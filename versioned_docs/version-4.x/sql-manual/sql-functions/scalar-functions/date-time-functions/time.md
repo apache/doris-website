@@ -1,7 +1,8 @@
 ---
 {
     "title": "TIME",
-    "language": "en"
+    "language": "en",
+    "description": "The TIME function get the Datetime value's time part."
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "Sort Key and Prefix Index",
-    "language": "en"
+    "language": "en",
+    "description": "Doris stores data in a structure similar to SSTable (Sorted String Table)."
 }
 ---
 

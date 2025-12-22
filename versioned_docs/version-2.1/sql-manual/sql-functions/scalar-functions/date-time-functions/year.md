@@ -1,7 +1,8 @@
 ---
 {
     "title": "YEAR",
-    "language": "en"
+    "language": "en",
+    "description": "Returns the year part of the date type, ranging from 1000 to 9999"
 }
 ---
 

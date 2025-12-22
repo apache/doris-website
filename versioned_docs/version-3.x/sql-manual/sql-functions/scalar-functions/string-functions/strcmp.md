@@ -1,7 +1,8 @@
 ---
 {
     "title": "STRCMP",
-    "language": "en"
+    "language": "en",
+    "description": "The STRCMP function compares two strings lexicographically. It returns an integer value indicating the result of the comparison."
 }
 ---
 

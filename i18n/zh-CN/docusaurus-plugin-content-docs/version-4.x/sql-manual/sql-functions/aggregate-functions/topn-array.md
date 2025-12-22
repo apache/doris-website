@@ -1,7 +1,8 @@
 ---
 {
     "title": "TOPN_ARRAY",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "TOPNARRAY 函数返回指定列中出现频率最高的 N 个值的数组。与 TOPN 函数不同，TOPNARRAY 返回一个数组类型，便于后续处理和分析。"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "MINUTE_FLOOR",
-    "language": "en"
+    "language": "en",
+    "description": "The minutefloor function rounds the input datetime value down to the nearest specified minute interval. If origin is specified,"
 }
 ---
 

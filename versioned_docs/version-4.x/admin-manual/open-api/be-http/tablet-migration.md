@@ -1,7 +1,8 @@
 ---
 {
     "title": "Migration Tablet",
-    "language": "en"
+    "language": "en",
+    "description": "Migrate a tablet to the specified disk."
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "SHOW SNAPSHOT",
-    "language": "en"
+    "language": "en",
+    "description": "This statement is used to view backups that already exist in the repository."
 }
 ---
 

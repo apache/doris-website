@@ -1,7 +1,8 @@
 ---
 {
     "title": "ST_ANGLE_SPHERE",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "计算地球表面两点之间的圆心角，单位为 度。传入的参数分别为 X 点的经度，X 点的纬度，Y 点的经度，Y 点的纬度。"
 }
 ---
 

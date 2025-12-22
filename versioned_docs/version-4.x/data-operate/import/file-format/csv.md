@@ -1,7 +1,8 @@
 ---
 {
     "title": "CSV",
-    "language": "en"
+    "language": "en",
+    "description": "This document explains how to load CSV format data files into Doris. Doris supports flexible CSV format configuration, including custom delimiters,"
 }
 ---
 

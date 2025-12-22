@@ -1,7 +1,8 @@
 ---
 {
     "title": "ARRAY_SPLIT",
-    "language": "en-US"
+    "language": "en-US",
+    "description": "Split the input array into multiple subarrays according to given boolean flags."
 }
 ---
 

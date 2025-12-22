@@ -1,7 +1,8 @@
 ---
 {
     "title": "Aliyun DLF",
-    "language": "en"
+    "language": "en",
+    "description": "This document describes how to use the CREATE CATALOG statement to connect and access Alibaba Cloud Data Lake Formation (DLF) metadata service."
 }
 ---
 

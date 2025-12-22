@@ -1,7 +1,8 @@
 ---
 {
     "title": "QUARTER_CEIL",
-    "language": "en"
+    "language": "en",
+    "description": "The QUARTERCEIL function rounds up the input datetime value to the nearest specified quarter period. If an origin time is specified,"
 }
 ---
 

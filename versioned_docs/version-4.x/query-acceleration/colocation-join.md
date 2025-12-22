@@ -1,7 +1,8 @@
 ---
 {
     "title": "Colocation Join",
-    "language": "en"
+    "language": "en",
+    "description": "Colocation Join provides local optimization for some Join queries to reduce data transmission time between nodes and accelerating query execution."
 }
 ---
 

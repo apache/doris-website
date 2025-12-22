@@ -1,7 +1,8 @@
 ---
 {
-  "title": "TIMESTAMPADD",
-  "language": "zh-CN"
+    "title": "TIMESTAMPADD",
+    "language": "zh-CN",
+    "description": "与 dateadd 函数 作用一致 TIMESTAMPADD 函数用于向指定的日期时间值添加（或减去）指定单位的时间间隔，并返回计算后的日期时间值。该函数支持多种时间单位（如秒、分、时、日、周、月、年等），可灵活处理日期时间的偏移计算，负数间隔表示减去对应时间。"
 }
 ---
 

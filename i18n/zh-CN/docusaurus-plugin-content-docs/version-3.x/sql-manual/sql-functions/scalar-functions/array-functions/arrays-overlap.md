@@ -1,7 +1,8 @@
 ---
 {
     "title": "ARRAYS_OVERLAP",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "判断 left 和 right 数组中是否包含公共元素"
 }
 ---
 

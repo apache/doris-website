@@ -1,7 +1,8 @@
 ---
 {
     "title": "ARRAY_POPBACK",
-    "language": "en"
+    "language": "en",
+    "description": "Remove the last element from array."
 }
 ---
 

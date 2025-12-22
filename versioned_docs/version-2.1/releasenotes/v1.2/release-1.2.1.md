@@ -1,7 +1,8 @@
 ---
 {
     "title": "Release 1.2.1",
-    "language": "en"
+    "language": "en",
+    "description": "DecimalV3, which supports higher precision and better performance, has the following advantages over past versions."
 }
 ---
 

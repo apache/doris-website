@@ -1,7 +1,8 @@
 ---
 {
     "title": "QUARTER",
-    "language": "en"
+    "language": "en",
+    "description": "The function returns the quarter (1 to 4) of the given date. Each quarter includes three months:"
 }
 ---
 

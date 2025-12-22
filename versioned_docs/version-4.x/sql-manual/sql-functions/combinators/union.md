@@ -1,7 +1,8 @@
 ---
 {
     "title": "UNION",
-    "language": "en"
+    "language": "en",
+    "description": "Aggregate multiple aggregation intermediate results into one. The type of the result is aggstate,"
 }
 ---
 

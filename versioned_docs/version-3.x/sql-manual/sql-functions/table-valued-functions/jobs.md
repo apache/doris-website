@@ -1,7 +1,8 @@
 ---
 {
-  "title": "JOBS",
-  "language": "en"
+    "title": "JOBS",
+    "language": "en",
+    "description": "Table function, generating a temporary task table, which can view job information in a certain task type."
 }
 ---
 

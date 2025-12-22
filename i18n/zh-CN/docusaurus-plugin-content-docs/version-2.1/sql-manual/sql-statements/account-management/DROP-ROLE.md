@@ -1,7 +1,8 @@
 ---
 {
     "title": "DROP ROLE",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "DROP ROLE 语句用于用户删除角色"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
-"title": "Ranger Authorization",
-"language": "en"
+    "title": "Ranger Authorization",
+    "language": "en",
+    "description": "Apache Ranger is a security framework used for monitoring, enabling services,"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "IS_IPV4_COMPAT",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "该函数采用以数字形式表示的二进制字符串形式的 IPv6 地址，由 INET6ATON 返回。INET6ATON 是 IPV6STRINGTONUMORNULL 的别名"
 }
 ---
 

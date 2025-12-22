@@ -1,7 +1,8 @@
 ---
 {
     "title": "ST_Y",
-    "language": "en"
+    "language": "en",
+    "description": "Returns the Y coordinate of a valid POINT geometry. In geospatial contexts, the Y coordinate typically corresponds to Latitude, ranging from [-90.0,"
 }
 ---
 

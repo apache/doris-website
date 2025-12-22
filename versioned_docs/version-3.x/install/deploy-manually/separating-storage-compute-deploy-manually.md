@@ -1,7 +1,8 @@
 ---
 {
     "title": "Deploy Separating Storage Compute Cluster Manually",
-    "language": "en"
+    "language": "en",
+    "description": "After completing the prerequisite checks and planning, such as environment checks, cluster planning, and operating system checks,"
 }
 ---
 

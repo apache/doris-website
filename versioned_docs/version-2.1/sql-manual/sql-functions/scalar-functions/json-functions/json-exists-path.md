@@ -1,7 +1,8 @@
 ---
 {
     "title": "JSON_EXISTS_PATH",
-    "language": "en"
+    "language": "en",
+    "description": "It is used to judge whether the field specified by jsonpath exists in the JSON data. If it exists, it returns TRUE, and if it does not exist,"
 }
 ---
 

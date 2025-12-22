@@ -1,7 +1,8 @@
 ---
 {
     "title": "认证与鉴权概述",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "Doris 的权限管理系统参照了 MySQL 的权限管理机制，做到了行级别细粒度的权限控制，基于角色的权限访问控制，并且支持白名单机制。"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "MAP",
-    "language": "en"
+    "language": "en",
+    "description": "Constructs a Map<K, V> of a specific type using some set of key-value pairs"
 }
 ---
 

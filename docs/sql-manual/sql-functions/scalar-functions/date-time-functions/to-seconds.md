@@ -1,7 +1,8 @@
 ---
 {
-  "title": "TO_SECONDS",
-  "language": "en"
+    "title": "TO_SECONDS",
+    "language": "en",
+    "description": "Seconds calculation function. It converts a date to a seconds value,"
 }
 ---
 

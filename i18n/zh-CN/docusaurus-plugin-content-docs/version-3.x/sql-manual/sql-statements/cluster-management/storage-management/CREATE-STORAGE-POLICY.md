@@ -1,7 +1,8 @@
 ---
 {
-"title": "CREATE STORAGE POLICY",
-"language": "zh-CN"
+    "title": "CREATE STORAGE POLICY",
+    "language": "zh-CN",
+    "description": "创建一个存储策略，必须先创建存储资源，然后创建迁移策略时候关联创建的存储资源名，具体可参考 RESOURCE 章节。"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "partition_statistics",
-    "language": "en"
+    "language": "en",
+    "description": "Partition statistics"
 }
 ---
 

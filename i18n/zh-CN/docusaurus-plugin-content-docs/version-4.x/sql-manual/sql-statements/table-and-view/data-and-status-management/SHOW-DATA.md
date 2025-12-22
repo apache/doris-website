@@ -1,7 +1,8 @@
 ---
 {
     "title": "SHOW DATA",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "SHOW DATA 语句用于展示数据量、副本数量以及统计行数信息。该语句具有以下功能："
 }
 ---
 

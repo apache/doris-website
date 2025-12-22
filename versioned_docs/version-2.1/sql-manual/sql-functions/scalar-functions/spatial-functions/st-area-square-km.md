@@ -1,7 +1,8 @@
 ---
 {
     "title": "ST_AREA_SQUARE_KM",
-    "language": "en"
+    "language": "en",
+    "description": "Calculate the area of the region on the sphere of the Earth"
 }
 ---
 

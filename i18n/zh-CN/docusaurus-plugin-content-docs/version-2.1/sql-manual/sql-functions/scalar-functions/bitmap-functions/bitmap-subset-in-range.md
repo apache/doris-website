@@ -1,7 +1,8 @@
 ---
 {
     "title": "BITMAP_SUBSET_IN_RANGE",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "返回 Bitmap 指定范围内的子集 (不包括范围结束)。"
 }
 ---
 

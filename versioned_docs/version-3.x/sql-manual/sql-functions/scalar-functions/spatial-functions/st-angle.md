@@ -1,7 +1,8 @@
 ---
 {
     "title": "ST_ANGLE",
-    "language": "en"
+    "language": "en",
+    "description": "Input three points. The first line is the straight line connecting point1 (first endpoint) and point2 (second endpoint)."
 }
 ---
 

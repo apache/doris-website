@@ -1,9 +1,9 @@
 ---
 {
     "title": "SET PROPERTY",
-    "language": "en"
+    "language": "en",
+    "description": "Set user attributes, including resources assigned to users, importing clusters, etc."
 }
-
 ---
 
 ## Description

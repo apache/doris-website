@@ -1,7 +1,8 @@
 ---
 {
     "title": "ST_CONTAINS",
-    "language": "en"
+    "language": "en",
+    "description": "Determines whether the geometry shape1 is fully capable of containing the geometry shape2"
 }
 ---
 

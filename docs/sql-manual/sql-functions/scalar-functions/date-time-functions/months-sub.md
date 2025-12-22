@@ -1,7 +1,8 @@
 ---
 {
     "title": "MONTHS_SUB",
-    "language": "en"
+    "language": "en",
+    "description": "The MONTHSSUB function subtracts a specified number of months from the input datetime value and returns the resulting new datetime value."
 }
 ---
 

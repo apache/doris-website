@@ -1,7 +1,8 @@
 ---
 {
     "title": "Query Profile Action",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "可获取集群所有 fe 节点 select 查询信息。"
 }
 ---
 

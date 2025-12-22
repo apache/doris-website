@@ -1,7 +1,8 @@
 ---
 {
     "title": "STRUCT",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "STRUCT 类型用于将多个字段组合成一个结构体，每个字段可以有自己的名字和类型，适合表示嵌套或复杂的业务数据结构。"
 }
 ---
 

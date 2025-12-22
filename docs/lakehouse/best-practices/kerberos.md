@@ -1,7 +1,8 @@
 ---
 {
     "title": "Kerberos Best Practices",
-    "language": "en"
+    "language": "en",
+    "description": "When users use Doris for federated analytical queries across multiple data sources,"
 }
 ---
 

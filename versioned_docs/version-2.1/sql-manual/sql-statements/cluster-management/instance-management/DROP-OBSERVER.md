@@ -1,7 +1,8 @@
 ---
 {
     "title": "DROP OBSERVER",
-    "language": "en"
+    "language": "en",
+    "description": "This statement deletes the node with the OBSERVER role of FRONTEND (only used by administrators!)"
 }
 ---
 

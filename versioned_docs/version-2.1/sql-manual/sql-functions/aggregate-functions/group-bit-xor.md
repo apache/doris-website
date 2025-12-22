@@ -1,7 +1,8 @@
 ---
 {
-"title": "GROUP_BIT_XOR",
-"language": "en"
+    "title": "GROUP_BIT_XOR",
+    "language": "en",
+    "description": "Performs a bitwise xor operation on all values in a single integer column or expression."
 }
 ---
 

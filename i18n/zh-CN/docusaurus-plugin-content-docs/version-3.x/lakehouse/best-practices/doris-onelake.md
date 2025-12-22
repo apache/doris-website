@@ -1,7 +1,8 @@
 ---
 {
     "title": "集成 Microsoft OneLake",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "OneLake 是 Microsoft Fabric 提供的统一且开放的 SaaS 数据湖，为企业提供一个逻辑上的集中数据存储位置。数据以 Parquet 格式存储，并可同时承载 Delta Lake 与 Iceberg 的元数据。这种设计使 OneLake 能在不进行数据复制或迁移的前提下，"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "比较操作符",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "比较条件将一个表达式与另一个表达式进行比较。比较的结果可以是 TRUE、FALSE 或 UNKNOWN。"
 }
 ---
 

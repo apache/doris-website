@@ -1,7 +1,8 @@
 ---
 {
     "title": "CURRENT_USER",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "获取当前的用户名及其 IP 白名单规则。"
 }
 ---
 

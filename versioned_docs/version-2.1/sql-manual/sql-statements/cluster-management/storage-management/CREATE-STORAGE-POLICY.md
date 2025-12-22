@@ -1,7 +1,8 @@
 ---
 {
     "title": "CREATE STORAGE POLICY",
-    "language": "en"
+    "language": "en",
+    "description": "To create a storage policy, you must first create a storage resource,"
 }
 ---
 

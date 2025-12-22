@@ -1,5 +1,8 @@
 ---
-{ 'title': 'Join', 'language': 'en' }
+{ 'title': 'Join', 'language': 'en',
+  "description": "In relational databases, data is distributed across multiple tables, which are interconnected through specific relationships."
+
+}
 ---
 
 ## What is JOIN

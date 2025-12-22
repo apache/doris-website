@@ -1,7 +1,8 @@
 ---
 {
     "title": "POW",
-    "language": "en"
+    "language": "en",
+    "description": "Returns the value of the first argument raised to the power of the second argument."
 }
 ---
 

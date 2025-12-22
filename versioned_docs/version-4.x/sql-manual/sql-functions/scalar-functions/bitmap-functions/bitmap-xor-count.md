@@ -1,7 +1,8 @@
 ---
 {
     "title": "BITMAP_XOR_COUNT",
-    "language": "en"
+    "language": "en",
+    "description": "Computes the symmetric difference (XOR operation) of two or more Bitmap sets and returns the count of elements in the result set."
 }
 ---
 

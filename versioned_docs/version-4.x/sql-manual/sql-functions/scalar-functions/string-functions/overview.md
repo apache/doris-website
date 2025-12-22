@@ -1,7 +1,8 @@
 ---
 {
     "title": "String Functions Overview",
-    "language": "en"
+    "language": "en",
+    "description": "String functions are built-in functions used to process and manipulate string data. They help perform various string operations,"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "SET TABLE STATUS",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "SET TABLE STATUS 语句用于手动设置 OLAP 表的状态。该语句具有以下功能："
 }
 ---
 

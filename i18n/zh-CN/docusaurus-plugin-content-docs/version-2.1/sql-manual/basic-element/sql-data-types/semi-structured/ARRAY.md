@@ -1,7 +1,8 @@
 ---
 {
     "title": "ARRAY",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "由 T 类型元素组成的数组，不能作为 key 列使用。目前支持在 Duplicate 和 Unique 模型的表中使用。"
 }
 ---
 

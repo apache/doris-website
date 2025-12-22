@@ -1,7 +1,8 @@
 ---
 {
     "title": "SHOW STREAM LOAD",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "该语句用于展示指定的 Stream Load 任务的执行情况"
 }
 ---
 

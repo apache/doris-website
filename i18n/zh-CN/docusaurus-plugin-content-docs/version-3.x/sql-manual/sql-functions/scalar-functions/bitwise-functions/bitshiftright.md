@@ -1,7 +1,8 @@
 ---
 {
-"title": "BIT_SHIFT_RIGHT",
-"language": "zh-CN"
+    "title": "BIT_SHIFT_RIGHT",
+    "language": "zh-CN",
+    "description": "用于 右移 位运算，通常用于将二进制数字的所有位向右移动指定的位数。这种操作通常用于处理二进制数据，或者用于一些数学计算（如除法的高效实现）。"
 }
 ---
 

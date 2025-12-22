@@ -1,7 +1,8 @@
 ---
 {
     "title": "ST_AREA_SQUARE_METERS",
-    "language": "en"
+    "language": "en",
+    "description": "Calculates the area of a closed region on the Earth's surface in square meters."
 }
 ---
 

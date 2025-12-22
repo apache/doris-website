@@ -1,7 +1,8 @@
 ---
 {
     "title": "SHOW TABLET",
-    "language": "en"
+    "language": "en",
+    "description": "This statement is used to show details of a specific tablet (only for administrators)."
 }
 ---
 

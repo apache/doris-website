@@ -1,7 +1,8 @@
 ---
 {
-  "title": "Config Doris to Deploy",
-  "language": "en"
+    "title": "Config Doris to Deploy",
+    "language": "en",
+    "description": "In the default DorisCluster resource deployment, the FE and BE images may not be the latest versions,"
 }
 ---
 

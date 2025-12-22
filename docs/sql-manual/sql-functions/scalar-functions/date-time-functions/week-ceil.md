@@ -1,7 +1,8 @@
 ---
 {
     "title": "WEEK_CEIL",
-    "language": "en"
+    "language": "en",
+    "description": "The weekceil function rounds up an input datetime value to the nearest specified week interval start time. If origin is specified,"
 }
 ---
 

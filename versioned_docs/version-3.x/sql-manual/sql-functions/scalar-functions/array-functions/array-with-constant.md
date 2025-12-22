@@ -1,7 +1,8 @@
 ---
 {
     "title": "ARRAY_WITH_CONSTANT",
-    "language": "en"
+    "language": "en",
+    "description": "Generates an array containing n repeated elements"
 }
 ---
 

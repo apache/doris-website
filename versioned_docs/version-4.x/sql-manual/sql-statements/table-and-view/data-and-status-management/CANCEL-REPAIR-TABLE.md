@@ -1,7 +1,8 @@
 ---
 {
     "title": "CANCEL REPAIR TABLE",
-    "language": "en"
+    "language": "en",
+    "description": "The CANCEL REPAIR TABLE statement is used to cancel high-priority repairs for a specified table or partition."
 }
 ---
 

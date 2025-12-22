@@ -1,7 +1,8 @@
 ---
 {
-  "title": "Star Schema Benchmark",
-  "language": "en"
+    "title": "Star Schema Benchmark",
+    "language": "en",
+    "description": "Star Schema Benchmark(SSB) is a lightweight performance test set in the data warehouse scenario."
 }
 ---
 

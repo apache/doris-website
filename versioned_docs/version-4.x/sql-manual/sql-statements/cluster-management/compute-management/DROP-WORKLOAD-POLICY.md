@@ -1,7 +1,8 @@
 ---
 {
-"title": "DROP WORKLOAD POLICY",
-"language": "en"
+    "title": "DROP WORKLOAD POLICY",
+    "language": "en",
+    "description": "Delete a Workload Policy"
 }
 ---
 

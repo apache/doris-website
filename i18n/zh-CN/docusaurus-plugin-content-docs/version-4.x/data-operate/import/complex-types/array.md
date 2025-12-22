@@ -1,7 +1,8 @@
 ---
 {
     "title": "ARRAY",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "ARRAY<T> 表示由 T 类型元素组成的数组。点击 ARRAY 数据类型 了解具体信息。"
 }
 ---
 

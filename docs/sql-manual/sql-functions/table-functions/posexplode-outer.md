@@ -1,7 +1,8 @@
 ---
 {
-"title": "POSEXPLODE_OUTER",
-"language": "en"
+    "title": "POSEXPLODE_OUTER",
+    "language": "en",
+    "description": "The posexplodeouter table function expands the <array> column into multiple rows and adds a column indicating the position, returning a STRUCT type."
 }
 ---
 

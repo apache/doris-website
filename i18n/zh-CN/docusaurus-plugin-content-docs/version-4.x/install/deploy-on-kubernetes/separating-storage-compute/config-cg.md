@@ -1,7 +1,8 @@
 ---
 {
-   "title": "配置计算组",
-   "language": "zh-CN"
+    "title": "配置计算组",
+    "language": "zh-CN",
+    "description": "存算分离集群中，计算组（Compute Group）负责数据导入并缓存对象存储中的数据以提高查询效率，计算组之间相互隔离。"
 }
 ---
 

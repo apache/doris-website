@@ -1,9 +1,8 @@
 ---
 {
-
     "title": "Flink Doris Connector",
-    "language": "zh-CN"
-
+    "language": "zh-CN",
+    "description": "Flink Doris Connector是通过 Flink 来读取和写入数据到 Doris 集群，同时集成了FlinkCDC，可以更便捷的对上游 MySQL 等数据库进行整库同步。"
 }
 ---
 

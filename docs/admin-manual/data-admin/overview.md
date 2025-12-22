@@ -1,7 +1,8 @@
 ---
 {
     "title": "Disaster Recovery Management Overview",
-    "language": "en"
+    "language": "en",
+    "description": "Doris provides disaster recovery capabilities, helping users effectively respond to data loss issues caused by hardware failures, software errors,"
 }
 ---
 

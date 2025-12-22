@@ -1,7 +1,8 @@
 ---
 {
     "title": "ALTER DATABASE",
-    "language": "en"
+    "language": "en",
+    "description": "This statement is used to set the properties of a specified db, change the db name, and set various quotas for the db."
 }
 ---
 

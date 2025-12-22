@@ -1,7 +1,8 @@
 ---
 {
     "title": "ROLLBACK",
-    "language": "en"
+    "language": "en",
+    "description": "Rollback an explicit transaction. It is used in pairs with BEGIN."
 }
 ---
 

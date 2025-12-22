@@ -1,7 +1,8 @@
 ---
 {
     "title": "ORC",
-    "language": "en"
+    "language": "en",
+    "description": "This document explains how to load ORC format data files in Doris."
 }
 ---
 

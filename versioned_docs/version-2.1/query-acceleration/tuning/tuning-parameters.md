@@ -1,7 +1,8 @@
 ---
 {
     "title": "Common Tuning Parameters",
-    "language": "en"
+    "language": "en",
+    "description": "Learn essential database tuning parameters including enable_nereids_planner, parallel_pipeline_task_num, and runtime_filter_mode for optimizing query performance, version upgrades, and adaptive parallelism in SQL execution."
 }
 ---
 

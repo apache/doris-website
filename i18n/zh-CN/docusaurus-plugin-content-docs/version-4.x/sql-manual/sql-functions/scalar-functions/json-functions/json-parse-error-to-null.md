@@ -1,7 +1,8 @@
 ---
 {
     "title": "JSON_PARSE_ERROR_TO_NULL",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "函数 JSONPARSE 的变种。"
 }
 ---
 

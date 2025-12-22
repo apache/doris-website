@@ -1,7 +1,8 @@
 ---
 {
     "title": "SHOW TABLE ID",
-    "language": "en"
+    "language": "en",
+    "description": "This statement is used to find the corresponding database name, table name according to table id."
 }
 ---
 

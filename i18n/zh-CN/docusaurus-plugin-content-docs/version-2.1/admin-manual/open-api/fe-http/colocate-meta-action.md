@@ -1,7 +1,8 @@
 ---
 {
     "title": "Colocate Meta Action",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "获取/修改 colocate group 信息。"
 }
 ---
 

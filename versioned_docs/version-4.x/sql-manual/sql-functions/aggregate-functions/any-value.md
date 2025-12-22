@@ -1,7 +1,8 @@
 ---
 {
-"title": "ANY_VALUE",
-"language": "en"
+    "title": "ANY_VALUE",
+    "language": "en",
+    "description": "Returns any value from the expression or column in the group. If there is a non-NULL value, it returns any non-NULL value; otherwise, it returns NULL."
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "YEAR_OF_WEEK",
-    "language": "en"
+    "language": "en",
+    "description": "The YEAROFWEEK function returns the week-year (year of week) for a specified date according to the ISO 8601 week calendar standard."
 }
 ---
 

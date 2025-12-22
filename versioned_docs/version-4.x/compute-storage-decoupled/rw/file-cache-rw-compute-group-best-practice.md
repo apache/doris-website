@@ -1,7 +1,8 @@
 ---
 {
     "title": "Best Practices for Cache Optimization in Read-Write Splitting Scenarios",
-    "language": "en"
+    "language": "en",
+    "description": "When using Apache Doris's storage-compute separation architecture,"
 }
 ---
 

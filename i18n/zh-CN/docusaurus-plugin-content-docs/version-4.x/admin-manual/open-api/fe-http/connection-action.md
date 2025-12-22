@@ -1,7 +1,8 @@
 ---
 {
     "title": "Connection Action",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "给定一个 connection id，返回这个连接当前正在执行的，或最后一次执行完成的 query id。"
 }
 ---
 

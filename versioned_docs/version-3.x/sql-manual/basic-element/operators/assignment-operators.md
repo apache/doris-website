@@ -1,7 +1,8 @@
 ---
 {
     "title": "Assignment Operators",
-    "language": "en"
+    "language": "en",
+    "description": "The function of the assignment operator is to assign the expression on the right-hand side of the operator to the expression on the left-hand side."
 }
 ---
 

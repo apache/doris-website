@@ -1,7 +1,8 @@
 ---
 {
     "title": "SECONDS_SUB",
-    "language": "en"
+    "language": "en",
+    "description": "The SECONDSSUB function subtracts or adds a specified number of seconds to a specified datetime value and returns the calculated datetime value."
 }
 ---
 

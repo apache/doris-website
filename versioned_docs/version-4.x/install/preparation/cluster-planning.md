@@ -1,7 +1,8 @@
 ---
 {
-"title": "Cluster Planning",
-"language": "en"
+    "title": "Cluster Planning",
+    "language": "en",
+    "description": "When deploying Doris, you can choose between the integrated storage-compute architecture or the decoupled storage-compute architecture based on your "
 }
 ---
 

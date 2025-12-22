@@ -1,7 +1,8 @@
 ---
 {
     "title": "MASK",
-    "language": "en"
+    "language": "en",
+    "description": "The MASK function is to shield data to protect sensitive information, and it is commonly used in data anonymization scenarios."
 }
 ---
 

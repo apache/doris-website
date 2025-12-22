@@ -1,7 +1,8 @@
 ---
 {
     "title": "ARRAY_APPLY",
-    "language": "en"
+    "language": "en",
+    "description": "Filters array elements using a specified binary operator and returns a new array containing elements that satisfy the condition."
 }
 ---
 

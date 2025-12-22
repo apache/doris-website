@@ -1,7 +1,8 @@
 ---
 {
     "title": "Help Action",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "用于通过模糊查询获取帮助。"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "Object Identifier",
-    "language": "en"
+    "language": "en",
+    "description": "Each database object, such as tables, columns, and indexes, has a name. In SQL statements, these names are referred to as object identifiers."
 }
 ---
 

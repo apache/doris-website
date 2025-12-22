@@ -1,7 +1,8 @@
 ---
 {
-  "title": "配置说明",
-  "language": "zh-CN"
+    "title": "配置说明",
+    "language": "zh-CN",
+    "description": "本文给出使用 CCR 需要调整或者关注的配置。"
 }
 ---
 

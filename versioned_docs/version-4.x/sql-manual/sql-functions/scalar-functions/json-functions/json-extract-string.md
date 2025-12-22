@@ -1,7 +1,8 @@
 ---
 {
     "title": "JSON_EXTRACT_STRING",
-    "language": "en"
+    "language": "en",
+    "description": "JSONEXTRACTSTRING extracts the field specified by <jsonpath> from a JSON object and converts it to STRING type."
 }
 ---
 

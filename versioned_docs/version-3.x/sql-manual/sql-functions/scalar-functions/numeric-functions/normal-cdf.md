@@ -1,7 +1,8 @@
 ---
 {
     "title": "NORMAL_CDF",
-    "language": "en"
+    "language": "en",
+    "description": "Computes the Cumulative distribution function (CDF) of the normal distribution at value x."
 }
 ---
 

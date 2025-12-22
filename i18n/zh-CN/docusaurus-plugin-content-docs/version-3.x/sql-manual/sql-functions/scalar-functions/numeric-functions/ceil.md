@@ -1,7 +1,8 @@
 ---
 {
     "title": "CEIL",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "对浮点及定点小数按特定位数向上取整，返回取整过后的浮点或定点数。"
 }
 ---
 

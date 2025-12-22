@@ -1,7 +1,8 @@
 ---
 {
     "title": "Temporary Partition",
-    "language": "en"
+    "language": "en",
+    "description": "Doris supports adding temporary partitions to partitioned tables."
 }
 ---
 

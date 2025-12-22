@@ -1,7 +1,8 @@
 ---
 {
     "title": "Data Update Overview",
-    "language": "en"
+    "language": "en",
+    "description": "In today's data-driven decision-making landscape, data \"freshness\" has become a core competitive advantage for enterprises to stand out in fierce "
 }
 ---
 

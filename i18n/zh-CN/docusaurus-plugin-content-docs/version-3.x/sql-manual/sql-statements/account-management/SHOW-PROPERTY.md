@@ -1,7 +1,8 @@
 ---
 {
     "title": "SHOW PROPERTY",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "该语句用于查看用户的属性"
 }
 ---
 

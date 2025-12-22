@@ -1,7 +1,8 @@
 ---
 {
     "title": "SIGN",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "返回x的符号。负数，零或正数分别对应 -1，0 或 1。"
 }
 ---
 

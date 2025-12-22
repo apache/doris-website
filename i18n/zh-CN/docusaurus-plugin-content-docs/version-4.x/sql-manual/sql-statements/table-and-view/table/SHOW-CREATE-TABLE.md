@@ -1,7 +1,8 @@
 ---
 {
     "title": "SHOW-CREATE-TABLE",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "该语句用于展示数据表的创建语句。"
 }
 ---
 

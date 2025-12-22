@@ -1,10 +1,9 @@
 ---
-
 {
-"title": "Kyuubi",
-"language": "en"
+    "title": "Kyuubi",
+    "language": "en",
+    "description": "Apache Kyuubi is a distributed and multi-tenant gateway to provide serverless SQL on Data Warehouses and Lakehouses."
 }
-
 ---
 
 # Use Kyuubi with Doris

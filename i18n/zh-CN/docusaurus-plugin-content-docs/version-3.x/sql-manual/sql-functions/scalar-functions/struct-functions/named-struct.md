@@ -1,7 +1,8 @@
 ---
 {
     "title": "NAMED_STRUCT",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "根据给定的字符串和值构造并返回 struct ,注意事项："
 }
 ---
 

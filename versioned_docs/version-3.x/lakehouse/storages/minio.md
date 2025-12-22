@@ -1,7 +1,8 @@
 ---
 {
-  "title": "MinIO",
-  "language": "en"
+    "title": "MinIO",
+    "language": "en",
+    "description": "This document describes the parameters required to access MinIO, which apply to the following scenarios:"
 }
 ---
 

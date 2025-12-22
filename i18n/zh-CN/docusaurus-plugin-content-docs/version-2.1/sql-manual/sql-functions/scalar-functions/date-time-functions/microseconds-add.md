@@ -1,7 +1,8 @@
 ---
 {
     "title": "MICROSECONDS_ADD",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "向日期时间值中添加指定的微秒数，返回一个新的日期时间值。"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "SHOW TABLETS BELONG",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "该语句用于显示指定 tablet 及其所属表的信息。"
 }
 ---
 

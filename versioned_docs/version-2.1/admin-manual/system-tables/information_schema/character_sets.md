@@ -1,7 +1,8 @@
 ---
 {
     "title": "character_sets",
-    "language": "en"
+    "language": "en",
+    "description": "View the supported character sets. This table is only used for compatibility with MySQL behavior and does not truly reflect the character sets used "
 }
 ---
 

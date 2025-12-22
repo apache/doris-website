@@ -1,7 +1,8 @@
 ---
 {
     "title": "EXPORT",
-    "language": "en"
+    "language": "en",
+    "description": "This document will introduce how to use the EXPORT command to export the data stored in Doris."
 }
 ---
 

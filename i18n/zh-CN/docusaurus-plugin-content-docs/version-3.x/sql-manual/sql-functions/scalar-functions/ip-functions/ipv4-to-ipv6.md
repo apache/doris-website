@@ -1,7 +1,8 @@
 ---
 {
     "title": "IPV4_TO_IPV6",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "接受一个类型为 IPv4 的地址，返回相应 IPv6 的形式。"
 }
 ---
 

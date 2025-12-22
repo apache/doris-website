@@ -1,7 +1,8 @@
 ---
 {
     "title": "STRUCT",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "STRUCT"
 }
 ---
 

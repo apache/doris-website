@@ -1,7 +1,8 @@
 ---
 {
     "title": "Repairing Data",
-    "language": "en"
+    "language": "en",
+    "description": "For the Unique Key Merge on Write table, there are bugs in some Doris versions, which may cause errors when the system calculates the delete bitmap,"
 }
 ---
 

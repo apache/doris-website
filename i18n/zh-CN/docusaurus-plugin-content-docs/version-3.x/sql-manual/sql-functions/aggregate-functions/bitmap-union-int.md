@@ -1,7 +1,8 @@
 ---
 {
-"title": "BITMAP-UNION-INT",
-"language": "zh-CN"
+    "title": "BITMAP-UNION-INT",
+    "language": "zh-CN",
+    "description": "计算 TINYINT,SMALLINT 和 INT 类型的列中不同值的个数，返回值和 COUNT(DISTINCT expr) 相同"
 }
 ---
 

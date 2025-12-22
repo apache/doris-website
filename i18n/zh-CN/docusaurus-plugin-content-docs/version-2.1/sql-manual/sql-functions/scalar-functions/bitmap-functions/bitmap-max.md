@@ -1,7 +1,8 @@
 ---
 {
     "title": "BITMAP_MAX",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "计算并返回 Bitmap 中的最大值。"
 }
 ---
 

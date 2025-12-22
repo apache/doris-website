@@ -1,7 +1,8 @@
 ---
 {
     "title": "Tablet metadata management tool",
-    "language": "en"
+    "language": "en",
+    "description": "In the latest version of the code, we introduced RocksDB in BE to store meta-information of tablet,"
 }
 ---
 

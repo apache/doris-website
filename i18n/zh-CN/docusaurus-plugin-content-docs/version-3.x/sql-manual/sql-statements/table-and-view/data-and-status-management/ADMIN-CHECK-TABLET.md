@@ -1,7 +1,8 @@
 ---
 {
     "title": "ADMIN CHECK TABLET",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "该语句用于对一组 tablet 执行指定的检查操作"
 }
 ---
 

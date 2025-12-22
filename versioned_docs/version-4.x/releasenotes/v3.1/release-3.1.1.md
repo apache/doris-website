@@ -1,7 +1,8 @@
 ---
 {
     "title": "Release 3.1.1",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "Apache Doris 3.1.1 is a maintenance release that focuses on critical bug fixes, performance optimizations, and stability improvements."
 }
 ---
 

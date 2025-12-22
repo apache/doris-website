@@ -1,7 +1,8 @@
 ---
 {
     "title": "XOR",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "Performs a bitwise XOR operation on two BOOLEAN values."
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "FineBI",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "FineBI 是一款商业智能产品，其具有数据处理、即时分析、多维度分析 Dashboard 等多种功能系统架构，FineBI 支持丰富的数据源连接、多种视图对表的分析管理。FineBI 可以顺利支持 Apache Doris 的内部数据和外部数据的建模与可视化处理。"
 }
 ---
 

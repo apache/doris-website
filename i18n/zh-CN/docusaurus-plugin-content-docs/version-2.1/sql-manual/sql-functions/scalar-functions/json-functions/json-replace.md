@@ -1,7 +1,8 @@
 ---
 {
     "title": "JSON_REPLACE",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "JSONREPLACE 函数用于在 JSON 中更新数据并返回结果。"
 }
 ---
 

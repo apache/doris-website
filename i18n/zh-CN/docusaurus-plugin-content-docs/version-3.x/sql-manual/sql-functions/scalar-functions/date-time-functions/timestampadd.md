@@ -1,7 +1,8 @@
 ---
 {
-  "title": "TIMESTAMPADD",
-  "language": "zh-CN"
+    "title": "TIMESTAMPADD",
+    "language": "zh-CN",
+    "description": "timestampadd 函数用于将指定的时间单位（如年、月、日、小时、分钟、秒等）添加到一个日期上。这个函数通常用于日期和时间的计算。"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "active_queries",
-    "language": "en"
+    "language": "en",
+    "description": "Used to view currently executing queries"
 }
 ---
 

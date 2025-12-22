@@ -1,7 +1,8 @@
 ---
 {
-  "title": "Deploy Doris Operator",
-  "language": "en"
+    "title": "Deploy Doris Operator",
+    "language": "en",
+    "description": "Deploying the Doris Operator involves three steps: install the CustomResourceDefinitions, deploy the Operator service, verify the deployment status."
 }
 ---
 

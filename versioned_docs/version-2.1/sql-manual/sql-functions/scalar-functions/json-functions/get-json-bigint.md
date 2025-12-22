@@ -1,7 +1,8 @@
 ---
 {
     "title": "GET_JSON_BIGINT",
-    "language": "en"
+    "language": "en",
+    "description": "Parses and obtains the integer (BIGINT) content of the specified path within the json string."
 }
 ---
 

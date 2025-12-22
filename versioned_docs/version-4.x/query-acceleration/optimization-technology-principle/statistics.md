@@ -1,7 +1,8 @@
 ---
 {
-"title": "Statistics",
-"language": "en"
+    "title": "Statistics",
+    "language": "en",
+    "description": "Starting from version 2.0, Doris integrated Cost-Based Optimization (CBO) capabilities into its optimizer. Statistics are the cornerstone of CBO,"
 }
 ---
 

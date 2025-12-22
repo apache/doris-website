@@ -1,7 +1,8 @@
 ---
 {
     "title": "Overview",
-    "language": "en"
+    "language": "en",
+    "description": "Users can use the CREATE TABLE statement to create a table in Doris."
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "REGEXP",
-    "language": "en"
+    "language": "en",
+    "description": "Performs a regular expression match on the string str, returning true if the match succeeds, otherwise false."
 }
 ---
 

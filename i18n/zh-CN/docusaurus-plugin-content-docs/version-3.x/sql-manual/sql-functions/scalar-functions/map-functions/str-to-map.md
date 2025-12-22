@@ -1,7 +1,8 @@
 ---
 {
     "title": "STR_TO_MAP",
-    "language": "cn"
+    "language": "cn",
+    "description": "将字符串转换为 Map<String, String> 类型。"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "SHOW CONVERT LIGHT SCHEMA CHANGE PROCESS",
-    "language": "en"
+    "language": "en",
+    "description": "Used to view the conversion process of non-light schema change OLAP tables to light schema change tables."
 }
 ---
 

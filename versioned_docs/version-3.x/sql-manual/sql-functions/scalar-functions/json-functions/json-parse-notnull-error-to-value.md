@@ -1,7 +1,8 @@
 ---
 {
     "title": "JSON_PARSE_NOTNULL_ERROR_TO_VALUE",
-    "language": "en"
+    "language": "en",
+    "description": "Function to parse JSON strings. If the JSON string format is invalid or a parsing error occurs,"
 }
 ---
 

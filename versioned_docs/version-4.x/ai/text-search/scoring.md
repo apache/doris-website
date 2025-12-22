@@ -1,8 +1,8 @@
 ---
-
 {
-"title": "Relevance Scoring",
-"language": "en"
+    "title": "Relevance Scoring",
+    "language": "en",
+    "description": "Text search scoring measures how relevant each row in a table is to a given query text."
 }
 ---
 

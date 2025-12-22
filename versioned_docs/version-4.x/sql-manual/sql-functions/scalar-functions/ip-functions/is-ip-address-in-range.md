@@ -1,7 +1,8 @@
 ---
 {
     "title": "IS_IP_ADDRESS_IN_RANGE",
-    "language": "en"
+    "language": "en",
+    "description": "Checks if a specified IP address is within a given CIDR network range. Supports both IPv4 and IPv6 addresses."
 }
 ---
 

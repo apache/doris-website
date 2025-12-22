@@ -1,7 +1,8 @@
 ---
 {
     "title": "Meta Info Action",
-    "language": "en"
+    "language": "en",
+    "description": "Meta Info Action is used to obtain metadata information in the cluster. Such as database list, table structure, etc."
 }
 ---
 

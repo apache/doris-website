@@ -1,7 +1,8 @@
 ---
 {
     "title": "Check Alive",
-    "language": "en"
+    "language": "en",
+    "description": "Provided for the monitoring service to Check whether the BE is alive, Be will respond if alive."
 }
 ---
 

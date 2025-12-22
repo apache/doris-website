@@ -1,7 +1,8 @@
 ---
 {
     "title": "元数据缓存",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "为了提升访问外部数据源的性能，Apache Doris 会对外部数据源的元数据进行缓存。"
 }
 ---
 

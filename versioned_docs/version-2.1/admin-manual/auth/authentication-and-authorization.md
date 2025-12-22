@@ -1,7 +1,8 @@
 ---
 {
     "title": "Authentication and Authorization",
-    "language": "en"
+    "language": "en",
+    "description": "The Doris permission management system is modeled after the MySQL permission management mechanism."
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "SHOW-CREATE-TABLE",
-    "language": "en"
+    "language": "en",
+    "description": "This statement is used to display the creation statement of the data table."
 }
 ---
 

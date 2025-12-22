@@ -1,7 +1,8 @@
 ---
 {
     "title": "ATAN",
-    "language": "en"
+    "language": "en",
+    "description": "Returns the arctangent of x, where x is in radians."
 }
 ---
 

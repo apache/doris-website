@@ -1,7 +1,8 @@
 ---
 {
-"title": "BITOR",
-"language": "zh-CN"
+    "title": "BITOR",
+    "language": "zh-CN",
+    "description": "用于对两个整数进行按位或操作。"
 }
 ---
 

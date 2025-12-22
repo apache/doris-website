@@ -1,7 +1,8 @@
 ---
 {
     "title": "MySQL Dump",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "Doris 在 0.15 之后的版本已经支持通过 mysqldump 工具导出数据或者表结构"
 }
 ---
 

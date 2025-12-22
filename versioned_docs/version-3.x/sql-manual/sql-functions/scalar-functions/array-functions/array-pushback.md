@@ -1,7 +1,8 @@
 ---
 {
     "title": "ARRAY_PUSHBACK",
-    "language": "en"
+    "language": "en",
+    "description": "Add value to the end of the array"
 }
 ---
 

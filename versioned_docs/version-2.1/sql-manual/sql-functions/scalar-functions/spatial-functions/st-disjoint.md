@@ -1,7 +1,8 @@
 ---
 {
     "title": "ST_DISJOINT",
-    "language": "en"
+    "language": "en",
+    "description": "Determines whether the geometry shape1 does not intersect with the geometry shape2."
 }
 ---
 

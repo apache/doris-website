@@ -1,7 +1,8 @@
 ---
 {
     "title": "UUID_TO_INT",
-    "language": "en"
+    "language": "en",
+    "description": "The UUIDTOINT function converts a UUID string to its INT128 integer representation."
 }
 ---
 

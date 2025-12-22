@@ -1,7 +1,8 @@
 ---
 {
     "title": "Overview",
-    "language": "en"
+    "language": "en",
+    "description": "Doris supports the following numeric data types:"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "GCD",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "计算两个整数的最大公约数。"
 }
 ---
 

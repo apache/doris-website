@@ -1,7 +1,8 @@
 ---
 {
     "title": "CAST expression",
-    "language": "en"
+    "language": "en",
+    "description": "CAST converts a value of one data type into another data type."
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
-"title": "SM4_DECRYPT",
-"language": "zh-CN"
+    "title": "SM4_DECRYPT",
+    "language": "zh-CN",
+    "description": "SM4 是一种国家标准的对称密钥加密算法，广泛应用于金融、通信、电子商务等领域。SM4DECRYPT 函数用于对数据进行 SM4 解密。默认采用 SM4128ECB 算法。"
 }
 ---
 

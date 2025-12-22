@@ -1,7 +1,8 @@
 ---
 {
     "title": "CURRENT_TIMESTAMP",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "函数用于获取当前系统时间，返回值为日期时间类型(DATETIME)，可以选择性地指定精度以调整返回值的小数秒部分的位数。"
 }
 ---
 

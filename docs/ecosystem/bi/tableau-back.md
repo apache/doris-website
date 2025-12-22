@@ -1,7 +1,8 @@
 ---
 {
-   "title": "Tableau",
-   "language": "en"
+    "title": "Tableau",
+    "language": "en",
+    "description": "VeloDB provides an official Tableau Doris connector. This connector accesses data based on the MySQL JDBC Driver."
 }
 ---
 

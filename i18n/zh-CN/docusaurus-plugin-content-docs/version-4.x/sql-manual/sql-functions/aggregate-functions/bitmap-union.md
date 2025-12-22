@@ -1,7 +1,8 @@
 ---
 {
-"title": "BITMAP_UNION",
-"language": "zh-CN"
+    "title": "BITMAP_UNION",
+    "language": "zh-CN",
+    "description": "计算输入 Bitmap 的并集，返回新的 bitmap。"
 }
 ---
 

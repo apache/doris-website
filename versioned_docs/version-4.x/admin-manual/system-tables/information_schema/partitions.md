@@ -1,7 +1,8 @@
 ---
 {
     "title": "partitions",
-    "language": "en"
+    "language": "en",
+    "description": "Show the Partition status of all tables in the database."
 }
 ---
 

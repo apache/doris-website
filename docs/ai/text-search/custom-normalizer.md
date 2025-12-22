@@ -1,7 +1,8 @@
 ---
 {
     "title": "Custom Normalizer",
-    "language": "en"
+    "language": "en",
+    "description": "Custom Normalizer is used for unified text preprocessing,"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "MAP_CONTAINS_VALUE",
-    "language": "en"
+    "language": "en",
+    "description": "Determines whether a given map contains a specific value value"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "MAX_BY",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "MAXBY 函数用于根据指定列的最大值，返回对应的的关联值。"
 }
 ---
 

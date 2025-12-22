@@ -1,7 +1,8 @@
 ---
 {
     "title": "BITMAP_TO_STRING",
-    "language": "en"
+    "language": "en",
+    "description": "Converts a Bitmap into a comma-separated string containing all the set bit positions."
 }
 ---
 

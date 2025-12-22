@@ -1,7 +1,8 @@
 ---
 {
     "title": "FOREACH",
-    "language": "en"
+    "language": "en",
+    "description": "Converts an aggregate function for tables into an aggregate function for arrays that aggregates the corresponding array items and returns an array of "
 }
 ---
 

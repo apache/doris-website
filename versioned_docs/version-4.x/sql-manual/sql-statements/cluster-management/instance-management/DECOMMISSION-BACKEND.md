@@ -1,7 +1,8 @@
 ---
 {
     "title": "DECOMMISSION BACKEND",
-    "language": "en"
+    "language": "en",
+    "description": "This statement is used to safely decommission a BE node from the cluster. This operation is asynchronous."
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "集成 Apache Gravitino",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "随着数据湖技术的快速发展，如何构建统一、安全、高效的湖仓一体化数据架构成为企业数字化转型的核心挑战。Apache Gravitino 作为新一代统一元数据管理平台，为多云、多引擎环境下的数据治理提供了完整的解决方案。它不仅支持多种数据源和计算引擎的统一管理，"
 }
 ---
 

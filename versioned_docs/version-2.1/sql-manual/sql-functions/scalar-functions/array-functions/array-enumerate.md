@@ -1,7 +1,8 @@
 ---
 {
     "title": "ARRAY_ENUMERATE",
-    "language": "en"
+    "language": "en",
+    "description": "Returns array sub item indexes e.g. [1, 2, 3, …, length (arr) ]"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "CANCEL BUILD INDEX",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "取消索引构建的后台任务。"
 }
 ---
 

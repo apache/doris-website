@@ -1,7 +1,8 @@
 ---
 {
     "title": "Window Function",
-    "language": "en"
+    "language": "en",
+    "description": "Analytic functions, also known as window functions, are functions in SQL queries that perform complex calculations on rows in a data set."
 }
 ---
 

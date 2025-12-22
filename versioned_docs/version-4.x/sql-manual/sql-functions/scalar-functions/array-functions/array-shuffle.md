@@ -1,7 +1,8 @@
 ---
 {
     "title": "ARRAY_SHUFFLE",
-    "language": "en-US"
+    "language": "en-US",
+    "description": "Randomly shuffle the order of elements in an array."
 }
 ---
 

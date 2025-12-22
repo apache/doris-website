@@ -1,7 +1,8 @@
 ---
 {
     "title": "Google Cloud Storage",
-    "language": "en"
+    "language": "en",
+    "description": "Doris provides two ways to load files from Google Cloud Storage:"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "ORC",
-    "language": "en"
+    "language": "en",
+    "description": "This document introduces the support for reading and writing ORC file formats in Doris. It applies to the following functionalities:"
 }
 ---
 

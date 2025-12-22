@@ -1,7 +1,8 @@
 ---
 {
     "title": "AUTO_PARTITION_NAME",
-    "language": "en"
+    "language": "en",
+    "description": "Generate datetime partition names by unit following RANGE's partition name rules"
 }
 ---
 

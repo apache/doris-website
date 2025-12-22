@@ -1,7 +1,8 @@
 ---
 {
     "title": "Cluster Action",
-    "language": "en"
+    "language": "en",
+    "description": "Used to get cluster http, mysql connection information."
 }
 ---
 

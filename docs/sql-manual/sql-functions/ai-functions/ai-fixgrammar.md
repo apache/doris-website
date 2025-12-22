@@ -1,7 +1,8 @@
 ---
 {
     "title": "AI_FIXGRAMMAR",
-    "language": "en"
+    "language": "en",
+    "description": "Used to correct grammatical errors in text."
 }
 ---
 

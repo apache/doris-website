@@ -1,7 +1,8 @@
 ---
 {
     "title": "DROP BACKEND",
-    "language": "en"
+    "language": "en",
+    "description": "This statement is used to remove BE nodes from the Doris cluster."
 }
 ---
 

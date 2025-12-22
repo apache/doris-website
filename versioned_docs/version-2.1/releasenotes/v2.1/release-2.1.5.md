@@ -1,7 +1,8 @@
 ---
 {
     "title": "Release 2.1.5",
-    "language": "en"
+    "language": "en",
+    "description": "Apache Doris version 2.1.5 was officially released on July 24, 2024. In this update,"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "CEIL",
-    "language": "en"
+    "language": "en",
+    "description": "Round up floating-point and fixed-point decimals to a specific number of places and return the rounded floating-point or fixed-point number."
 }
 ---
 

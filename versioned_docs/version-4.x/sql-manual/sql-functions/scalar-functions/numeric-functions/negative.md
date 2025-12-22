@@ -1,7 +1,8 @@
 ---
 {
     "title": "NEGATIVE",
-    "language": "en"
+    "language": "en",
+    "description": "Returns the negative value of the parameter x."
 }
 ---
 

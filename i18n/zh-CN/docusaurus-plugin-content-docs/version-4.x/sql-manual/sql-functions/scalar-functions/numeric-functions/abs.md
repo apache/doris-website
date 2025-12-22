@@ -1,7 +1,8 @@
 ---
 {
     "title": "ABS",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "返回一个值的绝对值。"
 }
 ---
 

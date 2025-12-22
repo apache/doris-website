@@ -1,7 +1,8 @@
 ---
 {
     "title": "磁盘空间管理",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "本文档主要介绍和磁盘存储空间有关的系统参数和处理策略。"
 }
 ---
 

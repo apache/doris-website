@@ -1,7 +1,8 @@
 ---
 {
     "title": "BITMAP-UNION-INT",
-    "language": "en"
+    "language": "en",
+    "description": "Counts the number of distinct values in the input expression. The return value is the same as COUNT(DISTINCT expr)."
 }
 ---
 

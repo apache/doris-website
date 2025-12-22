@@ -1,7 +1,8 @@
 ---
 {
     "title": "MinIO",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "Doris 提供两种方式从 MinIO 导入文件："
 }
 ---
 

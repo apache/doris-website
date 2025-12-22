@@ -1,7 +1,8 @@
 ---
 {
     "title": "ARRAY_UNION",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "ARRAYUNION 用于返回多个数组的并集，即合并所有数组中出现的元素，去重后组成一个新的数组。"
 }
 ---
 

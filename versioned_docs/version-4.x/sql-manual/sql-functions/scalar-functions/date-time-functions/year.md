@@ -1,7 +1,8 @@
 ---
 {
     "title": "YEAR",
-    "language": "en"
+    "language": "en",
+    "description": "The YEAR function extracts the year part from a specified date or time value, returning the year as an integer."
 }
 ---
 

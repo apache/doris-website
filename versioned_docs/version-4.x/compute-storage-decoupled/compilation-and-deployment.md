@@ -1,7 +1,8 @@
 ---
 {
     "title": "Compilation and Deployment",
-    "language": "en"
+    "language": "en",
+    "description": "This document details the compilation and deployment process of Doris in a decoupled storage-compute model,"
 }
 ---
 

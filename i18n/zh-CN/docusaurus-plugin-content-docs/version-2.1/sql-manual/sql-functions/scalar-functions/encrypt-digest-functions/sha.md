@@ -1,7 +1,8 @@
 ---
 {
-"title": "SHA1",
-"language": "zh-CN"
+    "title": "SHA1",
+    "language": "zh-CN",
+    "description": "使用 SHA1 算法对信息进行摘要处理。"
 }
 ---
 

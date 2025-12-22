@@ -1,7 +1,8 @@
 ---
 {
     "title": "table_properties",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "用于查看表（包括内表和外表）的属性信息。"
 }
 ---
 

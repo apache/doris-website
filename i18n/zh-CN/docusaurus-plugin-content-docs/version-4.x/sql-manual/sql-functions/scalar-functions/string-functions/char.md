@@ -1,7 +1,8 @@
 ---
 {
     "title": "CHAR",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "CHAR 函数将每个参数解释为整数，并返回一个由这些整数代码值组成字符的字符串。"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "QUANTILE_STATE_EMPTY",
-    "language": "en"
+    "language": "en",
+    "description": "Return an empty quantilestate type column."
 }
 ---
 

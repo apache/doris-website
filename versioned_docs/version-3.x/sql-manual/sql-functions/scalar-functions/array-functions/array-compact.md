@@ -1,7 +1,8 @@
 ---
 {
     "title": "ARRAY_COMPACT",
-    "language": "en"
+    "language": "en",
+    "description": "Removes consecutive duplicate elements from an array. The order of result values is determined by the order in the source array."
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "ST_CONTAINS",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "判断几何图形 shape1 是否完全能够包含几何图形 shape2"
 }
 ---
 

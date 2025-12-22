@@ -1,7 +1,8 @@
 ---
 {
     "title": "CURRENT_USER",
-    "language": "en"
+    "language": "en",
+    "description": "Get the current username and its IP rule whitelist."
 }
 ---
 

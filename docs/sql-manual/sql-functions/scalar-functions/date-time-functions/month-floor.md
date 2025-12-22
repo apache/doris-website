@@ -1,7 +1,8 @@
 ---
 {
     "title": "MONTH_FLOOR",
-    "language": "en"
+    "language": "en",
+    "description": "The monthfloor function rounds the input datetime value down to the nearest specified month interval. If origin is specified,"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "DAYNAME",
-    "language": "en"
+    "language": "en",
+    "description": "Calculates the name of the day corresponding to the given date expression."
 }
 ---
 

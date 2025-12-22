@@ -1,7 +1,8 @@
 ---
 {
     "title": "SECOND",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "函数用于返回指定日期时间值中的秒数部分。秒数的范围是 0 到 59。"
 }
 ---
 

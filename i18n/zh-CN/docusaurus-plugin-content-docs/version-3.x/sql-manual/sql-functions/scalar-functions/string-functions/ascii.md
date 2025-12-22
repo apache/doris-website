@@ -1,7 +1,8 @@
 ---
 {
     "title": "ASCII",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "返回字符串第一个字符对应的 ascii 码"
 }
 ---
 

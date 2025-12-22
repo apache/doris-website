@@ -1,7 +1,8 @@
 ---
 {
     "title": "Oceanbase JDBC Catalog",
-    "language": "en"
+    "language": "en",
+    "description": "Doris JDBC Catalog supports connecting to OceanBase database through the standard JDBC interface."
 }
 ---
 

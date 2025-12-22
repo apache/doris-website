@@ -1,7 +1,8 @@
 ---
 {
     "title": "Session Action",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "Session Action 用于获取当前的会话信息。"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
-"title": "MD5",
-"language": "en"
+    "title": "MD5",
+    "language": "en",
+    "description": "Calculates an MD5 128-bit checksum for the string or binary."
 }
 ---
 

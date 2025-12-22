@@ -1,7 +1,8 @@
 ---
 {
     "title": "YEARS_SUB",
-    "language": "en"
+    "language": "en",
+    "description": "Returns a new datetime value that is the result of subtracting a specified number of years from the input datetime."
 }
 ---
 

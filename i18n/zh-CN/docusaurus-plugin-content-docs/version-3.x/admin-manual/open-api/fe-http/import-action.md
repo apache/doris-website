@@ -1,7 +1,8 @@
 ---
 {
     "title": "Import Action",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "查看格式为 CSV 或 PARQUET 的文件内容。"
 }
 ---
 

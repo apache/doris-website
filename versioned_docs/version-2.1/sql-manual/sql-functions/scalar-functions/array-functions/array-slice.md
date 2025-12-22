@@ -1,7 +1,8 @@
 ---
 {
     "title": "ARRAY_SLICE",
-    "language": "en"
+    "language": "en",
+    "description": "Specify the starting position and length to extract a portion of elements from an array to form a new sub-array"
 }
 ---
 

@@ -1,4 +1,10 @@
-# Parallelism Tuning
+---
+{
+    "title": "Parallelism Tuning",
+    "language": "en",
+    "description": "Doris queries are executed in an MPP (Massively Parallel Processing) framework, where each query is executed in parallel across multiple BEs (Backend Executors)."
+}
+---
 
 ## Overview
 

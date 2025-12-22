@@ -1,7 +1,8 @@
 ---
 {
     "title": "HLL_TO_BASE64",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "将一个 HLL 类型转换为一个 base64 编码的字符串。"
 }
 ---
 

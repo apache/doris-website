@@ -1,7 +1,8 @@
 ---
 {
     "title": "ST_ANGLE_SPHERE",
-    "language": "en"
+    "language": "en",
+    "description": "Calculates the central angle (in degrees) between two points on the Earth's surface. The input parameters are, in order, the longitude of point X,"
 }
 ---
 

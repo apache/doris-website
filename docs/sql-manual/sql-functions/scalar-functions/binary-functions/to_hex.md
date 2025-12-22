@@ -1,7 +1,8 @@
 ---
 {
     "title": "TO_HEX",
-    "language": "en"
+    "language": "en",
+    "description": "Convert the input string into the corresponding byte sequence in hexadecimal."
 }
 ---
 

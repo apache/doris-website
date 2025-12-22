@@ -1,7 +1,8 @@
 ---
 {
     "title": "ARRAY_PUSHBACK",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "将 value 添加到数组的尾部。"
 }
 ---
 

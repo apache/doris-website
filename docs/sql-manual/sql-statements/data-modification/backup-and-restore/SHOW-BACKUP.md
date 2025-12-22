@@ -1,7 +1,8 @@
 ---
 {
     "title": "SHOW BACKUP",
-    "language": "en"
+    "language": "en",
+    "description": "This statement is used to view BACKUP tasks"
 }
 ---
 

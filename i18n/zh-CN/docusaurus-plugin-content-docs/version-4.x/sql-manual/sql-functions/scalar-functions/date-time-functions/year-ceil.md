@@ -1,7 +1,8 @@
 ---
 {
     "title": "YEAR_CEIL",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "YEARCEIL 函数用于将输入的日期时间值向上舍入到最接近的指定年间隔的起始时间，间隔单位为年。若指定了起始参考点（origin），则以该点为基准计算间隔；否则默认以 0000-01-01 00:00:00 为参考点。"
 }
 ---
 

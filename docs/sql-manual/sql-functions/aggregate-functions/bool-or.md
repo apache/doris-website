@@ -1,7 +1,8 @@
 ---
 {
-"title": "BOOL_OR",
-"language": "en"
+    "title": "BOOL_OR",
+    "language": "en",
+    "description": "Performs a logical OR aggregation over all non-NULL values of the expression."
 }
 ---
 

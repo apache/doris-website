@@ -1,7 +1,8 @@
 ---
 {
     "title": "JSON_SEARCH",
-    "language": "en"
+    "language": "en",
+    "description": "The JSONSEARCH function is used to search for specified values in a JSON document. If the value is found, it returns the path to the value."
 }
 ---
 

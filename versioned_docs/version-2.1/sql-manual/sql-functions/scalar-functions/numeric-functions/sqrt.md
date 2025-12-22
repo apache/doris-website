@@ -1,7 +1,8 @@
 ---
 {
     "title": "SQRT",
-    "language": "en"
+    "language": "en",
+    "description": "Returns the square root of a value, where the input value must be greater than or equal to 0."
 }
 ---
 

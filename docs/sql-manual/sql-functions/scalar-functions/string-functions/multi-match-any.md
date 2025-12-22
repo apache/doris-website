@@ -1,7 +1,8 @@
 ---
 {
     "title": "MULTI_MATCH_ANY",
-    "language": "en"
+    "language": "en",
+    "description": "Checks whether the string haystack matches the regular expressions patterns in re2 syntax."
 }
 ---
 

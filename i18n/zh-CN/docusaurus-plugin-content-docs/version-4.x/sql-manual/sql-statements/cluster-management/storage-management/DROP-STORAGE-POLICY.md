@@ -3,7 +3,8 @@
     "title": "DROP STORAGE POLICY",
     "language": "zh-CN",
     "toc_min_heading_level": 2,
-    "toc_max_heading_level": 4
+    "toc_max_heading_level": 4,
+    "description": "删除存储策略。存储策略的详细说明，请参阅“存储策略”章节。"
 }
 ---
 

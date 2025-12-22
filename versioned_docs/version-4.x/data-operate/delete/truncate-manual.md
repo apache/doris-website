@@ -1,7 +1,8 @@
 ---
 {
     "title": "Deleting Data with TRUNCATE Command",
-    "language": "en"
+    "language": "en",
+    "description": "Use this statement to clear data from a specified table and its partitions."
 }
 ---
 

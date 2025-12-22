@@ -1,7 +1,8 @@
 ---
 {
     "title": "Upload Action",
-    "language": "en"
+    "language": "en",
+    "description": "Upload Action currently mainly serves the front-end page of FE, and is used for users to load small test files."
 }
 ---
 

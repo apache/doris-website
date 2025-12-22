@@ -1,7 +1,8 @@
 ---
 {
     "title": "ASCII",
-    "language": "en"
+    "language": "en",
+    "description": "Returns the ASCII code value of the first character in a string. This function only processes the first character of the string,"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "RANDOM",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "返回 0-1 之间的随机数，或者根据参数返回需要的随机数。"
 }
 ---
 

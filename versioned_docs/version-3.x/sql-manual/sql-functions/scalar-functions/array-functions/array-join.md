@@ -1,7 +1,8 @@
 ---
 {
     "title": "ARRAY_JOIN",
-    "language": "en"
+    "language": "en",
+    "description": "Combine all elements in the array into a new string based on the separator (sep) and the string to replace NULL values (nullreplace)."
 }
 ---
 

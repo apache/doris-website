@@ -1,7 +1,8 @@
 ---
 {
     "title": "ARRAY_POSITION",
-    "language": "en"
+    "language": "en",
+    "description": "Returns a position/index of first occurrence of the value in the given array."
 }
 ---
 

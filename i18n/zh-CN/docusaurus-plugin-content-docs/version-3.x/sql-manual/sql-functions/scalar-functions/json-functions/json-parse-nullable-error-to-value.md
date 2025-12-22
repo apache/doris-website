@@ -1,7 +1,8 @@
 ---
 {
     "title": "JSON_PARSE_NULLABLE_ERROR_TO_VALUE",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "JSONPARSENULLABLEERRORTOVALUE 函数用于解析一个 JSON 字符串为有效的 JSON 对象。如果输入的 JSON 字符串无效，它将返回用户指定的默认值，而不是抛出错误。如果输入为 NULL，则返回默认值。"
 }
 ---
 

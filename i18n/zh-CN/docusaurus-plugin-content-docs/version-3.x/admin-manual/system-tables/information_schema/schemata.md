@@ -1,7 +1,8 @@
 ---
 {
     "title": "schemata",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "查看 Database 的相关信息"
 }
 ---
 

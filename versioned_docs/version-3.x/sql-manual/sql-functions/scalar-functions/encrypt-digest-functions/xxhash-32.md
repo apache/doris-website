@@ -1,7 +1,8 @@
 ---
 {
     "title": "XXHASH_32",
-    "language": "en"
+    "language": "en",
+    "description": "Calculate the 32-bit xxhash value of the input string"
 }
 ---
 

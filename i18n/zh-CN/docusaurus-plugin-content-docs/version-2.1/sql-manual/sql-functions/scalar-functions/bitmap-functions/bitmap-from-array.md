@@ -1,7 +1,8 @@
 ---
 {
     "title": "BITMAP_FROM_ARRAY",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "将一个 TINYINT/SMALLINT/INT/BIGINT 类型的数组转化为一个 BITMAP，当输入字段不合法时，结果返回 NULL"
 }
 ---
 

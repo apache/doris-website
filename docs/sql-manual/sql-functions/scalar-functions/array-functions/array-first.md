@@ -1,7 +1,8 @@
 ---
 {
     "title": "ARRAY_FIRST",
-    "language": "en"
+    "language": "en",
+    "description": "Returns the first element in the array that satisfies the lambda expression condition."
 }
 ---
 

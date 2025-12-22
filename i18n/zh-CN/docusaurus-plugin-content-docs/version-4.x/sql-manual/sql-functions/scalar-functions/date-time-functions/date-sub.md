@@ -1,7 +1,8 @@
 ---
 {
     "title": "DATE_SUB",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "DATESUB 函数用于从指定的日期或时间值中减去指定的时间间隔，返回计算后的日期或时间结果。该函数支持对 DATE（仅日期）和 DATETIME（日期和时间）类型进行操作，时间间隔通过数值和单位共同定义。"
 }
 ---
 

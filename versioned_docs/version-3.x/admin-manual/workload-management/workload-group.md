@@ -1,7 +1,8 @@
 ---
 {
     "title": "Workload Group",
-    "language": "en"
+    "language": "en",
+    "description": "Workload Group is an in-process mechanism for isolating workloads. It achieves resource isolation by finely partitioning or limiting resources (CPU,"
 }
 ---
 

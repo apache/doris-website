@@ -1,7 +1,8 @@
 ---
 {
     "title": "CSC",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "返回 x 的余割值，x 为弧度值，仅支持输入输出为double。输入null值时会返回null。"
 }
 ---
 

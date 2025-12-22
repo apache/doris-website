@@ -1,7 +1,8 @@
 ---
 {
     "title": "Cast to MAP Types",
-    "language": "en"
+    "language": "en",
+    "description": "MAP type is used to store and process key-value pair data, which can contain various basic types of keys and values,"
 }
 ---
 

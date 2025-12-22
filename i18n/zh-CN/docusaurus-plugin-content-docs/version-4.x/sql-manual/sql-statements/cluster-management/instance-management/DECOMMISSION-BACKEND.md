@@ -1,7 +1,8 @@
 ---
 {
     "title": "DECOMMISSION BACKEND",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "该语句用于将 BE 节点安全地从集群中下线。该操作为异步操作。"
 }
 ---
 

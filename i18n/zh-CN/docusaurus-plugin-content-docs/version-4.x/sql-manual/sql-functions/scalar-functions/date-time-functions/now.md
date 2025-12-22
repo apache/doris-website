@@ -1,7 +1,8 @@
 ---
 {
     "title": "NOW",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "NOW 函数用于获取当前系统的日期时间，返回值为 DATETIME 类型。支持通过可选参数指定小数秒的精度，以调整返回结果中微秒部分的位数。"
 }
 ---
 
