@@ -1,7 +1,8 @@
 ---
 {
     "title": "column_statistics",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "列统计信息"
 }
 ---
 

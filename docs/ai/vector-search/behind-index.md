@@ -2,7 +2,7 @@
 {
     "title": "Optimizations Behind Performance",
     "language": "en",
-    "description": "<!-- Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements."
+    "description": "Early versions of Apache Doris focused on online analytical processing (OLAP),"
 }
 ---
 

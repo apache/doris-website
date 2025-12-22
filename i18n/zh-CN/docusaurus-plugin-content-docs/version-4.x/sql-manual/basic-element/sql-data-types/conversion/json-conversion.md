@@ -1,7 +1,8 @@
 ---
 {
     "title": "转换为/从 JSON 类型",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "Doris 中的 JSON 类型采用二进制编码存储，而不是文本存储，提供更高效的处理和存储方式。JSON 类型与 Doris 内部类型存在一一对应的关系。"
 }
 ---
 

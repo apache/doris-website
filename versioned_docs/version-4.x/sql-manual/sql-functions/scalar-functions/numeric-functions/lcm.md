@@ -2,7 +2,7 @@
 {
     "title": "LCM",
     "language": "en",
-    "description": "<!-- Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements."
+    "description": "Calculates the least common multiple (LCM) of two integers. Note that the result may overflow."
 }
 ---
 

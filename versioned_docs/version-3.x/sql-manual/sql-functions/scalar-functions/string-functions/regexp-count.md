@@ -2,7 +2,7 @@
 {
     "title": "REGEXP_COUNT",
     "language": "en",
-    "description": "<!-- Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements."
+    "description": "This is a function to count the number of characters in a string that match a given regular expression pattern."
 }
 ---
 

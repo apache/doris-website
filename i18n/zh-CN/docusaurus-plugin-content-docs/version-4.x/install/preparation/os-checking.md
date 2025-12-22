@@ -1,7 +1,8 @@
 ---
 {
-"title": "操作系统检查",
-"language": "zh-CN"
+    "title": "操作系统检查",
+    "language": "zh-CN",
+    "description": "在部署 Doris 时，需要对以下操作系统项进行检查："
 }
 ---
 

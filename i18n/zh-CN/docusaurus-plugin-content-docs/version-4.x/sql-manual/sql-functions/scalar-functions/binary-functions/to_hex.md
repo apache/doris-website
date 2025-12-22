@@ -1,7 +1,8 @@
 ---
 {
     "title": "TO_HEX",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "将输入的字符串按十六进制转换成对应的字节序列"
 }
 ---
 

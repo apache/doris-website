@@ -2,7 +2,7 @@
 {
     "title": "AI Overview",
     "language": "en",
-    "description": "<!-- Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements."
+    "description": "As AI technologies continue to advance at an unprecedented pace, data infrastructure has become the cornerstone of modern AI applications."
 }
 ---
 

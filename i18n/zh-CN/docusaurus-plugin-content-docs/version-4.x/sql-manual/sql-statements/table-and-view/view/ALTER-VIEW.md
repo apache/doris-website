@@ -1,7 +1,8 @@
 ---
 {
     "title": "ALTER VIEW",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "该语句用于修改一个逻辑视图的定义。"
 }
 ---
 

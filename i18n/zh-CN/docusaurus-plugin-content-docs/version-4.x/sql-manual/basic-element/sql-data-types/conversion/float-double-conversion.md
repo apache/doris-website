@@ -1,7 +1,8 @@
 ---
 {
     "title": "转换为 FLOAT/DOUBLE",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": ":::caution 行为变更 自 4.0 起，溢出时结果不再是NULL，而是+/-Infinity。 :::"
 }
 ---
 

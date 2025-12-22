@@ -2,7 +2,7 @@
 {
     "title": "ANN Index Management",
     "language": "en",
-    "description": "<!-- Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements."
+    "description": "Approximate Nearest Neighbor (ANN) indexes in Apache Doris enable efficient vector similarity search for high-dimensional data. Since from Doris 4.x,"
 }
 ---
 

@@ -2,7 +2,7 @@
 {
     "title": "Reordering Join With Leading Hint",
     "language": "en",
-    "description": "<!-- Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements."
+    "description": "The Leading Hint feature allows users to manually specify the join order of tables in a query,"
 }
 ---
 

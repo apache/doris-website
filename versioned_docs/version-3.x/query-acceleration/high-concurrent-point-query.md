@@ -2,7 +2,7 @@
 {
     "title": "High-Concurrency Point Query Optimization",
     "language": "en",
-    "description": "<!-- Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements."
+    "description": ":::tip Tips This feature is supported since the Apache Doris 2.0 version :::"
 }
 ---
 

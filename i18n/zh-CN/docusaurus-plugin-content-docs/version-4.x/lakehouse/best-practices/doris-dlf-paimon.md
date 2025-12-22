@@ -1,9 +1,9 @@
 ---
 {
     "title": "集成阿里云 DLF Rest Catalog",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "阿里云数据湖构建 Data Lake Formation，DLF 作为云原生数据湖架构核心组成部分，帮助用户快速地构建云原生数据湖架构。数据湖构建提供湖上元数据统一管理、企业级权限控制，并无缝对接多种计算引擎，打破数据孤岛，洞察业务价值。"
 }
-
 ---
 
 阿里云数据湖构建 [Data Lake Formation，DLF](https://cn.aliyun.com/product/bigdata/dlf) 作为云原生数据湖架构核心组成部分，帮助用户快速地构建云原生数据湖架构。数据湖构建提供湖上元数据统一管理、企业级权限控制，并无缝对接多种计算引擎，打破数据孤岛，洞察业务价值。

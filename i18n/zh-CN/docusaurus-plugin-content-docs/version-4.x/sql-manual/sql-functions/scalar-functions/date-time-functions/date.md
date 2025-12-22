@@ -1,9 +1,11 @@
 ---
 {
     "title": "DATE",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "DATE 函数用于从日期时间值(包含日期和时间)中提取出纯日期部分，忽略时间信息。该函数可将 DATETIME 类型转换为 DATE 类型，仅保留年、月、日信息。"
 }
 ---
+
 ## 描述
 
 DATE 函数用于从日期时间值(包含日期和时间)中提取出纯日期部分，忽略时间信息。该函数可将 DATETIME 类型转换为 DATE 类型，仅保留年、月、日信息。

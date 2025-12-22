@@ -1,7 +1,8 @@
 ---
 {
     "title": "TO_IPV6",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "输入 IPv6 地址的字符串形式，并返回 IPv6 类型的值。该值的二进制形式等于 ipv6stringtonum 函数返回值的二进制形式。"
 }
 ---
 

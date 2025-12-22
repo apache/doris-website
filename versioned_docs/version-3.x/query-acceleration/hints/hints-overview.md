@@ -2,7 +2,7 @@
 {
     "title": "Overview of Hints",
     "language": "en",
-    "description": "<!-- Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements."
+    "description": "Database Hints are query optimization techniques used to guide the database query optimizer on how to generate a specific plan. By providing Hints,"
 }
 ---
 

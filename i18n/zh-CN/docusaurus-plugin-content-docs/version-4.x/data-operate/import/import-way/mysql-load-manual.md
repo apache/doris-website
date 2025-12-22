@@ -1,7 +1,8 @@
 ---
 {
     "title": "MySQL Load",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "Doris 兼容 MySQL 协议，可以使用 MySQL 标准的 LOAD DATA 语法导入本地文件。MySQL Load 是一种同步导入方式，执行导入后即返回导入结果。可以通过 LOAD DATA 语句的返回结果判断导入是否成功。一般来说，"
 }
 ---
 

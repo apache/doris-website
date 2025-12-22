@@ -1,7 +1,8 @@
 ---
 {
     "title": "ASINH",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "返回x的反双曲正弦值。"
 }
 ---
 

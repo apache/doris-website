@@ -2,7 +2,7 @@
 {
     "title": "Trace",
     "language": "en",
-    "description": "<!-- Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements."
+    "description": "This article introduces the storage and analysis practices of Trace, one of the core observability data."
 }
 ---
 

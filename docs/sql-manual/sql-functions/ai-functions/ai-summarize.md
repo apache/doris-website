@@ -2,7 +2,7 @@
 {
     "title": "AI_SUMMARIZE",
     "language": "en",
-    "description": "<!-- Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements."
+    "description": "Used to generate a concise summary of the text."
 }
 ---
 

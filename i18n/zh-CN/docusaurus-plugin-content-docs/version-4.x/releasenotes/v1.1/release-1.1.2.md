@@ -1,7 +1,8 @@
 ---
 {
     "title": "Release 1.1.2",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "在 Apache Doris 1.1.2 版本中，我们引入了新的 Memtracker、极大程度上避免 OOM 类问题的发生，提升了向量化执行引擎在多数查询场景的性能表现，修复了诸多导致 BE 和 FE 发生异常的问题，优化了在湖仓联邦查询场景的部分体验问题并提升访问外部数据的性能。"
 }
 ---
 

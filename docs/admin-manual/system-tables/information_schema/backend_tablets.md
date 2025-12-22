@@ -2,7 +2,7 @@
 {
     "title": "backend_tablets",
     "language": "en",
-    "description": "<!-- Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements."
+    "description": "View the information of talbet on Backends.(added by doris 3.0.7)"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
-"title": "JSON_CONTAINS",
-"language": "zh-CN"
+    "title": "JSON_CONTAINS",
+    "language": "zh-CN",
+    "description": "用于判断一个 JSON 文档是否包含指定的 JSON 元素。如果指定的元素存在于 JSON 文档中，则返回 1，否则返回 0。如果 JSON 文档或查询的元素无效，则返回 NULL。"
 }
 ---
 

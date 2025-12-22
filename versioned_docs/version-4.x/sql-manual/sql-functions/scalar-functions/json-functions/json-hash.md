@@ -2,7 +2,7 @@
 {
     "title": "JSON_HASH",
     "language": "en",
-    "description": "<!-- Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements."
+    "description": "JSONHASH calculates a hash value for a JSON object. This function accepts a JSON type parameter and returns a BIGINT hash value."
 }
 ---
 

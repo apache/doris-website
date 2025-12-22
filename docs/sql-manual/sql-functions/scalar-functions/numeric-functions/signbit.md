@@ -2,7 +2,7 @@
 {
     "title": "SIGNBIT",
     "language": "en",
-    "description": "<!-- Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements."
+    "description": "Determine whether the sign bit of the given floating-point number is set."
 }
 ---
 

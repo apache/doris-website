@@ -2,7 +2,7 @@
 {
     "title": "EVEN",
     "language": "en",
-    "description": "<!-- Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements."
+    "description": "Round to next even number by rounding away from zero."
 }
 ---
 

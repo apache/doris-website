@@ -1,7 +1,8 @@
 ---
 {
-  "title": "部署存算分离 Doris 集群",
-  "language": "zh-CN"
+    "title": "部署存算分离 Doris 集群",
+    "language": "zh-CN",
+    "description": "在 Kubernetes 上部署可用存算分离集群分为 4 步："
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "ST_CONTAINS",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "判断一个几何图形（shape1）是否完全包含另一个几何图形（shape2）。若 shape1 包含 shape2 的所有点，则返回 1；否则返回 0。"
 }
 ---
 

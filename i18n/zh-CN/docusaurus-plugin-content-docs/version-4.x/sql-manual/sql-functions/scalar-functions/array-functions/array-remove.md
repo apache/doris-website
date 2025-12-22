@@ -1,7 +1,8 @@
 ---
 {
     "title": "ARRAY_REMOVE",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "从数组中移除与给定值相等的所有元素，保留其余元素的相对顺序。"
 }
 ---
 

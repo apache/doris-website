@@ -2,7 +2,7 @@
 {
     "title": "Control CBO Rules With Hint",
     "language": "en",
-    "description": "<!-- Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements."
+    "description": "The query optimizer applies a series of rules when generating execution plans."
 }
 ---
 

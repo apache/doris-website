@@ -1,7 +1,8 @@
 ---
 {
     "title": "日志存储与分析",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "在部署集群之前，首先应评估所需服务器硬件资源，包括以下几个关键步骤："
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "Elasticsearch Catalog",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "Elasticsearch Catalog 除了支持自动映射 ES 元数据外，还可以利用 Doris 的分布式查询规划能力和 ES（Elasticsearch）的全文检索能力相结合，提供更完善的 OLAP 分析场景解决方案："
 }
 ---
 

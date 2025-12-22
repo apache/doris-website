@@ -1,7 +1,8 @@
 ---
 {
     "title": "PERCENTILE_APPROX_WEIGHTED",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "PERCENTILEAPPROXWEIGHTED 函数用于计算带权重的近似百分位数，主要用于需要考虑数值重要性的场景。它是 PERCENTILEAPPROX 的加权版本，允许为每个值指定一个权重。"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
-  "title": "Hive Metastore",
-  "language": "zh-CN"
+    "title": "Hive Metastore",
+    "language": "zh-CN",
+    "description": "本文档用于介绍通过 CREATE CATALOG 语句连接并访问 Hive MetaStore 服务时支持的所有参数。"
 }
 ---
 

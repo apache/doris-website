@@ -2,7 +2,7 @@
 {
     "title": "GCD",
     "language": "en",
-    "description": "<!-- Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements."
+    "description": "Calculates the greatest common divisor (GCD) of two integers."
 }
 ---
 

@@ -2,7 +2,7 @@
 {
     "title": "AI_SENTIMENT",
     "language": "en",
-    "description": "<!-- Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements."
+    "description": "Used to analyze the sentiment of text."
 }
 ---
 

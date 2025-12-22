@@ -2,7 +2,7 @@
 {
     "title": "Leading Hint",
     "language": "en",
-    "description": "<!-- Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements."
+    "description": "Leading Hint is a powerful query optimization technique that allows users to guide the Doris optimizer to determine the table join order in the query "
 }
 ---
 

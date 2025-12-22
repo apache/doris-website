@@ -2,7 +2,7 @@
 {
     "title": "AI_CLASSIFY",
     "language": "en",
-    "description": "<!-- Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements."
+    "description": "Used to classify text into a specified set of labels."
 }
 ---
 

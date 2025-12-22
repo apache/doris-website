@@ -1,7 +1,8 @@
 ---
 {
-"title": "BITMAP_UNION_COUNT",
-"language": "zh-CN"
+    "title": "BITMAP_UNION_COUNT",
+    "language": "zh-CN",
+    "description": "计算输入 Bitmap 的并集，返回其基数"
 }
 ---
 

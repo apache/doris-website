@@ -1,7 +1,8 @@
 ---
 {
     "title": "Release 4.0.1",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "Apache Doris 4.0.1 版本发布说明，包含行为变更、新增 JSON 与二进制相关函数、AI 搜索能力与倒排索引优化、Lakehouse 读写改进，以及查询执行和存储层多项缺陷修复。"
 }
 ---
 

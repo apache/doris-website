@@ -2,7 +2,7 @@
 {
     "title": "AI_MASK",
     "language": "en",
-    "description": "<!-- Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements."
+    "description": "Used to mask sensitive information in text related to specified labels."
 }
 ---
 

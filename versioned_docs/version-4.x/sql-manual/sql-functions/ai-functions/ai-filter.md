@@ -2,7 +2,7 @@
 {
     "title": "AI_FILTER",
     "language": "en",
-    "description": "<!-- Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements."
+    "description": "Filters text based on given conditions."
 }
 ---
 

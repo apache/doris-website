@@ -1,7 +1,8 @@
 ---
 {
     "title": "GEO",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": ":::info 本文档所述的 GEO 类型，在 Doris 中并非一种实际的数据类型，而是基于 String/Varchar 类型存储的特定格式数据及配套函数用法。 :::"
 }
 ---
 

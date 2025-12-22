@@ -1,7 +1,8 @@
 ---
 {
     "title": "Query Profile Action",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "Query Profile Action 用于获取 Query 的 profile"
 }
 ---
 

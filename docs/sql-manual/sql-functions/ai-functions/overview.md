@@ -2,7 +2,7 @@
 {
     "title": "Overview",
     "language": "en",
-    "description": "<!-- Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements."
+    "description": "AI Function is a built-in function provided by Doris based on Artificial Intelligence (AI) capabilities."
 }
 ---
 

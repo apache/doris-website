@@ -2,7 +2,7 @@
 {
     "title": "Performance Testing and Analysis",
     "language": "en",
-    "description": "<!-- Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements."
+    "description": "This document introduces the query and ingestion performance of Doris ANN Index. All benchmarks are conducted using VectorDBBench."
 }
 ---
 

@@ -2,7 +2,7 @@
 {
     "title": "AI_GENERATE",
     "language": "en",
-    "description": "<!-- Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements."
+    "description": "Generates a response based on the input prompt text."
 }
 ---
 

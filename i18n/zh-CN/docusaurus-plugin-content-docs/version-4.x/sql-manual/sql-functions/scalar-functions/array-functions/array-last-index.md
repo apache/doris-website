@@ -1,7 +1,8 @@
 ---
 {
     "title": "ARRAY_LAST_INDEX",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "<version since=\"2.0.0\">"
 }
 ---
 

@@ -2,7 +2,7 @@
 {
     "title": "Adjusting Join Shuffle Mode with Hint",
     "language": "en",
-    "description": "<!-- Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements."
+    "description": "Doris supports the use of hints to adjust the type of data shuffle in Join operations, thereby optimizing query performance."
 }
 ---
 

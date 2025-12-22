@@ -85,15 +85,45 @@ function cleanMarkdown(text) {
  * - 识别并跳过代码块（``` 开始到 ``` 结束）
  * - 返回第一个连续的非控制行段落（直到空行结束）
  */
-function extractFirstRealParagraph(body) {
+function extractFirstRealParagraph(body,type) {
   const lines = body.split(/\r?\n/);
   let inCodeBlock = false;
   let paragraphLines = [];
+  let inHtmlComment = false;
   let collecting = false;
 
   for (let i = 0; i < lines.length; i++) {
     const raw = lines[i];
     const line = raw.replace(/\r$/, '');
+
+        // 检查是否进入或退出HTML注释
+        if (!inCodeBlock) {
+          // 检查是否开始HTML注释
+          if (/<!--/.test(line) && !/-->/.test(line)) {
+            inHtmlComment = true;
+            // 如果正在收集，则结束段落
+            if (collecting) break;
+            continue;
+          }
+          
+          // 检查是否在HTML注释中结束
+          if (inHtmlComment && /-->/.test(line)) {
+            inHtmlComment = false;
+            continue;
+          }
+          
+          // 如果当前行完全在HTML注释中
+          if (/^\s*<!--.*-->\s*$/.test(line)) {
+            // 如果正在收集，则结束段落
+            if (collecting) break;
+            else continue;
+          }
+        }
+        
+        // 如果当前在HTML注释中，跳过该行
+        if (inHtmlComment) continue;
+    
+    
 
     // 代码块切换
     if (/^```/.test(line)) {
@@ -119,6 +149,7 @@ function extractFirstRealParagraph(body) {
       /^\s*\|.*\|/.test(line) ||          // 表格行
       /^\s*>/.test(line) ||               // 引用行
       /^\s*[-*_]{3,}\s*$/.test(line) ||   // hr
+      (/^\s*import\s+/.test(line) && type === 'mdx') || 
       /^[\s`]*`[^`\n]*`[\s`]*$/.test(line)      // 代码行 `xxxx` (以反引号包裹的行内代码)
     ) {
       // 如果之前已经开始收集，则遇到这些结构视为段落边界并结束
@@ -266,9 +297,9 @@ function processFile(filePath) {
     console.log(`ℹ️ 已有 description: ${filePath}`);
     return;
   }
-
+  const type = filePath.endsWith('.mdx') ? 'mdx' : filePath.endsWith('.md') ? 'md' : '';
   // 提取正文第一个真实段落
-  const firstParaRaw = extractFirstRealParagraph(body);
+  const firstParaRaw = extractFirstRealParagraph(body,type);
   const cleaned = cleanMarkdown(firstParaRaw);
   const descriptionCandidate = truncateSmart(cleaned, 150);
 

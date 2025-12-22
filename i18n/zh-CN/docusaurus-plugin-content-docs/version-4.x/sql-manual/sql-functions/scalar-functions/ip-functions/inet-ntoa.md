@@ -1,7 +1,8 @@
 ---
 {
     "title": "IPV4_NUM_TO_STRING",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "别名 ipv4numtostring。"
 }
 ---
 

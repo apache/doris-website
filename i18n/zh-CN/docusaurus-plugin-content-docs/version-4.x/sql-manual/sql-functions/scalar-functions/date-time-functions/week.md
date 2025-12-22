@@ -1,7 +1,8 @@
 ---
 {
     "title": "WEEK",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "WEEK 函数用于返回指定日期对应的星期数，默认 Mode 为 0，支持通过 mode 参数自定义星期计算规则（如星期的第一天是周日还是周一、星期数的范围、第一个星期的判定标准等）。 参数 mode 的作用参见下面的表格："
 }
 ---
 

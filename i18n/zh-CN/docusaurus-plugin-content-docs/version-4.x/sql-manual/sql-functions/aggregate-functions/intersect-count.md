@@ -1,7 +1,8 @@
 ---
 {
-"title": "INTERSECT_COUNT",
-"language": "zh-CN"
+    "title": "INTERSECT_COUNT",
+    "language": "zh-CN",
+    "description": "聚合函数，求 bitmap 交集大小的函数。 第一个参数是 Bitmap 列，第二个参数是用来过滤的维度列，第三个参数是变长参数，含义是过滤维度列的不同取值。 计算 bitmapcolumn 中符合 columntofilter 在 filtervalues 之内的元素的交集数量，"
 }
 ---
 

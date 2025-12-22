@@ -2,7 +2,7 @@
 {
     "title": "AI Function",
     "language": "en",
-    "description": "<!-- Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements."
+    "description": "In today's data-intensive world, we are always seeking more efficient and intelligent tools for data analysis."
 }
 ---
 

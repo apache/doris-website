@@ -1,7 +1,8 @@
 ---
 {
     "title": "ST_GEOMETRYFROMWKB",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "将一个标准图形 WKB（Well-known binary）转化为对应的内存的几何形式"
 }
 ---
 

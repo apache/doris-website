@@ -1,7 +1,8 @@
 ---
 {
     "title": "TO_JSON",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "TOJSON 函数将 Doris 内部数据类型转换为 JSONB 类型。该函数允许将兼容的 Doris 数据类型转换为 JSON 表示形式，并且在转换过程中不会丢失精度。"
 }
 ---
 

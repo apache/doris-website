@@ -2,7 +2,7 @@
 {
     "title": "EMBED",
     "language": "en",
-    "description": "<!-- Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements."
+    "description": "Generates a semantic embedding vector based on the input text, representing the semantic information of the text."
 }
 ---
 

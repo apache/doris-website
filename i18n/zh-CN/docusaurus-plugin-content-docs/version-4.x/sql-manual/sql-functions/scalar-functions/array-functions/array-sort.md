@@ -1,7 +1,8 @@
 ---
 {
     "title": "ARRAY_SORT",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "若不指定lambda函数，则对数组元素按升序排序。否则按照lambda函数进行排序。"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
-"title": "CANCEL BACKUP",
-"language": "zh-CN"
+    "title": "CANCEL BACKUP",
+    "language": "zh-CN",
+    "description": "该语句用于取消一个正在进行的 BACKUP 任务。"
 }
 ---
 

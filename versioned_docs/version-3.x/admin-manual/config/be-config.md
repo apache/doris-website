@@ -4,7 +4,7 @@
     "language": "en",
     "toc_min_heading_level": 2,
     "toc_max_heading_level": 4,
-    "description": "<!-- Please sort the configuration alphabetically -->"
+    "description": "This document mainly introduces the relevant configuration items of BE."
 }
 ---
 

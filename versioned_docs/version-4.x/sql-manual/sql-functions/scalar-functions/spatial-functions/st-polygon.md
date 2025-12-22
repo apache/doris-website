@@ -2,7 +2,7 @@
 {
     "title": "ST_POLYGON",
     "language": "en",
-    "description": "<!-- Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements."
+    "description": "Converts a string in WKT (Well-Known Text) format into an in-memory Polygon geometric object."
 }
 ---
 

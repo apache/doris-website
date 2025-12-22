@@ -2,7 +2,7 @@
 {
     "title": "ST_GEOMETRYFROMWKB",
     "language": "en",
-    "description": "<!-- Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements."
+    "description": "Converts a standard figure WKB (Well-known binary) to the corresponding memory geometry"
 }
 ---
 

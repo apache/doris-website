@@ -2,7 +2,7 @@
 {
     "title": "AI_TRANSLATE",
     "language": "en",
-    "description": "<!-- Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements."
+    "description": "Used to translate text into a specified language."
 }
 ---
 

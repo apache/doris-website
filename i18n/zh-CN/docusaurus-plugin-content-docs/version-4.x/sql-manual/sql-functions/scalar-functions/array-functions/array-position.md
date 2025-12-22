@@ -1,7 +1,8 @@
 ---
 {
     "title": "ARRAY_POSITION",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "<version since=\"2.0.0\">"
 }
 ---
 
