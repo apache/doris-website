@@ -1,7 +1,8 @@
 ---
 {
-"title": "COLLECT_SET",
-"language": "zh-CN"
+    "title": "COLLECT_SET",
+    "language": "zh-CN",
+    "description": "聚合函数，聚合指定列的所有唯一值，去除重复的元素，并返回一个集合类型的结果。"
 }
 ---
 

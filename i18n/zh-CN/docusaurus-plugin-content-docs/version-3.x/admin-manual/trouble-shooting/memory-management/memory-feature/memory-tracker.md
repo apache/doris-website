@@ -1,7 +1,8 @@
 ---
 {
     "title": "内存跟踪器",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "Doris BE 使用内存跟踪器（Memory Tracker）记录进程内存使用，包括查询、导入、Compaction、Schema Change 等任务生命周期中使用的内存，以及各项缓存。支持 Web 页面实时查看，并在内存相关报错时打印到 BE 日志中，用于内存分析和排查内存问题。"
 }
 ---
 

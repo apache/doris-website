@@ -1,7 +1,8 @@
 ---
 {
     "title": "ARRAY_RANGE",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": ":::tip quarter 支持从 3.0.8 和 3.1.0 版本开始。 :::"
 }
 ---
 

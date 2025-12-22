@@ -1,9 +1,9 @@
 ---
 {
     "title": "SHOW ALTER TABLE",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "该语句用于展示当前正在进行的各类修改任务的执行情况"
 }
-
 ---
 
 ## 描述

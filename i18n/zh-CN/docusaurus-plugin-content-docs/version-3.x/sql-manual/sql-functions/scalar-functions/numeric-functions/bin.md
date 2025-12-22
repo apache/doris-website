@@ -1,7 +1,8 @@
 ---
 {
     "title": "BIN",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "将十进制数字转换为二进制文本。"
 }
 ---
 

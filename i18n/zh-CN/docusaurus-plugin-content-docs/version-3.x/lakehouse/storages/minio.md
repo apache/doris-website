@@ -1,7 +1,8 @@
 ---
 {
-  "title": "MinIO",
-  "language": "zh-CN"
+    "title": "MinIO",
+    "language": "zh-CN",
+    "description": "本文档介绍访问 MinIO 所需的参数，这些参数适用于以下场景："
 }
 ---
 

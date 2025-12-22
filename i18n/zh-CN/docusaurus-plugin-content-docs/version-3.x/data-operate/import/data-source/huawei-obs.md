@@ -1,7 +1,8 @@
 ---
 {
     "title": "华为云 OBS",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "Doris 提供两种方式从华为云 OBS 导入文件："
 }
 ---
 

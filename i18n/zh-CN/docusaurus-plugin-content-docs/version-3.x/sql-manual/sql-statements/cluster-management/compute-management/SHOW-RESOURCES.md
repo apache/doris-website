@@ -1,7 +1,8 @@
 ---
 {
     "title": "SHOW RESOURCES",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "该语句用于展示用户有使用权限的资源。普通用户仅能展示有使用权限的资源，root 或 admin 用户会展示所有的资源。"
 }
 ---
 

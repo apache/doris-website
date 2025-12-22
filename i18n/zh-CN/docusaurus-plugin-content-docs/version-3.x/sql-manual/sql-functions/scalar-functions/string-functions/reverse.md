@@ -1,7 +1,8 @@
 ---
 {
     "title": "REVERSE",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "REVERSE 函数用于将字符串中的字符顺序颠倒或将数组中的元素顺序颠倒。"
 }
 ---
 

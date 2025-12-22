@@ -1,9 +1,9 @@
 ---
 {
     "title": "SELECT",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "主要介绍 Select 语法使用"
 }
-
 ---
 
 ## 描述

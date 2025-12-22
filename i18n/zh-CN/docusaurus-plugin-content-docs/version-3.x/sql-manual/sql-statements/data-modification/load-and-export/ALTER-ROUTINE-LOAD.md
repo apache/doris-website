@@ -1,7 +1,8 @@
 ---
 {
     "title": "ALTER ROUTINE LOAD",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "该语法用于修改已经创建的例行导入作业。只能修改处于 PAUSED 状态的作业。"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
-   "title": "跨集群数据同步概述",
-   "language": "zh-CN"
+    "title": "跨集群数据同步概述",
+    "language": "zh-CN",
+    "description": "CCR (Cross Cluster Replication) 是一种跨集群数据同步机制，能够在库或表级别将源集群的数据变更同步到目标集群。"
 }
 ---
 

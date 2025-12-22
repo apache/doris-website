@@ -1,7 +1,8 @@
 ---
 {
     "title": "ALTER USER",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "ALTER USER 语句用于修改一个用户的账户属性，包括密码、和密码策略等"
 }
 ---
 

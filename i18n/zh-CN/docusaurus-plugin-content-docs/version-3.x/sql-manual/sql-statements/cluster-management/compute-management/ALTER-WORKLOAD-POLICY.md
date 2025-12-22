@@ -1,7 +1,8 @@
 ---
 {
-"title": "ALTER WORKLOAD POLICY",
-"language": "zh-CN"
+    "title": "ALTER WORKLOAD POLICY",
+    "language": "zh-CN",
+    "description": "修改一个 Workload Group 的属性，目前只支持修改属性，不支持修改 action 和 condition。"
 }
 ---
 

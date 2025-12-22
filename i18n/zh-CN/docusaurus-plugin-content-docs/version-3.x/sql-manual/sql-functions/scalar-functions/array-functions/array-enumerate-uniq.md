@@ -1,7 +1,8 @@
 ---
 {
     "title": "ARRAY_ENUMERATE_UNIQ",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "返回与源数组大小相同的数组，指示每个元素在具有相同值的元素中的位置，例如 arrayenumerateuniq([1, 2, 1, 4]) = [1, 1, 2, 1] 该函数也可接受多个大小相同的数组作为参数，这种情况下，返回的是数组中相同位置的元素组成的元组在具有相同值的元组中的位置。"
 }
 ---
 

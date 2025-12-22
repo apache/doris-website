@@ -1,7 +1,8 @@
 ---
 {
     "title": "URL_DECODE",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "将 URL 转换为解码字符串。"
 }
 ---
 

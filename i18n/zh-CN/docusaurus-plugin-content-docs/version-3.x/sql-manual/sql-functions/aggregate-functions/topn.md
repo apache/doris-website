@@ -1,7 +1,8 @@
 ---
 {
     "title": "TOPN",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "TOPN 函数用于返回指定列中出现频率最高的 N 个值。它是一个近似计算函数，返回结果的顺序是按照计数值从大到小排序。"
 }
 ---
 

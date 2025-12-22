@@ -1,7 +1,8 @@
 ---
 {
-  "title": "ICEBERG_META",
-  "language": "zh-CN"
+    "title": "ICEBERG_META",
+    "language": "zh-CN",
+    "description": "icebergmeta 表函数（table-valued-function,tvf），可以用于读取 iceberg 表的各类元数据信息，如操作历史、生成的快照、文件元数据等。"
 }
 ---
 

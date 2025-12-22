@@ -1,7 +1,8 @@
 ---
 {
     "title": "SHOW ALTER TABLE MATERIALIZED VIEW",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "查看同步物化视图构建任务状态。"
 }
 ---
 

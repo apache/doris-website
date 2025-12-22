@@ -1,7 +1,8 @@
 ---
 {
     "title": "ANALYZE",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "该语句用于收集统计信息。可以针对表（可以指定具体列）或整个数据库进行列统计信息的收集。"
 }
 ---
 
