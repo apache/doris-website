@@ -2,7 +2,7 @@
 {
     "title": "ARRAY_PRODUCT",
     "language": "en-US",
-    "description": "<version since=\"2.0.0\">"
+    "description": "Calculates the product of all elements in an array. The function iterates through all elements in the array, multiplies them together,"
 }
 ---
 

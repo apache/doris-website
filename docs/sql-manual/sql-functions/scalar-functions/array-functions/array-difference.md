@@ -2,7 +2,7 @@
 {
     "title": "ARRAY_DIFFERENCE",
     "language": "en",
-    "description": "<version since=\"2.0.0\">"
+    "description": "Calculates the difference between adjacent elements in an array. The function traverses the array from left to right,"
 }
 ---
 

@@ -2,7 +2,7 @@
 {
     "title": "ARRAY_PUSHBACK",
     "language": "en-US",
-    "description": "<version since=\"2.0.0\">"
+    "description": "Adds an element to the end of an array. The function returns a new array containing all elements from the original array plus the newly added element."
 }
 ---
 

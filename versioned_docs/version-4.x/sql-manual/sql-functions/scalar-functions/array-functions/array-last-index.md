@@ -2,7 +2,7 @@
 {
     "title": "ARRAY_LAST_INDEX",
     "language": "en",
-    "description": "<version since=\"2.0.0\">"
+    
 }
 ---
 

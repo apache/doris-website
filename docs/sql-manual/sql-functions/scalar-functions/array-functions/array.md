@@ -2,7 +2,7 @@
 {
     "title": "ARRAY",
     "language": "en-US",
-    "description": "<version since=\"2.0.0\">"
+    "description": "Creates an array. The function accepts zero or more parameters and returns an array containing all input elements."
 }
 ---
 

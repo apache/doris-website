@@ -2,7 +2,7 @@
 {
     "title": "ARRAY_DISTINCT",
     "language": "en",
-    "description": "<version since=\"2.0.0\">"
+    "description": "Removes duplicate elements from an array and returns a new array containing unique elements. The function maintains the original order of elements,"
 }
 ---
 

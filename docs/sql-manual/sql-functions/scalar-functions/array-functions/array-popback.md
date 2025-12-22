@@ -2,7 +2,7 @@
 {
     "title": "ARRAY_POPBACK",
     "language": "en-US",
-    "description": "<version since=\"2.0.0\">"
+    "description": "Removes the last element from an array. The function returns a new array containing all elements from the original array except the last one."
 }
 ---
 

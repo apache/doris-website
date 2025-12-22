@@ -2,7 +2,7 @@
 {
     "title": "ARRAY_CUM_SUM",
     "language": "en",
-    "description": "<version since=\"2.0.0\">"
+    
 }
 ---
 

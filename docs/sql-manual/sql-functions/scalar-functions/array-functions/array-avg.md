@@ -2,7 +2,7 @@
 {
     "title": "ARRAY_AVG",
     "language": "en",
-    "description": "<version since=\"2.0.0\">"
+    "description": "Calculates the average of all numeric elements in an array. The function skips null values and non-numeric elements in the array,"
 }
 ---
 

@@ -2,7 +2,7 @@
 {
     "title": "ARRAY_MAX",
     "language": "en",
-    "description": "<version since=\"2.0.0\">"
+    "description": "Calculates the maximum value in an array. The function iterates through all elements in the array, finds the maximum value and returns it."
 }
 ---
 

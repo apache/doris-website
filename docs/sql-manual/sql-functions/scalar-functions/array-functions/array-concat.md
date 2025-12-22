@@ -2,7 +2,7 @@
 {
     "title": "ARRAY_CONCAT",
     "language": "en",
-    "description": "<version since=\"2.0.0\">"
+    "description": "Concatenates all input arrays into a single array. The function accepts one or more arrays as parameters and connects them into a new array in the "
 }
 ---
 

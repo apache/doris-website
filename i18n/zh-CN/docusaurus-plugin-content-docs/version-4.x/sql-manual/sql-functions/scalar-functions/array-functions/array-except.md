@@ -2,7 +2,7 @@
 {
     "title": "ARRAY_EXCEPT",
     "language": "zh-CN",
-    "description": "<version since=\"2.0.0\">"
+    "description": "返回第一个数组中存在但第二个数组中不存在的元素，去重后组成新数组，保持原始顺序。"
 }
 ---
 

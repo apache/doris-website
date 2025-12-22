@@ -2,7 +2,7 @@
 {
     "title": "ARRAY_PUSHFRONT",
     "language": "en-US",
-    "description": "<version since=\"2.0.0\">"
+    
 }
 ---
 

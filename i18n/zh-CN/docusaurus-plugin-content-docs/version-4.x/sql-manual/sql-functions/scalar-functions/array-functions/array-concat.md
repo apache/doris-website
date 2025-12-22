@@ -2,7 +2,7 @@
 {
     "title": "ARRAY_CONCAT",
     "language": "zh-CN",
-    "description": "<version since=\"2.0.0\">"
+    "description": "将输入的所有数组拼接为一个数组。函数接受一个或更多数组作为参数，按照参数顺序将它们连接成一个新的数组。"
 }
 ---
 

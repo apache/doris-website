@@ -2,7 +2,7 @@
 {
     "title": "ARRAY_COMPACT",
     "language": "zh-CN",
-    "description": "<version since=\"2.0.0\">"
+    "description": "去除数组中连续重复的元素，只保留每个不同值的第一个出现位置。该函数从左到右遍历数组，遇到与前一个元素相同的值时会跳过该元素，只保留第一个出现的值。"
 }
 ---
 

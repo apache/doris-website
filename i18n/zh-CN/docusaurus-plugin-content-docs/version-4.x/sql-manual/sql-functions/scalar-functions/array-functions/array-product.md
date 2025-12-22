@@ -2,7 +2,7 @@
 {
     "title": "ARRAY_PRODUCT",
     "language": "zh-CN",
-    "description": "<version since=\"2.0.0\">"
+    "description": "计算数组中所有元素的乘积。函数会遍历数组中的所有元素，将它们相乘并返回结果。"
 }
 ---
 

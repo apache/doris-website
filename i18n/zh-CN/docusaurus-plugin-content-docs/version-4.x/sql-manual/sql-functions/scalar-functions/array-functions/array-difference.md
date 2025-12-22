@@ -2,7 +2,7 @@
 {
     "title": "ARRAY_DIFFERENCE",
     "language": "zh-CN",
-    "description": "<version since=\"2.0.0\">"
+    "description": "计算数组中相邻元素的差值。函数会从左到右遍历数组，计算每个元素与其前一个元素的差值，返回一个与原数组等长的新数组。第一个元素的差值始终为 0。"
 }
 ---
 

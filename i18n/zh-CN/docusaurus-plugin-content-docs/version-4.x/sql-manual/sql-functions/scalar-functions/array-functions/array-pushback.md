@@ -2,7 +2,7 @@
 {
     "title": "ARRAY_PUSHBACK",
     "language": "zh-CN",
-    "description": "<version since=\"2.0.0\">"
+    "description": "在数组末尾添加一个元素。函数会返回一个新数组，包含原数组的所有元素以及新添加的元素。"
 }
 ---
 

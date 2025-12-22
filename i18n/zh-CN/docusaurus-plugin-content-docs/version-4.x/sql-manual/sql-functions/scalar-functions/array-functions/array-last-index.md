@@ -2,7 +2,7 @@
 {
     "title": "ARRAY_LAST_INDEX",
     "language": "zh-CN",
-    "description": "<version since=\"2.0.0\">"
+    "description": "查找数组中满足 lambda 表达式的最后一个元素的位置索引（从1开始）。找到最后一个满足条件的元素并返回其位置索引。"
 }
 ---
 

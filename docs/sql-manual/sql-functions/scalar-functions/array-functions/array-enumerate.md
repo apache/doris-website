@@ -2,7 +2,7 @@
 {
     "title": "ARRAY_ENUMERATE",
     "language": "en",
-    "description": "<version since=\"2.0.0\">"
+    "description": "Returns the position index (starting from 1) for each element in the array."
 }
 ---
 

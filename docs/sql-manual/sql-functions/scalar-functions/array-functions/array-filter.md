@@ -2,7 +2,7 @@
 {
     "title": "ARRAY_FILTER",
     "language": "en",
-    "description": "<version since=\"2.0.0\">"
+    "description": "Filters array elements based on conditions and returns a new array composed of elements that satisfy the conditions."
 }
 ---
 

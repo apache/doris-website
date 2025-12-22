@@ -2,7 +2,7 @@
 {
     "title": "ARRAY_EXISTS",
     "language": "en",
-    "description": "<version since=\"2.0.0\">"
+    "description": "Applies a lambda expression to elements in an array and returns a boolean array indicating whether each element satisfies the condition."
 }
 ---
 

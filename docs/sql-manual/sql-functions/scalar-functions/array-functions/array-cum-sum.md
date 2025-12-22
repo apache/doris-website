@@ -2,7 +2,7 @@
 {
     "title": "ARRAY_CUM_SUM",
     "language": "en",
-    "description": "<version since=\"2.0.0\">"
+    "description": "Calculates the cumulative sum of an array. The function traverses the array from left to right,"
 }
 ---
 

@@ -2,7 +2,7 @@
 {
     "title": "ARRAY_ENUMERATE_UNIQ",
     "language": "zh-CN",
-    "description": "<version since=\"2.0.0\">"
+    "description": "返回数组中每个元素在数组中的唯一出现次数编号。函数会为数组中的每个元素生成一个编号，表示该元素在数组中第几次出现。"
 }
 ---
 

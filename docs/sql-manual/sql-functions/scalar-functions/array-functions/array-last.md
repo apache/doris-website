@@ -2,7 +2,7 @@
 {
     "title": "ARRAY_LAST",
     "language": "en",
-    "description": "<version since=\"2.0.0\">"
+    "description": "Finds the last element in the array that satisfies the lambda expression. Finds the last element that satisfies the condition and returns it."
 }
 ---
 

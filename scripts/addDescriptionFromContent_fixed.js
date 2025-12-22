@@ -94,10 +94,38 @@ function extractFirstRealParagraph(body, type) {
     let inCustomContainer = false;
     let inHtmlComment = false;
     let collecting = false;
+    let inVersionTag = false; // 新增：跟踪<version>标签状态
 
     for (let i = 0; i < lines.length; i++) {
         const raw = lines[i];
         const line = raw.replace(/\r$/, '');
+
+        // 检查是否进入或退出<version>标签
+        if (!inCodeBlock && !inHtmlComment) {
+            // 检查是否开始<version>标签
+            if (/^\s*<version\s[^>]*>/.test(line) && !/<\/version>/.test(line)) {
+                inVersionTag = true;
+                // 如果正在收集，则结束段落
+                if (collecting) break;
+                continue;
+            }
+
+            // 检查是否在<version>标签中结束
+            if (inVersionTag && /<\/version>/.test(line)) {
+                inVersionTag = false;
+                continue;
+            }
+
+            // 如果当前行完全在<version>标签中（单行）
+            if (/^\s*<version\s[^>]*>.*<\/version>\s*$/.test(line)) {
+                // 如果正在收集，则结束段落
+                if (collecting) break;
+                else continue;
+            }
+        }
+
+        // 如果当前在<version>标签中，跳过该行
+        if (inVersionTag) continue;
 
         // 检查是否进入或退出自定义容器
         if (/^\s*:::\s*(\w+)?/.test(line)) {
@@ -170,7 +198,7 @@ function extractFirstRealParagraph(body, type) {
             /^\s*[-*_]{3,}\s*$/.test(line) || // hr
             (/^\s*import\s+/.test(line) && type === 'mdx') ||
             /^[\s`]*`[^`\n]*`[\s`]*$/.test(line) || // 代码行 `xxxx` (以反引号包裹的行内代码)
-            /^\s*!\[.*\]\(.*\)/.test(line)      // 新增：图片行 ![](url)
+            /^\s*!\[.*\]\(.*\)/.test(line) // 新增：图片行 ![](url)
         ) {
             // 如果之前已经开始收集，则遇到这些结构视为段落边界并结束
             if (collecting) break;

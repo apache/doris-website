@@ -2,7 +2,7 @@
 {
     "title": "ARRAY_EXISTS",
     "language": "zh-CN",
-    "description": "<version since=\"2.0.0\">"
+    "description": "对数组中的元素应用 lambda 表达式，返回一个布尔数组，表示每个元素是否满足条件。函数会为数组中的每个元素应用 lambda 表达式，返回对应的布尔值。"
 }
 ---
 

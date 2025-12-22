@@ -2,7 +2,7 @@
 {
     "title": "ARRAY_FILTER",
     "language": "zh-CN",
-    "description": "<version since=\"2.0.0\">"
+    "description": "根据条件过滤数组元素，返回满足条件的元素组成的新数组。函数支持两种调用方式：使用 lambda 表达式的高阶函数形式，以及直接使用布尔数组的过滤形式。"
 }
 ---
 

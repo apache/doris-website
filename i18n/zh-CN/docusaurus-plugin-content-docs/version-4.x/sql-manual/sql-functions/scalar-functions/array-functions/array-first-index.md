@@ -2,7 +2,7 @@
 {
     "title": "ARRAY_FIRST_INDEX",
     "language": "zh-CN",
-    "description": "<version since=\"2.0.0\">"
+    "description": "返回数组中第一个满足 lambda 表达式条件的元素的位置索引（从1开始）。函数会对数组中的元素应用 lambda 表达式，找到第一个满足条件的元素并返回其位置索引。"
 }
 ---
 
