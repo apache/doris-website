@@ -1,9 +1,9 @@
 ---
 {
     "title": "INSERT OVERWRITE",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "该语句的功能是重写表或表的某些分区"
 }
-
 ---
 
 ## 描述

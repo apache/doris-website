@@ -1,9 +1,9 @@
 ---
 {
-"title": "CANCEL TASK",
-"language": "zh-CN"
+    "title": "CANCEL TASK",
+    "language": "zh-CN",
+    "description": "取消通过 CREATE JOB 语句创建生成的正在运行中任务"
 }
-
 ---
 
 ## 描述

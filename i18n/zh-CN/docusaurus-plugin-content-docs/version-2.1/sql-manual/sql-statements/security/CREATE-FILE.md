@@ -1,7 +1,8 @@
 ---
 {
-  "title": "CREATE FILE",
-  "language": "zh-CN"
+    "title": "CREATE FILE",
+    "language": "zh-CN",
+    "description": "该语句用于创建并上传一个文件到 Doris 集群。 该功能通常用于管理一些其他命令中需要使用到的文件，如证书、公钥私钥等等。"
 }
 ---
 

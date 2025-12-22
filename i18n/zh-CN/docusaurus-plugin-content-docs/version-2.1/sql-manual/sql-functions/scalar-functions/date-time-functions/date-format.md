@@ -1,7 +1,8 @@
 ---
 {
     "title": "DATE_FORMAT",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "将日期类型按照 format 的类型转化为字符串。"
 }
 ---
 

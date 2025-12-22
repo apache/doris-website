@@ -1,7 +1,8 @@
 ---
 {
     "title": "ARRAY_SHUFFLE",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "将数组中元素进行随机排列"
 }
 ---
 

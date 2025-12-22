@@ -1,7 +1,8 @@
 ---
 {
     "title": "STDDEV_SAMP",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "返回 expr 表达式的样本标准差"
 }
 ---
 

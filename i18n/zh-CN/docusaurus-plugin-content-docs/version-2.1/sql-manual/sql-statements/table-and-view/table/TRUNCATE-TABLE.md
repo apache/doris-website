@@ -1,8 +1,8 @@
 ---
 {
-
     "title": "TRUNCATE TABLE",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "该语句用于清空指定表和分区的数据"
 }
 ---
 

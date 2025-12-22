@@ -1,7 +1,8 @@
 ---
 {
     "title": "BloomFilter 索引",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "BloomFilter 索引是基于 BloomFilter 的一种跳数索引。它的原理是利用 BloomFilter 跳过等值查询指定条件不满足的数据块，达到减少 I/O 查询加速的目的。"
 }
 ---
 

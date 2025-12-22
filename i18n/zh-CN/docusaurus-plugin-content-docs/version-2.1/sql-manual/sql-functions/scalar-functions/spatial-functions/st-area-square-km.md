@@ -1,7 +1,8 @@
 ---
 {
     "title": "ST_AREA_SQUARE_KM",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "计算地球球面上区域的面积"
 }
 ---
 

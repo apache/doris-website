@@ -1,10 +1,9 @@
 ---
 {
     "title": "连接（JOIN）",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "在关系型数据库中，数据被分布在多个表中，这些表之间通过特定关系相互关联。SQL JOIN 操作允许我们根据这些关联条件将不同的表合并成一个更完整的结果集。"
 }
-
-
 ---
 
 ## 什么是 JOIN

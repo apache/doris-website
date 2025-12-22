@@ -1,7 +1,8 @@
 ---
 {
     "title": "高并发点查",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": ":::tip 高并发点查功能自 Doris 2.0 版本起具有重大性能提升 :::"
 }
 ---
 

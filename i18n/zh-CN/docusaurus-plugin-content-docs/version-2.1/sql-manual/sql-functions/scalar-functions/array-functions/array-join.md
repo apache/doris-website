@@ -1,7 +1,8 @@
 ---
 {
     "title": "ARRAY_JOIN",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "根据分隔符 (sep) 和替换 NULL 的字符串 (nullreplace), 将数组中的所有元素组合成一个新的字符串。"
 }
 ---
 

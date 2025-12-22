@@ -1,7 +1,8 @@
 ---
 {
     "title": "DATEDIFF",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "计算给定日期之间的差值。"
 }
 ---
 

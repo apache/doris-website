@@ -1,9 +1,9 @@
 ---
 {
-  "title": "SHOW TRASH",
-  "language": "zh-CN"
+    "title": "SHOW TRASH",
+    "language": "zh-CN",
+    "description": "该语句用于查看 backend 内的垃圾数据占用空间。"
 }
-
 ---
 
 ## 描述

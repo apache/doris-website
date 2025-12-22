@@ -1,7 +1,8 @@
 ---
 {
     "title": "NORMAL_CDF",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "计算正态分布在值 x 处的累积分布函数 (CDF)。"
 }
 ---
 

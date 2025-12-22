@@ -1,7 +1,8 @@
 ---
 {
     "title": "LakeSoul Catalog",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": ":::warning Note! 该功能自 3.1.0 版本后被移除。如需使用，请联系开发人员。 :::"
 }
 ---
 

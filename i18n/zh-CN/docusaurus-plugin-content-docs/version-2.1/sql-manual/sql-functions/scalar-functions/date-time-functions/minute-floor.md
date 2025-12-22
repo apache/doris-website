@@ -1,7 +1,8 @@
 ---
 {
     "title": "MINUTE_FLOOR",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "将日期时间向下取整到最近的指定分钟周期。如果指定了起始时间（origin），则以该时间为基准计算周期。"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
-"title": "内置认证",
-"language": "zh-CN"
+    "title": "内置认证",
+    "language": "zh-CN",
+    "description": "在 Doris 中，一个 useridentity 唯一标识一个用户。useridentity 由两部分组成，username 和 host，其中 username 为用户名。host 标识用户端连接所在的主机地址。host 部分可以使用 % 进行模糊匹配。如果不指定 host，默认为 '%'，"
 }
 ---
 

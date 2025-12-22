@@ -1,7 +1,8 @@
 ---
 {
     "title": "CHAR_LENGTH",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "计算字符串的长度，对于多字节字符，返回字符数。"
 }
 ---
 

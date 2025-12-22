@@ -1,7 +1,8 @@
 ---
 {
     "title": "AUTO_PARTITION_NAME",
-    "language": "en"
+    "language": "en",
+    "description": ":::tip tip Supported since Apache Doris 2.1.6 :::"
 }
 ---
 

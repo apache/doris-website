@@ -1,7 +1,8 @@
 ---
 {
     "title": "HLL_FROM_BASE64",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "将一个 base64 编码的字符串（通常由 HLLTOBASE64 函数生成）转换为 HLL 类型。如果输入字符串不合法或为 NULL，则返回 NULL。"
 }
 ---
 

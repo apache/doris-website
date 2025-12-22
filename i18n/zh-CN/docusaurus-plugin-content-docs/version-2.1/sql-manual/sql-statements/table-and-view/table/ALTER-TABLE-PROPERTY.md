@@ -1,7 +1,8 @@
 ---
 {
     "title": "ALTER TABLE PROPERTY",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": ":::caution 分区属性与表属性的一些区别"
 }
 ---
 

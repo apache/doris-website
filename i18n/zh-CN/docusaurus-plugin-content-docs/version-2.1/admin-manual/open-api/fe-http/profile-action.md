@@ -1,7 +1,8 @@
 ---
 {
     "title": "Profile Action",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": ":::caution 注意："
 }
 ---
 
