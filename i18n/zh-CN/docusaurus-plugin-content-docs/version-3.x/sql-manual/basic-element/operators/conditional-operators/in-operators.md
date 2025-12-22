@@ -1,7 +1,8 @@
 ---
 {
     "title": "IN 操作符",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "IN 操作符测试一个值是否属于某个值列表或子查询中的成员。"
 }
 ---
 

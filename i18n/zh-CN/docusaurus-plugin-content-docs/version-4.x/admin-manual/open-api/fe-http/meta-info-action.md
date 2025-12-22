@@ -1,7 +1,8 @@
 ---
 {
     "title": "Meta Info Action",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "Meta Info Action 用于获取集群内的元数据信息。如数据库列表，表结构等。"
 }
 ---
 

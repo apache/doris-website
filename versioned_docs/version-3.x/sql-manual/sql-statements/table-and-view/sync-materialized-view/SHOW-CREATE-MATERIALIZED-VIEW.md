@@ -1,7 +1,8 @@
 ---
 {
-"title": "SHOW CREATE SYNC MATERIALIZED VIEW",
-"language": "en"
+    "title": "SHOW CREATE SYNC MATERIALIZED VIEW",
+    "language": "en",
+    "description": "View the materialized view creation statement."
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "DAYNAME",
-    "language": "en"
+    "language": "en",
+    "description": "The DAYNAME function is used to calculate the name of the day (such as \"Tuesday\", etc.) corresponding to a date or time expression,"
 }
 ---
 

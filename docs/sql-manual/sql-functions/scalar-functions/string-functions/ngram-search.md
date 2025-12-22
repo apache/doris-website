@@ -1,7 +1,8 @@
 ---
 {
     "title": "NGRAM_SEARCH",
-    "language": "en"
+    "language": "en",
+    "description": "The NGRAMSEARCH function calculates the N-gram similarity between two strings. The similarity ranges from 0 to 1,"
 }
 ---
 

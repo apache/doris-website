@@ -1,7 +1,8 @@
 ---
 {
-"title": "COVAR",
-"language": "zh-CN"
+    "title": "COVAR",
+    "language": "zh-CN",
+    "description": "计算两个数值型变量之间的协方差"
 }
 ---
 

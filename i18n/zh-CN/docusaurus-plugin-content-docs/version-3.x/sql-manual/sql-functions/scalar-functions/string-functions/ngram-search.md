@@ -1,7 +1,8 @@
 ---
 {
     "title": "NGRAM_SEARCH",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "计算 text 和 pattern 的 N-gram 相似度。相似度从 0 到 1，相似度越高证明两个字符串越相似。 其中pattern，gramnum必须为常量。 如果text或者pattern的长度小于gramnum，返回 0。"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "PERCENTILE_RESERVOIR",
-    "language": "en"
+    "language": "en",
+    "description": "This function applies reservoir sampling with a reservoir size up to 8192 and a random number generator for sampling."
 }
 ---
 

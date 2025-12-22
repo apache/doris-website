@@ -1,7 +1,8 @@
 ---
 {
     "title": "CREATE USER",
-    "language": "en"
+    "language": "en",
+    "description": "The CREATE USER statement is used to create a Doris user."
 }
 ---
 

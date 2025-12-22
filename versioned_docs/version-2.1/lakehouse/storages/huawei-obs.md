@@ -1,7 +1,8 @@
 ---
 {
-  "title": "Huawei OBS",
-  "language": "en"
+    "title": "Huawei OBS",
+    "language": "en",
+    "description": "This document describes the parameters required to access Huawei Cloud OBS, which are applicable to the following scenarios:"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "FORMAT_ROUND",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "将数字格式化为类似于“#,###,###.##”的格式，四舍五入到指定位小数，并将结果作为字符串返回。"
 }
 ---
 

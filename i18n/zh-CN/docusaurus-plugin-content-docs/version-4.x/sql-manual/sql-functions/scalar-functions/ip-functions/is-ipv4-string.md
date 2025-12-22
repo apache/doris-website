@@ -1,7 +1,8 @@
 ---
 {
     "title": "IS_IPV4_STRING",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "检查输入的字符串是否为有效的 IPv4 地址格式。返回 1 表示是有效的 IPv4 地址，返回 0 表示不是。"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "SQL Cache",
-    "language": "en"
+    "language": "en",
+    "description": "SQL Cache is a query optimization mechanism provided by Doris that can significantly enhance query performance."
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "ROLLBACK",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "回滚一个显式事务。与 BEGIN 成对使用。"
 }
 ---
 

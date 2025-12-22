@@ -1,7 +1,8 @@
 ---
 {
     "title": "ST_POLYGON",
-    "language": "en"
+    "language": "en",
+    "description": "Converts a string in WKT (Well-Known Text) format into an in-memory Polygon geometric object."
 }
 ---
 

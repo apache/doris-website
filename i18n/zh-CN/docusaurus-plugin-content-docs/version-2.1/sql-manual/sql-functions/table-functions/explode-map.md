@@ -1,7 +1,8 @@
 ---
 {
-"title": "EXPLODE_MAP",
-"language": "zh-CN"
+    "title": "EXPLODE_MAP",
+    "language": "zh-CN",
+    "description": "explodempa 函数接受一个 map (映射类型)，将 map（映射类型）展开成多个行，每行包含一个键值对。通常与 LATERAL VIEW 配合使用，可以支持多个 Lateral view。仅支持新优化器。"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "STRUCT",
-    "language": "en-US"
+    "language": "en-US",
+    "description": "Constructs and returns a struct based on given values. The function accepts one or more parameters and returns a struct containing all input elements."
 }
 ---
 

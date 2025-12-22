@@ -1,7 +1,8 @@
 ---
 {
-  "title": "Doris Kubernetes Operator",
-  "language": "en"
+    "title": "Doris Kubernetes Operator",
+    "language": "en",
+    "description": "Kubernetes Operator (referred to as Doris Operator) was born to meet the user's demand for efficient deployment and operation of Doris on the "
 }
 ---
 

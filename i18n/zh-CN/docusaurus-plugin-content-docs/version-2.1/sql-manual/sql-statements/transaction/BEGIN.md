@@ -1,7 +1,8 @@
 ---
 {
     "title": "BEGIN",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "开启一个显式事务。用户可以指定 Label，如未指定，系统自动生成 Label。"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "L2_DISTANCE",
-    "language": "en"
+    "language": "en",
+    "description": "Calculate the distance between two points (vector values are coordinates) in Euclidean space"
 }
 ---
 

@@ -1,10 +1,9 @@
 ---
-
 {
     "title": "HLL_TO_BASE64",
-    "language": "en"
+    "language": "en",
+    "description": "Converts an input HLL to a base64-encoded string."
 }
-
 ---
 
 ## Description

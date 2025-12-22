@@ -1,9 +1,9 @@
 ---
 {
-"title": "CREATE JOB",
-"language": "en"
+    "title": "CREATE JOB",
+    "language": "en",
+    "description": "Doris Job is a task that runs according to a set plan. It is used to trigger predefined operations at a specific time or a specified time interval,"
 }
-
 ---
 
 ## Description

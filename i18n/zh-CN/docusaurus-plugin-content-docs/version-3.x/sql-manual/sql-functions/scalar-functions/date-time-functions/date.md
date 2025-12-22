@@ -1,9 +1,11 @@
 ---
 {
     "title": "DATE",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "提取日期时间中的日期。"
 }
 ---
+
 ## 描述
 
 提取日期时间中的日期。

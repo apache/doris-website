@@ -1,7 +1,8 @@
 ---
 {
     "title": "Read Write Separation",
-    "language": "en"
+    "language": "en",
+    "description": "To support cross-availability zone (AZ) high-availability cluster architectures and read-write separation architectures,"
 }
 ---
 

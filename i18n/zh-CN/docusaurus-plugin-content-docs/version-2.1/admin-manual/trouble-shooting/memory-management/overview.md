@@ -1,7 +1,8 @@
 ---
 {
     "title": "概述",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "内存管理是 Doris 中最重要的组成部分之一，在 Doris 运行过程中，不论导入还是查询都依赖大量的内存操作。内存管理的好坏直接影响到 Doris 的稳定性和性能。"
 }
 ---
 

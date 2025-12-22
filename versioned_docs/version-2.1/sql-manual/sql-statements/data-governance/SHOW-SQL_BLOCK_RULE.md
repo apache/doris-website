@@ -1,7 +1,8 @@
 ---
 {
     "title": "SHOW SQL_BLOCK_RULE",
-    "language": "en"
+    "language": "en",
+    "description": "Displays the configured SQL blocking rules. If no rule name is specified, all rules will be displayed."
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "ST_POINT",
-    "language": "en"
+    "language": "en",
+    "description": "With the given X coordinate value, the Y coordinate value returns the corresponding Point."
 }
 ---
 

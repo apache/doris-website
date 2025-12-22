@@ -1,7 +1,8 @@
 ---
 {
     "title": "基于 Arrow Flight SQL 的高速数据传输链路",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "自 Doris 2.1 版本后，基于 Arrow Flight SQL 协议实现了高速数据链路，支持多种语言使用 SQL 从 Doris 高速读取大批量数据。Arrow Flight SQL 还提供了通用的 JDBC 驱动，支持与同样遵循 Arrow Flight SQL 协议的数据库无缝交互。"
 }
 ---
 

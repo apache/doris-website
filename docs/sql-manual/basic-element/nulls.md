@@ -1,7 +1,8 @@
 ---
 {
     "title": "NULL",
-    "language": "en"
+    "language": "en",
+    "description": "If a column in a row has no value, it is said to be NULL. NULL can appear in any column not restricted by a \"NOT NULL\" constraint."
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "COUNTEQUAL",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "判断数组中包含 value 元素的个数"
 }
 ---
 

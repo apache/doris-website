@@ -1,7 +1,8 @@
 ---
 {
     "title": "QUARTER_FLOOR",
-    "language": "en"
+    "language": "en",
+    "description": "QUARTERFLOOR function rounds down the input datetime value to the nearest specified quarter period. If you specify origin time,"
 }
 ---
 

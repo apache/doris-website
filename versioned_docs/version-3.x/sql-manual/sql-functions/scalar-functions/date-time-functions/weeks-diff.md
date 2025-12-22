@@ -1,7 +1,8 @@
 ---
 {
-   "title": "WEEKS_DIFF",
-   "language": "en"
+    "title": "WEEKS_DIFF",
+    "language": "en",
+    "description": "Calculates the number of complete weeks (in 7-day units) between two date or time values."
 }
 ---
 

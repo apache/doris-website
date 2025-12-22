@@ -1,7 +1,8 @@
 ---
 {
     "title": "SHOW TABLET",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "该语句用于显示指定 tablet id 信息（仅管理员使用）。"
 }
 ---
 

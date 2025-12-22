@@ -1,7 +1,8 @@
 ---
 {
-   "title": "Config ComputeGroups",
-   "language": "en"
+    "title": "Config ComputeGroups",
+    "language": "en",
+    "description": "In a decoupled storage and compute cluster, the Compute Group is responsible for importing data and caching data from object storage to enhance query "
 }
 ---
 

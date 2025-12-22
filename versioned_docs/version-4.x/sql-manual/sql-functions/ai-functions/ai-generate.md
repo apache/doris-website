@@ -1,7 +1,8 @@
 ---
 {
     "title": "AI_GENERATE",
-    "language": "en"
+    "language": "en",
+    "description": "Generates a response based on the input prompt text."
 }
 ---
 

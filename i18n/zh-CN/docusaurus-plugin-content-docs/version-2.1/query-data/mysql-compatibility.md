@@ -1,7 +1,8 @@
 ---
 {
     "title": "MySQL 兼容性",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "Doris 高度兼容 MySQL 语法，支持标准 SQL。但是 Doris 与 MySQL 还是有很多不同的地方，下面给出了它们的差异点介绍。"
 }
 ---
 

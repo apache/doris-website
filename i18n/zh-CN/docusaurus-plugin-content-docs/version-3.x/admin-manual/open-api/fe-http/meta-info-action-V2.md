@@ -1,7 +1,8 @@
 ---
 {
     "title": "Meta Info Action",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "获取集群内的元数据信息，包括数据库列表、表列表以及表结构等。"
 }
 ---
 

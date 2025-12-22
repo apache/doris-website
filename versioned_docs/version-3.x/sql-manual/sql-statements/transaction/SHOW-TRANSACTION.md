@@ -1,7 +1,8 @@
 ---
 {
     "title": "SHOW TRANSACTION",
-    "language": "en"
+    "language": "en",
+    "description": "This syntax is used to view transaction details for the specified transaction id or label."
 }
 ---
 

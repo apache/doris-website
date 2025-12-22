@@ -1,7 +1,8 @@
 ---
 {
     "title": "ADD_TIME",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "将给定的时间间隔添加到日期时间/时间表达式上。若第二个参数为负数，则等价于从第一个参数中减去该时间间隔。"
 }
 ---
 

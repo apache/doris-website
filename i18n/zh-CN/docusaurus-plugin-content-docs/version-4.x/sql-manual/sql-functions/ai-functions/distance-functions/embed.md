@@ -1,7 +1,8 @@
 ---
 {
     "title": "EMBED",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "根据输入文本生成语义嵌入向量，用于表示文本的语义信息，可用于相似度计算、检索等场景。"
 }
 ---
 

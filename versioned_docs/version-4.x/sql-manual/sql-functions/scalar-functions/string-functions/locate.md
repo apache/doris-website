@@ -1,7 +1,8 @@
 ---
 {
     "title": "LOCATE",
-    "language": "en"
+    "language": "en",
+    "description": "The LOCATE function returns the position of the first occurrence of substring substr in string str (counting starts from 1)."
 }
 ---
 

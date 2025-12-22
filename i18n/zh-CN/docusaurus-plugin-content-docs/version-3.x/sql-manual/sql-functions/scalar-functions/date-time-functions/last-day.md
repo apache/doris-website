@@ -1,7 +1,8 @@
 ---
 {
     "title": "LAST_DAY",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "返回输入日期所在月份的最后一天的日期。根据不同月份，返回日期的具体日期值为："
 }
 ---
 

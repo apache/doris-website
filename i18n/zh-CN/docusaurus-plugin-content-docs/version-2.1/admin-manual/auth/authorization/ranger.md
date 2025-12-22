@@ -1,7 +1,8 @@
 ---
 {
-"title": "Ranger 鉴权",
-"language": "zh-CN"
+    "title": "Ranger 鉴权",
+    "language": "zh-CN",
+    "description": "Apache Ranger 是一个用来在 Hadoop 平台上进行监控，启用服务，以及全方位数据安全访问管理的安全框架。 使用 ranger 后，会通过在 Ranger 侧配置权限代替在 Doris 中执行 Grant 语句授权。"
 }
 ---
 

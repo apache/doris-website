@@ -1,7 +1,8 @@
 ---
 {
     "title": "STRRIGHT",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "STRRIGHT 函数用于返回字符串右边指定长度的部分。长度的单位为 UTF8 字符。"
 }
 ---
 

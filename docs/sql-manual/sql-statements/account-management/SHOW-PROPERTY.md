@@ -1,7 +1,8 @@
 ---
 {
     "title": "SHOW PROPERTY",
-    "language": "en"
+    "language": "en",
+    "description": "This statement is used to view the attributes of the user."
 }
 ---
 

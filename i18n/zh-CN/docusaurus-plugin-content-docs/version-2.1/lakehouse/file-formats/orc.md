@@ -1,7 +1,8 @@
 ---
 {
     "title": "ORC",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "本文档用于介绍 Doris 的 ORC 文件格式的读写支持情况。该文档适用于以下功能。"
 }
 ---
 

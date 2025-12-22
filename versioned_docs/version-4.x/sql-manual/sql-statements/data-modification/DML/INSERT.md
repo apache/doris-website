@@ -1,7 +1,8 @@
 ---
 {
     "title": "INSERT",
-    "language": "en"
+    "language": "en",
+    "description": "The change statement is to complete the data insertion operation."
 }
 ---
 

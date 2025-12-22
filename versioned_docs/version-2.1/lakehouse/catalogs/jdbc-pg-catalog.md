@@ -1,7 +1,8 @@
 ---
 {
     "title": "PostgreSQL JDBC Catalog",
-    "language": "en"
+    "language": "en",
+    "description": "Doris JDBC Catalog supports connecting to PostgreSQL databases via the standard JDBC interface."
 }
 ---
 

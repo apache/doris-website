@@ -1,7 +1,8 @@
 ---
 {
     "title": "IPV4_TO_IPV6",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "将 IPv4 地址转换为 IPv6 地址。转换后的 IPv6 地址是 IPv4 映射地址，格式为 ::ffff:IPv4。"
 }
 ---
 

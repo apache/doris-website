@@ -1,7 +1,8 @@
 ---
 {
-"title": "ALTER STORAGE POLICY",
-"language": "zh-CN"
+    "title": "ALTER STORAGE POLICY",
+    "language": "zh-CN",
+    "description": "该语句用于修改一个已有的冷热分层迁移策略。仅 root 或 admin 用户可以修改资源。"
 }
 ---
 

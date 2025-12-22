@@ -1,7 +1,8 @@
 ---
 {
     "title": "Release 3.0.0",
-    "language": "en"
+    "language": "en",
+    "description": "We are excited to announce the release of Apache Doris 3.0!"
 }
 ---
 

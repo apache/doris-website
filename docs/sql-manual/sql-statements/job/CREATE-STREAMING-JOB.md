@@ -1,9 +1,9 @@
 ---
 {
-"title": "CREATE STREAMING JOB",
-"language": "en"
+    "title": "CREATE STREAMING JOB",
+    "language": "en",
+    "description": "Doris Streaming Job is a continuous import task based on the Job + TVF approach. After the Job is submitted,"
 }
-
 ---
 
 ## Description

@@ -1,7 +1,8 @@
 ---
 {
-  "title": "MONTH_CEIL",
-  "language": "zh-CN"
+    "title": "MONTH_CEIL",
+    "language": "zh-CN",
+    "description": "MONTHCEIL 函数用于将输入的日期时间值向上取整到最近的指定月份周期。若指定起始时间（origin），则以该时间为基准划分周期并取整；若未指定，默认以 0001-01-01 00:00:00 为基准。该函数支持处理 DATETIME、DATE 类型。"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "HLL_EMPTY",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "HLLEMPTY 用于返回一个 HLL（HyperLogLog）类型的空值，表示一个没有任何元素的数据集合。"
 }
 ---
 

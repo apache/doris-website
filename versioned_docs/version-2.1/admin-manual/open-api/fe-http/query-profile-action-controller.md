@@ -1,7 +1,8 @@
 ---
 {
     "title": "Query Profile Action",
-    "language": "en"
+    "language": "en",
+    "description": "The Query Profile Action is used to obtain the Query profile."
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "XXHASH_64",
-    "language": "en"
+    "language": "en",
+    "description": "Calculates the 64-bit xxhash value of the input string or binary."
 }
 ---
 

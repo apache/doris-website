@@ -1,7 +1,8 @@
 ---
 {
     "title": "metrics 信息",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "prometheus 监控采集接口"
 }
 ---
 

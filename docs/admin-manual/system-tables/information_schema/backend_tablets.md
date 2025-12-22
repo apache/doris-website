@@ -1,7 +1,8 @@
 ---
 {
     "title": "backend_tablets",
-    "language": "en"
+    "language": "en",
+    "description": "View the information of talbet on Backends.(added by doris 3.0.7)"
 }
 ---
 

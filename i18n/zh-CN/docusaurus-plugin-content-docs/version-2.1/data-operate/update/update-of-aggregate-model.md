@@ -1,7 +1,8 @@
 ---
 {
     "title": "聚合模型的导入更新",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "这篇文档主要介绍 Doris 聚合模型上基于导入的更新。"
 }
 ---
 

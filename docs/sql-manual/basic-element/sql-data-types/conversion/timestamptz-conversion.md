@@ -1,7 +1,8 @@
 ---
 {
     "title": "Cast to TIMESTAMPTZ Type",
-    "language": "en"
+    "language": "en",
+    "description": "The string 0000-01-01 00:00:00+08:00 is a valid DATETIME value, but after conversion to UTC time it exceeds the valid range, resulting in NULL."
 }
 ---
 

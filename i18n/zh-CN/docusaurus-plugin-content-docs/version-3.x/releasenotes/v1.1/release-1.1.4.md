@@ -1,7 +1,8 @@
 ---
 {
     "title": "Release 1.1.4",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "作为 1.1 LTS（Long-term Support，长周期支持）版本基础之上的 Bugfix 版本，在 Apache Doris 1.1.4 版本中，Doris 团队修复了自 1.1.3 版本以来的约 60 个 Issue 或性能优化项。改进了 Spark Load 的使用体验，"
 }
 ---
 

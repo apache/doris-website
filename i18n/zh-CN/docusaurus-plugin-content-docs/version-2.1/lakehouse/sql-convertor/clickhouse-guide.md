@@ -1,7 +1,8 @@
 ---
 {
     "title": "Clickhouse SQL 转换指南",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "TODO"
 }
 ---
 

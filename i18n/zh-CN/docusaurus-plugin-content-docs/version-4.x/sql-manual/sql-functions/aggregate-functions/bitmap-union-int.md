@@ -1,7 +1,8 @@
 ---
 {
     "title": "BITMAP-UNION-INT",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "计算输入的表达式中不同值的个数，返回值和 COUNT(DISTINCT expr) 相同。"
 }
 ---
 

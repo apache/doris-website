@@ -1,7 +1,8 @@
 ---
 {
     "title": "QUARTER",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "函数用于返回指定 日期所属的季度（1 到 4）。每个季度包含三个月："
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "ARRAY_ENUMERATE",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "返回数组下标，例如 [1, 2, 3, …, length (arr) ]"
 }
 ---
 

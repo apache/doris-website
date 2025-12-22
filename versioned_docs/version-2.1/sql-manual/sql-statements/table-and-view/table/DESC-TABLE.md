@@ -1,7 +1,8 @@
 ---
 {
     "title": "DESC TABLE",
-    "language": "en"
+    "language": "en",
+    "description": "This statement is used to display the schema information of the specified table."
 }
 ---
 

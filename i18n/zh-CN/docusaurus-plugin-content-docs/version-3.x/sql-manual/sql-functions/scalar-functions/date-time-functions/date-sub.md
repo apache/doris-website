@@ -1,7 +1,8 @@
 ---
 {
     "title": "DATE_SUB",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "从日期减去指定的时间间隔。"
 }
 ---
 

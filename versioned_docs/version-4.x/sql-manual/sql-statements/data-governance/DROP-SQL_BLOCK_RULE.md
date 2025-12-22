@@ -1,7 +1,8 @@
 ---
 {
     "title": "DROP SQL_BLOCK_RULE",
-    "language": "en"
+    "language": "en",
+    "description": "Deletes one or more SQL blocking rules. Multiple rules can be deleted at once by separating them with commas."
 }
 ---
 

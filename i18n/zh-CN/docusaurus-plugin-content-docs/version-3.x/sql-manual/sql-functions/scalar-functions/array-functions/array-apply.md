@@ -1,7 +1,8 @@
 ---
 {
     "title": "ARRAY_APPLY",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "数组以特定的二元条件符过滤元素，并返回过滤后的结果"
 }
 ---
 

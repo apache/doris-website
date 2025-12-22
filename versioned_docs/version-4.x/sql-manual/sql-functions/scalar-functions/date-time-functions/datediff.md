@@ -1,7 +1,8 @@
 ---
 {
     "title": "DATEDIFF",
-    "language": "en"
+    "language": "en",
+    "description": "The DATEDIFF function is used to calculate the difference between two date or datetime values, with the result precise to the day. That is,"
 }
 ---
 

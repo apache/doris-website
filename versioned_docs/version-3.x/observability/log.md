@@ -1,7 +1,8 @@
 ---
 {
     "title": "Log",
-    "language": "en"
+    "language": "en",
+    "description": "This document introduces the storage and analysis practices of Logs, one of the core observability components."
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "备份",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "有关备份的概念，请参阅备份与恢复。本指南提供了创建 Repository 和备份数据的操作步骤。"
 }
 ---
 

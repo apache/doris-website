@@ -1,7 +1,8 @@
 ---
 {
     "title": "Replacing Atomic Table",
-    "language": "en"
+    "language": "en",
+    "description": "Doris supports atomic replacement operations between two tables, applicable only to OLAP tables."
 }
 ---
 

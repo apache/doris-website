@@ -1,7 +1,8 @@
 ---
 {
     "title": "AI_FILTER",
-    "language": "en"
+    "language": "en",
+    "description": "Filters text based on given conditions."
 }
 ---
 

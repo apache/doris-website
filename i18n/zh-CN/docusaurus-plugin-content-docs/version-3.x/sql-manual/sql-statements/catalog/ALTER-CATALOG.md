@@ -1,7 +1,8 @@
 ---
 {
     "title": "ALTER CATALOG",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "该语句用于设置指定数据目录的属性。"
 }
 ---
 

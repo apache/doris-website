@@ -1,7 +1,8 @@
 ---
 {
     "title": "IS_IPV6_STRING",
-    "language": "en"
+    "language": "en",
+    "description": "Checks if the input string is a valid IPv6 address format. Returns 1 if it is a valid IPv6 address, returns 0 if it is not."
 }
 ---
 

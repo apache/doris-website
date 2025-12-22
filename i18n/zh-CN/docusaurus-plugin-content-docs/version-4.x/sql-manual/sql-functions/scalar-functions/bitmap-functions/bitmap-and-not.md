@@ -1,7 +1,8 @@
 ---
 {
     "title": "BITMAP_AND_NOT,BITMAP_ANDNOT",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "将两个 BITMAP 进行与非操作并返回计算结果，其中入参第一个叫 基准 BITMAP，第二个叫 排除 BITMAP。"
 }
 ---
 

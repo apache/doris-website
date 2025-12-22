@@ -1,7 +1,8 @@
 ---
 {
     "title": "MAP_KEYS",
-    "language": "en"
+    "language": "en",
+    "description": "Extract the keys of the given map into an ARRAY of the corresponding type"
 }
 ---
 

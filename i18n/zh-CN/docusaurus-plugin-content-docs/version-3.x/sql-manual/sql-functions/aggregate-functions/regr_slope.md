@@ -1,7 +1,8 @@
 ---
 {
     "title": "REGR_SLOPE",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "REGRSLOPE 用于计算一组数值对的最小二乘拟合线性方程的斜率。"
 }
 ---
 

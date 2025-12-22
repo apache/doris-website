@@ -1,7 +1,8 @@
 ---
 {
     "title": "GET_JSON_INT",
-    "language": "en"
+    "language": "en",
+    "description": "Alias of function JSONEXTRACTINT."
 }
 ---
 

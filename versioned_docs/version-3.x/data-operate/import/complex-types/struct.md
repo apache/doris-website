@@ -1,7 +1,8 @@
 ---
 {
     "title": "STRUCT",
-    "language": "en"
+    "language": "en",
+    "description": "STRUCT<fieldname:fieldtype [COMMENT 'commentstring'], ... > Represents value with structure described by multiple fields,"
 }
 ---
 

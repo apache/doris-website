@@ -1,7 +1,8 @@
 ---
 {
     "title": "SHOW TABLET STORAGE FORMAT",
-    "language": "en"
+    "language": "en",
+    "description": "This statement is used to display storage format information on the Backend."
 }
 ---
 

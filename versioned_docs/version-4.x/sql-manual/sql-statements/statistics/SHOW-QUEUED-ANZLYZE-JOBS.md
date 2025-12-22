@@ -1,7 +1,8 @@
 ---
 {
     "title": "SHOW QUEUED ANALYZE JOBS",
-    "language": "en"
+    "language": "en",
+    "description": "This statement is used to view the queue of statistics collection jobs waiting to be executed."
 }
 ---
 

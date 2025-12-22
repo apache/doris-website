@@ -1,7 +1,8 @@
 ---
 {
-"title": "BITNOT",
-"language": "en"
+    "title": "BITNOT",
+    "language": "en",
+    "description": "Performs a bitwise NOT operation on an integer."
 }
 ---
 

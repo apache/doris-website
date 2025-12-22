@@ -1,7 +1,8 @@
 ---
 {
     "title": "MURMUR_HASH3_32",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "计算 32 位 murmur3 hash 值"
 }
 ---
 

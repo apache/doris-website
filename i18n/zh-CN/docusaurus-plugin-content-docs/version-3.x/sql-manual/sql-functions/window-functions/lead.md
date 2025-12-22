@@ -1,7 +1,8 @@
 ---
 {
     "title": "LEAD",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "LEAD() 是一个窗口函数，用于访问当前行之后的行数据，而无需进行自连接。它可以获取分区内当前行之后第 N 行的值。"
 }
 ---
 

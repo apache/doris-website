@@ -1,7 +1,8 @@
 ---
 {
     "title": "ARRAY_ZIP",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "ARRAYZIP 函数用于将多个 ARRAY (如 arr1, arr2, ... , arrN) 按元素位置组合成一个ARRAY<STRUCT>，其中每个 STRUCT 包含来自各个输入数组对应位置的元素。"
 }
 ---
 

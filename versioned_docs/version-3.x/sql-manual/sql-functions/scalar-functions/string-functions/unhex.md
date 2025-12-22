@@ -1,7 +1,8 @@
 ---
 {
     "title": "UNHEX",
-    "language": "en"
+    "language": "en",
+    "description": "The unhex function is used to convert a hexadecimal string back into the original string. It converts every two hexadecimal characters into one byte."
 }
 ---
 

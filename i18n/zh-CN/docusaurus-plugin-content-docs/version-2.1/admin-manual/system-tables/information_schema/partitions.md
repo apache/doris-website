@@ -1,7 +1,8 @@
 ---
 {
     "title": "partitions",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "查看数据库中所有表的 partition 情况。在 2.1.7（不包含 2.1.7）之前恒为空表。"
 }
 ---
 

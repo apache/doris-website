@@ -1,7 +1,8 @@
 ---
 {
     "title": "ALTER USER",
-    "language": "en"
+    "language": "en",
+    "description": "The ALTER USER statement is used to modify a user's account attributes, including passwords, and password policies, etc."
 }
 ---
 

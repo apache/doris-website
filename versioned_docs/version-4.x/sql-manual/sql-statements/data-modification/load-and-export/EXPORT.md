@@ -1,7 +1,8 @@
 ---
 {
     "title": "EXPORT",
-    "language": "en"
+    "language": "en",
+    "description": "The EXPORT command is used to export data from a specified table to files at a specified location."
 }
 ---
 

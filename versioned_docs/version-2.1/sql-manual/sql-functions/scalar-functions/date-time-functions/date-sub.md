@@ -1,7 +1,8 @@
 ---
 {
     "title": "DAYS_SUB",
-    "language": "en"
+    "language": "en",
+    "description": "Subtracts a specified time interval to the date."
 }
 ---
 

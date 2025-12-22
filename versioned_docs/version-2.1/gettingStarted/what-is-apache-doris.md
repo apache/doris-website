@@ -1,7 +1,9 @@
 ---
 { 
 'title': 'Introduction to Apache Doris',
-'language': 'en' 
+'language': 'en',
+  "description": "Apache Doris is an MPP-based real-time data warehouse known for its high query speed. For queries on large datasets,"
+
 }
 ---
 

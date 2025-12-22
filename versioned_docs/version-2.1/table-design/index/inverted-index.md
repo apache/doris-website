@@ -1,7 +1,8 @@
 ---
 {
     "title": "Inverted Index",
-    "language": "en"
+    "language": "en",
+    "description": "Inverted Index is a commonly used indexing technique in the field of information retrieval."
 }
 ---
 

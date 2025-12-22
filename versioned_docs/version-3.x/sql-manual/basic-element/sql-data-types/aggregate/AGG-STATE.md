@@ -1,7 +1,8 @@
 ---
 {
     "title": "AGG_STATE",
-    "language": "en"
+    "language": "en",
+    "description": "AGGSTATE cannot be used as a key column, and the signature of the aggregation function must be declared at the same time when creating the table."
 }
 ---
 

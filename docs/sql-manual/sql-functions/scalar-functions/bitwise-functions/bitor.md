@@ -1,7 +1,8 @@
 ---
 {
-"title": "BITOR",
-"language": "en"
+    "title": "BITOR",
+    "language": "en",
+    "description": "Performs a bitwise OR operation on two integers."
 }
 ---
 

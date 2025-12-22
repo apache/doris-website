@@ -1,7 +1,8 @@
 ---
 {
     "title": "Diagnostic Tools",
-    "language": "en"
+    "language": "en",
+    "description": "Efficient and effective performance diagnostic tools are crucial for database system tuning,"
 }
 ---
 

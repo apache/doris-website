@@ -1,9 +1,9 @@
 ---
 {
     "title": "SHOW LAST INSERT",
-    "language": "en"
+    "language": "en",
+    "description": "This syntax is used to view the result of the latest insert operation in the current session connection"
 }
-
 ---
 
 ## Description

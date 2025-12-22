@@ -1,7 +1,8 @@
 ---
 {
-  "title": "Recommendations on AWS",
-  "language": "en"
+    "title": "Recommendations on AWS",
+    "language": "en",
+    "description": "The containers running in the EKS cluster are hosted on EC2 instances,"
 }
 ---
 

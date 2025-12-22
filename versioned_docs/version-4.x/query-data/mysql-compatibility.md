@@ -1,7 +1,8 @@
 ---
 {
     "title": "MySQL Compatibility",
-    "language": "en"
+    "language": "en",
+    "description": "Doris is highly compatible with MySQL syntax and supports standard SQL. However, there are several differences between Doris and MySQL,"
 }
 ---
 

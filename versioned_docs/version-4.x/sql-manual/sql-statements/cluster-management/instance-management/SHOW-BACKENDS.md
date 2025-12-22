@@ -1,7 +1,8 @@
 ---
 {
     "title": "SHOW BACKENDS",
-    "language": "en"
+    "language": "en",
+    "description": "This statement is used to view the basic status information of BE nodes."
 }
 ---
 

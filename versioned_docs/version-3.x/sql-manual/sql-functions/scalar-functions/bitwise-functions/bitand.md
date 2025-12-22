@@ -1,7 +1,8 @@
 ---
 {
-"title": "BITAND",
-"language": "en"
+    "title": "BITAND",
+    "language": "en",
+    "description": "Used to perform a bitwise AND operation. The bitwise AND operation compares each bit of two integers."
 }
 ---
 

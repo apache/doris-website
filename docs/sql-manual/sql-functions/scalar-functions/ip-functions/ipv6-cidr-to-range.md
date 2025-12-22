@@ -1,7 +1,8 @@
 ---
 {
     "title": "IPV6_CIDR_TO_RANGE",
-    "language": "en"
+    "language": "en",
+    "description": "Calculates the minimum and maximum IPv6 addresses for a network segment based on an IPv6 address and CIDR prefix length,"
 }
 ---
 

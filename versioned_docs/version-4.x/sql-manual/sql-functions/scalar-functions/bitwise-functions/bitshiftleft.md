@@ -1,7 +1,8 @@
 ---
 {
-"title": "BIT_SHIFT_LEFT",
-"language": "en"
+    "title": "BIT_SHIFT_LEFT",
+    "language": "en",
+    "description": "Performs a left shift operation, which moves all bits of a binary number to the left by a specified number of positions."
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "WEEKOFYEAR",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "获得一年中的第几周"
 }
 ---
 

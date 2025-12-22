@@ -3,7 +3,8 @@
     "title": "CREATE TABLE",
     "language": "en",
     "toc_min_heading_level": 2,
-    "toc_max_heading_level": 4
+    "toc_max_heading_level": 4,
+    "description": "Create a new table in the current or specified database. A table can have multiple columns, and each column definition includes the name, data type,"
 }
 ---
 

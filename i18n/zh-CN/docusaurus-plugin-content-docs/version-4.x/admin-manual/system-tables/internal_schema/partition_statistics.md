@@ -1,7 +1,8 @@
 ---
 {
     "title": "partition_statistics",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "分区统计信息"
 }
 ---
 

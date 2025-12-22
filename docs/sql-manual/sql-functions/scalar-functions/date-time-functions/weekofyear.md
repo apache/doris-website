@@ -1,7 +1,8 @@
 ---
 {
     "title": "WEEKOFYEAR",
-    "language": "en"
+    "language": "en",
+    "description": "The WEEKOFYEAR function returns the week number of a specified date within the year (range 1-53). A week starts on Monday and ends on Sunday."
 }
 ---
 

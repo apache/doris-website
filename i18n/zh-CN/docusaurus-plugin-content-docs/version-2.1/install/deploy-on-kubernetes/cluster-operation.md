@@ -1,7 +1,8 @@
 ---
 {
-  "title": "集群运维",
-  "language": "zh-CN"
+    "title": "集群运维",
+    "language": "zh-CN",
+    "description": "在 K8s 环境中服务因为一些预期之外的事情会进入 CrashLoopBackOff 状态，通过 kubectl get pod --namespace ${namespace} 命令可以查看指定 namespace 下的 pod 状态和 podname。"
 }
 ---
 

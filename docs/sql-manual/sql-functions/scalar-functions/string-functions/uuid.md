@@ -1,7 +1,8 @@
 ---
 {
     "title": "UUID",
-    "language": "en"
+    "language": "en",
+    "description": "The UUID function generates a random Universally Unique Identifier (UUID). The generated UUID conforms to RFC 4122 standard,"
 }
 ---
 

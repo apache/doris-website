@@ -1,7 +1,8 @@
 ---
 {
     "title": "BITMAP_SUBSET_IN_RANGE",
-    "language": "en"
+    "language": "en",
+    "description": "Returns a subset of the Bitmap within the specified range (excluding the range end)."
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "FIND_IN_SET",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "返回 strlist 中第一次出现 str 的位置（从 1 开始计数）。"
 }
 ---
 

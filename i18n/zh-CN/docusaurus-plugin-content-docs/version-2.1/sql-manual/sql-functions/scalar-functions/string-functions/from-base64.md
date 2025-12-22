@@ -1,7 +1,8 @@
 ---
 {
     "title": "FROM_BASE64",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "返回对输入的字符串进行 Base64 解码后的结果。特殊情况："
 }
 ---
 

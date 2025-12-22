@@ -1,7 +1,8 @@
 ---
 {
     "title": "SHOW ROW POLICY",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "查看行安全策略。"
 }
 ---
 

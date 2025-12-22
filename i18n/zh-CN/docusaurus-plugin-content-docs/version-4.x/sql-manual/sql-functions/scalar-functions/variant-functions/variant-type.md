@@ -1,7 +1,8 @@
 ---
 {
     "title": "VARIANT_TYPE",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "VARIANTTYPE 函数用于返回 VARIANT 类型值的实际类型。 该函数通常用于调试或分析 VARIANT 数据的结构，辅助进行类型判断和数据处理。"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "数据导出概述",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "数据导出功能，用于将查询结果集或者 Apache Doris 的表数据，使用指定的文件格式，写入指定的存储系统中的。"
 }
 ---
 

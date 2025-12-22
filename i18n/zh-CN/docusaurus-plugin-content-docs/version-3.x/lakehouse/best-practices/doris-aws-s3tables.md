@@ -1,9 +1,9 @@
 ---
 {
     "title": "集成 Glue + AWS S3 Tables",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "AWS S3 Tables 是一种特殊的 S3 Bucket 类型，其对外提供 Apache Iceberg 表格式标准的读写接口，底层依托 Amazon S3，提供和 S3 本身相同的持久性、可用性、可扩展性和性能特征。此外，S3 Tables 还提供以下特性："
 }
-
 ---
 
 [AWS S3 Tables](https://aws.amazon.com/s3/features/tables/) 是一种特殊的 S3 Bucket 类型，其对外提供 Apache Iceberg 表格式标准的读写接口，底层依托 Amazon S3，提供和 S3 本身相同的持久性、可用性、可扩展性和性能特征。此外，S3 Tables 还提供以下特性：

@@ -1,7 +1,8 @@
 ---
 {
     "title": "TOP_LEVEL_DOMAIN",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "TOPLEVELDOMAIN 函数用于从 URL 中提取顶级域名。如果输入的 URL 不合法，则返回空字符串。"
 }
 ---
 

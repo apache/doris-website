@@ -1,7 +1,8 @@
 ---
 {
     "title": "PARSE_DATA_SIZE",
-    "language": "en"
+    "language": "en",
+    "description": "The PARSEDATASIZE function parses a string with storage units (such as \"1.5GB\") and converts it to a numeric value in bytes."
 }
 ---
 

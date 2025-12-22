@@ -1,7 +1,8 @@
 ---
 {
-  "title": "HDFS",
-  "language": "zh-CN"
+    "title": "HDFS",
+    "language": "zh-CN",
+    "description": "本文档用于介绍访问 HDFS 时所需的参数。这些参数适用于："
 }
 ---
 

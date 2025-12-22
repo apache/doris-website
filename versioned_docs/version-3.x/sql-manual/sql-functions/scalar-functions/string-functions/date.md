@@ -1,9 +1,11 @@
 ---
 {
     "title": "DATE",
-    "language": "en"
+    "language": "en",
+    "description": "Extracts the date from the datetime."
 }
 ---
+
 ## Description
 
 Extracts the date from the datetime.

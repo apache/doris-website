@@ -1,7 +1,8 @@
 ---
 {
-  "title": "TIMESTAMPADD",
-  "language": "en"
+    "title": "TIMESTAMPADD",
+    "language": "en",
+    "description": "Same functionality as the dateadd function The TIMESTAMPADD function adds (or subtracts) a specified time interval of a specified unit to a given "
 }
 ---
 

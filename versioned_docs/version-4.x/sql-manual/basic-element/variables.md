@@ -1,7 +1,8 @@
 ---
 {
     "title": "Variables",
-    "language": "en"
+    "language": "en",
+    "description": "In Doris, variables are divided into system variables and user variables. Both are case-insensitive."
 }
 ---
 

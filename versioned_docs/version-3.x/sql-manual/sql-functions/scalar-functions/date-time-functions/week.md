@@ -1,7 +1,8 @@
 ---
 {
     "title": "WEEK",
-    "language": "en"
+    "language": "en",
+    "description": "Returns the week number for date.The value of the mode argument defaults to 0. The following table describes how the mode argument works."
 }
 ---
 

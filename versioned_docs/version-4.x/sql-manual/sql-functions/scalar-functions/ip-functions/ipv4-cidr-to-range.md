@@ -1,7 +1,8 @@
 ---
 {
     "title": "IPV4_CIDR_TO_RANGE",
-    "language": "en"
+    "language": "en",
+    "description": "Calculates the minimum and maximum IPv4 addresses for a network segment based on an IPv4 address and CIDR prefix length,"
 }
 ---
 

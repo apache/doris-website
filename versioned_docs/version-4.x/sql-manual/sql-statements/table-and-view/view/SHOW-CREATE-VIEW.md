@@ -1,7 +1,8 @@
 ---
 {
     "title": "SHOW CREATE VIEW",
-    "language": "en"
+    "language": "en",
+    "description": "Display the CREATE VIEW statement used to create the specified view."
 }
 ---
 

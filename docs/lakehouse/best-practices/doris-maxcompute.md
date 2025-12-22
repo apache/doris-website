@@ -1,9 +1,9 @@
 ---
 {
     "title": "From MaxCompute to Doris",
-    "language": "en"
+    "language": "en",
+    "description": "This document explains how to quickly import data from Alibaba Cloud MaxCompute into Apache Doris using the MaxCompute Catalog."
 }
-
 ---
 
 This document explains how to quickly import data from Alibaba Cloud MaxCompute into Apache Doris using the [MaxCompute Catalog](../catalogs/maxcompute-catalog.md).

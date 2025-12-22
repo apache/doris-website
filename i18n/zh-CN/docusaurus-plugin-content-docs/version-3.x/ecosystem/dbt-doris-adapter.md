@@ -1,7 +1,8 @@
 ---
 {
-  "title": "DBT Doris Adapter",
-  "language": "zh-CN"
+    "title": "DBT Doris Adapter",
+    "language": "zh-CN",
+    "description": "DBT(Data Build Tool) 是专注于做 ELT（提取、加载、转换）中的 T（Transform）—— “转换数据”环节的组件 dbt-doris adapter 是基于dbt-core 开发，依赖于mysql-connector-python驱动对 doris 进行数据转换。"
 }
 ---
 

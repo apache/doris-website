@@ -1,7 +1,8 @@
 ---
 {
-"title": "SM3",
-"language": "zh-CN"
+    "title": "SM3",
+    "language": "zh-CN",
+    "description": "计算 SM3 256-bit"
 }
 ---
 

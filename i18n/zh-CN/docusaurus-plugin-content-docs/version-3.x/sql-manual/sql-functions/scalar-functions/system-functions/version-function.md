@@ -1,7 +1,8 @@
 ---
 {
     "title": "VERSION",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "无实际意义，兼容 MySQL 协议。"
 }
 ---
 

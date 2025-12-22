@@ -1,7 +1,8 @@
 ---
 {
-"title": "CREATE ASYNC MATERIALIZED VIEW",
-"language": "en"
+    "title": "CREATE ASYNC MATERIALIZED VIEW",
+    "language": "en",
+    "description": "Statement for creating an asynchronous materialized view. The column names and types are derived from the materialized view SQL statement."
 }
 ---
 

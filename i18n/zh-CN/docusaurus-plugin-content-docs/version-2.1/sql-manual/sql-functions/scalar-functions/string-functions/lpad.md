@@ -1,7 +1,8 @@
 ---
 {
     "title": "LPAD",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "返回 str 中长度为 len（从首字母开始算起）的字符串。"
 }
 ---
 

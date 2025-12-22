@@ -1,7 +1,8 @@
 ---
 {
     "title": "AI_SIMILARITY",
-    "language": "en"
+    "language": "en",
+    "description": "Determines the semantic similarity between two texts."
 }
 ---
 

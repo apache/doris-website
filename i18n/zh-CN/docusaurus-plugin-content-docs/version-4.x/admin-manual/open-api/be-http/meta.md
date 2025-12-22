@@ -1,7 +1,8 @@
 ---
 {
     "title": "查询元信息",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "查询 tablet 元信息"
 }
 ---
 

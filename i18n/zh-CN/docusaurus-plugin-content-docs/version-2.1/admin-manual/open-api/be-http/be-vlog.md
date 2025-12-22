@@ -1,7 +1,8 @@
 ---
 {
     "title": "调整 BE VLOG",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "该功能用于动态调整 BE 端 VLOG 日志。"
 }
 ---
 

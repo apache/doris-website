@@ -1,7 +1,8 @@
 ---
 {
     "title": "全文检索操作符",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "全文检索操作符判断一个列是否满足指定的全文检索条件（关键词、短语等），结果可以是 TRUE、FALSE 或 UNKNOWN。"
 }
 ---
 

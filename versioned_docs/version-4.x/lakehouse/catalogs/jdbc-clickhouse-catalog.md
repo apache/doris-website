@@ -1,7 +1,8 @@
 ---
 {
     "title": "Clickhouse JDBC Catalog",
-    "language": "en"
+    "language": "en",
+    "description": "The Doris JDBC Catalog supports connecting to the ClickHouse database via the standard JDBC interface."
 }
 ---
 

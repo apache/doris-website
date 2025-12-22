@@ -1,7 +1,8 @@
 ---
 {
     "title": "YEARS_DIFF",
-    "language": "en"
+    "language": "en",
+    "description": "The YEARSDIFF function is used to calculate the complete year difference between two date or time values,"
 }
 ---
 

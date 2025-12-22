@@ -1,7 +1,8 @@
 ---
 {
     "title": "CLEAN ALL QUERY STATS",
-    "language": "en"
+    "language": "en",
+    "description": "This statement is used to clear query statistics"
 }
 ---
 

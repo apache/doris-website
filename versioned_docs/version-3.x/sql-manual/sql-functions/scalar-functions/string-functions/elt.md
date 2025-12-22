@@ -1,7 +1,8 @@
 ---
 {
     "title": "ELT",
-    "language": "en"
+    "language": "en",
+    "description": "Returns a string at the specified index. Special cases:"
 }
 ---
 

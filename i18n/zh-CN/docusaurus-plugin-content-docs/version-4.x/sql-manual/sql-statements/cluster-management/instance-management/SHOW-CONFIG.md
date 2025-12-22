@@ -1,7 +1,8 @@
 ---
 {
     "title": "SHOW CONFIG",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "该语句用于展示当前集群的配置（当前仅支持展示 FE 的配置项）"
 }
 ---
 

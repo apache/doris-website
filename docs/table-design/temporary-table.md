@@ -1,7 +1,8 @@
 ---
 {
     "title": "Temporary Table",
-    "language": "en"
+    "language": "en",
+    "description": "When performing complex data processing tasks, breaking down large SQL queries into multiple steps and temporarily saving the results of each step as "
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "session_variables",
-    "language": "en"
+    "language": "en",
+    "description": "View session variable information."
 }
 ---
 

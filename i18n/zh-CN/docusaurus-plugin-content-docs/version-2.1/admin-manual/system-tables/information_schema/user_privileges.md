@@ -1,7 +1,8 @@
 ---
 {
     "title": "user_privileges",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "查看用户赋权信息。"
 }
 ---
 

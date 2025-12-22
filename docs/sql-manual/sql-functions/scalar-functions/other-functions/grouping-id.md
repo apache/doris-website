@@ -1,7 +1,8 @@
 ---
 {
     "title": "GROUPING_ID",
-    "language": "en"
+    "language": "en",
+    "description": "Computes the level of grouping for rows in a GROUP BY query."
 }
 ---
 

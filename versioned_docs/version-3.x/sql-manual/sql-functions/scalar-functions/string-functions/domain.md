@@ -1,7 +1,8 @@
 ---
 {
     "title": "DOMAIN",
-    "language": "en"
+    "language": "en",
+    "description": "Extract the domain name from the string URL"
 }
 ---
 

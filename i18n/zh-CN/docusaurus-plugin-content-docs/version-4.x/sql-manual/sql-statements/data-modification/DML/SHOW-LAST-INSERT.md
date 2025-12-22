@@ -1,7 +1,8 @@
 ---
 {
     "title": "SHOW LAST INSERT",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "该语法用于查看在当前 session 连接中，最近一次 insert 操作的结果"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
-  "title": "FAQ",
-  "language": "en"
+    "title": "FAQ",
+    "language": "en",
+    "description": "Doris internally calculates the partition correspondence between the materialized view and the base tables and records the version of the base table "
 }
 ---
 

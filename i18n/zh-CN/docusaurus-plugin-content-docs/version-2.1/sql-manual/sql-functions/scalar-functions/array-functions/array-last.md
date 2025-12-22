@@ -1,7 +1,8 @@
 ---
 {
     "title": "ARRAY_LAST",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "使用一个 lambda 表达式和一个 ARRAY 作为输入参数，lambda 表达式为布尔型，用于对 ARRAY 中的每个元素进行判断返回值。 返回数组中的最后一个 lambda(arr1[i]) 值不为 0 的元素。当数组中所有元素进行 lambda(arr1[i]) 都为 0 时，"
 }
 ---
 

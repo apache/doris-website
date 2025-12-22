@@ -1,7 +1,8 @@
 ---
 {
     "title": "TIME",
-    "language": "en"
+    "language": "en",
+    "description": "The TIME(p) type stores time, where p is the precision, with the range of values for p being [0, 6], and the default value is 0. That is,"
 }
 ---
 

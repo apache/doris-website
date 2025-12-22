@@ -1,7 +1,8 @@
 ---
 {
     "title": "RECOVER",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "该语句用于恢复之前删除的 database、table 或者 partition。"
 }
 ---
 

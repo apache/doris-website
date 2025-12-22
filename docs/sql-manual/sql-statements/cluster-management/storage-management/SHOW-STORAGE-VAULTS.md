@@ -1,7 +1,8 @@
 ---
 {
     "title": "SHOW STORAGE VAULTS",
-    "language": "en"
+    "language": "en",
+    "description": "The SHOW STORAGE VAULTS command is used to display information about all storage vaults configured in the system."
 }
 ---
 

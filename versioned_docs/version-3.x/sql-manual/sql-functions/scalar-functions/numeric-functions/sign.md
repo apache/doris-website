@@ -1,7 +1,8 @@
 ---
 {
     "title": "SIGN",
-    "language": "en"
+    "language": "en",
+    "description": "Returns the sign of x. Negative, zero or positive numbers correspond to -1, 0 or 1 respectively."
 }
 ---
 

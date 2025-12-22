@@ -1,7 +1,8 @@
 ---
 {
     "title": "SUB_TIME",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "从给定的日期时间/时间表达式中减去指定的时间间隔。若第二个参数为负数，则等价于向第一个参数中添加该时间间隔。"
 }
 ---
 

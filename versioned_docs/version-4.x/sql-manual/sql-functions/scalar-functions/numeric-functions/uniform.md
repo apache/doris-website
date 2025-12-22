@@ -1,7 +1,8 @@
 ---
 {
     "title": "UNIFORM",
-    "language": "en"
+    "language": "en",
+    "description": "Using the given random seed, uniformly sample and generate random numbers within a specific range."
 }
 ---
 

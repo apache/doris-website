@@ -1,7 +1,8 @@
 ---
 {
     "title": "MySQL JDBC Catalog",
-    "language": "en"
+    "language": "en",
+    "description": "Doris JDBC Catalog supports connecting to MySQL databases via the standard JDBC interface."
 }
 ---
 

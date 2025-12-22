@@ -1,7 +1,8 @@
 ---
 {
     "title": "CONVERT_TZ",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "转换 datetime 值，从 fromtz 给定时区转到 totz 给定时区，并返回结果值，时区设置请查看 时区管理 文档。"
 }
 ---
 

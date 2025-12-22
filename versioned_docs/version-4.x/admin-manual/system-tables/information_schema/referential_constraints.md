@@ -1,7 +1,8 @@
 ---
 {
     "title": "referential_constraints",
-    "language": "en"
+    "language": "en",
+    "description": "This table is only used for compatibility with MySQL behavior. It is always empty."
 }
 ---
 

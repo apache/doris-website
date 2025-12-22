@@ -1,7 +1,8 @@
 ---
 {
     "title": "MODIFY BACKEND",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "该语句用于修改 BE 节点属性，修改 BE 节点属性后，会影响到当前的节点的查询、写入和数据分布。以下是支持修改的属性："
 }
 ---
 

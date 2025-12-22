@@ -1,7 +1,8 @@
 ---
 {
     "title": "STARTS_WITH",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "STARTSWITH 函数检查字符串是否以指定的前缀开头。如果字符串以指定的前缀开头，则返回 true；否则返回 false。"
 }
 ---
 

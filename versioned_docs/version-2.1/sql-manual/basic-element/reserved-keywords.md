@@ -1,7 +1,8 @@
 ---
 {
     "title": "Reserved Keywords",
-    "language": "en"
+    "language": "en",
+    "description": "Reserved keywords are words that have special meanings in SQL. Reserved keywords are a special category of keywords;"
 }
 ---
 

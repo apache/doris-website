@@ -1,7 +1,8 @@
 ---
 {
     "title": "User Property",
-    "language": "en"
+    "language": "en",
+    "description": "This document mainly introduces related configuration items at the User level."
 }
 ---
 

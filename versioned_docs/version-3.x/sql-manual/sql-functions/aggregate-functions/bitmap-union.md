@@ -1,7 +1,8 @@
 ---
 {
-"title": "BITMAP_UNION",
-"language": "en"
+    "title": "BITMAP_UNION",
+    "language": "en",
+    "description": "Calculate the union of input Bitmaps and return a new bitmap"
 }
 ---
 

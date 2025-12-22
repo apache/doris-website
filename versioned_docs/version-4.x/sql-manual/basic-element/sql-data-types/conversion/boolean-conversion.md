@@ -1,7 +1,8 @@
 ---
 {
     "title": "Cast to BOOLEAN Type",
-    "language": "en"
+    "language": "en",
+    "description": "The BOOLEAN type represents true or false values, with only two possible states: true value and false value."
 }
 ---
 

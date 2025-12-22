@@ -1,7 +1,8 @@
 ---
 {
     "title": "SHOW PARTITIONS",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "该语句用于展示分区信息。支持 Internal catalog 和 Hive Catalog。"
 }
 ---
 

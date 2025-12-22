@@ -1,10 +1,10 @@
 ---
 {
     "title": "ST_ASBINARY",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "将一个几何图形转换为标准的 WKB (Well-Known Binary) 二进制表示形式。WKB 是一种用于表示地理空间数据的二进制格式，广泛应用于地理信息系统 (GIS) 中。"
 }
 ---
-
 
 <!-- 
 Licensed to the Apache Software Foundation (ASF) under one

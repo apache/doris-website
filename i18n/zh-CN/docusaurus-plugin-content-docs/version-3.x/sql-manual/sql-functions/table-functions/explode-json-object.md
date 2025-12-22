@@ -1,7 +1,8 @@
 ---
 {
-"title": "EXPLODE_JSON_OBJECT",
-"language": "zh-CN"
+    "title": "EXPLODE_JSON_OBJECT",
+    "language": "zh-CN",
+    "description": "explodejsonobject 将 JSON 对象展开为多行，每行包含一个键值对。通常用于处理 JSON 数据，将 JSON 对象展开为更易查询的格式。该函数只支持包含元素的 JSON 对象。"
 }
 ---
 

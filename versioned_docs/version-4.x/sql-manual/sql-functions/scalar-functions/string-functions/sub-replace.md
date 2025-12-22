@@ -1,7 +1,8 @@
 ---
 {
-"title": "SUB_REPLACE",
-"language": "en"
+    "title": "SUB_REPLACE",
+    "language": "en",
+    "description": "The subreplace function is used to replace substrings within a string."
 }
 ---
 

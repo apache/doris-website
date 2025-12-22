@@ -1,7 +1,8 @@
 ---
 {
     "title": "BigQuery Catalog",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "BigQuery Catalog 通过 Trino Connector 兼容框架，使用 BigQuery Connector 来访问 BigQuery 表。"
 }
 ---
 

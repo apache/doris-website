@@ -1,5 +1,8 @@
 ---
-{ 'title': 'Reordering Join With Leading Hint', 'language': 'en' }
+{ 'title': 'Reordering Join With Leading Hint', 'language': 'en',
+  "description": "The Leading Hint feature allows users to manually specify the join order of tables in a query,"
+
+}
 ---
 
 ## Overview

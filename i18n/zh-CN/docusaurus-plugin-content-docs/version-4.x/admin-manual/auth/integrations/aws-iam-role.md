@@ -1,7 +1,8 @@
 ---
 {
     "title": "Apache Doris IAM Assume Role工作原理",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "AWS Assume Role 是一种安全身份切换机制，允许一个可信实体（如IAM用户、EC2实例或外部账号）通过STS（安全令牌服务）临时获取目标角色的权限，其运作流程如下:"
 }
 ---
 

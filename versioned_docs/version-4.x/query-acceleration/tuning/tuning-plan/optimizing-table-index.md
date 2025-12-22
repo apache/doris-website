@@ -1,7 +1,8 @@
 ---
 {
     "title": "Optimizing Table Index Design",
-    "language": "en"
+    "language": "en",
+    "description": "Doris currently supports two types of indexes:"
 }
 ---
 

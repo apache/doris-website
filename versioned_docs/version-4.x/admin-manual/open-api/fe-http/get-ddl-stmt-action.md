@@ -1,7 +1,8 @@
 ---
 {
     "title": "Get DDL Statement Action",
-    "language": "en"
+    "language": "en",
+    "description": "Used to get the table creation statement, partition creation statement and rollup statement of the specified table."
 }
 ---
 

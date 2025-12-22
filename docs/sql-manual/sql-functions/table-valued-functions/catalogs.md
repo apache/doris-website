@@ -1,7 +1,8 @@
 ---
 {
     "title": "CATALOGS",
-    "language": "en"
+    "language": "en",
+    "description": "The CATALOGS() function generates a temporary catalogs table,"
 }
 ---
 

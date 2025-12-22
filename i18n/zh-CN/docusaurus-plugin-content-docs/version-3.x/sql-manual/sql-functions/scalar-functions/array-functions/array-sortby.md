@@ -1,7 +1,8 @@
 ---
 {
     "title": "ARRAY_SORTBY",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "首先将 key 列升序排列，然后将 src 列按此顺序排序后的对应列做为结果返回; 如果输入数组 src 为 NULL，则返回 NULL。 如果输入数组 key 为 NULL，则直接返回 src 数组。 如果输入数组 key 元素包含 NULL, 则输出的排序数组会将 NULL 放在最前面。"
 }
 ---
 

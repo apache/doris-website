@@ -1,7 +1,8 @@
 ---
 {
     "title": "Query Optimizers",
-    "language": "en"
+    "language": "en",
+    "description": "In the current information technology landscape, query optimizers face multiple challenges: on the one hand,"
 }
 ---
 

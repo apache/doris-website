@@ -1,7 +1,8 @@
 ---
 {
     "title": "table_privileges",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "查看表的赋权信息。"
 }
 ---
 

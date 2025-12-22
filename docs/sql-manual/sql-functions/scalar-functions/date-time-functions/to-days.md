@@ -1,7 +1,8 @@
 ---
 {
     "title": "TO_DAYS",
-    "language": "en"
+    "language": "en",
+    "description": "A date calculation function that converts a date to a numeric value representing days,"
 }
 ---
 

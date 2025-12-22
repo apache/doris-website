@@ -1,7 +1,8 @@
 ---
 {
     "title": "TO_IPV6",
-    "language": "en"
+    "language": "en",
+    "description": "Takes the string form of an IPv6 address and returns a value of IPv6 type."
 }
 ---
 

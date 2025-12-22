@@ -1,7 +1,8 @@
 ---
 {
     "title": "DATE_FLOOR",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "DATEFLOOR 函数用于将指定的日期或时间值向下取整（floor）到最近的指定时间间隔周期的起点。即返回不大于输入日期时间的最大周期时刻，周期规则由 period（周期数量）和 type（周期单位）共同定义，所有周期均以固定起点 0001-01-01 00:00:00 为基准计算。"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "Metadata Cache",
-    "language": "en"
+    "language": "en",
+    "description": "To improve the performance of accessing external data sources, Apache Doris caches the metadata of external data sources."
 }
 ---
 

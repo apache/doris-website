@@ -1,7 +1,8 @@
 ---
 {
-"title": "ALTER COLOCATE GROUP",
-"language": "en"
+    "title": "ALTER COLOCATE GROUP",
+    "language": "en",
+    "description": "This statement is used to modify the properties of a Colocation Group."
 }
 ---
 

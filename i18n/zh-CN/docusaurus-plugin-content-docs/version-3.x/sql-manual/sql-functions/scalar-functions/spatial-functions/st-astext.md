@@ -1,7 +1,8 @@
 ---
 {
     "title": "ST_ASTEXT",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "将一个几何图形转换为 WKT (Well-Known Text) 文本表示形式。WKT 是一种用于表示地理空间数据的文本格式，广泛应用于地理信息系统 (GIS) 中。"
 }
 ---
 

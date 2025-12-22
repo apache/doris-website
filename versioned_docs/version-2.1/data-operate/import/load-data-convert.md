@@ -1,7 +1,8 @@
 ---
 {
     "title": "Transforming Data During Load",
-    "language": "en"
+    "language": "en",
+    "description": "Doris provides powerful data transformation capabilities during data loading,"
 }
 ---
 

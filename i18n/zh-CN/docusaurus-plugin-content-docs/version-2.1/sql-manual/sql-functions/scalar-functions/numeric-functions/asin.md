@@ -1,7 +1,8 @@
 ---
 {
     "title": "ASIN",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "返回x的反正弦值，若 x不在-1到 1的范围之内，则返回 nan."
 }
 ---
 

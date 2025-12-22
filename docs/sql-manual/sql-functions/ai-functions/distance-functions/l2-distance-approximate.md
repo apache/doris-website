@@ -1,7 +1,8 @@
 ---
 {
     "title": "L2_DISTANCE_APPROXIMATE",
-    "language": "en"
+    "language": "en",
+    "description": "Approximate version of l2distance. If related array column has ann index built on it, result of this function could be collected from index."
 }
 ---
 

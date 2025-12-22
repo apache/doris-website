@@ -1,7 +1,8 @@
 ---
 {
     "title": "DATE_CEIL",
-    "language": "en"
+    "language": "en",
+    "description": "dateceil rounds a given date to the next upper boundary of the specified time interval."
 }
 ---
 

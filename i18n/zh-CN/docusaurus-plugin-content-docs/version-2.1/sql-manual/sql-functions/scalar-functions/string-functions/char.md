@@ -1,7 +1,8 @@
 ---
 {
     "title": "CHAR",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "将每个参数解释为整数，并返回一个字符串，该字符串由这些整数的代码值给出的字符组成。特殊情况："
 }
 ---
 

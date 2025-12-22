@@ -1,7 +1,8 @@
 ---
 {
     "title": "公用表表达式（CTE）",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "公用表表达式（Common Table Expression）定义一个临时结果集，你可以在 SQL 语句的范围内多次引用。CTE 主要用于 SELECT 语句中。"
 }
 ---
 

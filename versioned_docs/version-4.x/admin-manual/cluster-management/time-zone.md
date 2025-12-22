@@ -1,7 +1,8 @@
 ---
 {
     "title": "Time Zone",
-    "language": "en"
+    "language": "en",
+    "description": "Doris supports custom time zone settings"
 }
 ---
 

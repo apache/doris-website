@@ -1,7 +1,8 @@
 ---
 {
-"title": "EXPLODE_JSON_ARRAY_JSON",
-"language": "zh-CN"
+    "title": "EXPLODE_JSON_ARRAY_JSON",
+    "language": "zh-CN",
+    "description": "explodejsonarrayjson 表函数，接受一个 JSON 数组，其中每个元素是 JSON 对象类型，将该 JSON 数组中的每个 JSON 对象展开为多行，每行包含一个 JSON 对象。配合 LATERAL VIEW 使用。"
 }
 ---
 

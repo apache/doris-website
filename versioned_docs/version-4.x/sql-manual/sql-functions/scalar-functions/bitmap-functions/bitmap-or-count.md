@@ -1,7 +1,8 @@
 ---
 {
     "title": "BITMAP_OR_COUNT",
-    "language": "en"
+    "language": "en",
+    "description": "Computes the union of two or more input Bitmaps and returns the count of elements in the union."
 }
 ---
 

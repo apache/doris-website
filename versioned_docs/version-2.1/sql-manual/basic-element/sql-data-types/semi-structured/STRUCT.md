@@ -1,7 +1,8 @@
 ---
 {
     "title": "STRUCT",
-    "language": "en"
+    "language": "en",
+    "description": "STRUCT"
 }
 ---
 

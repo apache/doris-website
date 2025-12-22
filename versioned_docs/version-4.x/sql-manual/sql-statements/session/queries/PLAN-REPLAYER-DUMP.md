@@ -1,7 +1,8 @@
 ---
 {
     "title": "PLAN REPLAYER DUMP",
-    "language": "en"
+    "language": "en",
+    "description": "PLAN REPLAYER DUMP is a tool for Doris users to generate execution plan diagnostic files. It captures the state and input data of the query optimizer,"
 }
 ---
 

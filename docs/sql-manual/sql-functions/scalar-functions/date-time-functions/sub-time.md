@@ -1,7 +1,8 @@
 ---
 {
     "title": "SUB_TIME",
-    "language": "en"
+    "language": "en",
+    "description": "Subtracts the specified time interval from a date/time or time expression. If the second parameter is negative,"
 }
 ---
 

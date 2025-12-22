@@ -1,7 +1,8 @@
 ---
 {
     "title": "JOBS",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "表函数，生成任务临时表，可以查看某个任务类型中的 job 信息。"
 }
 ---
 

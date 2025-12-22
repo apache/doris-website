@@ -1,7 +1,8 @@
 ---
 {
     "title": "操作手册",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "Syncer 同步时需要用户提供上下游的账户，该账户需要拥有下述权限："
 }
 ---
 

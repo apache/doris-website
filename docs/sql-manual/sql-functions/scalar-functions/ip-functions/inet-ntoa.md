@@ -1,7 +1,8 @@
 ---
 {
     "title": "IPV4_NUM_TO_STRING",
-    "language": "en"
+    "language": "en",
+    "description": "Alias for ipv4numtostring."
 }
 ---
 

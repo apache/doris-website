@@ -1,7 +1,8 @@
 ---
 {
     "title": "转换为 IP 类型",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "IP 类型用于存储和处理 IP 地址，包括 IPv4 和 IPv6 两种类型。IPv4 的底层存储为 uint32，而 IPv6 的底层存储为 uint128。"
 }
 ---
 

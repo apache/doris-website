@@ -1,7 +1,8 @@
 ---
 {
     "title": "读写分离场景下缓存优化最佳实践",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "在使用 Apache Doris 的存算分离架构时，特别是部署了多个计算组（Compute Group）来实现读写分离的场景下，查询性能高度依赖于 File Cache 的命中率。当只读计算组（Read-Only Compute Group）的缓存未命中（Cache Miss）时，"
 }
 ---
 

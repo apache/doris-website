@@ -1,9 +1,9 @@
 ---
 {
     "title": "File Cache Internals",
-    "language": "en"
+    "language": "en",
+    "description": "Doris employs cache slicing and prefetch mechanisms to optimize data cache management and read efficiency. Specifically,"
 }
-
 ---
 
 ## Fundamentals

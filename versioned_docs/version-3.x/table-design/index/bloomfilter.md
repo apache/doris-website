@@ -1,7 +1,8 @@
 ---
 {
     "title": "BloomFilter Index",
-    "language": "en"
+    "language": "en",
+    "description": "The BloomFilter index is a type of skip index based on BloomFilter."
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
-  "title": "TIMESTAMPDIFF",
-  "language": "zh-CN"
+    "title": "TIMESTAMPDIFF",
+    "language": "zh-CN",
+    "description": "与 date-diff 函数 作用一致 TIMESTAMPDIFF 函数用于计算两个日期时间值之间的差值，并以指定的时间单位返回结果。该函数支持多种时间单位（如秒、分、时、日、周、月、年）"
 }
 ---
 

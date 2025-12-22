@@ -1,7 +1,8 @@
 ---
 {
     "title": "MILLISECONDS_DIFF",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "MILLISECONDSDIFF 函数用于计算两个日期时间值之间的毫秒差值，结果为结束时间减去开始时间的毫秒数。该函数支持处理DATETIME 类型。"
 }
 ---
 

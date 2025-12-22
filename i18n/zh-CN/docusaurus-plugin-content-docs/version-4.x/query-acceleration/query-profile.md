@@ -1,7 +1,8 @@
 ---
 {
     "title": "Profile 分析指南",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "Apache Doris 提供 Query Profile 用于展示查询执行细节。本文介绍 Query Profile 的整体架构与常用实践，主要包括："
 }
 ---
 

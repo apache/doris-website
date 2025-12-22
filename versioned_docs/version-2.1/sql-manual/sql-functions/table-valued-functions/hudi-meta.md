@@ -1,7 +1,8 @@
 ---
 {
-  "title": "HUDI_META",
-  "language": "en"
+    "title": "HUDI_META",
+    "language": "en",
+    "description": "hudimeta table-valued-function(tvf), using for read hudi metadata, operation history, timeline of table, instant state etc."
 }
 ---
 

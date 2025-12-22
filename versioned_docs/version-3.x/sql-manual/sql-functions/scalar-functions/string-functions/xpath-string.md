@@ -1,7 +1,8 @@
 ---
 {
     "title": "XPATH_STRING",
-    "language": "en"
+    "language": "en",
+    "description": "The XPATHSTRING function is used to parse the XML string and return the first XML node that matches the XPath expression."
 }
 ---
 

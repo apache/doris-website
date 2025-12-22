@@ -1,7 +1,8 @@
 ---
 {
     "title": "ST_AREA_SQUARE_METERS",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "计算地球球面上闭合区域的面积，单位为平方米。输入参数为表示地球表面区域的几何对象（如多边形、圆形、多面体等）。"
 }
 ---
 

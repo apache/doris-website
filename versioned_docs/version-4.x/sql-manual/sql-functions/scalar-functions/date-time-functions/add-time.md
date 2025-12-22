@@ -1,7 +1,8 @@
 ---
 {
     "title": "ADD_TIME",
-    "language": "en"
+    "language": "en",
+    "description": "Adds the specified time interval to a date/time or time expression. If the second parameter is negative,"
 }
 ---
 

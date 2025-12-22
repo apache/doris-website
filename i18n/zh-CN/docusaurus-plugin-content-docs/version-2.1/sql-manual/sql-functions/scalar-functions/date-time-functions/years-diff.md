@@ -1,7 +1,8 @@
 ---
 {
     "title": "YEARS_DIFF",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "计算两个日期时间值之间相差的年数。"
 }
 ---
 

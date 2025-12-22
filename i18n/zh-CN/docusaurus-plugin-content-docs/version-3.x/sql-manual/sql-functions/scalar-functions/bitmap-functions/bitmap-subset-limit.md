@@ -1,7 +1,8 @@
 ---
 {
     "title": "BITMAP_SUBSET_LIMIT",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "从不小于指定位置 position 开始，按照指定基数 cardinalitylimit 为上限截取 Bitmap 元素，返回一个 Bitmap 子集。"
 }
 ---
 

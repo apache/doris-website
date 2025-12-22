@@ -1,7 +1,8 @@
 ---
 {
-  "title": "Hive Metastore",
-  "language": "en"
+    "title": "Hive Metastore",
+    "language": "en",
+    "description": "This document describes all supported parameters when connecting to and accessing Hive MetaStore services through the CREATE CATALOG statement."
 }
 ---
 
