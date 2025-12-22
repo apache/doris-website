@@ -2,7 +2,7 @@
 {
     "title": "HTTP 安全传输",
     "language": "zh-CN",
-    "description": ":::tip"
+    "description": "Doris FE 接口开启 SSL 功能需要配置密钥证书，步骤如下："
 }
 ---
 

@@ -2,7 +2,7 @@
 {
     "title": "ALTER TABLE PROPERTY",
     "language": "zh-CN",
-    "description": ":::caution 分区属性与表属性的一些区别"
+    "description": "该语句用于对已有 table 的 property 进行修改操作。这个操作是同步的，命令返回表示执行完毕。"
 }
 ---
 

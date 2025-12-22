@@ -2,7 +2,7 @@
 {
     "title": "Convert to FLOAT/DOUBLE",
     "language": "en",
-    "description": ":::caution Behavior Change Since version 4.0, the result of overflow is no longer NULL, but +/-Infinity. :::"
+    "description": "If the source type is nullable, returns nullable type;"
 }
 ---
 

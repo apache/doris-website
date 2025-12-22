@@ -2,7 +2,7 @@
 {
     "title": "LakeSoul Catalog",
     "language": "zh-CN",
-    "description": ":::warning Note! 该功能自 3.1.0 版本后被移除。如需使用，请联系开发人员。 :::"
+    "description": "Doris 支持通过存储在 PostgreSQL 中的元数据，访问并读取 LakeSoul 表数据。"
 }
 ---
 

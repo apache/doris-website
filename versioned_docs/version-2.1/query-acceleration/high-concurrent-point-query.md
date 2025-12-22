@@ -2,7 +2,7 @@
 {
     "title": "High-Concurrency Point Query Optimization",
     "language": "en",
-    "description": ":::tip Tips This feature is supported since the Apache Doris 2.0 version :::"
+    "description": "Doris is built on a columnar storage format engine. In high-concurrency service scenarios,"
 }
 ---
 

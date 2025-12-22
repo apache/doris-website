@@ -2,7 +2,7 @@
 {
     "title": "AUTO_PARTITION_NAME",
     "language": "zh-CN",
-    "description": ":::tip 提示 该功能自 Apache Doris 2.1.6 版本起支持 :::"
+    "description": "遵循 RANGE 的分区名规则将 datetime 按照 unit 生成分区名"
 }
 ---
 

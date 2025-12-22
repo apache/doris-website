@@ -2,7 +2,7 @@
 {
     "title": "Profile Action",
     "language": "zh-CN",
-    "description": ":::caution 注意："
+    "description": "用于获取指定 query id 的 query profile 如果 queryid 不存在，直接返回 404 NOT FOUND 错误 如果 queryid 存在，返回下列文本的 profile:"
 }
 ---
 

@@ -2,7 +2,7 @@
 {
     "title": "数据库建表最佳实践",
     "language": "zh-CN",
-    "description": ":::note Doris 数据表模型上目前分为三类：DUPLICATE KEY, UNIQUE KEY, AGGREGATE KEY。 :::"
+    "description": "只指定排序列，相同的 KEY 行不会合并。"
 }
 ---
 

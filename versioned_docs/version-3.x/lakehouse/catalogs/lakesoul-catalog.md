@@ -2,7 +2,7 @@
 {
     "title": "LakeSoul Catalog",
     "language": "en",
-    "description": ":::warning Note! This feature is deprecated since 3.1.0. For usage inquiries, please contact the developers. :::"
+    "description": "Doris supports accessing and reading LakeSoul table data using metadata stored in PostgreSQL."
 }
 ---
 

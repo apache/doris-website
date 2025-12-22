@@ -2,7 +2,7 @@
 {
     "title": "AUTO_PARTITION_NAME",
     "language": "en",
-    "description": ":::tip tip Supported since Apache Doris 2.1.6 :::"
+    "description": "Generate datetime partition names by unit following RANGE's partition name rules"
 }
 ---
 

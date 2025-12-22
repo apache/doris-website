@@ -2,7 +2,7 @@
 {
     "title": "Best Practices",
     "language": "en",
-    "description": ":::tip Recommendations"
+    "description": "When only the sorting columns are specified, rows with the same key will not be merged."
 }
 ---
 

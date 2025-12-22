@@ -2,7 +2,7 @@
 {
     "title": "GEO",
     "language": "en",
-    "description": ":::info The GEO type described in this document is not an actual data type in Doris,"
+    "description": "Geospatial types are special data types in databases used to store and manipulate geospatial data,"
 }
 ---
 

@@ -169,7 +169,8 @@ function extractFirstRealParagraph(body, type) {
             /^\s*>/.test(line) || // 引用行
             /^\s*[-*_]{3,}\s*$/.test(line) || // hr
             (/^\s*import\s+/.test(line) && type === 'mdx') ||
-            /^[\s`]*`[^`\n]*`[\s`]*$/.test(line) // 代码行 `xxxx` (以反引号包裹的行内代码)
+            /^[\s`]*`[^`\n]*`[\s`]*$/.test(line) || // 代码行 `xxxx` (以反引号包裹的行内代码)
+            /^\s*!\[.*\]\(.*\)/.test(line)      // 新增：图片行 ![](url)
         ) {
             // 如果之前已经开始收集，则遇到这些结构视为段落边界并结束
             if (collecting) break;
