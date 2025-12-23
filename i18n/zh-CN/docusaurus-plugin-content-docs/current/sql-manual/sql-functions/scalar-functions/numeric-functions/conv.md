@@ -1,7 +1,8 @@
 ---
 {
     "title": "CONV",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "对输入的数字进行进制转换"
 }
 ---
 

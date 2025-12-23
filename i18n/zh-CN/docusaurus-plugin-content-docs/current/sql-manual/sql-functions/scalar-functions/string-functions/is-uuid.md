@@ -1,7 +1,8 @@
 ---
 {
     "title": "IS_UUID",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "如果参数是一个有效的uuid，返回1。如果是一个无效的uuid，返回0。参数为NULL，则返回NULL。"
 }
 ---
 

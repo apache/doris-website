@@ -1,7 +1,8 @@
 ---
 {
     "title": "SHOW DATABASE ID",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "该语句用于根据 database id 查找对应的 database name（仅管理员使用）"
 }
 ---
 

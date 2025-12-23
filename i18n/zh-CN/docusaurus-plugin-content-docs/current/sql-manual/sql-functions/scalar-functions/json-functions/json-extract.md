@@ -1,7 +1,8 @@
 ---
 {
     "title": "JSON_EXTRACT",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "从 JSON 类型的数据中提取 jsonpath 指定的字段。"
 }
 ---
 

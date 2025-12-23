@@ -1,7 +1,8 @@
 ---
 {
-"title": "ARRAY_MATCH_ANY",
-"language": "zh-CN"
+    "title": "ARRAY_MATCH_ANY",
+    "language": "zh-CN",
+    "description": "检查数组中是否有任何元素满足给定条件。如果数组包含 NULL 元素且所有非 NULL 元素都不满足条件，则返回 NULL。"
 }
 ---
 

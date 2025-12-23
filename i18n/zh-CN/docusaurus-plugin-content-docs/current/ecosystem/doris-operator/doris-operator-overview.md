@@ -1,7 +1,8 @@
 ---
 {
-  "title": "Doris Kubernetes Operator",
-  "language": "zh-CN"
+    "title": "Doris Kubernetes Operator",
+    "language": "zh-CN",
+    "description": "为满足用户在 Kubernetes 平台上对 Doris 的高效部署和运维需求诞生的 Kubernetes Operator（简称：Doris Operator）， 集成了原生 Kubernetes 资源的复杂管理能力，并融合了 Doris 组件间的分布式协同、用户集群形态的按需定制等经验，"
 }
 ---
 

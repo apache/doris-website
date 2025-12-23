@@ -1,7 +1,8 @@
 ---
 {
     "title": "MILLISECONDS_ADD",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "MILLISECONDSADD 函数用于向输入的日期时间值中添加指定的毫秒数，并返回计算后的新日期时间值。该函数支持处理含毫秒精度的 DATETIME 类型。"
 }
 ---
 

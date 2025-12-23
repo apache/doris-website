@@ -1,7 +1,8 @@
 ---
 {
     "title": "MySQL 安全传输",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "Doris支持基于SSL的加密连接，当前支持TLS1.2，TLS1.3协议，可以通过以下配置开启Doris的SSL模式： 修改FE配置文件conf/fe.conf，添加enablessl = true即可。"
 }
 ---
 

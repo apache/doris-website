@@ -1,7 +1,8 @@
 ---
 {
     "title": "UNINSTALL PLUGIN",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "该语句用于卸载一个插件"
 }
 ---
 

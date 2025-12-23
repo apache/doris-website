@@ -1,7 +1,8 @@
 ---
 {
     "title": "ELEMENT_AT",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "ELEMENTAT 函数用于从数组或 map 中按指定的索引或键提取对应的元素值。"
 }
 ---
 

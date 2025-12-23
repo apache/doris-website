@@ -1,7 +1,8 @@
 ---
 {
     "title": "FROM_HEX",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "将输入的二进制数据转换成使用十六进制编码转换后的字符串"
 }
 ---
 

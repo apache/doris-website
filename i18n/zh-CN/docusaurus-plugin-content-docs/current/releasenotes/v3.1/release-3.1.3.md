@@ -1,7 +1,8 @@
 ---
 {
     "title": "Release 3.1.3",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "Apache Doris 3.1.3版本发布，新增MaxCompute Catalog项目级模式、Azure Blob Storage支持、EXPLODE函数struct展开功能。优化云原生架构的balance同步预热、peer cache读取性能，升级libhdfs至3.4.2，修复存储、Catalog连接、SQL引擎等多项关键问题，全面提升多云环境下的稳定性和数据湖集成能力。"
 }
 ---
 

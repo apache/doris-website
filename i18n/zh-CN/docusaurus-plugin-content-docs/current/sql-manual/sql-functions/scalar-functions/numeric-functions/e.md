@@ -1,7 +1,8 @@
 ---
 {
     "title": "E",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "返回常量 e 值。"
 }
 ---
 

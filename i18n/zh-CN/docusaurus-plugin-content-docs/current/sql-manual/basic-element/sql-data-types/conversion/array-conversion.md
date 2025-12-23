@@ -1,7 +1,8 @@
 ---
 {
     "title": "转换为 ARRAY 类型",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "ARRAY 类型用于存储和处理数组数据，可以包含各种基本类型的元素，如整型、字符串等，内部也可以嵌套其他复杂类型。"
 }
 ---
 

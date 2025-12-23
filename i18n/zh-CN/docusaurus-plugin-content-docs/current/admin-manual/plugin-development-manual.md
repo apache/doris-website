@@ -1,7 +1,8 @@
 ---
 {
     "title": "插件开发",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "Doris 的插件框架支持在运行时添加/卸载自定义插件，而不需要重启服务，用户可以通过开发自己的插件来扩展 Doris 的功能。"
 }
 ---
 

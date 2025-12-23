@@ -1,7 +1,8 @@
 ---
 {
-"title": "EXPLODE_JSON_ARRAY_STRING_OUTER",
-"language": "zh-CN"
+    "title": "EXPLODE_JSON_ARRAY_STRING_OUTER",
+    "language": "zh-CN",
+    "description": "explodejsonarraystringouter 表函数，接受一个 JSON 数组，其实现逻辑是将 JSON 数组转换为数组类型然后再调用 explodeouter 函数处理，行为等价于：explodeouter(cast(<jsonarray> as Array<STRING>)) 。"
 }
 ---
 

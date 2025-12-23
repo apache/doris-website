@@ -1,7 +1,8 @@
 ---
 {
     "title": "TASKS",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "表函数，生成 tasks 临时表，可以查看当前 doris 集群中的 job 产生的 tasks 信息。"
 }
 ---
 

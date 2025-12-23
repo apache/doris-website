@@ -1,7 +1,8 @@
 ---
 {
-"title": "自定义标准化",
-    "language": "zh-CN"
+    "title": "自定义标准化",
+    "language": "zh-CN",
+    "description": "自定义标准化（Normalizer）用于对文本进行统一的预处理，通常用于不需要分词但需要标准化的场景（如关键字搜索）。与分词器（Analyzer）不同，Normalizer 不会对文本进行切分，而是将整个文本作为一个完整的词项（Token）进行处理，支持组合字符过滤器和词元过滤器，"
 }
 ---
 

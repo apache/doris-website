@@ -1,7 +1,8 @@
 ---
 {
     "title": "SHOW REPOSITORIES",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "该语句用于查看当前已创建的仓库"
 }
 ---
 

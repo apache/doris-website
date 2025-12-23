@@ -1,7 +1,8 @@
 ---
 {
     "title": "REVERSE",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "REVERSE 函数用于将输入序列的顺序颠倒。对于字符串参数，返回字符顺序颠倒的字符串；对于数组参数，返回元素顺序颠倒的数组。该函数按字符进行反转，能够正确处理 UTF-8 多字节字符。"
 }
 ---
 

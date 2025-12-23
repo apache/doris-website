@@ -1,7 +1,8 @@
 ---
 {
-  "title": "CloudCanal",
-  "language": "zh-CN"
+    "title": "CloudCanal",
+    "language": "zh-CN",
+    "description": "CloudCanal 是一款全自研、可视化、自动化的数据迁移、同步工具，支持 30+ 款流行关系型数据库、实时数仓、消息中间件、缓存数据库和搜索引擎之间的数据互通，具备实时高效、精确互联、稳定可拓展、一站式、混合部署、复杂数据转换等优点。"
 }
 ---
 

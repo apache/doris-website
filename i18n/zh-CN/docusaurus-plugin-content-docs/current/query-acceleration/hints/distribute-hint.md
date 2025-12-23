@@ -1,7 +1,8 @@
 ---
 {
     "title": "Distribute Hint",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "Distribute hint 用来控制 join 的 shuffle 方式。"
 }
 ---
 

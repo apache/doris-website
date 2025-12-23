@@ -1,7 +1,8 @@
 ---
 {
     "title": "workload_groups",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "记录 Workload Group 的配置信息"
 }
 ---
 

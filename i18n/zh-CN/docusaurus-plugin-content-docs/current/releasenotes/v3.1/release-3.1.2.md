@@ -1,7 +1,8 @@
 ---
 {
     "title": "Release 3.1.2",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "Apache Doris 3.1.2版本发布，新增表级压缩配置、云模式查询新鲜度控制、AWS Glue Catalog IAM AssumeRole支持等核心功能。优化COUNT(*)查询性能、Variant列缓存、Iceberg/Paimon数据湖集成，修复数据湖连接、查询执行、存储导入等多处缺陷，显著提升云原生环境下的大数据分析效率和稳定性。"
 }
 ---
 

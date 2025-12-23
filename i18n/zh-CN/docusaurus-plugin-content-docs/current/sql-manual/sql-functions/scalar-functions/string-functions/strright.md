@@ -1,7 +1,8 @@
 ---
 {
     "title": "STRRIGHT",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "STRRIGHT 函数（别名 RIGHT）用于从字符串的右侧截取指定长度的字符。"
 }
 ---
 

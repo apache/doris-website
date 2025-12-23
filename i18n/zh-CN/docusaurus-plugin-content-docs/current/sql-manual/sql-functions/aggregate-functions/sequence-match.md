@@ -1,7 +1,8 @@
 ---
 {
     "title": "SEQUENCE_MATCH",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "检查序列是否包含与模式匹配的事件链。"
 }
 ---
 

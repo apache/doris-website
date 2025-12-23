@@ -1,7 +1,8 @@
 ---
 {
     "title": "Release 4.0.1",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "Apache Doris 4.0.1版本发布，包含多项重要更新：新增mmh64_v2函数、json_hash函数、binary数据类型及MySQL兼容时间函数；优化SEARCH函数支持短语查询、通配符和正则查询；增强倒排索引和分词器功能；修复SHOW PARTITIONS命令、Lakehouse外表查询、JOIN算法优化等多处缺陷，提升系统稳定性和查询性能。"
 }
 ---
 

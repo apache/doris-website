@@ -1,7 +1,8 @@
 ---
 {
     "title": "Get WAL size",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "用户可以通过该 HTTP 接口获取指定 BE 的 WAL 文件的数目，若不指定 BE，则默认返回所有 BE 的 WAL 文件的数目。"
 }
 ---
 

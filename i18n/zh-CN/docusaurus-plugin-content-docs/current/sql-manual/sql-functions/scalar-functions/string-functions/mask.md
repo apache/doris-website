@@ -1,7 +1,8 @@
 ---
 {
     "title": "MASK",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "MASK 函数用于对数据进行屏蔽以保护敏感信息。默认行为是将大写字母转换为 X，小写字母转换为 x，数字转换为 n。"
 }
 ---
 

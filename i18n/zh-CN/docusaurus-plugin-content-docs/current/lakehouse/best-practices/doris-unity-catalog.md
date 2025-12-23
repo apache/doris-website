@@ -1,7 +1,8 @@
 ---
 {
     "title": "集成 Databricks Unity Catalog",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "随着企业在 Lakehouse 架构下统一管理不断增长的数据资产，对跨平台、高性能、受治理的数据访问能力的需求愈加迫切。Apache Doris 作为新一代实时分析型数据库，现已实现与 Databricks Unity Catalog 的深度集成，使企业能够在统一的治理体系下，"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "POW",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "用于计算 a 的 b 次方。"
 }
 ---
 

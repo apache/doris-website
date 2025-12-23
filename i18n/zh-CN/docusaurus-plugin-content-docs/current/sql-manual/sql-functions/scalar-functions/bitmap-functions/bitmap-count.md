@@ -1,7 +1,8 @@
 ---
 {
     "title": "BITMAP_COUNT",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "计算输入 BITMAP 的元素个数"
 }
 ---
 

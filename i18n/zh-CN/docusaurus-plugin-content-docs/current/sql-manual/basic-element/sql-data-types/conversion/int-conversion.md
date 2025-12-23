@@ -1,7 +1,8 @@
 ---
 {
     "title": "转换为 INT 类型",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "如果源类型是nullable，返回nullable类型；"
 }
 ---
 

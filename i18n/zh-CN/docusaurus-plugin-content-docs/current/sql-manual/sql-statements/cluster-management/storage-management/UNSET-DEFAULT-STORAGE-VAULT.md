@@ -1,7 +1,8 @@
 ---
 {
-   "title": "UNSET DEFAULT STORAGE VAULT",
-   "language": "zh-CN"
+    "title": "UNSET DEFAULT STORAGE VAULT",
+    "language": "zh-CN",
+    "description": "取消已指定的默认 Storage Vault"
 }
 ---
 

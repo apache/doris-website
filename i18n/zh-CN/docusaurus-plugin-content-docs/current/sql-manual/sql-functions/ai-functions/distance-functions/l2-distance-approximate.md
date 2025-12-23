@@ -1,7 +1,8 @@
 ---
 {
     "title": "L2_DISTANCE_APPROXIMATE",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "l2distance 的近似版本。如果相关的数组列在其上构建了 ANN 索引，则该函数的结果可以从索引中获取。"
 }
 ---
 

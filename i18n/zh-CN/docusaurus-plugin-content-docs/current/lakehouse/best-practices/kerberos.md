@@ -1,7 +1,8 @@
 ---
 {
     "title": "Kerberos 最佳实践",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "当用户使用 Doris 进行多数据源的联邦分析查询时，不同的集群可能使用不同的 Kerberos 认证凭据。"
 }
 ---
 

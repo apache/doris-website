@@ -1,9 +1,9 @@
 ---
 {
-"title": "CREATE STREAMING JOB",
-"language": "zh-CN"
+    "title": "CREATE STREAMING JOB",
+    "language": "zh-CN",
+    "description": "Doris Streaming Job 是基于 Job + TVF 的方式，创建一个持续导入任务。在提交 Job 作业后，Doris 会持续运行该导入作业，实时的查询 TVF 中的数据写入到 Doris 表中。"
 }
-
 ---
 
 ## 描述

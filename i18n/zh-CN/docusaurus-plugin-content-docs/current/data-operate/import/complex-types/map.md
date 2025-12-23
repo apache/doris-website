@@ -1,7 +1,8 @@
 ---
 {
     "title": "MAP",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "MAP<K, V> 表示由K,V类型元素组成的MAP。 点击MAP 数据类型 了解具体信息。"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "STATE",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "返回聚合函数的中间结果，可以用于后续的聚合或者通过 merge 组合器获得实际计算结果，也可以直接写入 aggstate 类型的表保存下来。 结果的类型为 aggstate，aggstate 中的函数签名为AGGREGATEFUNCTION(arg...)。"
 }
 ---
 

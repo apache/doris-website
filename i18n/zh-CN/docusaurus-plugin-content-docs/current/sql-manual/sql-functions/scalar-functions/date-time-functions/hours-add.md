@@ -1,7 +1,8 @@
 ---
 {
     "title": "HOURS_ADD",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "HOURSADD 函数用于在输入的日期或日期时间值上增加或减少指定的小时数，并返回计算后的新日期时间。该函数支持 DATE 和 DATETIME 两种输入类型,若输入为 DATE 类型（仅包含年月日），会默认其时间部分为 00:00:00 转换为 DATETIME 类型，再进行小时累加。"
 }
 ---
 

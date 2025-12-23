@@ -1,7 +1,8 @@
 ---
 {
     "title": "SPLIT_BY_REGEXP",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "SPLITBYREGEXP 函数用于根据指定的正则表达式模式将字符串拆分成字符串数组。与 SPLITBYSTRING 不同，该函数支持复杂的正则表达式匹配，可以处理更灵活的分割规则。支持可选的最大分割数量限制，在处理结构化文本、数据清洗和模式匹配中非常有用。"
 }
 ---
 

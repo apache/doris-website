@@ -1,7 +1,8 @@
 ---
 {
     "title": "routine_load_job",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "用于查看routine load导入作业的信息"
 }
 ---
 

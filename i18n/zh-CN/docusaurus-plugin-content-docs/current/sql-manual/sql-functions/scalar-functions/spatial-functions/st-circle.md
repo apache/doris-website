@@ -1,7 +1,8 @@
 ---
 {
     "title": "ST_CIRCLE",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "将一个 WKT（Well Known Text）转化为地球球面上的一个圆。"
 }
 ---
 

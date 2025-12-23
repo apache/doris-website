@@ -1,7 +1,8 @@
 ---
 {
     "title": "UTC_DATE",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "UTCDATE 函数用于返回当前 UTC 时区的日期。该函数不受本地时区影响，始终返回基于 UTC 时区的当前日期，确保跨时区场景下的日期一致性。"
 }
 ---
 

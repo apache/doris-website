@@ -1,7 +1,8 @@
 ---
 {
     "title": "Release 4.0.2",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "Apache Doris 4.0.2版本发布，重磅推出Doris Catalog实现多集群联邦查询，新增倒排索引拼音分词器、Ann索引扫描能力、sem聚合函数等AI增强功能。优化物化视图透明重写、Iceberg表compaction操作、Huggingface数据集访问，修复查询优化、存算分离、数据湖集成等多项缺陷，全面提升大数据分析性能和稳定性。"
 }
 ---
 

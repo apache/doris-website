@@ -1,7 +1,8 @@
 ---
 {
     "title": "ARRAY_LAST",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "查找数组中满足 lambda 表达式的最后一个元素。找到最后一个满足条件的元素并返回。"
 }
 ---
 

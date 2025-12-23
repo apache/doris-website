@@ -1,7 +1,8 @@
 ---
 {
     "title": "Native",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "本文介绍如何在 Doris 中导入 Native 格式的数据文件。适合作为 内部数据交换与备份格式，而非通用文件交换格式；当你只在 Doris 内部流转数据时，应优先考虑 Native，以获得最高效率。"
 }
 ---
 

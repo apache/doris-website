@@ -1,7 +1,8 @@
 ---
 {
     "title": "Delete 操作",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "删除操作语句通过 MySQL 协议，按条件删除指定表或分区中的数据。支持通过简单的谓词组合条件来指定要删除的数据，也支持在主键表上使用 USING 子句关联多表进行删除。"
 }
 ---
 
