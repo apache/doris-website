@@ -1,7 +1,8 @@
 ---
 {
     "title": "CREATE FUNCTION",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "此语句用于创建一个自定义函数。"
 }
 ---
 

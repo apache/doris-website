@@ -1,7 +1,8 @@
 ---
 {
     "title": "转换为 STRUCT 类型",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "STRUCT 类型用于存储和处理结构化数据，可以包含不同类型的字段，每个字段都有一个名称和对应的值。STRUCT 可以嵌套其他复杂类型如 ARRAY、MAP 或其他 STRUCT。"
 }
 ---
 

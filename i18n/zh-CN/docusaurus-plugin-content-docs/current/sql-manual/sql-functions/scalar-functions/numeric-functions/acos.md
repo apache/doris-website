@@ -1,7 +1,8 @@
 ---
 {
     "title": "ACOS",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "计算 x 的反余弦值。若参数 x 不在 -1 到 1 的范围之内，则返回 NULL。"
 }
 ---
 

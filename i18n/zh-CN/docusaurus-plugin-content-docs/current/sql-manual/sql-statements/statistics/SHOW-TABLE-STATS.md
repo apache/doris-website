@@ -1,7 +1,8 @@
 ---
 {
     "title": "SHOW TABLE STATS",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "该语句用来查看表的统计信息收集概况。"
 }
 ---
 

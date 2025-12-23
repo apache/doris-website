@@ -1,7 +1,8 @@
 ---
 {
     "title": "快速开始",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "在源集群和目标集群的 fe.conf 和 be.conf 中配置如下信息："
 }
 ---
 

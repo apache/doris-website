@@ -1,7 +1,8 @@
 ---
 {
     "title": "IPV4_CIDR_TO_RANGE",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "根据 IPv4 地址和 CIDR 前缀长度，计算该网段的最小和最大 IPv4 地址，返回一个包含两个 IPv4 地址的结构体。"
 }
 ---
 

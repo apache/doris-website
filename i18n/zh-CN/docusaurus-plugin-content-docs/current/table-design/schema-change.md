@@ -1,7 +1,8 @@
 ---
 {
     "title": "Schema 变更",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "用户可以通过Alter Table 操作来修改 Doris 表的 Schema。Schema 变更主要涉及列的修改和索引的变化。本文主要介绍列相关的 Schema 变更，关于索引相关的变更，请参考表索引 了解不同索引的变更方法。"
 }
 ---
 

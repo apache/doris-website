@@ -1,7 +1,8 @@
 ---
 {
     "title": "Azure Storage",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "Doris 提供两种方式从 Azure Storage 导入文件："
 }
 ---
 

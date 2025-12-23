@@ -1,7 +1,8 @@
 ---
 {
     "title": "Release 1.2.6",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "感谢以下开发者在 Apache Doris 1.2.6 版本中所做的贡献；"
 }
 ---
 

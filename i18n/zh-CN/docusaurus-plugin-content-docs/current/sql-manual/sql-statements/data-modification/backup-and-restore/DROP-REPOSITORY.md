@@ -1,7 +1,8 @@
 ---
 {
     "title": "DROP REPOSITORY",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "该语句用于删除一个已创建的仓库。"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "NGRAM_SEARCH",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "NGRAMSEARCH 函数用于计算两个字符串的 N-gram 相似度。相似度范围为 0 到 1，值越大表示字符串越相似。"
 }
 ---
 

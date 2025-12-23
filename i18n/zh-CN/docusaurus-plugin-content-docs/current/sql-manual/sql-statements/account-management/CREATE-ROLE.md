@@ -1,7 +1,8 @@
 ---
 {
     "title": "CREATE ROLE",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "CREATE ROLE 语句用于创建一个无权限的角色，后续可以通过 GRANT 命令赋予该角色权限。"
 }
 ---
 

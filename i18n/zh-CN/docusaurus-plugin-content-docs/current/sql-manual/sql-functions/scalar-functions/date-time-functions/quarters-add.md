@@ -1,7 +1,8 @@
 ---
 {
     "title": "QUARTERS_ADD",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "QUARTERSADD 函数用于在指定的日期时间值基础上增加或减少指定的季度数（1 个季度 = 3 个月），并返回计算后的日期时间值。该函数支持处理 DATE、DATETIME 类型，若输入负数则等效于减去对应季度数。"
 }
 ---
 

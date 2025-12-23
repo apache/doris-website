@@ -1,7 +1,8 @@
 ---
 {
     "title": "Query Stats Action",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "获取或者删除指定的 catalog 数据库或者表中的统计信息，如果是 doris catalog 可以使用 defaultcluster"
 }
 ---
 

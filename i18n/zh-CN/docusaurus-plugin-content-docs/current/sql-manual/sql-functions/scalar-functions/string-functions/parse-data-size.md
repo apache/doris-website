@@ -1,7 +1,8 @@
 ---
 {
     "title": "PARSE_DATA_SIZE",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "PARSEDATASIZE 函数用于解析带存储单位的字符串（如 1.5GB），将其转换为以字节为单位的数值。"
 }
 ---
 

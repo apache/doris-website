@@ -1,7 +1,8 @@
 ---
 {
     "title": "LPAD",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "LPAD 函数（Left Padding）用于在字符串左侧填充指定的字符，直到达到指定的长度。如果目标长度小于原字符串长度，则截断字符串。"
 }
 ---
 

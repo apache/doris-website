@@ -1,7 +1,8 @@
 ---
 {
     "title": "REGR_SLOPE",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "REGRSLOPE 函数用于计算线性回归方程中的斜率。它返回组内非空值对的单变量线性回归线的斜率。"
 }
 ---
 

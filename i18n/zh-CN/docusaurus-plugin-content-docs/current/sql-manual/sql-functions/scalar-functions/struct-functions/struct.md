@@ -1,7 +1,8 @@
 ---
 {
     "title": "STRUCT",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "根据给定的值构造并返回 struct。函数接受一个或多个参数，返回一个包含所有输入元素的结构体。"
 }
 ---
 

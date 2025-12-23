@@ -1,7 +1,8 @@
 ---
 {
     "title": "CREATE RESOURCE",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "该语句用于创建资源。仅 root 或 admin 用户可以创建资源。目前支持 Spark, ODBC, S3, JDBC, HDFS, HMS, ES 外部资源。 将来其他外部资源可能会加入到 Doris 中使用，如 Spark/GPU 用于查询，HDFS/S3 用于外部存储，"
 }
 ---
 

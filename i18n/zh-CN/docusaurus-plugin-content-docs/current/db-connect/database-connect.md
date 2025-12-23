@@ -1,7 +1,8 @@
 ---
 {
     "title": "通过 MySQL 协议连接",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "Apache Doris 采用 MySQL 网络连接协议，兼容 MySQL 生态的命令行工具、JDBC/ODBC 和各种可视化工具。同时 Apache Doris 也内置了一个简单的 Web UI，方便使用。"
 }
 ---
 

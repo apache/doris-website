@@ -1,7 +1,8 @@
 ---
 {
     "title": "SPLIT_BY_STRING",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "SPLITBYSTRING 函数将输入字符串按照指定的分隔符字符串拆分成字符串数组。该函数支持多字符分隔符，与某些数据库的类似函数在空字符串处理上可能存在差异。"
 }
 ---
 

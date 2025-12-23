@@ -1,7 +1,8 @@
 ---
 {
     "title": "BITMAP_AND_COUNT",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "计算两个及以上输入 BITMAP 的交集，返回交集的个数。"
 }
 ---
 

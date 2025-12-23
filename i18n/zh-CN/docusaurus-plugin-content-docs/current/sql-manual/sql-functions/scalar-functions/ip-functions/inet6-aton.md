@@ -1,7 +1,8 @@
 ---
 {
     "title": "IPV6_STRING_TO_NUM_OR_NULL",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "别名 ipv6stringtonumornull。"
 }
 ---
 

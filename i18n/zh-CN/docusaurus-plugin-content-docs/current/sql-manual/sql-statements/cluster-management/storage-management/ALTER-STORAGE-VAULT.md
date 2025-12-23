@@ -1,7 +1,8 @@
 ---
 {
-"title": "ALTER STORAGE VAULT",
-"language": "zh-CN"
+    "title": "ALTER STORAGE VAULT",
+    "language": "zh-CN",
+    "description": "更改 Storage Vault 的可修改属性值"
 }
 ---
 

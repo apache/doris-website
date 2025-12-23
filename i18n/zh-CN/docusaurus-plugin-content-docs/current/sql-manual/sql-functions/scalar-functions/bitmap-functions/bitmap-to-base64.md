@@ -1,7 +1,8 @@
 ---
 {
     "title": "BITMAP_TO_BASE64",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "将一个 Bitmap 转化成一个 Base64 编码后的字符串。"
 }
 ---
 

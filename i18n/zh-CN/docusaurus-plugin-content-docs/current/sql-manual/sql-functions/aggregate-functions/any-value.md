@@ -1,7 +1,8 @@
 ---
 {
     "title": "ANY_VALUE",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "返回分组中表达式或列的任意一个值。如果存在非 NULL 值，返回任意非 NULL 值，否则返回 NULL。"
 }
 ---
 

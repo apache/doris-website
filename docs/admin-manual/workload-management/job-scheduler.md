@@ -2,7 +2,7 @@
 {
     "title": "Job Scheduler",
     "language": "en",
-    "description": "In the context of increasing demands for refined data management, scheduled scheduling plays an important role."
+    "description": "Introduction to Doris Job Scheduler, a built-in task scheduling system that enables automated periodic data imports, ETL operations, and data synchronization with second-level precision."
 }
 ---
 

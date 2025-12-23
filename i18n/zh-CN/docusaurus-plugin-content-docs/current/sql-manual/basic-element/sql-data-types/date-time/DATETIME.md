@@ -1,7 +1,8 @@
 ---
 {
     "title": "DATETIME",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "DATETIME(p) 类型存储日期时间，其中 p 为精度，p 的取值范围为 [0, 6]，缺省值为 0。即 DATETIME 等同于 DATETIME(0)。"
 }
 ---
 

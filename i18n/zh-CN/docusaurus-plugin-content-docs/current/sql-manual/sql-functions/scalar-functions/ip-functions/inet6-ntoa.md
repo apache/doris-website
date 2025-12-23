@@ -1,7 +1,8 @@
 ---
 {
     "title": "IPV6_NUM_TO_STRING",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "别名 ipv6numtostring。"
 }
 ---
 

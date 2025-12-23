@@ -1,7 +1,8 @@
 ---
 {
     "title": "BE 的配置信息",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "查询/更新 BE 的配置信息"
 }
 ---
 

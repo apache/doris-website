@@ -1,7 +1,8 @@
 ---
 {
     "title": "SECOND",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "SECOND 函数用于提取取指定日期时间值中的秒数部分，返回结果为 0 到 59 的整数。该函数支持处理 DATE、DATETIME、TIME 类型，"
 }
 ---
 

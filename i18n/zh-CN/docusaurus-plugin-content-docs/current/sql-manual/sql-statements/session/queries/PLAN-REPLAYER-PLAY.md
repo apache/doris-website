@@ -1,7 +1,8 @@
 ---
 {
     "title": "PLAN REPLAYER PLAY",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "PLAN REPLAYER PLAY 是 Doris 开发者用来分析优化器问题的工具。其根据PLAN REPLAYER DUMP生成的诊断文件，在对应版本的 fe 下可以加载元数据和统计信息用于开发者复现和调试问题。"
 }
 ---
 

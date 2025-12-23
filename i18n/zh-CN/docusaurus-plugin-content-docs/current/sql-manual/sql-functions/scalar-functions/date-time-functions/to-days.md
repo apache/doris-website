@@ -1,7 +1,8 @@
 ---
 {
-  "title": "TO_DAYS",
-  "language": "zh-CN"
+    "title": "TO_DAYS",
+    "language": "zh-CN",
+    "description": "日期计算函数，它用于将日期转换为天数数值，即计算从零日期(0000-00-00)到指定日期的总天数。"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "DATE_ADD",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "DATEADD 函数用于向指定的日期或时间值添加指定的时间间隔，并返回计算后的结果。"
 }
 ---
 
