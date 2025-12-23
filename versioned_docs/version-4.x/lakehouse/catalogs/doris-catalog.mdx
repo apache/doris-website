@@ -2,7 +2,7 @@
 {
     "title": "Doris Catalog",
     "language": "en",
-    "description": "Doris Catalog in Apache Doris 4.x enables cross-cluster federated analysis across multiple Doris clusters via Arrow Flight or virtual cluster modes, with configuration, type mapping and query optimization guides."
+    "description": "Doris Catalog enables cross-cluster federated analysis across multiple Doris clusters via Arrow Flight or virtual cluster modes, with configuration, type mapping and query optimization guides."
 }
 ---
 
@@ -51,6 +51,8 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 * `fe_thrift_hosts`
 
   List of remote Doris cluster FE Thrift service endpoints.
+
+  > Note: In version 4.0.2, user Master FE's address. This issue will be fixed in next version.
 
 * `use_arrow_flight`
 

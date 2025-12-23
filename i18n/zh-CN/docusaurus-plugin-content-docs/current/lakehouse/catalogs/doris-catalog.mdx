@@ -50,11 +50,13 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 
 * `fe_thrift_hosts`
 
-远端 Doris 集群 FE Thrift 服务端点列表。
+    远端 Doris 集群 FE Thrift 服务端点列表。
+
+    > 在 4.0.2 版本中，请填写 Master FE 的地址。该问题将在后续版本修复。
 
 * `use_arrow_flight`
 
-采用 Arrow Flight 方式访问远端 Doris 集群还是将远端表当做内表执行计划发送给远端 Doris 集群执行
+    采用 Arrow Flight 方式访问远端 Doris 集群还是将远端表当做内表执行计划发送给远端 Doris 集群执行
 
 * `{QueryProperties}`
 

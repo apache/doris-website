@@ -52,6 +52,8 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 
   List of remote Doris cluster FE Thrift service endpoints.
 
+  > Note: In version 4.0.2, user Master FE's address. This issue will be fixed in next version.
+
 * `use_arrow_flight`
 
   Whether to access the remote Doris cluster using Arrow Flight or treat remote tables as internal tables and send execution plans to the remote Doris cluster for execution.
