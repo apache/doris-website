@@ -29,6 +29,7 @@ The following parameters are common to different Catalog types.
 | hive.metastore.client.keytab       | hadoop.kerberos.keytab            | No       | Empty   | Kerberos keytab file path                                                                                                                                                               |
 | hive.metastore.username            | hadoop.username                   | No       | hadoop  | Hive Metastore username, used in non-Kerberos mode                                                                                                                                      |
 | hive.conf.resources                |                                   | No       | Empty   | hive-site.xml configuration file path, using relative path                                                                                                                             |
+| hive.metastore.client.socket.timeout                |                                   | No    | Default value is `hive_metastore_client_timeout_second` in FE configuration parameters, defaults to 10 seconds. | This parameter is supported since version 4.0.3. Timeout for accessing metadata through Hive Metastore Client connection. If the metadata is large (e.g., when there are many partitions), this value can be increased. |
 
 > Note:
 >
