@@ -2,10 +2,9 @@ import React, { useEffect, useMemo } from 'react';
 import { Form, message } from 'antd';
 import FormSelect from '../form-select/form-select';
 import copy from 'copy-to-clipboard';
-import { CPUEnum, DownloadTypeEnum, Option } from '@site/src/constant/download.data';
+import {  DownloadTypeEnum, Option } from '@site/src/constant/download.data';
 import { ToolsEnum } from '@site/src/constant/download.data';
 import { useForm, useWatch } from 'antd/es/form/Form';
-import { DownloadIcon } from '../Icons/download-icon';
 
 interface DownloadFormToolsProps {
     data: Option[];

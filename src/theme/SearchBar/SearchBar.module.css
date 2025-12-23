@@ -96,12 +96,12 @@ html[data-theme='dark'] .noResultsIcon {
 .hitTree > svg {
     height: var(--search-local-hit-height, 56px);
     opacity: 0.5;
-    stroke-width: var(--search-local-icon-stroke-width, 1.4);
+    strokeWidth: var(--search-local-icon-strokeWidth, 1.4);
     width: 24px;
 }
 
 .hitIcon {
-    stroke-width: var(--search-local-icon-stroke-width, 1.4);
+    strokeWidth: var(--search-local-icon-strokeWidth, 1.4);
 
     height: 20px;
     width: 20px;

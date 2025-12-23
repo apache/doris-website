@@ -3,7 +3,6 @@ import { Form } from 'antd';
 import { Option } from '@site/src/constant/download.data';
 import FormSelect from '../form-select/form-select';
 import { useForm, useWatch } from 'antd/es/form/Form';
-import { ExternalLinkArrowIcon } from '../Icons/external-link-arrow-icon';
 
 interface DownloadFormProps {
     versions: Option[];

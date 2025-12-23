@@ -1,38 +1,23 @@
 import Layout from '../../theme/Layout';
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
+import React, { JSX, useEffect, useState } from 'react';
 import { translate } from '@docusaurus/Translate';
 import './index.scss';
-import userCasesEn from '@site/userCases/en_US.json';
-import { Swiper, SwiperClass, SwiperSlide } from 'swiper/react';
-
-import { Pagination } from 'swiper';
-import usePhone from '@site/src/hooks/use-phone';
 import PageHeader from '@site/src/components/PageHeader';
-import { USER_STORIES, USER_STORIES_CATEGORIES } from '@site/src/constant/user.data';
+import { USER_STORIES_CATEGORIES } from '@site/src/constant/user.data';
 import useIsBrowser from '@docusaurus/useIsBrowser';
 import UserItem from '../../components/user-item/user-item';
 import USERS from '../../constant/users.data.json';
-import ReadMore from '@site/src/components/ReadMore';
-import LinkWithArrow from '@site/src/components/link-arrow';
 import { UserSwiper } from '../../components/user-swiper/user-swiper';
 
 const ALL_TEXT = 'All';
 
 export default function Users(): JSX.Element {
-    const { i18n } = useDocusaurusContext();
-    const userCases = userCasesEn;
-    const { isPhone } = usePhone();
     const isBrowser = useIsBrowser();
     const [active, setActive] = useState(() => {
         const tag = isBrowser ? sessionStorage.getItem('tag') : ALL_TEXT;
         return tag || ALL_TEXT;
     });
     const [users, setUsers] = useState([...USERS].sort((a, b) => a.order - b.order));
-    const getUserLogos = (page: number = 1, total: number = 30) => {
-        const arr = new Array(total).fill('');
-        return arr.map((item, index) => require(`@site/static/images/user-logo-${page}/u-${index + 1}.png`).default);
-    };
 
     const PAGE_SIZE = 32;
     const [currentSize, setCurrentSize] = useState<number>(PAGE_SIZE);
@@ -40,8 +25,6 @@ export default function Users(): JSX.Element {
     useEffect(() => {
         setActive(ALL_TEXT);
     }, []);
-
-    const theSlides = useMemo(() => ['slide one', 'slide two'], []);
 
     function changeCategory(category: string) {
         setActive(category);

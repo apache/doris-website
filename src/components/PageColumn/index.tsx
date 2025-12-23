@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import React, { CSSProperties, ComponentProps, JSXElementConstructor, ReactNode } from 'react';
+import React, { CSSProperties, ComponentProps, JSX, JSXElementConstructor, ReactNode } from 'react';
 import './styles.scss';
 
 interface PageColumnProps extends ComponentProps<JSXElementConstructor<any>> {

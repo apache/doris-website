@@ -50,7 +50,7 @@ export function CollapseBoxHeader({
                                     </div>}
                                 placement="right"
                                 overlayStyle={{ width: 650, height: 180 }}
-                                overlayInnerStyle={{ padding: 16 }}
+                                style={{ padding: 16 }}
                                 trigger="hover">
                                 <span><InfoFilledIcon /></span>
                             </Popover>
