@@ -29,6 +29,7 @@
 | hive.metastore.client.keytab       | hadoop.kerberos.keytab            | 否    | 空      | Kerberos keytab 文件路径                                                                                                                                                                 |
 | hive.metastore.username            | hadoop.username                   | 否    | hadoop | Hive Metastore 用户名，非 Kerberos 模式下使用                                                                                                                                                  |
 | hive.conf.resources                |                                   | 否    | 空      | hive-site.xml 配置文件路径，使用相对路径                                                                                                                                                          |
+| hive.metastore.client.socket.timeout                |                                   | 否    | 默认值为 FE 配置参数中的 `hive_metastore_client_timeout_second`，默认为 10 秒。 | 该参数自 4.0.3 版本支持。通过 Hive Metastore Client 连接访问元信息的超时时间。如果元信息较大（比如分区数量多时），可调大这个值。         |
 
 > 注：
 >
@@ -227,6 +228,7 @@ Kerberos 详细配置参考 Kerberos 认证。
 	    'oss.endpoint' = 'oss-cn-beijing.aliyuncs.com'
 	);
 	```
+
 ## HMS 访问端口要求
 
 说明：Doris 访问 HMS 最少需保证以下端口连通。
