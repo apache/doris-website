@@ -1,7 +1,8 @@
 ---
 {
     "title": "TIMESTAMP",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "draft": true
 }
 ---
 
