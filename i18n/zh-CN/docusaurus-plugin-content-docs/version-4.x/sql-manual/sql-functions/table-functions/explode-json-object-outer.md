@@ -1,7 +1,8 @@
 ---
 {
-"title": "EXPLODE_JSON_OBJECT_OUTER",
-"language": "zh-CN"
+    "title": "EXPLODE_JSON_OBJECT_OUTER",
+    "language": "zh-CN",
+    "description": "explodejsonobjectouter 表函数，将 JSON 对象展开为多行，每行包含一个键值对。 通常用于将 JSON 对象展开为更易查询的格式。该函数只支持包含元素的 JSON 对象。 需配合 LATERAL VIEW 使用。"
 }
 ---
 

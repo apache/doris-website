@@ -1,7 +1,8 @@
 ---
 {
     "title": "Insert Into Values",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "INSERT INTO VALUES 语句支持将 SQL 中的值导入到 Doris 的表中。INSERT INTO VALUES 是一个同步导入方式，执行导入后返回导入结果。可以通过请求的返回判断导入是否成功。INSERT INTO VALUES 可以保证导入任务的原子性，要么全部导入成功，"
 }
 ---
 

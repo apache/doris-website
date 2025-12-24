@@ -1,7 +1,8 @@
 ---
 {
     "title": "UUID_NUMERIC",
-    "language": "en"
+    "language": "en",
+    "description": "Return a LARGEINT type uuid"
 }
 ---
 

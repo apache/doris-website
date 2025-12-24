@@ -1,7 +1,8 @@
 ---
 {
     "title": "配置文件目录",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "FE 和 BE 的配置文件目录为 conf/。这个目录除了存放默认的 fe.conf, be.conf 等文件外，也被用于公用的配置文件存放目录。"
 }
 ---
 

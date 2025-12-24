@@ -1,7 +1,8 @@
 ---
 {
     "title": "Optimizing Join with Colocate Group",
-    "language": "en"
+    "language": "en",
+    "description": "Defining colocate group is an efficient way of Join."
 }
 ---
 

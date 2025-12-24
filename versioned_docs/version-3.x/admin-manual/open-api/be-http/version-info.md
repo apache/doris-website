@@ -1,7 +1,8 @@
 ---
 {
     "title": "Be Version Info",
-    "language": "en"
+    "language": "en",
+    "description": "Provide BE version info"
 }
 ---
 

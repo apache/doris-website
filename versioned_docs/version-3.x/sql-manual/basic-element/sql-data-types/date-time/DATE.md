@@ -1,7 +1,8 @@
 ---
 {
     "title": "DATE",
-    "language": "en"
+    "language": "en",
+    "description": "DATE"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "JSON_SET",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "jsonset 函数在 JSON 中插入或更新数据并返回结果。"
 }
 ---
 

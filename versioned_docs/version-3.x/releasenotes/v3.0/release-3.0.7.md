@@ -1,7 +1,8 @@
 ---
 {
     "title": "Release 3.0.7",
-    "language": "en"
+    "language": "en",
+    "description": "Behavior Changes:Adjust the permission requirements for `show frontends` and `show backends` to align with the corresponding RESTful API, i.e., requiring the `SELECT_PRIV` permission on the `information_schema` database"
 }
 ---
 

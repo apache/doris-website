@@ -1,7 +1,8 @@
 ---
 {
     "title": "数据类型",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "Apache Doris 已支持的数据类型列表如下："
 }
 ---
 

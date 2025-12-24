@@ -1,9 +1,9 @@
 ---
 {
     "title": "SHOW PARTITION",
-    "language": "en"
+    "language": "en",
+    "description": "SHOW PARTITION is used to display detailed information about a specified partition. This includes the name and ID of the associated database,"
 }
-
 ---
 
 ## Description

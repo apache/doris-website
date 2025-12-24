@@ -1,7 +1,8 @@
 ---
 {
     "title": "TO_IPV4",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "输入 IPv4 地址的字符串形式，并返回 IPv4 类型的值。"
 }
 ---
 

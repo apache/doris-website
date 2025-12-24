@@ -1,7 +1,8 @@
 ---
 {
     "title": "EXPLODE_MAP",
-    "language": "en"
+    "language": "en",
+    "description": "The explodemap function takes a map (mapping type) and expands it into multiple rows, with each row containing a key-value pair."
 }
 ---
 

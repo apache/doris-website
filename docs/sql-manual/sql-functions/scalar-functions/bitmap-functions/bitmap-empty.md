@@ -1,7 +1,8 @@
 ---
 {
     "title": "BITMAP_EMPTY",
-    "language": "en"
+    "language": "en",
+    "description": "Construct an empty BITMAP. Mainly used to fill default values during insert or stream load. For example:"
 }
 ---
 

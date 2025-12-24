@@ -1,7 +1,8 @@
 ---
 {
     "title": "PostgreSQL JDBC Catalog",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "Doris JDBC Catalog 支持通过标准 JDBC 接口连接 PostgreSQL 数据库。本文档介绍如何配置 PostgreSQL 数据库连接。"
 }
 ---
 

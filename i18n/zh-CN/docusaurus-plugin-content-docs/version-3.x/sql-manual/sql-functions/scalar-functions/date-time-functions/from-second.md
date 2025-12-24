@@ -1,7 +1,8 @@
 ---
 {
     "title": "FROM_SECOND",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "函数将输入的 Unix 时间戳（以秒为单位）转换为 DATETIME 类型的日期时间值。"
 }
 ---
 

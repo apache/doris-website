@@ -1,7 +1,8 @@
 ---
 {
-"title": "ALTER JOB",
-"language": "zh-CN"
+    "title": "ALTER JOB",
+    "language": "zh-CN",
+    "description": "用户修改一个 JOB 作业。只能修改 PAUSE 状态下的 Job，并且只支持修改 Streaming 类型的 Job。"
 }
 ---
 

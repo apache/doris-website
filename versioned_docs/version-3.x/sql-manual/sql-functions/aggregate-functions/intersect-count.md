@@ -1,7 +1,8 @@
 ---
 {
-"title": "INTERSECT_COUNT",
-"language": "en"
+    "title": "INTERSECT_COUNT",
+    "language": "en",
+    "description": "The INTERSECTCOUNT function is used to calculate the number of intersecting elements of the Bitmap data structure."
 }
 ---
 

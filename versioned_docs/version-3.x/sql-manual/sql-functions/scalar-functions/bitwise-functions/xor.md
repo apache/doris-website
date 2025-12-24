@@ -1,7 +1,8 @@
 ---
 {
-"title": "XOR",
-"language": "en"
+    "title": "XOR",
+    "language": "en",
+    "description": "Performs a bitwise exclusive OR operation on two BOOLEAN values."
 }
 ---
 

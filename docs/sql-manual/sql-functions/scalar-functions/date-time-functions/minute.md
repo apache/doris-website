@@ -1,7 +1,8 @@
 ---
 {
     "title": "MINUTE",
-    "language": "en"
+    "language": "en",
+    "description": "The MINUTE function extracts the minute component from the input datetime value, returning an integer ranging from 0 to 59."
 }
 ---
 

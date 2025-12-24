@@ -1,7 +1,8 @@
 ---
 {
     "title": "Tiered Storage of SSD and HDD",
-    "language": "en"
+    "language": "en",
+    "description": "Doris supports tiered storage between different disk types (SSD and HDD),"
 }
 ---
 

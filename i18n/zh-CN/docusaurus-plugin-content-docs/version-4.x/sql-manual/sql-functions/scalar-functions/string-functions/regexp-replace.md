@@ -1,7 +1,8 @@
 ---
 {
     "title": "REGEXP_REPLACE",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "对 STR 字符串进行正则匹配，将匹配 pattern 的部分替换为新字符串。"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "Table Query Plan Action",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "给定一个 SQL，用于获取该 SQL 对应的查询计划。"
 }
 ---
 

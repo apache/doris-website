@@ -1,7 +1,8 @@
 ---
 {
     "title": "GET_JSON_BIGINT",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "解析并获取 json 字符串内指定路径的整型 (BIGINT) 内容。"
 }
 ---
 

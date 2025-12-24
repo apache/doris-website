@@ -1,7 +1,8 @@
 ---
 {
     "title": "CREATE CATALOG",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "该语句用于创建外部数据目录（catalog）"
 }
 ---
 

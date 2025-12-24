@@ -1,7 +1,8 @@
 ---
 {
     "title": "JSON_EXTRACT",
-    "language": "en"
+    "language": "en",
+    "description": "JSONEXTRACT is a series of functions that extract the field specified by jsonpath from JSON data and provide different series of functions according "
 }
 ---
 

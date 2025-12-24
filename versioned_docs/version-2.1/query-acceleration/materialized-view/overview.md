@@ -1,7 +1,8 @@
 ---
 {
     "title": "Materialized View Overview",
-    "language": "en"
+    "language": "en",
+    "description": "Materialized views are entities that contain both computation logic and data. Unlike views,"
 }
 ---
 

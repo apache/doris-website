@@ -1,7 +1,8 @@
 ---
 {
     "title": "CREATE INDEX",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "为表创建新的索引，必须指定表名和索引名，可选指定索引类型、属性、注释。"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "ARRAY_COUNT",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "使用 lambda 表达式作为输入参数，对其他输入 ARRAY 参数的内部数据进行相应的表达式计算。返回使得 lambda(array1[i], ...) 返回值不为 0 的元素数量。如果找不到到满足此条件的元素，则返回 0。"
 }
 ---
 

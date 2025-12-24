@@ -1,9 +1,10 @@
---- 
+---
 {
     "title": "High-Concurrency Point Query Optimization",
-    "language": "en"
+    "language": "en",
+    "description": "Doris is built on a columnar storage format engine. In high-concurrency service scenarios,"
 }
---- 
+---
 
 <!-- 
 Licensed to the Apache Software Foundation (ASF) under one

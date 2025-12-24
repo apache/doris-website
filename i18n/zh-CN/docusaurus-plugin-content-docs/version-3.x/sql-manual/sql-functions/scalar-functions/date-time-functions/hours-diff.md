@@ -1,7 +1,8 @@
 ---
 {
     "title": "HOURS_DIFF",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "开始时间到结束时间相差几小时。"
 }
 ---
 

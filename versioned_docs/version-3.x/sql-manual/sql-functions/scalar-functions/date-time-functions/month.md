@@ -1,7 +1,8 @@
 ---
 {
     "title": "MONTH",
-    "language": "en"
+    "language": "en",
+    "description": "Extracts the month value from a datetime value. The returned value ranges from 1 to 12, representing the 12 months of the year."
 }
 ---
 

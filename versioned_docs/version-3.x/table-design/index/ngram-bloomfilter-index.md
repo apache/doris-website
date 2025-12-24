@@ -1,7 +1,8 @@
 ---
 {
     "title": "N-Gram BloomFilter Index",
-    "language": "en"
+    "language": "en",
+    "description": "n-gram tokenization is a method of splitting a sentence or a piece of text into multiple adjacent word groups. The NGram BloomFilter index,"
 }
 ---
 

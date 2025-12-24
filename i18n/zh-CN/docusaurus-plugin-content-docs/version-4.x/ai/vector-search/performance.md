@@ -1,7 +1,8 @@
 ---
 {
     "title": "性能测试与分析",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "这里介绍 Doris Ann Index 的查询性能与导入性能。所有的性能测试都是通过 VectorDBBench 完成的。"
 }
 ---
 

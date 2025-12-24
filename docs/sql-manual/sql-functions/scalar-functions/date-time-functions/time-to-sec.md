@@ -1,7 +1,8 @@
 ---
 {
     "title": "TIME_TO_SEC",
-    "language": "en"
+    "language": "en",
+    "description": "The TIMETOSEC function converts an input time value to the total number of seconds."
 }
 ---
 

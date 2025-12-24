@@ -1,7 +1,8 @@
 ---
 {
-"title": "BITMAP_AGG",
-"language": "en"
+    "title": "BITMAP_AGG",
+    "language": "en",
+    "description": "Aggregate the values of a column (excluding any NULL values) and return a single row bitmap value, i.e., convert multiple rows into one."
 }
 ---
 

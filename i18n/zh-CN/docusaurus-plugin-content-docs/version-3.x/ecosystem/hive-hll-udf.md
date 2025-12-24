@@ -1,7 +1,8 @@
 ---
 {
     "title": "Hive HLL UDF",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "Hive HLL UDF 提供了在 hive 表中生成 HLL 运算等 UDF，Hive 中的 HLL 与 Doris HLL 完全一致，Hive 中的 HLL 可以通过 Spark HLL Load 导入 Doris。关于 HLL 更多介绍可以参考：使用 HLL 近似去重"
 }
 ---
 

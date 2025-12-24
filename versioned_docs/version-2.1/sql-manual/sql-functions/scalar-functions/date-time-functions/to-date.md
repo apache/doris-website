@@ -1,7 +1,8 @@
 ---
 {
-  "title": "TO_DATE",
-  "language": "en"
+    "title": "TO_DATE",
+    "language": "en",
+    "description": "Date conversion function, used to convert date time (DATETIME) to date type (DATE), that is, remove the time part and keep only the date (YYYY-MM-DD)"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "COSH",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "返回 x 的双曲余弦。"
 }
 ---
 

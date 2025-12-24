@@ -1,7 +1,8 @@
 ---
 {
     "title": "CREATE SYNC MATERIALIZED VIEW",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "创建同步物化视图语句"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "SEC_TO_TIME",
-    "language": "en"
+    "language": "en",
+    "description": "The SECTOTIME function converts a value in seconds into a TIME type, returning the result in the format HH:MM:SS."
 }
 ---
 

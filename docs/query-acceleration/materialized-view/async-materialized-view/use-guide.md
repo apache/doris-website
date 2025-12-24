@@ -1,7 +1,8 @@
 ---
 {
     "title": "Best Practices",
-    "language": "en"
+    "language": "en",
+    "description": "When the following conditions are met, it is recommended to create partitioned materialized views:"
 }
 ---
 

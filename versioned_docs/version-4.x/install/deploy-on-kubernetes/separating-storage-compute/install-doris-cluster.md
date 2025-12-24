@@ -1,7 +1,8 @@
 ---
 {
-  "title": "Deploy Doris Cluster",
-  "language": "en"
+    "title": "Deploy Doris Cluster",
+    "language": "en",
+    "description": "Deploying a functional decoupled storage and compute Doris cluster on Kubernetes involves four main steps:"
 }
 ---
 

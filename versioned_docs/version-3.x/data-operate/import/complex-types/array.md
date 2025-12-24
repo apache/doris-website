@@ -1,7 +1,8 @@
 ---
 {
     "title": "ARRAY",
-    "language": "en"
+    "language": "en",
+    "description": "ARRAY<T> An array of T-type items, it cannot be used as a key column."
 }
 ---
 

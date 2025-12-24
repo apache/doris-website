@@ -1,7 +1,8 @@
 ---
 {
     "title": "COALESCE",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "返回参数列表中从左到右第一个非空表达式。如果所有参数都为 NULL，则返回 NULL。"
 }
 ---
 

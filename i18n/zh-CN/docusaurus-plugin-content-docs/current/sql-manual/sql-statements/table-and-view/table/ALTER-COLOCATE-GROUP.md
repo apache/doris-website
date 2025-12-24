@@ -1,7 +1,8 @@
 ---
 {
-"title": "ALTER COLOCATE GROUP",
-"language": "zh-CN"
+    "title": "ALTER COLOCATE GROUP",
+    "language": "zh-CN",
+    "description": "该语句用于修改 Colocation Group 的属性。"
 }
 ---
 

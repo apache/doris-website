@@ -1,7 +1,8 @@
 ---
 {
-  "title": "DAY_FLOOR",
-  "language": "en"
+    "title": "DAY_FLOOR",
+    "language": "en",
+    "description": "The DAYFLOOR function is used to round down a specified date or time value to the start of the nearest specified day period."
 }
 ---
 

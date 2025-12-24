@@ -241,9 +241,10 @@
                             "label": "Updating Data",
                             "items": [
                                 "data-operate/update/update-overview",
-                                "data-operate/update/unique-update",
+                                "data-operate/update/unique-update-sql",
                                 "data-operate/update/update-of-unique-model",
                                 "data-operate/update/update-of-aggregate-model",
+                                "data-operate/update/partial-column-update",
                                 "data-operate/update/unique-update-concurrent-control"
                             ]
                         },

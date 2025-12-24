@@ -1,7 +1,8 @@
 ---
 {
     "title": "QUARTERS_SUB",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "函数用于在指定的日期或日期时间值基础上，增加或减少指定的季度数，并返回计算后的日期值。"
 }
 ---
 

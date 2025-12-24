@@ -1,7 +1,8 @@
 ---
 {
     "title": "HOUR_FLOOR",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "HOURFLOOR 函数用于将输入的日期时间值向下取整到指定小时周期的最近时刻。例如，若指定周期为 5 小时，函数会将输入时间调整为该周期内的起始整点时刻."
 }
 ---
 

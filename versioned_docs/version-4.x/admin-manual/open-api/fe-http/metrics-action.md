@@ -1,7 +1,8 @@
 ---
 {
     "title": "Metrics Action",
-    "language": "en"
+    "language": "en",
+    "description": "Used to obtain doris metrics infomation."
 }
 ---
 

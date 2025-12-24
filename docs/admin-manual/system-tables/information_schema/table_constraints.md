@@ -1,7 +1,8 @@
 ---
 {
     "title": "table_constraints",
-    "language": "en"
+    "language": "en",
+    "description": "This table is solely for the purpose of maintaining compatibility with MySQL behavior. It is always empty."
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "LoongCollector (iLogtail) Doris Flusher",
-    "language": "en"
+    "language": "en",
+    "description": "LoongCollector (iLogtail) is an open-source, high-performance log collection and processing framework originating from Alibaba Cloud."
 }
 ---
 

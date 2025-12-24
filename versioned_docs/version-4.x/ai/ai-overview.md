@@ -1,7 +1,8 @@
 ---
 {
     "title": "AI Overview",
-    "language": "en"
+    "language": "en",
+    "description": "As AI technologies continue to advance at an unprecedented pace, data infrastructure has become the cornerstone of modern AI applications."
 }
 ---
 

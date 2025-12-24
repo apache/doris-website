@@ -1,7 +1,8 @@
 ---
 {
     "title": "SIN",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "计算参数的正弦值"
 }
 ---
 

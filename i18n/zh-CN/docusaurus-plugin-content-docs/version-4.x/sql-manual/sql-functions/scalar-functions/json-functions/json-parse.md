@@ -1,7 +1,8 @@
 ---
 {
     "title": "JSON_PARSE",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "将原始 JSON 字符串解析成 JSON 二进制格式。为了满足不同的异常数据处理需求，提供不同的 JSONPARSE 系列函数，具体如下："
 }
 ---
 

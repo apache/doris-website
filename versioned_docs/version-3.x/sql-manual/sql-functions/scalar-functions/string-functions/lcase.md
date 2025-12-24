@@ -1,7 +1,8 @@
 ---
 {
     "title": "LCASE/LOWER",
-    "language": "en"
+    "language": "en",
+    "description": "Convert all strings in the parameter to lowercase."
 }
 ---
 

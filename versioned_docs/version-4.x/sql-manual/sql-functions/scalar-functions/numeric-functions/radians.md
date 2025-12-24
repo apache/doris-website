@@ -1,7 +1,8 @@
 ---
 {
     "title": "RADIANS",
-    "language": "en"
+    "language": "en",
+    "description": "Returns the value of x in radians, converted from degrees to radians."
 }
 ---
 

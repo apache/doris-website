@@ -1,7 +1,8 @@
 ---
 {
-"title": "BIT_COUNT",
-"language": "zh-CN"
+    "title": "BIT_COUNT",
+    "language": "zh-CN",
+    "description": "用于返回一个整数值的二进制表示中 1 的位数。这个函数可以用于快速统计某个整数在二进制表示中“活跃”的位数，通常用于分析数据的分布或进行某些位运算"
 }
 ---
 

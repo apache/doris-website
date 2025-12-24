@@ -1,7 +1,8 @@
 ---
 {
-"title": "SHA2",
-"language": "zh-CN"
+    "title": "SHA2",
+    "language": "zh-CN",
+    "description": "使用 SHA2 对信息进行摘要处理。"
 }
 ---
 

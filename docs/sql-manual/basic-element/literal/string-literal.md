@@ -1,7 +1,8 @@
 ---
 {
     "title": "String Type Literal",
-    "language": "en"
+    "language": "en",
+    "description": "A string is a sequence of bytes or characters enclosed in single quotes (') or double quotes (\"). For example:"
 }
 ---
 

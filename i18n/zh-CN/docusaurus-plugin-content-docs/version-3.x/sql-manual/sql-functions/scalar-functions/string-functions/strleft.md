@@ -1,7 +1,8 @@
 ---
 {
     "title": "STRLEFT",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "STRLEFT 函数用于返回字符串左边指定长度的部分。长度的单位为 UTF8 字符。"
 }
 ---
 

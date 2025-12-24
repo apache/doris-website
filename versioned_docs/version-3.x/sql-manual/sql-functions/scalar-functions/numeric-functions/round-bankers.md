@@ -1,7 +1,8 @@
 ---
 {
     "title": "ROUND_BANKERS",
-    "language": "en"
+    "language": "en",
+    "description": "Round x using the banker's rounding method and keep d decimal places. The default value of d is 0."
 }
 ---
 

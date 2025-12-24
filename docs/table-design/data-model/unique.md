@@ -1,7 +1,8 @@
 ---
 {
     "title": "Unique Key Table",
-    "language": "en"
+    "language": "en",
+    "description": "When data updates are required, use the Unique Key Table."
 }
 ---
 

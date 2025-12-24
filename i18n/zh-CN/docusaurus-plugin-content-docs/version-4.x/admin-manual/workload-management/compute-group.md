@@ -1,7 +1,8 @@
 ---
 {
-"title": "Compute Group",
-"language": "zh-CN"
+    "title": "Compute Group",
+    "language": "zh-CN",
+    "description": "Compute Group 是存算分离架构下，实现不同的负载之间物理隔离的一种机制，它的基本原理如下图所示："
 }
 ---
 

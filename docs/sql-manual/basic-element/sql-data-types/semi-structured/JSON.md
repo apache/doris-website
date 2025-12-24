@@ -1,7 +1,8 @@
 ---
 {
     "title": "JSON",
-    "language": "en"
+    "language": "en",
+    "description": "JSON (JavaScript Object Notation) is an open standard file format and data interchange format that uses human-readable text to store and transmit "
 }
 ---
 

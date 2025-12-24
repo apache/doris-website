@@ -1,7 +1,8 @@
 ---
 {
     "title": "STRUCT_ELEMENT",
-    "language": "en-US"
+    "language": "en-US",
+    "description": "Returns a specific field within a struct data column. The function supports accessing fields in a struct through field position (index) or field name."
 }
 ---
 

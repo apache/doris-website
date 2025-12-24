@@ -1,7 +1,8 @@
 ---
 {
-"title": "ALTER STORAGE POLICY",
-"language": "zh-CN"
+    "title": "ALTER STORAGE POLICY",
+    "language": "zh-CN",
+    "description": "```sql ALTER STORAGE POLICY hastestpolicytoalter PROPERTIES(\"cooldowndatetime\" = \"2023-06-08 00:00:00\");"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "MILLISECONDS_SUB",
-    "language": "en"
+    "language": "en",
+    "description": "The MILLISECONDSSUB function subtracts a specified number of milliseconds from the input datetime value and returns the resulting new datetime value."
 }
 ---
 

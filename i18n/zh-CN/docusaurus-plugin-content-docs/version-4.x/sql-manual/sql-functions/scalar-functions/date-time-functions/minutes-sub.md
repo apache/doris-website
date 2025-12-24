@@ -1,7 +1,8 @@
 ---
 {
     "title": "MINUTES_SUB",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "MINUTESSUB 函数用于从输入的日期时间值中减去指定的分钟数，并返回计算后的新日期时间值。该函数支持处理 DATE、DATETIME类型."
 }
 ---
 

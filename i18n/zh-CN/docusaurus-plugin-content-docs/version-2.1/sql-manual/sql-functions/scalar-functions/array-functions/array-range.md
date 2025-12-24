@@ -1,7 +1,8 @@
 ---
 {
     "title": "ARRAY_RANGE",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "Doris ARRAY_RANGE函数（别名SEQUENCE）用于生成整数数组和日期时间数组。支持指定起始值、结束值和步长参数，可生成整数序列或日期时间序列，广泛应用于数据分析和时间序列处理场景。语法：ARRAY_RANGE(start,end,step)和ARRAY_RANGE(start_datetime,end_datetime,INTERVAL interval_step unit)。",
 }
 ---
 
@@ -12,7 +13,7 @@
 
 ## 别名
 
-- SEQUENCE
+-   SEQUENCE
 
 ## 语法
 
@@ -26,15 +27,15 @@ ARRAY_RANGE(<start_datetime>, <end_datetime>, INTERVAL <interval_step> <unit>)
 
 ## 参数
 
-| 参数 | 说明 |
-|--|--|
-| `<start>` | 起始值，为正整数，默认为 0 |
-| `<end>` | 结束值，为正整数 |
-| `<step>` | 步长，为正整数，默认为 1 |
-| `<start_datetime>` | 起始日期，为 datetimev2 类型 |
-| `<end_datetime>` | 结束日期，为 datetimev2 类型 |
-| `<interval_step>` | 间隔值，默认为 1 |
-| `<unit>` | 间隔单位，支持年/月/周/日/小时/分钟/秒，默认为日 |
+| 参数               | 说明                                             |
+| ------------------ | ------------------------------------------------ |
+| `<start>`          | 起始值，为正整数，默认为 0                       |
+| `<end>`            | 结束值，为正整数                                 |
+| `<step>`           | 步长，为正整数，默认为 1                         |
+| `<start_datetime>` | 起始日期，为 datetimev2 类型                     |
+| `<end_datetime>`   | 结束日期，为 datetimev2 类型                     |
+| `<interval_step>`  | 间隔值，默认为 1                                 |
+| `<unit>`           | 间隔单位，支持年/月/周/日/小时/分钟/秒，默认为日 |
 
 ## 返回值
 

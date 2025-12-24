@@ -1,7 +1,8 @@
 ---
 {
-"title": "SHOW RESTORE",
-"language": "zh-CN"
+    "title": "SHOW RESTORE",
+    "language": "zh-CN",
+    "description": "该语句用于查看 RESTORE 任务"
 }
 ---
 

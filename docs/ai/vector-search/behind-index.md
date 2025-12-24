@@ -1,7 +1,8 @@
 ---
 {
     "title": "Optimizations Behind Performance",
-    "language": "en"
+    "language": "en",
+    "description": "Early versions of Apache Doris focused on online analytical processing (OLAP),"
 }
 ---
 

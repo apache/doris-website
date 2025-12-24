@@ -1,7 +1,8 @@
 ---
 {
     "title": "MONTHS_ADD",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "MONTHSADD 函数用于对指定日期添加或减去指定的月份数，并返回计算后的新日期"
 }
 ---
 

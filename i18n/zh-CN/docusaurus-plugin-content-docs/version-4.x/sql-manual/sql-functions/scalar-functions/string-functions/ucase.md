@@ -1,7 +1,8 @@
 ---
 {
     "title": "UCASE/UPPER",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "UCASE 函数（别名 UPPER）用于将字符串中的所有小写字母转换为大写字母。该函数支持 Unicode 字符转换，能够正确处理各种语言的大小写转换规则。"
 }
 ---
 

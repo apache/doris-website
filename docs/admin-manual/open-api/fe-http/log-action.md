@@ -1,7 +1,8 @@
 ---
 {
     "title": "Log Action",
-    "language": "en"
+    "language": "en",
+    "description": "GET is used to obtain the latest part of Doris's WARNING log, and the POST method is used to dynamically set the log level of FE."
 }
 ---
 

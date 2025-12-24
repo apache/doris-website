@@ -1,7 +1,8 @@
 ---
 {
     "title": "HOURS_ADD",
-    "language": "en"
+    "language": "en",
+    "description": "Returns a new datetime value that is the result of adding a specified number of hours to the input datetime."
 }
 ---
 

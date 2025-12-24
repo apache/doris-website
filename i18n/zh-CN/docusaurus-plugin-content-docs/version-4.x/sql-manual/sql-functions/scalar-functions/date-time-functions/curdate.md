@@ -1,7 +1,8 @@
 ---
 {
     "title": "CURDATE,CURRENT_DATE",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "获取当前的日期，以 DATE 类型返回。"
 }
 ---
 

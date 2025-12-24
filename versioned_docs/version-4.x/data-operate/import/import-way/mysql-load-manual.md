@@ -1,7 +1,8 @@
 ---
 {
     "title": "MySQL Load",
-    "language": "en"
+    "language": "en",
+    "description": "Apache Doris is compatible with the MySQL protocol and supports the use of the standard MySQL LOAD DATA syntax to import local files."
 }
 ---
 

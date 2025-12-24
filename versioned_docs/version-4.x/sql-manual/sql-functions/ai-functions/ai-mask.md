@@ -1,7 +1,8 @@
 ---
 {
     "title": "AI_MASK",
-    "language": "en"
+    "language": "en",
+    "description": "Used to mask sensitive information in text related to specified labels."
 }
 ---
 

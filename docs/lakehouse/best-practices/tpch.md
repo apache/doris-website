@@ -1,7 +1,8 @@
 ---
 {
-"title": "Generating TPC-H on Hive/Iceberg",
-"language": "en"
+    "title": "Generating TPC-H on Hive/Iceberg",
+    "language": "en",
+    "description": "Doris supports using the Trino Connector compatible framework to quickly build TPCH test sets with the TPCH Connector."
 }
 ---
 

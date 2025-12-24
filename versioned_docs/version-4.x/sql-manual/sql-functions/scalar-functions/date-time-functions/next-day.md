@@ -1,7 +1,8 @@
 ---
 {
     "title": "NEXT_DAY",
-    "language": "en"
+    "language": "en",
+    "description": "The NEXTDAY function returns the first date after the specified date that matches the target day of the week. For example, NEXTDAY('2020-01-31',"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "时区管理",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "Doris 支持自定义时区设置"
 }
 ---
 

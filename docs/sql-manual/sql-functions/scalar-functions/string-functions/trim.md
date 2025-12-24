@@ -1,7 +1,8 @@
 ---
 {
     "title": "TRIM",
-    "language": "en"
+    "language": "en",
+    "description": "The TRIM function is used to remove consecutive spaces or specified strings from both ends of a string. If the second parameter is not specified,"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "Compaction",
-    "language": "en"
+    "language": "en",
+    "description": "Doris writes data through a structure similar to LSM-Tree,"
 }
 ---
 

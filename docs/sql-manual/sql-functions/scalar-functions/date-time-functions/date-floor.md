@@ -1,7 +1,8 @@
 ---
 {
     "title": "DATE_FLOOR",
-    "language": "en"
+    "language": "en",
+    "description": "The datefloor function floors a specified date or time value down to the nearest start of a specified time interval period."
 }
 ---
 

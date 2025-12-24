@@ -1,7 +1,8 @@
 ---
 {
     "title": "STRLEFT",
-    "language": "en"
+    "language": "en",
+    "description": "The STRLEFT function returns a specified number of characters from the left side of a string. The length is measured in UTF8 characters."
 }
 ---
 

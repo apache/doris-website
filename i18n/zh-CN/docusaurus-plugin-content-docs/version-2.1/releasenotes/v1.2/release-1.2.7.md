@@ -1,7 +1,8 @@
 ---
 {
     "title": "Release 1.2.7",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "-添加了 havequerycache 变量以保证与 MySQL 生态系统兼容。 -添加 enablestrong consistencyread 以支持会话之间的强一致性读取。 -FE 指标支持用户级的查询计数器。"
 }
 ---
 

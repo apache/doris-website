@@ -1,7 +1,8 @@
 ---
 {
     "title": "JSON_EXISTS_PATH",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "用来判断 <path> 指定的字段在 JSON 数据中是否存在，如果存在返回 TRUE，不存在返回 FALSE"
 }
 ---
 

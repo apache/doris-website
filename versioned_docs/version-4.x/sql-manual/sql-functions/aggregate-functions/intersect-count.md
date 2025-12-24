@@ -1,7 +1,8 @@
 ---
 {
-"title": "INTERSECT_COUNT",
-"language": "en"
+    "title": "INTERSECT_COUNT",
+    "language": "en",
+    "description": "Calculate the intersection of two or more bitmaps Usage: intersectcount(bitmapcolumntocount, filtercolumn, filtervalues ..."
 }
 ---
 

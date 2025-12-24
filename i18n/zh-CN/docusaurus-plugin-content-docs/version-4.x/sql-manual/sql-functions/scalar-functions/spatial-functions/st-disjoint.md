@@ -1,7 +1,8 @@
 ---
 {
     "title": "ST_DISJOINT",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "判断两个几何图形是否完全不相交（即没有任何公共点）。若两图形的边界、内部均无交集，则返回 1，否则返回 0。"
 }
 ---
 

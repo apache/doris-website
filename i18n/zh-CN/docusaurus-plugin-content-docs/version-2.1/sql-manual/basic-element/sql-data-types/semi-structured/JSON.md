@@ -1,7 +1,8 @@
 ---
 {
     "title": "JSON",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "JSON 数据类型，用二进制格式高效存储 JSON 数据，通过 JSON 函数访问其内部字段。"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "STRCMP",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "STRCMP 函数用于按照字典顺序比较两个字符串。该函数将返回一个整数值来表示两个字符串的比较结果。"
 }
 ---
 

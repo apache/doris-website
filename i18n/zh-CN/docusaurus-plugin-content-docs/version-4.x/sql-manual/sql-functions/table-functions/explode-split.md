@@ -1,7 +1,8 @@
 ---
 {
     "title": "EXPLODE_SPLIT",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "explodesplit 表函数用于将字符串按照指定分隔符拆分为多个子字符串，并将每个子字符串展开为一行。 需要与 LATERAL VIEW 配合使用，以将嵌套数据结构展开为标准的平面表格式。 explodesplit 和 explodesplitouter 区别主要在于空值处理。"
 }
 ---
 

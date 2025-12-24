@@ -1,7 +1,8 @@
 ---
 {
-"title": "Concurrency Control and Queuing",
-"language": "en"
+    "title": "Concurrency Control and Queuing",
+    "language": "en",
+    "description": "Concurrency control and queuing is a resource management mechanism."
 }
 ---
 

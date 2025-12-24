@@ -1,7 +1,8 @@
 ---
 {
     "title": "Release 3.0.7",
-    "language": "en"
+    "language": "zh-CN",
+    "description": "Apache Doris 3.0.7 版本发布说明，涵盖行为变更、新增查询与半结构化管理特性，以及导入、主键、存储、存算分离、Lakehouse、异步物化视图、查询优化器和倒排索引的性能优化与问题修复。"
 }
 ---
 

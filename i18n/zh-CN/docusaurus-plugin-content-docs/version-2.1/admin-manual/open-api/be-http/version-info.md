@@ -1,7 +1,8 @@
 ---
 {
     "title": "BE 版本信息",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "用于获取 be 节点的版本信息。"
 }
 ---
 

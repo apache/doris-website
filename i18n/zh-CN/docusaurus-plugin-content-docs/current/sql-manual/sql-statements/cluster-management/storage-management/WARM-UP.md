@@ -1,7 +1,8 @@
 ---
 {
     "title": "WARM UP",
-    "language": "zh_CN"
+    "language": "zh_CN",
+    "description": "WARM UP COMPUTE GROUP 语句用于预热计算组中的数据，以提高查询性能。预热操作可以从另一个计算组中获取资源，也可以指定特定的表和分区进行预热。预热操作返回一个作业 ID，可以用于追踪预热作业的状态。"
 }
 ---
 

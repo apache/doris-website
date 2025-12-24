@@ -1,7 +1,8 @@
 ---
 {
     "title": "ARRAY_SHUFFLE",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "ARRAYSHUFFLE 用来随机打乱数组内元素的顺序。"
 }
 ---
 

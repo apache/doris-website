@@ -1,7 +1,8 @@
 ---
 {
     "title": "Dynamic Partitioning(Outdated)",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "Dynamic partitioning will add and remove partitions in a rolling manner according to predefined rules,"
 }
 ---
 

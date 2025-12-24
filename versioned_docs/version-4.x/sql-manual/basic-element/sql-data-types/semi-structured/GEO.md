@@ -1,7 +1,8 @@
 ---
 {
     "title": "GEO",
-    "language": "en"
+    "language": "en",
+    "description": "Geospatial types are special data types in databases used to store and manipulate geospatial data,"
 }
 ---
 

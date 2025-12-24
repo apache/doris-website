@@ -1,7 +1,7 @@
 ---
 {
     "title": "ARRAY_RANGE",
-    "language": "zh-CN"
+    "language": "zh-CN",
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "HOUR_FLOOR",
-    "language": "en"
+    "language": "en",
+    "description": "Converts the date to the nearest rounded-down timestamp of the specified time interval period."
 }
 ---
 

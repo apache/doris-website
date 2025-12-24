@@ -1,7 +1,8 @@
 ---
 {
     "title": "JSON_EXTRACT_LARGEINT",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "JSONEXTRACTLARGEINT 从 JSON 对象中提取 <jsonpath> 指定的字段，并将其转换为 LARGEINT 类型。"
 }
 ---
 

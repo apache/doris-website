@@ -1,7 +1,8 @@
 ---
 {
     "title": "JSON",
-    "language": "en"
+    "language": "en",
+    "description": "This document explains how to load JSON format data files into Doris."
 }
 ---
 

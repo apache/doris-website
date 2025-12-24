@@ -1,7 +1,8 @@
 ---
 {
     "title": "HLL_HASH",
-    "language": "en"
+    "language": "en",
+    "description": "Converts a given value to the HLL (HyperLogLog) type. This function is typically used during data loading to create an HLL from raw data."
 }
 ---
 

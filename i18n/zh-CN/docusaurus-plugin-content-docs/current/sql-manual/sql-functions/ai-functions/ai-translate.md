@@ -1,7 +1,8 @@
 ---
 {
     "title": "AI_TRANSLATE",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "用于将文本翻译为特定语言"
 }
 ---
 

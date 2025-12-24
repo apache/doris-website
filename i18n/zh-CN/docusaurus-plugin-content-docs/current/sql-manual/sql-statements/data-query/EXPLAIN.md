@@ -1,9 +1,9 @@
 ---
 {
     "title": "EXPLAIN",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "EXPLAIN 语句用于展示 Doris 对于给定的查询所规划的查询计划。Doris 查询优化器的核心目标在于，针对任意给定的查询，生成一个高效且优化的执行计划。该优化器充分利用统计信息、数据特性以及 Doris 本身的功能优势，例如 HASH JOIN、分区和分桶等，来精心制定执行计划。然而，"
 }
-
 ---
 
 ## 描述

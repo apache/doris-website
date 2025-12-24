@@ -1,7 +1,8 @@
 ---
 {
     "title": "XOR",
-    "language": "en"
+    "language": "en",
+    "description": "Return the XOR value of two numbers."
 }
 ---
 

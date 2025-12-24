@@ -1,7 +1,8 @@
 ---
 {
     "title": "ARRAY_EXCEPT",
-    "language": "en"
+    "language": "en",
+    "description": "Returns elements that exist in the first array but not in the second array,"
 }
 ---
 

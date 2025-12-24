@@ -1,7 +1,8 @@
 ---
 {
     "title": "Integration with Apache Ranger",
-    "language": "en"
+    "language": "en",
+    "description": "Apache Ranger is a security framework used to monitor, enable services, and manage all-round data security access on the Hadoop platform."
 }
 ---
 

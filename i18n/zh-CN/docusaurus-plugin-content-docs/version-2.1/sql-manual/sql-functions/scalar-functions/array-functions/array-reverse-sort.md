@@ -1,7 +1,8 @@
 ---
 {
     "title": "ARRAY_REVERSE_SORT",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "将数组中的元素降序排列"
 }
 ---
 

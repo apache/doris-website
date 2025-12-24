@@ -1,7 +1,8 @@
 ---
 {
     "title": "Data Lakehouse FAQ",
-    "language": "en"
+    "language": "en",
+    "description": "This is usually due to incorrect Kerberos authentication information. You can troubleshoot by following these steps:"
 }
 ---
 

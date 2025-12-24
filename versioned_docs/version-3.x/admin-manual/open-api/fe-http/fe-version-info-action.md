@@ -1,7 +1,8 @@
 ---
 {
     "title": "Fe Version Info Action",
-    "language": "en"
+    "language": "en",
+    "description": "Get fe version info from fe host."
 }
 ---
 

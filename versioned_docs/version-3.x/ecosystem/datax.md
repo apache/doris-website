@@ -1,7 +1,8 @@
 ---
 {
     "title": "DataX Doriswriter",
-    "language": "en"
+    "language": "en",
+    "description": "The DataX Doriswriter plugin supports synchronizing data from various data sources, such as MySQL, Oracle, and SQL Server,"
 }
 ---
 

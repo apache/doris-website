@@ -1,10 +1,10 @@
 ---
 {
     "title": "MEDIAN",
-    "language": "en"
+    "language": "en",
+    "description": "The MEDIAN function returns the median of the expression, equivalent to percentile(expr, 0.5)."
 }
 ---
-
 
 ## Description
 

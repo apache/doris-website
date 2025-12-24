@@ -1,7 +1,8 @@
 ---
 {
     "title": "LTRIM",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "LTRIM 函数用于去除字符串左侧（开头部分）连续出现空格或指定字符。"
 }
 ---
 

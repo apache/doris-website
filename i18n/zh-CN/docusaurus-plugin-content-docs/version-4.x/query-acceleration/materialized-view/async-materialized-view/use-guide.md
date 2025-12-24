@@ -1,7 +1,8 @@
 ---
 {
     "title": "最佳实践",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "当满足以下条件时，建议创建分区物化视图："
 }
 ---
 

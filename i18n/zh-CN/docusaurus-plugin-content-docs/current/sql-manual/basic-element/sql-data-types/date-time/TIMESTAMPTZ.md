@@ -1,7 +1,8 @@
 ---
 {
     "title": "TIMESTAMPTZ",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "TIMESTAMPTZ 是 Doris 中用于存储带时区信息的日期时间数据类型，对应于标准 SQL 中的 TIMESTAMP WITH TIME ZONE。"
 }
 ---
 

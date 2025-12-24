@@ -1,7 +1,8 @@
 ---
 {
     "title": "EXPORT-SET",
-    "language": "en"
+    "language": "en",
+    "description": "EXPORTSET is used to convert each bit of an integer into a specified string and concatenate them into a result string. For each bit in bits that is 1,"
 }
 ---
 

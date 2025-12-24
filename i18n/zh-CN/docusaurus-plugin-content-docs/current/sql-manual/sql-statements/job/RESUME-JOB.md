@@ -1,7 +1,8 @@
 ---
 {
-"title": "RESUME JOB",
-"language": "zh-CN"
+    "title": "RESUME JOB",
+    "language": "zh-CN",
+    "description": "将处于 PAUSED 状态的 JOB 恢复为 RUNNING 状态。RUNNING 状态的 JOB 将会根据既定的调度周期去执行。"
 }
 ---
 

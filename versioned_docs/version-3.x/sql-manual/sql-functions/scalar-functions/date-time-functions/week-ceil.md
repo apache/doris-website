@@ -1,7 +1,8 @@
 ---
 {
     "title": "WEEK_CEIL",
-    "language": "en"
+    "language": "en",
+    "description": "Rounds up a datetime value to the nearest specified week interval. If a starting time (origin) is provided,"
 }
 ---
 

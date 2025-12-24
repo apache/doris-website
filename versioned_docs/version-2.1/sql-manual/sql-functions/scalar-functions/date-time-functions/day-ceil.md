@@ -1,7 +1,8 @@
 ---
 {
     "title": "DAY_CEIL",
-    "language": "en"
+    "language": "en",
+    "description": "Rounds the date up to the nearest specified time interval period."
 }
 ---
 

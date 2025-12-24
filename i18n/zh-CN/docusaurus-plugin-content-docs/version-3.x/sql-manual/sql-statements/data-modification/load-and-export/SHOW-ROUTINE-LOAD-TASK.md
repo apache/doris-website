@@ -1,7 +1,8 @@
 ---
 {
     "title": "SHOW ROUTINE LOAD TASK",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "该语法用于查看一个指定的 Routine Load 作业的当前正在运行的子任务情况。"
 }
 ---
 

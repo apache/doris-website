@@ -1,7 +1,8 @@
 ---
 {
-"title": "AVG",
-"language": "en"
+    "title": "AVG",
+    "language": "en",
+    "description": "Calculates the average of all non-NULL values in a specified column or expression."
 }
 ---
 

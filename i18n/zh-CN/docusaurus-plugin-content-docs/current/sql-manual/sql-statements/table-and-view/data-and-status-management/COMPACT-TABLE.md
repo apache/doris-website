@@ -1,9 +1,9 @@
 ---
 {
     "title": "COMPACT TABLE",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "存算一体模式中，用于对指定表分区下的所有副本触发一次 Compaction。"
 }
-
 ---
 
 ## 描述

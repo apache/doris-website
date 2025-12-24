@@ -1,7 +1,8 @@
 ---
 {
     "title": "TIMEDIFF",
-    "language": "en"
+    "language": "en",
+    "description": "The TIMEDIFF function calculates the difference between two datetime values and returns the result as a TIME type."
 }
 ---
 

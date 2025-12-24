@@ -1,7 +1,8 @@
 ---
 {
     "title": "SHOW PLUGINS",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "该语句用于展示已安装的插件"
 }
 ---
 

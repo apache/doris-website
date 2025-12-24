@@ -1,7 +1,8 @@
 ---
 {
     "title": "INSTR",
-    "language": "en"
+    "language": "en",
+    "description": "Returns the first occurrence position of substr in str (counting starts from 1). Special cases:"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "ELT",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "ELT 函数根据指定的索引位置返回对应的字符串。索引从1开始计数。"
 }
 ---
 

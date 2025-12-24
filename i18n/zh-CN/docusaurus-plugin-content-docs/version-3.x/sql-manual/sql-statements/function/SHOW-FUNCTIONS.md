@@ -1,7 +1,8 @@
 ---
 {
     "title": "SHOW FUNCTIONS",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "查看数据库下所有的自定义与系统提供的函数。"
 }
 ---
 

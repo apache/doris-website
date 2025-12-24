@@ -1,7 +1,8 @@
 ---
 {
     "title": "AI_AGG",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "根据用户提供的指令，通过大语言模型对特定列进行聚合操作"
 }
 ---
 

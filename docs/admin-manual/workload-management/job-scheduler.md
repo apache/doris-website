@@ -1,7 +1,8 @@
 ---
 {
-"title": "Job Scheduler",
-"language": "en"
+    "title": "Job Scheduler",
+    "language": "en",
+    "description": "Introduction to Doris Job Scheduler, a built-in task scheduling system that enables automated periodic data imports, ETL operations, and data synchronization with second-level precision."
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "INNER_PRODUCT_APPROXIMATE",
-    "language": "en"
+    "language": "en",
+    "description": "Approximate version of innerproduct. If related array column has ann index built on it, result of this function could be collected from index."
 }
 ---
 

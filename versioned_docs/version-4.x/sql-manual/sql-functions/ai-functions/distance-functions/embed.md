@@ -1,7 +1,8 @@
 ---
 {
     "title": "EMBED",
-    "language": "en"
+    "language": "en",
+    "description": "Generates a semantic embedding vector based on the input text, representing the semantic information of the text."
 }
 ---
 

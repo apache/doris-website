@@ -1,7 +1,8 @@
 ---
 {
     "title": "character_sets",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "查看支持的字符集。此表仅用于兼容 MySQL 行为。并不能真实反映 Doris 所使用的字符集。"
 }
 ---
 

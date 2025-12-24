@@ -1,7 +1,8 @@
 ---
 {
-  "title": "Power BI",
-  "language": "zh-CN"
+    "title": "Power BI",
+    "language": "zh-CN",
+    "description": "Microsoft Power BI 可以从 Apache Doris 查询或加载数据到内存。"
 }
 ---
 

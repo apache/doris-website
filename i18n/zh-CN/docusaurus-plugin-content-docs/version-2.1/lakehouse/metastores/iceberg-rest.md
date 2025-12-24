@@ -1,7 +1,8 @@
 ---
 {
     "title": "Iceberg Rest Catalog API",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "本文档用于介绍通过 CREATE CATALOG 语句连接并访问支持 Iceberg Rest Catalog 接口的元数据服务时所支持的参数。"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "AI_CLASSIFY",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "用于将文本分类到指定的标签集合中"
 }
 ---
 

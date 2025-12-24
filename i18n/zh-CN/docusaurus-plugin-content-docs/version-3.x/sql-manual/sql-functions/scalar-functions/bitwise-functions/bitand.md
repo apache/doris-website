@@ -1,7 +1,8 @@
 ---
 {
-"title": "BITAND",
-"language": "zh-CN"
+    "title": "BITAND",
+    "language": "zh-CN",
+    "description": "用于执行 按位与（bitwise AND）运算。按位与运算会对两个整数的每一位进行比较，当两个对应的二进制位都为 1 时，结果才为 1，否则为 0。"
 }
 ---
 

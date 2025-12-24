@@ -1,7 +1,8 @@
 ---
 {
     "title": "SPLIT_PART",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "SPLITPART 函数将字符串按照指定的分隔符拆分成多个部分，然后返回指定索引位置的部分。该函数常用于从分隔符分隔的数据中提取特定字段。"
 }
 ---
 

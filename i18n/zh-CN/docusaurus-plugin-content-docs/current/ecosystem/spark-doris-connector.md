@@ -1,7 +1,8 @@
 ---
 {
-   "title": "Spark Doris Connector",
-   "language": "zh-CN"
+    "title": "Spark Doris Connector",
+    "language": "zh-CN",
+    "description": "Spark Doris Connector 可以支持通过 Spark 读取 Doris 中存储的数据，也支持通过 Spark 写入数据到 Doris。"
 }
 ---
 

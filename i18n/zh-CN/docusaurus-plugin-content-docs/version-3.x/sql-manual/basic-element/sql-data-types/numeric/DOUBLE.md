@@ -1,7 +1,8 @@
 ---
 {
     "title": "DOUBLE",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "DOUBLE 8字节浮点数"
 }
 ---
 

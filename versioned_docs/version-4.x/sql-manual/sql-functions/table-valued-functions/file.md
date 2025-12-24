@@ -1,7 +1,8 @@
 ---
 {
     "title": "FILE",
-    "language": "en"
+    "language": "en",
+    "description": "The File table-valued-function (tvf) is a wrapper around table functions like S3, HDFS, and LOCAL,"
 }
 ---
 

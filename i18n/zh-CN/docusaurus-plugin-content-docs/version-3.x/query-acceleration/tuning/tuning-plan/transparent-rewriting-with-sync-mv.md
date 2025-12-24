@@ -1,7 +1,8 @@
 ---
 {
     "title": "使用同步物化视图透明改写",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "同步物化视图 （Sync-Materialized View）是一种特殊的表，它预先根据定义好的 SELECT 语句计算并存储数据。其主要目的是满足用户对原始明细数据的任意维度分析需求，同时也能快速地进行固定维度的分析查询。"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "MinIO",
-    "language": "en"
+    "language": "en",
+    "description": "Doris provides two ways to load files from MinIO:"
 }
 ---
 

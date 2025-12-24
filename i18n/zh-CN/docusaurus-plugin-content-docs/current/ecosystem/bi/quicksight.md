@@ -1,7 +1,8 @@
 ---
 {
     "title": "QuickSight",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "QuickSight 可以通过官方 MySQL 数据源以 Directly query 或 Import 模式连接到 Apache Doris"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "IPV6",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "IPv6 类型，以 UInt128 的形式存储在 16 个字节中，用于表示 IPv6 地址。 取值范围是 ['::', 'ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff']。"
 }
 ---
 

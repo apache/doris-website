@@ -1,7 +1,8 @@
 ---
 {
     "title": "ALTER TABLE COLUMN",
-    "language": "en"
+    "language": "en",
+    "description": "This statement is used to perform a schema change operation on an existing table. The schema change is asynchronous,"
 }
 ---
 

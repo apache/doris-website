@@ -1,7 +1,8 @@
 ---
 {
     "title": "JSON_EXTRACT_ISNULL",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "JSONEXTRACTISNULL 判断 JSON 对象中 <jsonpath> 指定的字段是否是 null 值。"
 }
 ---
 

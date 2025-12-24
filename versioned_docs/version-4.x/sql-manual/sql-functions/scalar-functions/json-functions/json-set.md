@@ -1,7 +1,8 @@
 ---
 {
     "title": "JSON_SET",
-    "language": "en"
+    "language": "en",
+    "description": "The JSONSET function is used to insert or replace data in JSON and return the result."
 }
 ---
 

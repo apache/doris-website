@@ -1,7 +1,8 @@
 ---
 {
     "title": "PRINTF",
-    "language": "en"
+    "language": "en",
+    "description": "Returns a formatted string using the specified printf string and arguments."
 }
 ---
 

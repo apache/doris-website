@@ -1,7 +1,8 @@
 ---
 {
     "title": "主键模型的 Update 更新",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "主要介绍如何使用 Update 命令来更新 Doris 中的数据。Update 命令仅适用于 Unique 数据模型的表。"
 }
 ---
 

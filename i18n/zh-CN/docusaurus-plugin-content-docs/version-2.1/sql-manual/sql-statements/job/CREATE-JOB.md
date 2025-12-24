@@ -1,9 +1,9 @@
 ---
 {
-"title": "CREATE JOB",
-"language": "zh-CN"
+    "title": "CREATE JOB",
+    "language": "zh-CN",
+    "description": "Doris Job 是根据既定计划运行的任务，用于在特定时间或指定时间间隔触发预定义的操作，从而帮助我们自动执行一些任务。从功能上来讲，它类似于操作系统上的 定时任务（如：Linux 中的 cron、Windows 中的计划任务）。"
 }
-
 ---
 
 ## 描述

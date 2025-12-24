@@ -1,7 +1,8 @@
 ---
 {
     "title": "MAX",
-    "language": "en"
+    "language": "en",
+    "description": "The MAX function returns the maximum non-NULL value of the expression."
 }
 ---
 

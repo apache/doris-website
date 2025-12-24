@@ -1,7 +1,8 @@
 ---
 {
     "title": "GET_JSON_DOUBLE",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "函数 JSONEXTRACTDOUBLE 的别名。"
 }
 ---
 

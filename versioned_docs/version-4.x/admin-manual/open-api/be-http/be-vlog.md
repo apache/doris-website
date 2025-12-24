@@ -1,7 +1,8 @@
 ---
 {
     "title": "Modify BE VLOG",
-    "language": "en"
+    "language": "en",
+    "description": "This function is used to dynamically adjust the VLOG log on the BE side."
 }
 ---
 

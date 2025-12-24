@@ -1,7 +1,8 @@
 ---
 {
     "title": "QUARTERS_SUB",
-    "language": "en"
+    "language": "en",
+    "description": "The QUARTERSSUB function is used to subtract or add a specified number of quarters (1 quarter = 3 months) to a specified datetime value and returns "
 }
 ---
 

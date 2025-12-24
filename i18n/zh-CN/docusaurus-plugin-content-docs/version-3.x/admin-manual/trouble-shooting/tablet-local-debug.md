@@ -1,7 +1,8 @@
 ---
 {
     "title": "Tablet 本地调试",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "Doris 线上运行过程中，因为各种原因，可能出现各种各样的 bug。例如：副本不一致，数据存在版本 diff 等。"
 }
 ---
 

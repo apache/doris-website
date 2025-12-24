@@ -1,7 +1,8 @@
 ---
 {
     "title": "POSITIVE",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "返回数值本身。"
 }
 ---
 

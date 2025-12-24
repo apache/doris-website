@@ -1,7 +1,8 @@
 ---
 {
     "title": "YEARS_ADD",
-    "language": "en"
+    "language": "en",
+    "description": "Returns a new datetime value that is the result of adding a specified number of years to the input datetime."
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "UTC_DATE",
-    "language": "en"
+    "language": "en",
+    "description": "The UTCDATE function returns the current date in the UTC timezone."
 }
 ---
 

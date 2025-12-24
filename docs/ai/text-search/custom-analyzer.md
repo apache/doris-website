@@ -1,7 +1,8 @@
 ---
 {
-"title": "Custom Analyzer",
-    "language": "en"
+    "title": "Custom Analyzer",
+    "language": "en",
+    "description": "Custom analyzers allow you to overcome the limitations of built-in tokenizers by combining character filters, tokenizers,"
 }
 ---
 

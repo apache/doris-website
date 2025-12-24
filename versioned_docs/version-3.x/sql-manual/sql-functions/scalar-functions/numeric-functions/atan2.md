@@ -1,7 +1,8 @@
 ---
 {
     "title": "ATAN2",
-    "language": "en"
+    "language": "en",
+    "description": "Returns the arc tangent of 'y' / 'x'."
 }
 ---
 

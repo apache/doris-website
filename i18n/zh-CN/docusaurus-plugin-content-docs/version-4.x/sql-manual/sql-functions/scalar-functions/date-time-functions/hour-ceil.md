@@ -1,7 +1,8 @@
 ---
 {
-  "title": "HOUR_CEIL",
-  "language": "zh-CN"
+    "title": "HOUR_CEIL",
+    "language": "zh-CN",
+    "description": "HOURCEIL 函数用于将输入的日期时间值向上取整到指定小时周期的最近时刻。例如，若指定周期为 5 小时，函数会将输入时间调整为该周期内的下一个整点时刻（若输入时间已在周期起点，则保持不变）。"
 }
 ---
 

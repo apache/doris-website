@@ -1,7 +1,8 @@
 ---
 {
     "title": "MILLISECONDS_DIFF",
-    "language": "en"
+    "language": "en",
+    "description": "Calculates the millisecond difference between two datetime values."
 }
 ---
 

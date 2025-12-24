@@ -1,7 +1,8 @@
 ---
 {
     "title": "DATE",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "DATE"
 }
 ---
 

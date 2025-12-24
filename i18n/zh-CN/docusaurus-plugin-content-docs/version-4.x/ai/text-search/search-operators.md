@@ -1,7 +1,8 @@
 ---
 {
     "title": "全文检索与查询加速支持",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "介绍 Apache Doris 全文检索算子（MATCH_ANY、MATCH_ALL、MATCH_PHRASE 等）及倒排索引查询加速能力，包含典型 SQL 示例和适用场景说明。"
 }
 ---
 

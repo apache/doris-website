@@ -1,7 +1,8 @@
 ---
 {
     "title": "JSON_OBJECT",
-    "language": "en"
+    "language": "en",
+    "description": "Generate a json object containing the specified Key-Value, an exception error is returned when Key is NULL or the number of parameters are odd."
 }
 ---
 

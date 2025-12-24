@@ -1,7 +1,8 @@
 ---
 {
     "title": "ANALYZE",
-    "language": "en"
+    "language": "en",
+    "description": "This statement is used to collect column statistics."
 }
 ---
 

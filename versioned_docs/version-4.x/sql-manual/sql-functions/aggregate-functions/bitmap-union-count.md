@@ -1,7 +1,8 @@
 ---
 {
     "title": "BITMAP_UNION_COUNT",
-    "language": "en"
+    "language": "en",
+    "description": "Calculates the union of input Bitmaps and returns its cardinality."
 }
 ---
 

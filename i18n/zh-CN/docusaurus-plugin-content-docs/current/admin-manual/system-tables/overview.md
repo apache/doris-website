@@ -1,7 +1,8 @@
 ---
 {
     "title": "概述",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "Doris 集群内置多个系统数据库，用于存储 Doris 系统本身的一些元数据信息。"
 }
 ---
 

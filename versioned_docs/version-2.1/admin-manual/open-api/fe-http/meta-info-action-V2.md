@@ -1,7 +1,8 @@
 ---
 {
     "title": "Meta Info Action",
-    "language": "en"
+    "language": "en",
+    "description": "Used to obtain metadata information about the cluster, including the database list, table list, and table schema."
 }
 ---
 

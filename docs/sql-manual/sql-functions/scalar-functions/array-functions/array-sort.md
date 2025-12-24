@@ -1,7 +1,8 @@
 ---
 {
     "title": "ARRAY_SORT",
-    "language": "en-US"
+    "language": "en-US",
+    "description": "If no lambda function is specified, the array elements are sorted in ascending order. Otherwise,"
 }
 ---
 

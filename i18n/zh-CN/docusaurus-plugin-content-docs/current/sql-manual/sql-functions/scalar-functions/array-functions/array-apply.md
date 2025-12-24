@@ -1,7 +1,8 @@
 ---
 {
     "title": "ARRAY_APPLY",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "使用指定的二元操作符对数组元素进行过滤，返回满足条件的元素组成的新数组。这是一个简化的数组过滤函数，使用预定义的操作符而不是 lambda 表达式。"
 }
 ---
 

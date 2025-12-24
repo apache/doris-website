@@ -1,7 +1,8 @@
 ---
 {
     "title": "PARTITIONS",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "表函数，生成分区临时表，可以查看某个 TABLE 的分区列表。"
 }
 ---
 

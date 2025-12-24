@@ -1,7 +1,8 @@
 ---
 {
     "title": "AI_TRANSLATE",
-    "language": "en"
+    "language": "en",
+    "description": "Used to translate text into a specified language."
 }
 ---
 

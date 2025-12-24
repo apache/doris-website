@@ -1,7 +1,8 @@
 ---
 {
-  "title": "HTTP",
-  "language": "en"
+    "title": "HTTP",
+    "language": "en",
+    "description": "HTTP table-valued-function (tvf) allows users to read and access file content on HTTP paths as if accessing relational table format data."
 }
 ---
 

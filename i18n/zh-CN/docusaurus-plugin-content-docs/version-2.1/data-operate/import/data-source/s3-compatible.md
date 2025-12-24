@@ -1,7 +1,8 @@
 ---
 {
     "title": "S3 兼容存储",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "Doris 提供两种方式从 S3 兼容存储 导入文件："
 }
 ---
 

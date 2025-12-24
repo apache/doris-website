@@ -1,7 +1,8 @@
 ---
 {
     "title": "DATE_CEIL",
-    "language": "en"
+    "language": "en",
+    "description": "The dateceil function rounds up a specified date or time value to the nearest start of a specified time interval period."
 }
 ---
 

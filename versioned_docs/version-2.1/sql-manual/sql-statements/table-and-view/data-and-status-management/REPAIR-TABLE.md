@@ -1,7 +1,8 @@
 ---
 {
     "title": "REPAIR TABLE",
-    "language": "en"
+    "language": "en",
+    "description": "The REPAIR TABLE statement is used to prioritize the repair of replicas for a specified table or partition."
 }
 ---
 

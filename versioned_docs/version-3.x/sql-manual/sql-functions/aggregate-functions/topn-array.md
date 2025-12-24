@@ -1,7 +1,8 @@
 ---
 {
     "title": "TOPN_ARRAY",
-    "language": "en"
+    "language": "en",
+    "description": "TOPNARRAY returns an array of the N most frequent values in the specified column."
 }
 ---
 

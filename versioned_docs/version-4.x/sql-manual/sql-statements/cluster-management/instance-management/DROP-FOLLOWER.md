@@ -1,7 +1,8 @@
 ---
 {
     "title": "DROP FOLLOWER",
-    "language": "en"
+    "language": "en",
+    "description": "This statement deletes the node with the FOLLOWER role of FRONTEND. (For administrators only!)"
 }
 ---
 

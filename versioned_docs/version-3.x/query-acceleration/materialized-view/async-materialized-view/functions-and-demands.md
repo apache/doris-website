@@ -1,7 +1,8 @@
 ---
 {
-  "title": "Creating, Querying, and Maintaining Asynchronous Materialized Views",
-  "language": "en"
+    "title": "Creating, Querying, and Maintaining Asynchronous Materialized Views",
+    "language": "en",
+    "description": "This document provides detailed information about materialized view creation, direct querying of materialized views, query rewriting,"
 }
 ---
 

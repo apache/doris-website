@@ -1,7 +1,8 @@
 ---
 {
-"title": "AVG",
-"language": "zh-CN"
+    "title": "AVG",
+    "language": "zh-CN",
+    "description": "计算指定列或表达式的所有非 NULL 值的平均值。"
 }
 ---
 

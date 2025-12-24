@@ -1,7 +1,8 @@
 ---
 {
-"title": "CORR",
-"language": "zh-CN"
+    "title": "CORR",
+    "language": "zh-CN",
+    "description": "计算两个随机变量的皮尔逊系数。"
 }
 ---
 

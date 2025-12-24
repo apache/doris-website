@@ -1,7 +1,8 @@
 ---
 {
     "title": "基于 Apache Ranger 的鉴权管理",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "Apache Ranger 是一个用来在 Hadoop 平台上进行监控，启用服务，以及全方位的数据安全访问管理的安全框架。"
 }
 ---
 

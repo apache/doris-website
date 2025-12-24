@@ -1,7 +1,8 @@
 ---
 {
     "title": "PERCENTILE_ARRAY",
-    "language": "en"
+    "language": "en",
+    "description": "The PERCENTILEARRAY function calculates exact percentile arrays, allowing multiple percentile values to be computed at once."
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "Overview",
-    "language": "en"
+    "language": "en",
+    "description": "AI Function is a built-in function provided by Doris based on Artificial Intelligence (AI) capabilities."
 }
 ---
 

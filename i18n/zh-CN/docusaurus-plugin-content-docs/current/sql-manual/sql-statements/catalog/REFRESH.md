@@ -1,7 +1,8 @@
 ---
 {
     "title": "REFRESH",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "该语句用于刷新指定 Catalog/Database/Table 的元数据。"
 }
 ---
 

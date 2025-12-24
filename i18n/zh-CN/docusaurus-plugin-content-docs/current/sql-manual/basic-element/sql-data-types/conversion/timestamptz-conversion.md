@@ -1,7 +1,8 @@
 ---
 {
     "title": "转换为 TIMESTAMPTZ 类型",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "字符串0000-01-01 00:00:00+08:00是一个合法的 DATETIME 值，但是转换成UTC时间后会超出合法范围，最终结果是NULL。"
 }
 ---
 

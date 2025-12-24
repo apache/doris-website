@@ -1,7 +1,8 @@
 ---
 {
     "title": "COMPRESS",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "COMPRESS 函数用于将字符串压缩成二进制数据。使用 zlib 压缩算法，压缩后的数据可通过 UNCOMPRESS 函数解压还原。"
 }
 ---
 

@@ -1,4 +1,10 @@
-# 并行度调优
+---
+{
+    "title": "并行度调优",
+    "language": "zh-CN",
+    "description": "介绍 Apache Doris 并行度调优思路与实践，围绕 parallel_pipeline_task_num 默认策略、原则、SQL/会话/全局设置、分片并发解耦及典型案例，帮助平衡 CPU 利用率与查询性能。"
+}
+---
 
 ## 概述
 

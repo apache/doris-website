@@ -1,7 +1,8 @@
 ---
 {
     "title": "Duplicate Key Model",
-    "language": "en"
+    "language": "en",
+    "description": "The Duplicate Key Model in Doris is the default table model, designed to store individual raw data records."
 }
 ---
 

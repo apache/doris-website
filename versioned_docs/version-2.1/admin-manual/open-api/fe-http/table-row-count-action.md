@@ -1,7 +1,8 @@
 ---
 {
     "title": "Table Row Count Action",
-    "language": "en"
+    "language": "en",
+    "description": "Used to obtain statistics about the number of rows in a specified table. This interface is currently used in Spark-Doris-Connector."
 }
 ---
 

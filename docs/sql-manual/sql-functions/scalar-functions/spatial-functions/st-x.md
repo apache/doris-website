@@ -1,7 +1,8 @@
 ---
 {
     "title": "ST_X",
-    "language": "en"
+    "language": "en",
+    "description": "When the point is a valid POINT type, returns the corresponding X coordinate value."
 }
 ---
 

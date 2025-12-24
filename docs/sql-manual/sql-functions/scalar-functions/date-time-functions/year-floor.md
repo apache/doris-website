@@ -1,7 +1,8 @@
 ---
 {
     "title": "YEAR_FLOOR",
-    "language": "en"
+    "language": "en",
+    "description": "The yearfloor function rounds down an input datetime value to the nearest specified year interval start time. If origin is specified,"
 }
 ---
 

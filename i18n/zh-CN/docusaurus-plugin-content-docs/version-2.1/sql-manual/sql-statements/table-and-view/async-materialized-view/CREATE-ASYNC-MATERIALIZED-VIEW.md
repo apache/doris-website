@@ -1,7 +1,8 @@
 ---
 {
-  "title": "CREATE ASYNC MATERIALIZED VIEW",
-  "language": "zh-CN"
+    "title": "CREATE ASYNC MATERIALIZED VIEW",
+    "language": "zh-CN",
+    "description": "创建异步物化视图语句，列名和列类型是通过物化视图 SQL 语句推导出来的，可以自定义列名，不可以定义列类型。"
 }
 ---
 

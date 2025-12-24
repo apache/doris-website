@@ -1,7 +1,8 @@
 ---
 {
     "title": "CREATE SYNC JOB",
-    "language": "en"
+    "language": "en",
+    "description": "The data synchronization (Sync Job) function allows users to submit a persistent data synchronization job."
 }
 ---
 

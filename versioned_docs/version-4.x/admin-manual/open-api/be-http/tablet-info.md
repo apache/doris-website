@@ -1,7 +1,8 @@
 ---
 {
     "title": "View Tablet Info",
-    "language": "en"
+    "language": "en",
+    "description": "View Tablet Info, including ID and schema hash."
 }
 ---
 

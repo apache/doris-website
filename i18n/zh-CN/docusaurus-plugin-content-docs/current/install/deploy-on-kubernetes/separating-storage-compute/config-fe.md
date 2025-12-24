@@ -1,7 +1,8 @@
 ---
 {
-   "title": "配置部署 FE",
-   "language": "zh-CN"
+    "title": "配置部署 FE",
+    "language": "zh-CN",
+    "description": "FE 在存算分离模式下主要负责查询解析和规划等相关工作。"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "TIMESTAMPTZ",
-    "language": "en"
+    "language": "en",
+    "description": "TIMESTAMPTZ is the data type in Doris used to store date and time information with time zone awareness,"
 }
 ---
 

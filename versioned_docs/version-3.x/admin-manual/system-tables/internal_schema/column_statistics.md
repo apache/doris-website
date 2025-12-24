@@ -1,7 +1,8 @@
 ---
 {
     "title": "column_statistics",
-    "language": "en"
+    "language": "en",
+    "description": "Column statistics"
 }
 ---
 

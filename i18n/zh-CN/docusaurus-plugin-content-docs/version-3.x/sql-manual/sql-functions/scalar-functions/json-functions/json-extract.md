@@ -1,7 +1,8 @@
 ---
 {
     "title": "JSON_EXTRACT",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "JSONEXTRACT 是一系列函数，从 JSON 类型的数据中提取 jsonpath 指定的字段，根据要提取的字段类型不同提供不同的系列函数。"
 }
 ---
 

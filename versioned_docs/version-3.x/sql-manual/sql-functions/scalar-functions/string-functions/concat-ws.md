@@ -1,7 +1,8 @@
 ---
 {
     "title": "CONCAT_WS",
-    "language": "en"
+    "language": "en",
+    "description": "Use the first parameter sep as the connector to concatenate the second parameter and all subsequent parameters (or all strings in one ARRAY or multi "
 }
 ---
 

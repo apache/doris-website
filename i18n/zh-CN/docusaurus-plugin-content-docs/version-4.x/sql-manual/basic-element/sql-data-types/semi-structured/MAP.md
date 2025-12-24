@@ -1,7 +1,8 @@
 ---
 {
-"title": "MAP",
-"language": "zh-CN"
+    "title": "MAP",
+    "language": "zh-CN",
+    "description": "````SQL SELECT MAP('Alice', 21, 'Bob', 23);"
 }
 ---
 

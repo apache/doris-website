@@ -1,7 +1,8 @@
 ---
 {
     "title": "MILLISECONDS_SUB",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "从日期时间值中减去指定的毫秒数，返回一个新的日期时间值。"
 }
 ---
 

@@ -3,7 +3,8 @@
     "title": "Seatunnel Doris Sink",
     "language": "en",
     "toc_min_heading_level": 2,
-    "toc_max_heading_level": 4
+    "toc_max_heading_level": 4,
+    "description": "SeaTunnel is a very easy-to-use ultra-high-performance distributed data integration platform that supports real-time synchronization of massive data."
 }
 ---
 

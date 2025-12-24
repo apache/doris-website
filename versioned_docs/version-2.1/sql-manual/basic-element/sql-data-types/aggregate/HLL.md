@@ -1,7 +1,8 @@
 ---
 {
     "title": "HLL (HyperLogLog)",
-    "language": "en"
+    "language": "en",
+    "description": "HLL"
 }
 ---
 

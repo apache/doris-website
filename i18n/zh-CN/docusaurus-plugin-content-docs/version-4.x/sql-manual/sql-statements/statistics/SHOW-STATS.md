@@ -1,7 +1,8 @@
 ---
 {
     "title": "SHOW COLUMN STATS",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "该语句用来查看表的列统计信息。"
 }
 ---
 

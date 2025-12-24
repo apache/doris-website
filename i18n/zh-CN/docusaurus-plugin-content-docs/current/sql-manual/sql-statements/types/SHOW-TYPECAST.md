@@ -1,7 +1,8 @@
 ---
 {
     "title": "SHOW TYPECAST",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "查看数据库下所有的类型转换。"
 }
 ---
 

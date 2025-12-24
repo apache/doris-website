@@ -1,7 +1,8 @@
 ---
 {
     "title": "ARRAYS_OVERLAP",
-    "language": "en"
+    "language": "en",
+    "description": "Determine whether the left and right arrays contain common elements"
 }
 ---
 

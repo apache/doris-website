@@ -1,7 +1,8 @@
 ---
 {
     "title": "LoongCollector (iLogtail) Doris Flusher",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "LoongCollector (iLogtail) 是一个开源高性能日志采集与处理框架，来源于阿里云，3.0版本之前的命名为：Logtail/iLogtail。支持自定义输出插件将数据写入存储系统，LoongCollector Doris Flusher 是输出到 Doris 的插件。"
 }
 ---
 

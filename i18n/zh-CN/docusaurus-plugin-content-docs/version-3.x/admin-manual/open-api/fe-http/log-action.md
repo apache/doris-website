@@ -1,7 +1,8 @@
 ---
 {
     "title": "Log Action",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "GET 用于获取 Doris 最新的一部分 WARNING 日志，POST 方法用于动态设置 FE 的日志级别。"
 }
 ---
 

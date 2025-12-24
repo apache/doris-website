@@ -1,7 +1,8 @@
 ---
 {
     "title": "BITMAP_AND_NOT_COUNT,BITMAP_ANDNOT_COUNT",
-    "language": "en"
+    "language": "en",
+    "description": "Performs a NOT operation on two BITMAPs and returns the number of elements in the result set."
 }
 ---
 

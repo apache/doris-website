@@ -1,7 +1,8 @@
 ---
 {
     "title": "NULL_OR_EMPTY",
-    "language": "en"
+    "language": "en",
+    "description": "The nullorempty function checks if the given value is NULL or an empty string. It returns true if the input value is NULL or an empty string,"
 }
 ---
 

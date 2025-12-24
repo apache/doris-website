@@ -1,7 +1,8 @@
 ---
 {
-"title": "GROUP_ARRAY_INTERSECT",
-"language": "zh-CN"
+    "title": "GROUP_ARRAY_INTERSECT",
+    "language": "zh-CN",
+    "description": "求出所有行中输入数组中的交集元素，返回一个新的数组"
 }
 ---
 

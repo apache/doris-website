@@ -1,7 +1,8 @@
 ---
 {
     "title": "System Action",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "System Action 用于 Doris 内置的 Proc 系统的相关信息。"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "Release 2.1.2",
-    "language": "en"
+    "language": "en",
+    "description": "eg, select @autocommit should with column type BIGINT, not BIT, otherwise it will throw error. So we change column type of @autocommit to BIGINT."
 }
 ---
 

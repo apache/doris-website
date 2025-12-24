@@ -1,7 +1,8 @@
 ---
 {
     "title": "IVF",
-    "language": "en"
+    "language": "en",
+    "description": "IVF index is an efficient data structure used for Approximate Nearest Neighbor (ANN) search. It helps narrow down the scope of vectors during search,"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "ARRAY_PUSHFRONT",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "在数组开头添加一个元素。函数会返回一个新数组，包含新添加的元素以及原数组的所有元素。"
 }
 ---
 

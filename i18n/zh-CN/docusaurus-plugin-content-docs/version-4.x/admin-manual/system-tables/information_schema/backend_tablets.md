@@ -1,7 +1,8 @@
 ---
 {
     "title": "backend_tablets",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "在 Backends 上查看 talbet 的信息。（doris 3.0.7添加）"
 }
 ---
 

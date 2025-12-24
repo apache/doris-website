@@ -1,7 +1,8 @@
 ---
 {
     "title": "MAP",
-    "language": "en"
+    "language": "en",
+    "description": "MAP<K, V> A Map of K, V items。 Click MAP to learn more."
 }
 ---
 

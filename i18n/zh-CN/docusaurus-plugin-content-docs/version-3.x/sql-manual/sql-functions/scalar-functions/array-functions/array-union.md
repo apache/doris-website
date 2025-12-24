@@ -1,7 +1,8 @@
 ---
 {
     "title": "ARRAY_UNION",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "将多个数组进行合并，不包含重复元素，生成一个新数组"
 }
 ---
 

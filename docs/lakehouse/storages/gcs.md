@@ -1,7 +1,8 @@
 ---
 {
     "title": "Google Cloud Storage",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "The document is under development."
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "CREATE VIEW",
-    "language": "en"
+    "language": "en",
+    "description": "This statement is used to create a logical view using a specified query statement."
 }
 ---
 

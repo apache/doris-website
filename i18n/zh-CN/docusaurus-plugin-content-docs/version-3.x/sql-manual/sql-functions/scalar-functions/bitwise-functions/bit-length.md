@@ -1,7 +1,8 @@
 ---
 {
     "title": "BIT_LENGTH",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "用于返回一个字符串的 二进制表示 中 位数（即总的二进制位数）。它计算的是字符串的二进制编码所占的位数。"
 }
 ---
 

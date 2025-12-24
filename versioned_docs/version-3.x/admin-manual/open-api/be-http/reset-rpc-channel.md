@@ -1,7 +1,8 @@
 ---
 {
     "title": "Reset Stub Cache",
-    "language": "en"
+    "language": "en",
+    "description": "Reset the connection cache of brpc"
 }
 ---
 

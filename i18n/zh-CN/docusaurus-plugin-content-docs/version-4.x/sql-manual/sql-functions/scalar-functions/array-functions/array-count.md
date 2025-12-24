@@ -1,7 +1,8 @@
 ---
 {
     "title": "ARRAY_COUNT",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "对数组中的元素应用 lambda 表达式，统计返回值不为 0 的元素个数。"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "MICROSECONDS_ADD",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "MICROSECONDSADD 函数用于向输入的日期时间值中添加指定的微秒数，并返回计算后的新日期时间值。该函数支持处理含微秒精度的 DATETIME 类型。"
 }
 ---
 

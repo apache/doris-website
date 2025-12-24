@@ -1,7 +1,8 @@
 ---
 {
     "title": "Configuration Instructions",
-    "language": "en"
+    "language": "en",
+    "description": "This document provides the configurations that need to be adjusted or paid attention to when using CCR."
 }
 ---
 

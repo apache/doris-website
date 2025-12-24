@@ -1,7 +1,8 @@
 ---
 {
     "title": "LAST_QUERY_ID",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "获取当前用户上一次查询的 query id。"
 }
 ---
 

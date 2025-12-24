@@ -1,7 +1,8 @@
 ---
 {
     "title": "Performance",
-    "language": "en"
+    "language": "en",
+    "description": "The performance data in this document is based on the default configuration."
 }
 ---
 

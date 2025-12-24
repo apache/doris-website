@@ -1,7 +1,8 @@
 ---
 {
     "title": "DATE_ADD",
-    "language": "en"
+    "language": "en",
+    "description": "The DATEADD function is used to add a specified time interval to a specified date or time value and return the calculated result."
 }
 ---
 

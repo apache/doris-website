@@ -1,7 +1,8 @@
 ---
 {
     "title": "ST_DISTANCE_SPHERE",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "计算地球两点之间的球面距离，单位为 米。传入的参数分别为 X 点的经度，X 点的纬度，Y 点的经度，Y 点的纬度。"
 }
 ---
 

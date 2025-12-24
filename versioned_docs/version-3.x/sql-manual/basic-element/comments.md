@@ -1,7 +1,8 @@
 ---
 {
     "title": "Comments",
-    "language": "en"
+    "language": "en",
+    "description": "Comments can make your application easier to read and maintain. For example,"
 }
 ---
 

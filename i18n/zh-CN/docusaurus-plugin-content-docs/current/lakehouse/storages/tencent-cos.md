@@ -1,7 +1,8 @@
 ---
 {
-  "title": "Tencent COS",
-  "language": "zh-CN"
+    "title": "Tencent COS",
+    "language": "zh-CN",
+    "description": "本文档介绍访问腾讯云 COS 所需的参数，这些参数适用于以下场景："
 }
 ---
 

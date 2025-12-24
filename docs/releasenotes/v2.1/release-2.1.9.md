@@ -1,7 +1,8 @@
 ---
 {
     "title": "Release 2.1.9",
-    "language": "en"
+    "language": "en",
+    "description": "Dear Community, Apache Doris version 2.1.9 is now available, featuring improved SQLHash calculation, enhanced query results accuracy,"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "Release 3.0.6",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "亲爱的社区小伙伴们，Apache Doris 3.0.6 版本已于 2025 年 06 月 16 日正式发布。 该版本进一步提升了系统的性能及稳定性，欢迎大家下载体验。"
 }
 ---
 

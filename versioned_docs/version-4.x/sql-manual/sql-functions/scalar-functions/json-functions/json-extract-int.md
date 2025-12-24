@@ -1,7 +1,8 @@
 ---
 {
     "title": "JSON_EXTRACT_INT",
-    "language": "en"
+    "language": "en",
+    "description": "JSONEXTRACTINT extracts the field specified by <jsonpath> from a JSON object and converts it to INT type."
 }
 ---
 

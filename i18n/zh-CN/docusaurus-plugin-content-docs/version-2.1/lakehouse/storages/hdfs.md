@@ -1,7 +1,8 @@
 ---
 {
-  "title": "HDFS",
-  "language": "zh-CN"
+    "title": "HDFS",
+    "language": "zh-CN",
+    "description": "本文档用于介绍访问 HDFS 时所需的参数。这些参数适用于："
 }
 ---
 
@@ -183,6 +184,20 @@ HDFS Client 提供了 Hedged Read 功能。该功能可以在一个读请求超�
 * 该参数应在客户端配置文件（如 `hdfs-site.xml`）中设置，确保客户端在与 HDFS 通信时使用正确的超时时间。
 
 总之，合理配置 `dfs.client.socket-timeout` 参数，可以在提高 I/O 响应速度的同时，确保系统的稳定性和可靠性。
+
+## HDFS 访问端口要求（仅 NameNode 与 DataNode）
+
+说明：Doris 访问 HDFS 最少需保证以下端口连通。
+
+| 服务     | 端口用途             | 默认端口 | 协议           |
+|----------|------------------|----------|--------------|
+| NameNode | RPC（客户端／元数据访问）   | 8020     | TCP          |
+| DataNode | 数据传输（Block 读写）   | 9866     | TCP          |
+
+
+注意：
+- 端口可能被 `core-site.xml`／`hdfs-site.xml` 自定义，请以实际配置为准。
+- 当启用 Kerberos 认证时，需要保证 Doris 到 Kerberos KDC 的网络连通。KDC 默认监听 TCP 88 端口，如有自定义请以实际配置为准。
 
 ## 调试 HDFS
 

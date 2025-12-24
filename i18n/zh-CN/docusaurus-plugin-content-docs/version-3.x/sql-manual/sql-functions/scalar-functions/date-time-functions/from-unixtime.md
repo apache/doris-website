@@ -1,7 +1,8 @@
 ---
 {
     "title": "FROM_UNIXTIME",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "将 unix 时间戳转化为对应的 time 格式。特殊情况："
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "BITMAP_TO_ARRAY",
-    "language": "en"
+    "language": "en",
+    "description": "Converts a Bitmap into an Array."
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "ORC",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "本文介绍如何在 Doris 中导入 ORC 格式的数据文件。"
 }
 ---
 

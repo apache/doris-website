@@ -1,3 +1,12 @@
+---
+{
+    "title": "Condition Cache",
+    "language": "en",
+    "description": "In large-scale analytical workloads, queries often include repeated filtering conditions (Conditions)"
+}
+---
+
+
 # Condition Cache
 
 ## Introduction

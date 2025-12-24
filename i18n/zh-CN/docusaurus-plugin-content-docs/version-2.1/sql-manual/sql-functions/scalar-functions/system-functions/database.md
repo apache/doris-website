@@ -1,7 +1,8 @@
 ---
 {
     "title": "DATABASE",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "获取当前 sql 客户端的连接的 database。"
 }
 ---
 

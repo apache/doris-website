@@ -1,7 +1,8 @@
 ---
 {
     "title": "GET_JSON_STRING",
-    "language": "en"
+    "language": "en",
+    "description": "Alias of function JSONEXTRACTSTRING."
 }
 ---
 

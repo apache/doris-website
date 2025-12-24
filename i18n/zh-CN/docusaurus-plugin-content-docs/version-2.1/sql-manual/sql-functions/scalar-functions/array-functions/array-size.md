@@ -1,7 +1,8 @@
 ---
 {
     "title": "ARRAY_SIZE",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "计算数组中元素的数量"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "DROP VIEW",
-    "language": "en"
+    "language": "en",
+    "description": "Delete a view in the current or specified database."
 }
 ---
 

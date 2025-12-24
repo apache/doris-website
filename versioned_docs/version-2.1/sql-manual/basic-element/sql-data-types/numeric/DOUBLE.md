@@ -1,7 +1,8 @@
 ---
 {
     "title": "DOUBLE",
-    "language": "en"
+    "language": "en",
+    "description": "DOUBLE 8-byte floating point number"
 }
 ---
 

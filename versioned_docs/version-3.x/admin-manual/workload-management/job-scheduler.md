@@ -1,7 +1,8 @@
 ---
 {
-"title": "Job Scheduler",
-"language": "en"
+    "title": "Job Scheduler",
+    "language": "en",
+    "description": "In the context of increasing demands for refined data management, scheduled scheduling plays an important role."
 }
 ---
 

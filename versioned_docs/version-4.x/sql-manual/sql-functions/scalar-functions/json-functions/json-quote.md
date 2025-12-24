@@ -1,7 +1,8 @@
 ---
 {
     "title": "JSON_QUOTE",
-    "language": "en"
+    "language": "en",
+    "description": "Surrounds the input string parameter with double quotes and escapes special characters and control characters in the string."
 }
 ---
 

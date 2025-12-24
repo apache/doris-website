@@ -1,7 +1,8 @@
 ---
 {
     "title": "CHAR",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "CHAR(M)"
 }
 ---
 

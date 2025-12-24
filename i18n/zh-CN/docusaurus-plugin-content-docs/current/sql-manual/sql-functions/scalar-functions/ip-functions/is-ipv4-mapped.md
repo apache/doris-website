@@ -1,7 +1,8 @@
 ---
 {
     "title": "IS_IPV4_MAPPED",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "检查 IPv6 地址是否为 IPv4 映射地址。IPv4 映射地址是一种特殊的 IPv6 地址格式，用于在 IPv6 网络中表示 IPv4 地址。"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "MONTHS_DIFF",
-    "language": "en"
+    "language": "en",
+    "description": "The MONTHSDIFF function is used to calculate the integer month difference between two datetime values,"
 }
 ---
 

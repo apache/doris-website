@@ -1,7 +1,8 @@
 ---
 {
     "title": "ARRAY",
-    "language": "en"
+    "language": "en",
+    "description": "construct an array with variadic elements and return it, T could be column or literal"
 }
 ---
 

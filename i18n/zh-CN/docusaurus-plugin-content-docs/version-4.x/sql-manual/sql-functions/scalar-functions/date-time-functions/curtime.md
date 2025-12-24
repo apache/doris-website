@@ -1,7 +1,8 @@
 ---
 {
     "title": "CURTIME,CURRENT_TIME",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "获取当前时间并返回为 TIME 类型。"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "Table Type Overview",
-    "language": "en"
+    "language": "en",
+    "description": "When creating a table in Doris, it is necessary to specify the Table Type to define how data is stored and managed."
 }
 ---
 

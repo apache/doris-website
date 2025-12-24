@@ -1,7 +1,8 @@
 ---
 {
     "title": "ARRAY",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "根据参数构造并返回 array, 参数可以是多列或者常量"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "MAKEDATE",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "根据指定的年份和一年中的天数（dayofyear）构建并返回一个日期。"
 }
 ---
 

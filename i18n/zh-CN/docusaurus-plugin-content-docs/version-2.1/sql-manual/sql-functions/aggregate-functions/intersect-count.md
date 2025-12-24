@@ -1,7 +1,8 @@
 ---
 {
-"title": "INTERSECT_COUNT",
-"language": "zh-CN"
+    "title": "INTERSECT_COUNT",
+    "language": "zh-CN",
+    "description": "INTERSECTCOUNT 函数用于计算 Bitmap 数据结构的交集元素的数量。"
 }
 ---
 

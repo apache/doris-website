@@ -1,7 +1,8 @@
 ---
 {
-"title": "SEARCH Function",
-    "language": "en"
+    "title": "SEARCH Function",
+    "language": "en",
+    "description": "The SEARCH function provides a concise DSL (domain‑specific language) for full‑text queries in Apache Doris from 4.0 version."
 }
 ---
 

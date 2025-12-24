@@ -1,9 +1,9 @@
 ---
 {
-   "title": "ADD BROKER",
-   "language": "en"
+    "title": "ADD BROKER",
+    "language": "en",
+    "description": "This statement is used to add one or more BROKER nodes."
 }
-
 ---
 
 ## Description

@@ -1,7 +1,8 @@
 ---
 {
     "title": "MERGE",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "将聚合中间结果进行聚合并计算获得实际结果。 结果的类型与AGGREGATEFUNCTION一致。"
 }
 ---
 

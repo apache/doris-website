@@ -1,7 +1,8 @@
 ---
 {
     "title": "ARRAY_CUM_SUM",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "计算数组的累积和。函数会从左到右遍历数组，计算每个位置之前（包括当前位置）所有元素的和，返回一个与原数组等长的新数组。"
 }
 ---
 

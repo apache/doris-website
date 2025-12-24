@@ -1,7 +1,8 @@
 ---
 {
-"title": "RESUME JOB",
-"language": "en"
+    "title": "RESUME JOB",
+    "language": "en",
+    "description": "Restore the PAUSED job to the RUNNING state. The RUNNING job will be executed according to the scheduled period."
 }
 ---
 

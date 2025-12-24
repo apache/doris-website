@@ -1,7 +1,8 @@
 ---
 {
-  "title": "TO_DAYS",
-  "language": "en"
+    "title": "TO_DAYS",
+    "language": "en",
+    "description": "Date calculation function, which is used to convert a date into a day value, that is, to calculate the total number of days from December 31,"
 }
 ---
 
