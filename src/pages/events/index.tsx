@@ -217,7 +217,7 @@ const EVENTS_PAGE_DATA = {
             ),
             isCover: true,
             link: 'https://www.selectdb.com/resources/events/doris-webinar-20251204',
-        },{
+        }, {
             cardTitle: '',
             cardDate: '',
             tag: '',
@@ -239,7 +239,7 @@ const EVENTS_PAGE_DATA = {
             ),
             isCover: true,
             link: 'https://www.selectdb.com/resources/events/doris-webinar-20251127',
-        },{
+        }, {
             cardTitle: '',
             cardDate: '',
             tag: '',
@@ -968,14 +968,14 @@ export default function Events() {
                         className={`flex flex-wrap gap-x-[1.5rem] gap-y-[5rem] ${!showMore ? 'mb-[2.5rem]' : 'mb-[5rem]'
                             } `}
                     >
-                        {eventList.slice(0, 9).map((event: Event, index) => (
-                            <EventCard data={event} key={index} />
+                        {eventList.slice(0, 9).map((event: Event) => (
+                            <EventCard data={event} key={event.link} />
                         ))}
                     </div>
                     {showMore ? (
                         <div className="flex flex-wrap gap-x-[1.5rem] gap-y-[5rem] mb-[2.5rem] ">
-                            {eventList.slice(9).map((event: Event, index) => (
-                                <EventCard data={event} key={index} />
+                            {eventList.slice(9).map((event: Event) => (
+                                <EventCard data={event} key={event.link} />
                             ))}
                         </div>
                     ) : null}

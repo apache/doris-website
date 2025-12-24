@@ -44,11 +44,14 @@ const config = {
     url: 'https://doris.apache.org',
     baseUrl: '/',
     onBrokenLinks: 'ignore',
-    onBrokenMarkdownLinks: 'ignore',
+    // onBrokenMarkdownLinks:  'ignore',  // handled in markdown config below
     favicon: 'images/favicon.ico',
     organizationName: 'Apache',
     markdown: {
         format: 'detect',
+        hooks: {
+            onBrokenMarkdownLinks: 'ignore',
+        },
     },
     trailingSlash: true,
     i18n: {
@@ -97,6 +100,7 @@ const config = {
     projectName: 'apache/doris-website', // Usually your repo name.
     customFields: {},
     future: {
+        v4: true,
         experimental_faster: true,
     },
     plugins: [

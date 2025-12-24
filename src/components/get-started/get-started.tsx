@@ -15,11 +15,13 @@ export default function GetStarted() {
                 </h2>
                 {data?.description && <div className="mt-4 text-center text-white">{data.description}</div>}
                 <div className="relative z-[1] mt-12 flex justify-center space-x-4 lg:space-x-10">
-                    {data.buttons.map((item, index) => {
+                    {data.buttons.map(item => {
+                        const buttonKey = item.link ?? item.text;
+
                         return (
                             <ExternalLink
                                 label={item.text}
-                                key={index}
+                                key={buttonKey}
                                 {...item}
                                 linkIcon={<ExternalLinkArrowIcon />}
                             />

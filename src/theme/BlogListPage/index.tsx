@@ -72,7 +72,7 @@ function BlogListPageContent(props) {
     const [blogs, setBlogs] = useState([]);
     const blogCategories = getBlogCategories(props);
     const ALL_BLOG = blogCategories.find(item => item.label === allText).values;
-    
+
     const { siteConfig } = useDocusaurusContext();
     const isCN = siteConfig.baseUrl.indexOf('zh-CN') > -1;
     const [active, setActive] = useState(() => {
@@ -132,12 +132,11 @@ function BlogListPageContent(props) {
             <HeadBlogs blogs={ALL_BLOG} />
             <div className="flex flex-col lg:max-w-7xl">
                 <ul className="scrollbar-none w-[100%] mt-6 custom-scrollbar m-auto flex gap-3 overflow-auto text-[#4C576C] lg:mt-[5.5rem]  lg:justify-center lg:gap-6">
-                    {blogCategories.map((item: any, index) => (
-                        <li className=" py-px" key={index} onClick={() => changeCategory(item.label)}>
+                    {blogCategories.map((item: any) => (
+                        <li className=" py-px" key={item.label} onClick={() => changeCategory(item.label)}>
                             <span
-                                className={`block cursor-pointer whitespace-nowrap rounded-[2.5rem] px-4 py-2 text-sm  shadow-[0px_1px_4px_0px_rgba(49,77,136,0.10)] hover:bg-[#444FD9] hover:text-white lg:px-6 lg:py-3 lg:text-base ${
-                                    active === item.label && 'bg-[#444FD9] text-white'
-                                }`}
+                                className={`block cursor-pointer whitespace-nowrap rounded-[2.5rem] px-4 py-2 text-sm  shadow-[0px_1px_4px_0px_rgba(49,77,136,0.10)] hover:bg-[#444FD9] hover:text-white lg:px-6 lg:py-3 lg:text-base ${active === item.label && 'bg-[#444FD9] text-white'
+                                    }`}
                             >
                                 {item.label}
                             </span>
@@ -145,9 +144,9 @@ function BlogListPageContent(props) {
                     ))}
                 </ul>
                 <ul className="mt-6 grid gap-6 lg:mt-10 lg:grid-cols-3 m-auto">
-                    {currentBlogs.map((BlogPostContent, i) => (
+                    {currentBlogs.map(BlogPostContent => (
                         <BlogListItem
-                            key={BlogPostContent.metadata.permalink + i}
+                            key={BlogPostContent.metadata.permalink}
                             frontMatter={BlogPostContent.frontMatter}
                             assets={BlogPostContent.assets}
                             metadata={BlogPostContent.metadata}

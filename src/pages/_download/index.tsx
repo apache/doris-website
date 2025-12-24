@@ -349,8 +349,8 @@ export default function Download(): JSX.Element {
                                 </tr>
                             </thead>
                             <tbody>
-                                {ALL_RELEASE.map((item, index) => (
-                                    <tr key={index}>
+                                {ALL_RELEASE.map(item => (
+                                    <tr key={item.version}>
                                         <td>{item.version}</td>
                                         <td>{item.date}</td>
                                         <td>
@@ -432,8 +432,8 @@ export default function Download(): JSX.Element {
                                 </tr>
                             </thead>
                             <tbody>
-                                {FLINK_CONNECTOR.map((item, index) => (
-                                    <tr key={index}>
+                                {FLINK_CONNECTOR.map(item => (
+                                    <tr key={`${item.version}-${item.scala}`}>
                                         <td>{item.version}</td>
                                         <td>{item.date}</td>
                                         <td>{item.flink}</td>
@@ -508,8 +508,8 @@ export default function Download(): JSX.Element {
                                 </tr>
                             </thead>
                             <tbody>
-                                {SPARK_CONNECTOR.map((item, index) => (
-                                    <tr key={index}>
+                                {SPARK_CONNECTOR.map(item => (
+                                    <tr key={`${item.version}-${item.scala}`}>
                                         <td>{item.version}</td>
                                         <td>{item.date}</td>
                                         <td>{item.spark}</td>
