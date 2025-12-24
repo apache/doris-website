@@ -17,6 +17,8 @@ This document describes the parameters required to access Microsoft Azure Blob s
 - Outfile properties
 - Backup / Restore properties
 
+**Azure Blob Storage currently does not support ARM architectures.**
+
 ## Parameter Overview
 
 | Property Name                  | Former Name   | Description                     | Default Value | Required |

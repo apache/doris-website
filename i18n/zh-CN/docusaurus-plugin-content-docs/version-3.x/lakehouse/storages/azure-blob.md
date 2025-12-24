@@ -17,6 +17,7 @@
 - Outfile 属性
 - Backup / Restore 属性
 
+**Azure Blob 存储目前不支持 ARM 架构。**
 ## 参数总览
 
 | 属性名称                           | 曾用名           | 描述                          | 默认值       | 是否必须   |
