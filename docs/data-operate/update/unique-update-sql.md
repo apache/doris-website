@@ -120,3 +120,4 @@ The updated data is as follows:
 ## More Help
 
 For more detailed syntax on data updates, please refer to the [UPDATE](../../sql-manual/sql-statements/data-modification/DML/UPDATE) command manual. You can also enter `HELP UPDATE` in the MySQL client command line for more help.
+

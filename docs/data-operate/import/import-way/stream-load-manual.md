@@ -1024,6 +1024,6 @@ The strict_mode attribute is used to set whether the import task runs in strict 
 
 ### Perform partial column updates/flexible partial update during import
 
-For how to express partial column updates during import, please refer to the Data Manipulation/Data Update documentation.
+For how to express partial column updates during import, please refer to the [Partial Column Update](../../../data-operate/update/partial-column-update.md) documentation.
 
 
