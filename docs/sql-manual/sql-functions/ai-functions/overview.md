@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Overview",
+    "title": "Overview | Ai Functions",
     "language": "en",
     "description": "AI Function is a built-in function provided by Doris based on Artificial Intelligence (AI) capabilities."
 }
@@ -158,3 +158,4 @@ SELECT AI_SENTIMENT('Apache Doris is a great DBMS.');
 ```
 
 For detailed function and usage, please refer to the documentation of each specific function.
+

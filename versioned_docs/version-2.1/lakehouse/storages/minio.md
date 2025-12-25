@@ -1,6 +1,6 @@
 ---
 {
-    "title": "MinIO",
+    "title": "MinIO | Storages",
     "language": "en",
     "description": "This document describes the parameters required to access MinIO, which apply to the following scenarios:"
 }
@@ -56,3 +56,4 @@ For versions before 3.1:
 * It is recommended to use the `minio.` prefix for configuration parameters to ensure consistency and clarity with MinIO.
 * For versions before 3.1, please use the legacy name `s3.` as the prefix.
 * Connection pool parameters can be adjusted according to concurrency requirements to avoid connection
+

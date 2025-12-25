@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Tableau",
+    "title": "Tableau | Bi",
     "language": "en",
     "description": "For enabling Apache Doris access on Tableau, Tableau's official MySQL connector can meet your needs."
 }
@@ -107,3 +107,4 @@ At this point, Tableau has been successfully connected to Apache Doris, enabling
 - Configure security groups to restrict access.
 - Enable SSL/TLS connections and other access methods.
 - Fine-tune Doris user account roles and access permissions to avoid excessive delegation of permissions.
+

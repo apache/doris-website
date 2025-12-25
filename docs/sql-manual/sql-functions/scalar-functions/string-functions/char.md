@@ -1,6 +1,6 @@
 ---
 {
-    "title": "CHAR",
+    "title": "CHAR | String Functions",
     "language": "en",
     "description": "The CHAR function interprets each argument as an integer and returns a string consisting of the characters represented by those integer code values."
 }
@@ -80,3 +80,4 @@ SELECT CHAR(NULL);
 |            |
 +------------+
 ```
+

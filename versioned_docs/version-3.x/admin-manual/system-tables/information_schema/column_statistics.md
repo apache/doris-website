@@ -1,6 +1,6 @@
 ---
 {
-    "title": "column_statistics",
+    "title": "column_statistics | Information Schema",
     "language": "en",
     "description": "This table is solely used for compatibility with MySQL behavior and is always empty."
 }

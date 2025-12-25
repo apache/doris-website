@@ -1,6 +1,6 @@
 ---
 {
-    "title": "IPV6_STRING_TO_NUM_OR_NULL",
+    "title": "IPV6_STRING_TO_NUM_OR_NULL | Ip Functions",
     "language": "en",
     "description": "The reverse function of IPv6NumToString, it takes an IP address String and returns an IPv6 address in binary format."
 }
@@ -39,3 +39,4 @@ select hex(ipv6_string_to_num_or_null('1111::ffff')) as r1, hex(ipv6_string_to_n
 | 1111000000000000000000000000FFFF | 00000000000000000000FFFFC0A80001 | NULL |
 +----------------------------------+----------------------------------+------+
 ```
+

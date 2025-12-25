@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Overview",
+    "title": "Overview | CCR",
     "language": "en",
     "description": "CCR (Cross Cluster Replication) is a cross-cluster data synchronization mechanism that synchronizes data changes from the source cluster to the "
 }
@@ -86,4 +86,5 @@ requirement: glibc >= 2.28
 | 2.1     | X64   | [ccr-syncer-2.1.10-rc06-x64.tar.xz](https://apache-doris-releases.oss-accelerate.aliyuncs.com/ccr-release/ccr-syncer-2.1.10-rc06-x64.tar.xz)     | ebeebbe47a85c8b52f69394fd1d839663e3e7ca2cab93d7a443b44ec3f6d35ae |
 | 3.0     | ARM64 | [ccr-syncer-3.0.6-rc05-arm64.tar.xz](https://apache-doris-releases.oss-accelerate.aliyuncs.com/ccr-release/ccr-syncer-3.0.6-rc05-arm64.tar.xz) | dd5f154c68007732c3c3a9f808f16a7f287fd742bd35d0272ef596779f0eb8e6 |
 | 3.0     | X64   | [ccr-syncer-3.0.6-rc05-x64.tar.xz](https://apache-doris-releases.oss-accelerate.aliyuncs.com/ccr-release/ccr-syncer-3.0.6-rc05-x64.tar.xz)   | 77a4e4e2a74c376ffaef0207cfdef957729380fa3718418bccece015a41ad15a |
+
 

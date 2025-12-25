@@ -1,6 +1,6 @@
 ---
 {
-    "title": "ARRAY",
+    "title": "ARRAY | Array Functions",
     "language": "en",
     "description": "construct an array with variadic elements and return it, T could be column or literal"
 }
@@ -72,4 +72,5 @@ select array(qid, creationDate, null) from nested  limit 4;
 | [null, "2009-06-16 08:15:45", null]                   |
 +-------------------------------------------------------+
 ```
+
 

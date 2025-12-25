@@ -1,6 +1,6 @@
 ---
 {
-    "title": "HDFS",
+    "title": "HDFS | Storages",
     "language": "en",
     "description": "This document describes the parameters required for accessing HDFS. These parameters apply to:"
 }

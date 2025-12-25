@@ -1,6 +1,6 @@
 ---
 {
-    "title": "ARRAY",
+    "title": "ARRAY | Semi Structured",
     "language": "en",
     "description": "ARRAY"
 }
@@ -68,3 +68,4 @@ mysql> SELECT * FROM `array_test`;
 ### keywords
 
     ARRAY
+

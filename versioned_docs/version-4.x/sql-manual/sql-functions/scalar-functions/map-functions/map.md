@@ -1,6 +1,6 @@
 ---
 {
-    "title": "MAP",
+    "title": "MAP | Map Functions",
     "language": "en",
     "description": "Constructs a MAP<K, V> of a specific type using several groups of key-value pairs"
 }

@@ -1,6 +1,6 @@
 ---
 {
-    "title": "column_statistics",
+    "title": "Column Statistics | Internal Schema",
     "language": "en",
     "description": "Column statistics"
 }

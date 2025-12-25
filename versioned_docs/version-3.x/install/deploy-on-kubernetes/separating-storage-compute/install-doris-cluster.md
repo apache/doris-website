@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Deploy Doris Cluster",
+    "title": "Deploy Doris Cluster | Separating Storage Compute",
     "language": "en",
     "description": "Deploying a functional decoupled storage and compute Doris cluster on Kubernetes involves four main steps:"
 }
@@ -137,5 +137,6 @@ After the cluster has successfully started, configure an available object storag
    SET {vaultName} AS DEFAULT STORAGE VAULT;
    ```
    Here, {vaultName} is the name of the Vault you wish to use, for example, s3_vault as created in the example above.
+
 
 

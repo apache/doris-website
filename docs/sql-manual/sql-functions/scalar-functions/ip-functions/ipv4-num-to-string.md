@@ -1,6 +1,6 @@
 ---
 {
-    "title": "IPV4_NUM_TO_STRING",
+    "title": "IPV4_NUM_TO_STRING | Ip Functions",
     "language": "en",
     "description": "Takes a Int16, Int32, Int64 number. Interprets it as an IPv4 address in big endian."
 }
@@ -54,3 +54,4 @@ select num,ipv4_num_to_string(num) from ipv4_bi;
 | 4294967296 | NULL                      |
 +------------+---------------------------+
 ```
+

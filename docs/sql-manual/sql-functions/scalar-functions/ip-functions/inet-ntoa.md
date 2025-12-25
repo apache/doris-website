@@ -1,6 +1,6 @@
 ---
 {
-    "title": "IPV4_NUM_TO_STRING",
+    "title": "IPV4_NUM_TO_STRING | Ip Functions",
     "language": "en",
     "description": "Alias for ipv4numtostring."
 }
@@ -86,4 +86,5 @@ select ipv4_num_to_string(4294967296);
 ### Keywords
 
 INET_NTOA, IPV4_NUM_TO_STRING
+
 

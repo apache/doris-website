@@ -1,6 +1,6 @@
 ---
 {
-    "title": "MinIO",
+    "title": "MinIO | Data Source",
     "language": "en",
     "description": "Doris provides two ways to load files from MinIO:"
 }
@@ -193,3 +193,4 @@ mysql> select * from test_s3load;
 +---------+-----------+------+
 10 rows in set (0.04 sec)
 ```
+

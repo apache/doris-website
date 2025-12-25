@@ -1,6 +1,6 @@
 ---
 {
-    "title": "JSON",
+    "title": "JSON | Complex Types",
     "language": "en",
     "description": "The JSON data type stores JSON data efficiently in a binary format and allows access to its internal fields through JSON functions."
 }
@@ -129,3 +129,4 @@ mysql> SELECT * FROM json_test;
 +------+-------------------------------+
 5 rows in set (0.01 sec)
 ```
+

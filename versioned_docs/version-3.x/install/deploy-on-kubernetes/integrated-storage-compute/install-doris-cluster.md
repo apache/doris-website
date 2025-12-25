@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Deploy Doris Cluster",
+    "title": "Deploy Doris Cluster | Integrated Storage Compute",
     "language": "en",
     "description": "To deploy a Doris cluster on Kubernetes, ensure that the Doris Operator is deployed."
 }
@@ -37,3 +37,4 @@ Expected output:
 NAME                  FESTATUS    BESTATUS    CNSTATUS   BROKERSTATUS
 doriscluster-sample   available   available
 ```
+

@@ -1,6 +1,6 @@
 ---
 {
-    "title": "DATE",
+    "title": "DATE | Date Time Functions",
     "language": "en",
     "description": "Extracts the date from the datetime."
 }

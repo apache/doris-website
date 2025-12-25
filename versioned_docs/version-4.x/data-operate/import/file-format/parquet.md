@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Parquet",
+    "title": "Parquet | File Format",
     "language": "en",
     "description": "This document explains how to load Parquet format data files in Doris."
 }

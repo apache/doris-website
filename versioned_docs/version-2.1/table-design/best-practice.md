@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Best Practices",
+    "title": "Best Practices | Table Design",
     "language": "en",
     "description": "When only the sorting columns are specified, rows with the same key will not be merged."
 }

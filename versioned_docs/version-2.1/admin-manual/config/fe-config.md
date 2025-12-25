@@ -1,6 +1,6 @@
 ---
 {
-    "title": "FE Configuration",
+    "title": "FE Configuration | Config",
     "language": "en",
     "toc_min_heading_level": 2,
     "toc_max_heading_level": 4,
@@ -2754,3 +2754,4 @@ To ensure compatibility with the MySQL ecosystem, Doris includes a built-in data
 Default value: 2000
 
 For auto-partitioned tables to prevent users from accidentally creating a large number of partitions, the number of partitions allowed per OLAP table is `max_auto_partition_num`. Default 2000.
+

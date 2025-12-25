@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Query Profile Action",
+    "title": "Query Profile Action | Fe Http",
     "language": "en",
     "description": "GET /rest/v2/manager/query/statistics/{traceid} (4.0.0+)"
 }

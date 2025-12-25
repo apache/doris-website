@@ -1,6 +1,6 @@
 ---
 {
-    "title": "FROM_ISO8601_DATE",
+    "title": "FROM_ISO8601_DATE | String Functions",
     "language": "en",
     "description": "Converts an ISO8601 formatted date expression to a DATE type date expression."
 }

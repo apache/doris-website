@@ -1,6 +1,6 @@
 ---
 {
-    "title": "STRUCT",
+    "title": "STRUCT | Semi Structured",
     "language": "en",
     "description": "The STRUCT type is used to combine multiple fields into a single structure, where each field can have its own name and type,"
 }

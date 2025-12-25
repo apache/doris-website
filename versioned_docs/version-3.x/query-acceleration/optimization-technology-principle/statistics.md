@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Statistics",
+    "title": "Statistics | Optimization Technology Principle",
     "language": "en",
     "description": "Starting from version 2.0, Doris integrated Cost-Based Optimization (CBO) capabilities into its optimizer. Statistics are the cornerstone of CBO,"
 }
@@ -478,3 +478,4 @@ Automatic collection uses sampling and does not require full table scans, and th
 For some special tables, such as those with many partitions or large individual tablets, memory usage may be higher.
 
 It is recommended to plan the number of tablets reasonably when creating tables to avoid creating oversized tablets. If the tablet structure is not easily adjustable, consider enabling automatic collection or manually collecting statistics for large tables during off-peak hours to avoid impacting business operations. In the Doris 3.x series, we will optimize for such scenarios.
+

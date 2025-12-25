@@ -1,6 +1,6 @@
 ---
 {
-    "title": "FE Configuration",
+    "title": "FE Configuration | Config",
     "language": "en",
     "toc_min_heading_level": 2,
     "toc_max_heading_level": 4,
@@ -2775,3 +2775,4 @@ Description:  The mode in which FE runs. `cloud` indicates the decoupled storage
 Default: ""
 
 Endpoints of the meta service should be specified in the format 'host1:port,host2:port'. This configuration is necessary for the storage and compute disaggregated mode.
+

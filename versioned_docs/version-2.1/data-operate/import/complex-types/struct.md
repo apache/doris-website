@@ -1,6 +1,6 @@
 ---
 {
-    "title": "STRUCT",
+    "title": "STRUCT | Complex Types",
     "language": "en",
     "description": "STRUCT<fieldname:fieldtype [COMMENT 'commentstring'], ... > Represents value with structure described by multiple fields,"
 }
@@ -136,3 +136,4 @@ mysql> SELECT * FROM struct_test;
 +------+--------------------------------------+
 5 rows in set (0.00 sec)
 ```
+

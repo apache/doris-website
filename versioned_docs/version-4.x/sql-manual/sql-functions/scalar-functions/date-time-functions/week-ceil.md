@@ -1,6 +1,6 @@
 ---
 {
-    "title": "WEEK_CEIL",
+    "title": "WEEK_CEIL | Date Time Functions",
     "language": "en",
     "description": "The weekceil function rounds up an input datetime value to the nearest specified week interval start time. If origin is specified,"
 }
@@ -114,3 +114,4 @@ SELECT WEEK_CEIL(NULL, 1) AS result;
 | NULL   |
 +--------+
 ```
+

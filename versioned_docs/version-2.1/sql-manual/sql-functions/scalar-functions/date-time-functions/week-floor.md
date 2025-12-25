@@ -1,6 +1,6 @@
 ---
 {
-    "title": "WEEK_FLOOR",
+    "title": "WEEK_FLOOR | Date Time Functions",
     "language": "en",
     "description": "Rounds down a datetime value to the nearest specified week interval. If a starting time (origin) is provided,"
 }
@@ -50,3 +50,4 @@ SELECT WEEK_FLOOR('2023-07-13 22:28:18', 2);
 | 2023-07-03 00:00:00                                        |
 +------------------------------------------------------------+
 ```
+

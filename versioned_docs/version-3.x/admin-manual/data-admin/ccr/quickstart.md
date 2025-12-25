@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Quick Start",
+    "title": "Quick Start | CCR",
     "language": "en-US",
     "description": "Configure the following information in the fe.conf and be.conf of both the source and target clusters:"
 }
@@ -78,3 +78,4 @@ If synchronizing at the database level, fill in your_db_name, and leave your_tab
 If synchronizing at the table level, fill in both your_db_name and your_table_name
 The name used to initiate the synchronization task can only be used once
 ```
+

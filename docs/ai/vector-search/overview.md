@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Overview",
+    "title": "Overview | Vector Search",
     "language": "en",
     "description": "In generative AI applications, relying solely on a large model's internal parameter “memory” has clear limitations: (1) the model’s knowledge becomes "
 }
@@ -393,3 +393,4 @@ In the era of AI, Python has become the mainstream language for data processing 
 4. If the distance function in SQL does not match the metric type defined in the index DDL, Doris cannot use the ANN index for TopN—even if you call `l2_distance_approximate` / `inner_product_approximate`.
 5. For metric type `inner_product`, only `ORDER BY inner_product_approximate(...) DESC LIMIT N` (DESC required) can be accelerated by the ANN index.
 6. The first parameter of `xxx_approximate()` must be a ColumnArray, and the second must be a CAST or ArrayLiteral. Reversing them triggers brute-force search.
+

@@ -1,6 +1,6 @@
 ---
 {
-    "title": "MAP",
+    "title": "MAP | Complex Types",
     "language": "en",
     "description": "MAP<K, V> A Map of K, V items。 Click MAP to learn more."
 }
@@ -117,3 +117,4 @@ mysql> SELECT * FROM map_test;
 +------+-------------------------+
 4 rows in set (0.01 sec)
 ```
+

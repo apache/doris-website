@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Parquet",
+    "title": "Parquet | File Formats",
     "language": "zh-CN",
     "description": "This document introduces the support for reading and writing Parquet file formats in Doris. It applies to the following features:"
 }
@@ -53,4 +53,5 @@ This document introduces the support for reading and writing Parquet file format
 * `parquet_column_max_buffer_mb` (2.1+, 3.0+)
 
     The maximum buffer size allocated when reading a Column within a Parquet Row Group. Default is 8M.
+
 

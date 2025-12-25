@@ -1,6 +1,6 @@
 ---
 {
-    "title": "HDFS",
+    "title": "HDFS | Table Valued Functions",
     "language": "en",
     "description": "HDFS table-valued-function(tvf), allows users to read and access file contents on S3-compatible object storage, just like accessing relational table."
 }
@@ -125,3 +125,4 @@ HDFS(
               "hadoop.username" = "doris",
               "format" = "csv_with_names");
   ```
+

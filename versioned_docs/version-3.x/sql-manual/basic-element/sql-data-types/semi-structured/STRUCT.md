@@ -1,6 +1,6 @@
 ---
 {
-    "title": "STRUCT",
+    "title": "STRUCT | Semi Structured",
     "language": "en",
     "description": "STRUCT"
 }
@@ -104,3 +104,4 @@ mysql> select * from struct_test;
 ### keywords
 
     STRUCT
+

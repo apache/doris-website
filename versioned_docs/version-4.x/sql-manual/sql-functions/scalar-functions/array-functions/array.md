@@ -1,8 +1,7 @@
 ---
 {
-    "title": "ARRAY",
-    "language": "en-US",
-    
+    "title": "ARRAY | Array Functions",
+    "language": "en-US"
 }
 ---
 
@@ -136,3 +135,4 @@ ERROR 1105 (HY000): errCode = 2, detailMessage = Can not find the compatibility 
 ### Keywords
 
 ARRAY
+

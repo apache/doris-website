@@ -1,6 +1,6 @@
 ---
 {
-    "title": "ARRAY",
+    "title": "ARRAY | Complex Types",
     "language": "en",
     "description": "ARRAY<T> An array of T-type items, it cannot be used as a key column."
 }
@@ -127,3 +127,4 @@ mysql> SELECT * FROM array_test;
 +------+-----------------+
 4 rows in set (0.01 sec)
 ```
+

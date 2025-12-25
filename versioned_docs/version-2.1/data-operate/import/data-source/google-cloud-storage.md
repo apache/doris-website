@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Google Cloud Storage",
+    "title": "Google Cloud Storage | Data Source",
     "language": "en",
     "description": "Doris provides two ways to load files from Google Cloud Storage:"
 }
@@ -170,3 +170,4 @@ mysql> select * from test_s3load;
 +---------+-----------+------+
 10 rows in set (0.04 sec)
 ```
+

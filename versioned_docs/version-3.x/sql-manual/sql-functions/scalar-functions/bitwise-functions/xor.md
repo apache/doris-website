@@ -1,6 +1,6 @@
 ---
 {
-    "title": "XOR",
+    "title": "XOR | Bitwise Functions",
     "language": "en",
     "description": "Performs a bitwise exclusive OR operation on two BOOLEAN values."
 }
@@ -35,3 +35,4 @@ select true XOR false,true XOR true;
 |                1 |               0 |
 +------------------+-----------------+
 ```
+

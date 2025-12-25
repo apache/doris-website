@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Overview",
+    "title": "Overview | Compute Storage Decoupled",
     "language": "en",
     "description": "This article introduces the differences, advantages,"
 }
@@ -77,3 +77,4 @@ The shared storage layer stores the data files, including segment files and the 
 - When you require high elastic scalability, Kubernetes containerization, or to run on a private cloud;
 - High throughput shared storage capability, allowing multiple computing groups to share data
 - When you have a dedicated team responsible for maintaining the company's entire data warehouse platform.
+

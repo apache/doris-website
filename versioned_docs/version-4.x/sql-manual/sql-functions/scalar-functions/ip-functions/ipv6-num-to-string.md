@@ -1,6 +1,6 @@
 ---
 {
-    "title": "IPV6_NUM_TO_STRING",
+    "title": "IPV6_NUM_TO_STRING | Ip Functions",
     "language": "en",
     "description": "Takes an IPv6 address in binary format of type String. Returns the string of this address in text format."
 }

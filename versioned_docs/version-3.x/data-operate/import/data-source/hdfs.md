@@ -1,6 +1,6 @@
 ---
 {
-    "title": "HDFS",
+    "title": "HDFS | Data Source",
     "language": "en",
     "description": "Doris provides two ways to load files from HDFS:"
 }
@@ -162,3 +162,4 @@ mysql> select * from test_hdfsload;
 +---------+-----------+------+
 10 rows in set (0.04 sec)
 ```
+

@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Log Storage and Analysis",
+    "title": "Log Storage and Analysis | Doris Docs",
     "language": "en",
     "description": "Logs record key events in the system and contain crucial information such as the events' subject, time, location, and content."
 }
@@ -569,3 +569,4 @@ Some third-party vendors offer visual log analysis development platforms based o
 - Display of top field values in search results for finding anomalies and further drilling down for analysis
 
 Please contact dev@doris.apache.org to find more.
+
