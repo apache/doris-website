@@ -6,6 +6,8 @@
 }
 ---
 
+# IPV6_STRING_TO_NUM_OR_NULL
+
 ## Description
 The reverse function of IPv6NumToString, it takes an IP address String and returns an IPv6 address in binary format.
 

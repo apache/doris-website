@@ -6,6 +6,8 @@
 }
 ---
 
+# TIMESTAMP
+
 ## Description
 
 The TIMESTAMP function converts a datetime format string to DATETIME type.

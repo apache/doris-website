@@ -6,6 +6,8 @@
 }
 ---
 
+# JSON
+
 The JSON data type stores JSON data efficiently in a binary format and allows access to its internal fields through JSON functions.
 
 By default, it supports up to 1048576 bytes (1MB), and can be increased up to 2147483643 bytes (2GB). This can be adjusted via the string_type_length_soft_limit_bytes configuration.

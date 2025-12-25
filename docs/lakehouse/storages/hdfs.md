@@ -6,6 +6,8 @@
 }
 ---
 
+# HDFS
+
 This document describes the parameters required for accessing HDFS. These parameters apply to:
 
 * Catalog properties

@@ -6,6 +6,8 @@
 }
 ---
 
+# Parquet
+
 This document explains how to load Parquet format data files in Doris.
 
 ## Supported Loading Methods

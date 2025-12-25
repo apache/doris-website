@@ -6,6 +6,8 @@
 }
 ---
 
+# CHAR
+
 ## Description
 
 Interpret each argument as an integer and return a string consisting of the characters given by the code values ​​of those integers. Special cases:

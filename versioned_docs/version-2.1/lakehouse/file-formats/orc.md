@@ -6,6 +6,8 @@
 }
 ---
 
+# ORC
+
 This document introduces the support for reading and writing ORC file formats in Doris. It applies to the following functionalities:
 
 * Reading and writing data in the Catalog.

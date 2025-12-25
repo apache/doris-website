@@ -6,6 +6,8 @@
 }
 ---
 
+# Overview
+
 ## Numeric Types
 
 Doris supports the following numeric data types:

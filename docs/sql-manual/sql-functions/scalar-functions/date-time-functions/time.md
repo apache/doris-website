@@ -6,6 +6,8 @@
 }
 ---
 
+# TIME
+
 ## Description
 The `TIME` function get the Datetime value's `time` part.
 

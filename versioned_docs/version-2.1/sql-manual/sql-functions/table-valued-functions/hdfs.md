@@ -6,6 +6,8 @@
 }
 ---
 
+# HDFS
+
 ## Description
 
 HDFS table-valued-function(tvf), allows users to read and access file contents on S3-compatible object storage, just like accessing relational table. Currently supports `csv/csv_with_names/csv_with_names_and_types/json/parquet/orc` file format.

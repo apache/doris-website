@@ -6,6 +6,8 @@
 }
 ---
 
+# FROM_ISO8601_DATE
+
 ## Description
 
 Converts an ISO8601 formatted date expression to a DATE type date expression.

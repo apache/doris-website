@@ -6,6 +6,8 @@
 }
 ---
 
+# ARRAY
+
 `ARRAY<T>` An array of T-type items, it cannot be used as a key column.
 
 - Before version 2.0, it was only supported in the Duplicate model table.

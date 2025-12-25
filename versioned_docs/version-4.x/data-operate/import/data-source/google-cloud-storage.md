@@ -6,6 +6,8 @@
 }
 ---
 
+# Google Cloud Storage
+
 Doris provides two ways to load files from Google Cloud Storage:
 - Use S3 Load to load Google Cloud Storage files into Doris, which is an asynchronous load method.
 - Use TVF to load Google Cloud Storage files into Doris, which is a synchronous load method.

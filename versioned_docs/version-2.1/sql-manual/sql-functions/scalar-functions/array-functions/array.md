@@ -6,6 +6,8 @@
 }
 ---
 
+# ARRAY
+
 ## Description
 construct an array with variadic elements and return it, T could be column or literal
 

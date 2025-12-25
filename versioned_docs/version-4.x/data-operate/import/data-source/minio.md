@@ -6,6 +6,8 @@
 }
 ---
 
+# MinIO
+
 Doris provides two ways to load files from MinIO:
 - Use S3 Load to load MinIO files into Doris, which is an asynchronous load method.
 - Use TVF to load MinIO files into Doris, which is a synchronous load method.

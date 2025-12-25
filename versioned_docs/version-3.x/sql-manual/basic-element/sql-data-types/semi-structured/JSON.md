@@ -6,6 +6,8 @@
 }
 ---
 
+# JSON
+
 ## JSON
 
 The JSON data type stores [JSON](https://www.rfc-editor.org/rfc/rfc8785) data efficiently in a binary format and allows access to its internal fields through JSON functions.

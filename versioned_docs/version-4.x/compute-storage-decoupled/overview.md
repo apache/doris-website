@@ -6,6 +6,8 @@
 }
 ---
 
+# Overview
+
 This article introduces the differences, advantages, and applicable scenarios of the compute-storage coupled mode and compute-storage decoupled mode of Doris, providing a reference for users' selection. 
 
 The following sections will describe in detail how to deploy and use Apache Doris in the compute-storage decoupled mode. For information on deployment in compute-storage coupled mode, please refer to the [Cluster Deployment](../install/deploy-manually/integrated-storage-compute-deploy-manually.md) section.

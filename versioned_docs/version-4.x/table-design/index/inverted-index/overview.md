@@ -7,6 +7,8 @@
 }
 ---
 
+# Inverted Index
+
 ## Indexing Principle
 
 [Inverted Index](https://en.wikipedia.org/wiki/Inverted_index) is a commonly used indexing technique in the field of information retrieval. It divides text into individual words and constructs a word -> document IDs index, allowing for quick searches to determine which documents contain a specific word.

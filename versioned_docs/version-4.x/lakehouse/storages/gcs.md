@@ -6,6 +6,8 @@
 }
 ---
 
+# Google Cloud Storage
+
 The document is under development.
 
 

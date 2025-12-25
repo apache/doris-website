@@ -6,6 +6,8 @@
 }
 ---
 
+# Tableau Back
+
 VeloDB provides an official Tableau Doris connector. This connector accesses data based on the MySQL JDBC Driver.
 
 The connector has been tested by the [TDVT framework](https://tableau.github.io/connector-plugin-sdk/docs/tdvt) with a 100% pass rate.

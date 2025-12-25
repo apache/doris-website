@@ -6,6 +6,8 @@
 }
 ---
 
+# CREATE WORKLOAD GROUP
+
 ## Description
 
 This statement is used to create a workload group. Workload groups enable the isolation of cpu resources and memory resources on a single be.

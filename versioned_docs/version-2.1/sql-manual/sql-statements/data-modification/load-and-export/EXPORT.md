@@ -6,6 +6,8 @@
 }
 ---
 
+# EXPORT
+
 ## Description
 
 The `EXPORT` command is used to export data from a specified table to files at a specified location. Currently supports exporting to remote storage such as HDFS, S3, BOS, COS (Tencent Cloud) through Broker processes, S3 protocol, or HDFS protocol.

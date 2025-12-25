@@ -6,6 +6,8 @@
 }
 ---
 
+# XOR
+
 ## Description
 
 Return the XOR value of two numbers.

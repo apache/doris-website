@@ -6,6 +6,8 @@
 }
 ---
 
+# ARRAY
+
 `ARRAY<T>` An array of T-type items. Click [ARRAY](../../../sql-manual/basic-element/sql-data-types/semi-structured/ARRAY.md) to learn more.
 
 ## CSV format import

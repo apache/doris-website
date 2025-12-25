@@ -6,6 +6,8 @@
 }
 ---
 
+# Export Manual
+
 This document will introduce how to use the `EXPORT` command to export the data stored in Doris.
 
 `Export` is a function provided by Doris for asynchronously exporting data. This function can export the data of the tables or partitions specified by users in the specified file format to the target storage systems, including object storage, HDFS or local file system.

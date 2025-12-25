@@ -6,6 +6,8 @@
 }
 ---
 
+# ORC
+
 This document explains how to load ORC format data files in Doris.
 
 ## Supported Loading Methods

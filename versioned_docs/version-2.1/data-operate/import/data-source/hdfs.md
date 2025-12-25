@@ -6,6 +6,8 @@
 }
 ---
 
+# HDFS
+
 Doris provides two ways to load files from HDFS:
 - Use HDFS Load to load HDFS files into Doris, which is an asynchronous load method.
 - Use TVF to load HDFS files into Doris, which is a synchronous load method.

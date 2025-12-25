@@ -6,6 +6,8 @@
 }
 ---
 
+# WEEK_CEIL
+
 ## Description
 
 Rounds up a datetime value to the nearest specified week interval. If a starting time (origin) is provided, it uses that time as the reference for calculating the interval.

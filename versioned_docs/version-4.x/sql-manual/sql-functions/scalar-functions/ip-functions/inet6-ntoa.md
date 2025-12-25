@@ -6,6 +6,8 @@
 }
 ---
 
+# IPV6_NUM_TO_STRING
+
 ## inet6_ntoa
 
 Alias for `ipv6_num_to_string`.

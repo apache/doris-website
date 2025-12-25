@@ -6,6 +6,8 @@
 }
 ---
 
+# LOCAL
+
 ## Description
 
 Local table-valued-function(tvf), allows users to read and access local file contents on be node, just like accessing relational table. Currently supports `csv/csv_with_names/csv_with_names_and_types/json/parquet/orc` file format.

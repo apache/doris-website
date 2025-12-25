@@ -6,6 +6,8 @@
 }
 ---
 
+# JSON
+
 ## JSON Introduction
 
 JSON (JavaScript Object Notation) is an open standard file format and data interchange format that uses human-readable text to store and transmit data. According to the official specification [RFC7159](https://datatracker.ietf.org/doc/html/rfc7159), JSON supports the following basic types:

@@ -6,6 +6,8 @@
 }
 ---
 
+# Query Profile Action
+
 ## Request
 
 `GET /rest/v2/manager/query/query_info`

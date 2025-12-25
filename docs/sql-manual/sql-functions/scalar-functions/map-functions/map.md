@@ -6,6 +6,8 @@
 }
 ---
 
+# MAP
+
 ## Description
 
 Constructs a [`MAP<K, V>`](../../../basic-element/sql-data-types/semi-structured/MAP.md) of a specific type using several groups of key-value pairs

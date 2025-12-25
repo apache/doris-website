@@ -6,6 +6,8 @@
 }
 ---
 
+# IPV6_NUM_TO_STRING
+
 ## Description
 Takes an IPv6 address in binary format of type String. Returns the string of this address in text format.
 - The IPv4 address mapped by IPv6 starts with ::ffff:111.222.33.

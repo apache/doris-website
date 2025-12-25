@@ -6,6 +6,8 @@
 }
 ---
 
+# MinIO
+
 This document describes the parameters required to access MinIO, which apply to the following scenarios:
 
 - Catalog properties

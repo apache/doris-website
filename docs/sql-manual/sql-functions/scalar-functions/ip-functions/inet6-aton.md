@@ -6,6 +6,8 @@
 }
 ---
 
+# IPV6_STRING_TO_NUM_OR_NULL
+
 ## inet6_aton
 
 Alias for `ipv6_string_to_num_or_null`.

@@ -6,6 +6,8 @@
 }
 ---
 
+# WEEK_FLOOR
+
 ## Description
 
 The WEEK_FLOOR function rounds down an input datetime value to the nearest specified week interval start time, with the interval unit being WEEK. If a starting reference point (origin) is specified, it uses that point as the basis for calculating intervals; otherwise, it defaults to using 0000-01-01 00:00:00 as the reference point.

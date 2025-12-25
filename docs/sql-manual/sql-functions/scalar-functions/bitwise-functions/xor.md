@@ -6,6 +6,8 @@
 }
 ---
 
+# XOR
+
 ## Description
 Performs a bitwise XOR operation on two BOOLEAN values.
 

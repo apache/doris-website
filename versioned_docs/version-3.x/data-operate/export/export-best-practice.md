@@ -6,6 +6,8 @@
 }
 ---
 
+# Best Practices
+
 This document mainly introduces how to determine whether resource utilization is reasonable during data export operations, and how to adjust resource utilization to achieve better data export efficiency.
 
 ## SELECT INTO OUTFILE

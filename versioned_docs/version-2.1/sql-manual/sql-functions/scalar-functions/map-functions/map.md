@@ -6,6 +6,8 @@
 }
 ---
 
+# MAP
+
 ## Description
 
 Constructs a `Map<K, V>` of a specific type using some set of key-value pairs

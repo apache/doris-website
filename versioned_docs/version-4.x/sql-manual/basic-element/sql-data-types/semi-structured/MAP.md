@@ -6,6 +6,8 @@
 }
 ---
 
+# MAP
+
 ## Type Description
 
 - The `MAP<key_type, value_type>` type is used to represent a composite type of key-value pairs, where each key uniquely corresponds to a value.

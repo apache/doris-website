@@ -6,6 +6,8 @@
 }
 ---
 
+# Column Statistics
+
 ## Overview
 
 Column statistics

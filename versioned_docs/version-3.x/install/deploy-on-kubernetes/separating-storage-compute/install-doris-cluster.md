@@ -6,6 +6,8 @@
 }
 ---
 
+# Deploy Doris Cluster
+
 Deploying a functional decoupled storage and compute Doris cluster on Kubernetes involves four main steps:
 1. Preparation – Primarily, install a FoundationDB cluster.
 2. Deploying the Doris Operator.

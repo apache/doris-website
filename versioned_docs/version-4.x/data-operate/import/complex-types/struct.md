@@ -6,6 +6,8 @@
 }
 ---
 
+# STRUCT
+
 `STRUCT<field_name:field_type [COMMENT 'comment_string'], ... >` Represents value with structure described by multiple fields, which can be viewed as a collection of multiple columns.Click [STRUCT](../../../sql-manual/basic-element/sql-data-types/semi-structured/STRUCT.md) to learn more.
 
 ## CSV format import

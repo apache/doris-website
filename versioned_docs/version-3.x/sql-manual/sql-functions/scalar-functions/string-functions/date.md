@@ -6,6 +6,8 @@
 }
 ---
 
+# DATE
+
 ## Description
 
 Extracts the date from the datetime.

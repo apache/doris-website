@@ -6,6 +6,8 @@
 }
 ---
 
+# MAP
+
 `MAP<K, V>` A Map of K, V items。 Click [MAP](../../../sql-manual/basic-element/sql-data-types/semi-structured/MAP.md) to learn more.
 
 ## CSV format import

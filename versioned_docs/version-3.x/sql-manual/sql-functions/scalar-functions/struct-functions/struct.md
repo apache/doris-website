@@ -6,6 +6,8 @@
 }
 ---
 
+# STRUCT
+
 ## Description
 
 construct an struct with variadic elements and return it, Tn could be column or literal
