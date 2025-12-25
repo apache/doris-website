@@ -1,6 +1,6 @@
 ---
 {
-    "title": "STRUCT",
+    "title": "STRUCT | Struct Functions",
     "language": "zh-CN",
     "description": "根据给定的值构造并返回 struct。函数接受一个或多个参数，返回一个包含所有输入元素的结构体。"
 }
@@ -93,6 +93,7 @@ ERROR 1105 (HY000): errCode = 2, detailMessage = struct does not support jsonb/v
 select struct();
 ERROR 1105 (HY000): errCode = 2, detailMessage = struct requires at least one argument, like: struct(1)
 ```
+
 
 
 

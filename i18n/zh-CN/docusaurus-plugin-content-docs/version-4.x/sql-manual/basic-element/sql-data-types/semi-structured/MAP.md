@@ -1,6 +1,6 @@
 ---
 {
-    "title": "MAP",
+    "title": "MAP | Semi Structured",
     "language": "zh-CN",
     "description": "````SQL SELECT MAP('Alice', 21, 'Bob', 23);"
 }

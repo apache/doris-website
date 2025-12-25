@@ -1,6 +1,6 @@
 ---
 {
-    "title": "DATE",
+    "title": "DATE | Date Time",
     "language": "zh-CN",
     "description": "DATE"
 }
@@ -30,3 +30,4 @@ SELECT DATE('2003-12-31 01:02:03');
 ### keywords
 
     DATE
+

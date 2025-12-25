@@ -1,6 +1,6 @@
 ---
 {
-    "title": "TIME",
+    "title": "TIME | Date Time Functions",
     "language": "zh-CN",
     "description": "TIME 函数可以获取一个DateTime值的 time 部分."
 }
@@ -38,3 +38,4 @@ mysql>
 | 12:12:12                  |
 +---------------------------+
 ```
+

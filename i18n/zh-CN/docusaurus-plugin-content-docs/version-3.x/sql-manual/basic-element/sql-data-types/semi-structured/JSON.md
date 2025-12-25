@@ -1,6 +1,6 @@
 ---
 {
-    "title": "JSON",
+    "title": "JSON | Semi Structured",
     "language": "zh-CN",
     "description": "JSON 数据类型，用二进制格式高效存储 JSON 数据，通过 JSON 函数访问其内部字段。"
 }
@@ -860,3 +860,4 @@ mysql> SELECT JSON_EXTRACT_STRING('{"key1" : null}', "$.key_not_exist") IS NULL;
 
 ### keywords
 JSON, json_parse, json_parse_error_to_null, json_parse_error_to_value, json_extract, json_extract_isnull, json_extract_bool, json_extract_int, json_extract_bigint, json_extract_double, json_extract_String, json_exists_path, json_type
+

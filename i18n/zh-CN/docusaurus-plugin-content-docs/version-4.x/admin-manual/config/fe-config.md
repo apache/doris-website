@@ -1,6 +1,6 @@
 ---
 {
-    "title": "FE 配置项",
+    "title": "FE 配置项 | Config",
     "language": "zh-CN",
     "toc_min_heading_level": 2,
     "toc_max_heading_level": 4,
@@ -2774,3 +2774,4 @@ Doris 为了兼用 mysql 周边工具生态，会内置一个名为 mysql 的数
 默认值： ""
 
 Meta Service 的端点应以 'host1:port,host2:port' 的格式指定。此配置对于存储和计算分离模式是必要的。
+

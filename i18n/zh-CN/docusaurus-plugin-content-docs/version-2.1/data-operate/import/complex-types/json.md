@@ -1,6 +1,6 @@
 ---
 {
-    "title": "JSON",
+    "title": "JSON | Complex Types",
     "language": "zh-CN",
     "description": "JSON 数据类型，用二进制格式高效存储 JSON 数据，通过 JSON 函数访问其内部字段。"
 }
@@ -132,3 +132,4 @@ mysql> SELECT * FROM json_test;
 +------+-------------------------------+
 5 rows in set (0.01 sec)
 ```
+

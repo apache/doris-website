@@ -1,6 +1,6 @@
 ---
 {
-    "title": "IPV6_NUM_TO_STRING",
+    "title": "IPV6_NUM_TO_STRING | Ip Functions",
     "language": "zh-CN",
     "description": "别名 ipv6numtostring。"
 }

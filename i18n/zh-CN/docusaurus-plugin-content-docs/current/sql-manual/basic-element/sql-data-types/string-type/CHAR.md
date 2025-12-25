@@ -1,6 +1,6 @@
 ---
 {
-    "title": "CHAR",
+    "title": "CHAR | String Type",
     "language": "zh-CN",
     "description": "CHAR(M)"
 }
@@ -15,3 +15,4 @@ CHAR(M)
 ## keywords
 
 CHAR
+

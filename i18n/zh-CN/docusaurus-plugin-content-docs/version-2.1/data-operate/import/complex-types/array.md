@@ -1,6 +1,6 @@
 ---
 {
-    "title": "ARRAY",
+    "title": "ARRAY | Complex Types",
     "language": "zh-CN",
     "description": "ARRAY<T> 表示由 T 类型元素组成的数组，不能作为 key 列使用。"
 }
@@ -127,3 +127,4 @@ mysql> SELECT * FROM array_test;
 +------+-----------------+
 4 rows in set (0.01 sec)
 ```
+

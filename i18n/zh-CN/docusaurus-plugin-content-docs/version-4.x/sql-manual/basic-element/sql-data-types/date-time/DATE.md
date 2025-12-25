@@ -1,6 +1,6 @@
 ---
 {
-    "title": "DATE",
+    "title": "DATE | Date Time",
     "language": "zh-CN",
     "description": "DATE 类型存储日期，取值范围是 [0000-01-01, 9999-12-31], 默认的输出格式为 'yyyy-MM-dd'。"
 }
@@ -45,3 +45,4 @@ select cast('0120-02-29' as date);
 | 0120-02-29                 |
 +----------------------------+
 ```
+

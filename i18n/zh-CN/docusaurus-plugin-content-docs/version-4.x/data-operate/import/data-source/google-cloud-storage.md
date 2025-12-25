@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Google Cloud Storage",
+    "title": "Google Cloud Storage | Data Source",
     "language": "zh-CN",
     "description": "Doris 提供两种方式从 Google Cloud Storage 导入文件："
 }
@@ -170,3 +170,4 @@ mysql> select * from test_s3load;
 +---------+-----------+------+
 10 rows in set (0.04 sec)
 ```
+

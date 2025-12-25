@@ -1,6 +1,6 @@
 ---
 {
-    "title": "HDFS",
+    "title": "HDFS | Data Source",
     "language": "zh-CN",
     "description": "Doris 提供两种方式从 HDFS 导入文件："
 }
@@ -162,3 +162,4 @@ mysql> select * from test_hdfsload;
 +---------+-----------+------+
 10 rows in set (0.04 sec)
 ```
+

@@ -1,6 +1,6 @@
 ---
 {
-    "title": "column_statistics",
+    "title": "column_statistics | Information Schema",
     "language": "zh-CN",
     "description": "此表仅用于兼容 MySQL 行为，永远为空。并不能真实反映 Doris 内数据的统计信息。如需查看 Doris 收集的统计信息，请查看统计信息章节。"
 }

@@ -1,6 +1,6 @@
 ---
 {
-    "title": "日志存储与分析",
+    "title": "日志存储与分析 | Version 3.x",
     "language": "zh-CN",
     "description": "在部署集群之前，首先应评估所需服务器硬件资源，包括以下几个关键步骤："
 }
@@ -460,4 +460,5 @@ ORDER BY ts DESC LIMIT 10;
 - 搜索结果的字段 Top 值展示，便于发现异常值和进一步下钻分析
 
 您可以联系 dev@doris.apache.org 获得更多帮助。
+
 

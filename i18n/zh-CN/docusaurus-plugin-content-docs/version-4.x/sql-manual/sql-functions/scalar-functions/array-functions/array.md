@@ -1,6 +1,6 @@
 ---
 {
-    "title": "ARRAY",
+    "title": "ARRAY | Array Functions",
     "language": "zh-CN",
     "description": "创建一个数组。函数接受零个或多个参数，返回一个包含所有输入元素的数组。"
 }
@@ -136,3 +136,4 @@ ERROR 1105 (HY000): errCode = 2, detailMessage = Can not find the compatibility 
 ### Keywords
 
 ARRAY
+

@@ -1,6 +1,6 @@
 ---
 {
-    "title": "MinIO",
+    "title": "MinIO | Data Source",
     "language": "zh-CN",
     "description": "Doris 提供两种方式从 MinIO 导入文件："
 }
@@ -192,3 +192,4 @@ mysql> select * from test_s3load;
 +---------+-----------+------+
 10 rows in set (0.04 sec)
 ```
+

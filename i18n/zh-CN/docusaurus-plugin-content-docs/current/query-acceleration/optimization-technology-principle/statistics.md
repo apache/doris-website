@@ -1,6 +1,6 @@
 ---
 {
-    "title": "统计信息",
+    "title": "统计信息 | Optimization Technology Principle",
     "language": "zh-CN",
     "description": "从 2.0 版本开始，Doris 在优化器中加入了 CBO 的能力。统计信息是 CBO 的基石，其准确性直接决定了代价估算的准确性，对于选择最优 Plan 至关重要。本文主要介绍统计信息的收集和管理方法、相关配置项以及常见问题。"
 }
@@ -478,3 +478,4 @@ ADMIN DIAGNOSE TABLET tablet_id
 对于某些特殊表，如分区众多的表或单个 Tablet 体积庞大的表，可能会出现内存占用较多的情况。
 
 建议用户在建表时合理规划 Tablet 数量，避免产生超大 Tablet。若 Tablet 结构不易调整，建议在系统低峰期开启自动收集，或于低峰期手动收集这些大表，以免在高峰期影响业务运行。在 Doris 3.x 系列中，我们将针对此类场景进行优化。
+

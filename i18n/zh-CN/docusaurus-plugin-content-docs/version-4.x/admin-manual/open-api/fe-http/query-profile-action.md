@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Query Profile Action",
+    "title": "Query Profile Action | Fe Http",
     "language": "zh-CN",
     "description": "GET /rest/v2/manager/query/statistics/{traceid} (4.0.0+)"
 }
@@ -496,5 +496,6 @@ Admin 和 Root 用户可以查看所有 Query。普通用户仅能查看自己�
     "count": 0
 }
 ```
+
 
 

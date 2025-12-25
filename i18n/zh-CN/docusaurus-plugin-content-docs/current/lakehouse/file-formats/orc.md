@@ -1,6 +1,6 @@
 ---
 {
-    "title": "ORC",
+    "title": "ORC | File Formats",
     "language": "zh-CN",
     "description": "本文档用于介绍 Doris 的 ORC 文件格式的读写支持情况。该文档适用于以下功能。"
 }
@@ -69,3 +69,4 @@
 * `orc_natural_read_size_mb` (2.1+, 3.0+)
 
     ORC Reader 一次性读取的最大字节大小。默认 8 MB。
+

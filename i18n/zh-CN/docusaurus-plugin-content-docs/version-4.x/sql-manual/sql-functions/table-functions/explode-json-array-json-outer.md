@@ -1,6 +1,6 @@
 ---
 {
-    "title": "EXPLODE_JSON_ARRAY_JSON_OUTER",
+    "title": "EXPLODE_JSON_ARRAY_JSON_OUTER | Table Functions",
     "language": "zh-CN",
     "description": "explodejsonarrayjsonouter 表函数，接受一个 JSON 数组，其实现逻辑是将 JSON 数组转换为数组类型然后再调用 explodeouter 函数处理，行为等价于：explodeouter(cast(<jsonarray> as Array<JSON>)) 。"
 }

@@ -1,6 +1,6 @@
 ---
 {
-    "title": "HDFS",
+    "title": "HDFS | Table Valued Functions",
     "language": "zh-CN",
     "description": "HDFS 表函数（table-valued-function,tvf），可以让用户像访问关系表格式数据一样，读取并访问 HDFS 上的文件内容。目前支持csv/csvwithnames/csvwithnamesandtypes/json/parquet/orc文件格式。"
 }
@@ -125,3 +125,4 @@ HDFS(
               "hadoop.username" = "doris",
               "format" = "csv_with_names");
   ```
+

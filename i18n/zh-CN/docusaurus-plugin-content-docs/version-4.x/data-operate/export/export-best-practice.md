@@ -1,6 +1,6 @@
 ---
 {
-    "title": "最佳实践",
+    "title": "最佳实践 | Export",
     "language": "zh-CN",
     "description": "本文档主要用于介绍在进行数据导出操作中，如何判断资源利用是否合理，以及如何调整资源利用率已达到更好的数据导出效率。"
 }
@@ -94,4 +94,5 @@
     - `async_task_consumer_thread_num`
 
         FE 配置参数，表示当前集群能够同时运行的 Export Task 的数量，默认是是 64。一个 Export Job 会根据并发度拆分成多个 Export Task。所有 Export Task 共享这个阈值。如果希望提升集群整体的可并发执行导出任务的数量，可以调大这个参数，并重启 FE 节点。
+
 

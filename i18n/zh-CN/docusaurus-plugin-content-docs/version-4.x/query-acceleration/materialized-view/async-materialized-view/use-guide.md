@@ -1,6 +1,6 @@
 ---
 {
-    "title": "最佳实践",
+    "title": "最佳实践 | Async Materialized View",
     "language": "zh-CN",
     "description": "当满足以下条件时，建议创建分区物化视图："
 }

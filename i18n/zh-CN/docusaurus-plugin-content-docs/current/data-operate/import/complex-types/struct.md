@@ -1,6 +1,6 @@
 ---
 {
-    "title": "STRUCT",
+    "title": "STRUCT | Complex Types",
     "language": "zh-CN",
     "description": "STRUCT<fieldname:fieldtype [COMMENT 'commentstring'], ... > 表示由多个 Field 组成的结构体，也可被理解为多个列的集合。点击STRUCT 数据类型 了解具体信息。"
 }
@@ -127,3 +127,4 @@ mysql> SELECT * FROM struct_test;
 +------+--------------------------------------+
 5 rows in set (0.00 sec)
 ```
+
