@@ -2001,6 +2001,7 @@ const sidebars: SidebarsConfig = {
                                 'sql-manual/sql-functions/table-valued-functions/local',
                                 'sql-manual/sql-functions/table-valued-functions/mv_infos',
                                 'sql-manual/sql-functions/table-valued-functions/numbers',
+                                'sql-manual/sql-functions/table-valued-functions/parquet-meta',
                                 'sql-manual/sql-functions/table-valued-functions/partition-values',
                                 'sql-manual/sql-functions/table-valued-functions/partitions',
                                 'sql-manual/sql-functions/table-valued-functions/query',

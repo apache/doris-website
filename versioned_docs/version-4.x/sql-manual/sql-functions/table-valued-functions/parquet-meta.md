@@ -1,16 +1,16 @@
 ---
 {
   "title": "PARQUET_META",
-  "language": "zh-CN",
-  "description": "parquet_meta 表函数（table-valued-function，tvf）可以用于读取 Parquet 文件的 Footer 元数据，不会扫描数据页。它可以快速查看 Row Group 统计、Schema、文件级元数据、KV 元数据以及 Bloom Filter 探测结果。"
+  "language": "en",
+  "description": "The parquet_meta table-valued-function (tvf) can be used to read Footer metadata of Parquet files without scanning data pages. It allows for quickly viewing Row Group statistics, Schema, file-level metadata, KV metadata, and Bloom Filter probe results."
 }
 ---
 
-`parquet_meta` 表函数（table-valued-function，tvf）可以用于读取 Parquet 文件的 Footer 元数据，不会扫描数据页。它可以快速查看 Row Group 统计、Schema、文件级元数据、KV 元数据以及 Bloom Filter 探测结果。
+The `parquet_meta` table-valued-function (tvf) can be used to read Footer metadata of Parquet files without scanning data pages. It allows for quickly viewing Row Group statistics, Schema, file-level metadata, KV metadata, and Bloom Filter probe results.
 
-> 该功能为实验功能，自 4.0.3 版本支持。
+> This is an experimental feature, supported since version 4.0.3.
 
-## 语法
+## Syntax
 
 ```sql
 PARQUET_META(
@@ -23,39 +23,39 @@ PARQUET_META(
 
 - `uri`
 
-  文件路径。
+  File path.
 
 - `mode`
 
-  元数据查询模式。可选，默认为 `parquet_metadata`。取值见"支持的模式"章节。
+  Metadata query mode. Optional, defaults to `parquet_metadata`. See "Supported Modes" section for values.
 
 - `{OptionalParameters}`
 
-  - `column`：当模式为 `parquet_bloom_probe` 时必填，表示要探测的列名。
-  - `value`：当模式为 `parquet_bloom_probe` 时必填，表示要探测的字面值。
+  - `column`: Required when mode is `parquet_bloom_probe`, specifies the column name to probe.
+  - `value`: Required when mode is `parquet_bloom_probe`, specifies the literal value to probe.
 
 - `{ConnectionParameters}`
 
-  访问文件所在的存储系统所需的参数，具体可参阅：
+  Parameters required to access the storage system where the file is located. For details, see:
 
   * [HDFS](../../../lakehouse/storages/hdfs.md)
   * [AWS S3](../../../lakehouse/storages/s3.md)
   * [Google Cloud Storage](../../../lakehouse/storages/gcs.md)
   * [Azure Blob](../../../lakehouse/storages/azure-blob.md)
-  * [阿里云 OSS](../../../lakehouse/storages/aliyun-oss.md)
-  * [腾讯云 COS](../../../lakehouse/storages/tencent-cos.md)
-  * [华为云 OBS](../../../lakehouse/storages/huawei-obs.md)
+  * [Alibaba Cloud OSS](../../../lakehouse/storages/aliyun-oss.md)
+  * [Tencent Cloud COS](../../../lakehouse/storages/tencent-cos.md)
+  * [Huawei Cloud OBS](../../../lakehouse/storages/huawei-obs.md)
   * [MinIO](../../../lakehouse/storages/minio.md)
 
-## 支持的模式
+## Supported Modes
 
 ### `parquet_metadata`
 
-默认模式。
+Default mode.
 
-该模式可用于查询 Parquet 文件中包含的元数据。这些元数据会揭示 Parquet 文件的各种内部细节，例如不同列的统计信息。这有助于确定 Parquet 文件中可以进行何种类型的跳过操作，甚至可以快速了解不同列包含的内容。
+This mode can be used to query metadata contained in Parquet files. This metadata reveals various internal details of the Parquet file, such as statistics for different columns. This helps determine what types of skip operations can be performed on Parquet files and can even provide quick insights into the content of different columns.
 
-| 字段名 | 类型 |
+| Field Name | Type |
 | --- | --- |
 | file_name | STRING |
 | row_group_id | BIGINT |
@@ -89,9 +89,9 @@ PARQUET_META(
 
 ### `parquet_schema`
 
-该模式可用于查询 Parquet 文件中包含的内部架构。请注意，这是 Parquet 文件元数据中包含的结构。
+This mode can be used to query the internal schema contained in Parquet files. Note that this is the structure included in the Parquet file metadata.
 
-| 字段名 | 类型 |
+| Field Name | Type |
 | --- | --- |
 | file_name | VARCHAR |
 | name | VARCHAR |
@@ -107,9 +107,9 @@ PARQUET_META(
 
 ### `parquet_file_metadata`
 
-该模式可用于查询文件级元数据，例如所使用的格式版本和加密算法。
+This mode can be used to query file-level metadata, such as the format version and encryption algorithm used.
 
-| 字段名 | 类型 |
+| Field Name | Type |
 | --- | --- |
 | file_name | STRING |
 | created_by | STRING |
@@ -121,9 +121,9 @@ PARQUET_META(
 
 ### `parquet_kv_metadata`
 
-该模式可用于查询定义为键值对的自定义元数据。
+This mode can be used to query custom metadata defined as key-value pairs.
 
-| 字段名 | 类型 |
+| Field Name | Type |
 | --- | --- |
 | file_name | STRING |
 | key | STRING |
@@ -131,23 +131,23 @@ PARQUET_META(
 
 ### `parquet_bloom_probe`
 
-Doris 支持使用 Parquet 文件中的布隆过滤器进行数据过滤和裁剪。该模式用于检测指定列和列值是否可以通过布隆过滤器检测。
+Doris supports using Bloom filters in Parquet files for data filtering and pruning. This mode is used to detect whether a specified column and column value can be detected through the Bloom filter.
 
-| 字段名 | 类型 |
+| Field Name | Type |
 | --- | --- |
 | file_name | STRING |
 | row_group_id | INT |
 | bloom_filter_excludes | INT |
 
-`bloom_filter_excludes` 的含义：
+Meaning of `bloom_filter_excludes`:
 
-- `1`：Bloom Filter 判断该 Row Group 一定不包含该值
-- `0`：Bloom Filter 判断可能包含该值
-- `-1`：文件没有 Bloom Filter
+- `1`: Bloom Filter determines that this Row Group definitely does not contain this value
+- `0`: Bloom Filter determines that it may contain this value
+- `-1`: File does not have a Bloom Filter
 
-## 示例
+## Examples
 
-- 本地文件（不带 scheme）
+- Local file (without scheme)
 
     ```sql
     SELECT * FROM parquet_meta(
@@ -155,7 +155,7 @@ Doris 支持使用 Parquet 文件中的布隆过滤器进行数据过滤和裁�
     );
     ```
 
-- S3 文件（带 scheme + 存储参数）
+- S3 file (with scheme + storage parameters)
 
     ```sql
     SELECT * FROM parquet_meta(
@@ -168,7 +168,7 @@ Doris 支持使用 Parquet 文件中的布隆过滤器进行数据过滤和裁�
     );
     ```
 
-- 使用通配符（glob）
+- Using wildcards (glob)
 
     ```sql
     SELECT file_name FROM parquet_meta(
@@ -177,7 +177,7 @@ Doris 支持使用 Parquet 文件中的布隆过滤器进行数据过滤和裁�
     );
     ```
 
-- 使用 `parquet_bloom_probe` 模式
+- Using `parquet_bloom_probe` mode
 
     ```sql
     select * from parquet_meta(
@@ -192,7 +192,7 @@ Doris 支持使用 Parquet 文件中的布隆过滤器进行数据过滤和裁�
     );
     ```
 
-## 说明与限制
+## Notes and Limitations
 
-- `parquet_meta` 只读取 Parquet Footer 元数据，不读取数据页，适合快速查看元信息。
-- 支持通配符（如 `*`、`{}`、`[]`），若无匹配文件则会报错。
+- `parquet_meta` only reads Parquet Footer metadata, not data pages, making it suitable for quickly viewing metadata.
+- Supports wildcards (such as `*`, `{}`, `[]`). If no matching files are found, an error will be reported.
