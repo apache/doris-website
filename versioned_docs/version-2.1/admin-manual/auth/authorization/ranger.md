@@ -171,7 +171,7 @@ Equivalent to the internal Doris authorization statement `grant usage_priv on wo
 
 3. Restart the Ranger service.
 
-4. Download [ranger-servicedef-doris.json](https://github.com/morningman/ranger/blob/doris-plugin/agents-common/src/main/resources/service-defs/ranger-servicedef-doris.json)
+4. Download [ranger-servicedef-doris.json](https://github.com/morningman/ranger/blob/doris-ranger-plugin-2.1/agents-common/src/main/resources/service-defs/ranger-servicedef-doris.json)
 
 5. Execute the following command to upload the definition file to the Ranger service:
 

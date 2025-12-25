@@ -170,7 +170,7 @@ Ranger 的安装和配置见下文：安装和配置 Doris Ranger 插件
 
 3. 重启 Ranger 服务。
 
-4. 下载 [ranger-servicedef-doris.json](https://github.com/morningman/ranger/blob/doris-plugin/agents-common/src/main/resources/service-defs/ranger-servicedef-doris.json)
+4. 下载 [ranger-servicedef-doris.json](https://github.com/morningman/ranger/blob/doris-ranger-plugin-2.1/agents-common/src/main/resources/service-defs/ranger-servicedef-doris.json)
 
 5. 执行以下命令上传定义文件到 Ranger 服务：
 
