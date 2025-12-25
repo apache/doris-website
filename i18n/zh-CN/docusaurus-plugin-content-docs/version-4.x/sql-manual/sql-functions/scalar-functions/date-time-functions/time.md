@@ -6,6 +6,8 @@
 }
 ---
 
+# TIME
+
 ## 描述
 `TIME` 函数可以获取一个`DateTime`值的 `time` 部分.
 

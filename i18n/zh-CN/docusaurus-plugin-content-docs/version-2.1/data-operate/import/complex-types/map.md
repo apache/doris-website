@@ -6,6 +6,8 @@
 }
 ---
 
+# MAP
+
 `MAP<K, V>` 表示由 K, V 类型元素组成的 map，不能作为 key 列使用。
 
 - 目前支持在 Duplicate，Unique 模型的表中使用。

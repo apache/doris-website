@@ -6,6 +6,8 @@
 }
 ---
 
+# Query Profile Action
+
 ## Request
 
 ```

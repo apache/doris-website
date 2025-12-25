@@ -6,6 +6,8 @@
 }
 ---
 
+# Tableau
+
 对于在 Tableau 上实现 Apache Doris 访问，Tableau 官方的 MySQL 连接器可以满足需求。 该连接器基于 MySQL JDBC Driver 实现访问数据。
 
 通过 MySQL 连接器，Tableau 可以将 Apache Doris 数据库和表作为数据源进行集成。要启用此功能，请遵循下面的设置指南：

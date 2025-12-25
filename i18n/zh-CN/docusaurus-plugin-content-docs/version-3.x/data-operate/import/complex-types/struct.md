@@ -6,6 +6,8 @@
 }
 ---
 
+# STRUCT
+
 `STRUCT<field_name:field_type [COMMENT 'comment_string'], ... >` 表示由多个 Field 组成的结构体，也可被理解为多个列的集合。
 
 - 不能作为 Key 使用，目前 STRUCT 仅支持在 Duplicate 模型的表中使用。

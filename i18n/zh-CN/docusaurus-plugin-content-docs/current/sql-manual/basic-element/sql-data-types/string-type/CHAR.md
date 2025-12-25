@@ -6,6 +6,8 @@
 }
 ---
 
+# CHAR
+
 ## description
 
 CHAR(M)

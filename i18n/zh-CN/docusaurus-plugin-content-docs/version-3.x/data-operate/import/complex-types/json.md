@@ -6,6 +6,8 @@
 }
 ---
 
+# JSON
+
 `JSON` 数据类型，用二进制格式高效存储 JSON 数据，通过 JSON 函数访问其内部字段。
 
 默认支持 1048576 字节（1 MB），可调大到 2147483643 字节（2 GB），可通过 BE 配置`string_type_length_soft_limit_bytes` 调整。

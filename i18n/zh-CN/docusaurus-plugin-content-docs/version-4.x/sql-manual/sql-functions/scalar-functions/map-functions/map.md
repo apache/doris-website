@@ -6,6 +6,8 @@
 }
 ---
 
+# MAP
+
 ## 描述
 
 使用若干组键值对构造一个特定类型的 [`MAP<K, V>`](../../../basic-element/sql-data-types/semi-structured/MAP.md)

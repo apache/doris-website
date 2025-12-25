@@ -6,6 +6,8 @@
 }
 ---
 
+# Meta Info Action
+
 ## Request
 
 `GET /api/meta/namespaces/<ns>/databases`

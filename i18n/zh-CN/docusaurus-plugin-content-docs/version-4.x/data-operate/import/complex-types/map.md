@@ -6,6 +6,8 @@
 }
 ---
 
+# MAP
+
 `MAP<K, V>` 表示由`K,V`类型元素组成的`MAP`。 点击[MAP 数据类型](../../../sql-manual/basic-element/sql-data-types/semi-structured/MAP.md) 了解具体信息。
 
 ## CSV 格式导入

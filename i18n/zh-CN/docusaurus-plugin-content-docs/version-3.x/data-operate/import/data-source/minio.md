@@ -6,6 +6,8 @@
 }
 ---
 
+# MinIO
+
 Doris 提供两种方式从 MinIO 导入文件：
 - 使用 S3 Load 将 MinIO 文件导入到 Doris 中，这是一个异步的导入方式。
 - 使用 TVF 将 MinIO 文件导入到 Doris 中，这是一个同步的导入方式。

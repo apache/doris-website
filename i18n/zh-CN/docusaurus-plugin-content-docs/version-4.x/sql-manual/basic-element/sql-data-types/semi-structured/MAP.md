@@ -6,6 +6,8 @@
 }
 ---
 
+# MAP
+
 ## 类型描述
 
 - `MAP<key_type, value_type>`类型用于表示键值对集合的复合类型,每个键（key）唯一地对应一个值（value）。

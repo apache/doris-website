@@ -6,6 +6,8 @@
 }
 ---
 
+# JSON
+
 ## JSON 介绍
 
 JSON（JavaScript Object Notation）是一种开放标准的文件格式和数据交换格式，使用可读性强的纯文本来存储和传输数据。根据官方规范 [RFC7159](https://datatracker.ietf.org/doc/html/rfc7159)，JSON 支持以下基本类型：

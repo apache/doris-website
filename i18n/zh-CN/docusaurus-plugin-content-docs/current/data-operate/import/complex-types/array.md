@@ -6,6 +6,8 @@
 }
 ---
 
+# ARRAY
+
 `ARRAY<T>` 表示由 T 类型元素组成的数组。点击 [ARRAY 数据类型](../../../sql-manual/basic-element/sql-data-types/semi-structured/ARRAY.md) 了解具体信息。
 
 ## CSV 格式导入

@@ -6,6 +6,8 @@
 }
 ---
 
+# IPV6_NUM_TO_STRING
+
 ## inet6_ntoa
 
 别名 `ipv6_num_to_string`。

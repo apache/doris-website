@@ -6,6 +6,8 @@
 }
 ---
 
+# STRUCT
+
 `STRUCT<field_name:field_type [COMMENT 'comment_string'], ... >` 表示由多个 Field 组成的结构体，也可被理解为多个列的集合。点击[STRUCT 数据类型](../../../sql-manual/basic-element/sql-data-types/semi-structured/STRUCT.md) 了解具体信息。
 
 ## CSV 格式导入

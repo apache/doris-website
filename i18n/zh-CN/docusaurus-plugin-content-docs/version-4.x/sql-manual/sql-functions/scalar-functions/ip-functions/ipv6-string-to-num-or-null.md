@@ -6,6 +6,8 @@
 }
 ---
 
+# IPV6_STRING_TO_NUM_OR_NULL
+
 ## 描述
 IPv6NumToString 的反向函数，它接受一个 IP 地址字符串并返回二进制格式的 IPv6 地址。
 

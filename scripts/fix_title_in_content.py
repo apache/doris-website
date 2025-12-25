@@ -155,7 +155,7 @@ def process_file(file_path):
 
 
 def main():
-    commit_hash = "32f5bfc50fb944949e9818bd7e38bc84982077a8"
+    commit_hash = "c402aa049343c669dbbb0e57c193b7957627dbef"
     
     print(f"正在获取commit {commit_hash} 修改的md/mdx文件...")
     modified_files = get_modified_files(commit_hash)

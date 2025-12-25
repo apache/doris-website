@@ -6,6 +6,8 @@
 }
 ---
 
+# Tableau
+
 VeloDB 提供了一个官方的 Tableau Doris 连接器。 该连接器基于 MySQL JDBC Driver 实现访问数据。
 
 该连接器通过 [TDVT framework](https://tableau.github.io/connector-plugin-sdk/docs/tdvt) 测试，通过率为 100%。
