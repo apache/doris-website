@@ -51,11 +51,15 @@ Ranger 的安装和配置见下文：安装和配置 Doris Ranger 插件
    ```
 
    其中需要将 `ranger.plugin.doris.policy.cache.dir` 和 `ranger.plugin.doris.policy.rest.url` 改为实际值。
+   `ranger.plugin.doris.policy.cache.dir` : 用于存放从 ranger server 获取的权限缓存文件，这个文件夹需要自己手动创建，保证文件夹存在。
+
 3. 启动集群
 ### 权限示例
 1. 在 Doris 中创建 `user1`。
 2. 在 Doris 中，先使用 `admin` 用户创建一个 Catalog：`hive`。
-3. 在 Ranger 中创建 `user1`。
+3. 在 Ranger 中创建 `user1`。目前 Ranger 不能从 Doris 自动同步用户，Doris 也不能从 Ranger 同步用户，需要手动创建用户
+和 Doris 同名即可。Ranger 创建用户的步骤见 Ranger 官方文档，在 Settings -> Users 中创建用户。
+
 
 #### 全局权限
 相当于 Doris 内部授权语句的 `grant select_priv on *.*.* to user1`;
@@ -159,6 +163,10 @@ Ranger 的安装和配置见下文：安装和配置 Doris Ranger 插件
 	```
 
    其中 `log4j.appender.D.File` 改为实际值，用于存放 Ranger 插件的日志。
+
+`log4j.rootLogger` 可以根据需要调整日志级别，如 debug，info 等。注意 debug 只能用于调试，不能用于生产环境，否则日志量会非常大，
+也会导致鉴权性能下降。
+
 2. 配置了 Row Level Filter policy ，但是用户查询时报没有权限
 
    Row Level Filter policy 仅用来限制用户访问表中数据的特定记录， 仍需通过 ACCESS POLICY 为用户授权
@@ -179,6 +187,12 @@ Ranger 的安装和配置见下文：安装和配置 Doris Ranger 插件
     - [ranger-doris-plugin-3.0.0-SNAPSHOT.jar](https://selectdb-doris-1308700295.cos.ap-beijing.myqcloud.com/release/ranger/dev/ranger-doris-plugin-3.0.0-SNAPSHOT.jar)
     - [mysql-connector-java-8.0.25.jar](https://selectdb-doris-1308700295.cos.ap-beijing.myqcloud.com/release/jdbc_driver/mysql-connector-java-8.0.25.jar)
 
+:::caution 注意
+
+ranger-doris-plugin-3.0.0-SNAPSHOT.jar 需要下载对应分支的 Jar 包，否则会导致无法使用。
+
+:::
+
 2. 将下载好的文件放到 Ranger 服务的 `ranger-plugins/doris` 目录下，如：
 
    ```
@@ -190,7 +204,13 @@ Ranger 的安装和配置见下文：安装和配置 Doris Ranger 插件
 
 4. 下载 [ranger-servicedef-doris.json](https://github.com/morningman/ranger/blob/doris-plugin/agents-common/src/main/resources/service-defs/ranger-servicedef-doris.json)
 
-5. 执行以下命令上传定义文件到 Ranger 服务：
+:::caution 注意
+
+ranger-servicedef-doris.json 需要下载对应分支的 json 文件，否则会导致无法使用。
+
+:::
+
+5. 执行以下命令上传定义文件到 Ranger 服务，这一步主要是添加 Apache Doris 的插件定义：
 
    ```
    curl -u user:password -X POST \
@@ -255,13 +275,22 @@ Ranger 的安装和配置见下文：安装和配置 Doris Ranger 插件
 
 Config Properties 部分参数含义如下：
 
+- `Service Name`：服务名称，Doris 会根据这个名称拉取相关权限，需要保证和 `ranger-doris-security.xml` 配置文件中 
+`ranger.plugin.doris.service.name` 属性值一致，建议写 `doris`，如果不一致，会导致 Doris 拉取不到权限，从而鉴权失败。
 - `Username`/`Pasword`：Doris 集群的用户名密码，这里建议使用 Admin 用户。
-- `jdbc.driver_class`：连接 Doris 使用的 JDBC 驱动。`com.mysql.cj.jdbc.Driver`
-- `jdbc.url`：Doris 集群的 JDBC url 连接串。`jdbc:mysql://172.21.0.101:9030?useSSL=false`
+- `jdbc.driver_class`：连接 Doris 使用的 JDBC 驱动。`com.mysql.cj.jdbc.Driver`。
+- `jdbc.url`：Doris 集群的 JDBC url 连接串。`jdbc:mysql://172.21.0.101:9030?useSSL=false`。
 - 额外参数：
     - `resource.lookup.timeout.value.in.ms`：获取元信息的超时时间，建议填写 `10000`，即 10 秒。
 
 可以点击 `Test Connection` 检查是否可以联通。
+
+:::info 备注
+
+如果此时 Doris 已经启动完成，且 fe.conf 已经配置 `ranger access_controller_type=ranger-doris`，
+点击 `Test Connection` 会显示 fail，因为此时 Ranger 鉴权服务还没有创建完成，Doris 拉取权限会失败。属于正常，直接创建服务即可。
+
+:::
 
 之后点击 `Add` 添加服务。
 
