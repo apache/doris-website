@@ -50,7 +50,6 @@
     "devDependencies": {
         "@docusaurus/module-type-aliases": "3.6.3",
         "@tsconfig/docusaurus": "2.0.3",
-        "gray-matter": "^4.0.3",
         "typescript": "^5.2.2"
     },
     "resolutions": {
