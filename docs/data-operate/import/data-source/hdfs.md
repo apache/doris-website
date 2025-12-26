@@ -2,7 +2,8 @@
 {
     "title": "HDFS | Data Source",
     "language": "en",
-    "description": "Doris provides two ways to load files from HDFS:"
+    "description": "Doris provides two ways to load files from HDFS:",
+    "sidebar_label": "HDFS"
 }
 ---
 

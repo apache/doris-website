@@ -2,7 +2,8 @@
 {
     "title": "HDFS | Storages",
     "language": "en",
-    "description": "This document describes the parameters required for accessing HDFS. These parameters apply to:"
+    "description": "This document describes the parameters required for accessing HDFS. These parameters apply to:",
+    "sidebar_label": "HDFS"
 }
 ---
 

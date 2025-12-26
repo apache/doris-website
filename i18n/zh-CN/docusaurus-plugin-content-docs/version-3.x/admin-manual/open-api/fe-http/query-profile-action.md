@@ -2,7 +2,8 @@
 {
     "title": "Query Profile Action | Fe Http",
     "language": "zh-CN",
-    "description": "可获取集群所有 fe 节点 select 查询信息。"
+    "description": "可获取集群所有 fe 节点 select 查询信息。",
+    "sidebar_label": "Query Profile Action"
 }
 ---
 

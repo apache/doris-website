@@ -2,7 +2,8 @@
 {
     "title": "Log Storage and Analysis | Doris Docs",
     "language": "en",
-    "description": "Logs record key events in the system and contain crucial information such as the events' subject, time, location, and content."
+    "description": "Logs record key events in the system and contain crucial information such as the events' subject, time, location, and content.",
+    "sidebar_label": "Log Storage and Analysis"
 }
 ---
 

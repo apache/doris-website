@@ -1,7 +1,8 @@
 ---
 {
     "title": "ARRAY | Array Functions",
-    "language": "en-US"
+    "language": "en-US",
+    "sidebar_label": "ARRAY"
 }
 ---
 

@@ -2,7 +2,8 @@
 {
     "title": "WEEK_FLOOR | Date Time Functions",
     "language": "en",
-    "description": "Rounds down a datetime value to the nearest specified week interval. If a starting time (origin) is provided,"
+    "description": "Rounds down a datetime value to the nearest specified week interval. If a starting time (origin) is provided,",
+    "sidebar_label": "WEEK_FLOOR"
 }
 ---
 

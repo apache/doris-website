@@ -2,7 +2,8 @@
 {
     "title": "Overview | CCR",
     "language": "en",
-    "description": "CCR (Cross Cluster Replication) is a cross-cluster data synchronization mechanism that synchronizes data changes from the source cluster to the "
+    "description": "CCR (Cross Cluster Replication) is a cross-cluster data synchronization mechanism that synchronizes data changes from the source cluster to the ",
+    "sidebar_label": "Overview"
 }
 ---
 

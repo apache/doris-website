@@ -2,7 +2,8 @@
 {
     "title": "ARRAY | Array Functions",
     "language": "en",
-    "description": "construct an array with variadic elements and return it, T could be column or literal"
+    "description": "construct an array with variadic elements and return it, T could be column or literal",
+    "sidebar_label": "ARRAY"
 }
 ---
 

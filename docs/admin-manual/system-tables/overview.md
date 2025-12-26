@@ -2,7 +2,8 @@
 {
     "title": "Overview | System Tables",
     "language": "zh-CN",
-    "description": "Apache Doris cluster has multiple built-in system databases to store metadata information about the Doris system itself."
+    "description": "Apache Doris cluster has multiple built-in system databases to store metadata information about the Doris system itself.",
+    "sidebar_label": "Overview"
 }
 ---
 

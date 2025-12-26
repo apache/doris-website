@@ -4,7 +4,8 @@
     "language": "zh-CN",
     "toc_min_heading_level": 2,
     "toc_max_heading_level": 4,
-    "description": "该文档主要介绍 FE 的相关配置项。"
+    "description": "该文档主要介绍 FE 的相关配置项。",
+    "sidebar_label": "FE 配置项"
 }
 ---
 

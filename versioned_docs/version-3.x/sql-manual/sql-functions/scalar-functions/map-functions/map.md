@@ -2,7 +2,8 @@
 {
     "title": "MAP | Map Functions",
     "language": "en",
-    "description": "Constructs a Map<K, V> of a specific type using some set of key-value pairs"
+    "description": "Constructs a Map<K, V> of a specific type using some set of key-value pairs",
+    "sidebar_label": "MAP"
 }
 ---
 

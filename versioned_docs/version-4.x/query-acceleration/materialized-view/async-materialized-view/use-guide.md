@@ -2,7 +2,8 @@
 {
     "title": "Best Practices | Async Materialized View",
     "language": "en",
-    "description": "When the following conditions are met, it is recommended to create partitioned materialized views:"
+    "description": "When the following conditions are met, it is recommended to create partitioned materialized views:",
+    "sidebar_label": "Best Practices"
 }
 ---
 

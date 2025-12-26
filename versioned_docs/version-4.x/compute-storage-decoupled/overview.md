@@ -2,7 +2,8 @@
 {
     "title": "Overview | Compute Storage Decoupled",
     "language": "en",
-    "description": "This article introduces the differences, advantages,"
+    "description": "This article introduces the differences, advantages,",
+    "sidebar_label": "Overview"
 }
 ---
 

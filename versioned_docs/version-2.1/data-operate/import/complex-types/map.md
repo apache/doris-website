@@ -2,7 +2,8 @@
 {
     "title": "MAP | Complex Types",
     "language": "en",
-    "description": "MAP<K, V> A Map of K, V items, it cannot be used as a key column. Now MAP can only be used in Duplicate and Unique Model Tables."
+    "description": "MAP<K, V> A Map of K, V items, it cannot be used as a key column. Now MAP can only be used in Duplicate and Unique Model Tables.",
+    "sidebar_label": "MAP"
 }
 ---
 

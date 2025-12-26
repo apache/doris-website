@@ -2,7 +2,8 @@
 {
     "title": "Tableau | Bi",
     "language": "zh-CN",
-    "description": "VeloDB 提供了一个官方的 Tableau Doris 连接器。 该连接器基于 MySQL JDBC Driver 实现访问数据。"
+    "description": "VeloDB 提供了一个官方的 Tableau Doris 连接器。 该连接器基于 MySQL JDBC Driver 实现访问数据。",
+    "sidebar_label": "Tableau"
 }
 ---
 

@@ -2,7 +2,8 @@
 {
     "title": "CREATE WORKLOAD GROUP | Compute Management",
     "language": "en",
-    "description": "This statement is used to create a workload group. Workload groups enable the isolation of cpu resources and memory resources on a single be."
+    "description": "This statement is used to create a workload group. Workload groups enable the isolation of cpu resources and memory resources on a single be.",
+    "sidebar_label": "CREATE WORKLOAD GROUP"
 }
 ---
 

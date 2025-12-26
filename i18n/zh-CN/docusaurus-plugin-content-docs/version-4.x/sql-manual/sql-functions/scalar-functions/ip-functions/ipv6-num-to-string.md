@@ -2,7 +2,8 @@
 {
     "title": "IPV6_NUM_TO_STRING | Ip Functions",
     "language": "zh-CN",
-    "description": "接受字符串类型的二进制格式的 IPv6 地址。以文本格式返回此地址的字符串。"
+    "description": "接受字符串类型的二进制格式的 IPv6 地址。以文本格式返回此地址的字符串。",
+    "sidebar_label": "IPV6_NUM_TO_STRING"
 }
 ---
 

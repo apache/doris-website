@@ -2,7 +2,8 @@
 {
     "title": "TIME | Date Time Functions",
     "language": "zh-CN",
-    "description": "TIME 函数可以获取一个DateTime值的 time 部分."
+    "description": "TIME 函数可以获取一个DateTime值的 time 部分.",
+    "sidebar_label": "TIME"
 }
 ---
 

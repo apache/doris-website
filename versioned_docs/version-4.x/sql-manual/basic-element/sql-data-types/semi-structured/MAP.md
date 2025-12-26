@@ -2,7 +2,8 @@
 {
     "title": "MAP | Semi Structured",
     "language": "en",
-    "description": "```SQL SELECT MAP('Alice', 21, 'Bob', 23);"
+    "description": "```SQL SELECT MAP('Alice', 21, 'Bob', 23);",
+    "sidebar_label": "MAP"
 }
 ---
 

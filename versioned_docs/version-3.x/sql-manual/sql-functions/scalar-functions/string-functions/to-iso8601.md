@@ -2,7 +2,8 @@
 {
     "title": "TO_ISO8601 | String Functions",
     "language": "zh-CN",
-    "draft": true
+    "draft": true,
+    "sidebar_label": "TO_ISO8601"
 }
 ---
 

@@ -2,7 +2,8 @@
 {
     "title": "Tableau | Bi",
     "language": "zh-CN",
-    "description": "对于在 Tableau 上实现 Apache Doris 访问，Tableau 官方的 MySQL 连接器可以满足需求。 该连接器基于 MySQL JDBC Driver 实现访问数据。"
+    "description": "对于在 Tableau 上实现 Apache Doris 访问，Tableau 官方的 MySQL 连接器可以满足需求。 该连接器基于 MySQL JDBC Driver 实现访问数据。",
+    "sidebar_label": "Tableau"
 }
 ---
 

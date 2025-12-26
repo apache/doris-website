@@ -2,7 +2,8 @@
 {
     "title": "Disk Capacity Management | Maint Monitor",
     "language": "en",
-    "description": "This document mainly introduces system parameters and processing strategies related to disk storage capacity."
+    "description": "This document mainly introduces system parameters and processing strategies related to disk storage capacity.",
+    "sidebar_label": "Disk Capacity Management"
 }
 ---
 

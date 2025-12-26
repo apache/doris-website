@@ -2,7 +2,8 @@
 {
     "title": "IPV4_NUM_TO_STRING | Ip Functions",
     "language": "en",
-    "description": "Alias for ipv4numtostring."
+    "description": "Alias for ipv4numtostring.",
+    "sidebar_label": "IPV4_NUM_TO_STRING"
 }
 ---
 

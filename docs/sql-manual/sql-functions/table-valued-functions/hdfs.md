@@ -2,7 +2,8 @@
 {
     "title": "LOCAL | Table Valued Functions",
     "language": "en",
-    "description": "Local table-valued-function(tvf), allows users to read and access local file contents on be node, just like accessing relational table."
+    "description": "Local table-valued-function(tvf), allows users to read and access local file contents on be node, just like accessing relational table.",
+    "sidebar_label": "LOCAL"
 }
 ---
 

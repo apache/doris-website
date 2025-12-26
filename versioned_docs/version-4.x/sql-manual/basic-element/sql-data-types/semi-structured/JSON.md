@@ -2,7 +2,8 @@
 {
     "title": "JSON | Semi Structured",
     "language": "en",
-    "description": "JSON (JavaScript Object Notation) is an open standard file format and data interchange format that uses human-readable text to store and transmit "
+    "description": "JSON (JavaScript Object Notation) is an open standard file format and data interchange format that uses human-readable text to store and transmit ",
+    "sidebar_label": "JSON"
 }
 ---
 

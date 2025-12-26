@@ -2,7 +2,8 @@
 {
     "title": "STRUCT | Complex Types",
     "language": "en",
-    "description": "STRUCT<fieldname:fieldtype [COMMENT 'commentstring'], ... > Represents value with structure described by multiple fields,"
+    "description": "STRUCT<fieldname:fieldtype [COMMENT 'commentstring'], ... > Represents value with structure described by multiple fields,",
+    "sidebar_label": "STRUCT"
 }
 ---
 

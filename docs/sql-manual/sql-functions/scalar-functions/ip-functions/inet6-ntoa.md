@@ -2,7 +2,8 @@
 {
     "title": "IPV6_NUM_TO_STRING | Ip Functions",
     "language": "en",
-    "description": "Alias for ipv6numtostring."
+    "description": "Alias for ipv6numtostring.",
+    "sidebar_label": "IPV6_NUM_TO_STRING"
 }
 ---
 

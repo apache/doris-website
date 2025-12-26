@@ -2,7 +2,8 @@
 {
     "title": "STRUCT | Struct Functions",
     "language": "en",
-    "description": "construct an struct with variadic elements and return it, Tn could be column or literal"
+    "description": "construct an struct with variadic elements and return it, Tn could be column or literal",
+    "sidebar_label": "STRUCT"
 }
 ---
 

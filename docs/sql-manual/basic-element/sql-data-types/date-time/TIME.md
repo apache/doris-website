@@ -2,7 +2,8 @@
 {
     "title": "TIME | Date Time",
     "language": "en",
-    "description": "The TIME(p) type stores time, where p is the precision, with the range of values for p being [0, 6], and the default value is 0. That is,"
+    "description": "The TIME(p) type stores time, where p is the precision, with the range of values for p being [0, 6], and the default value is 0. That is,",
+    "sidebar_label": "TIME"
 }
 ---
 

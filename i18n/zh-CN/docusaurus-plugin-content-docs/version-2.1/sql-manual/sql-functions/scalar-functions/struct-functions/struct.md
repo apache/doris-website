@@ -2,7 +2,8 @@
 {
     "title": "STRUCT | Struct Functions",
     "language": "zh-CN",
-    "description": "根据给定的值构造并返回 struct，参数可以是多列或常量"
+    "description": "根据给定的值构造并返回 struct，参数可以是多列或常量",
+    "sidebar_label": "STRUCT"
 }
 ---
 

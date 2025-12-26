@@ -2,7 +2,8 @@
 {
     "title": "Statistics | Optimization Technology Principle",
     "language": "en",
-    "description": "Starting from version 2.0, Doris integrated Cost-Based Optimization (CBO) capabilities into its optimizer. Statistics are the cornerstone of CBO,"
+    "description": "Starting from version 2.0, Doris integrated Cost-Based Optimization (CBO) capabilities into its optimizer. Statistics are the cornerstone of CBO,",
+    "sidebar_label": "Statistics"
 }
 ---
 

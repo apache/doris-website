@@ -2,7 +2,8 @@
 {
     "title": "Query Profile Action | Fe Http",
     "language": "en",
-    "description": "Gets information about select queries for all fe nodes in the cluster."
+    "description": "Gets information about select queries for all fe nodes in the cluster.",
+    "sidebar_label": "Query Profile Action"
 }
 ---
 

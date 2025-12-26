@@ -2,7 +2,8 @@
 {
     "title": "WEEK_CEIL | Date Time Functions",
     "language": "en",
-    "description": "Rounds up a datetime value to the nearest specified week interval. If a starting time (origin) is provided,"
+    "description": "Rounds up a datetime value to the nearest specified week interval. If a starting time (origin) is provided,",
+    "sidebar_label": "WEEK_CEIL"
 }
 ---
 

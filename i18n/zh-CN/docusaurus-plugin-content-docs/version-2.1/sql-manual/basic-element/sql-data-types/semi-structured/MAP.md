@@ -2,7 +2,8 @@
 {
     "title": "MAP | Semi Structured",
     "language": "zh-CN",
-    "description": "MAP"
+    "description": "MAP",
+    "sidebar_label": "MAP"
 }
 ---
 

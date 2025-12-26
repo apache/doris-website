@@ -2,7 +2,8 @@
 {
     "title": "MinIO | Storages",
     "language": "en",
-    "description": "This document describes the parameters required to access MinIO, which apply to the following scenarios:"
+    "description": "This document describes the parameters required to access MinIO, which apply to the following scenarios:",
+    "sidebar_label": "MinIO"
 }
 ---
 

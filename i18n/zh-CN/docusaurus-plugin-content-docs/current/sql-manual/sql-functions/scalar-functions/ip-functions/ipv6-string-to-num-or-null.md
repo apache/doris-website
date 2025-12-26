@@ -2,7 +2,8 @@
 {
     "title": "IPV6_STRING_TO_NUM_OR_NULL | Ip Functions",
     "language": "zh-CN",
-    "description": "IPv6NumToString 的反向函数，它接受一个 IP 地址字符串并返回二进制格式的 IPv6 地址。"
+    "description": "IPv6NumToString 的反向函数，它接受一个 IP 地址字符串并返回二进制格式的 IPv6 地址。",
+    "sidebar_label": "IPV6_STRING_TO_NUM_OR_NULL"
 }
 ---
 

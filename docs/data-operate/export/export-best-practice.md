@@ -2,7 +2,8 @@
 {
     "title": "Best Practices | Export",
     "language": "en",
-    "description": "This document mainly introduces how to determine whether resource utilization is reasonable during data export operations,"
+    "description": "This document mainly introduces how to determine whether resource utilization is reasonable during data export operations,",
+    "sidebar_label": "Best Practices"
 }
 ---
 

@@ -2,7 +2,8 @@
 {
     "title": "Job Scheduler | Scheduler",
     "language": "en",
-    "description": "In the context of increasingly refined data management needs, scheduled tasks play a crucial role."
+    "description": "In the context of increasingly refined data management needs, scheduled tasks play a crucial role.",
+    "sidebar_label": "Job Scheduler"
 }
 ---
 

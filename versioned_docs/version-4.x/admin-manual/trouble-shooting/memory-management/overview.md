@@ -2,7 +2,8 @@
 {
     "title": "Overview | Memory Management",
     "language": "en",
-    "description": "Memory management is one of the most important components of Doris. During the operation of Doris,"
+    "description": "Memory management is one of the most important components of Doris. During the operation of Doris,",
+    "sidebar_label": "Overview"
 }
 ---
 

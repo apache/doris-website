@@ -2,7 +2,8 @@
 {
     "title": "TO_ISO8601 | Date Time Functions",
     "language": "en",
-    "description": "Converts a datetime value to an ISO8601 formatted string."
+    "description": "Converts a datetime value to an ISO8601 formatted string.",
+    "sidebar_label": "TO_ISO8601"
 }
 ---
 

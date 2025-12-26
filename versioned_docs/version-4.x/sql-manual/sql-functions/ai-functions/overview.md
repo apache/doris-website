@@ -2,7 +2,8 @@
 {
     "title": "Overview | Ai Functions",
     "language": "en",
-    "description": "AI Function is a built-in function provided by Doris based on Artificial Intelligence (AI) capabilities."
+    "description": "AI Function is a built-in function provided by Doris based on Artificial Intelligence (AI) capabilities.",
+    "sidebar_label": "Overview"
 }
 ---
 

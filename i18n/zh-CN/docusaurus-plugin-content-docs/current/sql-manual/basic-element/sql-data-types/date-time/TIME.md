@@ -2,7 +2,8 @@
 {
     "title": "TIME | Date Time",
     "language": "zh-CN",
-    "description": "TIME(p) 类型存储时间，其中 p 为精度，p 的取值范围为 [0, 6]，缺省值为 0。即 TIME 等同于 TIME(0)。"
+    "description": "TIME(p) 类型存储时间，其中 p 为精度，p 的取值范围为 [0, 6]，缺省值为 0。即 TIME 等同于 TIME(0)。",
+    "sidebar_label": "TIME"
 }
 ---
 

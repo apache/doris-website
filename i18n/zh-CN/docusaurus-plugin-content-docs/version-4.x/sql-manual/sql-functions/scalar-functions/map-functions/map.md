@@ -2,7 +2,8 @@
 {
     "title": "MAP | Map Functions",
     "language": "zh-CN",
-    "description": "使用若干组键值对构造一个特定类型的 MAP<K, V>"
+    "description": "使用若干组键值对构造一个特定类型的 MAP<K, V>",
+    "sidebar_label": "MAP"
 }
 ---
 

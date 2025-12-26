@@ -2,7 +2,8 @@
 {
     "title": "Column Statistics | Internal Schema",
     "language": "en",
-    "description": "Column statistics"
+    "description": "Column statistics",
+    "sidebar_label": "Column Statistics"
 }
 ---
 

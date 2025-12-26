@@ -2,7 +2,8 @@
 {
     "title": "MinIO | Data Source",
     "language": "en",
-    "description": "Doris provides two ways to load files from MinIO:"
+    "description": "Doris provides two ways to load files from MinIO:",
+    "sidebar_label": "MinIO"
 }
 ---
 

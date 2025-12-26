@@ -2,7 +2,8 @@
 {
     "title": "ARRAY | Complex Types",
     "language": "en",
-    "description": "ARRAY<T> An array of T-type items, it cannot be used as a key column."
+    "description": "ARRAY<T> An array of T-type items, it cannot be used as a key column.",
+    "sidebar_label": "ARRAY"
 }
 ---
 

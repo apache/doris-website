@@ -2,7 +2,8 @@
 {
     "title": "Meta Info Action | Fe Http",
     "language": "zh-CN",
-    "description": "获取集群内的元数据信息，包括数据库列表、表列表以及表结构等。"
+    "description": "获取集群内的元数据信息，包括数据库列表、表列表以及表结构等。",
+    "sidebar_label": "Meta Info Action"
 }
 ---
 

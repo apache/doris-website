@@ -2,7 +2,8 @@
 {
     "title": "Job Scheduler | Workload Management",
     "language": "en",
-    "description": "Introduction to Doris Job Scheduler, a built-in task scheduling system that enables automated periodic data imports, ETL operations, and data synchronization with second-level precision."
+    "description": "Introduction to Doris Job Scheduler, a built-in task scheduling system that enables automated periodic data imports, ETL operations, and data synchronization with second-level precision.",
+    "sidebar_label": "Job Scheduler"
 }
 ---
 

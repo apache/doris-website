@@ -2,7 +2,8 @@
 {
     "title": "XOR | Bitwise Functions",
     "language": "zh-CN",
-    "description": "Performs a bitwise XOR operation on two BOOLEAN values."
+    "description": "Performs a bitwise XOR operation on two BOOLEAN values.",
+    "sidebar_label": "XOR"
 }
 ---
 

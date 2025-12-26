@@ -2,7 +2,8 @@
 {
     "title": "Quick Start | CCR",
     "language": "en-US",
-    "description": "Configure the following information in the fe.conf and be.conf of both the source and target clusters:"
+    "description": "Configure the following information in the fe.conf and be.conf of both the source and target clusters:",
+    "sidebar_label": "Quick Start"
 }
 ---
 

@@ -2,7 +2,8 @@
 {
     "title": "Overview | Workload Management",
     "language": "en",
-    "description": "Workload management is a very important feature of Doris, playing a critical role in the overall system management."
+    "description": "Workload management is a very important feature of Doris, playing a critical role in the overall system management.",
+    "sidebar_label": "Overview"
 }
 ---
 

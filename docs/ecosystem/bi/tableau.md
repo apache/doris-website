@@ -2,7 +2,8 @@
 {
     "title": "Tableau | Bi",
     "language": "en",
-    "description": "For enabling Apache Doris access on Tableau, Tableau's official MySQL connector can meet your needs."
+    "description": "For enabling Apache Doris access on Tableau, Tableau's official MySQL connector can meet your needs.",
+    "sidebar_label": "Tableau"
 }
 ---
 

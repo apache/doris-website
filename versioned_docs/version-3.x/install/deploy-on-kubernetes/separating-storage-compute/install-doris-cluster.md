@@ -2,7 +2,8 @@
 {
     "title": "Deploy Doris Cluster | Separating Storage Compute",
     "language": "en",
-    "description": "Deploying a functional decoupled storage and compute Doris cluster on Kubernetes involves four main steps:"
+    "description": "Deploying a functional decoupled storage and compute Doris cluster on Kubernetes involves four main steps:",
+    "sidebar_label": "Deploy Doris Cluster"
 }
 ---
 

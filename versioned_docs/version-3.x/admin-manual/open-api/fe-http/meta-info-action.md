@@ -2,7 +2,8 @@
 {
     "title": "Meta Info Action | Fe Http",
     "language": "en",
-    "description": "Meta Info Action is used to obtain metadata information in the cluster. Such as database list, table structure, etc."
+    "description": "Meta Info Action is used to obtain metadata information in the cluster. Such as database list, table structure, etc.",
+    "sidebar_label": "Meta Info Action"
 }
 ---
 

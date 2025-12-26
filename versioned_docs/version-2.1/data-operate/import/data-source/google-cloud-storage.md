@@ -2,7 +2,8 @@
 {
     "title": "Google Cloud Storage | Data Source",
     "language": "en",
-    "description": "Doris provides two ways to load files from Google Cloud Storage:"
+    "description": "Doris provides two ways to load files from Google Cloud Storage:",
+    "sidebar_label": "Google Cloud Storage"
 }
 ---
 

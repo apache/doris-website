@@ -2,7 +2,8 @@
 {
     "title": "Job Scheduler | Workload Management",
     "language": "en",
-    "description": "In the context of increasing demands for refined data management, scheduled scheduling plays an important role."
+    "description": "In the context of increasing demands for refined data management, scheduled scheduling plays an important role.",
+    "sidebar_label": "Job Scheduler"
 }
 ---
 

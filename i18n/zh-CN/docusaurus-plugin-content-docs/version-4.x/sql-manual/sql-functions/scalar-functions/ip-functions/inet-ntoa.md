@@ -2,7 +2,8 @@
 {
     "title": "IPV4_NUM_TO_STRING | Ip Functions",
     "language": "zh-CN",
-    "description": "别名 ipv4numtostring。"
+    "description": "别名 ipv4numtostring。",
+    "sidebar_label": "IPV4_NUM_TO_STRING"
 }
 ---
 

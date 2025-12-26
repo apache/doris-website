@@ -2,7 +2,8 @@
 {
     "title": "MAP | Complex Types",
     "language": "en",
-    "description": "MAP<K, V> A Map of K, V items。 Click MAP to learn more."
+    "description": "MAP<K, V> A Map of K, V items。 Click MAP to learn more.",
+    "sidebar_label": "MAP"
 }
 ---
 

@@ -2,7 +2,8 @@
 {
     "title": "IPV6_STRING_TO_NUM_OR_NULL | Ip Functions",
     "language": "en",
-    "description": "Alias for ipv6stringtonumornull."
+    "description": "Alias for ipv6stringtonumornull.",
+    "sidebar_label": "IPV6_STRING_TO_NUM_OR_NULL"
 }
 ---
 

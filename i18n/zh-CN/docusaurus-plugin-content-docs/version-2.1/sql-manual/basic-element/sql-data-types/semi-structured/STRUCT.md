@@ -2,7 +2,8 @@
 {
     "title": "STRUCT | Semi Structured",
     "language": "zh-CN",
-    "description": "STRUCT"
+    "description": "STRUCT",
+    "sidebar_label": "STRUCT"
 }
 ---
 

@@ -2,7 +2,8 @@
 {
     "title": "Inverted Index | Index",
     "language": "en",
-    "description": "Inverted Index is a commonly used indexing technique in the field of information retrieval."
+    "description": "Inverted Index is a commonly used indexing technique in the field of information retrieval.",
+    "sidebar_label": "Inverted Index"
 }
 ---
 

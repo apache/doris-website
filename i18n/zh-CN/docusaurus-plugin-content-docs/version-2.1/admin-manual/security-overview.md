@@ -2,7 +2,8 @@
 {
     "title": "安全概览 | Admin Manual",
     "language": "zh-CN",
-    "description": "Doris 提供以下机制管理数据安全："
+    "description": "Doris 提供以下机制管理数据安全：",
+    "sidebar_label": "安全概览"
 }
 ---
 

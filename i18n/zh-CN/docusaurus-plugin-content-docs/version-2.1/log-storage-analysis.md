@@ -1,8 +1,9 @@
 ---
 {
-    "title": "日志存储与分析 | Version 2.1",
+    "title": "日志存储与分析 | Doris Docs",
     "language": "zh-CN",
-    "description": "在部署集群之前，首先应评估所需服务器硬件资源，包括以下几个关键步骤："
+    "description": "在部署集群之前，首先应评估所需服务器硬件资源，包括以下几个关键步骤：",
+    "sidebar_label": "日志存储与分析"
 }
 ---
 

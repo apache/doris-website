@@ -2,7 +2,8 @@
 {
     "title": "Overview | Open Api",
     "language": "en",
-    "description": "As a supplement to Apache Doris operation and maintenance management,"
+    "description": "As a supplement to Apache Doris operation and maintenance management,",
+    "sidebar_label": "Overview"
 }
 ---
 

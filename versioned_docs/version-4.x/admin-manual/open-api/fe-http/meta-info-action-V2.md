@@ -2,7 +2,8 @@
 {
     "title": "Meta Info Action | Fe Http",
     "language": "en",
-    "description": "Used to obtain metadata information about the cluster, including the database list, table list, and table schema."
+    "description": "Used to obtain metadata information about the cluster, including the database list, table list, and table schema.",
+    "sidebar_label": "Meta Info Action"
 }
 ---
 

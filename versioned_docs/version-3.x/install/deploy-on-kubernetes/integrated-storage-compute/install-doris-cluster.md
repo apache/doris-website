@@ -2,7 +2,8 @@
 {
     "title": "Deploy Doris Cluster | Integrated Storage Compute",
     "language": "en",
-    "description": "To deploy a Doris cluster on Kubernetes, ensure that the Doris Operator is deployed."
+    "description": "To deploy a Doris cluster on Kubernetes, ensure that the Doris Operator is deployed.",
+    "sidebar_label": "Deploy Doris Cluster"
 }
 ---
 

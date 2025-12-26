@@ -2,7 +2,8 @@
 {
     "title": "Query Profile Action | Fe Http",
     "language": "zh-CN",
-    "description": "Query Profile Action 用于获取 Query 的 profile"
+    "description": "Query Profile Action 用于获取 Query 的 profile",
+    "sidebar_label": "Query Profile Action"
 }
 ---
 

@@ -4,7 +4,8 @@
     "language": "en",
     "toc_min_heading_level": 2,
     "toc_max_heading_level": 4,
-    "description": "Complete reference guide for Frontend (FE) configuration parameters in Doris, including metadata management, query engine, load/export, and storage settings."
+    "description": "Complete reference guide for Frontend (FE) configuration parameters in Doris, including metadata management, query engine, load/export, and storage settings.",
+    "sidebar_label": "FE Configuration"
 }
 ---
 

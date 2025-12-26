@@ -2,7 +2,8 @@
 {
     "title": "Google Cloud Storage | Data Source",
     "language": "zh-CN",
-    "description": "Doris 提供两种方式从 Google Cloud Storage 导入文件："
+    "description": "Doris 提供两种方式从 Google Cloud Storage 导入文件：",
+    "sidebar_label": "Google Cloud Storage"
 }
 ---
 

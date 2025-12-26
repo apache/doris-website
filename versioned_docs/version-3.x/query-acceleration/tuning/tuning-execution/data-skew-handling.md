@@ -2,7 +2,8 @@
 {
     "title": "Data Skew Handling | Tuning Execution",
     "language": "en",
-    "description": "Doris is an MPP database that relies on data shuffle for parallel computing acceleration. However, in actual production scenarios,"
+    "description": "Doris is an MPP database that relies on data shuffle for parallel computing acceleration. However, in actual production scenarios,",
+    "sidebar_label": "Data Skew Handling"
 }
 ---
 

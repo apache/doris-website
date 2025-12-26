@@ -2,7 +2,8 @@
 {
     "title": "CUT_IPV6 | Ip Functions",
     "language": "zh-CN",
-    "description": "根据 IPv6 地址的类型（IPv4 映射或纯 IPv6），从 IPv6 地址的末尾截取指定数量的字节，并返回截取后的 IPv6 地址字符串。"
+    "description": "根据 IPv6 地址的类型（IPv4 映射或纯 IPv6），从 IPv6 地址的末尾截取指定数量的字节，并返回截取后的 IPv6 地址字符串。",
+    "sidebar_label": "CUT_IPV6"
 }
 ---
 

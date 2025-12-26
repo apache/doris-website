@@ -2,7 +2,8 @@
 {
     "title": "Overview | Sql Data Types",
     "language": "en",
-    "description": "Doris supports the following numeric data types:"
+    "description": "Doris supports the following numeric data types:",
+    "sidebar_label": "Overview"
 }
 ---
 

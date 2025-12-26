@@ -2,7 +2,8 @@
 {
     "title": "DATE | Date Time",
     "language": "zh-CN",
-    "description": "DATE"
+    "description": "DATE",
+    "sidebar_label": "DATE"
 }
 ---
 

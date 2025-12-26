@@ -2,7 +2,8 @@
 {
     "title": "Overview | Table Design",
     "language": "en",
-    "description": "Users can use the CREATE TABLE statement to create a table in Doris."
+    "description": "Users can use the CREATE TABLE statement to create a table in Doris.",
+    "sidebar_label": "Overview"
 }
 ---
 

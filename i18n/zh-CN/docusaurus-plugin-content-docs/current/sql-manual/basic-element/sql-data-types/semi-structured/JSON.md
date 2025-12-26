@@ -2,7 +2,8 @@
 {
     "title": "JSON | Semi Structured",
     "language": "zh-CN",
-    "description": "JSON（JavaScript Object Notation）是一种开放标准的文件格式和数据交换格式，使用可读性强的纯文本来存储和传输数据。根据官方规范 RFC7159，JSON 支持以下基本类型："
+    "description": "JSON（JavaScript Object Notation）是一种开放标准的文件格式和数据交换格式，使用可读性强的纯文本来存储和传输数据。根据官方规范 RFC7159，JSON 支持以下基本类型：",
+    "sidebar_label": "JSON"
 }
 ---
 

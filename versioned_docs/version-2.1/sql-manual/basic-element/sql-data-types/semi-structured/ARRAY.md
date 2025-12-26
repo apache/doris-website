@@ -2,7 +2,8 @@
 {
     "title": "ARRAY | Semi Structured",
     "language": "en",
-    "description": "ARRAY"
+    "description": "ARRAY",
+    "sidebar_label": "ARRAY"
 }
 ---
 

@@ -2,7 +2,8 @@
 {
     "title": "IPV4_NUM_TO_STRING | Ip Functions",
     "language": "en",
-    "description": "Takes a Int16, Int32, Int64 number. Interprets it as an IPv4 address in big endian."
+    "description": "Takes a Int16, Int32, Int64 number. Interprets it as an IPv4 address in big endian.",
+    "sidebar_label": "IPV4_NUM_TO_STRING"
 }
 ---
 

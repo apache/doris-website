@@ -2,7 +2,8 @@
 {
     "title": "ARRAY | Complex Types",
     "language": "en",
-    "description": "ARRAY<T> An array of T-type items. Click ARRAY to learn more."
+    "description": "ARRAY<T> An array of T-type items. Click ARRAY to learn more.",
+    "sidebar_label": "ARRAY"
 }
 ---
 

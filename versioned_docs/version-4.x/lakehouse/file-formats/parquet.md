@@ -2,7 +2,8 @@
 {
     "title": "Parquet | File Formats",
     "language": "zh-CN",
-    "description": "This document introduces the support for reading and writing Parquet file formats in Doris. It applies to the following features:"
+    "description": "This document introduces the support for reading and writing Parquet file formats in Doris. It applies to the following features:",
+    "sidebar_label": "Parquet"
 }
 ---
 

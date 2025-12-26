@@ -2,7 +2,8 @@
 {
     "title": "JSON | Semi Structured",
     "language": "en",
-    "description": "The JSON data type stores JSON data efficiently in a binary format and allows access to its internal fields through JSON functions."
+    "description": "The JSON data type stores JSON data efficiently in a binary format and allows access to its internal fields through JSON functions.",
+    "sidebar_label": "JSON"
 }
 ---
 

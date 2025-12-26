@@ -2,7 +2,8 @@
 {
     "title": "ARRAY | Complex Types",
     "language": "zh-CN",
-    "description": "ARRAY<T> 表示由 T 类型元素组成的数组，不能作为 key 列使用。"
+    "description": "ARRAY<T> 表示由 T 类型元素组成的数组，不能作为 key 列使用。",
+    "sidebar_label": "ARRAY"
 }
 ---
 
