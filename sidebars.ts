@@ -521,6 +521,7 @@ const sidebars: SidebarsConfig = {
                                 'lakehouse/best-practices/doris-gravitino',
                                 'lakehouse/best-practices/doris-onelake',
                                 'lakehouse/best-practices/doris-unity-catalog',
+                                'lakehouse/best-practices/doris-lakekeeper',
                                 'lakehouse/best-practices/kerberos',
                                 'lakehouse/best-practices/tpch',
                                 'lakehouse/best-practices/tpcds',
