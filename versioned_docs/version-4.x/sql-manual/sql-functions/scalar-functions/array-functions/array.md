@@ -1,10 +1,12 @@
 ---
 {
-    "title": "ARRAY",
+    "title": "ARRAY | Array Functions",
     "language": "en-US",
-    
+    "sidebar_label": "ARRAY"
 }
 ---
+
+# ARRAY
 
 ## array
 
@@ -136,3 +138,4 @@ ERROR 1105 (HY000): errCode = 2, detailMessage = Can not find the compatibility 
 ### Keywords
 
 ARRAY
+

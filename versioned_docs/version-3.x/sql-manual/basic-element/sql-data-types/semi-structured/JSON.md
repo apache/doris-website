@@ -1,10 +1,13 @@
 ---
 {
-    "title": "JSON",
+    "title": "JSON | Semi Structured",
     "language": "en",
-    "description": "The JSON data type stores JSON data efficiently in a binary format and allows access to its internal fields through JSON functions."
+    "description": "The JSON data type stores JSON data efficiently in a binary format and allows access to its internal fields through JSON functions.",
+    "sidebar_label": "JSON"
 }
 ---
+
+# JSON
 
 ## JSON
 
@@ -867,4 +870,5 @@ The `GET_JSON_XXX` functions are designed for use on string types — they extra
 
 ### keywords
 JSONB, JSON, json_parse, json_parse_error_to_null, json_parse_error_to_value, json_extract, json_extract_isnull, json_extract_bool, json_extract_int, json_extract_bigint, json_extract_double, json_extract_string, json_exists_path, json_type
+
 

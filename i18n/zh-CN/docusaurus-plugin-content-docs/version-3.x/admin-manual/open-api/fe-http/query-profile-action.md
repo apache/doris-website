@@ -1,10 +1,13 @@
 ---
 {
-    "title": "Query Profile Action",
+    "title": "Query Profile Action | Fe Http",
     "language": "zh-CN",
-    "description": "可获取集群所有 fe 节点 select 查询信息。"
+    "description": "可获取集群所有 fe 节点 select 查询信息。",
+    "sidebar_label": "Query Profile Action"
 }
 ---
+
+# Query Profile Action
 
 ## Request
 
@@ -456,4 +459,5 @@ Admin 和 Root 用户可以查看所有 Query。普通用户仅能查看自己�
     "count": 0
 }
 ```
+
 

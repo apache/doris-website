@@ -1,10 +1,13 @@
 ---
 {
-    "title": "DATE",
+    "title": "DATE | Date Time Functions",
     "language": "zh-CN",
-    "description": "提取日期时间中的日期。"
+    "description": "提取日期时间中的日期。",
+    "sidebar_label": "DATE"
 }
 ---
+
+# DATE
 
 ## 描述
 

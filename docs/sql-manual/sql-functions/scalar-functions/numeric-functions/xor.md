@@ -1,10 +1,13 @@
 ---
 {
-    "title": "XOR",
+    "title": "XOR | Numeric Functions",
     "language": "en",
-    "description": "Return the XOR value of two numbers."
+    "description": "Return the XOR value of two numbers.",
+    "sidebar_label": "XOR"
 }
 ---
+
+# XOR
 
 ## Description
 
@@ -27,3 +30,4 @@ mysql >select true xor false,true xor true;
 
 ## Keywords
 	XOR
+

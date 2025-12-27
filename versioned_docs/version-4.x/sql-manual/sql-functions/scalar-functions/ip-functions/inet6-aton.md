@@ -1,10 +1,13 @@
 ---
 {
-    "title": "IPV6_STRING_TO_NUM_OR_NULL",
+    "title": "IPV6_STRING_TO_NUM_OR_NULL | Ip Functions",
     "language": "en",
-    "description": "Alias for ipv6stringtonumornull."
+    "description": "Alias for ipv6stringtonumornull.",
+    "sidebar_label": "IPV6_STRING_TO_NUM_OR_NULL"
 }
 ---
+
+# IPV6_STRING_TO_NUM_OR_NULL
 
 ## inet6_aton
 
@@ -79,4 +82,5 @@ select hex(ipv6_string_to_num_or_null('notaaddress')) as invalid;
 ### Keywords
 
 INET6_ATON, IPV6_STRING_TO_NUM_OR_NULL
+
 

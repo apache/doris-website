@@ -1,10 +1,13 @@
 ---
 {
-    "title": "XOR",
+    "title": "XOR | Bitwise Functions",
     "language": "zh-CN",
-    "description": "Performs a bitwise XOR operation on two BOOLEAN values."
+    "description": "Performs a bitwise XOR operation on two BOOLEAN values.",
+    "sidebar_label": "XOR"
 }
 ---
+
+# XOR
 
 ## Description
 Performs a bitwise XOR operation on two BOOLEAN values.
@@ -44,3 +47,4 @@ Returns the XOR value of the two BOOLEAN values.
     |          NULL |          NULL |           NULL |           NULL |          NULL |
     +---------------+---------------+----------------+----------------+---------------+
     ```
+

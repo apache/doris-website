@@ -1,10 +1,13 @@
 ---
 {
-    "title": "Overview",
+    "title": "Overview | Table Design",
     "language": "en",
-    "description": "Users can use the CREATE TABLE statement to create a table in Doris."
+    "description": "Users can use the CREATE TABLE statement to create a table in Doris.",
+    "sidebar_label": "Overview"
 }
 ---
+
+# Overview
 
 ## Creating tables
 
@@ -37,3 +40,4 @@ These properties apply to partitions, meaning that once a partition is created, 
 3. **Column addition operations**: Adding or removing VALUE columns is a lightweight operation that can be completed in seconds. Adding or removing KEY columns or modifying data types is a heavyweight operation, and the completion time depends on the amount of data. For large datasets, it is recommended to avoid adding or removing KEY columns or modifying data types.
 
 4. **Optimize storage strategy**: You can use tiered storage to store cold data on HDD or S3/HDFS.
+

@@ -1,10 +1,13 @@
 ---
 {
-    "title": "IPV6_NUM_TO_STRING",
+    "title": "IPV6_NUM_TO_STRING | Ip Functions",
     "language": "zh-CN",
-    "description": "接受字符串类型的二进制格式的 IPv6 地址。以文本格式返回此地址的字符串。"
+    "description": "接受字符串类型的二进制格式的 IPv6 地址。以文本格式返回此地址的字符串。",
+    "sidebar_label": "IPV6_NUM_TO_STRING"
 }
 ---
+
+# IPV6_NUM_TO_STRING
 
 ## 描述
 接受字符串类型的二进制格式的 IPv6 地址。以文本格式返回此地址的字符串。
@@ -38,3 +41,4 @@ select ipv6_num_to_string(unhex('2A0206B8000000000000000000000011')) as addr, ip
 | 2a02:6b8::11 | NULL                                     |
 +--------------+------------------------------------------+
 ```
+

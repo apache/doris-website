@@ -1,10 +1,11 @@
 ---
 {
-    "title": "FE Configuration",
+    "title": "FE Configuration Template | Config",
     "language": "en",
     "toc_min_heading_level": 2,
     "toc_max_heading_level": 4,
-    "description": "This document mainly introduces the relevant configuration items of FE."
+    "description": "This document mainly introduces the relevant configuration items of FE.",
+    "sidebar_label": "FE Configuration Template"
 }
 ---
 
@@ -121,3 +122,4 @@ There are two ways to configure FE configuration items:
 > If you need to modify, please modify the description information in `fe/fe-common/src/main/java/org/apache/doris/common/Config.java`.
 
 <--DOC_PLACEHOLDER-->
+

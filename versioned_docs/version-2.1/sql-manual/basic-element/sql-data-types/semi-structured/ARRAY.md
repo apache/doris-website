@@ -1,10 +1,13 @@
 ---
 {
-    "title": "ARRAY",
+    "title": "ARRAY | Semi Structured",
     "language": "en",
-    "description": "ARRAY"
+    "description": "ARRAY",
+    "sidebar_label": "ARRAY"
 }
 ---
+
+# ARRAY
 
 ## ARRAY
 
@@ -68,3 +71,4 @@ mysql> SELECT * FROM `array_test`;
 ### keywords
 
     ARRAY
+

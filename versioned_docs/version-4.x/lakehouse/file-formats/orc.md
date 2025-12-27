@@ -1,10 +1,13 @@
 ---
 {
-    "title": "ORC",
+    "title": "ORC | File Formats",
     "language": "en",
-    "description": "This document introduces the support for reading and writing ORC file formats in Doris. It applies to the following functionalities:"
+    "description": "This document introduces the support for reading and writing ORC file formats in Doris. It applies to the following functionalities:",
+    "sidebar_label": "ORC"
 }
 ---
+
+# ORC
 
 This document introduces the support for reading and writing ORC file formats in Doris. It applies to the following functionalities:
 
@@ -60,3 +63,4 @@ This document introduces the support for reading and writing ORC file formats in
 * `orc_natural_read_size_mb` (2.1+, 3.0+)
 
     The maximum number of bytes that the ORC Reader reads at one time. Default is 8 MB.
+

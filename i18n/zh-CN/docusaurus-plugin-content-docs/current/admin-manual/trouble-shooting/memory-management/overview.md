@@ -1,10 +1,13 @@
 ---
 {
-    "title": "概述",
+    "title": "概述 | Memory Management",
     "language": "zh-CN",
-    "description": "内存管理是 Doris 中最重要的组成部分之一，在 Doris 运行过程中，不论导入还是查询都依赖大量的内存操作。内存管理的好坏直接影响到 Doris 的稳定性和性能。"
+    "description": "内存管理是 Doris 中最重要的组成部分之一，在 Doris 运行过程中，不论导入还是查询都依赖大量的内存操作。内存管理的好坏直接影响到 Doris 的稳定性和性能。",
+    "sidebar_label": "概述"
 }
 ---
+
+# 概述
 
 内存管理是 Doris 中最重要的组成部分之一，在 Doris 运行过程中，不论导入还是查询都依赖大量的内存操作。内存管理的好坏直接影响到 Doris 的稳定性和性能。
 
@@ -143,3 +146,4 @@ Doris BE Process Memory
 ## 内存控制策略
 
 参考 [内存控制策略](./memory-feature/memory-control-strategy.md) 中对内存分配、监控、回收的介绍，它们保证了 Doris BE 进程内存的高效可控。
+

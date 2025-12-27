@@ -1,10 +1,13 @@
 ---
 {
-    "title": "Overview",
+    "title": "Overview | Memory Management",
     "language": "en",
-    "description": "Memory management is one of the most important components of Doris. During the operation of Doris,"
+    "description": "Memory management is one of the most important components of Doris. During the operation of Doris,",
+    "sidebar_label": "Overview"
 }
 ---
+
+# Overview
 
 Memory management is one of the most important components of Doris. During the operation of Doris, both load and query rely on a large number of memory operations. The quality of memory management directly affects the stability and performance of Doris.
 
@@ -143,3 +146,4 @@ Refer to [Memory problem FAQ](./memory-issue-faq.md) to analyze common memory pr
 ## Memory control strategy
 
 Refer to [Memory Control Strategy](./memory-feature/memory-control-strategy.md) for an introduction to memory allocation, monitoring, and recycling, which ensure the efficient and controllable memory of the Doris BE process.
+

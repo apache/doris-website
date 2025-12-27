@@ -1,10 +1,13 @@
 ---
 {
-    "title": "ARRAY",
+    "title": "ARRAY | Complex Types",
     "language": "en",
-    "description": "ARRAY<T> An array of T-type items. Click ARRAY to learn more."
+    "description": "ARRAY<T> An array of T-type items. Click ARRAY to learn more.",
+    "sidebar_label": "ARRAY"
 }
 ---
+
+# ARRAY
 
 `ARRAY<T>` An array of T-type items. Click [ARRAY](../../../sql-manual/basic-element/sql-data-types/semi-structured/ARRAY.md) to learn more.
 
@@ -117,3 +120,4 @@ mysql> SELECT * FROM array_test;
 +------+-----------------+
 4 rows in set (0.01 sec)
 ```
+

@@ -1,10 +1,13 @@
 ---
 {
-    "title": "TIMESTAMP",
+    "title": "TIMESTAMP | Date Time Functions",
     "language": "en",
-    "description": "The TIMESTAMP function converts a datetime format string to DATETIME type."
+    "description": "The TIMESTAMP function converts a datetime format string to DATETIME type.",
+    "sidebar_label": "TIMESTAMP"
 }
 ---
+
+# TIMESTAMP
 
 ## Description
 
@@ -61,3 +64,4 @@ SELECT TIMESTAMP(NULL);
 | NULL            |
 +-----------------+
 ```
+

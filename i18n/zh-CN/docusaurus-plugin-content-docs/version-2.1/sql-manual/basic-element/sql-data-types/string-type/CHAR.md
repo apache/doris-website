@@ -1,10 +1,13 @@
 ---
 {
-    "title": "CHAR",
+    "title": "CHAR | String Type",
     "language": "zh-CN",
-    "description": "CHAR(M)"
+    "description": "CHAR(M)",
+    "sidebar_label": "CHAR"
 }
 ---
+
+# CHAR
 
 ## description
 
@@ -15,3 +18,4 @@ CHAR(M)
 ## keywords
 
 CHAR
+

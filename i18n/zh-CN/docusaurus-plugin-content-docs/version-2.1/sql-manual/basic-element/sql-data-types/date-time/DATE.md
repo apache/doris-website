@@ -1,10 +1,13 @@
 ---
 {
-    "title": "DATE",
+    "title": "DATE | Date Time",
     "language": "zh-CN",
-    "description": "DATE"
+    "description": "DATE",
+    "sidebar_label": "DATE"
 }
 ---
+
+# DATE
 
 ## DATE
 
@@ -30,3 +33,4 @@ SELECT DATE('2003-12-31 01:02:03');
 ### keywords
 
     DATE
+

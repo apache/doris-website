@@ -1,10 +1,13 @@
 ---
 {
-    "title": "Google Cloud Storage",
+    "title": "Google Cloud Storage | Data Source",
     "language": "en",
-    "description": "Doris provides two ways to load files from Google Cloud Storage:"
+    "description": "Doris provides two ways to load files from Google Cloud Storage:",
+    "sidebar_label": "Google Cloud Storage"
 }
 ---
+
+# Google Cloud Storage
 
 Doris provides two ways to load files from Google Cloud Storage:
 - Use S3 Load to load Google Cloud Storage files into Doris, which is an asynchronous load method.
@@ -170,3 +173,4 @@ mysql> select * from test_s3load;
 +---------+-----------+------+
 10 rows in set (0.04 sec)
 ```
+

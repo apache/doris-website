@@ -1,10 +1,13 @@
 ---
 {
-    "title": "Overview",
+    "title": "Overview | Compute Storage Decoupled",
     "language": "en",
-    "description": "This article introduces the differences, advantages,"
+    "description": "This article introduces the differences, advantages,",
+    "sidebar_label": "Overview"
 }
 ---
+
+# Overview
 
 This article introduces the differences, advantages, and applicable scenarios of the compute-storage coupled mode and compute-storage decoupled mode of Doris, providing a reference for users' selection. 
 
@@ -77,3 +80,4 @@ The shared storage layer stores the data files, including segment files and the 
 - When you require high elastic scalability, Kubernetes containerization, or to run on a private cloud;
 - High throughput shared storage capability, allowing multiple computing groups to share data
 - When you have a dedicated team responsible for maintaining the company's entire data warehouse platform.
+

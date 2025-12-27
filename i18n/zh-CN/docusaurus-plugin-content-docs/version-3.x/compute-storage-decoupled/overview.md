@@ -1,10 +1,13 @@
 ---
 {
-    "title": "概览",
+    "title": "概览 | Compute Storage Decoupled",
     "language": "zh-CN",
-    "description": "本文介绍存算分离与存算一体两种架构的区别、优势和适用场景，为用户的选择与使用提供参考。后文将详细说明如何部署并使用 Apache Doris 存算分离模式。如需部署存算一体模式，请参考集群部署。"
+    "description": "本文介绍存算分离与存算一体两种架构的区别、优势和适用场景，为用户的选择与使用提供参考。后文将详细说明如何部署并使用 Apache Doris 存算分离模式。如需部署存算一体模式，请参考集群部署。",
+    "sidebar_label": "概览"
 }
 ---
+
+# 概览
 
 本文介绍存算分离与存算一体两种架构的区别、优势和适用场景，为用户的选择与使用提供参考。后文将详细说明如何部署并使用 Apache Doris 存算分离模式。如需部署存算一体模式，请参考[集群部署](../../current/install/deploy-manually/integrated-storage-compute-deploy-manually)。
 

@@ -1,6 +1,6 @@
 ---
 {
-    "title": "column_privileges",
+    "title": "Column Privileges",
     "language": "en",
     "description": "This table is solely used for compatibility with MySQL behavior and is always empty."
 }

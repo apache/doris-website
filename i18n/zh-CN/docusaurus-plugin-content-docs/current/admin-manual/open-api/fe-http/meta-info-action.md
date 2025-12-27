@@ -1,10 +1,13 @@
 ---
 {
-    "title": "Meta Info Action",
+    "title": "Meta Info Action | Fe Http",
     "language": "zh-CN",
-    "description": "Meta Info Action 用于获取集群内的元数据信息。如数据库列表，表结构等。"
+    "description": "Meta Info Action 用于获取集群内的元数据信息。如数据库列表，表结构等。",
+    "sidebar_label": "Meta Info Action"
 }
 ---
+
+# Meta Info Action
 
 Meta Info Action 用于获取集群内的元数据信息。如数据库列表，表结构等。
 
@@ -210,3 +213,4 @@ GET /api/meta/namespaces/default/databases/db1/tables/tbl1/schema?with_mv?=1
 ```
 
 * data 字段返回 base 表或 rollup 表的表结构信息。
+
