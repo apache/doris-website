@@ -1,7 +1,8 @@
 ---
 {
     "title": "集成 Lakekeeper",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "本文将详细介绍如何将 Apache Doris 与 Lakekeeper 进行集成，实现对 Iceberg 数据的高效查询与管理。我们将一步步带你完成从环境准备到最终查询的全过程。"
 }
 ---
 
@@ -15,10 +16,7 @@
 
 * **Lakekeeper 部署与配置**：如何使用 Docker Compose 部署 Lakekeeper 服务，并在 Lakekeeper 中创建 Project 和 Warehouse，为 Doris 提供元数据访问端点。
 
-* **Doris 连接 Lakekeeper**：演示两种核心的底层存储访问方式：
-
-  1. Doris 直接使用静态 AK/SK 访问对象存储
-  2. 由 Lakekeeper 发放临时 AK/SK（凭证发放机制，Credential Vending）
+* **Doris 连接 Lakekeeper**：使用 Doris 通过 Lakekeeper 访问 Iceberg 数据，进行读写操作。
 
 ## 1. AWS 环境准备
 
@@ -60,7 +58,7 @@ aws s3 ls | grep lakekeeper-doris-demo
     EOF
     ```
 
-    > 注意：请将 YOUR\_ACCOUNT\_ID 替换为您的实际 AWS 账户 ID，可通过 `aws sts get-caller-identity --query Account --output text` 获取。将 YOUR\_USER 替换为实际的 IAM 用户名。
+    > 注意：请将 `YOUR_ACCOUNT_ID` 替换为您的实际 AWS 账户 ID，可通过 `aws sts get-caller-identity --query Account --output text` 获取。将 `YOUR_USER` 替换为实际的 IAM 用户名。
 
 2. 创建 IAM Role
 
@@ -214,8 +212,8 @@ docker compose up -d
 
 启动后，可以访问以下端点：
 
-* Swagger UI：`http://YOUR_HOST_IP:8181/swagger-ui/`
-* Web UI：`http://YOUR_HOST_IP:8181/ui`
+* Swagger UI:`http://YOUR_HOST_IP:8181/swagger-ui/`
+* Web UI:`http://YOUR_HOST_IP:8181/ui`
 
 ### 2.2 创建 Project 和 Warehouse
 
@@ -235,43 +233,7 @@ docker compose up -d
 
     记录返回结果中的 `project-id`，后续步骤中将用作 `PROJECT_ID`。
 
-2. 创建 Warehouse（静态凭证模式）
-
-    创建 warehouse 配置文件 `create-warehouse-static.json`：
-
-    ```bash
-    cat > create-warehouse-static.json <<'JSON'
-    {
-      "warehouse-name": "lakekeeper-warehouse",
-      "storage-profile": {
-        "type": "s3",
-        "bucket": "lakekeeper-doris-demo",
-        "key-prefix": "warehouse",
-        "region": "us-east-1",
-        "endpoint": "https://s3.us-east-1.amazonaws.com",
-        "sts-enabled": false,
-        "flavor": "aws"
-      },
-      "storage-credential": {
-        "type": "s3",
-        "credential-type": "access-key",
-        "aws-access-key-id": "YOUR_ACCESS_KEY",
-        "aws-secret-access-key": "YOUR_SECRET_KEY"
-      }
-    }
-    JSON
-    ```
-
-    创建 warehouse：
-
-    ```bash
-    curl -i -X POST "http://localhost:8181/management/v1/warehouse" \
-      -H "Content-Type: application/json" \
-      -H "x-project-id: $PROJECT_ID" \
-      --data @create-warehouse-static.json
-    ```
-
-3. 创建 Warehouse（Credential Vending 模式）
+2. 创建 Warehouse（Credential Vending 模式）
 
     如果需要使用 Credential Vending 模式，创建 warehouse 配置文件 `create-warehouse-vc.json`：
 
@@ -311,6 +273,42 @@ docker compose up -d
       --data @create-warehouse-vc.json
     ```
 
+3. 创建 Warehouse（静态凭证模式）
+
+    创建 warehouse 配置文件 `create-warehouse-static.json`：
+
+    ```bash
+    cat > create-warehouse-static.json <<'JSON'
+    {
+      "warehouse-name": "lakekeeper-warehouse",
+      "storage-profile": {
+        "type": "s3",
+        "bucket": "lakekeeper-doris-demo",
+        "key-prefix": "warehouse",
+        "region": "us-east-1",
+        "endpoint": "https://s3.us-east-1.amazonaws.com",
+        "sts-enabled": false,
+        "flavor": "aws"
+      },
+      "storage-credential": {
+        "type": "s3",
+        "credential-type": "access-key",
+        "aws-access-key-id": "YOUR_ACCESS_KEY",
+        "aws-secret-access-key": "YOUR_SECRET_KEY"
+      }
+    }
+    JSON
+    ```
+
+    创建 warehouse：
+
+    ```bash
+    curl -i -X POST "http://localhost:8181/management/v1/warehouse" \
+      -H "Content-Type: application/json" \
+      -H "x-project-id: $PROJECT_ID" \
+      --data @create-warehouse-static.json
+    ```
+
 4. 验证 Warehouse 创建
 
     ```bash
@@ -341,7 +339,22 @@ docker compose up -d
 
 现在，我们将在 Doris 中创建一个 Iceberg Catalog，连接到刚刚配置好的 Lakekeeper 服务。
 
-### 方式一：静态存储凭证 (AK/SK)
+### 方式一：临时存储凭证 (Credential Vending)
+
+这是**最推荐**的方式。当需要读写 S3 上的数据文件时，Doris 会向 Lakekeeper 请求一个临时的、具有最小权限的 S3 访问凭证。
+
+```sql
+CREATE CATALOG lakekeeper_vc PROPERTIES (
+    'type' = 'iceberg',
+    'iceberg.catalog.type' = 'rest',
+    'iceberg.rest.uri' = 'http://YOUR_LAKEKEEPER_HOST:8181/catalog',
+    'warehouse' = 'lakekeeper-vc-warehouse',
+    -- 开启凭证发放
+    'iceberg.rest.vended-credentials-enabled' = 'true'
+);
+```
+
+### 方式二：静态存储凭证 (AK/SK)
 
 这种方式下，Doris 直接使用配置中写死的静态 AK/SK 访问对象存储。这种方式配置简单，适合快速测试，但安全性较低。
 
@@ -356,21 +369,6 @@ CREATE CATALOG lakekeeper_static PROPERTIES (
     's3.secret_key' = 'YOUR_SECRET_KEY',
     's3.endpoint' = 'https://s3.us-east-1.amazonaws.com',
     's3.region' = 'us-east-1'
-);
-```
-
-### 方式二：临时存储凭证 (Credential Vending)
-
-这是**最推荐**的方式。当需要读写 S3 上的数据文件时，Doris 会向 Lakekeeper 请求一个临时的、具有最小权限的 S3 访问凭证。
-
-```sql
-CREATE CATALOG lakekeeper_vc PROPERTIES (
-    'type' = 'iceberg',
-    'iceberg.catalog.type' = 'rest',
-    'iceberg.rest.uri' = 'http://YOUR_LAKEKEEPER_HOST:8181/catalog',
-    'warehouse' = 'lakekeeper-vc-warehouse',
-    -- 开启凭证发放
-    'iceberg.rest.vended-credentials-enabled' = 'true'
 );
 ```
 
@@ -405,7 +403,7 @@ SELECT * FROM my_iceberg_table;
 -- +------+------------+
 ```
 
-如果上述操作均能成功，恭喜你！你已经成功打通了 Doris -> Lakekeeper -> S3 的完整数据湖链路。
+如果上述操作均能成功，恭喜你！你已经成功打通了 Doris -> Lakekeeper -> Iceberg(S3) 的完整数据湖链路。
 
 有关使用 Doris 管理 Iceberg 表的更多信息，请访问：
 

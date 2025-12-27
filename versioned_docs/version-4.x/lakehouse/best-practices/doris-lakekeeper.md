@@ -15,10 +15,7 @@ This article will guide you through integrating Apache Doris with Lakekeeper to 
 
 * **Lakekeeper Deployment and Configuration**: How to deploy Lakekeeper service using Docker Compose, and create Project and Warehouse in Lakekeeper to provide metadata access endpoints for Doris.
 
-* **Doris Connection to Lakekeeper**: Demonstrates two core underlying storage access methods:
-
-  1. Doris directly using static AK/SK to access object storage
-  2. Temporary AK/SK issued by Lakekeeper (Credential Vending mechanism)
+* **Doris Connection to Lakekeeper**: How to use Doris to access Iceberg data through Lakekeeper for read and write operations.
 
 ## 1. AWS Environment Preparation
 
@@ -235,43 +232,7 @@ After starting, you can access the following endpoints:
 
     Note the `project-id` from the response, which will be used as `PROJECT_ID` in subsequent steps.
 
-2. Create Warehouse (Static Credentials Mode)
-
-    Create the warehouse configuration file `create-warehouse-static.json`:
-
-    ```bash
-    cat > create-warehouse-static.json <<'JSON'
-    {
-      "warehouse-name": "lakekeeper-warehouse",
-      "storage-profile": {
-        "type": "s3",
-        "bucket": "lakekeeper-doris-demo",
-        "key-prefix": "warehouse",
-        "region": "us-east-1",
-        "endpoint": "https://s3.us-east-1.amazonaws.com",
-        "sts-enabled": false,
-        "flavor": "aws"
-      },
-      "storage-credential": {
-        "type": "s3",
-        "credential-type": "access-key",
-        "aws-access-key-id": "YOUR_ACCESS_KEY",
-        "aws-secret-access-key": "YOUR_SECRET_KEY"
-      }
-    }
-    JSON
-    ```
-
-    Create the warehouse:
-
-    ```bash
-    curl -i -X POST "http://localhost:8181/management/v1/warehouse" \
-      -H "Content-Type: application/json" \
-      -H "x-project-id: $PROJECT_ID" \
-      --data @create-warehouse-static.json
-    ```
-
-3. Create Warehouse (Credential Vending Mode)
+2. Create Warehouse (Credential Vending Mode)
 
     If you need to use Credential Vending mode, create the warehouse configuration file `create-warehouse-vc.json`:
 
@@ -311,6 +272,42 @@ After starting, you can access the following endpoints:
       --data @create-warehouse-vc.json
     ```
 
+3. Create Warehouse (Static Credentials Mode)
+
+    Create the warehouse configuration file `create-warehouse-static.json`:
+
+    ```bash
+    cat > create-warehouse-static.json <<'JSON'
+    {
+      "warehouse-name": "lakekeeper-warehouse",
+      "storage-profile": {
+        "type": "s3",
+        "bucket": "lakekeeper-doris-demo",
+        "key-prefix": "warehouse",
+        "region": "us-east-1",
+        "endpoint": "https://s3.us-east-1.amazonaws.com",
+        "sts-enabled": false,
+        "flavor": "aws"
+      },
+      "storage-credential": {
+        "type": "s3",
+        "credential-type": "access-key",
+        "aws-access-key-id": "YOUR_ACCESS_KEY",
+        "aws-secret-access-key": "YOUR_SECRET_KEY"
+      }
+    }
+    JSON
+    ```
+
+    Create the warehouse:
+
+    ```bash
+    curl -i -X POST "http://localhost:8181/management/v1/warehouse" \
+      -H "Content-Type: application/json" \
+      -H "x-project-id: $PROJECT_ID" \
+      --data @create-warehouse-static.json
+    ```
+
 4. Verify Warehouse Creation
 
     ```bash
@@ -341,7 +338,22 @@ At this point, all Lakekeeper-side configuration is complete.
 
 Now, we will create an Iceberg Catalog in Doris that connects to the newly configured Lakekeeper service.
 
-### Method 1: Static Storage Credentials (AK/SK)
+### Method 1: Temporary Storage Credentials (Credential Vending)
+
+This is the **most recommended** approach. When needing to read/write data files on S3, Doris requests a temporary, minimally-privileged S3 access credential from Lakekeeper.
+
+```sql
+CREATE CATALOG lakekeeper_vc PROPERTIES (
+    'type' = 'iceberg',
+    'iceberg.catalog.type' = 'rest',
+    'iceberg.rest.uri' = 'http://YOUR_LAKEKEEPER_HOST:8181/catalog',
+    'warehouse' = 'lakekeeper-vc-warehouse',
+    -- Enable credential vending
+    'iceberg.rest.vended-credentials-enabled' = 'true'
+);
+```
+
+### Method 2: Static Storage Credentials (AK/SK)
 
 In this approach, Doris directly uses static AK/SK hardcoded in the configuration to access object storage. This method is simple to configure and suitable for quick testing, but has lower security.
 
@@ -356,21 +368,6 @@ CREATE CATALOG lakekeeper_static PROPERTIES (
     's3.secret_key' = 'YOUR_SECRET_KEY',
     's3.endpoint' = 'https://s3.us-east-1.amazonaws.com',
     's3.region' = 'us-east-1'
-);
-```
-
-### Method 2: Temporary Storage Credentials (Credential Vending)
-
-This is the **most recommended** approach. When needing to read/write data files on S3, Doris requests a temporary, minimally-privileged S3 access credential from Lakekeeper.
-
-```sql
-CREATE CATALOG lakekeeper_vc PROPERTIES (
-    'type' = 'iceberg',
-    'iceberg.catalog.type' = 'rest',
-    'iceberg.rest.uri' = 'http://YOUR_LAKEKEEPER_HOST:8181/catalog',
-    'warehouse' = 'lakekeeper-vc-warehouse',
-    -- Enable credential vending
-    'iceberg.rest.vended-credentials-enabled' = 'true'
 );
 ```
 
