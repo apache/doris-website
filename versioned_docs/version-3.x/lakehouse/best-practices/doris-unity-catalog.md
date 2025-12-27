@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Integrating with Databricks Unity Catalog",
+    "title": "Integration with Databricks Unity Catalog",
     "language": "en",
     "description": "As enterprises increasingly manage growing data assets under the Lakehouse architecture, the demand for cross-platform, high-performance,"
 }
