@@ -1,10 +1,13 @@
 ---
 {
-    "title": "DATE",
+    "title": "DATE | Date Time Functions",
     "language": "en",
-    "description": "The DATE function is used to extract the pure date part from a datetime value (which includes both date and time), ignoring the time information."
+    "description": "The DATE function is used to extract the pure date part from a datetime value (which includes both date and time), ignoring the time information.",
+    "sidebar_label": "DATE"
 }
 ---
+
+# DATE
 
 ## Description
 

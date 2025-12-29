@@ -1,10 +1,13 @@
 ---
 {
-    "title": "column_statistics",
+    "title": "Column Statistics | Information Schema",
     "language": "en",
-    "description": "This table is solely used for compatibility with MySQL behavior and is always empty."
+    "description": "This table is solely used for compatibility with MySQL behavior and is always empty.",
+    "sidebar_label": "Column Statistics"
 }
 ---
+
+# Column Statistics
 
 ## Overview
 

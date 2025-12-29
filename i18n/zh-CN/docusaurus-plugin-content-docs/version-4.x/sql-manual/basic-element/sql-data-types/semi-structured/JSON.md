@@ -1,10 +1,13 @@
 ---
 {
-    "title": "JSON",
+    "title": "JSON | Semi Structured",
     "language": "zh-CN",
-    "description": "JSON（JavaScript Object Notation）是一种开放标准的文件格式和数据交换格式，使用可读性强的纯文本来存储和传输数据。根据官方规范 RFC7159，JSON 支持以下基本类型："
+    "description": "JSON（JavaScript Object Notation）是一种开放标准的文件格式和数据交换格式，使用可读性强的纯文本来存储和传输数据。根据官方规范 RFC7159，JSON 支持以下基本类型：",
+    "sidebar_label": "JSON"
 }
 ---
+
+# JSON
 
 ## JSON 介绍
 
@@ -1097,3 +1100,4 @@ mysql> SELECT JSON_EXTRACT_STRING('{"key1" : null}', "$.key_not_exist") IS NULL;
 
 ### keywords
 JSON, json_parse, json_parse_error_to_null, json_parse_error_to_value, json_extract, json_extract_isnull, json_extract_bool, json_extract_int, json_extract_bigint, json_extract_double, json_extract_String, json_exists_path, json_type
+

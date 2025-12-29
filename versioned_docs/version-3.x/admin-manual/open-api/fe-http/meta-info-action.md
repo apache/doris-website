@@ -1,8 +1,9 @@
 ---
 {
-    "title": "Meta Info Action",
+    "title": "Meta Info Action | Fe Http",
     "language": "en",
-    "description": "Meta Info Action is used to obtain metadata information in the cluster. Such as database list, table structure, etc."
+    "description": "Meta Info Action is used to obtain metadata information in the cluster. Such as database list, table structure, etc.",
+    "sidebar_label": "Meta Info Action"
 }
 ---
 
@@ -212,3 +213,4 @@ GET /api/meta/namespaces/default/databases/db1/tables/tbl1/schema?with_mv?=1
 ```
 
 * The data field returns the table structure information of the base table or rollup table.
+

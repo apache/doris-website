@@ -1,11 +1,13 @@
 ---
 {
-    "title": "Inverted Index",
+    "title": "Inverted Index | Inverted Index",
     "sidebar_label": "Overview",
     "language": "en",
     "description": "Inverted Index is a commonly used indexing technique in the field of information retrieval."
 }
 ---
+
+# Inverted Index
 
 ## Indexing Principle
 
@@ -751,3 +753,4 @@ SELECT count() FROM hackernews_1m WHERE author = 'faster';
 |      20 |
 +---------+
 ```
+

@@ -1,10 +1,13 @@
 ---
 {
-    "title": "TIME",
+    "title": "TIME | Date Time",
     "language": "en",
-    "description": "The TIME(p) type stores time, where p is the precision, with the range of values for p being [0, 6], and the default value is 0. That is,"
+    "description": "The TIME(p) type stores time, where p is the precision, with the range of values for p being [0, 6], and the default value is 0. That is,",
+    "sidebar_label": "TIME"
 }
 ---
+
+# TIME
 
 ## Description
 
@@ -43,3 +46,4 @@ select cast('838:59:59.999999' as time(6));
 | 838:59:59.999999                    |
 +-------------------------------------+
 ```
+

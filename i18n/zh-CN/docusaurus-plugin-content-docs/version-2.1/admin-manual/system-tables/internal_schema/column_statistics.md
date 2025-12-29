@@ -1,10 +1,13 @@
 ---
 {
-    "title": "column_statistics",
+    "title": "column_statistics | Internal Schema",
     "language": "zh-CN",
-    "description": "列统计信息"
+    "description": "列统计信息",
+    "sidebar_label": "column_statistics"
 }
 ---
+
+# column_statistics
 
 ## 概述
 

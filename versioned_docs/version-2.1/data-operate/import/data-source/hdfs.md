@@ -1,10 +1,13 @@
 ---
 {
-    "title": "HDFS",
+    "title": "HDFS | Data Source",
     "language": "en",
-    "description": "Doris provides two ways to load files from HDFS:"
+    "description": "Doris provides two ways to load files from HDFS:",
+    "sidebar_label": "HDFS"
 }
 ---
+
+# HDFS
 
 Doris provides two ways to load files from HDFS:
 - Use HDFS Load to load HDFS files into Doris, which is an asynchronous load method.
@@ -162,3 +165,4 @@ mysql> select * from test_hdfsload;
 +---------+-----------+------+
 10 rows in set (0.04 sec)
 ```
+

@@ -1,10 +1,13 @@
 ---
 {
-    "title": "Parquet",
+    "title": "Parquet | File Format",
     "language": "zh-CN",
-    "description": "本文介绍如何在 Doris 中导入 Parquet 格式的数据文件。"
+    "description": "本文介绍如何在 Doris 中导入 Parquet 格式的数据文件。",
+    "sidebar_label": "Parquet"
 }
 ---
+
+# Parquet
 
 本文介绍如何在 Doris 中导入 Parquet 格式的数据文件。
 

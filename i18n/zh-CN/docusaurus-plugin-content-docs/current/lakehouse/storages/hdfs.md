@@ -1,10 +1,13 @@
 ---
 {
-    "title": "HDFS",
+    "title": "HDFS | Storages",
     "language": "zh-CN",
-    "description": "本文档用于介绍访问 HDFS 时所需的参数。这些参数适用于："
+    "description": "本文档用于介绍访问 HDFS 时所需的参数。这些参数适用于：",
+    "sidebar_label": "HDFS"
 }
 ---
+
+# HDFS
 
 本文档用于介绍访问 HDFS 时所需的参数。这些参数适用于：
 
@@ -217,3 +220,4 @@ Java 版本使用通过 Java 访问 HDFS，可以模拟 Doris FE 侧访问 HDFS 
 CPP 版本通过 C++ 调用 libhdfs 访问 HDFS，可以模拟 Doris BE 侧访问 HDFS 的逻辑。
 
 具体使用方式可以各自代码库的 README。
+

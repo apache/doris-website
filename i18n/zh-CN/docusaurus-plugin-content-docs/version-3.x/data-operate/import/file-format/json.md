@@ -1,8 +1,9 @@
 ---
 {
-    "title": "JSON",
+    "title": "JSON | File Format",
     "language": "zh-CN",
-    "description": "本文介绍如何在 Doris 中导入 JSON 格式的数据文件。Doris 支持导入标准 JSON 格式数据，通过配置相关参数，可以灵活地处理不同的 JSON 数据结构，并支持从 JSON 数据中抽取字段、处理嵌套结构等场景。"
+    "description": "本文介绍如何在 Doris 中导入 JSON 格式的数据文件。Doris 支持导入标准 JSON 格式数据，通过配置相关参数，可以灵活地处理不同的 JSON 数据结构，并支持从 JSON 数据中抽取字段、处理嵌套结构等场景。",
+    "sidebar_label": "JSON"
 }
 ---
 
@@ -437,3 +438,4 @@ FROM S3
     "json_root" = "$.events",
     ...
 );
+

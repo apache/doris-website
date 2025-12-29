@@ -1,10 +1,13 @@
 ---
 {
-    "title": "Query Profile Action",
+    "title": "Query Profile Action | Fe Http",
     "language": "en",
-    "description": "GET /rest/v2/manager/query/statistics/{traceid} (4.0.0+)"
+    "description": "Doris FE Query Profile REST API 文档，支持通过 HTTP 接口获取查询信息、执行 Profile、实时统计数据，并对正在运行的查询进行监控与控制。",
+    "sidebar_label": "Query Profile Action"
 }
 ---
+
+# Query Profile Action
 
 ## Request
 

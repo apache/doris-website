@@ -1,10 +1,13 @@
 ---
 {
-    "title": "Parquet",
+    "title": "Parquet | File Formats",
     "language": "zh-CN",
-    "description": "本文档用于介绍 Doris 的 Parquet 文件格式的读写支持情况。该文档适用于以下功能。"
+    "description": "本文档用于介绍 Doris 的 Parquet 文件格式的读写支持情况。该文档适用于以下功能。",
+    "sidebar_label": "Parquet"
 }
 ---
+
+# Parquet
 
 本文档用于介绍 Doris 的 Parquet 文件格式的读写支持情况。该文档适用于以下功能。
 
@@ -63,3 +66,4 @@
 * `parquet_column_max_buffer_mb` (2.1+, 3.0+)
 
     读取 Parquet Row Group 中的 Column 时所分配的最大 Buffer 大小，默认为 8M。
+

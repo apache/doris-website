@@ -1,10 +1,13 @@
 ---
 {
-    "title": "MAP",
+    "title": "MAP | Complex Types",
     "language": "en",
-    "description": "MAP<K, V> A Map of K, V items。 Click MAP to learn more."
+    "description": "MAP<K, V> A Map of K, V items。 Click MAP to learn more.",
+    "sidebar_label": "MAP"
 }
 ---
+
+# MAP
 
 `MAP<K, V>` A Map of K, V items。 Click [MAP](../../../sql-manual/basic-element/sql-data-types/semi-structured/MAP.md) to learn more.
 
@@ -117,3 +120,4 @@ mysql> SELECT * FROM map_test;
 +------+-------------------------+
 4 rows in set (0.01 sec)
 ```
+

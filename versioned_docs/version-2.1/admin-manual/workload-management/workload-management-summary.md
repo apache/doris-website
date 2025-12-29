@@ -1,10 +1,13 @@
 ---
 {
-    "title": "Overview",
+    "title": "Overview | Workload Management",
     "language": "en",
-    "description": "Workload management is a very important feature of Doris, playing a critical role in the overall system management."
+    "description": "Workload management is a very important feature of Doris, playing a critical role in the overall system management.",
+    "sidebar_label": "Overview"
 }
 ---
+
+# Overview
 
 Workload management is a very important feature of Doris, playing a critical role in the overall system management. Through reasonable workload management strategies, resource utilization can be optimized, system stability enhanced, and response time reduced. It has the following abilities:
 
@@ -39,3 +42,4 @@ The following table records the characteristics and advantageous scenarios of di
 - Soft Limit: The soft limit is a resource limit that can be exceeded, usually representing the recommended upper limit of resource usage. When the system is not busy, if a tenant requests more resources than the soft limit, it can borrow resources from other groups. When the system is busy and there is resource contention, if a tenant requests resources exceeding the soft limit, it will not be able to obtain additional resources.
 
 When using the Resource Group / Compute Group method to partition resources, only the hard limit mode is supported. When using the Workload Group method to partition resources, both the soft limit and hard limit of Workload Group are supported. The soft limit of Workload Group is usually used for sudden resource control, such as temporary query peaks or short-term increases in data writing.
+

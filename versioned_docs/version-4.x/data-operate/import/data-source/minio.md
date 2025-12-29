@@ -1,10 +1,13 @@
 ---
 {
-    "title": "MinIO",
+    "title": "MinIO | Data Source",
     "language": "en",
-    "description": "Doris provides two ways to load files from MinIO:"
+    "description": "Doris provides two ways to load files from MinIO:",
+    "sidebar_label": "MinIO"
 }
 ---
+
+# MinIO
 
 Doris provides two ways to load files from MinIO:
 - Use S3 Load to load MinIO files into Doris, which is an asynchronous load method.
@@ -193,3 +196,4 @@ mysql> select * from test_s3load;
 +---------+-----------+------+
 10 rows in set (0.04 sec)
 ```
+

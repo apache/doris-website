@@ -1,10 +1,13 @@
 ---
 {
-    "title": "Overview",
+    "title": "Overview | Sql Data Types",
     "language": "en",
-    "description": "Doris supports the following numeric data types:"
+    "description": "Doris supports the following numeric data types:",
+    "sidebar_label": "Overview"
 }
 ---
+
+# Overview
 
 ## Numeric Types
 
@@ -98,3 +101,4 @@ IP data types store IP addresses in a binary format, which is faster and more sp
 
 - **[IPv4](../sql-data-types/ip/IPV4.md)**: It stores IPv4 addresses as a 4-byte binary value. It is used in conjunction with the `ipv4_*` family of functions.
 - **[IPv6](../sql-data-types/ip/IPV6.md)**: It stores IPv6 addresses as a 16-byte binary value. It is used in conjunction with the `ipv6_*` family of functions.
+

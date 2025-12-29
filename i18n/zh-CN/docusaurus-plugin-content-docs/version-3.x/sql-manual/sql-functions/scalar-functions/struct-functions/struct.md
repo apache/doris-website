@@ -1,10 +1,13 @@
 ---
 {
-    "title": "STRUCT",
+    "title": "STRUCT | Struct Functions",
     "language": "zh-CN",
-    "description": "根据给定的值构造并返回 struct，参数可以是多列或常量"
+    "description": "根据给定的值构造并返回 struct，参数可以是多列或常量",
+    "sidebar_label": "STRUCT"
 }
 ---
+
+# STRUCT
 
 ## 描述
 
@@ -39,3 +42,4 @@ select struct(1, 'a', "abc"),struct(null, 1, null),struct(cast('2023-03-16' as d
 | {"col1":1, "col2":"a", "col3":"abc"} | {"col1":null, "col2":1, "col3":null} | {"col1":"2023-03-16 00:00:00"}              |
 +--------------------------------------+--------------------------------------+---------------------------------------------+
 ```
+
