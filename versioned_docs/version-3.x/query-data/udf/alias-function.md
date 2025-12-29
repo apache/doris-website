@@ -1,7 +1,8 @@
 ---
 {
     "title": "Alias Function",
-    "language": "en"
+    "language": "en",
+    "description": "An alias function refers to assigning an alias name to a function. By registering a new signature for a function or expression fragment in the system,"
 }
 ---
 

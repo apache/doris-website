@@ -1,7 +1,8 @@
 ---
 {
     "title": "SHOW COMPUTE GROUPS",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "在存算分离模式中，显示当前用户有集群使用权限的计算集群列表"
 }
 ---
 

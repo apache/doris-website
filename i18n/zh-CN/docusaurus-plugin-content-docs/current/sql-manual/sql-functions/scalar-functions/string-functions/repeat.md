@@ -1,7 +1,8 @@
 ---
 {
     "title": "REPEAT",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "REPEAT 函数用于将指定字符串重复指定次数，生成新的字符串。该函数常用于生成填充字符、创建分隔符或生成测试数据。"
 }
 ---
 

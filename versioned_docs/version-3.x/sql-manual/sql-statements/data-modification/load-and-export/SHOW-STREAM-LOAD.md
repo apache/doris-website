@@ -1,7 +1,8 @@
 ---
 {
     "title": "SHOW STREAM LOAD",
-    "language": "en"
+    "language": "en",
+    "description": "This statement is used to display the execution of the specified Stream Load task"
 }
 ---
 

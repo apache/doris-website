@@ -1,7 +1,8 @@
 ---
 {
     "title": "FROM_BASE64_BINARY",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "FROMBASE64BINARY 函数用于对输入字符串进行 Base64 解码，并返回结果的 VARBINARY 类型值。"
 }
 ---
 

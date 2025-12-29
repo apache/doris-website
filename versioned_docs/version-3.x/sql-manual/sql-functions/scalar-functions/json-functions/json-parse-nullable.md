@@ -1,7 +1,8 @@
 ---
 {
     "title": "JSON_PARSE_NULLABLE",
-    "language": "en"
+    "language": "en",
+    "description": "The JSONPARSENULLABLE function is used to parse a JSON string into a valid JSON object. If the input string is invalid or NULL,"
 }
 ---
 

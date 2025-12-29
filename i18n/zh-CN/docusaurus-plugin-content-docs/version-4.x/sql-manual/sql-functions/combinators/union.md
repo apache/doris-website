@@ -1,7 +1,8 @@
 ---
 {
     "title": "UNION",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "将多个聚合中间结果聚合为一个。 结果的类型为 aggstate，函数签名与入参一致。"
 }
 ---
 

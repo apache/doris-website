@@ -1,7 +1,8 @@
 ---
 {
     "title": "DROP CATALOG RECYCLE BIN",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "该语句用于立即删除回收站中的数据库、表或者分区。"
 }
 ---
 

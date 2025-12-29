@@ -1,7 +1,8 @@
 ---
 {
     "title": "SORT_JSON_OBJECT_KEYS",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "SORTJSONOBJECTKEYS 函数对 JSON 对象的键进行排序。该函数接受一个 JSON 对象作为输入，并返回一个新的 JSON 对象，其中键按字典顺序排序。"
 }
 ---
 

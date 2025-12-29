@@ -1,7 +1,8 @@
 ---
 {
     "title": "STOP SYNC JOB",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "此语句通过 jobname 停止一个数据库内非停止状态的常驻数据同步作业。"
 }
 ---
 

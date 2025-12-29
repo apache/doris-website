@@ -1,7 +1,8 @@
 ---
 {
     "title": "GREATEST",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "比较多个表达式的大小，并返回其中的最大值。如果任意参数为 NULL，则返回 NULL。"
 }
 ---
 

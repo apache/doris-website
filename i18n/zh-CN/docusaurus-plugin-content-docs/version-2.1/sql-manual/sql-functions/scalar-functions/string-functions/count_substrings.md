@@ -1,7 +1,8 @@
 ---
 {
     "title": "COUNT_SUBSTRINGS",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "COUNTSUBSTRINGS 函数用于计算一个字符串中指定子串出现的次数。注意：当前实现在每次匹配到子串时，会偏移一个子串长度继续查找。例如，当 str='ccc' 且 pattern='cc' 时，返回结果为 1。"
 }
 ---
 

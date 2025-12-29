@@ -1,7 +1,8 @@
 ---
 {
-"title": "BOOL_XOR",
-"language": "en"
+    "title": "BOOL_XOR",
+    "language": "en",
+    "description": "Performs a logical XOR aggregation over all non-NULL values of the expression."
 }
 ---
 

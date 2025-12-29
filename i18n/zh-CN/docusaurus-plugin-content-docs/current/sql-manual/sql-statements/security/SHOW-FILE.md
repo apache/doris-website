@@ -1,7 +1,8 @@
 ---
 {
-  "title": "SHOW FILE",
-  "language": "zh-CN"
+    "title": "SHOW FILE",
+    "language": "zh-CN",
+    "description": "该语句用于展示一个 database 内创建的文件。"
 }
 ---
 

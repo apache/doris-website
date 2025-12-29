@@ -1,7 +1,8 @@
 ---
 {
     "title": "MINUTES_DIFF",
-    "language": "en"
+    "language": "en",
+    "description": "The MINUTESDIFF function calculates the difference in minutes between two datetime values."
 }
 ---
 

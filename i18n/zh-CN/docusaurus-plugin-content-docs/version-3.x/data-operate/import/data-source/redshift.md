@@ -1,7 +1,8 @@
 ---
 {
     "title": "Redshift",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "在迁移 Redshift 的过程中，通常需要借助对象存储作为中间媒介。核心流程如下：首先通过 Redshift 的 UNLOAD 语句将数据导出到对象存储；再利用 Doris 的 S3 Load 功能从对象存储中读取数据并导入到 Doris 中，具体可参考 S3 导入。"
 }
 ---
 

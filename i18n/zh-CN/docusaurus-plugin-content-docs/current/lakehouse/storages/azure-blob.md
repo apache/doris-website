@@ -1,7 +1,8 @@
 ---
 {
     "title": "Azure Blob",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "自 3.1.3 版本起，Doris 支持访问 Azure Blob 存储。"
 }
 ---
 

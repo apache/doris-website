@@ -1,7 +1,8 @@
 ---
 {
     "title": "ARRAY_ENUMERATE_UNIQ",
-    "language": "en"
+    "language": "en",
+    "description": "Returns an array the same size as the source array, indicating for each element what its position is among elements with the same value. For example,"
 }
 ---
 

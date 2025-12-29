@@ -1,7 +1,8 @@
 ---
 {
     "title": "查询 tablet 信息",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "获取特定 BE 节点上指定数量的 tablet 的 tablet id 和 schema hash 信息"
 }
 ---
 

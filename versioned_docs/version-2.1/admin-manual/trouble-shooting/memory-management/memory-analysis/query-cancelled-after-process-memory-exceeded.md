@@ -1,7 +1,8 @@
 ---
 {
     "title": "Query error Process Memory Not Enough",
-    "language": "en"
+    "language": "en",
+    "description": "When MEMLIMITEXCEEDED appears in the error message of the query and contains Process memory not enough,"
 }
 ---
 

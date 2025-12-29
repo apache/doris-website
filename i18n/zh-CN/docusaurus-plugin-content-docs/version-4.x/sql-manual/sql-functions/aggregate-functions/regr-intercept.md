@@ -1,7 +1,8 @@
 ---
 {
     "title": "REGR_INTERCEPT",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "REGRINTERCEPT 函数用于计算线性回归方程中的截距（y 轴截距）。它返回组内非空值对的单变量线性回归线的截距。对于非空值对，使用以下公式计算："
 }
 ---
 

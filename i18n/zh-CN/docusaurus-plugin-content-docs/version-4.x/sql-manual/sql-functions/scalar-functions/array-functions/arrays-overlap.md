@@ -1,7 +1,8 @@
 ---
 {
     "title": "ARRAYS_OVERLAP",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "ARRAYSOVERLAP 用于判断两个数组是否存在至少一个相同的元素，如果存在返回 true，否则返回 false。"
 }
 ---
 

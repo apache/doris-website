@@ -1,7 +1,11 @@
 ---
 {
-    "title": "TIMESTAMP",
-    "language": "zh-CN"
+    "title": "TIMESTAMP | String Functions",
+    "language": "zh-CN",
+    "draft": true,
+    "sidebar_label": "TIMESTAMP"
 }
 ---
+
+# TIMESTAMP
 

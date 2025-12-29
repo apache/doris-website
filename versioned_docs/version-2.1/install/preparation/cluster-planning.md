@@ -1,7 +1,8 @@
 ---
 {
-"title": "Cluster Planning",
-"language": "en"
+    "title": "Cluster Planning",
+    "language": "en",
+    "description": "Doris instances communicate over the network, and their proper functioning requires the following ports to be available."
 }
 ---
 

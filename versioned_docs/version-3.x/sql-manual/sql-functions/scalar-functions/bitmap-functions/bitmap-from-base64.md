@@ -1,7 +1,8 @@
 ---
 {
     "title": "BITMAP_FROM_BASE64",
-    "language": "en"
+    "language": "en",
+    "description": "Convert a base64 string (which can be converted by bitmaptobase64 function) to a BITMAP. Returns NULL when the input string is invalid."
 }
 ---
 

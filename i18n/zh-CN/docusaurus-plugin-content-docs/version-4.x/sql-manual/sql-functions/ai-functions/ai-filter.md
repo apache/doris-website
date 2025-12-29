@@ -1,7 +1,8 @@
 ---
 {
     "title": "AI_FILTER",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "根据给定条件对文本进行过滤"
 }
 ---
 

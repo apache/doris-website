@@ -1,7 +1,8 @@
 ---
 {
-"title": "HUDI_META",
-"language": "zh-CN"
+    "title": "HUDI_META",
+    "language": "zh-CN",
+    "description": "hudimeta 表函数（table-valued-function,tvf），可以用于读取 hudi 表的各类元数据信息，如操作历史、表的时间线、文件元数据等。"
 }
 ---
 

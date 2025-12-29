@@ -1,7 +1,8 @@
 ---
 {
     "title": "ARRAY_SLICE",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "指定起始位置和长度，从一个数组中提取一部分元素，形成一个新的子数组"
 }
 ---
 

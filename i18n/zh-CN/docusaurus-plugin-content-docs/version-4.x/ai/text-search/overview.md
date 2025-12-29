@@ -2,7 +2,8 @@
 {
     "title": "文本搜索",
     "sidebar_label": "概述",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "文本搜索用于在数据集中检索包含特定词项或短语的文档，并根据相关性对结果进行排序。"
 }
 ---
 
@@ -234,4 +235,4 @@ SHOW INDEX FROM docs;
 ### 高级主题
 
 - [自定义分析器](./custom-analyzer.md) — 构建特定领域的分词器和过滤器
-- [向量搜索](../vector-search.md) — 使用嵌入向量进行语义相似度搜索
+- [向量搜索](../vector-search/overview.md) — 使用嵌入向量进行语义相似度搜索

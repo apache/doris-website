@@ -1,7 +1,8 @@
 ---
 {
-  "title": "FRONTENDS",
-  "language": "zh-CN"
+    "title": "FRONTENDS",
+    "language": "zh-CN",
+    "description": "表函数，生成 frontends 临时表，可以查看当前 doris 集群中的 FE 节点信息。"
 }
 ---
 
@@ -18,7 +19,7 @@ FRONTENDS()
 
 | 权限（Privilege） | 对象（Object） | 说明（Notes） |
 | :----------------|:-----------| :------------ |
-| ADMIN_PRIV       | 全局         |               |
+| SELECT_PRIV | internal.information_schema | 所有用户默认有该 db 的权限 |
 
 ## 返回值
 | Field                  | Description                                         |

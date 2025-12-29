@@ -1,7 +1,8 @@
 ---
 {
     "title": "RUNNING_DIFFERENCE",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "计算数据块中连续行值的差值。该函数的结果取决于受影响的数据块和块中数据的顺序。"
 }
 ---
 

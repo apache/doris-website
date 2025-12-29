@@ -1,7 +1,8 @@
 ---
 {
-"title": "联邦认证",
-"language": "zh-CN"
+    "title": "联邦认证",
+    "language": "zh-CN",
+    "description": "接入第三方 LDAP 服务为 Doris 提供验证登录和组授权服务。"
 }
 ---
 
@@ -78,7 +79,7 @@ DLAP 用户 dn 是 LDAP 组节点的“member”属性则 Doris 认为用户属�
 
 举例：
 
-LDAP 用户 dn 是 LDAP 组节点的 `member` 属性则认为用户属于该组，Doris 会截取组 dn 的第一个 Rdn 作为组名。
+LDAP 组节点的 `member` 属性包含LDAP 用户的 dn ，则认为用户属于该组，Doris 会截取组 dn 的第一个 Rdn 作为组名。
 
 例如用户 dn 为 `uid=jack,ou=aidp,dc=domain,dc=com`，组信息如下：
 
@@ -98,7 +99,7 @@ member: uid=jack,ou=aidp,dc=domain,dc=com
 > 若想让 user2 属于 group2，需要在 group2 的 member 属性中添加 user2
 ### LDAP 示例
 #### 更改 Doris 配置
-1. 在 fe/conf/fe.conf 文件中配置认证方式为 ldap authentication_type=ldap。
+1. 在 fe/conf/fe.conf 文件中配置认证方式为 ldap：`authentication_type=ldap`。
 2. 在 fe/conf/ldap.conf 文件中配置 LDAP 基本信息，
 3. 设置 LDAP 管理员密码：配置好 ldap.conf 文件后启动 fe，使用 root 或 admin 账号登录 Doris，执行 sql
 
@@ -148,7 +149,7 @@ set ldap_admin_password = password('ldap_admin_password');
 #### LDAP 名词解释
 
 - dc(Domain Component): 可以理解为一个组织的域名，作为树的根结点
-- dn(Distinguished Name): 相当于唯一名称，例如 user1 的 dn 为 cn=user1,ou=ou1,dc=example,dc=com user2 的 dn 为 cn=user2,cn=group2,ou=ou2,dc=example,dc=com
+- dn(Distinguished Name): 相当于唯一名称，例如 user1 的 dn 为 `cn=user1,ou=ou1,dc=example,dc=com` user2 的 dn 为 `cn=user2,cn=group2,ou=ou2,dc=example,dc=com`
 - rdn(Relative Distinguished Name): dn 的一部分，user1 的四个 rdn 为 cn=user1 ou=ou1 dc=example 和 dc=com
 - ou(Organization Unit): 可以理解为子组织，user 可以放在 ou 中，也可以直接放在 example.com 域中
 - cn(common name):名字

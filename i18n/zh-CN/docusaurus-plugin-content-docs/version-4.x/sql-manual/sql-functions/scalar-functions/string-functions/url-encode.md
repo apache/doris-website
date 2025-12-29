@@ -1,7 +1,8 @@
 ---
 {
     "title": "URL_ENCODE",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "使用 UTF-8 编码完成所提供文本的 URL 编码。通常用于对作为 URL 的一部分传递的参数信息进行编码"
 }
 ---
 

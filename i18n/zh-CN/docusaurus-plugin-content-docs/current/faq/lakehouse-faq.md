@@ -1,7 +1,8 @@
 ---
 {
     "title": "常见数据湖问题",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "通常是因为 Kerberos 认证信息填写不正确导致的，可以通过以下步骤排查："
 }
 ---
 

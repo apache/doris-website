@@ -1,7 +1,8 @@
 ---
 {
     "title": "TPC-H Benchmark",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "TPC-H 是一个决策支持基准（Decision Support Benchmark），它由一套面向业务的特别查询和并发数据修改组成。查询和填充数据库的数据具有广泛的行业相关性。这个基准测试演示了检查大量数据、执行高度复杂的查询并回答关键业务问题的决策支持系统。"
 }
 ---
 

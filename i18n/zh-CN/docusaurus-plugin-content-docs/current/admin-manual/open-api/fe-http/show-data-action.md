@@ -1,7 +1,8 @@
 ---
 {
     "title": "Show Data Action",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "用于获取集群的总数据量，或者指定数据库的数据量。单位字节。"
 }
 ---
 

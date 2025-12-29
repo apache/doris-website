@@ -1,7 +1,8 @@
 ---
 {
     "title": "BITMAP_TO_ARRAY",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "将一个 Bitmap 转化成一个 Array 数组。"
 }
 ---
 

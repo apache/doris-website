@@ -1,7 +1,8 @@
 ---
 {
     "title": "CONVERT_TO",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "将指定的 VARCHAR 列的字符编码转换为目标字符集，常用于 ORDER BY 子句中对包含中文的列进行按拼音排序。当前仅支持将 <character> 转换为 'gbk' 编码。"
 }
 ---
 

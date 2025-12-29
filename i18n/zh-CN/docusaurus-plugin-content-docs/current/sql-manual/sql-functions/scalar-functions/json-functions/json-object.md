@@ -1,7 +1,8 @@
 ---
 {
     "title": "JSON_OBJECT",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "生成一个包含指定 Key-Value 对的 json object, 当 Key 值为 NULL 或者传入参数为奇数个时，返回异常错误。"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "MONTHS_DIFF",
-    "language": "en"
+    "language": "en",
+    "description": "The MONTHSDIFF function calculates the number of complete months between two dates."
 }
 ---
 

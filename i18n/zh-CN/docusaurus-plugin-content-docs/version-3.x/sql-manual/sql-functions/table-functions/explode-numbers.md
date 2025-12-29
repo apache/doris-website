@@ -1,7 +1,8 @@
 ---
 {
     "title": "EXPLODE_NUMBERS",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "explodenumbers 表函数，接受一个整数 n，将范围的所有数字展开为多行，每行一个数字。常用于生成连续数字的序列，配合 LATERAL VIEW 使用。"
 }
 ---
 

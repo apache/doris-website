@@ -1,7 +1,8 @@
 ---
 {
     "title": "转换为 TIME 类型",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "Time 类型的合法范围为 [-838:59:59.999999, 838:59:59.999999]。"
 }
 ---
 

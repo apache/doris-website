@@ -95,6 +95,10 @@
     "message": "文本搜索",
     "description": "The label for category Text Search in sidebar docs"
   },
+  "sidebar.docs.category.Vector Search": {
+    "message": "向量搜索",
+    "description": "The label for category Vector Search in sidebar docs"
+  },
   "sidebar.docs.category.Inverted Index": {
     "message": "倒排索引",
     "description": "The label for category Inverted Index in sidebar docs"

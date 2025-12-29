@@ -1,7 +1,8 @@
 ---
 {
     "title": "PERCENTILE_APPROX",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "PERCENTILEAPPROX 函数用于计算近似百分位数，主要用于大数据集的场景。与 PERCENTILE 函数相比，它具有以下特点："
 }
 ---
 

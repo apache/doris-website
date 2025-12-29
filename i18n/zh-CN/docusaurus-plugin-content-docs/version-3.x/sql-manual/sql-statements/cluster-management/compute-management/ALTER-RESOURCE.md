@@ -1,7 +1,8 @@
 ---
 {
-"title": "ALTER RESOURCE",
-"language": "zh-CN"
+    "title": "ALTER RESOURCE",
+    "language": "zh-CN",
+    "description": "该语句用于修改一个已有的资源。仅 root 或 admin 用户可以修改资源。"
 }
 ---
 

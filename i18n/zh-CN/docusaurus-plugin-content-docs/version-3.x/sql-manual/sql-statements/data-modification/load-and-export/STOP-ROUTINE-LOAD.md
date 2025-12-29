@@ -1,7 +1,8 @@
 ---
 {
     "title": "STOP ROUTINE LOAD",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "该语法用于停止一个 Routine Load 作业。被停止的作业无法再重新运行，这与 PAUSE 命令不同。如果需要重新导入数据，需要创建新的导入作业。"
 }
 ---
 

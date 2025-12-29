@@ -1,7 +1,8 @@
 ---
 {
     "title": "SUBSTRING",
-    "language": "en"
+    "language": "en",
+    "description": "The SUBSTRING function is used to extract a substring from a string. You can specify the starting position and length,"
 }
 ---
 

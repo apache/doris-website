@@ -1,7 +1,8 @@
 ---
 {
     "title": "Export",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "本文档将介绍如何使用EXPORT命令导出 Doris 中存储的数据。"
 }
 ---
 

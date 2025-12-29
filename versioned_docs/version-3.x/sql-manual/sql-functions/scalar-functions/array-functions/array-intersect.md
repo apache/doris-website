@@ -1,7 +1,8 @@
 ---
 {
     "title": "ARRAY_INTERSECT",
-    "language": "en"
+    "language": "en",
+    "description": "Returns an array of the elements in the intersection of array1 and array2, without duplicates. If the input parameter is null, null is returned."
 }
 ---
 

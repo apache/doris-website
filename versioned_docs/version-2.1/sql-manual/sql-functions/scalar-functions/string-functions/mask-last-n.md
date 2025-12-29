@@ -1,7 +1,8 @@
 ---
 {
     "title": "MASK_LAST_N",
-    "language": "en"
+    "language": "en",
+    "description": "The MASKLASTN function is mainly used to mask the last N bytes of data to protect sensitive information,"
 }
 ---
 

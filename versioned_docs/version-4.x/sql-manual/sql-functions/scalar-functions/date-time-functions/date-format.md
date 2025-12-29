@@ -1,7 +1,8 @@
 ---
 {
     "title": "DATE_FORMAT",
-    "language": "en"
+    "language": "en",
+    "description": "The DATEFORMAT function is used to convert a date or time value into a string according to a specified format string (format)."
 }
 ---
 

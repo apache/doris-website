@@ -1,7 +1,8 @@
 ---
 {
     "title": "TOPN 查询优化",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "TOPN 查询是指下面这种 ORDER BY LIMIT 查询，在日志检索等明细查询场景中很常见，Doris 会自动对这种类型的查询进行优化。"
 }
 ---
 

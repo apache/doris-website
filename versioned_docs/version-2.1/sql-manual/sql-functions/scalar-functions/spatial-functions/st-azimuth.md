@@ -1,7 +1,8 @@
 ---
 {
     "title": "ST_AZIMUTH",
-    "language": "en"
+    "language": "en",
+    "description": "Enter two points and return the azimuth of the line segment formed by points 1 and 2."
 }
 ---
 

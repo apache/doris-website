@@ -1,7 +1,8 @@
 ---
 {
     "title": "Release 1.2.5",
-    "language": "en"
+    "language": "en",
+    "description": "In version 1.2.5, the Doris team has fixed nearly 210 issues or performance improvements since the release of version 1.2.4. At the same time,"
 }
 ---
 

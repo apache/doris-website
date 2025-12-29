@@ -1,7 +1,8 @@
 ---
 {
     "title": "SET DEFAULT STORAGE VAULT",
-    "language": "en"
+    "language": "en",
+    "description": "This statement is used to set the default storage vault in Doris. The default storage vault is used to store data for internal or system tables."
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
-   "title": "FineBI",
-   "language": "en"
+    "title": "FineBI",
+    "language": "en",
+    "description": "As a business intelligence product, FineBI has a system architecture of data processing, real-time analysis,"
 }
 ---
 

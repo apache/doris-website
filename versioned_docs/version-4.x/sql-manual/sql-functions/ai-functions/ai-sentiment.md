@@ -1,7 +1,8 @@
 ---
 {
     "title": "AI_SENTIMENT",
-    "language": "en"
+    "language": "en",
+    "description": "Used to analyze the sentiment of text."
 }
 ---
 

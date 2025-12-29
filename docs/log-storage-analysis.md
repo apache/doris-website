@@ -1,7 +1,8 @@
 ---
 {
     "title": "Log Storage and Analysis",
-    "language": "en"
+    "language": "en",
+    "description": "Logs record key events in the system and contain crucial information such as the events' subject, time, location, and content."
 }
 ---
 

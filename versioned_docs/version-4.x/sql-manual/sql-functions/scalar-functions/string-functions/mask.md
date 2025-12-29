@@ -1,7 +1,8 @@
 ---
 {
     "title": "MASK",
-    "language": "en"
+    "language": "en",
+    "description": "The MASK function is used to mask data to protect sensitive information. The default behavior is to convert uppercase letters to X,"
 }
 ---
 

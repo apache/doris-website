@@ -1,7 +1,8 @@
 ---
 {
     "title": "MAKEDATE",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "MAKEDATE 函数用于根据指定的年份和一年中的天数（dayofyear）构建并返回对应的日期。该函数通过计算 “年份的第一天 + 天数偏移” 生成结果，支持对超出当年天数的输入进行自动顺延处理。"
 }
 ---
 

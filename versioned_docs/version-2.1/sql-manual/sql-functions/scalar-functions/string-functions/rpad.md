@@ -1,7 +1,8 @@
 ---
 {
     "title": "RPAD",
-    "language": "en"
+    "language": "en",
+    "description": "Used to pad the specified character on the right side of the original string until met the specified length."
 }
 ---
 

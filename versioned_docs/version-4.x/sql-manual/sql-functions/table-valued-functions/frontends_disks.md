@@ -1,7 +1,8 @@
 ---
 {
     "title": "FRONTENDS_DISKS",
-    "language": "en"
+    "language": "en",
+    "description": "The frontendsdisks table function generates a temporary table that allows you to view the disk information of FE nodes in the current Doris cluster."
 }
 ---
 

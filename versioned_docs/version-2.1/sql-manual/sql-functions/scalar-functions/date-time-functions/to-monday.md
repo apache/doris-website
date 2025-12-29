@@ -1,7 +1,8 @@
 ---
 {
     "title": "TO_MONDAY",
-    "language": "en"
+    "language": "en",
+    "description": "Round a date or datetime down to the nearest Monday, return type is Date or DateV2. Specially, input 1970-01-01, 1970-01-02,"
 }
 ---
 

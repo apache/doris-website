@@ -1,7 +1,8 @@
 ---
 {
     "title": "EXPLODE_SPLIT_OUTER",
-    "language": "en"
+    "language": "en",
+    "description": "The explodesplitouter table function is used to split a string into multiple substrings according to the specified delimiter,"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "BITMAP_FROM_STRING",
-    "language": "en"
+    "language": "en",
+    "description": "Convert a string into a BITMAP. The string consists of a group of unsigned bigint numbers separated by commas."
 }
 ---
 

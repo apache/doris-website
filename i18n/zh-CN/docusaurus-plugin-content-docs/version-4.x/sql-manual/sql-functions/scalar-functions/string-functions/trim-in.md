@@ -1,7 +1,8 @@
 ---
 {
     "title": "TRIM_IN",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "TRIMIN 函数用于删除字符串两端的指定字符集合中的任意字符。如果不指定字符集合，默认删除空格。"
 }
 ---
 

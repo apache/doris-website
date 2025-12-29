@@ -1,7 +1,8 @@
 ---
 {
-"title": "SHA1",
-"language": "en"
+    "title": "SHA1",
+    "language": "en",
+    "description": "Use the SHA1 algorithm to digest the information."
 }
 ---
 

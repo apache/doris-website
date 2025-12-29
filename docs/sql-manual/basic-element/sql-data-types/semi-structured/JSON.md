@@ -1,9 +1,13 @@
 ---
 {
-    "title": "JSON",
-    "language": "en"
+    "title": "JSON | Semi Structured",
+    "language": "en",
+    "description": "JSON (JavaScript Object Notation) is an open standard file format and data interchange format that uses human-readable text to store and transmit ",
+    "sidebar_label": "JSON"
 }
 ---
+
+# JSON
 
 ## JSON Introduction
 
@@ -83,10 +87,131 @@ Doris JSONB supports all standard JSON types. The main difference is that Doris 
 - Comparison and Arithmetic:
   - JSONB columns cannot be directly compared with other data types (including other JSONB columns) or used in arithmetic operations.
   - Solution: Use JSON_EXTRACT function to extract scalar values (like INT, DOUBLE, STRING, BOOLEAN) from JSONB, then convert them to the corresponding native Doris types for comparison or calculation.
-- Sorting and Grouping:
-  - JSONB columns do not support ORDER BY and GROUP BY operations.
+- Sorting:
+  - JSONB columns do not support ORDER BY operations.
 - Implicit Conversion:
   - Input Only: When inputting data into a JSONB column, STRING type can be implicitly converted to JSONB (provided the string content is valid JSON text). Other Doris types cannot be implicitly converted to JSONB.
+
+
+## JSON 的分组支持
+
+### Example 1: GROUP BY on JSON columns
+```sql
+mysql> SELECT * FROM test_jsonb_groupby;
++------+---------------+
+| id   | j             |
++------+---------------+
+|    1 | {"a":1,"b":2} |
+|    2 | {"a":1,"b":3} |
+|    3 | {"a":2,"b":2} |
+|    4 | {"a":2,"b":2} |
+|    5 | {"a":1,"b":2} |
+|    6 | {"a":2,"b":2} |
++------+---------------+
+6 rows in set (0.07 sec)
+
+mysql> SELECT j, COUNT(*) FROM test_jsonb_groupby GROUP BY j;
++---------------+----------+
+| j             | COUNT(*) |
++---------------+----------+
+| {"a":1,"b":3} |        1 |
+| {"a":2,"b":2} |        3 |
+| {"a":1,"b":2} |        2 |
++---------------+----------+
+```
+
+### Example 2: DISTINCT query on JSON columns
+```sql
+mysql> SELECT DISTINCT j FROM test_jsonb_groupby;
++---------------+
+| j             |
++---------------+
+| {"a":1,"b":3} |
+| {"a":2,"b":2} |
+| {"a":1,"b":2} |
++---------------+
+```
+
+### Notes
+1. **Binary Comparison**: JSON comparison is binary-based. If two JSON data are semantically identical but have different binary representations, they cannot be grouped together. For example:
+   ```sql
+   mysql> SELECT * FROM test_jsonb;
+   +------+------+
+   | id   | j    |
+   +------+------+
+   |    1 | 123  |
+   |    2 | 123  |
+   +------+------+
+
+   mysql> SELECT j, COUNT(*) FROM test_jsonb GROUP BY j;
+   +------+----------+
+   | j    | COUNT(*) |
+   +------+----------+
+   | 123  |        1 |
+   | 123  |        1 |
+   +------+----------+
+   ```
+
+   This is because the first `123` is of type `BIGINT`, while the second `123` is of type `TINYINT`, resulting in different binary representations. You can verify their types with the following query:
+   ```sql
+   mysql> SELECT j, json_type(j, '$') FROM test_jsonb;
+   +------+------------------+
+   | j    | json_type(j, '$') |
+   +------+------------------+
+   | 123  | bigint           |
+   | 123  | int              |
+   +------+------------------+
+   ```
+
+   Similarly, JSON objects with different key orders cannot be grouped together. For example:
+   ```sql
+   mysql> SELECT * FROM test_jsonb;
+   +------+---------------+
+   | id   | j             |
+   +------+---------------+
+   |    2 | {"b":2,"a":1} |
+   |    1 | {"a":1,"b":2} |
+   +------+---------------+
+
+   mysql> SELECT j, COUNT(*) FROM test_jsonb GROUP BY j;
+   +---------------+----------+
+   | j             | COUNT(*) |
+   +---------------+----------+
+   | {"b":2,"a":1} |        1 |
+   | {"a":1,"b":2} |        1 |
+   +---------------+----------+
+   ```
+
+2. **Numeric Type Consistency**: To ignore numeric type differences, use the `NORMALIZE_JSON_NUMBERS_TO_DOUBLE` function to convert all numbers in JSON to `DOUBLE` type:
+   ```sql
+   mysql> SELECT NORMALIZE_JSON_NUMBERS_TO_DOUBLE(j), COUNT(*) 
+          FROM test_jsonb 
+          GROUP BY NORMALIZE_JSON_NUMBERS_TO_DOUBLE(j);
+   +-------------------------------------+----------+
+   | NORMALIZE_JSON_NUMBERS_TO_DOUBLE(j) | COUNT(*) |
+   +-------------------------------------+----------+
+   | 123                                 |        2 |
+   +-------------------------------------+----------+
+   ```
+   When JSON objects are created via text parsing (e.g., using CAST to convert strings to JSON), Doris automatically selects the appropriate numeric type for storage, so numeric type inconsistencies are generally not an issue.
+
+3. **Key Order Consistency**:
+   Use the `SORT_JSON_OBJECT_KEYS` function to sort keys:
+   ```sql
+   mysql> SELECT SORT_JSON_OBJECT_KEYS(j), COUNT(*) 
+          FROM test_jsonb 
+          GROUP BY SORT_JSON_OBJECT_KEYS(j);
+   +--------------------------+----------+
+   | SORT_JSON_OBJECT_KEYS(j) | COUNT(*) |
+   +--------------------------+----------+
+   | {"a":1,"b":2}            |        2 |
+   +--------------------------+----------+
+   ```
+
+   When JSON objects are created via text parsing (e.g., using CAST to convert strings to JSON), Doris preserves the key order in the text. Therefore, if your JSONB data is created via text parsing, you won't encounter the above grouping issues.
+
+### Recommendations
+If you cannot ensure numeric type or key order consistency in JSON data, it is recommended to preprocess the data using `NORMALIZE_JSON_NUMBERS_TO_DOUBLE` and `SORT_JSON_OBJECT_KEYS` functions before performing `GROUP BY` operations to ensure expected results.
 
 ### Syntax
 
@@ -130,7 +255,7 @@ SELECT CAST(json_extract(json_column_name, '$.k1') AS INT) FROM table_name;
 ```
 
 :::tip
-The JSON type currently cannot be used for `GROUP BY`, `ORDER BY`, or comparison operations.
+The JSON type currently cannot be used for `ORDER BY`, or comparison operations.
 :::
 
 ## JSON Input
@@ -1104,4 +1229,5 @@ The `GET_JSON_XXX` functions are designed for use on string types — they extra
 
 ### keywords
 JSONB, JSON, json_parse, json_parse_error_to_null, json_parse_error_to_value, json_extract, json_extract_isnull, json_extract_bool, json_extract_int, json_extract_bigint, json_extract_double, json_extract_string, json_exists_path, json_type
+
 

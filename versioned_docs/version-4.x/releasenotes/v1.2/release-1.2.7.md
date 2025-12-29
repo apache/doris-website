@@ -1,7 +1,8 @@
 ---
 {
     "title": "Release 1.2.7",
-    "language": "en"
+    "language": "en",
+    "description": "Bug Fixes:Fixed some query issues."
 }
 ---
 

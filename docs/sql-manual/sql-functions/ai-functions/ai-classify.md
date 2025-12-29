@@ -1,7 +1,8 @@
 ---
 {
     "title": "AI_CLASSIFY",
-    "language": "en"
+    "language": "en",
+    "description": "Used to classify text into a specified set of labels."
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
-  "title": "BACKENDS",
-  "language": "en"
+    "title": "BACKENDS",
+    "language": "en",
+    "description": "The table function generates the backends temporary table, and you can view the BE node information in the current doris cluster."
 }
 ---
 
@@ -18,7 +19,7 @@ BACKENDS()
 
 | Privilege  | Object | Notes |
 | :--------- |:-------|:------|
-| ADMIN_PRIV | global |       |
+| SELECT_PRIV | internal.information_schema | All users have permissions to this database by default |
 
 ## Return Value
 | Field                       | Description                                                                                                            |

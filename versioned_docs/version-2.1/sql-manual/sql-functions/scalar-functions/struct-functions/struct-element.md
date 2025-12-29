@@ -1,7 +1,8 @@
 ---
 {
     "title": "STRUCT_ELEMENT",
-    "language": "en"
+    "language": "en",
+    "description": "Return a specific field within a data column of a struct."
 }
 ---
 

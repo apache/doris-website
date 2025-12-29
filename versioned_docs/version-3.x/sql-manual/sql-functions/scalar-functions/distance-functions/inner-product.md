@@ -1,7 +1,8 @@
 ---
 {
     "title": "INNER_PRODUCT",
-    "language": "en"
+    "language": "en",
+    "description": "Computes the scalar product of two vectors of the same size"
 }
 ---
 

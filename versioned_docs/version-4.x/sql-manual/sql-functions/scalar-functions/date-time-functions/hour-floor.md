@@ -1,7 +1,8 @@
 ---
 {
     "title": "HOUR_FLOOR",
-    "language": "en"
+    "language": "en",
+    "description": "The hourfloor function rounds down the input datetime value to the nearest moment of the specified hour period. For example, if the period is 5 hours,"
 }
 ---
 

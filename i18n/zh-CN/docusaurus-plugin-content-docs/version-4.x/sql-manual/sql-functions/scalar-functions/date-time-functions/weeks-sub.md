@@ -1,7 +1,8 @@
 ---
 {
     "title": "WEEKS_SUB",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "WEEKSSUB 函数用于在指定的日期或时间值上减少（或增加）指定数量的周数，返回调整后的日期或时间（本质是减去 weeksvalue × 7 天）。支持处理 DATE、DATETIME 类型。"
 }
 ---
 

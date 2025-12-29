@@ -1,9 +1,13 @@
 ---
 {
-    "title": "TO_ISO8601",
-    "language": "en"
+    "title": "TO_ISO8601 | Date Time Functions",
+    "language": "en",
+    "description": "Converts a datetime value to an ISO8601 formatted string.",
+    "sidebar_label": "TO_ISO8601"
 }
 ---
+
+# TO_ISO8601
 
 ## Description
 
@@ -38,3 +42,4 @@ SELECT TO_ISO8601('2020-01-01 12:30:45');
 | 2020-01-01T12:30:45                 |
 +-------------------------------------+
 ```
+

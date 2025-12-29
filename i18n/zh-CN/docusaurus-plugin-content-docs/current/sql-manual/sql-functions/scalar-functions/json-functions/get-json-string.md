@@ -1,7 +1,8 @@
 ---
 {
     "title": "GET_JSON_STRING",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "函数 JSONEXTRACTSTRING 的别名。"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "LN",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "返回以e为底的x的自然对数。"
 }
 ---
 

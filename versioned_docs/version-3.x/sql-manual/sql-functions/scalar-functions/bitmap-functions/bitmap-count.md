@@ -1,7 +1,8 @@
 ---
 {
     "title": "BITMAP_COUNT",
-    "language": "en"
+    "language": "en",
+    "description": "Count the number of elements in the input BITMAP"
 }
 ---
 

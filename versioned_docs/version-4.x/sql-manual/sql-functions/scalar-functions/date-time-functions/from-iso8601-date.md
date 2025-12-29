@@ -1,9 +1,14 @@
 ---
 {
-    "title": "FROM_ISO8601_DATE",
-    "language": "en"
+    "title": "FROM_ISO8601_DATE | Date Time Functions",
+    "language": "en",
+    "description": "Converts an ISO8601 formatted date expression to a DATE type date expression. Date strings conforming to the ISO 8601 standard,",
+    "sidebar_label": "FROM_ISO8601_DATE"
 }
 ---
+
+# FROM_ISO8601_DATE
+
 ## Description
 
 Converts an ISO8601 formatted date expression to a DATE type date expression.

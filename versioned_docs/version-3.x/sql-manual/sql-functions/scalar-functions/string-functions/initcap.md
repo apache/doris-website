@@ -1,7 +1,8 @@
 ---
 {
     "title": "INITCAP",
-    "language": "en"
+    "language": "en",
+    "description": "Capitalizes the first letter of the word contained in the parameter and converts the rest of the letters to lowercase."
 }
 ---
 

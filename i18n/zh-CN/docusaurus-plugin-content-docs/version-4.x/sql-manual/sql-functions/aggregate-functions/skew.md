@@ -1,7 +1,8 @@
 ---
 {
     "title": "SKEW,SKEW_POP,SKEWNESS",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "返回表达式的 斜度。 用来计算斜度的公式是 3阶中心矩 / ((方差)^{1.5})。"
 }
 ---
 

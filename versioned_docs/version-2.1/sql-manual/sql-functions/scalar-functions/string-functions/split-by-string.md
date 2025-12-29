@@ -1,7 +1,8 @@
 ---
 {
     "title": "SPLIT_BY_STRING",
-    "language": "en"
+    "language": "en",
+    "description": "Split the input string into a string array according to the specified string."
 }
 ---
 

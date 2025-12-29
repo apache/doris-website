@@ -1,7 +1,8 @@
 ---
 {
     "title": "Trace",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "本文介绍可观测性核心数据之一 Trace 的存储分析实践，可观测性整体方案介绍请参考概述，资源评估、集群部署和优化可以参考 Log。"
 }
 ---
 

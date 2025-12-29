@@ -1,6 +1,11 @@
 ---
 {
-    "title": "WEEK_CEIL",
-    "language": "zh-CN"
+    "title": "WEEK_CEIL | String Functions",
+    "language": "zh-CN",
+    "draft": true,
+    "sidebar_label": "WEEK_CEIL"
 }
 ---
+
+# WEEK_CEIL
+

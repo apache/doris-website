@@ -1,7 +1,8 @@
 ---
 {
     "title": "SHOW FRONTENDS",
-    "language": "en"
+    "language": "en",
+    "description": "This statement is used to view the basic status information of the FE nodes."
 }
 ---
 
@@ -45,7 +46,7 @@ The user who executes this SQL must have at least the following permissions:
 
 | Privilege  | Object | Notes |
 |------------|----|----|
-| ADMIN_PRIV |    |    |
+| SELECT_PRIV | internal.information_schema | All users have permissions to this database by default |
 
 ## Usage Notes
 

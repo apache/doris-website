@@ -1,7 +1,8 @@
 ---
 {
     "title": "ARRAY_ZIP",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "将所有数组合并成一个单一的数组。结果数组包含源数组中按参数列表顺序分组的相应元素。"
 }
 ---
 

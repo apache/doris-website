@@ -1,7 +1,8 @@
 ---
 {
     "title": "Full Text Search Operators",
-    "language": "en"
+    "language": "en",
+    "description": "Full-text search operators determine whether a column meets specified full-text search conditions (keywords, phrases, etc.), with results being TRUE,"
 }
 ---
 

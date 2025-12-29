@@ -1,7 +1,8 @@
 ---
 {
     "title": "BIT_LENGTH",
-    "language": "en"
+    "language": "en",
+    "description": "返回字符串或二进制值的位长度（实际长度就是字节数 8。）。"
 }
 ---
 

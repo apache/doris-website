@@ -1,7 +1,8 @@
 ---
 {
     "title": "EXPLODE",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "explode 函数接受一个数组，会将数组的每个元素映射为单独的行。通常与 LATERAL VIEW 配合使用，以将嵌套数据结构展开为标准的平面表格式。explode 和 explodeouter 区别主要在于空值处理。"
 }
 ---
 

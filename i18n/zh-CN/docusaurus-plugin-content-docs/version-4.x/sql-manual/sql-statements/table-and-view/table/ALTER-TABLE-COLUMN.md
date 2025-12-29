@@ -1,7 +1,8 @@
 ---
 {
     "title": "ALTER TABLE COLUMN",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "该语句用于对已有 table 进行 Schema change 操作。schema change 是异步的，任务提交成功则返回，之后可使用SHOW ALTER TABLE COLUMN 命令查看进度。"
 }
 ---
 

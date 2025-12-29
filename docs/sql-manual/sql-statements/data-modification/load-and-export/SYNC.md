@@ -1,7 +1,8 @@
 ---
 {
     "title": "SYNC",
-    "language": "en"
+    "language": "en",
+    "description": "This statement is used to synchronize metadata for non-master Frontend (FE) nodes. In Apache Doris, only the master FE node can write metadata,"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "LENGTH",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "返回字符串的字节数。"
 }
 ---
 

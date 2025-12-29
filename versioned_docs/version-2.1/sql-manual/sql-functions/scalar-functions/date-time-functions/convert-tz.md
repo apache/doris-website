@@ -1,7 +1,8 @@
 ---
 {
     "title": "CONVERT_TZ",
-    "language": "en"
+    "language": "en",
+    "description": "Converts a datetime value from the time zone specified by fromtz to the time zone specified by totz, and returns the resulting value. Special cases:"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "ROW_NUMBER",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "ROWNUMBER() 是一个窗口函数，用于为分区内的每一行分配一个唯一的序号。序号从 1 开始连续递增。与 RANK() 和 DENSERANK() 不同，ROWNUMBER() 即使对于相同的值也会分配不同的序号，确保每行都有唯一的编号。 如果未显示指定窗口，"
 }
 ---
 

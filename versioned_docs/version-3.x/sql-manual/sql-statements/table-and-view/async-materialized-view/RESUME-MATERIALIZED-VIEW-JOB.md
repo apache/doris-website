@@ -1,7 +1,8 @@
 ---
 {
     "title": "RESUME MATERIALIZED VIEW",
-    "language": "en"
+    "language": "en",
+    "description": "This statement is used to temporarily restore the scheduled scheduling of materialized views"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "SHOW LOAD WARNINGS",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "如果导入任务失败且错误信息为 ETLQUALITYUNSATISFIED，则说明存在导入质量问题，如果想看到这些有质量问题的导入任务，该语句就是完成这个操作的。"
 }
 ---
 

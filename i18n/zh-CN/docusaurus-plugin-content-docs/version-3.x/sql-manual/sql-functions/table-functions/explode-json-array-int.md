@@ -1,7 +1,8 @@
 ---
 {
-"title": "EXPLODE_JSON_ARRAY_INT",
-"language": "zh-CN"
+    "title": "EXPLODE_JSON_ARRAY_INT",
+    "language": "zh-CN",
+    "description": "explodejsonarrayint 表函数，接受一个 JSON 数组，其中每个元素是整数类型，将该 JSON 数组中的每个整数展开为多行，每行包含一个整数。配合 LATERAL VIEW 使用。"
 }
 ---
 

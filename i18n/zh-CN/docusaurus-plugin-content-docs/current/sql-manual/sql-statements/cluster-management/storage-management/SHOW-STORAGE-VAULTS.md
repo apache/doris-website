@@ -1,7 +1,8 @@
 ---
 {
     "title": "SHOW STORAGE VAULTS",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "SHOW STORAGE VAULTS 命令用于显示系统中配置的所有 storage vault 的信息。storage vault 用于管理数据外部存储位置。"
 }
 ---
 

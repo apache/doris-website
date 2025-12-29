@@ -1,7 +1,8 @@
 ---
 {
     "title": "TPC-DS Benchmark",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "TPC-DS (Transaction Processing Performance Council Decision Support Benchmark) is a benchmark test that focuses on decision support and aims to "
 }
 ---
 
@@ -182,7 +183,7 @@ The test results are as follows:
 
 ## 6. Environmental Preparation
 
-Please refer to the [official document](../../../docs/install/deploy-manually/integrated-storage-compute-deploy-manually) to install and deploy Doris to obtain a normal running Doris cluster (at least 1 FE 1 BE, 1 FE 3 BE is recommended).
+Please refer to the [official document](../install/deploy-manually/integrated-storage-compute-deploy-manually) to install and deploy Doris to obtain a normal running Doris cluster (at least 1 FE 1 BE, 1 FE 3 BE is recommended).
 
 ## 7. Data Preparation
 

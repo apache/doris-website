@@ -1,7 +1,8 @@
 ---
 {
     "title": "DAY",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "获得日期中的天信息，返回值范围从 1-31。"
 }
 ---
 

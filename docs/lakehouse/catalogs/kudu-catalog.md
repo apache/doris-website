@@ -1,7 +1,8 @@
 ---
 {
     "title": "Kudu Catalog",
-    "language": "en"
+    "language": "en",
+    "description": "Kudu Catalog uses the Trino Connector compatibility framework to access Kudu tables through the Kudu Connector."
 }
 ---
 

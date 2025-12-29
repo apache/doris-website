@@ -1,7 +1,8 @@
 ---
 {
     "title": "Column Compression",
-    "language": "en_US"
+    "language": "en_US",
+    "description": "Doris adopts a columnar storage model to organize and store data,"
 }
 ---
 

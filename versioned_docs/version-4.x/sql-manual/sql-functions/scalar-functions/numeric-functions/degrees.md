@@ -1,7 +1,8 @@
 ---
 {
     "title": "DEGREES",
-    "language": "en"
+    "language": "en",
+    "description": "Input a double-precision floating-point number and convert it from radians to degrees."
 }
 ---
 

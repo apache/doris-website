@@ -1,7 +1,8 @@
 ---
 {
     "title": "FROM_DAYS",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "FROMDAYS 函数用于将一个整数天数转换为对应的日期（DATE 类型）。该函数以 “公元 1 年 1 月 1 日” 为基准（即天数 0 对应 0000-01-01），计算从基准日期开始经过指定天数后的日期。"
 }
 ---
 

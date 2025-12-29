@@ -1,7 +1,8 @@
 ---
 {
     "title": "Get FE log file",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "用户可以通过该 HTTP 接口获取 FE 的日志文件。"
 }
 ---
 

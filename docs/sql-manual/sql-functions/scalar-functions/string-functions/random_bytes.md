@@ -1,7 +1,8 @@
 ---
 {
     "title": "RANDOM_BYTES",
-    "language": "en"
+    "language": "en",
+    "description": "The RANDOMBYTES function generates a random byte sequence of specified length. The returned byte sequence is represented as a hexadecimal string."
 }
 ---
 

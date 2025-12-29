@@ -1,7 +1,8 @@
 ---
 {
     "title": "TRIM_IN",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "当没有 rhs 参数时，将参数 str 中右侧和左侧开始部分连续出现的空格去掉；当有 rhs 参数时，在字符串的两端查找并移除 rhs 字符集合中的任何字符（不考虑顺序）"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
-  "title": "SHOW ENCRYPTKEY",
-  "language": "en"
+    "title": "SHOW ENCRYPTKEY",
+    "language": "en",
+    "description": "View all custom keys under the database. If the user specifies a database, check the corresponding database,"
 }
 ---
 

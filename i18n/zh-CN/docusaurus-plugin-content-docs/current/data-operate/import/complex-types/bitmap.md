@@ -1,7 +1,8 @@
 ---
 {
     "title": "Bitmap",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "BITMAP 类型可以在 Duplicate 表、Unique 表、Aggregate 表中使用，只能作为 Key 类，无法作为 Value 列使用。在 Aggregate 表中使用 BITMAP 类型，其建表时必须使用聚合类型 BITMAPUNION。用户不需要指定长度和默认值。"
 }
 ---
 

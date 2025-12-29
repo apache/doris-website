@@ -1,7 +1,8 @@
 ---
 {
-"title": "COVAR_SAMP",
-"language": "zh-CN"
+    "title": "COVAR_SAMP",
+    "language": "zh-CN",
+    "description": "计算两个数值型变量之间的样本协方差"
 }
 ---
 

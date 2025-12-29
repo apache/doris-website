@@ -1,7 +1,8 @@
 ---
 {
     "title": "Smartbi",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "Smartbi 是软件服务、应用连接器的集合，其可以连接到多种数据源，包括 Oracle、SQL Server、MySQL 和 Doris 等，以便用户可以轻松地整合和清洗数据。借助 Smartbi 的数据建模功能，用户不仅可以创建复杂的关系模型，还能编写数据分析表达式并建立数据关系，"
 }
 ---
 

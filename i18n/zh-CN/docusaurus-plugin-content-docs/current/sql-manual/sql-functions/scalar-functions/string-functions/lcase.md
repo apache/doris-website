@@ -1,7 +1,8 @@
 ---
 {
     "title": "LCASE/LOWER",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "LCASE 函数（别名 LOWER）用于将字符串中的所有大写字母转换为小写字母。"
 }
 ---
 

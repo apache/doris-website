@@ -1,7 +1,8 @@
 ---
 {
     "title": "CANCEL BACKUP",
-    "language": "en"
+    "language": "en",
+    "description": "This statement is used to cancel an ongoing BACKUP task."
 }
 ---
 

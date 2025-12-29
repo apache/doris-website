@@ -1,7 +1,8 @@
 ---
 {
     "title": "SQL 方言转换",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "从 2.1 版本开始，Doris 可以支持多种 SQL 方言，如 Presto、Trino、Hive、PostgreSQL、Spark、Clickhouse 等等。通过这个功能，用户可以直接使用对应的 SQL 方言查询 Doris 中的数据，方便用户将原先的业务平滑的迁移到 Doris 中。"
 }
 ---
 

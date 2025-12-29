@@ -1,7 +1,8 @@
 ---
 {
     "title": "FORMAT",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "FORMAT 函数用于返回一个使用指定格式字符串和参数格式化的字符串。格式规则遵循 fmt 格式规范。"
 }
 ---
 

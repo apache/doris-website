@@ -1,7 +1,8 @@
 ---
 {
     "title": "Bootstrap Action",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "用于判断 FE 是否启动完成。当不提供任何参数时，仅返回是否启动成功。如果提供了 token 和 clusterid，则返回更多详细信息。"
 }
 ---
 

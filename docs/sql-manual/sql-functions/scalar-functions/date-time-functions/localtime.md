@@ -1,7 +1,8 @@
 ---
 {
     "title": "LOCALTIME,LOCALTIMESTAMP",
-    "language": "en"
+    "language": "en",
+    "description": "The function is used to retrieve the current system time, and the return value is of the DATETIME type."
 }
 ---
 

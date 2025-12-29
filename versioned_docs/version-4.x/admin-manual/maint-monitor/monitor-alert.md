@@ -1,7 +1,8 @@
 ---
 {
     "title": "Monitoring and alarming",
-    "language": "en"
+    "language": "en",
+    "description": "This document mainly introduces Doris's monitoring items and how to collect and display them. And how to configure alarm (TODO)"
 }
 ---
 

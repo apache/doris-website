@@ -1,7 +1,8 @@
 ---
 {
     "title": "TO_IPV6",
-    "language": "en"
+    "language": "en",
+    "description": "Convert a string form of IPv6 address to IPv6 type, which is binary equal to value returned by ipv6stringtonum."
 }
 ---
 

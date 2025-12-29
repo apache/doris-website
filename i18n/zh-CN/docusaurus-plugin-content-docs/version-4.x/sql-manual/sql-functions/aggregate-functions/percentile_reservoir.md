@@ -1,7 +1,8 @@
 ---
 {
     "title": "PERCENTILE_RESERVOIR",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "计算近似的第 p 位百分数。 该函数采用reservoir sampling算法，reservoir最大容量为8192，并使用随机数生成器进行抽样，结果是非确定性的。适用于大数据量下。 p 的值介于 0 到 1 之间，并注意这不是两数字的平均数."
 }
 ---
 

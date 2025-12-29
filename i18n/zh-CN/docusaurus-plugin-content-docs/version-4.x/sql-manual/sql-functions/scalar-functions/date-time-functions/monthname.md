@@ -1,7 +1,8 @@
 ---
 {
     "title": "MONTHNAME",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "MONTHNAME 函数用于返回日期时间值对应的英文月份名称。该函数支持处理 DATE、DATETIME 类型，返回值为完整的英文月份名称（1月 至 12月）。"
 }
 ---
 

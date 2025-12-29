@@ -1,7 +1,8 @@
 ---
 {
     "title": "Release 3.1.1",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "Apache Doris 3.1.1 是一个维护版本，重点在于关键性错误修复、性能优化和稳定性提升。此版本包含大量针对数据合并（compaction）、数据导入、查询处理和云功能的修复，使其在生产环境中更加稳健可靠。"
 }
 ---
 

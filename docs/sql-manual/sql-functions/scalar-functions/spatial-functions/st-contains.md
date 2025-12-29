@@ -1,7 +1,8 @@
 ---
 {
     "title": "ST_CONTAINS",
-    "language": "en"
+    "language": "en",
+    "description": "Determines whether one geometric shape (shape1) completely contains another geometric shape (shape2)."
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "GROUP_BIT_OR",
-    "language": "en"
+    "language": "en",
+    "description": "Performs a bitwise OR operation on all values in a single integer column or expression."
 }
 ---
 

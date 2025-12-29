@@ -1,7 +1,8 @@
 ---
 {
     "title": "NTH_VALUE",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "NTHVALUE() 是一个窗口函数，用于返回窗口分区中有序数据集的第 N 个值，当 N 超出窗口有效大小时，返回结果 NULL。"
 }
 ---
 

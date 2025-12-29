@@ -1,7 +1,8 @@
 ---
 {
     "title": "APPEND_TRAILING_CHAR_IF_ABSENT",
-    "language": "en"
+    "language": "en",
+    "description": "The APPENDTRAILINGCHARIFABSENT function ensures that a string ends with a specified character."
 }
 ---
 

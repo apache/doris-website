@@ -1,7 +1,8 @@
 ---
 {
-"title": "Generating TPC-DS on Hive/Iceberg",
-"language": "en"
+    "title": "Generating TPC-DS on Hive/Iceberg",
+    "language": "en",
+    "description": "Doris supports using the TPCDS Connector to quickly build TPCDS test sets through the Trino Connector compatible framework."
 }
 ---
 

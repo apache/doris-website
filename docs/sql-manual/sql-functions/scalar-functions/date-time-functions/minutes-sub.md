@@ -1,7 +1,8 @@
 ---
 {
     "title": "MINUTES_SUB",
-    "language": "en"
+    "language": "en",
+    "description": "The MINUTESSUB function subtracts a specified number of minutes from the input datetime value and returns the resulting new datetime value."
 }
 ---
 

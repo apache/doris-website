@@ -1,7 +1,8 @@
 ---
 {
     "title": "HEX",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "HEX 函数将输入参数转换为十六进制字符串表示形式。该函数是 MySQL 兼容函数，支持数字和字符串两种输入类型，分别采用不同的转换规则。"
 }
 ---
 

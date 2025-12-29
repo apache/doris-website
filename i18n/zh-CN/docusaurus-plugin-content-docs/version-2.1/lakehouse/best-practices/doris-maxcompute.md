@@ -1,9 +1,9 @@
 ---
 {
     "title": "从 MaxCompute 到 Doris",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "本文档介绍如何通过 MaxCompute Catalog 将阿里云 MaxCompute 中的数据快速导入到 Apache Doris 中。"
 }
-
 ---
 
 本文档介绍如何通过 [MaxCompute Catalog](../catalogs/maxcompute-catalog.md) 将阿里云 MaxCompute 中的数据快速导入到 Apache Doris 中。

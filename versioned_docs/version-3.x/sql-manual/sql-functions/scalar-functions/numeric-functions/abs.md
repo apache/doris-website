@@ -1,7 +1,8 @@
 ---
 {
     "title": "ABS",
-    "language": "en"
+    "language": "en",
+    "description": "Returns the absolute value of x"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "MURMUR_HASH3_64_V2",
-    "language": "en"
+    "language": "en",
+    "description": "Computes a 64-bit MurmurHash3 hash value."
 }
 ---
 

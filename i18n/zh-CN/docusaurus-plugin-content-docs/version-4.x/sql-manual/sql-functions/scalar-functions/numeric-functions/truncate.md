@@ -1,7 +1,8 @@
 ---
 {
     "title": "TRUNCATE",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "按照保留小数的位数 d 对 x 进行数值截取。"
 }
 ---
 

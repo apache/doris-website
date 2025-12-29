@@ -1,7 +1,8 @@
 ---
 {
     "title": "Health Action",
-    "language": "en"
+    "language": "en",
+    "description": "Returns the number of BE nodes currently surviving in the cluster and the number of BE nodes that are down."
 }
 ---
 

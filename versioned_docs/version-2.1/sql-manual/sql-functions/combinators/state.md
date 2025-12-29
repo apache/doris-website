@@ -1,7 +1,8 @@
 ---
 {
     "title": "STATE",
-    "language": "en"
+    "language": "en",
+    "description": "Returns the intermediate result of the aggregation function,"
 }
 ---
 

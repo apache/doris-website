@@ -1,7 +1,8 @@
 ---
 {
     "title": "Doris 存算分离模式部署准备",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "本文档介绍了 Apache Doris 存算分离模式的部署准备工作。存算分离架构旨在提高系统的可扩展性和性能，适用于大规模数据处理场景。"
 }
 ---
 

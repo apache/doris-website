@@ -1,7 +1,8 @@
 ---
 {
     "title": "USE",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "用于切换到指定的数据库或计算组。"
 }
 ---
 

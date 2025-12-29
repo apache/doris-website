@@ -1,11 +1,10 @@
 ---
 {
-  "title": "AutoMQ Load",
-  "language": "zh-CN"
+    "title": "AutoMQ Load",
+    "language": "zh-CN",
+    "description": "AutoMQ 是基于云重新设计的云原生 Kafka。通过将存储分离至对象存储，在保持和 Apache Kafka 100% 兼容的前提下，为用户提供高达 10 倍的成本优势以及百倍的弹性优势。通过其创新的共享存储架构，"
 }
-
 ---
-
 
 [AutoMQ](https://github.com/AutoMQ/automq) 是基于云重新设计的云原生 Kafka。通过将存储分离至对象存储，在保持和 Apache Kafka 100% 兼容的前提下，为用户提供高达 10 倍的成本优势以及百倍的弹性优势。通过其创新的共享存储架构，在保证高吞吐、低延迟的性能指标下实现了秒级分区迁移、流量自平衡、秒级自动弹性等能力。
 

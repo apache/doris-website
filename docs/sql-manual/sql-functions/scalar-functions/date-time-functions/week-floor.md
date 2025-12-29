@@ -1,7 +1,8 @@
 ---
 {
     "title": "WEEK_FLOOR",
-    "language": "en"
+    "language": "en",
+    "description": "The WEEKFLOOR function rounds down an input datetime value to the nearest specified week interval start time, with the interval unit being WEEK."
 }
 ---
 

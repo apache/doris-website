@@ -1,7 +1,8 @@
 ---
 {
     "title": "UUID_TO_INT",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "对于输入的 uuid 字符串，返回一个 int128 表示。"
 }
 ---
 

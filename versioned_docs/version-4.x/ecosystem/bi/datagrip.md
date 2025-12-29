@@ -1,7 +1,8 @@
 ---
 {
     "title": "DataGrip",
-    "language": "en"
+    "language": "en",
+    "description": "DataGrip is a powerful cross-platform database tool for relational and NoSQL databases from JetBrains."
 }
 ---
 

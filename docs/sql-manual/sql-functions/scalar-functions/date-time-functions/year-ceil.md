@@ -1,7 +1,8 @@
 ---
 {
-  "title": "YEAR_CEIL",
-  "language": "en"
+    "title": "YEAR_CEIL",
+    "language": "en",
+    "description": "The yearceil function rounds up an input datetime value to the nearest specified year interval start time, with the interval unit being year."
 }
 ---
 

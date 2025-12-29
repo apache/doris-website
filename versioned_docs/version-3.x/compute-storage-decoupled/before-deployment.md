@@ -1,7 +1,8 @@
 ---
 {
     "title": "Doris Compute-Storage Decoupled Deployment Preparation",
-    "language": "en"
+    "language": "en",
+    "description": "This document describes the deployment preparation work for the Apache Doris compute-storage decoupled mode."
 }
 ---
 

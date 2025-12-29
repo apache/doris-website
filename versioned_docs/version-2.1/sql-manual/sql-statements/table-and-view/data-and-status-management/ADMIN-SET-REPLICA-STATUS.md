@@ -1,7 +1,8 @@
 ---
 {
     "title": "ADMIN SET REPLICA STATUS",
-    "language": "en"
+    "language": "en",
+    "description": "This statement is used to set the status of a specified replica. Currently, it is only used for manually setting certain replica statuses to BAD,"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
-"title": "Query Stats Action",
-"language": "en"
+    "title": "Query Stats Action",
+    "language": "en",
+    "description": "Get or delete the statistics information of the specified catalog database or table, if it is a doris catalog, you can use defaultcluster"
 }
 ---
 

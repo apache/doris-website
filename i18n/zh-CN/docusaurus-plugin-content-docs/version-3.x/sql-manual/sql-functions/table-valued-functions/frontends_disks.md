@@ -1,7 +1,8 @@
 ---
 {
-  "title": "FRONTENDS_DISKS",
-  "language": "zh-CN"
+    "title": "FRONTENDS_DISKS",
+    "language": "zh-CN",
+    "description": "frontendsdisks 表函数会生成一个临时表，允许查看当前 Doris 集群中 FE 节点的磁盘信息。其结果基本与 show frontends disks 语句展示出的信息一致，但是 frontendsdisks() 的各个字段类型更加明确，"
 }
 ---
 
@@ -21,7 +22,7 @@ FRONTENDS_DISKS()
 
 | 权限（Privilege） | 对象（Object） | 说明（Notes） |
 | :----------------|:-----------| :------------ |
-| ADMIN_PRIV       | 全局         |               |
+| SELECT_PRIV | internal.information_schema | 所有用户默认有该 db 的权限 |
 
 ## 返回值
 查看 frontends_disks() 函数的描述字段

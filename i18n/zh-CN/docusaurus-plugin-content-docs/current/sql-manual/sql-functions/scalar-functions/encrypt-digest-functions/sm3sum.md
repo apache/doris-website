@@ -1,7 +1,8 @@
 ---
 {
-"title": "SM3SUM",
-"language": "zh-CN"
+    "title": "SM3SUM",
+    "language": "zh-CN",
+    "description": "计算 多个字符串 SM3 256-bit"
 }
 ---
 

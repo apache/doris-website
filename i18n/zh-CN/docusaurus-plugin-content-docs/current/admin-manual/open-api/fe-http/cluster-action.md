@@ -1,7 +1,8 @@
 ---
 {
     "title": "Cluster Action",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "用于获取集群 http、mysql 连接信息。"
 }
 ---
 

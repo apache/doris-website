@@ -1,7 +1,8 @@
 ---
 {
     "title": "导入概览",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "Apache Doris 提供了多种导入和集成数据的方法，您可以使用合适的导入方式从各种源将数据导入到数据库中。Apache Doris 提供的数据导入方式可以分为四类："
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "Cast to DECIMAL Type",
-    "language": "en"
+    "language": "en",
+    "description": "If the source type is nullable, returns nullable type;"
 }
 ---
 

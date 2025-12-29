@@ -1,7 +1,8 @@
 ---
 {
     "title": "TO_BASE64",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "TOBASE64 函数用于将输入的字符串转换为 Base64 编码格式。Base64 是一种基于 64 个可打印字符的编码方式，常用于在不支持二进制数据的协议中传输数据，如电子邮件、URL 参数、JSON 等。该函数遵循 RFC 4648 标准，使用标准的 Base64 字符集（A-Z, a-z,"
 }
 ---
 

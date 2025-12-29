@@ -1,7 +1,8 @@
 ---
 {
-  "title": "CREATE ENCRYPTKEY",
-  "language": "en"
+    "title": "CREATE ENCRYPTKEY",
+    "language": "en",
+    "description": "This statement creates a custom key."
 }
 ---
 

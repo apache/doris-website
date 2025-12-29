@@ -1,7 +1,8 @@
 ---
 {
     "title": "MICROSECOND",
-    "language": "en"
+    "language": "en",
+    "description": "The MICROSECOND function extracts the microsecond part (up to six digits after the decimal point) from the input datetime value,"
 }
 ---
 
@@ -67,6 +68,14 @@ SELECT MICROSECOND(CAST('1999-01-02 10:11:12' AS DATETIME(6)));
 +---------------------------------------------------------+
 |                                                       0 |
 +---------------------------------------------------------+
+
+-- When a string literal is valid for both datetime and time, prefer parsing it as time
+SELECT MICROSECOND("22:12:12.123456");
++--------------------------------+
+| MICROSECOND("22:12:12.123456") |
++--------------------------------+
+|                         123456 |
++--------------------------------+
 
 -- Input is NULL, returns NULL
 SELECT MICROSECOND(NULL);

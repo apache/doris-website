@@ -1,7 +1,8 @@
 ---
 {
     "title": "DAYOFYEAR",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "获得日期中对应当年中的哪一天。"
 }
 ---
 

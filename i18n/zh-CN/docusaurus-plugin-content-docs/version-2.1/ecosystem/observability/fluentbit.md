@@ -1,7 +1,8 @@
 ---
 {
-"title": "FluentBit",
-"language": "zh-CN"
+    "title": "FluentBit",
+    "language": "zh-CN",
+    "description": "Fluent Bit 是一个快速的日志处理器和转发器，它支持自定义输出插件将数据写入存储系统，Fluent Bit Doris Output Plugin 是输出到 Doris 的插件。"
 }
 ---
 

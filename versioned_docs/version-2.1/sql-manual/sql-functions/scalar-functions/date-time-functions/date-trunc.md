@@ -1,7 +1,8 @@
 ---
 {
     "title": "DATE_TRUNC",
-    "language": "en"
+    "language": "en",
+    "description": "Truncates the datetime according to the specified time unit."
 }
 ---
 

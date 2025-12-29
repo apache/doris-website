@@ -1,7 +1,8 @@
 ---
 {
     "title": "VARIANT",
-    "language": "en-US"
+    "language": "en-US",
+    "description": "The VARIANT type stores semi-structured JSON data. It can contain different primitive types (integers, strings, booleans, etc.),"
 }
 ---
 

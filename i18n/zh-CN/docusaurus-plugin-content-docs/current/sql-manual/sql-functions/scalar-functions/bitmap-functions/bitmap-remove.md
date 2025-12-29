@@ -1,7 +1,8 @@
 ---
 {
     "title": "BITMAP_REMOVE",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "从 Bitmap 列中删除指定的值。"
 }
 ---
 

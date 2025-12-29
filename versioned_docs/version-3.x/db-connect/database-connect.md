@@ -1,7 +1,8 @@
 ---
 {
     "title": "Connecting by MySQL Protocol",
-    "language": "en"
+    "language": "en",
+    "description": "Apache Doris adopts the MySQL network connection protocol. It is compatible with command-line tools, JDBC/ODBC drivers,"
 }
 ---
 

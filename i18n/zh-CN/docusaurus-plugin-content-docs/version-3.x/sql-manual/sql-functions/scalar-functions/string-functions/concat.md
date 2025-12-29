@@ -1,7 +1,8 @@
 ---
 {
     "title": "CONCAT",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "将多个字符串连接起来。特殊情况："
 }
 ---
 

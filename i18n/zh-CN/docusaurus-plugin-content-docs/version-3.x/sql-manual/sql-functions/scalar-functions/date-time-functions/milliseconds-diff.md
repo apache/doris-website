@@ -1,7 +1,8 @@
 ---
 {
     "title": "MILLISECONDS_DIFF",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "计算两个日期时间值之间的毫秒差值。结果为 <enddate> 减去 <startdate> 的毫秒数。"
 }
 ---
 

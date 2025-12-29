@@ -1,7 +1,8 @@
 ---
 {
     "title": "Set Config Action",
-    "language": "en"
+    "language": "en",
+    "description": "Used to dynamically set the configuration of FE. This command is passed through the ADMIN SET FRONTEND CONFIG command."
 }
 ---
 

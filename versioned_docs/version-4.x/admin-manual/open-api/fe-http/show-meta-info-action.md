@@ -1,7 +1,8 @@
 ---
 {
     "title": "Show Meta Info Action",
-    "language": "en"
+    "language": "en",
+    "description": "Used to display some metadata information"
 }
 ---
 

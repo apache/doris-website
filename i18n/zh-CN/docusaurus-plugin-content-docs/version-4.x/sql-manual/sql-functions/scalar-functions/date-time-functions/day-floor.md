@@ -1,7 +1,8 @@
 ---
 {
-  "title": "DAY_FLOOR",
-  "language": "zh-CN"
+    "title": "DAY_FLOOR",
+    "language": "zh-CN",
+    "description": "DAYFLOOR 函数用于将指定的日期或时间值向下取整（floor）到最近的指定天数周期的起点。即返回不大于输入日期时间的最大周期时刻，周期规则由 period（周期天数）和 origin（起始基准时间）共同定义。若未指定起始基准时间，默认以 0001-01-01 00:00:00 为基准计算。"
 }
 ---
 

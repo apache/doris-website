@@ -1,7 +1,8 @@
 ---
 {
     "title": "QUARTER_CEIL",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "将日期时间值向上取整到最近的指定季度周期的下个周期起点。如果指定了起始时间（origin），则以该时间为基准计算周期。"
 }
 ---
 

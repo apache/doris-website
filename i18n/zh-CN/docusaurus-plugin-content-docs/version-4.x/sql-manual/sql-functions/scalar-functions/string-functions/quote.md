@@ -1,7 +1,8 @@
 ---
 {
     "title": "QUOTE",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "QUOTE 函数用于将字符串用单引号包裹，并对内部的特殊字符进行转义，使其能够安全地用于 SQL 语句中。"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "HLL",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "HLL 是用作模糊去重，在数据量大的情况性能优于 Count Distinct。HLL 的导入需要结合 hllhash 等函数来使用。更多文档参考HLL。"
 }
 ---
 

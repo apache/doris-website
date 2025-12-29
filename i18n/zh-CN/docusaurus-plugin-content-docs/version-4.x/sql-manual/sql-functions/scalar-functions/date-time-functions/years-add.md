@@ -1,7 +1,8 @@
 ---
 {
     "title": "YEARS_ADD",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "YEARSADD 函数用于在指定的日期或时间值上增加（或减少）指定数量的年数，返回调整后的日期或时间。支持处理 DATE、DATETIME 类型，年数可为正数（增加）或负数（减少）。"
 }
 ---
 

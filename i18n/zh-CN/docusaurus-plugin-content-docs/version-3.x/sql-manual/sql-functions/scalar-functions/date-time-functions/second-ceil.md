@@ -1,7 +1,8 @@
 ---
 {
     "title": "SECOND_CEIL",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "函数用于将输入的日期时间值向上对齐到指定的秒周期边界，并返回对齐后的日期时间值。"
 }
 ---
 

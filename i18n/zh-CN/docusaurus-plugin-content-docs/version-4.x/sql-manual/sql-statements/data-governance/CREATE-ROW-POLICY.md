@@ -1,7 +1,8 @@
 ---
 {
     "title": "CREATE ROW POLICY",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "创建行安全策略，Explain 可以查看改写后的执行计划。"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "INSTALL PLUGIN",
-    "language": "en"
+    "language": "en",
+    "description": "This statement is used to install a plug-in"
 }
 ---
 

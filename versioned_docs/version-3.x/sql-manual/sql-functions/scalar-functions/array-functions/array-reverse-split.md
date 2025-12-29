@@ -1,7 +1,8 @@
 ---
 {
     "title": "ARRAY_REVERSE_SPLIT",
-    "language": "en"
+    "language": "en",
+    "description": "Returns an ARRAY type result, where the array is split according to the specified condition."
 }
 ---
 

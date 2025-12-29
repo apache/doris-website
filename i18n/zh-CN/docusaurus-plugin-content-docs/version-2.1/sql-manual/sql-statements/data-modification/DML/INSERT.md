@@ -1,7 +1,8 @@
 ---
 {
     "title": "INSERT",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "该语句是完成数据插入操作。"
 }
 ---
 

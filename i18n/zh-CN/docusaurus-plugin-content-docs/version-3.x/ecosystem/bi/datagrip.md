@@ -1,7 +1,8 @@
 ---
 {
     "title": "DataGrip",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "DataGrip 是 JetBrains 出品的适用于关系数据库和 NoSQL 数据库的强大跨平台数据库工具。"
 }
 ---
 

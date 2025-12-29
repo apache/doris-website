@@ -1,7 +1,8 @@
 ---
 {
     "title": "Release 2.0.9",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "亲爱的社区小伙伴们，Apache Doris 2.0.9 版本已正式发布。在本次版本中，有 34 位贡献者提交了约 68 个功能改进以及问题修复，欢迎大家下载体验。"
 }
 ---
 

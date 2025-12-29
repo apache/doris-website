@@ -1,7 +1,8 @@
 ---
 {
     "title": "STD,STDDEV,STDDEV_POP",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "返回 expr 表达式的标准差"
 }
 ---
 

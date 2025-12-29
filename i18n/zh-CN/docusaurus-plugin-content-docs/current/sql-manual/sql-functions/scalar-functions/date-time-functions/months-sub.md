@@ -1,7 +1,8 @@
 ---
 {
     "title": "MONTHS_SUB",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "MONTHSSUB 函数用于从输入的日期时间值中减去指定的月份数，并返回计算后的新日期时间值。该函数支持处理 DATE、DATETIME 类型，若输入负数则等效于添加对应月份数。"
 }
 ---
 

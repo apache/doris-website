@@ -1,7 +1,8 @@
 ---
 {
     "title": "TOP_LEVEL_DOMAIN",
-    "language": "en"
+    "language": "en",
+    "description": "The TOPLEVELDOMAIN function is used to extract the top-level domain from a URL. If the input URL is invalid, it returns an empty string."
 }
 ---
 

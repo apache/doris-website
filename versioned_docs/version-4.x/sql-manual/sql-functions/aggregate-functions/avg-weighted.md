@@ -1,7 +1,8 @@
 ---
 {
-"title": "AVG_WEIGHTED",
-"language": "en"
+    "title": "AVG_WEIGHTED",
+    "language": "en",
+    "description": "Calculates the weighted arithmetic mean, i.e., the result is the sum of the products of corresponding values and weights,"
 }
 ---
 

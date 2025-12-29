@@ -1,7 +1,8 @@
 ---
 {
     "title": "TPC-DS Benchmark",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "TPC-DS（Transaction Processing Performance Council Decision Support Benchmark）是一个以决策支持为重点的基准测试，旨在评估数据仓库和分析系统的性能。"
 }
 ---
 

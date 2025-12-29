@@ -1,7 +1,8 @@
 ---
 {
-  "title": "MINUTE_CEIL",
-  "language": "en"
+    "title": "MINUTE_CEIL",
+    "language": "en",
+    "description": "The minuteceil function rounds the input datetime value up to the nearest specified minute interval. If origin is specified,"
 }
 ---
 

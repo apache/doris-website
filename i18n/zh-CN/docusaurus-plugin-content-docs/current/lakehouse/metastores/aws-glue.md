@@ -1,7 +1,8 @@
 ---
 {
     "title": "AWS Glue",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "本文档介绍通过 CREATE CATALOG 使用 AWS Glue Catalog 访问 Iceberg 表 或 Hive 表 时的参数配置。"
 }
 ---
 

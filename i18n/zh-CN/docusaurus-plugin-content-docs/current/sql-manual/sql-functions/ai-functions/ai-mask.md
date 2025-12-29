@@ -1,7 +1,8 @@
 ---
 {
     "title": "AI_MASK",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "用于掩盖（mask）文本中与指定标签相关的敏感信息"
 }
 ---
 

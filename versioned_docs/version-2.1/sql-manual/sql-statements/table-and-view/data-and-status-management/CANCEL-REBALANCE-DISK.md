@@ -1,9 +1,9 @@
 ---
 {
     "title": "CANCEL REBALANCE DISK",
-    "language": "en"
+    "language": "en",
+    "description": "The CANCEL REBALANCE DISK statement is used to cancel the high-priority disk data balancing for Backend (BE) nodes."
 }
-
 ---
 
 ## Description

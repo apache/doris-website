@@ -1,7 +1,8 @@
 ---
 {
     "title": "CREATE WORKLOAD GROUP",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "该语句用于创建资源组。资源组可实现单个 be 上 cpu 资源和内存资源的隔离。"
 }
 ---
 

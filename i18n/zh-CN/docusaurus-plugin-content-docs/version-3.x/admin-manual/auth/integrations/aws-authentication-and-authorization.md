@@ -1,7 +1,8 @@
 ---
 {
     "title": "AWS 认证和鉴权",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "Doris 支持两种 AWS 认证、鉴权方式访问 AWS 服务，IAM User和Assumed Role，本文介绍如何配置这两种认证、鉴权方式的 AWS 安全凭证并通过安全凭证使用 Doris 相关的功能来访问 AWS 的服务资源。"
 }
 ---
 

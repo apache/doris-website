@@ -1,7 +1,8 @@
 ---
 {
     "title": "TO_BASE64",
-    "language": "en"
+    "language": "en",
+    "description": "The TOBASE64 function converts an input string to Base64 encoded format. Base64 is an encoding method based on 64 printable characters,"
 }
 ---
 

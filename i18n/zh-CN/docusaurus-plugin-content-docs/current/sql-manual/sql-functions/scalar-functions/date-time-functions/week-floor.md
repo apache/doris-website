@@ -1,7 +1,8 @@
 ---
 {
     "title": "WEEK_FLOOR",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "WEEKFLOOR 函数用于将输入的日期时间值向下舍入到最接近的指定周间隔的起始时间，间隔单位为 WEEK。若指定了起始参考点（origin），则以该点为基准计算间隔；否则默认以 0000-01-01 00:00:00 为参考点。"
 }
 ---
 

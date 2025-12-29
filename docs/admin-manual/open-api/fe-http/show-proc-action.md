@@ -1,7 +1,8 @@
 ---
 {
     "title": "Show Proc Action",
-    "language": "en"
+    "language": "en",
+    "description": "Used to obtain PROC information."
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "RESUME ROUTINE LOAD",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "该语法用于重启一个或所有被暂停的 Routine Load 作业。重启的作业，将继续从之前已消费的 offset 继续消费。"
 }
 ---
 

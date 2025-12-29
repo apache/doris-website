@@ -1,7 +1,8 @@
 ---
 {
     "title": "KURT,KURT_POP,KURTOSIS",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "KURTOSIS 函数用于计算数据的峰度值。此函数使用的公式为 第四阶中心矩 / (方差的平方) - 3。"
 }
 ---
 

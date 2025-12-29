@@ -1,18 +1,19 @@
 ---
 {
     "title": "All Releases",
-    "language": "en"
+    "language": "en",
+    "description": "This document presents a summary of Apache Doris versions released within one year, listed in reverse chronological order."
 }
 ---
 
 This document presents a summary of Apache Doris versions released within one year, listed in reverse chronological order.
 
 :::tip Latest Release
-🎉 Version 4.0.0 is released. Check out the 🔗[Release Notes](../releasenotes/v4.0/release-4.0.0) here. Apache Doris 4.0 takes a major step forward with new AI support (vector search, AI Functions) and better full-text search capabilities. These upgrades help users stay ahead in the AI and agent era, enabling companies to handle everything from traditional BI analysis to AI-driven workloads.
+🎉 Version 4.0.2 is released. Check out the 🔗[Release Notes](../releasenotes/v4.0/release-4.0.2) here. Apache Doris 4.0 takes a major step forward with new AI support (vector search, AI Functions) and better full-text search capabilities. These upgrades help users stay ahead in the AI and agent era, enabling companies to handle everything from traditional BI analysis to AI-driven workloads.
 
 <br />
 
-🎉 Version 3.1.1 is released. Check out the 🔗[Release Notes](../releasenotes/v3.1/release-3.1.1) here. Doris 3.1 introduces a sparse column and schema template for the VARIANT data type, making it more efficient to store and query large datasets with dynamic fields, such as logs and JSON data. For lakehouse capabilities, it enhances asynchronous materialized views and expands support for Iceberg and Paimon to build a stronger bridge between data lakes and data warehouses.
+🎉 Version 3.1.3 is released. Check out the 🔗[Release Notes](../releasenotes/v3.1/release-3.1.3) here. Doris 3.1 introduces a sparse column and schema template for the VARIANT data type, making it more efficient to store and query large datasets with dynamic fields, such as logs and JSON data. For lakehouse capabilities, it enhances asynchronous materialized views and expands support for Iceberg and Paimon to build a stronger bridge between data lakes and data warehouses.
 
 <br />
 
@@ -26,6 +27,16 @@ This document presents a summary of Apache Doris versions released within one ye
 
 
 <br />
+
+- [2025-12-15, Apache Doris 4.0.2 is released](../releasenotes/v4.0/release-4.0.2.md)
+
+- [2025-11-24, Apache Doris 3.1.3 is released](../releasenotes/v3.1/release-3.1.3.md)
+
+- [2025-11-08, Apache Doris 4.0.1 is released](../releasenotes/v4.0/release-4.0.1.md)
+
+- [2025-10-27, Apache Doris 3.1.2 is released](../releasenotes/v3.1/release-3.1.2.md)
+
+- [2025-10-14, Apache Doris 4.0.0 is released](../releasenotes/v4.0/release-4.0.0.md)
 
 - [2025-09-26, Apache Doris 3.1.1 is released](../releasenotes/v3.1/release-3.1.1.md)
 

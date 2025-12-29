@@ -1,7 +1,8 @@
 ---
 {
     "title": "ARRAY_SIZE",
-    "language": "en"
+    "language": "en",
+    "description": "Count the number of elements in an array"
 }
 ---
 

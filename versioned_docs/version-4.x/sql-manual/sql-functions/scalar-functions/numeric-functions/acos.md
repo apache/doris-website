@@ -1,7 +1,8 @@
 ---
 {
     "title": "ACOS",
-    "language": "en"
+    "language": "en",
+    "description": "Returns the arc cosine of x, or NULL if x is not in the range -1 to 1."
 }
 ---
 

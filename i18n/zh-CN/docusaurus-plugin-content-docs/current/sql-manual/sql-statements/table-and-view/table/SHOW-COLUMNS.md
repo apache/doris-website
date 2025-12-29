@@ -1,7 +1,8 @@
 ---
 {
     "title": "SHOW COLUMNS",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "该语句用于指定表的列信息"
 }
 ---
 

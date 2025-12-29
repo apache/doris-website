@@ -1,7 +1,8 @@
 ---
 {
     "title": "Jemalloc 内存分析",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "Doris 默认使用 Jemalloc 作为通用内存分配器，Jemalloc 自身占用的内存包括 Cache 和 Metadata 两部分，其中 Cache 包括 Thread Cache 和 Dirty Page 两部分，"
 }
 ---
 

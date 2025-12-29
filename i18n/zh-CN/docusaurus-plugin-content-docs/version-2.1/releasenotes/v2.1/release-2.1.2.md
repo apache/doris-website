@@ -1,7 +1,8 @@
 ---
 {
     "title": "Release 2.1.2",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "亲爱的社区小伙伴们，Apache Doris 2.1.2 版本已于 2024 年 4 月 12 日正式发布。该版本提交了若干改进项以及问题修复，进一步提升了系统的性能及稳定性，欢迎大家下载体验。"
 }
 ---
 

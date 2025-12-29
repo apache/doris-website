@@ -1,4 +1,10 @@
-# Condition Cache
+---
+{
+    "title": "Condition Cache",
+    "language": "zh-CN",
+    "description": "介绍 Apache Doris 中用于重复条件查询加速的 Condition Cache 机制，包含工作原理、适用场景、配置与内存管理、监控指标以及典型使用示例。"
+}
+---
 
 ## 简介
 

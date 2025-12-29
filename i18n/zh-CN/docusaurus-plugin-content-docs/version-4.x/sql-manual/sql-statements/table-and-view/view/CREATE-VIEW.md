@@ -1,7 +1,8 @@
 ---
 {
     "title": "CREATE VIEW",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "该语句用于通过指定的查询语句创建一个逻辑视图。"
 }
 ---
 

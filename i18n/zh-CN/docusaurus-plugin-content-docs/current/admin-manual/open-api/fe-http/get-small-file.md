@@ -1,7 +1,8 @@
 ---
 {
     "title": "Get Small File Action",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "通过文件 id，下载在文件管理器中的文件。"
 }
 ---
 

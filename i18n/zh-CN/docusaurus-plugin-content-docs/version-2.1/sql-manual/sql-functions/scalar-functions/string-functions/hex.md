@@ -1,7 +1,8 @@
 ---
 {
     "title": "HEX",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "如果输入参数是数字，返回十六进制值的字符串表示形式。"
 }
 ---
 

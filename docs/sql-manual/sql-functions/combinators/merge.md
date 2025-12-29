@@ -1,7 +1,8 @@
 ---
 {
     "title": "MERGE",
-    "language": "en"
+    "language": "en",
+    "description": "The aggregated intermediate results are aggregated and calculated to obtain the actual result."
 }
 ---
 

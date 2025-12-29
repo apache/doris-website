@@ -1,7 +1,8 @@
 ---
 {
     "title": "SAP HANA JDBC Catalog",
-    "language": "en"
+    "language": "en",
+    "description": "The Doris JDBC Catalog supports connecting to the SAP HANA database through the standard JDBC interface."
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "HLL",
-    "language": "en"
+    "language": "en",
+    "description": "HLL is used for approximate deduplication and performs better than Count Distinct when dealing with large data volumes."
 }
 ---
 

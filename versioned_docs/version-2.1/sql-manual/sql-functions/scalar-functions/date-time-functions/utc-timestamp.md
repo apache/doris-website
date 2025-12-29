@@ -1,7 +1,8 @@
 ---
 {
     "title": "UTC_TIMESTAMP",
-    "language": "en"
+    "language": "en",
+    "description": "Returns the current UTC date and time in \"YYYY-MM-DD HH: MM: SS\" or"
 }
 ---
 

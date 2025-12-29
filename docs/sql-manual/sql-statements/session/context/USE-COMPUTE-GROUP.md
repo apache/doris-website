@@ -1,9 +1,9 @@
 ---
 {
     "title": "USE COMPUTE GROUP",
-    "language": "en"
+    "language": "en",
+    "description": "In the storage-and-compute-separated version, specify the compute cluster to use."
 }
-
 ---
 
 ## Description

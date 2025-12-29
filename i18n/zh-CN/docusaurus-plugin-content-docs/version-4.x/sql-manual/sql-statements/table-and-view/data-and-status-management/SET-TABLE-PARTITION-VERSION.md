@@ -1,7 +1,8 @@
 ---
 {
     "title": "SET TABLE PARTITION VERSION",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "存算一体模式，该语句用于手动改变指定分区的可见版本。在某些特殊情况下，元数据中分区的版本有可能和实际副本的版本不一致。该命令可手动改变元数据中分区的版本。此命令一般只用于紧急故障修复，请谨慎操作。"
 }
 ---
 

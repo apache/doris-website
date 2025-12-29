@@ -1,7 +1,8 @@
 ---
 {
-"title": "Data Lake Query Optimization",
-"language": "en"
+    "title": "Data Lake Query Optimization",
+    "language": "en",
+    "description": "This document mainly introduces optimization methods and strategies for querying lake data (Hive, Iceberg, Paimon, etc.)."
 }
 ---
 
@@ -28,6 +29,8 @@ For example:
 Data Cache accelerates subsequent queries accessing the same data by caching recently accessed data files from remote storage systems (HDFS or object storage) to local disk.
 
 The cache feature is disabled by default. Please refer to the [Data Cache](../data-cache.md) documentation to configure and enable it.
+
+Since version 4.0.2, cache warmup functionality is supported, which can further actively utilize data cache to improve query performance.
 
 ## HDFS Read Optimization
 

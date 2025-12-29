@@ -1,7 +1,8 @@
 ---
 {
     "title": "Hybrid Row-Columnar Storage",
-    "language": "en"
+    "language": "en",
+    "description": "Doris uses columnar storage by default, with each column stored contiguously."
 }
 ---
 

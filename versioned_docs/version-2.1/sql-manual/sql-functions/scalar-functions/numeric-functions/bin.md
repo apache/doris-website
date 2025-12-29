@@ -1,7 +1,8 @@
 ---
 {
     "title": "BIN",
-    "language": "en"
+    "language": "en",
+    "description": "Converts decimal numbers to binary text."
 }
 ---
 

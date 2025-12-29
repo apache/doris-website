@@ -1,7 +1,8 @@
 ---
 {
     "title": "BITMAP_MIN",
-    "language": "en"
+    "language": "en",
+    "description": "Computes and returns the minimum value in a Bitmap."
 }
 ---
 

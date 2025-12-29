@@ -1,7 +1,8 @@
 ---
 {
     "title": "SHOW PLUGINS",
-    "language": "en"
+    "language": "en",
+    "description": "This statement is used to display installed plug-ins"
 }
 ---
 

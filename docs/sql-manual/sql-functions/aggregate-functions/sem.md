@@ -1,7 +1,8 @@
 ---
 {
-"title": "SEM",
-"language": "en"
+    "title": "SEM",
+    "language": "en",
+    "description": "Calculate the standard error of the mean for all non-null values in the specified column or expression."
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "SECOND_FLOOR",
-    "language": "en"
+    "language": "en",
+    "description": "The function aligns the input datetime value upwards to the nearest second boundary based on the specified period and returns the aligned datetime "
 }
 ---
 

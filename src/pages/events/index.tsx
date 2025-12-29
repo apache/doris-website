@@ -199,6 +199,73 @@ const EVENTS_PAGE_DATA = {
             cardTitle: '',
             cardDate: '',
             tag: '',
+            detailTitle: 'Apache Doris 4.0 AI 版本解读（二）：AI 混合检索',
+            date: '2025 年 12 月 04 日',
+            address: '线上直播',
+            description:
+                'Apache Doris 4.0 版本正式上线混合检索功能，实现全文搜索、向量搜索、结构化分析的一站式 SQL 引擎支持，彻底打破传统检索与分析的系统壁垒！',
+            start_date: '2025-12-04T19:30:00.000Z',
+            end_date: '2025-012-04T20:30:00.000Z',
+            img: (
+                <img
+                    alt="doris-meetup-20251204"
+                    width={384}
+                    height={164}
+                    className="rounded-t-lg"
+                    src={`${require('@site/static/images/events/webinar_4.0_release_251204.png').default}`}
+                />
+            ),
+            isCover: true,
+            link: 'https://www.selectdb.com/resources/events/doris-webinar-20251204',
+        },{
+            cardTitle: '',
+            cardDate: '',
+            tag: '',
+            detailTitle: 'Apache Doris 4.0 AI 版本解读（一）：AI 函数解读',
+            date: '2025 年 11 月 27 日',
+            address: '线上直播',
+            description:
+                '11 月 27 日（周二） 19:30-20:30，飞轮科技资深技术专家、Apache Doris PMC 成员李昊鹏、Apache Doris Active Contributor 林真祺将带来 4.0 版本原生 AI 函数的设计理念、实现原理与企业级应用解读，为用户提供更强大、更易用的智能数据分析体验。',
+            start_date: '2025-11-27T19:30:00.000Z',
+            end_date: '2025-11-27T20:30:00.000Z',
+            img: (
+                <img
+                    alt="doris-meetup-20251127"
+                    width={384}
+                    height={164}
+                    className="rounded-t-lg"
+                    src={`${require('@site/static/images/events/webinar_4.0_release_251127.png').default}`}
+                />
+            ),
+            isCover: true,
+            link: 'https://www.selectdb.com/resources/events/doris-webinar-20251127',
+        },{
+            cardTitle: '',
+            cardDate: '',
+            tag: '',
+            detailTitle: 'Doris Summit 2025 | Powering Real-Time Analytics & Search in the AI Era',
+            date: '2025 年 11 月 5 日',
+            address: '线上直播',
+            description:
+                'Doris Summit 2025 作为全球最具影响力的 OLAP 技术峰会之一，本次大会将延续技术深度与行业广度兼具的核心特色，与全球开发者、企业实践者共探数据价值释放的全新可能！',
+            start_date: '2025-11-05T09:00:00.000Z',
+            end_date: '2025-11-06T17:30:00.000Z',
+            img: (
+                <img
+                    alt="summit-20251105-1106"
+                    width={384}
+                    height={164}
+                    className="rounded-t-lg"
+                    src={`${require('@site/static/images/events/summit2025-zh.jpg').default}`}
+                />
+            ),
+            isCover: true,
+            link: 'https://doris-summit.org.cn',
+        },
+        {
+            cardTitle: '',
+            cardDate: '',
+            tag: '',
             detailTitle: 'Apache Doris 3.1 新版本解读（三）：湖仓一体升级',
             date: '2025 年 09 月 25 日',
             address: '线上直播',
@@ -828,7 +895,7 @@ export default function Events() {
                     >
                         {data.status}
                     </div>
-                    <div className="mb-4 text-[1.25rem]/[2rem] h-[3.75rem] font-semibold text-[#000]">
+                    <div className="mb-4 line-clamp-2 text-[1.25rem]/[2rem] h-[3.75rem] font-semibold text-[#000]">
                         {data.detailTitle}
                     </div>
                     <p className="line-clamp-2 mb-4 text-[#1D1D1D] text-[0.875rem]/[1.375rem]">{data.description}</p>

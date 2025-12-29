@@ -1,7 +1,8 @@
 ---
 {
     "title": "UCASE/UPPER",
-    "language": "en"
+    "language": "en",
+    "description": "Used to convert a string to uppercase letters"
 }
 ---
 

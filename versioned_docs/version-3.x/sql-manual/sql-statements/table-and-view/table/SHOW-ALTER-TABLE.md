@@ -1,9 +1,9 @@
 ---
 {
     "title": "SHOW ALTER",
-    "language": "en"
+    "language": "en",
+    "description": "This statement is used to display the execution status of various ongoing modification tasks."
 }
-
 ---
 
 ## Description

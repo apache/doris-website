@@ -1,7 +1,8 @@
 ---
 {
     "title": "Meta Action",
-    "language": "en"
+    "language": "en",
+    "description": "This is a set of APIs related to FE metadata, except for /dump, they are all used for internal communication between FE nodes."
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
-"title": "Compute Group",
-"language": "en"
+    "title": "Compute Group",
+    "language": "en",
+    "description": "Compute Group is a mechanism for physical isolation between different workloads in a storage-compute separation architecture."
 }
 ---
 

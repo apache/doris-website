@@ -1,7 +1,8 @@
 ---
 {
     "title": "table_privileges",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "View the authorization information of the table."
 }
 ---
 

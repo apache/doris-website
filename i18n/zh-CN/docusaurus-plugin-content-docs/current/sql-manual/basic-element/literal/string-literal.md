@@ -1,7 +1,8 @@
 ---
 {
     "title": "字符串类型字面量",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "字符串是一系列字节或字符，用单引号（'）或双引号（\"）字符括起来。例如："
 }
 ---
 

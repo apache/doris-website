@@ -1,7 +1,8 @@
 ---
 {
     "title": "Authority Management",
-    "language": "en"
+    "language": "en",
+    "description": "Doris's new privilege management system refers to MySQL's privilege management mechanism, achieves table-level fine-grained privilege control,"
 }
 ---
 

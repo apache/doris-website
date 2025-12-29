@@ -1,7 +1,8 @@
 ---
 {
     "title": "PERCENT_RANK",
-    "language": "en"
+    "language": "en",
+    "description": "PERCENTRANK() is a window function that calculates the relative rank of a row within a partition or result set, returning values from 0.0 to 1.0."
 }
 ---
 

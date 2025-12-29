@@ -1,7 +1,8 @@
 ---
 {
     "title": "模式匹配操作符",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "模式匹配操作符用于比较字符类型的数据。"
 }
 ---
 

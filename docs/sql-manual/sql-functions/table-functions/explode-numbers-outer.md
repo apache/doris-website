@@ -1,7 +1,8 @@
 ---
 {
     "title": "EXPLODE_NUMBERS_OUTER",
-    "language": "en"
+    "language": "en",
+    "description": "The explodenumbersouter function accepts an integer and maps each number in the range to a separate row."
 }
 ---
 

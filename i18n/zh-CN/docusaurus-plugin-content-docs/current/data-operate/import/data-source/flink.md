@@ -1,7 +1,8 @@
 ---
 {
     "title": "Flink",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "使用 Flink Doris Connector 可以实时的将 Flink 产生的数据（如：Flink 读取 Kafka，MySQL 中的数据）导入到 Doris 中。"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "STOP ROUTINE LOAD",
-    "language": "en"
+    "language": "en",
+    "description": "This syntax is used to stop a Routine Load job. Unlike the PAUSE command, stopped jobs cannot be restarted. If you need to import data again,"
 }
 ---
 

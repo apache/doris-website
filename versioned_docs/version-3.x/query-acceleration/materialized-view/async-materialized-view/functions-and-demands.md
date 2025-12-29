@@ -1,7 +1,8 @@
 ---
 {
-  "title": "Creating, Querying, and Maintaining Asynchronous Materialized Views",
-  "language": "en"
+    "title": "Creating, Querying, and Maintaining Asynchronous Materialized Views",
+    "language": "en",
+    "description": "This document provides detailed information about materialized view creation, direct querying of materialized views, query rewriting,"
 }
 ---
 
@@ -463,7 +464,7 @@ Additionally, if the partition field is of string type, the date format can be s
 For more details, refer to [CREATE ASYNC MATERIALIZED VIEW](../../../sql-manual/sql-statements/table-and-view/async-materialized-view/CREATE-ASYNC-MATERIALIZED-VIEW).
 
 ### SQL Definition
-There are no restrictions on the SQL definition of asynchronous materialized views.
+Asynchronous materialized views do not support creation using View.
 
 ## Direct Querying of Materialized Views
 
@@ -891,6 +892,21 @@ group by
     t1.l_suppkey;
 
 ```
+
+:::caution Notice
+Currently, partition compensation is supported, but compensation with conditional UNION ALLis not yet available.
+
+For example, if a materialized view contains a WHEREclause—such as adding the filter WHERE l_shipdate > '2023-10-19'in the example above—while 
+the query condition is WHERE l_shipdate > '2023-10-18', this scenario currently cannot be compensated via UNION ALL. Support for this case is planned for a future release.
+:::
+
+:::info Note
+Starting from version 3.1.0
+The partition compensation rewrite feature supports the following types of partitioned tables: internal tables, Hive, Iceberg, and Paimon.
+
+This means that the partition compensation mechanism can only be triggered when a partitioned materialized view is built on partitioned tables of the aforementioned types.
+:::
+
 
 ### Nested Materialized View Rewriting
 

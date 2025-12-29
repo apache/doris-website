@@ -1,7 +1,8 @@
 ---
 {
     "title": "REVERSE",
-    "language": "en"
+    "language": "en",
+    "description": "The REVERSE function is used to reverse the order of an input sequence. For string arguments, it returns a string with the character order reversed;"
 }
 ---
 

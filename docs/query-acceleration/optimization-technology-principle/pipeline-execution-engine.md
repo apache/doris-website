@@ -3,7 +3,8 @@
     "title": "Parallel Execution",
     "language": "en",
     "toc_min_heading_level": 2,
-    "toc_max_heading_level": 4
+    "toc_max_heading_level": 4,
+    "description": "The parallel execution model of Doris is a Pipeline execution model, primarily inspired by the implementation described in the Hyper paper."
 }
 ---
 

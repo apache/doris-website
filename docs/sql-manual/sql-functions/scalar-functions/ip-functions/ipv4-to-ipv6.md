@@ -1,7 +1,8 @@
 ---
 {
     "title": "IPV4_TO_IPV6",
-    "language": "en"
+    "language": "en",
+    "description": "Converts an IPv4 address to an IPv6 address. The converted IPv6 address is an IPv4-mapped address in the format ::ffff:IPv4."
 }
 ---
 

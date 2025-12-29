@@ -1,7 +1,8 @@
 ---
 {
     "title": "Release 3.0.7",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "Apache Doris 3.0.7 版本发布说明，涵盖行为变更、新特性、查询优化与执行改进、存储与导入增强、Lakehouse 与倒排索引优化，以及多项稳定性和性能修复。"
 }
 ---
 

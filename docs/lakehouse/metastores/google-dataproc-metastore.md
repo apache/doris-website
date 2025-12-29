@@ -1,7 +1,8 @@
 ---
 {
     "title": "Google Dataproc",
-    "language": "en"
+    "language": "en",
+    "description": "This document describes the supported parameters when connecting to and accessing Google Dataproc Metastore through the CREATE CATALOG statement."
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "IPV4_NUM_TO_STRING",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "接受一个类型为 Int16、Int32、Int64 且大端表示的 IPv4 的地址，返回相应 IPv4 的字符串表现形式，格式为 A.B.C.D（以点分割的十进制数字）。"
 }
 ---
 

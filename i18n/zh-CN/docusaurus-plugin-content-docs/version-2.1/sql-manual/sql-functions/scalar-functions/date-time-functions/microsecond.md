@@ -1,7 +1,8 @@
 ---
 {
     "title": "MICROSECOND",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "从日期时间值中提取微秒部分的值。返回的范围是 0 到 999999。"
 }
 ---
 

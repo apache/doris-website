@@ -1,7 +1,8 @@
 ---
 {
     "title": "Get FE log file",
-    "language": "en"
+    "language": "en",
+    "description": "Users can obtain FE log files through the HTTP interface."
 }
 ---
 

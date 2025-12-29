@@ -1,7 +1,8 @@
 ---
 {
-"title": "BOOL_XOR",
-"language": "zh-CN"
+    "title": "BOOL_XOR",
+    "language": "zh-CN",
+    "description": "对表达式中所有非 NULL 值执行逻辑异或（XOR）聚合计算。"
 }
 ---
 

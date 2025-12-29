@@ -1,7 +1,8 @@
 ---
 {
     "title": "JSON_PARSE",
-    "language": "en"
+    "language": "en",
+    "description": "Parse the original JSON string into JSON binary format. To meet the needs of different abnormal data processing,"
 }
 ---
 

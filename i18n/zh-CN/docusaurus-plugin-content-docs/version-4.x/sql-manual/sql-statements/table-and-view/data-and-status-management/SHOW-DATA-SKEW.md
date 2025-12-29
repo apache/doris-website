@@ -1,7 +1,8 @@
 ---
 {
-"title": "SHOW DATA SKEW",
-"language": "zh-CN"
+    "title": "SHOW DATA SKEW",
+    "language": "zh-CN",
+    "description": "SHOW DATA SKEW 语句用于查看表或分区的数据倾斜情况。该语句具有以下功能："
 }
 ---
 

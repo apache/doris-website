@@ -1,7 +1,8 @@
 ---
 {
     "title": "JSON_UNQUOTE",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "这个函数将去掉 JSON 值中的引号，并将结果作为字符串返回。如果参数为 NULL，则返回 NULL。"
 }
 ---
 

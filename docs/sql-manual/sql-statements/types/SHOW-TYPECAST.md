@@ -1,7 +1,8 @@
 ---
 {
-  "title": "SHOW TYPECAST",
-  "language": "zh-CN"
+    "title": "SHOW TYPECAST",
+    "language": "zh-CN",
+    "description": "View all type cast under the database. If the user specifies a database, then view the corresponding database,"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "Release 1.1.1",
-    "language": "en"
+    "language": "en",
+    "description": "This feature is enabled in non-vectorized engine but it is missed in vectorized engine in 1.1. So that we add back this feature in 1.1.1."
 }
 ---
 

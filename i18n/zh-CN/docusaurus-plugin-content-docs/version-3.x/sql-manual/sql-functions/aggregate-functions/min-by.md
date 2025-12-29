@@ -1,7 +1,8 @@
 ---
 {
     "title": "MIN_BY",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "MINBY 函数用于根据指定列的最小值，返回对应的的关联值。"
 }
 ---
 

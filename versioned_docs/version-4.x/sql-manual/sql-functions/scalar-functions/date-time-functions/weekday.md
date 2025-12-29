@@ -1,7 +1,8 @@
 ---
 {
     "title": "WEEKDAY",
-    "language": "en"
+    "language": "en",
+    "description": "The WEEKDAY function returns the weekday index value of a date, where Monday is 0, Tuesday is 1, and Sunday is 6."
 }
 ---
 

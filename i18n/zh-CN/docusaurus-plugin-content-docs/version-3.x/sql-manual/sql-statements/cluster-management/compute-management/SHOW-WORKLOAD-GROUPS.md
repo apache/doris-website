@@ -1,7 +1,8 @@
 ---
 {
     "title": "SHOW WORKLOAD GROUPS",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "该语句用于展示当前用户具有 usagepriv 权限的资源组。"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "REPAIR TABLE",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "REPAIR TABLE 语句用于优先修复指定表或分区的副本。该语句具有以下功能："
 }
 ---
 

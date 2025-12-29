@@ -1,7 +1,8 @@
 ---
 {
     "title": "MEDIAN",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "MEDIAN 函数返回表达式的中位数，等价于 percentile(expr, 0.5)。"
 }
 ---
 

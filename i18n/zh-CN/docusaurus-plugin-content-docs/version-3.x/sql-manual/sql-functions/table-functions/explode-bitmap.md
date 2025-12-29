@@ -1,7 +1,8 @@
 ---
 {
     "title": "EXPLODE_BITMAP",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "explodebitmap 表函数，接受一个位图（bitmap）类型的数据，将位图中的每个 bit（位）映射为单独的行。通常用于处理位图数据，将位图中的每个元素展开成单独的记录。需配合 Lateral View 使用。"
 }
 ---
 

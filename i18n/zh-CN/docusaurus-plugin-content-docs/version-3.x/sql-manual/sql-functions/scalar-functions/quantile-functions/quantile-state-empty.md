@@ -1,7 +1,8 @@
 ---
 {
     "title": "QUANTILE_STATE_EMPTY",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "返回一个空的 quantilestate 类型列。"
 }
 ---
 

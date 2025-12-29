@@ -1,7 +1,8 @@
 ---
 {
     "title": "YEAR_CEIL",
-    "language": "en"
+    "language": "en",
+    "description": "Convert the date to the nearest rounding up time of the specified time interval period."
 }
 ---
 

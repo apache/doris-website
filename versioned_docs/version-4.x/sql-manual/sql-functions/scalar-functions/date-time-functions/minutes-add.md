@@ -1,7 +1,8 @@
 ---
 {
     "title": "MINUTES_ADD",
-    "language": "en"
+    "language": "en",
+    "description": "The MINUTESADD function adds a specified number of minutes to the input datetime value and returns the resulting new datetime value."
 }
 ---
 

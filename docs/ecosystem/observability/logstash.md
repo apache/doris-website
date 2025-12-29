@@ -1,7 +1,8 @@
 ---
 {
     "title": "Logstash",
-    "language": "en"
+    "language": "en",
+    "description": "Logstash is a log ETL framework (collect, preprocess, send to storage systems) that supports custom output plugins to write data into storage systems."
 }
 ---
 

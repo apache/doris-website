@@ -1,7 +1,8 @@
 ---
 {
     "title": "Data Types",
-    "language": "en"
+    "language": "en",
+    "description": "Apache Doris support standard SQL syntax, using MySQL Network Connection Protocol, highly compatible with MySQL syntax protocol. Therefore,"
 }
 ---
 

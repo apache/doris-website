@@ -1,7 +1,8 @@
 ---
 {
     "title": "SET PROPERTY",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "SET PROPERTY 语句用于设置用户属性，包括分配给用户的资源和导入集群设置。"
 }
 ---
 

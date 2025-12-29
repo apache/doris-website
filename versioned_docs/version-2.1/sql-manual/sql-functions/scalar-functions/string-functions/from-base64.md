@@ -1,7 +1,8 @@
 ---
 {
     "title": "FROM_BASE64",
-    "language": "en"
+    "language": "en",
+    "description": "Returns the result of Base64 decoding the input string. Special cases:"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "ALTER ASYNC MATERIALIZED VIEW",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "该语句用于修改异步物化视图。"
 }
 ---
 

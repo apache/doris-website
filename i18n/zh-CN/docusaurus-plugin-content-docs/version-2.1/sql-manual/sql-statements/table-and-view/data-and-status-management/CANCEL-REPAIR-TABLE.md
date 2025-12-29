@@ -1,7 +1,8 @@
 ---
 {
     "title": "CANCEL REPAIR TABLE",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "CANCEL REPAIR TABLE 语句用于取消对指定表或分区的高优先级修复。该语句具有以下功能："
 }
 ---
 

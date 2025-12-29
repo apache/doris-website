@@ -1,7 +1,8 @@
 ---
 {
     "title": "TAN",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "返回 x 的正切值，x 为弧度值"
 }
 ---
 

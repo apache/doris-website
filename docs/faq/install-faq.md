@@ -1,7 +1,8 @@
 ---
 {
     "title": "Install Error",
-    "language": "en"
+    "language": "en",
+    "description": "This document is mainly used to record the common problems of operation and maintenance during the use of Doris. It will be updated from time to time."
 }
 ---
 

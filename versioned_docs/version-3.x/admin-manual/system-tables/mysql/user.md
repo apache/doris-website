@@ -1,7 +1,8 @@
 ---
 {
     "title": "user",
-    "language": "en"
+    "language": "en",
+    "description": "View all user information."
 }
 ---
 

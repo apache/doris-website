@@ -1,7 +1,8 @@
 ---
 {
     "title": "STOP SYNC JOB",
-    "language": "en"
+    "language": "en",
+    "description": "Stop a running resident data synchronization job in a database by specifying its jobname. Once stopped,"
 }
 ---
 

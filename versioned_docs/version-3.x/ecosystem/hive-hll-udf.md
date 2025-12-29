@@ -1,7 +1,8 @@
 ---
 {
     "title": "Hive HLL UDF",
-    "language": "en"
+    "language": "en",
+    "description": "The Hive HLL UDF provides a set of UDFs for generating HLL operations in Hive tables, which are identical to Doris HLL."
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "SHOW PRIVILEGES",
-    "language": "en"
+    "language": "en",
+    "description": "SHOW PRIVILEGES statement is used to display the list of currently available privileges in the database system."
 }
 ---
 

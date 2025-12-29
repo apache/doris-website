@@ -1,7 +1,8 @@
 ---
 {
     "title": "workload_groups",
-    "language": "en"
+    "language": "en",
+    "description": "Records the configuration information of Workload Groups."
 }
 ---
 

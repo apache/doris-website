@@ -1,7 +1,8 @@
 ---
 {
     "title": "Google Dataproc",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "本文档用于介绍通过CREATE CATALOG语句连接并访问 Google Dataproc Metastore 时所支持的参数。"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "MAKETIME",
-    "language": "en"
+    "language": "en",
+    "description": "Returns a time value composed from the hour, minute, and second arguments."
 }
 ---
 

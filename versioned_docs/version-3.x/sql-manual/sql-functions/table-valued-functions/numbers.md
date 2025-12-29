@@ -1,7 +1,8 @@
 ---
 {
-  "title": "NUMBERS",
-  "language": "en"
+    "title": "NUMBERS",
+    "language": "en",
+    "description": "Table function that generates a temporary table containing only one column with the column name number and all element values are constvalue if "
 }
 ---
 

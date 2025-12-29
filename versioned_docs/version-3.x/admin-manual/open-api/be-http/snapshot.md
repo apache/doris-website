@@ -1,7 +1,8 @@
 ---
 {
     "title": "Make Snapshot",
-    "language": "en"
+    "language": "en",
+    "description": "Make snapshot of a tablet"
 }
 ---
 

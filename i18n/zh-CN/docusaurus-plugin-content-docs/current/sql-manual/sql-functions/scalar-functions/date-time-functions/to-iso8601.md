@@ -1,7 +1,8 @@
 ---
 {
     "title": "TO_ISO8601",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "将日期时间值转换为 ISO8601 格式的字符串,支持输入类型为 DATETIME ,DATE . 返回的的 ISO8601 格式的日期时间表示为 YYYY-MM-DDTHH:MM:SS，T是日期和时间的分隔符"
 }
 ---
 

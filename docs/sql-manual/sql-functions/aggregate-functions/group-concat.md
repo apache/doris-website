@@ -1,7 +1,8 @@
 ---
 {
     "title": "GROUP_CONCAT",
-    "language": "en"
+    "language": "en",
+    "description": "The GROUPCONCAT function concatenates multiple rows of results in the result set into a string."
 }
 ---
 

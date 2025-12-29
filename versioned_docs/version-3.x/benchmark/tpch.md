@@ -1,7 +1,8 @@
 ---
 {
     "title": "TPC-H Benchmark",
-    "language": "en"
+    "language": "en",
+    "description": "TPC-H is a decision support benchmark (Decision Support Benchmark),"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "WEEKS_ADD",
-    "language": "en"
+    "language": "en",
+    "description": "The WEEKSADD function is used to add (or subtract) a specified number of weeks to a given date or time value,"
 }
 ---
 

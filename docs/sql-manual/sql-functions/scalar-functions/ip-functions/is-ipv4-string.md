@@ -1,7 +1,8 @@
 ---
 {
     "title": "IS_IPV4_STRING",
-    "language": "en"
+    "language": "en",
+    "description": "Checks if the input string is a valid IPv4 address format. Returns 1 if it is a valid IPv4 address, returns 0 if it is not."
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
-  "title": "DAY_FLOOR",
-  "language": "zh-CN"
+    "title": "DAY_FLOOR",
+    "language": "zh-CN",
+    "description": "将日期转化为指定的时间间隔周期的最近向下取整时刻。"
 }
 ---
 

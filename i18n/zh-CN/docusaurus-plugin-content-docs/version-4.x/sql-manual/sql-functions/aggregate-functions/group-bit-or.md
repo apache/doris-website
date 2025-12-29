@@ -1,7 +1,8 @@
 ---
 {
     "title": "GROUP_BIT_OR",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "对单个整数列或表达式中的所有值执行按位 or 运算。"
 }
 ---
 

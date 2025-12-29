@@ -1,7 +1,8 @@
 ---
 {
-"title": "DROP JOB",
-"language": "zh-CN"
+    "title": "DROP JOB",
+    "language": "zh-CN",
+    "description": "用户删除一个 JOB 作业。作业会被立即停止同时删除。"
 }
 ---
 

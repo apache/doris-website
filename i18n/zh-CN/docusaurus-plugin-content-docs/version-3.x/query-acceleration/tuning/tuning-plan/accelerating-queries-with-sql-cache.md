@@ -1,7 +1,8 @@
 ---
 {
     "title": "使用 SQL Cache 加速查询",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "关于 SQL Cache 详细实现原理，请参考 查询缓存（SQL Cache）章节"
 }
 ---
 

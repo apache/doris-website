@@ -1,7 +1,8 @@
 ---
 {
     "title": "DENSE_RANK",
-    "language": "en"
+    "language": "en",
+    "description": "DENSERANK() is a window function used to calculate rankings within a group. Unlike RANK(), DENSERANK() returns consecutive rankings without gaps."
 }
 ---
 

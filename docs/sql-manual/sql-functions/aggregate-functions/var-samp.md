@@ -1,7 +1,8 @@
 ---
 {
     "title": "VAR_SAMP,VARIANCE_SAMP",
-    "language": "en"
+    "language": "en",
+    "description": "The VARSAMP function calculates the sample variance of a specified expression. Unlike VARIANCE (population variance), VARSAMP uses n-1 as the divisor,"
 }
 ---
 

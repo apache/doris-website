@@ -1,7 +1,8 @@
 ---
 {
     "title": "Updating Data on Unique Key Model",
-    "language": "en"
+    "language": "en",
+    "description": "This document introduces how to update data in the Doris unique key model using various load methods."
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "DATE_TRUNC",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "DATETRUNC 函数用于将日期或时间值（datetime）按照指定的时间单位（timeunit）截断，即保留指定单位及更高层级的时间信息，将更低层级的时间信息清至最小日期时间。例如，按 “小时” 截断时，会保留年、月、日、小时，将分钟、秒等清零，按照年截断时，会把日，"
 }
 ---
 

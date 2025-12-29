@@ -1,7 +1,8 @@
 ---
 {
     "title": "HOURS_SUB",
-    "language": "en"
+    "language": "en",
+    "description": "The HOURSSUB function subtracts a specified number of hours from an input date or datetime value and returns the calculated new datetime."
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "ALTER TABLE COMMENT",
-    "language": "en"
+    "language": "en",
+    "description": "This statement is used to modify the comment of an existing table. The operation is synchronous, and the command returns to indicate completion."
 }
 ---
 

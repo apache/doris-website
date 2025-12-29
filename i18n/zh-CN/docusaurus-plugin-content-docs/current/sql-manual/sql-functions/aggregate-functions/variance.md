@@ -1,7 +1,8 @@
 ---
 {
     "title": "VARIANCE,VAR_POP,VARIANCE_POP",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "VARIANCE 函数计算指定表达式的统计方差。它衡量了数据值与其算术平均值之间的差异程度。"
 }
 ---
 

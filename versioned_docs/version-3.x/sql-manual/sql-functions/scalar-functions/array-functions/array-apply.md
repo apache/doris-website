@@ -1,7 +1,8 @@
 ---
 {
     "title": "ARRAY_APPLY",
-    "language": "en"
+    "language": "en",
+    "description": "Filter array to match specific binary condition"
 }
 ---
 

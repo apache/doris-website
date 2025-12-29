@@ -1,7 +1,8 @@
 ---
 {
-"title": "BOOL_OR",
-"language": "zh-CN"
+    "title": "BOOL_OR",
+    "language": "zh-CN",
+    "description": "对表达式中所有非 NULL 值执行逻辑或（OR）聚合计算。"
 }
 ---
 

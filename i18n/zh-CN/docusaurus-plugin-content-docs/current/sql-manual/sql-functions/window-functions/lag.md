@@ -1,7 +1,8 @@
 ---
 {
     "title": "LAG",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "LAG() 是一个窗口函数，用于访问当前行之前的行数据，而无需进行自连接。它可以获取分区内当前行之前第 N 行的值。 不需要未显示指定窗口，会隐式生成ROWS BETWEEN UNBOUNDED PRECEDING AND N PRECEDING 类型，且当前仅支持此类。"
 }
 ---
 

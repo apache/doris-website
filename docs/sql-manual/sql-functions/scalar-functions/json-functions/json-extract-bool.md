@@ -1,7 +1,8 @@
 ---
 {
     "title": "JSON_EXTRACT_BOOL",
-    "language": "en"
+    "language": "en",
+    "description": "JSONEXTRACTBOOL extracts the field specified by <jsonpath> from a JSON object and converts it to BOOLEAN type."
 }
 ---
 

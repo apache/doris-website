@@ -1,7 +1,8 @@
 ---
 {
-"title": "Built-in Authentication",
-"language": "en"
+    "title": "Built-in Authentication",
+    "language": "en",
+    "description": "In Doris, a useridentity uniquely identifies a user. useridentity consists of two parts: username and host, where username is the user name."
 }
 ---
 

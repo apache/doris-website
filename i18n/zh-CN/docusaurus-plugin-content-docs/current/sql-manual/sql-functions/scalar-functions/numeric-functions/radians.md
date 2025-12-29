@@ -1,7 +1,8 @@
 ---
 {
     "title": "RADIANS",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "返回x的弧度值，从度转换为弧度。"
 }
 ---
 

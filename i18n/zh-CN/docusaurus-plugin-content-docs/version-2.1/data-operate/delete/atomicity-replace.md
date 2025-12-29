@@ -1,7 +1,8 @@
 ---
 {
     "title": "表原子替换",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "Doris 支持对两个表进行原子替换操作，仅适用于 OLAP 表。"
 }
 ---
 

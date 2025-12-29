@@ -1,7 +1,8 @@
 ---
 {
     "title": "LTRIM",
-    "language": "en"
+    "language": "en",
+    "description": "The LTRIM function removes consecutive occurrences of spaces or specified character sets from the left side (beginning) of a string."
 }
 ---
 

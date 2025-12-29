@@ -1,7 +1,8 @@
 ---
 {
     "title": "REPLACE",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "REPLACE 函数用于将字符串中的一部分字符替换为其他字符。"
 }
 ---
 

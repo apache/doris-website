@@ -1,7 +1,8 @@
 ---
 {
     "title": "MONTHNAME",
-    "language": "en"
+    "language": "en",
+    "description": "The MONTHNAME function returns the English month name corresponding to a datetime value. This function supports processing DATE and DATETIME types,"
 }
 ---
 

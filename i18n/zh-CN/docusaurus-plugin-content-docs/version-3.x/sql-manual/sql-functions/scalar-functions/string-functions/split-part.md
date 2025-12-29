@@ -1,7 +1,8 @@
 ---
 {
     "title": "SPLIT_PART",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "用于将一个字符串按照指定的分隔符拆分成多个部分，并返回其中的一个部分。"
 }
 ---
 

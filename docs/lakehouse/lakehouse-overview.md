@@ -1,7 +1,8 @@
 ---
 {
     "title": "Lakehouse Overview",
-    "language": "en"
+    "language": "en",
+    "description": "The lakehouse is a modern big data solution that combines the advantages of data lakes and data warehouses."
 }
 ---
 

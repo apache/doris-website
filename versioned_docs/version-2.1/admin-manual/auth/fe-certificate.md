@@ -1,7 +1,8 @@
 ---
 {
     "title": "FE SSL Certificate",
-    "language": "en"
+    "language": "en",
+    "description": "To enable SSL function on Doris FE interface, you need to configure key certificate as follows:"
 }
 ---
 

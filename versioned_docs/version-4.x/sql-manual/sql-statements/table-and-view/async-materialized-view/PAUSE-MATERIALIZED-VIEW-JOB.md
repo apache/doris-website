@@ -1,7 +1,8 @@
 ---
 {
     "title": "PAUSE MATERIALIZED VIEW JOB",
-    "language": "en"
+    "language": "en",
+    "description": "This statement is used to pause the scheduled scheduling of materialized views"
 }
 ---
 

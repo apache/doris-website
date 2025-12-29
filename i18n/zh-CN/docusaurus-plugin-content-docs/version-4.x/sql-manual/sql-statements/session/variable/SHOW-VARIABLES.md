@@ -1,7 +1,8 @@
 ---
 {
     "title": "SHOW VARIABLES",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "该语句是用来显示 Doris 系统变量，可以通过条件查询"
 }
 ---
 

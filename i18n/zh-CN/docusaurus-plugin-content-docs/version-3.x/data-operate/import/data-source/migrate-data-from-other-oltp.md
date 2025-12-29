@@ -1,7 +1,8 @@
 ---
 {
     "title": "从其他 TP 系统迁移数据",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "从其他 TP 系统，如 MySQL/SqlServer/Oracle 等，迁移数据到 Doris，可以有多种方式。"
 }
 ---
 

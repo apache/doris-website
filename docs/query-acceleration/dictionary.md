@@ -1,7 +1,8 @@
 ---
 {
     "title": "Dictionary Table(Experimental)",
-    "language": "en"
+    "language": "en",
+    "description": "Dictionary is a special data structure provided by Doris to speed up JOIN operations. It is built on the basis of ordinary tables,"
 }
 ---
 

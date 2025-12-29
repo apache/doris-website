@@ -1,7 +1,8 @@
 ---
 {
     "title": "RESUME SYNC JOB",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "通过 jobname 恢复当前数据库中已暂停的常驻数据同步作业。恢复后，作业将从上一次暂停前保存的最新位置继续同步数据。"
 }
 ---
 

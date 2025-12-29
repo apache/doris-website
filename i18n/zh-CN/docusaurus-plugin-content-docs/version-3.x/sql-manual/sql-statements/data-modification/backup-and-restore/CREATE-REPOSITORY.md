@@ -1,7 +1,8 @@
 ---
 {
     "title": "CREATE REPOSITORY",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "该语句用于创建仓库。仓库用于属于备份或恢复。"
 }
 ---
 

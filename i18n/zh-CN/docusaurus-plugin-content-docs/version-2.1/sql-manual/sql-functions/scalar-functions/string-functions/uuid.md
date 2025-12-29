@@ -1,7 +1,8 @@
 ---
 {
     "title": "UUID",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "用于返回一个随机的 uuid 字符串"
 }
 ---
 

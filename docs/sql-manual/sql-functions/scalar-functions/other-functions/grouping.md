@@ -1,7 +1,8 @@
 ---
 {
     "title": "GROUPING",
-    "language": "en"
+    "language": "en",
+    "description": "Indicates whether a specified column expression in a GROUP BY list is aggregated or not. GROUPING returns 1 if the column is aggregated (i.e.,"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "Adjusting Join Shuffle Mode with Hint",
-    "language": "en"
+    "language": "en",
+    "description": "Doris supports the use of hints to adjust the type of data shuffle in Join operations, thereby optimizing query performance."
 }
 ---
 

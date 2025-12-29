@@ -1,7 +1,8 @@
 ---
 {
     "title": "GROUP_ARRAY_UNION",
-    "language": "en"
+    "language": "en",
+    "description": "Find the unique union of all elements from every row in the input array and return a new array."
 }
 ---
 

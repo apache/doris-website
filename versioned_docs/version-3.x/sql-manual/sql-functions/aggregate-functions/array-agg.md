@@ -1,7 +1,8 @@
 ---
 {
-"title": "ARRAY_AGG",
-"language": "en"
+    "title": "ARRAY_AGG",
+    "language": "en",
+    "description": "Concatenates the values (including null values) in a column into an array, which can be used for pivoting rows into columns."
 }
 ---
 

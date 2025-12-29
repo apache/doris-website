@@ -1,7 +1,8 @@
 ---
 {
     "title": "REGEXP_EXTRACT_ALL",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "REGEXPEXTRACTALL 函数用于对给定字符串str执行正则表达式匹配，所有与指定 pattern 匹配的文本串当中的与第一个子模式匹配的部分。为了使函数返回表示模式匹配部分的字符串数组，该模式必须与输入字符串 str 的一部分完全匹配。如果没有匹配项，或模式不包含任何子模式，"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "AUTO_PARTITION_NAME",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "遵循 RANGE 的分区名规则将 datetime 按照 unit 生成分区名"
 }
 ---
 

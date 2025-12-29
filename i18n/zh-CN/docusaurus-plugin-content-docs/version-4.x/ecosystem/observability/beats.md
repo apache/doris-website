@@ -1,7 +1,8 @@
 ---
 {
-"title": "Filebeat",
-"language": "zh-CN"
+    "title": "Filebeat",
+    "language": "zh-CN",
+    "description": "Beats 是一个数据采集 Agent，它支持自定义输出插件将数据写入存储系统，Beats Doris output plugin 是输出到 Doris 的插件。"
 }
 ---
 

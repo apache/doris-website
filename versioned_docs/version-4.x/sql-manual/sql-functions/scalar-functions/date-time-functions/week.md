@@ -1,7 +1,8 @@
 ---
 {
     "title": "WEEK",
-    "language": "en"
+    "language": "en",
+    "description": "The WEEK function returns the week number for a specified date, with default Mode 0."
 }
 ---
 

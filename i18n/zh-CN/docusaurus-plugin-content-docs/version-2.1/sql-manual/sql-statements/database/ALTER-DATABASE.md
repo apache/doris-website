@@ -1,7 +1,8 @@
 ---
 {
     "title": "ALTER DATABASE",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "该语句用于设置指定 db 的属性和改动 db 名字以及设定 db 的多种 quota。"
 }
 ---
 

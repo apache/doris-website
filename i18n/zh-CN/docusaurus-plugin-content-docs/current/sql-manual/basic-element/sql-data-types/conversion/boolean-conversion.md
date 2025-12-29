@@ -1,7 +1,8 @@
 ---
 {
     "title": "转换为 BOOLEAN 类型",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "BOOLEAN 类型表示真值或非真值，只有两种可能的值：真值和非真值。"
 }
 ---
 

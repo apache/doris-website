@@ -1,7 +1,8 @@
 ---
 {
     "title": "Cast to/from JSON",
-    "language": "en"
+    "language": "en",
+    "description": "The JSON type in Doris uses binary encoding for storage rather than text storage, providing more efficient processing and storage."
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "CloudDM",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "CloudDM 由 Clougence 研发，是一款为团队和个人用户而设计的跨平台数据库工具，帮助实现安全、高效、合规的数据库变更与管理。"
 }
 ---
 

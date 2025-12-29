@@ -1,7 +1,8 @@
 ---
 {
     "title": "Text/CSV/JSON",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "本文档用于介绍 Doris 的文本文件格式的读写支持情况。"
 }
 ---
 

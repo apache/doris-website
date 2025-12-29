@@ -1,7 +1,8 @@
 ---
 {
     "title": "BITMAP_HAS_ALL",
-    "language": "en"
+    "language": "en",
+    "description": "Determines whether one Bitmap contains all the elements of another Bitmap."
 }
 ---
 

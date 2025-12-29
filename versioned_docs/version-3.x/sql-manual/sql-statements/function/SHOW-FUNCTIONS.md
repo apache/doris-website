@@ -1,7 +1,8 @@
 ---
 {
     "title": "SHOW FUNCTIONS",
-    "language": "en"
+    "language": "en",
+    "description": "View all custom and system provided functions under the database."
 }
 ---
 

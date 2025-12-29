@@ -1,7 +1,8 @@
 ---
 {
     "title": "Log",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "本文介绍可观测性核心数据之一 Log 的存储和分析实践，可观测性整体方案介绍请参考概述。"
 }
 ---
 

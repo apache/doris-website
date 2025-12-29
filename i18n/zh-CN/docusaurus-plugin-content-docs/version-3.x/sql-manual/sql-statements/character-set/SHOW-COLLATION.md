@@ -1,7 +1,8 @@
 ---
 {
     "title": "SHOW COLLATION",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "在 Doris 中，SHOW COLLATION 命令用于显示数据库中可用的字符集校对。校对是一组决定数据如何排序和比较的规则。这些规则会影响字符数据的存储和检索。"
 }
 ---
 

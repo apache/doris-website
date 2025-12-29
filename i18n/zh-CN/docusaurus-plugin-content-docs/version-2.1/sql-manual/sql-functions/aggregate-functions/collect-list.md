@@ -1,7 +1,8 @@
 ---
 {
-"title": "COLLECT_LIST",
-"language": "zh-CN"
+    "title": "COLLECT_LIST",
+    "language": "zh-CN",
+    "description": "聚合函数，用于将某一列的所有值聚集成一个数组"
 }
 ---
 

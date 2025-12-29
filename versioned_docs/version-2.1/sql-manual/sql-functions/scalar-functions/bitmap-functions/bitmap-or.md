@@ -1,7 +1,8 @@
 ---
 {
     "title": "BITMAP_OR",
-    "language": "en"
+    "language": "en",
+    "description": "Computes the union of two or more Bitmaps and returns a new Bitmap."
 }
 ---
 

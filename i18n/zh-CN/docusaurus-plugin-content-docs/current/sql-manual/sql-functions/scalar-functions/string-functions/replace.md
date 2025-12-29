@@ -1,7 +1,8 @@
 ---
 {
     "title": "REPLACE",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "REPLACE 函数用于将字符串中所有出现的指定子字符串替换为新的子字符串。该函数会替换字符串中所有匹配的子字符串实例，执行全局替换操作。"
 }
 ---
 

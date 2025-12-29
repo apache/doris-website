@@ -1,7 +1,8 @@
 ---
 {
     "title": "Jemalloc Memory Analysis",
-    "language": "en"
+    "language": "en",
+    "description": "Doris uses Jemalloc as the general memory allocator by default. The memory occupied by Jemalloc itself includes Cache and Metadata."
 }
 ---
 

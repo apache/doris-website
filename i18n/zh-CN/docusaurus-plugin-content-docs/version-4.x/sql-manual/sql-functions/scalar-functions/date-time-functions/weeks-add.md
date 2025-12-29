@@ -1,7 +1,8 @@
 ---
 {
     "title": "WEEKS_ADD",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "WEEKSADD 函数用于在指定的日期或时间值上增加（或减少）指定数量的周数，等价于 在原有日期上 增加/减少 七天，返回调整后的日期或时间。"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "Reload Tablet",
-    "language": "en"
+    "language": "en",
+    "description": "Reload tablet"
 }
 ---
 

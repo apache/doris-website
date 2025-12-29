@@ -1,7 +1,8 @@
 ---
 {
     "title": "数据分桶",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "一个分区可以根据业务需求进一步划分为多个数据分桶（bucket）。每个分桶都作为一个物理数据分片（tablet）存储。合理的分桶策略可以有效降低查询时的数据扫描量，提升查询性能并增加并发处理能力。"
 }
 ---
 
@@ -90,7 +91,7 @@ DISTRIBUTED BY RANDOM BUCKETS 8;
 
 :::
 
-分桶键可以是一列或者多列。如果是 DUPLICATE 表，任何 Key 列与 Value 列都可以作为分桶键。如果是 AGGREGATE 或 UNIQUE 表，为了保证逐渐的聚合性，分桶列必须是 Key 列。
+分桶键可以是一列或者多列。如果是 DUPLICATE 表，任何 Key 列与 Value 列都可以作为分桶键。如果是 AGGREGATE 或 UNIQUE 表，为了保证主键的聚合性，分桶列必须是 Key 列。
 
 通常情况下，可以根据以下规则选择分桶键：
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "SHOW CREATE ROUTINE LOAD",
-    "language": "en"
+    "language": "en",
+    "description": "This statement is used to display the creation statement of a routine load job."
 }
 ---
 

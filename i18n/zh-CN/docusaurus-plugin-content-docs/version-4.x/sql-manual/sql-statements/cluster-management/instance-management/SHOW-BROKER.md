@@ -1,7 +1,8 @@
 ---
 {
-  "title": "SHOW BROKER",
-  "language": "zh-CN"
+    "title": "SHOW BROKER",
+    "language": "zh-CN",
+    "description": "该语句用于查看当前存在的 broker 进程状态。"
 }
 ---
 

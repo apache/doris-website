@@ -1,7 +1,8 @@
 ---
 {
     "title": "Analyze Files on S3/HDFS",
-    "language": "en"
+    "language": "en",
+    "description": "Through the Table Value Function feature, Doris can directly query and analyze files on object storage or HDFS as a Table."
 }
 ---
 

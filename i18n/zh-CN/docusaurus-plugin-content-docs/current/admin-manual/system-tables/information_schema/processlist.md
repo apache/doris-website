@@ -1,7 +1,8 @@
 ---
 {
     "title": "processlist",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "查看当前的全部连接"
 }
 ---
 

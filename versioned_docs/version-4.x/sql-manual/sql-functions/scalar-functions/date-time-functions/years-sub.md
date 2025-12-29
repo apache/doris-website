@@ -1,7 +1,8 @@
 ---
 {
     "title": "YEARS_SUB",
-    "language": "en"
+    "language": "en",
+    "description": "The YEARSSUB function is used to subtract (or add) a specified number of years from a given date or time value,"
 }
 ---
 

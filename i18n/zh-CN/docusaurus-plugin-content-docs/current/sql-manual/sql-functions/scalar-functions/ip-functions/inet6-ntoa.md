@@ -1,9 +1,13 @@
 ---
 {
-    "title": "IPV6_NUM_TO_STRING",
-    "language": "zh-CN"
+    "title": "IPV6_NUM_TO_STRING | Ip Functions",
+    "language": "zh-CN",
+    "description": "别名 ipv6numtostring。",
+    "sidebar_label": "IPV6_NUM_TO_STRING"
 }
 ---
+
+# IPV6_NUM_TO_STRING
 
 ## inet6_ntoa
 

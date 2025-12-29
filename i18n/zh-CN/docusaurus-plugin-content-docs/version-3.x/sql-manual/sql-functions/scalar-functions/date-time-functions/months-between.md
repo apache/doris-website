@@ -1,7 +1,8 @@
 ---
 {
     "title": "MONTHS_BETWEEN",
-    "language": "cn"
+    "language": "cn",
+    "description": "MONTHSBETWEEN 函数计算两个日期之间的月份数（浮点数）。它接收两个日期参数和一个可选的布尔参数。"
 }
 ---
 

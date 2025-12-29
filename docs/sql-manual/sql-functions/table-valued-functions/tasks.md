@@ -1,7 +1,8 @@
 ---
 {
     "title": "TASKS",
-    "language": "en"
+    "language": "en",
+    "description": "Table function, generates a temporary table of tasks,"
 }
 ---
 

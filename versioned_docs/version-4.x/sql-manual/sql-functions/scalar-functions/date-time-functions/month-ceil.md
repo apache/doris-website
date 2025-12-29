@@ -1,7 +1,8 @@
 ---
 {
-  "title": "MONTH_CEIL",
-  "language": "en"
+    "title": "MONTH_CEIL",
+    "language": "en",
+    "description": "The monthceil function rounds the input datetime value up to the nearest specified month interval. If origin is specified,"
 }
 ---
 

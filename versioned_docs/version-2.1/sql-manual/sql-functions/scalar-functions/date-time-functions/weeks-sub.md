@@ -1,7 +1,8 @@
 ---
 {
-  "title": "WEEKS_SUB",
-  "language": "en"
+    "title": "WEEKS_SUB",
+    "language": "en",
+    "description": "Subtracts a specified number of weeks from a specified date or time value (i.e., subtracts weeks 7 days)."
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "Row Count Action",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "用于手动更新指定表的行数统计信息。在更新行数统计信息的同时，也会以 JSON 格式返回表以及对应 rollup 的行数"
 }
 ---
 

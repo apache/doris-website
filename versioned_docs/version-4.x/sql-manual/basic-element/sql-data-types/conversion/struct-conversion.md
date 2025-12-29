@@ -1,7 +1,8 @@
 ---
 {
     "title": "Cast to STRUCT Types",
-    "language": "en"
+    "language": "en",
+    "description": "STRUCT type is used to store and process structured data, which can contain fields of different types, each with a name and corresponding value."
 }
 ---
 

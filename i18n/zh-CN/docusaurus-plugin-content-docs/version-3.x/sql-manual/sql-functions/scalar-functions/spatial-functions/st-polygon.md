@@ -1,7 +1,8 @@
 ---
 {
     "title": "ST_POLYGON",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "将 WKT（Well-Known Text）格式的字符串 转换为内存中的 多边形（Polygon）几何对象"
 }
 ---
 

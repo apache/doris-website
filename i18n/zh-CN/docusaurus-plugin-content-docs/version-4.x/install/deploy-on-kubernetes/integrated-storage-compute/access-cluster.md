@@ -1,7 +1,8 @@
 ---
 {
-   "title": "访问 Doris 集群",
-   "language": "zh-CN"
+    "title": "访问 Doris 集群",
+    "language": "zh-CN",
+    "description": "Kubernetes 通过 Service 作为 vip 和负载均衡器的能力，Service 有三种对外暴漏模式 ClusterIP 、 NodePort 、 LoadBalancer。"
 }
 ---
 

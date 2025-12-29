@@ -1,13 +1,14 @@
 ---
 {
     "title": "SHOW INDEX",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "该语句用于展示一个表中索引的相关信息，目前只支持 inverted index, ann index 索引"
 }
 ---
 
 ## 描述
 
- 该语句用于展示一个表中索引的相关信息，目前只支持 bitmap 索引
+ 该语句用于展示一个表中索引的相关信息，目前只支持 inverted index, ann index 索引
 
 ## 语法  
 

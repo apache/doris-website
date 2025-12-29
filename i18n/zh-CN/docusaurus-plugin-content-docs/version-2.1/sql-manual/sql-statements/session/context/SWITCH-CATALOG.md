@@ -1,7 +1,8 @@
 ---
 {
-   "title": "SWITCH CATALOG",
-   "language": "zh-CN"
+    "title": "SWITCH CATALOG",
+    "language": "zh-CN",
+    "description": "该语句用于切换数据目录（catalog）。"
 }
 ---
 

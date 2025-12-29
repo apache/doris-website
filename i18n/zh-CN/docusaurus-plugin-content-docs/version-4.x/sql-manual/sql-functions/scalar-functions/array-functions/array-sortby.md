@@ -1,7 +1,8 @@
 ---
 {
     "title": "ARRAY_SORTBY",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "依据 key数组的顺序对 value数组进行排序。"
 }
 ---
 

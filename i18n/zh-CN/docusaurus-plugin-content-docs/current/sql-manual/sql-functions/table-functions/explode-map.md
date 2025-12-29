@@ -1,7 +1,8 @@
 ---
 {
-"title": "EXPLODE_MAP",
-"language": "zh-CN"
+    "title": "EXPLODE_MAP",
+    "language": "zh-CN",
+    "description": "explodemap 表函数，接受一个 map (映射类型)，将 map（映射类型）展开成多个行，每行包含一个键值对。 需配合 LATERAL VIEW 使用。"
 }
 ---
 

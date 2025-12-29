@@ -1,7 +1,8 @@
 ---
 {
     "title": "真值检测操作符",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "此操作符只限于使用检测是否为 TRUE，FALSE 或 NULL。关于 NULL 的介绍，请参阅 Nulls 章节。"
 }
 ---
 

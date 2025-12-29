@@ -1,7 +1,8 @@
 ---
 {
-  "title": "ICEBERG_META",
-  "language": "en"
+    "title": "ICEBERG_META",
+    "language": "en",
+    "description": "icebergmeta table-valued-function(tvf), Use for read iceberg metadata, operation history, snapshots of table, file metadata etc."
 }
 ---
 

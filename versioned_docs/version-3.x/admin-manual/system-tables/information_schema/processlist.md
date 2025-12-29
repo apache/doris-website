@@ -1,7 +1,8 @@
 ---
 {
     "title": "processlist",
-    "language": "en"
+    "language": "en",
+    "description": "View All Current Connections"
 }
 ---
 

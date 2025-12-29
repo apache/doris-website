@@ -1,7 +1,8 @@
 ---
 {
     "title": "Cache Memory Analysis",
-    "language": "en"
+    "language": "en",
+    "description": "The caches managed by Doris are currently all LRU elimination strategies,"
 }
 ---
 

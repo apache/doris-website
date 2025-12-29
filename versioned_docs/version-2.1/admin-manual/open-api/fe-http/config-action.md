@@ -1,7 +1,8 @@
 ---
 {
     "title": "Config Action",
-    "language": "en"
+    "language": "en",
+    "description": "Config Action is used to obtain current FE configuration information."
 }
 ---
 

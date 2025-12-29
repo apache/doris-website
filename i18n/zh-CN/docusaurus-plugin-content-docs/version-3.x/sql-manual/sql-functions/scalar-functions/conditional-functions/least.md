@@ -1,7 +1,8 @@
 ---
 {
     "title": "LEAST",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "比较多个表达式的大小，返回其中的最小值。如果任意参数为 NULL，则返回 NULL。"
 }
 ---
 

@@ -1,9 +1,9 @@
 ---
 {
     "title": "REGEXP_COUNT",
-    "language": "en"
+    "language": "en",
+    "description": "This is a function to count the number of characters in a string that match a given regular expression pattern."
 }
-
 ---
 
 <!-- 

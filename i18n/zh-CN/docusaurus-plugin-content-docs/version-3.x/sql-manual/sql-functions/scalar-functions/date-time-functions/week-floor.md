@@ -1,7 +1,8 @@
 ---
 {
     "title": "WEEK_FLOOR",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "将日期时间值向下舍入到最接近的指定周间隔。如果提供了起始时间（origin），则使用该时间作为计算间隔的参考点。"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "Kudu Catalog",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "Kudu Catalog 通过 Trino Connector 兼容框架，使用 Trino Kudu Connector 来访问 Kudu 表。"
 }
 ---
 

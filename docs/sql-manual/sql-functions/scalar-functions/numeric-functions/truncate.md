@@ -1,7 +1,8 @@
 ---
 {
     "title": "TRUNCATE",
-    "language": "en"
+    "language": "en",
+    "description": "Perform numerical truncation on x to the number of decimal places d"
 }
 ---
 

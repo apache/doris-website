@@ -1,7 +1,8 @@
 ---
 {
     "title": "COS",
-    "language": "en"
+    "language": "en",
+    "description": "Calculate the cosine of the parameter"
 }
 ---
 

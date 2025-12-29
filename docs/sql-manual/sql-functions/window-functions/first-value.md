@@ -1,7 +1,8 @@
 ---
 {
     "title": "FIRST_VALUE",
-    "language": "en"
+    "language": "en",
+    "description": "FIRSTVALUE() is a window function that returns the first value in an ordered set of values within a window partition."
 }
 ---
 

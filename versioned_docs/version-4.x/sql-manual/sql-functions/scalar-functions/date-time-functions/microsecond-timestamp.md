@@ -1,7 +1,8 @@
 ---
 {
     "title": "MICROSECOND_TIMESTAMP",
-    "language": "en"
+    "language": "en",
+    "description": "The MICROSECONDTIMESTAMP function is used to convert an input datetime value into a Unix timestamp calculated from 1970-01-01 00:00:00 (adjusted by "
 }
 ---
 

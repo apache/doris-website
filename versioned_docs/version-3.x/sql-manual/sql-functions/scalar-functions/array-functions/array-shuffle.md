@@ -1,7 +1,8 @@
 ---
 {
     "title": "ARRAY_SHUFFLE",
-    "language": "en"
+    "language": "en",
+    "description": "Randomly arrange the elements in an array"
 }
 ---
 

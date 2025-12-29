@@ -1,7 +1,8 @@
 ---
 {
     "title": "Logstash",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "Logstash 是一个日志 ETL 框架（采集，预处理，发送到存储系统），它支持自定义输出插件将数据写入存储系统，Logstash Doris output plugin 是输出到 Doris 的插件。"
 }
 ---
 

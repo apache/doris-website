@@ -1,7 +1,8 @@
 ---
 {
     "title": "ARRAY_DISTINCT",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "去除数组中的重复元素，返回一个包含唯一元素的新数组。函数会保持元素的原始顺序，只保留每个元素的第一次出现。"
 }
 ---
 

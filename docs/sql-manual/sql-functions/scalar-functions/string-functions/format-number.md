@@ -1,7 +1,8 @@
 ---
 {
     "title": "FORMAT_NUMBER",
-    "language": "en"
+    "language": "en",
+    "description": "The FORMATNUMBER function formats numerical values into strings with unit symbols. Supported units are: K (thousand), M (million), B (billion),"
 }
 ---
 

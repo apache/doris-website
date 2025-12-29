@@ -2,7 +2,8 @@
 {
     "title": "Text Search",
     "sidebar_label": "Overview",
-    "language": "en"
+    "language": "en",
+    "description": "Text search retrieves documents that contain specific terms or phrases and ranks results by relevance."
 }
 ---
 
@@ -268,4 +269,4 @@ SHOW INDEX FROM docs;
 ### Advanced Topics
 
 - [Custom Analyzers](./custom-analyzer.md) — Build domain-specific tokenizers and filters
-- [Vector Search](../vector-search.md) — Semantic similarity search with embeddings
+- [Vector Search](../vector-search/overview.md) — Semantic similarity search with embeddings

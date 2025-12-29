@@ -1,7 +1,8 @@
 ---
 {
     "title": "ARRAY_ENUMERATE",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "返回数组中每个元素的位置索引（从1开始）。函数会为数组中的每个元素生成对应的位置编号"
 }
 ---
 

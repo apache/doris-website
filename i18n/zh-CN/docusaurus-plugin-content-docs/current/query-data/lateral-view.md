@@ -1,7 +1,8 @@
 ---
 {
     "title": "列转行 (Lateral View)",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "与生成器函数（例如 EXPLODE）结合使用，LATERAL VIEW 可以生成一个包含一个或多个行的虚拟表，并将这些行应用于每个原始输出行。"
 }
 ---
 

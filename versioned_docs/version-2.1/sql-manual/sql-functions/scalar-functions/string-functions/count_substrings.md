@@ -1,7 +1,8 @@
 ---
 {
     "title": "COUNT_SUBSTRINGS",
-    "language": "en"
+    "language": "en",
+    "description": "The COUNTSUBSTRINGS function counts the number of occurrences of a specified substring within a string."
 }
 ---
 

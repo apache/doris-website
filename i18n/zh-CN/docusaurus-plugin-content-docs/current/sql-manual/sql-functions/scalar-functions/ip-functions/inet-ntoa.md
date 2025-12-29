@@ -1,9 +1,13 @@
 ---
 {
-    "title": "IPV4_NUM_TO_STRING",
-    "language": "zh-CN"
+    "title": "IPV4_NUM_TO_STRING | Ip Functions",
+    "language": "zh-CN",
+    "description": "别名 ipv4numtostring。",
+    "sidebar_label": "IPV4_NUM_TO_STRING"
 }
 ---
+
+# IPV4_NUM_TO_STRING
 
 ## inet_ntoa
 别名 `ipv4_num_to_string`。

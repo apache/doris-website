@@ -1,7 +1,8 @@
 ---
 {
     "title": "JSON_PARSE_NOTNULL_ERROR_TO_VALUE",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "函数用于解析 JSON 字符串。如果 JSON 字符串格式无效或发生解析错误，函数会返回用户指定的默认值，而不是返回无效的 JSON 对象。该函数的主要作用是提供一个默认值，用于替代解析错误时的无效结果，确保查询返回合理的值。"
 }
 ---
 

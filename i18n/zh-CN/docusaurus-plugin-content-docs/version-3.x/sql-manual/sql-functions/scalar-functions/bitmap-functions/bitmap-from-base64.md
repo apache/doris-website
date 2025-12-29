@@ -1,7 +1,8 @@
 ---
 {
     "title": "BITMAP_FROM_BASE64",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "将一个 base64 字符串（可以由 bitmaptobase64 函数转换来）转化为一个 BITMAP。当输入字符串不合法时，返回 NULL。"
 }
 ---
 

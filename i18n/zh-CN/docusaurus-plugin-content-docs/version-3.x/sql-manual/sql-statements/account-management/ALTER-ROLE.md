@@ -1,7 +1,8 @@
 ---
 {
     "title": "ALTER ROLE",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "ALTER ROLE 语句用于修改一个角色的注释"
 }
 ---
 

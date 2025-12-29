@@ -1,7 +1,8 @@
 ---
 {
-  "title": "Hive Metastore",
-  "language": "zh-CN"
+    "title": "Hive Metastore",
+    "language": "zh-CN",
+    "description": "本文档用于介绍通过 CREATE CATALOG 语句连接并访问 Hive MetaStore 服务时支持的所有参数。"
 }
 ---
 
@@ -28,6 +29,7 @@
 | hive.metastore.client.keytab       | hadoop.kerberos.keytab            | 否    | 空      | Kerberos keytab 文件路径                                                                                                                                                                 |
 | hive.metastore.username            | hadoop.username                   | 否    | hadoop | Hive Metastore 用户名，非 Kerberos 模式下使用                                                                                                                                                  |
 | hive.conf.resources                |                                   | 否    | 空      | hive-site.xml 配置文件路径，使用相对路径                                                                                                                                                          |
+| hive.metastore.client.socket.timeout                |                                   | 否    | 默认值为 FE 配置参数中的 `hive_metastore_client_timeout_second`，默认为 10 秒。 | 该参数自 4.0.3 版本支持。通过 Hive Metastore Client 连接访问元信息的超时时间。如果元信息较大（比如分区数量多时），可调大这个值。         |
 
 > 注：
 >
@@ -226,6 +228,18 @@ Kerberos 详细配置参考 Kerberos 认证。
 	    'oss.endpoint' = 'oss-cn-beijing.aliyuncs.com'
 	);
 	```
+
+## HMS 访问端口要求
+
+说明：Doris 访问 HMS 最少需保证以下端口连通。
+
+| 服务             | 端口用途              | 默认端口 | 协议           |
+|----------------|-------------------|------|--------------|
+| Hive Metastore | Thrift（元数据访问） | 9083 | TCP          |
+
+注意：
+- 端口可能被 `hive-site.xml`自定义，请以实际配置为准。
+- 当启用 Kerberos 认证时，需要保证 Doris 到 Kerberos KDC 的网络连通。KDC 默认监听 TCP 88 端口，如有自定义请以实际配置为准。
 
 ## 常见问题 FAQ
 

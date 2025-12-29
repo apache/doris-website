@@ -1,7 +1,8 @@
 ---
 {
     "title": "All Releases",
-    "language": "en"
+    "language": "en",
+    "description": "This document presents a summary of Apache Doris versions released within one year, listed in reverse chronological order."
 }
 ---
 

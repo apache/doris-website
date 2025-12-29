@@ -1,7 +1,8 @@
 ---
 {
     "title": "常见查询问题",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "这种情况是因为对应的 tablet 没有找到可以查询的副本，通常原因可能是 BE 宕机、副本缺失等。可以先通过 show tablet tabletid 语句，然后执行后面的 show proc 语句，查看这个 tablet 对应的副本信息，检查副本是否完整。"
 }
 ---
 

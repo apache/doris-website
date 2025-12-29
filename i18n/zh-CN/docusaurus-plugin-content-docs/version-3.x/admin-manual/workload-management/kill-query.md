@@ -1,7 +1,8 @@
 ---
 {
-"title": "终止查询",
-"language": "zh-CN"
+    "title": "终止查询",
+    "language": "zh-CN",
+    "description": "可以通过 KILL 命令取消当前正在执行的操作或断开当前连接会话。本文档介绍相关操作和注意事项"
 }
 ---
 

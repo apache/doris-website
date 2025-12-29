@@ -1,7 +1,9 @@
 const transformPathWithoutZhCN = (pathname: string): string => {
     if(pathname.startsWith('/docs')){
         const pathWithoutDocs = pathname.replace('/docs', '');
-        if (pathname.includes('/3.x')) {
+        if(pathname.includes('/4.x')){
+            return `/versioned_docs/version-4.x${pathWithoutDocs.replace('/4.x', '')}.md`;
+        }else if (pathname.includes('/3.x')) {
             return `/versioned_docs/version-3.x${pathWithoutDocs.replace('/3.x', '')}.md`;
         } else if (pathname.includes('/2.0')) {
             return `/versioned_docs/version-2.0${pathWithoutDocs.replace('/2.0', '')}.md`;
@@ -19,7 +21,9 @@ const transformPathWithoutZhCN = (pathname: string): string => {
 };
 const transformPathWithZhCN = (pathname: string): string => {
     if (pathname.startsWith('/zh-CN/docs')) {
-        if (pathname.includes('/3.x')) {
+        if(pathname.includes('/4.x')){
+            return `/i18n/zh-CN/docusaurus-plugin-content-docs/version-4.x${pathname.replace('/zh-CN/docs/4.x', '')}.md`;
+        }else if (pathname.includes('/3.x')) {
             return `/i18n/zh-CN/docusaurus-plugin-content-docs/version-3.x${pathname.replace('/zh-CN/docs/3.x', '')}.md`;
         } else if (pathname.includes('/2.0')) {
             return `/i18n/zh-CN/docusaurus-plugin-content-docs/version-2.0${pathname.replace('/zh-CN/docs/2.0', '')}.md`;

@@ -1,7 +1,8 @@
 ---
 {
     "title": "ARRAY_DISTINCT",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "返回去除了重复元素的数组，如果输入数组为 NULL，则返回 NULL。"
 }
 ---
 

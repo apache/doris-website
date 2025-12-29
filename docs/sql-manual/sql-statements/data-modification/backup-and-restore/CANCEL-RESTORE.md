@@ -1,7 +1,8 @@
 ---
 {
     "title": "CANCEL RESTORE",
-    "language": "en"
+    "language": "en",
+    "description": "This statement is used to cancel an ongoing RESTORE task."
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "INSTALL PLUGIN",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "该语句用于安装一个插件"
 }
 ---
 

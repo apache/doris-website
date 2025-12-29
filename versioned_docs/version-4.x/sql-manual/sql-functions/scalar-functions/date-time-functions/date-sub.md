@@ -1,7 +1,8 @@
 ---
 {
     "title": "DATE_SUB",
-    "language": "en"
+    "language": "en",
+    "description": "The DATESUB function is used to subtract a specified time interval from a given date or time value and return the calculated date or time result."
 }
 ---
 

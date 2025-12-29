@@ -1,7 +1,8 @@
 ---
 {
     "title": "ST_INTERSECTS",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "判断几何图形 shape1 是否与几何图形 shape2 相交"
 }
 ---
 

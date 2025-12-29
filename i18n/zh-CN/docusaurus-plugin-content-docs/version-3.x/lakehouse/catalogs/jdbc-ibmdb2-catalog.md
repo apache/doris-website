@@ -1,7 +1,8 @@
 ---
 {
     "title": "IBM Db2 JDBC Catalog",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "Doris JDBC Catalog 支持通过标准 JDBC 接口连接 IBM Db2 数据库。本文档介绍如何配置 IBM Db2 数据库连接。"
 }
 ---
 
@@ -67,6 +68,7 @@ CREATE CATALOG db2_catalog PROPERTIES (
 | time             | string        |         |
 | clob             | string        |         |
 | xml              | string        |         |
+| BLOB             | varbinary     |由 properties 中 `enable.mapping.varbinary` (4.0.2 后开始支持) 属性控制。默认为 `false`, 则映射到 `string`; 为 `true` 时，则映射到 `varbinary` 类型。|
 | other            | UNSUPPORTED   |         |
 
 ## 常见问题

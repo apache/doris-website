@@ -1,7 +1,8 @@
 ---
 {
-  "title": "分析工具",
-  "language": "zh-CN"
+    "title": "分析工具",
+    "language": "zh-CN",
+    "description": "上节诊断工具已经帮助业务和运维人员定位到具体的慢 SQL，本章节开始介绍如何对慢 SQL 的性能瓶颈进行分析，以确定具体慢在 SQL 执行的哪个环节。"
 }
 ---
 

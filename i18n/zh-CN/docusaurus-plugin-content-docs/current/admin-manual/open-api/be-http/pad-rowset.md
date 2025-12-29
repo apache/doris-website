@@ -1,7 +1,8 @@
 ---
 {
     "title": "填充坏副本",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "该功能用于使用一个空的 rowset 填充损坏的副本。"
 }
 ---
 

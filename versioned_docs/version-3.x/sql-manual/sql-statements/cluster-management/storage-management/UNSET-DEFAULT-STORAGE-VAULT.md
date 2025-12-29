@@ -1,7 +1,8 @@
 ---
 {
     "title": "UNSET DEFAULT STORAGE VAULT",
-    "language": "en"
+    "language": "en",
+    "description": "Cancel the Specified Default Storage Vault"
 }
 ---
 

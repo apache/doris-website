@@ -1,7 +1,8 @@
 ---
 {
-"title": "SUBSTRING_INDEX",
-"language": "zh-CN"
+    "title": "SUBSTRING_INDEX",
+    "language": "zh-CN",
+    "description": "SUBSTRINGINDEX 函数用于截取字符串，根据指定的分隔符和出现次数来确定截取位置。该函数支持从左边或右边开始计数。"
 }
 ---
 

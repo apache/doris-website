@@ -1,7 +1,8 @@
 ---
 {
-  "title": "Spark Doris Connector",
-  "language": "en"
+    "title": "Spark Doris Connector",
+    "language": "en",
+    "description": "Spark Doris Connector can support reading data stored in Doris and writing data to Doris through Spark."
 }
 ---
 

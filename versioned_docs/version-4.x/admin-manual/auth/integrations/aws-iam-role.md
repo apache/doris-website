@@ -1,7 +1,8 @@
 ---
 {
     "title": "How Apache Doris IAM Assume Role work",
-    "language": "en"
+    "language": "en",
+    "description": "AWS Assume Role is a secure identity transfer mechanism that allows a trusted entity (such as an IAM user, EC2 instance,"
 }
 ---
 

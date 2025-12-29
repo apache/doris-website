@@ -1,7 +1,8 @@
 ---
 {
     "title": "Azure Blob",
-    "language": "en"
+    "language": "en",
+    "description": "Starting from version 3.1.3, Doris supports accessing Azure Blob storage."
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "BUILD INDEX",
-    "language": "en"
+    "language": "en",
+    "description": "Build an index for the entire table or table partitions. You must specify the table name and index name, and optionally specify the partition list."
 }
 ---
 

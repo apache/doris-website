@@ -1,7 +1,8 @@
 ---
 {
     "title": "SECOND",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "SECOND 函数用于提取取指定日期时间值中的秒数部分，返回结果为 0 到 59 的整数。该函数支持处理 DATE、DATETIME、TIME 类型，"
 }
 ---
 
@@ -71,6 +72,14 @@ SELECT SECOND('2024-01-01 00:00:00') AS result;
 +--------+
 |      0 |
 +--------+
+
+-- 输入情况为  datetime/time 类型都适用的字符串，则优先选择 time 类型
+SELECT SECOND("22:12:12");
++--------------------+
+| SECOND("22:12:12") |
++--------------------+
+|                 12 |
++--------------------+
 
 --- 输入为 NULL（返回 NULL）
 SELECT SECOND(NULL) AS result;

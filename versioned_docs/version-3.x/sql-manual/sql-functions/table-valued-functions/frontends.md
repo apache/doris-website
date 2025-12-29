@@ -1,7 +1,8 @@
 ---
 {
-  "title": "FRONTENDS",
-  "language": "en"
+    "title": "FRONTENDS",
+    "language": "en",
+    "description": "The table function generates the frontends temporary table, which allows you to view the FE node information in the current doris cluster."
 }
 ---
 
@@ -18,7 +19,7 @@ FRONTENDS()
 
 | Privilege  | Object | Notes |
 | :--------- |:-------|:------|
-| ADMIN_PRIV | global |       |
+| SELECT_PRIV | internal.information_schema | All users have permissions to this database by default |
 
 ## Return Value
 | Field                    | Description                                                                                             |

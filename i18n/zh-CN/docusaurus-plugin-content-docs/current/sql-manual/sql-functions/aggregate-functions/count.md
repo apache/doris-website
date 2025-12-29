@@ -1,7 +1,8 @@
 ---
 {
     "title": "COUNT",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "返回指定列的非 NULL 记录数，或者记录总数。"
 }
 ---
 

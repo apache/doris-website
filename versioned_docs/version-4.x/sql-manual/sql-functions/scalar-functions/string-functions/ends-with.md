@@ -1,7 +1,8 @@
 ---
 {
     "title": "ENDS_WITH",
-    "language": "en"
+    "language": "en",
+    "description": "The ENDSWITH function checks whether a string ends with the specified suffix."
 }
 ---
 

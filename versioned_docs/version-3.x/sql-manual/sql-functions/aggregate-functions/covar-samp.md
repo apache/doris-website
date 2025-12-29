@@ -1,7 +1,8 @@
 ---
 {
-"title": "COVAR_SAMP",
-"language": "en"
+    "title": "COVAR_SAMP",
+    "language": "en",
+    "description": "Computes the sample covariance between two numeric variables."
 }
 ---
 

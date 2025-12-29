@@ -1,7 +1,8 @@
 ---
 {
     "title": "LINEAR_HISTOGRAM",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "LINEARHISTOGRAM 函数用于描述数据分布情况，它使用“等宽”的分桶策略，并按照数据的值大小进行分桶。"
 }
 ---
 

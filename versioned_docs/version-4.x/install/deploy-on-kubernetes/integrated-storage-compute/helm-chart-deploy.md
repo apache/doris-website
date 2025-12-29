@@ -1,7 +1,8 @@
 ---
 {
-  "title": "Deploy Doris on Helm Chart",
-  "language": "en"
+    "title": "Deploy Doris on Helm Chart",
+    "language": "en",
+    "description": "Helm is the best way to find, share, and use software built for Kubernetes. Helm Charts help to define, install,"
 }
 ---
 

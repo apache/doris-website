@@ -1,7 +1,8 @@
 ---
 {
     "title": "ALTER TABLE ROLLUP",
-    "language": "en"
+    "language": "en",
+    "description": "This statement is used to perform a rollup modification operation on an existing table. The rollup is an asynchronous operation,"
 }
 ---
 

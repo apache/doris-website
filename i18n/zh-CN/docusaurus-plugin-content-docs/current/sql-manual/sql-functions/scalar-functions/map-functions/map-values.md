@@ -1,7 +1,8 @@
 ---
 {
     "title": "MAP_VALUES",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "将给定 MAP 的值提取成一个对应类型的 ARRAY。"
 }
 ---
 

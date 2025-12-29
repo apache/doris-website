@@ -1,7 +1,8 @@
 ---
 {
     "title": "DROP ANALYZE JOB",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "删除指定的统计信息收集作业的历史记录。"
 }
 ---
 

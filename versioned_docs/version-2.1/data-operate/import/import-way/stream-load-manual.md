@@ -1,7 +1,8 @@
 ---
 {
     "title": "Stream Load",
-    "language": "en"
+    "language": "en",
+    "description": "Stream Load supports importing local files or data streams into Doris through the HTTP protocol."
 }
 ---
 

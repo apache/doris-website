@@ -1,7 +1,8 @@
 ---
 {
     "title": "ALTER TABLE PARTITION",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "该语句用于对有 partition 的 table 进行修改操作。"
 }
 ---
 

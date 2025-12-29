@@ -1,7 +1,8 @@
 ---
 {
-  "title": "OUTFILE",
-  "language": "zh-CN"
+    "title": "OUTFILE",
+    "language": "zh-CN",
+    "description": "SELECT INTO OUTFILE 命令用于将查询结果导出为文件。目前支持通过 Broker 进程，S3 协议或 HDFS 协议，导出到远端存储，如 HDFS，S3，BOS，COS（腾讯云）上。"
 }
 ---
 

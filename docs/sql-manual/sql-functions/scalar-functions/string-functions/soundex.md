@@ -1,7 +1,8 @@
 ---
 {
     "title": "SOUNDEX",
-    "language": "en"
+    "language": "en",
+    "description": "The SOUNDEX function computes the Soundex encoding of a string."
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "RTRIM",
-    "language": "en"
+    "language": "en",
+    "description": "The RTRIM function is used to remove consecutive spaces or specified characters from the right side (trailing) of a string."
 }
 ---
 

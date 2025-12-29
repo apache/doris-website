@@ -1,7 +1,8 @@
 ---
 {
     "title": "Data Distribution Concept",
-    "language": "en"
+    "language": "en",
+    "description": "In Doris, the core of data distribution is to efficiently map the rows of data written to the table onto various data shards (Tablets) in the "
 }
 ---
 

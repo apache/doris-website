@@ -1,7 +1,8 @@
 ---
 {
     "title": "QUARTER_CEIL",
-    "language": "en"
+    "language": "en",
+    "description": "Rounds a datetime value up to the nearest specified quarter period boundary. If an origin time is specified,"
 }
 ---
 

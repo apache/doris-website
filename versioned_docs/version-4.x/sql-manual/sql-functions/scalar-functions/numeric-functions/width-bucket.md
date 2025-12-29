@@ -1,7 +1,8 @@
 ---
 {
     "title": "WIDTH_BUCKET",
-    "language": "en"
+    "language": "en",
+    "description": "Construct an equal-width histogram, where the histogram range is divided into equal-sized intervals, and after calculation,"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "GET_JSON_STRING",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "函数用于从 JSON 文档中提取一个字段的值，并将其转换为 STRING 类型。该函数返回指定路径上的字段值，如果该值无法转换为字符串，或者路径指向的字段不存在，则返回 NULL。"
 }
 ---
 

@@ -1,9 +1,11 @@
 ---
 {
     "title": "FROM_MICROSECOND",
-    "language": "en"
+    "language": "en",
+    "description": "The FROMMICROSECOND function is used to convert a Unix timestamp (in microseconds) to a DATETIME type date-time value."
 }
 ---
+
 ## Description
 
 The FROM_MICROSECOND function is used to convert a Unix timestamp (in microseconds) to a `DATETIME` type date-time value. The reference time for Unix timestamps is 1970-01-01 00:00:00 UTC, and this function converts the input microseconds to the corresponding specific date and time after that reference time (including the fractional part of seconds, accurate to microseconds).

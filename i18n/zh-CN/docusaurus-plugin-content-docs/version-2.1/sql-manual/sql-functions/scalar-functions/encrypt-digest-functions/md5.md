@@ -1,7 +1,8 @@
 ---
 {
-"title": "MD5",
-"language": "zh-CN"
+    "title": "MD5",
+    "language": "zh-CN",
+    "description": "计算 MD5 128-bit"
 }
 ---
 

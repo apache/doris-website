@@ -1,7 +1,8 @@
 ---
 {
     "title": "SOUNDEX",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "SOUNDEX 函数用于计算字符串的 Soundex 编码。Soundex 是一种语音算法，用于将英文单词编码为表示其发音的代码，相似发音的单词会有相同的编码。"
 }
 ---
 

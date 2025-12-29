@@ -1,7 +1,8 @@
 ---
 {
     "title": "CUT_TO_FIRST_SIGNIFICANT_SUBDOMAIN",
-    "language": "en"
+    "language": "en",
+    "description": "The CUTTOFIRSTSIGNIFICANTSUBDOMAIN function extracts the effective part of a domain from a URL,"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "inet_aton",
-    "language": "en"
+    "language": "en",
+    "description": "Alias for ipv4stringtonumornull."
 }
 ---
 

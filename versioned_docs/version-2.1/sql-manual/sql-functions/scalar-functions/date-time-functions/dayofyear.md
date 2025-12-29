@@ -1,7 +1,8 @@
 ---
 {
     "title": "DAYOFYEAR",
-    "language": "en"
+    "language": "en",
+    "description": "Obtains the corresponding day of the year for the given date."
 }
 ---
 

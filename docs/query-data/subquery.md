@@ -1,7 +1,8 @@
 ---
 {
     "title": "Subquery",
-    "language": "en"
+    "language": "en",
+    "description": "A Subquery is an SQL query nested within another query (usually a SELECT statement). It can be used in the SELECT, FROM, WHERE,"
 }
 ---
 

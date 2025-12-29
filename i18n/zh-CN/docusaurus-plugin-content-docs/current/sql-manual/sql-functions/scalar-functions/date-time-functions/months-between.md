@@ -1,7 +1,8 @@
 ---
 {
     "title": "MONTHS_BETWEEN",
-    "language": "cn"
+    "language": "cn",
+    "description": "与 monthsdiff 函数 不同的是，month-between 函数不会忽略日单位，返回的是浮点数，代表真实差距多少个月，而不是日期上显示的月单位所差的月数 MONTHSBETWEEN 函数用于计算两个日期时间值之间的月份差值，返回结果为浮点数。"
 }
 ---
 

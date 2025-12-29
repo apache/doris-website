@@ -1,7 +1,8 @@
 ---
 {
     "title": "JSON_SET",
-    "language": "en"
+    "language": "en",
+    "description": "The jsonset function inserts or updates data in a JSON and returns the result."
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "Clickhouse SQL Convertor Guide",
-    "language": "en"
+    "language": "en",
+    "description": "TODO"
 }
 ---
 

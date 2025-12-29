@@ -1,7 +1,8 @@
 ---
 {
     "title": "LEAST",
-    "language": "en"
+    "language": "en",
+    "description": "Compares multiple expressions and returns the smallest value among them. If any argument is NULL, returns NULL."
 }
 ---
 

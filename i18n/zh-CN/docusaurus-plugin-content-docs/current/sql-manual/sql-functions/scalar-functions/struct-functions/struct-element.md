@@ -1,7 +1,8 @@
 ---
 {
     "title": "STRUCT_ELEMENT",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "返回 struct 数据列内的某一字段。函数支持通过字段位置（索引）或字段名来访问结构体中的字段。"
 }
 ---
 

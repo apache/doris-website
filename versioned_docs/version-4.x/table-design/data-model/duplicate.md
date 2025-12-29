@@ -1,7 +1,8 @@
 ---
 {
     "title": "Duplicate Key Table",
-    "language": "en"
+    "language": "en",
+    "description": "The Duplicate Key Table in Doris is the default table type, designed to store individual raw data records."
 }
 ---
 

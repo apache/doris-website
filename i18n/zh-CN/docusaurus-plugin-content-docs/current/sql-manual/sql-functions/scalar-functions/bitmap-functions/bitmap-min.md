@@ -1,7 +1,8 @@
 ---
 {
     "title": "BITMAP_MIN",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "计算并返回 Bitmap 中的最小值。"
 }
 ---
 

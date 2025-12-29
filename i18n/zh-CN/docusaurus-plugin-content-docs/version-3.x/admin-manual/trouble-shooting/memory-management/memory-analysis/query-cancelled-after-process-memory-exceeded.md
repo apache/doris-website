@@ -1,7 +1,8 @@
 ---
 {
     "title": "查询报错 Process Memory Not Enough",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "当 Query 的报错信息中出现 MEMLIMITEXCEEDED 且包含 Process memory not enough 时，说明因为进程可用内存不足被 Cancel。"
 }
 ---
 

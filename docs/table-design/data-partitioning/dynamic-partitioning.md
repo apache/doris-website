@@ -1,7 +1,8 @@
 ---
 {
-    "title": "Dynamic Partitioning",
-    "language": "zh-CN"
+    "title": "Dynamic Partitioning(Outdated)",
+    "language": "zh-CN",
+    "description": "Dynamic partitioning will add and remove partitions in a rolling manner according to predefined rules,"
 }
 ---
 
@@ -14,7 +15,6 @@ The diagram below illustrates lifecycle management using dynamic partitioning, w
 * The dynamic partition end offset `dynamic_partition.end` is set to 2, retaining partitions for the next two days.
 
 According to the above rules, as time progresses, a total of 4 partitions will always be retained: the partition from the past day, the current day partition, and the partitions for the next two days.
-
 
 ![dynamic-partition](/images/getting-started/dynamic-partition.png)
 
@@ -29,7 +29,6 @@ When using dynamic partitioning, the following rules must be followed:
 ## Creating Dynamic Partitions
 
 When creating a table, you can create a dynamic partitioned table by specifying the `dynamic_partition` property.
-
 
 ```sql
 CREATE TABLE test_dynamic_partition(
@@ -208,6 +207,3 @@ PROPERTIES (
     "dynamic_partition.reserved_history_periods"="[2020-06-01,2020-06-20],[2020-10-31,2020-11-15]"
 );
 ```
-
-
-

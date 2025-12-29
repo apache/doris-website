@@ -1,7 +1,8 @@
 ---
 {
     "title": "DAYNAME",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "DAYNAME 函数用于计算日期或时间表达式对应的星期名称（如“Tuesday” 等），返回值为字符串类型。"
 }
 ---
 

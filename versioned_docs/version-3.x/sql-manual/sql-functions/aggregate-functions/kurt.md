@@ -1,7 +1,8 @@
 ---
 {
     "title": "KURT,KURT_POP,KURTOSIS",
-    "language": "en"
+    "language": "en",
+    "description": "The KURTOSIS function returns the kurtosis of the expr expression. The forumula used for this function is 4-th centrol moment / ((variance)^2) - 3."
 }
 ---
 

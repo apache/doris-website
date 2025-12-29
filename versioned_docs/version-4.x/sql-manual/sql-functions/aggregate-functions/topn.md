@@ -1,7 +1,8 @@
 ---
 {
     "title": "TOPN",
-    "language": "en"
+    "language": "en",
+    "description": "The TOPN function returns the N most frequent values in the specified column."
 }
 ---
 

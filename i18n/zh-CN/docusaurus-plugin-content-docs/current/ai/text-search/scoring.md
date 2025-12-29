@@ -1,7 +1,8 @@
 ---
 {
-"title": "相关性打分",
-"language": "zh"
+    "title": "相关性打分",
+    "language": "zh",
+    "description": "相关性打分用于衡量表中某一行数据与查询文本之间的相关程度。 当执行包含全文检索条件的查询（例如 MATCHANY、MATCHALL 等）时，Doris 会为每一行返回一个数值型的打分结果，表示该行与查询条件的匹配强度。 该打分值可用于结果排序，以便优先返回与查询最相关的内容。"
 }
 ---
 
@@ -88,12 +89,23 @@ avgdl = total_terms / total_rows
 SELECT *,
        score() AS relevance
 FROM search_demo
-WHERE content MATCH_ANY '检索测试'
+WHERE content MATCH_ANY 'text search test'
 ORDER BY relevance DESC
 LIMIT 10;
 ```
 
 该语句会根据 BM25 打分结果返回前 10 条最相关的记录。
+
+```text
++------+-----------------------------------+---------+--------------+-----------+
+| id   | content                           | author  | publish_date | relevance |
++------+-----------------------------------+---------+--------------+-----------+
+|    1 | Full text search engine test demo | Alice   | 2024-01-01   |  2.915228 |
+|    7 | Text processing techniques        | Grace   | 2024-01-07   |  1.341931 |
+|    5 | Performance test framework        | Eve     | 2024-01-05   |  1.341931 |
+|    3 | Advanced search algorithms        | Charlie | 2024-01-03   |  1.341931 |
++------+-----------------------------------+---------+--------------+-----------+
+```
 
 ---
 

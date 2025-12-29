@@ -1,7 +1,8 @@
 ---
 {
     "title": "EXPLODE_JSON_OBJECT_OUTER",
-    "language": "en"
+    "language": "en",
+    "description": "The explodejsonobjectouter table function expands a JSON object into multiple rows, each containing a key-value pair."
 }
 ---
 

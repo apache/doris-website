@@ -1,7 +1,8 @@
 ---
 {
     "title": "columns",
-    "language": "en"
+    "language": "en",
+    "description": "View all column information."
 }
 ---
 

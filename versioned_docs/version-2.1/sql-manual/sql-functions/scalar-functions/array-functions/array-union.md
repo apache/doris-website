@@ -1,7 +1,8 @@
 ---
 {
     "title": "ARRAY_UNION",
-    "language": "en"
+    "language": "en",
+    "description": "Merge multiple arrays without duplicate elements to generate a new array"
 }
 ---
 

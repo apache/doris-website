@@ -1,7 +1,8 @@
 ---
 {
     "title": "SHOW LOAD",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "该语句用于展示指定的导入任务的执行情况。"
 }
 ---
 

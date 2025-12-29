@@ -1,7 +1,8 @@
 ---
 {
-  "title": "SHOW DATA TYPES",
-  "language": "zh-CN"
+    "title": "SHOW DATA TYPES",
+    "language": "zh-CN",
+    "description": "该语句用于查看 DORIS 支持的所有数据类型。"
 }
 ---
 

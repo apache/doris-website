@@ -1,7 +1,8 @@
 ---
 {
     "title": "QUANTILE_UNION",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "QUANTILEUNION 函数用于合并多个分位数计算的中间结果。这个函数通常与 QUANTILESTATE 配合使用，特别适用于需要分阶段计算分位数的场景。"
 }
 ---
 

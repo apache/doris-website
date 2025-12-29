@@ -1,7 +1,8 @@
 ---
 {
     "title": "FMOD",
-    "language": "en"
+    "language": "en",
+    "description": "Find the remainder of a / b for the floating-point type. For the integer type, please use the mod function."
 }
 ---
 

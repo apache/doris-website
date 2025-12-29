@@ -1,7 +1,8 @@
 ---
 {
     "title": "EXTRACT",
-    "language": "en"
+    "language": "en",
+    "description": "The EXTRACT function is used to extract specific time components from date or time values, such as year, month, week, day, hour, minute, second, etc."
 }
 ---
 

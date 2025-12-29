@@ -1,7 +1,8 @@
 ---
 {
-  "title": "OUTFILE",
-  "language": "en"
+    "title": "OUTFILE",
+    "language": "en",
+    "description": "The SELECT INTO OUTFILE command is used to export query results to files. Currently supports exporting to remote storage such as HDFS, S3, BOS,"
 }
 ---
 

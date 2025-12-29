@@ -1,7 +1,8 @@
 ---
 {
     "title": "CAST 表达式",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "CAST 表达式用于将一种数据类型的值转换为另一种数据类型。而 TRYCAST 是一种安全的类型转换方式，它在转换可能发生错误时不会抛出异常，而是返回 SQL NULL 值。"
 }
 ---
 
@@ -96,6 +97,7 @@ select try_cast('abc' as int);
 - [转换为 DATE](./date-conversion.md)
 - [转换为 TIME](./time-conversion.md)
 - [转换为 DATETIME](./datetime-conversion.md)
+- [转换为 TIMESTAMPTZ](./timestamptz-conversion.md)
 - [转换为整数（INT 等）](./int-conversion.md)
 - [转换为浮点（FLOAT/DOUBLE）](./float-double-conversion.md)
 - [转换为 DECIMAL](./decimal-conversion.md)

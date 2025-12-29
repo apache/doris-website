@@ -1,7 +1,8 @@
 ---
 {
     "title": "Bitwise Operators",
-    "language": "en"
+    "language": "en",
+    "description": "Bitwise operators perform specified operations on one or two expressions at the bit level. These operators only accept arguments of the BIGINT type."
 }
 ---
 

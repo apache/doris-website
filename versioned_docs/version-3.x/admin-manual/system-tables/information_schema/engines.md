@@ -1,7 +1,8 @@
 ---
 {
     "title": "engines",
-    "language": "en"
+    "language": "en",
+    "description": "This table is solely used for compatibility with MySQL behavior. It is always empty."
 }
 ---
 

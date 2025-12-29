@@ -1,7 +1,8 @@
 ---
 {
     "title": "Heap Profile Memory Analysis",
-    "language": "en"
+    "language": "en",
+    "description": "Heap Profile supports real-time viewing of process memory usage and call stacks, so this usually requires some understanding of the code."
 }
 ---
 

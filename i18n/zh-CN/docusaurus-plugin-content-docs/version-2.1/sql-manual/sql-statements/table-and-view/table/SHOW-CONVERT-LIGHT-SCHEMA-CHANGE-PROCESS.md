@@ -1,7 +1,8 @@
 ---
 {
     "title": "SHOW CONVERT LIGHT SCHEMA CHANGE PROCESS",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "用来查看将非 light schema change 的 olpa 表转换为 light schema change 表的情况。"
 }
 ---
 

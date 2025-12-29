@@ -1,7 +1,8 @@
 ---
 {
     "title": "GET_JSON_DOUBLE",
-    "language": "en"
+    "language": "en",
+    "description": "Function is used to extract the value of a field from a JSON document and convert it to the DOUBLE type."
 }
 ---
 

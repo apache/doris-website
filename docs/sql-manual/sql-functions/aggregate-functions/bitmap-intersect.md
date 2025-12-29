@@ -1,7 +1,8 @@
 ---
 {
-"title": "BITMAP_INTERSECT",
-"language": "en"
+    "title": "BITMAP_INTERSECT",
+    "language": "en",
+    "description": "Used to calculate the intersection of grouped Bitmaps. Common use case: calculating user retention."
 }
 ---
 

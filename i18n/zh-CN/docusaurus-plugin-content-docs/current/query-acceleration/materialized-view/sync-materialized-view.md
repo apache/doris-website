@@ -1,7 +1,8 @@
 ---
 {
     "title": "同步物化视图",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "同步物化视图是将预先计算（根据定义好的 SELECT 语句）的数据集，存储在 Doris 中的一个特殊的表。Doris 会自动维护同步物化视图的数据，无论是新增数据还是删除数据，都能保证基表（Base Table）和物化视图表的数据同步更新并保持一致，只有同步完成后，相关命令才会结束，"
 }
 ---
 
@@ -26,6 +27,10 @@
 - 与异步物化视图不同，不能直接查询同步物化视图。
 
 - SELECT 列表中，不能包含自增列，不能包含常量，不能有重复表达式，也不支持窗口函数。
+
+- SELECT 列表中，不能包含 VARBINARY 类型的列。
+
+- SELECT 列表中的列名不能和基表中已有列相同，也不能和基表的所有其他同步物化视图中的列名重复，可以通过指定别名的方式(col as xxx)避免重名。
 
 - 如果 SELECT 列表包含聚合函数，则聚合函数必须是根表达式（不支持 `sum(a) + 1`，支持 `sum(a + 1)`），且聚合函数之后不能有其他非聚合函数表达式（例如，`SELECT x, sum(a)` 可以，而 `SELECT sum(a)`, x 不行）。
 
@@ -66,7 +71,7 @@ insert into sales_records values(1,1,1,"2020-02-02",1), (1,1,1,"2020-02-02",2);
 
 ```sql
 create materialized view store_amt as 
-select store_id, sum(sale_amt) from sales_records group by store_id;
+select store_id as store_id_, sum(sale_amt) from sales_records group by store_id;
 ```
 
 ### 检查物化视图是否创建完成
@@ -162,13 +167,13 @@ explain select store_id, sum(sale_amt) from sales_records group by store_id;
 
 ```sql
 +------------------------------------------------------------------------+
-| Explain String(Nereids Planner)                                        |
+| Explain String (Nereids Planner)                                       |
 +------------------------------------------------------------------------+
 | PLAN FRAGMENT 0                                                        |
 |   OUTPUT EXPRS:                                                        |
 |     store_id[#11]                                                      |
 |     sum(sale_amt)[#12]                                                 |
-|   PARTITION: HASH_PARTITIONED: mv_store_id[#7]                         |
+|   PARTITION: HASH_PARTITIONED: store_id_[#7]                           |
 |                                                                        |
 |   HAS_COLO_PLAN_NODE: true                                             |
 |                                                                        |
@@ -176,13 +181,13 @@ explain select store_id, sum(sale_amt) from sales_records group by store_id;
 |      MYSQL_PROTOCAL                                                    |
 |                                                                        |
 |   3:VAGGREGATE (merge finalize)(384)                                   |
-|   |  output: sum(partial_sum(mva_SUM__`sale_amt`)[#8])[#10]            |
-|   |  group by: mv_store_id[#7]                                         |
-|   |  sortByGroupKey:false                                              |
-|   |  cardinality=1                                                     |
-|   |  final projections: mv_store_id[#9], sum(mva_SUM__`sale_amt`)[#10] |
+|   |  output: sum(partial_sum(__sum_1)[#8])[#10]                        |
+|   |  group by: store_id_[#7]                                           |
+|   |  sortByGroupKey: false                                             |
+|   |  cardinality = 1                                                   |
+|   |  final projections: store_id_[#9], sum(__sum_1)[#10]               |
 |   |  final project output tuple id: 4                                  |
-|   |  distribute expr lists: mv_store_id[#7]                            |
+|   |  distribute expr lists: store_id_[#7]                              |
 |   |                                                                    |
 |   2:VEXCHANGE                                                          |
 |      offset: 0                                                         |
@@ -196,22 +201,22 @@ explain select store_id, sum(sale_amt) from sales_records group by store_id;
 |                                                                        |
 |   STREAM DATA SINK                                                     |
 |     EXCHANGE ID: 02                                                    |
-|     HASH_PARTITIONED: mv_store_id[#7]                                  |
+|     HASH_PARTITIONED: store_id_[#7]                                    |
 |                                                                        |
 |   1:VAGGREGATE (update serialize)(374)                                 |
 |   |  STREAMING                                                         |
-|   |  output: partial_sum(mva_SUM__`sale_amt`[#1])[#8]                  |
-|   |  group by: mv_store_id[#0]                                         |
-|   |  sortByGroupKey:false                                              |
-|   |  cardinality=1                                                     |
+|   |  output: partial_sum(__sum_1[#1])[#8]                              |
+|   |  group by: store_id_[#0]                                           |
+|   |  sortByGroupKey: false                                             |
+|   |  cardinality = 1                                                   |
 |   |  distribute expr lists:                                            |
 |   |                                                                    |
 |   0:VOlapScanNode(369)                                                 |
 |      TABLE: test_db.sales_records(store_amt), PREAGGREGATION: ON       |
-|      partitions=1/1 (sales_records)                                    |
-|      tablets=10/10, tabletList=266568,266570,266572 ...                |
-|      cardinality=1, avgRowSize=1805.0, numNodes=1                      |
-|      pushAggOp=NONE                                                    |
+|      partitions = 1/1 (sales_records)                                  |
+|      tablets = 10/10, tabletList = 266568, 266570, 266572 ...          |
+|      cardinality = 1, avgRowSize = 1805.0, numNodes = 1                |
+|      pushAggOp = NONE                                                  |
 |                                                                        |
 |                                                                        |
 | ========== MATERIALIZATIONS ==========                                 |
@@ -227,7 +232,7 @@ explain select store_id, sum(sale_amt) from sales_records group by store_id;
 |                                                                        |
 |                                                                        |
 | ========== STATISTICS ==========                                       |
-| planed with unknown column statistics                                  |
+| planned with unknown column statistics                                 |
 +------------------------------------------------------------------------+
 ```
 
@@ -294,8 +299,8 @@ drop materialized view store_amt on sales_records;
     ```sql
     create materialized view advertiser_uv as 
     select 
-        advertiser, 
-        channel, 
+        advertiser as advertiser_, 
+        channel as channel_, 
         bitmap_union(to_bitmap(user_id)) 
     from 
         advertiser_view_record 
@@ -346,74 +351,74 @@ drop materialized view store_amt on sales_records;
    
    ```sql
    +---------------------------------------------------------------------------------------------------------------------------------------------------------+
-   | Explain String(Nereids Planner)                                                                                                                         |
-   +---------------------------------------------------------------------------------------------------------------------------------------------------------+
-   | PLAN FRAGMENT 0                                                                                                                                         |
-   |   OUTPUT EXPRS:                                                                                                                                         |
-   |     advertiser[#13]                                                                                                                                     |
-   |     channel[#14]                                                                                                                                        |
-   |     count(DISTINCT user_id)[#15]                                                                                                                        |
-   |   PARTITION: HASH_PARTITIONED: mv_advertiser[#7], mv_channel[#8]                                                                                        |
-   |                                                                                                                                                         |
-   |   HAS_COLO_PLAN_NODE: true                                                                                                                              |
-   |                                                                                                                                                         |
-   |   VRESULT SINK                                                                                                                                          |
-   |      MYSQL_PROTOCAL                                                                                                                                     |
-   |                                                                                                                                                         |
-   |   3:VAGGREGATE (merge finalize)(440)                                                                                                                    |
-   |   |  output: bitmap_union_count(partial_bitmap_union_count(mva_BITMAP_UNION__to_bitmap_with_check(CAST(`user_id` AS bigint)))[#9])[#12]                 |
-   |   |  group by: mv_advertiser[#7], mv_channel[#8]                                                                                                        |
-   |   |  sortByGroupKey:false                                                                                                                               |
-   |   |  cardinality=1                                                                                                                                      |
-   |   |  final projections: mv_advertiser[#10], mv_channel[#11], bitmap_union_count(mva_BITMAP_UNION__to_bitmap_with_check(CAST(`user_id` AS bigint)))[#12] |
-   |   |  final project output tuple id: 4                                                                                                                   |
-   |   |  distribute expr lists: mv_advertiser[#7], mv_channel[#8]                                                                                           |
-   |   |                                                                                                                                                     |
-   |   2:VEXCHANGE                                                                                                                                           |
-   |      offset: 0                                                                                                                                          |
-   |      distribute expr lists:                                                                                                                             |
-   |                                                                                                                                                         |
-   | PLAN FRAGMENT 1                                                                                                                                         |
-   |                                                                                                                                                         |
-   |   PARTITION: HASH_PARTITIONED: user_id[#6]                                                                                                              |
-   |                                                                                                                                                         |
-   |   HAS_COLO_PLAN_NODE: false                                                                                                                             |
-   |                                                                                                                                                         |
-   |   STREAM DATA SINK                                                                                                                                      |
-   |     EXCHANGE ID: 02                                                                                                                                     |
-   |     HASH_PARTITIONED: mv_advertiser[#7], mv_channel[#8]                                                                                                 |
-   |                                                                                                                                                         |
-   |   1:VAGGREGATE (update serialize)(430)                                                                                                                  |
-   |   |  STREAMING                                                                                                                                          |
-   |   |  output: partial_bitmap_union_count(mva_BITMAP_UNION__to_bitmap_with_check(CAST(`user_id` AS bigint))[#2])[#9]                                      |
-   |   |  group by: mv_advertiser[#0], mv_channel[#1]                                                                                                        |
-   |   |  sortByGroupKey:false                                                                                                                               |
-   |   |  cardinality=1                                                                                                                                      |
-   |   |  distribute expr lists:                                                                                                                             |
-   |   |                                                                                                                                                     |
-   |   0:VOlapScanNode(425)                                                                                                                                  |
-   |      TABLE: test_db.advertiser_view_record(advertiser_uv), PREAGGREGATION: ON                                                                           |
-   |      partitions=1/1 (advertiser_view_record)                                                                                                            |
-   |      tablets=10/10, tabletList=266637,266639,266641 ...                                                                                                 |
-   |      cardinality=1, avgRowSize=0.0, numNodes=1                                                                                                          |
-   |      pushAggOp=NONE                                                                                                                                     |
-   |                                                                                                                                                         |
-   |                                                                                                                                                         |
-   | ========== MATERIALIZATIONS ==========                                                                                                                  |
-   |                                                                                                                                                         |
-   | MaterializedView                                                                                                                                        |
-   | MaterializedViewRewriteSuccessAndChose:                                                                                                                 |
-   |   internal.test_db.advertiser_view_record.advertiser_uv chose,                                                                                          |
-   |                                                                                                                                                         |
-   | MaterializedViewRewriteSuccessButNotChose:                                                                                                              |
-   |   not chose: none,                                                                                                                                      |
-   |                                                                                                                                                         |
-   | MaterializedViewRewriteFail:                                                                                                                            |
-   |                                                                                                                                                         |
-   |                                                                                                                                                         |
-   | ========== STATISTICS ==========                                                                                                                        |
-   | planed with unknown column statistics                                                                                                                   |
-   +---------------------------------------------------------------------------------------------------------------------------------------------------------+
+    | Explain String(Nereids Planner)                                                                                                                         |
+    +---------------------------------------------------------------------------------------------------------------------------------------------------------+
+    | PLAN FRAGMENT 0                                                                                                                                         |
+    |   OUTPUT EXPRS:                                                                                                                                         |
+    |     advertiser[#13]                                                                                                                                     |
+    |     channel[#14]                                                                                                                                        |
+    |     count(DISTINCT user_id)[#15]                                                                                                                        |
+    |   PARTITION: HASH_PARTITIONED: advertiser_[#7], channel_[#8]                                                                                            |
+    |                                                                                                                                                         |
+    |   HAS_COLO_PLAN_NODE: true                                                                                                                              |
+    |                                                                                                                                                         |
+    |   VRESULT SINK                                                                                                                                          |
+    |      MYSQL_PROTOCAL                                                                                                                                     |
+    |                                                                                                                                                         |
+    |   3:VAGGREGATE (merge finalize)(440)                                                                                                                    |
+    |   |  output: bitmap_union_count(partial_bitmap_union_count(__bitmap_union_2)[#9])[#12]                                                                  |
+    |   |  group by: advertiser_[#7], channel_[#8]                                                                                                            |
+    |   |  sortByGroupKey:false                                                                                                                               |
+    |   |  cardinality=1                                                                                                                                      |
+    |   |  final projections: advertiser_[#10], channel_[#11], bitmap_union_count(__bitmap_union_2)[#12]                                                      |
+    |   |  final project output tuple id: 4                                                                                                                   |
+    |   |  distribute expr lists: advertiser_[#7], channel_[#8]                                                                                               |
+    |   |                                                                                                                                                     |
+    |   2:VEXCHANGE                                                                                                                                           |
+    |      offset: 0                                                                                                                                          |
+    |      distribute expr lists:                                                                                                                             |
+    |                                                                                                                                                         |
+    | PLAN FRAGMENT 1                                                                                                                                         |
+    |                                                                                                                                                         |
+    |   PARTITION: HASH_PARTITIONED: user_id[#6]                                                                                                              |
+    |                                                                                                                                                         |
+    |   HAS_COLO_PLAN_NODE: false                                                                                                                             |
+    |                                                                                                                                                         |
+    |   STREAM DATA SINK                                                                                                                                      |
+    |     EXCHANGE ID: 02                                                                                                                                     |
+    |     HASH_PARTITIONED: advertiser_[#7], channel_[#8]                                                                                                     |
+    |                                                                                                                                                         |
+    |   1:VAGGREGATE (update serialize)(430)                                                                                                                  |
+    |   |  STREAMING                                                                                                                                          |
+    |   |  output: partial_bitmap_union_count(__bitmap_union_2[#2])[#9]                                                                                       |
+    |   |  group by: advertiser_[#0], channel_[#1]                                                                                                            |
+    |   |  sortByGroupKey:false                                                                                                                               |
+    |   |  cardinality=1                                                                                                                                      |
+    |   |  distribute expr lists:                                                                                                                             |
+    |   |                                                                                                                                                     |
+    |   0:VOlapScanNode(425)                                                                                                                                  |
+    |      TABLE: test_db.advertiser_view_record(advertiser_uv), PREAGGREGATION: ON                                                                           |
+    |      partitions=1/1 (advertiser_view_record)                                                                                                            |
+    |      tablets=10/10, tabletList=266637,266639,266641 ...                                                                                                 |
+    |      cardinality=1, avgRowSize=0.0, numNodes=1                                                                                                          |
+    |      pushAggOp=NONE                                                                                                                                     |
+    |                                                                                                                                                         |
+    |                                                                                                                                                         |
+    | ========== MATERIALIZATIONS ==========                                                                                                                  |
+    |                                                                                                                                                         |
+    | MaterializedView                                                                                                                                        |
+    | MaterializedViewRewriteSuccessAndChose:                                                                                                                 |
+    |   internal.test_db.advertiser_view_record.advertiser_uv chose,                                                                                          |
+    |                                                                                                                                                         |
+    | MaterializedViewRewriteSuccessButNotChose:                                                                                                              |
+    |   not chose: none,                                                                                                                                      |
+    |                                                                                                                                                         |
+    | MaterializedViewRewriteFail:                                                                                                                            |
+    |                                                                                                                                                         |
+    |                                                                                                                                                         |
+    | ========== STATISTICS ==========                                                                                                                        |
+    | planed with unknown column statistics                                                                                                                   |
+    +---------------------------------------------------------------------------------------------------------------------------------------------------------+
    ```
 
 8. 在 `explain` 的结果中，可以看到 `internal.test_db.advertiser_view_record.advertiser_uv chose`。也就是说，查询会直接扫描物化视图的数据，说明匹配成功。其次，对于 `user_id` 字段求 `count(distinct)` 被改写为求 `bitmap_union_count(to_bitmap)`，也就是通过 Bitmap 的方式来达到精确去重的效果。
@@ -432,7 +437,7 @@ drop materialized view store_amt on sales_records;
        k1 int, 
        k2 int, 
        k3 int, 
-       kx date
+       kx int
    ) 
    distributed by hash(k1) 
    properties("replication_num" = "1");
@@ -443,7 +448,7 @@ drop materialized view store_amt on sales_records;
 2. 创建 k3 为前缀索引的物化视图：
    
    ```sql
-   create materialized view mv_1 as SELECT k3, k2, k1 FROM test_table;
+   create materialized view mv_1 as SELECT k3 as k3_, k2 as k2_, k1 as k1_ FROM test_table;
    ```
 
 3. 使用 EXPLAIN 检查查询是否匹配物化视图：
@@ -463,7 +468,7 @@ drop materialized view store_amt on sales_records;
    |     k1[#7]                                               |
    |     k2[#8]                                               |
    |     k3[#9]                                               |
-   |   PARTITION: HASH_PARTITIONED: mv_k1[#2]                 |
+   |   PARTITION: HASH_PARTITIONED: k1_[#2]                   |
    |                                                          |
    |   HAS_COLO_PLAN_NODE: false                              |
    |                                                          |
@@ -477,7 +482,7 @@ drop materialized view store_amt on sales_records;
    |      tablets=10/10, tabletList=271177,271179,271181 ...  |
    |      cardinality=1, avgRowSize=0.0, numNodes=1           |
    |      pushAggOp=NONE                                      |
-   |      final projections: mv_k1[#2], mv_k2[#1], mv_k3[#0]  |
+   |      final projections: k1_[#2], mv_k2[#1], mv_k3[#0]    |
    |      final project output tuple id: 2                    |
    |                                                          |
    |                                                          |

@@ -1,7 +1,8 @@
 ---
 {
     "title": "Distribute Hint",
-    "language": "en"
+    "language": "en",
+    "description": "The Distribute hint is used to control the shuffle method for joins."
 }
 ---
 

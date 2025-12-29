@@ -1,7 +1,8 @@
 ---
 {
     "title": "MINUTES_ADD",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "MINUTESADD 函数用于向输入的日期时间值中添加指定的分钟数，并返回计算后的新日期时间值。该函数支持处理 DATE、DATETIME类型。"
 }
 ---
 

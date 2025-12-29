@@ -1,7 +1,8 @@
 ---
 {
     "title": "catalog_meta_cache_statistics",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "查看当前连接的 FE 中，External Catalog 的元数据缓存信息。"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "MAP_CONTAINS_KEY",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "判断给定 map 中是否包含特定的键 key"
 }
 ---
 

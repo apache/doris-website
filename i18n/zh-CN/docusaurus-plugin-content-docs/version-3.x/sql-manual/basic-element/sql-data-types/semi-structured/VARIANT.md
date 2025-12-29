@@ -1,7 +1,8 @@
 ---
 {
     "title": "VARIANT",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "VARIANT 类型用于存储半结构化 JSON 数据，可包含不同基础类型（整数、字符串、布尔等）以及一层数组与嵌套对象。写入时会自动基于 JSON Path 推断子列结构与类型，并将高频路径物化为独立子列，充分利用列式存储和向量化执行，兼顾灵活性与性能。"
 }
 ---
 

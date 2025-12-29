@@ -1,7 +1,8 @@
 ---
 {
-  "title": "DAY_CEIL",
-  "language": "en"
+    "title": "DAY_CEIL",
+    "language": "en",
+    "description": "The dayceil function rounds up a specified date or time value to the start of the nearest specified day period."
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "rowsets",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "返回 Rowset 的基础信息。"
 }
 ---
 

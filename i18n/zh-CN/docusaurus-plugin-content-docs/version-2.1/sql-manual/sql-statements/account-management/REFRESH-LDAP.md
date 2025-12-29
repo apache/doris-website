@@ -1,7 +1,8 @@
 ---
 {
     "title": "REFRESH LDAP",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "该语句用于刷新 Doris 中 LDAP 的缓存信息。修改 LDAP 服务中用户信息或者修改 Doris 中 LDAP 用户组对应的 role 权限，可能因为缓存的原因不会立即生效，可通过该语句刷新缓存。"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "Tablet 元数据管理工具",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "在最新版本的代码中，我们在 BE 端引入了 RocksDB，用于存储 tablet 的元信息，以解决之前通过 header 文件的方式存储元信息，带来的各种功能和性能方面的问题。当前每一个数据目录（root\\path），都会有一个对应的 RocksDB 实例，其中以 key-value 的方式，"
 }
 ---
 

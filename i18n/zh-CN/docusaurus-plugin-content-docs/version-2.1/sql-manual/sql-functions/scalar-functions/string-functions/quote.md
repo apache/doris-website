@@ -1,7 +1,8 @@
 ---
 {
     "title": "QUOTE",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "将参数中所有的字符串按原样输出，并用''套起来"
 }
 ---
 

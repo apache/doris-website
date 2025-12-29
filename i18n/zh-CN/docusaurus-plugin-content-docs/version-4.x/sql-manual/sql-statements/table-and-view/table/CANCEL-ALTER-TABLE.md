@@ -1,7 +1,8 @@
 ---
 {
     "title": "CANCEL-ALTER-TABLE",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "该语句用于取消（撤销）一个正在执行的 ALTER TABLE 操作。当一个 ALTER TABLE 操作正在执行时，您可以使用此命令来终止该操作。"
 }
 ---
 

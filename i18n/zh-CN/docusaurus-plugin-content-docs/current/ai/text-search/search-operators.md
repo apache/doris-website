@@ -1,7 +1,8 @@
 ---
 {
     "title": "全文检索与查询加速支持",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "Apache Doris全文检索与查询加速功能详解：支持MATCH_ANY/ALL/PHRASE/REGEXP等8种全文检索算子，提供短语匹配、前缀匹配、正则匹配、边缘短语匹配等高级搜索能力。结合倒排索引加速等值、范围、集合、数组等复杂查询，显著提升文本搜索和结构化数据过滤性能。"
 }
 ---
 

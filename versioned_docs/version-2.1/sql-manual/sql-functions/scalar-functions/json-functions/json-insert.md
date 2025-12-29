@@ -1,7 +1,8 @@
 ---
 {
     "title": "JSON_INSERT",
-    "language": "en"
+    "language": "en",
+    "description": "The JSONINSERT function is used to insert data into JSON and return the result."
 }
 ---
 

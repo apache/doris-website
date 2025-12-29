@@ -1,7 +1,8 @@
 ---
 {
     "title": "ARRAY_PRODUCT",
-    "language": "en"
+    "language": "en",
+    "description": "Calculates the product of all elements in an array"
 }
 ---
 

@@ -1,9 +1,9 @@
 ---
 {
     "title": "SELECT",
-    "language": "en"
+    "language": "en",
+    "description": "Mainly introduces the use of Select syntax"
 }
-
 ---
 
 ## Description

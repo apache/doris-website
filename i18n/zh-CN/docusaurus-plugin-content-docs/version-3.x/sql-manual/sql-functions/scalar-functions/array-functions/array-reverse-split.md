@@ -1,7 +1,8 @@
 ---
 {
     "title": "ARRAY_REVERSE_SPLIT",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "返回一个 ARRAY 类型的结果，其中按照对应条件分割后的数组"
 }
 ---
 

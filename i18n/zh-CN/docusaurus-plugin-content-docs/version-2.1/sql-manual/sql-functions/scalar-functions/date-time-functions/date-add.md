@@ -1,7 +1,8 @@
 ---
 {
     "title": "DATE_ADD",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "向日期添加指定的时间间隔。"
 }
 ---
 

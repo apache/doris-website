@@ -1,7 +1,8 @@
 ---
 {
     "title": "浮点类型 (FLOAT 和 DOUBLE)",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "Doris 提供了两种浮点数据类型：FLOAT 和 DOUBLE。这些是可变精度的数值类型，遵循 IEEE 754 浮点算术标准。"
 }
 ---
 

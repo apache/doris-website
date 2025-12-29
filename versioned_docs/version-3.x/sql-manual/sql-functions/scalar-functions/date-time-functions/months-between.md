@@ -1,7 +1,8 @@
 ---
 {
     "title": "MONTHS_BETWEEN",
-    "language": "en"
+    "language": "en",
+    "description": "The MONTHSBETWEEN function calculates the floating-point number of months between two dates."
 }
 ---
 

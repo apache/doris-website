@@ -1,7 +1,8 @@
 ---
 {
     "title": "DROP WORKLOAD GROUP",
-    "language": "en"
+    "language": "en",
+    "description": "This statement is used to delete a workload group."
 }
 ---
 

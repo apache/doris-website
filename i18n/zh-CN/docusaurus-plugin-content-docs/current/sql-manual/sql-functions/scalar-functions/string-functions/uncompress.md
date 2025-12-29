@@ -1,7 +1,8 @@
 ---
 {
     "title": "UNCOMPRESS",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "UNCOMPRESS 函数用于将二进制数据解压缩成字符串或值，你需要确保二进制数据需要是COMPRESS的结果。"
 }
 ---
 

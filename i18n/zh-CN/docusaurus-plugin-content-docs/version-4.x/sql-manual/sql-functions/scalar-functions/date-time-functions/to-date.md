@@ -1,7 +1,8 @@
 ---
 {
-  "title": "TO_DATE",
-  "language": "zh-CN"
+    "title": "TO_DATE",
+    "language": "zh-CN",
+    "description": "该函数等价于 CAST(<STRING> TO DATE)。"
 }
 ---
 

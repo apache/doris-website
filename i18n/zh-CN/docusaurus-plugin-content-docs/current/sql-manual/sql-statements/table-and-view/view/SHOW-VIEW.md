@@ -1,7 +1,8 @@
 ---
 {
     "title": "SHOW VIEW",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "该语句用于展示基于给定表建立的所有视图"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "Extra Basepath Action",
-    "language": "en"
+    "language": "en",
+    "description": "Used to obtain http basepath."
 }
 ---
 

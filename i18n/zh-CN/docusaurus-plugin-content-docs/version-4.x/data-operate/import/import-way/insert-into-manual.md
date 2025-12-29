@@ -1,7 +1,8 @@
 ---
 {
     "title": "Insert Into Select",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "INSERT INTO 支持将 Doris 查询的结果导入到另一个表中。INSERT INTO 是一个同步导入方式，执行导入后返回导入结果。可以通过请求的返回判断导入是否成功。INSERT INTO 可以保证导入任务的原子性，要么全部导入成功，要么全部导入失败。"
 }
 ---
 

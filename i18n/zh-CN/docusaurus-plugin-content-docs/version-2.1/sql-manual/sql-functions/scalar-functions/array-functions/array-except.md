@@ -1,7 +1,8 @@
 ---
 {
     "title": "ARRAY_EXCEPT",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "返回一个数组，包含所有在 array1 内但不在 array2 内的元素，不包含重复项，如果输入参数为 NULL，则返回 NULL"
 }
 ---
 

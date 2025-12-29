@@ -1,7 +1,8 @@
 ---
 {
-  "title": "Deploy Doris Cluster",
-  "language": "en"
+    "title": "Deploy Doris Cluster",
+    "language": "en",
+    "description": "To deploy a Doris cluster on Kubernetes, ensure that the Doris Operator is deployed."
 }
 ---
 

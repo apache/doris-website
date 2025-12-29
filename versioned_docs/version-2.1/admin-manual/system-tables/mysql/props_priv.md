@@ -1,7 +1,8 @@
 ---
 {
     "title": "procs_priv",
-    "language": "en"
+    "language": "en",
+    "description": "This table is solely for the purpose of compatibility with MySQL behavior. It is always empty."
 }
 ---
 

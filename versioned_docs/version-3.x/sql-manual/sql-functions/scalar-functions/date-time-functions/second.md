@@ -1,7 +1,8 @@
 ---
 {
     "title": "SECOND",
-    "language": "en"
+    "language": "en",
+    "description": "The function returns the second part of the specified datetime value. The range of seconds is 0 to 59."
 }
 ---
 

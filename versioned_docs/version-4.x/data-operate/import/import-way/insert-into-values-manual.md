@@ -1,7 +1,8 @@
 ---
 {
     "title": "Insert Into Values",
-    "language": "en"
+    "language": "en",
+    "description": "The INSERT INTO VALUES statement supports importing values from SQL into a Doris table. INSERT INTO VALUES is a synchronous import method,"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "ARRAY_FILTER",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "使用 lambda 表达式作为输入参数，计算筛选另外的输入参数 ARRAY 列的数据。 并过滤掉在结果中 0 和 NULL 的值。"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "MONTH_FLOOR",
-    "language": "en"
+    "language": "en",
+    "description": "Rounds down a datetime value to the nearest specified month interval. If a starting time (origin) is provided,"
 }
 ---
 

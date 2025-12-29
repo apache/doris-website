@@ -1,7 +1,8 @@
 ---
 {
     "title": "CREATE INDEX",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "为表创建新的索引，必须指定表名和索引名，可选指定索引类型、属性、注释。"
 }
 ---
 
@@ -14,7 +15,7 @@
 ```sql
 CREATE INDEX [IF NOT EXISTS] <index_name> 
              ON <table_name> (<column_name> [, ...])
-             [USING {INVERTED | NGRAM_BF}]
+             [USING {INVERTED | NGRAM_BF | ANN}]
              [PROPERTIES ("<key>" = "<value>"[ , ...])]
              [COMMENT '<index_comment>']
 ```
@@ -90,4 +91,14 @@ CREATE INDEX [IF NOT EXISTS] <index_name>
 
     ```sql
     CREATE INDEX index2 ON table1 USING NGRAM_BF PROPERTIES("gram_size"="3", "bf_size"="1024");
+    ```
+
+- 在table1 上创建 ANN 索引 index3
+
+    ```sql
+    CREATE INDEX index3 ON table1 (`embedding`) USING ANN PROPERTIES(
+    "index_type"="hnsw",
+    "metric_type"="l2_distance",
+    "dim"="128"
+    );
     ```

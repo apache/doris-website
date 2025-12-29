@@ -1,7 +1,8 @@
 ---
 {
     "title": "ARRAY_FILTER",
-    "language": "en"
+    "language": "en",
+    "description": "Use the lambda expression as the input parameter to calculate and filter the data of the ARRAY column of the other input parameter."
 }
 ---
 

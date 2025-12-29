@@ -1,7 +1,8 @@
 ---
 {
     "title": "SECONDS_ADD",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "函数用于在指定的日期时间值上增加或减少指定的秒数，并返回计算后的日期时间值"
 }
 ---
 

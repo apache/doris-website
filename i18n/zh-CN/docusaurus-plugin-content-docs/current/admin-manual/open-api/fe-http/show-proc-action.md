@@ -1,7 +1,8 @@
 ---
 {
     "title": "Show Proc Action",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "用于获取 PROC 信息。"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "恢复 tablet",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "该功能用于恢复 trash 目录中被误删的 tablet 数据。"
 }
 ---
 

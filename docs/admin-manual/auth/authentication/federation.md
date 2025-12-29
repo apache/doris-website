@@ -1,7 +1,8 @@
 ---
 {
-"title": "Federated Authentication",
-"language": "en"
+    "title": "Federated Authentication",
+    "language": "en",
+    "description": "Integrate third-party LDAP services to provide login authentication and group authorization services for Doris."
 }
 ---
 
@@ -100,7 +101,7 @@ Assuming `jack` also belongs to LDAP groups `doris_qa` and `doris_pm`; and Doris
 
 ### LDAP Example
 #### Modify Doris Configuration
-1. In the `fe/conf/fe.conf` file, configure the authentication method as `ldap authentication_type=ldap`.
+1. In the `fe/conf/fe.conf` file, configure the authentication method as ldap: `authentication_type=ldap`.
 2. In the `fe/conf/ldap.conf` file, configure the basic LDAP information.
 3. Set the LDAP administrator password: After configuring the `ldap.conf` file, start the fe, log in to Doris using the root or admin account, and execute the SQL
 

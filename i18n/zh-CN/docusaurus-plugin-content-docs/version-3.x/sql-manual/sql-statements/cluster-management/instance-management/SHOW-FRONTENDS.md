@@ -1,7 +1,8 @@
 ---
 {
     "title": "SHOW FRONTENDS",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "该语句用于查看 FE 节点的基本状态信息。"
 }
 ---
 
@@ -45,7 +46,7 @@ SHOW FRONTENDS
 
 | 权限         | 对象 | 说明 |
 |------------|----|----|
-| ADMIN_PRIV |    |    |
+| SELECT_PRIV | internal.information_schema | 所有用户默认有该 db 的权限 |
 
 ## 注意事项
 

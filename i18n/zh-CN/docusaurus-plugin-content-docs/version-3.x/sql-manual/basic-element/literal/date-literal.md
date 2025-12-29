@@ -1,7 +1,8 @@
 ---
 {
     "title": "日期类型字面量",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "和标准 SQL 一致，Doris 要求使用类型关键字和字符串来指定时间字面量。关键字和字符串之间的空格是可选的。例如："
 }
 ---
 

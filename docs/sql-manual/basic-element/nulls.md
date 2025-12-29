@@ -1,7 +1,8 @@
 ---
 {
     "title": "NULL",
-    "language": "en"
+    "language": "en",
+    "description": "If a column in a row has no value, it is said to be NULL. NULL can appear in any column not restricted by a \"NOT NULL\" constraint."
 }
 ---
 
@@ -20,6 +21,31 @@ When a NULL is provided as an argument, most aggregate functions return NULL. Yo
 ## NULL and Comparison Operators
 
 To test for NULL results, only the comparison conditions IS NULL and IS NOT NULL can be used. If a condition that depends on NULL is used, the result is UNKNOWN. Since NULL represents missing data, NULL cannot be equal to or not equal any value or another NULL.
+
+In comparable scenarios (such as nested type comparisons, where the inner value is NULL), NULL is always considered to be less than any value that can be represented by the current type. That is, it is less than any value except itself:
+
+```sql
+select array(null) < array(-1), array(null) > array(-1);
++-------------------------+-------------------------+
+| array(null) < array(-1) | array(null) > array(-1) |
++-------------------------+-------------------------+
+|                       1 |                       0 |
++-------------------------+-------------------------+
+
+select array(cast("nan" as double)) > array(null);
++--------------------------------------------+
+| array(cast("nan" as double)) > array(null) |
++--------------------------------------------+
+|                                          1 |
++--------------------------------------------+
+
+select array(cast("inf" as double)) > array(null);
++--------------------------------------------+
+| array(cast("inf" as double)) > array(null) |
++--------------------------------------------+
+|                                          1 |
++--------------------------------------------+
+```
 
 ## NULL in Conditions
 

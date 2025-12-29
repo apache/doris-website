@@ -1,9 +1,9 @@
 ---
 {
-   "title": "DROP BROKER",
-   "language": "zh-CN"
+    "title": "DROP BROKER",
+    "language": "zh-CN",
+    "description": "该语句是删除 BROKER 节点。"
 }
-
 ---
 
 ## 描述

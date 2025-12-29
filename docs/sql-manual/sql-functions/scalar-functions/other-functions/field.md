@@ -1,7 +1,8 @@
 ---
 {
     "title": "FIELD",
-    "language": "en"
+    "language": "en",
+    "description": "Returns the position of the first occurrence of <expr> in the list of values <param> [, ...]. If <expr> is not found, the function returns 0."
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "ARRAY_FLATTEN",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "将多维数组展平成一维。"
 }
 ---
 

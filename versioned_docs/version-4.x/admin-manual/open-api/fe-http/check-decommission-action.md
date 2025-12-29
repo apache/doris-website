@@ -1,7 +1,8 @@
 ---
 {
     "title": "Check Decommission Action",
-    "language": "en"
+    "language": "en",
+    "description": "Used to determine whether the specified BE can be decommissioned. For example, after the node being decommissioned,"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "Restore",
-    "language": "en"
+    "language": "en",
+    "description": "The following SQL statement can be used to view existing backups in the Repository named examplerepo."
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "QUARTERS_ADD",
-    "language": "en"
+    "language": "en",
+    "description": "The function adds or subtracts a specified number of quarters to/from a given date or datetime value and returns the resulting date."
 }
 ---
 

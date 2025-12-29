@@ -1,7 +1,8 @@
 ---
 {
     "title": "ST_ANGLE",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "输入三个点，它们表示两条相交的线。返回这些线之间的夹角。"
 }
 ---
 

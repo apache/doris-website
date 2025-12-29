@@ -1,7 +1,8 @@
 ---
 {
     "title": "WEEKS_SUB",
-    "language": "en"
+    "language": "en",
+    "description": "The WEEKSSUB function is used to subtract (or add) a specified number of weeks from a given date or time value,"
 }
 ---
 

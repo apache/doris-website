@@ -1,7 +1,8 @@
 ---
 {
     "title": "SHOW VARIABLES",
-    "language": "en"
+    "language": "en",
+    "description": "This statement is used to display Doris system variables, which can be queried by conditions"
 }
 ---
 

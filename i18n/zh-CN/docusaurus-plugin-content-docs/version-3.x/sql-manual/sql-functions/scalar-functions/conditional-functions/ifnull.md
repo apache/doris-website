@@ -1,7 +1,8 @@
 ---
 {
     "title": "IFNULL",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "如果 <expr1> 的值不为 NULL，则返回 <expr1>；否则返回 <expr2>。"
 }
 ---
 

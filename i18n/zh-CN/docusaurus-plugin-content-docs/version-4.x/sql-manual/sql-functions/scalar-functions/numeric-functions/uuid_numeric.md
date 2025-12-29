@@ -1,7 +1,8 @@
 ---
 {
     "title": "UUID_NUMERIC",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "返回一个 LARGEINT 类型的 uuid"
 }
 ---
 

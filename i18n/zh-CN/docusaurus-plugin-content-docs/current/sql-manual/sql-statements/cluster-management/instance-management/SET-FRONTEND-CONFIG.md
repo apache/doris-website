@@ -1,7 +1,8 @@
 ---
 {
     "title": "SET FRONTEND CONFIG",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "该语句用于设置集群的配置项（当前仅支持设置 FE 的配置项）。"
 }
 ---
 

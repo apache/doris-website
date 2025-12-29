@@ -1,7 +1,8 @@
 ---
 {
     "title": "DATE_FORMAT",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "DATEFORMAT 函数用于将日期或时间值按照指定的格式字符串（format）转换为字符串。支持对 DATE（仅日期）和 DATETIME（日期和时间）类型进行格式化，输出结果为符合格式要求的字符串。"
 }
 ---
 

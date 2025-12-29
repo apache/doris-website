@@ -1,7 +1,8 @@
 ---
 {
     "title": "metadata_name_ids",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "查看对象的 ID 信息"
 }
 ---
 

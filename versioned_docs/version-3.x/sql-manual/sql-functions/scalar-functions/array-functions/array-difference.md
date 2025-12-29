@@ -1,7 +1,8 @@
 ---
 {
     "title": "ARRAY_DIFFERENCE",
-    "language": "en"
+    "language": "en",
+    "description": "Calculates the difference between adjacent array elements. Returns an array where the first element will be 0,"
 }
 ---
 

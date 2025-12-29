@@ -1,7 +1,8 @@
 ---
 {
-"title": "GROUP_BITMAP_XOR",
-"language": "zh-CN"
+    "title": "GROUP_BITMAP_XOR",
+    "language": "zh-CN",
+    "description": "主要用于合并多个 bitmap 的值，并对结果进行按位 xor 计算"
 }
 ---
 

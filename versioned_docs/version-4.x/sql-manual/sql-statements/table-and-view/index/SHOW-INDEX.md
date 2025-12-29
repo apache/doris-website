@@ -1,13 +1,14 @@
 ---
 {
     "title": "SHOW INDEX",
-    "language": "en"
+    "language": "en",
+    "description": "This statement is used to display information about indexes in a table. Currently, only inverted indexes and ann indexes are supported."
 }
 ---
 
 ## Description
 
-This statement is used to display information about indexes in a table. Currently, only bitmap indexes are supported.
+This statement is used to display information about indexes in a table. Currently, only inverted indexes and ann indexes are supported.
 
 ## Syntax
 

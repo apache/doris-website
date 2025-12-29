@@ -1,7 +1,8 @@
 ---
 {
     "title": "RESTORE",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "该语句用于将之前通过 BACKUP 命令备份的数据，恢复到指定数据库下。该命令为异步操作。提交成功后，需通过 SHOW RESTORE命令查看进度。"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "STDDEV,STDDEV_POP",
-    "language": "en"
+    "language": "en",
+    "description": "Returns the standard deviation of the expr expression"
 }
 ---
 

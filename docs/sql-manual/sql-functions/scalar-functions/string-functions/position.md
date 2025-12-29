@@ -1,7 +1,8 @@
 ---
 {
     "title": "POSITION",
-    "language": "en"
+    "language": "en",
+    "description": "The POSITION function is used to find the position of a substring in a main string, with positions counting from 1."
 }
 ---
 

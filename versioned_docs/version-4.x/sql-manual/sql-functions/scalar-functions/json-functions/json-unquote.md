@@ -1,7 +1,8 @@
 ---
 {
     "title": "JSON_UNQUOTE",
-    "language": "en"
+    "language": "en",
+    "description": "This function removes quotes from JSON values and returns the result as a string. If the parameter is NULL, it returns NULL."
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "MONTHNAME",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "返回日期对应的英文月份名称。返回值为完整的英文月份名称（January 到 December）。"
 }
 ---
 

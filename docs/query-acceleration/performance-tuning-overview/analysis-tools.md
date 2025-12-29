@@ -1,7 +1,8 @@
 ---
 {
     "title": "Analysis Tools",
-    "language": "en"
+    "language": "en",
+    "description": "The previous section on diagnostic tools helped business and operations personnel pinpoint specific slow SQL queries."
 }
 ---
 

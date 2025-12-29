@@ -1,7 +1,8 @@
 ---
 {
     "title": "UUID_TO_INT",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "UUIDTOINT 函数用于将 UUID 字符串转换为 INT128 整数表示。这对于需要在数据库中以整数形式存储 UUID 的场景非常有用。"
 }
 ---
 

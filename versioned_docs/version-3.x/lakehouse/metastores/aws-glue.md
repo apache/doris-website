@@ -1,7 +1,8 @@
 ---
 {
     "title": "AWS Glue",
-    "language": "en"
+    "language": "en",
+    "description": "This document describes the parameter configuration when using AWS Glue Catalog to access Iceberg tables or Hive tables through CREATE CATALOG."
 }
 ---
 

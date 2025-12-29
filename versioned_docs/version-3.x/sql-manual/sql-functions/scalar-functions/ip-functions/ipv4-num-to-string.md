@@ -1,7 +1,8 @@
 ---
 {
     "title": "IPV4_NUM_TO_STRING",
-    "language": "en"
+    "language": "en",
+    "description": "Takes a Int16, Int32, Int64 number. Interprets it as an IPv4 address in big endian."
 }
 ---
 

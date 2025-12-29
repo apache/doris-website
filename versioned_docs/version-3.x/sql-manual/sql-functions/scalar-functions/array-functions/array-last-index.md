@@ -1,7 +1,8 @@
 ---
 {
     "title": "ARRAY_LAST_INDEX",
-    "language": "en"
+    "language": "en",
+    "description": "Use an lambda expression as an input parameter to perform corresponding expression calculations on the internal data of other input ARRAY parameters."
 }
 ---
 

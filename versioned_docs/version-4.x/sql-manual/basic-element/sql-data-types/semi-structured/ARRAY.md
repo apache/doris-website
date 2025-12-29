@@ -1,7 +1,9 @@
 ---
 {
-    "title": "ARRAY",
-    "language": "en"
+    "title": "ARRAY | Semi Structured",
+    "language": "en",
+    "description": "The ARRAY<T> type is used to represent an ordered collection of elements, where each element has the same data type. For example,",
+    "sidebar_label": "ARRAY"
 }
 ---
 
@@ -118,6 +120,62 @@ The `ARRAY<T>` type is used to represent an ordered collection of elements, wher
   | ["3"]                                                 |
   +-------------------------------------------------------+
   ```
+
+## Comparison Relationship
+
+ARRAY is an ordered type, and [1, 2, 3] and [3, 2, 1] are two different ARRAYs. Two ARRAYs are equal if and only if their elements are equal one by one in order:
+
+```sql
+select array(1,2,3) = array(3,2,1);
++-----------------------------+
+| array(1,2,3) = array(3,2,1) |
++-----------------------------+
+|                           0 |
++-----------------------------+
+
+select array(1,2,3) = array(1,2,3);
++-----------------------------+
+| array(1,2,3) = array(1,2,3) |
++-----------------------------+
+|                           1 |
++-----------------------------+
+
+select array(1,2,3) = array(1,2,3,3);
++-------------------------------+
+| array(1,2,3) = array(1,2,3,3) |
++-------------------------------+
+|                             0 |
++-------------------------------+
+```
+
+In partial order comparison, ARRAY follows dictionary order. Given two arrays `A` and `B`, starting from index `i = 1`, the elements at corresponding positions `A[i]` and `B[i]` are compared:
+
+- If `A[i] ≠ B[i]` are not equal, the comparison result (<, >) directly determines the overall comparison result of the arrays
+- If `A[i] = B[i]`, continue comparing the next position
+- When the arrays are completely equal in all common length ranges, the shorter array is smaller.
+
+```sql
+select array(1,2,3) > array(1,2,3,3), array(1,2,3) < array(1,2,3,3);
++-------------------------------+-------------------------------+
+| array(1,2,3) > array(1,2,3,3) | array(1,2,3) < array(1,2,3,3) |
++-------------------------------+-------------------------------+
+|                             0 |                             1 |
++-------------------------------+-------------------------------+
+
+select array(1,3,2) > array(1,2,3), array(1,3,2) < array(1,2,3);
++-----------------------------+-----------------------------+
+| array(1,3,2) > array(1,2,3) | array(1,3,2) < array(1,2,3) |
++-----------------------------+-----------------------------+
+|                           1 |                           0 |
++-----------------------------+-----------------------------+
+
+select array(null) < array(-1), array(null) > array(-1);
++-------------------------+-------------------------+
+| array(null) < array(-1) | array(null) > array(-1) |
++-------------------------+-------------------------+
+|                       1 |                       0 |
++-------------------------+-------------------------+
+```
 
 ## Query Acceleration
 
@@ -269,3 +327,4 @@ The `ARRAY<T>` type is used to represent an ordered collection of elements, wher
   |    3 | [7, 8, 9]    |
   +------+--------------+
   ```
+

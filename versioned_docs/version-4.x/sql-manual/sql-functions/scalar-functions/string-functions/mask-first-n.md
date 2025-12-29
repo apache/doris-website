@@ -1,7 +1,8 @@
 ---
 {
     "title": "MASK_FIRST_N",
-    "language": "en"
+    "language": "en",
+    "description": "The MASKFIRSTN function is used to mask the first N bytes of a string. It replaces uppercase letters with X, lowercase letters with x,"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "Profile Action",
-    "language": "en"
+    "language": "en",
+    "description": "Used to obtain the query profile of the specified query id. If queryid is not exists, return 404 NOT FOUND ERROR If queryid exists,"
 }
 ---
 

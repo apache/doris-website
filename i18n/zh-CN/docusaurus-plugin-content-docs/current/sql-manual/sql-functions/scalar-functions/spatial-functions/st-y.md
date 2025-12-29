@@ -1,7 +1,8 @@
 ---
 {
     "title": "ST_Y",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "当 point 是一个合法的 POINT 类型时，返回对应的 Y 坐标值。在地理空间场景中，Y 坐标通常对应 纬度（Latitude），取值范围为 [-90.0, 90.0]（单位：度）"
 }
 ---
 

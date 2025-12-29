@@ -1,7 +1,8 @@
 ---
 {
     "title": "TIMEDIFF",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "TIMEDIFF 函数用于计算两个日期时间值之间的差值。该函数接受两个参数，并返回其差值，结果为 TIME 类型。"
 }
 ---
 

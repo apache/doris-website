@@ -1,7 +1,8 @@
 ---
 {
     "title": "LOG",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "返回基于底数b的x的对数。"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "DESC FUNCTION",
-    "language": "en"
+    "language": "en",
+    "description": "Use the desc function tablevaluedfunction to obtain the schema information for the corresponding table-valued function."
 }
 ---
 

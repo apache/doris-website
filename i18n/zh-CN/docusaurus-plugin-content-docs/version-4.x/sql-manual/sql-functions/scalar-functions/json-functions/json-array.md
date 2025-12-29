@@ -1,7 +1,8 @@
 ---
 {
     "title": "JSON_ARRAY",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "生成一个包含指定元素的 json 数组，未传入参数时返回空数组。"
 }
 ---
 

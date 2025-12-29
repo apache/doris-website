@@ -1,7 +1,8 @@
 ---
 {
     "title": "SHOW CHARSET",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "\"SHOW CHARSET\" 命令用于显示当前数据库管理系统中可用的字符集（character set）以及与每个字符集相关联的一些属性。"
 }
 ---
 

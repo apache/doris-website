@@ -1,7 +1,8 @@
 ---
 {
     "title": "MINUTES_SUB",
-    "language": "en"
+    "language": "en",
+    "description": "Subtracts a specified number of minutes from a datetime value and returns a new datetime value."
 }
 ---
 

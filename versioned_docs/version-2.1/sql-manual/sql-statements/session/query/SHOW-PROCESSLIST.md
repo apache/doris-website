@@ -1,7 +1,8 @@
 ---
 {
     "title": "SHOW PROCESSLIST",
-    "language": "en"
+    "language": "en",
+    "description": "1. FULL"
 }
 ---
 

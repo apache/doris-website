@@ -1,7 +1,8 @@
 ---
 {
-"title": "CORR",
-"language": "en"
+    "title": "CORR",
+    "language": "en",
+    "description": "Calculate the Pearson coefficient of two random variables."
 }
 ---
 

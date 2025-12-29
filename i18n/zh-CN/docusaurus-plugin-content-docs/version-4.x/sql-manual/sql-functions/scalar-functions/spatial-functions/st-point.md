@@ -1,7 +1,8 @@
 ---
 {
     "title": "ST_POINT",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "通过给定的 X 坐标值，Y 坐标值返回对应的 Point。"
 }
 ---
 

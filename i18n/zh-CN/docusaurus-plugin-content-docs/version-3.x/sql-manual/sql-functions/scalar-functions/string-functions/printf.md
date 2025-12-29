@@ -1,7 +1,8 @@
 ---
 {
     "title": "PRINTF",
-    "language": "cn"
+    "language": "cn",
+    "description": "使用指定的 printf 格式字符串和参数返回格式化后的字符串。"
 }
 ---
 

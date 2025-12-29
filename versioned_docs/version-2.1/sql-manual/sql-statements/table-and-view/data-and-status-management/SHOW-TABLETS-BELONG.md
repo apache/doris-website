@@ -1,7 +1,8 @@
 ---
 {
     "title": "SHOW TABLETS BELONG",
-    "language": "en"
+    "language": "en",
+    "description": "This statement is used to show tablets and information of their belonging table."
 }
 ---
 

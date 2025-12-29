@@ -1,7 +1,8 @@
 ---
 {
     "title": "SHOW CREATE USER",
-    "language": "en"
+    "language": "en",
+    "description": "SHOW CREATE USER statement is used to display the creation statement of a user in a database system."
 }
 ---
 

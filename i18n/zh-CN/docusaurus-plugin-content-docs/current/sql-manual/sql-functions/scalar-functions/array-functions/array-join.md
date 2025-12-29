@@ -1,7 +1,8 @@
 ---
 {
     "title": "ARRAY_JOIN",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "将数组中的元素连接成一个字符串。函数会将数组中的所有元素转换为字符串，然后用指定的分隔符连接它们。"
 }
 ---
 

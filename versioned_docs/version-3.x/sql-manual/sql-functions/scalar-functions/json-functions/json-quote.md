@@ -1,7 +1,8 @@
 ---
 {
     "title": "JSON_QUOTE",
-    "language": "en"
+    "language": "en",
+    "description": "Enclose jsonvalue in double quotes (\"), escape special characters contained."
 }
 ---
 

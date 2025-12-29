@@ -1,7 +1,8 @@
 ---
 {
     "title": "SHOW WARM UP JOB",
-    "language": "en"
+    "language": "en",
+    "description": "The commands are used to display warm-up jobs in Doris."
 }
 ---
 

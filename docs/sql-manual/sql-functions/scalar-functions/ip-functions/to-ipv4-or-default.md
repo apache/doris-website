@@ -1,7 +1,8 @@
 ---
 {
     "title": "TO_IPV4_OR_DEFAULT",
-    "language": "en"
+    "language": "en",
+    "description": "Takes the string form of an IPv4 address and returns a value of IPv4 type. For invalid input or NULL input, returns the default value 0.0.0.0."
 }
 ---
 

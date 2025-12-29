@@ -1,7 +1,8 @@
 ---
 {
     "title": "SHOW TRANSACTION",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "该语法用于查看指定 transaction id 或 label 的事务详情。"
 }
 ---
 

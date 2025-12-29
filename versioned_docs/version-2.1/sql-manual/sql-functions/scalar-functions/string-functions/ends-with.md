@@ -1,7 +1,8 @@
 ---
 {
     "title": "ENDS_WITH",
-    "language": "en"
+    "language": "en",
+    "description": "Returns true if the string ends with the specified suffix, otherwise returns false. Special cases:"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "TIME_TO_SEC",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "函数将输入的 TIME 或 DATETIME 类型的值转换为以秒为单位的总时间。如果输入为 DATETIME 类型，函数会自动提取时间部分（HH:MM:SS）。"
 }
 ---
 

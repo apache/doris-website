@@ -1,7 +1,8 @@
 ---
 {
     "title": "AI_GENERATE",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "基于输入的提示文本生成响应内容"
 }
 ---
 

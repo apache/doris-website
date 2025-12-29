@@ -1,7 +1,8 @@
 ---
 {
     "title": "Bitmap",
-    "language": "en"
+    "language": "en",
+    "description": "The BITMAP type can be used in Duplicate tables, Unique tables, and Aggregate tables, and can only be used as a Key type, not as a Value column."
 }
 ---
 

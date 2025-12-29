@@ -1,7 +1,8 @@
 ---
 {
     "title": "NGRAM_SEARCH",
-    "language": "en"
+    "language": "en",
+    "description": "Calculate the N-gram similarity between text and pattern. The similarity ranges from 0 to 1,"
 }
 ---
 

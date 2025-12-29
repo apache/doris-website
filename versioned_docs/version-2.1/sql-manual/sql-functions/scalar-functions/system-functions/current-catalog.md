@@ -1,7 +1,8 @@
 ---
 {
     "title": "CURRENT_CATALOG",
-    "language": "en"
+    "language": "en",
+    "description": "Get the catalog of the current sql client connection."
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "AI_EXTRACT",
-    "language": "en"
+    "language": "en",
+    "description": "Used to extract information corresponding to specific labels from text."
 }
 ---
 

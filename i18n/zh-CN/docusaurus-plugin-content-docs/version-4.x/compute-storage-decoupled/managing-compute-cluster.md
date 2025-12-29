@@ -1,7 +1,8 @@
 ---
 {
     "title": "计算组操作",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "在存算分离架构下，可以将一个或多个计算节点 (BE) 组成一个计算组 (Compute Group)。本文档介绍如何使用计算组，其中涉及的操作包括："
 }
 ---
 

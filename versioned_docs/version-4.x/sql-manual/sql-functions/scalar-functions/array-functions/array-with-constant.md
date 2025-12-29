@@ -1,7 +1,8 @@
 ---
 {
     "title": "ARRAY_WITH_CONSTANT",
-    "language": "en"
+    "language": "en",
+    "description": "ARRAYWITHCONSTANT is used to generate an array of a specified length, where all elements have the given value."
 }
 ---
 

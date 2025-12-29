@@ -1,7 +1,8 @@
 ---
 {
-"title": "BITMAP 精准去重",
-"language": "zh-CN"
+    "title": "BITMAP 精准去重",
+    "language": "zh-CN",
+    "description": "本文介绍如何通过 Bitmap 类型实现精确去重。"
 }
 ---
 

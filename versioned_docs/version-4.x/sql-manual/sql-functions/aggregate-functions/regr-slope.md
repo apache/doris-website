@@ -1,7 +1,8 @@
 ---
 {
     "title": "REGR_SLOPE",
-    "language": "en"
+    "language": "en",
+    "description": "Returns the slope of the linear regression line for non-null pairs in a group."
 }
 ---
 

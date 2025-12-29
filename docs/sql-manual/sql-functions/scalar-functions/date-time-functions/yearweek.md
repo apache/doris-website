@@ -1,7 +1,8 @@
 ---
 {
     "title": "YEARWEEK",
-    "language": "en"
+    "language": "en",
+    "description": "The YEARWEEK function is used to return the \"year + week number\" combination for a specified date (format YYYYWW, e.g.,"
 }
 ---
 

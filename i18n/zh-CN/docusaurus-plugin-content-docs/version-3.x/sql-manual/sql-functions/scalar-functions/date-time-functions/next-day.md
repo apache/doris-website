@@ -1,7 +1,8 @@
 ---
 {
     "title": "NEXT_DAY",
-    "language": "cn"
+    "language": "cn",
+    "description": "NEXTDAY 函数用于返回给定日期之后第一个匹配指定星期几的日期。"
 }
 ---
 

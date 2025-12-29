@@ -1,7 +1,8 @@
 ---
 {
     "title": "TIMESTAMP",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "TIMESTAMP 将 符合 datetime 格式的字符串转换为 DATETIME 类型"
 }
 ---
 

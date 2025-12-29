@@ -1,7 +1,8 @@
 ---
 {
     "title": "CORR",
-    "language": "en"
+    "language": "en",
+    "description": "Calculates the Pearson correlation coefficient between two random variables."
 }
 ---
 

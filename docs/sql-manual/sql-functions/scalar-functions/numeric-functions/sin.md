@@ -1,7 +1,8 @@
 ---
 {
     "title": "SIN",
-    "language": "en"
+    "language": "en",
+    "description": "Calculate the sine of the parameter"
 }
 ---
 

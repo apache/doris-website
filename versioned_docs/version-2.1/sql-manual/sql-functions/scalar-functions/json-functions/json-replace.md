@@ -1,7 +1,8 @@
 ---
 {
     "title": "JSON_REPLACE",
-    "language": "en"
+    "language": "en",
+    "description": "The JSONREPLACE function is used to update data in a JSON and return the result."
 }
 ---
 

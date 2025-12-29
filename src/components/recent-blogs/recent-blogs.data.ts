@@ -1,19 +1,19 @@
 export const RECENT_BLOGS_POSTS = [
     {
-        label: 'Apache Doris Up To 40x Faster Than ClickHouse | OLAP Showdown Part 2',
-        link: 'https://www.velodb.io/blog/1504',
+        label: 'Apache Doris Up to 34x Faster Than ClickHouse in Real-Time Updates',
+        link: 'https://www.velodb.io/blog/apache-doris-34x-faster-clickhouse-realtime-updates',
     },
     {
-        label: 'The Ultimate OLAP Showdown: Apache Doris vs. ClickHouse vs. Snowflake (Part 1)',
-        link: 'https://www.velodb.io/blog/1463',
+        label: 'From OneLake to Insights: Building Modern Analytics with Apache Doris and Microsoft Fabric',
+        link: 'https://www.velodb.io/blog/connect-apache-doris-and-microsoft-fabric-and-onelake',
     },
     {
-        label: 'Apache Doris Tops RTABench, 6x Faster Than ClickHouse, 30x Faster Than PostgreSQL',
-        link: 'https://www.velodb.io/blog/1465',
+        label: 'Apache Doris Tops JSONBench in Cold Queries and Data Quality',
+        link: 'https://www.velodb.io/blog/apache-doris-tops-json-bench-cold-queries',
     },
     {
-        label: 'At Apache Doris, we have implemented multiple strategies to make the system more intelligent, enabling it to skip unnecessary data processing. In this article, we will discuss all the data pruning techniques used in Apache Doris.',
-        link: 'https://www.velodb.io/blog/1489',
+        label: 'Apache Doris Achieves 70% Better Price-Performance on ARM-based AWS Graviton',
+        link: 'https://www.velodb.io/blog/apache-doris-achieves-70-better-price-performance',
     },
 
 

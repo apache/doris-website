@@ -1,7 +1,8 @@
 ---
 {
     "title": "Logout Action",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "Logout Action 用于退出当前登录。"
 }
 ---
 

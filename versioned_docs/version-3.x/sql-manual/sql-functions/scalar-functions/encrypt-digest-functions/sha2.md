@@ -1,7 +1,8 @@
 ---
 {
-"title": "SHA2",
-"language": "en"
+    "title": "SHA2",
+    "language": "en",
+    "description": "The information is digested using SHA2."
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "SQL Error",
-    "language": "en"
+    "language": "en",
+    "description": "This happens because the corresponding tablet does not find a copy that can be queried, usually because the BE is down, the copy is missing, etc."
 }
 ---
 

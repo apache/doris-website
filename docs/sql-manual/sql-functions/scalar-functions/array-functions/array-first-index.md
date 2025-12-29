@@ -1,7 +1,8 @@
 ---
 {
     "title": "ARRAY_FIRST_INDEX",
-    "language": "en"
+    "language": "en",
+    "description": "Returns the position index (starting from 1) of the first element in the array that satisfies the lambda expression condition."
 }
 ---
 

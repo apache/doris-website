@@ -1,7 +1,8 @@
 ---
 {
     "title": "CREATE SYNC JOB",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "数据同步 (Sync Job) 功能支持用户提交一个常驻的数据同步作业，通过从指定的远端地址读取 Binlog 日志，增量同步用户在 MySQL 数据库中数据更新操作的 CDC (Change Data Capture) 信息。"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "Routine Load",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "Doris 可以通过 Routine Load 导入方式持续消费 Kafka Topic 中的数据。在提交 Routine Load 作业后，Doris 会持续运行该导入作业，实时生成导入任务不断消费 Kafka 集群中指定 Topic 的消息。"
 }
 ---
 

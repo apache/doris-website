@@ -1,7 +1,8 @@
 ---
 {
     "title": "APPROX_COUNT_DISTINCT",
-    "language": "en"
+    "language": "en",
+    "description": "The APPROXCOUNTDISTINCT function is implemented based on the HyperLogLog algorithm, which uses a fixed size of memory to estimate the column base."
 }
 ---
 

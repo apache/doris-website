@@ -1,7 +1,8 @@
 ---
 {
     "title": "LENGTH",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "LENGTH 函数返回字符串的字节长度（以字节为单位）。该函数计算的是字符串在 UTF-8 编码下占用的字节数，而不是字符数。"
 }
 ---
 

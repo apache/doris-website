@@ -3,7 +3,8 @@
     "title": "BE 配置项",
     "language": "zh-CN",
     "toc_min_heading_level": 2,
-    "toc_max_heading_level": 4
+    "toc_max_heading_level": 4,
+    "description": "该文档主要介绍 BE 的相关配置项。"
 }
 ---
 

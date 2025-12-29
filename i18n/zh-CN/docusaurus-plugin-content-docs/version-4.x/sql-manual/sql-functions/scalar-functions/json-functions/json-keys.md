@@ -1,7 +1,8 @@
 ---
 {
     "title": "JSON_KEYS",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "以数组形式返回 JSON 对象的所有键（key）。 默认情况返回 root 对象的键，也可以通过参数控制返回具体某个路径对应的对象的键。"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "CRC32",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "使用 CRC32 算法计算结果。"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "ARRAY_INTERSECT",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "返回多个数组的交集，即所有数组中共同存在的元素。函数会找出所有输入数组中共同存在的元素，去重后组成新数组。"
 }
 ---
 

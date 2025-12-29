@@ -1,7 +1,8 @@
 ---
 {
     "title": "Snowflake",
-    "language": "en"
+    "language": "en",
+    "description": "During the migration from Snowflake to Doris, object storage is typically used as an intermediate medium. The core process is as follows: First,"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "TO_BITMAP",
-    "language": "en"
+    "language": "en",
+    "description": "Converts an unsigned bigint to a Bitmap."
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "SHOW BACKEND CONFIG",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "展示 BACKEND（即 BE）的配置项和其当前值。"
 }
 ---
 

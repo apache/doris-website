@@ -1,7 +1,8 @@
 ---
 {
     "title": "REFRESH",
-    "language": "en"
+    "language": "en",
+    "description": "This statement refreshes the metadata of the specified Catalog/Database/Table."
 }
 ---
 

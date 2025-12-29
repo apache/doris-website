@@ -1,7 +1,8 @@
 ---
 {
-"title": "BITMAP-UNION-INT",
-"language": "en"
+    "title": "BITMAP-UNION-INT",
+    "language": "en",
+    "description": "Counts the number of distinct values in columns of type TINYINT, SMALLINT and INT. The return value is the same as COUNT(DISTINCT expr)"
 }
 ---
 

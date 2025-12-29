@@ -1,7 +1,8 @@
 ---
 {
     "title": "MULTI_SEARCH_ALL_POSITIONS",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "MULTISEARCHALLPOSITIONS 函数用于在字符串中批量查找多个子串的位置。返回一个数组，包含每个子串首次出现的位置。查找是大小写敏感的。"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "NAMED_STRUCT",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "根据给定的字段名和值构造并返回 struct。函数接受偶数个参数，奇数位是字段名，偶数位是字段值。"
 }
 ---
 

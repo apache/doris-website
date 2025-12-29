@@ -1,7 +1,8 @@
 ---
 {
     "title": "HOUR",
-    "language": "en"
+    "language": "en",
+    "description": "The HOUR function extracts the hour part from a datetime or time expression. This function supports multiple time type inputs,"
 }
 ---
 

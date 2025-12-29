@@ -1,7 +1,8 @@
 ---
 {
     "title": "SECOND",
-    "language": "en"
+    "language": "en",
+    "description": "The SECOND function extracts the seconds portion from a specified datetime value, returning an integer result from 0 to 59."
 }
 ---
 
@@ -74,6 +75,14 @@ SELECT SECOND('2024-01-01 00:00:00') AS result;
 +--------+
 |      0 |
 +--------+
+
+-- When a string literal is valid for both datetime and time, prefer parsing it as time
+SELECT SECOND("22:12:12");
++--------------------+
+| SECOND("22:12:12") |
++--------------------+
+|                 12 |
++--------------------+
 
 -- Input is NULL (returns NULL)
 SELECT SECOND(NULL) AS result;

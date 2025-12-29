@@ -1,9 +1,9 @@
 ---
 {
-"title": "ALTER RESOURCE",
-"language": "en"
+    "title": "ALTER RESOURCE",
+    "language": "en",
+    "description": "This statement is used to modify an existing resource. Only the root or admin user can modify resources."
 }
-
 ---
 
 ## Description

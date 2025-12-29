@@ -1,9 +1,10 @@
 ---
 {
     "title": "Compaction 原理",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "Apache Doris 基于 LSM-Tree 的存储引擎，在数据写入时会顺序追加到新的数据文件中，而不是直接更新原有文件。 这种设计保证了高效的写入性能，但随着时间推移，不同版本、不同大小的数据文件会不断累积，带来以下问题："
 }
---- 
+---
 
 ## 1 compaction 的作用
 

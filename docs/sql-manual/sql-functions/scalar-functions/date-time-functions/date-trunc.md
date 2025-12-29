@@ -1,7 +1,8 @@
 ---
 {
     "title": "DATE_TRUNC",
-    "language": "en"
+    "language": "en",
+    "description": "The DATETRUNC function is used to truncate a date or time value (datetime) to a specified time unit (timeunit)."
 }
 ---
 

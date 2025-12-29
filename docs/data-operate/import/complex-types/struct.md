@@ -1,9 +1,13 @@
 ---
 {
-    "title": "STRUCT",
-    "language": "en"
+    "title": "STRUCT | Complex Types",
+    "language": "en",
+    "description": "STRUCT<fieldname:fieldtype [COMMENT 'commentstring'], ... > Represents value with structure described by multiple fields,",
+    "sidebar_label": "STRUCT"
 }
 ---
+
+# STRUCT
 
 `STRUCT<field_name:field_type [COMMENT 'comment_string'], ... >` Represents value with structure described by multiple fields, which can be viewed as a collection of multiple columns.Click [STRUCT](../../../sql-manual/basic-element/sql-data-types/semi-structured/STRUCT.md) to learn more.
 
@@ -45,6 +49,12 @@ curl --location-trusted \
         -H "columns: id, c_struct" \
         -T "test_struct.csv" \
         http://localhost:8040/api/testdb/struct_test/_stream_load
+```
+
+Can also use `INSERT INTO VALUES`:
+
+```sql
+INSERT INTO struct_test VALUES(1, named_struct('f1', '1', 'f2', '2.0', 'f3', 'abc'));
 ```
 
 ### Step 4: Check the imported data
@@ -120,3 +130,4 @@ mysql> SELECT * FROM struct_test;
 +------+--------------------------------------+
 5 rows in set (0.00 sec)
 ```
+

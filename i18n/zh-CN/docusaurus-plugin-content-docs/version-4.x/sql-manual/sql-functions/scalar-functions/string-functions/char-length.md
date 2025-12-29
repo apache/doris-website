@@ -1,7 +1,8 @@
 ---
 {
     "title": "CHAR_LENGTH",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "CHARLENGTH 函数用于计算字符串的字符数（而非字节数）。对于多字节字符（如中文），返回的是字符个数。"
 }
 ---
 

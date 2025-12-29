@@ -1,7 +1,8 @@
 ---
 {
     "title": "腾讯云 COS",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "Doris 提供两种方式从腾讯云 COS 导入文件："
 }
 ---
 

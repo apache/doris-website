@@ -1,7 +1,8 @@
 ---
 {
-  "title": "TO_DATE",
-  "language": "zh-CN"
+    "title": "TO_DATE",
+    "language": "zh-CN",
+    "description": "日期转换函数，用于将日期时间（DATETIME）转换为日期类型（DATE），即去掉时间部分，仅保留日期（YYYY-MM-DD）"
 }
 ---
 

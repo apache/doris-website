@@ -1,7 +1,8 @@
 ---
 {
-"title": "Data Access Control",
-"language": "en"
+    "title": "Data Access Control",
+    "language": "en",
+    "description": "With row-level policies in Doris, you can achieve fine-grained access control over sensitive data."
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "REPLACE",
-    "language": "en"
+    "language": "en",
+    "description": "The REPLACE function is used to replace all occurrences of a specified substring in a string with a new substring."
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "恢复",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "以下 SQL 语句可用于查看名为examplerepo的 Repository 中的现有备份。"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "rowsets",
-    "language": "en"
+    "language": "en",
+    "description": "Returns basic information about the Rowset."
 }
 ---
 

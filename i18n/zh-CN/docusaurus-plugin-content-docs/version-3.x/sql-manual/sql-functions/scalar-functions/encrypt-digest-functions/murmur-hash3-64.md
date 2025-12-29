@@ -1,7 +1,8 @@
 ---
 {
     "title": "MURMUR_HASH3_64",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "计算 64 位 murmur3 hash 值"
 }
 ---
 

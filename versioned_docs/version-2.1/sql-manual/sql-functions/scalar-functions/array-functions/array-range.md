@@ -1,7 +1,8 @@
 ---
 {
     "title": "ARRAY_RANGE",
-    "language": "en"
+    "language": "en",
+    "description":"Description:1. Generate int array;2. Generate date and time array"
 }
 ---
 

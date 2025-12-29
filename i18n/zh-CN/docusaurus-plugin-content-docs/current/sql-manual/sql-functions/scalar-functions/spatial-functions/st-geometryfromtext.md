@@ -1,7 +1,8 @@
 ---
 {
     "title": "ST_GEOMETRYFROMTEXT",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "将一个 WKT（Well Known Text）转化为对应的内存的几何形式"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "LAST_DAY",
-    "language": "en"
+    "language": "en",
+    "description": "Returns the date of the last day of the month for the given input date. The returned day varies depending on the month:"
 }
 ---
 

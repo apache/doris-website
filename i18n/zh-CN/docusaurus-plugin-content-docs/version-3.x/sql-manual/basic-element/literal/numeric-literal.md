@@ -1,7 +1,8 @@
 ---
 {
     "title": "数值类型字面量",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "使用数字字面量表示法来指定定点数和浮点数。"
 }
 ---
 

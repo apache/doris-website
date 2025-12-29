@@ -1,7 +1,8 @@
 ---
 {
     "title": "XXHASH_64",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "计算输入字符串的 64 位 xxhash 值"
 }
 ---
 

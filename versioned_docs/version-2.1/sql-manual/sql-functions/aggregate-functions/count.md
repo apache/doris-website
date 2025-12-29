@@ -1,7 +1,8 @@
 ---
 {
-"title": "COUNT",
-"language": "en"
+    "title": "COUNT",
+    "language": "en",
+    "description": "Returns the number of non-NULL records in the specified column, or the total number of records."
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "Metadata Memory Analysis",
-    "language": "en"
+    "language": "en",
+    "description": "The metadata of Doris BE in memory includes data structures such as Tablet, Rowset, Segment, TabletSchema, ColumnReader, PrimaryKeyIndex,"
 }
 ---
 

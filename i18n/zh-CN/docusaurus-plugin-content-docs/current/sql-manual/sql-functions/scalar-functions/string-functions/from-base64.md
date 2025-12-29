@@ -1,7 +1,8 @@
 ---
 {
     "title": "FROM_BASE64",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "FROMBASE64 函数用于将 Base64 编码的字符串解码回原始字符串。这是 TOBASE64 函数的逆操作，遵循 RFC 4648 标准。Base64 编码常用于在文本协议中传输二进制数据，该函数可以将编码的数据还原。支持标准 Base64 字符集（A-Z, a-z, 0-9, +,"
 }
 ---
 

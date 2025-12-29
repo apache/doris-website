@@ -1,7 +1,8 @@
 ---
 {
     "title": "Release 2.0.0",
-    "language": "en"
+    "language": "en",
+    "description": "We are more than excited to announce that, after six months of coding, testing, and fine-tuning, Apache Doris 2.0.0 is now production-ready."
 }
 ---
 

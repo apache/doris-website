@@ -1,7 +1,8 @@
 ---
 {
     "title": "子查询",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "子查询（Subquery）是嵌套在另一个查询（通常是 SELECT 语句）中的 SQL 查询。它可以用在 SELECT、FROM、WHERE 或 HAVING 子句中，为外部查询提供数据或条件。子查询的使用使得 SQL 查询变得更加灵活和强大，因为它们允许我们在单个查询中解决更复杂的问题。"
 }
 ---
 

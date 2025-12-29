@@ -1,7 +1,8 @@
 ---
 {
     "title": "AI_SUMMARIZE",
-    "language": "en"
+    "language": "en",
+    "description": "Used to generate a concise summary of the text."
 }
 ---
 

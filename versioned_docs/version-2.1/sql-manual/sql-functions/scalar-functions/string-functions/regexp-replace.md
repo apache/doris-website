@@ -1,7 +1,8 @@
 ---
 {
     "title": "REGEXP_REPLACE",
-    "language": "en"
+    "language": "en",
+    "description": "Regular matching of STR strings, replacing the part hitting pattern with a new string."
 }
 ---
 

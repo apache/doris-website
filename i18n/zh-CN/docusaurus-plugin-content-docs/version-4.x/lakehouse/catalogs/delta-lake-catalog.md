@@ -1,7 +1,8 @@
 ---
 {
     "title": "Delta Lake Catalog",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "Delta Lake Catalog 通过 Trino Connector 兼容框架，使用 Delta Lake Connector 来访问 Delta Lake 表。"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "JSON_UNQUOTE",
-    "language": "en"
+    "language": "en",
+    "description": "This function unquotes a JSON value and returns the result as a utf8mb4 string. If the argument is NULL, it will return NULL."
 }
 ---
 

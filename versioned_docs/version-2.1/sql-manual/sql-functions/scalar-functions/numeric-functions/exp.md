@@ -1,7 +1,8 @@
 ---
 {
     "title": "EXP",
-    "language": "en"
+    "language": "en",
+    "description": "Returns x raised to the base e."
 }
 ---
 

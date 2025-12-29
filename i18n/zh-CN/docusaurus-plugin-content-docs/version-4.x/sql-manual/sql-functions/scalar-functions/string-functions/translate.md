@@ -1,7 +1,8 @@
 ---
 {
     "title": "TRANSLATE",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "TRANSLATE 函数用于字符串替换，将源字符串中的字符按照映射规则进行逐字符转换。该函数会将源字符串中出现在 from 字符串中的每个字符替换为 to 字符串中对应位置的字符。"
 }
 ---
 

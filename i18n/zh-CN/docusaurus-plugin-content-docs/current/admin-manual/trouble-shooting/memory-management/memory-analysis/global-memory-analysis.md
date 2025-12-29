@@ -1,7 +1,8 @@
 ---
 {
     "title": "全局内存分析",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "GLobal Memory 是 Doris 全局共享的内存，主要包括 Cache 和 Metadata。"
 }
 ---
 

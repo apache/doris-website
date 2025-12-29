@@ -1,7 +1,8 @@
 ---
 {
     "title": "YEARS_DIFF",
-    "language": "en"
+    "language": "en",
+    "description": "Calculates the difference in years between two datetime values."
 }
 ---
 

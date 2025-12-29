@@ -1,7 +1,8 @@
 ---
 {
     "title": "JSON_VALID",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "JSONVALID 函数用以判断字符串是否为有效的 JSON 字符串, 如果参数是 NULL 则返回 NULL。"
 }
 ---
 

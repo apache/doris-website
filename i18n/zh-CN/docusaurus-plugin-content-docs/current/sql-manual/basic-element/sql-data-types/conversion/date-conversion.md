@@ -1,7 +1,8 @@
 ---
 {
     "title": "转换为 DATE 类型",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "DATE 类型支持的合法时间上下界：[0000-01-01, 9999-12-31]"
 }
 ---
 

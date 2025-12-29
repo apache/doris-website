@@ -1,7 +1,8 @@
 ---
 {
     "title": "EVEN",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "将输入值向零的反方向进位（舍入）到下一个偶数整数。"
 }
 ---
 

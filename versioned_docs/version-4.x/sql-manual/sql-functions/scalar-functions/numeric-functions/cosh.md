@@ -1,7 +1,8 @@
 ---
 {
     "title": "COSH",
-    "language": "en"
+    "language": "en",
+    "description": "Returns the hyperbolic cosine of x."
 }
 ---
 

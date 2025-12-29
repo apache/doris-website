@@ -1,7 +1,8 @@
 ---
 {
     "title": "Statement Execution Action",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "Statement Execution Action 用于执行语句并返回结果。"
 }
 ---
 

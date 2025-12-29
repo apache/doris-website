@@ -1,7 +1,8 @@
 ---
 {
     "title": "变量",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "在 Doris 中，变量分为系统变量和用户变量。这两者都是大小写不敏感的。"
 }
 ---
 

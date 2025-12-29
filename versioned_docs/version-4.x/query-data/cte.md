@@ -1,7 +1,8 @@
 ---
 {
     "title": "Common Table Expression",
-    "language": "en"
+    "language": "en",
+    "description": "Common Table Expression (CTE) define a temporary result set that can be referenced multiple times within the scope of an SQL statement."
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "SHOW REPLICA DISTRIBUTION",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "该语句用于展示一个表或分区副本分布状态"
 }
 ---
 

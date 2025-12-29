@@ -1,7 +1,8 @@
 ---
 {
-"title": "SHOW CREATE ASYNC MATERIALIZED VIEW",
-"language": "zh-CN"
+    "title": "SHOW CREATE ASYNC MATERIALIZED VIEW",
+    "language": "zh-CN",
+    "description": "查看异步物化视图创建语句。"
 }
 ---
 

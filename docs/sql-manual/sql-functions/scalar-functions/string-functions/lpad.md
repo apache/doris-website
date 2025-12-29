@@ -1,7 +1,8 @@
 ---
 {
     "title": "LPAD",
-    "language": "en"
+    "language": "en",
+    "description": "The LPAD function (Left Padding) pads a string on the left side with specified characters until it reaches the specified length."
 }
 ---
 

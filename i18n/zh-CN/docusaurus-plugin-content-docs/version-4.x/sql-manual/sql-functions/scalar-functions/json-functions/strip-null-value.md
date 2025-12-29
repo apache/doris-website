@@ -1,7 +1,8 @@
 ---
 {
     "title": "STRIP_NULL_VALUE",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "STRIPNULLVALUE 函数将 JSON 中的 NULL 值转换为 SQL 中的 NULL 值。所有其他变体值保持不变。"
 }
 ---
 

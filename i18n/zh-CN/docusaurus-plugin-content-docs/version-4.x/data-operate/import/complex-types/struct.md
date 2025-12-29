@@ -1,9 +1,13 @@
 ---
 {
-    "title": "STRUCT",
-    "language": "zh-CN"
+    "title": "STRUCT | Complex Types",
+    "language": "zh-CN",
+    "description": "STRUCT<fieldname:fieldtype [COMMENT 'commentstring'], ... > 表示由多个 Field 组成的结构体，也可被理解为多个列的集合。点击STRUCT 数据类型 了解具体信息。",
+    "sidebar_label": "STRUCT"
 }
 ---
+
+# STRUCT
 
 `STRUCT<field_name:field_type [COMMENT 'comment_string'], ... >` 表示由多个 Field 组成的结构体，也可被理解为多个列的集合。点击[STRUCT 数据类型](../../../sql-manual/basic-element/sql-data-types/semi-structured/STRUCT.md) 了解具体信息。
 
@@ -45,6 +49,12 @@ curl --location-trusted \
         -H "columns: id, c_struct" \
         -T "test_struct.csv" \
         http://localhost:8040/api/testdb/struct_test/_stream_load
+```
+
+也可以使用 `INSERT INTO VALUES` 语句导入：
+
+```sql
+INSERT INTO struct_test VALUES(1, named_struct('f1', '1', 'f2', '2.0', 'f3', 'abc'));
 ```
 
 ### 第 4 步：检查导入数据
@@ -120,3 +130,4 @@ mysql> SELECT * FROM struct_test;
 +------+--------------------------------------+
 5 rows in set (0.00 sec)
 ```
+

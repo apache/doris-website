@@ -1,7 +1,8 @@
 ---
 {
-"title": "CANCEL WARM UP",
-"language": "en"
+    "title": "CANCEL WARM UP",
+    "language": "en",
+    "description": "For terminating a specified warm-up job in Doris."
 }
 ---
 

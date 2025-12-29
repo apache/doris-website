@@ -1,7 +1,8 @@
 ---
 {
     "title": "TIME",
-    "language": "en"
+    "language": "en",
+    "description": "TIME"
 }
 ---
 

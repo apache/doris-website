@@ -1,7 +1,8 @@
 ---
 {
     "title": "LENGTH",
-    "language": "en"
+    "language": "en",
+    "description": "Returns the number of bytes in a string."
 }
 ---
 

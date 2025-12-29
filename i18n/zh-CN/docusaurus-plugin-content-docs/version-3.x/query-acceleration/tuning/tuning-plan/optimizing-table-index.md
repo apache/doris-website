@@ -1,7 +1,8 @@
 ---
 {
     "title": "优化索引设计和使用",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "Doris 目前支持两类索引："
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "CANCEL DECOMMISSION BACKEND",
-    "language": "en"
+    "language": "en",
+    "description": "This statement is used to cancel the decommissioning operation of a BE node."
 }
 ---
 

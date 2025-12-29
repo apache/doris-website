@@ -1,7 +1,8 @@
 ---
 {
     "title": "管理 Storage Vault",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "Storage Vault 是 Doris 在存算分离模式中所使用的远程共享存储，可配置一个或多个 Storage Vault，可将不同表存储在不同 Storage Vault 上。"
 }
 ---
 

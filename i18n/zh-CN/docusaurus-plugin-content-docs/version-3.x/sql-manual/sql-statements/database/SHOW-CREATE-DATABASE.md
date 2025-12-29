@@ -1,7 +1,8 @@
 ---
 {
     "title": "SHOW CREATE DATABASE",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "该语句查看 doris 内置数据库或者 catalog 数据库的创建信息。"
 }
 ---
 

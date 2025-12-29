@@ -1,7 +1,8 @@
 ---
 {
     "title": "Runtime Filter",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "Runtime Filter 主要分为两种，Join Runtime Filter 与 TopN Runtime Filter。本文将详细介绍两类 Runtime Filter 的工作原理、使用指南与优化方法。"
 }
 ---
 

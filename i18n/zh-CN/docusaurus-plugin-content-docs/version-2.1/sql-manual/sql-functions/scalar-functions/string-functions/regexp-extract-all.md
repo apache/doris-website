@@ -1,7 +1,8 @@
 ---
 {
     "title": "REGEXP_EXTRACT_ALL",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "<<<<<<< HEAD ======="
 }
 ---
 

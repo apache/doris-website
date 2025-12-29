@@ -1,7 +1,8 @@
 ---
 {
     "title": "QUARTERS_DIFF",
-    "language": "en"
+    "language": "en",
+    "description": "The QUARTERSDIFF function calculates the number of quarters between two dates."
 }
 ---
 

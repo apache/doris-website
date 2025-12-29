@@ -1,7 +1,8 @@
 ---
 {
     "title": "SHOW CREATE LOAD",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "该语句用于展示导入作业的创建语句。"
 }
 ---
 

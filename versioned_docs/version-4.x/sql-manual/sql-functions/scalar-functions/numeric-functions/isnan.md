@@ -1,7 +1,8 @@
 ---
 {
     "title": "ISNAN",
-    "language": "en"
+    "language": "en",
+    "description": "Determines whether the specified value is NaN (Not a Number)."
 }
 ---
 

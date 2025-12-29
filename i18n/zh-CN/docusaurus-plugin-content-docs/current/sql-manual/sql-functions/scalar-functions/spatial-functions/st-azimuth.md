@@ -1,7 +1,8 @@
 ---
 {
     "title": "ST_AZIMUTH",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "计算地球球面上两点之间的方位角（单位为弧度）。方位角是从起点（点 1）的真北方向线开始，顺时针旋转到两点连线的角度。"
 }
 ---
 

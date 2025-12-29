@@ -1,7 +1,8 @@
 ---
 {
-"title": "Deploying on AWS",
-"language": "en"
+    "title": "Deploying on AWS",
+    "language": "en",
+    "description": "To facilitate a quick experience of Doris on AWS, we have provided a CloudFormation template (CFT) that allows for rapid cluster launch and operation."
 }
 ---
 

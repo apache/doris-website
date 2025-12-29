@@ -1,7 +1,8 @@
 ---
 {
     "title": "CREATE ROLE",
-    "language": "en"
+    "language": "en",
+    "description": "The CREATE ROLE statement is used to create an unprivileged role, which can be subsequently granted with the GRANT command."
 }
 ---
 

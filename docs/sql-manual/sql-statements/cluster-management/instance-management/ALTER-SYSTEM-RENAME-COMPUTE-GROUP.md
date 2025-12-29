@@ -1,9 +1,9 @@
 ---
 {
     "title": "ALTER-SYSTEM-RENAME-COMPUTE-GROUP",
-    "language": "en"
+    "language": "en",
+    "description": "ALTER SYSTEM RENAME COMPUTE-GROUP"
 }
-
 ---
 
 ## ALTER-SYSTEM-RENAME-COMPUTE-GROUP

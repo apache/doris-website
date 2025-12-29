@@ -1,7 +1,8 @@
 ---
 {
     "title": "column_privileges",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "此表仅用于兼容 MySQL 行为，永远为空。并不能真实反映 Doris 的列权限信息。"
 }
 ---
 

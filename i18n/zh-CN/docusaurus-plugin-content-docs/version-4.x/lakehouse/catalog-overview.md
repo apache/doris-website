@@ -1,7 +1,8 @@
 ---
 {
     "title": "数据目录概述",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "数据目录（Data Catalog）用于描述一个数据源的属性。"
 }
 ---
 

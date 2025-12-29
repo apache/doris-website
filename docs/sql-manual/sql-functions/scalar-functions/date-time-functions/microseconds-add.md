@@ -1,7 +1,8 @@
 ---
 {
     "title": "MICROSECONDS_ADD",
-    "language": "en"
+    "language": "en",
+    "description": "The MICROSECONDSADD function adds a specified number of microseconds to the input datetime value and returns the resulting new datetime value."
 }
 ---
 

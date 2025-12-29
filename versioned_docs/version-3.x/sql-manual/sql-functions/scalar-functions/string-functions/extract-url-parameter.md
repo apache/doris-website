@@ -1,7 +1,8 @@
 ---
 {
-"title": "EXTRACT_URL_PARAMETER",
-"language": "en"
+    "title": "EXTRACT_URL_PARAMETER",
+    "language": "en",
+    "description": "Returns the value of the name parameter in the URL, if it exists, or an empty string otherwise."
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "MySQL Client Certificate",
-    "language": "en"
+    "language": "en",
+    "description": "Doris supports SSL-based encrypted connections. It currently supports TLS1.2 and TLS1.3 protocols."
 }
 ---
 

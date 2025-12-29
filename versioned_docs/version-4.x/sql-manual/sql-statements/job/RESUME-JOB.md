@@ -1,7 +1,8 @@
 ---
 {
-"title": "RESUME JOB",
-"language": "en"
+    "title": "RESUME JOB",
+    "language": "en",
+    "description": "Restore the PAUSED job to the RUNNING state. The RUNNING job will be executed according to the scheduled period."
 }
 ---
 
@@ -23,9 +24,10 @@ RESUME JOB where jobName = <job_name> ;
 
 The user who executes this SQL command must have at least the following permissions:
 
-| Privilege | Object | Notes |
-|:--------------|:-----------|:------------------------|
-| ADMIN_PRIV | Database | Currently only supports **ADMIN** permissions to perform this operation |
+| Privilege | Object | ExecuteType | Notes |
+|:--------------|:-----------|:------------------------|:------------------------|
+| ADMIN_PRIV | Database | NO Streaming | Currently only supports **ADMIN** permissions to perform this operation |
+| LOAD_PRIV | Database | Streaming |Supports **LOAD** permissions to perform this operation |
 
 ## Example
 

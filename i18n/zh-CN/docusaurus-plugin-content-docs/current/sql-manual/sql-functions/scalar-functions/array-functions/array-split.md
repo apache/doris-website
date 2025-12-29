@@ -1,7 +1,8 @@
 ---
 {
     "title": "ARRAY_SPLIT",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "按给定的布尔标记把输入的数组切分为多个子数组。"
 }
 ---
 

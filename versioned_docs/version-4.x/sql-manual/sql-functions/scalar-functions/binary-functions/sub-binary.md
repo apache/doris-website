@@ -1,7 +1,8 @@
 ---
 {
     "title": "SUB_BINARY",
-    "language": "en"
+    "language": "en",
+    "description": "The SUBBINARY function extracts a binary subsequence from a VARBINARY value. You can specify the starting position and the length of bytes to extract."
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "ADD BACKEND",
-    "language": "en"
+    "language": "en",
+    "description": "The ADD BACKEND is used to add one or more BE nodes to the Doris cluster."
 }
 ---
 

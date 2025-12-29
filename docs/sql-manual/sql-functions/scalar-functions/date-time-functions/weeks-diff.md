@@ -1,7 +1,8 @@
 ---
 {
-   "title": "WEEKS_DIFF",
-   "language": "en"
+    "title": "WEEKS_DIFF",
+    "language": "en",
+    "description": "The WEEKSDIFF function calculates the difference in complete weeks between two date or time values,"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
-"title": "ALTER STORAGE POLICY",
-"language": "en"
+    "title": "ALTER STORAGE POLICY",
+    "language": "en",
+    "description": "This statement is used to modify an existing hot-cold tiered migration policy. Only root or admin users can modify resources."
 }
 ---
 

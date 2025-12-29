@@ -1,7 +1,8 @@
 ---
 {
     "title": "DROP-TABLE",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "该语句用于删除 Table。"
 }
 ---
 

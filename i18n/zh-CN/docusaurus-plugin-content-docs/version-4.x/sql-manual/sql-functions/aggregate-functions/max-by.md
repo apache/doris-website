@@ -1,7 +1,8 @@
 ---
 {
     "title": "MAX_BY",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "MAXBY 函数用于根据指定列的最大值，返回对应的的关联值。"
 }
 ---
 
@@ -19,8 +20,8 @@ MAX_BY(<expr1>, <expr2>)
 
 | 参数 | 说明 |
 | -- | -- |
-| `<expr1>` | 用于指定对应关联的表达式，支持类型为 Bool, TinyInt，SmallInt，Int，BigtInt，LargeInt，Float，Double，Decimal, String, Date, Datetime。 |
-| `<expr2>` | 用于指定最大值统计的表达式，支持类型为 Bool, TinyInt，SmallInt，Int，BigtInt，LargeInt，Float，Double，Decimal, String, Date, Datetime。 |
+| `<expr1>` | 用于指定对应关联的表达式，支持类型为 Bool, TinyInt，SmallInt，Int，BigtInt，LargeInt，Float，Double，Decimal, String, Date, Datetime, Array, Map, Struct。 |
+| `<expr2>` | 用于指定最大值统计的表达式，支持类型为 Bool, TinyInt，SmallInt，Int，BigtInt，LargeInt，Float，Double，Decimal, String, Date, Datetime, Array。 |
 
 ## 返回值
 
@@ -34,36 +35,61 @@ MAX_BY(<expr1>, <expr2>)
 create table tbl(
     k1 int,
     k2 int,
-    k3 int,
-    k4 int
+    arr ARRAY<INT>,
+    mp MAP<STRING, INT>,
+    st STRUCT<a: INT, b: STRING>,
 ) distributed by hash(k1) buckets 1
 properties ("replication_num"="1");
 insert into tbl values
-    (0, 3, 2, 100),
-    (1, 2, 3, 4),
-    (4, 3, 2, 1),
-    (3, 4, 2, 1);
+    (0, 100, [1,2,3], {"x": 1, "y": 4}, NAMED_STRUCT("a", 1, "b", "x")),
+    (1, 4,   [5, 6],  {"x": 2, "y": 3}, NAMED_STRUCT("a", 2, "b", "y")),
+    (4, 1,   [7],     {"x": 3, "y": 2}, NAMED_STRUCT("a", 3, "b", "z")),
+    (3, 1,   [8],     {"x": 4, "y": 1}, NAMED_STRUCT("a", 4, "b", "r"));
 ```
 
 ```sql
-select max_by(k1, k4) from tbl;
-```
-
-```text
-+--------------------+
-| max_by(`k1`, `k4`) |
-+--------------------+
-|                  0 |
-+--------------------+ 
-```
-
-```sql
-select max_by(k1, k4) from tbl where k1 is null;
+select max_by(k1, k2) from tbl;
 ```
 
 ```text
 +----------------+
-| max_by(k1, k4) |
+| max_by(k1, k2) |
++----------------+
+|              0 |
++----------------+
+```
+
+```sql
+select max_by(arr, k1), max_by(mp, k1), max_by(st, k1) from tbl;
+```
+
+```text
++-----------------+----------------+------------------+
+| max_by(arr, k1) | max_by(mp, k1) | max_by(st, k1)   |
++-----------------+----------------+------------------+
+| [7]             | {"x":3, "y":2} | {"a":3, "b":"z"} |
++-----------------+----------------+------------------+
+```
+
+```sql
+select max_by(k1, arr), max_by(mp, arr), max_by(st, arr), max_by(arr, arr) from tbl;
+```
+
+```text
++-----------------+-----------------+------------------+------------------+
+| max_by(k1, arr) | max_by(mp, arr) | max_by(st, arr)  | max_by(arr, arr) |
++-----------------+-----------------+------------------+------------------+
+|               3 | {"x":4, "y":1}  | {"a":4, "b":"r"} | [8]              |
++-----------------+-----------------+------------------+------------------+
+```
+
+```sql
+select max_by(k1, k2) from tbl where k1 is null;
+```
+
+```text
++----------------+
+| max_by(k1, k2) |
 +----------------+
 |           NULL |
 +----------------+

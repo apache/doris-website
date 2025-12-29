@@ -1,7 +1,8 @@
 ---
 {
     "title": "Release 2.1.0",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "亲爱的社区小伙伴们，我们很高兴地向大家宣布，在 3 月 8 日我们引来了 Apache Doris 2.1.0 版本的正式发布，欢迎大家下载使用。"
 }
 ---
 

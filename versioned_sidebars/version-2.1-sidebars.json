@@ -371,6 +371,7 @@
                                 "lakehouse/catalogs/delta-lake-catalog",
                                 "lakehouse/catalogs/bigquery-catalog",
                                 "lakehouse/catalogs/kudu-catalog",
+                                "lakehouse/catalogs/es-catalog",
                                 "lakehouse/catalogs/lakesoul-catalog",
                                 "lakehouse/catalogs/jdbc-catalog-overview",
                                 "lakehouse/catalogs/jdbc-mysql-catalog",
@@ -467,7 +468,8 @@
                                 "ecosystem/observability/logstash",
                                 "ecosystem/observability/beats",
                                 "ecosystem/observability/opentelemetry",
-                                "ecosystem/observability/fluentbit"
+                                "ecosystem/observability/fluentbit",
+                                "ecosystem/observability/loongcollector"
                             ]
                         }
                     ]
@@ -879,7 +881,8 @@
                         "ecosystem/observability/logstash",
                         "ecosystem/observability/beats",
                         "ecosystem/observability/opentelemetry",
-                        "ecosystem/observability/fluentbit"
+                        "ecosystem/observability/fluentbit",
+                        "ecosystem/observability/loongcollector"
                     ]
                 },
                 {
@@ -1570,8 +1573,6 @@
                             "items": [
                                 "sql-manual/sql-functions/aggregate-functions/any-value",
                                 "sql-manual/sql-functions/aggregate-functions/approx-count-distinct",
-                                "sql-manual/sql-functions/aggregate-functions/approx-top-k",
-                                "sql-manual/sql-functions/aggregate-functions/approx-top-sum",
                                 "sql-manual/sql-functions/aggregate-functions/array-agg",
                                 "sql-manual/sql-functions/aggregate-functions/avg",
                                 "sql-manual/sql-functions/aggregate-functions/avg-weighted",

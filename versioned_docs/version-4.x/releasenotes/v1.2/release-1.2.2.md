@@ -1,7 +1,8 @@
 ---
 {
     "title": "Release 1.2.2",
-    "language": "en"
+    "language": "en",
+    "description": "Reference: https://doris.apache.org/docs/dev/lakehouse/multi-catalog/"
 }
 ---
 

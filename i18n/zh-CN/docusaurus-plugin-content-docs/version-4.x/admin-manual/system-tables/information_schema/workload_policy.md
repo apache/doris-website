@@ -1,7 +1,8 @@
 ---
 {
     "title": "workload_policy",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "记录 Workload Policy 的配置信息"
 }
 ---
 

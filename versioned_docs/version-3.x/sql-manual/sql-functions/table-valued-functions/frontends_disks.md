@@ -1,7 +1,8 @@
 ---
 {
-  "title": "FRONTENDS_DISKS",
-  "language": "en"
+    "title": "FRONTENDS_DISKS",
+    "language": "en",
+    "description": "The frontendsdisks table function generates a temporary table that allows you to view the disk information of FE nodes in the current Doris cluster."
 }
 ---
 
@@ -21,7 +22,7 @@ FRONTENDS_DISKS()
 
 | Privilege  | Object | Notes |
 | :--------- |:-------|:------|
-| ADMIN_PRIV | global |       |
+| SELECT_PRIV | internal.information_schema | All users have permissions to this database by default |
 
 
 ## Return Value

@@ -1,7 +1,8 @@
 ---
 {
     "title": "BITMAP_HASH64",
-    "language": "en"
+    "language": "en",
+    "description": "Computes the 64-bit hash value of any input type and returns a Bitmap containing that hash value."
 }
 ---
 

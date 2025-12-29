@@ -1,7 +1,9 @@
 ---
 {
-"title": "MAP",
-"language": "en"
+    "title": "MAP | Semi Structured",
+    "language": "en",
+    "description": "MAP",
+    "sidebar_label": "MAP"
 }
 ---
 
@@ -253,3 +255,4 @@ mysql> SELECT id, map_values(m) FROM simple_map ORDER BY id;
 ### keywords
 
     MAP
+

@@ -1,7 +1,8 @@
 ---
 {
-"title": "SUB_REPLACE",
-"language": "zh-CN"
+    "title": "SUB_REPLACE",
+    "language": "zh-CN",
+    "description": "SUBREPLACE 函数用于替换字符串中指定位置和长度的子字符串。从 start 位置开始，用 newstr 替换长度为 len 的字符。"
 }
 ---
 

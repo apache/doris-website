@@ -1,7 +1,8 @@
 ---
 {
     "title": "转换为字符串（输出）",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "如果为真值，返回1。否则返回0"
 }
 ---
 

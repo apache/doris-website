@@ -1,7 +1,8 @@
 ---
 {
     "title": "ARRAY_SORTBY",
-    "language": "en"
+    "language": "en",
+    "description": "First, arrange the key column in ascending order, and then return the corresponding column of the src column sorted in this order as the result;"
 }
 ---
 

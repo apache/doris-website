@@ -1,7 +1,8 @@
 ---
 {
     "title": "检查连接缓存",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "该功能用于检查 brpc 的连接缓存。"
 }
 ---
 

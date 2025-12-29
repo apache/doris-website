@@ -1,7 +1,8 @@
 ---
 {
     "title": "Orthogonal BITMAP Calculation",
-    "language": "en"
+    "language": "en",
+    "description": "The original bitmap aggregate function designed by Doris is more general,"
 }
 ---
 

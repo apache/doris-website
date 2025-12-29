@@ -1,7 +1,8 @@
 ---
 {
     "title": "Routine Load Internals and Best Practices",
-    "language": "en"
+    "language": "en",
+    "description": "Routine Load is designed for continuously consuming Kafka data and writing it into Apache Doris."
 }
 ---
 

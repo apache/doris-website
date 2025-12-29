@@ -1,7 +1,8 @@
 ---
 {
     "title": "APPROX_COUNT_DISTINCT",
-    "language": "en"
+    "language": "en",
+    "description": "Returns the number of distinct non-NULL elements. This function is implemented based on the HyperLogLog algorithm,"
 }
 ---
 

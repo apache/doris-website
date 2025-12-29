@@ -1,7 +1,8 @@
 ---
 {
     "title": "parameters",
-    "language": "en"
+    "language": "en",
+    "description": "This table is solely for compatibility with MySQL behavior and is always empty."
 }
 ---
 

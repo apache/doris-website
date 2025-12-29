@@ -1,7 +1,8 @@
 ---
 {
     "title": "ARRAY_SORTBY",
-    "language": "en-US"
+    "language": "en-US",
+    "description": "Sort the values array according to the order of a keys array."
 }
 ---
 

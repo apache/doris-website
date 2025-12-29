@@ -1,7 +1,8 @@
 ---
 {
     "title": "GROUPING",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "用于在包含 CUBE、ROLLUP 或 GROUPING SETS 的 SQL 语句中，判断某个在 GROUP BY 子句中的列或表达式是否为汇总结果。当结果集中的数据行是由 CUBE、ROLLUP 或 GROUPING SETS 操作产生的汇总行时，该函数返回 1；否则返回 0。"
 }
 ---
 

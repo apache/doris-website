@@ -1,9 +1,9 @@
 ---
 {
     "title": "MODIFY FRONTEND HOSTNAME",
-    "language": "en"
+    "language": "en",
+    "description": "Modify the properties of the FRONTEND (hereinafter referred to as FE). Currently, this command can only modify the HOSTNAME of the FE."
 }
-
 ---
 
 ## Description

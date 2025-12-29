@@ -1,7 +1,8 @@
 ---
 {
     "title": "INNER_PRODUCT",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "计算两个大小相同的向量的标量积"
 }
 ---
 

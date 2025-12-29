@@ -1,7 +1,8 @@
 ---
 {
     "title": "CREATE CATALOG",
-    "language": "en"
+    "language": "en",
+    "description": "This statement is used to create an external catalog"
 }
 ---
 

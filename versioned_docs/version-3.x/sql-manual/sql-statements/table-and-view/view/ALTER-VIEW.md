@@ -1,7 +1,8 @@
 ---
 {
-  "title": "ALTER VIEW",
-  "language": "en"
+    "title": "ALTER VIEW",
+    "language": "en",
+    "description": "This statement is used to modify the definition of a logical view."
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "CURDATE,CURRENT_DATE",
-    "language": "en"
+    "language": "en",
+    "description": "Retrieves the current date and returns it as a DATE type."
 }
 ---
 

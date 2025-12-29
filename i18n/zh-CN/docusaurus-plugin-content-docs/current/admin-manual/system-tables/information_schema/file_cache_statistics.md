@@ -1,7 +1,8 @@
 ---
 {
     "title": "file_cache_statistics",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "用于查看各个 BE 节点 数据缓存 相关的指标信息。"
 }
 ---
 

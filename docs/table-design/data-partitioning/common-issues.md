@@ -1,7 +1,8 @@
 ---
 {
     "title": "Common Issues",
-    "language": "en"
+    "language": "en",
+    "description": "Doris creates tables sequentially based on partition granularity. When a partition fails to create, this error may occur."
 }
 ---
 

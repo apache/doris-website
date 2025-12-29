@@ -1,7 +1,8 @@
 ---
 {
     "title": "QUARTER_FLOOR",
-    "language": "en"
+    "language": "en",
+    "description": "Rounds a datetime value down to the nearest specified quarter period boundary. If an origin time is specified,"
 }
 ---
 

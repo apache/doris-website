@@ -1,7 +1,8 @@
 ---
 {
     "title": "Hudi Catalog",
-    "language": "en"
+    "language": "en",
+    "description": "Hudi Catalog reuses the Hive Catalog. By connecting to the Hive Metastore, or a metadata service compatible with the Hive Metastore,"
 }
 ---
 

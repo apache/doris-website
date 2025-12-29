@@ -1,9 +1,9 @@
 ---
 {
-   "title": "DROP BROKER",
-   "language": "en"
+    "title": "DROP BROKER",
+    "language": "en",
+    "description": "This statement is used to delete BROKER nodes."
 }
-
 ---
 
 ## Description

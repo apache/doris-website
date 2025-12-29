@@ -1,7 +1,8 @@
 ---
 {
     "title": "Download Log about Load Error",
-    "language": "en"
+    "language": "en",
+    "description": "Download log file about load error"
 }
 ---
 

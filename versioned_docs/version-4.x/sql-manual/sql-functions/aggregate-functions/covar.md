@@ -1,7 +1,8 @@
 ---
 {
     "title": "COVAR",
-    "language": "en"
+    "language": "en",
+    "description": "Calculates the sample covariance between two variables. If either input variable is NULL, that row is not included in the calculation."
 }
 ---
 

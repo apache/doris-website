@@ -1,7 +1,8 @@
 ---
 {
     "title": "BITMAP_TO_BASE64",
-    "language": "en"
+    "language": "en",
+    "description": "Converts a Bitmap into a Base64 encoded string."
 }
 ---
 

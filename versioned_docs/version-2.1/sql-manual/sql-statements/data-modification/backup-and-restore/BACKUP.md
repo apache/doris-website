@@ -1,9 +1,9 @@
 ---
 {
-"title": "BACKUP",
-"language": "en"
+    "title": "BACKUP",
+    "language": "en",
+    "description": "This statement is used to back up the data under the specified database. This command is an asynchronous operation."
 }
-
 ---
 
 ## Description

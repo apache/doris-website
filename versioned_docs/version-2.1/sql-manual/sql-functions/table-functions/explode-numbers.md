@@ -1,7 +1,8 @@
 ---
 {
     "title": "EXPLODE_NUMBERS",
-    "language": "en"
+    "language": "en",
+    "description": "The explodenumbers table function takes an integer n and expands all numbers within the range into multiple rows, each containing a single number."
 }
 ---
 

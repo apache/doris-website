@@ -1,7 +1,8 @@
 ---
 {
     "title": "Statement Execution Action",
-    "language": "en"
+    "language": "en",
+    "description": "Statement Execution Action is used to execute a statement and return the result."
 }
 ---
 

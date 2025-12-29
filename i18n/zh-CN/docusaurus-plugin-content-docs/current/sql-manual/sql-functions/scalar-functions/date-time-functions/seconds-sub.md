@@ -1,7 +1,8 @@
 ---
 {
     "title": "SECONDS_SUB",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "SECONDSSUB 函数用于在指定的日期时间值上减少或增加指定的秒数，并返回计算后的日期时间值。该函数支持处理 DATE、DATETIME 类型，若输入负数则等效于增加对应秒数。"
 }
 ---
 

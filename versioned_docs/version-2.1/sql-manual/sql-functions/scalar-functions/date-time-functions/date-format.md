@@ -1,7 +1,8 @@
 ---
 {
     "title": "DATE_FORMAT",
-    "language": "en"
+    "language": "en",
+    "description": "Convert the date type to a bit string according to the format type."
 }
 ---
 

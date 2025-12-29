@@ -1,7 +1,8 @@
 ---
 {
     "title": "Column to Row (Lateral View)",
-    "language": "en"
+    "language": "en",
+    "description": "Used in conjunction with generator functions such as EXPLODE, will generate a virtual table containing one or more rows."
 }
 ---
 

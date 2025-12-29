@@ -1,7 +1,8 @@
 ---
 {
     "title": "JSON_SEARCH",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "JSONSEARCH 函数用于在 JSON 文档中查找指定的值。如果找到该值，则返回值的路径。如果没有找到该值，则返回 NULL。该函数可以在 JSON 数据结构中递归查找。"
 }
 ---
 

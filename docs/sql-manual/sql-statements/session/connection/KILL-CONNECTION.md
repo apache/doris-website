@@ -1,7 +1,8 @@
 ---
 {
     "title": "KILL CONNECTION",
-    "language": "en"
+    "language": "en",
+    "description": "Kill a connection with a specified connection ID. This will also kill the query associated with this connection."
 }
 ---
 

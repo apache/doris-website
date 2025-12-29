@@ -1,7 +1,8 @@
 ---
 {
     "title": "NAMED_STRUCT",
-    "language": "en"
+    "language": "en",
+    "description": "Construct and return a struct based on the given strings and values. Notes:"
 }
 ---
 

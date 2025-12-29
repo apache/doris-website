@@ -1,7 +1,8 @@
 ---
 {
     "title": "HOURS_DIFF",
-    "language": "en"
+    "language": "en",
+    "description": "The HOURSDIFF function calculates the hour difference between two datetime or date values,"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "基于 LDAP 的用户认证",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "接入第三方 LDAP 服务为 Doris 提供验证登录和组授权服务。"
 }
 ---
 

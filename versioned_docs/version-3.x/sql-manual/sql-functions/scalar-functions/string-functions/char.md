@@ -1,9 +1,13 @@
 ---
 {
-    "title": "CHAR",
-    "language": "en"
+    "title": "CHAR | String Functions",
+    "language": "en",
+    "description": "Interpret each argument as an integer and return a string consisting of the characters given by the code values ​​of those integers. Special cases:",
+    "sidebar_label": "CHAR"
 }
 ---
+
+# CHAR
 
 ## Description
 

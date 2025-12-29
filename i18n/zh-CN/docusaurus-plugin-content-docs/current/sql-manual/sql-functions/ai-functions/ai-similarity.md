@@ -1,7 +1,8 @@
 ---
 {
     "title": "AI_SIMILARITY",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "判断两个文本之间的语义相似性"
 }
 ---
 

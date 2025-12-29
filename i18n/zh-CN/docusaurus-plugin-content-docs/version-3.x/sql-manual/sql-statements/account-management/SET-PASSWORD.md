@@ -1,7 +1,8 @@
 ---
 {
     "title": "SET PASSWORD",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "SET PASSWORD 语句用于修改一个用户的登录密码。"
 }
 ---
 

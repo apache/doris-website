@@ -1,7 +1,8 @@
 ---
 {
     "title": "MINUTE",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "MINUTE 函数用于从输入的日期时间值中提取分钟部分的值，返回范围为 0 到 59 的整数。该函数支持处理 DATE、DATETIME、TIME 类型。"
 }
 ---
 

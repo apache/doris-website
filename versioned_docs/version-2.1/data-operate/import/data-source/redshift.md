@@ -1,7 +1,8 @@
 ---
 {
     "title": "Redshift",
-    "language": "en"
+    "language": "en",
+    "description": "During the process of migrating Redshift, it is usually necessary to use object storage as an intermediate medium."
 }
 ---
 

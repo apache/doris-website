@@ -1,7 +1,8 @@
 ---
 {
     "title": "AUTO_PARTITION_NAME",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "AUTOPARTITIONNAME 函数用于生成自动分区的分区名称。支持两种模式：RANGE 模式按时间单位生成分区名，LIST 模式根据字符串生成分区名。"
 }
 ---
 

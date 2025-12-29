@@ -1,7 +1,8 @@
 ---
 {
     "title": "BigQuery Catalog",
-    "language": "en"
+    "language": "en",
+    "description": "BigQuery Catalog uses the Trino Connector compatibility framework to access BigQuery tables through the BigQuery Connector."
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "MONTHS_ADD",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "MONTHSADD 函数用于向输入的日期时间值中添加指定的月份数，并返回计算后的新日期时间值。该函数支持处理 DATE、DATETIME 类型，若输入负数则等效于减去对应月份数。"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "MAX_BY",
-    "language": "en"
+    "language": "en",
+    "description": "The MAXBY function is used to return the corresponding associated value based on the maximum value of the specified column."
 }
 ---
 

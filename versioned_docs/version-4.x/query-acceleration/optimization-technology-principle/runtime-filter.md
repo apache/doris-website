@@ -1,7 +1,8 @@
 ---
 {
     "title": "Runtime Filter",
-    "language": "en"
+    "language": "en",
+    "description": "Runtime Filter mainly consists of two types: Join Runtime Filter and TopN Runtime Filter."
 }
 ---
 

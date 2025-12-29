@@ -1,7 +1,8 @@
 ---
 {
     "title": "Release 1.1.1",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "在 1.1.0 版本的向量化执行引擎中 ODBC Sink 是不支持的，而这一功能在之前版本的行存引擎是支持的，因此在 1.1.1 版本中我们重新完善了这一功能。"
 }
 ---
 

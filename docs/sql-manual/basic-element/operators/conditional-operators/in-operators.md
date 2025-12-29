@@ -1,7 +1,8 @@
 ---
 {
     "title": "In Operators",
-    "language": "en"
+    "language": "en",
+    "description": "The IN operator tests whether a value is a member of a list of values or a subquery."
 }
 ---
 

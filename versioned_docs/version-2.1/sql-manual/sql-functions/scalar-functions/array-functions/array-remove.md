@@ -1,7 +1,8 @@
 ---
 {
     "title": "ARRAY_REMOVE",
-    "language": "en"
+    "language": "en",
+    "description": "Removes all specified elements from an array"
 }
 ---
 

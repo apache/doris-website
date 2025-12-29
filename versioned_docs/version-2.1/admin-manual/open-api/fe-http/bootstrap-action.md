@@ -1,7 +1,8 @@
 ---
 {
     "title": "Bootstrap Action",
-    "language": "en"
+    "language": "en",
+    "description": "It is used to judge whether the FE has started. When no parameters are provided, only whether the startup is successful is returned."
 }
 ---
 

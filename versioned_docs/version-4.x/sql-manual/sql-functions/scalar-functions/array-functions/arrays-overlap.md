@@ -1,7 +1,8 @@
 ---
 {
     "title": "ARRAYS_OVERLAP",
-    "language": "en"
+    "language": "en",
+    "description": "ARRAYSOVERLAP is used to ◊ whether two arrays have at least one common element. Returns true if they do, otherwise returns false."
 }
 ---
 

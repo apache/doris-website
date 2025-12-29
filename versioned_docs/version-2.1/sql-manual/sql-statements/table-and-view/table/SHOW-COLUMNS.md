@@ -1,7 +1,8 @@
 ---
 {
     "title": "SHOW COLUMNS",
-    "language": "en"
+    "language": "en",
+    "description": "This statement is used to specify the column information of a table."
 }
 ---
 

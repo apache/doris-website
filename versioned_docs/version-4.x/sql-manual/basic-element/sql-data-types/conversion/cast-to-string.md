@@ -1,7 +1,8 @@
 ---
 {
     "title": "Cast to String (Output)",
-    "language": "en"
+    "language": "en",
+    "description": "If the value is true, returns 1. Otherwise returns 0."
 }
 ---
 

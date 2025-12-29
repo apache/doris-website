@@ -1,7 +1,8 @@
 ---
 {
-"title": "Doris Kafka Connector",
-"language": "en"
+    "title": "Doris Kafka Connector",
+    "language": "en",
+    "description": "Kafka Connect is a scalable and reliable tool for data transmission between Apache Kafka and other systems."
 }
 ---
 

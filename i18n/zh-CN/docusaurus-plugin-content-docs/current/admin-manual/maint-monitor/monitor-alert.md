@@ -1,7 +1,8 @@
 ---
 {
     "title": "监控和报警",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "本文档主要介绍 Doris 的监控项及如何采集、展示监控项。以及如何配置报警（TODO）"
 }
 ---
 

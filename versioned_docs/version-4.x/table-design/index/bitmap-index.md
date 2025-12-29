@@ -1,7 +1,8 @@
 ---
 {
     "title": "Bitmap Index",
-    "language": "en"
+    "language": "en",
+    "description": "Bitmap Index is an index represented by bitmaps, where a bitmap is created for each key value in a column. Compared to other indexes,"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "ENDS_WITH",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "ENDSWITH 函数用于检查字符串是否以指定的后缀结尾。"
 }
 ---
 

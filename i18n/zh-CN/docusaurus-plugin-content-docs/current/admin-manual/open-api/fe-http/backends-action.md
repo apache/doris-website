@@ -1,7 +1,8 @@
 ---
 {
     "title": "Backends Action",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "Backends Action 返回 Backends 列表，包括 Backend 的 IP、PORT 等信息。"
 }
 ---
 

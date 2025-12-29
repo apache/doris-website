@@ -1,7 +1,8 @@
 ---
 {
     "title": "ST_ASBINARY",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "将一个几何图形转化为一个标准 WKB（Well-known binary）的表示形式。"
 }
 ---
 

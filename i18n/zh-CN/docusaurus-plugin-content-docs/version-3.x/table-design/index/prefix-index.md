@@ -1,7 +1,8 @@
 ---
 {
     "title": "前缀索引与排序键",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "Doris 的数据存储在类似 SSTable（Sorted String Table）的数据结构中。该结构是一种有序的数据结构，可以按照指定的一个或多个列进行排序存储。在这种数据结构上，以排序列的全部或者前面几个作为条件进行查找，会非常的高效。"
 }
 ---
 

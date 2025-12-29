@@ -1,10 +1,10 @@
 ---
 {
     "title": "RPAD",
-    "language": "en"
+    "language": "en",
+    "description": "The RPAD function (Right Padding) is used to pad the right side of a string with specified characters until it reaches a specified length."
 }
 ---
-
 
 ## Description
 

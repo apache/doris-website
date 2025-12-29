@@ -1,7 +1,8 @@
 ---
 {
     "title": "DROP STATS",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "删除指定表和列的统计信息。如果不指定列名，则删除所有列的统计信息。"
 }
 ---
 

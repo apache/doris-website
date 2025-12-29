@@ -1,7 +1,8 @@
 ---
 {
     "title": "RETENTION",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "留存函数将一组条件作为参数，类型为 1 到 32 个 Bool 类型的参数，用来表示事件是否满足特定条件。任何条件都可以指定为参数。"
 }
 ---
 

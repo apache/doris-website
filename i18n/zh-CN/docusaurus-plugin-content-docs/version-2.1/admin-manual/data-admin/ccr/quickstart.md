@@ -1,7 +1,8 @@
 ---
 {
     "title": "快速开始",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "在源集群和目标集群的 fe.conf 和 be.conf 中配置如下信息："
 }
 ---
 
@@ -17,7 +18,7 @@ enable_feature_binlog=true
 
 2.1. 从如下链接下载最新的包
 
-`https://apache-doris-releases.oss-accelerate.aliyuncs.com/ccr-release/ccr-syncer-3.0.4-rc02-x64.tar.xz`
+`https://apache-doris-releases.oss-accelerate.aliyuncs.com/ccr-release/ccr-syncer-3.0.6-rc05-x64.tar.xz`
 
 2.2. 启动和停止 Syncer
 

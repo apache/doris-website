@@ -1,9 +1,9 @@
 ---
 {
-   "title": "ADD BROKER",
-   "language": "zh-CN"
+    "title": "ADD BROKER",
+    "language": "zh-CN",
+    "description": "该语句用于添加一个或者多个 BROKER 节点。"
 }
-
 ---
 
 ## 描述

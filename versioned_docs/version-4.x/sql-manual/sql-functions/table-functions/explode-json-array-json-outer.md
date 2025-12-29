@@ -1,7 +1,8 @@
 ---
 {
-"title": "EXPLODE_JSON_ARRAY_JSON_OUTER",
-"language": "en"
+    "title": "EXPLODE_JSON_ARRAY_JSON_OUTER",
+    "language": "en",
+    "description": "The explodejsonarrayjsonouter table function accepts a JSON array."
 }
 ---
 
