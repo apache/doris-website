@@ -545,6 +545,7 @@ const sidebars: SidebarsConfig = {
                                 'ecosystem/observability/opentelemetry',
                                 'ecosystem/observability/fluentbit',
                                 'ecosystem/observability/loongcollector',
+                                'ecosystem/observability/langfuse',
                             ],
                         },
                     ],
@@ -988,6 +989,7 @@ const sidebars: SidebarsConfig = {
                         'ecosystem/observability/opentelemetry',
                         'ecosystem/observability/fluentbit',
                         'ecosystem/observability/loongcollector',
+                        'ecosystem/observability/langfuse',
                     ],
                 },
                 {
