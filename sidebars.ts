@@ -520,6 +520,7 @@ const sidebars: SidebarsConfig = {
                                 'lakehouse/best-practices/doris-onelake',
                                 'lakehouse/best-practices/doris-unity-catalog',
                                 'lakehouse/best-practices/doris-lakekeeper',
+                                'lakehouse/best-practices/doris-nessie',
                                 'lakehouse/best-practices/doris-dlf-paimon',
                                 'lakehouse/best-practices/doris-maxcompute',
                                 'lakehouse/best-practices/kerberos',
