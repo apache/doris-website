@@ -1,7 +1,8 @@
 ---
 {
     "title": "明细模型",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "明细模型是 Doris 中的默认建表模型，用于保存每条原始数据记录。在建表时，通过 DUPLICATE KEY 指定数据存储的排序列，以优化常用查询。一般建议选择三列或更少的列作为排序键，具体选择方式参考排序键。明细模型具有以下特点："
 }
 ---
 
@@ -43,7 +44,7 @@ DISTRIBUTED BY HASH(log_type) BUCKETS 10;
 
 ## 数据插入与存储
 
-在明细表中，数据不进行去重与聚合，插入数据即存储数据。明细模型中 Key 列指做为排序。
+在明细表中，数据不进行去重与聚合，插入数据即存储数据。明细模型中 Key 列只作为排序。
 
 ![columnar_storage](/images/table-desigin/duplicate-table-insert.png)
 

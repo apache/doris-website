@@ -1,7 +1,8 @@
 ---
 {
-"title": "Quick BI",
-"language": "en"
+    "title": "Quick BI",
+    "language": "en",
+    "description": "Quick BI is a data warehouse-based business intelligence tool that helps enterprises set up impressive visual analyses quickly."
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "Stream Load",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "Stream Load 支持通过 HTTP 协议将本地文件或数据流导入到 Doris 中。Stream Load 是一个同步导入方式，执行导入后返回导入结果，可以通过请求的返回判断导入是否成功。一般来说，可以使用 Stream Load 导入 10GB 以下的文件，如果文件过大，"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
-   "title": "Smartbi",
-   "language": "en"
+    "title": "Smartbi",
+    "language": "en",
+    "description": "Smartbi is a collection of software services and application connectors that can connect to a variety of data sources, including Oracle, SQL Server,"
 }
 ---
 

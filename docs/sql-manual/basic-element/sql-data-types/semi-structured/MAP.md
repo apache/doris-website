@@ -1,264 +1,224 @@
 ---
 {
-"title": "MAP",
-"language": "en"
+    "title": "MAP | Semi Structured",
+    "language": "en",
+    "description": "```SQL SELECT MAP('Alice', 21, 'Bob', 23);",
+    "sidebar_label": "MAP"
 }
 ---
 
-## MAP
+# MAP
 
-### Name
+## Type Description
 
-MAP
+- The `MAP<key_type, value_type>` type is used to represent a composite type of key-value pairs, where each key uniquely corresponds to a value.
+  - `key_type` represents the type of the keys, supporting types such as `BOOLEAN, TINYINT, SMALLINT, INT, BIGINT, LARGEINT, FLOAT, DOUBLE, DECIMAL, DATE, DATETIME, TIMESTAMPTZ, CHAR, VARCHAR, STRING, IPV4, IPV6`. Keys are nullable and cannot be specified as NOT NULL.
+  - `value_type` represents the type of the values, supporting `BOOLEAN, TINYINT, SMALLINT, INT, BIGINT, LARGEINT, FLOAT, DOUBLE, DECIMAL, DATE, DATETIME, TIMESTAMPTZ, CHAR, VARCHAR, STRING, IPV4, IPV6, ARRAY, MAP, STRUCT`. Values are nullable and cannot be specified as NOT NULL.
 
-### Syntax
-`MAP<K, V>`
+## Type Constraints
 
-Where:
+- The `MAP<key_type, value_type>` type allows a maximum nesting depth of 9.
+- In `MAP<key_type, value_type>`, keys can be NULL, and identical keys are allowed (NULL and NULL are considered the same key).
+- Conversion between `MAP<key_type, value_type>` types depends on whether `key_type` and `value_type` can be converted. `MAP<key_type, value_type>` cannot be converted to other types.
+  - For example: `MAP<INT, INT>` can be converted to `MAP<BIGINT, BIGINT>` because `INT` and `BIGINT` can be converted.
+  - String types can be converted to `MAP<key_type, value_type>` (through parsing, returning NULL if parsing fails).
+- In the `AGGREGATE` table model, `MAP<key_type, value_type>` only supports `REPLACE` and `REPLACE_IF_NOT_NULL`. **In any table model, it cannot be used as a KEY column, nor as a partition or bucket column**.
+- Columns of type `MAP<key_type, value_type>` do not support comparison or arithmetic operations, **do not support `ORDER BY` and `GROUP BY` operations, cannot be used as `JOIN KEY`, and cannot be used in `DELETE` statements**.
+- Columns of type `MAP<key_type, value_type>` do not support creating any indexes.
 
-* `K` is the type of the key for the map. You should must use one of the following types for keys:
-  * String Data Type(Char/Varchar/String)
-  * Numeric Data Type(except double and float)
-  * Date Type(Date/Datetime/Time)
-  * IP Address Type(IPV4/IPV6)
+## Type Construction
 
-  Map keys always be nullable. 
+- The `MAP()` function can return a value of type `MAP`.
 
-  **Because nullable types are supported as map keys, key comparison in maps uses "null-safe equal" (null and null are considered equal), which differs from the standard SQL definition.**
+  ```SQL
+  SELECT MAP('Alice', 21, 'Bob', 23);
 
-* `V` is the type of the value in the map. And it is always nullable.
+  +-----------------------------+
+  | map('Alice', 21, 'Bob', 23) |
+  +-----------------------------+
+  | {"Alice":21, "Bob":23}      |
+  +-----------------------------+
+  ```
 
-The Map type does not support duplicate keys; Doris will automatically remove duplicates (only one entry is retained for each identical key).
+- `{}` can be used to construct a value of type `MAP`.
 
-### Description
+  ```SQL
+  SELECT {'Alice': 20};
 
-A Map of K, V items, it cannot be used as a key column. Now MAP can only used in Duplicate and Unique Model Tables.
+  +---------------+
+  | {'Alice': 20} |
+  +---------------+
+  | {"Alice":20}  |
+  +---------------+
+  ```
 
-Need to manually enable the support, it is disabled by default.
-```
-admin set frontend config("enable_map_type" = "true");
-```
-### Example
+## Modifying Type
 
-Create table example:
+- Modification is allowed only when `key_type` or `value_type` of `MAP<key_type, value_type>` is `VARCHAR`.
+  - Only allows changing the parameter of `VARCHAR` from smaller to larger, not the other way around.
 
-```sql
-CREATE TABLE IF NOT EXISTS test.simple_map (
-  `id` INT(11) NULL COMMENT "",
-  `m` Map<STRING, INT> NULL COMMENT ""
-) ENGINE=OLAP
-DUPLICATE KEY(`id`)
-DISTRIBUTED BY HASH(`id`) BUCKETS 1
-PROPERTIES (
-"replication_allocation" = "tag.location.default: 1",
-"storage_format" = "V2"
-);
-```
+    ```SQL
+    CREATE TABLE `map_table` (
+      `k` INT NOT NULL,
+      `map_varchar_int` MAP<VARCHAR(10), INT>,
+      `map_int_varchar` MAP<INT, VARCHAR(10)>,
+      `map_varchar_varchar` MAP<VARCHAR(10), VARCHAR(10)>
+    ) ENGINE=OLAP
+    DUPLICATE KEY(`k`)
+    DISTRIBUTED BY HASH(`k`) BUCKETS 1
+    PROPERTIES (
+        "replication_num" = "1"
+    );
 
-Insert data example:
+    ALTER TABLE map_table MODIFY COLUMN map_varchar_int MAP<VARCHAR(20), INT>;
 
-```sql
-mysql> INSERT INTO simple_map VALUES(1, {'a': 100, 'b': 200});
-```
+    ALTER TABLE map_table MODIFY COLUMN map_int_varchar MAP<INT, VARCHAR(20)>;
 
-stream_load examples:
-See [STREAM LOAD](../../../../data-operate/import/import-way/stream-load-manual)  for syntax details.
+    ALTER TABLE map_table MODIFY COLUMN map_varchar_varchar MAP<VARCHAR(20), VARCHAR(20)>;
+    ```
 
-```shell
-# load the map data from json file
-curl --location-trusted -uroot: -T events.json -H "format: json" -H "read_json_by_line: true" http://fe_host:8030/api/test/simple_map/_stream_load
-# 返回结果
-{
-    "TxnId": 106134,
-    "Label": "5666e573-9a97-4dfc-ae61-2d6b61fdffd2",
-    "Comment": "",
-    "TwoPhaseCommit": "false",
-    "Status": "Success",
-    "Message": "OK",
-    "NumberTotalRows": 10293125,
-    "NumberLoadedRows": 10293125,
-    "NumberFilteredRows": 0,
-    "NumberUnselectedRows": 0,
-    "LoadBytes": 2297411459,
-    "LoadTimeMs": 66870,
-    "BeginTxnTimeMs": 1,
-    "StreamLoadPutTimeMs": 80,
-    "ReadDataTimeMs": 6415,
-    "WriteDataTimeMs": 10550,
-    "CommitAndPublishTimeMs": 38
-}
-```
+- The default value for columns of type `MAP<key_type, value_type>` can only be specified as NULL, and once specified, it cannot be modified.
 
-Select all data example:
+## Element Access
 
-```sql
-mysql> SELECT * FROM simple_map;
-+------+-----------------------------+
-| id   | m                           |
-+------+-----------------------------+
-|    1 | {'a':100, 'b':200}          |
-|    2 | {'b':100, 'c':200, 'd':300} |
-|    3 | {'a':10, 'd':200}           |
-+------+-----------------------------+
-```
+- Use `[key]` to access the value corresponding to the key in the `MAP`.
 
-Select map column example:
+  ```SQL
+  SELECT {'Alice': 20}['Alice'];
 
-```sql
-mysql> SELECT m FROM simple_map;
-+-----------------------------+
-| m                           |
-+-----------------------------+
-| {'a':100, 'b':200}          |
-| {'b':100, 'c':200, 'd':300} |
-| {'a':10, 'd':200}           |
-+-----------------------------+
-```
+  +------------------------+
+  | {'Alice': 20}['Alice'] |
+  +------------------------+
+  |                     20 |
+  +------------------------+
+  ```
 
-Select map value according given key example: 
+- Use `ELEMENT_AT(MAP, Key)` to access the value corresponding to the key in the `MAP`.
 
-```sql
-mysql> SELECT m['a'] FROM simple_map;
-+-----------------------------+
-| %element_extract%(`m`, 'a') |
-+-----------------------------+
-|                         100 |
-|                        NULL |
-|                          10 |
-+-----------------------------+
-```
+  ```SQL
+  SELECT ELEMENT_AT({'Alice': 20}, 'Alice');
 
-map functions examples: 
+  +------------------------------------+
+  | ELEMENT_AT({'Alice': 20}, 'Alice') |
+  +------------------------------------+
+  |                                 20 |
+  +------------------------------------+
+  ```
 
-```sql
-# map construct
+## Examples
 
-mysql> SELECT map('k11', 1000, 'k22', 2000)['k11'];
-+---------------------------------------------------------+
-| %element_extract%(map('k11', 1000, 'k22', 2000), 'k11') |
-+---------------------------------------------------------+
-|                                                    1000 |
-+---------------------------------------------------------+
+- Nested MAPs
 
-mysql> SELECT map('k11', 1000, 'k22', 2000)['nokey'];
-+-----------------------------------------------------------+
-| %element_extract%(map('k11', 1000, 'k22', 2000), 'nokey') |
-+-----------------------------------------------------------+
-|                                                      NULL |
-+-----------------------------------------------------------+
-1 row in set (0.06 sec)
+  ```SQL
+  -- Create table
+  CREATE TABLE IF NOT EXISTS map_table (
+      id INT,
+      map_nested MAP<STRING, MAP<STRING, INT>>
+  ) ENGINE=OLAP
+  DUPLICATE KEY(id)
+  DISTRIBUTED BY HASH(id) BUCKETS 1
+  PROPERTIES (
+      "replication_allocation" = "tag.location.default: 1"
+  );
 
-# map size
+  -- Insert
+  INSERT INTO map_table VALUES (1, MAP('key1', MAP('key2', 1, 'key3', 2)));
+  INSERT INTO map_table VALUES (2, MAP('key1', MAP('key2', 3, 'key3', 4)));
 
-mysql> SELECT map_size(map('k11', 1000, 'k22', 2000));
-+-----------------------------------------+
-| map_size(map('k11', 1000, 'k22', 2000)) |
-+-----------------------------------------+
-|                                       2 |
-+-----------------------------------------+
+  -- Query
+  SELECT map_nested['key1']['key2'] FROM map_table ORDER BY id;
+  +----------------------------+
+  | map_nested['key1']['key2'] |
+  +----------------------------+
+  |                          1 |
+  |                          3 |
+  +----------------------------+
+  ```
 
-mysql> SELECT id, m, map_size(m) FROM simple_map ORDER BY id;
-+------+-----------------------------+---------------+
-| id   | m                           | map_size(`m`) |
-+------+-----------------------------+---------------+
-|    1 | {"a":100, "b":200}          |             2 |
-|    2 | {"b":100, "c":200, "d":300} |             3 |
-|    2 | {"a":10, "d":200}           |             2 |
-+------+-----------------------------+---------------+
-3 rows in set (0.04 sec)
+- Nested Complex Types
 
-# map_contains_key
+  ```SQL
+  -- Create table
+  CREATE TABLE IF NOT EXISTS map_table (
+      id INT,
+      map_array MAP<STRING, ARRAY<INT>>
+  ) ENGINE=OLAP
+  DUPLICATE KEY(id)
+  DISTRIBUTED BY HASH(id) BUCKETS 1
+  PROPERTIES (
+      "replication_allocation" = "tag.location.default: 1"
+  );
 
-mysql> SELECT map_contains_key(map('k11', 1000, 'k22', 2000), 'k11');
-+--------------------------------------------------------+
-| map_contains_key(map('k11', 1000, 'k22', 2000), 'k11') |
-+--------------------------------------------------------+
-|                                                      1 |
-+--------------------------------------------------------+
-1 row in set (0.08 sec)
+  -- Insert
+  INSERT INTO map_table VALUES (1, MAP('key1', [1, 2, 3])), (2, MAP('key1', [4, 5, 6]));
 
-mysql> SELECT id, m, map_contains_key(m, 'k1') FROM simple_map ORDER BY id;
-+------+-----------------------------+-----------------------------+
-| id   | m                           | map_contains_key(`m`, 'k1') |
-+------+-----------------------------+-----------------------------+
-|    1 | {"a":100, "b":200}          |                           0 |
-|    2 | {"b":100, "c":200, "d":300} |                           0 |
-|    2 | {"a":10, "d":200}           |                           0 |
-+------+-----------------------------+-----------------------------+
-3 rows in set (0.10 sec)
+  -- Query
+  SELECT map_array['key1'][1] FROM map_table ORDER BY id;
+  +----------------------+
+  | map_array['key1'][1] |
+  +----------------------+
+  |                    1 |
+  |                    4 |
+  +----------------------+
 
-mysql> SELECT id, m, map_contains_key(m, 'a') FROM simple_map ORDER BY id;
-+------+-----------------------------+----------------------------+
-| id   | m                           | map_contains_key(`m`, 'a') |
-+------+-----------------------------+----------------------------+
-|    1 | {"a":100, "b":200}          |                          1 |
-|    2 | {"b":100, "c":200, "d":300} |                          0 |
-|    2 | {"a":10, "d":200}           |                          1 |
-+------+-----------------------------+----------------------------+
-3 rows in set (0.17 sec)
+  -- Create table
+  CREATE TABLE IF NOT EXISTS map_table (
+      id INT,
+      map_struct MAP<STRING, STRUCT<id: INT, name: STRING>>
+  ) ENGINE=OLAP
+  DUPLICATE KEY(id)
+  DISTRIBUTED BY HASH(id) BUCKETS 1
+  PROPERTIES (
+      "replication_allocation" = "tag.location.default: 1"
+  );
 
-# map_contains_value
+  -- Insert
+  INSERT INTO map_table VALUES (1, MAP('key1', STRUCT(1, 'John'), 'key2', STRUCT(3, 'Jane')));
 
-mysql> SELECT map_contains_value(map('k11', 1000, 'k22', 2000), NULL);
-+---------------------------------------------------------+
-| map_contains_value(map('k11', 1000, 'k22', 2000), NULL) |
-+---------------------------------------------------------+
-|                                                       0 |
-+---------------------------------------------------------+
-1 row in set (0.04 sec)
+  -- Query
+  SELECT STRUCT_ELEMENT(map_struct['key1'], 1), STRUCT_ELEMENT(map_struct['key1'], 'name') FROM map_table ORDER BY id;
+  +---------------------------------------+--------------------------------------------+
+  | STRUCT_ELEMENT(map_struct['key1'], 1) | STRUCT_ELEMENT(map_struct['key1'], 'name') |
+  +---------------------------------------+--------------------------------------------+
+  |                                     1 | John                                       |
+  +---------------------------------------+--------------------------------------------+
+  ```
 
-mysql> SELECT id, m, map_contains_value(m, '100') FROM simple_map ORDER BY id;
-+------+-----------------------------+------------------------------+
-| id   | m                           | map_contains_value(`m`, 100) |
-+------+-----------------------------+------------------------------+
-|    1 | {"a":100, "b":200}          |                            1 |
-|    2 | {"b":100, "c":200, "d":300} |                            1 |
-|    2 | {"a":10, "d":200}           |                            0 |
-+------+-----------------------------+------------------------------+
-3 rows in set (0.11 sec)
+- Modifying Type
 
-# map_keys
+  ```SQL
+  -- Create table
+  CREATE TABLE `map_table` (
+    `k` INT NOT NULL,
+    `map_varchar_int` MAP<VARCHAR(10), INT>,
+    `map_int_varchar` MAP<INT, VARCHAR(10)>,
+    `map_varchar_varchar` MAP<VARCHAR(10), VARCHAR(10)>
+  ) ENGINE=OLAP
+  DUPLICATE KEY(`k`)
+  DISTRIBUTED BY HASH(`k`) BUCKETS 1
+  PROPERTIES (
+      "replication_num" = "1"
+  );
 
-mysql> SELECT map_keys(map('k11', 1000, 'k22', 2000));
-+-----------------------------------------+
-| map_keys(map('k11', 1000, 'k22', 2000)) |
-+-----------------------------------------+
-| ["k11", "k22"]                          |
-+-----------------------------------------+
-1 row in set (0.04 sec)
+  -- Modify KEY
+  ALTER TABLE map_table MODIFY COLUMN map_varchar_int MAP<VARCHAR(20), INT>;
 
-mysql> SELECT id, map_keys(m) FROM simple_map ORDER BY id;
-+------+-----------------+
-| id   | map_keys(`m`)   |
-+------+-----------------+
-|    1 | ["a", "b"]      |
-|    2 | ["b", "c", "d"] |
-|    2 | ["a", "d"]      |
-+------+-----------------+
-3 rows in set (0.19 sec)
+  -- Modify VALUE
+  ALTER TABLE map_table MODIFY COLUMN map_int_varchar MAP<INT, VARCHAR(20)>;
 
-# map_values
+  -- Modify KEY and VALUE
+  ALTER TABLE map_table MODIFY COLUMN map_varchar_varchar MAP<VARCHAR(20), VARCHAR(20)>;
 
-mysql> SELECT map_values(map('k11', 1000, 'k22', 2000));
-+-------------------------------------------+
-| map_values(map('k11', 1000, 'k22', 2000)) |
-+-------------------------------------------+
-| [1000, 2000]                              |
-+-------------------------------------------+
-1 row in set (0.03 sec)
+  -- Check column types
+  DESC map_table;
+  +---------------------+------------------------------+------+-------+---------+-------+
+  | Field               | Type                         | Null | Key   | Default | Extra |
+  +---------------------+------------------------------+------+-------+---------+-------+
+  | k                   | int                          | No   | true  | NULL    |       |
+  | map_varchar_int     | map<varchar(20),int>         | Yes  | false | NULL    | NONE  |
+  | map_int_varchar     | map<int,varchar(20)>         | Yes  | false | NULL    | NONE  |
+  | map_varchar_varchar | map<varchar(20),varchar(20)> | Yes  | false | NULL    | NONE  |
+  +---------------------+------------------------------+------+-------+---------+-------+
+  ```
 
-mysql> SELECT id, map_values(m) FROM simple_map ORDER BY id;
-+------+-----------------+
-| id   | map_values(`m`) |
-+------+-----------------+
-|    1 | [100, 200]      |
-|    2 | [100, 200, 300] |
-|    2 | [10, 200]       |
-+------+-----------------+
-3 rows in set (0.18 sec)
 
-```
-
-### Keywords
-
-    MAP

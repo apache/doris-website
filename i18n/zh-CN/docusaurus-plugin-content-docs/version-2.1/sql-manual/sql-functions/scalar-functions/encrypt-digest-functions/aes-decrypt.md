@@ -1,7 +1,8 @@
 ---
 {
-"title": "AES_DECRYPT",
-"language": "zh-CN"
+    "title": "AES_DECRYPT",
+    "language": "zh-CN",
+    "description": "AES 解密函数。该函数与 MySQL 中的 AESDECRYPT 函数行为一致。默认采用 AES128ECB 算法，padding 模式为 PKCS7。"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
-  "title": "Creating, Querying, and Maintaining Asynchronous Materialized Views",
-  "language": "en"
+    "title": "Creating, Querying, and Maintaining Asynchronous Materialized Views",
+    "language": "en",
+    "description": "This document provides detailed information about materialized view creation, direct querying of materialized views, query rewriting,"
 }
 ---
 
@@ -89,28 +90,30 @@ Determines whether to refresh immediately after materialized view creation.
 
 - **`ON SCHEDULE` Scheduled Trigger**
 
-  Specify refresh intervals in the materialized view creation statement.
+  Specify refresh intervals in the materialized view creation statement. You can specify the data refresh interval in the materialized view creation statement using refreshUnit, where the refresh time interval unit can be minute, hour, day, week, etc.
 
   Example of full refresh (`REFRESH COMPLETE`) every 10 hours, refreshing all partitions:
 
-  ```sql
-  CREATE MATERIALIZED VIEW mv_6
-  REFRESH COMPLETE ON SCHEDULE EVERY 10 hour
-  AS
-  SELECT FROM lineitem;
-  ```
+```sql
+CREATE MATERIALIZED VIEW mv_6
+REFRESH COMPLETE ON SCHEDULE EVERY 10 hour
+DISTRIBUTED BY RANDOM BUCKETS 2   
+AS
+SELECT FROM lineitem;
+```
 
   Example of incremental refresh (`REFRESH AUTO`) every 10 hours,
   only refreshing changed partitions or falling back to full refresh if needed
   (automatic Hive partition calculation supported from version 2.1.3):
 
-  ```sql
-  CREATE MATERIALIZED VIEW mv_7
-  REFRESH AUTO ON SCHEDULE EVERY 10 hour
-  PARTITION by(l_shipdate)
-  AS
-  SELECT FROM lineitem;
-  ```
+```sql
+CREATE MATERIALIZED VIEW mv_7
+REFRESH AUTO ON SCHEDULE EVERY 10 hour
+PARTITION by(l_shipdate)
+DISTRIBUTED BY RANDOM BUCKETS 2   
+AS
+SELECT FROM lineitem;
+```
 
 
 - **`ON COMMIT` Automatic Trigger**
@@ -123,17 +126,19 @@ Determines whether to refresh immediately after materialized view creation.
     
     Example: When partition `t1` data changes in base table `lineitem`, it automatically triggers corresponding materialized view partition refresh:
 
-    ```sql
-    CREATE MATERIALIZED VIEW mv_8
-    REFRESH AUTO ON COMMIT
-    PARTITION by(l_shipdate)
-    AS
-    SELECT FROM lineitem;
-    ```
-    
-    :::caution
-    Not recommended for frequently changing base tables as it creates frequent materialized refresh tasks, consuming excessive resources.
-    :::
+```sql
+CREATE MATERIALIZED VIEW mv_8
+REFRESH AUTO ON COMMIT
+PARTITION by(l_shipdate)
+DISTRIBUTED BY RANDOM BUCKETS 2   
+AS
+SELECT FROM lineitem;
+```
+
+
+:::caution
+Not recommended for frequently changing base tables as it creates frequent materialized refresh tasks, consuming excessive resources.
+:::
 
     For more details, see [REFRESH MATERIALIZED VIEW](../../../sql-manual/sql-statements/table-and-view/async-materialized-view/REFRESH-MATERIALIZED-VIEW)
 
@@ -240,7 +245,8 @@ The time specified in STARTS must be later than the current time.
 CREATE MATERIALIZED VIEW mv_1_1
 BUILD DEFERRED
 REFRESH COMPLETE
-ON SCHEDULE EVERY 1 DAY STARTS '2024-12-01 20:30:00'  
+ON SCHEDULE EVERY 1 DAY STARTS '2024-12-01 20:30:00'
+DISTRIBUTED BY RANDOM BUCKETS 2   
 AS   
 SELECT   
 l_linestatus,   
@@ -260,6 +266,7 @@ CREATE MATERIALIZED VIEW mv_1_1
 BUILD IMMEDIATE
 REFRESH COMPLETE
 ON COMMIT
+DISTRIBUTED BY RANDOM BUCKETS 2   
 AS   
 SELECT   
 l_linestatus,   
@@ -463,7 +470,7 @@ Additionally, if the partition field is of string type, the date format can be s
 For more details, refer to [CREATE ASYNC MATERIALIZED VIEW](../../../sql-manual/sql-statements/table-and-view/async-materialized-view/CREATE-ASYNC-MATERIALIZED-VIEW).
 
 ### SQL Definition
-There are no restrictions on the SQL definition of asynchronous materialized views.
+Asynchronous materialized views do not support creation using View.
 
 ## Direct Querying of Materialized Views
 
@@ -1203,6 +1210,9 @@ NeedRefreshPartitions: ["p_20231023_20231024","p_20231019_20231020","p_20231020_
 - RefreshMode: COMPLETE means all partitions were refreshed, PARTIAL means some partitions were refreshed, NOT_REFRESH means no partitions needed refreshing.
 
 :::info Note
+
+- Currently, the default storage and display count for tasks is 100. This can be modified by configuring max_persistence_task_count in the fe.conf file. When exceeding this limit, older task records will be discarded. If the value is set to < 1, task persistence will be disabled. After modifying the configuration, a restart of the FE service is required for the changes to take effect.
+
 - If the `grace_period` property was set when creating the materialized view, it may still be available for transparent rewriting in some cases even if `SyncWithBaseTables` is false or 0.
 
 - `grace_period` is measured in seconds and specifies the allowed time for data inconsistency between the materialized view and base tables.

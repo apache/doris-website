@@ -1,13 +1,20 @@
 ---
 {
     "title": "Profile Action",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "用于获取指定 query id 的 query profile 如果 queryid 不存在，直接返回 404 NOT FOUND 错误 如果 queryid 存在，返回下列文本的 profile:"
 }
 ---
 
 # Profile Action
 
 ## Request
+
+:::caution 注意：
+
+使用该接口需要 admin_priv，建议使用 [query profile action](./query-profile-action.md) 来查看 profile
+
+:::
 
 `GET /api/profile`
 `GET /api/profile/text`

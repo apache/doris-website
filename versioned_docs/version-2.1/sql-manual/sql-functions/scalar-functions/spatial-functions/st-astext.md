@@ -1,7 +1,8 @@
 ---
 {
     "title": "ST_ASTEXT",
-    "language": "en"
+    "language": "en",
+    "description": "Convert a geometric figure to a representation of WKT (Well Known Text)"
 }
 ---
 

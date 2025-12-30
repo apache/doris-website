@@ -1,7 +1,8 @@
 ---
 {
-  "title": "SHOW STORAGE POLICY",
-  "language": "en"
+    "title": "SHOW STORAGE POLICY",
+    "language": "en",
+    "description": "View tables and partitions associated with all/specified storage policies."
 }
 ---
 

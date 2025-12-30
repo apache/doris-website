@@ -1,7 +1,8 @@
 ---
 {
-  "title": "创建、查询与维护异步物化视图",
-  "language": "zh-CN"
+    "title": "创建、查询与维护异步物化视图",
+    "language": "zh-CN",
+    "description": "本文将详细说明物化视图创建、物化视图直查、查询改写和物化视图常见运维。"
 }
 ---
 
@@ -86,26 +87,29 @@ CREATE MATERIALIZED VIEW
 
 - **`ON SCHEDULE` 定时触发**
 
-  通过物化视图的创建语句指定间隔多久刷新一次数据
+  通过物化视图的创建语句指定间隔多久刷新一次数据，refreshUnit(刷新时间间隔单位) 可以是 minute，hour，day，week 等。
 
   如下，要求全量刷新 (`REFRESH COMPLETE`)，物化视图每 10 小时刷新一次，并且刷新物化视图的所有分区。
 
-  ```sql
-  CREATE MATERIALIZED VIEW mv_6
-  REFRESH COMPLETE ON SCHEDULE EVERY 10 hour
-  AS
-  SELECT * FROM lineitem;
-  ```
+
+```sql
+CREATE MATERIALIZED VIEW mv_6
+REFRESH COMPLETE ON SCHEDULE EVERY 10 hour
+DISTRIBUTED BY RANDOM BUCKETS 2   
+AS
+SELECT * FROM lineitem;
+```
 
   如下，尽量增量刷新 (`REFRESH AUTO`)，只刷新自上次物化刷新后数据变化的分区，如果不能增量刷新，就刷新所有分区，物化视图每 10 小时刷新一次（从 2.1.3 版本开始能自动计算 Hive 需要刷新的分区）。
 
-    ```sql
-    CREATE MATERIALIZED VIEW mv_7
-    REFRESH AUTO ON SCHEDULE EVERY 10 hour
-    PARTITION by(l_shipdate)
-    AS
-  SELECT * FROM lineitem;
-  ```
+```sql
+CREATE MATERIALIZED VIEW mv_7
+REFRESH AUTO ON SCHEDULE EVERY 10 hour
+PARTITION by(l_shipdate)
+DISTRIBUTED BY RANDOM BUCKETS 2    
+AS
+SELECT * FROM lineitem;
+```
 
 - **`ON COMMIT` 自动触发**
 
@@ -117,13 +121,14 @@ CREATE MATERIALIZED VIEW
 
   如果物化视图的创建语句如下，那么当 基表 `lineitem` 的 `t1` 分区数据发生变化时，会自动触发物化视图的对应分区刷新。
 
-  ```sql
-  CREATE MATERIALIZED VIEW mv_8
-  REFRESH AUTO ON COMMIT
-  PARTITION by(l_shipdate)
-  AS
-  SELECT * FROM lineitem;
-  ```
+```sql
+CREATE MATERIALIZED VIEW mv_8
+REFRESH AUTO ON COMMIT
+PARTITION by(l_shipdate)
+DISTRIBUTED BY RANDOM BUCKETS 2   
+AS
+SELECT * FROM lineitem;
+```
 
   :::caution 注意
   如果基表的数据频繁变更，不太适合使用此种触发方式，因为会频繁构建物化刷新任务，消耗过多资源。
@@ -237,6 +242,7 @@ CREATE MATERIALIZED VIEW mv_1_1
 BUILD DEFERRED
 REFRESH COMPLETE
 ON SCHEDULE EVERY 1 DAY STARTS '2024-12-01 20:30:00'  
+DISTRIBUTED BY RANDOM BUCKETS 2          
 PROPERTIES ('replication_num' = '1')   
 AS   
 SELECT   
@@ -258,6 +264,7 @@ CREATE MATERIALIZED VIEW mv_1_1
 BUILD IMMEDIATE
 REFRESH COMPLETE
 ON COMMIT
+DISTRIBUTED BY RANDOM BUCKETS 2          
 PROPERTIES ('replication_num' = '1')   
 AS   
 SELECT   
@@ -448,7 +455,7 @@ SELECT * FROM t1;
 
 ### SQL 定义
 
-异步物化视图 SQL 定义没有限制。
+异步物化视图不支持使用 View 创建
 
 ## 直查物化视图
 
@@ -1138,7 +1145,7 @@ SyncWithBaseTables: 1
 
 - **SchemaChangeDetail：** 表示 SCHEMA_CHANGE 发生的原因。
 
-- **RefreshState：** 物化视图最后一次任务刷新的状态。如果为 FAIL，代表执行失败，可以通过 `tasks() `命令进一步定位失败原因。Task 命令见本文[查询刷新任务 TASK 信息](### 查询刷新任务 TASK 信息)。
+- **RefreshState：** 物化视图最后一次任务刷新的状态。如果为 FAIL，代表执行失败，可以通过 `tasks() `命令进一步定位失败原因。Task 命令见本文[查询刷新任务 TASK 信息](./functions-and-demands.md#查询刷新任务-task-信息)。
 
 - **SyncWithBaseTables：** 是否和基表数据同步。1 为同步，0 为不同步。如果不同步，可通过 `show partitions` 进一步判断哪个分区不同步。`show partitions` 见下文分区物化视图查看 SyncWithBaseTables 状态方法。
 
@@ -1200,6 +1207,9 @@ NeedRefreshPartitions: ["p_20231023_20231024","p_20231019_20231020","p_20231020_
 - RefreshMode：COMPLETE 代表刷新了全部分区，PARTIAL 代表刷新了部分分区，NOT_REFRESH 代表不需要刷新任何分区。
 
 :::info 备注
+- 目前 task 存储和展示的数量默认是 100 个，可以通过在 fe.conf 文件中配置 max_persistence_task_count 修改数量，超过这个
+  数量将会丢弃旧的 task 记录，如果值 < 1, 将不会持久化。修改完配置后需要重启 FE 才能生效。
+
 - 如果物化视图创建的时候设置了 `grace_period` 属性，那么即使 `SyncWithBaseTables` 是 false 或者 0，有些情况下它依然可用于透明改写。
 
 - `grace_period` 的单位是秒，指的是容许物化视图和所用基表数据不一致的时间。

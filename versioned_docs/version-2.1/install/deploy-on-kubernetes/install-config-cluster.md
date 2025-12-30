@@ -1,7 +1,8 @@
 ---
 {
-  "title": "Config Doris to Deploy",
-  "language": "en"
+    "title": "Config Doris to Deploy",
+    "language": "en",
+    "description": "In the default DorisCluster resource deployment, the FE and BE images may not be the latest versions,"
 }
 ---
 
@@ -18,7 +19,7 @@ spec:
   feSpec:
     image: ${image}
 ```
-Replace ${image} with the desired image name, then update the configuration in the target [DorisCluster resource](install-doris-cluster.md#step-2-custom-the-template-and-deploy-cluster).  Official FE images are available at [FE Image](https://hub.docker.com/repository/docker/selectdb/doris.fe-ubuntu).
+Replace ${image} with the desired image name, then update the configuration in the target [DorisCluster resource](install-doris-cluster.md#step-2-custom-the-template-and-deploy-cluster).  Official FE images are available at [FE Image](https://hub.docker.com/r/apache/doris/tags?name=fe).
 
 **BE image configuration**  
 To specify the BE image version, use the following configuration:
@@ -27,7 +28,7 @@ spec:
   beSpec:
     image: ${image}
 ```
-Replace ${image} with the desired image name, then update the configuration in the target [DorisCluster resource](install-doris-cluster.md#step-2-custom-the-template-and-deploy-cluster).  Official BE images are available at [BE Image](https://hub.docker.com/repository/docker/selectdb/doris.be-ubuntu).
+Replace ${image} with the desired image name, then update the configuration in the target [DorisCluster resource](install-doris-cluster.md#step-2-custom-the-template-and-deploy-cluster).  Official BE images are available at [BE Image](https://hub.docker.com/r/apache/doris/tags?name=be).
 
 ### Replicas configuration
 **FE Replicas configuration**  
@@ -267,7 +268,7 @@ spec:
 In the above configuration, ${your_storageclass} represents the name of the StorageClass you want to use, and ${storageSize} represents the storage size you want to allocation. The format of ${storageSize} follows the [quantity expression](https://kubernetes.io/docs/reference/kubernetes-api/common-definitions/quantity/) method of K8s, such as: 100Gi. Please replace them as needed when using.
 
 :::tip Tip  
-If you have reconfigured meta_dir or sys_log_dir in the [customized configuration file](#custom-fe-startup-configuration), please reconfigure the mountPath.
+If you have reconfigured meta_dir or `LOG_DIR` in the [customized configuration file](#custom-fe-startup-configuration), please reconfigure the mountPath.
 :::
 
 ### Persistent storage for BE
@@ -753,7 +754,7 @@ The Doris Operator mounts the krb5.conf file using a ConfigMap resource and moun
         keytabSecretName: ${keytabSecretName}
         keytabPath: ${keytabPath}
     ```
-    ${krb5ConfigMapName}: Name of the ConfigMap containing the krb5.conf file. ${keytabSecretName}: Name of the Secret containing the keytab files. ${keytabPath}: The directory path in the container where the Secret mounts the keytab files. This path should match the directory specified by hadoop.kerberos.keytab when creating a catalog. For catalog configuration details, refer to the [Hive Catalog configuration](../../lakehouse/datalake-analytics/hive.md#catalog-configuration) documentation.
+    ${krb5ConfigMapName}: Name of the ConfigMap containing the krb5.conf file. ${keytabSecretName}: Name of the Secret containing the keytab files. ${keytabPath}: The directory path in the container where the Secret mounts the keytab files. This path should match the directory specified by hadoop.kerberos.keytab when creating a catalog. For catalog configuration details, refer to the [Hive Catalog configuration](../../lakehouse/catalogs/hive-catalog.mdx#configuring-catalog) documentation.
 
 ## Configure Shared Storage
 As of version 25.4.0, the Doris Operator supports mounting shared storage with the ReadWriteMany access mode to all pods across multiple components. Before using this feature, ensure that the shared storage PersistentVolume and PersistentVolumeClaim resources have been created. Configure the DorisCluster resource as shown below before deploying the Doris cluster:
@@ -774,3 +775,36 @@ spec:
 The `mountPath` parameter can use `${DORIS_HOME}` as a prefix. When `${DORIS_HOME}` is used, it resolves to `/opt/apache-doris/fe` within FE containers and `/opt/apache-doris/be` within BE containers.
 :::
 
+## Configuring Probe Timeouts
+DorisCluster provides two types of probe timeout configurations for each service: `startup probe timeout` and `liveness probe timeout`. If a service fails to start within the specified startup timeout period, it is considered to have failed and will be restarted.
+If a service becomes unresponsive for longer than the specified liveness timeout, the corresponding Pod will be automatically restarted.
+
+### Startup Probe Timeout
+- FE Service Startup Timeout Configuration  
+    ```
+    spec:
+      feSpec:
+        startTimeout: 3600
+    ```
+    The above configuration sets the FE service startup timeout to 3600 seconds.  
+- BE Service Startup Timeout Configuration  
+    ```
+    spec:
+      beSpec:
+        startTimeout: 3600
+    ```
+### Liveness Probe Timeout
+- FE Service Liveness Timeout Configuration  
+    ```
+    spec:
+      feSpec:
+        liveTimeout: 60
+    ```
+    The above configuration sets the FE service liveness timeout to 60 seconds.
+- BE Service Liveness Timeout Configuration  
+    ```
+    spec:
+      beSpec:
+        liveTimeout: 60
+    ```
+    The above configuration sets the BE service liveness timeout to 60 seconds.

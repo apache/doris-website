@@ -1,7 +1,8 @@
 ---
 {
     "title": "VARIANT",
-    "language": "en"
+    "language": "en",
+    "description": "Introduced a new data type VARIANT in Doris 2.1, which can store semi-structured JSON data."
 }
 ---
 
@@ -319,83 +320,6 @@ mysql> SELECT
 3 rows in set (0.03 sec)
 ```
 
-### Nested Array
-```json
-{
-  "nested" : [{"field1" : 123, "field11" : "123"}, {"field2" : 456, "field22" : "456"}]
-}
-```
-In the JSON example above, the array nested contains objects (or nested data types). It’s important to note that **only one level of array expansion is currently supported, and the array must be a subfield of an object**. Here is an example:
-``` sql
--- Note: Set variant_enable_flatten_nested to true
--- This setting enables nested array expansion, allowing array<object> elements to be stored in columnar format.
--- If set to false, nested arrays will be stored as JSON types.
-CREATE TABLE `simple_nested_test` (
-  `k` bigint NULL,
-  `v` variant NULL
-) ENGINE=OLAP
-DUPLICATE KEY(`k`)
-DISTRIBUTED BY HASH(`k`) BUCKETS 8
-PROPERTIES (
-"file_cache_ttl_seconds" = "0",
-"is_being_synced" = "false",
-"storage_medium" = "hdd",
-"storage_format" = "V2",
-"inverted_index_storage_format" = "V2",
-"light_schema_change" = "true",
-"disable_auto_compaction" = "false",
-"variant_enable_flatten_nested" = "true",
-"enable_single_replica_compaction" = "false",
-"group_commit_interval_ms" = "10000",
-"group_commit_data_bytes" = "134217728"
-);
-
-insert into simple_nested_test values(1, '{
-  "eventId": 1,
-  "firstName": "Name1",
-  "lastName": "Eric",
-  "body": {
-    "phoneNumbers": [
-      {
-        "number": "1111111111",
-        "type": "GSM",
-        "callLimit": 5
-      },
-      {
-        "number": "222222222",
-        "type": "HOME",
-        "callLimit": 3
-      },
-      {
-        "number": "33333333",
-        "callLimit": 2,
-        "type": "WORK"
-      }
-    ]
-  }
-}');
-
--- Enable extended column descriptions
-set describe_extend_variant_column = true;  
-
--- The DESC command will display expanded columns such as v.body.phoneNumbers.callLimit, v.body.phoneNumbers.number, and v.body.phoneNumbers.type
--- These fields are expanded from v.body.phoneNumbers
-mysql> desc simple_nested_test;
-+-------------------------------+----------------+------+-------+---------+-------+
-| Field                         | Type           | Null | Key   | Default | Extra |
-+-------------------------------+----------------+------+-------+---------+-------+
-| k                             | bigint         | Yes  | true  | NULL    |       |
-| v                             | variant        | Yes  | false | NULL    | NONE  |
-| v.body.phoneNumbers.callLimit | array<tinyint> | Yes  | false | NULL    | NONE  |
-| v.body.phoneNumbers.number    | array<text>    | Yes  | false | NULL    | NONE  |
-| v.body.phoneNumbers.type      | array<text>    | Yes  | false | NULL    | NONE  |
-| v.eventId                     | tinyint        | Yes  | false | NULL    | NONE  |
-| v.firstName                   | text           | Yes  | false | NULL    | NONE  |
-| v.lastName                    | text           | Yes  | false | NULL    | NONE  |
-+-------------------------------+----------------+------+-------+---------+-------+
-8 rows in set (0.00 sec)
-```
-
 ### Usage Restrictions and Best Practices
 
 **There are several limitations when using the VARIANT type:**
@@ -436,11 +360,31 @@ CREATE TABLE example_table (
 SELECT * FROM example_table WHERE data_string LIKE '%doris%'
 ```
 
+**Tuning Techniques for Column-Count Limits:**
+
+Note: If the number of sub-columns exceeds 5,000, higher requirements for memory and configuration apply. On a single machine, aim for at least 128 GB of RAM and 32 CPU cores.
+
+1. In BE configuration, adjust `variant_max_merged_tablet_schema_size=n`, where n should be greater than the actual number of columns (not recommended to exceed 10,000).
+
+2. Be aware that extracting too many columns will put heavy pressure on compaction (import throughput must be throttled accordingly). Increasing the client-side import `batch_size`—based on memory usage—can reduce write amplification during compaction. Alternatively, enable `group_commit` (a table property) and appropriately increase `group_commit_interval_ms` and `group_commit_data_bytes`.
+
+3. If your queries do not require bucket pruning, use random bucketing and enable the [load_to_single_tablet](../../../../table-design/data-partitioning/data-bucketing#bucketing) import setting (an import configuration) to reduce compaction write amplification.
+
+4. In BE configuration, adjust `max_cumu_compaction_threads` according to import pressure; ensure at least 8 threads.
+
+5. In BE configuration, set `vertical_compaction_num_columns_per_group=500` to improve grouped-compaction efficiency, although this increases memory overhead.
+
+6. In BE configuration, set `segment_cache_memory_percentage=20` to increase segment cache capacity and improve metadata caching efficiency.
+
+7. Monitor the Compaction Score closely. A continuously rising score indicates that compaction cannot keep up (import pressure should be reduced accordingly).
+
+8. Using `SELECT *` or `SELECT variant` can significantly increase cluster-wide pressure, potentially causing timeouts or out-of-memory errors. It is recommended to include path information in queries—for example, `SELECT variant['path_1']`.
+
 ### FAQ
 
 1. Streamload Error: [CANCELLED][INTERNAL_ERROR] tablet error: [DATA_QUALITY_ERROR] Reached max column size limit 2048.
 
-Due to compaction and metadata storage limitations, the VARIANT type imposes a limit on the number of columns, with the default being 2048 columns. You can adjust the BE configuration `variant_max_merged_tablet_schema_size` accordingly, but it is not recommended to exceed 4096 columns.
+Due to compaction and metadata storage limitations, the VARIANT type imposes a limit on the number of columns, with the default being 2048 columns. You can adjust the BE configuration `variant_max_merged_tablet_schema_size` accordingly, but it is not recommended to exceed 4096 columns(Requires higher-spec hardware).
 
 2. Is there a difference between null in the VARIANT type (e.g., `{"key": null}`) and SQL NULL (i.e., IS NULL)?
 

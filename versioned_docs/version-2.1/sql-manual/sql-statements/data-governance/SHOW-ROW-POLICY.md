@@ -1,7 +1,8 @@
 ---
 {
     "title": "SHOW ROW POLICY",
-    "language": "en"
+    "language": "en",
+    "description": "View row security policies. For details on row security policies, refer to the \"Security Policies\" chapter"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "手动分区",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "分区列通常为时间列，以方便的管理新旧数据。Range 分区支持的列类型 DATE, DATETIME, TIMESTAMPTZ, TINYINT, SMALLINT, INT, BIGINT, LARGEINT。"
 }
 ---
 
@@ -15,7 +16,7 @@
 
 ## Range 分区
 
-分区列通常为时间列，以方便的管理新旧数据。Range 分区支持的列类型 DATE,  DATETIME, TINYINT, SMALLINT, INT, BIGINT, LARGEINT。
+分区列通常为时间列，以方便的管理新旧数据。Range 分区支持的列类型 DATE,  DATETIME, TIMESTAMPTZ, TINYINT, SMALLINT, INT, BIGINT, LARGEINT。
 
 **分区信息，支持四种写法：**            
 
@@ -106,7 +107,7 @@ PARTITION BY RANGE(col)
 
 ## List 分区
 
-分区列支持 `BOOLEAN, TINYINT, SMALLINT, INT, BIGINT, LARGEINT, DATE, DATETIME, CHAR, VARCHAR` 数据类型，分区值为枚举值。只有当数据为目标分区枚举值其中之一时，才可以命中分区。
+分区列支持 `BOOLEAN, TINYINT, SMALLINT, INT, BIGINT, LARGEINT, DATE, DATETIME, TIMESTAMPTZ, CHAR, VARCHAR` 数据类型，分区值为枚举值。只有当数据为目标分区枚举值其中之一时，才可以命中分区。
 
 Partition 支持通过 `VALUES IN (...)` 来指定每个分区包含的枚举值。
 

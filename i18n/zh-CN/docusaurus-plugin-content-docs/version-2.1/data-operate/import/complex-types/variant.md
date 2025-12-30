@@ -1,7 +1,8 @@
 ---
 {
     "title": "Variant",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "VARIANT 类型可以存储半结构化的 JSON 数据，允许存储包含不同数据类型（如整数、字符串、布尔值等）的复杂数据结构，而无需在表结构中预先定义具体的列。该类型特别适合处理复杂的嵌套结构，这些结构可能会随时发生变化。在写入过程中，VARIANT 类型能够自动推断列的结构和类型，"
 }
 ---
 
@@ -166,4 +167,51 @@ mysql> select * from testdb.test_variant\G
    payload: {"before":"abb58cc0db673a0bd5190000d2ff9c53bb51d04d","commits":[""],"distinct_size":4,"head":"91edd3c8c98c214155191feb852831ec535580ba","push_id":6027092734,"ref":"refs/heads/master","size":4}
     public: 1
 created_at: 2020-11-14 02:00:00
+```
+
+### 第 5 步：检查类型推导
+
+``` sql
+mysql> desc github_events;
++------------------------------------------------------------+------------+------+-------+---------+-------+
+| Field                                                      | Type       | Null | Key   | Default | Extra |
++------------------------------------------------------------+------------+------+-------+---------+-------+
+| id                                                         | BIGINT     | No   | true  | NULL    |       |
+| type                                                       | VARCHAR(*) | Yes  | false | NULL    | NONE  |
+| actor                                                      | VARIANT    | Yes  | false | NULL    | NONE  |
+| created_at                                                 | DATETIME   | Yes  | false | NULL    | NONE  |
+| payload                                                    | VARIANT    | Yes  | false | NULL    | NONE  |
+| public                                                     | BOOLEAN    | Yes  | false | NULL    | NONE  |
++------------------------------------------------------------+------------+------+-------+---------+-------+
+6 rows in set (0.07 sec)
+
+mysql> set describe_extend_variant_column = true;
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> desc github_events;
++------------------------------------------------------------+------------+------+-------+---------+-------+
+| Field                                                      | Type       | Null | Key   | Default | Extra |
++------------------------------------------------------------+------------+------+-------+---------+-------+
+| id                                                         | BIGINT     | No   | true  | NULL    |       |
+| type                                                       | VARCHAR(*) | Yes  | false | NULL    | NONE  |
+| actor                                                      | VARIANT    | Yes  | false | NULL    | NONE  |
+| actor.avatar_url                                           | TEXT       | Yes  | false | NULL    | NONE  |
+| actor.display_login                                        | TEXT       | Yes  | false | NULL    | NONE  |
+| actor.id                                                   | INT        | Yes  | false | NULL    | NONE  |
+| actor.login                                                | TEXT       | Yes  | false | NULL    | NONE  |
+| actor.url                                                  | TEXT       | Yes  | false | NULL    | NONE  |
+| created_at                                                 | DATETIME   | Yes  | false | NULL    | NONE  |
+| payload                                                    | VARIANT    | Yes  | false | NULL    | NONE  |
+| payload.action                                             | TEXT       | Yes  | false | NULL    | NONE  |
+| payload.before                                             | TEXT       | Yes  | false | NULL    | NONE  |
+| payload.comment.author_association                         | TEXT       | Yes  | false | NULL    | NONE  |
+| payload.comment.body                                       | TEXT       | Yes  | false | NULL    | NONE  |
+....
++------------------------------------------------------------+------------+------+-------+---------+-------+
+406 rows in set (0.07 sec)
+```
+
+可以按照 Partition 来展示
+``` sql
+DESCRIBE ${table_name} PARTITION ($partition_name);
 ```

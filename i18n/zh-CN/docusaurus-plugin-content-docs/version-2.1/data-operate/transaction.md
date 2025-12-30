@@ -1,7 +1,8 @@
 ---
 {
     "title": "事务",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "事务是指一个操作，包含一个或多个 SQL 语句，这些语句的执行要么完全成功，要么完全失败，是一个不可分割的工作单位。"
 }
 ---
 
@@ -51,7 +52,7 @@ Label 通常被设置为 `业务逻辑+时间` 的格式。如 `my_business1_202
 
 #### StreamLoad 2PC
 
-[StreamLoad 2PC](#stream-load)，主要用于支持 Flink 写入 Doris 时的 EOS 语义。
+[StreamLoad 2PC](./transaction.md#stream-load-2pc)，主要用于支持 Flink 写入 Doris 时的 EOS 语义。
 
 ## 显式事务操作
 

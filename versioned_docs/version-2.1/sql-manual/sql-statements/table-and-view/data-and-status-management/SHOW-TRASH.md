@@ -1,9 +1,9 @@
 ---
 {
-  "title": "SHOW TRASH",
-  "language": "en"
+    "title": "SHOW TRASH",
+    "language": "en",
+    "description": "This statement is used to view the space occupied by garbage data in backend."
 }
-
 ---
 
 ## Description

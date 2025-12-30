@@ -1,7 +1,8 @@
 ---
 {
     "title": "CREATE ROW POLICY",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "创建行安全策略，Explain 可以查看改写后的执行计划。"
 }
 ---
 
@@ -61,6 +62,6 @@ USING (<filter>);
     当我们执行对 table1 的查询时被改写后的 sql 为
 
     ```sql
-    SELECT * FROM (SELECT * FROM table1 WHERE c1 = 'a' AND c2 = 'b' OR c3 = 'c' OR c4 = 'd')
+    SELECT * FROM (SELECT * FROM table1 WHERE (c1 = 'a' AND c2 = 'b') AND (c3 = 'c' OR c4 = 'd'))
     ```
 

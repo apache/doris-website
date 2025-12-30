@@ -1,7 +1,8 @@
 ---
 {
     "title": "Table Model Overview",
-    "language": "en"
+    "language": "en",
+    "description": "When creating a table in Doris, it is necessary to specify the table model to define how data is stored and managed."
 }
 ---
 

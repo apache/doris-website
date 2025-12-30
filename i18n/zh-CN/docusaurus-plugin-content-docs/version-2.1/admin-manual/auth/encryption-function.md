@@ -1,7 +1,8 @@
 ---
 {
     "title": "加密和脱敏函数",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "Doris 内置了如下加密和脱敏函数。详细用法请参考 SQL 手册。"
 }
 ---
 

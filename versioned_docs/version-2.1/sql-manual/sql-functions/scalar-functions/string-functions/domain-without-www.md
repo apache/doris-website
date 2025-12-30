@@ -1,7 +1,8 @@
 ---
 {
     "title": "DOMAIN_WITHOUT_WWW",
-    "language": "en"
+    "language": "en",
+    "description": "Extract the domain name without the prefix www in the string URL"
 }
 ---
 

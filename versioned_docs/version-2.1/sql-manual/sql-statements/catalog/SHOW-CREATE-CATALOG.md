@@ -1,7 +1,8 @@
 ---
 {
     "title": "SHOW CREATE CATALOG",
-    "language": "en"
+    "language": "en",
+    "description": "This statement shows the creating statement of a doris catalog."
 }
 ---
 

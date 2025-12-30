@@ -1,7 +1,8 @@
 ---
 {
-  "title": "Creating, Querying, and Maintaining Asynchronous Materialized Views",
-  "language": "en"
+    "title": "Creating, Querying, and Maintaining Asynchronous Materialized Views",
+    "language": "en",
+    "description": "This document provides detailed information about materialized view creation, direct querying of materialized views, query rewriting,"
 }
 ---
 
@@ -89,7 +90,7 @@ Determines whether to refresh immediately after materialized view creation.
 
 - **`ON SCHEDULE` Scheduled Trigger**
 
-  Specify refresh intervals in the materialized view creation statement.
+  Specify refresh intervals in the materialized view creation statement. You can specify the data refresh interval in the materialized view creation statement using refreshUnit, where the refresh time interval unit can be minute, hour, day, week, etc.
 
   Example of full refresh (`REFRESH COMPLETE`) every 10 hours, refreshing all partitions:
 
@@ -462,8 +463,36 @@ Additionally, if the partition field is of string type, the date format can be s
 
 For more details, refer to [CREATE ASYNC MATERIALIZED VIEW](../../../sql-manual/sql-statements/table-and-view/async-materialized-view/CREATE-ASYNC-MATERIALIZED-VIEW).
 
+#### Multi-PCT Refresh
+"Multi-PCT Refresh" allows asynchronous materialized views to have multiple partition change tracking (PCT) tables, meaning that when data changes occur in multiple base tables, only partition-level refresh is performed instead of a full refresh.
+
+This feature has the following limitations in usage:
+- Only materialized views built based on INNER JOIN or UNION (including UNION ALL) are supported.
+- When the materialized view uses UNION operations, all participating union components must support Partition Change Tracking (PCT). For example, if the materialized view's SQL definition is: q1 UNION ALL q2, then both q1 and q2 must individually support partition refresh when used alone to create materialized views, and the derived partition columns must have consistent ordering.
+- The partition granularity across multiple PCT tables must be aligned:
+    - **Allowed example**:
+
+      Partitions of base table t1: [2020-01-01, 2020-01-02), [2020-01-02, 2020-01-03)
+
+      Partitions of base table t2: [2020-01-02, 2020-01-03), [2020-01-03, 2020-01-04)
+
+      The partitions of multiple base tables are not completely identical, but they do not overlap.
+
+    - **Disallowed example**:
+
+      Partitions of base table t1: [2020-01-01, 2020-01-03), [2020-01-03, 2020-01-05)
+
+      Partitions of base table t2: [2020-01-01, 2020-01-02), [2020-01-03, 2020-01-05)
+
+      Partitions [2020-01-01, 2020-01-03) and [2020-01-01, 2020-01-02) overlap but are not identical.
+
 ### SQL Definition
-There are no restrictions on the SQL definition of asynchronous materialized views.
+
+Asynchronous materialized views can be created based on internal views but do not support construction based on views from external data sources.
+
+It is important to note that when the underlying internal views are modified or rebuilt, it may lead to data inconsistencies between the asynchronous materialized view and the base tables. In such cases, although the data in the materialized view still exists, it cannot support transparent query rewriting.
+
+Additionally, if structural changes affect the partition tracking tables or columns relied upon by the asynchronous materialized view, or cause changes to its schema, the materialized view will fail to refresh successfully. If the changes do not impact these elements, the materialized view can resume normal operation after a refresh.
 
 ## Direct Querying of Materialized Views
 
@@ -892,6 +921,20 @@ group by
 
 ```
 
+:::caution Notice
+Currently, partition compensation is supported, but compensation with conditional UNION ALLis not yet available.
+
+For example, if a materialized view contains a WHEREclause—such as adding the filter WHERE l_shipdate > '2023-10-19'in the example above—while
+the query condition is WHERE l_shipdate > '2023-10-18', this scenario currently cannot be compensated via UNION ALL. Support for this case is planned for a future release.
+:::
+
+:::info Note
+Starting from version 3.1.0
+The partition compensation rewrite feature supports the following types of partitioned tables: internal tables, Hive, Iceberg, and Paimon.
+
+This means that the partition compensation mechanism can only be triggered when a partitioned materialized view is built on partitioned tables of the aforementioned types.
+:::
+
 ### Nested Materialized View Rewriting
 
 The SQL definition of a materialized view can use another materialized view; this is called a nested materialized view.
@@ -1203,6 +1246,9 @@ NeedRefreshPartitions: ["p_20231023_20231024","p_20231019_20231020","p_20231020_
 - RefreshMode: COMPLETE means all partitions were refreshed, PARTIAL means some partitions were refreshed, NOT_REFRESH means no partitions needed refreshing.
 
 :::info Note
+
+- Currently, the default storage and display count for tasks is 100. This can be modified by configuring max_persistence_task_count in the fe.conf file. When exceeding this limit, older task records will be discarded. If the value is set to < 1, task persistence will be disabled. After modifying the configuration, a restart of the FE service is required for the changes to take effect.
+
 - If the `grace_period` property was set when creating the materialized view, it may still be available for transparent rewriting in some cases even if `SyncWithBaseTables` is false or 0.
 
 - `grace_period` is measured in seconds and specifies the allowed time for data inconsistency between the materialized view and base tables.

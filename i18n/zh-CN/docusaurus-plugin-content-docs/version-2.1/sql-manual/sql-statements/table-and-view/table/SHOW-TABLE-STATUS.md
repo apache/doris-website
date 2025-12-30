@@ -1,7 +1,8 @@
 ---
 {
     "title": "SHOW TABLE STATUS",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "该语句用于展示一个表或者视图的一些信息。"
 }
 ---
 

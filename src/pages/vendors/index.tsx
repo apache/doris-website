@@ -26,7 +26,7 @@ export default function Vendors() {
                             <Link className="underline text-[#444FD9] font-medium" to="https://www.velodb.io">
                                 VeloDB
                             </Link>{' '}
-                            is the leading managed service for Apache Doris, offering fast, cost-effective,
+                            is a leading managed service for Apache Doris, offering fast, cost-effective,
                             enterprise-grade capabilities for real-time analytics use cases in today's AI-driven world.
                             It provides both cloud service and on-premise deployment.{' '}
                             <Link className="underline text-[#444FD9] font-medium" to="https://www.velodb.io/cloud">

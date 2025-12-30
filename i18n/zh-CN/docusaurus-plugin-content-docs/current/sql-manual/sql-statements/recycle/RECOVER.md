@@ -1,7 +1,8 @@
 ---
 {
     "title": "RECOVER",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "该语句用于恢复之前删除的 database、table 或者 partition。"
 }
 ---
 
@@ -34,7 +35,7 @@ RECOVER { DATABASE <db_name> [<db_id>] [AS <new_db_name>]
 恢复分区
 
 **1. `<partition_name>`**
-> 要恢复的数据库名称。
+> 要恢复的分区名称。
 
 **2. `<table_name>`**
 > 要恢复的分区所在的表名称。

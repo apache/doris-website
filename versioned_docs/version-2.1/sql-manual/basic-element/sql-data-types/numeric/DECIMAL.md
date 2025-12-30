@@ -1,7 +1,8 @@
 ---
 {
     "title": "DECIMAL",
-    "language": "en"
+    "language": "en",
+    "description": "DECIMAL"
 }
 ---
 
@@ -18,6 +19,8 @@ DECIMAL
     By default, precision is 38, and scale is 9(that is DECIMAL(38, 9)).
 
     The default value of enable_decimal256 is false. Setting it to true can get more accurate results, but it will bring some performance loss.
+
+    When outputting decimal types, the decimal point is always followed by S digits, even if the trailing digits are 0. For example, the number 123.456 of type decimal(18, 6) will be output as 123.456000.
 
 ### Precision Deduction
 

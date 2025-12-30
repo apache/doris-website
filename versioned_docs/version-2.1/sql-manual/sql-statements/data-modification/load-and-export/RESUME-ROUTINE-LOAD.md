@@ -1,7 +1,8 @@
 ---
 {
     "title": "RESUME ROUTINE LOAD",
-    "language": "en"
+    "language": "en",
+    "description": "This syntax is used to restart one or all paused Routine Load jobs. The restarted job will continue consuming from the previously consumed offset."
 }
 ---
 

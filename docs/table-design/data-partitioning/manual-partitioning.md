@@ -1,7 +1,8 @@
 ---
 {
     "title": "Manual partitioning",
-    "language": "en"
+    "language": "en",
+    "description": "Partition columns are usually time columns for convenient management of old and new data. RANGE partitioning supports column types such as DATE,"
 }
 ---
 
@@ -21,7 +22,7 @@
 
 ## RANGE partitioning
 
-Partition columns are usually time columns for convenient management of old and new data. RANGE partitioning supports column types such as `DATE`, `DATETIME`, `TINYINT`, `SMALLINT`, `INT`, `BIGINT`, and `LARGEINT`.
+Partition columns are usually time columns for convenient management of old and new data. RANGE partitioning supports column types such as `DATE`, `DATETIME`, `TIMESTAMPTZ`, `TINYINT`, `SMALLINT`, `INT`, `BIGINT`, and `LARGEINT`.
 
 Partition information supports the following four writing methods:
 
@@ -118,7 +119,7 @@ PARTITION BY RANGE(col)
 
 ## LIST partitioning
 
-Partition columns based on LIST partitioning support data types such as `BOOLEAN`, `TINYINT`, `SMALLINT`, `INT`, `BIGINT`, `LARGEINT`, `DATE`, `DATETIME`, `CHAR`, and `VARCHAR`. Partition values are enumerated values. Only when the data is one of the enumerated values of the target partition, the partition can be hit.
+Partition columns based on LIST partitioning support data types such as `BOOLEAN`, `TINYINT`, `SMALLINT`, `INT`, `BIGINT`, `LARGEINT`, `DATE`, `DATETIME`, `TIMESTAMPTZ`, `CHAR`, and `VARCHAR`. Partition values are enumerated values. Only when the data is one of the enumerated values of the target partition, the partition can be hit.
 
 Partitions support specifying the enumerated values contained in each partition through `VALUES IN (...)`.
 

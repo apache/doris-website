@@ -1,7 +1,8 @@
 ---
 {
     "title": "RANDOM",
-    "language": "en"
+    "language": "en",
+    "description": "Returns a random number between 0 and 1, or returns the required random number according to the parameters."
 }
 ---
 

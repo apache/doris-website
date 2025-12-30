@@ -1,7 +1,8 @@
 ---
 {
     "title": "Hardware Info Action",
-    "language": "en"
+    "language": "en",
+    "description": "Hardware Info Action is used to obtain the hardware information of the current FE."
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "APPEND_TRAILING_CHAR_IF_ABSENT",
-    "language": "en"
+    "language": "en",
+    "description": "Used to add a specific character (such as a space, a specific symbol, etc."
 }
 ---
 

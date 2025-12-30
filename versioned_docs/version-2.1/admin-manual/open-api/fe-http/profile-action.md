@@ -1,13 +1,20 @@
 ---
 {
     "title": "Profile Action",
-    "language": "en"
+    "language": "en",
+    "description": "Used to obtain the query profile of the specified query id. If queryid is not exists, return 404 NOT FOUND ERROR If queryid exists,"
 }
 ---
 
 # Profile Action
 
 ## Request
+
+:::caution Note:
+
+Admin privileges (admin_priv) are required to use this API. We recommend using [query profile action](./query-profile-action.md) to view profiles instead.
+
+:::
 
 `GET /api/profile`
 `GET /api/profile/text`

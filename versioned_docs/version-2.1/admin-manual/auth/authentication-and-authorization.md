@@ -1,7 +1,8 @@
 ---
 {
     "title": "Authentication and Authorization",
-    "language": "en"
+    "language": "en",
+    "description": "The Doris permission management system is modeled after the MySQL permission management mechanism."
 }
 ---
 
@@ -302,8 +303,12 @@ Please refer to [Authorization Scheme Based on Apache Ranger](./ranger.md).
     - root@'%': root user, allowed to log in from any node, with the operator role.
     - admin@'%': admin user, allowed to log in from any node, with the admin role.
 
-2. It is not supported to delete or change the permissions of roles or users created by default.
-
+2. Deleting or altering the permissions of default created users, roles, or users is not supported.
+    - Deleting the users root@'%' and admin@'%' is not supported, but creating and deleting root@'xxx' and admin@'xxx' users (where xxx refers to any host except %) is allowed (Doris treats these users as regular users).
+    - Revoking the default roles of root@'%' and admin@'%' is not supported.
+    - Deleting the roles operator and admin is not supported.
+    - Modifying the permissions of the roles operator and admin is not supported.
+   
 3. There is only one user with the operator role, which is Root. There can be multiple users with the admin role.
 
 4. Some potentially conflicting operations are explained as follows:

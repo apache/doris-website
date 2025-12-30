@@ -1,10 +1,9 @@
 ---
-
 {
-"title": "Kyuubi",
-"language": "zh-CN"
+    "title": "Kyuubi",
+    "language": "zh-CN",
+    "description": "Apache Kyuubi 是一个分布式和多租户网关，用于在 Lakehouse 上提供 Serverless SQL，可连接包括 Spark、Flink、Hive、JDBC 等引擎，并对外提供 Thrift、Trino 等接口协议供灵活对接。"
 }
-
 ---
 
 ## 介绍

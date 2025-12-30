@@ -1,6 +1,6 @@
 ---
 {
-"title": "Beats Doris Output Plugin",
+"title": "Filebeat",
 "language": "zh-CN"
 }
 ---
@@ -11,10 +11,10 @@
 
 Beats Doris output plugin 支持 [Filebeat](https://github.com/elastic/beats/tree/master/filebeat), [Metricbeat](https://github.com/elastic/beats/tree/master/metricbeat), [Packetbeat](https://github.com/elastic/beats/tree/master/packetbeat), [Winlogbeat](https://github.com/elastic/beats/tree/master/winlogbeat), [Auditbeat](https://github.com/elastic/beats/tree/master/auditbeat), [Heartbeat](https://github.com/elastic/beats/tree/master/heartbeat) 。
 
-Beats Doris output plugin 调用 [Doris Stream Load](../data-operate/import/import-way/stream-load-manual) HTTP 接口将数据实时写入 Doris，提供多线程并发，失败重试，自定义 Stream Load 格式和参数，输出写入速度等能力。
+Beats Doris output plugin 调用 [Doris Stream Load](../data-operate/import/stream-load-manual.md) HTTP 接口将数据实时写入 Doris，提供多线程并发，失败重试，自定义 Stream Load 格式和参数，输出写入速度等能力。
 
 使用 Beats Doris output plugin 主要有三个步骤：
-1. 下载或编译包含 Doris output plugin 的 Beats二进制程序
+1. 下载或编译包含 Doris output plugin 的 Beats 二进制程序
 2. 配置 Beats 输出地址和其他参数
 3. 启动 Beats 将数据实时写入 Doris
 
@@ -23,7 +23,7 @@ Beats Doris output plugin 调用 [Doris Stream Load](../data-operate/import/impo
 
 ### 从官网下载
 
-https://apache-doris-releases.oss-accelerate.aliyuncs.com/filebeat-doris-2.0.0
+https://apache-doris-releases.oss-accelerate.aliyuncs.com/extension/filebeat-doris-2.1.1
 
 
 ### 从源码编译
@@ -47,15 +47,15 @@ Beats Doris output plugin 的配置如下：
 
 配置 | 说明
 --- | ---
-`http_hosts` | Stream Load HTTP 地址，格式是字符串数组，可以有一个或者多个元素，每个元素是 host:port。 例如：["http://fe1:8030", "http://fe2:8030"]
-`user` | Doris 用户名，该用户需要有doris对应库表的导入权限
+`http_hosts` | Stream Load HTTP 地址，格式是字符串数组，可以有一个或者多个元素，每个元素是 host:port。例如：["http://fe1:8030", "http://fe2:8030"]
+`user` | Doris 用户名，该用户需要有 doris 对应库表的导入权限
 `password` | Doris 用户的密码
 `database` | 要写入的 Doris 库名
 `table` | 要写入的 Doris 表名
 `label_prefix` | Doris Stream Load Label 前缀，最终生成的 Label 为 *{label_prefix}_{db}_{table}_{yyyymmdd_hhmmss}_{uuid}* ，默认值是 beats
 `headers` | Doris Stream Load 的 headers 参数，语法格式为 YAML map
-`codec_format_string` | 输出到 Doris Stream Load 的format string，%{[a][b]} 代表输入中的 a.b 字段，参考后续章节的使用示例
-`bulk_max_size` | Doris Stream Load 的 batch size，默认为100000
+`codec_format_string` | 输出到 Doris Stream Load 的 format string，%{[a][b]} 代表输入中的 a.b 字段，参考后续章节的使用示例
+`bulk_max_size` | Doris Stream Load 的 batch size，默认为 100000
 `max_retries` | Doris Stream Load 请求失败重试次数，默认为 -1 无限重试保证数据可靠性
 `log_request` | 日志中是否输出 Doris Stream Load 请求和响应元数据，用于排查问题，默认为 true
 `log_progress_interval` | 日志中输出速度的时间间隔，单位是秒，默认为 10，设置为 0 可以关闭这种日志
@@ -230,7 +230,7 @@ total 11 MB 18978 ROWS, total speed 0 MB/s 632 R/s, last 10 seconds speed 1 MB/s
 
 **1. 数据**
 
-github events archive 是 github 用户操作事件的归档数据，格式是 JSON，可以从 https://www.gharchive.org/ 下载，比如下载 2024年1月1日15点的数据。
+github events archive 是 github 用户操作事件的归档数据，格式是 JSON，可以从 https://www.gharchive.org/ 下载，比如下载 2024 年 1 月 1 日 15 点的数据。
 
 ```
 wget https://data.gharchive.org/2024-01-01-15.json.gz

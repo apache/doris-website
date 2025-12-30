@@ -1,7 +1,8 @@
 ---
 {
     "title": "WINDOW_FUNNEL",
-    "language": "en"
+    "language": "en",
+    "description": "The WINDOWFUNNEL function analyzes user behavior sequences by searching for event chains within a specified time window and calculating the maximum "
 }
 ---
 
@@ -31,9 +32,13 @@ WINDOW_FUNNEL(<window>, <mode>, <timestamp>, <event_1>[, event_2, ... , event_n]
 | `<event_n>` | evnet_n is boolean expression like eventID = 1004 |
 
 **Mode**
+
     - `default`: Defualt mode.
+
     - `deduplication`: If the same event holds for the sequence of events, then such repeating event interrupts further processing. E.g. the array parameter is [event1='A', event2='B', event3='C', event4='D'], and the original event chain is "A-B-C-B-D". Since event B repeats, the filtered event chain can only be "A-B-C" and the max event level is 3.
+
     - `fixed`: Don't allow interventions of other events. E.g. the array parameter is [event1='A', event2='B', event3='C', event4='D'], and the original event chain is A->B->D->C, it stops finding A->B->C at the D and the max event level is 2.
+
     - `increase`: Apply conditions only to events with strictly increasing timestamps.
 
 ## Return Value

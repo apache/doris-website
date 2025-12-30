@@ -1,7 +1,8 @@
 ---
 {
     "title": "常见导入问题",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "问题描述：导入报数据质量错误。"
 }
 ---
 
@@ -82,7 +83,7 @@ curl --location-trusted -u root:"" \
 | 导入过程中产生大量小事务，导致 Compaction 无法及时完成，并持续报 -235 错误。 | Doris 消费速度过快，或 Kafka 数据流量呈小批量趋势 | 存算分离存算一体 | 暂停 Routine Load Job，并执行以下命令：`ALTER ROUTINE LOAD FOR jobname FROM kafka ("property.enable.partition.eof" = "false");` | <2.1.8 <3.0.4 | 2.1.8 3.0.4 | [#45528](https://github.com/apache/doris/pull/45528), [#44949](https://github.com/apache/doris/pull/44949), [#39975](https://github.com/apache/doris/pull/39975) |
 | Kafka 第三方库析构卡住，导致无法正常消费数据。             | Kafka 删除 Topic（可能不止此条件）         | 存算分离存算一体 | 重启所有 BE 节点。                                         | <2.1.8 <3.0.4 | 2.1.8 3.0.4 | [#44913](https://github.com/apache/doris/pull/44913)       |
 | Routine Load 调度卡住                                      | 当 FE 向 Meta Service 中止事务时发生超时   | 存算分离         | 重启 FE 节点。                                             | <3.0.2        | 3.0.2       | [#41267](https://github.com/apache/doris/pull/41267)       |
-| Routine Load 重启问题                                      | 重启 BE 节点                               | 存算分离存算一体 | 手动恢复 Job。                                             | <2.1.7 <3.0.2 | 2.1.7 3.0.2 | [#3727](https://github.com/selectdb/selectdb-core/pull/3727) |
+| Routine Load 重启问题                                      | 重启 BE 节点                               | 存算分离存算一体 | 手动恢复 Job。                                             | <2.1.7 <3.0.2 | 2.1.7 3.0.2 | [#3727](https://github.com/apache/doris/pull/40728) |
 
 ### 默认配置优化
 

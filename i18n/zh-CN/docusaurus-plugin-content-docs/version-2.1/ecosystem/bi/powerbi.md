@@ -1,81 +1,188 @@
 ---
 {
     "title": "Power BI",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "Microsoft Power BI 可以从 Apache Doris 查询或加载数据到内存。"
 }
 ---
 
-## Power BI 介绍
+Microsoft Power BI 可以从 Apache Doris 查询或加载数据到内存。
 
-Power BI 是软件服务、应用连接器的集合，其可以连接到多种数据源，包括 Excel、SQL Server、Azure、Google Analytics 等，以便用户可以轻松得整合和清洗数据。通过 Power BI 的数据建模，用户可以创建关系模型、数据分析表达式和数据关系，以支持高级的数据分析和可视化。Power BI 提供了丰富的可视化选项，包括图标、地图、仪表盘和自定义可视化工具，以帮助用户更直观地理解数据。
+您可以使用 Power BI Desktop，用于创建仪表板和可视化的 Windows 桌面应用程序。
 
-Apache Doris 高度兼容 MySQL 协议，可以通过 MySQL 驱动器连接 Power BI，当前 Power BI 中已经正式支持了 Apache Doris 的内部数据建模以及数据查询与可视化处理。
+本教程将指导您完成以下过程：
 
-## 前置条件
+- 安装 mysql ODBC 驱动程序
+- 将 Doris Power BI 连接器安装到 Power BI Desktop
+- 从 Doris 查询数据以在 Power BI Desktop 中可视化
 
-未安装 Power BI Desktop 可以访问 https://www.microsoft.com/zh-cn/power-platform/products/power-bi/desktop 下载安装 Power BI。
+## 前提条件
 
-## Power BI 与 Doris 的 Connector 配置
+### Power BI 安装
 
-:::info Note
-选择 8.0.26 版本的 MySQL JDBC Connector
-:::
+本教程假定您已经在 Windows 计算机上安装了 Microsoft Power BI Desktop。您可以在 [这里](https://www.microsoft.com/en-us/download/details.aspx?id=58494) 下载并安装 Power BI Desktop。
 
-MySQL Connector 下载
+我们建议您更新到最新版本的 Power BI。
 
-下载链接：https://downloads.mysql.com/archives/c-net/ 
+### 连接信息
 
-## 本地加载数据与创建模型
+收集您的 Apache Doris 连接详细信息
+
+您需要以下详细信息以连接到您的 Apache Doris 实例：
+
+| 参数 | 含义 | 示例                           |
+| ---- | ---- |------------------------------|
+| **Doris Data Source** | 数据库连接串，host + port | 127.0.1.28:9030              |
+| **Database** | 数据库名 | test_db                      |
+| **Data Connectivity Mode** | 数据连接模式，包含 Import 和 DirectQuery |       DirectQuery                       |
+| **SQL Statement** | SQL 语句，必须包含 Database，仅适用于Import 模式 | select * from database.table |
+| **User Name** | 用户名 | admin                        |
+| **Password** | 密码 | xxxxxx                       |
+
+## Power BI Desktop
+
+要开始在 Power BI Desktop 中查询数据，您需要完成以下步骤：
+
+1. 安装 Mysql ODBC 驱动程序
+2. 查找 Doris 连接器
+3. 连接到 Doris
+4. 查询和可视化数据
+
+### 安装 ODBC 驱动程序
+
+下载安装 [Mysql ODBC](https://downloads.mysql.com/archives/c-odbc/)，并配置 （版本为 5.3）。
+
+执行提供的 `.msi` 安装程序并按照向导进行操作。
+
+![](/images/ecomsystem/powerbi/WYRLb9JmcoEHeuxr41Ec8yMQnff.png)
+
+![](/images/ecomsystem/powerbi/LYh9bi780o3DaCxwF3BcuPrknlh.png)
+
+![](/images/ecomsystem/powerbi/E1i7buBzHoquRCxT6VAc1FjCnNf.png)
+
+安装完成
+
+![](/images/ecomsystem/powerbi/PURIbSCFhoara3xodBBc5xaNnjc.png)
+
+#### 验证 ODBC 驱动程序
+
+当驱动程序安装完成后，您可以通过以下方式验证安装是否成功：
+
+在开始菜单中输入  'ODBC'  并选择 "ODBC 数据源 (64 位)"。
+
+![](/images/ecomsystem/powerbi/QhVVbjalNoIwvdxd1u7cX3UAnEf.png)
+
+验证 mysql 驱动程序是否列出。
+
+![](/images/ecomsystem/powerbi/OzVSbojxto9SpRxP3sLcnqHmnme.png)
+
+### 安装 Doris 连接器
+
+当前 Power BI 自定义 Connector  暂时关闭认证通道，因此 Doris 提供的 自定义 Connector 是属于未经认证的，对于未认证连接器，配置方式([https://learn.microsoft.com/en-us/power-bi/connect-data/desktop-connector-extensibility#custom-connectors](https://learn.microsoft.com/en-us/power-bi/connect-data/desktop-connector-extensibility#custom-connectors))如下：
+
+1. 假定 `power_bi_path` 为 windows 操作系统中 Power BI Desktop 的目录，一般默认为：`power_bi_path = C:\Program Files\Power BI Desktop` 参考此处路径 `%power_bi_path%\Custom Connectors folder`，放置 [Doris.mez](https://velodb-bi-connector-1316291683.cos.ap-hongkong.myqcloud.com/PowerBI/latest/Doris.mez) 自定义连接器文件（如果路径不存在，按需手动创建）。
+2. 在 Power BI Desktop 中，选择 `File` > `Options and settings` > `Options` > `Security`，在 `Data Extensions` 下，勾选 `(Not Recommended) Allow any extension to load without validation or warning` 。可以屏蔽掉未认证连接器的限制。
+
+首先，选择 `File`
+
+![](/images/ecomsystem/powerbi/YeQDbcIoQoI5RtxU0mjcNXuJnrg.png)
+
+然后，选择 ` Options and settings` > `Options`
+
+![](/images/ecomsystem/powerbi/LV6Tbdw54o5pqtxC2bCctM30nbe.png)
+
+进入 `Options` 界面，`GLOBAL` >`Security`，在 `Data Extensions` 下，
+
+勾选 `(Not Recommended) Allow any extension to load without validation or warning` 选项 。
+
+![](/images/ecomsystem/powerbi/Tg5cbS75HoBGIMxpcKScJ9WXnRg.png)
+
+选择 `ok` ，然后重启 Power BI Desktop。
+
+### 查找 Doris 连接器
 
 1. 启动 Power BI Desktop
 2. 在 Power BI Desktop 打开界面点击新建报表。若已有本地报表可以选择打开已有报表
 
-   ![start page](/images/powerbi/bi-powerbi-en-2.png)
+![](/images/ecomsystem/powerbi/FuXNb5hb2oOq7cxNpPEcR1dKnyg.png)
 
-3. 点击获取数据，在弹出窗口中选择 MySQL 数据库
+3. 点击获取数据，在弹出窗口中选择 Doris 数据库
 
-   ![get data](/images/powerbi/bi-powerbi-en-3.png)
+![](/images/ecomsystem/powerbi/G9UWbT1P6otb53xlgj4cljUInz1.png)
 
-4. 配置数据库连接信息，在服务器输入框中输入 ip:port。Doris 默认的端口号为 9030
+### 连接到 Doris
 
-   ![connection information](/images/powerbi/bi-powerbi-en-4.png)
+选择连接器，并输入 Doris 实例凭据：
 
-5. 上一步点击确定后在新的连接窗口处选择"数据库"连接，并在用户名与密码处填写 Doris 的连接信息。
+- Doris Data Source（必填） - 您的实例域名/地址或者 host:port。
+- Database（必填） - 您的数据库名。
+- SQL statement - 预先执行的 sql 语句（仅在 ‘Import’ 模式下可用）
+- 数据连接模式 - DirectQuery/Import
 
-   ![uname and pwd](/images/powerbi/bi-powerbi-en-5.png)
+![](/images/ecomsystem/powerbi/KiM2bVPWhoYBg5xGQUQcJFNcntg.png)
 
-6. 加载选中的表，使其表中数据至 Power BI Desktop
+**备注**
 
-   ![load data](/images/powerbi/bi-powerbi-en-6.png)
+我们建议选择 DirectQuery 以直接查询 Doris。
 
-7. 配置需要的统计罗盘
+如果您有少量数据的用例，可以选择导入模式，整个数据将加载到 Power BI。
 
-   ![create compass](/images/powerbi/bi-powerbi-en-7.png)
+- 指定用户名和密码
 
-8. 把创建好的统计罗盘保存至本地
+![](/images/ecomsystem/powerbi/KZXxbDPTBo2O3FxqgZdcE9I6ndc.png)
 
-   ![savie file](/images/powerbi/bi-powerbi-en-8.png)
+### 查询和可视化数据
 
-## 设置数据自动刷新
+最后，您应该在导航器视图中看到数据库和表。选择所需的表并单击 "加载" 以从 Apache Doris 加载表结构和预览数据。
 
-1. 下载 On-premises data gateway。下载地址：https://learn.microsoft.com/en-us/power-bi/connect-data/service-gateway-personal-mode
-2. 安装 On-premises data gateway
+![](/images/ecomsystem/powerbi/J7xObwqSYoTdTQx3hjgcAjQznS5.png)
 
-   ![gateway install](/images/powerbi/bi-powerbi-en-9.png)
+导入完成后，您的 Doris 数据应在 Power BI 中如常访问，配置需要的统计罗盘 。
 
-3. 登陆 Power BI Online，在个人的工作区中把刚保存的本地模型进行导入
+![](/images/ecomsystem/powerbi/JvIgbbyo2oWPlgxcb6Cct5ssnld.png)
 
-   ![upload](/images/powerbi/bi-powerbi-en-10-zh.png)
+## 在 Power BI 中构建可视化
 
-4. 点击模型配置自动刷新时间
+我们选择 TPC-H 数据作为数据源，Doris TPC-H 数据源构建方式参考[此文档](../../benchmark/tpch)
+现在我们在 Power BI 中配置了 Doris 数据源，让我们可视化数据...
 
-   ![click module](/images/powerbi/bi-powerbi-en-11-zh.png)
+假设我们需要知道在各个地区的订单营收统计，接下来按照此需求进行看板构建
 
-5. 数据刷新的配置需要有 gataway 连接，本地开启网关后可以在网关连接中看到本地启动的网关，选取本地的网关即可。更多关于 gateway：https://learn.microsoft.com/zh-cn/power-bi/connect-data/service-gateway-onprem
+1. 首先进行表模型关系的创建 ，点击 Model view
 
-   ![config gateway](/images/powerbi/bi-powerbi-en-12-zh.png)
+![](/images/ecomsystem/powerbi/V7PsbP3oKoJpLjxK5HdcPsnLnKf.png)
 
-6. 配置相关刷新计划即可完成 Power BI 自动数据刷新
+2. 通过按需拖拽，将这四张表放置在同一屏幕下，然后进行关联字段的拖拽
 
-   ![make plan](/images/powerbi/bi-powerbi-en-13.png)
+![](/images/ecomsystem/powerbi/FZL5b2kJcoifIaxI7Eocpak7nvf.png)
 
+![](/images/ecomsystem/powerbi/UxL2b1OV2or1LhxZjHsc0JG7ntb.png)
+
+四张表关联关系如下：
+
+- **customer** ：c_nationkey  --  **nation** : n_nationkey
+- **customer** ：c_custkey  --  **orders** : o_custkey
+- **nation** : n_regionkey  --  **region** : r_regionkey
+
+3. 关联后结果如下：
+
+![](/images/ecomsystem/powerbi/LomhbQTPPoZr58xp8f3cxcTen8d.png)
+
+4. 返回 Report view 工作台，进行仪表盘构建。
+5. 将 orders 表中的 o_totalprice 拖拽到仪表盘
+
+![](/images/ecomsystem/powerbi/MB34bks6woK3mDx0eVccivKEngc.png)
+
+6. 将 region 表中的 r_name 拖拽到 X 列
+
+![](/images/ecomsystem/powerbi/JxpJbihDHoHGwixjWQScNyxvn4e.png)
+
+7. 现在得到预期看板内容
+
+![](/images/ecomsystem/powerbi/CfGWb6oaYoj4LyxpPIGcz3Binzb.png)
+
+8. 点击工作台左上角保存按钮，把创建好的统计罗盘保存至本地
+
+![](/images/ecomsystem/powerbi/WozGbmqAOoP2mqxq2NmcJRFyntc.png)
+
+至此，已经成功将 Power BI 连接到 Apache Doris，并实现了数据分析和可视化看板制作。

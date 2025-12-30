@@ -1,16 +1,16 @@
 ---
 {
     "title": "CREATE ROUTINE LOAD",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "例行导入（Routine Load）功能支持用户提交一个常驻的导入任务，通过不断地从指定的数据源读取数据，将数据导入到 Doris 中。"
 }
-
 ---
 
 ## 描述
 
 例行导入（Routine Load）功能支持用户提交一个常驻的导入任务，通过不断地从指定的数据源读取数据，将数据导入到 Doris 中。
 
-目前仅支持通过无认证或者 SSL 认证方式，从 Kafka 导入 CSV 或 Json 格式的数据。 [导入 Json 格式数据使用示例](../../../../data-operate/import/import-way/routine-load-manual.md#导入Json格式数据使用示例)
+目前仅支持通过无认证或者 SSL 认证方式，从 Kafka 导入 CSV 或 Json 格式的数据。 [导入 Json 格式数据使用示例](../../../../data-operate/import/import-way/routine-load-manual.md#json-格式导入)
 
 ## 语法
 
@@ -269,7 +269,7 @@ FROM <data_source> [<data_source_properties>]
 >
 > 13. `<max_filter_ratio>`
 >
->     采样窗口内，允许的最大过滤率。必须在大于等于0到小于等于1之间。默认值是 0。
+>     采样窗口内，允许的最大过滤率。必须在大于等于 0 到小于等于 1 之间。默认值是 0。
 >
 >     采样窗口为 `max_batch_rows * 10`。即如果在采样窗口内，错误行数/总行数大于 `max_filter_ratio`，则会导致例行作业被暂停，需要人工介入检查数据质量问题。
 >
@@ -283,7 +283,7 @@ FROM <data_source> [<data_source_properties>]
 >
 > 15. `<escape>`
 >
->     转义符。用于转义在csv字段中出现的与包围符相同的字符。例如数据为"a,'b,'c'"，包围符为"'"，希望"b,'c被作为一个字段解析，则需要指定单字节转义符，例如 `\`，然后将数据修改为 `a,'b,\'c'`。
+>     转义符。用于转义在 csv 字段中出现的与包围符相同的字符。例如数据为"a,'b,'c'"，包围符为"'"，希望"b,'c 被作为一个字段解析，则需要指定单字节转义符，例如 `\`，然后将数据修改为 `a,'b,\'c'`。
 >
 **5. `<data_source_properties>` 中的可选属性**
 

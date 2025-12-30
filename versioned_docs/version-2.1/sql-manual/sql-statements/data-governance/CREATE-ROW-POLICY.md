@@ -1,7 +1,8 @@
 ---
 {
     "title": "CREATE ROW POLICY",
-    "language": "en"
+    "language": "en",
+    "description": "Explain can view the rewritten execution plan."
 }
 ---
 
@@ -72,5 +73,5 @@ The user executing this SQL command must have at least the following privileges:
   When we execute a query on table1, the rewritten SQL is:
 
   ```sql
-  SELECT * FROM (SELECT * FROM table1 WHERE c1 = 'a' AND c2 = 'b' OR c3 = 'c' OR c4 = 'd')
+  SELECT * FROM (SELECT * FROM table1 WHERE (c1 = 'a' AND c2 = 'b') AND (c3 = 'c' OR c4 = 'd'))
   ```

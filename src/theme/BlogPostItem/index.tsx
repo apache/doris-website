@@ -15,8 +15,9 @@ function useContainerClassName() {
     return !isBlogPostPage ? 'margin-bottom--xl' : undefined;
 }
 
-export default function BlogPostItem({ children, className }: Props): JSX.Element {
+export default function BlogPostItem({ children, className }: Props): React.ReactElement {
     const containerClassName = useContainerClassName();
+
     return (
         <BlogPostItemContainer className={clsx(containerClassName, className)}>
             <BlogPostItemHeader />

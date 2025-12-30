@@ -36,7 +36,6 @@ Apache 项目的版本发布必须严格遵循 Apache 基金会的版本发布�
 
 * [Doris Core Release](./release-doris-core.md)
 * [Doris Connectors Release](./release-doris-connectors.md)
-* [Doris Manager Release](./release-doris-manager.md)
 * [Doris Shade Release](./release-doris-shade.md)
 * [Doris Sdk Release](./release-doris-sdk.md)
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "高并发导入优化（Group Commit）",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "在高频小批量写入场景下，传统的导入方式存在以下问题："
 }
 ---
 
@@ -474,7 +475,7 @@ ALTER TABLE dt SET ("group_commit_data_bytes" = "134217728");
 
 **测试工具**
 
-* [doris-streamloader](/ecosystem/doris-streamloader.md)
+* [doris-streamloader](../../ecosystem/doris-streamloader.md)
 
 **测试方法**
 

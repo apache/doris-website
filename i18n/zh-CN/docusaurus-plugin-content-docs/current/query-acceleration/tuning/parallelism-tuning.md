@@ -1,7 +1,9 @@
 ---
 {
-"title": "并行度调优",
-"language": "zh-CN"
+    "title": "并行度调优 | Tuning",
+    "language": "zh-CN",
+    "description": "Doris 的查询是一个 MPP 的执行框架，每一条查询都会在多个 BE 上并行执行；同时，在单个 BE 内部也会采用多线程并行的方式来加速查询的执行效率，目前所有的语句（包括 Query，DML，DDL）均支持并行执行。",
+    "sidebar_label": "并行度调优"
 }
 ---
 
@@ -21,7 +23,7 @@ Doris 中默认值为 0，即 BE 的 CPU 核数目的一半，这个值考虑了
 
 假设 BE 的 CPU 核数为 16：
 
-1. 对于单表的简单操作（如单表点差、where 扫描获取少量数据，limit 少量数据，命中物化视图) **并行度可设置为 1**
+1. 对于单表的简单操作（如单表点查、where 扫描获取少量数据，limit 少量数据，命中物化视图) **并行度可设置为 1**
 
 说明：单表的简单操作，只有一个 Fragment，查询的瓶颈通常在数据扫描处理上，数据扫描线程和查询执行的线程是分开的，数据扫描线程会自适应的做并行的扫描，这里的瓶颈不是查询线程，并行度可以直接设置为 1。
 
@@ -63,3 +65,4 @@ set parallel_pipeline_task_num = 8;
 ```SQL
 set global parallel_pipeline_task_num = 8;
 ```
+

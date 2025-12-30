@@ -1,7 +1,8 @@
 ---
 {
     "title": "Release 2.0.3",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "亲爱的社区小伙伴们，Apache Doris 2.0.3 版本已于 2023 年 12 月 14 日正式发布，该版本对复杂数据类型、统计信息收集、倒排索引、数据湖分析、分布式副本管理等多个功能进行了优化，有 104 位贡献者为 Apache Doris 2.0."
 }
 ---
 
@@ -177,7 +178,7 @@
 
 ### 导入和 Compaction
 
-- 修复 routine load 一流多表时 unkown slot descriptor 错误
+- 修复 routine load 一流多表时 unknown slot descriptor 错误
   - https://github.com/apache/doris/pull/25762
 
 - 修复内存统计并发访问导致 BE crash 问题

@@ -1,7 +1,8 @@
 ---
 {
     "title": "Approximate Deduplication Using HLL",
-    "language": "en"
+    "language": "en",
+    "description": "In actual business scenarios, with the increasing amount of business data, the pressure on data deduplication is also increasing."
 }
 ---
 

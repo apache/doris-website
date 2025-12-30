@@ -1,7 +1,8 @@
 ---
 {
     "title": "SHOW SQL_BLOCK_RULE",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "查看已配置的 SQL 阻止规则。如果未指定规则名，则显示所有规则。"
 }
 ---
 

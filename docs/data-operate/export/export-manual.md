@@ -1,9 +1,13 @@
 ---
 {
-    "title": "EXPORT",
-    "language": "en"
+    "title": "EXPORT | Export",
+    "language": "en",
+    "description": "This document will introduce how to use the EXPORT command to export the data stored in Doris.",
+    "sidebar_label": "EXPORT"
 }
 ---
+
+# EXPORT
 
 This document will introduce how to use the `EXPORT` command to export the data stored in Doris.
 
@@ -385,3 +389,4 @@ The specific BE node IP can be viewed in the `OutfileInfo` column in the `SHOW E
 :::caution
 This function is not applicable to the production environment, and please ensure the permissions of the export directory and data security on your own.
 :::
+

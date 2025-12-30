@@ -1,7 +1,8 @@
 ---
 {
     "title": "ALTER TABLE REPLACE",
-    "language": "en"
+    "language": "en",
+    "description": "Atomic substitution of two tables. This operation applies only to OLAP tables."
 }
 ---
 

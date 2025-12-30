@@ -1,7 +1,8 @@
 ---
 {
-"title": "Ranger 鉴权",
-"language": "zh-CN"
+    "title": "Ranger 鉴权",
+    "language": "zh-CN",
+    "description": "Apache Ranger 是一个用来在 Hadoop 平台上进行监控，启用服务，以及全方位数据安全访问管理的安全框架。 使用 ranger 后，会通过在 Ranger 侧配置权限代替在 Doris 中执行 Grant 语句授权。"
 }
 ---
 
@@ -147,13 +148,17 @@ Ranger 的安装和配置见下文：安装和配置 Doris Ranger 插件
 
    如图所示，创建服务的时候，添加配置 `default.policy.users` ，如需配置多个用户拥有全部权限，用 `,` 分隔
    ![default policy](/images/ranger/default-policy.png)
+4. 使用 ranger 鉴权后，内部授权还有用么？
+
+   当前 ranger 还无法配置 global 层级的权限， 因此内部授权 grant priv on *.*.* 是有用的，其它层级的授权没有用
+
 
 ## 安装和配置 Doris Ranger 插件
 ### 安装插件
 
 1. 下载以下文件
 
-    - [ranger-doris-plugin-3.0.0-SNAPSHOT.jar](https://selectdb-doris-1308700295.cos.ap-beijing.myqcloud.com/ranger/ranger-doris-plugin-3.0.0-SNAPSHOT.jar)
+    - [ranger-doris-plugin-3.0.0-SNAPSHOT.jar](https://selectdb-doris-1308700295.cos.ap-beijing.myqcloud.com/release/ranger/2.1/ranger-doris-plugin-3.0.0-SNAPSHOT.jar)
     - [mysql-connector-java-8.0.25.jar](https://selectdb-doris-1308700295.cos.ap-beijing.myqcloud.com/release/jdbc_driver/mysql-connector-java-8.0.25.jar)
 
 2. 将下载好的文件放到 Ranger 服务的 `ranger-plugins/doris` 目录下，如：

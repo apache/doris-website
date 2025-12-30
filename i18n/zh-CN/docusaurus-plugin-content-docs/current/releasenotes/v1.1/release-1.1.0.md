@@ -1,7 +1,8 @@
 ---
 {
     "title": "Release 1.1.0",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "在 1.1 版本中，我们实现了计算层和存储层的全面向量化、正式将向量化执行引擎作为稳定功能进行全面启用，所有查询默认通过向量化执行引擎来执行，性能较之前版本有 3-5 倍的巨大提升；增加了直接访问 Apache Iceberg 外部表的能力，"
 }
 ---
 
@@ -184,7 +185,7 @@ String 类型是 Apache Doris 在 0.15 版本中引入的新数据类型，在�
 
 GitHub 论坛：[https://github.com/apache/incubator-doris/discussions](https://github.com/apache/incubator-doris/discussions)
 
-Dev 邮件组：[dev@doris.apache.org](dev@doris.apache.org)
+Dev 邮件组：dev@doris.apache.org
 
 ## 致谢
 

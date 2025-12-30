@@ -1,7 +1,8 @@
 ---
 {
     "title": "ADD BACKEND",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "ADD BACKEND 命令用于向 Doris 集群中添加一个或多个 BE 节点。此命令允许管理员指定新 BE 节点的主机和端口，以及可选的属性来配置它们的行为。"
 }
 ---
 

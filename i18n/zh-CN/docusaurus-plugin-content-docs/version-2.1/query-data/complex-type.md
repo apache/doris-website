@@ -1,7 +1,8 @@
 ---
 {
     "title": "复杂类型查询",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "Doris 支持 Array，Map，Struct，JSON 等复杂类型。"
 }
 ---
 

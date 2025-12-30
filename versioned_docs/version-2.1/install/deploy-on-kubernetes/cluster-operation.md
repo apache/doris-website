@@ -1,7 +1,8 @@
 ---
 {
-      "title": "Cluster Operation",
-      "language": "en"
+    "title": "Cluster Operation",
+    "language": "en",
+    "description": "In the k8s environment, the service will enter the CrashLoopBackOff state due to some unexpected things."
 }
 ---
 
@@ -308,3 +309,31 @@ admin set frontend config("disable_balance" = "false");
 admin set frontend config("disable_colocate_balance" = "false");
 admin set frontend config("disable_tablet_scheduler" = "false");
 ```
+
+## Starting FE with `metadata_failure_recovery` Mode
+When the Frontend (FE) service is unable to elect a leader and becomes unavailable, you can recover the cluster by selecting the node with the highest `VLSN` and force-starting it as the master using the recovery mechanism.
+
+### Starting in Recovery Mode in a Containerized Environment
+1. Identify the node with the highest `VLSN`  
+    In Kubernetes, each time an FE Pod starts, it outputs the last 10 `VLSN` records of the node. An example is shown below:
+    ```
+    the annotations value:
+    the value not equal!  debug
+    /opt/apache-doris/fe/doris-meta/bdb/je.info.0:19:2025-08-05 03:42:47.650 UTC INFO [fe_f35530c4_3ff1_48fe_80d1_cc8e32dbc942] Replica-feeder fe_d8763579_92da_4d72_8c58_4e62b88bdff0 start stream at VLSN: 30
+    /opt/apache-doris/fe/doris-meta/bdb/je.info.0:21:2025-08-05 03:42:47.659 UTC INFO [fe_f35530c4_3ff1_48fe_80d1_cc8e32dbc942] Replica initialization completed. Replica VLSN: -1  Heartbeat master commit VLSN: 49  DTVLSN:0 Replica VLSN delta: 50
+    [Tue Aug  5 06:14:05 UTC 2025] start with meta run start_fe.sh with additional options: '--console'
+    ```
+    In this example, the highest `VLSN` on the current node is 30, as indicated by the log prefix `start stream at VLSN:`.
+2. Designate the Pod with the highest `VLSN` for recovery  
+    After identifying the Pod corresponding to the node with the highest `VLSN`, annotate it to enable the recovery mechanism:
+    ```
+    kubectl annotate pod {podName} "selectdb.com.doris/recovery=true"
+    ```
+    Upon restarting, the Pod will automatically append the `--metadata_failure_recovery` flag to its startup command and start in recovery mode.  
+3. Remove the annotation after recovery  
+    Once the FE service is running normally, make sure to remove the annotation added in Step 2 to avoid unexpected behavior during future restarts.
+
+:::tip Note
+1. After adding the annotation, do not restart the Pod using kubectl delete pod, as this will remove the annotation. Instead, allow kubelet to restart it automatically or manually kill the process inside the container.  
+2. Starting FE in `metadata_failure_recovery` mode can take a long time due to extensive log replay. Before proceeding, increase the FE service's [startup probe timeout](./install-config-cluster.md#startup-probe-timeout), and delete all FE Pods before initiating the recovery startup.
+:::

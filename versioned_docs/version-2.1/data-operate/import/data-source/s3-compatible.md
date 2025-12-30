@@ -1,7 +1,8 @@
 ---
 {
     "title": "S3 Compatible Storage",
-    "language": "en"
+    "language": "en",
+    "description": "Doris provides two ways to load files from S3 Compatible Storage:"
 }
 ---
 

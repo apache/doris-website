@@ -504,8 +504,18 @@
                     "type": "category",
                     "label": "SQL Clients",
                     "items": [
+                        "ecosystem/bi/clouddm",
                         "ecosystem/bi/dbeaver",
                         "ecosystem/bi/datagrip"
+                    ]
+                },
+                {
+                    "type": "category",
+                    "label": "Observability",
+                    "items": [
+                        "ecosystem/logstash",
+                        "ecosystem/beats",
+                        "ecosystem/fluentbit"
                     ]
                 },
                 {
@@ -518,8 +528,6 @@
                         "ecosystem/seatunnel",
                         "ecosystem/kettle",
                         "ecosystem/kyuubi",
-                        "ecosystem/logstash",
-                        "ecosystem/beats",
                         "ecosystem/automq-load",
                         "ecosystem/hive-bitmap-udf"
                     ]
@@ -1475,20 +1483,9 @@
                 "releasenotes/all-release",
                 {
                     "type": "category",
-                    "label": "v3.0",
-                    "items": [
-                        "releasenotes/v3.0/release-3.0.5",
-                        "releasenotes/v3.0/release-3.0.4",
-                        "releasenotes/v3.0/release-3.0.3",
-                        "releasenotes/v3.0/release-3.0.2",
-                        "releasenotes/v3.0/release-3.0.1",
-                        "releasenotes/v3.0/release-3.0.0"
-                    ]
-                },
-                {
-                    "type": "category",
                     "label": "v2.1",
                     "items": [
+                        "releasenotes/v2.1/release-2.1.11",
                         "releasenotes/v2.1/release-2.1.10",
                         "releasenotes/v2.1/release-2.1.9",
                         "releasenotes/v2.1/release-2.1.8",

@@ -1,7 +1,8 @@
 ---
 {
     "title": "监控指标",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "Doris 的 FE 进程和 BE 进程都提供了完备的监控指标。监控指标可以分为两类："
 }
 ---
 

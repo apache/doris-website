@@ -1,7 +1,9 @@
 ---
 {
-    "title": "JSON",
-    "language": "en"
+    "title": "JSON | File Format",
+    "language": "en",
+    "description": "This document explains how to load JSON format data files into Doris.",
+    "sidebar_label": "JSON"
 }
 ---
 
@@ -14,7 +16,7 @@ The following loading methods support JSON format data:
 - [Stream Load](../import-way/stream-load-manual.md)
 - [Broker Load](../import-way/broker-load-manual.md)
 - [Routine Load](../import-way/routine-load-manual.md)
-- [INSERT INTO FROM S3 TVF](../../../lakehouse/file.md)
+- [INSERT INTO FROM S3 TVF](../../../lakehouse/file-analysis.md)
 - [INSERT INTO FROM HDFS TVF](../../../sql-manual/sql-functions/table-valued-functions/hdfs)
 
 ## Supported JSON Formats
@@ -434,3 +436,4 @@ FROM S3
     "json_root" = "$.events",
     ...
 );
+

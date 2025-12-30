@@ -1,7 +1,8 @@
 ---
 {
     "title": "Transforming Data During Load",
-    "language": "en"
+    "language": "en",
+    "description": "Doris provides powerful data transformation capabilities during data loading,"
 }
 ---
 
@@ -99,8 +100,8 @@ Column mapping is used to define the correspondence between source data columns 
 
 Column mapping implementation can be divided into two steps:
 
-**Step 1: Data Source Parsing** - Parse raw data into intermediate variables based on data format
-**Step 2: Column Mapping and Assignment** - Map intermediate variables to target table fields by column name
+- **Step 1: Data Source Parsing** - Parse raw data into intermediate variables based on data format
+- **Step 2: Column Mapping and Assignment** - Map intermediate variables to target table fields by column name
 
 The following are processing flows for three different data formats:
 

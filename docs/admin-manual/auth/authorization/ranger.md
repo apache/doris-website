@@ -1,7 +1,8 @@
 ---
 {
-"title": "Ranger Authorization",
-"language": "en"
+    "title": "Ranger Authorization",
+    "language": "en",
+    "description": "Apache Ranger is a security framework used for monitoring, enabling services,"
 }
 ---
 
@@ -97,6 +98,25 @@ Equivalent to the internal Doris authorization statement `grant usage_priv on wo
 
 ![ Workload Group Permissions](/images/ranger/group1.png)
 
+#### Compute Group Permissions
+
+> Supported in version 3.0.6
+
+Equivalent to the internal Doris authorization statement `grant usage_priv on compute group 'group1' to user1`;
+- The compute group option can be found in the dropdown box at the same level as the catalog.
+
+![compute group](/images/ranger/compute-group.png)
+
+#### Storage Vault Permissions
+
+> Supported in version 3.0.6
+
+Equivalent to the internal Doris authorization statement `grant usage_priv on storage vault 'vault1' to user1`;
+- The storage vault option can be found in the dropdown box at the same level as the catalog.
+
+![storage vault](/images/ranger/storage-vault.png)
+
+
 ### Row-Level Permissions Example
 
 > Supported in version 2.1.3
@@ -148,7 +168,9 @@ Equivalent to the internal Doris authorization statement `grant usage_priv on wo
 
    As shown in the image, when creating the service, add the configuration `default.policy.users`. If you need to configure multiple users with full permissions, separate them with `,`.
    ![default policy](/images/ranger/default-policy.png)
+4. After using Ranger for authentication, is internal authorization still effective?
 
+   No, it cannot be used, and roles cannot be created/deleted.
 
 ## Install and Configure Doris Ranger Plugin
 
@@ -156,7 +178,7 @@ Equivalent to the internal Doris authorization statement `grant usage_priv on wo
 
 1. Download the following files
 
-    - [ranger-doris-plugin-3.0.0-SNAPSHOT.jar](https://selectdb-doris-1308700295.cos.ap-beijing.myqcloud.com/ranger/ranger-doris-plugin-3.0.0-SNAPSHOT.jar)
+    - [ranger-doris-plugin-3.0.0-SNAPSHOT.jar](https://selectdb-doris-1308700295.cos.ap-beijing.myqcloud.com/release/ranger/dev/ranger-doris-plugin-3.0.0-SNAPSHOT.jar)
     - [mysql-connector-java-8.0.25.jar](https://selectdb-doris-1308700295.cos.ap-beijing.myqcloud.com/release/jdbc_driver/mysql-connector-java-8.0.25.jar)
 
 2. Place the downloaded files in the `ranger-plugins/doris` directory of the Ranger service, such as:

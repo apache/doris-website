@@ -1,7 +1,8 @@
 ---
 {
     "title": "自动分区",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "自动分区功能主要解决了用户预期基于某列对表进行分区操作，但该列的数据分布比较零散或者难以预测，在建表或调整表结构时难以准确创建所需分区，或者分区数量过多以至于手动创建过于繁琐的问题。"
 }
 ---
 
@@ -56,60 +57,60 @@ PROPERTIES (
 
 ## 语法
 
-建表时，使用以下语法填充[CREATE-TABLE](../../sql-manual/sql-statements/table-and-view/table/CREATE-TABLE)时的 `partition_info` 部分：
+建表时，使用以下语法填充 [CREATE-TABLE](../../sql-manual/sql-statements/table-and-view/table/CREATE-TABLE) 中的 `partitions_definition` 部分：
 
 1. AUTO RANGE PARTITION:
 
-```sql
-   AUTO PARTITION BY RANGE (FUNC_CALL_EXPR)
-   ()
-```
+    ```sql
+      AUTO PARTITION BY RANGE(<partition_expr>)
+      <origin_partitions_definition>
+    ```
 
-其中
-```sql
-   FUNC_CALL_EXPR ::= date_trunc ( <partition_column>, '<interval>' )
-```
+    其中
+
+    ```sql
+      partition_expr ::= date_trunc ( <partition_column>, '<interval>' )
+    ```
 
 2. AUTO LIST PARTITION:
 
-```sql
-    AUTO PARTITION BY LIST(`partition_col1`[, `partition_col2`, ...])
-    ()
-```
+    ```sql
+        AUTO PARTITION BY LIST(`partition_col1` [, `partition_col2`, ...])
+        <origin_partitions_definition>
+    ```
 
 ### 用法示例
 
 1. AUTO RANGE PARTITION
 
-```sql
-   CREATE TABLE `date_table` (
-       `TIME_STAMP` datev2 NOT NULL
-   ) ENGINE=OLAP
-   DUPLICATE KEY(`TIME_STAMP`)
-   AUTO PARTITION BY RANGE (date_trunc(`TIME_STAMP`, 'month'))
-   (
-   )
-   DISTRIBUTED BY HASH(`TIME_STAMP`) BUCKETS 10
-   PROPERTIES (
-   "replication_allocation" = "tag.location.default: 1"
-   );
-```
+    ```sql
+      CREATE TABLE `date_table` (
+          `TIME_STAMP` datev2 NOT NULL
+      ) ENGINE=OLAP
+      DUPLICATE KEY(`TIME_STAMP`)
+      AUTO PARTITION BY RANGE (date_trunc(`TIME_STAMP`, 'month'))
+      (
+      )
+      DISTRIBUTED BY HASH(`TIME_STAMP`) BUCKETS 10
+      PROPERTIES (
+      "replication_allocation" = "tag.location.default: 1"
+      );
+    ```
 
 2. AUTO LIST PARTITION
 
-```sql
-   CREATE TABLE `str_table` (
-       `str` varchar not null
-   ) ENGINE=OLAP
-   DUPLICATE KEY(`str`)
-   AUTO PARTITION BY LIST (`str`)
-   (
-   )
-   DISTRIBUTED BY HASH(`str`) BUCKETS 10
-   PROPERTIES (
-   "replication_allocation" = "tag.location.default: 1"
-   );
-```
+    ```sql
+      CREATE TABLE `str_table` (
+          `str` varchar not null
+      ) ENGINE=OLAP
+      DUPLICATE KEY(`str`)
+      AUTO PARTITION BY LIST (`str`)
+      ()
+      DISTRIBUTED BY HASH(`str`) BUCKETS 10
+      PROPERTIES (
+      "replication_allocation" = "tag.location.default: 1"
+      );
+    ```
 
    LIST 自动分区支持多个分区列，分区列写法同普通 LIST 分区一样： ```AUTO PARTITION BY LIST (`col1`, `col2`, ...)```
 
@@ -126,52 +127,51 @@ PROPERTIES (
 
 1. 对于 AUTO LIST PARTITION，可以使用 NULLABLE 列作为分区列，会正常创建对应的 NULL 值分区：
 
-```sql
-  create table auto_null_list(
-    k0 varchar null
-  )
-  auto partition by list (k0)
-  (
-  )
-  DISTRIBUTED BY HASH(`k0`) BUCKETS 1
-  properties("replication_num" = "1");
+    ```sql
+      create table auto_null_list(
+        k0 varchar null
+      )
+      auto partition by list (k0)
+      (
+      )
+      DISTRIBUTED BY HASH(`k0`) BUCKETS 1
+      properties("replication_num" = "1");
 
+      insert into auto_null_list values (null);
 
-  insert into auto_null_list values (null);
+      select * from auto_null_list;
+      +------+
+      | k0   |
+      +------+
+      | NULL |
+      +------+
 
-  select * from auto_null_list;
-  +------+
-  | k0   |
-  +------+
-  | NULL |
-  +------+
-
-  select * from auto_null_list partition(pX);
-  +------+
-  | k0   |
-  +------+
-  | NULL |
-  +------+
-```
+      select * from auto_null_list partition(pX);
+      +------+
+      | k0   |
+      +------+
+      | NULL |
+      +------+
+    ```
 
 2. 对于 AUTO RANGE PARTITION，**不支持 NULLABLE 列作为分区列**。
 
-```sql
-  CREATE TABLE `range_table_nullable` (
-    `k1` INT,
-    `k2` DATETIMEV2(3),
-    `k3` DATETIMEV2(6)
-  ) ENGINE=OLAP
-  DUPLICATE KEY(`k1`)
-  AUTO PARTITION BY RANGE (date_trunc(`k2`, 'day'))
-  (
-  )
-  DISTRIBUTED BY HASH(`k1`) BUCKETS 16
-  PROPERTIES (
-  "replication_allocation" = "tag.location.default: 1"
-  );
-ERROR 1105 (HY000): errCode = 2, detailMessage = AUTO RANGE PARTITION doesn't support NULL column
-```
+    ```sql
+      CREATE TABLE `range_table_nullable` (
+        `k1` INT,
+        `k2` DATETIMEV2(3),
+        `k3` DATETIMEV2(6)
+      ) ENGINE=OLAP
+      DUPLICATE KEY(`k1`)
+      AUTO PARTITION BY RANGE (date_trunc(`k2`, 'day'))
+      ()
+      DISTRIBUTED BY HASH(`k1`) BUCKETS 16
+      PROPERTIES (
+      "replication_allocation" = "tag.location.default: 1"
+      );
+
+    ERROR 1105 (HY000): errCode = 2, detailMessage = AUTO RANGE PARTITION doesn't support NULL column
+    ```
 
 ## 场景示例
 
@@ -221,10 +221,15 @@ show partitions from `DAILY_TRADE_VALUE`;
 ## 与动态分区联用
 
 Doris 支持自动分区和动态分区同时使用。此时，二者的功能都生效：
+
 1. 自动分区将会自动在数据导入过程中按需创建分区；
 2. 动态分区将会自动创建、回收、转储分区。
 
-二者语法功能不存在冲突，同时设置对应的子句/属性即可。
+二者语法功能不存在冲突，同时设置对应的子句/属性即可。请注意，当前时间所在的分区由自动分区还是动态分区创建，是不确定的。不同创建方式会导致分区的名称格式不同。
+
+:::info
+该功能自 Doris 2.1.7 起支持。
+:::
 
 ### 最佳实践
 
@@ -265,7 +270,7 @@ select * from partitions("catalog"="internal","database"="optest","table"="DAILY
 
 这样每个分区的 ID 和取值就可以精准地被筛选出，用于后续针对分区的具体操作（例如 `insert overwrite partition`）。
 
-详细语法说明请见：[auto_partition_name 函数文档](../../sql-manual/sql-functions/string-functions/auto-partition-name)，[partitions 表函数文档](../../sql-manual/sql-functions/table-valued-functions/partitions)。
+详细语法说明请见：[auto_partition_name 函数文档](../../sql-manual/sql-functions/scalar-functions/string-functions/auto-partition-name)，[partitions 表函数文档](../../sql-manual/sql-functions/table-valued-functions/partitions)。
 
 ## 注意事项
 
@@ -276,4 +281,3 @@ select * from partitions("catalog"="internal","database"="optest","table"="DAILY
 - 向开启了 AUTO PARTITION 的表导入数据时，Coordinator 发送数据的轮询间隔与普通表有所不同。具体请见[BE 配置项](../../admin-manual/config/be-config)中的`olap_table_sink_send_interval_auto_partition_factor`。开启前移（`enable_memtable_on_sink_node = true`）后该变量不产生影响。
 - 在使用[insert-overwrite](../../sql-manual/sql-statements/data-modification/DML/INSERT-OVERWRITE)插入数据时 AUTO PARTITION 表的行为详见 INSERT OVERWRITE 文档。
 - 如果导入创建分区时，该表涉及其他元数据操作（如 Schema Change、Rebalance），则导入可能失败。
-

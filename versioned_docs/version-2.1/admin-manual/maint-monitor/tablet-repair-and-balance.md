@@ -1,7 +1,8 @@
 ---
 {
     "title": "Data Replica Management",
-    "language": "en"
+    "language": "en",
+    "description": "Beginning with version 0.9.0, Doris introduced an optimized replica management strategy and supported a richer replica status viewing tool."
 }
 ---
 

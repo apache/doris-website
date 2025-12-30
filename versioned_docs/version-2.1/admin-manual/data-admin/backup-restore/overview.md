@@ -1,7 +1,8 @@
 ---
 {
     "title": "Backup and Restore Overview",
-    "language": "en"
+    "language": "en",
+    "description": "Doris provides support for backup and restore operations. These features allow users to back up data from databases, tables,"
 }
 ---
 

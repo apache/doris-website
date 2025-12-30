@@ -1,7 +1,8 @@
 ---
 {
     "title": "Release 2.1.7",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "亲爱的社区小伙伴们，Apache Doris 2.1.7 版本已于 2024 年 11 月 10 日正式发布。2.1.7 版本持续升级改进，同时在湖仓一体、异步物化视图、半结构化数据管理、查询优化器、执行引擎、存储管理、以及权限管理等方面完成了若干修复。欢迎大家下载使用。"
 }
 ---
 
@@ -56,13 +57,13 @@
 ### 湖仓一体
 
 - 支持写入数据到 Hive Text 格式表。[#40537](https://github.com/apache/doris/pull/40537)
-  - 更多信息，请参考[使用 Hive 构建数据湖](../../lakehouse/datalake-building/hive-build/)文档
+  - 更多信息，请参考[使用 Hive 构建数据湖](../../lakehouse/catalogs/hive-catalog)文档
 - 使用 MaxCompute Open Storage API 访问 MaxCompute 数据。[#41610](https://github.com/apache/doris/pull/41610)
-  - 更多信息，请参考 [MaxCompute](../../lakehouse/database/max-compute/) 文档
+  - 更多信息，请参考 [MaxCompute](../../lakehouse/catalogs/maxcompute-catalog) 文档
 - 支持 Paimon DLF Catalog。[#41694](https://github.com/apache/doris/pull/41694)
-  - 更多信息，请参考 [Paimon Catalog](../../lakehouse/datalake-analytics/paimon/) 文档
+  - 更多信息，请参考 [Paimon Catalog](../../lakehouse/catalogs/paimon-catalog) 文档
 - 新增语法 `table$partitions` 语法支持直接查询 Hive 分区信息 [#41230](https://github.com/apache/doris/pull/41230)
-  - 更多信息，请参考[通过 Hive 分析数据湖](../../lakehouse/datalake-analytics/hive/)文档
+  - 更多信息，请参考[通过 Hive 分析数据湖](../../lakehouse/catalogs/hive-catalog)文档
 - 支持 brotli 压缩格式的 Parquet 文件读取。[#42162](https://github.com/apache/doris/pull/42162)
 - 支持读取 Parquet 文件中的 DECIMAL 256 类型。[#42241](https://github.com/apache/doris/pull/42241)
 - 支持读取 OpenCsvSerde 格式的 Hive 表。[#42939](https://github.com/apache/doris/pull/42939)
@@ -118,7 +119,7 @@
 - 修复用户指定的 Start Time 不生效的问题。[#39573](https://github.com/apache/doris/pull/39573)
 - 修复嵌套物化视图不刷新的问题。[#40433](https://github.com/apache/doris/pull/40433)
 - 修复删除重建基表后，物化视图可能不刷新的问题。[#41762](https://github.com/apache/doris/pull/41762)
-- 修复分区补偿改写可能导致结果错误的问题。[#40803]( https://github.com/apache/doris/pull/40803)
+- 修复分区补偿改写可能导致结果错误的问题。[#40803](https://github.com/apache/doris/pull/40803)
 - 当 `sql_select_limit` 设置时，改写结果可能错误的问题。[#40106](https://github.com/apache/doris/pull/40106)
 
 ### 半结构化管理
