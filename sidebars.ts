@@ -2507,6 +2507,7 @@ const sidebars: SidebarsConfig = {
                     type: 'category',
                     label: 'v3.1',
                     items: [
+                        "releasenotes/v3.1/release-3.1.4",
                         "releasenotes/v3.1/release-3.1.3",
                         'releasenotes/v3.1/release-3.1.2',
                         'releasenotes/v3.1/release-3.1.1',
