@@ -144,6 +144,78 @@ If the database or compute group name contains reserved keywords, the correspond
 
 You can scale compute groups by adding or removing BE using `ALTER SYSTEM ADD BACKEND` and `ALTER SYSTEM DECOMMISION BACKEND`.
 
+### Load Rebalancing After Scaling
+
+Cloud rebalance is a load balancing operation in Doris's compute-storage decoupled architecture. It is used to rebalance read and write traffic across the compute group after scaling (adding or removing) backend nodes in different Compute Groups. A node that has been offline for an extended period is considered as removed.
+
+#### Balance Strategy Types
+
+:::caution
+
+The `balance_type` feature is supported starting from Doris 3.1.3 and Doris 4.0.2.  
+Prior to these versions, only the FE global configuration `enable_cloud_warm_up_for_rebalance` was available to control whether warm up tasks are executed during rebalance.
+
+:::
+
+The following table describes three strategy types, using the example of adding nodes to a Compute Group:
+
+| Type | Time to Service | Performance Fluctuation | Technical Principle | Use Cases |
+| :--- | :---: | :---: | :-- | :-- |
+  | `without_warmup` | Fastest | Highest fluctuation | FE directly modifies shard mapping; first read/write has no file cache and needs to fetch from S3 | Scenarios requiring quick node deployment with low sensitivity to performance jitter |
+| `async_warmup` | Faster | Possible cache miss | Issues warm up tasks, modifies mapping after success or timeout; attempts to pull file cache to new BE during mapping switch, some scenarios may still miss on first read | General scenarios with acceptable performance |
+| `sync_warmup` | Slower | Minimal cache miss | Issues warm up tasks, FE modifies mapping only after task completion, ensuring cache migration | Scenarios with extremely high performance requirements after scaling, requiring file cache to exist on new nodes |
+
+#### User Interface
+
+##### Global Default Balance Type
+
+Set the global default value through FE configuration (fe.conf):
+
+```
+cloud_default_rebalance_type = "async_warmup"
+```
+
+##### Compute Group-Level Configuration
+
+You can configure balance type for each Compute Group separately:
+
+```sql
+ALTER COMPUTE GROUP cg1 PROPERTIES("balance_type"="async_warmup");
+```
+
+##### Configuration Rules
+
+1. If a Compute Group does not have `balance_type` configured, it uses the global default value `async_warmup`.
+2. If a Compute Group has `balance_type` configured, that configuration takes priority during rebalance.
+
+#### FAQ
+
+##### How to View and Modify Global Rebalance Type?
+
+- **View**: Execute `ADMIN SHOW FRONTEND CONFIG LIKE "cloud_default_rebalance_type";`
+- **Modify**: Execute `ADMIN SET FRONTEND CONFIG ("cloud_warm_up_for_rebalance_type" = "without_warmup");` (takes effect without restarting FE)
+
+##### How to Query Compute Group Balance Type?
+
+Execute `SHOW COMPUTE GROUPS;`. The `properties` column in the result contains Compute Group attribute information, including the `balance_type` configuration.
+
+##### How to Determine if the Cluster is in a Stable Tablet State?
+
+1. **Check via `SHOW BACKENDS`**: Check if the tablet counts across BEs are close. Reference calculation range:  
+   ```
+   (Total tablets in cluster / Compute Group BE count) * 0.95 
+   ~ 
+   (Total tablets in cluster / Compute Group BE count) * 1.05
+   ```  
+   The value 0.05 is the default value of the FE configuration `cloud_rebalance_percent_threshold`. To make tablet distribution more uniform across BEs in the Compute Group, you can reduce this configuration value.
+
+2. **Observe via FE Metrics**: Check the `doris_fe_cloud_.*_balance_num` series of metrics in FE metrics. If there is no change for an extended period, it indicates the Compute Group has reached a balanced state. It is recommended to configure these metrics on a monitoring dashboard for continuous observation and judgment.  
+   ```bash
+   curl "http://feip:fe_http_port/metrics" | grep '_balance_num'
+   ```
+
+
+
 ## Renaming Compute Group
 
 You can use the `ALTER SYSTEM RENAME COMPUTE GROUP <old_name> <new_name>` command to rename an existing compute group. Please refer to the SQL Manual on [Renaming Compute Groups](../sql-manual/sql-statements/cluster-management/instance-management/ALTER-SYSTEM-RENAME-COMPUTE-GROUP).
