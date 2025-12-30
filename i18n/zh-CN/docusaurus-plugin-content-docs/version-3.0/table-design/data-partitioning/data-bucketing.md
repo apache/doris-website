@@ -152,7 +152,7 @@ DISTRIBUTED BY HASH(region) BUCKETS AUTO
 properties("estimate_partition_size" = "20G")
 
 -- Set random bucket auto
-DISTRIBUTED BYRANDOM BUCKETS AUTO
+DISTRIBUTED BY RANDOM BUCKETS AUTO
 properties("estimate_partition_size" = "20G")
 ```
 
