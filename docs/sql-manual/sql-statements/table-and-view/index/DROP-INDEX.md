@@ -39,6 +39,6 @@ The user executing this SQL command must have at least the following privileges:
 - drop index
 
    ```sql
-   DROP INDEX IF NOT EXISTS index_name ON table1 ;
+   DROP INDEX IF EXISTS index_name ON table1 ;
    ```
 
