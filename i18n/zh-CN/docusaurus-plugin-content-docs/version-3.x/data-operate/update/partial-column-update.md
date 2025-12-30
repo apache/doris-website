@@ -80,7 +80,9 @@ SET enable_unique_key_partial_update=true;
 INSERT INTO order_tbl (order_id, order_status) VALUES (1, '待发货');
 ```
 
-需要注意的是，控制 insert 语句是否开启严格模式的会话变量 `enable_insert_strict` 的默认值为 true，即 insert 语句默认开启严格模式。在严格模式下进行部分列更新不允许更新不存在的 key。所以，在使用 insert 语句进行部分列更新时，如果希望能插入不存在的 key，需要在 `enable_unique_key_partial_update` 设置为 true 的基础上，同时将 `enable_insert_strict` 设置为 false。
+:::caution 注意：
+需要注意的是，控制 insert 语句是否开启严格模式的会话变量 `enable_insert_strict` 的默认值为 true，即 insert 语句默认开启严格模式。在 3.0.x 及更低版本中，在严格模式下进行部分列更新不允许更新不存在的 key。所以，在使用 insert 语句进行部分列更新时，如果希望能插入不存在的 key，需要在 `enable_unique_key_partial_update` 设置为 true 的基础上，同时将 `enable_insert_strict` 设置为 false。
+:::
 
 #### Flink Connector
 
@@ -267,7 +269,8 @@ MySQL root@127.1:d1> select * from t1;
 
 ### 部分列更新/灵活列更新中对新插入的行的处理
 
-session variable或导入属性`partial_update_new_key_behavior`用于控制部分列更新和灵活列更新中插入的新行的行为。
+3.0.x 版本中，导入是否开启了严格模式会控制部分列更新中插入的新行的行为，具体可参考[严格模式](../import/handling-messy-data.md#限定部分列更新只能更新已有的列)文档。
+自 3.1.0 版本起，session variable或导入属性`partial_update_new_key_behavior`用于控制部分列更新和灵活列更新中插入的新行的行为。
 
 当`partial_update_new_key_behavior=ERROR`时，插入的每一行数据必须满足该行数据的 Key 在表中已经存在。而当`partial_update_new_key_behavior=APPEND`时，进行部分列更新或灵活列更新时可以更新 Key 已经存在的行，也可以插入 Key 不存在的新行。
 

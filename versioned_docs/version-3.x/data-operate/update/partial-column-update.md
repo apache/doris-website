@@ -78,7 +78,9 @@ SET enable_unique_key_partial_update=true;
 INSERT INTO order_tbl (order_id, order_status) VALUES (1, 'Pending Shipment');
 ```
 
-Note that the session variable `enable_insert_strict` defaults to true, enabling strict mode by default. In strict mode, partial column updates do not allow updating non-existent keys. To insert non-existent keys using the insert statement for partial column updates, set `enable_unique_key_partial_update` to true and `enable_insert_strict` to false.
+:::caution Note:
+Note that the session variable `enable_insert_strict` defaults to true, enabling strict mode by default. In version 3.0.x, partial column updates do not allow updating non-existent keys in strict mode. To insert non-existent keys using the insert statement for partial column updates, set `enable_unique_key_partial_update` to true and `enable_insert_strict` to false.
+:::
 
 #### Flink Connector
 
@@ -265,7 +267,8 @@ MySQL root@127.1:d1> select * from t1;
 
 ### Handling New Rows in Partial Column Updates
 
-The session variable or import property `partial_update_new_key_behavior` controls the behavior when inserting new rows during partial column updates.
+In the 3.0.x series, whether strict mode is enabled during import controls the behavior of newly inserted rows in Partial Column Update. For details, see the documentation on [Strict Mode](../import/handling-messy-data.md#restricting-partial-column-updates-to-existing-columns-only).
+Starting from version 3.1.0, the session variable or import property `partial_update_new_key_behavior` controls the behavior when inserting new rows during partial column updates.
 
 When `partial_update_new_key_behavior=ERROR`, each inserted row must have a key that already exists in the table. When `partial_update_new_key_behavior=APPEND`, partial column updates can update existing rows with matching keys or insert new rows with keys that do not exist in the table.
 

@@ -80,8 +80,6 @@ SET enable_unique_key_partial_update=true;
 INSERT INTO order_tbl (order_id, order_status) VALUES (1, '待发货');
 ```
 
-需要注意的是，控制 insert 语句是否开启严格模式的会话变量 `enable_insert_strict` 的默认值为 true，即 insert 语句默认开启严格模式。在严格模式下进行部分列更新不允许更新不存在的 key。所以，在使用 insert 语句进行部分列更新时，如果希望能插入不存在的 key，需要在 `enable_unique_key_partial_update` 设置为 true 的基础上，同时将 `enable_insert_strict` 设置为 false。
-
 #### Flink Connector
 
 如果使用 Flink Connector，需要添加如下配置：
