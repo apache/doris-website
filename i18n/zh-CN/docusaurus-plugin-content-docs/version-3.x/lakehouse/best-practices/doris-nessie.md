@@ -1,7 +1,8 @@
 ---
 {
     "title": "集成 Nessie",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "本文将带您了解如何将 Apache Doris 与 Nessie 集成，实现对 Iceberg 数据的高效查询和管理。我们将逐步带您完成从环境准备到最终查询的整个过程。"
 }
 ---
 

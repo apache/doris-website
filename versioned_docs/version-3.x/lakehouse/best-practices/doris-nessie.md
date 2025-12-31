@@ -1,7 +1,8 @@
 ---
 {
     "title": "Integration with Nessie",
-    "language": "en"
+    "language": "en",
+    "description": "This article will guide you through integrating Apache Doris with Nessie to achieve efficient querying and management of Iceberg data. We will take you through the entire process from environment preparation to final querying step by step."
 }
 ---
 
