@@ -158,7 +158,7 @@ PROPERTIES (
 
 从 2.0 版本开始，Doris 在主键模型（MoW）上支持了强大的部分列更新能力。用户在导入数据时，只需提供主键和待更新的列，未提供的列将保持其原值不变。这极大地简化了宽表拼接、实时标签更新等场景的ETL流程。
 
-要启用此功能，需在创建主键模型表时，开启 Merge-on-Write (MoW) 模式，并设置 `enable_unique_key_partial_update` 属性为 `true`。或者在数据导入时配置`"partial_columns"`参数
+要启用此功能，需在创建主键模型表时，开启 Merge-on-Write (MoW) 模式，并设置 `enable_unique_key_merge_on_write` 属性为 `true`。或者在数据导入时配置`"partial_columns"`参数
 
 ```sql
 CREATE TABLE user_profiles (
@@ -170,7 +170,7 @@ CREATE TABLE user_profiles (
 UNIQUE KEY(user_id)
 DISTRIBUTED BY HASH(user_id)
 PROPERTIES (
-    "enable_unique_key_partial_update" = "true"
+    "enable_unique_key_merge_on_write" = "true"
 );
 
 -- 初始数据
