@@ -31,16 +31,18 @@ ARRAY_SIZE(<arr>)
 
 返回数组中元素数量，如果输入数组为 NULL，则返回 NULL
 
+
+
 ## 举例
 
 ```sql
-SELECT ARRAY_SIZE(['a', 'b', 'c']),ARRAY_SIZE([NULL]),ARRAY_SIZE([]);
+SELECT ARRAY_SIZE(['a', 'b', 'c']),ARRAY_SIZE(NULL),ARRAY_SIZE([]);
 ```
 
 ```text
 +------------------------------+---------------------+-----------------+
-| cardinality(['a', 'b', 'c']) | cardinality([NULL]) | cardinality([]) |
+| cardinality(['a', 'b', 'c']) | cardinality(NULL)   | cardinality([]) |
 +------------------------------+---------------------+-----------------+
-|                            3 |                   1 |               0 |
+|                            3 |         NULL        |               0 |
 +------------------------------+---------------------+-----------------+
 ```
