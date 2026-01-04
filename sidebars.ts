@@ -241,6 +241,7 @@ const sidebars: SidebarsConfig = {
                                 'data-operate/update/update-of-aggregate-model',
                                 'data-operate/update/partial-column-update',
                                 'data-operate/update/unique-update-concurrent-control',
+                                'data-operate/update/multi-stream-update-for-unique-model',
                             ],
                         },
                         {
