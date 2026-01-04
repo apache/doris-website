@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Data Skew Handling | Tuning Execution",
+    "title": "Parallelism Tuning | Tuning Execution",
     "language": "en",
     "description": "Doris queries are executed in an MPP (Massively Parallel Processing) framework, where each query is executed in parallel across multiple BEs (Backend Executors).",
     "sidebar_label": "Data Skew Handling"
