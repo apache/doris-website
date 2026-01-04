@@ -34,19 +34,6 @@ To achieve this, we need a mechanism to measure semantic relatedness between a u
 
 Vector retrieval in RAG is not limited to text; it naturally extends to multimodal scenarios. In a multimodal RAG system, images, audio, video, and other data types can also be encoded into vectors for retrieval and then supplied to the generative model as context. For example, if a user uploads an image, the system can first retrieve related descriptions or knowledge snippets, then generate explanatory content. In medical QA, RAG can retrieve patient records and literature to support more accurate diagnostic suggestions.
 
-## Brute-Force Search
-
-Starting from version 2.0, Apache Doris supports nearest-neighbor search based on vector distance. Performing vector search with SQL is natural and simple:
-
-```sql
-SELECT id, l2_distance(embedding, [1.0, 2.0, xxx, 10.0]) AS distance
-FROM   vector_table
-ORDER  BY distance
-LIMIT  10; 
-```
-
-When the dataset is small (under ~1 million rows), Doris’s exact K-Nearest Neighbor search performance is sufficient, providing 100% recall and precision. As the dataset grows, however, most users are willing to trade a small amount of recall/accuracy for significantly lower latency. The problem then becomes Approximate Nearest Neighbor (ANN) search.
-
 ## Approximate Nearest Neighbor Search
 
 From version 4.0, Apache Doris officially supports ANN search. No additional data type is introduced: vectors are stored as fixed-length arrays. For distance-based indexing a new index type, ANN, is implemented based on Faiss.
