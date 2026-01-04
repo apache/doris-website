@@ -391,10 +391,34 @@ SELECT * FROM tbl WHERE v['str'] MATCH 'Doris';
 | `VARCHAR`       | ✔        | ✔         |
 | `JSON`          | ✔        | ✔         |
 
+## 宽列
+
+当导入的数据中包含了大量的不同的 JSON key 时，VARAINT 的子列就会变多，达到一定程度就会出现性能下降问题。为了解决列数过多的问题，VARIANT 提供了两种机制。
+
+1. 稀疏列机制：将所有的子列按照稀疏度排序，不稀疏的子列物化为独立子列，剩余的所有的稀疏的子列共同存放到稀疏列中。例如：设置 VARAINT 的最大子列数为 2048，导入的数据一万行中包含 5000个不同的 JSON key，在写入到磁盘文件上时，会根据每个 JSON key 实际存在的行数排序，行数最多的前2048列会物化成单独子列，剩余的2952列被存放到稀疏列中。
+   - 稀疏列机制引入了 sharding 机制，例如指定 sharding count 为 10，在上述的例子中，磁盘上会存储10个稀疏列，平均每个稀疏列中有 295 个子列。
+
+2. DOC编码机制：讲所有的子列物化为独立子列，并且将原始的 json 作为一个"存储字段"保存下来，用于查询整个 JSON。这个机制和Elasticsearch中的 stored fields 作用类似，在Elasticsearch中，可以把整个 DOC保存下来，用于取回整 DOC。
+   - DOC编码机制引入了 sharding 机制，例如指定 sharding count 为 10，原始的json 将被拆散到 10 个列中存储，在查询整个json时将组装这 10 个列。
+
+这两种机制是互斥的，当用户指定使用稀疏列机制时，将无法使用DOC编码，反之亦然。
+
+使用稀疏列机制的建议：
+1. 适用于JSON key 数量较多但查询主要集中在部分高频字段的场景。高频字段作为独立子列可获得最佳查询性能，低频字段虽存储在稀疏列中，仍可正常查询。
+2. 通过 `variant_max_subcolumns_count` 控制独立子列的数量上限，建议设置为 2048，避免列数过多导致的元数据膨胀和写入性能下降。
+3. 当 JSON key 分布极度不均匀（少数 key 高频出现，大量 key 偶发出现）时，稀疏列机制可以很好地平衡存储效率和查询性能。
+4. 可通过配置 sharding count 进一步优化稀疏列的读取性能，将稀疏子列分散到多个稀疏列中。
+
+使用 DOC 编码机制的建议：
+1. 适用于整体JSON key 数量较多但每一行的JSON key 却很少的场景。例如：一万行数据中不同的JSON key有一万个，一行数据中不同的JSON key只有一百个。
+2. 当业务需要对 VARIANT 整体进行 `SELECT *` 时，DOC 编码可避免从大量子列中重新组装 JSON 的开销。
+3. DOC 编码会额外存储一份原始 JSON 数据，因此存储空间会有所增加，需要权衡存储成本与查询便利性。
+4. 可通过配置进一步减少DOC 编码下的写入消耗，例如在写入时如果行数过少只写入原始的 json， 当不同的文件合并达到一定行数时再将子列物化成独立的子列。
+
+这两种机制的详细设置见下方的配置章节。
+
 ## 限制
 
-- `variant_max_subcolumns_count`：默认 0（不限制 Path 物化列数）。建议在生产设置为 2048（Tablet 级别）以控制列数。超过阈值后，低频/稀疏路径会被收敛到共享数据结构，从该结构查询可能带来性能下降（详见“配置”）。
-- 若 Schema Template 指定了 Path 类型，则该 Path 会被强制提取；当 `variant_enable_typed_paths_to_sparse = true` 时，它也会计入阈值，可能被收敛到共享结构。
 - JSON key 长度 ≤ 255。
 - 不支持作为主键或排序键。
 - 不支持与其他类型嵌套（如 `Array<Variant>`、`Struct<Variant>`）。
@@ -428,16 +452,40 @@ CREATE TABLE example_table (
       'path_2' : STRING,
       properties(
           'variant_max_subcolumns_count' = '2048',
-          'variant_enable_typed_paths_to_sparse' = 'true'
+          'variant_enable_typed_paths_to_sparse' = 'true',
+          'variant_sparse_hash_shard_count' = '64'
       )
   >
 );
 ```
 
 <table>
-<tr><td>属性<br/></td><td>描述<br/></td></tr>
+<tr><td>稀疏列属性<br/></td><td>描述<br/></td></tr>
 <tr><td>`variant_max_subcolumns_count`<br/></td><td>控制 Path 物化列数的上限；超过后新增路径可能存放于共享数据结构。默认 0 表示不限，建议设置为 2048；不推荐超过 10000。<br/></td></tr>
 <tr><td>`variant_enable_typed_paths_to_sparse`<br/></td><td>默认指定了 Path 类型后，该 Path 一定会被提取（不计入 `variant_max_subcolumns_count`）。设置为 `true` 后也会计入阈值，可能被收敛到共享结构。<br/></td></tr>
+<tr><td>`variant_sparse_hash_shard_count`<br/></td><td>控制稀疏列的分片数量。将稀疏子列分散存储到多个稀疏列中，以以提升查询性能。默认值为 1，建议根据稀疏子列数量适当调整。<br/></td></tr>
+</table>
+
+```sql
+CREATE TABLE example_table (
+  id INT,
+  data_variant VARIANT<
+      'path_1' : INT,
+      'path_2' : STRING,
+      properties(
+          'variant_enable_doc_mode' = 'true',
+          'variant_doc_materialization_min_rows' = '10000',
+          'variant_doc_hash_shard_count' = '64'
+      )
+  >
+);
+```
+
+<table>
+<tr><td>DOC 编码属性<br/></td><td>描述<br/></td></tr>
+<tr><td>`variant_enable_doc_mode`<br/></td><td>是否启用 DOC 编码模式。设置为 `true` 时，原始 JSON 会作为存储字段保存，用于快速返回整个 JSON 文档。启用后将无法使用稀疏列机制。默认值为 `false`。<br/></td></tr>
+<tr><td>`variant_doc_materialization_min_rows`<br/></td><td>DOC 编码模式下触发子列物化的最小行数阈值。当写入行数低于该值时，仅存储原始 JSON；当文件合并后行数达到该阈值时，才将子列物化为独立子列。用于减少小批量写入时的开销。<br/></td></tr>
+<tr><td>`variant_doc_hash_shard_count`<br/></td><td>控制 DOC 编码的分片数量。原始 JSON 会被拆散存储到指定数量的列中，查询整个 JSON 时再组装这些分片。默认值为 64，可根据 JSON 大小和并发需求调整。<br/></td></tr>
 </table>
 
 达到上限后的行为与调优建议：

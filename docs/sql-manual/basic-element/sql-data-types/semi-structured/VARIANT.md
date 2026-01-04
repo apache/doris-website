@@ -391,10 +391,34 @@ SELECT * FROM tbl WHERE v['str'] MATCH 'Doris';
 | `VARCHAR`       | ✔        | ✔         |
 | `JSON`          | ✔        | ✔         |
 
+## Wide columns
+
+When ingested JSON contains many distinct keys, VARIANT materialized subcolumns can grow rapidly and may lead to performance degradation. To address “too many subcolumns”, VARIANT provides two mechanisms:
+
+1. **Sparse columns**: subcolumns are ranked by sparsity; less-sparse (more frequently present) paths are materialized as independent subcolumns, while remaining sparse paths are stored together in a shared sparse structure. For example, set the max subcolumns to 2048; if you ingest 10,000 rows with 5,000 distinct keys, the top 2048 most frequently present keys are materialized, and the remaining 2,952 keys are stored in sparse columns.
+   - Sparse columns support sharding (e.g. shard count = 10). In the above example, the storage will contain 10 sparse columns, each holding ~295 subpaths on average.
+2. **DOC encoding**: materialize all subcolumns, and additionally keep the original JSON as a “stored field” so queries can quickly return the entire JSON document (similar to stored fields in Elasticsearch). DOC encoding also uses sharding (e.g. shard count = 10): the original JSON is split into 10 columns for storage and reassembled when querying the whole JSON.
+
+These two mechanisms are mutually exclusive: enabling sparse columns disables DOC encoding, and vice versa.
+
+Tuning suggestions for sparse columns:
+
+1. Suitable when JSON has many keys but queries focus on a subset of high-frequency fields. High-frequency fields stay as independent subcolumns (best performance), while low-frequency fields remain queryable from sparse columns.
+2. Use `variant_max_subcolumns_count` to cap the number of independent subcolumns. Recommend 2048 to avoid metadata bloat and write slowdown caused by too many columns.
+3. When key distribution is highly skewed (few keys appear frequently, many keys appear rarely), sparse columns balance storage efficiency and query performance well.
+4. Use sharding count to improve sparse read performance by distributing sparse paths across multiple sparse columns.
+
+Tuning suggestions for DOC encoding:
+
+1. Suitable when the total number of distinct keys is large but each row contains only a small subset of keys. Example: 10,000 rows contain 10,000 distinct keys, but each row has only ~100 keys.
+2. If your workload often needs `SELECT *` on VARIANT, DOC encoding can avoid the overhead of assembling JSON from a large number of subcolumns.
+3. DOC encoding stores an extra copy of the original JSON, increasing storage size; balance storage cost vs query convenience.
+4. You can reduce write overhead via configuration: for small writes, only persist the original JSON; materialize subcolumns later when compaction merges files to reach a row threshold.
+
+See the “Configuration” section below for details.
+
 ## Limitations
 
-- `variant_max_subcolumns_count`: default 0 (no limit). In production, set to 2048 (tablet level) to control the number of materialized paths. Above the threshold, low-frequency/sparse paths are moved to a shared data structure; reading from it may be slower (see “Configuration”).
-- If a path type is specified via Schema Template, that path will be forced to be materialized; when `variant_enable_typed_paths_to_sparse = true`, it also counts toward the threshold and may be moved to the shared structure.
 - JSON key length ≤ 255.
 - Cannot be a primary key or sort key.
 - Cannot be nested within other types (e.g., `Array<Variant>`, `Struct<Variant>`).
@@ -428,7 +452,8 @@ CREATE TABLE example_table (
       'path_2' : STRING,
       properties(
           'variant_max_subcolumns_count' = '2048',
-          'variant_enable_typed_paths_to_sparse' = 'true'
+          'variant_enable_typed_paths_to_sparse' = 'true',
+          'variant_sparse_hash_shard_count' = '64'
       )
   >
 );
@@ -438,6 +463,29 @@ CREATE TABLE example_table (
 <tr><td>Property<br/></td><td>Description<br/></td></tr>
 <tr><td>`variant_max_subcolumns_count`<br/></td><td>Max number of materialized paths. Above the threshold, new paths may be stored in a shared data structure. Default 0 (unlimited). Recommended 2048; do not exceed 10000.<br/></td></tr>
 <tr><td>`variant_enable_typed_paths_to_sparse`<br/></td><td>By default, typed paths are always materialized (and do not count against `variant_max_subcolumns_count`). When set to `true`, typed paths also count toward the threshold and may be moved to the shared structure.<br/></td></tr>
+<tr><td>`variant_sparse_hash_shard_count`<br/></td><td>Shard count for sparse columns. Distributes sparse subpaths across multiple sparse columns to improve read performance. Default 1; tune based on the number of sparse subpaths.<br/></td></tr>
+</table>
+
+```sql
+CREATE TABLE example_table (
+  id INT,
+  data_variant VARIANT<
+      'path_1' : INT,
+      'path_2' : STRING,
+      properties(
+          'variant_enable_doc_mode' = 'true',
+          'variant_doc_materialization_min_rows' = '10000',
+           'variant_doc_hash_shard_count' = '64'
+      )
+  >
+);
+```
+
+<table>
+<tr><td>Property<br/></td><td>Description<br/></td></tr>
+<tr><td>`variant_enable_doc_mode`<br/></td><td>Enable DOC encoding mode. When `true`, the original JSON is stored as a stored field to quickly return the whole JSON document. DOC mode is mutually exclusive with sparse columns. Default `false`.<br/></td></tr>
+<tr><td>`variant_doc_materialization_min_rows`<br/></td><td>Minimum row threshold to materialize subcolumns in DOC mode. When rows are below this value, only the original JSON is stored; after compaction merges files to reach the threshold, subcolumns are materialized. Helps reduce overhead for small-batch writes.<br/></td></tr>
+<tr><td>`variant_doc_hash_shard_count`<br/></td><td>Shard count for DOC encoding. The original JSON is split into the specified number of columns for storage and reassembled when querying the whole JSON. Default 64; tune based on JSON size and concurrency.<br/></td></tr>
 </table>
 
 Behavior at limits and tuning suggestions:
