@@ -24,7 +24,6 @@ import { CheckedIcon } from '@site/src/components/Icons/checked-icon';
 const BINARY_VERSION = [
     { label: `${VersionEnum.Latest} ( Latest )`, value: VersionEnum.Latest },
     { label: `${VersionEnum.Prev}`, value: VersionEnum.Prev },
-    { label: `${VersionEnum.Earlier} ( Stable )`, value: VersionEnum.Earlier },
 ];
 
 function downloadFile(url: string) {
@@ -47,7 +46,7 @@ const CPU = [
 ];
 
 export default function Download() {
-    const [version, setVersion] = useState<string>(VersionEnum.Prev);
+    const [version, setVersion] = useState<string>(VersionEnum.Latest);
     const [currentVersionInfo, setCurrentVersionInfo] = useState(() => {
         return DORIS_VERSIONS.find(doris_version => doris_version.value === version);
     });
