@@ -118,7 +118,7 @@ To avoid this issue:
 
 1. **Tag cold (HDD) backends with a distinct location**
     
-    For example:
+For example:
     
 ```sql
 ALTER SYSTEM MODIFY BACKEND "cold_node1:9050" SET ("tag.location" = "archive");
@@ -126,10 +126,10 @@ ALTER SYSTEM MODIFY BACKEND "cold_node1:9050" SET ("tag.location" = "archive");
     
 2. **Explicitly target the tagged backends when modifying the partition**
     
-    Specify both the desired storage medium and the replication allocation:
+Specify both the desired storage medium and the replication allocation:
     
 ```sql
-MODIFY PARTITION (partition_name) SET (   "storage_medium" = "HDD",   "replication_allocation" = "tag.location.archive:1" );
+MODIFY PARTITION (partition_name) SET ("storage_medium" = "HDD", "replication_allocation" = "tag.location.archive:1");
 ```
     
 
