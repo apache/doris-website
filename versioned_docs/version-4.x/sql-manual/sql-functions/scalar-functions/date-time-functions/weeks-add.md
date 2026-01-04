@@ -8,7 +8,7 @@
 
 ## Description 
 
-The WEEKS_ADD function is used to add (or subtract) a specified number of weeks to a given date or time value, equivalent to adding/subtracting seven days to the original date, returning the adjusted date or time.
+The WEEKS_ADD function is used to add (or subtract) a specified number of weeks to a given date or time value, equivalent to adding/subtracting seven days to the original date, returning the adjusted date or time. This function supports DATE, DATETIME and TIMESTAMPTZ input types.
 
 This function behaves consistently with the [weeks_add function](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_weeks-add) using WEEK as the unit in MySQL.
 
@@ -20,15 +20,18 @@ WEEKS_ADD(`<datetime_or_date_expr>`, `<weeks_value>`)
 ## Parameters
 | Parameter | Description |
 |-----------|-------------|
-| `<datetime_or_date_expr>` | Input datetime value, supports date/datetime types. For datetime and date formats, please refer to [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
+| `<datetime_or_date_expr>` | Input datetime value, supports date/datetime/timestamptz types. For specific formats, please refer to [timestamptz conversion](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion), [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
 | `<weeks_value>` | INT type integer, representing the number of weeks to add or subtract (positive for addition, negative for subtraction) |
 
 ## Return Value
 
-Returns the datetime with the specified number of weeks added.
+Returns the datetime with the specified number of weeks added, the return value type is determined by the type of the first parameter:
 
-- If input is DATE type, return value remains DATE type (only adjusts year, month, day).
-- If input is DATETIME type, return value remains DATETIME type (year, month, day adjusted, hours, minutes, seconds remain unchanged).
+- If input is DATE type, return value is DATE type (only adjusts year, month, day).
+- If input is DATETIME type, return value is DATETIME type (year, month, day adjusted, hours, minutes, seconds remain unchanged).
+- If input is TIMESTAMPTZ type, return value is TIMESTAMPTZ type (includes date, time and timezone offset).
+
+Special cases:
 - `<weeks_value>` as negative number indicates subtracting weeks.
 - Any input parameter is NULL, returns NULL
 - If calculation result exceeds valid date type range (0000-01-01 00:00:00 to 9999-12-31 23:59:59), returns error
@@ -74,6 +77,14 @@ SELECT WEEKS_ADD(NULL, 5) AS null_input;
 +------------+
 | NULL       |
 +------------+
+
+-- Example of TimeStampTz type, SET time_zone = '+08:00'
+SELECT WEEKS_ADD('2025-10-10 11:22:33.123+07:00', 1);
++-----------------------------------------------+
+| WEEKS_ADD('2025-10-10 11:22:33.123+07:00', 1) |
++-----------------------------------------------+
+| 2025-10-17 12:22:33.123+08:00                 |
++-----------------------------------------------+
 ```
 
 
