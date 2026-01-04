@@ -78,8 +78,6 @@ SET enable_unique_key_partial_update=true;
 INSERT INTO order_tbl (order_id, order_status) VALUES (1, 'Pending Shipment');
 ```
 
-Note that the session variable `enable_insert_strict` defaults to true, enabling strict mode by default. In strict mode, partial column updates do not allow updating non-existent keys. To insert non-existent keys using the insert statement for partial column updates, set `enable_unique_key_partial_update` to true and `enable_insert_strict` to false.
-
 #### Flink Connector
 
 If using Flink Connector, add the following configuration:

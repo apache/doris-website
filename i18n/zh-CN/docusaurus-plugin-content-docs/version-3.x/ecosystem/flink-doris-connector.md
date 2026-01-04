@@ -902,7 +902,7 @@ Flink Doris Connector 中集成了[Flink CDC](https://nightlies.apache.org/flink
 | --multi-to-one-target   | 与 multi-to-one-origin 搭配使用，目标表的配置，比如：--multi-to-one-target "a\|b" |
 | --create-table-only     | 是否只仅仅同步表的结构                                       |
 
-### 类型映射
+### Doris 到 Flink 的数据类型映射
 
 | Doris Type | Flink Type |
 | ---------- | ---------- |
@@ -928,6 +928,27 @@ Flink Doris Connector 中集成了[Flink CDC](https://nightlies.apache.org/flink
 | VARIANT    | STRING     |
 | IPV4       | STRING     |
 | IPV6       | STRING     |
+
+### Flink 到 Doris 的数据类型映射
+| Flink Type    | Doris Type     |
+| ------------- | -------------- |
+| BOOLEAN       | BOOLEAN        |
+| TINYINT       | TINYINT        |
+| SMALLINT      | SMALLINT       |
+| INTEGER       | INTEGER        |
+| BIGINT        | BIGINT         |
+| FLOAT         | FLOAT          |
+| DOUBLE        | DOUBLE         |
+| DECIMAL       | DECIMAL        |
+| CHAR          | CHAR           |
+| VARCHAR       | VARCHAR/STRING |
+| STRING        | STRING         |
+| DATE          | DATE           |
+| TIMESTAMP     | DATETIME       |
+| TIMESTAMP_LTZ | DATETIME       |
+| ARRAY         | ARRAY          |
+| MAP           | MAP/JSON       |
+| ROW           | STRUCT/JSON    |
 
 ### 监控指标
 

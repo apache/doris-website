@@ -21,7 +21,7 @@ Doris Operator 提供了 `Debug` 的运行模式，下面描述了当服务进�
 1. **通过以下命令给运行有问题的 pod 进行添加 annnotation**
 
   ```shell
-  kubectl annotate pod ${pod_name} --namespace ${namespace} apache.com.doris/runmode=debug
+  kubectl annotate pod ${pod_name} --namespace ${namespace} apache.org.doris/runmode=debug
   ```
 
   当服务进行下一次重启时候，服务会检测到标识 `Debug` 模式启动的 annotation 就会进入 `Debug` 模式启动，pod 状态为 `running`。
