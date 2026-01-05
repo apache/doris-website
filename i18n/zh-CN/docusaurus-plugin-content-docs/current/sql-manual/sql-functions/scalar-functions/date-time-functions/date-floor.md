@@ -30,17 +30,19 @@ $type$ 代表的是周期单位
 
 | 参数 | 说明 |
 | -- | -- |
-| `date_or_time_expr` | 参数是合法的日期表达式，类型为 为 datetime 或者 date 类型,具体 datetime 和 date 格式请查看 [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion)) |
+| `date_or_time_expr` | 参数是合法的日期表达式，支持输入 date/datetime/timestamptz 类型，具体格式请查看 [timestamptz的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion), [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
 | `period` | 参数是指定每个周期有多少个单位组成,为 `INT` 类型，开始的时间起点为 0001-01-01T00:00:00 |
 | `type` | 参数可以是：YEAR, MONTH, WEEK,DAY, HOUR, MINUTE, SECOND |
 
 ## 返回值
 
-返回一个日期按照 period 周期向下取整的结果，类型和 datetime 保持一致
+返回类型为 TIMESTAMPTZ, DATETIME 或 DATE。返回一个日期按照 period 周期向下取整的结果，类型和 `<date_or_time_expr>` 保持一致。
 
 返回与 datetime 类型一致的取整结果：
+- 若输入为 TIMESTAMPTZ 类型，则会先将其转换为 local_time(如：`2025-12-31 23:59:59+05:00` 在会话变量为`+08:00`的情况下代表的local_time为`2026-01-01 02:59:59`),再进行 DATE_FLOOR 计算操作。
 - 输入 DATE 类型时，返回 DATE（仅日期部分）；
 - 输入 DATETIME 类型时，返回 DATETIME（包含日期和时间）。
+- 输出 TIMESTAMPTZ 类型，返回 TIMESTAMPTZ（包含日期、时间和偏移量）。
 - 输入带有 scale 的日期时间，返回值也会带有 scale， 小数部分为 0 。
 
 特殊情况：
@@ -81,6 +83,18 @@ mysql> select date_floor("2023-07-13", INTERVAL 5 YEAR);
 +-------------------------------------------+
 | 2021-01-01 00:00:00                       |
 +-------------------------------------------+
+
+-- TimeStampTz类型样例, SET time_zone = '+08:00'
+-- 将变量值转换为 local_time(2026-01-01 02:59:59)后再做 DATE_FLOOR 操作
+SELECT DATE_FLOOR('2025-12-31 23:59:59+05:00', INTERVAL 1 YEAR);
++----------------------------------------------------------+
+| DATE_FLOOR('2025-12-31 23:59:59+05:00', INTERVAL 1 YEAR) |
++----------------------------------------------------------+
+| 2026-01-01 00:00:00+08:00                                |
++----------------------------------------------------------+
+
+-- 若参数同时包含 TimeStampTz 和 Datetime 类型，则输出 DateTime 类型
+SELECT DATE_FLOOR('2025-12-31 23:59:59+05:00', INTERVAL 1 HOUR, '2025-12-15 00:00:00.123') AS result;
 
 -- period 为负数，无效返回错误
 mysql> select date_floor("2023-07-13 22:28:18", INTERVAL -5 MINUTE);

@@ -33,17 +33,18 @@ DAY_CEIL(<date_or_time_expr>, <period>, <origin>)
 
 | 参数 | 说明 |
 | -- | -- |
-| `<date_or_time_expr>` | 参数是合法的日期表达式，支持输入 date/datetime 类型，具体 datetime 和 date 格式请查看 [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
+| `<date_or_time_expr>` | 参数是合法的日期表达式，支持输入 date/datetime/timestamptz 类型，具体格式请查看 [timestamptz的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion), [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
 | `<period>` | 参数是指定每个周期包含的天数，类型为 INT。若未指定，默认周期为 1 天。 |
 | `<origin>` | 参数是周期计算的起始基准时间，支持 date/datetime 类型|
 
 ## 返回值
 
-返回的是一个日期或时间值，表示将输入值向上舍入到指定天数周期的结果。
+返回类型为 TIMESTAMPTZ, DATETIME 或 DATE。返回的是一个日期或时间值，表示将输入值向上舍入到指定天数周期的结果。
 
 若输入有效，返回与 datetime 类型一致的取整结果：
-
-`<date_or_time_expr>` 与 `<origin>` 输入都 DATE 类型时，返回 DATE 类型, 否则返回 DATETIME 类型.
+- 若输入为 TIMESTAMPTZ 类型，则会先将其转换为 local_time(如：`2025-12-31 23:59:59+05:00` 在会话变量为`+08:00`的情况下代表的local_time为`2026-01-01 02:59:59`),再进行 DAY_CEIL 计算操作。
+- 若输入的时间值(`<date_or_time_expr>` 和`<period>`)同时包含 TIMESTAMPTZ 和 DATETIME 类型，则输出 DATETIME 类型。
+- `<date_or_time_expr>` 与 `<origin>` 输入都 DATE 类型时，返回 DATE 类型, 否则返回 DATETIME 类型.
 
 特殊情况：
 
@@ -127,6 +128,23 @@ select day_ceil('2023-07-13 19:30:00.123', 4, '2028-07-14 08:00:00');
 +---------------------------------------------------------------+
 | 2023-07-17 08:00:00.000                                       |
 +---------------------------------------------------------------+
+
+-- TimeStampTz类型样例, SET time_zone = '+08:00'
+-- 将变量值转换为 local_time(2026-01-01 02:59:59)后再做 DAY_CEIL 操作
+SELECT DAY_CEIL('2025-12-31 23:59:59+05:00');
++---------------------------------------+
+| DAY_CEIL('2025-12-31 23:59:59+05:00') |
++---------------------------------------+
+| 2026-01-02 00:00:00+08:00             |
++---------------------------------------+
+
+-- 若参数同时包含 TimeStampTz 和 Datetime 类型，则输出 DateTime 类型
+SELECT DAY_CEIL('2025-12-31 23:59:59+05:00', '2025-12-15 00:00:00.123');
++------------------------------------------------------------------+
+| DAY_CEIL('2025-12-31 23:59:59+05:00', '2025-12-15 00:00:00.123') |
++------------------------------------------------------------------+
+| 2026-01-02 00:00:00.123                                          |
++------------------------------------------------------------------+
 
 -- 周期为负数
 mysql> select day_ceil("2023-07-13 22:28:18", -2);
