@@ -103,6 +103,7 @@ You should have 7 partitions, 5 of which use SSD as the storage medium, while th
 You can manually move an individual partition between storage tiers by updating its `storage_medium` property. For example, to move a partition to HDD storage:
 
 ```sql
+ALTER TABLE parent_table
 MODIFY PARTITION (partition_name) SET ("storage_medium" = "HDD");
 ```
 
@@ -129,6 +130,7 @@ ALTER SYSTEM MODIFY BACKEND "cold_node1:9050" SET ("tag.location" = "archive");
 Specify both the desired storage medium and the replication allocation:
     
 ```sql
+ALTER TABLE parent_table
 MODIFY PARTITION (partition_name) SET ("storage_medium" = "HDD", "replication_allocation" = "tag.location.archive:1");
 ```
     
