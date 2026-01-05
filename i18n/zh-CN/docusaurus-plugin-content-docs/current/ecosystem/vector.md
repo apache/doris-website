@@ -15,9 +15,16 @@ Vector 是一个高性能的可观测性数据管道，采用 Rust 语言开发�
 
 ### 下载安装包
 ```shell
-wget https://zyk-bj-1316291683.cos.accelerate.myqcloud.com/vector-0.49.0.custom.9eb55ef09-x86_64-unknown-linux-gnu.tar.gz
+wget https://apache-doris-releases.oss-cn-beijing.aliyuncs.com/extension/vector-x86_64-unknown-linux-gnu.tar.gz
 ```
 
+### 从源码编译
+```shell
+cd ${Vector_HOME}
+
+## 可根据部署环境自行选择，Makefile 中提供了多种选项
+make package-x86_64-unknown-linux-gnu
+```
 
 
 ## 配置参数
@@ -50,7 +57,7 @@ Doris Sink 支持丰富的配置选项，以满足不同场景下的数据写入
 | `request.concurrency` | string/integer | `"adaptive"` | 控制并发策略，支持 `"adaptive"`、`"none"`（串行）或正整数并发上限 |
 | `request.timeout_secs` | integer | `60` | 单次 Stream Load 请求的超时（秒） |
 | `request.rate_limit_duration_secs` | integer | `1` | 速率限制时间窗（秒） |
-| `request.rate_limit_num` | integer | `9_223_372_036_854_775_807` | 每个时间窗内允许的请求数，默认近似无限制 |
+| `request.rate_limit_num` | integer | `i64::MAX` | 每个时间窗内允许的请求数，默认近似无限制 |
 | `request.retry_attempts` | integer | `usize::MAX` | Tower 中间件的最大重试次数，缺省表示无限重试 |
 | `request.retry_initial_backoff_secs` | integer | `1` | 第一次重试前的等待时间（秒），后续按 Fibonacci 退避 |
 | `request.retry_max_duration_secs` | integer | `30` | 单次重试退避的最大等待时长（秒） |
@@ -79,7 +86,8 @@ Doris Sink 使用 `encoding` 区块控制事件序列化行为，默认发出 ND
 
 #### Stream Load 头部（`headers`）
 
-`headers` 是一个键值对映射，直接透传为 Doris Stream Load 的 HTTP 头。常见设置如下（所有值均需为字符串）：
+`headers` 是一个键值对映射，直接透传为 Doris Stream Load 的 HTTP 头，你可以使用 stream load 中 header 可传入的所有参数。
+常见设置如下（所有值均需为字符串）：
 
 | 参数名称 | 类型 | 默认值 | 说明 |
 |--------|------|------|-----|
@@ -100,16 +108,16 @@ Doris Sink 使用 `encoding` 区块控制事件序列化行为，默认发出 ND
 
 ### 可靠性与安全配置
 
-| 参数名称 | 类型 | 默认值 | 说明 |
-|--------|------|------|-----|
-| `max_retries` | integer | `-1` | Sink 级别的最大重试次数，`-1` 表示无限制 |
-| `log_request` | boolean | `false` | 是否打印每次 Stream Load 请求与响应（生产环境建议按需开启） |
-| `compression` | string/object | `"none"` | HTTP 请求体压缩算法，支持 `none`、`gzip`、`zlib`、`zstd`、`snappy`，可通过对象形式指定压缩级别 |
-| `distribution.retry_initial_backoff_secs` | integer | `1` | 端点健康检查恢复的初始回退时间（秒） |
-| `distribution.retry_max_duration_secs` | integer | `3600` | 健康检查最大回退时长（秒） |
-| `tls.verify_certificate` | boolean | `true` | 启用/禁用上游证书校验 |
-| `tls.verify_hostname` | boolean | `true` | 启用/禁用主机名校验 |
-| `tls.ca_file` / `tls.crt_file` / `tls.key_file` / `tls.key_pass` / `tls.alpn_protocols` / `tls.server_name` | 各类 | - | 标准 Vector TLS 客户端配置项，用于自定义 CA、双向认证或 SNI |
+| 参数名称 | 类型      | 默认值     | 说明                                         |
+|--------|---------|---------|--------------------------------------------|
+| `max_retries` | integer | `-1`    | Sink 级别的最大重试次数，`-1` 表示无限制                  |
+| `log_request` | boolean | `false` | 是否打印每次 Stream Load 请求与响应（生产环境建议按需开启）       |
+| `compression` | -       | `未支持`   | -                                          |
+| `distribution.retry_initial_backoff_secs` | integer | `1`     | 端点健康检查恢复的初始回退时间（秒）                         |
+| `distribution.retry_max_duration_secs` | integer | `3600`  | 健康检查最大回退时长（秒）                              |
+| `tls.verify_certificate` | boolean | `true`  | 启用/禁用上游证书校验                                |
+| `tls.verify_hostname` | boolean | `true`  | 启用/禁用主机名校验                                 |
+| `tls.ca_file` / `tls.crt_file` / `tls.key_file` / `tls.key_pass` / `tls.alpn_protocols` / `tls.server_name` | 各类      | -       | 标准 Vector TLS 客户端配置项，用于自定义 CA、双向认证或 SNI    |
 | `acknowledgements.enabled` | boolean | `false` | 启用端到端确认，用于与支持 acknowledgements 的 Source 组合 |
 ## 使用示例
 
@@ -186,7 +194,7 @@ PROPERTIES (
   multiline.start_pattern = "^\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2},\\d{3}"
   multiline.mode = "halt_before"
   multiline.condition_pattern = "^\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2},\\d{3}"
-  multiline.timeout_ms = 1000
+  multiline.timeout_ms = 10000
 
 # ==================== Transforms ====================
 # 使用 grok 解析日志内容
@@ -229,7 +237,7 @@ PROPERTIES (
 [sinks.doris]
   inputs = ["parse_log"]
   type = "doris"
-  endpoints = ["http://localhost:8030"]
+  endpoints = ["http://fe_ip:http_port"]
   database = "log_db"
   table = "doris_log"
   label_prefix = "vector_fe_log"
@@ -343,33 +351,19 @@ wget https://data.gharchive.org/2024-01-01-15.json.gz
 CREATE DATABASE log_db;
 USE log_db;
 
-
 CREATE TABLE github_events
 (
   `created_at` DATETIME,
   `id` BIGINT,
   `type` TEXT,
   `public` BOOLEAN,
-  `actor.id` BIGINT,
-  `actor.login` TEXT,
-  `actor.display_login` TEXT,
-  `actor.gravatar_id` TEXT,
-  `actor.url` TEXT,
-  `actor.avatar_url` TEXT,
-  `repo.id` BIGINT,
-  `repo.name` TEXT,
-  `repo.url` TEXT,
+  `actor` VARIANT,
+  `repo` VARIANT,
   `payload` TEXT,
-  `host` TEXT,
-  `path` TEXT,
   INDEX `idx_id` (`id`) USING INVERTED,
   INDEX `idx_type` (`type`) USING INVERTED,
-  INDEX `idx_actor.id` (`actor.id`) USING INVERTED,
-  INDEX `idx_actor.login` (`actor.login`) USING INVERTED,
-  INDEX `idx_repo.id` (`repo.id`) USING INVERTED,
-  INDEX `idx_repo.name` (`repo.name`) USING INVERTED,
-  INDEX `idx_host` (`host`) USING INVERTED,
-  INDEX `idx_path` (`path`) USING INVERTED,
+  INDEX `idx_actor` (`actor`) USING INVERTED,
+  INDEX `idx_host` (`repo`) USING INVERTED,
   INDEX `idx_payload` (`payload`) USING INVERTED PROPERTIES("parser" = "unicode", "support_phrase" = "true")
 )
 ENGINE = OLAP
@@ -378,6 +372,7 @@ PARTITION BY RANGE(`created_at`) ()
 DISTRIBUTED BY RANDOM BUCKETS 10
 PROPERTIES (
 "replication_num" = "1",
+"inverted_index_storage_format"= "v2",
 "compaction_policy" = "time_series",
 "enable_single_replica_compaction" = "true",
 "dynamic_partition.enable" = "true",
@@ -394,99 +389,74 @@ PROPERTIES (
 **3. Vector 配置**
 
 ```toml
-# Sources
+# ==================== Sources ====================
 [sources.github_events_reload]
-  type = "file"
-  include = ["/path/2024-01-01-15.json"]
-  read_from = "beginning"
-  ignore_checkpoints = true
-  max_line_bytes = 10485760
-  ignore_older_secs = 0
-  line_delimiter = "\n"
-  fingerprint.strategy = "device_and_inode"
+type = "file"
+include = ["/path/2024-01-01-15.json"]
+read_from = "beginning"
+ignore_checkpoints = true
+max_line_bytes = 10485760
+ignore_older_secs = 0
+line_delimiter = "\n"
+fingerprint.strategy = "device_and_inode"
 
-# Transforms
-# 解析 JSON 格式的 GitHub Events 数据
+# ==================== Transforms ====================
+# 解析 JSON 格式的 GitHub Events 数据，VARIANT 类型可直接存储嵌套对象
 [transforms.parse_json]
-  inputs = ["github_events_reload"]
-  type = "remap"
-  source = '''
+inputs = ["github_events_reload"]
+type = "remap"
+source = '''
     # 解析 JSON 数据（每行是一个完整的 JSON 对象）
     . = parse_json!(.message)
-  '''
-
-# 映射字段到 Doris 表结构
-[transforms.map_fields]
-  inputs = ["parse_json"]
-  type = "remap"
-  source = '''
-    # 映射顶层字段
-    .created_at = .created_at
-    .id = .id
-    .type = .type
-    .public = .public
     
-    # 映射嵌套的 actor 字段（使用点表示法）
-    ."actor.id" = .actor.id
-    ."actor.login" = .actor.login
-    ."actor.display_login" = .actor.display_login
-    ."actor.gravatar_id" = .actor.gravatar_id
-    ."actor.url" = .actor.url
-    ."actor.avatar_url" = .actor.avatar_url
-    
-    # 映射嵌套的 repo 字段
-    ."repo.id" = .repo.id
-    ."repo.name" = .repo.name
-    ."repo.url" = .repo.url
-    
-    # 映射 payload（转为 JSON 字符串）
+    # payload 字段转为 JSON 字符串（TEXT 类型）
     .payload = encode_json(.payload)
     
-    # 映射 host 和 path 字段
-    .host = .host
-    .path = .file
-    
-    # 删除原始嵌套对象，只保留映射后的扁平字段
-    del(.actor)
-    del(.repo)
+    # 只保留表中需要的字段
+    . = {
+      "created_at": .created_at,
+      "id": .id,
+      "type": .type,
+      "public": .public,
+      "actor": .actor,
+      "repo": .repo,
+      "payload": .payload
+    }
   '''
 
 # ==================== Sinks ====================
 [sinks.doris]
-  inputs = ["map_fields"]
-  type = "doris"
-  endpoints = ["http://localhost:8030"]
-  database = "log_db"
-  table = "github_events"
-  label_prefix = "vector_github_events"
-  log_request = true
+inputs = ["parse_json"]
+type = "doris"
+endpoints = ["http://fe_ip:http_port"]
+database = "log_db"
+table = "github_events"
+label_prefix = "vector_github_events"
+log_request = true
 
 [sinks.doris.auth]
-  user = "root"
-  password = ""
-  strategy = "basic"
+user = "root"
+password = ""
+strategy = "basic"
 
 [sinks.doris.encoding]
-  codec = "json"
+codec = "json"
 
 [sinks.doris.framing]
-  method = "newline_delimited"
+method = "newline_delimited"
 
 [sinks.doris.request]
-  concurrency = 10
+concurrency = 10
 
 [sinks.doris.headers]
-  format = "json"
-  read_json_by_line = "true"
-  load_to_single_tablet = "true"
+format = "json"
+read_json_by_line = "true"
+load_to_single_tablet = "true"
 
 [sinks.doris.batch]
-  max_events = 10000
-  timeout_secs = 3
-  max_bytes = 100000000
-
-
-
+max_events = 10000
+timeout_secs = 3
+max_bytes = 100000000
 ```
 
 #### 启动 Vector
