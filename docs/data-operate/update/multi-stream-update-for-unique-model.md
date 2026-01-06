@@ -257,3 +257,5 @@ MySQL > select * from upsert_test;
 7. Creating RollUp is not currently supported 
 
 8. If the sequence_mapping attribute is not included when creating a new table, it will not be supported to open it later 
+
+9. Fields that are not included will be automatically filled with default values or null during load data. When comparing values for the sequence columns, null values will be treated as the smallest value. 
