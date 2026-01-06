@@ -935,15 +935,16 @@ This is an experimental feature, supported since version 4.1.0.
                 'type' = 'iceberg',
                 'iceberg.catalog.type' = 'jdbc',
                 'iceberg.jdbc.uri' = 'jdbc:postgresql://127.0.0.1:5432/iceberg_db',
-                'iceberg.jdbc.user' = 'iceberg',
+                'iceberg.jdbc.user' = 'iceberg_user',
                 'iceberg.jdbc.password' = 'password',
                 'iceberg.jdbc.init-catalog-tables' = 'true',
                 'iceberg.jdbc.schema-version' = 'V1',
-                'iceberg.jdbc.strict-mode' = 'false',
+                'iceberg.jdbc.driver_class' = 'org.postgresql.Driver',
+                'iceberg.jdbc.driver_url' = '<jdbc_driver_jar>'
                 'warehouse' = 's3://bucket/warehouse',
                 's3.access_key' = '<ak>',
                 's3.secret_key' = '<sk>',
-                's3.endpoint' = 'http://s3.amazonaws.com',
+                's3.endpoint' = 'https://s3.us-east-1.amazonaws.com',
                 's3.region' = 'us-east-1'
             );
             ```
@@ -955,34 +956,36 @@ This is an experimental feature, supported since version 4.1.0.
                 'type' = 'iceberg',
                 'iceberg.catalog.type' = 'jdbc',
                 'iceberg.jdbc.uri' = 'jdbc:mysql://127.0.0.1:3306/iceberg_db',
-                'iceberg.jdbc.user' = 'root',
+                'iceberg.jdbc.user' = 'iceberg_user',
                 'iceberg.jdbc.password' = 'password',
                 'iceberg.jdbc.init-catalog-tables' = 'true',
                 'iceberg.jdbc.schema-version' = 'V1',
-                'iceberg.jdbc.strict-mode' = 'false',
+                'iceberg.jdbc.driver_class' = 'com.mysql.cj.jdbc.Driver',
+                'iceberg.jdbc.driver_url' = '<jdbc_driver_jar>'
                 'warehouse' = 's3://bucket/warehouse',
                 's3.access_key' = '<ak>',
                 's3.secret_key' = '<sk>',
-                's3.endpoint' = 'http://s3.amazonaws.com',
+                's3.endpoint' = 'https://s3.us-east-1.amazonaws.com',
                 's3.region' = 'us-east-1'
             );
             ```
         </TabItem>
-        <TabItem value='HDFS' label='HDFS'>
-            Using PostgreSQL as metadata storage with HDFS
+        <TabItem value='SQLite' label='SQLite'>
+            Using SQLite as metadata storage (suitable for testing environments)
             ```sql
-            CREATE CATALOG iceberg_jdbc_hdfs PROPERTIES (
+            CREATE CATALOG iceberg_jdbc_sqlite PROPERTIES (
                 'type' = 'iceberg',
                 'iceberg.catalog.type' = 'jdbc',
-                'iceberg.jdbc.uri' = 'jdbc:postgresql://127.0.0.1:5432/iceberg_db',
-                'iceberg.jdbc.user' = 'iceberg',
-                'iceberg.jdbc.password' = 'password',
+                'iceberg.jdbc.uri' = 'jdbc:sqlite:/tmp/iceberg_catalog.db',
                 'iceberg.jdbc.init-catalog-tables' = 'true',
                 'iceberg.jdbc.schema-version' = 'V1',
-                'iceberg.jdbc.strict-mode' = 'false',
-                'warehouse' = 'hdfs://namenode:8020/user/iceberg/warehouse',
-                'fs.defaultFS' = 'hdfs://namenode:8020',
-                'hadoop.username' = 'hadoop'
+                'iceberg.jdbc.driver_class' = 'org.sqlite.JDBC',
+                'iceberg.jdbc.driver_url' = '<jdbc_driver_jar>'
+                'warehouse' = 's3://bucket/warehouse',
+                's3.access_key' = '<ak>',
+                's3.secret_key' = '<sk>',
+                's3.endpoint' = 'https://s3.us-east-1.amazonaws.com',
+                's3.region' = 'us-east-1'
             );
             ```
         </TabItem>
