@@ -1,7 +1,8 @@
 ---
 {
     "title": "Checksum",
-    "language": "en"
+    "language": "en",
+    "description": "Checksum"
 }
 ---
 

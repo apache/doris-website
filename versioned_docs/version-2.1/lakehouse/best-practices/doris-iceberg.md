@@ -1,9 +1,9 @@
 ---
 {
     "title": "Using Doris and Iceberg",
-    "language": "en"
+    "language": "en",
+    "description": "As a new open data management architecture, the Data Lakehouse integrates the high performance and real-time capabilities of a data warehouse with "
 }
-
 ---
 
 As a new open data management architecture, the Data Lakehouse integrates the high performance and real-time capabilities of a data warehouse with the low cost and flexibility of a data lake, helping users more conveniently meet various data processing and analysis needs. It has been increasingly applied in enterprise big data systems.
@@ -36,7 +36,7 @@ Users can quickly build an efficient Data Lakehouse solution based on Apache Dor
 
 In the future, Apache Iceberg will serve as one of the native table engines for Apache Doris, providing more comprehensive analysis and management functions for lake-formatted data. Apache Doris will also gradually support more advanced features of Apache Iceberg, including Update/Delete/Merge, sorting during write-back, incremental data reading, metadata management, etc., to jointly build a unified, high-performance, real-time data lake platform.
 
-For more information, please refer to [Iceberg Catalog](../catalogs/iceberg-catalog.md)
+For more information, please refer to [Iceberg Catalog](../catalogs/iceberg-catalog.mdx)
 
 ## User Guide
 

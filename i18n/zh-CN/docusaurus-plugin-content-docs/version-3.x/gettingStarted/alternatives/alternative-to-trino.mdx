@@ -1,0 +1,185 @@
+---
+{
+    "title": "Apache Doris vs Trino / Presto",
+    "language": "zh-CN",
+    "description": "Apache Doris 和 Trino/Presto 均为主流数据湖仓查询引擎，但 Doris 在性能上表现更具优势。Trino/Presto 主要专注于查询加速，而 Doris 不仅能够加速查询，还具备作为独立数据仓库的能力。企业可以利用 Doris 实现数据仓库和湖仓查询引擎的统一，"
+}
+---
+
+Apache Doris 和 Trino/Presto 均为主流数据湖仓查询引擎，但 Doris 在性能上表现更具优势。Trino/Presto 主要专注于查询加速，而 Doris 不仅能够加速查询，还具备作为独立数据仓库的能力。企业可以利用 Doris 实现数据仓库和湖仓查询引擎的统一，从而简化其数据架构。
+
+- **统一**: Apache Doris 实现数据仓库与湖仓查询引擎统一，有效简化企业技术栈
+
+- **10 倍性能提升**: 相较于 Presto/Trino，Doris 内表查询性能最高提升达 10 倍。
+
+- **2~3 倍 执行效率**: 作为湖仓引擎，Doris 执行效率较 Presto/Trino快 2-3 倍。
+
+
+## 精选案例
+
+<div style={{ display:'flex', justifyContent:'space-between' }}>
+
+    <div style={{paddingTop:'2rem', paddingBottom:'2rem',paddingLeft:'2rem',paddingRight:'2.5rem', boxSizing:'border-box', borderWidth:'0.5px', borderRadius:'0.75px', borderColor:'#e5e7eb'}}>
+    
+        <div style={{ display:'flex', justifyContent:'space-between', flexDirection:'column' }}>
+            <div style={{marginBottom:'1.25rem'}}>
+                <img alt='tencent-music' loading="lazy" width="200" height="40" decoding="async" data-nimg="1" style={{color:'transparent'}} src="/zh-CN/images/comparisons/cisco.png" />
+            </div>
+            <div style={{marginBbottom:'1.25rem'}}>
+            “早期我们使用多个系统（如 Trino、Pinot、Iceberg 和 Kyuubi）构建数据平台，导致架构复杂、数据重复存储、运维困难、资源利用率低和数据时效性差。通过引入 Apache Doris 替换多个技术栈，**实现湖仓一体化，显著提高了查询性能和系统稳定性，并降低了 30% 的资源成本。**”
+            </div>
+        </div>
+    
+    </div>
+
+    <div style={{paddingTop:'2rem', paddingBottom:'2rem',paddingLeft:'2rem',paddingRight:'2.5rem', boxSizing:'border-box', borderWidth:'0.5px', borderRadius:'0.75px', borderColor:'#e5e7eb'}}>
+    
+        <div style={{ display:'flex', justifyContent:'space-between', flexDirection:'column' }}>
+            <div style={{marginBottom:'1.25rem'}}>
+                <img alt='tencent-music' loading="lazy" width="140" height="40" decoding="async" data-nimg="1" style={{color:'transparent'}} src="/zh-CN/images/comparisons/netease-games-zh-CN.png" />
+            </div>
+            <div style={{marginBbottom:'1.25rem'}}>
+            “迁移到 Doris 后，整体查询性能得到大幅提升。**之前使用 Presto 进行多维分析时，查询时间长达 20-40 秒，而 Doris 将这一时间缩短至 1-2 秒**。此外，Doris 的一大优势在于能够自动识别并匹配最优物化视图进行查询，这进一步增强了系统复杂分析的性能。”
+            </div>
+        </div>
+    
+    </div>
+
+     <div style={{paddingTop:'2rem', paddingBottom:'2rem',paddingLeft:'2rem',paddingRight:'2.5rem', boxSizing:'border-box', borderWidth:'0.5px', borderRadius:'0.75px', borderColor:'#e5e7eb'}}>
+    
+        <div style={{ display:'flex', justifyContent:'space-between', flexDirection:'column' }}>
+            <div style={{marginBottom:'1.25rem'}}>
+                <img alt='tencent-music' loading="lazy" width="150" height="40" decoding="async" data-nimg="1" style={{color:'transparent'}} src="/zh-CN/images/comparisons/zto-zh-CN.png" />
+            </div>
+            <div style={{marginBbottom:'1.25rem'}}>
+            使用 Trino 和 SparkSQL 时，系统查询延迟普遍维持在分钟级别，存在明显的性能瓶颈。**迁移至 Apache Doris 后，整体查询性能提升 2 倍以上**。通过 Doris 统一架构，有效解决了混合架构下的数据孤岛与资源冗余问题，更加速了实时分析与交互式即席查询响应。
+            </div>            
+        </div>
+    
+    </div>
+
+</div> 
+
+
+## Apache Doris vs. ClickHouse
+
+
+<table border="1">
+    <thead>
+        <tr>
+            <th></th>
+            <th>Apache Doris</th>
+            <th>Trino / Presto</th>
+        </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td><strong>系统架构</strong></td>
+        <td>
+        <ul>
+            <li style={{fontSize:'14px'}}>**统一架构:** 融合数据仓库与数据湖查询能力</li>
+        </ul>
+        </td>
+        <td>
+        <ul>
+            <li style={{fontSize:'14px'}}>**联邦查询:** 擅长跨异构数据源查询，但无内置存储层</li>
+        </ul>
+        </td>
+    </tr>
+      <tr>
+        <td><strong>执行引擎</strong></td>
+        <td>
+         <ul>
+            <li style={{fontSize:'14px'}}>基于 C++ 实现的全向量化执行引擎，提供高性能数据处理</li>
+        </ul>
+        </td>
+        <td>
+        <ul>
+            <li style={{fontSize:'14px'}}>向量化引擎主要基于 Java 实现，目前作为 Hummingbird 项目的一部分处于开发中</li>
+        </ul>
+        </td>
+    </tr>
+    <tr>
+        <td><strong>查询优化</strong></td>
+        <td>
+        <ul>
+            <li style={{fontSize:'14px'}}>提供基于成本的查询优化器（CBO），可优化复杂查询，包括 JOIN、聚合分析、排序等</li>
+        </ul>
+        </td>
+        <td>
+        <ul>
+            <li style={{fontSize:'14px'}}>支持基于成本优化，但统计信息收集机制不完善，需手动全量收集</li>
+        </ul>
+        </td>
+    </tr>
+    <tr>
+        <td><strong>缓存机制</strong></td>
+        <td>
+         <ul>
+            <li style={{fontSize:'14px'}}>**元数据缓存：** 具备 TTL、自动刷新和增量同步的内存元数据缓存能力</li>
+            <li style={{fontSize:'14px'}}>**数据缓存：** 通过本地 SSD 热数据缓存减少网络 I/O</li>
+            <li style={{fontSize:'14px'}}>**查询缓存：** 支持 SQL 缓存与分区缓存</li>
+        </ul>
+        </td>
+        <td>
+        <ul>
+            <li style={{fontSize:'14px'}}>**数据缓存：** 依赖于 Alluxio 等外部缓存方案</li>
+        </ul>
+        </td>
+    </tr>
+    <tr>
+        <td><strong>物化视图</strong></td>
+        <td>
+        <ul>
+            <li style={{fontSize:'14px'}}>**增量刷新：** 支持增量刷新和多种数据刷新策略</li>
+            <li style={{fontSize:'14px'}}>**查询透明加速：** 查询优化器能够自动识别并匹配最优物化视图进行查询</li>
+        </ul>
+        </td>
+        <td>
+          <ul>
+            <li style={{fontSize:'14px'}}>**手动刷新：** 仅支持人工全量刷新</li>
+        </ul>
+        </td>
+    </tr>
+    <tr>
+        <td><strong>应用场景</strong></td>
+        <td>
+        <ul>
+            <li style={{fontSize:'14px'}}>高并发实时分析</li>
+            <li style={{fontSize:'14px'}}>交互式分析</li>
+        </ul>
+        </td>
+        <td>
+          <ul>
+            <li style={{fontSize:'14px'}}>仅支持交互式分析</li>
+        </ul>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+## 性能对比
+
+### TPC-DS 1TB 性能测试
+
+
+<div style={{ display:'flex', justifyContent:'space-between', flexDirection:'column', paddingTop:'0.5rem',paddingBottom:'0.5rem'}}>
+    <div style={{marginRight:'2rem'}}>
+        <p>TPC-DS 1TB Benchmark 包含 24 张表、63.5 亿条记录的 1TB 数据集，通过 99 条复杂查询（涵盖关联查询、聚合运算及嵌套子查询）评估数据仓库的性能。该测试基于雪花模型构建，模拟真实电商销售场景，由于查询的复杂性，在处理 1TB 规模数据时是一项挑战。</p>
+        <p>测试环境配置​包括：</p>
+        <ul>
+            <li>1 个 FE/Coordinator 节点 and 5 个 BE/Worker 节点</li>
+            <li>单节点 64 核 CPU、1.5TB 内存以及 SSD 存储</li>
+            <li>HDFS 部署在计算节点上，并创建 Hive 表</li>
+        </ul>
+        <p>在测试过程中，使用相同的数据集和相等的计算服务，结果显示：</p>
+        <ul>
+            <li>**当数据导入 Doris 内表并使用 Doris 执行查询时，整体查询耗时最短**</li>
+            <li>**当 Doris 与 Trino 分别对外部 Hive 表查询时，Doris 在数据湖场景展现更优的查询加速性能**</li>
+        </ul>
+    </div>
+    <div>
+        <img alt="TPC-DS 1TB  Benchmark" loading="lazy" width="400" height="338" decoding="async" data-nimg="1" src="/zh-CN/images/comparisons/tpc-ds-1tb-trino.png" style={{color: 'transparent', marginTop:0}} />
+    </div>
+</div>
+

@@ -1,7 +1,8 @@
 ---
 {
     "title": "Aliyun DLF",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "本文档介绍如何使用 CREATE CATALOG 语句连接并访问阿里云 Dake Lake Formation(DLF) 元数据服务。"
 }
 ---
 
@@ -22,7 +23,11 @@
 | `dlf.access_key` | - | 阿里云 AccessKey，用于访问 DLF 服务。 | 无 | 是 |
 | `dlf.secret_key` | - | 阿里云 SecretKey，用于访问 DLF 服务。 | 无 | 是 |
 | `dlf.catalog_id` | `dlf.catalog.id` | Catalog ID。用于指定元数据目录，如果不设置则使用默认目录。 | 无 | 否 |
-| `warehouse` | - | Warehouse 的存储路径，仅在 Paimon Catalog 中需要填写 | 无 | 否 |
+| `warehouse` | - | Warehouse 的存储路径，仅在 Paimon Catalog 中需要填写。注意，对象存储路径，已经要以 `/` 结尾。 | 无 | 否 |
+
+> 注：
+>
+> 3.1.0 版本之前，请使用曾用名。
 
 ### DLF 2.5+ (Rest Catalog)
 

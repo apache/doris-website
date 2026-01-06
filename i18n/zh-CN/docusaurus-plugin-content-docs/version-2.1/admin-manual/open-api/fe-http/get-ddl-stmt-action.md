@@ -1,7 +1,8 @@
 ---
 {
     "title": "Get DDL Statement Action",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "用于获取指定表的建表语句、建分区语句和建 rollup 语句。"
 }
 ---
 

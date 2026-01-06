@@ -6,7 +6,8 @@
     display: flex;
     align-items: center;
     height: var(--docusaurus-announcement-bar-height);
-    background: linear-gradient(0deg, rgba(247, 249, 254, 0.8) 0%, rgba(247, 249, 254, 0.8) 100%), #fff;
+    /* background: linear-gradient(0deg, rgba(247, 249, 254, 0.8) 0%, rgba(247, 249, 254, 0.8) 100%), #fff; */
+    background: linear-gradient(89deg, #9748FF 0.05%, #471CF0 74.19%);
     color: var(--ifm-color-black);
 
     /*
@@ -42,7 +43,7 @@ html[data-announcement-bar-initially-dismissed='true'] .announcementBar {
 }
 
 .announcementBarContent > a:active {
-    background: linear-gradient(0deg, rgba(247, 249, 254, 0.8) 0%, rgba(247, 249, 254, 0.8) 100%), #fff !important;
+    background: transparent !important;
 }
 
 @media print {
@@ -53,7 +54,7 @@ html[data-announcement-bar-initially-dismissed='true'] .announcementBar {
 
 @media (min-width: 997px) {
     :root {
-        --docusaurus-announcement-bar-height: 40px;
+        --docusaurus-announcement-bar-height: 48px;
     }
 
     .announcementBarPlaceholder,

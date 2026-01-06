@@ -1,7 +1,8 @@
 ---
 {
     "title": "MOD",
-    "language": "en"
+    "language": "en",
+    "description": "Find the remainder of a divided by b for the integer type. For the floating-point type, please use the fmod function."
 }
 ---
 

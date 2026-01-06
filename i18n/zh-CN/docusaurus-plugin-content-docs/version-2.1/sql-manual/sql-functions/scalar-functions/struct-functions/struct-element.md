@@ -1,7 +1,8 @@
 ---
 {
     "title": "STRUCT_ELEMENT",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "返回 struct 数据列内的某一 field"
 }
 ---
 

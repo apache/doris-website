@@ -20,7 +20,7 @@ CREATE MATERIALIZED VIEW
 语法：
 
 ```sql
-CREATE MATERIALIZED VIEW [MV name] as [query]
+CREATE MATERIALIZED VIEW [MV name] [AS] [query]
 [PROPERTIES ("key" = "value")]
 ```
 

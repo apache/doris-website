@@ -1,7 +1,8 @@
 ---
 {
     "title": "聚合模型",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "Doris 的聚合模型专为高效处理大规模数据查询中的聚合操作设计。它通过预聚合数据，减少重复计算，提升查询性能。聚合模型只存储聚合后的数据，节省存储空间并加速查询。"
 }
 ---
 
@@ -41,7 +42,7 @@ AGGREGATE KEY(user_id, load_dt, city)
 DISTRIBUTED BY HASH(user_id) BUCKETS 10;
 ```
 
-上例中定义了用户信息和访问行为表，将 `user_id`、`load_date`、`city` 及 `age` 作为 Key 列进行聚合。数据导入时，Key 列会聚合成一行，Value 列会按照指定的聚合类型进行维度聚合。
+上例中定义了用户信息和访问行为表，将 `user_id`、`load_dt` 及 `city` 作为 Key 列进行聚合。数据导入时，Key 列会聚合成一行，Value 列会按照指定的聚合类型进行维度聚合。
 
 在聚合表中支持以下类型的维度聚合：
 

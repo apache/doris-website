@@ -1,32 +1,113 @@
 ---
 {
-   "title": "Tableau",
-   "language": "en"
+    "title": "Tableau | Bi",
+    "language": "en",
+    "description": "For enabling Apache Doris access on Tableau, Tableau's official MySQL connector can meet your needs.",
+    "sidebar_label": "Tableau"
 }
 ---
 
-## Introduction
-Tableau is a lightweight data visualization analysis platform that combines data operations with beautiful charts perfectly. It seamlessly combines data computation with visually appealing charts, requiring no coding from the user. By simply dragging and dropping, users can quickly gain insights into the data. They can explore different views and even easily combine multiple data sources to complete tasks such as data visualization, exploration, and analysis.
-## Prerequisites
-Regardless of whether your Mac is based on an Intel chips or Apple Silicon Chips, for Tableau Desktop on Mac, you need to download and install the Intel version. This is to ensure compatibility with the MySQL driver. You can select and download the Intel version from the [Support Releases](https://www.tableau.com/support/releases) page.  
+# Tableau
 
-## Driver Installation
-1. iODBC Installation  
-    1. Close Tableau Desktop  
-    2. Download the latest Driver Manager (mxkozzz.dmg) from the official [iODBC website](https://www.iodbc.org/dataspace/doc/iodbc/wiki/iodbcWiki/Downloads#Mac%20OS%20X)
-    3. Install the downloaded dmg file
-2. Install the MySQL driver
+For enabling Apache Doris access on Tableau, Tableau's official MySQL connector can meet your needs. This connector uses the MySQL JDBC driver to access data.
 
-When choosing the ODBC driver for MySQL to connect to Doris, you should install the MySQL 5.x ODBC driver. Using the latest MySQL driver may result in an "Unsupported command" error when connecting to Doris.
-## Connection Configuration and Usage
-1. Click the Tableau Desktop home page and select MySQL at the connection data source
+Through the MySQL connector, Tableau can integrate Apache Doris databases and tables as data sources. To enable this feature, follow the setup guide below:
 
-   ![main page](/images/bi-tableau-en-1.png)
+- Required setup before use
+- Configuring the Apache Doris data source in Tableau
+- Building visualizations in Tableau
+- Connection and usage tips
 
-2. Fill in the Doris server address, port and other relevant information, and click sigin in button after correctly filling
+## Installing Tableau and the JDBC driver
 
-   ![sign in page](/images/bi-tableau-en-2.png)
+1. Download and install [Tableau desktop](https://www.tableau.com/products/desktop/download).
+2. Obtain [MySQL JDBC](https://velodb-bi-connector-1316291683.cos.ap-hongkong.myqcloud.com/Tableau/latest/mysql-connector-j-8.3.0.jar) (version 8.3.0).
+3. JDBC Driver Placement Path
+   - macOS: JDBC driver JAR file placement path: `~/Library/Tableau/Drivers`
+   - Windows: Assuming `tableau_path` is the Tableau installation directory on the Windows operating system, generally the default is: `tableau_path = C:\Program Files\Tableau`, then the JDBC driver JAR file placement path is: `%tableau_path%\Drivers\`
 
-3. After entering Tableau, select the corresponding library table to carry out the relevant compass processing.
+Next, you can configure a Doris data source in Tableau and start building data visualizations!
 
-   ![usage page](/images/bi-tableau-en-3.png)  
+## Configuring a Doris Data Source in Tableau
+
+Now that you have installed and set up the **JDBC and Connector** drivers, let's see how to define a data source in Tableau that connects to the tpch database in Doris.
+
+1. Gathering Your Connection Details
+
+To connect to Apache Doris via JDBC, you need the following information:
+
+| Parameter            | Meaning                                                                 | Example                        |
+| -------------------- | -------------------------------------------------------------------- | ----------------------------- |
+| Server               | Database host                                                           | 127.0.1.28                    |
+| Port                 | Database MySQL port                                                     | 9030                          |
+| Database             | Database name                                                           | tpch                          |
+| Username             | Username                                                                 | testuser                      |
+| Password             | Password                                                                 | Leave blank                   |
+| Init SQL Statement   | Initial SQL statement                                                    | `select * from database.table` |
+
+
+2. Start Tableau. (If you are already running it, please restart it.)
+3. From the left-hand menu, click **More** under the **To a Server** section. Search for **mysql** in the list of available connectors.
+
+![](/images/ecomsystem/tableau/QSrsbadm0oEiuHxyGv3clFhTnLh.png)
+
+4. Clicking **MySQL** will bring up the following dialog box:
+
+![](/images/ecomsystem/tableau/DN47bCp5ZovHCmxH0DAc3fBonR3.png)
+
+5. Follow the prompts in the dialog box to enter the corresponding connection information.
+6. After completing the above input boxes, click the **Sign In** button. You should then see a new Tableau workbook.
+   ![](/images/ecomsystem/tableau/LJK9bPMptoAGjGxzoCtcY8Agnye.png)
+
+Next, we can build some visualizations in Tableau!
+
+## Building Visualizations in Tableau
+
+We've chosen TPC-H data as our data source. For instructions on building a Doris TPC-H data source, refer to [this document](../../benchmark/tpch.md).
+
+Now that we've configured the Doris data source in Tableau, let's visualize the data.
+
+1. Drag the `customer` and `orders` tables into the workbook. Then, select the `Custkey` field for the table association below.
+   ![](/images/ecomsystem/tableau/ZJuBbDBc5o2Gnyxhn7icv30xnXw.png)
+2. Drag the `nation` table into the workbook and associate it with the `customer` table by selecting the `Nationkey` field.
+   ![](/images/ecomsystem/tableau/GPXQbcNUnobHtLx5sIocMHAwn2d.png)
+3. Now you have linked the `customer`, `orders`, and `nation` tables as data sources, so you can use this relationship to work on data-related issues. Select the `Sheet 1` tab at the bottom of the workbook to access the workbench.
+   ![](/images/ecomsystem/tableau/FsHmbUOKIoFT5YxWmGecLArLnjd.png)
+4. Suppose you want to know the total number of users each year. Drag OrderDate from orders to the Columns area (a horizontal field), and then drag customer(count) from customer to Rows. Tableau will generate the following line chart:
+   ![](/images/ecomsystem/tableau/I9SCbCFzoo7TgLx6BP1cHdtRnWc.png)
+
+A simple line chart is now complete. However, this dataset is not real data and was automatically generated by the tpch script and default rules; it is intended for testing usability.
+
+5. Suppose you want to know the average order amount (USD) by region (country) and year:
+   - Click the `New Worksheet` tab to create a new table
+   - Drag Name from the nation table into `Rows`
+   - Drag OrderDate from the orders table into `Columns`
+
+You should see the following:
+
+6. Note: The `Abc` value is just a populated value because you haven't defined the aggregation logic to this icon, so you need to drag the measure onto the table. Drag Totalprice from the orders table to the middle of the table. Note that the default calculation is a SUM on Totalprices:
+   ![](/images/ecomsystem/tableau/Am9IbyUo4o30DixVi2ccoZvKn8b.png)
+7. Click `SUM` and change `Measure` to `Average`.
+   ![](/images/ecomsystem/tableau/AaFwbMOKTo86NaxU54mcVYs1nJd.png)
+8. From the same drop-down menu, select `Format` and change `Numbers` to `Currency (Standard)`
+   ![](/images/ecomsystem/tableau/ZmRDbjws9o5Ampx4YZYcS6Umnqf.png)
+9. You will get a table that meets your expectations.
+   ![](/images/ecomsystem/tableau/MNb0bjoB2ozn4kxfKx9cVj2hnhb.png)
+
+At this point, Tableau has been successfully connected to Apache Doris, enabling data analysis and dashboard creation.
+
+## Connection and Usage Tips
+
+**Performance Optimization**
+
+- Create Doris database tables appropriately based on actual needs, partitioning and bucketing by time to effectively reduce predicate filtering and most data transfer.
+- Appropriate data pre-aggregation can be achieved by creating materialized views on the Doris side.
+- Set a reasonable refresh schedule to balance refresh computational resource consumption and dashboard data timeliness.
+
+**Security Configuration**
+
+- It is recommended to use a VPC private connection to avoid security risks introduced by public network access.
+- Configure security groups to restrict access.
+- Enable SSL/TLS connections and other access methods.
+- Fine-tune Doris user account roles and access permissions to avoid excessive delegation of permissions.
+

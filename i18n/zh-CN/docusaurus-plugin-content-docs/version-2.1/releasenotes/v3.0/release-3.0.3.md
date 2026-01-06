@@ -1,7 +1,8 @@
 ---
 {
     "title": "Release 3.0.3",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "亲爱的社区小伙伴们，Apache Doris 3.0.3 版本已于 2024 年 12 月 02 日正式发布。 该版本进一步提升了系统的性能及稳定性，欢迎大家下载体验。"
 }
 ---
 
@@ -26,11 +27,11 @@
 
 - 新增 `table$partition` 语法，用于查询 Hive 表的分区信息。[#40774](https://github.com/apache/doris/pull/40774)  
   
-  - [查看文档](../../lakehouse/datalake-analytics/hive#查询-hive-分区) 
+  - [查看文档](../../lakehouse/catalogs/hive-catalog)
 
 - 支持创建 Text 格式的 Hive 表。[#41860](https://github.com/apache/doris/pull/41860) [#42175](https://github.com/apache/doris/pull/42175)  
 
-  - [查看文档](../../lakehouse/datalake-building/hive-build#table) 
+  - [查看文档](../../lakehouse/catalogs/hive-catalog)
 
 ### 异步物化视图
 
@@ -77,7 +78,7 @@
 
 - Paimon Catalog 支持阿里云 DLF 和 OSS-HDFS 存储。[#41247](https://github.com/apache/doris/pull/41247) [#42585](https://github.com/apache/doris/pull/42585) 
   
-  - [查看文档](../../lakehouse/datalake-analytics/paimon#基于-aliyun-dlf-创建-catalog)
+  - [查看文档](../../lakehouse/catalogs/paimon-catalog)
 
 - 支持读取 OpenCSV 格式的 Hive 表。[#42257](https://github.com/apache/doris/pull/42257) [#42942](https://github.com/apache/doris/pull/42942)
 - 优化了访问 External Catalog 中 `information_schema.columns` 表的性能。[#41659](https://github.com/apache/doris/pull/41659) [#41962](https://github.com/apache/doris/pull/41962)

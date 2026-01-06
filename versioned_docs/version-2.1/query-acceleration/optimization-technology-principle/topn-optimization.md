@@ -1,7 +1,8 @@
 ---
 {
     "title": "TOPN Query Optimization",
-    "language": "en"
+    "language": "en",
+    "description": "TOPN queries refer to queries that involve ORDER BY LIMIT operations, which are common in log retrieval and other detailed query scenarios."
 }
 ---
 

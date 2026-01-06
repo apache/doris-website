@@ -1,9 +1,9 @@
 ---
 {
     "title": "From MaxCompute to Doris",
-    "language": "en"
+    "language": "en",
+    "description": "This document explains how to quickly import data from Alibaba Cloud MaxCompute into Apache Doris using the MaxCompute Catalog."
 }
-
 ---
 
 This document explains how to quickly import data from Alibaba Cloud MaxCompute into Apache Doris using the [MaxCompute Catalog](../catalogs/maxcompute-catalog.md).
@@ -48,6 +48,19 @@ CREATE CATALOG mc PROPERTIES (
   "mc.access_key" = "AKxxxxx",
   "mc.secret_key" = "SKxxxxx",
   "mc.endpoint" = "xxxxx"
+);
+```
+
+Support Schema Level (3.1.3+):
+
+```sql
+CREATE CATALOG mc PROPERTIES (
+  "type" = "max_compute",
+  "mc.default.project" = "xxx",
+  "mc.access_key" = "AKxxxxx",
+  "mc.secret_key" = "SKxxxxx",
+  "mc.endpoint" = "xxxxx",
+  'mc.enable.namespace.schema' = 'true'
 );
 ```
 

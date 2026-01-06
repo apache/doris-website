@@ -1,7 +1,8 @@
 ---
 {
     "title": "MaxCompute Catalog",
-    "language": "en"
+    "language": "en",
+    "description": "MaxCompute is an enterprise-level SaaS (Software as a Service) cloud data warehouse on Alibaba Cloud."
 }
 ---
 
@@ -20,7 +21,7 @@
 
 2. There are certain restrictions on the use of the open storage SDK. Please refer to the `Usage Restrictions` section in this [document](https://help.aliyun.com/zh/maxcompute/user-guide/overview-1).
 
-3. A `Project` in MaxCompute is equivalent to a `Database` in Doris.
+3. Before Doris version 3.1.3, a `Project` in MaxCompute is equivalent to a `Database` in Doris. After 3.1.3, You can use the `mc.enable.namespace.schema` parameter to introduce the MaxCompute schema level.
 
 ## Configuring Catalog
 
@@ -60,8 +61,10 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
   | `mc.read_timeout`           | `120s`          | Timeout for reading from MaxCompute.                                        | 2.1.8 and later         |
   | `mc.retry_count`            | `4`             | Number of retries after a timeout.                                          | 2.1.8 and later         |
   | `mc.datetime_predicate_push_down` | `true`  | Whether to allow pushdown of predicate conditions of `timestamp/timestamp_ntz` types. Doris will lose precision (9 -> 6) when synchronizing these two types. Therefore, if the original data has a precision higher than 6 digits, condition pushdown may lead to inaccurate results. | 2.1.9/3.0.5 and later  |
+  | `mc.account_format` | `name`             | The account systems of Alibaba Cloud International and China are different. For users of the International site, if an error such as `user 'RAM$xxxxxx:xxxxx' is not a valid aliyun account` occurs, you can specify this parameter as `id`. | 3.0.9/3.1.1 later  |
+  | `mc.enable.namespace.schema` | `false`             | Whether MaxCompute's schema level is supported. For details, see: https://help.aliyun.com/zh/maxcompute/user-guide/schema-related-operations | 3.1.3 and later  |
   
-* `{CommonProperties}`
+* `[CommonProperties]`
 
 The CommonProperties section is used to fill in common properties. Please refer to the Catalog Overview section on [Common Properties](../catalog-overview.md).
 
@@ -74,6 +77,24 @@ Only the public cloud version of MaxCompute is supported. For support with the p
 * Supports reading partitioned tables, clustered tables, and materialized views.
 
 * Does not support reading MaxCompute external tables, logical views, or Delta Tables.
+
+## Hierarchical Mapping
+
+- `mc.enable.namespace.schema` is false
+
+  | Doris    | MaxCompute |
+  | -------- | ---------- |
+  | Catalog  | N/A        |
+  | Database | Project    |
+  | Table    | Table      |
+
+- `mc.enable.namespace.schema` is true
+
+  | Doris    | MaxCompute |
+  | -------- | ---------- |
+  | Catalog  | Project    |
+  | Database | Schema     |
+  | Table    | Table      |
 
 ## Column Type Mapping
 
@@ -123,6 +144,21 @@ CREATE CATALOG mc_catalog PROPERTIES (
     'mc.secret_key' = 'sk'
     'mc.odps_endpoint' = 'http://service.cn-beijing.maxcompute.aliyun-inc.com/api',
     'mc.tunnel_endpoint' = 'http://dt.cn-beijing.maxcompute.aliyun-inc.com'
+);
+```
+
+Support Schema:
+
+```sql
+CREATE CATALOG mc_catalog PROPERTIES (
+    'type' = 'max_compute',
+    'mc.region' = 'cn-beijing',
+    'mc.default.project' = 'project',
+    'mc.access_key' = 'ak',
+    'mc.secret_key' = 'sk'
+    'mc.odps_endpoint' = 'http://service.cn-beijing.maxcompute.aliyun-inc.com/api',
+    'mc.tunnel_endpoint' = 'http://dt.cn-beijing.maxcompute.aliyun-inc.com',
+    'mc.enable.namespace.schema' = 'true'
 );
 ```
 

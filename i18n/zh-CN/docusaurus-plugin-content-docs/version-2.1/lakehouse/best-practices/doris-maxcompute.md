@@ -1,9 +1,9 @@
 ---
 {
     "title": "从 MaxCompute 到 Doris",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "本文档介绍如何通过 MaxCompute Catalog 将阿里云 MaxCompute 中的数据快速导入到 Apache Doris 中。"
 }
-
 ---
 
 本文档介绍如何通过 [MaxCompute Catalog](../catalogs/maxcompute-catalog.md) 将阿里云 MaxCompute 中的数据快速导入到 Apache Doris 中。
@@ -14,7 +14,7 @@
 
 ### 01 开通 MaxCompute 开放存储 API
 
-在 [MaxCompute控制台](https://maxcompute.console.aliyun.com/) 左侧导航栏 -> `租户管理` -> `租户属性`  -> 打开 `开放存储(Storage API)开关`
+在 [MaxCompute 控制台](https://maxcompute.console.aliyun.com/) 左侧导航栏 -> `租户管理` -> `租户属性`  -> 打开 `开放存储(Storage API)开关`
 
 ### 02 开通 MaxCompute 权限
 
@@ -48,6 +48,19 @@ CREATE CATALOG mc PROPERTIES (
   "mc.access_key" = "AKxxxxx",
   "mc.secret_key" = "SKxxxxx",
   "mc.endpoint" = "xxxxx"
+);
+```
+
+如需支持 Schema 层级（3.1.3+）：
+
+```sql
+CREATE CATALOG mc PROPERTIES (
+  "type" = "max_compute",
+  "mc.default.project" = "xxx",
+  "mc.access_key" = "AKxxxxx",
+  "mc.secret_key" = "SKxxxxx",
+  "mc.endpoint" = "xxxxx",
+  'mc.enable.namespace.schema' = 'true'
 );
 ```
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "概览",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "使用 CREATE TABLE 语句在 Doris 中创建一个表，也可以使用 CREATE TABKE LIKE 或 CREATE TABLE AS 子句从另一个表派生表定义。"
 }
 ---
 
@@ -15,7 +16,7 @@ Doris 中表名默认是大小写敏感的，可以在第一次初始化集群�
 
 ## 表属性
 
-Doris 的建表语句中可以指定[建表属性](../sql-manual/sql-statements/table-and-view/table/CREATE-TABLE#properties)，包括：
+Doris 的建表语句中可以指定[建表属性](../sql-manual/sql-statements/table-and-view/table/CREATE-TABLE.md)，包括：
 
 - 分桶数 (buckets)：决定数据在表中的分布；
 
@@ -25,7 +26,7 @@ Doris 的建表语句中可以指定[建表属性](../sql-manual/sql-statements/
 
 - 冷热分离存储策略 (storage_policy) ：控制数据的冷热分离存储的迁移策略；
 
-这些属性作用于分区，即分区创建之后，分区就会有自己的属性，修改表属性只对未来创建的分区生效，对已经创建好的分区不生效，关于属性更多的信息请参考[修改表属性](../sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-PROPERTY)。
+这些属性作用于分区，即分区创建之后，分区就会有自己的属性，修改表属性只对未来创建的分区生效，对已经创建好的分区不生效，关于属性更多的信息请参考[修改表属性](../sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-PROPERTY)。[动态分区](data-partitioning/dynamic-partitioning.md) 可以单独设置这些属性。
 
 
 ## 注意事项

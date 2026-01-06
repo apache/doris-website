@@ -1,7 +1,8 @@
 ---
 {
     "title": "Variant",
-    "language": "en"
+    "language": "en",
+    "description": "The VARIANT type can store semi-structured JSON data,"
 }
 ---
 
@@ -166,4 +167,53 @@ mysql> select * from testdb.test_variant\G
    payload: {"before":"abb58cc0db673a0bd5190000d2ff9c53bb51d04d","commits":[""],"distinct_size":4,"head":"91edd3c8c98c214155191feb852831ec535580ba","push_id":6027092734,"ref":"refs/heads/master","size":4}
     public: 1
 created_at: 2020-11-14 02:00:00
+```
+
+### Step 5: Check type inference
+
+Running desc command to view schema information, sub-columns will automatically expand at the storage layer and undergo type inference.
+
+``` sql
+mysql> desc github_events;
++------------------------------------------------------------+------------+------+-------+---------+-------+
+| Field                                                      | Type       | Null | Key   | Default | Extra |
++------------------------------------------------------------+------------+------+-------+---------+-------+
+| id                                                         | BIGINT     | No   | true  | NULL    |       |
+| type                                                       | VARCHAR(*) | Yes  | false | NULL    | NONE  |
+| actor                                                      | VARIANT    | Yes  | false | NULL    | NONE  |
+| created_at                                                 | DATETIME   | Yes  | false | NULL    | NONE  |
+| payload                                                    | VARIANT    | Yes  | false | NULL    | NONE  |
+| public                                                     | BOOLEAN    | Yes  | false | NULL    | NONE  |
++------------------------------------------------------------+------------+------+-------+---------+-------+
+6 rows in set (0.07 sec)
+
+mysql> set describe_extend_variant_column = true;
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> desc github_events;
++------------------------------------------------------------+------------+------+-------+---------+-------+
+| Field                                                      | Type       | Null | Key   | Default | Extra |
++------------------------------------------------------------+------------+------+-------+---------+-------+
+| id                                                         | BIGINT     | No   | true  | NULL    |       |
+| type                                                       | VARCHAR(*) | Yes  | false | NULL    | NONE  |
+| actor                                                      | VARIANT    | Yes  | false | NULL    | NONE  |
+| actor.avatar_url                                           | TEXT       | Yes  | false | NULL    | NONE  |
+| actor.display_login                                        | TEXT       | Yes  | false | NULL    | NONE  |
+| actor.id                                                   | INT        | Yes  | false | NULL    | NONE  |
+| actor.login                                                | TEXT       | Yes  | false | NULL    | NONE  |
+| actor.url                                                  | TEXT       | Yes  | false | NULL    | NONE  |
+| created_at                                                 | DATETIME   | Yes  | false | NULL    | NONE  |
+| payload                                                    | VARIANT    | Yes  | false | NULL    | NONE  |
+| payload.action                                             | TEXT       | Yes  | false | NULL    | NONE  |
+| payload.before                                             | TEXT       | Yes  | false | NULL    | NONE  |
+| payload.comment.author_association                         | TEXT       | Yes  | false | NULL    | NONE  |
+| payload.comment.body                                       | TEXT       | Yes  | false | NULL    | NONE  |
+....
++------------------------------------------------------------+------------+------+-------+---------+-------+
+406 rows in set (0.07 sec)
+```
+DESC can be used to specify partition and view the schema of a particular partition. The syntax is as follows:
+
+``` sql
+DESCRIBE ${table_name} PARTITION ($partition_name);
 ```

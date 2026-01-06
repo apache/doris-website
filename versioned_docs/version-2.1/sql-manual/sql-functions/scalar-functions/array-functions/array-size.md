@@ -1,7 +1,8 @@
 ---
 {
     "title": "ARRAY_SIZE",
-    "language": "en"
+    "language": "en",
+    "description": "Count the number of elements in an array"
 }
 ---
 
@@ -40,6 +41,6 @@ SELECT ARRAY_SIZE(['a', 'b', 'c']),ARRAY_SIZE([NULL]),ARRAY_SIZE([]);
 +------------------------------+---------------------+-----------------+
 | cardinality(['a', 'b', 'c']) | cardinality([NULL]) | cardinality([]) |
 +------------------------------+---------------------+-----------------+
-|                            3 |                   1 |               0 |
+|                            3 |                NULL |               0 |
 +------------------------------+---------------------+-----------------+
 ```

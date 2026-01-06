@@ -1,7 +1,8 @@
 ---
 {
     "title": "SET TABLE PARTITION VERSION",
-    "language": "en"
+    "language": "en",
+    "description": "In compute-storage coupled mode. This statement is used to manually change the visible version of the specified partition. In some special cases,"
 }
 ---
 

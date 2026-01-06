@@ -1,7 +1,8 @@
 ---
 {
     "title": "ARRAY_PRODUCT",
-    "language": "en-US"
+    "language": "en-US",
+    "description": "Calculates the product of all elements in an array. The function iterates through all elements in the array, multiplies them together,"
 }
 ---
 

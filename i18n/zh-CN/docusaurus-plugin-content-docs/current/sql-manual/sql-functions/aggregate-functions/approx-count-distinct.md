@@ -1,7 +1,8 @@
 ---
 {
     "title": "APPROX_COUNT_DISTINCT",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "返回非 NULL 的不同元素数量。 基于 HyperLogLog 算法实现，使用固定大小的内存估算列基数。 该算法基于尾部零分布假设进行计算，具体精确程度取决于数据分布。基于 Doris 使用的固定桶大小，该算法相对标准误差为 0.8125% 更详细具体的分析，详见相关论文"
 }
 ---
 
@@ -23,7 +24,7 @@ NDV(<expr>)
 
 | 参数 | 说明 |
 | -- | -- |
-| `<expr>` | 用于计算的表达式。支持的类型包括 String、Date、DateTime、IPv4、IPv6、TinyInt、SmallInt、Integer、BigInt、LargeInt、Float、Double、Decimal。|
+| `<expr>` | 用于计算的表达式。支持的类型包括 String、Date、DateTime、Timestamptz、IPv4、IPv6、TinyInt、SmallInt、Integer、BigInt、LargeInt、Float、Double、Decimal。|
 
 ## 返回值
 

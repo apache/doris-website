@@ -1,7 +1,8 @@
 ---
 {
     "title": "ALTER TABLE REPLACE",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "对两个表进行原子的替换操作。该操作仅适用于 OLAP 表。"
 }
 ---
 

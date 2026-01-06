@@ -1,7 +1,8 @@
 ---
 {
     "title": "LTRIM_IN",
-    "language": "en"
+    "language": "en",
+    "description": "The LTRIMIN function removes specified characters from the left side of a string. When no character set is specified,"
 }
 ---
 

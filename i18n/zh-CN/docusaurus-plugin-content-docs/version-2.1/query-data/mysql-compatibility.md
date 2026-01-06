@@ -1,7 +1,8 @@
 ---
 {
     "title": "MySQL 兼容性",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "Doris 高度兼容 MySQL 语法，支持标准 SQL。但是 Doris 与 MySQL 还是有很多不同的地方，下面给出了它们的差异点介绍。"
 }
 ---
 
@@ -260,3 +261,10 @@ Doris Select 语法与 MySQL 基本一致
 ## SQL Function
 
 Doris Function 基本覆盖绝大部分 MySQL Function。
+
+## SQL Mode
+
+| 名称 | 设置的行为 | 未设置的行为 | 备注 |
+| :-- | :-- | :-- | :-- |
+| PIPES_AS_CONCAT | 将 `\|\|` 符号解析为 concat 函数 | 将 `\|\|` 符号解析为逻辑与操作符 | - |
+| NO_BACKSLASH_ESCAPES | 将字符串中的反斜杠当做正常字符解析 | 将字符串中的反斜杠当做转义起始字符 | - |

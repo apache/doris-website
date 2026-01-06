@@ -1,7 +1,8 @@
 ---
 {
-   "title": "访问 Doris 集群",
-   "language": "zh-CN"
+    "title": "访问 Doris 集群",
+    "language": "zh-CN",
+    "description": "Kubernetes 通过 Service 作为 vip 和负载均衡器的能力，Service 有三种对外暴漏模式 ClusterIP 、 NodePort 、 LoadBalancer。"
 }
 ---
 
@@ -53,7 +54,7 @@ mysql -uroot -P9030 -hdoriscluster-sample-fe-service
 
 ## NodePort 模式
 
-按照 DorisCluster 访问配置章节，[配置使用 NodePort 访问模式](install-config-cluster.md#nodeport)后，使用 MySQL 协议，通过 root 无密码模式访问 FE 步骤如下。
+按照 DorisCluster 访问配置章节，[配置使用 NodePort 访问模式](./install-config-cluster.md#nodeport)后，使用 MySQL 协议，通过 root 无密码模式访问 FE 步骤如下。
 
 ### 第 1 步：获取 Service
 
@@ -100,7 +101,7 @@ mysql -h 192.168.88.62 -P 31545 -uroot
 
 ## LoadBalancer 模式
 
-按照 DorisCluster 访问配置章节，在公有云上，[配置使用 LoadBalancer 访问模式](install-config-cluster.md#loadbalancer)后，使用 MySQL 协议，通过 root 无密码模式访问 FE 步骤如下。
+按照 DorisCluster 访问配置章节，在公有云上，[配置使用 LoadBalancer 访问模式](./install-config-cluster.md#loadbalancer)后，使用 MySQL 协议，通过 root 无密码模式访问 FE 步骤如下。
 
 ### 第 1 步：获取 Service
 
@@ -134,7 +135,7 @@ FE 通过 301 机制返回的是 BE 只在 Kubernetes 内部可访问的地址�
 
 在 Kubernetes 外部的客户端使用 StreamLoad 模式向部署在 Kubernetes 上的 Doris 集群导入数据时，需要配置可从外部访问的 BE 地址作为 StreamLoad 的导入地址。
 ### 配置 BE Service 外部可访问
-按照 [NodePort](install-config-cluster.md#nodeport) 或者 [LoadBalancer](install-config-cluster.md#loadbalancer) 配置 BE 服务的 `Service` 可以从 Kubernetes 集群外部访问。更新部署 Doris 集群的 `DorisCluster` 资源。
+按照 [NodePort](./install-config-cluster.md#nodeport) 或者 [LoadBalancer](./install-config-cluster.md#loadbalancer) 配置 BE 服务的 `Service` 可以从 Kubernetes 集群外部访问。更新部署 Doris 集群的 `DorisCluster` 资源。
 
 ### 配置 BE 代理地址
-根据 [NodePort](#nodeport-模式) 或者 [LoadBalancer](#loadbalancer-模式) 获取访问地址的方式，获取可在 Kubernetes 外部访问的地址以及对应的可访问 web_server 服务的端口。将获取到的地址和访问端口配置到使用 StreamLoad 导入数据的请求地址中。
+根据 [NodePort](./access-cluster.md#nodeport-模式) 或者 [LoadBalancer](./access-cluster.md#loadbalancer-模式) 获取访问地址的方式，获取可在 Kubernetes 外部访问的地址以及对应的可访问 web_server 服务的端口。将获取到的地址和访问端口配置到使用 StreamLoad 导入数据的请求地址中。

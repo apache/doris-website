@@ -1,7 +1,8 @@
 ---
 {
     "title": "Feature Details",
-    "language": "en-US"
+    "language": "en-US",
+    "description": "The Cross-Cluster Replication (CCR) feature in Doris is primarily used for efficiently synchronizing data between multiple clusters,"
 }
 ---
 

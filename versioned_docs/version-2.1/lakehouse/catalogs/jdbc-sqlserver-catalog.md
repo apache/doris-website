@@ -1,7 +1,8 @@
 ---
 {
     "title": "SQL Server JDBC Catalog",
-    "language": "en"
+    "language": "en",
+    "description": "Doris JDBC Catalog supports connecting to SQL Server databases through the standard JDBC interface."
 }
 ---
 
@@ -75,6 +76,7 @@ When mapping SQLServer, a Database in Doris corresponds to a Schema under the sp
 | char/varchar/text/nchar/nvarchar/ntext | string        |                                                  |
 | time/datetimeoffset                    | string        |                                                  |
 | timestamp                              | string        | Displays hexadecimal representation of binary data, no actual meaning |
+| image/binary/varbinary             | varbinary     |Controlled by the `enable.mapping.varbinary` property of Catalog (supported since 4.0.2). The default is `false`, which maps to `string`; when `true`, it maps to `varbinary` type.|
 | other                                  | UNSUPPORTED   |                                                  |
 
 ## Common Issues

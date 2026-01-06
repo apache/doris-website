@@ -1,7 +1,8 @@
 ---
 {
     "title": "Migrating Data from Other OLAP",
-    "language": "en"
+    "language": "en",
+    "description": "To migrate data from other OLAP systems to Doris, you have several options:"
 }
 ---
 

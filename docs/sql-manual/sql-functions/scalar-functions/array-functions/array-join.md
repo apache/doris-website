@@ -1,7 +1,8 @@
 ---
 {
     "title": "ARRAY_JOIN",
-    "language": "en-US"
+    "language": "en-US",
+    "description": "Joins the elements of an array into a string. The function converts all elements in the array to strings and then concatenates them with the "
 }
 ---
 

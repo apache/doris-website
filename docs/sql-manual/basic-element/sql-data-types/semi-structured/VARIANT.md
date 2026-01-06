@@ -1,7 +1,8 @@
 ---
 {
     "title": "VARIANT",
-    "language": "en-US"
+    "language": "en-US",
+    "description": "The VARIANT type stores semi-structured JSON data. It can contain different primitive types (integers, strings, booleans, etc.),"
 }
 ---
 
@@ -97,6 +98,7 @@ Besides primitive types, VARIANT supports the following extended types via Schem
   - Decimal: Decimal32 / Decimal64 / Decimal128 / Decimal256
   - LargeInt
 - Datetime
+- Timestamptz
 - Date
 - IPV4 / IPV6
 - Boolean
@@ -114,6 +116,7 @@ CREATE TABLE test_var_schema (
         'string_val': STRING,
         'decimal_val': DECIMAL(38, 9),
         'datetime_val': DATETIME,
+        'tz_val': TIMESTAMPTZ,
         'ip_val': IPV4
     > NULL
 )
@@ -124,16 +127,17 @@ INSERT INTO test_var_schema VALUES (1, '{
     "string_val" : "Hello World",
     "decimal_val" : 1.11111111,
     "datetime_val" : "2025-05-16 11:11:11",
+    "tz_val" : "2025-05-16 11:11:11+08:00",
     "ip_val" : "127.0.0.1"
 }');
 
 SELECT variant_type(v1) FROM test_var_schema;
 
-+----------------------------------------------------------------------------------------------------------------------------+
-| variant_type(v1)                                                                                                           |
-+----------------------------------------------------------------------------------------------------------------------------+
-| {"datetime_val":"datetimev2","decimal_val":"decimal128i","ip_val":"ipv4","large_int_val":"largeint","string_val":"string"} |
-+----------------------------------------------------------------------------------------------------------------------------+
++---------------------------------------------------------------------------------------------------------------------------------------------------+
+| variant_type(v1)                                                                                                                                  |
++---------------------------------------------------------------------------------------------------------------------------------------------------+
+| {"datetime_val":"datetimev2","decimal_val":"decimal128i","ip_val":"ipv4","large_int_val":"largeint","string_val":"string","tz_val":"timestamptz"} |
++---------------------------------------------------------------------------------------------------------------------------------------------------+
 ```
 
 `{"date": 2020-01-01}` and `{"ip": 127.0.0.1}` are invalid JSON texts; the correct format is `{"date": "2020-01-01"}` and `{"ip": "127.0.0.1"}`.
@@ -374,18 +378,18 @@ SELECT * FROM tbl WHERE v['str'] MATCH 'Doris';
 - VARIANT itself cannot be used directly in ORDER BY, GROUP BY, as a JOIN KEY, or as an aggregate argument; CAST subpaths instead.
 - Strings can be implicitly converted to VARIANT.
 
-| VARIANT         | Castable | Coercible | Conversion Function |
-| --------------- | -------- | --------- | ------------------- |
-| `ARRAY`         | ✔        | ❌        |                     |
-| `BOOLEAN`       | ✔        | ✔         |                     |
-| `DATE/DATETIME` | ✔        | ✔         |                     |
-| `FLOAT`         | ✔        | ✔         |                     |
-| `IPV4/IPV6`     | ✔        | ✔         |                     |
-| `DECIMAL`       | ✔        | ✔         |                     |
-| `MAP`           | ❌        | ❌         |                     |
-| `TIMESTAMP`     | ✔        | ✔         |                     |
-| `VARCHAR`       | ✔        | ✔         | `PARSE_TO_JSON`     |
-| `JSON`          | ✔        | ✔         |                     |
+| VARIANT         | Castable | Coercible |
+| --------------- | -------- | --------- |
+| `ARRAY`         | ✔        | ❌        |
+| `BOOLEAN`       | ✔        | ✔         |
+| `DATE/DATETIME` | ✔        | ✔         |
+| `FLOAT`         | ✔        | ✔         |
+| `IPV4/IPV6`     | ✔        | ✔         |
+| `DECIMAL`       | ✔        | ✔         |
+| `MAP`           | ❌        | ❌        |
+| `TIMESTAMP`     | ✔        | ✔         |
+| `VARCHAR`       | ✔        | ✔         |
+| `JSON`          | ✔        | ✔         |
 
 ## Limitations
 
@@ -462,6 +466,10 @@ Approach 2: extended `DESC` to show materialized subpaths (only those extracted)
 ```sql
 SET describe_extend_variant_column = true;
 DESC variant_tbl;
+```
+
+``` sql
+DESCRIBE ${table_name} PARTITION ($partition_name);
 ```
 
 Use both: Approach 1 is precise; Approach 2 is efficient.

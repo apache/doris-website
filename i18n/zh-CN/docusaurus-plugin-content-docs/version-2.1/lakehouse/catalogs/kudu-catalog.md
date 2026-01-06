@@ -1,13 +1,14 @@
 ---
 {
     "title": "Kudu Catalog",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "Kudu Catalog 通过 Trino Connector 兼容框架，使用 Trino Kudu Connector 来访问 Kudu 表。"
 }
 ---
 
 Kudu Catalog 通过 [Trino Connector](https://doris.apache.org/zh-CN/community/how-to-contribute/trino-connector-developer-guide/) 兼容框架，使用 Trino Kudu Connector 来访问 Kudu 表。
 
-:::notice
+:::note
 该功能为实验功能，自 3.0.1 版本开始支持。
 :::
 
@@ -67,7 +68,7 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 
   TrinoProperties 部分用于填写将传递给 Trino Connector 的属性，这些属性以`trino.`为前缀。理论上，Trino 支持的属性这里都支持，更多有关 Kudu 的属性可以参考 [Trino 文档](https://trino.io/docs/current/connector/kudu.html)。
 
-* `{CommonProperties}`
+* `[CommonProperties]`
 
   CommonProperties 部分用于填写通用属性。请参阅[ 数据目录概述 ](../catalog-overview.md)中【通用属性】部分。
 

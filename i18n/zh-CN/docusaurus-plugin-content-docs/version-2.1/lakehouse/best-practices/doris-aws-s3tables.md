@@ -1,9 +1,9 @@
 ---
 {
-    "title": "Doris 集成 AWS S3 Tables",
-    "language": "zh-CN"
+    "title": "集成 Glue + AWS S3 Tables",
+    "language": "zh-CN",
+    "description": "AWS S3 Tables 是一种特殊的 S3 Bucket 类型，其对外提供 Apache Iceberg 表格式标准的读写接口，底层依托 Amazon S3，提供和 S3 本身相同的持久性、可用性、可扩展性和性能特征。此外，S3 Tables 还提供以下特性："
 }
-
 ---
 
 [AWS S3 Tables](https://aws.amazon.com/s3/features/tables/) 是一种特殊的 S3 Bucket 类型，其对外提供 Apache Iceberg 表格式标准的读写接口，底层依托 Amazon S3，提供和 S3 本身相同的持久性、可用性、可扩展性和性能特征。此外，S3 Tables 还提供以下特性：
@@ -54,7 +54,7 @@ S3 Table Bucket 是 S3 推出的第三种 Bucket 类型，和之前的 General p
         'type' = 'iceberg',
         'iceberg.catalog.type' = 'rest',
         'iceberg.rest.uri' = 'https://glue.<region>.amazonaws.com/iceberg',
-        'iceberg.rest.warehouse' = '<acount_id>:s3tablescatalog/<s3_table_bucket_name>',
+        'warehouse' = '<acount_id>:s3tablescatalog/<s3_table_bucket_name>',
         'iceberg.rest.sigv4-enabled' = 'true',
         'iceberg.rest.signing-name' = 'glue',
         'iceberg.rest.access-key-id' = '<ak>',

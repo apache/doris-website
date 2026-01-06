@@ -1,7 +1,8 @@
 ---
 {
     "title": "Config Action",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "Config Action 用于获取当前 FE 的配置信息"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "E",
-    "language": "en"
+    "language": "en",
+    "description": "Returns the constant e value."
 }
 ---
 

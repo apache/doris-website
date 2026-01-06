@@ -1,7 +1,8 @@
 ---
 {
     "title": "BUILD INDEX",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "为整个表或者表的分区构建索引，必须指定表名和索引名，可选指定分区列表。"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "SHOW EXPORT",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "该语句用于展示指定的导出任务的执行情况"
 }
 ---
 

@@ -35,7 +35,7 @@ export default function Home(): JSX.Element {
         },
         {
             label: <Translate id="homepage.banner.button2">Join Slack</Translate>,
-            link: 'https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-35mzao67o-BrpU70FNKPyB6UlgpXf8_w',
+            link: 'https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-3b8tlr3le-Z~IrrVxkzqniFjhL17d1oQ',
             type: 'ghost',
         },
     ];
@@ -69,29 +69,29 @@ export default function Home(): JSX.Element {
                 </p>
             </div>
         ),
-        event: (
-            <Link
-                to={'https://www.velodb.io/events/doris-meetup-250820'}
-                style={{ background: 'linear-gradient(0deg, #F7F9FE 0%, #F7F9FE 100%), #FFF', textDecoration: 'none' }}
-                onMouseEnter={() => {
-                    document.getElementById('event-star-icon').firstChild.style.fill = '#444FD9';
-                }}
-                onMouseLeave={() => {
-                    document.getElementById('event-star-icon').firstChild.style.fill = '#636CDF';
-                }}
-                className="lg:rounded-full rounded-[1.625rem] mb-8 text-center group lg:w-[51rem] mx-auto lg:flex-row flex-col flex py-4 px-[2.25rem] items-center justify-center"
-            >
-                <div className="lg:mb-0 mb-4 flex items-center">
-                    <HomeEvenStarIcon id="event-star-icon" />
-                    <span className="ml-[3px] group-hover:text-[#444FD9] font-bold text-[#636CDF] text-[0.875rem]/[1rem]">
-                        NEW EVENT
-                    </span>
-                </div>
-                <p className="lg:ml-[0.75rem] group-hover:text-[#444FD9] text-[1rem]/[1rem] text-[#000]">
-                    Real-Time IoT Analytics — Apache Doris × EMQ Meetup | Aug 20 · San Francisco
-                </p>
-            </Link>
-        ),
+        // event: (
+        //     <Link
+        //         to={'https://www.velodb.io/events/GenAI-AWS-251113'}
+        //         style={{ background: 'linear-gradient(0deg, #F7F9FE 0%, #F7F9FE 100%), #FFF', textDecoration: 'none' }}
+        //         onMouseEnter={() => {
+        //             document.getElementById('event-star-icon').firstChild.style.fill = '#444FD9';
+        //         }}
+        //         onMouseLeave={() => {
+        //             document.getElementById('event-star-icon').firstChild.style.fill = '#636CDF';
+        //         }}
+        //         className="lg:rounded-full rounded-[1.625rem] mb-8 text-center group lg:w-[45rem] mx-auto lg:flex-row flex-col flex py-4 px-[2.25rem] items-center justify-center"
+        //     >
+        //         <div className="lg:mb-0 mb-4 flex items-center">
+        //             <HomeEvenStarIcon id="event-star-icon" />
+        //             <span className="ml-[3px] group-hover:text-[#444FD9] font-bold text-[#636CDF] text-[0.875rem]/[1rem]">
+        //                 NEW EVENT
+        //             </span>
+        //         </div>
+        //         <p className="lg:ml-[0.75rem] group-hover:text-[#444FD9] text-[1rem]/[1rem] text-[#000]">
+        //             Webinar: Data Analytics in the Agentic AI Era —— Register Now
+        //         </p>
+        //     </Link>
+        // ),
         bannerImg: require('@site/static/images/home-banner.png').default,
         buttons,
     };
@@ -284,7 +284,7 @@ export default function Home(): JSX.Element {
                     </defs>
                 </svg>
             ),
-            href: 'https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-35mzao67o-BrpU70FNKPyB6UlgpXf8_w',
+            href: 'https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-3b8tlr3le-Z~IrrVxkzqniFjhL17d1oQ',
         },
         {
             title: <Translate id="community.title.c4">Twitter</Translate>,
@@ -408,7 +408,7 @@ export default function Home(): JSX.Element {
                 message:
                     'Apache Doris is an open-source database based on MPP architecture,with easier use and higher performance.  As a modern data warehouse, apache doris empowers your Olap query and database analytics.',
             })}
-            showAnnouncementBar={true}
+            showAnnouncementBar={false}
             keywords={translate({
                 id: 'homepage.keywords',
                 message: 'Open Source database, OLAP, data warehouse, database analytics',

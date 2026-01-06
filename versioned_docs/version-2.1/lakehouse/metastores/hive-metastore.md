@@ -1,7 +1,8 @@
 ---
 {
-  "title": "Hive Metastore",
-  "language": "en"
+    "title": "Hive Metastore",
+    "language": "en",
+    "description": "This document describes all supported parameters when connecting to and accessing Hive MetaStore services through the CREATE CATALOG statement."
 }
 ---
 
@@ -28,6 +29,7 @@ The following parameters are common to different Catalog types.
 | hive.metastore.client.keytab       | hadoop.kerberos.keytab            | No       | Empty   | Kerberos keytab file path                                                                                                                                                               |
 | hive.metastore.username            | hadoop.username                   | No       | hadoop  | Hive Metastore username, used in non-Kerberos mode                                                                                                                                      |
 | hive.conf.resources                |                                   | No       | Empty   | hive-site.xml configuration file path, using relative path                                                                                                                             |
+| hive.metastore.client.socket.timeout                |                                   | No    | Default value is `hive_metastore_client_timeout_second` in FE configuration parameters, defaults to 10 seconds. | This parameter is supported since version 4.0.3. Timeout for accessing metadata through Hive Metastore Client connection. If the metadata is large (e.g., when there are many partitions), this value can be increased. |
 
 > Note:
 >
@@ -226,6 +228,17 @@ The following parameters are specific to each Catalog type, in addition to the c
         'oss.endpoint' = 'oss-cn-beijing.aliyuncs.com'
     );
     ```
+## HMS Access Port Requirements
+
+Doris requires at least the following ports to be open to access HMS:
+
+| Service        | Port Purpose          | Default Port | Protocol |
+|----------------|-----------------------|--------------|----------|
+| Hive Metastore | Thrift (metadata access) | 9083         | TCP      |
+
+Notes:
+- Ports may be customized in `hive-site.xml`. Always follow your actual configuration.
+- When Kerberos authentication is enabled, ensure network connectivity from Doris to the Kerberos KDC. The KDC listens on TCP port 88 by default, unless customized in your KDC configuration.
 
 ## Frequently Asked Questions (FAQ)
 

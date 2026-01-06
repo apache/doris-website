@@ -1,7 +1,8 @@
 ---
 {
     "title": "ARRAY_POPBACK",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "返回移除最后一个元素后的数组，如果输入参数为 NULL，则返回 NULL"
 }
 ---
 

@@ -1,9 +1,13 @@
 ---
 {
-    "title": "最佳实践",
-    "language": "zh-CN"
+    "title": "最佳实践 | Async Materialized View",
+    "language": "zh-CN",
+    "description": "当满足以下条件时，建议创建分区物化视图：",
+    "sidebar_label": "最佳实践"
 }
 ---
+
+# 最佳实践
 
 ## 异步物化视图使用原则
 - **时效性考虑：** 异步物化视图通常用于对数据时效性要求不高的场景，一般是 T+1 的数据。如果时效性要求高，应考虑使用同步物化视图。
@@ -271,12 +275,12 @@ union_sub_mv2;
 物化视图可以只保留最近几个分区的数据，每次刷新时，自动删除过期的分区数据。
 可以通过设置物化视图的属性 `partition_sync_limit`，`partition_sync_time_unit`，`partition_sync_date_format` 来实现。
 
-partition_sync_limit： 基表的分区字段为时间时，可以用此属性配置同步基表的分区范围，配合 partition_sync_time_unit 一起使用。例如设置为 3，
+partition_sync_limit：基表的分区字段为时间时，可以用此属性配置同步基表的分区范围，配合 partition_sync_time_unit 一起使用。例如设置为 3，
 partition_sync_time_unit 设置为 DAY，代表仅同步基表近 3 天的分区和数据。
 
-partition_sync_time_unit： 分区刷新的时间单位，支持 DAY/MONTH/YEAR（默认DAY）。
+partition_sync_time_unit：分区刷新的时间单位，支持 DAY/MONTH/YEAR（默认DAY）。
 
-partition_date_format：当基表的分区字段为字符串时，如果想使用 partition_sync_limit的能力，可以设置日期的格式。
+partition_date_format：当基表的分区字段为字符串时，如果想使用 partition_sync_limit 的能力，可以设置日期的格式。
 
 例如：
 物化视图定义如下，物化视图只保留最近 3 天的数据，如果最近 3 天没有数据，直查如下物化视图，就不会返回数据。

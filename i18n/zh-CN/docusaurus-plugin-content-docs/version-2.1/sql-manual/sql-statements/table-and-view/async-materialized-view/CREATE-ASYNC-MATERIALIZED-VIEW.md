@@ -1,7 +1,8 @@
 ---
 {
-  "title": "CREATE ASYNC MATERIALIZED VIEW",
-  "language": "zh-CN"
+    "title": "CREATE ASYNC MATERIALIZED VIEW",
+    "language": "zh-CN",
+    "description": "创建异步物化视图语句，列名和列类型是通过物化视图 SQL 语句推导出来的，可以自定义列名，不可以定义列类型。"
 }
 ---
 
@@ -137,7 +138,7 @@ refresh_trigger
 | grace_period                     | 查询改写时允许物化视图数据的最大延迟时间（单位：秒）。如果分区 A 和基表的数据不一致，物化视图的分区 A 上次刷新时间为 10:15:00，系统当前时间为  10:15:08，那么该分区不会被透明改写。但是如果 `grace_period`  = 10，该分区就会被用于透明改写 |
 | excluded_trigger_tables          | 数据刷新时忽略的表名，逗号分割。例如`table1,table2`          |
 | refresh_partition_num            | 单次 insert 语句刷新的分区数量，默认为 1。物化视图刷新时会先计算要刷新的分区列表，然后根据该配置拆分成多个 Insert 语句顺序执行。遇到失败的 Insert 语句，整个任务将停止执行。物化视图保证单个 Insert 语句的事务性，失败的 Insert 语句不会影响到已经刷新成功的分区 |
-| workload_group                   | 物化视图执行刷新任务时使用的 `workload_group` 名称。用来限制物化视图刷新数据使用的资源，避免影响到其它业务的运行。关于 `workload_group` 的创建及使用，可参考 [WORKLOAD-GROUP](https://doris.apache.org/zh-CN/docs/admin-manual/workload-group.md) 文档。 |
+| workload_group                   | 物化视图执行刷新任务时使用的 `workload_group` 名称。用来限制物化视图刷新数据使用的资源，避免影响到其它业务的运行。关于 `workload_group` 的创建及使用，可参考 [WORKLOAD-GROUP](https://doris.apache.org/zh-CN/docs/dev/admin-manual/workload-management/workload-group) 文档。 |
 | partition_sync_limit             | 当基表的分区字段为时间时，可以用此属性配置同步基表的分区范围，配合 `partition_sync_time_unit` 一起使用。例如设置为 2，`partition_sync_time_unit` 设置为 `MONTH`，代表仅同步基表近 2 个月的分区和数据。最小值为 `1`。随着时间的变化物化视图每次刷新时都会自动增删分区，例如物化视图现在有 2,3 两个月的数据，下个月的时候，会自动删除 2 月的数据，增加 4 月的数据。 |
 | partition_sync_time_unit         | 分区刷新的时间单位，支持 DAY/MONTH/YEAR（默认DAY）           |
 | partition_date_format            | 当基表的分区字段为字符串时，如果想使用 `partition_sync_limit`的能力，可以设置日期的格式，将按照 `partition_date_format`的设置解析分区时间 |

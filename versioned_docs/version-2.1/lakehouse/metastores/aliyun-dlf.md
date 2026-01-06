@@ -1,7 +1,8 @@
 ---
 {
     "title": "Aliyun DLF",
-    "language": "en"
+    "language": "en",
+    "description": "This document describes how to use the CREATE CATALOG statement to connect and access Alibaba Cloud Data Lake Formation (DLF) metadata service."
 }
 ---
 
@@ -22,7 +23,11 @@ This document describes how to use the `CREATE CATALOG` statement to connect and
 | `dlf.access_key` | - | Alibaba Cloud AccessKey for accessing DLF service. | None | Yes |
 | `dlf.secret_key` | - | Alibaba Cloud SecretKey for accessing DLF service. | None | Yes |
 | `dlf.catalog_id` | `dlf.catalog.id` | Catalog ID. Used to specify metadata catalog. If not set, the default catalog is used. | None | No |
-| `warehouse` | - | Storage path of the Warehouse, only required for Paimon Catalog | None | No |
+| `warehouse` | - | Storage path of the Warehouse, only required for Paimon Catalog. Note that the object storage path must end with `/`. | None | No |
+
+> Note:
+>
+> For versions before 3.1.0, please use the former names.
 
 ### DLF 2.5+ (Rest Catalog)
 

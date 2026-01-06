@@ -1,7 +1,8 @@
 ---
 {
     "title": "UPDATE",
-    "language": "en"
+    "language": "en",
+    "description": "This statement is used to update the data. The UPDATE statement currently only supports the UNIQUE KEY model."
 }
 ---
 

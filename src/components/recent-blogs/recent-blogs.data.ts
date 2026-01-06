@@ -1,19 +1,19 @@
 export const RECENT_BLOGS_POSTS = [
     {
-        label: `Apache Doris 3.0.5 Released`,
-        link: 'https://doris.apache.org/blog/release-note-3.0.5',
+        label: 'Apache Doris Up to 34x Faster Than ClickHouse in Real-Time Updates',
+        link: 'https://www.velodb.io/blog/apache-doris-34x-faster-clickhouse-realtime-updates',
     },
     {
-        label: 'How Tencent Music saved 80% in costs by migrating from Elasticsearch to Apache Doris',
-        link: 'https://www.velodb.io/blog/1395',
+        label: 'From OneLake to Insights: Building Modern Analytics with Apache Doris and Microsoft Fabric',
+        link: 'https://www.velodb.io/blog/connect-apache-doris-and-microsoft-fabric-and-onelake',
     },
     {
-        label: 'Slash your cost by 90% with Apache Doris Compute-Storage Decoupled Mode',
-        link: 'https://www.velodb.io/blog/1384',
+        label: 'Apache Doris Tops JSONBench in Cold Queries and Data Quality',
+        link: 'https://www.velodb.io/blog/apache-doris-tops-json-bench-cold-queries',
     },
     {
-        label: 'Why Apache Doris is a Better Alternative to Elasticsearch for Real-Time Analytics',
-        link: 'https://www.velodb.io/blog/1379',
+        label: 'Apache Doris Achieves 70% Better Price-Performance on ARM-based AWS Graviton',
+        link: 'https://www.velodb.io/blog/apache-doris-achieves-70-better-price-performance',
     },
 
 

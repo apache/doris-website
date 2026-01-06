@@ -1,9 +1,13 @@
 ---
 {
-    "title": "ARRAY",
-    "language": "en-US"
+    "title": "ARRAY | Array Functions",
+    "language": "en-US",
+    "description": "Creates an array. The function accepts zero or more parameters and returns an array containing all input elements.",
+    "sidebar_label": "ARRAY"
 }
 ---
+
+# ARRAY
 
 ## array
 
@@ -135,3 +139,4 @@ ERROR 1105 (HY000): errCode = 2, detailMessage = Can not find the compatibility 
 ### Keywords
 
 ARRAY
+

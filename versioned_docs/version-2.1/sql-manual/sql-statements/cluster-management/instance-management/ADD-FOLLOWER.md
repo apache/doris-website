@@ -1,7 +1,8 @@
 ---
 {
     "title": "ADD FOLLOWER",
-    "language": "en"
+    "language": "en",
+    "description": "This statement adds a node with the FOLLOWER role to the FRONTEND node (only used by administrators!)"
 }
 ---
 

@@ -65,7 +65,23 @@ const config = {
             },
         },
     },
-    scripts: ['/js/custom-script.js'],
+    scripts: ['/js/custom-script.js',
+        {
+            async: true,
+            src: 'https://widget.kapa.ai/kapa-widget.bundle.js',
+            'data-website-id': 'a5fb90df-217a-4097-95c0-80490220314b',
+            'data-modal-title': 'Apache Doris AI',
+            'data-project-name': 'Apache Doris Website',
+            'data-project-logo': 'https://cdn.selectdb.com/static/doris_1_3c42247c63.png',
+            'data-modal-image': 'https://cdn.selectdb.com/static/doris_logo_only_9617fa366a.png',
+            'data-project-color': '#444FD9',
+            'data-modal-disclaimer': 'This is a custom LLM with access to all [Doris documentation](https://doris.apache.org/docs/4.x/gettingStarted/what-is-apache-doris).',
+            'data-consent-required': true,
+            'data-consent-screen-disclaimer': "By clicking &quot;I agree, let's chat&quot;, you consent to the use of the AI assistant in accordance with kapa.ai's [Privacy Policy](https://www.kapa.ai/content/privacy-policy). This service uses reCAPTCHA, which requires your consent to Google's [Privacy Policy](https://policies.google.com/privacy) and [Terms of Service](https://policies.google.com/terms). By proceeding, you explicitly agree to both kapa.ai's and Google's privacy policies.",
+            'data-user-analytics-cookie-enabled': false,
+            'data-bot-protection-mechanism': "hcaptcha"
+        }
+    ],
     stylesheets: [
         // 'https://cdn-font.hyperos.mi.com/font/css?family=MiSans:100,200,300,400,450,500,600,650,700,900:Chinese_Simplify,Latin&display=swap',
         // 'https://cdn-font.hyperos.mi.com/font/css?family=MiSans_Latin:100,200,300,400,450,500,600,650,700,900:Latin&display=swap',
@@ -73,6 +89,10 @@ const config = {
         // 'https://fonts.googleapis.com',
         // 'https://fonts.gstatic.com',
         // 'https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap'
+        {
+            href: '/css/katex.min.css',
+            type: 'text/css',
+        },
     ],
     projectName: 'apache/doris-website', // Usually your repo name.
     customFields: {},
@@ -119,20 +139,20 @@ const config = {
                         from: '/docs/dev/get-starting/',
                         to: `/docs/${DEFAULT_VERSION}/gettingStarted/quick-start`,
                     },
+                    {
+                        from: '/docs/4.0/releasenotes/v4.0/release-4.0.0/',
+                        to: '/docs/4.x/releasenotes/v4.0/release-4.0.0'
+                    }
                 ],
                 createRedirects(existingPath) {
-                    if (existingPath.startsWith('/docs/3.0/')) {
-                        const withoutVersion = existingPath.replace('/docs/3.0/', '/docs/');
-                        return [withoutVersion];
-                    }
-                    // return [];
-                    if (existingPath.includes('/gettingStarted/what-is-apache-doris')) {
+                    if (existingPath.includes('/gettingStarted/what-is-apache-doris') || existingPath.startsWith('/docs/3.x/')) {
                         // Redirect from /gettingStarted/what-is-new to /gettingStarted/what-is-apache-doris
                         return [
                             existingPath.replace(
                                 '/gettingStarted/what-is-apache-doris',
                                 '/gettingStarted/what-is-new',
                             ),
+                            existingPath.replace('/docs/3.x/', '/docs/'), existingPath.replace('/docs/3.x/', '/docs/3.0/')
                         ];
                     }
                     return undefined; // Return a falsy value: no redirect created
@@ -148,7 +168,7 @@ const config = {
                 docs: {
                     lastVersion: getLatestVersion(),
                     versions: getDocsVersions(),
-                    sidebarPath: require.resolve('./sidebars.json'),
+                    sidebarPath: require.resolve('./sidebars.ts'),
                     // editUrl: ({ locale, versionDocsDirPath, docPath }) => {
                     //     return `https://github.com/apache/doris-website/edit/master/docs/${locale}/docs/${docPath}`;
                     //     // if (versionDocsDirPath === 'versioned_docs/version-dev') {
@@ -157,7 +177,15 @@ const config = {
                     // },
                     showLastUpdateAuthor: false,
                     showLastUpdateTime: false,
-                    remarkPlugins: [markdownBoldPlugin],
+                    remarkPlugins: [markdownBoldPlugin, require('remark-math')],
+                    rehypePlugins: [
+                        [
+                            require('rehype-katex'),
+                            {
+                                strict: process.env.CI === 'true' || process.env.GITHUB_ACTIONS === 'true' ? false : 'warn',
+                            }
+                        ]
+                    ]
                 },
                 blog: {
                     blogTitle: 'Apache Doris - Blog | Latest news and events ',
@@ -203,7 +231,7 @@ const config = {
                 highlightSearchTermsOnTargetPage: true,
                 // indexPages: true,
                 indexDocs: true,
-                docsRouteBasePath: ['/docs/2.0', '/docs/2.1', '/docs/3.0', '/docs/dev'],
+                docsRouteBasePath: ['/docs/2.1', '/docs/3.x', '/docs/4.x', '/docs/dev'],
                 indexBlog: false,
                 explicitSearchResultPath: true,
                 searchBarShortcut: true,
@@ -224,20 +252,32 @@ const config = {
             announcementBar: {
                 id: 'join_us',
                 content: JSON.stringify({
-                    zh: `<a href="https://www.selectdb.com/resources/events/doris-webinar-20250828" target="_blank" style="display:flex; width: 100%; align-items: center; justify-content: center; margin-left: 4px; text-decoration: none;">
-                <img style="width: 19px; height: 19px; margin-right: 3px;" src="/images/nav-star.svg">
-                <span style="color:#52CAA3;font-size:0.875rem;font-weight:700;line-height:1rem; margin-right:0.675rem; text-decoration: none;">NEW</span>
-               <span>Apache Doris x Milvus 联合 Webinar：解锁 DB for AI 的无限可能</span> 
-               <p style="margin-left:0.675rem;color:#52CAA3;font-size:0.875rem;line-height:1rem;font-weight:700;letter-spacing:0.28px;">查看详情 -></p> 
-                   </a>`,
-                    en: `<a href="https://www.velodb.io/events/doris-webinar-20250923" target="_blank" style="display:flex; width: 100%; align-items: center; justify-content: center; margin-left: 4px; text-decoration: none;">
-                    <img style="width: 19px; height: 19px; margin-right: 3px;" src="/images/nav-star.svg">
-                    <span style="color:#52CAA3;font-size:0.875rem;font-weight:700;line-height:1rem; margin-right:0.675rem; text-decoration: none;">NEW EVENTS</span>
-                   <span>Bridging Data Lake and Database — Apache Doris Webinar | September 23</span> 
-                   <p style="margin-left:0.675rem;color:#52CAA3;font-size:0.875rem;line-height:1rem;font-weight:700;letter-spacing:0.28px;">Register Now -></p> 
-                       </a>`,
+                    //         zh: `<a href="https://www.selectdb.com/resources/events/doris-webinar-20250828" target="_blank" style="display:flex; width: 100%; align-items: center; justify-content: center; margin-left: 4px; text-decoration: none;">
+                    //     <img style="width: 19px; height: 19px; margin-right: 3px;" src="/images/nav-star.svg">
+                    //     <span style="color:#52CAA3;font-size:0.875rem;font-weight:700;line-height:1rem; margin-right:0.675rem; text-decoration: none;">NEW</span>
+                    //    <span>Apache Doris x Milvus 联合 Webinar：解锁 DB for AI 的无限可能</span> 
+                    //    <p style="margin-left:0.675rem;color:#52CAA3;font-size:0.875rem;line-height:1rem;font-weight:700;letter-spacing:0.28px;">查看详情 -></p> 
+                    //        </a>`,
+                    //         en: `<a href="https://www.velodb.io/events/GenAI-AWS-251113" target="_blank" style="display:flex; width: 100%; align-items: center; justify-content: center; margin-left: 4px; text-decoration: none;">
+                    //         <img style="width: 19px; height: 19px; margin-right: 3px;" src="/images/nav-star.svg">
+                    //         <span style="color:#52CAA3;font-size:0.875rem;font-weight:700;line-height:1rem; margin-right:0.675rem; text-decoration: none;">NEW EVENTS</span>
+                    //        <span>Webinar: Data Analytics in the Agentic AI Era</span> 
+                    //        <p style="margin-left:0.675rem;color:#52CAA3;font-size:0.875rem;line-height:1rem;font-weight:700;letter-spacing:0.28px;">Register Now -></p> 
+                    //            </a>`,
+                    //     }),
+                    //     content: JSON.stringify({
+                    //         zh: `<a href="https://doris-summit.org.cn" target="_blank" style="display:flex; width: 100%; align-items: center; justify-content: center; margin-left: 4px; text-decoration: none;">
+                    //     <img style="width: 60px; height: 24px; margin-right: 34px;" src="/images/doris-summit.svg">
+                    //    <span style="font-weight:700; font-size:0.875rem; line-height: 120%;">Powering Real-Time Analytics & Search  in the AI Era | 2025 年 11 月 05 日-06 日 · 全网直播</span> 
+                    //    <p style="margin-left:2.5rem;color:#FFF;font-size:0.875rem;line-height:120%;font-weight:600;">立即报名 -></p> 
+                    //        </a>`,
+                    //         en: `<a href="https://www.airmeet.com/e/10fb98e0-9921-11f0-89cc-795d82447e40?utm_source=Apache_Doris_Banner" target="_blank" style="display:flex; width: 100%; align-items: center; justify-content: center; margin-left: 4px; text-decoration: none;">
+                    //         <img style="width: 60px; height: 24px; margin-right: 34px;" src="/images/doris-summit.svg">
+                    //        <span style="font-weight:700; font-size:0.875rem; line-height: 120%;">Apache Doris Summit 2025 · Virtual</span> 
+                    //        <p style="margin-left:2.5rem;color:#FFF;font-size:0.875rem;line-height:120%;font-weight:600;">See Full Agenda and Register Now -></p> 
+                    //            </a>`,
                 }),
-                textColor: '#4C576C',
+                textColor: '#FFF',
                 isCloseable: false,
             },
             navbar: {

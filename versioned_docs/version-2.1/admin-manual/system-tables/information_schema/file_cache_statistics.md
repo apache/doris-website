@@ -1,7 +1,8 @@
 ---
 {
     "title": "file_cache_statistics",
-    "language": "en"
+    "language": "en",
+    "description": "Used to view the metric information related to data cache on each BE node."
 }
 ---
 

@@ -1,9 +1,13 @@
 ---
 {
-    "title": "Overview",
-    "language": "en"
+    "title": "Overview | Open Api",
+    "language": "en",
+    "description": "As a supplement to Apache Doris operation and maintenance management,",
+    "sidebar_label": "Overview"
 }
 ---
+
+# Overview
 
 As a supplement to Apache Doris operation and maintenance management, OPEN API is mainly used by database administrators to perform some management operations.
 
@@ -25,4 +29,5 @@ The security authentication of FE BE API can be enabled through the following co
 :::info NOTE
 The permission requirements for the HTTP API of FE and BE vary from version to version. Please refer to the corresponding API documentation for details.
 :::
+
 

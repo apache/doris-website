@@ -1,7 +1,8 @@
 ---
 {
-"title": "ARRAY_AGG",
-"language": "zh-CN"
+    "title": "ARRAY_AGG",
+    "language": "zh-CN",
+    "description": "将一列中的值（包括空值 null）串联成一个数组，可以用于多行转一行（行转列）。"
 }
 ---
 
@@ -19,7 +20,7 @@ ARRAY_AGG(<col>)
 
 | 参数 | 说明 |
 | -- | -- |
-| `<col>` | 确定要放入数组的值的表达式，支持类型为 Bool，TinyInt，SmallInt，Integer，BigInt，LargeInt，Float，Double，Decimal，Date，Datetime，IPV4，IPV6，String，Array，Map，Struct。|
+| `<col>` | 确定要放入数组的值的表达式，支持类型为 Bool，TinyInt，SmallInt，Integer，BigInt，LargeInt，Float，Double，Decimal，Date，Datetime，Timestamptz，IPV4，IPV6，String，Array，Map，Struct。|
 
 ## 返回值
 

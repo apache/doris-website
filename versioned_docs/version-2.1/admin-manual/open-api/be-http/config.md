@@ -1,7 +1,8 @@
 ---
 {
     "title": "Config of BE",
-    "language": "en"
+    "language": "en",
+    "description": "Query and update the config of BE"
 }
 ---
 

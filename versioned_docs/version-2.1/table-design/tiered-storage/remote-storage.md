@@ -1,7 +1,8 @@
 ---
 {
     "title": "Remote Storage",
-    "language": "en-US"
+    "language": "en-US",
+    "description": "Remote storage supports placing cold data in external storage (such as object storage, HDFS)."
 }
 ---
 
@@ -140,7 +141,7 @@ ALTER TABLE create_table_partition MODIFY PARTITION (*) SET("storage_policy"="te
 :::tip
 Note that if the user specifies different Storage Policies for the entire Table and some Partitions when creating the table, the Storage Policy set for the Partition will be ignored, and all Partitions of the table will use the table's Policy. If you need a Partition's Policy to differ from others, you can modify it using the method described above for associating a Storage Policy with an existing Partition.
 
-For more details, please refer to the Docs directory under [RESOURCE](../../sql-manual/sql-statements/cluster-management/compute-management/CREATE-RESOURCE), [POLICY](../../sql-manual/sql-statements/cluster-management/compute-management/CREATE-WORKLOAD-POLICY), [CREATE TABLE](../../sql-manual/sql-statements/table-and-view/table/CREATE-TABLE), [ALTER TABLE](../../sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-COLUMN), etc.
+For more details, please refer to the Docs directory under [RESOURCE](../../sql-manual/sql-statements/cluster-management/compute-management/CREATE-RESOURCE), [STORAGE POLICY](../../sql-manual/sql-statements/cluster-management/storage-management/CREATE-STORAGE-POLICY), [CREATE TABLE](../../sql-manual/sql-statements/table-and-view/table/CREATE-TABLE), [ALTER TABLE](../../sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-COLUMN), etc.
 :::
 
 ### Configuring Compaction
@@ -153,9 +154,13 @@ For more details, please refer to the Docs directory under [RESOURCE](../../sql-
 
 -   Tables using remote storage do not support backup.
 
--   Modifying the location information of remote storage, such as endpoint, bucket, and path, is not supported.
+-   Modifying the location information of remote storage, such as endpoint, bucket, or path, is not supported.
 
--   Unique model tables do not support setting remote storage when the Merge-on-Write feature is enabled.
+-   Unique model tables with Merge-on-Write enabled do not support remote storage.
+
+-   Storage policies support creation, modification, and deletion. Before deleting a storage policy, ensure that no tables are referencing it.
+
+-   Once a storage policy is set, it cannot be unset.
 
 ## Cold Data Space
 
@@ -210,3 +215,7 @@ PROPERTIES
     "use_path_style" = "true"
 );
 ```
+
+2. What happens after modifying parameters related to cooldown time?
+
+   Changes to cooldown-related parameters only take effect for data that has not yet been cooled to remote storage. For data that has already been cooled to remote storage, the changes do not apply. For example, if you change `cooldown_ttl` from 21 days to 7 days, data that is already in remote storage will not be moved back to local storage;

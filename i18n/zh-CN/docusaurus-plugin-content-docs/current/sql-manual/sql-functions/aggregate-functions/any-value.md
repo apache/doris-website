@@ -1,7 +1,8 @@
 ---
 {
     "title": "ANY_VALUE",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "返回分组中表达式或列的任意一个值。如果存在非 NULL 值，返回任意非 NULL 值，否则返回 NULL。"
 }
 ---
 
@@ -24,7 +25,7 @@ ANY(<expr>)
 
 | 参数 | 说明 |
 | -- | -- |
-| `<expr>` | 要聚合的列或表达式，支持类型为 String，Date，DateTime，IPv4，IPv6，Bool，TinyInt，SmallInt，Integer，BigInt，LargeInt，Float，Double，Decimal，Array，Map，Struct，AggState，Bitmap，HLL，QuantileState。 |
+| `<expr>` | 要聚合的列或表达式，支持类型为 String，Date，DateTime，Timestamptz，IPv4，IPv6，Bool，TinyInt，SmallInt，Integer，BigInt，LargeInt，Float，Double，Decimal，Array，Map，Struct，AggState，Bitmap，HLL，QuantileState。 |
 
 ## 返回值
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "FROM_MILLISECOND",
-    "language": "en"
+    "language": "en",
+    "description": "The function converts a Unix timestamp (in milliseconds) into a DATETIME value."
 }
 ---
 

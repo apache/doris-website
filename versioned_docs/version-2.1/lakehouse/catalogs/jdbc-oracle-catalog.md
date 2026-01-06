@@ -1,7 +1,8 @@
 ---
 {
     "title": "Oracle JDBC Catalog",
-    "language": "en"
+    "language": "en",
+    "description": "Apache Doris JDBC Catalog supports connecting to Oracle databases via the standard JDBC interface."
 }
 ---
 
@@ -60,6 +61,7 @@ When mapping Oracle, a Database in Apache Doris corresponds to a User in Oracle.
 | char/nchar                            | string                               |                                                                                                                 |
 | varchar2/nvarchar2                    | string                               |                                                                                                                 |
 | long/raw/long raw/internal            | string                               |                                                                                                                 |
+| BLOB             | varbinary     |Controlled by the `enable.mapping.varbinary` property of Catalog (supported since 4.0.2). The default is `false`, which maps to `string`; when `true`, it maps to `varbinary` type.|
 | other                                 | UNSUPPORTED                          |                                                                                                                 |
 
 ## Common Issues

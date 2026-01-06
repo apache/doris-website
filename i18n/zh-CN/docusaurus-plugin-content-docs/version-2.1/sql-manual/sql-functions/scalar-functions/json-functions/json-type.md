@@ -1,7 +1,8 @@
 ---
 {
     "title": "JSON_TYPE",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "用来判断 jsonpath 指定的字段在 JSONB 数据中的类型，如果字段不存在返回 NULL，如果存在返回下面的类型之一"
 }
 ---
 

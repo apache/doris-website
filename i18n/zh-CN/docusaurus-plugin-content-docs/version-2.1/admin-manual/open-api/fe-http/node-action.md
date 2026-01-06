@@ -1,7 +1,8 @@
 ---
 {
     "title": "Node Action",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "用于获取集群获取 fe, be, broker 节点信息。"
 }
 ---
 

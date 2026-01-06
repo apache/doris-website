@@ -1,7 +1,8 @@
 ---
 {
     "title": "REGEXP_EXTRACT_OR_NULL",
-    "language": "en"
+    "language": "en",
+    "description": "Extract the first substring that matches the target regular expression pattern from the text string,"
 }
 ---
 
@@ -16,7 +17,11 @@ Support since Apache Doris 3.0.2
 
 If the 'pattern' is not allowed regexp regular,throw error
 
-Support character match classes : https://github.com/google/re2/wiki/Syntax
+Default supported character match classes : https://github.com/google/re2/wiki/Syntax
+
+Doris supports enabling more advanced regular expression features, such as look-around zero-width assertions, through the session variable `enable_extended_regex` (default is `false`).
+
+Supported character matching types when the session variable `enable_extended_regex` is set to `true`: https://www.boost.org/doc/libs/latest/libs/regex/doc/html/boost_regex/syntax/perl_syntax.html
 
 ## Syntax
 
@@ -226,4 +231,22 @@ mysql> SELECT REGEXP_EXTRACT_OR_NULL('123AbCdExCx', '([[:lower:]]+)C([[]ower:]]+
 ```text
 ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.2)[INVALID_ARGUMENT]Could not compile regexp pattern: ([[:lower:]]+)C([[:lower:]+)
 Error: missing ]: [[:lower:]+)
+```
+
+Advanced regexp
+```sql
+SELECT regexp_extract_or_null('foo123bar', '(?<=foo)(\\d+)(?=bar)', 1);
+-- ERROR 1105 (HY000): errCode = 2, detailMessage = (127.0.0.1)[INVALID_ARGUMENT]Invalid regex pattern: (?<=foo)(\d+)(?=bar). Error: invalid perl operator: (?<
+```
+
+```sql
+SET enable_extended_regex = true;
+SELECT regexp_extract_or_null('foo123bar', '(?<=foo)(\\d+)(?=bar)', 1);
+```
+```text
++-----------------------------------------------------------------+
+| regexp_extract_or_null('foo123bar', '(?<=foo)(\\d+)(?=bar)', 1) |
++-----------------------------------------------------------------+
+| 123                                                             |
++-----------------------------------------------------------------+
 ```
