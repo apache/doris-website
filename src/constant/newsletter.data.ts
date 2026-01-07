@@ -22,10 +22,10 @@ export const NEWSLETTER_DATA = [
     },
     {
         tags: ['Tech Sharing'],
-        title: "Apache Doris Achieves 70% Better Price-Performance on ARM-based AWS Graviton",
-        content: `We benchmarked Apache Doris on ARM-based AWS Graviton against x86 instances across five industry-standard OLAP tests (ClickBench, SSB 100G, SSB-Flat, TPC-H, and TPC-DS), and found Doris running on ARM-based Graviton consistently delivered 54%–70% higher price-performance.`,
-        to: 'https://www.velodb.io/blog/apache-doris-achieves-70-better-price-performance',
-        image: 'blogs/Doris_on_AWS_Graviton_1800X766.png',
+        title: "Deploying Apache Doris with MinIO: Analytics with Storage-Compute Separation",
+        content: `In the Apache Doris + MinIO architecture, Apache Doris handles compute, MinIO handles storage, and the result is a modern analytics architecture that’s fast, scalable, cost-efficient, and separates compute from storage. `,
+        to: 'https://www.velodb.io/blog/deploying-apache-doris-with-minio',
+        image: 'blogs/202512_MinIO_1800_766.png',
     },
 
 

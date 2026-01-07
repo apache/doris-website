@@ -12,8 +12,8 @@ export const RECENT_BLOGS_POSTS = [
         link: 'https://www.velodb.io/blog/apache-doris-tops-json-bench-cold-queries',
     },
     {
-        label: 'Apache Doris Achieves 70% Better Price-Performance on ARM-based AWS Graviton',
-        link: 'https://www.velodb.io/blog/apache-doris-achieves-70-better-price-performance',
+        label: 'Deploying Apache Doris with MinIO: Analytics with Storage-Compute Separation',
+        link: 'https://www.velodb.io/blog/deploying-apache-doris-with-minio',
     },
 
 
