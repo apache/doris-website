@@ -143,4 +143,4 @@ After a successful initial experience with Apache Doris, MiniMax proceeds with t
 
 - **Lakehousing**: expand the use of Apache Doris include big data processing and analysis within MiniMax, laying the foundation for a data lakehouse.
 
-If you have any questions or require assistance regarding Apache Doris, join the [community](https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-2gmq5o30h-455W226d79zP3L96ZhXIoQ).
+If you have any questions or require assistance regarding Apache Doris, join the [community](https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-3b8tlr3le-Z~IrrVxkzqniFjhL17d1oQ).

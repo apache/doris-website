@@ -202,7 +202,7 @@ In addition, for transactional tasks, the Job Scheduler can ensure data consiste
 
 The Doris Job Scheduler is a Swiss Army Knife. It is not only useful in ETL and data lake analytics as we mentioned, but also critical for the implementation of [asynchronous materialized views](https://doris.apache.org/docs/query/view-materialized-view/async-materialized-view). An asynchronous materialized view is a pre-computed result set. Unlike normal materialized views, it can be built on multiple tables. Thus, as you can imagine, changes in any of the source tables will lead to the need for updates in the asynchronous materialized view. That's why we apply the job scheduling mechanism for periodic data refreshing in asynchronous materialized views, which is low-maintenance and also ensures data consistency.
 
-Where are we going with the Doris Job Scheduler? The [Apache Doris developer community](https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-2gmq5o30h-455W226d79zP3L96ZhXIoQ) is looking at:
+Where are we going with the Doris Job Scheduler? The [Apache Doris developer community](https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-3b8tlr3le-Z~IrrVxkzqniFjhL17d1oQ) is looking at:
 
 - Displaying the distribution of tasks executed in different time slots on the WebUI.
 

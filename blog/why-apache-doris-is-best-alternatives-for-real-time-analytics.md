@@ -397,7 +397,7 @@ By 2023, the value of Doris with inverted indexes became increasingly evident, l
 
 The growth momentum has continued, and as of 2024, we are experiencing rapid expansion, with over 100 companies now leveraging Doris to replace Elasticsearch.
 
-Looking ahead, I am very much looking forward to what 2025 will bring. This progress, advancing from the ground up to such significant milestones, has been made possible by the incredible support from the Doris community users and developers. We encourage everyone to join the [Apache Doris Slack community](https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-2zlwvmzon-NIb2rz50rIhcflGAFpYjDQ) and join the dedicated channel [#elasticsearch-to-doris](https://apachedoriscommunity.slack.com/archives/C08CQKX20R5), where you can receive technical assistance, stay updated with the latest news about Doris, and engage with more Doris developers and users.
+Looking ahead, I am very much looking forward to what 2025 will bring. This progress, advancing from the ground up to such significant milestones, has been made possible by the incredible support from the Doris community users and developers. We encourage everyone to join the [Apache Doris Slack community](https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-3b8tlr3le-Z~IrrVxkzqniFjhL17d1oQ) and join the dedicated channel [#elasticsearch-to-doris](https://apachedoriscommunity.slack.com/archives/C08CQKX20R5), where you can receive technical assistance, stay updated with the latest news about Doris, and engage with more Doris developers and users.
 
 More on Apache Doris: 
 

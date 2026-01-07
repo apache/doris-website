@@ -230,4 +230,4 @@ From the Volcano Model to the Pipeline Execution Engine, Apache Doris 2.0.0 has 
 
 What's next in our roadmap is to support spilling data to disk in PipelineX to further improve query speed and system reliability. We also plan to advance further in terms of automation, such as self-adaptive concurrency and auto execution plan optimization, accompanied by NUMA technologies to harvest better performance from hardware resources. 
 
-If you want to talk to the amazing Doris developers who lead these changes, you are more than welcome to join the [Apache Doris](https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-2gmq5o30h-455W226d79zP3L96ZhXIoQ) community. 
+If you want to talk to the amazing Doris developers who lead these changes, you are more than welcome to join the [Apache Doris](https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-3b8tlr3le-Z~IrrVxkzqniFjhL17d1oQ) community. 
