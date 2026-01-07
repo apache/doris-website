@@ -35,7 +35,7 @@ export default function Home(): JSX.Element {
         },
         {
             label: <Translate id="homepage.banner.button2">Join Slack</Translate>,
-            link: 'https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-3b8tlr3le-Z~IrrVxkzqniFjhL17d1oQ',
+            link: 'https://doris.apache.org/slack',
             type: 'ghost',
         },
     ];
@@ -284,7 +284,7 @@ export default function Home(): JSX.Element {
                     </defs>
                 </svg>
             ),
-            href: 'https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-3b8tlr3le-Z~IrrVxkzqniFjhL17d1oQ',
+            href: 'https://doris.apache.org/slack',
         },
         {
             title: <Translate id="community.title.c4">Twitter</Translate>,
