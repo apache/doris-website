@@ -102,4 +102,4 @@ We believe self-service BI is the future in the BI landscape, just like AGI is t
 
 
 
-Find the Apache Doris developers on [Slack](https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-2unfw3a3q-MtjGX4pAd8bCGC1UV0sKcw)
+Find the Apache Doris developers on [Slack](https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-3b8tlr3le-Z~IrrVxkzqniFjhL17d1oQ)

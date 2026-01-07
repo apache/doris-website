@@ -32,7 +32,7 @@ under the License.
 -->
 
 :::tip Special Thanks
-The Apache Doris community would like to extend our gratitude to Dien for sharing his valuable experience and best practices in migrating from BigQuery to Apache Doris in this insightful and informative article. Dien is also an active member of the Apache Doris open-source [community](https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-2gmq5o30h-455W226d79zP3L96ZhXIoQ), and we are truly appreciative of his ongoing support.
+The Apache Doris community would like to extend our gratitude to Dien for sharing his valuable experience and best practices in migrating from BigQuery to Apache Doris in this insightful and informative article. Dien is also an active member of the Apache Doris open-source [community](https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-3b8tlr3le-Z~IrrVxkzqniFjhL17d1oQ), and we are truly appreciative of his ongoing support.
 :::
 
 This article is written by [Dien, Tran Thanh](https://www.linkedin.com/in/dien-tran-thanh-19275b14a/) and originally posted on [Medium](https://dientt.medium.com/migrate-data-platform-từ-bigquery-sang-apache-doris-giúp-giảm-chi-phí-từ-6-000-xuống-còn-1-500-40ba9b22967e).
@@ -183,7 +183,7 @@ The implementation was carried out by 1 Data Engineer, 1 Software Engineer, and 
 
 - Data replication between nodes can sometimes lose synchronization due to network issues or other reasons, and the automatic replication retry mechanism may not be successful. In such cases, it is necessary to set up an external worker mechanism for automatic handling (Doris manages a storage unit called Tablet. The metadata on each node records the ETL data into a specific table, and the metadata version gets updated. Doris provides a SQL-based method to handle desynchronization).
 
-- New versions may occasionally have bugs, so it's recommended to check if the [community](https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-2gmq5o30h-455W226d79zP3L96ZhXIoQ) has reported any issues before deciding to upgrade.
+- New versions may occasionally have bugs, so it's recommended to check if the [community](https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-3b8tlr3le-Z~IrrVxkzqniFjhL17d1oQ) has reported any issues before deciding to upgrade.
 
 - Limited support for processing Vietnamese text, with the full-text search feature not performing well in Vietnamese.
 
