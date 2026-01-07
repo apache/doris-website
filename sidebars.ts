@@ -465,6 +465,7 @@ const sidebars: SidebarsConfig = {
                                 'lakehouse/metastores/google-dataproc-metastore',
                                 'lakehouse/metastores/aliyun-dlf',
                                 'lakehouse/metastores/iceberg-rest',
+                                'lakehouse/metastores/iceberg-jdbc',
                                 'lakehouse/metastores/filesystem',
                             ],
                         },
