@@ -2,7 +2,7 @@
 {
     "title": "Iceberg Catalog",
     "language": "en",
-    "description": "Iceberg Catalog in Apache Doris connects to multiple Iceberg metadata services to query and write Iceberg tables across HDFS and cloud object storage, with detailed configuration, properties, query and write operations."
+    "description": "Iceberg Catalog in Apache Doris 4.x connects to multiple Iceberg metadata services to query and write Iceberg tables across HDFS and cloud object storage, with detailed configuration, properties, query and write operations."
 }
 ---
 
@@ -100,6 +100,7 @@ The current Iceberg dependency is version 1.6.1, which is compatible with higher
 * [AWS Glue](../metastores/aws-glue.md)
 * [Aliyun DLF](../metastores/aliyun-dlf.md)
 * [Iceberg Rest Catalog](../metastores/iceberg-rest.md)
+* [Iceberg JDBC Catalog](../metastores/iceberg-jdbc.md) (Supported since version 4.1.0)
 * [FileSystem](../metastores/filesystem.md)
 
 > Note: The service types and parameters supported by different Doris versions are slightly different. Please refer to the [Examples] section.
@@ -917,6 +918,78 @@ Support for Nested Namespace needs to be explicitly enabled. For details, please
 
     </Tabs>
 
+</details>
+
+### Iceberg JDBC Catalog
+:::tip Note
+This is an experimental feature, supported since version 4.1.0.
+:::
+
+<details>
+    <summary>4.1+ Version</summary>
+    <Tabs>
+        <TabItem value='PostgreSQL' label='PostgreSQL' default>
+            Using PostgreSQL as metadata storage with S3
+            ```sql
+            CREATE CATALOG iceberg_jdbc_postgresql PROPERTIES (
+                'type' = 'iceberg',
+                'iceberg.catalog.type' = 'jdbc',
+                'iceberg.jdbc.uri' = 'jdbc:postgresql://127.0.0.1:5432/iceberg_db',
+                'iceberg.jdbc.user' = 'iceberg_user',
+                'iceberg.jdbc.password' = 'password',
+                'iceberg.jdbc.init-catalog-tables' = 'true',
+                'iceberg.jdbc.schema-version' = 'V1',
+                'iceberg.jdbc.driver_class' = 'org.postgresql.Driver',
+                'iceberg.jdbc.driver_url' = '<jdbc_driver_jar>'
+                'warehouse' = 's3://bucket/warehouse',
+                's3.access_key' = '<ak>',
+                's3.secret_key' = '<sk>',
+                's3.endpoint' = 'https://s3.us-east-1.amazonaws.com',
+                's3.region' = 'us-east-1'
+            );
+            ```
+        </TabItem>
+        <TabItem value='MySQL' label='MySQL'>
+            Using MySQL as metadata storage with S3
+            ```sql
+            CREATE CATALOG iceberg_jdbc_mysql PROPERTIES (
+                'type' = 'iceberg',
+                'iceberg.catalog.type' = 'jdbc',
+                'iceberg.jdbc.uri' = 'jdbc:mysql://127.0.0.1:3306/iceberg_db',
+                'iceberg.jdbc.user' = 'iceberg_user',
+                'iceberg.jdbc.password' = 'password',
+                'iceberg.jdbc.init-catalog-tables' = 'true',
+                'iceberg.jdbc.schema-version' = 'V1',
+                'iceberg.jdbc.driver_class' = 'com.mysql.cj.jdbc.Driver',
+                'iceberg.jdbc.driver_url' = '<jdbc_driver_jar>'
+                'warehouse' = 's3://bucket/warehouse',
+                's3.access_key' = '<ak>',
+                's3.secret_key' = '<sk>',
+                's3.endpoint' = 'https://s3.us-east-1.amazonaws.com',
+                's3.region' = 'us-east-1'
+            );
+            ```
+        </TabItem>
+        <TabItem value='SQLite' label='SQLite'>
+            Using SQLite as metadata storage (suitable for testing environments)
+            ```sql
+            CREATE CATALOG iceberg_jdbc_sqlite PROPERTIES (
+                'type' = 'iceberg',
+                'iceberg.catalog.type' = 'jdbc',
+                'iceberg.jdbc.uri' = 'jdbc:sqlite:/tmp/iceberg_catalog.db',
+                'iceberg.jdbc.init-catalog-tables' = 'true',
+                'iceberg.jdbc.schema-version' = 'V1',
+                'iceberg.jdbc.driver_class' = 'org.sqlite.JDBC',
+                'iceberg.jdbc.driver_url' = '<jdbc_driver_jar>'
+                'warehouse' = 's3://bucket/warehouse',
+                's3.access_key' = '<ak>',
+                's3.secret_key' = '<sk>',
+                's3.endpoint' = 'https://s3.us-east-1.amazonaws.com',
+                's3.region' = 'us-east-1'
+            );
+            ```
+        </TabItem>
+    </Tabs>
 </details>
 
 ### FileSystem
