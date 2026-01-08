@@ -88,7 +88,7 @@ Restore partitions p1 and p2 of the table `backup_tbl`, as well as the table `ba
 
 ## 3. Check the Execution Status of the Restore Job
 
-      ```sql
+  ```sql
    mysql> SHOW RESTORE\G;
    *************************** 1. row ***************************
                   JobId: 17891851
