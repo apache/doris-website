@@ -1,11 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { useThemeConfig } from '@docusaurus/theme-common';
 import { splitNavbarItems } from '@docusaurus/theme-common/internal';
 import NavbarLogo from '@theme/Navbar/Logo';
 import Link from '@docusaurus/Link';
 import GithubIconNew from '@site/static/images/icon/github-new.svg';
-import Translate from '@docusaurus/Translate';
-import NavbarItem, { type Props as NavbarItemConfig } from '@theme/NavbarItem';
+import { type Props as NavbarItemConfig } from '@theme/NavbarItem';
 
 import { NavbarItems } from '..';
 import styles from '../styles.module.css';

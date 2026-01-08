@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { Form, message } from 'antd';
 import { DownloadTypeEnum, Option } from '@site/src/constant/download.data';
 import FormSelect from '../form-select/form-select';

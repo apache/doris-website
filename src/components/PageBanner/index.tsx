@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 import Link from '@docusaurus/Link';
-import React, { ComponentProps, JSXElementConstructor } from 'react';
+import React, { ComponentProps, JSX, JSXElementConstructor } from 'react';
 import './styles.scss';
 
 export interface ButtonProps extends ComponentProps<JSXElementConstructor<any>> {
