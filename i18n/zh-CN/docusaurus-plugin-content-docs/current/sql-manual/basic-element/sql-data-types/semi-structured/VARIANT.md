@@ -391,10 +391,55 @@ SELECT * FROM tbl WHERE v['str'] MATCH 'Doris';
 | `VARCHAR`       | ✔        | ✔         |
 | `JSON`          | ✔        | ✔         |
 
+## 宽列
+
+当导入数据包含大量不同的 JSON key 时，VARIANT 的子列会迅速增多；当规模达到一定程度，可能出现元数据膨胀、写入/合并开销增大、查询性能下降等问题。为应对“宽列”（子列过多），VARIANT 提供两种机制：**稀疏列** 与 **DOC 编码**。
+
+注意：这两种机制**互斥**——启用 DOC 编码后将无法使用稀疏列机制，反之亦然。
+
+### 稀疏列机制
+
+**机制说明**
+
+- 系统会按“非空比例/稀疏度”对路径排序：高频（不稀疏）路径优先物化为独立子列；可物化的最大子列数量由 `variant_max_subcolumns_count` 指定，其余低频（稀疏）路径会被合并存放到稀疏列中。
+- 如果对子列指定了预定义 Schema，默认情况下该子列不会被放入稀疏列中；可通过 `variant_enable_typed_paths_to_sparse` 允许“指定了类型”的子列进入稀疏列。
+- 稀疏列支持 sharding：通过将稀疏子路径分散到多个稀疏列中，降低单列读取负担、提升读取效率；可通过 `variant_sparse_hash_shard_count` 指定稀疏列的实际存储个数。
+
+**适用场景**
+- JSON key 总量大，但查询主要集中在少数高频字段（热点字段）。
+- key 分布高度不均匀（少数 key 高频出现，大量 key 偶发出现）：希望兼顾存储效率与热点查询性能。
+- 更关注“常用路径”的查询速度，能接受低频路径通过稀疏列读取（仍可正常查询，但通常更慢）。
+
+**限制与配置**
+- JSON key 总量大，但各个 JSON key 的“非空比例/稀疏度”都比较接近、缺乏区分度：这种情况下很难区分哪些列是真正稀疏的，稀疏列机制的效果会被降低。
+- 物化为独立子列的数目（`variant_max_subcolumns_count`）建议最大上限为 **10000**。
+- 如果对“指定了预定义 Schema”的子列有较高查询要求，建议 `variant_enable_typed_paths_to_sparse` 设为 **false**。
+- `variant_sparse_hash_shard_count` 的设置可按“进入稀疏列的总列数 / 128”粗略估算。例如：VARIANT 中所有 JSON key 为 1 万，设置 `variant_max_subcolumns_count = 2000`，进入稀疏列的总列数约为 8000，则 `variant_sparse_hash_shard_count` 可参考 `8000/128`。
+
+### DOC 编码机制
+
+**机制说明**
+
+- 子路径仍可物化为独立子列用于按路径查询，同时会额外保存一份“原始 JSON”作为存储字段，以便更快返回整条 JSON 文档。
+- DOC 编码支持 sharding：原始 JSON 会被拆分到多个列中存储，读取整条 JSON 时再组装这些分片；可通过 `variant_doc_hash_shard_count` 指定 DOC 编码的实际分片数。
+- 小批量写入时可以不物化子列，后续合并时再触发子列物化：该行为由 `variant_doc_materialization_min_rows` 决定。例如 `variant_doc_materialization_min_rows = 10000`，当写入行数低于 1 万时，该批次只写入原始 JSON，不会物化子列。
+
+**适用场景**
+
+- JSON 的“总体 key 种类很多”，但“单行 key 数量相对少”，单行 key 数量占总体的 5% 以下（典型稀疏宽列场景）。
+- 业务经常需要返回整条 JSON（例如 `SELECT *`/整行回显/原始文档取回），不希望从大量子列重组 JSON。
+- 希望降低小批量写入时的子列物化开销，并在后续合并时再触发子列物化。
+- 可以接受额外存储开销（因为会保存原始 JSON 存储字段）。
+
+**限制与配置**
+- 需开启 `variant_enable_doc_mode`。
+- 使用 DOC 编码机制时，指定了预定义 Schema 的子列类型只能是数值类型、字符串类型、array 类型。
+- `variant_doc_hash_shard_count` 的设置可按 “JSON key 的总个数 / 128” 粗略估算。
+
+两种机制的详细使用见下方“配置”章节。
+
 ## 限制
 
-- `variant_max_subcolumns_count`：默认 0（不限制 Path 物化列数）。建议在生产设置为 2048（Tablet 级别）以控制列数。超过阈值后，低频/稀疏路径会被收敛到共享数据结构，从该结构查询可能带来性能下降（详见“配置”）。
-- 若 Schema Template 指定了 Path 类型，则该 Path 会被强制提取；当 `variant_enable_typed_paths_to_sparse = true` 时，它也会计入阈值，可能被收敛到共享结构。
 - JSON key 长度 ≤ 255。
 - 不支持作为主键或排序键。
 - 不支持与其他类型嵌套（如 `Array<Variant>`、`Struct<Variant>`）。
@@ -428,16 +473,40 @@ CREATE TABLE example_table (
       'path_2' : STRING,
       properties(
           'variant_max_subcolumns_count' = '2048',
-          'variant_enable_typed_paths_to_sparse' = 'true'
+          'variant_enable_typed_paths_to_sparse' = 'true',
+          'variant_sparse_hash_shard_count' = '64'
       )
   >
 );
 ```
 
 <table>
-<tr><td>属性<br/></td><td>描述<br/></td></tr>
+<tr><td>稀疏列属性<br/></td><td>描述<br/></td></tr>
 <tr><td>`variant_max_subcolumns_count`<br/></td><td>控制 Path 物化列数的上限；超过后新增路径可能存放于共享数据结构。默认 0 表示不限，建议设置为 2048；不推荐超过 10000。<br/></td></tr>
 <tr><td>`variant_enable_typed_paths_to_sparse`<br/></td><td>默认指定了 Path 类型后，该 Path 一定会被提取（不计入 `variant_max_subcolumns_count`）。设置为 `true` 后也会计入阈值，可能被收敛到共享结构。<br/></td></tr>
+<tr><td>`variant_sparse_hash_shard_count`<br/></td><td>控制稀疏列的分片数量。将稀疏子列分散存储到多个稀疏列中，以提升查询性能。默认值为 1，建议根据稀疏子列数量适当调整。<br/></td></tr>
+</table>
+
+```sql
+CREATE TABLE example_table (
+  id INT,
+  data_variant VARIANT<
+      'path_1' : INT,
+      'path_2' : STRING,
+      properties(
+          'variant_enable_doc_mode' = 'true',
+          'variant_doc_materialization_min_rows' = '10000',
+          'variant_doc_hash_shard_count' = '64'
+      )
+  >
+);
+```
+
+<table>
+<tr><td>DOC 编码属性<br/></td><td>描述<br/></td></tr>
+<tr><td>`variant_enable_doc_mode`<br/></td><td>是否启用 DOC 编码模式。设置为 `true` 时，原始 JSON 会作为存储字段保存，用于快速返回整个 JSON 文档。启用后将无法使用稀疏列机制。默认值为 `false`。<br/></td></tr>
+<tr><td>`variant_doc_materialization_min_rows`<br/></td><td>DOC 编码模式下触发子列物化的最小行数阈值。当写入行数低于该值时，仅存储原始 JSON；当文件合并后行数达到该阈值时，才将子列物化为独立子列。用于减少小批量写入时的开销。<br/></td></tr>
+<tr><td>`variant_doc_hash_shard_count`<br/></td><td>控制 DOC 编码的分片数量。原始 JSON 会被拆散存储到指定数量的列中，查询整个 JSON 时再组装这些分片。默认值为 64，可根据 JSON 大小和并发需求调整。<br/></td></tr>
 </table>
 
 达到上限后的行为与调优建议：

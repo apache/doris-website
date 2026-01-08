@@ -2,7 +2,7 @@
 {
     "title": "VARIANT",
     "language": "en-US",
-    "description": "The VARIANT type stores semi-structured JSON data. It can contain different primitive types (integers, strings, booleans, etc.),"
+    "description": "The VARIANT type stores semi-structured JSON data. It can contain different primitive types (integers, strings, booleans, etc.), one-dimensional arrays, and nested objects. On write, Doris infers the structure and type of sub-paths based on JSON paths and materializes frequent paths as independent subcolumns, leveraging columnar storage and vectorized execution for both flexibility and performance."
 }
 ---
 
@@ -391,10 +391,57 @@ SELECT * FROM tbl WHERE v['str'] MATCH 'Doris';
 | `VARCHAR`       | ✔        | ✔         |
 | `JSON`          | ✔        | ✔         |
 
+## Wide columns
+
+When ingested data contains many distinct JSON keys, VARIANT materialized subcolumns can grow rapidly; at scale this may cause metadata bloat, higher write/merge cost, and query slowdowns. To address “wide columns” (too many subcolumns), VARIANT provides two mechanisms: **Sparse columns** and **DOC encoding**.
+
+Note: these two mechanisms are mutually exclusive—enabling DOC encoding disables sparse columns, and vice versa.
+
+### Sparse columns
+
+**How it works**
+
+- The system ranks paths by non-null ratio / sparsity: high-frequency (less-sparse) paths are materialized as independent subcolumns; remaining low-frequency (sparse) paths are merged and stored in sparse columns. The maximum number of materialized subcolumns is controlled by `variant_max_subcolumns_count`.
+- If a path is declared in a Schema Template, by default it will not be moved into sparse columns; set `variant_enable_typed_paths_to_sparse` to allow typed paths to be moved into sparse columns.
+- Sparse columns support sharding: distribute sparse subpaths across multiple sparse columns to reduce per-column read overhead and improve read efficiency. Use `variant_sparse_hash_shard_count` to specify how many sparse columns are physically stored.
+
+**When to use**
+
+- Many JSON keys overall, but queries mostly target a small subset of high-frequency fields (hot fields).
+- Highly skewed key distribution (a few keys appear frequently; many keys appear occasionally): you want good hot-path performance while keeping long-tail keys queryable (typically slower).
+
+**Limitations and configuration notes**
+
+- If most keys have similar non-null ratios (little sparsity contrast), it’s hard to identify truly sparse paths and the benefit of sparse columns is reduced.
+- `variant_max_subcolumns_count` (materialized subcolumns) is recommended to stay ≤ 10000.
+- If you have high query requirements on typed paths (declared via Schema Template), prefer `variant_enable_typed_paths_to_sparse = false`.
+- `variant_sparse_hash_shard_count` can be roughly estimated as “number of sparse paths / 128”. Example: total JSON keys ≈ 10,000, `variant_max_subcolumns_count = 2000`, then sparse paths ≈ 8000, so `variant_sparse_hash_shard_count` can start around `8000/128`.
+
+### DOC encoding (DOC mode)
+
+**How it works**
+
+- Paths can still be materialized as independent subcolumns for path-based queries, and the original JSON is additionally stored as a stored field to return the full JSON document efficiently.
+- DOC encoding supports sharding: the original JSON is split into multiple columns for storage and reassembled when querying the full JSON. Use `variant_doc_hash_shard_count` to specify the number of DOC shards.
+- For small-batch writes, subcolumns can be skipped and materialized later during merges. This is controlled by `variant_doc_materialization_min_rows`. For example, if `variant_doc_materialization_min_rows = 10000`, writes below 10,000 rows will only store the original JSON and won’t materialize subcolumns for that batch.
+
+**When to use**
+
+- Many distinct keys overall, but each row contains only a small subset of keys (e.g. per-row keys < 5% of total keys): typical sparse wide-column workloads.
+- Workloads frequently need the full JSON document (e.g. `SELECT *` / full-row return) and you want to avoid assembling JSON from a large number of subcolumns.
+- You want to reduce subcolumn materialization overhead for small batches and defer it to later merges.
+- You can accept additional storage cost (because the original JSON is stored as a stored field).
+
+**Limitations and configuration notes**
+
+- DOC mode requires `variant_enable_doc_mode = true`.
+- In DOC mode, typed paths declared via Schema Template are limited to numeric, string, and array types.
+- `variant_doc_hash_shard_count` can be roughly estimated as “total JSON keys / 128”.
+
+See the “Configuration” section below for the full property list.
+
 ## Limitations
 
-- `variant_max_subcolumns_count`: default 0 (no limit). In production, set to 2048 (tablet level) to control the number of materialized paths. Above the threshold, low-frequency/sparse paths are moved to a shared data structure; reading from it may be slower (see “Configuration”).
-- If a path type is specified via Schema Template, that path will be forced to be materialized; when `variant_enable_typed_paths_to_sparse = true`, it also counts toward the threshold and may be moved to the shared structure.
 - JSON key length ≤ 255.
 - Cannot be a primary key or sort key.
 - Cannot be nested within other types (e.g., `Array<Variant>`, `Struct<Variant>`).
@@ -428,7 +475,8 @@ CREATE TABLE example_table (
       'path_2' : STRING,
       properties(
           'variant_max_subcolumns_count' = '2048',
-          'variant_enable_typed_paths_to_sparse' = 'true'
+          'variant_enable_typed_paths_to_sparse' = 'true',
+          'variant_sparse_hash_shard_count' = '64'
       )
   >
 );
@@ -438,6 +486,29 @@ CREATE TABLE example_table (
 <tr><td>Property<br/></td><td>Description<br/></td></tr>
 <tr><td>`variant_max_subcolumns_count`<br/></td><td>Max number of materialized paths. Above the threshold, new paths may be stored in a shared data structure. Default 0 (unlimited). Recommended 2048; do not exceed 10000.<br/></td></tr>
 <tr><td>`variant_enable_typed_paths_to_sparse`<br/></td><td>By default, typed paths are always materialized (and do not count against `variant_max_subcolumns_count`). When set to `true`, typed paths also count toward the threshold and may be moved to the shared structure.<br/></td></tr>
+<tr><td>`variant_sparse_hash_shard_count`<br/></td><td>Shard count for sparse columns. Distributes sparse subpaths across multiple sparse columns to improve read performance. Default 1; tune based on the number of sparse subpaths.<br/></td></tr>
+</table>
+
+```sql
+CREATE TABLE example_table (
+  id INT,
+  data_variant VARIANT<
+      'path_1' : INT,
+      'path_2' : STRING,
+      properties(
+          'variant_enable_doc_mode' = 'true',
+          'variant_doc_materialization_min_rows' = '10000',
+          'variant_doc_hash_shard_count' = '64'
+      )
+  >
+);
+```
+
+<table>
+<tr><td>Property<br/></td><td>Description<br/></td></tr>
+<tr><td>`variant_enable_doc_mode`<br/></td><td>Enable DOC encoding mode. When `true`, the original JSON is stored as a stored field to quickly return the whole JSON document. DOC mode is mutually exclusive with sparse columns. Default `false`.<br/></td></tr>
+<tr><td>`variant_doc_materialization_min_rows`<br/></td><td>Minimum row threshold to materialize subcolumns in DOC mode. When rows are below this value, only the original JSON is stored; after compaction merges files to reach the threshold, subcolumns are materialized. Helps reduce overhead for small-batch writes.<br/></td></tr>
+<tr><td>`variant_doc_hash_shard_count`<br/></td><td>Shard count for DOC encoding. The original JSON is split into the specified number of columns for storage and reassembled when querying the whole JSON. Default 64; tune based on JSON size and concurrency.<br/></td></tr>
 </table>
 
 Behavior at limits and tuning suggestions:

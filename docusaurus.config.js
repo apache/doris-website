@@ -142,6 +142,10 @@ const config = {
                     {
                         from: '/docs/4.0/releasenotes/v4.0/release-4.0.0/',
                         to: '/docs/4.x/releasenotes/v4.0/release-4.0.0'
+                    },
+                    {
+                        from: '/slack',
+                        to: 'https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-3b8tlr3le-Z~IrrVxkzqniFjhL17d1oQ'
                     }
                 ],
                 createRedirects(existingPath) {

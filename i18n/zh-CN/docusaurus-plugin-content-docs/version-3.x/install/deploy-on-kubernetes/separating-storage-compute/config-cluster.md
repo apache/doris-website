@@ -12,6 +12,11 @@
 
 Doris 节点的管理需要通过用户名、密码以 MySQL 协议连接活着的 FE 节点进行操作。Doris 实现[类似 RBAC 的权限管理机制](../../../admin-manual/auth/authentication-and-authorization)，节点的管理需要用户拥有 [Node_priv](../../../admin-manual/auth/authentication-and-authorization#权限类型) 权限。Doris Operator 默认使用拥有所有权限的 root 用户无密码模式对 DorisDisaggregatedCluster 资源配置的集群进行部署和管理。root 用户添加密码后，需要在 DorisDisaggregatedCluster 资源中显示配置拥有 Node_Priv 权限的用户名和密码，以便 Doris Operator 对集群进行自动化管理操作。
 
+无论何种方式配置密码，请注意以下几点：
+- root、admin 等已经存在用户的密码，任何情况下 operator 都不会自动进行修改，需要用户自己去配置或者修改。
+- 极度不推荐使用 admin 用户来作为 operator 的管理用户，因为 admin 用户通常作为数据库读写最高权限用户，而非用作集群运维，在 operator 的某些功能上，admin 用户缺少特定权限。
+- 非 root 用户，建议专号专用，不要用作其他用途。避免密码修改后无法同步到 operator 上 或者 权限丢失，导致运维失效。
+
 DorisDisaggregatedCluster 资源提供两种方式来配置管理集群节点所需的用户名、密码，包括：环境变量配置的方式，以及使用 [Secret](https://kubernetes.io/docs/concepts/configuration/secret/) 配置的方式。配置集群管理的用户名和密码分为 3 种情况：
 
 - 集群部署需初始化 root 用户密码；
@@ -187,7 +192,7 @@ Doris 集群在部署后，若未设置 root 用户的密码。需要配置一�
 CREATE USER '${DB_ADMIN_USER}' IDENTIFIED BY '${DB_ADMIN_PASSWD}';
 ```
 
-其中 ${DB_ADMIN_USER} 为要创建的用户名，${DB_ADMIN_PASSWD} 为要设置的密码。
+其中 `${DB_ADMIN_USER}` 为要创建的用户名，`${DB_ADMIN_PASSWD}` 为要设置的密码。
 
 #### 第 2 步：为新用户赋予 Node_priv 权限
 
@@ -197,7 +202,7 @@ CREATE USER '${DB_ADMIN_USER}' IDENTIFIED BY '${DB_ADMIN_PASSWD}';
 GRANT NODE_PRIV ON *.*.* TO ${DB_ADMIN_USER};
 ```
 
-其中，${DB_ADMIN_USER} 为新创建的用户名。
+其中，`${DB_ADMIN_USER}` 为新创建的用户名。
 
 新建用户名密码，以及赋予权限详细使用，请参考官方文档 [CREATE-USER](../../../sql-manual/sql-statements/account-management/CREATE-USER) 部分。
 
@@ -213,7 +218,7 @@ GRANT NODE_PRIV ON *.*.* TO ${DB_ADMIN_USER};
       password: ${DB_ADMIN_PASSWD}
   ```
 
-  其中，${DB_ADMIN_USER} 为新建的用户名，${DB_ADMIN_PASSWD} 为新建用户设置的密码。
+  其中，`${DB_ADMIN_USER}` 为新建的用户名，`${DB_ADMIN_PASSWD}` 为新建用户设置的密码。
 
 - Secret 方式
 
@@ -227,7 +232,7 @@ GRANT NODE_PRIV ON *.*.* TO ${DB_ADMIN_USER};
     password: ${DB_ADMIN_PASSWD}
   ```
 
-  其中 ${DB_ADMIN_USER} 为新创建的用户名，${DB_ADMIN_PASSWD} 为新建用户名设置的密码。
+  其中 `${DB_ADMIN_USER}` 为新创建的用户名，`${DB_ADMIN_PASSWD}` 为新建用户名设置的密码。
 
   使用以下命令将 Secret 部署到 Kubernetes 集群：
 
@@ -259,12 +264,12 @@ Doris Operator 使用 `ConfigMap` 资源挂载 krb5.conf 文件，使用 `Secret
     ```shell
     kubectl create -n ${namespace} create configmap ${name} --from-file=krb5.conf
     ```
-   ${namespace} 为 `DorisDisaggregatedCluster` 部署的命名空间，${name} 为 ConfigMap 想要指定的名字。
+   `${namespace}` 为 `DorisDisaggregatedCluster` 部署的命名空间，`${name}` 为 ConfigMap 想要指定的名字。
 2. 构建包含 keytab 的 Secret:
     ```shell
     kubectl create -n ${namespace} secret generic ${name} --from-file= ${xxx.keytab}
     ```
-   ${namespace} 为 `DorisDisaggregatedCluster` 部署的命名空间，${name} 为 Secret 想要指定的名字，如果需要挂载多个 `keytab` 文件，请参考 [kubectl 创建 Secret 文档](https://kubernetes.io/docs/reference/kubectl/generated/kubectl_create/kubectl_create_secret/)将多个 `keytab` 文件放到一个 Secret 中。
+   `${namespace}` 为 `DorisDisaggregatedCluster` 部署的命名空间，`${name}` 为 Secret 想要指定的名字，如果需要挂载多个 `keytab` 文件，请参考 [kubectl 创建 Secret 文档](https://kubernetes.io/docs/reference/kubectl/generated/kubectl_create/kubectl_create_secret/)将多个 `keytab` 文件放到一个 Secret 中。
 3. 配置 DorisDisaggregatedCluster 资源，指定包含 `krb5.conf` 的 ConfigMap, 以及包含 `keytab` 文件的 Secret。
     ```yaml
     spec:
@@ -273,5 +278,5 @@ Doris Operator 使用 `ConfigMap` 资源挂载 krb5.conf 文件，使用 `Secret
         keytabSecretName: ${keytabSecretName}
         keytabPath: ${keytabPath}
     ```
-   ${krb5ConfigMapName} 为包含要使用的 `krb5.conf` 文件的 ConfigMap 名称。${keytabSecretName} 为包含 keytab 文件的 Secret 名称。${keytabPath} 为 Secret 希望挂载到容器中的路径，这个路径是创建 catalog 时，通过 `hadoop.kerberos.keytab` 指定 keytab 的文件所在目录。创建
+   `${krb5ConfigMapName}` 为包含要使用的 `krb5.conf` 文件的 ConfigMap 名称。`${keytabSecretName}` 为包含 keytab 文件的 Secret 名称。`${keytabPath}` 为 Secret 希望挂载到容器中的路径，这个路径是创建 catalog 时，通过 `hadoop.kerberos.keytab` 指定 keytab 的文件所在目录。创建
    catalog 请参考配置 [Hive Catalog](../../../lakehouse/catalogs/hive-catalog.mdx) 文档。

@@ -43,7 +43,7 @@ under the License.
 
 * 加入 Doris 微信群 (加微信号：morningman-cmy, 备注：加入 Doris 群) 随时提问；
 
-* 加入 [Slack](https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-35mzao67o-BrpU70FNKPyB6UlgpXf8_w);
+* 加入 [Slack](https://doris.apache.org/slack);
 
 通过以上方式及时了解 Doris 项目的开发动态并为您关注的话题发表意见。
 
