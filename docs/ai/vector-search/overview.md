@@ -1,10 +1,13 @@
 ---
 {
-    "title": "Overview",
+    "title": "Overview | Vector Search",
     "language": "en",
-    "description": "In generative AI applications, relying solely on a large model's internal parameter “memory” has clear limitations: (1) the model’s knowledge becomes "
+    "description": "In generative AI applications, relying solely on a large model's internal parameter “memory” has clear limitations: (1) the model’s knowledge becomes ",
+    "sidebar_label": "Overview"
 }
 ---
+
+# Overview
 
 <!-- 
 Licensed to the Apache Software Foundation (ASF) under one
@@ -30,19 +33,6 @@ In generative AI applications, relying solely on a large model's internal parame
 To achieve this, we need a mechanism to measure semantic relatedness between a user query and documents in the knowledge base. Vector representations are a standard tool: by encoding both queries and documents into semantic vectors, we can use vector similarity to measure relevance. With the advancement of pretrained language models, generating high-quality embeddings has become mainstream. Thus, the retrieval stage of RAG becomes a typical vector similarity search problem: from a large vector collection, find the K vectors most similar to the query (i.e., candidate knowledge pieces).
 
 Vector retrieval in RAG is not limited to text; it naturally extends to multimodal scenarios. In a multimodal RAG system, images, audio, video, and other data types can also be encoded into vectors for retrieval and then supplied to the generative model as context. For example, if a user uploads an image, the system can first retrieve related descriptions or knowledge snippets, then generate explanatory content. In medical QA, RAG can retrieve patient records and literature to support more accurate diagnostic suggestions.
-
-## Brute-Force Search
-
-Starting from version 2.0, Apache Doris supports nearest-neighbor search based on vector distance. Performing vector search with SQL is natural and simple:
-
-```sql
-SELECT id, l2_distance(embedding, [1.0, 2.0, xxx, 10.0]) AS distance
-FROM   vector_table
-ORDER  BY distance
-LIMIT  10; 
-```
-
-When the dataset is small (under ~1 million rows), Doris’s exact K-Nearest Neighbor search performance is sufficient, providing 100% recall and precision. As the dataset grows, however, most users are willing to trade a small amount of recall/accuracy for significantly lower latency. The problem then becomes Approximate Nearest Neighbor (ANN) search.
 
 ## Approximate Nearest Neighbor Search
 
@@ -393,3 +383,4 @@ In the era of AI, Python has become the mainstream language for data processing 
 4. If the distance function in SQL does not match the metric type defined in the index DDL, Doris cannot use the ANN index for TopN—even if you call `l2_distance_approximate` / `inner_product_approximate`.
 5. For metric type `inner_product`, only `ORDER BY inner_product_approximate(...) DESC LIMIT N` (DESC required) can be accelerated by the ANN index.
 6. The first parameter of `xxx_approximate()` must be a ColumnArray, and the second must be a CAST or ArrayLiteral. Reversing them triggers brute-force search.
+

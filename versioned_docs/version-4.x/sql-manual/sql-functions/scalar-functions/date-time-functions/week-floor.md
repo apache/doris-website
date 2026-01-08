@@ -1,10 +1,13 @@
 ---
 {
-    "title": "WEEK_FLOOR",
+    "title": "WEEK_FLOOR | Date Time Functions",
     "language": "en",
-    "description": "The WEEKFLOOR function rounds down an input datetime value to the nearest specified week interval start time, with the interval unit being WEEK."
+    "description": "The WEEKFLOOR function rounds down an input datetime value to the nearest specified week interval start time, with the interval unit being WEEK.",
+    "sidebar_label": "WEEK_FLOOR"
 }
 ---
+
+# WEEK_FLOOR
 
 ## Description
 
@@ -108,3 +111,4 @@ SELECT WEEK_FLOOR(NULL, 1) AS result;
 | NULL   |
 +--------+
 ```
+

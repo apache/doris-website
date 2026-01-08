@@ -1,10 +1,13 @@
 ---
 {
-    "title": "ARRAY",
+    "title": "ARRAY | Semi Structured",
     "language": "zh-CN",
-    "description": "由 T 类型元素组成的数组，不能作为 key 列使用。目前支持在 Duplicate 和 Unique 模型的表中使用。"
+    "description": "由 T 类型元素组成的数组，不能作为 key 列使用。目前支持在 Duplicate 和 Unique 模型的表中使用。",
+    "sidebar_label": "ARRAY"
 }
 ---
+
+# ARRAY
 
 ## 描述
 
@@ -60,4 +63,5 @@ mysql> SELECT * FROM `array_test`;
 |    4 | NULL            |
 +------+-----------------+
 ```
+
 

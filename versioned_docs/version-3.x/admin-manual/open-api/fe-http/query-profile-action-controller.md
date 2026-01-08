@@ -1,8 +1,9 @@
 ---
 {
-    "title": "Query Profile Action",
+    "title": "Query Profile Action | Fe Http",
     "language": "en",
-    "description": "The Query Profile Action is used to obtain the Query profile."
+    "description": "The Query Profile Action is used to obtain the Query profile.",
+    "sidebar_label": "Query Profile Action"
 }
 ---
 

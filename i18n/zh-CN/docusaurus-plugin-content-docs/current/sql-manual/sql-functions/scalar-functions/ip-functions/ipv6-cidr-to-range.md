@@ -1,10 +1,13 @@
 ---
 {
-    "title": "IPV6_CIDR_TO_RANGE",
+    "title": "IPV6_CIDR_TO_RANGE | Ip Functions",
     "language": "zh-CN",
-    "description": "根据 IPv6 地址和 CIDR 前缀长度，计算该网段的最小和最大 IPv6 地址，返回一个包含两个 IPv6 地址的结构体。"
+    "description": "根据 IPv6 地址和 CIDR 前缀长度，计算该网段的最小和最大 IPv6 地址，返回一个包含两个 IPv6 地址的结构体。",
+    "sidebar_label": "IPV6_CIDR_TO_RANGE"
 }
 ---
+
+# IPV6_CIDR_TO_RANGE
 
 ## ipv6_cidr_to_range
 
@@ -77,4 +80,5 @@ ERROR 1105 (HY000): errCode = 2, detailMessage = (...)[INVALID_ARGUMENT]Illegal 
 ### Keywords
 
 IPV6_CIDR_TO_RANGE
+
 

@@ -1,10 +1,13 @@
 ---
 {
-    "title": "概述",
+    "title": "概述 | Observability",
     "language": "zh_CN",
-    "description": "可观测性（Observability）是指通过系统的外部输出数据来推断其内部状态的能力。可观测性平台通过采集、存储、可视化分析三大可关键数据：日志（Logging）、链路追踪（Tracing）和指标（Metrics），帮助团队全面理解分布式系统的运行状态，支撑资源优化、故障预警、根因分析等，"
+    "description": "可观测性（Observability）是指通过系统的外部输出数据来推断其内部状态的能力。可观测性平台通过采集、存储、可视化分析三大可关键数据：日志（Logging）、链路追踪（Tracing）和指标（Metrics），帮助团队全面理解分布式系统的运行状态，支撑资源优化、故障预警、根因分析等，",
+    "sidebar_label": "概述"
 }
 ---
+
+# 概述
 
 ## 什么是可观测性
 
@@ -131,4 +134,5 @@ Grafana 通过 MySQL Datasource 连接到 Doris，提供统一的 Log, Trace, Me
 Grafana 的 Log 可视化和分析能力相对于 Kibana 来说是比较简单的，因此有第三方厂商实现了类似 Kibana Discover 的检索分析能力，未来也会集成到 Grafana Doris datasource 中，提供更好的统一 Log Trace Metrics 可视化分析能力。此外，后续还会通过兼容 Elasticsearch 查询协议，让原生 Kibana 连接到 Doris，对于 ELK 用户来说，将 Elasticsearch 替换成 Doris，不改变日志采集和可视化分析使用习惯的前提下，达到降本增效的效果。
 
 ![studio-visualization](/images/observability/studio-discover.png)
+
 

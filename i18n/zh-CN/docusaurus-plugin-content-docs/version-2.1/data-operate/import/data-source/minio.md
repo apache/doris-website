@@ -1,10 +1,13 @@
 ---
 {
-    "title": "MinIO",
+    "title": "MinIO | Data Source",
     "language": "zh-CN",
-    "description": "Doris 提供两种方式从 MinIO 导入文件："
+    "description": "Doris 提供两种方式从 MinIO 导入文件：",
+    "sidebar_label": "MinIO"
 }
 ---
+
+# MinIO
 
 Doris 提供两种方式从 MinIO 导入文件：
 - 使用 S3 Load 将 MinIO 文件导入到 Doris 中，这是一个异步的导入方式。
@@ -192,3 +195,4 @@ mysql> select * from test_s3load;
 +---------+-----------+------+
 10 rows in set (0.04 sec)
 ```
+

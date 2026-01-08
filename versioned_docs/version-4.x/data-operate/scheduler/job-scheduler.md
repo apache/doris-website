@@ -1,10 +1,13 @@
 ---
 {
-    "title": "Job Scheduler",
+    "title": "Job Scheduler | Scheduler",
     "language": "en",
-    "description": "In the context of increasingly refined data management needs, scheduled tasks play a crucial role."
+    "description": "In the context of increasingly refined data management needs, scheduled tasks play a crucial role.",
+    "sidebar_label": "Job Scheduler"
 }
 ---
+
+# Job Scheduler
 
 ## Background
 
@@ -184,3 +187,4 @@ Conclusion
 
 ## Future Plans
 Doris Job Scheduler is a powerful and flexible task scheduling tool essential for data processing. Beyond common scenarios like data lake analysis and internal ETL, it plays a crucial role in implementing asynchronous materialized views. Asynchronous materialized views store precomputed result sets, and their update frequency is closely tied to source table changes. Frequent updates to source table data necess
+

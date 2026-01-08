@@ -1,10 +1,13 @@
 ---
 {
-    "title": "MinIO",
+    "title": "MinIO | Storages",
     "language": "en",
-    "description": "This document describes the parameters required to access MinIO, which apply to the following scenarios:"
+    "description": "This document describes the parameters required to access MinIO, which apply to the following scenarios:",
+    "sidebar_label": "MinIO"
 }
 ---
+
+# MinIO
 
 This document describes the parameters required to access MinIO, which apply to the following scenarios:
 
@@ -32,8 +35,8 @@ This document describes the parameters required to access MinIO, which apply to 
 
 MinIO uses Host-style access by default, but also supports Path-style access. You can switch by setting the `minio.use_path_style` parameter.
 
-- Host-style access (default): https://bucket.minio.example.com
-- Path-style access (when enabled): https://minio.example.com/bucket
+- Host-style access (default): `https://bucket.minio.example.com`
+- Path-style access (when enabled): `https://minio.example.com/bucket`
 
 ## Example Configuration
 
@@ -56,3 +59,4 @@ For versions before 3.1:
 * It is recommended to use the `minio.` prefix for configuration parameters to ensure consistency and clarity with MinIO.
 * For versions before 3.1, please use the legacy name `s3.` as the prefix.
 * Connection pool parameters can be adjusted according to concurrency requirements to avoid connection
+

@@ -1,10 +1,13 @@
 ---
 {
-    "title": "IPV6_STRING_TO_NUM_OR_NULL",
+    "title": "IPV6_STRING_TO_NUM_OR_NULL | Ip Functions",
     "language": "zh-CN",
-    "description": "IPv6NumToString 的反向函数，它接受一个 IP 地址字符串并返回二进制格式的 IPv6 地址。"
+    "description": "IPv6NumToString 的反向函数，它接受一个 IP 地址字符串并返回二进制格式的 IPv6 地址。",
+    "sidebar_label": "IPV6_STRING_TO_NUM_OR_NULL"
 }
 ---
+
+# IPV6_STRING_TO_NUM_OR_NULL
 
 ## 描述
 IPv6NumToString 的反向函数，它接受一个 IP 地址字符串并返回二进制格式的 IPv6 地址。
@@ -38,3 +41,4 @@ select hex(ipv6_string_to_num_or_null('1111::ffff')) as r1, hex(ipv6_string_to_n
 | 1111000000000000000000000000FFFF | 00000000000000000000FFFFC0A80001 | NULL |
 +----------------------------------+----------------------------------+------+
 ```
+

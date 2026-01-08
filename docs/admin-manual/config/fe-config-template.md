@@ -1,10 +1,11 @@
 ---
 {
-    "title": "FE Configuration",
+    "title": "FE Configuration Template | Config",
     "language": "en",
     "toc_min_heading_level": 2,
     "toc_max_heading_level": 4,
-    "description": "This document mainly introduces the relevant configuration items of FE."
+    "description": "This document mainly introduces the relevant configuration items of FE.",
+    "sidebar_label": "FE Configuration"
 }
 ---
 
@@ -2747,4 +2748,5 @@ MasterOnly: false
 If false, when select from tables in information_schema database,
 the result will not contain the information of the table in external catalog.
 This is to avoid query time when external catalog is not reachable.
+
 

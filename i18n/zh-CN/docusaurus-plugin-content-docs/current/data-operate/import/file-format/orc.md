@@ -1,10 +1,13 @@
 ---
 {
-    "title": "ORC",
+    "title": "ORC | File Format",
     "language": "zh-CN",
-    "description": "本文介绍如何在 Doris 中导入 ORC 格式的数据文件。"
+    "description": "本文介绍如何在 Doris 中导入 ORC 格式的数据文件。",
+    "sidebar_label": "ORC"
 }
 ---
+
+# ORC
 
 本文介绍如何在 Doris 中导入 ORC 格式的数据文件。
 
@@ -60,3 +63,4 @@ FROM S3
 );
 
 ```
+

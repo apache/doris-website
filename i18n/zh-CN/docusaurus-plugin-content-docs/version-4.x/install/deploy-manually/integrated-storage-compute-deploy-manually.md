@@ -64,7 +64,7 @@
       | ------------------------------------------------------------ | --------------------------------------------------------- |
       | JAVA_OPTS                                                    | 指定参数 `-Xmx` 调整 Java Heap，生产环境建议 16G 以上。   |
       | [lower_case_table_names ](../../admin-manual/config/fe-config#lower_case_table_names) | 设置大小写敏感，建议调整为 1，即大小写不敏感。            |
-      | [priority_networks ](../../admin-manual/config/fe-config#priority_networks) | 网络 CIDR，更具网络 IP 地址指定。在 FQDN 环境中可以忽略。 |
+      | [priority_networks ](../../admin-manual/config/fe-config#priority_networks) | 网络 CIDR，根据网络 IP 地址指定。在 FQDN 环境中可以忽略。 |
       | JAVA_HOME                                                    | 建议 Doris 使用独立于操作系统的 JDK 环境。                |
    
 3. **启动 FE 进程**
@@ -178,7 +178,7 @@
 
    | 参数                                                         | 修改建议                                                  |
    | ------------------------------------------------------------ | --------------------------------------------------------- |
-   | [priority_networks](../../admin-manual/config/be-config#priority_networks) | 网络 CIDR，更具网络 IP 地址指定。在 FQDN 环境中可以忽略。 |
+   | [priority_networks](../../admin-manual/config/be-config#priority_networks) | 网络 CIDR，根据网络 IP 地址指定。在 FQDN 环境中可以忽略。 |
    | JAVA_OPTS                                                    | 指定参数 `-Xmx` 调整 Java Heap，生产环境建议 2G 以上。   |
    | JAVA_HOME                                                    | 建议 Doris 使用独立于操作系统的 JDK 环境。                |
 

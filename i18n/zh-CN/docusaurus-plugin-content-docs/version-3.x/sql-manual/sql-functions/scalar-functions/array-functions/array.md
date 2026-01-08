@@ -1,10 +1,13 @@
 ---
 {
-    "title": "ARRAY",
+    "title": "ARRAY | Array Functions",
     "language": "zh-CN",
-    "description": "根据参数构造并返回 array, 参数可以是多列或者常量"
+    "description": "根据参数构造并返回 array, 参数可以是多列或者常量",
+    "sidebar_label": "ARRAY"
 }
 ---
+
+# ARRAY
 
 ## 描述
 根据参数构造并返回 array, 参数可以是多列或者常量
@@ -71,3 +74,4 @@ select array(qid, creationDate, null) from nested  limit 4;
 | [null, "2009-06-16 08:15:45", null]                   |
 +-------------------------------------------------------+
 ```
+

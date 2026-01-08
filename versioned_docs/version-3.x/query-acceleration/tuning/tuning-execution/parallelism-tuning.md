@@ -1,8 +1,9 @@
 ---
 {
-    "title": "Data Skew Handling",
+    "title": "Parallelism Tuning | Tuning Execution",
     "language": "en",
-    "description": "Doris queries are executed in an MPP (Massively Parallel Processing) framework, where each query is executed in parallel across multiple BEs (Backend Executors)."
+    "description": "Doris queries are executed in an MPP (Massively Parallel Processing) framework, where each query is executed in parallel across multiple BEs (Backend Executors).",
+    "sidebar_label": "Data Skew Handling"
 }
 ---
 
@@ -141,3 +142,4 @@ Usually, users do not need to adjust the query parallelism. If adjustment is req
 
 1. It is recommended to start from the CPU utilization. Observe whether it is a CPU bottleneck through the PROFILE tool output and try to make reasonable modifications to the parallelism.
 2. Adjusting a single SQL is relatively safe. Try not to make overly aggressive global modifications.
+

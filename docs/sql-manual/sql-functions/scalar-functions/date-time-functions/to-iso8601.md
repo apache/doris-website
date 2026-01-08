@@ -1,10 +1,13 @@
 ---
 {
-    "title": "TO_ISO8601",
+    "title": "TO_ISO8601 | Date Time Functions",
     "language": "en",
-    "description": "Converts datetime values to ISO8601 formatted strings, supporting input types DATETIME and DATE."
+    "description": "Converts datetime values to ISO8601 formatted strings, supporting input types DATETIME and DATE.",
+    "sidebar_label": "TO_ISO8601"
 }
 ---
+
+# TO_ISO8601
 
 ## Description
 
@@ -73,3 +76,4 @@ SELECT TO_ISO8601(NULL) AS null_input;
 | NULL       |
 +------------+
 ```
+

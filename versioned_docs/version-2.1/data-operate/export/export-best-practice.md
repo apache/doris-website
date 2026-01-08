@@ -1,10 +1,13 @@
 ---
 {
-    "title": "Best Practices",
+    "title": "Best Practices | Export",
     "language": "en",
-    "description": "This document mainly introduces how to determine whether resource utilization is reasonable during data export operations,"
+    "description": "This document mainly introduces how to determine whether resource utilization is reasonable during data export operations,",
+    "sidebar_label": "Best Practices"
 }
 ---
+
+# Best Practices
 
 This document mainly introduces how to determine whether resource utilization is reasonable during data export operations, and how to adjust resource utilization to achieve better data export efficiency.
 
@@ -94,3 +97,4 @@ This document mainly introduces how to determine whether resource utilization is
     - `async_task_consumer_thread_num`
 
         This is an FE configuration parameter that indicates the number of Export Tasks that the current cluster can run concurrently. The default value is 64. An Export Job is split into multiple Export Tasks based on concurrency. All Export Tasks share this threshold. To increase the overall number of concurrent export tasks that the cluster can execute, increase this parameter and restart the FE node.
+

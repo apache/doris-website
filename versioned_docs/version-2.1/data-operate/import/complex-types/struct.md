@@ -1,10 +1,13 @@
 ---
 {
-    "title": "STRUCT",
+    "title": "STRUCT | Complex Types",
     "language": "en",
-    "description": "STRUCT<fieldname:fieldtype [COMMENT 'commentstring'], ... > Represents value with structure described by multiple fields,"
+    "description": "STRUCT<fieldname:fieldtype [COMMENT 'commentstring'], ... > Represents value with structure described by multiple fields,",
+    "sidebar_label": "STRUCT"
 }
 ---
+
+# STRUCT
 
 `STRUCT<field_name:field_type [COMMENT 'comment_string'], ... >` Represents value with structure described by multiple fields, which can be viewed as a collection of multiple columns.
 
@@ -136,3 +139,4 @@ mysql> SELECT * FROM struct_test;
 +------+--------------------------------------+
 5 rows in set (0.00 sec)
 ```
+

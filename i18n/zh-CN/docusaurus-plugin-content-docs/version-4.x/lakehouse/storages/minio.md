@@ -1,10 +1,13 @@
 ---
 {
-    "title": "MinIO",
+    "title": "MinIO | Storages",
     "language": "zh-CN",
-    "description": "本文档介绍访问 MinIO 所需的参数，这些参数适用于以下场景："
+    "description": "本文档介绍访问 MinIO 所需的参数，这些参数适用于以下场景：",
+    "sidebar_label": "MinIO"
 }
 ---
+
+# MinIO
 
 本文档介绍访问 MinIO 所需的参数，这些参数适用于以下场景：
 
@@ -32,8 +35,8 @@
 
 Minio 默认使用 Host-style 访问方式，但也支持 Path-style 访问。可以通过设置 `minio.use_path_style` 参数来切换。
 
-- Host-style 访问（默认）: https://bucket.minio.example.com
-- Path-style 访问（开启后）: https://minio.example.com/bucket
+- Host-style 访问（默认）: `https://bucket.minio.example.com`
+- Path-style 访问（开启后）: `https://minio.example.com/bucket`
 
 ## 示例配置
 
@@ -56,3 +59,4 @@ Minio 默认使用 Host-style 访问方式，但也支持 Path-style 访问。�
 * 推荐使用 `minio.` 前缀配置参数，保证与 MinIO 的一致性和清晰度。
 * 3.1 之前的版本，请使用曾用名 `s3.` 作为前缀。
 * 连接池参数可根据并发需求调整，避免连接阻塞。
+

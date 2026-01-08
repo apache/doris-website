@@ -89,7 +89,7 @@ function Footer(): React.ReactElement | null {
                                     <TwitterIcon />
                                 </a>
                                 <a
-                                    href="https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-3b8tlr3le-Z~IrrVxkzqniFjhL17d1oQ"
+                                    href="https://doris.apache.org/slack"
                                     title="slack"
                                     target="_blank"
                                     className="item"
