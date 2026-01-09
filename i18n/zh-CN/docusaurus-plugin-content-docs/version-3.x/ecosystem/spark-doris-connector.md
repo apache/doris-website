@@ -20,6 +20,7 @@ Spark Doris Connector 可以支持通过 Spark 读取 Doris 中存储的数据�
 
 | Connector | Spark               | Doris       | Java | Scala      |
 |-----------|---------------------|-------------|------|------------|
+| 25.2.0    | 3.5 - 3.1, 2.4      | 1.0 +       | 8    | 2.12, 2.11 |
 | 25.1.0    | 3.5 - 3.1, 2.4      | 1.0 +       | 8    | 2.12, 2.11 |
 | 25.0.1    | 3.5 - 3.1, 2.4      | 1.0 +       | 8    | 2.12, 2.11 |
 | 25.0.0    | 3.5 - 3.1, 2.4      | 1.0 +       | 8    | 2.12, 2.11 |
@@ -37,7 +38,7 @@ Spark Doris Connector 可以支持通过 Spark 读取 Doris 中存储的数据�
 <dependency>
     <groupId>org.apache.doris</groupId>
     <artifactId>spark-doris-connector-spark-3.5</artifactId>
-    <version>25.1.0</version>
+    <version>25.2.0</version>
 </dependency>
 ```
 
@@ -60,7 +61,7 @@ Spark Doris Connector 可以支持通过 Spark 读取 Doris 中存储的数据�
 
 编译时，可直接运行 `sh build.sh`，具体可参考这里。
 
-编译成功后，会在 `dist` 目录生成目标 jar 包，如：spark-doris-connector-spark-3.5-25.1.0.jar。将此文件复制到 `Spark` 的 `ClassPath` 中即可使用 `Spark-Doris-Connector`。例如，`Local` 模式运行的 `Spark`，将此文件放入 `jars/` 文件夹下。`Yarn`集群模式运行的`Spark`，则将此文件放入预部署包中。
+编译成功后，会在 `dist` 目录生成目标 jar 包，如：spark-doris-connector-spark-3.5-25.2.0.jar。将此文件复制到 `Spark` 的 `ClassPath` 中即可使用 `Spark-Doris-Connector`。例如，`Local` 模式运行的 `Spark`，将此文件放入 `jars/` 文件夹下。`Yarn`集群模式运行的`Spark`，则将此文件放入预部署包中。
 也可以
 
 
@@ -68,20 +69,20 @@ Spark Doris Connector 可以支持通过 Spark 读取 Doris 中存储的数据�
    `sh build.sh`
    根据提示输入你需要的 Scala 与 Spark 版本进行编译。
 
-编译成功后，会在 `dist` 目录生成目标 jar 包，如：`spark-doris-connector-spark-3.5-25.1.0.jar`。
+编译成功后，会在 `dist` 目录生成目标 jar 包，如：`spark-doris-connector-spark-3.5-25.2.0.jar`。
 将此文件复制到 `Spark` 的 `ClassPath` 中即可使用 `Spark-Doris-Connector`。
 
 例如，`Local` 模式运行的 `Spark`，将此文件放入 `jars/` 文件夹下。`Yarn`集群模式运行的`Spark`，则将此文件放入预部署包中。
 
-例如将 `spark-doris-connector-spark-3.5-25.1.0.jar` 上传到 hdfs 并在 `spark.yarn.jars` 参数上添加 hdfs 上的 Jar 包路径
+例如将 `spark-doris-connector-spark-3.5-25.2.0.jar` 上传到 hdfs 并在 `spark.yarn.jars` 参数上添加 hdfs 上的 Jar 包路径
 ```shell
-1. 上传 `spark-doris-connector-spark-3.5-25.1.0.jar` 到 hdfs。
+1. 上传 `spark-doris-connector-spark-3.5-25.2.0.jar` 到 hdfs。
 
 hdfs dfs -mkdir /spark-jars/
-hdfs dfs -put /your_local_path/spark-doris-connector-spark-3.5-25.1.0.jar /spark-jars/
+hdfs dfs -put /your_local_path/spark-doris-connector-spark-3.5-25.2.0.jar /spark-jars/
 
-2. 在集群中添加 `spark-doris-connector-spark-3.5-25.1.0.jar` 依赖。
-spark.yarn.jars=hdfs:///spark-jars/spark-doris-connector-spark-3.5-25.1.0.jar
+2. 在集群中添加 `spark-doris-connector-spark-3.5-25.2.0.jar` 依赖。
+spark.yarn.jars=hdfs:///spark-jars/spark-doris-connector-spark-3.5-25.2.0.jar
 
 ```
 
@@ -449,7 +450,7 @@ insert into your_catalog_name.your_doris_db.your_doris_table select * from your_
 | doris.filter.query          | --            | 过滤读取数据的表达式，此表达式透传给 Doris。Doris 使用此表达式完成源端数据过滤。 |
 
 
-## Doris 和 Spark 列类型映射关系
+## Doris 到 Spark 列类型映射关系
 
 | Doris Type | Spark Type              |
 |------------|-------------------------|
@@ -473,6 +474,24 @@ insert into your_catalog_name.your_doris_db.your_doris_table select * from your_
 | TIME       | DataTypes.DoubleType    |
 | HLL        | DataTypes.StringType    |
 | Bitmap     | DataTypes.StringType    |
+
+## Spark 到 Doris 的数据类型映射
+
+| Spark Type     | Doris Type     |
+|----------------|----------------|
+| BooleanType    | BOOLEAN        |
+| ShortType      | SMALLINT       |
+| IntegerType    | INT            |
+| LongType       | BIGINT         |
+| FloatType      | FLOAT          |
+| DoubleType     | DOUBLE         |
+| DecimalType    | DECIMAL        |
+| StringType     | VARCHAR/STRING |
+| DateType       | DATE           |
+| TimestampType  | DATETIME       |
+| ArrayType      | ARRAY          |
+| MapType        | MAP/JSON       |
+| StructType     | STRUCT/JSON    |
 
 :::tip
 
