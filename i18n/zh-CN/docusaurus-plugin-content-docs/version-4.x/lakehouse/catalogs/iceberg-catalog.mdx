@@ -1225,17 +1225,19 @@ Iceberg 的元数层级关系是 Catalog -> Namespace -> Table。其中 Namespac
 <details>
     <summary>3.1+ 版本  </summary>
     <Tabs>
-        <TabItem value='FileSystem Catalog' label='FileSystem Catalog' default>
+        <TabItem value='S3 Tables Rest Catalog' label='S3 Tables Rest Catalog' default>
             可参阅 [集成 S3 Tables](../best-practices/doris-aws-s3tables.md) 文档。
             ```sql
-            CREATE CATALOG test_s3tables_write_insert PROPERTIES (
+            CREATE CATALOG aws_s3_tables PROPERTIES (
                 'type' = 'iceberg',
-                'iceberg.catalog.type' = 's3tables',
-                'warehouse' = 'arn:aws:s3tables:ap-east-1:12345:bucket/doris-s3-table-bucket',
-                's3.region' = 'ap-east-1',
-                's3.endpoint' = 'https://s3.ap-east-1.amazonaws.com',
-                's3.access_key' = '<ak>',
-                's3.secret_key' = '<sk>'
+                'iceberg.catalog.type' = 'rest',
+                'warehouse' = 'arn:aws:s3tables:us-east-1:<account_id>:bucket/<s3_table_bucket_name>',
+                'iceberg.rest.uri' = 'https://s3tables.us-east-1.amazonaws.com/iceberg',
+                'iceberg.rest.sigv4-enabled' = 'true',
+                'iceberg.rest.signing-name' = 's3tables',
+                'iceberg.rest.signing-region' = 'us-east-1',
+                'iceberg.rest.access-key-id' = '<ak>',
+                'iceberg.rest.secret-access-key' = '<sk>'
             );
             ```
         </TabItem>
@@ -1255,6 +1257,21 @@ Iceberg 的元数层级关系是 Catalog -> Namespace -> Table。其中 Namespac
             );
             ```
         </TabItem>
+        <TabItem value='FileSystem Catalog' label='FileSystem Catalog' default>
+            可参阅 [集成 S3 Tables](../best-practices/doris-aws-s3tables.md) 文档。
+            ```sql
+            CREATE CATALOG test_s3tables_write_insert PROPERTIES (
+                'type' = 'iceberg',
+                'iceberg.catalog.type' = 's3tables',
+                'warehouse' = 'arn:aws:s3tables:ap-east-1:12345:bucket/doris-s3-table-bucket',
+                's3.region' = 'ap-east-1',
+                's3.endpoint' = 'https://s3.ap-east-1.amazonaws.com',
+                's3.access_key' = '<ak>',
+                's3.secret_key' = '<sk>'
+            );
+            ```
+        </TabItem>
+        
     </Tabs>
 
 
