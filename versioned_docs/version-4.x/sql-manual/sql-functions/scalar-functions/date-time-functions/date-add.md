@@ -10,7 +10,7 @@
 
 The DATE_ADD function is used to add a specified time interval to a specified date or time value and return the calculated result.
 
-- Supported input date types include DATE, DATETIME (such as '2023-12-31', '2023-12-31 23:59:59').
+- Supported input date types include DATE, DATETIME, TIMESTAMPTZ (such as '2023-12-31', '2023-12-31 23:59:59', '2023-12-31 23:59:59+08:00').
 - The time interval is specified by both a numeric value (`expr`) and a unit (`time_unit`). When `expr` is positive, it means "add", and when it is negative, it is equivalent to "subtract" the corresponding interval.
 
 ## Aliases
@@ -28,7 +28,7 @@ DATE_ADD(<date_or_time_expr>, <expr> <time_unit>)
 
 | Parameter | Description |
 | -- | -- |
-| `<date_or_time_expr>` | The date/time value to be processed. Supported types: datetime or date type, with a maximum precision of six decimal places for seconds (e.g., 2022-12-28 23:59:59.999999). For specific datetime and date formats, please refer to [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
+| `<date_or_time_expr>` | The date/time value to be processed. Supported types: datetime or date type, with a maximum precision of six decimal places for seconds (e.g., 2022-12-28 23:59:59.999999). For specific formats, please refer to [timestamptz conversion](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion), [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
 | `<expr>` | The time interval to be added, of `INT` type |
 | `<time_unit>` | Enumeration values: YEAR, QUARTER, MONTH, WEEK, DAY, HOUR, MINUTE, SECOND, DAY_SECOND, DAY_HOUR, MINUTE_SECOND, SECOND_MICROSECOND |
 
@@ -37,6 +37,7 @@ DATE_ADD(<date_or_time_expr>, <expr> <time_unit>)
 Returns a result with the same type as <date_or_time_expr>:
 - When DATE type is input, returns DATE (date part only);
 - When DATETIME type input, returns DATETIME (including date and time);
+- WHEN TIMESTAMPTZ type input, returns TIMESTAMPTZ (including date, time, and timezone offset).
 - Input with scale (such as '2024-01-01 12:00:00.123') will preserve the scale, with a maximum of six decimal places.
 
 Special cases:
@@ -128,6 +129,14 @@ mysql>  select date_add("2025-10-10 10:10:10.123456", INTERVAL "1.1" SECOND_MICR
 +---------------------------------------------------------------------------+
 | 2025-10-10 10:10:11.223456                                                |
 +---------------------------------------------------------------------------+
+
+-- Example of TimestampTz type, SET time_zone = '+08:00'
+select DATE_ADD('2023-01-01 23:22:33+03:00', INTERVAL 1 DAY);
++-------------------------------------------------------+
+| DATE_ADD('2023-01-01 23:22:33+03:00', INTERVAL 1 DAY) |
++-------------------------------------------------------+
+| 2023-01-03 04:22:33+08:00                             |
++-------------------------------------------------------+
 
 -- Illegal unit
 select DATE_ADD('2023-12-31 23:00:00', INTERVAL 2 sa);
