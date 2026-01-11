@@ -63,6 +63,45 @@ SELECT * FROM table_name WHERE content MATCH_REGEXP '^key_word.*';
 SELECT * FROM table_name WHERE content MATCH_PHRASE_EDGE 'search engine optim';
 ```
 
+### Specifying Analyzer with USING ANALYZER
+
+When a column has multiple inverted indexes with different analyzers, use the `USING ANALYZER` clause to specify which analyzer to use for the query.
+
+**Syntax:**
+```sql
+SELECT * FROM table_name WHERE column MATCH 'keywords' USING ANALYZER analyzer_name;
+```
+
+**Supported Operators:**
+All MATCH operators support the `USING ANALYZER` clause:
+- MATCH / MATCH_ANY
+- MATCH_ALL
+- MATCH_PHRASE
+- MATCH_PHRASE_PREFIX
+- MATCH_PHRASE_EDGE
+- MATCH_REGEXP
+
+**Examples:**
+```sql
+-- Use standard analyzer (tokenizes text into words)
+SELECT * FROM articles WHERE content MATCH 'hello world' USING ANALYZER std_analyzer;
+
+-- Use keyword analyzer (exact match, no tokenization)
+SELECT * FROM articles WHERE content MATCH 'hello world' USING ANALYZER kw_analyzer;
+
+-- Use with MATCH_PHRASE
+SELECT * FROM articles WHERE content MATCH_PHRASE 'hello world' USING ANALYZER std_analyzer;
+
+-- Use built-in analyzers
+SELECT * FROM articles WHERE content MATCH 'hello' USING ANALYZER standard;
+SELECT * FROM articles WHERE content MATCH 'hello' USING ANALYZER none;
+```
+
+**Notes:**
+- If the specified analyzer's index is not built, the query automatically falls back to non-index path (correct results, slower performance)
+- If no analyzer is specified, the system uses any available index
+- Built-in analyzer names: `none` (exact match), `standard`, `chinese`
+
 ## Inverted Index Query Acceleration
 
 ### Supported Operators and Functions
