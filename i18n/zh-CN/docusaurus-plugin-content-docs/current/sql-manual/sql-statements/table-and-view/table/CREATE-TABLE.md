@@ -349,6 +349,7 @@ rollup 可以创建的同步物化视图功能有限。已不再推荐使用。�
 | min_load_replica_num                          | 设定数据导入成功所需的最小副本数，默认值为 -1。当该属性小于等于 0 时，表示导入数据仍需多数派副本成功。 |
 | is_being_synced                               | 用于标识此表是否是被 CCR 复制而来并且正在被 syncer 同步，默认为 `false`。如果设置为 `true`，`colocate_with`和`storage_policy`属性将被擦除。`dynamic partition`和`auto bucket`功能将会失效。即在`show create table`中显示开启状态，但不会实际生效。当`is_being_synced`被设置为 `false` 时，这些功能将会恢复生效。这个属性仅供 CCR 外围模块使用，在 CCR 同步的过程中不要手动设置。 |
 | storage_medium                                | 声明表数据的初始存储介质                                     |
+| medium_allocation_mode                        | 指定在存储介质不可用时的处理方式。支持两种模式：`strict`（指定介质不可用时创建失败）和 `adaptive`（自动选择其他可用介质继续工作）。 |
 | storage_cooldown_time                         | 设定表数据的初始存储介质的到期时间。超过此时间后，会自动降级到第一级别的存储介质上。 |
 | colocate_with                                 | 当需要使用 Colocation Join 功能时，使用这个参数设置 Colocation Group。 |
 | bloom_filter_columns                          | 用户指定需要添加 Bloom Filter 索引的列名称列表。各个列的 Bloom Filter 索引是独立的，并不是组合索引。列如：`"bloom_filter_columns" = "k1, k2, k3"` |
@@ -577,6 +578,40 @@ DISTRIBUTED BY HASH (k1, k2) BUCKETS 32
 PROPERTIES(
     "storage_medium" = "SSD",
     "storage_cooldown_time" = "2015-06-04 00:00:00"
+);
+```
+
+**介质分配模式**
+
+```sql
+-- 严格模式：必须使用 SSD，如果 SSD 不可用则失败
+CREATE TABLE table_strict
+(
+    k1 BIGINT,
+    k2 LARGEINT,
+    v1 VARCHAR(2048)
+)
+UNIQUE KEY(k1, k2)
+DISTRIBUTED BY HASH (k1, k2) BUCKETS 32
+PROPERTIES(
+    "storage_medium" = "SSD",
+    "medium_allocation_mode" = "strict",
+    "replication_num" = "1"
+);
+
+-- 自适应模式：优先使用 SSD，需要时自动切换到 HDD
+CREATE TABLE table_adaptive
+(
+    k1 BIGINT,
+    k2 LARGEINT,
+    v1 VARCHAR(2048)
+)
+UNIQUE KEY(k1, k2)
+DISTRIBUTED BY HASH (k1, k2) BUCKETS 32
+PROPERTIES(
+    "storage_medium" = "SSD",
+    "medium_allocation_mode" = "adaptive",
+    "replication_num" = "1"
 );
 ```
 
