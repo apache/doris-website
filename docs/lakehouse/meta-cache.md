@@ -250,27 +250,59 @@ To see real-time schema, snapshot, and partition information, disable the table 
 
 ### Iceberg Manifest Cache
 
-Used to cache Iceberg manifest file contents to reduce the overhead of reading manifest files from remote storage.
+Used to cache **parsed** Iceberg manifest file contents—specifically the `DataFile` and `DeleteFile` objects extracted from manifest files.
 
 This cache is part of `IcebergMetadataCache`, with each Iceberg Catalog having its own instance.
 
-- Enable/Disable
+**What is Cached:**
 
-    Controlled by Catalog property `iceberg.manifest.cache.enable`. Default is `true`.
+The cache stores parsed manifest content (not raw file bytes):
+- `DataFile` objects: File metadata including path, partition values, metrics, etc.
+- `DeleteFile` objects: Delete metadata for equality deletes.
 
-    Set to `false` to disable manifest caching. This increases remote storage access but ensures real-time manifest data.
+:::tip Best Practice
+For optimal performance, **combine Doris Manifest Cache with Iceberg native manifest cache** by setting:
 
-- Maximum cache size
+```sql
+CREATE CATALOG iceberg_catalog PROPERTIES (
+    'type' = 'iceberg',
+    ...
+    'iceberg.manifest.cache.enable' = 'true',     -- Enable Doris Manifest Cache (default)
+    'io.manifest.cache-enabled' = 'true'          -- Enable Iceberg native cache
+);
+```
 
-    Controlled by Catalog property `iceberg.manifest.cache.capacity-mb`, in MB. Default is 1024 MB.
+This provides two-level caching:
+1. **Iceberg native cache** (`io.manifest.cache-enabled`): Caches raw manifest file I/O
+2. **Doris Manifest Cache**: Caches parsed `DataFile`/`DeleteFile` objects, avoiding repeated parsing
+:::
 
-    When the cache reaches capacity, older entries are evicted using LRU policy.
+**Important Note:**
 
-- Eviction time (TTL)
+Iceberg manifest files are **immutable**—once created, they are never modified. New commits create new manifest files rather than modifying existing ones. Therefore:
 
-    Controlled by Catalog property `iceberg.manifest.cache.ttl-second`, in seconds. Default is 172800 seconds (48 hours).
+- The Manifest Cache **does not affect data correctness** or what users see.
+- It only affects **query performance** (reducing I/O and parsing overhead).
+- Even with cached (stale) manifest entries, queries will still see the correct data.
+- Disabling this cache will not help you see "newer" data—it will only increase I/O and CPU overhead.
 
-    Cached manifest files are automatically removed after this period.
+**Configuration:**
+
+These properties are set when **creating an Iceberg Catalog**:
+
+```sql
+CREATE CATALOG iceberg_catalog PROPERTIES (
+    "iceberg.manifest.cache.enable" = "true",
+    "iceberg.manifest.cache.capacity-mb" = "1024",
+    "iceberg.manifest.cache.ttl-second" = "172800"
+);
+```
+
+| Config | Default | Description |
+|--------|---------|-------------|
+| `iceberg.manifest.cache.enable` | `true` | Enable/disable manifest cache |
+| `iceberg.manifest.cache.capacity-mb` | `1024` | Maximum cache capacity in MB |
+| `iceberg.manifest.cache.ttl-second` | `48 * 60 * 60` (48 hours) | Cache entry expiration after access |
 
 ## Cache Refresh
 

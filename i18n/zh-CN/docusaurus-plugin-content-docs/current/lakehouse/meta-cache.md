@@ -250,27 +250,59 @@ Table Cache 控制使用哪个版本的 Iceberg 表元数据，这会影响：
 
 ### Iceberg Manifest 缓存
 
-用于缓存 Iceberg Manifest 文件内容，以减少从远程存储读取 Manifest 文件的开销。
+用于缓存**已解析的** Iceberg Manifest 文件内容——具体是从 Manifest 文件中提取的 `DataFile` 和 `DeleteFile` 对象。
 
 该缓存是 `IcebergMetadataCache` 的一部分，每个 Iceberg Catalog 都有自己独立的实例。
 
-- 启用/禁用
+**缓存内容：**
 
-    由 Catalog 属性 `iceberg.manifest.cache.enable` 控制，默认为 `true`。
+该缓存存储的是已解析的 Manifest 内容（而不是原始文件字节）：
+- `DataFile` 对象：文件元数据，包括路径、分区值、统计信息等
+- `DeleteFile` 对象：Equality Delete 的删除元数据
 
-    设置为 `false` 可以禁用 Manifest 缓存。这会增加远程存储访问，但能确保获取实时的 Manifest 数据。
+:::tip 最佳实践
+为了获得最佳性能，**建议将 Doris Manifest Cache 与 Iceberg 原生 Manifest Cache 结合使用**：
 
-- 最大缓存大小
+```sql
+CREATE CATALOG iceberg_catalog PROPERTIES (
+    'type' = 'iceberg',
+    ...
+    'iceberg.manifest.cache.enable' = 'true',     -- 启用 Doris Manifest Cache（默认）
+    'io.manifest.cache-enabled' = 'true'          -- 启用 Iceberg 原生缓存
+);
+```
 
-    由 Catalog 属性 `iceberg.manifest.cache.capacity-mb` 控制，单位为 MB。默认为 1024 MB。
+这样提供了两级缓存：
+1. **Iceberg 原生缓存** (`io.manifest.cache-enabled`)：缓存原始 Manifest 文件的 I/O
+2. **Doris Manifest Cache**：缓存已解析的 `DataFile`/`DeleteFile` 对象，避免重复解析
+:::
 
-    当缓存达到容量上限时，会使用 LRU 策略淘汰旧条目。
+**重要说明：**
 
-- 淘汰时间（TTL）
+Iceberg 的 Manifest 文件是**不可变的**（immutable）——一旦创建就永远不会被修改。新的提交会创建新的 Manifest 文件，而不是修改现有文件。因此：
 
-    由 Catalog 属性 `iceberg.manifest.cache.ttl-second` 控制，单位为秒。默认为 172800 秒（48 小时）。
+- Manifest Cache **不影响数据正确性**，也不影响用户看到的数据。
+- 它只影响**查询性能**（减少 I/O 和解析开销）。
+- 即使使用缓存的（旧的）Manifest 条目，查询仍然会看到正确的数据。
+- 禁用此缓存**不会**帮助您看到"更新的"数据——只会增加 I/O 和 CPU 开销。
 
-    缓存的 Manifest 文件会在该时间后自动移除。
+**配置参数：**
+
+这些属性在**创建 Iceberg Catalog 时**设置：
+
+```sql
+CREATE CATALOG iceberg_catalog PROPERTIES (
+    "iceberg.manifest.cache.enable" = "true",
+    "iceberg.manifest.cache.capacity-mb" = "1024",
+    "iceberg.manifest.cache.ttl-second" = "172800"
+);
+```
+
+| 配置项 | 默认值 | 说明 |
+|--------|--------|------|
+| `iceberg.manifest.cache.enable` | `true` | 启用/禁用 Manifest 缓存 |
+| `iceberg.manifest.cache.capacity-mb` | `1024` | 最大缓存容量（MB） |
+| `iceberg.manifest.cache.ttl-second` | `48 * 60 * 60`（48 小时） | 访问后的缓存条目过期时间 |
 
 ## 缓存刷新
 
