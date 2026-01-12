@@ -212,32 +212,25 @@ This cache, each Hudi Catalog has one.
 
     After version 3.0.7, the configuration item name is changed to `external_cache_refresh_time_minutes`. The default value remains unchanged.
 
-### Iceberg Table Information
+### Iceberg Table/View Cache
 
-Used to cache Iceberg table objects. The object is loaded and constructed through the Iceberg API.
+Used to cache Iceberg table and view objects. These objects are loaded and constructed through the Iceberg API.
 
-This cache, each Iceberg Catalog has one.
+This cache is maintained in `IcebergMetadataCache`, where each Iceberg Catalog has its own instance with separate `tableCache` and `viewCache`.
 
-- Maximum cache count
+The cached table object (`IcebergTableCacheValue`) also contains snapshot information, which is lazily loaded on demand (mainly for MTMV scenarios).
 
-    Controlled by the FE configuration item `max_external_table_cache_num`, default is 1000.
+**Impact on Data Visibility:**
 
-    You can adjust this parameter appropriately according to the number of Iceberg tables.
+The Table Cache controls which version of the Iceberg table metadata is used. This affects:
 
-- Eviction time
+- **Schema**: The `schemaId` is obtained from the cached table object. If the cache contains an older table object, you will see the old schema (column definitions).
+- **Snapshot**: The current snapshot ID is obtained from the cached table object. If the cache contains an older table object, queries will use the old snapshot and may not see the latest data.
+- **Partition**: Partition information is loaded using the cached table object's metadata (specs, snapshots). Older cache means outdated partition information.
 
-    Fixed at 28800 seconds. After version 3.0.7, configured by the FE parameter `external_cache_expire_time_seconds_after_access`, default is 86400 seconds.
-
-- Minimum refresh time
-
-    Controlled by the FE configuration item `external_cache_expire_time_minutes_after_access`, in minutes. Default is 10 minutes. Reducing this time allows you to see the latest Iceberg table properties in Doris more in real time, but increases the frequency of accessing external data sources.
-
-    After version 3.0.7, the configuration item name is changed to `external_cache_refresh_time_minutes`. The default value remains unchanged.
-
-### Iceberg Table Snapshot
-
-Used to cache the snapshot list of Iceberg tables. The object is loaded and constructed through the Iceberg API.
-This cache, each Iceberg Catalog has one.
+:::tip
+To see real-time schema, snapshot, and partition information, disable the table cache by setting `iceberg.table.meta.cache.ttl-second=0`. The Schema cache does not affect which version is used—it only caches the parsed result for performance.
+:::
 
 - Maximum cache count
 
@@ -245,15 +238,39 @@ This cache, each Iceberg Catalog has one.
 
     You can adjust this parameter appropriately according to the number of Iceberg tables.
 
-- Eviction time
+- Eviction time (TTL)
 
-    Fixed at 28800 seconds. After version 3.0.7, configured by the FE parameter `external_cache_expire_time_seconds_after_access`, default is 86400 seconds.
+    Configured via Catalog property `iceberg.table.meta.cache.ttl-second` (in seconds). If not specified, defaults to the FE parameter `external_cache_expire_time_seconds_after_access` (default is 86400 seconds).
+
+    Set to `0` to disable the cache, forcing metadata to be fetched on every access.
 
 - Minimum refresh time
 
-    Controlled by the FE configuration item `external_cache_expire_time_minutes_after_access`, in minutes. Default is 10 minutes. Reducing this time allows you to see the latest Iceberg table properties in Doris more in real time, but increases the frequency of accessing external data sources.
+    Controlled by the FE configuration item `external_cache_refresh_time_minutes`, in minutes. Default is 10 minutes. This is an asynchronous refresh that does not block current operations.
 
-    After version 3.0.7, the configuration item name is changed to `external_cache_refresh_time_minutes`. The default value remains unchanged.
+### Iceberg Manifest Cache
+
+Used to cache Iceberg manifest file contents to reduce the overhead of reading manifest files from remote storage.
+
+This cache is part of `IcebergMetadataCache`, with each Iceberg Catalog having its own instance.
+
+- Enable/Disable
+
+    Controlled by Catalog property `iceberg.manifest.cache.enable`. Default is `true`.
+
+    Set to `false` to disable manifest caching. This increases remote storage access but ensures real-time manifest data.
+
+- Maximum cache size
+
+    Controlled by Catalog property `iceberg.manifest.cache.capacity-mb`, in MB. Default is 1024 MB.
+
+    When the cache reaches capacity, older entries are evicted using LRU policy.
+
+- Eviction time (TTL)
+
+    Controlled by Catalog property `iceberg.manifest.cache.ttl-second`, in seconds. Default is 172800 seconds (48 hours).
+
+    Cached manifest files are automatically removed after this period.
 
 ## Cache Refresh
 
@@ -335,6 +352,12 @@ For all types of External Catalogs, if you want to see the latest Table Schema i
     "schema.cache.ttl-second" = "0" // For a specific Catalog, disable Schema cache (supported in 2.1.11, 3.0.6)
     ```
 
+:::note
+For **Iceberg Catalog**, disabling Schema Cache alone does **not** guarantee real-time schema visibility. The schemaId is obtained from the cached Table object (controlled by Table Cache). To see the latest schema, you must disable Table Cache (`iceberg.table.meta.cache.ttl-second=0`).
+
+Schema Cache only affects whether to re-parse the schema (performance optimization), not which schema version is used.
+:::
+
 After setting, Doris will see the latest Table Schema in real time. However, this setting may increase the pressure on the metadata service.
 
 ### Disable Hive Catalog Metadata Cache
@@ -363,4 +386,23 @@ After setting the above parameters:
 - Changes in partition data files can be queried in real time.
 
 But this will increase the access pressure on external data sources (such as Hive Metastore and HDFS), which may cause unstable metadata access latency and other phenomena.
+
+### Disable Iceberg Catalog Metadata Cache
+
+For Iceberg Catalog, if you want to disable the cache to query real-time updated data, you can configure the following parameters:
+
+- Disable at Catalog level
+
+    ```text
+    -- Catalog property
+    "iceberg.table.meta.cache.ttl-second" = "0"     // Disable table/view cache
+    "iceberg.manifest.cache.enable" = "false"        // Disable manifest cache
+    ```
+
+After setting the above parameters:
+
+- New table snapshots can be queried in real time.
+- Changes to manifest files can be queried in real time.
+
+But this will increase the access pressure on external data sources (such as Iceberg Catalog service and object storage), which may cause unstable metadata access latency.
 

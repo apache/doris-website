@@ -212,32 +212,25 @@
 
     3.0.7 版本后，配置项名称修改为 `external_cache_refresh_time_minutes`。默认值不变。
 
-### Iceberg 表信息
+### Iceberg 表/视图缓存
 
-用于缓存 Iceberg 表对象。该对象通过 Iceberg API 加载并构建。
+用于缓存 Iceberg 表和视图对象，这些对象通过 Iceberg API 加载并构建。
 
-该缓存，每个 Iceberg Catalog 有一个。
+该缓存由 `IcebergMetadataCache` 维护，每个 Iceberg Catalog 都有自己独立的实例，包含 `tableCache` 和 `viewCache` 两个缓存。
 
-- 最大缓存数量
+缓存的表对象（`IcebergTableCacheValue`）中还包含 Snapshot 信息，该信息按需懒加载（主要用于 MTMV 场景）。
 
-    由 FE 配置项 `max_external_table_cache_num` 控制，默认为 1000。
+**对数据可见性的影响：**
 
-    可以根据 Iceberg 表的数量，适当调整这个参数。
+Table Cache 控制使用哪个版本的 Iceberg 表元数据，这会影响：
 
-- 淘汰时间
+- **Schema（结构）**：`schemaId` 从缓存的表对象中获取。如果缓存中是旧的表对象，您将看到旧的 Schema（列定义）。
+- **Snapshot（快照）**：当前快照 ID 从缓存的表对象中获取。如果缓存中是旧的表对象，查询将使用旧快照，可能看不到最新数据。
+- **Partition（分区）**：分区信息使用缓存的表对象的元数据（分区规范、快照）加载。缓存越旧，分区信息越滞后。
 
-    固定 28800 秒。3.0.7 版本之后，由 FE 参数 `external_cache_expire_time_seconds_after_access` 配置，默认 86400 秒。
-
-- 最短刷新时间
-
-    由 FE 配置项 `external_cache_expire_time_minutes_after_access` 控制。单位为分钟。默认 10 分钟。减少该时间，可以更实时的在 Doris 中访问到最新的 Iceberg 表属性，但会增加访问外部数据源的频率。
-
-    3.0.7 版本后，配置项名称修改为 `external_cache_refresh_time_minutes`。默认值不变。
-
-### Iceberg 表 Snapshot
-
-用于缓存 Iceberg 表的 Snapshot 列表。该对象通过 Iceberg API 加载并构建。
-该缓存，每个 Iceberg Catalog 有一个。
+:::tip
+要实时看到最新的 Schema、Snapshot 和 Partition 信息，需要禁用表缓存，设置 `iceberg.table.meta.cache.ttl-second=0`。Schema 缓存不影响使用的版本——它只是为了性能缓存已解析的结果。
+:::
 
 - 最大缓存数量
 
@@ -245,15 +238,39 @@
 
     可以根据 Iceberg 表的数量，适当调整这个参数。
 
-- 淘汰时间
+- 淘汰时间（TTL）
 
-    固定 28800 秒。3.0.7 版本之后，由 FE 参数 `external_cache_expire_time_seconds_after_access` 配置，默认 86400 秒。
+    通过 Catalog 属性 `iceberg.table.meta.cache.ttl-second` 配置（单位：秒）。如未指定，则使用 FE 参数 `external_cache_expire_time_seconds_after_access` 的默认值（86400 秒）。
+
+    设置为 `0` 可以禁用缓存，强制每次访问都重新获取元数据。
 
 - 最短刷新时间
 
-    由 FE 配置项 `external_cache_expire_time_minutes_after_access` 控制。单位为分钟。默认 10 分钟。减少该时间，可以更实时的在 Doris 中访问到最新的 Iceberg 表属性，但会增加访问外部数据源的频率。
+    由 FE 配置项 `external_cache_refresh_time_minutes` 控制，单位为分钟。默认为 10 分钟。这是异步刷新，不会阻塞当前操作。
 
-    3.0.7 版本后，配置项名称修改为 `external_cache_refresh_time_minutes`。默认值不变。
+### Iceberg Manifest 缓存
+
+用于缓存 Iceberg Manifest 文件内容，以减少从远程存储读取 Manifest 文件的开销。
+
+该缓存是 `IcebergMetadataCache` 的一部分，每个 Iceberg Catalog 都有自己独立的实例。
+
+- 启用/禁用
+
+    由 Catalog 属性 `iceberg.manifest.cache.enable` 控制，默认为 `true`。
+
+    设置为 `false` 可以禁用 Manifest 缓存。这会增加远程存储访问，但能确保获取实时的 Manifest 数据。
+
+- 最大缓存大小
+
+    由 Catalog 属性 `iceberg.manifest.cache.capacity-mb` 控制，单位为 MB。默认为 1024 MB。
+
+    当缓存达到容量上限时，会使用 LRU 策略淘汰旧条目。
+
+- 淘汰时间（TTL）
+
+    由 Catalog 属性 `iceberg.manifest.cache.ttl-second` 控制，单位为秒。默认为 172800 秒（48 小时）。
+
+    缓存的 Manifest 文件会在该时间后自动移除。
 
 ## 缓存刷新
 
@@ -335,6 +352,12 @@ CREATE CATALOG hive PROPERTIES (
     "schema.cache.ttl-second" = "0" // 针对某个 Catalog，关闭 Schema 缓存（2.1.11, 3.0.6 支持）
     ```
 
+:::note
+对于 **Iceberg Catalog**，仅关闭 Schema Cache **不能**保证实时看到最新的 Schema。schemaId 是从缓存的 Table 对象中获取的（由 Table Cache 控制）。要看到最新的 Schema，必须关闭 Table Cache（`iceberg.table.meta.cache.ttl-second=0`）。
+
+Schema Cache 只影响是否重新解析 Schema（性能优化），不影响使用哪个版本的 Schema。
+:::
+
 设置完成后，Doris 会实时可见最新的 Table Schema。但此设置可能会增加元数据服务的压力。
 
 ### 关闭 Hive Catalog 元数据缓存
@@ -363,3 +386,22 @@ CREATE CATALOG hive PROPERTIES (
 - 分区数据文件变动可以实时查询到。
 
 但会增加外部源数据（如 Hive Metastore 和 HDFS）的访问压力，可能导致元数据访问延迟不稳定等现象。
+
+### 关闭 Iceberg Catalog 元数据缓存
+
+针对 Iceberg Catalog，如果想关闭缓存来查询到实时更新的数据，可以配置以下参数：
+
+- Catalog 级别关闭
+
+    ```text
+    -- Catalog property
+    "iceberg.table.meta.cache.ttl-second" = "0"     // 关闭表/视图缓存
+    "iceberg.manifest.cache.enable" = "false"        // 关闭 Manifest 缓存
+    ```
+
+设置以上参数后：
+
+- 新的表 Snapshot 可以实时查询到。
+- Manifest 文件的变更可以实时查询到。
+
+但会增加外部数据源（如 Iceberg Catalog 服务和对象存储）的访问压力，可能导致元数据访问延迟不稳定等现象。
