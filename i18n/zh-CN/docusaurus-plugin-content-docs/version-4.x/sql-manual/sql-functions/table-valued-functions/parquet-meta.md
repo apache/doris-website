@@ -8,7 +8,7 @@
 
 `parquet_meta` 表函数（table-valued-function，tvf）可以用于读取 Parquet 文件的 Footer 元数据，不会扫描数据页。它可以快速查看 Row Group 统计、Schema、文件级元数据、KV 元数据以及 Bloom Filter 探测结果。
 
-> 该功能为实验功能，自 4.0.3 版本支持。
+> 该功能为实验功能，自 4.1.0 版本支持。
 
 ## 语法
 
