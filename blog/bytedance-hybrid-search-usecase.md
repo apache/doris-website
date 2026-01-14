@@ -8,7 +8,7 @@
     'author': 'velodb.io · VeloDB Engineering Team'
     'externalLink': 'https://www.velodb.io/blog/bytedance-solved-billion-scale-vector-search-problem-with-apache-doris-4-0'
     'tags': ['Best Practice']
-    "image": 'images/blogs/202512_ByteDance_horizontal.png'
+    "image": '/images/blogs/202512_ByteDance_horizontal.png'
 ---
 
 import { BlogLink } from '../src/components/blogs/components/blog-link';

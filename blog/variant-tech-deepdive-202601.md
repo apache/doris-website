@@ -8,7 +8,7 @@
     'author': 'velodb.io · VeloDB Engineering Team'
     'externalLink': 'https://www.velodb.io/blog/fast-json-analytics-in-apache-doris-100x-faster-than-postgresql-and-mongodb'
     'tags': ['Tech Sharing']
-    "image": 'images/blogs/202512_Variant_horizontal.png'
+    "image": '/images/blogs/202512_Variant_horizontal.png'
 ---
 import { BlogLink } from '../src/components/blogs/components/blog-link';
 import { SeeMore } from '../src/components/blogs/components/see-more';

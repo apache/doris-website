@@ -8,7 +8,7 @@
     'author': 'velodb.io · VeloDB Engineering Team'
     'externalLink': 'https://www.velodb.io/blog/deploying-apache-doris-with-minio'
     'tags': ['Tech Sharing']
-    "image": 'images/blogs/202512_MinIO_1800_766.png'
+    "image": '/images/blogs/202512_MinIO_1800_766.png'
 ---
 
 import { BlogLink } from '../src/components/blogs/components/blog-link';
