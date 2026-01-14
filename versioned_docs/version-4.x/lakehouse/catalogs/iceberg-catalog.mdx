@@ -141,7 +141,7 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 | decimal(P, S)                          | decimal(P, S)        |                                         |
 | date                                   | date                 |                                         |
 | timestamp (Timestamp without timezone) | datetime(6)          | Mapped to datetime with precision 6     |
-| timestamptz (Timestamp with timezone)  | datetime(6)          | Mapped to datetime with precision 6     |
+| timestamptz (Timestamp with timezone)  | datetime(6)/timestamptz(6) | Mapped to datetime with precision 6.The `enable.mapping.timestamp_tz` property (supported since version 4.0.3) controls the mapping behavior.  By default, it is set to `false`, in which case the type is mapped to `datetime`.  When set to `true`, it is mapped to the `timestamptz` type.     |
 | fixed(N)                               | char(N)              |                                         |
 | string                                 | string               |                                         |
 | binary                                 | string/varbinary     | Controlled by the `enable.mapping.varbinary` property of Catalog (supported since 4.0.2). The default is `false`, which maps to `string`; when `true`, it maps to `varbinary` type.|
@@ -156,6 +156,8 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 > Doris currently does not support `Timestamp` types with timezone. All `timestamp` and `timestamptz` will be uniformly mapped to `datetime(N)` type. However, during reading and writing, Doris will correctly handle timezones based on the actual source type. For example, after specifying a timezone with `SET time_zone=<tz>`, it will affect the reading and writing results of `timestamptz` columns.
 >
 > You can check whether the source type has timezone information in the Extra column of the `DESCRIBE table_name` statement. If it shows `WITH_TIMEZONE`, it indicates that the source type is a timezone-aware type. (Supported since 3.1.0).
+>
+> Supported since version 4.0.3, `timestamptz` (timestamp with time zone) can be mapped to the Doris `timestamptz` type.
 
 ## Namespace Mapping
 

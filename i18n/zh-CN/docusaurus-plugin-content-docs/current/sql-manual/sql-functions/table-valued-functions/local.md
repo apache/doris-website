@@ -45,6 +45,7 @@ LOCAL(
 | `skip_lines`       | 对于 CSV 格式的导入，选填，默认为 0，表示跳过 CSV 文件的前几行。当设置格式为 `csv_with_names` 或 `csv_with_names_and_types` 时，该参数会失效                        | csv 格式                                                                      |
 | `path_partition_keys`| 选填，指定文件路径中携带的分区列名，例如 `/path/to/city=beijing/date="2023-07-09"`，则填写 `path_partition_keys="city,date"`，将从路径中自动读取相应的列名和列值进行导入 |                                                                             |
 |`enable_mapping_varbinary`|默认为 false，在读取 PARQUET / ORC 时将 BYTE_ARRAY 类型映射为 STRING，开启后则会映射到 VARBINAY 类型。| 在 4.0.3 之后开始支持 |
+|`enable_mapping_timestamp_tz`|默认为 false，在读取 PARQUET(TIMESTAMP WITH isAdjustedToUTC) \ ORC(TIMESTAMP_INSTANT) 类型映射为 DATATIME，开启后则会映射到 TIMESTAMPTZ 类型。| 在 4.0.3 之后开始支持 |
 
 ## 权限控制
 

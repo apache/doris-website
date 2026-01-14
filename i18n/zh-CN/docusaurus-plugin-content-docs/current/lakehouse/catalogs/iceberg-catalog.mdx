@@ -158,7 +158,7 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 | decimal(P, S)                          | decimal(P, S)        |                       |
 | date                                   | date                 |                       |
 | timestamp (Timestamp without timezone) | datetime(6)          | 固定映射到精度为 6 的 datetime |
-| timestamptz (Timestamp with timezone)  | datetime(6)          | 固定映射到精度为 6 的 datetime |
+| timestamptz (Timestamp with timezone)  | datetime(6)/timestamptz(6)          | 固定映射到精度为 6 的 datetime。由 properties 中 `enable.mapping.timestamp_tz` (4.0.3 后开始支持) 属性控制，默认为 `false`, 则映射到 `datetime`; 为 `true` 时，则映射到 `timestamptz` 类型 |
 | fixed(N)                               | char(N)              |                       |
 | string                                 | string               |                       |
 | binary                                 | string/varbinary     |由 properties 中 `enable.mapping.varbinary` (4.0.2 后开始支持) 属性控制。默认为 `false`, 则映射到 `string`; 为 `true` 时，则映射到 `varbinary` 类型。                       |
@@ -173,6 +173,8 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 > Doris 当前不支持带时区的 `Timestamp` 类型。所有 `timestamp` 和 `timestamptz` 会统一映射到 `datetime(N)` 类型上。但在读取和写入时，Doris 会根据实际源类型正确处理时区。如通过 `SET time_zone=<tz>` 指定时区后，会影响 `timestamptz` 列的读取和写入结果。
 >
 > 可以在 `DESCRIBE table_name` 语句中的 Extra 列查看源类型是否带时区信息。如显示 `WITH_TIMEZONE`，则表示源类型是带时区的类型。(该功能自 3.1.0 版本支持)。
+>
+> 4.0.3 后开始支持, 可以映射 `timestamptz (Timestamp with timezone)` 到 Doris 的 `timestamptz` 类型。
 
 ## Namespace 映射
 
