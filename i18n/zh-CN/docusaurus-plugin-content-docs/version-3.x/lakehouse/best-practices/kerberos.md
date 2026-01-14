@@ -263,7 +263,13 @@ docker inspect <container-name> | grep IPAddress
     ```
 
 至此，完成多 Kerberos 集群访问配置，您可以查看两个 Hive 集群中的数据，并使用不同的 Kerberos 凭证。
+## 联通性检测工具
+对于 Kerberos 等外部依赖的联通性检查，可使用开源工具 **Pulse** 进行验证。
 
+**Pulse 是一个独立的开源联通性测试工具，相关使用方式、安装说明及版本发布，请参考其项目文档。**
+
+相关文档 [Kerberos Connectivity Tool](https://github.com/CalvinKirs/Pulse/tree/main/kerberos-tools)
+安装包 [Kerberos Connectivity Tool](https://github.com/CalvinKirs/Pulse/releases/tag/v1.0.0)
 ## FAQ
 1. javax.security.sasl.SaslException: No common protection layer between client and server
    - 原因: 客户端的 hadoop.rpc.protection 配置与 HDFS 集群上的配置不一致。

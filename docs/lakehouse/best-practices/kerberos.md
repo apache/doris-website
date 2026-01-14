@@ -263,6 +263,17 @@ Or directly use 127.0.0.1 (provided that the service has been mapped to the host
     ```
 
 At this point, the multi-Kerberos cluster access configuration is complete. You can view data from both Hive clusters and use different Kerberos credentials.
+## Connectivity Testing Tool
+
+For verifying connectivity to external dependencies such as Kerberos,
+the open-source tool **Pulse** can be used.
+
+**Pulse is an independent open-source connectivity testing tool.
+For usage instructions, installation details, and release information,
+please refer to the project documentation.**
+
+- Documentation:[Kerberos Connectivity Tool](https://github.com/CalvinKirs/Pulse/tree/main/kerberos-tools)
+- Release package:[Kerberos Connectivity Tool v1.0.0](https://github.com/CalvinKirs/Pulse/releases/tag/v1.0.0)
 ## FAQ 
 1. javax.security.sasl.SaslException: No common protection layer between client and server
    - Cause: The client's `hadoop.rpc.protection` differs from the HDFS cluster setting.
