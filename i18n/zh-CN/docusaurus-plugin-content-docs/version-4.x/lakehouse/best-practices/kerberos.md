@@ -268,8 +268,8 @@ docker inspect <container-name> | grep IPAddress
 
 **Pulse 是一个独立的开源联通性测试工具，相关使用方式、安装说明及版本发布，请参考其项目文档。**
 
-相关文档 [Kerberos Connectivity Tool](https://github.com/CalvinKirs/Pulse/tree/main/kerberos-tools)
-安装包 [Kerberos Connectivity Tool](https://github.com/CalvinKirs/Pulse/releases/tag/v1.0.0)
+相关文档: [Kerberos Connectivity Tool](https://github.com/CalvinKirs/Pulse/tree/main/kerberos-tools)
+安装包: [Kerberos Connectivity Tool](https://github.com/CalvinKirs/Pulse/releases/tag/v1.0.0)
 ## FAQ
 1. javax.security.sasl.SaslException: No common protection layer between client and server
    - 原因: 客户端的 hadoop.rpc.protection 配置与 HDFS 集群上的配置不一致。
