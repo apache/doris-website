@@ -131,7 +131,6 @@ Lucene 模式模拟 Elasticsearch/Lucene 的 query_string 行为，布尔操作�
 - AND/OR/NOT 是影响相邻词项的修饰符
 - 操作符优先级从左到右
 - 内部使用 MUST/SHOULD/MUST_NOT（类似 Lucene 的 Occur 枚举）
-- 纯 NOT 查询返回空结果（需要正向子句）
 
 **启用 Lucene 模式：**
 ```sql
@@ -150,7 +149,7 @@ SELECT * FROM docs WHERE search('apple AND banana OR cherry',
 |------|----------|-------------|
 | `a AND b` | a ∩ b | +a +b（都是 MUST） |
 | `a OR b` | a ∪ b | a b（都是 SHOULD，min=1） |
-| `NOT a` | ¬a | 空结果（无正向子句） |
+| `NOT a` | ¬a | -a（MUST_NOT） |
 | `a AND NOT b` | a ∩ ¬b | +a -b（MUST a，MUST_NOT b） |
 | `a AND b OR c` | (a ∩ b) ∪ c | +a b c（只有 a 是 MUST） |
 

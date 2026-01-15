@@ -131,7 +131,6 @@ Lucene mode mimics Elasticsearch/Lucene query_string behavior where boolean oper
 - AND/OR/NOT are modifiers that affect adjacent terms
 - Operator precedence is left-to-right
 - Uses MUST/SHOULD/MUST_NOT internally (like Lucene's Occur enum)
-- Pure NOT queries return empty results (need a positive clause)
 
 **Enable Lucene mode:**
 ```sql
@@ -150,7 +149,7 @@ SELECT * FROM docs WHERE search('apple AND banana OR cherry',
 |-------|--------------|-------------|
 | `a AND b` | a ∩ b | +a +b (both MUST) |
 | `a OR b` | a ∪ b | a b (both SHOULD, min=1) |
-| `NOT a` | ¬a | Empty (no positive clause) |
+| `NOT a` | ¬a | -a (MUST_NOT) |
 | `a AND NOT b` | a ∩ ¬b | +a -b (MUST a, MUST_NOT b) |
 | `a AND b OR c` | (a ∩ b) ∪ c | +a b c (only a is MUST) |
 
