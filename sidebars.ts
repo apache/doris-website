@@ -222,6 +222,7 @@ const sidebars: SidebarsConfig = {
                             items: [
                                 'data-operate/import/load-internals/load-internals',
                                 'data-operate/import/load-internals/routine-load-internals',
+                                'data-operate/import/load-internals/stream-load-in-complex-network',
                             ],
                         },
                         "data-operate/import/streaming-job"

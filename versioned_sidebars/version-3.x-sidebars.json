@@ -213,7 +213,14 @@
                         "data-operate/import/load-data-convert",
                         "data-operate/import/load-high-availability",
                         "data-operate/import/group-commit-manual",
-                        "data-operate/import/load-best-practices"
+                        "data-operate/import/load-best-practices",
+                        {
+                            "type": "category",
+                            "label": "Load Internals",
+                            "items": [
+                                "data-operate/import/load-internals/stream-load-in-complex-network"
+                            ]
+                        }
                     ]
                 },
                 {
