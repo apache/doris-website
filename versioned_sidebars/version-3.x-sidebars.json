@@ -419,6 +419,7 @@
                                 "lakehouse/metastores/google-dataproc-metastore",
                                 "lakehouse/metastores/aliyun-dlf",
                                 "lakehouse/metastores/iceberg-rest",
+                                "lakehouse/metastores/iceberg-jdbc",
                                 "lakehouse/metastores/filesystem"
                             ]
                         },
@@ -501,7 +502,8 @@
                                 "ecosystem/observability/beats",
                                 "ecosystem/observability/opentelemetry",
                                 "ecosystem/observability/fluentbit",
-                                "ecosystem/observability/loongcollector"
+                                "ecosystem/observability/loongcollector",
+                                "ecosystem/observability/vector"
                             ]
                         }
                     ]
@@ -946,7 +948,8 @@
                         "ecosystem/observability/beats",
                         "ecosystem/observability/opentelemetry",
                         "ecosystem/observability/fluentbit",
-                        "ecosystem/observability/loongcollector"
+                        "ecosystem/observability/loongcollector",
+                        "ecosystem/observability/vector"
                     ]
                 },
                 {
