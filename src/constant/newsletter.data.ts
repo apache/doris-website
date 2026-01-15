@@ -25,8 +25,7 @@ export const NEWSLETTER_DATA = [
         title: "Deploying Apache Doris with MinIO: Analytics with Storage-Compute Separation",
         content: `In the Apache Doris + MinIO architecture, Apache Doris handles compute, MinIO handles storage, and the result is a modern analytics architecture that’s fast, scalable, cost-efficient, and separates compute from storage. `,
         to: 'https://www.velodb.io/blog/deploying-apache-doris-with-minio',
-        image: 'blogs/202512_MinIO_1800_766.png',
-    },
-
+        image: 'blogs/202512_MinIO.png', 
+    }
 
 ];
