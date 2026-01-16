@@ -224,7 +224,14 @@ const sidebars: SidebarsConfig = {
                                 'data-operate/import/load-internals/routine-load-internals',
                             ],
                         },
-                        "data-operate/import/streaming-job"
+                        {
+                            type: 'category',
+                            label: 'Continuous Load',
+                            items: [
+                                'data-operate/import/streaming-job/streaming-job-tvf',
+                                'data-operate/import/streaming-job/streaming-job-multi-table',
+                            ],
+                        }
                     ],
                 },
                 {
