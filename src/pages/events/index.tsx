@@ -941,12 +941,12 @@ export default function Events() {
                 </div>
             </section>
             <section className="mb-[5.5rem] mt-[1.25rem]">
-                <div className="max-w-[75rem] text-[1rem]/[180%] mx-auto flex justify-start gap-x-[2.5rem] font-medium">
+                <div className="max-w-[75rem] lg:px-0 px-4 text-[1rem]/[180%] mx-auto flex justify-start gap-x-[2.5rem] font-medium">
                     <div className="h-[3.25rem] pb-4">Event Language Type:</div>
                     <div
                         onClick={() => setSelectedLanguage('en')}
                         className={`h-[3.25rem] cursor-pointer pb-4 hover:text-[#1D1D1D] ${selectedLanguage === 'en'
-                            ? 'text-[#1D1D1D] border-b-[2px]  border-[#444FD9]'
+                            ? 'text-[#1D1D1D] border-b-[2px]  border-primary'
                             : 'text-[#4C576C]'
                             }`}
                     >
@@ -956,7 +956,7 @@ export default function Events() {
                     <div
                         onClick={() => setSelectedLanguage('zh')}
                         className={`h-[3.25rem] cursor-pointer hover:text-[#1D1D1D] pb-4 ${selectedLanguage === 'zh'
-                            ? 'text-[#1D1D1D] border-b-[2px] border-[#444FD9]'
+                            ? 'text-[#1D1D1D] border-b-[2px] border-primary'
                             : 'text-[#4C576C]'
                             }`}
                     >
@@ -965,7 +965,7 @@ export default function Events() {
                 </div>
                 <div className="max-w-[75rem] pt-[5rem] border-t-[0.5px] border-[#E3E8F2] mx-auto ">
                     <div
-                        className={`flex flex-wrap gap-x-[1.5rem] gap-y-[5rem] ${!showMore ? 'mb-[2.5rem]' : 'mb-[5rem]'
+                        className={`flex justify-center lg:justify-start flex-wrap gap-x-[1.5rem] gap-y-[5rem] ${!showMore ? 'mb-[2.5rem]' : 'mb-[5rem]'
                             } `}
                     >
                         {eventList.slice(0, 9).map((event: Event, index) => (
@@ -973,7 +973,7 @@ export default function Events() {
                         ))}
                     </div>
                     {showMore ? (
-                        <div className="flex flex-wrap gap-x-[1.5rem] gap-y-[5rem] mb-[2.5rem] ">
+                        <div className="flex justify-center lg:justify-start flex-wrap gap-x-[1.5rem] gap-y-[5rem] mb-[2.5rem] ">
                             {eventList.slice(9).map((event: Event, index) => (
                                 <EventCard data={event} key={index} />
                             ))}
@@ -982,7 +982,7 @@ export default function Events() {
                     {eventList.length > 9 ? (
                         <div
                             onClick={() => setShowMore(true)}
-                            className="cursor-pointer text-center mx-auto text-[#444FD9] text-[0.875rem]/[1.375rem]"
+                            className="cursor-pointer text-center mx-auto text-primary text-[0.875rem]/[1.375rem]"
                         >
                             See More <ArrowDown className="inline" />
                         </div>

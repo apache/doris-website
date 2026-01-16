@@ -22,9 +22,11 @@
         }
 
         .banner-title {
-            font-size: var(--global-font-size-bigger);
-            font-weight: 500;
-            line-height: 4rem;
+            font-size: 3.5rem;
+            line-height: 125%;
+            font-weight: 700;
+            letter-spacing: -1.232px;
+            font-family: 'Montserrat';
             text-align: center;
             color: var(--global-colors-text-black);
             .highlight {
@@ -50,7 +52,7 @@
                 border: 1px solid transparent;
 
                 &:hover {
-                    // box-shadow: 10px 16px 18px rgba(195, 203, 235, 0.2);
+                    box-shadow: 0px 6px 12px rgba(17, 166, 121, 0.28);
                 }
 
                 & + .button {
@@ -62,7 +64,7 @@
                     color: var(--global-colors-white);
 
                     &:hover {
-                        box-shadow: 0px 6px 12px rgba(161, 167, 210, 0.45);
+                        box-shadow: 0px 6px 12px rgba(17, 166, 121, 0.28);
                     }
                 }
 
@@ -71,7 +73,7 @@
                     color: var(--ifm-color-primary);
 
                     &:hover {
-                        box-shadow: 0px 6px 12px rgba(161, 167, 210, 0.3);
+                        box-shadow: 0px 6px 12px rgba(17, 166, 121, 0.28);
                     }
                 }
 
@@ -81,7 +83,7 @@
                     background-color: #ffffff;
 
                     &:hover {
-                        box-shadow: 0px 6px 12px rgba(161, 167, 210, 0.3);
+                        box-shadow: 0px 6px 12px rgba(17, 166, 121, 0.28);
                     }
                 }
             }
@@ -125,9 +127,10 @@
             .banner-info {
                 margin-top: 3rem;
                 .banner-title {
-                    font-size: 2.25rem;
+                    font-family: 'Montserrat';
+                    font-size: 2rem;
                     line-height: 1.5;
-                    font-weight: 500;
+                    font-weight: 700;
                 }
                 .banner-sub-title {
                     font-size: 1rem;
