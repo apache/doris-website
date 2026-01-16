@@ -91,7 +91,7 @@ export default function Users(): JSX.Element {
                         {USER_STORIES_CATEGORIES.map((item: any) => (
                             <li className="py-px" key={item} onClick={() => changeCategory(item)}>
                                 <span
-                                    className={`block cursor-pointer whitespace-nowrap rounded-[2.5rem] px-4 py-2 text-sm shadow-[0px_1px_4px_0px_rgba(49,77,136,0.10)] hover:bg-primary hover:text-white lg:px-6 lg:py-3 lg:text-base ${
+                                    className={`block cursor-pointer whitespace-nowrap rounded-[2.5rem] px-4 py-2 text-sm shadow-[0px_1px_4px_0px_rgba(0,89,68,0.10)] hover:bg-primary hover:text-white lg:px-6 lg:py-3 lg:text-base ${
                                         active === item && 'bg-primary text-white'
                                     }`}
                                 >
@@ -111,7 +111,7 @@ export default function Users(): JSX.Element {
                         onClick={() => setCurrentSize(currentSize => Math.min(currentSize + PAGE_SIZE, users.length))}
                         className="justify-center flex mt-9"
                     >
-                        <div className="flex items-center cursor-pointer px-8 py-4 border border-[#444FD9] rounded text-[#444FD9] text-base">
+                        <div className="flex items-center cursor-pointer px-8 py-4 border border-primary rounded text-primary text-base">
                             <span className="mr-1">View more</span>
                             <span>
                                 <svg
@@ -123,14 +123,14 @@ export default function Users(): JSX.Element {
                                 >
                                     <path
                                         d="M4.5 9.82226L8.5 13.8222L12.5 9.82227"
-                                        stroke="#444FD9"
+                                        stroke="#1FCD94"
                                         strokeWidth="1.37143"
                                         strokeLinecap="round"
                                         strokeLinejoin="round"
                                     />
                                     <path
                                         d="M8.49951 3.82227L8.49951 13.8223"
-                                        stroke="#444FD9"
+                                        stroke="#1FCD94"
                                         strokeWidth="1.37143"
                                         strokeLinecap="round"
                                         strokeLinejoin="round"

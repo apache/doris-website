@@ -1,6 +1,6 @@
 .cases-tabs {
     .ant-tabs-ink-bar {
-        background-color: #444fd9;
+        background-color: var(--ifm-color-primary);
     }
     .ant-tabs-nav {
         .ant-tabs-tab {
@@ -12,12 +12,12 @@
             padding-top: 1rem;
             padding-bottom: 1rem;
             &:hover {
-                color: #444fd9;
+                color: var(--ifm-color-primary);
             }
             &.ant-tabs-tab-active {
-                background: linear-gradient(270deg, rgba(223, 224, 247, 0.4) 0%, rgba(223, 224, 247, 0.02) 100%);
+                background: linear-gradient(270deg, rgba(31, 205, 148, 0.40) 0%, rgba(31, 205, 148, 0.02) 100%);
                 .ant-tabs-tab-btn {
-                    color: #444fd9;
+                    color: var(--ifm-color-primary);
                     .progress {
                         display: block;
                     }
@@ -90,11 +90,11 @@
         background-color: #fff;
         .ant-collapse-item-active {
             .ant-collapse-header-text {
-                color: #444fd9;
+                color: var(--ifm-color-primary);
             }
             .ant-collapse-expand-icon {
                 transform: rotate(180deg);
-                color: #444fd9;
+                color: var(--ifm-color-primary);
             }
         }
         .ant-collapse-item {
