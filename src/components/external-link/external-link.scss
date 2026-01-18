@@ -7,11 +7,43 @@
         margin-top: 1px;
     }
     &.primary-btn {
-        background: #444fd9;
-        color: #fff;
+        background: var(--ifm-color-primary, #444fd9);
+        color: var(--global-colors-white, #ffffff);
         min-width: 10rem;
-        border-radius: 4px;
+        border-radius: 6px;
         padding: 0 1.25rem;
         height: 3rem;
+        font-weight: 600;
+        border: 1px solid transparent;
+        box-shadow: 0 6px 16px rgba(68, 79, 217, 0.18);
+        transition: background-color 160ms ease, box-shadow 160ms ease, transform 120ms ease,
+            border-color 160ms ease, color 160ms ease;
+
+        &:hover {
+            background: #3a45c8;
+            box-shadow: 0 8px 20px rgba(68, 79, 217, 0.24);
+            transform: translateY(-1px);
+        }
+
+        &:active {
+            background: #3039b1;
+            box-shadow: 0 4px 12px rgba(68, 79, 217, 0.2);
+            transform: translateY(0);
+        }
+
+        &:focus-visible {
+            outline: 2px solid rgba(68, 79, 217, 0.35);
+            outline-offset: 2px;
+        }
+
+        &.is-disabled {
+            background: #e6e8f5;
+            color: var(--global-colors-text-secondary, #4c576c);
+            border-color: #d5d8ea;
+            box-shadow: none;
+            cursor: not-allowed;
+            pointer-events: none;
+            transform: none;
+        }
     }
 }
