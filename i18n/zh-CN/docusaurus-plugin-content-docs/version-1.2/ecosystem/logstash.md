@@ -28,7 +28,7 @@ Logstash Doris output plugin 调用 [Doris Stream Load](../data-operate/import/i
 
 ```shell
 # 包含依赖的安装包
-wget https://apache-doris-releases.oss-accelerate.aliyuncs.com/extension/logstash-output-doris-1.2.0.zip
+wget https://apache-doris-releases.oss-cn-beijing.aliyuncs.com/extension/logstash-output-doris-1.2.0-java.gem
 ```
 
 - 从源码编译
