@@ -28,7 +28,7 @@ You can download the plugin from the official website or compile it from the sou
 
 ```shell
 # Installation package with dependencies
-wget https://apache-doris-releases.oss-accelerate.aliyuncs.com/extension/logstash-output-doris-1.2.0.zip
+wget https://apache-doris-releases.oss-cn-beijing.aliyuncs.com/extension/logstash-output-doris-1.2.0-java.gem
 ```
 
 - Compile from source code
