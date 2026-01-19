@@ -2,11 +2,11 @@
 {
     "title": "Apache Doris vs ClickHouse",
     "language": "zh-CN",
-    "description": "Apache Doris 和 ClickHouse 都是全球领先的实时数据仓库，均支持列式存储与极速查询。此外，Doris 具备更高的并发处理能力、更高效的 Join 查询、更简便的运维，并兼容 MySQL 的语法，使其更易于使用和部署。"
+    "description": "Apache Doris 相比 ClickHouse 具备 10 倍以上的 Join 查询性能、通过存算分离降低高达 70% 的成本，以及实时更新场景下 34 倍的查询性能优势。"
 }
 ---
 
-Apache Doris 和 ClickHouse 都是全球领先的实时数据仓库，均支持列式存储与极速查询。此外，Doris 具备更高的并发处理能力、更高效的 Join 查询、更简便的运维，并兼容 MySQL 的语法，使其更易于使用和部署。
+Apache Doris 和 ClickHouse 都是全球领先的实时分析型数据库，均支持列式存储与极速查询。Apache Doris 在三个关键领域具有显著优势：**Join 查询性能提升 2-10 倍**（基于先进的 MPP 架构与基于成本的查询优化器）、**通过存算分离降低高达 70% 的基础设施成本**（支持计算与存储资源独立扩缩）、以及**卓越的实时更新性能**（写时合并引擎在高频数据更新时仍能保持稳定的查询性能）。
 
 
 ## 精选案例
@@ -14,16 +14,16 @@ Apache Doris 和 ClickHouse 都是全球领先的实时数据仓库，均支持�
 <div style={{ display:'flex', justifyContent:'space-between' }}>
 
     <div style={{paddingTop:'2rem', paddingBottom:'2rem',paddingLeft:'2rem',paddingRight:'2.5rem', boxSizing:'border-box', borderWidth:'0.5px', borderRadius:'0.75px', borderColor:'#e5e7eb'}}>
-    
+
         <div style={{ display:'flex', justifyContent:'space-between', flexDirection:'column' }}>
             <div style={{marginBottom:'1.25rem'}}>
                 <img alt='tencent-music' loading="lazy" width="95" height="40" decoding="async" data-nimg="1" style={{color:'transparent'}} src="/zh-CN/images/comparisons/kwai-zh-CN.png" />
             </div>
             <div style={{marginBbottom:'1.25rem'}}>
-            “利用 Apache Doris 替换 ClickHouse 后，快手成功升级为湖仓一体架构，实现统一存储并简化数据链路，无需数据导入，Doris 可直接访问湖仓数据。结合 Doris 的物化视图改写与自动物化服务，实现了高性能查询与灵活的数据治理。”
+            "利用 Apache Doris 替换 ClickHouse 后，快手成功升级为湖仓一体架构，实现统一存储并简化数据链路，无需数据导入，Doris 可直接访问湖仓数据。结合 Doris 的物化视图改写与自动物化服务，实现了高性能查询与灵活的数据治理。"
             </div>
             <div style={{marginBbottom:'1.25rem'}}>
-                <p><strong>亮点：</strong></p>             
+                <p><strong>亮点：</strong></p>
                 <ul>
                     <li>直接查询数据湖数据，缩短数据链路</li>
                     <li>查询性能提升，满足多场景查询加速</li>
@@ -31,20 +31,20 @@ Apache Doris 和 ClickHouse 都是全球领先的实时数据仓库，均支持�
                 </ul>
             </div>
         </div>
-    
+
     </div>
 
     <div style={{paddingTop:'2rem', paddingBottom:'2rem',paddingLeft:'2rem',paddingRight:'2.5rem', boxSizing:'border-box', borderWidth:'0.5px', borderRadius:'0.75px', borderColor:'#e5e7eb'}}>
-    
+
         <div style={{ display:'flex', justifyContent:'space-between', flexDirection:'column' }}>
             <div style={{marginBottom:'1.25rem'}}>
                 <img alt='tencent-music' loading="lazy" width="210" height="40" decoding="async" data-nimg="1" style={{color:'transparent'}} src="/zh-CN/images/comparisons/tencent-music-zh-CN.png" />
             </div>
             <div style={{marginBbottom:'1.25rem'}}>
-            “内容库数据平台经过分析引擎从 ClickHouse 到 Apache Doris 的替换、数据架构语义层的初步引入到深度应用，有效提高了数据时效性、降低了运维成本、解决了数据管理割裂等问题。”
+            "内容库数据平台经过分析引擎从 ClickHouse 到 Apache Doris 的替换、数据架构语义层的初步引入到深度应用，有效提高了数据时效性、降低了运维成本、解决了数据管理割裂等问题。"
             </div>
             <div style={{marginBbottom:'1.25rem'}}>
-                <p><strong>亮点：</strong></p>             
+                <p><strong>亮点：</strong></p>
                 <ul>
                     <li>具备多表查询和联邦查询性能特性</li>
                     <li>兼容 MySQL 协议，降低运维成本</li>
@@ -52,20 +52,20 @@ Apache Doris 和 ClickHouse 都是全球领先的实时数据仓库，均支持�
                 </ul>
             </div>
         </div>
-    
+
     </div>
 
      <div style={{paddingTop:'2rem', paddingBottom:'2rem',paddingLeft:'2rem',paddingRight:'2.5rem', boxSizing:'border-box', borderWidth:'0.5px', borderRadius:'0.75px', borderColor:'#e5e7eb'}}>
-    
+
         <div style={{ display:'flex', justifyContent:'space-between', flexDirection:'column' }}>
             <div style={{marginBottom:'1.25rem'}}>
                 <img alt='tencent-music' loading="lazy" width="150" height="40" decoding="async" data-nimg="1" style={{color:'transparent'}} src="/zh-CN/images/comparisons/netease-music-zh-CN.png" />
             </div>
             <div style={{marginBbottom:'1.25rem'}}>
-            “我们用 Apache Doris 替换了 ClickHouse，构建了新的日志平台，目前规模已达 50 台服务器、2PB 数据量。此次架构升级后，系统在查询响应、并发处理、稳定性及运维效率等多方面均取得了显著提升。”
+            "我们用 Apache Doris 替换了 ClickHouse，构建了新的日志平台，目前规模已达 50 台服务器、2PB 数据量。此次架构升级后，系统在查询响应、并发处理、稳定性及运维效率等多方面均取得了显著提升。"
             </div>
             <div style={{marginBbottom:'1.25rem'}}>
-                <p><strong>亮点：</strong></p>             
+                <p><strong>亮点：</strong></p>
                 <ul>
                     <li>全文检索性能提升 3-7 倍</li>
                     <li>峰值写入吞吐达 6GB/s</li>
@@ -73,10 +73,10 @@ Apache Doris 和 ClickHouse 都是全球领先的实时数据仓库，均支持�
                 </ul>
             </div>
         </div>
-    
+
     </div>
 
-</div> 
+</div>
 
 
 ## 为什么选择 Apache Doris
@@ -106,33 +106,54 @@ Apache Doris 和 ClickHouse 都是全球领先的实时数据仓库，均支持�
         </td>
     </tr>
       <tr>
-        <td><strong>查询能力</strong></td>
+        <td><strong>Join 查询性能</strong></td>
         <td>
         <ul>
-            <li style={{fontSize:'14px'}}>支持分布式 Join</li>
-            <li style={{fontSize:'14px'}}>提供基于成本的查询优化器（Cost-Based Optimization）</li>
-            <li style={{fontSize:'14px'}}>支持查询重写与多表物化视图性能</li>
-            <li style={{fontSize:'14px'}}>提供更高的并发性能</li>
+            <li style={{fontSize:'14px'}}><strong>Join 性能提升 2-10 倍</strong>，支持跨节点的真正分布式 Join 执行</li>
+            <li style={{fontSize:'14px'}}>先进的基于成本的查询优化器（CBO），自动选择最优 Join 策略（Broadcast、Shuffle、Colocate）</li>
+            <li style={{fontSize:'14px'}}>Colocate Join 消除预分区表的网络 Shuffle 开销</li>
+            <li style={{fontSize:'14px'}}>Runtime Filter 下推可减少高达 90% 的数据扫描</li>
+            <li style={{fontSize:'14px'}}>透明查询加速 - 对基表的查询自动改写为物化视图查询</li>
+            <li style={{fontSize:'14px'}}>可执行 ClickHouse 中会导致 OOM 的复杂 TPC-DS 查询</li>
         </ul>
         </td>
         <td>
         <ul>
-            <li style={{fontSize:'14px'}}>Join 性能较差</li>
-            <li style={{fontSize:'14px'}}>不支持基于成本的查询优化器（CBO）</li>
-            <li style={{fontSize:'14px'}}>仅支持单表物化视图</li>
-            <li style={{fontSize:'14px'}}>并发性能较低</li>
+            <li style={{fontSize:'14px'}}>Join 能力有限，依赖子查询和宽表建模</li>
+            <li style={{fontSize:'14px'}}>无基于成本的查询优化器，需手动调优查询</li>
+            <li style={{fontSize:'14px'}}>Scatter-Gather 架构不适用于分布式 Join</li>
+            <li style={{fontSize:'14px'}}>约 50% 的 TPC-DS 查询因不支持关联子查询而失败</li>
+            <li style={{fontSize:'14px'}}>不支持自动查询改写，必须显式查询物化视图，无法加速对基表的查询</li>
+            <li style={{fontSize:'14px'}}>大型多表查询频繁出现 OOM 错误</li>
         </ul>
         </td>
     </tr>
     <tr>
         <td><strong>实时更新</strong></td>
         <td><ul>
-            <li style={{fontSize:'14px'}}>具备强一致性的主键存储模型，支持同步数据更新与删除</li>
-            <li style={{fontSize:'14px'}}>对唯一键实现了写时合并（Merge-On-Write）和删除位图，确保查询性能不受影响</li>
+            <li style={{fontSize:'14px'}}>实时更新场景下<strong>查询性能是 ClickHouse 的 34 倍</strong></li>
+            <li style={{fontSize:'14px'}}>写时合并（Merge-on-Write）引擎配合删除位图，确保查询性能不受更新频率影响</li>
+            <li style={{fontSize:'14px'}}>强一致性主键模型，更新后数据立即可见，无脏读</li>
+            <li style={{fontSize:'14px'}}>支持高吞吐 UPSERT 操作，查询性能不会下降</li>
+            <li style={{fontSize:'14px'}}>支持部分列更新，减少写放大</li>
         </ul></td>
         <td><ul>
-            <li style={{fontSize:'14px'}}>仅支持异步更新，更新后仍可能读取到旧值</li>
-            <li style={{fontSize:'14px'}}>可通过 <code>FINAL</code> 关键字实现同步更新，但会显著降低查询性能</li>
+            <li style={{fontSize:'14px'}}>ReplacingMergeTree 仅支持最终一致性，后台合并完成前可能读到旧数据</li>
+            <li style={{fontSize:'14px'}}>使用 <code>FINAL</code> 关键字获取一致性数据会导致 2-10 倍的查询性能下降</li>
+            <li style={{fontSize:'14px'}}>高频更新导致大量合并开销和查询延迟波动</li>
+        </ul></td>
+    </tr>
+    <tr>
+        <td><strong>查询并发</strong></td>
+        <td><ul>
+            <li style={{fontSize:'14px'}}><strong>并发能力提升 10 倍以上</strong>，支持数千并发查询</li>
+            <li style={{fontSize:'14px'}}>高效内存管理，高负载下避免 OOM</li>
+            <li style={{fontSize:'14px'}}>查询队列管理与工作负载隔离</li>
+        </ul></td>
+        <td><ul>
+            <li style={{fontSize:'14px'}}>并发查询支持有限（通常 &lt;100）</li>
+            <li style={{fontSize:'14px'}}>内存密集型查询导致集群不稳定</li>
+            <li style={{fontSize:'14px'}}>无内置工作负载管理</li>
         </ul></td>
     </tr>
     <tr>
@@ -166,15 +187,24 @@ Apache Doris 和 ClickHouse 都是全球领先的实时数据仓库，均支持�
         </td>
     </tr>
     <tr>
-        <td><strong>存算分离</strong></td>
+        <td><strong>成本效益（存算分离）</strong></td>
         <td>
             <ul>
-                <li style={{fontSize:'14px'}}>自 3.0 版本起，开源版本已支持存储与计算分离</li>
+                <li style={{fontSize:'14px'}}>通过计算与存储独立扩缩，<strong>成本最高可降低 70%</strong></li>
+                <li style={{fontSize:'14px'}}>冷数据存储于低成本对象存储（S3、HDFS、OSS），热数据使用本地 SSD</li>
+                <li style={{fontSize:'14px'}}>弹性计算扩缩，增减节点无需数据重平衡</li>
+                <li style={{fontSize:'14px'}}>多级存储与自动数据冷热分层管理</li>
+                <li style={{fontSize:'14px'}}>按需付费，只为实际使用的计算资源买单</li>
+                <li style={{fontSize:'14px'}}>自 3.0 版本起，开源版本已支持存算分离</li>
             </ul>
         </td>
         <td>
             <ul>
-                <li style={{fontSize:'14px'}}>开源版本不支持存储与计算分离</li>
+                <li style={{fontSize:'14px'}}>存储与计算紧耦合，扩容需同时扩展两者</li>
+                <li style={{fontSize:'14px'}}>存算分离仅在商业版 ClickHouse Cloud 中支持</li>
+                <li style={{fontSize:'14px'}}>扩容需要昂贵的跨节点数据重平衡</li>
+                <li style={{fontSize:'14px'}}>需过度配置计算资源以应对峰值负载</li>
+                <li style={{fontSize:'14px'}}>变化型工作负载的总体拥有成本（TCO）更高</li>
             </ul>
         </td>
     </tr>
