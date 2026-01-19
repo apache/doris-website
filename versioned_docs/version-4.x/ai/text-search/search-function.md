@@ -22,11 +22,19 @@ Syntax
 SEARCH('<search_expression>')
 SEARCH('<search_expression>', '<default_field>')
 SEARCH('<search_expression>', '<default_field>', '<default_operator>')
+SEARCH('<search_expression>', '<options_json>')
 ```
 
 - `<search_expression>` — string literal containing the SEARCH DSL expression.
 - `<default_field>` *(optional)* — column name automatically applied to terms that do not specify a field.
 - `<default_operator>` *(optional)* — default boolean operator for multi-term expressions; accepts `and` or `or` (case-insensitive). Defaults to `or`.
+- `<options_json>` *(optional)* — JSON string containing search options for advanced features like multi-field search. Supported options:
+  - `default_field`: same as the second parameter
+  - `default_operator`: same as the third parameter (`and` or `or`)
+  - `fields`: array of field names for multi-field search (mutually exclusive with `default_field`)
+  - `type`: multi-field search mode, either `best_fields` (default) or `cross_fields`
+  - `mode`: parsing mode, either `standard` (default) or `lucene`
+  - `minimum_should_match`: integer for lucene mode (default: 0)
 
 Usage
 
@@ -120,6 +128,46 @@ WHERE SEARCH('title:Python OR tags:ANY(database mysql) OR author:Alice');
 SELECT id, title FROM search_test_basic
 WHERE SEARCH('tags:ALL(tutorial) AND category:Technology');
 ```
+
+#### Multi-field search (Elasticsearch-style)
+- Syntax: Use JSON options with `fields` array
+- Semantics: search the same terms across multiple fields with automatic expansion; supports two modes:
+  - `best_fields` (default): matches if all terms appear in the same field, fields are ORed together
+  - `cross_fields`: matches if terms appear across different fields (like a single combined field)
+- Indexing tip: add inverted indexes for each field in the `fields` array
+
+**best_fields mode** (default): Each field must contain all terms, then results from all fields are combined with OR.
+
+```sql
+-- Search "machine learning" in both title and content fields
+-- Expands to: (title:machine AND title:learning) OR (content:machine AND content:learning)
+SELECT id, title FROM articles
+WHERE SEARCH('machine learning', '{"fields":["title","content"],"default_operator":"and"}');
+
+-- With explicit type parameter
+SELECT id, title FROM articles
+WHERE SEARCH('machine learning', '{"fields":["title","content"],"default_operator":"and","type":"best_fields"}');
+```
+
+**cross_fields mode**: Terms can match across different fields, treating all fields as one combined field.
+
+```sql
+-- Search "machine learning" across title and content
+-- Expands to: (title:machine OR content:machine) AND (title:learning OR content:learning)
+SELECT id, title FROM articles
+WHERE SEARCH('machine learning', '{"fields":["title","content"],"default_operator":"and","type":"cross_fields"}');
+
+-- Useful for searching person names across firstname/lastname fields
+SELECT id, name FROM people
+WHERE SEARCH('John Smith', '{"fields":["firstname","lastname"],"default_operator":"and","type":"cross_fields"}');
+```
+
+**Comparison of modes**:
+
+| Mode | Behavior | Use Case |
+|------|----------|----------|
+| `best_fields` | All terms must match within the same field | Document search where relevance is field-specific |
+| `cross_fields` | Terms can match across any field | Entity search (e.g., person name split across fields) |
 
 #### Wildcard query
 - Syntax: `column:prefix*`, `column:*mid*`, `column:?ingle`

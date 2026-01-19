@@ -22,11 +22,19 @@ SEARCH 是一个返回布尔值的谓词函数，可作为过滤条件出现在 
 SEARCH('<search_expression>')
 SEARCH('<search_expression>', '<default_field>')
 SEARCH('<search_expression>', '<default_field>', '<default_operator>')
+SEARCH('<search_expression>', '<options_json>')
 ```
 
 - `<search_expression>`：SEARCH DSL 查询表达式（字符串字面量）
 - `<default_field>`（可选）：当 DSL 中的词项未显式指定字段时自动套用的列名。
 - `<default_operator>`（可选）：多词项表达式默认布尔运算符，仅接受 `and` 或 `or`（不区分大小写），默认为 `or`。
+- `<options_json>`（可选）：JSON 字符串，包含高级搜索选项（如多字段搜索）。支持的选项：
+  - `default_field`：同第二个参数
+  - `default_operator`：同第三个参数（`and` 或 `or`）
+  - `fields`：字段名数组，用于多字段搜索（与 `default_field` 互斥）
+  - `type`：多字段搜索模式，可选 `best_fields`（默认）或 `cross_fields`
+  - `mode`：解析模式，可选 `standard`（默认）或 `lucene`
+  - `minimum_should_match`：lucene 模式下的最小匹配数（默认：0）
 
 用法
 
@@ -120,6 +128,46 @@ WHERE SEARCH('title:Python OR tags:ANY(database mysql) OR author:Alice');
 SELECT id, title FROM search_test_basic
 WHERE SEARCH('tags:ALL(tutorial) AND category:Technology');
 ```
+
+#### 多字段搜索（Elasticsearch 风格）
+- 语法：使用带 `fields` 数组的 JSON 选项
+- 语义：在多个字段中搜索相同的词项，自动展开；支持两种模式：
+  - `best_fields`（默认）：所有词项必须出现在同一字段中，各字段结果通过 OR 组合
+  - `cross_fields`：词项可以分布在不同字段中（视为一个组合字段）
+- 索引建议：为 `fields` 数组中的每个字段建立倒排索引
+
+**best_fields 模式**（默认）：每个字段必须包含所有词项，然后各字段结果通过 OR 组合。
+
+```sql
+-- 在 title 和 content 字段中搜索 "machine learning"
+-- 展开为：(title:machine AND title:learning) OR (content:machine AND content:learning)
+SELECT id, title FROM articles
+WHERE SEARCH('machine learning', '{"fields":["title","content"],"default_operator":"and"}');
+
+-- 显式指定 type 参数
+SELECT id, title FROM articles
+WHERE SEARCH('machine learning', '{"fields":["title","content"],"default_operator":"and","type":"best_fields"}');
+```
+
+**cross_fields 模式**：词项可以匹配不同字段，将所有字段视为一个组合字段。
+
+```sql
+-- 跨 title 和 content 搜索 "machine learning"
+-- 展开为：(title:machine OR content:machine) AND (title:learning OR content:learning)
+SELECT id, title FROM articles
+WHERE SEARCH('machine learning', '{"fields":["title","content"],"default_operator":"and","type":"cross_fields"}');
+
+-- 适用于跨 firstname/lastname 字段搜索人名
+SELECT id, name FROM people
+WHERE SEARCH('John Smith', '{"fields":["firstname","lastname"],"default_operator":"and","type":"cross_fields"}');
+```
+
+**模式对比**：
+
+| 模式 | 行为 | 适用场景 |
+|------|------|----------|
+| `best_fields` | 所有词项必须在同一字段内匹配 | 文档搜索，相关性与字段相关 |
+| `cross_fields` | 词项可以跨任意字段匹配 | 实体搜索（如人名分布在多个字段） |
 
 #### 通配符查询
 - 语法：`column:prefix*`、`column:*mid*`、`column:?ingle`
