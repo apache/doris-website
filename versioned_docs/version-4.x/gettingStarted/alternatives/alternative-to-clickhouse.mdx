@@ -144,6 +144,19 @@ Apache Doris and ClickHouse are both leading real-time analytical databases with
         </ul></td>
     </tr>
     <tr>
+        <td><strong>Transaction Support</strong></td>
+        <td><ul>
+            <li style={{fontSize:'14px'}}>Full ACID transaction support for data ingestion</li>
+            <li style={{fontSize:'14px'}}>Atomic batch imports - all data loads succeed or fail together</li>
+            <li style={{fontSize:'14px'}}>Two-phase commit ensures data consistency across distributed nodes</li>
+        </ul></td>
+        <td><ul>
+            <li style={{fontSize:'14px'}}>No transaction support</li>
+            <li style={{fontSize:'14px'}}>Partial data may be visible during failed imports</li>
+            <li style={{fontSize:'14px'}}>Requires application-level handling for data consistency</li>
+        </ul></td>
+    </tr>
+    <tr>
         <td><strong>Query Concurrency</strong></td>
         <td><ul>
             <li style={{fontSize:'14px'}}><strong>10x higher concurrency</strong> - supports thousands of concurrent queries</li>

@@ -144,6 +144,19 @@ Apache Doris 和 ClickHouse 都是全球领先的实时分析型数据库，均�
         </ul></td>
     </tr>
     <tr>
+        <td><strong>事务支持</strong></td>
+        <td><ul>
+            <li style={{fontSize:'14px'}}>数据导入支持完整 ACID 事务</li>
+            <li style={{fontSize:'14px'}}>原子性批量导入，数据要么全部成功要么全部失败</li>
+            <li style={{fontSize:'14px'}}>两阶段提交确保分布式节点间的数据一致性</li>
+        </ul></td>
+        <td><ul>
+            <li style={{fontSize:'14px'}}>不支持事务</li>
+            <li style={{fontSize:'14px'}}>导入失败时可能出现部分数据可见</li>
+            <li style={{fontSize:'14px'}}>需要应用层自行处理数据一致性</li>
+        </ul></td>
+    </tr>
+    <tr>
         <td><strong>查询并发</strong></td>
         <td><ul>
             <li style={{fontSize:'14px'}}><strong>并发能力提升 10 倍以上</strong>，支持数千并发查询</li>
