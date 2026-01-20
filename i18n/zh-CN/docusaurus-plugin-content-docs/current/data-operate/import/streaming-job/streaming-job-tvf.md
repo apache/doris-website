@@ -155,7 +155,7 @@ DO <Insert_Command>
 
 | 参数               | 默认值 | 说明                                                         |
 | ------------------ | ------ | ------------------------------------------------------------ |
-| session.*          | 无     | 支持在 job_properties 上配置所有的 session 变量，导入变量可参考 [Insert Into Select](../../data-operate/import/import-way/insert-into-manual.md#导入配置参数) |
+| session.*          | 无     | 支持在 job_properties 上配置所有的 session 变量，导入变量可参考 [Insert Into Select](../../../data-operate/import/import-way/insert-into-manual.md#导入配置参数) |
 | s3.max_batch_files | 256    | 当累计文件数达到该值时触发一次导入写入                           |
 | s3.max_batch_bytes | 10G    | 当累计数据量达到该值时触发一次导入写入                             |
 | max_interval       | 10s    | 当上游没有新增文件或数据时，空闲的调度间隔。                 |

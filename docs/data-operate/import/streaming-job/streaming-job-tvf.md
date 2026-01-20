@@ -156,7 +156,7 @@ The module description is as follows:
 
 | Parameter | Default Value | Description |
 | ------------------ | ------ | ------------------------------------------------------------ |
-| session.* | None | Supports configuring all session variables in job_properties. For importing variables, please refer to [Insert Into Select](../../data-operate/import/import-way/insert-into-manual.md#Import Configuration Parameters) |
+| session.* | None | Supports configuring all session variables in job_properties. For importing variables, please refer to [Insert Into Select](../../../data-operate/import/import-way/insert-into-manual.md#Import Configuration Parameters) |
 | s3.max_batch_files | 256 | Triggers an import write when the cumulative number of files reaches this value. |
 | s3.max_batch_bytes | 10G | Triggers an import write when the cumulative data volume reaches this value. |
 | max_interval | 10s | The idle scheduling interval when there are no new files or data added upstream. |
