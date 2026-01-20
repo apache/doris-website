@@ -1,6 +1,6 @@
 ---
 {
-  "title": "Multi-table Continuous Import",
+  "title": "Multi-table Continuous Load",
   "language": "en",
   "description": "Doris can continuously synchronize full and incremental data from multiple tables in MySQL, Postgres, etc. to Doris using Streaming Job."
 }

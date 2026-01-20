@@ -234,7 +234,7 @@
                             "label": "Continuous Load",
                             "items": [
                                 "data-operate/import/streaming-job/streaming-job-tvf",
-                                "data-operate/import/streaming-job/streaming-job-multi-table",
+                                "data-operate/import/streaming-job/streaming-job-multi-table"
                             ]
                         }
                     ]
