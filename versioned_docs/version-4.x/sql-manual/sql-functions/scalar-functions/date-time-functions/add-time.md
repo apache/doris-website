@@ -20,19 +20,20 @@ ADD_TIME(`<date_or_time_expr>`, `<time>`)
 
 | Parameter             | Description |
 | ---------------------| ----------- |
-| `<date_or_time_expr>`| A valid date expression. Supports input of datetime/date/time types. If the type is date, it will be converted to the start time of the day (00:00:00). For specific datetime/time formats, see [datetime conversion](../../../../../docs/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [time conversion](../../../../../docs/sql-manual/basic-element/sql-data-types/conversion/time-conversion). |
+| `<date_or_time_expr>`| A valid date expression. Supports input of timestamptz/datetime/date/time types. If the type is date, it will be converted to the start time of the day (00:00:00). For specific formats, see [timestamptz conversion](../../../../../../docs/sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion.md), [datetime conversion](../../../../../../docs/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [time conversion](../../../../../../docs/sql-manual/basic-element/sql-data-types/conversion/time-conversion). |
 | `<time>`             | A valid time expression, representing the time value to be added to `<date_or_time_expr>`. If negative, it means subtraction. Supports input of time type. |
 
 ## Return Value
 
 Returns the result of adding `<time>` to `<date_or_time_expr>`. The return type depends on the type of the first parameter:
+- If the first parameter is of timestamptz type, returns timestamptz type.
 - If the first parameter is of datetime type, returns datetime type.
 - If the first parameter is of time type, returns time type.
 
 Special cases:
 - If any input parameter is null, returns null.
 - If the first parameter is of time type and the result exceeds the time type range, returns the maximum (or minimum) time value.
-- If the first parameter is of datetime type and the result exceeds the datetime type range, an error is thrown.
+- If the first parameter is of datetime or timestamptz type and the result exceeds the datetime type range, an error is thrown.
 
 ## Examples
 
@@ -52,6 +53,14 @@ SELECT ADD_TIME(cast('12:15:20' as time), '00:10:40');
 +------------------------------------------------+
 | 12:26:00                                       |
 +------------------------------------------------+   
+
+-- SET time_zone = '+08:00';
+SELECT ADD_TIME('2025-10-10 11:22:33.1234567+03:00', '01:02:03');
++-----------------------------------------------------------+
+| ADD_TIME('2025-10-10 11:22:33.1234567+03:00', '01:02:03') |
++-----------------------------------------------------------+
+| 2025-10-10 17:24:36.123457+08:00                          |
++-----------------------------------------------------------+
          
 -- NULL parameter test
 SELECT ADD_TIME(NULL, '01:00:00');

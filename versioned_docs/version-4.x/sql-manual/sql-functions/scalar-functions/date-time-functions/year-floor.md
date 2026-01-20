@@ -31,12 +31,12 @@ YEAR_FLOOR(<date_or_time_expr>, <period>, <origin>)
 ## Parameters
 | Parameter | Description |
 |-----------|-------------|
-| `<date_or_time_expr>` | The datetime value to round down, supports date/datetime types. For datetime and date formats, please refer to [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
+| `<date_or_time_expr>` | The datetime value to round down, supports date/datetime/timestamptz types. Date type will be converted to the start time 00:00:00 of the corresponding date. For specific formats please see [timestamptz conversion](../../../../../../docs/sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion.md), and for datetime/date formats refer to [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
 | `<period>` | Optional, represents how many seconds each period consists of, supports positive integer type (INT). Default is 1 second. |
 | `<origin_datetime>` | Starting point for the interval, supports date/datetime types; defaults to 0000-01-01 00:00:00. |
 
 ## Return Value
-Returns a result consistent with the input type (DATETIME or DATE), representing the year interval start time after rounding down:
+Returns a result consistent with the input type (TIMESTAMPTZ, DATETIME or DATE), representing the year interval start time after rounding down:
 
 - If input is DATE type, returns DATE type (containing only date part); if input is DATETIME or properly formatted string, returns DATETIME type (time part consistent with origin, defaults to 00:00:00 when no origin).
 - If `<period>` is a non-positive integer (≤0), the function returns an error.
@@ -45,6 +45,8 @@ Returns a result consistent with the input type (DATETIME or DATE), representing
 - If calculation result exceeds maximum datetime 9999-12-31 23:59:59, returns an error.
 - If the `<origin>` date and time is after the `<period>`, it will still be calculated according to the above formula, but the period k will be negative.
 - If date_or_time_expr has a scale, the returned result will also have a scale with the fractional part being zero.
+- If the input is TIMESTAMPTZ type, it will first be converted to local_time (for example: `2025-12-31 23:59:59+05:00` represents local_time `2026-01-01 02:59:59` when the session variable is `+08:00`), and then perform YEAR_FLOOR.
+- If the input time values (`<date_or_time_expr>` and `<period>`) contain both TIMESTAMPTZ and DATETIME types, the output is DATETIME type.
 
 ## Examples
 ```sql
@@ -151,6 +153,23 @@ SELECT YEAR_FLOOR('2023-07-13 10:00:00', 1, '2020-01-01 08:30:00') AS result;
 +---------------------+
 | 2023-01-01 08:30:00 |
 +---------------------+
+
+-- TimeStampTz sample, SET time_zone = '+08:00'
+-- Convert to local_time (2026-01-01 02:59:59) and then perform YEAR_FLOOR
+SELECT YEAR_FLOOR('2025-12-31 23:59:59+05:00');
++----------------------------------------+
+| YEAR_FLOOR('2025-12-31 23:59:59+05:00')|
++----------------------------------------+
+| 2026-01-01 00:00:00+08:00              |
++----------------------------------------+
+
+-- If parameters contain both TimeStampTz and Datetime types, output DateTime type
+SELECT YEAR_FLOOR('2025-12-31 23:59:59+05:00', '2025-12-15 00:00:00.123');
++--------------------------------------------------------------------+
+| YEAR_FLOOR('2025-12-31 23:59:59+05:00', '2025-12-15 00:00:00.123') |
++--------------------------------------------------------------------+
+| 2026-01-01 00:00:00.123                                            |
++--------------------------------------------------------------------+
 
 -- Invalid period (non-positive integer)
 SELECT YEAR_FLOOR('2023-07-13', 0) AS result;

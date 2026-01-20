@@ -8,7 +8,7 @@
 
 ## Description
 
-The DATE_SUB function is used to subtract a specified time interval from a given date or time value and return the calculated date or time result. It supports operations on DATE (date only) and DATETIME (date and time) types, where the time interval is defined by both a numerical value and a unit.
+The DATE_SUB function is used to subtract a specified time interval from a given date or time value and return the calculated date or time result. It supports operations on DATE (date only), DATETIME (date and time) and TIMESTAMPTZ(date, time, and timezone offset) types, where the time interval is defined by both a numerical value and a unit.
 
 This function behaves generally consistently with the [date_sub function](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_date-sub) in MySQL, but the difference is that MySQL supports compound unit additions and subtractions, such as:
 
@@ -33,7 +33,7 @@ DATE_SUB(<date_or_time_part>, <expr> <time_unit>)
 
 | Parameter | Description |
 | -- | -- |
-| `<date_or_time_part>` | A valid date value, supporting datetime or date type. For specific datetime and date formats, please refer to [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
+| `<date_or_time_part>` | A valid date value, supporting datetime or date type. For specificformats, please refer to [timestamptz conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion), [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
 | `<expr>` | The time interval to be subtracted, of type `INT` |
 | `<time_unit>` | Enumerated values: YEAR, QUARTER, MONTH, WEEK, DAY, HOUR, MINUTE, SECOND |
 
@@ -42,6 +42,7 @@ DATE_SUB(<date_or_time_part>, <expr> <time_unit>)
 Returns a calculated result with the same type as date:
 - When input is DATE, returns DATE (date part only);
 - When input is DATETIME, returns DATETIME (including date and time).
+- When input is TIMESTAMPTZ, returns TIMESTAMPTZ (including date, time, and timezone offset).
 - For datetime types with scale, the scale will be preserved and returned.
 
 Special cases:
@@ -100,6 +101,14 @@ mysql> select date_sub('2023-12-31 23:59:59', INTERVAL 61 QUARTER);
 +------------------------------------------------------+
 | 2008-09-30 23:59:59                                  |
 +------------------------------------------------------+
+
+-- Example of TimeStampTz type, SET time_zone = '+08:00'
+SELECT DATE_SUB('2024-02-05 02:03:04.123+12:00', INTERVAL 1 DAY);
++-----------------------------------------------------------+
+| DATE_SUB('2024-02-05 02:03:04.123+12:00', INTERVAL 1 DAY) |
++-----------------------------------------------------------+
+| 2024-02-03 22:03:04.123+08:00                             |
++-----------------------------------------------------------+
 
 -- Any parameter is NULL
 mysql> select date_sub('2023-01-01', INTERVAL NULL DAY);

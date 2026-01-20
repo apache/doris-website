@@ -2,12 +2,12 @@
 {
     "title": "SECONDS_ADD",
     "language": "zh-CN",
-    "description": "SECONDSADD 函数用于在指定的日期时间值上增加或减少指定的秒数，并并返回计算后的日期时间值。该函数支持处理 DATE、DATETIME 类型，若输入负数则等效于减去对应秒数。"
+    "description": "SECONDSADD 函数用于在指定的日期时间值上增加或减少指定的秒数，并并返回计算后的日期时间值。该函数支持处理 DATE、DATETIME、TIMESTAMPTZ 类型，若输入负数则等效于减去对应秒数。"
 }
 ---
 
 ## 描述
-SECONDS_ADD 函数用于在指定的日期时间值上增加或减少指定的秒数，并并返回计算后的日期时间值。该函数支持处理 DATE、DATETIME 类型，若输入负数则等效于减去对应秒数。
+SECONDS_ADD 函数用于在指定的日期时间值上增加或减少指定的秒数，并并返回计算后的日期时间值。该函数支持处理 DATE、DATETIME、TIMESTAMPTZ 类型，若输入负数则等效于减去对应秒数。
 
 该函数与 [date_add 函数](./date-add) 和 mysql 中的 [date_add 函数](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_date_add) 使用 SECOND 为单位的行为一致
 
@@ -20,16 +20,19 @@ SECONDS_ADD(<date_or_time_expr>, <seconds>)
 
 | 参数           | 说明                                          |
 |--------------|---------------------------------------------|
-| `<date_or_time_expr>` | 必填，输入的日期时间值，类型可以是 DATE、DATETIME ，具体 datetime/date 请查看 [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion), [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion)           |
+| `<date_or_time_expr>` | 必填，输入的日期时间值，类型可以是 DATE、DATETIME、TIMESTAMPTZ ，具体格式请查看 [timestamptz的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion), [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion), [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion)           |
 | `<seconds>`  | 必填，要增加或减少的秒数，支持整数类型（BIGINT）。正数表示增加秒数，负数表示减少秒数。 |
 
 ## 返回值
 
-返回一个日期时间值，类型与输入的 <date_or_time_expr> 类型一致。
+返回基准时间`<date_or_time_expr>`添加指定秒数`<second>`的值，返回值类型由第一个参数类型决定:
+- 若第一个参数类型为 DATE/DATETIME, 则返回 DATETIME 类型。
+- 若第一个参数类型为 TIMESTAMPTZ, 则返回 TIMESTAMPTZ 类型。
 
+特殊情况：
 - 若 <seconds> 为负数，函数效果等同于从基准时间中减去对应秒数（即 SECONDS_ADD(date, -n) 等价于 SECONDS_SUB(date, n)）。
 - 若输入为 DATE 类型（仅包含年月日），默认其时间部分为 00:00:00/
-- 若计算结果超出日期类型的有效范围（DATE 类型：0000-01-01 至 9999-12-31；DATETIME 类型：0000-01-01 00:00:00 至 9999-12-31 23:59:59.999999），返回错误。
+- 若计算结果超出日期类型的有效范围（DATE 类型：0000-01-01 至 9999-12-31；DATETIME/TIMESTAMPTZ 类型：0000-01-01 00:00:00 至 9999-12-31 23:59:59.999999），返回错误。
 - 若任一参数为 NULL，返回 NULL。
 
 
@@ -74,6 +77,14 @@ SELECT SECONDS_ADD('2023-07-13 10:30:25.123456', 2) AS result;
 +----------------------------+
 | 2023-07-13 10:30:27.123456 |
 +----------------------------+
+
+-- TimeStampTz 类型示例, SET time_zone = '+08:00'
+SELECT SECONDS_ADD('2025-10-10 11:22:33.123+07:00', 1);
++-------------------------------------------------+
+| SECONDS_ADD('2025-10-10 11:22:33.123+07:00', 1) |
++-------------------------------------------------+
+| 2025-10-10 12:22:34.123+08:00                   |
++-------------------------------------------------+
 
 --- 输入为 NULL 时返回 NULL
 SELECT SECONDS_ADD(NULL, 30), SECONDS_ADD('2025-01-23 12:34:56', NULL) AS result;

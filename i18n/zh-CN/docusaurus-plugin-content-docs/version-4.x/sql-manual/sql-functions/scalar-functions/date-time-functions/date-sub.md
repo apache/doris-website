@@ -2,13 +2,13 @@
 {
     "title": "DATE_SUB",
     "language": "zh-CN",
-    "description": "DATESUB 函数用于从指定的日期或时间值中减去指定的时间间隔，返回计算后的日期或时间结果。该函数支持对 DATE（仅日期）和 DATETIME（日期和时间）类型进行操作，时间间隔通过数值和单位共同定义。"
+    "description": "DATE_SUB 函数用于从指定的日期或时间值中减去指定的时间间隔，返回计算后的日期或时间结果。该函数支持对 DATE（仅日期）, DATETIME（日期和时间）TIMESTAMPTZ(带时区偏移量的日期时间)类型进行操作，时间间隔通过数值和单位共同定义。"
 }
 ---
 
 ## 描述
 
-DATE_SUB 函数用于从指定的日期或时间值中减去指定的时间间隔，返回计算后的日期或时间结果。该函数支持对 DATE（仅日期）和 DATETIME（日期和时间）类型进行操作，时间间隔通过数值和单位共同定义。
+DATE_SUB 函数用于从指定的日期或时间值中减去指定的时间间隔，返回计算后的日期或时间结果。该函数支持对 DATE（仅日期）, DATETIME（日期和时间）TIMESTAMPTZ(带时区偏移量的日期时间)类型进行操作，时间间隔通过数值和单位共同定义。
 
 该函数与 mysql 中的 [date_sub 函数](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_date-sub) 行为大致一致，但不同的是，mysql 支持联合单位的增减，如:
 
@@ -33,7 +33,7 @@ DATE_ADD(<date_or_time_part>, <expr> <time_unit>)
 
 | 参数 | 说明 |
 | -- | -- |
-| `<date_or_time_part>` | 合法的日期值，支持为 datetime 或者 date 类型，具体 datetime 和 date 格式请查看 [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion)) |
+| `<date_or_time_part>` | 合法的日期值，支持为 timestamptz, datetime 或者 date 类型，具体格式请查看 [timestamptz的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion), [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
 | `<expr>` | 希望减去的时间间隔，类型为 `INT` |
 | `<time_unit>` | 枚举值：YEAR，QUARTER，MONTH，WEEK，DAY，HOUR，MINUTE，SECOND |
 
@@ -42,6 +42,7 @@ DATE_ADD(<date_or_time_part>, <expr> <time_unit>)
 返回与 date 类型一致的计算结果：
 - 输入 DATE 类型时，返回 DATE（仅日期部分）；
 - 输入 DATETIME 类型时，返回 DATETIME（包含日期和时间）。
+- 输入 TIMESTAMPTZ 类型时, 返回 TIMESTAMPTZ（包含日期，时间和时区偏移量）。
 - 对于带有 scale 的 datetime 类型，会保留 scale 返回。
 
 特殊情况：
@@ -109,7 +110,15 @@ mysql> select date_sub('2023-01-01', INTERVAL NULL DAY);
 | NULL                                      |
 +-------------------------------------------+
 
---非法单位，返回粗我
+-- TimeStampTz 类型测试，SET time_zone = '+08:00'
+SELECT DATE_SUB('2024-02-05 02:03:04.123+12:00', INTERVAL 1 DAY);
++-----------------------------------------------------------+
+| DATE_SUB('2024-02-05 02:03:04.123+12:00', INTERVAL 1 DAY) |
++-----------------------------------------------------------+
+| 2024-02-03 22:03:04.123+08:00                             |
++-----------------------------------------------------------+
+
+--非法单位，返回错误
 mysql> select date_sub('2022-01-01', INTERVAL 1 Y);
 ERROR 1105 (HY000): errCode = 2, detailMessage = 
 mismatched input 'Y' expecting {'.', '[', 'AND', 'BETWEEN', 'COLLATE', 'DAY', 'DIV', 'HOUR', 'IN', 'IS', 'LIKE', 'MATCH', 'MATCH_ALL', 'MATCH_ANY', 'MATCH_PHRASE', 'MATCH_PHRASE_EDGE', 'MATCH_PHRASE_PREFIX', 'MATCH_REGEXP', 'MINUTE', 'MONTH', 'NOT', 'OR', 'QUARTER', 'REGEXP', 'RLIKE', 'SECOND', 'WEEK', 'XOR', 'YEAR', EQ, '<=>', NEQ, '<', LTE, '>', GTE, '+', '-', '*', '/', '%', '&', '&&', '|', '||', '^'}(line 1, pos 41)
