@@ -20,7 +20,7 @@ SUB_TIME(`<date_or_time_expr>`, `<time>`)
 
 | Parameter             | Description |
 | ---------------------| ----------- |
-| `<date_or_time_expr>`| A valid date expression. Supports input of timestamptz/datetime/date/time types. If the type is date, it will be converted to the start time of the day (00:00:00). For specific formats, see [timestamptz conversion](../../../../../docs/sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion), [datetime conversion](../../../../../docs/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [time conversion](../../../../../docs/sql-manual/basic-element/sql-data-types/conversion/time-conversion). |
+| `<date_or_time_expr>`| A valid date expression. Supports input of timestamptz/datetime/date/time types. If the type is date, it will be converted to the start time of the day (00:00:00). For specific formats, see [timestamptz conversion](../../../../../../docs/sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion.md), [datetime conversion](../../../../../../docs/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [time conversion](../../../../../../docs/sql-manual/basic-element/sql-data-types/conversion/time-conversion). |
 | `<time>`             | A valid time expression, representing the time value to be subtracted from `<date_or_time_expr>`. If negative, it means addition. Supports input of time type. |
 
 ## Return Value

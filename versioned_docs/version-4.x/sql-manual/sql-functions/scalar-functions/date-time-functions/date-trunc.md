@@ -21,7 +21,7 @@ DATE_TRUNC(<time_unit>, <datetime>)
 
 | Parameter | Description |
 | -- | -- |
-| `<date_or_time_part>` | A valid date expression, supporting datetime or date type. For specific formats, please refer to [timestamptz conversion](../../../../../docs/sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion), [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
+| `<date_or_time_part>` | A valid date expression, supporting datetime or date type. For specific formats, please refer to [timestamptz conversion](../../../../../../docs/sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion.md), [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
 | `<time_unit>` | The time interval to truncate to. The available values are: [`second`,`minute`,`hour`,`day`,`week`,`month`,`quarter`,`year`] |
 
 ## Return Value

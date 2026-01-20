@@ -22,7 +22,7 @@ MICROSECONDS_ADD(`<datetime_like_type>`, `<delta>`)
 
 | Parameter | Description |
 | --------- | ----------- |
-| `<datetime_like_type>` | The input datetime value, of type DATETIME or TIMESTAMPTZ. For formats, see [timestamptz conversion](../../../../../docs/sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion), [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) |
+| `<datetime_like_type>` | The input datetime value, of type DATETIME or TIMESTAMPTZ. For formats, see [timestamptz conversion](../../../../../../docs/sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion.md), [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) |
 | `<delta>` | The number of microseconds to add, of type BIGINT. 1 second = 1,000,000 microseconds. |
 
 ## Return Value

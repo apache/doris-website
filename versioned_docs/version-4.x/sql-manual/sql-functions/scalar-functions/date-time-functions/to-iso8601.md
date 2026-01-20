@@ -23,7 +23,7 @@ TO_ISO8601(`<date_or_date_expr>`)
 ## Parameters
 | Parameter | Description |
 |-----------|-------------|
-| `<date_or_date_expr>` | Input datetime value, supports date/datetime/timestamptz types. For specific formats please see [timestamptz conversion](../../../../../docs/sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion), [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
+| `<date_or_date_expr>` | Input datetime value, supports date/datetime/timestamptz types. For specific formats please see [timestamptz conversion](../../../../../../docs/sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion.md), [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
 
 ## Return Value
 

@@ -22,7 +22,7 @@ MINUTES_ADD(`<date_or_time_expr>`, `<minutes>`)
 
 | Parameter | Description |
 | --------- | ----------- |
-| `<date_or_time_expr>` | The input datetime value, which can be of type DATE, DATETIME or TIMESTAMPTZ. For specific formats, see [timestamptz conversion](../../../../../docs/sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion), [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
+| `<date_or_time_expr>` | The input datetime value, which can be of type DATE, DATETIME or TIMESTAMPTZ. For specific formats, see [timestamptz conversion](../../../../../../docs/sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion.md), [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
 | `<minutes>` | The number of minutes to add, of type BIGINT. |
 
 ## Return Value
