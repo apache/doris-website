@@ -35,6 +35,29 @@ Usage
 
 When `default_field` is provided, Doris expands bare terms or functions to that field. For example, `SEARCH('foo bar', 'tags', 'and')` behaves like `SEARCH('tags:ALL(foo bar)')`, while `SEARCH('foo bark', 'tags')` expands to `tags:ANY(foo bark)`. Explicit boolean operators inside the DSL always take precedence over the default operator.
 
+### Options Parameter (JSON format)
+
+The second parameter can also be a JSON string for advanced configuration:
+
+```sql
+SEARCH('<search_expression>', '<options_json>')
+```
+
+**Supported options:**
+
+| Option | Type | Description |
+|--------|------|-------------|
+| `default_field` | string | Column name for terms without explicit field |
+| `default_operator` | string | `and` or `or` for multi-term expressions |
+| `mode` | string | `standard` (default) or `lucene` |
+| `minimum_should_match` | integer | Minimum SHOULD clauses to match (Lucene mode only) |
+
+**Example:**
+```sql
+SELECT * FROM docs WHERE search('apple banana',
+  '{"default_field":"title","default_operator":"and","mode":"lucene"}');
+```
+
 `SEARCH()` follows SQL three-valued logic. Rows where all referenced fields are NULL evaluate to UNKNOWN (filtered out in the `WHERE` clause) unless other predicates short-circuit the expression (`TRUE OR NULL = TRUE`, `FALSE OR NULL = NULL`, `NOT NULL = NULL`), matching the behavior of dedicated text search operators.
 
 ### Current Supported Queries
@@ -99,6 +122,39 @@ WHERE SEARCH('(title:Machine OR title:Python) AND category:Technology');
 SELECT id, title FROM search_test_basic
 WHERE SEARCH('tags:ANY(python javascript) AND (category:Technology OR category:Programming)');
 ```
+
+#### Lucene Boolean Mode
+
+Lucene mode mimics Elasticsearch/Lucene query_string behavior where boolean operators work as left-to-right modifiers instead of traditional boolean algebra.
+
+**Key differences from standard mode:**
+- AND/OR/NOT are modifiers that affect adjacent terms
+- Operator precedence is left-to-right
+- Uses MUST/SHOULD/MUST_NOT internally (like Lucene's Occur enum)
+- Pure NOT queries return empty results (need a positive clause)
+
+**Enable Lucene mode:**
+```sql
+-- Basic Lucene mode
+SELECT * FROM docs WHERE search('apple AND banana',
+  '{"default_field":"title","mode":"lucene"}');
+
+-- With minimum_should_match
+SELECT * FROM docs WHERE search('apple AND banana OR cherry',
+  '{"default_field":"title","mode":"lucene","minimum_should_match":1}');
+```
+
+**Behavior comparison:**
+
+| Query | Standard Mode | Lucene Mode |
+|-------|--------------|-------------|
+| `a AND b` | a ∩ b | +a +b (both MUST) |
+| `a OR b` | a ∪ b | a b (both SHOULD, min=1) |
+| `NOT a` | ¬a | Empty (no positive clause) |
+| `a AND NOT b` | a ∩ ¬b | +a -b (MUST a, MUST_NOT b) |
+| `a AND b OR c` | (a ∩ b) ∪ c | +a b c (only a is MUST) |
+
+**Note:** In Lucene mode, `a AND b OR c` parses left-to-right: the OR operator changes `b` from MUST to SHOULD. Use `minimum_should_match` to require SHOULD matches.
 
 #### Phrase query
 - Syntax: `column:"quoted phrase"`
@@ -252,6 +308,31 @@ FROM test_variant_search_subcolumn
 WHERE SEARCH('properties.message:hello OR properties.category:beta')
 ORDER BY id;
 ```
+
+#### Escape Characters
+
+Use backslash (`\`) to escape special characters in DSL:
+
+| Escape | Description | Example |
+|--------|-------------|---------|
+| `\ ` | Literal space (joins terms) | `title:First\ Value` matches "First Value" |
+| `\(` `\)` | Literal parentheses | `title:hello\(world\)` matches "hello(world)" |
+| `\:` | Literal colon | `title:key\:value` matches "key:value" |
+| `\\` | Literal backslash | `title:path\\to\\file` matches "path\to\file" |
+
+**Example:**
+```sql
+-- Search for value containing space as single term
+SELECT * FROM docs WHERE search('title:First\\ Value');
+
+-- Search for value with parentheses
+SELECT * FROM docs WHERE search('title:hello\\(world\\)');
+
+-- Search for value with colon
+SELECT * FROM docs WHERE search('title:key\\:value');
+```
+
+**Note:** In SQL strings, backslashes need double escaping. Use `\\` in SQL to produce a single `\` in the DSL.
 
 ### Current Limitations
 
