@@ -8,19 +8,17 @@
 
 ## 概述
 
-Doris 可以通过 Job 创建一个持续导入任务。在提交 Job 作业后，Doris 会持续运行该导入作业，实时的查询数据源中的数据写入到 Doris 表中。
+Doris 可以通过 Job + TVF 的方式，创建一个持续导入任务。在提交 Job 作业后，Doris 会持续运行该导入作业，实时的查询 TVF 中的数据写入到 Doris 表中。
 
-## 支持的数据源
+## 支持的 TVF
 
-- [S3](../../sql-manual/sql-functions/table-valued-functions/s3.md) TVF
-- MySQL
-- Postgres
+[S3](../../../sql-manual/sql-functions/table-valued-functions/s3.md) TVF
 
 ## 基本原理
 
 ### S3
 
-通过 S3 TVF 遍历 S3 指定目录的文件，对文件进行拆分成文件列表，以小批次的文件列表的方式写入到 Doris 表中。
+遍历 S3 指定目录的文件，对文件进行拆分成文件列表，以小批次的文件列表的方式写入到 Doris 表中。
 
 **增量读取方式**
 
@@ -28,16 +26,10 @@ Doris 可以通过 Job 创建一个持续导入任务。在提交 Job 作业后�
 
 注意：新文件的名称必须按字典序大于上一次已导入的文件名，否则 Doris 不会将其作为新文件处理。比如，文件命名为 file1、file2、file3 时会按顺序导入；如果随后新增一个 file0，由于它在字典序上小于最后已导入的文件 file3，Doris 将不会导入该文件。
 
-### MySQL / Postgres
-
-集成了 Flink CDC 摄入数据的能力，可以将 MySQL 和 Postgres 里面的数据全量和增量数据同步到 Doris 中。
-
-
 ## 快速上手
 
 ### 创建导入作业
 
-#### S3 
 假设 S3 的目录下，会定期的产生以 CSV 结尾的文件。此时可以创建 Job
 
 ```SQL

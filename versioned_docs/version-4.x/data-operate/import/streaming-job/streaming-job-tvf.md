@@ -12,7 +12,7 @@ Doris allows you to create a continuous import task using a Job + TVF approach. 
 
 ## Supported TVFs
 
-[S3](../../sql-manual/sql-functions/table-valued-functions/s3.md) TVF
+[S3](../../../sql-manual/sql-functions/table-valued-functions/s3.md) TVF
 
 ## Basic Principles
 

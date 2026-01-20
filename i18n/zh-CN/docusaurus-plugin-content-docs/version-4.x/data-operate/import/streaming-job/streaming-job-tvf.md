@@ -12,7 +12,7 @@ Doris 可以通过 Job + TVF 的方式，创建一个持续导入任务。在提
 
 ## 支持的 TVF
 
-[S3](../../sql-manual/sql-functions/table-valued-functions/s3.md) TVF
+[S3](../../../sql-manual/sql-functions/table-valued-functions/s3.md) TVF
 
 ## 基本原理
 
