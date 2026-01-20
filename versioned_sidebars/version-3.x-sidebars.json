@@ -510,6 +510,7 @@
                                 "ecosystem/observability/opentelemetry",
                                 "ecosystem/observability/fluentbit",
                                 "ecosystem/observability/loongcollector",
+                                "ecosystem/observability/langfuse",
                                 "ecosystem/observability/vector"
                             ]
                         }
@@ -956,6 +957,7 @@
                         "ecosystem/observability/opentelemetry",
                         "ecosystem/observability/fluentbit",
                         "ecosystem/observability/loongcollector",
+                        "ecosystem/observability/langfuse",
                         "ecosystem/observability/vector"
                     ]
                 },
