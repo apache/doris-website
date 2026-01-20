@@ -33,7 +33,7 @@ DATE_SUB(<date_or_time_part>, <expr> <time_unit>)
 
 | Parameter | Description |
 | -- | -- |
-| `<date_or_time_part>` | A valid date value, supporting datetime or date type. For specificformats, please refer to [timestamptz conversion](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion), [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
+| `<date_or_time_part>` | A valid date value, supporting datetime or date type. For specificformats, please refer to [timestamptz conversion](../../../../../docs/sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion), [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
 | `<expr>` | The time interval to be subtracted, of type `INT` |
 | `<time_unit>` | Enumerated values: YEAR, QUARTER, MONTH, WEEK, DAY, HOUR, MINUTE, SECOND |
 

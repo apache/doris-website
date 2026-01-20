@@ -30,7 +30,7 @@ $type$ 代表的是周期单位
 
 | 参数 | 说明 |
 | -- | -- |
-| `<date_or_time_expr>` | 参数是合法的日期表达式，支持输入 date/datetime/timestamptz 类型，具体格式请查看 [timestamptz的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion), [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion)|
+| `<date_or_time_expr>` | 参数是合法的日期表达式，支持输入 date/datetime/timestamptz 类型，具体格式请查看 [timestamptz的转换](../../../../sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion), [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion)|
 | `<period>` | 参数是指定每个周期有多少个单位组成，类型为 INT, 开始的时间起点为 0001-01-01T00:00:00 |
 | `<type>` | 参数可以是：YEAR, QUARTER, MONTH, WEEK ,DAY, HOUR, MINUTE, SECOND|
 
@@ -43,7 +43,7 @@ $type$ 代表的是周期单位
 - 输入 DATE 类型时，返回 DATE（仅日期部分）；
 - 输入 DATETIME 类型，返回 DATETIME（包含日期和时间）。
 - 输出 TIMESTAMPTZ 类型，返回 TIMESTAMPTZ（包含日期、时间和偏移量）。
-- 对于不带有 scale 的 datetime和timestamptz, 返回值也会带有 scale， 小数部分为零.
+- 对于带有 scale 的 DATETIME 和 TIMESTAMPTZ，返回值也会带有 scale，小数部分为零。
 
 特殊情况：
 - 任何参数为 NULL 时，返回 NULL；
@@ -116,16 +116,6 @@ select date_ceil("2023-07-13 22:28:18",interval 5 year);
 +-------------------------------------------------------------+
 | 2023-12-01 00:00:00                                         |
 +-------------------------------------------------------------+
-
--- 会话变量中的时区为: '+08:00'
--- '2025-12-31 23:59:59+05:00' 对应的本地时间为 '2026-01-01 02:59:59'
--- 对本地
-SELECT DATE_CEIL('2025-12-31 23:59:59+05:00', INTERVAL 1 YEAR);
-+---------------------------------------------------------+
-| DATE_CEIL('2025-12-31 23:59:59+05:00', INTERVAL 1 YEAR) |
-+---------------------------------------------------------+
-| 2027-01-01 00:00:00                                     |
-+---------------------------------------------------------+
 
 -- TimeStampTz类型样例, SET time_zone = '+08:00'
 -- 将变量值转换为 local_time(2026-01-01 02:59:59)后再做 DATE_CEIL 操作

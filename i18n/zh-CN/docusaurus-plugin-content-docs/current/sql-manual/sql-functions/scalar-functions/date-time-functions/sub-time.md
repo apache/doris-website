@@ -20,7 +20,7 @@ SUB_TIME(`<date_or_time_expr>`, `<time>`)
 
 | 参数 | 说明 |
 | -- | -- |
-| `<date_or_time_expr>` | 参数是合法的日期表达式，支持输入 timestamptz/datetime/date/time 类型,date 类型会转换为对应日期的一天起始时间 00:00:00 ,具体格式请查看 [timestamptz的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion), [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [time的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/time-conversion) |
+| `<date_or_time_expr>` | 参数是合法的日期表达式，支持输入 timestamptz/datetime/date/time 类型,date 类型会转换为对应日期的一天起始时间 00:00:00 ,具体格式请查看 [timestamptz的转换](../../../../sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion), [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [time的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/time-conversion) |
 |  `<time>`        |  参数为合法的时间表达式，表示从`<date_or_time_expr>` 中减去的时间值，若为负数，则表示增加，支持输入 time 类型  |
 
 ## 返回值

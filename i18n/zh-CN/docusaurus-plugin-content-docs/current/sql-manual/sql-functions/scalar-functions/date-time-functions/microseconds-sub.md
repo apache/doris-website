@@ -22,7 +22,7 @@ MICROSECONDS_SUB(`<datetime_like_type>`, `<delta>`)
 
 | 参数 | 说明 |
 | ---- | ---- |
-| `<datetime_like_type>` | 输入的日期时间值，类型为 DATETIME 或 TIMESTAMPTZ，具体格式请查看 [timestamptz的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion), [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) |
+| `<datetime_like_type>` | 输入的日期时间值，类型为 DATETIME 或 TIMESTAMPTZ，具体格式请查看 [timestamptz的转换](../../../../sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion), [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) |
 | `<delta>` | 要减去的微秒数，类型为 BIGINT，1 秒 = 1,000,000 微秒 |
 
 ## 返回值

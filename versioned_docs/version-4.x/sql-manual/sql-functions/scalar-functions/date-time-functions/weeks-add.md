@@ -20,7 +20,7 @@ WEEKS_ADD(`<datetime_or_date_expr>`, `<weeks_value>`)
 ## Parameters
 | Parameter | Description |
 |-----------|-------------|
-| `<datetime_or_date_expr>` | Input datetime value, supports date/datetime/timestamptz types. For specific formats, please refer to [timestamptz conversion](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion), [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
+| `<datetime_or_date_expr>` | Input datetime value, supports date/datetime/timestamptz types. For specific formats, please refer to [timestamptz conversion](../../../../../docs/sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion), [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
 | `<weeks_value>` | INT type integer, representing the number of weeks to add or subtract (positive for addition, negative for subtraction) |
 
 ## Return Value

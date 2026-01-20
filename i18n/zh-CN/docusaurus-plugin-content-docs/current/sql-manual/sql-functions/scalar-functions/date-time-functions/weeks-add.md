@@ -20,7 +20,7 @@ WEEKS_ADD(`<datetime_or_date_expr>`, `<weeks_value>`)
 ## 参数
 | 参数                          | 描述                                                                               |
 |-------------------------------|-------------------------------------------------------------------------------------|
-| `<datetime_or_date_expr>` | 日期时间的输入值，支持输入 date/datetime/timestamptz 类型，具体格式请查看 [timestamptz的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion)，[datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion)  |
+| `<datetime_or_date_expr>` | 日期时间的输入值，支持输入 date/datetime/timestamptz 类型，具体格式请查看 [timestamptz的转换](../../../../sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion)，[datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion)  |
 | `<weeks_value>`            | INT 类型整数，表示要增加或减少的周数（正数表示增加，负数表示减少） |
 
 

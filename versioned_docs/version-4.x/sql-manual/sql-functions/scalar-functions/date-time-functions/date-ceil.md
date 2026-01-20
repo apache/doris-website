@@ -31,17 +31,20 @@ $type$ represents the unit of period
 
 | Parameter | Description |
 | -- | -- |
-| `date_or_time_expr` | A valid date expression, supporting input of datetime or date type. For specific datetime and date formats, please refer to [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
+| `date_or_time_expr` | A valid date expression, supporting input of date/datetime/timestamptz types. For specific formats, please refer to [timestamptz conversion](../../../../../../docs/sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion), [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
 | `period` | Specifies the number of units each period consists of, of type INT. The starting time point is 0001-01-01T00:00:00 |
 | `type` | Can be: YEAR, QUARTER, MONTH, WEEK, DAY, HOUR, MINUTE, SECOND |
 
 ## Return Value
 
-Returns a date or time value representing the result of rounding up the input value to the specified unit.
-The rounded result is of the same type as datetime:
+The return type is TIMESTAMPTZ, DATETIME, or DATE. Returns a date or time value representing the result of rounding up the input value to the specified unit.
+
+Returns a rounded result consistent with the `<date_or_time_expr>` type:
+- If the input is TIMESTAMPTZ type, it is first converted to local_time (e.g., `2025-12-31 23:59:59+05:00` represents local_time `2026-01-01 02:59:59` when the session variable is `+08:00`), and then the DATE_CEIL calculation is performed.
 - When input is DATE, returns DATE (only the date part);
 - When input is DATETIME, returns DATETIME (including date and time).
-- For datetime with scale, the return value will also have scale，decimal part equal 0.
+- When input is TIMESTAMPTZ type, returns TIMESTAMPTZ (including date, time, and offset).
+- For DATETIME and TIMESTAMPTZ with scale, the return value will also have scale, with the fractional part being zero.
 
 Special cases:
 - Returns NULL if any parameter is NULL;
@@ -120,6 +123,15 @@ select date_ceil("2023-07-13 22:28:18",interval 5 year);
 +-------------------------------------------------------------+
 | 2023-12-01 00:00:00                                         |
 +-------------------------------------------------------------+
+
+-- TimeStampTz type example, SET time_zone = '+08:00'
+-- Convert variable value to local_time(2026-01-01 02:59:59) then perform DATE_CEIL operation
+SELECT DATE_CEIL('2025-12-31 23:59:59+05:00', INTERVAL 1 YEAR);
++---------------------------------------------------------+
+| DATE_CEIL('2025-12-31 23:59:59+05:00', INTERVAL 1 YEAR) |
++---------------------------------------------------------+
+| 2027-01-01 00:00:00+08:00                               |
++---------------------------------------------------------+
 
 -- Exceeds the maximum year
 mysql> select date_ceil("9999-07-13",interval 5 year);

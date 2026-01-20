@@ -33,13 +33,13 @@ QUARTER_CEIL(`<date_or_time_expr>`, `<period>`, `<origin>`)
 
 | Parameter | Description |
 | ---- | ---- |
-| `<date_or_time_expr>` | The datetime value to be rounded up. It is a valid date expression that supports date/datetime types. For specific datetime and date formats, see [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion). |
+| `<date_or_time_expr>` | The datetime value to be rounded up. It is a valid date expression that supports date/datetime/timestamptz types. Date type will be converted to the start time 00:00:00 of the corresponding date. For specific formats please see [timestamptz conversion](../../../../../docs/sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion), and for datetime/date formats refer to [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion). |
 | `<period>` | Quarter period value, type INT, indicating the number of quarters contained in each period |
 | `<origin_datetime>` | The starting time point of the period, supports date/datetime types, default value is 0001-01-01 00:00:00 |
 
 ## Return Value
 
-Returns DATETIME type, returning the time value rounded up to the nearest specified quarter period based on the input datetime. The precision of the return value matches the precision of the input datetime parameter.
+Returns TIMESTAMPTZ, DATETIME or DATE, returning the time value rounded up to the nearest specified quarter period based on the input datetime. The precision of the return value matches the precision of the input datetime parameter.
 
 - If `<period>` is non-positive, returns an error.
 - If any parameter is NULL, returns NULL.
@@ -49,6 +49,8 @@ Returns DATETIME type, returning the time value rounded up to the nearest specif
 - If the calculation result exceeds the maximum date range 9999-12-31 23:59:59, returns an error
 - If `<origin>` datetime is after `<period>`, the calculation follows the same formula, but period k is negative.
 - If `date_or_time_expr` has scale, the returned result also has scale with fractional part as zero.
+- If the input is TIMESTAMPTZ type, it will first be converted to local_time (for example: `2025-12-31 23:59:59+05:00` represents local_time `2026-01-01 02:59:59` when the session variable is `+08:00`), and then perform QUARTER_CEIL.
+- If the input time values (`<date_or_time_expr>` and `<period>`) contain both TIMESTAMPTZ and DATETIME types, the output is DATETIME type.
 
 ## Examples
 
@@ -116,6 +118,23 @@ SELECT QUARTER_CEIL('2023-07-13', 1) AS result;
 +---------------------+
 | 2023-10-01 00:00:00 |
 +---------------------+
+
+-- Example of TimeStampTz type, SET time_zone = '+08:00'
+-- Convert the variable value to local_time(2026-01-01 02:59:59) before performing CEIL operation
+SELECT QUARTER_CEIL('2025-12-31 23:59:59+05:00');
++-------------------------------------------+
+| QUARTER_CEIL('2025-12-31 23:59:59+05:00') |
++-------------------------------------------+
+| 2026-04-01 00:00:00+08:00                 |
++-------------------------------------------+
+
+-- If the parameters include both TimeStampTz and Datetime types, output the DateTime type.
+SELECT QUARTER_CEIL('2025-12-31 23:59:59+05:00', '2025-12-15 00:00:00.123');
++----------------------------------------------------------------------+
+| QUARTER_CEIL('2025-12-31 23:59:59+05:00', '2025-12-15 00:00:00.123') |
++----------------------------------------------------------------------+
+| 2026-03-15 00:00:00.123                                              |
++----------------------------------------------------------------------+
 
 -- Calculation result exceeds maximum date range 9999-12-31, returns error
 SELECT QUARTER_CEIL('9999-10-13 22:28:18', 2) AS result;

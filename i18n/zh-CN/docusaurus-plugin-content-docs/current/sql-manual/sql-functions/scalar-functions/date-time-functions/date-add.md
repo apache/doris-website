@@ -28,7 +28,7 @@ DATE_ADD(<date_or_time_expr>, <expr> <time_unit>)
 
 | 参数 | 说明 |
 | -- | -- |
-| `<date_or_time_expr>` | 待处理的日期/时间值。支持类型：为 timestamptz, datetime 或者 date 类型，最高有六位秒数的精度（如 2022-12-28 23:59:59.999999），具体格式请查看 [timestamptz的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion), [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion)|
+| `<date_or_time_expr>` | 待处理的日期/时间值。支持类型：为 timestamptz, datetime 或者 date 类型，最高有六位秒数的精度（如 2022-12-28 23:59:59.999999），具体格式请查看 [timestamptz的转换](../../../../sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion), [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion)|
 | `<expr>` | 希望添加的时间间隔，为 `INT` 类型|
 | `<time_unit>` | 枚举值：YEAR, QUARTER, MONTH, WEEK,DAY, HOUR, MINUTE, SECOND, DAY_SECOND, DAY_HOUR, MINUTE_SECOND, SECOND_MICROSECOND |
 

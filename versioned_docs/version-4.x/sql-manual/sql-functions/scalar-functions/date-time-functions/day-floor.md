@@ -30,18 +30,18 @@ DAY_FLOOR(<date_or_time_expr>, <period>, <origin>)
 
 | Parameter | Description |
 | -- | -- |
-| `<date_or_time_expr>` | A valid date expression that supports date/datetime types. For specific datetime and date formats, please refer to [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
+| `<date_or_time_expr>` | A valid date expression that supports date/datetime/timestamptz types. Date type will be converted to the start time 00:00:00 of the corresponding date. For specific formats please see [timestamptz conversion](../../../../../docs/sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion), [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
 | `<period>` | Specifies the number of days in each period, of type INT. If negative or 0, returns NULL; if not specified, the default period is 1 day. |
 | `<origin>` | The starting reference time for period calculation, supports date/datetime types |
 
 ## Return Value
 
-Returns a date or time value representing the result of rounding down the input value to the specified day period.
+Returns TIMESTAMPTZ, DATETIME or DATE, representing the result of rounding down the input value to the specified day period.
 
 If the input is valid, returns a rounding result consistent with the datetime type:
 
-When input is DATE, returns DATE
-When input is DATETIME, returns DATETIME (including date and time, with the time part being 00:00:00, since the period is based on days).
+- If input is TIMESTAMPTZ, it will first be converted to local_time (for example: `2025-12-31 23:59:59+05:00` represents local_time `2026-01-01 02:59:59` when session variable is `+08:00`), and then perform DAY_FLOOR.
+- If `<date_or_time_expr>` and `<period>` contain both TIMESTAMPTZ and DATETIME, output is DATETIME.
 
 Special cases:
 
@@ -111,6 +111,23 @@ select day_floor(cast("2023-07-13" as date), 3);
 +------------------------------------------+
 | 2023-07-11                               |
 +------------------------------------------+
+
+-- TimeStampTz sample, SET time_zone = '+08:00'
+-- Convert to local_time (2026-01-01 02:59:59) and then perform DAY_FLOOR
+SELECT DAY_FLOOR('2025-12-31 23:59:59+05:00');
++----------------------------------------+
+| DAY_FLOOR('2025-12-31 23:59:59+05:00') |
++----------------------------------------+
+| 2026-01-01 00:00:00+08:00              |
++----------------------------------------+
+
+-- If parameters contain both TimeStampTz and Datetime types, output DateTime type
+SELECT DAY_FLOOR('2025-12-31 23:59:59+05:00', '2025-12-15 00:00:00.123');
++-------------------------------------------------------------------+
+| DAY_FLOOR('2025-12-31 23:59:59+05:00', '2025-12-15 00:00:00.123') |
++-------------------------------------------------------------------+
+| 2026-01-01 00:00:00.123                                           |
++-------------------------------------------------------------------+
 
 -- Period is negative, returns error
 select day_floor("2023-07-13 22:28:18", -2);

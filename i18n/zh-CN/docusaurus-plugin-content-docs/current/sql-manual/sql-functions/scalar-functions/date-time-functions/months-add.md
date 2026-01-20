@@ -22,7 +22,7 @@ MONTHS_ADD(`<date_or_time_expr>`, `<nums>`)
 
 | 参数                | 说明            |
 |-------------------|---------------|
-| ``<date_or_time_expr>`` | 输入的日期时间值，支持输入 date/datetime/timestamptz 类型，具体格式请查看 [timestamptz的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion)，[datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion)  |
+| ``<date_or_time_expr>`` | 输入的日期时间值，支持输入 date/datetime/timestamptz 类型，具体格式请查看 [timestamptz的转换](../../../../sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion)，[datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion)  |
 | ``<nums>``          | 需要加减的月份数 ,为 INT 类型，负数表示日期时间减去 nums 月份，正数表示加上 nums 月份   |
 
 ## 返回值

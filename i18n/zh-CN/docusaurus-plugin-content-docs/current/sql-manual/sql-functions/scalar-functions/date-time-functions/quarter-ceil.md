@@ -33,7 +33,7 @@ QUARTER_CEIL(`<date_or_time_expr>`, `<period>`, `<origin>`)
 
 | 参数 | 说明 |
 | ---- | ---- |
-| `<date_or_time_expr>` | 需要向上取整的日期时间值，参数是合法的日期表达式，支持输入 date/datetime/timestamptz 类型,具体格式请查看 [timestamptz的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion), [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
+| `<date_or_time_expr>` | 需要向上取整的日期时间值，参数是合法的日期表达式，支持输入 date/datetime/timestamptz 类型,具体格式请查看 [timestamptz的转换](../../../../sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion), [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
 | `<period>` | 季度周期值，类型为 INT，表示每个周期包含的季度数 |
 | `<origin>` | 周期的起始时间点，支持输入 date/datetime 类型，默认值为 0001-01-01 00:00:00 |
 

@@ -2,13 +2,13 @@
 {
     "title": "MONTH_FLOOR",
     "language": "zh-CN",
-    "description": "MONTHFLOOR 函数用于将输入的日期时间值向下取整到最近的指定月份周期。若指定起始时间（origin），则以该时间为基准划分周期并取整；若未指定，默认以 0001-01-01 00:00:00 为基准。该函数支持处理 DATETIME 类型。"
+    "description": "MONTH_FLOOR 函数用于将输入的日期时间值向下取整到最近的指定月份周期。若指定起始时间（origin），则以该时间为基准划分周期并取整；若未指定，默认以 0001-01-01 00:00:00 为基准。"
 }
 ---
 
 ## 描述
 
-MONTH_FLOOR 函数用于将输入的日期时间值向下取整到最近的指定月份周期。若指定起始时间（origin），则以该时间为基准划分周期并取整；若未指定，默认以 0001-01-01 00:00:00 为基准。该函数支持处理 DATETIME 类型。
+MONTH_FLOOR 函数用于将输入的日期时间值向下取整到最近的指定月份周期。若指定起始时间（origin），则以该时间为基准划分周期并取整；若未指定，默认以 0001-01-01 00:00:00 为基准。
 
 日期时间的计算公式：
 
@@ -27,14 +27,14 @@ $k$ 代表的是基准时间到目标时间的周期数
 MINUTE_FLOOR(`<date_or_time_expr>`)
 MINUTE_FLOOR(`<date_or_time_expr>`, `<origin>`)
 MINUTE_FLOOR(`<date_or_time_expr>`, `<period>`)
-MINUTE_FLOOR(`<date_or_time_expr>, `<period>`, `<origin>`)
+MINUTE_FLOOR(`<date_or_time_expr>`, `<period>`, `<origin>`)
 ```
 
 ## 参数
 
 | 参数 | 说明 |
 | ---- | ---- |
-| `<date_or_time_expr>` | 需要向下取整的日期时间值，类型为 DATETIME 或 DATE ，具体格式请查看 [timestamptz的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion), [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion)|
+| `<date_or_time_expr>` | 需要向下取整的日期时间值，类型为 DATETIME 或 DATE ，具体格式请查看 [timestamptz的转换](../../../../sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion), [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion)|
 | `<period>` | 月份周期值，类型为 INT，表示每个周期包含的月数 |
 | `<origin>` | 周期的起始时间点，类型为 DATETIME/DATE ，默认值为 0001-01-01 00:00:00 |
 
@@ -46,7 +46,7 @@ MINUTE_FLOOR(`<date_or_time_expr>, `<period>`, `<origin>`)
 - 若输入的时间值(`<date_or_time_expr>` 和`<period>`)同时包含 TIMESTAMPTZ 和 DATETIME 类型，则输出 DATETIME 类型。
 - 若 `<period>` 为非正（≤0），返回错误。
 - 若任一参数为 NULL，返回 NULL。
-- 不指定 period 时，默认以 1 个月份为周期。
+- 不指定 period 时，默认以 1 分钟为周期。
 - `<origin>` 未指定，默认以 0001-01-01 00:00:00 为基准。
 - 若输入为 DATE 类型（仅包含年月日），默认其时间部分为 00:00:00。
 - 若 `<origin>` 日期时间在 `<period>` 之后，也会按照上述公式计算，不过周期 k 为负数。
@@ -112,7 +112,7 @@ SELECT MONTH_FLOOR('2022-09-13 22:28:18', 5, '2028-07-03 22:20:00') AS result;
 +---------------------+
 
 --- 输入为 DATE 类型（默认时间 00:00:00）
-SELECT MONTH_FLOOR('2023-07-13', 30) AS result;
+SELECT MINUTE_FLOOR('2023-07-13', 30) AS result;
 +---------------------+
 | result              |
 +---------------------+

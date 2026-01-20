@@ -33,7 +33,7 @@ DATE_ADD(<date_or_time_part>, <expr> <time_unit>)
 
 | 参数 | 说明 |
 | -- | -- |
-| `<date_or_time_part>` | 合法的日期值，支持为 timestamptz, datetime 或者 date 类型，具体格式请查看 [timestamptz的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion), [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
+| `<date_or_time_part>` | 合法的日期值，支持为 timestamptz, datetime 或者 date 类型，具体格式请查看 [timestamptz的转换](../../../../sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion), [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
 | `<expr>` | 希望减去的时间间隔，类型为 `INT` |
 | `<time_unit>` | 枚举值：YEAR，QUARTER，MONTH，WEEK，DAY，HOUR，MINUTE，SECOND |
 

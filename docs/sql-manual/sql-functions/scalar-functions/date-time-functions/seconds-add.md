@@ -22,7 +22,7 @@ SECONDS_ADD(<date_or_time_expr>, <seconds>)
 
 | Parameter | Description |
 | --------- | ----------- |
-| `<date_or_time_expr>` | Required. The input datetime value. Can be of type DATE, DATETIME or TIMESTAMPTZ. For specific formats, see [timestamptz conversion](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion), [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
+| `<date_or_time_expr>` | Required. The input datetime value. Can be of type DATE, DATETIME or TIMESTAMPTZ. For specific formats, see [timestamptz conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion), [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
 | `<seconds>` | Required. The number of seconds to add or subtract. Supports integer type (BIGINT). Positive numbers indicate adding seconds, negative numbers indicate subtracting seconds. |
 
 ## Return Value
