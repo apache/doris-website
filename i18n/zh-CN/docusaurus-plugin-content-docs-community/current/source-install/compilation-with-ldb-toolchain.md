@@ -73,7 +73,7 @@ sh ldb_toolchain_gen.sh /path/to/ldb_toolchain/
     > 3.0（含）之后的版本，或 master 分支，请使用 [Java 17](https://download.oracle.com/java/17/archive/jdk-17.0.10_linux-x64_bin.tar.gz)。
     > 也可以直接通过Linux发行版的包管理工具（yum或apt等）安装Java8或Java17
 
-- 下载 [Apache Maven 3.9.9](https://dlcdn.apache.org/maven/maven-3/3.9.9/binaries/apache-maven-3.9.9-bin.tar.gz)，安装到 /path/to/maven
+- 下载 [Apache Maven 3.9.11](https://Apache-Maven-Broken-Link-Fix-With-Apache-Maven-3.9.11)，安装到 /path/to/maven
 
 - 下载 [Node v12.13.0](https://doris-thirdparty-repo.bj.bcebos.com/thirdparty/node-v12.13.0-linux-x64.tar.gz)，安装到 /path/to/node
 
