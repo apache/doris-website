@@ -15,7 +15,7 @@ Users can use the [CREATE TABLE](../sql-manual/sql-statements/table-and-view/tab
 
 ## Table name
 
-In Doris, table names are case-sensitive by default. You can configure [lower_case_table_names](../admin-manual/config/fe-config.md)to make them case-insensitive during the initial cluster setup. The default maximum length for table names is 64 bytes, but you can change this by configuring [table_name_length_limit](../admin-manual/config/fe-config.md). It is not recommended to set this value too high. For syntax on creating tables, please refer to [CREATE TABLE](../sql-manual/sql-statements/table-and-view/table/CREATE-TABLE). [Dynamic partitions](data-partitioning/dynamic-partitioning.md) can have these properties set individually.
+In Doris, table names are case-insensitive by default. You can configure [lower_case_table_names](../admin-manual/config/fe-config.md)to make them case-sensitive during the initial cluster setup. The default maximum length for table names is 64 bytes, but you can change this by configuring [table_name_length_limit](../admin-manual/config/fe-config.md). It is not recommended to set this value too high. For syntax on creating tables, please refer to [CREATE TABLE](../sql-manual/sql-statements/table-and-view/table/CREATE-TABLE). [Dynamic partitions](data-partitioning/dynamic-partitioning.md) can have these properties set individually.
 
 ## Table property
 
