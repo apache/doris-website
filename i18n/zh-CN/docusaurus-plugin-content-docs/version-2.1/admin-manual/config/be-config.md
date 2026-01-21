@@ -450,7 +450,7 @@ thrift 服务器接收请求消息的大小（字节数）上限。如果客户�
 
 * 类型：int32
 * 描述：在列式 compaction 中，输出的 segment 文件最大值，单位是 m 字节。
-* 默认值：268435456
+* 默认值：1073741824
 
 #### `enable_ordered_data_compaction`
 
@@ -622,12 +622,6 @@ BaseCompaction:546859:
 * 类型：int32
 * 描述：当 segment 数量超过此阈值时触发 segment compaction，该配置也限制了单个 segment compaction 任务中的最大原始 segment 数量。
 * 默认值：10
-
-#### `segcompaction_candidate_max_rows`
-
-* 类型：int32
-* 描述：当 segment 的行数超过此大小时则会在 segment compaction 时被 compact，否则跳过
-* 默认值：1048576
 
 #### `segcompaction_candidate_max_rows`
 
