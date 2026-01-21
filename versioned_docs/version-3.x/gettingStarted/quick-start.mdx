@@ -33,10 +33,10 @@ chmod 755 start-doris.sh
 
 ### Step 2: Start the cluster
 
-Run the script to start the cluster. The default version is `2.1.9`. You can specify the startup version through the -v parameter, such as:
+Run the script to start the cluster. Use the `-v` parameter to specify a 3.x version:
 
 ```shell
-bash start-doris.sh -v 3.0.4
+bash start-doris.sh -v 3.0.8
 ```
 
 ### Step 3: Connect to the cluster using MySQL client and check the cluster status
@@ -239,8 +239,22 @@ Download the corresponding binary installation package from the Apache Doris web
    4 rows in set (0.10 sec)
    ```
 
+## FAQs
 
+**Q: How do I install Docker on Mac?**
 
+A: Download and install [Docker Desktop](https://www.docker.com/products/docker-desktop/).
 
+**Q: Mac: "Error: Docker environment not detected" after Docker Desktop is installed**
+
+A: Create a symlink:
+
+```shell
+sudo ln -s /Applications/Docker.app/Contents/Resources/bin/docker /usr/local/bin/docker
+```
+
+**Q: Mac: "error getting credentials - err: exit status 1, out: \`\`"**
+
+A: This error is usually caused by Docker credential helper misconfiguration. For local development/testing, you can remove the `credsStore` field in `~/.docker/config.json` as a workaround. Note: This workaround stores credentials in plaintext and is only recommended for local development environments.
 
 
