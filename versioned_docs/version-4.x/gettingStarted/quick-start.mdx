@@ -261,6 +261,6 @@ sudo ln -s /Applications/Docker.app/Contents/Resources/bin/docker /usr/local/bin
 
 **Q: Mac: "error getting credentials - err: exit status 1, out: \`\`"**
 
-A: Remove the `credsStore` field in `~/.docker/config.json`.
+A: This error is usually caused by Docker credential helper misconfiguration. For local development/testing, you can remove the `credsStore` field in `~/.docker/config.json` as a workaround. Note: This workaround stores credentials in plaintext and is only recommended for local development environments.
 
 

@@ -40,7 +40,7 @@ bash start-doris.sh
 可通过 -v 参数指定启动版本，如：
 
 ```shell
-bash start-doris.sh -v 2.1.8
+bash start-doris.sh -v 3.0.8
 ```
 
 ### 第 3 步：使用 MySQL 客户端连接集群，并检查集群状态
@@ -261,5 +261,5 @@ sudo ln -s /Applications/Docker.app/Contents/Resources/bin/docker /usr/local/bin
 
 **Q: Mac: "error getting credentials - err: exit status 1, out: \`\`"**
 
-A: 删除 `~/.docker/config.json` 中的 `credsStore` 字段。
+A: 此错误通常由 Docker 凭据助手配置问题导致。对于本地开发/测试环境，可以删除 `~/.docker/config.json` 中的 `credsStore` 字段作为临时解决方案。注意：此方法会以明文存储凭据，仅建议在本地开发环境中使用。
 
