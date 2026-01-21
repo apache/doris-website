@@ -266,5 +266,5 @@ Doris Function 基本覆盖绝大部分 MySQL Function。
 
 | 名称 | 设置的行为 | 未设置的行为 | 备注 |
 | :-- | :-- | :-- | :-- |
-| PIPES_AS_CONCAT | 将 `\|\|` 符号解析为 concat 函数 | 将 `\|\|` 符号解析为逻辑与操作符 | - |
+| PIPES_AS_CONCAT | 将 `\|\|` 符号解析为 concat 函数 | 将 `\|\|` 符号解析为逻辑或操作符 | - |
 | NO_BACKSLASH_ESCAPES | 将字符串中的反斜杠当做正常字符解析 | 将字符串中的反斜杠当做转义起始字符 | - |
