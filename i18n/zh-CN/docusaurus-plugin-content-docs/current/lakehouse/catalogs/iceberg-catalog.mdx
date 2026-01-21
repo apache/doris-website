@@ -2456,6 +2456,49 @@ EXECUTE set_current_snapshot ("ref" = "v1.0");
 3. 如果指定的快照 ID 或引用不存在，操作会失败
 4. 如果当前快照已经是目标快照，操作会直接返回，不会创建新快照
 
+### publish_changes
+
+`publish_changes` 操作用于在 WAP（Write-Audit-Publish）模式下，将带有指定 `wap.id` 的快照发布为当前表状态。  
+它会找到与给定 `wap_id` 匹配的快照，并通过 *cherrypick* 的方式将其合并到当前表中，使这批暂存数据对所有读取操作可见。 
+
+**语法：**
+
+```sql
+ALTER TABLE [catalog.][database.]table_name
+EXECUTE publish_changes("wap_id" = "<wap_id>")
+```
+
+**参数说明：**
+
+| 参数名称 | 类型 | 必填 | 描述 |
+| -------- | ---- | ---- | ---- |
+| `wap_id` | STRING | 是 | 要发布的 WAP 快照 ID |
+
+**返回值：**
+
+执行 `publish_changes` 操作会返回一个结果集，包含以下 2 列：
+
+| 列名 | 类型 | 描述 |
+| ---- | ---- | ---- |
+| `previous_snapshot_id` | STRING | 发布操作前当前快照的 ID（如果不存在则为 NULL） |
+| `current_snapshot_id` | STRING | 发布操作后新创建并设置为当前快照的 ID |
+
+**示例：**
+
+```sql
+-- 发布 WAP ID 为 test_wap_001 的快照
+ALTER TABLE iceberg_db.iceberg_table 
+EXECUTE publish_changes("wap_id" = "test_wap_001");
+```
+
+**注意事项：**
+
+1. 该操作不支持WHERE条件，也不支持分区（PARTITION/PARTITIONS）子句
+2. 仅对启用了write.wap.enabled = true并通过wap.id产生 WAP 快照的 Iceberg 表有意义
+3. 如果找不到与指定wap_id对应的快照，操作会失败并抛出错误
+4. 发布后，新快照将成为当前快照
+5. 如果在发布前表还没有任何快照，则previous_snapshot_id可能为 NULL
+
 ## Iceberg 表优化
 
 ### 查看数据文件分布
