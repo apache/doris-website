@@ -406,7 +406,8 @@ Here are the available parameters for the job_properties clause:
 | strip_outer_array         | When importing JSON format data, if strip_outer_array is true, it indicates that the JSON data is presented as an array, and each element in the data will be treated as a row. Default value is false. Typically, JSON data in Kafka might be represented as an array with square brackets `[]` in the outermost layer. In this case, you can specify `"strip_outer_array" = "true"` to consume Topic data in array mode. For example, the following data will be parsed into two rows: `[{"user_id":1,"name":"Emily","age":25},{"user_id":2,"name":"Benjamin","age":35}]` |
 | send_batch_parallelism    | Used to set the parallelism of sending batch data. If the parallelism value exceeds the `max_send_batch_parallelism_per_job` in BE configuration, the coordinating BE will use the value of `max_send_batch_parallelism_per_job`. |
 | load_to_single_tablet     | Supports importing data to only one tablet in the corresponding partition per task. Default value is false. This parameter can only be set when importing data to OLAP tables with random bucketing. |
-| partial_columns           | Specifies whether to enable partial column update feature. Default value is false. This parameter can only be set when the table model is Unique and uses Merge on Write. Multi-table streaming does not support this parameter. For details, refer to [Partial Column Update](../../../data-operate/update/update-of-unique-model) |
+| partial_columns           | Specifies whether to enable partial column update feature. Default value is false. This parameter can only be set when the table model is Unique and uses Merge on Write. Multi-table streaming does not support this parameter. For details, refer to [Partial Column Update](../../../data-operate/update/partial-column-update) |
+| unique_key_update_mode    | Specifies the update mode for Unique Key tables. Available values are:<ul><li>`UPSERT` (default): Standard insert or update operation for the entire row.</li><li>`UPDATE_FIXED_COLUMNS`: Partial column update where all rows update the same columns. Equivalent to `partial_columns=true`.</li><li>`UPDATE_FLEXIBLE_COLUMNS`: Flexible partial column update where each row can update different columns. Requires JSON format and the table must have `enable_unique_key_skip_bitmap_column=true`. Cannot be used with `jsonpaths`, `fuzzy_parse`, `COLUMNS` clause, or `WHERE` clause.</li></ul>For details, refer to [Partial Column Update](../../../data-operate/update/partial-column-update#flexible-partial-column-updates) |
 | partial_update_new_key_behavior | When performing partial column updates on Unique Merge on Write table, this parameter controls how new rows are handled. There are two types: `APPEND` and `ERROR`.<br/>- `APPEND`: Allows inserting new row data<br/>- `ERROR`: Fails and reports an error when inserting new rows |
 | max_filter_ratio          | The maximum allowed filter ratio within the sampling window. Must be between 0 and 1 inclusive. Default value is 1.0, indicating any error rows can be tolerated. The sampling window is `max_batch_rows * 10`. If the ratio of error rows to total rows within the sampling window exceeds `max_filter_ratio`, the routine job will be suspended and require manual intervention to check data quality issues. Rows filtered by WHERE conditions are not counted as error rows. |
 | enclose                   | Specifies the enclosing character. When CSV data fields contain line or column separators, a single-byte character can be specified as an enclosing character for protection to prevent accidental truncation. For example, if the column separator is "," and the enclosing character is "'", the data "a,'b,c'" will have "b,c" parsed as one field. |
@@ -1361,6 +1362,83 @@ The columns in the result set provide the following information:
     +------+----------------+------+------+
     3 rows in set (0.01 sec)
     ```
+
+**Flexible Partial Column Update**
+
+This example demonstrates how to use flexible partial column updates where each row can update different columns. This is useful for CDC scenarios where change records may contain different fields.
+
+1. Load sample data (each JSON record updates different columns):
+
+    ```json
+    {"id": 1, "balance": 150.00, "last_active": "2024-01-15 10:30:00"}
+    {"id": 2, "city": "Shanghai", "age": 28}
+    {"id": 3, "name": "Alice", "balance": 500.00, "city": "Beijing"}
+    {"id": 1, "age": 30}
+    {"id": 4, "__DORIS_DELETE_SIGN__": 1}
+    ```
+
+2. Create table (must enable Merge-on-Write and skip bitmap column):
+
+    ```sql
+    CREATE TABLE demo.routine_test_flexible (
+        id           INT            NOT NULL  COMMENT "id",
+        name         VARCHAR(30)              COMMENT "name",
+        age          INT                      COMMENT "age",
+        city         VARCHAR(50)              COMMENT "city",
+        balance      DECIMAL(10,2)            COMMENT "balance",
+        last_active  DATETIME                 COMMENT "last active time"
+    )
+    UNIQUE KEY(`id`)
+    DISTRIBUTED BY HASH(`id`) BUCKETS 1
+    PROPERTIES (
+        "replication_num" = "1",
+        "enable_unique_key_merge_on_write" = "true",
+        "enable_unique_key_skip_bitmap_column" = "true"
+    );
+    ```
+
+3. Insert initial data:
+
+    ```sql
+    INSERT INTO demo.routine_test_flexible VALUES
+    (1, 'John', 25, 'Shenzhen', 100.00, '2024-01-01 08:00:00'),
+    (2, 'Jane', 30, 'Guangzhou', 200.00, '2024-01-02 09:00:00'),
+    (3, 'Bob', 35, 'Hangzhou', 300.00, '2024-01-03 10:00:00'),
+    (4, 'Tom', 40, 'Nanjing', 400.00, '2024-01-04 11:00:00');
+    ```
+
+4. Load command:
+
+    ```sql
+    CREATE ROUTINE LOAD demo.kafka_job_flexible ON routine_test_flexible
+            PROPERTIES
+            (
+                "format" = "json",
+                "unique_key_update_mode" = "UPDATE_FLEXIBLE_COLUMNS"
+            )
+            FROM KAFKA
+            (
+                "kafka_broker_list" = "10.16.10.6:9092",
+                "kafka_topic" = "routineLoadFlexible",
+                "property.kafka_default_offsets" = "OFFSET_BEGINNING"
+            );
+    ```
+
+5. Load result:
+
+    ```sql
+    mysql> SELECT * FROM demo.routine_test_flexible ORDER BY id;
+    +------+-------+------+-----------+---------+---------------------+
+    | id   | name  | age  | city      | balance | last_active         |
+    +------+-------+------+-----------+---------+---------------------+
+    |    1 | John  |   30 | Shenzhen  |  150.00 | 2024-01-15 10:30:00 |
+    |    2 | Jane  |   28 | Shanghai  |  200.00 | 2024-01-02 09:00:00 |
+    |    3 | Alice |   35 | Beijing   |  500.00 | 2024-01-03 10:00:00 |
+    +------+-------+------+-----------+---------+---------------------+
+    3 rows in set (0.01 sec)
+    ```
+
+    Note: Row with `id=4` was deleted due to `__DORIS_DELETE_SIGN__`, and each row was updated with only the columns present in its corresponding JSON record.
 
 ### Loading Complex Data Types
 
