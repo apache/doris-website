@@ -273,6 +273,10 @@ ln -s /etc/pki/ca-trust/extracted/openssl/ca-bundle.trust.crt /etc/ssl/certs/ca-
 
     因为插入数据之后，需要更新对应的统计信息，这个更新的操作需要 alter 权限，所以要在 ranger 上给该用户新增 alter 权限。
 
+13. 在查询 ORC 文件时，如果出现报错类似 `Orc row reader nextBatch failed. reason = Can't open /usr/share/zoneinfo/+08:00`
+    首先检查当前 `session` 下 `time_zone` 的时区设置是多少，推荐使用类似 `Asia/Shanghai` 的写法。
+    如果 `session` 时区已经是 `Asia/Shanghai`，且查询仍然报错，说明生成 ORC 文件时的时区是 `+08:00`, 导致在读取时解析 `footer` 时需要用到 `+08:00` 时区，可以尝试在 `/usr/share/zoneinfo/` 目录下面软链到相同时区上。
+
 ## HDFS
 
 1. 访问 HDFS 3.x 时报错：`java.lang.VerifyError: xxx`
