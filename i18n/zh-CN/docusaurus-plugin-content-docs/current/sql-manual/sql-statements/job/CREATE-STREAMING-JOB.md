@@ -8,7 +8,7 @@
 
 ## 描述
 
-Doris Streaming Job 是基于 Job 的方式，创建一个持续导入任务。在提交 Job 作业后，Doris 会持续运行该导入作业，实时的查询 TVF 或上游数据源中的数据写入到 Doris 表中。。
+Doris Streaming Job 是基于 Job 的方式，创建一个持续导入任务。在提交 Job 作业后，Doris 会持续运行该导入作业，实时的查询 TVF 或上游数据源中的数据写入到 Doris 表中。
 
 ## 语法
 
