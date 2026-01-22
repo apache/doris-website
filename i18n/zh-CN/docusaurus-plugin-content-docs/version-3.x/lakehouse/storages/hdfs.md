@@ -94,6 +94,8 @@ Doris 将以该 `hdfs.authentication.kerberos.principal` 属性指定的主体�
 "hdfs.authentication.kerberos.keytab" = "/etc/security/keytabs/hdfs.keytab",
 ```
 
+Kerberos 配置常见问题请参考 [Kerberos FAQ](../best-practices/kerberos.md/#faq).
+
 ## 高可用配置（HDFS HA）
 
 如 HDFS 开启了 HA 模式，需要配置 `dfs.nameservices` 相关参数：

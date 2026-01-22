@@ -80,7 +80,7 @@ To use Kerberos authentication to connect to Hive Metastore service, configure t
 
 When using Hive MetaStore service with Kerberos authentication enabled, ensure that the same keytab file exists on all FE nodes, the user running the Doris process has read permission to the keytab file, and the krb5 configuration file is properly configured.
 
-For detailed Kerberos configuration, refer to Kerberos Authentication.
+For information on common Kerberos configuration issues and best practices, please refer to the [Kerberos](../best-practices/kerberos.md)
 
 ### Configuration File Parameters
 

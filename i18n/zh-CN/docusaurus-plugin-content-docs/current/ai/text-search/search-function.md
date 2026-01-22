@@ -35,6 +35,29 @@ SEARCH('<search_expression>', '<default_field>', '<default_operator>')
 
 提供 `default_field` 后，Doris 会把裸词项或函数自动扩展到该字段。例如 `SEARCH('foo bar', 'tags', 'and')` 等价于 `SEARCH('tags:ALL(foo bar)')`，而 `SEARCH('foo bark', 'tags')` 会展开为 `tags:ANY(foo bark)`。DSL 中显式出现的布尔操作优先级最高，会覆盖默认运算符。
 
+### Options 参数（JSON 格式）
+
+第二个参数也可以是 JSON 字符串，用于高级配置：
+
+```sql
+SEARCH('<search_expression>', '<options_json>')
+```
+
+**支持的选项：**
+
+| 选项 | 类型 | 说明 |
+|------|------|------|
+| `default_field` | string | 未指定字段的词项使用的默认列名 |
+| `default_operator` | string | 多词项表达式的默认运算符（`and` 或 `or`） |
+| `mode` | string | `standard`（默认）或 `lucene` |
+| `minimum_should_match` | integer | SHOULD 子句最小匹配数（仅 Lucene 模式） |
+
+**示例：**
+```sql
+SELECT * FROM docs WHERE search('apple banana',
+  '{"default_field":"title","default_operator":"and","mode":"lucene"}');
+```
+
 `SEARCH()` 遵循 SQL 三值逻辑。当所有参与匹配的列值均为 NULL 时结果为 UNKNOWN（在 `WHERE` 中被过滤），但若与其他子表达式组合，可按布尔短路原则返回 TRUE 或继续保留 NULL（例如 `TRUE OR NULL = TRUE`、`FALSE OR NULL = NULL`、`NOT NULL = NULL`），行为与文本检索算子保持一致。
 
 ### 当前支持语法
@@ -99,6 +122,39 @@ WHERE SEARCH('(title:Machine OR title:Python) AND category:Technology');
 SELECT id, title FROM search_test_basic
 WHERE SEARCH('tags:ANY(python javascript) AND (category:Technology OR category:Programming)');
 ```
+
+#### Lucene 布尔模式
+
+Lucene 模式模拟 Elasticsearch/Lucene 的 query_string 行为，布尔操作符作为左到右的修饰符工作，而非传统的布尔代数。
+
+**与标准模式的主要区别：**
+- AND/OR/NOT 是影响相邻词项的修饰符
+- 操作符优先级从左到右
+- 内部使用 MUST/SHOULD/MUST_NOT（类似 Lucene 的 Occur 枚举）
+- 纯 NOT 查询返回空结果（需要正向子句）
+
+**启用 Lucene 模式：**
+```sql
+-- 基本 Lucene 模式
+SELECT * FROM docs WHERE search('apple AND banana',
+  '{"default_field":"title","mode":"lucene"}');
+
+-- 使用 minimum_should_match
+SELECT * FROM docs WHERE search('apple AND banana OR cherry',
+  '{"default_field":"title","mode":"lucene","minimum_should_match":1}');
+```
+
+**行为对比：**
+
+| 查询 | 标准模式 | Lucene 模式 |
+|------|----------|-------------|
+| `a AND b` | a ∩ b | +a +b（都是 MUST） |
+| `a OR b` | a ∪ b | a b（都是 SHOULD，min=1） |
+| `NOT a` | ¬a | 空结果（无正向子句） |
+| `a AND NOT b` | a ∩ ¬b | +a -b（MUST a，MUST_NOT b） |
+| `a AND b OR c` | (a ∩ b) ∪ c | +a b c（只有 a 是 MUST） |
+
+**注意：** 在 Lucene 模式中，`a AND b OR c` 从左到右解析：OR 操作符将 `b` 从 MUST 改为 SHOULD。使用 `minimum_should_match` 来要求 SHOULD 子句匹配。
 
 #### 词组查询
 - 语法：`column:"quoted phrase"`
@@ -252,6 +308,31 @@ FROM test_variant_search_subcolumn
 WHERE SEARCH('properties.message:hello OR properties.category:beta')
 ORDER BY id;
 ```
+
+#### 转义字符
+
+使用反斜杠（`\`）转义 DSL 中的特殊字符：
+
+| 转义 | 说明 | 示例 |
+|------|------|------|
+| `\ ` | 字面空格（连接词项） | `title:First\ Value` 匹配 "First Value" |
+| `\(` `\)` | 字面括号 | `title:hello\(world\)` 匹配 "hello(world)" |
+| `\:` | 字面冒号 | `title:key\:value` 匹配 "key:value" |
+| `\\` | 字面反斜杠 | `title:path\\to\\file` 匹配 "path\to\file" |
+
+**示例：**
+```sql
+-- 搜索包含空格的值作为单个词项
+SELECT * FROM docs WHERE search('title:First\\ Value');
+
+-- 搜索包含括号的值
+SELECT * FROM docs WHERE search('title:hello\\(world\\)');
+
+-- 搜索包含冒号的值
+SELECT * FROM docs WHERE search('title:key\\:value');
+```
+
+**注意：** 在 SQL 字符串中，反斜杠需要双重转义。使用 `\\` 在 SQL 中产生 DSL 中的单个 `\`。
 
 ### 当前限制
 

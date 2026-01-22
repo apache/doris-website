@@ -8,7 +8,7 @@
 
 The `parquet_meta` table-valued-function (tvf) can be used to read Footer metadata of Parquet files without scanning data pages. It allows for quickly viewing Row Group statistics, Schema, file-level metadata, KV metadata, and Bloom Filter probe results.
 
-> This is an experimental feature, supported since version 4.0.3.
+> This is an experimental feature, supported since version 4.1.0.
 
 ## Syntax
 

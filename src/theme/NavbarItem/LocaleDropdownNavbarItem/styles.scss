@@ -10,13 +10,13 @@
         padding: 0.5rem 0.75rem;
         line-height: 1.6;
         &:hover {
-            background-color: #f7f9fe !important;
+            background-color: #F7FAFC !important;
             color: #1d1d1d !important;
         }
     }
     .dropdown__link--active,
     .dropdown__link--active:hover {
-        color: #444fd9 !important;
+        color: var(--ifm-color-primary) !important;
         background-color: transparent !important;
     }
 }

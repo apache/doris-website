@@ -93,6 +93,7 @@ Example:
 "hdfs.authentication.kerberos.principal" = "hdfs/hadoop@HADOOP.COM",
 "hdfs.authentication.kerberos.keytab" = "/etc/security/keytabs/hdfs.keytab",
 ```
+For troubleshooting common Kerberos configuration issues, see [Kerberos FAQ](../best-practices/kerberos.md/#faq).
 
 ## HDFS HA Configuration
 

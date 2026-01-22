@@ -153,7 +153,7 @@ val jdbcDF = spark.read
   .option("password", "")
   .save() 
 ```
-具体可参考：[JDBC To Other Databases](https://spark.apache.org/docs/latest/sql-data-sources-jdbc.html)，[Spark Doris Connector](../../../ecosystem//spark-doris-connector.md#批量写入)
+具体可参考：[JDBC To Other Databases](https://spark.apache.org/docs/latest/sql-data-sources-jdbc.html)，[Spark Doris Connector](../../../ecosystem/spark-doris-connector.md#批量写入)
 
 ## DataX / Seatunnel / CloudCanal 等三方工具
 

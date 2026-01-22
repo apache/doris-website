@@ -20,19 +20,20 @@ SUB_TIME(`<date_or_time_expr>`, `<time>`)
 
 | 参数 | 说明 |
 | -- | -- |
-| `<date_or_time_expr>` | 参数是合法的日期表达式，支持输入 datetime/date/time 类型,date 类型会转换为对应日期的一天起始时间 00:00:00 ,具体 datetime//time 格式请查看  [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [time的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/time-conversion) |
+| `<date_or_time_expr>` | 参数是合法的日期表达式，支持输入 timestamptz/datetime/date/time 类型,date 类型会转换为对应日期的一天起始时间 00:00:00 ,具体格式请查看 [timestamptz的转换](../../../../sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion), [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [time的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/time-conversion) |
 |  `<time>`        |  参数为合法的时间表达式，表示从`<date_or_time_expr>` 中减去的时间值，若为负数，则表示增加，支持输入 time 类型  |
 
 ## 返回值
 
 返回 `<date_or_time_expr>` 减去 `<time>` 时间值之后的结果，根据第一个参数类型返回不同的类型
+- 若第一个参数为 timestamptz 类型，则返回 timestamptz 类型
 - 若第一个参数为 datetime 类型，则返回 datetime 类型
 - 若第一个参数为 time 类型，则返回 time 类型
 
 特殊情况:
 - 若输入参数包含 null ,返回 null
 - 若第一个参数类型为 time 类型，且计算结果超出 time 类型范围，则返回 time 类型最大（最小值）
-- 若第一个参数类型为 datetime 类型，且计算结果超出 datetime 类型，则跑出错误
+- 若第一个参数类型为 datetime 或 timestamptz 类型，且计算结果超出 datetime 类型范围，则抛出错误
 
 ## 举例
 
@@ -52,6 +53,14 @@ SELECT SUB_TIME(cast('12:15:20' as time), '00:10:40');
 +------------------------------------------------+
 | 12:04:40                                       |
 +------------------------------------------------+   
+
+-- SET time_zone = '+08:00'
+select sub_time('2025-10-10 11:22:33+03:00', '3:22:33.123');
++------------------------------------------------------+
+| sub_time('2025-10-10 11:22:33+03:00', '3:22:33.123') |
++------------------------------------------------------+
+| 2025-10-10 12:59:59.877+08:00                        |
++------------------------------------------------------+
          
 -- NULL 参数测试
 SELECT SUB_TIME(NULL, '01:00:00');

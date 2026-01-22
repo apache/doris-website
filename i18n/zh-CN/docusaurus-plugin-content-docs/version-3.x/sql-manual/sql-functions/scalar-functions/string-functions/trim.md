@@ -13,7 +13,7 @@
 ## 语法
 
 ```sql
-RTIM( <str> [ , <rhs>])
+TRIM( <str> [ , <rhs>])
 ```
 ## 必选参数
 

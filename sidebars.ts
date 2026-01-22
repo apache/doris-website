@@ -222,6 +222,7 @@ const sidebars: SidebarsConfig = {
                             items: [
                                 'data-operate/import/load-internals/load-internals',
                                 'data-operate/import/load-internals/routine-load-internals',
+                                'data-operate/import/load-internals/stream-load-in-complex-network',
                             ],
                         },
                         "data-operate/import/streaming-job"
@@ -548,6 +549,7 @@ const sidebars: SidebarsConfig = {
                                 'ecosystem/observability/opentelemetry',
                                 'ecosystem/observability/fluentbit',
                                 'ecosystem/observability/loongcollector',
+                                'ecosystem/observability/langfuse',
                                 'ecosystem/observability/vector',
                             ],
                         },
@@ -992,6 +994,7 @@ const sidebars: SidebarsConfig = {
                         'ecosystem/observability/opentelemetry',
                         'ecosystem/observability/fluentbit',
                         'ecosystem/observability/loongcollector',
+                        'ecosystem/observability/langfuse',
                         'ecosystem/observability/vector',
                     ],
                 },

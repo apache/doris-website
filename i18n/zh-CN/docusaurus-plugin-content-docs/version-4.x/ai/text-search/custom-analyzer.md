@@ -95,7 +95,13 @@ PROPERTIES (
     - `split_on_case_change`（默认 true）
     - `split_on_numerics`（默认 true）
     - `stem_english_possessive`（默认 true）
-    - `type_table`：自定义字符类型映射（如 `[+ => ALPHA, - => ALPHA]`），类型含 `ALPHA`、`ALPHANUM`、`DIGIT`、`LOWER`、`SUBWORD_DELIM`、`UPPER`
+    - `type_table`：自定义字符类型映射表，可将非字母数字字符映射为指定类型以避免被切分。示例：`["+ => ALPHA", "- => ALPHA"]`。支持映射类型：
+      - `ALPHA`（字母）
+      - `ALPHANUM`（字母数字）
+      - `DIGIT`（数字）
+      - `LOWER`（小写字母）
+      - `SUBWORD_DELIM`（非字母数字分隔符）
+      - `UPPER`（大写字母）
 - `ascii_folding`：将非 ASCII 字符映射为等效 ASCII
 - `lowercase`：将 token 文本转为小写
 - `pinyin`：在分词后将中文字符转换为拼音的过滤器。参数详情请参考上文的 **pinyin** 分词器。

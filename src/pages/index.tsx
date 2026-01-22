@@ -42,12 +42,8 @@ export default function Home(): JSX.Element {
     const banner = {
         title: (
             <div
-                className="lg:leading-[78px]"
-                style={{
-                    fontWeight: 700,
-                }}
             >
-                <p className="highlight">
+                <p>
                     <Translate id="homepage.banner.title">Open Source, Real-Time</Translate>
                 </p>
                 <p>
@@ -72,9 +68,9 @@ export default function Home(): JSX.Element {
         // event: (
         //     <Link
         //         to={'https://www.velodb.io/events/GenAI-AWS-251113'}
-        //         style={{ background: 'linear-gradient(0deg, #F7F9FE 0%, #F7F9FE 100%), #FFF', textDecoration: 'none' }}
+        //         style={{ background: 'linear-gradient(0deg, #F7FAFC 0%, #F7FAFC 100%), #FFF', textDecoration: 'none' }}
         //         onMouseEnter={() => {
-        //             document.getElementById('event-star-icon').firstChild.style.fill = '#444FD9';
+        //             document.getElementById('event-star-icon').firstChild.style.fill = '#1FCD94';
         //         }}
         //         onMouseLeave={() => {
         //             document.getElementById('event-star-icon').firstChild.style.fill = '#636CDF';
@@ -83,11 +79,11 @@ export default function Home(): JSX.Element {
         //     >
         //         <div className="lg:mb-0 mb-4 flex items-center">
         //             <HomeEvenStarIcon id="event-star-icon" />
-        //             <span className="ml-[3px] group-hover:text-[#444FD9] font-bold text-[#636CDF] text-[0.875rem]/[1rem]">
+        //             <span className="ml-[3px] group-hover:text-primary font-bold text-[#636CDF] text-[0.875rem]/[1rem]">
         //                 NEW EVENT
         //             </span>
         //         </div>
-        //         <p className="lg:ml-[0.75rem] group-hover:text-[#444FD9] text-[1rem]/[1rem] text-[#000]">
+        //         <p className="lg:ml-[0.75rem] group-hover:text-primary text-[1rem]/[1rem] text-[#000]">
         //             Webinar: Data Analytics in the Agentic AI Era —— Register Now
         //         </p>
         //     </Link>
@@ -416,7 +412,7 @@ export default function Home(): JSX.Element {
         >
             <PageBanner {...banner}></PageBanner>
             <AchievementBanner />
-            <section style={{ backgroundColor: '#F7F9FE' }} className="group">
+            <section style={{ backgroundColor: '#F7FAFC' }} className="group">
                 <NewsLetterSwiper />
             </section>
             <section className="apache-doris">
@@ -431,6 +427,7 @@ export default function Home(): JSX.Element {
                     footer={
                         <div className="justify-center flex mt-14">
                             <LinkWithArrow
+                                className="hover:!text-primary !text-[#1D1D1D]"
                                 to={`/docs/${DEFAULT_VERSION}/gettingStarted/what-is-apache-doris`}
                                 text={
                                     <Translate id="homepage.more" description="more link">
@@ -454,7 +451,7 @@ export default function Home(): JSX.Element {
             </section>
             <PageColumn
                 className="lg:py-[7.5rem]"
-                wrapperStyle={{ backgroundColor: '#F7F9FE' }}
+                wrapperStyle={{ backgroundColor: '#F7FAFC' }}
                 title={
                     <Translate id="homepage.capabilities" description="Core capabilities">
                         Core capabilities
@@ -491,7 +488,7 @@ export default function Home(): JSX.Element {
                 <UserCaseCarousel />
             </PageColumn>
             <PageColumn
-                className="bg-[#F7F9FE]"
+                className="bg-[#F7FAFC]"
                 title={
                     <Translate id="homepage.join" description="Join The Community">
                         Connect with community
