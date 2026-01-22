@@ -138,7 +138,7 @@ DO <Insert_Command>
     )
     ```
 
-- 创建一个名为 my_job 的作业，持续同步 Postgrees 上游的 test_tbls 表的增量的数据，到 target_test_db 库下面。
+- 创建一个名为 my_job 的作业，持续同步 Postgres 上游的 test_tbls 表的增量的数据，到 target_test_db 库下面。
 
     ```sql
     CREATE JOB test_postgres_job
