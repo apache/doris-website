@@ -96,7 +96,7 @@ select * from jobs(type=insert) where ExecuteType = "STREAMING"
       ExecuteType: STREAMING
 RecurringStrategy: \N
            Status: RUNNING
-       ExecuteSql: FROM MYSQL('include_tables'='user_info','database'='test','driver_class'='com.mysql.cj.jdbc.Driver','driver_url'='mysql-connector-j-8.0.31.jar','offset'='initial','jdbc_url'='jdbc:mysql://127.0.0.1:3306','user'='root' ) TO DATABSE target_test_db ('table.create.properties.replication_num'='1')
+       ExecuteSql: FROM MYSQL('include_tables'='user_info','database'='test','driver_class'='com.mysql.cj.jdbc.Driver','driver_url'='mysql-connector-j-8.0.31.jar','offset'='initial','jdbc_url'='jdbc:mysql://127.0.0.1:3306','user'='root' ) TO DATABASE target_test_db ('table.create.properties.replication_num'='1')
        CreateTime: 2025-12-10 10:19:35
  SucceedTaskCount: 1
   FailedTaskCount: 0
