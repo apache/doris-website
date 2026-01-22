@@ -47,7 +47,10 @@ export default function Home(): JSX.Element {
                     <Translate id="homepage.banner.title">Open Source, Real-Time</Translate>
                 </p>
                 <p>
-                    <Translate id="homepage.banner.highlightTitle">Data Warehouse</Translate>
+                    <Translate id="homepage.banner.highlightTitle">Analytics and Search Database</Translate>
+                </p>
+                <p>
+                    <Translate id="homepage.banner.highlightTitle">for the AI Era</Translate>
                 </p>
             </div>
         ),
@@ -55,7 +58,7 @@ export default function Home(): JSX.Element {
             <div>
                 <p>
                     <Translate id="homepage.banner.subTitle-1">
-                        Apache Doris is a modern data warehouse for real-time analytics.
+                        Apache Doris is a database for real-time analytics and search.
                     </Translate>
                 </p>
                 <p>
