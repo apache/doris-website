@@ -25,7 +25,7 @@ export default function PageBanner(props: PageBannerProps): JSX.Element {
     return (
         <section className={clsx('banner-section', className)}>
             <div className="banner-container container">
-                <div className="banner-info mb-10 lg:mb-20">
+                <div className="banner-info mb-10 lg:mb-10">
                     { event }
                     <div className="banner-title-wrap">
                         <div className="banner-title">{title}</div>

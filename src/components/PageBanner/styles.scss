@@ -6,7 +6,7 @@
         width: 100%;
 
         .banner-info {
-            margin-top: var(--ifm-navbar-height);
+            margin-top: 2rem;
         }
 
         .banner-title-wrap {
@@ -22,7 +22,7 @@
         }
 
         .banner-title {
-            font-size: 3.5rem;
+            font-size: 3.3rem;
             line-height: 125%;
             font-weight: 700;
             letter-spacing: -1.232px;
@@ -125,10 +125,10 @@
             }
 
             .banner-info {
-                margin-top: 3rem;
+                margin-top: 2rem;
                 .banner-title {
                     font-family: 'Montserrat';
-                    font-size: 2rem;
+                    font-size: 1.5rem;
                     line-height: 1.5;
                     font-weight: 700;
                 }
