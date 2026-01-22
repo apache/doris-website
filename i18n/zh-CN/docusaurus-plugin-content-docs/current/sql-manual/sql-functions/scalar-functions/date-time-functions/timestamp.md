@@ -15,10 +15,6 @@ TIMESTAMP 将 符合 datetime 格式的字符串转换为 DATETIME 类型
 
 该函数与 mysql 中的 [timestamp 函数](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_timestamp) 行为相同。
 
-:::note
-两个参数版本从4.0.3开始支持
-:::
-
 ## 语法
 
 ```sql
