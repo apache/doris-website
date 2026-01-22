@@ -18,6 +18,9 @@ For specific datetime formats, please refer to [datetime conversion](../../../..
 
 This function behaves the same way as the [timestamp function](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_timestamp) in MySQL. 
 
+:::note
+Two parameter versions are supported from 4.0.3
+:::
 
 ## Syntax
 
