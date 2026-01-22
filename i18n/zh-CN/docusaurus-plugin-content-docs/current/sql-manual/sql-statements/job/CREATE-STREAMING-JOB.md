@@ -69,7 +69,7 @@ DO <Insert_Command>
 **6. `<target_property>`**
 | 参数           | 默认值  | 说明                                                         |
 | -------------- | ------- | ------------------------------------------------------------ |
-| table.create.properties.*       | -       | 支持创建表的时候指定 table 的 properties，比如 replication_num       
+| table.create.properties.*       | -       | 支持创建表的时候指定 table 的 properties，比如 replication_num       |
 
 
 
