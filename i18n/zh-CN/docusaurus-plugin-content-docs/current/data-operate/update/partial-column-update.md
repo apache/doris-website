@@ -124,8 +124,8 @@ INSERT INTO order_tbl (order_id, order_status) VALUES (1, '待发货');
 
 :::caution 注意：
 
-1. 目前只有 stream load 这一种导入方式以及使用 stream load 作为其导入方式的工具 (如 doris-flink-connector) 支持灵活列更新功能
-2. 在使用灵活列更新时导入文件必须为 json 格式的数据
+1. 灵活列更新功能支持 Stream Load、Routine Load 以及使用 Stream Load 作为其导入方式的工具（如 Doris-Flink-Connector）
+2. 在使用灵活列更新时导入文件必须为 JSON 格式的数据
 :::
 
 #### 适用场景
@@ -157,11 +157,53 @@ unique_key_update_mode:UPDATE_FLEXIBLE_COLUMNS
 
 **Flink Doris Connector**
 
-如果使用 Flink Doris Connector, 需要添加如下配置：
+如果使用 Flink Doris Connector，需要添加如下配置：
 
 ```Plain
 'sink.properties.unique_key_update_mode' = 'UPDATE_FLEXIBLE_COLUMNS'
 ```
+
+**Routine Load**
+
+在使用 Routine Load 导入时，在 `PROPERTIES` 子句中添加如下属性：
+
+```sql
+CREATE ROUTINE LOAD db1.job1 ON tbl1
+PROPERTIES (
+    "format" = "json",
+    "unique_key_update_mode" = "UPDATE_FLEXIBLE_COLUMNS"
+)
+FROM KAFKA (
+    "kafka_broker_list" = "localhost:9092",
+    "kafka_topic" = "my_topic",
+    "property.kafka_default_offsets" = "OFFSET_BEGINNING"
+);
+```
+
+也可以使用 `ALTER ROUTINE LOAD` 来修改现有 Routine Load 作业的更新模式：
+
+```sql
+-- 首先暂停作业
+PAUSE ROUTINE LOAD FOR db1.job1;
+
+-- 修改更新模式
+ALTER ROUTINE LOAD FOR db1.job1
+PROPERTIES (
+    "unique_key_update_mode" = "UPDATE_FLEXIBLE_COLUMNS"
+);
+
+-- 恢复作业
+RESUME ROUTINE LOAD FOR db1.job1;
+```
+
+:::caution Routine Load 限制
+在 Routine Load 中使用 `UPDATE_FLEXIBLE_COLUMNS` 模式时，存在以下限制：
+- 数据格式必须为 JSON（`"format" = "json"`）
+- 不能指定 `jsonpaths` 属性
+- 不能启用 `fuzzy_parse` 选项
+- 不能使用 `COLUMNS` 子句
+- 不能使用 `WHERE` 子句
+:::
 
 #### 示例
 
