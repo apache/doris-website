@@ -400,7 +400,7 @@ export default function Home(): JSX.Element {
         <Layout
             title={translate({
                 id: 'homepage.title',
-                message: 'Apache Doris: Open source data warehouse for real time data analytics',
+                message: 'Apache Doris: Open Source, Real-Time Analytics and Search Database for the AI Era',
             })}
             description={translate({
                 id: 'homepage.banner.subTitle',
