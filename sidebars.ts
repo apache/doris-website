@@ -1791,6 +1791,7 @@ const sidebars: SidebarsConfig = {
                                     items: [
                                         'sql-manual/sql-functions/scalar-functions/other-functions/convert-to',
                                         'sql-manual/sql-functions/scalar-functions/other-functions/esquery',
+                                        'sql-manual/sql-functions/scalar-functions/other-functions/default',
                                         'sql-manual/sql-functions/scalar-functions/other-functions/field',
                                         'sql-manual/sql-functions/scalar-functions/other-functions/g',
                                         'sql-manual/sql-functions/scalar-functions/other-functions/grouping',
