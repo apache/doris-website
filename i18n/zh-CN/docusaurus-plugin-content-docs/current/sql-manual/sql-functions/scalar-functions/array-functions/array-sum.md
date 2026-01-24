@@ -1,7 +1,8 @@
 ---
 {
     "title": "ARRAY_SUM",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "ARRAYSUM 函数用于对数组中的所有数值元素求和。"
 }
 ---
 

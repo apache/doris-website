@@ -1,7 +1,8 @@
 ---
 {
     "title": "SORT_JSON_OBJECT_KEYS",
-    "language": "en"
+    "language": "en",
+    "description": "SORTJSONOBJECTKEYS sorts the keys of a JSON object. This function takes a JSON object as input and returns a new JSON object with keys sorted in "
 }
 ---
 

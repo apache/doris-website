@@ -1,7 +1,8 @@
 ---
 {
     "title": "CBRT",
-    "language": "en"
+    "language": "en",
+    "description": "Calculate the cube root of the parameter"
 }
 ---
 

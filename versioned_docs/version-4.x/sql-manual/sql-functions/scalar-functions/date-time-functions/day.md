@@ -1,7 +1,8 @@
 ---
 {
     "title": "DAY",
-    "language": "en"
+    "language": "en",
+    "description": "The DAY function is used to extract the \"day\" part from a date or time expression,"
 }
 ---
 

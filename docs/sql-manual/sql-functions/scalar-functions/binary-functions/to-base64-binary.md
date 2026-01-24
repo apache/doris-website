@@ -1,7 +1,8 @@
 ---
 {
     "title": "TO_BASE64_BINARY",
-    "language": "en"
+    "language": "en",
+    "description": "The TOBASE64BINARY function converts the input binary string into Base64 encoding format."
 }
 ---
 

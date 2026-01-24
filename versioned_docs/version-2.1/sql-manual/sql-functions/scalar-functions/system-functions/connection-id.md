@@ -1,7 +1,8 @@
 ---
 {
-  "title": "CONNECTION_ID",
-  "language": "en"
+    "title": "CONNECTION_ID",
+    "language": "en",
+    "description": "Get the connection number of the current sql client."
 }
 ---
 

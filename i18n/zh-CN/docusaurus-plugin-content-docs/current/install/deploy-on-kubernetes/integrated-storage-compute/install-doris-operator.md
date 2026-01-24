@@ -1,7 +1,8 @@
 ---
 {
-   "title": "部署 Doris Operator",
-   "language": "zh-CN"
+    "title": "部署 Doris Operator",
+    "language": "zh-CN",
+    "description": "部署 Doris Operator 的过程分为安装 CRD、部署 Operator 服务以及检查部署状态三个步骤。"
 }
 ---
 

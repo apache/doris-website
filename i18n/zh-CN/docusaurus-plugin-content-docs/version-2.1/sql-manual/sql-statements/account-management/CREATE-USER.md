@@ -1,7 +1,8 @@
 ---
 {
     "title": "CREATE USER",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "CREATE USER 语句用于创建一个 Doris 用户。"
 }
 ---
 

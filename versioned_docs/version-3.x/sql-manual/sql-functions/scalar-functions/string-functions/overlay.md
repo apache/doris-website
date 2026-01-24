@@ -1,7 +1,8 @@
 ---
 {
     "title": "OVERLAY",
-    "language": "en"
+    "language": "en",
+    "description": "The OVERLAY function is used to replace a part of a string with another string."
 }
 ---
 

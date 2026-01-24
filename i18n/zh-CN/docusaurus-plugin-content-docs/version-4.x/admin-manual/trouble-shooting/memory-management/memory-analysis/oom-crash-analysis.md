@@ -1,7 +1,8 @@
 ---
 {
     "title": "OOM Killer Crash 分析",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "如果 BE 进程 Crash 后 log/be.out 中没有报错信息，执行 dmesg -T 如果看到下面的日志，说明触发了 OOM Killer，可见 20240718 15:03:59 时 pid 为 360303 的 dorisbe 进程物理内存（anon-rss）约 60 GB。"
 }
 ---
 

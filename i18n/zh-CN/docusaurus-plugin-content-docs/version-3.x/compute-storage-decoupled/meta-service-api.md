@@ -1,7 +1,8 @@
 ---
 {
     "title": "Meta Service API 参考",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "本文介绍 Meta Service 提供的所有 API。"
 }
 ---
 

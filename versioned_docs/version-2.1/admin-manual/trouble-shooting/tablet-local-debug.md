@@ -1,7 +1,8 @@
 ---
 {
     "title": "Tablet Local Debug",
-    "language": "en"
+    "language": "en",
+    "description": "During the online operation of Doris, various bugs may occur due to various reasons. For example: the replica is inconsistent,"
 }
 ---
 

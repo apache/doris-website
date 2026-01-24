@@ -1,7 +1,8 @@
 ---
 {
     "title": "OVERLAY",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "OVERLAY 函数用于替换字符串中指定位置和长度的子串。从指定位置开始，用新字符串替换指定长度的字符。此函数支持多字节字符。"
 }
 ---
 

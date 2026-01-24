@@ -1,7 +1,8 @@
 ---
 {
     "title": "YEARWEEK",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "YEARWEEK 函数用于返回指定日期对应的 “年份 + 周数” 组合（格式为 YYYYWW，如 202301 表示 2023 年第 1 周）。该函数通过可选参数 mode 灵活定义一周的起始日和 “第一周” 的判断标准，默认使用 mode=0。"
 }
 ---
 

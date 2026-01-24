@@ -1,7 +1,8 @@
 ---
 {
     "title": "DATETIME",
-    "language": "en"
+    "language": "en",
+    "description": "The DATETIME(p) type stores date and time, where p is the precision, with the range of values for p being [0, 6], and the default value is 0. That is,"
 }
 ---
 

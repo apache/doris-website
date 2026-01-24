@@ -1,7 +1,8 @@
 ---
 {
-   "title": "跨集群数据同步概述",
-   "language": "zh-CN"
+    "title": "跨集群数据同步概述",
+    "language": "zh-CN",
+    "description": "CCR (Cross Cluster Replication) 是一种跨集群数据同步机制，能够在库或表级别将源集群的数据变更同步到目标集群。"
 }
 ---
 
@@ -81,10 +82,10 @@ CCR 支持四种同步方式：
 
 | 版本 | 架构  | 包地址                                                                                                                                         | SHA256                                                           |
 |------|-------|------------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------|
-| 2.1     | ARM64 | [ccr-syncer-2.1.10-rc05-arm64.tar.xz](https://apache-doris-releases.oss-accelerate.aliyuncs.com/ccr-release/ccr-syncer-2.1.10-rc05-arm64.tar.xz) | d58f251ddef698fe1554a6aafa0c7b373d01abaebf9f7bab64cb66f6b9db6c2c |
-| 2.1     | X64   | [ccr-syncer-2.1.10-rc05-x64.tar.xz](https://apache-doris-releases.oss-accelerate.aliyuncs.com/ccr-release/ccr-syncer-2.1.10-rc05-x64.tar.xz)     | 0bc93211bc49f57bd011c9a0c9e72a51f5435477903a0cedccb748890700e45c |
-| 3.0     | ARM64 | [ccr-syncer-3.0.6-rc04-arm64.tar.xz](https://apache-doris-releases.oss-accelerate.aliyuncs.com/ccr-release/ccr-syncer-3.0.6-rc04-arm64.tar.xz) | 210478eacd4e7ddc22e75025a93cf5528200dee2e2a144b6180749cb79b3e126 |
-| 3.0     | X64   | [ccr-syncer-3.0.6-rc04-x64.tar.xz](https://apache-doris-releases.oss-accelerate.aliyuncs.com/ccr-release/ccr-syncer-3.0.6-rc04-x64.tar.xz)   | fefd0a4cac24fb9fb880d2b05e34ab1bccd9a69ef288f0a28da5046b6ce036c2 |
+| 2.1     | ARM64 | [ccr-syncer-2.1.10-rc06-arm64.tar.xz](https://apache-doris-releases.oss-accelerate.aliyuncs.com/ccr-release/ccr-syncer-2.1.10-rc06-arm64.tar.xz) | a2e56dc1909b065db98c037a037d6ec918dec7e20eb7cccbac9da729ce9be155 |
+| 2.1     | X64   | [ccr-syncer-2.1.10-rc06-x64.tar.xz](https://apache-doris-releases.oss-accelerate.aliyuncs.com/ccr-release/ccr-syncer-2.1.10-rc06-x64.tar.xz)     | ebeebbe47a85c8b52f69394fd1d839663e3e7ca2cab93d7a443b44ec3f6d35ae |
+| 3.0     | ARM64 | [ccr-syncer-3.0.6-rc05-arm64.tar.xz](https://apache-doris-releases.oss-accelerate.aliyuncs.com/ccr-release/ccr-syncer-3.0.6-rc05-arm64.tar.xz) | dd5f154c68007732c3c3a9f808f16a7f287fd742bd35d0272ef596779f0eb8e6 |
+| 3.0     | X64   | [ccr-syncer-3.0.6-rc05-x64.tar.xz](https://apache-doris-releases.oss-accelerate.aliyuncs.com/ccr-release/ccr-syncer-3.0.6-rc05-x64.tar.xz)   | 77a4e4e2a74c376ffaef0207cfdef957729380fa3718418bccece015a41ad15a |
 | 4.0     | ARM64 | [ccr-syncer-4.0.1-rc01-arm64.tar.xz](https://apache-doris-releases.oss-accelerate.aliyuncs.com/ccr-release/ccr-syncer-4.0.1-rc01-arm64.tar.xz) | ed9decc7da157afa7f42ea696babc02f13b9a809a418f80e23e45a8afb347618 |
 | 4.0     | X64   | [ccr-syncer-4.0.1-rc01-x64.tar.xz](https://apache-doris-releases.oss-accelerate.aliyuncs.com/ccr-release/ccr-syncer-4.0.1-rc01-x64.tar.xz)   | 9f2a049bb2cf107be1a4f79081c1e9da204ebebc410104793996dce3beb87865 |
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "PROTOCOL",
-    "language": "en"
+    "language": "en",
+    "description": "The PROTOCOL function is mainly used to extract the protocol part from a URL string."
 }
 ---
 

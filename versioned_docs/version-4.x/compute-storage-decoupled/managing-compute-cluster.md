@@ -1,7 +1,8 @@
 ---
 {
     "title": "Managing Compute Groups",
-    "language": "en"
+    "language": "en",
+    "description": "In a compute-storage decoupled architecture, one or more compute nodes (BE) can be grouped into a Compute Group."
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "MAKE_SET",
-    "language": "en"
+    "language": "en",
+    "description": "The MAKESET function selects and combines strings from multiple string parameters based on a bitmask (bit)."
 }
 ---
 

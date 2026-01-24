@@ -1,7 +1,8 @@
 ---
 {
     "title": "Aggregate Key Table",
-    "language": "en"
+    "language": "en",
+    "description": "Doris's Aggregate Key Table is designed to efficiently handle aggregation operations in large-scale data queries."
 }
 ---
 

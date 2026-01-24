@@ -1,7 +1,8 @@
 ---
 {
-"title": "CANCEL TASK",
-"language": "en"
+    "title": "CANCEL TASK",
+    "language": "en",
+    "description": "Cancel a running task created by the CREATE JOB statement."
 }
 ---
 

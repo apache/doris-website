@@ -1,7 +1,8 @@
 ---
 {
     "title": "DIGITAL_MASKING",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "DIGITALMASKING 函数用于对数字字符串进行脱敏处理。按照固定格式将数字的中间部分替换为 ，保留前3位和后4位。等价于 CONCAT(LEFT(id, 3), '', RIGHT(id, 4))。"
 }
 ---
 

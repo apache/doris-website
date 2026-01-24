@@ -1,9 +1,9 @@
 ---
 {
     "title": "ALTER TABLE PARTITION",
-    "language": "en"
+    "language": "en",
+    "description": "This statement is used to modify a table with a partition."
 }
-
 ---
 
 ## Description

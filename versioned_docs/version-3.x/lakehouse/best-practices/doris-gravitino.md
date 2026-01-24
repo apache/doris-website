@@ -1,7 +1,8 @@
 ---
 {
     "title": "Integration with Apache Gravitino",
-    "language": "en"
+    "language": "en",
+    "description": "With the rapid development of data lake technology, building a unified, secure,"
 }
 ---
 

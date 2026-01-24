@@ -1,7 +1,8 @@
 ---
 {
     "title": "engines",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "此表仅用于兼容 MySQL 行为。永远为空。"
 }
 ---
 

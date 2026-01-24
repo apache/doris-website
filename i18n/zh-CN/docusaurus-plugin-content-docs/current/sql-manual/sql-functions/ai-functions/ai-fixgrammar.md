@@ -1,7 +1,8 @@
 ---
 {
     "title": "AI_FIXGRAMMAR",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "用于修复文本中的语法错误"
 }
 ---
 

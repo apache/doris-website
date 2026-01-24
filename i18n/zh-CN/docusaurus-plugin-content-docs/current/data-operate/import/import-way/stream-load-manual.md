@@ -1,7 +1,8 @@
 ---
 {
     "title": "Stream Load",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "Stream Load 支持通过 HTTP 协议将本地文件或数据流导入到 Doris 中。Stream Load 是一个同步导入方式，执行导入后返回导入结果，可以通过请求的返回判断导入是否成功。一般来说，可以使用 Stream Load 导入 10GB 以下的文件，如果文件过大，"
 }
 ---
 
@@ -333,7 +334,7 @@ Stream Load 操作支持 HTTP 分块导入（HTTP chunked）与 HTTP 非分块�
 | enclose                      | 指定包围符。当 CSV 数据字段中含有行分隔符或列分隔符时，为防止意外截断，可指定单字节字符作为包围符起到保护作用。例如列分隔符为 ","，包围符为 "'"，数据为 "a,'b,c'"，则 "b,c" 会被解析为一个字段。注意：当 enclose 设置为`"`时，trim_double_quotes 一定要设置为 true。 |
 | escape                       | 指定转义符。用于转义在字段中出现的与包围符相同的字符。例如数据为 "a,'b,'c'"，包围符为 "'"，希望 "b,'c 被作为一个字段解析，则需要指定单字节转义符，例如"\"，将数据修改为 "a,'b,\'c'"。 |
 | memtable_on_sink_node        | 导入数据的时候是否开启 MemTable 前移，默认为 false。 |
-| unique_key_update_mode       | Unique 表上的更新模式，目前仅对 Merge-On-Write Unique 表有效，一共支持三种类型 `UPSERT`, `UPDATE_FIXED_COLUMNS`, `UPDATE_FLEXIBLE_COLUMNS`。 `UPSERT`: 表示以 upsert 语义导入数据; `UPDATE_FIXED_COLUMNS`: 表示以[部分列更新](../../../data-operate/update/update-of-unique-model)的方式导入数据; `UPDATE_FLEXIBLE_COLUMNS`: 表示以[灵活部分列更新](../../../data-operate/update/update-of-unique-model)的方式导入数据|
+| unique_key_update_mode       | Unique 表上的更新模式，目前仅对 Merge-On-Write Unique 表有效，一共支持三种类型 `UPSERT`, `UPDATE_FIXED_COLUMNS`, `UPDATE_FLEXIBLE_COLUMNS`。 `UPSERT`: 表示以 upsert 语义导入数据; `UPDATE_FIXED_COLUMNS`: 表示以[部分列更新](../../../data-operate/update/partial-column-update.md#主键模型的列更新)的方式导入数据; `UPDATE_FLEXIBLE_COLUMNS`: 表示以[灵活部分列更新](../../../data-operate/update/partial-column-update.md#灵活部分列更新)的方式导入数据|
 | partial_update_new_key_behavior | Unique 表上进行部分列更新或灵活列更新时，对新插入行的处理方式。有两种类型 `APPEND`, `ERROR`。<br/>-`APPEND`: 允许插入新行数据<br/>-`ERROR`: 插入新行时倒入失败并报错 |
 
 ### 导入返回值
@@ -1027,5 +1028,5 @@ Doris 可以在导入语句中支持非常丰富的列转换和过滤操作。�
 
 ### 导入时进行部分列更新/灵活部分列更新
 
-关于导入时，如何表达部分列更新，可以参考 [数据更新/主键模型的导入更新](../../../data-operate/update/update-of-unique-model) 文档
+关于导入时，如何表达部分列更新，可以参考 [列更新](../../../data-operate/update/partial-column-update.md) 文档
 

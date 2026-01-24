@@ -1,7 +1,8 @@
 ---
 {
     "title": "STR_TO_MAP",
-    "language": "en"
+    "language": "en",
+    "description": "Constructs a Map<String, String> from a string."
 }
 ---
 

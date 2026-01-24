@@ -1,7 +1,8 @@
 ---
 {
     "title": "MONTHS_DIFF",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "MONTHSDIFF 函数用于计算两个日期之间相差的月份数。该函数接受两个日期参数，返回第一个日期减去第二个日期后的相差月份数。"
 }
 ---
 

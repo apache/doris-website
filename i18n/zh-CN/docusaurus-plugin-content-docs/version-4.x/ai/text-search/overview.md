@@ -2,7 +2,8 @@
 {
     "title": "文本搜索",
     "sidebar_label": "概述",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "文本搜索用于在数据集中检索包含特定词项或短语的文档，并根据相关性对结果进行排序。"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "NULLIF",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "如果两个输入值相等，则返回 NULL；否则返回第一个输入值。该函数等价于以下 CASE WHEN 表达式："
 }
 ---
 

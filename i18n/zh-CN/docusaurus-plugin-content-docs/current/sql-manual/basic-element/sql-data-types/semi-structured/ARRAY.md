@@ -1,9 +1,13 @@
 ---
 {
-    "title": "ARRAY",
-    "language": "zh-CN"
+    "title": "ARRAY | Semi Structured",
+    "language": "zh-CN",
+    "description": "ARRAY<T> 类型用于表示有序元素集合，集合中的每个元素具有相同的数据类型。例如，一个整数数组可表示为[1, 2, 3]，一个字符串数组可表示为[\"a\", \"b\", \"c\"]。",
+    "sidebar_label": "ARRAY"
 }
 ---
+
+# ARRAY
 
 ## 类型描述
 

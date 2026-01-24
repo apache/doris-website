@@ -1,7 +1,8 @@
 ---
 {
     "title": "CREATE RESOURCE",
-    "language": "en"
+    "language": "en",
+    "description": "This statement is used to create a resource. Only the root or admin user can create resources. Currently supports Spark, ODBC, S3 external resources."
 }
 ---
 

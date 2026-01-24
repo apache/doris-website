@@ -1,7 +1,8 @@
 ---
 {
     "title": "Release 3.0.5",
-    "language": "en"
+    "language": "en",
+    "description": "Dear community members, the Apache Doris 3.0.5 version was officially released on Apr 28, 2025."
 }
 ---
 

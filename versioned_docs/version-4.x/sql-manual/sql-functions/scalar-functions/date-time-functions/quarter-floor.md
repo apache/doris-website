@@ -1,13 +1,14 @@
 ---
 {
     "title": "QUARTER_FLOOR",
-    "language": "en"
+    "language": "en",
+    "description": "QUARTERFLOOR function rounds down the input datetime value to the nearest specified quarter period. If you specify origin time,"
 }
 ---
 
 ## Description
 
-QUARTER_FLOOR function rounds down the input datetime value to the nearest specified quarter period. If you specify origin time, the period will be divided based on this time and rounded down; if not specified, the default is 0001-01-01 00:00:00. This function supports DATETIME and DATE types.
+QUARTER_FLOOR function rounds down the input datetime value to the nearest specified quarter period. If you specify origin time, the period will be divided based on this time and rounded down; if not specified, the default is 0001-01-01 00:00:00. This function supports TIMESTAMPTZ, DATETIME and DATE types.
 
 Date and time calculation formula:
 
@@ -33,7 +34,7 @@ QUARTER_FLOOR(`<date_or_time_expr>`, `<period>`, `<origin>`)
 
 | Parameter | Description |
 | ---- | ---- |
-| `<date_or_time_expr>` | The datetime value to be rounded down, type DATETIME or DATE. For specific datetime/date formats, see [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion.md) and [date conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
+| `<date_or_time_expr>` | The datetime value to be rounded down, supports DATETIME/DATE/TIMESTAMPTZ types. Date type will be converted to the start time 00:00:00 of the corresponding date. For specific formats please see [timestamptz conversion](../../../../../../docs/sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion.md),  [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion.md) and [date conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
 | `<period>` | Quarter period value, type INT, indicating the number of quarters contained in each period |
 | `<origin_datetime>` | Starting time point of the period, type DATETIME/DATE, default is 0001-01-01 00:00:00 |
 
@@ -48,6 +49,8 @@ Return type is DATETIME, returning the time value rounded down to the nearest sp
 - If the input is DATE type (only containing year, month, day), its time part defaults to 00:00:00.
 - If the `<origin>` datetime is after `<period>`, it will also be calculated according to the above formula, but the period k is negative.
 - If `date_or_time_expr` has scale, the return result also has scale and the fractional part is zero.
+- If the input is TIMESTAMPTZ type, it will first be converted to local_time (for example: `2025-12-31 23:59:59+05:00` represents local_time `2026-01-01 02:59:59` when the session variable is `+08:00`), and then perform FLOOR calculation.
+- If the input time values (`<date_or_time_expr>` and `<period>`) contain both TIMESTAMPTZ and DATETIME types, the output is DATETIME type.
 
 ## Description
 
@@ -158,6 +161,23 @@ SELECT QUARTER_FLOOR('2023-07-13', 1) AS result;
 +---------------------+
 | 2023-07-01 00:00:00 |
 +---------------------+
+
+-- Example of TimeStampTz type, SET time_zone = '+08:00'
+-- Convert the variable value to local_time(2026-01-01 02:59:59) before performing CEIL operation
+SELECT QUARTER_CEIL('2025-12-31 23:59:59+05:00');
++-------------------------------------------+
+| QUARTER_CEIL('2025-12-31 23:59:59+05:00') |
++-------------------------------------------+
+| 2026-04-01 00:00:00+08:00                 |
++-------------------------------------------+
+
+-- If the parameters include both TimeStampTz and Datetime types, output the DateTime type.
+SELECT QUARTER_CEIL('2025-12-31 23:59:59+05:00', '2025-12-15 00:00:00.123');
++----------------------------------------------------------------------+
+| QUARTER_CEIL('2025-12-31 23:59:59+05:00', '2025-12-15 00:00:00.123') |
++----------------------------------------------------------------------+
+| 2026-03-15 00:00:00.123                                              |
++----------------------------------------------------------------------+
 
 --- Period is non-positive, returns error
 SELECT QUARTER_FLOOR('2023-07-13 22:28:18', -1) AS result;

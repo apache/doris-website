@@ -1,7 +1,8 @@
 ---
 {
     "title": "DataX Doriswriter",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "DataX Doriswriter 插件，支持将 MySQL、Oracle、SqlServer 等多种数据源中的数据通过 Stream Load 的方式同步到 Doris 中。"
 }
 ---
 

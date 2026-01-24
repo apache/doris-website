@@ -1,7 +1,8 @@
 ---
 {
     "title": "SPACE",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "生成由指定数量的空格组成的字符串。"
 }
 ---
 

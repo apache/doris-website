@@ -1,7 +1,8 @@
 ---
 {
     "title": "CONCAT_WS",
-    "language": "en"
+    "language": "en",
+    "description": "The CONCATWS function (Concatenate With Separator) concatenates multiple strings or arrays using a specified separator. Unlike the CONCAT function,"
 }
 ---
 

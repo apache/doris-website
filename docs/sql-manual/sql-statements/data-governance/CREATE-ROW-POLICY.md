@@ -1,7 +1,8 @@
 ---
 {
     "title": "CREATE ROW POLICY",
-    "language": "en"
+    "language": "en",
+    "description": "Explain can view the rewritten execution plan."
 }
 ---
 

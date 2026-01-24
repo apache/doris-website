@@ -1,7 +1,8 @@
 ---
 {
     "title": "ARRAY_SIZE",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "计算数组中元素的数量"
 }
 ---
 
@@ -33,13 +34,13 @@ ARRAY_SIZE(<arr>)
 ## 举例
 
 ```sql
-SELECT ARRAY_SIZE(['a', 'b', 'c']),ARRAY_SIZE([NULL]),ARRAY_SIZE([]);
+SELECT ARRAY_SIZE(['a', 'b', 'c']),ARRAY_SIZE(NULL),ARRAY_SIZE([]);
 ```
 
 ```text
 +------------------------------+---------------------+-----------------+
-| cardinality(['a', 'b', 'c']) | cardinality([NULL]) | cardinality([]) |
+| cardinality(['a', 'b', 'c']) | cardinality(NULL)   | cardinality([]) |
 +------------------------------+---------------------+-----------------+
-|                            3 |                   1 |               0 |
+|                            3 |                NULL |               0 |
 +------------------------------+---------------------+-----------------+
 ```

@@ -1,7 +1,8 @@
 ---
 {
-  "title": "YEAR_CEIL",
-  "language": "zh-CN"
+    "title": "YEAR_CEIL",
+    "language": "zh-CN",
+    "description": "将日期转化为指定的时间间隔周期的最近上取整时刻。"
 }
 ---
 

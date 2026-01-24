@@ -1,7 +1,8 @@
 ---
 {
     "title": "MICROSECOND",
-    "language": "en"
+    "language": "en",
+    "description": "The MICROSECOND function extracts the microsecond part (up to six digits after the decimal point) from the input datetime value,"
 }
 ---
 

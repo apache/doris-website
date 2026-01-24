@@ -1,7 +1,8 @@
 ---
 {
     "title": "ALTER ROLE",
-    "language": "en"
+    "language": "en",
+    "description": "The ALTER ROLE statement is used to modify a role."
 }
 ---
 

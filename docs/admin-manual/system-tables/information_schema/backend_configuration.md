@@ -1,7 +1,8 @@
 ---
 {
     "title": "backend_configuration",
-    "language": "en"
+    "language": "en",
+    "description": "View the configurations on Backends."
 }
 ---
 

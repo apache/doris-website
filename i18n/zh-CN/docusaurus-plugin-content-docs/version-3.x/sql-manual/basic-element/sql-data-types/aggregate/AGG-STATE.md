@@ -1,7 +1,8 @@
 ---
 {
     "title": "AGG_STATE",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "AGGSTATE不能作为key列使用，建表时需要同时声明聚合函数的签名。 用户不需要指定长度和默认值。实际存储的数据大小与函数实现有关。"
 }
 ---
 

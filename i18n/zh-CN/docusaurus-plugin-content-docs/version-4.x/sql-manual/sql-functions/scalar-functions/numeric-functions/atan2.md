@@ -1,7 +1,8 @@
 ---
 {
     "title": "ATAN2",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "返回 'y' / 'x' 的反正切。"
 }
 ---
 

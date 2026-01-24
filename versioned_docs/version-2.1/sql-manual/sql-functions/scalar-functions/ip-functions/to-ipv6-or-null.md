@@ -1,7 +1,8 @@
 ---
 {
     "title": "TO_IPV6_OR_NULL",
-    "language": "en"
+    "language": "en",
+    "description": "Convert a string form of IPv6 address to IPv6 type."
 }
 ---
 

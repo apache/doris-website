@@ -1,7 +1,8 @@
 ---
 {
     "title": "BITMAP_FROM_ARRAY",
-    "language": "en"
+    "language": "en",
+    "description": "Converts an array of TINYINT/SMALLINT/INT/BIGINT type to a BITMAP. When the input field is illegal, the result returns NULL."
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "collations",
-    "language": "en"
+    "language": "en",
+    "description": "View all collation methods for character sets. This table is only used for compatibility with MySQL behavior and holds no practical significance."
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "REGR_SLOPE",
-    "language": "en"
+    "language": "en",
+    "description": "REGRSLOPE is used to calculate the slope of the least squares-fit linear equation for a set of number pairs."
 }
 ---
 

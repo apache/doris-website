@@ -1,7 +1,8 @@
 ---
 {
     "title": "IF",
-    "language": "en"
+    "language": "en",
+    "description": "If the expression <condition> is true, returns <valuetrue>; otherwise, returns <valuefalseornull>."
 }
 ---
 

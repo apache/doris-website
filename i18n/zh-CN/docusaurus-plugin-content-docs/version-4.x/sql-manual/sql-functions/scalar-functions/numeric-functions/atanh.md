@@ -1,7 +1,8 @@
 ---
 {
     "title": "ATANH",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "返回x的反双曲正切值。如果x不在-1到1之间 (不包括-1和1)，则返回NULL。"
 }
 ---
 

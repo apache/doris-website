@@ -1,7 +1,8 @@
 ---
 {
     "title": "LDAP",
-    "language": "en"
+    "language": "en",
+    "description": "Access to third-party LDAP services to provide authentication login and group authorization services for Doris."
 }
 ---
 

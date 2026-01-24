@@ -1,7 +1,8 @@
 ---
 {
     "title": "ARRAY_CONCAT",
-    "language": "en"
+    "language": "en",
+    "description": "Concat all arrays passed in the arguments"
 }
 ---
 

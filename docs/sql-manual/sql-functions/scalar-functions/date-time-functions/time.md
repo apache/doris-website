@@ -1,9 +1,13 @@
 ---
 {
-    "title": "TIME",
-    "language": "en"
+    "title": "TIME | Date Time Functions",
+    "language": "en",
+    "description": "The TIME function get the Datetime value's time part.",
+    "sidebar_label": "TIME"
 }
 ---
+
+# TIME
 
 ## Description
 The `TIME` function get the Datetime value's `time` part.
@@ -37,3 +41,4 @@ mysql>
 | 12:12:12                  |
 +---------------------------+
 ```
+

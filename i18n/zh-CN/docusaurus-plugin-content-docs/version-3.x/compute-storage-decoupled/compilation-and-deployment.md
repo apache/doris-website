@@ -1,7 +1,8 @@
 ---
 {
     "title": "编译部署",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "本文档详细介绍了 Doris 存算分离模式下的编译和部署流程，重点说明了与存算一体模式的区别，特别是新增 Meta Service (MS) 模块的编译、配置和管理。"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "HLL_FROM_BASE64",
-    "language": "en"
+    "language": "en",
+    "description": "Converts a base64-encoded string (usually the result of the HLLTOBASE64 function) into an HLL. If the input string is invalid or NULL,"
 }
 ---
 

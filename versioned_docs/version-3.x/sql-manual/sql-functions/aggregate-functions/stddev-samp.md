@@ -1,7 +1,8 @@
 ---
 {
     "title": "STDDEV_SAMP",
-    "language": "en"
+    "language": "en",
+    "description": "Returns the sample standard deviation of the expr expression"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "MILLISECOND_TIMESTAMP",
-    "language": "en"
+    "language": "en",
+    "description": "The MILLISECONDTIMESTAMP function converts a DATETIME value into a Unix timestamp (in milliseconds) starting from 1970-01-01 00:00:00 UTC."
 }
 ---
 

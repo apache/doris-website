@@ -1,7 +1,8 @@
 ---
 {
     "title": "内存日志分析",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "be/log/be.INFO 中的进程内存日志主要分为两类，一是进程内存状态日志，包括进程内存大小和系统剩余可用内存大小。二是更加详细的进程内存统计日志，包含 Memory Tracker 统计的内存大小。"
 }
 ---
 

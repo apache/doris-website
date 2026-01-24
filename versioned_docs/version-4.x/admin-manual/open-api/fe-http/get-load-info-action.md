@@ -1,7 +1,8 @@
 ---
 {
     "title": "Get Load Info Action",
-    "language": "en"
+    "language": "en",
+    "description": "Used to obtain the information of the load job of the specified label."
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "Logstash",
-    "language": "en"
+    "language": "en",
+    "description": "Logstash is a log ETL framework (collect, preprocess, send to storage systems) that supports custom output plugins to write data into storage systems."
 }
 ---
 
@@ -25,10 +26,11 @@ Using the Logstash Doris output plugin mainly involves three steps:
 You can download the plugin from the official website or compile it from the source code yourself.
 
 - Download from the official website
-   - Installation package without dependencies
-   [https://apache-doris-releases.oss-accelerate.aliyuncs.com/extension/logstash-output-doris-1.2.0.gem](https://apache-doris-releases.oss-accelerate.aliyuncs.com/extension/logstash-output-doris-1.2.0.gem)
-   - Installation package with dependencies
-   [https://apache-doris-releases.oss-accelerate.aliyuncs.com/extension/logstash-output-doris-1.2.0.zip](https://apache-doris-releases.oss-accelerate.aliyuncs.com/extension/logstash-output-doris-1.2.0.zip)
+
+```shell
+# Installation package with dependencies
+wget https://apache-doris-releases.oss-cn-beijing.aliyuncs.com/extension/logstash-output-doris-1.2.0-java.gem
+```
 
 - Compile from source code
 
@@ -56,12 +58,12 @@ The standard installation mode will automatically install the ruby modules that 
 
 - Offline Installation
 
-```
-${LOGSTASH_HOME}/bin/logstash-plugin install file:///tmp/logstash-output-doris-1.2.0.zip
+```shell
 
-Installing file: logstash-output-doris-1.2.0.zip
-Resolving dependencies.........................
-Install successful
+export JARS_SKIP="true"
+
+${LOGSTASH_HOME}/bin/logstash-plugin install logstash-output-doris-1.2.0.gem
+
 ```
 
 ## Configuration

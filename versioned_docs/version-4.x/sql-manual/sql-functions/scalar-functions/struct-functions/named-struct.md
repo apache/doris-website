@@ -1,7 +1,8 @@
 ---
 {
     "title": "NAMED_STRUCT",
-    "language": "en-US"
+    "language": "en-US",
+    "description": "Constructs and returns a struct based on given field names and values. The function accepts an even number of parameters,"
 }
 ---
 

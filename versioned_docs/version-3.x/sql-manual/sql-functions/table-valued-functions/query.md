@@ -1,7 +1,8 @@
 ---
 {
-  "title": "QUERY",
-  "language": "en"
+    "title": "QUERY",
+    "language": "en",
+    "description": "Query table function (table-valued-function, tvf) can be used to transparently transmit query statements directly to a catalog for data query"
 }
 ---
 

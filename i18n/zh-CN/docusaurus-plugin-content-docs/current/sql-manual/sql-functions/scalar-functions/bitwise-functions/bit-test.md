@@ -1,7 +1,8 @@
 ---
 {
-"title": "BIT_TEST",
-"language": "zh-CN"
+    "title": "BIT_TEST",
+    "language": "zh-CN",
+    "description": "将 <x> 的值转换为二进制的形式，返回指定位置 <bits> 的值， <bits> 从 0 开始，从右到左。"
 }
 ---
 

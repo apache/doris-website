@@ -1,7 +1,8 @@
 ---
 {
     "title": "转换为 FLOAT/DOUBLE",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "如果源类型是nullable，返回nullable类型；"
 }
 ---
 

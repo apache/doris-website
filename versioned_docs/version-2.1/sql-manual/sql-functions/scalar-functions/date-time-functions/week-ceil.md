@@ -1,9 +1,13 @@
 ---
 {
-    "title": "WEEK_CEIL",
-    "language": "en"
+    "title": "WEEK_CEIL | Date Time Functions",
+    "language": "en",
+    "description": "Rounds up a datetime value to the nearest specified week interval. If a starting time (origin) is provided,",
+    "sidebar_label": "WEEK_CEIL"
 }
 ---
+
+# WEEK_CEIL
 
 ## Description
 
@@ -49,3 +53,4 @@ SELECT WEEK_CEIL('2023-07-13 22:28:18', 2);
 | 2023-07-17 00:00:00                                       |
 +-----------------------------------------------------------+
 ```
+

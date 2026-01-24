@@ -1,7 +1,8 @@
 ---
 {
     "title": "audit_log",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "存储审计日志"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "LOCATE",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "LOCATE 函数返回子字符串 substr 在字符串 str 中第一次出现的位置（从 1 开始计数）。如果指定了可选的第三个参数 pos，则从字符串 str 的指定位置开始搜索。该函数是 MySQL 兼容函数，常用于字符串匹配和位置查找。"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "IPV6_NUM_TO_STRING",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "接受字符串类型的二进制格式的 IPv6 地址。以文本格式返回此地址的字符串。"
 }
 ---
 

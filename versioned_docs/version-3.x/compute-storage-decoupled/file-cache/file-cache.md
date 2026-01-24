@@ -1,7 +1,8 @@
 ---
 {
     "title": "File Cache",
-    "language": "en"
+    "language": "en",
+    "description": "In a decoupled architecture, data is stored in remote storage."
 }
 ---
 

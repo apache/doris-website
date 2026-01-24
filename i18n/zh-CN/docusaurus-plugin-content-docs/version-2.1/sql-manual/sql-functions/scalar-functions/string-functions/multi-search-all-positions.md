@@ -1,7 +1,8 @@
 ---
 {
     "title": "MULTI_SEARCH_ALL_POSITIONS",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "返回一个 ARRAY，其中第 i 个元素为 needles 中第 i 个元素 needle，在字符串 haystack 中首次出现的位置。位置从 1 开始计数，0 代表未找到该元素。大小写敏感。"
 }
 ---
 

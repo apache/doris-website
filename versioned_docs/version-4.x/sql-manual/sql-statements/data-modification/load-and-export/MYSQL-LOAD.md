@@ -1,7 +1,8 @@
 ---
 {
     "title": "MYSQL LOAD",
-    "language": "en"
+    "language": "en",
+    "description": "Use the MySQL client to import local data files into Doris. MySQL Load is a synchronous import method,"
 }
 ---
 

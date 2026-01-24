@@ -1,7 +1,8 @@
 ---
 {
-  "title": "Overview of Asynchronous Materialized Views",
-  "language": "en"
+    "title": "Overview of Asynchronous Materialized Views",
+    "language": "en",
+    "description": "Materialized views, as an efficient solution, combine the flexibility of views with the high performance advantages of physical tables."
 }
 ---
 

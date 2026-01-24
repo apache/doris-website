@@ -1,7 +1,8 @@
 ---
 {
     "title": "Disk Capacity Management",
-    "language": "en"
+    "language": "en",
+    "description": "This document mainly introduces system parameters and processing strategies related to disk storage capacity."
 }
 ---
 

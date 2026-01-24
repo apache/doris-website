@@ -1,7 +1,8 @@
 ---
 {
     "title": "FIRST_SIGNIFICANT_SUBDOMAIN",
-    "language": "en"
+    "language": "en",
+    "description": "Extract the \"first valid subdomain\" from the URL and return it. If it is illegal, an empty string will be returned."
 }
 ---
 

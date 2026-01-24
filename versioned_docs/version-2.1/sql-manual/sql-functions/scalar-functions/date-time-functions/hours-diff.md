@@ -1,7 +1,8 @@
 ---
 {
     "title": "HOURS_DIFF",
-    "language": "en"
+    "language": "en",
+    "description": "Calculates the difference in hours between the start time and the end time."
 }
 ---
 

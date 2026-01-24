@@ -1,7 +1,8 @@
 ---
 {
     "title": "DAY",
-    "language": "en"
+    "language": "en",
+    "description": "Obtain the day information from the date, with return values ranging from 1 to 31."
 }
 ---
 

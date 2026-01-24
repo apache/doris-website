@@ -1,7 +1,8 @@
 ---
 {
     "title": "FROM_BASE64",
-    "language": "en"
+    "language": "en",
+    "description": "The FROMBASE64 function decodes a Base64-encoded string back to its original string."
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
-  "title": "SHOW ENCRYPTKEY",
-  "language": "zh-CN"
+    "title": "SHOW ENCRYPTKEY",
+    "language": "zh-CN",
+    "description": "查看数据库下所有的自定义的密钥。"
 }
 ---
 

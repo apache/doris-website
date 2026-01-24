@@ -1,7 +1,8 @@
 ---
 {
     "title": "MYSQL LOAD",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "使用 MySql 客户端将本地数据文件导入到 Doris 中。MySQL Load 是一种同步导入方式，执行导入后即返回导入结果。可以通过 LOAD DATA 语句的返回结果判断导入是否成功。MySQL Load 可以保证一批导入任务的原子性，要么全部导入成功，要么全部导入失败。"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "WIDTH_BUCKET",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "构造等宽直方图，其中直方图范围被划分为相同大小的区间，并在计算后返回表达式的值所在的桶号。特殊情况："
 }
 ---
 

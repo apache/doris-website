@@ -1,7 +1,8 @@
 ---
 {
     "title": "Release 1.1.0",
-    "language": "en"
+    "language": "en",
+    "description": "In version 1.1, we realized the full vectorization of the computing layer and storage layer,"
 }
 ---
 

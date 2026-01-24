@@ -1,7 +1,8 @@
 ---
 {
     "title": "VERSION",
-    "language": "en"
+    "language": "en",
+    "description": "No practical meaning, for compatibility with MySQL protocol."
 }
 ---
 

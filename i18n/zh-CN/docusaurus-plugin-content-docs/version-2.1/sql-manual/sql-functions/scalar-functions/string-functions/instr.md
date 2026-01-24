@@ -1,7 +1,8 @@
 ---
 {
     "title": "INSTR",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "返回 substr 在 str 中第一次出现的位置（从 1 开始计数）。特殊情况："
 }
 ---
 

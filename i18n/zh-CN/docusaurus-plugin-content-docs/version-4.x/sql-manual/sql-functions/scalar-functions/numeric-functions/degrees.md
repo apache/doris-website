@@ -1,7 +1,8 @@
 ---
 {
     "title": "DEGREES",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "输入一个 double 类型的浮点数，由弧度转换为角度。"
 }
 ---
 

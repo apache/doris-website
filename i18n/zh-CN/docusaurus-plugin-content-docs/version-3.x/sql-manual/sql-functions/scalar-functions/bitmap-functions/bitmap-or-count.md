@@ -1,7 +1,8 @@
 ---
 {
     "title": "BITMAP_OR_COUNT",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "计算两个及以上输入 Bitmap 的并集，返回并集的元素个数。"
 }
 ---
 

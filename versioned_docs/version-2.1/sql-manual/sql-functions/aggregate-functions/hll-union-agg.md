@@ -1,7 +1,8 @@
 ---
 {
     "title": "HLL_UNION_AGG",
-    "language": "en"
+    "language": "en",
+    "description": "The HLLUNIONAGG function is an aggregate function, which is mainly used to merge multiple HyperLogLog data structures and estimate the approximate "
 }
 ---
 

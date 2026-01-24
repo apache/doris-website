@@ -1,7 +1,8 @@
 ---
 {
     "title": "CUME_DIST",
-    "language": "en"
+    "language": "en",
+    "description": "CUMEDIST (Cumulative Distribution) is a window function that calculates the relative ranking of the current row value in the sorted result set."
 }
 ---
 

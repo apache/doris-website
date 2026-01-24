@@ -1,7 +1,8 @@
 ---
 {
     "title": "Flink Doris Connector",
-    "language": "en"
+    "language": "en",
+    "description": "The Flink Doris Connector is used to read from and write data to a Doris cluster through Flink. It also integrates FlinkCDC,"
 }
 ---
 
@@ -900,7 +901,7 @@ After starting the Flink cluster, you can directly run the following command:
 | --multi-to-one-target   | Used in combination with multi-to-one-origin, the configuration of the target table, for example: --multi-to-one-target "a\|b" |
 | --create-table-only     | Whether to only synchronize the structure of the table.      |
 
-### Type Mapping
+### Doris to Flink Data Type Mapping
 
 | Doris Type | Flink Type |
 | ---------- | ---------- |
@@ -926,6 +927,27 @@ After starting the Flink cluster, you can directly run the following command:
 | VARIANT    | STRING     |
 | IPV4       | STRING     |
 | IPV6       | STRING     |
+
+### Flink to Doris Data Type Mapping
+| Flink Type    | Doris Type     |
+| ------------- | -------------- |
+| BOOLEAN       | BOOLEAN        |
+| TINYINT       | TINYINT        |
+| SMALLINT      | SMALLINT       |
+| INTEGER       | INTEGER        |
+| BIGINT        | BIGINT         |
+| FLOAT         | FLOAT          |
+| DOUBLE        | DOUBLE         |
+| DECIMAL       | DECIMAL        |
+| CHAR          | CHAR           |
+| VARCHAR       | VARCHAR/STRING |
+| STRING        | STRING         |
+| DATE          | DATE           |
+| TIMESTAMP     | DATETIME       |
+| TIMESTAMP_LTZ | DATETIME       |
+| ARRAY         | ARRAY          |
+| MAP           | MAP/JSON       |
+| ROW           | STRUCT/JSON    |
 
 ### Monitoring Metrics
 

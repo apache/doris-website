@@ -1,9 +1,13 @@
 ---
 {
-  "title": "HDFS",
-  "language": "en"
+    "title": "HDFS | Storages",
+    "language": "en",
+    "description": "This document describes the parameters required for accessing HDFS. These parameters apply to:",
+    "sidebar_label": "HDFS"
 }
 ---
+
+# HDFS
 
 This document describes the parameters required for accessing HDFS. These parameters apply to:
 
@@ -183,6 +187,20 @@ Note:
 * This parameter should be set in the client configuration file (such as `hdfs-site.xml`) to ensure the client uses the correct timeout when communicating with HDFS.
 
 In summary, properly configuring the `dfs.client.socket-timeout` parameter can improve I/O response speed while ensuring system stability and reliability.
+
+## HDFS Access Port Requirements (NameNode \& DataNode only)
+
+Doris requires the following ports to be open to access HDFS:
+
+| Service   | Port Purpose                  | Default Port | Protocol|
+|-----------|-------------------------------|--------------|---------|
+| NameNode  | RPC (client/metadata access)  | 8020         |TCP      |
+| DataNode  | Data transfer (block I/O)     | 9866         |TCP       |
+
+Notes:
+- Ports may be customized in `core-site.xml` \& `hdfs-site.xml`. Use actual configs.
+- When Kerberos authentication is enabled, Doris must also be able to reach the Kerberos KDC service. The KDC listens on TCP port 88 by default, but the actual port should follow your KDC configuration.
+
 
 ## Debugging HDFS
 

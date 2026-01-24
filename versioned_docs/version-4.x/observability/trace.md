@@ -1,7 +1,8 @@
 ---
 {
     "title": "Trace",
-    "language": "en"
+    "language": "en",
+    "description": "This article introduces the storage and analysis practices of Trace, one of the core observability data."
 }
 ---
 

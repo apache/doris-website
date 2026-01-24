@@ -1,7 +1,8 @@
 ---
 {
     "title": "RPAD",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "用于在原始字符串的右侧填充指定的字符，直到达到指定的长度。"
 }
 ---
 

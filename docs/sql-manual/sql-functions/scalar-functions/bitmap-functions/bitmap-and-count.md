@@ -1,7 +1,8 @@
 ---
 {
     "title": "BITMAP_AND_COUNT",
-    "language": "en"
+    "language": "en",
+    "description": "Computes the intersection of two or more input BITMAPs and returns the number of intersections."
 }
 ---
 

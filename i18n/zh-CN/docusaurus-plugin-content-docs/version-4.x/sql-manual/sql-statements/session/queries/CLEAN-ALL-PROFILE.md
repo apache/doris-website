@@ -1,7 +1,8 @@
 ---
 {
     "title": "CLEAN PROFILE",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "用于手动清理所有历史 query 或 load 的 profile 信息。"
 }
 ---
 

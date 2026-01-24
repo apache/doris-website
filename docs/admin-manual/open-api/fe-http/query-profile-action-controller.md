@@ -1,7 +1,9 @@
 ---
 {
-    "title": "Query Profile Action",
-    "language": "en"
+    "title": "Query Profile Action Controller | Fe Http",
+    "language": "en",
+    "description": "The Query Profile Action is used to obtain the Query profile.",
+    "sidebar_label": "Query Profile Action Controller"
 }
 ---
 

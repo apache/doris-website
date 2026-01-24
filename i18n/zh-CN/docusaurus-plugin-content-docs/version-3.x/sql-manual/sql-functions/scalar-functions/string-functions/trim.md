@@ -1,7 +1,8 @@
 ---
 {
     "title": "TRIM",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "用于删除字符串两端的空格或指定字符，当没有 rhs 参数时，将参数 str 中右侧和左侧开始部分连续出现的空格去掉，否则去掉 rhs"
 }
 ---
 
@@ -12,7 +13,7 @@
 ## 语法
 
 ```sql
-RTIM( <str> [ , <rhs>])
+TRIM( <str> [ , <rhs>])
 ```
 ## 必选参数
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "Developing Plugins",
-    "language": "en"
+    "language": "en",
+    "description": "Doris plugin framework supports install/uninstall custom plugins at runtime without restart the Doris service."
 }
 ---
 

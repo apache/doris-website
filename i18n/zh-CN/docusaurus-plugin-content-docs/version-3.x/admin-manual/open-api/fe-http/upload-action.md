@@ -1,7 +1,8 @@
 ---
 {
     "title": "Upload Action",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "Upload Action 目前主要服务于 FE 的前端页面，用于用户导入一些测试性质的小文件。"
 }
 ---
 

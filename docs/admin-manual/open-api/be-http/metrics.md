@@ -1,7 +1,8 @@
 ---
 {
     "title": "Metrics",
-    "language": "en"
+    "language": "en",
+    "description": "Provided for prometheus"
 }
 ---
 

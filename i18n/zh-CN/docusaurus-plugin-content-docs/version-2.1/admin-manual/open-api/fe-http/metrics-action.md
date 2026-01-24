@@ -1,7 +1,8 @@
 ---
 {
     "title": "Metrics Action",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "获取 doris metrics 信息。"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "Manual bucketing",
-    "language": "en"
+    "language": "en",
+    "description": "If partitions are used, DISTRIBUTED ... statement describes the rules for dividing data within each partition."
 }
 ---
 

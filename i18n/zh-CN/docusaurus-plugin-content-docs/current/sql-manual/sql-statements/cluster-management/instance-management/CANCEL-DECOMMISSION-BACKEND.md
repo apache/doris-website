@@ -1,7 +1,8 @@
 ---
 {
     "title": "CANCEL DECOMMISSION BACKEND",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "该语句用于撤销一个 BE 节点下线操作。"
 }
 ---
 

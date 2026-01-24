@@ -1,7 +1,8 @@
 ---
 {
     "title": "Kerberos 最佳实践",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "当用户使用 Doris 进行多数据源的联邦分析查询时，不同的集群可能使用不同的 Kerberos 认证凭据。"
 }
 ---
 
@@ -262,3 +263,77 @@ docker inspect <container-name> | grep IPAddress
     ```
 
 至此，完成多 Kerberos 集群访问配置，您可以查看两个 Hive 集群中的数据，并使用不同的 Kerberos 凭证。
+
+## FAQ
+1. javax.security.sasl.SaslException: No common protection layer between client and server
+   - 原因: 客户端的 hadoop.rpc.protection 配置与 HDFS 集群上的配置不一致。
+   - 解决: 检查并统一客户端与 HDFS Server 的 hadoop.rpc.protection 配置。
+
+2. No valid credentials provided (Mechanism level: Illegal key size)
+   - 原因: Java 默认不支持大于 128 位的加密密钥长度。
+   - 解决: 下载并安装 Java Cryptography Extension (JCE) Unlimited Strength Jurisdiction Policy Files。将下载的 JAR 文件解压并放置到 $JAVA_HOME/jre/lib/security 目录下，然后重启相关服务。
+
+3. Encryption type AES256 CTS mode with HMAC SHA1-96 is not supported/enabled
+   - 原因: 当前 Java 环境不支持 AES256 加密，而 Kerberos 默认可能使用此加密方式。
+   - 解决:修改 Kerberos 配置文件 (/etc/krb5.conf)，在 [libdefaults] 部分指定一个当前环境支持的加密算法。 或者，安装 JCE 扩展包以启用对 AES256 的支持（同上一个问题）。
+
+4. No valid credentials provided (Mechanism level: Failed to find any Kerberos tgt)
+   - 原因: Kerberos 无法找到有效的票据授权票据 (Ticket Granting Ticket, TGT)。 对于已正常运行过的环境: 票据（Ticket）已过期或 Kerberos 服务端（KDC）已重启。 对于首次配置的环境: krb5.conf 配置文件有误，或 keytab 文件不正确/已损坏。
+   - 解决: 检查 krb5.conf 和 keytab 文件的正确性，并确保票据在有效期内。可以尝试使用 kinit 命令重新获取票据。
+
+5. Failure unspecified at GSS-API level (Mechanism level: Checksum failed)
+   - 原因: GSS-API 校验和失败。 kinit 时使用的密码错误。 keytab 文件无效或包含过期的密钥版本，导致 JVM 回退到尝试使用用户密码登录。
+   - 解决: 确认 kinit 使用的密码正确，并检查 keytab 文件是否为最新且有效。
+
+6. Receive timed out
+   - 原因: 使用 UDP 协议与 KDC 通信时，网络不稳定或数据包较大，容易导致超时。
+   - 解决: 强制 Kerberos 使用 TCP 协议。在 /etc/krb5.conf 的 [libdefaults] 部分添加以下配置：
+```shell
+   - [libdefaults]
+   udp_preference_limit = 1
+```
+7. javax.security.auth.login.LoginException: Unable to obtain password from user
+   - 原因: Principal 和 keytab 文件不匹配，或者应用程序无法读取 krb5.conf 或 keytab 文件。
+   - 解决:
+     - 使用 klist -kt <keytab_file> 和 kinit -kt <keytab_file> <principal> 命令验证 keytab 和 principal 是否匹配。 
+     - 检查 krb5.conf 和 keytab 文件的路径和文件权限，确保运行程序的用户有权读取它们。
+     - 确认 JVM 启动参数中是否正确指定了配置文件路径。
+
+8. Principal not found 或 Could not resolve Kerberos principal name
+   - 原因: 
+     - Principal 名称中的主机名无法被正确解析。 
+     - Principal 格式 user/_HOST@REALM 中的 _HOST 占位符被替换为了一个 KDC 无法识别的主机名。
+     - DNS 或 /etc/hosts 文件配置不正确，导致主机名解析失败。
+   - 解决:
+     - 检查 Principal 名称的拼写是否正确。
+     - 确保在所有相关节点（包括 Doris FE、BE 和 KDC）的 /etc/hosts 文件中都包含了正确的主机名和 IP 地址映射。
+
+9. Cannot find KDC for realm "XXX"
+   - 原因: 在 krb5.conf 文件中找不到指定 Realm 的 KDC 配置。
+   - 解决:
+     - 检查 krb5.conf 文件中 [realms] 部分的 Realm 名称是否拼写正确。
+     - 确认该 Realm 下的 kdc 地址是否配置正确。
+     - 如果修改或新增了 /etc/krb5.conf，需要重启 BE&FE 才能使配置生效。
+
+10. Request is a replay
+    - 原因: KDC 认为收到了一个重复的认证请求，这可能是攻击行为。 时间不同步: 集群中各节点（包括 KDC）的时钟不一致。 Principal 共享: 多个服务或进程共享了同一个 Principal（例如 service@REALM），导致认证请求冲突。
+    - 解决:
+     - 在所有节点上配置并启用 NTP 服务，确保时间同步。
+     - 为每个服务实例使用特定的 Principal，格式为 service/_HOST@REALM，避免共享。
+
+11. Client not found in Kerberos database
+    - 原因: 客户端 Principal 在 Kerberos 数据库中不存在。
+    - 解决: 确认使用的 Principal 是否已在 KDC 中正确创建。
+
+12. Message stream modified (41)
+    - 原因: 这通常是特定操作系统（如 CentOS 7）与 Kerberos/Java 组合下的已知问题。
+    - 解决: 联系操作系统供应商或查找相关的安全补丁。
+
+13. Pre-authentication information was invalid (24)
+    - 原因: 
+     - 预认证信息无效。
+     - 客户端和 KDC 之间的时钟不同步。
+     - 客户端 JDK 的加密算法与 KDC 不匹配。
+    - 解决:
+      - 检查并同步所有节点的时间。
+      - 检查并统一加密算法配置。

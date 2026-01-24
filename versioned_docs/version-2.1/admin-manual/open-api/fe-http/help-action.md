@@ -1,7 +1,8 @@
 ---
 {
     "title": "Help Action",
-    "language": "en"
+    "language": "en",
+    "description": "Used to obtain help through fuzzy query."
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "workload_group_privileges",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "存储 Workload Group 的权限信息"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "Load Best Practices",
-    "language": "en"
+    "language": "en",
+    "description": "It is recommended to prioritize using the Duplicate Key model,"
 }
 ---
 

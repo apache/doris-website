@@ -1,7 +1,8 @@
 ---
 {
     "title": "workload_group_privileges",
-    "language": "en"
+    "language": "en",
+    "description": "Stores permission information for Workload Groups."
 }
 ---
 

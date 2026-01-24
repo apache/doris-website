@@ -1,7 +1,8 @@
 ---
 {
     "title": "INSTR",
-    "language": "en"
+    "language": "en",
+    "description": "The INSTR function returns the position of the first occurrence of a substring in the main string, with position counting starting from 1."
 }
 ---
 

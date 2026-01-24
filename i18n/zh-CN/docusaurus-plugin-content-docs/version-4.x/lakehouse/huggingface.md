@@ -1,7 +1,8 @@
 ---
 {
     "title": "分析 Hugging Face 数据",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "Hugging Face 是一个广受欢迎的中心化平台，用户可以在上面存储、分享并协作构建机器学习模型、数据集以及其他资源。"
 }
 ---
 

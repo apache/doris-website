@@ -1,7 +1,9 @@
 ---
 {
-    "title": "Disk Capacity Management",
-    "language": "en"
+    "title": "Disk Capacity Management | Be Http",
+    "language": "en",
+    "description": "This document mainly introduces system parameters and processing strategies related to disk storage capacity.",
+    "sidebar_label": "Disk Capacity Management"
 }
 ---
 
@@ -146,3 +148,4 @@ When the disk capacity is higher than High Watermark or even Flood Stage, many o
     * Delete tablet metadata (refer to [Tablet metadata management tool](../../trouble-shooting/tablet-meta-tool)）
 
         ```./lib/meta_tool --operation=delete_header --root_path=/path/to/root_path --tablet_id=12345 --schema_hash= 352781111```
+

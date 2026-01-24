@@ -1,7 +1,8 @@
 ---
 {
     "title": "APPEND_TRAILING_CHAR_IF_ABSENT",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "用于在字符串末尾添加特定字符（如空格、特定符号等），如果该字符不存在于字符串的结尾时进行添加。函数的作用是确保字符串以特定字符结尾。"
 }
 ---
 

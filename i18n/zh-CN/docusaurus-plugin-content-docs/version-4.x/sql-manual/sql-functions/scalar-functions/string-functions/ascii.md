@@ -1,7 +1,8 @@
 ---
 {
     "title": "ASCII",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "返回字符串第一个字符对应的 ASCII 码值。该函数仅处理字符串的第一个字符，对于多字符字符串只返回首字符的 ASCII 值。"
 }
 ---
 

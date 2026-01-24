@@ -1,7 +1,8 @@
 ---
 {
     "title": "SHOW BACKUP",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "该语句用于查看 BACKUP 任务"
 }
 ---
 

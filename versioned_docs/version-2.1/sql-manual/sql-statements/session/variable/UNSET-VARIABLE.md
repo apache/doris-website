@@ -1,7 +1,8 @@
 ---
 {
     "title": "UNSET VARIABLE",
-    "language": "en"
+    "language": "en",
+    "description": "This statement is used to restore Doris system variables. These system variables can be modified at global or session level."
 }
 ---
 

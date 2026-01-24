@@ -1,7 +1,8 @@
 ---
 {
     "title": "LOG10",
-    "language": "en"
+    "language": "en",
+    "description": "Returns the natural logarithm of x to base 10."
 }
 ---
 

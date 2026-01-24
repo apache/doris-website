@@ -1,7 +1,8 @@
 ---
 {
     "title": "workload_group_resource_usage",
-    "language": "en"
+    "language": "en",
+    "description": "Stores usage information for Workload Group resources."
 }
 ---
 

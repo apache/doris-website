@@ -1,7 +1,8 @@
 ---
 {
     "title": "Table Schema Action",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "用于获取指定表的表结构信息。该接口目前用于 Spark/Flink Doris Connector 中，获取 Doris 的表结构信息。"
 }
 ---
 

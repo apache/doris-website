@@ -1,7 +1,8 @@
 ---
 {
     "title": "RESUME MATERIALIZED VIEW",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "该语句用于暂恢复物化视图的定时调度"
 }
 ---
 

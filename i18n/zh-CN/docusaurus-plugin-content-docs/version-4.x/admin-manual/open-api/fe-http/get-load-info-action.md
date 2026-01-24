@@ -1,7 +1,8 @@
 ---
 {
     "title": "Get Load Info Action",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "用于获取指定 label 的导入作业的信息。"
 }
 ---
 

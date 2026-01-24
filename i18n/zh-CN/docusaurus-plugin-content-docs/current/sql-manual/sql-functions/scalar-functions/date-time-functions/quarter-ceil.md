@@ -1,7 +1,8 @@
 ---
 {
     "title": "QUARTER_CEIL",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "QUARTERCEIL 函数用于将输入的日期时间值向上取整到最近的指定季度周期。若指定起始时间（origin），则以该时间为基准划分周期并取整；若未指定，默认以 0001-01-01 00:00:00 为基准。该函数支持处理 DATETIME、DATE 类型。"
 }
 ---
 
@@ -32,14 +33,16 @@ QUARTER_CEIL(`<date_or_time_expr>`, `<period>`, `<origin>`)
 
 | 参数 | 说明 |
 | ---- | ---- |
-| `<date_or_time_expr>` | 需要向上取整的日期时间值，参数是合法的日期表达式，支持输入 date/datetime 类型,具体 datetime 和 date 格式请查看 [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
+| `<date_or_time_expr>` | 需要向上取整的日期时间值，参数是合法的日期表达式，支持输入 date/datetime/timestamptz 类型,具体格式请查看 [timestamptz的转换](../../../../sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion), [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
 | `<period>` | 季度周期值，类型为 INT，表示每个周期包含的季度数 |
 | `<origin>` | 周期的起始时间点，支持输入 date/datetime 类型，默认值为 0001-01-01 00:00:00 |
 
 ## 返回值
 
-返回类型为 DATETIME，返回以输入日期时间为基准，向上取整到最近的指定季度周期后的时间值。返回值的精度与输入参数 datetime 的精度相同。
+返回类型为 TIMESTAMPTZ, DATETIME 或 DATE，返回以输入日期时间为基准，向上取整到最近的指定季度周期后的时间值。返回值的精度与输入参数的精度相同。
 
+- 若输入为 TIMESTAMPTZ 类型，则会先将其转换为 local_time(如：`2025-12-31 23:59:59+05:00` 在会话变量为`+08:00`的情况下代表的local_time为`2026-01-01 02:59:59`),再进行 CEIL 计算操作。
+- 若输入的时间值(`<date_or_time_expr>` 和`<period>`)同时包含 TIMESTAMPTZ 和 DATETIME 类型，则输出 DATETIME 类型。
 - 若 `<period>` 为非正，返回错误。
 - 若任一参数为 NULL，返回 NULL。
 - 不指定 period 时，默认以 1 个季度为周期。
@@ -131,6 +134,23 @@ SELECT QUARTER_CEIL(NULL, 1), QUARTER_CEIL('2023-07-13 22:28:18', NULL) AS resul
 +-----------------------+--------+
 | NULL                  | NULL   |
 +-----------------------+--------+
+
+-- TimeStampTz类型样例, SET time_zone = '+08:00'
+-- 将变量值转换为 local_time(2026-01-01 02:59:59)后再做 CEIL 操作
+SELECT QUARTER_CEIL('2025-12-31 23:59:59+05:00');
++-------------------------------------------+
+| QUARTER_CEIL('2025-12-31 23:59:59+05:00') |
++-------------------------------------------+
+| 2026-04-01 00:00:00+08:00                 |
++-------------------------------------------+
+
+-- 若参数同时包含 TimeStampTz 和 Datetime 类型，则输出 DateTime 类型
+SELECT QUARTER_CEIL('2025-12-31 23:59:59+05:00', '2025-12-15 00:00:00.123');
++----------------------------------------------------------------------+
+| QUARTER_CEIL('2025-12-31 23:59:59+05:00', '2025-12-15 00:00:00.123') |
++----------------------------------------------------------------------+
+| 2026-03-15 00:00:00.123                                              |
++----------------------------------------------------------------------+
 ```
 
 ## 最佳实践

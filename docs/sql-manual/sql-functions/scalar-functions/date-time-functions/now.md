@@ -1,7 +1,8 @@
 ---
 {
     "title": "NOW",
-    "language": "en"
+    "language": "en",
+    "description": "The NOW function is used to get the current system date and time, returning a value of type DATETIME."
 }
 ---
 

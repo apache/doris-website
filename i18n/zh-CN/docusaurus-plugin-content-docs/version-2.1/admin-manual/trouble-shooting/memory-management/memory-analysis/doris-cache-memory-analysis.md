@@ -1,7 +1,8 @@
 ---
 {
     "title": "Cache 内存分析",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "Doris 自己管理的 Cache 目前均为 LRU 淘汰策略，均支持单独通过参数控制容量和淘汰时长。"
 }
 ---
 

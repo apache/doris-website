@@ -1,7 +1,8 @@
 ---
 {
     "title": "ALTER TABLE PROPERTY",
-    "language": "en"
+    "language": "en",
+    "description": "This statement is used to modify the properties of an existing table. This operation is synchronous,"
 }
 ---
 

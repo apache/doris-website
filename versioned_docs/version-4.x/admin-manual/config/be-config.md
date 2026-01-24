@@ -3,7 +3,8 @@
     "title": "BE Configuration",
     "language": "en",
     "toc_min_heading_level": 2,
-    "toc_max_heading_level": 4
+    "toc_max_heading_level": 4,
+    "description": "This document mainly introduces the relevant configuration items of BE."
 }
 ---
 

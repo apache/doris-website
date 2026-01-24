@@ -1,7 +1,8 @@
 ---
 {
     "title": "ATAN",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "返回x的反正切值，x为弧度值。"
 }
 ---
 

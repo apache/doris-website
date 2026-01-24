@@ -1,7 +1,8 @@
 ---
 {
     "title": "key_column_usage",
-    "language": "en"
+    "language": "en",
+    "description": "This table is solely for compatibility with MySQL behavior. It is always empty."
 }
 ---
 

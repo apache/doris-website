@@ -1,7 +1,8 @@
 ---
 {
     "title": "ARRAY_POPFRONT",
-    "language": "en-US"
+    "language": "en-US",
+    "description": "Removes the first element from an array. The function returns a new array containing all elements from the original array except the first one."
 }
 ---
 

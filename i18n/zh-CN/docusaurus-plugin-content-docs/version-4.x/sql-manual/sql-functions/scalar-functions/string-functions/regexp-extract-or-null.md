@@ -1,7 +1,8 @@
 ---
 {
     "title": "REGEXP_EXTRACT_OR_NULL",
-    "language": "ZH-CN"
+    "language": "ZH-CN",
+    "description": "从文本字符串中提取与目标正则表达式模式匹配的第一个子字符串，并根据表达式组索引从中提取特定组。"
 }
 ---
 

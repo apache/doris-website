@@ -1,7 +1,8 @@
 ---
 {
     "title": "JSON_KEYS",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "用于从 JSON 对象的顶级值中返回键。这些键作为数组返回，或者如果给定了路径参数，则返回所选路径的顶级键。您需要将 JSON 文档作为函数的参数提供。您还可以（可选地）提供第二个参数，以指定 JSON 文档中“顶级”路径从何处开始。 其中，jsondoc 是 JSON 文档，"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "FROM_DAYS",
-    "language": "en"
+    "language": "en",
+    "description": "Given a number of days, returns a DATE."
 }
 ---
 

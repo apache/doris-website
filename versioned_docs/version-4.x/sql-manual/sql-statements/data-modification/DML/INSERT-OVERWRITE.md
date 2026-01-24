@@ -1,10 +1,9 @@
 ---
 {
     "title": "INSERT OVERWRITE",
-    "language": "en"
+    "language": "en",
+    "description": "The function of this statement is to overwrite a table or some partitions of a table"
 }
-
-
 ---
 
 ## Description

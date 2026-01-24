@@ -1,7 +1,8 @@
 ---
 {
-"title": "ALTER JOB",
-"language": "en"
+    "title": "ALTER JOB",
+    "language": "en",
+    "description": "A user can modify a job. Only jobs in the PAUSE state can be modified, and only Streaming type jobs can be modified."
 }
 ---
 

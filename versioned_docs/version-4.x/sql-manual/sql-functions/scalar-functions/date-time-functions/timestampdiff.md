@@ -1,7 +1,8 @@
 ---
 {
-  "title": "TIMESTAMPDIFF",
-  "language": "en"
+    "title": "TIMESTAMPDIFF",
+    "language": "en",
+    "description": "Same functionality as the date-diff function The TIMESTAMPDIFF function calculates the difference between two datetime values and returns the result "
 }
 ---
 

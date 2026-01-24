@@ -1,7 +1,8 @@
 ---
 {
-"title": "Apache Superset",
-"language": "zh-CN"
+    "title": "Apache Superset",
+    "language": "zh-CN",
+    "description": "Apache Superset 是一个开源的数据挖掘平台，支持丰富的数据源连接，多种可视化方式，并能够对用户实现细粒度的权限控制。该工具主要特点是可自助分析、自定义仪表盘、分析结果可视化（导出）、用户/角色权限控制，还集成了一个 SQL 编辑器，可以进行 SQL 编辑查询等。"
 }
 ---
 

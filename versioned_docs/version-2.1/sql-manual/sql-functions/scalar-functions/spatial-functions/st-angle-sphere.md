@@ -1,7 +1,8 @@
 ---
 {
     "title": "ST_ANGLE_SPHERE",
-    "language": "en"
+    "language": "en",
+    "description": "Calculate the center Angle between two points on the Earth's surface in degrees. The parameters passed in are the longitude of point X,"
 }
 ---
 

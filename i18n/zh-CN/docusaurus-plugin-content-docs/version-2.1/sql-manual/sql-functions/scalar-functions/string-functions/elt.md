@@ -1,7 +1,8 @@
 ---
 {
     "title": "ELT",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "在指定的索引处返回一个字符串。特殊情况："
 }
 ---
 

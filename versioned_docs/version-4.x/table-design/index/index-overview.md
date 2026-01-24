@@ -1,7 +1,8 @@
 ---
 {
     "title": "Index Overview",
-    "language": "en"
+    "language": "en",
+    "description": "Database indexes are used to accelerate queries. To speed up different query scenarios, Doris supports various rich indexes."
 }
 ---
 

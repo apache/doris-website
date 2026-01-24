@@ -1,7 +1,8 @@
 ---
 {
     "title": "SHOW CATALOGS",
-    "language": "en"
+    "language": "en",
+    "description": "This statement is used for view created catalogs"
 }
 ---
 

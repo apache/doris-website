@@ -1,7 +1,8 @@
 ---
 {
     "title": "TO_IPV6_OR_NULL",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "输入 IPv6 地址的字符串形式，并返回 IPv6 类型的值。对于无效输入或 NULL 输入，返回 NULL。"
 }
 ---
 

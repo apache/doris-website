@@ -1,7 +1,8 @@
 ---
 {
     "title": "NEXT_DAY",
-    "language": "cn"
+    "language": "cn",
+    "description": "NEXTDAY 函数用于返回指定日期之后第一个匹配目标星期几的日期，例如 NEXTDAY('2020-01-31', 'MONDAY') 表示 2020-01-31 之后的第一个周一。该函数支持处理 DATE、DATETIME 类型，忽略输入中的时间部分（仅基于日期部分计算）。"
 }
 ---
 

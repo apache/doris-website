@@ -1,7 +1,8 @@
 ---
 {
-"title": "Data Lake Query Optimization",
-"language": "en"
+    "title": "Data Lake Query Optimization",
+    "language": "en",
+    "description": "This document mainly introduces optimization methods and strategies for querying lake data (Hive, Iceberg, Paimon, etc.)."
 }
 ---
 

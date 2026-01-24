@@ -1,9 +1,13 @@
 ---
 {
-  "title": "Deploy Doris Cluster",
-  "language": "en"
+    "title": "Deploy Doris Cluster | Integrated Storage Compute",
+    "language": "en",
+    "description": "To deploy a Doris cluster on Kubernetes, ensure that the Doris Operator is deployed.",
+    "sidebar_label": "Deploy Doris Cluster"
 }
 ---
+
+# Deploy Doris Cluster
 
 To deploy a Doris cluster on Kubernetes, ensure that [the Doris Operator is deployed](install-doris-operator.md).  
 The deployment process for a Doris cluster consists of three steps: download the deployment template, custom the template and deploy cluster, and verify the cluster status.
@@ -36,3 +40,4 @@ Expected output:
 NAME                  FESTATUS    BESTATUS    CNSTATUS   BROKERSTATUS
 doriscluster-sample   available   available
 ```
+

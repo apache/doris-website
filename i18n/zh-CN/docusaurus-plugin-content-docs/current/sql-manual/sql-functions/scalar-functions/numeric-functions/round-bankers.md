@@ -1,7 +1,8 @@
 ---
 {
     "title": "ROUND_BANKERS",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "将x使用银行家舍入法后，保留 d 位小数，d默认为 0。"
 }
 ---
 

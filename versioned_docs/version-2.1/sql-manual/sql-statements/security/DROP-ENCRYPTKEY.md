@@ -1,7 +1,8 @@
 ---
 {
-   "title": "DROP ENCRYPTKEY",
-   "language": "en"
+    "title": "DROP ENCRYPTKEY",
+    "language": "en",
+    "description": "Delete a custom key. The name of the key is exactly the same to be deleted."
 }
 ---
 

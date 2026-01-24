@@ -1,13 +1,14 @@
 ---
 {
     "title": "MINUTES_SUB",
-    "language": "en"
+    "language": "en",
+    "description": "The MINUTESSUB function subtracts a specified number of minutes from the input datetime value and returns the resulting new datetime value."
 }
 ---
 
 ## Description
 
-The MINUTES_SUB function subtracts a specified number of minutes from the input datetime value and returns the resulting new datetime value. This function supports processing DATE and DATETIME types.
+The MINUTES_SUB function subtracts a specified number of minutes from the input datetime value and returns the resulting new datetime value. This function supports processing DATE, DATETIME and TIMESTAMPTZ types.
 
 This function is consistent with [date_sub function](./date-sub) and MySQL's [date_sub function](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_date-sub) when using MINUTE as the unit.
 
@@ -21,13 +22,16 @@ MINUTES_SUB(`<date_or_time_expr>`, `<minutes>`)
 
 | Parameter | Description |
 | --------- | ----------- |
-| `<date_or_time_expr>` | The input datetime value, which can be of type DATE or DATETIME. For specific datetime/date formats, see [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion). |
+| `<date_or_time_expr>` | The input datetime value, which can be of type DATE, DATETIME or TIMESTAMPTZ. For specific datetime/date formats, see [timestamptz conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion), [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion). |
 | `<minutes>` | The number of minutes to subtract, of type BIGINT. Can be positive or negative. |
 
 ## Return Value
 
-Returns a value of type DATETIME, representing the datetime value after subtracting the specified number of minutes.
+Return the result of subtracting the specified minutes `<minutes>` from the base time `<datetime_like_type>`, with the return type being related to the type of the first parameter:
+- If the first parameter is TIMESTAMPTZ, then return TIMESTAMPTZ.
+- If the first parameter is DATETIME, then return DATETIME.
 
+Special cases:
 - If `<minutes>` is negative, the function behaves the same as adding the corresponding minutes to the base time (i.e., MINUTES_SUB(date, -n) is equivalent to MINUTES_ADD(date, n)).
 - If the input is of DATE type (only includes year, month, and day), its time part defaults to 00:00:00.
 - If the input datetime includes microseconds, the original microsecond precision is preserved after subtracting minutes (e.g., '2023-01-01 00:01:00.123456' becomes '2023-01-01 00:00:00.123456' after subtracting 1 minute).
@@ -68,6 +72,14 @@ SELECT MINUTES_SUB('2023-07-13', 30) AS result;
 +---------------------+
 | 2023-07-12 23:30:00 |
 +---------------------+
+
+-- Example of TimeStampTz type, SET time_zone = '+08:00'
+SELECT MINUTES_SUB('2025-10-10 11:22:33.123+07:00', 1);
++-------------------------------------------------+
+| MINUTES_SUB('2025-10-10 11:22:33.123+07:00', 1) |
++-------------------------------------------------+
+| 2025-10-10 12:21:33.123+08:00                   |
++-------------------------------------------------+
 
 -- Any parameter is NULL, returns NULL
 SELECT MINUTES_SUB(NULL, 10), MINUTES_SUB('2023-07-13 22:28:18', NULL) AS result;

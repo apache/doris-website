@@ -1,7 +1,8 @@
 ---
 {
     "title": "COMMIT",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "提交一个显式事务。与 BEGIN 成对使用。"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "Config Dir",
-    "language": "en"
+    "language": "en",
+    "description": "The configuration file directory for FE and BE is conf/. In addition to storing the default fe.conf, be.conf and other files,"
 }
 ---
 

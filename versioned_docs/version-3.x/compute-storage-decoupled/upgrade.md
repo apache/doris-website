@@ -1,7 +1,8 @@
 ---
 {
-   "title": "Upgrade",
-   "language": "en"
+    "title": "Upgrade",
+    "language": "en",
+    "description": "This guide provides step-by-step instructions for upgrading Doris using a storage-compute decoupling architecture (a.k.a. Cloud Mode)."
 }
 ---
 

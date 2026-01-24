@@ -1,7 +1,8 @@
 ---
 {
     "title": "NULL_OR_EMPTY",
-    "language": "en"
+    "language": "en",
+    "description": "The nullorempty function is used to determine whether the given value is not NULL and not empty. If the input value is neither NULL nor empty,"
 }
 ---
 

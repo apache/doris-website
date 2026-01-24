@@ -1,7 +1,8 @@
 ---
 {
-  "title": "Config Cluster",
-  "language": "en"
+    "title": "Config Cluster",
+    "language": "en",
+    "description": "In a disaggregated compute-storage cluster, certain configurations apply at the cluster level,"
 }
 ---
 
@@ -11,6 +12,11 @@ In a disaggregated compute-storage cluster, certain configurations apply at the 
 Managing Doris nodes requires connecting to a live Frontend (FE) node using a username and password via the MySQL protocol. Doris implements a [role-based access control (RBAC)-like authorization mechanism](../../../admin-manual/auth/authentication-and-authorization), and node management operations require a user account with the [Node_priv](../../../admin-manual/auth/authentication-and-authorization#Types-of-Permissions) privilege.
 
 By default, the Doris Operator uses the root user—who has full privileges and no password—for deploying and managing clusters defined in the DorisDisaggregatedCluster resource. Once a password is assigned to the root account, it is necessary to explicitly configure a username and password with Node_priv in the DorisDisaggregatedCluster resource, enabling the Doris Operator to continue performing automated management tasks.
+
+Regardless of the password configuration method, please note the following:
+- Passwords for existing users such as root and admin will not be automatically changed by the operator under any circumstances. Users need to configure or change them manually.
+- It is strongly discouraged to use the admin user as the operator's management user. The admin user is typically used as the user with the highest database read/write privileges, not for cluster maintenance. The admin user lacks specific permissions for certain functions of the operator.
+- Non-root users should be used exclusively for their intended purpose and not for other uses. This is to avoid password changes failing to sync with the operator or resulting in lost permissions, leading to operational failures.
 
 The DorisDisaggregatedCluster resource supports two methods for configuring the credentials required to manage cluster nodes: using environment variables, or using a Kubernetes Secret. Depending on the deployment scenario, the management credentials can be configured in the following ways:
 
@@ -81,7 +87,7 @@ spec:
     name: root
     password: ${password}
 ```
-Here, ${password} should be the plaintext (unencrypted) password for the root user.
+Here, `${password}` should be the plaintext (unencrypted) password for the root user.
 
 **Option 2: Using a Secret**  
 Doris Operator also supports using a [Basic Authentication Secret](https://kubernetes.io/docs/concepts/configuration/secret/#basic-authentication-secret) to provide the root username and password. Doris Operator will mount this Secret into the container as a file, which auxiliary services will parse to retrieve the credentials and use them to automatically add nodes to the cluster.
@@ -96,13 +102,13 @@ The Secret must contain exactly two fields: `username` and `password`.
       username: root
       password: ${password}
     ```
-   ${password} is the plaintext password for the root user.  
+   `${password}` is the plaintext password for the root user.  
    Deploy the Secret to the Kubernetes cluster using the command below:
     ```yaml
     kubectl -n ${namespace} apply -f ${secretFileName}.yaml
     ```
-   ${namespace}: the target namespace where the DorisDisaggregatedCluster will be deployed.  
-   ${secretFileName}: the name of the YAML file containing the Secret definition
+   `${namespace}`: the target namespace where the DorisDisaggregatedCluster will be deployed.  
+   `${secretFileName}`: the name of the YAML file containing the Secret definition
 
 2. Configure the DorisDisaggregatedCluster Resource  
    Reference the Secret in the `DorisDisaggregatedCluster` resource using the `spec.authSecret` field:
@@ -110,7 +116,7 @@ The Secret must contain exactly two fields: `username` and `password`.
     spec:
       authSecret: ${secretName}
     ```
-   Here, ${secretName} is the name of the Kubernetes Secret containing the root user credentials.
+   Here, `${secretName}` is the name of the Kubernetes Secret containing the root user credentials.
 
 ### Automatically Creating a Non-Root Administrative User and Password During Deployment (Recommended)
 If you choose not to set an initial password for the root user during the first deployment, you can configure a non-root administrative user and its password using either environment variables or a Kubernetes Secret. Doris's auxiliary services within the container will automatically create this user within Doris, assign the specified password, and grant it the `Node_priv` privilege. The Doris Operator will then use this automatically created user account to manage cluster nodes.
@@ -123,7 +129,7 @@ spec:
     name: ${DB_ADMIN_USER}
     password: ${DB_ADMIN_PASSWD}
 ```
-${DB_ADMIN_USER}: the name of the new non-root user with administrative privileges. ${DB_ADMIN_PASSWD}: the password to assign to the new user.
+`${DB_ADMIN_USER}`: the name of the new non-root user with administrative privileges. `${DB_ADMIN_PASSWD}`: the password to assign to the new user.
 
 #### Option 2: Using a Secret
 a. Create the Required Secret  
@@ -133,12 +139,12 @@ stringData:
   username: ${DB_ADMIN_USER}
   password: ${DB_ADMIN_PASSWD}
 ```
-${DB_ADMIN_USER}: the username for the new administrative user. ${DB_ADMIN_PASSWD}: the password to assign to the new user.
+`${DB_ADMIN_USER}`: the username for the new administrative user. `${DB_ADMIN_PASSWD}`: the password to assign to the new user.
 Deploy the Secret to your Kubernetes cluster using:
 ```shell
 kubectl -n ${namespace} apply -f ${secretFileName}.yaml
 ```
-${namespace}: the namespace where the DorisDisaggregatedCluster resource is deployed. ${secretFileName}: the name of the YAML file defining the Secret.
+`${namespace}`: the namespace where the DorisDisaggregatedCluster resource is deployed. `${secretFileName}`: the name of the YAML file defining the Secret.
 
 b. Update the DorisDisaggregatedCluster Resource  
 Specify the Secret in the `DorisDisaggregatedCluster` resource:
@@ -146,7 +152,7 @@ Specify the Secret in the `DorisDisaggregatedCluster` resource:
 spec:
   authSecret: ${secretName}
 ```
-${secretName}: the name of the Secret containing the non-root administrative user credentials.
+`${secretName}`: the name of the Secret containing the non-root administrative user credentials.
 
 :::tip Note
 After deployment, it is recommended to set a password for the root user. Once this is done, Doris Operator will switch to managing cluster nodes using the new non-root user. Avoid deleting this user after it has been created.
@@ -160,7 +166,7 @@ Connect to the database using the MySQL protocol, and execute the following SQL 
 ```sql
 CREATE USER '${DB_ADMIN_USER}' IDENTIFIED BY '${DB_ADMIN_PASSWD}';
 ```
-${DB_ADMIN_USER}: the name of the user to be created. ${DB_ADMIN_PASSWD}: the password for the new user.
+`${DB_ADMIN_USER}`: the name of the user to be created. `${DB_ADMIN_PASSWD}`: the password for the new user.
 
 #### Step 2: Grant Node_priv Privilege to the User
 Still connected via the MySQL protocol, execute the following command to grant the `Node_priv` privilege:
@@ -178,7 +184,7 @@ Refer to the official [CREATE USER documentation](../../../sql-manual/sql-statem
         name: ${DB_ADMIN_USER}
         password: ${DB_ADMIN_PASSWD}
     ```
-  ${DB_ADMIN_USER}: the name of the new administrative user. ${DB_ADMIN_PASSWD}: the corresponding password.
+  `${DB_ADMIN_USER}`: the name of the new administrative user. `${DB_ADMIN_PASSWD}`: the corresponding password.
 
 - Option 2: Using a Secret  
   a. Define the Secret  
@@ -192,7 +198,7 @@ Refer to the official [CREATE USER documentation](../../../sql-manual/sql-statem
     ```shell
     kubectl -n ${namespace} apply -f ${secretFileName}.yaml
     ```
-  ${namespace}: the namespace where the DorisDisaggregatedCluster resource is deployed. ${secretFileName}: the name of the Secret definition file.
+  `${namespace}`: the namespace where the DorisDisaggregatedCluster resource is deployed. `${secretFileName}`: the name of the Secret definition file.
 
   b. Update the DorisDisaggregatedCluster Resource  
   Reference the Secret in the resource configuration:
@@ -200,7 +206,7 @@ Refer to the official [CREATE USER documentation](../../../sql-manual/sql-statem
     spec:
       authSecret: ${secretName}
     ```
-  ${secretName}: the name of the Secret containing the user credentials.
+  `${secretName}`: the name of the Secret containing the user credentials.
 
 :::tip Note
 - After configuring the root password and specifying a new user with node management privileges, Doris Operator will trigger a rolling restart of existing services in the cluster.
@@ -215,12 +221,12 @@ The Doris Operator mounts the krb5.conf file using a ConfigMap resource and moun
     ```shell
     kubectl create -n ${namespace} configmap ${name} --from-file=krb5.conf
     ```
-   Replace ${namespace} with the namespace where the DorisDisaggregatedCluster is deployed, and ${name} with the desired name for the ConfigMap.
+   Replace `${namespace}` with the namespace where the DorisDisaggregatedCluster is deployed, and `${name}` with the desired name for the ConfigMap.
 2. Create a Secret containing the keytab files:
     ```shell
     kubectl create -n ${namespace} secret generic ${name} --from-file=${xxx.keytab}
     ```
-   Replace ${namespace} with the namespace where the DorisDisaggregatedCluster is deployed, and ${name} with the desired name for the Secret. If multiple keytab files need to be mounted, refer to the [kubectl create Secret documentation](https://kubernetes.io/docs/reference/kubectl/generated/kubectl_create/kubectl_create_secret/) to include them in a single Secret.
+   Replace `${namespace}` with the namespace where the DorisDisaggregatedCluster is deployed, and `${name}` with the desired name for the Secret. If multiple keytab files need to be mounted, refer to the [kubectl create Secret documentation](https://kubernetes.io/docs/reference/kubectl/generated/kubectl_create/kubectl_create_secret/) to include them in a single Secret.
 3. Configure the DorisDisaggregatedCluster resource to specify the ConfigMap containing krb5.conf and the Secret containing keytab files:
     ```yaml
     spec:
@@ -229,4 +235,4 @@ The Doris Operator mounts the krb5.conf file using a ConfigMap resource and moun
         keytabSecretName: ${keytabSecretName}
         keytabPath: ${keytabPath}
     ```
-   ${krb5ConfigMapName}: Name of the ConfigMap containing the krb5.conf file. ${keytabSecretName}: Name of the Secret containing the keytab files. ${keytabPath}: The directory path in the container where the Secret mounts the keytab files. This path should match the directory specified by hadoop.kerberos.keytab when creating a catalog. For catalog configuration details, refer to the [Hive Catalog configuration](../../../lakehouse/catalogs/hive-catalog.mdx) documentation.
+   `${krb5ConfigMapName}`: Name of the ConfigMap containing the krb5.conf file. `${keytabSecretName}`: Name of the Secret containing the keytab files. `${keytabPath}`: The directory path in the container where the Secret mounts the keytab files. This path should match the directory specified by hadoop.kerberos.keytab when creating a catalog. For catalog configuration details, refer to the [Hive Catalog configuration](../../../lakehouse/catalogs/hive-catalog.mdx) documentation.

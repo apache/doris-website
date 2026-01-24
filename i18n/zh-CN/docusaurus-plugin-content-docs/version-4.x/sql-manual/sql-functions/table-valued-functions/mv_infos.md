@@ -1,7 +1,8 @@
 ---
 {
     "title": "MV_INFOS",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "表函数，生成异步物化视图临时表，可以查看某个 db 中创建的异步物化视图信息。"
 }
 ---
 

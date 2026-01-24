@@ -1,7 +1,8 @@
 ---
 {
     "title": "SEC_TO_TIME",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "SECTOTIME 函数用于将以秒为单位的数值转换为 TIME 类型，返回格式为 HH:MM:SS 或 HH:MM:SS.ssssss。输入的秒数表示从一天的起点时间（00:00:00.000000）开始计算的时间。。该函数将输入的秒数解析为从一天起点时间（00:00:00）开始计算的时间偏移量，"
 }
 ---
 

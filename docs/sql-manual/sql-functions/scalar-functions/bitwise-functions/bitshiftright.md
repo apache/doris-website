@@ -1,7 +1,8 @@
 ---
 {
-"title": "BIT_SHIFT_RIGHT",
-"language": "zh-CN"
+    "title": "BIT_SHIFT_RIGHT",
+    "language": "zh-CN",
+    "description": "Performs a right shift bitwise operation, which moves all bits of a binary number to the right by a specified number of positions."
 }
 ---
 

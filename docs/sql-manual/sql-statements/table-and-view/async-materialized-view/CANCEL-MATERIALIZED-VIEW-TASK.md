@@ -1,7 +1,8 @@
 ---
 {
     "title": "CANCEL MATERIALIZED VIEW TASK",
-    "language": "en"
+    "language": "en",
+    "description": "This statement is used to cancel the task of materialized views"
 }
 ---
 

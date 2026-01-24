@@ -1,7 +1,8 @@
 ---
 {
     "title": "TO_IPV4",
-    "language": "en"
+    "language": "en",
+    "description": "Takes the string form of an IPv4 address and returns a value of IPv4 type."
 }
 ---
 

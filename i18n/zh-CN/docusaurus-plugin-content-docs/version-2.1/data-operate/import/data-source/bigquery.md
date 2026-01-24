@@ -1,7 +1,8 @@
 ---
 {
     "title": "BigQuery",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "在迁移 BigQuery 的过程中，通常需要借助对象存储作为中间媒介。核心流程如下：首先通过 BigQuery 的 Export 语句将数据导出到 GCS（Google Cloud Storage）；再利用 Doris 的 S3 Load 功能从对象存储中读取数据并导入到 Doris 中，"
 }
 ---
 

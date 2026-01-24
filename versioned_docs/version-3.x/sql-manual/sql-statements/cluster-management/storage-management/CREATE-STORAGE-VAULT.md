@@ -3,7 +3,8 @@
     "title": "CREATE-STORAGE-VAULT",
     "language": "en",
     "toc_min_heading_level": 2,
-    "toc_max_heading_level": 4
+    "toc_max_heading_level": 4,
+    "description": "This command is used to create a storage vault. The topic of this document describes the syntax for creating a self-managed storage vault in Doris."
 }
 ---
 

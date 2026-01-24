@@ -1,7 +1,8 @@
 ---
 {
     "title": "CLEAN QUERY STATS",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "该语句用清空查询统计信息"
 }
 ---
 

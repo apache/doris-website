@@ -1,7 +1,8 @@
 ---
 {
     "title": "ATANH",
-    "language": "en"
+    "language": "en",
+    "description": "Returns the hyperbolic arc tangent of x, or NULL if x is not in the range -1 to 1 (excluding -1 and 1)."
 }
 ---
 

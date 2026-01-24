@@ -1,7 +1,8 @@
 ---
 {
     "title": "MaxCompute Catalog",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "MaxCompute 是阿里云上的企业级 SaaS（Software as a Service）模式云数据仓库。通过 MaxCompute 提供的开放存储 SDK，Doris 可以获取 MaxCompute 的表信息并进行查询。"
 }
 ---
 

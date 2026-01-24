@@ -1,7 +1,8 @@
 ---
 {
     "title": "Multi-Dimensional Analytics",
-    "language": "en"
+    "language": "en",
+    "description": "In a database, ROLLUP, CUBE, and GROUPING SETS are advanced SQL statements used for multidimensional data aggregation."
 }
 ---
 

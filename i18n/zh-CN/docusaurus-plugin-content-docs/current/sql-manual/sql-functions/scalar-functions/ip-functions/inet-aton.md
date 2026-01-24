@@ -1,7 +1,8 @@
 ---
 {
     "title": "inet_aton",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "别名 ipv4stringtonumornull。"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "最新发布",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "本文列出了近一年内所有已发布的 Apache Doris 版本，按发布时间倒序呈现。"
 }
 ---
 

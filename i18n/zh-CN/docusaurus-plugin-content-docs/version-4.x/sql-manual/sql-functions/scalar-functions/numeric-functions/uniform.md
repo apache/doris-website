@@ -1,7 +1,8 @@
 ---
 {
     "title": "UNIFORM",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "使用给定的随机数种子，在特定范围内均匀采样生成随机数。"
 }
 ---
 

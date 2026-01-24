@@ -1,7 +1,8 @@
 ---
 {
     "title": "DROP WORKLOAD POLICY",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "删除一个 Workload Policy"
 }
 ---
 

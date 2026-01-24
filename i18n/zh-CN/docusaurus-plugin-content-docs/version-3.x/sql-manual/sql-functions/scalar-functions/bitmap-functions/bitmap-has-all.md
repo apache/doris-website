@@ -1,7 +1,8 @@
 ---
 {
     "title": "BITMAP_HAS_ALL",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "判断一个 Bitmap 是否包含另一个 Bitmap 的全部元素。"
 }
 ---
 

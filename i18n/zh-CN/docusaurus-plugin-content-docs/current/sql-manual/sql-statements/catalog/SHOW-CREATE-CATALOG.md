@@ -1,7 +1,8 @@
 ---
 {
     "title": "SHOW CREATE CATALOG",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "该语句查看 Doris 数据目录的创建语句。"
 }
 ---
 

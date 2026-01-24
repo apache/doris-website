@@ -1,7 +1,8 @@
 ---
 {
     "title": "HLL_CARDINALITY",
-    "language": "en"
+    "language": "en",
+    "description": "HLLCARDINALITY calculates the cardinality of a HyperLogLog (HLL) type value."
 }
 ---
 

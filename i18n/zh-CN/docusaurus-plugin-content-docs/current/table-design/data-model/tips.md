@@ -1,7 +1,8 @@
 ---
 {
     "title": "使用注意",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "这里针对 Aggregate 模型，来介绍下聚合模型的局限性。"
 }
 ---
 

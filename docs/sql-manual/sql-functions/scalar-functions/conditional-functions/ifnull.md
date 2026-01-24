@@ -1,7 +1,8 @@
 ---
 {
     "title": "IFNULL",
-    "language": "en"
+    "language": "en",
+    "description": "If the value of <expr1> is not NULL, returns <expr1>; otherwise, returns <expr2>."
 }
 ---
 

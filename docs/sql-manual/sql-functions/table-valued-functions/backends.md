@@ -1,7 +1,8 @@
 ---
 {
     "title": "BACKENDS",
-    "language": "en"
+    "language": "en",
+    "description": "The table function generates the backends temporary table, and you can view the BE node information in the current doris cluster."
 }
 ---
 

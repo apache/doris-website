@@ -1,7 +1,8 @@
 ---
 {
-"title": "CORR_WELFORD",
-"language": "en"
+    "title": "CORR_WELFORD",
+    "language": "en",
+    "description": "Calculate the Pearson coefficient of two random variables using the Welford algorithm, which can effectively reduce calculation errors."
 }
 ---
 

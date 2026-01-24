@@ -1,7 +1,8 @@
 ---
 {
     "title": "SECONDS_ADD",
-    "language": "en"
+    "language": "en",
+    "description": "The function adds or subtracts a specified number of seconds to/from a given datetime value and returns the resulting datetime."
 }
 ---
 

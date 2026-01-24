@@ -1,7 +1,8 @@
 ---
 {
     "title": "SIGNBIT",
-    "language": "en"
+    "language": "en",
+    "description": "Determine whether the sign bit of the given floating-point number is set."
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "MaxCompute Catalog",
-    "language": "en"
+    "language": "en",
+    "description": "MaxCompute is an enterprise-level SaaS (Software as a Service) cloud data warehouse on Alibaba Cloud."
 }
 ---
 

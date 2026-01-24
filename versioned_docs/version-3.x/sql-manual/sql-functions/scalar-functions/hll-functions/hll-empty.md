@@ -1,7 +1,8 @@
 ---
 {
     "title": "HLL_EMPTY",
-    "language": "en"
+    "language": "en",
+    "description": "HLLEMPTY returns an empty HLL (HyperLogLog) value, representing a data set with no elements."
 }
 ---
 

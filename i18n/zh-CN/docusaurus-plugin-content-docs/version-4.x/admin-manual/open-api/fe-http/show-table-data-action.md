@@ -1,7 +1,8 @@
 ---
 {
     "title": "Show Table Data Action",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "用于获取所有 internal 源下所有数据库所有表的数据量，或者指定数据库或指定表的数据量。单位字节。"
 }
 ---
 

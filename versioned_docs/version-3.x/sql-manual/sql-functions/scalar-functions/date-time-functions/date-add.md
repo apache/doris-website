@@ -1,7 +1,8 @@
 ---
 {
     "title": "DAYS_ADD",
-    "language": "en"
+    "language": "en",
+    "description": "Add a specified time interval to the date."
 }
 ---
 
@@ -27,7 +28,7 @@ DATE_ADD(<date>, <expr> <time_unit>)
 | -- | -- |
 | `<date>` | A valid date value |
 | `<expr>` | The time interval you want to add |
-| `<time_unit>` | Enumerated values: YEAR, QUARTER, MONTH, DAY, HOUR, MINUTE, SECOND |
+| `<time_unit>` | Enumerated values: YEAR, MONTH, DAY, HOUR, MINUTE, SECOND |
 
 ## Return Value
 

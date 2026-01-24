@@ -1,7 +1,8 @@
 ---
 {
     "title": "JSON_PARSE_NOTNULL_ERROR_TO_INVALID",
-    "language": "en"
+    "language": "en",
+    "description": "This function is used to parse a JSON string. If the JSON string is malformed or a parsing error occurs,"
 }
 ---
 

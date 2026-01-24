@@ -1,7 +1,8 @@
 ---
 {
     "title": "TOKENIZE",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "TOKENIZE 函数使用指定的分词器对字符串进行分词,并以字符串数组形式返回分词结果。该函数特别适用于测试和理解在使用倒排索引进行全文搜索时,文本将如何被分析处理。"
 }
 ---
 

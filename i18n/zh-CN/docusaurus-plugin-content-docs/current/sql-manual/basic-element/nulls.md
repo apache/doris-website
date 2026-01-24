@@ -1,7 +1,8 @@
 ---
 {
     "title": "NULL",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "如果一行中的某一列没有值，那么就说该列为 NULL。NULL 可以出现在任何没有被“非空”（NOT NULL）限制的数据类型的列中。当实际值未知或者某个值没有意义时，使用 NULL。"
 }
 ---
 

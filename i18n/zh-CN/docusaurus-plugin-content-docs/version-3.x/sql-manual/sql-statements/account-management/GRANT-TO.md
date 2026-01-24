@@ -1,7 +1,8 @@
 ---
 {
     "title": "GRANT TO",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "GRANT 命令用于："
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "FE 日志管理",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "本文主要介绍 Frontend(FE) 进程的日志管理。"
 }
 ---
 

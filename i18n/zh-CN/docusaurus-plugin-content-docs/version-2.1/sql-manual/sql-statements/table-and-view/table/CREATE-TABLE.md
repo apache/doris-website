@@ -3,7 +3,8 @@
     "title": "CREATE TABLE",
     "language": "zh-CN",
     "toc_min_heading_level": 2,
-    "toc_max_heading_level": 4
+    "toc_max_heading_level": 4,
+    "description": "在当前或指定的数据库中创建一个新表。一个表可以有多个列，每个列的定义包括名称、数据类型，以及可选的以下属性："
 }
 ---
 

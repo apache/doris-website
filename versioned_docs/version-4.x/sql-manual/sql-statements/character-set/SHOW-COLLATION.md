@@ -1,7 +1,8 @@
 ---
 {
     "title": "SHOW COLLATION",
-    "language": "en"
+    "language": "en",
+    "description": "In Doris, the SHOW COLLATION command is used to display the character set collations available in the database."
 }
 ---
 

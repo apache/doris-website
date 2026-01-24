@@ -1,7 +1,8 @@
 ---
 {
     "title": "Resource Group",
-    "language": "en"
+    "language": "en",
+    "description": "Resource Group is a mechanism under the compute-storage integration architecture that achieves physical isolation between different workloads."
 }
 ---
 

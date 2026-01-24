@@ -1,7 +1,8 @@
 ---
 {
     "title": "SHOW ROUTINE LOAD",
-    "language": "en"
+    "language": "en",
+    "description": "This statement is used to display the running status of Routine Load jobs. You can view the status information of either a specific job or all jobs."
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "COS",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "计算参数的余弦值"
 }
 ---
 

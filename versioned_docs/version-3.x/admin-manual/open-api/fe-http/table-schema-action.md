@@ -1,7 +1,8 @@
 ---
 {
     "title": "Table Schema Action",
-    "language": "en"
+    "language": "en",
+    "description": "Used to obtain the table structure information of the specified table. This interface is currently used in Spark/Flink Doris Connector."
 }
 ---
 

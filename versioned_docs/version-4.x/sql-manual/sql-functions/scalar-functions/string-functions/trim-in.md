@@ -1,10 +1,10 @@
 ---
 {
     "title": "TRIM_IN",
-    "language": "en"
+    "language": "en",
+    "description": "The TRIMIN function is used to remove leading and trailing specified characters from a string. If no character set is specified,"
 }
 ---
-
 
 ## Description
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "元数据内存分析",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "Doris BE 在内存中的元数据（Metadata）包括 Tablet、Rowset、Segment、TabletSchema、ColumnReader、PrimaryKeyIndex、BloomFilterIndex 等数据结构，"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "HLL_RAW_AGG",
-    "language": "en"
+    "language": "en",
+    "description": "The HLLRAWAGG function is an aggregate function, which is mainly used to merge multiple HyperLogLog data structures."
 }
 ---
 

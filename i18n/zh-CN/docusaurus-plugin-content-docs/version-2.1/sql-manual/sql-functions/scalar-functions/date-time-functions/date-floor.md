@@ -1,7 +1,8 @@
 ---
 {
     "title": "DATE_FLOOR",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "datefloor 将日期转化为指定的时间间隔周期的最近下取整时刻。"
 }
 ---
 

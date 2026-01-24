@@ -1,7 +1,8 @@
 ---
 {
     "title": "AutoMQ Load",
-    "language": "en"
+    "language": "en",
+    "description": "AutoMQ is a cloud-native fork of Kafka by separating storage to object storage like S3."
 }
 ---
 

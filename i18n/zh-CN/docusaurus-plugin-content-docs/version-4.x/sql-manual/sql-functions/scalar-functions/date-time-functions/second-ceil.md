@@ -1,7 +1,8 @@
 ---
 {
     "title": "SECOND_CEIL",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "SECONDCEIL 函数用于将输入的日期时间值向上取整到最近的指定秒周期。若指定起始时间（origin），则以该时间为基准划分周期并取整；若未指定，默认以 0001-01-01 00:00:00 为基准。该函数支持处理 DATETIME 类型。"
 }
 ---
 
@@ -28,14 +29,16 @@ SECOND_CEIL(<datetime>[, <period>][, <origin_datetime>])
 
 | 参数                  | 说明                                                       |
 |---------------------|----------------------------------------------------------|
-| `<datetime>`        | 必填，输入的日期时间值，支持输入 datetime 类型,具体 datetime 格式请查看 [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion)                            |
+| `<datetime>`        | 必填，输入的日期时间值，支持输入 date/datetime/timestamptz 类型，具体格式请查看 [timestamptz的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion), [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion)                            |
 | `<period>`          | 可选，表示每个周期由多少秒组成，支持正整数类型（INT）。默认为 1 秒。                   |
 | `<origin_datetime>` | 可选，对齐的时间起点，支持输入 datetime 类型和符合日期时间格式的字符串。如果未指定，默认为 0001-01-01T00:00:00。 |
 
 ## 返回值
 
-返回类型为 DATETIME，返回以输入日期时间为基准，向上取整到最近的指定秒周期后的时间值。返回值的精度与输入参数 datetime 的精度相同。
+返回类型为 TIMESTAMPTZ, DATETIME 或 DATE。返回以输入日期时间为基准，向上取整到最近的指定秒周期后的时间值。返回值的精度与输入参数 datetime 的精度相同。
 
+- 若输入为 TIMESTAMPTZ 类型，则会先将其转换为 local_time(如：`2025-12-31 23:59:59+05:00` 在会话变量为`+08:00`的情况下代表的local_time为`2026-01-01 02:59:59`),再进行 SECOND_CEIL 计算操作。
+- 若输入的时间值(`<date_or_time_expr>` 和`<period>`)同时包含 TIMESTAMPTZ 和 DATETIME 类型，则输出 DATETIME 类型。
 - 若 `<period>` 为非正数（≤0），返回错误。
 - 若任一参数为 NULL，返回 NULL。
 - 不指定 period 时，默认以 1 秒为周期。
@@ -103,6 +106,23 @@ SELECT SECOND_CEIL('2025-01-23', 30) AS result;
 +---------------------+
 | 2025-01-23 00:00:00 |
 +---------------------+
+
+-- TimeStampTz类型样例, SET time_zone = '+08:00'
+-- 将变量值转换为 local_time(2026-01-01 02:59:59)后再做 SECOND_CEIL 操作
+SELECT SECOND_CEIL('2025-12-31 23:59:59+05:00');
++------------------------------------------+
+| SECOND_CEIL('2025-12-31 23:59:59+05:00') |
++------------------------------------------+
+| 2026-01-01 02:59:59+08:00                |
++------------------------------------------+
+
+-- 若参数同时包含 TimeStampTz 和 Datetime 类型，则输出 DateTime 类型
+SELECT SECOND_CEIL('2025-12-31 23:59:59+05:00', '2025-12-15 00:00:00.123');
++---------------------------------------------------------------------+
+| SECOND_CEIL('2025-12-31 23:59:59+05:00', '2025-12-15 00:00:00.123') |
++---------------------------------------------------------------------+
+| 2026-01-01 02:59:59.123                                             |
++---------------------------------------------------------------------+
 
 --- 计算结果超出最大日期时间范围，返回错误
 SELECT SECOND_CEIL('9999-12-31 23:59:59', 2) AS result;

@@ -1,7 +1,8 @@
 ---
 {
     "title": "ST_TOUCHES",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "判断两个几何图形是否仅边界接触（即边界存在公共点，但内部无任何交集）。具体来说："
 }
 ---
 

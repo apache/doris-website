@@ -1,7 +1,8 @@
 ---
 {
     "title": "DAYOFWEEK",
-    "language": "en"
+    "language": "en",
+    "description": "The DAYOFWEEK function is used to return the weekday index value corresponding to a date or time expression, following the rule where Sunday is 1,"
 }
 ---
 

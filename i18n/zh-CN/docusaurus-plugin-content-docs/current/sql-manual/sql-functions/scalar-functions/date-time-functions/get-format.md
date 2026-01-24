@@ -1,7 +1,8 @@
 ---
 {
     "title": "GET_FORMAT",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "返回特定的格式字符串"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "NORMALIZE_JSON_NUMBERS_TO_DOUBLE",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "NORMALIZEJSONNUMBERSTODOUBLE 函数用于将 JSON 中的所有数值类型转换为双精度浮点数（double）类型。 该函数接受一个 JSON 值作为输入，并返回一个新的 JSON 值，其中所有数值类型都被转换为双精度浮点数。"
 }
 ---
 

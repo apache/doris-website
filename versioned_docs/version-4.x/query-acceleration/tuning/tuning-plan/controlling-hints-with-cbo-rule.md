@@ -1,5 +1,8 @@
 ---
-{ 'title': 'Control CBO Rules With Hint', 'language': 'en' }
+{ 'title': 'Control CBO Rules With Hint', 'language': 'en',
+  "description": "The query optimizer applies a series of rules when generating execution plans."
+
+}
 ---
 
 ## Overview

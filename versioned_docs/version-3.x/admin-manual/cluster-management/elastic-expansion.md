@@ -1,9 +1,9 @@
 ---
 {
     "title": "Elastic Scaling",
-    "language": "en"
+    "language": "en",
+    "description": "Doris supports online elastic scaling, allowing users to dynamically add or remove nodes without interrupting services."
 }
-
 ---
 
 Doris supports online elastic scaling, allowing users to dynamically add or remove nodes without interrupting services. This capability ensures businesses can meet growing demands or reduce idle resource waste. Scaling up or down BE nodes does not affect cluster availability but involves data migration, so it is recommended to perform scaling operations during periods of low business activity.

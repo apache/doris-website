@@ -1,7 +1,8 @@
 ---
 {
     "title": "OVERVIEW",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "窗口函数（也称为分析函数）是一类特殊的内置函数，它能在保留原始行的基础上进行计算。与聚合函数不同，窗口函数："
 }
 ---
 

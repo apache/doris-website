@@ -1,7 +1,8 @@
 ---
 {
     "title": "JSON_EXTRACT_BIGINT",
-    "language": "en"
+    "language": "en",
+    "description": "JSONEXTRACTBIGINT extracts the field specified by <jsonpath> from a JSON object and converts it to BIGINT type."
 }
 ---
 

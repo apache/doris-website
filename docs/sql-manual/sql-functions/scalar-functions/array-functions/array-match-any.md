@@ -1,7 +1,8 @@
 ---
 {
-"title": "array_match_any",
-"language": "en"
+    "title": "array_match_any",
+    "language": "en",
+    "description": "Returns true if any element in the array matches the given condition, false otherwise."
 }
 ---
 

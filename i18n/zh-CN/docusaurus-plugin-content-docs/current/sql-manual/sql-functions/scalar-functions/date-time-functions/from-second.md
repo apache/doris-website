@@ -1,7 +1,8 @@
 ---
 {
     "title": "FROM_SECOND",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "FROMSECOND 函数用于将 Unix 时间戳（以秒为单位） 转换为 DATETIME 类型的日期时间值。Unix 时间戳的基准时间为 1970-01-01 00:00:00 UTC，该函数会将输入的秒数转换为该基准时间之后对应的具体日期和时间（精确到秒）。"
 }
 ---
 

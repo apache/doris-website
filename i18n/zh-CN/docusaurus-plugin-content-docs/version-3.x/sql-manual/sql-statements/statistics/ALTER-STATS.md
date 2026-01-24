@@ -1,7 +1,8 @@
 ---
 {
     "title": "ALTER STATS",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "手动修改指定表中指定列的统计信息。请参阅统计信息章节"
 }
 ---
 

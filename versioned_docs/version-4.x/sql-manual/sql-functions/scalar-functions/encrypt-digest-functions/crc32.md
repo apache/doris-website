@@ -1,7 +1,8 @@
 ---
 {
     "title": "CRC32",
-    "language": "en"
+    "language": "en",
+    "description": "Use CRC32 to compute the result."
 }
 ---
 

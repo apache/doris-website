@@ -1,7 +1,8 @@
 ---
 {
     "title": "SECOND_CEIL",
-    "language": "en"
+    "language": "en",
+    "description": "The secondceil function rounds the input datetime value up to the nearest specified second period. If origin is specified, it uses that as the basis;"
 }
 ---
 

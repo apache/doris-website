@@ -1,7 +1,8 @@
 ---
 {
     "title": "TO_BASE64_BINARY",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "TOBASE64BINARY 函数用于将输入的二进制串转换为 Base64 编码格式。Base64 编码可以将任意二进制数据转换成由 64 个字符组成的字符串。"
 }
 ---
 

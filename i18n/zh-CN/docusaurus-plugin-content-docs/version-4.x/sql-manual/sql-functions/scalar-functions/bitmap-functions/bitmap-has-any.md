@@ -1,7 +1,8 @@
 ---
 {
     "title": "BITMAP_HAS_ANY",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "计算两个 Bitmap 是否存在相交元素。"
 }
 ---
 

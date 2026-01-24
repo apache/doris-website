@@ -1,7 +1,8 @@
 ---
 {
     "title": "Auto bucket",
-    "language": "en"
+    "language": "en",
+    "description": "Users often encounter various issues due to improper bucket settings. To address this,"
 }
 ---
 

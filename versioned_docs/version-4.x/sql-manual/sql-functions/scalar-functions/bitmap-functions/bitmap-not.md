@@ -1,7 +1,8 @@
 ---
 {
     "title": "BITMAP_NOT",
-    "language": "en"
+    "language": "en",
+    "description": "Computes the difference between the first Bitmap and the second Bitmap, and returns the result as a new Bitmap."
 }
 ---
 

@@ -1,9 +1,13 @@
 ---
 {
-    "title": "Best Practices",
-    "language": "en"
+    "title": "Best Practices | Async Materialized View",
+    "language": "en",
+    "description": "When the following conditions are met, it is recommended to create partitioned materialized views:",
+    "sidebar_label": "Best Practices"
 }
 ---
+
+# Best Practices
 
 ## Principles for Using Asynchronous Materialized Views
 - **Timeliness Consideration:** Asynchronous materialized views are typically used in scenarios where data timeliness is not critical, usually T+1 data. If high timeliness is required, consider using synchronous materialized views.
@@ -162,100 +166,6 @@ GROUP BY
   l_linestatus, 
   ps_partkey, 
   date_trunc(l_ordertime, 'day');
-```
-
-## Creating Partitioned Materialized Views with UNION ALL
-Currently, Doris has a limitation where partitioned materialized view definitions cannot contain UNION ALL clauses.
-To create a materialized view that includes UNION ALL, you can use the following approach: For each input part of the UNION ALL,
-attempt to create a partitioned materialized view, and then create a regular view for the entire UNION ALL result set.
-
-For example:
-The materialized view definition below contains a UNION ALL clause, which cannot be directly used to create a partitioned materialized view.
-
-```sql
-
-SELECT
-l_linestatus,
-sum(
-l_extendedprice * (1 - l_discount)
-) AS revenue,
-ps_partkey,
-date_trunc(l_ordertime, 'day') as order_date
-FROM
-lineitem
-LEFT JOIN partsupp ON l_partkey = ps_partkey
-and l_suppkey = ps_suppkey
-GROUP BY
-l_linestatus,
-ps_partkey,
-date_trunc(l_ordertime, 'day')
-UNION ALL
-SELECT
-l_linestatus,
-l_extendedprice,
-ps_partkey,
-date_trunc(l_ordertime, 'day') as order_date
-FROM
-lineitem
-LEFT JOIN partsupp ON l_partkey = ps_partkey
-and l_suppkey = ps_suppkey;
-```
-
-You can split the above SQL statement into two parts and create two partitioned materialized views separately.
-
-```sql
-
-CREATE MATERIALIZED VIEW union_sub_mv1
-BUILD IMMEDIATE REFRESH AUTO ON MANUAL
-partition by(order_date)
-DISTRIBUTED BY RANDOM BUCKETS 2
-AS
-SELECT
-l_linestatus,
-sum(
-l_extendedprice * (1 - l_discount)
-) AS revenue,
-ps_partkey,
-date_trunc(l_ordertime, 'day') as order_date
-FROM
-lineitem
-LEFT JOIN partsupp ON l_partkey = ps_partkey
-and l_suppkey = ps_suppkey
-GROUP BY
-l_linestatus,
-ps_partkey,
-date_trunc(l_ordertime, 'day');
-```
-
-```sql
-CREATE MATERIALIZED VIEW union_sub_mv2
-BUILD IMMEDIATE REFRESH AUTO ON MANUAL
-partition by(order_date)
-DISTRIBUTED BY RANDOM BUCKETS 2
-AS
-SELECT
-l_linestatus,
-l_extendedprice,
-ps_partkey,
-date_trunc(l_ordertime, 'day') as order_date
-FROM
-lineitem
-LEFT JOIN partsupp ON l_partkey = ps_partkey
-and l_suppkey = ps_suppkey;
-```
-Then create a regular view that performs UNION ALL on the result sets of the two partitioned materialized views.
-This view (union_all_view) can be exposed externally.
-
-```sql
-CREATE VIEW union_all_view
-AS
-SELECT *
-FROM
-union_sub_mv1
-UNION ALL
-SELECT *
-FROM
-union_sub_mv2;
 ```
 
 ## Partitioned Materialized Views Retaining Only Recent Partition Data

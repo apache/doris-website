@@ -1,7 +1,8 @@
 ---
 {
     "title": "LAST_VALUE",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "LASTVALUE() 是一个窗口函数，用于返回窗口范围内的最后一个值。可以通过 IGNORE NULLS 选项来控制是否忽略空值。"
 }
 ---
 

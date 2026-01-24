@@ -1,7 +1,8 @@
 ---
 {
     "title": "ANN 索引管理",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "Apache Doris 中的近似最近邻 (ANN) 索引支持对高维数据进行高效的向量相似性搜索。从 Doris 4.x 开始，通用索引操作语法也支持了 ANN 索引。本文将介绍 ANN 索引相关操作的具体 SQL 语法，并提供详细的参数说明。"
 }
 ---
 

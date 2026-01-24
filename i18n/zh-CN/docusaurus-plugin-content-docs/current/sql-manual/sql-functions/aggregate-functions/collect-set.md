@@ -1,7 +1,8 @@
 ---
 {
-"title": "COLLECT_SET",
-"language": "zh-CN"
+    "title": "COLLECT_SET",
+    "language": "zh-CN",
+    "description": "将表达式的所有非 NULL 值去重后聚集成一个数组。"
 }
 ---
 

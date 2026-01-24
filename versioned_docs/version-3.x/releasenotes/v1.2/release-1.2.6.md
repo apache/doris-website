@@ -1,7 +1,8 @@
 ---
 {
     "title": "Release 1.2.6",
-    "language": "en"
+    "language": "en",
+    "description": "Thanks all who contribute to this release:"
 }
 ---
 

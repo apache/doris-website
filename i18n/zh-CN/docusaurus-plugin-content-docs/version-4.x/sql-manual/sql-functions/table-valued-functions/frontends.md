@@ -1,7 +1,8 @@
 ---
 {
     "title": "FRONTENDS",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "表函数，生成 frontends 临时表，可以查看当前 doris 集群中的 FE 节点信息。"
 }
 ---
 

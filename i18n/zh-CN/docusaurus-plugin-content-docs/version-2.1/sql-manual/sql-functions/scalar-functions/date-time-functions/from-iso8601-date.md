@@ -1,9 +1,11 @@
 ---
 {
     "title": "FROM_ISO8601_DATE",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "将 ISO8601 格式的日期表达式转化为 date 类型的日期表达式。"
 }
 ---
+
 ## 描述
 
 将 ISO8601 格式的日期表达式转化为 date 类型的日期表达式。

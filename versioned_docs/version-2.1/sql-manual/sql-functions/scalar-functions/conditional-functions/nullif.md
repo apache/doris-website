@@ -1,7 +1,8 @@
 ---
 {
     "title": "NULLIF",
-    "language": "en"
+    "language": "en",
+    "description": "Returns NULL if the two input values are equal; otherwise, returns the first input value."
 }
 ---
 

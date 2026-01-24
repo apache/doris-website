@@ -1,9 +1,13 @@
 ---
 {
-"title": "Job Scheduler",
-"language": "en"
+    "title": "Job Scheduler | Workload Management",
+    "language": "en",
+    "description": "In the context of increasing demands for refined data management, scheduled scheduling plays an important role.",
+    "sidebar_label": "Job Scheduler"
 }
 ---
+
+# Job Scheduler
 
 ## Background
 
@@ -214,4 +218,5 @@ In the future, Doris Job Scheduler will also support the following features:
 - Support for viewing the distribution of tasks executed during different time periods via the UI.
 - Support for JOB workflow orchestration, i.e., DAG JOB. This means we can implement internal data warehouse task orchestration, and with the Catalog functionality, it will more efficiently complete data processing and analysis tasks.
 - Support for scheduling import tasks, UPDATE, and DELETE operations.
+
 

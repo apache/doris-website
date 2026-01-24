@@ -1,7 +1,8 @@
 ---
 {
-"title": "COLLECT_LIST",
-"language": "en"
+    "title": "COLLECT_LIST",
+    "language": "en",
+    "description": "Aggregation function, used to aggregate all values of a column into an array."
 }
 ---
 

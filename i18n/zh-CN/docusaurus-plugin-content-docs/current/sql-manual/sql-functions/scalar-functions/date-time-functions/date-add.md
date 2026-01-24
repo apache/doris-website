@@ -1,7 +1,8 @@
 ---
 {
     "title": "DATE_ADD",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "DATEADD 函数用于向指定的日期或时间值添加指定的时间间隔，并返回计算后的结果。"
 }
 ---
 
@@ -9,7 +10,7 @@
 
 DATE_ADD 函数用于向指定的日期或时间值添加指定的时间间隔，并返回计算后的结果。
 
-- 支持的输入日期类型包括 DATE、DATETIME（如 '2023-12-31'、'2023-12-31 23:59:59'）。
+- 支持的输入日期类型包括 DATE、DATETIME、TIMESTAMPTZ（如 '2023-12-31'、'2023-12-31 23:59:59'、'2023-12-31 23:59:59+08:00'）。
 - 时间间隔由数值（`expre`）和单位（`time_unit`）共同指定，`expr` 为正数时表示“添加”，为负数时等效于“减去”对应间隔。
 
 ## 别名
@@ -27,7 +28,7 @@ DATE_ADD(<date_or_time_expr>, <expr> <time_unit>)
 
 | 参数 | 说明 |
 | -- | -- |
-| `<date_or_time_expr>` | 待处理的日期/时间值。支持类型：为 datetime 或者 date 类型，最高有六位秒数的精度（如 2022-12-28 23:59:59.999999），具体 datetime 和 date 格式请查看 [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion))|
+| `<date_or_time_expr>` | 待处理的日期/时间值。支持类型：为 timestamptz, datetime 或者 date 类型，最高有六位秒数的精度（如 2022-12-28 23:59:59.999999），具体格式请查看 [timestamptz的转换](../../../../sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion), [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion)|
 | `<expr>` | 希望添加的时间间隔，为 `INT` 类型|
 | `<time_unit>` | 枚举值：YEAR, QUARTER, MONTH, WEEK,DAY, HOUR, MINUTE, SECOND, DAY_SECOND, DAY_HOUR, MINUTE_SECOND, SECOND_MICROSECOND |
 
@@ -36,6 +37,7 @@ DATE_ADD(<date_or_time_expr>, <expr> <time_unit>)
 返回与 <date_or_time_expr> 类型一致的结果：
 - 输入 DATE 类型时，返回 DATE（仅日期部分）；
 - 输入 DATETIME 类型，返回 DATETIME（包含日期和时间）；
+- 输入 TIMESTAMPTZ 类型，返回 TIMESTAMPTZ(包含日期，时间和时区偏移量);
 - 带有 scale 的输入（如 '2024-01-01 12:00:00.123'）会保留 scale，最高六位小数精度。
 
 特殊情况：
@@ -126,6 +128,14 @@ mysql>  select date_add("2025-10-10 10:10:10.123456", INTERVAL "1.1" SECOND_MICR
 +---------------------------------------------------------------------------+
 | 2025-10-10 10:10:11.223456                                                |
 +---------------------------------------------------------------------------+
+
+-- TimestampTz类型示例, SET time_zone = '+08:00'
+select DATE_ADD('2023-01-01 23:22:33+03:00', INTERVAL 1 DAY);
++-------------------------------------------------------+
+| DATE_ADD('2023-01-01 23:22:33+03:00', INTERVAL 1 DAY) |
++-------------------------------------------------------+
+| 2023-01-03 04:22:33+08:00                             |
++-------------------------------------------------------+
 
 ---非法单位
 select DATE_ADD('2023-12-31 23:00:00', INTERVAL 2 sa);

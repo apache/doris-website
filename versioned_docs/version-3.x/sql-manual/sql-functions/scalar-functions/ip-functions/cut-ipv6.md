@@ -1,7 +1,8 @@
 ---
 {
     "title": "CUT_IPV6",
-    "language": "en"
+    "language": "en",
+    "description": "Accept an IPv6 type address and return a string containing the address of the specified number of bytes removed in text format."
 }
 ---
 

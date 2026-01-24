@@ -1,7 +1,8 @@
 ---
 {
     "title": "REPLACE_EMPTY",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "REPLACEEMPTY 函数用于将字符串中的一部分字符替换为其他字符。与 REPLACE 函数不同的是，当 old 为空字符串时，会将 new 字符串插入到 str 字符串的每个字符前，以及 str 字符串的最后。"
 }
 ---
 

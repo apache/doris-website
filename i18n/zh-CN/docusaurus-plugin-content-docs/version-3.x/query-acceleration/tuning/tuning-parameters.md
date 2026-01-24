@@ -1,7 +1,8 @@
 ---
 {
     "title": "常见调优参数",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "总结 Apache Doris 查询加速相关的常见调优参数，包括新优化器开关、DML 支持、Pipeline 并行度与 Runtime Filter 模式，并给出升级与优化场景下的推荐配置。"
 }
 ---
 

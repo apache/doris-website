@@ -1,7 +1,8 @@
 ---
 {
-  "title": "ALTER TABLE ADD GENERATED COLUMN",
-  "language": "zh-CN"
+    "title": "ALTER TABLE ADD GENERATED COLUMN",
+    "language": "zh-CN",
+    "description": "不支持使用 ALTER TABLE ADD COLUMN 增加一个生成列，不支持使用 ALTER TABLE MODIFY COLUMN 修改生成列信息。支持使用 ALTER TABLE 对生成列顺序进行修改，修改生成列名称和删除生成列。"
 }
 ---
 

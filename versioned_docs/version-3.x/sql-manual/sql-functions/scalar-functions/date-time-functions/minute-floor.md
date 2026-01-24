@@ -1,7 +1,8 @@
 ---
 {
     "title": "MINUTE_FLOOR",
-    "language": "en"
+    "language": "en",
+    "description": "Rounds down a datetime value to the nearest specified minute interval. If a starting time (origin) is provided,"
 }
 ---
 

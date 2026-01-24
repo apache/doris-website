@@ -1,7 +1,8 @@
 ---
 {
     "title": "ARRAY_FLATTEN",
-    "language": "en"
+    "language": "en",
+    "description": "Flatten a multidimensional array into one dimension."
 }
 ---
 

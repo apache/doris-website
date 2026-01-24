@@ -1,7 +1,8 @@
 ---
 {
     "title": "DROP FUNCTION",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "删除一个自定义函数。"
 }
 ---
 

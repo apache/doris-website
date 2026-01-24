@@ -1,7 +1,8 @@
 ---
 {
     "title": "DROP USER",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "DROP USER 语句用于删除一个用户。"
 }
 ---
 

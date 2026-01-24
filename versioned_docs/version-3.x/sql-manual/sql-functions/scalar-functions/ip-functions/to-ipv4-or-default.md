@@ -1,7 +1,8 @@
 ---
 {
     "title": "TO_IPV4_OR_DEFAULT",
-    "language": "en"
+    "language": "en",
+    "description": "This function like ipv4stringtonum that takes a string form of IPv4 address and returns value of IPv4 type,"
 }
 ---
 

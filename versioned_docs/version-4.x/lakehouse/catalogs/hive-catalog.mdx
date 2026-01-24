@@ -1,7 +1,8 @@
 ---
 {
     "title": "Hive Catalog",
-    "language": "en"
+    "language": "en",
+    "description": "Hive Catalog in Apache Doris 4.x connects to Hive Metastore and compatible services to query and write Hive, Iceberg and Hudi tables across HDFS and object storage, with configuration guides, supported services, formats and examples."
 }
 ---
 
@@ -142,6 +143,7 @@ Hive transactional tables are supported from version 3.x onwards. For details, r
 | varchar(N)    | varchar(N)    |                                                |
 | string        | string        |                                                |
 | binary        | string/varbinary  | Controlled by the `enable.mapping.varbinary` property of Catalog (supported since 4.0.2). The default is `false`, which maps to `string`; when `true`, it maps to `varbinary` type.|
+| timestamp with local time zone| datetime/timestamptz | The `enable.mapping.timestamp_tz` property (supported since version 4.0.3) controls the mapping behavior.  By default, it is set to `false`, in which case the type is mapped to `datetime`.  When set to `true`, it is mapped to the `timestamptz` type.     |
 | array         | array         |                                                |
 | map           | map           |                                                |
 | struct        | struct        |                                                |

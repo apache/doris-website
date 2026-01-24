@@ -1,7 +1,8 @@
 ---
 {
     "title": "ALTER ROUTINE LOAD",
-    "language": "en"
+    "language": "en",
+    "description": "This syntax is used to modify an existing routine load job. Only jobs in PAUSED state can be modified."
 }
 ---
 

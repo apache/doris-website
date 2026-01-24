@@ -1,7 +1,8 @@
 ---
 {
     "title": "SHOW DYNAMIC PARTITION",
-    "language": "en"
+    "language": "en",
+    "description": "This statement is used to display the status of all dynamic partition tables in the current database."
 }
 ---
 

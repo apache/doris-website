@@ -1,7 +1,8 @@
 ---
 {
     "title": "tables",
-    "language": "en"
+    "language": "en",
+    "description": "Stores all table information."
 }
 ---
 

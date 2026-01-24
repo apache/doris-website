@@ -1,7 +1,8 @@
 ---
 {
     "title": "QUANTILE_PERCENT",
-    "language": "en"
+    "language": "en",
+    "description": "The QUANTILEPERCENT function is used to calculate the quantile value for a given percentage."
 }
 ---
 

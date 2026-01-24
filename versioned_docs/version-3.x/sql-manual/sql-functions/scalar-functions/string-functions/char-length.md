@@ -1,7 +1,8 @@
 ---
 {
     "title": "CHAR_LENGTH",
-    "language": "en"
+    "language": "en",
+    "description": "Calculates the length of a string. For multi-byte characters, returns the number of characters."
 }
 ---
 

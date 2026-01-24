@@ -1,7 +1,8 @@
 ---
 {
     "title": "SECOND_TIMESTAMP",
-    "language": "en"
+    "language": "en",
+    "description": "The SECONDTIMESTAMP function converts an input datetime value to a Unix timestamp (in seconds),"
 }
 ---
 

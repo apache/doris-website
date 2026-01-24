@@ -1,7 +1,8 @@
 ---
 {
-    "title": "Integrating with Databricks Unity Catalog",
-    "language": "en"
+    "title": "Integration with Databricks Unity Catalog",
+    "language": "en",
+    "description": "As enterprises increasingly manage growing data assets under the Lakehouse architecture, the demand for cross-platform, high-performance,"
 }
 ---
 
@@ -73,7 +74,7 @@ Click the user avatar in the top right corner, go to the `Settings` page, and se
 ### Creating a Catalog
 
 ```sql
--- Use oath2 credential and vended credentials
+-- Use oauth2 credential and vended credentials
 CREATE CATALOG dbx_unity_catalog PROPERTIES (
   "uri" = "https://dbc-xx.cloud.databricks.com:443/api/2.1/unity-catalog/iceberg-rest/",
   "type" = "iceberg",
@@ -97,7 +98,7 @@ CREATE CATALOG dbx_unity_catalog PROPERTIES (
   "iceberg.rest.vended-credentials-enabled" = "true"
 );
 
--- Use oath2 credential and static ak/sk for accessing aws s3
+-- Use oauth2 credential and static ak/sk for accessing aws s3
 CREATE CATALOG dbx_unity_catalog PROPERTIES (
   "uri" = "https://dbc-xx.cloud.databricks.com:443/api/2.1/unity-catalog/iceberg-rest/",
   "type" = "iceberg",

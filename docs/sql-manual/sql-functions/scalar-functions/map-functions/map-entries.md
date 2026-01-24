@@ -1,7 +1,8 @@
 ---
 {
     "title": "MAP_ENTRIES",
-    "language": "en"
+    "language": "en",
+    "description": "Converts the given map into an ARRAY<STRUCT<key, value>>."
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "Usage Notes",
-    "language": "en"
+    "language": "en",
+    "description": "Suggestions for column types when creating a table:"
 }
 ---
 

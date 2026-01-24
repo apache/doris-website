@@ -1,4 +1,10 @@
-# Condition Cache
+---
+{
+    "title": "Condition Cache",
+    "language": "zh-CN",
+    "description": "Apache Doris Condition Cache机制详解：针对重复条件查询的高效缓存优化方案，通过缓存Segment过滤结果减少CPU和IO冗余开销。支持LRU内存管理、bit向量压缩存储，提供命中率监控指标，显著提升高并发OLAP查询性能，适用于数据相对稳定、高选择性的重复过滤场景。"
+}
+---
 
 ## 简介
 

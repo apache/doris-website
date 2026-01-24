@@ -1,7 +1,8 @@
 ---
 {
     "title": "JSON_ARRAY_IGNORE_NULL",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "生成一个包含指定元素的 json 数组，未传入参数时返回空数组，它与 JSONARRAY 只有一个区别：会忽略值为 NULL 的参数。"
 }
 ---
 

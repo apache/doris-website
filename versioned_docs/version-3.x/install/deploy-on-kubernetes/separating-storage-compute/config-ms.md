@@ -1,7 +1,8 @@
 ---
 {
-"title": "Config MetaService",
-"language": "en"
+    "title": "Config MetaService",
+    "language": "en",
+    "description": "MetaService is the metadata management component for Doris decoupled storage and compute clusters."
 }
 ---
 

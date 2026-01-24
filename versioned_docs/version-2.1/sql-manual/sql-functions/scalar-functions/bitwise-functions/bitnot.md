@@ -1,7 +1,8 @@
 ---
 {
-"title": "BITNOT",
-"language": "en"
+    "title": "BITNOT",
+    "language": "en",
+    "description": "Used to perform a bitwise inversion operation on an integer."
 }
 ---
 

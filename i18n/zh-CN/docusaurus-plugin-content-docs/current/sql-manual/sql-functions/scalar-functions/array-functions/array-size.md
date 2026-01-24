@@ -1,7 +1,8 @@
 ---
 {
     "title": "ARRAY_SIZE",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "返回数组的元素个数。"
 }
 ---
 

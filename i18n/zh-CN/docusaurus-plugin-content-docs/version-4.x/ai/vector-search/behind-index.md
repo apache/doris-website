@@ -1,7 +1,8 @@
 ---
 {
     "title": "性能测试背后的优化",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "早期版本的 Apache Doris 是一个面向在线数据分析处理的系统，主要处理的场景是报表分析和聚合数据分析，最典型的查询是多表 JOIN 以及 GROUP BY 聚合查询。在 2.X 版本中实现了基于倒排索引的文本检索功能，引入了 Variant 数据类型来高效处理 JSON。在 3."
 }
 ---
 

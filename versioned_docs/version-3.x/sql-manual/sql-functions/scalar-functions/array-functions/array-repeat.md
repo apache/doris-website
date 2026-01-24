@@ -1,7 +1,8 @@
 ---
 {
     "title": "ARRAY_REPEAT",
-    "language": "en"
+    "language": "en",
+    "description": "Generates an array containing n repeated elements"
 }
 ---
 

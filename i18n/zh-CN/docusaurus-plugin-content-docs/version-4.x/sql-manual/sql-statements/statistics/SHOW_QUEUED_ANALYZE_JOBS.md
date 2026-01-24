@@ -1,7 +1,8 @@
 ---
 {
     "title": "SHOW QUEUED ANALYZE JOBS",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "该语句用来查看等待执行的统计信息作业队列。"
 }
 ---
 

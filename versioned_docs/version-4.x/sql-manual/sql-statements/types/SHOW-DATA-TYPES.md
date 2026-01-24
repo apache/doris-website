@@ -1,7 +1,8 @@
 ---
 {
-  "title": "SHOW DATA TYPES",
-  "language": "en"
+    "title": "SHOW DATA TYPES",
+    "language": "en",
+    "description": "This statement is used to view all supported data types."
 }
 ---
 

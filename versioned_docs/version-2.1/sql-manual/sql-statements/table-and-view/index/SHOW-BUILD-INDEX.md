@@ -1,7 +1,8 @@
 ---
 {
     "title": "SHOW BUILD INDEX",
-    "language": "en"
+    "language": "en",
+    "description": "Check the status of index build tasks."
 }
 ---
 

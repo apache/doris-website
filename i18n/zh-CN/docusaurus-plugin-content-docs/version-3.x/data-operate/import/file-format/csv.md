@@ -1,7 +1,8 @@
 ---
 {
     "title": "CSV",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "本文介绍如何在 Doris 中导入 CSV 格式的数据文件。Doris 支持灵活的 CSV 格式配置，包括自定义分隔符、字段包围符等，并提供多种导入方式以满足不同场景的数据导入需求。"
 }
 ---
 

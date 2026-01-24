@@ -1,7 +1,8 @@
 ---
 {
     "title": "KILL QUERY",
-    "language": "en"
+    "language": "en",
+    "description": "Each Doris connection runs in a separate thread. Use this statement to terminate the thread."
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
-"title": "Kill Query",
-"language": "en"
+    "title": "Kill Query",
+    "language": "en",
+    "description": "You can cancel currently executing operations or disconnect current connection sessions using the KILL command."
 }
 ---
 

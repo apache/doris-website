@@ -1,7 +1,8 @@
 ---
 {
     "title": "BITMAP_AGG",
-    "language": "en"
+    "language": "en",
+    "description": "Aggregates the non-NULL values of the input expression into a Bitmap. If a value is less than 0 or greater than 18446744073709551615,"
 }
 ---
 

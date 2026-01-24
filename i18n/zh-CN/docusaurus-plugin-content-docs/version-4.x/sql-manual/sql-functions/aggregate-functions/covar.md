@@ -1,7 +1,8 @@
 ---
 {
     "title": "COVAR",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "计算两个变量之间的样本协方差，如果输入变量存在 NULL，则该行不计入统计数据。"
 }
 ---
 

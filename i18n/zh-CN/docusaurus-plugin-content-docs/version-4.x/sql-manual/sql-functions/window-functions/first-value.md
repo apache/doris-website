@@ -1,7 +1,8 @@
 ---
 {
     "title": "FIRST_VALUE",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "FIRSTVALUE() 是一个窗口函数，用于返回窗口分区中有序数据集的第一个值。可以通过 IGNORE NULL 选项来控制是否忽略NULL值。"
 }
 ---
 

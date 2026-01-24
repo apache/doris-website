@@ -1,7 +1,8 @@
 ---
 {
     "title": "SUBSTRING",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "SUBSTRING 函数用于从字符串中提取子字符串。可以指定起始位置和长度，支持正向和反向提取。字符串中第一个字符的位置为 1。"
 }
 ---
 

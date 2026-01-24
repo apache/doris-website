@@ -1,7 +1,8 @@
 ---
 {
     "title": "ROUND",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "将数字 x 四舍五入后保留 d 位小数。"
 }
 ---
 

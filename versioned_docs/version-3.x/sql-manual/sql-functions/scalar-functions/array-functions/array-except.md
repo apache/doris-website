@@ -1,7 +1,8 @@
 ---
 {
     "title": "ARRAY_EXCEPT",
-    "language": "en"
+    "language": "en",
+    "description": "Returns an array of the elements in array1 but not in array2, without duplicates. If the input parameter is null, null is returned."
 }
 ---
 
