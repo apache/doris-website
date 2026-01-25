@@ -328,13 +328,13 @@ This cache stores **parsed** Iceberg manifest file contents—specifically the `
 **Performance Benefits:**
 
 :::tip Best Practice
-For optimal performance, **combine Doris Manifest Cache with Iceberg native manifest cache** by setting:
+For optimal performance, **enable and combine Doris Manifest Cache with Iceberg native manifest cache** by setting:
 
 ```sql
 CREATE CATALOG iceberg_catalog PROPERTIES (
     'type' = 'iceberg',
     ...
-    'iceberg.manifest.cache.enable' = 'true',     -- Enable Doris Manifest Cache (default)
+    'iceberg.manifest.cache.enable' = 'true',     -- Enable Doris Manifest Cache
     'io.manifest.cache-enabled' = 'true'          -- Enable Iceberg native cache
 );
 ```
@@ -365,7 +365,7 @@ CREATE CATALOG iceberg_catalog PROPERTIES (
 
 | Config | Default | Description |
 |--------|---------|-------------|
-| `iceberg.manifest.cache.enable` | `true` | Enable/disable manifest cache |
+| `iceberg.manifest.cache.enable` | `false` | Enable/disable manifest cache |
 | `iceberg.manifest.cache.capacity-mb` | `1024` | Maximum cache capacity in MB |
 | `iceberg.manifest.cache.ttl-second` | `172800` (48 hours) | Cache entry expiration after access |
 
@@ -498,8 +498,8 @@ For Iceberg Catalog, if you want to disable the cache to query real-time updated
     CREATE CATALOG iceberg_catalog PROPERTIES (
         'type' = 'iceberg',
         ...
-        'iceberg.table.meta.cache.ttl-second' = '0',      -- Disable table/view cache
-        'iceberg.manifest.cache.enable' = 'false'         -- Disable manifest cache
+        'iceberg.table.meta.cache.ttl-second' = '0'       -- Disable table/view cache
+        -- Note: Manifest cache is disabled by default, no need to set explicitly
     );
     ```
 
@@ -517,7 +517,10 @@ For Iceberg Catalog, if you want to disable the cache to query real-time updated
 After setting the above parameters:
 
 - New table snapshots can be queried in real time.
-- Changes to manifest files can be queried in real time (4.0.3+).
+
+:::note
+In version 4.0.3+, the Manifest Cache is **disabled by default**. Since Iceberg manifest files are **immutable** (they are never modified after creation), **the Manifest Cache does not affect the visibility of the latest data**. When new data is committed to an Iceberg table, new manifest files are created, and the table's snapshot is updated to reference these new manifests. It is the **Table Cache** that controls which snapshot version is used, thereby affecting data visibility. By disabling the Table Cache (as shown above), you ensure queries always use the latest snapshot.
+:::
 
 But this will increase the access pressure on external data sources (such as Iceberg Catalog service and object storage), which may cause unstable metadata access latency.
 

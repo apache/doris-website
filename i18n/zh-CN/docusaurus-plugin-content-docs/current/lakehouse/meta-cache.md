@@ -328,13 +328,13 @@ Table Cache 控制使用哪个版本的 Iceberg 表元数据，这会影响：
 **性能优势：**
 
 :::tip 最佳实践
-为了获得最佳性能，**建议将 Doris Manifest Cache 与 Iceberg 原生 Manifest Cache 结合使用**：
+为了获得最佳性能，**建议启用并结合 Doris Manifest Cache 与 Iceberg 原生 Manifest Cache**：
 
 ```sql
 CREATE CATALOG iceberg_catalog PROPERTIES (
     'type' = 'iceberg',
     ...
-    'iceberg.manifest.cache.enable' = 'true',     -- 启用 Doris Manifest Cache（默认）
+    'iceberg.manifest.cache.enable' = 'true',     -- 启用 Doris Manifest Cache
     'io.manifest.cache-enabled' = 'true'          -- 启用 Iceberg 原生缓存
 );
 ```
@@ -365,7 +365,7 @@ CREATE CATALOG iceberg_catalog PROPERTIES (
 
 | 配置项 | 默认值 | 说明 |
 |--------|--------|------|
-| `iceberg.manifest.cache.enable` | `true` | 启用/禁用 Manifest 缓存 |
+| `iceberg.manifest.cache.enable` | `false` | 启用/禁用 Manifest 缓存 |
 | `iceberg.manifest.cache.capacity-mb` | `1024` | 最大缓存容量（MB） |
 | `iceberg.manifest.cache.ttl-second` | `172800`（48 小时） | 访问后的缓存条目过期时间 |
 
@@ -498,8 +498,8 @@ Schema Cache 只影响是否重新解析 Schema（性能优化），不影响使
     CREATE CATALOG iceberg_catalog PROPERTIES (
         'type' = 'iceberg',
         ...
-        'iceberg.table.meta.cache.ttl-second' = '0',      -- 关闭表/视图缓存
-        'iceberg.manifest.cache.enable' = 'false'         -- 关闭 Manifest 缓存
+        'iceberg.table.meta.cache.ttl-second' = '0'       -- 关闭表/视图缓存
+        -- 注意：Manifest 缓存默认是关闭的，无需显式设置
     );
     ```
 
@@ -517,6 +517,9 @@ Schema Cache 只影响是否重新解析 Schema（性能优化），不影响使
 设置以上参数后：
 
 - 新的表 Snapshot 可以实时查询到。
-- Manifest 文件的变更可以实时查询到（4.0.3+）。
+
+:::note
+在 4.0.3+ 版本中，Manifest Cache **默认是关闭的**。由于 Iceberg 的 Manifest 文件是**不可变的**（创建后永远不会被修改），**Manifest Cache 不影响最新数据的可见性**。当向 Iceberg 表提交新数据时，会创建新的 Manifest 文件，表的快照会更新以引用这些新 Manifest。是 **Table Cache** 控制了使用哪个快照版本，从而影响数据可见性。通过禁用 Table Cache（如上所示），可以确保查询始终使用最新的快照。
+:::
 
 但会增加外部数据源（如 Iceberg Catalog 服务和对象存储）的访问压力，可能导致元数据访问延迟不稳定等现象。
