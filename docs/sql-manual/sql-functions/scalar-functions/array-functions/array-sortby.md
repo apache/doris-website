@@ -19,8 +19,8 @@ Sort the `values` array according to the order of a `keys` array.
 
 ## Parameters
 
-- `values`: `ARRAY<T>`, the value array to be sorted. `T` supports numeric, boolean, string, datetime, IP, etc.
-- `keys`: `ARRAY<T>`, a key array of the same length as `values`. `T` supports numeric, boolean, string, datetime, IP, etc.
+- `values`: `ARRAY<T>`, the value array to be sorted. `T` supports numeric, boolean, string, datetime, IP, etc. Multi-dimensional arrays are supported, but all array elements (no matter how deeply nested) must be of the supported types.
+- `keys`: `ARRAY<T>`, a key array of the same length as `values`. `T` supports numeric, boolean, string, datetime, IP, etc. Multi-dimensional arrays are supported, but all array elements (no matter how deeply nested) must be of the supported types.
 - `lambda`: a `lambda` expression applied to `values` to produce the `keys` array used for sorting.
 
 ## Return value
@@ -37,7 +37,7 @@ Sort the `values` array according to the order of a `keys` array.
 
 - Basic: sort `values` by the ascending order of `keys`.
   - `ARRAY_SORTBY([10,20,30], [3,1,2])` -> `[20,30,10]`
-  - `ARRAY_SORTBY(['a','b','c'], [2,2,1])` -> `['c','a','b]`
+  - `ARRAY_SORTBY(['a','b','c'], [2,2,1])` -> `['c','a','b']`
 
 - Higher-order: compute `keys` via `lambda`, then sort.
   - `ARRAY_SORTBY(x -> x + 1, [3,1,2])` -> `[1,2,3]` (with `keys` `[4,2,3]`)
@@ -46,6 +46,9 @@ Sort the `values` array according to the order of a `keys` array.
 - When `keys` or `values` is `NULL`, return `values` unchanged.
   - `array_sortby([10,20,30], NULL)` -> `[10, 20, 30]`
   - `array_sortby(NULL, [2,3])` -> `NULL`
+
+- Multi-dimensional array sort: the key sorting rules follow the type of the inner elements.
+  - `ARRAY_SORTBY(x -> x[1], [[1,2],[0,1]])` -> `[[0, 1], [1, 2]]`
 
 
 
