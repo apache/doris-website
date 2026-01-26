@@ -16,7 +16,7 @@ Sort array elements in descending order.
 
 ## Parameters
 
-- `arr`: `ARRAY<T>`, where `T` can be numeric, boolean, string, datetime, IP, etc.
+- `arr`: `ARRAY<T>`, where `T` can be numeric, boolean, string, datetime, IP, etc. Multi-dimensional arrays are supported, but all array elements (no matter how deeply nested) must be of the supported types.
 
 ## Return value
 
@@ -36,6 +36,9 @@ Sort array elements in descending order.
 - If the input is `NULL`, returns `NULL`; if the input is an empty array `[]`, returns an empty array.
   - `ARRAY_REVERSE_SORT(NULL)` -> `NULL`
   - `ARRAY_REVERSE_SORT([])` -> `[]`
+
+- Multi-dimensional array sort
+  - `ARRAY_REVERSE_SORT([[3, 4], [5, 6]])` -> `[[5, 6], [3, 4]]`
 
 
 
