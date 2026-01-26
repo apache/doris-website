@@ -856,7 +856,7 @@ BaseCompaction:546859:
 #### `webserver_num_workers`
 
 * Description: Webserver default number of worker threads
-* Default value: 48
+* Default value: 128
 
 #### `send_batch_thread_pool_thread_num`
 
