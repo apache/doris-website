@@ -252,3 +252,5 @@ MySQL > select * from upsert_test;
 7. 暂时不支持创建RollUp
 
 8. 如果新建表时没带sequence_mapping属性，后期不支持打开
+
+9. 导入时对于没有包含的字段会自动用默认值或null填充，sequence列比较大小时null值会被当做最小值看待
