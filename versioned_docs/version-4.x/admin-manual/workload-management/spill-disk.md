@@ -1,7 +1,8 @@
 ---
 {
-"title": "Spill Disk",
-"language": "en"
+    "title": "Spill Disk",
+    "language": "en",
+    "description": "Doris's computing layer adopts an MPP (Massively Parallel Processing) architecture,"
 }
 ---
 

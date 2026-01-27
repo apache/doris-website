@@ -1,7 +1,8 @@
 ---
 {
     "title": "ARRAY_POSITION",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "查找数组中指定元素第一次出现的位置索引（从1开始）。函数会从左到右遍历数组，找到第一个匹配的元素并返回其位置索引。"
 }
 ---
 

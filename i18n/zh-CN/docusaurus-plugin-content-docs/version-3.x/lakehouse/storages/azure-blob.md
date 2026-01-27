@@ -1,7 +1,8 @@
 ---
 {
     "title": "Azure Blob",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "自 3.1.3 版本起，Doris 支持访问 Azure Blob 存储。"
 }
 ---
 
@@ -16,6 +17,7 @@
 - Outfile 属性
 - Backup / Restore 属性
 
+**Azure Blob 存储目前不支持 ARM 架构。**
 ## 参数总览
 
 | 属性名称                           | 曾用名           | 描述                          | 默认值       | 是否必须   |

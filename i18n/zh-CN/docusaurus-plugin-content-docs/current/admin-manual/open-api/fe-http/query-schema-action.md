@@ -1,7 +1,8 @@
 ---
 {
     "title": "Query Schema Action",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "Query Schema Action 可以返回给定的 SQL 有关的表的建表语句。可以用于本地测试一些查询场景。 该 API 在 1.2 版本中发布。"
 }
 ---
 

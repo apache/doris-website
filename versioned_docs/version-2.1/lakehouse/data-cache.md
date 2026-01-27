@@ -1,7 +1,8 @@
 ---
 {
     "title": "Data Cache",
-    "language": "en"
+    "language": "en",
+    "description": "Data Cache accelerates subsequent queries of the same data by caching recently accessed data files from remote storage systems (HDFS or object "
 }
 ---
 

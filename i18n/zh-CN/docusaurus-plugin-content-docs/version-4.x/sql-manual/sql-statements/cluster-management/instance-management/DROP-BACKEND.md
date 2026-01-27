@@ -1,7 +1,8 @@
 ---
 {
     "title": "DROP BACKEND",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "该语句用于将 BE 节点从 Doris 集群中删除。"
 }
 ---
 

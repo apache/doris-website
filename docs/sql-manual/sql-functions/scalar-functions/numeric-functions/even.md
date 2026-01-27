@@ -1,7 +1,8 @@
 ---
 {
     "title": "EVEN",
-    "language": "en"
+    "language": "en",
+    "description": "Round to next even number by rounding away from zero."
 }
 ---
 

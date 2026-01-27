@@ -1,7 +1,8 @@
 ---
 {
     "title": "REVOKE FROM",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "REVOKE 命令用于："
 }
 ---
 

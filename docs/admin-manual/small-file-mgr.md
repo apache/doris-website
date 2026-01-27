@@ -1,7 +1,8 @@
 ---
 {
     "title": "Small File Manager",
-    "language": "en"
+    "language": "en",
+    "description": "Some functions in Doris require some user-defined files. For example, public keys, key files,"
 }
 ---
 

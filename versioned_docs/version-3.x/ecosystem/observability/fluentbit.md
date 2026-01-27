@@ -1,7 +1,8 @@
 ---
 {
-"title": "FluentBit",
-"language": "en"
+    "title": "FluentBit",
+    "language": "en",
+    "description": "Fluent Bit is a fast log processor and forwarder that supports custom output plugins to write data into storage systems,"
 }
 ---
 

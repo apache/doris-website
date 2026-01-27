@@ -1,7 +1,8 @@
 ---
 {
     "title": "L2_DISTANCE",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "计算欧几里得空间中两点（向量值为坐标）之间的距离"
 }
 ---
 

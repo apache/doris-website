@@ -1,7 +1,8 @@
 ---
 {
     "title": "FROM_DAYS",
-    "language": "en"
+    "language": "en",
+    "description": "The FROMDAYS function is used to convert an integer number of days to the corresponding date (DATE type). This function uses \"January 1st,"
 }
 ---
 

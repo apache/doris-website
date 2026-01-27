@@ -1,7 +1,8 @@
 ---
 {
     "title": "Get Load State",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "返回指定 label 的导入事务的状态 执行完毕后，会以 Json 格式返回这次导入的相关内容。当前包括以下字段： Label：本次导入的 label，如果没有指定，则为一个 uuid Status：此命令是否成功执行，"
 }
 ---
 

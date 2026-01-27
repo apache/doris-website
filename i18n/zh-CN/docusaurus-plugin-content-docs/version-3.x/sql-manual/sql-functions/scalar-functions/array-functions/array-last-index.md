@@ -1,7 +1,8 @@
 ---
 {
     "title": "ARRAY_LAST_INDEX",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "使用 lambda 表达式作为输入参数，对其他输入 ARRAY 参数的内部数据进行相应的表达式计算。返回最后一个使得 lambda(array1[i], ...) 返回值不为 0 的索引。如果没找到满足此条件的索引，则返回 0。"
 }
 ---
 

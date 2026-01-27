@@ -1,7 +1,8 @@
 ---
 {
     "title": "SECOND_TIMESTAMP",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "SECONDTIMESTAMP 函数用于将输入的日期时间值转换为 Unix 时间戳（以秒为单位），该时间戳表示从 1970-01-01 00:00:00 UTC 开始到指定日期时间的总秒数。该函数支持处理 DATETIME，该函数结果会加上机器所在的时区偏移，时区部分请查看 时区管理。"
 }
 ---
 

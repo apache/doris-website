@@ -1,7 +1,8 @@
 ---
 {
     "title": "Load High Availability",
-    "language": "en-US"
+    "language": "en-US",
+    "description": "Doris provides various mechanisms to ensure high availability during data import."
 }
 ---
 

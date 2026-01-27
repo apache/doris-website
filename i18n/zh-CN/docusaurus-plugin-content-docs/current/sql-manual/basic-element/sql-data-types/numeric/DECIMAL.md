@@ -1,7 +1,8 @@
 ---
 {
-"title": "DECIMAL",
-"language": "zh-CN"
+    "title": "DECIMAL",
+    "language": "zh-CN",
+    "description": "DECIMAL"
 }
 ---
 

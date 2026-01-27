@@ -1,7 +1,8 @@
 ---
 {
     "title": "LCM",
-    "language": "en"
+    "language": "en",
+    "description": "Calculates the least common multiple (LCM) of two integers. Note that the result may overflow."
 }
 ---
 

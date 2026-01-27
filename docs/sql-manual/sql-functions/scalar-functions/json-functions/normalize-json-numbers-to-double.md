@@ -1,7 +1,8 @@
 ---
 {
     "title": "NORMALIZE_JSON_NUMBERS_TO_DOUBLE",
-    "language": "en"
+    "language": "en",
+    "description": "The NORMALIZEJSONNUMBERSTODOUBLE function converts all numeric values in a JSON to double-precision floating-point type."
 }
 ---
 

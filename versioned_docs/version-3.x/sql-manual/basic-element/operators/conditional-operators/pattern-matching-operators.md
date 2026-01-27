@@ -1,7 +1,8 @@
 ---
 {
     "title": "Pattern Matching Operators",
-    "language": "en"
+    "language": "en",
+    "description": "Pattern matching operators are used to compare character-type data."
 }
 ---
 

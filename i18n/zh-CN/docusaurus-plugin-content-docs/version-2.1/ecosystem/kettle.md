@@ -1,7 +1,8 @@
 ---
 {
     "title": "Kettle Doris Plugin",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "Kettle Doris 的插件，用于在 Kettle 中通过 Stream Load 将其他数据源的数据写入到 Doris 中。"
 }
 ---
 

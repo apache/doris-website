@@ -1,7 +1,8 @@
 ---
 {
     "title": "QUANTILE_STATE",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "QUANTILESTATE"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
-"title": "EXPLODE_JSON_OBJECT",
-"language": "en"
+    "title": "EXPLODE_JSON_OBJECT",
+    "language": "en",
+    "description": "explodejsonobject expands a JSON object into multiple rows, with each row containing a key-value pair."
 }
 ---
 

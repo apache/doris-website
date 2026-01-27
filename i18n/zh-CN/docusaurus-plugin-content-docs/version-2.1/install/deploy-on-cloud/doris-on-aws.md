@@ -1,7 +1,8 @@
 ---
 {
-"title": "Doris on AWS",
-"language": "zh-CN"
+    "title": "Doris on AWS",
+    "language": "zh-CN",
+    "description": "为了方便大家在 AWS 上快速体验 Doris，提供了 CloudFormation 模版（CFT），允许快速启动和运行集群。使用模板，只需最少的配置，就可以自动配置 AWS 资源，并启动 Doris 集群。"
 }
 ---
 

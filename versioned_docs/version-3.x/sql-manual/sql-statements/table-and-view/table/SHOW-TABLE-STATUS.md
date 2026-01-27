@@ -1,7 +1,8 @@
 ---
 {
     "title": "SHOW TABLE STATUS",
-    "language": "en"
+    "language": "en",
+    "description": "This statement is used to display some information about a table or view."
 }
 ---
 

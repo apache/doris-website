@@ -1,7 +1,8 @@
 ---
 {
     "title": "SHOW FRONTENDS",
-    "language": "en"
+    "language": "en",
+    "description": "This statement is used to view the basic status information of the FE nodes."
 }
 ---
 

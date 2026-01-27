@@ -1,7 +1,8 @@
 ---
 {
-    "title": "SPLIT_BY_REGEXP",
-    "language": "en"
+    "title": "SPLIT_BY_REGEXP/REGEXP_SPLIT_TO_ARRAY",
+    "language": "en",
+    "description": "The SPLITBYREGEXP function splits a string into an array of strings based on a specified regular expression pattern. Unlike SPLITBYSTRING,"
 }
 ---
 
@@ -165,4 +166,4 @@ SELECT SPLIT_BY_REGEXP('a,,b,c', ','), SPLIT_BY_REGEXP('123abc456def', '[a-z]+')
 
 ### Keywords
 
-    SPLIT_BY_REGEXP, SPLIT, REGEXP
+    SPLIT_BY_REGEXP, SPLIT, REGEXP, REGEXP_SPLIT_TO_ARRAY

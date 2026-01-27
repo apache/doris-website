@@ -1,7 +1,8 @@
 ---
 {
     "title": "LEAD",
-    "language": "en"
+    "language": "en",
+    "description": "LEAD() is a window function used to access data from subsequent rows without performing a self-join."
 }
 ---
 

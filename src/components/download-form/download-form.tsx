@@ -31,7 +31,7 @@ export default function DownloadForm(props: DownloadFormProps) {
     }, [version]);
 
     return (
-        <div className="rounded-lg border border-b-[0.375rem] border-[#444FD9] px-8 pt-[3.125rem] pb-[2.1875rem]">
+        <div className="rounded-lg border border-b-[0.375rem] border-primary px-8 pt-[3.125rem] pb-[2.1875rem]">
             <div className="mb-8 text-xl font-medium">Available downloads</div>
             <Form
                 form={form}
@@ -66,7 +66,7 @@ export default function DownloadForm(props: DownloadFormProps) {
                 </Form.Item>
                 <div className="flex justify-center mt-[1.5rem]">
                     <div
-                        className="inline-flex items-center text-[#444FD9] cursor-pointer hover:underline"
+                        className="inline-flex items-center text-primary cursor-pointer hover:underline"
                         onClick={() => {
                             window.open(getVersionLinkByKeys(version, architecture, 'asc'), '_blank');
                         }}
@@ -74,7 +74,7 @@ export default function DownloadForm(props: DownloadFormProps) {
                         asc
                     </div>
                     <div
-                        className="inline-flex items-center ml-[4.375rem] text-[#444FD9] cursor-pointer hover:underline"
+                        className="inline-flex items-center ml-[4.375rem] text-primary cursor-pointer hover:underline"
                         onClick={() => {
                             window.open(getVersionLinkByKeys(version, architecture, 'sha512'), '_blank');
                         }}
@@ -82,7 +82,7 @@ export default function DownloadForm(props: DownloadFormProps) {
                         sha512
                     </div>
                     <div
-                        className="inline-flex items-center ml-[4.375rem] text-[#444FD9] cursor-pointer hover:underline"
+                        className="inline-flex items-center ml-[4.375rem] text-primary cursor-pointer hover:underline"
                         onClick={() => {
                             window.open(getVersionLinkByKeys(version, architecture, 'source'), '_blank');
                         }}

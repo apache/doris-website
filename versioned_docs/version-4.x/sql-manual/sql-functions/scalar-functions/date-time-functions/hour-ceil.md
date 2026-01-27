@@ -1,7 +1,8 @@
 ---
 {
-  "title": "HOUR_CEIL",
-  "language": "en"
+    "title": "HOUR_CEIL",
+    "language": "en",
+    "description": "The hourceil function rounds up the input datetime value to the nearest moment of the specified hour period. For example, if the period is 5 hours,"
 }
 ---
 

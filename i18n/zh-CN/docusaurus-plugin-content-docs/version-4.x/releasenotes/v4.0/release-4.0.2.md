@@ -1,7 +1,8 @@
 ---
 {
     "title": "Release 4.0.2",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "Apache Doris 4.0.2 版本发布说明，重点介绍 AI 搜索与倒排索引增强、新函数与物化视图能力扩展、大量 Lakehouse 数据湖特性（Doris Catalog、Iceberg compaction、HTTP TVF、Huggingface 等），以及查询执行、存储层与数据湖相关的性能优化和缺陷修复。"
 }
 ---
 

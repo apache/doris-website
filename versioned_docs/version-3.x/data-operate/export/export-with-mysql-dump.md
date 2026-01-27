@@ -1,7 +1,8 @@
 ---
 {
-"title": "Using MySQL Dump",
-"language": "en"
+    "title": "Using MySQL Dump",
+    "language": "en",
+    "description": "Doris has supported exporting data or table structures through the mysqldump tool after version 0.15"
 }
 ---
 

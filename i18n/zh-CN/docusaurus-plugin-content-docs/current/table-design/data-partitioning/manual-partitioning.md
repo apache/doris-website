@@ -1,7 +1,8 @@
 ---
 {
     "title": "手动分区",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "分区列通常为时间列，以方便的管理新旧数据。Range 分区支持的列类型 DATE, DATETIME, TIMESTAMPTZ, TINYINT, SMALLINT, INT, BIGINT, LARGEINT。"
 }
 ---
 

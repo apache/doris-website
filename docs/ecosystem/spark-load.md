@@ -1,7 +1,8 @@
 ---
 {
-  "title": "Spark Load",
-  "language": "en"
+    "title": "Spark Load",
+    "language": "en",
+    "description": "Spark Load uses external Spark resources to pre-process the imported data,"
 }
 ---
 

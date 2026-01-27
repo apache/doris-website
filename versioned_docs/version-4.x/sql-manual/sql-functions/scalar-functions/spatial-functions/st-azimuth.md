@@ -1,7 +1,8 @@
 ---
 {
     "title": "ST_AZIMUTH",
-    "language": "en"
+    "language": "en",
+    "description": "Calculates the azimuth (in radians) between two points on the Earth's surface."
 }
 ---
 

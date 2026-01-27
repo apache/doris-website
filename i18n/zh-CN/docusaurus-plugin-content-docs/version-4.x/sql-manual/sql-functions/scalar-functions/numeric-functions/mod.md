@@ -1,7 +1,8 @@
 ---
 {
     "title": "MOD",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "求整数类型，a / b 的余数，浮点类型请使用 fmod 函数。"
 }
 ---
 

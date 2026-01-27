@@ -1,7 +1,8 @@
 ---
 {
     "title": "Leading Hint",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "Leading Hint 是一种强大的查询优化技术，允许用户指导 Doris 优化器确定查询计划中的表连接顺序。正确使用 Leading Hint 可以显著提高复杂查询的性能。本文将详细介绍如何在 Doris 中使用 Leading Hint 来控制 join 顺序。"
 }
 ---
 

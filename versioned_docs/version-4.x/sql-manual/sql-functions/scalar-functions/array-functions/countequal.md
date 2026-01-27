@@ -1,7 +1,8 @@
 ---
 {
     "title": "COUNTEQUAL",
-    "language": "en"
+    "language": "en",
+    "description": "Count the number of elements equal to a given target value within an array."
 }
 ---
 

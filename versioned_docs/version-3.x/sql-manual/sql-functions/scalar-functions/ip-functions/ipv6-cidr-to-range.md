@@ -1,7 +1,8 @@
 ---
 {
     "title": "IPV6_CIDR_TO_RANGE",
-    "language": "en"
+    "language": "en",
+    "description": "Receive an IPv6 and an Int16 value containing CIDR. Returns a struct that contains two IPv6 fields representing the lower range (min) and higher "
 }
 ---
 

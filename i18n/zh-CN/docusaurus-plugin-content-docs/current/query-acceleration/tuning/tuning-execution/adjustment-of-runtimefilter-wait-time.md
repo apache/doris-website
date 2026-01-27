@@ -1,7 +1,8 @@
 ---
 {
-"title": "RuntimeFilter 的等待时间调整",
-"language": "zh-CN"
+    "title": "RuntimeFilter 的等待时间调整",
+    "language": "zh-CN",
+    "description": "实际生产场景会遇到因为 RuntimeFilter 等待时间不合理，引起的性能问题的情况。RuntimeFilter 是一种查询优化技术，它通过运行时生成过滤条件，从而避免了对无关数据的扫描。这种优化方式能够大幅减少 I/O 操作和计算量，进而加速查询执行。下面介绍几种常见的案例，"
 }
 ---
 

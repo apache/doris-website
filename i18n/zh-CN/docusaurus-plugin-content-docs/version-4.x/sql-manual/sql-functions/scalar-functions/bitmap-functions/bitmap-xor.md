@@ -1,7 +1,8 @@
 ---
 {
     "title": "BITMAP_XOR",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "计算两个及以上输入 Bitmap 的差集，返回新的 Bitmap。"
 }
 ---
 

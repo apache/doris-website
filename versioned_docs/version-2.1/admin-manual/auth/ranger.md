@@ -1,7 +1,8 @@
 ---
 {
     "title": "Integration with Apache Ranger",
-    "language": "en"
+    "language": "en",
+    "description": "Apache Ranger is a security framework used to monitor, enable services, and manage all-round data security access on the Hadoop platform."
 }
 ---
 
@@ -21,7 +22,7 @@ In version 2.1.0, Doris supports unified permission management by integrating Ap
 
 1. Download the following files
 
-	- [ranger-doris-plugin-3.0.0-SNAPSHOT.jar](https://selectdb-doris-1308700295.cos.ap-beijing.myqcloud.com/ranger/ranger-doris-plugin-3.0.0-SNAPSHOT.jar)
+	- [ranger-doris-plugin-3.0.0-SNAPSHOT.jar](https://selectdb-doris-1308700295.cos.ap-beijing.myqcloud.com/release/ranger/2.1/ranger-doris-plugin-3.0.0-SNAPSHOT.jar)
 	- [mysql-connector-java-8.0.25.jar](https://selectdb-doris-1308700295.cos.ap-beijing.myqcloud.com/release/jdbc_driver/mysql-connector-java-8.0.25.jar)
 
 2. Place the downloaded file in the `ranger-plugins/doris` directory of the Ranger service, such as:

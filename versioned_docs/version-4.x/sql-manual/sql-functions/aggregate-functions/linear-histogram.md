@@ -1,10 +1,10 @@
 ---
 {
     "title": "LINEAR_HISTOGRAM",
-    "language": "en"
+    "language": "en",
+    "description": "The LINEARHISTOGRAM function is used to describe data distribution."
 }
 ---
-
 
 ## Description
 

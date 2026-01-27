@@ -1,7 +1,8 @@
 ---
 {
     "title": "ARRAY_MAP",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "对数组中的元素应用 lambda 表达式，返回一个新数组。函数会为数组中的每个元素应用 lambda 表达式，返回对应的结果。"
 }
 ---
 

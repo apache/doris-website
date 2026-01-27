@@ -1,7 +1,8 @@
 ---
 {
     "title": "Table Row Count Action",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "用于获取指定表的行数统计信息。该接口目前用于 Spark-Doris-Connector 中，Spark 获取 Doris 的表统计信息。"
 }
 ---
 

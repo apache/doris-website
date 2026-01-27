@@ -1,7 +1,8 @@
 ---
 {
     "title": "DOMAIN_WITHOUT_WWW",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "提取字符串 URL 中不带前缀 www 的域名"
 }
 ---
 

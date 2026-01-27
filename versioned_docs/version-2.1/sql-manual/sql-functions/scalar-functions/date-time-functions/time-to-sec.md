@@ -1,7 +1,8 @@
 ---
 {
     "title": "TIME_TO_SEC",
-    "language": "en"
+    "language": "en",
+    "description": "The function converts an input TIME or DATETIME value into the total time in seconds. If the input is of DATETIME type,"
 }
 ---
 

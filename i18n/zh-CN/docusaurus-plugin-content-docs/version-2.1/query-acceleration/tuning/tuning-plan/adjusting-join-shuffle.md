@@ -1,7 +1,8 @@
 ---
 {
     "title": "使用 Hint 调整 Join Shuffle 方式",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "Doris 支持使用 Hint 来调整 Join 操作中数据 Shuffle 的类型，从而优化查询性能。本节将详细介绍如何在 Doris 中利用 Hint 来指定 Join Shuffle 的类型。"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "OpenTelemetry",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "OpenTelemetry（简称OTel），是一个中立厂商的开源可观测性框架，用于监测、生成、收集和导出日志、调用链追踪和指标等可观测性数据。OpenTelemetry 定义了一套可观测性的标准和协议，被可观测性社区和厂商广泛采纳，逐渐成为可观测性领域的事实标准。"
 }
 ---
 

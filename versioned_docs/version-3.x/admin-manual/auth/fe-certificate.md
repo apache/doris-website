@@ -1,7 +1,8 @@
 ---
 {
     "title": "FE SSL Certificate",
-    "language": "en"
+    "language": "en",
+    "description": "Certificate Configuration"
 }
 ---
 

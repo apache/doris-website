@@ -1,7 +1,8 @@
 ---
 {
     "title": "MASK_FIRST_N",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "MASKFIRSTN 函数用于对字符串的前 N 个字节进行脱敏。将前 N 个字节中的大写字母替换为 X，小写字母替换为 x，数字替换为 n。"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "DAY_FLOOR",
-    "language": "en"
+    "language": "en",
+    "description": "Rounds the date down to the nearest timestamp of the specified time interval period."
 }
 ---
 

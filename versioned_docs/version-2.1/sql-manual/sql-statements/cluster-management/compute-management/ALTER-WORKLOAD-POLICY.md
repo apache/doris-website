@@ -1,7 +1,8 @@
 ---
 {
-"title": "ALTER WORKLOAD POLICY",
-"language": "en"
+    "title": "ALTER WORKLOAD POLICY",
+    "language": "en",
+    "description": "Modify the properties of a Workload Group. Currently, only property modifications are supported;"
 }
 ---
 

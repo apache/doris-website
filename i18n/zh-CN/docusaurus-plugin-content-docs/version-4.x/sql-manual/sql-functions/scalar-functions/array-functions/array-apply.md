@@ -1,7 +1,8 @@
 ---
 {
     "title": "ARRAY_APPLY",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "<version since=\"1.2.3\">"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "AI 概述",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "在 AI 技术快速演进的时代，数据基础设施正成为AI应用的核心支撑。Apache Doris 作为一款高性能、实时分析型数据库，深度融合了文本搜索、向量搜索、AI 函数和MCP智能交互能力，构建从数据存储、检索到分析的完整 AI 数据栈。"
 }
 ---
 

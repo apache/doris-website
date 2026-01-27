@@ -1,7 +1,8 @@
 ---
 {
     "title": "RANDOM_BYTES",
-    "language": "en"
+    "language": "en",
+    "description": "The RANDOMBYTES function is used to generate a random byte sequence of the specified length."
 }
 ---
 

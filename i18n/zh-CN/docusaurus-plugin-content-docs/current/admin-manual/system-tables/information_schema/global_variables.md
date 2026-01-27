@@ -1,7 +1,8 @@
 ---
 {
     "title": "global_variables",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "查看全局变量"
 }
 ---
 

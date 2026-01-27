@@ -1,7 +1,8 @@
 ---
 {
     "title": "metadata_name_ids",
-    "language": "en"
+    "language": "en",
+    "description": "View ID Information of Objects"
 }
 ---
 

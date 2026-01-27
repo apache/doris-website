@@ -1,7 +1,8 @@
 ---
 {
     "title": "查询 tablet 分布",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "获取 BE 节点上每一个 partition 下的 tablet 在不同磁盘上的分布情况"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "RPAD",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "RPAD 函数（Right Padding）用于在字符串右侧填充指定的字符，直到达到指定的长度。如果目标长度小于原字符串长度，则截断字符串。该函数按字符长度计算，而非字节长度."
 }
 ---
 

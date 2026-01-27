@@ -1,7 +1,8 @@
 ---
 {
     "title": "SHOW CACHE HOTSPOT",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "该语句用于显示文件缓存的热点信息。"
 }
 ---
 

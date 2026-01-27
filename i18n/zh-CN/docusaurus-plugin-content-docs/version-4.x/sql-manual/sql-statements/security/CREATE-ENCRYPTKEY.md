@@ -1,7 +1,8 @@
 ---
 {
-  "title": "CREATE ENCRYPTKEY",
-  "language": "zh-CN"
+    "title": "CREATE ENCRYPTKEY",
+    "language": "zh-CN",
+    "description": "此语句创建一个自定义密钥。"
 }
 ---
 

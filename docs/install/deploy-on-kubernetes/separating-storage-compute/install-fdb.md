@@ -1,7 +1,8 @@
 ---
 {
-  "title": "Install FoundationDB",
-  "language": "en"
+    "title": "Install FoundationDB",
+    "language": "en",
+    "description": "FoundationDB is an open-source distributed database released under the Apache 2.0 license, it provides strong consistency for structured data storage."
 }
 ---
 

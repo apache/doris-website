@@ -1,7 +1,8 @@
 ---
 {
-"title": "EXPLODE_JSON_ARRAY_INT",
-"language": "en"
+    "title": "EXPLODE_JSON_ARRAY_INT",
+    "language": "en",
+    "description": "The explodejsonarrayint table function accepts a JSON array."
 }
 ---
 

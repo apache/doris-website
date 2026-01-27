@@ -1,7 +1,8 @@
 ---
 {
     "title": "DATE_FLOOR",
-    "language": "en"
+    "language": "en",
+    "description": "datefloor rounds a given date to the closest lower boundary of the specified time interval."
 }
 ---
 

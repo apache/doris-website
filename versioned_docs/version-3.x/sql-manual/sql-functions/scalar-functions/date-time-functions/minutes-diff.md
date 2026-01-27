@@ -1,7 +1,8 @@
 ---
 {
     "title": "MINUTES_DIFF",
-    "language": "en"
+    "language": "en",
+    "description": "Calculates the minute difference between two datetime values. The result is the number of minutes from <startdate> subtracted from <enddate>."
 }
 ---
 

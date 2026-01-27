@@ -1,7 +1,8 @@
 ---
 {
     "title": "MAP_CONTAINS_ENTRY",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "判断给定 map 中是否包含指定的 (key, value) 键值对。"
 }
 ---
 

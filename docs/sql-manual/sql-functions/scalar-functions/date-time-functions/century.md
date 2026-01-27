@@ -1,7 +1,8 @@
 ---
 {
     "title": "CENTURY",
-    "language": "en"
+    "language": "en",
+    "description": "Returns the century of the given date. If the input is invalid or out of the supported range, it returns NULL."
 }
 ---
 

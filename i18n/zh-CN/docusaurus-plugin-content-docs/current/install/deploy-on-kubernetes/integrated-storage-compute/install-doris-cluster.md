@@ -1,7 +1,8 @@
 ---
 {
-   "title": "部署 Doris 集群",
-   "language": "zh-CN"
+    "title": "部署 Doris 集群",
+    "language": "zh-CN",
+    "description": "在 Kubernetes 上部署 Doris 集群时，请提前部署 Doris Operator。"
 }
 ---
 

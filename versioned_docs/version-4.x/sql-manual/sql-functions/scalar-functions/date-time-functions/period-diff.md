@@ -1,7 +1,8 @@
 ---
 {
     "title": "PERIOD_DIFF",
-    "language": "en"
+    "language": "en",
+    "description": "Calculates the difference in months between two periods."
 }
 ---
 

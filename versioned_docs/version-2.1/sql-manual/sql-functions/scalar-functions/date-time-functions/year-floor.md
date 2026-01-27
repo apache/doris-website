@@ -1,7 +1,8 @@
 ---
 {
     "title": "YEAR_FLOOR",
-    "language": "en"
+    "language": "en",
+    "description": "It is used to round the given date down to the specified year interval starting point. It supports multiple variants,"
 }
 ---
 

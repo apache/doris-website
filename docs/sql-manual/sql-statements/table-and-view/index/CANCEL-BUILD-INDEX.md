@@ -1,7 +1,8 @@
 ---
 {
     "title": "CANCEL BUILD INDEX",
-    "language": "en"
+    "language": "en",
+    "description": "Cancel background tasks for index building."
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
-  "title": "WEEKS_ADD",
-  "language": "zh-CN"
+    "title": "WEEKS_ADD",
+    "language": "zh-CN",
+    "description": "函数用于在指定的日期或时间值上增加（或减少）一定数量的周"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "SHOW PROC",
-    "language": "en"
+    "language": "en",
+    "description": "The Proc system is a unique feature of Doris. Students who have used Linux may understand this concept better. In Linux systems,"
 }
 ---
 

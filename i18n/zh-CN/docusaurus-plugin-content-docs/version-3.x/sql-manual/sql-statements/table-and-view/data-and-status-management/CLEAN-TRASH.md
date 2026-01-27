@@ -1,9 +1,9 @@
 ---
 {
     "title": "ADMIN CLEAN TRASH",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "该语句用于清理 backend 内的垃圾数据。"
 }
-
 ---
 
 ## 描述

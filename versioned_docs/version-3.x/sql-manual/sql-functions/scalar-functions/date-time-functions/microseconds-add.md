@@ -1,7 +1,8 @@
 ---
 {
     "title": "MICROSECONDS_ADD",
-    "language": "en"
+    "language": "en",
+    "description": "Adds a specified number of microseconds to a datetime value and returns a new datetime value."
 }
 ---
 

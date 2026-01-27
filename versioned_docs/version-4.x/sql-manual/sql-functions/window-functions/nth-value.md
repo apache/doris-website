@@ -1,7 +1,8 @@
 ---
 {
     "title": "NTH_VALUE",
-    "language": "en"
+    "language": "en",
+    "description": "NTHVALUE() is a window function used to return the Nth value in an ordered dataset within a window partition."
 }
 ---
 

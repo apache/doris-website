@@ -1,7 +1,8 @@
 ---
 {
     "title": "CANCEL ALTER TABLE",
-    "language": "en"
+    "language": "en",
+    "description": "This statement is used to cancel (revoke) an ongoing ALTER TABLE operation."
 }
 ---
 

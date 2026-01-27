@@ -1,7 +1,8 @@
 ---
 {
     "title": "MAP_ENTRIES",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "将给定的 map 转换为 ARRAY<STRUCT<key, value>>"
 }
 ---
 

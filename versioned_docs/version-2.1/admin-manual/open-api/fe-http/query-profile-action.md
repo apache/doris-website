@@ -1,9 +1,13 @@
 ---
 {
-    "title": "Query Profile Action",
-    "language": "en"
+    "title": "Query Profile Action | Fe Http",
+    "language": "en",
+    "description": "Gets information about select queries for all fe nodes in the cluster.",
+    "sidebar_label": "Query Profile Action"
 }
 ---
+
+# Query Profile Action
 
 ## Request
 
@@ -478,3 +482,4 @@ Cancel query of specified connection.
     "count": 0
 }
 ```
+

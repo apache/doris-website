@@ -1,7 +1,8 @@
 ---
 {
     "title": "Row Count Action",
-    "language": "en"
+    "language": "en",
+    "description": "Used to manually update the row count statistics of the specified table. While updating the statistics of the number of rows,"
 }
 ---
 

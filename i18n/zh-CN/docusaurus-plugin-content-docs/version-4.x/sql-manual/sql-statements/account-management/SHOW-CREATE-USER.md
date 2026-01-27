@@ -1,7 +1,8 @@
 ---
 {
     "title": "SHOW CREATE USER",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "SHOW CREATE USER 语句用于显示数据库系统中用户的创建语句。它能帮助管理员更好地管理账号"
 }
 ---
 

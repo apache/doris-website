@@ -1,7 +1,8 @@
 ---
 {
     "title": "BITMAP",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "BITMAP"
 }
 ---
 

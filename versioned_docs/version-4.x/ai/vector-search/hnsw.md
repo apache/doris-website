@@ -1,7 +1,8 @@
 ---
 {
     "title": "HNSW",
-    "language": "en"
+    "language": "en",
+    "description": "HNSW (Malkov & Yashunin, 2016) has become the de facto standard for high‑performance online vector search thanks to its ability to achieve high "
 }
 ---
 

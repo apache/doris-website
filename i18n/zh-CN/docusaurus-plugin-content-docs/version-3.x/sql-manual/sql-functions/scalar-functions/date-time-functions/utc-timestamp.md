@@ -1,7 +1,8 @@
 ---
 {
     "title": "UTC_TIMESTAMP",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "返回当前 UTC 日期和时间在 \"YYYY-MM-DD HH:MM:SS\" 或"
 }
 ---
 

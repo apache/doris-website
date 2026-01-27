@@ -1,7 +1,8 @@
 ---
 {
     "title": "Manually Trigger Compaction",
-    "language": "en"
+    "language": "en",
+    "description": "POST /api/compaction/run?tableid={int}&compacttype=full Note that tableid=xxx will take effect only when compacttype=full is specified."
 }
 ---
 

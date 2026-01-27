@@ -1,7 +1,8 @@
 ---
 {
     "title": "Recover from Recycle Bin",
-    "language": "en"
+    "language": "en",
+    "description": "To avoid disasters caused by accidental operations, Doris supports the recovery of accidentally deleted databases, tables, and partitions."
 }
 ---
 

@@ -1,10 +1,10 @@
 ---
 {
     "title": "ST_ASBINARY",
-    "language": "en"
+    "language": "en",
+    "description": "Converts a geometric object into a standard WKB (Well-Known Binary) binary representation. WKB is a binary format for representing geospatial data,"
 }
 ---
-
 
 <!-- 
 Licensed to the Apache Software Foundation (ASF) under one

@@ -1,7 +1,8 @@
 ---
 {
     "title": "Unique Key Model",
-    "language": "en"
+    "language": "en",
+    "description": "When data updates are required, use the Unique Key Model."
 }
 ---
 

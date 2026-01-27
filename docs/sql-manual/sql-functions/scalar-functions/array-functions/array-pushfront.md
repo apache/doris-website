@@ -1,7 +1,8 @@
 ---
 {
     "title": "ARRAY_PUSHFRONT",
-    "language": "en-US"
+    "language": "en-US",
+    "description": "Adds an element to the beginning of an array. The function returns a new array containing the newly added element plus all elements from the original "
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "NTILE",
-    "language": "en"
+    "language": "en",
+    "description": "NTILE() is a window function that divides an ordered dataset into a specified number of approximately equal buckets."
 }
 ---
 

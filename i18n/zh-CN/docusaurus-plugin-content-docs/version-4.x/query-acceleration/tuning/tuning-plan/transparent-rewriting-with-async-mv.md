@@ -1,7 +1,8 @@
 ---
 {
     "title": "使用异步物化视图透明改写",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "异步物化视图采用的是基于 SPJG（SELECT-PROJECT-JOIN-GROUP-BY）模式的透明改写算法。该算法能够分析查询 SQL 的结构信息，自动寻找合适的物化视图，并尝试进行透明改写，以利用最优的物化视图来表达查询 SQL。通过使用预计算的物化视图结果，可以显著提高查询性能，"
 }
 ---
 

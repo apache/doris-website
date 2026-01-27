@@ -1,9 +1,13 @@
 ---
 {
-    "title": "IPV4_CIDR_TO_RANGE",
-    "language": "zh-CN"
+    "title": "IPV4_CIDR_TO_RANGE | Ip Functions",
+    "language": "zh-CN",
+    "description": "根据 IPv4 地址和 CIDR 前缀长度，计算该网段的最小和最大 IPv4 地址，返回一个包含两个 IPv4 地址的结构体。",
+    "sidebar_label": "IPV4_CIDR_TO_RANGE"
 }
 ---
+
+# IPV4_CIDR_TO_RANGE
 
 ## ipv4_cidr_to_range
 
@@ -75,4 +79,5 @@ ERROR 1105 (HY000): errCode = 2, detailMessage = (...)[INVALID_ARGUMENT]Illegal 
 ### Keywords
 
 IPV4_CIDR_TO_RANGE
+
 

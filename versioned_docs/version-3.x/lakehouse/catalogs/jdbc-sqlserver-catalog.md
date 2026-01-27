@@ -1,7 +1,8 @@
 ---
 {
     "title": "SQL Server JDBC Catalog",
-    "language": "en"
+    "language": "en",
+    "description": "Doris JDBC Catalog supports connecting to SQL Server databases through the standard JDBC interface."
 }
 ---
 

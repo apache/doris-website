@@ -1,7 +1,8 @@
 ---
 {
     "title": "BITMAP_NOT",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "计算第一个 Bitmap 减去第二个 Bitmap 之后的集合，并返回为新的 Bitmap。"
 }
 ---
 

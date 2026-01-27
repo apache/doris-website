@@ -1,7 +1,8 @@
 ---
 {
     "title": "HEX",
-    "language": "en"
+    "language": "en",
+    "description": "If the input parameter is a number, return the string representation of the hexadecimal value."
 }
 ---
 

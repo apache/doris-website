@@ -1,7 +1,8 @@
 ---
 {
     "title": "MySQL JDBC Catalog",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "Doris JDBC Catalog 支持通过标准 JDBC 接口连接 MySQL 数据库。本文档介绍如何配置 MySQL 数据库连接。"
 }
 ---
 
@@ -77,7 +78,7 @@ CREATE CATALOG mysql_catalog PROPERTIES (
 | decimal(P, S)                        | decimal(P, S)              |                                                                                |
 | unsigned decimal(P, S)               | decimal(P + 1, S) / string | 如果超过 Doris 支持的最大精度，则会使用 String 承接。注意在此类型被映射为 String 时，只能支持查询，不能对 MySQL 进行写入操作。 |
 | date                                 | date                       |                                                                                |
-| timestamp(S)                         | datetime(S)                |                                                                                |
+| timestamp(S)                         | datetime(S)/timestamptz(S)                |  properties 中 `enable.mapping.timestamp_tz` (4.0.3 后开始支持) 属性控制，默认为 `false`, 则映射到 `datetime`; 为 `true` 时，则映射到 `timestamptz` 类型                                                                               |
 | datetime(S)                          | datetime(S)                |                                                                                |
 | year                                 | smallint                   | Doris 不支持 year 类型，year 类型会被映射为 smallint。                                       |
 | time                                 | string                     | Doris 不支持 time 类型，time 类型会被映射为 string。                                         |

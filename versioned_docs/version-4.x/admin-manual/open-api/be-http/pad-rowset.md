@@ -1,7 +1,8 @@
 ---
 {
     "title": "Pad Rowset",
-    "language": "en"
+    "language": "en",
+    "description": "Pad one empty rowset as one substitute for error replica."
 }
 ---
 

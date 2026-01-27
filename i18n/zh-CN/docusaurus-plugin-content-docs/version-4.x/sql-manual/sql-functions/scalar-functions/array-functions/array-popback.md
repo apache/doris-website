@@ -1,7 +1,8 @@
 ---
 {
     "title": "ARRAY_POPBACK",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "移除数组的最后一个元素。函数会返回一个新数组，包含原数组中除最后一个元素外的所有元素。"
 }
 ---
 

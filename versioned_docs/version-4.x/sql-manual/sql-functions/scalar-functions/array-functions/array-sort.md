@@ -1,7 +1,8 @@
 ---
 {
     "title": "ARRAY_SORT",
-    "language": "en-US"
+    "language": "en-US",
+    "description": "If no lambda function is specified, the array elements are sorted in ascending order. Otherwise,"
 }
 ---
 
@@ -17,7 +18,7 @@ If no lambda function is specified, the array elements are sorted in ascending o
 ## Parameters
 
 - `lambda`: A `lambda` expression used to define sorting rules, whose return value should be -1, 0, or 1 (representing less than, less than or equal to, and greater than respectively).
-- `arr`: `ARRAY<T>`, where `T` can be numeric, boolean, string, datetime, IP, etc.
+- `arr`: `ARRAY<T>`, where `T` can be numeric, boolean, string, datetime, IP, etc. Multi-dimensional arrays are supported, but all array elements (no matter how deeply nested) must be of the supported types.
 
 ## Return value
 
@@ -176,4 +177,18 @@ SELECT array_sort((x, y) -> IF(cardinality(x) < cardinality(y), -1,
 +-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | [[1, 2], [2, 3, 1], [4, 2, 1, 4]]                                                                                                                                                                   |
 +-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+```
+
+4. Multi-dimensional array sort
+
+```sql
+SELECT ARRAY_SORT([[6, 2], [5, 6]]);
+```
+
+```text
++------------------------------+
+| ARRAY_SORT([[6, 2], [5, 6]]) |
++------------------------------+
+| [[5, 6], [6, 2]]             |
++------------------------------+
 ```

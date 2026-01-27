@@ -1,7 +1,8 @@
 ---
 {
     "title": "ARRAY_RANGE",
-    "language": "en"
+    "language": "en",
+    "description": "Generate an arithmetic sequence array of numbers or datetimes."
 }
 ---
 

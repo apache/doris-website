@@ -1,7 +1,8 @@
 ---
 {
     "title": "MAP_AGG",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "MAPAGG 函数用于根据多行数据中的键值对形成一个映射结构。"
 }
 ---
 

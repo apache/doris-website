@@ -1,7 +1,8 @@
 ---
 {
-  "title": "Tencent COS",
-  "language": "en"
+    "title": "Tencent COS",
+    "language": "en",
+    "description": "This document describes the parameters required to access Tencent Cloud COS, which apply to the following scenarios:"
 }
 ---
 

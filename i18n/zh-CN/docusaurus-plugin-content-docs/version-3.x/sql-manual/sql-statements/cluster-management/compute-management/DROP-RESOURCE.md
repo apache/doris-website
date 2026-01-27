@@ -1,7 +1,8 @@
 ---
 {
     "title": "DROP RESOURCE",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "该语句用于删除一个已有的资源。仅 root 或 admin 用户可以删除资源。"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "Iceberg Catalog",
-    "language": "en"
+    "language": "en",
+    "description": "Iceberg Catalog in Apache Doris connects to multiple Iceberg metadata services to query and write Iceberg tables across HDFS and cloud object storage, with detailed configuration, properties, query and write operations."
 }
 ---
 
@@ -86,12 +87,18 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 
 ### Supported Iceberg Versions
 
-The current Iceberg dependency is version 1.6.1, which is compatible with higher versions of Iceberg.
+| Doris Version | Iceberg SDK Version |
+| --- | --- |
+| 2.1 | 1.6.1 |
+| 3.0 | 1.6.1 |
+| 3.1 | 1.9.1 |
+| 4.0 | 1.9.1 |
 
 ### Supported Iceberg Formats
 
 * Supports Iceberg V1/V2 formats.
-* Supports Position Delete and Equality Delete.
+* Supports reading Position Delete and Equality Delete.
+* Supports reading  Deletion Vector (Since 4.1.0).
 
 ### Supported Metadata Services
 
@@ -137,7 +144,7 @@ The current Iceberg dependency is version 1.6.1, which is compatible with higher
 | fixed(N)                               | char(N)              |                                         |
 | string                                 | string               |                                         |
 | binary                                 | string/varbinary     | Controlled by the `enable.mapping.varbinary` property of Catalog (supported since 4.0.2). The default is `false`, which maps to `string`; when `true`, it maps to `varbinary` type.|
-| uuid                                   | string/varbinary     | Before 4.0.2, it was mapped to `string`; after that, it is mapped to `varbinary` type.|
+| uuid                                   | string/varbinary     | version < 4.0.2 maps to `string` type; version == 4.0.2 maps to `varbinary` type. For version > 4.0.2, it is controlled by the `enable.mapping.varbinary` property in the properties. The default is `false`, which maps to `string`.|
 | struct                                 | struct (supported from version 2.1.3) |                                         |
 | map                                    | map (supported from version 2.1.3)    |                                         |
 | list                                   | array                |                                         |
@@ -1136,17 +1143,19 @@ Support for Nested Namespace needs to be explicitly enabled. For details, please
 <details>
     <summary>3.1+ Version</summary>
     <Tabs>
-        <TabItem value='FileSystem Catalog' label='FileSystem Catalog' default>
+        <TabItem value='S3 Tables Rest Catalog' label='S3 Tables Rest Catalog' default>
             Please refer to the [S3 Tables Integration](../best-practices/doris-aws-s3tables.md) documentation.
             ```sql
-            CREATE CATALOG test_s3tables_write_insert PROPERTIES (
+            CREATE CATALOG aws_s3_tables PROPERTIES (
                 'type' = 'iceberg',
-                'iceberg.catalog.type' = 's3tables',
-                'warehouse' = 'arn:aws:s3tables:ap-east-1:12345:bucket/doris-s3-table-bucket',
-                's3.region' = 'ap-east-1',
-                's3.endpoint' = 'https://s3.ap-east-1.amazonaws.com',
-                's3.access_key' = '<ak>',
-                's3.secret_key' = '<sk>'
+                'iceberg.catalog.type' = 'rest',
+                'warehouse' = 'arn:aws:s3tables:us-east-1:<account_id>:bucket/<s3_table_bucket_name>',
+                'iceberg.rest.uri' = 'https://s3tables.us-east-1.amazonaws.com/iceberg',
+                'iceberg.rest.sigv4-enabled' = 'true',
+                'iceberg.rest.signing-name' = 's3tables',
+                'iceberg.rest.signing-region' = 'us-east-1',
+                'iceberg.rest.access-key-id' = '<ak>',
+                'iceberg.rest.secret-access-key' = '<sk>'
             );
             ```
         </TabItem>
@@ -1163,6 +1172,20 @@ Support for Nested Namespace needs to be explicitly enabled. For details, please
                 'iceberg.rest.access-key-id' = '<ak>',
                 'iceberg.rest.secret-access-key' = '<sk>',
                 'iceberg.rest.signing-region' = 'ap-east-1'
+            );
+            ```
+        </TabItem>
+        <TabItem value='FileSystem Catalog' label='FileSystem Catalog' default>
+            Please refer to the [S3 Tables Integration](../best-practices/doris-aws-s3tables.md) documentation.
+            ```sql
+            CREATE CATALOG test_s3tables_write_insert PROPERTIES (
+                'type' = 'iceberg',
+                'iceberg.catalog.type' = 's3tables',
+                'warehouse' = 'arn:aws:s3tables:ap-east-1:12345:bucket/doris-s3-table-bucket',
+                's3.region' = 'ap-east-1',
+                's3.endpoint' = 'https://s3.ap-east-1.amazonaws.com',
+                's3.access_key' = '<ak>',
+                's3.secret_key' = '<sk>'
             );
             ```
         </TabItem>

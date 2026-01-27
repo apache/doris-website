@@ -1,7 +1,8 @@
 ---
 {
     "title": "YEARS_SUB",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "返回一个新的日期时间值，该值是从输入的日期时间中减去指定的年数。"
 }
 ---
 

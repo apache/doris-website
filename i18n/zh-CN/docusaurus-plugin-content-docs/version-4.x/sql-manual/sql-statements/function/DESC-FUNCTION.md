@@ -1,7 +1,8 @@
 ---
 {
     "title": "DESC FUNCTION",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "利用 desc function tablevaluedfunction 获取对应表值函数的 Schema 信息。"
 }
 ---
 

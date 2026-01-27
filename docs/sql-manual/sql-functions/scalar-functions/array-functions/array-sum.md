@@ -1,7 +1,8 @@
 ---
 {
     "title": "ARRAY_SUM",
-    "language": "en"
+    "language": "en",
+    "description": "The ARRAYSUM function calculates the sum of all numeric elements in an array."
 }
 ---
 

@@ -1,9 +1,9 @@
 ---
 {
     "title": "Using Doris and Iceberg",
-    "language": "en"
+    "language": "en",
+    "description": "As a new open data management architecture, the Data Lakehouse integrates the high performance and real-time capabilities of a data warehouse with "
 }
-
 ---
 
 As a new open data management architecture, the Data Lakehouse integrates the high performance and real-time capabilities of a data warehouse with the low cost and flexibility of a data lake, helping users more conveniently meet various data processing and analysis needs. It has been increasingly applied in enterprise big data systems.

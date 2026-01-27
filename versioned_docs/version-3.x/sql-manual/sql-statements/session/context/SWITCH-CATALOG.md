@@ -1,7 +1,8 @@
 ---
 {
-   "title": "SWITCH CATALOG",
-   "language": "en"
+    "title": "SWITCH CATALOG",
+    "language": "en",
+    "description": "This statement is used to switch catalog."
 }
 ---
 

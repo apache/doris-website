@@ -1,7 +1,8 @@
 ---
 {
     "title": "Kafka",
-    "language": "en"
+    "language": "en",
+    "description": "Doris provides the following methods to load data from Kafka:"
 }
 ---
 

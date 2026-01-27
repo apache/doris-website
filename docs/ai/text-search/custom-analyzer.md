@@ -1,7 +1,8 @@
 ---
 {
-"title": "Custom Analyzer",
-    "language": "en"
+    "title": "Custom Analyzer",
+    "language": "en",
+    "description": "Custom analyzers allow you to overcome the limitations of built-in tokenizers by combining character filters, tokenizers,"
 }
 ---
 
@@ -285,3 +286,126 @@ SELECT * FROM stars WHERE name MATCH 'liu';
 SELECT * FROM stars WHERE name MATCH 'ldh';
 SELECT * FROM stars WHERE name MATCH 'zxy';
 ```
+
+## Multiple Analyzers on Single Column
+
+Doris supports creating multiple inverted indexes with different analyzers on a single column. This enables flexible search strategies where the same data can be searched using different tokenization methods.
+
+### Use Cases
+
+- **Multi-language support**: Use different analyzers for different languages on the same text column
+- **Search precision vs. recall**: Use keyword analyzer for exact match and standard analyzer for fuzzy search
+- **Autocomplete**: Use edge_ngram analyzer for prefix matching while keeping standard analyzer for regular search
+
+### Creating Multiple Indexes
+
+```sql
+-- Create analyzers with different tokenization strategies
+CREATE INVERTED INDEX ANALYZER IF NOT EXISTS std_analyzer
+PROPERTIES ("tokenizer" = "standard", "token_filter" = "lowercase");
+
+CREATE INVERTED INDEX ANALYZER IF NOT EXISTS kw_analyzer
+PROPERTIES ("tokenizer" = "keyword", "token_filter" = "lowercase");
+
+CREATE INVERTED INDEX TOKENIZER IF NOT EXISTS edge_ngram_tokenizer
+PROPERTIES (
+    "type" = "edge_ngram",
+    "min_gram" = "1",
+    "max_gram" = "20",
+    "token_chars" = "letter"
+);
+
+CREATE INVERTED INDEX ANALYZER IF NOT EXISTS ngram_analyzer
+PROPERTIES ("tokenizer" = "edge_ngram_tokenizer", "token_filter" = "lowercase");
+
+-- Create table with multiple indexes on same column
+CREATE TABLE articles (
+    id INT,
+    content TEXT,
+    -- Standard analyzer for tokenized search
+    INDEX idx_content_std (content) USING INVERTED
+        PROPERTIES("analyzer" = "std_analyzer", "support_phrase" = "true"),
+    -- Keyword analyzer for exact match
+    INDEX idx_content_kw (content) USING INVERTED
+        PROPERTIES("analyzer" = "kw_analyzer"),
+    -- Edge n-gram analyzer for autocomplete
+    INDEX idx_content_ngram (content) USING INVERTED
+        PROPERTIES("analyzer" = "ngram_analyzer")
+) ENGINE=OLAP
+DUPLICATE KEY(id)
+DISTRIBUTED BY HASH(id) BUCKETS 1
+PROPERTIES ("replication_allocation" = "tag.location.default: 1");
+```
+
+### Querying with Specific Analyzer
+
+Use `USING ANALYZER` clause to specify which index to use:
+
+```sql
+-- Insert test data
+INSERT INTO articles VALUES
+    (1, 'hello world'),
+    (2, 'hello'),
+    (3, 'world'),
+    (4, 'hello world test');
+
+-- Tokenized search: matches rows containing 'hello' token
+-- Returns: 1, 2, 4
+SELECT id FROM articles WHERE content MATCH 'hello' USING ANALYZER std_analyzer ORDER BY id;
+
+-- Exact match: only matches rows with exact 'hello' string
+-- Returns: 2
+SELECT id FROM articles WHERE content MATCH 'hello' USING ANALYZER kw_analyzer ORDER BY id;
+
+-- Prefix match with edge n-gram
+-- Returns: 1, 2, 4 (all rows starting with 'hel')
+SELECT id FROM articles WHERE content MATCH 'hel' USING ANALYZER ngram_analyzer ORDER BY id;
+```
+
+### Adding Indexes to Existing Tables
+
+```sql
+-- Add a new index with different analyzer
+ALTER TABLE articles ADD INDEX idx_content_chinese (content)
+USING INVERTED PROPERTIES("parser" = "chinese");
+
+-- Wait for schema change to complete
+SHOW ALTER TABLE COLUMN WHERE TableName='articles';
+```
+
+### Building Indexes
+
+After adding an index, you need to build it for existing data:
+
+```sql
+-- Build specific index (non-cloud mode)
+BUILD INDEX idx_content_chinese ON articles;
+
+-- Build all indexes (cloud mode)
+BUILD INDEX ON articles;
+
+-- Check build progress
+SHOW BUILD INDEX WHERE TableName='articles';
+```
+
+### Important Notes
+
+1. **Analyzer Identity**: Two analyzers with the same tokenizer and token_filter configuration are considered identical. You cannot create multiple indexes with identical analyzer identities on the same column.
+
+2. **Index Selection Behavior**:
+   - When using `USING ANALYZER`, if the specified analyzer's index exists and is built, it will be used
+   - If the specified index is not built, the query falls back to non-index path (correct results, slower performance)
+   - Without `USING ANALYZER`, any available index may be used
+
+3. **Built-in Analyzers**: You can also use built-in analyzers directly:
+   ```sql
+   -- Using built-in analyzers
+   SELECT * FROM articles WHERE content MATCH 'hello' USING ANALYZER standard;
+   SELECT * FROM articles WHERE content MATCH 'hello' USING ANALYZER none;
+   SELECT * FROM articles WHERE content MATCH '你好' USING ANALYZER chinese;
+   ```
+
+4. **Performance Considerations**:
+   - Each additional index increases storage space and write overhead
+   - Choose analyzers based on actual query patterns
+   - Consider using fewer indexes if query patterns are predictable

@@ -1,7 +1,8 @@
 ---
 {
-    "title": "Integrate with Microsoft OneLake",
-    "language": "en"
+    "title": "Integration with Microsoft OneLake",
+    "language": "en",
+    "description": "Microsoft OneLake, part of the Fabric ecosystem, is a unified and open SaaS data lake that provides organizations with a centralized logical data "
 }
 ---
 

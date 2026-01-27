@@ -1,7 +1,8 @@
 ---
 {
     "title": "导入内存分析",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "Doris 数据导入分为 Fragment 读取和 Channel 写入两个阶段，其中 Fragment 和查询的 Fragment 执行逻辑相同，不过 Stream Load 通常只有 Scan Operator。Channel 主要将数据写入临时的数据结构 Memtable，"
 }
 ---
 

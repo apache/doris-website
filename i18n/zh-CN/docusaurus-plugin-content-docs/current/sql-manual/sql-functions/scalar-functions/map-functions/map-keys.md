@@ -1,7 +1,8 @@
 ---
 {
     "title": "MAP_KEYS",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "将给定 map 的键提取成一个对应类型的 ARRAY。"
 }
 ---
 

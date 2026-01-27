@@ -1,13 +1,14 @@
 ---
 {
     "title": "MINUTE_FLOOR",
-    "language": "en"
+    "language": "en",
+    "description": "MINUTE_FLOOR function rounds the input datetime value down to the nearest specified minute period. If origin is specified, it uses that as the basis; if not specified, the default basis is 0001-01-01 00:00:00. Supports processing DATETIME type."
 }
 ---
 
 ## Description
 
-The minute_floor function rounds the input datetime value down to the nearest specified minute interval. If origin is specified, it uses that as the baseline; otherwise, it defaults to 0001-01-01 00:00:00.
+MINUTE_FLOOR function rounds the input datetime value down to the nearest specified minute period. If origin is specified, it uses that as the baseline; otherwise, it defaults to 0001-01-01 00:00:00. The function supports processing DATETIME type.
 
 Date calculation formula:
 $$
@@ -32,14 +33,16 @@ MINUTE_FLOOR(`<datetime>`, `<period>`, `<origin>`)
 
 | Parameter | Description |
 | --------- | ----------- |
-| `<datetime>` | The datetime value to be rounded down, of type DATETIME. For specific datetime formats, [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) |
+| `<datetime>` | The datetime value to be rounded down. Supports input of date/datetime/timestamptz types. For specific formats please see [timestamptz的转换](../../../../sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion), [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion). |
 | `<period>` | The minute interval value, of type INT, representing the number of minutes contained in each interval. |
 | `<origin>` | The starting time point of the interval, of type DATETIME. Default value is 0001-01-01 00:00:00. |
 
 ## Return Value
 
-Returns a value of type DATETIME, representing the time value after rounding down to the nearest specified minute interval based on the input datetime. The precision of the return value is the same as that of the input parameter datetime.
+Returns a value of type TIMESTAMPTZ, DATETIME or DATE. Returns the time value after rounding down to the nearest specified minute period based on the input datetime. The precision of the return value is the same as that of the input parameter datetime.
 
+- If the input is TIMESTAMPTZ type, it will first be converted to local_time (for example: `2025-12-31 23:59:59+05:00` represents local_time `2026-01-01 02:59:59` when the session variable is `+08:00`), and then perform MINUTE_FLOOR calculation.
+- If the input time values (`<date_or_time_expr>` and `<period>`) contain both TIMESTAMPTZ and DATETIME types, the output is DATETIME type.
 - If `<period>` is a non-positive number (≤0), returns error.
 - If any parameter is NULL, returns NULL.
 - If period is not specified, it defaults to a 1-minute interval.
@@ -106,6 +109,23 @@ SELECT MINUTE_FLOOR('2023-07-13', 30) AS result;
 +---------------------+
 | 2023-07-13 00:00:00 |
 +---------------------+
+
+-- TimeStampTz sample, SET time_zone = '+08:00'
+-- Convert to local_time (2026-01-01 02:59:59) and then perform MINUTE_FLOOR
+SELECT MINUTE_FLOOR('2025-12-31 23:59:59+05:00');
++-------------------------------------------+
+| MINUTE_FLOOR('2025-12-31 23:59:59+05:00') |
++-------------------------------------------+
+| 2026-01-01 02:59:00+08:00                 |
++-------------------------------------------+
+
+-- If parameters contain both TimeStampTz and Datetime types, output DateTime type
+SELECT MINUTE_FLOOR('2025-12-31 23:59:59+05:00', '2025-12-15 00:00:00.123');
++----------------------------------------------------------------------+
+| MINUTE_FLOOR('2025-12-31 23:59:59+05:00', '2025-12-15 00:00:00.123') |
++----------------------------------------------------------------------+
+| 2026-01-01 02:59:00.123                                              |
++----------------------------------------------------------------------+
 
 --- If the <origin> date and time is after the <period>, it will still be calculated according to the above formula, but the period k will be negative
 SELECT MINUTE_floor('0001-01-01 12:32:18', 5, '2028-07-03 22:20:00') AS result;

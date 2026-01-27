@@ -1,7 +1,8 @@
 ---
 {
     "title": "SELECT INTO OUTFILE",
-    "language": "en"
+    "language": "en",
+    "description": "This document will introduce how to use the SELECT INTO OUTFILE command to perform the export operation of query results."
 }
 ---
 

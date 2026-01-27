@@ -1,7 +1,8 @@
 ---
 {
     "title": "CATALOGS",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "CATALOGS() 函数生成一个临时的 catalogs 表，允许查看当前 Doris 中所有已创建的 catalogs 信息，其结果综合了 show catalogs 和 show catalog xxx 的信息。"
 }
 ---
 

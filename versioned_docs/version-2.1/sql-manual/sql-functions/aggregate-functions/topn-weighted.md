@@ -1,7 +1,8 @@
 ---
 {
     "title": "TOPN_WEIGHTED",
-    "language": "en"
+    "language": "en",
+    "description": "The TOPNWEIGHTED function returns the N most frequent values in the specified column with weighted counting. Unlike the regular TOPN function,"
 }
 ---
 

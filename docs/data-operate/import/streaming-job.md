@@ -1,7 +1,8 @@
 ---
 {
     "title": "Continuous Load",
-    "language": "en"
+    "language": "en",
+    "description": "Doris allows you to create a continuous import task using a Job + TVF approach. After submitting the Job, Doris continuously runs the import job,"
 }
 ---
 

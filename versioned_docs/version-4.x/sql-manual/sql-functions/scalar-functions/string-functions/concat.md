@@ -1,7 +1,8 @@
 ---
 {
     "title": "CONCAT",
-    "language": "en"
+    "language": "en",
+    "description": "The CONCAT function concatenates multiple strings in sequence into one string."
 }
 ---
 

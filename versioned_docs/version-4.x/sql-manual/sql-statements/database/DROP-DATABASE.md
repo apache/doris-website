@@ -1,7 +1,8 @@
 ---
 {
     "title": "DROP DATABASE",
-    "language": "en"
+    "language": "en",
+    "description": "This statement is used to delete a database."
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
-"title": "Environment Checking",
-"language": "en"
+    "title": "Environment Checking",
+    "language": "en",
+    "description": "When deploying Doris, the following checks need to be performed for the hardware and software environment:"
 }
 ---
 

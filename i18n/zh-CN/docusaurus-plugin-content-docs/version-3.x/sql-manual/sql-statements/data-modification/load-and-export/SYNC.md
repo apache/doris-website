@@ -1,7 +1,8 @@
 ---
 {
     "title": "SYNC",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "该语句用于同步非 Master Frontend（FE）节点的元数据。在 Apache Doris 中，只有 Master FE 节点可以写入元数据，其他 FE 节点的元数据写入操作都会转发至 Master 节点。在 Master 节点完成元数据写入操作后，"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "DBeaver",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "DBeaver 是一款跨平台数据库工具，适用于开发人员、数据库管理员、分析师和所有处理数据的人。"
 }
 ---
 

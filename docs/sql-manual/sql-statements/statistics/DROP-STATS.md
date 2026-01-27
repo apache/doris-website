@@ -1,7 +1,8 @@
 ---
 {
     "title": "DROP STATS",
-    "language": "en"
+    "language": "en",
+    "description": "Delete statistics information for the specified table and columns. If no column names are specified,"
 }
 ---
 

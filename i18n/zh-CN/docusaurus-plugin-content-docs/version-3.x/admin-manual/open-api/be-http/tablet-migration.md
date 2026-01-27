@@ -1,7 +1,8 @@
 ---
 {
     "title": "迁移 tablet",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "在 BE 节点上迁移单个 tablet 到指定磁盘"
 }
 ---
 

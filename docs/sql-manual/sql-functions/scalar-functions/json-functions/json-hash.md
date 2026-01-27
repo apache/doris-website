@@ -1,7 +1,8 @@
 ---
 {
     "title": "JSON_HASH",
-    "language": "en"
+    "language": "en",
+    "description": "JSONHASH calculates a hash value for a JSON object. This function accepts a JSON type parameter and returns a BIGINT hash value."
 }
 ---
 

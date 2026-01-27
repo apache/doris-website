@@ -1,7 +1,8 @@
 ---
 {
     "title": "Release 2.1.3",
-    "language": "en"
+    "language": "en",
+    "description": "Apache Doris 2.1.3 was officially released on May 21, 2024. This version has updated several improvements, including writing data back to Hive,"
 }
 ---
 

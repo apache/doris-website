@@ -1,7 +1,8 @@
 ---
 {
     "title": "MAP_CONTAINS_ENTRY",
-    "language": "en"
+    "language": "en",
+    "description": "Determines whether the given map contains a specific entry (key, value)"
 }
 ---
 

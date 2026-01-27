@@ -1,7 +1,8 @@
 ---
 {
     "title": "ARRAY_PUSHFRONT",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "将 value 添加到数组的开头"
 }
 ---
 

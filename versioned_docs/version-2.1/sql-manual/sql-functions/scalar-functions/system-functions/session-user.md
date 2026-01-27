@@ -1,7 +1,8 @@
 ---
 {
     "title": "SESSION_USER",
-    "language": "en"
+    "language": "en",
+    "description": "Get the current username and IP of Doris connection, compatible with MySQL protocol."
 }
 ---
 

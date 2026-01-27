@@ -1,7 +1,8 @@
 ---
 {
     "title": "Checksum",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "checksum"
 }
 ---
 

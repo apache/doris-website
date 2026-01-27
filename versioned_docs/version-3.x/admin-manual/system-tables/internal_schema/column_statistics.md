@@ -1,9 +1,13 @@
 ---
 {
-    "title": "column_statistics",
-    "language": "en"
+    "title": "column_statistics | Internal Schema",
+    "language": "en",
+    "description": "Column statistics",
+    "sidebar_label": "column_statistics"
 }
 ---
+
+# column_statistics
 
 ## Overview
 

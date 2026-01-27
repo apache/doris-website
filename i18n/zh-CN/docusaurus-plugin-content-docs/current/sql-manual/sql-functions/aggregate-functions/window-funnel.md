@@ -1,7 +1,8 @@
 ---
 {
     "title": "WINDOW_FUNNEL",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "WINDOWFUNNEL 函数用于分析用户行为序列，它在指定的时间窗口内搜索事件链，并计算事件链中完成的最大步骤数。这个函数特别适用于转化漏斗分析，比如分析用户从访问网站到最终购买的转化过程。"
 }
 ---
 

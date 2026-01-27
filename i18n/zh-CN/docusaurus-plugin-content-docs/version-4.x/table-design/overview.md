@@ -1,7 +1,8 @@
 ---
 {
     "title": "概览",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "使用 CREATE TABLE 语句在 Doris 中创建一个表，也可以使用 CREATE TABKE LIKE 或 CREATE TABLE AS 子句从另一个表派生表定义。"
 }
 ---
 

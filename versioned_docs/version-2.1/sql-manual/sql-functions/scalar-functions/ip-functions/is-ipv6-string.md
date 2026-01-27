@@ -1,7 +1,8 @@
 ---
 {
     "title": "IS_IPV6_STRING",
-    "language": "en"
+    "language": "en",
+    "description": "Determine whether an IPv6-type address is a valid IPv6 address."
 }
 ---
 

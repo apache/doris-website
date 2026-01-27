@@ -1,7 +1,8 @@
 ---
 {
     "title": "MASK_FIRST_N",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "MASKFIRSTN 函数主要作用是对数据的前 N 个字节进行屏蔽，以保护敏感信息，常用于数据脱敏场景。其行为是将前 N 个字节中的大写字母替换为X，小写字母替换为x，数字替换为n。"
 }
 ---
 

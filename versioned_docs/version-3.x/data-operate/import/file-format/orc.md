@@ -1,9 +1,13 @@
 ---
 {
-    "title": "ORC",
-    "language": "en"
+    "title": "ORC | File Format",
+    "language": "en",
+    "description": "This document explains how to load ORC format data files in Doris.",
+    "sidebar_label": "ORC"
 }
 ---
+
+# ORC
 
 This document explains how to load ORC format data files in Doris.
 
@@ -55,3 +59,4 @@ FROM S3
     "format" = "orc",
     ...
 );
+

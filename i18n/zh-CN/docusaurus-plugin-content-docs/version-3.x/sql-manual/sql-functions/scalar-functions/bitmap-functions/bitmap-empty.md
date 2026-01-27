@@ -1,7 +1,8 @@
 ---
 {
     "title": "BITMAP_EMPTY",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "构建一个空 BITMAP。主要用于 insert 或 stream load 时填充默认值。例如："
 }
 ---
 

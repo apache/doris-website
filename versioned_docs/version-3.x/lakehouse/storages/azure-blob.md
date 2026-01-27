@@ -1,7 +1,8 @@
 ---
 {
     "title": "Azure Blob",
-    "language": "en"
+    "language": "en",
+    "description": "Starting from version 3.1.3, Doris supports accessing Azure Blob storage."
 }
 ---
 
@@ -15,6 +16,8 @@ This document describes the parameters required to access Microsoft Azure Blob s
 - Export properties
 - Outfile properties
 - Backup / Restore properties
+
+**Azure Blob Storage currently does not support ARM architectures.**
 
 ## Parameter Overview
 

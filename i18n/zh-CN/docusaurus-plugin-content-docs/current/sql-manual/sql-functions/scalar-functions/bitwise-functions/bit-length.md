@@ -1,7 +1,8 @@
 ---
 {
     "title": "BIT_LENGTH",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "Returns the length of a string or binary value in bits."
 }
 ---
 

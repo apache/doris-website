@@ -1,3 +1,12 @@
+---
+{
+    "title": "并行度调优 | Tuning Execution",
+    "language": "zh-CN",
+    "description": "Doris 的查询是一个 MPP 的执行框架，每一条查询都会在多个 BE 上并行执行；同时，在单个 BE 内部也会采用多线程并行的方式来加速查询的执行效率，目前所有的语句（包括 Query，DML，DDL）均支持并行执行。",
+    "sidebar_label": "并行度调优"
+}
+---
+
 # 并行度调优
 
 ## 概述
@@ -133,3 +142,4 @@ set parallel_pipeline_task_num = 16;
 
 1. 建议从 CPU 利用率出发。通过 PROFILE 工具输出观察是否是 CPU 瓶颈，尝试进行并行度的合理修改
 2. 单 SQL 调整比较安全，尽量不要全局做过于激进的修改
+

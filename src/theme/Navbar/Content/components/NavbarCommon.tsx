@@ -43,22 +43,22 @@ export const NavbarCommonRight = ({ star }: NavbarCommonRightProps) => {
             <NavbarItems items={rightItems} />
             <Link
                 onMouseEnter={() => {
-                    document.getElementById('github-icon-new').firstChild.style.fill = '#444FD9';
+                    document.getElementById('github-icon-new').firstChild.style.fill = '#1FCD94';
                 }}
                 onMouseLeave={() => {
                     document.getElementById('github-icon-new').firstChild.style.fill = '#1D1D1D';
                 }}
-                className="github-btn bg-[#F7F9FE] mr-1 group !no-underline  rounded-sm items-center justify-start desktop h-[2.25rem] w-[6.5rem] "
+                className="github-btn bg-[#F7FAFC] mr-1 group !no-underline ml-4 rounded-sm items-center justify-start desktop h-[2.25rem] w-[6.5rem] "
                 href="https://github.com/apache/doris"
                 target="_blank"
             >
                 <GithubIconNew id='github-icon-new' className='github-icon-new ml-[0.5rem]' />
-                <span className='github-text ml-1 text-[1rem]/[137.5%] group-hover:text-[#444FD9] text-[#252734] font-medium'>Star Me</span>
+                <span className='github-text ml-1 text-[1rem]/[137.5%] group-hover:text-primary text-[#252734] font-medium'>Star Me</span>
             </Link>
             {star && <div className="gh-count text-[1rem]/[1rem]">{star}k</div>}
             <Link
                 className="slack-btn desktop header-right-button-slack"
-                href="https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-3b8tlr3le-Z~IrrVxkzqniFjhL17d1oQ"
+                href="https://doris.apache.org/slack"
                 target="_blank"
             ></Link>
         </>

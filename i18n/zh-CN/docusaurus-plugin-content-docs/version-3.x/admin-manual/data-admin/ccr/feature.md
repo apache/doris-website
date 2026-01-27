@@ -1,7 +1,8 @@
 ---
 {
     "title": "功能详情",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "Doris 中的跨集群复制 (CCR) 功能，主要用于在多个集群之间高效同步数据，从而增强业务连续性和容灾能力。CCR 支持 Doris 中的多种操作，确保数据在不同集群间保持一致性。以下是 CCR 支持的主要 Doris 操作的详细情况。"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "Show Runtime Info Action",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "用于获取 FE JVM 的 Runtime 信息"
 }
 ---
 

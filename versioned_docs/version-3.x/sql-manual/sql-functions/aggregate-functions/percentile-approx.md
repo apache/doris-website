@@ -1,7 +1,8 @@
 ---
 {
     "title": "PERCENTILE_APPROX",
-    "language": "en"
+    "language": "en",
+    "description": "The PERCENTILEAPPROX function is used to calculate approximate percentiles, primarily for large datasets. Compared to the PERCENTILE function,"
 }
 ---
 

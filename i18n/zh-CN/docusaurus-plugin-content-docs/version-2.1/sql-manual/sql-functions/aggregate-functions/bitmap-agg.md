@@ -1,7 +1,8 @@
 ---
 {
-"title": "BITMAP_AGG",
-"language": "zh-CN"
+    "title": "BITMAP_AGG",
+    "language": "zh-CN",
+    "description": "聚合某列的值（不包括任何空值）返回一行 bitmap 值，即多行转一行。"
 }
 ---
 

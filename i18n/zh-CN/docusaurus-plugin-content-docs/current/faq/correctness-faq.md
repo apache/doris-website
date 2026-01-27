@@ -1,7 +1,8 @@
 ---
 {
     "title": "数据正确性问题",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "本文档主要用于记录 Doris 使用过程中关于数据正确性的常见问题。会不定期更新。"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "ARRAY_CUM_SUM",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "返回数组的累计和。数组中的NULL值会被跳过，并在结果数组的相同位置设置NULL。"
 }
 ---
 

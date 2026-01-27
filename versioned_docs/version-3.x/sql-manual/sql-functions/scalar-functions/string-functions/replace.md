@@ -1,7 +1,8 @@
 ---
 {
     "title": "REPLACE",
-    "language": "en"
+    "language": "en",
+    "description": "The REPLACE function is used to replace a part of characters in a string with other characters."
 }
 ---
 

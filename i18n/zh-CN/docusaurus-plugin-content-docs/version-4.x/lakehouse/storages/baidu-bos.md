@@ -1,7 +1,8 @@
 ---
 {
     "title": "Baidu BOS",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "文档更新中。"
 }
 ---
 

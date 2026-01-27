@@ -1,7 +1,8 @@
 ---
 {
     "title": "SEQUENCE_MATCH",
-    "language": "en"
+    "language": "en",
+    "description": "Checks whether the sequence contains an event chain that matches the pattern."
 }
 ---
 

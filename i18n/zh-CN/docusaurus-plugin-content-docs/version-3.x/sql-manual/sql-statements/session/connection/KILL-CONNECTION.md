@@ -1,7 +1,8 @@
 ---
 {
     "title": "KILL CONNECTION",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "杀死一个指定连接 ID 的连接。进而会杀死此连接对应的查询。"
 }
 ---
 

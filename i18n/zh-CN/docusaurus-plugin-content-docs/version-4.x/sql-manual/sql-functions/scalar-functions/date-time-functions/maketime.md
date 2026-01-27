@@ -1,7 +1,8 @@
 ---
 {
     "title": "MAKETIME",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "返回根据hour, minute, second组合出的时间值"
 }
 ---
 

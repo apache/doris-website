@@ -1,7 +1,8 @@
 ---
 {
     "title": "SECOND_FLOOR",
-    "language": "en"
+    "language": "en",
+    "description": "The secondfloor function rounds the input datetime value down to the nearest specified second period. If origin is specified,"
 }
 ---
 

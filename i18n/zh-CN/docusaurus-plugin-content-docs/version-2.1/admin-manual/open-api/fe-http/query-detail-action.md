@@ -1,7 +1,8 @@
 ---
 {
     "title": "Query Detail Action",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "用于获取指定时间点之后的所有查询的信息"
 }
 ---
 

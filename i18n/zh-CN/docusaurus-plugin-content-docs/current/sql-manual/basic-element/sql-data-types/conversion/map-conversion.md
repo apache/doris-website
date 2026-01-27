@@ -1,7 +1,8 @@
 ---
 {
     "title": "转换为 MAP 类型",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "MAP 类型用于存储和处理键值对数据，可以包含各种基本类型的键和值，内部也可以嵌套其他复杂类型。"
 }
 ---
 

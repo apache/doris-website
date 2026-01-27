@@ -1,7 +1,8 @@
 ---
 {
     "title": "Optimizing Table Scanning",
-    "language": "en"
+    "language": "en",
+    "description": "Doris, as a high-performance real-time analytic data warehouse,"
 }
 ---
 

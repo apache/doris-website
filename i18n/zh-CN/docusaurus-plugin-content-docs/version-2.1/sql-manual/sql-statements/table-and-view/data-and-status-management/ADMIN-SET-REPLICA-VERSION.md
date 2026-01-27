@@ -1,7 +1,8 @@
 ---
 {
     "title": "ADMIN SET REPLICA VERSION",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "该语句用于设置指定副本的版本、最大成功版本、最大失败版本，目前仅用于在程序异常情况下，手动修复副本的版本，从而使得副本从异常状态恢复过来。"
 }
 ---
 

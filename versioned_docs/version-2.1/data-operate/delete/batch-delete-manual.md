@@ -1,7 +1,8 @@
 ---
 {
     "title": "Batch Deletion Based on Load",
-    "language": "en"
+    "language": "en",
+    "description": "The delete operation is a special form of data update. In the primary key model (Unique Key) table,"
 }
 ---
 

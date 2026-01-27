@@ -1,7 +1,8 @@
 ---
 {
     "title": "Release 3.1.3",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "Apache Doris 3.1.3 带来了以下主要改进："
 }
 ---
 

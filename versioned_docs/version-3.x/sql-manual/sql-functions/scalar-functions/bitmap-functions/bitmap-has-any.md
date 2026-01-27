@@ -1,7 +1,8 @@
 ---
 {
     "title": "BITMAP_HAS_ANY",
-    "language": "en"
+    "language": "en",
+    "description": "Determines whether two Bitmaps share any common elements."
 }
 ---
 

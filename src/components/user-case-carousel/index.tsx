@@ -88,7 +88,7 @@ export function UserCaseCarousel() {
                     return {
                         label: (
                             <div className="font-misans text-start">
-                                <span>{title}</span>
+                                <span className={`${index == Number(activeKey) ? 'font-[520]' : 'font-[330]'}`}>{title}</span>
                                 <div className="absolute -bottom-0 w-full">
                                     <Progress percent={count} />
                                 </div>

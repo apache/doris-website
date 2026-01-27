@@ -1,7 +1,8 @@
 ---
 {
-    "title": "SPLIT_BY_STRING",
-    "language": "en"
+    "title": "SPLIT/SPLIT_BY_STRING",
+    "language": "en",
+    "description": "The SPLITBYSTRING function splits an input string into an array of strings based on a specified delimiter string."
 }
 ---
 

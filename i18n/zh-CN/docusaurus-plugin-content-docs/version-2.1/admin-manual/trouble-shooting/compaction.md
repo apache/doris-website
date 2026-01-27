@@ -1,7 +1,8 @@
 ---
 {
     "title": "Compaction 优化",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "Doris 通过类似 LSM-Tree 的结构写入数据，在后台通过 Compaction 机制不断将小文件合并成有序的大文件，同时也会处理数据的删除、更新等操作。适当的调整 Compaction 的策略，可以极大地提升导入效率和查询效率。"
 }
 ---
 

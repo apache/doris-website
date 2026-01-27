@@ -1,10 +1,9 @@
 ---
 {
-  "title": "FE Lock Management",
-  "language": "en"
+    "title": "FE Lock Management",
+    "language": "en",
+    "description": "FE Lock Management is used to detect potential deadlocks and slow locks within the FE process,"
 }
-
-
 ---
 
 FE Lock Management is used to detect potential deadlocks and slow locks within the FE process, making it easier for users to identify and troubleshoot issues in production, as well as monitor lock usage.

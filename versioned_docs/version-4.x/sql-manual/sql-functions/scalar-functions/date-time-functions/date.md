@@ -1,9 +1,14 @@
 ---
 {
-    "title": "DATE",
-    "language": "en"
+    "title": "DATE | Date Time Functions",
+    "language": "en",
+    "description": "The DATE function is used to extract the pure date part from a datetime value (which includes both date and time), ignoring the time information.",
+    "sidebar_label": "DATE"
 }
 ---
+
+# DATE
+
 ## Description
 
 The DATE function is used to extract the pure date part from a datetime value (which includes both date and time), ignoring the time information. This function can convert a DATETIME type into a DATE type, retaining only the year, month, and day information.

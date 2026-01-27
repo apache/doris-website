@@ -1,7 +1,8 @@
 ---
 {
     "title": "SQL Dialect Conversion",
-    "language": "en"
+    "language": "en",
+    "description": "Starting from version 2.1, Doris can support multiple SQL dialects, such as Presto, Trino, Hive, PostgreSQL, Spark, Clickhouse, etc."
 }
 ---
 

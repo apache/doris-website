@@ -1,7 +1,8 @@
 ---
 {
     "title": "DAYOFWEEK",
-    "language": "en"
+    "language": "en",
+    "description": "Returns the weekday index of the date, where Sunday is 1, Monday is 2, and Saturday is 7."
 }
 ---
 

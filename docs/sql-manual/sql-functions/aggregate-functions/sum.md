@@ -1,7 +1,8 @@
 ---
 {
     "title": "SUM",
-    "language": "en"
+    "language": "en",
+    "description": "Used to return the sum of all values of the selected field"
 }
 ---
 

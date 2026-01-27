@@ -1,9 +1,13 @@
 ---
 {
-   "title": "Tableau",
-   "language": "en"
+    "title": "Tableau Back | Bi",
+    "language": "en",
+    "description": "VeloDB provides an official Tableau Doris connector. This connector accesses data based on the MySQL JDBC Driver.",
+    "sidebar_label": "Tableau Back"
 }
 ---
+
+# Tableau Back
 
 VeloDB provides an official Tableau Doris connector. This connector accesses data based on the MySQL JDBC Driver.
 
@@ -133,5 +137,6 @@ So far, Tableau has been successfully connected to Apache Doris, and data analys
 ## Summary
 
 This connector simplifies the connection setup process of generic ODBC/JDBC driver-based connectors and provides a better compatible connector for Apache Doris. If you encounter any problems when using the connector, please feel free to contact us on [GitHub](https://github.com/apache/doris/issues).
+
 
 

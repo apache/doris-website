@@ -1,9 +1,13 @@
 ---
 {
-    "title": "Overview",
-    "language": "zh-CN"
+    "title": "Overview | System Tables",
+    "language": "zh-CN",
+    "description": "Apache Doris cluster has multiple built-in system databases to store metadata information about the Doris system itself.",
+    "sidebar_label": "Overview"
 }
 ---
+
+# Overview
 
 Apache Doris cluster has multiple built-in system databases to store metadata information about the Doris system itself.
 
@@ -30,3 +34,4 @@ All tables in the `mysql` database are read-only, and users cannot modify, delet
 All tables under the `__internal_schema` database are actual tables in Doris, stored similarly to user-created data tables. When a Doris cluster is created, all system tables under this database are automatically created.
 
 By default, common users have read-only permissions for tables in this database. However, once granted, they can modify, delete, or create tables under this database.
+

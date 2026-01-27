@@ -1,7 +1,8 @@
 ---
 {
     "title": "总览",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "OPEN API 作为 Apache Doris 运维管理操作的补充，主要用于数据库管理人员进行一些管理操作。"
 }
 ---
 

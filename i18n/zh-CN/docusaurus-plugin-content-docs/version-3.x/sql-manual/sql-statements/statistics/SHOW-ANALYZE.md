@@ -1,7 +1,8 @@
 ---
 {
     "title": "SHOW ANALYZE",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "该语句用来查看统计信息收集作业的状态。"
 }
 ---
 

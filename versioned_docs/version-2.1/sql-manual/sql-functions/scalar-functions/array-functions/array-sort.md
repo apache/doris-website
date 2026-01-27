@@ -1,7 +1,8 @@
 ---
 {
     "title": "ARRAY_SORT",
-    "language": "en"
+    "language": "en",
+    "description": "Sort the elements in an array in ascending order"
 }
 ---
 

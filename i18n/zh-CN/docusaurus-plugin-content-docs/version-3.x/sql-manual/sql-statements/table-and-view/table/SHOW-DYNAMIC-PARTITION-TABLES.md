@@ -1,7 +1,8 @@
 ---
 {
     "title": "SHOW DYNAMIC PARTITION TABLES",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "该语句用于展示当前 db 下所有的动态分区表状态"
 }
 ---
 

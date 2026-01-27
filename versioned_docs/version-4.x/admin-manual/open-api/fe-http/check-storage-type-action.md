@@ -1,7 +1,8 @@
 ---
 {
     "title": "Check Storage Type Action",
-    "language": "en"
+    "language": "en",
+    "description": "It is used to check whether the storage format of the table under the specified database is the row storage format. (The row format is deprecated)"
 }
 ---
 

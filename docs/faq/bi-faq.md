@@ -1,7 +1,8 @@
 ---
 {
     "title": "BI FAQ",
-    "language": "en"
+    "language": "en",
+    "description": "Usually, this is Power BI pulling the time timeout of the data source. When filling in the data source server and database, click the advanced option,"
 }
 ---
 

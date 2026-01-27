@@ -1,7 +1,8 @@
 ---
 {
-"title": "Java UDF, UDAF, UDWF, UDTF",
-"language": "en"
+    "title": "Java UDF, UDAF, UDWF, UDTF",
+    "language": "en",
+    "description": "Java UDF provides a Java interface for users to implement user-defined functions (UDFs) conveniently using the Java programming language."
 }
 ---
 

@@ -1,7 +1,9 @@
 ---
 {
-    "title": "Best Practices",
-    "language": "en"
+    "title": "Best Practices | Table Design",
+    "language": "en",
+    "description": "When only the sorting columns are specified, rows with the same key will not be merged.",
+    "sidebar_label": "Best Practices"
 }
 ---
 
@@ -447,3 +449,4 @@ show partitions from tbl_unique_merge_on_write_p;
    ```
 
 :::
+

@@ -1,7 +1,8 @@
 ---
 {
     "title": "删除操作概述",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "在 Apache Doris 中，删除操作（Delete）是一项关键功能，用于管理和清理数据，以满足用户在大规模数据分析场景中的灵活性需求。"
 }
 ---
 

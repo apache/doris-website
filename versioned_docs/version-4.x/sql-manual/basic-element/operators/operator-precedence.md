@@ -1,7 +1,8 @@
 ---
 {
     "title": "Operator Precedence",
-    "language": "en"
+    "language": "en",
+    "description": "Operator precedence determines the order in which operators are evaluated in an expression. When an expression contains multiple operators,"
 }
 ---
 

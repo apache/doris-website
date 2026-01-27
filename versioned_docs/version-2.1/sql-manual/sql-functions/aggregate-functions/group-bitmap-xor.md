@@ -1,7 +1,8 @@
 ---
 {
-"title": "GROUP_BITMAP_XOR",
-"language": "en"
+    "title": "GROUP_BITMAP_XOR",
+    "language": "en",
+    "description": "Mainly used to merge the values of multiple bitmaps and perform bitwise xor calculations on the results."
 }
 ---
 

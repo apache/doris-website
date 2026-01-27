@@ -1,7 +1,8 @@
 ---
 {
     "title": "FROM_DAYS",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "给定一个天数，返回一个 DATE。"
 }
 ---
 

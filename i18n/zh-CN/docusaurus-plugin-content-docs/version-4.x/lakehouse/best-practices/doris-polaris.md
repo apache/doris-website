@@ -1,7 +1,8 @@
 ---
 {
     "title": "集成 Apache Polaris",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "随着数据湖技术的不断演进，如何高效、安全地管理位于对象存储（如 AWS S3）之上的海量数据，并为上层分析引擎（如 Apache Doris）提供统一的访问入口，已成为现代数据架构的核心挑战。Apache Polaris 作为 Iceberg 的开放、标准化的 REST Catalog 服务，"
 }
 ---
 

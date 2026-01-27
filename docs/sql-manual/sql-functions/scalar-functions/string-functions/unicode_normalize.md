@@ -1,7 +1,8 @@
 ---
 {
     "title": "UNICODE_NORMALIZE",
-    "language": "en"
+    "language": "en",
+    "description": "Performs Unicode Normalization on the input string."
 }
 ---
 

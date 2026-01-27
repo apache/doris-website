@@ -1,7 +1,8 @@
 ---
 {
     "title": "AI_SENTIMENT",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "用于分析文本的情感倾向"
 }
 ---
 

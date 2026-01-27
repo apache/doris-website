@@ -1,7 +1,8 @@
 ---
 {
     "title": "FACTORIAL",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "返回x的阶乘值。如果x不在0到20之间 (包括0和20)，则返回NULL。"
 }
 ---
 

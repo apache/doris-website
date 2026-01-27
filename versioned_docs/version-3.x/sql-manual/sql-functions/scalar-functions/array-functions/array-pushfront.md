@@ -1,7 +1,8 @@
 ---
 {
     "title": "ARRAY_PUSHFRONT",
-    "language": "en"
+    "language": "en",
+    "description": "Add value to the beginning of the array"
 }
 ---
 

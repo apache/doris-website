@@ -1,7 +1,8 @@
 ---
 {
     "title": "DATE_TRUNC",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "将 datetime 按照指定的时间单位截断。"
 }
 ---
 

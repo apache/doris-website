@@ -1,7 +1,8 @@
 ---
 {
     "title": "AI Function",
-    "language": "en"
+    "language": "en",
+    "description": "In today's data-intensive world, we are always seeking more efficient and intelligent tools for data analysis."
 }
 ---
 

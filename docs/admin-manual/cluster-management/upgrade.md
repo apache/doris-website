@@ -1,7 +1,8 @@
 ---
 {
     "title": "Upgrading Cluster",
-    "language": "en"
+    "language": "en",
+    "description": "Doris provides the capability for rolling upgrades, enabling step-by-step upgrades of FE and BE nodes, minimizing downtime,"
 }
 ---
 

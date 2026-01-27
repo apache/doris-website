@@ -1,7 +1,8 @@
 ---
 {
     "title": "ESQUERY",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "ESQUERY(<field>, <querydsl>) 函数用于将无法用 SQL 表达的查询下推到 Elasticsearch 进行过滤。 第一个参数 <field> 用于关联索引，第二个参数 <querydsl> 为 Elasticsearch 的基本 Query DSL 的 JSON 表达式，"
 }
 ---
 

@@ -1,9 +1,9 @@
 ---
 {
     "title": "OUTFILE",
-    "language": "en"
+    "language": "en",
+    "description": "This statement is used to export query results to a file using the SELECT INTO OUTFILE command. Currently, it supports exporting to remote storage,"
 }
-
 ---
 
 ## Description

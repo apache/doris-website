@@ -1,7 +1,8 @@
 ---
 {
     "title": "Analyzing Hugging Face Data",
-    "language": "en"
+    "language": "en",
+    "description": "Hugging Face is a popular centralized platform where users can store, share, and collaborate on building machine learning models, datasets,"
 }
 ---
 

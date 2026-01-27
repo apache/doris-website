@@ -1,7 +1,8 @@
 ---
 {
     "title": "LINEAR_HISTOGRAM",
-    "language": "en"
+    "language": "en",
+    "description": "The LINEARHISTOGRAM function is used to describe the data distribution. It uses an \"equal width\" bucking strategy,"
 }
 ---
 

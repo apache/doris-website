@@ -1,7 +1,8 @@
 ---
 {
     "title": "Paimon Catalog",
-    "language": "en"
+    "language": "en",
+    "description": "Paimon Catalog in Apache Doris connects to multiple Paimon metadata services to query Paimon tables across HDFS and cloud object storage, with detailed configuration, properties and query operations, and planned support for writes."
 }
 ---
 
@@ -146,7 +147,7 @@ The currently dependent Paimon version is 1.0.0.
 | binary, varbinary                             | string/varbinary | Controlled by the `enable.mapping.varbinary` property of Catalog (supported since 4.0.2). The default is `false`, which maps to `string`; when `true`, it maps to `varbinary` type.|
 | date                               | date          |                                                                         |
 | timestamp\_without\_time\_zone     | datetime(N)   | Mapped according to precision. If precision is greater than 6, it maps to a maximum of 6 (may cause precision loss). |
-| timestamp\_with\_local\_time\_zone | datetime(N)   | Mapped according to precision. If precision is greater than 6, it maps to a maximum of 6 (may cause precision loss). |
+| timestamp\_with\_local\_time\_zone | datetime(N)/timestamptz(N)  | Mapped according to precision. If precision is greater than 6, it maps to a maximum of 6 (may cause precision loss). The `enable.mapping.timestamp_tz` property (supported since version 4.0.3) controls the mapping behavior.  By default, it is set to `false`, in which case the type is mapped to `datetime`.  When set to `true`, it is mapped to the `timestamptz` type.|
 | array                              | array         |                                                                         |
 | map                                | map           |                                                                         |
 | row                                | struct        |                                                                         |
@@ -157,6 +158,8 @@ The currently dependent Paimon version is 1.0.0.
 > Doris currently does not support `Timestamp` types with timezone. All `timestamp_without_time_zone` and `timestamp_with_local_time_zone` will be uniformly mapped to `datetime(N)` type. However, during reading, Doris will correctly handle timezones based on the actual source type. For example, after specifying a timezone with `SET time_zone=<tz>`, it will affect the return results of `timestamp_with_local_time_zone` columns.
 >
 > You can check whether the source type contains timezone information in the Extra column of the `DESCRIBE table_name` statement. If it displays `WITH_TIMEZONE`, it indicates that the source type is a timezone-aware type. (This feature is supported since 3.0.8)
+>
+> Supported since version 4.0.3, `timestamp_with_local_time_zone` can be mapped to Doris `timestamptz` type.
 
 ## Examples
 ### Hive Metastore

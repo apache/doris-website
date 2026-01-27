@@ -1,7 +1,8 @@
 ---
 {
     "title": "SHOW TABLET STORAGE FORMAT",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "该语句用于显示 Backend 上的存储格式信息"
 }
 ---
 

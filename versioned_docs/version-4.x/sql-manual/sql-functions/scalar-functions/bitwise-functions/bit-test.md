@@ -1,7 +1,8 @@
 ---
 {
-"title": "BIT_TEST",
-"language": "en"
+    "title": "BIT_TEST",
+    "language": "en",
+    "description": "Converts the value of <x> to its binary form and returns the value at the specified <bits> position(s), where <bits> starts from 0 (rightmost bit)."
 }
 ---
 

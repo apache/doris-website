@@ -1,7 +1,8 @@
 ---
 {
-"title": "BITMAP Precise Deduplication",
-"language": "en"
+    "title": "BITMAP Precise Deduplication",
+    "language": "en",
+    "description": "This document explains how to achieve precise deduplication using the Bitmap type."
 }
 ---
 

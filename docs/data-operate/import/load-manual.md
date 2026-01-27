@@ -1,7 +1,8 @@
 ---
 {
     "title": "Loading Overview",
-    "language": "en"
+    "language": "en",
+    "description": "Apache Doris offers various methods for importing and integrating data, allowing you to import data from various sources into the database."
 }
 ---
 
@@ -37,6 +38,10 @@ Apache Doris offers various methods for importing and integrating data, allowing
     
 
 Each import method in Doris is an implicit transaction by default. For more information on transactions, refer to [Transactions](../transaction.md).
+
+### Partial Column Updates During Import
+
+Doris supports partial column updates during data import, allowing you to update only specific columns in a table without providing values for all columns. This is particularly useful for updating wide tables or performing incremental updates. For detailed information on how to perform partial column updates for Unique Key Model and Aggregate Key Model tables, please refer to [Partial Column Update](../update/partial-column-update.md).
 
 ### Quick Overview of Import Methods
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "TO_BITMAP",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "将一个无符号的长整型数转换为 Bitmap。"
 }
 ---
 

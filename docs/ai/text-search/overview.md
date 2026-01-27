@@ -2,7 +2,8 @@
 {
     "title": "Text Search",
     "sidebar_label": "Overview",
-    "language": "en"
+    "language": "en",
+    "description": "Text search retrieves documents that contain specific terms or phrases and ranks results by relevance."
 }
 ---
 

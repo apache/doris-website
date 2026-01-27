@@ -1,7 +1,8 @@
 ---
 {
     "title": "ATAN",
-    "language": "en"
+    "language": "en",
+    "description": "Return the arctangent value."
 }
 ---
 

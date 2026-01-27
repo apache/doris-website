@@ -1,7 +1,8 @@
 ---
 {
     "title": "HLL_CARDINALITY",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "HLLCARDINALITY 用于计算 HLL（HyperLogLog）类型值的基数。HLL 是一种近似计数的算法，适用于大规模数据集的基数估算。"
 }
 ---
 

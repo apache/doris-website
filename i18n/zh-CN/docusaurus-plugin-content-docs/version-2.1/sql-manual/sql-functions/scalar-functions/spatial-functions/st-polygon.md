@@ -1,7 +1,8 @@
 ---
 {
     "title": "ST_POLYGON",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "将一个 WKT（Well Known Text）转化为对应的多边形内存形式"
 }
 ---
 

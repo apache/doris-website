@@ -1,7 +1,8 @@
 ---
 {
     "title": "SHOW CREATE FUNCTION",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "该语句用于展示用户自定义函数的创建语句"
 }
 ---
 

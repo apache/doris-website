@@ -1,9 +1,9 @@
 ---
 {
     "title": "集成 Glue + AWS S3 Tables",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "AWS S3 Tables 是一种特殊的 S3 Bucket 类型，其对外提供 Apache Iceberg 表格式标准的读写接口，底层依托 Amazon S3，提供和 S3 本身相同的持久性、可用性、可扩展性和性能特征。此外，S3 Tables 还提供以下特性："
 }
-
 ---
 
 [AWS S3 Tables](https://aws.amazon.com/s3/features/tables/) 是一种特殊的 S3 Bucket 类型，其对外提供 Apache Iceberg 表格式标准的读写接口，底层依托 Amazon S3，提供和 S3 本身相同的持久性、可用性、可扩展性和性能特征。此外，S3 Tables 还提供以下特性：
@@ -33,17 +33,19 @@ S3 Table Bucket 是 S3 推出的第三种 Bucket 类型，和之前的 General p
 
 ### 02 创建 Iceberg Catalog
 
-- 创建一个 `s3tables` 类型的 Iceberg Catalog
+- 通过 AWS S3 Table Rest Catalog 连接 `s3 tables`
 
     ```sql
-    CREATE CATALOG iceberg_s3 PROPERTIES (
+    CREATE CATALOG aws_s3_tables PROPERTIES (
         'type' = 'iceberg',
-        'iceberg.catalog.type' = 's3tables',
-        'warehouse' = 'arn:aws:s3tables:<region>:<acount_id>:bucket/<s3_table_bucket_name>',
-        's3.region' = '<region>',
-        's3.endpoint' = 's3.<region>.amazonaws.com',
-        's3.access_key' = '<ak>',
-        's3.secret_key' = '<sk>'
+        'iceberg.catalog.type' = 'rest',
+        'warehouse' = 'arn:aws:s3tables:us-east-1:<account_id>:bucket/<s3_table_bucket_name>',
+        'iceberg.rest.uri' = 'https://s3tables.us-east-1.amazonaws.com/iceberg',
+        'iceberg.rest.sigv4-enabled' = 'true',
+        'iceberg.rest.signing-name' = 's3tables',
+        'iceberg.rest.signing-region' = 'us-east-1',
+        'iceberg.rest.access-key-id' = '<ak>',
+        'iceberg.rest.secret-access-key' = '<sk>'
     );
     ```
 

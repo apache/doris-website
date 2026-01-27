@@ -1,7 +1,8 @@
 ---
 {
     "title": "SHOW CHARSET",
-    "language": "en"
+    "language": "en",
+    "description": "The \"SHOW CHARSET\" command is used to display the character sets available in the current database management system and some properties associated "
 }
 ---
 

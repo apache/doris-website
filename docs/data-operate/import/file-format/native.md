@@ -1,7 +1,8 @@
 ---
 {
     "title": "Native",
-    "language": "en"
+    "language": "en",
+    "description": "This document explains how to load Native format data files in Doris.It is suitable as an internal data exchange and backup format ,"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "FLOOR",
-    "language": "en"
+    "language": "en",
+    "description": "Round down floating-point and fixed-point decimals to a specific number of digits and return the rounded floating-point or fixed-point number."
 }
 ---
 

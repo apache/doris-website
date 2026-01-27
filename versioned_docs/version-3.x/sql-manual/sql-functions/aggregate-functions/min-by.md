@@ -1,7 +1,8 @@
 ---
 {
     "title": "MIN_BY",
-    "language": "en"
+    "language": "en",
+    "description": "The MINBY function is used to return the corresponding associated value based on the minimum value of the specified column."
 }
 ---
 

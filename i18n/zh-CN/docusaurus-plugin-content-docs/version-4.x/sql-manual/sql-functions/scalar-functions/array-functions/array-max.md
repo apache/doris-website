@@ -1,7 +1,8 @@
 ---
 {
     "title": "ARRAY_MAX",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "计算数组中的最大值。函数会遍历数组中的所有元素，找到最大的值并返回。"
 }
 ---
 

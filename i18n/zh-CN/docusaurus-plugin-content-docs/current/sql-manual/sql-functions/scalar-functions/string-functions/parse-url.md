@@ -1,7 +1,8 @@
 ---
 {
     "title": "PARSE_URL",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "PARSEURL 函数主要用于解析 URL 字符串，并从中提取各种组成部分，如协议、主机、路径、查询参数等。"
 }
 ---
 

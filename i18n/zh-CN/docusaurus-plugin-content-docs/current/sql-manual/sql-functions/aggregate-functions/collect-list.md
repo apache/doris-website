@@ -1,7 +1,8 @@
 ---
 {
-"title": "COLLECT_LIST",
-"language": "zh-CN"
+    "title": "COLLECT_LIST",
+    "language": "zh-CN",
+    "description": "将表达式的所有非 NULL 值聚集成一个数组。"
 }
 ---
 

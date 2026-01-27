@@ -24,7 +24,6 @@ import { CheckedIcon } from '@site/src/components/Icons/checked-icon';
 const BINARY_VERSION = [
     { label: `${VersionEnum.Latest} ( Latest )`, value: VersionEnum.Latest },
     { label: `${VersionEnum.Prev}`, value: VersionEnum.Prev },
-    { label: `${VersionEnum.Earlier} ( Stable )`, value: VersionEnum.Earlier },
 ];
 
 function downloadFile(url: string) {
@@ -47,7 +46,7 @@ const CPU = [
 ];
 
 export default function Download() {
-    const [version, setVersion] = useState<string>(VersionEnum.Prev);
+    const [version, setVersion] = useState<string>(VersionEnum.Latest);
     const [currentVersionInfo, setCurrentVersionInfo] = useState(() => {
         return DORIS_VERSIONS.find(doris_version => doris_version.value === version);
     });
@@ -273,7 +272,7 @@ export default function Download() {
                             <Link
                                 to="https://doris.apache.org/community/release-versioning"
                                 style={{
-                                    color: '#444FD9',
+                                    color: 'var(--ifm-color-primary)',
                                     cursor: 'pointer',
                                     textDecoration: 'underline',
                                 }}
@@ -319,7 +318,7 @@ export default function Download() {
                             <Link
                                 to="/docs/install/deploy-manually/storage-compute-coupled-deploy-manually"
                                 style={{
-                                    color: '#444FD9',
+                                    color: 'var(--ifm-color-primary)',
                                     cursor: 'pointer',
                                 }}
                             >
@@ -328,7 +327,7 @@ export default function Download() {
                             manual and cluster{' '}
                             <Link
                                 style={{
-                                    color: '#444FD9',
+                                    color: 'var(--ifm-color-primary)',
                                     cursor: 'pointer',
                                 }}
                                 to="/docs/admin-manual/cluster-management/upgrade"
@@ -390,7 +389,7 @@ export default function Download() {
                             <Link
                                 to="/docs/install/deploy-manually/storage-compute-coupled-deploy-manually"
                                 style={{
-                                    color: '#444FD9',
+                                    color: 'var(--ifm-color-primary)',
                                     cursor: 'pointer',
                                 }}
                             >
@@ -399,7 +398,7 @@ export default function Download() {
                             manual and cluster{' '}
                             <Link
                                 style={{
-                                    color: '#444FD9',
+                                    color: 'var(--ifm-color-primary)',
                                     cursor: 'pointer',
                                 }}
                                 to="/docs/admin-manual/cluster-management/upgrade"
@@ -415,7 +414,7 @@ export default function Download() {
                 </div>
             </PageColumn>
             <a id="runAnywhere" className="scroll-mt-20"></a>
-            <div className="run-anywhere bg-[#F7F9FE] pt-[5.5rem] pb-[7.5rem] mt-[80px]">
+            <div className="run-anywhere bg-[#F7FAFC] pt-[5.5rem] pb-[7.5rem] mt-[80px]">
                 <div className="container mx-auto">
                     <h3 className="text-center text-[#1D1D1D] text-[2.5rem] font-medium">Run anywhere</h3>
                     <ul className="mt-10 grid gap-x-6 gap-y-3 lg:grid-cols-3 lg:gap-y-0">
@@ -423,11 +422,11 @@ export default function Download() {
                             <div
                                 onClick={() => window.open(item.link)}
                                 key={item.title}
-                                className="run-anywhere-card relative bg-white flex cursor-pointer flex-col items-center justify-center overflow-hidden rounded-lg border-b-4 border-b-[#444FD9] py-[2rem] px-4 lg:px-[1.5rem] shadow-[inset_0_0_0_1px_#444FD9] hover:no-underline"
+                                className="run-anywhere-card relative bg-white flex cursor-pointer flex-col items-center justify-center overflow-hidden rounded-lg border-b-4 border-b-primary py-[2rem] px-4 lg:px-[1.5rem] shadow-[inset_0_0_0_1px_#1FCD94] hover:no-underline"
                             >
                                 <div className="text-2xl text-[#1D1D1D]">{item.title}</div>
                                 <div className="mt-4 text-base text-center text-[#4C576C]">{item.description}</div>
-                                <div className="flex items-center mt-4 text-[#444FD9]">
+                                <div className="flex items-center mt-4 text-primary">
                                     <LinkWithArrow to={item.link} text="Learn more" />
                                 </div>
                             </div>

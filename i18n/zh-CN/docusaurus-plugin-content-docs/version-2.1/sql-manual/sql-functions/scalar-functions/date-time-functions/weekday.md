@@ -1,7 +1,8 @@
 ---
 {
     "title": "WEEKDAY",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "WEEKDAY 函数返回日期的工作日索引值，即星期一为 0，星期二为 1，星期日为 6"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "ANN Index Management",
-    "language": "en"
+    "language": "en",
+    "description": "Approximate Nearest Neighbor (ANN) indexes in Apache Doris enable efficient vector similarity search for high-dimensional data. Since from Doris 4.x,"
 }
 ---
 

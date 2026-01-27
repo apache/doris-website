@@ -1,7 +1,8 @@
 ---
 {
     "title": "ISNAN",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "判断指定的值是否为 NaN（非数字）。"
 }
 ---
 

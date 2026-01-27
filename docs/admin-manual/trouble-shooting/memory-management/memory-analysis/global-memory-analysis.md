@@ -1,7 +1,8 @@
 ---
 {
     "title": "Global Memory Analysis",
-    "language": "en"
+    "language": "en",
+    "description": "GLobal Memory is Doris's globally shared memory, mainly including Cache and Metadata."
 }
 ---
 

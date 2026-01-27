@@ -1,7 +1,8 @@
 ---
 {
     "title": "SHOW TABLE STATS",
-    "language": "en"
+    "language": "en",
+    "description": "This statement is used to view the overview statistics of a table."
 }
 ---
 

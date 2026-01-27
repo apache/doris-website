@@ -1,7 +1,8 @@
 ---
 {
-  "title": "Transparent Rewriting with Sync-Materialized View",
-  "language": "en"
+    "title": "Transparent Rewriting with Sync-Materialized View",
+    "language": "en",
+    "description": "The Sync-Materialized View is a special kind of table that pre-computes and stores data according to a predefined SELECT statement."
 }
 ---
 

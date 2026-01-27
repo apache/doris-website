@@ -1,7 +1,8 @@
 ---
 {
-"title": "HISTOGRAM",
-"language": "zh-CN"
+    "title": "HISTOGRAM",
+    "language": "zh-CN",
+    "description": "HISTOGRAM（直方图）函数用于描述数据分布情况，它使用“等高”的分桶策略，并按照数据的值大小进行分桶，并用一些简单的数据来描述每个桶，比如落在桶里的值的个数。仅统计非 NULL 的数据。"
 }
 ---
 

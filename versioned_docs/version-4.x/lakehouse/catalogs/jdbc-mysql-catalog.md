@@ -1,7 +1,8 @@
 ---
 {
     "title": "MySQL JDBC Catalog",
-    "language": "en"
+    "language": "en",
+    "description": "Doris JDBC Catalog supports connecting to MySQL databases via the standard JDBC interface."
 }
 ---
 
@@ -77,7 +78,7 @@ When mapping MySQL, a Database in Doris corresponds to a Database in MySQL. A Ta
 | decimal(P, S)                        | decimal(P, S)              |                                                                                |
 | unsigned decimal(P, S)               | decimal(P + 1, S) / string | If it exceeds the maximum precision supported by Doris, it will be handled by String. Note that when this type is mapped to String, it only supports queries and cannot write to MySQL. |
 | date                                 | date                       |                                                                                |
-| timestamp(S)                         | datetime(S)                |                                                                                |
+| timestamp(S) | datetime(S) / timestamptz(S) | Controlled by the `enable.mapping.timestamp_tz` property (supported since version 4.0.3). By default, it is set to `false`, in which case it is mapped to `datetime`; when set to `true`, it is mapped to the `timestamptz` type. |
 | datetime(S)                          | datetime(S)                |                                                                                |
 | year                                 | smallint                   | Doris does not support the year type, so the year type is mapped to smallint.                                       |
 | time                                 | string                     | Doris does not support the time type, so the time type is mapped to string.                                         |

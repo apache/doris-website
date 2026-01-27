@@ -1,7 +1,8 @@
 ---
 {
-"title": "ARRAY_MATCH_ALL",
-"language": "en"
+    "title": "ARRAY_MATCH_ALL",
+    "language": "en",
+    "description": "Returns true if all elements in the array match the given condition, false otherwise."
 }
 ---
 

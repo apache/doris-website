@@ -1,7 +1,8 @@
 ---
 {
-  "title": "CREATE FILE",
-  "language": "en"
+    "title": "CREATE FILE",
+    "language": "en",
+    "description": "This statement is used to create and upload a file to the Doris cluster."
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "SHOW DELETE",
-    "language": "en"
+    "language": "en",
+    "description": "This statement is used to display the historical delete tasks that have been successfully executed"
 }
 ---
 

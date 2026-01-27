@@ -1,7 +1,8 @@
 ---
 {
     "title": "ST_ASTEXT",
-    "language": "en"
+    "language": "en",
+    "description": "Converts a geometric object into its WKT (Well-Known Text) text representation. WKT is a text-based format for representing geospatial data,"
 }
 ---
 

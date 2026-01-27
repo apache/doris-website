@@ -1,7 +1,8 @@
 ---
 {
     "title": "PI",
-    "language": "en"
+    "language": "en",
+    "description": "Returns the constant Pi value."
 }
 ---
 

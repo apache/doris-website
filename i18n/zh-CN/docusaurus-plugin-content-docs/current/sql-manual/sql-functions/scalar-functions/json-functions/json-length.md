@@ -1,7 +1,8 @@
 ---
 {
-"title": "JSON_LENGTH",
-"language": "zh-CN"
+    "title": "JSON_LENGTH",
+    "language": "zh-CN",
+    "description": "JSONLENGTH 函数用于返回给定 JSON 文档的长度或元素个数。如果 JSON 文档是一个数组，则返回数组中元素的个数；如果 JSON 文档是一个对象，则返回对象中键值对的个数。如果 JSON 文档为 NULL 或无效，返回 NULL。"
 }
 ---
 

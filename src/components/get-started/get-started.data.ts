@@ -5,7 +5,7 @@ export const GET_STARTED_DATA = {
         {
             to: '/download',
             text: 'Download',
-            className: 'w-[10.5rem] h-[3rem] bg-white rounded-lg text-[#444FD9]',
+            className: 'w-[10.5rem] h-[3rem] bg-white rounded-lg text-primary',
         },
         {
             to: '/download#runAnywhere',

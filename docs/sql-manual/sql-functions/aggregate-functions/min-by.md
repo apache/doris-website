@@ -1,10 +1,10 @@
 ---
 {
     "title": "MIN_BY",
-    "language": "en"
+    "language": "en",
+    "description": "The MINBY function returns the associated value based on the minimum value of the specified column."
 }
 ---
-
 
 ## Description
 

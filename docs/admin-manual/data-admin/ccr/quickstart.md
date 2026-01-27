@@ -1,7 +1,9 @@
 ---
 {
-    "title": "Quick Start",
-    "language": "en"
+    "title": "Quick Start | CCR",
+    "language": "en",
+    "description": "Configure the following information in the fe.conf and be.conf of both the source and target clusters:",
+    "sidebar_label": "Quick Start"
 }
 ---
 
@@ -17,7 +19,7 @@ enable_feature_binlog=true
 
 2.1. Download the latest package from the following link:
 
-`https://apache-doris-releases.oss-accelerate.aliyuncs.com/ccr-release/ccr-syncer-3.0.6-rc04-x64.tar.xz`
+`https://apache-doris-releases.oss-accelerate.aliyuncs.com/ccr-release/ccr-syncer-3.0.6-rc05-x64.tar.xz`
 
 2.2. Start and stop Syncer
 
@@ -77,3 +79,4 @@ If synchronizing at the database level, fill in your_db_name, and leave your_tab
 If synchronizing at the table level, fill in both your_db_name and your_table_name
 The name used to initiate the synchronization job can only be used once
 ```
+

@@ -1,7 +1,8 @@
 ---
 {
     "title": "GET_FORMAT",
-    "language": "en"
+    "language": "en",
+    "description": "Returns a specific format string."
 }
 ---
 

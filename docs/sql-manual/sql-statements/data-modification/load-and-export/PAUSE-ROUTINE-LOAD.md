@@ -1,7 +1,8 @@
 ---
 {
     "title": "PAUSE ROUTINE LOAD",
-    "language": "en"
+    "language": "en",
+    "description": "This syntax is used to pause one or all Routine Load jobs. Paused jobs can be restarted using the RESUME command."
 }
 ---
 

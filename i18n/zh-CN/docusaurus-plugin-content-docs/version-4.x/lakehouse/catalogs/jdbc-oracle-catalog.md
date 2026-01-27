@@ -1,7 +1,8 @@
 ---
 {
     "title": "Oracle JDBC Catalog",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "Apache Doris JDBC Catalog 支持通过标准 JDBC 接口连接 Oracle 数据库。本文档介绍如何配置 Oracle 数据库连接。"
 }
 ---
 
@@ -57,6 +58,7 @@ CREATE CATALOG oracle_catalog PROPERTIES (
 | float/real                            | double                               |                                                                                                                 |
 | date                                  | date                                 |                                                                                                                 |
 | timestamp                             | datetime(S)                          |                                                                                                                 |
+|timestamp(s) with local time zone | datetime / timestamptz| properties 中 `enable.mapping.timestamp_tz` (4.0.3 后开始支持) 属性控制，默认为 `false`, 则映射到 `datetime`; 为 `true` 时，则映射到 `timestamptz` 类型|
 | char/nchar                            | string                               |                                                                                                                 |
 | varchar2/nvarchar2                    | string                               |                                                                                                                 |
 | long/raw/long raw/internal            | string                               |                                                                                                                 |

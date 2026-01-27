@@ -1,7 +1,8 @@
 ---
 {
-  "title": "HTTP",
-  "language": "zh-CN"
+    "title": "HTTP",
+    "language": "zh-CN",
+    "description": "HTTP 表函数（table-valued-function,tvf），可以让用户像访问关系表格式数据一样，读取并访问 HTTP 路径上的文件内容。目前支持 csv/csvwithnames/csvwithnamesandtypes/json/parquet/orc 文件格式。"
 }
 ---
 

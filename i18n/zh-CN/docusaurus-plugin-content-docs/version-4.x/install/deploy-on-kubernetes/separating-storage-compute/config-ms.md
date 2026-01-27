@@ -1,7 +1,8 @@
 ---
 {
-  "title": "配置部署 MetaService",
-  "language": "zh-CN"
+    "title": "配置部署 MetaService",
+    "language": "zh-CN",
+    "description": "MetaService 是 Doris 存算分离集群元数据管理组件，不对外暴漏，仅用于内部使用。MetaService 属于无状态服务，通常采用主备模式部署。下面介绍如何在 DorisDisaggregatedCluster 资源中配置 MetaService。"
 }
 ---
 

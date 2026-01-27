@@ -1,7 +1,8 @@
 ---
 {
     "title": "SHOW WARM UP JOB",
-    "language": "en"
+    "language": "en",
+    "description": "这些命令用于在 Doris 中显示预热作业。"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "LakeSoul Catalog",
-    "language": "en"
+    "language": "en",
+    "description": "Doris supports accessing and reading LakeSoul table data using metadata stored in PostgreSQL."
 }
 ---
 

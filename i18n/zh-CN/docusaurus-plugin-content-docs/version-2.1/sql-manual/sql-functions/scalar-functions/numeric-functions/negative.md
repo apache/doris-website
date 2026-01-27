@@ -1,7 +1,8 @@
 ---
 {
     "title": "NEGATIVE",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "返回传参 x 的负值"
 }
 ---
 

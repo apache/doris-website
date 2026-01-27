@@ -1,7 +1,8 @@
 ---
 {
     "title": "Amazon S3",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "Doris 提供两种方式从 AWS S3 导入文件："
 }
 ---
 
