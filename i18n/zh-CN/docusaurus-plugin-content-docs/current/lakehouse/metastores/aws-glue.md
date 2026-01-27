@@ -67,7 +67,7 @@ AWS Glue Catalog 当前支持三种类型的 Catalog：
     );
     ```
 
-AWS 认证鉴权配置说明请参阅文档[aws-authentication-and-authorization](../../../admin-manual/administration/integration/aws-authentication-and-authorization.md)
+AWS 认证鉴权配置说明请参阅文档[aws-authentication-and-authorization](../../admin-manual/auth/integrations/aws-authentication-and-authorization.md)
 
 ### Hive Glue Catalog
 

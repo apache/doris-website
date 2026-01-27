@@ -89,15 +89,15 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 
 * [Aliyun DLF ](../metastores/aliyun-dlf.md)
 
-Hive Catalog 功能支持矩阵
+> 注意：不同 Doris 版本所支持的服务类型和参数略有区别，请参考【基础示例】章节。
+
+### Hive Catalog 功能支持矩阵
 
 | 元数据服务 | 表查询 | 视图查询 |DDL 操作| 数据写回|
 | ---------- | -------- | -------- | -------- | -------- |
-| Hive       | √        | √        | √        | √        |
-| AWS Glue   | √        | √        | x        | x       |
-| DLF       | √        | √        |   √      |   √       |
-
-> 注意：不同 Doris 版本所支持的服务类型和参数略有区别，请参考【基础示例】章节。
+| Hive       | ✅       | ✅        | ✅        | ✅        |
+| AWS Glue   | ✅       | ✅        | ❌        | ❌       |
+| DLF        | ✅       | ✅        | ✅        | ✅        |
 
 ### 支持的存储系统
 

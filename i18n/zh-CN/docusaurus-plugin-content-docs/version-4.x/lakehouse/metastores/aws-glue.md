@@ -66,7 +66,7 @@ AWS Glue Catalog 当前支持三种类型的 Catalog：
       -- 'glue.external_id' = '<YOUR_EXTERNAL_ID>'
     );
     ```
-
+AWS 认证鉴权配置说明请参阅文档[aws-authentication-and-authorization](../../admin-manual/auth/integrations/aws-authentication-and-authorization.md)
 ### Hive Glue Catalog
 
 Hive Glue Catalog 用于访问 Hive 表，通过 AWS Glue 的 Hive Metastore 兼容接口访问 Glue。配置如下：

@@ -87,6 +87,14 @@ Hive transactional tables are supported from version 3.x onwards. For details, r
 
 > Note: The service types and parameters supported by different Doris versions are slightly different. Please refer to the [Examples] section.
 
+### Hive Catalog Feature Support Matrix
+
+| Metadata Service | Table Query | View Query | DDL Operations | Data Writeback |
+|------------------|-------------|------------|----------------|----------------|
+| Hive             | ✅          | ✅         | ✅             | ✅             |
+| AWS Glue         | ✅          | ✅         | ❌             | ❌             |
+| DLF              | ✅          | ✅         | ✅             | ✅             |
+
 ### Supported Storage Systems
 
 * [HDFS](../storages/hdfs.md)
