@@ -1,6 +1,6 @@
 ---
 {
-  "title": "Apache Superset",
+  "title": "Metabase",
   "language": "en",
   "description": "Metabase is an open-source business intelligence tool that provides simple and easy-to-use data analysis and visualization capabilities, supports rich data source connections, and enables the rapid construction of interactive dashboards."
 }
