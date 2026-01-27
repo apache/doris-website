@@ -968,6 +968,7 @@ const sidebars: SidebarsConfig = {
                     items: [
                         'ecosystem/bi/apache-superset',
                         'ecosystem/bi/finebi',
+                        'ecosystem/bi/metabase',
                         'ecosystem/bi/powerbi',
                         'ecosystem/bi/tableau',
                         'ecosystem/bi/quicksight',
