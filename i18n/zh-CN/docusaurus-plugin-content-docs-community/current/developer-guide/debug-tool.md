@@ -99,6 +99,14 @@ jstack -l pid > 1.js
 
 针对这些问题，可以使用以下工具进行追踪和分析。
 
+#### Doris Debug Tools
+
+[Doris Debug Tools](https://github.com/morningman/doris-debug-tools) 提供封装好的 CPU 火焰图和内存分析工具，可以直接下载使用。
+
+- [Releases](https://github.com/morningman/doris-debug-tools/releases)
+
+> 注：非官方工具，仅用于开发调试。
+
 #### Jemalloc Heap Profile
 
 > **说明：** Doris 1.2.2 版本开始默认使用 Jemalloc 作为内存分配器。
@@ -498,7 +506,15 @@ cat be.out | python asan_symbolize.py | c++filt
 
 ### CPU 调试
 
-当系统的 CPU Idle 很低时，说明 CPU 已经成为主要瓶颈，这时需要分析当前的 CPU 使用情况。对于 Doris BE，有以下两种方式来分析 CPU 瓶颈。
+当系统的 CPU Idle 很低时，说明 CPU 已经成为主要瓶颈，这时需要分析当前的 CPU 使用情况。对于 Doris BE，有以下几种方式来分析 CPU 瓶颈。
+
+#### Doris Debug Tools
+
+[Doris Debug Tools](https://github.com/morningman/doris-debug-tools) 提供封装好的 CPU 火焰图和内存分析工具，可以直接下载使用。
+
+- [Releases](https://github.com/morningman/doris-debug-tools/releases)
+
+> 注：非官方工具，仅用于开发调试。
 
 #### pprof
 
