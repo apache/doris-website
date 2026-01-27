@@ -247,7 +247,9 @@ ln -s /etc/pki/ca-trust/extracted/openssl/ca-bundle.trust.crt /etc/ssl/certs/ca-
 
 13. When querying ORC files, if an error like  
    `Orc row reader nextBatch failed. reason = Can't open /usr/share/zoneinfo/+08:00`  
-   occurs, first check the `time_zone` setting of the current session. It is recommended to use a region-based timezone name such as `Asia/Shanghai`.
+   occurs.
+
+   First check the `time_zone` setting of the current session. It is recommended to use a region-based timezone name such as `Asia/Shanghai`.
 
    If the session timezone is already set to `Asia/Shanghai` but the query still fails, it indicates that the ORC file was generated with the timezone `+08:00`. During query execution, this timezone is required when parsing the ORC footer. In this case, you can try creating a symbolic link under the `/usr/share/zoneinfo/` directory that points `+08:00` to an equivalent timezone.
 
