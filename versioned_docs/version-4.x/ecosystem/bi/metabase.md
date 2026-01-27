@@ -213,7 +213,7 @@ Doris supports multi-catalog functionality, allowing queries to external data so
 1. Configure `Catalog` in the Links configuration interface, and configure the external database under that catalog in `Database`, for example:  
    `catalog: hive_catalog`, `database: warehouse` - Access the warehouse database named hive_catalog  
 
-![Configuring catalog](/images/ecomsystem/metabase/metabase-14.png)
+![Configuring catalog](/images/ecomsystem/metabase/metabase-15.png)
 
 2. Or explicitly specify the Catalog in an SQL query:
 

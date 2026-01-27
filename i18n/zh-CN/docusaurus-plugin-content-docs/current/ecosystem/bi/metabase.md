@@ -213,7 +213,7 @@ Doris 支持多 Catalog 功能，可以查询外部数据源 和 跨数据源的
 1. 在 链接配置界面配置 `Catalog`， 在 `Database` 中配置 该 catalog 下的外表数据库，例如：  
    `catalog: hive_catalog`, `database: warehouse` - 访问 名为 hive_catalog 中的 warehouse 数据库  
 
-![配置catalog](/images/ecomsystem/metabase/metabase-14.png)
+![配置catalog](/images/ecomsystem/metabase/metabase-15.png)
 
 2. 或者在 SQL 查询中显式指定 Catalog：
 
