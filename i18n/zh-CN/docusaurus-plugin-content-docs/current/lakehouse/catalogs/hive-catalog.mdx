@@ -72,7 +72,7 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 
   * `hive.ignore_absent_partitions`：是否忽略不存在的分区。默认为 `true`。如果设为 `false`，当遇到不存在的分区时，查询会报错。该参数自 3.0.2 版本支持。
 
-  * `hive.staging_dir`：用于 Hive 写操作的临时 staging 根目录。写入过程中数据会先写入该目录，写入完成后再移动到最终的 Hive 表目录。该路径可以是相对于 Hive 表根目录的相对路径，也可以是绝对路径。默认值为 `.doris_staging`。该参数自 4.0.3 版本开始支持。
+  * `hive.staging_dir`：用于设置 Hive 写操作的临时 staging 根目录。写入过程中数据会先写入该目录，写入完成后再移动到最终的 Hive 表目录。该路径可以是相对于 Hive 表根目录的相对路径，也可以是绝对路径。默认值为 `/tmp/.doris_staging`。某些情况下，写入 Hive 表时会遇到 `/tmp` 目录和表目录分属不同 namespace，导致无法写入的问题，此时可以通过修改此参数，使用相对路径解决该问题。该参数自 4.0.3 版本开始支持。
 
 * `{CommonProperties}`
 

@@ -70,8 +70,7 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 
   * `hive.ignore_absent_partitions`: Whether to ignore non-existent partitions. Defaults to `true`. If set to `false`, the query will report an error when encountering non-existent partitions. This parameter has been supported since version 3.0.2.
 
-  * `hive.staging_dir`: The root directory used for staging data during Hive write operations. Data is first written to this directory and then moved to the final Hive table location after the write completes. The path can be relative to the Hive table root or an absolute path. Defaults to `.doris_staging`. This parameter has been supported since version 4.0.3.
- 
+  * `hive.staging_dir`: Used to set the temporary staging root directory for Hive write operations. During the write process, data is first written to this directory and then moved to the final Hive table directory after completion. This path can be either a relative path relative to the Hive table root directory or an absolute path. The default value is `/tmp/.doris_staging`. In some cases, when writing to Hive tables, you may encounter issues where the `/tmp` directory and the table directory belong to different namespaces, causing write failures. In such cases, you can modify this parameter to use a relative path to resolve the issue. This parameter is supported since version 4.0.3.
 
 * `{CommonProperties}`
 
@@ -742,14 +741,7 @@ AS SELECT col1, pt1 AS col2, pt2 AS pt1 FROM test_ctas.part_ctas_src WHERE col1 
 
 ### Related Parameters
 
-* Session variables
-
-| Parameter name | Default value | Desciption | Since version |
-| ----------| ---- | ---- | --- |
-| `hive_parquet_use_column_names` | `true` | When Doris reads the Parquet data type of the Hive table, it will find the column with the same name from the Parquet file to read the data according to the column name of the Hive table by default. When this variable is `false`, Doris will read data from the Parquet file according to the column order in the Hive table, regardless of the column name. Similar to the `parquet.column.index.access` variable in Hive. This parameter only applies to the top-level column name and is invalid inside the Struct. | 2.1.6+, 3.0.3+ |
-| `hive_orc_use_column_names` | `true` | Similar to `hive_parquet_use_column_names`, it is for the Hive table ORC data type. Similar to the `orc.force.positional.evolution` variable in Hive. | 2.1.6+, 3.0.3+ |
-
-* BE
+* BE Configuration
 
   | Parameter Name                                                                | Default Value                                                                                                     | Description |
   | ----------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- | ----------- |
