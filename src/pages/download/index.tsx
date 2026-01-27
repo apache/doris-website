@@ -422,7 +422,7 @@ export default function Download() {
                             <div
                                 onClick={() => window.open(item.link)}
                                 key={item.title}
-                                className="run-anywhere-card relative bg-white flex cursor-pointer flex-col items-center justify-center overflow-hidden rounded-lg border-b-4 border-b-primary py-[2rem] px-4 lg:px-[1.5rem] shadow-[inset_0_0_0_1px_#1FCD94] hover:no-underline"
+                                className="run-anywhere-card relative bg-white flex cursor-pointer flex-col items-center justify-center overflow-hidden rounded-lg border-b-4 border-b-primary py-[2rem] px-4 lg:px-[1.5rem] shadow-[inset_0_0_0_1px_#11A679] hover:no-underline"
                             >
                                 <div className="text-2xl text-[#1D1D1D]">{item.title}</div>
                                 <div className="mt-4 text-base text-center text-[#4C576C]">{item.description}</div>

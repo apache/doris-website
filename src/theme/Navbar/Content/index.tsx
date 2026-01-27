@@ -122,7 +122,7 @@ export default function NavbarContent(): ReactNode {
                     {NavbarTypes[currentNavbar].right}
                     {!mobileSidebar.disabled && !showSearchPageMobile && <NavbarMobileSidebarToggle />}
                     <NavbarColorModeToggle className={styles.colorModeToggle} />
-                    <Link className="header-right-button-primary navbar-download-desktop" to="/download">
+                    <Link className="header-right-button-primary navbar-download-desktop font-medium" to="/download">
                         <Translate id="navbar.download">
                             {typeof window !== 'undefined' && location.pathname.includes('zh-CN/docs')
                                 ? '下载'

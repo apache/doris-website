@@ -6,6 +6,7 @@ import Link from '@docusaurus/Link';
 import GithubIconNew from '@site/static/images/icon/github-new.svg';
 import Translate from '@docusaurus/Translate';
 import NavbarItem, { type Props as NavbarItemConfig } from '@theme/NavbarItem';
+import { GithubIconNavbar } from '@site/src/components/Icons/github-icon-navbar';
 
 import { NavbarItems } from '..';
 import styles from '../styles.module.css';
@@ -43,7 +44,7 @@ export const NavbarCommonRight = ({ star }: NavbarCommonRightProps) => {
             <NavbarItems items={rightItems} />
             <Link
                 onMouseEnter={() => {
-                    document.getElementById('github-icon-new').firstChild.style.fill = '#1FCD94';
+                    document.getElementById('github-icon-new').firstChild.style.fill = '#11A679';
                 }}
                 onMouseLeave={() => {
                     document.getElementById('github-icon-new').firstChild.style.fill = '#1D1D1D';
@@ -52,7 +53,7 @@ export const NavbarCommonRight = ({ star }: NavbarCommonRightProps) => {
                 href="https://github.com/apache/doris"
                 target="_blank"
             >
-                <GithubIconNew id='github-icon-new' className='github-icon-new ml-[0.5rem]' />
+                <GithubIconNavbar id='github-icon-new' className='github-icon-new ml-[0.5rem]' />
                 <span className='github-text ml-1 text-[1rem]/[137.5%] group-hover:text-primary text-[#252734] font-medium'>Star Me</span>
             </Link>
             {star && <div className="gh-count text-[1rem]/[1rem]">{star}k</div>}
