@@ -110,7 +110,7 @@ ln -s /etc/pki/ca-trust/extracted/openssl/ca-bundle.trust.crt /etc/ssl/certs/ca-
    
 5. 单个字段过大，查询时 BE 侧 Java 内存 OOM
 
-   Jdbc Scanner 在通过 jdbc 读取时，由 session variable `batch_size` 决定每批次数据在 JVM 中处理的数量，如果单个字段过大，导致 `字段大小 * batch_size`(近似值，由于 JVM 中 static 以及数据 copy 占用)超过 JVM 内存限制，就会出现 OOM。
+   Jdbc Scanner 在通过 jdbc 读取时，由 session variable `batch_size` 决定每批次数据在 JVM 中处理的数量，如果单个字段过大，导致 `字段大小 * batch_size`(近似值，由于 JVM 中 static 以及数据 copy 占用) 超过 JVM 内存限制，就会出现 OOM。
 
    解决方法：
 
@@ -272,6 +272,12 @@ ln -s /etc/pki/ca-trust/extracted/openssl/ca-bundle.trust.crt /etc/ssl/certs/ca-
 12. 在插入 hive 数据的时候报错：`HiveAccessControlException Permission denied: user [user_a] does not have [UPDATE] privilege on [database/table]`。
 
     因为插入数据之后，需要更新对应的统计信息，这个更新的操作需要 alter 权限，所以要在 ranger 上给该用户新增 alter 权限。
+
+13. 在查询 ORC 文件时，如果出现报错类似 `Orc row reader nextBatch failed. reason = Can't open /usr/share/zoneinfo/+08:00`
+
+    首先检查当前 `session` 下 `time_zone` 的时区设置是多少，推荐使用类似 `Asia/Shanghai` 的写法。
+
+    如果 `session` 时区已经是 `Asia/Shanghai`，且查询仍然报错，说明生成 ORC 文件时的时区是 `+08:00`, 导致在读取时解析 `footer` 时需要用到 `+08:00` 时区，可以尝试在 `/usr/share/zoneinfo/` 目录下面软链到相同时区上。
 
 ## HDFS
 
