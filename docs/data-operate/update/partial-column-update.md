@@ -122,7 +122,7 @@ Previously, Doris's partial update feature required that every row in an import 
 
 :::caution Note:
 
-1. Currently, only the Stream Load import method and tools using Stream Load (e.g. Doris-Flink-Connector) support this feature.
+1. Flexible column updates are supported by Stream Load, Routine Load, and tools using Stream Load (e.g. Doris-Flink-Connector).
 2. The import file must be in JSON format when using flexible column updates.
 :::
 
@@ -160,6 +160,48 @@ If using the Flink Doris Connector, add the following configuration:
 ```Plain
 'sink.properties.unique_key_update_mode' = 'UPDATE_FLEXIBLE_COLUMNS'
 ```
+
+**Routine Load**
+
+When using Routine Load, add the following property in the `PROPERTIES` clause:
+
+```sql
+CREATE ROUTINE LOAD db1.job1 ON tbl1
+PROPERTIES (
+    "format" = "json",
+    "unique_key_update_mode" = "UPDATE_FLEXIBLE_COLUMNS"
+)
+FROM KAFKA (
+    "kafka_broker_list" = "localhost:9092",
+    "kafka_topic" = "my_topic",
+    "property.kafka_default_offsets" = "OFFSET_BEGINNING"
+);
+```
+
+You can also modify the update mode of an existing Routine Load job using `ALTER ROUTINE LOAD`:
+
+```sql
+-- Pause the job first
+PAUSE ROUTINE LOAD FOR db1.job1;
+
+-- Alter the update mode
+ALTER ROUTINE LOAD FOR db1.job1
+PROPERTIES (
+    "unique_key_update_mode" = "UPDATE_FLEXIBLE_COLUMNS"
+);
+
+-- Resume the job
+RESUME ROUTINE LOAD FOR db1.job1;
+```
+
+:::caution Routine Load Limitations
+When using `UPDATE_FLEXIBLE_COLUMNS` mode with Routine Load, the following restrictions apply:
+- The data format must be JSON (`"format" = "json"`)
+- The `jsonpaths` property cannot be specified
+- The `fuzzy_parse` option cannot be enabled
+- The `COLUMNS` clause cannot be used
+- The `WHERE` clause cannot be used
+:::
 
 #### Example
 

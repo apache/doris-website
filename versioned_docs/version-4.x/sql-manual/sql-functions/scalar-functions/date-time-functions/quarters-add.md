@@ -8,7 +8,7 @@
 
 ## Description
 
-The QUARTERS_ADD function is used to add or subtract a specified number of quarters (1 quarter = 3 months) to a specified datetime value and returns the calculated datetime value. This function supports processing DATE and DATETIME types. If a negative number is input, it is equivalent to subtracting the corresponding number of quarters.
+The QUARTERS_ADD function is used to add or subtract a specified number of quarters (1 quarter = 3 months) to a specified datetime value and returns the calculated datetime value. This function supports processing DATE and DATETIME types. If a negative number is input, it is equivalent to subtracting the corresponding number of quarters. This function supports DATE, DATETIME and TIMESTAMPTZ input types.
 
 This function is consistent with the [date_add function](./date-add) when using QUARTER as the unit.
 
@@ -22,14 +22,15 @@ QUARTERS_ADD(`<date_or_time_expr>`, `<quarters>`)
 
 | Parameter | Description |
 | --------- | ----------- |
-| `<date_or_time_expr>` | The input date or datetime value. Supports date/datetime types. For specific datetime and date formats, see [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion). |
+| `<date_or_time_expr>` | The input date or datetime value. Supports date/datetime/timestamptz types. For specific formats, please refer to [timestamptz conversion](../../../../../../docs/sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion.md), [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion). |
 | `<quarters>` | The number of quarters to add or subtract. Positive integers indicate addition, negative integers indicate subtraction. |
 
 ## Return Value
 
-Returns a date value consistent with the input date type.
+Returns a date value consistent with the input date type, the return value type is determined by the type of the first parameter:
 - If `<quarters>` is negative, the function behaves the same as subtracting the corresponding number of quarters from the base time (i.e., QUARTERS_ADD(date, -n) is equivalent to QUARTERS_SUB(date, n)).
-- If the input is of DATE type (only includes year, month, and day), the result remains of DATE type; if the input is of DATETIME type, the result preserves the original time component (e.g., '2023-01-01 12:34:56' becomes '2023-04-01 12:34:56' after adding 1 quarter).
+- If the input is of DATE type (only includes year, month, and day), the result is of DATE type; if the input is of DATETIME type, the result is of DATETIME type and preserves the original time component (e.g., '2023-01-01 12:34:56' becomes '2023-04-01 12:34:56' after adding 1 quarter).
+- If input is TIMESTAMPTZ type, return value is TIMESTAMPTZ type (includes date, time and timezone offset).
 - If the input date is the last day of the month and the target month has fewer days than that date, it automatically adjusts to the last day of the target month (e.g., January 31st plus 1 quarter (3 months) becomes April 30th).
 - If the calculation result exceeds the valid range of the date type (DATE type: 0000-01-01 to 9999-12-31; DATETIME type: 0000-01-01 00:00:00 to 9999-12-31 23:59:59), throws an exception.
 - If any parameter is NULL, returns NULL.
@@ -92,6 +93,14 @@ SELECT QUARTERS_ADD(NULL, 1), QUARTERS_ADD('2023-07-13', NULL) AS result;
 +-------------------------+--------+
 | NULL                    | NULL   |
 +-------------------------+--------+
+
+--- Example of TimeStampTz type, SET time_zone = '+08:00'
+SELECT QUARTERS_ADD('2025-10-10 11:22:33.123+07:00', 1);
++--------------------------------------------------+
+| QUARTERS_ADD('2025-10-10 11:22:33.123+07:00', 1) |
++--------------------------------------------------+
+| 2026-01-10 12:22:33.123+08:00                    |
++--------------------------------------------------+
 
 --- Calculation result exceeds date range
 SELECT QUARTERS_ADD('9999-10-31', 2) AS result;

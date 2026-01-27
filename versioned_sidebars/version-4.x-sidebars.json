@@ -226,7 +226,8 @@
                             "label": "Load Internals",
                             "items": [
                                 "data-operate/import/load-internals/load-internals",
-                                "data-operate/import/load-internals/routine-load-internals"
+                                "data-operate/import/load-internals/routine-load-internals",
+                                "data-operate/import/load-internals/stream-load-in-complex-network"
                             ]
                         },
                         "data-operate/import/streaming-job"
@@ -471,6 +472,7 @@
                                 "lakehouse/metastores/google-dataproc-metastore",
                                 "lakehouse/metastores/aliyun-dlf",
                                 "lakehouse/metastores/iceberg-rest",
+                                "lakehouse/metastores/iceberg-jdbc",
                                 "lakehouse/metastores/filesystem"
                             ]
                         },
@@ -552,7 +554,9 @@
                                 "ecosystem/observability/beats",
                                 "ecosystem/observability/opentelemetry",
                                 "ecosystem/observability/fluentbit",
-                                "ecosystem/observability/loongcollector"
+                                "ecosystem/observability/loongcollector",
+                                "ecosystem/observability/langfuse",
+                                "ecosystem/observability/vector"
                             ]
                         }
                     ]
@@ -1010,7 +1014,9 @@
                         "ecosystem/observability/beats",
                         "ecosystem/observability/opentelemetry",
                         "ecosystem/observability/fluentbit",
-                        "ecosystem/observability/loongcollector"
+                        "ecosystem/observability/loongcollector",
+                        "ecosystem/observability/langfuse",
+                        "ecosystem/observability/vector"
                     ]
                 },
                 {
@@ -1260,6 +1266,7 @@
                                         "sql-manual/sql-functions/scalar-functions/numeric-functions/floor",
                                         "sql-manual/sql-functions/scalar-functions/numeric-functions/fmod",
                                         "sql-manual/sql-functions/scalar-functions/numeric-functions/format-round",
+                                        "sql-manual/sql-functions/scalar-functions/numeric-functions/interval",
                                         "sql-manual/sql-functions/scalar-functions/numeric-functions/isinf",
                                         "sql-manual/sql-functions/scalar-functions/numeric-functions/isnan",
                                         "sql-manual/sql-functions/scalar-functions/numeric-functions/ln",
@@ -1474,6 +1481,7 @@
                                         "sql-manual/sql-functions/scalar-functions/date-time-functions/timestampdiff",
                                         "sql-manual/sql-functions/scalar-functions/date-time-functions/time",
                                         "sql-manual/sql-functions/scalar-functions/date-time-functions/timediff",
+                                        "sql-manual/sql-functions/scalar-functions/date-time-functions/time-format",
                                         "sql-manual/sql-functions/scalar-functions/date-time-functions/time-to-sec",
                                         "sql-manual/sql-functions/scalar-functions/date-time-functions/to-date",
                                         "sql-manual/sql-functions/scalar-functions/date-time-functions/to-days",
@@ -1801,6 +1809,7 @@
                                     "label": "Other Functions",
                                     "items": [
                                         "sql-manual/sql-functions/scalar-functions/other-functions/convert-to",
+                                        "sql-manual/sql-functions/scalar-functions/other-functions/default",
                                         "sql-manual/sql-functions/scalar-functions/other-functions/esquery",
                                         "sql-manual/sql-functions/scalar-functions/other-functions/field",
                                         "sql-manual/sql-functions/scalar-functions/other-functions/g",

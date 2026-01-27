@@ -58,6 +58,7 @@ When mapping Oracle, a Database in Apache Doris corresponds to a User in Oracle.
 | float/real                            | double                               |                                                                                                                 |
 | date                                  | date                                 |                                                                                                                 |
 | timestamp                             | datetime(S)                          |                                                                                                                 |
+| timestamp(s) with local time zone | datetime / timestamptz | Controlled by the `enable.mapping.timestamp_tz` property (supported since version 4.0.3). By default, it is `false`, in which case it is mapped to `datetime`; when set to `true`, it is mapped to the `timestamptz` type. |
 | char/nchar                            | string                               |                                                                                                                 |
 | varchar2/nvarchar2                    | string                               |                                                                                                                 |
 | long/raw/long raw/internal            | string                               |                                                                                                                 |

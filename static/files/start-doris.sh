@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Default version
-DORIS_QUICK_START_VERSION="2.1.9"
+DORIS_QUICK_START_VERSION="4.0.1"
 
 # Parse parameters
 while getopts "v:" opt; do
@@ -103,7 +103,10 @@ EOF
 fi
 
 # Start services
-$COMPOSE_CMD -f docker-compose-doris.yaml up -d
+if ! $COMPOSE_CMD -f docker-compose-doris.yaml up -d; then
+  echo "Error: Failed to start Doris cluster"
+  exit 1
+fi
 
 echo "Doris cluster started successfully, version: ${DORIS_QUICK_START_VERSION}"
 echo "You can manage the cluster using the following commands:"

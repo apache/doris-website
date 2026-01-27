@@ -417,8 +417,9 @@ job_properties 子句具体参数选项如下：
 | strip_outer_array         | 当导入数据格式为 json 时，strip_outer_array 为 true 表示 JSON 数据以数组的形式展现，数据中的每一个元素将被视为一行数据。默认值是 false。通常情况下，Kafka 中的 JSON 数据可能以数组形式表示，即在最外层中包含中括号`[]`，此时，可以指定 `"strip_outer_array" = "true"`，以数组模式消费 Topic 中的数据。如以下数据会被解析成两行：`[{"user_id":1,"name":"Emily","age":25},{"user_id":2,"name":"Benjamin","age":35}]` |
 | send_batch_parallelism    | 用于设置发送批量数据的并行度。如果并行度的值超过 BE 配置中的 `max_send_batch_parallelism_per_job`，那么作为协调点的 BE 将使用 `max_send_batch_parallelism_per_job` 的值。 |
 | load_to_single_tablet     | 支持一个任务只导入数据到对应分区的一个 tablet，默认值为 false，该参数只允许在对带有 random 分桶的 olap 表导数的时候设置。 |
-| partial_columns           | 指定是否开启部分列更新功能。默认值为 false。该参数只允许在表模型为 Unique 且采用 Merge on Write 时设置。一流多表不支持此参数。具体参考文档[列更新](../../../data-operate/update/partial-column-update.md) |
-| partial_update_new_key_behavior | 在 Unique Merge on Write 表上进行部分列更新时，对新插入行的处理方式。有两种类型 `APPEND`, `ERROR`。<br/>-`APPEND`: 允许插入新行数据<br/>-`ERROR`: 插入新行时倒入失败并报错 |
+| partial_columns           | 指定是否开启部分列更新功能。默认值为 false。该参数只允许在表模型为 Unique 且采用 Merge on Write 时设置。一流多表不支持此参数。具体参考文档[部分列更新](../../../data-operate/update/partial-column-update.md) |
+| unique_key_update_mode    | 指定 Unique Key 表的更新模式。可选值：<ul><li>`UPSERT`（默认）：标准的整行插入或更新操作。</li><li>`UPDATE_FIXED_COLUMNS`：部分列更新，所有行更新相同的列。等同于 `partial_columns=true`。</li><li>`UPDATE_FLEXIBLE_COLUMNS`：灵活部分列更新，每行可以更新不同的列。需要 JSON 格式且表必须设置 `enable_unique_key_skip_bitmap_column=true`。不能与 `jsonpaths`、`fuzzy_parse`、`COLUMNS` 子句或 `WHERE` 子句一起使用。</li></ul>详情参考[部分列更新](../../../data-operate/update/partial-column-update#灵活部分列更新) |
+| partial_update_new_key_behavior | 在 Unique Merge on Write 表上进行部分列更新时，对新插入行的处理方式。有两种类型 `APPEND`、`ERROR`。<br/>- `APPEND`：允许插入新行数据<br/>- `ERROR`：插入新行时导入失败并报错 |
 | max_filter_ratio          | 采样窗口内，允许的最大过滤率。必须在大于等于 0 到小于等于 1 之间。默认值是 1.0，表示可以容忍任何错误行。采样窗口为 `max_batch_rows * 10`。即如果在采样窗口内，错误行数/总行数大于 `max_filter_ratio`，则会导致例行作业被暂停，需要人工介入检查数据质量问题。被 where 条件过滤掉的行不算错误行。 |
 | enclose                   | 指定包围符。当 CSV 数据字段中含有行分隔符或列分隔符时，为防止意外截断，可指定单字节字符作为包围符起到保护作用。例如列分隔符为 ","，包围符为 "'"，数据为 "a,'b,c'"，则 "b,c" 会被解析为一个字段。 |
 | escape                    | 指定转义符。用于转义在字段中出现的与包围符相同的字符。例如数据为 "a,'b,'c'"，包围符为 "'"，希望 "b,'c 被作为一个字段解析，则需要指定单字节转义符，例如"\"，将数据修改为 "a,'b,\'c'"。 |
@@ -1369,6 +1370,83 @@ mysql> SELECT * FROM routine_test08;
     +------+----------------+------+------+
     3 rows in set (0.01 sec)
     ```
+
+**灵活部分列更新**
+
+本示例演示如何使用灵活部分列更新，其中每行可以更新不同的列。这在 CDC 场景中非常有用，因为变更记录可能包含不同的字段。
+
+1. 导入数据样例（每条 JSON 记录更新不同的列）：
+
+    ```json
+    {"id": 1, "balance": 150.00, "last_active": "2024-01-15 10:30:00"}
+    {"id": 2, "city": "Shanghai", "age": 28}
+    {"id": 3, "name": "Alice", "balance": 500.00, "city": "Beijing"}
+    {"id": 1, "age": 30}
+    {"id": 4, "__DORIS_DELETE_SIGN__": 1}
+    ```
+
+2. 建表（必须启用 Merge-on-Write 和 skip bitmap 列）：
+
+    ```sql
+    CREATE TABLE demo.routine_test_flexible (
+        id           INT            NOT NULL  COMMENT "id",
+        name         VARCHAR(30)              COMMENT "姓名",
+        age          INT                      COMMENT "年龄",
+        city         VARCHAR(50)              COMMENT "城市",
+        balance      DECIMAL(10,2)            COMMENT "余额",
+        last_active  DATETIME                 COMMENT "最后活跃时间"
+    )
+    UNIQUE KEY(`id`)
+    DISTRIBUTED BY HASH(`id`) BUCKETS 1
+    PROPERTIES (
+        "replication_num" = "1",
+        "enable_unique_key_merge_on_write" = "true",
+        "enable_unique_key_skip_bitmap_column" = "true"
+    );
+    ```
+
+3. 插入初始数据：
+
+    ```sql
+    INSERT INTO demo.routine_test_flexible VALUES
+    (1, 'John', 25, 'Shenzhen', 100.00, '2024-01-01 08:00:00'),
+    (2, 'Jane', 30, 'Guangzhou', 200.00, '2024-01-02 09:00:00'),
+    (3, 'Bob', 35, 'Hangzhou', 300.00, '2024-01-03 10:00:00'),
+    (4, 'Tom', 40, 'Nanjing', 400.00, '2024-01-04 11:00:00');
+    ```
+
+4. 导入命令：
+
+    ```sql
+    CREATE ROUTINE LOAD demo.kafka_job_flexible ON routine_test_flexible
+            PROPERTIES
+            (
+                "format" = "json",
+                "unique_key_update_mode" = "UPDATE_FLEXIBLE_COLUMNS"
+            )
+            FROM KAFKA
+            (
+                "kafka_broker_list" = "10.16.10.6:9092",
+                "kafka_topic" = "routineLoadFlexible",
+                "property.kafka_default_offsets" = "OFFSET_BEGINNING"
+            );
+    ```
+
+5. 导入结果：
+
+    ```sql
+    mysql> SELECT * FROM demo.routine_test_flexible ORDER BY id;
+    +------+-------+------+-----------+---------+---------------------+
+    | id   | name  | age  | city      | balance | last_active         |
+    +------+-------+------+-----------+---------+---------------------+
+    |    1 | John  |   30 | Shenzhen  |  150.00 | 2024-01-15 10:30:00 |
+    |    2 | Jane  |   28 | Shanghai  |  200.00 | 2024-01-02 09:00:00 |
+    |    3 | Alice |   35 | Beijing   |  500.00 | 2024-01-03 10:00:00 |
+    +------+-------+------+-----------+---------+---------------------+
+    3 rows in set (0.01 sec)
+    ```
+
+    注意：`id=4` 的行因为 `__DORIS_DELETE_SIGN__` 被删除，每行只更新了其对应 JSON 记录中包含的列。
 
 ### 导入复杂类型
 

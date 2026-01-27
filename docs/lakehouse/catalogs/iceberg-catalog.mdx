@@ -87,12 +87,18 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 
 ### Supported Iceberg Versions
 
-The current Iceberg dependency is version 1.6.1, which is compatible with higher versions of Iceberg.
+| Doris Version | Iceberg SDK Version |
+| --- | --- |
+| 2.1 | 1.6.1 |
+| 3.0 | 1.6.1 |
+| 3.1 | 1.9.1 |
+| 4.0 | 1.9.1 |
 
 ### Supported Iceberg Formats
 
 * Supports Iceberg V1/V2 formats.
-* Supports Position Delete and Equality Delete.
+* Supports reading Position Delete and Equality Delete.
+* Supports reading  Deletion Vector (Since 4.1.0).
 
 ### Supported Metadata Services
 
@@ -100,6 +106,7 @@ The current Iceberg dependency is version 1.6.1, which is compatible with higher
 * [AWS Glue](../metastores/aws-glue.md)
 * [Aliyun DLF](../metastores/aliyun-dlf.md)
 * [Iceberg Rest Catalog](../metastores/iceberg-rest.md)
+* [Iceberg JDBC Catalog](../metastores/iceberg-jdbc.md) (Supported since version 4.1.0)
 * [FileSystem](../metastores/filesystem.md)
 
 > Note: The service types and parameters supported by different Doris versions are slightly different. Please refer to the [Examples] section.
@@ -134,7 +141,7 @@ The current Iceberg dependency is version 1.6.1, which is compatible with higher
 | decimal(P, S)                          | decimal(P, S)        |                                         |
 | date                                   | date                 |                                         |
 | timestamp (Timestamp without timezone) | datetime(6)          | Mapped to datetime with precision 6     |
-| timestamptz (Timestamp with timezone)  | datetime(6)          | Mapped to datetime with precision 6     |
+| timestamptz (Timestamp with timezone)  | datetime(6)/timestamptz(6) | Mapped to datetime with precision 6.The `enable.mapping.timestamp_tz` property (supported since version 4.0.3) controls the mapping behavior.  By default, it is set to `false`, in which case the type is mapped to `datetime`.  When set to `true`, it is mapped to the `timestamptz` type.     |
 | fixed(N)                               | char(N)              |                                         |
 | string                                 | string               |                                         |
 | binary                                 | string/varbinary     | Controlled by the `enable.mapping.varbinary` property of Catalog (supported since 4.0.2). The default is `false`, which maps to `string`; when `true`, it maps to `varbinary` type.|
@@ -149,6 +156,8 @@ The current Iceberg dependency is version 1.6.1, which is compatible with higher
 > Doris currently does not support `Timestamp` types with timezone. All `timestamp` and `timestamptz` will be uniformly mapped to `datetime(N)` type. However, during reading and writing, Doris will correctly handle timezones based on the actual source type. For example, after specifying a timezone with `SET time_zone=<tz>`, it will affect the reading and writing results of `timestamptz` columns.
 >
 > You can check whether the source type has timezone information in the Extra column of the `DESCRIBE table_name` statement. If it shows `WITH_TIMEZONE`, it indicates that the source type is a timezone-aware type. (Supported since 3.1.0).
+>
+> Supported since version 4.0.3, `timestamptz` (timestamp with time zone) can be mapped to the Doris `timestamptz` type.
 
 ## Namespace Mapping
 
@@ -919,6 +928,78 @@ Support for Nested Namespace needs to be explicitly enabled. For details, please
 
 </details>
 
+### Iceberg JDBC Catalog
+:::tip Note
+This is an experimental feature, supported since version 4.1.0.
+:::
+
+<details>
+    <summary>4.1+ Version</summary>
+    <Tabs>
+        <TabItem value='PostgreSQL' label='PostgreSQL' default>
+            Using PostgreSQL as metadata storage with S3
+            ```sql
+            CREATE CATALOG iceberg_jdbc_postgresql PROPERTIES (
+                'type' = 'iceberg',
+                'iceberg.catalog.type' = 'jdbc',
+                'iceberg.jdbc.uri' = 'jdbc:postgresql://127.0.0.1:5432/iceberg_db',
+                'iceberg.jdbc.user' = 'iceberg_user',
+                'iceberg.jdbc.password' = 'password',
+                'iceberg.jdbc.init-catalog-tables' = 'true',
+                'iceberg.jdbc.schema-version' = 'V1',
+                'iceberg.jdbc.driver_class' = 'org.postgresql.Driver',
+                'iceberg.jdbc.driver_url' = '<jdbc_driver_jar>'
+                'warehouse' = 's3://bucket/warehouse',
+                's3.access_key' = '<ak>',
+                's3.secret_key' = '<sk>',
+                's3.endpoint' = 'https://s3.us-east-1.amazonaws.com',
+                's3.region' = 'us-east-1'
+            );
+            ```
+        </TabItem>
+        <TabItem value='MySQL' label='MySQL'>
+            Using MySQL as metadata storage with S3
+            ```sql
+            CREATE CATALOG iceberg_jdbc_mysql PROPERTIES (
+                'type' = 'iceberg',
+                'iceberg.catalog.type' = 'jdbc',
+                'iceberg.jdbc.uri' = 'jdbc:mysql://127.0.0.1:3306/iceberg_db',
+                'iceberg.jdbc.user' = 'iceberg_user',
+                'iceberg.jdbc.password' = 'password',
+                'iceberg.jdbc.init-catalog-tables' = 'true',
+                'iceberg.jdbc.schema-version' = 'V1',
+                'iceberg.jdbc.driver_class' = 'com.mysql.cj.jdbc.Driver',
+                'iceberg.jdbc.driver_url' = '<jdbc_driver_jar>'
+                'warehouse' = 's3://bucket/warehouse',
+                's3.access_key' = '<ak>',
+                's3.secret_key' = '<sk>',
+                's3.endpoint' = 'https://s3.us-east-1.amazonaws.com',
+                's3.region' = 'us-east-1'
+            );
+            ```
+        </TabItem>
+        <TabItem value='SQLite' label='SQLite'>
+            Using SQLite as metadata storage (suitable for testing environments)
+            ```sql
+            CREATE CATALOG iceberg_jdbc_sqlite PROPERTIES (
+                'type' = 'iceberg',
+                'iceberg.catalog.type' = 'jdbc',
+                'iceberg.jdbc.uri' = 'jdbc:sqlite:/tmp/iceberg_catalog.db',
+                'iceberg.jdbc.init-catalog-tables' = 'true',
+                'iceberg.jdbc.schema-version' = 'V1',
+                'iceberg.jdbc.driver_class' = 'org.sqlite.JDBC',
+                'iceberg.jdbc.driver_url' = '<jdbc_driver_jar>'
+                'warehouse' = 's3://bucket/warehouse',
+                's3.access_key' = '<ak>',
+                's3.secret_key' = '<sk>',
+                's3.endpoint' = 'https://s3.us-east-1.amazonaws.com',
+                's3.region' = 'us-east-1'
+            );
+            ```
+        </TabItem>
+    </Tabs>
+</details>
+
 ### FileSystem
 <details>
     <summary>3.1+ Version</summary>
@@ -1137,17 +1218,19 @@ Support for Nested Namespace needs to be explicitly enabled. For details, please
 <details>
     <summary>3.1+ Version</summary>
     <Tabs>
-        <TabItem value='FileSystem Catalog' label='FileSystem Catalog' default>
+        <TabItem value='S3 Tables Rest Catalog' label='S3 Tables Rest Catalog' default>
             Please refer to the [S3 Tables Integration](../best-practices/doris-aws-s3tables.md) documentation.
             ```sql
-            CREATE CATALOG test_s3tables_write_insert PROPERTIES (
+            CREATE CATALOG aws_s3_tables PROPERTIES (
                 'type' = 'iceberg',
-                'iceberg.catalog.type' = 's3tables',
-                'warehouse' = 'arn:aws:s3tables:ap-east-1:12345:bucket/doris-s3-table-bucket',
-                's3.region' = 'ap-east-1',
-                's3.endpoint' = 'https://s3.ap-east-1.amazonaws.com',
-                's3.access_key' = '<ak>',
-                's3.secret_key' = '<sk>'
+                'iceberg.catalog.type' = 'rest',
+                'warehouse' = 'arn:aws:s3tables:us-east-1:<account_id>:bucket/<s3_table_bucket_name>',
+                'iceberg.rest.uri' = 'https://s3tables.us-east-1.amazonaws.com/iceberg',
+                'iceberg.rest.sigv4-enabled' = 'true',
+                'iceberg.rest.signing-name' = 's3tables',
+                'iceberg.rest.signing-region' = 'us-east-1',
+                'iceberg.rest.access-key-id' = '<ak>',
+                'iceberg.rest.secret-access-key' = '<sk>'
             );
             ```
         </TabItem>
@@ -1164,6 +1247,20 @@ Support for Nested Namespace needs to be explicitly enabled. For details, please
                 'iceberg.rest.access-key-id' = '<ak>',
                 'iceberg.rest.secret-access-key' = '<sk>',
                 'iceberg.rest.signing-region' = 'ap-east-1'
+            );
+            ```
+        </TabItem>
+        <TabItem value='FileSystem Catalog' label='FileSystem Catalog' default>
+            Please refer to the [S3 Tables Integration](../best-practices/doris-aws-s3tables.md) documentation.
+            ```sql
+            CREATE CATALOG test_s3tables_write_insert PROPERTIES (
+                'type' = 'iceberg',
+                'iceberg.catalog.type' = 's3tables',
+                'warehouse' = 'arn:aws:s3tables:ap-east-1:12345:bucket/doris-s3-table-bucket',
+                's3.region' = 'ap-east-1',
+                's3.endpoint' = 'https://s3.ap-east-1.amazonaws.com',
+                's3.access_key' = '<ak>',
+                's3.secret_key' = '<sk>'
             );
             ```
         </TabItem>
@@ -1954,11 +2051,11 @@ Supported operations include:
 
 ## Iceberg Table Actions
 
-> This feature is supported since 4.0.2
+> This feature is supported starting from version 4.0.2. See specific version requirements for each operation.
 >
 > This is an experimental feature.
 
-Doris supports executing specific actions on Iceberg tables through the `ALTER TABLE EXECUTE` syntax. This syntax provides a unified interface for executing various actions such as table optimization and snapshot management.
+Doris supports executing specific Iceberg table actions through the `ALTER TABLE EXECUTE` syntax. This syntax provides a unified interface for executing various operations such as table optimization and snapshot management.
 
 ```sql
 ALTER TABLE [catalog.][database.]table_name
@@ -1966,13 +2063,142 @@ EXECUTE <action_name> ("key1" = "value1", "key2" = "value2", ...)
 [WHERE <condition>]
 ```
 
-* `action_name`: The name of the action to execute
-* `("key1" = "value1", ...)`: Action-related parameters provided as key-value pairs. Parameter names must be wrapped in double quotes
+* `action_name`: Name of the operation to execute
+* `("key1" = "value1", ...)`: Operation-related parameters provided as key-value pairs. Parameter names must be enclosed in double quotes
 * `[WHERE <condition>]`: Optional WHERE condition to specify the partition or data range for the operation (only supported by some operations)
+
+### cherrypick_snapshot
+
+The `cherrypick_snapshot` operation merges changes from a specified snapshot into the current table state, creating a new snapshot without modifying or deleting the original snapshot.
+
+> Supported version: 4.0.2+
+
+**Syntax:**
+
+```sql
+ALTER TABLE [catalog.][database.]table_name
+EXECUTE cherrypick_snapshot ("snapshot_id" = "<snapshot_id>")
+```
+
+**Parameters:**
+
+| Parameter | Type | Required | Description |
+| -------- | ---- | ---- | ---- |
+| `snapshot_id` | Long | Yes | The snapshot ID to be merged |
+
+**Return Value:**
+
+Executing the `cherrypick_snapshot` operation returns a result set with the following 2 columns:
+
+| Column Name | Type | Description |
+| ---- | ---- | ---- |
+| `source_snapshot_id` | BIGINT | The merged snapshot ID |
+| `current_snapshot_id` | BIGINT | The snapshot ID newly created and set as current after the merge operation |
+
+**Example:**
+
+```sql
+-- Merge changes from snapshot 123456789 into the current table state
+ALTER TABLE iceberg_db.iceberg_table 
+EXECUTE cherrypick_snapshot ("snapshot_id" = "123456789");
+```
+
+**Notes:**
+
+1. This operation does not support WHERE conditions
+2. The operation will fail if the specified snapshot does not exist
+3. The merge operation creates a new snapshot and does not delete the original snapshot
+
+### fast_forward
+
+The `fast_forward` operation quickly advances the current snapshot of one branch to the latest snapshot of another branch.
+
+> Supported version: 4.0.2+
+
+**Syntax:**
+
+```sql
+ALTER TABLE [catalog.][database.]table_name
+EXECUTE fast_forward ("branch" = "<branch_name>", "to" = "<target_branch>")
+```
+
+**Parameters:**
+
+| Parameter | Type | Required | Description |
+| -------- | ---- | ---- | ---- |
+| `branch` | String | Yes | Name of the branch to advance |
+| `to` | String | Yes | Target branch name; `branch` will be advanced to the latest snapshot of this branch |
+
+**Return Value:**
+
+Executing the `fast_forward` operation returns a result set with the following 3 columns:
+
+| Column Name | Type | Description |
+| ---- | ---- | ---- |
+| `branch_updated` | STRING | The name of the branch that was advanced |
+| `previous_ref` | BIGINT | The snapshot ID the branch pointed to before advancing (can be NULL) |
+| `updated_ref` | BIGINT | The snapshot ID the branch points to after advancing |
+
+**Example:**
+
+```sql
+-- Advance the feature branch to the latest snapshot of the main branch
+ALTER TABLE iceberg_db.iceberg_table 
+EXECUTE fast_forward ("branch" = "feature", "to" = "main");
+```
+
+**Notes:**
+
+1. This operation does not support WHERE conditions
+2. The operation will fail if the specified branch does not exist
+3. Only branches can be advanced, not tags
+
+### publish_changes
+
+The `publish_changes` operation is the "Publish" step in the Write-Audit-Publish (WAP) pattern. This process finds snapshots with a specific `wap.id` attribute and adds them to the current table state. This allows users to atomically make "staged" data visible after validation.
+
+> Supported version: 4.1.0+
+
+**Syntax:**
+
+```sql
+ALTER TABLE [catalog.][database.]table_name
+EXECUTE publish_changes ("wap_id" = "<wap-id>")
+```
+
+**Parameters:**
+
+| Parameter | Type | Required | Description |
+| -------- | ---- | ---- | ---- |
+| `wap_id` | String | Yes | The `wap.id` of the snapshot to publish |
+
+**Return Value:**
+
+Executing the `publish_changes` operation returns a result set with the following 2 columns:
+
+| Column Name | Type | Description |
+| ---- | ---- | ---- |
+| `previous_snapshot_id` | BIGINT | The snapshot ID before publishing |
+| `current_snapshot_id` | BIGINT | The new snapshot ID after publishing |
+
+**Example:**
+
+```sql
+ALTER TABLE iceberg_db.iceberg_table
+EXECUTE publish_changes ("wap_id" = "branch-123")
+```
+
+**Notes:**
+
+1. This operation does not support WHERE conditions
+2. The operation will fail if the specified `wap.id` does not exist
+
 
 ### rewrite_data_files
 
-The `rewrite_data_files` operation rewrites data files in an Iceberg table to implement small file compaction, optimizing query performance and storage efficiency. This is a synchronized operation.
+The `rewrite_data_files` operation rewrites data files in an Iceberg table to achieve small file compaction, optimizing query performance and storage efficiency. This is a synchronous operation.
+
+> Supported version: 4.0.2+
 
 **Syntax:**
 
@@ -1983,28 +2209,28 @@ EXECUTE rewrite_data_files ("key1" = "value1", "key2" = "value2", ...) [WHERE <c
 
 **Parameters:**
 
-| Parameter Name | Type | Default Value | Description |
-| -------------- | ---- | ------------- | ----------- |
-| `target-file-size-bytes` | Long | 536870912 (512MB) | Target file size in bytes for output files |
+| Parameter | Type | Default Value | Description |
+| -------- | ---- | ------ | ---- |
+| `target-file-size-bytes` | Long | 536870912 (512MB) | Target file size in bytes. The target size for output files |
 | `min-file-size-bytes` | Long | target-file-size-bytes * 0.75 | Minimum file size in bytes. Files smaller than this will be rewritten. If not specified, defaults to 75% of target file size |
 | `max-file-size-bytes` | Long | target-file-size-bytes * 1.8 | Maximum file size in bytes. Files larger than this will be split. If not specified, defaults to 180% of target file size |
-| `min-input-files` | Integer | 5 | Minimum number of input files to trigger rewrite. Rewrite only executes when the number of files to rewrite reaches this threshold |
+| `min-input-files` | Integer | 5 | Minimum number of input files to trigger rewriting. Rewriting will only execute when the number of files to rewrite reaches this threshold |
 | `rewrite-all` | Boolean | false | Whether to rewrite all files regardless of file size |
-| `max-file-group-size-bytes` | Long | 107374182400 (100GB) | Maximum size in bytes for a file group. Used to limit the amount of data processed by a single rewrite task |
-| `delete-file-threshold` | Integer | Integer.MAX_VALUE | Minimum number of delete files required to trigger rewrite |
-| `delete-ratio-threshold` | Double | 0.3 | Minimum ratio of delete records to total records required to trigger rewrite (delete records / total records). Range: 0.0 - 1.0 |
-| `output-spec-id` | Long | 2 | Partition specification ID for output files |
+| `max-file-group-size-bytes` | Long | 107374182400 (100GB) | Maximum size of a single file group in bytes. Used to limit the amount of data processed by a single rewrite task |
+| `delete-file-threshold` | Integer | Integer.MAX_VALUE | Minimum number of delete files required to trigger rewriting |
+| `delete-ratio-threshold` | Double | 0.3 | Minimum ratio of deleted records required to trigger rewriting (deleted records / total records). Range: 0.0 - 1.0 |
+| `output-spec-id` | Long | 2 | Partition spec ID for output files |
 
 **Return Value:**
 
-Executing `rewrite_data_files` returns a result set with the following 4 columns:
+Executing the `rewrite_data_files` operation returns a result set with the following 4 columns:
 
 | Column Name | Type | Description |
-| ----------- | ---- | ----------- |
-| `rewritten_data_files_count` | INT | Number of data files that were rewritten |
-| `added_data_files_count` | INT | Number of new data files that were written |
-| `rewritten_bytes_count` | INT | Number of bytes that were rewritten |
-| `removed_delete_files_count` | BIGINT | Number of delete files that were removed |
+| ---- | ---- | ---- |
+| `rewritten_data_files_count` | INT | Number of data files rewritten |
+| `added_data_files_count` | INT | Number of new data files added |
+| `rewritten_bytes_count` | INT | Number of bytes rewritten |
+| `removed_delete_files_count` | BIGINT | Number of delete files removed |
 
 **Examples:**
 
@@ -2019,7 +2245,7 @@ EXECUTE rewrite_data_files (
   "min-input-files" = "10"
 );
 
--- Use WHERE condition to rewrite specific partition data
+-- Rewrite data in specific partitions using WHERE condition
 ALTER TABLE iceberg_db.iceberg_table 
 EXECUTE rewrite_data_files (
   "target-file-size-bytes" = "268435456"
@@ -2036,96 +2262,51 @@ EXECUTE rewrite_data_files (
 
 **Notes:**
 
-1. The `rewrite_data_files` operation reads and rewrites data files, which will generate additional I/O and computational overhead. Please allocate cluster resources reasonably.
-2. Before execution, you can use the SQL in the [View Data File Distribution](#view-data-file-distribution) section to evaluate whether a rewrite operation is needed
-3. The WHERE condition can be used to limit the partition or data range for rewriting. This condition will filter out files that do not contain data matching the WHERE condition, thereby reducing the number of files and amount of data to rewrite
-4. Before execution, you can use the SQL in the [Rewrite File Selection Logic](#rewrite-file-selection-logic) section to calculate which files will be rewritten
+1. The `rewrite_data_files` operation reads and rewrites data files, which incurs additional I/O and computing overhead. Please allocate cluster resources appropriately.
+2. Before execution, you can use SQL from the [View Data File Distribution](#view-data-file-distribution) section to evaluate whether rewriting is necessary
+3. WHERE conditions can be used to limit the partitions or data range for rewriting. This condition filters out files that don't contain data matching the WHERE condition, reducing the number of files and amount of data to rewrite
+4. Before execution, you can use SQL from the [Rewrite File Selection Logic](#rewrite-file-selection-logic) section to calculate which files will be rewritten
 
-### cherrypick_snapshot
+### rewrite_manifests
 
-The `cherrypick_snapshot` operation merges changes from a specified snapshot into the current table state, creating a new snapshot without modifying or deleting the original snapshot.
+The `rewrite_manifests` operation allows users to optimize Iceberg table metadata by rewriting manifest files, improving query performance and reducing metadata overhead.
 
-**Syntax:**
+This addresses manifest file optimization issues in large Iceberg tables, as a large number of small manifest files can impact query planning performance.
 
-```sql
-ALTER TABLE [catalog.][database.]table_name
-EXECUTE cherrypick_snapshot ("snapshot_id" = "<snapshot_id>")
-```
-
-**Parameters:**
-
-| Parameter Name | Type | Required | Description |
-| -------------- | ---- | -------- | ----------- |
-| `snapshot_id` | Long | Yes | The snapshot ID to merge |
-
-**Return Value:**
-
-Executing `cherrypick_snapshot` returns a result set with the following 2 columns:
-
-| Column Name | Type | Description |
-| ----------- | ---- | ----------- |
-| `source_snapshot_id` | BIGINT | The snapshot ID whose changes were merged |
-| `current_snapshot_id` | BIGINT | The snapshot ID of the new snapshot created and set as current after the merge operation |
-
-**Example:**
-
-```sql
--- Merge changes from snapshot 123456789 into current table state
-ALTER TABLE iceberg_db.iceberg_table 
-EXECUTE cherrypick_snapshot ("snapshot_id" = "123456789");
-```
-
-**Notes:**
-
-1. This operation does not support WHERE conditions
-2. If the specified snapshot does not exist, the operation will fail
-3. The merge operation creates a new snapshot and does not delete the original snapshot
-
-### fast_forward
-
-The `fast_forward` operation fast-forwards the current snapshot of one branch to the latest snapshot of another branch.
+> Supported version: 4.1.0+
 
 **Syntax:**
 
 ```sql
 ALTER TABLE [catalog.][database.]table_name
-EXECUTE fast_forward ("branch" = "<branch_name>", "to" = "<target_branch>")
+EXECUTE rewrite_manifests();
 ```
 
 **Parameters:**
 
-| Parameter Name | Type | Required | Description |
-| -------------- | ---- | -------- | ----------- |
-| `branch` | String | Yes | Name of the branch to fast-forward |
-| `to` | String | Yes | Target branch name. The `branch` will be fast-forwarded to the latest snapshot of this branch |
+No parameters
 
 **Return Value:**
 
-Executing `fast_forward` returns a result set with the following 3 columns:
+Executing the `rewrite_manifests` operation returns a result set with the following 2 columns:
 
 | Column Name | Type | Description |
-| ----------- | ---- | ----------- |
-| `branch_updated` | STRING | Name of the branch that was fast-forwarded |
-| `previous_ref` | BIGINT | Snapshot ID the branch was pointing to before the fast-forward operation (can be NULL) |
-| `updated_ref` | BIGINT | Snapshot ID the branch is pointing to after the fast-forward operation |
+| ---- | ---- | ---- |
+| `rewritten_manifests_count` | BIGINT | Number of files rewritten |
+| `total_data_manifests_count` | BIGINT | Number of data manifest files rewritten |
 
 **Example:**
 
 ```sql
--- Fast-forward feature branch to the latest snapshot of main branch
-ALTER TABLE iceberg_db.iceberg_table 
-EXECUTE fast_forward ("branch" = "feature", "to" = "main");
+ALTER TABLE iceberg_db.iceberg_table
+EXECUTE rewrite_manifests();
 ```
-
-**Notes:**
-
-1. This operation does not support WHERE conditions
-2. If the specified branch does not exist, the operation will fail
-3. Only branches can be fast-forwarded, not tags
 
 ### rollback_to_snapshot
 
 The `rollback_to_snapshot` operation rolls back an Iceberg table to a specified snapshot.
+
+> Supported version: 4.0.2+
 
 **Syntax:**
 
@@ -2136,23 +2317,23 @@ EXECUTE rollback_to_snapshot ("snapshot_id" = "<snapshot_id>")
 
 **Parameters:**
 
-| Parameter Name | Type | Required | Description |
-| -------------- | ---- | -------- | ----------- |
-| `snapshot_id` | Long | Yes | The snapshot ID to rollback to |
+| Parameter | Type | Required | Description |
+| -------- | ---- | ---- | ---- |
+| `snapshot_id` | Long | Yes | The snapshot ID to roll back to |
 
 **Return Value:**
 
-Executing `rollback_to_snapshot` returns a result set with the following 2 columns:
+Executing the `rollback_to_snapshot` operation returns a result set with the following 2 columns:
 
 | Column Name | Type | Description |
-| ----------- | ---- | ----------- |
-| `previous_snapshot_id` | BIGINT | The snapshot ID that was current before the rollback operation |
-| `current_snapshot_id` | BIGINT | The snapshot ID that is set as current after rolling back to the specified snapshot |
+| ---- | ---- | ---- |
+| `previous_snapshot_id` | BIGINT | The ID of the current snapshot before rollback |
+| `current_snapshot_id` | BIGINT | The snapshot ID set as current after rollback |
 
 **Example:**
 
 ```sql
--- Rollback to snapshot 987654321
+-- Roll back to snapshot 987654321
 ALTER TABLE iceberg_db.iceberg_table 
 EXECUTE rollback_to_snapshot ("snapshot_id" = "987654321");
 ```
@@ -2160,12 +2341,14 @@ EXECUTE rollback_to_snapshot ("snapshot_id" = "987654321");
 **Notes:**
 
 1. This operation does not support WHERE conditions
-2. If the specified snapshot does not exist, the operation will fail
+2. The operation will fail if the specified snapshot does not exist
 3. If the current snapshot is already the target snapshot, the operation returns directly without creating a new snapshot
 
 ### rollback_to_timestamp
 
-The `rollback_to_timestamp` operation rolls back an Iceberg table to the snapshot at a specified timestamp.
+The `rollback_to_timestamp` operation rolls back an Iceberg table to the snapshot at a specified point in time.
+
+> Supported version: 4.0.2+
 
 **Syntax:**
 
@@ -2176,27 +2359,27 @@ EXECUTE rollback_to_timestamp ("timestamp" = "<timestamp>")
 
 **Parameters:**
 
-| Parameter Name | Type | Required | Description |
-| -------------- | ---- | -------- | ----------- |
-| `timestamp` | String | Yes | The timestamp to rollback to. Supports two formats:<br />1. ISO datetime format: `yyyy-MM-dd HH:mm:ss.SSS` (e.g., `2024-01-01 10:30:00.000`)<br />2. Milliseconds timestamp (e.g., `1704067200000`) |
+| Parameter | Type | Required | Description |
+| -------- | ---- | ---- | ---- |
+| `timestamp` | String | Yes | The point in time to roll back to. Supports two formats:<br />1. ISO datetime format: `yyyy-MM-dd HH:mm:ss.SSS` (e.g., `2024-01-01 10:30:00.000`)<br/>2. Millisecond timestamp (e.g., `1704067200000`) |
 
 **Return Value:**
 
-Executing `rollback_to_timestamp` returns a result set with the following 2 columns:
+Executing the `rollback_to_timestamp` operation returns a result set with the following 2 columns:
 
 | Column Name | Type | Description |
-| ----------- | ---- | ----------- |
-| `previous_snapshot_id` | BIGINT | The snapshot ID that was current before the rollback operation |
-| `current_snapshot_id` | BIGINT | The snapshot ID that was current at the specified timestamp, now set as current |
+| ---- | ---- | ---- |
+| `previous_snapshot_id` | BIGINT | The ID of the current snapshot before rollback |
+| `current_snapshot_id` | BIGINT | The snapshot ID at the specified point in time, now set as current |
 
 **Examples:**
 
 ```sql
--- Rollback to specified timestamp (ISO format)
+-- Roll back to specified point in time (ISO format)
 ALTER TABLE iceberg_db.iceberg_table 
 EXECUTE rollback_to_timestamp ("timestamp" = "2024-01-01 10:30:00.000");
 
--- Rollback to specified timestamp (timestamp format)
+-- Roll back to specified point in time (timestamp format)
 ALTER TABLE iceberg_db.iceberg_table 
 EXECUTE rollback_to_timestamp ("timestamp" = "1704067200000");
 ```
@@ -2204,12 +2387,14 @@ EXECUTE rollback_to_timestamp ("timestamp" = "1704067200000");
 **Notes:**
 
 1. This operation does not support WHERE conditions
-2. The `timestamp` parameter supports ISO datetime format (`yyyy-MM-dd HH:mm:ss.SSS`) or milliseconds timestamp format
-3. If there is no snapshot corresponding to the specified timestamp, the operation will fail
+2. The `timestamp` parameter supports ISO datetime format (`yyyy-MM-dd HH:mm:ss.SSS`) or millisecond timestamp format
+3. The operation will fail if there is no corresponding snapshot at the specified point in time
 
 ### set_current_snapshot
 
 The `set_current_snapshot` operation sets the current snapshot of an Iceberg table to a specified snapshot ID or reference (branch or tag).
+
+> Supported version: 4.0.2+
 
 **Syntax:**
 
@@ -2220,19 +2405,19 @@ EXECUTE set_current_snapshot ("snapshot_id" = "<snapshot_id>" | "ref" = "<ref_na
 
 **Parameters:**
 
-| Parameter Name | Type | Required | Description |
-| -------------- | ---- | -------- | ----------- |
+| Parameter | Type | Required | Description |
+| -------- | ---- | ---- | ---- |
 | `snapshot_id` | Long | Either one | The snapshot ID to set as current |
 | `ref` | String | Either one | The reference name (branch or tag) to set as current |
 
 **Return Value:**
 
-Executing `set_current_snapshot` returns a result set with the following 2 columns:
+Executing the `set_current_snapshot` operation returns a result set with the following 2 columns:
 
 | Column Name | Type | Description |
-| ----------- | ---- | ----------- |
-| `previous_snapshot_id` | BIGINT | The snapshot ID that was current before setting the new current snapshot |
-| `current_snapshot_id` | BIGINT | The snapshot ID that is now set as current (from `snapshot_id` parameter or resolved from `ref` parameter) |
+| ---- | ---- | ---- |
+| `previous_snapshot_id` | BIGINT | The ID of the current snapshot before the operation |
+| `current_snapshot_id` | BIGINT | The snapshot ID after the operation (from `snapshot_id` parameter or resolved from `ref` parameter) |
 
 **Examples:**
 
@@ -2254,7 +2439,7 @@ EXECUTE set_current_snapshot ("ref" = "v1.0");
 
 1. This operation does not support WHERE conditions
 2. The `snapshot_id` and `ref` parameters are mutually exclusive; only one can be specified
-3. If the specified snapshot ID or reference does not exist, the operation will fail
+3. The operation will fail if the specified snapshot ID or reference does not exist
 4. If the current snapshot is already the target snapshot, the operation returns directly without creating a new snapshot
 
 ## Iceberg Table Optimization

@@ -28,7 +28,7 @@ DATE_ADD(<date>, <expr> <time_unit>)
 | -- | -- |
 | `<date>` | 合法的日期值 |
 | `<expr>` | 希望添加的时间间隔 |
-| `<time_unit>` | 枚举值：YEAR, QUARTER, MONTH, DAY, HOUR, MINUTE, SECOND |
+| `<time_unit>` | 枚举值：YEAR, MONTH, DAY, HOUR, MINUTE, SECOND |
 
 ## 返回值
 
