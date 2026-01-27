@@ -89,13 +89,20 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 
 ### 支持的 Iceberg 版本
 
-当前使用的 Iceberg 依赖为 1.6.1 版本，可以兼容更高版本的 Iceberg。
+| Doris 版本 | Iceberg SDK 版本 |
+| --- | --- |
+| 2.1 | 1.6.1 |
+| 3.0 | 1.6.1 |
+| 3.1 | 1.9.1 |
+| 4.0 | 1.9.1 |
 
 ### 支持的 Iceberg 格式
 
 * 支持 Iceberg V1/V2 格式。
 
 * 支持 Position Delete 和 Equality Delete。
+
+* 支持读取 Deletion Vector（自 4.1.0 版本支持）。
 
 ### 支持的元数据服务
 
@@ -106,6 +113,8 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 * [Aliyun DLF ](../metastores/aliyun-dlf.md)
 
 * [Iceberg Rest Catalog](../metastores/iceberg-rest.md)
+
+* [Iceberg JDBC Catalog](../metastores/iceberg-jdbc.md) (自 4.1.0 版本支持)
 
 * [FileSystem](../metastores/filesystem.md)
 
@@ -153,7 +162,7 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 | fixed(N)                               | char(N)              |                       |
 | string                                 | string               |                       |
 | binary                                 | string/varbinary     |由 properties 中 `enable.mapping.varbinary` (4.0.2 后开始支持) 属性控制。默认为 `false`, 则映射到 `string`; 为 `true` 时，则映射到 `varbinary` 类型。                       |
-| uuid                                   | string/varbinary     |4.0.2 之前映射成 `string`，之后则映射成 `varbinary` 类型。   |
+| uuid                                   | string/varbinary     |version < 4.0.2 映射成 `string` 类型; version == 4.0.2 则映射成 `varbinary` 类型。version > 4.0.2，由 properties 中 `enable.mapping.varbinary`属性控制。默认为 `false`, 则映射到 `string`;   |
 | struct                                 | struct（2.1.3 版本开始支持） |                       |
 | map                                    | map（2.1.3 版本开始支持）    |                       |
 | list                                   | array                |                       |
@@ -919,6 +928,78 @@ Iceberg 的元数层级关系是 Catalog -> Namespace -> Table。其中 Namespac
 
 </details>
 
+### Iceberg JDBC Catalog
+:::tip 提示
+该功能为试验功能，自 4.1.0 版本支持。
+:::
+
+<details>
+    <summary>4.1+ 版本</summary>
+    <Tabs>
+        <TabItem value='PostgreSQL' label='PostgreSQL' default>
+            使用 PostgreSQL 作为元数据存储，配合 S3 存储
+            ```sql
+            CREATE CATALOG iceberg_jdbc_postgresql PROPERTIES (
+                'type' = 'iceberg',
+                'iceberg.catalog.type' = 'jdbc',
+                'iceberg.jdbc.uri' = 'jdbc:postgresql://127.0.0.1:5432/iceberg_db',
+                'iceberg.jdbc.user' = 'iceberg_user',
+                'iceberg.jdbc.password' = 'password',
+                'iceberg.jdbc.init-catalog-tables' = 'true',
+                'iceberg.jdbc.schema-version' = 'V1',
+                'iceberg.jdbc.driver_class' = 'org.postgresql.Driver',
+                'iceberg.jdbc.driver_url' = '<jdbc_driver_jar>'
+                'warehouse' = 's3://bucket/warehouse',
+                's3.access_key' = '<ak>',
+                's3.secret_key' = '<sk>',
+                's3.endpoint' = 'https://s3.us-east-1.amazonaws.com',
+                's3.region' = 'us-east-1'
+            );
+            ```
+        </TabItem>
+        <TabItem value='MySQL' label='MySQL'>
+            使用 MySQL 作为元数据存储，配合 S3 存储
+            ```sql
+            CREATE CATALOG iceberg_jdbc_mysql PROPERTIES (
+                'type' = 'iceberg',
+                'iceberg.catalog.type' = 'jdbc',
+                'iceberg.jdbc.uri' = 'jdbc:mysql://127.0.0.1:3306/iceberg_db',
+                'iceberg.jdbc.user' = 'iceberg_user',
+                'iceberg.jdbc.password' = 'password',
+                'iceberg.jdbc.init-catalog-tables' = 'true',
+                'iceberg.jdbc.schema-version' = 'V1',
+                'iceberg.jdbc.driver_class' = 'com.mysql.cj.jdbc.Driver',
+                'iceberg.jdbc.driver_url' = '<jdbc_driver_jar>'
+                'warehouse' = 's3://bucket/warehouse',
+                's3.access_key' = '<ak>',
+                's3.secret_key' = '<sk>',
+                's3.endpoint' = 'https://s3.us-east-1.amazonaws.com',
+                's3.region' = 'us-east-1'
+            );
+            ```
+        </TabItem>
+        <TabItem value='SQLite' label='SQLite'>
+            使用 SQLite 作为元数据存储（适用于测试环境）
+            ```sql
+            CREATE CATALOG iceberg_jdbc_sqlite PROPERTIES (
+                'type' = 'iceberg',
+                'iceberg.catalog.type' = 'jdbc',
+                'iceberg.jdbc.uri' = 'jdbc:sqlite:/tmp/iceberg_catalog.db',
+                'iceberg.jdbc.init-catalog-tables' = 'true',
+                'iceberg.jdbc.schema-version' = 'V1',
+                'iceberg.jdbc.driver_class' = 'org.sqlite.JDBC',
+                'iceberg.jdbc.driver_url' = '<jdbc_driver_jar>'
+                'warehouse' = 's3://bucket/warehouse',
+                's3.access_key' = '<ak>',
+                's3.secret_key' = '<sk>',
+                's3.endpoint' = 'https://s3.us-east-1.amazonaws.com',
+                's3.region' = 'us-east-1'
+            );
+            ```
+        </TabItem>
+    </Tabs>
+</details>
+
 ### FileSystem
 <details>
     <summary>3.1+ 版本  </summary>
@@ -1151,17 +1232,19 @@ Iceberg 的元数层级关系是 Catalog -> Namespace -> Table。其中 Namespac
 <details>
     <summary>3.1+ 版本  </summary>
     <Tabs>
-        <TabItem value='FileSystem Catalog' label='FileSystem Catalog' default>
+        <TabItem value='S3 Tables Rest Catalog' label='S3 Tables Rest Catalog' default>
             可参阅 [集成 S3 Tables](../best-practices/doris-aws-s3tables.md) 文档。
             ```sql
-            CREATE CATALOG test_s3tables_write_insert PROPERTIES (
+            CREATE CATALOG aws_s3_tables PROPERTIES (
                 'type' = 'iceberg',
-                'iceberg.catalog.type' = 's3tables',
-                'warehouse' = 'arn:aws:s3tables:ap-east-1:12345:bucket/doris-s3-table-bucket',
-                's3.region' = 'ap-east-1',
-                's3.endpoint' = 'https://s3.ap-east-1.amazonaws.com',
-                's3.access_key' = '<ak>',
-                's3.secret_key' = '<sk>'
+                'iceberg.catalog.type' = 'rest',
+                'warehouse' = 'arn:aws:s3tables:us-east-1:<account_id>:bucket/<s3_table_bucket_name>',
+                'iceberg.rest.uri' = 'https://s3tables.us-east-1.amazonaws.com/iceberg',
+                'iceberg.rest.sigv4-enabled' = 'true',
+                'iceberg.rest.signing-name' = 's3tables',
+                'iceberg.rest.signing-region' = 'us-east-1',
+                'iceberg.rest.access-key-id' = '<ak>',
+                'iceberg.rest.secret-access-key' = '<sk>'
             );
             ```
         </TabItem>
@@ -1181,6 +1264,21 @@ Iceberg 的元数层级关系是 Catalog -> Namespace -> Table。其中 Namespac
             );
             ```
         </TabItem>
+        <TabItem value='FileSystem Catalog' label='FileSystem Catalog' default>
+            可参阅 [集成 S3 Tables](../best-practices/doris-aws-s3tables.md) 文档。
+            ```sql
+            CREATE CATALOG test_s3tables_write_insert PROPERTIES (
+                'type' = 'iceberg',
+                'iceberg.catalog.type' = 's3tables',
+                'warehouse' = 'arn:aws:s3tables:ap-east-1:12345:bucket/doris-s3-table-bucket',
+                's3.region' = 'ap-east-1',
+                's3.endpoint' = 'https://s3.ap-east-1.amazonaws.com',
+                's3.access_key' = '<ak>',
+                's3.secret_key' = '<sk>'
+            );
+            ```
+        </TabItem>
+        
     </Tabs>
 
 
@@ -1965,7 +2063,7 @@ DROP DATABASE [IF EXISTS] iceberg.iceberg_db;
 
 ## Iceberg 表操作
 
-> 该功能自 4.0.2 版本开始支持。
+> 该功能自 4.0.2 版本开始支持。具体支持版本参见各个操作的说明
 >
 > 该功能是实验性功能。
 
@@ -1981,9 +2079,138 @@ EXECUTE <action_name> ("key1" = "value1", "key2" = "value2", ...)
 * `("key1" = "value1", ...)`：操作相关的参数，以键值对形式提供。参数名称需要使用双引号包裹
 * `[WHERE <condition>]`：可选的 WHERE 条件，用于指定操作的分区或数据范围（仅部分操作支持）
 
+### cherrypick_snapshot
+
+`cherrypick_snapshot` 操作用于将指定快照的变更合并到当前表状态，创建一个新的快照而不修改或删除原始快照。
+
+> 支持版本：4.0.2+
+
+**语法：**
+
+```sql
+ALTER TABLE [catalog.][database.]table_name
+EXECUTE cherrypick_snapshot ("snapshot_id" = "<snapshot_id>")
+```
+
+**参数说明：**
+
+| 参数名称 | 类型 | 必填 | 描述 |
+| -------- | ---- | ---- | ---- |
+| `snapshot_id` | Long | 是 | 要合并的快照 ID |
+
+**返回值：**
+
+执行 `cherrypick_snapshot` 操作会返回一个结果集，包含以下 2 列：
+
+| 列名 | 类型 | 描述 |
+| ---- | ---- | ---- |
+| `source_snapshot_id` | BIGINT | 被合并的快照 ID |
+| `current_snapshot_id` | BIGINT | 合并操作后新创建并设置为当前快照的快照 ID |
+
+**示例：**
+
+```sql
+-- 将快照 123456789 的变更合并到当前表状态
+ALTER TABLE iceberg_db.iceberg_table 
+EXECUTE cherrypick_snapshot ("snapshot_id" = "123456789");
+```
+
+**注意事项：**
+
+1. 该操作不支持 WHERE 条件
+2. 如果指定的快照不存在，操作会失败
+3. 合并操作会创建一个新的快照，不会删除原始快照
+
+### fast_forward
+
+`fast_forward` 操作用于将一个分支的当前快照快速推进到另一个分支的最新快照。
+
+> 支持版本：4.0.2+
+
+**语法：**
+
+```sql
+ALTER TABLE [catalog.][database.]table_name
+EXECUTE fast_forward ("branch" = "<branch_name>", "to" = "<target_branch>")
+```
+
+**参数说明：**
+
+| 参数名称 | 类型 | 必填 | 描述 |
+| -------- | ---- | ---- | ---- |
+| `branch` | String | 是 | 要推进的分支名称 |
+| `to` | String | 是 | 目标分支名称，会将 `branch` 推进到该分支的最新快照 |
+
+**返回值：**
+
+执行 `fast_forward` 操作会返回一个结果集，包含以下 3 列：
+
+| 列名 | 类型 | 描述 |
+| ---- | ---- | ---- |
+| `branch_updated` | STRING | 被推进的分支名称 |
+| `previous_ref` | BIGINT | 推进操作前分支指向的快照 ID（可为 NULL） |
+| `updated_ref` | BIGINT | 推进操作后分支指向的快照 ID |
+
+**示例：**
+
+```sql
+-- 将 feature 分支推进到 main 分支的最新快照
+ALTER TABLE iceberg_db.iceberg_table 
+EXECUTE fast_forward ("branch" = "feature", "to" = "main");
+```
+
+**注意事项：**
+
+1. 该操作不支持 WHERE 条件
+2. 如果指定的分支不存在，操作会失败
+3. 只能推进分支，不能推进标签（Tag）
+
+### publish_changes
+
+`publish_changes` 操作是“写入 - 审核 - 发布” (Write-Audit-Publish) 模式中的“发布”步骤。该过程会查找带有特定 `wap.id` 属性的快照，并将其添加到当前表状态中。这样，用户就可以在验证后原子性地使“暂存”数据可见。
+
+> 支持版本：4.1.0+
+
+**语法：**
+
+```sql
+ALTER TABLE [catalog.][database.]table_name
+EXECUTE publish_changes ("wap_id" = "<wap-id>")
+```
+
+**参数说明：**
+
+| 参数名称 | 类型 | 必填 | 描述 |
+| -------- | ---- | ---- | ---- |
+| `wap_id` | String | 是 | 要进行发布的快照的 `wap.id` |
+
+**返回值：**
+
+执行 `publish_changes` 操作会返回一个结果集，包含以下 2 列：
+
+| 列名 | 类型 | 描述 |
+| ---- | ---- | ---- |
+| `previous_snapshot_id` | BIGINT | 发布之前的快照 ID |
+| `current_snapshot_id` | BIGINT | 发布之后的新的快照 ID |
+
+**示例：**
+
+```sql
+ALTER TABLE iceberg_db.iceberg_table
+EXECUTE publish_changes ("wap_id" = "branch-123")
+```
+
+**注意事项：**
+
+1. 该操作不支持 WHERE 条件
+2. 如果指定的 `wap.id` 不存在，操作会失败
+
+
 ### rewrite_data_files
 
 `rewrite_data_files` 操作用于对 Iceberg 表进行数据文件重写，实现小文件合并（Compaction）功能，以优化查询性能和存储效率。该操作是一个同步操作。
+
+> 支持版本：4.0.2+
 
 **语法：**
 
@@ -2052,91 +2279,46 @@ EXECUTE rewrite_data_files (
 3. WHERE 条件可用于限制重写的分区或数据范围，这个条件会过滤掉那些不包含 符合 WHERE 条件的数据的文件，从而减少重写的文件数量和数据量
 4. 执行前可以通过[重写文件选择逻辑](#重写文件选择逻辑)章节中的 SQL 来计算哪些文件会被重写
 
-### cherrypick_snapshot
+### rewrite_manifests
 
-`cherrypick_snapshot` 操作用于将指定快照的变更合并到当前表状态，创建一个新的快照而不修改或删除原始快照。
+`rewrite_manifests` 操作允许用户通过重写清单文件（Manifest File）来优化 Iceberg 表元数据，从而提高查询性能并减少元数据开销。
 
-**语法：**
+这解决了大型 Iceberg 表中清单文件优化的问题，因为大量小型清单文件可能会影响查询计划性能。
 
-```sql
-ALTER TABLE [catalog.][database.]table_name
-EXECUTE cherrypick_snapshot ("snapshot_id" = "<snapshot_id>")
-```
-
-**参数说明：**
-
-| 参数名称 | 类型 | 必填 | 描述 |
-| -------- | ---- | ---- | ---- |
-| `snapshot_id` | Long | 是 | 要合并的快照 ID |
-
-**返回值：**
-
-执行 `cherrypick_snapshot` 操作会返回一个结果集，包含以下 2 列：
-
-| 列名 | 类型 | 描述 |
-| ---- | ---- | ---- |
-| `source_snapshot_id` | BIGINT | 被合并的快照 ID |
-| `current_snapshot_id` | BIGINT | 合并操作后新创建并设置为当前快照的快照 ID |
-
-**示例：**
-
-```sql
--- 将快照 123456789 的变更合并到当前表状态
-ALTER TABLE iceberg_db.iceberg_table 
-EXECUTE cherrypick_snapshot ("snapshot_id" = "123456789");
-```
-
-**注意事项：**
-
-1. 该操作不支持 WHERE 条件
-2. 如果指定的快照不存在，操作会失败
-3. 合并操作会创建一个新的快照，不会删除原始快照
-
-### fast_forward
-
-`fast_forward` 操作用于将一个分支的当前快照快速推进到另一个分支的最新快照。
+> 支持版本：4.1.0+
 
 **语法：**
 
 ```sql
 ALTER TABLE [catalog.][database.]table_name
-EXECUTE fast_forward ("branch" = "<branch_name>", "to" = "<target_branch>")
+EXECUTE rewrite_manifests();
 ```
 
 **参数说明：**
 
-| 参数名称 | 类型 | 必填 | 描述 |
-| -------- | ---- | ---- | ---- |
-| `branch` | String | 是 | 要推进的分支名称 |
-| `to` | String | 是 | 目标分支名称，会将 `branch` 推进到该分支的最新快照 |
+无参数
 
 **返回值：**
 
-执行 `fast_forward` 操作会返回一个结果集，包含以下 3 列：
+执行 `rewrite_manifests` 操作会返回一个结果集，包含以下 2 列：
 
 | 列名 | 类型 | 描述 |
 | ---- | ---- | ---- |
-| `branch_updated` | STRING | 被推进的分支名称 |
-| `previous_ref` | BIGINT | 推进操作前分支指向的快照 ID（可为 NULL） |
-| `updated_ref` | BIGINT | 推进操作后分支指向的快照 ID |
+| `rewritten_manifests_count` | BIGINT | 被重写的文件数量 |
+| `total_data_manifests_count` | BIGINT | 被重写的数据清单文件数量 |
 
 **示例：**
 
 ```sql
--- 将 feature 分支推进到 main 分支的最新快照
-ALTER TABLE iceberg_db.iceberg_table 
-EXECUTE fast_forward ("branch" = "feature", "to" = "main");
+ALTER TABLE iceberg_db.iceberg_table
+EXECUTE rewrite_manifests();
 ```
-
-**注意事项：**
-
-1. 该操作不支持 WHERE 条件
-2. 如果指定的分支不存在，操作会失败
-3. 只能推进分支，不能推进标签（Tag）
 
 ### rollback_to_snapshot
 
 `rollback_to_snapshot` 操作用于将 Iceberg 表回滚到指定的快照。
+
+> 支持版本：4.0.2+
 
 **语法：**
 
@@ -2177,6 +2359,8 @@ EXECUTE rollback_to_snapshot ("snapshot_id" = "987654321");
 ### rollback_to_timestamp
 
 `rollback_to_timestamp` 操作用于将 Iceberg 表回滚到指定时间点的快照。
+
+> 支持版本：4.0.2+
 
 **语法：**
 
@@ -2221,6 +2405,8 @@ EXECUTE rollback_to_timestamp ("timestamp" = "1704067200000");
 ### set_current_snapshot
 
 `set_current_snapshot` 操作用于将 Iceberg 表的当前快照设置为指定的快照 ID 或引用（分支或标签）。
+
+> 支持版本：4.0.2+
 
 **语法：**
 

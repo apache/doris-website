@@ -30,6 +30,11 @@
     src: url('/fonts/NotoSansSC-VariableFont_wght.ttf');
 }
 
+@font-face {
+    font-family: 'Montserrat';
+    src: url('/fonts/Montserrat-VariableFont_wght.ttf');
+}
+
 @layer utilities {
     .transition-slide {
         @apply inline-block transform transition-transform duration-300 hover:translate-x-1 group-hover:translate-x-1;
@@ -44,7 +49,7 @@
     align-items: center;
     gap: 4px;
     border-radius: 4px;
-    background: var(--b-1, #444fd9);
+    background: var(--b-1, #1fcd94);
     color: white;
 }
 
@@ -55,7 +60,8 @@ html[lang='zh-Hans-CN'] {
 
 html[lang='en-US'] {
     --font-family-base: 'Inter';
-    font-family: 'Inter', 'MiSans Latin', 'Source Sans Pro', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-family: 'Inter', 'MiSans Latin', 'Montserrat', 'Source Sans Pro', 'Helvetica Neue', Helvetica, Arial,
+        sans-serif;
 }
 
 // :root {
@@ -99,4 +105,24 @@ body {
     border-left-width: 5px;
     border-radius: 4px;
     background: rgba(0, 101, 253, 0.08);
+}
+
+.ant-pagination-item-active a,
+.ant-pagination-item-active {
+    color: var(--ifm-color-primary) !important;
+}
+.ant-pagination-options-quick-jumper input:hover,
+.ant-pagination-options-quick-jumper input:focus-within,
+.ant-pagination-item-active a,
+.ant-pagination-item-active
+ {
+    border-color: var(--ifm-color-primary) !important;
+}
+
+.ant-pagination-options-quick-jumper input:focus-within {
+    box-shadow: 0 0 0 2px #C9FFE6 !important;
+}
+
+.ant-pagination-item-container .ant-pagination-item-link-icon {
+    color: var(--ifm-color-primary) !important;
 }

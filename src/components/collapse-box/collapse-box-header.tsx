@@ -24,7 +24,7 @@ export function CollapseBoxHeader({
                 if (disabled) return;
                 setExpand(!expand);
             }}
-            className={`peer flex cursor-pointer items-center justify-between rounded-t-lg bg-[#F7F9FE] px-[1rem] py-[0.75rem] lg:px-[3rem] lg:py-[1.5rem] text-2xl font-medium leading-[2.5rem] font-misans ${disabled ? 'cursor-default' : 'cursor-pointer'
+            className={`peer flex cursor-pointer items-center justify-between rounded-t-lg bg-[#F7FAFC] px-[1rem] py-[0.75rem] lg:px-[3rem] lg:py-[1.5rem] text-2xl font-medium leading-[2.5rem] font-misans ${disabled ? 'cursor-default' : 'cursor-pointer'
                 } ${expand ? 'expand' : ' rounded-b-lg'}`}
         >
             <div className="flex items-center">

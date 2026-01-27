@@ -57,7 +57,7 @@
 
     .download-link:hover {
         text-decoration: underline;
-        color: #444fd9;
+        color: var(--ifm-color-primary);
     }
 
     .archive-tips-content {
@@ -65,7 +65,7 @@
     }
 
     .latest-version-link {
-        color: #444fd9;
+        color: var(--ifm-color-primary);
         text-decoration: underline;
     }
 

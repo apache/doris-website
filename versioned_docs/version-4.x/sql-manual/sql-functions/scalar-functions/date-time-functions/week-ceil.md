@@ -37,13 +37,13 @@ WEEK_CEIL(`<date_or_time_expr>`, `<period>`, `<origin>`)
 
 | Parameter | Description |
 |-----------|-------------|
-| `<date_or_time_expr>` | The datetime value to round up, supports date/datetime types. For datetime and date formats, please refer to [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
+| `<date_or_time_expr>` | The datetime value to round up, supports date/datetime/timestamptz types. Date type will be converted to the start time 00:00:00 of the corresponding date. For specific formats please see [timestamptz conversion](../../../../../../docs/sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion.md), and for datetime/date formats refer to [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
 | `<period>` | Week interval value, type INT, representing the number of weeks in each interval |
 | `<origin>` | Starting point for the interval, supports date/datetime types; defaults to 0000-01-01 00:00:00 |
 
 ## Return Value
 
-Returns DATETIME type, representing the rounded-up datetime value.
+Returns TIMESTAMPTZ, DATETIME or DATE type, representing the rounded-up datetime value.
 
 - If `<period>` is a non-positive integer (≤0), the function returns an error;
 - If any parameter is NULL, returns NULL;
@@ -53,6 +53,8 @@ Returns DATETIME type, representing the rounded-up datetime value.
 - If calculation result exceeds maximum datetime 9999-12-31 23:59:59, returns an error.
 - If the `<origin>` date and time is after the `<period>`, it will still be calculated according to the above formula, but the period k will be negative.
 - If date_or_time_expr has a scale, the returned result will also have a scale with the fractional part being zero.
+- If the input is TIMESTAMPTZ type, it will first be converted to local_time (for example: `2025-12-31 23:59:59+05:00` represents local_time `2026-01-01 02:59:59` when the session variable is `+08:00`), and then perform WEEK_CEIL.
+- If the input time values (`<date_or_time_expr>` and `<period>`) contain both TIMESTAMPTZ and DATETIME types, the output is DATETIME type.
 
 ## Examples
 
@@ -104,6 +106,23 @@ SELECT WEEK_CEIL('2023-07-13', 1, '2023-07-03') AS result;
 +---------------------+
 | 2023-07-17 00:00:00 |
 +---------------------+
+
+-- TimeStampTz sample, SET time_zone = '+08:00'
+-- Convert to local_time (2026-01-01 02:59:59) and then perform WEEK_CEIL
+SELECT WEEK_CEIL('2025-12-31 23:59:59+05:00');
++----------------------------------------+
+| WEEK_CEIL('2025-12-31 23:59:59+05:00') |
++----------------------------------------+
+| 2026-01-05 00:00:00+08:00              |
++----------------------------------------+
+
+-- If parameters contain both TimeStampTz and Datetime types, output DateTime type
+SELECT WEEK_CEIL('2025-12-31 23:59:59+05:00', '2025-12-15 00:00:00.123');
++-------------------------------------------------------------------+
+| WEEK_CEIL('2025-12-31 23:59:59+05:00', '2025-12-15 00:00:00.123') |
++-------------------------------------------------------------------+
+| 2026-01-05 00:00:00.123                                           |
++-------------------------------------------------------------------+
 
 -- Invalid period (non-positive integer)
 SELECT WEEK_CEIL('2023-07-13', 0) AS result;

@@ -3,5 +3,5 @@
 }
 
 .blog-item-link:hover{
-    color: #444FD9 !important;
+    color: var(--ifm-color-primary) !important;
 }

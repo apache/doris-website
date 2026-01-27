@@ -108,7 +108,7 @@ Only the public cloud version of MaxCompute is supported. For support with the p
 | bigint           | bigint        |                                                                              |
 | float            | float         |                                                                              |
 | double           | double        |                                                                              |
-| decimal(P, S)    | decimal(P, S) |                                                                              |
+| decimal(P, S)    | decimal(P, S) | 1 <= P <= 38 ,0 <= scale <= 18                                               |
 | char(N)          | char(N)       |                                                                              |
 | varchar(N)       | varchar(N)    |                                                                              |
 | string           | string        |                                                                              |
@@ -217,3 +217,14 @@ The generated endpoint formats are as follows:
 Users can also manually specify `mc.odps_endpoint` and `mc.tunnel_endpoint` to customize the service addresses. This is particularly useful for private deployments of MaxCompute environments.
 
 For details on configuring MaxCompute Endpoint and Tunnel Endpoint, refer to the documentation on [Endpoints for Different Regions and Network Connection Methods](https://help.aliyun.com/zh/maxcompute/user-guide/endpoints).
+
+
+### Resource Usage Control
+
+Users can adjust the `parallel_pipeline_task_num` and `num_scanner_threads` session variables to control the [table-level request concurrency](https://help.aliyun.com/zh/maxcompute/user-guide/data-transfer-service-quota-manage?spm=a2c4g.11186623.help-menu-search-27797.d_2) and manage resource consumption in the data transmission service. The corresponding concurrency equals `max(parallel_pipeline_task_num * be num * num_scanner_threads)`.
+
+Note:
+
+1. This method can only control the concurrent request count for a single table in a single query, and cannot control resource usage across multiple SQL statements.
+
+2. Reducing the concurrency will increase the query time.

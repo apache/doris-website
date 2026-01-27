@@ -263,3 +263,88 @@ Or directly use 127.0.0.1 (provided that the service has been mapped to the host
     ```
 
 At this point, the multi-Kerberos cluster access configuration is complete. You can view data from both Hive clusters and use different Kerberos credentials.
+## Connectivity Testing Tool
+
+For verifying connectivity to external dependencies such as Kerberos,
+the open-source tool **Pulse** can be used.
+
+**Pulse is an independent open-source connectivity testing tool.
+For usage instructions, installation details, and release information,
+please refer to the project documentation.**
+
+- Documentation: [Kerberos Connectivity Tool](https://github.com/CalvinKirs/Pulse/tree/main/kerberos-tools)
+- Release package: [Kerberos Connectivity Tool v1.0.0](https://github.com/CalvinKirs/Pulse/releases/tag/v1.0.0)
+## FAQ
+1. javax.security.sasl.SaslException: No common protection layer between client and server
+   - Cause: The client's `hadoop.rpc.protection` differs from the HDFS cluster setting.
+   - Fix: Align `hadoop.rpc.protection` between the client and HDFS server.
+
+2. No valid credentials provided (Mechanism level: Illegal key size)
+   - Cause: Java by default does not support encryption keys larger than 128 bits.
+   - Fix: Install the Java Cryptography Extension (JCE) Unlimited Strength Policy; unpack the JARs into `$JAVA_HOME/jre/lib/security` and restart services.
+
+3. Encryption type AES256 CTS mode with HMAC SHA1-96 is not supported/enabled
+   - Cause: The current Java environment lacks AES256 support while Kerberos may use it.
+   - Fix: Update `/etc/krb5.conf` in `[libdefaults]` to use a supported cipher, or install the JCE extension to enable AES256 (same as above).
+
+4. No valid credentials provided (Mechanism level: Failed to find any Kerberos tgt)
+   - Cause: Kerberos cannot find a valid Ticket Granting Ticket (TGT). In a previously working setup, the ticket expired or the KDC restarted. In a new setup, `krb5.conf` or the keytab is incorrect or corrupted.
+   - Fix: Verify `krb5.conf` and the keytab, ensure tickets are valid, and try `kinit` to obtain a new ticket.
+
+5. Failure unspecified at GSS-API level (Mechanism level: Checksum failed)
+   - Cause: GSS-API checksum failure; wrong password used with `kinit`; keytab is invalid or has an outdated key version so JVM falls back to password login.
+   - Fix: Use the correct password with `kinit` and ensure the keytab is current and valid.
+
+6. Receive timed out
+   - Cause: Using UDP to talk to the KDC on unstable networks or with large packets.
+   - Fix: Force Kerberos to use TCP by adding in `/etc/krb5.conf`:
+```shell
+[libdefaults]
+udp_preference_limit = 1
+```
+
+7. javax.security.auth.login.LoginException: Unable to obtain password from user
+   - Cause: Principal does not match the keytab, or the application cannot read `krb5.conf` or the keytab.
+   - Fix:
+      - Use `klist -kt <keytab_file>` and `kinit -kt <keytab_file> <principal>` to validate the keytab and principal.
+      - Check paths and permissions for `krb5.conf` and the keytab so the runtime user can read them.
+      - Ensure JVM startup options specify the correct config paths.
+
+8. Principal not found or Could not resolve Kerberos principal name
+   - Causes:
+      - The hostname in the principal cannot be resolved.
+      - The `_HOST` placeholder expands to a hostname unknown to the KDC.
+      - DNS or `/etc/hosts` is misconfigured.
+   - Fix:
+      - Verify the principal spelling.
+      - Ensure all relevant nodes (Doris FE/BE and KDC) have correct hostname-to-IP entries.
+
+9. Cannot find KDC for realm "XXX"
+   - Cause: The specified realm has no KDC configured in `krb5.conf`.
+   - Fix:
+      - Check the realm name under `[realms]`.
+      - Confirm the `kdc` address.
+      - Restart BE & FE after changing `/etc/krb5.conf`.
+
+10. Request is a replay
+- Cause: KDC thinks the auth request is duplicated. Typical reasons: clock skew across nodes or multiple services sharing the same principal.
+- Fix:
+   - Enable NTP on all nodes to keep time in sync.
+   - Use unique principals per service instance, such as `service/_HOST@REALM`, to avoid sharing.
+
+11. Client not found in Kerberos database
+- Cause: The client principal does not exist in the Kerberos database.
+- Fix: Create the principal in the KDC.
+
+12. Message stream modified (41)
+- Cause: Known issue for certain OS (e.g., CentOS 7) with Kerberos/Java combinations.
+- Fix: Apply vendor patches or security updates.
+
+13. Pre-authentication information was invalid (24)
+- Causes:
+   - Invalid pre-auth data.
+   - Clock skew between client and KDC.
+   - JDK cipher configuration mismatches the KDC.
+- Fix:
+   - Sync time across all nodes.
+   - Align cipher configurations.

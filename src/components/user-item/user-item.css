@@ -19,7 +19,7 @@
     left: 0;
     width: 100%;
     height: 0;
-    background: #444FD9;
+    background: var(--ifm-color-primary);
     transition: all .35s;
 }
 

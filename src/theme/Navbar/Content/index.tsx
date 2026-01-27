@@ -13,7 +13,8 @@ import { NavbarCommonLeft, NavbarCommonRight } from './components/NavbarCommon';
 import { DataContext } from '../../Layout';
 import { ARCHIVE_PATH } from '@site/src/constant/common';
 import { STAR_COUNT } from '../../../constant/github.data';
- 
+import { StarGreenIcon } from '@site/src/components/Icons/star-green-icon';
+
 import styles from './styles.module.css';
 
 enum NavBar {
@@ -111,6 +112,13 @@ export default function NavbarContent(): ReactNode {
             left={NavbarTypes[currentNavbar].left}
             right={
                 <>
+                    <button
+                        className="rounded-full flex items-center gap-x-2 px-4 py-[5px] border border-primary bg-[#F0FFF7] text-[1rem]/[1.625rem] font-medium text-[#1D1D1D]"
+                        id="navbar-ask-ai-btn"
+                    >
+                        <StarGreenIcon />
+                        Ask AI
+                    </button>
                     {NavbarTypes[currentNavbar].right}
                     {!mobileSidebar.disabled && !showSearchPageMobile && <NavbarMobileSidebarToggle />}
                     <NavbarColorModeToggle className={styles.colorModeToggle} />

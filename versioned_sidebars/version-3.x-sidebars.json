@@ -213,7 +213,14 @@
                         "data-operate/import/load-data-convert",
                         "data-operate/import/load-high-availability",
                         "data-operate/import/group-commit-manual",
-                        "data-operate/import/load-best-practices"
+                        "data-operate/import/load-best-practices",
+                        {
+                            "type": "category",
+                            "label": "Load Internals",
+                            "items": [
+                                "data-operate/import/load-internals/stream-load-in-complex-network"
+                            ]
+                        }
                     ]
                 },
                 {
@@ -419,6 +426,7 @@
                                 "lakehouse/metastores/google-dataproc-metastore",
                                 "lakehouse/metastores/aliyun-dlf",
                                 "lakehouse/metastores/iceberg-rest",
+                                "lakehouse/metastores/iceberg-jdbc",
                                 "lakehouse/metastores/filesystem"
                             ]
                         },
@@ -501,7 +509,9 @@
                                 "ecosystem/observability/beats",
                                 "ecosystem/observability/opentelemetry",
                                 "ecosystem/observability/fluentbit",
-                                "ecosystem/observability/loongcollector"
+                                "ecosystem/observability/loongcollector",
+                                "ecosystem/observability/langfuse",
+                                "ecosystem/observability/vector"
                             ]
                         }
                     ]
@@ -947,7 +957,9 @@
                         "ecosystem/observability/beats",
                         "ecosystem/observability/opentelemetry",
                         "ecosystem/observability/fluentbit",
-                        "ecosystem/observability/loongcollector"
+                        "ecosystem/observability/loongcollector",
+                        "ecosystem/observability/langfuse",
+                        "ecosystem/observability/vector"
                     ]
                 },
                 {

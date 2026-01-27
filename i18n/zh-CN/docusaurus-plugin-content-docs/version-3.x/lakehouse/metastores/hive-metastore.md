@@ -80,7 +80,7 @@
 
 使用开启 Kerberos 认证的 Hive MetaStore 服务时需要确保所有 FE 节点上都存在相同的 keytab 文件，并且运行 Doris 进程的用户具有该 keytab 文件的读权限。以及 krb5 配置文件配置正确。
 
-Kerberos 详细配置参考 Kerberos 认证。
+Kerberos 配置常见问题及最佳实践请参考 [Kerberos](../best-practices/kerberos.md).
 
 ### 配置文件参数
 

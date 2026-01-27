@@ -222,6 +222,7 @@ const sidebars: SidebarsConfig = {
                             items: [
                                 'data-operate/import/load-internals/load-internals',
                                 'data-operate/import/load-internals/routine-load-internals',
+                                'data-operate/import/load-internals/stream-load-in-complex-network',
                             ],
                         },
                         "data-operate/import/streaming-job"
@@ -241,6 +242,7 @@ const sidebars: SidebarsConfig = {
                                 'data-operate/update/update-of-aggregate-model',
                                 'data-operate/update/partial-column-update',
                                 'data-operate/update/unique-update-concurrent-control',
+                                'data-operate/update/multi-stream-update-for-unique-model',
                             ],
                         },
                         {
@@ -464,6 +466,7 @@ const sidebars: SidebarsConfig = {
                                 'lakehouse/metastores/google-dataproc-metastore',
                                 'lakehouse/metastores/aliyun-dlf',
                                 'lakehouse/metastores/iceberg-rest',
+                                'lakehouse/metastores/iceberg-jdbc',
                                 'lakehouse/metastores/filesystem',
                             ],
                         },
@@ -546,6 +549,8 @@ const sidebars: SidebarsConfig = {
                                 'ecosystem/observability/opentelemetry',
                                 'ecosystem/observability/fluentbit',
                                 'ecosystem/observability/loongcollector',
+                                'ecosystem/observability/langfuse',
+                                'ecosystem/observability/vector',
                             ],
                         },
                     ],
@@ -990,6 +995,8 @@ const sidebars: SidebarsConfig = {
                         'ecosystem/observability/opentelemetry',
                         'ecosystem/observability/fluentbit',
                         'ecosystem/observability/loongcollector',
+                        'ecosystem/observability/langfuse',
+                        'ecosystem/observability/vector',
                     ],
                 },
                 {
@@ -1239,6 +1246,7 @@ const sidebars: SidebarsConfig = {
                                         'sql-manual/sql-functions/scalar-functions/numeric-functions/floor',
                                         'sql-manual/sql-functions/scalar-functions/numeric-functions/fmod',
                                         'sql-manual/sql-functions/scalar-functions/numeric-functions/format-round',
+                                        "sql-manual/sql-functions/scalar-functions/numeric-functions/interval",
                                         'sql-manual/sql-functions/scalar-functions/numeric-functions/isinf',
                                         'sql-manual/sql-functions/scalar-functions/numeric-functions/isnan',
                                         'sql-manual/sql-functions/scalar-functions/numeric-functions/ln',
@@ -1454,6 +1462,7 @@ const sidebars: SidebarsConfig = {
                                         'sql-manual/sql-functions/scalar-functions/date-time-functions/timestampdiff',
                                         'sql-manual/sql-functions/scalar-functions/date-time-functions/time',
                                         'sql-manual/sql-functions/scalar-functions/date-time-functions/timediff',
+                                        "sql-manual/sql-functions/scalar-functions/date-time-functions/time-format",
                                         'sql-manual/sql-functions/scalar-functions/date-time-functions/time-to-sec',
                                         'sql-manual/sql-functions/scalar-functions/date-time-functions/to-date',
                                         'sql-manual/sql-functions/scalar-functions/date-time-functions/to-days',
@@ -1783,6 +1792,7 @@ const sidebars: SidebarsConfig = {
                                     items: [
                                         'sql-manual/sql-functions/scalar-functions/other-functions/convert-to',
                                         'sql-manual/sql-functions/scalar-functions/other-functions/esquery',
+                                        'sql-manual/sql-functions/scalar-functions/other-functions/default',
                                         'sql-manual/sql-functions/scalar-functions/other-functions/field',
                                         'sql-manual/sql-functions/scalar-functions/other-functions/g',
                                         'sql-manual/sql-functions/scalar-functions/other-functions/grouping',
