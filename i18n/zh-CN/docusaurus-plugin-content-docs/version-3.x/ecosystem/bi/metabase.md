@@ -164,7 +164,7 @@ ORDER BY ship_month, l_shipmode
 
 3. 点击右下角的 **Visualize** 按钮查看结果
 
-![查看结果](/images/ecomsystem/metabase/metsbase-09.png)
+![查看结果](/images/ecomsystem/metabase/metabase-09.png)
 
 
 ### 配置可视化图表

@@ -164,7 +164,7 @@ ORDER BY ship_month, l_shipmode
 
 3. Click the **Visualize** button in the lower right corner to view the results.
 
-![View Results](/images/ecomsystem/metabase/metsbase-09.png)
+![View Results](/images/ecomsystem/metabase/metabase-09.png)
 
 
 ### Configure Visualization Charts
