@@ -4,7 +4,7 @@ import Link from '@docusaurus/Link';
 import clsx from 'clsx';
 import DateIcon from '@site/static/images/events/date-icon.svg';
 import AddressIcon from '@site/static/images/events/address-icon.svg';
-import ArrowDown from '@site/static/images/events/arrow-down.svg';
+import { ArrowDown } from '@site/src/components/Icons/arrow-down'
 import { useState } from 'react';
 import './styles.scss';
 
