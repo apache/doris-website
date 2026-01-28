@@ -435,7 +435,21 @@ const sidebars: SidebarsConfig = {
                             label: 'Data Catalogs',
                             items: [
                                 'lakehouse/catalogs/hive-catalog',
-                                'lakehouse/catalogs/iceberg-catalog',
+                                {
+                                    type: 'category',
+                                    label: 'Iceberg Catalog',
+                                    link: {type: 'doc', id: 'lakehouse/catalogs/iceberg-catalog'},
+                                    items: [
+                                        'lakehouse/best-practices/doris-iceberg',
+                                        'lakehouse/best-practices/doris-aws-s3tables',
+                                        'lakehouse/best-practices/doris-polaris',
+                                        'lakehouse/best-practices/doris-gravitino',
+                                        'lakehouse/best-practices/doris-onelake',
+                                        'lakehouse/best-practices/doris-unity-catalog',
+                                        'lakehouse/best-practices/doris-lakekeeper',
+                                        'lakehouse/best-practices/doris-nessie'
+                                    ],
+                                },
                                 'lakehouse/catalogs/hudi-catalog',
                                 'lakehouse/catalogs/paimon-catalog',
                                 'lakehouse/catalogs/maxcompute-catalog',
@@ -973,6 +987,7 @@ const sidebars: SidebarsConfig = {
                     items: [
                         'ecosystem/bi/apache-superset',
                         'ecosystem/bi/finebi',
+                        'ecosystem/bi/metabase',
                         'ecosystem/bi/powerbi',
                         'ecosystem/bi/tableau',
                         'ecosystem/bi/quicksight',

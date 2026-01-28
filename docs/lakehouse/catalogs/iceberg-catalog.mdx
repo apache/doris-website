@@ -111,6 +111,16 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 
 > Note: The service types and parameters supported by different Doris versions are slightly different. Please refer to the [Examples] section.
 
+### Iceberg Catalog Feature Support Matrix
+
+| Metadata Service       | Table Query | View Query | DDL Operations                | Data Writeback                | System Tables (Supported since 3.1+) |
+| ---------------------- | ----------- | ---------- | ----------------------------- | ----------------------------- | ------------------------------------ |
+| Hive MetaStore         | ✅          | ✅         | ✅                            | ✅                            | ✅                                   |
+| AWS Glue               | ✅          | ✅         | ❌                            | ❌                            | ✅                                   |
+| Aliyun DLF             | ✅          | ✅         | ❌                            | ❌                            | ❌                                   |
+| Iceberg Rest Catalog   | ✅          | ✅         | Depends on the service provider | Depends on the service provider | Depends on the service provider      |
+| FileSystem             | ✅          | ✅         | ✅                            | ✅                            | ✅                                   |
+
 ### Supported Storage Systems
 
 * [HDFS](../storages/hdfs.md)

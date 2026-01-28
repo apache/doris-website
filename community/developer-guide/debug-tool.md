@@ -99,6 +99,14 @@ Memory debugging focuses on two aspects:
 
 The following tools can be used for tracking and analysis.
 
+#### Doris Debug Tools
+
+[Doris Debug Tools](https://github.com/morningman/doris-debug-tools) provides packaged CPU flame graph and memory analysis tools that can be downloaded and used directly.
+
+- [Releases](https://github.com/morningman/doris-debug-tools/releases)
+
+> Note: Unofficial tool, for development and debugging purposes only.
+
 #### Jemalloc Heap Profile
 
 > **Note:** Doris 1.2.2 and later versions use Jemalloc as the default memory allocator.
@@ -494,7 +502,15 @@ This command produces readable stack information.
 
 ### CPU Debugging
 
-When system CPU Idle is low, CPU is the main bottleneck. Analyze current CPU usage. For Doris BE, there are two methods to analyze CPU bottlenecks.
+When system CPU Idle is low, CPU is the main bottleneck. Analyze current CPU usage. For Doris BE, there are serveral methods to analyze CPU bottlenecks.
+
+#### Doris Debug Tools
+
+[Doris Debug Tools](https://github.com/morningman/doris-debug-tools) provides packaged CPU flame graph and memory analysis tools that can be downloaded and used directly.
+
+- [Releases](https://github.com/morningman/doris-debug-tools/releases)
+
+> Note: Unofficial tool, for development and debugging purposes only.
 
 #### pprof
 
