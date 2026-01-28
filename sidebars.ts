@@ -434,7 +434,6 @@ const sidebars: SidebarsConfig = {
                             type: 'category',
                             label: 'Data Catalogs',
                             items: [
-                                'lakehouse/catalogs/hive-catalog',
                                 {
                                     type: 'category',
                                     label: 'Iceberg Catalog',
@@ -450,8 +449,17 @@ const sidebars: SidebarsConfig = {
                                         'lakehouse/best-practices/doris-nessie'
                                     ],
                                 },
+                                {
+                                    type: 'category',
+                                    label: 'Paimon Catalog',
+                                    link: {type: 'doc', id: 'lakehouse/catalogs/paimon-catalog'},
+                                    items: [
+                                        'lakehouse/best-practices/doris-paimon',
+                                        'lakehouse/best-practices/doris-dlf-paimon'
+                                    ],
+                                },
+                                'lakehouse/catalogs/hive-catalog',
                                 'lakehouse/catalogs/hudi-catalog',
-                                'lakehouse/catalogs/paimon-catalog',
                                 'lakehouse/catalogs/maxcompute-catalog',
                                 'lakehouse/catalogs/delta-lake-catalog',
                                 'lakehouse/catalogs/bigquery-catalog',
@@ -529,16 +537,6 @@ const sidebars: SidebarsConfig = {
                             items: [
                                 'lakehouse/best-practices/optimization',
                                 'lakehouse/best-practices/doris-hudi',
-                                'lakehouse/best-practices/doris-paimon',
-                                'lakehouse/best-practices/doris-iceberg',
-                                'lakehouse/best-practices/doris-aws-s3tables',
-                                'lakehouse/best-practices/doris-polaris',
-                                'lakehouse/best-practices/doris-gravitino',
-                                'lakehouse/best-practices/doris-onelake',
-                                'lakehouse/best-practices/doris-unity-catalog',
-                                'lakehouse/best-practices/doris-lakekeeper',
-                                'lakehouse/best-practices/doris-nessie',
-                                'lakehouse/best-practices/doris-dlf-paimon',
                                 'lakehouse/best-practices/doris-maxcompute',
                                 'lakehouse/best-practices/kerberos',
                                 'lakehouse/best-practices/tpch',
