@@ -87,6 +87,17 @@ Doris supports the following password policies to assist users in better passwor
 
     - `SET validate_password_policy=STRONG`
 
+    Since Doris 4.0.4, the password strength validation policy has been enhanced as follows:
+
+    1. When `validate_password_policy` is set to `STRONG/2`, the password must **contain all 4 character types** (uppercase letters, lowercase letters, numbers, and special characters), instead of the previous "3 out of 4" requirement.
+
+    2. Added **dictionary word check**: passwords cannot contain common weak words (such as password, admin, test, root, etc.). The system includes a built-in dictionary of common weak words, and passwords containing these words will be rejected.
+
+    3. Support for **custom dictionary files**: you can specify a custom dictionary filename via the global variable `validate_password_dictionary_file`. The dictionary file should be placed in the `${DORIS_HOME}/plugins/security/` directory. The file format is one word per line; empty lines and lines starting with `#` are ignored.
+
+       Example:
+       - `SET GLOBAL validate_password_dictionary_file = 'my_dictionary.txt'`
+
 For more help, please refer to [ALTER USER](../../sql-manual/sql-statements/account-management/ALTER-USER.md).
 
 ### LDAP-based Authentication Scheme
