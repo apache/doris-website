@@ -5,14 +5,14 @@ export default function ArrowIcon() {
         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" fill="none">
             <path
                 d="M10.1251 13.5L14.625 9L10.1251 4.5"
-                stroke="#1FCD94"
+                stroke="#11A679"
                 strokeWidth="1.5"
                 strokeLinecap="round"
                 strokeLinejoin="round"
             />
             <path
                 d="M3.37506 9.00049L14.6251 9.00049"
-                stroke="#1FCD94"
+                stroke="#11A679"
                 strokeWidth="1.5"
                 strokeLinecap="round"
                 strokeLinejoin="round"

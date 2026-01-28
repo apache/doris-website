@@ -1,6 +1,6 @@
 .achievement-banner-wrapper {
     display: flex;
-    margin-bottom: 4rem;
+    margin-bottom: 5rem;
 
     .achievement-banner-item {
         width: 300px;
@@ -20,5 +20,12 @@
             line-height: 140%;
             font-family: 'Montserrat';
         }
+    }
+}
+
+@media (min-width:1536px) {
+    .achievement-banner-wrapper {
+        margin-bottom: 60px;
+        margin-top: 20px;
     }
 }

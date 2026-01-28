@@ -73,7 +73,7 @@ export default function Home(): JSX.Element {
         //         to={'https://www.velodb.io/events/GenAI-AWS-251113'}
         //         style={{ background: 'linear-gradient(0deg, #F7FAFC 0%, #F7FAFC 100%), #FFF', textDecoration: 'none' }}
         //         onMouseEnter={() => {
-        //             document.getElementById('event-star-icon').firstChild.style.fill = '#1FCD94';
+        //             document.getElementById('event-star-icon').firstChild.style.fill = '#11A679';
         //         }}
         //         onMouseLeave={() => {
         //             document.getElementById('event-star-icon').firstChild.style.fill = '#636CDF';

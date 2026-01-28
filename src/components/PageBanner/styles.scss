@@ -6,7 +6,7 @@
         width: 100%;
 
         .banner-info {
-            margin-top: 2rem;
+            margin-top: 5rem;
         }
 
         .banner-title-wrap {
@@ -106,6 +106,17 @@
 @media (max-width: 1299px) {
     .banner-section {
         height: auto;
+    }
+}
+
+@media (min-width: 1536px) {
+    .banner-info {
+        margin-top: 2.5rem !important;
+        margin-bottom: 4rem;
+    }
+
+    .banner-buttons {
+        margin-top: 2.5rem !important;
     }
 }
 

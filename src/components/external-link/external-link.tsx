@@ -13,7 +13,7 @@ export default function ExternalLink(props: ExternalLinkProps) {
     return (
         <Link
             {...rest}
-            className={`flex group items-center justify-center hover:no-underline external-link ${className}`}
+            className={`flex group items-center font-medium justify-center hover:no-underline external-link ${className}`}
         >
             <span className="mr-2">{label}</span>
             <span className="transition-slide">{linkIcon}</span>
