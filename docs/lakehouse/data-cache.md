@@ -109,6 +109,8 @@ Users can view cache statistics for each Backend node through the system table [
 
 ## Cache Query Limit
 
+> This feature is supported since version 4.0.3.
+
 The Cache Query Limit feature allows users to limit the percentage of file cache that a single query can use. In scenarios where multiple users or complex queries share cache resources, a single large query might occupy too much cache space, causing other queries' hot data to be evicted. By setting a query limit, you can ensure fair resource usage and prevent cache thrashing.
 
 The cache space occupied by a query refers to the total size of data populated into the cache due to cache misses. If the total size populated by the query reaches the quota limit, subsequent data populated by the query will replace the previously populated data based on the LRU algorithm.
