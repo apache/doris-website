@@ -9,6 +9,10 @@
 
 将多个 map 合并为一个 map。当合并具有不同键或值类型的 map 时，该函数会找到键和值的公共类型。
 
+:::info Note
+Supported since Apache Doris 4.0.4.
+:::
+
 ## 语法
 
 ```sql

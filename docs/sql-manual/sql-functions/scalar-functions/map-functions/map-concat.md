@@ -9,6 +9,10 @@
 
 Concatenates multiple maps into a single map. When concatenating maps with different key or value types, the function finds common types for keys and values.
 
+:::info Note
+Supported since Apache Doris 4.0.4.
+:::
+
 ## Syntax
 
 ```sql
