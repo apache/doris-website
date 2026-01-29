@@ -10,12 +10,11 @@
 
 The `EXTRACT` function is used to extract specific time components from date or time values, such as year, month, week, day, hour, minute, second, etc. This function can precisely obtain specific parts of a datetime.
 
-This function behaves mostly consistently with the [extract function](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_extract) in MySQL. The difference is that Doris currently does not support combined unit inputs, such as:
+This function behaves consistently with the [extract function](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_extract) in MySQL. 
 
-```sql
-mysql> SELECT EXTRACT(YEAR_MONTH FROM '2019-07-02 01:02:03');
-        -> 201907
-```
+:::note
+Extraction of compound units, such as `YEAR_MONTH`, is supported since version 4.0.4.
+:::
 
 ## Syntax
 
@@ -25,12 +24,14 @@ mysql> SELECT EXTRACT(YEAR_MONTH FROM '2019-07-02 01:02:03');
 
 | Parameter | Description |
 | -- | -- |
-| `<unit>` | Extract the value of a specified unit from DATETIME. The unit can be year, month, week, day, hour, minute, second, or microsecond |
+| `<unit>` | Enumeration values: YEAR, QUARTER, MONTH, WEEK, DAY, HOUR, MINUTE, SECOND, YEAR_MONTH, DAY_HOUR, DAY_MINUTE, DAY_SECOND, DAY_MICROSECOND, HOUR_MINUTE, HOUR_SECOND, HOUR_MICROSECOND, MINUTE_SECOND, MINUTE_MICROSECOND, SECOND_MICROSECOND, DAYOFWEEK(DOW), DAYOFYEAR(DOY) |
 | `<datetime_or_time_expr>` | A valid date expression that supports date/datetime types and strings in date-time format. For specific datetime and date formats, please refer to [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
 
 ## Return Value
 
-Returns the extracted part of the date or time, of type INT, depending on the extracted unit.
+Returns the extracted part of the date or time.
+- For independent types like `YEAR` and [DAYOFWEEK(DOW)](./dayofweek.md), [DAYOFYEAR(DOY)](./dayofyear.md), the return type is INT
+- For composite types like `YEAR_MONTH`, the return type is STRING
 
 The value range for the week unit is 0-53, calculated as follows:
 
@@ -43,9 +44,23 @@ When the unit is year, month, day, hour, minute, second, microsecond, it returns
 When the unit is quarter, January-March returns 1, April-June returns 2, July-September returns 3, October-December returns 4.
 
 Special cases:
+- If <date_or_time_expr> is NULL, returns NULL.
+- If <unit> is an unsupported unit, an error is reported.
 
-If <date_or_time_expr> is NULL, returns NULL.
-If <unit> is an unsupported unit, an error is reported.
+The format of the composite unit return is as follows:
+| time_unit          | return format                             |
+| ------------------ | ----------------------------------------- |
+| YEAR_MONTH         | 'YEARS-MONTHS'                            |
+| DAY_HOUR           | 'DAYS HOURS'                              |
+| DAY_MINUTE         | 'DAYS HOURS:MINUTES'                      |
+| DAY_SECOND         | 'DAYS HOURS:MINUTES:SECONDS'              |
+| DAY_MICROSECOND    | 'DAYS HOURS:MINUTES:SECONDS.MICROSECONDS' |
+| HOUR_MINUTE        | 'HOURS:MINUTES'                           |
+| HOUR_SECOND        | 'HOURS:MINUTES:SECONDS'                   |
+| HOUR_MICROSECOND   | 'HOURS:MINUTES:SECONDS.MICROSECONDS'      |
+| MINUTE_SECOND      | 'MINUTES:SECONDS'                         |
+| MINUTE_MICROSECOND | 'MINUTES:SECONDS.MICROSECONDS'            |
+| SECOND_MICROSECOND | 'SECONDS.MICROSECONDS'                    |
 
 ## Examples
 
@@ -96,6 +111,24 @@ select extract(week from '2024-12-31') as week;
 +------+
 |   52 |
 +------+
+
+select extract(year_month from '2026-01-01 11:45:14.123456') as year_month,
+       extract(day_hour from '2026-01-01 11:45:14.123456') as day_hour,
+       extract(day_minute from '2026-01-01 11:45:14.123456') as day_minute,
+       extract(day_second from '2026-01-01 11:45:14.123456') as day_second,
+       extract(day_microsecond from '2026-01-01 11:45:14.123456') as day_microsecond,
+       extract(hour_minute from '2026-01-01 11:45:14.123456') as hour_minute,
+       extract(hour_second from '2026-01-01 11:45:14.123456') as hour_second,
+       extract(hour_microsecond from '2026-01-01 11:45:14.123456') as hour_microsecond,
+       extract(minute_second from '2026-01-01 11:45:14.123456') as minute_second,
+       extract(minute_microsecond from '2026-01-01 11:45:14.123456') as minute_microsecond,
+       extract(second_microsecond from '2026-01-01 11:45:14.123456') as second_microsecond;
+
++------------+----------+------------+-------------+-----------------------+-------------+-------------+-----------------------+--------------+----------------------+-------------------+
+| year_month | day_hour | day_minute | day_second  | day_microsecond       | hour_minute | hour_second | hour_microsecond      | minute_second| minute_microsecond   | second_microsecond |
++------------+----------+------------+-------------+-----------------------+-------------+-------------+-----------------------+--------------+----------------------+-------------------+
+| 2026-01    | 1 11     | 1 11:45    | 1 11:45:14  | 1 11:45:14.123456     | 11:45       | 11:45:14    | 11:45:14.123456       | 45:14        | 45:14.123456         | 14.123456         |
++------------+----------+------------+-------------+-----------------------+-------------+-------------+-----------------------+--------------+----------------------+-------------------+
 
 -- Input unit does not exist, reports error
 select extract(uint from '2024-01-07') as week;
