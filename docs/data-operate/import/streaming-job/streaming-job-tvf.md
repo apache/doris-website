@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Continuous Load",
+    "title": "TVF Continuous Load",
     "language": "en",
     "description": "Doris allows you to create a continuous import task using a Job + TVF approach. After submitting the Job, Doris continuously runs the import job,"
 }
@@ -12,7 +12,7 @@ Doris allows you to create a continuous import task using a Job + TVF approach. 
 
 ## Supported TVFs
 
-[S3](../../sql-manual/sql-functions/table-valued-functions/s3.md) TVF
+[S3](../../../sql-manual/sql-functions/table-valued-functions/s3.md) TVF
 
 ## Basic Principles
 
@@ -156,7 +156,7 @@ The module description is as follows:
 
 | Parameter | Default Value | Description |
 | ------------------ | ------ | ------------------------------------------------------------ |
-| session.* | None | Supports configuring all session variables in job_properties. For importing variables, please refer to [Insert Into Select](../../data-operate/import/import-way/insert-into-manual.md#Import Configuration Parameters) |
+| session.* | None | Supports configuring all session variables in job_properties. For importing variables, please refer to [Insert Into Select](../../../data-operate/import/import-way/insert-into-manual.md#Import Configuration Parameters) |
 | s3.max_batch_files | 256 | Triggers an import write when the cumulative number of files reaches this value. |
 | s3.max_batch_bytes | 10G | Triggers an import write when the cumulative data volume reaches this value. |
 | max_interval | 10s | The idle scheduling interval when there are no new files or data added upstream. |
