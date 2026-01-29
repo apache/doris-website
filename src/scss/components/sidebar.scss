@@ -48,10 +48,6 @@
         .menu__link--sublist-caret {
             &:after {
                 background-size: 1.5rem;
-                position: absolute;
-                left: 0;
-                top: 50%;
-                margin-top: -0.625rem;
 
                 @media screen and (max-width: 996px) {
                     position: static;
