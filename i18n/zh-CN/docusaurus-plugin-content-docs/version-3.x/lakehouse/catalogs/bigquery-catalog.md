@@ -79,7 +79,7 @@ PROPERTIES (
 
 * `{TrinoProperties}`
 
-  TrinoProperties 部分用于填写将传递给 Trino Connector 的属性，这些属性以`trino.`为前缀。理论上，Trino 支持的属性这里都支持，更多有关 BigQuery 的属性可以参考 [Trino 文档](https://trino.io/docs/current/connector/bigquery.html)。
+  TrinoProperties 部分用于填写将传递给 Trino Connector 的属性，这些属性以`trino.`为前缀。理论上，Trino 支持的属性这里都支持，更多有关 BigQuery 的属性可以参考 [Trino 文档](https://trino.io/docs/435/connector/bigquery.html)。
 
 * `[CommonProperties]`
 
@@ -87,7 +87,7 @@ PROPERTIES (
 
 ### 支持的 BigQuery 版本
 
-更多有关 BigQuery 的属性可以参考 [Trino 文档](https://trino.io/docs/current/connector/bigquery.html)。
+更多有关 BigQuery 的属性可以参考 [Trino 文档](https://trino.io/docs/435/connector/bigquery.html)。
 
 ## 列类型映射
 

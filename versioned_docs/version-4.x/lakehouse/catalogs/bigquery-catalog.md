@@ -75,7 +75,7 @@ PROPERTIES (
   
 ### Supported BigQuery Versions
 
-For more information about BigQuery properties, refer to the [Trino documentation](https://trino.io/docs/current/connector/bigquery.html).
+For more information about BigQuery properties, refer to the [Trino documentation](https://trino.io/docs/435/connector/bigquery.html).
 
 ## Column Type Mapping
 

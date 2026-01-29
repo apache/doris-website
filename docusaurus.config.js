@@ -182,7 +182,7 @@ const config = {
                     //     // }
                     // },
                     showLastUpdateAuthor: false,
-                    showLastUpdateTime: false,
+                    showLastUpdateTime: true,
                     remarkPlugins: [markdownBoldPlugin, require('remark-math')],
                     rehypePlugins: [
                         [
