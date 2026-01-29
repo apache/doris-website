@@ -66,7 +66,7 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 
 * `{TrinoProperties}`
 
-  TrinoProperties 部分用于填写将传递给 Trino Connector 的属性，这些属性以`trino.`为前缀。理论上，Trino 支持的属性这里都支持，更多有关 Kudu 的属性可以参考 [Trino 文档](https://trino.io/docs/current/connector/kudu.html)。
+  TrinoProperties 部分用于填写将传递给 Trino Connector 的属性，这些属性以`trino.`为前缀。理论上，Trino 支持的属性这里都支持，更多有关 Kudu 的属性可以参考 [Trino 文档](https://trino.io/docs/435/connector/kudu.html)。
 
 * `[CommonProperties]`
 
@@ -74,15 +74,15 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 
 ### 支持的 Kudu 版本
 
-更多有关 Kudu 的信息可以参考 [Trino 文档](https://trino.io/docs/current/connector/kudu.html)。
+更多有关 Kudu 的信息可以参考 [Trino 文档](https://trino.io/docs/435/connector/kudu.html)。
 
 ### 支持的元数据服务
 
-更多有关 Kudu 的信息可以参考 [Trino 文档](https://trino.io/docs/current/connector/kudu.html)。
+更多有关 Kudu 的信息可以参考 [Trino 文档](https://trino.io/docs/435/connector/kudu.html)。
 
 ### 支持的存储系统
 
-更多有关 Kudu 的信息可以参考 [Trino 文档](https://trino.io/docs/current/connector/kudu.html)。
+更多有关 Kudu 的信息可以参考 [Trino 文档](https://trino.io/docs/435/connector/kudu.html)。
 
 ## 列类型映射
 
@@ -110,6 +110,21 @@ CREATE CATALOG kudu_catalog PROPERTIES (
     'trino.connector.name' = 'kudu', 
     'trino.kudu.client.master-addresses' = 'ip1:port1,ip2:port2,ip3,port3', 
     'trino.kudu.authentication.type' = 'NONE' 
+);
+```
+
+Kerberos:
+
+```sql
+CREATE CATALOG kudu_catalog PROPERTIES (
+    'type' = 'trino-connector',
+    'trino.connector.name' = 'kudu',
+    'trino.kudu.client.master-addresses' = 'ip1:port1,ip2:port2,ip3,port3'
+    'trino.kudu.authentication.type' = 'KERBEROS',
+    'trino.kudu.authentication.client.principal' = 'user@DOMAIN.COM',
+    'trino.kudu.authentication.client.keytab' = '/path/to/kudu.keytab',
+    'trino.kudu.authentication.config' = '/etc/krb5.conf',
+    'trino.kudu.authentication.server.principal.primary' = 'kudu'
 );
 ```
 

@@ -66,7 +66,7 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 
 * `{TrinoProperties}`
 
-  The `TrinoProperties` section is used to specify properties that will be passed to the Trino Connector. These properties are prefixed with `trino.`. In theory, all properties supported by Trino are also supported here. For more information about Kudu properties, refer to the [Trino documentation](https://trino.io/docs/current/connector/kudu.html).
+  The `TrinoProperties` section is used to specify properties that will be passed to the Trino Connector. These properties are prefixed with `trino.`. In theory, all properties supported by Trino are also supported here. For more information about Kudu properties, refer to the [Trino documentation](https://trino.io/docs/435/connector/kudu.html).
 
 * `[CommonProperties]`
 
@@ -74,15 +74,15 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
   
 ### Supported Kudu Versions
 
-For more information about Kudu, refer to the [Trino documentation](https://trino.io/docs/current/connector/kudu.html).
+For more information about Kudu, refer to the [Trino documentation](https://trino.io/docs/435/connector/kudu.html).
 
 ### Supported Metadata Services
 
-For more information about Kudu, refer to the [Trino documentation](https://trino.io/docs/current/connector/kudu.html).
+For more information about Kudu, refer to the [Trino documentation](https://trino.io/docs/435/connector/kudu.html).
 
 ### Supported Storage Systems
 
-For more information about Kudu, refer to the [Trino documentation](https://trino.io/docs/current/connector/kudu.html).
+For more information about Kudu, refer to the [Trino documentation](https://trino.io/docs/435/connector/kudu.html).
 
 ## Column Type Mapping
 
@@ -110,6 +110,21 @@ CREATE CATALOG kudu_catalog PROPERTIES (
     'trino.connector.name' = 'kudu', 
     'trino.kudu.client.master-addresses' = 'ip1:port1,ip2:port2,ip3,port3', 
     'trino.kudu.authentication.type' = 'NONE'
+);
+```
+
+Kerberos:
+
+```sql
+CREATE CATALOG kudu_catalog PROPERTIES (
+    'type' = 'trino-connector',
+    'trino.connector.name' = 'kudu',
+    'trino.kudu.client.master-addresses' = 'ip1:port1,ip2:port2,ip3,port3'
+    'trino.kudu.authentication.type' = 'KERBEROS',
+    'trino.kudu.authentication.client.principal' = 'user@DOMAIN.COM',
+    'trino.kudu.authentication.client.keytab' = '/path/to/kudu.keytab',
+    'trino.kudu.authentication.config' = '/etc/krb5.conf',
+    'trino.kudu.authentication.server.principal.primary' = 'kudu'
 );
 ```
 
