@@ -21,10 +21,10 @@ ICEBERG_META(
 ## 必填参数
 iceberg_meta 表函数 tvf 中的每一个参数都是一个 `"key"="value"` 对
 
-| Field        | Description                                                                 |
-|--------------|-----------------------------------------------------------------------------|
-| `<table>`    | 完整的表名，需要按照目录名。库名.表名的格式，填写需要查看的 iceberg 表名。       |
-| `<query_type>` | 元数据类型，目前仅支持 `snapshots`。                                          |
+| Field          | Description                                                                                                                                                                                                                                                                                                                                                                                            |
+|----------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `<table>`      | 完整的表名，需要按照目录名。库名.表名的格式，填写需要查看的 iceberg 表名。                                                                                                                                                                                                                                                                                                                             |
+| `<query_type>` | 元数据类型，支持以下类型：<br/>`snapshots`：快照信息<br/>`manifests`：当前快照的清单文件<br/>`files`：当前快照的文件信息<br/>`data_files`：当前快照的数据文件<br/>`delete_files`：当前快照的删除文件<br/>`partitions`：分区信息<br/>`refs`：引用信息（分支和标签）<br/>`history`：历史记录<br/>`metadata_log_entries`：元数据日志条目 |
 
 
 ## 示例（Examples）
@@ -68,3 +68,55 @@ iceberg_meta 表函数 tvf 中的每一个参数都是一个 `"key"="value"` 对
     |  2022-09-21 10:36:35   |  98865735822   |  64123452344  | overwrite | hdfs:/path/to/m2  | {"flink.job-id":"xxm2", ...} |
     +------------------------+----------------+---------------+-----------+-------------------+------------------------------+
     ```
+
+- 查看 iceberg 表的 manifests（当前快照的清单文件）
+
+    ```sql
+    select * from iceberg_meta("table" = "iceberg_ctl.test_db.test_tbl", "query_type" = "manifests");
+    ```
+
+- 查看 iceberg 表的 files（当前快照的文件信息）
+
+    ```sql
+    select * from iceberg_meta("table" = "iceberg_ctl.test_db.test_tbl", "query_type" = "files");
+    ```
+
+- 查看 iceberg 表的 data_files（当前快照的数据文件）
+
+    ```sql
+    select * from iceberg_meta("table" = "iceberg_ctl.test_db.test_tbl", "query_type" = "data_files");
+    ```
+
+- 查看 iceberg 表的 delete_files（当前快照的删除文件）
+
+    ```sql
+    select * from iceberg_meta("table" = "iceberg_ctl.test_db.test_tbl", "query_type" = "delete_files");
+    ```
+
+- 查看 iceberg 表的 partitions（分区信息）
+
+    ```sql
+    select * from iceberg_meta("table" = "iceberg_ctl.test_db.test_tbl", "query_type" = "partitions");
+    ```
+
+- 查看 iceberg 表的 refs（引用信息）
+
+    ```sql
+    select * from iceberg_meta("table" = "iceberg_ctl.test_db.test_tbl", "query_type" = "refs");
+    ```
+
+- 查看 iceberg 表的 history（历史记录）
+
+    ```sql
+    select * from iceberg_meta("table" = "iceberg_ctl.test_db.test_tbl", "query_type" = "history");
+    ```
+
+- 查看 iceberg 表的 metadata_log_entries（元数据日志条目）
+
+    ```sql
+    select * from iceberg_meta("table" = "iceberg_ctl.test_db.test_tbl", "query_type" = "metadata_log_entries");
+    ```
+
+## 相关说明
+
+更多关于 Iceberg 系统表的详细信息，请参阅 [Iceberg Catalog 系统表](../../lakehouse/catalogs/iceberg-catalog.mdx#系统表)。

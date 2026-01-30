@@ -1406,7 +1406,9 @@ For example, to view the table's history, you can execute:
 SELECT * FROM iceberg_table$history;
 ```
 
-> Currently, the `all_manifests` and `position_deletes` system tables are not yet supported and are planned to be supported in future versions.
+> The `all_manifests` system table is supported starting from version 4.0.4.
+>
+> The `position_deletes` system table is not yet supported and is planned to be supported in future versions.
 
 ### entries
 
@@ -1510,6 +1512,20 @@ Result:
 |       0 | s3://.../iceberg_table/metadata/3194eb8b-5ea4-4cbe-95ba-073229458e7b-m0.avro |   7138 |                 0 | 4890031351138056789 |                      0 |                         5 |                        5 |                        0 |                           0 |                          0 | [{"contains_null":0, "contains_nan":0, "lower_bound":"1", "upper_bound":"10"}] |
 +---------+------------------------------------------------------------------------------------------------------------------------------------------------+--------+-------------------+---------------------+------------------------+---------------------------+--------------------------+--------------------------+-----------------------------+----------------------------+--------------------------------------------------------------------------------+
 ```
+
+### all_manifests
+
+> This feature is supported starting from version 4.0.4
+
+Shows manifest file info of all valid snapshots of the table:
+
+`all_manifests` and `manifests` have the same structure. The difference is that `all_manifests` includes manifest files from all valid snapshots, while `manifests` only includes manifest files from the current snapshot.
+
+```sql
+SELECT * FROM iceberg_table$all_manifests;
+```
+
+The result format is the same as the `manifests` system table.
 
 ### metadata_log_entries
 
