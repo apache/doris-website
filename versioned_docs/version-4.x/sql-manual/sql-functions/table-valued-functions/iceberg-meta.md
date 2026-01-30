@@ -22,10 +22,10 @@ ICEBERG_META(
 ## Required Parameters
 Each parameter in the `iceberg_meta` table function (tvf) is a `"key"="value"` pair.
 
-| Field        | Description                                                                                                                           |
-|--------------|---------------------------------------------------------------------------------------------------------------------------------------|
-| `<table>`    | The full table name, which must be specified in the format of `database_name.table_name` for the Iceberg table that you want to view. |
-| `<query_type>` | The type of metadata you want to view. Currently, only `snapshots` is supported.                                                      |
+| Field          | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
+|----------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `<table>`      | The full table name, which must be specified in the format of `database_name.table_name` for the Iceberg table that you want to view.                                                                                                                                                                                                                                                                                                                                                                                                     |
+| `<query_type>` | The type of metadata you want to view. Supported types:<br/>`snapshots`: Snapshot information<br/>`manifests`: Manifest files of current snapshot<br/>`all_manifests`: Manifest files of all valid snapshots (supported from version 4.0.4)<br/>`files`: File information of current snapshot<br/>`data_files`: Data files of current snapshot<br/>`delete_files`: Delete files of current snapshot<br/>`partitions`: Partition information<br/>`refs`: Reference information (branches and tags)<br/>`history`: History records<br/>`metadata_log_entries`: Metadata log entries |
 
 
 ## Examples
@@ -68,3 +68,61 @@ Each parameter in the `iceberg_meta` table function (tvf) is a `"key"="value"` p
     |  2022-09-21 10:36:35   |  98865735822   |  64123452344  | overwrite | hdfs:/path/to/m2  | {"flink.job-id":"xxm2", ...} |
     +------------------------+----------------+---------------+-----------+-------------------+------------------------------+
     ```
+
+- View manifests of the iceberg table (manifest files of current snapshot)
+
+    ```sql
+    select * from iceberg_meta("table" = "iceberg_ctl.test_db.test_tbl", "query_type" = "manifests");
+    ```
+
+- View all_manifests of the iceberg table (manifest files of all valid snapshots, supported from version 4.0.4)
+
+    ```sql
+    select * from iceberg_meta("table" = "iceberg_ctl.test_db.test_tbl", "query_type" = "all_manifests");
+    ```
+
+- View files of the iceberg table (file information of current snapshot)
+
+    ```sql
+    select * from iceberg_meta("table" = "iceberg_ctl.test_db.test_tbl", "query_type" = "files");
+    ```
+
+- View data_files of the iceberg table (data files of current snapshot)
+
+    ```sql
+    select * from iceberg_meta("table" = "iceberg_ctl.test_db.test_tbl", "query_type" = "data_files");
+    ```
+
+- View delete_files of the iceberg table (delete files of current snapshot)
+
+    ```sql
+    select * from iceberg_meta("table" = "iceberg_ctl.test_db.test_tbl", "query_type" = "delete_files");
+    ```
+
+- View partitions of the iceberg table
+
+    ```sql
+    select * from iceberg_meta("table" = "iceberg_ctl.test_db.test_tbl", "query_type" = "partitions");
+    ```
+
+- View refs of the iceberg table (reference information)
+
+    ```sql
+    select * from iceberg_meta("table" = "iceberg_ctl.test_db.test_tbl", "query_type" = "refs");
+    ```
+
+- View history of the iceberg table
+
+    ```sql
+    select * from iceberg_meta("table" = "iceberg_ctl.test_db.test_tbl", "query_type" = "history");
+    ```
+
+- View metadata_log_entries of the iceberg table
+
+    ```sql
+    select * from iceberg_meta("table" = "iceberg_ctl.test_db.test_tbl", "query_type" = "metadata_log_entries");
+    ```
+
+## Related
+
+For more detailed information about Iceberg system tables, please refer to [Iceberg Catalog System Tables](../../lakehouse/catalogs/iceberg-catalog.mdx#system-tables).
