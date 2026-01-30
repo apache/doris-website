@@ -1422,7 +1422,9 @@ SELECT * FROM iceberg_table$system_table_name;
 SELECT * FROM iceberg_table$history;
 ```
 
-> 目前 `all_manifests` 和 `position_deletes` 系统表尚未支持，计划在以后版本中支持。
+> `all_manifests` 系统表从 4.0.4 版本开始支持。
+>
+> `position_deletes` 系统表尚未支持，计划在以后版本中支持。
 
 ### entries
 
@@ -1525,6 +1527,20 @@ SELECT * FROM iceberg_table$manifests;
 |       0 | s3://.../iceberg_table/metadata/3194eb8b-5ea4-4cbe-95ba-073229458e7b-m0.avro |   7138 |                 0 | 4890031351138056789 |                      0 |                         5 |                        5 |                        0 |                           0 |                          0 | [{"contains_null":0, "contains_nan":0, "lower_bound":"1", "upper_bound":"10"}] |
 +---------+------------------------------------------------------------------------------------------------------------------------------------------------+--------+-------------------+---------------------+------------------------+---------------------------+--------------------------+--------------------------+-----------------------------+----------------------------+--------------------------------------------------------------------------------+
 ```
+
+### all_manifests
+
+> 该功能自 4.0.4 版本支持
+
+显示表的所有有效快照的 manifest 文件信息：
+
+`all_manifests` 和 `manifests` 的结构相同，区别在于 `all_manifests` 包含了所有有效快照的 manifest 文件，而 `manifests` 只包含当前快照的 manifest 文件。
+
+```sql
+SELECT * FROM iceberg_table$all_manifests;
+```
+
+结果格式与 `manifests` 系统表相同。
 
 ### metadata_log_entries
 
