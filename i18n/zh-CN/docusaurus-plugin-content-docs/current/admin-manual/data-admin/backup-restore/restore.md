@@ -85,6 +85,38 @@ PROPERTIES
    );
    ```
 
+### Option 5：使用指定存储介质恢复（严格模式）
+
+从快照恢复表 `backup_tbl`，强制使用 SSD 存储。如果 SSD 不可用则恢复失败（严格模式）：
+
+```sql
+RESTORE SNAPSHOT `restore_label1`
+FROM `example_repo`
+ON ( `backup_tbl` )
+PROPERTIES
+(
+    "backup_timestamp"="2022-04-08-15-52-29",
+    "storage_medium"="ssd",
+    "medium_allocation_mode"="strict"
+);
+```
+
+### Option 6：使用存储介质恢复（自适应模式）
+
+从快照恢复表 `backup_tbl`，保留原始存储介质设置。如果原始介质不可用，则自动切换到可用介质（自适应模式）：
+
+```sql
+RESTORE SNAPSHOT `restore_label1`
+FROM `example_repo`
+ON ( `backup_tbl` )
+PROPERTIES
+(
+    "backup_timestamp"="2022-04-08-15-52-29",
+    "storage_medium"="same_with_upstream",
+    "medium_allocation_mode"="adaptive"
+);
+```
+
 ## 3. 查看恢复作业的执行情况
 
     ```sql

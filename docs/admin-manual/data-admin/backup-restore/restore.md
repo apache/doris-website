@@ -86,6 +86,38 @@ Restore partitions p1 and p2 of the table `backup_tbl`, as well as the table `ba
    );
    ```
 
+### Option 5: Restore with Specific Storage Medium in Strict Mode
+
+Restore table `backup_tbl` from snapshot with SSD storage. The restore will fail if SSD is not available (strict mode):
+
+```sql
+RESTORE SNAPSHOT `restore_label1`
+FROM `example_repo`
+ON ( `backup_tbl` )
+PROPERTIES
+(
+    "backup_timestamp"="2022-04-08-15-52-29",
+    "storage_medium"="ssd",
+    "medium_allocation_mode"="strict"
+);
+```
+
+### Option 6: Restore with Storage Medium in Adaptive Mode
+
+Restore table `backup_tbl` from snapshot, preserving the original storage medium setting. If the original medium is unavailable, automatically switch to an available medium (adaptive mode):
+
+```sql
+RESTORE SNAPSHOT `restore_label1`
+FROM `example_repo`
+ON ( `backup_tbl` )
+PROPERTIES
+(
+    "backup_timestamp"="2022-04-08-15-52-29",
+    "storage_medium"="same_with_upstream",
+    "medium_allocation_mode"="adaptive"
+);
+```
+
 ## 3. Check the Execution Status of the Restore Job
 
       ```sql
