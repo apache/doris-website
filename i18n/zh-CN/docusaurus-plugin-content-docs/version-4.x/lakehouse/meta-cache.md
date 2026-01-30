@@ -256,120 +256,329 @@
 
     3.0.7 版本后，配置项名称修改为 `external_cache_refresh_time_minutes`。默认值不变。
 
-## Iceberg 元数据缓存增强（4.0.3 版本起）
+## 新的 Iceberg 元数据缓存（4.0.3 版本起）
 
 :::tip 版本说明
-以下增强功能从 4.0.3 版本开始提供。对于早期版本，请参考上述基础缓存配置。
+以下功能从 4.0.3 版本开始提供。对于早期版本，请参考上述基础缓存配置。
 :::
 
-从 4.0.3 版本开始，Doris 对 Iceberg 元数据缓存进行了重大改进，提供了更精细的可配置性、更好的性能和更清晰的语义。
+从 4.0.3 版本开始，Doris 引入了全新的 Iceberg 元数据缓存架构，提供了更精细的可配置性、更好的性能和更清晰的语义。
 
-### 增强的 Iceberg 表/视图缓存
+### 整体架构
 
-4.0.3 版本中增强的表/视图缓存提供了更精细的控制和更好的缓存行为理解。
+新的 Iceberg 元数据缓存架构包含两个核心缓存组件，每个 Iceberg Catalog 都有独立的缓存实例：
 
-**架构：**
+#### **架构层次**
 
-该缓存由 `IcebergMetadataCache` 维护，每个 Iceberg Catalog 都有自己独立的实例，包含 `tableCache` 和 `viewCache` 两个缓存。
+**Iceberg Catalog**
+└── **IcebergMetadataCache**（每个 Catalog 一个实例）
+    ├── **1. Table Cache**（核心缓存）
+    │   ├── 缓存内容
+    │   │   ├── Table 对象（IcebergTableCacheValue）
+    │   │   │   ├── Schema ID（表结构版本）
+    │   │   │   ├── Current Snapshot ID（当前快照）
+    │   │   │   ├── Partition Spec（分区规范）
+    │   │   │   └── Snapshot 列表（懒加载，用于 MTMV）
+    │   │   └── View 对象（独立缓存，配置相同）
+    │   ├── 影响范围
+    │   │   ├── ✓ Schema 版本
+    │   │   ├── ✓ Snapshot 版本（数据可见性）
+    │   │   └── ✓ Partition 信息
+    │   └── 配置参数：`iceberg.table.meta.cache.ttl-second`
+    │
+    └── **2. Manifest Cache**（4.0.3 新增）
+        ├── 缓存内容
+        │   ├── 已解析的 DataFile 对象
+        │   │   └── 文件路径、分区值、统计信息
+        │   └── 已解析的 DeleteFile 对象
+        │       └── Equality Delete 元数据
+        ├── 影响范围
+        │   ├── ✓ 仅影响查询性能
+        │   └── ✗ 不影响数据正确性和可见性
+        └── 配置参数：`iceberg.manifest.cache.enable`
 
-缓存的表对象（`IcebergTableCacheValue`）中还包含 Snapshot 信息，该信息按需懒加载（主要用于 MTMV 场景）。
+#### **查询执行流程**
 
-**对数据可见性的影响：**
+1. **Table Cache** 决定使用哪个 Snapshot
+2. 根据 Snapshot 加载 Manifest List
+3. **Manifest Cache** 加速 Manifest 文件的解析
+4. 返回 DataFile 列表用于查询执行
 
-Table Cache 控制使用哪个版本的 Iceberg 表元数据，这会影响：
+#### **可选的外部缓存层**
 
-- **Schema（结构）**：`schemaId` 从缓存的表对象中获取。如果缓存中是旧的表对象，您将看到旧的 Schema（列定义）。
-- **Snapshot（快照）**：当前快照 ID 从缓存的表对象中获取。如果缓存中是旧的表对象，查询将使用旧快照，可能看不到最新数据。
-- **Partition（分区）**：分区信息使用缓存的表对象的元数据（分区规范、快照）加载。缓存越旧，分区信息越滞后。
+- **Iceberg 原生 Manifest Cache**：缓存 Manifest 文件字节，加速 I/O（可选配置）
+- **对象存储/HDFS**：存储原始 Manifest 文件
 
-:::tip
-要实时看到最新的 Schema、Snapshot 和 Partition 信息，需要禁用表缓存，设置 `iceberg.table.meta.cache.ttl-second=0`。Schema 缓存不影响使用的版本——它只是为了性能缓存已解析的结果。
+**关键设计要点：**
+
+1. **Table Cache** 控制元数据版本和数据可见性
+   - 缓存的是 Iceberg Table 对象，包含 Schema、Snapshot 等核心元数据
+   - View Cache 与 Table Cache 独立但配置相同
+   - TTL 过期或设为 0 时，会强制重新加载，看到最新数据
+
+2. **Manifest Cache** 仅优化查询性能
+   - 缓存的是已解析的 Manifest 文件内容（DataFile/DeleteFile 对象）
+   - Manifest 文件不可变，因此缓存不影响数据正确性
+   - 即使缓存了旧的 Manifest，Table Cache 会控制使用哪个 Snapshot
+
+3. **两级缓存协同工作**
+   - 可选配合 Iceberg 原生 Manifest Cache，形成三级缓存
+   - 原生缓存加速 I/O，Doris Manifest Cache 加速解析
+
+### 缓存组件详解
+
+#### 1. Table Cache（表缓存）
+
+**功能定位：**
+
+Table Cache 是 Iceberg 元数据缓存的核心组件，负责缓存 Iceberg Table 对象，控制查询使用的元数据版本。这是整个缓存体系中最关键的部分。
+
+:::info 关于 View Cache
+`IcebergMetadataCache` 同时包含一个 View Cache 用于缓存 Iceberg View 对象，其工作原理与 Table Cache 类似。本文档主要介绍 Table Cache，View Cache 的配置和行为与之一致。
 :::
-
-**增强配置（4.0.3+）：**
-
-- **Catalog 级别的 TTL 控制**
-
-    从 4.0.3 版本开始，可以通过 `iceberg.table.meta.cache.ttl-second`（单位：秒）在 Catalog 级别配置 TTL。
-
-    ```sql
-    CREATE CATALOG iceberg_catalog PROPERTIES (
-        'type' = 'iceberg',
-        ...
-        'iceberg.table.meta.cache.ttl-second' = '7200'  -- 2 小时
-    );
-    ```
-
-    如未指定，则使用 FE 参数 `external_cache_expire_time_seconds_after_access` 的默认值（86400 秒）。
-
-    设置为 `0` 可以禁用缓存，强制每次访问都重新获取元数据。
-
-- **最大缓存数量**
-
-    由 FE 配置项 `max_external_table_cache_num` 控制，默认为 1000。
-
-    可以根据 Iceberg 表的数量，适当调整这个参数。
-
-- **最短刷新时间**
-
-    由 FE 配置项 `external_cache_refresh_time_minutes` 控制，单位为分钟。默认为 10 分钟。这是异步刷新，不会阻塞当前操作。
-
-### 全新的 Iceberg Manifest 缓存（4.0.3+）
-
-4.0.3 版本引入了全新的 **Manifest 缓存**，显著提升 Iceberg 表的查询性能。
 
 **缓存内容：**
 
-该缓存存储的是**已解析的** Iceberg Manifest 文件内容——具体是从 Manifest 文件中提取的 `DataFile` 和 `DeleteFile` 对象（而不是原始文件字节）：
+Table Cache 缓存的核心对象是 `IcebergTableCacheValue`，包含：
 
-- `DataFile` 对象：文件元数据，包括路径、分区值、统计信息等
-- `DeleteFile` 对象：Equality Delete 的删除元数据
+| 组成部分 | 包含信息 | 用途 |
+|---------|----------|------|
+| **Iceberg Table 对象** | • Schema ID（表结构版本）<br>• Current Snapshot ID（当前快照）<br>• Partition Spec（分区规范）<br>• Table Properties（表属性） | 决定查询看到的数据版本和表结构 |
+| **Snapshot 信息**<br>（懒加载） | • Snapshot 信息<br>• Partition 信息 | 主要用于多表物化视图（MTMV）场景 |
 
-**性能优势：**
+**对数据可见性的影响：**
 
-:::tip 最佳实践
-为了获得最佳性能，**建议启用并结合 Doris Manifest Cache 与 Iceberg 原生 Manifest Cache**：
+Table Cache 是唯一控制数据可见性的缓存组件，直接影响：
+
+| 影响维度 | 说明 | 缓存滞后的后果 |
+|---------|------|---------------|
+| **Schema（表结构）** | `schemaId` 决定查询看到的列定义 | 看不到新增/修改的列 |
+| **Snapshot（数据版本）** | `currentSnapshotId` 决定查询哪个数据快照 | 看不到最新写入的数据 |
+| **Partition（分区信息）** | Partition Spec 和 Snapshot 决定分区元数据 | 分区列表不是最新状态 |
+
+:::warning 重要
+**Table Cache 是数据新鲜度的唯一控制点：**
+- 要看到最新数据，必须刷新或禁用 Table Cache
+- 设置 `iceberg.table.meta.cache.ttl-second=0` 可禁用缓存，强制每次查询都获取最新元数据
+- Manifest Cache 和其他缓存不影响数据可见性
+:::
+
+#### 2. Manifest Cache（Manifest 缓存）
+
+**功能定位：**
+
+Manifest Cache 是 4.0.3 版本新引入的纯性能优化组件，通过缓存已解析的 Manifest 文件内容来加速查询执行。
+
+**缓存内容：**
+
+Manifest Cache 存储的是**已解析的对象**，而非原始文件字节：
+
+| 缓存对象 | 包含信息 | 用途 |
+|---------|----------|------|
+| `DataFile` 对象 | • 文件路径<br>• 分区值<br>• 记录数<br>• 文件大小<br>• 列统计信息（min/max/null count） | 用于文件扫描规划和分区裁剪 |
+| `DeleteFile` 对象 | • Delete 文件路径<br>• Delete 条件<br>• 相关 DataFile 引用 | 用于 MOR (Merge-On-Read) 查询 |
+
+**性能收益：**
+
+Manifest Cache 提供两方面的性能优化：
+
+1. **减少 I/O 开销**：避免重复读取相同的 Manifest 文件
+2. **减少 CPU 开销**：避免重复解析 Avro 格式的 Manifest 文件
+
+:::tip 性能最佳实践
+**推荐启用三级缓存架构以获得最佳性能：**
 
 ```sql
 CREATE CATALOG iceberg_catalog PROPERTIES (
     'type' = 'iceberg',
     ...
-    'iceberg.manifest.cache.enable' = 'true',     -- 启用 Doris Manifest Cache
-    'io.manifest.cache-enabled' = 'true'          -- 启用 Iceberg 原生缓存
+    -- Level 1: Iceberg 原生文件 I/O 缓存
+    'io.manifest.cache-enabled' = 'true',
+
+    -- Level 2: Doris Manifest 对象缓存
+    'iceberg.manifest.cache.enable' = 'true',
+    'iceberg.manifest.cache.capacity-mb' = '1024'
 );
 ```
 
-这样提供了两级缓存：
-1. **Iceberg 原生缓存** (`io.manifest.cache-enabled`)：缓存原始 Manifest 文件的 I/O
-2. **Doris Manifest Cache**：缓存已解析的 `DataFile`/`DeleteFile` 对象，避免重复解析
+**三级缓存协同工作：**
+1. **对象存储/HDFS** → 原始 Manifest 文件
+2. **Iceberg 原生缓存** → 缓存文件字节，加速 I/O
+3. **Doris Manifest Cache** → 缓存解析后的 DataFile/DeleteFile 对象，跳过解析
 :::
 
 **关于数据正确性的重要说明：**
 
-Iceberg 的 Manifest 文件是**不可变的**（immutable）——一旦创建就永远不会被修改。新的提交会创建新的 Manifest 文件，而不是修改现有文件。因此：
+:::info Manifest 不可变特性
+Iceberg 的 Manifest 文件遵循**不可变（Immutable）设计**：
 
-- Manifest Cache **不影响数据正确性**，也不影响用户看到的数据。
-- 它只影响**查询性能**（减少 I/O 和解析开销）。
-- 即使使用缓存的（旧的）Manifest 条目，查询仍然会看到正确的数据，因为 Table Cache 控制使用哪个快照。
-- 禁用此缓存**不会**帮助您看到"更新的"数据——只会增加 I/O 和 CPU 开销。
+- **新提交创建新文件**：每次数据提交都会生成新的 Manifest 文件，不会修改已有文件
+- **文件内容永不改变**：一旦创建，Manifest 文件内容永远不会被修改
+- **通过路径标识唯一性**：相同路径的 Manifest 文件内容始终一致
 
-**配置参数：**
+**因此：**
+- ✅ Manifest Cache **不影响数据正确性**
+- ✅ Manifest Cache **不影响数据可见性**
+- ✅ 即使缓存了"旧"的 Manifest 文件，也不会看到错误数据
+  - Table Cache 控制使用哪个 Snapshot
+  - Snapshot 决定读取哪些 Manifest 文件
+  - 即使某个 Manifest 被缓存了，只要不在当前 Snapshot 的 Manifest List 中，就不会被使用
+- ❌ 禁用 Manifest Cache **不会**让您看到更新的数据，只会降低性能
+:::
+
+### 配置参数
+
+#### Table Cache 配置
+
+Table Cache 支持在 Catalog 级别和 FE 全局级别进行配置。
+
+:::info
+View Cache 使用与 Table Cache 相同的配置参数，无需单独配置。
+:::
+
+**Catalog 级别参数**
+
+| 参数名称 | 默认值 | 说明 |
+|---------|--------|------|
+| `iceberg.table.meta.cache.ttl-second` | `86400`（24 小时） | Table 元数据缓存的过期时间（秒）<br>• 同时控制 Table Cache 和 View Cache<br>• 设置为 `0` 禁用缓存，强制每次重新加载<br>• 建议生产环境设置 1-2 小时 |
+
+**FE 全局参数（`fe.conf`）**
+
+| 参数名称 | 默认值 | 说明 |
+|---------|--------|------|
+| `external_cache_expire_time_seconds_after_access` | `86400`（24 小时） | 全局默认的缓存过期时间（秒）<br>当 Catalog 未指定 TTL 时使用 |
+| `max_external_table_cache_num` | `1000` | 单个 Catalog 最大缓存的 Table/View 数量 |
+| `external_cache_refresh_time_minutes` | `10` | 缓存异步刷新的最小间隔（分钟）<br>在后台更新未过期的缓存，不阻塞查询 |
+
+:::info 参数优先级
+Catalog 级别 `iceberg.table.meta.cache.ttl-second` > FE 全局 `external_cache_expire_time_seconds_after_access`
+:::
+
+#### Manifest Cache 配置
+
+Manifest Cache 仅支持 Catalog 级别配置：
+
+| 参数名称 | 默认值 | 说明 |
+|---------|--------|------|
+| `iceberg.manifest.cache.enable` | `false` | 是否启用 Manifest 缓存<br>• **建议启用**以提升查询性能 |
+| `iceberg.manifest.cache.capacity-mb` | `1024` | 最大缓存容量（MB）<br>• 根据表数量和查询频率调整<br>• 达到上限后使用 LRU 策略淘汰 |
+| `iceberg.manifest.cache.ttl-second` | `172800`（48 小时） | 缓存条目的过期时间（秒）<br>• Manifest 文件不可变，可以设置较长 TTL |
+| `io.manifest.cache-enabled` | `false` | Iceberg 原生 Manifest I/O 缓存<br>• **建议与 Doris Manifest Cache 一起启用** |
+
+### 配置示例
+
+#### 示例 1：生产环境推荐配置（平衡性能与数据新鲜度）
 
 ```sql
-CREATE CATALOG iceberg_catalog PROPERTIES (
-    "iceberg.manifest.cache.enable" = "true",
-    "iceberg.manifest.cache.capacity-mb" = "1024",
-    "iceberg.manifest.cache.ttl-second" = "172800"
+CREATE CATALOG iceberg_prod PROPERTIES (
+    'type' = 'iceberg',
+    'iceberg.catalog.type' = 'hms',
+    'hive.metastore.uris' = 'thrift://your-hive-metastore:9083',
+
+    -- Table Cache: 1 小时 TTL，平衡数据新鲜度和性能
+    'iceberg.table.meta.cache.ttl-second' = '3600',
+
+    -- Manifest Cache: 启用并配置合理容量
+    'iceberg.manifest.cache.enable' = 'true',
+    'iceberg.manifest.cache.capacity-mb' = '2048',
+    'iceberg.manifest.cache.ttl-second' = '172800',
+
+    -- Iceberg 原生缓存: 配合使用
+    'io.manifest.cache-enabled' = 'true'
 );
 ```
 
-| 配置项 | 默认值 | 说明 |
-|--------|--------|------|
-| `iceberg.manifest.cache.enable` | `false` | 启用/禁用 Manifest 缓存 |
-| `iceberg.manifest.cache.capacity-mb` | `1024` | 最大缓存容量（MB） |
-| `iceberg.manifest.cache.ttl-second` | `172800`（48 小时） | 访问后的缓存条目过期时间 |
+同时在 `fe.conf` 中设置：
+```properties
+external_cache_refresh_time_minutes = 5    # 5 分钟异步刷新
+max_external_table_cache_num = 2000        # 根据表数量调整
+```
 
-当缓存达到容量上限时，会使用 LRU 策略淘汰旧条目。
+**此配置的效果：**
+- ✅ Table Cache 1 小时过期，访问时同步重新加载最新元数据
+- ✅ 每 5 分钟后台异步刷新，大多数时候能看到 5 分钟内的最新数据
+- ✅ Manifest Cache 加速查询，减少 I/O 和解析开销
+- ✅ 三级缓存协同工作，性能最优
+
+#### 示例 2：开发/测试环境配置（优先数据实时性）
+
+```sql
+CREATE CATALOG iceberg_dev PROPERTIES (
+    'type' = 'iceberg',
+    'iceberg.catalog.type' = 'hms',
+    'hive.metastore.uris' = 'thrift://your-hive-metastore:9083',
+
+    -- Table Cache: 禁用，始终获取最新元数据
+    'iceberg.table.meta.cache.ttl-second' = '0',
+
+    -- Manifest Cache: 仍然可以启用，不影响数据新鲜度
+    'iceberg.manifest.cache.enable' = 'true',
+    'iceberg.manifest.cache.capacity-mb' = '512'
+);
+```
+
+**此配置的效果：**
+- ✅ 每次查询都获取最新的 Table 元数据，看到最新数据
+- ✅ Manifest Cache 仍然工作，提升性能但不影响数据正确性
+- ⚠️ 每次查询都需要访问 Metastore，延迟略高
+
+#### 示例 3：高性能只读场景（优先查询性能）
+
+```sql
+CREATE CATALOG iceberg_readonly PROPERTIES (
+    'type' = 'iceberg',
+    'iceberg.catalog.type' = 'hms',
+    'hive.metastore.uris' = 'thrift://your-hive-metastore:9083',
+
+    -- Table Cache: 较长 TTL，减少 Metastore 访问
+    'iceberg.table.meta.cache.ttl-second' = '7200',
+
+    -- Manifest Cache: 大容量，长 TTL
+    'iceberg.manifest.cache.enable' = 'true',
+    'iceberg.manifest.cache.capacity-mb' = '4096',
+    'iceberg.manifest.cache.ttl-second' = '259200',  -- 3 天
+
+    -- Iceberg 原生缓存
+    'io.manifest.cache-enabled' = 'true'
+);
+```
+
+同时在 `fe.conf` 中设置：
+```properties
+external_cache_refresh_time_minutes = 30   # 减少刷新频率
+max_external_table_cache_num = 5000        # 更大的缓存容量
+```
+
+**此配置的效果：**
+- ✅ Table Cache 2 小时过期，显著减少 Metastore 访问
+- ✅ 大容量 Manifest Cache，查询性能最优
+- ⚠️ 适合元数据变更不频繁的场景
+- ⚠️ 如需看到最新数据，需要手动 REFRESH
+
+#### 示例 4：仅启用 Manifest Cache（不影响数据新鲜度的性能优化）
+
+```sql
+CREATE CATALOG iceberg_balance PROPERTIES (
+    'type' = 'iceberg',
+    'iceberg.catalog.type' = 'hms',
+    'hive.metastore.uris' = 'thrift://your-hive-metastore:9083',
+
+    -- Table Cache: 禁用，始终获取最新元数据
+    'iceberg.table.meta.cache.ttl-second' = '0',
+
+    -- Manifest Cache: 启用，仅优化性能
+    'iceberg.manifest.cache.enable' = 'true',
+    'iceberg.manifest.cache.capacity-mb' = '2048',
+
+    -- Iceberg 原生缓存
+    'io.manifest.cache-enabled' = 'true'
+);
+```
+
+**此配置的效果：**
+- ✅ 始终看到最新的 Snapshot 和 Schema
+- ✅ Manifest 解析性能仍然优化
+- ✅ 适合需要数据实时性但查询性能也很重要的场景
 
 ## 缓存刷新
 

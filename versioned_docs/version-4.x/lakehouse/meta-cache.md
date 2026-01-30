@@ -264,112 +264,323 @@ The following enhancements are available starting from version 4.0.3. For earlie
 
 Starting from version 4.0.3, Doris introduces significant improvements to Iceberg metadata caching with enhanced configurability, better performance, and clearer semantics.
 
-### Enhanced Iceberg Table/View Cache
+Starting from version 4.0.3, Doris introduces significant improvements to Iceberg metadata caching with enhanced configurability, better performance, and clearer semantics.
 
-The enhanced Table/View cache in version 4.0.3 provides more granular control and better understanding of cache behavior.
+### Overall Architecture
 
-**Architecture:**
+The new Iceberg metadata caching architecture contains two core caching components, with each Iceberg Catalog having its own independent cache instance:
 
-This cache is maintained in `IcebergMetadataCache`, where each Iceberg Catalog has its own instance with separate `tableCache` and `viewCache`.
+#### **Architecture Hierarchy**
 
-The cached table object (`IcebergTableCacheValue`) also contains snapshot information, which is lazily loaded on demand (mainly for MTMV scenarios).
+**Iceberg Catalog**
+└── **IcebergMetadataCache** (one instance per Catalog)
+    ├── **1. Table Cache** (Core Component)
+    │   ├── Cached Content
+    │   │   ├── Table Object (IcebergTableCacheValue)
+    │   │   │   ├── Schema ID (schema version)
+    │   │   │   ├── Current Snapshot ID (current snapshot)
+    │   │   │   ├── Partition Spec (partition specification)
+    │   │   │   └── Snapshot List (lazy-loaded, for MTMV)
+    │   │   └── View Object (separate cache, same configuration)
+    │   ├── Impact Scope
+    │   │   ├── ✓ Schema version
+    │   │   ├── ✓ Snapshot version (data visibility)
+    │   │   └── ✓ Partition information
+    │   └── Configuration: `iceberg.table.meta.cache.ttl-second`
+    │
+    └── **2. Manifest Cache** (Added in 4.0.3)
+        ├── Cached Content
+        │   ├── Parsed DataFile objects
+        │   │   └── File path, partition values, statistics
+        │   └── Parsed DeleteFile objects
+        │       └── Equality Delete metadata
+        ├── Impact Scope
+        │   ├── ✓ Only affects query performance
+        │   └── ✗ Does not affect data correctness or visibility
+        └── Configuration: `iceberg.manifest.cache.enable`
+
+#### **Query Execution Flow**
+
+1. **Table Cache** determines which Snapshot to use
+2. Load Manifest List based on Snapshot
+3. **Manifest Cache** accelerates Manifest file parsing
+4. Return DataFile list for query execution
+
+#### **Optional External Cache Layers**
+
+- **Iceberg Native Manifest Cache**: Caches Manifest file bytes to accelerate I/O (optional configuration)
+- **Object Storage/HDFS**: Stores original Manifest files
+
+**Key Design Points:**
+
+1. **Table Cache** controls metadata versioning and data visibility
+   - Caches Iceberg Table objects containing Schema, Snapshot, and other core metadata
+   - View Cache is independent but shares the same configuration with Table Cache
+   - When TTL expires or is set to 0, it forces reloading to see the latest data
+
+2. **Manifest Cache** only optimizes query performance
+   - Caches parsed Manifest file content (DataFile/DeleteFile objects)
+   - Manifest files are immutable, so caching does not affect data correctness
+   - Even with cached old Manifests, Table Cache controls which Snapshot to use
+
+3. **Multi-tier cache collaboration**
+   - Optionally combine with Iceberg native Manifest Cache for a three-tier caching architecture
+   - Native cache accelerates I/O, Doris Manifest Cache accelerates parsing
+
+### Cache Component Details
+
+#### 1. Table Cache
+
+**Purpose:**
+
+Table Cache is the core component of Iceberg metadata caching, responsible for caching Iceberg Table objects and controlling which metadata version queries use. This is the most critical part of the entire caching system.
+
+:::info About View Cache
+`IcebergMetadataCache` also includes a View Cache for caching Iceberg View objects. It works similarly to Table Cache. This documentation primarily focuses on Table Cache, with View Cache configuration and behavior being identical.
+:::
+
+**Cached Content:**
+
+Table Cache caches the core object `IcebergTableCacheValue`, which includes:
+
+| Component | Information | Purpose |
+|-----------|-------------|---------|
+| **Iceberg Table Object** | • Schema ID (schema version)<br>• Current Snapshot ID (current snapshot)<br>• Partition Spec (partition specification)<br>• Table Properties | Determines the data version and table schema seen by queries |
+| **Snapshot Information**<br>(Lazy-loaded) | • Snapshot information<br>• Partition information | Mainly for Materialized View (MTMV) scenarios |
 
 **Impact on Data Visibility:**
 
-The Table Cache controls which version of the Iceberg table metadata is used. This affects:
+Table Cache is the only cache component that controls data visibility, directly affecting:
 
-- **Schema**: The `schemaId` is obtained from the cached table object. If the cache contains an older table object, you will see the old schema (column definitions).
-- **Snapshot**: The current snapshot ID is obtained from the cached table object. If the cache contains an older table object, queries will use the old snapshot and may not see the latest data.
-- **Partition**: Partition information is loaded using the cached table object's metadata (specs, snapshots). Older cache means outdated partition information.
+| Dimension | Description | Consequence of Stale Cache |
+|-----------|-------------|---------------------------|
+| **Schema** | `schemaId` determines column definitions seen by queries | Cannot see newly added/modified columns |
+| **Snapshot** | `currentSnapshotId` determines which data snapshot to query | Cannot see latest written data |
+| **Partition** | Partition Spec and Snapshot determine partition metadata | Partition list is not up-to-date |
 
-:::tip
-To see real-time schema, snapshot, and partition information, disable the table cache by setting `iceberg.table.meta.cache.ttl-second=0`. The Schema cache does not affect which version is used—it only caches the parsed result for performance.
+:::warning Important
+**Table Cache is the sole control point for data freshness:**
+- To see the latest data, you must refresh or disable Table Cache
+- Setting `iceberg.table.meta.cache.ttl-second=0` disables the cache, forcing fresh metadata retrieval on every query
+- Manifest Cache and other caches do not affect data visibility
 :::
 
-**Enhanced Configuration (4.0.3+):**
+#### 2. Manifest Cache
 
-- **Catalog-level TTL Control**
+**Purpose:**
 
-    Starting from 4.0.3, you can configure TTL at the Catalog level via `iceberg.table.meta.cache.ttl-second` (in seconds).
+Manifest Cache is a pure performance optimization component introduced in version 4.0.3, accelerating query execution by caching parsed Manifest file content.
 
-    ```sql
-    CREATE CATALOG iceberg_catalog PROPERTIES (
-        'type' = 'iceberg',
-        ...
-        'iceberg.table.meta.cache.ttl-second' = '7200'  -- 2 hours
-    );
-    ```
+**Cached Content:**
 
-    If not specified, it falls back to the FE parameter `external_cache_expire_time_seconds_after_access` (default is 86400 seconds).
+Manifest Cache stores **parsed objects** rather than raw file bytes:
 
-    Set to `0` to disable the cache, forcing metadata to be fetched on every access.
-
-- **Maximum cache count**
-
-    Controlled by the FE configuration item `max_external_table_cache_num`, default is 1000.
-
-    You can adjust this parameter appropriately according to the number of Iceberg tables.
-
-- **Minimum refresh time**
-
-    Controlled by the FE configuration item `external_cache_refresh_time_minutes`, in minutes. Default is 10 minutes. This is an asynchronous refresh that does not block current operations.
-
-### New Iceberg Manifest Cache (4.0.3+)
-
-Version 4.0.3 introduces a brand new **Manifest Cache** to significantly improve query performance on Iceberg tables.
-
-**What is Cached:**
-
-This cache stores **parsed** Iceberg manifest file contents—specifically the `DataFile` and `DeleteFile` objects extracted from manifest files (not raw file bytes):
-
-- `DataFile` objects: File metadata including path, partition values, metrics, etc.
-- `DeleteFile` objects: Delete metadata for equality deletes.
+| Cached Object | Information | Purpose |
+|---------------|-------------|---------|
+| `DataFile` objects | • File path<br>• Partition values<br>• Record count<br>• File size<br>• Column statistics (min/max/null count) | For file scan planning and partition pruning |
+| `DeleteFile` objects | • Delete file path<br>• Delete conditions<br>• Related DataFile references | For MOR (Merge-On-Read) queries |
 
 **Performance Benefits:**
 
-:::tip Best Practice
-For optimal performance, **enable and combine Doris Manifest Cache with Iceberg native manifest cache** by setting:
+Manifest Cache provides two types of performance optimizations:
+
+1. **Reduced I/O overhead**: Avoids repeatedly reading the same Manifest files
+2. **Reduced CPU overhead**: Avoids repeatedly parsing Avro-formatted Manifest files
+
+:::tip Performance Best Practice
+**Recommended to enable three-tier caching architecture for optimal performance:**
 
 ```sql
 CREATE CATALOG iceberg_catalog PROPERTIES (
     'type' = 'iceberg',
     ...
-    'iceberg.manifest.cache.enable' = 'true',     -- Enable Doris Manifest Cache
-    'io.manifest.cache-enabled' = 'true'          -- Enable Iceberg native cache
+    -- Level 1: Iceberg native file I/O cache
+    'io.manifest.cache-enabled' = 'true',
+
+    -- Level 2: Doris Manifest object cache
+    'iceberg.manifest.cache.enable' = 'true',
+    'iceberg.manifest.cache.capacity-mb' = '1024'
 );
 ```
 
-This provides two-level caching:
-1. **Iceberg native cache** (`io.manifest.cache-enabled`): Caches raw manifest file I/O
-2. **Doris Manifest Cache**: Caches parsed `DataFile`/`DeleteFile` objects, avoiding repeated parsing
+**Three-tier cache collaboration:**
+1. **Object Storage/HDFS** → Original Manifest files
+2. **Iceberg Native Cache** → Caches file bytes, accelerates I/O
+3. **Doris Manifest Cache** → Caches parsed DataFile/DeleteFile objects, skips parsing
 :::
 
 **Important Note on Data Correctness:**
 
-Iceberg manifest files are **immutable**—once created, they are never modified. New commits create new manifest files rather than modifying existing ones. Therefore:
+:::info Manifest Immutability
+Iceberg Manifest files follow an **Immutable design**:
 
-- The Manifest Cache **does not affect data correctness** or what users see.
-- It only affects **query performance** (reducing I/O and parsing overhead).
-- Even with cached (stale) manifest entries, queries will still see the correct data because the Table Cache controls which snapshot is used.
-- Disabling this cache will not help you see "newer" data—it will only increase I/O and CPU overhead.
+- **New commits create new files**: Each data commit generates new Manifest files without modifying existing ones
+- **File content never changes**: Once created, Manifest file content never changes
+- **Path-based uniqueness**: Manifest files with the same path always have the same content
 
-**Configuration:**
+**Therefore:**
+- ✅ Manifest Cache **does not affect data correctness**
+- ✅ Manifest Cache **does not affect data visibility**
+- ✅ Even with cached "old" Manifest files, queries will not see incorrect data
+  - Table Cache controls which Snapshot to use
+  - Snapshot determines which Manifest files to read
+  - Even if a Manifest is cached, it won't be used unless it's in the current Snapshot's Manifest List
+- ❌ Disabling Manifest Cache **will not** show you newer data, only reduce performance
+:::
+
+### Configuration Parameters
+
+#### Table Cache Configuration
+
+Table Cache supports configuration at both Catalog level and FE global level.
+
+:::info
+View Cache uses the same configuration parameters as Table Cache and requires no separate configuration.
+:::
+
+**Catalog-level Parameters**
+
+| Parameter | Default | Description |
+|-----------|---------|-------------|
+| `iceberg.table.meta.cache.ttl-second` | `86400` (24 hours) | Table metadata cache expiration time (seconds)<br>• Controls both Table Cache and View Cache<br>• Set to `0` to disable cache and force reload every time<br>• Recommended 1-2 hours for production environments |
+
+**FE Global Parameters (`fe.conf`)**
+
+| Parameter | Default | Description |
+|-----------|---------|-------------|
+| `external_cache_expire_time_seconds_after_access` | `86400` (24 hours) | Global default cache expiration time (seconds)<br>Used when Catalog does not specify TTL |
+| `max_external_table_cache_num` | `1000` | Maximum number of Table/View entries cached per Catalog |
+| `external_cache_refresh_time_minutes` | `10` | Minimum interval for cache asynchronous refresh (minutes)<br>Updates non-expired cache in background without blocking queries |
+
+:::info Parameter Priority
+Catalog-level `iceberg.table.meta.cache.ttl-second` > FE global `external_cache_expire_time_seconds_after_access`
+:::
+
+#### Manifest Cache Configuration
+
+Manifest Cache only supports Catalog-level configuration:
+
+| Parameter | Default | Description |
+|-----------|---------|-------------|
+| `iceberg.manifest.cache.enable` | `false` | Whether to enable Manifest cache<br>• **Recommended to enable** for improved query performance |
+| `iceberg.manifest.cache.capacity-mb` | `1024` | Maximum cache capacity (MB)<br>• Adjust based on table count and query frequency<br>• Uses LRU eviction when limit is reached |
+| `iceberg.manifest.cache.ttl-second` | `172800` (48 hours) | Cache entry expiration time (seconds)<br>• Manifest files are immutable, can set longer TTL |
+| `io.manifest.cache-enabled` | `false` | Iceberg native Manifest I/O cache<br>• **Recommended to enable together with Doris Manifest Cache** |
+
+### Configuration Examples
+
+#### Example 1: Production Environment Recommended Configuration (Balance Performance and Data Freshness)
 
 ```sql
-CREATE CATALOG iceberg_catalog PROPERTIES (
-    "iceberg.manifest.cache.enable" = "true",
-    "iceberg.manifest.cache.capacity-mb" = "1024",
-    "iceberg.manifest.cache.ttl-second" = "172800"
+CREATE CATALOG iceberg_prod PROPERTIES (
+    'type' = 'iceberg',
+    'iceberg.catalog.type' = 'hms',
+    'hive.metastore.uris' = 'thrift://your-hive-metastore:9083',
+
+    -- Table Cache: 1 hour TTL, balances data freshness and performance
+    'iceberg.table.meta.cache.ttl-second' = '3600',
+
+    -- Manifest Cache: Enable with reasonable capacity
+    'iceberg.manifest.cache.enable' = 'true',
+    'iceberg.manifest.cache.capacity-mb' = '2048',
+    'iceberg.manifest.cache.ttl-second' = '172800',
+
+    -- Iceberg native cache: Use together
+    'io.manifest.cache-enabled' = 'true'
 );
 ```
 
-| Config | Default | Description |
-|--------|---------|-------------|
-| `iceberg.manifest.cache.enable` | `false` | Enable/disable manifest cache |
-| `iceberg.manifest.cache.capacity-mb` | `1024` | Maximum cache capacity in MB |
-| `iceberg.manifest.cache.ttl-second` | `172800` (48 hours) | Cache entry expiration after access |
+Also configure in `fe.conf`:
+```properties
+external_cache_refresh_time_minutes = 5    # 5-minute async refresh
+max_external_table_cache_num = 2000        # Adjust based on table count
+```
 
-When the cache reaches capacity, older entries are evicted using LRU policy.
+**Effects of this configuration:**
+- ✅ Table Cache expires in 1 hour, synchronously reloads latest metadata on access
+- ✅ Asynchronous refresh every 5 minutes, mostly sees data within 5 minutes
+- ✅ Manifest Cache accelerates queries, reduces I/O and parsing overhead
+- ✅ Three-tier cache collaboration for optimal performance
+
+#### Example 2: Development/Test Environment Configuration (Prioritize Data Real-time)
+
+```sql
+CREATE CATALOG iceberg_dev PROPERTIES (
+    'type' = 'iceberg',
+    'iceberg.catalog.type' = 'hms',
+    'hive.metastore.uris' = 'thrift://your-hive-metastore:9083',
+
+    -- Table Cache: Disable, always get latest metadata
+    'iceberg.table.meta.cache.ttl-second' = '0',
+
+    -- Manifest Cache: Can still enable without affecting data freshness
+    'iceberg.manifest.cache.enable' = 'true',
+    'iceberg.manifest.cache.capacity-mb' = '512'
+);
+```
+
+**Effects of this configuration:**
+- ✅ Every query gets latest Table metadata, sees latest data
+- ✅ Manifest Cache still works, improves performance without affecting data correctness
+- ⚠️ Every query needs to access Metastore, slightly higher latency
+
+#### Example 3: High-Performance Read-Only Scenario (Prioritize Query Performance)
+
+```sql
+CREATE CATALOG iceberg_readonly PROPERTIES (
+    'type' = 'iceberg',
+    'iceberg.catalog.type' = 'hms',
+    'hive.metastore.uris' = 'thrift://your-hive-metastore:9083',
+
+    -- Table Cache: Longer TTL, reduces Metastore access
+    'iceberg.table.meta.cache.ttl-second' = '7200',
+
+    -- Manifest Cache: Large capacity, long TTL
+    'iceberg.manifest.cache.enable' = 'true',
+    'iceberg.manifest.cache.capacity-mb' = '4096',
+    'iceberg.manifest.cache.ttl-second' = '259200',  -- 3 days
+
+    -- Iceberg native cache
+    'io.manifest.cache-enabled' = 'true'
+);
+```
+
+Also configure in `fe.conf`:
+```properties
+external_cache_refresh_time_minutes = 30   # Reduce refresh frequency
+max_external_table_cache_num = 5000        # Larger cache capacity
+```
+
+**Effects of this configuration:**
+- ✅ Table Cache expires in 2 hours, significantly reduces Metastore access
+- ✅ Large-capacity Manifest Cache, optimal query performance
+- ⚠️ Suitable for scenarios with infrequent metadata changes
+- ⚠️ Manual REFRESH required to see latest data
+
+#### Example 4: Enable Only Manifest Cache (Performance Optimization Without Affecting Data Freshness)
+
+```sql
+CREATE CATALOG iceberg_balance PROPERTIES (
+    'type' = 'iceberg',
+    'iceberg.catalog.type' = 'hms',
+    'hive.metastore.uris' = 'thrift://your-hive-metastore:9083',
+
+    -- Table Cache: Disable, always get latest metadata
+    'iceberg.table.meta.cache.ttl-second' = '0',
+
+    -- Manifest Cache: Enable, only optimize performance
+    'iceberg.manifest.cache.enable' = 'true',
+    'iceberg.manifest.cache.capacity-mb' = '2048',
+
+    -- Iceberg native cache
+    'io.manifest.cache-enabled' = 'true'
+);
+```
+
+**Effects of this configuration:**
+- ✅ Always sees latest Snapshot and Schema
+- ✅ Manifest parsing performance still optimized
+- ✅ Suitable for scenarios requiring data real-time but also query performance
 
 ## Cache Refresh
 
