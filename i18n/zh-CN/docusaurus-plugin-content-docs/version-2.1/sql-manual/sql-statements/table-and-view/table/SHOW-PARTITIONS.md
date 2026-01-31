@@ -69,7 +69,7 @@ SHOW [ TEMPORARY ] PARTITIONS
 | Range | datetime | 该分区的分区区间                                                   |
 | DistributionKey | varchar  | 该分区的分布键                                                    |
 | Buckets | int      | 该分区的分桶数                                                    |
-| ReplicationNum | int      | 该分区的副本书                                                    |
+| ReplicationNum | int      | 该分区的副本数                                                    |
 | StorageMedium | varchar  | 该分区的存储介质                                                   |
 | CooldownTime | datetime | 该分区的降冷时间，如果没有冷热分离，该字段的值为 `[9999-12-31 23:59:59]` ，即一直为热数据。 |
 | RemoteStoragePolicy | varchar  | 该分区的远端存储策略                                                 |
