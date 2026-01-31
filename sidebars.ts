@@ -1613,6 +1613,7 @@ const sidebars: SidebarsConfig = {
                                         'sql-manual/sql-functions/scalar-functions/map-functions/map-size',
                                         'sql-manual/sql-functions/scalar-functions/map-functions/map-values',
                                         'sql-manual/sql-functions/scalar-functions/map-functions/str-to-map',
+                                        'sql-manual/sql-functions/scalar-functions/map-functions/map-concat',
                                     ],
                                 },
                                 {
