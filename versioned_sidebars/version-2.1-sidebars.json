@@ -45,7 +45,8 @@
                                 "install/deploy-on-kubernetes/install-config-cluster",
                                 "install/deploy-on-kubernetes/install-doris-cluster",
                                 "install/deploy-on-kubernetes/access-cluster",
-                                "install/deploy-on-kubernetes/cluster-operation"
+                                "install/deploy-on-kubernetes/cluster-operation",
+                                "install/deploy-on-kubernetes/helm-chart-deploy"
                             ]
                         },
                         {
@@ -90,7 +91,10 @@
                                 "table-design/data-partitioning/dynamic-partitioning",
                                 "table-design/data-partitioning/auto-partitioning",
                                 "table-design/data-partitioning/data-bucketing",
-                                "table-design/data-partitioning/common-issues"
+                                "table-design/data-partitioning/common-issues",
+                                "table-design/data-partitioning/auto-bucket",
+                                "table-design/data-partitioning/basic-concepts",
+                                "table-design/data-partitioning/manual-bucketing"
                             ]
                         },
                         "table-design/data-type",
@@ -103,7 +107,8 @@
                                 "table-design/index/prefix-index",
                                 "table-design/index/inverted-index",
                                 "table-design/index/bloomfilter",
-                                "table-design/index/ngram-bloomfilter-index"
+                                "table-design/index/ngram-bloomfilter-index",
+                                "table-design/index/bitmap-index"
                             ]
                         },
                         "table-design/schema-change",
@@ -158,7 +163,8 @@
                                 "data-operate/import/import-way/routine-load-manual",
                                 "data-operate/import/import-way/insert-into-manual",
                                 "data-operate/import/import-way/insert-into-values-manual",
-                                "data-operate/import/import-way/mysql-load-manual"
+                                "data-operate/import/import-way/mysql-load-manual",
+                                "data-operate/import/import-way/log-storage-analysis"
                             ]
                         },
                         {
@@ -188,7 +194,15 @@
                         "data-operate/import/load-data-convert",
                         "data-operate/import/load-high-availability",
                         "data-operate/import/group-commit-manual",
-                        "data-operate/import/load-best-practices"
+                        "data-operate/import/load-best-practices",
+                        "data-operate/import/cdc-load-manual-sample",
+                        {
+                            "type": "category",
+                            "label": "Scheduler",
+                            "items": [
+                                "data-operate/scheduler/job-scheduler"
+                            ]
+                        }
                     ]
                 },
                 {
@@ -294,7 +308,9 @@
                             "label": "Distincting Counts",
                             "items": [
                                 "query-acceleration/distinct-counts/bitmap-precise-deduplication",
-                                "query-acceleration/distinct-counts/hll-approximate-deduplication"
+                                "query-acceleration/distinct-counts/hll-approximate-deduplication",
+                                "query-acceleration/distinct-counts/orthogonal-bitmap-manual",
+                                "query-acceleration/distinct-counts/using-hll"
                             ]
                         },
                         "query-acceleration/colocation-join",
@@ -520,7 +536,10 @@
                                 },
                                 "admin-manual/auth/encryption-function"
                             ]
-                        }
+                        },
+                        "admin-manual/auth/ldap",
+                        "admin-manual/auth/ranger",
+                        "admin-manual/auth/user-privilege"
                     ]
                 }
             ]
@@ -626,7 +645,8 @@
                         "admin-manual/config/config-dir",
                         "admin-manual/config/fe-config",
                         "admin-manual/config/be-config",
-                        "admin-manual/config/user-property"
+                        "admin-manual/config/user-property",
+                        "admin-manual/config/fe-config-template"
                     ]
                 },
                 {
@@ -903,7 +923,8 @@
                         "ecosystem/automq-load",
                         "ecosystem/hive-bitmap-udf"
                     ]
-                }
+                },
+                "ecosystem/ecosystem-overview"
             ]
         },
         {
@@ -975,7 +996,8 @@
                                         "sql-manual/basic-element/sql-data-types/semi-structured/MAP",
                                         "sql-manual/basic-element/sql-data-types/semi-structured/STRUCT",
                                         "sql-manual/basic-element/sql-data-types/semi-structured/JSON",
-                                        "sql-manual/basic-element/sql-data-types/semi-structured/VARIANT"
+                                        "sql-manual/basic-element/sql-data-types/semi-structured/VARIANT",
+                                        "sql-manual/basic-element/sql-data-types/semi-structured/semi-structured-overview"
                                     ]
                                 },
                                 {
@@ -1088,7 +1110,8 @@
                                         "sql-manual/sql-functions/scalar-functions/numeric-functions/mod",
                                         "sql-manual/sql-functions/scalar-functions/numeric-functions/normal-cdf",
                                         "sql-manual/sql-functions/scalar-functions/numeric-functions/uuid_numeric",
-                                        "sql-manual/sql-functions/scalar-functions/numeric-functions/width-bucket"
+                                        "sql-manual/sql-functions/scalar-functions/numeric-functions/width-bucket",
+                                        "sql-manual/sql-functions/scalar-functions/numeric-functions/xor"
                                     ]
                                 },
                                 {
@@ -1166,7 +1189,12 @@
                                         "sql-manual/sql-functions/scalar-functions/string-functions/unhex",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/url-decode",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/url-encode",
-                                        "sql-manual/sql-functions/scalar-functions/string-functions/uuid"
+                                        "sql-manual/sql-functions/scalar-functions/string-functions/uuid",
+                                        "sql-manual/sql-functions/scalar-functions/string-functions/date",
+                                        "sql-manual/sql-functions/scalar-functions/string-functions/from-iso8601-date",
+                                        "sql-manual/sql-functions/scalar-functions/string-functions/to-iso8601",
+                                        "sql-manual/sql-functions/scalar-functions/string-functions/week-ceil",
+                                        "sql-manual/sql-functions/scalar-functions/string-functions/week-floor"
                                     ]
                                 },
                                 {
@@ -1195,7 +1223,6 @@
                                         "sql-manual/sql-functions/scalar-functions/date-time-functions/from-iso8601-date",
                                         "sql-manual/sql-functions/scalar-functions/date-time-functions/from-microsecond",
                                         "sql-manual/sql-functions/scalar-functions/date-time-functions/from-millisecond",
-                                        "sql-manual/sql-functions/scalar-functions/date-time-functions/from-second",
                                         "sql-manual/sql-functions/scalar-functions/date-time-functions/from-second",
                                         "sql-manual/sql-functions/scalar-functions/date-time-functions/from-unixtime",
                                         "sql-manual/sql-functions/scalar-functions/date-time-functions/hour",
@@ -1260,10 +1287,12 @@
                                         "sql-manual/sql-functions/scalar-functions/date-time-functions/year",
                                         "sql-manual/sql-functions/scalar-functions/date-time-functions/year-ceil",
                                         "sql-manual/sql-functions/scalar-functions/date-time-functions/year-floor",
+                                        "sql-manual/sql-functions/scalar-functions/date-time-functions/yearweek",
                                         "sql-manual/sql-functions/scalar-functions/date-time-functions/years-add",
                                         "sql-manual/sql-functions/scalar-functions/date-time-functions/years-diff",
                                         "sql-manual/sql-functions/scalar-functions/date-time-functions/years-sub",
-                                        "sql-manual/sql-functions/scalar-functions/date-time-functions/yearweek"
+                                        "sql-manual/sql-functions/scalar-functions/date-time-functions/current-timestamp",
+                                        "sql-manual/sql-functions/scalar-functions/date-time-functions/second-timestamp"
                                     ]
                                 },
                                 {
@@ -1669,7 +1698,8 @@
                                 "sql-manual/sql-functions/table-functions/explode-json-object",
                                 "sql-manual/sql-functions/table-functions/explode-map",
                                 "sql-manual/sql-functions/table-functions/explode-numbers",
-                                "sql-manual/sql-functions/table-functions/explode-split"
+                                "sql-manual/sql-functions/table-functions/explode-split",
+                                "sql-manual/sql-functions/table-functions/posexplode"
                             ]
                         },
                         {
@@ -1681,6 +1711,7 @@
                                 "sql-manual/sql-functions/table-valued-functions/frontends",
                                 "sql-manual/sql-functions/table-valued-functions/frontends_disks",
                                 "sql-manual/sql-functions/table-valued-functions/hdfs",
+                                "sql-manual/sql-functions/table-valued-functions/hudi-meta",
                                 "sql-manual/sql-functions/table-valued-functions/iceberg-meta",
                                 "sql-manual/sql-functions/table-valued-functions/jobs",
                                 "sql-manual/sql-functions/table-valued-functions/local",
@@ -1768,7 +1799,8 @@
                                         "sql-manual/sql-statements/data-modification/backup-and-restore/RESTORE",
                                         "sql-manual/sql-statements/data-modification/backup-and-restore/SHOW-RESTORE",
                                         "sql-manual/sql-statements/data-modification/backup-and-restore/CANCEL-RESTORE",
-                                        "sql-manual/sql-statements/data-modification/backup-and-restore/SHOW-SNAPSHOT"
+                                        "sql-manual/sql-statements/data-modification/backup-and-restore/SHOW-SNAPSHOT",
+                                        "sql-manual/sql-statements/data-modification/backup-and-restore/SHOW-BACKUP"
                                     ]
                                 }
                             ]
@@ -2067,7 +2099,8 @@
                                         "sql-manual/sql-statements/cluster-management/storage-management/CREATE-STORAGE-POLICY",
                                         "sql-manual/sql-statements/cluster-management/storage-management/ALTER-STORAGE-POLICY",
                                         "sql-manual/sql-statements/cluster-management/storage-management/DROP-STORAGE-POLICY",
-                                        "sql-manual/sql-statements/cluster-management/storage-management/SHOW-STORAGE-POLICY"
+                                        "sql-manual/sql-statements/cluster-management/storage-management/SHOW-STORAGE-POLICY",
+                                        "sql-manual/sql-statements/cluster-management/storage-management/SHOW-STORAGE-POLICY-USING"
                                     ]
                                 }
                             ]
