@@ -2156,6 +2156,12 @@ Default：HDD
 
 When create a table(or partition), you can specify its storage medium(HDD or SSD). If not set, this specifies the default medium when create.
 
+#### `default_compression_type`
+
+Default: lz4 (before 4.0.3), zstd (since 4.0.3)
+
+When creating a table, you can specify its compression algorithm. If not set, this specifies the default compression type when creating a table. Valid values include: lz4, zstd.
+
 #### `enable_storage_policy`
 
 * Whether to enable the Storage Policy feature. This config allows users to separate hot and cold data.
