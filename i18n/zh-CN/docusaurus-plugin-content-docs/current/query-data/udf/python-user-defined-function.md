@@ -17,7 +17,7 @@ Python UDF 支持两种执行模式:
 :::tip 提示
 **环境依赖**: 使用 Python UDF 前，必须在所有 BE 节点的 Python 环境中预先安装 **`pandas`** 和 **`pyarrow`** 两个库，这是 Doris Python UDF 功能的强制依赖。详见 [Python UDF 环境配置](python-user-defined-function#python-udfudafudtf-环境配置与多版本管理)。
 
-**日志路径**: Python UDF Server 的运行日志位于 `output/be/lib/udf/python/python_udf_output.log`。用户可以在该日志中查看 Python Server 的运行情况、函数执行信息和调试错误。
+**日志路径**: Python UDF Server 的运行日志位于 `output/be/log/python_udf_output.log`。用户可以在该日志中查看 Python Server 的运行情况、函数执行信息和调试错误。
 :::
 
 ### 创建 Python UDF
@@ -913,43 +913,6 @@ A: 技术上可以，但**强烈不建议**。Python UDF 中可以使用网络�
 - 大量并发请求可能造成外部服务压力
 - 难以控制超时和错误处理
 
-#### Q7: 如何在 Python UDF 中使用第三方库?
-
-A: Python UDF 可以使用第三方库，但需要由 DBA 或运维人员**在集群的所有 BE 节点上手动安装依赖**。具体步骤:
-
-1. **在每个 BE 节点上安装依赖**:
-   ```bash
-   # 使用 pip 安装
-   pip install numpy pandas requests
-   
-   # 或使用 conda 安装
-   conda install numpy pandas requests
-   ```
-
-2. **在 UDF 中导入并使用**:
-   ```sql
-   CREATE FUNCTION py_use_numpy(DOUBLE)
-   RETURNS DOUBLE
-   PROPERTIES (
-       "type" = "PYTHON_UDF",
-       "symbol" = "evaluate",
-       "runtime_version" = "3.10.12"
-   )
-   AS $$
-   import numpy as np
-   
-   def evaluate(x):
-       return np.sqrt(x)
-   $$;
-   ```
-
-:::caution 注意
-- **`pandas` 和 `pyarrow` 是强制依赖**，必须在所有 Python 环境中预先安装，否则 Python UDF 无法运行
-- 必须在**所有 BE 节点**上安装相同版本的依赖，否则会导致部分节点执行失败
-- 安装路径要与 Python UDF 使用的 Python 运行时环境一致
-- 建议使用虚拟环境管理依赖，避免与系统 Python 环境冲突
-:::
-
 ## Python UDAF
 
 Python UDAF (User Defined Aggregate Function) 是 Apache Doris 提供的自定义聚合函数扩展机制，允许用户使用 Python 语言编写自定义聚合函数，用于数据分组聚合和窗口计算。通过 Python UDAF，用户可以灵活地实现复杂的聚合逻辑，如统计分析、数据收集、自定义指标计算等。
@@ -963,7 +926,7 @@ Python UDAF 的核心特点:
 :::tip 提示
 **环境依赖**: 使用 Python UDAF 前，必须在所有 BE 节点的 Python 环境中预先安装 **`pandas`** 和 **`pyarrow`** 两个库，这是 Doris Python UDAF 功能的强制依赖。详见 [Python UDAF 环境配置](python-user-defined-function#python-udfudafudtf-环境配置与多版本管理)。
 
-**日志路径**: Python UDAF Server 的运行日志位于 `output/be/lib/udf/python/python_udf_output.log`。用户可以在该日志中查看 Python Server 的运行情况、聚合函数执行信息和调试错误。
+**日志路径**: Python UDAF Server 的运行日志位于 `output/be/log/python_udf_output.log`。用户可以在该日志中查看 Python Server 的运行情况、聚合函数执行信息和调试错误。
 :::
 
 ### UDAF 基本概念
@@ -1447,6 +1410,7 @@ DROP FUNCTION IF EXISTS py_variance(DOUBLE);
 ### 窗口函数 (Window Functions)
 
 Python UDAF 可以与窗口函数 (OVER 子句) 结合使用:
+> 若将 Python UDAF 用于窗口函数（OVER 子句）, Doris 会在计算每个 window frame 后调用 UDAF 的 reset 方法，需要在类中实现它以将聚合状态重置为初始值
 
 ```sql
 DROP TABLE IF EXISTS daily_sales_data;
@@ -1483,6 +1447,9 @@ PROPERTIES (
 AS $$
 class RunningSumUDAF:
     def __init__(self):
+        self.total = 0.0
+
+    def reset(self):
         self.total = 0.0
     
     @property
@@ -1868,49 +1835,6 @@ A: `merge` 方法在以下情况被调用:
 
 因此 `merge` 的实现必须正确，否则会导致结果错误。
 
-#### Q5: 如何在 Python UDAF 中使用第三方库?
-
-A: Python UDAF 可以使用第三方库，但需要由 DBA 或运维人员**在集群的所有 BE 节点上手动安装依赖**。具体步骤:
-
-1. **在每个 BE 节点上安装依赖**:
-   ```bash
-   # 使用 pip 安装
-   pip install numpy pandas requests
-   
-   # 或使用 conda 安装
-   conda install numpy pandas requests -y
-   ```
-
-2. **在 UDAF 中导入并使用**:
-   ```sql
-   CREATE AGGREGATE FUNCTION py_stats(DOUBLE)
-   RETURNS DOUBLE
-   PROPERTIES (
-       "type" = "PYTHON_UDF",
-       "symbol" = "StatsUDAF",
-       "runtime_version" = "3.10.12"
-   )
-   AS $$
-   import numpy as np
-   
-   class StatsUDAF:
-       def __init__(self):
-           self.values = []
-       
-       def accumulate(self, value):
-           if value is not None:
-               self.values.append(value)
-       
-       def finish(self):
-           return np.std(self.values) if self.values else None
-   $$;
-   ```
-
-**注意事项**:
-- **`pandas` 和 `pyarrow` 是强制依赖**，必须在所有 Python 环境中预先安装，否则 Python UDAF 无法运行
-- 必须在**所有 BE 节点**上安装相同版本的依赖，否则会导致部分节点执行失败
-- 安装路径要与 Python UDAF 使用的 Python 运行时环境一致
-
 
 ## Python UDTF
 
@@ -1925,7 +1849,7 @@ Python UDTF 的核心特点:
 :::tip 提示
 **环境依赖**: 使用 Python UDTF 前，必须在所有 BE 节点的 Python 环境中预先安装 **`pandas`** 和 **`pyarrow`** 两个库，这是 Doris Python UDTF 功能的强制依赖。详见 [Python UDTF 环境配置](python-user-defined-function#python-udfudafudtf-环境配置与多版本管理)。
 
-**日志路径**: Python UDTF Server 的运行日志位于 `output/be/lib/udf/python/python_udf_output.log`。用户可以在该日志中查看 Python Server 的运行情况、聚合函数执行信息和调试错误。
+**日志路径**: Python UDTF Server 的运行日志位于 `output/be/log/python_udf_output.log`。用户可以在该日志中查看 Python Server 的运行情况、聚合函数执行信息和调试错误。
 :::
 
 ### UDTF 基本概念
@@ -2854,9 +2778,29 @@ def limited_udtf(data):
         count += 1
 ```
 
-#### Q6: 如何在 Python UDTF 中使用第三方库?
+#### Q6: UDTF 输出的数据类型有限制吗?
 
-A: Python UDTF 可以使用第三方库，但需要由 DBA 或运维人员**在集群的所有 BE 节点上手动安装依赖**。具体步骤:
+A: UDTF 支持所有 Doris 数据类型，包括基本类型（INT、STRING、DOUBLE 等）和复杂类型（ARRAY、STRUCT、MAP 等）。输出类型必须在 `RETURNS ARRAY<...>` 中明确定义。
+
+#### Q7: 可以在 UDTF 中访问外部资源吗?
+
+A: 技术上可以，但**强烈不推荐**。UDTF 应该是纯函数式的，只基于输入参数进行处理。访问外部资源（数据库、文件、网络）会导致性能问题和不可预测的行为。
+
+## Python UDF/UDAF/UDTF 环境配置与多版本管理
+
+### Python 环境管理
+
+在使用 Python UDF/UDAF/UDTF 之前，请确保 Doris 的 Backend (BE) 节点已正确配置 Python 运行环境。Doris 支持通过 **Conda** 或 **Virtual Environment (venv)** 管理 Python 环境，允许不同的 UDF 使用不同版本的 Python 解释器和依赖库。
+
+Doris 提供两种 Python 环境管理方式:
+- **Conda 模式**: 使用 Miniconda/Anaconda 管理多版本环境
+- **Venv 模式**: 使用 Python 内置的虚拟环境 (venv) 管理多版本环境
+
+### 第三方库的安装与使用
+
+Python UDF、UDAF、UDTF 都可以使用第三方库。但由于 Doris 的分布式特性，需要在**所有 BE 节点**上统一安装第三方库，否则会导致部分节点执行失败。
+
+#### 安装步骤
 
 1. **在每个 BE 节点上安装依赖**:
    ```bash
@@ -2867,47 +2811,22 @@ A: Python UDTF 可以使用第三方库，但需要由 DBA 或运维人员**在�
    conda install numpy pandas requests -y
    ```
 
-2. **在 UDTF 中导入并使用**:
-   ```sql
-   CREATE TABLES FUNCTION py_process(STRING)
-   RETURNS ARRAY<STRING>
-   PROPERTIES (
-       "type" = "PYTHON_UDF",
-       "symbol" = "process_udtf",
-       "runtime_version" = "3.10.12"
-   )
-   AS $$
-   import json
-   import re
+2. **在函数中导入并使用**:
+   ```python
+   import numpy as np
+   import pandas as pd
    
-   def process_udtf(data):
-       # 使用第三方库
-       parsed = json.loads(data)
-       for item in parsed:
-           yield (str(item),)
-   $$;
+   # 在 UDF/UDAF/UDTF 函数中使用
+   def my_function(x):
+       return np.sqrt(x)
    ```
 
-**注意事项**:
-- **`pandas` 和 `pyarrow` 是强制依赖**，必须在所有 Python 环境中预先安装，否则 Python UDTF 无法运行
+#### 注意事项
+
+- **`pandas` 和 `pyarrow` 是强制依赖**，必须在所有 Python 环境中预先安装，否则 Python UDF/UDAF/UDTF 无法运行
 - 必须在**所有 BE 节点**上安装相同版本的依赖，否则会导致部分节点执行失败
-- 安装路径要与 Python UDTF 使用的 Python 运行时环境一致
-
-#### Q7: UDTF 输出的数据类型有限制吗?
-
-A: UDTF 支持所有 Doris 数据类型，包括基本类型（INT、STRING、DOUBLE 等）和复杂类型（ARRAY、STRUCT、MAP 等）。输出类型必须在 `RETURNS ARRAY<...>` 中明确定义。
-
-#### Q8: 可以在 UDTF 中访问外部资源吗?
-
-A: 技术上可以，但**强烈不推荐**。UDTF 应该是纯函数式的，只基于输入参数进行处理。访问外部资源（数据库、文件、网络）会导致性能问题和不可预测的行为。
-
-## Python UDF/UDAF/UDTF 环境配置与多版本管理
-
-在使用 Python UDF/UDAF/UDTF 之前，请确保 Doris 的 Backend (BE) 节点已正确配置 Python 运行环境。Doris 支持通过 **Conda** 或 **Virtual Environment (venv)** 管理 Python 环境，允许不同的 UDF 使用不同版本的 Python 解释器和依赖库。
-
-Doris 提供两种 Python 环境管理方式:
-- **Conda 模式**: 使用 Miniconda/Anaconda 管理多版本环境
-- **Venv 模式**: 使用 Python 内置的虚拟环境 (venv) 管理多版本环境
+- 安装路径要与对应 UDF/UDAF/UDTF 使用的 Python 运行时环境一致
+- 建议使用虚拟环境或 Conda 环境管理依赖，避免与系统 Python 环境冲突
 
 ### BE 配置参数
 
@@ -3268,8 +3187,33 @@ grep python /path/to/be.conf
 
 **解决方案**:
 1. 检查所有节点的 Python 版本和依赖版本
-2. 统一使用 `requirements.txt` 或 `environment.yml` 部署环境
-3. 验证所有节点环境一致性
+2. 验证所有节点环境一致性
+3. 统一使用 `requirements.txt`（pip）或 `environment.yml`（Conda）部署环境，常见用法示例：
+
+- 使用 `requirements.txt`（pip）:
+```bash
+# 在开发环境中导出依赖
+pip freeze > requirements.txt
+# 在 BE 节点上使用目标 Python 安装依赖
+/path/to/python -m pip install -r requirements.txt
+```
+
+- 使用 `environment.yml`（Conda）:
+```bash
+# 导出依赖
+conda env export --from-history -n py312 -f environment.yml
+# 在 BE 节点上创建环境
+conda env create -f environment.yml -n py312
+# 或更新已有环境
+conda env update -f environment.yml -n py312
+```
+
+:::caution 注意
+- 必须确保 `pandas` 和 `pyarrow` 出现在依赖文件中，并在所有 BE 节点中安装相同版本
+- 安装时务必使用与 Doris 配置一致的 Python 解释器或 Conda 路径（例如 `/opt/miniconda3/bin/conda` 或指定的 venv 解释器）
+- 建议将依赖文件纳入版本控制或放入共享存储，由运维统一分发到所有 BE 节点
+- 更多参考：[pip 官方文档](https://pip.pypa.io/en/stable/cli/pip/)，[Conda 环境导出/导入说明](https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html#exporting-the-environment)
+:::
 
 #### Q4: 修改 be.conf 后未生效
 

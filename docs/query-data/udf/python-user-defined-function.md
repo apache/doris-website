@@ -17,7 +17,7 @@ Python UDF supports two execution modes:
 :::tip Note
 **Environment Dependencies**: Before using Python UDF, you must pre-install **`pandas`** and **`pyarrow`** libraries in the Python environment on all BE nodes. These are mandatory dependencies for Doris Python UDF functionality. See [Python UDF Environment Configuration](python-user-defined-function#python-udfudafudtf-environment-configuration-and-multi-version-management).
 
-**Log Path**: The Python UDF Server runtime log is located at `output/be/lib/udf/python/python_udf_output.log`. Users can check the Python Server's operation status, function execution information, and debug errors in this log.
+**Log Path**: The Python UDF Server runtime log is located at `output/be/log/python_udf_output.log`. Users can check the Python Server's operation status, function execution information, and debug errors in this log.
 :::
 
 ### Creating Python UDF
@@ -913,43 +913,6 @@ A: Technically possible, but **strongly not recommended**. Python UDF can use ne
 - Large concurrent requests may cause external service pressure
 - Difficult to control timeout and error handling
 
-#### Q7: How to use third-party libraries in Python UDF?
-
-A: Python UDF can use third-party libraries, but requires DBA or operations personnel to **manually install dependencies on all BE nodes in the cluster**. Specific steps:
-
-1. **Install dependencies on each BE node**:
-   ```bash
-   # Install using pip
-   pip install numpy pandas requests
-   
-   # Or install using conda
-   conda install numpy pandas requests
-   ```
-
-2. **Import and use in UDF**:
-   ```sql
-   CREATE FUNCTION py_use_numpy(DOUBLE)
-   RETURNS DOUBLE
-   PROPERTIES (
-       "type" = "PYTHON_UDF",
-       "symbol" = "evaluate",
-       "runtime_version" = "3.10.12"
-   )
-   AS $$
-   import numpy as np
-   
-   def evaluate(x):
-       return np.sqrt(x)
-   $$;
-   ```
-
-:::caution Note
-- **`pandas` and `pyarrow` are mandatory dependencies**, must be pre-installed in all Python environments, otherwise Python UDF cannot run
-- Must install same version dependencies on **all BE nodes**, otherwise some nodes will fail to execute
-- Installation path must match Python runtime environment used by Python UDF
-- Recommend using virtual environments to manage dependencies, avoid conflicts with system Python environment
-:::
-
 ## Python UDAF
 
 Python UDAF (User Defined Aggregate Function) is a custom aggregate function extension mechanism provided by Apache Doris, allowing users to write custom aggregate functions in Python for data grouping aggregation and window calculations. Through Python UDAF, users can flexibly implement complex aggregation logic such as statistical analysis, data collection, custom metric calculations, etc.
@@ -963,7 +926,7 @@ Core features of Python UDAF:
 :::tip Note
 **Environment Dependencies**: Before using Python UDAF, you must pre-install **`pandas`** and **`pyarrow`** libraries in the Python environment on all BE nodes. These are mandatory dependencies for Doris Python UDAF functionality. See [Python UDAF Environment Configuration](python-user-defined-function#python-udfudafudtf-environment-configuration-and-multi-version-management).
 
-**Log Path**: The Python UDAF Server runtime log is located at `output/be/lib/udf/python/python_udf_output.log`. Users can check the Python Server's operation status, aggregate function execution information, and debug errors in this log.
+**Log Path**: The Python UDAF Server runtime log is located at `output/be/log/python_udf_output.log`. Users can check the Python Server's operation status, aggregate function execution information, and debug errors in this log.
 :::
 
 ### UDAF Basic Concepts
@@ -1447,6 +1410,7 @@ DROP FUNCTION IF EXISTS py_variance(DOUBLE);
 ### Window Functions
 
 Python UDAF can be used with window functions (OVER clause):
+> If Python UDAF is used in window functions (OVER clause), Doris will call the `reset` method of the UDAF after calculating each window frame, which needs to be implemented in the class to reset the aggregation state to its initial value
 
 ```sql
 DROP TABLE IF EXISTS daily_sales_data;
@@ -1483,6 +1447,9 @@ PROPERTIES (
 AS $$
 class RunningSumUDAF:
     def __init__(self):
+        self.total = 0.0
+
+    def reset(self):
         self.total = 0.0
     
     @property
@@ -1868,49 +1835,6 @@ A: The `merge` method is called in the following situations:
 
 Therefore, `merge` implementation must be correct, otherwise it will lead to incorrect results.
 
-#### Q5: How to use third-party libraries in Python UDAF?
-
-A: Python UDAF can use third-party libraries, but requires DBA or operations personnel to **manually install dependencies on all BE nodes in the cluster**. Specific steps:
-
-1. **Install dependencies on each BE node**:
-   ```bash
-   # Install using pip
-   pip install numpy pandas requests
-   
-   # Or install using conda
-   conda install numpy pandas requests -y
-   ```
-
-2. **Import and use in UDAF**:
-   ```sql
-   CREATE AGGREGATE FUNCTION py_stats(DOUBLE)
-   RETURNS DOUBLE
-   PROPERTIES (
-       "type" = "PYTHON_UDF",
-       "symbol" = "StatsUDAF",
-       "runtime_version" = "3.10.12"
-   )
-   AS $$
-   import numpy as np
-   
-   class StatsUDAF:
-       def __init__(self):
-           self.values = []
-       
-       def accumulate(self, value):
-           if value is not None:
-               self.values.append(value)
-       
-       def finish(self):
-           return np.std(self.values) if self.values else None
-   $$;
-   ```
-
-**Notes**:
-- **`pandas` and `pyarrow` are mandatory dependencies**, must be pre-installed in all Python environments, otherwise Python UDAF cannot run
-- Must install same version dependencies on **all BE nodes**, otherwise some nodes will fail to execute
-- Installation path must match Python runtime environment used by Python UDAF
-
 
 ## Python UDTF
 
@@ -1925,7 +1849,7 @@ Core features of Python UDTF:
 :::tip Note
 **Environment Dependencies**: Before using Python UDTF, you must pre-install **`pandas`** and **`pyarrow`** libraries in the Python environment on all BE nodes. These are mandatory dependencies for Doris Python UDTF functionality. See [Python UDTF Environment Configuration](python-user-defined-function#python-udfudafudtf-environment-configuration-and-multi-version-management).
 
-**Log Path**: The Python UDTF Server runtime log is located at `output/be/lib/udf/python/python_udf_output.log`. Users can check the Python Server's operation status, aggregate function execution information, and debug errors in this log.
+**Log Path**: The Python UDTF Server runtime log is located at `output/be/log/python_udf_output.log`. Users can check the Python Server's operation status, aggregate function execution information, and debug errors in this log.
 :::
 
 ### UDTF Basic Concepts
@@ -2854,9 +2778,29 @@ def limited_udtf(data):
         count += 1
 ```
 
-#### Q6: How to use third-party libraries in Python UDTF?
+#### Q6: Are there limitations on UDTF output data types?
 
-A: Python UDTF can use third-party libraries, but requires DBA or operations personnel to **manually install dependencies on all BE nodes in the cluster**. Specific steps:
+A: UDTF supports all Doris data types, including basic types (INT, STRING, DOUBLE, etc.) and complex types (ARRAY, STRUCT, MAP, etc.). Output type must be explicitly defined in `RETURNS ARRAY<...>`.
+
+#### Q7: Can external resources be accessed in UDTF?
+
+A: Technically possible, but **strongly not recommended**. UDTF should be purely functional, only process based on input parameters. Accessing external resources (databases, files, networks) will cause performance issues and unpredictable behavior.
+
+## Python UDF/UDAF/UDTF Environment Configuration and Multi-Version Management
+
+### Python Environment Management
+
+Before using Python UDF/UDAF/UDTF, please ensure that the Backend (BE) nodes of Doris have properly configured the Python runtime environment. Doris supports managing Python environments through **Conda** or **Virtual Environment (venv)**, allowing different UDFs to use different versions of Python interpreters and dependency libraries.
+
+Doris provides two Python environment management methods:
+- **Conda Mode**: Use Miniconda/Anaconda to manage multi-version environments
+- **Venv Mode**: Use Python's built-in virtual environment (venv) to manage multi-version environments
+
+### Installation and Usage of Third-Party Libraries
+
+Python UDF, UDAF, and UDTF can all use third-party libraries. However, due to Doris's distributed nature, third-party libraries must be uniformly installed on **all BE nodes**, otherwise some nodes will fail to execute.
+
+#### Installation Steps
 
 1. **Install dependencies on each BE node**:
    ```bash
@@ -2867,47 +2811,22 @@ A: Python UDTF can use third-party libraries, but requires DBA or operations per
    conda install numpy pandas requests -y
    ```
 
-2. **Import and use in UDTF**:
-   ```sql
-   CREATE TABLES FUNCTION py_process(STRING)
-   RETURNS ARRAY<STRING>
-   PROPERTIES (
-       "type" = "PYTHON_UDF",
-       "symbol" = "process_udtf",
-       "runtime_version" = "3.10.12"
-   )
-   AS $$
-   import json
-   import re
+2. **Import and use in functions**:
+   ```python
+   import numpy as np
+   import pandas as pd
    
-   def process_udtf(data):
-       # Use third-party libraries
-       parsed = json.loads(data)
-       for item in parsed:
-           yield (str(item),)
-   $$;
+   # Use in UDF/UDAF/UDTF functions
+   def my_function(x):
+       return np.sqrt(x)
    ```
 
-**Notes**:
-- **`pandas` and `pyarrow` are mandatory dependencies**, must be pre-installed in all Python environments, otherwise Python UDTF cannot run
+:::caution Note
+- **`pandas` and `pyarrow` are mandatory dependencies**, must be pre-installed in all Python environments, otherwise Python UDF/UDAF/UDTF cannot run
 - Must install same version dependencies on **all BE nodes**, otherwise some nodes will fail to execute
-- Installation path must match Python runtime environment used by Python UDTF
-
-#### Q7: Are there limitations on UDTF output data types?
-
-A: UDTF supports all Doris data types, including basic types (INT, STRING, DOUBLE, etc.) and complex types (ARRAY, STRUCT, MAP, etc.). Output type must be explicitly defined in `RETURNS ARRAY<...>`.
-
-#### Q8: Can external resources be accessed in UDTF?
-
-A: Technically possible, but **strongly not recommended**. UDTF should be purely functional, only process based on input parameters. Accessing external resources (databases, files, networks) will cause performance issues and unpredictable behavior.
-
-## Python UDF/UDAF/UDTF Environment Configuration and Multi-Version Management
-
-Before using Python UDF/UDAF/UDTF, please ensure that the Backend (BE) nodes of Doris have properly configured the Python runtime environment. Doris supports managing Python environments through **Conda** or **Virtual Environment (venv)**, allowing different UDFs to use different versions of Python interpreters and dependency libraries.
-
-Doris provides two Python environment management methods:
-- **Conda Mode**: Use Miniconda/Anaconda to manage multi-version environments
-- **Venv Mode**: Use Python's built-in virtual environment (venv) to manage multi-version environments
+- Installation path must match Python runtime environment used by corresponding UDF/UDAF/UDTF
+- Recommend using virtual environments or Conda to manage dependencies, avoid conflicts with system Python environment
+:::
 
 ### BE Configuration Parameters
 
@@ -3267,9 +3186,33 @@ grep python /path/to/be.conf
 **Reason**: Python environment or dependency versions inconsistent across BE nodes
 
 **Solution**:
-1. Check Python version and dependency versions on all nodes
-2. Uniformly use `requirements.txt` or `environment.yml` to deploy environment
-3. Verify environment consistency across all nodes
+1. Check Python version and dependency versions on all nodes.
+2. Verify environment consistency across all nodes.
+3. Use `requirements.txt` (pip) or `environment.yml` (Conda) to deploy environments; common usage examples:
+
+- Using `requirements.txt` (pip):
+```bash
+# Export dependencies from development environment
+pip freeze > requirements.txt
+# On BE nodes, install with target Python interpreter
+/path/to/python -m pip install -r requirements.txt
+```
+
+- Using `environment.yml` (Conda):
+```bash
+# export dependencies
+conda env export --from-history -n py312 -f environment.yml
+# On BE nodes, create the environment
+conda env create -f environment.yml -n py312
+# Or update an existing environment
+conda env update -f environment.yml -n py312
+```
+
+**Notes**:
+- Ensure **`pandas`** and **`pyarrow`** are included in the dependency files and installed with the same versions on all BE nodes.
+- When installing, use the Python interpreter or Conda path configured for Doris (for example, `/opt/miniconda3/bin/conda` or the venv interpreter path used by BE).
+- Keep dependency files under version control or on shared storage so operations can distribute them consistently to all BE nodes.
+- References: [pip docs](https://pip.pypa.io/en/stable/cli/pip/)，[Conda export/import](https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html#exporting-the-environment)
 
 #### Q4: be.conf modification not effective
 
