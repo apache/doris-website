@@ -125,4 +125,4 @@ Each parameter in the `iceberg_meta` table function (tvf) is a `"key"="value"` p
 
 ## Related
 
-For more detailed information about Iceberg system tables, please refer to [Iceberg Catalog System Tables](../../lakehouse/catalogs/iceberg-catalog.mdx#system-tables).
+For more detailed information about Iceberg system tables, please refer to [Iceberg Catalog System Tables](../../../lakehouse/catalogs/iceberg-catalog.mdx#system-tables).

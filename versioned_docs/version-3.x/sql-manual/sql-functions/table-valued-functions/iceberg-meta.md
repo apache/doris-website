@@ -22,10 +22,10 @@ ICEBERG_META(
 ## Required Parameters
 Each parameter in the `iceberg_meta` table function (tvf) is a `"key"="value"` pair.
 
-| Field          | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
-|----------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `<table>`      | The full table name, which must be specified in the format of `database_name.table_name` for the Iceberg table that you want to view.                                                                                                                                                                                                                                                                                                                                                                      |
-| `<query_type>` | The type of metadata you want to view. Supported types:<br/>`snapshots`: Snapshot information<br/>`manifests`: Manifest files of current snapshot<br/>`files`: File information of current snapshot<br/>`data_files`: Data files of current snapshot<br/>`delete_files`: Delete files of current snapshot<br/>`partitions`: Partition information<br/>`refs`: Reference information (branches and tags)<br/>`history`: History records<br/>`metadata_log_entries`: Metadata log entries |
+| Field          | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
+|----------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `<table>`      | The full table name, which must be specified in the format of `database_name.table_name` for the Iceberg table that you want to view.                                                                                                                                                                                                                                                                                                                                                                                                     |
+| `<query_type>` | The type of metadata you want to view. Supported types:<br/>`snapshots`: Snapshot information<br/>`manifests`: Manifest files of current snapshot<br/>`all_manifests`: Manifest files of all valid snapshots (supported from version 4.0.4)<br/>`files`: File information of current snapshot<br/>`data_files`: Data files of current snapshot<br/>`delete_files`: Delete files of current snapshot<br/>`partitions`: Partition information<br/>`refs`: Reference information (branches and tags)<br/>`history`: History records<br/>`metadata_log_entries`: Metadata log entries |
 
 
 ## Examples
@@ -75,6 +75,12 @@ Each parameter in the `iceberg_meta` table function (tvf) is a `"key"="value"` p
     select * from iceberg_meta("table" = "iceberg_ctl.test_db.test_tbl", "query_type" = "manifests");
     ```
 
+- View all_manifests of the iceberg table (manifest files of all valid snapshots, supported from version 4.0.4)
+
+    ```sql
+    select * from iceberg_meta("table" = "iceberg_ctl.test_db.test_tbl", "query_type" = "all_manifests");
+    ```
+
 - View files of the iceberg table (file information of current snapshot)
 
     ```sql
@@ -119,4 +125,4 @@ Each parameter in the `iceberg_meta` table function (tvf) is a `"key"="value"` p
 
 ## Related
 
-For more detailed information about Iceberg system tables, please refer to [Iceberg Catalog System Tables](../../lakehouse/catalogs/iceberg-catalog.mdx#system-tables).
+For more detailed information about Iceberg system tables, please refer to [Iceberg Catalog System Tables](../../../lakehouse/catalogs/iceberg-catalog.mdx#system-tables).

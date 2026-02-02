@@ -125,4 +125,4 @@ iceberg_meta 表函数 tvf 中的每一个参数都是一个 `"key"="value"` 对
 
 ## 相关说明
 
-更多关于 Iceberg 系统表的详细信息，请参阅 [Iceberg Catalog 系统表](../../lakehouse/catalogs/iceberg-catalog.mdx#系统表)。
+更多关于 Iceberg 系统表的详细信息，请参阅 [Iceberg Catalog 系统表](../../../lakehouse/catalogs/iceberg-catalog.mdx#系统表)。
