@@ -27,7 +27,7 @@ DATE_SUB(<date_or_time_part>, INTERVAL <expr> <time_unit>)
 
 | 参数 | 说明 |
 | -- | -- |
-| `<date_or_time_part>` | 合法的日期值，支持为 timestamptz, datetime 或者 date 类型，具体格式请查看 [timestamptz的转换](../../../../sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion), [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
+| `<date_or_time_part>` | 合法的日期值，支持为 timestamptz, datetime 或者 date 类型，具体格式请查看 [timestamptz的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion), [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
 | `<expr>` | 希望减去的时间间隔，类型为 `INT`, 对于独立单位(如`YEAR`)为 `INT` 类型; 对于复合单位(如`YEAR_MONT`)为字符串类型, 且接受所有非数字作为分隔符，所以对于例如`INTERVAL 6/4 HOUR_MINUTE`，Doris会将其识别为 6 小时 4 分，而非1小时30分(6/4 == 1.5)。对于复合单位, 如果输入的时间间隔值过短，会将空出的大单位的值设为 0。该值的正负性仅由第一个出现的非数字字符是否为`-`决定。|
 | `<time_unit>` | 枚举值：YEAR, QUARTER, MONTH, WEEK,DAY, HOUR, MINUTE, SECOND, YEAR_MONTH, DAY_HOUR, DAY_MINUTE, DAY_SECOND, DAY_MICROSECOND, HOUR_MINUTE, HOUR_SECOND, HOUR_MICROSECOND, MINUTE_SECOND, MINUTE_MICROSECOND, SECOND_MICROSECOND。 |
 
