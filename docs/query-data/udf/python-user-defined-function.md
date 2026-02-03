@@ -397,7 +397,7 @@ The following table lists the mapping relationship between Doris data types and 
 | | `DECIMAL128` | `decimal.Decimal` | 128-bit fixed-point number |
 | | `DECIMAL256` | `decimal.Decimal` | 256-bit fixed-point number |
 | | `TIMESTAMPTZ` | `datetime.datetime` | DateTime object with time zone |
-| IP Data Types | `ipaddress.IPv4Address` | `int` | IPv4 address |
+| IP Data Types | `IPV4` | `ipaddress.IPv4Address` | IPv4 address |
 | | `IPV6` | `ipaddress.IPv6Address` | IPv6 address |
 | Binary Types | `BITMAP` | `bytes` | Bitmap data (currently not supported) |
 | | `HLL` | `bytes` | HyperLogLog data (currently not supported) |
