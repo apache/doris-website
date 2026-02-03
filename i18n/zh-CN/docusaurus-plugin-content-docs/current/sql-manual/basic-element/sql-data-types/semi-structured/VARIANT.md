@@ -440,6 +440,7 @@ SELECT * FROM tbl WHERE v['str'] MATCH 'Doris';
 
 ## 限制
 
+- **大宽表优化**：针对 `VARIANT` 类型可能产生大量动态子列（例如超过 2000 列）的大宽表场景，强烈建议开启 **V3 存储格式**。通过在建表 `PROPERTIES` 中指定 `"storage_format" = "V3"`，可以将列元数据与 Segment Footer 解耦，加快文件打开速度并降低内存占用。
 - JSON key 长度 ≤ 255。
 - 不支持作为主键或排序键。
 - 不支持与其他类型嵌套（如 `Array<Variant>`、`Struct<Variant>`）。
