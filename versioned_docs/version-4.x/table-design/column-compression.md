@@ -41,6 +41,9 @@ Doris supports various compression algorithms, each with different trade-offs be
 **Encoding Before Compression**
    Before compressing data, Doris encodes the column data (e.g., **dictionary encoding**, **run-length encoding**, etc.) to transform the data into a form more suitable for compression, further enhancing compression efficiency.
 
+**Storage Format V3 Optimizations**
+   Starting from Doris Storage Format V3, the encoding strategy for numerical types has been further optimized. It defaults to `PLAIN_ENCODING` for integer types, which, when combined with LZ4/ZSTD, provides higher read throughput and lower CPU overhead. For more details, see [Storage Format V3](./storage-format).
+
 **Page Compression**
    Doris adopts a **page**-level compression strategy. The data in each column is divided into multiple pages, and the data within each page is compressed independently. By compressing by page, Doris can efficiently handle large-scale datasets while ensuring high compression ratios and decompression performance.
 
