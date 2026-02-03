@@ -379,25 +379,26 @@ The following table lists the mapping relationship between Doris data types and 
 | | `INT` | `int` | 32-bit integer |
 | | `BIGINT` | `int` | 64-bit integer |
 | | `LARGEINT` | `int` | 128-bit integer |
-| | `IPV4` | `int` | IPv4 address (as integer) |
 | Floating Point Types | `FLOAT` | `float` | 32-bit floating point |
 | | `DOUBLE` | `float` | 64-bit floating point |
 | | `TIME` / `TIMEV2` | `float` | Time type (as floating point) |
 | String Types | `CHAR` | `str` | Fixed-length string |
 | | `VARCHAR` | `str` | Variable-length string |
 | | `STRING` | `str` | String |
-| | `IPV6` | `str` | IPv6 address (string format) |
 | | `JSONB` | `str` | JSON binary format (converted to string) |
 | | `VARIANT` | `str` | Variant type (converted to string) |
-| Date/Time Types | `DATE` | `str` | Date string, format `'YYYY-MM-DD'` |
-| | `DATEV2` | `datetime.date` | Date object |
+| | `DATE` | `str` | Date string, format `'YYYY-MM-DD'` |
 | | `DATETIME` | `str` | DateTime string, format `'YYYY-MM-DD HH:MM:SS'` |
+| Date/Time Types | `DATEV2` | `datetime.date` | Date object |
 | | `DATETIMEV2` | `datetime.datetime` | DateTime object |
 | Decimal Types | `DECIMAL` / `DECIMALV2` | `decimal.Decimal` | High-precision decimal |
 | | `DECIMAL32` | `decimal.Decimal` | 32-bit fixed-point number |
 | | `DECIMAL64` | `decimal.Decimal` | 64-bit fixed-point number |
 | | `DECIMAL128` | `decimal.Decimal` | 128-bit fixed-point number |
 | | `DECIMAL256` | `decimal.Decimal` | 256-bit fixed-point number |
+| | `TIMESTAMPTZ` | `datetime.datetime` | DateTime object with time zone |
+| IP Data Types | `ipaddress.IPv4Address` | `int` | IPv4 address |
+| | `IPV6` | `ipaddress.IPv6Address` | IPv6 address |
 | Binary Types | `BITMAP` | `bytes` | Bitmap data (currently not supported) |
 | | `HLL` | `bytes` | HyperLogLog data (currently not supported) |
 | | `QUANTILE_STATE` | `bytes` | Quantile state data (currently not supported) |
