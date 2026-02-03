@@ -1828,6 +1828,7 @@ const sidebars: SidebarsConfig = {
                                     type: 'category',
                                     label: 'Conditional Functions',
                                     items: [
+                                        'sql-manual/sql-functions/scalar-functions/conditional-functions/overview',
                                         'sql-manual/sql-functions/scalar-functions/conditional-functions/coalesce',
                                         'sql-manual/sql-functions/scalar-functions/conditional-functions/greatest',
                                         'sql-manual/sql-functions/scalar-functions/conditional-functions/if',
