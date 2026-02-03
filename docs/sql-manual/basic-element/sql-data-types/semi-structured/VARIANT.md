@@ -483,10 +483,10 @@ CREATE TABLE example_table (
 ```
 
 <table>
-<tr><td>Property<br/></td><td>Description<br/></td></tr>
-<tr><td>`variant_max_subcolumns_count`<br/></td><td>Max number of materialized paths. Above the threshold, new paths may be stored in a shared data structure. Default 0 (unlimited). Recommended 2048; do not exceed 10000.<br/></td></tr>
-<tr><td>`variant_enable_typed_paths_to_sparse`<br/></td><td>By default, typed paths are always materialized (and do not count against `variant_max_subcolumns_count`). When set to `true`, typed paths also count toward the threshold and may be moved to the shared structure.<br/></td></tr>
-<tr><td>`variant_sparse_hash_shard_count`<br/></td><td>Shard count for sparse columns. Distributes sparse subpaths across multiple sparse columns to improve read performance. Default 1; tune based on the number of sparse subpaths.<br/></td></tr>
+<tr><td>Property</td><td>Description</td></tr>
+<tr><td>`variant_max_subcolumns_count`</td><td>Max number of materialized paths. Above the threshold, new paths may be stored in a shared data structure. Default: 2048 (Recommended). 0 means no limit; do not exceed 10000.</td></tr>
+<tr><td>`variant_enable_typed_paths_to_sparse`</td><td>By default, typed paths are always materialized (and do not count against `variant_max_subcolumns_count`). When set to `true`, typed paths also count toward the threshold and may be moved to the shared structure.</td></tr>
+<tr><td>`variant_sparse_hash_shard_count`</td><td>Shard count for sparse columns. Distributes sparse subpaths across multiple sparse columns to improve read performance. Default: 1; tune based on the number of sparse subpaths.</td></tr>
 </table>
 
 ```sql
@@ -505,10 +505,10 @@ CREATE TABLE example_table (
 ```
 
 <table>
-<tr><td>Property<br/></td><td>Description<br/></td></tr>
-<tr><td>`variant_enable_doc_mode`<br/></td><td>Enable DOC encoding mode. When `true`, the original JSON is stored as a stored field to quickly return the whole JSON document. DOC mode is mutually exclusive with sparse columns. Default `false`.<br/></td></tr>
-<tr><td>`variant_doc_materialization_min_rows`<br/></td><td>Minimum row threshold to materialize subcolumns in DOC mode. When rows are below this value, only the original JSON is stored; after compaction merges files to reach the threshold, subcolumns are materialized. Helps reduce overhead for small-batch writes.<br/></td></tr>
-<tr><td>`variant_doc_hash_shard_count`<br/></td><td>Shard count for DOC encoding. The original JSON is split into the specified number of columns for storage and reassembled when querying the whole JSON. Default 64; tune based on JSON size and concurrency.<br/></td></tr>
+<tr><td>Property</td><td>Description</td></tr>
+<tr><td>`variant_enable_doc_mode`</td><td>Enable DOC encoding mode. When `true`, the original JSON is stored as a stored field to quickly return the whole JSON document. DOC mode is mutually exclusive with sparse columns. Default: `false`.</td></tr>
+<tr><td>`variant_doc_materialization_min_rows`</td><td>Minimum row threshold to materialize subcolumns in DOC mode. When rows are below this value, only the original JSON is stored; after compaction merges files to reach the threshold, subcolumns are materialized. Helps reduce overhead for small-batch writes.</td></tr>
+<tr><td>`variant_doc_hash_shard_count`</td><td>Shard count for DOC encoding. The original JSON is split into the specified number of columns for storage and reassembled when querying the whole JSON. Default: 64; tune based on JSON size and concurrency.</td></tr>
 </table>
 
 Behavior at limits and tuning suggestions:
