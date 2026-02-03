@@ -2,7 +2,7 @@
 {
     "title": "VARIANT",
     "language": "en-US",
-    "description": "The VARIANT type stores semi-structured JSON data. It can contain different primitive types (integers, strings, booleans, etc.),"
+    "description": "The VARIANT type stores semi-structured JSON data. It can contain different primitive types (integers, strings, booleans, etc.), one-dimensional arrays, and nested objects. On write, Doris infers the structure and type of sub-paths based on JSON paths and materializes frequent paths as independent subcolumns, leveraging columnar storage and vectorized execution for both flexibility and performance."
 }
 ---
 
@@ -432,9 +432,9 @@ CREATE TABLE example_table (
 ```
 
 <table>
-<tr><td>Property<br/></td><td>Description<br/></td></tr>
-<tr><td>`variant_max_subcolumns_count`<br/></td><td>Max number of materialized paths. Above the threshold, new paths may be stored in a shared data structure. Default 0 (unlimited). Recommended 2048; do not exceed 10000.<br/></td></tr>
-<tr><td>`variant_enable_typed_paths_to_sparse`<br/></td><td>By default, typed paths are always materialized (and do not count against `variant_max_subcolumns_count`). When set to `true`, typed paths also count toward the threshold and may be moved to the shared structure.<br/></td></tr>
+<tr><td>Property</td><td>Description</td></tr>
+<tr><td>`variant_max_subcolumns_count`</td><td>Max number of materialized paths. Above the threshold, new paths may be stored in a shared data structure. Default: 2048 (Recommended). 0 means no limit; do not exceed 10000.</td></tr>
+<tr><td>`variant_enable_typed_paths_to_sparse`</td><td>By default, typed paths are always materialized (and do not count against `variant_max_subcolumns_count`). When set to `true`, typed paths also count toward the threshold and may be moved to the shared structure.</td></tr>
 </table>
 
 Behavior at limits and tuning suggestions:
