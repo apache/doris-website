@@ -19,7 +19,8 @@ For wide tables with a large number of dynamic sub-columns (e.g., more than 2000
 ### Advantages of V3 for Variant
 - **Metadata Decoupling**: V3 moves column metadata (`ColumnMetaPB`) out of the Segment Footer into a separate area. This prevents the Footer from becoming too large when there are thousands of dynamic columns, significantly speeding up file opening and reducing memory overhead.
 - **On-demand Loading**: Metadata is loaded only when needed, which is particularly beneficial for cloud-native storage where object storage access latency is higher.
-- **Improved Scan Performance**: Uses more efficient encoding strategies (`BINARY_PLAIN_ENCODING_V2`) that favor vectorized sequential scans, improving the performance of string and JSONB types within `VARIANT`.
+- **Compact Storage**: Uses `BINARY_PLAIN_ENCODING_V2` to eliminate large trailing offset tables, making storage more compact for string and JSONB types within `VARIANT`.
+- **Improved Numerical Scan Performance**: Integer types default to `PLAIN_ENCODING`, which provides higher read throughput when combined with LZ4/ZSTD.
 
 To enable V3, specify the storage format in the table properties:
 ```sql

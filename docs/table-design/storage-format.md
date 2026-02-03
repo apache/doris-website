@@ -41,7 +41,7 @@ Doris Storage Format V3 is a major evolution from the Segment V2 format. Through
 
 ### Binary Plain Encoding V2
 *   **Optimization**: Introduces `BINARY_PLAIN_ENCODING_V2`, using a `[length(varuint)][raw_data]` streaming layout, replacing the old format that relied on trailing offset tables.
-*   **Benefits**: Eliminates large trailing offset tables, making data storage more compact and favoring sequential scanning by instruction pipelines (Vectorized Sequential Scan), improving scan efficiency for string and JSONB types.
+*   **Benefits**: Eliminates large trailing offset tables, making data storage more compact and significantly reducing storage consumption for string and JSONB types.
 
 ## Design Philosophy
 The design philosophy of V3 can be summarized as: **"Metadata Decoupling, Encoding Simplification, and Streaming Layout"**. By reducing metadata processing bottlenecks and leveraging the high efficiency of modern CPUs in processing simple encodings, it achieves high-performance analysis under complex schemas.
