@@ -117,6 +117,7 @@ const sidebars: SidebarsConfig = {
                         },
                         'table-design/data-type',
                         'table-design/column-compression',
+                        'table-design/storage-format',
                         {
                             type: 'category',
                             label: 'Table Indexes',
