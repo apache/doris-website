@@ -308,7 +308,9 @@ INSERT 命令是同步命令，返回成功，即表示导入成功。
 
 ## 通过 TVF 导入数据
 
-通过 Table Value Function 功能，Doris 可以直接将对象存储或 HDFS 上的文件作为 Table 进行查询分析、并且支持自动的列类型推断、多文件导入。详细介绍，请参考[湖仓一体/TVF文档](https://doris.apache.org/zh-CN/docs/3.0/lakehouse/file-analysis?_highlight=%E9%80%9A%E8%BF%87&_highlight=table&_highlight=value&_highlight=function&_highlight=%E5%8A%9F%E8%83%BD)。
+通过 Table Value Function 功能，Doris 可以直接将对象存储或 HDFS 上的文件作为 Table 进行查询分析、并且支持自动的列类型推断、多文件导入。详细介绍，请参考[湖仓一体/TVF文档](../../../lakehouse/file-analysis)。
+
+TVF 支持在文件路径中使用通配符（`*`、`?`、`[...]`）和范围模式（`{1..10}`）。完整语法请参阅[文件路径模式](../../../sql-manual/basic-element/file-path-pattern)。
 
 ### 自动推断文件列类型
 

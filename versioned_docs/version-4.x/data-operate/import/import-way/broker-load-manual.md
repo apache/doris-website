@@ -24,6 +24,12 @@ Supported data sources:
 - HDFS protocol
 - Custom protocol (require broker process)
 
+Supported file path patterns:
+
+- Wildcards: `*`, `?`, `[abc]`, `[a-z]`
+- Range expansion: `{1..10}`, `{a,b,c}`
+- See [File Path Pattern](../../../sql-manual/basic-element/file-path-pattern) for complete syntax
+
 Supported data types:
 
 - CSV
@@ -557,6 +563,8 @@ Different Broker types and access methods require different authentication infor
   ```
 
 ### Importing data from HDFS using wildcards to match two batches of files and importing them into two separate tables
+
+  Broker Load supports wildcards (`*`, `?`, `[...]`) and range patterns (`{1..10}`) in file paths. For detailed syntax, see [File Path Pattern](../../../sql-manual/basic-element/file-path-pattern).
 
   ```sql
   LOAD LABEL example_db.label2

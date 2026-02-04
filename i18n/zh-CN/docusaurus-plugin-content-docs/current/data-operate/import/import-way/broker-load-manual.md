@@ -23,6 +23,12 @@ Broker Load 适合源数据存储在远程存储系统，比如对象存储或 H
 - HDFS 协议
 - 其他协议（需要相应的 Broker 进程）
 
+支持的文件路径模式：
+
+- 通配符：`*`、`?`、`[abc]`、`[a-z]`
+- 范围展开：`{1..10}`、`{a,b,c}`
+- 完整语法请参阅[文件路径模式](../../../sql-manual/basic-element/file-path-pattern)
+
 支持的数据类型：
 
 - CSV
@@ -550,6 +556,8 @@ Broker Name 只是一个用户自定义名称，不代表 Broker 的类型。
   ```
 
 ### 从 HDFS 导入数据，使用通配符匹配两批文件，分别导入到两个表中
+
+  Broker Load 支持在文件路径中使用通配符（`*`、`?`、`[...]`）和范围模式（`{1..10}`）。详细语法请参阅[文件路径模式](../../../sql-manual/basic-element/file-path-pattern)。
 
   ```sql
   LOAD LABEL example_db.label2
