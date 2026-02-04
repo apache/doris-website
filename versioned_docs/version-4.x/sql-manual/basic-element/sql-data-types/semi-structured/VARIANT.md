@@ -388,6 +388,69 @@ SELECT * FROM tbl WHERE v['str'] MATCH 'Doris';
 | `VARCHAR`       | ✔        | ✔         |
 | `JSON`          | ✔        | ✔         |
 
+### Schema Template based auto CAST
+
+When a VARIANT column defines a Schema Template and `enable_variant_schema_auto_cast` is set to true, the analyzer automatically inserts CASTs to the declared types for subpaths that match the Schema Template, so you do not need to write CASTs manually.
+
+- Applies to SELECT, WHERE, ORDER BY, GROUP BY, HAVING, JOIN keys, and aggregate arguments.
+- To disable this behavior, set `enable_variant_schema_auto_cast` to false.
+
+Example:
+```sql
+CREATE TABLE t (
+  id BIGINT,
+  data VARIANT<'num_*': BIGINT, 'str_*': STRING>
+);
+
+-- 1) Filter + order
+SELECT id
+FROM t
+WHERE data['num_a'] > 10
+ORDER BY data['num_a'];
+
+-- 2) Group + aggregate + alias
+SELECT data['str_name'] AS username, SUM(data['num_a']) AS total
+FROM t
+GROUP BY username
+HAVING data['num_a'] > 100;
+
+-- 3) JOIN ON
+SELECT *
+FROM t1 JOIN t2
+ON t1.data['num_id'] = t2.data['num_id'];
+```
+
+**Note**: Auto CAST cannot determine whether a path is a leaf; it simply casts all paths that match the Schema Template.
+
+Therefore, in cases like the following, to ensure correct results, set `enable_variant_schema_auto_cast` to false and add CASTs manually.
+
+```sql
+-- Schema Template: treat all int_* as INT
+CREATE TABLE t (
+  id INT,
+  data VARIANT<'int_*': INT>
+);
+
+INSERT INTO t VALUES
+(1, '{"int_1": 1, "int_nested": {"level1_num_1": 1011111, "level1_num_2": 102}}');
+
+-- Auto CAST enabled
+SET enable_variant_schema_auto_cast = true;
+
+-- int_nested matches int_*, is incorrectly CAST to INT, and the query returns NULL
+SELECT
+  data['int_nested']
+FROM t;
+
+-- Auto CAST disabled
+SET enable_variant_schema_auto_cast = false;
+
+-- int_nested matches int_*, and the query returns the correct result
+SELECT
+  data['int_nested']
+FROM t;
+```
+
 ## Limitations
 
 - `variant_max_subcolumns_count`: default 0 (no limit). In production, set to 2048 (tablet level) to control the number of materialized paths. Above the threshold, low-frequency/sparse paths are moved to a shared data structure; reading from it may be slower (see “Configuration”).

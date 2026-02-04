@@ -388,6 +388,69 @@ SELECT * FROM tbl WHERE v['str'] MATCH 'Doris';
 | `VARCHAR`       | ✔        | ✔         |
 | `JSON`          | ✔        | ✔         |
 
+### 基于 Schema Template 自动 CAST
+
+当 VARIANT 列定义了 schema template 时，且 `enable_variant_schema_auto_cast` 设为 true 时，语义分析阶段会为命中 schema template 的子列自动插入对应类型的 CAST，无需自行手写。
+
+- 覆盖 SELECT、WHERE、ORDER BY、GROUP BY、HAVING、JOIN KEY 或聚合参数等场景。
+- 若需关闭此行为，将 `enable_variant_schema_auto_cast` 设为 false。
+
+示例：
+```sql
+CREATE TABLE t (
+  id BIGINT,
+  data VARIANT<'num_*': BIGINT, 'str_*': STRING>
+);
+
+-- 1) 过滤 + 排序
+SELECT id
+FROM t
+WHERE data['num_a'] > 10
+ORDER BY data['num_a'];
+
+-- 2) 分组 + 聚合 + Alias
+SELECT data['str_name'] AS username, SUM(data['num_a']) AS total
+FROM t
+GROUP BY username
+HAVING data['num_a'] > 100;
+
+-- 3) JOIN ON
+SELECT *
+FROM t1 JOIN t2
+ON t1.data['num_id'] = t2.data['num_id'];
+```
+
+**注意**：自动 CAST 功能无法感知给定的 Path 是否为叶子，它只是对所有符合 schema template 规则的 Path 都加对应的 CAST。
+
+因此，对于下述这种情况需要额外注意，为保证结果正确，请设置 `enable_variant_schema_auto_cast` 设为 false，并手动添加 CAST。
+
+```sql
+-- Schema Template：所有 int_* 视为 INT
+CREATE TABLE t (
+  id INT,
+  data VARIANT<'int_*': INT>
+);
+
+INSERT INTO t VALUES
+(1, '{"int_1": 1, "int_nested": {"level1_num_1": 1011111, "level1_num_2": 102}}');
+
+-- 自动 CAST 开启
+SET enable_variant_schema_auto_cast = true;
+
+-- int_nested 匹配 int_*，错误自动 CAST 为 INT，查询结果返回 NULL
+SELECT
+  data['int_nested']
+FROM t;
+
+-- 自动 CAST 关闭
+SET enable_variant_schema_auto_cast = false;
+
+-- int_nested 匹配 int_*，查询结果正确返回
+SELECT
+  data['int_nested']
+FROM t;
+```
+
 ## 限制
 
 - `variant_max_subcolumns_count`：默认 0（不限制 Path 物化列数）。建议在生产设置为 2048（Tablet 级别）以控制列数。超过阈值后，低频/稀疏路径会被收敛到共享数据结构，从该结构查询可能带来性能下降（详见“配置”）。
