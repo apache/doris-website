@@ -117,6 +117,7 @@ const sidebars: SidebarsConfig = {
                         },
                         'table-design/data-type',
                         'table-design/column-compression',
+                        'table-design/storage-format',
                         {
                             type: 'category',
                             label: 'Table Indexes',
@@ -284,7 +285,11 @@ const sidebars: SidebarsConfig = {
                         {
                             type: 'category',
                             label: 'User Defined Functions',
-                            items: ['query-data/udf/alias-function', 'query-data/udf/java-user-defined-function'],
+                            items: [
+                                'query-data/udf/alias-function',
+                                'query-data/udf/java-user-defined-function',
+                                'query-data/udf/python-user-defined-function',
+                            ],
                         },
                         'query-data/complex-type',
                         'query-data/lateral-view',

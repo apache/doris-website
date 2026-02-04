@@ -390,6 +390,7 @@ SELECT * FROM tbl WHERE v['str'] MATCH 'Doris';
 
 ## 限制
 
+- **大宽表优化**：针对 `VARIANT` 类型可能产生大量动态子列（例如超过 2000 列）的大宽表场景，强烈建议开启 **V3 存储格式**。通过在建表 `PROPERTIES` 中指定 `"storage_format" = "V3"`，可以将列元数据与 Segment Footer 解耦，加快文件打开速度并降低内存占用。
 - `variant_max_subcolumns_count`：默认 0（不限制 Path 物化列数）。建议在生产设置为 2048（Tablet 级别）以控制列数。超过阈值后，低频/稀疏路径会被收敛到共享数据结构，从该结构查询可能带来性能下降（详见“配置”）。
 - 若 Schema Template 指定了 Path 类型，则该 Path 会被强制提取；当 `variant_enable_typed_paths_to_sparse = true` 时，它也会计入阈值，可能被收敛到共享结构。
 - JSON key 长度 ≤ 255。
@@ -432,9 +433,9 @@ CREATE TABLE example_table (
 ```
 
 <table>
-<tr><td>属性<br/></td><td>描述<br/></td></tr>
-<tr><td>`variant_max_subcolumns_count`<br/></td><td>控制 Path 物化列数的上限；超过后新增路径可能存放于共享数据结构。默认 0 表示不限，建议设置为 2048；不推荐超过 10000。<br/></td></tr>
-<tr><td>`variant_enable_typed_paths_to_sparse`<br/></td><td>默认指定了 Path 类型后，该 Path 一定会被提取（不计入 `variant_max_subcolumns_count`）。设置为 `true` 后也会计入阈值，可能被收敛到共享结构。<br/></td></tr>
+<tr><td>属性</td><td>描述</td></tr>
+<tr><td>`variant_max_subcolumns_count`</td><td>控制 Path 物化列数的上限；超过后新增路径可能存放于共享数据结构。默认 2048（推荐），0 表示不限制；不推荐超过 10000。</td></tr>
+<tr><td>`variant_enable_typed_paths_to_sparse`</td><td>默认指定了 Path 类型后，该 Path 一定会被提取（不计入 `variant_max_subcolumns_count`）。设置为 `true` 后也会计入阈值，可能被收敛到共享结构。</td></tr>
 </table>
 
 达到上限后的行为与调优建议：

@@ -107,6 +107,51 @@ If `BytesScannedFromRemote` is 0, it means the cache is fully hit.
 
 Users can view cache statistics for each Backend node through the system table [`file_cache_statistics`](../admin-manual/system-tables/information_schema/file_cache_statistics).
 
+## Cache Query Limit
+
+> This feature is supported since version 4.0.3.
+
+The Cache Query Limit feature allows users to limit the percentage of file cache that a single query can use. In scenarios where multiple users or complex queries share cache resources, a single large query might occupy too much cache space, causing other queries' hot data to be evicted. By setting a query limit, you can ensure fair resource usage and prevent cache thrashing.
+
+The cache space occupied by a query refers to the total size of data populated into the cache due to cache misses. If the total size populated by the query reaches the quota limit, subsequent data populated by the query will replace the previously populated data based on the LRU algorithm.
+
+### Configuration
+
+This feature involves configuration on BE and FE, as well as session variable settings.
+
+**1. BE Configuration**
+
+- `enable_file_cache_query_limit`:
+  - Type: Boolean
+  - Default: `false`
+  - Description: The master switch for the file cache query limit feature on the BE side. Only when enabled will the BE process the query limit parameters passed from the FE.
+
+**2. FE Configuration**
+
+- `file_cache_query_limit_max_percent`:
+  - Type: Integer
+  - Default: `100`
+  - Description: The max query limit constraint used to validate the upper limit of session variables. It ensures that the query limit set by users does not exceed this value.
+
+**3. Session Variables**
+
+- `file_cache_query_limit_percent`:
+  - Type: Integer (1-100)
+  - Description: The file cache query limit percentage. It sets the maximum percentage of cache a query can use. This value is constrained by `file_cache_query_limit_max_percent`. It is recommended that the calculated cache quota is not less than 256MB. If it is lower than this value, the BE will print a warning in the log.
+
+**Usage Example**
+
+```sql
+-- Set session variable to limit a query to use at most 50% of the cache
+SET file_cache_query_limit_percent = 50;
+
+-- Execute query
+SELECT * FROM large_table;
+```
+
+**Note:**
+1. The value must be within the range [0, `file_cache_query_limit_max_percent`].
+
 ## Cache Warmup
 
 Data Cache provides a cache "warmup" feature that allows preloading external data into the local cache of BE nodes, thereby improving cache hit rates and query performance for subsequent first-time queries.
