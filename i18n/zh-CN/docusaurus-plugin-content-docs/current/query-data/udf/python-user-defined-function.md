@@ -379,25 +379,26 @@ DROP FUNCTION IF EXISTS py_is_prime(INT);
 | | `INT` | `int` | 32 位整数 |
 | | `BIGINT` | `int` | 64 位整数 |
 | | `LARGEINT` | `int` | 128 位整数 |
-| | `IPV4` | `int` | IPv4 地址(以整数形式) |
 | 浮点类型 | `FLOAT` | `float` | 32 位浮点数 |
 | | `DOUBLE` | `float` | 64 位浮点数 |
 | | `TIME` / `TIMEV2` | `float` | 时间类型(以浮点数表示) |
 | 字符串类型 | `CHAR` | `str` | 定长字符串 |
 | | `VARCHAR` | `str` | 变长字符串 |
 | | `STRING` | `str` | 字符串 |
-| | `IPV6` | `str` | IPv6 地址(字符串形式) |
 | | `JSONB` | `str` | JSON 二进制格式(转换为字符串) |
 | | `VARIANT` | `str` | 变体类型(转换为字符串) |
-| 日期时间类型 | `DATE` | `str` | 日期字符串，格式为 `'YYYY-MM-DD'` |
-| | `DATEV2` | `datetime.date` | 日期对象 |
+| | `DATE` | `str` | 日期字符串，格式为 `'YYYY-MM-DD'` |
 | | `DATETIME` | `str` | 日期时间字符串，格式为 `'YYYY-MM-DD HH:MM:SS'` |
+| 日期时间类型 | `DATEV2` | `datetime.date` | 日期对象 |
 | | `DATETIMEV2` | `datetime.datetime` | 日期时间对象 |
+| | `TIMESTAMPTZ` | `datetime.datetime` | 带时区的日期时间对象 |
 | Decimal 类型 | `DECIMAL` / `DECIMALV2` | `decimal.Decimal` | 高精度小数 |
 | | `DECIMAL32` | `decimal.Decimal` | 32 位定点数 |
 | | `DECIMAL64` | `decimal.Decimal` | 64 位定点数 |
 | | `DECIMAL128` | `decimal.Decimal` | 128 位定点数 |
 | | `DECIMAL256` | `decimal.Decimal` | 256 位定点数 |
+| IP 类型 | `IPV4` | `ipaddress.IPv4Address` | IPv4 地址 |
+| | `IPV6` | `ipaddress.IPv6Address` | IPv6 地址 |
 | 二进制类型 | `BITMAP` | `bytes` | 位图数据（暂不支持该类型） |
 | | `HLL` | `bytes` | HyperLogLog 数据（暂不支持该类型） |
 | | `QUANTILE_STATE` | `bytes` | 分位数状态数据（暂不支持该类型） |
