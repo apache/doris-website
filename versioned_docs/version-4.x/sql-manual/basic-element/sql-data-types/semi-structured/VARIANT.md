@@ -171,7 +171,7 @@ Schema only guides the persisted storage type. During query execution, the effec
 SELECT variant_type(CAST('{"a" : "12345"}' AS VARIANT<'a' : INT>)['a']);
 ```
 
-Wildcard matching and order:
+### Wildcard matching and order
 
 ```sql
 CREATE TABLE test_var_schema (
@@ -196,6 +196,70 @@ v1 VARIANT<
 ```
 
 Matched subpaths are materialized as columns by default. If too many paths match and generate excessive columns, consider enabling `variant_enable_typed_paths_to_sparse` (see “Configuration”).
+
+### Wildcard syntax
+
+The Schema Template pattern-matching algorithm supports **only a restricted subset of glob syntax**.
+
+#### Supported glob syntax
+
+All examples below are matching examples.
+
+| Syntax | Meaning | Example (pattern → JSON Path) |
+|------|---------|------------------------------|
+| `*` | Any-length string | `num_*` → `num_latency` |
+| `?` | Any single character | `a?b` → `acb` |
+| `[abc]` | Character class | `a[bc]d` → `abd` |
+| `[a-z]` | Character range | `int_[0-9]` → `int_3` |
+| `[!abc]` | Negated character class | `int_[!0-9]` → `int_a` |
+| `[^abc]` | Negated character class | `int_[^0-9]` → `int_a` |
+| `\` | Escape the next character | `a\*b` → `a*b` |
+
+#### Escaping rules
+
+- `\*` is a literal `*`
+- `\?` is a literal `?`
+- `\[` is a literal `[`
+- A trailing standalone `\` is treated as a literal `\`
+
+#### Unsupported syntax
+
+The following are treated as ordinary characters or cause matching to fail; avoid them whenever possible:
+
+| Syntax | Semantics in some glob implementations | Current behavior |
+|------|----------------------------------------|------------------|
+| `{a,b}` | Brace expansion | **Not supported** (treated as literal `{` `}`) |
+| `**` | Recursive directory match | **No special semantics** (equivalent to `*` `*`) |
+
+- Empty character patterns like `[]`, `[!]`, `[^]`, and `a[]b` are invalid and match no JSON Path.
+- Unterminated character patterns like `int_[0-9` are invalid and match no JSON Path.
+
+#### Typical examples
+
+1. Normal match
+- Pattern: `num_*`
+  - √ `num_a`
+  - √ `num_1`
+  - × `number_a`
+
+- Pattern: `a\*b`
+  - √ `a*b`
+  - × `axxb`
+
+- Pattern: `int_[0-9]`
+  - √ `int_1`
+  - × `int_a`
+
+2. Full match (not “contains” semantics)
+- Pattern: `a*b`
+  - √ `ab`
+  - √ `axxxb`
+  - × `xxaxxxbxx`
+
+3. `.` and `/` are not special; they are ordinary characters
+- Pattern: `int_*`
+  - √ `int_nested.level1`
+  - √ `int_nested/level1`
 
 ## Type conflicts and promotion rules
 
