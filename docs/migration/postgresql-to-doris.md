@@ -37,7 +37,7 @@ This guide covers migrating data from PostgreSQL to Apache Doris. You can choose
 | date | DATE | |
 | time | STRING | Doris does not support TIME type |
 | interval | STRING | |
-| json / jsonb | JSON or STRING | Use STRING for better query performance |
+| json / jsonb | VARIANT | See [VARIANT type](../data-operate/import/complex-types/variant.md) for flexible schema |
 | uuid | STRING | |
 | bytea | STRING | |
 | array | ARRAY | See [Handling Arrays](#handling-arrays) |
@@ -379,7 +379,7 @@ FROM pg_catalog.schema.pg_table;
 
 ### Handling JSON/JSONB
 
-For complex JSON queries, map to Doris STRING and use JSON functions:
+PostgreSQL JSON/JSONB maps to Doris VARIANT type, which supports flexible schema and efficient JSON operations:
 
 ```sql
 -- Query JSON fields

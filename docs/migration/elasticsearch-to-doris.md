@@ -49,8 +49,8 @@ This guide covers migrating data from Elasticsearch to Apache Doris. Doris can s
 | date | DATE or DATETIME | See [Date Handling](#handling-date-types) |
 | ip | STRING | |
 | nested | VARIANT | See [VARIANT type](../data-operate/import/complex-types/variant.md) for flexible schema |
-| object | JSON | |
-| flattened | JSON | Supported since Doris 3.1.4, 4.0.3 |
+| object | VARIANT | See [VARIANT type](../data-operate/import/complex-types/variant.md) |
+| flattened | VARIANT | Supported since Doris 3.1.4, 4.0.3 |
 | geo_point | STRING | Store as "lat,lon" string |
 | geo_shape | STRING | Store as GeoJSON string |
 
