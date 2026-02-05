@@ -23,7 +23,7 @@ import { CheckedIcon } from '@site/src/components/Icons/checked-icon';
 
 const BINARY_VERSION = [
     { label: `${VersionEnum.Latest} ( Latest )`, value: VersionEnum.Latest },
-    { label: `${VersionEnum.Prev}`, value: VersionEnum.Prev },
+    { label: `${VersionEnum.Prev} ( Stable )`, value: VersionEnum.Prev },
 ];
 
 function downloadFile(url: string) {
