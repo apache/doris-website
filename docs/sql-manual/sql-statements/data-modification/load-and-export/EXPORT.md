@@ -322,8 +322,9 @@ PROPERTIES (
 ) WITH S3 (
   "s3.endpoint" = "xxxxx",
   "s3.region" = "xxxxx",
-  "s3.secret_key"="xxxx",
-  "s3.access_key" = "xxxxx"
+  "s3.access_key" = "xxxxx",
+  "s3.secret_key"="xxxx"
+  
 )
 ```
 
