@@ -1169,6 +1169,7 @@ const sidebars: SidebarsConfig = {
                         'sql-manual/basic-element/reserved-keywords',
                         'sql-manual/basic-element/variables',
                         'sql-manual/basic-element/comments',
+                        'sql-manual/basic-element/file-path-pattern',
                         {
                             type: 'category',
                             label: 'Operators',
