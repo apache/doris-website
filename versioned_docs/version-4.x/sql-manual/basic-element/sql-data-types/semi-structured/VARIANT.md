@@ -57,6 +57,12 @@ FROM ${table_name}
 WHERE ARRAY_CONTAINS(CAST(v['tags'] AS ARRAY<TEXT>), 'Doris');
 ```
 
+In VARIANT queries, JSON Path can be expressed in the following forms; any other form is undefined:
+
+1. `v['properties']['title']`
+2. `v['properties.title']`
+3. `v.properties.title`
+
 ## Primitive types
 
 VARIANT infers subcolumn types automatically. Supported types include:
@@ -565,5 +571,3 @@ ClickBench (43 queries):
    - No. They are equivalent.
 2. Why doesn’t my query/index work?
    - Check whether you CAST paths to the correct types; whether the type was promoted to JSONB due to conflicts; or whether you mistakenly expect an index on the whole VARIANT instead of on subpaths.
-
-

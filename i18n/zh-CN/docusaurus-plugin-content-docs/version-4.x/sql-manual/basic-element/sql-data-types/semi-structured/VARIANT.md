@@ -57,6 +57,12 @@ FROM ${table_name}
 WHERE ARRAY_CONTAINS(CAST(v['tags'] AS ARRAY<TEXT>), 'Doris');
 ```
 
+VARIANT 查询中， JSON Path 的表示有如下几种类型，除此之外的表示均为未定义行为：
+
+1. `v['properties']['title']`
+2. `v['properties.title']`
+3. `v.properties.title`
+
 ## 基本类型
 
 VARIANT 自动推断的子列基础类型包括：
