@@ -37,7 +37,7 @@
 | date | DATE | |
 | time | STRING | Doris 不支持 TIME 类型 |
 | interval | STRING | |
-| json / jsonb | JSON 或 STRING | 使用 STRING 可获得更好的查询性能 |
+| json / jsonb | VARIANT | 参见 [VARIANT 类型](../data-operate/import/complex-types/variant.md)，支持灵活 Schema |
 | uuid | STRING | |
 | bytea | STRING | |
 | array | ARRAY | 参见[处理数组](#处理数组) |
@@ -367,7 +367,7 @@ FROM pg_catalog.schema.pg_table;
 
 ### 处理 JSON/JSONB
 
-对于复杂的 JSON 查询，映射到 Doris STRING 并使用 JSON 函数：
+PostgreSQL JSON/JSONB 映射到 Doris VARIANT 类型，支持灵活 Schema 和高效的 JSON 操作：
 
 ```sql
 -- 查询 JSON 字段
