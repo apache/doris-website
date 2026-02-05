@@ -25,7 +25,7 @@
 
 2. **索引到表映射**：每个 Elasticsearch 索引通常映射到一个 Doris 表。
 
-3. **嵌套文档**：Elasticsearch nested/object 类型映射到 Doris JSON 类型。
+3. **嵌套文档**：Elasticsearch nested 类型映射到 Doris [VARIANT](../data-operate/import/complex-types/variant.md) 类型，支持灵活的 Schema 处理。
 
 4. **数组处理**：Elasticsearch 数组需要在 Doris 中显式配置。
 
@@ -48,7 +48,7 @@
 | text | STRING | 考虑在 Doris 中使用倒排索引 |
 | date | DATE 或 DATETIME | 参见[日期处理](#处理日期类型) |
 | ip | STRING | |
-| nested | JSON | |
+| nested | VARIANT | 参见 [VARIANT 类型](../data-operate/import/complex-types/variant.md)，支持灵活 Schema |
 | object | JSON | |
 | flattened | JSON | Doris 3.1.4、4.0.3 起支持 |
 | geo_point | STRING | 存储为 "lat,lon" 字符串 |
