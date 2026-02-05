@@ -25,7 +25,7 @@ This guide covers migrating data from Elasticsearch to Apache Doris. Doris can s
 
 2. **Index to Table Mapping**: Each Elasticsearch index typically maps to a Doris table.
 
-3. **Nested Documents**: Elasticsearch nested/object types map to Doris JSON type.
+3. **Nested Documents**: Elasticsearch nested types map to Doris [VARIANT](../data-operate/import/complex-types/variant.md) type for flexible schema handling.
 
 4. **Array Handling**: Elasticsearch arrays require explicit configuration in Doris.
 
@@ -48,7 +48,7 @@ This guide covers migrating data from Elasticsearch to Apache Doris. Doris can s
 | text | STRING | Consider inverted index in Doris |
 | date | DATE or DATETIME | See [Date Handling](#handling-date-types) |
 | ip | STRING | |
-| nested | JSON | |
+| nested | VARIANT | See [VARIANT type](../data-operate/import/complex-types/variant.md) for flexible schema |
 | object | JSON | |
 | flattened | JSON | Supported since Doris 3.1.4, 4.0.3 |
 | geo_point | STRING | Store as "lat,lon" string |
