@@ -49,8 +49,8 @@
 | date | DATE 或 DATETIME | 参见[日期处理](#处理日期类型) |
 | ip | STRING | |
 | nested | VARIANT | 参见 [VARIANT 类型](../data-operate/import/complex-types/variant.md)，支持灵活 Schema |
-| object | JSON | |
-| flattened | JSON | Doris 3.1.4、4.0.3 起支持 |
+| object | VARIANT | 参见 [VARIANT 类型](../data-operate/import/complex-types/variant.md) |
+| flattened | VARIANT | Doris 3.1.4、4.0.3 起支持 |
 | geo_point | STRING | 存储为 "lat,lon" 字符串 |
 | geo_shape | STRING | 存储为 GeoJSON 字符串 |
 

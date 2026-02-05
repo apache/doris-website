@@ -39,7 +39,7 @@
 | TEXT / MEDIUMTEXT / LONGTEXT | STRING | |
 | BINARY / VARBINARY | STRING | |
 | BLOB / MEDIUMBLOB / LONGBLOB | STRING | |
-| JSON | JSON | |
+| JSON | VARIANT | 参见 [VARIANT 类型](../data-operate/import/complex-types/variant.md) |
 | ENUM | STRING | |
 | SET | STRING | |
 | BIT | BOOLEAN / BIGINT | BIT(1) 映射为 BOOLEAN |

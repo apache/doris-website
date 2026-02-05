@@ -39,7 +39,7 @@ This guide covers migrating data from MySQL to Apache Doris. MySQL is one of the
 | TEXT / MEDIUMTEXT / LONGTEXT | STRING | |
 | BINARY / VARBINARY | STRING | |
 | BLOB / MEDIUMBLOB / LONGBLOB | STRING | |
-| JSON | JSON | |
+| JSON | VARIANT | See [VARIANT type](../data-operate/import/complex-types/variant.md) |
 | ENUM | STRING | |
 | SET | STRING | |
 | BIT | BOOLEAN / BIGINT | BIT(1) maps to BOOLEAN |
