@@ -10,7 +10,7 @@
 将多个 map 合并为一个 map。当合并具有不同键或值类型的 map 时，该函数会找到键和值的公共类型。
 
 :::info Note
-Supported since Apache Doris 4.0.4.
+自 Apache Doris 4.0.4 版本起支持。
 :::
 
 ## 语法
@@ -90,7 +90,7 @@ MAP_CONCAT(<map1> [, <map2> [, <map3> ... ]])
     +---------------------------------+
     ```
 
-    包含 null 元素的 map 合并：null 元素通常会在合并结果中保留。
+    如果任何参数为 NULL，则结果为 NULL。
 
 3. 类型转换示例
     ```sql
