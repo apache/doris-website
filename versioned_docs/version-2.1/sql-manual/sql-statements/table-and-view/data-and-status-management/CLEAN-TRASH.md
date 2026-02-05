@@ -1,9 +1,9 @@
 ---
 {
-  "title": "ADMIN CLEAN TRASH",
-  "language": "en"
+    "title": "ADMIN CLEAN TRASH",
+    "language": "en",
+    "description": "This statement is used to clear garbage data in backend."
 }
-
 ---
 
 ## Description

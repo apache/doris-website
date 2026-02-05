@@ -1,7 +1,8 @@
 ---
 {
     "title": "STRUCT_ELEMENT",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "返回 struct 数据列内的某一 field"
 }
 ---
 
@@ -12,7 +13,7 @@
 ## 语法
 
 ```sql
-STRUCT_ELEMENT( <struct>, `<filed_location>/<filed_name>`)
+STRUCT_ELEMENT( <struct>, '<filed_location>/<filed_name>')
 ```
 
 ## 参数
@@ -21,7 +22,7 @@ STRUCT_ELEMENT( <struct>, `<filed_location>/<filed_name>`)
 | -- | -- |
 | `<struct>` | 输入的 struct 列，如果是 null，则返回 null |
 | `<filed_location>` | field 的位置，起始位置从 1 开始，仅支持常量 |
-| `<filed_name>` | field 的名字，仅支持常量 |
+| `<filed_name>` | field 的名字，仅支持常量，大小写敏感 |
 
 ## 返回值
 

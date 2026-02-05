@@ -1,7 +1,8 @@
 ---
 {
     "title": "ROW_NUMBER",
-    "language": "en"
+    "language": "en",
+    "description": "ROWNUMBER() is a window function that assigns a unique sequential number to each row within a partition."
 }
 ---
 

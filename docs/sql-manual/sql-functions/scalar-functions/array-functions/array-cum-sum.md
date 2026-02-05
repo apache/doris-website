@@ -1,7 +1,8 @@
 ---
 {
     "title": "ARRAY_CUM_SUM",
-    "language": "en"
+    "language": "en",
+    "description": "Calculates the cumulative sum of an array. The function traverses the array from left to right,"
 }
 ---
 
@@ -38,7 +39,7 @@ Return value meaning:
 - NULL: if the input array is NULL
 
 Usage notes:
-- If the array contains other types (such as strings etc.), it will attempt to convert elements to DOUBLE type. Elements that fail conversion will result in null and null value be treated as 0 in the cumulative sum calculation.
+- If the array contains other types (such as strings etc.), it will attempt to convert elements to DOUBLE type. Elements that fail conversion will result in null.
 - The function will attempt to convert all elements to compatible numeric types for cumulative sum calculation，The return type of the cumulative sum is automatically selected based on the input type:
   - When input is DOUBLE or FLOAT, returns ARRAY\<DOUBLE>
   - When input is integer type, returns ARRAY\<BIGINT> or ARRAY\<LARGEINT>
@@ -46,7 +47,7 @@ Usage notes:
 - The cumulative sum calculation order is from left to right, where each position contains the sum of all non-null elements before it.
 - Empty array returns empty array, NULL array returns NULL, array with only one element returns the original array.
 - Nested arrays, MAP, STRUCT and other complex types do not support cumulative sum, calling will result in an error.
-- For null values in array elements: null value be treated as 0 in the cumulative sum calculation.
+- For null values in array elements: Starting from the first non-null value, the null after the cumulative value will be used as 0 to participate in the cumulative sum calculation.
 
 ### Examples
 
@@ -133,14 +134,14 @@ SELECT array_cum_sum([42]);
 +----------------------+
 ```
 
-Array containing null values, null value be treated as 0 in the cumulative sum calculation.
+Array containing null values, starting from the first non-null value, the null after the cumulative value will be used as 0 to participate in the cumulative sum calculation.
 ```sql
-SELECT array_cum_sum([1, null, 3, null, 5]);
-+--------------------------------------+
-| array_cum_sum([1, null, 3, null, 5]) |
-+--------------------------------------+
-| [1, 1, 4, 4, 9]                      |
-+--------------------------------------+
+SELECT array_cum_sum([null, 1, null, 3, null, 5]);
++--------------------------------------------+
+| array_cum_sum([null, 1, null, 3, null, 5]) |
++--------------------------------------------+
+| [null, 1, 1, 4, 4, 9]                      |
++--------------------------------------------+
 ```
 
 Complex type examples:

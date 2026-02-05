@@ -1,11 +1,10 @@
 ---
 {
     "title": "Time Zone",
-    "language": "en"
+    "language": "en",
+    "description": "Doris supports custom time zone settings"
 }
 ---
-
-# Time Zone
 
 Doris supports custom time zone settings
 
@@ -57,6 +56,34 @@ For `DATE` and `DATETIME` types, we support time zone conversion when importing 
 - If the data has a time zone, such as "2020-12-12 12:12:12+08:00" with the current Doris `time_zone = +00:00`, then the data is imported into Doris and the actual value is "2020-12-12 04:12:12".
 
 - If the data does not contain a time zone, such as "2020-12-12 12:12:12", the time is considered to be an absolute time and no conversion occurs.
+
+For `TIMESTAMPTZ` type, time zone conversion is also supported when importing data, converting input time values uniformly to UTC (Coordinated Universal Time), and adding the current session's time zone offset when outputting.
+
+- If the data has a time zone, such as "2020-12-12 12:12:12+08:00", Doris will use that time zone information for conversion.
+
+- If the data does not have a time zone, such as "2020-12-12 12:12:12", Doris will use the current session's time zone setting for conversion.
+
+The current session's `time_zone` affects the output of `TIMESTAMPTZ` type. For example, assuming the current session has `time_zone="+08:00"` and the `TIMESTAMPTZ` type value is `2020-12-12 12:12:12+08:00`, after changing `time_zone`, the output value will change:
+```
+set time_zone = "+08:00";
+
+select * from tz_test;
++---------------------------+
+| tz                        |
++---------------------------+
+| 2020-12-12 12:12:12+08:00 |
++---------------------------+
+
+set time_zone = "+07:00";
+
+select * from tz_test;
++---------------------------+
+| tz                        |
++---------------------------+
+| 2020-12-12 11:12:12+07:00 |
++---------------------------+
+```
+
 
 ### 3. Daylight Saving Time
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "REGEXP",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "对字符串 str 执行正则表达式匹配，匹配成功时返回 true，否则返回 false。pattern 为正则表达式模式。 需要注意的是，在处理字符集匹配时，应使用 Utf-8 标准字符类。这确保函数能够正确识别和处理来自不同语言的各种字符。"
 }
 ---
 
@@ -12,7 +13,15 @@
 
 如果 'pattern' 参数不符合正则表达式，则抛出错误
 
-支持的字符匹配种类 : https://github.com/google/re2/wiki/Syntax
+默认支持的字符匹配种类 : https://github.com/google/re2/wiki/Syntax
+
+Doris 支持通过会话变量 `enable_extended_regex`（默认为 `false`）来启用更高级的正则表达式功能，例如 look-around 零宽断言。
+
+会话变量`enable_extended_regex`设置为`true`时
+支持的字符匹配种类 : https://www.boost.org/doc/libs/latest/libs/regex/doc/html/boost_regex/syntax/perl_syntax.html
+
+
+注：启用此变量后，仅当正则表达式中包含高级语法（如 look-around）时才会影响性能。因此，为了获得更好的性能，建议您尽可能优化正则表达式，避免使用此类零宽断言。
 
 ## 语法
 
@@ -192,3 +201,18 @@ SELECT REGEXP('Hello, World!', '([a-z');
 ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.2)[INTERNAL_ERROR]Invalid regex expression: ([a-z
 ```
 
+高级的正则表达式
+```sql
+SELECT regexp('foobar', '(?<=foo)bar');
+-- ERROR 1105 (HY000): errCode = 2, detailMessage = (127.0.0.1)[INTERNAL_ERROR]Invalid regex expression: ([a-zA-Z_+-]+(?:/[a-zA-Z_0-9+-]+)*)(?=s|$). Error: invalid perl operator: (?<
+
+SET enable_extended_regex = true;
+SELECT regexp('foobar', '(?<=foo)bar');
+```
+```text
++---------------------------------+
+| regexp('foobar', '(?<=foo)bar') |
++---------------------------------+
+|                               1 |
++---------------------------------+
+```

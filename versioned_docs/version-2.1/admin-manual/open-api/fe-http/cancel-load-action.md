@@ -1,7 +1,8 @@
 ---
 {
     "title": "Cancel Load Action",
-    "language": "en"
+    "language": "en",
+    "description": "Used to cancel the load transaction of the specified label."
 }
 ---
 

@@ -1,9 +1,9 @@
 ---
 {
-    "title": "Doris 集成 AWS S3 Tables",
-    "language": "zh-CN"
+    "title": "集成 Glue + AWS S3 Tables",
+    "language": "zh-CN",
+    "description": "AWS S3 Tables 是一种特殊的 S3 Bucket 类型，其对外提供 Apache Iceberg 表格式标准的读写接口，底层依托 Amazon S3，提供和 S3 本身相同的持久性、可用性、可扩展性和性能特征。此外，S3 Tables 还提供以下特性："
 }
-
 ---
 
 [AWS S3 Tables](https://aws.amazon.com/s3/features/tables/) 是一种特殊的 S3 Bucket 类型，其对外提供 Apache Iceberg 表格式标准的读写接口，底层依托 Amazon S3，提供和 S3 本身相同的持久性、可用性、可扩展性和性能特征。此外，S3 Tables 还提供以下特性：
@@ -33,19 +33,35 @@ S3 Table Bucket 是 S3 推出的第三种 Bucket 类型，和之前的 General p
 
 ### 02 创建 Iceberg Catalog
 
-创建一个 `s3tables` 类型的 Iceberg Catalog
+- 创建一个 `s3tables` 类型的 Iceberg Catalog
 
-```sql
-CREATE CATALOG iceberg_s3 PROPERTIES (
-    'type' = 'iceberg',
-    'iceberg.catalog.type' = 's3tables',
-    'warehouse' = 'arn:aws:s3tables:us-east-1:169698000000:bucket/doris-s3-table-bucket',
-    's3.region' = 'us-east-1',
-    's3.endpoint' = 's3.us-east-1.amazonaws.com',
-    's3.access_key' = 'AKIASPAWQE3ITEXAMPLE',
-    's3.secret_key' = 'l4rVnn3hCmwEXAMPLE/lht4rMIfbhVfEXAMPLE'
-);
-```
+    ```sql
+    CREATE CATALOG iceberg_s3 PROPERTIES (
+        'type' = 'iceberg',
+        'iceberg.catalog.type' = 's3tables',
+        'warehouse' = 'arn:aws:s3tables:<region>:<acount_id>:bucket/<s3_table_bucket_name>',
+        's3.region' = '<region>',
+        's3.endpoint' = 's3.<region>.amazonaws.com',
+        's3.access_key' = '<ak>',
+        's3.secret_key' = '<sk>'
+    );
+    ```
+
+- 通过 Glue Rest Catalog 连接 `s3 tables`
+
+    ```sql
+    CREATE CATALOG glue_s3 PROPERTIES (
+        'type' = 'iceberg',
+        'iceberg.catalog.type' = 'rest',
+        'iceberg.rest.uri' = 'https://glue.<region>.amazonaws.com/iceberg',
+        'warehouse' = '<acount_id>:s3tablescatalog/<s3_table_bucket_name>',
+        'iceberg.rest.sigv4-enabled' = 'true',
+        'iceberg.rest.signing-name' = 'glue',
+        'iceberg.rest.access-key-id' = '<ak>',
+        'iceberg.rest.secret-access-key' = '<sk>',
+        'iceberg.rest.signing-region' = '<region>'
+    );
+    ```
 
 ### 03 访问 S3Tables
 
@@ -107,7 +123,7 @@ Doris > SELECT * FROM partition_table;
 
 ### 05 Time Travel
 
-我们可以再插入一批数据，然后使用 `iceberg_meta()` 函数查看 Iceberg 的 Snapshots：
+我们可以再插入一批数据，然后使用 `$snapshots` 系统表查看 Iceberg 的 Snapshots：
 
 ```sql
 Doris > INSERT INTO partition_table VALUES
@@ -118,10 +134,7 @@ Query OK, 2 rows affected (9.76 sec)
 ```
 
 ```
-Doris > SELECT * FROM iceberg_meta(
-    ->     'table' = 'iceberg_s3.my_namespace.partition_table',
-    ->     'query_type' = 'snapshots'
-    -> )\G
+Doris > SELECT * FROM partition_table$snapshots\G
 *************************** 1. row ***************************
  committed_at: 2025-01-15 23:27:01
   snapshot_id: 6834769222601914216

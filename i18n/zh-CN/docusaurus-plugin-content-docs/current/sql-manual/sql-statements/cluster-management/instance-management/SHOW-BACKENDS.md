@@ -1,7 +1,8 @@
 ---
 {
     "title": "SHOW BACKENDS",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "该语句用于查看 BE 节点的基本状态信息。"
 }
 ---
 
@@ -49,9 +50,9 @@
 
 执行此 SQL 命令的用户必须至少具有以下权限：
 
-| 权限         | 对象 | 说明 |
-|------------|----|----|
-| ADMIN_PRIV |    |    |
+| 权限         | 对象 | 说明              |
+|------------|----|-----------------|
+| SELECT_PRIV | internal.information_schema | 所有用户默认有该 db 的权限 |
 
 ## 注意事项
 

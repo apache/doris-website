@@ -1,7 +1,8 @@
 ---
 {
     "title": "导入概览",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "Apache Doris 提供了多种导入和集成数据的方法，您可以使用合适的导入方式从各种源将数据导入到数据库中。Apache Doris 提供的数据导入方式可以分为四类："
 }
 ---
 
@@ -33,9 +34,11 @@ Apache Doris 提供了多种导入和集成数据的方法，您可以使用合�
 - **外部数据源集成**：通过与外部数据源（如 Hive、JDBC、Iceberg 等）的集成，实现对外部数据的查询和部分数据导入到 Doris 表中。
     - 可以创建 [Catalog](../../lakehouse/lakehouse-overview.md) 读取外部数据源中的数据，使用 [INSERT INTO SELECT](./import-way/insert-into-manual.md) 将外部数据源中的数据同步写入到 Doris 中，配合 [JOB](../../admin-manual/workload-management/job-scheduler) 可以异步写入。
 
-    - 可以使用 [X2Doris](data-source/migrate-data-from-other-olap.md) 将其他 AP 系统的数据迁移到 Doris 中。
-
 Doris 的每个导入默认都是一个隐式事务，事务相关的更多信息请参考[事务](../transaction.md)。
+
+### 导入时进行部分列更新
+
+Doris 支持在数据导入时进行部分列更新，允许您只更新表中的特定列，而不需要提供所有列的值。这对于更新宽表或执行增量更新特别有用。关于如何对主键模型和聚合模型表进行部分列更新的详细信息，请参考[列更新](../update/partial-column-update.md)。
 
 ## 导入方式快速浏览
 

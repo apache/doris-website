@@ -1,9 +1,11 @@
 ---
 {
-    "title": "FE Configuration",
+    "title": "FE Configuration Template | Config",
     "language": "en",
     "toc_min_heading_level": 2,
-    "toc_max_heading_level": 4
+    "toc_max_heading_level": 4,
+    "description": "This document mainly introduces the relevant configuration items of FE.",
+    "sidebar_label": "FE Configuration"
 }
 ---
 
@@ -1602,6 +1604,27 @@ Default：5
 
 Export checker's running interval.
 
+#### `enable_mow_load_force_take_ms_lock`
+
+Default: true
+
+IsMutable：true
+
+MasterOnly：true
+
+Specifies whether to enable the forced lock acquisition mechanism for imports on Merge-On-Write Unique tables in compute-storage decoupled mode. When enabled, if an import transaction exceeds a waiting time threshold (configured by `mow_load_force_take_ms_lock_threshold_ms`) while attempting to acquire the distributed lock for the table in the meta-service during the commit phase, it will forcibly take the lock.
+This feature helps reduce import latency tail caused by lock contention under high-frequency and high-concurrency import workloads.
+
+#### `mow_load_force_take_ms_lock_threshold_ms`
+
+Default: 500
+
+IsMutable：true
+
+MasterOnly：true
+
+The timeout threshold (in milliseconds) for triggering forced lock acquisition of import transactions on Merge-On-Write Unique tables in compute-storage decoupled mode.
+
 ### Log
 
 #### `log_roll_size_mb`
@@ -2725,4 +2748,5 @@ MasterOnly: false
 If false, when select from tables in information_schema database,
 the result will not contain the information of the table in external catalog.
 This is to avoid query time when external catalog is not reachable.
+
 

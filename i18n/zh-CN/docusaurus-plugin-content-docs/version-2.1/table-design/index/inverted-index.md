@@ -1,7 +1,8 @@
 ---
 {
     "title": "倒排索引",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "倒排索引，是信息检索领域常用的索引技术，将文本分成一个个词，构建 词 -> 文档编号 的索引，可以快速查找一个词在哪些文档出现。"
 }
 ---
 
@@ -210,7 +211,7 @@ SHOW BUILD INDEX where TableName = "table1";
 通过 `CANCEL BUILD INDEX` 取消 `BUILD INDEX`：
 ```sql
 CANCEL BUILD INDEX ON table_name;
-CANCEL BUILD INDEX ON table_name (job_id1,jobid_2,...);
+CANCEL BUILD INDEX ON table_name (job_id1,job_id2,...);
 ```
 
 :::tip

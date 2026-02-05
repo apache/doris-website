@@ -1,7 +1,8 @@
 ---
 {
     "title": "Release 3.0.0",
-    "language": "en"
+    "language": "en",
+    "description": "We are excited to announce the release of Apache Doris 3.0!"
 }
 ---
 
@@ -142,7 +143,7 @@ In terms of write performance, we have simulated two test cases under the same c
 
 - If users need the compute-storage coupled mode, following the [documentation](https://doris.apache.org/docs/3.0/install/source-install/compilation-with-docker/) for its deployment and upgrade. We recommend using Doris Manager for quick deployment and cluster upgrades. However, the compute-storage decoupled mode does not yet support Doris Manager deployment and upgrade. We will continue iteration for better support in future versions.
 
-- Currently Apache Doris does not support in-place upgrade from V2.1 to the compute-storage decoupled mode of V3.0. For such purpose, users need to perform data migration using tools like X2Doris after deploying the compute-storage decoupled clusters. In the future, we will support migration without service interruption through the CCR (Change Data Capture) capability.
+- Currently Apache Doris does not support in-place upgrade from V2.1 to the compute-storage decoupled mode of V3.0. For such purpose, users need to perform data migration using tools after deploying the compute-storage decoupled clusters. In the future, we will support migration without service interruption through the CCR (Change Data Capture) capability.
 
 :::info
 See doc:
@@ -440,7 +441,7 @@ Before the official release of version 3.0, the compute-storage decoupled mode o
 
 We highly recommend users with compute-storage decoupling needs to download version 3.0 and experience it firsthand.
 
-Going forward, we will accelerate our release iteration cycle to deliver a more stable version experience for all users. Feel free to join us in the [Apache Doris community](https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-2gmq5o30h-455W226d79zP3L96ZhXIoQ) and engage directly with the core developers.
+Going forward, we will accelerate our release iteration cycle to deliver a more stable version experience for all users. Feel free to join us in the [Apache Doris community](https://doris.apache.org/slack) and engage directly with the core developers.
 
 ## Credits
 

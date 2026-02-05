@@ -83,7 +83,7 @@ Normally there are two ways to write real-time data into a data system. One is p
 
 **Elasticsearch** supports push-based ingestion, but it requires Logstash to perform pull-based data ingestion, making it less convenient.
 
-As for **Apache Doris**, it supports both push-based method (HTTP [Stream Load](https://doris.apache.org/docs/3.0/data-operate/import/import-way/stream-load-manual)) and pull-based method ([Routine Load](https://doris.apache.org/docs/3.0/data-operate/import/import-way/routine-load-manual) from Kafka, [Broker Load](https://doris.apache.org/docs/3.0/data-operate/import/import-way/broker-load-manual) from object storage and HDFS). In addition, output plugins for [Logstash](https://doris.apache.org/docs/ecosystem/logstash) and [Beats](https://doris.apache.org/docs/ecosystem/beats) are available to enable seamless data ingestion from Logstash or Beats into Doris.
+As for **Apache Doris**, it supports both push-based method (HTTP [Stream Load](https://doris.apache.org/docs/3.0/data-operate/import/import-way/stream-load-manual)) and pull-based method ([Routine Load](https://doris.apache.org/docs/3.0/data-operate/import/import-way/routine-load-manual) from Kafka, [Broker Load](https://doris.apache.org/docs/3.0/data-operate/import/import-way/broker-load-manual) from object storage and HDFS). In addition, output plugins for [Logstash](https://doris.apache.org/docs/ecosystem/observability/logstash) and [Beats](https://doris.apache.org/docs/ecosystem/observability/beats) are available to enable seamless data ingestion from Logstash or Beats into Doris.
 
 In addition, Doris provides a special write [transaction](https://doris.apache.org/docs/3.0/data-operate/transaction) mechanism. By setting a [label](https://doris.apache.org/docs/3.0/data-operate/transaction#label-mechanism) for a batch of data through the Load API, attempting to re-load a label that has been successfully load before will result in an error, thereby achieving data deduplication. This mechanism ensures that data is written without loss or duplication without relying on the uniqueness of primary keys at the storage layer. Additionally, having a unique label for each batch of data offers better performance compared to having a unique primary key for each individual record.
 
@@ -397,7 +397,7 @@ By 2023, the value of Doris with inverted indexes became increasingly evident, l
 
 The growth momentum has continued, and as of 2024, we are experiencing rapid expansion, with over 100 companies now leveraging Doris to replace Elasticsearch.
 
-Looking ahead, I am very much looking forward to what 2025 will bring. This progress, advancing from the ground up to such significant milestones, has been made possible by the incredible support from the Doris community users and developers. We encourage everyone to join the [Apache Doris Slack community](https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-2zlwvmzon-NIb2rz50rIhcflGAFpYjDQ) and join the dedicated channel [#elasticsearch-to-doris](https://apachedoriscommunity.slack.com/archives/C08CQKX20R5), where you can receive technical assistance, stay updated with the latest news about Doris, and engage with more Doris developers and users.
+Looking ahead, I am very much looking forward to what 2025 will bring. This progress, advancing from the ground up to such significant milestones, has been made possible by the incredible support from the Doris community users and developers. We encourage everyone to join the [Apache Doris Slack community](https://doris.apache.org/slack) and join the dedicated channel [#elasticsearch-to-doris](https://apachedoriscommunity.slack.com/archives/C08CQKX20R5), where you can receive technical assistance, stay updated with the latest news about Doris, and engage with more Doris developers and users.
 
 More on Apache Doris: 
 
@@ -413,7 +413,7 @@ Connect with me on [Linkedin](https://www.linkedin.com/in/kang-xiao-441740316/)
 
 Apache Doris on [GitHub](https://github.com/apache/doris)
 
-Apache Doris [Website]( https://doris.apache.org)
+Apache Doris [Website](https://doris.apache.org)
 
 
 

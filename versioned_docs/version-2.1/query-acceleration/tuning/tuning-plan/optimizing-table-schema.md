@@ -1,7 +1,8 @@
 ---
 {
     "title": "Optimizing Table Schema Design",
-    "language": "en"
+    "language": "en",
+    "description": "In Schema design and tuning, table Schema design is a crucial part, encompassing table engine selection, partition and bucket column selection,"
 }
 ---
 

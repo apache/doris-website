@@ -15,8 +15,8 @@ export default function Archive() {
     const [isZH, setIsZH] = useState(false);
     const handleMouseEnter = (id: string) => {
         const dom = document.getElementById(id);
-        dom!.style.color = '#444FD9';
-        dom!.firstChild!.style.fill = '#444FD9';
+        dom!.style.color = '#11A679';
+        dom!.firstChild!.style.fill = '#11A679';
     };
 
     const handleMouseLeave = (id: string) => {
@@ -112,7 +112,7 @@ export default function Archive() {
                         id="archive-tips-2"
                         values={{
                             latestVersion: (
-                                <Link className='latest-version-link' to={`/${isZH ? 'zh-CN/' : ''}docs/3.0/gettingStarted/what-is-apache-doris`}>
+                                <Link className='latest-version-link' to={`/${isZH ? 'zh-CN/' : ''}docs/3.x/gettingStarted/what-is-apache-doris`}>
                                     <Translate id="archive.latest.version">latest version</Translate>
                                 </Link>
                             ),

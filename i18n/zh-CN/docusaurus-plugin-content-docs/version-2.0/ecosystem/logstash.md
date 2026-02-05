@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Logstash Doris Output Plugin",
+    "title": "Logstash",
     "language": "zh-CN"
 }
 ---
@@ -9,9 +9,9 @@
 
 ## 介绍
 
-Logstash 是一个日志ETL框架（采集，预处理，发送到存储系统），它支持自定义输出插件将数据写入存储系统，Logstash Doris output plugin 是输出到 Doris 的插件。
+Logstash 是一个日志 ETL 框架（采集，预处理，发送到存储系统），它支持自定义输出插件将数据写入存储系统，Logstash Doris output plugin 是输出到 Doris 的插件。
 
-Logstash Doris output plugin 调用 [Doris Stream Load](../data-operate/import/import-way/stream-load-manual) HTTP 接口将数据实时写入 Doris，提供多线程并发，失败重试，自定义 Stream Load 格式和参数，输出写入速度等能力。
+Logstash Doris output plugin 调用 [Doris Stream Load](../data-operate/import/stream-load-manual.md) HTTP 接口将数据实时写入 Doris，提供多线程并发，失败重试，自定义 Stream Load 格式和参数，输出写入速度等能力。
 
 使用 Logstash Doris output plugin 主要有三个步骤：
 1. 将插件安装到 Logstash 中
@@ -25,10 +25,11 @@ Logstash Doris output plugin 调用 [Doris Stream Load](../data-operate/import/i
 可以从官网下载或者自行从源码编译 Logstash Doris output plugin。
 
 - 从官网下载
-  - 不包含依赖的安装包
-https://apache-doris-releases.oss-accelerate.aliyuncs.com/logstash-output-doris-1.0.0.gem
-  - 包含依赖的安装包
-https://apache-doris-releases.oss-accelerate.aliyuncs.com/logstash-output-doris-1.0.0.zip
+
+```shell
+# 包含依赖的安装包
+wget https://apache-doris-releases.oss-cn-beijing.aliyuncs.com/extension/logstash-output-doris-1.2.0-java.gem
+```
 
 - 从源码编译
 
@@ -44,23 +45,23 @@ gem build logstash-output-doris.gemspec
 
 ${LOGSTASH_HOME} 是 Logstash 的安装目录，运行它下面的 bin/logstash-plugin 命令安装插件
 ```
-${LOGSTASH_HOME}/bin/logstash-plugin install logstash-output-doris-1.0.0.gem
+${LOGSTASH_HOME}/bin/logstash-plugin install logstash-output-doris-1.2.0.gem
 
-Validating logstash-output-doris-1.0.0.gem
+Validating logstash-output-doris-1.2.0.gem
 Installing logstash-output-doris
 Installation successful
 ```
 
-普通安装模式会自动安装插件依赖的 ruby 模块，对于网络不通的情况会卡住无法完成，这种情况下可以下载包含依赖的zip安装包进行完全离线安装，注意需要用 file:// 指定本地文件系统。
+普通安装模式会自动安装插件依赖的 ruby 模块，对于网络不通的情况会卡住无法完成，这种情况下可以下载包含依赖的 zip 安装包进行完全离线安装，注意需要用 file:// 指定本地文件系统。
 
 - 离线安装
 
-```
-${LOGSTASH_HOME}/bin/logstash-plugin install file:///tmp/logstash-output-doris-1.0.0.zip
+```shell
 
-Installing file: logstash-output-doris-1.0.0.zip
-Resolving dependencies.........................
-Install successful
+export JARS_SKIP="true"
+
+${LOGSTASH_HOME}/bin/logstash-plugin install logstash-output-doris-1.2.0.gem
+
 ```
 
 ## 参数配置
@@ -69,14 +70,14 @@ Logstash Doris output plugin 的配置如下：
 
 配置 | 说明
 --- | ---
-`http_hosts` | Stream Load HTTP 地址，格式是字符串数组，可以有一个或者多个元素，每个元素是 host:port。 例如：["http://fe1:8030", "http://fe2:8030"]
-`user` | Doris 用户名，该用户需要有doris对应库表的导入权限
+`http_hosts` | Stream Load HTTP 地址，格式是字符串数组，可以有一个或者多个元素，每个元素是 host:port。例如：["http://fe1:8030", "http://fe2:8030"]
+`user` | Doris 用户名，该用户需要有 doris 对应库表的导入权限
 `password` | Doris 用户的密码
 `db` | 要写入的 Doris 库名
 `table` | 要写入的 Doris 表名
 `label_prefix` | Doris Stream Load Label 前缀，最终生成的 Label 为 *{label_prefix}_{db}_{table}_{yyyymmdd_hhmmss}_{uuid}* ，默认值是 logstash
 `headers` | Doris Stream Load 的 headers 参数，语法格式为 ruby map，例如：headers => { "format" => "json" "read_json_by_line" => "true" }
-`mapping` | Logstash 字段到 Doris 表字段的映射， 参考后续章节的使用示例
+`mapping` | Logstash 字段到 Doris 表字段的映射，参考后续章节的使用示例
 `message_only` | 一种特殊的 mapping 形式，只将 Logstash 的 @message 字段输出到 Doris，默认为 false
 `max_retries` | Doris Stream Load 请求失败重试次数，默认为 -1 无限重试保证数据可靠性
 `log_request` | 日志中是否输出 Doris Stream Load 请求和响应元数据，用于排查问题，默认为 false
@@ -145,7 +146,7 @@ PROPERTIES (
 
 Logstash 主要有两类配置文件，一类是整个 Logstash 的配置文件，另一类是某个日志采集的配置文件。
 
-整个 Logstash 的配置文件通常在 config/logstash.yml，为了提升写入 Doris 的性能需要修改 batch 大小和攒批时间，对于平均每条i几百字节的日志，推荐 100 万行和 10s 。
+整个 Logstash 的配置文件通常在 config/logstash.yml，为了提升写入 Doris 的性能需要修改 batch 大小和攒批时间，对于平均每条 i 几百字节的日志，推荐 100 万行和 10s。
 ```
 pipeline.batch.size: 1000000
 pipeline.batch.delay: 10000
@@ -258,7 +259,7 @@ ${LOGSTASH_HOME}/bin/logstash -f config/logstash_doris_log.conf
 
 **1. 数据**
 
-github events archive 是 github 用户操作事件的归档数据，格式是 JSON，可以从 https://www.gharchive.org/ 下载，比如下载 2024年1月1日15点的数据。
+github events archive 是 github 用户操作事件的归档数据，格式是 JSON，可以从 https://www.gharchive.org/ 下载，比如下载 2024 年 1 月 1 日 15 点的数据。
 
 ```
 wget https://data.gharchive.org/2024-01-01-15.json.gz

@@ -1,127 +1,165 @@
 ---
 {
     "title": "ARRAY_JOIN",
-    "language": "en"
+    "language": "en-US",
+    "description": "Joins the elements of an array into a string. The function converts all elements in the array to strings and then concatenates them with the "
 }
 ---
 
+## array_join
+
+<version since="2.0.0">
+
+</version>
+
 ## Description
-Combine all elements in the array into a new string based on the separator (sep) and the string to replace NULL values (null_replace).
+
+Joins the elements of an array into a string. The function converts all elements in the array to strings and then concatenates them with the specified separator.
 
 ## Syntax
 
 ```sql
-ARRAY_JOIN(<arr> , <sep> [, <null_replace>])
+array_join(ARRAY<T> arr, STRING separator [, STRING null_replacement])
 ```
-## Parameters
-| Parameter      | Description |
-|---|---|
-| `<arr>`         | An array to join |
-| `<sep>`         | Separator string |
-| `<null_replace>` | String to replace `NULL` values |
 
-## Return Value
-Returns a new string with the following special cases:
-- If `<sep>` is `NULL`, the function returns `NULL`.
-- If `<null_replace>` is `NULL`, the function also returns `NULL`.
-- If `<sep>` is an empty string, no separator is applied.
-- If `<null_replace>` is an empty string or not specified, `NULL` elements in the array are discarded directly.
+### Parameters
 
-## Example
+- `arr`：ARRAY<T> type, the array to be joined
+- `separator`：STRING type, required parameter, the separator used to separate array elements
+- `null_replacement`：STRING type, optional parameter, the string used to replace null values in the array. If this parameter is not provided, null values will be skipped
 
+**Supported types for T:**
+- Numeric types: TINYINT, SMALLINT, INT, BIGINT, LARGEINT, FLOAT, DOUBLE, DECIMAL
+- String types: CHAR, VARCHAR, STRING
+- Date and time types: DATE, DATETIME, DATEV2, DATETIMEV2
+- Boolean type: BOOLEAN
+- IP types: IPV4, IPV6
+
+### Return Value
+
+Return type: STRING
+
+Return value meaning:
+- Returns a string containing all elements of the array, joined with the separator
+- NULL: if the input array is NULL
+
+Usage notes:
+- The function converts each element in the array to a string and joins them with the specified separator
+- For null values in array elements:
+  - If the `null_replacement` parameter is provided, null elements will be replaced with that string
+  - If the `null_replacement` parameter is not provided, null elements will be skipped
+- Empty arrays return empty strings
+
+**Query Examples:**
+
+Join arrays with a separator:
 ```sql
-CREATE TABLE array_test (
-                            k1 INT,
-                            k2 ARRAY<INT>
-)
-    duplicate key (k1)
-distributed by hash(k1) buckets 1
-properties(
-  'replication_num' = '1'
-);
+SELECT array_join([1, 2, 3, 4, 5], ',');
++--------------------------------------+
+| array_join([1, 2, 3, 4, 5], ',')    |
++--------------------------------------+
+| 1,2,3,4,5                           |
++--------------------------------------+
+```
 
-INSERT INTO array_test VALUES
-                           (1, [1, 2, 3, 4, 5]),
-                           (2, [6, 7, 8]),
-                           (3, []),
-                           (4, NULL),
-                           (5, [1, 2, 3, 4, 5, 4, 3, 2, 1]),
-                           (6, [1, 2, 3, NULL]),
-                           (7, [4, 5, 6, NULL, NULL]);
-select k1, k2, array_join(k2, '_', 'null') from array_test order by k1;
-```
-```text
-+------+-----------------------------+------------------------------------+
-| k1   | k2                          | array_join(`k2`, '_', 'null')      |
-+------+-----------------------------+------------------------------------+
-|  1   | [1, 2, 3, 4, 5]             | 1_2_3_4_5                          |
-|  2   | [6, 7, 8]                   | 6_7_8                              |
-|  3   | []                          |                                    |
-|  4   | NULL                        | NULL                               |
-|  5   | [1, 2, 3, 4, 5, 4, 3, 2, 1] | 1_2_3_4_5_4_3_2_1                  |
-|  6   | [1, 2, 3, NULL]             | 1_2_3_null                         |
-|  7   | [4, 5, 6, NULL, NULL]       | 4_5_6_null_null                    |
-+------+-----------------------------+------------------------------------+
-```
+Join string arrays with a space separator:
 ```sql
-select k1, k2, array_join(k2, '_') from array_test order by k1;
-```
-```text
-+------+-----------------------------+----------------------------+
-| k1   | k2                          | array_join(`k2`, '_')      |
-+------+-----------------------------+----------------------------+
-|  1   | [1, 2, 3, 4, 5]             | 1_2_3_4_5                  |
-|  2   | [6, 7, 8]                   | 6_7_8                      |
-|  3   | []                          |                            |
-|  4   | NULL                        | NULL                       |
-|  5   | [1, 2, 3, 4, 5, 4, 3, 2, 1] | 1_2_3_4_5_4_3_2_1          |
-|  6   | [1, 2, 3, NULL]             | 1_2_3                      |
-|  7   | [4, 5, 6, NULL, NULL]       | 4_5_6                      |
-+------+-----------------------------+----------------------------+
+SELECT array_join(['hello', 'world', 'doris'], ' ');
++--------------------------------------------------+
+| array_join(['hello', 'world', 'doris'], ' ')    |
++--------------------------------------------------+
+| hello world doris                                |
++--------------------------------------------------+
 ```
 
+Join arrays containing null values (null values are skipped):
 ```sql
-CREATE TABLE array_test01 (
-    k1 INT,
-    k2 ARRAY<STRING>
-)
-duplicate key (k1)
-distributed by hash(k1) buckets 1
-properties(
-  'replication_num' = '1'
-);
-
-INSERT INTO array_test01 VALUES
-(1, ['a', 'b', 'c', 'd']),
-(2, ['e', 'f', 'g', 'h']),
-(3, [NULL, 'a', NULL, 'b', NULL, 'c']),
-(4, ['d', 'e', NULL, ' ']),
-(5, [' ', NULL, 'f', 'g']);
-select k1, k2, array_join(k2, '_', 'null') from array_test01 order by k1;
-```
-```text
-+------+-----------------------------------+------------------------------------+
-| k1   | k2                                | array_join(`k2`, '_', 'null')      |
-+------+-----------------------------------+------------------------------------+
-|  1   | ['a', 'b', 'c', 'd']              | a_b_c_d                            |
-|  2   | ['e', 'f', 'g', 'h']              | e_f_g_h                            |
-|  3   | [NULL, 'a', NULL, 'b', NULL, 'c'] | null_a_null_b_null_c               |
-|  4   | ['d', 'e', NULL, ' ']             | d_e_null_                          |
-|  5   | [' ', NULL, 'f', 'g']             |  _null_f_g                         |
-+------+-----------------------------------+------------------------------------+
+SELECT array_join([1, null, 3, null, 5], '-');
++--------------------------------------------+
+| array_join([1, null, 3, null, 5], '-')    |
++--------------------------------------------+
+| 1-3-5                                      |
++--------------------------------------------+
 ```
 
+Replace null values using the null_replacement parameter:
 ```sql
-select k1, k2, array_join(k2, '_') from array_test01 order by k1;
+SELECT array_join([1, null, 3, null, 5], '-', 'NULL');
++--------------------------------------------------+
+| array_join([1, null, 3, null, 5], '-', 'NULL')  |
++--------------------------------------------------+
+| 1-NULL-3-NULL-5                                 |
++--------------------------------------------------+
 ```
-```text
-+------+-----------------------------------+----------------------------+
-| k1   | k2                                | array_join(`k2`, '_')      |
-+------+-----------------------------------+----------------------------+
-|  1   | ['a', 'b', 'c', 'd']              | a_b_c_d                    |
-|  2   | ['e', 'f', 'g', 'h']              | e_f_g_h                    |
-|  3   | [NULL, 'a', NULL, 'b', NULL, 'c'] | a_b_c                      |
-|  4   | ['d', 'e', NULL, ' ']             | d_e_                       |
-|  5   | [' ', NULL, 'f', 'g']             |  _f_g                      |
-+------+-----------------------------------+----------------------------+
+
+Join float arrays:
+```sql
+SELECT array_join([1.1, 2.2, 3.3], ' | ');
++------------------------------------------+
+| array_join([1.1, 2.2, 3.3], ' | ')      |
++------------------------------------------+
+| 1.1 | 2.2 | 3.3                         |
++------------------------------------------+
 ```
+
+Join date arrays:
+```sql
+SELECT array_join(CAST(['2023-01-01', '2023-06-15', '2023-12-31'] AS ARRAY<DATETIME>), ' to ');
++-----------------------------------------------------------------------------------------+
+| array_join(CAST(['2023-01-01', '2023-06-15', '2023-12-31'] AS ARRAY<DATETIME>), ' to ') |
++-----------------------------------------------------------------------------------------+
+| 2023-01-01 00:00:00 to 2023-06-15 00:00:00 to 2023-12-31 00:00:00                       |
++-----------------------------------------------------------------------------------------+
+```
+
+Join IP address arrays:
+```sql
+SELECT array_join(CAST(['192.168.1.1', '192.168.1.2', '192.168.1.3'] AS ARRAY<IPV4>), ' -> ');
++----------------------------------------------------------------------------------+
+| array_join(CAST(['192.168.1.1', '192.168.1.2', '192.168.1.3'] AS ARRAY<IPV4>), ' -> ') |
++----------------------------------------------------------------------------------+
+| 192.168.1.1 -> 192.168.1.2 -> 192.168.1.3                                       |
++----------------------------------------------------------------------------------+
+```
+
+Empty arrays return empty strings:
+```sql
+SELECT array_join([], ',');
++----------------------+
+| array_join([], ',')  |
++----------------------+
+|                      |
++----------------------+
+```
+
+NULL arrays return NULL:
+```sql
+SELECT array_join(NULL, ',');
++----------------------+
+| array_join(NULL, ',') |
++----------------------+
+| NULL                 |
++----------------------+
+```
+
+Error when passing complex types:
+```sql
+SELECT array_join([{'name':'Alice','age':20}, {'name':'Bob','age':30}], '; ');
+ERROR 1105 (HY000): errCode = 2, detailMessage = can not cast from origin type ARRAY<MAP<TEXT,TEXT>> to target type=ARRAY<VARCHAR(65533)>
+```
+
+Error with wrong number of parameters:
+```sql
+SELECT array_join([1,2,3], ',', 'extra', 'too_many');
+ERROR 1105 (HY000): errCode = 2, detailMessage = Can not found function 'array_join' which has 4 arity. Candidate functions are: [array_join(Expression, Expression, Expression), array_join(Expression, Expression)]
+```
+
+Error when passing non-array types:
+```sql
+SELECT array_join('not_an_array', ',');
+ERROR 1105 (HY000): errCode = 2, detailMessage = Can not find the compatibility function signature: array_join(VARCHAR(12), VARCHAR(1))
+```
+
+### Keywords
+
+ARRAY, JOIN, ARRAY_JOIN

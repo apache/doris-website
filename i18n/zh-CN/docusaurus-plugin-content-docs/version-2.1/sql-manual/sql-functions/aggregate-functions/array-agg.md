@@ -1,7 +1,8 @@
 ---
 {
-"title": "ARRAY_AGG",
-"language": "zh-CN"
+    "title": "ARRAY_AGG",
+    "language": "zh-CN",
+    "description": "将一列中的值（包括空值 null）串联成一个数组，可以用于多行转一行（行转列）。"
 }
 ---
 

@@ -1,15 +1,19 @@
 ---
 {
-"title": "MAP",
-"language": "en"
+    "title": "MAP | Semi Structured",
+    "language": "en",
+    "description": "```SQL SELECT MAP('Alice', 21, 'Bob', 23);",
+    "sidebar_label": "MAP"
 }
 ---
+
+# MAP
 
 ## Type Description
 
 - The `MAP<key_type, value_type>` type is used to represent a composite type of key-value pairs, where each key uniquely corresponds to a value.
-  - `key_type` represents the type of the keys, supporting types such as `BOOLEAN, TINYINT, SMALLINT, INT, BIGINT, LARGEINT, FLOAT, DOUBLE, DECIMAL, DATE, DATETIME, CHAR, VARCHAR, STRING, IPV4, IPV6`. Keys are nullable and cannot be specified as NOT NULL.
-  - `value_type` represents the type of the values, supporting `BOOLEAN, TINYINT, SMALLINT, INT, BIGINT, LARGEINT, FLOAT, DOUBLE, DECIMAL, DATE, DATETIME, CHAR, VARCHAR, STRING, IPV4, IPV6, ARRAY, MAP, STRUCT`. Values are nullable and cannot be specified as NOT NULL.
+  - `key_type` represents the type of the keys, supporting types such as `BOOLEAN, TINYINT, SMALLINT, INT, BIGINT, LARGEINT, FLOAT, DOUBLE, DECIMAL, DATE, DATETIME, TIMESTAMPTZ, CHAR, VARCHAR, STRING, IPV4, IPV6`. Keys are nullable and cannot be specified as NOT NULL.
+  - `value_type` represents the type of the values, supporting `BOOLEAN, TINYINT, SMALLINT, INT, BIGINT, LARGEINT, FLOAT, DOUBLE, DECIMAL, DATE, DATETIME, TIMESTAMPTZ, CHAR, VARCHAR, STRING, IPV4, IPV6, ARRAY, MAP, STRUCT`. Values are nullable and cannot be specified as NOT NULL.
 
 ## Type Constraints
 
@@ -216,4 +220,5 @@
   | map_varchar_varchar | map<varchar(20),varchar(20)> | Yes  | false | NULL    | NONE  |
   +---------------------+------------------------------+------+-------+---------+-------+
   ```
+
 

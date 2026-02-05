@@ -1,7 +1,8 @@
 ---
 {
     "title": "SECONDS_DIFF",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "函数用于计算两个日期时间值之间的时间差，以秒为单位返回差值。"
 }
 ---
 

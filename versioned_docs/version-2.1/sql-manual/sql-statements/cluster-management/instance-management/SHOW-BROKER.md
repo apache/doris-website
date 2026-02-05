@@ -1,7 +1,8 @@
 ---
 {
-  "title": "SHOW BROKER",
-  "language": "en"
+    "title": "SHOW BROKER",
+    "language": "en",
+    "description": "This statement is used to view the status of the currently existing broker processes."
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "SHOW PARTITIONS",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "该语句用于展示分区信息。支持 Internal catalog 和 Hive Catalog。"
 }
 ---
 
@@ -43,8 +44,9 @@ SHOW [ TEMPORARY ] PARTITIONS
 过滤条件，支持 `PartitionId`,`PartitionName`,`State`,`Buckets`,`ReplicationNum`,`LastConsistencyCheckTime` 等列的过滤。
 
 需要注意的是：
-1. 目前 `where`子句只支持 `=` 操作符，不支持 `>`、`<`、`>=`、`<=` 等操作符。
-2. `where`子句使用 `=` 操作符时，列名需要在左侧。
+1. 目前 `where`子句等操作符。对字符型的 `PartitionName`, `State` 只支持`=`、`!=`、`like` 操作符。对其余的只支持 `=`、`!=`、`>`、`<`、`>=`、`<=` 操作符。
+2. `where`子句使用上面的操作符时，列名需要在左侧。
+3. `where`子句可以包含`AND`。
 
 
 **4. `<order_by_key>`**
@@ -67,7 +69,7 @@ SHOW [ TEMPORARY ] PARTITIONS
 | Range | datetime | 该分区的分区区间                                                   |
 | DistributionKey | varchar  | 该分区的分布键                                                    |
 | Buckets | int      | 该分区的分桶数                                                    |
-| ReplicationNum | int      | 该分区的副本书                                                    |
+| ReplicationNum | int      | 该分区的副本数                                                    |
 | StorageMedium | varchar  | 该分区的存储介质                                                   |
 | CooldownTime | datetime | 该分区的降冷时间，如果没有冷热分离，该字段的值为 `[9999-12-31 23:59:59]` ，即一直为热数据。 |
 | RemoteStoragePolicy | varchar  | 该分区的远端存储策略                                                 |

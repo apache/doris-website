@@ -1,7 +1,8 @@
 ---
 {
     "title": "Data Operation Error",
-    "language": "en"
+    "language": "en",
+    "description": "This document is mainly used to record common problems of data operation during the use of Doris. It will be updated from time to time."
 }
 ---
 

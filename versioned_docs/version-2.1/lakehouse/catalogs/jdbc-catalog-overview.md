@@ -1,7 +1,8 @@
 ---
 {
     "title": "JDBC Catalog",
-    "language": "en"
+    "language": "en",
+    "description": "JDBC Catalog supports connecting to databases that are compatible with the JDBC protocol through a standard JDBC interface."
 }
 ---
 
@@ -79,7 +80,7 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
       | `connection_pool_max_life_time`| 1800000      | Sets the maximum active duration (in milliseconds) for a connection in the pool. Connections exceeding this time will be recycled. Additionally, half of this value is used as the minimum eviction idle time for the pool, making connections reaching this time eligible for eviction. |
       | `connection_pool_keep_alive`  | false         | Effective only on BE nodes, it determines whether to keep connections active that have reached the minimum eviction idle time but not the maximum lifetime. Disabled by default to reduce unnecessary resource usage. |
         
-* `{CommonProperties}`
+* `[CommonProperties]`
 
   The CommonProperties section is used to configure common properties. Please refer to the [Catalog Overview](../catalog-overview.md) section on **Common Properties**.
 

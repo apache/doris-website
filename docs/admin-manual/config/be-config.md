@@ -3,7 +3,8 @@
     "title": "BE Configuration",
     "language": "en",
     "toc_min_heading_level": 2,
-    "toc_max_heading_level": 4
+    "toc_max_heading_level": 4,
+    "description": "This document mainly introduces the relevant configuration items of BE."
 }
 ---
 
@@ -339,7 +340,7 @@ The maximum size of a (received) message of the thrift server, in bytes. If the 
 
 #### `fragment_mgr_asynic_work_pool_thread_num_min`
 
-* Description: Number of threads to excute asynic work. By default, the minimum number of threads is 16.
+* Description: Number of threads to execute asynic work. By default, the minimum number of threads is 16.
 * Default value: 16
 
 #### `fragment_mgr_asynic_work_pool_thread_num_max`
@@ -639,6 +640,23 @@ BaseCompaction:546859:
 * Description: Minimal interval (s) to update peer replica infos
 * Default value: 60 (s)
 
+#### `cold_data_compaction_score_threshold`
+
+* Type: int32
+* Description: This configuration specifies the minimum compaction score threshold for cold data before triggering compaction. When the compaction score of cold data exceeds this threshold, compaction will be considered. Adjusting this value helps control the frequency and aggressiveness of compaction on cold data in remote storage. Supported since 3.1.3.
+* Default value: 100
+
+#### `cold_data_compaction_thread_num`
+
+* Type: int32
+* Description: The number of threads used for cold data compaction. This configuration controls the degree of parallelism for cold data compaction tasks. Increasing this value allows more compaction tasks on cold data to run simultaneously, which may improve throughput but also increase resource usage.
+* Default value: 2
+
+#### `cold_data_compaction_interval_sec`
+
+* Type: int32
+* Description: The time interval in seconds between triggers for cold data compaction. A shorter interval means compaction on cold data will be considered more frequently, potentially leading to faster cleanup but higher resource consumption.
+* Default value: 1800 (seconds)
 
 ### Load
 
@@ -1359,3 +1377,9 @@ Default: true for cloud mode, false for non-cloud mode.
 Default: [{"path":"${DORIS_HOME}/file_cache"}]
 * Description: The disk paths and other parameters used for file cache, represented as an array, with one entry for each disk. The `path` specifies the disk path, and `total_size` limits the size of the cache; -1 or 0 will use the entire disk space.
 * format: [{"path":"/path/to/file_cache","total_size":21474836480,{"path":"/path/to/file_cache2","total_size":21474836480}]
+
+#### `time_series_max_tablet_version_num`
+
+* Type: int
+* Description: Limit the number of versions of a single tablet under the time-series compaction policy. It is used to prevent a large number of version accumulation problems caused by too frequent load or untimely compaction. When the limit is exceeded, the load task will be rejected.
+* Default value: 20000

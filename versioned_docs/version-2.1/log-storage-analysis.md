@@ -1,7 +1,9 @@
 ---
 {
-    "title": "Log Storage and Analysis",
-    "language": "en"
+    "title": "Log Storage and Analysis | Doris Docs",
+    "language": "en",
+    "description": "Logs record key events in the system and contain crucial information such as the events' subject, time, location, and content.",
+    "sidebar_label": "Log Storage and Analysis"
 }
 ---
 
@@ -156,7 +158,7 @@ Refer to the following table to learn about the values of indicators in the exam
 
 ### Step 2: Deploy the cluster
 
-After estimating the resources, you need to deploy the cluster. It is recommended to deploy in both physical and virtual environments manually. For manual deployment, refer to [Manual Deployment](../version-3.0/install/deploy-manually/integrated-storage-compute-deploy-manually).
+After estimating the resources, you need to deploy the cluster. It is recommended to deploy in both physical and virtual environments manually. For manual deployment, refer to [Manual Deployment](./install/deploy-manually/integrated-storage-compute-deploy-manually).
 
 ### Step 3: Optimize FE and BE configurations
 
@@ -187,7 +189,7 @@ You can find BE configuration fields in `be/conf/be.conf`. Refer to the followin
 | -          | `enable_file_cache = true`                                   | Enable file caching.                                         |
 | -          | `file_cache_path = [{"path": "/mnt/datadisk0/file_cache", "total_size":53687091200, "query_limit": "10737418240"},{"path": "/mnt/datadisk1/file_cache", "total_size":53687091200,"query_limit": "10737418240"}]` | Configure the cache path and related settings for cold data with the following specific configurations:<br/>`path`: cache path<br/>`total_size`: total size of the cache path in bytes, where 53687091200 bytes equals 50 GB<br/>`query_limit`: maximum amount of data that can be queried from the cache path in one query in bytes, where 10737418240 bytes equals 10 GB |
 | Write      | `write_buffer_size = 1073741824`                             | Increase the file size of the write buffer to reduce small files and random I/O operations, improving performance. |
-| -          | `max_tablet_version_num = 20000`                             | In coordination with the time_series compaction strategy for table creation, allow more versions to remain temporarily unmerged |
+| -          | `max_tablet_version_num = 20000`                             | In coordination with the time_series compaction strategy for table creation, allow more versions to remain temporarily unmerged. No longer required after version 2.1.11, as there is a time_series_max_tablet_version_num configuration |
 | Compaction | `max_cumu_compaction_threads = 8`                            | Set to CPU core count / 4, indicating that 1/4 of CPU resources are used for writing, 1/4 for background compaction, and 2/1 for queries and other operations. |
 | -          | `inverted_index_compaction_enable = true`                    | Enable inverted index compaction to reduce CPU consumption during compaction. |
 | -          | `enable_segcompaction = false` `enable_ordered_data_compaction = false` | Disable two compaction features that are unnecessary for log scenarios. |
@@ -214,7 +216,7 @@ Due to the distinct characteristics of both writing and querying log data, it is
 
 - For data partitioning:
 
-    - Enable [range partitioning](./table-design/data-partitioning/manual-partitioning.md#range-partitioning) (`PARTITION BY RANGE(`ts`)`) with [dynamic partitions](./table-design/data-partitioning/dynamic-partitioning.md)   (`"dynamic_partition.enable" = "true"`) managed automatically by day.
+    - Enable [range partitioning](./table-design/data-partitioning/manual-partitioning.md#range-partitioning) (`PARTITION BY RANGE(`ts`)`) with [dynamic partitions](./table-design/data-partitioning/dynamic-partitioning)   (`"dynamic_partition.enable" = "true"`) managed automatically by day.
 
     - Use a field in the DATETIME type as the key (`DUPLICATE KEY(ts)`) for accelerated retrieval of the latest N log entries.
 
@@ -316,12 +318,12 @@ Follow these steps:
 
 1. Download and install the Logstash Doris Output plugin. You can choose one of the following two methods:
 
-   - [Click to download](https://apache-doris-releases.oss-accelerate.aliyuncs.com/logstash-output-doris-1.0.0.gem) and install.
+   - [Click to download](https://apache-doris-releases.oss-accelerate.aliyuncs.com/extension/logstash-output-doris-1.2.0.gem) and install.
 
    - Compile from the source code and run the following command to install:
 
 ```markdown  
-./bin/logstash-plugin install logstash-output-doris-1.0.0.gem
+./bin/logstash-plugin install logstash-output-doris-1.2.0.gem
 ```
 
 2. Configure Logstash. Specify the following fields:
@@ -377,13 +379,13 @@ output {
 ./bin/logstash -f logstash_demo.conf
 ```
 
-For more information about the Logstash Doris Output plugin, see [Logstash Doris Output Plugin](./ecosystem/logstash).
+For more information about the Logstash Doris Output plugin, see [Logstash Doris Output Plugin](./ecosystem/observability/logstash).
 
 **Integrating Filebeat**
 
 Follow these steps:
 
-1. Obtain the Filebeat binary file that supports output to Apache Doris. You can [click to download](https://apache-doris-releases.oss-accelerate.aliyuncs.com/filebeat-doris-1.0.0) or compile it from the Apache Doris source code.
+1. Obtain the Filebeat binary file that supports output to Apache Doris. You can [click to download](https://apache-doris-releases.oss-accelerate.aliyuncs.com/extension/filebeat-doris-2.1.1) or compile it from the Apache Doris source code.
 
 2. Configure Filebeat. Specify the filebeat_demo.yml field that is used to configure the specific input path of the collected logs and the settings for output to Apache Doris.
 
@@ -441,11 +443,11 @@ headers:
 3. Run Filebeat according to the command below, collect logs, and output to Apache Doris.
 
     ```shell  
-    chmod +x filebeat-doris-1.0.0  
-    ./filebeat-doris-1.0.0 -c filebeat_demo.yml
+    chmod +x filebeat-doris-2.1.1  
+    ./filebeat-doris-2.1.1 -c filebeat_demo.yml
     ```
 
-For more information about Filebeat, refer to [Beats Doris Output Plugin](./ecosystem/beats).
+For more information about Filebeat, refer to [Beats Doris Output Plugin](./ecosystem/observability/beats).
 
 **Integrating Kafka**
 
@@ -568,3 +570,4 @@ Some third-party vendors offer visual log analysis development platforms based o
 - Display of top field values in search results for finding anomalies and further drilling down for analysis
 
 Please contact dev@doris.apache.org to find more.
+

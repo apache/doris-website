@@ -1,7 +1,8 @@
 ---
 {
     "title": "Lakehouse Overview",
-    "language": "en"
+    "language": "en",
+    "description": "The lakehouse is a modern big data solution that combines the advantages of data lakes and data warehouses."
 }
 ---
 
@@ -23,7 +24,7 @@ Whether it's Hive, Iceberg, Hudi, Paimon, or database systems supporting the JDB
 
 For lakehouse systems, Doris can obtain the structure and distribution information of data tables from metadata services such as Hive Metastore, AWS Glue, and Unity Catalog, perform reasonable query planning, and utilize the MPP architecture for distributed computing.
 
-For details, refer to each catalog document, such as [Iceberg Catalog](./catalogs/iceberg-catalog.md)
+For details, refer to each catalog document, such as [Iceberg Catalog](./catalogs/iceberg-catalog.mdx)
 
 #### Extensible Connector Framework
 
@@ -87,6 +88,22 @@ In actual user scenarios, Doris reduces average query latency by 20% and 95th pe
 In the process of integrating multiple data sources and achieving lakehouse transformation, migrating SQL queries to Doris is a challenge due to differences in SQL dialects across systems in terms of syntax and function support. Without a suitable migration plan, the business side may need significant modifications to adapt to the new system's SQL syntax.
 
 To address this issue, Doris provides a [SQL Dialect Conversion Service](sql-convertor/sql-convertor-overview.md), allowing users to directly use SQL dialects from other systems for data queries. The conversion service converts these SQL dialects into Doris SQL, greatly reducing user migration costs. Currently, Doris supports SQL dialect conversion for common query engines such as Presto/Trino, Hive, PostgreSQL, and Clickhouse, achieving a compatibility of over 99% in some actual user scenarios.
+
+### Modern Deployment Architecture
+
+Since version 3.0, Doris supports a cloud-native [compute-storage separation architecture](https://doris.apache.org/docs/3.x/compute-storage-decoupled/overview). This architecture, with its low cost and high elasticity, effectively improves resource utilization and enables independent scaling of compute and storage.
+
+![compute-storage-decouple](/images/Lakehouse/compute-storage-decouple.png)
+
+The above diagram shows the system architecture of Doris's compute-storage separation, decoupling compute and storage. Compute nodes no longer store primary data, and the underlying shared storage layer (HDFS and object storage) serves as the unified primary data storage space, supporting independent scaling of compute and storage resources. The compute-storage separation architecture brings significant advantages to the lakehouse solution:
+
+* **Low-Cost Storage**: Storage and compute resources can be independently scaled, allowing enterprises to increase storage capacity without increasing compute resources. Additionally, by using cloud object storage, enterprises can enjoy lower storage costs and higher availability, while still using local high-speed disks for caching relatively low-proportion hot data.
+
+* **Single Source of Truth**: All data is stored in a unified storage layer, allowing the same data to be accessed and processed by different compute clusters, ensuring data consistency and integrity, and reducing the complexity of data synchronization and duplicate storage.
+
+* **Workload Diversity**: Users can dynamically allocate compute resources based on different workload needs, supporting various application scenarios such as batch processing, real-time analysis, and machine learning. By separating storage and compute, enterprises can more flexibly optimize resource usage, ensuring efficient operation under different loads.
+
+In addition, under the storage-computing coupled architecture, [elastic computing nodes](./compute-node.md) can still be used to provide elastic computing capabilities in lake warehouse data query scenarios.
 
 ### Openness
 

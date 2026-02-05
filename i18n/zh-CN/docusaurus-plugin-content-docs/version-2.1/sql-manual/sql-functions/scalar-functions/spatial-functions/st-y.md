@@ -1,7 +1,8 @@
 ---
 {
     "title": "ST_Y",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "当 point 是一个合法的 POINT 类型时，返回对应的 Y 坐标值"
 }
 ---
 

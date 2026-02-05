@@ -25,7 +25,7 @@ export default function PageBanner(props: PageBannerProps): JSX.Element {
     return (
         <section className={clsx('banner-section', className)}>
             <div className="banner-container container">
-                <div className="banner-info mb-10 lg:mb-20">
+                <div className="banner-info mb-10 lg:mb-[5rem]">
                     { event }
                     <div className="banner-title-wrap">
                         <div className="banner-title">{title}</div>
@@ -58,14 +58,14 @@ export default function PageBanner(props: PageBannerProps): JSX.Element {
                                     >
                                         <path
                                             d="M10.6251 13.5L15.125 9L10.6251 4.5"
-                                            stroke="#444FD9"
+                                            stroke="#11A679"
                                             strokeWidth="1.5"
                                             strokeLinecap="round"
                                             strokeLinejoin="round"
                                         />
                                         <path
                                             d="M3.87506 9.00055L15.1251 9.00055"
-                                            stroke="#444FD9"
+                                            stroke="#11A679"
                                             strokeWidth="1.5"
                                             strokeLinecap="round"
                                             strokeLinejoin="round"

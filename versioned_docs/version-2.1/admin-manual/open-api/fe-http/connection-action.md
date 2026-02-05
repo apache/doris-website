@@ -1,7 +1,8 @@
 ---
 {
     "title": "Connection Action",
-    "language": "en"
+    "language": "en",
+    "description": "Given a connection id, return the query id that is currently being executed for this connection or the last execution completed."
 }
 ---
 

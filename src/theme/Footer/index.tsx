@@ -18,7 +18,7 @@ import { MediumIcon } from '@site/src/components/Icons/medium';
 import Translate from '@docusaurus/Translate';
 import Link from '@docusaurus/Link';
 
-function Footer(): JSX.Element | null {
+function Footer(): React.ReactElement | null {
     const { footer } = useThemeConfig();
     if (!footer) {
         return null;
@@ -89,7 +89,7 @@ function Footer(): JSX.Element | null {
                                     <TwitterIcon />
                                 </a>
                                 <a
-                                    href="https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-35mzao67o-BrpU70FNKPyB6UlgpXf8_w"
+                                    href="https://doris.apache.org/slack"
                                     title="slack"
                                     target="_blank"
                                     className="item"
@@ -121,13 +121,6 @@ function Footer(): JSX.Element | null {
                                     className="item"
                                 >
                                     <MediumIcon />
-                                </a>
-                                <a className="item wechat">
-                                    <WechatIcon />
-                                    <div className="wechat-dropdown">
-                                        <p className="text-[#4c576c] text-xs">Connect on WeChat</p>
-                                        <img src={require('@site/static/images/doris-wechat.png').default} alt="" />
-                                    </div>
                                 </a>
                             </div>
                         </div>

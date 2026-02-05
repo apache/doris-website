@@ -1,7 +1,8 @@
 ---
 {
-  "title": "Star Schema Benchmark",
-  "language": "en"
+    "title": "Star Schema Benchmark",
+    "language": "en",
+    "description": "Star Schema Benchmark(SSB) is a lightweight performance test set in the data warehouse scenario."
 }
 ---
 
@@ -86,7 +87,7 @@ Here we use Apache Doris 2.0.15.1 for comparative testing. In the test, we use Q
 
 ## 6. Environment Preparation
 
-Please first refer to the [official documentation](../../version-3.0/install/deploy-manually/integrated-storage-compute-deploy-manually) to install and deploy Apache Doris first to obtain a Doris cluster which is working well(including at least 1 FE 1 BE, 1 FE 3 BEs is recommended).
+Please first refer to the [official documentation](../install/deploy-manually/integrated-storage-compute-deploy-manually) to install and deploy Apache Doris first to obtain a Doris cluster which is working well(including at least 1 FE 1 BE, 1 FE 3 BEs is recommended).
 
 ## 7. Data Preparation
 

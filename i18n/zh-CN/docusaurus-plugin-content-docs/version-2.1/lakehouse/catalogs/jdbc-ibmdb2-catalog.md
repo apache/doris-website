@@ -1,7 +1,8 @@
 ---
 {
     "title": "IBM Db2 JDBC Catalog",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "Doris JDBC Catalog 支持通过标准 JDBC 接口连接 IBM Db2 数据库。本文档介绍如何配置 IBM Db2 数据库连接。"
 }
 ---
 
@@ -67,6 +68,7 @@ CREATE CATALOG db2_catalog PROPERTIES (
 | time             | string        |         |
 | clob             | string        |         |
 | xml              | string        |         |
+| BLOB             | varbinary     |由 properties 中 `enable.mapping.varbinary` (4.0.2 后开始支持) 属性控制。默认为 `false`, 则映射到 `string`; 为 `true` 时，则映射到 `varbinary` 类型。|
 | other            | UNSUPPORTED   |         |
 
 ## 常见问题
@@ -74,3 +76,7 @@ CREATE CATALOG db2_catalog PROPERTIES (
 1. 通过 JDBC Catalog 读取 IBM Db2 数据时出现 `Invalid operation: result set is closed. ERRORCODE=-4470` 异常
 
    在创建 IBM Db2 Catalog 的 jdbc\_url 连接串中添加连接参数：`allowNextOnExhaustedResultSet=1;resultSetHoldability=1;`。如： `jdbc:db2://host:port/database:allowNextOnExhaustedResultSet=1;resultSetHoldability=1;`。
+
+2. Caught java.io.CharConversionException
+
+    这可能是因为字符集问题，可以在 `be.conf` 的 `JAVA_OPTS` 添加配置 `-Ddb2.jcc.charsetDecoderEncoder=3`，并重启 BE 尝试解决，可以尝试 `1`、`2` 等不同取值。具体可参阅：https://www.ibm.com/docs/en/content-collector/4.0.1?topic=manager-jdbc-throws-javaiocharconversionexception

@@ -1,43 +1,160 @@
 ---
 {
     "title": "YEAR_CEIL",
-    "language": "en"
+    "language": "en",
+    "description": "The yearceil function rounds up an input datetime value to the nearest specified year interval start time, with the interval unit being year."
 }
 ---
 
-## year_ceil
-### description
-#### Syntax
+## Description
+
+
+The year_ceil function rounds up an input datetime value to the nearest specified year interval start time, with the interval unit being year. If origin is specified, it uses that as the reference; otherwise, it defaults to 0000-01-01 00:00:00.
+
+Date calculation formula:
+$$
+\begin{aligned}
+&\text{year\_ceil}(\langle\text{date\_or\_time\_expr}\rangle, \langle\text{period}\rangle, \langle\text{origin}\rangle) = \\
+&\min\{\langle\text{origin}\rangle + k \times \langle\text{period}\rangle \times \text{year} \mid \\
+&k \in \mathbb{Z} \land \langle\text{origin}\rangle + k \times \langle\text{period}\rangle \times \text{year} \geq \langle\text{date\_or\_time\_expr}\rangle\}
+\end{aligned}
+$$
+$k$ represents the number of periods needed to reach the target time from the reference time.
+
+## Syntax
+```sql
+YEAR_CEIL(<date_or_time_expr>)
+YEAR_CEIL(<date_or_time_expr>, origin)
+YEAR_CEIL(<date_or_time_expr>, <period>)
+YEAR_CEIL(<date_or_time_expr>, <period>, <origin>)
+```
+## Parameters
+
+| Parameter | Description |
+|-----------|-------------|
+| `<date_or_time_expr>` | The datetime value to round up, supports date/datetime/timestamptz types. Date type will be converted to the start time 00:00:00 of the corresponding date. For specific formats please see [timestamptz conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion), [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
+| `<period>` | Optional, represents how many seconds each period consists of, supports positive integer type (INT). Default is 1 second. |
+| `<origin_datetime>` | Starting point for the interval, supports date/datetime types; defaults to 0000-01-01 00:00:00. |
+
+## Return Value
+
+Returns a result consistent with the input type (DATETIME or DATE), representing the year interval start time after rounding up:
+
+- If input is DATE type, returns DATE type (containing only date part); if input is DATETIME or properly formatted string, returns DATETIME type (time part consistent with origin, defaults to 00:00:00 when no origin).
+- If `<period>` is a non-positive integer (≤0), the function returns an error.
+- If any parameter is NULL, returns NULL.
+- If `<date_or_time_expr>` is exactly at an interval start point (based on `<period>` and `<origin>`), returns that start point.
+- If calculation result exceeds maximum datetime 9999-12-31 23:59:59, returns an error.
+- If the `<origin>` date and time is after the `<period>`, it will still be calculated according to the above formula, but the period k will be negative.
+- If date_or_time_expr has a scale, the returned result will also have a scale with the fractional part being zero.
+- If the input is TIMESTAMPTZ type, it will first be converted to local_time (for example: `2025-12-31 23:59:59+05:00` represents local_time `2026-01-01 02:59:59` when the session variable is `+08:00`), and then perform CEIL calculation.
+- If the input time values (`<date_or_time_expr>` and `<period>`) contain both TIMESTAMPTZ and DATETIME types, the output is DATETIME type.
+
+## Examples
 
 ```sql
-DATETIME YEAR_CEIL(DATETIME datetime)
-DATETIME YEAR_CEIL(DATETIME datetime, DATETIME origin)
-DATETIME YEAR_CEIL(DATETIME datetime, INT period)
-DATETIME YEAR_CEIL(DATETIME datetime, INT period, DATETIME origin)
+-- Default 1-year interval (start point is January 1st each year), 2023-07-13 rounds up to 2024-01-01
+SELECT YEAR_CEIL('2023-07-13 22:28:18') AS result;
++---------------------+
+| result              |
++---------------------+
+| 2024-01-01 00:00:00 |
++---------------------+
+
+-- Specify 5-year interval, 2023-07-13 rounds up to nearest 5-year interval start (calculated with default origin)
+SELECT YEAR_CEIL('2023-07-13 22:28:18', 5) AS result;
++---------------------+
+| result              |
++---------------------+
+| 2025-01-01 00:00:00 |  
++---------------------+
+
+-- Input is DATE type, returns DATE type interval start
+SELECT YEAR_CEIL(cast('2023-07-13' as date)) AS result;
++------------+
+| result     |
++------------+
+| 2024-01-01 |
++------------+
+
+-- Only with origin date and specified date
+select year_ceil("2023-07-13 22:28:18", "2021-03-13 22:13:00");
++---------------------------------------------------------+
+| year_ceil("2023-07-13 22:28:18", "2021-03-13 22:13:00") |
++---------------------------------------------------------+
+| 2024-03-13 22:13:00                                     |
++---------------------------------------------------------+
+
+-- Specify origin reference point='2020-01-01', 1-year interval, 2023-07-13 rounds to 2024-01-01
+SELECT YEAR_CEIL('2023-07-13', 1, '2020-01-01') AS result;
++---------------------+
+| result              |
++---------------------+
+| 2024-01-01 00:00:00 |
++---------------------+
+
+-- input with scale
+mysql> SELECT YEAR_CEIL('2023-07-13 22:28:18.123', 5) AS result;
++-------------------------+
+| result                  |
++-------------------------+
+| 2026-01-01 00:00:00.000 |
++-------------------------+
+
+-- Specify origin with time part, returned result's time part matches origin
+SELECT YEAR_CEIL('2023-07-13', 1, '2020-01-01 08:30:00') AS result;
++---------------------+
+| result              |
++---------------------+
+| 2024-01-01 08:30:00 |
++---------------------+
+
+-- Input exactly at interval start point (origin='2023-01-01', period=1), returns itself
+SELECT YEAR_CEIL('2023-01-01', 1, '2023-01-01') AS result;
++---------------------+
+| result              |
++---------------------+
+| 2023-01-01 00:00:00 |
++---------------------+
+
+--- If the <origin> date and time is after the <period>, it will still be calculated according to the above formula, but the period k will be negative.
+SELECT YEAR_CEIL('2023-07-13 22:22:56', 1, '2028-01-01 08:30:00') AS result;
++---------------------+
+| result              |
++---------------------+
+| 2024-01-01 08:30:00 |
++---------------------+
+
+-- TimeStampTz sample, SET time_zone = '+08:00'
+-- Convert to local_time (2026-01-01 02:59:59) and then perform YEAR_CEIL
+SELECT YEAR_CEIL('2025-12-31 23:59:59+05:00');
++---------------------------------------+
+| YEAR_CEIL('2025-12-31 23:59:59+05:00')|
++---------------------------------------+
+| 2027-01-01 00:00:00+08:00             |
++---------------------------------------+
+
+-- If parameters contain both TimeStampTz and Datetime types, output DateTime type
+SELECT YEAR_CEIL('2025-12-31 23:59:59+05:00', '2025-12-15 00:00:00.123');
++-------------------------------------------------------------------+
+| YEAR_CEIL('2025-12-31 23:59:59+05:00', '2025-12-15 00:00:00.123') |
++-------------------------------------------------------------------+
+| 2027-01-01 00:00:00.123                                           |
++-------------------------------------------------------------------+
+
+-- Invalid period (non-positive integer)
+SELECT YEAR_CEIL('2023-07-13', 0) AS result;
+ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.3)[E-218]Operation year_ceil of 2023-07-13 00:00:00, 0 out of range
+
+-- Any parameter is NULL, returns NULL
+SELECT YEAR_CEIL(NULL, 1) AS result;
++--------+
+| result |
++--------+
+| NULL   |
++--------+
+
+-- Calculation result exceeds maximum datetime, returns error
+SELECT YEAR_CEIL('9999-12-31 22:28:18', 5) AS result;
+-- ERROR: Operation out of range
 ```
-
-Convert the date to the nearest rounding up time of the specified time interval period.
-
-- datetime: a valid date expression.
-- period: specifies how many years each cycle consists of.
-- origin: starting from 0001-01-01T00:00:00.
-
-### example
-
-```
-mysql> select year_ceil("2023-07-13 22:28:18", 5);
-+------------------------------------------------------------+
-| year_ceil(cast('2023-07-13 22:28:18' as DATETIMEV2(0)), 5) |
-+------------------------------------------------------------+
-| 2025-01-01 00:00:00                                        |
-+------------------------------------------------------------+
-1 row in set (0.02 sec)
-```
-
-### keywords
-
-    YEAR_CEIL, YEAR, CEIL
-
-### Best Practice
-
-See also [date_ceil](./date-ceil)

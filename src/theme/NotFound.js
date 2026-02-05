@@ -49,7 +49,7 @@ export default function NotFound() {
                                         label="Report this issue"
                                         linkIcon={<ExternalLinkArrowIcon />}
                                         to="https://github.com/apache/doris-website/issues"
-                                        className="text-sm border border-[#444FD9] h-[2.625rem] rounded-md text-primary cursor-pointer"
+                                        className="text-sm border border-primary h-[2.625rem] rounded-md text-primary cursor-pointer"
                                     />
                                 </div>
                             </div>

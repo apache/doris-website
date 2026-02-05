@@ -1,7 +1,8 @@
 ---
 {
     "title": "DML Tuning Plan",
-    "language": "en"
+    "language": "en",
+    "description": "For DML plan tuning, it is first necessary to identify whether the performance bottleneck is caused by the import process or the query section."
 }
 ---
 

@@ -92,7 +92,6 @@ function BlogListPageContent(props) {
             location.state,
         );
     };
-
     useEffect(() => {
         let currentPageNumber = 1;
         let currentCategoryName = allText;
@@ -136,8 +135,8 @@ function BlogListPageContent(props) {
                     {blogCategories.map((item: any, index) => (
                         <li className=" py-px" key={index} onClick={() => changeCategory(item.label)}>
                             <span
-                                className={`block cursor-pointer whitespace-nowrap rounded-[2.5rem] px-4 py-2 text-sm  shadow-[0px_1px_4px_0px_rgba(49,77,136,0.10)] hover:bg-[#444FD9] hover:text-white lg:px-6 lg:py-3 lg:text-base ${
-                                    active === item.label && 'bg-[#444FD9] text-white'
+                                className={`block cursor-pointer whitespace-nowrap rounded-[2.5rem] px-4 py-2 text-sm  shadow-[0px_1px_4px_0px_rgba(0,89,68,0.10)] hover:bg-primary hover:text-white lg:px-6 lg:py-3 lg:text-base ${
+                                    active === item.label && 'bg-primary text-white'
                                 }`}
                             >
                                 {item.label}

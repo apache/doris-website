@@ -1,7 +1,8 @@
 ---
 {
-"title": "集群规划",
-"language": "zh-CN"
+    "title": "集群规划",
+    "language": "zh-CN",
+    "description": "Doris 的各个实例通过网络进行通信，其正常运行需要网络环境提供以下端口。管理员可以根据实际环境自行调整 Doris 的端口配置："
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "Use Advice",
-    "language": "en"
+    "language": "en",
+    "description": "Asynchronous materialized views improve query performance by precomputing and storing query results, but each refresh may incur significant overhead."
 }
 ---
 

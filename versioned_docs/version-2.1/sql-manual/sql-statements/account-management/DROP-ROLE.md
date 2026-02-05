@@ -1,7 +1,8 @@
 ---
 {
     "title": "DROP ROLE",
-    "language": "en"
+    "language": "en",
+    "description": "The DROP ROLE statement is used to removes a role."
 }
 ---
 

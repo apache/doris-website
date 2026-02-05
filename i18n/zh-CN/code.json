@@ -28,7 +28,7 @@
         "description": "stable version"
     },
     "archive.admonition.latest": {
-        "message": "版本（3.0）",
+        "message": "版本（3.x）",
         "description": "latest version"
     },
     "archive.admonition.and": {
@@ -71,7 +71,7 @@
         "message": "使用参考请跳转至 {recommondVersionLink} 或 {latestVersionLink} 正式版本文档进行查阅。"
     },
     "theme.docs.versions.latestVersionLinkLabel": {
-        "message": "3.0"
+        "message": "3.x"
     },
     "theme.docs.versions.recommondVersionLinkLabel": {
         "message": "2.1"

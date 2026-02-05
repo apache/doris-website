@@ -1,7 +1,8 @@
 ---
 {
     "title": "High Concurrency LOAD Optimization(Group Commit)",
-    "language": "en"
+    "language": "en",
+    "description": "In high-frequency small batch write scenarios, traditional loading methods have the following issues:"
 }
 ---
 
@@ -470,7 +471,7 @@ We have separately tested the write performance of group commit in high-concurre
 
 #### Test Tool
 
-* [doris-streamloader](/ecosystem/doris-streamloader)
+* [doris-streamloader](../../ecosystem/doris-streamloader)
 
 #### Test Method
 

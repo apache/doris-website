@@ -24,6 +24,7 @@
         "@docusaurus/plugin-client-redirects": "3.6.3",
         "@docusaurus/plugin-pwa": "3.6.3",
         "@docusaurus/preset-classic": "3.6.3",
+        "@emotion/css": "^11.13.5",
         "@mdx-js/react": "^3.0.0",
         "@yang1666204/docusaurus-search-local": "0.0.7",
         "antd": "^5.12.2",
@@ -37,6 +38,8 @@
         "react": "^18.2.0",
         "react-dom": "^18.2.0",
         "react-github-button": "^0.1.11",
+        "rehype-katex": "7",
+        "remark-math": "6",
         "sass": "^1.63.2",
         "sass-migrator": "^2.2.1",
         "swiper": "^9.0.5",
@@ -47,6 +50,7 @@
     "devDependencies": {
         "@docusaurus/module-type-aliases": "3.6.3",
         "@tsconfig/docusaurus": "2.0.3",
+        "gray-matter": "^4.0.3",
         "typescript": "^5.2.2"
     },
     "resolutions": {

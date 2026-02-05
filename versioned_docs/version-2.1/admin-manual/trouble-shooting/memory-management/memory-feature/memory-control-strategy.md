@@ -1,7 +1,8 @@
 ---
 {
     "title": "Memory Control Strategy",
-    "language": "en"
+    "language": "en",
+    "description": "Doris Allocator is the unified entry point for large-block memory applications in the system."
 }
 ---
 

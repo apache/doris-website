@@ -1,12 +1,12 @@
 ---
 {
     "title": "Alternative to ClickHouse",
-    "language": "en"
+    "language": "en",
+    "description": "Apache Doris offers 10x faster join queries, up to 70% lower costs via storage-compute separation, and 34x better real-time update performance compared to ClickHouse."
 }
-
 ---
 
-Apache Doris and ClickHouse are both leading global real-time data warehouses, supporting columnar storage and fast queries. Doris has advantages like higher concurrency, more efficient joins, easier maintenance, and MySQL-like SQL syntax, making it simpler to use and deploy.
+Apache Doris and ClickHouse are both leading real-time analytical databases with columnar storage and fast query capabilities. Apache Doris offers significant advantages over ClickHouse in three critical areas: **10x faster join query performance** through its advanced MPP architecture with Cost-Based Optimizer, **lower infrastructure costs** via compute-storage separation that allows independent scaling of resources, and **superior real-time update performance** with its Merge-on-Write engine that maintains query speed during high-frequency data modifications.
 
 ## Featured Migration Cases
 
@@ -106,28 +106,68 @@ Apache Doris and ClickHouse are both leading global real-time data warehouses, s
         </td>
     </tr>
       <tr>
-        <td><strong>Queries</strong></td>
+        <td><strong>Join Query Performance</strong></td>
         <td>
         <ul>
-            <li style={{fontSize:'14px'}}>Distributed joins</li>
-            <li style={{fontSize:'14px'}}>Cost-Based Optimization (CBO)</li>
-            <li style={{fontSize:'14px'}}>Query rewrites and multi-table materialized views</li>
-            <li style={{fontSize:'14px'}}>Higher concurrent  performance</li>
+            <li style={{fontSize:'14px'}}><strong>2-10x faster joins</strong> with true distributed join execution across nodes</li>
+            <li style={{fontSize:'14px'}}>Advanced Cost-Based Optimizer (CBO) automatically selects optimal join strategies (broadcast, shuffle, colocate)</li>
+            <li style={{fontSize:'14px'}}>Colocate Join eliminates network shuffle for pre-partitioned tables</li>
+            <li style={{fontSize:'14px'}}>Runtime Filter pushdown reduces data scanning by up to 90%</li>
+            <li style={{fontSize:'14px'}}>Transparent query acceleration - queries on base tables are automatically rewritten to use materialized views</li>
+            <li style={{fontSize:'14px'}}>Handles complex TPC-DS queries that cause OOM in ClickHouse</li>
         </ul>
         </td>
         <td>
         <ul>
-            <li style={{fontSize:'14px'}}>Poor join implementation</li>
-            <li style={{fontSize:'14px'}}>Lacks a Cost-Based Optimizer (CBO)</li>
-            <li style={{fontSize:'14px'}}>Only supports single-table materialized views</li>
-            <li style={{fontSize:'14px'}}>Lower concurrency performance</li>
+            <li style={{fontSize:'14px'}}>Limited join capability - relies on subqueries and denormalization</li>
+            <li style={{fontSize:'14px'}}>No Cost-Based Optimizer; requires manual query tuning</li>
+            <li style={{fontSize:'14px'}}>Scatter-Gather architecture not designed for distributed joins</li>
+            <li style={{fontSize:'14px'}}>~50% of TPC-DS queries fail due to unsupported correlated subqueries</li>
+            <li style={{fontSize:'14px'}}>No automatic query rewriting - must explicitly query materialized views; cannot accelerate queries on base tables</li>
+            <li style={{fontSize:'14px'}}>Frequent OOM errors on large multi-table queries</li>
         </ul>
         </td>
     </tr>
     <tr>
         <td><strong>Real-time Updates</strong></td>
-        <td><ul><li style={{fontSize:'14px'}}>Features a strongly consistent primary key storage model, supporting synchronous data updates and deletions</li></ul></td>
-        <td><ul><li style={{fontSize:'14px'}}>Only supports asynchronous updates, allowing old values to be read after an update.</li></ul></td>
+        <td><ul>
+            <li style={{fontSize:'14px'}}><strong>34x faster query performance</strong> than ClickHouse for real-time update workloads</li>
+            <li style={{fontSize:'14px'}}>Merge-on-Write (MoW) engine with delete bitmap ensures query performance remains constant regardless of update frequency</li>
+            <li style={{fontSize:'14px'}}>Strongly consistent primary key model - updates are immediately visible with no stale reads</li>
+            <li style={{fontSize:'14px'}}>Supports high-throughput UPSERT operations without query performance degradation</li>
+            <li style={{fontSize:'14px'}}>Partial column updates minimize write amplification</li>
+        </ul></td>
+        <td><ul>
+            <li style={{fontSize:'14px'}}>ReplacingMergeTree only supports eventual consistency - stale data visible until background merge</li>
+            <li style={{fontSize:'14px'}}>Using <code>FINAL</code> keyword for consistent reads causes 2-10x query slowdown</li>
+            <li style={{fontSize:'14px'}}>High update frequency leads to excessive merge overhead and query latency spikes</li>
+        </ul></td>
+    </tr>
+    <tr>
+        <td><strong>Transaction Support</strong></td>
+        <td><ul>
+            <li style={{fontSize:'14px'}}>Full ACID transaction support for data ingestion</li>
+            <li style={{fontSize:'14px'}}>Atomic batch imports - all data loads succeed or fail together</li>
+            <li style={{fontSize:'14px'}}>Two-phase commit ensures data consistency across distributed nodes</li>
+        </ul></td>
+        <td><ul>
+            <li style={{fontSize:'14px'}}>No transaction support</li>
+            <li style={{fontSize:'14px'}}>Partial data may be visible during failed imports</li>
+            <li style={{fontSize:'14px'}}>Requires application-level handling for data consistency</li>
+        </ul></td>
+    </tr>
+    <tr>
+        <td><strong>Query Concurrency</strong></td>
+        <td><ul>
+            <li style={{fontSize:'14px'}}><strong>10x higher concurrency</strong> - supports thousands of concurrent queries</li>
+            <li style={{fontSize:'14px'}}>Efficient memory management prevents OOM under high load</li>
+            <li style={{fontSize:'14px'}}>Query queue management with workload isolation</li>
+        </ul></td>
+        <td><ul>
+            <li style={{fontSize:'14px'}}>Limited concurrent query support (typically &lt;100)</li>
+            <li style={{fontSize:'14px'}}>Memory-intensive queries cause cluster instability</li>
+            <li style={{fontSize:'14px'}}>No built-in workload management</li>
+        </ul></td>
     </tr>
     <tr>
         <td><strong>Data API</strong></td>
@@ -144,7 +184,7 @@ Apache Doris and ClickHouse are both leading global real-time data warehouses, s
         <td><ul><li style={{fontSize:'14px'}}>Supports automatic scaling in, scaling out, and replica balancing</li></ul></td>
         <td><ul><li style={{fontSize:'14px'}}>Requires manual rebalancing during scaling operations</li></ul></td>
     </tr>
-       <tr>
+    <tr>
         <td><strong>Performance</strong></td>
         <td>
         <ul>
@@ -157,6 +197,41 @@ Apache Doris and ClickHouse are both leading global real-time data warehouses, s
             <li style={{fontSize:'14px'}}>In terms of ClickBench performance, ClickHouse and Doris have been taking turns leading</li>
             <li style={{fontSize:'14px'}}>Experiences many OOM (Out of Memory) queries in large TPC-H and TPC-DS tests</li>
         </ul>
+        </td>
+    </tr>
+    <tr>
+        <td><strong>Cost Efficiency (Storage-Compute Separation)</strong></td>
+        <td>
+            <ul>
+                <li style={{fontSize:'14px'}}><strong>Up to 70% cost reduction</strong> by independently scaling compute and storage</li>
+                <li style={{fontSize:'14px'}}>Cold data stored on low-cost object storage (S3, HDFS, OSS) while hot data uses local SSD</li>
+                <li style={{fontSize:'14px'}}>Elastic compute scaling - add/remove nodes without data rebalancing</li>
+                <li style={{fontSize:'14px'}}>Multi-tier storage with automatic data temperature management</li>
+                <li style={{fontSize:'14px'}}>Pay only for the compute resources you need at any given time</li>
+                <li style={{fontSize:'14px'}}>Available as open-source feature since version 3.0</li>
+            </ul>
+        </td>
+        <td>
+            <ul>
+                <li style={{fontSize:'14px'}}>Tightly coupled storage and compute - scaling requires both</li>
+                <li style={{fontSize:'14px'}}>Storage-compute separation only in proprietary ClickHouse Cloud</li>
+                <li style={{fontSize:'14px'}}>Scaling requires expensive data rebalancing across nodes</li>
+                <li style={{fontSize:'14px'}}>Must over-provision compute to handle peak loads</li>
+                <li style={{fontSize:'14px'}}>Higher total cost of ownership for variable workloads</li>
+            </ul>
+        </td>
+    </tr>
+    <tr>
+        <td><strong>Open Source</strong></td>
+        <td>
+            <ul>
+                <li style={{fontSize:'14px'}}>Fully open source under the Apache Software Foundation; license and governance are community-driven and cannot be changed by any single entity.</li>
+            </ul>
+        </td>
+        <td>
+            <ul>
+                <li style={{fontSize:'14px'}}>Open source, but controlled by a commercial company.</li>
+            </ul>
         </td>
     </tr>
     </tbody>

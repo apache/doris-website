@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Logstash Doris Output Plugin",
+    "title": "Logstash",
     "language": "zh-CN"
 }
 ---
@@ -25,10 +25,11 @@ Logstash Doris output plugin 调用 [Doris Stream Load](../data-operate/import/i
 可以从官网下载或者自行从源码编译 Logstash Doris output plugin。
 
 - 从官网下载
-  - 不包含依赖的安装包
-https://apache-doris-releases.oss-accelerate.aliyuncs.com/logstash-output-doris-1.0.0.gem
-  - 包含依赖的安装包
-https://apache-doris-releases.oss-accelerate.aliyuncs.com/logstash-output-doris-1.0.0.zip
+
+```shell
+# 包含依赖的安装包
+wget https://apache-doris-releases.oss-cn-beijing.aliyuncs.com/extension/logstash-output-doris-1.2.0-java.gem
+```
 
 - 从源码编译
 
@@ -44,9 +45,9 @@ gem build logstash-output-doris.gemspec
 
 ${LOGSTASH_HOME} 是 Logstash 的安装目录，运行它下面的 bin/logstash-plugin 命令安装插件
 ```
-${LOGSTASH_HOME}/bin/logstash-plugin install logstash-output-doris-1.0.0.gem
+${LOGSTASH_HOME}/bin/logstash-plugin install logstash-output-doris-1.2.0.gem
 
-Validating logstash-output-doris-1.0.0.gem
+Validating logstash-output-doris-1.2.0.gem
 Installing logstash-output-doris
 Installation successful
 ```
@@ -55,12 +56,12 @@ Installation successful
 
 - 离线安装
 
-```
-${LOGSTASH_HOME}/bin/logstash-plugin install file:///tmp/logstash-output-doris-1.0.0.zip
+```shell
 
-Installing file: logstash-output-doris-1.0.0.zip
-Resolving dependencies.........................
-Install successful
+export JARS_SKIP="true"
+
+${LOGSTASH_HOME}/bin/logstash-plugin install logstash-output-doris-1.2.0.gem
+
 ```
 
 ## 参数配置

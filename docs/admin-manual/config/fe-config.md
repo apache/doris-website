@@ -1,9 +1,11 @@
 ---
 {
-    "title": "FE Configuration",
+    "title": "FE Configuration | Config",
     "language": "en",
     "toc_min_heading_level": 2,
-    "toc_max_heading_level": 4
+    "toc_max_heading_level": 4,
+    "description": "Complete reference guide for Frontend (FE) configuration parameters in Doris, including metadata management, query engine, load/export, and storage settings.",
+    "sidebar_label": "FE Configuration"
 }
 ---
 
@@ -1593,6 +1595,14 @@ Default：5
 
 Export checker's running interval.
 
+#### `enable_stream_load_profile`
+
+Default: false
+
+MasterOnly: false
+
+Whether to enable stream load profile
+
 ### Log
 
 #### `log_roll_size_mb`
@@ -2145,6 +2155,12 @@ When create a table(or partition), you can specify its storage medium(HDD or SSD
 Default：HDD
 
 When create a table(or partition), you can specify its storage medium(HDD or SSD). If not set, this specifies the default medium when create.
+
+#### `default_compression_type`
+
+Default: lz4 (before 4.0.3), zstd (since 4.0.3)
+
+When creating a table, you can specify its compression algorithm. If not set, this specifies the default compression type when creating a table. Valid values include: lz4, zstd.
 
 #### `enable_storage_policy`
 
@@ -2757,3 +2773,4 @@ Description:  The mode in which FE runs. `cloud` indicates the decoupled storage
 Default: ""
 
 Endpoints of the meta service should be specified in the format 'host1:port,host2:port'. This configuration is necessary for the storage and compute disaggregated mode.
+

@@ -1,7 +1,8 @@
 ---
 {
     "title": "REFRESH LDAP",
-    "language": "en"
+    "language": "en",
+    "description": "This statement is used to refresh the cache information of LDAP in Doris."
 }
 ---
 

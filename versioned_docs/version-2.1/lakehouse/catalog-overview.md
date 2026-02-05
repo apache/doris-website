@@ -1,7 +1,8 @@
 ---
 {
     "title": "Data Catalog Overview",
-    "language": "en"
+    "language": "en",
+    "description": "A Data Catalog is used to describe the attributes of a data source."
 }
 ---
 
@@ -24,7 +25,7 @@ Catalogs are mainly applicable to the following three scenarios, but different c
 | Data Integration | ZeroETL solution, directly accessing different data sources to generate result data, or facilitating data flow between different data sources. |
 | Data Write-back | After data processing via Doris, write back to external data sources.                |
 
-This document uses [Iceberg Catalog](./catalogs/iceberg-catalog.md) as an example to focus on the basic operations of catalogs. For detailed descriptions of different catalogs, please refer to the documentation of the corresponding catalog.
+This document uses [Iceberg Catalog](./catalogs/iceberg-catalog.mdx) as an example to focus on the basic operations of catalogs. For detailed descriptions of different catalogs, please refer to the documentation of the corresponding catalog.
 
 ## Creating Catalog
 
@@ -76,6 +77,15 @@ SELECT * EXCEPT(k3) FROM table;     -- Query OK.
 SELECT k1, k3 FROM table;           -- Error: Unsupported type 'UNSUPPORTED_TYPE' in 'k3'
 SELECT k1, k4 FROM table;           -- Query OK.
 ```
+
+### Nullable Attribute
+
+Doris currently has special restrictions on the Nullable attribute support for external table columns, with specific behaviors as follows:
+
+| Source Type | Doris Read Behavior | Doris Write Behavior |
+| ---   | ------------  | ------------ |
+| Nullable | Nullable  | Allow writing Null values |
+| Not Null | Nullable, i.e., still treated as columns that allow NULL during reading | Allow writing Null values, i.e., no strict checking for Null values. Users need to ensure data integrity and consistency themselves.|
 
 ## Using Catalog
 
@@ -175,7 +185,7 @@ CREATE CATALOG mysql_catalog properties(
 Then, perform a join query between Iceberg tables and MySQL tables using SQL:
 
 ```sql
-SELECT * FROM FROM
+SELECT * FROM
 iceberg_catalog.iceberg_db.table1 tbl1 JOIN mysql_catalog.mysql_db.dim_table tbl2
 ON tbl1.id = tbl2.id;
 ```
@@ -202,8 +212,8 @@ SELECT * FROM iceberg_catalog.iceberg_db.table1;
 
 Doris supports writing data back to external data sources using the `INSERT` statement. For more details, refer to:
 
-* [Hive Catalog](./catalogs/hive-catalog.md)
-* [Iceberg Catalog](./catalogs/iceberg-catalog.md)
+* [Hive Catalog](./catalogs/hive-catalog.mdx)
+* [Iceberg Catalog](./catalogs/iceberg-catalog.mdx)
 * [JDBC Catalog](./catalogs/jdbc-catalog-overview.md)
 
 ## Refreshing Catalog

@@ -1,13 +1,14 @@
 ---
 {
     "title": "BigQuery Catalog",
-    "language": "en"
+    "language": "en",
+    "description": "BigQuery Catalog uses the Trino Connector compatibility framework to access BigQuery tables through the BigQuery Connector."
 }
 ---
 
 BigQuery Catalog uses the [Trino Connector](https://doris.apache.org/zh-CN/community/how-to-contribute/trino-connector-developer-guide/) compatibility framework to access BigQuery tables through the BigQuery Connector.
 
-:::notice
+:::note
 This feature is experimental and has been supported since version 3.0.1.
 :::
 
@@ -68,7 +69,7 @@ PROPERTIES (
 
   The TrinoProperties section is used to specify properties that will be passed to the Trino Connector. These properties use the `trino.` prefix. In theory, all properties supported by Trino are also supported here. For more information about BigQuery, refer to the [Trino documentation](https://trino.io/docs/435/connector/bigquery.html).
 
-* `{CommonProperties}`
+* `[CommonProperties]`
 
   The CommonProperties section is used to specify general properties. Please refer to the [Catalog Overview](../catalog-overview.md) under the "Common Properties" section.
   

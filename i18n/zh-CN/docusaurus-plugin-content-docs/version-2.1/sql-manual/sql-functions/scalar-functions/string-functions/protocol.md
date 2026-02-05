@@ -1,7 +1,8 @@
 ---
 {
     "title": "PROTOCOL",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "PROTOCOL 函数主要用于提取 URL 字符串中的协议部分。"
 }
 ---
 

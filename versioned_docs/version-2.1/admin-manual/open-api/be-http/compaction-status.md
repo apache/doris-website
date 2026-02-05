@@ -1,7 +1,8 @@
 ---
 {
     "title": "View Compaction Status",
-    "language": "en"
+    "language": "en",
+    "description": "It is used to view the overall compaction status of a BE node and the compaction status of a specified tablet."
 }
 ---
 

@@ -1,7 +1,9 @@
 ---
 { 
 'title': 'Apache Doris 简介', 
-'language': 'zh-CN' 
+'language': 'zh-CN',
+  "description": "Apache Doris 是一款基于 MPP 架构的高性能、实时分析型数据库。它以高效、简单和统一的特性著称，能够在亚秒级的时间内返回海量数据的查询结果。Doris 既能支持高并发的点查询场景，也能支持高吞吐的复杂分析场景。"
+
 }
 ---
 

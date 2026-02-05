@@ -1,7 +1,9 @@
 ---
 {
-    "title": "ARRAY",
-    "language": "en"
+    "title": "ARRAY | Semi Structured",
+    "language": "en",
+    "description": "The ARRAY<T> type is used to represent an ordered collection of elements, where each element has the same data type. For example,",
+    "sidebar_label": "ARRAY"
 }
 ---
 
@@ -11,7 +13,7 @@
 
 The `ARRAY<T>` type is used to represent an ordered collection of elements, where each element has the same data type. For example, an array of integers can be represented as `[1, 2, 3]`, and an array of strings as `["a", "b", "c"]`.
 
-- `ARRAY<T>` represents an array composed of elements of type T, where T is nullable. Supported types for T include: `BOOLEAN, TINYINT, SMALLINT, INT, BIGINT, LARGEINT, FLOAT, DOUBLE, DECIMAL, DATE, DATETIME, CHAR, VARCHAR, STRING, IPV4, IPV6, STRUCT, MAP, VARIANT, JSONB, ARRAY<T>`.
+- `ARRAY<T>` represents an array composed of elements of type T, where T is nullable. Supported types for T include: `BOOLEAN, TINYINT, SMALLINT, INT, BIGINT, LARGEINT, FLOAT, DOUBLE, DECIMAL, DATE, DATETIME, TIMESTAMPTZ, CHAR, VARCHAR, STRING, IPV4, IPV6, STRUCT, MAP, VARIANT, JSONB, ARRAY<T>`.
   - Note: Among the above T types, `JSONB` and `VARIANT` are only supported in the computation layer of Doris and **do not support using `ARRAY<JSONB>` and `ARRAY<VARIANT>` in table creation in Doris**.
 
 ## Type Constraints
@@ -23,7 +25,7 @@ The `ARRAY<T>` type is used to represent an ordered collection of elements, wher
   - String type can be converted to `ARRAY<T>` type (through parsing, returning NULL if parsing fails).
 - In the `AGGREGATE` table model, `ARRAY<T>` type only supports `REPLACE` and `REPLACE_IF_NOT_NULL`. **In any table model, it cannot be used as a KEY column, nor as a partition or bucket column**.
 - Columns of `ARRAY<T>` type **support `ORDER BY` and `GROUP BY` operations**.
-  - T types that support `ORDER BY` and `GROUP BY` include: `BOOLEAN, TINYINT, SMALLINT, INT, BIGINT, LARGEINT, FLOAT, DOUBLE, DECIMAL, DATE, DATETIME, CHAR, VARCHAR, STRING, IPV4, IPV6`.
+  - T types that support `ORDER BY` and `GROUP BY` include: `BOOLEAN, TINYINT, SMALLINT, INT, BIGINT, LARGEINT, FLOAT, DOUBLE, DECIMAL, DATE, DATETIME, TIMESTAMPTZ, CHAR, VARCHAR, STRING, IPV4, IPV6`.
 - Columns of `ARRAY<T>` type do not support being used as `JOIN KEY` and do not support being used in `DELETE` statements.
 
 ## Constant Construction
@@ -119,10 +121,66 @@ The `ARRAY<T>` type is used to represent an ordered collection of elements, wher
   +-------------------------------------------------------+
   ```
 
+## Comparison Relationship
+
+ARRAY is an ordered type, and [1, 2, 3] and [3, 2, 1] are two different ARRAYs. Two ARRAYs are equal if and only if their elements are equal one by one in order:
+
+```sql
+select array(1,2,3) = array(3,2,1);
++-----------------------------+
+| array(1,2,3) = array(3,2,1) |
++-----------------------------+
+|                           0 |
++-----------------------------+
+
+select array(1,2,3) = array(1,2,3);
++-----------------------------+
+| array(1,2,3) = array(1,2,3) |
++-----------------------------+
+|                           1 |
++-----------------------------+
+
+select array(1,2,3) = array(1,2,3,3);
++-------------------------------+
+| array(1,2,3) = array(1,2,3,3) |
++-------------------------------+
+|                             0 |
++-------------------------------+
+```
+
+In partial order comparison, ARRAY follows dictionary order. Given two arrays `A` and `B`, starting from index `i = 1`, the elements at corresponding positions `A[i]` and `B[i]` are compared:
+
+- If `A[i] ≠ B[i]` are not equal, the comparison result (<, >) directly determines the overall comparison result of the arrays
+- If `A[i] = B[i]`, continue comparing the next position
+- When the arrays are completely equal in all common length ranges, the shorter array is smaller.
+
+```sql
+select array(1,2,3) > array(1,2,3,3), array(1,2,3) < array(1,2,3,3);
++-------------------------------+-------------------------------+
+| array(1,2,3) > array(1,2,3,3) | array(1,2,3) < array(1,2,3,3) |
++-------------------------------+-------------------------------+
+|                             0 |                             1 |
++-------------------------------+-------------------------------+
+
+select array(1,3,2) > array(1,2,3), array(1,3,2) < array(1,2,3);
++-----------------------------+-----------------------------+
+| array(1,3,2) > array(1,2,3) | array(1,3,2) < array(1,2,3) |
++-----------------------------+-----------------------------+
+|                           1 |                           0 |
++-----------------------------+-----------------------------+
+
+select array(null) < array(-1), array(null) > array(-1);
++-------------------------+-------------------------+
+| array(null) < array(-1) | array(null) > array(-1) |
++-------------------------+-------------------------+
+|                       1 |                       0 |
++-------------------------+-------------------------+
+```
+
 ## Query Acceleration
 
 - Columns of type `ARRAY<T>` in Doris tables support adding inverted indexes to accelerate computations involving `ARRAY` functions on this column.
-  - T types supported by inverted indexes: `BOOLEAN, TINYINT, SMALLINT, INT, BIGINT, LARGEINT, DECIMAL, DATE, DATETIME, CHAR, VARCHAR, STRING, IPV4, IPV6`.
+  - T types supported by inverted indexes: `BOOLEAN, TINYINT, SMALLINT, INT, BIGINT, LARGEINT, DECIMAL, DATE, DATETIME, TIMESTAMPTZ, CHAR, VARCHAR, STRING, IPV4, IPV6`.
   - Accelerated `ARRAY` functions: `ARRAY_CONTAINS`, `ARRAYS_OVERLAP`, but when the function parameters include NULL, it falls back to regular vectorized computation.
 
 ## Examples
@@ -269,3 +327,4 @@ The `ARRAY<T>` type is used to represent an ordered collection of elements, wher
   |    3 | [7, 8, 9]    |
   +------+--------------+
   ```
+

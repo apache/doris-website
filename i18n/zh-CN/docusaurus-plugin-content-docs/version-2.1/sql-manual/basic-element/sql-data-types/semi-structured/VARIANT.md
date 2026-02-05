@@ -1,7 +1,8 @@
 ---
 {
     "title": "VARIANT",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "在 Doris 2.1 中引入一种新的数据类型 VARIANT，它可以存储半结构化 JSON 数据。它允许存储包含不同数据类型（如整数、字符串、布尔值等）的复杂数据结构，而无需在表结构中提前定义具体的列。VARIANT 类型特别适用于处理复杂的嵌套结构，而这些结构可能随时会发生变化。在写入过程中，"
 }
 ---
 
@@ -368,11 +369,11 @@ SELECT * FROM example_table WHERE data_string LIKE '%doris%';
 注意如果是 超过 5000 子列，对内存和配置有比较高的要求，单机尽可能 128G 以上内存，核数 32C 以上
 1. BE 配置`variant_max_merged_tablet_schema_size=n` n 大于实际的列数（不推荐超过 10000）
 2. 需要注意的是，提取的列数过多会导致 compaction 的压力过大（需要控制导入的吞吐）。根据内存使用情况增大客户端导入的 batch_size 可以降低 compaction 的写放大（或者推荐使用 group_commit，表 properties 配置，适当增加`group_commit_interval_ms` 和 `group_commit_data_bytes`）
-3. 如果查询没有分桶裁剪的需求，可以使用 random 分桶，开启 [load_to_single_tablet](../../../../table-design/data-partitioning/data-bucketing#bucketing) 导入（导入的配置），可以减少 compaction 写放大
+3. 如果查询没有分桶裁剪的需求，可以使用 random 分桶，开启 [load_to_single_tablet](../../../../table-design/data-partitioning/data-bucketing#random-分桶) 导入（导入的配置），可以减少 compaction 写放大
 4. BE 配置 根据导入压力调整 `max_cumu_compaction_threads`，至少保证 8 个线程
 5. BE 配置`vertical_compaction_num_columns_per_group=500`提升分组 compaction 效率，但是会增加内存开销销
-6. BE 配置`segment_cache_memory_percentage=20`增加 segment 缓存的容量，提升元数据缓存效率率
-7. 注意关注 Compaction Score，如果 Score 持续增加会导致，Score 过高反应 Compaction 做不过来（需要适当降低导入压力）
+6. BE 配置`segment_cache_memory_percentage=20`增加 segment 缓存的容量，提升元数据缓存效率
+7. 注意关注 Compaction Score，Score 过高反应 Compaction 做不过来（需要适当降低导入压力）
 8. `SELECT *` 或者 `SELECT variant` 会导致集群整体压力明显上升，甚至出现超时或者内存超限。建议查询带上 Path 信息例如 `SELECT variant['path_1']`。
 
 

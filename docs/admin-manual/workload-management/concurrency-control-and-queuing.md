@@ -1,7 +1,8 @@
 ---
 {
-"title": "Concurrency Control and Queuing",
-"language": "en"
+    "title": "Concurrency Control and Queuing",
+    "language": "en",
+    "description": "Explains how to configure concurrency control and queuing in Doris through workload groups to manage query resources and prevent system overload."
 }
 ---
 

@@ -1,46 +1,147 @@
 ---
 {
     "title": "HOUR_FLOOR",
-    "language": "en"
+    "language": "en",
+    "description": "HOUR_FLOOR function rounds down the input datetime value to the nearest moment of the specified hour period. For example, if the period is 5 hours, the function adjusts the input time to the starting hour mark within that period."
 }
 ---
 
 ## Description
 
-Converts the date to the nearest rounded-down timestamp of the specified time interval period.
+HOUR_FLOOR function rounds down the input datetime value to the nearest moment of the specified hour period. For example, if the period is 5 hours, the function adjusts the input time to the starting hour mark within that period.
+
+Date calculation formula:
+$$
+\begin{aligned}
+&\text{hour\_floor}(\langle\text{date\_or\_time\_expr}\rangle, \langle\text{period}\rangle, \langle\text{origin}\rangle) = \\
+&\max\{\langle\text{origin}\rangle + k \times \langle\text{period}\rangle \times \text{hour} \mid \\
+&k \in \mathbb{Z} \land \langle\text{origin}\rangle + k \times \langle\text{period}\rangle \times \text{hour} \leq \langle\text{date\_or\_time\_expr}\rangle\}
+\end{aligned}
+$$
+$k$ represents the number of periods from the baseline time to the target time.
 
 ## Syntax
 
 ```sql
-HOUR_FLOOR(<datetime>)
-HOUR_FLOOR(<datetime>, <origin>)
-HOUR_FLOOR(<datetime>, <period>)
-HOUR_FLOOR(<datetime>, <period>, <origin>)
+HOUR_FLOOR(`<date_or_time_expr>`)
+HOUR_FLOOR(`<date_or_time_expr>`, `<origin>`)
+HOUR_FLOOR(`<date_or_time_expr>`, `<period>`)
+HOUR_FLOOR(`<date_or_time_expr>`, `<period>`, `<origin>`)
 ```
 
 ## Parameters
 
 | Parameter | Description |
 | -- | -- |
-| `<datetime>` | A valid date expression |
-| `<period>` | Specifies how many hours make up each period|
-| `<origin>` | The starting point of time. If not provided, the default is 0001-01-01T00:00:00 |
+| `<date_or_time_expr>` | A valid date expression that supports datetime/date/timestamptz types. Date type will be converted to the start time 00:00:00 of the corresponding date. For specific formats please see [timestamptz conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion), and for datetime/date formats refer to [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
+| `<period>` | Optional parameter that specifies the period length (unit: hours), must be a positive integer (such as 2, 6, 12). Default value is 1, representing one period every 1 hour |
+| `<origin>` | The starting time origin, supports datetime/date types. If not provided, the default is 0001-01-01T00:00:00 |
 
 ## Return Value
 
-Returns the nearest rounded-down timestamp of the specified time interval period.
+Returns a TIMESTAMPTZ, DATETIME or DATE type value representing the nearest period moment after rounding down.
+
+- If the input is TIMESTAMPTZ type, it will first be converted to local_time (for example: `2025-12-31 23:59:59+05:00` represents local_time `2026-01-01 02:59:59` when the session variable is `+08:00`), and then perform FLOOR calculation.
+- If the input time values (`<date_or_time_expr>` and `<period>`) contain both TIMESTAMPTZ and DATETIME types, the output is DATETIME type.
+- If the input period is a non-positive integer, returns error.
+- If any parameter is NULL, the result returns NULL.
+- If origin or datetime has scale, the returned result has scale.
+- If the `<origin>` date and time is after the `<period>`, it will still be calculated according to the above formula, but the period k will be negative.
 
 ## Examples
 
 ```sql
-select hour_floor("2023-07-13 22:28:18", 5);
-```
 
-```text
-+-------------------------------------------------------------+
-| hour_floor(cast('2023-07-13 22:28:18' as DATETIMEV2(0)), 5) |
-+-------------------------------------------------------------+
-| 2023-07-13 21:00:00                                         |
-+-------------------------------------------------------------+
-```
+-- Round down by 5-hour period, default origin is 0001-01-01 00:00:00
+mysql> select hour_floor("2023-07-13 22:28:18", 5);
++--------------------------------------+
+| hour_floor("2023-07-13 22:28:18", 5) |
++--------------------------------------+
+| 2023-07-13 18:00:00                  |
++--------------------------------------+
 
+-- Using 2023-07-13 08:00 as origin, divide by 4-hour periods
+mysql> select hour_floor('2023-07-13 19:30:00', 4, '2023-07-13 08:00:00') as custom_origin;
++---------------------+
+| custom_origin       |
++---------------------+
+| 2023-07-13 16:00:00 |
++---------------------+
+
+-- Input datetime exactly at period edge, return input datetime value
+select hour_floor("2023-07-13 18:00:00", 5);
++--------------------------------------+
+| hour_floor("2023-07-13 18:00:00", 5) |
++--------------------------------------+
+| 2023-07-13 18:00:00                  |
++--------------------------------------+
+
+-- Only with origin date and specified date
+select hour_floor("2023-07-13 22:28:18", "2023-07-01 12:12:00");
++----------------------------------------------------------+
+| hour_floor("2023-07-13 22:28:18", "2023-07-01 12:12:00") |
++----------------------------------------------------------+
+| 2023-07-13 22:12:00                                      |
++----------------------------------------------------------+
+
+-- Input date type will be converted to start time 2023-07-13 00:00:00 of the day
+mysql> select hour_floor('2023-07-13 20:30:00', 4, '2023-07-13');
++----------------------------------------------------+
+| hour_floor('2023-07-13 20:30:00', 4, '2023-07-13') |
++----------------------------------------------------+
+| 2023-07-13 20:00:00                                |
++----------------------------------------------------+
+
+-- TimeStampTz sample, SET time_zone = '+08:00'
+-- Convert to local_time (2026-01-01 02:59:59) and then perform HOUR_FLOOR
+SELECT HOUR_FLOOR('2025-12-31 23:59:59+05:00');
++-----------------------------------------+
+| HOUR_FLOOR('2025-12-31 23:59:59+05:00') |
++-----------------------------------------+
+| 2026-01-01 02:00:00                     |
++-----------------------------------------+
+
+-- If parameters contain both TimeStampTz and Datetime types, output DateTime type
+SELECT HOUR_FLOOR('2025-12-31 23:59:59+05:00', '2025-12-15 00:00:00.123');
++--------------------------------------------------------------------+
+| HOUR_FLOOR('2025-12-31 23:59:59+05:00', '2025-12-15 00:00:00.123') |
++--------------------------------------------------------------------+
+| 2026-01-01 02:00:00.123                                            |
++--------------------------------------------------------------------+
+
+-- If origin or datetime has scale, the returned result has scale
+mysql> select hour_floor('2023-07-13 19:30:00.123', 4, '2023-07-03 08:00:00') as custom_origin;
++-------------------------+
+| custom_origin           |
++-------------------------+
+| 2023-07-13 16:00:00.000 |
++-------------------------+
+
+mysql> select hour_floor('2023-07-13 19:30:00', 4, '2023-07-03 08:00:00.123') as custom_origin;
++-------------------------+
+| custom_origin           |
++-------------------------+
+| 2023-07-13 16:00:00.123 |
++-------------------------+
+
+--- If the <origin> date and time is after the <period>, it will still be calculated according to the above formula, but the period k will be negative.
+select hour_floor('2023-07-13 19:30:00.123', 4, '2028-07-14 08:00:00') ;
++-----------------------------------------------------------------+
+| hour_floor('2023-07-13 19:30:00.123', 4, '2028-07-14 08:00:00') |
++-----------------------------------------------------------------+
+| 2023-07-13 16:00:00.000                                         |
++-----------------------------------------------------------------+
+
+-- Input any parameter as NULL (returns NULL)
+mysql> select hour_floor(null, 6) as null_input;
++------------+
+| null_input |
++------------+
+| NULL       |
++------------+
+
+-- Period is negative, returns erro
+mysql> select hour_floor('2023-12-31 23:59:59', -3);
+ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.3)[E-218]Operation hour_floor of 2023-12-31 23:59:59, -3 out of range
+
+```

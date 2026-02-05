@@ -1,7 +1,8 @@
 ---
 {
-  "title": "集群运维",
-  "language": "zh-CN"
+    "title": "集群运维",
+    "language": "zh-CN",
+    "description": "在 K8s 环境中服务因为一些预期之外的事情会进入 CrashLoopBackOff 状态，通过 kubectl get pod --namespace ${namespace} 命令可以查看指定 namespace 下的 pod 状态和 podname。"
 }
 ---
 
@@ -20,7 +21,7 @@ Doris Operator 提供了 `Debug` 的运行模式，下面描述了当服务进�
 1. **通过以下命令给运行有问题的 pod 进行添加 annnotation**
 
   ```shell
-  kubectl annotate pod ${pod_name} --namespace ${namespace} apache.com.doris/runmode=debug
+  kubectl annotate pod ${pod_name} --namespace ${namespace} apache.org.doris/runmode=debug
   ```
 
   当服务进行下一次重启时候，服务会检测到标识 `Debug` 模式启动的 annotation 就会进入 `Debug` 模式启动，pod 状态为 `running`。
@@ -242,7 +243,7 @@ admin set frontend config("disable_tablet_scheduler" = "true");
 
 #### 验证集群节点状态
 
-通过  [访问 Doris 集群](install-config-cluster.md#访问配置) 文档提供的方式，通过 `mysql-client` 访问 Doris。
+通过  [访问 Doris 集群](./install-config-cluster.md#访问配置) 文档提供的方式，通过 `mysql-client` 访问 Doris。
 
 使用 `show frontends` 和 `show backends` 等 SQL 查看各个组件的 版本 和 状态。
 
@@ -408,3 +409,30 @@ admin set frontend config("disable_colocate_balance" = "false");
 admin set frontend config("disable_tablet_scheduler" = "false");
 ```
 
+## FE 使用 metadata_failure_recovery 模式启动
+当 FE 无法选主时，服务处于不可用状态时，可以通过选定一个拥有 `VLSN` 最大值的节点使用 `metadata_failure_recovery` 机制强制启动作为 master 节点，依此来恢复集群。
+
+### 容器环境下使用 recovery 模式启动
+
+1. 找到 `VLSN` 最大值所在的节点  
+   k8s 下，FE 的 Pod 每次启动时会输出本节点的上最近 10 条  `VLSN` 记录，如下图所示：
+    ```
+    the annotations value:
+    the value not equal!  debug
+    /opt/apache-doris/fe/doris-meta/bdb/je.info.0:19:2025-08-05 03:42:47.650 UTC INFO [fe_f35530c4_3ff1_48fe_80d1_cc8e32dbc942] Replica-feeder fe_d8763579_92da_4d72_8c58_4e62b88bdff0 start stream at VLSN: 30
+    /opt/apache-doris/fe/doris-meta/bdb/je.info.0:21:2025-08-05 03:42:47.659 UTC INFO [fe_f35530c4_3ff1_48fe_80d1_cc8e32dbc942] Replica initialization completed. Replica VLSN: -1  Heartbeat master commit VLSN: 49  DTVLSN:0 Replica VLSN delta: 50
+    [Tue Aug  5 06:14:05 UTC 2025] start with meta run start_fe.sh with additional options: '--console'
+    ```
+   以上是一个实例集群 FE 启动时输出的 `VLSN` 记录，当前节点最大 `VLSN` 为 30（日志输出前缀为 `start stream at VLSN:`）。  
+2. 选定最大值节点的 pod  作为使用 recovery 机制的节点。
+   找到 `VLSN` 最大值所在节点的 pod 后，通过如下命令给 pod 添加需要使用 recovery 机制启动的注解。
+    ```
+    kubectl annotate pod {podName} "selectdb.com.doris/recovery=true"
+    ```
+   当 Pod 再次重新启动后，当前节点会自动在启动命令中添加 ` --metadata_failure_recovery`，服务以 recovery 模式启动。  
+3. 服务正常后，必须删除第二步添加的 annotation，否则后面节点重启后会出现不可预期的行为。
+
+:::tip 提示
+1. 添加注解后，不可以通过 delete pod 的模式重启，这样会导致注解丢失。等待 kubelet 自动重启拉起，或者进入容器手动 kill 进程。
+2. 使用 `metadata_failure_recovery` 模式启动，FE 回放日志耗时会很长，在使用该模式启动之前请先修改 FE 服务的[启动超时时间](./install-config-cluster.md#启动探测超时配置)，然后删除所有的 FE Pod 在进行 `metadata_failure_recovery` 启动。
+:::

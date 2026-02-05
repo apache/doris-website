@@ -1,20 +1,22 @@
 ---
 {
-  "title": "DBT Doris Adapter",
-  "language": "zh-CN"
+    "title": "DBT Doris Adapter",
+    "language": "zh-CN",
+    "description": "DBT(Data Build Tool) 是专注于做 ELT（提取、加载、转换）中的 T（Transform）—— “转换数据”环节的组件 dbt-doris adapter 是基于dbt-core 开发，依赖于mysql-connector-python驱动对 doris 进行数据转换。"
 }
 ---
 
 [DBT(Data Build Tool)](https://docs.getdbt.com/docs/introduction) 是专注于做 ELT（提取、加载、转换）中的 T（Transform）—— “转换数据”环节的组件
-`dbt-doris` adapter 是基于`dbt-core` 1.5.0 开发，依赖于`mysql-connector-python`驱动对 doris 进行数据转换。
+`dbt-doris` adapter 是基于`dbt-core` 开发，依赖于`mysql-connector-python`驱动对 doris 进行数据转换。
 
 代码仓库：https://github.com/apache/doris/tree/master/extension/dbt-doris
 
 ## 版本支持
 
-| doris   | python       | dbt-core |
-|---------|--------------|----------|
-| >=1.2.5 | >=3.8,<=3.10 | >=1.5.0  |
+| doris   | python      | dbt-core | dbt-doris |
+|---------|-------------|----------|----------|
+| >=1.2.5 | >=3.8,<=3.10| >=1.5.0  | <=0.3    |
+| >=1.2.5 | >=3.9       | >=1.8.0  | >=0.4    |
 
 
 ## dbt-doris adapter 使用
@@ -478,4 +480,42 @@ select
     create_time = {{ var('my_date' , 'DATE_SUB(CURDATE(), INTERVAL 1 DAY)') }} 
 
 {% endif %}
+```
+
+### 自定义表数据列类型及精度样例参考
+
+`schema.yaml` 文件对 `models` 中 `columns` 的 `data_type` 配置如下：
+
+```yaml
+models:
+  - name: sell_user
+    description: "A dbt model named sell_user"
+    columns:
+      - name: user_id
+        data_type: BIGINT
+      - name: account_id
+        data_type: VARCHAR(12)
+      - name: status
+      - name: cost_sum
+        data_type: DECIMAL(38,9)
+      - name: update_time
+        data_type: DATETIME
+      - name: create_time
+        data_type: DATETIME
+```
+
+### 访问 catalog 样例参考
+
+[Data Catalog](../lakehouse/catalog-overview.md) 是 Doris 数据湖功能中指向不同的数据源，其层级在 Database 之上。
+对其访问 推荐通过 dbt-doris 内置 Macros : `catalog_source`
+
+```sql
+{{ config(materialized='table', replication_num=1) }}
+
+select *
+--  use macros 'catalog_source' not macros 'source'
+--  catalog name is 'mysql_catalog'
+--  database name is 'dbt_source'
+--  table name is 'sell_user'
+from {{ catalog_source('mysql_catalog', 'dbt_source', 'sell_user') }}
 ```

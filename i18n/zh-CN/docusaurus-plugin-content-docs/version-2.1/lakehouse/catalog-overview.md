@@ -1,7 +1,8 @@
 ---
 {
     "title": "数据目录概述",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "数据目录（Data Catalog）用于描述一个数据源的属性。"
 }
 ---
 
@@ -24,7 +25,7 @@ Doris 中的数据目录分为两种：
 | 数据集成 | ZeroETL 方案，直接访问不同数据源生成结果数据，或让数据在不同数据源中便捷流转。 |
 | 数据写回 | 通过 Doris 进行数据加工处理后，写回到外部数据源。                |
 
-本文以 [Iceberg Catalog](./catalogs/iceberg-catalog.md) 为例，重点介绍数据目录的基础操作。不同数据目录的详细介绍，请参阅对应的数据目录文档。
+本文以 [Iceberg Catalog](./catalogs/iceberg-catalog) 为例，重点介绍数据目录的基础操作。不同数据目录的详细介绍，请参阅对应的数据目录文档。
 
 ## 创建数据目录
 
@@ -75,6 +76,15 @@ SELECT * EXCEPT(k3) FROM table;     -- Query OK.
 SELECT k1, k3 FROM table;           -- Error: Unsupported type 'UNSUPPORTED_TYPE' in 'k3'
 SELECT k1, k4 FROM table;           -- Query OK.
 ```
+
+### Nullable 属性
+
+Doris 目前对外表列的 Nullable 属性支持有特殊限制，具体行为如下：
+
+| 源类型 | Doris 读取行为 | Doris 写入行为 |
+| ---   | ------------  | ------------ |
+| Nullable | Nullable  | 允许写入 Null 值 |
+| Not Null | Nullable，即依然当做可允许为 NULL 的列进行读取 | 允许写入 Null 值，即不对 Null 值进行严格检查。用户需要自行保证数据的完整性和一致性。|
 
 ## 使用数据目录
 
@@ -142,9 +152,9 @@ jdbc:mysql://host:9030/iceberg_catalog.iceberg_db
 SET PROPERTY default_init_catalog=hive_catalog;
 ```
 
-注意1：如果 MySQL 命令行或 JDBC 连接串中已经明确指定了数据目录，则以指定的为准，`default_init_catalog` 用户属性不生效；
-注意2：如果用户属性 `default_init_catalog` 设置的数据目录已经不存在，则自动切换到默认的 `internal` 数据目录；
-注意3：该功能从 v3.1.x 版本开始生效；
+注意 1：如果 MySQL 命令行或 JDBC 连接串中已经明确指定了数据目录，则以指定的为准，`default_init_catalog` 用户属性不生效；
+注意 2：如果用户属性 `default_init_catalog` 设置的数据目录已经不存在，则自动切换到默认的 `internal` 数据目录；
+注意 3：该功能从 v3.1.x 版本开始生效；
 
 ### 简单查询
 
@@ -175,7 +185,7 @@ CREATE CATALOG mysql_catalog properties(
 之后通过 SQL 对 Iceberg 表和 MySQL 表进行关联查询：
 
 ```sql
-SELECT * FROM FROM
+SELECT * FROM
 iceberg_catalog.iceberg_db.table1 tbl1 JOIN mysql_catalog.mysql_db.dim_table tbl2
 ON tbl1.id = tbl2.id;
 ```
@@ -202,9 +212,9 @@ SELECT * FROM iceberg_catalog.iceberg_db.table1;
 
 Doris 支持通过 `INSERT` 语句直接将数据写回到外部数据源。具体参阅：
 
-* [ Hive Catalog ](./catalogs/hive-catalog.md)
+* [ Hive Catalog ](./catalogs/hive-catalog.mdx)
 
-* [ Iceberg Catalog](./catalogs/iceberg-catalog.md)
+* [ Iceberg Catalog](./catalogs/iceberg-catalog.mdx)
 
 * [ JDBC Catalog](./catalogs/jdbc-catalog-overview.md)
 

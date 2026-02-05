@@ -16,6 +16,7 @@ import GetStarted from '@site/src/components/get-started/get-started';
 import HomeEvenStarIcon from '@site/static/images/home-event-star.svg';
 import { UserCaseCarousel } from '../components/user-case-carousel';
 import { NewsLetterSwiper } from '../components/newsletter-swiper';
+import { DEFAULT_VERSION } from '@site/src/constant/version';
 
 export default function Home(): JSX.Element {
     const { siteConfig } = useDocusaurusContext();
@@ -29,28 +30,27 @@ export default function Home(): JSX.Element {
         },
         {
             label: <Translate id="homepage.banner.button1">Get started</Translate>,
-            link: '/docs/gettingStarted/what-is-apache-doris',
+            link: `/docs/${DEFAULT_VERSION}/gettingStarted/what-is-apache-doris`,
             type: 'ghost',
         },
         {
             label: <Translate id="homepage.banner.button2">Join Slack</Translate>,
-            link: 'https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-35mzao67o-BrpU70FNKPyB6UlgpXf8_w',
+            link: 'https://doris.apache.org/slack',
             type: 'ghost',
         },
     ];
     const banner = {
         title: (
             <div
-                className="lg:leading-[78px]"
-                style={{
-                    fontWeight: 700,
-                }}
             >
-                <p className="highlight">
+                <p>
                     <Translate id="homepage.banner.title">Open Source, Real-Time</Translate>
                 </p>
                 <p>
-                    <Translate id="homepage.banner.highlightTitle">Data Warehouse</Translate>
+                    <Translate id="homepage.banner.highlightTitle">Analytics and Search Database</Translate>
+                </p>
+                <p>
+                    <Translate id="homepage.banner.highlightTitle">for the AI Era</Translate>
                 </p>
             </div>
         ),
@@ -58,7 +58,7 @@ export default function Home(): JSX.Element {
             <div>
                 <p>
                     <Translate id="homepage.banner.subTitle-1">
-                        Apache Doris is a modern data warehouse for real-time analytics.
+                        Apache Doris is a database for real-time analytics and search.
                     </Translate>
                 </p>
                 <p>
@@ -68,29 +68,29 @@ export default function Home(): JSX.Element {
                 </p>
             </div>
         ),
-        event: (
-            <Link
-                to={'https://www.velodb.io/events/apache-doris-meetup-20250822'}
-                style={{ background: 'linear-gradient(0deg, #F7F9FE 0%, #F7F9FE 100%), #FFF', textDecoration: 'none' }}
-                onMouseEnter={() => {
-                    document.getElementById('event-star-icon').firstChild.style.fill = '#444FD9';
-                }}
-                onMouseLeave={() => {
-                    document.getElementById('event-star-icon').firstChild.style.fill = '#636CDF';
-                }}
-                className="lg:rounded-full rounded-[1.625rem] mb-8 text-center group lg:w-[51rem] mx-auto lg:flex-row flex-col flex py-4 px-[2.25rem] items-center justify-center"
-            >
-                <div className="lg:mb-0 mb-4 flex items-center">
-                    <HomeEvenStarIcon id="event-star-icon" />
-                    <span className="ml-[3px] group-hover:text-[#444FD9] font-bold text-[#636CDF] text-[0.875rem]/[1rem]">
-                        NEW EVENT
-                    </span>
-                </div>
-                <p className="lg:ml-[0.75rem] group-hover:text-[#444FD9] text-[1rem]/[1rem] text-[#000]">
-                    NebulaGraph × Apache Doris @ Hong Kong: New Fintech Paradigm on August 22
-                </p>
-            </Link>
-        ),
+        // event: (
+        //     <Link
+        //         to={'https://www.velodb.io/events/GenAI-AWS-251113'}
+        //         style={{ background: 'linear-gradient(0deg, #F7FAFC 0%, #F7FAFC 100%), #FFF', textDecoration: 'none' }}
+        //         onMouseEnter={() => {
+        //             document.getElementById('event-star-icon').firstChild.style.fill = '#11A679';
+        //         }}
+        //         onMouseLeave={() => {
+        //             document.getElementById('event-star-icon').firstChild.style.fill = '#636CDF';
+        //         }}
+        //         className="lg:rounded-full rounded-[1.625rem] mb-8 text-center group lg:w-[45rem] mx-auto lg:flex-row flex-col flex py-4 px-[2.25rem] items-center justify-center"
+        //     >
+        //         <div className="lg:mb-0 mb-4 flex items-center">
+        //             <HomeEvenStarIcon id="event-star-icon" />
+        //             <span className="ml-[3px] group-hover:text-primary font-bold text-[#636CDF] text-[0.875rem]/[1rem]">
+        //                 NEW EVENT
+        //             </span>
+        //         </div>
+        //         <p className="lg:ml-[0.75rem] group-hover:text-primary text-[1rem]/[1rem] text-[#000]">
+        //             Webinar: Data Analytics in the Agentic AI Era —— Register Now
+        //         </p>
+        //     </Link>
+        // ),
         bannerImg: require('@site/static/images/home-banner.png').default,
         buttons,
     };
@@ -283,7 +283,7 @@ export default function Home(): JSX.Element {
                     </defs>
                 </svg>
             ),
-            href: 'https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-35mzao67o-BrpU70FNKPyB6UlgpXf8_w',
+            href: 'https://doris.apache.org/slack',
         },
         {
             title: <Translate id="community.title.c4">Twitter</Translate>,
@@ -400,14 +400,14 @@ export default function Home(): JSX.Element {
         <Layout
             title={translate({
                 id: 'homepage.title',
-                message: 'Apache Doris: Open source data warehouse for real time data analytics',
+                message: 'Apache Doris: Open Source, Real-Time Analytics and Search Database for the AI Era',
             })}
             description={translate({
                 id: 'homepage.banner.subTitle',
                 message:
                     'Apache Doris is an open-source database based on MPP architecture,with easier use and higher performance.  As a modern data warehouse, apache doris empowers your Olap query and database analytics.',
             })}
-            showAnnouncementBar={true}
+            showAnnouncementBar={false}
             keywords={translate({
                 id: 'homepage.keywords',
                 message: 'Open Source database, OLAP, data warehouse, database analytics',
@@ -415,7 +415,7 @@ export default function Home(): JSX.Element {
         >
             <PageBanner {...banner}></PageBanner>
             <AchievementBanner />
-            <section style={{ backgroundColor: '#F7F9FE' }} className="group">
+            <section style={{ backgroundColor: '#F7FAFC' }} className="group">
                 <NewsLetterSwiper />
             </section>
             <section className="apache-doris">
@@ -430,7 +430,8 @@ export default function Home(): JSX.Element {
                     footer={
                         <div className="justify-center flex mt-14">
                             <LinkWithArrow
-                                to="/docs/gettingStarted/what-is-apache-doris"
+                                className="hover:!text-primary !text-[#1D1D1D]"
+                                to={`/docs/${DEFAULT_VERSION}/gettingStarted/what-is-apache-doris`}
                                 text={
                                     <Translate id="homepage.more" description="more link">
                                         Learn more
@@ -453,7 +454,7 @@ export default function Home(): JSX.Element {
             </section>
             <PageColumn
                 className="lg:py-[7.5rem]"
-                wrapperStyle={{ backgroundColor: '#F7F9FE' }}
+                wrapperStyle={{ backgroundColor: '#F7FAFC' }}
                 title={
                     <Translate id="homepage.capabilities" description="Core capabilities">
                         Core capabilities
@@ -490,7 +491,7 @@ export default function Home(): JSX.Element {
                 <UserCaseCarousel />
             </PageColumn>
             <PageColumn
-                className="bg-[#F7F9FE]"
+                className="bg-[#F7FAFC]"
                 title={
                     <Translate id="homepage.join" description="Join The Community">
                         Connect with community

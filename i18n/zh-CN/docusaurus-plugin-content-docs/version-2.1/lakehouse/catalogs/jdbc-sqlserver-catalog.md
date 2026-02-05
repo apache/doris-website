@@ -1,7 +1,8 @@
 ---
 {
     "title": "SQL Server JDBC Catalog",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "Doris JDBC Catalog 支持通过标准 JDBC 接口连接 SQL Server 数据库。本文档介绍如何配置 SQL Server 数据库连接。"
 }
 ---
 
@@ -75,6 +76,7 @@ JDBC 驱动程序以及连接器自动使用传输层安全性 (TLS) 加密和�
 | char/varchar/text/nchar/nvarchar/ntext | string        |                                                  |
 | time/datetimeoffset                    | string        |                                                  |
 | timestamp                              | string        | 读取二进制数据的十六进制显示，无实际意义                             |
+| image/binary/varbinary                 | varbinary     | 由 properties 中 `enable.mapping.varbinary` (4.0.2 后开始支持) 属性控制。默认为 `false`, 则映射到 `string`; 为 `true` 时，则映射到 `varbinary` 类型。|
 | other                                  | UNSUPPORTED   |                                                  |
 
 ## 常见问题

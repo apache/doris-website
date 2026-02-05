@@ -1,7 +1,8 @@
 ---
 {
     "title": "查询缓存",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "SQL Cache 是 Doris 提供的一种查询优化机制，可以显著提升查询性能。它通过缓存查询结果来减少重复计算，适用于数据更新频率较低的场景。"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "REGEXP_EXTRACT",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "此函数用于对给定字符串 STR 执行正则匹配，并提取符合指定模式的第 POS 个匹配部分。若函数要返回匹配结果，该模式必须与 STR 的某些部分完全匹配。"
 }
 ---
 
@@ -37,7 +38,12 @@ pos参数为 'integer' 类型，用于指定字符串中开始搜索正则表达
 
 如果 'pattern' 参数不符合正则表达式，则抛出错误
 
-支持的字符匹配种类 : https://github.com/google/re2/wiki/Syntax
+默认支持的字符匹配种类 : https://github.com/google/re2/wiki/Syntax
+
+Doris 支持通过会话变量 `enable_extended_regex`（默认为 `false`）来启用更高级的正则表达式功能，例如 look-around 零宽断言。
+
+会话变量`enable_extended_regex`设置为`true`时,
+支持的字符匹配种类 : https://www.boost.org/doc/libs/latest/libs/regex/doc/html/boost_regex/syntax/perl_syntax.html
 
 ## 语法
 ```sql
@@ -201,4 +207,22 @@ SELECT regexp_extract('AbCdE', '([[:digit:]]+', 1);
 ```text
 ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.2)[INVALID_ARGUMENT]Could not compile regexp pattern: ([[:digit:]]+
 Error: missing ): ([[:digit:]]+
+```
+
+高级的正则表达式
+```sql
+SELECT regexp_extract('foo123bar456baz', '(?<=foo)(\\d+)(?=bar)', 1);
+-- ERROR 1105 (HY000): errCode = 2, detailMessage = (127.0.0.1)[INVALID_ARGUMENT]Invalid regex pattern: (?<=foo)(\d+)(?=bar). Error: invalid perl operator: (?<
+```
+
+```sql
+SET enable_extended_regex = true;
+SELECT regexp_extract('foo123bar456baz', '(?<=foo)(\\d+)(?=bar)', 1);
+```
+```text
++---------------------------------------------------------------+
+| regexp_extract('foo123bar456baz', '(?<=foo)(\\d+)(?=bar)', 1) |
++---------------------------------------------------------------+
+| 123                                                           |
++---------------------------------------------------------------+
 ```

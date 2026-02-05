@@ -1,7 +1,8 @@
 ---
 {
     "title": "ST_TOUCHES",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "判断几何图形 shape1 是否与几何图形 shape2 相接触（即两个几何图形的边界是否相交，但内部不相交）"
 }
 ---
 
