@@ -203,17 +203,19 @@ The Schema Template pattern-matching algorithm supports **only a restricted subs
 
 #### Supported glob syntax
 
+In SQL strings, we should write `\\\\` to express a literal `\` in glob patterns.
+
 All examples below are matching examples.
 
-| Syntax | Meaning | Example (pattern → JSON Path) |
-|------|---------|------------------------------|
-| `*` | Any-length string | `num_*` → `num_latency` |
-| `?` | Any single character | `a?b` → `acb` |
-| `[abc]` | Character class | `a[bc]d` → `abd` |
-| `[a-z]` | Character range | `int_[0-9]` → `int_3` |
-| `[!abc]` | Negated character class | `int_[!0-9]` → `int_a` |
-| `[^abc]` | Negated character class | `int_[^0-9]` → `int_a` |
-| `\` | Escape the next character | `a\*b` → `a*b` |
+| Syntax | Meaning | Example (pattern → JSON Path) | SQL literal |
+|------|---------|------------------------------|-------------|
+| `*` | Any-length string | `num_*` → `num_latency` | `'num_*'` |
+| `?` | Any single character | `a?b` → `acb` | `'a?b'` |
+| `[abc]` | Character class | `a[bc]d` → `abd` | `'a[bc]d'` |
+| `[a-z]` | Character range | `int_[0-9]` → `int_3` | `'int_[0-9]'` |
+| `[!abc]` | Negated character class | `int_[!0-9]` → `int_a` | `'int_[!0-9]'` |
+| `[^abc]` | Negated character class | `int_[^0-9]` → `int_a` | `'int_[^0-9]'` |
+| `\` | Escape the next character | `a\*b` → `a*b`<br/>`a\?b` → `a?b`<br/>`a\[b` → `a[b`<br/>`\` → `\` | `'a\\\\*b'`<br/>`'a\\\\?b'`<br/>`'a\\\\[b'`<br/>`'\\\\'` |
 
 #### Escaping rules
 
@@ -243,8 +245,19 @@ The following are treated as ordinary characters or cause matching to fail; avoi
   - × `number_a`
 
 - Pattern: `a\*b`
+  - SQL: `'a\\\\*b'`
   - √ `a*b`
   - × `axxb`
+
+- Pattern: `\*`
+  - SQL: `'\\\\*'`
+  - √ `*`
+  - × `a*`
+
+- Pattern: `\`
+  - SQL: `'\\\\'`
+  - √ `\`
+  - × `\\`
 
 - Pattern: `int_[0-9]`
   - √ `int_1`
@@ -635,5 +648,4 @@ ClickBench (43 queries):
    - No. They are equivalent.
 2. Why doesn’t my query/index work?
    - Check whether you CAST paths to the correct types; whether the type was promoted to JSONB due to conflicts; or whether you mistakenly expect an index on the whole VARIANT instead of on subpaths.
-
 
