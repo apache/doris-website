@@ -616,7 +616,7 @@ const sidebars: SidebarsConfig = {
                                     label: 'Authentication',
                                     items: [
                                         'admin-manual/auth/authentication/internal',
-                                        'admin-manual/auth/authentication/federation',
+                                        'admin-manual/auth/authentication/ldap',
                                     ],
                                 },
                                 {
