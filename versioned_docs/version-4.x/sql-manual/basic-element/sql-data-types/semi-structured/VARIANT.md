@@ -203,7 +203,7 @@ The Schema Template pattern-matching algorithm supports **only a restricted subs
 
 #### Supported glob syntax
 
-In SQL strings, we should write `\\\\` to express a literal `\` in glob patterns.
+In SQL strings, we should write `\\` to express a literal `\` in glob patterns.
 
 All examples below are matching examples.
 
@@ -215,7 +215,7 @@ All examples below are matching examples.
 | `[a-z]` | Character range | `int_[0-9]` → `int_3` | `'int_[0-9]'` |
 | `[!abc]` | Negated character class | `int_[!0-9]` → `int_a` | `'int_[!0-9]'` |
 | `[^abc]` | Negated character class | `int_[^0-9]` → `int_a` | `'int_[^0-9]'` |
-| `\` | Escape the next character | `a\*b` → `a*b`<br/>`a\?b` → `a?b`<br/>`a\[b` → `a[b`<br/>`\` → `\` | `'a\\\\*b'`<br/>`'a\\\\?b'`<br/>`'a\\\\[b'`<br/>`'\\\\'` |
+| `\` | Escape the next character | `a\*b` → `a*b`<br/>`a\?b` → `a?b`<br/>`a\[b` → `a[b`<br/>`\` → `\` | `'a\\*b'`<br/>`'a\\?b'`<br/>`'a\\[b'`<br/>`'\\'` |
 
 #### Unsupported syntax
 
@@ -238,17 +238,17 @@ The following are treated as ordinary characters or cause matching to fail; avoi
   - × `number_a`
 
 - Pattern: `a\*b`
-  - SQL: `'a\\\\*b'`
+  - SQL: `'a\\*b'`
   - √ `a*b`
   - × `axxb`
 
 - Pattern: `\*`
-  - SQL: `'\\\\*'`
+  - SQL: `'\\*'`
   - √ `*`
   - × `a*`
 
 - Pattern: `\`
-  - SQL: `'\\\\'`
+  - SQL: `'\\'`
   - √ `\`
   - × `\\`
 
