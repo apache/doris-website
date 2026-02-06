@@ -1,6 +1,6 @@
 ---
 {
-    "title": "持续导入",
+    "title": "TVF 持续导入",
     "language": "zh-CN",
     "description": "Doris 可以通过 Job + TVF 的方式，创建一个持续导入任务。在提交 Job 作业后，Doris 会持续运行该导入作业，实时的查询 TVF 中的数据写入到 Doris 表中。"
 }
@@ -12,7 +12,7 @@ Doris 可以通过 Job + TVF 的方式，创建一个持续导入任务。在提
 
 ## 支持的 TVF
 
-[S3](../../sql-manual/sql-functions/table-valued-functions/s3.md) TVF
+[S3](../../../sql-manual/sql-functions/table-valued-functions/s3.md) TVF
 
 ## 基本原理
 
@@ -155,7 +155,7 @@ DO <Insert_Command>
 
 | 参数               | 默认值 | 说明                                                         |
 | ------------------ | ------ | ------------------------------------------------------------ |
-| session.*          | 无     | 支持在 job_properties 上配置所有的 session 变量，导入变量可参考 [Insert Into Select](../../data-operate/import/import-way/insert-into-manual.md#导入配置参数) |
+| session.*          | 无     | 支持在 job_properties 上配置所有的 session 变量，导入变量可参考 [Insert Into Select](../../../data-operate/import/import-way/insert-into-manual.md#导入配置参数) |
 | s3.max_batch_files | 256    | 当累计文件数达到该值时触发一次导入写入                           |
 | s3.max_batch_bytes | 10G    | 当累计数据量达到该值时触发一次导入写入                             |
 | max_interval       | 10s    | 当上游没有新增文件或数据时，空闲的调度间隔。                 |
