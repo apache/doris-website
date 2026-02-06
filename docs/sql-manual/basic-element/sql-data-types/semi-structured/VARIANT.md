@@ -220,13 +220,6 @@ All examples below are matching examples.
 | `[^abc]` | Negated character class | `int_[^0-9]` → `int_a` | `'int_[^0-9]'` |
 | `\` | Escape the next character | `a\*b` → `a*b`<br/>`a\?b` → `a?b`<br/>`a\[b` → `a[b`<br/>`\` → `\` | `'a\\\\*b'`<br/>`'a\\\\?b'`<br/>`'a\\\\[b'`<br/>`'\\\\'` |
 
-#### Escaping rules
-
-- `\*` is a literal `*`
-- `\?` is a literal `?`
-- `\[` is a literal `[`
-- A trailing standalone `\` is treated as a literal `\`
-
 #### Unsupported syntax
 
 The following are treated as ordinary characters or cause matching to fail; avoid them whenever possible:
