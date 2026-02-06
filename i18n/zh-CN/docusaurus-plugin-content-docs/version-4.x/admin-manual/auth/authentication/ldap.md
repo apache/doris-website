@@ -84,34 +84,44 @@ LDAP 认证要求客户端以明文方式发送密码，因此需要启用明文
 
 **JDBC Client**
 
-使用 JDBC 连接时，需要自定义认证插件以绕过 SSL 限制：
+1. Doris 未开启 SSL
 
-1. 创建自定义插件类，继承 `MysqlClearPasswordPlugin` 并重写 `requiresConfidentiality()` 方法：
+  Doris 未开启 SSL 的情况下，使用 JDBC 连接时，需要自定义认证插件以绕过 SSL 限制：
 
-   ```java
-   public class MysqlClearPasswordPluginWithoutSSL extends MysqlClearPasswordPlugin {
-     @Override
-     public boolean requiresConfidentiality() {
-       return false;
-     }
-   }
-   ```
+  1. 创建自定义插件类，继承 `MysqlClearPasswordPlugin` 并重写 `requiresConfidentiality()` 方法：
 
-   可以参考[该代码库](https://github.com/morningman/doris-debug-tools/tree/main/jdbc-test) 中的相关示例。或执行 `build-auth-plugin.sh` 可直接生成上述插件 jar 包。然后放置到客户端指定位置。
+    ```java
+    public class MysqlClearPasswordPluginWithoutSSL extends MysqlClearPasswordPlugin {
+      @Override
+      public boolean requiresConfidentiality() {
+        return false;
+      }
+    }
+    ```
 
-2. 在 JDBC 连接 URL 中配置自定义插件（将 `xxx` 替换为实际的包名）：
+  2. 在 JDBC 连接 URL 中配置自定义插件（将 `xxx` 替换为实际的包名）：
 
-   ```sql
-   jdbcUrl = "jdbc:mysql://localhost:9030/mydatabase?authenticationPlugins=xxx.xxx.xxx.MysqlClearPasswordPluginWithoutSSL&defaultAuthenticationPlugin=xxx.xxx.xxx.MysqlClearPasswordPluginWithoutSSL&disabledAuthenticationPlugins=com.mysql.jdbc.authentication.MysqlClearPasswordPlugin";
-   ```
+    ```sql
+    jdbcUrl = "jdbc:mysql://localhost:9030/mydatabase?authenticationPlugins=xxx.xxx.xxx.MysqlClearPasswordPluginWithoutSSL&defaultAuthenticationPlugin=xxx.xxx.xxx.MysqlClearPasswordPluginWithoutSSL&disabledAuthenticationPlugins=com.mysql.jdbc.authentication.MysqlClearPasswordPlugin";
+    ```
 
-   需要配置的三个属性说明：
+    需要配置的三个属性说明：
 
-   | 属性 | 说明 |
-   | --- | --- |
-   | `authenticationPlugins` | 注册自定义的明文认证插件 |
-   | `defaultAuthenticationPlugin` | 将自定义插件设为默认认证插件 |
-   | `disabledAuthenticationPlugins` | 禁用原始的明文认证插件（该插件强制要求 SSL） |
+    | 属性 | 说明 |
+    | --- | --- |
+    | `authenticationPlugins` | 注册自定义的明文认证插件 |
+    | `defaultAuthenticationPlugin` | 将自定义插件设为默认认证插件 |
+    | `disabledAuthenticationPlugins` | 禁用原始的明文认证插件（该插件强制要求 SSL） |
+
+  > 可以参考[该代码库](https://github.com/morningman/doris-debug-tools/tree/main/jdbc-test) 中的相关示例。或执行 `build-auth-plugin.sh` 可直接生成上述插件 jar 包。然后放置到客户端指定位置。
+
+2. Doris 开启 SSL
+
+  Doris 开启 SSL 的情况下（`fe.conf` 中添加 `enable_ssl=true`），JDBC URL 无需添加额外参数，直接连接即可：
+
+  ```sql
+  jdbcUrl = "jdbc:mysql://localhost:9030/mydatabase
+  ```
 
 ## 验证登录
 
