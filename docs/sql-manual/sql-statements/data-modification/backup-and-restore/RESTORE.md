@@ -53,6 +53,13 @@ Restoration operation attributes, the format is `<key>` = `<value>`，currently 
 - "atomic_restore" - : The data will be loaded into a temporary table first, and then the original table will be replaced atomically to ensure that the read and write of the target table are not affected during the recovery process.
 - "force_replace" : Force replace when the table exists and the schema is different with the backup table. 
   - Note that to enable `force_replace`, you must enable `atomic_restore`
+- "storage_medium": Controls the storage medium for restored table. Default is "same_with_upstream" which preserves the source table's storage medium setting.
+  - "same_with_upstream": Use the same storage medium as the backup source table (default)
+  - "hdd": Force use HDD storage
+  - "ssd": Force use SSD storage
+- "medium_allocation_mode": Controls how to handle storage medium allocation when the specified medium is unavailable. Default is "strict".
+  - "strict": Strictly use the specified storage medium. Restore will fail if the medium is unavailable (except in single-medium environments)
+  - "adaptive": Prefer the specified medium, but automatically fallback to available medium if unavailable
 
 ## Optional Parameters
 
@@ -127,5 +134,33 @@ EXCLUDE ( `backup_tbl` )
 PROPERTIES
 (
     "backup_timestamp"="2018-05-04-18-12-18"
+);
+```
+
+4. Restore table backup_tbl from snapshot_4, using SSD storage with strict mode (restore will fail if SSD is unavailable):
+
+```sql
+RESTORE SNAPSHOT example_db1.`snapshot_4`
+FROM `example_repo`
+ON ( `backup_tbl` )
+PROPERTIES
+(
+    "backup_timestamp"="2018-05-04-19-20-30",
+    "storage_medium"="ssd",
+    "medium_allocation_mode"="strict"
+);
+```
+
+5. Restore table backup_tbl from snapshot_5, preserving the original storage medium with adaptive mode (automatically switches to available medium if the original is unavailable):
+
+```sql
+RESTORE SNAPSHOT example_db1.`snapshot_5`
+FROM `example_repo`
+ON ( `backup_tbl` )
+PROPERTIES
+(
+    "backup_timestamp"="2018-05-04-20-30-40",
+    "storage_medium"="same_with_upstream",
+    "medium_allocation_mode"="adaptive"
 );
 ```
