@@ -635,3 +635,5 @@ ClickBench (43 queries):
    - No. They are equivalent.
 2. Why doesn’t my query/index work?
    - Check whether you CAST paths to the correct types; whether the type was promoted to JSONB due to conflicts; or whether you mistakenly expect an index on the whole VARIANT instead of on subpaths.
+
+
