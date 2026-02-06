@@ -49,6 +49,22 @@ GRANT Select_priv(col1,col2) ON ctl.db.tbl TO user1
 
 例如，管理员可以选择将信用卡号、身份证号等敏感字段的部分或全部数字替换为星号 * 或其他字符，或者将真实姓名替换为假名。
 
-从 2.1.2 版本开始，支持通过 Apache Ranger 的 Data Masking 来为某些列设置脱敏策略，目前仅支持通过 [Apache Ranger](./ranger)来设置
+目前可以通过两种方式设置数据脱敏策略 
+
+### 1. Doris 内置脱敏策略
+### 相关命令
+- 创建脱敏限策略 [CREATE DATA MASK POLICY](../../../sql-manual/sql-statements/data-governance/CREATE-DATA-MASK-POLICY)
+- 查看脱敏策略 [SHOW DATA MASK POLICY](../../../sql-manual/sql-statements/data-governance/SHOW-DATA-MASK-POLICY)
+- 删除脱敏策略 [DROP DATA MASK POLICY](../../../sql-manual/sql-statements/data-governance/DROP-DATA-MASK-POLICY)
+### 脱敏策略示例
+1.  test 用户查询 t1.c1 列的时候使用 MASK_HASH 策略
+
+```sql
+CREATE DATA MASK POLICY test_policy_1 ON t1.c1
+TO test USING MASK_HASH;
+```
+### 2. Apache Ranger 外部设置
+
+从 2.1.2 版本开始，支持通过 Apache Ranger 的 Data Masking 来为某些列设置脱敏策略。详见： [Apache Ranger](./ranger)
 
 > 为 admin/root 用户设置数据脱敏不会生效

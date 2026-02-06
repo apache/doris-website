@@ -2469,6 +2469,9 @@ const sidebars: SidebarsConfig = {
                                 'sql-manual/sql-statements/data-governance/CREATE-ROW-POLICY',
                                 'sql-manual/sql-statements/data-governance/DROP-ROW-POLICY',
                                 'sql-manual/sql-statements/data-governance/SHOW-ROW-POLICY',
+                                'sql-manual/sql-statements/data-governance/CREATE-DATA-MASK-POLICY',
+                                'sql-manual/sql-statements/data-governance/DROP-DATA-MASK-POLICY',
+                                'sql-manual/sql-statements/data-governance/SHOW-DATA-MASK-POLICY',
                             ],
                         },
                         {
