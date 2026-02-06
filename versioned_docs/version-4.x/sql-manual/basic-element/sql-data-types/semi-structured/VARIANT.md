@@ -472,13 +472,13 @@ CREATE TABLE t (
   data VARIANT<'num_*': BIGINT, 'str_*': STRING>
 );
 
--- 1) Filter + order
+-- 1) FILTER + ORDER
 SELECT id
 FROM t
 WHERE data['num_a'] > 10
 ORDER BY data['num_a'];
 
--- 2) Group + aggregate + alias
+-- 2) GROUP + AGGREGATE + ALIAS
 SELECT data['str_name'] AS username, SUM(data['num_a']) AS total
 FROM t
 GROUP BY username
@@ -515,7 +515,7 @@ FROM t;
 -- Auto CAST disabled
 SET enable_variant_schema_auto_cast = false;
 
--- int_nested matches int_*, and the query returns the correct result
+-- The query returns the correct result
 SELECT
   data['int_nested']
 FROM t;

@@ -515,7 +515,7 @@ FROM t;
 -- 自动 CAST 关闭
 SET enable_variant_schema_auto_cast = false;
 
--- int_nested 匹配 int_*，查询结果正确返回
+-- 查询结果正确返回
 SELECT
   data['int_nested']
 FROM t;
