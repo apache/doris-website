@@ -84,34 +84,44 @@ You can enable the cleartext authentication plugin using either method:
 
 **JDBC Client**
 
-When connecting via JDBC, you need a custom authentication plugin to bypass SSL restrictions:
+1. Doris SSL Not Enabled
 
-1. Create a custom plugin class that extends `MysqlClearPasswordPlugin` and overrides the `requiresConfidentiality()` method:
+  When Doris SSL is not enabled, you need to create a custom authentication plugin to bypass SSL restrictions when using JDBC connections:
 
-   ```java
-   public class MysqlClearPasswordPluginWithoutSSL extends MysqlClearPasswordPlugin {
-     @Override
-     public boolean requiresConfidentiality() {
-       return false;
-     }
-   }
-   ```
+  1. Create a custom plugin class that extends `MysqlClearPasswordPlugin` and overrides the `requiresConfidentiality()` method:
 
-   Refer to the examples in [this repository](https://github.com/morningman/doris-debug-tools/tree/main/jdbc-test). Or execute `build-auth-plugin.sh` to directly generate the plugin jar file. Then place it in the specified client location.
+    ```java
+    public class MysqlClearPasswordPluginWithoutSSL extends MysqlClearPasswordPlugin {
+      @Override
+      public boolean requiresConfidentiality() {
+        return false;
+      }
+    }
+    ```
 
-2. Configure the custom plugin in the JDBC connection URL (replace `xxx` with the actual package name):
+  2. Configure the custom plugin in the JDBC connection URL (replace `xxx` with your actual package name):
 
-   ```sql
-   jdbcUrl = "jdbc:mysql://localhost:9030/mydatabase?authenticationPlugins=xxx.xxx.xxx.MysqlClearPasswordPluginWithoutSSL&defaultAuthenticationPlugin=xxx.xxx.xxx.MysqlClearPasswordPluginWithoutSSL&disabledAuthenticationPlugins=com.mysql.jdbc.authentication.MysqlClearPasswordPlugin";
-   ```
+    ```sql
+    jdbcUrl = "jdbc:mysql://localhost:9030/mydatabase?authenticationPlugins=xxx.xxx.xxx.MysqlClearPasswordPluginWithoutSSL&defaultAuthenticationPlugin=xxx.xxx.xxx.MysqlClearPasswordPluginWithoutSSL&disabledAuthenticationPlugins=com.mysql.jdbc.authentication.MysqlClearPasswordPlugin";
+    ```
 
-   Three properties to configure:
+    Description of the three required properties:
 
-   | Property | Description |
-   | --- | --- |
-   | `authenticationPlugins` | Register the custom cleartext authentication plugin |
-   | `defaultAuthenticationPlugin` | Set the custom plugin as the default authentication plugin |
-   | `disabledAuthenticationPlugins` | Disable the original cleartext authentication plugin (which mandates SSL) |
+    | Property | Description |
+    | --- | --- |
+    | `authenticationPlugins` | Register the custom cleartext authentication plugin |
+    | `defaultAuthenticationPlugin` | Set the custom plugin as the default authentication plugin |
+    | `disabledAuthenticationPlugins` | Disable the original cleartext authentication plugin (which mandates SSL) |
+
+  > You can refer to the examples in [this code repository](https://github.com/morningman/doris-debug-tools/tree/main/jdbc-test). Or execute `build-auth-plugin.sh` to directly generate the plugin JAR file, then place it in the client's specified location.
+
+2. Doris SSL Enabled
+
+  When Doris SSL is enabled (`enable_ssl=true` added in `fe.conf`), the JDBC URL requires no additional parameters and can connect directly:
+
+  ```sql
+  jdbcUrl = "jdbc:mysql://localhost:9030/mydatabase
+  ```
 
 ## Authentication
 
