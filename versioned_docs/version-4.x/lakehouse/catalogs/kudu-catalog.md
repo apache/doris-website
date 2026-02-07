@@ -12,9 +12,6 @@ Kudu Catalog accesses Kudu tables through the [Trino Connector](https://doris.ap
 
 :::note
 - This is an experimental feature, supported since version 3.0.1.
-:::
-
-:::note
 - This feature does not depend on a Trino cluster environment and only uses the Trino compatibility plugin.
 :::
 

@@ -11,11 +11,8 @@
 Delta Lake Catalog uses the [Trino Connector](https://doris.apache.org/community/how-to-contribute/trino-connector-developer-guide/) compatibility framework with Trino Delta Lake Connector to access Delta Lake tables.
 
 :::note
-This is an experimental feature, supported since version 3.0.1.
-:::
-
-:::note
-This feature does not depend on a Trino cluster environment, it only uses the Trino compatibility plugin.
+- This is an experimental feature, supported since version 3.0.1.
+- This feature does not depend on a Trino cluster environment, it only uses the Trino compatibility plugin.
 :::
 
 ### Use Cases

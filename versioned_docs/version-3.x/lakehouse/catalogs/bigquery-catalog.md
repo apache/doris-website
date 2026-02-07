@@ -12,9 +12,6 @@ BigQuery Catalog uses the Trino BigQuery Connector to access BigQuery tables thr
 
 :::note
 - This feature is experimental and supported since version 3.0.1.
-:::
-
-:::note
 - This feature does not depend on a Trino cluster environment and only uses the Trino compatibility plugin.
 :::
 
