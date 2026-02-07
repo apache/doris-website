@@ -2,7 +2,7 @@
 {
     "title": "Paimon Catalog",
     "language": "en",
-    "description": "Paimon Catalog in Apache Doris 3.x connects to multiple Paimon metadata services to query Paimon tables across HDFS and cloud object storage, with detailed configuration, properties and query operations, and planned support for writes."
+    "description": "Paimon Catalog in Apache Doris connects to multiple Paimon metadata services to query Paimon tables across HDFS and cloud object storage, with detailed configuration, properties and query operations, and planned support for writes."
 }
 ---
 
@@ -147,20 +147,24 @@ The currently dependent Paimon version is 1.0.0.
 | binary, varbinary                             | string/varbinary | Controlled by the `enable.mapping.varbinary` property of Catalog (supported since 4.0.2). The default is `false`, which maps to `string`; when `true`, it maps to `varbinary` type.|
 | date                               | date          |                                                                         |
 | timestamp\_without\_time\_zone     | datetime(N)   | Mapped according to precision. If precision is greater than 6, it maps to a maximum of 6 (may cause precision loss). |
-| timestamp\_with\_local\_time\_zone | datetime(N)   | Mapped according to precision. If precision is greater than 6, it maps to a maximum of 6 (may cause precision loss). |
+| timestamp\_with\_local\_time\_zone | datetime(N)/timestamptz(N)  | Mapped according to precision. If precision is greater than 6, it maps to a maximum of 6 (may cause precision loss). The `enable.mapping.timestamp_tz` property (supported since version 4.0.3) controls the mapping behavior.  By default, it is set to `false`, in which case the type is mapped to `datetime`.  When set to `true`, it is mapped to the `timestamptz` type.|
 | array                              | array         |                                                                         |
 | map                                | map           |                                                                         |
 | row                                | struct        |                                                                         |
 | other                              | UNSUPPORTED   |                                                                         |
 
-> Note:
->
-> Doris currently does not support `Timestamp` types with timezone. All `timestamp_without_time_zone` and `timestamp_with_local_time_zone` will be uniformly mapped to `datetime(N)` type. However, during reading, Doris will correctly handle timezones based on the actual source type. For example, after specifying a timezone with `SET time_zone=<tz>`, it will affect the return results of `timestamp_with_local_time_zone` columns.
->
-> You can check whether the source type contains timezone information in the Extra column of the `DESCRIBE table_name` statement. If it displays `WITH_TIMEZONE`, it indicates that the source type is a timezone-aware type. (This feature is supported since 3.0.8)
+:::info Note
+Doris currently does not support `Timestamp` types with timezone. All `timestamp_without_time_zone` and `timestamp_with_local_time_zone` will be uniformly mapped to `datetime(N)` type. However, during reading, Doris will correctly handle timezones based on the actual source type. For example, after specifying a timezone with `SET time_zone=<tz>`, it will affect the return results of `timestamp_with_local_time_zone` columns.
+
+You can check whether the source type contains timezone information in the Extra column of the `DESCRIBE table_name` statement. If it displays `WITH_TIMEZONE`, it indicates that the source type is a timezone-aware type. (This feature is supported since 3.0.8)
+
+Supported since version 4.0.3, `timestamp_with_local_time_zone` can be mapped to Doris `timestamptz` type.
+:::
 
 ## Examples
+
 ### Hive Metastore
+
 <details>
     <summary>Version 3.1+</summary>
     <Tabs>
@@ -275,7 +279,7 @@ The currently dependent Paimon version is 1.0.0.
     </Tabs>
 </details>
 
-<details >
+<details>
     <summary>Version 2.1 & 3.0</summary>
     <Tabs>
         <TabItem value='HDFS' label='HDFS' default>
@@ -298,14 +302,14 @@ The currently dependent Paimon version is 1.0.0.
                 'warehouse' = 'hdfs://127.0.0.1:8520/paimon-hms-hdfs-warehouse',
                 'hive.metastore.uris' = 'thrift://127.0.0.1:9583',
                 'hive.metastore.kerberos.principal' = 'hive/hadoop-master@LABS.TERADATA.COM',
-                'hive.metastore.sasl.enabled ' = 'true',
+                'hive.metastore.sasl.enabled' = 'true',
                 'fs.defaultFS' = 'hdfs://127.0.0.1:8520',
                 'hadoop.security.auth_to_local' = 'RULE:[2:\$1@\$0](.*@LABS.TERADATA.COM)s/@.*//
-                RULE:[2:\$1@\$0](.*@OTHERLABS.TERADATA.COM)s/@.*//
-                RULE:[2:\$1@\$0](.*@OTHERREALM.COM)s/@.*//
-                DEFAULT',
+                    RULE:[2:\$1@\$0](.*@OTHERLABS.TERADATA.COM)s/@.*//
+                    RULE:[2:\$1@\$0](.*@OTHERREALM.COM)s/@.*//
+                    DEFAULT',
                 'hadoop.security.authentication' = 'kerberos',
-                'hadoop.kerberos.principal'='hive/presto-master.docker.cluster@LABS.TERADATA.COM',
+                'hadoop.kerberos.principal' = 'hive/presto-master.docker.cluster@LABS.TERADATA.COM',
                 'hadoop.kerberos.keytab' = '/keytabs/hive-presto-master.keytab'
             );
             ```
@@ -324,7 +328,7 @@ The currently dependent Paimon version is 1.0.0.
                 's3.access_key' = '<ak>',
                 'paimon.s3.access-key' = '<ak>',
                 's3.secret_key' = '<sk>',
-                'paimon.s3.secret-key' = '<sk>'    
+                'paimon.s3.secret-key' = '<sk>'
             );
             ```
         </TabItem>
@@ -382,7 +386,7 @@ The currently dependent Paimon version is 1.0.0.
                 's3.access_key' = '<ak>',
                 'paimon.s3.access-key' = '<ak>',
                 's3.secret_key' = '<sk>',
-                'paimon.s3.secret-key' = '<sk>',    
+                'paimon.s3.secret-key' = '<sk>',
                 's3.path.style.access' = 'true'
             );
             ```
@@ -391,6 +395,7 @@ The currently dependent Paimon version is 1.0.0.
 </details>
 
 ### Aliyun DLF Metastore
+
 <details>
     <summary>Version 3.1+</summary>
     <Tabs>
@@ -410,7 +415,7 @@ The currently dependent Paimon version is 1.0.0.
             ```
         </TabItem>
         <TabItem value='DLF(2.5+)' label='DLF(2.5+)'>
-            ``` sql
+            ```sql
             CREATE CATALOG paimon_dlf_test PROPERTIES (
                 'type' = 'paimon',
                 'paimon.catalog.type' = 'rest',
@@ -423,11 +428,9 @@ The currently dependent Paimon version is 1.0.0.
             ```
         </TabItem>
     </Tabs>
-
-
 </details>
 
-<details >
+<details>
     <summary>Version 2.1 & 3.0</summary>
 
     <Tabs>
@@ -446,7 +449,6 @@ The currently dependent Paimon version is 1.0.0.
             );
             ```
         </TabItem>
-
     </Tabs>
 </details>
 
@@ -478,7 +480,9 @@ The currently dependent Paimon version is 1.0.0.
                 's3.secret_key' = '<sk>'
             );
             ```
+
             Obtaining S3 access credentials using an IAM Assumed Role (3.1.2+)
+
             ```sql
             CREATE CATALOG paimon_fs_on_s3_iamrole PROPERTIES (
                 'type' = 'paimon',
@@ -717,20 +721,20 @@ SELECT * FROM paimon_table@incr('startTimestamp'='1750844949000', 'endTimestamp'
 Parameter:
 
 | Parameter | Description | Example |
-| --- | --- | -- |
+| --- | --- | --- |
 | `startSnapshotId` | Starting snapshot ID, must be greater than 0. Must be specified with `endSnapshotId` together. | `'startSnapshotId'='3'` |
 | `endSnapshotId` | Ending snapshot ID, must be greater than `startSnapshotId`. Must be specified with `startSnapshotId` together. | `'endSnapshotId'='10'` |
 | `incrementalBetweenScanMode` | Specifies the incremental read mode, default is `auto`, supports `delta`, `changelog` and `diff` |  `'incrementalBetweenScanMode'='delta'` |
 | `startTimestamp` | Starting snapshot timestamp, must be greater than or equal to 0. Unit is millisecond. | `'startTimestamp'='1750844949000'` |
 | `endTimestamp` | Ending snapshot timestamp, must be greater than `startTimestamp`. Optional, if not specified, reads from `startTimestamp` to the latest snapshot. Unit is millisecond. | `'endTimestamp'='1750944949000'` |
 
-> Notice:
->
-> `startSnapshotId` and `endSnapshotId` will compose the Paimon parameter `'incremental-between'='3,10'`
->
-> `startTimestamp` and `endTimestamp` will compose the Paimon parameter `'incremental-between-timestamp'='1750844949000,1750944949000'`
->
-> `incrementalBetweenScanMode` corresponds to the Paimon parameter `incremental-between-scan-mode`.
+:::tip Notice
+`startSnapshotId` and `endSnapshotId` will compose the Paimon parameter `'incremental-between'='3,10'`
+
+`startTimestamp` and `endTimestamp` will compose the Paimon parameter `'incremental-between-timestamp'='1750844949000,1750944949000'`
+
+`incrementalBetweenScanMode` corresponds to the Paimon parameter `incremental-between-scan-mode`.
+:::
 
 Refer to the [Paimon documentation](https://paimon.apache.org/docs/master/maintenance/configurations/) for further details about these parameters.
 
@@ -759,8 +763,7 @@ Doris > SELECT snapshot_id,commit_time FROM paimon_tbl$snapshots;
 You can use `FOR TIME AS OF` and `FOR VERSION AS OF` statements to read historical version data based on snapshot ID or the time when the snapshot was created. Examples:
 
 ```sql
--- Notice:
--- Before 3.1.1, only support format like YYYY-MM-DD HH:MM:SS.SSS
+-- Notice: Before 3.1.1, only support format like YYYY-MM-DD HH:MM:SS.SSS
 -- After 3.1.2, support YYYY-MM-DD HH:MM:SS and YYYY-MM-DD
 SELECT * FROM paimon_tbl FOR TIME AS OF "2025-08-17 06:05:52.740";
 SELECT * FROM paimon_tbl FOR TIME AS OF "2025-08-17 06:05:52";
@@ -827,8 +830,9 @@ To access metadata of a Paimon table, add a `$` symbol after the table name, fol
 SELECT * FROM my_table$system_table_name;
 ```
 
-> Note: Doris does not support reading Paimon global system tables, which are only supported in Flink.
-
+:::info Note
+Doris does not support reading Paimon global system tables, which are only supported in Flink.
+:::
 
 ### schemas
 
@@ -1107,9 +1111,12 @@ Result:
 #### View data distribution of buckets
 
 ```sql
-SELECT `bucket` , COUNT(*) as file_count, SUM(file_size_in_bytes)/1024/1024 as total_size_mb from paimon_s3.tpcds.catalog_sales$files GROUP BY `bucket`  ORDER BY total_size_mb;
+SELECT `bucket`, COUNT(*) as file_count, SUM(file_size_in_bytes)/1024/1024 as total_size_mb FROM paimon_s3.tpcds.catalog_sales$files GROUP BY `bucket` ORDER BY total_size_mb;
 ```
-> Note: Many fields in Paimon system tables are keywords in Doris, so they need to be enclosed in backticks.
+
+:::info Note
+Many fields in Paimon system tables are keywords in Doris, so they need to be enclosed in backticks.
+:::
 
 Result:
 
@@ -1134,56 +1141,59 @@ Result:
 
 ### FAQ
 
-1. `Could not find a file io implementation for scheme 's3a' in the classpath`
+**1. `Could not find a file io implementation for scheme 's3a' in the classpath`**
 
-    In versions prior to 3.1, when using HMS as metadata storage with 's3a' or 's3' protocol on the storage side, the following error occurs:
-    
-    ```
-    java.io.UncheckedIOException: org.apache.paimon.fs.UnsupportedSchemeException: Could not find a file io implementation for scheme 's3a' in the classpath. Hadoop FileSystem also cannot access this path 's3a://`.
-    ```
-    **Versions prior to 3.1**
-    Versions prior to 3.1 do not support the `s3a` protocol. If you must use it, you can temporarily add the `s3a`-related parameters as a workaround.
+In versions prior to 3.1, when using HMS as metadata storage with 's3a' or 's3' protocol on the storage side, the following error occurs:
 
-    **Version 3.1 and above**
-    Starting from version 3.1, explicitly adding `s3a` parameters is no longer necessary. If you need to override Paimon storage parameters, you can add parameters with the `paimon.fs.` prefix. Since Paimon internally uses the HDFS API, all `fs.s3a.*` parameters are supported.
+```text
+java.io.UncheckedIOException: org.apache.paimon.fs.UnsupportedSchemeException: Could not find a file io implementation for scheme 's3a' in the classpath. Hadoop FileSystem also cannot access this path 's3a://`.
+```
 
-    For example:
+**Versions prior to 3.1**
 
-    ```sql
-    CREATE CATALOG `paimon_hms_on_s3a` PROPERTIES (
-        "type" = "paimon",
-        "paimon.catalog.type" = "hms",
-        "hive.metastore.uris" = "thrift://172.20.48.119:9383"
-        "warehouse" = "s3a://bucket/paimon_warehouse",
-        "s3.access_key" = "<ak>",
-        "s3.secret_key" = "<sk>",
-        "s3.region" = "ap-east-1",
-        "s3.endpoint" = "s3.ap-east-1.amazonaws.com",
-        -- explicitly add s3a parameters
-        "fs.s3a.access.key"="<ak>",
-        "fs.s3a.secret.key"="<sk>",
-        "fs.s3a.endpoint.region"="ap-east-1",
-        "fs.s3a.endpoint"="s3.ap-east-1.amazonaws.com",
-        "fs.s3a.impl"= "org.apache.hadoop.fs.s3a.S3AFileSystem",
-    ); 
-    ``` 
+Versions prior to 3.1 do not support the `s3a` protocol. If you must use it, you can temporarily add the `s3a`-related parameters as a workaround.
 
-    When using the `s3` protocol, you need to explicitly add Paimon S3-related parameters, i.e., add the `paimon.` prefix. For example:
+**Version 3.1 and above**
 
-    ```sql
-    CREATE CATALOG test_paimon_on_hms_aws_catalog PROPERTIES (
-        'type' = 'paimon',
-        'paimon.catalog.type' = 'hms',
-        'warehouse' = 's3://bucket-hk/paimon_warehouse',
-        'hive.metastore.uris' = 'thrift://127.0.0.1:9383',
-        's3.region' = 'ap-east-1',
-        's3.endpoint' = 's3.ap-east-1.amazonaws.com',
-        's3.access_key' = '<ak>',
-        's3.secret_key' = '<sk>',
-        -- explicitly add s3a parameters
-        'paimon.s3.region' = 'ap-east-1',
-        'paimon.s3.endpoint' = 'ap-east-1',
-        'paimon.s3.access-key' = '<ak>',
-        'paimon.s3.secret-key' = '<sk>'
-    );
-    ```
+Starting from version 3.1, explicitly adding `s3a` parameters is no longer necessary. If you need to override Paimon storage parameters, you can add parameters with the `paimon.fs.` prefix. Since Paimon internally uses the HDFS API, all `fs.s3a.*` parameters are supported.
+
+For example:
+
+```sql
+CREATE CATALOG `paimon_hms_on_s3a` PROPERTIES (
+    "type" = "paimon",
+    "paimon.catalog.type" = "hms",
+    "hive.metastore.uris" = "thrift://172.20.48.119:9383",
+    "warehouse" = "s3a://bucket/paimon_warehouse",
+    "s3.access_key" = "<ak>",
+    "s3.secret_key" = "<sk>",
+    "s3.region" = "ap-east-1",
+    "s3.endpoint" = "s3.ap-east-1.amazonaws.com",
+    -- Explicitly add s3a parameters
+    "fs.s3a.access.key" = "<ak>",
+    "fs.s3a.secret.key" = "<sk>",
+    "fs.s3a.endpoint.region" = "ap-east-1",
+    "fs.s3a.endpoint" = "s3.ap-east-1.amazonaws.com",
+    "fs.s3a.impl" = "org.apache.hadoop.fs.s3a.S3AFileSystem"
+);
+```
+
+When using the `s3` protocol, you need to explicitly add Paimon S3-related parameters, i.e., add the `paimon.` prefix. For example:
+
+```sql
+CREATE CATALOG test_paimon_on_hms_aws_catalog PROPERTIES (
+    'type' = 'paimon',
+    'paimon.catalog.type' = 'hms',
+    'warehouse' = 's3://bucket-hk/paimon_warehouse',
+    'hive.metastore.uris' = 'thrift://127.0.0.1:9383',
+    's3.region' = 'ap-east-1',
+    's3.endpoint' = 's3.ap-east-1.amazonaws.com',
+    's3.access_key' = '<ak>',
+    's3.secret_key' = '<sk>',
+    -- Explicitly add Paimon S3 parameters
+    'paimon.s3.region' = 'ap-east-1',
+    'paimon.s3.endpoint' = 'ap-east-1',
+    'paimon.s3.access-key' = '<ak>',
+    'paimon.s3.secret-key' = '<sk>'
+);
+```
