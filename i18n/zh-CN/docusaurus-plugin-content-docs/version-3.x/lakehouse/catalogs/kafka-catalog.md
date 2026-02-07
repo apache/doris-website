@@ -12,9 +12,6 @@ Kafka Catalog 通过 [Trino Connector](https://doris.apache.org/zh-CN/community/
 
 :::note
 - 该功能为实验功能，自 3.0.1 版本开始支持。
-:::
-
-:::note
 - 该功能不依赖 Trino 集群环境，仅使用 Trino 兼容插件。
 :::
 
