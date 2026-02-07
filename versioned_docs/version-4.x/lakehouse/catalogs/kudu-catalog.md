@@ -39,12 +39,7 @@ You can choose one of the following methods to obtain the Kudu Connector plugin:
 
 **Method 1: Use Pre-compiled Package (Recommended)**
 
-Download and extract the pre-compiled plugin package directly:
-
-```shell
-wget https://github.com/apache/doris-thirdparty/releases/download/trino-435-20240724/trino-kudu-435-20240724.tar.gz
-tar -xzf trino-kudu-435-20240724.tar.gz
-```
+Download and extract the pre-compiled plugin package from [here](https://github.com/apache/doris-thirdparty/releases/tag/trino-435-20240724).
 
 **Method 2: Manual Compilation**
 

@@ -39,12 +39,7 @@ Kudu Catalog 通过 [Trino Connector](https://doris.apache.org/zh-CN/community/h
 
 **方式一：使用预编译包（推荐）**
 
-直接下载预编译的插件包并解压：
-
-```shell
-wget https://github.com/apache/doris-thirdparty/releases/download/trino-435-20240724/trino-kudu-435-20240724.tar.gz
-tar -xzf trino-kudu-435-20240724.tar.gz
-```
+直接在 [这里](https://github.com/apache/doris-thirdparty/releases/tag/trino-435-20240724) 找到对应的预编译的插件包并下载解压。
 
 **方式二：手动编译**
 
