@@ -2,7 +2,7 @@
 {
     "title": "Iceberg Catalog",
     "language": "en",
-    "description": "Iceberg Catalog in Apache Doris connects to multiple Iceberg metadata services to query and write Iceberg tables across HDFS and cloud object storage, with detailed configuration, properties, query and write operations."
+    "description": "Apache Doris Iceberg Catalog: Connect to Iceberg tables via HMS, Glue, REST, or JDBC. Query and write data on HDFS/cloud storage with time travel, schema evolution, DDL operations, and table optimization features."
 }
 ---
 
@@ -75,11 +75,11 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 
   The IcebergProperties section is used to fill in parameters specific to Iceberg Catalog.
 
-  - `list-all-tables`
+    - `list-all-tables`
 
-    For Iceberg Catalog that uses Hive Metastore as the metadata service. Default is `true`. By default, the `SHOW TABLES` operation will list all types of tables in the current Database (Hive Metastore may store non-Iceberg type tables). This approach has the best performance.
-    
-    If set to `false`, Doris will check the type of each table one by one and only return Iceberg type tables. This mode will have poor performance when there are many tables.
+        For Iceberg Catalog that uses Hive Metastore as the metadata service. Default is `true`. By default, the `SHOW TABLES` operation will list all types of tables in the current Database (Hive Metastore may store non-Iceberg type tables). This approach has the best performance.
+
+        If set to `false`, Doris will check the type of each table one by one and only return Iceberg type tables. This mode will have poor performance when there are many tables.
 
 * `{CommonProperties}`
 
@@ -98,7 +98,7 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 
 * Supports Iceberg V1/V2 formats.
 * Supports reading Position Delete and Equality Delete.
-* Supports reading  Deletion Vector (Since 4.1.0).
+* Supports reading Deletion Vector (Since 4.1.0).
 
 ### Supported Metadata Services
 
@@ -151,7 +151,7 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 | decimal(P, S)                          | decimal(P, S)        |                                         |
 | date                                   | date                 |                                         |
 | timestamp (Timestamp without timezone) | datetime(6)          | Mapped to datetime with precision 6     |
-| timestamptz (Timestamp with timezone)  | datetime(6)          | Mapped to datetime with precision 6     |
+| timestamptz (Timestamp with timezone)  | datetime(6)/timestamptz(6) | Mapped to datetime with precision 6. The `enable.mapping.timestamp_tz` property (supported since version 4.0.3) controls the mapping behavior. By default, it is set to `false`, in which case the type is mapped to `datetime`. When set to `true`, it is mapped to the `timestamptz` type. |
 | fixed(N)                               | char(N)              |                                         |
 | string                                 | string               |                                         |
 | binary                                 | string/varbinary     | Controlled by the `enable.mapping.varbinary` property of Catalog (supported since 4.0.2). The default is `false`, which maps to `string`; when `true`, it maps to `varbinary` type.|
@@ -166,6 +166,8 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 > Doris currently does not support `Timestamp` types with timezone. All `timestamp` and `timestamptz` will be uniformly mapped to `datetime(N)` type. However, during reading and writing, Doris will correctly handle timezones based on the actual source type. For example, after specifying a timezone with `SET time_zone=<tz>`, it will affect the reading and writing results of `timestamptz` columns.
 >
 > You can check whether the source type has timezone information in the Extra column of the `DESCRIBE table_name` statement. If it shows `WITH_TIMEZONE`, it indicates that the source type is a timezone-aware type. (Supported since 3.1.0).
+>
+> Supported since version 4.0.3, `timestamptz` (timestamp with time zone) can be mapped to the Doris `timestamptz` type.
 
 ## Namespace Mapping
 
@@ -393,7 +395,7 @@ Support for Nested Namespace needs to be explicitly enabled. For details, please
             );
             ```
         </TabItem>
-        <TabItem value='Azure Blob' label='Azure Blob '>
+        <TabItem value='Azure Blob' label='Azure Blob'>
             Supported since 3.1.3
             ```sql
             CREATE CATALOG iceberg_fs_on_azure_blob_catalog PROPERTIES (
@@ -519,14 +521,14 @@ Support for Nested Namespace needs to be explicitly enabled. For details, please
         <TabItem value='MinIO' label='MinIO'>
             ```sql
             CREATE CATALOG test_iceberg_on_hms_minio_catalog PROPERTIES (
-            'type' = 'iceberg',
-            'iceberg.catalog.type' = 'hms',
-            'warehouse' = 's3://warehouse/iceberg',
-            'hive.metastore.uris' = 'thrift://127.0.0.1:9383',
-            's3.endpoint' = 'http://127.0.0.1:19001',
-            's3.access_key' = '<ak>',
-            's3.secret_key' = '<sk>'
-                );
+                'type' = 'iceberg',
+                'iceberg.catalog.type' = 'hms',
+                'warehouse' = 's3://warehouse/iceberg',
+                'hive.metastore.uris' = 'thrift://127.0.0.1:9383',
+                's3.endpoint' = 'http://127.0.0.1:19001',
+                's3.access_key' = '<ak>',
+                's3.secret_key' = '<sk>'
+            );
                 ```
         </TabItem>
     </Tabs>
@@ -567,8 +569,6 @@ Support for Nested Namespace needs to be explicitly enabled. For details, please
                 's3.secret_key' = '<sk>'
             );
             ```
-
-            Using IAM Assumed Role to obtain S3 access credentials (Since 3.1.2+)
             ```sql
             CREATE CATALOG `glue_iceberg_iamrole` PROPERTIES (
                 'type' = 'iceberg',
@@ -956,7 +956,7 @@ This is an experimental feature, supported since version 4.1.0.
                 'iceberg.jdbc.init-catalog-tables' = 'true',
                 'iceberg.jdbc.schema-version' = 'V1',
                 'iceberg.jdbc.driver_class' = 'org.postgresql.Driver',
-                'iceberg.jdbc.driver_url' = '<jdbc_driver_jar>'
+                'iceberg.jdbc.driver_url' = '<jdbc_driver_jar>',
                 'warehouse' = 's3://bucket/warehouse',
                 's3.access_key' = '<ak>',
                 's3.secret_key' = '<sk>',
@@ -977,7 +977,7 @@ This is an experimental feature, supported since version 4.1.0.
                 'iceberg.jdbc.init-catalog-tables' = 'true',
                 'iceberg.jdbc.schema-version' = 'V1',
                 'iceberg.jdbc.driver_class' = 'com.mysql.cj.jdbc.Driver',
-                'iceberg.jdbc.driver_url' = '<jdbc_driver_jar>'
+                'iceberg.jdbc.driver_url' = '<jdbc_driver_jar>',
                 'warehouse' = 's3://bucket/warehouse',
                 's3.access_key' = '<ak>',
                 's3.secret_key' = '<sk>',
@@ -996,7 +996,7 @@ This is an experimental feature, supported since version 4.1.0.
                 'iceberg.jdbc.init-catalog-tables' = 'true',
                 'iceberg.jdbc.schema-version' = 'V1',
                 'iceberg.jdbc.driver_class' = 'org.sqlite.JDBC',
-                'iceberg.jdbc.driver_url' = '<jdbc_driver_jar>'
+                'iceberg.jdbc.driver_url' = '<jdbc_driver_jar>',
                 'warehouse' = 's3://bucket/warehouse',
                 's3.access_key' = '<ak>',
                 's3.secret_key' = '<sk>',
@@ -1404,7 +1404,9 @@ For example, to view the table's history, you can execute:
 SELECT * FROM iceberg_table$history;
 ```
 
-> Currently, the `all_manifests` and `position_deletes` system tables are not yet supported and are planned to be supported in future versions.
+> The `all_manifests` system table is supported starting from version 4.0.4.
+>
+> The `position_deletes` system table is not yet supported and is planned to be supported in future versions.
 
 ### entries
 
@@ -1508,6 +1510,20 @@ Result:
 |       0 | s3://.../iceberg_table/metadata/3194eb8b-5ea4-4cbe-95ba-073229458e7b-m0.avro |   7138 |                 0 | 4890031351138056789 |                      0 |                         5 |                        5 |                        0 |                           0 |                          0 | [{"contains_null":0, "contains_nan":0, "lower_bound":"1", "upper_bound":"10"}] |
 +---------+------------------------------------------------------------------------------------------------------------------------------------------------+--------+-------------------+---------------------+------------------------+---------------------------+--------------------------+--------------------------+-----------------------------+----------------------------+--------------------------------------------------------------------------------+
 ```
+
+### all_manifests
+
+> This feature is supported starting from version 4.0.4
+
+Shows manifest file info of all valid snapshots of the table:
+
+`all_manifests` and `manifests` have the same structure. The difference is that `all_manifests` includes manifest files from all valid snapshots, while `manifests` only includes manifest files from the current snapshot.
+
+```sql
+SELECT * FROM iceberg_table$all_manifests;
+```
+
+The result format is the same as the `manifests` system table.
 
 ### metadata_log_entries
 
@@ -1784,47 +1800,47 @@ For an Iceberg Database, you must first drop all tables under the database befor
 
 * **Partitioning**
 
-  Partition types in Iceberg correspond to List partitions in Doris. Therefore, when creating an Iceberg partitioned table in Doris, you should use the List partitioning syntax, but you don't need to explicitly enumerate each partition. Doris will automatically create the corresponding Iceberg partitions based on the data values during data insertion.
+    Partition types in Iceberg correspond to List partitions in Doris. Therefore, when creating an Iceberg partitioned table in Doris, you should use the List partitioning syntax, but you don't need to explicitly enumerate each partition. Doris will automatically create the corresponding Iceberg partitions based on the data values during data insertion.
 
-  * Supports creating single-column or multi-column partitioned tables.
+    * Supports creating single-column or multi-column partitioned tables.
 
-  * Supports partition transformation functions to enable Iceberg implicit partitioning and partition evolution. For specific Iceberg partition transformation functions, see [Iceberg partition transforms](https://iceberg.apache.org/spec/#partition-transforms):
+    * Supports partition transformation functions to enable Iceberg implicit partitioning and partition evolution. For specific Iceberg partition transformation functions, see [Iceberg partition transforms](https://iceberg.apache.org/spec/#partition-transforms):
 
-    * `year(ts)` or `years(ts)`
+        * `year(ts)` or `years(ts)`
 
-    * `month(ts)` or `months(ts)`
+        * `month(ts)` or `months(ts)`
 
-    * `day(ts)` or `days(ts)` or `date(ts)`
+        * `day(ts)` or `days(ts)` or `date(ts)`
 
-    * `hour(ts)` or `hours(ts)` or `date_hour(ts)`
+        * `hour(ts)` or `hours(ts)` or `date_hour(ts)`
 
-    * `bucket(N, col)`
+        * `bucket(N, col)`
 
-    * `truncate(L, col)`
+        * `truncate(L, col)`
 
 * **File Formats**
 
-  * Parquet (default)
+    * Parquet (default)
 
-    Note that for the Iceberg table created by Doris, the Datetime corresponds to the `timestamp_ntz` type.
+        Note that for the Iceberg table created by Doris, the Datetime corresponds to the `timestamp_ntz` type.
 
-    In versions after 3.1.0, when the Datetime type is written to the Parquet file, the physical type used is INT64 instead of INT96.
-    
-    And if the Iceberg table is created by other systems, although the `timestamp` and `timestamp_ntz` types are both mapped to the Doris Datetime type. However, when writing, it will determine whether the time zone needs to be processed based on the actual type.
+        In versions after 3.1.0, when the Datetime type is written to the Parquet file, the physical type used is INT64 instead of INT96.
 
-  * ORC
+        And if the Iceberg table is created by other systems, although the `timestamp` and `timestamp_ntz` types are both mapped to the Doris Datetime type. However, when writing, it will determine whether the time zone needs to be processed based on the actual type.
+
+    * ORC
 
 * **Compression Formats**
 
-  * Parquet: snappy, zstd (default), plain (no compression).
+    * Parquet: snappy, zstd (default), plain (no compression).
 
-  * ORC: snappy, zlib (default), zstd, plain (no compression).
+    * ORC: snappy, zlib (default), zstd, plain (no compression).
 
 * **Storage Medium**
 
-  * HDFS
+    * HDFS
 
-  * Object storage
+    * Object storage
 
 ### Schema Change
 
@@ -1834,55 +1850,55 @@ Supported schema change operations include:
 
 * **Rename Column**
 
-  Use the `RENAME COLUMN` clause to rename columns. Renaming columns within nested types is not supported.
+    Use the `RENAME COLUMN` clause to rename columns. Renaming columns within nested types is not supported.
 
-  ```sql
-  ALTER TABLE iceberg_table RENAME COLUMN old_col_name TO new_col_name;
-  ```
+    ```sql
+    ALTER TABLE iceberg_table RENAME COLUMN old_col_name TO new_col_name;
+    ```
 
 * **Add a Column**
 
-  Use `ADD COLUMN` to add a new column. Adding new columns to nested types is not supported.
+    Use `ADD COLUMN` to add a new column. Adding new columns to nested types is not supported.
 
-  When adding a new column, you can specify nullable attributes, default values, comments, and column position.
+    When adding a new column, you can specify nullable attributes, default values, comments, and column position.
 
-  ```sql
-  ALTER TABLE iceberg_table ADD COLUMN col_name col_type [NULL|NOT NULL, [DEFAULT default_value, [COMMENT 'comment', [FIRST|AFTER col_name]]]];
-  ```
+    ```sql
+    ALTER TABLE iceberg_table ADD COLUMN col_name col_type [NULL|NOT NULL, [DEFAULT default_value, [COMMENT 'comment', [FIRST|AFTER col_name]]]];
+    ```
 
-  Example:
+    Example:
 
-  ```sql
-  ALTER TABLE iceberg_table ADD COLUMN new_col STRING NOT NULL DEFAULT 'default_value' COMMENT 'This is a new col' AFTER old_col;
-  ```
+    ```sql
+    ALTER TABLE iceberg_table ADD COLUMN new_col STRING NOT NULL DEFAULT 'default_value' COMMENT 'This is a new col' AFTER old_col;
+    ```
 
 * **Add Columns**
 
-  You can also use `ADD COLUMN` to add multiple columns. The new columns will be added to the end of the table. Column positioning is not supported for multiple columns. Adding new columns to nested types is not supported.
+    You can also use `ADD COLUMN` to add multiple columns. The new columns will be added to the end of the table. Column positioning is not supported for multiple columns. Adding new columns to nested types is not supported.
 
-  The syntax for each column is the same as adding a single column.
+    The syntax for each column is the same as adding a single column.
 
-  ```sql
-  ALTER TABLE iceberg_table ADD COLUMN (col_name1 col_type1 [NULL|NOT NULL, [DEFAULT default_value, [COMMENT 'comment']]], col_name2 col_type2 [NULL|NOT NULL, [DEFAULT default_value, [COMMENT 'comment']]] ...);
-  ```
+    ```sql
+    ALTER TABLE iceberg_table ADD COLUMN (col_name1 col_type1 [NULL|NOT NULL, [DEFAULT default_value, [COMMENT 'comment']]], col_name2 col_type2 [NULL|NOT NULL, [DEFAULT default_value, [COMMENT 'comment']]] ...);
+    ```
 
 * **Drop Column**
 
-  Use `DROP COLUMN` to drop columns. Dropping columns within nested types is not supported.
+    Use `DROP COLUMN` to drop columns. Dropping columns within nested types is not supported.
 
-  ```sql
-  ALTER TABLE iceberg_table DROP COLUMN col_name;
-  ```
+    ```sql
+    ALTER TABLE iceberg_table DROP COLUMN col_name;
+    ```
 
 * **Modify Column**
 
-  Use the `MODIFY COLUMN` statement to modify column attributes, including type, nullable, default value, comment, and column position.
+    Use the `MODIFY COLUMN` statement to modify column attributes, including type, nullable, default value, comment, and column position.
 
-  Note: When modifying column attributes, all attributes that are not being modified should also be explicitly specified with their original values.
+    Note: When modifying column attributes, all attributes that are not being modified should also be explicitly specified with their original values.
 
-  ```sql
-  ALTER TABLE iceberg_table MODIFY COLUMN col_name col_type [NULL|NOT NULL, [DEFAULT default_value, [COMMENT 'comment', [FIRST|AFTER col_name]]]];
-  ```
+    ```sql
+    ALTER TABLE iceberg_table MODIFY COLUMN col_name col_type [NULL|NOT NULL, [DEFAULT default_value, [COMMENT 'comment', [FIRST|AFTER col_name]]]];
+    ```
 
   Example:
 
@@ -1897,11 +1913,11 @@ Supported schema change operations include:
 
 * **Reorder Columns**
 
-  Use `ORDER BY` to reorder columns by specifying the new column order.
+    Use `ORDER BY` to reorder columns by specifying the new column order.
 
-  ```sql
-  ALTER TABLE iceberg_table ORDER BY (col_name1, col_name2, ...);
-  ```
+    ```sql
+    ALTER TABLE iceberg_table ORDER BY (col_name1, col_name2, ...);
+    ```
 
 ### Partition Evolution
 
@@ -2456,57 +2472,57 @@ EXECUTE set_current_snapshot ("ref" = "v1.0");
 
 You can use the following SQL to analyze the data distribution and delete file count of Iceberg tables, helping determine whether optimization like `rewrite_data_files` is needed.
 
-- Display data file size distribution. This can help identify if there are too many
+- Display data file size distribution. This can help identify if there are too many small files:
 
-  ```sql
-  SELECT
-    CASE
-      WHEN file_size_in_bytes BETWEEN 0 AND 8 * 1024 * 1024 THEN '0-8M'
-      WHEN file_size_in_bytes BETWEEN 8 * 1024 * 1024 + 1 AND 32 * 1024 * 1024 THEN '8-32M'
-      WHEN file_size_in_bytes BETWEEN 2 * 1024 * 1024 + 1 AND 128 * 1024 * 1024 THEN '32-128M'
-      WHEN file_size_in_bytes BETWEEN 128 * 1024 * 1024 + 1 AND 512 * 1024 * 1024 THEN '128-512M'
-      WHEN file_size_in_bytes > 512 * 1024 * 1024 THEN '> 512M'
-      ELSE 'Unknown'
-    END AS SizeRange,
-    COUNT(*) AS FileNum
-  FROM store_sales$data_files
-  GROUP BY
-    SizeRange;
+    ```sql
+    SELECT
+        CASE
+            WHEN file_size_in_bytes BETWEEN 0 AND 8 * 1024 * 1024 THEN '0-8M'
+            WHEN file_size_in_bytes BETWEEN 8 * 1024 * 1024 + 1 AND 32 * 1024 * 1024 THEN '8-32M'
+            WHEN file_size_in_bytes BETWEEN 2 * 1024 * 1024 + 1 AND 128 * 1024 * 1024 THEN '32-128M'
+            WHEN file_size_in_bytes BETWEEN 128 * 1024 * 1024 + 1 AND 512 * 1024 * 1024 THEN '128-512M'
+            WHEN file_size_in_bytes > 512 * 1024 * 1024 THEN '> 512M'
+            ELSE 'Unknown'
+        END AS SizeRange,
+        COUNT(*) AS FileNum
+    FROM store_sales$data_files
+    GROUP BY
+        SizeRange;
 
-  +-----------+---------+
-  | SizeRange | FileNum |
-  +-----------+---------+
-  | 0-8M      |       8 |
-  | 8-32M     |       6 |
-  +-----------+---------+
-  ```
+    +-----------+---------+
+    | SizeRange | FileNum |
+    +-----------+---------+
+    | 0-8M      |       8 |
+    | 8-32M     |       6 |
+    +-----------+---------+
+    ```
 
-- Display the number of data files and delete files
+- Display the number of data files and delete files:
 
-  ```sql
-  SELECT
-    CASE
-      WHEN content = 0 THEN 'DataFile'
-      WHEN content = 1 THEN 'PositionDeleteFile'
-      WHEN content = 2 THEN 'EqualityDeleteFile'
-      ELSE 'Unknown'
-    END AS ContentType,
-    COUNT(*) AS FileNum,
-    SUM(file_size_in_bytes) AS SizeInBytes,
-    SUM(record_count) AS Records
-  FROM
-    iceberg_table$files
-  GROUP BY
-    ContentType;
+    ```sql
+    SELECT
+        CASE
+            WHEN content = 0 THEN 'DataFile'
+            WHEN content = 1 THEN 'PositionDeleteFile'
+            WHEN content = 2 THEN 'EqualityDeleteFile'
+            ELSE 'Unknown'
+        END AS ContentType,
+        COUNT(*) AS FileNum,
+        SUM(file_size_in_bytes) AS SizeInBytes,
+        SUM(record_count) AS Records
+    FROM
+        iceberg_table$files
+    GROUP BY
+        ContentType;
 
-  +--------------------+---------+-------------+---------+
-  | ContentType        | FileNum | SizeInBytes | Records |
-  +--------------------+---------+-------------+---------+
-  | EqualityDeleteFile |    2787 |     1432518 |   27870 |
-  | DataFile           |    2787 |     4062416 |   38760 |
-  | PositionDeleteFile |      11 |       36608 |   10890 |
-  +--------------------+---------+-------------+---------+
-  ```
+    +--------------------+---------+-------------+---------+
+    | ContentType        | FileNum | SizeInBytes | Records |
+    +--------------------+---------+-------------+---------+
+    | EqualityDeleteFile |    2787 |     1432518 |   27870 |
+    | DataFile           |    2787 |     4062416 |   38760 |
+    | PositionDeleteFile |      11 |       36608 |   10890 |
+    +--------------------+---------+-------------+---------+
+    ```
 
 ### Dangling Delete
 
@@ -2577,7 +2593,7 @@ Here are some example query strategies:
 
     **Sample output:**
 
-    ```
+    ```text
     +----------------------------------------------------------------------------------------+---------------------------+-------------+--------------+------------+
     | file_path                                                                             | partition                 | file_size_mb | record_count | size_issue |
     +----------------------------------------------------------------------------------------+---------------------------+-------------+--------------+------------+
@@ -2638,7 +2654,7 @@ Here are some example query strategies:
 
     **Sample output:**
 
-    ```
+    ```text
     +----------------------------------------------+--------+
     | metric                                       | value  |
     +----------------------------------------------+--------+
@@ -2657,34 +2673,34 @@ Here are some example query strategies:
     - Adjust parameter values (`@min_file_size_bytes`, `@max_file_size_bytes`) according to your actual rewrite parameters
     - The default values shown above correspond to default rewrite parameters (min-file-size-bytes = target-file-size-bytes * 0.75, max-file-size-bytes = target-file-size-bytes * 1.8)
 
-- View snapshot and branch relationships
+- View snapshot and branch relationships:
 
     ```sql
     SELECT
-    refs_data.snapshot_id,
-    snapshots.committed_at,
-    snapshots.operation,
-    ARRAY_SORT(refs_data.refs)
+        refs_data.snapshot_id,
+        snapshots.committed_at,
+        snapshots.operation,
+        ARRAY_SORT(refs_data.refs)
     FROM (
-    SELECT
-        snapshot_id,
-        ARRAY_AGG(CONCAT(type, ':', name)) AS refs
-    FROM
-        iceberg_table$refs
-    GROUP BY
-        snapshot_id
+        SELECT
+            snapshot_id,
+            ARRAY_AGG(CONCAT(type, ':', name)) AS refs
+        FROM
+            iceberg_table$refs
+        GROUP BY
+            snapshot_id
     ) AS refs_data
     JOIN (
-    SELECT
-        snapshot_id,
-        committed_at,
-        operation
-    FROM
-        iceberg_table$snapshots
+        SELECT
+            snapshot_id,
+            committed_at,
+            operation
+        FROM
+            iceberg_table$snapshots
     ) AS snapshots
     ON refs_data.snapshot_id = snapshots.snapshot_id
     ORDER BY
-    snapshots.committed_at;
+        snapshots.committed_at;
 
     +---------------------+----------------------------+-----------+-------------------------------------+
     | snapshot_id         | committed_at               | operation | ARRAY_SORT(refs_data.refs)          |
