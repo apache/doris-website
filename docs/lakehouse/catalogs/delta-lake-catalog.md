@@ -2,139 +2,170 @@
 {
     "title": "Delta Lake Catalog",
     "language": "en",
-    "description": "Delta Lake Catalog uses the Trino Connector compatibility framework to access Delta Lake tables through the Delta Lake Connector."
+    "description": "Apache Doris Delta Lake Catalog User Guide: Connect to Delta Lake data lake through Trino Connector framework to query and integrate Delta Lake table data. Supports Hive Metastore, multiple data type mappings, and quick integration between Delta Lake and Doris."
 }
 ---
 
-Delta Lake Catalog uses the [Trino Connector](https://doris.apache.org/zh-CN/community/how-to-contribute/trino-connector-developer-guide/) compatibility framework to access Delta Lake tables through the Delta Lake Connector.
+## Overview
+
+Delta Lake Catalog uses the [Trino Connector](https://doris.apache.org/community/how-to-contribute/trino-connector-developer-guide/) compatibility framework with Trino Delta Lake Connector to access Delta Lake tables.
 
 :::note
-This feature is experimental and has been supported since version 3.0.1.
+This is an experimental feature, supported since version 3.0.1.
 :::
 
-## Application Scenarios
+:::note
+This feature does not depend on a Trino cluster environment, it only uses the Trino compatibility plugin.
+:::
 
-| Scenario       | Description                          |
-| -------------- | ------------------------------------ |
-| Data Integration | Read Delta Lake data and write it into Doris internal tables. |
-| Data Writeback  | Not supported.                     |
+### Use Cases
 
-## Environment Preparation
+| Scenario | Support Status |
+| -------- | -------------- |
+| Data Integration | Read Delta Lake data and write to Doris internal tables |
+| Data Write-back | Not supported |
 
-### Compile the Delta Lake Connector Plugin
+### Version Compatibility
 
-> JDK 17 is required.
+- **Doris Version**: 3.0.1 and above
+- **Trino Connector Version**: 435
+- **Delta Lake Version**: For supported versions, please refer to [Trino Documentation](https://trino.io/docs/435/connector/delta-lake.html)
+
+## Quick Start
+
+### Step 1: Prepare Connector Plugin
+
+You can obtain the Delta Lake Connector plugin using one of the following methods:
+
+**Method 1: Use Pre-compiled Package (Recommended)**
+
+Download the pre-compiled [trino-delta-lake-435-20240724.tar.gz](https://github.com/apache/Doris-thirdparty/releases/download/trino-435-20240724/trino-delta-lake-435-20240724.tar.gz) and [hdfs.tar.gz](https://github.com/apache/doris-thirdparty/releases/download/trino-435-20240724/trino-hdfs-435-20240724.tar.gz) and extract them.
+
+**Method 2: Manual Compilation**
+
+If you need custom compilation, follow these steps (requires JDK 17):
 
 ```shell
-$ git clone https://github.com/apache/doris-thirdparty.git
-$ cd doris-thirdparty
-$ git checkout trino-435
-$ cd plugin/trino-delta-lake
-$ mvn clean install -DskipTest
-$ cd ../../lib/trino-hdfs
-$ mvn clean install -DskipTest
+git clone https://github.com/apache/doris-thirdparty.git
+cd doris-thirdparty
+git checkout trino-435
+cd plugin/trino-delta-lake
+mvn clean install -DskipTests
+cd ../../lib/trino-hdfs
+mvn clean install -DskipTests
 ```
 
-After compiling, you will find the `trino-delta-lake-435` directory under `trino/plugin/trino-delta-lake/target/` and the `hdfs` directory under `trino/lib/trino-hdfs/target/`.
+After compilation, you'll get the `trino-delta-lake-435` directory under `trino/plugin/trino-delta-lake/target/`, and the `hdfs` directory under `trino/lib/trino-hdfs/target/`.
 
-You can also directly download the precompiled [trino-delta-lake-435-20240724.tar.gz](https://github.com/apache/Doris-thirdparty/releases/download/trino-435-20240724/trino-delta-lake-435-20240724.tar.gz) and [hdfs.tar.gz](https://github.com/apache/doris-thirdparty/releases/download/trino-435-20240724/trino-hdfs-435-20240724.tar.gz), then extract them.
+### Step 2: Deploy Plugin
 
-### Deploy the Delta Lake Connector
+1. Place the `trino-delta-lake-435/` directory under the `connectors/` directory of all FE and BE deployment paths (create the directory manually if it doesn't exist):
 
-Place the `trino-delta-lake-435/` directory in the `connectors/` directory of all FE and BE deployment paths(If it does not exist, you can create it manually) and extract `hdfs.tar.gz` into the `trino-delta-lake-435/` directory.
+   ```text
+   ├── bin
+   ├── conf
+   ├── plugins
+   │   ├── connectors
+   │       ├── trino-delta-lake-435
+   │           ├── hdfs
+   ...
+   ```
 
-```text
-├── bin
-├── conf
-├── connectors
-│   ├── trino-delta-lake-435
-│   │   ├── hdfs
-...
-```
+   > You can also customize the plugin path by modifying the `trino_connector_plugin_dir` configuration in `fe.conf`. For example: `trino_connector_plugin_dir=/path/to/connectors/`
 
-After deployment, it is recommended to restart the FE and BE nodes to ensure the Connector is loaded correctly.
+2. Restart all FE and BE nodes to ensure the connector is loaded correctly.
 
-## Configuring Catalog
+### Step 3: Create Catalog
 
-### Syntax
+**Basic Configuration**
 
 ```sql
-CREATE CATALOG [IF NOT EXISTS] catalog_name
-PROPERTIES (
-    'type' = 'trino-connector', -- required
-    'trino.connector.name' = 'delta_lake', -- required
-    {TrinoProperties},
-    {CommonProperties}
-);
-```
-
-* `{TrinoProperties}`
-
-  The TrinoProperties section is used to specify properties that will be passed to the Trino Connector. These properties use the `trino.` prefix. In theory, all properties supported by Trino are also supported here. For more information about Delta Lake, refer to the [Trino documentation](https://trino.io/docs/435/connector/delta-lake.html).
-
-* `[CommonProperties]`
-
-  The CommonProperties section is used to specify general properties. Please refer to the [Catalog Overview](../catalog-overview.md) under the "Common Properties" section.
-  
-### Supported Delta Lake Versions
-
-For more information about Delta Lake, refer to the [Trino documentation](https://trino.io/docs/435/connector/delta-lake.html).
-
-### Supported Metadata Services
-
-For more information about Delta Lake, refer to the [Trino documentation](https://trino.io/docs/435/connector/delta-lake.html).
-
-### Supported Storage Systems
-
-For more information about Delta Lake, refer to the [Trino documentation](https://trino.io/docs/435/connector/delta-lake.html).
-
-## Column Type Mapping
-
-| Delta Lake Type | Trino Type                  | Doris Type    | Comment |
-| --------------- | --------------------------- | ------------- | ------- |
-| boolean         | boolean                     | boolean       |         |
-| int             | int                         | int           |         |
-| byte            | tinyint                     | tinyint       |         |
-| short           | smallint                    | smallint      |         |
-| long            | bigint                      | bigint        |         |
-| float           | real                        | float         |         |
-| double          | double                      | double        |         |
-| decimal(P, S)   | decimal(P, S)               | decimal(P, S) |         |
-| string          | varchar                     | string        |         |
-| bianry          | varbinary                   | string        |         |
-| date            | date                        | date          |         |
-| timestamp\_ntz  | timestamp(N)                | datetime(N)   |         |
-| timestamp       | timestamp with time zone(N) | datetime(N)   |         |
-| array           | array                       | array         |         |
-| map             | map                         | map           |         |
-| struct          | row                         | struct        |         |
-
-## Examples
-
-```sql
-CREATE CATALOG delta_lake_hms properties ( 
-    'type' = 'trino-connector', 
+CREATE CATALOG delta_lake_catalog PROPERTIES (
+    'type' = 'trino-connector',
     'trino.connector.name' = 'delta_lake',
     'trino.hive.metastore' = 'thrift',
-    'trino.hive.metastore.uri'= 'thrift://ip:port',
-    'trino.hive.config.resources'='/path/to/core-site.xml,/path/to/hdfs-site.xml'
+    'trino.hive.metastore.uri' = 'thrift://ip:port',
+    'trino.hive.config.resources' = '/path/to/core-site.xml,/path/to/hdfs-site.xml'
 );
 ```
 
-## Query Operations
+**Configuration Description**
 
-After configuring the Catalog, you can query the table data in the Catalog using the following methods:
+- `trino.hive.metastore`: Metadata service type, supports `thrift` (Hive Metastore), etc.
+- `trino.hive.metastore.uri`: Hive Metastore service address
+- `trino.hive.config.resources`: Hadoop configuration file path, multiple files separated by commas
+
+For more configuration options, please refer to the "Configuration Description" section below or [Trino Official Documentation](https://trino.io/docs/435/connector/delta-lake.html).
+
+### Step 4: Query Data
+
+After creating the Catalog, you can query Delta Lake table data using one of the following three methods:
 
 ```sql
--- 1. Switch to the catalog, use the database, and query
-SWITCH delta_lake_ctl;
+-- Method 1: Switch to Catalog then query
+SWITCH delta_lake_catalog;
 USE delta_lake_db;
 SELECT * FROM delta_lake_tbl LIMIT 10;
 
--- 2. Use the Delta Lake database directly
-USE delta_lake_ctl.delta_lake_db;
+-- Method 2: Use two-level path
+USE delta_lake_catalog.delta_lake_db;
 SELECT * FROM delta_lake_tbl LIMIT 10;
 
--- 3. Use the fully qualified name to query
-SELECT * FROM delta_lake_ctl.delta_lake_db.delta_lake_tbl LIMIT 10;
+-- Method 3: Use fully qualified name
+SELECT * FROM delta_lake_catalog.delta_lake_db.delta_lake_tbl LIMIT 10;
 ```
+
+## Configuration Description
+
+### Catalog Configuration Parameters
+
+The basic syntax for creating a Delta Lake Catalog is as follows:
+
+```sql
+CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
+    'type' = 'trino-connector',            -- Required, fixed value
+    'trino.connector.name' = 'delta_lake', -- Required, fixed value
+    {TrinoProperties},                     -- Trino Connector related properties
+    {CommonProperties}                     -- Common properties
+);
+```
+
+#### TrinoProperties Parameters
+
+TrinoProperties are used to configure Trino Delta Lake Connector specific properties, these properties are prefixed with `trino.`. Common parameters include:
+
+| Parameter Name | Required | Default Value | Description |
+| -------------- | -------- | ------------- | ----------- |
+| `trino.hive.metastore` | Yes | - | Metadata service type, such as `thrift` |
+| `trino.hive.metastore.uri` | Yes | - | Hive Metastore service address |
+| `trino.hive.config.resources` | No | - | Hadoop configuration file path, multiple files separated by commas |
+| `trino.delta.hide-non-delta-tables` | No | false | Whether to hide non-Delta Lake tables |
+
+For more Delta Lake Connector configuration parameters, please refer to [Trino Official Documentation](https://trino.io/docs/435/connector/delta-lake.html).
+
+#### CommonProperties Parameters
+
+CommonProperties are used to configure common Catalog properties, such as metadata refresh policies, permission control, etc. For detailed information, please refer to the "Common Properties" section in [Catalog Overview](../catalog-overview.md).
+
+## Data Type Mapping
+
+When using Delta Lake Catalog, data types are mapped according to the following rules:
+
+| Delta Lake Type | Trino Type | Doris Type | Notes |
+| --------------- | ---------- | ---------- | ----- |
+| boolean | boolean | boolean | |
+| int | int | int | |
+| byte | tinyint | tinyint | |
+| short | smallint | smallint | |
+| long | bigint | bigint | |
+| float | real | float | |
+| double | double | double | |
+| decimal(P, S) | decimal(P, S) | decimal(P, S) | |
+| string | varchar | string | |
+| binary | varbinary | string | |
+| date | date | date | |
+| timestamp_ntz | timestamp(N) | datetime(N) | |
+| timestamp | timestamp with time zone(N) | datetime(N) | |
+| array | array | array | |
+| map | map | map | |
+| struct | row | struct | |

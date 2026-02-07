@@ -62,10 +62,13 @@ After compilation, you will get the `trino-kudu-435/` directory in `trino/plugin
    ```text
    ├── bin
    ├── conf
-   ├── connectors
-   │   ├── trino-kudu-435
+   ├── plugins
+   │   ├── connectors
+   │       ├── trino-kudu-435
    ...
    ```
+
+   > You can also customize the plugin path by modifying the `trino_connector_plugin_dir` configuration in `fe.conf`. For example: `trino_connector_plugin_dir=/path/to/connectors/`
 
 2. Restart all FE and BE nodes to ensure the Connector is properly loaded.
 

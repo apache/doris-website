@@ -2,127 +2,173 @@
 {
     "title": "BigQuery Catalog",
     "language": "en",
-    "description": "BigQuery Catalog uses the Trino Connector compatibility framework to access BigQuery tables through the BigQuery Connector."
+    "description": "Learn how to configure and use BigQuery Catalog in Apache Doris to connect to Google BigQuery data warehouse. Implement BigQuery table data querying, data integration, and real-time analytics through the Trino Connector framework. Supports Google Cloud ADC authentication and various data type mappings (including complex types like ARRAY, MAP, STRUCT). Provides complete installation, deployment, configuration parameters, and usage examples to help users quickly achieve data interoperability between BigQuery and Doris."
 }
 ---
 
-BigQuery Catalog uses the [Trino Connector](https://doris.apache.org/zh-CN/community/how-to-contribute/trino-connector-developer-guide/) compatibility framework to access BigQuery tables through the BigQuery Connector.
+## Overview
+
+BigQuery Catalog uses the Trino BigQuery Connector to access BigQuery tables through the [Trino Connector](https://doris.apache.org/community/how-to-contribute/trino-connector-developer-guide/) compatibility framework.
 
 :::note
-This feature is experimental and has been supported since version 3.0.1.
+- This feature is experimental and supported since version 3.0.1.
 :::
 
-## Application Scenarios
+:::note
+- This feature does not depend on a Trino cluster environment and only uses the Trino compatibility plugin.
+:::
 
-| Scenario       | Description                          |
-| -------------- | ------------------------------------ |
-| Data Integration | Read BigQuery data and write it into Doris internal tables. |
-| Data Writeback  | Not supported.                     |
+### Use Cases
 
-## Environment Preparation
+| Scenario         | Support Status                                    |
+| ---------------- | ------------------------------------------------- |
+| Data Integration | Read BigQuery data and write to Doris internal tables |
+| Data Write-back  | Not supported                                     |
 
-### Compile the BigQuery Connector Plugin
+### Version Compatibility
 
-> JDK 17 is required.
+- **Doris Version**: 3.0.1 and above
+- **Trino Connector Version**: 435
+- **BigQuery Version**: For supported versions, please refer to [Trino Documentation](https://trino.io/docs/435/connector/bigquery.html)
+
+## Quick Start
+
+### Step 1: Prepare Connector Plugin
+
+You can choose one of the following methods to obtain the BigQuery Connector plugin:
+
+**Method 1: Use Pre-compiled Package (Recommended)**
+
+Download and extract the pre-compiled plugin package directly from [here](https://github.com/apache/doris-thirdparty/releases/tag/trino-435-20240724).
+
+**Method 2: Manual Compilation**
+
+If you need custom compilation, follow these steps (requires JDK 17):
 
 ```shell
-$ git clone https://github.com/apache/doris-thirdparty.git
-$ cd doris-thirdparty
-$ git checkout trino-435
-$ cd plugin/trino-bigquery
-$ mvn clean install -DskipTest
+git clone https://github.com/apache/doris-thirdparty.git
+cd doris-thirdparty
+git checkout trino-435
+cd plugin/trino-bigquery
+mvn clean install -DskipTest
 ```
 
-After compilation, the `trino/plugin/trino-bigquery/target/` directory will contain the `trino-bigquery-435` folder.
+After compilation, you will get the `trino-bigquery-435/` directory under `trino/plugin/trino-bigquery/target/`.
 
-You can also directly download the precompiled [trino-bigquery-435-20240724.tar.gz](https://github.com/apache/doris-thirdparty/releases/download/trino-435-20240724/trino-bigquery-435-20240724.tar.gz) and extract it.
+### Step 2: Deploy Plugin
 
-### Deploy the BigQuery Connector
+1. Place the `trino-bigquery-435/` directory in the `connectors/` directory under the deployment path of all FE and BE nodes (create the directory manually if it doesn't exist):
 
-Place the `trino-bigquery-435/` directory into the `connectors/` directory of the deployment paths for all FE and BE nodes. (If the directory does not exist, you can create it manually.)
+   ```text
+   ├── bin
+   ├── conf
+   ├── plugins
+   │   ├── connectors
+   │       ├── trino-bigquery-435
+   ...
+   ```
 
-```text
-├── bin
-├── conf
-├── connectors
-│   ├── trino-bigquery-435
-...
-```
+   > You can also customize the plugin path by modifying the `trino_connector_plugin_dir` configuration in `fe.conf`. For example: `trino_connector_plugin_dir=/path/to/connectors/`
 
-After deployment, it is recommended to restart the FE and BE nodes to ensure the Connector is loaded correctly.
+2. Restart all FE and BE nodes to ensure the Connector is properly loaded.
 
-## Configuring Catalog
+### Step 3: Prepare Google Cloud Authentication
 
-### Syntax
+Before creating the Catalog, you need to configure Google Cloud authentication. The recommended method is Application Default Credentials (ADC):
 
-```sql
-CREATE CATALOG [IF NOT EXISTS] catalog_name
-PROPERTIES (
-    'type' = 'trino-connector', -- required
-    'trino.connector.name' = 'bigquery', -- required
-    {TrinoProperties},
-    {CommonProperties}
-);
-```
+1. Install gcloud CLI: <https://cloud.google.com/sdk/docs/install>
 
-* `{TrinoProperties}`
+2. Execute the following commands for initialization and authentication:
 
-  The TrinoProperties section is used to specify properties that will be passed to the Trino Connector. These properties use the `trino.` prefix. In theory, all properties supported by Trino are also supported here. For more information about BigQuery, refer to the [Trino documentation](https://trino.io/docs/435/connector/bigquery.html).
+    ```shell
+    gcloud init --console-only --skip-diagnostics
+    gcloud auth login
+    gcloud auth application-default login
+    ```
 
-* `[CommonProperties]`
+3. After successful authentication, the ADC credential file will be generated at `~/.config/gcloud/application_default_credentials.json`.
 
-  The CommonProperties section is used to specify general properties. Please refer to the [Catalog Overview](../catalog-overview.md) under the "Common Properties" section.
-  
-### Supported BigQuery Versions
+### Step 4: Create Catalog
 
-For more information about BigQuery properties, refer to the [Trino documentation](https://trino.io/docs/435/connector/bigquery.html).
-
-## Column Type Mapping
-
-| BigQuery Type | Trino Type                  | Doris Type    |
-| ------------- | --------------------------- | ------------- |
-| boolean       | boolean                     | boolean       |
-| int64         | bigint                      | bigint        |
-| float64       | double                      | double        |
-| numeric       | decimal(P, S)               | decimal(P, S) |
-| bignumric     | decimal(P, S)               | decimal(P, S) |
-| string        | varchar                     | string        |
-| bytes         | varbinary                   | string        |
-| date          | date                        | date          |
-| datetime      | timestamp(6)                | datetime(6)   |
-| time          | time(6)                     | string        |
-| timestamp     | timestamp with time zone(6) | datetime(6)   |
-| geography     | varchar                     | string        |
-| array         | array                       | array         |
-| map           | map                         | map           |
-| struct        | row                         | struct        |
-
-## Examples
+**Basic Configuration Example**
 
 ```sql
 CREATE CATALOG bigquery_catalog PROPERTIES (
     'type' = 'trino-connector',
     'trino.connector.name' = 'bigquery',
     'trino.bigquery.project-id' = 'your-bigquery-project-id',
-    'trino.bigquery.credentials-file' = '/path/to/application_default_credentials.json',
+    'trino.bigquery.credentials-file' = '/path/to/application_default_credentials.json'
 );
 ```
 
-## Query Operations
+### Step 5: Query Data
 
-After configuring the Catalog, you can query the table data in the Catalog using the following methods:
+After creating the Catalog, you can query BigQuery table data in three ways:
 
 ```sql
--- 1. switch to catalog, use database and query
-SWITCH bigquery_ctl;
+-- Method 1: Query after switching to Catalog
+SWITCH bigquery_catalog;
 USE bigquery_db;
 SELECT * FROM bigquery_tbl LIMIT 10;
 
--- 2. use bigquery database directly
-USE bigquery_ctl.bigquery_db;
+-- Method 2: Use two-level path
+USE bigquery_catalog.bigquery_db;
 SELECT * FROM bigquery_tbl LIMIT 10;
 
--- 3. use full qualified name to query
-SELECT * FROM bigquery_ctl.bigquery_db.bigquery_tbl LIMIT 10;
+-- Method 3: Use fully qualified name
+SELECT * FROM bigquery_catalog.bigquery_db.bigquery_tbl LIMIT 10;
 ```
 
+## Configuration
+
+### Catalog Configuration Parameters
+
+The basic syntax for creating a BigQuery Catalog is as follows:
+
+```sql
+CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
+    'type' = 'trino-connector',             -- Required, fixed value
+    'trino.connector.name' = 'bigquery',    -- Required, fixed value
+    {TrinoProperties},                      -- Trino Connector related properties
+    {CommonProperties}                      -- Common properties
+);
+```
+
+#### TrinoProperties Parameters
+
+TrinoProperties are used to configure Trino BigQuery Connector-specific properties, prefixed with `trino.`. Common parameters include:
+
+| Parameter Name                        | Required | Default | Description                                    |
+| ------------------------------------- | -------- | ------- | ---------------------------------------------- |
+| `trino.bigquery.project-id`           | Yes      | -       | BigQuery project ID                            |
+| `trino.bigquery.credentials-file`     | Yes      | -       | Google Cloud credentials file path             |
+| `trino.bigquery.views-enabled`        | No       | false   | Whether to enable view support                 |
+| `trino.bigquery.arrow-serialization.enabled` | No       | true    | Whether to enable Arrow serialization for performance |
+
+For more BigQuery Connector configuration parameters, please refer to the [Trino Official Documentation](https://trino.io/docs/435/connector/bigquery.html).
+
+#### CommonProperties Parameters
+
+CommonProperties are used to configure common Catalog properties, such as metadata refresh policies and access control. For detailed information, please refer to the "Common Properties" section in [Catalog Overview](../catalog-overview.md).
+
+## Data Type Mapping
+
+When using BigQuery Catalog, data types are mapped according to the following rules:
+
+| BigQuery Type | Trino Type                      | Doris Type    |
+| ------------- | ------------------------------- | ------------- |
+| boolean       | boolean                         | boolean       |
+| int64         | bigint                          | bigint        |
+| float64       | double                          | double        |
+| numeric       | decimal(P, S)                   | decimal(P, S) |
+| bignumeric    | decimal(P, S)                   | decimal(P, S) |
+| string        | varchar                         | string        |
+| bytes         | varbinary                       | string        |
+| date          | date                            | date          |
+| datetime      | timestamp(6)                    | datetime(6)   |
+| time          | time(6)                         | string        |
+| timestamp     | timestamp with time zone(6)     | datetime(6)   |
+| geography     | varchar                         | string        |
+| array         | array                           | array         |
+| map           | map                             | map           |
+| struct        | row                             | struct        |

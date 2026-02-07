@@ -62,10 +62,13 @@ mvn clean package -Dmaven.test.skip=true
    ```text
    ├── bin
    ├── conf
-   ├── connectors
-   │   ├── trino-kudu-435
+   ├── plugins
+   │   ├── connectors
+   │       ├── trino-kudu-435
    ...
    ```
+
+   > 也可以通过修改 `fe.conf` 的 `trino_connector_plugin_dir` 配置自定义插件路径。如：`trino_connector_plugin_dir=/path/to/connectors/`
 
 2. 重启所有 FE 和 BE 节点，以确保 Connector 被正确加载。
 
