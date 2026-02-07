@@ -46,21 +46,21 @@ In LDAP, data is organized in a tree structure. Here's an example of a typical L
 1. Set the authentication method in `fe/conf/fe.conf`: `authentication_type=ldap`.
 2. Configure LDAP service connection information in `fe/conf/ldap.conf`:
 
-  ```
-  ldap_authentication_enabled = true
-  ldap_host = ladp-host
-  ldap_port = 389
-  ldap_admin_name = uid=admin,o=emr
-  ldap_user_basedn = ou=people,o=emr
-  ldap_user_filter = (&(uid={login}))
-  ldap_group_basedn = ou=group,o=emr
-  ```
+    ```
+    ldap_authentication_enabled = true
+    ldap_host = ladp-host
+    ldap_port = 389
+    ldap_admin_name = uid=admin,o=emr
+    ldap_user_basedn = ou=people,o=emr
+    ldap_user_filter = (&(uid={login}))
+    ldap_group_basedn = ou=group,o=emr
+    ```
 
 3. After starting `fe`, log in to Doris with `root` or `admin` account and set the LDAP admin password:
 
-   ```sql
-   set ldap_admin_password = password('<ldap_admin_password>');
-   ```
+    ```sql
+    set ldap_admin_password = password('<ldap_admin_password>');
+    ```
 
 ### Step 2: Client Connection
 
@@ -72,56 +72,56 @@ You can enable the cleartext authentication plugin using either method:
 
 - **Method 1**: Set environment variable (permanent)
 
-  ```shell
-  echo "export LIBMYSQL_ENABLE_CLEARTEXT_PLUGIN=1" >> ~/.bash_profile && source ~/.bash_profile
-  ```
+    ```shell
+    echo "export LIBMYSQL_ENABLE_CLEARTEXT_PLUGIN=1" >> ~/.bash_profile && source ~/.bash_profile
+    ```
 
 - **Method 2**: Add parameter when logging in (one-time)
 
-  ```shell
-  mysql -hDORIS_HOST -PDORIS_PORT -u user -p --enable-cleartext-plugin
-  ```
+    ```shell
+    mysql -hDORIS_HOST -PDORIS_PORT -u user -p --enable-cleartext-plugin
+    ```
 
 **JDBC Client**
 
 1. Doris SSL Not Enabled
 
-  When Doris SSL is not enabled, you need to create a custom authentication plugin to bypass SSL restrictions when using JDBC connections:
+    When Doris SSL is not enabled, you need to create a custom authentication plugin to bypass SSL restrictions when using JDBC connections:
 
-  1. Create a custom plugin class that extends `MysqlClearPasswordPlugin` and overrides the `requiresConfidentiality()` method:
+    1. Create a custom plugin class that extends `MysqlClearPasswordPlugin` and overrides the `requiresConfidentiality()` method:
 
-    ```java
-    public class MysqlClearPasswordPluginWithoutSSL extends MysqlClearPasswordPlugin {
-      @Override
-      public boolean requiresConfidentiality() {
-        return false;
-      }
-    }
-    ```
+        ```java
+        public class MysqlClearPasswordPluginWithoutSSL extends MysqlClearPasswordPlugin {
+          @Override
+          public boolean requiresConfidentiality() {
+            return false;
+          }
+        }
+        ```
 
-  2. Configure the custom plugin in the JDBC connection URL (replace `xxx` with your actual package name):
+    2. Configure the custom plugin in the JDBC connection URL (replace `xxx` with your actual package name):
 
-    ```sql
-    jdbcUrl = "jdbc:mysql://localhost:9030/mydatabase?authenticationPlugins=xxx.xxx.xxx.MysqlClearPasswordPluginWithoutSSL&defaultAuthenticationPlugin=xxx.xxx.xxx.MysqlClearPasswordPluginWithoutSSL&disabledAuthenticationPlugins=com.mysql.jdbc.authentication.MysqlClearPasswordPlugin";
-    ```
+        ```sql
+        jdbcUrl = "jdbc:mysql://localhost:9030/mydatabase?authenticationPlugins=xxx.xxx.xxx.MysqlClearPasswordPluginWithoutSSL&defaultAuthenticationPlugin=xxx.xxx.xxx.MysqlClearPasswordPluginWithoutSSL&disabledAuthenticationPlugins=com.mysql.jdbc.authentication.MysqlClearPasswordPlugin";
+        ```
 
-    Description of the three required properties:
+        Description of the three required properties:
 
-    | Property | Description |
-    | --- | --- |
-    | `authenticationPlugins` | Register the custom cleartext authentication plugin |
-    | `defaultAuthenticationPlugin` | Set the custom plugin as the default authentication plugin |
-    | `disabledAuthenticationPlugins` | Disable the original cleartext authentication plugin (which mandates SSL) |
+        | Property | Description |
+        | --- | --- |
+        | `authenticationPlugins` | Register the custom cleartext authentication plugin |
+        | `defaultAuthenticationPlugin` | Set the custom plugin as the default authentication plugin |
+        | `disabledAuthenticationPlugins` | Disable the original cleartext authentication plugin (which mandates SSL) |
 
-  > You can refer to the examples in [this code repository](https://github.com/morningman/doris-debug-tools/tree/main/jdbc-test). Or execute `build-auth-plugin.sh` to directly generate the plugin JAR file, then place it in the client's specified location.
+    > You can refer to the examples in [this code repository](https://github.com/morningman/doris-debug-tools/tree/main/jdbc-test). Or execute `build-auth-plugin.sh` to directly generate the plugin JAR file, then place it in the client's specified location.
 
 2. Doris SSL Enabled
 
-  When Doris SSL is enabled (`enable_ssl=true` added in `fe.conf`), the JDBC URL requires no additional parameters and can connect directly:
+    When Doris SSL is enabled (`enable_ssl=true` added in `fe.conf`), the JDBC URL requires no additional parameters and can connect directly:
 
-  ```sql
-  jdbcUrl = "jdbc:mysql://localhost:9030/mydatabase
-  ```
+    ```sql
+    jdbcUrl = "jdbc:mysql://localhost:9030/mydatabase
+    ```
 
 ## Authentication
 
