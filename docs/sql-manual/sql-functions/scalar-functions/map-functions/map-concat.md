@@ -27,7 +27,7 @@ MAP_CONCAT(<map1> [, <map2> [, <map3> ... ]])
 - When concatenating maps with different value types, the function finds a common value type
 
 ## Return Value
-Returns a concatenated `MAP` containing all key-value pairs from the input maps.
+Returns a concatenated `MAP` that merges all key-value pairs from the input maps from left to right. For duplicate keys, the value from the last map wins (and the key's position in the result is determined by its last occurrence).
 
 **Behavior:**
 - The resulting map's key type is the common type of all input map key types
