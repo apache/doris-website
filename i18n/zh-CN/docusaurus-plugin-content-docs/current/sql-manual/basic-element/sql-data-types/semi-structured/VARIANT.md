@@ -57,6 +57,12 @@ FROM ${table_name}
 WHERE ARRAY_CONTAINS(CAST(v['tags'] AS ARRAY<TEXT>), 'Doris');
 ```
 
+VARIANT 查询中， JSON Path 的表示有如下几种类型，除此之外的表示均为未定义行为：
+
+1. `v['properties']['title']`
+2. `v['properties.title']`
+3. `v.properties.title`
+
 ## 基本类型
 
 VARIANT 自动推断的子列基础类型包括：
@@ -168,7 +174,7 @@ Schema 仅指导“存储层”的持久化类型，计算逻辑仍以实际数�
 SELECT variant_type(CAST('{"a" : "12345"}' AS VARIANT<'a' : INT>)['a']);
 ```
 
-通配符与匹配顺序：
+### 通配符与匹配顺序
 
 ```sql
 CREATE TABLE test_var_schema (
@@ -193,6 +199,76 @@ v1 VARIANT<
 ```
 
 匹配成功的子路径默认会展开为独立列。若匹配子列过多导致列数暴增，建议开启 `variant_enable_typed_paths_to_sparse`（见“配置”）。
+
+### 通配符语法
+
+Schema Template 模式匹配算法**只支持受限 glob 语法子集**。
+
+#### 支持的 glob 语法
+
+SQL 字符串需要写成 `\\` 才能表达 glob 中的 `\`。
+
+以下示例均为可匹配示例。
+
+| 语法 | 含义 | 示例（模式 → JSON Path） | SQL 字面量写法 |
+|------|------|-------------------|----------------|
+| `*` | 任意长度字符串 | `num_*` → `num_latency` | `'num_*'` |
+| `?` | 任意单字符 | `a?b` → `acb` | `'a?b'` |
+| `[abc]` | 字符类 | `a[bc]d` → `abd` | `'a[bc]d'` |
+| `[a-z]` | 字符范围 | `int_[0-9]` → `int_3` | `'int_[0-9]'` |
+| `[!abc]` | 取反字符类 | `int_[!0-9]` → `int_a` | `'int_[!0-9]'` |
+| `[^abc]` | 取反字符类 | `int_[^0-9]` → `int_a` | `'int_[^0-9]'` |
+| `\` | 转义下一个字符 | `a\*b` → `a*b`<br/>`a\?b` → `a?b`<br/>`a\[b` → `a[b`<br/>`\` → `\` | `'a\\*b'`<br/>`'a\\?b'`<br/>`'a\\[b'`<br/>`'\\'` |
+
+#### 不支持的语法
+
+以下语法会被当成普通字符处理，或导致匹配失败，请尽可能避免：
+
+| 语法 | 在某些 glob 实现中的语义 | 当前行为 |
+|------|--------------------------|----------|
+| `{a,b}` | 花括号展开 | **不支持**（当作字面量 `{` `}`） |
+| `**` | 递归目录匹配 | **不支持特殊语义**（等价于 `*` `*` 连用） |
+
+- 类似于 `[]`、`[!]`、`[^]`、`a[]b` 的空字符模式无效，不匹配任何 JSON Path
+- 类似于 `int_[0-9` 的未闭合字符模式无效，不匹配任何 JSON Path
+
+#### 典型示例
+
+1. 正常匹配
+- 模式：`num_*`
+  - √ `num_a`
+  - √ `num_1`
+  - × `number_a`
+
+- 模式：`a\*b`
+  - SQL：`'a\\*b'`
+  - √ `a*b`
+  - × `axxb`
+
+- 模式：`\*`
+  - SQL：`'\\*'`
+  - √ `*`
+  - × `a*`
+
+- 模式：`\`
+  - SQL：`'\\'`
+  - √ `\`
+  - × `\\`
+
+- 模式：`int_[0-9]`
+  - √ `int_1`
+  - × `int_a`
+
+2. 全量匹配（不是“包含”的语义）
+- 模式：`a*b`
+  - √ `ab`
+  - √ `axxxb`
+  - × `xxaxxxbxx`
+
+3. `.` 与 `/` 不特殊，为普通字符
+- 模式：`int_*`
+  - √ `int_nested.level1`
+  - √ `int_nested/level1`
 
 ## 类型冲突与提升规则
 
@@ -390,6 +466,69 @@ SELECT * FROM tbl WHERE v['str'] MATCH 'Doris';
 | `TIMESTAMP`     | ✔        | ✔         |
 | `VARCHAR`       | ✔        | ✔         |
 | `JSON`          | ✔        | ✔         |
+
+### 基于 Schema Template 自动 CAST
+
+当 VARIANT 列定义了 schema template 时，且 `enable_variant_schema_auto_cast` 设为 true 时，语义分析阶段会为命中 schema template 的子列自动插入对应类型的 CAST，无需自行手写。
+
+- 覆盖 SELECT、WHERE、ORDER BY、GROUP BY、HAVING、JOIN KEY 或聚合参数等场景。
+- 若需关闭此行为，将 `enable_variant_schema_auto_cast` 设为 false。
+
+示例：
+```sql
+CREATE TABLE t (
+  id BIGINT,
+  data VARIANT<'num_*': BIGINT, 'str_*': STRING>
+);
+
+-- 1) 过滤 + 排序
+SELECT id
+FROM t
+WHERE data['num_a'] > 10
+ORDER BY data['num_a'];
+
+-- 2) 分组 + 聚合 + Alias
+SELECT data['str_name'] AS username, SUM(data['num_a']) AS total
+FROM t
+GROUP BY username
+HAVING data['num_a'] > 100;
+
+-- 3) JOIN ON
+SELECT *
+FROM t1 JOIN t2
+ON t1.data['num_id'] = t2.data['num_id'];
+```
+
+**注意**：自动 CAST 功能无法感知给定的 Path 是否为叶子，它只是对所有符合 schema template 规则的 Path 都加对应的 CAST。
+
+因此，对于下述这种情况需要额外注意，为保证结果正确，请设置 `enable_variant_schema_auto_cast` 设为 false，并手动添加 CAST。
+
+```sql
+-- Schema Template：所有 int_* 视为 INT
+CREATE TABLE t (
+  id INT,
+  data VARIANT<'int_*': INT>
+);
+
+INSERT INTO t VALUES
+(1, '{"int_1": 1, "int_nested": {"level1_num_1": 1011111, "level1_num_2": 102}}');
+
+-- 自动 CAST 开启
+SET enable_variant_schema_auto_cast = true;
+
+-- int_nested 匹配 int_*，错误自动 CAST 为 INT，查询结果返回 NULL
+SELECT
+  data['int_nested']
+FROM t;
+
+-- 自动 CAST 关闭
+SET enable_variant_schema_auto_cast = false;
+
+-- 查询结果正确返回
+SELECT
+  data['int_nested']
+FROM t;
+```
 
 ## 宽列
 

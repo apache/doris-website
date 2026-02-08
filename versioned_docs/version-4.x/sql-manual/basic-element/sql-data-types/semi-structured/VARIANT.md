@@ -57,6 +57,12 @@ FROM ${table_name}
 WHERE ARRAY_CONTAINS(CAST(v['tags'] AS ARRAY<TEXT>), 'Doris');
 ```
 
+In VARIANT queries, JSON Path can be expressed in the following forms; any other form is undefined:
+
+1. `v['properties']['title']`
+2. `v['properties.title']`
+3. `v.properties.title`
+
 ## Primitive types
 
 VARIANT infers subcolumn types automatically. Supported types include:
@@ -165,7 +171,7 @@ Schema only guides the persisted storage type. During query execution, the effec
 SELECT variant_type(CAST('{"a" : "12345"}' AS VARIANT<'a' : INT>)['a']);
 ```
 
-Wildcard matching and order:
+### Wildcard matching and order
 
 ```sql
 CREATE TABLE test_var_schema (
@@ -190,6 +196,76 @@ v1 VARIANT<
 ```
 
 Matched subpaths are materialized as columns by default. If too many paths match and generate excessive columns, consider enabling `variant_enable_typed_paths_to_sparse` (see “Configuration”).
+
+### Wildcard syntax
+
+The Schema Template pattern-matching algorithm supports **only a restricted subset of glob syntax**.
+
+#### Supported glob syntax
+
+In SQL strings, we should write `\\` to express a literal `\` in glob patterns.
+
+All examples below are matching examples.
+
+| Syntax | Meaning | Example (pattern → JSON Path) | SQL literal |
+|------|---------|------------------------------|-------------|
+| `*` | Any-length string | `num_*` → `num_latency` | `'num_*'` |
+| `?` | Any single character | `a?b` → `acb` | `'a?b'` |
+| `[abc]` | Character class | `a[bc]d` → `abd` | `'a[bc]d'` |
+| `[a-z]` | Character range | `int_[0-9]` → `int_3` | `'int_[0-9]'` |
+| `[!abc]` | Negated character class | `int_[!0-9]` → `int_a` | `'int_[!0-9]'` |
+| `[^abc]` | Negated character class | `int_[^0-9]` → `int_a` | `'int_[^0-9]'` |
+| `\` | Escape the next character | `a\*b` → `a*b`<br/>`a\?b` → `a?b`<br/>`a\[b` → `a[b`<br/>`\` → `\` | `'a\\*b'`<br/>`'a\\?b'`<br/>`'a\\[b'`<br/>`'\\'` |
+
+#### Unsupported syntax
+
+The following are treated as ordinary characters or cause matching to fail; avoid them whenever possible:
+
+| Syntax | Semantics in some glob implementations | Current behavior |
+|------|----------------------------------------|------------------|
+| `{a,b}` | Brace expansion | **Not supported** (treated as literal `{` `}`) |
+| `**` | Recursive directory match | **No special semantics** (equivalent to `*` `*`) |
+
+- Empty character patterns like `[]`, `[!]`, `[^]`, and `a[]b` are invalid and match no JSON Path.
+- Unterminated character patterns like `int_[0-9` are invalid and match no JSON Path.
+
+#### Typical examples
+
+1. Normal match
+- Pattern: `num_*`
+  - √ `num_a`
+  - √ `num_1`
+  - × `number_a`
+
+- Pattern: `a\*b`
+  - SQL: `'a\\*b'`
+  - √ `a*b`
+  - × `axxb`
+
+- Pattern: `\*`
+  - SQL: `'\\*'`
+  - √ `*`
+  - × `a*`
+
+- Pattern: `\`
+  - SQL: `'\\'`
+  - √ `\`
+  - × `\\`
+
+- Pattern: `int_[0-9]`
+  - √ `int_1`
+  - × `int_a`
+
+2. Full match (not “contains” semantics)
+- Pattern: `a*b`
+  - √ `ab`
+  - √ `axxxb`
+  - × `xxaxxxbxx`
+
+3. `.` and `/` are not special; they are ordinary characters
+- Pattern: `int_*`
+  - √ `int_nested.level1`
+  - √ `int_nested/level1`
 
 ## Type conflicts and promotion rules
 
@@ -388,6 +464,69 @@ SELECT * FROM tbl WHERE v['str'] MATCH 'Doris';
 | `VARCHAR`       | ✔        | ✔         |
 | `JSON`          | ✔        | ✔         |
 
+### Schema Template based auto CAST
+
+When a VARIANT column defines a Schema Template and `enable_variant_schema_auto_cast` is set to true, the analyzer automatically inserts CASTs to the declared types for subpaths that match the Schema Template, so you do not need to write CASTs manually.
+
+- Applies to SELECT, WHERE, ORDER BY, GROUP BY, HAVING, JOIN keys, and aggregate arguments.
+- To disable this behavior, set `enable_variant_schema_auto_cast` to false.
+
+Example:
+```sql
+CREATE TABLE t (
+  id BIGINT,
+  data VARIANT<'num_*': BIGINT, 'str_*': STRING>
+);
+
+-- 1) FILTER + ORDER
+SELECT id
+FROM t
+WHERE data['num_a'] > 10
+ORDER BY data['num_a'];
+
+-- 2) GROUP + AGGREGATE + ALIAS
+SELECT data['str_name'] AS username, SUM(data['num_a']) AS total
+FROM t
+GROUP BY username
+HAVING data['num_a'] > 100;
+
+-- 3) JOIN ON
+SELECT *
+FROM t1 JOIN t2
+ON t1.data['num_id'] = t2.data['num_id'];
+```
+
+**Note**: Auto CAST cannot determine whether a path is a leaf; it simply casts all paths that match the Schema Template.
+
+Therefore, in cases like the following, to ensure correct results, set `enable_variant_schema_auto_cast` to false and add CASTs manually.
+
+```sql
+-- Schema Template: treat all int_* as INT
+CREATE TABLE t (
+  id INT,
+  data VARIANT<'int_*': INT>
+);
+
+INSERT INTO t VALUES
+(1, '{"int_1": 1, "int_nested": {"level1_num_1": 1011111, "level1_num_2": 102}}');
+
+-- Auto CAST enabled
+SET enable_variant_schema_auto_cast = true;
+
+-- int_nested matches int_*, is incorrectly CAST to INT, and the query returns NULL
+SELECT
+  data['int_nested']
+FROM t;
+
+-- Auto CAST disabled
+SET enable_variant_schema_auto_cast = false;
+
+-- The query returns the correct result
+SELECT
+  data['int_nested']
+FROM t;
+```
+
 ## Limitations
 
 - **Wide tables optimization**: For wide tables with a large number of dynamic sub-columns (e.g., more than 2000 columns) generated by the `VARIANT` type, it is highly recommended to enable **Storage Format V3** by specifying `"storage_format" = "V3"` in the table `PROPERTIES`. This decouples column metadata from the Segment Footer, speeding up file opening and reducing memory overhead.
@@ -503,5 +642,4 @@ ClickBench (43 queries):
    - No. They are equivalent.
 2. Why doesn’t my query/index work?
    - Check whether you CAST paths to the correct types; whether the type was promoted to JSONB due to conflicts; or whether you mistakenly expect an index on the whole VARIANT instead of on subpaths.
-
 
