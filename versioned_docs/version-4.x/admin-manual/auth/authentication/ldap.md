@@ -55,7 +55,7 @@ In LDAP, data is organized in a tree structure. Here's an example of a typical L
     ldap_user_basedn = ou=people,o=emr
     ldap_user_filter = (&(uid={login}))
     ldap_group_basedn = ou=group,o=emr
-    # specify ldap_use_ssl to true to switch to secured LDAPS protocol, specify false or comment property to use default behavior with plain LDAP
+    # specify ldap_use_ssl to true to use to secured LDAPS protocol, specify false or comment property to use default behavior with plain LDAP
     ldap_use_ssl = true 
     ```
 
