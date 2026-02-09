@@ -117,10 +117,10 @@ You can enable the cleartext authentication plugin using either method:
 
 2. Doris SSL Enabled
 
-    When Doris SSL is enabled (`enable_ssl=true` added in `fe.conf`), the JDBC URL requires no additional parameters and can connect directly:
+    When Doris SSL is enabled (`enable_ssl=true` added in `fe.conf`):
 
     ```sql
-    jdbcUrl = "jdbc:mysql://localhost:9030/mydatabase
+    jdbcUrl = "jdbc:mysql://localhost:9030/mydatabase?useSSL=true&sslMode=REQUIRED
     ```
 
 ## Authentication

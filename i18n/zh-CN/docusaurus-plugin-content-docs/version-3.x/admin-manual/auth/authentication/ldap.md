@@ -117,10 +117,10 @@ LDAP 认证要求客户端以明文方式发送密码，因此需要启用明文
 
 2. Doris 开启 SSL
 
-    Doris 开启 SSL 的情况下（`fe.conf` 中添加 `enable_ssl=true`），JDBC URL 无需添加额外参数，直接连接即可：
+    Doris 开启 SSL 的情况下（`fe.conf` 中添加 `enable_ssl=true`）：
 
     ```sql
-    jdbcUrl = "jdbc:mysql://localhost:9030/mydatabase
+    jdbcUrl = "jdbc:mysql://localhost:9030/mydatabase?useSSL=true&sslMode=REQUIRED
     ```
 
 ## 验证登录
