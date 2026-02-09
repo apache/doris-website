@@ -49,17 +49,23 @@ In LDAP, data is organized in a tree structure. Here's an example of a typical L
     ```
     ldap_authentication_enabled = true
     ldap_host = ladp-host
-    ldap_port = 389 # change it if ldap_use_ssl specified to true as different port (636) is used for LDAPS
+    # change ldap_port value if ldap_use_ssl specified to true as different port (636) is used for LDAPS
+    ldap_port = 389 
     ldap_admin_name = uid=admin,o=emr
     ldap_user_basedn = ou=people,o=emr
     ldap_user_filter = (&(uid={login}))
     ldap_group_basedn = ou=group,o=emr
-    ldap_use_ssl = true # specify true to switch to secured LDAPS protocol, specify false or comment property to use default behavior with plain LDAP
+    # specify ldap_use_ssl to true to switch to secured LDAPS protocol, specify false or comment property to use default behavior with plain LDAP
+    ldap_use_ssl = true 
     ```
 
 > Important for LDAPS:
+>
 > When `ldap_use_ssl = true`, ensure your LDAP server certificate is trusted by the Doris FE JVM.
-> If using a custom or self-signed Certificate Authority (CA), you must configure the Java trustStore. Add the following parameters to JAVA_OPTS in `fe/conf/fe.conf` (adjust the path to your cacerts file):
+>
+> If using a custom or self-signed Certificate Authority (CA), you must configure the Java trustStore. 
+> 
+> Add the following parameters to JAVA_OPTS in `fe/conf/fe.conf` (adjust the path to your cacerts file):
 > ```
 > # Example for JDK 17
 > JAVA_OPTS_FOR_JDK_17 = "-Djavax.net.ssl.trustStore=/path/to/your/cacerts -Djavax.net.ssl.trustStorePassword=changeit ..."
