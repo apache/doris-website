@@ -469,6 +469,7 @@ const sidebars: SidebarsConfig = {
                                 'lakehouse/catalogs/delta-lake-catalog',
                                 'lakehouse/catalogs/bigquery-catalog',
                                 'lakehouse/catalogs/kudu-catalog',
+                                'lakehouse/catalogs/kafka-catalog',
                                 'lakehouse/catalogs/es-catalog',
                                 'lakehouse/catalogs/doris-catalog',
                                 'lakehouse/catalogs/jdbc-catalog-overview',
@@ -616,7 +617,7 @@ const sidebars: SidebarsConfig = {
                                     label: 'Authentication',
                                     items: [
                                         'admin-manual/auth/authentication/internal',
-                                        'admin-manual/auth/authentication/federation',
+                                        'admin-manual/auth/authentication/ldap',
                                     ],
                                 },
                                 {
