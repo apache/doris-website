@@ -466,6 +466,8 @@ SELECT * FROM tbl WHERE v['str'] MATCH 'Doris';
 
 ### 基于 Schema Template 自动 CAST
 
+> 该功能自 4.1.0 版本支持
+
 当 VARIANT 列定义了 schema template 时，且 `enable_variant_schema_auto_cast` 设为 true 时，语义分析阶段会为命中 schema template 的子列自动插入对应类型的 CAST，无需自行手写。
 
 - 覆盖 SELECT、WHERE、ORDER BY、GROUP BY、HAVING、JOIN KEY 或聚合参数等场景。
