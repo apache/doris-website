@@ -49,12 +49,27 @@ In LDAP, data is organized in a tree structure. Here's an example of a typical L
     ```
     ldap_authentication_enabled = true
     ldap_host = ladp-host
-    ldap_port = 389
+    # change ldap_port value if ldap_use_ssl specified to true as different port (636) is used for LDAPS
+    ldap_port = 389 
     ldap_admin_name = uid=admin,o=emr
     ldap_user_basedn = ou=people,o=emr
     ldap_user_filter = (&(uid={login}))
     ldap_group_basedn = ou=group,o=emr
+    # specify ldap_use_ssl to use to switch to secured LDAPS protocol, specify false or comment property to use default behavior with plain LDAP
+    ldap_use_ssl = true 
     ```
+
+> Important for LDAPS:
+>
+> When `ldap_use_ssl = true`, ensure your LDAP server certificate is trusted by the Doris FE JVM.
+>
+> If using a custom or self-signed Certificate Authority (CA), you must configure the Java trustStore. 
+> 
+> Add the following parameters to JAVA_OPTS in `fe/conf/fe.conf` (adjust the path to your cacerts file):
+> ```
+> # Example for JDK 17
+> JAVA_OPTS_FOR_JDK_17 = "-Djavax.net.ssl.trustStore=/path/to/your/cacerts -Djavax.net.ssl.trustStorePassword=changeit ..."
+> ```
 
 3. After starting `fe`, log in to Doris with `root` or `admin` account and set the LDAP admin password:
 
@@ -250,7 +265,9 @@ You can refresh the cache with the `refresh ldap` statement. See [REFRESH-LDAP](
 
 ## Known Limitations
 
-- Currently, Doris's LDAP functionality only supports cleartext password verification, meaning that when users log in, passwords are transmitted in plaintext between `client` and `fe`, and between `fe` and LDAP service.
+- Currently, Doris's LDAP functionality only supports cleartext password verification, meaning that when users log in, passwords are transmitted in plaintext between `client` and `fe`, but connection between `fe` and LDAP service can be secured optionally.
+-   **For `ldap_use_ssl = false` (default behavior)**: Passwords are transmitted in plain text between the Doris FE and the LDAP server.
+-   **To secure the connection**: Set `ldap_use_ssl = true` to encrypt traffic between Doris FE and the LDAP server. Note that SSL/TLS encryption between the **client and Doris FE** must be configured separately.
 
 ## FAQ
 
