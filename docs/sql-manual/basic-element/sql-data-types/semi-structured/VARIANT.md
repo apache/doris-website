@@ -471,7 +471,7 @@ SELECT * FROM tbl WHERE v['str'] MATCH 'Doris';
 
 > This feature is supported since version 4.1.0
 
-When a VARIANT column defines a Schema Template and `enable_variant_schema_auto_cast` is set to true, the analyzer automatically inserts CASTs to the declared types for subpaths that match the Schema Template, so you do not need to write CASTs manually.
+When a VARIANT column defines a Schema Template and `enable_variant_schema_auto_cast` is set to true, the analyzer automatically inserts CASTs to the declared types for subpaths that match the Schema Template, so you do not need to write CASTs manually. This parameter is enabled by default.
 
 - Applies to SELECT, WHERE, ORDER BY, GROUP BY, HAVING, JOIN keys, and aggregate arguments.
 - To disable this behavior, set `enable_variant_schema_auto_cast` to false.
