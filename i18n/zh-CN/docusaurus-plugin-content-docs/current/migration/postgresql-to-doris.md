@@ -54,7 +54,7 @@
 
 ## 迁移选项
 
-### 选项 1：JDBC Catalog（推荐）
+### 选项 1：JDBC Catalog（批量迁移）
 
 [JDBC Catalog](../lakehouse/catalogs/jdbc-catalog.md) 提供从 Doris 直接访问 PostgreSQL 数据的能力。这是查询和迁移数据最简单的方法。
 

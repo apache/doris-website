@@ -10,7 +10,7 @@ Apache Doris provides multiple methods to migrate data from various source syste
 
 ## Migration Paths
 
-| Source System | Recommended Method | Real-time Sync | Full Migration | Incremental |
+| Source System | Migration Method | Real-time Sync | Full Migration | Incremental |
 |---------------|-------------------|----------------|----------------|-------------|
 | [PostgreSQL](./postgresql-to-doris.md) | JDBC Catalog / Flink CDC | Yes | Yes | Yes |
 | [MySQL](./mysql-to-doris.md) | Flink CDC / JDBC Catalog | Yes | Yes | Yes |
@@ -21,9 +21,9 @@ Apache Doris provides multiple methods to migrate data from various source syste
 
 ## Choosing a Migration Method
 
-### Catalog-Based Migration (Recommended)
+### Catalog-Based Migration
 
-Doris's [Multi-Catalog](../lakehouse/lakehouse-overview.md) feature allows you to directly query external data sources without data movement. This is the recommended approach for:
+Doris's [Multi-Catalog](../lakehouse/lakehouse-overview.md) feature allows you to directly query external data sources without data movement. This approach is suited for:
 
 - **Initial exploration**: Query source data before deciding on migration strategy
 - **Hybrid queries**: Join data across Doris and external sources

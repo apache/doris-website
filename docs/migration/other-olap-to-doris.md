@@ -10,7 +10,7 @@ This guide covers migrating data from various OLAP systems to Apache Doris, incl
 
 ## Migration Methods Overview
 
-| Source System | Recommended Method | Notes |
+| Source System | Migration Method | Notes |
 |---------------|-------------------|-------|
 | ClickHouse | JDBC Catalog + SQL Convertor | Schema and SQL syntax conversion needed |
 | Greenplum | JDBC Catalog | PostgreSQL-compatible |

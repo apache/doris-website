@@ -62,7 +62,7 @@
 
 ## 迁移选项
 
-### 选项 1：ES Catalog（推荐）
+### 选项 1：ES Catalog（直接查询和迁移）
 
 [ES Catalog](../lakehouse/catalogs/es-catalog.md) 提供从 Doris 直接访问 Elasticsearch 数据的能力，支持查询和迁移。
 
