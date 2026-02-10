@@ -236,12 +236,6 @@ const sidebars: SidebarsConfig = {
                                 'data-operate/import/streaming-job/streaming-job-tvf',
                                 'data-operate/import/streaming-job/streaming-job-multi-table',
                             ],
-                        },
-                        'data-operate/import/cdc-load-manual-sample',
-                        {
-                            type: 'category',
-                            label: 'Scheduler',
-                            items: ['data-operate/scheduler/job-scheduler'],
                         }
                     ],
                 },
