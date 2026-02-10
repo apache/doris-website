@@ -2539,6 +2539,7 @@ const sidebars: SidebarsConfig = {
                     type: 'category',
                     label: 'v4.0',
                     items: [
+                        'releasenotes/v4.0/release-4.0.3',
                         'releasenotes/v4.0/release-4.0.2',
                         'releasenotes/v4.0/release-4.0.1',
                         'releasenotes/v4.0/release-4.0.0'
