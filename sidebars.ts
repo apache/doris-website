@@ -2260,6 +2260,7 @@ const sidebars: SidebarsConfig = {
                                         'sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-REPLACE',
                                         'sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-PROPERTY',
                                         'sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-COMMENT',
+                                        'sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-DISTRIBUTION',
                                         'sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-ADD-GENERATED-COLUMN',
                                         'sql-manual/sql-statements/table-and-view/table/CANCEL-ALTER-TABLE',
                                         'sql-manual/sql-statements/table-and-view/table/SHOW-ALTER-TABLE',
