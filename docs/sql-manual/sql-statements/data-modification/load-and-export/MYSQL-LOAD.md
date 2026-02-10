@@ -69,7 +69,7 @@ INTO TABLE "<tbl_name>"
 | max_filter_ratio | The maximum tolerable ratio of filterable data (due to reasons such as data irregularities), with a default of zero tolerance. |
 | timeout | Specify the import timeout period in seconds. The default is 600 seconds, and the valid range is from 1 second to 259,200 seconds. |
 | strict_mode | Users can specify whether to enable strict mode for this import. The default is disabled. |
-| timezone | Specify the time zone for this import. The default is the East Eight Time Zone. This parameter will affect the results of all time - zone - related functions involved in the import. |
+| timezone | Specify the time zone for this import. The default is the current cluster time zone. This parameter will affect the results of all time - zone - related functions involved in the import. |
 | exec_mem_limit | The import memory limit, with a default of 2GB in bytes. |
 | trim_double_quotes | A boolean type with a default value of `false`. When set to `true`, it means trimming the outermost double quotes of each field in the imported file. |
 | enclose | Enclosure character. When a CSV data field contains a line separator or column separator, to prevent accidental truncation, a single - byte character can be specified as the enclosure character for protection. For example, if the column separator is ",", the enclosure character is "'", and the data is "a,'b,c'", then "b,c" will be parsed as one field. Note: When `enclose` is set to `""`, `trim_double_quotes` must be set to `true`. |
