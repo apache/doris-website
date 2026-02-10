@@ -1,7 +1,8 @@
 ---
 {
     "title": "Logstash",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "Logstash 是一个日志 ETL 框架（采集，预处理，发送到存储系统），它支持自定义输出插件将数据写入存储系统，Logstash Doris output plugin 是输出到 Doris 的插件。"
 }
 ---
 
@@ -11,7 +12,7 @@
 
 Logstash 是一个日志 ETL 框架（采集，预处理，发送到存储系统），它支持自定义输出插件将数据写入存储系统，Logstash Doris output plugin 是输出到 Doris 的插件。
 
-Logstash Doris output plugin 调用 [Doris Stream Load](../data-operate/import/import-way/stream-load-manual) HTTP 接口将数据实时写入 Doris，提供多线程并发，失败重试，自定义 Stream Load 格式和参数，输出写入速度等能力。
+Logstash Doris output plugin 调用 [Doris Stream Load](../../data-operate/import/import-way/stream-load-manual) HTTP 接口将数据实时写入 Doris，提供多线程并发，失败重试，自定义 Stream Load 格式和参数，输出写入速度等能力。
 
 使用 Logstash Doris output plugin 主要有三个步骤：
 1. 将插件安装到 Logstash 中
@@ -25,10 +26,10 @@ Logstash Doris output plugin 调用 [Doris Stream Load](../data-operate/import/i
 可以从官网下载或者自行从源码编译 Logstash Doris output plugin。
 
 - 从官网下载
-  - 不包含依赖的安装包
-https://apache-doris-releases.oss-accelerate.aliyuncs.com/extension/logstash-output-doris-1.2.0.gem
-  - 包含依赖的安装包
-https://apache-doris-releases.oss-accelerate.aliyuncs.com/extension/logstash-output-doris-1.2.0.zip
+
+```shell
+# 包含依赖的安装包
+wget https://apache-doris-releases.oss-cn-beijing.aliyuncs.com/extension/logstash-output-doris-1.2.0-java.gem
 
 - 从源码编译
 
@@ -55,12 +56,12 @@ Installation successful
 
 - 离线安装
 
-```
-${LOGSTASH_HOME}/bin/logstash-plugin install file:///tmp/logstash-output-doris-1.2.0.zip
+```shell
 
-Installing file: logstash-output-doris-1.2.0.zip
-Resolving dependencies.........................
-Install successful
+export JARS_SKIP="true"
+
+${LOGSTASH_HOME}/bin/logstash-plugin install logstash-output-doris-1.2.0.gem
+
 ```
 
 ## 参数配置

@@ -1,7 +1,8 @@
 ---
 {
     "title": "Check Decommission Action",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "用于判断指定的 BE 是否能够被下线。比如判断节点下线后，剩余的节点是否能够满足空间要求和副本数要求等。"
 }
 ---
 

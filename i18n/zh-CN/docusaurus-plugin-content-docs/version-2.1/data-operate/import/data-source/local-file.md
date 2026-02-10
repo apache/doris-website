@@ -1,7 +1,8 @@
 ---
 {
     "title": "本地文件",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "Doris 提供多种方式从本地数据导入："
 }
 ---
 

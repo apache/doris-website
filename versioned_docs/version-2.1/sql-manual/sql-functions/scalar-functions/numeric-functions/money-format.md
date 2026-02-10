@@ -1,7 +1,8 @@
 ---
 {
     "title": "MONEY_FORMAT",
-    "language": "en"
+    "language": "en",
+    "description": "The number is output in currency format, the integer part is separated by commas every three bits, and the decimal part is reserved for two bits."
 }
 ---
 

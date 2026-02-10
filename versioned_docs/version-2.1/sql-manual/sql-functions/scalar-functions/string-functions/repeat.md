@@ -1,7 +1,8 @@
 ---
 {
     "title": "REPEAT",
-    "language": "en"
+    "language": "en",
+    "description": "The REPEAT function is used to repeat a string a specified number of times."
 }
 ---
 

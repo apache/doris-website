@@ -1,7 +1,8 @@
 ---
 {
     "title": "ARRAY_REPEAT",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "生成一个包含 n 个重复元素 element 的数组"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "HA Action",
-    "language": "en"
+    "language": "en",
+    "description": "HA Action is used to obtain the high availability group information of the FE cluster."
 }
 ---
 

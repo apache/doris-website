@@ -85,7 +85,7 @@ function LatestVersionSuggestionLabel({
                                 id="theme.docs.versions.latestVersionLinkLabel"
                                 description="The label used for the latest version suggestion link label"
                             >
-                                Version 3.0
+                                Version 3.x
                             </Translate>
                         </Link>
                     </b>
@@ -144,8 +144,8 @@ function DocVersionBannerEnabled({
                     versionLabel={latestVersionSuggestion.label}
                     to={latestVersionSuggestedDoc.path}
                     realLatestVersion={{
-                        label: '3.0',
-                        to: '/docs/3.0/gettingStarted/what-is-apache-doris',
+                        label: '3.x',
+                        to: '/docs/3.x/gettingStarted/what-is-apache-doris',
                     }}
                     onClick={() => savePreferredVersionName(latestVersionSuggestion.name)}
                 />

@@ -1,7 +1,8 @@
 ---
 {
     "title": "KILL ANALYZE JOB",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "停止正在后台执行的统计信息收集作业。"
 }
 ---
 

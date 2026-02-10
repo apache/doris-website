@@ -1,7 +1,8 @@
 ---
 {
-  "title": "Updating Data on Aggregate Key Model",
-  "language": "en"
+    "title": "Updating Data on Aggregate Key Model",
+    "language": "en",
+    "description": "This document primarily introduces how to update the Doris Aggregate model based on data load."
 }
 ---
 

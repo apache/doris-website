@@ -43,7 +43,7 @@ under the License.
 
 ```Shell
 brew install automake autoconf libtool pkg-config texinfo coreutils gnu-getopt \
-python@3 cmake ninja ccache bison byacc gettext wget pcre maven llvm@16 openjdk@11 npm
+python@3 cmake ninja ccache bison byacc gettext wget pcre maven llvm@20 openjdk@11 npm
 ```
 
 在 MacOS 上，由于 brew 没有提供 JDK8 的安装包，所以在这里使用了 JDK11。也可以自己手动下载安装 JDK8。

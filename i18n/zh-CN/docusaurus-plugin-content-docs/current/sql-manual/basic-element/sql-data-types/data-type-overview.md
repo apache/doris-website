@@ -1,7 +1,8 @@
 ---
 {
     "title": "数据类型概览",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "包括以下 4 种："
 }
 ---
 
@@ -29,7 +30,7 @@
 
 **3. 浮点数类型：** 
 
-不精确的浮点数类型 FLOAT 和 DOUBLE，和常见编程语言中的 float 和 double 对应。更多信息参考 [FLOAT](../../basic-element/sql-data-types/numeric/FLOAT.md)、[DOUBLE](../../basic-element/sql-data-types/numeric/DOUBLE.md) 文档。
+不精确的浮点数类型 FLOAT 和 DOUBLE，和常见编程语言中的 float 和 double 对应。更多信息参考 [FLOAT](../../basic-element/sql-data-types/numeric/FLOATING-POINT.md)、[DOUBLE](../../basic-element/sql-data-types/numeric/FLOATING-POINT.md) 文档。
 
 **4. 定点数类型：** 
 
@@ -38,11 +39,11 @@
 
 ## 日期类型
 
-日期类型包括 DATE、TIME 和 DATETIME，DATE 类型只存储日期精确到天，DATETIME 类型存储日期和时间，可以精确到微秒。TIME 类型只存储时间，且**暂时不支持建表存储，只能在查询过程中使用**。
+日期类型包括 DATE、TIME、DATETIME 和 TIMESTAMPTZ，DATE 类型只存储日期精确到天，DATETIME 类型存储日期和时间，可以精确到微秒。TIME 类型只存储时间，且**暂时不支持建表存储，只能在查询过程中使用**。TIMESTAMPTZ 是带时区信息的日期时间类型，存储时转换为 UTC 时间，查询时根据会话时区自动转换显示。
 
 对日期类型进行计算，或将其转换为数字，请使用类似 [TIME_TO_SEC](../../sql-functions/scalar-functions/date-time-functions/time-to-sec), [DATE_DIFF](../../sql-functions/scalar-functions/date-time-functions/datediff), [UNIX_TIMESTAMP](../../sql-functions/scalar-functions/date-time-functions/unix-timestamp) 等函数，直接将其 CAST 为数字类型的结果不受保证。在未来的版本中，此类 CAST 行为将会被禁止。
 
-更多信息参考 [DATE](../../basic-element/sql-data-types/date-time/DATE)、[TIME](../../basic-element/sql-data-types/date-time/TIME) 和 [DATETIME](../../basic-element/sql-data-types/date-time/DATETIME) 文档。
+更多信息参考 [DATE](../../basic-element/sql-data-types/date-time/DATE)、[TIME](../../basic-element/sql-data-types/date-time/TIME)、[DATETIME](../../basic-element/sql-data-types/date-time/DATETIME) 和 [TIMESTAMPTZ](../../basic-element/sql-data-types/date-time/TIMESTAMPTZ) 文档。
 
 
 ## 字符串类型
@@ -54,6 +55,11 @@
 2. [VARCHAR(M)](./string-type/VARCHAR)：不定长字符串，M 是最大长度，M 的范围是 [1, 65533]。
 
 3. [STRING](./string-type/STRING)：不定长字符串，默认最长 1048576 字节（1MB），可调大到 2147483643 字节（2GB），BE 配置 string_type_length_soft_limit_bytes。
+
+
+## 二进制类型
+
+1. [VARBINARY](./binary-type/VARBINARY)：变长二进制字节序列，M 为最大长度（单位：字节）。与 VARCHAR 类似，但按字节序存储与比较，不涉及字符集或排序规则，适合存储任意二进制数据（如文件片段、加密数据、压缩数据等）。自 4.0 起支持，当前不支持建表和存储，可以结合Catalog 映射其他数据库的BINARY到DORIS中使用。
 
 ## 半结构化类型
 

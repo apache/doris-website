@@ -1,7 +1,8 @@
 ---
 {
     "title": "SHOW DATABASES",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "该语句用于展示当前可见的数据库"
 }
 ---
 

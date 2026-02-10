@@ -1,7 +1,8 @@
 ---
 {
     "title": "ARRAY_ENUMERATE_UNIQ",
-    "language": "en"
+    "language": "en",
+    "description": "Returns the unique occurrence count number for each element in the array. The function generates a number for each element in the array,"
 }
 ---
 

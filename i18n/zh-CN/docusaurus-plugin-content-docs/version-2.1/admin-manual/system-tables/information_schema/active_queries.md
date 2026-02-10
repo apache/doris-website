@@ -1,7 +1,8 @@
 ---
 {
     "title": "active_queries",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "用于查看当前正在执行的查询"
 }
 ---
 

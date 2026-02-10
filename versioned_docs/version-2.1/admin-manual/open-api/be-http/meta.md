@@ -1,7 +1,8 @@
 ---
 {
     "title": "View Meta",
-    "language": "en"
+    "language": "en",
+    "description": "View meta of a tablet"
 }
 ---
 

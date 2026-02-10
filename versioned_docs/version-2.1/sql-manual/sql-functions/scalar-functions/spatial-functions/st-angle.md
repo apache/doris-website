@@ -1,7 +1,8 @@
 ---
 {
     "title": "ST_ANGLE",
-    "language": "en"
+    "language": "en",
+    "description": "Enter three points that represent two intersecting lines. Return the Angle between these lines."
 }
 ---
 

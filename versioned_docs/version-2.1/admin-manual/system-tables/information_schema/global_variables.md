@@ -1,7 +1,8 @@
 ---
 {
     "title": "global_variables",
-    "language": "en"
+    "language": "en",
+    "description": "View Global Variables"
 }
 ---
 

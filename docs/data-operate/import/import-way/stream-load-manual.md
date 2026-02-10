@@ -1,7 +1,8 @@
 ---
 {
     "title": "Stream Load",
-    "language": "en"
+    "language": "en",
+    "description": "Stream Load supports importing local files or data streams into Doris through the HTTP protocol."
 }
 ---
 
@@ -241,6 +242,11 @@ Under the storage-computation separation mode, Compute Groups can be specified i
 -H "cloud_cluster:cluster1"
 ```
 
+Starting from Doris 4.0.0, you can use `compute_group` as an alternative
+```
+-H "compute_group:cluster1"
+```
+
 2. Specify Compute Group in the user properties bound to Stream Load. If both user properties and the HTTP header specify a Compute Group, the Compute Group specified in the Header takes precedence.
 ```
 set property for user1 'default_compute_group'='cluster1';
@@ -459,7 +465,7 @@ curl --location-trusted -u <doris_user>:<doris_password> \
 
 ### Loading data into specific timezone
 
-Since Doris currently does not have a built-in time zone time type, all `DATETIME` related types only represent absolute time points, do not contain time zone information, and will not change due to changes in the Doris system time zone. Therefore, for the import of data with time zones, our unified processing method is to convert it into data in a specific target time zone. In the Doris system, it is the time zone represented by the session variable `time_zone`.
+`DATETIME` related types only represent absolute time points, do not contain time zone information, and will not change due to changes in the Doris system time zone. Therefore, for the import of data with time zones, our unified processing method is to convert it into data in a specific target time zone. In the Doris system, it is the time zone represented by the session variable `time_zone`.
 
 In the import, our target time zone is specified through the parameter `timezone`. This variable will replace the session variable `time_zone` when time zone conversion occurs and time zone sensitive functions are calculated. Therefore, if there are no special circumstances, the `timezone` should be set in the import transaction to be consistent with the `time_zone` of the current Doris cluster. This means that all time data with a time zone will be converted to this time zone.
 
@@ -1018,6 +1024,6 @@ The strict_mode attribute is used to set whether the import task runs in strict 
 
 ### Perform partial column updates/flexible partial update during import
 
-For how to express partial column updates during import, please refer to the Data Manipulation/Data Update documentation.
+For how to express partial column updates during import, please refer to the [Partial Column Update](../../../data-operate/update/partial-column-update.md) documentation.
 
 

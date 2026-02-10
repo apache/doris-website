@@ -27,7 +27,7 @@ Function with two arguments will ignore session variable `block_encryption_mode`
 #### Remarks
 
 For the incoming key, the AES_ENCRYPT function not directly uses, but will further process it. The specific steps are as follows:
-1. According to the encryption algorithm used, determine the number of bytes of the key, for example, if you use the AES_128_ECB algorithm, the number of bytes of the key is `128 / 8 = 16` (if you use the AES_256_ECB algorithm, the number of bytes of the key is `128 / 8 = 32`). 2;
+1. According to the encryption algorithm used, determine the number of bytes of the key, for example, if you use the AES_128_ECB algorithm, the number of bytes of the key is `128 / 8 = 16` (if you use the AES_256_ECB algorithm, the number of bytes of the key is `256 / 8 = 32`). 2;
 2. then for the key entered by the user, bits `i` and `16*k+i` are used to perform an isomorphism, followed by a zero if the key entered by the user is less than 16 bits. 3. finally, the newly generated key is used to generate a new key;
 3. finally, the newly generated key is used for encryption.
 

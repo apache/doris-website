@@ -1,7 +1,8 @@
 ---
 {
     "title": "Heap Profile 分析内存",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "Heap Profile 支持实时查看进程内存使用，并可以看到调用栈，所以这通常需要对代码有一些了解，需要注意的是 Heap Profile 记录的是虚拟内存，需要修改配置后重启 Doris BE 进程，并且现象可以被复现。"
 }
 ---
 

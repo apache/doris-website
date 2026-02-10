@@ -1,7 +1,8 @@
 ---
 {
     "title": "Baidu BOS",
-    "language": "en"
+    "language": "en",
+    "description": "Document is under development."
 }
 ---
 

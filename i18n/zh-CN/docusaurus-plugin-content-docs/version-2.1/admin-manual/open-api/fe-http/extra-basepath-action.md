@@ -1,7 +1,8 @@
 ---
 {
     "title": "Extra Basepath Action",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "获取 http 的 basepath。"
 }
 ---
 

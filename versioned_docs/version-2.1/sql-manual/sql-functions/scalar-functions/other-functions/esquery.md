@@ -1,7 +1,8 @@
 ---
 {
     "title": "ESQUERY",
-    "language": "en"
+    "language": "en",
+    "description": "Use the ESQUERY(<field>, <querydsl>) function to push down queries that cannot be expressed in SQL to Elasticsearch for filtering."
 }
 ---
 

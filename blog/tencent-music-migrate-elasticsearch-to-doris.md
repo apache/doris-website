@@ -186,4 +186,4 @@ The migration from Elasticsearch to Apache Doris has yielded impressive gains. W
 
 By replacing its Elasticsearch cluster with Doris, TME has unified its content library's search and analytics engines into a single, streamlined platform. The system now supports complex custom tag-based segmentation with sub-second response. The next-phase plan of TME is to explore broader use cases of Apache Doris and prepare to adopt the [compute-storage decoupled mode](https://doris.apache.org/docs/3.0/compute-storage-decoupled/overview) to drive even greater cost efficiency. 
 
-For direct communication, real-world insights, and best practices, join [#elasticsearch-to-doris](https://apachedoriscommunity.slack.com/archives/C08CQKX20R5) channel in the [Apache Doris community](https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-2gmq5o30h-455W226d79zP3L96ZhXIoQ).
+For direct communication, real-world insights, and best practices, join [#elasticsearch-to-doris](https://apachedoriscommunity.slack.com/archives/C08CQKX20R5) channel in the [Apache Doris community](https://doris.apache.org/slack).

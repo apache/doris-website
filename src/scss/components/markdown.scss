@@ -85,7 +85,7 @@
         padding: 0.75rem 1.625rem 0.75rem 3.25rem;
         border-top-left-radius: 0.25rem;
         border-top-right-radius: 0.25rem;
-        background-color: #f7f9fe;
+        background-color: #F7FAFC;
     }
 
     details > summary::before {
@@ -165,11 +165,11 @@
     }
 
     table thead tr {
-        background-color: #f7f9fe;
+        background-color: #F7FAFC;
     }
 
     table thead th {
-        background-color: #f7f9fe;
+        background-color: #F7FAFC;
         color: #1d1d1d;
         font-size: 0.875rem;
         font-weight: 600;
@@ -235,7 +235,7 @@
             border-bottom-color: #ffffff !important;
             border-top-left-radius: 0.25rem;
             border-top-right-radius: 0.25rem;
-            color: #444fd9 !important;
+            color: var(--ifm-color-primary) !important;
             font-weight: 700;
         }
         .tabs__item {

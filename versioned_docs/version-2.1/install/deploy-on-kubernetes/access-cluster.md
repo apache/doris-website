@@ -1,7 +1,8 @@
 ---
 {
-  "title": "Access Cluster",
-  "language": "en"
+    "title": "Access Cluster",
+    "language": "en",
+    "description": "Kubernetes provides the use of Service as VIP (Virtual IP) and load balancer. There are three external exposure modes for Service: ClusterIP,"
 }
 ---
 

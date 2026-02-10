@@ -1,7 +1,8 @@
 ---
 {
     "title": "Exists Operators",
-    "language": "en"
+    "language": "en",
+    "description": "The EXISTS condition is used to test for the existence of rows in a subquery."
 }
 ---
 

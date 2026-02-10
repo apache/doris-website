@@ -1,7 +1,8 @@
 ---
 {
     "title": "ARRAY_DISTINCT",
-    "language": "en"
+    "language": "en",
+    "description": "Return the array which has been removed duplicate values. Return NULL for NULL input."
 }
 ---
 

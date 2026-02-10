@@ -1,7 +1,8 @@
 ---
 {
     "title": "阿里云 OSS",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "Doris 提供两种方式从阿里云 OSS 导入文件："
 }
 ---
 

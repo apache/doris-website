@@ -1,9 +1,9 @@
 ---
 {
     "title": "使用 Doris 和 Paimon",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "作为一种全新的开放式的数据管理架构，湖仓一体（Data Lakehouse）融合了数据仓库的高性能、实时性以及数据湖的低成本、灵活性等优势，帮助用户更加便捷地满足各种数据处理分析的需求，在企业的大数据体系中已经得到越来越多的应用。"
 }
-
 ---
 
 作为一种全新的开放式的数据管理架构，湖仓一体（Data Lakehouse）融合了数据仓库的高性能、实时性以及数据湖的低成本、灵活性等优势，帮助用户更加便捷地满足各种数据处理分析的需求，在企业的大数据体系中已经得到越来越多的应用。
@@ -35,7 +35,7 @@ Apache Paimon 是一种数据湖格式，并创新性地将数据湖格式和 LS
 
 本文将会再 Docker 环境中，为读者讲解如何快速搭建 Apache Doris + Apache Paimon 测试 & 演示环境，并展示各功能的使用操作。
 
-关于更多说明，请参阅 [Paimon Catalog](../catalogs/paimon-catalog.md)
+关于更多说明，请参阅 [Paimon Catalog](../catalogs/paimon-catalog)
 
 ## 使用指南
 

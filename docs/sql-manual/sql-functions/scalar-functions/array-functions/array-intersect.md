@@ -1,7 +1,8 @@
 ---
 {
     "title": "ARRAY_INTERSECT",
-    "language": "en"
+    "language": "en",
+    "description": "Returns the intersection of multiple arrays, i.e., elements that exist in all arrays."
 }
 ---
 

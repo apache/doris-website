@@ -3,7 +3,8 @@
     "title": "BE 配置项",
     "language": "zh-CN",
     "toc_min_heading_level": 2,
-    "toc_max_heading_level": 4
+    "toc_max_heading_level": 4,
+    "description": "该文档主要介绍 BE 的相关配置项。"
 }
 ---
 
@@ -373,7 +374,7 @@ Thrift 服务器接收请求消息的大小（字节数）上限。如果客户�
 
 * 类型：int32
 * 描述：Scanner 线程池线程数目。在 Doris 的扫描任务之中，每一个 Scanner 会作为一个线程 Task 提交到线程池之中等待被调度，该参数决定了 Scanner 线程池的大小。
-* 默认值：取决于 CPU 核心数量。等于 `max(48, num_of_cpu_cores)`
+* 默认值：取决于 CPU 核心数量。等于 `max(48, 2 * num_of_cpu_cores)`
 
 #### `doris_max_remote_scanner_thread_pool_thread_num`
 
@@ -647,9 +648,27 @@ BaseCompaction:546859:
 
 #### `update_replica_infos_interval_seconds`
 
+* 类型：int32
 * 描述：更新 peer replica infos 的最小间隔时间
 * 默认值：60（s）
 
+#### `cold_data_compaction_score_threshold`
+
+* 类型：int32
+* 描述：该配置项指定触发冷数据 compaction 的最小 compaction 分数阈值。当冷数据的 compaction 分数超过该阈值时，会触发 compaction。调整该值有助于控制远程存储（如冷数据）上的 compaction 频率和激进程度。自 3.1.3 版本起支持。
+* 默认值：100
+
+#### `cold_data_compaction_thread_num`
+
+* 类型：int32
+* 描述：用于冷数据 compaction 的线程数。该配置项控制冷数据 compaction 任务的并发度，数值越大，同时进行的冷数据 compaction 任务越多，可以提升吞吐能力，但也会增加资源消耗。
+* 默认值：2
+
+#### `cold_data_compaction_interval_sec`
+
+* 类型：int32
+* 描述：触发冷数据 compaction 的时间间隔，单位为秒。间隔越短，冷数据 compaction 检查越频繁，有助于更快地清理冷数据，但也会消耗更多资源。
+* 默认值：1800（秒）
 
 ### 导入
 

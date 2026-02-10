@@ -1,7 +1,8 @@
 ---
 {
     "title": "ST_GEOMETRYFROMTEXT",
-    "language": "en"
+    "language": "en",
+    "description": "Convert a WKT (Well Known Text) to the corresponding memory geometry"
 }
 ---
 

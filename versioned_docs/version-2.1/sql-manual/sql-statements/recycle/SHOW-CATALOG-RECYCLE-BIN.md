@@ -1,7 +1,8 @@
 ---
 {
-  "title": "SHOW CATALOG RECYCLE BIN",
-  "language": "en"
+    "title": "SHOW CATALOG RECYCLE BIN",
+    "language": "en",
+    "description": "This statement is used to display the recoverable metadata of databases, tables, or partitions in the recycle bin."
 }
 ---
 

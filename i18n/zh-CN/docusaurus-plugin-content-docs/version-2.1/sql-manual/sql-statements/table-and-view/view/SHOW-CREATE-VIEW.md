@@ -1,7 +1,8 @@
 ---
 {
     "title": "SHOW CREATE VIEW",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "显示指定视图创建时的 CREATE VIEW 语句。"
 }
 ---
 

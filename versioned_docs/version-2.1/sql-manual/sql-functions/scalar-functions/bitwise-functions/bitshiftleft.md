@@ -1,7 +1,8 @@
 ---
 {
-"title": "BIT_SHIFT_LEFT",
-"language": "en"
+    "title": "BIT_SHIFT_LEFT",
+    "language": "en",
+    "description": "Functions for left shift operations are usually used to perform bit shift operations,"
 }
 ---
 

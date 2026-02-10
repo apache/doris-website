@@ -1,7 +1,8 @@
 ---
 {
     "title": "CLEAN LABEL",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "用于手动清理历史导入作业的 Label。清理后，Label 可以重复使用。 常用于一些程序设置的自动导入任务，重复执行时，设置导入固定字符串的 label， 在每次导入任务发起前，先执行清理该 label 的语句。"
 }
 ---
 

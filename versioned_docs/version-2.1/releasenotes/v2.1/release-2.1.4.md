@@ -1,7 +1,8 @@
 ---
 {
     "title": "Release 2.1.4",
-    "language": "en"
+    "language": "en",
+    "description": "Apache Doris version 2.1.4 was officially released on June 26, 2024. In this update,"
 }
 ---
 
@@ -63,15 +64,15 @@
 
 - Build support for internal table triggered updates, where if a materialized view uses an internal table and the data in the internal table changes, it can trigger a refresh of the materialized view, specifying REFRESH ON COMMIT when creating the materialized view.
 
-- Support transparent rewriting for single tables. For more information, see [Querying Async Materialized View](../../query-acceleration/materialized-view/async-materialized-view).
+- Support transparent rewriting for single tables. For more information, see [Querying Async Materialized View](../../query-acceleration/materialized-view/async-materialized-view/functions-and-demands.md).
 
-- Transparent rewriting supports aggregation roll-up for agg_state, agg_union types; materialized views can be defined as agg_state or agg_union, queries can use specific aggregation functions, or use agg_merge. For more information, see [AGG_STATE](../../sql-manual/basic-element/sql-data-types/aggregate/AGG-STATE.md).
+- Transparent rewriting supports aggregation roll-up for agg_state, agg_union types; materialized views can be defined as agg_state or agg_union, queries can use specific aggregation functions, or use agg_merge. For more information, see [AGG_STATE](../../sql-manual/basic-element/sql-data-types/aggregate/AGG-STATE.md)
 
 ### Others
 
 - Added function `replace_empty`. 
 
-	For more information, see [documentation](../../sql-manual/sql-functions/scalar-functions/string-functions/replace-empty.md).
+	For more information, see [documentation]../sql-manual/sql-functions/string-functions/replace_empty).
 
 - Support `show storage policy using` statement.
 

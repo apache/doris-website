@@ -1,7 +1,8 @@
 ---
 {
     "title": "OpenTelemetry",
-    "language": "en"
+    "language": "en",
+    "description": "OpenTelemetry, also known as OTel, is a vendor-neutral open source Observability framework for instrumenting, generating, collecting,"
 }
 ---
 

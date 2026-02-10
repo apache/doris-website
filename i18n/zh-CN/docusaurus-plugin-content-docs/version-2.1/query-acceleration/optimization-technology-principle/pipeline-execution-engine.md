@@ -3,7 +3,8 @@
     "title": "Pipeline 执行引擎",
     "language": "zh-CN",
     "toc_min_heading_level": 2,
-    "toc_max_heading_level": 4
+    "toc_max_heading_level": 4,
+    "description": "Doris 的并行执行模型是一种 Pipeline 执行模型，主要参考了Hyper论文中 Pipeline 的实现方式，Pipeline 执行模型能够充分释放多核 CPU 的计算能力，并对 Doris 的查询线程的数目进行限制，从而解决 Doris 的执行线程膨胀的问题。"
 }
 ---
 

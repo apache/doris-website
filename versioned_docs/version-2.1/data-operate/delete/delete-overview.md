@@ -1,9 +1,9 @@
 ---
 {
     "title": "Delete Overview",
-    "language": "en"
+    "language": "en",
+    "description": "In Apache Doris, the delete operation is essential for managing and cleaning data to meet the flexible needs of users in large-scale data analysis "
 }
-
 ---
 
 In Apache Doris, the delete operation is essential for managing and cleaning data to meet the flexible needs of users in large-scale data analysis scenarios.

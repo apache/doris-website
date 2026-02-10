@@ -1,7 +1,8 @@
 ---
 {
     "title": "DROP ROW POLICY",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "删除行安全策略。"
 }
 ---
 

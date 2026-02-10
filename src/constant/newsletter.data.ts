@@ -1,32 +1,31 @@
 export const NEWSLETTER_DATA = [
     {
         tags: ['Best Practice'],
-        title: "Unified Lakehouse with Apache Doris and Paimon: Xiaomi Achieves 6× Faster Performance",
-        content: `Xiaomi is a leading global player in consumer electronics. Best known for its smartphones and smart home devices, Xiaomi is among the top global three smartphone makers and continues to expand into new offerings like electric vehicles. With a global operation, Xiaomi requires an analytical data architecture that can support its growth and increasing demand. Their solution: Apache Doris and Apache Paimon.`,
-        to: 'https://www.velodb.io/blog/1461',
-        image: 'blogs/lakehouse-performance.png',
-    },
-    {
-        tags: ['Best Practice'],
-        title: "Apache Doris Empowers Real-time Lakehouse in Large-Scale Business Scenarios of Cainiao",
-        content: `Cainiao, the world of e-commerce logistics giant, chose Apache Doris to upgrade its data platform. This step-by-step migration started in 2023, including validating Doris in a mission-critical scenario, expanding Doris's application scenarios, and executing full-scale deployment. the cost efficiency, stability, and operational efficiency of Doris have been powerfully proven. Currently, Doris powers over 25 clusters (10,000+ CPUs) across 3 regions without any failure.`,
-        to: 'https://www.velodb.io/blog/1454',
-        image: 'blogs/real-time-lakehouse-in-cainiao-large-scale-business-scenarios.png',
-    },
-    {
-        tags: ['Best Practice'],
-        title: "Leading Cloud Computing Service Provider Chose Apache Doris + Iceberg for Hyperscale Data Lakehouse",
-        content: `The world's cloud computing service giant chose Apache Doris + Apache Iceberg to upgrade its data platform into a flexible, efficient data lakehouse with low costs. This solution handles reporting and BI, federated analysis, log storage and analysis, and high-concurrency analysis. With Apache Doris, this company has successfully launched 20+ projects with 50+ clusters, 3000+ nodes, and over 15 petabytes of data.`,
-        to: 'https://www.velodb.io/blog/1450',
-        image: 'blogs/apache-doris-and-iceberg-building-hyperscale-data-lakehouse.png',
+        title: "How ByteDance Solved Billion-Scale Vector Search Problem with Apache Doris 4.0",
+        content: `With Apache Doris 4.0 and its hybrid search capabilities, ByteDance built a search system handling 1 billion+ vectors, achieving accuracy, low latency, and cost-efficiency in infra costs. `,
+        to: 'https://www.velodb.io/blog/bytedance-solved-billion-scale-vector-search-problem-with-apache-doris-4-0',
+        image: 'blogs/202512_ByteDance_horizontal.png',
     },
     {
         tags: ['Tech Sharing'],
-        title: "Real-time Data Analytics at Scale: Integrating Apache Flink and Doris",
-        content: `In this article, we'll discuss the main technical use cases of Flink Doris Connector and Flink CDC, showing a complete playbook to combine Flink's real-time processing with Doris's fast analytics.`,
-        to: 'https://www.velodb.io/blog/1453',
-        image: 'blogs/real-time-data-analytics-at-scale-integrating-apache-flink-and-doris.JPEG',
+        title: "Apache Doris Up to 34x Faster Than ClickHouse in Real-Time Updates",
+        content: `We benchmarked Apache Doris against ClickHouse on ClickBench and SSB (Star Schema Benchmark), under fair resource allocations in each product's cloud services. Results: Apache Doris is 18-34x faster than ClickHouse in SSB and 2.5-4.6x faster than ClickHouse in ClickBench.`,
+        to: 'https://www.velodb.io/blog/apache-doris-34x-faster-clickhouse-realtime-updates',
+        image: 'blogs/20250930_ck_cdc_header_1.jpg',
     },
-
+    {
+        tags: ['Tech Sharing'],
+        title: "Fast JSON Analytics in Apache Doris: 100x Faster Than PostgreSQL and MongoDB",
+        content: `Apache Doris uses the VARIANT data type to deliver flexible, high-performance JSON handling, thanks to features like dynamic subcolumns, sparse columns, schema templates, lazy materialization, and path-based indexing.`,
+        to: 'https://www.velodb.io/blog/fast-json-analytics-in-apache-doris-100x-faster-than-postgresql-and-mongodb',
+        image: 'blogs/202512_Variant_horizontal.png',
+    },
+    {
+        tags: ['Tech Sharing'],
+        title: "Deploying Apache Doris with MinIO: Analytics with Storage-Compute Separation",
+        content: `In the Apache Doris + MinIO architecture, Apache Doris handles compute, MinIO handles storage, and the result is a modern analytics architecture that’s fast, scalable, cost-efficient, and separates compute from storage. `,
+        to: 'https://www.velodb.io/blog/deploying-apache-doris-with-minio',
+        image: 'blogs/202512_MinIO.png', 
+    }
 
 ];

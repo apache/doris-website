@@ -1,7 +1,8 @@
 ---
 {
-"title": "EXTRACT_URL_PARAMETER",
-"language": "zh-CN"
+    "title": "EXTRACT_URL_PARAMETER",
+    "language": "zh-CN",
+    "description": "返回 URL 中 name 参数的值（如果存在）, 否则为空字符串。"
 }
 ---
 

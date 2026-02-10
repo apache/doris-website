@@ -1,7 +1,8 @@
 ---
 {
     "title": "CREATE DATABASE",
-    "language": "en"
+    "language": "en",
+    "description": "This statement is used to create a new database"
 }
 ---
 

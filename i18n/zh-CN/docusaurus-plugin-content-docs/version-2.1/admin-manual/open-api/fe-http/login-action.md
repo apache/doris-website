@@ -1,7 +1,8 @@
 ---
 {
     "title": "Login Action",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "用于登录服务。"
 }
 ---
 

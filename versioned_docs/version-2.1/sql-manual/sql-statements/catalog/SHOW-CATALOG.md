@@ -1,7 +1,8 @@
 ---
 {
     "title": "SHOW CATALOG",
-    "language": "en"
+    "language": "en",
+    "description": "Shows properties of specified catalog"
 }
 ---
 

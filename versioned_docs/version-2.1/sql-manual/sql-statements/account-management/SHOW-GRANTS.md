@@ -1,7 +1,8 @@
 ---
 {
     "title": "SHOW GRANTS",
-    "language": "en"
+    "language": "en",
+    "description": "This statement is used to view user permissions."
 }
 ---
 

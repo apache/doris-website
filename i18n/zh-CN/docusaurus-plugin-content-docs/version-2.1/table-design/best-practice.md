@@ -1,7 +1,8 @@
 ---
 {
     "title": "数据库建表最佳实践",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "Doris数据库建表最佳实践全面指南，涵盖DUPLICATE KEY、UNIQUE KEY、AGGREGATE KEY三种数据表模型选择、前缀索引、ZoneMap索引、倒排索引、BloomFilter索引、Bitmap索引等六大索引优化策略，以及字段类型选择、分区分桶配置、数据分布优化等核心技术要点，帮助用户设计高性能、可扩展的数据库表结构。"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "views",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "存储所有的视图信息。"
 }
 ---
 

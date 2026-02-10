@@ -1,7 +1,8 @@
 ---
 {
-"title": "在 Hive/Iceberg 上构建 TPC-DS 数据集",
-"language": "zh-CN"
+    "title": "在 Hive/Iceberg 上构建 TPC-DS 数据集",
+    "language": "zh-CN",
+    "description": "Doris 支持通过 Trino Connector 兼容框架，使用 TPCDS Connector 来快速构建 TPCDS 测试集。"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "ARRAY_POPFRONT",
-    "language": "en"
+    "language": "en",
+    "description": "Remove the first element from array."
 }
 ---
 

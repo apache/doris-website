@@ -1,7 +1,8 @@
 ---
 {
     "title": "ST_AZIMUTH",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "输入两个点，并返回由点 1 和点 2 形成的线段的方位角。方位角是点 1 的真北方向线与点 1 和点 2 形成的线段之间的角的弧度。"
 }
 ---
 

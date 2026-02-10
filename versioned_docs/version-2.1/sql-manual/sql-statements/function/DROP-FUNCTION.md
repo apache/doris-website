@@ -1,7 +1,8 @@
 ---
 {
     "title": "DROP FUNCTION",
-    "language": "en"
+    "language": "en",
+    "description": "Delete a custom function."
 }
 ---
 

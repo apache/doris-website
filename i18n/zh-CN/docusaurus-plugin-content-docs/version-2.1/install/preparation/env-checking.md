@@ -1,7 +1,8 @@
 ---
 {
-"title": "软硬件环境检查",
-"language": "zh-CN"
+    "title": "软硬件环境检查",
+    "language": "zh-CN",
+    "description": "部署 Doris 时，需要对软硬件环境进行以下检查："
 }
 ---
 

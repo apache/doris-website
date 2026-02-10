@@ -1,7 +1,8 @@
 ---
 {
     "title": "CLEAN LABEL",
-    "language": "en"
+    "language": "en",
+    "description": "Used to manually clean up the labels of historical import jobs. After cleaning up, the labels can be reused."
 }
 ---
 

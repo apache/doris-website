@@ -1,9 +1,9 @@
 ---
 {
     "title": "Load Balancing",
-    "language": "en"
+    "language": "en",
+    "description": "Users connect to Doris through FE's query port (queryport, default 9030) using the MySQL protocol. When deploying multiple FE nodes,"
 }
-
 ---
 
 Users connect to Doris through FE's query port (`query_port`, default 9030) using the MySQL protocol. When deploying multiple FE nodes, users can deploy a load balancing layer on top of multiple FEs to achieve high availability for Doris queries.
@@ -519,7 +519,7 @@ Add to `fe.conf` in FE:
 enable_proxy_protocol = true
 ```
 
-:::notice
+:::note
 
 1. Only supports Proxy Protocol V1.
 

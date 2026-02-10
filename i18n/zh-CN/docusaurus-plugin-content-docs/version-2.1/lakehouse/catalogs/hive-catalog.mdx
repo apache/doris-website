@@ -1,7 +1,8 @@
 ---
 {
     "title": "Hive Catalog",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "通过连接 Hive Metastore，或者兼容 Hive Metatore 的元数据服务，Doris 可以自动获取 Hive 的库表信息，并进行数据查询。"
 }
 ---
 
@@ -32,8 +33,8 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
     'fs.defaultFS' = '<fs_defaultfs>', -- optional
     {MetaStoreProperties},
     {StorageProperties},
-    {CommonProperties},
-    {OtherProperties}
+    {HiveProperties},
+    {CommonProperties}
 );
 ```
 
@@ -61,19 +62,19 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 
   StorageProperties 部分用于填写存储系统相关的连接和认证信息。具体可参阅【支持的存储系统】部分。
 
-* `{CommonProperties}`
+* `{HiveProperties}`
 
-  CommonProperties 部分用于填写通用属性。请参阅[ 数据目录概述 ](../catalog-overview.md)中【通用属性】部分。
-
-* `{OtherProperties}`
-
-  OtherProperties 部分用于填写和 Hive Catalog 相关的其他参数。
+  HiveProperties 部分用于填写和 Hive Catalog 相关的其他参数。
 
   * `get_schema_from_table`：默认为 false。默认情况下，Doris 会从 Hive Metastore 中获取表的 Schema 信息。但某些情况下可能出现兼容问题，如错误 `Storage schema reading not supported`。此时可以将这个参数设置为 true，则会从 Table 对象中直接获取表 Schema。但注意，该方式会导致列的默认值信息被忽略。该参数自 2.1.10 和 3.0.6 版本支持。
 
   * `hive.recursive_directories`：在 list 分区目录时，是否递归子目录。该参数自 3.0.2 版本支持。在 4.0 版本之前，该参数默认值为 `false`，之后的版本，该默认值为 `true`。某些 Hive 外表的分区路径可能和表结构中的分区信息不匹配，需要将这个参数设为 `true` 以便获取子目录下的数据文件。
 
   * `hive.ignore_absent_partitions`：是否忽略不存在的分区。默认为 `true`。如果设为 `false`，当遇到不存在的分区时，查询会报错。该参数自 3.0.2 版本支持。
+
+* `{CommonProperties}`
+
+  CommonProperties 部分用于填写通用属性。请参阅[ 数据目录概述 ](../catalog-overview.md)中【通用属性】部分。
 
 ### 支持的 Hive 版本
 
@@ -99,6 +100,8 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 
 * [Google Cloud Storage](../storages/gcs.md)
 
+* [Azure Blob](../storages/azure-blob.md)
+
 * [阿里云 OSS](../storages/aliyun-oss.md)
 
 * [腾讯云 COS](../storages/tencent-cos.md)
@@ -110,6 +113,14 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 > 如果需要通过 Doris 创建 Hive 表并写入数据，需要在 Catalog 属性中显式增加 `fs.defaultFS` 属性。如果创建 Catalog 仅用于查询，则该参数可以省略。
 > 
 > 不同 Doris 版本所支持的服务类型和参数略有区别，请参考【基础示例】章节。
+
+### Hive Catalog 功能支持矩阵
+
+| 元数据服务 | 表查询 | 视图查询 |DDL 操作| 数据写回|
+| ---------- | -------- | -------- | -------- | -------- |
+| Hive       | ✅       | ✅        | ✅        | ✅        |
+| AWS Glue   | ✅       | ✅        | ❌        | ❌       |
+| DLF        | ✅       | ✅        | ✅        | ✅        |
 
 ### 支持的数据格式
 
@@ -150,7 +161,7 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 | char(N)       | char(N)       |                           |
 | varchar(N)    | varchar(N)    |                           |
 | string        | string        |                           |
-| binary        | string        |                           |
+| binary        | string/varbinary| 由 properties 中 `enable.mapping.varbinary` (4.0.2 后开始支持) 属性控制。默认为 `false`, 则映射到 `string`; 为 `true` 时，则映射到 `varbinary` 类型。|
 | array         | array         |                           |
 | map           | map           |                           |
 | struct        | struct        |                           |
@@ -220,7 +231,8 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
                 's3.secret_key' = '<sk>'
             );
             ```
-            使用 IAM Assumed Role 的方式获取 S3 访问凭证 (3.1.1+)
+            
+            使用 IAM Assumed Role 的方式获取 S3 访问凭证 (3.1.2+)
             ```sql
             CREATE CATALOG hive_hms_on_s3_iamrole PROPERTIES (
                 'type' = 'hms',
@@ -339,6 +351,19 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
                 'gs.access_key' = '<ak>',
                 'gs.secret_key' = '<sk>',
                 'fs.gcs.support'='true'
+            );
+            ```
+        </TabItem>
+        <TabItem value='Azure Blob' label='Azure Blob'>
+            Supported since 3.1.3
+            ```sql
+            CREATE CATALOG `hive_hms_on_azure_blob_new_catalog` PROPERTIES (
+                'type' = 'hms',
+                'hive.metastore.uris' = 'thrift://127.0.0.1:9383',
+                'azure.account_name' = '<account_name>',
+                'azure.account_key' = '<account_key>',
+                'azure.endpoint' = 'https://<account_name>.blob.core.windows.net',
+                'fs.azure.support'='true'
             );
             ```
         </TabItem>
@@ -483,6 +508,7 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
                 'glue.secret_key' = '<sk>'
             );
             ```
+            
             Glue 服务的认证信息和 S3 的认证信息不一致时，可以通过以下方式单独指定 S3 的认证信息。
             ```sql
             CREATE CATALOG hive_glue_on_s3_catalog PROPERTIES (
@@ -498,6 +524,17 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
                 's3.secret_key' = '<sk>'
             );
             ```
+
+            使用 IAM Assumed Role 的方式获取 S3 访问凭证 (3.1.2+ 支持)
+            ```sql
+            CREATE CATALOG `glue_hive_iamrole` PROPERTIES ( 
+                'type' = 'hms',
+                'hive.metastore.type' = 'glue',
+                'glue.region' = 'us-east-1',
+                'glue.endpoint' = 'https://glue.us-east-1.amazonaws.com',
+                'glue.role_arn' = '<role_arn>'
+            );
+            ```
         </TabItem>
     </Tabs>
 </details>
@@ -505,6 +542,9 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
     <summary>2.1 & 3.0 版本</summary>
     <Tabs>
         <TabItem value='S3' label='S3' default>
+            非 EC2 环境下，需要使用 [aws configure ](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-files.html) 配置 Credentials 信息，同时在~/.aws 目录下生成 credentials 文件。
+            
+            或者显示的在创建 catalog 参数中新增凭据提供方式 <b>"aws.catalog.credentials.provider.factory.class"="com.amazonaws.glue.catalog.credentials.ConfigurationAWSCredentialsProviderFactory"</b>
             ```sql
             create catalog hive_glue PROPERTIES(
                 'type' = 'hms',

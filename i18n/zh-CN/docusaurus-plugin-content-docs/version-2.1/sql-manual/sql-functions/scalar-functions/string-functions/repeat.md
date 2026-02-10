@@ -1,7 +1,8 @@
 ---
 {
     "title": "REPEAT",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "REPEAT 函数用于将一个字符串重复指定的次数。"
 }
 ---
 

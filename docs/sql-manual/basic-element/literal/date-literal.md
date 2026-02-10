@@ -1,7 +1,8 @@
 ---
 {
     "title": "Date Type Literal",
-    "language": "en"
+    "language": "en",
+    "description": "Consistent with standard SQL, Doris requires the use of type keywords and strings to specify date literals."
 }
 ---
 
@@ -21,7 +22,7 @@ TIMESTAMP '2008-08-08 20:08:08'
 - Use a string separated by `-` in the format `'YYYY-MM-DD'` or `'YY-MM-DD'`. Doris also supports MySQL's non-standard separator formats, but their use is not recommended.
 - As a string without separators, use the format `'YYYYMMDD'` or `'YYMMDD'` (provided the string is meaningful as a date).
 
-### DATETIME Literal
+### DATETIME and TIMESTAMPTZ Literal
 
 - Use a string separated by `-` in the format `'YYYY-MM-DD hh:mm:ss'` or `'YY-MM-DD hh:mm:ss'`. Doris also supports MySQL's non-standard separator formats, but their use is not recommended. The separator between date and time can be a space (` `) or `T`. **Unlike MySQL 8.4 and earlier versions, Doris does not support any other separators between time and date.**
 - As a string without separators, use the format `'YYYYMMDDhhmmss'` or `'YYMMDDhhmmss'` (provided the string is meaningful as a date).
@@ -37,7 +38,7 @@ Dates containing two-digit year values are ambiguous because the century is unkn
 
 ### Time Zones
 
-DATE and DATETIME literals can use time zone suffixes. When using time zones, the time zone must be immediately adjacent to the previous date or time part, with no spaces in between. For example:
+DATE, DATETIME and TIMESTAMPTZ literals can use time zone suffixes. When using time zones, the time zone must be immediately adjacent to the previous date or time part, with no spaces in between. For example:
 
 ```sql
 TIMESTAMP '2008-08-08 20:08:08+08:00'

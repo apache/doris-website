@@ -6,6 +6,7 @@ import Link from '@docusaurus/Link';
 import GithubIconNew from '@site/static/images/icon/github-new.svg';
 import Translate from '@docusaurus/Translate';
 import NavbarItem, { type Props as NavbarItemConfig } from '@theme/NavbarItem';
+import { GithubIconNavbar } from '@site/src/components/Icons/github-icon-navbar';
 
 import { NavbarItems } from '..';
 import styles from '../styles.module.css';
@@ -43,22 +44,22 @@ export const NavbarCommonRight = ({ star }: NavbarCommonRightProps) => {
             <NavbarItems items={rightItems} />
             <Link
                 onMouseEnter={() => {
-                    document.getElementById('github-icon-new').firstChild.style.fill = '#444FD9';
+                    document.getElementById('github-icon-new').firstChild.style.fill = '#11A679';
                 }}
                 onMouseLeave={() => {
                     document.getElementById('github-icon-new').firstChild.style.fill = '#1D1D1D';
                 }}
-                className="github-btn bg-[#F7F9FE] mr-1 group !no-underline  rounded-sm items-center justify-start desktop h-[2.25rem] w-[6.5rem] "
+                className="github-btn bg-[#F7FAFC] mr-1 group !no-underline ml-4 rounded-sm items-center justify-start desktop h-[2.25rem] w-[6.5rem] "
                 href="https://github.com/apache/doris"
                 target="_blank"
             >
-                <GithubIconNew id='github-icon-new' className='github-icon-new ml-[0.5rem]' />
-                <span className='github-text ml-1 text-[1rem]/[137.5%] group-hover:text-[#444FD9] text-[#252734] font-medium'>Star Me</span>
+                <GithubIconNavbar id='github-icon-new' className='github-icon-new ml-[0.5rem]' />
+                <span className='github-text ml-1 text-[1rem]/[137.5%] group-hover:text-primary text-[#252734] font-medium'>Star Me</span>
             </Link>
             {star && <div className="gh-count text-[1rem]/[1rem]">{star}k</div>}
             <Link
                 className="slack-btn desktop header-right-button-slack"
-                href="https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-35mzao67o-BrpU70FNKPyB6UlgpXf8_w"
+                href="https://doris.apache.org/slack"
                 target="_blank"
             ></Link>
         </>

@@ -1,7 +1,8 @@
 ---
 {
     "title": "BEGIN",
-    "language": "en"
+    "language": "en",
+    "description": "Users can specify a Label. If not specified, the system will generate a Label automatically."
 }
 ---
 

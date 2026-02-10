@@ -1,7 +1,8 @@
 ---
 {
     "title": "SHOW ROUTINE LOAD TASK",
-    "language": "en"
+    "language": "en",
+    "description": "This syntax is used to view the currently running subtasks of a specified Routine Load job."
 }
 ---
 

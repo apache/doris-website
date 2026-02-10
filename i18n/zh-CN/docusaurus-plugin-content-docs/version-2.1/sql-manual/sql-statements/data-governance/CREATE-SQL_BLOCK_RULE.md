@@ -1,7 +1,8 @@
 ---
 {
     "title": "CREATE SQL_BLOCK_RULE",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "该语句用于创建 SQL 阻止规则"
 }
 ---
 

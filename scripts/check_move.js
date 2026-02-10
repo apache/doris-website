@@ -49,9 +49,17 @@ function isLocalLink(link) {
          !/.*@.*\..*/.test(link);
 }
 
+// function removeCodeBlocks(content) {
+//   return content.replace(/```[\s\S]*?```/g, ""); // remove ```...``` 
+// }
+
 function removeCodeBlocks(content) {
-  return content.replace(/```[\s\S]*?```/g, ""); // remove ```...``` 
+  let result = content.replace(/```[\s\S]*?```/g, ""); 
+  result = result.replace(/`[^`]*`/g, ""); 
+
+  return result;
 }
+
 
 // Check links in files
 function checkFileLinks(filePath) {

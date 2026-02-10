@@ -1,7 +1,8 @@
 ---
 {
     "title": "Doris Streamloader",
-    "language": "en"
+    "language": "en",
+    "description": "Doris Streamloader is a client tool designed for loading data into Apache Doris. In comparison to single-threaded load using curl,"
 }
 ---
 

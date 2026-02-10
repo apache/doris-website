@@ -1,7 +1,8 @@
 ---
 {
-"title": "Java UDF, UDAF, UDTF",
-"language": "zh-CN"
+    "title": "Java UDF, UDAF, UDWF, UDTF",
+    "language": "zh-CN",
+    "description": "Java UDF 为用户提供使用 Java 编写 UDF 的接口，以方便用户使用 Java 语言进行自定义函数的执行。 Doris 支持使用 JAVA 编写 UDF、UDAF 和 UDTF。下文如无特殊说明，使用 UDF 统称所有用户自定义函数。"
 }
 ---
 
@@ -10,7 +11,8 @@ Java UDF 为用户提供使用 Java 编写 UDF 的接口，以方便用户使用
 Doris 支持使用 JAVA 编写 UDF、UDAF 和 UDTF。下文如无特殊说明，使用 UDF 统称所有用户自定义函数。
 1. Java UDF  是较为常见的自定义标量函数 (Scalar Function)，即每输入一行数据，就会有一行对应的结果输出，较为常见的有 ABS，LENGTH 等。值得一提的是对于用户来讲，Hive UDF 是可以直接迁移至 Doris 的。
 2. Java UDAF 即为自定义的聚合函数 (Aggregate Function)，即在输入多行数据进行聚合后，仅输出一行对应的结果，较为常见的有 MIN，MAX，COUNT 等。
-3. JAVA UDTF 即为自定义的表函数 (Table Function)，即每输一行数据，可以产生一行或多行的结果，在 Doris 中需要结合 Lateral View 使用可以达到行转列的效果，较为常见的有 EXPLODE，EXPLODE_SPLIT 等。**该功能自 Doris 3.0 版本起开始支持。**
+3. Java UDWF 即为自定义的窗口函数 (Window Function)，它为每行返回的结果是在一个窗口内(一行或多行)计算的值，较为常见的有 ROW_NUMBER，RANK，DENSE_RANK 等。
+4. JAVA UDTF 即为自定义的表函数 (Table Function)，即每输一行数据，可以产生一行或多行的结果，在 Doris 中需要结合 Lateral View 使用可以达到行转列的效果，较为常见的有 EXPLODE，EXPLODE_SPLIT 等。**该功能自 Doris 3.0 版本起开始支持。**
 
 ## 类型对应关系
 
@@ -26,7 +28,6 @@ Doris 支持使用 JAVA 编写 UDF、UDAF 和 UDTF。下文如无特殊说明，
 | Double           | Double                                     |
 | Date             | LocalDate                                  |
 | Datetime         | LocalDateTime                              |
-| IPV4/IPV6        | InetAddress                                |
 | String           | String                                     |
 | Decimal          | BigDecimal                                 |
 | `array<Type>`      | `ArrayList<Type>`（支持嵌套）                  |
@@ -297,7 +298,7 @@ public void destroy(State state) {
 </details>
 
 
-2. 在 Doris 中注册创建 Java-UADF 函数。更多语法帮助可参阅 [CREATE FUNCTION](../../sql-manual/sql-statements/function/CREATE-FUNCTION).
+2. 在 Doris 中注册创建 Java-UDAF 函数。更多语法帮助可参阅 [CREATE FUNCTION](../../sql-manual/sql-statements/function/CREATE-FUNCTION).
 
     ```sql
     CREATE AGGREGATE FUNCTION simple_demo(INT) RETURNS INT PROPERTIES (
@@ -327,6 +328,37 @@ public void destroy(State state) {
     +-----------------+
     |               7 |
     +-----------------+
+    ```
+
+### Java-UDWF 实例介绍
+
+1. 首先编写对应的 Java UDWF 代码，打包生成 JAR 包，它与 Java UDAF 的代码编写是一致的，仅需要实现额外 reset 的接口，将所有的 state 状态置为初始值:
+
+    ```JAVA
+    void reset(State state)
+    ```
+
+2. 在 Doris 中注册创建 Java-UDWF 函数，与注册 Java-UDAF 一样。更多语法帮助可参阅 [CREATE FUNCTION](../../sql-manual/sql-statements/function/CREATE-FUNCTION).
+
+    ```sql
+    CREATE AGGREGATE FUNCTION simple_demo_window(INT) RETURNS INT PROPERTIES (
+        "file"="file:///pathTo/java-udaf.jar",
+        "symbol"="org.apache.doris.udf.SimpleDemo",
+        "always_nullable"="true",
+        "type"="JAVA_UDF"
+    );
+    ```
+
+3. 使用 Java-UDWF, 可以查询在特定窗口内的计算结果，更多语法可以参考[窗口函数](../window-function.md):
+
+    ```sql
+    select id, simple_demo_window(id) over(partition by id order by d1 rows between 1 preceding and 1 following) as res from test_table;
+        +------+------+
+        | id   | res  |
+        +------+------+
+        |    1 |    1 |
+        |    6 |    6 |
+        +------+------+
     ```
 
 ### Java-UDTF 实例介绍

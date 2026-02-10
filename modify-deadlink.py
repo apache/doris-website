@@ -13,7 +13,7 @@ def find_file(file_str, search_dir, line_content):
     # Extract the second file path (including the line number)
     match = re.search(r"in file '([^']+)'", file_str)
     if match:
-        base_file = match.group(1)  # For example: "versioned_docs/version-3.0/sql-manual/sql-data-types/data-type-overview.md:67"
+        base_file = match.group(1)  # For example: "versioned_docs/version-3.x/sql-manual/sql-data-types/data-type-overview.md:67"
         parts = base_file.split(":")
         base_file_path = parts[0]         # Remove the line number part to get the file path
         line_number = parts[1] if len(parts) > 1 else ""  # The part after the colon

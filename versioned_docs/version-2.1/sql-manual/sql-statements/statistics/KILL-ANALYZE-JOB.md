@@ -1,7 +1,8 @@
 ---
 {
     "title": "KILL ANALYZE JOB",
-    "language": "en"
+    "language": "en",
+    "description": "Stop the statistical information collection job that is being executed in the background."
 }
 ---
 

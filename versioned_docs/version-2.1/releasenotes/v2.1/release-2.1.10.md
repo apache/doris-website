@@ -1,7 +1,8 @@
 ---
 {
     "title": "Release 2.1.10",
-    "language": "en"
+    "language": "en",
+    "description": "Behavior Changes:DELETE no longer incorrectly requires the SELECT_PRIV permission on the target table."
 }
 ---
 

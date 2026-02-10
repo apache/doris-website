@@ -1,7 +1,8 @@
 ---
 {
     "title": "ALTER TABLE RENAME",
-    "language": "en"
+    "language": "en",
+    "description": "This statement is used to rename certain names of existing table properties. This operation is synchronous,"
 }
 ---
 

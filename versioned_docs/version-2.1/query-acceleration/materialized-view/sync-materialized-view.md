@@ -1,7 +1,8 @@
 ---
 {
     "title": "Sync-Materialized View",
-    "language": "en"
+    "language": "en",
+    "description": "A synchronous materialized view is a special type of table in Doris that stores pre-computed data sets based on defined SELECT statements."
 }
 ---
 

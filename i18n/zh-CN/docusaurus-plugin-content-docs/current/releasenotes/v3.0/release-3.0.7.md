@@ -1,7 +1,8 @@
 ---
 {
     "title": "Release 3.0.7",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "Apache Doris 3.0.7稳定版发布，新增MySQL GROUP BY WITH ROLLUP语法支持、LIKE ESCAPE功能、半结构化数据索引优化。显著改进存算分离架构、异步物化视图性能、倒排索引可观测性，修复导入、存储、查询、数据湖集成等多项关键缺陷，全面提升生产环境稳定性。"
 }
 ---
 

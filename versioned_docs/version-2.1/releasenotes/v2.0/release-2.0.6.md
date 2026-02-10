@@ -1,7 +1,8 @@
 ---
 {
     "title": "Release 2.0.6",
-    "language": "en"
+    "language": "en",
+    "description": "Thanks to our community users and developers, about 114 improvements and bug fixes have been created by 51 contributors in Doris 2.0.6 version."
 }
 ---
 

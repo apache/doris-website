@@ -1,7 +1,8 @@
 ---
 {
-"title": "Filebeat",
-"language": "en"
+    "title": "Filebeat",
+    "language": "en",
+    "description": "Beats is a data collection agent that supports custom output plugins to write data into storage systems,"
 }
 ---
 
@@ -11,7 +12,7 @@
 
 The Beats Doris output plugin supports [Filebeat](https://github.com/elastic/beats/tree/master/filebeat), [Metricbeat](https://github.com/elastic/beats/tree/master/metricbeat), [Packetbeat](https://github.com/elastic/beats/tree/master/packetbeat), [Winlogbeat](https://github.com/elastic/beats/tree/master/winlogbeat), [Auditbeat](https://github.com/elastic/beats/tree/master/auditbeat), and [Heartbeat](https://github.com/elastic/beats/tree/master/heartbeat).
 
-By invoking the [Doris Stream Load](../data-operate/import/import-way/stream-load-manual) HTTP interface, the Beats Doris output plugin writes data into Doris in real-time, offering capabilities such as multi-threaded concurrency, failure retries, custom Stream Load formats and parameters, and output write speed.
+By invoking the [Doris Stream Load](../../data-operate/import/import-way/stream-load-manual) HTTP interface, the Beats Doris output plugin writes data into Doris in real-time, offering capabilities such as multi-threaded concurrency, failure retries, custom Stream Load formats and parameters, and output write speed.
 
 To use the Beats Doris output plugin, there are three main steps:
 1. Download or compile the Beats binary program that includes the Doris output plugin.

@@ -1,7 +1,8 @@
 ---
 {
-   "title": "FQDN",
-   "language": "zh-CN"
+    "title": "FQDN",
+    "language": "zh-CN",
+    "description": "本文介绍如何启用基于 FQDN（Fully Qualified Domain Name，完全限定域名）使用 Apache Doris。FQDN 是 Internet 上特定计算机或主机的完整域名。"
 }
 ---
 
@@ -51,7 +52,7 @@ Doris 支持 FQDN 之后，各节点之间通信完全基于 FQDN。添加各类
 
 Pod 意外重启后，K8s 不能保证 Pod 的 IP 不发生变化，但是能保证域名不变，基于这一特性，Doris 开启 FQDN 时，能保证 Pod 意外重启后，还能正常提供服务。
 
-K8s 部署 Doris 的方法请参考[K8s 部署 Doris](../../../version-3.0/install/deploy-on-kubernetes/integrated-storage-compute/install-doris-cluster)
+K8s 部署 Doris 的方法请参考[K8s 部署 Doris](../../install/deploy-on-kubernetes/install-doris-operator.md)
 
 ### 服务器变更 IP
 

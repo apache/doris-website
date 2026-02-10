@@ -1,7 +1,8 @@
 ---
 {
     "title": "Show Table Data Action",
-    "language": "en"
+    "language": "en",
+    "description": "Used to get the data size of all tables in all databases under all internal catalog, or the data size of the specified database or table. Unit byte."
 }
 ---
 

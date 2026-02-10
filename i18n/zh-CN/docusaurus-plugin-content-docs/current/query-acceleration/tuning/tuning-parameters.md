@@ -1,7 +1,8 @@
 ---
 {
     "title": "常见调优参数",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "Apache Doris常见调优参数指南：详解enable_nereids_planner新优化器开关、enable_nereids_dml DML支持、parallel_pipeline_task_num并行度配置、runtime_filter_mode运行时过滤模式等关键参数的作用场景、默认值和升级迁移设置建议，帮助用户优化查询性能和系统配置。"
 }
 ---
 

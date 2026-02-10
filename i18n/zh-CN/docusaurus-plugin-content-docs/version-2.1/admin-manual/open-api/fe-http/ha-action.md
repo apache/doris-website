@@ -1,7 +1,8 @@
 ---
 {
     "title": "HA Action",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "HA Action 用于获取 FE 集群的高可用组信息。"
 }
 ---
 

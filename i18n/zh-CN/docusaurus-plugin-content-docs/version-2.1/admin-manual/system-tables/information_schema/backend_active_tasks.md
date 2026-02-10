@@ -1,7 +1,8 @@
 ---
 {
     "title": "backend_active_tasks",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "查看所有 Backend 正在运行中的查询或者导入任务的资源用量。"
 }
 ---
 

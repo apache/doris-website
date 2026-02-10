@@ -1,7 +1,8 @@
 ---
 {
     "title": "Release 1.1.0",
-    "language": "en"
+    "language": "en",
+    "description": "In version 1.1, we realized the full vectorization of the computing layer and storage layer,"
 }
 ---
 
@@ -170,7 +171,7 @@ If you encounter any problems with use, please feel free to contact us through G
 
 GitHub Forum: [https://github.com/apache/doris/discussions](https://github.com/apache/doris/discussions)
 
-Mailing list: [dev@doris.apache.org](dev@doris.apache.org)
+Mailing list: dev@doris.apache.org
 
 ## Thanks
 

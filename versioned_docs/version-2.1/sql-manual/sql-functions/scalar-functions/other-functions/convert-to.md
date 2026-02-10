@@ -1,7 +1,8 @@
 ---
 {
     "title": "CONVERT_TO",
-    "language": "en"
+    "language": "en",
+    "description": "Converts the character encoding of a column to a specified target character set."
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "Paimon Catalog",
-    "language": "en"
+    "language": "en",
+    "description": "Paimon Catalog in Apache Doris 2.1 connects to multiple Paimon metadata services to query Paimon tables across HDFS and cloud object storage, with detailed configuration, properties and query operations, and planned support for writes."
 }
 ---
 
@@ -33,6 +34,7 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
     'warehouse' = '<paimon_warehouse>'
     {MetaStoreProperties},
     {StorageProperties},
+    {PaimonProperties},
     {CommonProperties}
 );
 ```
@@ -60,6 +62,27 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 * `{StorageProperties}`
 
   The StorageProperties section is used to fill in connection and authentication information related to the storage system. Refer to the section on [Supported Storage Systems] for details.
+
+* `{PaimonProperties}`
+
+  The PaimonProperties section is used to fill Paimon-related properties.
+
+  When Doris accesses Paimon metadata, it partially uses the Paimon Java SDK, so some custom parameters may need to be passed through to the Paimon Java SDK. You can use the following prefixes:
+
+  ```
+  paimon.s3.xxx
+  paimon.s3a.xxx
+  paimon.fs.xxx
+  ```
+
+  These parameters will be automatically converted and passed through. Here are some examples:
+
+  | Input Parameter | Converted Parameter for Paimon Java SDK |
+  | --- | --- |
+  | "paimon.s3.list.version" = "1" | "fs.s3a.list.version" = "1" |
+  | "paimon.s3.paging.maximum" = "100" | "fs.s3a.paging.maximum" = "100" |
+  | "paimon.fs.s3.read.ahead.buffer.size" = "1" | "fs.s3a.read.ahead.buffer.size" = "1" |
+  | "paimon.s3a.replication.factor" = "3" | "fs.s3a.replication.factor" = "3" |
 
 * `{CommonProperties}`
 
@@ -121,8 +144,7 @@ The currently dependent Paimon version is 1.0.0.
 | decimal(P, S)                      | decimal(P, S) |                                                                         |
 | varchar                            | string        |                                                                         |
 | char                               | string        |                                                                         |
-| binary                             | string        |                                                                         |
-| varbinary                          | string        |                                                                         |
+| binary, varbinary                             | string/varbinary | Controlled by the `enable.mapping.varbinary` property of Catalog (supported since 4.0.2). The default is `false`, which maps to `string`; when `true`, it maps to `varbinary` type.|
 | date                               | date          |                                                                         |
 | timestamp\_without\_time\_zone     | datetime(N)   | Mapped according to precision. If precision is greater than 6, it maps to a maximum of 6 (may cause precision loss). |
 | timestamp\_with\_local\_time\_zone | datetime(N)   | Mapped according to precision. If precision is greater than 6, it maps to a maximum of 6 (may cause precision loss). |
@@ -167,7 +189,7 @@ The currently dependent Paimon version is 1.0.0.
                 's3.secret_key' = '<sk>'
             );
             ```
-            Obtaining S3 access credentials using an IAM Assumed Role (3.1.1+)
+            Obtaining S3 access credentials using an IAM Assumed Role (3.1.221+)
             ```sql
             CREATE CATALOG paimon_hms_on_s3_iamrole PROPERTIES (
                 'type' = 'paimon',
@@ -456,7 +478,7 @@ The currently dependent Paimon version is 1.0.0.
                 's3.secret_key' = '<sk>'
             );
             ```
-            Obtaining S3 access credentials using an IAM Assumed Role (3.1.1+)
+            Obtaining S3 access credentials using an IAM Assumed Role (3.1.2+)
             ```sql
             CREATE CATALOG paimon_fs_on_s3_iamrole PROPERTIES (
                 'type' = 'paimon',
@@ -468,6 +490,8 @@ The currently dependent Paimon version is 1.0.0.
             ``` 
         </TabItem>
         <TabItem value='OSS' label='OSS'>
+            Use OSS
+
             ```sql
             CREATE CATALOG paimon_base_filesystem_paimon_oss PROPERTIES (
                 'type' = 'paimon',
@@ -477,6 +501,21 @@ The currently dependent Paimon version is 1.0.0.
                 'oss.endpoint'='oss-cn-beijing.aliyuncs.com',
                 'oss.access_key'='<ak>',
                 'oss.secret_key'='<sk>'
+            );
+            ```
+
+            Use OSS-HDFS
+
+            ```sql
+            CREATE CATALOG paimon_base_filesystem_paimon_oss_hdfs PROPERTIES (
+                'type' = 'paimon',
+                'paimon.catalog.type' = 'filesystem',
+                'warehouse' = 'oss://bucket/regression/paimon1',
+                'fs.oss-hdfs.support' = 'true',
+                'oss.hdfs.access_key' = '<ak>',
+                'oss.hdfs.secret_key' = '<sk>',
+                'oss.hdfs.endpoint' = 'cn-beijing.oss-dls.aliyuncs.com',
+                'oss.hdfs.region' = 'cn-beijing'
             );
             ```
         </TabItem>
@@ -562,6 +601,8 @@ The currently dependent Paimon version is 1.0.0.
             ```
         </TabItem>
         <TabItem value='OSS' label='OSS'>
+            Use OSS
+
             ```sql
             CREATE CATALOG paimon_base_filesystem_paimon_oss PROPERTIES (
                 'type' = 'paimon',
@@ -571,6 +612,21 @@ The currently dependent Paimon version is 1.0.0.
                 'oss.endpoint'='oss-cn-beijing.aliyuncs.com',
                 'oss.access_key'='<ak>',
                 'oss.secret_key'='<sk>'
+            );
+            ```
+
+            Use OSS-HDFS
+
+            ```sql
+            CREATE CATALOG paimon_base_filesystem_paimon_oss_hdfs PROPERTIES (
+                'type' = 'paimon',
+                'paimon.catalog.type' = 'filesystem',
+                'warehouse' = 'oss://bucket/regression/paimon1',
+                'oss.hdfs.enabled' = 'true',
+                'oss.access_key' = 'your-access-key',
+                'oss.secret_key' = 'your-secret-key',
+                'oss.endpoint' = 'cn-hangzhou.oss-dls.aliyuncs.com',
+                'oss.region' = 'cn-hangzhou'
             );
             ```
         </TabItem>
@@ -703,8 +759,13 @@ Doris > SELECT snapshot_id,commit_time FROM paimon_tbl$snapshots;
 You can use `FOR TIME AS OF` and `FOR VERSION AS OF` statements to read historical version data based on snapshot ID or the time when the snapshot was created. Examples:
 
 ```sql
--- Notice: The time must be precise down to the millisecond.
+-- Notice:
+-- Before 3.1.1, only support format like YYYY-MM-DD HH:MM:SS.SSS
+-- After 3.1.2, support YYYY-MM-DD HH:MM:SS and YYYY-MM-DD
 SELECT * FROM paimon_tbl FOR TIME AS OF "2025-08-17 06:05:52.740";
+SELECT * FROM paimon_tbl FOR TIME AS OF "2025-08-17 06:05:52";
+SELECT * FROM paimon_tbl FOR TIME AS OF "2025-08-17";
+
 -- Notice: The timestamp must be precise down to the millisecond.
 SELECT * FROM paimon_tbl FOR TIME AS OF 1755381952740;
 -- Use snapshot id
@@ -1080,9 +1141,12 @@ Result:
     ```
     java.io.UncheckedIOException: org.apache.paimon.fs.UnsupportedSchemeException: Could not find a file io implementation for scheme 's3a' in the classpath. Hadoop FileSystem also cannot access this path 's3a://`.
     ```
+    **Versions prior to 3.1**
+    Versions prior to 3.1 do not support the `s3a` protocol. If you must use it, you can temporarily add the `s3a`-related parameters as a workaround.
 
-    Versions prior to 3.1 do not support the `s3a` protocol. If you must use it, you can temporarily add `s3a` protocol-related parameters as a workaround. This operation is not needed for versions 3.1 and later.
-    
+    **Version 3.1 and above**
+    Starting from version 3.1, explicitly adding `s3a` parameters is no longer necessary. If you need to override Paimon storage parameters, you can add parameters with the `paimon.fs.` prefix. Since Paimon internally uses the HDFS API, all `fs.s3a.*` parameters are supported.
+
     For example:
 
     ```sql

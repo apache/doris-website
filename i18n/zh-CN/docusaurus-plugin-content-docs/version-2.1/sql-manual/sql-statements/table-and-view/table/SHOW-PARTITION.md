@@ -1,7 +1,8 @@
 ---
 {
     "title": "SHOW PARTITION",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "SHOW PARTITION 用于展示指定分区的详细信息。包括所属数据库名字和 ID，所属表名字和 ID 以及分区名字。"
 }
 ---
 

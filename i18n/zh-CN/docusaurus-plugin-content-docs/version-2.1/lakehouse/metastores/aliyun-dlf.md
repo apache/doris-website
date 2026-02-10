@@ -1,7 +1,8 @@
 ---
 {
     "title": "Aliyun DLF",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "本文档介绍如何使用 CREATE CATALOG 语句连接并访问阿里云 Dake Lake Formation(DLF) 元数据服务。"
 }
 ---
 

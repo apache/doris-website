@@ -1,7 +1,8 @@
 ---
 {
     "title": "schema_privileges",
-    "language": "en"
+    "language": "en",
+    "description": "View the authorization information of the database."
 }
 ---
 

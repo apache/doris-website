@@ -1,7 +1,8 @@
 ---
 {
     "title": "FROM_UNIXTIME",
-    "language": "en"
+    "language": "en",
+    "description": "Converts a Unix timestamp to the corresponding TIME format. Special cases:"
 }
 ---
 

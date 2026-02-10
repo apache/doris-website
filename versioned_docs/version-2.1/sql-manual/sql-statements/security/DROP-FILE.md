@@ -1,7 +1,8 @@
 ---
 {
-  "title": "DROP FILE",
-  "language": "en"
+    "title": "DROP FILE",
+    "language": "en",
+    "description": "This statement is used to delete an uploaded file."
 }
 ---
 

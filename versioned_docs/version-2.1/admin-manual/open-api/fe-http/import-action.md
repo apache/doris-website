@@ -1,7 +1,8 @@
 ---
 {
     "title": "Import Action",
-    "language": "en"
+    "language": "en",
+    "description": "View the contents of the file in CSV or PARQUET format."
 }
 ---
 

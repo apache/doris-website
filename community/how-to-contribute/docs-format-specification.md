@@ -143,9 +143,9 @@ Link descriptions are not advisable to repeatedly use phrases such as "see detai
 
 **2. Link Format**
 
-- Link to other headings within the same document, such as [Inverted Index](#Prefix-Index)
+- Link to other headings within the same document, such as [Inverted Index]
 
-- Link to adjacent documents: [BITMAP Index](../../data-table/index/bloomfilter)
+- Link to adjacent documents: [BITMAP Index]
 
 - Link to external websites: [Wikipedia - Inverted Index](https://en.wikipedia.org/wiki/Inverted_index)
 
@@ -232,7 +232,7 @@ When you want to display images, it is convenient to co-locate the asset next to
 
 You can display images in two different ways: 
 
-- Simple syntax: ` ![Alt text for images description](co-locate file structure or link) `
+- Simple syntax: ` ![Alt text for images description] (co-locate file structure or link) `
 
 - If you want the image to be centered, you can use HTML as following: 
 
