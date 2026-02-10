@@ -13,7 +13,7 @@ Use this statement to clear data from a specified table and its partitions.
 ## Syntax
 
 ```sql
-TRUNCATE TABLE [db.]tbl[ PARTITION(p1, p2, ...)] FORCE?;
+TRUNCATE TABLE [db.]tbl [PARTITION(p1, p2, ...)] [FORCE];
 ```
 
 - This statement only clears the data within a table or partition but preserves the table or partition itself.

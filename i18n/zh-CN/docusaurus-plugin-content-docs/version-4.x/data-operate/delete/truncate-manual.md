@@ -11,7 +11,7 @@
 ## 语法
 
 ```sql
-TRUNCATE TABLE [db.]tbl[ PARTITION(p1, p2, ...)] FORCE?;
+TRUNCATE TABLE [db.]tbl [PARTITION(p1, p2, ...)] [FORCE];
 ```
 
 - 该语句仅清空表或分区中的数据，但保留表或分区本身。
