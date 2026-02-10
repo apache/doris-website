@@ -14,7 +14,7 @@ The design goal of TPC-DS is to simulate complex decision support workloads in t
 
 This document mainly introduces the performance of Doris on the TPC-DS 1000G test set.
 
-On 99 queries on the TPC-DS standard test data set, we conducted a comparison test based on Apache Doris 3.0.3-rc03 (Compute-Storage Decoupled Mode) and Apache Doris 2.1.7-rc03 versions. The performance of the integrated storage and computing mode in version 3.x is based on version 2.1.x
+For 99 queries on the TPC-DS standard test data set, we conducted a comparison test between Apache Doris 3.0.3-rc03 running in Compute-Storage Decoupled Mode and Apache Doris 2.1.7-rc03 running in the traditional integrated storage-compute mode, with the 2.1.x integrated mode used as the performance baseline for earlier 3.x integrated-mode results.
 
 
 ![TPCDS_1000G](/images/tpcds_3.0.png)
