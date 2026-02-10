@@ -12,7 +12,7 @@ TPC-H is a decision support benchmark (Decision Support Benchmark), which consis
 
 This document mainly introduces the performance of Doris on the TPC-H 1000G test set.
 
-On 22 queries on the TPC-H standard test data set, we conducted a comparison test based on Apache Doris 3.0.3-rc03 (Compute-Storage Decoupled Mode) and Apache Doris 2.1.7-rc03 versions. The performance of the integrated storage and computing mode in version 3.x is based on version 2.1.x
+On 22 queries on the TPC-H standard test data set, we conducted a comparison test between Apache Doris 3.0.3-rc03 in compute-storage decoupled mode and Apache Doris 2.1.7-rc03 in integrated storage-compute mode. The performance of the integrated storage-compute architecture in the 3.x series uses Apache Doris 2.1.x (integrated mode) as the baseline.
 
 ![TPCH_1000G](/images/tpch_3.0.png)
 
