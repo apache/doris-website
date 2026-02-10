@@ -2145,16 +2145,6 @@ tablet 状态更新间隔
 
 删除数据库（表/分区）后，您可以使用 RECOVER stmt 恢复它。这指定了最大数据保留时间。一段时间后，数据将被永久删除。
 
-#### `storage_cooldown_second`
-
-:::tip 提示
-该功能自 Apache Doris  2.0 版本起支持
-:::
-
-默认值：`30 * 24 * 3600L`  （30 天）
-
-创建表（或分区）时，可以指定其存储介质（HDD 或 SSD）。如果设置为 SSD，这将指定 tablet 在 SSD 上停留的默认时间。之后，tablet 将自动移动到 HDD。您可以在 `CREATE TABLE stmt` 中设置存储冷却时间。
-
 #### `default_storage_medium`
 
 默认值：HDD
@@ -2760,4 +2750,3 @@ Doris 为了兼用 mysql 周边工具生态，会内置一个名为 mysql 的数
 默认值：1
 
 用于控制 ProfileManager 进行 Profile 垃圾回收的间隔时间，垃圾回收期间 ProfileManager 会把多余的以及过期的 profile 从内存和磁盘中清理掉，节省内存。
-
