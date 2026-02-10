@@ -1,6 +1,6 @@
 ---
 {
-        "title": "多表持续导入",
+        "title": "Postgres/MySQL 持续导入",
         "language": "zh-CN",
         "description": "Doris 可以通过 Streaming Job 的方式，将 MySQL、Postgres 等多张表的全量和增量数据持续同步到 Doris 中。"
 }
