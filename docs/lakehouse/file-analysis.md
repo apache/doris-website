@@ -39,21 +39,15 @@ The attributes of a TVF include the file path to be analyzed, file format, conne
 
 ### Multiple File Import
 
-When importing, the file path (URI) supports wildcards for matching. Doris file path matching uses the [Glob matching pattern](https://en.wikipedia.org/wiki/Glob_(programming)#:~:text=glob%20%28%29%20%28%2F%20%C9%A1l%C9%92b%20%2F%29%20is%20a%20libc,into%20a%20list%20of%20names%20matching%20that%20pattern.), and has been extended on this basis to support more flexible file selection methods.
+The file path (URI) supports wildcards and range patterns for matching multiple files:
 
-- `file_{1..3}`: Matches files `file_1`, `file_2`, `file_3`
-- `file_{1,3}_{1,2}`: Matches files `file_1_1`, `file_1_2`, `file_3_1`, `file_3_2` (supports mixing with `{n..m}` notation, separated by commas)
-- `file_*`: Matches all files starting with `file_`
-- `*.parquet`: Matches all files with the `.parquet` suffix
-- `tvf_test/*`: Matches all files in the `tvf_test` directory
-- `*test*`: Matches files containing `test` in the filename
+| Pattern | Example | Matches |
+|---------|---------|---------|
+| `*` | `file_*` | All files starting with `file_` |
+| `{n..m}` | `file_{1..3}` | `file_1`, `file_2`, `file_3` |
+| `{a,b,c}` | `file_{a,b}` | `file_a`, `file_b` |
 
-**Notes**
-
-- In the `{1..3}` notation, the order can be reversed, `{3..1}` is also valid.
-- Notations like `file_{-1..2}` and `file_{a..4}` are not supported, as negative numbers or letters cannot be used as enumeration endpoints. However, `file_{1..3,11,a}` is allowed and will match files `file_1`, `file_2`, `file_3`, `file_11`, and `file_a`.
-- Doris tries to import as many files as possible. For paths like `file_{a..b,-1..3,4..5}` that contain incorrect notation, we will match files `file_4` and `file_5`.
-- When using commas with `{1..4,5}`, only numbers are allowed. Expressions like `{1..4,a}` are not supported; in this case, `{a}` will be ignored.
+For complete syntax including all supported wildcards, range expansion rules, and usage examples, see [File Path Pattern](../sql-manual/basic-element/file-path-pattern).
 
 
 ### Automatic Inference of File Column Types

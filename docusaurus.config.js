@@ -6,7 +6,7 @@ const { DEFAULT_VERSION } = require('./src/constant/version');
 
 const lightCodeTheme = themes.dracula;
 
-const logoImg = '/images/logo.svg';
+const logoImg = '/images/logo-doris.svg';
 
 function getDocsVersions() {
     const result = {};
@@ -72,9 +72,11 @@ const config = {
             'data-website-id': 'a5fb90df-217a-4097-95c0-80490220314b',
             'data-modal-title': 'Apache Doris AI',
             'data-project-name': 'Apache Doris Website',
+            'data-button-hide':"true",
+            'data-modal-override-open-selector':"#navbar-ask-ai-btn",
             'data-project-logo': 'https://cdn.selectdb.com/static/doris_1_3c42247c63.png',
-            'data-modal-image': 'https://cdn.selectdb.com/static/doris_logo_only_9617fa366a.png',
-            'data-project-color': '#444FD9',
+            'data-modal-image': 'https://cdn.selectdb.com/static/doris_logo_cc5a30d886.png',
+            'data-project-color': '#11A679',
             'data-modal-disclaimer': 'This is a custom LLM with access to all [Doris documentation](https://doris.apache.org/docs/4.x/gettingStarted/what-is-apache-doris).',
             'data-consent-required': true,
             'data-consent-screen-disclaimer': "By clicking &quot;I agree, let's chat&quot;, you consent to the use of the AI assistant in accordance with kapa.ai's [Privacy Policy](https://www.kapa.ai/content/privacy-policy). This service uses reCAPTCHA, which requires your consent to Google's [Privacy Policy](https://policies.google.com/privacy) and [Terms of Service](https://policies.google.com/terms). By proceeding, you explicitly agree to both kapa.ai's and Google's privacy policies.",
@@ -180,7 +182,7 @@ const config = {
                     //     // }
                     // },
                     showLastUpdateAuthor: false,
-                    showLastUpdateTime: false,
+                    showLastUpdateTime: true,
                     remarkPlugins: [markdownBoldPlugin, require('remark-math')],
                     rehypePlugins: [
                         [

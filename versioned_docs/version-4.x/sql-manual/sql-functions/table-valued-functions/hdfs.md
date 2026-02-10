@@ -48,6 +48,8 @@ LOCAL(
 | `skip_lines`            | For CSV format imports, optional, defaults to `0`, which means skipping the first few lines of the CSV file. When the format is `csv_with_names` or `csv_with_names_and_types`, this parameter is ignored. | For CSV format                                                           |
 | `path_partition_keys`   | Optional, specifies the partition column names carried in the file path, e.g., `/path/to/city=beijing/date="2023-07-09"`, then fill in `path_partition_keys="city,date"`. This will automatically read the corresponding column names and values from the path for import. |                                                                       |
 | `enable_mapping_varbinary` | Defaults to false. When reading PARQUET/ORC, it maps the BYTE_ARRAY type to STRING. When enabled, it maps to VARBINARY type. | Supported since 4.0.3 |
+| `enable_mapping_timestamp_tz` | Defaults to `false`. When reading PARQUET (`TIMESTAMP` with `isAdjustedToUTC`) or ORC (`TIMESTAMP_INSTANT`), the type is mapped to `DATETIME`. When enabled, it is mapped to the `TIMESTAMPTZ` type. | Supported since version 4.0.3 |
+
 
 ## Access Control Requirements
 | Privilege  | Object | Notes |

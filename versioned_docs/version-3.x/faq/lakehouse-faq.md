@@ -245,6 +245,14 @@ ln -s /etc/pki/ca-trust/extracted/openssl/ca-bundle.trust.crt /etc/ssl/certs/ca-
 
     Since after inserting the data, the corresponding statistical information needs to be updated, and this update operation requires the alter privilege. Therefore, the alter privilege needs to be added for this user on Ranger.
 
+13. When querying ORC files, if an error like  
+   `Orc row reader nextBatch failed. reason = Can't open /usr/share/zoneinfo/+08:00`  
+   occurs.
+
+   First check the `time_zone` setting of the current session. It is recommended to use a region-based timezone name such as `Asia/Shanghai`.
+
+   If the session timezone is already set to `Asia/Shanghai` but the query still fails, it indicates that the ORC file was generated with the timezone `+08:00`. During query execution, this timezone is required when parsing the ORC footer. In this case, you can try creating a symbolic link under the `/usr/share/zoneinfo/` directory that points `+08:00` to an equivalent timezone.
+
 ## HDFS
 
 1. When accessing HDFS 3.x, if you encounter the error `java.lang.VerifyError: xxx`, in versions prior to 1.2.1, Doris depends on Hadoop version 2.8. You need to update to 2.10.2 or upgrade Doris to versions after 1.2.2.
@@ -287,16 +295,32 @@ ln -s /etc/pki/ca-trust/extracted/openssl/ca-bundle.trust.crt /etc/ssl/certs/ca-
     Possible solutions include:
     - Use `hdfs fsck file -files -blocks -locations` to check if the file is healthy.
     - Check connectivity with datanodes using `telnet`.
+
+        The following error may be printed in the error log:
+        
+        ```
+        No live nodes contain current block Block locations: DatanodeInfoWithStorage[10.70.150.122:50010,DS-7bba8ffc-651c-4617-90e1-6f45f9a5f896,DISK]
+        ```
+        
+        You can first check the connectivity between the Doris cluster and `10.70.150.122:50010`.
+        
+        In addition, in some cases, the HDFS cluster uses dual network  with internal and external IPs. In this case, domain names are required for communication, and the following needs to be added to the Catalog properties: `"dfs.client.use.datanode.hostname" = "true"`.
+        
+        At the same time, please check whether the parameter is true in the `hdfs-site.xml` file placed under `fe/conf` and `be/conf`.
+
     - Check datanode logs.
 
-    If you encounter the following error:
+        If you encounter the following error:
 
-    `org.apache.hadoop.hdfs.server.datanode.DataNode: Failed to read expected SASL data transfer protection handshake from client at /XXX.XXX.XXX.XXX:XXXXX. Perhaps the client is running an older version of Hadoop which does not support SASL data transfer protection`
-    it means that the current hdfs has enabled encrypted transmission, but the client has not, causing the error.
+        ```
+        org.apache.hadoop.hdfs.server.datanode.DataNode: Failed to read expected SASL data transfer protection handshake from client at /XXX.XXX.XXX.XXX:XXXXX. Perhaps the client is running an older version of Hadoop which does not support SASL data transfer protection
+        ```
 
-    Use any of the following solutions:
-    - Copy hdfs-site.xml and core-site.xml to be/conf and fe/conf directories. (Recommended)
-    - In hdfs-site.xml, find the corresponding configuration `dfs.data.transfer.protection` and set this parameter in the catalog.
+        it means that the current hdfs has enabled encrypted transmission, but the client has not, causing the error.
+
+        Use any of the following solutions:
+        - Copy `hdfs-site.xml` and `core-site.xml` to `fe/conf` and `be/conf`. (Recommended)
+        - In `hdfs-site.xml`, find the corresponding configuration `dfs.data.transfer.protection` and set this parameter in the catalog.
 
 ## DLF Catalog
 

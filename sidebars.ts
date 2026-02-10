@@ -59,6 +59,7 @@ const sidebars: SidebarsConfig = {
                                         'install/deploy-on-kubernetes/integrated-storage-compute/install-doris-cluster',
                                         'install/deploy-on-kubernetes/integrated-storage-compute/access-cluster',
                                         'install/deploy-on-kubernetes/integrated-storage-compute/cluster-operation',
+                                        'install/deploy-on-kubernetes/integrated-storage-compute/helm-chart-deploy',
                                     ],
                                 },
                                 {
@@ -113,10 +114,12 @@ const sidebars: SidebarsConfig = {
                                 'table-design/data-partitioning/auto-partitioning',
                                 'table-design/data-partitioning/data-bucketing',
                                 'table-design/data-partitioning/common-issues',
+                                'table-design/data-partitioning/basic-concepts',
                             ],
                         },
                         'table-design/data-type',
                         'table-design/column-compression',
+                        'table-design/storage-format',
                         {
                             type: 'category',
                             label: 'Table Indexes',
@@ -130,6 +133,8 @@ const sidebars: SidebarsConfig = {
                                 },
                                 'table-design/index/bloomfilter',
                                 'table-design/index/ngram-bloomfilter-index',
+                                'table-design/index/bitmap-index',
+                                'table-design/index/inverted-index',
                             ],
                         },
                         'table-design/schema-change',
@@ -186,6 +191,7 @@ const sidebars: SidebarsConfig = {
                                 'data-operate/import/import-way/insert-into-manual',
                                 'data-operate/import/import-way/insert-into-values-manual',
                                 'data-operate/import/import-way/mysql-load-manual',
+                                "data-operate/import/import-way/log-storage-analysis"
                             ],
                         },
                         {
@@ -196,6 +202,7 @@ const sidebars: SidebarsConfig = {
                                 'data-operate/import/file-format/json',
                                 'data-operate/import/file-format/parquet',
                                 'data-operate/import/file-format/orc',
+                                'data-operate/import/file-format/native',
                             ],
                         },
                         {
@@ -222,6 +229,7 @@ const sidebars: SidebarsConfig = {
                             items: [
                                 'data-operate/import/load-internals/load-internals',
                                 'data-operate/import/load-internals/routine-load-internals',
+                                'data-operate/import/load-internals/stream-load-in-complex-network',
                             ],
                         },
                         {
@@ -231,7 +239,13 @@ const sidebars: SidebarsConfig = {
                                 'data-operate/import/streaming-job/streaming-job-tvf',
                                 'data-operate/import/streaming-job/streaming-job-multi-table',
                             ],
-                        }
+                        },
+                        'data-operate/import/cdc-load-manual-sample',
+                        {
+                            type: 'category',
+                            label: 'Scheduler',
+                            items: ['data-operate/scheduler/job-scheduler'],
+                        },
                     ],
                 },
                 {
@@ -290,7 +304,11 @@ const sidebars: SidebarsConfig = {
                         {
                             type: 'category',
                             label: 'User Defined Functions',
-                            items: ['query-data/udf/alias-function', 'query-data/udf/java-user-defined-function'],
+                            items: [
+                                'query-data/udf/alias-function',
+                                'query-data/udf/java-user-defined-function',
+                                'query-data/udf/python-user-defined-function',
+                            ],
                         },
                         'query-data/complex-type',
                         'query-data/lateral-view',
@@ -440,14 +458,37 @@ const sidebars: SidebarsConfig = {
                             type: 'category',
                             label: 'Data Catalogs',
                             items: [
+                                {
+                                    type: 'category',
+                                    label: 'Iceberg Catalog',
+                                    link: {type: 'doc', id: 'lakehouse/catalogs/iceberg-catalog'},
+                                    items: [
+                                        'lakehouse/best-practices/doris-iceberg',
+                                        'lakehouse/best-practices/doris-aws-s3tables',
+                                        'lakehouse/best-practices/doris-polaris',
+                                        'lakehouse/best-practices/doris-gravitino',
+                                        'lakehouse/best-practices/doris-onelake',
+                                        'lakehouse/best-practices/doris-unity-catalog',
+                                        'lakehouse/best-practices/doris-lakekeeper',
+                                        'lakehouse/best-practices/doris-nessie'
+                                    ],
+                                },
+                                {
+                                    type: 'category',
+                                    label: 'Paimon Catalog',
+                                    link: {type: 'doc', id: 'lakehouse/catalogs/paimon-catalog'},
+                                    items: [
+                                        'lakehouse/best-practices/doris-paimon',
+                                        'lakehouse/best-practices/doris-dlf-paimon'
+                                    ],
+                                },
                                 'lakehouse/catalogs/hive-catalog',
-                                'lakehouse/catalogs/iceberg-catalog',
                                 'lakehouse/catalogs/hudi-catalog',
-                                'lakehouse/catalogs/paimon-catalog',
                                 'lakehouse/catalogs/maxcompute-catalog',
                                 'lakehouse/catalogs/delta-lake-catalog',
                                 'lakehouse/catalogs/bigquery-catalog',
                                 'lakehouse/catalogs/kudu-catalog',
+                                'lakehouse/catalogs/kafka-catalog',
                                 'lakehouse/catalogs/es-catalog',
                                 'lakehouse/catalogs/doris-catalog',
                                 'lakehouse/catalogs/jdbc-catalog-overview',
@@ -521,16 +562,6 @@ const sidebars: SidebarsConfig = {
                             items: [
                                 'lakehouse/best-practices/optimization',
                                 'lakehouse/best-practices/doris-hudi',
-                                'lakehouse/best-practices/doris-paimon',
-                                'lakehouse/best-practices/doris-iceberg',
-                                'lakehouse/best-practices/doris-aws-s3tables',
-                                'lakehouse/best-practices/doris-polaris',
-                                'lakehouse/best-practices/doris-gravitino',
-                                'lakehouse/best-practices/doris-onelake',
-                                'lakehouse/best-practices/doris-unity-catalog',
-                                'lakehouse/best-practices/doris-lakekeeper',
-                                'lakehouse/best-practices/doris-nessie',
-                                'lakehouse/best-practices/doris-dlf-paimon',
                                 'lakehouse/best-practices/doris-maxcompute',
                                 'lakehouse/best-practices/kerberos',
                                 'lakehouse/best-practices/tpch',
@@ -555,6 +586,7 @@ const sidebars: SidebarsConfig = {
                                 'ecosystem/observability/opentelemetry',
                                 'ecosystem/observability/fluentbit',
                                 'ecosystem/observability/loongcollector',
+                                'ecosystem/observability/langfuse',
                                 'ecosystem/observability/vector',
                             ],
                         },
@@ -604,7 +636,7 @@ const sidebars: SidebarsConfig = {
                                     label: 'Authentication',
                                     items: [
                                         'admin-manual/auth/authentication/internal',
-                                        'admin-manual/auth/authentication/federation',
+                                        'admin-manual/auth/authentication/ldap',
                                     ],
                                 },
                                 {
@@ -639,6 +671,9 @@ const sidebars: SidebarsConfig = {
                                 'admin-manual/auth/integrations/aws-iam-role',
                             ],
                         },
+                        'admin-manual/auth/ldap',
+                        'admin-manual/auth/ranger',
+                        'admin-manual/auth/user-privilege',
                     ],
                 },
             ],
@@ -741,6 +776,7 @@ const sidebars: SidebarsConfig = {
                         'admin-manual/config/fe-config',
                         'admin-manual/config/be-config',
                         'admin-manual/config/user-property',
+                        'admin-manual/config/fe-config-template',
                     ],
                 },
                 {
@@ -952,6 +988,8 @@ const sidebars: SidebarsConfig = {
                         },
                     ],
                 },
+                'admin-manual/plugin-development-manual',
+                'admin-manual/small-file-mgr',
             ],
         },
         {
@@ -978,6 +1016,7 @@ const sidebars: SidebarsConfig = {
                     items: [
                         'ecosystem/bi/apache-superset',
                         'ecosystem/bi/finebi',
+                        'ecosystem/bi/metabase',
                         'ecosystem/bi/powerbi',
                         'ecosystem/bi/tableau',
                         'ecosystem/bi/quicksight',
@@ -999,6 +1038,7 @@ const sidebars: SidebarsConfig = {
                         'ecosystem/observability/opentelemetry',
                         'ecosystem/observability/fluentbit',
                         'ecosystem/observability/loongcollector',
+                        'ecosystem/observability/langfuse',
                         'ecosystem/observability/vector',
                     ],
                 },
@@ -1018,6 +1058,7 @@ const sidebars: SidebarsConfig = {
                         'ecosystem/spark-load',
                     ],
                 },
+                'ecosystem/ecosystem-overview',
             ],
         },
         {
@@ -1097,6 +1138,7 @@ const sidebars: SidebarsConfig = {
                                         'sql-manual/basic-element/sql-data-types/semi-structured/STRUCT',
                                         'sql-manual/basic-element/sql-data-types/semi-structured/JSON',
                                         'sql-manual/basic-element/sql-data-types/semi-structured/VARIANT',
+                                        'sql-manual/basic-element/sql-data-types/semi-structured/semi-structured-overview',
                                     ],
                                 },
                                 {
@@ -1155,6 +1197,7 @@ const sidebars: SidebarsConfig = {
                         'sql-manual/basic-element/reserved-keywords',
                         'sql-manual/basic-element/variables',
                         'sql-manual/basic-element/comments',
+                        'sql-manual/basic-element/file-path-pattern',
                         {
                             type: 'category',
                             label: 'Operators',
@@ -1379,6 +1422,9 @@ const sidebars: SidebarsConfig = {
                                         'sql-manual/sql-functions/scalar-functions/string-functions/url-encode',
                                         'sql-manual/sql-functions/scalar-functions/string-functions/uuid',
                                         'sql-manual/sql-functions/scalar-functions/string-functions/xpath-string',
+                                        'sql-manual/sql-functions/scalar-functions/string-functions/date',
+                                        'sql-manual/sql-functions/scalar-functions/string-functions/to-iso8601',
+                                        'sql-manual/sql-functions/scalar-functions/string-functions/uuid-to-int',
                                     ],
                                 },
                                 {
@@ -1492,6 +1538,12 @@ const sidebars: SidebarsConfig = {
                                         'sql-manual/sql-functions/scalar-functions/date-time-functions/years-add',
                                         'sql-manual/sql-functions/scalar-functions/date-time-functions/years-diff',
                                         'sql-manual/sql-functions/scalar-functions/date-time-functions/years-sub',
+                                        'sql-manual/sql-functions/scalar-functions/date-time-functions/current-timestamp',
+                                        'sql-manual/sql-functions/scalar-functions/date-time-functions/localtime',
+                                        'sql-manual/sql-functions/scalar-functions/date-time-functions/quarter-ceil',
+                                        'sql-manual/sql-functions/scalar-functions/date-time-functions/quarter-floor',
+                                        'sql-manual/sql-functions/scalar-functions/date-time-functions/quarters-diff',
+                                        'sql-manual/sql-functions/scalar-functions/date-time-functions/second-timestamp',
                                     ],
                                 },
                                 {
@@ -1716,6 +1768,10 @@ const sidebars: SidebarsConfig = {
                                         'sql-manual/sql-functions/scalar-functions/ip-functions/to-ipv6',
                                         'sql-manual/sql-functions/scalar-functions/ip-functions/to-ipv6-or-default',
                                         'sql-manual/sql-functions/scalar-functions/ip-functions/to-ipv6-or-null',
+                                        'sql-manual/sql-functions/scalar-functions/ip-functions/inet-aton',
+                                        'sql-manual/sql-functions/scalar-functions/ip-functions/inet-ntoa',
+                                        'sql-manual/sql-functions/scalar-functions/ip-functions/inet6-aton',
+                                        'sql-manual/sql-functions/scalar-functions/ip-functions/inet6-ntoa',
                                     ],
                                 },
                                 {
@@ -1795,6 +1851,7 @@ const sidebars: SidebarsConfig = {
                                     items: [
                                         'sql-manual/sql-functions/scalar-functions/other-functions/convert-to',
                                         'sql-manual/sql-functions/scalar-functions/other-functions/esquery',
+                                        'sql-manual/sql-functions/scalar-functions/other-functions/default',
                                         'sql-manual/sql-functions/scalar-functions/other-functions/field',
                                         'sql-manual/sql-functions/scalar-functions/other-functions/g',
                                         'sql-manual/sql-functions/scalar-functions/other-functions/grouping',
@@ -1921,6 +1978,7 @@ const sidebars: SidebarsConfig = {
                                 'sql-manual/sql-functions/window-functions/percent-rank',
                                 'sql-manual/sql-functions/window-functions/rank',
                                 'sql-manual/sql-functions/window-functions/row-number',
+                                'sql-manual/sql-functions/window-functions/nth-value',
                                 'sql-manual/sql-functions/aggregate-functions/any-value',
                                 'sql-manual/sql-functions/aggregate-functions/approx-count-distinct',
                                 'sql-manual/sql-functions/aggregate-functions/array-agg',
@@ -2000,6 +2058,7 @@ const sidebars: SidebarsConfig = {
                                 'sql-manual/sql-functions/table-functions/explode-json-array-string',
                                 'sql-manual/sql-functions/table-functions/explode-json-array-string-outer',
                                 'sql-manual/sql-functions/table-functions/explode-json-object',
+                                'sql-manual/sql-functions/table-functions/explode-json-object-outer',
                                 'sql-manual/sql-functions/table-functions/explode-map',
                                 'sql-manual/sql-functions/table-functions/explode-map-outer',
                                 'sql-manual/sql-functions/table-functions/explode-numbers',
@@ -2112,6 +2171,7 @@ const sidebars: SidebarsConfig = {
                                         'sql-manual/sql-statements/data-modification/backup-and-restore/SHOW-RESTORE',
                                         'sql-manual/sql-statements/data-modification/backup-and-restore/CANCEL-RESTORE',
                                         'sql-manual/sql-statements/data-modification/backup-and-restore/SHOW-SNAPSHOT',
+                                        'sql-manual/sql-statements/data-modification/backup-and-restore/SHOW-BACKUP',
                                     ],
                                 },
                             ],
@@ -2360,6 +2420,7 @@ const sidebars: SidebarsConfig = {
                                 'sql-manual/sql-statements/statistics/DROP-ANALYZE-JOB',
                                 'sql-manual/sql-statements/statistics/KILL-ANALYZE-JOB',
                                 'sql-manual/sql-statements/statistics/SHOW-ANALYZE',
+                                'sql-manual/sql-statements/statistics/SHOW-QUEUED-ANZLYZE-JOBS',
                             ],
                         },
                         {
@@ -2389,6 +2450,7 @@ const sidebars: SidebarsConfig = {
                                         'sql-manual/sql-statements/cluster-management/instance-management/ADD-BROKER',
                                         'sql-manual/sql-statements/cluster-management/instance-management/DROP-BROKER',
                                         'sql-manual/sql-statements/cluster-management/instance-management/SHOW-BROKER',
+                                        'sql-manual/sql-statements/cluster-management/instance-management/ALTER-SYSTEM-RENAME-COMPUTE-GROUP',
                                     ],
                                 },
                                 {

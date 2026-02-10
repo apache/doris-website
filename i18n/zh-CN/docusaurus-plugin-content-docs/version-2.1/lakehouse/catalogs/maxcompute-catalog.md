@@ -108,7 +108,7 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 | bigint           | bigint        |                                                                              |
 | float            | float         |                                                                              |
 | double           | double        |                                                                              |
-| decimal(P, S)    | decimal(P, S) |                                                                              |
+| decimal(P, S)    | decimal(P, S) | 1 <= P <= 38 ,0 <= scale <= 18                                               |
 | char(N)          | char(N)       |                                                                              |
 | varchar(N)       | varchar(N)    |                                                                              |
 | string           | string        |                                                                              |
@@ -216,6 +216,17 @@ SELECT * FROM mc_ctl.mc_db.mc_tbl LIMIT 10;
 用户也可以单独指定`mc.odps_endpoint` 和 `mc.tunnel_endpoint` 来自定义服务地址，适用于一些私有部署的 MaxCompute 环境。
 
 MaxCompute Endpoint 和 Tunnel Endpoint 的配置请参见[各地域及不同网络连接方式下的 Endpoint](https://help.aliyun.com/zh/maxcompute/user-guide/endpoints)。
+
+
+### 资源使用控制
+
+用户可以通过调整 `parallel_pipeline_task_num`、`num_scanner_threads` 这两个 session variable 来调整[表级别请求并发数量](https://help.aliyun.com/zh/maxcompute/user-guide/data-transfer-service-quota-manage?spm=a2c4g.11186623.help-menu-search-27797.d_2)， 以控制数据传输服务中的资源消耗。其对应的并发数量等于 `max(parallel_pipeline_task_num * be num * num_scanner_threads)`。
+
+需要注意：
+
+1. 该方法只能控制单个query中单张表的并发请求数量，无法控制多个sql的资源使用量; 
+
+2. 降低并发数量意味着会提高query的查询时间。
 
 
 

@@ -33,6 +33,8 @@ ALTER SYSTEM ADD BACKEND "<host>:<heartbeat_port>"[,"<host>:<heartbeat_port>"...
 > 一组键值对，用于定义 BE 节点的附加属性。这些属性可用于自定义正在添加的 BE 的配置。可用属性包括：
 > - `tag.location`：存算一体模式下用于指定 BE 节点所属的资源组。
 > - `tag.compute_group_name`：存算分离模式下用于指定 BE 节点所属的计算组。
+> - `tag.public_endpoint`：用于指定 BE 节点的公网端点，供外部访问使用（如 `11.10.20.12:8010`）。通常是负载均衡器的域名或公网 IP，用于外部用户访问。
+> - `tag.private_endpoint`：用于指定 BE 节点的私网端点，供私有网络访问使用（如 `10.10.10.9:8020`）。通常用于 VPC 内部访问或 Kubernetes 集群内的 Service IP。
 
 ## 权限控制
 
@@ -73,3 +75,17 @@ ALTER SYSTEM ADD BACKEND "<host>:<heartbeat_port>"[,"<host>:<heartbeat_port>"...
    ALTER SYSTEM ADD BACKEND "192.168.0.3:9050" PROPERTIES ("tag.compute_group_name" = "cloud_groupc");
    ```
    此命令将单个 BE 节点（IP 192.168.0.3，端口 9050）添加到集群中的计算组`cloud_groupc`。
+
+4. 在复杂网络环境下，添加配置了公网和私网端点的 BE 节点
+   ```sql
+   ALTER SYSTEM ADD BACKEND "192.168.1.1:9050" PROPERTIES (
+       "tag.public_endpoint" = "11.10.20.12:8010",
+       "tag.private_endpoint" = "10.10.10.9:8020"
+   );
+   ```
+   此命令添加一个具有多个网络端点的 BE 节点：
+   * `192.168.1.1:9050`：用于集群内部通信的内部地址（be_host）
+   * `11.10.20.12:8010`：公网端点，用于外部用户通过负载均衡器访问
+   * `10.10.10.9:8020`：私网端点，用于 VPC 内部或 Kubernetes 跨集群访问
+
+   此配置在云环境或 Kubernetes 集群中非常有用，BE 节点需要从不同的网络环境进行访问。详情请参阅[复杂网络环境下的 Stream Load 实践](../../../../data-operate/import/load-internals/stream-load-in-complex-network.md)。

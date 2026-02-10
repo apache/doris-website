@@ -73,7 +73,8 @@ When mapping PostgreSQL, a Database in Doris corresponds to a Schema under a spe
 | bigserial                               | bigint                 |                                                                 |
 | char(N)                                 | char(N)                |                                                                 |
 | varchar/text                            | string                 |                                                                 |
-| timestamp(S)/timestampz(S)              | datetime(S)            |                                                                 |
+| timestamp(S)              | datetime(S)            |                                                                 |
+| timestamptz(S) | datetime(S) / timestamptz(S) | Controlled by the `enable.mapping.timestamp_tz` property (supported since version 4.0.3). By default, it is `false`, in which case it is mapped to `datetime`; when set to `true`, it is mapped to the `timestamptz` type. |
 | date                                    | date                   |                                                                 |
 | json/jsonb                              | string                 | For better reading and computing performance balance, Doris maps JSON type to STRING type.                   |
 | time                                    | string                 | Doris does not support time type, time type will be mapped to string.                          |

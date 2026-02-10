@@ -8,26 +8,26 @@
 
 ## Description
 
-The `MICROSECONDS_SUB` function subtracts a specified number of microseconds from the input datetime value and returns the resulting new datetime value. This function supports processing `DATETIME` types with microsecond precision.
+The `MICROSECONDS_SUB` function subtracts a specified number of microseconds from the input datetime value and returns the resulting new datetime value. This function supports processing `DATETIME` and `TIMESTAMPTZ` types with microsecond precision.
 
 This function behaves the same as MySQL’s [date_sub function](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_date-sub) when using MICROSECOND as the unit.
 
 ## Syntax
 
 ```sql
-MICROSECONDS_SUB(`<datetime>`, `<delta>`)
+MICROSECONDS_SUB(`<datetime_like_type>`, `<delta>`)
 ```
 
 ## Parameters
 
 | Parameter    | Description                                                                                     |
 |--------------|-------------------------------------------------------------------------------------------------|
-| `<datetime>` | The input datetime value, of type `DATETIME`. For specific datetime formats, see [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion). |
+| `<datetime_like_type>` | The input datetime value, of type `DATETIME` or `TIMESTAMPTZ`. For specific formats, see [timestamptz conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion), [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion). |
 | `<delta>`    | The number of microseconds to subtract, of type `BIGINT`. 1 second = 1,000,000 microseconds.       |
 
 ## Return Value
 
-Returns a value of type `DATETIME`, representing the result of subtracting the specified number of microseconds from the base time.
+Return the result of subtracting the specified microseconds `<delta>` from the base time `<datetime_like_type>`, with the return type being the same as the type of the first parameter.
 
 - If `<delta>` is negative, the function behaves the same as adding the corresponding number of microseconds to the base time (i.e., `MICROSECONDS_SUB(basetime, -n)` is equivalent to `MICROSECONDS_ADD(basetime, n)`).
 - If the calculation result exceeds the valid range of the `DATETIME` type (`0000-01-01 00:00:00` to `9999-12-31 23:59:59.999999`), an exception is thrown.
@@ -68,6 +68,14 @@ SELECT MICROSECONDS_SUB('2023-10-01', -300000);
 +-----------------------------------------+
 | 2023-10-01 00:00:00.300000              |
 +-----------------------------------------+
+
+-- Example of TimeStampTz type, SET time_zone = '+08:00'
+SELECT MICROSECONDS_SUB('2024-12-25 12:34:56.123+04:00', '765800');
++-------------------------------------------------------------+
+| MICROSECONDS_SUB('2024-12-25 12:34:56.123+04:00', '765800') |
++-------------------------------------------------------------+
+| 2024-12-25 16:34:55.357200+08:00                            |
++-------------------------------------------------------------+
 
 -- Exceeds datetime range, throws an error
 mysql> SELECT MICROSECONDS_SUB('0000-01-01 00:00:00.000000', 1000000) AS after_sub;

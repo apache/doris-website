@@ -63,6 +63,45 @@ SELECT * FROM table_name WHERE content MATCH_REGEXP '^key_word.*';
 SELECT * FROM table_name WHERE content MATCH_PHRASE_EDGE 'search engine optim';
 ```
 
+### 使用 USING ANALYZER 指定分词器
+
+当一个列上创建了多个使用不同分词器的倒排索引时，可以使用 `USING ANALYZER` 子句指定查询时使用哪个分词器。
+
+**语法：**
+```sql
+SELECT * FROM table_name WHERE column MATCH 'keywords' USING ANALYZER analyzer_name;
+```
+
+**支持的算子：**
+所有 MATCH 算子都支持 `USING ANALYZER` 子句：
+- MATCH / MATCH_ANY
+- MATCH_ALL
+- MATCH_PHRASE
+- MATCH_PHRASE_PREFIX
+- MATCH_PHRASE_EDGE
+- MATCH_REGEXP
+
+**示例：**
+```sql
+-- 使用标准分词器（将文本分词）
+SELECT * FROM articles WHERE content MATCH 'hello world' USING ANALYZER std_analyzer;
+
+-- 使用关键词分词器（精确匹配，不分词）
+SELECT * FROM articles WHERE content MATCH 'hello world' USING ANALYZER kw_analyzer;
+
+-- 配合 MATCH_PHRASE 使用
+SELECT * FROM articles WHERE content MATCH_PHRASE 'hello world' USING ANALYZER std_analyzer;
+
+-- 使用内置分词器
+SELECT * FROM articles WHERE content MATCH 'hello' USING ANALYZER standard;
+SELECT * FROM articles WHERE content MATCH 'hello' USING ANALYZER none;
+```
+
+**注意事项：**
+- 如果指定分词器的索引未构建，查询会自动降级到非索引路径（结果正确，但性能较慢）
+- 如果未指定分词器，系统会使用任意可用的索引
+- 内置分词器名称：`none`（精确匹配）、`standard`（标准分词）、`chinese`（中文分词）
+
 ## 倒排索引查询加速
 
 ### 支持的运算符和函数

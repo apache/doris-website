@@ -62,7 +62,7 @@ HDFS(
 | `path_partition_keys`         | 指定文件路径中携带的分区列名，例如/path/to/city=beijing/date="2023-07-09", 则填写 path_partition_keys="city,date"，将会自动从路径中读取相应列名和列值进行导入                                                            |                                                                             |
 | `resource`                    | 指定 Resource 名，HDFS TVF 可以利用已有的 HFDS Resource 来直接访问 HDFS。创建 HDFS Resource 的方法可以参照 [CREATE-RESOURCE](../../sql-statements/cluster-management/compute-management/CREATE-RESOURCE) | 仅支持 2.1.4 及以上版本                                                                            |
 |`enable_mapping_varbinary`|默认为 false，在读取 PARQUET / ORC 时将 BYTE_ARRAY 类型映射为 STRING，开启后则会映射到 VARBINAY 类型。| 在 4.0.3 之后开始支持 |
-
+|`enable_mapping_timestamp_tz`|默认为 false，在读取 PARQUET(TIMESTAMP WITH isAdjustedToUTC) \ ORC(TIMESTAMP_INSTANT) 类型映射为 DATATIME，开启后则会映射到 TIMESTAMPTZ 类型。| 在 4.0.3 之后开始支持 |
 
 ## 权限控制
 

@@ -21,7 +21,7 @@ DATE_TRUNC(<time_unit>, <datetime>)
 
 | Parameter | Description |
 | -- | -- |
-| `<date_or_time_part>` | A valid date expression, supporting datetime or date type. For specific datetime and date formats, please refer to [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
+| `<date_or_time_part>` | A valid date expression, supporting datetime or date type. For specific formats, please refer to [timestamptz conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion), [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
 | `<time_unit>` | The time interval to truncate to. The available values are: [`second`,`minute`,`hour`,`day`,`week`,`month`,`quarter`,`year`] |
 
 ## Return Value
@@ -29,6 +29,7 @@ DATE_TRUNC(<time_unit>, <datetime>)
 Returns a truncated result with the same type as datetime:
 - When input is DATE, returns DATE ;
 - When input is DATETIME or a time-containing string, returns DATETIME (including the date and the truncated time).
+- If the input is of TIMESTAMPTZ type, it will first be converted to local_time (for example, in the case where the session variable is `+08:00`, the local_time represented by `2025-12-31 23:59:59+05:00` is `2026-01-01 02:59:59`), and then the truncation operation will be performed.
 - For datetime types with scale, the fractional part will be truncated to zero but the scale will be preserved in the return value.
 
 Special cases:
@@ -108,6 +109,15 @@ mysql> select date_trunc('2010-12-02 19:28:30.523', 'second');
 | date_trunc('2010-12-02 19:28:30.523', 'second') |
 +-------------------------------------------------+
 | 2010-12-02 19:28:30.000                         |
++-------------------------------------------------+
+
+-- Example of TimeStampTz type, SET time_zone = '+08:00'
+-- Convert the variable value to local_time(2026-01-01 02:59:59) before truncation
+SELECT DATE_TRUNC('2025-12-31 23:59:59+05:00', 'year');
++-------------------------------------------------+
+| DATE_TRUNC('2025-12-31 23:59:59+05:00', 'year') |
++-------------------------------------------------+
+| 2026-01-01 00:00:00+08:00                       |
 +-------------------------------------------------+
 
 -- Unsupported unit, returns error

@@ -107,10 +107,10 @@ ln -s /etc/pki/ca-trust/extracted/openssl/ca-bundle.trust.crt /etc/ssl/certs/ca-
    请在 `jdbc_url` 中添加 `useSSL=true`
 
 4. 使用 JDBC Catalog 将 MySQL 数据同步到 Doris 中，日期数据同步错误。需要校验下 MySQL 的版本是否与 MySQL 的驱动包是否对应，比如 MySQL8 以上需要使用驱动 com.mysql.cj.jdbc.Driver。
-
+   
 5. 单个字段过大，查询时 BE 侧 Java 内存 OOM
 
-   Jdbc Scanner 在通过 jdbc 读取时，由 session variable `batch_size` 决定每批次数据在 JVM 中处理的数量，如果单个字段过大，导致 `字段大小 * batch_size`(近似值，由于 JVM 中 static 以及数据 copy 占用)超过 JVM 内存限制，就会出现 OOM。
+   Jdbc Scanner 在通过 jdbc 读取时，由 session variable `batch_size` 决定每批次数据在 JVM 中处理的数量，如果单个字段过大，导致 `字段大小 * batch_size`(近似值，由于 JVM 中 static 以及数据 copy 占用) 超过 JVM 内存限制，就会出现 OOM。
 
    解决方法：
 
@@ -273,6 +273,12 @@ ln -s /etc/pki/ca-trust/extracted/openssl/ca-bundle.trust.crt /etc/ssl/certs/ca-
 
     因为插入数据之后，需要更新对应的统计信息，这个更新的操作需要 alter 权限，所以要在 ranger 上给该用户新增 alter 权限。
 
+13. 在查询 ORC 文件时，如果出现报错类似 `Orc row reader nextBatch failed. reason = Can't open /usr/share/zoneinfo/+08:00`
+
+    首先检查当前 `session` 下 `time_zone` 的时区设置是多少，推荐使用类似 `Asia/Shanghai` 的写法。
+
+    如果 `session` 时区已经是 `Asia/Shanghai`，且查询仍然报错，说明生成 ORC 文件时的时区是 `+08:00`, 导致在读取时解析 `footer` 时需要用到 `+08:00` 时区，可以尝试在 `/usr/share/zoneinfo/` 目录下面软链到相同时区上。
+
 ## HDFS
 
 1. 访问 HDFS 3.x 时报错：`java.lang.VerifyError: xxx`
@@ -287,7 +293,6 @@ ln -s /etc/pki/ca-trust/extracted/openssl/ca-bundle.trust.crt /etc/ssl/certs/ca-
     注意：该功能可能会增加 HDFS 集群的负载，请酌情使用。
 
     可以通过以下方式开启这个功能：
-
 
     ```
     create catalog regression properties (
@@ -321,16 +326,32 @@ ln -s /etc/pki/ca-trust/extracted/openssl/ca-bundle.trust.crt /etc/ssl/certs/ca-
     可能的处理方式有：
     - 通过 `hdfs fsck file -files -blocks -locations` 来查看具体该文件是否健康。
     - 通过 `telnet` 来检查与 datanode 的连通性。
+
+        在错误日志中可能会打印如下错误：
+
+        ```
+        No live nodes contain current block Block locations: DatanodeInfoWithStorage[10.70.150.122:50010,DS-7bba8ffc-651c-4617-90e1-6f45f9a5f896,DISK]
+        ```
+
+        可以先检查 Doris 集群与 `10.70.150.122:50010` 的连通性。
+
+        另外，某些情况下，HDFS 集群会使用双网卡，有对内和对外 IP。此时，需使用域名来进行通信，需要在 Catalog 属性中添加：`"dfs.client.use.datanode.hostname" = "true"`。
+
+        同时，请检查 `fe/conf` 和 `be/conf` 下放置的 `hdfs-site.xml` 文件中，该参数是否为 true。
+
     - 查看 datanode 日志。
 
-    如果出现以下错误：
+        如果出现以下错误：
 
-    `org.apache.hadoop.hdfs.server.datanode.DataNode: Failed to read expected SASL data transfer protection handshake from client at /XXX.XXX.XXX.XXX:XXXXX. Perhaps the client is running an older version of Hadoop which does not support SASL data transfer protection`
-    则为当前 hdfs 开启了加密传输方式，而客户端未开启导致的错误。
+        ```
+        org.apache.hadoop.hdfs.server.datanode.DataNode: Failed to read expected SASL data transfer protection handshake from client at /XXX.XXX.XXX.XXX:XXXXX. Perhaps the client is running an older version of Hadoop which does not support SASL data transfer protection
+        ```
 
-    使用下面的任意一种解决方案即可：
-    - 拷贝 hdfs-site.xml 以及 core-site.xml 到 be/conf 和 fe/conf 目录。(推荐)
-    - 在 hdfs-site.xml 找到相应的配置 `dfs.data.transfer.protection`，并且在 catalog 里面设置该参数。
+        则为当前 hdfs 开启了加密传输方式，而客户端未开启导致的错误。
+
+        使用下面的任意一种解决方案即可：
+        - 拷贝 `hdfs-site.xml` 以及 `core-site.xml` 到 `fe/conf` 和 `be/conf` 目录。(推荐)
+        - 在 `hdfs-site.xml` 找到相应的配置 `dfs.data.transfer.protection`，并且在 catalog 里面设置该参数。
 
 ## DLF Catalog
 

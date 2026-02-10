@@ -68,6 +68,8 @@ Example:
     );
     ```
 
+For instructions on AWS authentication and authorization configuration, please refer to the document [aws-authentication-and-authorization](../../admin-manual/auth/integrations/aws-authentication-and-authorization.md)
+
 ### Hive Glue Catalog
 
 Hive Glue Catalog is used to access Hive tables through AWS Glue's Hive Metastore compatible interface. Configuration as follows:

@@ -84,8 +84,8 @@ export default function TOC({ className, ...props }: Props): React.ReactElement 
             <div style={isBrowser && location.pathname.startsWith('/blog') ? { display: 'none' } : {}}>
                 <Link to={'/'}>
                     <div className="toc-icon-content group">
-                        <HomeIcon className="group-hover:text-[#444FD9]" />
-                        <span className="group-hover:text-[#444FD9]">{isCN ? 'Doris 首页' : 'Doris Homepage'}</span>
+                        <HomeIcon className="group-hover:text-primary" />
+                        <span className="group-hover:text-primary">{isCN ? 'Doris 首页' : 'Doris Homepage'}</span>
                     </div>
                 </Link>
                 {isCN && ['4.x', '3.x', '2.0', '2.1'].includes(currentVersion) ? (
@@ -97,23 +97,23 @@ export default function TOC({ className, ...props }: Props): React.ReactElement 
                             await downloadFileWithLoading(pdfInfo.link, pdfInfo.filename);
                         }}
                     >
-                        <PdfIcon className="group-hover:text-[#444FD9]" />
-                        <span className={` group-hover:text-[#444FD9] mr-2`}>{isCN ? '下载 PDF' : 'Download PDF'}</span>
+                        <PdfIcon className="group-hover:text-primary" />
+                        <span className={` group-hover:text-primary mr-2`}>{isCN ? '下载 PDF' : 'Download PDF'}</span>
                         <Spin size="small" spinning={loading} />
                     </div>
                 ) : null}
                 {isCN ? (
                     <Link to={'https://doris-forum.org.cn'}>
                         <div className="toc-icon-content group">
-                            <ForumIcon className="group-hover:text-[#444FD9]" />{' '}
-                            <span className="group-hover:text-[#444FD9]">技术论坛</span>
+                            <ForumIcon className="group-hover:text-primary" />{' '}
+                            <span className="group-hover:text-primary">技术论坛</span>
                         </div>
                     </Link>
                 ) : null}
                 {!isCN ? (
                     <Link className="toc-icon-content group" to={'https://github.com/apache/doris/discussions'}>
-                        <GithubIcon className="group-hover:text-[#444FD9]" />
-                        <span className="group-hover:text-[#444FD9]">Ask Questions on Discussion</span>
+                        <GithubIcon className="group-hover:text-primary" />
+                        <span className="group-hover:text-primary">Ask Questions on Discussion</span>
                     </Link>
                 ) : null}
 
@@ -125,9 +125,9 @@ export default function TOC({ className, ...props }: Props): React.ReactElement 
                         }
                     >
                         <div style={{ padding: '2px' }}>
-                            <SlackIcon className="group-hover:text-[#444FD9]" />
+                            <SlackIcon className="group-hover:text-primary" />
                         </div>
-                        <span className="group-hover:text-[#444FD9]">Chat on Slack</span>
+                        <span className="group-hover:text-primary">Chat on Slack</span>
                     </Link>
                 ) : null}
             </div>

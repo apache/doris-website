@@ -245,6 +245,14 @@ ln -s /etc/pki/ca-trust/extracted/openssl/ca-bundle.trust.crt /etc/ssl/certs/ca-
 
     Since after inserting the data, the corresponding statistical information needs to be updated, and this update operation requires the alter privilege. Therefore, the alter privilege needs to be added for this user on Ranger.
 
+13. When querying ORC files, if an error like  
+   `Orc row reader nextBatch failed. reason = Can't open /usr/share/zoneinfo/+08:00`  
+   occurs.
+
+   First check the `time_zone` setting of the current session. It is recommended to use a region-based timezone name such as `Asia/Shanghai`.
+
+   If the session timezone is already set to `Asia/Shanghai` but the query still fails, it indicates that the ORC file was generated with the timezone `+08:00`. During query execution, this timezone is required when parsing the ORC footer. In this case, you can try creating a symbolic link under the `/usr/share/zoneinfo/` directory that points `+08:00` to an equivalent timezone.
+
 ## HDFS
 
 1. When accessing HDFS 3.x, if you encounter the error `java.lang.VerifyError: xxx`, in versions prior to 1.2.1, Doris depends on Hadoop version 2.8. You need to update to 2.10.2 or upgrade Doris to versions after 1.2.2.
