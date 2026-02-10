@@ -63,7 +63,7 @@ try {
 }
 ```
 
-如果需要在连接时初始换会话变量（Session Variables），可以使用下列格式：
+如果需要在连接时初始化会话变量（Session Variables），可以使用下列格式：
 
 ```
 jdbc:mysql://FE_IP:FE_PORT/demo?sessionVariables=key1=val1,key2=val2
