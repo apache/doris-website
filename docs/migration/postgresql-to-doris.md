@@ -68,7 +68,21 @@ Flink CDC captures changes from PostgreSQL WAL (Write-Ahead Log) and streams the
 
 For detailed setup, see the [Flink Doris Connector](../ecosystem/flink-doris-connector.md) documentation.
 
-### Option 3: Export and Load
+### Option 3: Streaming Job (Continuous File Loading)
+
+Doris's built-in [Streaming Job](../data-operate/import/streaming-job.md) (`CREATE JOB ON STREAMING`) provides continuous file-based loading without external tools. Export PostgreSQL data to S3/object storage, and the Streaming Job automatically picks up new files and loads them into Doris.
+
+This option is suited for:
+
+- Continuous incremental migration via file export pipelines
+- Environments where you prefer Doris-native features over external tools like Flink
+- Scenarios where PostgreSQL data is periodically exported to object storage
+
+**Prerequisites**: Data exported to S3-compatible object storage; Doris 2.1+ with Job Scheduler enabled.
+
+For detailed setup, see the [Streaming Job](../data-operate/import/streaming-job.md) and [CREATE STREAMING JOB](../sql-manual/sql-statements/job/CREATE-STREAMING-JOB.md) documentation.
+
+### Option 4: Export and Load
 
 For air-gapped environments or when direct connectivity is not possible:
 
