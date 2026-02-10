@@ -2141,6 +2141,14 @@ tablet 状态更新间隔
 
 删除数据库（表/分区）后，您可以使用 RECOVER stmt 恢复它。 这指定了最大数据保留时间。 一段时间后，数据将被永久删除。
 
+#### `storage_cooldown_second`
+
+<version deprecated="2.0"></version>
+
+默认值：`30 * 24 * 3600L`  （30天）
+
+创建表（或分区）时，可以指定其存储介质（HDD 或 SSD）。 如果设置为 SSD，这将指定tablet在 SSD 上停留的默认时间。 之后，tablet将自动移动到 HDD。 您可以在 `CREATE TABLE stmt` 中设置存储冷却时间。
+
 #### `default_storage_medium`
 
 默认值：HDD
@@ -2729,4 +2737,5 @@ show data （其他用法：HELP SHOW DATA）
 是否为 Master FE 节点独有的配置项：false
 
 用于限制fe节点thrift端口可以接收的最大包长度，避免接收到过大或者错误的包导致OOM
+
 
