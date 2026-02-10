@@ -59,6 +59,7 @@ const sidebars: SidebarsConfig = {
                                         'install/deploy-on-kubernetes/integrated-storage-compute/install-doris-cluster',
                                         'install/deploy-on-kubernetes/integrated-storage-compute/access-cluster',
                                         'install/deploy-on-kubernetes/integrated-storage-compute/cluster-operation',
+                                        'install/deploy-on-kubernetes/integrated-storage-compute/helm-chart-deploy',
                                     ],
                                 },
                                 {
@@ -113,6 +114,7 @@ const sidebars: SidebarsConfig = {
                                 'table-design/data-partitioning/auto-partitioning',
                                 'table-design/data-partitioning/data-bucketing',
                                 'table-design/data-partitioning/common-issues',
+                                'table-design/data-partitioning/basic-concepts',
                             ],
                         },
                         'table-design/data-type',
@@ -131,6 +133,8 @@ const sidebars: SidebarsConfig = {
                                 },
                                 'table-design/index/bloomfilter',
                                 'table-design/index/ngram-bloomfilter-index',
+                                'table-design/index/bitmap-index',
+                                'table-design/index/inverted-index',
                             ],
                         },
                         'table-design/schema-change',
@@ -187,6 +191,7 @@ const sidebars: SidebarsConfig = {
                                 'data-operate/import/import-way/insert-into-manual',
                                 'data-operate/import/import-way/insert-into-values-manual',
                                 'data-operate/import/import-way/mysql-load-manual',
+                                "data-operate/import/import-way/log-storage-analysis"
                             ],
                         },
                         {
@@ -197,6 +202,7 @@ const sidebars: SidebarsConfig = {
                                 'data-operate/import/file-format/json',
                                 'data-operate/import/file-format/parquet',
                                 'data-operate/import/file-format/orc',
+                                'data-operate/import/file-format/native',
                             ],
                         },
                         {
@@ -226,7 +232,13 @@ const sidebars: SidebarsConfig = {
                                 'data-operate/import/load-internals/stream-load-in-complex-network',
                             ],
                         },
-                        "data-operate/import/streaming-job"
+                        'data-operate/import/streaming-job',
+                        'data-operate/import/cdc-load-manual-sample',
+                        {
+                            type: 'category',
+                            label: 'Scheduler',
+                            items: ['data-operate/scheduler/job-scheduler'],
+                        },
                     ],
                 },
                 {
@@ -652,6 +664,9 @@ const sidebars: SidebarsConfig = {
                                 'admin-manual/auth/integrations/aws-iam-role',
                             ],
                         },
+                        'admin-manual/auth/ldap',
+                        'admin-manual/auth/ranger',
+                        'admin-manual/auth/user-privilege',
                     ],
                 },
             ],
@@ -754,6 +769,7 @@ const sidebars: SidebarsConfig = {
                         'admin-manual/config/fe-config',
                         'admin-manual/config/be-config',
                         'admin-manual/config/user-property',
+                        'admin-manual/config/fe-config-template',
                     ],
                 },
                 {
@@ -965,6 +981,8 @@ const sidebars: SidebarsConfig = {
                         },
                     ],
                 },
+                'admin-manual/plugin-development-manual',
+                'admin-manual/small-file-mgr',
             ],
         },
         {
@@ -1033,6 +1051,7 @@ const sidebars: SidebarsConfig = {
                         'ecosystem/spark-load',
                     ],
                 },
+                'ecosystem/ecosystem-overview',
             ],
         },
         {
@@ -1112,6 +1131,7 @@ const sidebars: SidebarsConfig = {
                                         'sql-manual/basic-element/sql-data-types/semi-structured/STRUCT',
                                         'sql-manual/basic-element/sql-data-types/semi-structured/JSON',
                                         'sql-manual/basic-element/sql-data-types/semi-structured/VARIANT',
+                                        'sql-manual/basic-element/sql-data-types/semi-structured/semi-structured-overview',
                                     ],
                                 },
                                 {
@@ -1395,6 +1415,9 @@ const sidebars: SidebarsConfig = {
                                         'sql-manual/sql-functions/scalar-functions/string-functions/url-encode',
                                         'sql-manual/sql-functions/scalar-functions/string-functions/uuid',
                                         'sql-manual/sql-functions/scalar-functions/string-functions/xpath-string',
+                                        'sql-manual/sql-functions/scalar-functions/string-functions/date',
+                                        'sql-manual/sql-functions/scalar-functions/string-functions/to-iso8601',
+                                        'sql-manual/sql-functions/scalar-functions/string-functions/uuid-to-int',
                                     ],
                                 },
                                 {
@@ -1508,6 +1531,12 @@ const sidebars: SidebarsConfig = {
                                         'sql-manual/sql-functions/scalar-functions/date-time-functions/years-add',
                                         'sql-manual/sql-functions/scalar-functions/date-time-functions/years-diff',
                                         'sql-manual/sql-functions/scalar-functions/date-time-functions/years-sub',
+                                        'sql-manual/sql-functions/scalar-functions/date-time-functions/current-timestamp',
+                                        'sql-manual/sql-functions/scalar-functions/date-time-functions/localtime',
+                                        'sql-manual/sql-functions/scalar-functions/date-time-functions/quarter-ceil',
+                                        'sql-manual/sql-functions/scalar-functions/date-time-functions/quarter-floor',
+                                        'sql-manual/sql-functions/scalar-functions/date-time-functions/quarters-diff',
+                                        'sql-manual/sql-functions/scalar-functions/date-time-functions/second-timestamp',
                                     ],
                                 },
                                 {
@@ -1732,6 +1761,10 @@ const sidebars: SidebarsConfig = {
                                         'sql-manual/sql-functions/scalar-functions/ip-functions/to-ipv6',
                                         'sql-manual/sql-functions/scalar-functions/ip-functions/to-ipv6-or-default',
                                         'sql-manual/sql-functions/scalar-functions/ip-functions/to-ipv6-or-null',
+                                        'sql-manual/sql-functions/scalar-functions/ip-functions/inet-aton',
+                                        'sql-manual/sql-functions/scalar-functions/ip-functions/inet-ntoa',
+                                        'sql-manual/sql-functions/scalar-functions/ip-functions/inet6-aton',
+                                        'sql-manual/sql-functions/scalar-functions/ip-functions/inet6-ntoa',
                                     ],
                                 },
                                 {
@@ -1938,6 +1971,7 @@ const sidebars: SidebarsConfig = {
                                 'sql-manual/sql-functions/window-functions/percent-rank',
                                 'sql-manual/sql-functions/window-functions/rank',
                                 'sql-manual/sql-functions/window-functions/row-number',
+                                'sql-manual/sql-functions/window-functions/nth-value',
                                 'sql-manual/sql-functions/aggregate-functions/any-value',
                                 'sql-manual/sql-functions/aggregate-functions/approx-count-distinct',
                                 'sql-manual/sql-functions/aggregate-functions/array-agg',
@@ -2017,6 +2051,7 @@ const sidebars: SidebarsConfig = {
                                 'sql-manual/sql-functions/table-functions/explode-json-array-string',
                                 'sql-manual/sql-functions/table-functions/explode-json-array-string-outer',
                                 'sql-manual/sql-functions/table-functions/explode-json-object',
+                                'sql-manual/sql-functions/table-functions/explode-json-object-outer',
                                 'sql-manual/sql-functions/table-functions/explode-map',
                                 'sql-manual/sql-functions/table-functions/explode-map-outer',
                                 'sql-manual/sql-functions/table-functions/explode-numbers',
@@ -2129,6 +2164,7 @@ const sidebars: SidebarsConfig = {
                                         'sql-manual/sql-statements/data-modification/backup-and-restore/SHOW-RESTORE',
                                         'sql-manual/sql-statements/data-modification/backup-and-restore/CANCEL-RESTORE',
                                         'sql-manual/sql-statements/data-modification/backup-and-restore/SHOW-SNAPSHOT',
+                                        'sql-manual/sql-statements/data-modification/backup-and-restore/SHOW-BACKUP',
                                     ],
                                 },
                             ],
@@ -2377,6 +2413,7 @@ const sidebars: SidebarsConfig = {
                                 'sql-manual/sql-statements/statistics/DROP-ANALYZE-JOB',
                                 'sql-manual/sql-statements/statistics/KILL-ANALYZE-JOB',
                                 'sql-manual/sql-statements/statistics/SHOW-ANALYZE',
+                                'sql-manual/sql-statements/statistics/SHOW-QUEUED-ANZLYZE-JOBS',
                             ],
                         },
                         {
@@ -2406,6 +2443,7 @@ const sidebars: SidebarsConfig = {
                                         'sql-manual/sql-statements/cluster-management/instance-management/ADD-BROKER',
                                         'sql-manual/sql-statements/cluster-management/instance-management/DROP-BROKER',
                                         'sql-manual/sql-statements/cluster-management/instance-management/SHOW-BROKER',
+                                        'sql-manual/sql-statements/cluster-management/instance-management/ALTER-SYSTEM-RENAME-COMPUTE-GROUP',
                                     ],
                                 },
                                 {
