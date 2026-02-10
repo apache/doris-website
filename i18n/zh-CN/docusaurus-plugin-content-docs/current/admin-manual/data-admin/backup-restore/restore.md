@@ -87,7 +87,7 @@ PROPERTIES
 
 ## 3. 查看恢复作业的执行情况
 
-    ```sql
+```sql
     mysql> SHOW RESTORE\G;
     *************************** 1. row ***************************
                   JobId: 17891851
@@ -126,4 +126,4 @@ PROPERTIES
                   Status: [OK]
                 Timeout: 86400
     1 row in set (0.01 sec)
-    ```
+```
