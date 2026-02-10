@@ -88,7 +88,7 @@ Restore partitions p1 and p2 of the table `backup_tbl`, as well as the table `ba
 
 ## 3. Check the Execution Status of the Restore Job
 
-  ```sql
+```sql
    mysql> SHOW RESTORE\G;
    *************************** 1. row ***************************
                   JobId: 17891851
@@ -127,4 +127,4 @@ Restore partitions p1 and p2 of the table `backup_tbl`, as well as the table `ba
                  Status: [OK]
                 Timeout: 86400
    1 row in set (0.01 sec)
-   ```
+```
