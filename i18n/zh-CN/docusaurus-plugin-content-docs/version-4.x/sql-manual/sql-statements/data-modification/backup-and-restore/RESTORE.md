@@ -13,7 +13,7 @@
 ## 语法
 
 ```sql
-RESTORE SNAPSHOT [<db_name>.]<snapshot_name>
+RESTORE [GLOBAL] SNAPSHOT [<db_name>.]<snapshot_name>
 FROM `<repository_name>`
 [ { ON | EXCLUDE } ] (
     `<table_name>` [PARTITION (`<partition_name>`, ...)] [AS `<table_alias>`]
@@ -51,6 +51,9 @@ FROM `<repository_name>`
 - "atomic_restore"：先将数据加载到临时表中，再以原子方式替换原表，确保恢复过程中不影响目标表的读写。
 - "force_replace"：当表存在且架构与备份表不同时，强制替换。
   - 注意，要启用 "force_replace"，必须启用 "atomic_restore"
+- "reserve_privilege" = "true"：是否恢复权限信息，与 `RESTORE GLOBAL` 一起使用。
+- "reserve_catalog" = "true"：是否恢复 catalog 信息，与 `RESTORE GLOBAL` 一起使用。
+- "reserve_workload_group" = "true"：是否恢复 workload group 信息，与 `RESTORE GLOBAL` 一起使用。
 
 ## 可选参数
 
@@ -128,3 +131,28 @@ PROPERTIES
 );
 ```
 
+4. 从 example_repo 中恢复备份 snapshot_4 的权限、catalog 和 workload group 信息，时间版本为 "2018-05-04-18-12-18"。
+
+```sql
+RESTORE GLOBAL SNAPSHOT `snapshot_4`
+FROM `example_repo`
+EXCLUDE ( `backup_tbl` )
+PROPERTIES
+(
+    "backup_timestamp"="2018-05-04-18-12-18"
+);
+```
+
+5. 从 example_repo 中恢复备份 snapshot_5 的权限和 workload group 信息，时间版本为 "2018-05-04-18-12-18"。
+
+```sql
+RESTORE GLOBAL SNAPSHOT `snapshot_5`
+FROM `example_repo`
+EXCLUDE ( `backup_tbl` )
+PROPERTIES
+(
+    "backup_timestamp"="2018-05-04-18-12-18",
+    "reserve_privilege" = "true",
+    "reserve_workload_group" = "true"
+);
+```

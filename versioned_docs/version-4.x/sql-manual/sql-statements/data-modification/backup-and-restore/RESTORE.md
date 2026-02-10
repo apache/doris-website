@@ -13,7 +13,7 @@ This statement is used to restore the data backed up by the BACKUP command to th
 ## Syntax
 
 ```sql
-RESTORE SNAPSHOT [<db_name>.]<snapshot_name>
+RESTORE [GLOBAL] SNAPSHOT [<db_name>.]<snapshot_name>
 FROM `<repository_name>`
 [ { ON | EXCLUDE } ] (
     `<table_name>` [PARTITION (`<partition_name>`, ...)] [AS `<table_alias>`]
@@ -53,6 +53,9 @@ Restoration operation attributes, the format is `<key>` = `<value>`，currently 
 - "atomic_restore" - : The data will be loaded into a temporary table first, and then the original table will be replaced atomically to ensure that the read and write of the target table are not affected during the recovery process.
 - "force_replace" : Force replace when the table exists and the schema is different with the backup table. 
   - Note that to enable `force_replace`, you must enable `atomic_restore`
+- "reserve_privilege" = "true": Whether to restore privileges. Use with `RESTORE GLOBAL`.
+- "reserve_catalog" = "true": Whether to restore catalogs. Use with `RESTORE GLOBAL`.
+- "reserve_workload_group" = "true": Whether to restore workload groups. Use with `RESTORE GLOBAL`.
 
 ## Optional Parameters
 
@@ -127,5 +130,31 @@ EXCLUDE ( `backup_tbl` )
 PROPERTIES
 (
     "backup_timestamp"="2018-05-04-18-12-18"
+);
+```
+
+4. Restore privileges, catalogs, and workload groups from backup snapshot_4 in example_repo, with time version "2018-05-04-18-12-18".
+
+```sql
+RESTORE GLOBAL SNAPSHOT `snapshot_4`
+FROM `example_repo`
+EXCLUDE ( `backup_tbl` )
+PROPERTIES
+(
+    "backup_timestamp"="2018-05-04-18-12-18"
+);
+```
+
+5. Restore privileges and workload groups from backup snapshot_5 in example_repo, with time version "2018-05-04-18-12-18".
+
+```sql
+RESTORE GLOBAL SNAPSHOT `snapshot_5`
+FROM `example_repo`
+EXCLUDE ( `backup_tbl` )
+PROPERTIES
+(
+    "backup_timestamp"="2018-05-04-18-12-18",
+    "reserve_privilege" = "true",
+    "reserve_workload_group" = "true"
 );
 ```
