@@ -23,7 +23,7 @@ on:
 
 concurrency:
     group: ${{ github.ref }} (Build Extensions)
-    cancel-in-progress: true
+    cancel-in-progress: false
 
 jobs:
     build-and-deploy:
@@ -41,14 +41,27 @@ jobs:
               uses: actions/setup-python@v4
               with:
                 python-version: '3.9'
+
+            - name: Use Node.js
+              uses: actions/setup-node@v3
+              with:
+                  node-version: 20
             
             - name: Refactor PR commits and check move
               run: |
                 git config --global user.email "gha@apache.org"
                 git config --global user.name "github-action-test"
-                git reset --soft origin/master
-                git commit -m "All this PR changed(for test)"
-                python check_move.py `git rev-parse HEAD`
+          
+                # Get the base commit of the PR
+                BASE_COMMIT=$(git merge-base origin/${{ github.base_ref }} HEAD)
+    
+                # Run the Python script with the base commit range
+                python check_move.py $BASE_COMMIT
+                  
+            
+            - name: Run Node.js dead link checker
+              run: |
+                node ./scripts/check_move.js `git rev-parse HEAD`
         
             - name: Check exit code
               run: |
@@ -56,11 +69,6 @@ jobs:
                     echo "Have detected not processed link changes, please fix them."
                     exit 1
                 fi
-            
-            - name: Use Node.js
-              uses: actions/setup-node@v3
-              with:
-                  node-version: 20
 
             - name: Build
               run: |
@@ -68,5 +76,4 @@ jobs:
                   yarn cache clean
                   export NODE_OPTIONS=--max-old-space-size=8192
                   yarn && yarn build
-
                   rm -rf build

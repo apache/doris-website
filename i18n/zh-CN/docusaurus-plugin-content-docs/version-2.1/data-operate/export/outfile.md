@@ -1,28 +1,10 @@
 ---
 {
     "title": "SELECT INTO OUTFILE",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "本文档将介绍如何使用 SELECT INTO OUTFILE 命令进行查询结果的导出操作。"
 }
 ---
-
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
 
 本文档将介绍如何使用 `SELECT INTO OUTFILE` 命令进行查询结果的导出操作。
 
@@ -32,7 +14,7 @@ under the License.
 
 关于如何选择 `SELECT INTO OUTFILE` 和 `EXPORT`，请参阅 [导出综述](./export-overview.md)。
 
-有关`SELECT INTO OUTFILE`命令的详细介绍，请参考：[SELECT INTO OUTFILE](../../sql-manual/sql-statements/Data-Manipulation-Statements/OUTFILE.md)
+有关`SELECT INTO OUTFILE`命令的详细介绍，请参考：[SELECT INTO OUTFILE](../../sql-manual/sql-statements/data-modification/load-and-export/OUTFILE)
 
 ## 适用场景
 
@@ -115,6 +97,16 @@ PROPERTIES(
 * csv
 * csv\_with\_names
 * csv\_with\_names\_and\_types
+
+### 导出并发度
+
+可以通过会话参数 `enable_parallel_outfile` 开启并发导出。
+
+`SET enable_parallel_outfile=true;`
+
+并发导出会利用多节点、多线程导出结果数据，以提升整体的导出效率。但并发导出可能会产生更多的文件。
+
+注意，某些查询即使打开此参数，也无法执行并发导出，如包含全局排序的查询。如果导出命令返回的行数大于 1 行，则表示开启了并发导出。
 
 ## 导出示例
 
@@ -266,7 +258,7 @@ PROPERTIES(
 示例：将 tbl 表中的所有数据导出到本地文件系统，设置导出作业的文件格式为 csv（默认格式），并设置列分割符为`,`。
 
 ```sql
-SELECT c1, c2 FROM tbl FROM tbl1
+SELECT c1, c2 FROM db.tbl
 INTO OUTFILE "file:///path/to/result_"
 FORMAT AS CSV
 PROPERTIES(
@@ -274,6 +266,23 @@ PROPERTIES(
 );
 ```
 
+此功能会将数据导出并写入到 BE 所在节点的磁盘上，如果有多个 BE 节点，则数据会根据导出任务的并发度分散在不同 BE 节点上，每个节点有一部分数据。
+
+如在这个示例中，最终会在 BE 节点的 `/path/to/` 下生产一组类似 `result_c6df5f01bd664dde-a2168b019b6c2b3f_0.csv` 的文件。
+
+具体的 BE 节点 IP 会在返回的结果中显示，如：
+
+```
++------------+-----------+----------+--------------------------------------------------------------------------+
+| FileNumber | TotalRows | FileSize | URL                                                                      |
++------------+-----------+----------+--------------------------------------------------------------------------+
+|          1 |   1195072 |  4780288 | file:///172.20.32.136/path/to/result_c6df5f01bd664dde-a2168b019b6c2b3f_* |
+|          1 |   1202944 |  4811776 | file:///172.20.32.136/path/to/result_c6df5f01bd664dde-a2168b019b6c2b40_* |
+|          1 |   1198880 |  4795520 | file:///172.20.32.137/path/to/result_c6df5f01bd664dde-a2168b019b6c2b43_* |
+|          1 |   1198880 |  4795520 | file:///172.20.32.137/path/to/result_c6df5f01bd664dde-a2168b019b6c2b45_* |
++------------+-----------+----------+--------------------------------------------------------------------------+
+```
+
 :::caution
-此功能会将数据导出并写入到 BE 所在节点的磁盘上，如果有多个 BE 节点，则数据会根据导出任务的并发度分散在不同 BE 节点上，每个节点有一部分数据。此功能不适用于生产环境，并且请自行确保导出目录的权限和数据安全性。
+此功能不适用于生产环境，并且请自行确保导出目录的权限和数据安全性。
 :::

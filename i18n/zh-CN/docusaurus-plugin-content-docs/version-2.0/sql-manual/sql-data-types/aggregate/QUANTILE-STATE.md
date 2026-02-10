@@ -5,30 +5,10 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
-
 ## 描述
     QUANTILE_STATE
 
-**在 2.0 中我们支持了[agg_state](AGG_STATE.md)功能，推荐使用 agg_state quantile_union(quantile_state not null) 来代替本类型。**
+**在 2.0 中我们支持了[agg_state](AGG-STATE.md)功能，推荐使用 agg_state quantile_union(quantile_state not null) 来代替本类型。**
 
 QUANTILE_STATE 不能作为 key 列使用，支持在 Aggregate 模型、Duplicate 模型和 Unique 模型的表中使用。在 Aggregate 模型表中使用时，建表时配合的聚合类型为 QUANTILE_UNION。
 用户不需要指定长度和默认值。长度根据数据的聚合程度系统内控制。

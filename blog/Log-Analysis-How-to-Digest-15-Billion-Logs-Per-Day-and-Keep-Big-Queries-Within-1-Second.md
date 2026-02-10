@@ -3,9 +3,10 @@
     'title': 'Log analysis: how to digest 15 billion logs per day and keep big queries within 1 second',
     'description': "This article describes a large-scale data warehousing use case to provide reference for data engineers who are looking for log analytic solutions. It introduces the log processing architecture and real case practice in data ingestion, storage, and queries.",
     'date': '2023-09-16',
-    'author': 'Yuqi Liu',
+    'author': 'velodb.io · Yuqi Liu',
+    'externalLink': 'https://www.velodb.io/blog/137',
     'tags': ['Best Practice'],
-    "image": '/images/china-unicom.png'
+    "image": '/images/telegram.jpeg'
 }
 ---
 
@@ -30,7 +31,7 @@ under the License.
 
 
 
-This data warehousing use case is about **scale**. The user is [China Unicom](https://en.wikipedia.org/wiki/China_Unicom), one of the world's biggest telecommunication service providers. Using Apache Doris, they deploy multiple petabyte-scale clusters on dozens of machines to support their 15 billion daily log additions from their over 30 business lines. Such a gigantic log analysis system is part of their cybersecurity management. For the need of real-time monitoring, threat tracing, and alerting, they require a log analytic system that can automatically collect, store, analyze, and visualize logs and event records.
+This data warehousing use case is about **scale**. The user is one of the world's biggest telecommunication service providers. Using Apache Doris, they deploy multiple petabyte-scale clusters on dozens of machines to support their 15 billion daily log additions from their over 30 business lines. Such a gigantic log analysis system is part of their cybersecurity management. For the need of real-time monitoring, threat tracing, and alerting, they require a log analytic system that can automatically collect, store, analyze, and visualize logs and event records.
 
 From an architectural perspective, the system should be able to undertake real-time analysis of various formats of logs, and of course, be scalable to support the huge and ever-enlarging data size. The rest of this post is about what their log processing architecture looks like, and how they realize stable data ingestion, low-cost storage, and quick queries with it.
 
@@ -87,7 +88,7 @@ These strategies have shortened the response time of queries. For example, a que
 
 ## Ongoing Plans
 
-The user is now testing with the newly added [inverted index](https://doris.apache.org/docs/table-design/index/inverted-index) in Apache Doris. It is designed to speed up full-text search of strings as well as equivalence and range queries of numerics and datetime. They have also provided their valuable feedback about the auto-bucketing logic in Doris: Currently, Doris decides the number of buckets for a partition  based on the data size of the previous partition. The problem for the user is, most of their new data comes in during daytime, but little at nights. So in their case, Doris creates too many buckets for night data but too few in daylight, which is the opposite of what they need. They hope to add a new auto-bucketing logic, where the reference for Doris to decide the number of buckets is the data size and distribution of the previous day. They've come to the [Apache Doris community](https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-2unfw3a3q-MtjGX4pAd8bCGC1UV0sKcw) and we are now working on this optimization. 
+The user is now testing with the newly added [inverted index](https://doris.apache.org/docs/table-design/index/inverted-index) in Apache Doris. It is designed to speed up full-text search of strings as well as equivalence and range queries of numerics and datetime. They have also provided their valuable feedback about the auto-bucketing logic in Doris: Currently, Doris decides the number of buckets for a partition  based on the data size of the previous partition. The problem for the user is, most of their new data comes in during daytime, but little at nights. So in their case, Doris creates too many buckets for night data but too few in daylight, which is the opposite of what they need. They hope to add a new auto-bucketing logic, where the reference for Doris to decide the number of buckets is the data size and distribution of the previous day. They've come to the [Apache Doris community](https://doris.apache.org/slack) and we are now working on this optimization. 
 
 
 

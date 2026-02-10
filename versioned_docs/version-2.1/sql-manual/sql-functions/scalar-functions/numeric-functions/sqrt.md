@@ -1,0 +1,44 @@
+---
+{
+    "title": "SQRT",
+    "language": "en",
+    "description": "Returns the square root of a value, where the input value must be greater than or equal to 0."
+}
+---
+
+## Description
+
+Returns the square root of a value, where the input value must be greater than or equal to 0.
+
+## Aliases
+
+- DSQRT
+
+## Syntax
+
+```sql
+SQRT(<a>)
+```
+
+## Parameters
+
+| Parameter | Description |
+| -- | -- |
+| `<a>` | The value whose square root is to be calculated |
+
+## Return Value
+
+The square root of parameter a.
+
+## Examples
+
+```sql
+select sqrt(9),sqrt(2)
+```
+```text
++-------------------------+-------------------------+
+| sqrt(cast(9 as DOUBLE)) | sqrt(cast(2 as DOUBLE)) |
++-------------------------+-------------------------+
+|                     3.0 |      1.4142135623730951 |
++-------------------------+-------------------------+
+```

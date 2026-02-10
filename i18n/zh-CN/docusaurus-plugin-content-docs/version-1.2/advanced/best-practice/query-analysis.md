@@ -5,25 +5,6 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 # 查询分析
 
 Doris 提供了一个图形化的命令以帮助用户更方便的分析一个具体的查询或导入。本文介绍如何使用该功能。
@@ -37,55 +18,55 @@ SQL 是一个描述性语言，用户通过一个 SQL 来描述想获取的数�
 Doris 的查询规划过程是先将一个 SQL 语句转换成一个单机执行计划树。
 
 ```text
-     ┌────┐
+     ┌----┐
      │Sort│
-     └────┘
+     └----┘
         │
-  ┌───────────┐
+  ┌-----------┐
   │Aggregation│
-  └───────────┘
+  └-----------┘
         │
-     ┌────┐
+     ┌----┐
      │Join│
-     └────┘
-    ┌───┴────┐
-┌──────┐ ┌──────┐
+     └----┘
+    ┌---┴---┐
+┌------┐ ┌------┐
 │Scan-1│ │Scan-2│
-└──────┘ └──────┘
+└------┘ └------┘
 ```
 
 之后，查询规划器会根据具体的算子执行方式、数据的具体分布，将单机查询计划转换为分布式查询计划。分布式查询计划是由多个 Fragment 组成的，每个 Fragment 负责查询计划的一部分，各个 Fragment 之间会通过 ExchangeNode 算子进行数据的传输。
 
 ```text
-        ┌────┐
+        ┌----┐
         │Sort│
         │F1  │
-        └────┘
+        └----┘
            │
-     ┌───────────┐
+     ┌-----------┐
      │Aggregation│
      │F1         │
-     └───────────┘
+     └-----------┘
            │
-        ┌────┐
+        ┌----┐
         │Join│
         │F1  │
-        └────┘
-    ┌──────┴────┐
-┌──────┐ ┌────────────┐
+        └----┘
+    ┌------┴----┐
+┌------┐ ┌------------┐
 │Scan-1│ │ExchangeNode│
 │F1    │ │F1          │
-└──────┘ └────────────┘
+└------┘ └------------┘
                 │
-          ┌──────────────┐
+          ┌--------------┐
           │DataStreamDink│
           │F2            │
-          └──────────────┘
+          └--------------┘
                 │
-            ┌──────┐
+            ┌------┐
             │Scan-2│
             │F2    │
-            └──────┘
+            └------┘
 ```
 
 如上图，我们将单机计划分成了两个 Fragment：F1 和 F2。两个 Fragment 之间通过一个 ExchangeNode 节点传输数据。
@@ -104,83 +85,83 @@ Doris 的查询规划过程是先将一个 SQL 语句转换成一个单机执行
 
 ```sql
 mysql> explain graph select tbl1.k1, sum(tbl1.k2) from tbl1 join tbl2 on tbl1.k1 = tbl2.k1 group by tbl1.k1 order by tbl1.k1;
-+---------------------------------------------------------------------------------------------------------------------------------+
-| Explain String                                                                                                                  |
-+---------------------------------------------------------------------------------------------------------------------------------+
-|                                                                                                                                 |
-|              ┌───────────────┐                                                                                                  |
-|              │[9: ResultSink]│                                                                                                  |
-|              │[Fragment: 4]  │                                                                                                  |
-|              │RESULT SINK    │                                                                                                  |
-|              └───────────────┘                                                                                                  |
-|                      │                                                                                                          |
-|           ┌─────────────────────┐                                                                                               |
-|           │[9: MERGING-EXCHANGE]│                                                                                               |
-|           │[Fragment: 4]        │                                                                                               |
-|           └─────────────────────┘                                                                                               |
-|                      │                                                                                                          |
-|            ┌───────────────────┐                                                                                                |
-|            │[9: DataStreamSink]│                                                                                                |
-|            │[Fragment: 3]      │                                                                                                |
-|            │STREAM DATA SINK   │                                                                                                |
-|            │  EXCHANGE ID: 09  │                                                                                                |
-|            │  UNPARTITIONED    │                                                                                                |
-|            └───────────────────┘                                                                                                |
-|                      │                                                                                                          |
-|               ┌─────────────┐                                                                                                   |
-|               │[4: TOP-N]   │                                                                                                   |
-|               │[Fragment: 3]│                                                                                                   |
-|               └─────────────┘                                                                                                   |
-|                      │                                                                                                          |
-|      ┌───────────────────────────────┐                                                                                          |
-|      │[8: AGGREGATE (merge finalize)]│                                                                                          |
-|      │[Fragment: 3]                  │                                                                                          |
-|      └───────────────────────────────┘                                                                                          |
-|                      │                                                                                                          |
-|               ┌─────────────┐                                                                                                   |
-|               │[7: EXCHANGE]│                                                                                                   |
-|               │[Fragment: 3]│                                                                                                   |
-|               └─────────────┘                                                                                                   |
-|                      │                                                                                                          |
-|            ┌───────────────────┐                                                                                                |
-|            │[7: DataStreamSink]│                                                                                                |
-|            │[Fragment: 2]      │                                                                                                |
-|            │STREAM DATA SINK   │                                                                                                |
-|            │  EXCHANGE ID: 07  │                                                                                                |
-|            │  HASH_PARTITIONED │                                                                                                |
-|            └───────────────────┘                                                                                                |
-|                      │                                                                                                          |
-|     ┌─────────────────────────────────┐                                                                                         |
-|     │[3: AGGREGATE (update serialize)]│                                                                                         |
-|     │[Fragment: 2]                    │                                                                                         |
-|     │STREAMING                        │                                                                                         |
-|     └─────────────────────────────────┘                                                                                         |
-|                      │                                                                                                          |
-|     ┌─────────────────────────────────┐                                                                                         |
-|     │[2: HASH JOIN]                   │                                                                                         |
-|     │[Fragment: 2]                    │                                                                                         |
-|     │join op: INNER JOIN (PARTITIONED)│                                                                                         |
-|     └─────────────────────────────────┘                                                                                         |
-|           ┌──────────┴──────────┐                                                                                               |
-|    ┌─────────────┐       ┌─────────────┐                                                                                        |
-|    │[5: EXCHANGE]│       │[6: EXCHANGE]│                                                                                        |
-|    │[Fragment: 2]│       │[Fragment: 2]│                                                                                        |
-|    └─────────────┘       └─────────────┘                                                                                        |
-|           │                     │                                                                                               |
-| ┌───────────────────┐ ┌───────────────────┐                                                                                     |
-| │[5: DataStreamSink]│ │[6: DataStreamSink]│                                                                                     |
-| │[Fragment: 0]      │ │[Fragment: 1]      │                                                                                     |
-| │STREAM DATA SINK   │ │STREAM DATA SINK   │                                                                                     |
-| │  EXCHANGE ID: 05  │ │  EXCHANGE ID: 06  │                                                                                     |
-| │  HASH_PARTITIONED │ │  HASH_PARTITIONED │                                                                                     |
-| └───────────────────┘ └───────────────────┘                                                                                     |
-|           │                     │                                                                                               |
-|  ┌─────────────────┐   ┌─────────────────┐                                                                                      |
-|  │[0: OlapScanNode]│   │[1: OlapScanNode]│                                                                                      |
-|  │[Fragment: 0]    │   │[Fragment: 1]    │                                                                                      |
-|  │TABLE: tbl1      │   │TABLE: tbl2      │                                                                                      |
-|  └─────────────────┘   └─────────────────┘                                                                                      |
-+---------------------------------------------------------------------------------------------------------------------------------+
++------------------------------------------------------------------+
+| Explain String                                                   |
++------------------------------------------------------------------+
+|                                                                  |
+|              ┌---------------┐                                   |
+|              │[9: ResultSink]│                                   |
+|              │[Fragment: 4]  │                                   |
+|              │RESULT SINK    │                                   |
+|              └---------------┘                                   |
+|                      │                                           |
+|           ┌---------------------┐                                |
+|           │[9: MERGING-EXCHANGE]│                                |
+|           │[Fragment: 4]        │                                |
+|           └---------------------┘                                |
+|                      │                                           |
+|            ┌-------------------┐                                 |
+|            │[9: DataStreamSink]│                                 |
+|            │[Fragment: 3]      │                                 |
+|            │STREAM DATA SINK   │                                 |
+|            │  EXCHANGE ID: 09  │                                 |
+|            │  UNPARTITIONED    │                                 |
+|            └-------------------┘                                 |
+|                      │                                           |
+|               ┌-------------┐                                    |
+|               │[4: TOP-N]   │                                    |
+|               │[Fragment: 3]│                                    |
+|               └-------------┘                                    |
+|                      │                                           |
+|      ┌-------------------------------┐                           |
+|      │[8: AGGREGATE (merge finalize)]│                           |
+|      │[Fragment: 3]                  │                           |
+|      └-------------------------------┘                           |
+|                      │                                           |
+|               ┌-------------┐                                    |
+|               │[7: EXCHANGE]│                                    |
+|               │[Fragment: 3]│                                    |
+|               └-------------┘                                    |
+|                      │                                           |
+|            ┌-------------------┐                                 |
+|            │[7: DataStreamSink]│                                 |
+|            │[Fragment: 2]      │                                 |
+|            │STREAM DATA SINK   │                                 |
+|            │  EXCHANGE ID: 07  │                                 |
+|            │  HASH_PARTITIONED │                                 |
+|            └-------------------┘                                 |
+|                      │                                           |
+|     ┌---------------------------------┐                          |
+|     │[3: AGGREGATE (update serialize)]│                          |
+|     │[Fragment: 2]                    │                          |
+|     │STREAMING                        │                          |
+|     └---------------------------------┘                          |
+|                      │                                           |
+|     ┌---------------------------------┐                          |
+|     │[2: HASH JOIN]                   │                          |
+|     │[Fragment: 2]                    │                          |
+|     │join op: INNER JOIN (PARTITIONED)│                          |
+|     └---------------------------------┘                          |
+|           ┌----------┴----------┐                                |
+|    ┌-------------┐       ┌-------------┐                         |
+|    │[5: EXCHANGE]│       │[6: EXCHANGE]│                         |
+|    │[Fragment: 2]│       │[Fragment: 2]│                         |
+|    └-------------┘       └-------------┘                         |
+|           │                     │                                |
+| ┌-------------------┐ ┌-------------------┐                      |
+| │[5: DataStreamSink]│ │[6: DataStreamSink]│                      |
+| │[Fragment: 0]      │ │[Fragment: 1]      │                      |
+| │STREAM DATA SINK   │ │STREAM DATA SINK   │                      |
+| │  EXCHANGE ID: 05  │ │  EXCHANGE ID: 06  │                      |
+| │  HASH_PARTITIONED │ │  HASH_PARTITIONED │                      |
+| └-------------------┘ └-------------------┘                      |
+|           │                     │                                |
+|  ┌-----------------┐   ┌-----------------┐                       |
+|  │[0: OlapScanNode]│   │[1: OlapScanNode]│                       |
+|  │[Fragment: 0]    │   │[Fragment: 1]    │                       |
+|  │TABLE: tbl1      │   │TABLE: tbl2      │                       |
+|  └-----------------┘   └-----------------┘                       |
++------------------------------------------------------------------+
 ```
 
 从图中可以看出，查询计划树被分为了5个 Fragment：0、1、2、3、4。如 `OlapScanNode` 节点上的 `[Fragment: 0]` 表示这个节点属于 Fragment 0。每个Fragment之间都通过 DataStreamSink 和 ExchangeNode 进行数据传输。
@@ -291,172 +272,175 @@ mysql> explain select tbl1.k1, sum(tbl1.k2) from tbl1 join tbl2 on tbl1.k1 = tbl
 
 ```sql
 mysql> explain verbose select tbl1.k1, sum(tbl1.k2) from tbl1 join tbl2 on tbl1.k1 = tbl2.k1 group by tbl1.k1 order by tbl1.k1;
-+---------------------------------------------------------------------------------------------------------------------------------------------------------+
-| Explain String                                                                                                                                          |
-+---------------------------------------------------------------------------------------------------------------------------------------------------------+
-| PLAN FRAGMENT 0                                                                                                                                         |
-|   OUTPUT EXPRS:<slot 5> <slot 3> `tbl1`.`k1` | <slot 6> <slot 4> sum(`tbl1`.`k2`)                                                                       |
-|   PARTITION: UNPARTITIONED                                                                                                                              |
-|                                                                                                                                                         |
-|   VRESULT SINK                                                                                                                                          |
-|                                                                                                                                                         |
-|   6:VMERGING-EXCHANGE                                                                                                                                   |
-|      limit: 65535                                                                                                                                       |
-|      tuple ids: 3                                                                                                                                       |
-|                                                                                                                                                         |
-| PLAN FRAGMENT 1                                                                                                                                         |
-|                                                                                                                                                         |
-|   PARTITION: HASH_PARTITIONED: `default_cluster:test`.`tbl1`.`k2`                                                                                       |
-|                                                                                                                                                         |
-|   STREAM DATA SINK                                                                                                                                      |
-|     EXCHANGE ID: 06                                                                                                                                     |
-|     UNPARTITIONED                                                                                                                                       |
-|                                                                                                                                                         |
-|   4:VTOP-N                                                                                                                                              |
-|   |  order by: <slot 5> <slot 3> `tbl1`.`k1` ASC                                                                                                        |
-|   |  offset: 0                                                                                                                                          |
-|   |  limit: 65535                                                                                                                                       |
-|   |  tuple ids: 3                                                                                                                                       |
-|   |                                                                                                                                                     |
-|   3:VAGGREGATE (update finalize)                                                                                                                        |
-|   |  output: sum(<slot 8>)                                                                                                                              |
-|   |  group by: <slot 7>                                                                                                                                 |
-|   |  cardinality=-1                                                                                                                                     |
-|   |  tuple ids: 2                                                                                                                                       |
-|   |                                                                                                                                                     |
-|   2:VHASH JOIN                                                                                                                                          |
-|   |  join op: INNER JOIN(BROADCAST)[Tables are not in the same group]                                                                                   |
-|   |  equal join conjunct: CAST(`tbl1`.`k1` AS DATETIME) = `tbl2`.`k1`                                                                                   |
-|   |  runtime filters: RF000[in_or_bloom] <- `tbl2`.`k1`                                                                                                 |
-|   |  cardinality=0                                                                                                                                      |
-|   |  vec output tuple id: 4  |  tuple ids: 0 1                                                                                                          |
-|   |                                                                                                                                                     |
-|   |----5:VEXCHANGE                                                                                                                                      |
-|   |       tuple ids: 1                                                                                                                                  |
-|   |                                                                                                                                                     |
-|   0:VOlapScanNode                                                                                                                                       |
-|      TABLE: tbl1(null), PREAGGREGATION: OFF. Reason: the type of agg on StorageEngine's Key column should only be MAX or MIN.agg expr: sum(`tbl1`.`k2`) |
-|      runtime filters: RF000[in_or_bloom] -> CAST(`tbl1`.`k1` AS DATETIME)                                                                               |
-|      partitions=0/1, tablets=0/0, tabletList=                                                                                                           |
-|      cardinality=0, avgRowSize=20.0, numNodes=1                                                                                                         |
-|      tuple ids: 0                                                                                                                                       |
-|                                                                                                                                                         |
-| PLAN FRAGMENT 2                                                                                                                                         |
-|                                                                                                                                                         |
-|   PARTITION: HASH_PARTITIONED: `default_cluster:test`.`tbl2`.`k2`                                                                                       |
-|                                                                                                                                                         |
-|   STREAM DATA SINK                                                                                                                                      |
-|     EXCHANGE ID: 05                                                                                                                                     |
-|     UNPARTITIONED                                                                                                                                       |
-|                                                                                                                                                         |
-|   1:VOlapScanNode                                                                                                                                       |
-|      TABLE: tbl2(null), PREAGGREGATION: OFF. Reason: null                                                                                               |
-|      partitions=0/1, tablets=0/0, tabletList=                                                                                                           |
-|      cardinality=0, avgRowSize=16.0, numNodes=1                                                                                                         |
-|      tuple ids: 1                                                                                                                                       |
-|                                                                                                                                                         |
-| Tuples:                                                                                                                                                 |
-| TupleDescriptor{id=0, tbl=tbl1, byteSize=32, materialized=true}                                                                                         |
-|   SlotDescriptor{id=0, col=k1, type=DATE}                                                                                                               |
-|     parent=0                                                                                                                                            |
-|     materialized=true                                                                                                                                   |
-|     byteSize=16                                                                                                                                         |
-|     byteOffset=16                                                                                                                                       |
-|     nullIndicatorByte=0                                                                                                                                 |
-|     nullIndicatorBit=-1                                                                                                                                 |
-|     slotIdx=1                                                                                                                                           |
-|                                                                                                                                                         |
-|   SlotDescriptor{id=2, col=k2, type=INT}                                                                                                                |
-|     parent=0                                                                                                                                            |
-|     materialized=true                                                                                                                                   |
-|     byteSize=4                                                                                                                                          |
-|     byteOffset=0                                                                                                                                        |
-|     nullIndicatorByte=0                                                                                                                                 |
-|     nullIndicatorBit=-1                                                                                                                                 |
-|     slotIdx=0                                                                                                                                           |
-|                                                                                                                                                         |
-|                                                                                                                                                         |
-| TupleDescriptor{id=1, tbl=tbl2, byteSize=16, materialized=true}                                                                                         |
-|   SlotDescriptor{id=1, col=k1, type=DATETIME}                                                                                                           |
-|     parent=1                                                                                                                                            |
-|     materialized=true                                                                                                                                   |
-|     byteSize=16                                                                                                                                         |
-|     byteOffset=0                                                                                                                                        |
-|     nullIndicatorByte=0                                                                                                                                 |
-|     nullIndicatorBit=-1                                                                                                                                 |
-|     slotIdx=0                                                                                                                                           |
-|                                                                                                                                                         |
-|                                                                                                                                                         |
-| TupleDescriptor{id=2, tbl=null, byteSize=32, materialized=true}                                                                                         |
-|   SlotDescriptor{id=3, col=null, type=DATE}                                                                                                             |
-|     parent=2                                                                                                                                            |
-|     materialized=true                                                                                                                                   |
-|     byteSize=16                                                                                                                                         |
-|     byteOffset=16                                                                                                                                       |
-|     nullIndicatorByte=0                                                                                                                                 |
-|     nullIndicatorBit=-1                                                                                                                                 |
-|     slotIdx=1                                                                                                                                           |
-|                                                                                                                                                         |
-|   SlotDescriptor{id=4, col=null, type=BIGINT}                                                                                                           |
-|     parent=2                                                                                                                                            |
-|     materialized=true                                                                                                                                   |
-|     byteSize=8                                                                                                                                          |
-|     byteOffset=0                                                                                                                                        |
-|     nullIndicatorByte=0                                                                                                                                 |
-|     nullIndicatorBit=-1                                                                                                                                 |
-|     slotIdx=0                                                                                                                                           |
-|                                                                                                                                                         |
-|                                                                                                                                                         |
-| TupleDescriptor{id=3, tbl=null, byteSize=32, materialized=true}                                                                                         |
-|   SlotDescriptor{id=5, col=null, type=DATE}                                                                                                             |
-|     parent=3                                                                                                                                            |
-|     materialized=true                                                                                                                                   |
-|     byteSize=16                                                                                                                                         |
-|     byteOffset=16                                                                                                                                       |
-|     nullIndicatorByte=0                                                                                                                                 |
-|     nullIndicatorBit=-1                                                                                                                                 |
-|     slotIdx=1                                                                                                                                           |
-|                                                                                                                                                         |
-|   SlotDescriptor{id=6, col=null, type=BIGINT}                                                                                                           |
-|     parent=3                                                                                                                                            |
-|     materialized=true                                                                                                                                   |
-|     byteSize=8                                                                                                                                          |
-|     byteOffset=0                                                                                                                                        |
-|     nullIndicatorByte=0                                                                                                                                 |
-|     nullIndicatorBit=-1                                                                                                                                 |
-|     slotIdx=0                                                                                                                                           |
-|                                                                                                                                                         |
-|                                                                                                                                                         |
-| TupleDescriptor{id=4, tbl=null, byteSize=48, materialized=true}                                                                                         |
-|   SlotDescriptor{id=7, col=k1, type=DATE}                                                                                                               |
-|     parent=4                                                                                                                                            |
-|     materialized=true                                                                                                                                   |
-|     byteSize=16                                                                                                                                         |
-|     byteOffset=16                                                                                                                                       |
-|     nullIndicatorByte=0                                                                                                                                 |
-|     nullIndicatorBit=-1                                                                                                                                 |
-|     slotIdx=1                                                                                                                                           |
-|                                                                                                                                                         |
-|   SlotDescriptor{id=8, col=k2, type=INT}                                                                                                                |
-|     parent=4                                                                                                                                            |
-|     materialized=true                                                                                                                                   |
-|     byteSize=4                                                                                                                                          |
-|     byteOffset=0                                                                                                                                        |
-|     nullIndicatorByte=0                                                                                                                                 |
-|     nullIndicatorBit=-1                                                                                                                                 |
-|     slotIdx=0                                                                                                                                           |
-|                                                                                                                                                         |
-|   SlotDescriptor{id=9, col=k1, type=DATETIME}                                                                                                           |
-|     parent=4                                                                                                                                            |
-|     materialized=true                                                                                                                                   |
-|     byteSize=16                                                                                                                                         |
-|     byteOffset=32                                                                                                                                       |
-|     nullIndicatorByte=0                                                                                                                                 |
-|     nullIndicatorBit=-1                                                                                                                                 |
-|     slotIdx=2                                                                                                                                           |
-+---------------------------------------------------------------------------------------------------------------------------------------------------------+
++-----------------------------------------------------------------------------------+
+| Explain String                                                                    |
++-----------------------------------------------------------------------------------+
+| PLAN FRAGMENT 0                                                                   |
+|   OUTPUT EXPRS:<slot 5> <slot 3> `tbl1`.`k1` | <slot 6> <slot 4> sum(`tbl1`.`k2`) |
+|   PARTITION: UNPARTITIONED                                                        |
+|                                                                                   |
+|   VRESULT SINK                                                                    |
+|                                                                                   |
+|   6:VMERGING-EXCHANGE                                                             |
+|      limit: 65535                                                                 |
+|      tuple ids: 3                                                                 |
+|                                                                                   |
+| PLAN FRAGMENT 1                                                                   |
+|                                                                                   |
+|   PARTITION: HASH_PARTITIONED: `default_cluster:test`.`tbl1`.`k2`                 |
+|                                                                                   |
+|   STREAM DATA SINK                                                                |
+|     EXCHANGE ID: 06                                                               |
+|     UNPARTITIONED                                                                 |
+|                                                                                   |
+|   4:VTOP-N                                                                        |
+|   |  order by: <slot 5> <slot 3> `tbl1`.`k1` ASC                                  |
+|   |  offset: 0                                                                    |
+|   |  limit: 65535                                                                 |
+|   |  tuple ids: 3                                                                 |
+|   |                                                                               |
+|   3:VAGGREGATE (update finalize)                                                  |
+|   |  output: sum(<slot 8>)                                                        |
+|   |  group by: <slot 7>                                                           |
+|   |  cardinality=-1                                                               |
+|   |  tuple ids: 2                                                                 |
+|   |                                                                               |
+|   2:VHASH JOIN                                                                    |
+|   |  join op: INNER JOIN(BROADCAST)[Tables are not in the same group]             |
+|   |  equal join conjunct: CAST(`tbl1`.`k1` AS DATETIME) = `tbl2`.`k1`             |
+|   |  runtime filters: RF000[in_or_bloom] <- `tbl2`.`k1`                           |
+|   |  cardinality=0                                                                |
+|   |  vec output tuple id: 4  |  tuple ids: 0 1                                    |
+|   |                                                                               |
+|   |----5:VEXCHANGE                                                                |
+|   |       tuple ids: 1                                                            |
+|   |                                                                               |
+|   0:VOlapScanNode                                                                 |
+|      TABLE: tbl1(null), PREAGGREGATION: OFF. Reason: the type of agg on           |
+|      StorageEngine's Key                                                          |
+|      column should only be MAX or MIN.agg expr: sum(`tbl1`.`k2`)                  |
+|      runtime filters: RF000[in_or_bloom] -> CAST(`tbl1`.`k1` AS DATETIME)         |
+|      partitions=0/1, tablets=0/0, tabletList=                                     |
+|      cardinality=0, avgRowSize=20.0, numNodes=1                                   |
+|      tuple ids: 0                                                                 |
+|                                                                                   |
+| PLAN FRAGMENT 2                                                                   |
+|                                                                                   |
+|   PARTITION: HASH_PARTITIONED: `default_cluster:test`.`tbl2`.`k2`                 |
+|                                                                                   |
+|   STREAM DATA SINK                                                                |
+|     EXCHANGE ID: 05                                                               |
+|     UNPARTITIONED                                                                 |
+|                                                                                   |
+|   1:VOlapScanNode                                                                 |
+|      TABLE: tbl2(null), PREAGGREGATION: OFF. Reason: null                         |
+|      partitions=0/1, tablets=0/0, tabletList=                                     |
+|      cardinality=0, avgRowSize=16.0, numNodes=1                                   |
+|      tuple ids: 1                                                                 |
+|                                                                                   |
+| Tuples:                                                                           |
+| TupleDescriptor{id=0, tbl=tbl1, byteSize=32, materialized=true}                   |
+|   SlotDescriptor{id=0, col=k1, type=DATE}                                         |
+|     parent=0                                                                      |
+|     materialized=true                                                             |
+|     byteSize=16                                                                   |
+|     byteOffset=16                                                                 |
+|     nullIndicatorByte=0                                                           |
+|     nullIndicatorBit=-1                                                           |
+|     slotIdx=1                                                                     |
+|                                                                                   |
+|   SlotDescriptor{id=2, col=k2, type=INT}                                          |
+|     parent=0                                                                      |
+|     materialized=true                                                             |
+|     byteSize=4                                                                    |
+|     byteOffset=0                                                                  |
+|     nullIndicatorByte=0                                                           |
+|     nullIndicatorBit=-1                                                           |
+|     slotIdx=0                                                                     |
+|                                                                                   |
+|                                                                                   |
+| TupleDescriptor{id=1, tbl=tbl2, byteSize=16, materialized=true}                   |
+|   SlotDescriptor{id=1, col=k1, type=DATETIME}                                     |
+|     parent=1                                                                      |
+|     materialized=true                                                             |
+|     byteSize=16                                                                   |
+|     byteOffset=0                                                                  |
+|     nullIndicatorByte=0                                                           |
+|     nullIndicatorBit=-1                                                           |
+|     slotIdx=0                                                                     |
+|                                                                                   |
+|                                                                                   |
+| TupleDescriptor{id=2, tbl=null, byteSize=32, materialized=true}                   |
+|   SlotDescriptor{id=3, col=null, type=DATE}                                       |
+|     parent=2                                                                      |
+|     materialized=true                                                             |
+|     byteSize=16                                                                   |
+|     byteOffset=16                                                                 |
+|     nullIndicatorByte=0                                                           |
+|     nullIndicatorBit=-1                                                           |
+|     slotIdx=1                                                                     |
+|                                                                                   |
+|   SlotDescriptor{id=4, col=null, type=BIGINT}                                     |
+|     parent=2                                                                      |
+|     materialized=true                                                             |
+|     byteSize=8                                                                    |
+|     byteOffset=0                                                                  |
+|     nullIndicatorByte=0                                                           |
+|     nullIndicatorBit=-1                                                           |
+|     slotIdx=0                                                                     |
+|                                                                                   |
+|                                                                                   |
+| TupleDescriptor{id=3, tbl=null, byteSize=32, materialized=true}                   |
+|   SlotDescriptor{id=5, col=null, type=DATE}                                       |
+|     parent=3                                                                      |
+|     materialized=true                                                             |
+|     byteSize=16                                                                   |
+|     byteOffset=16                                                                 |
+|     nullIndicatorByte=0                                                           |
+|     nullIndicatorBit=-1                                                           |
+|     slotIdx=1                                                                     |
+|                                                                                   |
+|   SlotDescriptor{id=6, col=null, type=BIGINT}                                     |
+|     parent=3                                                                      |
+|     materialized=true                                                             |
+|     byteSize=8                                                                    |
+|     byteOffset=0                                                                  |
+|     nullIndicatorByte=0                                                           |
+|     nullIndicatorBit=-1                                                           |
+|     slotIdx=0                                                                     |
+|                                                                                   |
+|                                                                                   |
+| TupleDescriptor{id=4, tbl=null, byteSize=48, materialized=true}                   |
+|   SlotDescriptor{id=7, col=k1, type=DATE}                                         |
+|     parent=4                                                                      |
+|     materialized=true                                                             |
+|     byteSize=16                                                                   |
+|     byteOffset=16                                                                 |
+|     nullIndicatorByte=0                                                           |
+|     nullIndicatorBit=-1                                                           |
+|     slotIdx=1                                                                     |
+|                                                                                   |
+|   SlotDescriptor{id=8, col=k2, type=INT}                                          |
+|     parent=4                                                                      |
+|     materialized=true                                                             |
+|     byteSize=4                                                                    |
+|     byteOffset=0                                                                  |
+|     nullIndicatorByte=0                                                           |
+|     nullIndicatorBit=-1                                                           |
+|     slotIdx=0                                                                     |
+|                                                                                   |
+|   SlotDescriptor{id=9, col=k1, type=DATETIME}                                     |
+|     parent=4                                                                      |
+|     materialized=true                                                             |
+|     byteSize=16                                                                   |
+|     byteOffset=32                                                                 |
+|     nullIndicatorByte=0                                                           |
+|     nullIndicatorBit=-1                                                           |
+|     slotIdx=2                                                                     |
++-----------------------------------------------------------------------------------+
 160 rows in set (0.00 sec)
 ```
+
 
 
 > 查询计划中显示的信息还在不断规范和完善中，我们将在后续的文章中详细介绍。
@@ -495,86 +479,86 @@ QueryState: EOF
 
    这一步主要用于从整体分析执行计划，并查看每个Fragment的执行耗时。
 
-   ```sql
+```sql
    mysql> show query profile "/c257c52f93e149ee-ace8ac14e8c9fef9"\G
    *************************** 1. row ***************************
    Fragments:
-                ┌──────────────────────┐
+                ┌ - - - - - - - - - - -┐
                 │[-1: DataBufferSender]│
                 │Fragment: 0           │
                 │MaxActiveTime: 6.626ms│
-                └──────────────────────┘
+                └ - - - - - - - - - - -┘
                             │
-                  ┌──────────────────┐
+                  ┌ - - - - - - - - -┐
                   │[9: EXCHANGE_NODE]│
                   │Fragment: 0       │
-                  └──────────────────┘
+                  └ - - - - - - - - -┘
                             │
-                ┌──────────────────────┐
+                ┌ - - - - - - - - - - -┐
                 │[9: DataStreamSender] │
                 │Fragment: 1           │
                 │MaxActiveTime: 5.449ms│
-                └──────────────────────┘
+                └ - - - - - - - - - - -┘
                             │
-                    ┌──────────────┐
+                    ┌ - - - - - - -┐
                     │[4: SORT_NODE]│
                     │Fragment: 1   │
-                    └──────────────┘
+                    └ - - - - - - -┘
                            ┌┘
-                ┌─────────────────────┐
+                ┌ - - - - - - - - - - ┐
                 │[8: AGGREGATION_NODE]│
                 │Fragment: 1          │
-                └─────────────────────┘
+                └ - - - - - - - - - - ┘
                            └┐
-                  ┌──────────────────┐
+                  ┌ - - - - - - - - -┐
                   │[7: EXCHANGE_NODE]│
                   │Fragment: 1       │
-                  └──────────────────┘
+                  └ - - - - - - - - -┘
                             │
-                ┌──────────────────────┐
+                ┌ - - - - - - - - - - -┐
                 │[7: DataStreamSender] │
                 │Fragment: 2           │
                 │MaxActiveTime: 3.505ms│
-                └──────────────────────┘
+                └ - - - - - - - - - - -┘
                            ┌┘
-                ┌─────────────────────┐
+                ┌ - - - - - - - - - - ┐
                 │[3: AGGREGATION_NODE]│
                 │Fragment: 2          │
-                └─────────────────────┘
+                └ - - - - - - - - - - ┘
                            │
-                 ┌───────────────────┐
+                 ┌ - - - - - - - - - ┐
                  │[2: HASH_JOIN_NODE]│
                  │Fragment: 2        │
-                 └───────────────────┘
-              ┌────────────┴────────────┐
-    ┌──────────────────┐      ┌──────────────────┐
+                 └ - - - - - - - - - ┘
+              ┌-----------┴-----------┐
+    ┌ - - - - - - - - -┐      ┌ - - - - - - - - -┐
     │[5: EXCHANGE_NODE]│      │[6: EXCHANGE_NODE]│
     │Fragment: 2       │      │Fragment: 2       │
-    └──────────────────┘      └──────────────────┘
+    └ - - - - - - - - -┘      └ - - - - - - - - -┘
               │                         │
-   ┌─────────────────────┐ ┌────────────────────────┐
+   ┌ - - - - - - - - - - ┐ ┌ - - - - - - - - - - - -┐
    │[5: DataStreamSender]│ │[6: DataStreamSender]   │
    │Fragment: 4          │ │Fragment: 3             │
    │MaxActiveTime: 1.87ms│ │MaxActiveTime: 636.767us│
-   └─────────────────────┘ └────────────────────────┘
+   └ - - - - - - - - - - ┘ └ - - - - - - - - - - - -┘
               │                        ┌┘
-    ┌───────────────────┐    ┌───────────────────┐
+    ┌ - - - - - - - - - ┐    ┌ - - - - - - - - - ┐
     │[0: OLAP_SCAN_NODE]│    │[1: OLAP_SCAN_NODE]│
     │Fragment: 4        │    │Fragment: 3        │
-    └───────────────────┘    └───────────────────┘
+    └ - - - - - - - - - ┘    └ - - - - - - - - - ┘
               │                        │
-       ┌─────────────┐          ┌─────────────┐
+       ┌ - - - - - - ┐          ┌ - - - - - - ┐
        │[OlapScanner]│          │[OlapScanner]│
        │Fragment: 4  │          │Fragment: 3  │
-       └─────────────┘          └─────────────┘
+       └ - - - - - - ┘          └ - - - - - - ┘
               │                        │
-     ┌─────────────────┐      ┌─────────────────┐
+     ┌ - - - - - - - - ┐      ┌ - - - - - - - - ┐
      │[SegmentIterator]│      │[SegmentIterator]│
      │Fragment: 4      │      │Fragment: 3      │
-     └─────────────────┘      └─────────────────┘
+     └ - - - - - - - - ┘      └ - - - - - - - - ┘
    
    1 row in set (0.02 sec)
-   ```
+```
 
    如上图，每个节点都标注了自己所属的 Fragment，并且在每个 Fragment 的 Sender节点，标注了该 Fragment 的执行耗时。这个耗时，是Fragment下所有 Instance 执行耗时中最长的一个。这个有助于我们从整体角度发现最耗时的 Fragment。
 
@@ -582,7 +566,7 @@ QueryState: EOF
 
    比如我们发现 Fragment 1 耗时最长，则可以继续查看 Fragment 1 的 Instance 列表：
    
-   ```sql
+```sql
    mysql> show query profile "/c257c52f93e149ee-ace8ac14e8c9fef9/1";
    +-----------------------------------+-------------------+------------+
    | Instances                         | Host              | ActiveTime |
@@ -591,7 +575,7 @@ QueryState: EOF
    | c257c52f93e149ee-ace8ac14e8c9ff05 | 10.200.00.02:9060 | 5.367ms    |
    | c257c52f93e149ee-ace8ac14e8c9ff04 | 10.200.00.03:9060 | 5.358ms    |
    +-----------------------------------+-------------------+------------+ 
-   ```
+```
    
    这里展示了 Fragment 1 上所有的 3 个 Instance 所在的执行节点和耗时。
 
@@ -599,11 +583,11 @@ QueryState: EOF
 
    我们可以继续查看某一个具体的 Instance 上各个算子的详细 Profile：
 
-   ```sql
+```sql
    mysql> show query profile "/c257c52f93e149ee-ace8ac14e8c9fef9/1/c257c52f93e149ee-ace8ac14e8c9ff03"\G
    *************************** 1. row ***************************
    Instance:
-    ┌───────────────────────────────────────┐
+    +---------------------------------------+
     │[9: DataStreamSender]                  │
     │(Active: 37.222us, non-child: 0.40)    │
     │  - Counters:                          │
@@ -613,20 +597,20 @@ QueryState: EOF
     │      - PeakMemoryUsage: 8.00 KB       │
     │      - SerializeBatchTime: 0ns        │
     │      - UncompressedRowBatchSize: 0.00 │
-    └───────────────────────────────────────┘
+    +---------------------------------------+
                         └┐
                          │
-       ┌──────────────────────────────────┐
+       +----------------------------------+
        │[4: SORT_NODE]                    │
        │(Active: 5.421ms, non-child: 0.71)│
        │  - Counters:                     │
        │      - PeakMemoryUsage: 12.00 KB │
        │      - RowsReturned: 0           │
        │      - RowsReturnedRate: 0       │
-       └──────────────────────────────────┘
+       +----------------------------------+
                         ┌┘
                         │
-      ┌───────────────────────────────────┐
+      +-----------------------------------+
       │[8: AGGREGATION_NODE]              │
       │(Active: 5.355ms, non-child: 10.68)│
       │  - Counters:                      │
@@ -650,10 +634,10 @@ QueryState: EOF
       │      - RowsReturned: 0            │
       │      - RowsReturnedRate: 0        │
       │      - SpilledPartitions: 0       │
-      └───────────────────────────────────┘
+      +-----------------------------------+
                         └┐
                          │
-   ┌──────────────────────────────────────────┐
+   +------------------------------------------+
    │[7: EXCHANGE_NODE]                        │
    │(Active: 4.360ms, non-child: 46.84)       │
    │  - Counters:                             │
@@ -666,8 +650,8 @@ QueryState: EOF
    │      - RowsReturned: 0                   │
    │      - RowsReturnedRate: 0               │
    │      - SendersBlockedTotalTimer(*): 0ns  │
-   └──────────────────────────────────────────┘
-   ```
+   +------------------------------------------+
+```
 
    上图展示了 Fragment 1 中，Instance c257c52f93e149ee-ace8ac14e8c9ff03 的各个算子的具体 Profile。
 

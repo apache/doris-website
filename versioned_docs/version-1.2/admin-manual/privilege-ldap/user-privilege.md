@@ -5,25 +5,6 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 # Authority Management
 
 Doris's new privilege management system refers to Mysql's privilege management mechanism, achieves table-level fine-grained privilege control, role-based privilege access control, and supports whitelist mechanism.
@@ -61,24 +42,24 @@ When a user and a role are disassociated, the user automatically loses all permi
 When the role's permissions are added or deleted, the user's permissions will also change.
 
 ```
-┌────────┐        ┌────────┐         ┌────────┐
-│  user1 ├────┬───►  role1 ├────┬────►  priv1 │
-└────────┘    │   └────────┘    │    └────────┘
+┌--------┐        ┌--------┐         ┌--------┐
+│  user1 ├----┬---►  role1 ├----┬----►  priv1 │
+└--------┘    │   └--------┘    │    └--------┘
               │                 │
               │                 │
-              │   ┌────────┐    │
-              │   │  role2 ├────┤
-┌────────┐    │   └────────┘    │    ┌────────┐
-│  user2 ├────┘                 │  ┌─►  priv2 │
-└────────┘                      │  │ └────────┘
-                  ┌────────┐    │  │
-           ┌──────►  role3 ├────┘  │
-           │      └────────┘       │
+              │   ┌--------┐    │
+              │   │  role2 ├----┤
+┌--------┐    │   └--------┘    │    ┌--------┐
+│  user2 ├----┘                 │  ┌─►  priv2 │
+└--------┘                      │  │ └--------┘
+                  ┌--------┐    │  │
+           ┌------►  role3 ├----┘  │
+           │      └--------┘       │
            │                       │
            │                       │
-┌────────┐ │      ┌────────┐       │ ┌────────┐
-│  userN ├─┴──────►  roleN ├───────┴─►  privN │
-└────────┘        └────────┘         └────────┘
+┌--------┐ │      ┌--------┐       │ ┌--------┐
+│  userN ├-┴------►  roleN ├-------┴-►  privN │
+└--------┘        └--------┘         └--------┘
 ```
 
 As shown in the figure above:

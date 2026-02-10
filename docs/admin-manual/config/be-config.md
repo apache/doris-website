@@ -3,30 +3,10 @@
     "title": "BE Configuration",
     "language": "en",
     "toc_min_heading_level": 2,
-    "toc_max_heading_level": 4
+    "toc_max_heading_level": 4,
+    "description": "This document mainly introduces the relevant configuration items of BE."
 }
 ---
-
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
-<!-- Please sort the configuration alphabetically -->
 
 # BE Configuration
 
@@ -50,7 +30,7 @@ There are two ways to view the configuration items of BE:
 
 2. View by command
 
-   You can view the configuration items of the BE in the MySQL client with the following command,Concrete language law reference [SHOW-CONFIG](../../sql-manual/sql-statements/Database-Administration-Statements/SHOW-CONFIG.md):
+   You can view the configuration items of the BE in the MySQL client with the following command,Concrete language law reference [SHOW-CONFIG](../../sql-manual/sql-statements/cluster-management/instance-management/SHOW-FRONTEND-CONFIG):
 
     `SHOW BACKEND CONFIG;`
 
@@ -360,7 +340,7 @@ The maximum size of a (received) message of the thrift server, in bytes. If the 
 
 #### `fragment_mgr_asynic_work_pool_thread_num_min`
 
-* Description: Number of threads to excute asynic work. By default, the minimum number of threads is 16.
+* Description: Number of threads to execute asynic work. By default, the minimum number of threads is 16.
 * Default value: 16
 
 #### `fragment_mgr_asynic_work_pool_thread_num_max`
@@ -389,7 +369,7 @@ The maximum size of a (received) message of the thrift server, in bytes. If the 
 
 * Type: int32
 * Description: The number of threads in the Scanner thread pool. In Doris' scanning tasks, each Scanner will be submitted as a thread task to the thread pool to be scheduled. This parameter determines the size of the Scanner thread pool.
-* Default value: 48
+* Default value: Depending on cpu cores. Equal to `max(48, 2 * num_of_cpu_cores)`
 
 #### `doris_max_remote_scanner_thread_pool_thread_num`
 
@@ -603,7 +583,7 @@ BaseCompaction:546859:
 #### `segcompaction_batch_size`
 
 * Type: int32
-* Description: Max number of segments allowed in a single segment compaction task.
+* Description: Segment compaction is triggered when the number of segments exceeds this threshold. This configuration also limits the maximum number of raw segments in a single segment compaction task.
 * Default value: 10
 
 #### `segcompaction_candidate_max_rows`
@@ -660,6 +640,23 @@ BaseCompaction:546859:
 * Description: Minimal interval (s) to update peer replica infos
 * Default value: 60 (s)
 
+#### `cold_data_compaction_score_threshold`
+
+* Type: int32
+* Description: This configuration specifies the minimum compaction score threshold for cold data before triggering compaction. When the compaction score of cold data exceeds this threshold, compaction will be considered. Adjusting this value helps control the frequency and aggressiveness of compaction on cold data in remote storage. Supported since 3.1.3.
+* Default value: 100
+
+#### `cold_data_compaction_thread_num`
+
+* Type: int32
+* Description: The number of threads used for cold data compaction. This configuration controls the degree of parallelism for cold data compaction tasks. Increasing this value allows more compaction tasks on cold data to run simultaneously, which may improve throughput but also increase resource usage.
+* Default value: 2
+
+#### `cold_data_compaction_interval_sec`
+
+* Type: int32
+* Description: The time interval in seconds between triggers for cold data compaction. A shorter interval means compaction on cold data will be considered more frequently, potentially leading to faster cleanup but higher resource consumption.
+* Default value: 1800 (seconds)
 
 ### Load
 
@@ -1356,11 +1353,6 @@ Indicates how many tablets failed to load in the data directory. At the same tim
   group_commit_wal_path=/data1/storage/wal;/data2/storage/wal;/data3/storage/wal
   ```
 
-#### `group_commit_memory_rows_for_max_filter_ratio`
-
-* Description: The `max_filter_ratio` limit can only work if the total rows of `group commit` is less than this value. See [Group Commit](../../data-operate/import/group-commit-manual.md) for more details
-* Default: 10000
-
 ### Compute and Storage Disaggregated Mode
 
 #### `deploy_mode`
@@ -1385,3 +1377,9 @@ Default: true for cloud mode, false for non-cloud mode.
 Default: [{"path":"${DORIS_HOME}/file_cache"}]
 * Description: The disk paths and other parameters used for file cache, represented as an array, with one entry for each disk. The `path` specifies the disk path, and `total_size` limits the size of the cache; -1 or 0 will use the entire disk space.
 * format: [{"path":"/path/to/file_cache","total_size":21474836480,{"path":"/path/to/file_cache2","total_size":21474836480}]
+
+#### `time_series_max_tablet_version_num`
+
+* Type: int
+* Description: Limit the number of versions of a single tablet under the time-series compaction policy. It is used to prevent a large number of version accumulation problems caused by too frequent load or untimely compaction. When the limit is exceeded, the load task will be rejected.
+* Default value: 20000

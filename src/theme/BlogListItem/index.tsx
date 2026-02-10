@@ -8,7 +8,6 @@ import { blogPostContainerID } from '@docusaurus/utils-common';
 import MDXContent from '@theme/MDXContent';
 import EditThisPage from '@theme/EditThisPage';
 import TagsListInline from '@theme/TagsListInline';
-import BlogPostAuthors from '@theme/BlogPostAuthors';
 import useFormatDate from '@site/src/hooks/use-format-date';
 import './styles.scss';
 import HeadItem from './HeadItem';
@@ -36,6 +35,7 @@ export default function BlogListItem(props) {
     const { withBaseUrl } = useBaseUrlUtils();
     const { children, frontMatter, assets, metadata, large = false } = props;
     const { date, permalink, tags, readingTime, title, editUrl, authors } = metadata;
+    const externalLink = frontMatter.externalLink;
     const image = assets.image ?? frontMatter.image;
     const tagsExists = tags.length > 0;
     const summary = frontMatter.summary;
@@ -45,6 +45,7 @@ export default function BlogListItem(props) {
             <HeadItem
                 {...metadata}
                 image={image}
+                externalLink={externalLink}
                 large={large}
                 size={large ? 'large' : 'small'}
                 tagsExists={tagsExists}
@@ -57,11 +58,12 @@ export default function BlogListItem(props) {
         <article itemProp="blogPost" itemScope itemType="http://schema.org/BlogPosting">
             <Link
                 itemProp="url"
-                to={permalink}
-                className="hover:no-underline hover:decoration-none transition-scale group relative flex h-full flex-col rounded-lg border border-[#DFE5F0] hover:border-[#0065FD] lg:border-0"
+                target={externalLink ? '_blank' : '_self'}
+                to={externalLink || permalink}
+                className="hover:no-underline hover:decoration-none transition-scale group relative flex h-full flex-col rounded-lg border border-[#DFE5F0] hover:border-primary lg:border-0"
             >
                 <div
-                    className={`relative overflow-hidden rounded-t-lg border-[#DFE5F0] group-hover:border-[#0065FD] lg:border lg:border-b-0 lg:pb-0`}
+                    className={`relative overflow-hidden rounded-t-lg border-[#DFE5F0] group-hover:border-primary lg:border lg:border-b-0 lg:pb-0`}
                     style={{
                         width: '100%',
                         height: '165px',
@@ -72,7 +74,7 @@ export default function BlogListItem(props) {
                 <div
                     className={`px-6 ${
                         large ? 'py-6 lg:pt-12' : ' py-6'
-                    } flex-1 rounded-b-lg border-[#DFE5F0] group-hover:border-[#0065FD] lg:border lg:border-t-0`}
+                    } flex-1 rounded-b-lg border-[#DFE5F0] group-hover:border-primary lg:border lg:border-t-0`}
                 >
                     {!large && (
                         <div className="">

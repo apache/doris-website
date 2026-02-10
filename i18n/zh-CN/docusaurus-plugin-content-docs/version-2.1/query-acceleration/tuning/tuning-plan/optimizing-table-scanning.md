@@ -1,28 +1,10 @@
 ---
 {
     "title": "使用分区裁剪优化扫表",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "Doris 作为一款高性能实时分析数据库，提供了强大的分区裁剪（Partition Pruning）功能，可以显著提升查询性能。分区裁剪是一种查询优化技术，它通过分析查询条件，智能识别与查询相关的分区，并仅扫描这些分区的数据，从而避免了对无关分区的不必要扫描。"
 }
 ---
-
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
 
 ## 概述
 
@@ -79,4 +61,4 @@ WHERE date BETWEEN '2023-01-15' AND '2023-02-15';
 
 ## 总结
 
-综上所述，Doris 的分区裁剪功能可以智能识别查询条件与分区之间的关联性，自动裁剪无关分区，仅扫描必要的数据 ，显著提升查询性能。合理利用分区裁剪特性，可以帮助用户构建高效的实时分析系统，轻松应对海量数据的查询需求。
+综上所述，Doris 的分区裁剪功能可以智能识别查询条件与分区之间的关联性，自动裁剪无关分区，仅扫描必要的数据，显著提升查询性能。合理利用分区裁剪特性，可以帮助用户构建高效的实时分析系统，轻松应对海量数据的查询需求。

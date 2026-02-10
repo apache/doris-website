@@ -5,26 +5,6 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
-
 本文档介绍如何使用 [SELECT INTO OUTFILE](../../sql-manual/sql-reference/Data-Manipulation-Statements/OUTFILE) 命令进行查询结果的导出操作。
 
 `SELECT INTO OUTFILE` 是一个同步命令，命令返回即表示操作结束，同时会返回一行结果来展示导出的执行结果。
@@ -152,6 +132,8 @@ ERROR 1064 (HY000): errCode = 2, detailMessage = Open broker writer failed ...
 ```
 
 ## 注意事项
+
+* 当前版本 nereids 优化器不支持并发Outfile，若开启了 nereids 优化器，并发 Outfile 将直接回退老优化器，由老优化器来进行并发 Outfile 导出。同时，当前版本 pipeline 引擎也不支持并发 Outfile，若开启了 pipeline 引擎, 并发 Outfile 将回退到单并发导出。
 
 * 如果不开启并发导出，查询结果是由单个 BE 节点，单线程导出的。因此导出时间和导出结果集大小正相关。开启并发导出可以降低导出的时间。
 

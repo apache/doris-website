@@ -1,32 +1,13 @@
 ---
 {
-    "title": "FE Configuration",
+    "title": "FE Configuration | Config",
     "language": "en",
     "toc_min_heading_level": 2,
-    "toc_max_heading_level": 4
+    "toc_max_heading_level": 4,
+    "description": "Complete reference guide for Frontend (FE) configuration parameters in Doris, including metadata management, query engine, load/export, and storage settings.",
+    "sidebar_label": "FE Configuration"
 }
 ---
-
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
-<!-- Please sort the configuration alphabetically -->
 
 # FE Configuration
 
@@ -48,7 +29,7 @@ There are two ways to view the configuration items of FE:
 
 2. View by command
 
-    After the FE is started, you can view the configuration items of the FE in the MySQL client with the following command,Concrete language law reference [SHOW-CONFIG](../../sql-manual/sql-statements/Database-Administration-Statements/SHOW-CONFIG.md):
+    After the FE is started, you can view the configuration items of the FE in the MySQL client with the following command,Concrete language law reference [SHOW-CONFIG](../../sql-manual/sql-statements/cluster-management/instance-management/SHOW-FRONTEND-CONFIG):
 
     `SHOW FRONTEND CONFIG;`
 
@@ -85,7 +66,7 @@ There are two ways to configure FE configuration items:
 
 3. Dynamic configuration via HTTP protocol
 
-    For details, please refer to [Set Config Action](../fe/set-config-action)
+    For details, please refer to [Set Config Action](../open-api/fe-http/set-config-action)
 
     This method can also persist the modified configuration items. The configuration items will be persisted in the `fe_custom.conf` file and will still take effect after FE is restarted.
 
@@ -1614,6 +1595,14 @@ Default：5
 
 Export checker's running interval.
 
+#### `enable_stream_load_profile`
+
+Default: false
+
+MasterOnly: false
+
+Whether to enable stream load profile
+
 ### Log
 
 #### `log_roll_size_mb`
@@ -1760,7 +1749,7 @@ Used to set maximal number of replication per tablet.
 
 #### `default_db_data_quota_bytes`
 
-Default：1PB
+Default：8192PB
 
 IsMutable：true
 
@@ -2166,6 +2155,12 @@ When create a table(or partition), you can specify its storage medium(HDD or SSD
 Default：HDD
 
 When create a table(or partition), you can specify its storage medium(HDD or SSD). If not set, this specifies the default medium when create.
+
+#### `default_compression_type`
+
+Default: lz4 (before 4.0.3), zstd (since 4.0.3)
+
+When creating a table, you can specify its compression algorithm. If not set, this specifies the default compression type when creating a table. Valid values include: lz4, zstd.
 
 #### `enable_storage_policy`
 
@@ -2778,3 +2773,4 @@ Description:  The mode in which FE runs. `cloud` indicates the decoupled storage
 Default: ""
 
 Endpoints of the meta service should be specified in the format 'host1:port,host2:port'. This configuration is necessary for the storage and compute disaggregated mode.
+

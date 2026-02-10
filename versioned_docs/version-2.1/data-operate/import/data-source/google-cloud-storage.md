@@ -1,28 +1,13 @@
 ---
 {
-    "title": "Google Cloud Storage",
-    "language": "en"
+    "title": "Google Cloud Storage | Data Source",
+    "language": "en",
+    "description": "Doris provides two ways to load files from Google Cloud Storage:",
+    "sidebar_label": "Google Cloud Storage"
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
+# Google Cloud Storage
 
 Doris provides two ways to load files from Google Cloud Storage:
 - Use S3 Load to load Google Cloud Storage files into Doris, which is an asynchronous load method.
@@ -188,3 +173,4 @@ mysql> select * from test_s3load;
 +---------+-----------+------+
 10 rows in set (0.04 sec)
 ```
+

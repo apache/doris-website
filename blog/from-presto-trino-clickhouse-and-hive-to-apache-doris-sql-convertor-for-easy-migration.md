@@ -3,7 +3,8 @@
     'title': "From Presto, Trino, ClickHouse, and Hive to Apache Doris: SQL convertor for easy migration",
     'description': "Users can execute queries with their old SQL syntaxes directly in Doris or batch convert their existing SQL statements on the visual SQL conversion interface.",
     'date': '2024-05-06',
-    'author': 'Apache Doris',
+    'author': 'velodb.io · VeloDB Engineering Team',
+    'externalLink': 'https://www.velodb.io/blog/377',
     'tags': ['Tech Sharing'],
     "image": '/images/sql-convertor-feature.jpeg'
 }
@@ -173,7 +174,7 @@ After deployment, you can access the service by `ip:8080` via your local browser
 2. The Doris SQL Convertor supports 239 UNION ALL conversions at most.
 :::
 
-Join the [Apache Doris community](https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-2unfw3a3q-MtjGX4pAd8bCGC1UV0sKcw) to seek guidance from the Doris makers or provide your feedback!
+Join the [Apache Doris community](https://doris.apache.org/slack) to seek guidance from the Doris makers or provide your feedback!
 
 
 

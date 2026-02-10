@@ -12,17 +12,22 @@ import { NavbarItems, getNavItem } from '..';
 import SearchIcon from '@site/static/images/search-icon.svg';
 import CloseIcon from '@site/static/images/icon/close.svg';
 import { DataContext } from '../../../Layout';
+import { ARCHIVE_PATH } from '../../../../constant/common' ;
+import { DEFAULT_VERSION } from '../../../../constant/version' ;
 
 interface NavbarDocsProps {
     isEN: boolean;
 }
 
 export const NavbarDocsLeft = ({ isEN }: NavbarDocsProps) => {
-    const [currentVersion, setCurrentVersion] = useState('');
+    const [currentVersion, setCurrentVersion] = useState(DEFAULT_VERSION);
     const location = useLocation();
     const history = useHistory();
     const docItems = isEN ? useThemeConfig().docNavbarEN.items : useThemeConfig().docNavbarZH.items;
-    const [leftDocItems] = splitNavbarItems(docItems);
+    let [leftDocItems] = splitNavbarItems(docItems);
+    if(location.pathname.includes(ARCHIVE_PATH)){
+        leftDocItems = leftDocItems.filter((item)=>item.type !== 'search')
+    }
     useEffect(() => {
         const secPath = location.pathname.includes('zh-CN/docs')
             ? location.pathname.split('/')[3]
@@ -30,7 +35,7 @@ export const NavbarDocsLeft = ({ isEN }: NavbarDocsProps) => {
         if (location.pathname.includes('docs') && ['dev', '2.1', '2.0', '1.2'].includes(secPath)) {
             setCurrentVersion(secPath);
         } else {
-            setCurrentVersion('');
+            setCurrentVersion(DEFAULT_VERSION);
         }
     }, [typeof window !== 'undefined' && location.pathname]);
     return (

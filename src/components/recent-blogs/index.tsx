@@ -9,7 +9,7 @@ export default function RecentBlogs() {
             <div className=" text-[2rem] leading-[3.25rem]">Recent posts</div>
             <div className="mt-4 flex flex-col">
                 {RECENT_BLOGS_POSTS.map(({ label, link }) => (
-                    <Link className="text-lg leading-10 hover:no-underline hover:text-[#444FD9]" to={link}>
+                    <Link className="text-lg leading-10 hover:no-underline hover:text-primary" to={link}>
                         {label}
                     </Link>
                 ))}

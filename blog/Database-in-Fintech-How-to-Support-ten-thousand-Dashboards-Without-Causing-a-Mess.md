@@ -3,8 +3,9 @@
     'title': 'Database in fintech: how to support 10,000 dashboards without causing a mess',
     'description': "This article introduces the lifecycle of financial metrics in a database, from how they're produced to how they're efficiently presented in data reports.",
     'date': '2023-08-05',
-    'author': 'Hou Lan',
+    'author': 'velodb.io · Hou Lan',
     'tags': ['Best Practice'],
+    'externalLink': 'https://www.velodb.io/blog/133',
     "image": '/images/fintech-service.png'
 }
 
@@ -72,7 +73,7 @@ Analysts often check data reports of the same metrics on a regular basis. These 
 
 The complexity of data analysis in the financial industry lies in the data itself other than the engineering side. Thus, the underlying data architecture should focus on facilitating the unified and efficient management of data. Apache Doris provides the flexibility of simple metric registration and the ability of fast and resource-efficient metric computation. In this case, the user is able to handle 10,000 active financial metrics in 10,000 dashboards with 30% less ETL efforts.
 
-Find Apache Doris developers on [Slack](https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-2unfw3a3q-MtjGX4pAd8bCGC1UV0sKcw).
+Find Apache Doris developers on [Slack](https://doris.apache.org/slack).
 
 
 

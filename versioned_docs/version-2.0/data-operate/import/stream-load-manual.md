@@ -5,25 +5,6 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 Stream Load supports importing local files or data streams into Doris through the HTTP protocol. 
 
 Stream Load is a synchronous import method that returns the import result after the import is executed, allowing you to determine the success of the import through the request response. Generally, user can use Stream Load to import files under 10GB. If the file is too large, it is recommended to split the file and then use Stream Load for importing. Stream Load can ensure the atomicity of a batch of import tasks, meaning that either all of them succeed or all of them fail.
@@ -385,48 +366,6 @@ The return result parameters are explained in the following table:
 | ErrorURL               | If there are data quality issues, users can access this URL to view the specific rows with errors. |
 
 Users can access the ErrorURL to review data that failed to import due to issues with data quality. By executing the command `curl "<ErrorURL>"`, users can directly retrieve information about the erroneous data.
-
-## Application of Table Value Function in Stream Load - http_stream Mode
-
-Leveraging the recently introduced functionality of Table Value Function (TVF) in Doris, Stream Load now allows the expression of import parameters through SQL statements. Specifically, a TVF named `http_stream` has been dedicated for Stream Load operations.
-
-:::tip
-
-When performing Stream Load using the TVF `http_stream`, the Rest API URL differs from the standard URL used for regular Stream Load imports.
-
-- Standard Stream Load URL:
-  `http://fe_host:http_port/api/{db}/{table}/_stream_load`
-- URL for Stream Load using TVF `http_stream`:
-  `http://fe_host:http_port/api/_http_stream`
-
-:::
-
-Using curl for Stream Load in http_stream Mode:
-
-```shell
-curl --location-trusted -u user:passwd [-H "sql: ${load_sql}"...] -T data.file -XPUT http://fe_host:http_port/api/_http_stream
-```
-
-Adding a SQL parameter in the header to replace the previous parameters such as `column_separator`, `line_delimiter`, `where`, `columns`, etc., makes it very convenient to use.
-
-Example of load SQL:
-
-```shell
-insert into db.table (col, ...) select stream_col, ... from http_stream("property1"="value1");
-```
-
-http_stream parameter:
-
-- "column_separator" = ","
-
-- "format" = "CSV"
-- ...
-
-For example:
-
-```Plain
-curl  --location-trusted -u root: -T test.csv  -H "sql:insert into demo.example_tbl_1(user_id, age, cost) select c1, c4, c7 * 2 from http_stream(\"format\" = \"CSV\", \"column_separator\" = \",\" ) where age >= 30"  http://127.0.0.1:28030/api/_http_stream
-```
 
 ## Load example
 
@@ -1278,32 +1217,6 @@ Stream load uses HTTP protocol, so all parameters related to import tasks are se
    Whether to enable partial column updates, Boolean type, True means that use partial column update, the default value is false, this parameter is only allowed to be set when the table model is Unique and Merge on Write is used.
 
    eg: `curl  --location-trusted -u root: -H "partial_columns:true" -H "column_separator:," -H "columns:id,balance,last_access_time" -T /tmp/test.csv http://127.0.0.1:48037/api/db1/user_profile/_stream_load`
-
-
-### Use stream load with SQL
-
-You can add a `sql` parameter to the `Header` to replace the `column_separator`, `line_delimiter`, `where`, `columns` in the previous parameter, which is convenient to use.
-
-```
-curl --location-trusted -u user:passwd [-H "sql: ${load_sql}"...] -T data.file -XPUT http://fe_host:http_port/api/_http_stream
-
-
-# -- load_sql
-# insert into db.table (col, ...) select stream_col, ... from http_stream("property1"="value1");
-
-# http_stream
-# (
-#     "column_separator" = ",",
-#     "format" = "CSV",
-#     ...
-# )
-```
-
-Examples：
-
-```
-curl  --location-trusted -u root: -T test.csv  -H "sql:insert into demo.example_tbl_1(user_id, age, cost) select c1, c4, c7 * 2 from http_stream("format" = "CSV", "column_separator" = "," ) where age >= 30"  http://127.0.0.1:28030/api/_http_stream
-```
 
 ### Return results
 

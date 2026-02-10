@@ -5,26 +5,6 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
-
 # 导入严格模式
 
 严格模式（strict_mode）为导入操作中的一个参数配置。该参数会影响某些数值的导入行为和最终导入的数据。
@@ -107,7 +87,7 @@ under the License.
 
    | 原始数据类型 | 原始数据举例  | 转换为 TinyInt 后的值 | 严格模式   | 结果             |
    | ------------ | ------------- | --------------------- | ---------- | ---------------- |
-   | 空值         | \N            | NULL                  | 开启或关闭 | NULL             |
+   | 空值         | `\N`            | NULL                  | 开启或关闭 | NULL             |
    | 非空值       | "abc" or 2000 | NULL                  | 开启       | 非法值（被过滤） |
    | 非空值       | "abc"         | NULL                  | 关闭       | NULL             |
    | 非空值       | 1             | 1                     | 开启或关闭 | 正确导入         |
@@ -121,7 +101,7 @@ under the License.
 
    | 原始数据类型 | 原始数据举例 | 转换为 Decimal 后的值 | 严格模式   | 结果             |
    | ------------ | ------------ | --------------------- | ---------- | ---------------- |
-   | 空值         | \N           | null                  | 开启或关闭 | NULL             |
+   | 空值         | `\N`           | null                  | 开启或关闭 | NULL             |
    | 非空值       | aaa          | NULL                  | 开启       | 非法值（被过滤） |
    | 非空值       | aaa          | NULL                  | 关闭       | NULL             |
    | 非空值       | 1 or 10      | 1 or 10               | 开启或关闭 | 正确导入         |

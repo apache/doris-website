@@ -5,25 +5,6 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 ## OUTFILE
 ### Name
 
@@ -133,8 +114,7 @@ INTO OUTFILE "file_path"
 
 Parquet and ORC file formats have their own data types. The export function of Doris can automatically export the Doris data types to the corresponding data types of the Parquet/ORC file format. The following are the data type mapping relationship of the Doris data types and the Parquet/ORC file format data types:
 
-1. The mapping relationship between the Doris data types to the ORC data types is: 
-
+1. The mapping relationship between the Doris data types to the ORC data types is:
     | Doris Type | Orc Type |
     | --- | --- |
     | boolean | boolean  |
@@ -155,8 +135,7 @@ Parquet and ORC file formats have their own data types. The export function of D
     | map | map  |
     | array | array |
 
-2. When Doris exports data to the Parquet file format, the Doris memory data will be converted to Arrow memory data format first, and then the paraquet file format is written by Arrow. The mapping relationship between the Doris data types to the ARROW data types is: 
-
+2. When Doris exports data to the Parquet file format, the Doris memory data will be converted to Arrow memory data format first, and then the paraquet file format is written by Arrow. The mapping relationship between the Doris data types to the ARROW data types is:
     | Doris Type | Arrow Type |
     | --- | --- |
     | boolean  | boolean |

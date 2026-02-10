@@ -1,0 +1,7 @@
+.blog-item-link{
+    color: #000000 !important;
+}
+
+.blog-item-link:hover{
+    color: var(--ifm-color-primary) !important;
+}

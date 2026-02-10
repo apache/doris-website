@@ -5,25 +5,6 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 ## EXPORT
 
 ### Name
@@ -69,8 +50,8 @@ illustrate:
 
   The following parameters can be specified:
 
-  - `column_separator`: Specifies the exported column separator, default is \t. Only single byte is supported.
-  - `line_delimiter`: Specifies the line delimiter for export, the default is \n. Only single byte is supported.
+  - `column_separator`: Specifies the exported column separator, default is `\t`. Only single byte is supported.
+  - `line_delimiter`: Specifies the line delimiter for export, the default is `\n`. Only single byte is supported.
   - `exec_mem_limit`: Export the upper limit of the memory usage of a single BE node, the default is 2GB, and the unit is bytes.
   - `timeout`: The timeout period of the export job, the default is 2 hours, the unit is seconds.
   - `tablet_num_per_task`: The maximum number of tablets each subtask can allocate to scan.
@@ -154,7 +135,7 @@ WITH BROKER "broker_name"
 EXPORT TABLE testTbl TO "file:///home/data/a";
 ```
 
-6. Export all data in the testTbl table to hdfs with invisible character "\x07" as column or row separator.
+6. Export all data in the testTbl table to hdfs with invisible character `"\x07"` as column or row separator.
 
 ```sql
 EXPORT TABLE testTbl TO "hdfs://hdfs_host:port/a/b/c" 
@@ -175,7 +156,7 @@ WITH BROKER "broker_name"
 EXPORT TABLE testTbl TO "file:///home/data/a" PROPERTIES ("columns" = "k1,v1");
 ```
 
-8. Export all data in the testTbl table to s3 with invisible characters "\x07" as column or row separators.
+8. Export all data in the testTbl table to s3 with invisible characters `"\x07"` as column or row separators.
 
 ```sql
 EXPORT TABLE testTbl TO "hdfs://hdfs_host:port/a/b/c" 

@@ -3,7 +3,8 @@
     'title': 'Variant in Apache Doris 2.1.0: a new data type 8 times faster than JSON for semi-structured data analysis',
     'description': 'Doris 2.1.0 provides a new data type: Variant, for semi-structured data analysis, which enables 8 times faster query performance than JSON with one-third storage space.',
     'date': '2024-03-26',
-    'author': 'Apache Doris',
+    'author': 'velodb.io · VeloDB Engineering Team',
+    'externalLink': 'https://www.velodb.io/blog/224',
     'tags': ['Tech Sharing'],
     "image": '/images/variant-in-apache-doris-2.1.png'
 }
@@ -427,4 +428,4 @@ The Doris-based solution also delivers lower CPU usage in data writing and highe
 
 The Variant data type has stood the test of many users before the official release of Apache Doris 2.1.0. It is production-available now. In the future, we plan to realize more lightweight changes for Variant to facilitate data modeling. 
 
-For more information about Variant and guides on how to build a semi-structured data analytics solution for your case, come talk to the [Apache Doris developer team](https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-2unfw3a3q-MtjGX4pAd8bCGC1UV0sKcw).
+For more information about Variant and guides on how to build a semi-structured data analytics solution for your case, come talk to the [Apache Doris developer team](https://doris.apache.org/slack).

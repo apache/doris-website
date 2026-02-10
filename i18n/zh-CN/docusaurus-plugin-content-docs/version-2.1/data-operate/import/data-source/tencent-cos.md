@@ -1,32 +1,14 @@
 ---
 {
-    "title": "Tencent COS",
-    "language": "zh-CN"
+    "title": "腾讯云 COS",
+    "language": "zh-CN",
+    "description": "Doris 提供两种方式从腾讯云 COS 导入文件："
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
-Doris 提供两种方式从 Tencent COS 导入文件：
-- 使用 S3 Load 将 Tencent COS 文件导入到 Doris 中，这是一个异步的导入方式。
-- 使用 TVF 将 Tencent COS 文件导入到 Doris 中，这是一个同步的导入方式。
+Doris 提供两种方式从腾讯云 COS 导入文件：
+- 使用 S3 Load 将腾讯云 COS 文件导入到 Doris 中，这是一个异步的导入方式。
+- 使用 TVF 将腾讯云 COS 文件导入到 Doris 中，这是一个同步的导入方式。
 
 ## 使用 S3 Load 导入 
 
@@ -34,7 +16,7 @@ Doris 提供两种方式从 Tencent COS 导入文件：
 
 ### 第 1 步：准备数据
 
-创建 CSV 文件 s3load_example.csv 文件存储在 Tencent COS 上，其内容如下：
+创建 CSV 文件 s3load_example.csv 文件存储在腾讯云 COS 上，其内容如下：
 
 ```
 1,Emily,25
@@ -117,7 +99,7 @@ mysql> select * from test_s3load;
 
 ### 第 1 步：准备数据
 
-创建 CSV 文件 s3load_example.csv 文件存储在 Tencent COS 上，其内容如下：
+创建 CSV 文件 s3load_example.csv 文件存储在腾讯云 COS 上，其内容如下：
 
 ```
 1,Emily,25

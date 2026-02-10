@@ -5,25 +5,6 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 ## 索引原理
 
 [倒排索引](https://zh.wikipedia.org/wiki/%E5%80%92%E6%8E%92%E7%B4%A2%E5%BC%95)，是信息检索领域常用的索引技术，将文本分成一个个词，构建 词 -> 文档编号 的索引，可以快速查找一个词在哪些文档出现。
@@ -137,7 +118,7 @@ table_properties;
   **用于指定索引是否支持 MATCH_PHRASE 短语查询加速**
   <p>- true 为支持，但是索引需要更多的存储空间</p>
   <p>- false 为不支持，更省存储空间，可以用 MATCH_ALL 查询多个关键字</p>
-  <p>- 默认 false</p>
+  <p>- 从 2.0.14, 2.1.5 和 3.0.1 版本开始，如果指定了 parser 则默认为 true，否则默认为 false</p>
 
   例如下面的例子指定中文分词，粗粒度模式，支持短语查询加速。
 ```sql
@@ -317,7 +298,7 @@ SELECT * FROM table_name WHERE content MATCH_PHRASE_PREFIX 'keyword1';
 
 -- 2.5 对分词后的词进行正则匹配，默认匹配 50 个（session 变量 inverted_index_max_expansions 控制）
 -- 类似 MATCH_PHRASE_PREFIX 的匹配规则，只是前缀变成了正则
-SELECT * FROM table_name WHERE content MATCH_REGEXP 'key*';
+SELECT * FROM table_name WHERE content MATCH_REGEXP 'key.*';
 
 -- 3. 普通等值、范围、IN、NOT IN，正常的 SQL 语句即可，例如
 SELECT * FROM table_name WHERE id = 123;

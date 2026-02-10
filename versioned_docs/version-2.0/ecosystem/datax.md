@@ -5,25 +5,6 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 # DataX Doriswriter
 
 The [DataX](https://github.com/alibaba/DataX) Doriswriter plugin supports synchronizing data from various data sources, such as MySQL, Oracle, and SQL Server, into Doris using the Stream Load method.
@@ -153,7 +134,7 @@ Download the [source code](https://github.com/apache/doris/tree/master/extension
 
 #### 1. Stream reads the data and imports it to Doris
 
-For instructions on using the doriswriter plug-in, please refer to [here](https://github.com/apache/incubator-doris/blob/master/extension/DataX/doriswriter/doc/doriswriter.md).
+For instructions on using the doriswriter plug-in, please refer to [here](https://github.com/apache/doris/blob/master/extension/DataX/doriswriter/doc/doriswriter.md).
 
 #### 2.Mysql reads the data and imports it to Doris
 

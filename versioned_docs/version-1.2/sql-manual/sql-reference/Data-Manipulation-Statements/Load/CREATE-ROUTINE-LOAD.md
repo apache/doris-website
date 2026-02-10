@@ -5,25 +5,6 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 ## CREATE-ROUTINE-LOAD
 
 ### Name
@@ -176,7 +157,7 @@ FROM data_source [data_source_properties]
 
      | source data | source data example | string to int | strict_mode   | result                 |
      | ----------- | ------------------- | ------------- | ------------- | ---------------------- |
-     | null        | \N                  | N/A           | true or false | NULL                   |
+     | null        | `\N`                | N/A           | true or false | NULL                   |
      | not null    | aaa or 2000         | NULL          | true          | invalid data(filtered) |
      | not null    | aaa                 | NULL          | false         | NULL                   |
      | not null    | 1                   | 1             | true or false | correct data           |
@@ -187,7 +168,7 @@ FROM data_source [data_source_properties]
 
      | source data | source data example | string to int | strict_mode   | result                 |
      | ----------- | ------------------- | ------------- | ------------- | ---------------------- |
-     | null        | \N                  | N/A           | true or false | NULL                   |
+     | null        | `\N`                | N/A           | true or false | NULL                   |
      | not null    | aaa                 | NULL          | true          | invalid data(filtered) |
      | not null    | aaa                 | NULL          | false         | NULL                   |
      | not null    | 1 or 10             | 1             | true or false | correct data           |

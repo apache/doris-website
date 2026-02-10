@@ -5,25 +5,6 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 # 数据导出
 
 数据导出（Export）是 Doris 提供的一种将数据导出的功能。该功能可以将用户指定的表或分区的数据，以文本的格式，通过 Broker 进程导出到远端存储上，如 HDFS / 对象存储（支持 S3 协议）等。
@@ -119,9 +100,9 @@ WITH BROKER "hdfs"
 ```
 
 * `label`：本次导出作业的标识。后续可以使用这个标识查看作业状态。
-* `column_separator`：列分隔符。默认为 `\t`。支持不可见字符，比如 '\x07'。
+* `column_separator`：列分隔符。默认为 `\t`。支持不可见字符，比如 `'\x07'`。
 * `columns`：要导出的列，使用英文状态逗号隔开，如果不填这个参数默认是导出表的所有列。
-* `line_delimiter`：行分隔符。默认为 `\n`。支持不可见字符，比如 '\x07'。
+* `line_delimiter`：行分隔符。默认为 `\n`。支持不可见字符，比如 `'\x07'`。
 * `exec_mem_limit`：表示 Export 作业中，一个查询计划在单个 BE 上的内存使用限制。默认 2GB。单位字节。
 * `timeout`：作业超时时间。默认 2 小时。单位秒。
 * `tablet_num_per_task`：每个查询计划分配的最大分片数。默认为 5。

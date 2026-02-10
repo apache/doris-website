@@ -1,9 +1,9 @@
 .theme-doc-sidebar-menu.menu__list {
     padding-left: 1rem;
     .menu__link.menu__link--active:not(.menu__link--sublist) {
-        color: #444fd9 !important;
+        color: var(--ifm-color-primary) !important;
         font-weight: 500;
-        background-color: rgba(237, 238, 250, 0.6);
+        background-color: #F7FFFB;
     }
     .menu__list-item {
         a.menu__link {
@@ -14,7 +14,7 @@
             // font-size: 14px;
             font-weight: 400;
             &:hover {
-                background-color: rgba(237, 242, 250, 0.5) !important;
+                background-color: #F7FFFB !important;
             }
             &:after {
                 right: 0;

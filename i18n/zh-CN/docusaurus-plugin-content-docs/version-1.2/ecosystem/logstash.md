@@ -1,28 +1,9 @@
 ---
 {
-    "title": "Logstash Doris Output Plugin",
+    "title": "Logstash",
     "language": "zh-CN"
 }
 ---
-
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
 
 # Logstash Doris output plugin
 
@@ -30,7 +11,7 @@ under the License.
 
 Logstash 是一个日志ETL框架（采集，预处理，发送到存储系统），它支持自定义输出插件将数据写入存储系统，Logstash Doris output plugin 是输出到 Doris 的插件。
 
-Logstash Doris output plugin 调用 [Doris Stream Load](../data-operate/import/stream-load-manual.md) HTTP 接口将数据实时写入 Doris，提供多线程并发，失败重试，自定义 Stream Load 格式和参数，输出写入速度等能力。
+Logstash Doris output plugin 调用 [Doris Stream Load](../data-operate/import/import-way/stream-load-manual) HTTP 接口将数据实时写入 Doris，提供多线程并发，失败重试，自定义 Stream Load 格式和参数，输出写入速度等能力。
 
 使用 Logstash Doris output plugin 主要有三个步骤：
 1. 将插件安装到 Logstash 中
@@ -44,10 +25,11 @@ Logstash Doris output plugin 调用 [Doris Stream Load](../data-operate/import/s
 可以从官网下载或者自行从源码编译 Logstash Doris output plugin。
 
 - 从官网下载
-  - 不包含依赖的安装包
-https://apache-doris-releases.oss-accelerate.aliyuncs.com/logstash-output-doris-1.0.0.gem
-  - 包含依赖的安装包
-https://apache-doris-releases.oss-accelerate.aliyuncs.com/logstash-output-doris-1.0.0.zip
+
+```shell
+# 包含依赖的安装包
+wget https://apache-doris-releases.oss-cn-beijing.aliyuncs.com/extension/logstash-output-doris-1.2.0-java.gem
+```
 
 - 从源码编译
 
@@ -63,9 +45,9 @@ gem build logstash-output-doris.gemspec
 
 ${LOGSTASH_HOME} 是 Logstash 的安装目录，运行它下面的 bin/logstash-plugin 命令安装插件
 ```
-${LOGSTASH_HOME}/bin/logstash-plugin install logstash-output-doris-1.0.0.gem
+${LOGSTASH_HOME}/bin/logstash-plugin install logstash-output-doris-1.2.0.gem
 
-Validating logstash-output-doris-1.0.0.gem
+Validating logstash-output-doris-1.2.0.gem
 Installing logstash-output-doris
 Installation successful
 ```
@@ -74,32 +56,32 @@ Installation successful
 
 - 离线安装
 
-```
-${LOGSTASH_HOME}/bin/logstash-plugin install file:///tmp/logstash-output-doris-1.0.0.zip
+```shell
 
-Installing file: logstash-output-doris-1.0.0.zip
-Resolving dependencies.........................
-Install successful
+export JARS_SKIP="true"
+
+${LOGSTASH_HOME}/bin/logstash-plugin install logstash-output-doris-1.2.0.gem
+
 ```
 
 ## 参数配置
 
 Logstash Doris output plugin 的配置如下：
 
-配置 | 说明
---- | ---
-`http_hosts` | Stream Load HTTP 地址，格式是字符串数组，可以有一个或者多个元素，每个元素是 host:port。 例如：["http://fe1:8030", "http://fe2:8030"]
-`user` | Doris 用户名，该用户需要有doris对应库表的导入权限
-`password` | Doris 用户的密码
-`db` | 要写入的 Doris 库名
-`table` | 要写入的 Doris 表名
-`label_prefix` | Doris Stream Load Label 前缀，最终生成的 Label 为 *{label_prefix}_{db}_{table}_{yyyymmdd_hhmmss}_{uuid}* ，默认值是 logstash
-`headers` | Doris Stream Load 的 headers 参数，语法格式为 ruby map，例如：headers => { "format" => "json" "read_json_by_line" => "true" }
-`mapping` | Logstash 字段到 Doris 表字段的映射， 参考后续章节的使用示例
-`message_only` | 一种特殊的 mapping 形式，只将 Logstash 的 @message 字段输出到 Doris，默认为 false
-`max_retries` | Doris Stream Load 请求失败重试次数，默认为 -1 无限重试保证数据可靠性
-`log_request` | 日志中是否输出 Doris Stream Load 请求和响应元数据，用于排查问题，默认为 false
-`log_speed_interval` | 日志中输出速度的时间间隔，单位是秒，默认为 10，设置为 0 可以关闭这种日志
+配置                     | 说明
+----------------------- | -------------------------------------------------------------------------------------------------------------------------
+`http_hosts`            | Stream Load HTTP 地址，格式是字符串数组，可以有一个或者多个元素，每个元素是 host:port。 例如：["http://fe1:8030", "http://fe2:8030"]
+`user`                  | Doris 用户名，该用户需要有doris对应库表的导入权限
+`password`              | Doris 用户的密码
+`db`                    | 要写入的 Doris 库名
+`table`                 | 要写入的 Doris 表名
+`label_prefix`          | Doris Stream Load Label 前缀，最终生成的 Label 为 *{label_prefix}_{db}_{table}_{yyyymmdd_hhmmss}_{uuid}* ，默认值是 logstash
+`headers`               | Doris Stream Load 的 headers 参数，语法格式为 ruby map，例如：headers => { "format" => "json" "read_json_by_line" => "true" }
+`mapping`               | Logstash 字段到 Doris 表字段的映射， 参考后续章节的使用示例
+`message_only`          | 一种特殊的 mapping 形式，只将 Logstash 的 @message 字段输出到 Doris，默认为 false
+`max_retries`           | Doris Stream Load 请求失败重试次数，默认为 -1 无限重试保证数据可靠性
+`log_request`           | 日志中是否输出 Doris Stream Load 请求和响应元数据，用于排查问题，默认为 false
+`log_speed_interval`    | 日志中输出速度的时间间隔，单位是秒，默认为 10，设置为 0 可以关闭这种日志
 
 
 ## 使用示例

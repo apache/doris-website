@@ -1,28 +1,13 @@
 ---
 {
-    "title": "EXPORT",
-    "language": "en"
+    "title": "EXPORT | Export",
+    "language": "en",
+    "description": "This document will introduce how to use the EXPORT command to export the data stored in Doris.",
+    "sidebar_label": "EXPORT"
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
+# EXPORT
 
 This document will introduce how to use the `EXPORT` command to export the data stored in Doris.
 
@@ -30,7 +15,7 @@ This document will introduce how to use the `EXPORT` command to export the data 
 
 `Export` is an asynchronously executed command. Once the command is executed successfully, it will return the result immediately. Users can view the detailed information of the Export task through the `Show Export` command.
 
-For the detailed introduction of the `EXPORT` command, please refer to: [EXPORT](../../sql-manual/sql-statements/Data-Manipulation-Statements/Manipulation/EXPORT.md)
+For the detailed introduction of the `EXPORT` command, please refer to: [EXPORT](../../sql-manual/sql-statements/data-modification/load-and-export/EXPORT)
 
 Regarding how to choose between `SELECT INTO OUTFILE` and `EXPORT`, please refer to [Export Overview](../../data-operate/export/export-overview.md).
 
@@ -104,7 +89,7 @@ PROPERTIES (
 
 ### View Export Jobs
 
-After submitting a job, you can query the status of the export job via the [SHOW EXPORT](../../sql-manual/sql-statements/Show-Statements/SHOW-EXPORT.md) command. An example of the result is as follows: 
+After submitting a job, you can query the status of the export job via the [SHOW EXPORT](../../sql-manual/sql-statements/data-modification/load-and-export/SHOW-EXPORT) command. An example of the result is as follows: 
 
 ```sql
 mysql> show export\G
@@ -125,7 +110,7 @@ OutfileInfo: [
     {
       "fileNumber": "1",
       "totalRows": "6001215",
-      "fileSize": "747503989bytes",
+      "fileSize": "747503989",
       "url": "s3://bucket/export/export_6555cd33e7447c1-baa9568b5c4eb0ac_*"
     }
   ]
@@ -133,11 +118,11 @@ OutfileInfo: [
 1 row in set (0.00 sec)
 ```
 
-For the detailed usage of the `show export` command and the meaning of each column in the returned results, please refer to [SHOW EXPORT](../../sql-manual/sql-statements/Show-Statements/SHOW-EXPORT.md).
+For the detailed usage of the `show export` command and the meaning of each column in the returned results, please refer to [SHOW EXPORT](../../sql-manual/sql-statements/data-modification/load-and-export/SHOW-EXPORT).
 
 ### Cancel Export Jobs
 
-After submitting an Export job, the export job can be cancelled via the [CANCEL EXPORT](../../sql-manual/sql-statements/Data-Manipulation-Statements/Manipulation/CANCEL-EXPORT.md) command before the Export task succeeds or fails. An example of the cancellation command is as follows: 
+After submitting an Export job, the export job can be cancelled via the [CANCEL EXPORT](../../sql-manual/sql-statements/data-modification/load-and-export/CANCEL-EXPORT) command before the Export task succeeds or fails. An example of the cancellation command is as follows: 
 
 ```sql
 CANCEL EXPORT FROM dbName WHERE LABEL like "%export_%";
@@ -320,6 +305,10 @@ PROPERTIES (
 
 By setting `"max_file_size" = "512MB"`, the maximum size of a single exported file is 512MB.
 
+`max_file_size` cannot be less than 5MB and cannot be greater than 2GB.
+
+In versions 2.1.11 and 3.0.7, the maximum limit of 2GB was removed, leaving only the minimum limit of 5MB.
+
 ## Notice
 
 * Export Data Volume
@@ -363,13 +352,41 @@ If you want to enable this function, please add `enable_outfile_to_local=true` i
 Example: Export all the data in the `tbl` table to the local file system, set the file format of the export job to csv (the default format), and set the column delimiter to `,`.
 
 ```sql
-EXPORT TABLE tbl TO "file:///home/user/tmp/"
+EXPORT TABLE tbl TO "file:///path/to/result_"
 PROPERTIES (
   "format" = "csv",
   "line_delimiter" = ","
 );
 ```
 
+This function will export and write data to the disk of the node where the BE is located. If there are multiple BE nodes, the data will be scattered on different BE nodes according to the concurrency of the export task, and each node will have a part of the data.
+
+As in this example, a set of files similar to `result_7052bac522d840f5-972079771289e392_0.csv` will eventually be produced under `/path/to/` of the BE node.
+
+The specific BE node IP can be viewed in the `OutfileInfo` column in the `SHOW EXPORT` result, such as:
+
+```
+[
+    [
+        {
+            "fileNumber": "1", 
+            "totalRows": "0", 
+            "fileSize": "8388608", 
+            "url": "file:///172.20.32.136/path/to/result_7052bac522d840f5-972079771289e392_*"
+        }
+    ], 
+    [
+        {
+            "fileNumber": "1", 
+            "totalRows": "0", 
+            "fileSize": "8388608", 
+            "url": "file:///172.20.32.137/path/to/result_22aba7ec933b4922-ba81e5eca12bf0c2_*"
+        }
+    ]
+]
+```
+
 :::caution
-This function will export and write the data to the disks of the nodes where the BE is located. If there are multiple BE nodes, the data will be distributed across different BE nodes according to the concurrency of the export tasks, and each node will have a portion of the data. This function is not applicable to the production environment, and please ensure the permissions of the export directory and data security on your own.
+This function is not applicable to the production environment, and please ensure the permissions of the export directory and data security on your own.
 :::
+

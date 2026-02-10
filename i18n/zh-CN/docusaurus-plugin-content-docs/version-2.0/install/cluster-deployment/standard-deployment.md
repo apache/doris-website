@@ -5,23 +5,6 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
 手动部署 Doris 集群，通常要进行四步规划：
 
 1.  软硬件环境检查：检查用户的硬件资源情况及操作系统兼容性
@@ -611,7 +594,7 @@ server1:apache-doris/fe doris$ curl http://127.0.0.1:8030/api/bootstrap
 
 Doris FE 内置 Web UI。用户无须安装 MySQL 客户端，即可通过 Web UI 来完成诸如添加 BE/FE 节点，以及运行其它 SQL 查询。
 
-在浏览器中输入 http://fe_ip:fe_port,  比如 `http://172.20.63.118:8030`，打开 Doris 内置的 Web 控制台。
+在浏览器中输入 http://fe_ip:fe_port,  比如 ``http://172.20.63.118:8030``，打开 Doris 内置的 Web 控制台。
 
 内置 Web 控制台，主要供集群 root 账户使用，默认安装后 root 账户密码为空。
 

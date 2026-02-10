@@ -5,25 +5,6 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 ## STREAM-LOAD
 
 ### Name
@@ -57,13 +38,13 @@ Parameter introduction:
 
    Currently, Doris retains the most recent successful label within 30 minutes.
 
-2. column_separator: used to specify the column separator in the import file, the default is \t. If it is an invisible character, you need to add \x as a prefix and use hexadecimal to represent the separator.
+2. column_separator: used to specify the column separator in the import file, the default is `\t`. If it is an invisible character, you need to add `\x` as a prefix and use hexadecimal to represent the separator.
 
-    For example, the separator \x01 of the hive file needs to be specified as -H "column_separator:\x01".
+    For example, the separator `\x01` of the hive file needs to be specified as `-H "column_separator:\x01"`.
 
     You can use a combination of multiple characters as column separators.
 
-3. line_delimiter: used to specify the newline character in the imported file, the default is \n. Combinations of multiple characters can be used as newlines.
+3. line_delimiter: used to specify the newline character in the imported file, the default is `\n`. Combinations of multiple characters can be used as newlines.
 
 4. columns: used to specify the correspondence between the columns in the import file and the columns in the table. If the column in the source file corresponds exactly to the content in the table, then there is no need to specify the content of this field.
 
@@ -259,7 +240,7 @@ ERRORS:
     curl --location-trusted -u root -H "label:123" -H "format: json" -T testData http://host:port/api/testDb/testTbl/_stream_load
     ```
     
-    In order to improve throughput, it supports importing multiple pieces of json data at one time, each line is a json object, and \n is used as a newline by default. You need to set read_json_by_line to true. The json data format is as follows:
+    In order to improve throughput, it supports importing multiple pieces of json data at one time, each line is a json object, and `\n` is used as a newline by default. You need to set read_json_by_line to true. The json data format is as follows:
 
     ```
     {"category":"C++","author":"avc","title":"C++ primer","price":89.5}

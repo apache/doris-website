@@ -1,28 +1,13 @@
 ---
 {
-"title": "Job Scheduler",
-"language": "en"
+    "title": "Job Scheduler | Workload Management",
+    "language": "en",
+    "description": "Introduction to Doris Job Scheduler, a built-in task scheduling system that enables automated periodic data imports, ETL operations, and data synchronization with second-level precision.",
+    "sidebar_label": "Job Scheduler"
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
+# Job Scheduler
 
 ## Background
 
@@ -41,7 +26,7 @@ In versions of Apache Doris prior to 2.1, it was typically necessary to rely on 
 To solve the above problems, Apache Doris introduced the Job Scheduler feature in version 2.1, achieving autonomous task scheduling capabilities with scheduling precision reaching the second level. The introduction of this feature not only ensures the integrity and consistency of data imports but also allows users to flexibly and conveniently adjust scheduling strategies. At the same time, by reducing dependence on external systems, it also lowers the risk of system failures and operational costs, providing community users with a more unified and reliable user experience.
 
 Doris Job Scheduler is a task management system based on preset schedules, capable of triggering predefined operations at specific points in time or at specified time intervals, achieving automated task execution. The Job Scheduler has the following features:
-- **Efficient scheduling**: The Job Scheduler can arrange tasks and events within specified time intervals, ensuring the efficiency of data processing. It uses a time wheel algorithm to ensure events can be triggered precisely at the second level.
+- **Efficient scheduling**: The Job Scheduler can arrange tasks and events within specified time intervals, ensuring the efficiency of data processing. It uses a time wheel algorithm to ensure events can be triggered precisely to the second level.
 - **Flexible scheduling**: The Job Scheduler provides multiple scheduling options, such as scheduling at minute, hour, day, or week intervals. It also supports one-time scheduling as well as recurring (periodic) event scheduling, and periodic scheduling can specify start and end times.
 - **Event pool and high-performance processing queue**: The Job Scheduler uses Disruptor to implement a high-performance producer-consumer model, maximizing the avoidance of task execution overload.
 - **Traceable scheduling records**: The Job Scheduler stores the latest Task execution records (configurable). Task execution records can be viewed through simple commands, ensuring process traceability.
@@ -167,7 +152,7 @@ Using the table above as an example, the user wants to query users who meet spec
     ```sql
     CREATE TABLE IF NOT EXISTS user_activity
       (
-      `user_id` LARGEINT NOT NULL COMMENT "用户 id",
+      `user_id` LARGEINT NOT NULL,
       `date` DATE NOT NULL,
       `city` VARCHAR(20),
       `age` SMALLINT,
@@ -233,4 +218,5 @@ In the future, Doris Job Scheduler will also support the following features:
 - Support for viewing the distribution of tasks executed during different time periods via the UI.
 - Support for JOB workflow orchestration, i.e., DAG JOB. This means we can implement internal data warehouse task orchestration, and with the Catalog functionality, it will more efficiently complete data processing and analysis tasks.
 - Support for scheduling import tasks, UPDATE, and DELETE operations.
+
 

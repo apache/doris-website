@@ -5,25 +5,6 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 ## Kettle Doris Plugin
 
 [Kettle](https://pentaho.com/) Doris Plugin is used to write data from other data sources to Doris through Stream Load in Kettle.
@@ -57,9 +38,11 @@ mvn clean package -DskipTests
 ```
 ### Build a job
 Find Doris Stream Loader in the batch loading in Kettle and build a job
+
 ![create_zh.png](https://raw.githubusercontent.com/apache/doris/refs/heads/master/extension/kettle/images/create.png)
 
 Click Start Running the Job to complete data synchronization
+
 ![running_zh.png](https://raw.githubusercontent.com/apache/doris/refs/heads/master/extension/kettle/images/running.png)
 
 ### Parameter Description

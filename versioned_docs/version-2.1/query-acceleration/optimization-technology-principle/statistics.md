@@ -1,30 +1,15 @@
 ---
 {
-"title": "Statistics",
-"language": "en"
+    "title": "Statistics | Optimization Technology Principle",
+    "language": "en",
+    "description": "Starting from version 2.0, Doris integrated Cost-Based Optimization (CBO) capabilities into its optimizer. Statistics are the cornerstone of CBO,",
+    "sidebar_label": "Statistics"
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
+# Statistics
 
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
-Starting from version 2.0, Doris integrated Cost-Based Optimization (CBO) capabilities into its optimizer. Statistics are the cornerstone of CBO, and their accuracy directly determines the accuracy of cost estimation, which is crucial for selecting the optimal execution plan. This document serves as a guide to statistical usage in Doris 2.1, focusing on the collection and management methods, relevant configuration options, and frequently asked questions.
+Starting from version 2.0, Doris integrated Cost-Based Optimization (CBO) capabilities into its optimizer. Statistics are the cornerstone of CBO, and their accuracy directly determines the accuracy of cost estimation, which is crucial for selecting the optimal execution plan. This document serves as a guide to statistical usage for unreleased development version, focusing on the collection and management methods, relevant configuration options, and frequently asked questions.
 
 ## Collection of Statistics
 
@@ -165,7 +150,7 @@ Doris calls Paimon's scan API to obtain the number of rows contained in each Spl
 
 **4. For JDBC Tables:**
 
-Doris sends SQL of reading table statistics to remote database to get table row count. This can only be achieved when the remote database has collected the row count information of the table. Currently, Doris supports retrieving the row count of tables in MySQL, Oracle, Postgresql and SQLServer.
+Doris sends SQL of reading table statistics to remote database to get table row count. This can only be achieved when the remote database has collected the row count information of the table. Currently, Doris supports retrieving the row count of tables in MySQL, Oracle, PostgreSQL and SQLServer.
 
 **5. For Other External Tables:**
 
@@ -474,7 +459,7 @@ If the number of columns does not exceed the threshold, execute `show auto analy
 
 ### Q3: Why are statistics not available for some columns?
 
-Currently, the system only supports collecting statistics for columns of basic data types. For complex types such as JSONV, VARIANT, MAP, STRUCT, ARRAY, HLL, BITMAP, TIME, and TIMEV2, the system skips them.
+Currently, the system only supports collecting statistics for columns of basic data types. For complex types such as JSONB, VARIANT, MAP, STRUCT, ARRAY, HLL, BITMAP, TIME, and TIMEV2, the system skips them.
 
 ### Q4: Error: "Stats table not available, please make sure your cluster status is normal"
 
@@ -509,3 +494,4 @@ Automatic collection uses sampling and does not require full table scans, and th
 For some special tables, such as those with many partitions or large individual tablets, memory usage may be higher.
 
 It is recommended to plan the number of tablets reasonably when creating tables to avoid creating oversized tablets. If the tablet structure is not easily adjustable, consider enabling automatic collection or manually collecting statistics for large tables during off-peak hours to avoid impacting business operations. In the Doris 3.x series, we will optimize for such scenarios.
+

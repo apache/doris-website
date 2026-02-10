@@ -5,25 +5,6 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 # 动态分区
 
 动态分区是在 Doris 0.12 版本中引入的新功能。旨在对表级别的分区实现生命周期管理(TTL)，减少用户的使用负担。
@@ -387,16 +368,37 @@ p20200521: ["2020-05-21", "2020-05-22")
 
 ```sql
 mysql> SHOW DYNAMIC PARTITION TABLES;
-+-----------+--------+----------+-------------+------+--------+---------+-----------+----------------+---------------------+--------+------------------------+----------------------+-------------------------+
-| TableName | Enable | TimeUnit | Start       | End  | Prefix | Buckets | StartOf   | LastUpdateTime | LastSchedulerTime   | State  | LastCreatePartitionMsg | LastDropPartitionMsg | ReservedHistoryPeriods  |
-+-----------+--------+----------+-------------+------+--------+---------+-----------+----------------+---------------------+--------+------------------------+----------------------+-------------------------+
-| d3        | true   | WEEK     | -3          | 3    | p      | 1       | MONDAY    | N/A            | 2020-05-25 14:29:24 | NORMAL | N/A                    | N/A                  | [2021-12-01,2021-12-31] |
-| d5        | true   | DAY      | -7          | 3    | p      | 32      | N/A       | N/A            | 2020-05-25 14:29:24 | NORMAL | N/A                    | N/A                  | NULL                    |
-| d4        | true   | WEEK     | -3          | 3    | p      | 1       | WEDNESDAY | N/A            | 2020-05-25 14:29:24 | NORMAL | N/A                    | N/A                  | NULL                    | 
-| d6        | true   | MONTH    | -2147483648 | 2    | p      | 8       | 3rd       | N/A            | 2020-05-25 14:29:24 | NORMAL | N/A                    | N/A                  | NULL                    |
-| d2        | true   | DAY      | -3          | 3    | p      | 32      | N/A       | N/A            | 2020-05-25 14:29:24 | NORMAL | N/A                    | N/A                  | NULL                    |
-| d7        | true   | MONTH    | -2147483648 | 5    | p      | 8       | 24th      | N/A            | 2020-05-25 14:29:24 | NORMAL | N/A                    | N/A                  | NULL                    |
-+-----------+--------+----------+-------------+------+--------+---------+-----------+----------------+---------------------+--------+------------------------+----------------------+-------------------------+
++-----------+--------+----------+-------------+------+--------+---------+-----------+
+| TableName | Enable | TimeUnit | Start       | End  | Prefix | Buckets | StartOf   |
++-----------+--------+----------+-------------+------+--------+---------+-----------+
+| d3        | true   | WEEK     | -3          | 3    | p      | 1       | MONDAY    |
+| d5        | true   | DAY      | -7          | 3    | p      | 32      | N/A       |
+| d4        | true   | WEEK     | -3          | 3    | p      | 1       | WEDNESDAY |
+| d6        | true   | MONTH    | -2147483648 | 2    | p      | 8       | 3rd       |
+| d2        | true   | DAY      | -3          | 3    | p      | 32      | N/A       |
+| d7        | true   | MONTH    | -2147483648 | 5    | p      | 8       | 24th      |
++-----------+--------+----------+-------------+------+--------+---------+-----------+
++----------------+---------------------+--------+------------------------+
+| LastUpdateTime | LastSchedulerTime   | State  | LastCreatePartitionMsg |
++----------------+---------------------+--------+------------------------+
+| N/A            | 2020-05-25 14:29:24 | NORMAL | N/A                    |
+| N/A            | 2020-05-25 14:29:24 | NORMAL | N/A                    |
+| N/A            | 2020-05-25 14:29:24 | NORMAL | N/A                    |
+| N/A            | 2020-05-25 14:29:24 | NORMAL | N/A                    |
+| N/A            | 2020-05-25 14:29:24 | NORMAL | N/A                    |
+| N/A            | 2020-05-25 14:29:24 | NORMAL | N/A                    |
++----------------+---------------------+--------+------------------------+
++----------------------+-------------------------+
+| LastDropPartitionMsg | ReservedHistoryPeriods  |
++----------------------+-------------------------+
+| N/A                  | [2021-12-01,2021-12-31] |
+| N/A                  | NULL                    |
+| N/A                  | NULL                    |
+| N/A                  | NULL                    |
+| N/A                  | NULL                    |
+| N/A                  | NULL                    |
++----------------------+-------------------------+
+
 7 rows in set (0.02 sec)
 ```
 

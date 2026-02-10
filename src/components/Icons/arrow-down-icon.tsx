@@ -5,19 +5,12 @@ interface ArrowDownIconProps {
 }
 export function ArrowDownIcon(props: ArrowDownIconProps) {
     return (
-        <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="1em"
-            height="1em"
-            viewBox="0 0 16 16"
-            fill="none"
-            className={props.className}
-        >
+        <svg {...props} xmlns="http://www.w3.org/2000/svg" width="14" height="8" viewBox="0 0 14 8" fill="none">
             <path
-                d="M4 6L7.57574 9.57574C7.81005 9.81005 8.18995 9.81005 8.42426 9.57574L12 6"
-                stroke="currentColor"
-                strokeWidth="1.2"
-                strokeLinecap="round"
+                d="M0.900391 6.52721L6.26399 1.1636C6.61547 0.812131 7.18532 0.81213 7.53679 1.1636L12.9004 6.52721"
+                stroke="#11A679"
+                stroke-width="1.8"
+                stroke-linecap="round"
             />
         </svg>
     );

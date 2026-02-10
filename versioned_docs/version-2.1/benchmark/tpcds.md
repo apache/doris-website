@@ -1,28 +1,10 @@
 ---
 {
     "title": "TPC-DS Benchmark",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "TPC-DS (Transaction Processing Performance Council Decision Support Benchmark) is a benchmark test that focuses on decision support and aims to "
 }
 ---
-
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
 
 # TPC-DS Benchmark
 
@@ -200,7 +182,7 @@ The test results are as follows: (Apache Doris 2.0.15.1 q78 q79 failed to execut
 
 ## 6. Environmental Preparation
 
-Please refer to the [official document](../install/cluster-deployment/standard-deployment.md) to install and deploy Doris to obtain a normal running Doris cluster (at least 1 FE 1 BE, 1 FE 3 BE is recommended).
+Please refer to the [official document](../install/deploy-manually/integrated-storage-compute-deploy-manually) to install and deploy Doris to obtain a normal running Doris cluster (at least 1 FE 1 BE, 1 FE 3 BE is recommended).
 
 ## 7. Data Preparation
 
@@ -256,7 +238,7 @@ export DB='tpcds'
 ```shell
 sh bin/create-tpcds-tables.sh -s 1000
 ```
-Or copy the table creation statement in [create-tpcds-tables](https://github.com/apache/doris/blob/master/tools/tpcds-tools/ddl/create-tpcds-tables-sf1000) and excute it in Doris.
+Or copy the table creation statement in [create-tpcds-tables](https://github.com/apache/doris/blob/master/tools/tpcds-tools/ddl/create-tpcds-tables-sf1000) and execute it in Doris.
 
 
 ### 7.4 Import Data

@@ -5,25 +5,6 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 亲爱的社区小伙伴们，**Apache Doris 2.1.7 版本已于 2024 年 11 月 10 日正式发布。**2.1.7 版本持续升级改进，同时在湖仓一体、异步物化视图、半结构化数据管理、查询优化器、执行引擎、存储管理、以及权限管理等方面完成了若干修复。欢迎大家下载使用。
 
 - [立即下载](https://doris.apache.org/download)
@@ -137,7 +118,7 @@ under the License.
 - 修复用户指定的 Start Time 不生效的问题。[#39573](https://github.com/apache/doris/pull/39573)
 - 修复嵌套物化视图不刷新的问题。[#40433](https://github.com/apache/doris/pull/40433)
 - 修复删除重建基表后，物化视图可能不刷新的问题。[#41762](https://github.com/apache/doris/pull/41762)
-- 修复分区补偿改写可能导致结果错误的问题。[#40803]( https://github.com/apache/doris/pull/40803)
+- 修复分区补偿改写可能导致结果错误的问题。[#40803](https://github.com/apache/doris/pull/40803)
 - 当 `sql_select_limit` 设置时，改写结果可能错误的问题。[#40106](https://github.com/apache/doris/pull/40106)
 
 ### 半结构化管理

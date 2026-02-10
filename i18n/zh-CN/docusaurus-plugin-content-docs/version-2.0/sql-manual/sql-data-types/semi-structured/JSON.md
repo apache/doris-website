@@ -5,25 +5,6 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 JSON 数据类型，用二进制格式高效存储 [JSON](https://www.rfc-editor.org/rfc/rfc8785) 数据，通过 JSON 函数访问其内部字段。
 
 默认支持 1048576 字节（1 MB），可调大到 2147483643 字节（2 GB），可通过 BE 配置`string_type_length_soft_limit_bytes` 调整。
@@ -848,4 +829,28 @@ mysql> select id, j, json_type(j, '$.k1') from test_json order by id;
 
 ```
 
+### FAQ
+1. JSON类型中的null和SQL中的NULL(IS NULL)有区别吗
 
+是的，JSON中的null例如 `{"key1" : null}` 表示`key1`这个JSON键存在，并且值为null (作为一个特殊类型会被编码到JSON binary中)，而SQL中的NULL是指没有这个JSON键。例如
+``` sql 
+mysql> SELECT JSON_EXTRACT_STRING('{"key1" : null}', "$.key1") IS NULL;
++----------------------------------------------------------+
+| JSON_EXTRACT_STRING('{"key1" : null}', "$.key1") IS NULL |
++----------------------------------------------------------+
+|                                                        0 |
++----------------------------------------------------------+
+1 row in set (0.00 sec)
+
+mysql> SELECT JSON_EXTRACT_STRING('{"key1" : null}', "$.key_not_exist") IS NULL;
++-------------------------------------------------------------------+
+| JSON_EXTRACT_STRING('{"key1" : null}', "$.key_not_exist") IS NULL |
++-------------------------------------------------------------------+
+|                                                                 1 |
++-------------------------------------------------------------------+
+1 row in set (0.01 sec)
+```
+
+2. `GET_JSON_XXX` 函数和 `JSON_EXTRACT_XXX` 函数的区别，以及怎么选择
+
+`GET_JSON_XXX` 是针对字符串类型设计的函数，是直接在原生字符串上做提取操作，而 `JSON_EXTRACT_XXX` 是针对 JSON 类型实现的函数，针对 JSON 类型有特殊优化。一般建议使用 `JSON_EXTRACT_XXX` 性能会更好。

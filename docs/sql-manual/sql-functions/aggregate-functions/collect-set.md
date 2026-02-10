@@ -1,75 +1,71 @@
 ---
 {
     "title": "COLLECT_SET",
-    "language": "en"
+    "language": "en",
+    "description": "Aggregation function aggregates all unique values of the specified column, removes duplicate elements, and returns a set type result."
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
+## Description
 
-  http://www.apache.org/licenses/LICENSE-2.0
+Aggregation function aggregates all unique values of the specified column, removes duplicate elements, and returns a set type result.
 
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
+## Alias
 
-## COLLECT_SET
+- GROUP_UNIQ_ARRAY
 
-COLLECT_SET
+## Syntax
 
-### description
-#### Syntax
-
-`ARRAY<T> collect_set(expr[,max_size])`
-
-Creates an array containing distinct elements from `expr`,with the optional `max_size` parameter limits the size of the resulting array to `max_size` elements. It has an alias `group_uniq_array`.
-
-
-### example
-
-```
-mysql> select k1,k2,k3 from collect_set_test order by k1;
-+------+------------+-------+
-| k1   | k2         | k3    |
-+------+------------+-------+
-|    1 | 2023-01-01 | hello |
-|    2 | 2023-01-01 | NULL  |
-|    2 | 2023-01-02 | hello |
-|    3 | NULL       | world |
-|    3 | 2023-01-02 | hello |
-|    4 | 2023-01-02 | doris |
-|    4 | 2023-01-03 | sql   |
-+------+------------+-------+
-
-mysql> select collect_set(k1),collect_set(k1,2) from collect_set_test;
-+-------------------------+--------------------------+
-| collect_set(`k1`)       | collect_set(`k1`,2)      |
-+-------------------------+--------------------------+
-| [4,3,2,1]               | [1,2]                    |
-+----------------------------------------------------+
-
-mysql> select k1,collect_set(k2),collect_set(k3,1) from collect_set_test group by k1 order by k1;
-+------+-------------------------+--------------------------+
-| k1   | collect_set(`k2`)       | collect_set(`k3`,1)      |
-+------+-------------------------+--------------------------+
-|    1 | [2023-01-01]            | [hello]                  |
-|    2 | [2023-01-01,2023-01-02] | [hello]                  |
-|    3 | [2023-01-02]            | [world]                  |
-|    4 | [2023-01-02,2023-01-03] | [sql]                    |
-+------+-------------------------+--------------------------+
-
+```sql
+COLLECT_SET(<expr> [,<max_size>])
 ```
 
-### keywords
-COLLECT_SET,GROUP_UNIQ_ARRAY,COLLECT_LIST,ARRAY
+## Parameters
+
+| Parameter | Description |
+| -- | -- |
+| `<expr>` | An expression to determine the values to be placed into the array. Supported types: Bool, TinyInt, SmallInt, Integer, BigInt, LargeInt, Float, Double, Decimal, Date, Datetime, Timestamptz, IPV4, IPV6, String, Array, Map, Struct. |
+| `<max_size>` | Optional parameter to limit the result array size to max_size elements. Supported type: Integer. |
+
+## Return Value
+
+Returns ARRAY type, containing all non-NULL values after deduplication. If there is no valid data in the group, returns an empty array.
+
+## Example
+
+```sql
+-- setup
+CREATE TABLE collect_set_test (
+	k1 INT,
+	k2 INT,
+	k3 STRING
+) DISTRIBUTED BY HASH(k1) BUCKETS 1
+PROPERTIES ("replication_num" = "1");
+INSERT INTO collect_set_test VALUES (1, 10, 'a'), (1, 20, 'b'), (1, 10, 'a'), (2, 100, 'x'), (2, 200, 'y'), (3, NULL, NULL);
+```
+
+```sql
+select collect_set(k1),collect_set(k1,2) from collect_set_test;
+```
+
+```text
++-----------------+-------------------+
+| collect_set(k1) | collect_set(k1,2) |
++-----------------+-------------------+
+| [2, 1, 3]       | [2, 1]            |
++-----------------+-------------------+
+```
+
+```sql
+select k1,collect_set(k2),collect_set(k3,1) from collect_set_test group by k1 order by k1;
+```
+
+```text
++------+-----------------+-------------------+
+| k1   | collect_set(k2) | collect_set(k3,1) |
++------+-----------------+-------------------+
+|    1 | [20, 10]        | ["a"]             |
+|    2 | [200, 100]      | ["x"]             |
+|    3 | []              | []                |
++------+-----------------+-------------------+
+```

@@ -1,74 +1,75 @@
 ---
 {
-    "title": "SHOW-TABLETS-BELONG",
+    "title": "SHOW TABLETS BELONG",
     "language": "en"
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
+## Description
 
-  http://www.apache.org/licenses/LICENSE-2.0
+This statement is used to show tablets and information of their belonging table.
 
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
-
-
-## SHOW-TABLETS-BELONG
-
-
-
-### Name
-
-SHOW TABLETS BELONG
-
-### Description
-
-Used to show tablets and information of their belonging table
-
-grammar：
+## Syntax
 
 ```sql
-SHOW TABLETS BELONG tablet-ids;
+SHOW TABLETS BELONG <tablet_id> [, <tablet_id>]...;
 ```
 
-illustrate：
+## Required Parameters
 
-1. tablet-ids: one or more tablet-ids, with comma separated
-2. Columns of result keep same with result of `SHOW-DATA` for the same table
+**1. `<tablet_id>`**
 
-### Example
+> One or more tablet IDs, separated by commas. Duplicate IDs will be deduplicated in the result.
 
-1. show information of four tablet-ids (actually, three tablet-ids. Result will be deduplicated)
+## Return Value
 
-    ```sql
-    SHOW TABLETS BELONG 27028,78880,78382,27028;
-    ```
+When using `SHOW TABLETS BELONG <tablet_id> [, <tablet_id>]...`, the following columns are returned:
 
-    ```
+| Column        | DataType | Note                                                                   |
+|---------------|----------|------------------------------------------------------------------------|
+| DbName        | String   | The name of the database that contains the tablet.                     |
+| TableName     | String   | The name of the table that contains the tablet.                        |
+| TableSize     | String   | The size of the table (e.g., "8.649 KB").                              |
+| PartitionNum  | Int      | The number of partitions in the table.                                 |
+| BucketNum     | Int      | The number of buckets in the table.                                    |
+| ReplicaCount  | Int      | The number of replicas in the table.                                   |
+| TabletIds     | Array    | The list of tablet IDs that belong to the table.                       |
+
+## Access Control Requirements
+
+The user executing this SQL command must have at least the following privileges:
+
+| Privilege  | Object   | Notes                                                                                                                            |
+|:-----------|:---------|:---------------------------------------------------------------------------------------------------------------------------------|
+| Admin_priv | Database | Required to execute administrative operations on the database, including managing tables, partitions, and system-level commands. |
+
+## Examples
+
+Show information about a specific tablet:
+
+```sql
+SHOW TABLETS BELONG 10145;
+```
+
+```text
++--------+-----------+-----------+--------------+-----------+--------------+-----------+
+| DbName | TableName | TableSize | PartitionNum | BucketNum | ReplicaCount | TabletIds |
++--------+-----------+-----------+--------------+-----------+--------------+-----------+
+| test   | sell_user | 8.649 KB  | 1            | 4         | 4            | [10145]   |
++--------+-----------+-----------+--------------+-----------+--------------+-----------+
+```
+
+Show information about multiple tablets:
+
+```sql
+SHOW TABLETS BELONG 27028,78880,78382,27028;
+```
+
+```text
 +---------------------+-----------+-----------+--------------+-----------+--------------+----------------+
 | DbName              | TableName | TableSize | PartitionNum | BucketNum | ReplicaCount | TabletIds      |
 +---------------------+-----------+-----------+--------------+-----------+--------------+----------------+
 | default_cluster:db1 | kec       | 613.000 B | 379          | 604       | 604          | [78880, 78382] |
 | default_cluster:db1 | test      | 1.874 KB  | 1            | 1         | 1            | [27028]        |
 +---------------------+-----------+-----------+--------------+-----------+--------------+----------------+
-    ```
-
-### Keywords
-
-    SHOW, TABLETS, BELONG
-
-### Best Practice
-
+```

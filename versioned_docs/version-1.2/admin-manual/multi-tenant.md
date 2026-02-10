@@ -5,25 +5,6 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements. See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership. The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License. You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied. See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 # Multi-tenancy
 
 The main purpose of Doris's multi-tenant and resource isolation solution is to reduce interference between multiple users when performing data operations in the same Doris cluster, and to allocate cluster resources to each user more reasonably.
@@ -81,39 +62,39 @@ Node resource division refers to setting tags for BE nodes in a Doris cluster, a
     The following figure shows the current node division and data distribution:
     
     ```
-     ┌────────────────────────────────────────────────────┐
+     ┌----------------------------------------------------┐
      │                                                    │
-     │         ┌──────────────────┐  ┌──────────────────┐ │
+     │         ┌------------------┐  ┌------------------┐ │
      │         │ host1            │  │ host2            │ │
-     │         │  ┌─────────────┐ │  │                  │ │
+     │         │  ┌-------------┐ │  │                  │ │
      │ group_a │  │   replica1  │ │  │                  │ │
-     │         │  └─────────────┘ │  │                  │ │
+     │         │  └-------------┘ │  │                  │ │
      │         │                  │  │                  │ │
-     │         └──────────────────┘  └──────────────────┘ │
+     │         └------------------┘  └------------------┘ │
      │                                                    │
-     ├────────────────────────────────────────────────────┤
-     ├────────────────────────────────────────────────────┤
+     ├----------------------------------------------------┤
+     ├----------------------------------------------------┤
      │                                                    │
-     │         ┌──────────────────┐  ┌──────────────────┐ │
+     │         ┌------------------┐  ┌------------------┐ │
      │         │ host3            │  │ host4            │ │
-     │         │                  │  │  ┌─────────────┐ │ │
+     │         │                  │  │  ┌-------------┐ │ │
      │ group_b │                  │  │  │   replica2  │ │ │
-     │         │                  │  │  └─────────────┘ │ │
+     │         │                  │  │  └-------------┘ │ │
      │         │                  │  │                  │ │
-     │         └──────────────────┘  └──────────────────┘ │
+     │         └------------------┘  └------------------┘ │
      │                                                    │
-     ├────────────────────────────────────────────────────┤
-     ├────────────────────────────────────────────────────┤
+     ├----------------------------------------------------┤
+     ├----------------------------------------------------┤
      │                                                    │
-     │         ┌──────────────────┐  ┌──────────────────┐ │
+     │         ┌------------------┐  ┌------------------┐ │
      │         │ host5            │  │ host6            │ │
-     │         │                  │  │  ┌─────────────┐ │ │
+     │         │                  │  │  ┌-------------┐ │ │
      │ group_c │                  │  │  │   replica3  │ │ │
-     │         │                  │  │  └─────────────┘ │ │
+     │         │                  │  │  └-------------┘ │ │
      │         │                  │  │                  │ │
-     │         └──────────────────┘  └──────────────────┘ │
+     │         └------------------┘  └------------------┘ │
      │                                                    │
-     └────────────────────────────────────────────────────┘
+     └----------------------------------------------------┘
     ```
     
 3. Use different resource groups for data query
@@ -129,7 +110,7 @@ Node resource division refers to setting tags for BE nodes in a Doris cluster, a
     ```
 
    :::tip
-   It should be noted that after each modification of the ```resource_tags.location``` property, the user needs to re-establish the connection for the changes to take effect.
+   It should be noted that after each modification of the `resource_tags.location` property, the user needs to re-establish the connection for the changes to take effect.
    :::
     
     After the setting is complete, when user1 initiates a query on the UserTable table, it will only access the data copy on the nodes in the `group_a` resource group, and the query will only use the node computing resources in the `group_a` resource group. The query of user3 can use copies and computing resources in any resource group.

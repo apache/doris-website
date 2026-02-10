@@ -1,29 +1,10 @@
 ---
 {
     "title": "Release 3.0.0",
-    "language": "en"
+    "language": "en",
+    "description": "We are excited to announce the release of Apache Doris 3.0!"
 }
 ---
-
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 
 We are excited to announce the release of Apache Doris 3.0! 
 
@@ -162,7 +143,7 @@ In terms of write performance, we have simulated two test cases under the same c
 
 - If users need the compute-storage coupled mode, following the [documentation](https://doris.apache.org/docs/3.0/install/source-install/compilation-with-docker/) for its deployment and upgrade. We recommend using Doris Manager for quick deployment and cluster upgrades. However, the compute-storage decoupled mode does not yet support Doris Manager deployment and upgrade. We will continue iteration for better support in future versions.
 
-- Currently Apache Doris does not support in-place upgrade from V2.1 to the compute-storage decoupled mode of V3.0. For such purpose, users need to perform data migration using tools like X2Doris after deploying the compute-storage decoupled clusters. In the future, we will support migration without service interruption through the CCR (Change Data Capture) capability.
+- Currently Apache Doris does not support in-place upgrade from V2.1 to the compute-storage decoupled mode of V3.0. For such purpose, users need to perform data migration using tools after deploying the compute-storage decoupled clusters. In the future, we will support migration without service interruption through the CCR (Change Data Capture) capability.
 
 :::info
 See doc:
@@ -215,15 +196,15 @@ See doc:
 
 - Trino Connector: https://doris.apache.org/community/how-to-contribute/trino-connector-developer-guide/
 
-- TPC-H: https://doris.apache.org/docs/3.0/lakehouse/datalake-analytics/tpch/
+- TPC-H: https://doris.apache.org/docs/3.0/lakehouse/best-practices/tpch/
 
-- TPC-DS: https://doris.apache.org/docs/3.0/lakehouse/datalake-analytics/tpcds/
+- TPC-DS: https://doris.apache.org/docs/3.0/lakehouse/best-practices/tpcds/
 
-- Delta Lake: https://doris.apache.org/docs/3.0/lakehouse/datalake-analytics/deltalake/
+- Delta Lake: https://doris.apache.org/docs/3.0/lakehouse/catalogs/delta-lake-catalog/
 
-- Kudu: https://doris.apache.org/docs/3.0/lakehouse/datalake-analytics/kudu/
+- Kudu: https://doris.apache.org/docs/3.0/lakehouse/catalogs/kudu-catalog/
 
-- BigQuery: https://doris.apache.org/docs/3.0/lakehouse/datalake-analytics/bigquery/
+- BigQuery: https://doris.apache.org/docs/3.0/lakehouse/catalogs/bigquery-catalog/
 :::
 
 
@@ -234,7 +215,7 @@ In V3.0, we have introduced data writeback functionality for Hive and Iceberg. T
 In future iterations, Apache Doris will further enhance support for data lake table formats and improve the openness of storage APIs.
 
 :::info Note
-See doc: https://doris.apache.org/docs/3.0/lakehouse/datalake-building/hive-build/
+See doc: https://doris.apache.org/docs/3.0/lakehouse/catalogs/hive-catalog/
 :::
 
 ## 3. Upgraded semi-structured data analysis capabilities
@@ -460,7 +441,7 @@ Before the official release of version 3.0, the compute-storage decoupled mode o
 
 We highly recommend users with compute-storage decoupling needs to download version 3.0 and experience it firsthand.
 
-Going forward, we will accelerate our release iteration cycle to deliver a more stable version experience for all users. Feel free to join us in the [Apache Doris community](https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-2gmq5o30h-455W226d79zP3L96ZhXIoQ) and engage directly with the core developers.
+Going forward, we will accelerate our release iteration cycle to deliver a more stable version experience for all users. Feel free to join us in the [Apache Doris community](https://doris.apache.org/slack) and engage directly with the core developers.
 
 ## Credits
 

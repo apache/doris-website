@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const { getIndexHash } = require('@easyops-cn/docusaurus-search-local/dist/server/server/utils/getIndexHash.js');
+const { getIndexHash } = require('@yang1666204/docusaurus-search-local/dist/server/server/utils/getIndexHash.js');
 
 function ensureArray(object, key) {
     if (!Array.isArray(object[key])) {
@@ -30,7 +30,7 @@ searchConfig.docsDir = searchConfig.docsDir.map(dir => path.join(__dirname, `../
 searchConfig.blogDir = searchConfig.blogDir.map(dir => path.join(__dirname, `../${dir}`));
 const searchHash = getIndexHash(searchConfig);
 if (searchHash) {
-    const workerJSPath = path.join(__dirname, '../worker.js');
+    const workerJSPath = path.join(__dirname, '../src/theme/SearchBar/worker.js');
     const workerJs = fs.readFileSync(workerJSPath, 'utf-8');
     const targetRegex = /const searchIndexUrl = "search-index\{dir\}\.json\?_=[^"]+"/;
     const replacement = `const searchIndexUrl = "search-index{dir}.json?_=${searchHash}"`;

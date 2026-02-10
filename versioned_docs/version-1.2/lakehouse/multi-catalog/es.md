@@ -5,25 +5,6 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 # Elasticsearch
 
 Elasticsearch (ES) Catalogs in Doris support auto-mapping of ES metadata. Users can utilize the full-text search capability of ES in combination of the distributed query planning capability of Doris to provide a full-fledged OLAP solution that is able to perform:
@@ -50,17 +31,17 @@ After switching to the ES Catalog, you will be in the `dafault_db`  so you don't
 
 ### Parameter Description
 
-| Parameter         | Required or Not | Default Value | Description                                                                                                                                       |
-| ----------------- | --------------- | ------------- |---------------------------------------------------------------------------------------------------------------------------------------------------|
-| `hosts`           | Yes             |               | ES address, can be one or multiple addresses, or the load balancer address of ES                                                                  |
-| `user`            | No              | Empty         | ES username                                                                                                                                       |
-| `password`        | No              | Empty         | Password of the corresponding user                                                                                                                |
-| `doc_value_scan`  | No              | true          | Whether to obtain value of the target field by ES/Lucene columnar storage                                                                         |
-| `keyword_sniff`   | No              | true          | Whether to sniff the text.fields in ES based on keyword; If this is set to false, the system will perform matching after tokenization.            |
-| `nodes_discovery` | No              | true          | Whether to enable ES node discovery, set to true by default; set to false in network isolation environments and only connected to specified nodes |
-| `ssl`             | No              | false         | Whether to enable HTTPS access mode for ES, currently follows a "Trust All" method in FE/BE                                                       |
-| `mapping_es_id`   | No              | false         | Whether to map the  `_id`  field in the ES index                                                                                                  |
-| `like_push_down`  | No              | true          | Whether to transform like to wildcard push down to es, this increases the cpu consumption of the es.                                              |
+| Parameter                        | Required or Not               | Default Value        | Description                                                                     |
+| -------------------------------- | ----------------------------- | -------------------- |---------------------------------------------------------------------------------|
+| `hosts`                  | Yes                    |                  | ES address, can be one or multiple addresses, or the load balancer address of ES                                                                  |
+| `user`                   | No                     | Empty            | ES username                                                                                                                                       |
+| `password`               | No                     | Empty            | Password of the corresponding user                                                                                                                |
+| `doc_value_scan`         | No                     | true             | Whether to obtain value of the target field by ES/Lucene columnar storage                                                                         |
+| `keyword_sniff`          | No                     | true             | Whether to sniff the text.fields in ES based on keyword; If this is set to false, the system will perform matching after tokenization.            |
+| `nodes_discovery`        | No                     | true             | Whether to enable ES node discovery, set to true by default; set to false in network isolation environments and only connected to specified nodes |
+| `ssl`                    | No                     | false            | Whether to enable HTTPS access mode for ES, currently follows a "Trust All" method in FE/BE                                                       |
+| `mapping_es_id`          | No                     | false            | Whether to map the  `_id`  field in the ES index                                                                                                  |
+| `like_push_down`         | No                     | true             | Whether to transform like to wildcard push down to es, this increases the cpu consumption of the es.                                              |
 
 > 1. In terms of authentication, only HTTP Basic authentication is supported and it requires the user to have read privilege for the index and paths including `/_cluster/state/` and `_nodes/http` ; if you have not enabled security authentication for the cluster, you don't need to set the  `user` and `password`.
 >

@@ -5,25 +5,6 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 # Binlog Load
 
 The Binlog Load feature enables Doris to incrementally synchronize update operations in MySQL, so as to CDC(Change Data Capture) of data on Mysql.
@@ -113,8 +94,8 @@ To enable the binlog of MySQL, you need to edit the my.cnf file and set it like:
 
 ```
 [mysqld]
-log-bin = mysql-bin # 开启 binlog
-binlog-format=ROW # 选择 ROW 模式
+log-bin = mysql-bin # Enable binlog
+binlog-format=ROW # Select ROW mode
 ```
 
 ### Principle Description
@@ -460,7 +441,7 @@ The parameters in the result set have the following meanings:
 	
 	User can control the status of the job by three commands: `stop/pause/resume`. After the operation, the job status is `cancelled/paused/running` respectively.
 	
-	There is only one final stage of the job, Cancelled. When the job status changes to Canceled, it cannot be resumed again. 
+	There is only one final stage of the job, Cancelled. When the job status changes to Canceled, it cannot be resumed again. 
 	
 	When an error occurs during SyncJob is running, if the error is unrecoverable, the status will change to cancelled, otherwise it will change to paused.
 	
@@ -537,7 +518,7 @@ The following configuration belongs to the system level configuration of SyncJob
 	
 2. Will the SyncJob continue to run after the database is deleted?
 
-	No. In this case, the SyncJob will be checked by the Fe's scheduler thread and be stopped.
+	No. In this case, the SyncJob will be checked by the Fe's scheduler thread and be stopped.
 	
 3. Can multiple SyncJobs be configured with the same `IP:Port + destination`?
 

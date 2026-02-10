@@ -1,40 +1,22 @@
 ---
 {
-    "title": "Huawei OBS",
-    "language": "en"
+    "title": "Huawei Cloud OBS",
+    "language": "en",
+    "description": "Doris provides two ways to load files from Huawei Cloud OBS:"
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
+Doris provides two ways to load files from Huawei Cloud OBS:
+- Use S3 Load to load Huawei Cloud OBS files into Doris, which is an asynchronous load method.
+- Use TVF to load Huawei Cloud OBS files into Doris, which is a synchronous load method.
 
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
-Doris provides two ways to load files from Huawei OBS:
-- Use S3 Load to load Huawei OBS files into Doris, which is an asynchronous load method.
-- Use TVF to load Huawei OBS files into Doris, which is a synchronous load method.
-
-## load with S3 Load
+## Load with S3 Load
 
 Use S3 Load to import files on object storage. For detailed steps, please refer to the [Broker Load Manual](../import-way/broker-load-manual)
 
 ### Step 1: Prepare the data
 
-Create a CSV file s3load_example.csv The file is stored on Huawei OBS and its content is as follows:
+Create a CSV file s3load_example.csv The file is stored on Huawei Cloud OBS and its content is as follows:
 
 ```
 1,Emily,25
@@ -92,7 +74,7 @@ PROPERTIES
 SELECT * FROM test_s3load;
 ```
 
-Results:
+Result:
 
 ```
 mysql> select * from test_s3load;
@@ -117,7 +99,7 @@ mysql> select * from test_s3load;
 
 ### Step 1: Prepare the data
 
-Create a CSV file s3load_example.csv The file is stored on Huawei OBS and its content is as follows:
+Create a CSV file s3load_example.csv The file is stored on Huawei Cloud OBS and its content is as follows:
 
 ```
 1,Emily,25

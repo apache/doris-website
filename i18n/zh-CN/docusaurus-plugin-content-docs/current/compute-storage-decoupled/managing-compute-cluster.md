@@ -1,28 +1,10 @@
 ---
 {
     "title": "计算组操作",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "在存算分离架构下，可以将一个或多个计算节点 (BE) 组成一个计算组 (Compute Group)。本文档介绍如何使用计算组，其中涉及的操作包括："
 }
 ---
-
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
 
 在存算分离架构下，可以将一个或多个计算节点 (BE) 组成一个计算组 (Compute Group)。本文档介绍如何使用计算组，其中涉及的操作包括：
 
@@ -72,8 +54,8 @@ SHOW COMPUTE GROUPS;
 
 ## 添加计算组
 
-操作计算组需要具备 `OPERATOR` 权限，即节点管理权限。有关详细信息，请参阅[权限管理](../sql-manual/sql-statements/Account-Management-Statements/GRANT.md)。默认情况下，只有 root 账号拥有 `OPERATOR` 权限，但可以通过 `GRANT` 命令将此权限授予其他账号。
-要添加 BE 并为其指定计算组，请使用 [Add BE](../sql-manual/sql-statements/Cluster-Management-Statements/ALTER-SYSTEM-ADD-BACKEND.md) 命令。例如：
+操作计算组需要具备 `OPERATOR` 权限，即节点管理权限。有关详细信息，请参阅[权限管理](../sql-manual/sql-statements/account-management/GRANT-TO)。默认情况下，只有 root 账号拥有 `OPERATOR` 权限，但可以通过 `GRANT` 命令将此权限授予其他账号。
+要添加 BE 并为其指定计算组，请使用 [Add BE](../sql-manual/sql-statements/cluster-management/instance-management/ADD-BACKEND) 命令。例如：
 
 ```sql
 ALTER SYSTEM ADD BACKEND 'host:9050' PROPERTIES ("tag.compute_group_name" = "new_group");
@@ -87,13 +69,13 @@ ALTER SYSTEM ADD BACKEND 'host:9050';
 
 ## 授予计算组访问权限
 
-前置条件：当前操作用户具备 `ADMIN` 权限，或者当前用户属于admin role。
+前置条件：当前操作用户具备 `ADMIN` 权限，或者当前用户属于 admin role。
 ```sql
 GRANT USAGE_PRIV ON COMPUTE GROUP {compute_group_name} TO {user}
 ```
 
 ## 撤销计算组访问权限
-前置条件：当前操作用户具备 `ADMIN` 权限，或者当前用户属于admin role。
+前置条件：当前操作用户具备 `ADMIN` 权限，或者当前用户属于 admin role。
 ```sql
 REVOKE USAGE_PRIV ON COMPUTE GROUP {compute_group_name} FROM {user}
 ```
@@ -118,7 +100,7 @@ SET PROPERTY FOR {user} 'default_compute_group' = '{clusterName}';
 SHOW PROPERTY;
 ```
 
-查看其他用户默认计算组，此操作需要当前用户具备admin权限，返回结果中`default_compute_group` 的值即为默认计算组：
+查看其他用户默认计算组，此操作需要当前用户具备 admin 权限，返回结果中`default_compute_group` 的值即为默认计算组：
 
 ```sql
 SHOW PROPERTY FOR {user};
@@ -160,3 +142,81 @@ USE { [catalog_name.]database_name[@compute_group_name] | @compute_group_name }
 ## 计算组扩缩容
 
 通过 `ALTER SYSTEM ADD BACKEND` 以及 `ALTER SYSTEM DECOMMISION BACKEND` 添加或者删除 BE 实现计算组的扩缩容。
+
+### 计算组扩缩容后负载重均衡
+
+Cloud rebalance 是 Doris 在存算分离架构下，当不同 Compute Group 中的后端节点（Backend）发生扩缩容（长时间节点下线视为缩容）后，用于重新均衡集群读写流量的负载均衡操作。
+
+#### Balance 策略类型
+
+:::caution
+
+`balance_type` 功能自 Doris 3.1.3 和 Doris 4.0.2 版本起支持。  
+在此之前，仅支持通过 FE 全局配置 `enable_cloud_warm_up_for_rebalance` 来控制 rebalance 时是否执行 warm up 任务。
+
+:::
+
+以下以向 Compute Group 扩容节点为例，说明三种策略类型：
+
+| 类型 | 新节点可服务时间 | 性能波动 | 技术原理 | 适用场景 |
+| :--- | :---: | :---: | :-- | :-- |
+| `without_warmup` | 最快 | 性能波动最大 | FE 直接修改分片映射；首次读写无 file cache，需从 S3 拉取数据 | 需要新节点快速上线，对性能抖动不敏感的场景 |
+| `async_warmup` | 较快 | 可能出现 cache miss | 下发 warm up 任务，成功或超时后再修改映射；在映射切换时尽力拉取 file cache 到新 BE，部分场景首次读仍可能 miss | 通用场景，性能可接受 |
+| `sync_warmup` | 较慢 | 基本无 cache miss | 下发 warm up 任务，FE 确认任务完成后才修改映射，确保 cache 迁移完成 | 对扩容后性能要求极高，希望新节点上一定存在 file cache 的场景 |
+
+#### 用户接口
+
+##### 全局默认 balance type
+
+通过 FE 配置项(fe.conf)设置全局默认值：
+
+```
+cloud_default_rebalance_type = "async_warmup"
+```
+
+##### Compute Group 维度配置
+
+支持为每个 Compute Group 单独配置 balance type：
+
+```sql
+ALTER COMPUTE GROUP cg1 PROPERTIES("balance_type"="async_warmup");
+```
+
+##### 配置规则
+
+1. 若 Compute Group 未配置 `balance_type`，则使用全局默认值 `async_warmup`。
+2. 若 Compute Group 已配置 `balance_type`，则执行 rebalance 时优先使用该 Compute Group 的配置。
+
+#### FAQ
+
+##### 如何查看与修改全局 rebalance type？
+
+- **查看**：执行 `ADMIN SHOW FRONTEND CONFIG LIKE "cloud_default_rebalance_type";`
+- **修改**：执行 `ADMIN SET FRONTEND CONFIG ("cloud_warm_up_for_rebalance_type" = "without_warmup");`（修改后无需重启 FE 即可生效）
+
+##### 如何查询 Compute Group 的 balance type？
+
+执行 `SHOW COMPUTE GROUPS;`，结果中的 `properties` 列包含 Compute Group 的属性信息，其中可查看 `balance_type` 配置。
+
+##### 如何判断集群是否处于 tablet 稳定态？
+
+1. **通过 `SHOW BACKENDS` 查看**：检查各 BE 的 tablet 数是否接近。计算方法参考范围：  
+   ```
+   (集群所有 tablet 数 / Compute Group BE 数) * 0.95 
+   ~ 
+   (集群所有 tablet 数 / Compute Group BE 数) * 1.05
+   ```  
+   其中 0.05 为 FE 配置项 `cloud_rebalance_percent_threshold` 的默认值。如需让 Compute Group 中各 BE 承载的 tablet 更加均匀，可调小该配置值。
+
+2. **通过 FE metrics 观察**：查看 FE metrics 中的 `doris_fe_cloud_.*_balance_num` 系列指标，若长时间无变化，说明 Compute Group 已趋于均衡状态。建议在监控面板上配置这些 metrics，便于持续观察和判断。  
+   ```bash
+   curl "http://feip:fe_http_port/metrics" | grep '_balance_num'
+   ```
+
+
+## 重命名计算组
+
+您可以使用 `ALTER SYSTEM RENAME COMPUTE GROUP <old_name> <new_name>` 命令来重命名现有的计算组。请参阅[重命名计算组 SQL 手册](../sql-manual/sql-statements/cluster-management/instance-management/ALTER-SYSTEM-RENAME-COMPUTE-GROUP)
+
+*注意*
+在重命名计算组后，拥有旧名称（old_name）计算组权限的用户，或将旧名称设置为默认计算组（default_compute_group）的用户，其权限不会自动更新为新名称（new_name）。需要由具有管理员权限的账户重新设置权限。这与 MySQL 数据库的权限体系保持一致。

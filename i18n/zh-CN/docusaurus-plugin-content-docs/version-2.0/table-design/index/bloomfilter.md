@@ -5,25 +5,6 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 ## 索引原理
 
 
@@ -55,7 +36,7 @@ BloomFilter 索引能够对等值查询（包括 = 和 IN）加速，对高基�
 
 BloomFilter 的使用有下面一些限制：
 
-- 对 IN 和 = 之外的查询没有效果，比如 !=, NOT INT, >, < 等
+- 对 IN 和 = 之外的查询没有效果，比如 !=, NOT IN, >, < 等
 
 - 不支持对 Tinyint、Float、Double 类型的列建 BloomFilter 索引。
 

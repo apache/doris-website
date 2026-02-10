@@ -1,28 +1,10 @@
 ---
 {
     "title": "MySQL Compatibility",
-    "language": "en"
+    "language": "en",
+    "description": "Doris is highly compatible with MySQL syntax and supports standard SQL. However, there are several differences between Doris and MySQL,"
 }
 ---
-
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
 
 Doris is highly compatible with MySQL syntax and supports standard SQL. However, there are several differences between Doris and MySQL, as outlined below.
 
@@ -36,8 +18,8 @@ Doris is highly compatible with MySQL syntax and supports standard SQL. However,
 | Bit          | <p>- Supported</p>  <p>- Range: 1 to 64</p>                                | Not supported                                                |
 | Tinyint      | <p>- Supported</p> <p>- Supports signed and unsigned</p>  <p>- Range: signed range from -128 to 127, unsigned range from 0 to 255 </p> | <p>- Supported</p>  <p>- Only supports signed</p>  <p>- Range: -128 to 127</p>    |
 | Smallint     | <p>- Supported</p> <p>- Supports signed and unsigned</p> <p> - Range: signed range from -2^15 to 2^15-1, unsigned range from 0 to 2^16-1</p> | <p>- Supported</p>  <p>- Only supports signed</p>  <p>- Range: -32768 to 32767</p> |
-| Mediumint    | <p>- Supported</p> <p>- Supports signed and unsigned</p>  <p>- Range: signed range from -2^23 to 2^23-1, unsigned range from 0 to -2^24-1</p> | - Not supported                                              |
-| Int          | <p>- Supported</p> <p>- Supports signed and unsigned</p>  <p>- Range: signed range from -2^31 to 2^31-1, unsigned range from 0 to -2^32-1</p> | <p>- Supported</p>  <p>- Only supports signed</p>  <p>- Range: -2147483648 to 2147483647</p> |
+| Mediumint    | <p>- Supported</p> <p>- Supports signed and unsigned</p>  <p>- Range: signed range from -2^23 to 2^23-1, unsigned range from 0 to 2^24-1</p> | - Not supported                                              |
+| Int          | <p>- Supported</p> <p>- Supports signed and unsigned</p>  <p>- Range: signed range from -2^31 to 2^31-1, unsigned range from 0 to 2^32-1</p> | <p>- Supported</p>  <p>- Only supports signed</p>  <p>- Range: -2147483648 to 2147483647</p> |
 | Bigint       | <p>- Supported</p> <p>- Supports signed and unsigned</p> <p>- Range: signed range from -2^63 to 2^63-1, unsigned range from 0 to 2^64-1</p> | <p>- Supported</p>  <p>- Only supports signed</p>  <p>- Range: -2^63 to 2^63-1</p> |
 | Largeint     | - Not supported                                              | <p>- Supported</p>  <p>- Only supports signed</p>  <p>- Range: -2^127 to 2^127-1</p> |
 | Decimal      | <p>- Supported</p>  <p>- Supports signed and unsigned (deprecated after 8.0.17)</p>  <p>- Default: Decimal(10, 0)</p> | <p>- Supported</p>  <p>- Only supports signed</p>  <p>- Default: Decimal(9, 0)</p> |
@@ -49,8 +31,8 @@ Doris is highly compatible with MySQL syntax and supports standard SQL. However,
 | --------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
 | Date      | <p>- Supported</p> <p>- Range: ['1000-01-01', '9999-12-31']</p>   - Format: YYYY-MM-DD | <p>- Supported</p> <p>- Range: ['0000-01-01', '9999-12-31']</p>   - Format: YYYY-MM-DD |
 | DateTime  | <p>- Supported</p> <p>- DATETIME([P]), where P is an optional parameter defined precision</p>  - Range: '1000-01-01 00:00:00.000000' to '9999-12-31 23:59:59.999999'  <p>- Format: YYYY-MM-DD hh:mm:ss[.fraction]</p> | <p>- Supported</p> <p>- DATETIME([P]), where P is an optional parameter defined precision</p>  <p>- Range: ['0000-01-01 00:00:00[.000000]', '9999-12-31 23:59:59[.999999]']</p>   - Format: YYYY-MM-DD hh:mm:ss[.fraction] |
-| Timestamp | <p>- Supported</p> <p>- Timestamp[(p)], where P is an optional parameter defined precision</p> <p>- Range: ['1970-01-01 00:00:01.000000' UTC, '2038-01-19 03:14:07.999999' UTC]</p>   <p>- Format: YYYY-MM-DD hh:mm:ss[.fraction]</p> | - Not supported                                              |
-| Time      | <p>- Supported</p> <p>- Time[(p)]</p>  <p>- Range: ['-838:59:59.000000' to '838:59:59.000000']</p>   <p>- Format: hh:mm:ss[.fraction]</p> | - Not supported                                              |
+| Timestamp | <p>- Supported</p> <p>- Timestamp[(p)], where P is an optional parameter defined precision</p> <p>- Range: ['1970-01-01 00:00:01.000000' UTC, '2038-01-19 03:14:07.999999' UTC]</p>   <p>- Format: YYYY-MM-DD hh:mm:ss[.fraction]</p> | - Supported<br />- TIMESTAMPTZ([P]), where optional parameter P represents precision <br />- Range: ['0000-01-01 00:00:00[.000000]' UTC, '9999-12-31 23:59:59[.999999]' UTC] <br />- Format: YYYY-MM-DD hh:mm:ss[.fraction]+XX:XX                                              |
+| Time      | <p>- Supported</p> <p>- Time[(p)]</p>  <p>- Range: ['-838:59:59.000000' to '838:59:59.000000']</p>   <p>- Format: hh:mm:ss[.fraction]</p> | - Supports computation, but not supported as column storage in OLAP tables <br />- Time[(p)] <br /> - Range: ['-838:59:59.999999' to '838:59:59.999999'] <br />- Format: hh:mm:ss[.fraction]  |
 | Year      | <p>- Supported</p> <p>- Range: 1901 to 2155, or 0000</p>   - Format: yyyy  | - Not supported                                              |
 
 ### String Types
@@ -116,7 +98,7 @@ Doris has several unique data types. Here are the details:
 
   The length and default value do not need to be specified, and the actual storage size depends on the implementation of the function.
 
-  AGG_STATE can only be used in combination with [STATE](../../sql-manual/sql-functions/combinators/state) / [MERGE](../../sql-manual/sql-functions/combinators/merge)/ [UNION](../../sql-manual/sql-functions/combinators/union) functions from the SQL manual for aggregators.
+  AGG_STATE can only be used in combination with [STATE](../sql-manual/sql-functions/combinators/state) / [MERGE](../sql-manual/sql-functions/combinators/merge)/ [UNION](../sql-manual/sql-functions/combinators/union) functions from the SQL manual for aggregators.
 
 ## Syntax
 
@@ -278,3 +260,11 @@ The Doris SELECT syntax is basically the same as MySQL.
 ## SQL Function
 
 Doris Function covers most MySQL functions.
+
+## SQL Mode
+
+| Name | Behavior when enabled | Behavior when disabled | Notes |
+| :-- | :-- | :-- | :-- |
+| PIPES_AS_CONCAT | Parses `\|\|` as the `concat` function | Parses `\|\|` as the logical AND operator | - |
+| NO_BACKSLASH_ESCAPES | Treats backslashes in strings as literal characters | Treats backslashes in strings as escape characters | - |
+| ONLY_FULL_GROUP_BY | Allows only standard aggregations | Allows scalar values not in the GROUP BY key to appear in the aggregation result | Supported since version 3.1.0 |

@@ -1,29 +1,10 @@
 ---
 {
     "title": "Doris Streamloader",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "Doris Streamloader 是一款用于将数据导入 Doris 数据库的专用客户端工具。相比于直接使用 curl 的单并发导入，该工具可以提供多并发导入的功能，降低大数据量导入的耗时。拥有以下功能："
 }
 ---
-
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 
 ## 概述
 [Doris Streamloader](https://github.com/apache/doris-streamloader) 是一款用于将数据导入 Doris 数据库的专用客户端工具。相比于直接使用 `curl` 的单并发导入，该工具可以提供多并发导入的功能，降低大数据量导入的耗时。拥有以下功能：
@@ -36,7 +17,7 @@ under the License.
 ## 获取与安装
 
 源代码：https://github.com/apache/doris-streamloader
-二进制文件：https://doris.incubator.apache.org/zh-CN/download
+二进制文件：https://doris.apache.org/zh-CN/download
 
 :::note
 获取结果即为可执行二进制。
@@ -92,12 +73,6 @@ doris-streamloader --source_file={FILE_LIST} --url={FE_OR_BE_SERVER_URL}:{PORT} 
    ```json
   doris-streamloader --source_file="dir1,dir2,dir3" --url="http://localhost:8330" --header="column_separator:|?columns:col1,col2" --db="testdb" --table="testtbl" 
    ```
-
-:::tip 
-当需要多个文件导入时，使用 Doris Streamloader 也只会产生一个版本号 
-:::
-
-
 
 **2.** `STREAMLOAD_HEADER` **支持 Stream Load 的所有参数，多个参数之间用  '?' 分隔。**
 

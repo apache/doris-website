@@ -3,7 +3,8 @@
     'title': 'Introduction to Apache Doris: a next-generation real-time data warehouse',
     'description': "This is a technical overview of Apache Doris, introducing how it enables fast query performance with its architectural design, features, and mechanisms.",
     'date': '2023-10-03',
-    'author': 'Apache Doris',
+    'author': 'velodb.io · VeloDB Engineering Team',
+    'externalLink':'https://www.velodb.io/blog/127',
     'tags': ['Tech Sharing'],
     "image": '/images/doris-intro.png'
 }
@@ -170,4 +171,4 @@ Roughly speaking, for a data asset consisting of 80% cold data, tiered storage w
 
 ## The Apache Doris Community
 
-This is an overview of Apache Doris, an open-source real-time data warehouse. It is actively evolving with an agile release schedule, and the [community](https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-2unfw3a3q-MtjGX4pAd8bCGC1UV0sKcw) embraces any questions, ideas, and feedback.
+This is an overview of Apache Doris, an open-source real-time data warehouse. It is actively evolving with an agile release schedule, and the [community](https://doris.apache.org/slack) embraces any questions, ideas, and feedback.

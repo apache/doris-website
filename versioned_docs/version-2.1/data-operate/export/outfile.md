@@ -1,28 +1,10 @@
 ---
 {
     "title": "SELECT INTO OUTFILE",
-    "language": "en"
+    "language": "en",
+    "description": "This document will introduce how to use the SELECT INTO OUTFILE command to perform the export operation of query results."
 }
 ---
-
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
 
 This document will introduce how to use the `SELECT INTO OUTFILE` command to perform the export operation of query results.
 
@@ -32,7 +14,7 @@ The `SELECT INTO OUTFILE` is a synchronous command, the return of the command me
 
 Regarding how to choose between `SELECT INTO OUTFILE` and `EXPORT`, please refer to [Export Overview](./export-overview.md).
 
-For a detailed introduction to the `SELECT INTO OUTFILE` command, please refer to: [SELECT INTO OUTFILE](../../sql-manual/sql-statements/Data-Manipulation-Statements/OUTFILE.md)
+For a detailed introduction to the `SELECT INTO OUTFILE` command, please refer to: [SELECT INTO OUTFILE](../../sql-manual/sql-statements/data-modification/load-and-export/OUTFILE)
 
 ## Applicable Scenarios
 
@@ -116,6 +98,16 @@ The `SELECT INTO OUTFILE` currently supports exporting the following file format
 * csv
 * csv\_with\_names
 * csv\_with\_names\_and\_types
+
+### Export concurrency
+
+You can enable concurrent export through the session variable `enable_parallel_outfile`.
+
+`SET enable_parallel_outfile=true;`
+
+Concurrent export will use multi-node and multi-thread to export result data to improve the overall export throughout. However, concurrent export may generate more files.
+
+Note that some queries cannot perform concurrent export even if this variable is turned on, such as queries containing global sorting. If the number of rows returned by the export command is greater than 1, it means that concurrent export is enabled.
 
 ## Export Examples
 
@@ -268,7 +260,7 @@ If you want to enable this function, please add `enable_outfile_to_local=true` i
 Example: Export all the data in the tbl table to the local file system, set the file format of the export job to csv (the default format), and set the column separator to `,`.
 
 ```sql
-SELECT c1, c2 FROM tbl FROM tbl1
+SELECT c1, c2 FROM db.tbl
 INTO OUTFILE "file:///path/to/result_"
 FORMAT AS CSV
 PROPERTIES(
@@ -276,6 +268,24 @@ PROPERTIES(
 );
 ```
 
+This function will export and write data to the disk of the node where the BE is located. If there are multiple BE nodes, the data will be scattered on different BE nodes according to the concurrency of the export task, and each node will have a part of the data.
+
+As in this example, a set of files similar to `result_c6df5f01bd664dde-a2168b019b6c2b3f_0.csv` will eventually be produced under `/path/to/` of the BE node.
+
+The specific BE node IP will be displayed in the returned results, such as:
+
+```
++------------+-----------+----------+--------------------------------------------------------------------------+
+| FileNumber | TotalRows | FileSize | URL                                                                      |
++------------+-----------+----------+--------------------------------------------------------------------------+
+|          1 |   1195072 |  4780288 | file:///172.20.32.136/path/to/result_c6df5f01bd664dde-a2168b019b6c2b3f_* |
+|          1 |   1202944 |  4811776 | file:///172.20.32.136/path/to/result_c6df5f01bd664dde-a2168b019b6c2b40_* |
+|          1 |   1198880 |  4795520 | file:///172.20.32.137/path/to/result_c6df5f01bd664dde-a2168b019b6c2b43_* |
+|          1 |   1198880 |  4795520 | file:///172.20.32.137/path/to/result_c6df5f01bd664dde-a2168b019b6c2b45_* |
++------------+-----------+----------+--------------------------------------------------------------------------+
+```
+
 :::caution
-This function will export and write data to the disks of the nodes where the BE is located. If there are multiple BE nodes, the data will be scattered among different BE nodes according to the concurrency of the export tasks, and each node will have a part of the data. This function is not suitable for the production environment, and please ensure the permissions and data security of the export directory on your own.
+This function is not suitable for the production environment, and please ensure the permissions and data security of the export directory on your own.
 :::
+

@@ -5,25 +5,6 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 # 数据恢复
 
 Doris 支持将当前数据以文件的形式，通过 broker 备份到远端存储系统中。之后可以通过 恢复 命令，从远端存储系统中将数据恢复到任意 Doris 集群。通过这个功能，Doris 可以支持将数据定期的进行快照备份。也可以通过这个功能，在不同集群间进行数据迁移。
@@ -56,7 +37,7 @@ Doris 支持将当前数据以文件的形式，通过 broker 备份到远端存
 
 1. 从 example_repo 中恢复备份 snapshot_1 中的表 backup_tbl 到数据库 example_db1，时间版本为 "2018-05-04-16-45-08"。恢复为 1 个副本：
 
-    ```sql
+```sql
     RESTORE SNAPSHOT example_db1.`snapshot_1`
     FROM `example_repo`
     ON ( `backup_tbl` )
@@ -65,11 +46,11 @@ Doris 支持将当前数据以文件的形式，通过 broker 备份到远端存
         "backup_timestamp"="2022-04-08-15-52-29",
         "replication_num" = "1"
     );
-    ```
+```
 
 2. 从 example_repo 中恢复备份 snapshot_2 中的表 backup_tbl 的分区 p1,p2，以及表 backup_tbl2 到数据库 example_db1，并重命名为 new_tbl，时间版本为 "2018-05-04-17-11-01"。默认恢复为 3 个副本：
 
-    ```sql
+```sql
     RESTORE SNAPSHOT example_db1.`snapshot_2`
     FROM `example_repo`
     ON
@@ -81,11 +62,11 @@ Doris 支持将当前数据以文件的形式，通过 broker 备份到远端存
     (
         "backup_timestamp"="2022-04-08-15-55-43"
     );
-    ```
+```
 
 3. 查看 restore 作业的执行情况:
 
-   ```sql
+```sql
    mysql> SHOW RESTORE\G;
    *************************** 1. row ***************************
                   JobId: 17891851
@@ -124,7 +105,7 @@ Doris 支持将当前数据以文件的形式，通过 broker 备份到远端存
                  Status: [OK]
                 Timeout: 86400
    1 row in set (0.01 sec)
-   ```
+```
 
 RESTORE的更多用法可参考 [这里](../../sql-manual/sql-reference/Data-Definition-Statements/Backup-and-Restore/RESTORE.md)。
 

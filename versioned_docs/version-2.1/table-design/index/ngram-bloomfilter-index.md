@@ -1,33 +1,14 @@
 ---
 {
     "title": "N-Gram BloomFilter Index",
-    "language": "en"
+    "language": "en",
+    "description": "n-gram tokenization is a method of splitting a sentence or a piece of text into multiple adjacent word groups. The NGram BloomFilter index,"
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
-
 ## Indexing Principles
 
-The NGram BloomFilter index, similar to the BloomFilter index, is a skip index based on BloomFilter. 
+n-gram tokenization is a method of splitting a sentence or a piece of text into multiple adjacent word groups. The NGram BloomFilter index, similar to the BloomFilter index, is a skip index based on BloomFilter. 
 
 Unlike the BloomFilter index, the NGram BloomFilter index is used to accelerate text LIKE queries. Instead of storing the original text values, it tokenizes the text using NGram and stores each token in the BloomFilter. For LIKE queries, the pattern in LIKE '%pattern%' is also tokenized using NGram. Each token is checked against the BloomFilter, and if any token is not found, the corresponding data block does not meet the LIKE condition and can be skipped, reducing IO and accelerating the query.
 
@@ -58,7 +39,7 @@ Explanation of the syntax:
 1. **`idx_column_name(column_name)`** is mandatory. `column_name` is the column to be indexed and must appear in the column definitions above. `idx_column_name` is the index name, which must be unique at the table level. It is recommended to name it with a prefix `idx_` followed by the column name.
 2. **`USING NGRAM_BF`** is mandatory and specifies that the index type is an NGram BloomFilter index.
 3. **`PROPERTIES`** is optional and is used to specify additional properties for the NGram BloomFilter index. The supported properties are:
-   - **gram_size**: The N in NGram, specifying the number of consecutive characters to form a token. For example, 'an ngram example' with N = 3 would be tokenized into 'an ', 'n n', ' ng', 'ngr', 'gra', 'ram' (6 tokens).
+   - **gram_size**: The N in NGram, specifying the number of consecutive characters to form a token. For example, 'This is a simple ngram example' with N = 3 would be tokenized into 'This is a', 'is a simple', 'a simple ngram', 'simple ngram example' (4 tokens).
    - **bf_size**: The size of the BloomFilter in bits. bf_size determines the size of the index corresponding to each data block. The larger this value, the more storage space it occupies, but the lower the probability of hash collisions.
 
    It is recommended to set **gram_size** to the minimum length of the string in LIKE queries but not less than 2. Generally, "gram_size"="3", "bf_size"="1024" is recommended, then adjust based on the Query Profile.
@@ -92,6 +73,11 @@ ALTER TABLE table_ngrambf ADD INDEX idx_column_name2(column_name2) USING NGRAM_B
 ```
 
 ## Using Indexes
+
+To use NGram BloomFilter index, you need to set the following parameters (enable_function_pushdown is false by default):
+```sql
+SET enable_function_pushdown = true;
+```
 
 NGram BloomFilter index is used to accelerate LIKE queries, for example:
 SELECT count() FROM table1 WHERE message LIKE '%error%';

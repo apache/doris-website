@@ -1,28 +1,9 @@
 ---
 {
-    "title": "Logstash Doris Output Plugin",
+    "title": "Logstash",
     "language": "en"
 }
 ---
-
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
 
 # Logstash Doris output plugin
 
@@ -44,10 +25,11 @@ Using the Logstash Doris output plugin mainly involves three steps:
 You can download the plugin from the official website or compile it from the source code yourself.
 
 - Download from the official website
-   - Installation package without dependencies
-   [https://apache-doris-releases.oss-accelerate.aliyuncs.com/logstash-output-doris-1.0.0.gem](https://apache-doris-releases.oss-accelerate.aliyuncs.com/logstash-output-doris-1.0.0.gem)
-   - Installation package with dependencies
-   [https://apache-doris-releases.oss-accelerate.aliyuncs.com/logstash-output-doris-1.0.0.zip](https://apache-doris-releases.oss-accelerate.aliyuncs.com/logstash-output-doris-1.0.0.zip)
+
+```shell
+# Installation package with dependencies
+wget https://apache-doris-releases.oss-cn-beijing.aliyuncs.com/extension/logstash-output-doris-1.2.0-java.gem
+```
 
 - Compile from source code
 
@@ -64,9 +46,9 @@ gem build logstash-output-doris.gemspec
 `${LOGSTASH_HOME}` is the installation directory of Logstash. Run the `bin/logstash-plugin` command under it to install the plugin.
 
 ```
-${LOGSTASH_HOME}/bin/logstash-plugin install logstash-output-doris-1.0.0.gem
+${LOGSTASH_HOME}/bin/logstash-plugin install logstash-output-doris-1.2.0.gem
 
-Validating logstash-output-doris-1.0.0.gem
+Validating logstash-output-doris-1.2.0.gem
 Installing logstash-output-doris
 Installation successful
 ```
@@ -75,12 +57,12 @@ The standard installation mode will automatically install the ruby modules that 
 
 - Offline Installation
 
-```
-${LOGSTASH_HOME}/bin/logstash-plugin install file:///tmp/logstash-output-doris-1.0.0.zip
+```shell
 
-Installing file: logstash-output-doris-1.0.0.zip
-Resolving dependencies.........................
-Install successful
+export JARS_SKIP="true"
+
+${LOGSTASH_HOME}/bin/logstash-plugin install logstash-output-doris-1.2.0.gem
+
 ```
 
 ## Configuration

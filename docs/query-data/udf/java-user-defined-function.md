@@ -1,29 +1,10 @@
 ---
 {
-"title": "Java UDF, UDAF, UDTF",
-"language": "en"
+    "title": "Java UDF, UDAF, UDWF, UDTF",
+    "language": "en",
+    "description": "Java UDF provides a Java interface for users to implement user-defined functions (UDFs) conveniently using the Java programming language."
 }
 ---
-
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 
 ## Overview
 Java UDF provides a Java interface for users to implement user-defined functions (UDFs) conveniently using the Java programming language.
@@ -33,7 +14,9 @@ Doris supports the use of Java to develop UDFs, UDAFs, and UDTFs. Unless otherwi
 
 2. Java UDAF: A Java UDAF is a user-defined aggregate function that aggregates multiple input rows into a single output row. Common examples include MIN, MAX, and COUNT.
 
-3. Java UDTF: A Java UDTF is a user-defined table function, where a single input row can generate one or multiple output rows. In Doris, UDTFs must be used with Lateral View to achieve row-to-column transformations. Common examples include EXPLODE and EXPLODE_SPLIT.
+3. Java UDWF: stands for User-Defined Window Function, which returns a computed value for each row based on a window (one or multiple rows). Common examples include ROW_NUMBER, RANK, and DENSE_RANK.
+
+4. Java UDTF: A Java UDTF is a user-defined table function, where a single input row can generate one or multiple output rows. In Doris, UDTFs must be used with Lateral View to achieve row-to-column transformations. Common examples include EXPLODE and EXPLODE_SPLIT. **Java UDTF is available from version 3.0.0 and onwards.**
 
 ## Type Correspondence
 
@@ -52,12 +35,14 @@ Doris supports the use of Java to develop UDFs, UDAFs, and UDTFs. Unless otherwi
 | IPV4/IPV6             | InetAddress                  |
 | String                | String                       |
 | Decimal               | BigDecimal                   |
-| `array<Type>`         | `ArrayList<Type>`            |
-| `map<Type1,Type2>`    | `HashMap<Type1,Type2>`       |
-| `struct<Type...>`     | `ArrayList<Object>` (from version 3.0.0) |
+| `array<Type>`         | `ArrayList<Type>` or `List<Type>`          |
+| `map<Type1,Type2>`    | `HashMap<Type1,Type2>`or`Map<Type1,Type2>`     |
+| `struct<Type...>`     | `ArrayList<Object>` (from version 3.0.0) or`List<Object>`|
+| VarBinary     | byte[], Byte[] (The VARBINARY type is supported starting from version 4.0; prefer using byte[] to avoid an extra conversion layer.) |
 
 :::tip
 `array/map/struct` types can be nested with other types. For instance, Doris: `array<array<int>>` corresponds to JAVA UDF Argument Type: `ArrayList<ArrayList<Integer>>`. Other types follow the same pattern.
+And `List`,`Map` class is supported from version 3.1.0
 :::
 
 :::caution Warning
@@ -73,6 +58,11 @@ When creating functions, avoid using `varchar` in place of `string`, as this may
 
 3. Due to issues with JVM loading classes with the same name, do not use multiple classes with the same name as UDF implementations simultaneously. If you want to update a UDF with a class of the same name, you need to restart BE to reload the classpath.
 
+4. Same-named Functions
+
+    Users can create UDF with exactly the same signature as built-in functions. By default, the system will prioritize matching built-in functions. However, if you specify the `database` when using the function (i.e., `db.function()`), it will be forcibly considered as a user-defined function.
+
+    In version 3.0.7, a new session variable `prefer_udf_over_builtin` was added. When set to `true`, it will prioritize matching user-defined functions, making it easier for users to migrate from other systems to Doris while maintaining the original system's function behavior through custom functions without changing function names.
 
 ## Getting Started
 This section mainly introduces how to develop a Java UDF. Examples are provided in `samples/doris-demo/java-udf-demo/` for reference. Click [here](https://github.com/apache/doris/tree/master/samples/doris-demo/java-udf-demo) to view details.
@@ -112,7 +102,7 @@ When writing a UDF in Java, the main entry point must be the `evaluate` function
     }
     ```
 
-2. Register and create the Java-UDF function in Doris. For more details on the syntax, refer to [CREATE FUNCTION](../../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-FUNCTION.md).
+2. Register and create the Java-UDF function in Doris. For more details on the syntax, refer to [CREATE FUNCTION](../../sql-manual/sql-statements/function/CREATE-FUNCTION).
 
     ```sql
     CREATE FUNCTION java_udf_add_one(int) RETURNS int PROPERTIES (
@@ -123,7 +113,7 @@ When writing a UDF in Java, the main entry point must be the `evaluate` function
     );
     ```
 
-3. To utilize UDFs, users must possess the `SELECT` privilege for the corresponding database. And to verify the successful registration of the UDF, you can use the [SHOW FUNCTIONS](../../sql-manual/sql-statements/Show-Statements/SHOW-FUNCTIONS.md) command.
+3. To utilize UDFs, users must possess the `SELECT` privilege for the corresponding database. And to verify the successful registration of the UDF, you can use the [SHOW FUNCTIONS](../../sql-manual/sql-statements/function/SHOW-FUNCTIONS) command.
 
     ``` sql
     select id,java_udf_add_one(id) from test_table;
@@ -135,7 +125,7 @@ When writing a UDF in Java, the main entry point must be the `evaluate` function
     +------+----------------------+
     ```
 
-4. If a UDF is no longer needed, it can be dropped using the following command, as detailed in [DROP FUNCTION](../../sql-manual/sql-statements/Data-Definition-Statements/Drop/DROP-FUNCTION).
+4. If a UDF is no longer needed, it can be dropped using the following command, as detailed in [DROP FUNCTION](../../sql-manual/sql-statements/function/DROP-FUNCTION).
 
 Additionally, if your UDF requires loading large resource files or defining global static variables, you can refer to the method for loading static variables described later in this document.
 
@@ -325,7 +315,7 @@ public class MedianUDAF {
 </details>
 
 
-2. Register and create the Java-UDAF function in Doris. For more syntax details, please refer to [CREATE FUNCTION](../../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-FUNCTION.md).
+2. Register and create the Java-UDAF function in Doris. For more syntax details, please refer to [CREATE FUNCTION](../../sql-manual/sql-statements/function/CREATE-FUNCTION).
 
     ```sql
     CREATE AGGREGATE FUNCTION simple_demo(INT) RETURNS INT PROPERTIES (
@@ -357,6 +347,37 @@ public class MedianUDAF {
     +-----------------+
     ```
 
+### Introduction to Java-UDWF Example
+
+1. The implementation is similar to Java UDAF, but requires an additional reset() method to clear the state.
+
+    ```JAVA
+    void reset(State state)
+    ```
+
+2. Register and create the Java-UDWF function same as UDAF in Doris. For more syntax details, please refer to [CREATE FUNCTION](../../sql-manual/sql-statements/function/CREATE-FUNCTION).
+
+    ```sql
+    CREATE AGGREGATE FUNCTION simple_demo_window(INT) RETURNS INT PROPERTIES (
+        "file"="file:///pathTo/java-udaf.jar",
+        "symbol"="org.apache.doris.udf.SimpleDemo",
+        "always_nullable"="true",
+        "type"="JAVA_UDF"
+    );
+    ```
+
+3. Java UDWF allows querying computed results within specific window frames. For detailed syntax, refer to [Window Function](../window-function.md)
+
+    ```sql
+    select id, simple_demo_window(id) over(partition by id order by d1 rows between 1 preceding and 1 following) as res from test_table;
+        +------+------+
+        | id   | res  |
+        +------+------+
+        |    1 |    1 |
+        |    6 |    6 |
+        +------+------+
+    ```
+
 ### Introduction to Java-UDTF Example
 
 :::tip
@@ -377,8 +398,8 @@ UDTF is supported starting from Doris version 3.0.
     }
     ```
 
-2. Register and create the Java-UDTF function in Doris. Two UDTF functions will be registered. Table functions in Doris may exhibit different behaviors due to the `_outer` suffix. For more details, refer to [OUTER combinator](../../sql-manual/sql-functions/table-functions/explode-numbers-outer.md).
-For more syntax details, please refer to [CREATE FUNCTION](../../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-FUNCTION.md).
+2. Register and create the Java-UDTF function in Doris. Two UDTF functions will be registered. Table functions in Doris may exhibit different behaviors due to the `_outer` suffix. For more details, refer to [OUTER combinator](../../sql-manual/sql-functions/table-functions/explode-numbers).
+For more syntax details, please refer to [CREATE FUNCTION](../../sql-manual/sql-statements/function/CREATE-FUNCTION).
 
     ```sql
     CREATE TABLES FUNCTION java-utdf(string, string) RETURNS array<string> PROPERTIES (

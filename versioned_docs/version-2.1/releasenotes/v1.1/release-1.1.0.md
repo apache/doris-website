@@ -1,28 +1,10 @@
 ---
 {
     "title": "Release 1.1.0",
-    "language": "en"
+    "language": "en",
+    "description": "In version 1.1, we realized the full vectorization of the computing layer and storage layer,"
 }
 ---
-
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
 
 In version 1.1, we realized the full vectorization of the computing layer and storage layer, and officially enabled the vectorized execution engine as a stable function. All queries are executed by the vectorized execution engine by default, and the performance is 3-5 times higher than the previous version. It increases the ability to access the external tables of Apache Iceberg and supports federated query of data in Doris and Iceberg, and expands the analysis capabilities of Apache Doris on the data lake; on the basis of the original LZ4, the ZSTD compression algorithm is added , further improves the data compression rate; fixed many performance and stability problems in previous versions, greatly improving system stability. Downloading and using is recommended.
 
@@ -88,11 +70,11 @@ On all 13 SQLs in the SSB test data set, version 1.1 is better than version 0.15
 
 On all 22 SQLs in the TPC-H test data set, version 1.1 is better than version 0.15, the overall performance is improved by about 4.5 times, and the performance of some scenarios is improved by more than ten times;
 
-![](/images/release-note-1.1.0-SSB.png)
+![release-note-1.1.0-SSB](/images/release-note-1.1.0-SSB.png)
 
 <p align='center'>SSB Benchmark</p>
 
-![](/images/release-note-1.1.0-TPC-H.png)
+![release-note-1.1.0-TPC-H](/images/release-note-1.1.0-TPC-H.png)
 
 
 <p align='center'>TPC-H Benchmark</p>
@@ -189,7 +171,7 @@ If you encounter any problems with use, please feel free to contact us through G
 
 GitHub Forum: [https://github.com/apache/doris/discussions](https://github.com/apache/doris/discussions)
 
-Mailing list: [dev@doris.apache.org](dev@doris.apache.org)
+Mailing list: dev@doris.apache.org
 
 ## Thanks
 
