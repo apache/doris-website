@@ -29,25 +29,6 @@ Doris 的 [Multi-Catalog](../lakehouse/lakehouse-overview.md) 功能允许您直
 - **混合查询**：跨 Doris 和外部源进行 JOIN 查询
 - **增量迁移**：在保持源可访问的同时逐步迁移数据
 
-```sql
--- 创建 Catalog 连接到您的源
-CREATE CATALOG pg_catalog PROPERTIES (
-    'type' = 'jdbc',
-    'user' = 'username',
-    'password' = 'password',
-    'jdbc_url' = 'jdbc:postgresql://host:5432/database',
-    'driver_url' = 'postgresql-42.5.6.jar',
-    'driver_class' = 'org.postgresql.Driver'
-);
-
--- 直接查询源数据
-SELECT * FROM pg_catalog.schema_name.table_name LIMIT 10;
-
--- 使用 INSERT INTO SELECT 迁移数据
-INSERT INTO doris_db.doris_table
-SELECT * FROM pg_catalog.schema_name.source_table;
-```
-
 ### Flink CDC（实时同步）
 
 [Flink CDC](../ecosystem/flink-doris-connector.md) 适用于：
@@ -64,7 +45,7 @@ SELECT * FROM pg_catalog.schema_name.source_table;
 2. 将文件存储到对象存储（S3、GCS、HDFS）
 3. 使用 [S3 Load](../data-operate/import/data-source/amazon-s3.md) 或 [Broker Load](../data-operate/import/import-way/broker-load-manual.md) 加载到 Doris
 
-## 迁移规划清单
+## 迁移规划原则
 
 迁移前，请考虑以下事项：
 
@@ -93,52 +74,10 @@ SELECT * FROM pg_catalog.schema_name.source_table;
 
 ## 最佳实践
 
-### 从试点表开始
-
-在迁移整个数据库之前，先用一个代表性的表进行测试：
-
-```sql
--- 1. 创建具有适当 schema 的 Doris 表
-CREATE TABLE pilot_table (
-    id INT,
-    created_at DATETIME,
-    data VARCHAR(255)
-)
-UNIQUE KEY(id)
-DISTRIBUTED BY HASH(id) BUCKETS 8;
-
--- 2. 迁移数据
-INSERT INTO pilot_table
-SELECT id, created_at, data
-FROM source_catalog.db.source_table;
-
--- 3. 验证行数
-SELECT COUNT(*) FROM pilot_table;
-SELECT COUNT(*) FROM source_catalog.db.source_table;
-```
-
-### 批量大规模迁移
-
-对于数十亿行的表，分批迁移：
-
-```sql
--- 按日期范围迁移
-INSERT INTO doris_table
-SELECT * FROM source_catalog.db.source_table
-WHERE created_at >= '2024-01-01' AND created_at < '2024-02-01';
-```
-
-### 监控迁移进度
-
-使用以下命令跟踪加载任务：
-
-```sql
--- 检查活动的加载任务
-SHOW LOAD WHERE STATE = 'LOADING';
-
--- 检查最近的加载历史
-SHOW LOAD ORDER BY CreateTime DESC LIMIT 10;
-```
+- **从试点表开始**：在迁移整个数据库之前，先用一个代表性的表进行测试，验证 Schema 设计、类型映射和数据正确性。
+- **批量大规模迁移**：对于数十亿行的表，分批迁移（例如按日期范围），以管理资源使用并在批次之间进行验证。
+- **监控迁移进度**：使用 `SHOW LOAD` 跟踪活动和已完成的加载任务。
+- **迁移后验证**：比较源和目标的行数、抽查记录、验证数据类型。
 
 ## 下一步
 

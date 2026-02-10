@@ -51,73 +51,6 @@ ClickHouse and Doris are both columnar OLAP databases with some similarities but
 | LowCardinality(T) | T | No special handling needed |
 | Enum8/Enum16 | TINYINT/SMALLINT or STRING | |
 
-### Migration with JDBC Catalog
-
-#### Step 1: Set Up ClickHouse JDBC Driver
-
-```bash
-# Download ClickHouse JDBC driver
-wget https://github.com/ClickHouse/clickhouse-java/releases/download/v0.6.0/clickhouse-jdbc-0.6.0-all.jar
-
-# Deploy to Doris
-cp clickhouse-jdbc-0.6.0-all.jar $DORIS_HOME/fe/jdbc_drivers/
-cp clickhouse-jdbc-0.6.0-all.jar $DORIS_HOME/be/jdbc_drivers/
-```
-
-#### Step 2: Create ClickHouse Catalog
-
-```sql
-CREATE CATALOG clickhouse_catalog PROPERTIES (
-    'type' = 'jdbc',
-    'user' = 'default',
-    'password' = 'password',
-    'jdbc_url' = 'jdbc:clickhouse://clickhouse-host:8123/default',
-    'driver_url' = 'clickhouse-jdbc-0.6.0-all.jar',
-    'driver_class' = 'com.clickhouse.jdbc.ClickHouseDriver'
-);
-```
-
-#### Step 3: Explore and Migrate
-
-```sql
--- Explore ClickHouse data
-SWITCH clickhouse_catalog;
-SHOW DATABASES;
-USE default;
-SHOW TABLES;
-
--- Preview table
-SELECT * FROM events LIMIT 10;
-
--- Create Doris table
-SWITCH internal;
-CREATE TABLE analytics.events (
-    event_id BIGINT,
-    event_time DATETIME,
-    user_id BIGINT,
-    event_type VARCHAR(64),
-    properties JSON
-)
-DUPLICATE KEY(event_id)
-PARTITION BY RANGE(event_time) ()
-DISTRIBUTED BY HASH(event_id) BUCKETS 16
-PROPERTIES (
-    "dynamic_partition.enable" = "true",
-    "dynamic_partition.time_unit" = "DAY",
-    "replication_num" = "3"
-);
-
--- Migrate data
-INSERT INTO internal.analytics.events
-SELECT
-    event_id,
-    event_time,
-    user_id,
-    event_type,
-    properties
-FROM clickhouse_catalog.default.events;
-```
-
 ### SQL Syntax Conversion
 
 Common ClickHouse to Doris SQL conversions:
@@ -146,9 +79,13 @@ Common ClickHouse to Doris SQL conversions:
 | AggregatingMergeTree | AGGREGATE | Complex aggregations |
 | CollapsingMergeTree | UNIQUE | With delete support |
 
+### Migration
+
+Use the [JDBC Catalog](../lakehouse/catalogs/jdbc-catalog.md) to connect to ClickHouse and migrate data via `INSERT INTO ... SELECT`.
+
 ## Greenplum
 
-Greenplum is PostgreSQL-based, so migration is similar to PostgreSQL.
+Greenplum is PostgreSQL-based, so migration is similar to PostgreSQL. See the [PostgreSQL to Doris](./postgresql-to-doris.md) guide for general principles.
 
 ### Data Type Mapping
 
@@ -164,224 +101,31 @@ Use the [PostgreSQL type mapping](./postgresql-to-doris.md#data-type-mapping) as
 | TIMESTAMP | DATETIME | |
 | INTERVAL | STRING | |
 
-### Migration with JDBC Catalog
+### Migration
 
-```sql
--- Create Greenplum catalog (uses PostgreSQL driver)
-CREATE CATALOG gp_catalog PROPERTIES (
-    'type' = 'jdbc',
-    'user' = 'gpadmin',
-    'password' = 'password',
-    'jdbc_url' = 'jdbc:postgresql://gp-master:5432/database',
-    'driver_url' = 'postgresql-42.5.6.jar',
-    'driver_class' = 'org.postgresql.Driver'
-);
-
--- Query Greenplum data
-SWITCH gp_catalog;
-USE public;
-SELECT * FROM large_table LIMIT 10;
-
--- Migrate with partitioning
-INSERT INTO internal.target_db.large_table
-SELECT * FROM gp_catalog.public.large_table
-WHERE partition_col >= '2024-01-01';
-```
-
-### Parallel Migration
-
-For large Greenplum tables, leverage parallel export:
-
-```bash
-# Export from Greenplum to files
-psql -h gp-master -c "COPY large_table TO '/tmp/data.csv' WITH CSV"
-
-# Or use gpfdist for parallel export
-# Then load to Doris using Stream Load or Broker Load
-```
+Use the [JDBC Catalog](../lakehouse/catalogs/jdbc-catalog.md) with the PostgreSQL driver to connect to Greenplum and migrate data. For large tables, consider parallel export via `gpfdist` followed by file-based loading into Doris.
 
 ## Data Lake (Hive, Iceberg, Hudi) {#data-lake}
 
 Doris's Multi-Catalog feature provides native integration with data lake table formats.
 
-### Hive Migration
+### Hive
 
-#### Step 1: Create Hive Catalog
+Use the [Hive Catalog](../lakehouse/catalogs/hive-catalog.md) to directly query and migrate data from Hive. Supports both HDFS and S3-based storage.
 
-```sql
-CREATE CATALOG hive_catalog PROPERTIES (
-    'type' = 'hms',
-    'hive.metastore.uris' = 'thrift://hive-metastore:9083',
-    'hadoop.username' = 'hadoop'
-);
-```
+### Iceberg
 
-For S3-based Hive:
+Use the [Iceberg Catalog](../lakehouse/catalogs/iceberg-catalog.md) to query and migrate Iceberg tables. Supports HMS and REST catalog types, as well as time travel queries.
 
-```sql
-CREATE CATALOG hive_catalog PROPERTIES (
-    'type' = 'hms',
-    'hive.metastore.uris' = 'thrift://hive-metastore:9083',
-    's3.endpoint' = 's3.amazonaws.com',
-    's3.region' = 'us-east-1',
-    's3.access_key' = 'your_ak',
-    's3.secret_key' = 'your_sk'
-);
-```
+### Hudi
 
-#### Step 2: Query and Migrate
-
-```sql
--- Browse Hive tables
-SWITCH hive_catalog;
-SHOW DATABASES;
-USE warehouse;
-SHOW TABLES;
-
--- Query Hive data directly
-SELECT * FROM hive_catalog.warehouse.fact_sales LIMIT 10;
-
--- Migrate to Doris
-INSERT INTO internal.analytics.fact_sales
-SELECT * FROM hive_catalog.warehouse.fact_sales
-WHERE dt >= '2024-01-01';
-```
-
-### Iceberg Migration
-
-```sql
--- Create Iceberg catalog
-CREATE CATALOG iceberg_catalog PROPERTIES (
-    'type' = 'iceberg',
-    'iceberg.catalog.type' = 'hms',
-    'hive.metastore.uris' = 'thrift://hive-metastore:9083'
-);
-
--- Or with REST catalog
-CREATE CATALOG iceberg_catalog PROPERTIES (
-    'type' = 'iceberg',
-    'iceberg.catalog.type' = 'rest',
-    'uri' = 'http://iceberg-rest:8181'
-);
-
--- Query Iceberg tables
-SELECT * FROM iceberg_catalog.db.table_name;
-
--- Time travel query
-SELECT * FROM iceberg_catalog.db.table_name
-FOR VERSION AS OF 123456789;
-
--- Migrate data
-INSERT INTO internal.target_db.target_table
-SELECT * FROM iceberg_catalog.source_db.source_table;
-```
-
-### Hudi Migration
-
-```sql
--- Create Hudi catalog
-CREATE CATALOG hudi_catalog PROPERTIES (
-    'type' = 'hms',
-    'hive.metastore.uris' = 'thrift://hive-metastore:9083'
-);
-
--- Query Hudi tables (read-optimized)
-SELECT * FROM hudi_catalog.db.hudi_table;
-
--- Migrate data
-INSERT INTO internal.target_db.target_table
-SELECT * FROM hudi_catalog.db.hudi_table;
-```
+Use the Hive Catalog to query and migrate Hudi tables (read-optimized view).
 
 ## Spark/Flink Connector Migration
 
-For systems not directly supported by catalogs, use Spark or Flink connectors.
+For systems not directly supported by catalogs, use the [Spark Doris Connector](../ecosystem/spark-doris-connector.md) or [Flink Doris Connector](../ecosystem/flink-doris-connector.md) to read from any Spark/Flink-supported source and write to Doris.
 
-### Spark Doris Connector
-
-```scala
-// Read from any Spark-supported source
-val sourceDF = spark.read
-  .format("source_format")
-  .load("source_path")
-
-// Write to Doris
-sourceDF.write
-  .format("doris")
-  .option("doris.table.identifier", "db.table")
-  .option("doris.fenodes", "doris-fe:8030")
-  .option("user", "root")
-  .option("password", "")
-  .save()
-```
-
-### Flink Doris Connector
-
-```sql
--- Read from source
-CREATE TABLE source_table (...) WITH ('connector' = 'source-connector', ...);
-
--- Write to Doris
-CREATE TABLE doris_sink (...) WITH (
-    'connector' = 'doris',
-    'fenodes' = 'doris-fe:8030',
-    'table.identifier' = 'db.table',
-    'username' = 'root',
-    'password' = ''
-);
-
-INSERT INTO doris_sink SELECT * FROM source_table;
-```
-
-## Export-Import Method
-
-For air-gapped environments or when direct connectivity isn't possible:
-
-### Step 1: Export to Files
-
-```bash
-# From ClickHouse
-clickhouse-client --query "SELECT * FROM table FORMAT Parquet" > data.parquet
-
-# From Greenplum
-psql -c "\COPY table TO 'data.csv' WITH CSV HEADER"
-
-# From Hive
-hive -e "INSERT OVERWRITE DIRECTORY '/tmp/export' ROW FORMAT DELIMITED SELECT * FROM table"
-```
-
-### Step 2: Upload to Object Storage
-
-```bash
-# Upload to S3
-aws s3 cp data.parquet s3://bucket/migration/
-
-# Or to HDFS
-hdfs dfs -put data.parquet /migration/
-```
-
-### Step 3: Load into Doris
-
-```sql
--- S3 Load
-LOAD LABEL migration_job
-(
-    DATA INFILE("s3://bucket/migration/data.parquet")
-    INTO TABLE target_table
-    FORMAT AS "parquet"
-)
-WITH S3 (
-    "provider" = "AWS",
-    "s3.endpoint" = "s3.amazonaws.com",
-    "s3.region" = "us-east-1",
-    "s3.access_key" = "ak",
-    "s3.secret_key" = "sk"
-);
-```
-
-## Best Practices
-
-### Schema Design Considerations
+## Schema Design Principles
 
 When migrating from other OLAP systems:
 
@@ -397,56 +141,6 @@ When migrating from other OLAP systems:
 3. **Bucket count**:
    - Start with 8-16 buckets per partition
    - Scale based on data volume and query patterns
-
-### Incremental Migration
-
-For continuous sync from data lakes:
-
-```sql
--- Track last sync timestamp
-CREATE TABLE sync_metadata (
-    table_name VARCHAR(128),
-    last_sync_time DATETIME
-)
-DISTRIBUTED BY HASH(table_name) BUCKETS 1;
-
--- Incremental load
-INSERT INTO internal.analytics.fact_sales
-SELECT * FROM hive_catalog.warehouse.fact_sales
-WHERE updated_at > (
-    SELECT last_sync_time FROM sync_metadata
-    WHERE table_name = 'fact_sales'
-);
-
--- Update sync metadata
-INSERT INTO sync_metadata VALUES ('fact_sales', NOW())
-ON DUPLICATE KEY UPDATE last_sync_time = NOW();
-```
-
-## Validation
-
-After migration:
-
-```sql
--- Row count validation
-SELECT
-    'source' as system,
-    COUNT(*) as cnt
-FROM source_catalog.db.table
-UNION ALL
-SELECT
-    'doris' as system,
-    COUNT(*) as cnt
-FROM internal.db.table;
-
--- Aggregation validation
-SELECT SUM(amount), COUNT(DISTINCT user_id)
-FROM internal.db.table;
-
--- Compare with source
-SELECT SUM(amount), COUNT(DISTINCT user_id)
-FROM source_catalog.db.table;
-```
 
 ## Next Steps
 

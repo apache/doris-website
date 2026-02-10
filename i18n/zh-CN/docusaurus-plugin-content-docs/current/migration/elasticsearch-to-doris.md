@@ -27,7 +27,13 @@
 
 3. **嵌套文档**：Elasticsearch nested 类型映射到 Doris [VARIANT](../data-operate/import/complex-types/variant.md) 类型，支持灵活的 Schema 处理。
 
-4. **数组处理**：Elasticsearch 数组需要在 Doris 中显式配置。
+4. **数组处理**：Elasticsearch 没有显式的数组类型。通过 ES Catalog 正确读取数组时，需要在 ES 索引映射中使用 `_meta.doris.array_fields` 配置数组字段元数据。
+
+5. **日期类型**：Elasticsearch 日期可以有多种格式。迁移时确保一致的日期处理 — 使用显式转换到 DATETIME。
+
+6. **_id 字段**：要保留 Elasticsearch 文档 `_id`，在 ES Catalog 配置中启用 `mapping_es_id`。
+
+7. **性能**：为了获得更好的 ES Catalog 读取性能，启用 `doc_value_scan`。注意 `text` 字段不支持 doc_value，会回退到 `_source`。
 
 ## 数据类型映射
 
@@ -46,7 +52,7 @@
 | scaled_float | DOUBLE | |
 | keyword | STRING | |
 | text | STRING | 考虑在 Doris 中使用倒排索引 |
-| date | DATE 或 DATETIME | 参见[日期处理](#处理日期类型) |
+| date | DATE 或 DATETIME | 参见上方日期类型 |
 | ip | STRING | |
 | nested | VARIANT | 参见 [VARIANT 类型](../data-operate/import/complex-types/variant.md)，支持灵活 Schema |
 | object | VARIANT | 参见 [VARIANT 类型](../data-operate/import/complex-types/variant.md) |
@@ -58,184 +64,23 @@
 
 ### 选项 1：ES Catalog（推荐）
 
-ES Catalog 提供从 Doris 直接访问 Elasticsearch 数据的能力，支持查询和迁移。
+[ES Catalog](../lakehouse/catalogs/es-catalog.md) 提供从 Doris 直接访问 Elasticsearch 数据的能力，支持查询和迁移。
 
-#### 前提条件
+**前提条件**：Elasticsearch 5.x 或更高版本；Doris FE/BE 节点与 Elasticsearch 之间的网络连接。
 
-- Elasticsearch 5.x 或更高版本
-- Doris FE/BE 节点与 Elasticsearch 之间的网络连接
+### 选项 2：Logstash Pipeline
 
-#### 步骤 1：创建 ES Catalog
+使用 Logstash 从 Elasticsearch 读取数据，通过 HTTP（Stream Load）写入 Doris。此方法在迁移过程中提供数据转换能力。
 
-```sql
-CREATE CATALOG es_catalog PROPERTIES (
-    'type' = 'es',
-    'hosts' = 'http://es-node1:9200,http://es-node2:9200',
-    'user' = 'elastic',
-    'password' = 'password'
-);
-```
+### 选项 3：自定义脚本 + Scroll API
 
-带有更多选项：
+需要更多控制时，使用自定义脚本结合 Elasticsearch Scroll API 读取数据，通过 Stream Load 加载到 Doris。
 
-```sql
-CREATE CATALOG es_catalog PROPERTIES (
-    'type' = 'es',
-    'hosts' = 'http://es-node1:9200',
-    'user' = 'elastic',
-    'password' = 'password',
-    'doc_value_scan' = 'true',
-    'keyword_sniff' = 'true',
-    'nodes_discovery' = 'true',
-    'ssl' = 'false',
-    'mapping_es_id' = 'true'
-);
-```
+## Doris 中的全文搜索
 
-#### 步骤 2：探索 Elasticsearch 数据
+Doris 的[倒排索引](../table-design/index/inverted-index/overview.md)提供类似 Elasticsearch 的全文搜索能力。
 
-```sql
--- 切换到 ES catalog
-SWITCH es_catalog;
-
--- ES 创建一个 default_db 数据库
-USE default_db;
-
--- 列出索引作为表
-SHOW TABLES;
-
--- 预览数据
-SELECT * FROM logs_index LIMIT 10;
-
--- 检查字段映射
-DESC logs_index;
-```
-
-#### 步骤 3：设计 Doris 表
-
-基于您的 Elasticsearch 索引，设计合适的 Doris 表：
-
-```sql
--- 示例：日志数据表
-SWITCH internal;
-
-CREATE TABLE logs (
-    `@timestamp` DATETIME NOT NULL,
-    log_id VARCHAR(64),
-    level VARCHAR(16),
-    message TEXT,
-    host VARCHAR(128),
-    service VARCHAR(64),
-    trace_id VARCHAR(64),
-    INDEX idx_message (message) USING INVERTED PROPERTIES("parser" = "unicode", "support_phrase" = "true"),
-    INDEX idx_level (level) USING INVERTED,
-    INDEX idx_service (service) USING INVERTED
-)
-DUPLICATE KEY(`@timestamp`, log_id)
-PARTITION BY RANGE(`@timestamp`) ()
-DISTRIBUTED BY HASH(log_id) BUCKETS 16
-PROPERTIES (
-    "dynamic_partition.enable" = "true",
-    "dynamic_partition.time_unit" = "DAY",
-    "dynamic_partition.start" = "-30",
-    "dynamic_partition.end" = "3",
-    "dynamic_partition.prefix" = "p",
-    "replication_num" = "3"
-);
-```
-
-#### 步骤 4：迁移数据
-
-```sql
--- 基本迁移
-INSERT INTO internal.analytics_db.logs
-SELECT
-    `@timestamp`,
-    _id as log_id,
-    level,
-    message,
-    host,
-    service,
-    trace_id
-FROM es_catalog.default_db.logs_index;
-```
-
-对于大型索引，按时间范围迁移：
-
-```sql
--- 按天迁移
-INSERT INTO internal.analytics_db.logs
-SELECT * FROM es_catalog.default_db.logs_index
-WHERE `@timestamp` >= '2024-01-01' AND `@timestamp` < '2024-01-02';
-```
-
-#### 步骤 5：配置数组字段
-
-Elasticsearch 没有显式的数组类型。要正确读取数组，需要配置 ES 索引映射：
-
-```bash
-# 向 ES 索引添加数组字段元数据
-curl -X PUT "localhost:9200/logs_index/_mapping" -H 'Content-Type: application/json' -d '{
-    "_meta": {
-        "doris": {
-            "array_fields": ["tags", "ip_addresses"]
-        }
-    }
-}'
-```
-
-然后在 Doris 中：
-
-```sql
--- 数组字段将被正确识别
-SELECT tags, ip_addresses FROM es_catalog.default_db.logs_index LIMIT 5;
-```
-
-## 迁移全文搜索
-
-Doris 的倒排索引提供类似 Elasticsearch 的全文搜索能力。
-
-### 创建倒排索引
-
-```sql
--- 创建带倒排索引的表用于全文搜索
-CREATE TABLE articles (
-    id BIGINT,
-    title VARCHAR(256),
-    content TEXT,
-    author VARCHAR(64),
-    published_at DATETIME,
-    tags ARRAY<STRING>,
-    INDEX idx_title (title) USING INVERTED PROPERTIES("parser" = "unicode"),
-    INDEX idx_content (content) USING INVERTED PROPERTIES(
-        "parser" = "unicode",
-        "support_phrase" = "true"
-    ),
-    INDEX idx_tags (tags) USING INVERTED
-)
-DUPLICATE KEY(id)
-DISTRIBUTED BY HASH(id) BUCKETS 8;
-```
-
-### 全文搜索查询
-
-```sql
--- Match 查询（类似 ES match）
-SELECT * FROM articles
-WHERE content MATCH 'apache doris';
-
--- 短语匹配（类似 ES match_phrase）
-SELECT * FROM articles
-WHERE content MATCH_PHRASE 'real-time analytics';
-
--- 多条件组合
-SELECT * FROM articles
-WHERE title MATCH 'database'
-  AND content MATCH 'performance'
-  AND published_at > '2024-01-01';
-```
-
-### DSL 到 SQL 转换示例
+### DSL 到 SQL 转换参考
 
 | Elasticsearch DSL | Doris SQL |
 |-------------------|-----------|
@@ -247,103 +92,6 @@ WHERE title MATCH 'database'
 | `{"bool": {"must": [...]}}` | `WHERE ... AND ...` |
 | `{"bool": {"should": [...]}}` | `WHERE ... OR ...` |
 | `{"exists": {"field": "email"}}` | `WHERE email IS NOT NULL` |
-
-## 处理常见问题
-
-### 处理日期类型
-
-Elasticsearch 日期可以有多种格式。确保一致处理：
-
-```sql
--- 带 datetime 的 Doris 表
-CREATE TABLE events (
-    event_id VARCHAR(64),
-    event_time DATETIME,
-    event_data JSON
-)
-DUPLICATE KEY(event_id)
-DISTRIBUTED BY HASH(event_id) BUCKETS 8;
-
--- 带日期转换的迁移
-INSERT INTO events
-SELECT
-    _id,
-    CAST(`@timestamp` AS DATETIME),
-    event_data
-FROM es_catalog.default_db.events_index;
-```
-
-### 处理嵌套文档
-
-Elasticsearch 嵌套对象映射到 Doris JSON：
-
-```sql
--- ES 文档带嵌套数据
--- { "user": { "name": "John", "address": { "city": "NYC" } } }
-
--- Doris 表
-CREATE TABLE users (
-    id VARCHAR(64),
-    user_data JSON
-)
-DISTRIBUTED BY HASH(id) BUCKETS 8;
-
--- 在 Doris 中查询嵌套数据
-SELECT
-    id,
-    JSON_EXTRACT(user_data, '$.name') as name,
-    JSON_EXTRACT(user_data, '$.address.city') as city
-FROM users;
-```
-
-### 处理 _id 字段
-
-要保留 Elasticsearch `_id`：
-
-```sql
--- 在 catalog 中启用 _id 映射
-CREATE CATALOG es_catalog PROPERTIES (
-    'type' = 'es',
-    'hosts' = 'http://es-node:9200',
-    'mapping_es_id' = 'true'
-);
-
--- 带 _id 查询
-SELECT _id, * FROM es_catalog.default_db.index_name LIMIT 10;
-```
-
-### 性能优化
-
-提升 ES Catalog 读取性能：
-
-```sql
--- 启用列式扫描（doc_value）
-CREATE CATALOG es_catalog PROPERTIES (
-    'type' = 'es',
-    'hosts' = 'http://es-node:9200',
-    'doc_value_scan' = 'true'
-);
-```
-
-注意：`text` 字段不支持 doc_value，会回退到 `_source`。
-
-## 验证
-
-迁移后，验证：
-
-```sql
--- 比较文档数
-SELECT COUNT(*) FROM es_catalog.default_db.logs_index;
-SELECT COUNT(*) FROM internal.analytics_db.logs;
-
--- 验证全文搜索工作正常
-SELECT COUNT(*) FROM internal.analytics_db.logs
-WHERE message MATCH 'error';
-
--- 抽查特定文档
-SELECT * FROM internal.analytics_db.logs
-WHERE log_id = 'specific-doc-id';
-```
 
 ## 下一步
 
