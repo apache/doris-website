@@ -12,7 +12,7 @@
 
 1. **协议兼容**：Doris 兼容 MySQL 协议，因此现有的 MySQL 客户端和工具可以与 Doris 配合使用。
 
-2. **实时需求**：如果需要实时同步，推荐使用 Flink CDC，支持自动建表和 Schema 变更。
+2. **实时需求**：如果需要实时同步，Flink CDC 支持自动建表和 Schema 变更。
 
 3. **全库同步**：Flink Doris Connector 支持同步整个 MySQL 数据库，包括 DDL 操作。
 
@@ -54,9 +54,9 @@
 
 ## 迁移选项
 
-### 选项 1：Flink CDC（推荐用于实时同步）
+### 选项 1：Flink CDC（实时同步）
 
-Flink CDC 捕获 MySQL binlog 变更并流式传输到 Doris。这是以下场景的推荐方法：
+Flink CDC 捕获 MySQL binlog 变更并流式传输到 Doris。此方法适用于：
 
 - 实时数据同步
 - 自动建表的全库迁移

@@ -10,7 +10,7 @@
 
 ## 迁移方法概述
 
-| 源系统 | 推荐方法 | 说明 |
+| 源系统 | 迁移方法 | 说明 |
 |--------|---------|------|
 | ClickHouse | JDBC Catalog + SQL 转换 | 需要 Schema 和 SQL 语法转换 |
 | Greenplum | JDBC Catalog | 兼容 PostgreSQL |

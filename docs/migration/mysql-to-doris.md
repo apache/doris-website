@@ -12,7 +12,7 @@ This guide covers migrating data from MySQL to Apache Doris. MySQL is one of the
 
 1. **Protocol Compatibility**: Doris is MySQL protocol compatible, so existing MySQL clients and tools work with Doris.
 
-2. **Real-time Requirements**: If you need real-time synchronization, Flink CDC is the recommended approach with support for automatic table creation and schema changes.
+2. **Real-time Requirements**: If you need real-time synchronization, Flink CDC supports automatic table creation and schema changes.
 
 3. **Full Database Sync**: The Flink Doris Connector supports synchronizing entire MySQL databases including DDL operations.
 
@@ -54,9 +54,9 @@ This guide covers migrating data from MySQL to Apache Doris. MySQL is one of the
 
 ## Migration Options
 
-### Option 1: Flink CDC (Recommended for Real-time Sync)
+### Option 1: Flink CDC (Real-time Sync)
 
-Flink CDC captures MySQL binlog changes and streams them to Doris. This is the recommended method for:
+Flink CDC captures MySQL binlog changes and streams them to Doris. This method is suited for:
 
 - Real-time data synchronization
 - Full database migration with automatic table creation

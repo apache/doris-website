@@ -62,7 +62,7 @@ This guide covers migrating data from Elasticsearch to Apache Doris. Doris can s
 
 ## Migration Options
 
-### Option 1: ES Catalog (Recommended)
+### Option 1: ES Catalog (Direct Query and Migration)
 
 The [ES Catalog](../lakehouse/catalogs/es-catalog.md) provides direct access to Elasticsearch data from Doris, enabling both querying and migration.
 

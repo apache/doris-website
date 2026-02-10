@@ -54,7 +54,7 @@ This guide covers migrating data from PostgreSQL to Apache Doris. You can choose
 
 ## Migration Options
 
-### Option 1: JDBC Catalog (Recommended)
+### Option 1: JDBC Catalog (Batch Migration)
 
 The [JDBC Catalog](../lakehouse/catalogs/jdbc-catalog.md) provides direct access to PostgreSQL data from Doris. This is the simplest approach for both querying and migrating data.
 
