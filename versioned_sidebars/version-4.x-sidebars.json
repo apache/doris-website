@@ -56,8 +56,7 @@
                                         "install/deploy-on-kubernetes/integrated-storage-compute/install-config-cluster",
                                         "install/deploy-on-kubernetes/integrated-storage-compute/install-doris-cluster",
                                         "install/deploy-on-kubernetes/integrated-storage-compute/access-cluster",
-                                        "install/deploy-on-kubernetes/integrated-storage-compute/cluster-operation",
-                                        "install/deploy-on-kubernetes/integrated-storage-compute/helm-chart-deploy"
+                                        "install/deploy-on-kubernetes/integrated-storage-compute/cluster-operation"
                                     ]
                                 },
                                 {
@@ -137,9 +136,7 @@
                                     ]
                                 },
                                 "table-design/index/bloomfilter",
-                                "table-design/index/ngram-bloomfilter-index",
-                                "table-design/index/bitmap-index",
-                                "table-design/index/inverted-index"
+                                "table-design/index/ngram-bloomfilter-index"
                             ]
                         },
                         "table-design/schema-change",
@@ -664,10 +661,7 @@
                                 "admin-manual/auth/integrations/aws-authentication-and-authorization",
                                 "admin-manual/auth/integrations/aws-iam-role"
                             ]
-                        },
-                        "admin-manual/auth/ldap",
-                        "admin-manual/auth/ranger",
-                        "admin-manual/auth/user-privilege"
+                        }
                     ]
                 }
             ]
@@ -776,8 +770,7 @@
                         "admin-manual/config/config-dir",
                         "admin-manual/config/fe-config",
                         "admin-manual/config/be-config",
-                        "admin-manual/config/user-property",
-                        "admin-manual/config/fe-config-template"
+                        "admin-manual/config/user-property"
                     ]
                 },
                 {
@@ -988,9 +981,7 @@
                             ]
                         }
                     ]
-                },
-                "admin-manual/plugin-development-manual",
-                "admin-manual/small-file-mgr"
+                }
             ]
         },
         {
@@ -1062,8 +1053,7 @@
                         "ecosystem/hive-hll-udf",
                         "ecosystem/spark-load"
                     ]
-                },
-                "ecosystem/ecosystem-overview"
+                }
             ]
         },
         {
@@ -1143,8 +1133,7 @@
                                         "sql-manual/basic-element/sql-data-types/semi-structured/MAP",
                                         "sql-manual/basic-element/sql-data-types/semi-structured/STRUCT",
                                         "sql-manual/basic-element/sql-data-types/semi-structured/JSON",
-                                "sql-manual/basic-element/sql-data-types/semi-structured/VARIANT",
-                                "sql-manual/basic-element/sql-data-types/semi-structured/semi-structured-overview"
+                                        "sql-manual/basic-element/sql-data-types/semi-structured/VARIANT"
                                     ]
                                 },
                                 {
@@ -1425,11 +1414,7 @@
                                         "sql-manual/sql-functions/scalar-functions/string-functions/url-decode",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/url-encode",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/uuid",
-                                "sql-manual/sql-functions/scalar-functions/string-functions/xpath-string",
-                                "sql-manual/sql-functions/scalar-functions/string-functions/date",
-                                "sql-manual/sql-functions/scalar-functions/string-functions/from-iso8601-date",
-                                "sql-manual/sql-functions/scalar-functions/string-functions/to-iso8601",
-                                "sql-manual/sql-functions/scalar-functions/string-functions/uuid-to-int"
+                                        "sql-manual/sql-functions/scalar-functions/string-functions/xpath-string"
                                     ]
                                 },
                                 {
@@ -1542,13 +1527,7 @@
                                         "sql-manual/sql-functions/scalar-functions/date-time-functions/yearweek",
                                         "sql-manual/sql-functions/scalar-functions/date-time-functions/years-add",
                                         "sql-manual/sql-functions/scalar-functions/date-time-functions/years-diff",
-                                "sql-manual/sql-functions/scalar-functions/date-time-functions/years-sub",
-                                "sql-manual/sql-functions/scalar-functions/date-time-functions/current-timestamp",
-                                "sql-manual/sql-functions/scalar-functions/date-time-functions/localtime",
-                                "sql-manual/sql-functions/scalar-functions/date-time-functions/quarter-ceil",
-                                "sql-manual/sql-functions/scalar-functions/date-time-functions/quarter-floor",
-                                "sql-manual/sql-functions/scalar-functions/date-time-functions/quarters-diff",
-                                "sql-manual/sql-functions/scalar-functions/date-time-functions/second-timestamp"
+                                        "sql-manual/sql-functions/scalar-functions/date-time-functions/years-sub"
                                     ]
                                 },
                                 {
@@ -1771,11 +1750,7 @@
                                         "sql-manual/sql-functions/scalar-functions/ip-functions/to-ipv4-or-null",
                                         "sql-manual/sql-functions/scalar-functions/ip-functions/to-ipv6",
                                         "sql-manual/sql-functions/scalar-functions/ip-functions/to-ipv6-or-default",
-                                "sql-manual/sql-functions/scalar-functions/ip-functions/to-ipv6-or-null",
-                                "sql-manual/sql-functions/scalar-functions/ip-functions/inet-aton",
-                                "sql-manual/sql-functions/scalar-functions/ip-functions/inet-ntoa",
-                                "sql-manual/sql-functions/scalar-functions/ip-functions/inet6-aton",
-                                "sql-manual/sql-functions/scalar-functions/ip-functions/inet6-ntoa"
+                                        "sql-manual/sql-functions/scalar-functions/ip-functions/to-ipv6-or-null"
                                     ]
                                 },
                                 {
@@ -2040,8 +2015,7 @@
                                 "sql-manual/sql-functions/aggregate-functions/topn-weighted",
                                 "sql-manual/sql-functions/aggregate-functions/var-samp",
                                 "sql-manual/sql-functions/aggregate-functions/variance",
-                                "sql-manual/sql-functions/aggregate-functions/window-funnel",
-                                "sql-manual/sql-functions/window-functions/nth-value"
+                                "sql-manual/sql-functions/aggregate-functions/window-funnel"
                             ]
                         },
                         {
@@ -2068,8 +2042,7 @@
                                 "sql-manual/sql-functions/table-functions/explode-split",
                                 "sql-manual/sql-functions/table-functions/explode-split-outer",
                                 "sql-manual/sql-functions/table-functions/posexplode",
-                                "sql-manual/sql-functions/table-functions/posexplode-outer",
-                                "sql-manual/sql-functions/table-functions/explode-json-object-outer"
+                                "sql-manual/sql-functions/table-functions/posexplode-outer"
                             ]
                         },
                         {
@@ -2173,8 +2146,7 @@
                                         "sql-manual/sql-statements/data-modification/backup-and-restore/RESTORE",
                                         "sql-manual/sql-statements/data-modification/backup-and-restore/SHOW-RESTORE",
                                         "sql-manual/sql-statements/data-modification/backup-and-restore/CANCEL-RESTORE",
-                                        "sql-manual/sql-statements/data-modification/backup-and-restore/SHOW-SNAPSHOT",
-                                        "sql-manual/sql-statements/data-modification/backup-and-restore/SHOW-BACKUP"
+                                        "sql-manual/sql-statements/data-modification/backup-and-restore/SHOW-SNAPSHOT"
                                     ]
                                 }
                             ]
@@ -2424,8 +2396,7 @@
                                 "sql-manual/sql-statements/statistics/SHOW-STATS",
                                 "sql-manual/sql-statements/statistics/DROP-ANALYZE-JOB",
                                 "sql-manual/sql-statements/statistics/KILL-ANALYZE-JOB",
-                                "sql-manual/sql-statements/statistics/SHOW-ANALYZE",
-                                "sql-manual/sql-statements/statistics/SHOW-QUEUED-ANZLYZE-JOBS"
+                                "sql-manual/sql-statements/statistics/SHOW-ANALYZE"
                             ]
                         },
                         {
@@ -2454,8 +2425,7 @@
                                         "sql-manual/sql-statements/cluster-management/instance-management/CANCEL-DECOMMISSION-BACKEND",
                                         "sql-manual/sql-statements/cluster-management/instance-management/ADD-BROKER",
                                         "sql-manual/sql-statements/cluster-management/instance-management/DROP-BROKER",
-                                        "sql-manual/sql-statements/cluster-management/instance-management/SHOW-BROKER",
-                                        "sql-manual/sql-statements/cluster-management/instance-management/ALTER-SYSTEM-RENAME-COMPUTE-GROUP"
+                                        "sql-manual/sql-statements/cluster-management/instance-management/SHOW-BROKER"
                                     ]
                                 },
                                 {
@@ -2492,8 +2462,7 @@
                                         "sql-manual/sql-statements/cluster-management/storage-management/WARM-UP",
                                         "sql-manual/sql-statements/cluster-management/storage-management/CANCEL-WARM-UP",
                                         "sql-manual/sql-statements/cluster-management/storage-management/SHOW-WARM-UP-JOB",
-                                        "sql-manual/sql-statements/cluster-management/storage-management/SHOW-CACHE-HOTSPOT",
-                                        "sql-manual/sql-statements/cluster-management/storage-management/SHOW-STORAGE-POLICY-USING"
+                                        "sql-manual/sql-statements/cluster-management/storage-management/SHOW-CACHE-HOTSPOT"
                                     ]
                                 }
                             ]
