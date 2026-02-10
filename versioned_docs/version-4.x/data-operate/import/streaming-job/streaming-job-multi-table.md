@@ -194,12 +194,16 @@ TO DATABASE <target_db> (
 | schema        | -       | Schema name                                 |
 | include_tables| -       | Tables to synchronize, comma separated      |
 | offset        | initial | initial: full + incremental, latest: incremental only |
+| snapshot_split_size | 8096 | The size (in number of rows) of each split. During full synchronization, a table will be divided into multiple splits for synchronization. |
+| snapshot_parallelism | 1 | The parallelism level during the full synchronization phase, i.e., the maximum number of splits a single task can schedule at once. |
 
 #### Doris Target DB Parameters
 
 | Parameter                       | Default | Description                                 |
 | ------------------------------- | ------- | ------------------------------------------- |
 | table.create.properties.*       | -       | Table properties when creating, e.g. replication_num |
+| load.strict_mode | - | Whether to enable strict mode. Disabled by default. |
+| load.max_filter_ratio | - | The maximum allowed filtering ratio within a sampling window. Must be between 0 and 1 (inclusive). The default value is 0, indicating zero tolerance. The sampling window equals max_interval * 10. If, within this window, the ratio of erroneous rows to total rows exceeds max_filter_ratio, the scheduled job will be paused and requires manual intervention to address data quality issues. |
 
 ### Import Status
 

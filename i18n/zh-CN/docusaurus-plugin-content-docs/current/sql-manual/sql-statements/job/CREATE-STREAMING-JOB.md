@@ -62,6 +62,9 @@ DO <Insert_Command>
 | schema       | -       | schema 名称                                                      |
 | include_tables | -       | 需要同步的表名，多个表用逗号分隔                              |
 | offset         | initial | initial: 全量 + 增量同步，latest: 仅增量同步                    |
+| snapshot_split_size         | 8096 | split 的大小 (行数)，全量同步时，表会被切分成多个 split 进行同步   |
+| snapshot_parallelism         | 1 | 全量阶段同步的并行度，即单次 Task 最多调度的 split 数量   |
+
 
 **5. `<target_db>`**
 > 需要导入的 Doris 目标库名称。
@@ -69,7 +72,9 @@ DO <Insert_Command>
 **6. `<target_property>`**
 | 参数           | 默认值  | 说明                                                         |
 | -------------- | ------- | ------------------------------------------------------------ |
-| table.create.properties.*       | -       | 支持创建表的时候指定 table 的 properties，比如 replication_num       |
+| table.create.properties.*       | -       | 支持创建表的时候指定 table 的 properties，比如 replication_num |
+| load.strict_mode       | -       | 是否开启严格模式，默认为关闭 |
+| load.max_filter_ratio       | -       | 采样窗口内，允许的最大过滤率。必须在大于等于 0 到小于等于 1 之间。默认值是 0，表示零容忍。采样窗口为 max_interval * 10。即如果在采样窗口内，错误行数/总行数大于 max_filter_ratio，则会导致例行作业被暂停，需要人工介入检查数据质量问题。 |
 
 
 
