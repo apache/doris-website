@@ -34,7 +34,7 @@ Doris 提供了两大类数据更新方法：**通过数据导入进行更新**�
 
 ![img](/images/update-overview/update-by-loading.png)
 
-1.2.2. 通过 `UPDATE` DML语句更新
+#### 1.2.2. 通过 `UPDATE` DML语句更新
 
 Doris 支持标准的 SQL `UPDATE` 语句，允许用户根据 `WHERE` 子句指定的条件对数据进行更新。这种方式非常灵活，支持复杂的更新逻辑，例如跨表关联更新。
 
@@ -53,7 +53,7 @@ WHERE t1.user_id = t2.user_id;
 
 **注意**：`UPDATE` 语句的执行过程是先扫描满足条件的数据，然后将更新后的数据重新写回表中。它适合低频、批量的更新任务。**不建议对** **`UPDATE`** **语句进行高并发操作**，因为并发的 `UPDATE` 在涉及相同主键时，无法保证数据的隔离性。
 
-#### 1.2.2. 通过 `INSERT INTO SELECT` DML语句更新
+#### 1.2.3. 通过 `INSERT INTO SELECT` DML语句更新
 
 由于Doris默认提供了UPSERT的语义，因此使用`INSERT INTO SELECT`也可以实现类似于`UPDATE`的更新效果。
 
