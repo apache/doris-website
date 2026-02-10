@@ -8,7 +8,7 @@
 
 ## Description
 
-This statement is used to back up the data under the specified database. This command is an asynchronous operation. After the submission is successful, you need to check the progress through the [SHOW BACKUP](./SHOW-BACKUP.md) command. 
+This statement is used to back up the data under the specified database. This command is an asynchronous operation. After submission, you can check progress with the `SHOW BACKUP` command.
 
 ## Syntax
 
