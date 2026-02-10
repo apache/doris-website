@@ -75,7 +75,7 @@ TPC-DS 99 个测试查询语句： [TPC-DS-Query-SQL](https://github.com/apache/
 
 这里我们使用 Apache Doris 3.0.3-rc03 (存算分离模式) 和 Apache Doris 2.1.7-rc03 版本进行对比测试，测试结果如下：
 
-| Query     | Apache Doris 3.0.3-rc03 Compute-Storage Coupled Mode (ms) | Apache Doris 2.1.7-rc03 (ms) |
+| Query     | Apache Doris 3.0.3-rc03 Compute-Storage Decoupled Mode (ms) | Apache Doris 2.1.7-rc03 (ms) |
 |-----------|-----------------------------------------------------------|------------------------------|
 | query01   | 580                                                       | 630                          |
 | query02   | 5540                                                      | 4930                         |
@@ -261,4 +261,3 @@ sh bin/run-tpcds-queries.sh -s 1000
 ### 7.5.2 单个 SQL 执行
 
 你也可以从代码库里获取最新的 SQL。最新测试查询语句地址：[TPC-DS 测试查询语句](https://github.com/apache/doris/tree/master/tools/tpcds-tools/queries/sf1000)
-
