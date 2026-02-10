@@ -51,7 +51,7 @@ ROWS BETWEEN [ { m | UNBOUNDED } PRECEDING | CURRENT ROW] [ AND [CURRENT ROW | {
 Taking the following stock data as an example, the stock code is JDR, and the "closing price" refers to the daily closing quotation.
 
 ```sql
-create table stock_ticker (stock_symbol string, closing_price decimal(8,2), closing_date timestamp);    
+create table stock_ticker (stock_symbol string, closing_price decimal(8,2), closing_date datetime);
 ...load some data...    
 select * from stock_ticker order by stock_symbol, closing_date
 ```
