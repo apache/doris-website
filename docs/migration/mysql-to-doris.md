@@ -70,7 +70,21 @@ For detailed setup, see the [Flink Doris Connector](../ecosystem/flink-doris-con
 
 The [JDBC Catalog](../lakehouse/catalogs/jdbc-catalog.md) allows direct querying and batch migration from MySQL. This is the simplest approach for one-time or periodic batch migrations.
 
-### Option 3: DataX
+### Option 3: Streaming Job (Continuous File Loading)
+
+Doris's built-in [Streaming Job](../data-operate/import/streaming-job.md) (`CREATE JOB ON STREAMING`) provides continuous file-based loading without external tools. Export MySQL data to S3/object storage, and the Streaming Job automatically picks up new files and loads them into Doris.
+
+This option is suited for:
+
+- Continuous incremental migration via file export pipelines
+- Environments where you prefer Doris-native features over external tools like Flink
+- Scenarios where MySQL data is periodically exported to object storage
+
+**Prerequisites**: Data exported to S3-compatible object storage; Doris 2.1+ with Job Scheduler enabled.
+
+For detailed setup, see the [Streaming Job](../data-operate/import/streaming-job.md) and [CREATE STREAMING JOB](../sql-manual/sql-statements/job/CREATE-STREAMING-JOB.md) documentation.
+
+### Option 4: DataX
 
 [DataX](https://github.com/alibaba/DataX) is a widely-used data synchronization tool that supports MySQL to Doris migration via the `mysqlreader` and `doriswriter` plugins.
 
