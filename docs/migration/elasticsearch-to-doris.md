@@ -93,6 +93,43 @@ Doris's [Inverted Index](../table-design/index/inverted-index/overview.md) provi
 | `{"bool": {"should": [...]}}` | `WHERE ... OR ...` |
 | `{"exists": {"field": "email"}}` | `WHERE email IS NOT NULL` |
 
+## Feature Compatibility
+
+### VARIANT Type vs ES Dynamic Mapping
+
+Doris [VARIANT](../data-operate/import/complex-types/variant.md) type provides comparable functionality to Elasticsearch Dynamic Mapping for flexible schema handling.
+
+| Feature | Doris VARIANT | ES Dynamic Mapping | Status |
+|---------|--------------|-------------------|--------|
+| Dynamic schema inference | Auto-infer JSON field types | Dynamic Mapping | Compatible |
+| Predefined field types | `MATCH_NAME 'field': type` | Explicit Mapping | Compatible |
+| Pattern-based type matching | `MATCH_NAME_GLOB 'pattern*': type` | dynamic_templates | Compatible |
+| Field index configuration | `INDEX ... PROPERTIES("field_pattern"=...)` | Mapping + Index Settings | Compatible |
+| Custom analyzer | `CREATE INVERTED INDEX ANALYZER` | Custom Analyzer | Compatible |
+| Sub-column count limit | `variant_max_subcolumns_count` | `mapping.total_fields.limit` | Compatible |
+| Sparse column optimization | `variant_enable_typed_paths_to_sparse` | N/A | Doris-specific |
+| Nested array objects | Flattened handling | Nested Type | Partial |
+
+### Search Function vs ES Query String
+
+Doris `search()` function provides Lucene-compatible query string syntax similar to Elasticsearch `query_string`.
+
+| Feature | Doris search() | ES query_string | Status |
+|---------|---------------|----------------|--------|
+| Query string syntax | Lucene mode | query_string query | Compatible |
+| Multi-field search | `fields` parameter | multi_match / fields | Supported |
+| best_fields mode | Supported | Supported | Supported |
+| cross_fields mode | Supported | Supported | Supported |
+| VARIANT sub-column search | `variant.field:term` | Object/Nested search | Supported |
+| Boolean queries | AND/OR/NOT | AND/OR/NOT | Supported |
+| Phrase queries | `"exact phrase"` | `"exact phrase"` | Supported |
+| Wildcards | `*`, `?` | `*`, `?` | Supported |
+| Regular expressions | `/pattern/` | `/pattern/` | Supported |
+| Relevance scoring | Disabled | BM25 | Not supported |
+| Fuzzy queries | Not supported | `term~2` | Not supported |
+| Range queries | Not supported | `[a TO z]` | Not supported |
+| Proximity queries | Not supported | `"foo bar"~5` | Not supported |
+
 ## Next Steps
 
 - [Inverted Index](../table-design/index/inverted-index/overview.md) - Full-text search in Doris
