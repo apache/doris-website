@@ -479,7 +479,7 @@ where year in (1999, 2000, 2001, 2002)
 1. 假设我们有如下的股票数据，股票代码是 JDR，closing price 是每天的收盘价。
 
 ```sql
-create table stock_ticker (stock_symbol string, closing_price decimal(8,2), closing_date timestamp);    
+create table stock_ticker (stock_symbol string, closing_price decimal(8,2), closing_date datetime);    
 
 INSERT INTO stock_ticker VALUES 
     ("JDR", 12.86, "2014-10-02 00:00:00"), 
