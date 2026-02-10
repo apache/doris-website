@@ -1,7 +1,8 @@
 ---
 {
     "title": "SHOW CREATE REPOSITORY",
-    "language": "en"
+    "language": "en",
+    "description": "This statement is used to demonstrate the creation statement of a repository."
 }
 ---
 

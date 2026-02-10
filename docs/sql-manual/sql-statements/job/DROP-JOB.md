@@ -1,7 +1,8 @@
 ---
 {
-"title": "DROP JOB",
-"language": "en"
+    "title": "DROP JOB",
+    "language": "en",
+    "description": "The user deletes a JOB job. The job will be stopped and deleted immediately."
 }
 ---
 
@@ -24,9 +25,11 @@ DROP JOB where jobName = <job_name> ;
 
 The user who executes this SQL command must have at least the following permissions:
 
-| Privilege | Object | Notes |
-|:--------------|:-----------|:------------------------|
-| ADMIN_PRIV | Database | Currently only supports **ADMIN** permissions to perform this operation |
+| Privilege | Object | ExecuteType | Notes |
+|:--------------|:-----------|:------------------------|:------------------------|
+| ADMIN_PRIV | Database | NO Streaming | Currently only supports **ADMIN** permissions to perform this operation |
+| LOAD_PRIV | Database | Streaming |Supports **LOAD** permissions to perform this operation |
+
 
 ## Examples
 

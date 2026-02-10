@@ -1,7 +1,8 @@
 ---
 {
     "title": "从回收站恢复",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "为了避免因误操作造成的灾难，Doris 支持意外删除的数据库、表和分区的数据恢复。在删除表或数据库后，Doris 不会立即物理删除数据。 当用户执行DROP DATABASE/TABLE/PARTITION命令而不使用FORCE时，Doris 会将删除的数据库、表或分区移动到回收站。"
 }
 ---
 

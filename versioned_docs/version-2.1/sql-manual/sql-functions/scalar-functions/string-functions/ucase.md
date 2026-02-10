@@ -1,21 +1,20 @@
 ---
 {
-    "title": "UCASE",
-    "language": "en"
+    "title": "UCASE/UPPER",
+    "language": "en",
+    "description": "Used to convert a string to uppercase letters"
 }
 ---
 
 ## Description
 
 Used to convert a string to uppercase letters
-## Alias
-
-- UPPER
 
 ## Syntax
 
 ```sql
 UCASE( <str> )
+UPPER( <str> )
 ```
 
 ## Required Parameters
@@ -30,12 +29,23 @@ The value after converting the uppercase
 ## Example
 
 ```sql
-SELECT ucase("aBc123");
+SELECT UCASE("aBc123"),UPPER("aBc123");
 ```
 ```sql
-+-----------------+
-| ucase('aBc123') |
-+-----------------+
-| ABC123          |
-+-----------------+
++-----------------+-----------------+
+| UCASE("aBc123") | UPPER("aBc123") |
++-----------------+-----------------+
+| ABC123          | ABC123          |
++-----------------+-----------------+
+```
+
+```sql
+SELECT UCASE("Кириллица"),UPPER("Бәйтерек");
+```
+```sql
++-----------------------------+---------------------------+
+| UCASE("Кириллица")          | UPPER("Бәйтерек")         |
++-----------------------------+---------------------------+
+| КИРИЛЛИЦА                   | БӘЙТЕРЕК                  |
++-----------------------------+---------------------------+
 ```

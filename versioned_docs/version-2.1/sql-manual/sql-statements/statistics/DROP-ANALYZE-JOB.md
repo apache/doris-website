@@ -1,7 +1,8 @@
 ---
 {
     "title": "DROP ANALYZE JOB",
-    "language": "en"
+    "language": "en",
+    "description": "Delete the history of the specified statistics collection job."
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "常见 BI 问题",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "通常这是 Power BI 在拉取数据源的时间超时，在填写数据源服务器和数据库时点击高级选项，其中有个超时时间，把该时间配置的较高。"
 }
 ---
 

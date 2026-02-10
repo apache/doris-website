@@ -1,7 +1,8 @@
 ---
 {
     "title": "ST_TOUCHES",
-    "language": "en"
+    "language": "en",
+    "description": "Determines whether the geometry shape1 touches the geometry shape2. (i.e.,"
 }
 ---
 

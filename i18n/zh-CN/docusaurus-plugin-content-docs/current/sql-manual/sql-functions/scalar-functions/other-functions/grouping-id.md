@@ -1,7 +1,8 @@
 ---
 {
     "title": "GROUPING_ID",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "GROUPINGID 是一个用于计算分组层级的函数。当 SQL 语句中使用了 GROUP BY 子句时，该函数可以在 SELECT、HAVING 或 ORDER BY 子句中使用，返回一个 BIGINT 值，该值表示各分组列聚合情况对应的二进制位图转换为十进制后的结果。"
 }
 ---
 

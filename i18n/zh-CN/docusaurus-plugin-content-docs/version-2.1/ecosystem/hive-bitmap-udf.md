@@ -1,7 +1,8 @@
 ---
 {
     "title": "Hive Bitmap UDF",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "Hive Bitmap UDF 提供了在 Hive 表中生成 bitmap、bitmap 运算等 UDF，Hive 中的 bitmap 与 Doris bitmap 完全一致，Hive 中的 bitmap 可以直接导入 doris。"
 }
 ---
 
@@ -113,7 +114,7 @@ CREATE TABLE IF NOT EXISTS `test`.`hive_bitmap_table`(
 ) stored as textfile 
 ```
 
-2. [在 Doris 中创建 Catalog](../lakehouse/datalake-analytics/hive.md)
+2. [在 Doris 中创建 Catalog](../lakehouse/catalogs/hive-catalog)
 
 ```sql
 CREATE CATALOG hive PROPERTIES (

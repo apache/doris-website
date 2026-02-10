@@ -1,7 +1,8 @@
 ---
 {
     "title": "Fe Version Info Action",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "用于获取 fe 节点的版本信息。"
 }
 ---
 

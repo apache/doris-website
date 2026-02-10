@@ -1,7 +1,8 @@
 ---
 {
     "title": "Updating Data with UPDATE Command",
-    "language": "en"
+    "language": "en",
+    "description": "This document explains how to use the UPDATE command to modify data in Doris."
 }
 ---
 

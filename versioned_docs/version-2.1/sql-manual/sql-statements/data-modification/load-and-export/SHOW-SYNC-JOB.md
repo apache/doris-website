@@ -1,7 +1,8 @@
 ---
 {
     "title": "SHOW SYNC JOB",
-    "language": "en"
+    "language": "en",
+    "description": "This statement displays the status of resident data synchronization jobs in all databases."
 }
 ---
 

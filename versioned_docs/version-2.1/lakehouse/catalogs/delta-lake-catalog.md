@@ -1,13 +1,14 @@
 ---
 {
     "title": "Delta Lake Catalog",
-    "language": "en"
+    "language": "en",
+    "description": "Delta Lake Catalog uses the Trino Connector compatibility framework to access Delta Lake tables through the Delta Lake Connector."
 }
 ---
 
 Delta Lake Catalog uses the [Trino Connector](https://doris.apache.org/zh-CN/community/how-to-contribute/trino-connector-developer-guide/) compatibility framework to access Delta Lake tables through the Delta Lake Connector.
 
-:::notice
+:::note
 This feature is experimental and has been supported since version 3.0.1.
 :::
 

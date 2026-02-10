@@ -1,7 +1,8 @@
 ---
 {
     "title": "DROP WORKLOAD GROUP",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "该语句用于删除资源组。"
 }
 ---
 

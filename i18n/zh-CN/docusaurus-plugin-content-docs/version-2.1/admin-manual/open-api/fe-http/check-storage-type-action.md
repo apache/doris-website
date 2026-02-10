@@ -1,7 +1,8 @@
 ---
 {
     "title": "Check Storage Type Action",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "用于检查指定数据库下的表的存储格式否是行存格式。（行存格式已废弃）"
 }
 ---
 

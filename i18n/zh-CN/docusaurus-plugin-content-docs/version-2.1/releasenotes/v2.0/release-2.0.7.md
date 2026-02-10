@@ -1,7 +1,8 @@
 ---
 {
     "title": "Release 2.0.7",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "924060929,airborne12,amorynan,ByteYue,dataroaring,deardeng,feiniaofeiafei,felixwluo,freemandealer,gavinchou,hello-stephen,HHoflittlefish777,jacktengg,"
 }
 ---
 

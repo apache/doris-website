@@ -1,7 +1,8 @@
 ---
 {
     "title": "SHOW TABLET DIAGNOSIS",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "该语句用于诊断指定 tablet。结果中将显示这个 tablet 的信息和一些潜在的问题。"
 }
 ---
 

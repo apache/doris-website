@@ -1,7 +1,8 @@
 ---
 {
     "title": "ADMIN COPY TABLET",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "该语句用于为指定的 tablet 制作快照，主要用于本地加载 tablet 来复现问题。"
 }
 ---
 

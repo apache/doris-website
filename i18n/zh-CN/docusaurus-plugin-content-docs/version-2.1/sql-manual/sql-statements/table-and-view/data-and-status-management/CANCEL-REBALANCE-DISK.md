@@ -1,7 +1,8 @@
 ---
 {
     "title": "CANCEL REBALANCE DISK",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "CANCEL REBALANCE DISK 语句用于取消优先均衡 BE（Backend）节点的磁盘数据。该语句具有以下功能："
 }
 ---
 

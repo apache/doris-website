@@ -1,7 +1,8 @@
 ---
 {
     "title": "Logic Operators",
-    "language": "en"
+    "language": "en",
+    "description": "Logical conditions combine the results of two components' conditions to generate a single result based on them,"
 }
 ---
 

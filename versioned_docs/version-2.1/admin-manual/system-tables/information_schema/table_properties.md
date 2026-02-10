@@ -1,7 +1,8 @@
 ---
 {
     "title": "table_properties",
-    "language": "en"
+    "language": "en",
+    "description": "Used to view attribute information of tables (including internal and external tables)."
 }
 ---
 

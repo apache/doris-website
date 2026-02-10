@@ -1,7 +1,8 @@
 ---
 {
     "title": "ARRAY_MIN",
-    "language": "en"
+    "language": "en",
+    "description": "Calculates the minimum value in an array. The function iterates through all elements in the array, finds the minimum value and returns it."
 }
 ---
 

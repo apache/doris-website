@@ -1,7 +1,8 @@
 ---
 {
     "title": "CANCEL LOAD",
-    "language": "en"
+    "language": "en",
+    "description": "This statement is used to cancel an import job with a specified label, or to cancel import jobs in batches through fuzzy matching."
 }
 ---
 

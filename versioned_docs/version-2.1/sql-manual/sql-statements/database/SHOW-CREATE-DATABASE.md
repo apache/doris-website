@@ -1,7 +1,8 @@
 ---
 {
     "title": "SHOW CREATE DATABASE",
-    "language": "en"
+    "language": "en",
+    "description": "This statement checks the creation information of the doris built-in database or catalog database."
 }
 ---
 

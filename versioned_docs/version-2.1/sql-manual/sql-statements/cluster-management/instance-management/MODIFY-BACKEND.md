@@ -1,7 +1,8 @@
 ---
 {
     "title": "MODIFY BACKEND",
-    "language": "en"
+    "language": "en",
+    "description": "This statement is used to modify the attributes of BE nodes. After modifying the attributes of BE nodes, it will affect the query, write,"
 }
 ---
 

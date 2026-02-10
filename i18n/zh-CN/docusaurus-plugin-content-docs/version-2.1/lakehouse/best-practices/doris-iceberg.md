@@ -1,9 +1,9 @@
 ---
 {
     "title": "使用 Doris 和 Iceberg",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "作为一种全新的开放式的数据管理架构，湖仓一体（Data Lakehouse）融合了数据仓库的高性能、实时性以及数据湖的低成本、灵活性等优势，帮助用户更加便捷地满足各种数据处理分析的需求，在企业的大数据体系中已经得到越来越多的应用。"
 }
-
 ---
 
 作为一种全新的开放式的数据管理架构，湖仓一体（Data Lakehouse）融合了数据仓库的高性能、实时性以及数据湖的低成本、灵活性等优势，帮助用户更加便捷地满足各种数据处理分析的需求，在企业的大数据体系中已经得到越来越多的应用。
@@ -36,7 +36,7 @@ Apache Doris 对 Iceberg 多项核心特性提供了原生支持：
 
 未来，Apache Iceberg 将作为 Apache Doris 的原生表引擎之一，提供更加完善的湖格式数据的分析、管理功能。Apache Doris 也将逐步支持包括 Update/Delete/Merge、写回时排序、增量数据读取、元数据管理等 Apache Iceberg 更多高级特性，共同构建统一、高性能、实时的湖仓平台。
 
-关于更多说明，请参阅 [Iceberg Catalog](../catalogs/iceberg-catalog.md)
+关于更多说明，请参阅 [Iceberg Catalog](../catalogs/iceberg-catalog)
 
 ## 使用指南
 
@@ -361,7 +361,7 @@ shape: (4, 6)
 └───────────┴─────────┴───────────────┴─────────────┴────────────────────┴─────────────────────┘
 ```
 
-> 通过 pyiceberg 写入 iceberg 数据，请参阅[步骤](#通过-pyiceberg-写入数据)
+> 通过 pyiceberg 写入 iceberg 数据，请参阅[步骤](./doris-iceberg.md#通过-pyiceberg-写入数据)
 
 ### 08 附录
 

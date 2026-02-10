@@ -1,7 +1,8 @@
 ---
 {
     "title": "Query error Memory Tracker Limit Exceeded",
-    "language": "en"
+    "language": "en",
+    "description": "When MEMLIMITEXCEEDED appears in the query or load error message and contains memory tracker limit exceeded,"
 }
 ---
 

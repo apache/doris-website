@@ -1,7 +1,8 @@
 ---
 {
     "title": "TO_QUANTILE_STATE",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "此函数将数值类型转化成 QUANTILESTATE 类型。 compression 参数是可选项，可设置范围是[2048, 10000]，值越大，后续分位数近似计算的精度越高，内存消耗越大，计算耗时越长。 compression 参数未指定或设置的值在[2048, 10000]范围外，"
 }
 ---
 

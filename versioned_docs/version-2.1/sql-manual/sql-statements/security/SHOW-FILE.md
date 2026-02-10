@@ -1,7 +1,8 @@
 ---
 {
-   "title": "SHOW FILE",
-   "language": "en"
+    "title": "SHOW FILE",
+    "language": "en",
+    "description": "This statement is used to display a file created in a database."
 }
 ---
 

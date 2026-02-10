@@ -1,7 +1,8 @@
 ---
 {
     "title": "Hudi Catalog",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "Hudi Catalog 复用了 Hive Catalog。通过连接 Hive Metastore，或者兼容 Hive Metatore 的元数据服务，Doris 可以自动获取 Hudi 的库表信息，并进行数据查询。"
 }
 ---
 
@@ -108,7 +109,7 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 
 ## 基础示例
 
-Hudi Catalog 的创建方式和 Hive Catalog 一致。更多示例可参阅[ Hive Catalog](./hive-catalog.md)
+Hudi Catalog 的创建方式和 Hive Catalog 一致。更多示例可参阅[ Hive Catalog](./hive-catalog)
 
 ```sql
 CREATE CATALOG hudi_hms PROPERTIES (

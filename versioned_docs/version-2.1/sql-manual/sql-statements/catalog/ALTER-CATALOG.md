@@ -1,7 +1,8 @@
 ---
 {
     "title": "ALTER CATALOG",
-    "language": "en"
+    "language": "en",
+    "description": "This statement is used to set properties of the specified catalog."
 }
 ---
 

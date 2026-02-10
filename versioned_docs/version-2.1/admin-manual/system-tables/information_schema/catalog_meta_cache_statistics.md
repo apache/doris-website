@@ -1,7 +1,8 @@
 ---
 {
     "title": "catalog_meta_cache_statistics",
-    "language": "en"
+    "language": "en",
+    "description": "View the metadata cache information of the External Catalog in the currently connected FE."
 }
 ---
 

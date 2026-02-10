@@ -1,7 +1,8 @@
 ---
 {
     "title": "REGEXP_EXTRACT_ALL",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "REGEXPEXTRACTALL 函数用于对给定字符串str执行正则表达式匹配，所有与指定 pattern 匹配的文本串当中的与第一个子模式匹配的部分。为了使函数返回表示模式匹配部分的字符串数组，该模式必须与输入字符串 str 的一部分完全匹配。如果没有匹配项，或模式不包含任何子模式，"
 }
 ---
 
@@ -32,7 +33,12 @@ REGEXP_EXTRACT_ALL 函数用于对给定字符串str执行正则表达式匹配�
 
 如果 'pattern' 参数不符合正则表达式，则抛出错误
 
-支持的字符匹配种类 : https://github.com/google/re2/wiki/Syntax
+默认支持的字符匹配种类 : https://github.com/google/re2/wiki/Syntax
+
+Doris 支持通过会话变量 `enable_extended_regex`（默认为 `false`）来启用更高级的正则表达式功能，例如 look-around 零宽断言。
+
+会话变量`enable_extended_regex`设置为`true`时,
+支持的字符匹配种类 : https://www.boost.org/doc/libs/latest/libs/regex/doc/html/boost_regex/syntax/perl_syntax.html
 
 ## 语法
 
@@ -201,4 +207,22 @@ SELECT regexp_extract_all('hello (world) 123', '([[:alpha:]+');
 ```text
 ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.2)[INVALID_ARGUMENT]Could not compile regexp pattern: ([[:alpha:]+
 Error: missing ]: [[:alpha:]+
+```
+
+高级的正则表达式
+```sql
+SELECT REGEXP_EXTRACT_ALL('ID:AA-1,ID:BB-2,ID:CC-3', '(?<=ID:)([A-Z]{2}-\\d)');
+-- ERROR 1105 (HY000): errCode = 2, detailMessage = (127.0.0.1)[INVALID_ARGUMENT]Invalid regex pattern: (?<=ID:)([A-Z]{2}-\d). Error: invalid perl operator: (?<
+```
+
+```sql
+SET enable_extended_regex = true;
+SELECT REGEXP_EXTRACT_ALL('ID:AA-1,ID:BB-2,ID:CC-3', '(?<=ID:)([A-Z]{2}-\\d)');
+```
+```text
++-------------------------------------------------------------------------+
+| REGEXP_EXTRACT_ALL('ID:AA-1,ID:BB-2,ID:CC-3', '(?<=ID:)([A-Z]{2}-\\d)') |
++-------------------------------------------------------------------------+
+| ['AA-1','BB-2','CC-3']                                                  |
++-------------------------------------------------------------------------+
 ```

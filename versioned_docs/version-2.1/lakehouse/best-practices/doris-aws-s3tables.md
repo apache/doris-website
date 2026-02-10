@@ -1,9 +1,9 @@
 ---
 {
-    "title": "Integration with AWS S3 Tables",
-    "language": "en"
+    "title": "Integration with Glue + AWS S3 Tables",
+    "language": "en",
+    "description": "AWS S3 Tables is a special type of S3 Bucket that provides read and write interfaces compatible with Apache Iceberg table format standards,"
 }
-
 ---
 
 [AWS S3 Tables](https://aws.amazon.com/s3/features/tables/) is a special type of S3 Bucket that provides read and write interfaces compatible with Apache Iceberg table format standards, built on Amazon S3, offering the same durability, availability, scalability, and performance characteristics as S3 itself. Additionally, S3 Tables provides the following features:
@@ -54,7 +54,7 @@ Here we create a Table Bucket named doris-s3-table-bucket. After creation, we wi
         'type' = 'iceberg',
         'iceberg.catalog.type' = 'rest',
         'iceberg.rest.uri' = 'https://glue.<region>.amazonaws.com/iceberg',
-        'iceberg.rest.warehouse' = '<acount_id>:s3tablescatalog/<s3_table_bucket_name>',
+        'warehouse' = '<acount_id>:s3tablescatalog/<s3_table_bucket_name>',
         'iceberg.rest.sigv4-enabled' = 'true',
         'iceberg.rest.signing-name' = 'glue',
         'iceberg.rest.access-key-id' = '<ak>',

@@ -91,6 +91,18 @@
     "message": "表索引",
     "description": "The label for category Table Index in sidebar docs"
   },
+  "sidebar.docs.category.Text Search": {
+    "message": "文本搜索",
+    "description": "The label for category Text Search in sidebar docs"
+  },
+  "sidebar.docs.category.Vector Search": {
+    "message": "向量搜索",
+    "description": "The label for category Vector Search in sidebar docs"
+  },
+  "sidebar.docs.category.Inverted Index": {
+    "message": "倒排索引",
+    "description": "The label for category Inverted Index in sidebar docs"
+  },
   "sidebar.docs.category.Data Manipulation": {
     "message": "数据操作",
     "description": "The label for category Data Manipulation in sidebar docs"
@@ -582,6 +594,10 @@
   "sidebar.docs.category.HLL Functions": {
     "message": "HLL 函数",
     "description": "The label for category HLL Functions in sidebar docs"
+  },
+  "sidebar.docs.category.Binary Functions": {
+    "message": "Binary 函数",
+    "description": "The label for category Binary Functions in sidebar docs"
   },
   "sidebar.docs.category.System Functions": {
     "message": "系统函数",

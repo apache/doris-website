@@ -1,9 +1,11 @@
 ---
 {
     "title": "URL_ENCODE",
-    "language": "en"
+    "language": "en",
+    "description": "Use UTF-8 encoding to complete the URL encoding of the provided text. Typically used to encode parameter information passed as part of a URL"
 }
 ---
+
 ## Description
 
 Use UTF-8 encoding to complete the URL encoding of the provided text. Typically used to encode parameter information passed as part of a URL

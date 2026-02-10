@@ -1,7 +1,8 @@
 ---
 {
     "title": "IPV4_STRING_TO_NUM_OR_NULL",
-    "language": "en"
+    "language": "en",
+    "description": "Takes a string containing an IPv4 address in the format A.B.C.D (dot-separated numbers in decimal form)."
 }
 ---
 

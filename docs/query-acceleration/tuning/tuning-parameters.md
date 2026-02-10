@@ -1,7 +1,8 @@
 ---
 {
     "title": "Common Tuning Parameters",
-    "language": "en"
+    "language": "en",
+    "description": "Master key database performance tuning parameters including enable_nereids_planner, parallel_pipeline_task_num, and runtime_filter_mode for optimizing query execution, managing version upgrades, and implementing adaptive parallelism strategies in SQL databases."
 }
 ---
 

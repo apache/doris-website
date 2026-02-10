@@ -1,7 +1,8 @@
 ---
 {
-"title": "SHOW FRONTENDS DISKS",
-"language": "en"
+    "title": "SHOW FRONTENDS DISKS",
+    "language": "en",
+    "description": "This statement is used to view the disk information of important directories on the FE node, such as metadata, logs, audit logs,"
 }
 ---
 

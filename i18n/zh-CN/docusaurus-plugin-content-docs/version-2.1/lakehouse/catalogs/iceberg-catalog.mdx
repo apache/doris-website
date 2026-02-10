@@ -1,7 +1,8 @@
 ---
 {
     "title": "Iceberg Catalog",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "Doris 支持通过多种元数据服务访问 Iceberg 表数据。除支持数据读取外，Doris 也支持对 Iceberg 表进行写入操作。"
 }
 ---
 
@@ -35,6 +36,7 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
     'warehouse' = '<warehouse>' --optional
     {MetaStoreProperties},
     {StorageProperties},
+    {IcebergProperties},
     {CommonProperties}
 );
 ```
@@ -61,21 +63,38 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 
   `warehouse` 的路径必须指向 `Database` 路径的上一级。如您的表路径是：`s3://bucket/path/to/db1/table1`，那么 `warehouse` 应该是：`s3://bucket/path/to/`
 
-* `[MetaStoreProperties]`
+* `{MetaStoreProperties}`
 
   MetaStoreProperties 部分用于填写 Metastore 元数据服务连接和认证信息。具体可参阅【支持的元数据服务】部分。
 
-* `[StorageProperties]`
+* `{StorageProperties}`
 
   StorageProperties 部分用于填写存储系统相关的连接和认证信息。具体可参阅【支持的存储系统】部分。
 
-* `[CommonProperties]`
+* `{IcebergProperties}`
+
+  IcebergProperties 部分用于填写一些 Iceberg Catalog 特有的参数。
+
+  - `list-all-tables`
+
+    自 3.1.2 版本支持。
+
+    针对以 Hive Metastore 作为元数据服务的 Iceberg Catalog。默认为 `true`。在默认情况下，`SHOW TABLES` 操作会罗列出当前 Database 下的所有类型的 Table（Hive Metastore 中可能存储了非 Iceberg 类型的表）。
+    
+    这种方式性能最好。如果设置为 `false`，则 Doris 会逐一检查每个 Table 的类型，并只返回 Iceberg 类型的 Table。该模式在表很多的情况下，性能会比较差。
+
+* `{CommonProperties}`
 
   CommonProperties 部分用于填写通用属性。请参阅[ 数据目录概述 ](../catalog-overview.md)中【通用属性】部分。
 
 ### 支持的 Iceberg 版本
 
-当前使用的 Iceberg 依赖为 1.6.1 版本，可以兼容更高版本的 Iceberg。
+| Doris 版本 | Iceberg SDK 版本 |
+| --- | --- |
+| 2.1 | 1.6.1 |
+| 3.0 | 1.6.1 |
+| 3.1 | 1.9.1 |
+| 4.0 | 1.9.1 |
 
 ### 支持的 Iceberg 格式
 
@@ -83,39 +102,58 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 
 * 支持 Position Delete 和 Equality Delete。
 
+* 支持读取 Deletion Vector（自 4.1.0 版本支持）。
+
 ### 支持的元数据服务
 
-* [ Hive Metastore](../metastores/hive-metastore.md)
+* [Hive Metastore](../metastores/hive-metastore.md)
 
-* [ AWS Glue](../metastores/aws-glue.md)
+* [AWS Glue](../metastores/aws-glue.md)
 
-* [ Aliyun DLF ](../metastores/aliyun-dlf.md)
+* [Aliyun DLF ](../metastores/aliyun-dlf.md)
 
-* [ Iceberg Rest Catalog](../metastores/iceberg-rest.md)
+* [Iceberg Rest Catalog](../metastores/iceberg-rest.md)
 
-* [ FileSystem](../metastores/filesystem.md)
+* [FileSystem](../metastores/filesystem.md)
+
+> 注意：不同 Doris 版本所支持的服务类型和参数略有区别，请参考【基础示例】章节。
+
+### Iceberg Catalog 功能支持矩阵
+
+| 元数据服务           | 表查询 | 视图查询 | DDL 操作       | 数据写回       | 系统表 (3.1+ 支持) |
+| -------------------- | ------ | -------- | -------------- | -------------- | ------------------ |
+| Hive MetaStore       | ✅     | ✅       | ✅             | ✅             | ✅                 |
+| AWS Glue             | ✅     | ✅       | ❌             | ❌             | ✅                 |
+| Aliyun DLF           | ✅     | ✅       | ❌              | ❌              | ❌                   |
+| Iceberg Rest Catalog | ✅     | ✅       | 取决于服务提供方 | 取决于服务提供方 | 取决于服务提供方   |
+| FileSystem           | ✅     | ✅       | ✅             | ✅             | ✅                 |
+
 
 ### 支持的存储系统
 
-* [ HDFS](../storages/hdfs.md)
+* [HDFS](../storages/hdfs.md)
 
-* [ AWS S3](../storages/s3.md)
+* [AWS S3](../storages/s3.md)
 
-* [ Google Cloud Storage](../storages/gcs.md)
+* [Google Cloud Storage](../storages/gcs.md)
 
-* [ 阿里云 OSS](../storages/aliyun-oss.md)
+* [Azure Blob](../storages/azure-blob.md)
 
-* [ 腾讯云 COS](../storages/tencent-cos.md)
+* [阿里云 OSS](../storages/aliyun-oss.md)
 
-* [ 华为云 OBS](../storages/huawei-obs.md)
+* [腾讯云 COS](../storages/tencent-cos.md)
 
-* [ MINIO](../storages/minio.md)
+* [华为云 OBS](../storages/huawei-obs.md)
+
+* [MINIO](../storages/minio.md)
+
+> 注意：不同 Doris 版本所支持的服务类型和参数略有区别，请参考【基础示例】章节。
 
 ### 支持的数据格式
 
-* [ Parquet](../file-formats/parquet.md)
+* [Parquet](../file-formats/parquet.md)
 
-* [ ORC](../file-formats/orc.md)
+* [ORC](../file-formats/orc.md)
 
 ## 列类型映射
 
@@ -132,8 +170,8 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 | timestamptz (Timestamp with timezone)  | datetime(6)          | 固定映射到精度为 6 的 datetime |
 | fixed(N)                               | char(N)              |                       |
 | string                                 | string               |                       |
-| binary                                 | string               |                       |
-| uuid                                   | string               |                       |
+| binary                                 | string/varbinary     |由 properties 中 `enable.mapping.varbinary` (4.0.2 后开始支持) 属性控制。默认为 `false`, 则映射到 `string`; 为 `true` 时，则映射到 `varbinary` 类型。                       |
+| uuid                                   | string/varbinary     |version < 4.0.2 映射成 `string` 类型; version == 4.0.2 则映射成 `varbinary` 类型。version > 4.0.2，由 properties 中 `enable.mapping.varbinary`属性控制。默认为 `false`, 则映射到 `string`;   |
 | struct                                 | struct（2.1.3 版本开始支持） |                       |
 | map                                    | map（2.1.3 版本开始支持）    |                       |
 | list                                   | array                |                       |
@@ -145,6 +183,42 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 >
 > 可以在 `DESCRIBE table_name` 语句中的 Extra 列查看源类型是否带时区信息。如显示 `WITH_TIMEZONE`，则表示源类型是带时区的类型。(该功能自 3.1.0 版本支持)。
 
+## Namespace 映射
+
+Iceberg 的元数层级关系是 Catalog -> Namespace -> Table。其中 Namespace 可以有多级（Nested Namespace）。
+
+```
+      ┌─────────┐             
+      │ Catalog │             
+      └────┬────┘             
+           │                  
+     ┌─────┴─────┐            
+  ┌──▼──┐     ┌──▼──┐         
+  │ NS1 │     │ NS2 │         
+  └──┬──┘     └──┬──┘         
+     │           │            
+┌────▼───┐    ┌──▼──┐         
+│ Table1 │    │ NS3 │         
+└────────┘    └──┬──┘         
+                 │            
+          ┌──────┴───────┐    
+     ┌────▼───┐     ┌────▼───┐
+     │ Table2 │     │ Table3 │
+     └────────┘     └────────┘
+```
+
+自 3.1.2 版本开始，对于 Iceberg Rest Catalog，Doris 支持对 Nested Namespace 的映射。
+
+在上述示例中表，会按照如下逻辑映射为 Doris 的元数据：
+
+| Catalog | Database | Table |
+| --- | --- | --- |
+| Catalog | NS1 | Table1 |
+| Catalog | NS2.NS3 | Table2 |
+| Catalog | NS1.NS3 | Table3 |
+
+对 Nested Namespace 的支持需要显式开启，具体请参阅 [Iceberg Rest Catalog](../metastores/iceberg-rest.md)
+
 ## 基础示例
 
 ### Hive Metastore
@@ -154,86 +228,97 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
         <TabItem value='HDFS' label='HDFS' default>
             访问未开启 Kerberos 认证的 HMS 和 HDFS 服务
             ```sql
-            CREATE CATALOG IF NOT EXISTS iceberg_hms_on_hdfs_catalog PROPERTIES (
-            'type' = 'iceberg',
-            'iceberg.catalog.type' = 'hms',
-            'warehouse' = 'hdfs://127.0.0.1:8320/user/iceberg/warehouse/iceberg-hms-hdfs-warehouse',
-            'hive.metastore.uris' = 'thrift://127.0.0.1:9383',
-            'fs.defaultFS' = 'hdfs://127.0.0.1:8320',
-            'hadoop.username' = 'doris'
+            CREATE CATALOG iceberg_hms_on_hdfs_catalog PROPERTIES (
+                'type' = 'iceberg',
+                'iceberg.catalog.type' = 'hms',
+                'warehouse' = 'hdfs://127.0.0.1:8320/user/iceberg/warehouse/iceberg-hms-hdfs-warehouse',
+                'hive.metastore.uris' = 'thrift://127.0.0.1:9383',
+                'fs.defaultFS' = 'hdfs://127.0.0.1:8320',
+                'hadoop.username' = 'doris'
             );
             ```
             访问开启 Kerberos 认证的 HMS 和 HDFS 服务
             ```sql
-            CREATE CATALOG IF NOT EXISTS iceberg_hms_on_hdfs_kerberos_hdfs_catalog PROPERTIES (
-            'type' = 'iceberg',
-            'iceberg.catalog.type' = 'hms',
-            'warehouse' = 'hdfs://127.0.0.1:8520/iceberg-hms-hdfs-warehouse',
-            'hive.metastore.uris' = 'thrift://127.0.0.1:9583',
-            'hive.metastore.client.principal' = 'hive/presto-master.docker.cluster@LABS.TERADATA.COM',
-            'hive.metastore.client.keytab' = '/keytabs/hive-presto-master.keytab',
-            'hive.metastore.service.principal' = 'hive/hadoop-master@LABS.TERADATA.COM',
-            'hive.metastore.sasl.enabled ' = 'true',
-            'hive.metastore.authentication.type' = 'kerberos',
-            'hadoop.security.auth_to_local' = 'RULE:[2:\$1@\$0](.*@LABS.TERADATA.COM)s/@.*//
-            RULE:[2:\$1@\$0](.*@OTHERLABS.TERADATA.COM)s/@.*//
-            RULE:[2:\$1@\$0](.*@OTHERREALM.COM)s/@.*//
-            DEFAULT',
-            'fs.defaultFS' = 'hdfs://127.0.0.1:8520',
-            'hadoop.security.authentication' = 'kerberos',
-            'hadoop.kerberos.principal'='hive/presto-master.docker.cluster@LABS.TERADATA.COM',
-            'hadoop.kerberos.keytab' = '/keytabs/hive-presto-master.keytab'
+            CREATE CATALOG iceberg_hms_on_hdfs_kerberos_hdfs_catalog PROPERTIES (
+                'type' = 'iceberg',
+                'iceberg.catalog.type' = 'hms',
+                'warehouse' = 'hdfs://127.0.0.1:8520/iceberg-hms-hdfs-warehouse',
+                'hive.metastore.uris' = 'thrift://127.0.0.1:9583',
+                'hive.metastore.client.principal' = 'hive/presto-master.docker.cluster@LABS.TERADATA.COM',
+                'hive.metastore.client.keytab' = '/keytabs/hive-presto-master.keytab',
+                'hive.metastore.service.principal' = 'hive/hadoop-master@LABS.TERADATA.COM',
+                'hive.metastore.sasl.enabled ' = 'true',
+                'hive.metastore.authentication.type' = 'kerberos',
+                'hadoop.security.auth_to_local' = 'RULE:[2:\$1@\$0](.*@LABS.TERADATA.COM)s/@.*//
+                RULE:[2:\$1@\$0](.*@OTHERLABS.TERADATA.COM)s/@.*//
+                RULE:[2:\$1@\$0](.*@OTHERREALM.COM)s/@.*//
+                DEFAULT',
+                'fs.defaultFS' = 'hdfs://127.0.0.1:8520',
+                'hadoop.security.authentication' = 'kerberos',
+                'hadoop.kerberos.principal'='hive/presto-master.docker.cluster@LABS.TERADATA.COM',
+                'hadoop.kerberos.keytab' = '/keytabs/hive-presto-master.keytab'
             );
             ```
         </TabItem>
         <TabItem value='S3' label='S3'>
             访问未开启 Kerberos 认证的 HMS
             ```sql
-            CREATE CATALOG IF NOT EXISTS iceberg_hms_on_s3_catalog PROPERTIES (
-            'type' = 'iceberg',
-            'iceberg.catalog.type' = 'hms',
-            'hive.metastore.uris' = 'thrift://127.0.0.1:9383',
-            'warehouse' = 's3://selectdb-qa-datalake-test-hk/refactor-test/iceberg-hms-s3-warehouse',
-            's3.region' = 'ap-east-1',
-            's3.access_key' = 'ACCESS_KEY',
-            's3.secret_key' = 'SECRET_KEY'
+            CREATE CATALOG iceberg_hms_on_s3_catalog PROPERTIES (
+                'type' = 'iceberg',
+                'iceberg.catalog.type' = 'hms',
+                'hive.metastore.uris' = 'thrift://127.0.0.1:9383',
+                'warehouse' = 's3://selectdb-qa-datalake-test-hk/refactor-test/iceberg-hms-s3-warehouse',
+                's3.region' = 'ap-east-1',
+                's3.access_key' = '<ak>',
+                's3.secret_key' = '<sk>'
+            );
+            ```
+            使用 IAM Assumed Role 的方式获取 S3 访问凭证 (3.1.2+)
+            ```sql
+            CREATE CATALOG iceberg_hms_on_s3_iamrole PROPERTIES (
+                'type' = 'iceberg',
+                'iceberg.catalog.type' = 'hms',
+                'hive.metastore.uris' = 'thrift://127.0.0.1:9383',
+                'warehouse' = 's3://bucket/warehouse',
+                's3.region' = 'us-east-1',
+                's3.role_arn' = 'arn:aws:iam::543815668950:role/role'
             );
             ```
         </TabItem>
         <TabItem value='OSS' label='OSS'>
             访问未开启 Kerberos 认证的 HMS
             ```sql
-            CREATE CATALOG IF NOT EXISTS iceberg_hms_on_oss_catalog PROPERTIES (
-            'type' = 'iceberg',
-            'iceberg.catalog.type' = 'hms',
-            'warehouse' = 'oss://bucket/iceberg/iceberg-hms-warehouse',
-            'hive.metastore.uris' = 'thrift://127.0.0.1:9083',
-            'oss.region' = 'cn-beijing',
-            'oss.endpoint' = 'oss-cn-beijing.aliyuncs.com',
-            'oss.access_key' = 'ACCESS_KEY',
-            'oss.secret_key' = 'SECRET_KEY'
+            CREATE CATALOG iceberg_hms_on_oss_catalog PROPERTIES (
+                'type' = 'iceberg',
+                'iceberg.catalog.type' = 'hms',
+                'warehouse' = 'oss://bucket/iceberg/iceberg-hms-warehouse',
+                'hive.metastore.uris' = 'thrift://127.0.0.1:9083',
+                'oss.region' = 'cn-beijing',
+                'oss.endpoint' = 'oss-cn-beijing.aliyuncs.com',
+                'oss.access_key' = '<ak>',
+                'oss.secret_key' = '<sk>'
             );
             ```
             访问开启 Kerberos 认证的 HMS
             ```sql
-            CREATE CATALOG IF NOT EXISTS iceberg_hms_on_oss_kerberos_new_catalog PROPERTIES (
-            'type' = 'iceberg',
-            'iceberg.catalog.type' = 'hms',
-            'warehouse' = 'oss://bucket/iceberg/iceberg-hms-warehouse',
-            'hive.metastore.uris' = 'thrift://127.0.0.1:9583',
-            'hive.metastore.client.principal' = 'presto-server/presto-master.docker.cluster@LABS.TERADATA.COM',
-            'hive.metastore.client.keytab' = '/keytabs/presto-server.keytab',
-            'hive.metastore.authentication.type' = 'kerberos',
-            'hive.metastore.service.principal' = 'hive/hadoop-master@LABS.TERADATA.COM',
-            'hive.metastore.sasl.enabled ' = 'true',
-            'hadoop.security.auth_to_local' = 'RULE:[2:\$1@\$0](.*@LABS.TERADATA.COM)s/@.*//
-            RULE:[2:\$1@\$0](.*@OTHERLABS.TERADATA.COM)s/@.*//
-            RULE:[2:\$1@\$0](.*@OTHERREALM.COM)s/@.*//
-            DEFAULT',
-            'oss.region' = 'cn-beijing',
-            'oss.endpoint' = 'oss-cn-beijing.aliyuncs.com',
-            'oss.access_key' = 'ACCESS_KEY',
-            'oss.secret_key' = 'SECRET_KEY'
+            CREATE CATALOG iceberg_hms_on_oss_kerberos_new_catalog PROPERTIES (
+                'type' = 'iceberg',
+                'iceberg.catalog.type' = 'hms',
+                'warehouse' = 'oss://bucket/iceberg/iceberg-hms-warehouse',
+                'hive.metastore.uris' = 'thrift://127.0.0.1:9583',
+                'hive.metastore.client.principal' = 'presto-server/presto-master.docker.cluster@LABS.TERADATA.COM',
+                'hive.metastore.client.keytab' = '/keytabs/presto-server.keytab',
+                'hive.metastore.authentication.type' = 'kerberos',
+                'hive.metastore.service.principal' = 'hive/hadoop-master@LABS.TERADATA.COM',
+                'hive.metastore.sasl.enabled ' = 'true',
+                'hadoop.security.auth_to_local' = 'RULE:[2:\$1@\$0](.*@LABS.TERADATA.COM)s/@.*//
+                RULE:[2:\$1@\$0](.*@OTHERLABS.TERADATA.COM)s/@.*//
+                RULE:[2:\$1@\$0](.*@OTHERREALM.COM)s/@.*//
+                DEFAULT',
+                'oss.region' = 'cn-beijing',
+                'oss.endpoint' = 'oss-cn-beijing.aliyuncs.com',
+                'oss.access_key' = '<ak>',
+                'oss.secret_key' = '<sk>'
             );
             ```
         </TabItem>
@@ -241,100 +326,100 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
             访问未开启 Kerberos 认证的 HMS
             ```sql
             CREATE CATALOG `iceberg_hms_on_cos_catalog` PROPERTIES (
-            'type' = 'iceberg',
-            'iceberg.catalog.type' = 'hms',
-            'warehouse' = 'cos://bucket/iceberg-hms-cos-warehouse',
-            'hive.metastore.uris' = 'thrift://127.0.0.1:9383',
-            'cos.region' = 'ap-beijing',
-            'cos.endpoint' = 'cos.ap-beijing.myqcloud.com',
-            'cos.secret_key' = 'SECRET_KEY',
-            'cos.access_key' = 'ACCESS_KEY'
+                'type' = 'iceberg',
+                'iceberg.catalog.type' = 'hms',
+                'warehouse' = 'cos://bucket/iceberg-hms-cos-warehouse',
+                'hive.metastore.uris' = 'thrift://127.0.0.1:9383',
+                'cos.region' = 'ap-beijing',
+                'cos.endpoint' = 'cos.ap-beijing.myqcloud.com',
+                'cos.secret_key' = '<sk>',
+                'cos.access_key' = '<ak>'
             );
             ```
             访问开启 Kerberos 认证的 HMS
             ```sql
             CREATE CATALOG `iceberg_hms_on_cos_kerberos_new_catalog` PROPERTIES (
-            'type' = 'iceberg',
-            'iceberg.catalog.type' = 'hms',
-            'warehouse' = 'cos://bucket/iceberg-hms-cos-warehouse',
-            'hive.metastore.uris' = 'thrift://127.0.0.1:9583',
-            'hive.metastore.service.principal' = 'hive/hadoop-master@LABS.TERADATA.COM',
-            'hive.metastore.sasl.enabled' = 'true',
-            'hive.metastore.client.principal' = 'hive/presto-master.docker.cluster@LABS.TERADATA.COM',
-            'hive.metastore.client.keytab' = '/keytabs/keytabs/hive-presto-master.keytab',
-            'hadoop.security.auth_to_local' = 'RULE:[2:$1@$0](.*@LABS.TERADATA.COM)s/@.*//
-            RULE:[2:$1@$0](.*@OTHERLABS.TERADATA.COM)s/@.*//
-            RULE:[2:$1@$0](.*@OTHERREALM.COM)s/@.*//
-            DEFAULT',
-            'cos.region' = 'ap-beijing',
-            'cos.endpoint' = 'cos.ap-beijing.myqcloud.com',
-            'cos.secret_key' = 'SECRET_KEY',
-            'cos.access_key' = 'ACCESS_KEY'
+                'type' = 'iceberg',
+                'iceberg.catalog.type' = 'hms',
+                'warehouse' = 'cos://bucket/iceberg-hms-cos-warehouse',
+                'hive.metastore.uris' = 'thrift://127.0.0.1:9583',
+                'hive.metastore.service.principal' = 'hive/hadoop-master@LABS.TERADATA.COM',
+                'hive.metastore.sasl.enabled' = 'true',
+                'hive.metastore.client.principal' = 'hive/presto-master.docker.cluster@LABS.TERADATA.COM',
+                'hive.metastore.client.keytab' = '/keytabs/keytabs/hive-presto-master.keytab',
+                'hadoop.security.auth_to_local' = 'RULE:[2:$1@$0](.*@LABS.TERADATA.COM)s/@.*//
+                RULE:[2:$1@$0](.*@OTHERLABS.TERADATA.COM)s/@.*//
+                RULE:[2:$1@$0](.*@OTHERREALM.COM)s/@.*//
+                DEFAULT',
+                'cos.region' = 'ap-beijing',
+                'cos.endpoint' = 'cos.ap-beijing.myqcloud.com',
+                'cos.secret_key' = '<sk>',
+                'cos.access_key' = '<ak>'
             );
             ```
         </TabItem>
         <TabItem value='OBS' label='OBS'>
             访问未开启 Kerberos 认证的 HMS
             ```sql
-            CREATE CATALOG IF NOT EXISTS test_iceberg_on_hms_obs_catalog PROPERTIES (
-            'type' = 'iceberg',
-            'iceberg.catalog.type' = 'hms',
-            'warehouse' = 'obs://bucket/regression/iceberg',
-            'hive.metastore.uris' = 'thrift://127.0.0.1:9383',
-            'obs.region' = 'cn-north-4',
-            'obs.endpoint' = 'obs.cn-north-4.myhuaweicloud.com',
-            'obs.access_key' = 'ACCESS_KEY',
-            'obs.secret_key' = 'SECRET_KEY'
+            CREATE CATALOG test_iceberg_on_hms_obs_catalog PROPERTIES (
+                'type' = 'iceberg',
+                'iceberg.catalog.type' = 'hms',
+                'warehouse' = 'obs://bucket/regression/iceberg',
+                'hive.metastore.uris' = 'thrift://127.0.0.1:9383',
+                'obs.region' = 'cn-north-4',
+                'obs.endpoint' = 'obs.cn-north-4.myhuaweicloud.com',
+                'obs.access_key' = '<ak>',
+                'obs.secret_key' = '<sk>'
             );
             ```
             访问开启 Kerberos 认证的 HMS
             ```sql
-            CREATE CATALOG IF NOT EXISTS obs PROPERTIES (
-            'type' = 'iceberg',
-            'iceberg.catalog.type' = 'hms',
-            'warehouse' = 'obs://bucket/regression/iceberg1',
-            'hive.metastore.uris' = 'thrift://127.0.0.1:9583',
-            'hive.metastore.service.principal' = 'hive/hadoop-master@LABS.TERADATA.COM',
-            'hive.metastore.sasl.enabled' = 'true',
-            'hive.metastore.client.principal' = 'hive/presto-master.docker.cluster@LABS.TERADATA.COM',
-            'hive.metastore.client.keytab' = '/keytabs/hive-presto-master.keytab',
-            'hive.metastore.authentication.type' = 'kerberos',
-            'hadoop.security.auth_to_local' = 'RULE:[2:\$1@\$0](.*@LABS.TERADATA.COM)s/@.*//
-            RULE:[2:\$1@\$0](.*@OTHERLABS.TERADATA.COM)s/@.*//
-            RULE:[2:\$1@\$0](.*@OTHERREALM.COM)s/@.*//
-            DEFAULT',
-            'obs.region' = 'cn-north-4',
-            'obs.endpoint' = 'obs.cn-north-4.myhuaweicloud.com',
-            'obs.access_key' = 'ACCESS_KEY',
-            'obs.secret_key' = 'SECRET_KEY'
+            CREATE CATALOG obs PROPERTIES (
+                'type' = 'iceberg',
+                'iceberg.catalog.type' = 'hms',
+                'warehouse' = 'obs://bucket/regression/iceberg1',
+                'hive.metastore.uris' = 'thrift://127.0.0.1:9583',
+                'hive.metastore.service.principal' = 'hive/hadoop-master@LABS.TERADATA.COM',
+                'hive.metastore.sasl.enabled' = 'true',
+                'hive.metastore.client.principal' = 'hive/presto-master.docker.cluster@LABS.TERADATA.COM',
+                'hive.metastore.client.keytab' = '/keytabs/hive-presto-master.keytab',
+                'hive.metastore.authentication.type' = 'kerberos',
+                'hadoop.security.auth_to_local' = 'RULE:[2:\$1@\$0](.*@LABS.TERADATA.COM)s/@.*//
+                RULE:[2:\$1@\$0](.*@OTHERLABS.TERADATA.COM)s/@.*//
+                RULE:[2:\$1@\$0](.*@OTHERREALM.COM)s/@.*//
+                DEFAULT',
+                'obs.region' = 'cn-north-4',
+                'obs.endpoint' = 'obs.cn-north-4.myhuaweicloud.com',
+                'obs.access_key' = '<ak>',
+                'obs.secret_key' = '<sk>'
             );
             ```
         </TabItem>
         <TabItem value='GCS' label='GCS'>
             ```sql
-            CREATE CATALOG IF NOT EXISTS `iceberg_hms_on_gcs_kerberos_new_catalog` PROPERTIES (
-            'type' = 'iceberg',
-            'iceberg.catalog.type' = 'hms',
-            'hive.metastore.uris' = 'thrift://127.0.0.1:9383',
-            'warehouse' = 'gs://bucket/iceberg_warehouse',
-            'gs.access_key' = 'ACCESS_KEY',
-            'gs.secret_key' = 'SECRET_KEY',
-            'fs.gcs.support'='true'
+            CREATE CATALOG `iceberg_hms_on_gcs_kerberos_new_catalog` PROPERTIES (
+                'type' = 'iceberg',
+                'iceberg.catalog.type' = 'hms',
+                'hive.metastore.uris' = 'thrift://127.0.0.1:9383',
+                'warehouse' = 'gs://bucket/iceberg_warehouse',
+                'gs.access_key' = '<ak>',
+                'gs.secret_key' = '<sk>',
+                'fs.gcs.support'='true'
             );
             ```
         </TabItem>
         <TabItem value='MinIO' label='MinIO'>
             ```sql
-            CREATE CATALOG IF NOT EXISTS test_iceberg_on_hms_minio_catalog PROPERTIES (
-            'type' = 'iceberg',
-            'iceberg.catalog.type' = 'hms',
-            'warehouse' = 's3://warehouse/wh',
-            'hive.metastore.uris' = 'thrift://127.0.0.1:9383',
-            'fs.minio.support' = 'true',
-            'minio.use_path_style' = 'true',
-            'minio.endpoint' = 'http://127.0.0.1:19001',
-            'minio.access_key' = 'ACCESS_KEY',
-            'minio.secret_key' = 'SECRET_KEY'
+            CREATE CATALOG test_iceberg_on_hms_minio_catalog PROPERTIES (
+                'type' = 'iceberg',
+                'iceberg.catalog.type' = 'hms',
+                'warehouse' = 's3://warehouse/wh',
+                'hive.metastore.uris' = 'thrift://127.0.0.1:9383',
+                'fs.minio.support' = 'true',
+                'minio.use_path_style' = 'true',
+                'minio.endpoint' = 'http://127.0.0.1:19001',
+                'minio.access_key' = '<ak>',
+                'minio.secret_key' = '<sk>'
             );
             ```
         </TabItem>
@@ -347,92 +432,103 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
         <TabItem value='HDFS' label='HDFS' default>
             访问未开启 Kerberos 认证的 HMS 和 HDFS 服务
             ```sql
-            CREATE CATALOG IF NOT EXISTS iceberg_hms_on_hdfs_catalog PROPERTIES (
-            'type' = 'iceberg',
-            'iceberg.catalog.type' = 'hms',
-            'hive.metastore.uris' = 'thrift://127.0.0.1:9383',
-            'warehouse' = 'hdfs://127.0.0.1:8320/user/iceberg/warehouse/iceberg-hms-hdfs-warehouse',
-            'hadoop.username' = 'doris',
-            'fs.defaultFS' = 'hdfs://127.0.0.1:8320'
+            CREATE CATALOG iceberg_hms_on_hdfs_catalog PROPERTIES (
+                'type' = 'iceberg',
+                'iceberg.catalog.type' = 'hms',
+                'hive.metastore.uris' = 'thrift://127.0.0.1:9383',
+                'warehouse' = 'hdfs://127.0.0.1:8320/user/iceberg/warehouse/iceberg-hms-hdfs-warehouse',
+                'hadoop.username' = 'doris',
+                'fs.defaultFS' = 'hdfs://127.0.0.1:8320'
             );
             ```
             访问开启 Kerberos 认证的 HMS 和 HDFS 服务
             ```sql
-            CREATE CATALOG IF NOT EXISTS iceberg_hms_on_hdfs_kerberos_hdfs_catalog PROPERTIES (
-            'type' = 'iceberg',
-            'iceberg.catalog.type' = 'hms',
-            'warehouse' = 'hdfs://127.0.0.1:8520/iceberg-hms-hdfs-warehouse',
-            'hive.metastore.uris' = 'thrift://127.0.0.1:9583',
-            'hive.metastore.kerberos.principal' = 'hive/hadoop-master@LABS.TERADATA.COM',
-            'hive.metastore.sasl.enabled ' = 'true',
-            'hive.metastore.authentication.type' = 'kerberos',
-            'hadoop.security.auth_to_local' = 'RULE:[2:\$1@\$0](.*@LABS.TERADATA.COM)s/@.*//
-            RULE:[2:\$1@\$0](.*@OTHERLABS.TERADATA.COM)s/@.*//
-            RULE:[2:\$1@\$0](.*@OTHERREALM.COM)s/@.*//
-            DEFAULT',
-            'fs.defaultFS' = 'hdfs://127.0.0.1:8520',
-            'hadoop.security.authentication' = 'kerberos',
-            'hadoop.kerberos.principal'='hive/presto-master.docker.cluster@LABS.TERADATA.COM',
-            'hadoop.kerberos.keytab' = '/keytabs/hive-presto-master.keytab'
+            CREATE CATALOG iceberg_hms_on_hdfs_kerberos_hdfs_catalog PROPERTIES (
+                'type' = 'iceberg',
+                'iceberg.catalog.type' = 'hms',
+                'warehouse' = 'hdfs://127.0.0.1:8520/iceberg-hms-hdfs-warehouse',
+                'hive.metastore.uris' = 'thrift://127.0.0.1:9583',
+                'hive.metastore.kerberos.principal' = 'hive/hadoop-master@LABS.TERADATA.COM',
+                'hive.metastore.sasl.enabled ' = 'true',
+                'hive.metastore.authentication.type' = 'kerberos',
+                'hadoop.security.auth_to_local' = 'RULE:[2:\$1@\$0](.*@LABS.TERADATA.COM)s/@.*//
+                RULE:[2:\$1@\$0](.*@OTHERLABS.TERADATA.COM)s/@.*//
+                RULE:[2:\$1@\$0](.*@OTHERREALM.COM)s/@.*//
+                DEFAULT',
+                'fs.defaultFS' = 'hdfs://127.0.0.1:8520',
+                'hadoop.security.authentication' = 'kerberos',
+                'hadoop.kerberos.principal'='hive/presto-master.docker.cluster@LABS.TERADATA.COM',
+                'hadoop.kerberos.keytab' = '/keytabs/hive-presto-master.keytab'
             );
             ```
         </TabItem>
         <TabItem value='S3' label='S3'>
             ```sql
-            CREATE CATALOG IF NOT EXISTS iceberg_hms_on_s3_catalog PROPERTIES (
-            'type' = 'iceberg',
-            'iceberg.catalog.type' = 'hms',
-            'hive.metastore.uris' = 'thrift://127.0.0.1:9383',
-            'warehouse' = 's3://selectdb-qa-datalake-test-hk/refactor-test/iceberg-hms-s3-warehouse',
-            's3.region' = 'ap-east-1',
-            's3.access_key' = 'ACCESS_KEY',
-            's3.secret_key' = 'SECRET_KEY'
+            CREATE CATALOG iceberg_hms_on_s3_catalog PROPERTIES (
+                'type' = 'iceberg',
+                'iceberg.catalog.type' = 'hms',
+                'hive.metastore.uris' = 'thrift://127.0.0.1:9383',
+                'warehouse' = 's3://selectdb-qa-datalake-test-hk/refactor-test/iceberg-hms-s3-warehouse',
+                's3.region' = 'ap-east-1',
+                's3.access_key' = '<ak>',
+                's3.secret_key' = '<sk>'
             );
             ```
         </TabItem>
         <TabItem value='OSS' label='OSS'>
             ```sql
-            CREATE CATALOG IF NOT EXISTS iceberg_hms_on_oss_catalog PROPERTIES (
-            'type' = 'iceberg',
-            'iceberg.catalog.type' = 'hms',
-            'hive.metastore.uris' = 'thrift://127.0.0.1:9083',
-            'warehouse' = 'oss://bucket/iceberg/iceberg-hms-warehouse',
-            'oss.region' = 'cn-beijing',
-            'oss.endpoint' = 'oss-cn-beijing.aliyuncs.com',
-            'oss.access_key' = 'ACCESS_KEY',
-            'oss.secret_key' = 'SECRET_KEY'
+            CREATE CATALOG iceberg_hms_on_oss_catalog PROPERTIES (
+                'type' = 'iceberg',
+                'iceberg.catalog.type' = 'hms',
+                'hive.metastore.uris' = 'thrift://127.0.0.1:9083',
+                'warehouse' = 'oss://bucket/iceberg/iceberg-hms-warehouse',
+                'oss.region' = 'cn-beijing',
+                'oss.endpoint' = 'oss-cn-beijing.aliyuncs.com',
+                'oss.access_key' = '<ak>',
+                'oss.secret_key' = '<sk>'
             );
             ```
         </TabItem>
         <TabItem value='COS' label='COS'>
             ```sql
-            CREATE CATALOG IF NOT EXISTS `iceberg_hms_on_cos_catalog` PROPERTIES (
-            'type' = 'iceberg',
-            'iceberg.catalog.type' = 'hms',
-            'warehouse' = 'cos://bucket/iceberg-hms-cos-warehouse',
-            'hive.metastore.uris' = 'thrift://127.0.0.1:9383',
-            'cos.region' = 'ap-beijing',
-            'cos.endpoint' = 'cos.ap-beijing.myqcloud.com',
-            'cos.secret_key' = 'SECRET_KEY',
-            'cos.access_key' = 'ACCESS_KEY'
+            CREATE CATALOG `iceberg_hms_on_cos_catalog` PROPERTIES (
+                'type' = 'iceberg',
+                'iceberg.catalog.type' = 'hms',
+                'warehouse' = 'cos://bucket/iceberg-hms-cos-warehouse',
+                'hive.metastore.uris' = 'thrift://127.0.0.1:9383',
+                'cos.region' = 'ap-beijing',
+                'cos.endpoint' = 'cos.ap-beijing.myqcloud.com',
+                'cos.secret_key' = '<sk>',
+                'cos.access_key' = '<ak>'
             );
             ```
         </TabItem>
         <TabItem value='OBS' label='OBS'>
             ```sql
-            CREATE CATALOG IF NOT EXISTS test_iceberg_on_hms_obs_catalog PROPERTIES (
-            'type' = 'iceberg',
-            'iceberg.catalog.type' = 'hms',
-            'hive.metastore.uris' = 'thrift://127.0.0.1:9383',
-            'warehouse' = 'obs://bucket/regression/iceberg',
-            'obs.region' = 'cn-north-4',
-            'obs.endpoint' = 'obs.cn-north-4.myhuaweicloud.com',
-            'obs.access_key' = 'ACCESS_KEY',
-            'obs.secret_key' = 'SECRET_KEY'
+            CREATE CATALOG test_iceberg_on_hms_obs_catalog PROPERTIES (
+                'type' = 'iceberg',
+                'iceberg.catalog.type' = 'hms',
+                'hive.metastore.uris' = 'thrift://127.0.0.1:9383',
+                'warehouse' = 'obs://bucket/regression/iceberg',
+                'obs.region' = 'cn-north-4',
+                'obs.endpoint' = 'obs.cn-north-4.myhuaweicloud.com',
+                'obs.access_key' = '<ak>',
+                'obs.secret_key' = '<sk>'
             );
             ```
         </TabItem>
         <TabItem value='MinIO' label='MinIO'>
+            ```sql
+            CREATE CATALOG test_iceberg_on_hms_minio_catalog PROPERTIES (
+                'type' = 'iceberg',
+                'iceberg.catalog.type' = 'hms',
+                'warehouse' = 's3://warehouse/iceberg',
+                'hive.metastore.uris' = 'thrift://127.0.0.1:9383',
+                's3.endpoint' = 'http://127.0.0.1:19001',
+                's3.access_key' = '<ak>',
+                's3.secret_key' = '<sk>'
+            );
+            ```
         </TabItem>
     </Tabs>
 </details>
@@ -446,29 +542,42 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
             AWS Glue 和 S3 存储服务共用一套认证信息。
             ```sql
             CREATE CATALOG `iceberg_glue_on_s3_catalog_` PROPERTIES (
-            'type' = 'iceberg',
-            'iceberg.catalog.type' = 'glue',
-            'warehouse' = 's3://bucket/iceberg-glue-s3-warehouse',
-            'glue.region' = 'ap-northeast-1',
-            'glue.endpoint' = 'https://glue.ap-northeast-1.amazonaws.com',
-            'glue.access_key' = 'ACCESS_KEY',
-            'glue.secret_key' = 'SECRET_KEY'
+                'type' = 'iceberg',
+                'iceberg.catalog.type' = 'glue',
+                'warehouse' = 's3://bucket/iceberg-glue-s3-warehouse',
+                'glue.region' = 'ap-northeast-1',
+                'glue.endpoint' = 'https://glue.ap-northeast-1.amazonaws.com',
+                'glue.access_key' = '<ak>',
+                'glue.secret_key' = '<sk>'
             );
             ```
+            
             Glue 服务的认证信息和 S3 的认证信息不一致时，可以通过以下方式单独指定 S3 的认证信息。
             ```sql
             CREATE CATALOG `iceberg_glue_on_s3_catalog_` PROPERTIES (
-            'type' = 'iceberg',
-            'iceberg.catalog.type' = 'glue',
-            'warehouse' = 's3://selectdb-qa-datalake-test/iceberg-glue-s3-warehouse',
-            'glue.region' = 'ap-northeast-1',
-            'glue.endpoint' = 'https://glue.ap-northeast-1.amazonaws.com',
-            'glue.access_key' = 'ACCESS_KEY',
-            'glue.secret_key' = 'SECRET_KEY',
-            's3.endpoint' = 's3.ap-northeast-1.amazonaws.com',
-            's3.region' = 'ap-northeast-1',
-            's3.access_key' = 'ACCESS_KEY',
-            's3.secret_key' = 'SECRET_KEY'
+                'type' = 'iceberg',
+                'iceberg.catalog.type' = 'glue',
+                'warehouse' = 's3://selectdb-qa-datalake-test/iceberg-glue-s3-warehouse',
+                'glue.region' = 'ap-northeast-1',
+                'glue.endpoint' = 'https://glue.ap-northeast-1.amazonaws.com',
+                'glue.access_key' = '<ak>',
+                'glue.secret_key' = '<sk>',
+                's3.endpoint' = 's3.ap-northeast-1.amazonaws.com',
+                's3.region' = 'ap-northeast-1',
+                's3.access_key' = '<ak>',
+                's3.secret_key' = '<sk>'
+            );
+            ```
+
+            使用 IAM Assumed Role 的方式获取 S3 访问凭证 (3.1.2+ 支持)
+            ```sql
+            CREATE CATALOG `glue_iceberg_iamrole` PROPERTIES (
+                'type' = 'iceberg',
+                'iceberg.catalog.type' = 'glue',
+                'warehouse' = 's3://bucket/warehouse',
+                'glue.region' = 'us-east-1',                    
+                'glue.endpoint' = 'https://glue.us-east-1.amazonaws.com',
+                'glue.role_arn' = '<role_arn>'                
             );
             ```
         </TabItem>
@@ -478,16 +587,16 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
     <summary>2.1 & 3.0  版本 </summary>
     <Tabs>
         <TabItem value='S3' label='S3' default>
-            AWS Glue 和 S3 存储服务共用一套认证信息.
+            AWS Glue 和 S3 存储服务共用一套认证信息。
 
-            非 EC2 环境下，需要使用 [aws configure ](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-files.html) 配置 Credentials 信息，同时在~/.aws目录下生成 credentials 文件。
+            非 EC2 环境下，需要使用 [aws configure ](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-files.html) 配置 Credentials 信息，同时在~/.aws 目录下生成 credentials 文件。
             ```sql
             CREATE CATALOG glue PROPERTIES (
-            'type'='iceberg',
-            'iceberg.catalog.type' = 'glue',
-            'glue.endpoint' = 'https://glue.us-east-1.amazonaws.com',
-            'glue.access_key' = 'ACCESS_KEY',
-            'glue.secret_key' = 'SECRET_KEY'
+                'type'='iceberg',
+                'iceberg.catalog.type' = 'glue',
+                'glue.endpoint' = 'https://glue.us-east-1.amazonaws.com',
+                'glue.access_key' = '<ak>',
+                'glue.secret_key' = '<sk>'
             );
             ```
         </TabItem>
@@ -501,16 +610,16 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
     <Tabs>
         <TabItem value='DLF 1.0' label='DLF 1.0' default>
             ```sql
-            CREATE CATALOG IF NOT EXISTS iceberg_dlf_catalog_catalog PROPERTIES (
-            'type' = 'iceberg',
-            'iceberg.catalog.type'='dlf',
-            'warehouse' = 'oss://bucket/iceberg-dlf-oss-warehouse',
-            'dlf.uid' = '203225413946383283',
-            'dlf.catalog_id' = 'p2_regression_case',
-            'dlf.region' = 'cn-beijing',
-            'dlf.endpoint' = 'datalake.cn-beijing.aliyuncs.com',
-            'dlf.access_key' = 'ACCESS_KEY',
-            'dlf.secret_key' = 'SECRET_KEY'
+            CREATE CATALOG iceberg_dlf_catalog_catalog PROPERTIES (
+                'type' = 'iceberg',
+                'iceberg.catalog.type'='dlf',
+                'warehouse' = 'oss://bucket/iceberg-dlf-oss-warehouse',
+                'dlf.uid' = '203225413946383283',
+                'dlf.catalog_id' = 'p2_regression_case',
+                'dlf.region' = 'cn-beijing',
+                'dlf.endpoint' = 'datalake.cn-beijing.aliyuncs.com',
+                'dlf.access_key' = '<ak>',
+                'dlf.secret_key' = '<sk>'
             );
             ```
         </TabItem>
@@ -521,15 +630,15 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
     <Tabs>
         <TabItem value='DLF 1.0' label='DLF 1.0' default>
             ```sql
-            CREATE CATALOG IF NOT EXISTS iceberg_dlf_catalog_catalog PROPERTIES (
-            'type' = 'iceberg',
-            'iceberg.catalog.type'='dlf',
-            'warehouse' = 'oss://bucket/iceberg-dlf-oss-warehouse',
-            'dlf.uid' = '203225413946383283',
-            'dlf.catalog.id' = 'catalog_id',
-            'dlf.region' = 'cn-beijing',
-            'dlf.access_key' = 'ACCESS_KEY',
-            'dlf.secret_key' = 'SECRET_KEY'
+            CREATE CATALOG iceberg_dlf_catalog_catalog PROPERTIES (
+                'type' = 'iceberg',
+                'iceberg.catalog.type'='dlf',
+                'warehouse' = 'oss://bucket/iceberg-dlf-oss-warehouse',
+                'dlf.uid' = '203225413946383283',
+                'dlf.catalog.id' = 'catalog_id',
+                'dlf.region' = 'cn-beijing',
+                'dlf.access_key' = '<ak>',
+                'dlf.secret_key' = '<sk>'
             );
             ```
         </TabItem>
@@ -547,43 +656,43 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
                 <TabItem value='s3-noauth' label='无认证' default>
                     ```sql
                     CREATE CATALOG iceberg_static_s3 PROPERTIES (
-                    'type' = 'iceberg',
-                    'warehouse' = 's3://iceberg_rest_warehouse',
-                    'iceberg.catalog.type' = 'rest',
-                    'iceberg.rest.uri' = 'http://127.0.0.1:8181',
-                    's3.endpoint' = 'https://s3.ap-east-1.amazonaws.com',
-                    's3.access_key' = 'YOUR_AWS_ACCESS_KEY_ID',
-                    's3.secret_key' = 'YOUR_AWS_SECRET_ACCESS_KEY',
-                    's3.region' = 'ap-east-1'
+                        'type' = 'iceberg',
+                        'warehouse' = 's3://warehouse',
+                        'iceberg.catalog.type' = 'rest',
+                        'iceberg.rest.uri' = 'http://127.0.0.1:8181',
+                        's3.endpoint' = 'https://s3.ap-east-1.amazonaws.com',
+                        's3.access_key' = '<ak>',
+                        's3.secret_key' = '<sk>',
+                        's3.region' = 'ap-east-1'
                     );
                     ```
                 </TabItem>
                 <TabItem value='s3-oauth2' label='OAuth2 认证'>
                     ```sql
                     CREATE CATALOG polaris_oauth2_credential_static_s3 PROPERTIES (
-                    'type' = 'iceberg',
-                    'warehouse' = 'doris_test',
-                    'iceberg.catalog.type' = 'rest',
-                    'iceberg.rest.uri' = 'http://127.0.0.1:9000/api/catalog',
-                    'iceberg.rest.security.type' = 'oauth2',
-                    'iceberg.rest.oauth2.credential' = 'root:secret123',
-                    'iceberg.rest.oauth2.server-uri' = 'http://127.0.0.1:9000/api/catalog/v1/oauth/tokens',
-                    'iceberg.rest.oauth2.scope' = 'PRINCIPAL_ROLE:ALL',
-                    's3.endpoint' = 'https://s3.us-west-2.amazonaws.com',
-                    's3.access_key' = 'YOUR_AWS_ACCESS_KEY_ID',
-                    's3.secret_key' = 'YOUR_AWS_SECRET_ACCESS_KEY',
-                    's3.region' = 'us-west-2'
+                        'type' = 'iceberg',
+                        'warehouse' = 'doris_test',
+                        'iceberg.catalog.type' = 'rest',
+                        'iceberg.rest.uri' = 'http://127.0.0.1:8181/api/catalog',
+                        'iceberg.rest.security.type' = 'oauth2',
+                        'iceberg.rest.oauth2.credential' = 'root:secret123',
+                        'iceberg.rest.oauth2.server-uri' = 'http://127.0.0.1:8181/api/catalog/v1/oauth/tokens',
+                        'iceberg.rest.oauth2.scope' = 'PRINCIPAL_ROLE:ALL',
+                        's3.endpoint' = 'https://s3.us-west-2.amazonaws.com',
+                        's3.access_key' = '<ak>',
+                        's3.secret_key' = '<sk>',
+                        's3.region' = 'us-west-2'
                     );
                     ```
                 </TabItem>
                 <TabItem value='s3-vended' label='Vended Credentials'>
                     ```sql
                     CREATE CATALOG gravitino_vended_s3 PROPERTIES (
-                    'type' = 'iceberg',
-                    'warehouse' = 'warehouse',
-                    'iceberg.catalog.type' = 'rest',
-                    'iceberg.rest.uri' = 'http://127.0.0.1:9001/iceberg/',
-                    'iceberg.rest.vended-credentials-enabled' = 'true'
+                        'type' = 'iceberg',
+                        'warehouse' = 'warehouse',
+                        'iceberg.catalog.type' = 'rest',
+                        'iceberg.rest.uri' = 'http://127.0.0.1:9001/iceberg/',
+                        'iceberg.rest.vended-credentials-enabled' = 'true'
                     );
                     ```
                 </TabItem>
@@ -595,32 +704,32 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
                 <TabItem value='oss-noauth' label='无认证' default>
                     ```sql
                     CREATE CATALOG iceberg_static_oss PROPERTIES (
-                    'type' = 'iceberg',
-                    'warehouse' = 's3://iceberg_rest_warehouse',
-                    'iceberg.catalog.type' = 'rest',
-                    'iceberg.rest.uri' = 'http://127.0.0.1:8181',
-                    'oss.endpoint' = 'https://oss-cn-beijing.aliyuncs.com',
-                    'oss.access_key' = 'YOUR_AWS_ACCESS_KEY_ID',
-                    'oss.secret_key' = 'YOUR_AWS_SECRET_ACCESS_KEY',
-                    'oss.region' = 'cn-beijing'
+                        'type' = 'iceberg',
+                        'warehouse' = 's3://warehouse',
+                        'iceberg.catalog.type' = 'rest',
+                        'iceberg.rest.uri' = 'http://127.0.0.1:8181',
+                        'oss.endpoint' = 'https://oss-cn-beijing.aliyuncs.com',
+                        'oss.access_key' = '<ak>',
+                        'oss.secret_key' = '<sk>',
+                        'oss.region' = 'cn-beijing'
                     );
                     ```
                 </TabItem>
                 <TabItem value='oss-oauth2' label='OAuth2 认证'>
                     ```sql
                     CREATE CATALOG polaris_oauth2_credential_static_oss PROPERTIES (
-                    'type' = 'iceberg',
-                    'warehouse' = 'doris_test',
-                    'iceberg.catalog.type' = 'rest',
-                    'iceberg.rest.uri' = 'http://127.0.0.1:9000/api/catalog',
-                    'iceberg.rest.security.type' = 'oauth2',
-                    'iceberg.rest.oauth2.credential' = 'root:secret123',
-                    'iceberg.rest.oauth2.server-uri' = 'http://127.0.0.1:9000/api/catalog/v1/oauth/tokens',
-                    'iceberg.rest.oauth2.scope' = 'PRINCIPAL_ROLE:ALL',
-                    'oss.endpoint' = 'https://oss-cn-beijing.aliyuncs.com',
-                    'oss.access_key' = 'YOUR_AWS_ACCESS_KEY_ID',
-                    'oss.secret_key' = 'YOUR_AWS_SECRET_ACCESS_KEY',
-                    'oss.region' = 'cn-beijing'
+                        'type' = 'iceberg',
+                        'warehouse' = 'doris_test',
+                        'iceberg.catalog.type' = 'rest',
+                        'iceberg.rest.uri' = 'http://127.0.0.1:8181/api/catalog',
+                        'iceberg.rest.security.type' = 'oauth2',
+                        'iceberg.rest.oauth2.credential' = 'root:secret123',
+                        'iceberg.rest.oauth2.server-uri' = 'http://127.0.0.1:8181/api/catalog/v1/oauth/tokens',
+                        'iceberg.rest.oauth2.scope' = 'PRINCIPAL_ROLE:ALL',
+                        'oss.endpoint' = 'https://oss-cn-beijing.aliyuncs.com',
+                        'oss.access_key' = '<ak>',
+                        'oss.secret_key' = '<sk>',
+                        'oss.region' = 'cn-beijing'
                     );
                     ```
                 </TabItem>
@@ -632,36 +741,121 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
                 <TabItem value='cos-noauth' label='无认证' default>
                     ```sql
                     CREATE CATALOG iceberg_static_cos PROPERTIES (
-                    'type' = 'iceberg',
-                    'warehouse' = 's3://iceberg_rest_warehouse',
-                    'iceberg.catalog.type' = 'rest',
-                    'iceberg.rest.uri' = 'http://127.0.0.1:8181',
-                    'cos.endpoint' = 'https://cos.ap-beijing.myqcloud.com',
-                    'cos.access_key' = 'YOUR_AWS_ACCESS_KEY_ID',
-                    'cos.secret_key' = 'YOUR_AWS_SECRET_ACCESS_KEY',
-                    'cos.region' = 'ap-beijing'
+                        'type' = 'iceberg',
+                        'warehouse' = 's3://warehouse',
+                        'iceberg.catalog.type' = 'rest',
+                        'iceberg.rest.uri' = 'http://127.0.0.1:8181',
+                        'cos.endpoint' = 'https://cos.ap-beijing.myqcloud.com',
+                        'cos.access_key' = '<ak>',
+                        'cos.secret_key' = '<sk>',
+                        'cos.region' = 'ap-beijing'
                     );
                     ```
                 </TabItem>
                 <TabItem value='cos-oauth2' label='OAuth2 认证'>
                     ```sql
                     CREATE CATALOG polaris_oauth2_credential_static_cos PROPERTIES (
-                    'type' = 'iceberg',
-                    'warehouse' = 'doris_test',
-                    'iceberg.catalog.type' = 'rest',
-                    'iceberg.rest.uri' = 'http://127.0.0.1:9000/api/catalog',
-                    'iceberg.rest.security.type' = 'oauth2',
-                    'iceberg.rest.oauth2.credential' = 'root:secret123',
-                    'iceberg.rest.oauth2.server-uri' = 'http://127.0.0.1:9000/api/catalog/v1/oauth/tokens',
-                    'iceberg.rest.oauth2.scope' = 'PRINCIPAL_ROLE:ALL',
-                    'cos.endpoint' = 'https://cos.ap-beijing.myqcloud.com',
-                    'cos.access_key' = 'YOUR_AWS_ACCESS_KEY_ID',
-                    'cos.secret_key' = 'YOUR_AWS_SECRET_ACCESS_KEY',
-                    'cos.region' = 'ap-beijing'
+                        'type' = 'iceberg',
+                        'warehouse' = 'doris_test',
+                        'iceberg.catalog.type' = 'rest',
+                        'iceberg.rest.uri' = 'http://127.0.0.1:8181/api/catalog',
+                        'iceberg.rest.security.type' = 'oauth2',
+                        'iceberg.rest.oauth2.credential' = 'root:secret123',
+                        'iceberg.rest.oauth2.server-uri' = 'http://127.0.0.1:8181/api/catalog/v1/oauth/tokens',
+                        'iceberg.rest.oauth2.scope' = 'PRINCIPAL_ROLE:ALL',
+                        'cos.endpoint' = 'https://cos.ap-beijing.myqcloud.com',
+                        'cos.access_key' = '<ak>',
+                        'cos.secret_key' = '<sk>',
+                        'cos.region' = 'ap-beijing'
                     );
                     ```
                 </TabItem>
             </Tabs>
+        </TabItem>
+
+        <TabItem value='obs' label='OBS'>
+            <Tabs>
+                <TabItem value='obs-noauth' label='无认证' default>
+                    ```sql
+                    CREATE CATALOG iceberg_static_obs PROPERTIES (
+                        'type' = 'iceberg',
+                        'warehouse' = 's3://warehouse',
+                        'iceberg.catalog.type' = 'rest',
+                        'iceberg.rest.uri' = 'http://127.0.0.1:8181',
+                        'obs.endpoint' = 'obs.cn-north-4.myhuaweicloud.com',
+                        'obs.access_key' = '<ak>',
+                        'obs.secret_key' = '<sk>',
+                        'obs.region' = 'cn-north-4'
+                    );
+                    ```
+                </TabItem>
+                <TabItem value='obs-oauth2' label='OAuth2 认证'>
+                    ```sql
+                    CREATE CATALOG polaris_oauth2_credential_static_obs PROPERTIES (
+                        'type' = 'iceberg',
+                        'warehouse' = 'doris_test',
+                        'iceberg.catalog.type' = 'rest',
+                        'iceberg.rest.uri' = 'http://127.0.0.1:8181/api/catalog',
+                        'iceberg.rest.security.type' = 'oauth2',
+                        'iceberg.rest.oauth2.credential' = 'root:secret123',
+                        'iceberg.rest.oauth2.server-uri' = 'http://127.0.0.1:8181/api/catalog/v1/oauth/tokens',
+                        'iceberg.rest.oauth2.scope' = 'PRINCIPAL_ROLE:ALL',
+                        'obs.endpoint' = 'obs.cn-north-4.myhuaweicloud.com',
+                        'obs.access_key' = '<ak>',
+                        'obs.secret_key' = '<sk>',
+                        'obs.region' = 'cn-north-4'
+                    );
+                    ```
+                </TabItem>
+            </Tabs>
+        </TabItem>
+
+        <TabItem value='gcs' label='GCS'>
+            <Tabs>
+                <TabItem value='gcs-noauth' label='无认证' default>
+                    ```sql
+                    CREATE CATALOG iceberg_static_gcs PROPERTIES (
+                        'type' = 'iceberg',
+                        'warehouse' = 'gs://warehouse',
+                        'iceberg.catalog.type' = 'rest',
+                        'iceberg.rest.uri' = 'http://127.0.0.1:8181',
+                        'gs.endpoint' = 'https://storage.googleapis.com',
+                        'gs.access_key' = '<ak>',
+                        'gs.secret_key' = '<sk>'
+                    );
+                    ```
+                </TabItem>
+                <TabItem value='gcs-oauth2' label='OAuth2 认证'>
+                    ```sql
+                    CREATE CATALOG polaris_oauth2_credential_static_gcs PROPERTIES (
+                        'type' = 'iceberg',
+                        'warehouse' = 'doris_test',
+                        'iceberg.catalog.type' = 'rest',
+                        'iceberg.rest.uri' = 'http://127.0.0.1:8181/api/catalog',
+                        'iceberg.rest.security.type' = 'oauth2',
+                        'iceberg.rest.oauth2.credential' = 'root:secret123',
+                        'iceberg.rest.oauth2.server-uri' = 'http://127.0.0.1:8181/api/catalog/v1/oauth/tokens',
+                        'iceberg.rest.oauth2.scope' = 'PRINCIPAL_ROLE:ALL',
+                        'gs.endpoint' = 'https://storage.googleapis.com',
+                        'gs.access_key' = '<ak>',
+                        'gs.secret_key' = '<sk>'
+                        
+                    );
+                    ```
+                </TabItem>
+            </Tabs>
+        </TabItem>
+
+        <TabItem value='hdfs' label='HDFS'>
+            ```sql
+            CREATE CATALOG iceberg_static_hdfs PROPERTIES (
+                'type' = 'iceberg',
+                'warehouse' = 'hdfs://127.0.0.1:8020/user/iceberg/warehouse',
+                'iceberg.catalog.type' = 'rest',
+                'iceberg.rest.uri' = 'http://127.0.0.1:8181',
+                'fs.defaultFS' = 'hdfs://127.0.0.1:8020'
+            );
+            ```
         </TabItem>
     </Tabs>
 
@@ -671,26 +865,72 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
     <summary>2.1 & 3.0  版本 </summary>
 
     <Tabs>
-        <TabItem value='HDFS' label='HDFS' default>
-
-        </TabItem>
-        <TabItem value='S3' label='S3'>
-
+        <TabItem value='S3' label='S3' default>
+            ```sql
+            CREATE CATALOG iceberg_static_s3 PROPERTIES (
+                'type' = 'iceberg',
+                'warehouse' = 's3://warehouse',
+                'iceberg.catalog.type' = 'rest',
+                'uri' = 'http://127.0.0.1:8181',
+                's3.endpoint' = 'https://s3.ap-east-1.amazonaws.com',
+                's3.access_key' = '<ak>',
+                's3.secret_key' = '<sk>',
+                's3.region' = 'ap-east-1'
+            );
+            ```
         </TabItem>
         <TabItem value='OSS' label='OSS'>
-
+            ```sql
+            CREATE CATALOG iceberg_static_oss PROPERTIES (
+                'type' = 'iceberg',
+                'warehouse' = 's3://warehouse',
+                'iceberg.catalog.type' = 'rest',
+                'uri' = 'http://127.0.0.1:8181',
+                's3.endpoint' = 'https://oss-cn-beijing.aliyuncs.com',
+                's3.access_key' = '<ak>',
+                's3.secret_key' = '<sk>',
+                's3.region' = 'cn-beijing'
+            );
+            ```
         </TabItem>
         <TabItem value='COS' label='COS'>
-
+            ```sql
+            CREATE CATALOG iceberg_static_cos PROPERTIES (
+                'type' = 'iceberg',
+                'warehouse' = 's3://warehouse',
+                'iceberg.catalog.type' = 'rest',
+                'uri' = 'http://127.0.0.1:8181',
+                's3.endpoint' = 'https://cos.ap-beijing.myqcloud.com',
+                's3.access_key' = '<ak>',
+                's3.secret_key' = '<sk>',
+                's3.region' = 'ap-beijing'
+            );
+            ```
         </TabItem>
         <TabItem value='OBS' label='OBS'>
-
+            ```sql
+            CREATE CATALOG iceberg_static_obs PROPERTIES (
+                'type' = 'iceberg',
+                'warehouse' = 's3://warehouse',
+                'iceberg.catalog.type' = 'rest',
+                'uri' = 'http://127.0.0.1:8181',
+                's3.endpoint' = 'obs.cn-north-4.myhuaweicloud.com',
+                's3.access_key' = '<ak>',
+                's3.secret_key' = '<sk>',
+                's3.region' = 'cn-north-4'
+            );
+            ```
         </TabItem>
-        <TabItem value='GCS' label='GCS'>
-
-        </TabItem>
-        <TabItem value='MinIO' label='MinIO'>
-
+        <TabItem value='HDFS' label='HDFS'>
+            ```sql
+            CREATE CATALOG iceberg_static_hdfs PROPERTIES (
+                'type' = 'iceberg',
+                'warehouse' = 'hdfs://127.0.0.1:8020/user/iceberg/warehouse',
+                'iceberg.catalog.type' = 'rest',
+                'uri' = 'http://127.0.0.1:8181',
+                'fs.defaultFS' = 'hdfs://127.0.0.1:8020'
+            );
+            ```
         </TabItem>
 
     </Tabs>
@@ -704,103 +944,127 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
         <TabItem value='HDFS' label='HDFS' default>
             访问未开启 Kerberos 认证的 HDFS 服务
             ```sql
-            CREATE CATALOG IF NOT EXISTS iceberg_fs_on_hdfs_catalog PROPERTIES (
-            'type' = 'iceberg',
-            'iceberg.catalog.type' = 'hadoop',
-            'warehouse' = 'hdfs://127.0.0.1:8320/user/iceberg/warehouse/iceberg-fs-hdfs-warehouse',
-            'hadoop.username' = 'doris',
-            'fs.defaultFS' = 'hdfs://127.0.0.1:8320'
+            CREATE CATALOG iceberg_fs_on_hdfs_catalog PROPERTIES (
+                'type' = 'iceberg',
+                'iceberg.catalog.type' = 'hadoop',
+                'warehouse' = 'hdfs://127.0.0.1:8320/user/iceberg/warehouse/iceberg-fs-hdfs-warehouse',
+                'hadoop.username' = 'doris',
+                'fs.defaultFS' = 'hdfs://127.0.0.1:8320'
             );
             ```
             访问开启了 Kerberos 认证的 HDFS 服务
             ```sql
-            CREATE CATALOG IF NOT EXISTS iceberg_fs_on_hdfs_kerberos_catalog PROPERTIES (
-            'type' = 'iceberg',
-            'iceberg.catalog.type' = 'hadoop',
-            'warehouse' = 'hdfs://127.0.0.1:8520/iceberg-fs-hdfs-warehouse',
-            'fs.defaultFS' = 'hdfs://127.0.0.1:8520',
-            'hadoop.security.authentication' = 'kerberos',
-            'hadoop.kerberos.principal'='hive/presto-master.docker.cluster@LABS.TERADATA.COM',
-            'hadoop.kerberos.keytab' = '/keytabs/hive-presto-master.keytab'
+            CREATE CATALOG iceberg_fs_on_hdfs_kerberos_catalog PROPERTIES (
+                'type' = 'iceberg',
+                'iceberg.catalog.type' = 'hadoop',
+                'warehouse' = 'hdfs://127.0.0.1:8520/iceberg-fs-hdfs-warehouse',
+                'fs.defaultFS' = 'hdfs://127.0.0.1:8520',
+                'hadoop.security.authentication' = 'kerberos',
+                'hadoop.kerberos.principal'='hive/presto-master.docker.cluster@LABS.TERADATA.COM',
+                'hadoop.kerberos.keytab' = '/keytabs/hive-presto-master.keytab'
             );
 
             ```
         </TabItem>
         <TabItem value='S3' label='S3'>
             ```sql
-            CREATE CATALOG IF NOT EXISTS iceberg_fs_on_glue_catalog PROPERTIES (
-            'type' = 'iceberg',
-            'iceberg.catalog.type' = 'hadoop',
-            'warehouse' = 's3://selectdb-qa-datalake-test-hk/refactor-test/iceberg-fs-s3-warehouse',
-            's3.region' = 'ap-east-1',
-            's3.access_key' = 'ACCESS_KEY',
-            's3.secret_key' = 'SECRET_KEY'
+            CREATE CATALOG iceberg_fs_on_glue_catalog PROPERTIES (
+                'type' = 'iceberg',
+                'iceberg.catalog.type' = 'hadoop',
+                'warehouse' = 's3://selectdb-qa-datalake-test-hk/refactor-test/iceberg-fs-s3-warehouse',
+                's3.region' = 'ap-east-1',
+                's3.access_key' = '<ak>',
+                's3.secret_key' = '<sk>'
+            );
+            ```
+            使用 IAM Assumed Role 的方式获取 S3 访问凭证 (3.1.2+)
+            ```sql
+            CREATE CATALOG iceberg_fs_on_s3_iamrole PROPERTIES (
+                'type' = 'iceberg',
+                'iceberg.catalog.type' = 'hadoop',
+                'warehouse' = 's3://bucket/warehouse',
+                's3.region' = 'us-east-1',
+                's3.role_arn' = 'arn:aws:iam::543815668950:role/role'
             );
             ```
         </TabItem>
         <TabItem value='COS' label='COS'>
             ```sql
-            CREATE CATALOG IF NOT EXISTS iceberg_fs_on_cos_catalog PROPERTIES (
-            'type' = 'iceberg',
-            'iceberg.catalog.type' = 'hadoop',
-            'warehouse' = 'cos://doris-build-1308700295/iceberg-fs-cos-warehouse',
-            'cos.region' = 'ap-beijing',
-            'cos.endpoint' = 'cos.ap-beijing.myqcloud.com',
-            'cos.access_key' = 'ACCESS_KEY',
-            'cos.secret_key' = 'SECRET_KEY'
+            CREATE CATALOG iceberg_fs_on_cos_catalog PROPERTIES (
+                'type' = 'iceberg',
+                'iceberg.catalog.type' = 'hadoop',
+                'warehouse' = 'cos://doris-build-1308700295/iceberg-fs-cos-warehouse',
+                'cos.region' = 'ap-beijing',
+                'cos.endpoint' = 'cos.ap-beijing.myqcloud.com',
+                'cos.access_key' = '<ak>',
+                'cos.secret_key' = '<sk>'
             );
 
             ```
         </TabItem>
         <TabItem value='OSS' label='OSS'>
             ```sql
-            CREATE CATALOG IF NOT EXISTS iceberg_fs_on_oss_catalog PROPERTIES (
-            'type' = 'iceberg',
-            'iceberg.catalog.type' = 'hadoop',
-            'warehouse' = 'oss://doris-regression-bj/refactor-test/iceberg-fs-oss-warehouse',
-            'oss.region' = 'cn-beijing',
-            'oss.endpoint' = 'oss-cn-beijing.aliyuncs.com',
-            'oss.access_key' = 'ACCESS_KEY',
-            'oss.secret_key' = 'SECRET_KEY'
+            CREATE CATALOG iceberg_fs_on_oss_catalog PROPERTIES (
+                'type' = 'iceberg',
+                'iceberg.catalog.type' = 'hadoop',
+                'warehouse' = 'oss://doris-regression-bj/refactor-test/iceberg-fs-oss-warehouse',
+                'oss.region' = 'cn-beijing',
+                'oss.endpoint' = 'oss-cn-beijing.aliyuncs.com',
+                'oss.access_key' = '<ak>',
+                'oss.secret_key' = '<sk>'
             );
             ```
         </TabItem>
         <TabItem value='OBS' label='OBS'>
             ```sql
-            CREATE CATALOG IF NOT EXISTS test_fs_on_obs_catalog PROPERTIES (
-            'type' = 'iceberg',
-            'iceberg.catalog.type' = 'hadoop',
-            'warehouse' = 'obs://bucket/regression/iceberg',
-            'obs.region' = 'cn-north-4',
-            'obs.endpoint' = 'obs.cn-north-4.myhuaweicloud.com',
-            'obs.access_key' = 'ACCESS_KEY',
-            'obs.secret_key' = 'SECRET_KEY'
+            CREATE CATALOG test_fs_on_obs_catalog PROPERTIES (
+                'type' = 'iceberg',
+                'iceberg.catalog.type' = 'hadoop',
+                'warehouse' = 'obs://bucket/regression/iceberg',
+                'obs.region' = 'cn-north-4',
+                'obs.endpoint' = 'obs.cn-north-4.myhuaweicloud.com',
+                'obs.access_key' = '<ak>',
+                'obs.secret_key' = '<sk>'
             );
             ```
         </TabItem>
         <TabItem value='GCS' label='GCS'>
             ```sql
-            CREATE CATALOG IF NOT EXISTS iceberg_fs_on_gcs_catalog PROPERTIES (
-            'type' = 'iceberg',
-            'iceberg.catalog.type' = 'hadoop',
-            'warehouse' = 'gs://bucket/iceberg_warehouse',
-            'fs.gcs.support'='true',
-            'gs.access_key' = 'ACCESS_KEY',
-            'gs.secret_key' = 'SECRET_KEY'
+            CREATE CATALOG iceberg_fs_on_gcs_catalog PROPERTIES (
+                'type' = 'iceberg',
+                'iceberg.catalog.type' = 'hadoop',
+                'warehouse' = 'gs://bucket/iceberg_warehouse',
+                'fs.gcs.support'='true',
+                'gs.access_key' = '<ak>',
+                'gs.secret_key' = '<sk>'
+            );
+            ```
+        </TabItem>
+        <TabItem value='Azure Blob' label='Azure Blob '> 
+            自 3.1.3 起支持
+            ```sql
+            CREATE CATALOG iceberg_fs_on_azure_blob_catalog PROPERTIES (
+                'type' = 'iceberg',
+                'iceberg.catalog.type' = 'hadoop',
+                'warehouse' = 'abfs://<container>@<account_name>.dfs.core.windows.net/iceberg-warehouse',
+                'azure.account_name' = '<account_name>',
+                'azure.account_key' = '<account_key>',
+                'azure.endpoint' = 'https://<account_name>.blob.core.windows.net',
+                'fs.azure.support'='true'
             );
             ```
         </TabItem>
         <TabItem value='MinIO' label='MinIO'>
             ```sql
             CREATE CATALOG test_iceberg_fs_on_minio PROPERTIES (
-            'type' = 'iceberg',
-            'iceberg.catalog.type'='hadoop',
-            'warehouse' = 's3://warehouse/wh',
-            'fs.minio.support'='true',
-            'minio.endpoint' = 'http://127.0.0.1:19001',
-            'minio.access_key' = 'admin',
-            'minio.secret_key' = 'password',
-            'minio.use_path_style' = 'true'
+                'type' = 'iceberg',
+                'iceberg.catalog.type'='hadoop',
+                'warehouse' = 's3://warehouse/wh',
+                'fs.minio.support'='true',
+                'minio.endpoint' = 'http://127.0.0.1:19001',
+                'minio.access_key' = 'admin',
+                'minio.secret_key' = 'password',
+                'minio.use_path_style' = 'true'
             );
             ```
         </TabItem>
@@ -812,106 +1076,146 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
         <TabItem value='HDFS' label='HDFS' default>
             访问未开启 Kerberos 认证的 HDFS 服务
             ```sql
-            CREATE CATALOG IF NOT EXISTS iceberg_fs_on_hdfs_catalog PROPERTIES (
-            'type' = 'iceberg',
-            'iceberg.catalog.type' = 'hadoop',
-            'warehouse' = 'hdfs://127.0.0.1:8320/user/iceberg/warehouse/iceberg-fs-hdfs-warehouse',
-            'hadoop.username' = 'doris',
-            'fs.defaultFS' = 'hdfs://127.0.0.1:8320'
+            CREATE CATALOG iceberg_fs_on_hdfs_catalog PROPERTIES (
+                'type' = 'iceberg',
+                'iceberg.catalog.type' = 'hadoop',
+                'warehouse' = 'hdfs://127.0.0.1:8320/user/iceberg/warehouse/iceberg-fs-hdfs-warehouse',
+                'hadoop.username' = 'doris',
+                'fs.defaultFS' = 'hdfs://127.0.0.1:8320'
             );
             ```
             访问开启了 Kerberos 认证的 HDFS 服务
             ```sql
-            CREATE CATALOG IF NOT EXISTS iceberg_fs_on_hdfs_kerberos_catalog PROPERTIES (
-            'type' = 'iceberg',
-            'iceberg.catalog.type' = 'hadoop',
-            'warehouse' = 'hdfs://127.0.0.1:8520/iceberg-fs-hdfs-warehouse',
-            'fs.defaultFS' = 'hdfs://127.0.0.1:8520',
-            'hadoop.security.authentication' = 'kerberos',
-            'hadoop.kerberos.principal'='hive/presto-master.docker.cluster@LABS.TERADATA.COM',
-            'hadoop.kerberos.keytab' = '/keytabs/hive-presto-master.keytab'
+            CREATE CATALOG iceberg_fs_on_hdfs_kerberos_catalog PROPERTIES (
+                'type' = 'iceberg',
+                'iceberg.catalog.type' = 'hadoop',
+                'warehouse' = 'hdfs://127.0.0.1:8520/iceberg-fs-hdfs-warehouse',
+                'fs.defaultFS' = 'hdfs://127.0.0.1:8520',
+                'hadoop.security.authentication' = 'kerberos',
+                'hadoop.kerberos.principal'='hive/presto-master.docker.cluster@LABS.TERADATA.COM',
+                'hadoop.kerberos.keytab' = '/keytabs/hive-presto-master.keytab'
             );
             ```
         </TabItem>
         <TabItem value='S3' label='S3'>
             ```sql
-            CREATE CATALOG IF NOT EXISTS iceberg_fs_on_s3_catalog PROPERTIES (
-            'type' = 'iceberg',
-            'iceberg.catalog.type' = 'hadoop',
-            'warehouse' = 's3://selectdb-qa-datalake-test-hk/refactor-test/iceberg-fs-s3-warehouse',
-            's3.region' = 'ap-east-1',
-            's3.endpoint' = 's3.ap-east-1.amazonaws.com',
-            's3.access_key' = 'ACCESS_KEY',
-            's3.secret_key' = 'SECRET_KEY'
+            CREATE CATALOG iceberg_fs_on_s3_catalog PROPERTIES (
+                'type' = 'iceberg',
+                'iceberg.catalog.type' = 'hadoop',
+                'warehouse' = 's3://selectdb-qa-datalake-test-hk/refactor-test/iceberg-fs-s3-warehouse',
+                's3.region' = 'ap-east-1',
+                's3.endpoint' = 's3.ap-east-1.amazonaws.com',
+                's3.access_key' = '<ak>',
+                's3.secret_key' = '<sk>'
             );
             ```
         </TabItem>
         <TabItem value='COS' label='COS'>
             ```sql
-            CREATE CATALOG IF NOT EXISTS iceberg_fs_on_cos_catalog PROPERTIES (
-            'type' = 'iceberg',
-            'iceberg.catalog.type' = 'hadoop',
-            'warehouse' = 'cos://doris-build-1308700295/iceberg-fs-cos-warehouse',
-            'cos.region' = 'ap-beijing',
-            'cos.endpoint' = 'cos.ap-beijing.myqcloud.com',
-            'cos.access_key' = 'ACCESS_KEY',
-            'cos.secret_key' = 'SECRET_KEY'
+            CREATE CATALOG iceberg_fs_on_cos_catalog PROPERTIES (
+                'type' = 'iceberg',
+                'iceberg.catalog.type' = 'hadoop',
+                'warehouse' = 'cos://doris-build-1308700295/iceberg-fs-cos-warehouse',
+                'cos.region' = 'ap-beijing',
+                'cos.endpoint' = 'cos.ap-beijing.myqcloud.com',
+                'cos.access_key' = '<ak>',
+                'cos.secret_key' = '<sk>'
             );
             ```
         </TabItem>
         <TabItem value='OSS' label='OSS'>
             ```sql
-            CREATE CATALOG IF NOT EXISTS iceberg_fs_on_oss_catalog PROPERTIES (
-            'type' = 'iceberg',
-            'iceberg.catalog.type' = 'hadoop',
-            'warehouse' = 'oss://bucket/refactor-test/iceberg-fs-oss-warehouse',
-            'oss.region' = 'cn-beijing',
-            'oss.endpoint' = 'oss-cn-beijing.aliyuncs.com',
-            'oss.access_key' = 'ACCESS_KEY',
-            'oss.secret_key' = 'SECRET_KEY'
+            CREATE CATALOG iceberg_fs_on_oss_catalog PROPERTIES (
+                'type' = 'iceberg',
+                'iceberg.catalog.type' = 'hadoop',
+                'warehouse' = 'oss://bucket/refactor-test/iceberg-fs-oss-warehouse',
+                'oss.region' = 'cn-beijing',
+                'oss.endpoint' = 'oss-cn-beijing.aliyuncs.com',
+                'oss.access_key' = '<ak>',
+                'oss.secret_key' = '<sk>'
             );
             ```
         </TabItem>
-        <TabItem value='OBS' label='OBS'>
-            Create DB异常，需要排查
-        </TabItem>
         <TabItem value='GCS' label='GCS'>
             ```sql
-            CREATE CATALOG IF NOT EXISTS iceberg_fs_on_gcs_catalog PROPERTIES (
-            'type'='iceberg',
-            'iceberg.catalog.type'='hadoop',
-            'warehouse' = 's3://bucket/iceberg_warehouse',
-            'gs.endpoint'='storage.googleapis.com',
-            'gs.access_key' = 'ACCESS_KEY',
-            'gs.secret_key' = 'SECRET_KEY'
+            CREATE CATALOG iceberg_fs_on_gcs_catalog PROPERTIES (
+                'type'='iceberg',
+                'iceberg.catalog.type'='hadoop',
+                'warehouse' = 's3://bucket/iceberg_warehouse',
+                'gs.endpoint'='storage.googleapis.com',
+                'gs.access_key' = '<ak>',
+                'gs.secret_key' = '<sk>'
             );
             ```
         </TabItem>
         <TabItem value='MinIO' label='MinIO'>
-
+            ```sql
+            CREATE CATALOG test_iceberg_fs_on_minio PROPERTIES (
+            'type' = 'iceberg',
+            'iceberg.catalog.type'='hadoop',
+            'warehouse' = 's3://warehouse/wh',
+            's3.region' = 'ap-east-1',
+            's3.endpoint' = 'http://minio:9000',
+            's3.access_key' = '<ak>',
+            's3.secret_key' = '<sk>'
+            );
+            ```
         </TabItem>
     </Tabs>
 </details>
 
 
-### S3Tables
+### AWS S3 Tables
 <details>
     <summary>3.1+ 版本  </summary>
     <Tabs>
-        <TabItem value='S3Tables' label='S3Tables' default>
+        <TabItem value='S3 Tables Rest Catalog' label='S3 Tables Rest Catalog' default>
             可参阅 [集成 S3 Tables](../best-practices/doris-aws-s3tables.md) 文档。
             ```sql
-            CREATE CATALOG IF NOT EXISTS test_s3tables_write_insert PROPERTIES (
-            'type' = 'iceberg',
-            'iceberg.catalog.type' = 's3tables',
-            'warehouse' = 'arn:aws:s3tables:ap-east-1:12345:bucket/doris-s3-table-bucket',
-            's3.region' = 'ap-east-1',
-            's3.endpoint' = 'https://s3.ap-east-1.amazonaws.com',
-            's3.access_key' = 'ACCESS_KEY',
-            's3.secret_key' = 'SECRET_KEY'
+            CREATE CATALOG aws_s3_tables PROPERTIES (
+                'type' = 'iceberg',
+                'iceberg.catalog.type' = 'rest',
+                'warehouse' = 'arn:aws:s3tables:us-east-1:<account_id>:bucket/<s3_table_bucket_name>',
+                'iceberg.rest.uri' = 'https://s3tables.us-east-1.amazonaws.com/iceberg',
+                'iceberg.rest.sigv4-enabled' = 'true',
+                'iceberg.rest.signing-name' = 's3tables',
+                'iceberg.rest.signing-region' = 'us-east-1',
+                'iceberg.rest.access-key-id' = '<ak>',
+                'iceberg.rest.secret-access-key' = '<sk>'
             );
             ```
         </TabItem>
+        <TabItem value='AWS Glue Rest Catalog' label='AWS Glue Rest Catalog' default>
+            可参阅 [集成 S3 Tables](../best-practices/doris-aws-s3tables.md) 文档。
+            ```sql
+            CREATE CATALOG glue_s3 PROPERTIES (
+                'type' = 'iceberg',
+                'iceberg.catalog.type' = 'rest',
+                'iceberg.rest.uri' = 'https://glue.ap-east-1.amazonaws.com/iceberg',
+                'warehouse' = '<acount_id>:s3tablescatalog/<s3_table_bucket_name>',
+                'iceberg.rest.sigv4-enabled' = 'true',
+                'iceberg.rest.signing-name' = 'glue',
+                'iceberg.rest.access-key-id' = '<ak>',
+                'iceberg.rest.secret-access-key' = '<sk>',
+                'iceberg.rest.signing-region' = 'ap-east-1'
+            );
+            ```
+        </TabItem>
+        <TabItem value='FileSystem Catalog' label='FileSystem Catalog' default>
+            可参阅 [集成 S3 Tables](../best-practices/doris-aws-s3tables.md) 文档。
+            ```sql
+            CREATE CATALOG test_s3tables_write_insert PROPERTIES (
+                'type' = 'iceberg',
+                'iceberg.catalog.type' = 's3tables',
+                'warehouse' = 'arn:aws:s3tables:ap-east-1:12345:bucket/doris-s3-table-bucket',
+                's3.region' = 'ap-east-1',
+                's3.endpoint' = 'https://s3.ap-east-1.amazonaws.com',
+                's3.access_key' = '<ak>',
+                's3.secret_key' = '<sk>'
+            );
+            ```
+        </TabItem>
+        
     </Tabs>
 
 
@@ -919,16 +1223,17 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 
 <details >
     <summary> 3.0.6+ 版本 </summary>
-    <TabItem value='S3Tables' label='S3Tables' default>
+    <TabItem value='FileSystem Catalog' label='FileSystem Catalog' default>
+        可参阅 [集成 S3 Tables](../best-practices/doris-aws-s3tables.md) 文档。
         ```sql
-        CREATE CATALOG IF NOT EXISTS test_s3tables_catalog PROPERTIES (
-        'type' = 'iceberg',
-        'iceberg.catalog.type' = 's3tables',
-        'warehouse' = 'arn:aws:s3tables:ap-east-1:9527:bucket/doris-s3-table-bucket',
-        's3.region' = 'ap-east-1',
-        's3.endpoint' = 'https://s3.ap-east-1.amazonaws.com',
-        's3.access_key' = 'ACCESS_KEY',
-        's3.secret_key' = 'SECRET_KEY'
+        CREATE CATALOG test_s3tables_catalog PROPERTIES (
+            'type' = 'iceberg',
+            'iceberg.catalog.type' = 's3tables',
+            'warehouse' = 'arn:aws:s3tables:ap-east-1:9527:bucket/doris-s3-table-bucket',
+            's3.region' = 'ap-east-1',
+            's3.endpoint' = 'https://s3.ap-east-1.amazonaws.com',
+            's3.access_key' = '<ak>',
+            's3.secret_key' = '<sk>'
         );
         ```
     </TabItem>
@@ -1539,6 +1844,63 @@ DROP DATABASE [IF EXISTS] iceberg.iceberg_db;
   ALTER TABLE iceberg_table ORDER BY (col_name1, col_name2, ...);
   ```
 
+### Partition Evolution
+
+自 4.0.2 版本开始，Doris 支持通过 `ALTER` 语句对 Iceberg 表进行 Partition Evolution。
+
+支持的分区变换包括
+
+| 变换 | 语法 | 示例 |
+|-----------|--------|---------|
+| bucket | `bucket(N, column)` | `bucket(16, id)` |
+| truncate | `truncate(N, column)` | `truncate(10, name)` |
+| year | `year(column)` | `year(ts)` |
+| month | `month(column)` | `month(ts)` |
+| day | `day(column)` | `day(ts)` |
+| hour | `hour(column)` | `hour(ts)` |
+| identity | `column` | `category` |
+
+支持的操作包括：
+
+- **增加分区键**
+
+    ```sql
+    -- use optional AS keyword to specify a custom name for the partition field
+    ALTER TABLE table_name ADD PARTITION KEY partition_transform [AS key_name];
+
+    -- example
+    ALTER TABLE prod.db.sample ADD PARTITION KEY bucket(16, id);
+    ALTER TABLE prod.db.sample ADD PARTITION KEY truncate(4, data);
+    ALTER TABLE prod.db.sample ADD PARTITION KEY year(ts);
+    -- use optional AS keyword to specify a custom name for the partition field 
+    ALTER TABLE prod.db.sample ADD PARTITION KEY bucket(16, id) AS shard;
+    ```
+
+- **删除分区键**
+
+    ```sql
+    ALTER TABLE table_name DROP PARTITION KEY partition_transform｜key_name;
+
+    -- example
+    ALTER TABLE prod.db.sample DROP PARTITION KEY catalog;
+    ALTER TABLE prod.db.sample DROP PARTITION KEY bucket(16, id);
+    ALTER TABLE prod.db.sample DROP PARTITION KEY truncate(4, data);
+    ALTER TABLE prod.db.sample DROP PARTITION KEY year(ts);
+    ALTER TABLE prod.db.sample DROP PARTITION KEY shard;
+    ```
+
+- **替换分区键**
+
+    ```sql
+    -- use optional AS keyword to specify a custom name for the partition field
+    ALTER TABLE table_name REPLACE PARTITION KEY key_name WITH partition_transform [AS key_name];
+
+    -- example
+    ALTER TABLE prod.db.sample REPLACE PARTITION KEY ts_day WITH day(ts);
+    -- use optional AS keyword to specify a custom name for the new partition field 
+    ALTER TABLE prod.db.sample REPLACE PARTITION KEY ts_day WITH day(ts) AS day_of_ts;
+    ```
+
 ### 管理 Branch & Tag
 
 > 该功能自 3.1.0 版本支持
@@ -1636,11 +1998,316 @@ DROP DATABASE [IF EXISTS] iceberg.iceberg_db;
   ALTER TABLE tbl DROP TAG t1;
   ```
 
+## Iceberg 表操作
+
+> 该功能自 4.0.2 版本开始支持。
+>
+> 该功能是实验性功能。
+
+Doris 支持通过 `ALTER TABLE EXECUTE` 语法来执行 Iceberg 表的特定操作（Actions）。该语法提供了统一的接口来执行表优化和快照管理等各种操作。
+
+```sql
+ALTER TABLE [catalog.][database.]table_name
+EXECUTE <action_name> ("key1" = "value1", "key2" = "value2", ...)
+[WHERE <condition>]
+```
+
+* `action_name`：要执行的操作名称
+* `("key1" = "value1", ...)`：操作相关的参数，以键值对形式提供。参数名称需要使用双引号包裹
+* `[WHERE <condition>]`：可选的 WHERE 条件，用于指定操作的分区或数据范围（仅部分操作支持）
+
+### rewrite_data_files
+
+`rewrite_data_files` 操作用于对 Iceberg 表进行数据文件重写，实现小文件合并（Compaction）功能，以优化查询性能和存储效率。该操作是一个同步操作。
+
+**语法：**
+
+```sql
+ALTER TABLE [catalog.][database.]table_name
+EXECUTE rewrite_data_files ("key1" = "value1", "key2" = "value2", ...) [WHERE <condition>]
+```
+
+**参数说明：**
+
+| 参数名称 | 类型 | 默认值 | 描述 |
+| -------- | ---- | ------ | ---- |
+| `target-file-size-bytes` | Long | 536870912 (512MB) | 目标文件大小（字节）。输出文件的目标大小 |
+| `min-file-size-bytes` | Long | target-file-size-bytes * 0.75 | 最小文件大小（字节）。小于此大小的文件会被重写。如果未指定，默认为目标文件大小的 75% |
+| `max-file-size-bytes` | Long | target-file-size-bytes * 1.8 | 最大文件大小（字节）。大于此大小的文件会被拆分。如果未指定，默认为目标文件大小的 180% |
+| `min-input-files` | Integer | 5 | 触发重写的最小输入文件数。只有当需要重写的文件数达到此阈值时才会执行重写 |
+| `rewrite-all` | Boolean | false | 是否重写所有文件，无论文件大小 |
+| `max-file-group-size-bytes` | Long | 107374182400 (100GB) | 单个文件组的最大大小（字节）。用于限制单个重写任务处理的数据量 |
+| `delete-file-threshold` | Integer | Integer.MAX_VALUE | 触发重写所需的最小删除文件数 |
+| `delete-ratio-threshold` | Double | 0.3 | 触发重写所需的最小删除记录比例（删除记录数 / 总记录数）。范围：0.0 - 1.0 |
+| `output-spec-id` | Long | 2 | 输出文件的分区规范 ID |
+
+**返回值：**
+
+执行 `rewrite_data_files` 操作会返回一个结果集，包含以下 4 列：
+
+| 列名 | 类型 | 描述 |
+| ---- | ---- | ---- |
+| `rewritten_data_files_count` | INT | 被重写的数据文件数量 |
+| `added_data_files_count` | INT | 新增的数据文件数量 |
+| `rewritten_bytes_count` | INT | 重写的数据字节数 |
+| `removed_delete_files_count` | BIGINT | 被移除的删除文件数量 |
+
+**示例：**
+
+```sql
+-- 使用默认参数进行数据文件重写
+ALTER TABLE iceberg_db.iceberg_table EXECUTE rewrite_data_files();
+
+-- 指定目标文件大小和最小输入文件数
+ALTER TABLE iceberg_db.iceberg_table 
+EXECUTE rewrite_data_files (
+  "target-file-size-bytes" = "134217728",
+  "min-input-files" = "10"
+);
+
+-- 使用 WHERE 条件重写特定分区的数据
+ALTER TABLE iceberg_db.iceberg_table 
+EXECUTE rewrite_data_files (
+  "target-file-size-bytes" = "268435456"
+)
+WHERE date_col = '2024-01-01';
+
+-- 重写所有文件
+ALTER TABLE iceberg_db.iceberg_table 
+EXECUTE rewrite_data_files (
+  "rewrite-all" = "true",
+  "target-file-size-bytes" = "536870912"
+);
+```
+
+**注意事项：**
+
+1. `rewrite_data_files` 操作会读取数据文件并重新写入，会产生额外的 I/O 和计算开销，请合理分配集群资源。
+2. 执行前可以通过[查看数据文件分布](#查看数据文件分布)章节中的 SQL 来评估是否需要执行重写操作
+3. WHERE 条件可用于限制重写的分区或数据范围，这个条件会过滤掉那些不包含 符合 WHERE 条件的数据的文件，从而减少重写的文件数量和数据量
+4. 执行前可以通过[重写文件选择逻辑](#重写文件选择逻辑)章节中的 SQL 来计算哪些文件会被重写
+
+### cherrypick_snapshot
+
+`cherrypick_snapshot` 操作用于将指定快照的变更合并到当前表状态，创建一个新的快照而不修改或删除原始快照。
+
+**语法：**
+
+```sql
+ALTER TABLE [catalog.][database.]table_name
+EXECUTE cherrypick_snapshot ("snapshot_id" = "<snapshot_id>")
+```
+
+**参数说明：**
+
+| 参数名称 | 类型 | 必填 | 描述 |
+| -------- | ---- | ---- | ---- |
+| `snapshot_id` | Long | 是 | 要合并的快照 ID |
+
+**返回值：**
+
+执行 `cherrypick_snapshot` 操作会返回一个结果集，包含以下 2 列：
+
+| 列名 | 类型 | 描述 |
+| ---- | ---- | ---- |
+| `source_snapshot_id` | BIGINT | 被合并的快照 ID |
+| `current_snapshot_id` | BIGINT | 合并操作后新创建并设置为当前快照的快照 ID |
+
+**示例：**
+
+```sql
+-- 将快照 123456789 的变更合并到当前表状态
+ALTER TABLE iceberg_db.iceberg_table 
+EXECUTE cherrypick_snapshot ("snapshot_id" = "123456789");
+```
+
+**注意事项：**
+
+1. 该操作不支持 WHERE 条件
+2. 如果指定的快照不存在，操作会失败
+3. 合并操作会创建一个新的快照，不会删除原始快照
+
+### fast_forward
+
+`fast_forward` 操作用于将一个分支的当前快照快速推进到另一个分支的最新快照。
+
+**语法：**
+
+```sql
+ALTER TABLE [catalog.][database.]table_name
+EXECUTE fast_forward ("branch" = "<branch_name>", "to" = "<target_branch>")
+```
+
+**参数说明：**
+
+| 参数名称 | 类型 | 必填 | 描述 |
+| -------- | ---- | ---- | ---- |
+| `branch` | String | 是 | 要推进的分支名称 |
+| `to` | String | 是 | 目标分支名称，会将 `branch` 推进到该分支的最新快照 |
+
+**返回值：**
+
+执行 `fast_forward` 操作会返回一个结果集，包含以下 3 列：
+
+| 列名 | 类型 | 描述 |
+| ---- | ---- | ---- |
+| `branch_updated` | STRING | 被推进的分支名称 |
+| `previous_ref` | BIGINT | 推进操作前分支指向的快照 ID（可为 NULL） |
+| `updated_ref` | BIGINT | 推进操作后分支指向的快照 ID |
+
+**示例：**
+
+```sql
+-- 将 feature 分支推进到 main 分支的最新快照
+ALTER TABLE iceberg_db.iceberg_table 
+EXECUTE fast_forward ("branch" = "feature", "to" = "main");
+```
+
+**注意事项：**
+
+1. 该操作不支持 WHERE 条件
+2. 如果指定的分支不存在，操作会失败
+3. 只能推进分支，不能推进标签（Tag）
+
+### rollback_to_snapshot
+
+`rollback_to_snapshot` 操作用于将 Iceberg 表回滚到指定的快照。
+
+**语法：**
+
+```sql
+ALTER TABLE [catalog.][database.]table_name
+EXECUTE rollback_to_snapshot ("snapshot_id" = "<snapshot_id>")
+```
+
+**参数说明：**
+
+| 参数名称 | 类型 | 必填 | 描述 |
+| -------- | ---- | ---- | ---- |
+| `snapshot_id` | Long | 是 | 要回滚到的快照 ID |
+
+**返回值：**
+
+执行 `rollback_to_snapshot` 操作会返回一个结果集，包含以下 2 列：
+
+| 列名 | 类型 | 描述 |
+| ---- | ---- | ---- |
+| `previous_snapshot_id` | BIGINT | 回滚操作前当前快照的 ID |
+| `current_snapshot_id` | BIGINT | 回滚操作后设置为当前快照的快照 ID |
+
+**示例：**
+
+```sql
+-- 回滚到快照 987654321
+ALTER TABLE iceberg_db.iceberg_table 
+EXECUTE rollback_to_snapshot ("snapshot_id" = "987654321");
+```
+
+**注意事项：**
+
+1. 该操作不支持 WHERE 条件
+2. 如果指定的快照不存在，操作会失败
+3. 如果当前快照已经是目标快照，操作会直接返回，不会创建新快照
+
+### rollback_to_timestamp
+
+`rollback_to_timestamp` 操作用于将 Iceberg 表回滚到指定时间点的快照。
+
+**语法：**
+
+```sql
+ALTER TABLE [catalog.][database.]table_name
+EXECUTE rollback_to_timestamp ("timestamp" = "<timestamp>")
+```
+
+**参数说明：**
+
+| 参数名称 | 类型 | 必填 | 描述 |
+| -------- | ---- | ---- | ---- |
+| `timestamp` | String | 是 | 要回滚到的时间点。支持两种格式：<br />1. ISO 日期时间格式：`yyyy-MM-dd HH:mm:ss.SSS`（如 `2024-01-01 10:30:00.000`）<br/>2. 毫秒时间戳（如 `1704067200000`） |
+
+**返回值：**
+
+执行 `rollback_to_timestamp` 操作会返回一个结果集，包含以下 2 列：
+
+| 列名 | 类型 | 描述 |
+| ---- | ---- | ---- |
+| `previous_snapshot_id` | BIGINT | 回滚操作前当前快照的 ID |
+| `current_snapshot_id` | BIGINT | 指定时间点时的快照 ID，现在设置为当前快照 |
+
+**示例：**
+
+```sql
+-- 回滚到指定时间点（ISO 格式）
+ALTER TABLE iceberg_db.iceberg_table 
+EXECUTE rollback_to_timestamp ("timestamp" = "2024-01-01 10:30:00.000");
+
+-- 回滚到指定时间点（时间戳格式）
+ALTER TABLE iceberg_db.iceberg_table 
+EXECUTE rollback_to_timestamp ("timestamp" = "1704067200000");
+```
+
+**注意事项：**
+
+1. 该操作不支持 WHERE 条件
+2. `timestamp` 参数支持 ISO 日期时间格式（`yyyy-MM-dd HH:mm:ss.SSS`）或毫秒时间戳格式
+3. 如果指定的时间点没有对应的快照，操作会失败
+
+### set_current_snapshot
+
+`set_current_snapshot` 操作用于将 Iceberg 表的当前快照设置为指定的快照 ID 或引用（分支或标签）。
+
+**语法：**
+
+```sql
+ALTER TABLE [catalog.][database.]table_name
+EXECUTE set_current_snapshot ("snapshot_id" = "<snapshot_id>" | "ref" = "<ref_name>")
+```
+
+**参数说明：**
+
+| 参数名称 | 类型 | 必填 | 描述 |
+| -------- | ---- | ---- | ---- |
+| `snapshot_id` | Long | 二选一 | 要设置为当前快照的快照 ID |
+| `ref` | String | 二选一 | 要设置为当前快照的引用名称（分支或标签） |
+
+**返回值：**
+
+执行 `set_current_snapshot` 操作会返回一个结果集，包含以下 2 列：
+
+| 列名 | 类型 | 描述 |
+| ---- | ---- | ---- |
+| `previous_snapshot_id` | BIGINT | 设置操作前当前快照的 ID |
+| `current_snapshot_id` | BIGINT | 设置操作后当前快照的 ID（来自 `snapshot_id` 参数或从 `ref` 参数解析得到） |
+
+**示例：**
+
+```sql
+-- 通过快照 ID 设置当前快照
+ALTER TABLE iceberg_db.iceberg_table 
+EXECUTE set_current_snapshot ("snapshot_id" = "123456789");
+
+-- 通过分支名称设置当前快照
+ALTER TABLE iceberg_db.iceberg_table 
+EXECUTE set_current_snapshot ("ref" = "feature_branch");
+
+-- 通过标签名称设置当前快照
+ALTER TABLE iceberg_db.iceberg_table 
+EXECUTE set_current_snapshot ("ref" = "v1.0");
+```
+
+**注意事项：**
+
+1. 该操作不支持 WHERE 条件
+2. `snapshot_id` 和 `ref` 参数互斥，只能指定其中一个
+3. 如果指定的快照 ID 或引用不存在，操作会失败
+4. 如果当前快照已经是目标快照，操作会直接返回，不会创建新快照
+
 ## Iceberg 表优化
 
 ### 查看数据文件分布
 
-通过以下 SQL 可以分析 Iceberg 表的数据分布和 delete 文件数量等，从而判断是否需要进行优化，如 Compaction。
+通过以下 SQL 可以分析 Iceberg 表的数据分布和 delete 文件数量等，从而判断是否需要进行优化，如 `rewrite_data_files`。
 
 - 显示数据文件大小分布。可以判断是否有过多的小文件。
 
@@ -1694,41 +2361,190 @@ DROP DATABASE [IF EXISTS] iceberg.iceberg_db;
   +--------------------+---------+-------------+---------+
   ```
 
-### 查看快照和分支对应情况
+### Dangling Delete
 
-```sql
-SELECT
-  refs_data.snapshot_id,
-  snapshots.committed_at,
-  snapshots.operation,
-  ARRAY_SORT(refs_data.refs)
-FROM (
-  SELECT
-    snapshot_id,
-    ARRAY_AGG(CONCAT(type, ':', name)) AS refs
-  FROM
-    iceberg_table$refs
-  GROUP BY
-    snapshot_id
-) AS refs_data
-JOIN (
-  SELECT
-    snapshot_id,
-    committed_at,
-    operation
-  FROM
-    iceberg_table$snapshots
-) AS snapshots
-ON refs_data.snapshot_id = snapshots.snapshot_id
-ORDER BY
-  snapshots.committed_at;
+某些情况下，在执行完 `rewrite_data_files` 方法后，某些 Position Delete 的引用可能没有从 Snapshot 元数据中删除（Dangling Delete）。此时如果直接使用元数据中的行数信息，结果可能是[错误](https://iceberg.apache.org/docs/nightly/spark-procedures/#rewrite_position_delete_files)的。
 
-+---------------------+----------------------------+-----------+-------------------------------------+
-| snapshot_id         | committed_at               | operation | ARRAY_SORT(refs_data.refs)          |
-+---------------------+----------------------------+-----------+-------------------------------------+
-| 8272911997874079853 | 2025-07-10 15:27:07.177000 | append    | ["BRANCH:b1", "TAG:t1"]             |
-| 1325777059626757917 | 2025-07-10 15:27:07.530000 | append    | ["BRANCH:b2", "TAG:t2"]             |
-|   76492482642020578 | 2025-07-10 15:27:07.865000 | append    | ["BRANCH:b3", "TAG:t3"]             |
-| 1788715857849070138 | 2025-07-12 04:15:19.626000 | append    | ["BRANCH:main", "TAG:t4", "TAG:t5"] |
-+---------------------+----------------------------+-----------+-------------------------------------+
-```
+因此，在默认情况下，对于 `COUNT(*)` 查询，如果发现存在 Position Delete 文件，则不启用 COUNT 下推优化，而是直接读取文件获取真实的 `COUNT(*)` 结果。但这种方式耗时较长。
+
+如果用户能确保没有 Dangling Delete 问题，则可以通过 Doris 会话变量 `ignore_iceberg_dangling_delete` 来跳过这个检查。该变量默认为 `false`。当设置为 `true` 时，则会直接通过元数据中的行数信息，返回 `COUNT(*)` 的结果，提升查询效率。
+
+该功能自 3.1.4 和 4.0.3 版本支持。
+
+## 附录
+
+### `rewrite_data_files` 文件选择策略
+
+你可以查看此章节来了解被重写文件的选择逻辑。也可以使用以下 SQL 查询来基于系统表信息分析哪些文件会被重写。这有助于你在执行实际重写操作之前进行调试和理解重写行为。
+
+重写操作采用两阶段过滤和分组策略：
+
+1. 阶段 1：文件级别过滤
+
+    首先基于文件级别条件过滤文件。只有满足以下至少一个条件的文件才会被考虑重写：
+
+    1. **文件大小超出范围**：文件小于 `min-file-size-bytes` 或大于 `max-file-size-bytes`
+    2. **删除文件过多**：关联的删除文件数量 >= `delete-file-threshold`
+    3. **删除比例过高**：删除记录比例 >= `delete-ratio-threshold`
+
+    **关于删除文件条件的说明：** 与删除文件相关的条件（`delete-file-threshold` 和 `delete-ratio-threshold`）会影响文件重写选择，但无法通过系统表 SQL 查询准确计算。这是因为当前系统表信息不足以准确判断哪些数据文件受到删除文件的影响。删除文件可能只影响特定的数据文件（特别是 Position Delete 文件），删除文件与数据文件的关联需要更详细的元数据，这些信息在当前系统表中不可用。实际的重写操作将基于系统表中未暴露的更详细元数据来评估这些条件。
+
+2. 阶段 2：BinPack 分组和组级别过滤
+
+    文件级别过滤后，文件按分区分组，然后在每个分区内使用 **BinPack 算法**基于文件大小和 `max-file-group-size-bytes` 对文件进行分组。BinPack 算法会智能地将文件打包成组以优化重写操作。
+
+    分组后，文件组会根据组级别条件进行过滤。文件组满足以下至少一个条件时会被重写：
+
+    1. **足够的输入文件**：组内文件数 > 1 且文件数 >= `min-input-files`
+    2. **足够的内容**：组内文件数 > 1 且总大小 > `target-file-size-bytes`
+    3. **内容过多**：组总大小 > `max-file-group-size-bytes`
+    4. **包含有删除文件问题的文件**：组内至少有一个文件有太多删除文件或删除比例过高。
+
+    **关于 BinPack 分组的说明：** 用于在每个分区内对文件进行分组的 BinPack 算法是一个复杂的优化算法，无法通过系统表 SQL 查询准确模拟。该算法会考虑文件大小和 `max-file-group-size-bytes` 来智能地将文件打包成组，这可能导致与简单的按分区分组不同的分组结果。因此，下面提供的 SQL 查询只能识别满足文件级别条件的文件，但无法准确计算最终会被重写的文件组。
+
+下面给出一些查询策略示例：
+
+- 查询 1：识别满足文件级别条件的文件
+
+    该查询识别满足文件级别条件（文件大小）并将被考虑重写的文件：
+
+    ```sql
+    -- 设置参数（根据你的重写参数调整）
+    SET @min_file_size_bytes = 16 * 1024 * 1024;   -- 16 MB (默认：target-file-size-bytes * 0.75)
+    SET @max_file_size_bytes = 768 * 1024 * 1024;  -- 768 MB (默认：target-file-size-bytes * 1.8)
+
+    SELECT 
+        file_path,
+        `partition`,
+        file_size_in_bytes / 1024.0 / 1024.0 AS file_size_mb,
+        record_count,
+        CASE 
+            WHEN file_size_in_bytes < @min_file_size_bytes THEN 'Too small'
+            WHEN file_size_in_bytes > @max_file_size_bytes THEN 'Too large'
+        END AS size_issue
+    FROM iceberg_table$data_files
+    WHERE file_size_in_bytes < @min_file_size_bytes 
+    OR file_size_in_bytes > @max_file_size_bytes
+    ORDER BY `partition`, file_size_in_bytes DESC;
+    ```
+
+    **示例输出：**
+
+    ```
+    +----------------------------------------------------------------------------------------+---------------------------+-------------+--------------+------------+
+    | file_path                                                                             | partition                 | file_size_mb | record_count | size_issue |
+    +----------------------------------------------------------------------------------------+---------------------------+-------------+--------------+------------+
+    | s3a://bucket/path/to/table/data/date_col=2024-01-01/00000-0-00000-00000-0.parquet   | {"date_col":"2024-01-01"} |     0.00215  |            5 | Too small  |
+    | s3a://bucket/path/to/table/data/date_col=2024-01-01/00001-0-00001-00001-0.parquet     | {"date_col":"2024-01-01"} |     0.00198  |            5 | Too small  |
+    | s3a://bucket/path/to/table/data/date_col=2024-01-02/00002-0-00002-00002-0.parquet     | {"date_col":"2024-01-02"} |     0.00231  |            5 | Too small  |
+    | s3a://bucket/path/to/table/data/date_col=2024-01-02/00003-0-00003-00003-0.parquet     | {"date_col":"2024-01-02"} |   850.23456  |      1250000 | Too large  |
+    | s3a://bucket/path/to/table/data/date_col=2024-01-03/00004-0-00004-00004-0.parquet     | {"date_col":"2024-01-03"} |     0.00245  |            5 | Too small  |
+    +----------------------------------------------------------------------------------------+---------------------------+-------------+--------------+------------+
+    5 rows in set
+    ```
+
+    **注意：** 此查询只能识别满足文件级别条件（文件大小）的文件。实际会被重写的文件组取决于 BinPack 分组算法，该算法无法通过 SQL 查询准确模拟。此查询识别的文件可能会被 BinPack 算法以不同方式分组，并且某些组可能会根据组级别条件被过滤掉。
+
+- 查询 2：总体统计摘要
+
+    该查询提供关于满足文件级别条件文件的总体统计信息：
+
+    ```sql
+    -- 设置参数（根据你的重写参数调整）
+    SET @min_file_size_bytes = 16 * 1024 * 1024;
+    SET @max_file_size_bytes = 768 * 1024 * 1024;
+
+    WITH file_analysis AS (
+        SELECT 
+            `partition`,
+            file_path,
+            file_size_in_bytes,
+            record_count,
+            (file_size_in_bytes < @min_file_size_bytes OR file_size_in_bytes > @max_file_size_bytes) AS meets_file_level_conditions
+        FROM iceberg_table$data_files
+    )
+    SELECT 
+        'Total files' AS metric, 
+        COUNT(*) AS value
+    FROM file_analysis
+    UNION ALL
+    SELECT 
+        'Files meeting file-level conditions', 
+        SUM(CASE WHEN meets_file_level_conditions THEN 1 ELSE 0 END)
+    FROM file_analysis
+    UNION ALL
+    SELECT 
+        'Total size (GB)', 
+        ROUND(SUM(file_size_in_bytes) / 1024.0 / 1024.0 / 1024.0, 2)
+    FROM file_analysis
+    UNION ALL
+    SELECT 
+        'Size meeting file-level conditions (GB)', 
+        ROUND(SUM(CASE WHEN meets_file_level_conditions THEN file_size_in_bytes ELSE 0 END) / 1024.0 / 1024.0 / 1024.0, 2)
+    FROM file_analysis
+    UNION ALL
+    SELECT 
+        'Percentage meeting file-level conditions (%)', 
+        ROUND(SUM(CASE WHEN meets_file_level_conditions THEN 1 ELSE 0 END) * 100.0 / COUNT(*), 2)
+    FROM file_analysis;
+    ```
+
+    **示例输出：**
+
+    ```
+    +----------------------------------------------+--------+
+    | metric                                       | value  |
+    +----------------------------------------------+--------+
+    | Total files                                  |  15.00 |
+    | Total size (GB)                              |   2.45 |
+    | Files meeting file-level conditions          |  12.00 |
+    | Size meeting file-level conditions (GB)      |   1.85 |
+    | Percentage meeting file-level conditions (%) |  80.00 |
+    +----------------------------------------------+--------+
+    5 rows in set
+    ```
+
+    **注意事项：**
+
+    - 替换示例中的 `iceberg_table` 为实际的表名
+    - 根据你的实际重写参数调整参数值（`@min_file_size_bytes`、`@max_file_size_bytes`）
+    - 上面显示的默认值对应于默认重写参数（min-file-size-bytes = target-file-size-bytes * 0.75，max-file-size-bytes = target-file-size-bytes * 1.8）
+
+- 查看快照和分支对应情况
+
+    ```sql
+    SELECT
+    refs_data.snapshot_id,
+    snapshots.committed_at,
+    snapshots.operation,
+    ARRAY_SORT(refs_data.refs)
+    FROM (
+    SELECT
+        snapshot_id,
+        ARRAY_AGG(CONCAT(type, ':', name)) AS refs
+    FROM
+        iceberg_table$refs
+    GROUP BY
+        snapshot_id
+    ) AS refs_data
+    JOIN (
+    SELECT
+        snapshot_id,
+        committed_at,
+        operation
+    FROM
+        iceberg_table$snapshots
+    ) AS snapshots
+    ON refs_data.snapshot_id = snapshots.snapshot_id
+    ORDER BY
+    snapshots.committed_at;
+
+    +---------------------+----------------------------+-----------+-------------------------------------+
+    | snapshot_id         | committed_at               | operation | ARRAY_SORT(refs_data.refs)          |
+    +---------------------+----------------------------+-----------+-------------------------------------+
+    | 8272911997874079853 | 2025-07-10 15:27:07.177000 | append    | ["BRANCH:b1", "TAG:t1"]             |
+    | 1325777059626757917 | 2025-07-10 15:27:07.530000 | append    | ["BRANCH:b2", "TAG:t2"]             |
+    |   76492482642020578 | 2025-07-10 15:27:07.865000 | append    | ["BRANCH:b3", "TAG:t3"]             |
+    | 1788715857849070138 | 2025-07-12 04:15:19.626000 | append    | ["BRANCH:main", "TAG:t4", "TAG:t5"] |
+    +---------------------+----------------------------+-----------+-------------------------------------+
+    ```

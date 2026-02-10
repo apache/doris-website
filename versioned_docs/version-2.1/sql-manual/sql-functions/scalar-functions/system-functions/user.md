@@ -1,7 +1,8 @@
 ---
 {
     "title": "USER",
-    "language": "en"
+    "language": "en",
+    "description": "Get the current username and IP that Doris is connected to."
 }
 ---
 

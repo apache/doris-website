@@ -1,7 +1,8 @@
 ---
 {
-"title": "SM4_ENCRYPT",
-"language": "en"
+    "title": "SM4_ENCRYPT",
+    "language": "en",
+    "description": "SM4 is a national standard symmetric key encryption algorithm, widely used in finance, communications, e-commerce and other fields."
 }
 ---
 

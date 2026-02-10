@@ -1,7 +1,8 @@
 ---
 {
-"title": "Workload Group",
-"language": "zh-CN"
+    "title": "Workload Group",
+    "language": "zh-CN",
+    "description": "Workload Group 是一种进程内实现的对负载进行逻辑隔离的机制，它通过对 BE 进程内的资源（CPU，IO，Memory）进行细粒度的划分或者限制，达到资源隔离的目的，它的原理如下图所示："
 }
 ---
 
@@ -152,7 +153,6 @@ Query OK, 0 rows affected (0.03 sec)
 | scan_thread_num              | 整型      | -1         | [1, 2147483647] | 可选，当前 workload group 用于 scan 的线程个数。当该属性为 -1，含义是不生效，此时在 BE 上的实际取值为 BE 配置中的```doris_scanner_thread_pool_thread_num```。                                                                                                                                                                                                                                                       |
 | max_remote_scan_thread_num   | 整型      | -1         | [1, 2147483647] | 可选，读外部数据源的 scan 线程池的最大线程数。当该属性为 -1 时，实际的线程数由 BE 自行决定，通常和核数相关。                                                                                                                                                                                                                                                                                                              |
 | min_remote_scan_thread_num   | 整型      | -1         | [1, 2147483647] | 可选，读外部数据源的 scan 线程池的最小线程数。当该属性为 -1 时，实际的线程数由 BE 自行决定，通常和核数相关。                                                                                                                                                                                                                                                                                                              |
-| tag                          | 字符串     | 空          |   -   | 该功能已废弃，不推荐生产环境使用; 为 Workload Group 指定分组标签，相同标签的 Workload Group 资源累加值不能超过 100%；如果期望指定多个值，可以使用英文逗号分隔。                                                                                                                                                                                                                                                                        |
 | read_bytes_per_second        | 整型      | -1         | [1, 9223372036854775807] | 可选，含义为读 Doris 内表时的最大 IO 吞吐，默认值为 -1，也就是不限制 IO 带宽。需要注意的是这个值并不绑定磁盘，而是绑定文件夹。比如为 Doris 配置了 2 个文件夹用于存放内表数据，那么每个文件夹的最大读 IO 不会超过该值，如果这 2 个文件夹都配置到同一块盘上，最大吞吐控制就会变成 2 倍的 read_bytes_per_second。落盘的文件目录也受该值的约束。                                                                                                                                                                       |
 | remote_read_bytes_per_second | 整型      | -1    | [1, 9223372036854775807] | 可选，含义为读 Doris 外表时的最大 IO 吞吐，默认值为 -1，也就是不限制 IO 带宽。                                                                                                                                                                                                                                                                                                                           |
 
@@ -164,6 +164,8 @@ Query OK, 0 rows affected (0.03 sec)
 
 3. 需要注意 CGroup v1 CGroup v2 版本 CPU 软限默认值是有区别的，CGroup v1 的 CPU 软限默认值为 1024，取值范围为 2 到 262144。而 CGroup v2 的 CPU 软限默认值为 100，取值范围是 1 到 10000。
    如果软限填了一个超出范围的值，这会导致 CPU 软限在 BE 修改失败。如果在 CGroup v1 的环境上如果按照 CGroup v2 的默认值 100 设置，这可能导致这个 workload group 的优先级在该机器上是最低的。
+
+4. CPU 软限的核心是 “相对权重分配” —— 它不限制任务的绝对 CPU 使用时间，而是在 CPU 资源被争用（整体利用率≥100%） 时，按权重比例分配 CPU 时间片；若 CPU 空闲，任务可无限制使用全部 CPU 资源。所以非常难评估效果，建议线上使用硬限。
    :::
 
 ## 为用户设置 Workload Group

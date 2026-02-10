@@ -1,7 +1,8 @@
 ---
 {
     "title": "Log",
-    "language": "en"
+    "language": "en",
+    "description": "This document introduces the storage and analysis practices of Logs, one of the core observability components."
 }
 ---
 
@@ -33,7 +34,7 @@ Before deploying the cluster, you need to estimate the hardware resources requir
 
 For example, suppose that the daily data increment is 100 TB, the data compression ratio is 5, the number of data copies is 2, the storage duration of hot data is 3 days, the storage duration of cold data is 30 days, the ratio of the peak write throughput to the average write throughput is 200%, the write throughput of a single-core CUP is 10 MB/s, and 50% of CPU resources are reserved for data querying, one can estimate that:
 
-**compute-storage-integerated mode**
+**compute-storage-integrated mode**
 - 3 FE servers are required, each configured with a 16-core CPU, 64 GB memory, and an 1 100 GB SSD disk.
 - 30 BE servers are required, each configured with a 32-core CPU, 256 GB memory, and 8 625 GB SSD disks.
 - S3 object storage space 540 TB
@@ -121,7 +122,7 @@ You can find BE configuration fields in `be/conf/be.conf`. Refer to the followin
 
 For more information, refer to [BE Configuration](../admin-manual/config/be-config).
 
-### Step 4: Create tables
+## Step 4: Create tables
 
 Due to the distinct characteristics of both writing and querying log data, it is recommended to configure tables with targeted settings to enhance performance.
 
@@ -221,7 +222,7 @@ PROPERTIES (
 );
 ```
 
-### Step 5: Collect logs
+## Step 5: Collect logs
 
 After completing table creation, you can proceed with log collection.
 
@@ -423,7 +424,7 @@ When using custom programs, pay attention to the following key points:
 
 - It is recommended to write batches whose sizes are between 100MB to 1GB on the client side. For Apache Doris version 2.1 and higher, you need to reduce batch sizes on the client side through the Group Commit function.
 
-### Step 6: Query and analyze logs
+## Step 6: Query and analyze logs
 
 **Query logs**
 

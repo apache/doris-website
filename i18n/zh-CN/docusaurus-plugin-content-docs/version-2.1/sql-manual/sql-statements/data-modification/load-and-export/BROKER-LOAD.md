@@ -1,7 +1,8 @@
 ---
 {
     "title": "BROKER LOAD",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "Broker Load 是 Doris 的数据导入方式，主要用于从远程存储系统（如 HDFS 或 S3）导入大规模数据。它通过 MySQL API 发起，是异步导入方式。导入进度和结果可以通过 SHOW LOAD 查询。"
 }
 ---
 

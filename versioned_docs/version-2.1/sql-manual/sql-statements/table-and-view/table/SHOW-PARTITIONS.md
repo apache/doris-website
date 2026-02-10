@@ -1,7 +1,8 @@
 ---
 {
     "title": "SHOW PARTITIONS",
-    "language": "en"
+    "language": "en",
+    "description": "This statement is used to display partition information. It supports both Internal catalog and Hive Catalog."
 }
 ---
 

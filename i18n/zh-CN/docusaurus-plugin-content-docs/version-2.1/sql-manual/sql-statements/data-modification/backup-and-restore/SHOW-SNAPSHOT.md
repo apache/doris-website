@@ -1,7 +1,8 @@
 ---
 {
-"title": "SHOW SNAPSHOT",
-"language": "zh-CN"
+    "title": "SHOW SNAPSHOT",
+    "language": "zh-CN",
+    "description": "该语句用于查看仓库中已存在的备份。"
 }
 ---
 

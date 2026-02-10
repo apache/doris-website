@@ -1,7 +1,8 @@
 ---
 {
     "title": "CANCEL LOAD",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "该语句用于撤销指定 label 的导入作业。或者通过模糊匹配批量撤销导入作业"
 }
 ---
 

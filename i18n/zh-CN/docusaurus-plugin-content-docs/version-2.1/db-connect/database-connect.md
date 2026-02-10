@@ -1,7 +1,8 @@
 ---
 {
     "title": "通过 MySQL 协议连接",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "Apache Doris 采用 MySQL 网络连接协议，兼容 MySQL 生态的命令行工具、JDBC/ODBC 和各种可视化工具。同时 Apache Doris 也内置了一个简单的 Web UI，方便使用。"
 }
 ---
 
@@ -9,7 +10,7 @@ Apache Doris 采用 MySQL 网络连接协议，兼容 MySQL 生态的命令行�
 
 ## MySQL Client
 
-从 MySQL 官方网站下载 MySQL Client，或者下载我们提供的 Linux 上免安装的 [MySQL 客户端](https://cdn.selectdb.com/download/mysql-client/mysql-5.7.22-linux-glibc2.12-x86_64.tar.gz)。当前 Doris 主要兼容 MySQL 5.7 及其以上的客户端。
+从 [MySQL 官网](https://dev.mysql.com/downloads/mysql/) 下载 Linux 版 MySQL 客户端。目前 Doris 主要兼容 MySQL 5.7 及以上版本的客户端。
 
 解压下载的 MySQL 客户端，在 `bin/` 目录下可以找到 `mysql` 命令行工具。然后执行下面的命令连接 Doris。
 
@@ -83,7 +84,7 @@ jdbc:mysql://FE_IP:FE_PORT/demo?sessionVariables=key1=val1,key2=val2
 
 Doris FE 内置 Web UI。用户无须安装 MySQL 客户端，即可通过内置的 Web UI 进行 SQL 查询和其它相关信息的查看。
 
-在浏览器中输入 http://fe_ip:fe_port,  比如 `http://172.20.63.118:8030`，打开 Doris 内置的 Web 控制台。
+在浏览器中输入 http://fe_ip:fe_port,  比如 ``http://172.20.63.118:8030``，打开 Doris 内置的 Web 控制台。
 
 内置 Web 控制台，主要供集群 root 账户使用，默认安装后 root 账户密码为空。
 

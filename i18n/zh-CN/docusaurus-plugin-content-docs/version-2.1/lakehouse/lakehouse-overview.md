@@ -1,7 +1,8 @@
 ---
 {
     "title": "湖仓一体概述",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "湖仓一体是将数据湖和数据仓库的优势相结合的现代化大数据解决方案。其融合了数据湖的低成本、高扩展性与数据仓库的高性能、强数据治理能力，从而实现对大数据时代各类数据的高效、安全、质量可控的存储和处理分析。同时通过标准化的数据格式和元数据管理，统一了实时、历史数据，批处理和流处理，"
 }
 ---
 
@@ -23,7 +24,7 @@ Doris 通过可扩展的连接器框架，支持主流数据系统和数据格�
 
 对于湖仓系统，Doris 可从元数据服务，如 Hive Metastore，AWS Glue、Unity Catalog 中获取数据表的结构和分布信息，进行合理的查询规划，并利用 MPP 架构进行分布式计算。
 
-具体可参阅各数据目录文档，如 [Iceberg Catalog](./catalogs/iceberg-catalog.md)
+具体可参阅各数据目录文档，如 [Iceberg Catalog](./catalogs/iceberg-catalog)
 
 #### 可扩展的连接器框架
 

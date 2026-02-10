@@ -1,9 +1,9 @@
 ---
 {
     "title": "MODIFY FRONTEND HOSTNAME",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "修改 FRONTEND（后续使用简称 FE）的属性。当前，此命令仅能修改 FE 的主机名（HOSTNAME）。当集群中的某一个 FE 实例运行的主机需要变更主机名时，可以使用此命令更改此 FE 在集群中注册的主机名，使其可以继续正常运行。"
 }
-
 ---
 
 ## 描述

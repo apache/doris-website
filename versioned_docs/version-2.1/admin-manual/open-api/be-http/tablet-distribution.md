@@ -1,7 +1,8 @@
 ---
 {
     "title": "View Tablet Distribution",
-    "language": "en"
+    "language": "en",
+    "description": "Get the distribution of tablets under each partition between different disks on BE node"
 }
 ---
 

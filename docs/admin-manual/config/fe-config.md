@@ -1,9 +1,11 @@
 ---
 {
-    "title": "FE Configuration",
+    "title": "FE Configuration | Config",
     "language": "en",
     "toc_min_heading_level": 2,
-    "toc_max_heading_level": 4
+    "toc_max_heading_level": 4,
+    "description": "Complete reference guide for Frontend (FE) configuration parameters in Doris, including metadata management, query engine, load/export, and storage settings.",
+    "sidebar_label": "FE Configuration"
 }
 ---
 
@@ -1593,6 +1595,14 @@ Default：5
 
 Export checker's running interval.
 
+#### `enable_stream_load_profile`
+
+Default: false
+
+MasterOnly: false
+
+Whether to enable stream load profile
+
 ### Log
 
 #### `log_roll_size_mb`
@@ -2134,17 +2144,17 @@ MasterOnly：true
 
 After dropping database(table/partition), you can recover it by using RECOVER stmt. And this specifies the maximal data retention time. After time, the data will be deleted permanently.
 
-#### `storage_cooldown_second`
-
-Default：`30 * 24 * 3600L`  （30 day）
-
-When create a table(or partition), you can specify its storage medium(HDD or SSD). If set to SSD, this specifies the default duration that tablets will stay on SSD.  After that, tablets will be moved to HDD automatically.  You can set storage cooldown time in CREATE TABLE stmt.
-
 #### `default_storage_medium`
 
 Default：HDD
 
 When create a table(or partition), you can specify its storage medium(HDD or SSD). If not set, this specifies the default medium when create.
+
+#### `default_compression_type`
+
+Default: lz4 (before 4.0.3), zstd (since 4.0.3)
+
+When creating a table, you can specify its compression algorithm. If not set, this specifies the default compression type when creating a table. Valid values include: lz4, zstd.
 
 #### `enable_storage_policy`
 

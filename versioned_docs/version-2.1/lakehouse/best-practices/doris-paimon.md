@@ -1,9 +1,9 @@
 ---
 {
     "title": "Using Doris and Paimon",
-    "language": "en"
+    "language": "en",
+    "description": "As a new open data management architecture, the Data Lakehouse integrates the high performance and real-time capabilities of data warehouses with the "
 }
-
 ---
 
 As a new open data management architecture, the Data Lakehouse integrates the high performance and real-time capabilities of data warehouses with the low cost and flexibility of data lakes, helping users more conveniently meet various data processing and analysis needs. It has been increasingly applied in enterprise big data systems.
@@ -35,7 +35,7 @@ In the future, Apache Doris will gradually support more advanced features of Apa
 
 This article will explain how to quickly set up an Apache Doris + Apache Paimon testing & demonstration environment in a Docker environment and demonstrate the usage of various features.
 
-For more information, please refer to [Paimon Catalog](../catalogs/paimon-catalog.md)
+For more information, please refer to [Paimon Catalog](../catalogs/paimon-catalog.mdx)
 
 ## User Guide
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "Auto-Increment Column",
-    "language": "en"
+    "language": "en",
+    "description": "In Doris, the auto increment column is a feature that automatically generates a unique numeric value,"
 }
 ---
 

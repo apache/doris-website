@@ -60,10 +60,10 @@ export default function BlogListItem(props) {
                 itemProp="url"
                 target={externalLink ? '_blank' : '_self'}
                 to={externalLink || permalink}
-                className="hover:no-underline hover:decoration-none transition-scale group relative flex h-full flex-col rounded-lg border border-[#DFE5F0] hover:border-[#0065FD] lg:border-0"
+                className="hover:no-underline hover:decoration-none transition-scale group relative flex h-full flex-col rounded-lg border border-[#DFE5F0] hover:border-primary lg:border-0"
             >
                 <div
-                    className={`relative overflow-hidden rounded-t-lg border-[#DFE5F0] group-hover:border-[#0065FD] lg:border lg:border-b-0 lg:pb-0`}
+                    className={`relative overflow-hidden rounded-t-lg border-[#DFE5F0] group-hover:border-primary lg:border lg:border-b-0 lg:pb-0`}
                     style={{
                         width: '100%',
                         height: '165px',
@@ -74,7 +74,7 @@ export default function BlogListItem(props) {
                 <div
                     className={`px-6 ${
                         large ? 'py-6 lg:pt-12' : ' py-6'
-                    } flex-1 rounded-b-lg border-[#DFE5F0] group-hover:border-[#0065FD] lg:border lg:border-t-0`}
+                    } flex-1 rounded-b-lg border-[#DFE5F0] group-hover:border-primary lg:border lg:border-t-0`}
                 >
                     {!large && (
                         <div className="">

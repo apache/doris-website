@@ -1,7 +1,8 @@
 ---
 {
     "title": "REBALANCE DISK",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "REBALANCE DISK 语句用于优化 BE（Backend）节点上的数据分布。该语句具有以下功能："
 }
 ---
 

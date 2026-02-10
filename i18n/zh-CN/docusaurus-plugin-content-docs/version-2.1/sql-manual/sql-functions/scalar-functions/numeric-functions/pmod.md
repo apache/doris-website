@@ -1,7 +1,8 @@
 ---
 {
     "title": "PMOD",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "返回模运算 x mod y 在模系中的最小正数解，即通过计算 (x % y + y) % y 得出结果。"
 }
 ---
 

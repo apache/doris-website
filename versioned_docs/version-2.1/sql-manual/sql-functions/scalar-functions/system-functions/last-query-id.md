@@ -1,7 +1,8 @@
 ---
 {
     "title": "LAST_QUERY_ID",
-    "language": "en"
+    "language": "en",
+    "description": "Get the query id of the current user's last query."
 }
 ---
 

@@ -1,9 +1,13 @@
 ---
 {
-    "title": "Best Practices",
-    "language": "en"
+    "title": "Best Practices | Export",
+    "language": "en",
+    "description": "This document mainly introduces how to determine whether resource utilization is reasonable during data export operations,",
+    "sidebar_label": "Best Practices"
 }
 ---
+
+# Best Practices
 
 This document mainly introduces how to determine whether resource utilization is reasonable during data export operations, and how to adjust resource utilization to achieve better data export efficiency.
 
@@ -75,4 +79,22 @@ This document mainly introduces how to determine whether resource utilization is
     In the above example, 2 Outfile commands were initiated. Each command has 4 Writers writing concurrently.
 
     By adjusting the `parallelism` parameter in the Export command properties, you can control the number of concurrent Outfile operations, thereby controlling the concurrency level.
+
+2. Parameters affecting parallelism
+
+    The parallelism of Export jobs depends on two parameters:
+
+    - `parallelism`
+
+        Used to set the maximum number of Outfile commands to split into.
+
+    - `data_consistency`
+
+        Whether to split Outfile commands within partitions. This parameter defaults to `partition`, which means no further splitting within partitions. That is, the number of Outfile commands will only be less than or equal to the number of partitions involved. If set to `none`, a partition will be further split, which can improve concurrency, but if the partition is being written to, it may sacrifice export consistency (i.e., different Outfile commands for the same partition may export different versions of data from that partition).
+
+        For details, please refer to [Export Command Manual](../../sql-manual/sql-statements/data-modification/load-and-export/EXPORT.md)
+
+    - `async_task_consumer_thread_num`
+
+        This is an FE configuration parameter that indicates the number of Export Tasks that the current cluster can run concurrently. The default value is 64. An Export Job is split into multiple Export Tasks based on concurrency. All Export Tasks share this threshold. To increase the overall number of concurrent export tasks that the cluster can execute, increase this parameter and restart the FE node.
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "SHOW BUILD INDEX",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "查看索引构建任务的状态。"
 }
 ---
 

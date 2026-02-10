@@ -1,7 +1,8 @@
 ---
 {
     "title": "IS_IP_ADDRESS_IN_RANGE",
-    "language": "en"
+    "language": "en",
+    "description": "Determine whether the IP (IPv4 or IPv6) address is included in the network represented by CIDR notation."
 }
 ---
 

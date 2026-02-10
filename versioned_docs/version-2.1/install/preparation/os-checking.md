@@ -1,7 +1,8 @@
 ---
 {
-"title": "OS Checking",
-"language": "en"
+    "title": "OS Checking",
+    "language": "en",
+    "description": "When deploying Doris, ensure the following operating system configurations:"
 }
 ---
 

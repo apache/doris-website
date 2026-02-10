@@ -1,7 +1,8 @@
 ---
 {
     "title": "索引概述",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "数据库索引是用于查询加速的，为了加速不同的查询场景，Apache Doris 支持了多种丰富的索引。"
 }
 ---
 

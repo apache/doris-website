@@ -1,9 +1,13 @@
 ---
 {
-"title": "Statistics",
-"language": "en"
+    "title": "Statistics | Optimization Technology Principle",
+    "language": "en",
+    "description": "Starting from version 2.0, Doris integrated Cost-Based Optimization (CBO) capabilities into its optimizer. Statistics are the cornerstone of CBO,",
+    "sidebar_label": "Statistics"
 }
 ---
+
+# Statistics
 
 Starting from version 2.0, Doris integrated Cost-Based Optimization (CBO) capabilities into its optimizer. Statistics are the cornerstone of CBO, and their accuracy directly determines the accuracy of cost estimation, which is crucial for selecting the optimal execution plan. This document serves as a guide to statistical usage for unreleased development version, focusing on the collection and management methods, relevant configuration options, and frequently asked questions.
 
@@ -490,3 +494,4 @@ Automatic collection uses sampling and does not require full table scans, and th
 For some special tables, such as those with many partitions or large individual tablets, memory usage may be higher.
 
 It is recommended to plan the number of tablets reasonably when creating tables to avoid creating oversized tablets. If the tablet structure is not easily adjustable, consider enabling automatic collection or manually collecting statistics for large tables during off-peak hours to avoid impacting business operations. In the Doris 3.x series, we will optimize for such scenarios.
+

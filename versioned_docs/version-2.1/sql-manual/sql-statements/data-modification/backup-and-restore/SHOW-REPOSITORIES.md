@@ -1,7 +1,8 @@
 ---
 {
     "title": "SHOW REPOSITORIES",
-    "language": "en"
+    "language": "en",
+    "description": "This statement is used to view the currently created warehouse"
 }
 ---
 

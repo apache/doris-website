@@ -1,7 +1,8 @@
 ---
 {
     "title": "DROP CATALOG",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "该语句用于删除外部数据目录（catalog）"
 }
 ---
 

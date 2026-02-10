@@ -1,7 +1,8 @@
 ---
 {
     "title": "Node Action",
-    "language": "en"
+    "language": "en",
+    "description": "Used to get cluster to get fe, be, broker node information."
 }
 ---
 

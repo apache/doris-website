@@ -1,7 +1,8 @@
 ---
 {
     "title": "ROUND",
-    "language": "en"
+    "language": "en",
+    "description": "Rounds the number x to the specified number of digits."
 }
 ---
 

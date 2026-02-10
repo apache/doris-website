@@ -1,9 +1,9 @@
 ---
 {
     "title": "EXPLAIN",
-    "language": "en"
+    "language": "en",
+    "description": "The EXPLAIN statement displays Doris's query execution plan for a given query."
 }
-
 ---
 
 ## Description

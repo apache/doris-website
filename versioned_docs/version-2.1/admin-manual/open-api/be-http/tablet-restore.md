@@ -1,7 +1,8 @@
 ---
 {
     "title": "Restore Tablet",
-    "language": "en"
+    "language": "en",
+    "description": "To restore the tablet data from trash dir on BE"
 }
 ---
 

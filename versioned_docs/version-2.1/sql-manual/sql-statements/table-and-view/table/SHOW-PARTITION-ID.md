@@ -1,7 +1,8 @@
 ---
 {
-"title": "SHOW PARTITION ID",
-"language": "en"
+    "title": "SHOW PARTITION ID",
+    "language": "en",
+    "description": "This statement is used to find the corresponding database name, table name, and partition name based on the partition ID."
 }
 ---
 

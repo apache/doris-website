@@ -1,7 +1,8 @@
 ---
 {
     "title": "冷热数据分层概述",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "为了帮助用户节省存储成本，Doris 针对冷数据提供了灵活的选择。"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "STR_TO_DATE",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "函数将输入的日期时间字符串根据指定的格式转换为 DATETIME 类型的值。"
 }
 ---
 
@@ -20,11 +21,11 @@ STR_TO_DATE(<datetime_str>, <format>)
 | 参数               | 说明                                                           |
 |------------------|--------------------------------------------------------------|
 | `<datetime_str>` | 必填，输入的日期时间字符串，表示要转换的日期或时间。                                   |
-| `<format>`       | 必填，指定的日期时间格式字符串，如 `%Y-%m-%d %H:%i:%s` 等，具体格式参数详见[DATE_FORMAT](./date-format#参数)文档 |
+| `<format>`       | 必填，指定的日期时间格式字符串，如 `%Y-%m-%d %H:%i:%s` 等，具体格式参数详见[DATE_FORMAT](./date-format)文档 |
 
 除此之外，`<format>` 额外支持以下若干代用格式，并按照正规 format 格式解读：
 
-|代用输入|解读为|
+|代用输入 | 解读为|
 |-|-|
 |`yyyyMMdd`|`%Y%m%d`|
 |`yyyy-MM-dd`|`%Y-%m-%d`|

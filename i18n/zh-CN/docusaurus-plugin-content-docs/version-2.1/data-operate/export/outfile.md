@@ -1,7 +1,8 @@
 ---
 {
     "title": "SELECT INTO OUTFILE",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "本文档将介绍如何使用 SELECT INTO OUTFILE 命令进行查询结果的导出操作。"
 }
 ---
 

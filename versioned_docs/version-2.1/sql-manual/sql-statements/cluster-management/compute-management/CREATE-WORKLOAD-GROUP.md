@@ -1,7 +1,8 @@
 ---
 {
     "title": "CREATE WORKLOAD GROUP",
-    "language": "en"
+    "language": "en",
+    "description": "This statement is used to create a workload group. Workload groups enable the isolation of cpu resources and memory resources on a single be."
 }
 ---
 

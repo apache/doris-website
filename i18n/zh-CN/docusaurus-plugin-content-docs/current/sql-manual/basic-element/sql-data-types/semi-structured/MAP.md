@@ -1,15 +1,22 @@
 ---
 {
-"title": "MAP",
-"language": "zh-CN"
+    "title": "MAP | Semi Structured",
+    "language": "zh-CN",
+    "description": "````SQL SELECT MAP('Alice', 21, 'Bob', 23);",
+    "sidebar_label": "MAP"
 }
 ---
+
+# MAP
 
 ## 类型描述
 
 - `MAP<key_type, value_type>`类型用于表示键值对集合的复合类型,每个键（key）唯一地对应一个值（value）。
-  - `key_type` 表征键的类型，支持的类型为`BOOLEAN, TINYINT, SMALLINT, INT, BIGINT, LARGEINT, FLOAT, DOUBLE, DECIMAL, DATE, DATETIME, CHAR, VARCHAR, STRING，IPTV4, IPV6`，key值是Nullable的，不支持指定NOT NULL。
-- `value_type` 表征值的类型，支持 `BOOLEAN, TINYINT, SMALLINT, INT, BIGINT, LARGEINT, FLOAT, DOUBLE, DECIMAL, DATE, DATETIME, CHAR, VARCHAR, STRING，IPV4, IPV6, ARRAY, MAP, STRUCT`，值是 Nullable 的，不支持指定 NOT NULL。
+  - `key_type` 表征键的类型，支持的类型为`BOOLEAN, TINYINT, SMALLINT, INT, BIGINT, LARGEINT, FLOAT, DOUBLE, DECIMAL, DATE, DATETIME,TIMESTAMPTZ, CHAR, VARCHAR, STRING，IPTV4, IPV6`，key值是Nullable的，不支持指定NOT NULL。
+- `value_type` 表征值的类型，支持 `BOOLEAN, TINYINT, SMALLINT, INT, BIGINT, LARGEINT, FLOAT, DOUBLE, DECIMAL, DATE, DATETIME,TIMESTAMPTZ, CHAR, VARCHAR, STRING，IPV4, IPV6, ARRAY, MAP, STRUCT`，值是 Nullable 的，不支持指定 NOT NULL。
+
+### 语法
+`MAP<K, V>`
   
 ## 类型约束
 - `MAP<key_type, value_type>`类型允许的最大嵌套深度是9。

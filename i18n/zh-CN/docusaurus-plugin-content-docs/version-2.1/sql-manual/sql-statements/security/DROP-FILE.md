@@ -1,7 +1,8 @@
 ---
 {
-  "title": "DROP FILE",
-  "language": "zh-CN"
+    "title": "DROP FILE",
+    "language": "zh-CN",
+    "description": "该语句用于删除一个已上传的文件。"
 }
 ---
 

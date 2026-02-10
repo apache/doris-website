@@ -1,7 +1,8 @@
 ---
 {
     "title": "DROP RESOURCE",
-    "language": "en"
+    "language": "en",
+    "description": "This statement is used to delete an existing resource. Only the root or admin user can delete resources."
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "Release 2.1.2",
-    "language": "en"
+    "language": "en",
+    "description": "eg, select @autocommit should with column type BIGINT, not BIT, otherwise it will throw error. So we change column type of @autocommit to BIGINT."
 }
 ---
 
@@ -13,7 +14,7 @@
 
 2. Some of MySQL Connector (eg, dotnet MySQL.Data) rely on variable's column type to make connection.
 
-  eg, select @[@autocommit]([@autocommit](https://github.com/autocommit)) should with column type BIGINT, not BIT, otherwise it will throw error. So we change column type of @[@autocommit](https://github.com/autocommit) to BIGINT. 
+  eg, `select @autocommit` should with column type BIGINT, not BIT, otherwise it will throw error. So we change column type of `@autocommit` to BIGINT. 
 
   - https://github.com/apache/doris/pull/33282
 

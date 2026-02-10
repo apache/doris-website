@@ -1,7 +1,8 @@
 ---
 {
     "title": "分析 S3/HDFS 上的文件",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "通过 Table Value Function 功能，Doris 可以直接将对象存储或 HDFS 上的文件作为 Table 进行查询分析。并且支持自动的列类型推断。"
 }
 ---
 
@@ -13,7 +14,7 @@
 
 * [HDFS](../sql-manual/sql-functions/table-valued-functions/hdfs.md)：支持 HDFS 上的文件分析。
 
-* [FILE](../sql-manual/sql-functions/table-valued-functions/file.md)：统一表函数，可以同时支持 S3/HDFS/Local 文件的读取。（自 3.1.0 版本支持。）
+* [FILE](../sql-manual/sql-functions/table-valued-functions/local.md)：统一表函数，可以同时支持 S3/HDFS/Local 文件的读取。（自 3.1.0 版本支持。）
 
 ## 基础使用
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "Encryption and Masking Function ",
-    "language": "en"
+    "language": "en",
+    "description": "Doris provides the following built-in encryption and masking functions. For detailed usage, please refer to the SQL manual."
 }
 ---
 

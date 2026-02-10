@@ -1,7 +1,8 @@
 ---
 {
     "title": "CREATE WORKLOAD POLICY",
-    "language": "en"
+    "language": "en",
+    "description": "Create a Workload Policy to execute corresponding actions on a query when it meets certain conditions."
 }
 ---
 

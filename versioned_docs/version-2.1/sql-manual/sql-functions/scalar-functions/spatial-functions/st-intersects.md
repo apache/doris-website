@@ -1,7 +1,8 @@
 ---
 {
     "title": "ST_INTERSECTS",
-    "language": "en"
+    "language": "en",
+    "description": "Determines whether the geometry shape1 intersects with the geometry shape2."
 }
 ---
 

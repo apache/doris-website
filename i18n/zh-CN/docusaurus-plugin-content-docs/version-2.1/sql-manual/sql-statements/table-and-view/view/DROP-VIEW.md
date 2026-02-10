@@ -1,7 +1,8 @@
 ---
 {
     "title": "DROP VIEW",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "在当前或指定的数据库中删除一个视图。"
 }
 ---
 

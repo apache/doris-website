@@ -3,7 +3,8 @@
     "title": "BE Configuration",
     "language": "en",
     "toc_min_heading_level": 2,
-    "toc_max_heading_level": 4
+    "toc_max_heading_level": 4,
+    "description": "This document mainly introduces the relevant configuration items of BE."
 }
 ---
 
@@ -229,9 +230,9 @@ There are two ways to configure BE configuration items:
 
 #### `brpc_num_threads`
 
-* Description: This configuration is mainly used to modify the number of bthreads for brpc. The default value is set to -1, which means the number of bthreads is #cpu-cores.
+* Description: This configuration is mainly used to modify the number of bthreads for brpc. The default value is set to 256.
   - User can set this configuration to a larger value to get better QPS performance. For more information, please refer to `https://github.com/apache/brpc/blob/master/docs/cn/benchmark.md`
-* Default value: -1
+* Default value: 256
 
 #### `thrift_rpc_timeout_ms`
 

@@ -1,7 +1,8 @@
 ---
 {
-"title": "Quick BI",
-"language": "zh-CN"
+    "title": "Quick BI",
+    "language": "zh-CN",
+    "description": "Quick BI 是一款基于数据仓库的商业智能工具，它可以帮助企业快速搭建起酷炫的可视化分析罗盘。Quick BI 支持多种数据源，包括 MySQL、Oracle、SQL Server、Apache Doris 等数据库，以及 Excel、CSV、JSON 等文件格式。它提供了丰富的可视化组件，"
 }
 ---
 

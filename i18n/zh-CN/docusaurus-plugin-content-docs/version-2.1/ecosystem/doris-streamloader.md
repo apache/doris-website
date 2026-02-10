@@ -1,7 +1,8 @@
 ---
 {
     "title": "Doris Streamloader",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "Doris Streamloader 是一款用于将数据导入 Doris 数据库的专用客户端工具。相比于直接使用 curl 的单并发导入，该工具可以提供多并发导入的功能，降低大数据量导入的耗时。拥有以下功能："
 }
 ---
 

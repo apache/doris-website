@@ -1,7 +1,8 @@
 ---
 {
-"title": "工作负载分析与诊断",
-"language": "zh-CN"
+    "title": "工作负载分析与诊断",
+    "language": "zh-CN",
+    "description": "集群的工作负载分析主要分成两个阶段："
 }
 ---
 
