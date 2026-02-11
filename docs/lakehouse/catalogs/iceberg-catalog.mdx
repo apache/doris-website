@@ -2133,6 +2133,70 @@ EXECUTE cherrypick_snapshot ("snapshot_id" = "123456789");
 2. The operation will fail if the specified snapshot does not exist
 3. The merge operation creates a new snapshot and does not delete the original snapshot
 
+### expire_snapshots
+
+The `expire_snapshots` operation removes old snapshots from Iceberg tables to free up storage space and improve metadata performance. This operation follows the Apache Iceberg Spark procedure specification.
+
+> Supported version: 4.1.0+
+
+**Syntax:**
+
+```sql
+ALTER TABLE [catalog.][database.]table_name
+EXECUTE expire_snapshots ("key1" = "value1", "key2" = "value2", ...)
+```
+
+**Parameters:**
+
+| Parameter | Type | Required | Description |
+| -------- | ---- | ---- | ---- |
+| `older_than` | String | No | Timestamp threshold for snapshot expiration. Snapshots older than this will be removed. Supports ISO datetime format (e.g., `2024-01-01T00:00:00`) or milliseconds timestamp |
+| `retain_last` | Integer | No | Number of ancestor snapshots to preserve. When specified alone, automatically sets `older_than` to current time |
+| `snapshot_ids` | String | No | Comma-separated list of specific snapshot IDs to expire |
+| `max_concurrent_deletes` | Integer | No | Size of thread pool for delete operations |
+| `clean_expired_metadata` | Boolean | No | When set to `true`, cleans up unused partition specs and schemas |
+
+**Return Value:**
+
+Executing the `expire_snapshots` operation returns a result set with the following 6 columns:
+
+| Column Name | Type | Description |
+| ---- | ---- | ---- |
+| `deleted_data_files_count` | BIGINT | Number of deleted data files |
+| `deleted_position_delete_files_count` | BIGINT | Number of deleted position delete files |
+| `deleted_equality_delete_files_count` | BIGINT | Number of deleted equality delete files |
+| `deleted_manifest_files_count` | BIGINT | Number of deleted manifest files |
+| `deleted_manifest_lists_count` | BIGINT | Number of deleted manifest list files |
+| `deleted_statistics_files_count` | BIGINT | Number of deleted statistics files |
+
+**Example:**
+
+```sql
+-- Expire snapshots, keeping only the last 2
+ALTER TABLE iceberg_db.iceberg_table 
+EXECUTE expire_snapshots ("retain_last" = "2");
+
+-- Expire snapshots older than a specific timestamp
+ALTER TABLE iceberg_db.iceberg_table 
+EXECUTE expire_snapshots ("older_than" = "2024-01-01T00:00:00");
+
+-- Expire specific snapshots by ID
+ALTER TABLE iceberg_db.iceberg_table 
+EXECUTE expire_snapshots ("snapshot_ids" = "123456789,987654321");
+
+-- Combine parameters: expire snapshots older than 2024-06-01 but keep at least the last 5
+ALTER TABLE iceberg_db.iceberg_table 
+EXECUTE expire_snapshots ("older_than" = "2024-06-01T00:00:00", "retain_last" = "5");
+```
+
+**Notes:**
+
+1. This operation does not support WHERE conditions.
+2. If both `older_than` and `retain_last` are specified, both conditions apply: only snapshots older than `older_than` AND not within the most recent `retain_last` snapshots will be deleted.
+3. `snapshot_ids` can be used alone to delete specific snapshots.
+4. This operation permanently deletes snapshots and their associated data files. Use with caution.
+5. It is recommended to query the `$snapshots` system table before execution to understand the table's snapshot information.
+
 ### fast_forward
 
 The `fast_forward` operation quickly advances the current snapshot of one branch to the latest snapshot of another branch.

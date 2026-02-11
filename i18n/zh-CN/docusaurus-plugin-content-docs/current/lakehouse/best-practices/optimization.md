@@ -36,6 +36,32 @@
 
 可参考 [HDFS 文档](../storages/hdfs.md) 中 **HDFS IO 优化** 部分。
 
+## Split 数量限制
+
+当查询外部表（Hive、Iceberg、Paimon 等）时，Doris 会将文件拆分成多个 split 进行并行处理。在某些场景下，尤其是存在大量小文件时，可能会生成过多的 split，导致：
+
+1. 内存压力：过多的 split 会消耗 FE 大量内存
+2. OOM 问题：split 数量过多可能导致 OutOfMemoryError
+3. 性能下降：管理过多 split 会增加查询规划开销
+
+可以通过 `max_file_split_num` 会话变量来限制每个 table scan 允许的最大 split 数量（该参数自 4.0.4 版本支持）：
+
+- 类型：`int`
+- 默认值：`100000`
+- 说明：在非 batch 模式下，每个 table scan 最大允许的 split 数量，防止产生过多 split 导致 OOM。
+
+使用示例：
+
+```sql
+-- 设置最大 split 数量为 50000
+SET max_file_split_num = 50000;
+
+-- 禁用该限制（设置为 0 或负数）
+SET max_file_split_num = 0;
+```
+
+当设置了该限制后，Doris 会动态计算最小的 split 大小，以确保 split 数量不超过设定的上限。
+
 ## Merge IO 优化
 
 针对 HDFS、对象存储等远端存储系统，Doris 会通过 Merge IO 技术来优化 IO 访问。Merge IO 技术，本质上是将多个相邻的小 IO 请求，合并成一个大 IO 请求，这样可以减少 IOPS，增加 IO 吞吐。
@@ -71,3 +97,51 @@ Request Range: [0, 50]
 - `merge_io_read_slice_size_bytes`
 
     会话变量，自 3.1.3 版本支持。默认为 8MB。如果发现读放大严重，可以将此参数调小，如 64KB。并观察修改后的 IO 请求和查询延迟是否有提升。
+
+## Parquet Page Cache
+
+:::info
+自 4.1.0 版本支持。
+:::
+
+Parquet Page Cache 是针对 Parquet 文件的页级缓存机制。该功能与 Doris 现有的 Page Cache 框架集成，通过在内存中缓存解压后（或压缩的）数据页，显著提升查询性能。
+
+### 主要特性
+
+1. **统一的 Page Cache 集成**
+    - 与 Doris 内表使用的 `StoragePageCache` 共享同一个基础框架
+    - 共享内存池和淘汰策略
+    - 复用现有的缓存统计和 RuntimeProfile 进行统一的性能监控
+
+2. **智能缓存策略**
+    - **压缩比感知**：根据 `parquet_page_cache_decompress_threshold` 参数自动选择缓存压缩数据还是解压后的数据
+    - **灵活的存储方式**：当 `解压后大小 / 压缩大小 ≤ 阈值` 时缓存解压后的数据，否则根据 `enable_parquet_cache_compressed_pages` 决定是否缓存压缩数据
+    - **缓存键设计**：使用 `file_path::mtime::offset` 作为缓存键，确保文件修改后缓存的一致性
+
+### 相关配置参数
+
+以下为 BE 配置参数：
+
+- `enable_parquet_page_cache`
+
+    是否启用 Parquet Page Cache 功能。默认为 `false`。
+
+- `parquet_page_cache_decompress_threshold`
+
+    控制缓存压缩数据还是解压数据的阈值。默认为 `1.5`。当 `解压后大小 / 压缩大小` 的比值小于或等于该阈值时，会缓存解压后的数据；否则会根据 `enable_parquet_cache_compressed_pages` 的设置决定是否缓存压缩数据。
+
+- `enable_parquet_cache_compressed_pages`
+
+    当压缩比超过阈值时，是否缓存压缩的数据页。默认为 `true`。
+
+### 性能监控
+
+通过 Query Profile 可以查看 Parquet Page Cache 的使用情况：
+
+```
+ParquetPageCache:
+    - PageCacheHitCount: 1024
+    - PageCacheMissCount: 128
+```
+
+其中 `PageCacheHitCount` 表示缓存命中次数，`PageCacheMissCount` 表示缓存未命中次数。
