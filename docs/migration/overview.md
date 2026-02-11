@@ -12,8 +12,8 @@ Apache Doris provides multiple methods to migrate data from various source syste
 
 | Source System | Migration Method | Sync Modes |
 |---------------|-------------------|------------|
-| [PostgreSQL](./postgresql-to-doris.md) | JDBC Catalog / Streaming Job / Flink CDC | Full, CDC |
-| [MySQL](./mysql-to-doris.md) | Streaming Job / Flink CDC / JDBC Catalog | Full, CDC |
+| [PostgreSQL](./postgresql-to-doris.md) | Streaming Job / JDBC Catalog / Flink CDC | Full, CDC |
+| [MySQL](./mysql-to-doris.md) | Streaming Job / JDBC Catalog / Flink CDC | Full, CDC |
 | [Elasticsearch](./elasticsearch-to-doris.md) | ES Catalog | Full |
 | [ClickHouse](./other-olap-to-doris.md#clickhouse) | JDBC Catalog | Full |
 | [Greenplum](./other-olap-to-doris.md#greenplum) | JDBC Catalog | Full |
