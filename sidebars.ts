@@ -449,6 +449,7 @@ const sidebars: SidebarsConfig = {
                             type: 'category',
                             label: 'Data Catalogs',
                             items: [
+                                'lakehouse/catalogs/hive-catalog',
                                 {
                                     type: 'category',
                                     label: 'Iceberg Catalog',
@@ -473,9 +474,22 @@ const sidebars: SidebarsConfig = {
                                         'lakehouse/best-practices/doris-dlf-paimon'
                                     ],
                                 },
-                                'lakehouse/catalogs/hive-catalog',
-                                'lakehouse/catalogs/hudi-catalog',
-                                'lakehouse/catalogs/maxcompute-catalog',
+                                {
+                                    type: 'category',
+                                    label: 'Hudi Catalog',
+                                    link: {type: 'doc', id: 'lakehouse/catalogs/hudi-catalog'},
+                                    items: [
+                                        'lakehouse/best-practices/doris-hudi'
+                                    ],
+                                },
+                                {
+                                    type: 'category',
+                                    label: 'MaxCompute Catalog',
+                                    link: {type: 'doc', id: 'lakehouse/catalogs/maxcompute-catalog'},
+                                    items: [
+                                        'lakehouse/best-practices/doris-maxcompute'
+                                    ],
+                                },
                                 'lakehouse/catalogs/delta-lake-catalog',
                                 'lakehouse/catalogs/bigquery-catalog',
                                 'lakehouse/catalogs/kudu-catalog',
@@ -552,8 +566,6 @@ const sidebars: SidebarsConfig = {
                             label: 'Lakehouse Best Practices',
                             items: [
                                 'lakehouse/best-practices/optimization',
-                                'lakehouse/best-practices/doris-hudi',
-                                'lakehouse/best-practices/doris-maxcompute',
                                 'lakehouse/best-practices/kerberos',
                                 'lakehouse/best-practices/tpch',
                                 'lakehouse/best-practices/tpcds',
