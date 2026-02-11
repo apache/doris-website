@@ -55,6 +55,10 @@ ALTER TABLE example_db.my_table ADD PARTITION p3 VALUES LESS THAN ('30');
 -- p3 will have 10 buckets; existing partitions remain unchanged
 ```
 
+:::info
+Switching to/away from AUTO bucket mode is supported since Doris 4.0.4.
+:::
+
 2. Switch from a fixed bucket count to AUTO
 
 ```sql

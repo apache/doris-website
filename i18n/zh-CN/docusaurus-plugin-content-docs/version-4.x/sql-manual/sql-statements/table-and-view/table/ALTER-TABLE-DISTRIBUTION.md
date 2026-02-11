@@ -55,6 +55,10 @@ ALTER TABLE example_db.my_table ADD PARTITION p3 VALUES LESS THAN ('30');
 -- p3 将使用 10 个分桶；已有分区不受影响
 ```
 
+:::info
+注意，切换为/切出 AUTO 分桶模式，自 Doris 4.0.4 开始支持。
+:::
+
 2. 从固定分桶数切换为 AUTO
 
 ```sql
