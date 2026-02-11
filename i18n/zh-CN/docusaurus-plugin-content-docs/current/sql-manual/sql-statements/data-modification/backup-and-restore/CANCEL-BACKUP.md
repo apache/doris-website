@@ -13,7 +13,7 @@
 ## 语法
 
 ```sql
-CANCEL BACKUP FROM <db_name>;
+CANCEL [GLOBAL] BACKUP [FROM <db_name>];
 ```
 
 ## 参数
@@ -30,3 +30,8 @@ CANCEL BACKUP FROM <db_name>;
 CANCEL BACKUP FROM example_db;
 ```
 
+2. 取消 GLOBAL BACKUP 任务。
+
+```sql
+CANCEL GLOBAL BACKUP;
+```

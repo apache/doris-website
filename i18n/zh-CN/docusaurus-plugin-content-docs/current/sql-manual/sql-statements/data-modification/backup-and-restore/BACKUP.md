@@ -8,12 +8,12 @@
 
 ## 描述
 
-该语句用于备份指定数据库下的数据。该命令为异步操作，提交成功后，需通过 [SHOW BACKUP](./SHOW-BACKUP.md) 命令查看进度。
+该语句用于备份指定数据库下的数据。该命令为异步操作，提交成功后，需通过 `SHOW BACKUP` 命令查看进度。
 
 ## 语法
 
 ```sql
-BACKUP SNAPSHOT [<db_name>.]<snapshot_name>
+BACKUP [GLOBAL] SNAPSHOT [<db_name>.]<snapshot_name>
 TO `<repository_name>`
 [ { ON | EXCLUDE } ]
     ( <table_name> [ PARTITION ( <partition_name> [, ...] ) ]
@@ -55,6 +55,9 @@ TO `<repository_name>`
 
 - "type" = "full"：表示这是一次全量更新（默认）
 - "timeout" = "3600"：任务超时时间，默认为一天。单位秒。
+- "backup_privilege" = "true"：是否备份权限信息，与 `BACKUP GLOBAL` 一起使用。
+- "backup_catalog" = "true"：是否备份 catalog 信息，与 `BACKUP GLOBAL` 一起使用。
+- "backup_workload_group" = "true"：是否备份 workload group 信息，与 `BACKUP GLOBAL` 一起使用。
 
 ## 权限控制
 
@@ -108,3 +111,17 @@ BACKUP SNAPSHOT example_db.snapshot_label3
 TO example_repo;
 ```
 
+5. 备份权限、catalog 和 workload group 信息到仓库 example_repo 中：
+
+```sql
+BACKUP GLOBAL SNAPSHOT snapshot_label5
+TO example_repo;
+```
+
+6. 备份权限和 catalog 信息到仓库 example_repo 中：
+
+```sql
+BACKUP GLOBAL SNAPSHOT snapshot_label6
+TO example_repo
+PROPERTIES ("backup_privilege" = "true", "backup_catalog" = "true");
+```

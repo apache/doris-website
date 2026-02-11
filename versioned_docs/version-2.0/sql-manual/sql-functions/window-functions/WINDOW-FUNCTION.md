@@ -55,7 +55,7 @@ ROWS BETWEEN [ { m | UNBOUNDED } PRECEDING | CURRENT ROW] [ AND [CURRENT ROW | {
 Suppose we have the following stock data, the stock symbol is JDR, and the closing price is the closing price of each day.
 
 ```sql
-create table stock_ticker (stock_symbol string, closing_price decimal(8,2), closing_date timestamp);    
+create table stock_ticker (stock_symbol string, closing_price decimal(8,2), closing_date datetime);    
 ...load some data...    
 select * from stock_ticker order by stock_symbol, closing_date
  | stock_symbol | closing_price | closing_date        |

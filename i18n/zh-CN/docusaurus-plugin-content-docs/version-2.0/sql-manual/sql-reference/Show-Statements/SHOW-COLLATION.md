@@ -29,7 +29,7 @@ SHOW COLLATION
 ## 示例
 
 ```sql
-how collation;
+show collation;
 ```
 
 ```

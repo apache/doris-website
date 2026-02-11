@@ -229,7 +229,14 @@ const sidebars: SidebarsConfig = {
                                 'data-operate/import/load-internals/stream-load-in-complex-network',
                             ],
                         },
-                        'data-operate/import/streaming-job',
+                        {
+                            type: 'category',
+                            label: 'Continuous Load',
+                            items: [
+                                'data-operate/import/streaming-job/streaming-job-tvf',
+                                'data-operate/import/streaming-job/streaming-job-multi-table',
+                            ],
+                        }
                     ],
                 },
                 {
@@ -2253,6 +2260,7 @@ const sidebars: SidebarsConfig = {
                                         'sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-REPLACE',
                                         'sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-PROPERTY',
                                         'sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-COMMENT',
+                                        'sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-DISTRIBUTION',
                                         'sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-ADD-GENERATED-COLUMN',
                                         'sql-manual/sql-statements/table-and-view/table/CANCEL-ALTER-TABLE',
                                         'sql-manual/sql-statements/table-and-view/table/SHOW-ALTER-TABLE',
@@ -2532,6 +2540,7 @@ const sidebars: SidebarsConfig = {
                     type: 'category',
                     label: 'v4.0',
                     items: [
+                        'releasenotes/v4.0/release-4.0.3',
                         'releasenotes/v4.0/release-4.0.2',
                         'releasenotes/v4.0/release-4.0.1',
                         'releasenotes/v4.0/release-4.0.0'

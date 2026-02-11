@@ -28,7 +28,7 @@ under the License.
 
 ```shell
 brew install automake autoconf libtool pkg-config texinfo coreutils gnu-getopt \
-python@3 cmake ninja ccache bison byacc gettext wget pcre maven llvm@20 openjdk@17 npm
+python@3 cmake ninja ccache bison byacc gettext wget pcre maven llvm@21 openjdk@17 npm
 ```
 
 *The version of jdk installed using brew is 17, because on macOS, the arm64 version of brew does not have version 8 of jdk by default*
@@ -83,6 +83,8 @@ reference link: `https://gist.github.com/tonydeng/02e571f273d6cce4230dc8d5f39449
     ```shell
     export DORIS_HOME=~/DorisDev/doris
     export PATH=$DORIS_HOME/bin:$PATH
+    export LDFLAGS="-L$(brew --prefix llvm)/lib${LDFLAGS:+ $LDFLAGS}"
+    export CPPFLAGS="-I$(brew --prefix llvm)/include${CPPFLAGS:+ $CPPFLAGS}"
     ```
 
 ## Download Doris compilation dependencies
