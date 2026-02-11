@@ -76,10 +76,6 @@ Before migrating, consider the following:
    - Concurrent query load
    - Data freshness requirements
 
-5. **Migration Window**
-   - Acceptable downtime (if any)
-   - Sync vs. async migration needs
-
 ## Best Practices
 
 - **Start with a pilot table**: Before migrating your entire database, test with a representative table to validate schema design, type mappings, and data correctness.

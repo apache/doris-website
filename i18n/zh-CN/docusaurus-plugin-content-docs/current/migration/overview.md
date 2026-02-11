@@ -76,10 +76,6 @@ Doris 内置的 [Streaming Job](../data-operate/import/streaming-job/streaming-j
    - 并发查询负载
    - 数据新鲜度要求
 
-5. **迁移窗口**
-   - 可接受的停机时间（如果有）
-   - 同步与异步迁移需求
-
 ## 最佳实践
 
 - **从试点表开始**：在迁移整个数据库之前，先用一个代表性的表进行测试，验证 Schema 设计、类型映射和数据正确性。
