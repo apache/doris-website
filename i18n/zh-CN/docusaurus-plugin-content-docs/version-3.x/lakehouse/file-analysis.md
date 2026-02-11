@@ -123,8 +123,6 @@ FROM s3(
 | `{n..m}` | `file_{1..3}` | `file_1`、`file_2`、`file_3` |
 | `{a,b,c}` | `file_{a,b}` | `file_a`、`file_b` |
 
-完整语法请参阅[文件路径模式](../sql-manual/basic-element/file-path-pattern)。
-
 ### 使用 Resource 简化配置
 
 TVF 支持通过 `resource` 属性引用预先创建的 S3 或 HDFS Resource，从而避免在每次查询时重复填写连接信息。

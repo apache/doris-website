@@ -125,8 +125,6 @@ The file path (URI) supports using wildcards and range patterns to match multipl
 | `{n..m}` | `file_{1..3}` | `file_1`, `file_2`, `file_3` |
 | `{a,b,c}` | `file_{a,b}` | `file_a`, `file_b` |
 
-For complete syntax, please refer to [File Path Pattern](../sql-manual/basic-element/file-path-pattern).
-
 ### Using Resource to Simplify Configuration
 
 TVF supports referencing pre-created S3 or HDFS Resources through the `resource` property, avoiding the need to repeatedly fill in connection information for each query.
