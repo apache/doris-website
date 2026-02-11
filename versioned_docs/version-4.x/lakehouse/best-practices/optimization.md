@@ -36,6 +36,32 @@ Since version 4.0.2, cache warmup functionality is supported, which can further 
 
 Please refer to the **HDFS IO Optimization** section in the [HDFS Documentation](../storages/hdfs.md).
 
+## Split Count Limit
+
+When querying external tables (Hive, Iceberg, Paimon, etc.), Doris splits files into multiple splits for parallel processing. In some scenarios, especially when there are a large number of small files, too many splits may be generated, leading to:
+
+1. Memory pressure: Too many splits consume a significant amount of FE memory
+2. OOM issues: Excessive split counts may cause OutOfMemoryError
+3. Performance degradation: Managing too many splits increases query planning overhead
+
+You can use the `max_file_split_num` session variable to limit the maximum number of splits allowed per table scan (supported since 4.0.4):
+
+- Type: `int`
+- Default: `100000`
+- Description: In non-batch mode, the maximum number of splits allowed per table scan to prevent OOM caused by too many splits.
+
+Usage example:
+
+```sql
+-- Set maximum split count to 50000
+SET max_file_split_num = 50000;
+
+-- Disable this limit (set to 0 or negative number)
+SET max_file_split_num = 0;
+```
+
+When this limit is set, Doris dynamically calculates the minimum split size to ensure the split count does not exceed the specified limit.
+
 ## Merge IO Optimization
 
 For remote storage systems like HDFS and object storage, Doris optimizes IO access through Merge IO technology. Merge IO technology essentially merges multiple adjacent small IO requests into one large IO request, which can reduce IOPS and increase IO throughput.
@@ -71,3 +97,51 @@ If you find that `MergedBytes` is much larger than `RequestBytes`, it indicates 
 - `merge_io_read_slice_size_bytes`
 
     Session variable, supported since version 3.1.3. Default is 8MB. If you find serious read amplification, you can reduce this parameter, such as to 64KB, and observe whether the modified IO requests and query latency improve.
+
+## Parquet Page Cache
+
+:::info
+Supported since version 4.1.0.
+:::
+
+Parquet Page Cache is a page-level caching mechanism for Parquet files. This feature integrates with Doris's existing Page Cache framework, significantly improving query performance by caching decompressed (or compressed) data pages in memory.
+
+### Key Features
+
+1. **Unified Page Cache Integration**
+    - Shares the same underlying `StoragePageCache` framework used by Doris internal tables
+    - Shares memory pool and eviction policies
+    - Reuses existing cache statistics and RuntimeProfile for unified performance monitoring
+
+2. **Intelligent Caching Strategy**
+    - **Compression Ratio Awareness**: Automatically decides whether to cache compressed or decompressed data based on the `parquet_page_cache_decompress_threshold` parameter
+    - **Flexible Storage Approach**: Caches decompressed data when `decompressed size / compressed size ≤ threshold`; otherwise, decides whether to cache compressed data based on `enable_parquet_cache_compressed_pages`
+    - **Cache Key Design**: Uses `file_path::mtime::offset` as the cache key to ensure cache consistency after file modifications
+
+### Configuration Parameters
+
+The following are BE configuration parameters:
+
+- `enable_parquet_page_cache`
+
+    Whether to enable the Parquet Page Cache feature. Default is `false`.
+
+- `parquet_page_cache_decompress_threshold`
+
+    Threshold that controls whether to cache compressed or decompressed data. Default is `1.5`. When the ratio of `decompressed size / compressed size` is less than or equal to this threshold, decompressed data will be cached; otherwise, it will decide whether to cache compressed data based on the `enable_parquet_cache_compressed_pages` setting.
+
+- `enable_parquet_cache_compressed_pages`
+
+    Whether to cache compressed data pages when the compression ratio exceeds the threshold. Default is `true`.
+
+### Performance Monitoring
+
+You can view Parquet Page Cache usage through Query Profile:
+
+```
+ParquetPageCache:
+    - PageCacheHitCount: 1024
+    - PageCacheMissCount: 128
+```
+
+Where `PageCacheHitCount` indicates the number of cache hits, and `PageCacheMissCount` indicates the number of cache misses.
