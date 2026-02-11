@@ -10,14 +10,14 @@ Apache Doris provides multiple methods to migrate data from various source syste
 
 ## Migration Paths
 
-| Source System | Migration Method | Real-time Sync | Full Migration | Incremental |
-|---------------|-------------------|----------------|----------------|-------------|
-| [PostgreSQL](./postgresql-to-doris.md) | JDBC Catalog / Streaming Job / Flink CDC | Yes | Yes | Yes |
-| [MySQL](./mysql-to-doris.md) | Streaming Job / Flink CDC / JDBC Catalog | Yes | Yes | Yes |
-| [Elasticsearch](./elasticsearch-to-doris.md) | ES Catalog | No | Yes | Manual |
-| [ClickHouse](./other-olap-to-doris.md#clickhouse) | JDBC Catalog | No | Yes | Manual |
-| [Greenplum](./other-olap-to-doris.md#greenplum) | JDBC Catalog | No | Yes | Manual |
-| [Hive/Iceberg/Hudi](./other-olap-to-doris.md#data-lake) | Multi-Catalog | No | Yes | Yes |
+| Source System | Migration Method | Sync Modes |
+|---------------|-------------------|------------|
+| [PostgreSQL](./postgresql-to-doris.md) | JDBC Catalog / Streaming Job / Flink CDC | Full, CDC |
+| [MySQL](./mysql-to-doris.md) | Streaming Job / Flink CDC / JDBC Catalog | Full, CDC |
+| [Elasticsearch](./elasticsearch-to-doris.md) | ES Catalog | Full |
+| [ClickHouse](./other-olap-to-doris.md#clickhouse) | JDBC Catalog | Full |
+| [Greenplum](./other-olap-to-doris.md#greenplum) | JDBC Catalog | Full |
+| [Hive/Iceberg/Hudi](./other-olap-to-doris.md#data-lake) | Multi-Catalog | Full, Batch Incremental |
 
 ## Choosing a Migration Method
 
