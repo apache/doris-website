@@ -16,8 +16,6 @@ Doris 提供以下 TVF 用于访问不同的存储系统：
 |-----|-----------|------|
 | [S3](../sql-manual/sql-functions/table-valued-functions/s3.md) | S3 兼容的对象存储 | 支持 AWS S3、阿里云 OSS、腾讯云 COS 等 |
 | [HDFS](../sql-manual/sql-functions/table-valued-functions/hdfs.md) | HDFS | 支持 Hadoop 分布式文件系统 |
-| [HTTP](../sql-manual/sql-functions/table-valued-functions/http.md) | HTTP | 支持从 HTTP 地址访问文件（自 4.0.2 版本起） |
-| [FILE](../sql-manual/sql-functions/table-valued-functions/file.md) | S3/HDFS/HTTP/Local | 统一表函数，支持多种存储（自 3.1.0 版本起） |
 
 ## 使用场景
 

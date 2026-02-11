@@ -16,8 +16,6 @@ Doris provides the following TVFs for accessing different storage systems:
 |-----|-------------------|-------------|
 | [S3](../sql-manual/sql-functions/table-valued-functions/s3.md) | S3-compatible object storage | Supports AWS S3, Alibaba Cloud OSS, Tencent Cloud COS, etc. |
 | [HDFS](../sql-manual/sql-functions/table-valued-functions/hdfs.md) | HDFS | Supports Hadoop Distributed File System |
-| [HTTP](../sql-manual/sql-functions/table-valued-functions/http.md) | HTTP | Supports accessing files from HTTP addresses (since version 4.0.2) |
-| [FILE](../sql-manual/sql-functions/table-valued-functions/file.md) | S3/HDFS/HTTP/Local | Unified table function supporting multiple storage types (since version 3.1.0) |
 
 ## Use Cases
 
