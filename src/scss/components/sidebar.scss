@@ -58,6 +58,8 @@
 
         .menu__caret {
             &::before {
+                content: '';
+                background: url('@site/static/images/chevron-down.svg') no-repeat center;
                 background-size: 1.5rem;
             }
 
