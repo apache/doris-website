@@ -12,8 +12,8 @@ Apache Doris provides multiple methods to migrate data from various source syste
 
 | Source System | Migration Method | Real-time Sync | Full Migration | Incremental |
 |---------------|-------------------|----------------|----------------|-------------|
-| [PostgreSQL](./postgresql-to-doris.md) | JDBC Catalog / Flink CDC | Yes | Yes | Yes |
-| [MySQL](./mysql-to-doris.md) | Flink CDC / JDBC Catalog | Yes | Yes | Yes |
+| [PostgreSQL](./postgresql-to-doris.md) | JDBC Catalog / Streaming Job / Flink CDC | Yes | Yes | Yes |
+| [MySQL](./mysql-to-doris.md) | Streaming Job / Flink CDC / JDBC Catalog | Yes | Yes | Yes |
 | [Elasticsearch](./elasticsearch-to-doris.md) | ES Catalog | No | Yes | Manual |
 | [ClickHouse](./other-olap-to-doris.md#clickhouse) | JDBC Catalog | No | Yes | Manual |
 | [Greenplum](./other-olap-to-doris.md#greenplum) | JDBC Catalog | No | Yes | Manual |
@@ -29,13 +29,21 @@ Doris's [Multi-Catalog](../lakehouse/lakehouse-overview.md) feature allows you t
 - **Hybrid queries**: Join data across Doris and external sources
 - **Incremental migration**: Gradually move data while keeping source accessible
 
+### Streaming Job (Built-in CDC Sync)
+
+Doris's built-in [Streaming Job](../data-operate/import/streaming-job/streaming-job-multi-table.md) can directly synchronize full and incremental data from MySQL and PostgreSQL without external tools. It reads binlog/WAL natively, auto-creates target tables, and keeps data in sync — all with a single SQL command.
+
+- **No external dependencies**: No Flink cluster or other middleware required
+- **Full + incremental sync**: Initial snapshot followed by continuous CDC
+- **Multi-table support**: Sync multiple tables in one job
+
 ### Flink CDC (Real-time Synchronization)
 
-[Flink CDC](../ecosystem/flink-doris-connector.md) is ideal for:
+[Flink CDC](../ecosystem/flink-doris-connector.md) provides CDC-based sync via an external Flink cluster. Choose this over Streaming Job when you need:
 
-- **Real-time data sync**: Capture changes as they happen
-- **Full database migration**: Sync entire databases with automatic table creation
-- **Zero-downtime migration**: Keep source and Doris in sync during transition
+- **Schema evolution**: Automatic DDL propagation
+- **Complex transformations**: Flink SQL processing during sync
+- **Broader source support**: Sources beyond MySQL/PostgreSQL
 
 ### Export-Import Method
 
