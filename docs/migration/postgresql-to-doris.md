@@ -68,19 +68,72 @@ Flink CDC captures changes from PostgreSQL WAL (Write-Ahead Log) and streams the
 
 For detailed setup, see the [Flink Doris Connector](../ecosystem/flink-doris-connector.md) documentation.
 
-### Option 3: Streaming Job (Continuous File Loading)
+### Option 3: Streaming Job (Built-in CDC Sync)
 
-Doris's built-in [Streaming Job](../data-operate/import/streaming-job.md) (`CREATE JOB ON STREAMING`) provides continuous file-based loading without external tools. Export PostgreSQL data to S3/object storage, and the Streaming Job automatically picks up new files and loads them into Doris.
+Doris's built-in [Streaming Job](../data-operate/import/streaming-job/streaming-job-multi-table.md) can directly synchronize full and incremental data from PostgreSQL to Doris without external tools like Flink. It uses CDC under the hood to read PostgreSQL WAL and automatically creates target tables (UNIQUE KEY model) with primary keys matching the source.
 
 This option is suited for:
 
-- Continuous incremental migration via file export pipelines
-- Environments where you prefer Doris-native features over external tools like Flink
-- Scenarios where PostgreSQL data is periodically exported to object storage
+- Real-time multi-table sync without deploying a Flink cluster
+- Environments where you prefer Doris-native features over external tools
+- Full + incremental migration with a single SQL command
 
-**Prerequisites**: Data exported to S3-compatible object storage; Doris 2.1+ with Job Scheduler enabled.
+**Prerequisites**: PostgreSQL with logical replication enabled (`wal_level = logical`); PostgreSQL JDBC driver deployed to Doris.
 
-For detailed setup, see the [Streaming Job](../data-operate/import/streaming-job.md) and [CREATE STREAMING JOB](../sql-manual/sql-statements/job/CREATE-STREAMING-JOB.md) documentation.
+#### Step 1: Enable Logical Replication
+
+Ensure `postgresql.conf` contains:
+
+```ini
+wal_level = logical
+```
+
+#### Step 2: Create Streaming Job
+
+```sql
+CREATE JOB pg_sync
+ON STREAMING
+FROM POSTGRES (
+    "jdbc_url" = "jdbc:postgresql://pg-host:5432/source_db",
+    "driver_url" = "postgresql-42.5.6.jar",
+    "driver_class" = "org.postgresql.Driver",
+    "user" = "postgres",
+    "password" = "password",
+    "database" = "source_db",
+    "schema" = "public",
+    "include_tables" = "orders,customers,products",
+    "offset" = "initial"
+)
+TO DATABASE target_db (
+    "table.create.properties.replication_num" = "3"
+)
+```
+
+Key parameters:
+
+| Parameter | Description |
+|-----------|-------------|
+| `include_tables` | Comma-separated list of tables to sync |
+| `offset` | `initial` for full + incremental; `latest` for incremental only |
+| `snapshot_split_size` | Row count per split during full sync (default: 8096) |
+| `snapshot_parallelism` | Parallelism during full sync phase (default: 1) |
+
+#### Step 3: Monitor Sync Status
+
+```sql
+-- Check job status
+SELECT * FROM jobs(type=insert) WHERE ExecuteType = "STREAMING";
+
+-- Check task history
+SELECT * FROM tasks(type='insert') WHERE jobName = 'pg_sync';
+
+-- Pause / Resume / Drop
+PAUSE JOB WHERE jobname = 'pg_sync';
+RESUME JOB WHERE jobname = 'pg_sync';
+DROP JOB WHERE jobname = 'pg_sync';
+```
+
+For detailed reference, see the [Streaming Job Multi-Table Sync](../data-operate/import/streaming-job/streaming-job-multi-table.md) documentation.
 
 ### Option 4: Export and Load
 

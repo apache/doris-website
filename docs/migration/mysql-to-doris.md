@@ -70,19 +70,74 @@ For detailed setup, see the [Flink Doris Connector](../ecosystem/flink-doris-con
 
 The [JDBC Catalog](../lakehouse/catalogs/jdbc-catalog.md) allows direct querying and batch migration from MySQL. This is the simplest approach for one-time or periodic batch migrations.
 
-### Option 3: Streaming Job (Continuous File Loading)
+### Option 3: Streaming Job (Built-in CDC Sync)
 
-Doris's built-in [Streaming Job](../data-operate/import/streaming-job.md) (`CREATE JOB ON STREAMING`) provides continuous file-based loading without external tools. Export MySQL data to S3/object storage, and the Streaming Job automatically picks up new files and loads them into Doris.
+Doris's built-in [Streaming Job](../data-operate/import/streaming-job/streaming-job-multi-table.md) can directly synchronize full and incremental data from MySQL to Doris without external tools like Flink. It uses CDC under the hood to read MySQL binlog and automatically creates target tables (UNIQUE KEY model) with primary keys matching the source.
 
 This option is suited for:
 
-- Continuous incremental migration via file export pipelines
-- Environments where you prefer Doris-native features over external tools like Flink
-- Scenarios where MySQL data is periodically exported to object storage
+- Real-time multi-table sync without deploying a Flink cluster
+- Environments where you prefer Doris-native features over external tools
+- Full + incremental migration with a single SQL command
 
-**Prerequisites**: Data exported to S3-compatible object storage; Doris 2.1+ with Job Scheduler enabled.
+**Prerequisites**: MySQL with binlog enabled (`binlog_format = ROW`); MySQL JDBC driver deployed to Doris.
 
-For detailed setup, see the [Streaming Job](../data-operate/import/streaming-job.md) and [CREATE STREAMING JOB](../sql-manual/sql-statements/job/CREATE-STREAMING-JOB.md) documentation.
+#### Step 1: Enable MySQL Binlog
+
+Ensure `my.cnf` contains:
+
+```ini
+[mysqld]
+log-bin = mysql-bin
+binlog_format = ROW
+server-id = 1
+```
+
+#### Step 2: Create Streaming Job
+
+```sql
+CREATE JOB mysql_sync
+ON STREAMING
+FROM MYSQL (
+    "jdbc_url" = "jdbc:mysql://mysql-host:3306",
+    "driver_url" = "mysql-connector-j-8.0.31.jar",
+    "driver_class" = "com.mysql.cj.jdbc.Driver",
+    "user" = "root",
+    "password" = "password",
+    "database" = "source_db",
+    "include_tables" = "orders,customers,products",
+    "offset" = "initial"
+)
+TO DATABASE target_db (
+    "table.create.properties.replication_num" = "3"
+)
+```
+
+Key parameters:
+
+| Parameter | Description |
+|-----------|-------------|
+| `include_tables` | Comma-separated list of tables to sync |
+| `offset` | `initial` for full + incremental; `latest` for incremental only |
+| `snapshot_split_size` | Row count per split during full sync (default: 8096) |
+| `snapshot_parallelism` | Parallelism during full sync phase (default: 1) |
+
+#### Step 3: Monitor Sync Status
+
+```sql
+-- Check job status
+SELECT * FROM jobs(type=insert) WHERE ExecuteType = "STREAMING";
+
+-- Check task history
+SELECT * FROM tasks(type='insert') WHERE jobName = 'mysql_sync';
+
+-- Pause / Resume / Drop
+PAUSE JOB WHERE jobname = 'mysql_sync';
+RESUME JOB WHERE jobname = 'mysql_sync';
+DROP JOB WHERE jobname = 'mysql_sync';
+```
+
+For detailed reference, see the [Streaming Job Multi-Table Sync](../data-operate/import/streaming-job/streaming-job-multi-table.md) documentation.
 
 ### Option 4: DataX
 
