@@ -45,7 +45,8 @@
     }
 
     .menu__list-item-collapsible {
-        .menu__link--sublist-caret {
+        /* Use the same link :after icon for all collapsible categories */
+        a.menu__link {
             &:after {
                 background-size: 1.5rem;
 
@@ -56,11 +57,11 @@
             }
         }
 
+        /* Hide CollapseButton's own icon, keep only the clickable area */
         .menu__caret {
             &::before {
-                content: '';
-                background: url('@site/static/images/chevron-down.svg') no-repeat center;
-                background-size: 1.5rem;
+                content: none;
+                background: none;
             }
 
             &:hover {
