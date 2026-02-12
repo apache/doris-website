@@ -22,7 +22,7 @@
 
 ```shell
 # 下载 Apache Doris 二进制安装包
-server1:~ doris$ wget https://apache-doris-releases.oss-accelerate.aliyuncs.com/apache-doris-2.0.12-bin-x64.tar.gz
+server1:~ doris$ wget https://download.selectdb.com/apache-doris-2.0.12-bin-x64.tar.gz
 
 # 解压安装包
 server1:~ doris$ tar zxf apache-doris-2.0.12-bin-x64.tar.gz

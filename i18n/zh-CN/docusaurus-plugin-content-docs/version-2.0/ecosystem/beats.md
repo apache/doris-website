@@ -23,7 +23,7 @@ Beats Doris output plugin 调用 [Doris Stream Load](../data-operate/import/stre
 
 ### 从官网下载
 
-https://apache-doris-releases.oss-accelerate.aliyuncs.com/extension/filebeat-doris-2.1.1
+https://download.selectdb.com/extension/filebeat-doris-2.1.1
 
 
 ### 从源码编译

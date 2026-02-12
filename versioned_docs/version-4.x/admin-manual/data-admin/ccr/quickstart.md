@@ -19,7 +19,7 @@ enable_feature_binlog=true
 
 2.1. Download the latest package from the following link:
 
-`https://apache-doris-releases.oss-accelerate.aliyuncs.com/ccr-release/ccr-syncer-3.0.4-rc02-x64.tar.xz`
+`https://download.velodb.io/ccr-release/ccr-syncer-3.0.4-rc02-x64.tar.xz`
 
 2.2. Start and stop Syncer
 

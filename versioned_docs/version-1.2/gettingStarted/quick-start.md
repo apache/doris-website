@@ -21,7 +21,7 @@ Download the Apache Doris installation package from doris.apache.org and proceed
 
 ```shell
 # Download the binary installation package of Apache Doris
-server1:~ doris$ wget https://apache-doris-releases.oss-accelerate.aliyuncs.com/apache-doris-2.0.3-bin-x64.tar.gz
+server1:~ doris$ wget https://download.velodb.io/apache-doris-2.0.3-bin-x64.tar.gz
 
 # Extract the installation package
 server1:~ doris$ tar zxf apache-doris-2.0.3-bin-x64.tar.gz

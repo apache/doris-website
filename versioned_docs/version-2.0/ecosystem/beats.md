@@ -22,7 +22,7 @@ To use the Beats Doris output plugin, there are three main steps:
 
 ### Download from the Official Website
 
-[https://apache-doris-releases.oss-accelerate.aliyuncs.com/extension/filebeat-doris-2.1.1](https://apache-doris-releases.oss-accelerate.aliyuncs.com/extension/filebeat-doris-2.1.1)
+[https://download.velodb.io/extension/filebeat-doris-2.1.1](https://download.velodb.io/extension/filebeat-doris-2.1.1)
 
 ### Compile from Source Code
 
