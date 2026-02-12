@@ -210,7 +210,7 @@ Doris 会自动进行集群内的副本均衡。目前支持两种均衡策略�
 
 我们用 ClusterLoadStatistics（CLS）表示一个 cluster 中各个 Backend 的负载均衡情况。TabletScheduler 根据这个统计值，来触发集群均衡。我们当前通过 **磁盘使用率** 和 **副本数量** 两个指标，为每个 BE 计算一个 loadScore，作为 BE 的负载分数。分数越高，表示该 BE 的负载越重。
 
-磁盘使用率和副本数量各有一个权重系数，分别为 **capacityCoefficient** 和 **replicaNumCoefficient**，其 **和恒为 1**。其中 capacityCoefficient 会根据实际磁盘使用率动态调整。当一个 BE 的总体磁盘使用率在 50% 以下，则 capacityCoefficient 值为 0.5，如果磁盘使用率在 75%（可通过 FE 配置项 `capacity_used_percent_high_water` 配置）以上，则值为 1。如果使用率介于 50% ~ 75% 之间，则该权重系数平滑增加，公式为：
+磁盘使用率和副本数量各有一个权重系数，分别为 **capacityCoefficient** 和 **replicaNumCoefficient**，其 **和恒为 1**。如果系统配置了有效的 `backend_load_capacity_coeficient` 参数（取值范围 `0.0`~`1.0`），则 `capacityCoefficient = backend_load_capacity_coeficient`。否则，`capacityCoefficient` 会根据实际磁盘使用率动态调整。当一个 BE 的总体磁盘使用率在 50% 以下，则 `capacityCoefficient` 值为 0.5，如果磁盘使用率在 75%（可通过 FE 配置项 `capacity_used_percent_high_water` 配置）以上，则值为 1。如果使用率介于 50% ~ 75% 之间，则该权重系数平滑增加，公式为：
 
 `capacityCoefficient= 2 * 磁盘使用率 - 0.5`
 
@@ -745,7 +745,7 @@ TabletScheduler 在每轮调度时，都会通过 LoadBalancer 来选择一定�
 
 8. 更快速的副本均衡
 
-    Doris 的副本均衡逻辑会先增加一个正常副本，然后在删除老的副本，已达到副本迁移的目的。而在删除老副本时，Doris 会等待这个副本上已经开始执行的导入任务完成，以避免均衡任务影响导入任务。但这样会降低均衡逻辑的执行速度。此时可以通过修改以下参数，让 Doris 忽略这个等待，直接删除老副本：
+    Doris 的副本均衡逻辑会先增加一个正常副本，然后在删除老的副本，以达到副本迁移的目的。而在删除老副本时，Doris 会等待这个副本上已经开始执行的导入任务完成，以避免均衡任务影响导入任务。但这样会降低均衡逻辑的执行速度。此时可以通过修改以下参数，让 Doris 忽略这个等待，直接删除老副本：
     
     ```
     ADMIN SET FRONTEND CONFIG ("enable_force_drop_redundant_replica" = "true");
@@ -760,6 +760,5 @@ TabletScheduler 在每轮调度时，都会通过 LoadBalancer 来选择一定�
 3. 停止副本均衡逻辑以避免占用集群资源，等集群恢复后，再开启即可。
 4. 使用更保守的策略触发修复任务，以应对 BE 频繁宕机导致的雪崩效应。
 5. 按需关闭 colocation 表的调度任务，集中集群资源修复其他高优数据。
-
 
 

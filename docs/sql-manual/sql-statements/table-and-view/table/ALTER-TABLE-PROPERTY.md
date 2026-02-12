@@ -119,7 +119,7 @@ ALTER TABLE example_db.my_table MODIFY DISTRIBUTION DISTRIBUTED BY HASH(k1) BUCK
 
 Note:
 
-- Only support non colocate table with RANGE partition and HASH distribution
+- Only support partitioned non-Colocate tables. See [ALTER TABLE DISTRIBUTION](./ALTER-TABLE-DISTRIBUTION) for more details.
 
 9. Modify table comments
 

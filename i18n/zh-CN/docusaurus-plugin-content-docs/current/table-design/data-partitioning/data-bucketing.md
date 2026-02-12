@@ -153,7 +153,7 @@ DISTRIBUTED BY HASH(region) BUCKETS AUTO
 properties("estimate_partition_size" = "20G")
 
 -- Set random bucket auto
-DISTRIBUTED BY HASH(region) BUCKETS AUTO
+DISTRIBUTED BY RANDOM BUCKETS AUTO
 properties("estimate_partition_size" = "20G")
 ```
 
@@ -192,4 +192,3 @@ SET ("dynamic_partition.buckets"="16");
 ```
 
 在修改分桶数量后，可以通过 SHOW PARTITION 命令查看修改后的分桶数量。
-

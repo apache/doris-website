@@ -498,7 +498,7 @@ The query results are as follows:
 1. Assume we have the following stock data, with stock symbol JDR and daily closing prices:
 
 ```sql
-create table stock_ticker (stock_symbol string, closing_price decimal(8,2), closing_date timestamp);  
+create table stock_ticker (stock_symbol string, closing_price decimal(8,2), closing_date datetime);  
   
 INSERT INTO stock_ticker VALUES 
     ("JDR", 12.86, "2014-10-02 00:00:00"), 

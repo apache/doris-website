@@ -215,7 +215,10 @@ mysql -uroot -P9030 -h127.0.0.1 -e 'SELECT `host`, `alive` FROM backends()'
        k4 INT NOT NULL DEFAULT "1" COMMENT "int column"
    ) 
    COMMENT "my first table"
-   DISTRIBUTED BY HASH(k1) BUCKETS 1;
+   DISTRIBUTED BY HASH(k1) BUCKETS 1
+   PROPERTIES (
+    "replication_num" = "1"
+   );
    ```
 
 3. **导入测试数据**
@@ -262,4 +265,3 @@ sudo ln -s /Applications/Docker.app/Contents/Resources/bin/docker /usr/local/bin
 **Q: Mac: "error getting credentials - err: exit status 1, out: \`\`"**
 
 A: 此错误通常由 Docker 凭据助手配置问题导致。对于本地开发/测试环境，可以删除 `~/.docker/config.json` 中的 `credsStore` 字段作为临时解决方案。注意：此方法会以明文存储凭据，仅建议在本地开发环境中使用。
-

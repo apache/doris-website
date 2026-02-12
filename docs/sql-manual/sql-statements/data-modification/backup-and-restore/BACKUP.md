@@ -8,12 +8,12 @@
 
 ## Description
 
-This statement is used to back up the data under the specified database. This command is an asynchronous operation. After the submission is successful, you need to check the progress through the [SHOW BACKUP](./SHOW-BACKUP.md) command. 
+This statement is used to back up the data under the specified database. This command is an asynchronous operation. After submission, you can check progress with the `SHOW BACKUP` command.
 
 ## Syntax
 
 ```sql
-BACKUP SNAPSHOT [<db_name>.]<snapshot_name>
+BACKUP [GLOBAL] SNAPSHOT [<db_name>.]<snapshot_name>
 TO `<repository_name>`
 [ { ON | EXCLUDE } ]
     ( <table_name> [ PARTITION ( <partition_name> [, ...] ) ]
@@ -55,6 +55,9 @@ Data snapshot attributes, in the format: `<key>` = `<value>`，currently support
 
 - "type" = "full": indicates that this is a full update (default)
 - "timeout" = "3600": The task timeout period, the default is one day. in seconds.
+- "backup_privilege" = "true": Whether to back up privileges. Use with `BACKUP GLOBAL`.
+- "backup_catalog" = "true": Whether to back up catalogs. Use with `BACKUP GLOBAL`.
+- "backup_workload_group" = "true": Whether to back up workload groups. Use with `BACKUP GLOBAL`.
 
 ## Access Control Requirements
 
@@ -106,4 +109,19 @@ EXCLUDE (example_tbl);
 ```sql
 BACKUP SNAPSHOT example_db.snapshot_label3
 TO example_repo;
+```
+
+5. Back up privileges, catalogs, and workload groups to repository example_repo:
+
+```sql
+BACKUP GLOBAL SNAPSHOT snapshot_label5
+TO example_repo;
+```
+
+6. Back up privileges and catalogs to repository example_repo:
+
+```sql
+BACKUP GLOBAL SNAPSHOT snapshot_label6
+TO example_repo
+PROPERTIES ("backup_privilege" = "true", "backup_catalog" = "true");
 ```
