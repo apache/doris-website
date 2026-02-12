@@ -37,8 +37,8 @@ Doris 可以手动指定查询的并行度，以调整查询执行时并行执�
 通过 SQL HINT 来指定单个 SQL 的并行度，这样可以灵活控制不同 SQL 的并行度来取得最佳的执行效果
 
 ```SQL
-select /*+SET_VAR("parallel_pipeline_task_num=8")*/ * from nation, lineitem where lineitem.l_suppkey = nation.n_nationkey
-select /*+SET_VAR("parallel_pipeline_task_num=8,runtime_filter_mode=global")*/ * from nation, lineitem where lineitem.l_suppkey = nation.n_nationkey
+select /*+SET_VAR(parallel_pipeline_task_num=8)*/ * from nation, lineitem where lineitem.l_suppkey = nation.n_nationkey
+select /*+SET_VAR(parallel_pipeline_task_num=8,runtime_filter_mode=global)*/ * from nation, lineitem where lineitem.l_suppkey = nation.n_nationkey
 ```
 
 ### 会话级别调整

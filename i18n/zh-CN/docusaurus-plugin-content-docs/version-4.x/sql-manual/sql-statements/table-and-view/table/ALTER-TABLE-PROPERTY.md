@@ -113,7 +113,7 @@ ALTER TABLE example_db.my_table MODIFY DISTRIBUTION DISTRIBUTED BY HASH(k1) BUCK
 
 注意：
 
-- 只能用在分区类型为 RANGE，采用哈希分桶的非 colocate 表
+- 仅支持分区表且非 Colocate 表。详见 [ALTER TABLE DISTRIBUTION](./ALTER-TABLE-DISTRIBUTION)。
 
 9. 修改表注释
 

@@ -229,7 +229,14 @@ const sidebars: SidebarsConfig = {
                                 'data-operate/import/load-internals/stream-load-in-complex-network',
                             ],
                         },
-                        'data-operate/import/streaming-job',
+                        {
+                            type: 'category',
+                            label: 'Continuous Load',
+                            items: [
+                                'data-operate/import/streaming-job/streaming-job-tvf',
+                                'data-operate/import/streaming-job/streaming-job-multi-table',
+                            ],
+                        }
                     ],
                 },
                 {
@@ -442,6 +449,7 @@ const sidebars: SidebarsConfig = {
                             type: 'category',
                             label: 'Data Catalogs',
                             items: [
+                                'lakehouse/catalogs/hive-catalog',
                                 {
                                     type: 'category',
                                     label: 'Iceberg Catalog',
@@ -466,9 +474,22 @@ const sidebars: SidebarsConfig = {
                                         'lakehouse/best-practices/doris-dlf-paimon'
                                     ],
                                 },
-                                'lakehouse/catalogs/hive-catalog',
-                                'lakehouse/catalogs/hudi-catalog',
-                                'lakehouse/catalogs/maxcompute-catalog',
+                                {
+                                    type: 'category',
+                                    label: 'Hudi Catalog',
+                                    link: {type: 'doc', id: 'lakehouse/catalogs/hudi-catalog'},
+                                    items: [
+                                        'lakehouse/best-practices/doris-hudi'
+                                    ],
+                                },
+                                {
+                                    type: 'category',
+                                    label: 'MaxCompute Catalog',
+                                    link: {type: 'doc', id: 'lakehouse/catalogs/maxcompute-catalog'},
+                                    items: [
+                                        'lakehouse/best-practices/doris-maxcompute'
+                                    ],
+                                },
                                 'lakehouse/catalogs/delta-lake-catalog',
                                 'lakehouse/catalogs/bigquery-catalog',
                                 'lakehouse/catalogs/kudu-catalog',
@@ -545,8 +566,6 @@ const sidebars: SidebarsConfig = {
                             label: 'Lakehouse Best Practices',
                             items: [
                                 'lakehouse/best-practices/optimization',
-                                'lakehouse/best-practices/doris-hudi',
-                                'lakehouse/best-practices/doris-maxcompute',
                                 'lakehouse/best-practices/kerberos',
                                 'lakehouse/best-practices/tpch',
                                 'lakehouse/best-practices/tpcds',
@@ -2253,6 +2272,7 @@ const sidebars: SidebarsConfig = {
                                         'sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-REPLACE',
                                         'sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-PROPERTY',
                                         'sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-COMMENT',
+                                        'sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-DISTRIBUTION',
                                         'sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-ADD-GENERATED-COLUMN',
                                         'sql-manual/sql-statements/table-and-view/table/CANCEL-ALTER-TABLE',
                                         'sql-manual/sql-statements/table-and-view/table/SHOW-ALTER-TABLE',
@@ -2532,6 +2552,7 @@ const sidebars: SidebarsConfig = {
                     type: 'category',
                     label: 'v4.0',
                     items: [
+                        'releasenotes/v4.0/release-4.0.3',
                         'releasenotes/v4.0/release-4.0.2',
                         'releasenotes/v4.0/release-4.0.1',
                         'releasenotes/v4.0/release-4.0.0'

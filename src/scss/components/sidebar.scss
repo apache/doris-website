@@ -45,6 +45,7 @@
     }
 
     .menu__list-item-collapsible {
+        /* For categories without a separate CollapseButton (no href), size the link :after icon */
         .menu__link--sublist-caret {
             &:after {
                 background-size: 1.5rem;
@@ -56,8 +57,11 @@
             }
         }
 
+        /* For categories with href + items, use the same chevron icon on the CollapseButton */
         .menu__caret {
             &::before {
+                content: '';
+                background: url('@site/static/images/chevron-down.svg') no-repeat center;
                 background-size: 1.5rem;
             }
 

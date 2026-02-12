@@ -46,8 +46,8 @@ Doris allows users to manually specify the parallelism of a query to adjust the 
 Use SQL HINT to specify the parallelism of a single SQL statement. This allows for flexible control of the parallelism of different SQL statements to achieve the best execution results.
 
 ```sql
-select /*+SET_VAR("parallel_pipeline_task_num=8")*/ * from nation, lineitem where lineitem.l_suppkey = nation.n_nationkey
-select /*+SET_VAR("parallel_pipeline_task_num=8,runtime_filter_mode=global")*/ * from nation, lineitem where lineitem.l_suppkey = nation.n_nationkey
+select /*+SET_VAR(parallel_pipeline_task_num=8)*/ * from nation, lineitem where lineitem.l_suppkey = nation.n_nationkey
+select /*+SET_VAR(parallel_pipeline_task_num=8,runtime_filter_mode=global)*/ * from nation, lineitem where lineitem.l_suppkey = nation.n_nationkey
 ```
 
 ### Session Level Adjustment
@@ -142,4 +142,3 @@ Usually, users do not need to adjust the query parallelism. If adjustment is req
 
 1. It is recommended to start from the CPU utilization. Observe whether it is a CPU bottleneck through the PROFILE tool output and try to make reasonable modifications to the parallelism.
 2. Adjusting a single SQL is relatively safe. Try not to make overly aggressive global modifications.
-

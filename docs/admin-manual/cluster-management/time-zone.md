@@ -200,7 +200,7 @@ Doris is currently compatible with importing data in various time zones into Dor
    :::tip
     * In import methods such as Stream Load and Broker Load, the header `timezone` will overwrite the Doris cluster `time_zone`, so it should be consistent during import.
     * In import methods such as Stream Load and Broker Load, the header `timezone` will affect the functions used in import conversion.
-    * If the header `timezone` is not specified when importing, the East Eighth Zone will be used by default.
+    * If the header `timezone` is not specified when importing, defaults to the current cluster time zone.
    :::
 
 **To sum up, the best practice for dealing with time zone issues is:**

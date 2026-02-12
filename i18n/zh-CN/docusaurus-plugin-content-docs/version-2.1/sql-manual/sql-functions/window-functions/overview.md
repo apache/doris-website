@@ -46,7 +46,7 @@ function(<args>) OVER(
 1. 假设我们有如下的股票数据，股票代码是 JDR，closing price 是每天的收盘价。
 
 ```sql
-create table stock_ticker (stock_symbol string, closing_price decimal(8,2), closing_date timestamp);    
+create table stock_ticker (stock_symbol string, closing_price decimal(8,2), closing_date datetime);    
 ...load some data...    
 select * from stock_ticker order by stock_symbol, closing_date
 ```

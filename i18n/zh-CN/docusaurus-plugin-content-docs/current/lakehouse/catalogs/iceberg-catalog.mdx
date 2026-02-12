@@ -2149,6 +2149,70 @@ EXECUTE cherrypick_snapshot ("snapshot_id" = "123456789");
 2. 如果指定的快照不存在，操作会失败。
 3. 合并操作会创建一个新的快照，不会删除原始快照。
 
+### expire_snapshots
+
+`expire_snapshots` 操作用于删除 Iceberg 表的旧快照，以释放存储空间并提高元数据性能。该操作遵循 Apache Iceberg Spark 过程规范。
+
+> 支持版本：4.1.0+
+
+**语法：**
+
+```sql
+ALTER TABLE [catalog.][database.]table_name
+EXECUTE expire_snapshots ("key1" = "value1", "key2" = "value2", ...)
+```
+
+**参数说明：**
+
+| 参数名称 | 类型 | 必填 | 描述 |
+| -------- | ---- | ---- | ---- |
+| `older_than` | String | 否 | 快照过期的时间阈值，早于该时间的快照将被删除。支持 ISO 日期时间格式（如 `2024-01-01T00:00:00`）或毫秒时间戳格式 |
+| `retain_last` | Integer | 否 | 保留的祖先快照数量。当单独指定时，自动将 `older_than` 设置为当前时间 |
+| `snapshot_ids` | String | 否 | 要过期的特定快照 ID 列表，以逗号分隔 |
+| `max_concurrent_deletes` | Integer | 否 | 执行删除操作的线程池大小 |
+| `clean_expired_metadata` | Boolean | 否 | 设置为 `true` 时，清理未使用的分区规格和 Schema |
+
+**返回值：**
+
+执行 `expire_snapshots` 操作会返回一个结果集，包含以下 6 列：
+
+| 列名 | 类型 | 描述 |
+| ---- | ---- | ---- |
+| `deleted_data_files_count` | BIGINT | 已删除的数据文件数量 |
+| `deleted_position_delete_files_count` | BIGINT | 已删除的 Position Delete 文件数量 |
+| `deleted_equality_delete_files_count` | BIGINT | 已删除的 Equality Delete 文件数量 |
+| `deleted_manifest_files_count` | BIGINT | 已删除的 Manifest 文件数量 |
+| `deleted_manifest_lists_count` | BIGINT | 已删除的 Manifest List 文件数量 |
+| `deleted_statistics_files_count` | BIGINT | 已删除的统计文件数量 |
+
+**示例：**
+
+```sql
+-- 过期快照，只保留最近的 2 个
+ALTER TABLE iceberg_db.iceberg_table 
+EXECUTE expire_snapshots ("retain_last" = "2");
+
+-- 过期指定时间之前的快照
+ALTER TABLE iceberg_db.iceberg_table 
+EXECUTE expire_snapshots ("older_than" = "2024-01-01T00:00:00");
+
+-- 过期指定 ID 的快照
+ALTER TABLE iceberg_db.iceberg_table 
+EXECUTE expire_snapshots ("snapshot_ids" = "123456789,987654321");
+
+-- 组合参数：过期 2024-06-01 之前的快照，但至少保留最近的 5 个
+ALTER TABLE iceberg_db.iceberg_table 
+EXECUTE expire_snapshots ("older_than" = "2024-06-01T00:00:00", "retain_last" = "5");
+```
+
+**注意事项：**
+
+1. 该操作不支持 WHERE 条件。
+2. 如果同时指定 `older_than` 和 `retain_last`，则两个条件都会生效：只有早于 `older_than` 且不在最近 `retain_last` 个快照中的快照才会被删除。
+3. `snapshot_ids` 可以单独使用，用于删除特定的快照。
+4. 该操作会永久删除快照及其关联的数据文件，请谨慎使用。
+5. 建议在执行前先查询 `$snapshots` 系统表了解表的快照信息。
+
 ### fast_forward
 
 `fast_forward` 操作用于将一个分支的当前快照快速推进到另一个分支的最新快照。
