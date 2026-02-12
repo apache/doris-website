@@ -160,7 +160,7 @@ By the `PROPERTIES (key1 = value1 [, key2=value2])` syntax, you can configure th
 | max_filter_ratio   | The maximum filtering rate allowed. Must be between 0 and 1, inclusive. The default value is 0, indicating no tolerance for any error rows. |
 | timeout            | The import timeout, measured in seconds. The default value is 600. The range allowed is from 1s to 259200s. |
 | strict_mode        | Whether to enable strict mode for this import. Disabled by default. |
-| timezone           | The time zone for this import. The default time zone is UTC+8. This parameter will affect the results of any time zone-related functions involved in the import. |
+| timezone           | The time zone for this import. The default time zone is the current cluster time zone. This parameter will affect the results of any time zone-related functions involved in the import. |
 | exec_mem_limit     | Memory limit for the import, defaults to 2GB, measured in bytes. |
 | trim_double_quotes | Boolean, defaults to false. If this is set to true, the outermost double quotes will be trimmed from each field in the import file. |
 | enclose            | This specifies the enclosure character. When a CSV data field contains line breaks or column delimiters, you can specify a single-byte character as the enclosure character to prevent accidental truncation.For example, if the column delimiter is ",", and the enclosure character is "'", in data "a,'b,c'", "b,c" will be parsed as one field. |
