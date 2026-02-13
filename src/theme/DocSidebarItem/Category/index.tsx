@@ -177,12 +177,8 @@ export default function DocSidebarItemCategory({
                                 collapsible
                                     ? e => {
                                           onItemClick?.(item);
-                                          if (href) {
-                                              updateCollapsed(false);
-                                          } else {
-                                              e.preventDefault();
-                                              updateCollapsed();
-                                          }
+                                          e.preventDefault();
+                                          updateCollapsed();
                                       }
                                     : () => {
                                           onItemClick?.(item);
