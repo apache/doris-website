@@ -177,8 +177,20 @@ export default function DocSidebarItemCategory({
                                 collapsible
                                     ? e => {
                                           onItemClick?.(item);
-                                          e.preventDefault();
-                                          updateCollapsed();
+                                          if (href) {
+                                              if (isCurrentPage) {
+                                                  // When already on this doc, toggle expand/collapse on text click
+                                                  e.preventDefault();
+                                                  updateCollapsed();
+                                              } else {
+                                                  // When navigating to this doc, just ensure it's expanded
+                                                  updateCollapsed(false);
+                                              }
+                                          } else {
+                                              // No href: behave like a pure toggle button
+                                              e.preventDefault();
+                                              updateCollapsed();
+                                          }
                                       }
                                     : () => {
                                           onItemClick?.(item);
