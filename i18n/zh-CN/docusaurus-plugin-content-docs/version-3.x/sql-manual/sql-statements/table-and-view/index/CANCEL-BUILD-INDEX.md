@@ -62,11 +62,11 @@ job_list
 - 取消表 table1 上的所有索引构建任务
 
     ```sql
-    CANCEL BUILD INDEX ON TABLE table1
+    CANCEL BUILD INDEX ON table1
     ```
 
 - 取消表 table1 上的索引构建任务 jobid1 和 jobid2
 
     ```sql
-    CANCEL BUILD INDEX ON TABLE table1(jobid1, jobid2)
+    CANCEL BUILD INDEX ON table1(jobid1, jobid2)
     ```
