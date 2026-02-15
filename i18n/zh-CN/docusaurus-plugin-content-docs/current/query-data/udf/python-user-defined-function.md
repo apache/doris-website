@@ -3146,7 +3146,7 @@ max_python_process_num = 32
 
 ### 环境验证
 
-在每个 BE 节点上验证环境是否正确:
+#### 在每个 BE 节点上验证环境是否正确:
 
 ```bash
 # Conda 模式
@@ -3156,6 +3156,75 @@ max_python_process_num = 32
 # Venv 模式
 /doris/python_envs/python3.9.18/bin/python --version
 /doris/python_envs/python3.9.18/bin/python -c "import pandas; print(pandas.__version__)"
+```
+
+#### 展示所有 BE 共有的 python 版本
+```sql
+SHOW PYTHON VERSIONS;
+```
+```text
++---------+---------+---------+-------------------+----------------------------------------+
+| Version | EnvName | EnvType | BasePath          | ExecutablePath                         |
++---------+---------+---------+-------------------+----------------------------------------+
+| 3.9.18  | py39    | conda   | path/to/miniconda | path/to/miniconda/envs/py39/bin/python |
++---------+---------+---------+-------------------+----------------------------------------+
+```
+
+#### 展示指定版本中已安装的依赖
+使用`SHOW PYTHON PACKAGES IN '<version>'` 来展示指定版本中已安装的依赖，如果各 BE 存在依赖不相同的情况，会列出不相
+```sql
+SHOW PYTHON PACKAGES IN '3.9.18'
+```
+各 BE 依赖安装情况完全相同:
+```text
++-----------------+-------------+
+| Package         | Version     |
++-----------------+-------------+
+| pyarrow         | 21.0.0      |
+| Bottleneck      | 1.4.2       |
+| jieba           | 0.42.1      |
+| six             | 1.17.0      |
+| wheel           | 0.45.1      |
+| python-dateutil | 2.9.0.post0 |
+| tzdata          | 2025.3      |
+| setuptools      | 80.9.0      |
+| numpy           | 2.0.1       |
+| psutil          | 7.0.0       |
+| pandas          | 2.3.3       |
+| mkl_random      | 1.2.8       |
+| pip             | 25.3        |
+| snownlp         | 0.12.3      |
+| pytz            | 2025.2      |
+| mkl_fft         | 1.3.11      |
+| mkl-service     | 2.4.0       |
+| numexpr         | 2.10.1      |
++-----------------+-------------+
+```
+各 BE 安装依赖情况不同:
+```text
++-----------------+-------------+------------+----------------+
+| Package         | Version     | Consistent | Backends       |
++-----------------+-------------+------------+----------------+
+| pyarrow         | 21.0.0      | Yes        |                |
+| Bottleneck      | 1.4.2       | Yes        |                |
+| six             | 1.17.0      | Yes        |                |
+| jieba           | 0.42.1      | No         | 127.0.0.1:9660 |
+| wheel           | 0.45.1      | Yes        |                |
+| python-dateutil | 2.9.0.post0 | Yes        |                |
+| tzdata          | 2025.3      | Yes        |                |
+| setuptools      | 80.9.0      | Yes        |                |
+| numpy           | 2.0.1       | Yes        |                |
+| psutil          | 7.0.0       | No         | 127.0.0.1:9660 |
+| pandas          | 2.3.3       | Yes        |                |
+| mkl_random      | 1.2.8       | Yes        |                |
+| pip             | 26.0.1      | No         | 127.0.0.1:9077 |
+| pip             | 25.3        | No         | 127.0.0.1:9660 |
+| snownlp         | 0.12.3      | No         | 127.0.0.1:9660 |
+| pytz            | 2025.2      | Yes        |                |
+| numexpr         | 2.10.1      | Yes        |                |
+| mkl-service     | 2.4.0       | Yes        |                |
+| mkl_fft         | 1.3.11      | Yes        |                |
++-----------------+-------------+------------+----------------+
 ```
 
 ### 常见问题排查
