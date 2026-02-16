@@ -177,9 +177,9 @@ After enabling LDAP, login behaviors under different user states are as follows:
 
 > **About Empty Password Security:**
 >
-> The ldap_allow_empty_pass configuration provides additional security control:
-> When `true` (default): Users can accidentally or intentionally log in without a password, which might be convenient for development environments but poses security risks in production.
-> When `false`: Empty passwords are strictly rejected, ensuring all users must provide valid credentials. This is recommended for production environments to prevent unauthorized access.
+> The `ldap_allow_empty_pass` configuration provides additional security control:
+> - When `true` (default): Users can accidentally or intentionally log in without a password, which might be convenient for development environments but poses security risks in production.
+> - When `false`: Empty passwords are strictly rejected, ensuring all users must provide valid credentials. This is recommended for production environments to prevent unauthorized access.
 
 ### Login Examples
 
