@@ -6,14 +6,14 @@
 }
 ---
 
-[MaxCompute](https://help.aliyun.com/zh/maxcompute/) is an enterprise-level SaaS (Software as a Service) cloud data warehouse on Alibaba Cloud. Through the open storage SDK provided by MaxCompute, Doris can retrieve MaxCompute table information and perform queries.
+[MaxCompute](https://help.aliyun.com/zh/maxcompute/) is an enterprise-level SaaS (Software as a Service) cloud data warehouse on Alibaba Cloud. Through the open storage SDK provided by MaxCompute, Doris can retrieve MaxCompute table information and perform queries and writes.
 
 ## Applicable Scenarios
 
 | Scenario | Description |
 | ---- | ------------------------------------------------------ |
 | Data Integration | Read MaxCompute data and write to Doris internal tables. |
-| Data Write-back | Supported since version 4.1.0 |
+| Data Write-back | Using INSERT command to write data into MaxCompute Table. (Supported since version 4.1.0) |
 
 ## Usage Notes
 

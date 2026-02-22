@@ -6,14 +6,14 @@
 }
 ---
 
-[MaxCompute](https://help.aliyun.com/zh/maxcompute/) 是阿里云上的企业级 SaaS（Software as a Service）模式云数据仓库。通过 MaxCompute 提供的开放存储 SDK，Doris 可以获取 MaxCompute 的表信息并进行查询。
+[MaxCompute](https://help.aliyun.com/zh/maxcompute/) 是阿里云上的企业级 SaaS（Software as a Service）模式云数据仓库。通过 MaxCompute 提供的开放存储 SDK，Doris 可以获取 MaxCompute 的表信息并进行查询和写入操作。
 
 ## 适用场景
 
 | 场景 | 说明                 |
 | ---- | ------------------------------------------------------ |
 | 数据集成 | 读取 MaxCompute 数据并写入到 Doris 内表。 |
-| 数据写回 | 4.1.0 版本支持                           |
+| 数据写回 | 通过 INSERT 命令将数据写入 MaxCompute 表。（4.1.0 版本支持）    |
 
 ## 使用须知
 
