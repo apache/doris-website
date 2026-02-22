@@ -110,7 +110,7 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 
 * [AWS Glue](../metastores/aws-glue.md)
 
-* [Aliyun DLF ](../metastores/aliyun-dlf.md)
+* [Aliyun DLF](../metastores/aliyun-dlf.md)
 
 * [Iceberg Rest Catalog](../metastores/iceberg-rest.md)
 
@@ -212,7 +212,7 @@ Iceberg 的元数层级关系是 Catalog -> Namespace -> Table。其中 Namespac
 
 自 3.1.2 版本开始，对于 Iceberg Rest Catalog，Doris 支持对 Nested Namespace 的映射。
 
-在上述示例中表，会按照如下逻辑映射为 Doris 的元数据：
+在上述示例中，会按照如下逻辑映射为 Doris 的元数据：
 
 | Catalog | Database | Table |
 | --- | --- | --- |
@@ -250,7 +250,7 @@ Iceberg 的元数层级关系是 Catalog -> Namespace -> Table。其中 Namespac
                 'hive.metastore.client.principal' = 'hive/presto-master.docker.cluster@LABS.TERADATA.COM',
                 'hive.metastore.client.keytab' = '/keytabs/hive-presto-master.keytab',
                 'hive.metastore.service.principal' = 'hive/hadoop-master@LABS.TERADATA.COM',
-                'hive.metastore.sasl.enabled ' = 'true',
+                'hive.metastore.sasl.enabled' = 'true',
                 'hive.metastore.authentication.type' = 'kerberos',
                 'hadoop.security.auth_to_local' = 'RULE:[2:\$1@\$0](.*@LABS.TERADATA.COM)s/@.*//
                 RULE:[2:\$1@\$0](.*@OTHERLABS.TERADATA.COM)s/@.*//
@@ -258,7 +258,7 @@ Iceberg 的元数层级关系是 Catalog -> Namespace -> Table。其中 Namespac
                 DEFAULT',
                 'fs.defaultFS' = 'hdfs://127.0.0.1:8520',
                 'hadoop.security.authentication' = 'kerberos',
-                'hadoop.kerberos.principal'='hive/presto-master.docker.cluster@LABS.TERADATA.COM',
+                'hadoop.kerberos.principal' = 'hive/presto-master.docker.cluster@LABS.TERADATA.COM',
                 'hadoop.kerberos.keytab' = '/keytabs/hive-presto-master.keytab'
             );
             ```
@@ -313,7 +313,7 @@ Iceberg 的元数层级关系是 Catalog -> Namespace -> Table。其中 Namespac
                 'hive.metastore.client.keytab' = '/keytabs/presto-server.keytab',
                 'hive.metastore.authentication.type' = 'kerberos',
                 'hive.metastore.service.principal' = 'hive/hadoop-master@LABS.TERADATA.COM',
-                'hive.metastore.sasl.enabled ' = 'true',
+                'hive.metastore.sasl.enabled' = 'true',
                 'hadoop.security.auth_to_local' = 'RULE:[2:\$1@\$0](.*@LABS.TERADATA.COM)s/@.*//
                 RULE:[2:\$1@\$0](.*@OTHERLABS.TERADATA.COM)s/@.*//
                 RULE:[2:\$1@\$0](.*@OTHERREALM.COM)s/@.*//
@@ -407,7 +407,7 @@ Iceberg 的元数层级关系是 Catalog -> Namespace -> Table。其中 Namespac
                 'warehouse' = 'gs://bucket/iceberg_warehouse',
                 'gs.access_key' = '<ak>',
                 'gs.secret_key' = '<sk>',
-                'fs.gcs.support'='true'
+                'fs.gcs.support' = 'true'
             );
             ```
         </TabItem>
@@ -429,8 +429,8 @@ Iceberg 的元数层级关系是 Catalog -> Namespace -> Table。其中 Namespac
     </Tabs>
 </details>
 
-<details >
-    <summary>2.1 & 3.0  版本 </summary>
+<details>
+    <summary>2.1 & 3.0 版本</summary>
     <Tabs>
         <TabItem value='HDFS' label='HDFS' default>
             访问未开启 Kerberos 认证的 HMS 和 HDFS 服务
@@ -452,7 +452,7 @@ Iceberg 的元数层级关系是 Catalog -> Namespace -> Table。其中 Namespac
                 'warehouse' = 'hdfs://127.0.0.1:8520/iceberg-hms-hdfs-warehouse',
                 'hive.metastore.uris' = 'thrift://127.0.0.1:9583',
                 'hive.metastore.kerberos.principal' = 'hive/hadoop-master@LABS.TERADATA.COM',
-                'hive.metastore.sasl.enabled ' = 'true',
+                'hive.metastore.sasl.enabled' = 'true',
                 'hive.metastore.authentication.type' = 'kerberos',
                 'hadoop.security.auth_to_local' = 'RULE:[2:\$1@\$0](.*@LABS.TERADATA.COM)s/@.*//
                 RULE:[2:\$1@\$0](.*@OTHERLABS.TERADATA.COM)s/@.*//
@@ -460,7 +460,7 @@ Iceberg 的元数层级关系是 Catalog -> Namespace -> Table。其中 Namespac
                 DEFAULT',
                 'fs.defaultFS' = 'hdfs://127.0.0.1:8520',
                 'hadoop.security.authentication' = 'kerberos',
-                'hadoop.kerberos.principal'='hive/presto-master.docker.cluster@LABS.TERADATA.COM',
+                'hadoop.kerberos.principal' = 'hive/presto-master.docker.cluster@LABS.TERADATA.COM',
                 'hadoop.kerberos.keytab' = '/keytabs/hive-presto-master.keytab'
             );
             ```
@@ -536,7 +536,6 @@ Iceberg 的元数层级关系是 Catalog -> Namespace -> Table。其中 Namespac
     </Tabs>
 </details>
 
-
 ### AWS Glue
 <details>
     <summary>3.1+ 版本</summary>
@@ -554,7 +553,7 @@ Iceberg 的元数层级关系是 Catalog -> Namespace -> Table。其中 Namespac
                 'glue.secret_key' = '<sk>'
             );
             ```
-            
+
             Glue 服务的认证信息和 S3 的认证信息不一致时，可以通过以下方式单独指定 S3 的认证信息。
             ```sql
             CREATE CATALOG `iceberg_glue_on_s3_catalog_` PROPERTIES (
@@ -578,24 +577,25 @@ Iceberg 的元数层级关系是 Catalog -> Namespace -> Table。其中 Namespac
                 'type' = 'iceberg',
                 'iceberg.catalog.type' = 'glue',
                 'warehouse' = 's3://bucket/warehouse',
-                'glue.region' = 'us-east-1',                    
+                'glue.region' = 'us-east-1',
                 'glue.endpoint' = 'https://glue.us-east-1.amazonaws.com',
-                'glue.role_arn' = '<role_arn>'                
+                'glue.role_arn' = '<role_arn>'
             );
             ```
         </TabItem>
     </Tabs>
 </details>
-<details >
-    <summary>2.1 & 3.0  版本 </summary>
+
+<details>
+    <summary>2.1 & 3.0 版本</summary>
     <Tabs>
         <TabItem value='S3' label='S3' default>
             AWS Glue 和 S3 存储服务共用一套认证信息。
 
-            非 EC2 环境下，需要使用 [aws configure ](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-files.html) 配置 Credentials 信息，同时在~/.aws 目录下生成 credentials 文件。
+            非 EC2 环境下，需要使用 [aws configure](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-files.html) 配置 Credentials 信息，同时在 ~/.aws 目录下生成 credentials 文件。
             ```sql
             CREATE CATALOG glue PROPERTIES (
-                'type'='iceberg',
+                'type' = 'iceberg',
                 'iceberg.catalog.type' = 'glue',
                 'glue.endpoint' = 'https://glue.us-east-1.amazonaws.com',
                 'glue.access_key' = '<ak>',
@@ -615,7 +615,7 @@ Iceberg 的元数层级关系是 Catalog -> Namespace -> Table。其中 Namespac
             ```sql
             CREATE CATALOG iceberg_dlf_catalog_catalog PROPERTIES (
                 'type' = 'iceberg',
-                'iceberg.catalog.type'='dlf',
+                'iceberg.catalog.type' = 'dlf',
                 'warehouse' = 'oss://bucket/iceberg-dlf-oss-warehouse',
                 'dlf.uid' = '203225413946383283',
                 'dlf.catalog_id' = 'p2_regression_case',
@@ -628,14 +628,15 @@ Iceberg 的元数层级关系是 Catalog -> Namespace -> Table。其中 Namespac
         </TabItem>
     </Tabs>
 </details>
-<details >
-    <summary>2.1 & 3.0  版本 </summary>
+
+<details>
+    <summary>2.1 & 3.0 版本</summary>
     <Tabs>
         <TabItem value='DLF 1.0' label='DLF 1.0' default>
             ```sql
             CREATE CATALOG iceberg_dlf_catalog_catalog PROPERTIES (
                 'type' = 'iceberg',
-                'iceberg.catalog.type'='dlf',
+                'iceberg.catalog.type' = 'dlf',
                 'warehouse' = 'oss://bucket/iceberg-dlf-oss-warehouse',
                 'dlf.uid' = '203225413946383283',
                 'dlf.catalog.id' = 'catalog_id',
@@ -648,10 +649,9 @@ Iceberg 的元数层级关系是 Catalog -> Namespace -> Table。其中 Namespac
     </Tabs>
 </details>
 
-
 ### Iceberg Rest Catalog
 <details>
-    <summary>3.1+ 版本  </summary>
+    <summary>3.1+ 版本</summary>
 
     <Tabs>
         <TabItem value='s3' label='S3' default>
@@ -842,7 +842,6 @@ Iceberg 的元数层级关系是 Catalog -> Namespace -> Table。其中 Namespac
                         'gs.endpoint' = 'https://storage.googleapis.com',
                         'gs.access_key' = '<ak>',
                         'gs.secret_key' = '<sk>'
-                        
                     );
                     ```
                 </TabItem>
@@ -864,9 +863,8 @@ Iceberg 的元数层级关系是 Catalog -> Namespace -> Table。其中 Namespac
 
 </details>
 
-<details >
-    <summary>2.1 & 3.0  版本 </summary>
-
+<details>
+    <summary>2.1 & 3.0 版本</summary>
     <Tabs>
         <TabItem value='S3' label='S3' default>
             ```sql
@@ -1014,7 +1012,7 @@ Iceberg 的元数层级关系是 Catalog -> Namespace -> Table。其中 Namespac
 
 ### FileSystem
 <details>
-    <summary>3.1+ 版本  </summary>
+    <summary>3.1+ 版本</summary>
     <Tabs>
         <TabItem value='HDFS' label='HDFS' default>
             访问未开启 Kerberos 认证的 HDFS 服务
@@ -1035,10 +1033,9 @@ Iceberg 的元数层级关系是 Catalog -> Namespace -> Table。其中 Namespac
                 'warehouse' = 'hdfs://127.0.0.1:8520/iceberg-fs-hdfs-warehouse',
                 'fs.defaultFS' = 'hdfs://127.0.0.1:8520',
                 'hadoop.security.authentication' = 'kerberos',
-                'hadoop.kerberos.principal'='hive/presto-master.docker.cluster@LABS.TERADATA.COM',
+                'hadoop.kerberos.principal' = 'hive/presto-master.docker.cluster@LABS.TERADATA.COM',
                 'hadoop.kerberos.keytab' = '/keytabs/hive-presto-master.keytab'
             );
-
             ```
         </TabItem>
         <TabItem value='S3' label='S3'>
@@ -1074,7 +1071,6 @@ Iceberg 的元数层级关系是 Catalog -> Namespace -> Table。其中 Namespac
                 'cos.access_key' = '<ak>',
                 'cos.secret_key' = '<sk>'
             );
-
             ```
         </TabItem>
         <TabItem value='OSS' label='OSS'>
@@ -1115,7 +1111,7 @@ Iceberg 的元数层级关系是 Catalog -> Namespace -> Table。其中 Namespac
             );
             ```
         </TabItem>
-        <TabItem value='Azure Blob' label='Azure Blob '> 
+        <TabItem value='Azure Blob' label='Azure Blob'>
             自 3.1.3 起支持
             ```sql
             CREATE CATALOG iceberg_fs_on_azure_blob_catalog PROPERTIES (
@@ -1125,7 +1121,7 @@ Iceberg 的元数层级关系是 Catalog -> Namespace -> Table。其中 Namespac
                 'azure.account_name' = '<account_name>',
                 'azure.account_key' = '<account_key>',
                 'azure.endpoint' = 'https://<account_name>.blob.core.windows.net',
-                'fs.azure.support'='true'
+                'fs.azure.support' = 'true'
             );
             ```
         </TabItem>
@@ -1133,9 +1129,9 @@ Iceberg 的元数层级关系是 Catalog -> Namespace -> Table。其中 Namespac
             ```sql
             CREATE CATALOG test_iceberg_fs_on_minio PROPERTIES (
                 'type' = 'iceberg',
-                'iceberg.catalog.type'='hadoop',
+                'iceberg.catalog.type' = 'hadoop',
                 'warehouse' = 's3://warehouse/wh',
-                'fs.minio.support'='true',
+                'fs.minio.support' = 'true',
                 'minio.endpoint' = 'http://127.0.0.1:19001',
                 'minio.access_key' = 'admin',
                 'minio.secret_key' = 'password',
@@ -1145,8 +1141,9 @@ Iceberg 的元数层级关系是 Catalog -> Namespace -> Table。其中 Namespac
         </TabItem>
     </Tabs>
 </details>
-<details >
-    <summary>2.1 & 3.0 版本 </summary>
+
+<details>
+    <summary>2.1 & 3.0 版本</summary>
     <Tabs>
         <TabItem value='HDFS' label='HDFS' default>
             访问未开启 Kerberos 认证的 HDFS 服务
@@ -1167,7 +1164,7 @@ Iceberg 的元数层级关系是 Catalog -> Namespace -> Table。其中 Namespac
                 'warehouse' = 'hdfs://127.0.0.1:8520/iceberg-fs-hdfs-warehouse',
                 'fs.defaultFS' = 'hdfs://127.0.0.1:8520',
                 'hadoop.security.authentication' = 'kerberos',
-                'hadoop.kerberos.principal'='hive/presto-master.docker.cluster@LABS.TERADATA.COM',
+                'hadoop.kerberos.principal' = 'hive/presto-master.docker.cluster@LABS.TERADATA.COM',
                 'hadoop.kerberos.keytab' = '/keytabs/hive-presto-master.keytab'
             );
             ```
@@ -1214,10 +1211,10 @@ Iceberg 的元数层级关系是 Catalog -> Namespace -> Table。其中 Namespac
         <TabItem value='GCS' label='GCS'>
             ```sql
             CREATE CATALOG iceberg_fs_on_gcs_catalog PROPERTIES (
-                'type'='iceberg',
-                'iceberg.catalog.type'='hadoop',
+                'type' = 'iceberg',
+                'iceberg.catalog.type' = 'hadoop',
                 'warehouse' = 's3://bucket/iceberg_warehouse',
-                'gs.endpoint'='storage.googleapis.com',
+                'gs.endpoint' = 'storage.googleapis.com',
                 'gs.access_key' = '<ak>',
                 'gs.secret_key' = '<sk>'
             );
@@ -1226,23 +1223,22 @@ Iceberg 的元数层级关系是 Catalog -> Namespace -> Table。其中 Namespac
         <TabItem value='MinIO' label='MinIO'>
             ```sql
             CREATE CATALOG test_iceberg_fs_on_minio PROPERTIES (
-            'type' = 'iceberg',
-            'iceberg.catalog.type'='hadoop',
-            'warehouse' = 's3://warehouse/wh',
-            's3.region' = 'ap-east-1',
-            's3.endpoint' = 'http://minio:9000',
-            's3.access_key' = '<ak>',
-            's3.secret_key' = '<sk>'
+                'type' = 'iceberg',
+                'iceberg.catalog.type' = 'hadoop',
+                'warehouse' = 's3://warehouse/wh',
+                's3.region' = 'ap-east-1',
+                's3.endpoint' = 'http://minio:9000',
+                's3.access_key' = '<ak>',
+                's3.secret_key' = '<sk>'
             );
             ```
         </TabItem>
     </Tabs>
 </details>
 
-
 ### AWS S3 Tables
 <details>
-    <summary>3.1+ 版本  </summary>
+    <summary>3.1+ 版本</summary>
     <Tabs>
         <TabItem value='S3 Tables Rest Catalog' label='S3 Tables Rest Catalog' default>
             可参阅 [集成 S3 Tables](../best-practices/doris-aws-s3tables.md) 文档。
@@ -1290,14 +1286,12 @@ Iceberg 的元数层级关系是 Catalog -> Namespace -> Table。其中 Namespac
             );
             ```
         </TabItem>
-        
     </Tabs>
-
 
 </details>
 
-<details >
-    <summary> 3.0.6+ 版本 </summary>
+<details>
+    <summary>3.0.6+ 版本</summary>
     <TabItem value='FileSystem Catalog' label='FileSystem Catalog' default>
         可参阅 [集成 S3 Tables](../best-practices/doris-aws-s3tables.md) 文档。
         ```sql
@@ -1684,13 +1678,13 @@ SELECT id, name, region FROM source_table;
 CREATE TABLE iceberg_ctas AS SELECT * FROM other_table;
 ```
 
-CTAS 支持指定文件格式、分区方式等信息
+CTAS 支持指定文件格式、分区方式等信息。
 
 ```sql
 CREATE TABLE iceberg_ctas
 PARTITION BY LIST (pt1, pt2) ()
 AS SELECT col1,pt1,pt2 FROM part_ctas_src WHERE col1>0;
-    
+
 CREATE TABLE iceberg.iceberg_db.iceberg_ctas (col1,col2,pt1)
 PARTITION BY LIST (pt1) ()
 PROPERTIES (
@@ -1736,12 +1730,12 @@ CREATE DATABASE [IF NOT EXISTS] iceberg_db;
 
 ```sql
 CREATE DATABASE [IF NOT EXISTS] iceberg.iceberg_db;
-    
+
 CREATE DATABASE [IF NOT EXISTS] iceberg.iceberg_db
 PROPERTIES ('location'='hdfs://172.21.16.47:4007/path/to/db/');
 ```
 
-之后可以通过 `SHOW CREATE DATABASE` 命令可以查看 Database 的 Location 信息：
+之后可以通过 `SHOW CREATE DATABASE` 命令查看 Database 的 Location 信息：
 
 ```sql
 mysql> SHOW CREATE DATABASE iceberg_db;
@@ -1809,6 +1803,25 @@ DROP DATABASE [IF EXISTS] iceberg.iceberg_db;
     'compression-codec'='zlib'
   );
   ```
+
+  自 4.1.0 版本开始，Doris 支持创建 Iceberg 表时，指定排序列。并且在写入数据时，会根据指定的排序列进行数据排序，以获得更好的数据查询性能。
+
+  ```sql
+  CREATE TABLE ordered_table (
+    `id` int NULL,
+    `name` text NULL,
+    `score` double NULL,
+    `create_time` datetimev2(6) NULL
+  )
+  ORDER BY  (`id` ASC NULLS FIRST, `score` DESC NULLS LAST)
+  PROPERTIES (
+    "write-format" = "parquet",
+    "write.parquet.compression-codec" = "zstd"
+  );
+  ```
+
+  - 如不指定排序列，则写入时不做任何排序。
+  - 排序的默认规则是 `ASC NULLS FIRST`。
 
   创建后，可以通过 `SHOW CREATE TABLE` 命令查看 Iceberg 的建表语句。关于分区表的分区函数，可以参阅后面的【分区】小节。
 
@@ -1951,7 +1964,7 @@ DROP DATABASE [IF EXISTS] iceberg.iceberg_db;
 
 自 4.0.2 版本开始，Doris 支持通过 `ALTER` 语句对 Iceberg 表进行 Partition Evolution。
 
-支持的分区变换包括
+支持的分区变换包括：
 
 | 变换 | 语法 | 示例 |
 |-----------|--------|---------|
@@ -1982,7 +1995,7 @@ DROP DATABASE [IF EXISTS] iceberg.iceberg_db;
 - **删除分区键**
 
     ```sql
-    ALTER TABLE table_name DROP PARTITION KEY partition_transform｜key_name;
+    ALTER TABLE table_name DROP PARTITION KEY partition_transform|key_name;
 
     -- 示例
     ALTER TABLE prod.db.sample DROP PARTITION KEY catalog;
@@ -2151,7 +2164,7 @@ EXECUTE cherrypick_snapshot ("snapshot_id" = "<snapshot_id>")
 
 ```sql
 -- 将快照 123456789 的变更合并到当前表状态
-ALTER TABLE iceberg_db.iceberg_table 
+ALTER TABLE iceberg_db.iceberg_table
 EXECUTE cherrypick_snapshot ("snapshot_id" = "123456789");
 ```
 
@@ -2201,19 +2214,19 @@ EXECUTE expire_snapshots ("key1" = "value1", "key2" = "value2", ...)
 
 ```sql
 -- 过期快照，只保留最近的 2 个
-ALTER TABLE iceberg_db.iceberg_table 
+ALTER TABLE iceberg_db.iceberg_table
 EXECUTE expire_snapshots ("retain_last" = "2");
 
 -- 过期指定时间之前的快照
-ALTER TABLE iceberg_db.iceberg_table 
+ALTER TABLE iceberg_db.iceberg_table
 EXECUTE expire_snapshots ("older_than" = "2024-01-01T00:00:00");
 
 -- 过期指定 ID 的快照
-ALTER TABLE iceberg_db.iceberg_table 
+ALTER TABLE iceberg_db.iceberg_table
 EXECUTE expire_snapshots ("snapshot_ids" = "123456789,987654321");
 
 -- 组合参数：过期 2024-06-01 之前的快照，但至少保留最近的 5 个
-ALTER TABLE iceberg_db.iceberg_table 
+ALTER TABLE iceberg_db.iceberg_table
 EXECUTE expire_snapshots ("older_than" = "2024-06-01T00:00:00", "retain_last" = "5");
 ```
 
@@ -2259,7 +2272,7 @@ EXECUTE fast_forward ("branch" = "<branch_name>", "to" = "<target_branch>")
 
 ```sql
 -- 将 feature 分支推进到 main 分支的最新快照
-ALTER TABLE iceberg_db.iceberg_table 
+ALTER TABLE iceberg_db.iceberg_table
 EXECUTE fast_forward ("branch" = "feature", "to" = "main");
 ```
 
@@ -2354,21 +2367,21 @@ EXECUTE rewrite_data_files ("key1" = "value1", "key2" = "value2", ...) [WHERE <c
 ALTER TABLE iceberg_db.iceberg_table EXECUTE rewrite_data_files();
 
 -- 指定目标文件大小和最小输入文件数
-ALTER TABLE iceberg_db.iceberg_table 
+ALTER TABLE iceberg_db.iceberg_table
 EXECUTE rewrite_data_files (
   "target-file-size-bytes" = "134217728",
   "min-input-files" = "10"
 );
 
 -- 使用 WHERE 条件重写特定分区的数据
-ALTER TABLE iceberg_db.iceberg_table 
+ALTER TABLE iceberg_db.iceberg_table
 EXECUTE rewrite_data_files (
   "target-file-size-bytes" = "268435456"
 )
 WHERE date_col = '2024-01-01';
 
 -- 重写所有文件
-ALTER TABLE iceberg_db.iceberg_table 
+ALTER TABLE iceberg_db.iceberg_table
 EXECUTE rewrite_data_files (
   "rewrite-all" = "true",
   "target-file-size-bytes" = "536870912"
@@ -2449,7 +2462,7 @@ EXECUTE rollback_to_snapshot ("snapshot_id" = "<snapshot_id>")
 
 ```sql
 -- 回滚到快照 987654321
-ALTER TABLE iceberg_db.iceberg_table 
+ALTER TABLE iceberg_db.iceberg_table
 EXECUTE rollback_to_snapshot ("snapshot_id" = "987654321");
 ```
 
@@ -2491,11 +2504,11 @@ EXECUTE rollback_to_timestamp ("timestamp" = "<timestamp>")
 
 ```sql
 -- 回滚到指定时间点（ISO 格式）
-ALTER TABLE iceberg_db.iceberg_table 
+ALTER TABLE iceberg_db.iceberg_table
 EXECUTE rollback_to_timestamp ("timestamp" = "2024-01-01 10:30:00.000");
 
 -- 回滚到指定时间点（时间戳格式）
-ALTER TABLE iceberg_db.iceberg_table 
+ALTER TABLE iceberg_db.iceberg_table
 EXECUTE rollback_to_timestamp ("timestamp" = "1704067200000");
 ```
 
@@ -2538,15 +2551,15 @@ EXECUTE set_current_snapshot ("snapshot_id" = "<snapshot_id>" | "ref" = "<ref_na
 
 ```sql
 -- 通过快照 ID 设置当前快照
-ALTER TABLE iceberg_db.iceberg_table 
+ALTER TABLE iceberg_db.iceberg_table
 EXECUTE set_current_snapshot ("snapshot_id" = "123456789");
 
 -- 通过分支名称设置当前快照
-ALTER TABLE iceberg_db.iceberg_table 
+ALTER TABLE iceberg_db.iceberg_table
 EXECUTE set_current_snapshot ("ref" = "feature_branch");
 
 -- 通过标签名称设置当前快照
-ALTER TABLE iceberg_db.iceberg_table 
+ALTER TABLE iceberg_db.iceberg_table
 EXECUTE set_current_snapshot ("ref" = "v1.0");
 ```
 
@@ -2556,49 +2569,6 @@ EXECUTE set_current_snapshot ("ref" = "v1.0");
 2. `snapshot_id` 和 `ref` 参数互斥，只能指定其中一个。
 3. 如果指定的快照 ID 或引用不存在，操作会失败。
 4. 如果当前快照已经是目标快照，操作会直接返回，不会创建新快照。
-
-### publish_changes
-
-`publish_changes` 操作用于在 WAP（Write-Audit-Publish）模式下，将带有指定 `wap.id` 的快照发布为当前表状态。  
-它会找到与给定 `wap_id` 匹配的快照，并通过 *cherrypick* 的方式将其合并到当前表中，使这批暂存数据对所有读取操作可见。 
-
-**语法：**
-
-```sql
-ALTER TABLE [catalog.][database.]table_name
-EXECUTE publish_changes("wap_id" = "<wap_id>")
-```
-
-**参数说明：**
-
-| 参数名称 | 类型 | 必填 | 描述 |
-| -------- | ---- | ---- | ---- |
-| `wap_id` | STRING | 是 | 要发布的 WAP 快照 ID |
-
-**返回值：**
-
-执行 `publish_changes` 操作会返回一个结果集，包含以下 2 列：
-
-| 列名 | 类型 | 描述 |
-| ---- | ---- | ---- |
-| `previous_snapshot_id` | STRING | 发布操作前当前快照的 ID（如果不存在则为 NULL） |
-| `current_snapshot_id` | STRING | 发布操作后新创建并设置为当前快照的 ID |
-
-**示例：**
-
-```sql
--- 发布 WAP ID 为 test_wap_001 的快照
-ALTER TABLE iceberg_db.iceberg_table 
-EXECUTE publish_changes("wap_id" = "test_wap_001");
-```
-
-**注意事项：**
-
-1. 该操作不支持 WHERE 条件，也不支持分区（PARTITION/PARTITIONS）子句
-2. 仅对启用了 write.wap.enabled = true 并通过 wap.id 产生 WAP 快照的 Iceberg 表有意义
-3. 如果找不到与指定 wap_id 对应的快照，操作会失败并抛出错误
-4. 发布后，新快照将成为当前快照
-5. 如果在发布前表还没有任何快照，则 previous_snapshot_id 可能为 NULL
 
 ## Iceberg 表优化
 
@@ -2710,17 +2680,17 @@ EXECUTE publish_changes("wap_id" = "test_wap_001");
     SET @min_file_size_bytes = 16 * 1024 * 1024;   -- 16 MB（默认：target-file-size-bytes * 0.75）
     SET @max_file_size_bytes = 768 * 1024 * 1024;  -- 768 MB（默认：target-file-size-bytes * 1.8）
 
-    SELECT 
+    SELECT
         file_path,
         `partition`,
         file_size_in_bytes / 1024.0 / 1024.0 AS file_size_mb,
         record_count,
-        CASE 
+        CASE
             WHEN file_size_in_bytes < @min_file_size_bytes THEN 'Too small'
             WHEN file_size_in_bytes > @max_file_size_bytes THEN 'Too large'
         END AS size_issue
     FROM iceberg_table$data_files
-    WHERE file_size_in_bytes < @min_file_size_bytes 
+    WHERE file_size_in_bytes < @min_file_size_bytes
     OR file_size_in_bytes > @max_file_size_bytes
     ORDER BY `partition`, file_size_in_bytes DESC;
     ```
@@ -2752,7 +2722,7 @@ EXECUTE publish_changes("wap_id" = "test_wap_001");
     SET @max_file_size_bytes = 768 * 1024 * 1024;
 
     WITH file_analysis AS (
-        SELECT 
+        SELECT
             `partition`,
             file_path,
             file_size_in_bytes,
@@ -2760,28 +2730,28 @@ EXECUTE publish_changes("wap_id" = "test_wap_001");
             (file_size_in_bytes < @min_file_size_bytes OR file_size_in_bytes > @max_file_size_bytes) AS meets_file_level_conditions
         FROM iceberg_table$data_files
     )
-    SELECT 
-        'Total files' AS metric, 
+    SELECT
+        'Total files' AS metric,
         COUNT(*) AS value
     FROM file_analysis
     UNION ALL
-    SELECT 
-        'Files meeting file-level conditions', 
+    SELECT
+        'Files meeting file-level conditions',
         SUM(CASE WHEN meets_file_level_conditions THEN 1 ELSE 0 END)
     FROM file_analysis
     UNION ALL
-    SELECT 
-        'Total size (GB)', 
+    SELECT
+        'Total size (GB)',
         ROUND(SUM(file_size_in_bytes) / 1024.0 / 1024.0 / 1024.0, 2)
     FROM file_analysis
     UNION ALL
-    SELECT 
-        'Size meeting file-level conditions (GB)', 
+    SELECT
+        'Size meeting file-level conditions (GB)',
         ROUND(SUM(CASE WHEN meets_file_level_conditions THEN file_size_in_bytes ELSE 0 END) / 1024.0 / 1024.0 / 1024.0, 2)
     FROM file_analysis
     UNION ALL
-    SELECT 
-        'Percentage meeting file-level conditions (%)', 
+    SELECT
+        'Percentage meeting file-level conditions (%)',
         ROUND(SUM(CASE WHEN meets_file_level_conditions THEN 1 ELSE 0 END) * 100.0 / COUNT(*), 2)
     FROM file_analysis;
     ```

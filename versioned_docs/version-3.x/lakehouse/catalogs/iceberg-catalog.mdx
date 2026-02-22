@@ -1794,6 +1794,25 @@ For an Iceberg Database, you must first drop all tables under the database befor
   );
   ```
 
+  Starting from version 4.1.0, Doris supports specifying sort columns when creating an Iceberg table. When writing data, the data will be sorted according to the specified sort columns to achieve better query performance.
+
+  ```sql
+  CREATE TABLE ordered_table (
+    `id` int NULL,
+    `name` text NULL,
+    `score` double NULL,
+    `create_time` datetimev2(6) NULL
+  )
+  ORDER BY  (`id` ASC NULLS FIRST, `score` DESC NULLS LAST)
+  PROPERTIES (
+    "write-format" = "parquet",
+    "write.parquet.compression-codec" = "zstd"
+  );
+  ```
+
+  - If no sort columns are specified, no sorting will be performed during writes.
+  - The default sort order is ASC NULLS FIRST.
+
   After creation, you can use the `SHOW CREATE TABLE` command to view the Iceberg table creation statement. For details about partition functions, see the [Partitioning](#) section.
 
 * **Dropping Tables**
