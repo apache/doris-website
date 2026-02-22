@@ -2594,11 +2594,11 @@ EXECUTE publish_changes("wap_id" = "test_wap_001");
 
 **注意事项：**
 
-1. 该操作不支持WHERE条件，也不支持分区（PARTITION/PARTITIONS）子句
-2. 仅对启用了write.wap.enabled = true并通过wap.id产生 WAP 快照的 Iceberg 表有意义
-3. 如果找不到与指定wap_id对应的快照，操作会失败并抛出错误
+1. 该操作不支持 WHERE 条件，也不支持分区（PARTITION/PARTITIONS）子句
+2. 仅对启用了 write.wap.enabled = true 并通过 wap.id 产生 WAP 快照的 Iceberg 表有意义
+3. 如果找不到与指定 wap_id 对应的快照，操作会失败并抛出错误
 4. 发布后，新快照将成为当前快照
-5. 如果在发布前表还没有任何快照，则previous_snapshot_id可能为 NULL
+5. 如果在发布前表还没有任何快照，则 previous_snapshot_id 可能为 NULL
 
 ## Iceberg 表优化
 
