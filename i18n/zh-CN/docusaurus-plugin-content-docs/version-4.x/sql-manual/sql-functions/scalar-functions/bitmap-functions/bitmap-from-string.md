@@ -1,7 +1,8 @@
 ---
 {
     "title": "BITMAP_FROM_STRING",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "将一个字符串转化为一个 BITMAP，字符串是由逗号分隔的一组 unsigned bigint 数字组成。(数字取值在:0 ~ 18446744073709551615) 比如\"0, 1, 2\"字符串会转化为一个 Bitmap，其中的第 0, 1, 2 位被设置。当输入字段不合法时，返回 NULL"
 }
 ---
 

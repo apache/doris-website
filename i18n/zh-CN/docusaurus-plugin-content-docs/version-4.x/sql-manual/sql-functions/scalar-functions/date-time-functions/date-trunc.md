@@ -1,13 +1,14 @@
 ---
 {
     "title": "DATE_TRUNC",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "DATETRUNC 函数用于将日期或时间值（datetime）按照指定的时间单位（timeunit）截断，即保留指定单位及更高层级的时间信息，将更低层级的时间信息清至最小日期时间。例如，按 “小时” 截断时，会保留年、月、日、小时，将分钟、秒等清零，按照年截断时，会把日，"
 }
 ---
 
 ## 描述
 
-DATE_TRUNC 函数用于将日期或时间值（datetime）按照指定的时间单位（time_unit）截断，即保留指定单位及更高层级的时间信息，将更低层级的时间信息清至最小日期时间。例如，按 “小时” 截断时，会保留年、月、日、小时，将分钟、秒等清零，按照年截断时，会把日，月截断为 xxxx-01-01。
+DATE_TRUNC 函数用于将日期或时间值按照指定的时间单位（time_unit）截断，即保留指定单位及更高层级的时间信息，将更低层级的时间信息清至最小日期时间。例如，按 “小时” 截断时，会保留年、月、日、小时，将分钟、秒等清零，按照年截断时，会把日，月截断为 xxxx-01-01。支持输入类型为 TIMESTAMPTZ, DATETIME, DATE。
 
 该函数与 postgresql 中的 [date_trunc函数](https://www.postgresql.org/docs/16/functions-datetime.html#FUNCTIONS-DATETIME-TRUNC) 行为基本一致, 不同的是, doris暂不支持 second 单位以下的截断, postgresql 支持到 microsecond 。
 
@@ -22,14 +23,13 @@ DATE_TRUNC(<time_unit>, <datetime>)
 
 | 参数 | 说明 |
 | -- | -- |
-| `<date_or_time_part>` | 合法的日期表达式, 类型为 datetime 或者 date 类型, 具体 datetime 和 date 格式请查看 [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion)) |
+| `<date_or_time_part>` | 合法的日期表达式，支持输入 date/datetime/timestamptz 类型，具体格式请查看 [timestamptz的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion), [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
 | `<time_unit>` | 希望截断的时间间隔，可选的值如下：[`second`,`minute`,`hour`,`day`,`week`,`month`,`quarter`,`year`] |
 
 ## 返回值
 
-返回与 datetime 类型一致的截断结果：
-- 输入 DATE 时，返回 DATE 类型；
-- 输入 DATETIME 或带时间的字符串时，返回 DATETIME（包含日期和截断后的时间）。
+返回类型与`<date_or_time_part>`类型保持一致， 返回对应的日期时间类型截断之后的结果（即保留指定单位及更高层级的时间信息，将更低层级的时间信息清至最小日期时间）
+- 若输入为 TIMESTAMPTZ 类型，则会先将其转换为 local_time(如：`2025-12-31 23:59:59+05:00` 在会话变量为`+08:00`的情况下代表的local_time为`2026-01-01 02:59:59`)，再进行截断操作。
 - 对于带有 scale 的 datetime 类型，会截小数为零但保留 scale 返回.
 
 特殊情况：
@@ -103,6 +103,15 @@ mysql> select date_trunc('2010-12-02 19:28:30.523', 'second');
 | date_trunc('2010-12-02 19:28:30.523', 'second') |
 +-------------------------------------------------+
 | 2010-12-02 19:28:30.000                         |
++-------------------------------------------------+
+
+-- TimeStampTz类型样例, SET time_zone = '+08:00'
+-- 将变量值转换为 local_time(2026-01-01 02:59:59)后再做 DATE_TRUNC 截断操作
+SELECT DATE_TRUNC('2025-12-31 23:59:59+05:00', 'year');
++-------------------------------------------------+
+| DATE_TRUNC('2025-12-31 23:59:59+05:00', 'year') |
++-------------------------------------------------+
+| 2026-01-01 00:00:00+08:00                       |
 +-------------------------------------------------+
 
 ---不支持的单位，返回错误

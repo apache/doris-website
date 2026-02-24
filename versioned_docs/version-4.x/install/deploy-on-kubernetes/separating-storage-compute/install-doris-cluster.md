@@ -1,9 +1,13 @@
 ---
 {
-  "title": "Deploy Doris Cluster",
-  "language": "en"
+    "title": "Deploy Doris Cluster | Separating Storage Compute",
+    "language": "en",
+    "description": "Deploying a functional decoupled storage and compute Doris cluster on Kubernetes involves four main steps:",
+    "sidebar_label": "Deploy Doris Cluster"
 }
 ---
+
+# Deploy Doris Cluster
 
 Deploying a functional decoupled storage and compute Doris cluster on Kubernetes involves four main steps:
 1. Preparation – Primarily, install a FoundationDB cluster.
@@ -136,5 +140,6 @@ After the cluster has successfully started, configure an available object storag
    SET {vaultName} AS DEFAULT STORAGE VAULT;
    ```
    Here, {vaultName} is the name of the Vault you wish to use, for example, s3_vault as created in the example above.
+
 
 

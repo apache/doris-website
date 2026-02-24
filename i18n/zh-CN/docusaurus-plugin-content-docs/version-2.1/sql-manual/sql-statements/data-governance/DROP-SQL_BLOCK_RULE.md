@@ -1,7 +1,8 @@
 ---
 {
     "title": "DROP SQL_BLOCK_RULE",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "删除一个或多个 SQL 阻止规则。支持同时删除多个规则，规则名称之间用逗号分隔。"
 }
 ---
 

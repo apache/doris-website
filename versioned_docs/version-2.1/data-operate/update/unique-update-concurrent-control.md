@@ -1,7 +1,8 @@
 ---
 {
     "title": "Concurrency Control for Updates in the Primary Key Model",
-    "language": "en"
+    "language": "en",
+    "description": "Doris employs Multi-Version Concurrency Control (MVCC) to handle concurrent updates. Each data write operation is assigned a write transaction,"
 }
 ---
 

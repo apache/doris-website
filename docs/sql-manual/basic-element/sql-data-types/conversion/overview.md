@@ -1,7 +1,8 @@
 ---
 {
     "title": "Type Conversion",
-    "language": "en"
+    "language": "en",
+    "description": "In Doris, each expression has a type, such as 1, col1, and fromunixtime(col2) in the expression select 1, col1, fromunixtime(col2) from table1."
 }
 ---
 
@@ -107,5 +108,3 @@ TODO
 ### Common Type
 
 When an implicit conversion is required due to the operands being used as mathematical operations, the first step is to determine the common type. If the operands on both sides are not consistent with the common type, each will plan a CAST expression to the common type.
-
-TODO

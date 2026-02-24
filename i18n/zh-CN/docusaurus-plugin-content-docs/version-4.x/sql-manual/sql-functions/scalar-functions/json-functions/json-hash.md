@@ -1,7 +1,8 @@
 ---
 {
     "title": "JSON_HASH",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "JSONHASH 函数用于计算一个 JSON 对象的哈希值。该函数接受一个 JSON 类型的参数，并返回一个 BIGINT 类型的哈希值。"
 }
 ---
 

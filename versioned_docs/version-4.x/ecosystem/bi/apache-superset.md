@@ -1,7 +1,8 @@
 ---
 {
-"title": "Apache Superset",
-"language": "en"
+    "title": "Apache Superset",
+    "language": "en",
+    "description": "Apache Superset is an open-source data mining platform that supports rich data source connections, various visualization methods,"
 }
 ---
 

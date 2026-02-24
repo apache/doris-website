@@ -1,7 +1,8 @@
 ---
 {
     "title": "SHOW COMPUTE GROUPS",
-    "language": "en"
+    "language": "en",
+    "description": "In the compute storage separation mode, display a list of compute groups that the current user has permissions to use."
 }
 ---
 

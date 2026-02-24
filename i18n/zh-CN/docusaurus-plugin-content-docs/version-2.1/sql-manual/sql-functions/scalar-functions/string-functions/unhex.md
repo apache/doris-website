@@ -1,7 +1,8 @@
 ---
 {
     "title": "UNHEX",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "unhex 函数用于将十六进制字符串转换为原始字符串。将每两个十六进制字符转换为一个字节。当传入的参数是无效值时，将返回空字符串。"
 }
 ---
 

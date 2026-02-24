@@ -1,7 +1,8 @@
 ---
 {
     "title": "ATAN",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "返回反正切值。"
 }
 ---
 

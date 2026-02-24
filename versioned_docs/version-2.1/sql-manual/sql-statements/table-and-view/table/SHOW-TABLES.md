@@ -1,7 +1,8 @@
 ---
 {
     "title": "SHOW TABLES",
-    "language": "en"
+    "language": "en",
+    "description": "This statement is used to display all tables and views under the current db."
 }
 ---
 

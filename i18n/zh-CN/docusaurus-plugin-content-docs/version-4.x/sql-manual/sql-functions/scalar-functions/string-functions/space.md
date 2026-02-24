@@ -1,7 +1,8 @@
 ---
 {
     "title": "SPACE",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "SPACE 函数用于生成由指定数量的空格组成的字符串。"
 }
 ---
 

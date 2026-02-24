@@ -1,7 +1,8 @@
 ---
 {
     "title": "MICROSECOND",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "MICROSECOND 函数用于从输入的日期时间值中提取微秒部分（即小数点后第六位及以内的数值），返回范围为 0 到 999999。该函数支持处理含微秒精度的 DATETIME 类型，对于精度不足的输入会自动补 0。"
 }
 ---
 

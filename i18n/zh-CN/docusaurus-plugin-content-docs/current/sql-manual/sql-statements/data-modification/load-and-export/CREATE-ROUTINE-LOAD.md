@@ -1,9 +1,9 @@
 ---
 {
     "title": "CREATE ROUTINE LOAD",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "例行导入（Routine Load）功能支持用户提交一个常驻的导入任务，通过不断地从指定的数据源读取数据，将数据导入到 Doris 中。"
 }
-
 ---
 
 ## 描述
@@ -596,6 +596,6 @@ FROM <data_source> [<data_source_properties>]
    (
        "kafka_broker_list" = "broker1:9092,broker2:9092",
        "kafka_topic" = "my_topic",
-       "kafka_default_offsets" = "2021-05-21 10:00:00"
+       "property.kafka_default_offsets" = "2021-05-21 10:00:00"
    );
    ```

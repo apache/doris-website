@@ -1,7 +1,8 @@
 ---
 {
-   "title": "DROP STORAGE POLICY",
-   "language": "zh-CN"
+    "title": "DROP STORAGE POLICY",
+    "language": "zh-CN",
+    "description": "删除存储策略。"
 }
 ---
 

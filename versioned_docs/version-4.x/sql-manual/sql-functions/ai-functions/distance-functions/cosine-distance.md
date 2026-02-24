@@ -1,7 +1,8 @@
 ---
 {
     "title": "COSINE_DISTANCE",
-    "language": "en"
+    "language": "en",
+    "description": "Calculates the cosine distance between two vectors (vector values are coordinates)"
 }
 ---
 

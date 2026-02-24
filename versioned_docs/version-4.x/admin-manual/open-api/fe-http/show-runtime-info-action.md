@@ -1,7 +1,8 @@
 ---
 {
     "title": "Show Runtime Info Action",
-    "language": "en"
+    "language": "en",
+    "description": "Used to obtain Runtime information of FE JVM"
 }
 ---
 

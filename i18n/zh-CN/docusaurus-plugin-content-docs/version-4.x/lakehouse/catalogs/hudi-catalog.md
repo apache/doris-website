@@ -1,7 +1,8 @@
 ---
 {
     "title": "Hudi Catalog",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "Hudi Catalog 复用了 Hive Catalog。通过连接 Hive Metastore，或者兼容 Hive Metatore 的元数据服务，Doris 可以自动获取 Hudi 的库表信息，并进行数据查询。"
 }
 ---
 

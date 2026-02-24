@@ -1,9 +1,13 @@
 ---
 {
-    "title": "ARRAY",
-    "language": "zh-CN"
+    "title": "ARRAY | Complex Types",
+    "language": "zh-CN",
+    "description": "ARRAY<T> 表示由 T 类型元素组成的数组。点击 ARRAY 数据类型 了解具体信息。",
+    "sidebar_label": "ARRAY"
 }
 ---
+
+# ARRAY
 
 `ARRAY<T>` 表示由 T 类型元素组成的数组。点击 [ARRAY 数据类型](../../../sql-manual/basic-element/sql-data-types/semi-structured/ARRAY.md) 了解具体信息。
 
@@ -116,3 +120,4 @@ mysql> SELECT * FROM array_test;
 +------+-----------------+
 4 rows in set (0.01 sec)
 ```
+

@@ -1,7 +1,8 @@
 ---
 {
     "title": "IF",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "如果表达式 <condition> 成立，则返回 <valuetrue>；否则返回 <valuefalseornull>。 返回类型：<valuetrue> 表达式的结果类型。"
 }
 ---
 

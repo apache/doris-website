@@ -1,7 +1,8 @@
 ---
 {
     "title": "NEXT_DAY",
-    "language": "en"
+    "language": "en",
+    "description": "The NEXTDAY function is used to return the first date that is later than the given date and matches the specified day of the week."
 }
 ---
 

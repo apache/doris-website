@@ -1,7 +1,8 @@
 ---
 {
     "title": "检查 tablet 文件丢失",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "在 BE 节点上，可能会因为一些异常情况导致数据文件丢失，但是元数据显示正常，这种副本异常不会被 FE 检测到，也不能被修复。 当用户查询时，会报错failed to initialize storage reader。该接口的功能是检测出当前 BE 节点上所有存在文件丢失的 tablet。"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "Hardware Info Action",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "Hardware Info Action 用于获取当前 FE 的硬件信息。"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "Release 1.1.3",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "作为 1.1.2 LTS（Long-term Support，长周期支持）版本基础之上的 Bugfix 版本，在 Apache Doris 1.1.3 版本中，有超过 80 个 Issue 或性能优化项被合入，优化了在导入或查询过程中的内存控制，"
 }
 ---
 

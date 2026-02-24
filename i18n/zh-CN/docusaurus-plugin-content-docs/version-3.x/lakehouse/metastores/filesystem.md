@@ -1,7 +1,8 @@
 ---
 {
     "title": "File System",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "Iceberg Catalog 和 Paimon Catalog 支持直接从文件系统访问元数据。"
 }
 ---
 

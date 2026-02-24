@@ -1,7 +1,8 @@
 ---
 {
     "title": "Query Memory Analysis",
-    "language": "en"
+    "language": "en",
+    "description": "Usually, we first use Query Profile to analyze query memory usage."
 }
 ---
 

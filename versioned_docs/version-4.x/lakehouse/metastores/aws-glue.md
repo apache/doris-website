@@ -1,7 +1,8 @@
 ---
 {
     "title": "AWS Glue",
-    "language": "en"
+    "language": "en",
+    "description": "This document describes the parameter configuration when using AWS Glue Catalog to access Iceberg tables or Hive tables through CREATE CATALOG."
 }
 ---
 
@@ -66,6 +67,8 @@ Example:
       -- 'glue.external_id' = '<YOUR_EXTERNAL_ID>'
     );
     ```
+
+For instructions on AWS authentication and authorization configuration, please refer to the document [aws-authentication-and-authorization](../../admin-manual/auth/integrations/aws-authentication-and-authorization.md)
 
 ### Hive Glue Catalog
 

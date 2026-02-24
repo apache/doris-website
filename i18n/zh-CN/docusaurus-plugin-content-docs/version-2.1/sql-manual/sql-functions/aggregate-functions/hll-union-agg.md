@@ -1,7 +1,8 @@
 ---
 {
     "title": "HLL_UNION_AGG",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "HLLUNIONAGG 函数是一种聚合函数，主要用于将多个 HyperLogLog 数据结构合并，估算合并后基数的近似值。"
 }
 ---
 

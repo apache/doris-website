@@ -1,7 +1,8 @@
 ---
 {
     "title": "Cast to DATETIME Type",
-    "language": "en"
+    "language": "en",
+    "description": "Valid range for DATETIME type:"
 }
 ---
 

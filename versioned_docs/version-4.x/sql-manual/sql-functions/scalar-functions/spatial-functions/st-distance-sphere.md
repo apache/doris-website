@@ -1,7 +1,8 @@
 ---
 {
     "title": "ST_DISTANCE_SPHERE",
-    "language": "en"
+    "language": "en",
+    "description": "Calculate the spherical distance between two points on the Earth, in meters. The input parameters are the longitude of point X, latitude of point X,"
 }
 ---
 

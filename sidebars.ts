@@ -113,10 +113,12 @@ const sidebars: SidebarsConfig = {
                                 'table-design/data-partitioning/auto-partitioning',
                                 'table-design/data-partitioning/data-bucketing',
                                 'table-design/data-partitioning/common-issues',
+                                'table-design/data-partitioning/basic-concepts',
                             ],
                         },
                         'table-design/data-type',
                         'table-design/column-compression',
+                        'table-design/storage-format',
                         {
                             type: 'category',
                             label: 'Table Indexes',
@@ -186,6 +188,7 @@ const sidebars: SidebarsConfig = {
                                 'data-operate/import/import-way/insert-into-manual',
                                 'data-operate/import/import-way/insert-into-values-manual',
                                 'data-operate/import/import-way/mysql-load-manual',
+                                "data-operate/import/import-way/log-storage-analysis"
                             ],
                         },
                         {
@@ -196,6 +199,7 @@ const sidebars: SidebarsConfig = {
                                 'data-operate/import/file-format/json',
                                 'data-operate/import/file-format/parquet',
                                 'data-operate/import/file-format/orc',
+                                'data-operate/import/file-format/native',
                             ],
                         },
                         {
@@ -222,8 +226,17 @@ const sidebars: SidebarsConfig = {
                             items: [
                                 'data-operate/import/load-internals/load-internals',
                                 'data-operate/import/load-internals/routine-load-internals',
+                                'data-operate/import/load-internals/stream-load-in-complex-network',
                             ],
                         },
+                        {
+                            type: 'category',
+                            label: 'Continuous Load',
+                            items: [
+                                'data-operate/import/streaming-job/streaming-job-tvf',
+                                'data-operate/import/streaming-job/streaming-job-multi-table',
+                            ],
+                        }
                     ],
                 },
                 {
@@ -235,10 +248,12 @@ const sidebars: SidebarsConfig = {
                             label: 'Updating Data',
                             items: [
                                 'data-operate/update/update-overview',
-                                'data-operate/update/unique-update',
+                                'data-operate/update/unique-update-sql',
                                 'data-operate/update/update-of-unique-model',
                                 'data-operate/update/update-of-aggregate-model',
+                                'data-operate/update/partial-column-update',
                                 'data-operate/update/unique-update-concurrent-control',
+                                'data-operate/update/multi-stream-update-for-unique-model',
                             ],
                         },
                         {
@@ -280,7 +295,11 @@ const sidebars: SidebarsConfig = {
                         {
                             type: 'category',
                             label: 'User Defined Functions',
-                            items: ['query-data/udf/alias-function', 'query-data/udf/java-user-defined-function'],
+                            items: [
+                                'query-data/udf/alias-function',
+                                'query-data/udf/java-user-defined-function',
+                                'query-data/udf/python-user-defined-function',
+                            ],
                         },
                         'query-data/complex-type',
                         'query-data/lateral-view',
@@ -323,6 +342,7 @@ const sidebars: SidebarsConfig = {
                         'query-acceleration/condition-cache',
                         'query-acceleration/high-concurrent-point-query',
                         'query-acceleration/dictionary',
+                        'query-acceleration/query-profile',
                         {
                             type: 'category',
                             label: 'Distincting Counts',
@@ -391,6 +411,7 @@ const sidebars: SidebarsConfig = {
                     type: 'category',
                     label: 'AI',
                     items: [
+                        'ai/ai-overview',
                         'ai/ai-function-overview',
                         {
                             type: 'category',
@@ -413,6 +434,7 @@ const sidebars: SidebarsConfig = {
                                 'ai/vector-search/ivf',
                                 'ai/vector-search/index-management',
                                 'ai/vector-search/performance',
+                                'ai/vector-search/behind-index',
                             ],
                         },
                     ],
@@ -428,13 +450,50 @@ const sidebars: SidebarsConfig = {
                             label: 'Data Catalogs',
                             items: [
                                 'lakehouse/catalogs/hive-catalog',
-                                'lakehouse/catalogs/iceberg-catalog',
-                                'lakehouse/catalogs/hudi-catalog',
-                                'lakehouse/catalogs/paimon-catalog',
-                                'lakehouse/catalogs/maxcompute-catalog',
+                                {
+                                    type: 'category',
+                                    label: 'Iceberg Catalog',
+                                    link: {type: 'doc', id: 'lakehouse/catalogs/iceberg-catalog'},
+                                    items: [
+                                        'lakehouse/best-practices/doris-iceberg',
+                                        'lakehouse/best-practices/doris-aws-s3tables',
+                                        'lakehouse/best-practices/doris-polaris',
+                                        'lakehouse/best-practices/doris-gravitino',
+                                        'lakehouse/best-practices/doris-onelake',
+                                        'lakehouse/best-practices/doris-unity-catalog',
+                                        'lakehouse/best-practices/doris-lakekeeper',
+                                        'lakehouse/best-practices/doris-nessie'
+                                    ],
+                                },
+                                {
+                                    type: 'category',
+                                    label: 'Paimon Catalog',
+                                    link: {type: 'doc', id: 'lakehouse/catalogs/paimon-catalog'},
+                                    items: [
+                                        'lakehouse/best-practices/doris-paimon',
+                                        'lakehouse/best-practices/doris-dlf-paimon'
+                                    ],
+                                },
+                                {
+                                    type: 'category',
+                                    label: 'Hudi Catalog',
+                                    link: {type: 'doc', id: 'lakehouse/catalogs/hudi-catalog'},
+                                    items: [
+                                        'lakehouse/best-practices/doris-hudi'
+                                    ],
+                                },
+                                {
+                                    type: 'category',
+                                    label: 'MaxCompute Catalog',
+                                    link: {type: 'doc', id: 'lakehouse/catalogs/maxcompute-catalog'},
+                                    items: [
+                                        'lakehouse/best-practices/doris-maxcompute'
+                                    ],
+                                },
                                 'lakehouse/catalogs/delta-lake-catalog',
                                 'lakehouse/catalogs/bigquery-catalog',
                                 'lakehouse/catalogs/kudu-catalog',
+                                'lakehouse/catalogs/kafka-catalog',
                                 'lakehouse/catalogs/es-catalog',
                                 'lakehouse/catalogs/doris-catalog',
                                 'lakehouse/catalogs/jdbc-catalog-overview',
@@ -459,6 +518,7 @@ const sidebars: SidebarsConfig = {
                                 'lakehouse/metastores/google-dataproc-metastore',
                                 'lakehouse/metastores/aliyun-dlf',
                                 'lakehouse/metastores/iceberg-rest',
+                                'lakehouse/metastores/iceberg-jdbc',
                                 'lakehouse/metastores/filesystem',
                             ],
                         },
@@ -506,16 +566,6 @@ const sidebars: SidebarsConfig = {
                             label: 'Lakehouse Best Practices',
                             items: [
                                 'lakehouse/best-practices/optimization',
-                                'lakehouse/best-practices/doris-hudi',
-                                'lakehouse/best-practices/doris-paimon',
-                                'lakehouse/best-practices/doris-iceberg',
-                                'lakehouse/best-practices/doris-aws-s3tables',
-                                'lakehouse/best-practices/doris-dlf-paimon',
-                                'lakehouse/best-practices/doris-maxcompute',
-                                'lakehouse/best-practices/doris-polaris',
-                                'lakehouse/best-practices/doris-gravitino',
-                                'lakehouse/best-practices/doris-onelake',
-                                'lakehouse/best-practices/doris-unity-catalog',
                                 'lakehouse/best-practices/kerberos',
                                 'lakehouse/best-practices/tpch',
                                 'lakehouse/best-practices/tpcds',
@@ -538,6 +588,9 @@ const sidebars: SidebarsConfig = {
                                 'ecosystem/observability/beats',
                                 'ecosystem/observability/opentelemetry',
                                 'ecosystem/observability/fluentbit',
+                                'ecosystem/observability/loongcollector',
+                                'ecosystem/observability/langfuse',
+                                'ecosystem/observability/vector',
                             ],
                         },
                     ],
@@ -586,7 +639,7 @@ const sidebars: SidebarsConfig = {
                                     label: 'Authentication',
                                     items: [
                                         'admin-manual/auth/authentication/internal',
-                                        'admin-manual/auth/authentication/federation',
+                                        'admin-manual/auth/authentication/ldap',
                                     ],
                                 },
                                 {
@@ -620,7 +673,7 @@ const sidebars: SidebarsConfig = {
                                 'admin-manual/auth/integrations/aws-authentication-and-authorization',
                                 'admin-manual/auth/integrations/aws-iam-role',
                             ],
-                        },
+                        }
                     ],
                 },
             ],
@@ -933,7 +986,7 @@ const sidebars: SidebarsConfig = {
                             ],
                         },
                     ],
-                },
+                }
             ],
         },
         {
@@ -960,6 +1013,7 @@ const sidebars: SidebarsConfig = {
                     items: [
                         'ecosystem/bi/apache-superset',
                         'ecosystem/bi/finebi',
+                        'ecosystem/bi/metabase',
                         'ecosystem/bi/powerbi',
                         'ecosystem/bi/tableau',
                         'ecosystem/bi/quicksight',
@@ -980,6 +1034,9 @@ const sidebars: SidebarsConfig = {
                         'ecosystem/observability/beats',
                         'ecosystem/observability/opentelemetry',
                         'ecosystem/observability/fluentbit',
+                        'ecosystem/observability/loongcollector',
+                        'ecosystem/observability/langfuse',
+                        'ecosystem/observability/vector',
                     ],
                 },
                 {
@@ -997,7 +1054,7 @@ const sidebars: SidebarsConfig = {
                         'ecosystem/hive-hll-udf',
                         'ecosystem/spark-load',
                     ],
-                },
+                }
             ],
         },
         {
@@ -1049,6 +1106,7 @@ const sidebars: SidebarsConfig = {
                                         'sql-manual/basic-element/sql-data-types/date-time/DATE',
                                         'sql-manual/basic-element/sql-data-types/date-time/TIME',
                                         'sql-manual/basic-element/sql-data-types/date-time/DATETIME',
+                                        'sql-manual/basic-element/sql-data-types/date-time/TIMESTAMPTZ',
                                         'admin-manual/cluster-management/time-zone',
                                     ],
                                 },
@@ -1107,6 +1165,7 @@ const sidebars: SidebarsConfig = {
                                         'sql-manual/basic-element/sql-data-types/conversion/boolean-conversion',
                                         'sql-manual/basic-element/sql-data-types/conversion/date-conversion',
                                         'sql-manual/basic-element/sql-data-types/conversion/datetime-conversion',
+                                        'sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion',
                                         'sql-manual/basic-element/sql-data-types/conversion/decimal-conversion',
                                         'sql-manual/basic-element/sql-data-types/conversion/float-double-conversion',
                                         'sql-manual/basic-element/sql-data-types/conversion/int-conversion',
@@ -1133,6 +1192,7 @@ const sidebars: SidebarsConfig = {
                         'sql-manual/basic-element/reserved-keywords',
                         'sql-manual/basic-element/variables',
                         'sql-manual/basic-element/comments',
+                        'sql-manual/basic-element/file-path-pattern',
                         {
                             type: 'category',
                             label: 'Operators',
@@ -1227,6 +1287,7 @@ const sidebars: SidebarsConfig = {
                                         'sql-manual/sql-functions/scalar-functions/numeric-functions/floor',
                                         'sql-manual/sql-functions/scalar-functions/numeric-functions/fmod',
                                         'sql-manual/sql-functions/scalar-functions/numeric-functions/format-round',
+                                        "sql-manual/sql-functions/scalar-functions/numeric-functions/interval",
                                         'sql-manual/sql-functions/scalar-functions/numeric-functions/isinf',
                                         'sql-manual/sql-functions/scalar-functions/numeric-functions/isnan',
                                         'sql-manual/sql-functions/scalar-functions/numeric-functions/ln',
@@ -1425,6 +1486,7 @@ const sidebars: SidebarsConfig = {
                                         'sql-manual/sql-functions/scalar-functions/date-time-functions/next-day',
                                         'sql-manual/sql-functions/scalar-functions/date-time-functions/period-add',
                                         'sql-manual/sql-functions/scalar-functions/date-time-functions/period-diff',
+                                        'sql-manual/sql-functions/scalar-functions/date-time-functions/previous-day',
                                         'sql-manual/sql-functions/scalar-functions/date-time-functions/quarter',
                                         'sql-manual/sql-functions/scalar-functions/date-time-functions/quarters-add',
                                         'sql-manual/sql-functions/scalar-functions/date-time-functions/quarters-sub',
@@ -1442,6 +1504,7 @@ const sidebars: SidebarsConfig = {
                                         'sql-manual/sql-functions/scalar-functions/date-time-functions/timestampdiff',
                                         'sql-manual/sql-functions/scalar-functions/date-time-functions/time',
                                         'sql-manual/sql-functions/scalar-functions/date-time-functions/timediff',
+                                        "sql-manual/sql-functions/scalar-functions/date-time-functions/time-format",
                                         'sql-manual/sql-functions/scalar-functions/date-time-functions/time-to-sec',
                                         'sql-manual/sql-functions/scalar-functions/date-time-functions/to-date',
                                         'sql-manual/sql-functions/scalar-functions/date-time-functions/to-days',
@@ -1484,10 +1547,13 @@ const sidebars: SidebarsConfig = {
                                         'sql-manual/sql-functions/scalar-functions/spatial-functions/st-circle',
                                         'sql-manual/sql-functions/scalar-functions/spatial-functions/st-contains',
                                         'sql-manual/sql-functions/scalar-functions/spatial-functions/st-disjoint',
+                                        'sql-manual/sql-functions/scalar-functions/spatial-functions/st-distance',
                                         'sql-manual/sql-functions/scalar-functions/spatial-functions/st-distance-sphere',
                                         'sql-manual/sql-functions/scalar-functions/spatial-functions/st-geometryfromtext',
                                         'sql-manual/sql-functions/scalar-functions/spatial-functions/st-geometryfromwkb',
+                                        'sql-manual/sql-functions/scalar-functions/spatial-functions/st-geometrytype',
                                         'sql-manual/sql-functions/scalar-functions/spatial-functions/st-intersects',
+                                        'sql-manual/sql-functions/scalar-functions/spatial-functions/st-length',
                                         'sql-manual/sql-functions/scalar-functions/spatial-functions/st-linefromtext',
                                         'sql-manual/sql-functions/scalar-functions/spatial-functions/st-point',
                                         'sql-manual/sql-functions/scalar-functions/spatial-functions/st-polygon',
@@ -1771,6 +1837,7 @@ const sidebars: SidebarsConfig = {
                                     items: [
                                         'sql-manual/sql-functions/scalar-functions/other-functions/convert-to',
                                         'sql-manual/sql-functions/scalar-functions/other-functions/esquery',
+                                        'sql-manual/sql-functions/scalar-functions/other-functions/default',
                                         'sql-manual/sql-functions/scalar-functions/other-functions/field',
                                         'sql-manual/sql-functions/scalar-functions/other-functions/g',
                                         'sql-manual/sql-functions/scalar-functions/other-functions/grouping',
@@ -2003,6 +2070,7 @@ const sidebars: SidebarsConfig = {
                                 'sql-manual/sql-functions/table-valued-functions/local',
                                 'sql-manual/sql-functions/table-valued-functions/mv_infos',
                                 'sql-manual/sql-functions/table-valued-functions/numbers',
+                                'sql-manual/sql-functions/table-valued-functions/parquet-meta',
                                 'sql-manual/sql-functions/table-valued-functions/partition-values',
                                 'sql-manual/sql-functions/table-valued-functions/partitions',
                                 'sql-manual/sql-functions/table-valued-functions/query',
@@ -2208,6 +2276,7 @@ const sidebars: SidebarsConfig = {
                                         'sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-REPLACE',
                                         'sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-PROPERTY',
                                         'sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-COMMENT',
+                                        'sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-DISTRIBUTION',
                                         'sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-ADD-GENERATED-COLUMN',
                                         'sql-manual/sql-statements/table-and-view/table/CANCEL-ALTER-TABLE',
                                         'sql-manual/sql-statements/table-and-view/table/SHOW-ALTER-TABLE',
@@ -2435,6 +2504,8 @@ const sidebars: SidebarsConfig = {
                             label: 'Job',
                             items: [
                                 'sql-manual/sql-statements/job/CREATE-JOB',
+                                'sql-manual/sql-statements/job/CREATE-STREAMING-JOB',
+                                'sql-manual/sql-statements/job/ALTER-JOB',
                                 'sql-manual/sql-statements/job/PAUSE-JOB',
                                 'sql-manual/sql-statements/job/DROP-JOB',
                                 'sql-manual/sql-statements/job/RESUME-JOB',
@@ -2485,6 +2556,8 @@ const sidebars: SidebarsConfig = {
                     type: 'category',
                     label: 'v4.0',
                     items: [
+                        'releasenotes/v4.0/release-4.0.3',
+                        'releasenotes/v4.0/release-4.0.2',
                         'releasenotes/v4.0/release-4.0.1',
                         'releasenotes/v4.0/release-4.0.0'
                     ],
@@ -2493,6 +2566,7 @@ const sidebars: SidebarsConfig = {
                     type: 'category',
                     label: 'v3.1',
                     items: [
+                        "releasenotes/v3.1/release-3.1.4",
                         "releasenotes/v3.1/release-3.1.3",
                         'releasenotes/v3.1/release-3.1.2',
                         'releasenotes/v3.1/release-3.1.1',

@@ -1,7 +1,8 @@
 ---
 {
     "title": "JSON_EXTRACT_DOUBLE",
-    "language": "en"
+    "language": "en",
+    "description": "JSONEXTRACTDOUBLE extracts the field specified by <jsonpath> from a JSON object and converts it to DOUBLE type."
 }
 ---
 

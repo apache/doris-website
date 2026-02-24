@@ -1,7 +1,8 @@
 ---
 {
-"title": "PAUSE JOB",
-"language": "en"
+    "title": "PAUSE JOB",
+    "language": "en",
+    "description": "When a user pauses a job in the RUNNING state, the running task will be interrupted and the job state will be changed to PAUSED."
 }
 ---
 
@@ -24,9 +25,10 @@ PAUSE JOB WHERE jobname = <job_name> ;
 
 The user who executes this SQL command must have at least the following permissions:
 
-| Privilege | Object | Notes |
-|:--------------|:-----------|:------------------------|
-| ADMIN_PRIV | Database | Currently only supports **ADMIN** permissions to perform this operation |
+| Privilege | Object | ExecuteType | Notes |
+|:--------------|:-----------|:------------------------|:------------------------|
+| ADMIN_PRIV | Database | NO Streaming | Currently only supports **ADMIN** permissions to perform this operation |
+| LOAD_PRIV | Database | Streaming |Supports **LOAD** permissions to perform this operation |
 
 ## Examples
 

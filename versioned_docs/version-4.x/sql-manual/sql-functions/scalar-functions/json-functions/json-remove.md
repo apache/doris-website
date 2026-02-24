@@ -1,7 +1,8 @@
 ---
 {
     "title": "JSON_REMOVE",
-    "language": "en"
+    "language": "en",
+    "description": "The JSONREMOVE function is used to remove data from a JSON document and return the result."
 }
 ---
 

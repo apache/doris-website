@@ -1,7 +1,8 @@
 ---
 {
     "title": "Release 3.0.0",
-    "language": "en"
+    "language": "en",
+    "description": "We are excited to announce the release of Apache Doris 3.0!"
 }
 ---
 
@@ -440,7 +441,7 @@ Before the official release of version 3.0, the compute-storage decoupled mode o
 
 We highly recommend users with compute-storage decoupling needs to download version 3.0 and experience it firsthand.
 
-Going forward, we will accelerate our release iteration cycle to deliver a more stable version experience for all users. Feel free to join us in the [Apache Doris community](https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-2gmq5o30h-455W226d79zP3L96ZhXIoQ) and engage directly with the core developers.
+Going forward, we will accelerate our release iteration cycle to deliver a more stable version experience for all users. Feel free to join us in the [Apache Doris community](https://doris.apache.org/slack) and engage directly with the core developers.
 
 ## Credits
 

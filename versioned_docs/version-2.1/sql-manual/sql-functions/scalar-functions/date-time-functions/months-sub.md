@@ -1,7 +1,8 @@
 ---
 {
     "title": "MONTHS_SUB",
-    "language": "en"
+    "language": "en",
+    "description": "The MONTHSSUB function is used to add or subtract a specified number of months to a given date and returns the resulting date."
 }
 ---
 

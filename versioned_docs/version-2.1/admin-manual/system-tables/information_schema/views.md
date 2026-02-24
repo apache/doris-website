@@ -1,7 +1,8 @@
 ---
 {
     "title": "views",
-    "language": "en"
+    "language": "en",
+    "description": "Stores all view information."
 }
 ---
 

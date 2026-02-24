@@ -1,7 +1,8 @@
 ---
 {
     "title": "POSITIVE",
-    "language": "en"
+    "language": "en",
+    "description": "Returns the value itself."
 }
 ---
 

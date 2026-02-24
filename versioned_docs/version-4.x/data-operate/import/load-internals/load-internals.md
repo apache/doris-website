@@ -1,7 +1,8 @@
 ---
 {
     "title": "Load Internals and Performance Optimization",
-    "language": "en"
+    "language": "en",
+    "description": "Apache Doris is a high-performance distributed analytical database that adopts the MPP (Massively Parallel Processing) architecture and is widely "
 }
 ---
 

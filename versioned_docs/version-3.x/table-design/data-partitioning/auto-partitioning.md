@@ -1,7 +1,8 @@
 ---
 {
     "title": "Auto Partition",
-    "language": "en"
+    "language": "en",
+    "description": "The Auto Partition feature supports automatic detection of whether the corresponding partition exists during the data import process."
 }
 ---
 
@@ -245,7 +246,7 @@ auto partition by range (date_trunc(k0, 'year'))
 )
 DISTRIBUTED BY HASH(`k0`) BUCKETS 2
 properties(
-    "dynamic_partition.enable" = "true",
+    "dynamic_partition.enable" = "false",
     "dynamic_partition.prefix" = "p",
     "dynamic_partition.start" = "-50",
     "dynamic_partition.end" = "0", --- Dynamic Partition No Partition Creation

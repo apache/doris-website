@@ -1,7 +1,8 @@
 ---
 {
     "title": "AWS authentication and authorization",
-    "language": "en"
+    "language": "en",
+    "description": "Doris supports accessing AWS service resources through two authentication methods: ​​IAM User​​ and ​​Assumed Role​​."
 }
 ---
 

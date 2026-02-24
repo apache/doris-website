@@ -1,89 +1,129 @@
 ---
 {
     "title": "Analyzing Hugging Face Data",
-    "language": "en"
+    "language": "en",
+    "description": "Learn how to use Apache Doris to query and analyze Hugging Face datasets directly with SQL. Supports CSV, Parquet, JSON formats without downloading, enabling fast import of machine learning data."
 }
 ---
 
-[Hugging Face](https://huggingface.co/) is a popular centralized platform where users can store, share, and collaborate on building machine learning models, datasets, and other resources.
+[Hugging Face](https://huggingface.co/) is a popular centralized platform where users can store, share, and collaborate on building machine learning models, datasets, and other resources. [Hugging Face Dataset](https://huggingface.co/datasets) repositories may contain data files in various formats such as CSV, Parquet, and JSONL.
 
-[Hugging Face Dataset](https://huggingface.co/datasets) may contain data files such as CSV, Parquet, JSONL, etc., depending on the repository type.
-
-Through the [HTTP Table Value Function](../sql-manual/sql-functions/table-valued-functions/http.md) feature, Doris can directly access data on Hugging Face datasets via SQL.
+Doris can directly access and analyze data from Hugging Face datasets using SQL through the [HTTP Table Valued Function](../sql-manual/sql-functions/table-valued-functions/http.md).
 
 :::note
-This feature is supported since version 4.0.3
+This feature is supported starting from version 4.0.2.
 :::
 
-## Usage Instructions
+## Features
 
-Doris accesses data in Hugging Face Dataset through HTTP protocol.
+| Feature | Description |
+|---------|-------------|
+| Access Protocol | Access Hugging Face Dataset via HTTP protocol |
+| Type Inference | Supports automatic type inference |
+| Supported File Formats | CSV, JSON, Parquet, ORC |
+| Data Operations | Supports `CREATE TABLE AS SELECT` and `INSERT INTO ... SELECT` |
 
-Supports automatic type inference. Supports `CREATE TABLE AS SELECT` and `INSERT INTO ... SELECT` methods for data processing.
+The parameters are the same as File Table Valued Function.
 
-Supports CSV, Json, Parquet, ORC and other file types, with parameters same as File Table Valued Function.
+## URI Syntax
 
-## Basic Examples
+The URI format for accessing Hugging Face datasets is as follows:
 
-1. Access CSV data from the `fka/awesome-chatgpt-prompts` repository
+```
+hf://datasets/<owner>/<repo>[@<branch>]/<path>
+```
 
-    ```sql
-    SELECT COUNT(*) FROM
-    HTTP(
-        "uri" = "hf://datasets/fka/awesome-chatgpt-prompts/blob/main/prompts.csv",
-        "format" = "csv"
-    );
-    ```
+| Component | Description | Required |
+|-----------|-------------|----------|
+| `owner` | Dataset owner | Yes |
+| `repo` | Dataset repository name | Yes |
+| `branch` | Branch name, defaults to `main` | No |
+| `path` | File path, supports wildcards | Yes |
 
-    Corresponding data file: https://huggingface.co/datasets/fka/awesome-chatgpt-prompts/blob/main/prompts.csv
+**Wildcard Description:**
 
-2. Create table, access JSON data from the `stanfordnlp/imdb` repository with the `script` branch specified. Then import data into the table.
+| Wildcard | Description | Example |
+|----------|-------------|---------|
+| `*` | Matches any characters in a single directory level | `*/*.parquet` matches all Parquet files in first-level subdirectories |
+| `**` | Recursively matches multiple directory levels | `**/*.parquet` matches Parquet files at all levels |
+| `[...]` | Matches any single character in the character set | `test-0000[0-9].parquet` matches test-00000 to test-00009 |
 
-    ```sql
-    CREATE TABLE hf_table AS
-    SELECT * FROM
-    HTTP(
-        "uri" = "hf://datasets/stanfordnlp/imdb@script/dataset_infos.json",
-        "format" = "json"
-    );
-    ```
+## Use Cases
 
-    Corresponding data file: https://huggingface.co/datasets/stanfordnlp/imdb/blob/script/dataset_infos.json
+### Case 1: Quick Data Query
 
-3. Access Parquet files from the `stanfordnlp/imdb` repository with the `main` branch specified. Also, use wildcards to match multiple paths.
+Query public datasets on Hugging Face directly using SQL without downloading files.
 
-    ```sql
-    SELECT * FROM
-    HTTP(
-        "uri" = "hf://datasets/stanfordnlp/imdb@main/*/*.parquet",
-        "format" = "parquet"
-    ) ORDER BY text LIMIT 1;
-    ```
+**Example:** Query CSV data from the `fka/awesome-chatgpt-prompts` repository:
 
-    Corresponding data file: https://huggingface.co/datasets/stanfordnlp/imdb/blob/main/plain_text/test-00000-of-00001.parquet
+```sql
+SELECT COUNT(*) FROM
+HTTP(
+    "uri" = "hf://datasets/fka/awesome-chatgpt-prompts/blob/main/prompts.csv",
+    "format" = "csv"
+);
+```
 
-4. Access Parquet files from the `stanfordnlp/imdb` repository with the `main` branch specified. Also, use wildcards to match multiple recursive files. Then insert into the specified table.
+> Corresponding data file: https://huggingface.co/datasets/fka/awesome-chatgpt-prompts/blob/main/prompts.csv
 
-    ```sql
-    INSERT INTO hf_table
-    SELECT * FROM
-    HTTP(
-        "uri" = "hf://datasets/stanfordnlp/imdb@main/**/test-00000-of-0000[1].parquet",
-        "format" = "parquet"
-    ) ORDER BY text LIMIT 1;
-    ```
+**Example:** Query Parquet files from the `stanfordnlp/imdb` repository using wildcards to match multiple files:
 
-    Corresponding data file: https://huggingface.co/datasets/stanfordnlp/imdb/blob/main/plain_text/test-00000-of-00001.parquet
+```sql
+SELECT * FROM
+HTTP(
+    "uri" = "hf://datasets/stanfordnlp/imdb@main/*/*.parquet",
+    "format" = "parquet"
+) ORDER BY text LIMIT 1;
+```
 
-5. Analyze files that require authorization
+> Corresponding data file: https://huggingface.co/datasets/stanfordnlp/imdb/blob/main/plain_text/test-00000-of-00001.parquet
 
-    Get a Token from your Hugging Face account (starting with `hf_`), then add it to the `http.header.Authorization` property.
+### Case 2: Import Data to Local Tables
 
-    ```sql
-    SELECT * FROM
-    HTTP(
-        "uri" = "hf://datasets/gaia-benchmark/GAIA/blob/main/2023/validation/metadata.level1.parquet",
-        "format" = "parquet",
-        "http.header.Authorization" = "Bearer hf_MWYzOJJoZEymb..."
-    ) LIMIT 1\G
-    ```
+Import Hugging Face datasets into Doris tables for subsequent analysis.
+
+**Method 1:** Use `CREATE TABLE AS SELECT` to create a new table and import data:
+
+```sql
+CREATE TABLE hf_table AS
+SELECT * FROM
+HTTP(
+    "uri" = "hf://datasets/stanfordnlp/imdb@script/dataset_infos.json",
+    "format" = "json"
+);
+```
+
+> Corresponding data file: https://huggingface.co/datasets/stanfordnlp/imdb/blob/script/dataset_infos.json
+
+**Method 2:** Use `INSERT INTO ... SELECT` to insert data into an existing table:
+
+```sql
+INSERT INTO hf_table
+SELECT * FROM
+HTTP(
+    "uri" = "hf://datasets/stanfordnlp/imdb@main/**/test-00000-of-0000[1].parquet",
+    "format" = "parquet"
+) ORDER BY text LIMIT 1;
+```
+
+> Corresponding data file: https://huggingface.co/datasets/stanfordnlp/imdb/blob/main/plain_text/test-00000-of-00001.parquet
+
+### Case 3: Access Private Datasets
+
+For datasets that require authorization, you need to add Token authentication in the request.
+
+**Steps:**
+
+1. Log in to your Hugging Face account and obtain an Access Token (starts with `hf_`).
+2. Pass the Token through the `http.header.Authorization` property in SQL.
+
+**Example:**
+
+```sql
+SELECT * FROM
+HTTP(
+    "uri" = "hf://datasets/gaia-benchmark/GAIA/blob/main/2023/validation/metadata.level1.parquet",
+    "format" = "parquet",
+    "http.header.Authorization" = "Bearer hf_MWYzOJJoZEymb..."
+) LIMIT 1\G
+```

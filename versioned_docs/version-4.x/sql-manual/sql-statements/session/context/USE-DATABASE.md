@@ -1,9 +1,9 @@
 ---
 {
     "title": "USE DATABASE",
-    "language": "en"
+    "language": "en",
+    "description": "Used to switch to the specified database or compute group."
 }
-
 ---
 
 ## Description

@@ -1,7 +1,8 @@
 ---
 {
     "title": "Release 3.0.1",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "亲爱的社区小伙伴们，Apache Doris 3.0.1 版本已于 2024 年 8 月 23 日正式发布。从 3.0 系列版本开始，Apache Doris 开始支持存算分离模式，用户可以在集群部署时选择采用存算一体模式或存算分离模式。同时在 3.0.1 版本中，"
 }
 ---
 

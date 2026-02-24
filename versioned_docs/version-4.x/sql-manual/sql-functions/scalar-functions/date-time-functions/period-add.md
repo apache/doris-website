@@ -1,7 +1,8 @@
 ---
 {
     "title": "PERIOD_ADD",
-    "language": "en"
+    "language": "en",
+    "description": "Calculate the result of increasing the <period> by <month> months."
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "SHOW ROLES",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "SHOW ROLES 语句用于展示所有已创建的角色信息，包括角色名称，包含的用户以及权限。"
 }
 ---
 

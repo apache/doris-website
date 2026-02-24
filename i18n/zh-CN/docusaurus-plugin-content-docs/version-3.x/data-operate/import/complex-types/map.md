@@ -1,9 +1,13 @@
 ---
 {
-    "title": "MAP",
-    "language": "zh-CN"
+    "title": "MAP | Complex Types",
+    "language": "zh-CN",
+    "description": "MAP<K, V> 表示由 K, V 类型元素组成的 map，不能作为 key 列使用。",
+    "sidebar_label": "MAP"
 }
 ---
+
+# MAP
 
 `MAP<K, V>` 表示由 K, V 类型元素组成的 map，不能作为 key 列使用。
 
@@ -125,3 +129,4 @@ mysql> SELECT * FROM map_test;
 +------+-------------------------+
 4 rows in set (0.01 sec)
 ```
+

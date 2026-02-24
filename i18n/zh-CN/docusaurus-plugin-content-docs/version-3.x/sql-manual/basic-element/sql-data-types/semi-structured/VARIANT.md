@@ -1,7 +1,8 @@
 ---
 {
     "title": "VARIANT",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "VARIANT 类型用于存储半结构化 JSON 数据，可包含不同基础类型（整数、字符串、布尔等）以及一层数组与嵌套对象。写入时会自动基于 JSON Path 推断子列结构与类型，并将高频路径物化为独立子列，充分利用列式存储和向量化执行，兼顾灵活性与性能。"
 }
 ---
 
@@ -485,9 +486,9 @@ CREATE TABLE example_table (
 ```
 
 <table>
-<tr><td>属性<br/></td><td>描述<br/></td></tr>
-<tr><td>`variant_max_subcolumns_count` (仅 3.1 以上的版本支持) <br/></td><td>控制 Path 物化列数的上限；超过后新增路径可能存放于共享数据结构。默认 0 表示不限，建议设置为 2048；不推荐超过 10000。<br/></td></tr>
-<tr><td>`variant_enable_typed_paths_to_sparse` (仅 3.1 以上的版本支持) <br/></td><td>默认指定了 Path 类型后，该 Path 一定会被提取（不计入 `variant_max_subcolumns_count`）。设置为 `true` 后也会计入阈值，可能被收敛到共享结构。<br/></td></tr>
+<tr><td>属性</td><td>描述</td></tr>
+<tr><td>`variant_max_subcolumns_count` (仅 3.1 以上的版本支持)</td><td>控制 Path 物化列数的上限；超过后新增路径可能存放于共享数据结构。默认 2048（推荐），0 表示不限制；不推荐超过 10000。</td></tr>
+<tr><td>`variant_enable_typed_paths_to_sparse` (仅 3.1 以上的版本支持)</td><td>默认指定了 Path 类型后，该 Path 一定会被提取（不计入 `variant_max_subcolumns_count`）。设置为 `true` 后也会计入阈值，可能被收敛到共享结构。</td></tr>
 </table>
 
 达到上限后的行为与调优建议：

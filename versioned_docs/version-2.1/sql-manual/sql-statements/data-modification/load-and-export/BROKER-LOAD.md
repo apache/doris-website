@@ -1,7 +1,8 @@
 ---
 {
     "title": "BROKER LOAD",
-    "language": "en"
+    "language": "en",
+    "description": "Broker Load is a data import method in Doris, primarily used to import large scale data from remote storage systems such as HDFS or S3."
 }
 ---
 

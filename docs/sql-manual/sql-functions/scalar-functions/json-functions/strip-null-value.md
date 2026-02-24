@@ -1,7 +1,8 @@
 ---
 {
     "title": "STRIP_NULL_VALUE",
-    "language": "en"
+    "language": "en",
+    "description": "The STRIPNULLVALUE function converts NULL values in JSON to NULL values in SQL. All other variant values remain unchanged."
 }
 ---
 

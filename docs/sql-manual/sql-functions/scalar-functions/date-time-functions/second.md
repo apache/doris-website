@@ -1,7 +1,8 @@
 ---
 {
     "title": "SECOND",
-    "language": "en"
+    "language": "en",
+    "description": "The SECOND function extracts the seconds portion from a specified datetime value, returning an integer result from 0 to 59."
 }
 ---
 

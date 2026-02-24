@@ -1,7 +1,8 @@
 ---
 {
     "title": "转换为 DATETIME 类型",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "DATETIME 类型支持的合法时间上下界："
 }
 ---
 

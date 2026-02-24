@@ -1,7 +1,8 @@
 ---
 {
     "title": "AI_EXTRACT",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "用于从文本中提取特定标签对应的信息"
 }
 ---
 

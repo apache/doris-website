@@ -1,7 +1,8 @@
 ---
 {
     "title": "YEAR_OF_WEEK",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "YEAROFWEEK 函数用于返回指定日期在 ISO 8601 周日历标准下的周年（year of week）。与普通年份不同，ISO 周年以周为单位计算，一年的第一周是包含 1 月 4 日的那一周，且该周必须包含至少 4 天属于当年。 与 year 函数 不同，year 函数只是返回输入日期的年份"
 }
 ---
 

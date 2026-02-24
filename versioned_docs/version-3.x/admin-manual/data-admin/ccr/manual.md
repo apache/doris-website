@@ -1,7 +1,8 @@
 ---
 {
     "title": "Operation Manual",
-    "language": "en"
+    "language": "en",
+    "description": "When Syncer synchronizes, the user needs to provide accounts for both upstream and downstream, which must have the following permissions:"
 }
 ---
 

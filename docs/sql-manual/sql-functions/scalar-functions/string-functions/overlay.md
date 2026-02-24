@@ -1,7 +1,8 @@
 ---
 {
     "title": "OVERLAY",
-    "language": "en"
+    "language": "en",
+    "description": "The OVERLAY function is used to replace a substring at a specified position and length within a string. Starting from the specified position,"
 }
 ---
 

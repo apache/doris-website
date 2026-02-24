@@ -1,7 +1,8 @@
 ---
 {
     "title": "Complex Type",
-    "language": "en"
+    "language": "en",
+    "description": "Doris supports complex types such as Array, Map, Struct, and JSON."
 }
 ---
 

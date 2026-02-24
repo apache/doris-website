@@ -1,9 +1,13 @@
 ---
 {
-    "title": "Best Practices",
-    "language": "en"
+    "title": "Best Practices | Async Materialized View",
+    "language": "en",
+    "description": "When the following conditions are met, it is recommended to create partitioned materialized views:",
+    "sidebar_label": "Best Practices"
 }
 ---
+
+# Best Practices
 
 ## Principles for Using Asynchronous Materialized Views
 - **Timeliness Consideration:** Asynchronous materialized views are typically used in scenarios where data timeliness is not critical, usually T+1 data. If high timeliness is required, consider using synchronous materialized views.

@@ -1,7 +1,8 @@
 ---
 {
     "title": "YEARS_DIFF",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "YEARSDIFF 函数用于计算两个日期或时间值之间的完整年数差值，结果为结束时间减去开始时间的年数。支持处理 DATE、DATETIME 类型，计算时会考虑完整的时间差（包括月份、日期及时分秒）。"
 }
 ---
 

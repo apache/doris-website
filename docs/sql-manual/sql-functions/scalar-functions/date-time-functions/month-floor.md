@@ -1,7 +1,8 @@
 ---
 {
     "title": "MONTH_FLOOR",
-    "language": "en"
+    "language": "en",
+    "description": "The monthfloor function rounds the input datetime value down to the nearest specified month interval. If origin is specified,"
 }
 ---
 
@@ -32,7 +33,7 @@ MONTH_FLOOR(`<datetime>`, `<period>`, `<origin>`)
 
 | Parameter | Description |
 | --------- | ----------- |
-| `<datetime>` | The datetime value to be rounded down, of type DATETIME and DATE. For specific datetime formats, see [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion). |
+| `<datetime>` | The datetime value to be rounded down, supports DATETIME/DATE/TIMESTAMPTZ types. Date type will be converted to the start time 00:00:00 of the corresponding date. For specific formats please see [timestamptz conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion), and for datetime/date formats refer to [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion). |
 | `<period>` | The month interval value, of type INT, representing the number of months contained in each interval. |
 | `<origin>` | The starting time point of the interval, of type DATETIME and DATE. Default value is 0001-01-01 00:00:00. |
 
@@ -47,6 +48,8 @@ Returns a value of type DATETIME, representing the time value after rounding dow
 - If the input is of DATE type (only includes year, month, and day), its time part defaults to 00:00:00.
 - If the `<origin>` date and time is after the `<period>`, it will still be calculated according to the above formula, but the period k will be negative.
 - If date_or_time_expr has a scale, the returned result will also have a scale with the fractional part being zero.
+- If the input is TIMESTAMPTZ type, it will first be converted to local_time (for example: `2025-12-31 23:59:59+05:00` represents local_time `2026-01-01 02:59:59` when the session variable is `+08:00`), and then perform FLOOR calculation.
+- If the input time values (`<datetime>` and `<period>`) contain both TIMESTAMPTZ and DATETIME types, the output is DATETIME type.
 
 ## Examples
 
@@ -114,6 +117,23 @@ SELECT MONTH_FLOOR('2022-09-13 22:28:18', 5, '2028-07-03 22:20:00') AS result;
 +---------------------+
 | 2022-09-03 22:20:00 |
 +---------------------+
+
+-- Example of TimeStampTz type, SET time_zone = '+08:00'
+-- Convert the variable value to local_time(2026-01-01 02:59:59) before performing the FLOOR operation
+SELECT MONTH_FLOOR('2025-12-31 23:59:59+05:00');
++------------------------------------------+
+| MONTH_FLOOR('2025-12-31 23:59:59+05:00') |
++------------------------------------------+
+| 2026-01-01 00:00:00+08:00                |
++------------------------------------------+
+
+-- If the parameters include both TimeStampTz and Datetime types, output the DateTime type.
+SELECT MONTH_FLOOR('2025-12-31 23:59:59+05:00', '2025-12-15 00:00:00.123');
++---------------------------------------------------------------------+
+| MONTH_FLOOR('2025-12-31 23:59:59+05:00', '2025-12-15 00:00:00.123') |
++---------------------------------------------------------------------+
+| 2025-12-15 00:00:00.123                                             |
++---------------------------------------------------------------------+
 
 -- Period is non-positive, returns error
 SELECT MINUTE_FLOOR('2023-07-13 22:28:18', -5) AS result;

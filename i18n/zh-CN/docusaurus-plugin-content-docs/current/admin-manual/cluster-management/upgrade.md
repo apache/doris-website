@@ -1,7 +1,8 @@
 ---
 {
     "title": "集群升级",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "Doris 提供了滚动升级的能力，在升级过程中逐步对 FE 与 BE 节点进行升级，减少停机时间，确保在升级过程中系统能够保持正常运行。"
 }
 ---
 

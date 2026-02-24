@@ -1,7 +1,8 @@
 ---
 {
-  "title": "Leading Hint",
-  "language": "en"
+    "title": "Leading Hint",
+    "language": "en",
+    "description": "Leading Hint is a powerful query optimization technique that allows users to guide the Doris optimizer to determine the table join order in the query "
 }
 ---
 

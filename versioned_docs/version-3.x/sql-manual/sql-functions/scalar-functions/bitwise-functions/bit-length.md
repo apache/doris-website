@@ -1,7 +1,8 @@
 ---
 {
     "title": "BIT_LENGTH",
-    "language": "en"
+    "language": "en",
+    "description": "It is used to return the median of the binary representation of a string (that is, the total number of binary digits)."
 }
 ---
 

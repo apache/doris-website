@@ -1,7 +1,8 @@
 ---
 {
     "title": "ST_POINT",
-    "language": "en"
+    "language": "en",
+    "description": "Creates a Point geometry object from the given X and Y coordinates. In geospatial contexts,"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "UCASE/UPPER",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "用于将字符串转换为大写字母"
 }
 ---
 

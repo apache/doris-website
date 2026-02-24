@@ -1,7 +1,8 @@
 ---
 {
     "title": "PARSE_URL",
-    "language": "en"
+    "language": "en",
+    "description": "The PARSEURL function is mainly used to parse URL strings and extract various components from them, such as protocols, hosts, paths, query parameters,"
 }
 ---
 

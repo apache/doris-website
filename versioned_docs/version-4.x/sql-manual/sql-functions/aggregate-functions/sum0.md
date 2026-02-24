@@ -1,7 +1,8 @@
 ---
 {
     "title": "SUM0",
-    "language": "en"
+    "language": "en",
+    "description": "Used to return the sum of all values of the selected field. Unlike the SUM function, when all input values are NULL, SUM0 returns 0 instead of NULL."
 }
 ---
 

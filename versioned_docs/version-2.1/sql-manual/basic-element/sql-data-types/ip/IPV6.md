@@ -1,7 +1,8 @@
 ---
 {
     "title": "IPV6",
-    "language": "en"
+    "language": "en",
+    "description": "IPv6 type, stored in UInt128 format in 16 bytes, used to represent IPv6 addresses. The range of values is ['::',"
 }
 ---
 

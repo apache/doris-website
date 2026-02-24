@@ -1,7 +1,8 @@
 ---
 {
     "title": "ISINF",
-    "language": "en"
+    "language": "en",
+    "description": "Determines whether the specified value is infinity."
 }
 ---
 

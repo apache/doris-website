@@ -1,7 +1,8 @@
 ---
 {
     "title": "COUNTEQUAL",
-    "language": "en"
+    "language": "en",
+    "description": "Determine the number of value elements in the array"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "JSON_KEYS",
-    "language": "en"
+    "language": "en",
+    "description": "Returns all keys of a JSON object in array form. By default, it returns the keys of the root object,"
 }
 ---
 

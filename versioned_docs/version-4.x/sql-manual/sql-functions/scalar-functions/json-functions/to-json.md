@@ -1,7 +1,8 @@
 ---
 {
     "title": "TO_JSON",
-    "language": "en"
+    "language": "en",
+    "description": "Converts Doris internal data types to JSONB type. This function allows for converting compatible Doris data types into JSON representation without "
 }
 ---
 

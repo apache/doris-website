@@ -1,7 +1,8 @@
 ---
 {
     "title": "IPV4_STRING_TO_NUM_OR_NULL",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "获取包含 IPv4 地址的字符串，格式为 A.B.C.D（点分隔的十进制数字）。返回一个 BIGINT 数字，表示相应的大端 IPv4 地址。"
 }
 ---
 

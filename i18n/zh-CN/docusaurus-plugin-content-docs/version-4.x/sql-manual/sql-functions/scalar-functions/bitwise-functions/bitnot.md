@@ -1,7 +1,8 @@
 ---
 {
-"title": "BITNOT",
-"language": "zh-CN"
+    "title": "BITNOT",
+    "language": "zh-CN",
+    "description": "用于对整数进行按位取反操作。"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "CREATE DATABASE",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "该语句用于新建数据库（database）"
 }
 ---
 

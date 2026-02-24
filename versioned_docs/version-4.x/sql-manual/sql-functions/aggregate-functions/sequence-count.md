@@ -1,7 +1,8 @@
 ---
 {
     "title": "SEQUENCE_COUNT",
-    "language": "en"
+    "language": "en",
+    "description": "Counts the number of event chains that matched the pattern. The function searches event chains that do not overlap."
 }
 ---
 

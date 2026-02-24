@@ -1,7 +1,8 @@
 ---
 {
     "title": "SHOW VIEW",
-    "language": "en"
+    "language": "en",
+    "description": "This statement is used to display all views based on the given table"
 }
 ---
 

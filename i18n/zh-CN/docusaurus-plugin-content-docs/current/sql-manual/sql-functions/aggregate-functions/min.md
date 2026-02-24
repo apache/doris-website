@@ -1,7 +1,8 @@
 ---
 {
     "title": "MIN",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "MIN 函数返回表达式的最小非 NULL 值。"
 }
 ---
 
@@ -19,7 +20,7 @@ MIN(<expr>)
 
 | 参数 | 说明 |
 | -- | -- |
-| `<expr>` | 用于计算的表达式。支持的类型包括 String、Time、Date、DateTime、IPv4、IPv6、TinyInt、SmallInt、Integer、BigInt、LargeInt、Float、Double、Decimal、Array。 |
+| `<expr>` | 用于计算的表达式。支持的类型包括 String、Time、Date、DateTime、Timestamptz、IPv4、IPv6、TinyInt、SmallInt、Integer、BigInt、LargeInt、Float、Double、Decimal、Array。 |
 
 ## 返回值
 

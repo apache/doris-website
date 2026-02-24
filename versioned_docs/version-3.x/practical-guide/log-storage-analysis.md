@@ -1,7 +1,9 @@
 ---
 {
-    "title": "Log Storage and Analysis",
-    "language": "en"
+    "title": "Log Storage and Analysis | Practical Guide",
+    "language": "en",
+    "description": "Logs record key events in the system and contain crucial information such as the events' subject, time, location, and content.",
+    "sidebar_label": "Log Storage and Analysis"
 }
 ---
 
@@ -316,7 +318,7 @@ Follow these steps:
 
 1. Download and install the Logstash Doris Output plugin. You can choose one of the following two methods:
 
-   - [Click to download](https://apache-doris-releases.oss-accelerate.aliyuncs.com/extension/logstash-output-doris-1.2.0.gem) and install.
+   - [Click to download](https://download.velodb.io/extension/logstash-output-doris-1.2.0.gem) and install.
 
    - Compile from the source code and run the following command to install:
 
@@ -383,7 +385,7 @@ For more information about the Logstash Doris Output plugin, see [Logstash Doris
 
 Follow these steps:
 
-1. Obtain the Filebeat binary file that supports output to Apache Doris. You can [click to download](https://apache-doris-releases.oss-accelerate.aliyuncs.com/extension/filebeat-doris-2.1.1) or compile it from the Apache Doris source code.
+1. Obtain the Filebeat binary file that supports output to Apache Doris. You can [click to download](https://download.velodb.io/extension/filebeat-doris-2.1.1) or compile it from the Apache Doris source code.
 
 2. Configure Filebeat. Specify the filebeat_demo.yml field that is used to configure the specific input path of the collected logs and the settings for output to Apache Doris.
 
@@ -568,3 +570,4 @@ Some third-party vendors offer visual log analysis development platforms based o
 - Display of top field values in search results for finding anomalies and further drilling down for analysis
 
 Please contact dev@doris.apache.org to find more.
+

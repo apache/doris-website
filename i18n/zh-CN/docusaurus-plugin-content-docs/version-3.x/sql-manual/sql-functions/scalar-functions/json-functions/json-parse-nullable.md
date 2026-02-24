@@ -1,7 +1,8 @@
 ---
 {
     "title": "JSON_PARSE_NULLABLE",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "JSONPARSENULLABLE 函数用于解析一个 JSON 字符串为有效的 JSON 对象。如果输入字符串无效或为 NULL，它将返回 NULL，而不会抛出错误。"
 }
 ---
 

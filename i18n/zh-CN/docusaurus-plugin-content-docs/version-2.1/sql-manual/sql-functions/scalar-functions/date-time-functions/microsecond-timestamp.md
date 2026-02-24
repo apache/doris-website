@@ -1,9 +1,11 @@
 ---
 {
     "title": "MICROSECOND_TIMESTAMP",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "函数将输入的 DATETIME 值转换为从 1970-01-01 00:00:00 UTC 开始的 Unix 时间戳（以微秒为单位）。"
 }
 ---
+
 ## 描述
 
 函数将输入的 `DATETIME` 值转换为从 `1970-01-01 00:00:00 UTC` 开始的 Unix 时间戳（以微秒为单位）。

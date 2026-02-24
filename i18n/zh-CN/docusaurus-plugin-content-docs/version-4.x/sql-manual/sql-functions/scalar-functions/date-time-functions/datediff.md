@@ -1,7 +1,8 @@
 ---
 {
     "title": "DATEDIFF",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "DATEDIFF 函数用于计算两个日期或日期时间值之间的差值，结果精确到天，即返回 expr1 减去 expr2 所得到的天数差。该函数仅关注日期部分，忽略时间部分的具体小时、分钟、秒。"
 }
 ---
 

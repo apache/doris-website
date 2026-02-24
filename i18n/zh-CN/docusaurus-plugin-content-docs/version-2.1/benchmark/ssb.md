@@ -1,7 +1,8 @@
 ---
 {
-  "title": "Star Schema Benchmark",
-  "language": "zh-CN"
+    "title": "Star Schema Benchmark",
+    "language": "zh-CN",
+    "description": "Star Schema Benchmark(SSB) 是一个轻量级的数仓场景下的性能测试集。SSB 基于 TPC-H 提供了一个简化版的星型模型数据集，主要用于测试在星型模型下，多表关联查询的性能表现。另外，业界内通常也会将 SSB 打平为宽表模型（以下简称：SSB flat），"
 }
 ---
 

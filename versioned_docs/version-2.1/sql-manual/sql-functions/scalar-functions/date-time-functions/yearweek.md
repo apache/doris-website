@@ -1,7 +1,8 @@
 ---
 {
     "title": "YEARWEEK",
-    "language": "en"
+    "language": "en",
+    "description": "Returns year and week for a date.The value of the mode argument defaults to 0. When the week of the date belongs to the previous year,"
 }
 ---
 

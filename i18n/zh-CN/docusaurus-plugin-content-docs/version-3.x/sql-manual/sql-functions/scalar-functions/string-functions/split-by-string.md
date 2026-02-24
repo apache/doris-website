@@ -1,7 +1,8 @@
 ---
 {
     "title": "SPLIT_BY_STRING",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "将输入字符串按照指定的字符串拆分成字符串数组。"
 }
 ---
 

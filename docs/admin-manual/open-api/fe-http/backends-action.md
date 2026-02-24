@@ -1,7 +1,8 @@
 ---
 {
     "title": "Backends Action",
-    "language": "en"
+    "language": "en",
+    "description": "Backends Action returns the Backends list, including Backend's IP, PORT and other information."
 }
 ---
 

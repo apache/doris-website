@@ -1,7 +1,8 @@
 ---
 {
-"title": "EXPLODE_JSON_ARRAY_DOUBLE",
-"language": "en"
+    "title": "EXPLODE_JSON_ARRAY_DOUBLE",
+    "language": "en",
+    "description": "The explodejsonarraydouble table function accepts a JSON array, where each element is of double-precision floating-point type,"
 }
 ---
 

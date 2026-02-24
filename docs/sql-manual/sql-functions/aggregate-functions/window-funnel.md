@@ -1,7 +1,8 @@
 ---
 {
     "title": "WINDOW_FUNNEL",
-    "language": "en"
+    "language": "en",
+    "description": "The WINDOWFUNNEL function analyzes user behavior sequences by searching for event chains within a specified time window and calculating the maximum "
 }
 ---
 

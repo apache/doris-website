@@ -1,7 +1,8 @@
 ---
 {
     "title": "JSON_EXTRACT_BOOL",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "JSONEXTRACTBOOL 从 JSON 对象中提取 <jsonpath> 指定的字段，并将其转换为 BOOLEAN 类型。"
 }
 ---
 

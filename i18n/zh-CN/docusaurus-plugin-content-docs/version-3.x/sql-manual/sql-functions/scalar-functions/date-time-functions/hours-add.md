@@ -1,7 +1,8 @@
 ---
 {
     "title": "HOURS_ADD",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "返回一个新的日期时间值，该值是在输入的日期时间上增加指定的小时数。"
 }
 ---
 

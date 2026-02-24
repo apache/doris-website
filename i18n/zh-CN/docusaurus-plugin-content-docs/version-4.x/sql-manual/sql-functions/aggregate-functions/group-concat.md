@@ -1,7 +1,8 @@
 ---
 {
     "title": "GROUP_CONCAT",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "GROUPCONCAT 函数将结果集中的多行结果连接成一个字符串。"
 }
 ---
 

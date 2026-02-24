@@ -1,7 +1,8 @@
 ---
 {
     "title": "UTC_TIME",
-    "language": "en"
+    "language": "en",
+    "description": "The UTCTIME function returns the current time in the UTC timezone."
 }
 ---
 

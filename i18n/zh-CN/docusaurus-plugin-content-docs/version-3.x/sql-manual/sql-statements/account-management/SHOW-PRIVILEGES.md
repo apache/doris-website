@@ -1,7 +1,8 @@
 ---
 {
     "title": "SHOW PRIVILEGES",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "SHOW PRIVILEGES 语句用于显示数据库系统中当前可用的权限列表。它帮助用户了解系统支持的权限类型以及每种权限的详细信息。"
 }
 ---
 

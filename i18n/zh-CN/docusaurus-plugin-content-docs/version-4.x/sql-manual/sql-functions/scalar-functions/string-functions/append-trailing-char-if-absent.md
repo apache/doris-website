@@ -1,7 +1,8 @@
 ---
 {
     "title": "APPEND_TRAILING_CHAR_IF_ABSENT",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "APPENDTRAILINGCHARIFABSENT 函数用于确保字符串以指定字符结尾。如果字符串末尾不存在该字符，则添加；如果已存在，则保持不变。"
 }
 ---
 

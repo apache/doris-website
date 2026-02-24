@@ -1,7 +1,8 @@
 ---
 {
     "title": "恢复",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "以下 SQL 语句可用于查看名为examplerepo的 Repository 中的现有备份。"
 }
 ---
 
@@ -118,7 +119,7 @@ PROPERTIES
 
 ## 3. 查看恢复作业的执行情况
 
-    ```sql
+```sql
     mysql> SHOW RESTORE\G;
     *************************** 1. row ***************************
                   JobId: 17891851
@@ -157,4 +158,4 @@ PROPERTIES
                   Status: [OK]
                 Timeout: 86400
     1 row in set (0.01 sec)
-    ```
+```

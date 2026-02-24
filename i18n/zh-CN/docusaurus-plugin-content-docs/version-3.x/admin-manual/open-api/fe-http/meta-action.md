@@ -1,7 +1,8 @@
 ---
 {
     "title": "Meta Action",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "这是一组 FE 元数据相关的 API，除了 /dump 以外，都为 FE 节点之间内部通讯用。"
 }
 ---
 

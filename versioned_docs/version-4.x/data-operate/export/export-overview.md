@@ -1,7 +1,8 @@
 ---
 {
     "title": "Export Overview",
-    "language": "en"
+    "language": "en",
+    "description": "The data export function is used to write the query result set or Doris table data into the specified storage system in the specified file format."
 }
 ---
 

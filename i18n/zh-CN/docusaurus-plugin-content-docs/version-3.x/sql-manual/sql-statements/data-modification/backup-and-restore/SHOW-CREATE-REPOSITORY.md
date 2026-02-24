@@ -1,7 +1,8 @@
 ---
 {
     "title": "SHOW CREATE REPOSITORY",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "该语句用于展示仓库的创建语句。"
 }
 ---
 

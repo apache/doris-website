@@ -1,7 +1,8 @@
 ---
 {
     "title": "VARIANCE,VAR_POP,VARIANCE_POP",
-    "language": "en"
+    "language": "en",
+    "description": "The VARIANCE function calculates the statistical variance of the specified expression."
 }
 ---
 

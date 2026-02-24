@@ -1,7 +1,8 @@
 ---
 {
-"title": "ALTER WORKLOAD GROUP",
-"language": "zh-CN"
+    "title": "ALTER WORKLOAD GROUP",
+    "language": "zh-CN",
+    "description": "该语句用于修改资源组。"
 }
 ---
 

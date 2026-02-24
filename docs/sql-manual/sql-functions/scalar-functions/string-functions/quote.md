@@ -1,7 +1,8 @@
 ---
 {
     "title": "QUOTE",
-    "language": "en"
+    "language": "en",
+    "description": "The QUOTE function is used to wrap a string with single quotes and escape special characters within it, making it safe for use in SQL statements."
 }
 ---
 

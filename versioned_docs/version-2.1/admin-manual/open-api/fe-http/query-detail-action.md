@@ -1,7 +1,8 @@
 ---
 {
     "title": "Query Detail Action",
-    "language": "en"
+    "language": "en",
+    "description": "Used to obtain information about all queries after a specified time point"
 }
 ---
 

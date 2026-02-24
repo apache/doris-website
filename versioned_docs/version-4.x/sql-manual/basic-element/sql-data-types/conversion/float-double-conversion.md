@@ -1,7 +1,8 @@
 ---
 {
     "title": "Convert to FLOAT/DOUBLE",
-    "language": "en"
+    "language": "en",
+    "description": "If the source type is nullable, returns nullable type;"
 }
 ---
 

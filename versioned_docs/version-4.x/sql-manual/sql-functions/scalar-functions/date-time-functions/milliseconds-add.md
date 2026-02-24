@@ -1,7 +1,8 @@
 ---
 {
     "title": "MILLISECONDS_ADD",
-    "language": "en"
+    "language": "en",
+    "description": "The MILLISECONDSADD function adds a specified number of milliseconds to the input datetime value and returns the resulting new datetime value."
 }
 ---
 

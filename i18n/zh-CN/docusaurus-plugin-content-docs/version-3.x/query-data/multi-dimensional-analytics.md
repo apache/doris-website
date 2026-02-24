@@ -1,7 +1,8 @@
 ---
 {
     "title": "聚合多维分析",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "在数据库中，ROLLUP、CUBE 和 GROUPING SETS 是用于多维数据聚合的高级 SQL 语句。这些功能显著增强了 GROUP BY 子句的能力，使得用户可以在单一查询中获得多种层次的汇总结果，这在语义上等价于使用 UNION ALL 连接多个聚合语句。"
 }
 ---
 

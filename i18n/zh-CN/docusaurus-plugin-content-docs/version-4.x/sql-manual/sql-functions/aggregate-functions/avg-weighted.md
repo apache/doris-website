@@ -1,7 +1,8 @@
 ---
 {
-"title": "AVG_WEIGHTED",
-"language": "zh-CN"
+    "title": "AVG_WEIGHTED",
+    "language": "zh-CN",
+    "description": "计算加权算术平均值，即返回结果为：所有对应数值和权重的乘积相累加，除总的权重和。如果所有的权重和等于 0, 将返回 NaN。计算过程中总是用 Double 类型进行计算。"
 }
 ---
 

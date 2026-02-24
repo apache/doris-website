@@ -1,10 +1,10 @@
 ---
 {
     "title": "KURT,KURT_POP,KURTOSIS",
-    "language": "en"
+    "language": "en",
+    "description": "The KURTOSIS function calculates the kurtosis of the data. The formula used is: fourth central moment / (variance squared) - 3."
 }
 ---
-
 
 ## Description
 

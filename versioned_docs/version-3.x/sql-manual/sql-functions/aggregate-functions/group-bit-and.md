@@ -1,7 +1,8 @@
 ---
 {
-"title": "GROUP_BIT_AND",
-"language": "en"
+    "title": "GROUP_BIT_AND",
+    "language": "en",
+    "description": "Performs a bitwise AND operation on all values in a single integer column or expression."
 }
 ---
 

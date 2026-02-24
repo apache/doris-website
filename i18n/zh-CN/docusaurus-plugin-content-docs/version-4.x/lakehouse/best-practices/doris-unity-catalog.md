@@ -1,7 +1,8 @@
 ---
 {
     "title": "集成 Databricks Unity Catalog",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "随着企业在 Lakehouse 架构下统一管理不断增长的数据资产，对跨平台、高性能、受治理的数据访问能力的需求愈加迫切。Apache Doris 作为新一代实时分析型数据库，现已实现与 Databricks Unity Catalog 的深度集成，使企业能够在统一的治理体系下，"
 }
 ---
 
@@ -73,7 +74,7 @@ INSERT INTO `my-unity-catalog`.default.iceberg_table VALUES(1, "jack");
 ### 创建 Catalog
 
 ```sql
--- Use oath2 credential and vended credentials
+-- Use oauth2 credential and vended credentials
 CREATE CATALOG dbx_unity_catalog PROPERTIES (
   "uri" = "https://dbc-xx.cloud.databricks.com:443/api/2.1/unity-catalog/iceberg-rest/",
   "type" = "iceberg",
@@ -97,7 +98,7 @@ CREATE CATALOG dbx_unity_catalog PROPERTIES (
   "iceberg.rest.vended-credentials-enabled" = "true"
 );
 
--- Use oath2 credential and static ak/sk for accessing aws s3
+-- Use oauth2 credential and static ak/sk for accessing aws s3
 CREATE CATALOG dbx_unity_catalog PROPERTIES (
   "uri" = "https://dbc-xx.cloud.databricks.com:443/api/2.1/unity-catalog/iceberg-rest/",
   "type" = "iceberg",

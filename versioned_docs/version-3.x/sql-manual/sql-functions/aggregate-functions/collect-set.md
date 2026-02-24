@@ -1,7 +1,8 @@
 ---
 {
-"title": "COLLECT_SET",
-"language": "en"
+    "title": "COLLECT_SET",
+    "language": "en",
+    "description": "Aggregation function aggregates all unique values of the specified column, removes duplicate elements, and returns a set type result."
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "ADD OBSERVER",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "该语句是增加 FRONTEND 的 OBSERVER 角色的节点，（仅管理员使用！）"
 }
 ---
 

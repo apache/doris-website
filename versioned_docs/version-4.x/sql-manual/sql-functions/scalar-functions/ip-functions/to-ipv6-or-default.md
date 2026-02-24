@@ -1,7 +1,8 @@
 ---
 {
     "title": "TO_IPV6_OR_DEFAULT",
-    "language": "en"
+    "language": "en",
+    "description": "Takes the string form of an IPv6 address and returns a value of IPv6 type. For invalid input or NULL input, returns the default value ::."
 }
 ---
 

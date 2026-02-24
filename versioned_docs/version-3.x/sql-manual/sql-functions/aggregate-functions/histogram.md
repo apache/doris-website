@@ -1,7 +1,8 @@
 ---
 {
     "title": "HISTOGRAM",
-    "language": "en"
+    "language": "en",
+    "description": "The histogram function is used to describe the distribution of the data. It uses an \"equal height\" bucking strategy,"
 }
 ---
 

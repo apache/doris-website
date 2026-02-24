@@ -1,7 +1,8 @@
 ---
 {
     "title": "MAP_SIZE",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "计算 Map 中元素的个数"
 }
 ---
 

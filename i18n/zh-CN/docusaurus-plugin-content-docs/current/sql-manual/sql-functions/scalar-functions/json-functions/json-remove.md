@@ -1,7 +1,8 @@
 ---
 {
     "title": "JSON_REMOVE",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "JSONREMOVE 函数用于从 JSON 文档中删除数据并返回结果。"
 }
 ---
 

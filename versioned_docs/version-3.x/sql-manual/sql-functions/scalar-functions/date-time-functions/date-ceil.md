@@ -1,7 +1,8 @@
 ---
 {
     "title": "DATE_CEIL",
-    "language": "en"
+    "language": "en",
+    "description": "dateceil rounds a given date to the next upper boundary of the specified time interval."
 }
 ---
 
@@ -19,7 +20,7 @@
 | -- | -- |
 | `datetime` | The argument is a valid date expression |
 | `period` | The argument specifies how many units make up each period, with the start time being 0001-01-01T00:00:00 |
-| `type` | The argument can be: YEAR, QUARTER, MONTH, DAY, HOUR, MINUTE, SECOND|
+| `type` | The argument can be: YEAR, MONTH, DAY, HOUR, MINUTE, SECOND|
 
 :::tip 
 QUARTER is supported since version 3.0.8 and 3.1.0.

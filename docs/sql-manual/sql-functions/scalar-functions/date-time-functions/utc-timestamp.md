@@ -1,7 +1,8 @@
 ---
 {
     "title": "UTC_TIMESTAMP",
-    "language": "en"
+    "language": "en",
+    "description": "The UTCTIMESTAMP function returns the current date and time in UTC timezone."
 }
 ---
 

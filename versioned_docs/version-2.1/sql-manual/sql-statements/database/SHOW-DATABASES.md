@@ -1,7 +1,8 @@
 ---
 {
     "title": "SHOW DATABASES",
-    "language": "en"
+    "language": "en",
+    "description": "This statement is used to display the currently visible database."
 }
 ---
 

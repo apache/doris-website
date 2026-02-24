@@ -1,7 +1,8 @@
 ---
 {
     "title": "安全概览",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "Doris 提供以下机制管理数据安全："
 }
 ---
 

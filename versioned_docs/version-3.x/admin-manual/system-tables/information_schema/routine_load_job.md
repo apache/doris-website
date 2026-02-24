@@ -1,7 +1,8 @@
 ---
 {
     "title": "routine_load_job",
-    "language": "en"
+    "language": "en",
+    "description": "Used to view information about routine load jobs. This feature was introduced in version 3.0.5."
 }
 ---
 

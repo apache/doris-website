@@ -1,7 +1,8 @@
 ---
 {
     "title": "SIGNBIT",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "判断给定浮点数的符号位是否为负。"
 }
 ---
 

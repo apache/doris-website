@@ -1,7 +1,8 @@
 ---
 {
     "title": "Kettle Doris Plugin",
-    "language": "en"
+    "language": "en",
+    "description": "Kettle Doris Plugin is used to write data from other data sources to Doris through Stream Load in Kettle."
 }
 ---
 

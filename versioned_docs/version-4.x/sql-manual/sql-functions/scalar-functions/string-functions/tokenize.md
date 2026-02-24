@@ -1,7 +1,8 @@
 ---
 {
     "title": "TOKENIZE",
-    "language": "en"
+    "language": "en",
+    "description": "The TOKENIZE function tokenizes a string using a specified analyzer and returns the tokenization results as a JSON-formatted string array."
 }
 ---
 

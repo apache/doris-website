@@ -1,7 +1,8 @@
 ---
 {
-"title": "BITMAP_AGG",
-"language": "zh-CN"
+    "title": "BITMAP_AGG",
+    "language": "zh-CN",
+    "description": "将输入的表达式聚合的非 NULL 值聚合为一个 Bitmap 。 如果某个值小于 0 或者大于 18446744073709551615，该值会被忽略，不会合并到 Bitmap 中。"
 }
 ---
 

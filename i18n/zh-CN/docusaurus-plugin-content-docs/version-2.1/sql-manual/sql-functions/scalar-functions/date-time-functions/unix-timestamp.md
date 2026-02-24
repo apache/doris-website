@@ -1,7 +1,8 @@
 ---
 {
     "title": "UNIX_TIMESTAMP",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "将 Date 或者 Datetime 类型转化为 unix 时间戳。"
 }
 ---
 

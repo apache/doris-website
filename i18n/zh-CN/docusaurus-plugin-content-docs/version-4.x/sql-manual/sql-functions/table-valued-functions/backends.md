@@ -1,7 +1,8 @@
 ---
 {
     "title": "BACKENDS",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "表函数，生成 backends 临时表，可以查看当前 doris 集群中的 BE 节点信息。"
 }
 ---
 

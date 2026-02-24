@@ -1,7 +1,8 @@
 ---
 {
-"title": "CORR_WELFORD",
-"language": "zh-CN"
+    "title": "CORR_WELFORD",
+    "language": "zh-CN",
+    "description": "采用 Welford 算法计算两个随机变量的皮尔逊系数，能够有效降低计算误差。"
 }
 ---
 

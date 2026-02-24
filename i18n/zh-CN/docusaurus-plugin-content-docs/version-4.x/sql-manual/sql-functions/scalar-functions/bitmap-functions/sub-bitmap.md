@@ -1,7 +1,8 @@
 ---
 {
     "title": "SUB_BITMAP",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "从指定位置 position 开始，截取指定个数 cardinalitylimit 的 Bitmap 元素，返回一个 Bitmap 子集。"
 }
 ---
 

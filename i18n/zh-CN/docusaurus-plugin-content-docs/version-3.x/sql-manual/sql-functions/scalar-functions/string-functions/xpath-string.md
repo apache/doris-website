@@ -1,7 +1,8 @@
 ---
 {
     "title": "XPATH_STRING",
-    "language": "cn"
+    "language": "cn",
+    "description": "XPATHSTRING 函数用于解析 XML 字符串并返回第一个匹配 XPath 表达式的 XML 节点。"
 }
 ---
 

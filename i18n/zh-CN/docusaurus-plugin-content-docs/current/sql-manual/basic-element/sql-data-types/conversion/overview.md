@@ -1,7 +1,8 @@
 ---
 {
     "title": "类型转换",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "在 Doris 中，每个表达式均有其类型（例如 select 1, col1, fromunixtime(col2) from table1 中的 1，col1，fromunixtime(col2) 等）。将一个表达式从一种类型转换到另一种类型的过程称为“类型转换”。"
 }
 ---
 
@@ -107,4 +108,3 @@ TODO
 
 在因作为数学运算的操作数而需要发生隐式转换时，首先要确定转换的公共类型。两侧操作数如果与公共类型不一致，则会各自规划到公共类型的 CAST 表达式。
 
-TODO

@@ -1,7 +1,8 @@
 ---
 {
     "title": "Schema Change",
-    "language": "en"
+    "language": "en",
+    "description": "Users can modify the schema of Doris tables through the Alter Table operation. Schema changes mainly involve column modifications and index changes."
 }
 ---
 

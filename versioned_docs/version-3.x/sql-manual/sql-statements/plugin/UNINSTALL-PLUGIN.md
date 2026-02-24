@@ -1,7 +1,8 @@
 ---
 {
     "title": "UNINSTALL PLUGIN",
-    "language": "en"
+    "language": "en",
+    "description": "This statement is used to uninstall a plugin."
 }
 ---
 

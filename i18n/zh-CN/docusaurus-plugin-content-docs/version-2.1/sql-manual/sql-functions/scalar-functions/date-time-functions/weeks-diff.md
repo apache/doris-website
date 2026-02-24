@@ -1,7 +1,8 @@
 ---
 {
-   "title": "WEEKS_DIFF",
-   "language": "zh-CN"
+    "title": "WEEKS_DIFF",
+    "language": "zh-CN",
+    "description": "用于计算两个日期或时间值之间相差的完整周数（以 7 天为单位）。"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "REGR_INTERCEPT",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "REGRINTERCEPT 用于计算一组数值对的最小二乘拟合线性方程的截距。"
 }
 ---
 

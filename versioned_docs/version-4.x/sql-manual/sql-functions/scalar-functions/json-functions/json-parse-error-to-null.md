@@ -1,7 +1,8 @@
 ---
 {
     "title": "JSON_PARSE_ERROR_TO_NULL",
-    "language": "en"
+    "language": "en",
+    "description": "A variant of the JSONPARSE function."
 }
 ---
 

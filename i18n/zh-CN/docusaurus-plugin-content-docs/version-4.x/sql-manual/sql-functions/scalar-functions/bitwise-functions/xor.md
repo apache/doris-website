@@ -1,7 +1,8 @@
 ---
 {
     "title": "XOR",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "用于对两个 BOOLEAN 值进行按位异或操作。"
 }
 ---
 

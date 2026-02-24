@@ -1,7 +1,8 @@
 ---
 {
-"title": "PAUSE JOB",
-"language": "en"
+    "title": "PAUSE JOB",
+    "language": "en",
+    "description": "When a user pauses a job in the RUNNING state, the running task will be interrupted and the job state will be changed to PAUSED."
 }
 ---
 

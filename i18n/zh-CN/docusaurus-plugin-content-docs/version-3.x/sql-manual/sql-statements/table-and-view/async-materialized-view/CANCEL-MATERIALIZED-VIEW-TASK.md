@@ -1,7 +1,8 @@
 ---
 {
     "title": "CANCEL MATERIALIZED VIEW TASK",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "该语句用于取消物化视图的 task"
 }
 ---
 

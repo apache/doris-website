@@ -1,7 +1,8 @@
 ---
 {
     "title": "JSON_PARSE_NULLABLE_ERROR_TO_INVALID",
-    "language": "en"
+    "language": "en",
+    "description": "The JSONPARSENULLABLEERRORTOINVALID function is used to parse a JSON string into a valid JSON object. If the input JSON string is invalid,"
 }
 ---
 

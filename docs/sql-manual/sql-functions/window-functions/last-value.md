@@ -1,7 +1,8 @@
 ---
 {
     "title": "LAST_VALUE",
-    "language": "en"
+    "language": "en",
+    "description": "LASTVALUE() is a window function that returns the last value within the window frame."
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
-"title": "CREATE ASYNC MATERIALIZED VIEW",
-"language": "en"
+    "title": "CREATE ASYNC MATERIALIZED VIEW",
+    "language": "en",
+    "description": "Statement for creating an asynchronous materialized view. The column names and types are derived from the materialized view SQL statement."
 }
 ---
 
@@ -131,7 +132,7 @@ Properties used by internal tables, most of which can be used by materialized vi
 | grace_period                     | The maximum allowed delay in seconds for materialized view data during query rewriting. If partition A of the materialized view and the base table data are inconsistent, and the last refresh time of partition A was 10:15:00, with the current system time being 10:15:08, the partition will not be transparently rewritten. However, if `grace_period` is set to 10, the partition will be used for transparent rewriting. |
 | excluded_trigger_tables          | Comma-separated table names to be ignored during data refresh. For example, `table1,table2`. |
 | refresh_partition_num            | The number of partitions refreshed by a single INSERT statement, defaulting to 1. When refreshing a materialized view, it first calculates the list of partitions to be refreshed and then splits them into multiple INSERT statements for sequential execution. If an INSERT statement fails, the entire task will stop. The materialized view ensures the atomicity of a single INSERT statement, and a failed INSERT will not affect partitions that have already been refreshed successfully. |
-| workload_group                   | The name of the `workload_group` used when the materialized view executes refresh tasks. This is used to limit the resources used by the materialized view during data refresh to avoid impacting other business operations. For more information on creating and using `workload_group`, refer to the [WORKLOAD-GROUP](https://doris.apache.org/zh-CN/docs/admin-manual/workload-group.md) documentation. |
+| workload_group                   | The name of the `workload_group` used when the materialized view executes refresh tasks. This is used to limit the resources used by the materialized view during data refresh to avoid impacting other business operations. For more information on creating and using `workload_group`, refer to the [WORKLOAD-GROUP](https://doris.apache.org/zh-CN/docs/dev/admin-manual/workload-management/workload-group) documentation. |
 | partition_sync_limit             | When the base table's partition field is of type time, this property can be used to configure the range of partitions to synchronize with the base table, in conjunction with `partition_sync_time_unit`. For example, setting it to 2 with `partition_sync_time_unit` set to `MONTH` means that only the partitions and data from the last 2 months of the base table will be synchronized. The minimum value is `1`. As time progresses, the materialized view will automatically add and remove partitions during each refresh. For example, if the materialized view currently has data for months 2 and 3, next month it will automatically remove the data for month 2 and add data for month 4. |
 | partition_sync_time_unit         | The time unit for partition refresh, supporting DAY/MONTH/YEAR (default is DAY). |
 | partition_date_format            | When the base table's partition field is of type string, if you want to use the `partition_sync_limit` capability, you can set the date format to parse the partition time according to the `partition_date_format` setting. |

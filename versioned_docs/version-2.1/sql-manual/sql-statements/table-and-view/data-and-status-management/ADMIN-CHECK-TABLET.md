@@ -1,7 +1,8 @@
 ---
 {
-   "title": "ADMIN CHECK TABLET",
-   "language": "en"
+    "title": "ADMIN CHECK TABLET",
+    "language": "en",
+    "description": "This statement is used to perform the specified check operation on a set of tablets."
 }
 ---
 

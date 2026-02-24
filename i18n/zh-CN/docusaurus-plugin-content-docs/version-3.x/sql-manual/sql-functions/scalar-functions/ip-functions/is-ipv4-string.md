@@ -1,7 +1,8 @@
 ---
 {
     "title": "IS_IPV4_STRING",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "接收一个表示形式为字符串的 IPv4 地址作为参数，如果为格式正确且合法的 IPv4 地址，返回 true；反之，返回 false。"
 }
 ---
 

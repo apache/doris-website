@@ -1,9 +1,14 @@
 ---
 {
-    "title": "DATE",
-    "language": "en"
+    "title": "DATE | Date Time Functions",
+    "language": "en",
+    "description": "Extracts the date from the datetime.",
+    "sidebar_label": "DATE"
 }
 ---
+
+# DATE
+
 ## Description
 
 Extracts the date from the datetime.

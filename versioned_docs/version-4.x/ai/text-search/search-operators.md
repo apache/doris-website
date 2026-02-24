@@ -1,7 +1,8 @@
 ---
 {
     "title": "Full-Text Search and Query Acceleration Support",
-    "language": "en"
+    "language": "en",
+    "description": "Explore full-text search operators including MATCH_ANY, MATCH_ALL, MATCH_PHRASE, MATCH_REGEXP, and inverted index query acceleration for high-performance data retrieval in database systems."
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "HLL_HASH",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "将一个值转换为 HLL（HyperLogLog）类型。该函数通常用于数据加载时，将普通类型的值转换为 HLL 类型，常用于处理大数据集的去重和计数操作。"
 }
 ---
 

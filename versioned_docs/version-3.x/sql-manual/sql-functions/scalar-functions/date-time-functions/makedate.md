@@ -1,7 +1,8 @@
 ---
 {
     "title": "MAKEDATE",
-    "language": "en"
+    "language": "en",
+    "description": "Returns a date based on the specified year and the day of the year (dayofyear)."
 }
 ---
 

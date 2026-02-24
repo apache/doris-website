@@ -1,7 +1,8 @@
 ---
 {
     "title": "GET_JSON_INT",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "函数 JSONEXTRACTINT 的别名。"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "JSON_VALID",
-    "language": "en"
+    "language": "en",
+    "description": "The JSONVALID function returns 0 or 1 to indicate whether the input is a valid JSON. If the input is NULL, it returns NULL."
 }
 ---
 

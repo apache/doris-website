@@ -1,7 +1,8 @@
 ---
 {
-  "title": "TO_SECONDS",
-  "language": "zh-CN"
+    "title": "TO_SECONDS",
+    "language": "zh-CN",
+    "description": "秒数计算函数，它用于将日期转换为秒数值，即计算从零日期(0000-00-00)到指定日期时间的总秒数。"
 }
 ---
 

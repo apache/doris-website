@@ -1,7 +1,8 @@
 ---
 {
     "title": "ARRAY_REMOVE",
-    "language": "en"
+    "language": "en",
+    "description": "Remove all elements equal to the given value from an array while preserving the relative order of the remaining elements."
 }
 ---
 

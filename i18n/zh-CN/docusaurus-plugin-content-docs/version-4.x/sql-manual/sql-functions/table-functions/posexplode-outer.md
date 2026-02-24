@@ -1,7 +1,8 @@
 ---
 {
-"title": "POSEXPLODE_OUTER",
-"language": "zh-CN"
+    "title": "POSEXPLODE_OUTER",
+    "language": "zh-CN",
+    "description": "posexplodeouter 表函数，将 <array> 列展开成多行, 并且增加一列标明位置的列，组成 STRUCT 类型返回。 需配合 Lateral View 使用, 可以支持多个 Lateral view。 posexplodeouter 和 posexplode 区别主要在于空值处理。"
 }
 ---
 

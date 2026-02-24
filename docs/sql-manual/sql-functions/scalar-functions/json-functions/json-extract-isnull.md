@@ -1,7 +1,8 @@
 ---
 {
     "title": "JSON_EXTRACT_ISNULL",
-    "language": "en"
+    "language": "en",
+    "description": "JSONEXTRACTISNULL determines whether the field specified by <jsonpath> in a JSON object is a null value."
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "Comparison Operators",
-    "language": "en"
+    "language": "en",
+    "description": "Comparison conditions compare one expression with another. The result of the comparison can be TRUE, FALSE, or UNKNOWN."
 }
 ---
 

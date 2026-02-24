@@ -1,7 +1,8 @@
 ---
 {
     "title": "Release 2.0.1",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "亲爱的社区小伙伴们，我们很高兴地向大家宣布，Apache Doris 2.0.1 Release 版本已于 2023 年 9 月 4 日正式发布，有超过 71 位贡献者为 Apache Doris 提交了超过 380 个优化与修复。"
 }
 ---
 

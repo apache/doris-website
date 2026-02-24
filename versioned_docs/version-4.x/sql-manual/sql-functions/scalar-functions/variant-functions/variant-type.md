@@ -1,7 +1,8 @@
 ---
 {
     "title": "VARIANT_TYPE",
-    "language": "en"
+    "language": "en",
+    "description": "The VARIANTTYPE function returns the actual type of a VARIANT value."
 }
 ---
 

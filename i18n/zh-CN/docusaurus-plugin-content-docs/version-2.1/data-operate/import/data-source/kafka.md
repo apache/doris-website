@@ -1,7 +1,8 @@
 ---
 {
     "title": "Kafka",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "Doris 提供以下方式从 Kafka 导入数据："
 }
 ---
 

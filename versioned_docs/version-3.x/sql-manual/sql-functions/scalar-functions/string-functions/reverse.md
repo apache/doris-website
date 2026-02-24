@@ -1,7 +1,8 @@
 ---
 {
     "title": "REVERSE",
-    "language": "en"
+    "language": "en",
+    "description": "The REVERSE function is used to reverse the order of characters in a string or the order of elements in an array."
 }
 ---
 

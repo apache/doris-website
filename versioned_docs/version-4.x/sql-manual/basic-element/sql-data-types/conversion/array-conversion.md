@@ -1,7 +1,8 @@
 ---
 {
     "title": "Cast to ARRAY Types",
-    "language": "en"
+    "language": "en",
+    "description": "ARRAY type is used to store and process array data, which can contain various basic element types such as integers, strings, etc.,"
 }
 ---
 

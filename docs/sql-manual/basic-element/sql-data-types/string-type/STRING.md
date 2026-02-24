@@ -1,7 +1,8 @@
 ---
 {
     "title": "STRING",
-    "language": "en"
+    "language": "en",
+    "description": "STRING (M) A variable length string. Default support is 1048576 bytes (1M), adjustable up to 2147483643 bytes (2G),"
 }
 ---
 

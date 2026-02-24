@@ -1,7 +1,8 @@
 ---
 {
     "title": "SHOW BACKEND CONFIG",
-    "language": "en"
+    "language": "en",
+    "description": "Display the configuration items and their current values for BACKEND (i.e., BE)."
 }
 ---
 

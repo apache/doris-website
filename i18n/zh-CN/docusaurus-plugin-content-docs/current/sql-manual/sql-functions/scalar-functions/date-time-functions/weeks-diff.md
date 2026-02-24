@@ -1,7 +1,8 @@
 ---
 {
-   "title": "WEEKS_DIFF",
-   "language": "zh-CN"
+    "title": "WEEKS_DIFF",
+    "language": "zh-CN",
+    "description": "WEEKSDIFF 函数用于计算两个日期或时间值之间的完整周数差值，结果为结束时间减去开始时间的周数（以 7 天为 1 周）。支持处理 DATE、DATETIME 类型及符合格式的字符串，计算时会考虑完整的时间差（包括时分秒）。"
 }
 ---
 

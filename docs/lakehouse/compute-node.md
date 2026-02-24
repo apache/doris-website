@@ -1,7 +1,8 @@
 ---
 {
     "title": "Elastic Compute Node",
-    "language": "en"
+    "language": "en",
+    "description": "Elastic compute nodes, as a special type of BE node, do not have data storage capabilities and are only responsible for data computation. Therefore,"
 }
 ---
 

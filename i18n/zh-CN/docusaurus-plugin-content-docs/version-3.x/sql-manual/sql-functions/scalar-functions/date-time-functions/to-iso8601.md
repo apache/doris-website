@@ -1,7 +1,8 @@
 ---
 {
     "title": "TO_ISO8601",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "将日期时间值转换为 ISO8601 格式的字符串。"
 }
 ---
 

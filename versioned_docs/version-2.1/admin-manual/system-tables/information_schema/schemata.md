@@ -1,7 +1,8 @@
 ---
 {
     "title": "schemata",
-    "language": "en"
+    "language": "en",
+    "description": "View information related to the database."
 }
 ---
 

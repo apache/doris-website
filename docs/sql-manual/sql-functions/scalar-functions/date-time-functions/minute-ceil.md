@@ -1,14 +1,15 @@
 ---
 {
-  "title": "MINUTE_CEIL",
-  "language": "en"
+    "title": "MINUTE_CEIL",
+    "language": "en",
+    "description": "MINUTE_CEIL function rounds the input datetime value up to the nearest specified minute period. If origin is specified, it uses that as the basis; if not specified, the default basis is 0001-01-01 00:00:00. Supports processing DATETIME type."
 }
 ---
 
 ## Description
 
 
-The minute_ceil function rounds the input datetime value up to the nearest specified minute interval. If origin is specified, it uses that as the baseline; otherwise, it defaults to 0001-01-01 00:00:00.
+MINUTE_CEIL function rounds the input datetime value up to the nearest specified minute period. If origin is specified, it uses that as the basis; otherwise, it defaults to 0001-01-01 00:00:00. The function supports processing DATETIME type.
 
 Date calculation formula:
 $$
@@ -33,14 +34,16 @@ MINUTE_CEIL(`<date_or_time_expr>`, `<period>`, `<origin>`)
 
 | Parameter | Description |
 | --------- | ----------- |
-| `<date_or_time_expr>` | The datetime value to be rounded up, of type DATETIME. For specific datetime formats, see [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion). |
+| `<date_or_time_expr>` | The datetime value to be rounded up. Supports input of date/datetime/timestamptz types. For specific formats please see [timestamptz的转换](../../../../sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion), [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion). |
 | `<period>` | The minute interval value, of type INT, representing the number of minutes contained in each interval. |
 | `<origin>` | The starting time point of the interval, of type DATETIME. Default value is 0001-01-01 00:00:00. |
 
 ## Return Value
 
-Returns a value of type DATETIME, representing the time value after rounding up to the nearest specified minute interval based on the input datetime. The precision of the return value is the same as that of the input parameter datetime.
+Returns a value of type TIMESTAMPTZ, DATETIME or DATE. Returns the time value after rounding up to the nearest specified minute period based on the input datetime. The precision of the return value is the same as that of the input parameter datetime.
 
+- If the input is TIMESTAMPTZ type, it will first be converted to local_time (for example: `2025-12-31 23:59:59+05:00` represents local_time `2026-01-01 02:59:59` when the session variable is `+08:00`), and then perform MINUTE_CEIL calculation.
+- If the input time values (`<date_or_time_expr>` and `<period>`) contain both TIMESTAMPTZ and DATETIME types, the output is DATETIME type.
 - If `<period>` is a non-positive number (≤0), returns an error.
 - If any parameter is NULL, returns NULL.
 - If period is not specified, it defaults to a 1-minute interval.
@@ -116,6 +119,23 @@ SELECT MINUTE_CEIL('2023-07-13', 30) AS result;
 +---------------------+
 | 2023-07-13 00:00:00 |
 +---------------------+
+
+-- TimeStampTz sample, SET time_zone = '+08:00'
+-- Convert to local_time (2026-01-01 02:59:59) and then perform MINUTE_CEIL
+SELECT MINUTE_CEIL('2025-12-31 23:59:59+05:00');
++------------------------------------------+
+| MINUTE_CEIL('2025-12-31 23:59:59+05:00') |
++------------------------------------------+
+| 2026-01-01 03:00:00+08:00                |
++------------------------------------------+
+
+-- If parameters contain both TimeStampTz and Datetime types, output DateTime type
+SELECT MINUTE_CEIL('2025-12-31 23:59:59+05:00', '2025-12-15 00:00:00.123');
++---------------------------------------------------------------------+
+| MINUTE_CEIL('2025-12-31 23:59:59+05:00', '2025-12-15 00:00:00.123') |
++---------------------------------------------------------------------+
+| 2026-01-01 03:00:00.123                                             |
++---------------------------------------------------------------------+
 
 -- Calculation result exceeds maximum datetime 9999-12-31 23:59:59, returns error
 SELECT MINUTE_CEIL('9999-12-31 23:59:18', 6);

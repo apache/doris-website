@@ -1,7 +1,8 @@
 ---
 {
-  "title": "Creating, Querying, and Maintaining Asynchronous Materialized Views",
-  "language": "en"
+    "title": "Creating, Querying, and Maintaining Asynchronous Materialized Views",
+    "language": "en",
+    "description": "This document provides detailed information about materialized view creation, direct querying of materialized views, query rewriting,"
 }
 ---
 
@@ -463,7 +464,7 @@ Additionally, if the partition field is of string type, the date format can be s
 For more details, refer to [CREATE ASYNC MATERIALIZED VIEW](../../../sql-manual/sql-statements/table-and-view/async-materialized-view/CREATE-ASYNC-MATERIALIZED-VIEW).
 
 ### SQL Definition
-There are no restrictions on the SQL definition of asynchronous materialized views.
+Asynchronous materialized views do not support creation using View.
 
 ## Direct Querying of Materialized Views
 

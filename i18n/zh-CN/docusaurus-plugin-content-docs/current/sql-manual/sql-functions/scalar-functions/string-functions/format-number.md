@@ -1,7 +1,8 @@
 ---
 {
     "title": "FORMAT_NUMBER",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "FORMATNUMBER 函数用于将数值格式化为带单位符号的字符串。支持的单位有：K（千）、M（百万）、B（十亿）、T（万亿）、Q（千万亿）。"
 }
 ---
 

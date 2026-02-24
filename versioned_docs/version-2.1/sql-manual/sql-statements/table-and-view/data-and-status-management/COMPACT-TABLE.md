@@ -1,7 +1,8 @@
 ---
 {
     "title": "COMPACT TABLE",
-    "language": "en"
+    "language": "en",
+    "description": "In the storage-computing coupled mode, this is used to trigger a compaction for all replicas under the specified table partition."
 }
 ---
 

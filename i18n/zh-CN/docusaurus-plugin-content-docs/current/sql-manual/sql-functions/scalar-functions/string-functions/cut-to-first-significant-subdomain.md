@@ -1,7 +1,8 @@
 ---
 {
     "title": "CUT_TO_FIRST_SIGNIFICANT_SUBDOMAIN",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "CUTTOFIRSTSIGNIFICANTSUBDOMAIN 函数用于从 URL 中提取域名的有效部分，包含顶级域名直至\"第一个有效子域\"。如果输入的 URL 不合法，则返回空字符串。"
 }
 ---
 

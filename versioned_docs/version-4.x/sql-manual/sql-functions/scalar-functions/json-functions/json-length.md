@@ -1,7 +1,8 @@
 ---
 {
-"title": "JSON_LENGTH",
-"language": "en"
+    "title": "JSON_LENGTH",
+    "language": "en",
+    "description": "The JSONLENGTH function is used to return the length or number of elements in a given JSON document. If the JSON document is an array,"
 }
 ---
 

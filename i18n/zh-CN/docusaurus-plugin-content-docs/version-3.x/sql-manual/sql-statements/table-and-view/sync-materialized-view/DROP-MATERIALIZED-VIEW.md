@@ -1,7 +1,8 @@
 ---
 {
     "title": "DROP MATERIALIZED VIEW",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "删除同步物化视图。"
 }
 ---
 

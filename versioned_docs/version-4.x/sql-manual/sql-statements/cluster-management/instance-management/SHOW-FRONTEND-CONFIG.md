@@ -1,7 +1,8 @@
 ---
 {
     "title": "SHOW FRONTEND CONFIG",
-    "language": "en"
+    "language": "en",
+    "description": "This statement is used to display the configuration of the current cluster (currently only the configuration items of FE are supported)"
 }
 ---
 

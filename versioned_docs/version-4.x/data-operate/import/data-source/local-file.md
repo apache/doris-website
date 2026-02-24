@@ -1,7 +1,8 @@
 ---
 {
     "title": "local file",
-    "language": "en"
+    "language": "en",
+    "description": "Doris provides multiple ways to load data from local sources:"
 }
 ---
 

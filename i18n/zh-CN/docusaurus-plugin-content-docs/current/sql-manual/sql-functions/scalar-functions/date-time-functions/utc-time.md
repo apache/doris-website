@@ -1,7 +1,8 @@
 ---
 {
     "title": "UTC_TIME",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "UTCTIME 函数用于返回当前 UTC 时区的时间。该函数不受本地时区影响，始终返回基于 UTC 时区的当前时间，确保跨时区场景下的时间一致性。"
 }
 ---
 

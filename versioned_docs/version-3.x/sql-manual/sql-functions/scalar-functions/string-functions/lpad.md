@@ -1,7 +1,8 @@
 ---
 {
     "title": "LPAD",
-    "language": "en"
+    "language": "en",
+    "description": "Returns a string of length len (starting from the first letter) in str."
 }
 ---
 

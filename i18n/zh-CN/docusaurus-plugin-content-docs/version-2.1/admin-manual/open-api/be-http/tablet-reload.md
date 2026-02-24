@@ -1,7 +1,8 @@
 ---
 {
     "title": "重加载 tablet",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "该功能用于重加载 tablet 数据。"
 }
 ---
 

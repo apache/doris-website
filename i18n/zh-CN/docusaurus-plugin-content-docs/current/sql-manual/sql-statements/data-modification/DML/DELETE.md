@@ -1,7 +1,8 @@
 ---
 {
     "title": "DELETE",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "该语句用于按条件删除指定 table（base index）partition 中的数据。"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "Tiered Storage of SSD and HDD",
-    "language": "en"
+    "language": "en",
+    "description": "Doris supports tiered storage between different disk types (SSD and HDD),"
 }
 ---
 
@@ -96,3 +97,42 @@ You should have 7 partitions, 5 of which use SSD as the storage medium, while th
   p20210522：["2021-05-22", "2021-05-23") storage_medium=SSD storage_cooldown_time=2021-05-24 00:00:00
   p20210523：["2021-05-23", "2021-05-24") storage_medium=SSD storage_cooldown_time=2021-05-25 00:00:00
 ```
+
+### 3. Manually tiering a partition
+
+You can manually move an individual partition between storage tiers by updating its `storage_medium` property. For example, to move a partition to HDD storage:
+
+```sql
+ALTER TABLE parent_table
+MODIFY PARTITION (partition_name) SET ("storage_medium" = "HDD");
+```
+
+This operation updates the partition’s storage policy and triggers Doris to relocate the data accordingly.
+
+### 4. Manual tiering in heterogeneous clusters
+
+In heterogeneous cluster setups, it is common to deploy a mix of SSD-backed nodes for hot data and HDD-backed nodes for cold data. A frequent pitfall in such environments is failing to distinguish these nodes using location tags.
+
+If all backends share the default location tag, Doris may be unable to tier a partition down to HDD. This happens because the partition was originally placed on an SSD node, and Doris cannot locate an HDD storage medium on the same backend.
+
+To avoid this issue:
+
+1. **Tag cold (HDD) backends with a distinct location**
+    
+For example:
+    
+```sql
+ALTER SYSTEM MODIFY BACKEND "cold_node1:9050" SET ("tag.location" = "archive");
+```
+    
+2. **Explicitly target the tagged backends when modifying the partition**
+    
+Specify both the desired storage medium and the replication allocation:
+    
+```sql
+ALTER TABLE parent_table
+MODIFY PARTITION (partition_name) SET ("storage_medium" = "HDD", "replication_allocation" = "tag.location.archive:1");
+```
+    
+
+By assigning location tags and referencing them in the partition’s replication policy, Doris can correctly place cold data on HDD-backed nodes in heterogeneous clusters.

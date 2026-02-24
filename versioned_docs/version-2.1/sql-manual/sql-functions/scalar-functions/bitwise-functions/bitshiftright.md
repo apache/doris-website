@@ -1,7 +1,8 @@
 ---
 {
-"title": "BIT_SHIFT_RIGHT",
-"language": "en"
+    "title": "BIT_SHIFT_RIGHT",
+    "language": "en",
+    "description": "Used for right shift operations, usually used to shift all bits of a binary number to the right by a specified number of bits."
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "STR_TO_DATE",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "函数将输入的日期时间字符串根据指定的格式转换为 DATETIME 类型的值。"
 }
 ---
 

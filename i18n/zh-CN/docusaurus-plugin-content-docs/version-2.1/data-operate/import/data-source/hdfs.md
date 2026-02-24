@@ -1,9 +1,13 @@
 ---
 {
-    "title": "HDFS",
-    "language": "zh-CN"
+    "title": "HDFS | Data Source",
+    "language": "zh-CN",
+    "description": "Doris 提供两种方式从 HDFS 导入文件：",
+    "sidebar_label": "HDFS"
 }
 ---
+
+# HDFS
 
 Doris 提供两种方式从 HDFS 导入文件：
 - 使用 HDFS Load 将 HDFS 文件导入到 Doris 中，这是一个异步的导入方式。
@@ -161,3 +165,4 @@ mysql> select * from test_hdfsload;
 +---------+-----------+------+
 10 rows in set (0.04 sec)
 ```
+

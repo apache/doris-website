@@ -1,9 +1,9 @@
 ---
 {
     "title": "CANCEL BUILD INDEX",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "取消索引构建的后台任务。"
 }
-
 ---
 
 ## 描述
@@ -62,11 +62,11 @@ job_list
 - 取消表 table1 上的所有索引构建任务
 
     ```sql
-    CANCEL BUILD INDEX ON TABLE table1
+    CANCEL BUILD INDEX ON table1
     ```
 
 - 取消表 table1 上的索引构建任务 jobid1 和 jobid2
 
     ```sql
-    CANCEL BUILD INDEX ON TABLE table1(jobid1, jobid2)
+    CANCEL BUILD INDEX ON table1(jobid1, jobid2)
     ```

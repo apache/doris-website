@@ -1,7 +1,8 @@
 ---
 {
     "title": "CORR_WELFORD",
-    "language": "en"
+    "language": "en",
+    "description": "Calculates the Pearson correlation coefficient between two random variables using the Welford algorithm, which effectively reduces calculation errors."
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "NULL_OR_EMPTY",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "nullorempty 函数用于判断给定的值是否为 NULL 或空。如果输入值为 NULL 或空字符串，则返回 true，否则返回 false。"
 }
 ---
 

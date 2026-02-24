@@ -1,7 +1,8 @@
 ---
 {
-"title": "BITAND",
-"language": "en"
+    "title": "BITAND",
+    "language": "en",
+    "description": "Performs a bitwise AND operation. The bitwise AND operation compares each bit of two integers; the result is 1 only if both corresponding bits are 1,"
 }
 ---
 

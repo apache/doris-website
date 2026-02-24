@@ -1,7 +1,8 @@
 ---
 {
     "title": "ARRAY_MAP",
-    "language": "en"
+    "language": "en",
+    "description": "Applies a lambda expression to elements in an array and returns a new array."
 }
 ---
 

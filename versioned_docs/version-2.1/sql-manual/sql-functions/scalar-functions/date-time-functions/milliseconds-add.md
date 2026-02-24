@@ -1,7 +1,8 @@
 ---
 {
     "title": "MILLISECONDS_ADD",
-    "language": "en"
+    "language": "en",
+    "description": "Adds a specified number of milliseconds to a datetime value and returns a new datetime value."
 }
 ---
 

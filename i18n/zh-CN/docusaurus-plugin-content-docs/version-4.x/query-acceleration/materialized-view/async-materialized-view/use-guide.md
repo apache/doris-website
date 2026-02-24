@@ -1,9 +1,13 @@
 ---
 {
-    "title": "最佳实践",
-    "language": "zh-CN"
+    "title": "最佳实践 | Async Materialized View",
+    "language": "zh-CN",
+    "description": "当满足以下条件时，建议创建分区物化视图：",
+    "sidebar_label": "最佳实践"
 }
 ---
+
+# 最佳实践
 
 ## 异步物化视图使用原则
 - **时效性考虑：** 异步物化视图通常用于对数据时效性要求不高的场景，一般是 T+1 的数据。如果时效性要求高，应考虑使用同步物化视图。
@@ -161,101 +165,6 @@ GROUP BY
   ps_partkey, 
   date_trunc(l_ordertime, 'day');
 ```
-
-## 创建包含 UNION ALL 的分区物化视图
-目前 Doris 有限制，分区物化定义中不能包含 UNION ALL 子句。
-如果想要创建包含 UNION ALL 的物化视图，可以使用采用如下的方式创建。对于 UNION ALL 的每部分输入
-尝试创建分区物化视图，之后针对整个 UNION ALL 结果集创建一个普通视图。
-
-例如：
-物化视图定义如下，要使用如下 sql 语句构建分区物化视图，可以看到 sql 语句包含 UNION ALL 子句。
-```sql
-SELECT 
-  l_linestatus, 
-  sum(
-    l_extendedprice * (1 - l_discount)
-  ) AS revenue, 
-  ps_partkey, 
-  date_trunc(l_ordertime, 'day') as order_date 
-FROM 
-  lineitem 
-  LEFT JOIN partsupp ON l_partkey = ps_partkey 
-  and l_suppkey = ps_suppkey 
-GROUP BY 
-  l_linestatus, 
-  ps_partkey, 
-  date_trunc(l_ordertime, 'day')
-UNION ALL
-SELECT
-  l_linestatus, 
-  l_extendedprice, 
-  ps_partkey, 
-  date_trunc(l_ordertime, 'day') as order_date 
-FROM 
-  lineitem 
-  LEFT JOIN partsupp ON l_partkey = ps_partkey 
-  and l_suppkey = ps_suppkey;
-```
-
-可以将上述 SQL 语句拆分成两个部分，分别创建两个分区物化视图。
-
-```sql
-CREATE MATERIALIZED VIEW union_sub_mv1
-BUILD IMMEDIATE REFRESH AUTO ON MANUAL 
-partition by(order_date) 
-DISTRIBUTED BY RANDOM BUCKETS 2 
-AS
-SELECT 
-  l_linestatus, 
-  sum(
-    l_extendedprice * (1 - l_discount)
-  ) AS revenue, 
-  ps_partkey, 
-  date_trunc(l_ordertime, 'day') as order_date 
-FROM 
-  lineitem 
-  LEFT JOIN partsupp ON l_partkey = ps_partkey 
-  and l_suppkey = ps_suppkey 
-GROUP BY 
-  l_linestatus, 
-  ps_partkey, 
-  date_trunc(l_ordertime, 'day');
-```
-
-
-```sql
-CREATE MATERIALIZED VIEW union_sub_mv2
-BUILD IMMEDIATE REFRESH AUTO ON MANUAL 
-partition by(order_date) 
-DISTRIBUTED BY RANDOM BUCKETS 2 
-       
-AS
-SELECT
-  l_linestatus, 
-  l_extendedprice, 
-  ps_partkey, 
-  date_trunc(l_ordertime, 'day') as order_date 
-FROM 
-  lineitem 
-  LEFT JOIN partsupp ON l_partkey = ps_partkey 
-  and l_suppkey = ps_suppkey;
-```
-
-然后创建一个普通视图，将两个分区物化视图的结果集进行 UNION ALL。对外可以提供这个视图 union_all_view
-
-```sql
-CREATE VIEW union_all_view
-AS
-SELECT * 
-FROM
-union_sub_mv1
-UNION ALL
-SELECT * 
-FROM
-union_sub_mv2;
-
-```
-
 
 ## 分区物化视图只保留最近分区数据
 

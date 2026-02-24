@@ -1,7 +1,8 @@
 ---
 {
     "title": "数据分桶",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "一个分区可以根据业务需求进一步划分为多个数据分桶（bucket）。每个分桶都作为一个物理数据分片（tablet）存储。合理的分桶策略可以有效降低查询时的数据扫描量，提升查询性能并增加并发处理能力。"
 }
 ---
 
@@ -152,7 +153,7 @@ DISTRIBUTED BY HASH(region) BUCKETS AUTO
 properties("estimate_partition_size" = "20G")
 
 -- Set random bucket auto
-DISTRIBUTED BY HASH(region) BUCKETS AUTO
+DISTRIBUTED BY RANDOM BUCKETS AUTO
 properties("estimate_partition_size" = "20G")
 ```
 
@@ -191,4 +192,3 @@ SET ("dynamic_partition.buckets"="16");
 ```
 
 在修改分桶数量后，可以通过 SHOW PARTITION 命令查看修改后的分桶数量。
-

@@ -1,7 +1,8 @@
 ---
 {
     "title": "查看 Compaction 状态",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "用于查看某个 BE 节点总体的 compaction 状态，或者指定 tablet 的 compaction 状态。"
 }
 ---
 

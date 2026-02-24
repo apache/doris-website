@@ -1,7 +1,8 @@
 ---
 {
     "title": "REVOKE FROM",
-    "language": "en"
+    "language": "en",
+    "description": "The REVOKE command has the following functions:"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "G",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "draft": true
 }
 ---
 

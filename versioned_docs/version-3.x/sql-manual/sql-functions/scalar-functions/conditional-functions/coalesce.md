@@ -1,7 +1,8 @@
 ---
 {
     "title": "COALESCE",
-    "language": "en"
+    "language": "en",
+    "description": "Returns the first non-null expression from left to right in the parameter list. If all arguments are NULL, returns NULL."
 }
 ---
 

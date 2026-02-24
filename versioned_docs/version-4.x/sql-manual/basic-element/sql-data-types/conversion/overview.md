@@ -1,7 +1,8 @@
 ---
 {
     "title": "Type Conversion",
-    "language": "en"
+    "language": "en",
+    "description": "In Doris, each expression has a type, such as 1, col1, and fromunixtime(col2) in the expression select 1, col1, fromunixtime(col2) from table1."
 }
 ---
 

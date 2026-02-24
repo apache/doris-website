@@ -1,7 +1,8 @@
 ---
 {
     "title": "IVF",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "IVF 索引是一种用于近似最近邻（ANN）搜索的高效数据结构。它能在搜索过程中缩小向量搜索范围，显著提高搜索速度。自 Apache Doris 4.x 版本起，已支持基于 IVF 的 ANN 索引。本文档将详细介绍 IVF 算法、关键参数和工程实践，"
 }
 ---
 

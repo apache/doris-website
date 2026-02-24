@@ -1,7 +1,8 @@
 ---
 {
     "title": "DROP USER",
-    "language": "en"
+    "language": "en",
+    "description": "The DROP USER statement is used to delete a user."
 }
 ---
 

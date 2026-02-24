@@ -1,7 +1,8 @@
 ---
 {
-"title": "Workload Group Bind Compute Group",
-"language": "en"
+    "title": "Workload Group Bind Compute Group",
+    "language": "en",
+    "description": "Doris supports logical partitioning of BE (Backend) resources within a cluster through the Compute Group feature,"
 }
 ---
 

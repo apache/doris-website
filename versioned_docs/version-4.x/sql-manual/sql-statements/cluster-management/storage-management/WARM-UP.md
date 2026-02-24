@@ -1,7 +1,8 @@
 ---
 {
     "title": "WARM UP",
-    "language": "en"
+    "language": "en",
+    "description": "The WARM UP COMPUTE GROUP statement is used to warm up data in a compute group to improve query performance."
 }
 ---
 

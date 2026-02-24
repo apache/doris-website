@@ -1,7 +1,8 @@
 ---
 {
     "title": "Hive Catalog",
-    "language": "en"
+    "language": "en",
+    "description": "Hive Catalog in Apache Doris 2.1 connects to Hive Metastore and compatible services to query and write Hive, Iceberg and Hudi tables across HDFS and object storage, with configuration guides, supported services, formats and examples."
 }
 ---
 
@@ -87,6 +88,14 @@ Hive transactional tables are supported from version 3.x onwards. For details, r
 
 > Note: The service types and parameters supported by different Doris versions are slightly different. Please refer to the [Examples] section.
 
+### Hive Catalog Feature Support Matrix
+
+| Metadata Service | Table Query | View Query | DDL Operations | Data Writeback |
+|------------------|-------------|------------|----------------|----------------|
+| Hive             | ✅          | ✅         | ✅             | ✅             |
+| AWS Glue         | ✅          | ✅         | ❌             | ❌             |
+| DLF              | ✅          | ✅         | ✅             | ✅             |
+
 ### Supported Storage Systems
 
 * [HDFS](../storages/hdfs.md)
@@ -141,7 +150,7 @@ Hive transactional tables are supported from version 3.x onwards. For details, r
 | char(N)       | char(N)       |                                                |
 | varchar(N)    | varchar(N)    |                                                |
 | string        | string        |                                                |
-| binary        | string        |                                                |
+| binary        | string/varbinary  | Controlled by the `enable.mapping.varbinary` property of Catalog (supported since 4.0.2). The default is `false`, which maps to `string`; when `true`, it maps to `varbinary` type.|
 | array         | array         |                                                |
 | map           | map           |                                                |
 | struct        | struct        |                                                |

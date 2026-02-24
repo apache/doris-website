@@ -1,9 +1,8 @@
 ---
 {
-
     "title": "Routine Load导入原理及最佳实践",
-    "language": "zh-CN"
-
+    "language": "zh-CN",
+    "description": "Routine Load 用于持续消费 Kafka 数据并写入 Apache Doris。用户可以通过创建 Routine Load Job，来自动订阅指定的 Kafka Topic。其核心特性包括："
 }
 ---
 

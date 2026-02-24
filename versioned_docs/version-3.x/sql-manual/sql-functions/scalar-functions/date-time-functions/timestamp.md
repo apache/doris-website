@@ -1,7 +1,8 @@
 ---
 {
     "title": "TIMESTAMP",
-    "language": "en"
+    "language": "en",
+    "description": "The TIMESTAMP function has two uses:"
 }
 ---
 

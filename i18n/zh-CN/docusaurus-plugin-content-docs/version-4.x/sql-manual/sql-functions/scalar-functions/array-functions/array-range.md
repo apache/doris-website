@@ -1,7 +1,8 @@
 ---
 {
     "title": "ARRAYS_RANGE",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "生成数值或日期时间的等差序列数组。"
 }
 ---
 

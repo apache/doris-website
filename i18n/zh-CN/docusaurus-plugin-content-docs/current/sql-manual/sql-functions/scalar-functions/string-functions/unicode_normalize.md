@@ -1,7 +1,8 @@
 ---
 {
     "title": "UNICODE_NORMALIZE",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "对输入字符串进行 Unicode 标准化（归一化）。"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "HLL(HyperLogLog)",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "HLL HLL 不能作为 key 列使用，支持在 Aggregate 模型、Duplicate 模型和 Unique 模型的表中使用。在 Aggregate 模型表中使用时，建表时配合的聚合类型为 HLLUNION。 用户不需要指定长度和默认值。长度根据数据的聚合程度系统内控制。"
 }
 ---
 

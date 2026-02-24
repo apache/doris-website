@@ -1,7 +1,8 @@
 ---
 {
-  "title": "TO_DATE",
-  "language": "en"
+    "title": "TO_DATE",
+    "language": "en",
+    "description": "This function is equivalent to CAST(<STRING> TO DATE)."
 }
 ---
 

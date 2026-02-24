@@ -1,7 +1,8 @@
 ---
 {
     "title": "session_variables",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "查看会话变量信息。"
 }
 ---
 

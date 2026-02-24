@@ -1,7 +1,8 @@
 ---
 {
-"title": "FluentBit",
-"language": "en"
+    "title": "FluentBit",
+    "language": "en",
+    "description": "Fluent Bit is a fast log processor and forwarder that supports custom output plugins to write data into storage systems,"
 }
 ---
 
@@ -18,7 +19,7 @@ To use the Fluent Bit Doris output plugin, there are three main steps:
 
 ### Download
 
-https://apache-doris-releases.oss-accelerate.aliyuncs.com/integrations/fluent-bit-doris-3.1.9
+https://download.velodb.io/integrations/fluent-bit-doris-3.1.9
 
 ### Compile from Source Code
 

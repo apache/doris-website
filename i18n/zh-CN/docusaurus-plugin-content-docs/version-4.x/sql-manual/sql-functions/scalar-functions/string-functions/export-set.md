@@ -1,7 +1,8 @@
 ---
 {
     "title": "EXPORT_SET",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "EXPORTSET 用于将一个整数的每一位（bit）转换为指定的字符串，并拼接成结果字符串。对于 bits 中每个为 1 的位，结果中对应位置会显示 on 字符串；每个为 0 的位则显示 off 字符串。位的检查顺序是从右到左（即从低位到高位），而拼接到结果字符串时是从左到右。"
 }
 ---
 

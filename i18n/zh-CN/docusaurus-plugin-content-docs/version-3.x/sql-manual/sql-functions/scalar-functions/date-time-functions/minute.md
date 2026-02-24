@@ -1,7 +1,8 @@
 ---
 {
     "title": "MINUTE",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "从日期时间值中提取分钟部分的值。返回值范围为 0 到 59。"
 }
 ---
 

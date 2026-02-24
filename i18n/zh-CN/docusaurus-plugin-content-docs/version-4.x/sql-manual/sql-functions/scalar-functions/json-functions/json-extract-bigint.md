@@ -1,7 +1,8 @@
 ---
 {
     "title": "JSON_EXTRACT_BIGINT",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "JSONEXTRACTBIGINT 从 JSON 对象中提取 <jsonpath> 指定的字段，并将其转换为 BIGINT 类型。"
 }
 ---
 

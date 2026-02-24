@@ -1,7 +1,8 @@
 ---
 {
     "title": "ELT",
-    "language": "en"
+    "language": "en",
+    "description": "The ELT function returns the string at the specified index position. Index counting starts from 1."
 }
 ---
 

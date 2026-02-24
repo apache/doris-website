@@ -1,7 +1,8 @@
 ---
 {
     "title": "Release 3.1.2",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "Apache Doris 3.1.2 版本发布说明，重点介绍存储压缩、云与对象存储、数据湖、Java UDF 等新功能，以及查询执行、存储层优化和多项数据湖、查询引擎与导入相关缺陷修复。"
 }
 ---
 

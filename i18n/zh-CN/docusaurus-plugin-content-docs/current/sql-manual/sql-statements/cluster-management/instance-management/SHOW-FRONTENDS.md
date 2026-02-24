@@ -1,7 +1,8 @@
 ---
 {
     "title": "SHOW FRONTENDS",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "该语句用于查看 FE 节点的基本状态信息。"
 }
 ---
 

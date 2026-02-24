@@ -1,7 +1,8 @@
 ---
 {
     "title": "IS_UUID",
-    "language": "en"
+    "language": "en",
+    "description": "If the parameter is a valid UUID, return 1. If it is an invalid UUID, return 0. If the parameter is NULL, return NULL."
 }
 ---
 

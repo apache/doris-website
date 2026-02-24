@@ -1,7 +1,8 @@
 ---
 {
     "title": "HLL_RAW_AGG",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "HLLRAWAGG 函数是一种聚合函数，主要用于将多个 HyperLogLog 数据结构合并成一个。"
 }
 ---
 

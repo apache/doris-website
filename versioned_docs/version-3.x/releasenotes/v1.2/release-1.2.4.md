@@ -1,7 +1,8 @@
 ---
 {
     "title": "Release 1.2.4",
-    "language": "en"
+    "language": "en",
+    "description": "​ Refer to: https://doris.apache.org/docs/dev/lakehouse/multi-catalog/jdbc#trino"
 }
 ---
 

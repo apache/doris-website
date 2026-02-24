@@ -1,9 +1,13 @@
 ---
 {
-    "title": "STRUCT",
-    "language": "zh-CN"
+    "title": "STRUCT | Semi Structured",
+    "language": "zh-CN",
+    "description": "STRUCT",
+    "sidebar_label": "STRUCT"
 }
 ---
+
+# STRUCT
 
 ## STRUCT
 
@@ -100,3 +104,4 @@ mysql> select * from struct_test;
 ### keywords
 
     STRUCT
+

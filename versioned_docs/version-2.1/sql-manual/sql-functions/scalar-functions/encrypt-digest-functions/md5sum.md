@@ -1,7 +1,8 @@
 ---
 {
-"title": "MD5SUM",
-"language": "en"
+    "title": "MD5SUM",
+    "language": "en",
+    "description": "Calculates an MD5 128-bit checksum for the strings"
 }
 ---
 

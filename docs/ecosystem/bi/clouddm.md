@@ -1,7 +1,8 @@
 ---
 {
     "title": "CloudDM",
-    "language": "en"
+    "language": "en",
+    "description": "CloudDM, developed by Clougence, is a powerful cross-platform database management tool designed for both teams and individual users."
 }
 ---
 

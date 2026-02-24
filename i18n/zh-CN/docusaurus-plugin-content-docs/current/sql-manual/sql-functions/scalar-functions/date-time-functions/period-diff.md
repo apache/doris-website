@@ -1,7 +1,8 @@
 ---
 {
     "title": "PERIOD_DIFF",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "计算两个周期之间的月份差值。"
 }
 ---
 

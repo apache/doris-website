@@ -1,7 +1,8 @@
 ---
 {
     "title": "BITMAP_TO_STRING",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "将一个 Bitmap 转化成一个逗号分隔的字符串，字符串中包含所有设置的 Bit 位。"
 }
 ---
 

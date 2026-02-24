@@ -1,7 +1,8 @@
 ---
 {
     "title": "OVERVIEW",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "窗口函数（也称为分析函数）是一类特殊的内置函数，它能在保留原始行的基础上进行计算。与聚合函数不同，窗口函数："
 }
 ---
 
@@ -45,7 +46,7 @@ function(<args>) OVER(
 1. 假设我们有如下的股票数据，股票代码是 JDR，closing price 是每天的收盘价。
 
 ```sql
-create table stock_ticker (stock_symbol string, closing_price decimal(8,2), closing_date timestamp);    
+create table stock_ticker (stock_symbol string, closing_price decimal(8,2), closing_date datetime);
 ...load some data...    
 select * from stock_ticker order by stock_symbol, closing_date
 ```

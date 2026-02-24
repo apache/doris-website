@@ -1,7 +1,8 @@
 ---
 {
     "title": "ALTER ASYNC MATERIALIZED VIEW",
-    "language": "en"
+    "language": "en",
+    "description": "This statement is used to modify asynchronous materialized views."
 }
 ---
 

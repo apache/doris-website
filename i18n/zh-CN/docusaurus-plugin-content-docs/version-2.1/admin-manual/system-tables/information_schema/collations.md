@@ -1,7 +1,8 @@
 ---
 {
     "title": "collations",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "查看所有字符集的排序方法。此表仅用于兼容 MySQL 行为。没有实际的意义。不能真实反映 Doris 所使用的字符排序方法。"
 }
 ---
 

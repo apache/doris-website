@@ -272,7 +272,7 @@ img.home-svg svg path {
 
 .home-page-hero-right a:hover,
 a:active {
-    /* color: #444fd9; */
+    /* color: var(--ifm-color-primary); */
     text-decoration: none;
     transition-duration: .3s;
     transition-timing-function: cubic-bezier(0, 0, .2, 1);
@@ -323,7 +323,7 @@ a:active {
     font-size: 12px;
     color: #fafafa;
     border-radius: 10px;
-    background-color: #444fd9;
+    background-color: var(--ifm-color-primary);
     /* text-align: center; */
     padding-top: .25rem;
     padding-bottom: .125rem;

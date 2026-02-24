@@ -1,7 +1,8 @@
 ---
 {
     "title": "DATE_FLOOR",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "datefloor 将日期转化为指定的时间间隔周期的最近下取整时刻。"
 }
 ---
 
@@ -19,7 +20,7 @@
 | -- | -- |
 | `datetime` | 参数是合法的日期表达式 |
 | `period` | 参数是指定每个周期有多少个单位组成，开始的时间起点为 0001-01-01T00:00:00 |
-| `type` | 参数可以是：YEAR, QUARTER, MONTH, DAY, HOUR, MINUTE, SECOND |
+| `type` | 参数可以是：YEAR, MONTH, DAY, HOUR, MINUTE, SECOND |
 
 :::tip 
 QUARTER 支持从 3.0.8 和 3.1.0 版本开始。

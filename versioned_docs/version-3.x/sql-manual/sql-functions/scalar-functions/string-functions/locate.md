@@ -1,7 +1,8 @@
 ---
 {
     "title": "LOCATE",
-    "language": "en"
+    "language": "en",
+    "description": "Returns the position of substr in str (counting from 1). If the third parameter pos is specified,"
 }
 ---
 

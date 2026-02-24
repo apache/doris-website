@@ -1,7 +1,8 @@
 ---
 {
     "title": "Hive Catalog",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "通过连接 Hive Metastore，或者兼容 Hive Metatore 的元数据服务，Doris 可以自动获取 Hive 的库表信息，并进行数据查询。"
 }
 ---
 
@@ -113,6 +114,14 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 > 
 > 不同 Doris 版本所支持的服务类型和参数略有区别，请参考【基础示例】章节。
 
+### Hive Catalog 功能支持矩阵
+
+| 元数据服务 | 表查询 | 视图查询 |DDL 操作| 数据写回|
+| ---------- | -------- | -------- | -------- | -------- |
+| Hive       | ✅       | ✅        | ✅        | ✅        |
+| AWS Glue   | ✅       | ✅        | ❌        | ❌       |
+| DLF        | ✅       | ✅        | ✅        | ✅        |
+
 ### 支持的数据格式
 
 * Hive
@@ -152,7 +161,7 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 | char(N)       | char(N)       |                           |
 | varchar(N)    | varchar(N)    |                           |
 | string        | string        |                           |
-| binary        | string        |                           |
+| binary        | string/varbinary| 由 properties 中 `enable.mapping.varbinary` (4.0.2 后开始支持) 属性控制。默认为 `false`, 则映射到 `string`; 为 `true` 时，则映射到 `varbinary` 类型。|
 | array         | array         |                           |
 | map           | map           |                           |
 | struct        | struct        |                           |

@@ -1,7 +1,8 @@
 ---
 {
     "title": "PLAN REPLAYER DUMP",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "PLAN REPLAYER DUMP 是 Doris 用户用来生成执行规划诊断文件的工具。用于捕捉查询优化器的状态和输入数据，方便调试和分析查询优化问题。其输出为对应诊断文件的 http 地址。"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "Manual partitioning",
-    "language": "en"
+    "language": "en",
+    "description": "Partition columns are usually time columns for convenient management of old and new data. RANGE partitioning supports column types such as DATE,"
 }
 ---
 

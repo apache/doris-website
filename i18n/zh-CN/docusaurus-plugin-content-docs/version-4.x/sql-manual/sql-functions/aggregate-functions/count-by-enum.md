@@ -1,7 +1,8 @@
 ---
 {
-"title": "COUNT_BY_ENUM",
-"language": "zh-CN"
+    "title": "COUNT_BY_ENUM",
+    "language": "zh-CN",
+    "description": "将列中数据看作枚举值，统计每个枚举值的个数。返回各个列枚举值的个数，以及非 NULL 值的个数与 NULL 值的个数。"
 }
 ---
 

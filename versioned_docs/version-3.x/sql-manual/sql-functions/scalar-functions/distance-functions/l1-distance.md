@@ -1,7 +1,8 @@
 ---
 {
     "title": "L1_DISTANCE",
-    "language": "en"
+    "language": "en",
+    "description": "Calculate the distance between two points in L1 space (vector values are coordinates)"
 }
 ---
 

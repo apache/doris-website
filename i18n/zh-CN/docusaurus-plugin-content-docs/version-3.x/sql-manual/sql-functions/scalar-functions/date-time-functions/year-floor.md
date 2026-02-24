@@ -1,7 +1,8 @@
 ---
 {
     "title": "YEAR_FLOOR",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "用于将给定的日期向下取整到指定的年份间隔起点。它支持多个变体，可按不同方式 指定起始时间 (origin) 和周期 (period) 进行取整。"
 }
 ---
 

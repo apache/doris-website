@@ -1,7 +1,8 @@
 ---
 {
     "title": "SHOW REPLICA DISTRIBUTION",
-    "language": "en"
+    "language": "en",
+    "description": "This statement is used to display the replica status information for a table or partition."
 }
 ---
 

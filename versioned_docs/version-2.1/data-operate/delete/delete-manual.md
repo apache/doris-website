@@ -1,9 +1,9 @@
 ---
 {
     "title": "Deleting Data with DELETE Command",
-    "language": "en"
+    "language": "en",
+    "description": "The DELETE statement removes data from a specified table or partition based on conditions through the MySQL protocol."
 }
-
 ---
 
 The `DELETE` statement removes data from a specified table or partition based on conditions through the MySQL protocol. It supports specifying the data to be deleted using simple predicate combinations and also supports using the `USING` clause to join multiple tables for deletion on primary key tables.

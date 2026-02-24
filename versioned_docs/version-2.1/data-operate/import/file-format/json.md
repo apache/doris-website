@@ -1,7 +1,9 @@
 ---
 {
-    "title": "JSON",
-    "language": "en"
+    "title": "JSON | File Format",
+    "language": "en",
+    "description": "This document explains how to load JSON format data files into Doris.",
+    "sidebar_label": "JSON"
 }
 ---
 
@@ -434,3 +436,4 @@ FROM S3
     "json_root" = "$.events",
     ...
 );
+

@@ -1,7 +1,8 @@
 ---
 {
     "title": "ST_Y",
-    "language": "en"
+    "language": "en",
+    "description": "When point is a valid POINT type, return the corresponding y-coordinate value"
 }
 ---
 

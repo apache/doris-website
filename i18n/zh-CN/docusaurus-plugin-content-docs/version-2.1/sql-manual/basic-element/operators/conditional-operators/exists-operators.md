@@ -1,7 +1,8 @@
 ---
 {
     "title": "EXISTS 操作符",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "EXISTS 条件用于测试子查询中行的存在性。"
 }
 ---
 

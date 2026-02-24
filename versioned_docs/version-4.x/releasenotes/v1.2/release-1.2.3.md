@@ -1,7 +1,8 @@
 ---
 {
     "title": "Release 1.2.3",
-    "language": "en"
+    "language": "en",
+    "description": "Currently, Jdbc Catalog only support to use 5.x version of JDBC jar package to connect another Doris database. If you use 8."
 }
 ---
 

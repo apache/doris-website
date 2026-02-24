@@ -1,7 +1,8 @@
 ---
 {
-"title": "SEARCH 函数",
-    "language": "zh-CN"
+    "title": "SEARCH 函数",
+    "language": "zh-CN",
+    "description": "SEARCH 函数为 Apache Doris 4.0版本开始提供的统一的全文检索查询入口。它以简洁的 DSL（领域特定语言）描述查询条件，并基于倒排索引高效执行。"
 }
 ---
 

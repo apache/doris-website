@@ -1,7 +1,8 @@
 ---
 {
     "title": "SINH",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "返回x的双曲正弦值。"
 }
 ---
 

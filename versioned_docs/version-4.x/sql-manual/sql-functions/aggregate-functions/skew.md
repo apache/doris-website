@@ -1,7 +1,8 @@
 ---
 {
     "title": "SKEW,SKEW_POP,SKEWNESS",
-    "language": "en"
+    "language": "en",
+    "description": "Returns the skewness of the expr expression. The formula used for this function is 3rd central moment / ((variance)^{1.5})."
 }
 ---
 

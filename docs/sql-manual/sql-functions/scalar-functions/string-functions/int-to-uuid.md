@@ -1,7 +1,8 @@
 ---
 {
     "title": "INT_TO_UUID",
-    "language": "en"
+    "language": "en",
+    "description": "For the input encoded LARGEINT, converts it to the original UUID string."
 }
 ---
 

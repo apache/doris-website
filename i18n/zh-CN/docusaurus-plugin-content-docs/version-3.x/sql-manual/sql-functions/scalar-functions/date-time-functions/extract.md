@@ -1,7 +1,8 @@
 ---
 {
     "title": "EXTRACT",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "extract 函数用于从日期或时间值中提取指定的部分，如年份、月份、日、小时、分钟、秒等。该函数常用于从日期时间字段中提取具体的时间组件进行计算、比较或展示。"
 }
 ---
 

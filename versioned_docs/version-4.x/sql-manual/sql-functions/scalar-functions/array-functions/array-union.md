@@ -1,7 +1,8 @@
 ---
 {
     "title": "ARRAY_UNION",
-    "language": "en"
+    "language": "en",
+    "description": "ARRAYUNION returns the union of multiple arrays, i.e., merges all elements from the arrays, removes duplicates, and returns a new array."
 }
 ---
 

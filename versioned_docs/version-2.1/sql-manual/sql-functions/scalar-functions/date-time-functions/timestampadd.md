@@ -1,7 +1,8 @@
 ---
 {
     "title": "TIMESTAMPADD",
-    "language": "en"
+    "language": "en",
+    "description": "The timestampadd function is used to add a specified time unit (such as year, month, day, hour, minute, second, etc.) to a date."
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "MAX",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "MAX 函数返回表达式的最大非 NULL 值。"
 }
 ---
 
@@ -19,7 +20,7 @@ MAX(<expr>)
 
 | 参数 | 说明 |
 | -- | -- |
-| `<expr>` | 用于获取值的表达式。支持的类型包括 String、Time、Date、DateTime、IPv4、IPv6、TinyInt、SmallInt、Integer、BigInt、LargeInt、Float、Double、Decimal、Array。 |
+| `<expr>` | 用于获取值的表达式。支持的类型包括 String、Time、Date、DateTime、Timestamptz、IPv4、IPv6、TinyInt、SmallInt、Integer、BigInt、LargeInt、Float、Double、Decimal、Array。 |
 
 ## 返回值
 

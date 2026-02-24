@@ -1,7 +1,8 @@
 ---
 {
     "title": "LCM",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "计算两个整数的最小公倍数。注意结果可能会溢出。"
 }
 ---
 

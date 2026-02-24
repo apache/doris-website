@@ -1,7 +1,8 @@
 ---
 {
     "title": "JSON_PARSE_NULLABLE_ERROR_TO_INVALID",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "JSONPARSENULLABLEERRORTOINVALID 函数用于解析一个 JSON 字符串为有效的 JSON 对象。如果输入的 JSON 字符串无效，它将返回一个 \"无效的 JSON\" 标记（通常为 INVALIDJSON），而不会抛出错误。如果输入为 NULL，"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
-"title": "Workload Analysis Diagnosis",
-"language": "en"
+    "title": "Workload Analysis Diagnosis",
+    "language": "en",
+    "description": "Guide to workload analysis and diagnosis in Doris, covering runtime analysis for resource bottlenecks and historical data analysis through audit logs to optimize cluster performance."
 }
 ---
 

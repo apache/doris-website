@@ -1,7 +1,8 @@
 ---
 {
     "title": "ARRAY_EXISTS",
-    "language": "en"
+    "language": "en",
+    "description": "Use an optional lambda expression as an input parameter to perform corresponding expression calculations on the internal data of other input ARRAY "
 }
 ---
 

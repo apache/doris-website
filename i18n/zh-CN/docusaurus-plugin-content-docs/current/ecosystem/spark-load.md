@@ -1,7 +1,8 @@
 ---
 {
-  "title": "Spark Load",
-  "language": "zh-CN"
+    "title": "Spark Load",
+    "language": "zh-CN",
+    "description": "Spark Load 通过外部的 Spark 资源实现对导入数据的预处理，提高 Doris 大数据量的导入性能并且节省 Doris 集群的计算资源。主要用于初次迁移，大数据量导入 Doris 的场景。"
 }
 ---
 

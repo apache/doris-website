@@ -1,7 +1,8 @@
 ---
 {
     "title": "FORMAT",
-    "language": "en"
+    "language": "en",
+    "description": "The FORMAT function returns a string formatted using the specified format string and parameters."
 }
 ---
 

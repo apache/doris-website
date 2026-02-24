@@ -1,7 +1,8 @@
 ---
 {
     "title": "Cast to DATE Type",
-    "language": "en"
+    "language": "en",
+    "description": "Valid range for DATE type: [0000-01-01, 9999-12-31]"
 }
 ---
 

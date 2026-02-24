@@ -1,7 +1,8 @@
 ---
 {
     "title": "FROM_SECOND",
-    "language": "en"
+    "language": "en",
+    "description": "The function converts a Unix timestamp (in seconds) into a DATETIME value."
 }
 ---
 

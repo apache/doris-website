@@ -1,7 +1,8 @@
 ---
 {
-"title": "CREATE WORKLOAD POLICY",
-"language": "zh-CN"
+    "title": "CREATE WORKLOAD POLICY",
+    "language": "zh-CN",
+    "description": "创建一个 Workload Policy，用于当一个查询满足一些条件时，就对该查询执行相应的动作。"
 }
 ---
 

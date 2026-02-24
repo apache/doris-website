@@ -1,7 +1,8 @@
 ---
 {
     "title": "MONTHS_BETWEEN",
-    "language": "en"
+    "language": "en",
+    "description": "Unlike the MONTHSDIFF function, the MONTHSBETWEEN function does not ignore the day component and returns a floating-point number representing the "
 }
 ---
 

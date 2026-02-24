@@ -1,7 +1,8 @@
 ---
 {
     "title": "ARRAY_CONCAT",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "将输入的所有数组拼接为一个数组"
 }
 ---
 

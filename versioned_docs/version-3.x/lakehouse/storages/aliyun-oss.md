@@ -1,7 +1,8 @@
 ---
 {
-  "title": "Aliyun OSS",
-  "language": "en"
+    "title": "Aliyun OSS",
+    "language": "en",
+    "description": "This document describes the parameters required to access Alibaba Cloud OSS, which are applicable to the following scenarios:"
 }
 ---
 

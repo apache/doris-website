@@ -1,7 +1,8 @@
 ---
 {
     "title": "DAYOFWEEK",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "返回日期的工作日索引值，即星期日为 1，星期一为 2，星期六为 7。"
 }
 ---
 

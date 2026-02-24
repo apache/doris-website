@@ -1,7 +1,8 @@
 ---
 {
     "title": "DROP INDEX",
-    "language": "en"
+    "language": "en",
+    "description": "This statement is used to delete an index with a specified name from a table. Currently, only inverted indexes and ann indexes are supported."
 }
 ---
 
@@ -38,6 +39,6 @@ The user executing this SQL command must have at least the following privileges:
 - drop index
 
    ```sql
-   DROP INDEX IF NOT EXISTS index_name ON table1 ;
+   DROP INDEX IF EXISTS index_name ON table1 ;
    ```
 

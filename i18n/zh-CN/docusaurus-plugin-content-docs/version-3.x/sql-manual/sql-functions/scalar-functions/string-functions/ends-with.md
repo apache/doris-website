@@ -1,7 +1,8 @@
 ---
 {
     "title": "ENDS_WITH",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "如果字符串以指定后缀结尾则返回 true，否则返回 false。特殊情况："
 }
 ---
 

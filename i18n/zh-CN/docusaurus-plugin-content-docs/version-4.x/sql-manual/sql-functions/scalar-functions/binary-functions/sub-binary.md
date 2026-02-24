@@ -1,7 +1,8 @@
 ---
 {
     "title": "SUB_BINARY",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "SUBBINARY 函数用于从 VARBINARY 类型的二进制值中提取一个子序列。可以指定起始字节位置和提取的字节长度。二进制数据的首字节位置为 1。"
 }
 ---
 

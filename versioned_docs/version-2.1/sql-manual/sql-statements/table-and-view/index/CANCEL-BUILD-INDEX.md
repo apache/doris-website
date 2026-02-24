@@ -1,7 +1,8 @@
 ---
 {
     "title": "CANCEL BUILD INDEX",
-    "language": "en"
+    "language": "en",
+    "description": "Cancel background tasks for index building."
 }
 ---
 
@@ -61,11 +62,11 @@ The user executing this SQL command must have at least the following privileges:
 - Cancel all index building tasks on table table1
 
   ```sql
-  CANCEL BUILD INDEX ON TABLE table1
+  CANCEL BUILD INDEX ON table1
   ```
 
 - Cancel index building tasks jobid1 and jobid2 on table table1
 
   ```sql
-  CANCEL BUILD INDEX ON TABLE table1(jobid1, jobid2)
+  CANCEL BUILD INDEX ON table1(jobid1, jobid2)
   ```

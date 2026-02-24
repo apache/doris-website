@@ -1,7 +1,8 @@
 ---
 {
     "title": "REGEXP",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "对字符串 str 执行正则表达式匹配，匹配成功时返回 true，否则返回 false。pattern 为正则表达式模式。 需要注意的是，在处理字符集匹配时，应使用 Utf-8 标准字符类。这确保函数能够正确识别和处理来自不同语言的各种字符。"
 }
 ---
 

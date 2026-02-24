@@ -1,7 +1,8 @@
 ---
 {
     "title": "URL_DECODE",
-    "language": "en"
+    "language": "en",
+    "description": "Converts an url to a decode string."
 }
 ---
 

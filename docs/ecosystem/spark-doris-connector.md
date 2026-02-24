@@ -1,7 +1,8 @@
 ---
 {
-  "title": "Spark Doris Connector",
-  "language": "en"
+    "title": "Spark Doris Connector",
+    "language": "en",
+    "description": "Spark Doris Connector can support reading data stored in Doris and writing data to Doris through Spark."
 }
 ---
 
@@ -20,6 +21,7 @@ Github: https://github.com/apache/doris-spark-connector
 
 | Connector | Spark               | Doris       | Java | Scala      |
 |-----------|---------------------|-------------|------|------------|
+| 25.2.0    | 3.5 - 3.1, 2.4      | 1.0 +       | 8    | 2.12, 2.11 |
 | 25.1.0    | 3.5 - 3.1, 2.4      | 1.0 +       | 8    | 2.12, 2.11 |
 | 25.0.1    | 3.5 - 3.1, 2.4      | 1.0 +       | 8    | 2.12, 2.11 |
 | 25.0.0    | 3.5 - 3.1, 2.4      | 1.0 +       | 8    | 2.12, 2.11 |
@@ -38,7 +40,7 @@ Github: https://github.com/apache/doris-spark-connector
 <dependency>
     <groupId>org.apache.doris</groupId>
     <artifactId>spark-doris-connector-spark-3.5</artifactId>
-    <version>25.1.0</version>
+    <version>25.2.0</version>
 </dependency>
 ``` 
 
@@ -61,7 +63,7 @@ Starting from version 24.0.0, the naming rules of the Doris connector package ha
 
 When compiling, you can directly run `sh build.sh`, for details, please refer to here.
 
-After successful compilation, the target jar package will be generated in the `dist` directory, such as: spark-doris-connector-spark-3.5-25.1.0.jar. Copy this file to the `ClassPath` of `Spark` to use `Spark-Doris-Connector`. For example, for `Spark` running in `Local` mode, put this file in the `jars/` folder. For `Spark` running in `Yarn` cluster mode, put this file in the pre-deployment package.
+After successful compilation, the target jar package will be generated in the `dist` directory, such as: spark-doris-connector-spark-3.5-25.2.0.jar. Copy this file to the `ClassPath` of `Spark` to use `Spark-Doris-Connector`. For example, for `Spark` running in `Local` mode, put this file in the `jars/` folder. For `Spark` running in `Yarn` cluster mode, put this file in the pre-deployment package.
 You can also
 
 Execute in the source code directory:
@@ -70,21 +72,21 @@ Execute in the source code directory:
 
 Enter the Scala and Spark versions you need to compile according to the prompts.
 
-After successful compilation, the target jar package will be generated in the `dist` directory, such as: `spark-doris-connector-spark-3.5-25.1.0.jar`.
+After successful compilation, the target jar package will be generated in the `dist` directory, such as: `spark-doris-connector-spark-3.5-25.2.0.jar`.
 Copy this file to the `ClassPath` of `Spark` to use `Spark-Doris-Connector`.
 
 For example, if `Spark` is running in `Local` mode, put this file in the `jars/` folder. If `Spark` is running in `Yarn` cluster mode, put this file in the pre-deployment package.
 
-For example, upload `spark-doris-connector-spark-3.5-25.1.0.jar` to hdfs and add the Jar package path on hdfs to the `spark.yarn.jars` parameter
+For example, upload `spark-doris-connector-spark-3.5-25.2.0.jar` to hdfs and add the Jar package path on hdfs to the `spark.yarn.jars` parameter
 ```shell
 
-1. Upload `spark-doris-connector-spark-3.5-25.1.0.jar` to hdfs.
+1. Upload `spark-doris-connector-spark-3.5-25.2.0.jar` to hdfs.
 
 hdfs dfs -mkdir /spark-jars/
-hdfs dfs -put /your_local_path/spark-doris-connector-spark-3.5-25.1.0.jar /spark-jars/
+hdfs dfs -put /your_local_path/spark-doris-connector-spark-3.5-25.2.0.jar /spark-jars/
 
-2. Add the `spark-doris-connector-spark-3.5-25.1.0.jar` dependency in the cluster.
-spark.yarn.jars=hdfs:///spark-jars/spark-doris-connector-spark-3.5-25.1.0.jar
+2. Add the `spark-doris-connector-spark-3.5-25.2.0.jar` dependency in the cluster.
+spark.yarn.jars=hdfs:///spark-jars/spark-doris-connector-spark-3.5-25.2.0.jar
 
 ```
 
@@ -448,7 +450,7 @@ insert into your_catalog_name.your_doris_db.your_doris_table select * from your_
 | doris.filter.query          | --            | Filter expression of the query, which is transparently transmitted to Doris. Doris uses this expression to complete source-side data filtering. |
 
 
-## Doris & Spark Column Type Mapping
+## Data Type Mapping from Doris to Spark
 
 | Doris Type | Spark Type              |
 |------------|-------------------------|
@@ -472,6 +474,25 @@ insert into your_catalog_name.your_doris_db.your_doris_table select * from your_
 | TIME       | DataTypes.DoubleType    |
 | HLL        | DataTypes.StringType    |
 | Bitmap     | DataTypes.StringType    |
+
+
+## Data Type Mapping from Spark to Doris
+
+| Spark Type     | Doris Type     |
+|----------------|----------------|
+| BooleanType    | BOOLEAN        |
+| ShortType      | SMALLINT       |
+| IntegerType    | INT            |
+| LongType       | BIGINT         |
+| FloatType      | FLOAT          |
+| DoubleType     | DOUBLE         |
+| DecimalType    | DECIMAL        |
+| StringType     | VARCHAR/STRING |
+| DateType       | DATE           |
+| TimestampType  | DATETIME       |
+| ArrayType      | ARRAY          |
+| MapType        | MAP/JSON       |
+| StructType     | STRUCT/JSON    |
 
 :::tip
 

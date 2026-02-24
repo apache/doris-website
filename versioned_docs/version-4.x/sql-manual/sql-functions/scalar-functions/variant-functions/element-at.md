@@ -1,7 +1,8 @@
 ---
 {
     "title": "ELEMENT_AT",
-    "language": "en"
+    "language": "en",
+    "description": "The ELEMENTAT function is used to extract the element value from an array or map based on the specified index or key."
 }
 ---
 

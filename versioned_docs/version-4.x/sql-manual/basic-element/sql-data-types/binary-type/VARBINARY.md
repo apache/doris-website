@@ -1,7 +1,8 @@
 ---
 {
     "title": "VARBINARY",
-    "language": "en"
+    "language": "en",
+    "description": "A variable-length binary byte sequence, where M denotes the maximum length (in bytes)."
 }
 ---
 

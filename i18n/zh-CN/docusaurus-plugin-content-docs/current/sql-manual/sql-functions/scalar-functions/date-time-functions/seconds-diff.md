@@ -1,7 +1,8 @@
 ---
 {
     "title": "SECONDS_DIFF",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "SECONDSDIFF 函数用于计算两个日期时间值之间的差值，并以秒为单位返回结果。该函数支持处理 DATE、DATETIME 类型，若输入为 DATE 类型，默认其时间部分为 00:00:00。"
 }
 ---
 

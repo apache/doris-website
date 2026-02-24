@@ -1,7 +1,8 @@
 ---
 {
     "title": "TRANSLATE",
-    "language": "en"
+    "language": "en",
+    "description": "The TRANSLATE function performs character-by-character string replacement, converting characters in the source string according to mapping rules."
 }
 ---
 

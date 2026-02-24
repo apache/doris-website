@@ -1,7 +1,8 @@
 ---
 {
     "title": "Accelerating Queries with SQL Cache",
-    "language": "en"
+    "language": "en",
+    "description": "For the detailed implementation principle of SQL Cache, please refer to the chapter SQL Cache."
 }
 ---
 

@@ -1,9 +1,9 @@
 ---
 {
     "title": "Using Doris and LakeSoul",
-    "language": "en"
+    "language": "en",
+    "description": "As a new open data management architecture, the Data Lakehouse integrates the high performance and real-time capabilities of data warehouses with the "
 }
-
 ---
 
 As a new open data management architecture, the Data Lakehouse integrates the high performance and real-time capabilities of data warehouses with the low cost and flexibility of data lakes, helping users more conveniently meet various data processing and analysis needs. It has been increasingly applied in enterprise big data systems.

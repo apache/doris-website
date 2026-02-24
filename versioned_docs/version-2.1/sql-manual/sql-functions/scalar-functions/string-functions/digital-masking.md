@@ -1,7 +1,8 @@
 ---
 {
     "title": "DIGITAL_MASKING",
-    "language": "en"
+    "language": "en",
+    "description": "The digitalmasking function is used for masking numbers. Based on the specified masking rule, certain characters in the number are replaced with ."
 }
 ---
 

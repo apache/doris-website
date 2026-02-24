@@ -1,7 +1,8 @@
 ---
 {
     "title": "YEAR",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "返回 date 类型的 year 部分，范围从 1000-9999"
 }
 ---
 

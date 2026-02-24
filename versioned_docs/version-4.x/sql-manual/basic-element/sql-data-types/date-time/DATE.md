@@ -1,9 +1,13 @@
 ---
 {
-    "title": "DATE",
-    "language": "en"
+    "title": "DATE | Date Time",
+    "language": "en",
+    "description": "DATE type stores dates, with a value range of [0000-01-01, 9999-12-31], and the default output format is 'yyyy-MM-dd'.",
+    "sidebar_label": "DATE"
 }
 ---
+
+# DATE
 
 ## Description
 
@@ -44,3 +48,4 @@ select cast('0120-02-29' as date);
 | 0120-02-29                 |
 +----------------------------+
 ```
+

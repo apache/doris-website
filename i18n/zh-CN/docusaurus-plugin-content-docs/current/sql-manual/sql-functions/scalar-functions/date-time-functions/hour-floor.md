@@ -1,7 +1,8 @@
 ---
 {
     "title": "HOUR_FLOOR",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "HOURFLOOR 函数用于将输入的日期时间值向下取整到指定小时周期的最近时刻。例如，若指定周期为 5 小时，函数会将输入时间调整为该周期内的起始整点时刻."
 }
 ---
 
@@ -32,14 +33,16 @@ HOUR_FLOOR(`<date_or_time_expr>`, `<period>`, `<origin>`)
 
 | 参数 | 说明 |
 | -- | -- |
-| `<date_or_time_expr>` | 参数是合法的日期表达式，支持输入 datetime/date 类型,date 类型会转换为对应日期的一天起始时间 00:00:00 ,具体 datetime/date 格式请查看  [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
+| `<date_or_time_expr>` | 参数是合法的日期表达式，支持输入 datetime/date/timestamptz 类型,date 类型会转换为对应日期的一天起始时间 00:00:00 ,具体格式请查看 [timestamptz的转换](../../../../sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion), [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
 | `<period>` | 	可选参数，指定周期长度（单位：小时），为正整数（如 2、6、12）。默认值为 1，表示每 1 小时一个周期。|
 |` <origin>` | 开始的时间起点，支持输入 datetime/date 类型，如果不填，默认是 0001-01-01T00:00:00 |
 
 ## 返回值
 
-返回 DATETIME 类型的值，表示向下取整后的最近周期时刻。
+返回 TIMESTAMPTZ, DATETIME 或 DATE 类型的值，表示向下取整后的最近周期时刻。
 
+- 若输入为 TIMESTAMPTZ 类型，则会先将其转换为 local_time(如：`2025-12-31 23:59:59+05:00` 在会话变量为`+08:00`的情况下代表的local_time为`2026-01-01 02:59:59`),再进行 FLOOR 计算操作。
+- 若输入的时间值(`<date_or_time_expr>` 和`<period>`)同时包含 TIMESTAMPTZ 和 DATETIME 类型，则输出 DATETIME 类型。
 - 若输入的 period 为非正数，返回错误。
 - 若是任意参数为 NULL ,结果返回 NULL.
 - origin 或 datetime 带有 scale,返回结果带有 scale，小数部分变为零
@@ -111,6 +114,23 @@ select hour_floor('2023-07-13 19:30:00.123', 4, '2028-07-14 08:00:00');
 +-----------------------------------------------------------------+
 | 2023-07-13 16:00:00.000                                         |
 +-----------------------------------------------------------------+
+
+-- TimeStampTz类型样例, SET time_zone = '+08:00'
+-- 将变量值转换为 local_time(2026-01-01 02:59:59)后再做 HOUR_FLOOR 操作
+SELECT HOUR_FLOOR('2025-12-31 23:59:59+05:00');
++-----------------------------------------+
+| HOUR_FLOOR('2025-12-31 23:59:59+05:00') |
++-----------------------------------------+
+| 2026-01-01 02:00:00                     |
++-----------------------------------------+
+
+-- 若参数同时包含 TimeStampTz 和 Datetime 类型，则输出 DateTime 类型
+SELECT HOUR_FLOOR('2025-12-31 23:59:59+05:00', '2025-12-15 00:00:00.123');
++--------------------------------------------------------------------+
+| HOUR_FLOOR('2025-12-31 23:59:59+05:00', '2025-12-15 00:00:00.123') |
++--------------------------------------------------------------------+
+| 2026-01-01 02:00:00.123                                            |
++--------------------------------------------------------------------+
 
 -- 输入任一参数为 NULL（返回NULL）
 mysql> select hour_floor(null, 6) as null_input;

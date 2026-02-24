@@ -1,7 +1,8 @@
 ---
 {
     "title": "RTRIM_IN",
-    "language": "en"
+    "language": "en",
+    "description": "The RTRIMIN function removes specified characters from the right side of a string. When no character set is specified,"
 }
 ---
 

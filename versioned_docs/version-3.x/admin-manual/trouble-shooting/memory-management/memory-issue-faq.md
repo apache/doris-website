@@ -1,7 +1,8 @@
 ---
 {
     "title": "Memory Issue FAQ",
-    "language": "en"
+    "language": "en",
+    "description": "Doris BE process memory analysis mainly uses be/log/be.INFO log, BE process memory monitoring (Metrics), Doris Bvar statistics."
 }
 ---
 

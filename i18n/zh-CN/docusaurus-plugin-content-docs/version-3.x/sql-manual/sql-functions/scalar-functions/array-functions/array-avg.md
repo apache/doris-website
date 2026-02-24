@@ -1,7 +1,8 @@
 ---
 {
     "title": "ARRAY_AVG",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "返回数组中所有元素的平均值，数组中的NULL值会被跳过。空数组以及元素全为NULL值的数组，结果返回NULL值。"
 }
 ---
 

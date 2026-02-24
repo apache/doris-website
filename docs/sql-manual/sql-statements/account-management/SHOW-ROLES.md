@@ -1,7 +1,8 @@
 ---
 {
     "title": "SHOW ROLES",
-    "language": "en"
+    "language": "en",
+    "description": "The SHOW ROLES statement is used to display all created role information, including role name, included users and permissions."
 }
 ---
 

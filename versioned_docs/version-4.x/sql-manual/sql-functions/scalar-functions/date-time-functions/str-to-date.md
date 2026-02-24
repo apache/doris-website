@@ -1,7 +1,8 @@
 ---
 {
     "title": "STR_TO_DATE",
-    "language": "en"
+    "language": "en",
+    "description": "The function converts the input datetime string into a DATETIME type value based on the specified format."
 }
 ---
 

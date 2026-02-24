@@ -1,7 +1,8 @@
 ---
 {
     "title": "TIMESTAMP",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "TIMESTAMP 函数有两种用法："
 }
 ---
 

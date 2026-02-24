@@ -1,7 +1,8 @@
 ---
 {
     "title": "Security Overview",
-    "language": "en"
+    "language": "en",
+    "description": "Doris provides the following mechanisms to manage data security:"
 }
 ---
 

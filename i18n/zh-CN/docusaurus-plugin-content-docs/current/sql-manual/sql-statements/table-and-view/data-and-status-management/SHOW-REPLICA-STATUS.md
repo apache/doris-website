@@ -1,7 +1,8 @@
 ---
 {
     "title": "SHOW REPLICA STATUS",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "该语句用于展示一个表或分区的副本状态信息。"
 }
 ---
 

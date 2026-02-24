@@ -1,7 +1,8 @@
 ---
 {
-"title": "Java UDF, UDAF, UDWF, UDTF",
-"language": "zh-CN"
+    "title": "Java UDF, UDAF, UDWF, UDTF",
+    "language": "zh-CN",
+    "description": "Java UDF 为用户提供使用 Java 编写 UDF 的接口，以方便用户使用 Java 语言进行自定义函数的执行。 Doris 支持使用 JAVA 编写 UDF、UDAF 和 UDTF。下文如无特殊说明，使用 UDF 统称所有用户自定义函数。"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
-"title": "SHOW RESTORE",
-"language": "zh-CN"
+    "title": "SHOW RESTORE",
+    "language": "zh-CN",
+    "description": "该语句用于查看 RESTORE 任务"
 }
 ---
 
@@ -12,7 +13,7 @@
 ## 语法
 
 ```SQL
-SHOW [BRIEF] RESTORE [FROM <db_name>]
+SHOW [BRIEF] [GLOBAL] RESTORE [FROM <db_name>]
 ```
 
 ## 参数
@@ -54,4 +55,10 @@ SHOW [BRIEF] RESTORE [FROM <db_name>]
 
 ```sql
 SHOW RESTORE FROM example_db;
+```
+
+2. 查看最近一次 GLOBAL RESTORE 任务。
+
+```sql
+SHOW GLOBAL RESTORE;
 ```

@@ -1,7 +1,8 @@
 ---
 {
     "title": "ARRAY_SLICE",
-    "language": "en-US"
+    "language": "en-US",
+    "description": "Return a subarray, supporting starting offset and length."
 }
 ---
 

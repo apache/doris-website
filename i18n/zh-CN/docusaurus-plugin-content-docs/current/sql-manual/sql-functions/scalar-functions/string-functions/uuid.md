@@ -1,7 +1,8 @@
 ---
 {
     "title": "UUID",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "UUID 函数用于生成一个随机的通用唯一标识符（Universally Unique Identifier）。生成的 UUID 符合 RFC 4122 标准，格式为 8-4-4-4-12 的36个字符（包含连字符）。"
 }
 ---
 

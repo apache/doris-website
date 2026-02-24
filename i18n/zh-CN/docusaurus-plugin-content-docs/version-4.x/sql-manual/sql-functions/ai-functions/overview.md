@@ -1,7 +1,8 @@
 ---
 {
     "title": "综述",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "AI Function 是 Doris 提供的基于大语言模型能力的内置函数，用户可以在 SQL 查询中直接调用 AI 执行多种文本智能任务。"
 }
 ---
 

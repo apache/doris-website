@@ -1,7 +1,8 @@
 ---
 {
     "title": "Release 2.0.9",
-    "language": "en"
+    "language": "en",
+    "description": "Thanks to our community users and developers, about 68 improvements and bug fixes have been made in Doris 2.0.9 version."
 }
 ---
 

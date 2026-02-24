@@ -1,7 +1,8 @@
 ---
 {
     "title": "使用 Leading Hint 控制 Join 顺序",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "Leading Hint 特性允许用户手工指定查询中的表的连接顺序，在特定场景优化复杂查询性能。本文将详细介绍如何在 Doris 中使用 Leading Hint 来控制 join 的顺序。详细使用说明，可参考leading hint文档。"
 }
 ---
 

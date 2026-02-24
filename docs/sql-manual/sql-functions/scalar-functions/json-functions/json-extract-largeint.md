@@ -1,7 +1,8 @@
 ---
 {
     "title": "JSON_EXTRACT_LARGEINT",
-    "language": "en"
+    "language": "en",
+    "description": "JSONEXTRACTLARGEINT extracts the field specified by <jsonpath> from a JSON object and converts it to LARGEINT type."
 }
 ---
 

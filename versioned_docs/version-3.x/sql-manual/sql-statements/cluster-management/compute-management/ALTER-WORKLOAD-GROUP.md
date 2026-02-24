@@ -1,7 +1,8 @@
 ---
 {
-"title": "ALTER WORKLOAD GROUP",
-"language": "en"
+    "title": "ALTER WORKLOAD GROUP",
+    "language": "en",
+    "description": "This statement is used to modify the workload group."
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "OVERLAY",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "OVERLAY 函数用于将一个字符串替换另一个字符串中的一部分。"
 }
 ---
 

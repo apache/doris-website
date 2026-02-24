@@ -1,7 +1,8 @@
 ---
 {
     "title": "EXPLODE_SPLIT",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "explodesplit 表函数用于将字符串按照指定分隔符拆分为多个子字符串，并将每个子字符串展开为一行。每个子字符串作为单独的行返回，通常与 LATERAL VIEW 一起使用，便于将长字符串拆解为单独的部分，进行更细粒度的查询。"
 }
 ---
 

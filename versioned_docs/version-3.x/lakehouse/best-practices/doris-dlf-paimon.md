@@ -1,44 +1,44 @@
 ---
 {
-    "title": "Integration with Aliyun DLF Rest Catalog",
-    "language": "en"
+    "title": "Integrating Alibaba Cloud DLF Rest Catalog",
+    "language": "en",
+    "description": "This article explains how to integrate Apache Doris with Alibaba Cloud DLF (Data Lake Formation) Rest Catalog for seamless access and analysis of Paimon table data, including guides on creating Catalog, querying data, and incremental reading."
 }
-
 ---
 
-Aliyun [Data Lake Formation (DLF)](https://www.alibabacloud.com/en/product/datalake-formation) serves as a core component of cloud-native data lake architecture, helping users quickly build cloud-native data lake architectures. Data Lake Formation provides unified metadata management on the lake, enterprise-level permission control, and seamlessly integrates with multiple computing engines to break data silos and uncover business value.
+Alibaba Cloud [Data Lake Formation (DLF)](https://cn.aliyun.com/product/bigdata/dlf), as a core component of the cloud-native data lake architecture, helps users quickly build cloud-native data lake solutions. DLF provides unified metadata management on the data lake, enterprise-level permission control, and seamless integration with multiple compute engines, breaking down data silos and enabling business insights.
 
 - Unified Metadata and Storage
 
-    Computing engines share a unified set of lake metadata and storage, enabling data flow between lake ecosystem products.
+    Big data compute engines share a single set of lake metadata and storage, with data flowing seamlessly between lake products.
 
 - Unified Permission Management
 
-    Computing engines share a unified set of lake table permission configurations, achieving one-time configuration with multi-location effectiveness.
+    Big data compute engines share a single set of lake table permission configurations, enabling one-time setup with universal effect.
 
 - Storage Optimization
 
-    Provides optimization strategies including small file merging, expired snapshot cleanup, partition organization, and obsolete file cleanup to improve storage efficiency.
+    Provides optimization strategies including small file compaction, expired snapshot cleanup, partition reorganization, and obsolete file cleanup to improve storage efficiency.
 
 - Comprehensive Cloud Ecosystem Support
 
-    Deep integration with Alibaba Cloud products, including streaming and batch computing engines, enabling out-of-the-box functionality and enhancing user experience and operational convenience.
+    Deep integration with Alibaba Cloud products, including streaming and batch compute engines, delivering out-of-the-box functionality and enhanced user experience.
 
-Starting from DLF version 2.5, Paimon Rest Catalog is supported. Doris, beginning from version 3.1.0, supports integration with DLF 2.5+ Paimon Rest Catalog, enabling seamless connection to DLF for accessing and analyzing Paimon table data. This document demonstrates how to use Apache Doris to connect to DLF 2.5+ and access Paimon table data.
+DLF supports Paimon Rest Catalog starting from version 2.5. Doris supports integration with DLF 2.5+ Paimon Rest Catalog starting from version 3.0.3/3.1.0, enabling seamless connection to DLF for accessing and analyzing Paimon table data. This article demonstrates how to connect Apache Doris with DLF 2.5+ and access Paimon table data.
 
 :::tip
-This feature is supported since Doris 3.1
+This feature is supported starting from Doris version 3.0.3/3.1.0.
 :::
 
 ## Usage Guide
 
 ### 01 Enable DLF Service
 
-Please refer to the DLF official documentation to enable the DLF service and create corresponding Catalog, Database, and Table.
+Please refer to the DLF official documentation to enable the DLF service and create the corresponding Catalog, Database, and Table.
 
 ### 02 Access DLF Using EMR Spark SQL
 
-- Connection
+- Connect
 
     ```sql
     spark-sql --master yarn \
@@ -53,7 +53,7 @@ Please refer to the DLF official documentation to enable the DLF service and cre
         --conf spark.sql.catalog.paimon.dlf.token-loader=ecs
     ```
 
-    > Replace the corresponding `warehouse` and `uri` address.
+    > Replace the corresponding `warehouse` and `uri` addresses.
 
 - Write Data
 
@@ -81,7 +81,7 @@ Please refer to the DLF official documentation to enable the DLF service and cre
     (6, '18-24', 'F', false);
     ```
 
-    If you encounter the following error, please try removing `paimon-jindo-x.y.z.jar` from `/opt/apps/PAIMON/paimon-dlf-2.5/lib/spark3` and restart the Spark service before retrying.
+    If you encounter the following error, try removing `paimon-jindo-x.y.z.jar` from `/opt/apps/PAIMON/paimon-dlf-2.5/lib/spark3`, then restart the Spark service and retry.
 
     ```
     Ambiguous FileIO classes are:
@@ -89,7 +89,7 @@ Please refer to the DLF official documentation to enable the DLF service and cre
     org.apache.paimon.oss.OSSLoader
     ```
 
-### 03 Connect Doris to DLF
+### 03 Connect to DLF Using Doris
 
 - Create Paimon Catalog
 
@@ -105,8 +105,8 @@ Please refer to the DLF official documentation to enable the DLF service and cre
     );
     ```
 
-    - Doris will use temporary credentials returned by DLF to access OSS object storage, without requiring additional OSS credential information.
-    - Only supports accessing DLF within the same VPC, ensure you provide the correct uri address.
+    - Doris uses the temporary credentials returned by DLF to access OSS object storage, so no additional OSS credentials are required.
+    - DLF can only be accessed within the same VPC. Ensure you provide the correct URI address.
 
 - Query Data
 
@@ -137,7 +137,7 @@ Please refer to the DLF official documentation to enable the DLF service and cre
     +-------------+-------------------------+--------------------+
     ```
 
-- Batch Incremental Reading
+- Incremental Reading
 
     ```sql
     SELECT * FROM users_samples@incr('startSnapshotId'=1, 'endSnapshotId'=2) ORDER BY user_id;
@@ -148,3 +148,4 @@ Please refer to the DLF official documentation to enable the DLF service and cre
     |       4 | 18-24     | F                 |    0 |
     +---------+-----------+-------------------+------+
     ```
+    

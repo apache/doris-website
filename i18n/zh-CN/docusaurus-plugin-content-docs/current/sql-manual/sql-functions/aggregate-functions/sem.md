@@ -1,7 +1,8 @@
 ---
 {
-"title": "SEM",
-"language": "zh-CN"
+    "title": "SEM",
+    "language": "zh-CN",
+    "description": "计算指定列或表达式的所有非 NULL 值的均值标准误。"
 }
 ---
 

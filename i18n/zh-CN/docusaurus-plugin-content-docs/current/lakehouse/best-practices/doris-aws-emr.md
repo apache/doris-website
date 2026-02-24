@@ -1,9 +1,9 @@
 ---
 {
     "title": "集成 AWS EMR",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "本文主要介绍如何通过 Doris 快速集成 Amazon EMR，并以访问 Hive 为例，展示和 AWS Glue Data Catalog 以及和 Amazon S3 的集成。"
 }
-
 ---
 
 <!--

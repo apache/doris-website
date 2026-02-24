@@ -1,7 +1,8 @@
 ---
 {
     "title": "DAYNAME",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "计算日期表达式对应的日期名字。"
 }
 ---
 

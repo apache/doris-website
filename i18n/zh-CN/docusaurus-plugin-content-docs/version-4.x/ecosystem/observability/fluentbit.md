@@ -1,7 +1,8 @@
 ---
 {
-"title": "FluentBit",
-"language": "zh-CN"
+    "title": "FluentBit",
+    "language": "zh-CN",
+    "description": "Fluent Bit 是一个快速的日志处理器和转发器，它支持自定义输出插件将数据写入存储系统，Fluent Bit Doris Output Plugin 是输出到 Doris 的插件。"
 }
 ---
 
@@ -18,7 +19,7 @@ Fluent Bit Doris Output Plugin 调用 [Doris Stream Load](../../data-operate/imp
 
 ### 从官网下载
 
-https://apache-doris-releases.oss-accelerate.aliyuncs.com/integrations/fluent-bit-doris-3.1.9
+https://download.selectdb.com/integrations/fluent-bit-doris-3.1.9
 
 ### 从源码编译
 

@@ -1,7 +1,8 @@
 ---
 {
-  "title": "DROP ENCRYPTKEY",
-  "language": "zh-CN"
+    "title": "DROP ENCRYPTKEY",
+    "language": "zh-CN",
+    "description": "此语句用于删除一个自定义密钥。密钥的名字完全一致才能够被删除。"
 }
 ---
 

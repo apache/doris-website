@@ -1,7 +1,8 @@
 ---
 {
     "title": "SHOW GRANTS",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "该语句用于查看用户权限。"
 }
 ---
 

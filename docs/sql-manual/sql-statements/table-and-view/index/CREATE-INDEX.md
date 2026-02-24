@@ -1,7 +1,8 @@
 ---
 {
     "title": "CREATE INDEX",
-    "language": "en"
+    "language": "en",
+    "description": "Create a new index on a table. The table name and index name must be specified. Optionally, you can specify the index type, properties, and comments."
 }
 ---
 

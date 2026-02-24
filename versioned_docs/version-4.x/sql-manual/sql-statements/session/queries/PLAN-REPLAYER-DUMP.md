@@ -1,7 +1,8 @@
 ---
 {
     "title": "PLAN REPLAYER DUMP",
-    "language": "en"
+    "language": "en",
+    "description": "PLAN REPLAYER DUMP is a tool for Doris users to generate execution plan diagnostic files. It captures the state and input data of the query optimizer,"
 }
 ---
 
@@ -24,7 +25,7 @@ PLAN REPLAYER DUMP <query>
 
 - Refers to the query statement inside the corresponding DML.
 - If it is not a query statement, a parse error will be reported.
-- For more details, please refer to the [SELECT](https://doris.apache.org/en-US/docs/sql-manual/sql-statements/Data-Manipulation-Statements/Manipulation/SELECT/) syntax.
+- For more details, please refer to the [SELECT](https://doris.apache.org/docs/dev/sql-manual/sql-statements/data-query/SELECT) syntax.
 
 
 ## Permission Control

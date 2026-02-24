@@ -1,7 +1,8 @@
 ---
 {
-      "title": "ARRAY_CONTAINS",
-      "language": "zh-CN"
+    "title": "ARRAY_CONTAINS",
+    "language": "zh-CN",
+    "description": "<version since=\"1.2.0\">"
 }
 ---
 

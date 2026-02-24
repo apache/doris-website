@@ -1,7 +1,8 @@
 ---
 {
     "title": "ST_LINEFROMTEXT",
-    "language": "en"
+    "language": "en",
+    "description": "Converts a WKT (Well Known Text) string into an in-memory representation of a Line"
 }
 ---
 

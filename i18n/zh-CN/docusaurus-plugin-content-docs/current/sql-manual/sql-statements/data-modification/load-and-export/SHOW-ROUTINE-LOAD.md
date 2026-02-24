@@ -1,7 +1,8 @@
 ---
 {
     "title": "SHOW ROUTINE LOAD",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "该语句用于展示 Routine Load 作业运行状态。可以查看指定作业或所有作业的状态信息。"
 }
 ---
 

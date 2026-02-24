@@ -1,7 +1,8 @@
 ---
 {
     "title": "RECOVER",
-    "language": "en"
+    "language": "en",
+    "description": "This statement is used to recover previously deleted databases, tables, or partitions."
 }
 ---
 

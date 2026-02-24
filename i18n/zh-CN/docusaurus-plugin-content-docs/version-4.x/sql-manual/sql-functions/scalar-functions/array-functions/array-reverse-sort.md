@@ -1,7 +1,8 @@
 ---
 {
     "title": "ARRAY_REVERSE_SORT",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "对数组元素按降序排序。"
 }
 ---
 
@@ -15,7 +16,7 @@
 
 ## 参数
 
-- `arr`：`ARRAY<T>`，`T` 可为数值、布尔、字符串、日期时间、IP 等。
+- `arr`：`ARRAY<T>`，`T` 可为数值、布尔、字符串、日期时间、IP 等类型，也支持多维数组，但所有数组元素（无论嵌套多少层）都必须属于上述类型。
 
 ## 返回值
 
@@ -35,5 +36,8 @@
 - 输入为 `NULL`，返回 `NULL`; 输入为空数组 `[]`，返回空数组。
   - `ARRAY_REVERSE_SORT(NULL)` -> `NULL`
   - `ARRAY_REVERSE_SORT([])` -> `[]`
+
+- 多维数组排序
+  - `ARRAY_REVERSE_SORT([[3, 4], [5, 6]])` -> `[[5, 6], [3, 4]]`
 
 

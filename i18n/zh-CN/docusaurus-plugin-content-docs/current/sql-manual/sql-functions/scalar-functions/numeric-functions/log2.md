@@ -1,7 +1,8 @@
 ---
 {
     "title": "LOG2",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "返回以2为底的x的自然对数。"
 }
 ---
 

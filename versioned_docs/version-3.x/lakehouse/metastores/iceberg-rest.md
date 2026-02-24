@@ -1,7 +1,8 @@
 ---
 {
     "title": "Iceberg Rest Catalog API",
-    "language": "en"
+    "language": "en",
+    "description": "This document describes the supported parameters when connecting to and accessing metadata services that support the Iceberg Rest Catalog interface "
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "查询内存分析",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "通常先使用 Query Profile 分析查询内存使用，如果 Query Profile 中统计的各个算子（Operator）内存之和远小于 Query Memory Trcker 统计到的内存，说明 Query Profile 统计到的算子内存与实际使用的内存相差较大，"
 }
 ---
 

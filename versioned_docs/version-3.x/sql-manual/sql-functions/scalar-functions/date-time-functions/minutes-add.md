@@ -1,7 +1,8 @@
 ---
 {
     "title": "MINUTES_ADD",
-    "language": "en"
+    "language": "en",
+    "description": "Adds a specified number of minutes to a datetime value and returns a new datetime value."
 }
 ---
 

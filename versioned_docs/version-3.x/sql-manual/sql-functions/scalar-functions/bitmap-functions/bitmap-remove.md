@@ -1,7 +1,8 @@
 ---
 {
     "title": "BITMAP_REMOVE",
-    "language": "en"
+    "language": "en",
+    "description": "Removes a specified value from a Bitmap column."
 }
 ---
 

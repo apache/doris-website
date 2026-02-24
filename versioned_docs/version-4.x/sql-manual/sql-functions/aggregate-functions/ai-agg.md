@@ -1,7 +1,8 @@
 ---
 {
     "title": "AI_AGG",
-    "language": "en"
+    "language": "en",
+    "description": "Aggregates a specific column using a large language model according to user-provided instructions."
 }
 ---
 

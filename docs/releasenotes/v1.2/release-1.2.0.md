@@ -1,7 +1,8 @@
 ---
 {
     "title": "Release 1.2.0",
-    "language": "en"
+    "language": "en",
+    "description": "In the standard ssb-100-flat benchmark, the performance of 1.2 is 2 times faster than that of 1.1; in complex TPCH 100 benchmark,"
 }
 ---
 

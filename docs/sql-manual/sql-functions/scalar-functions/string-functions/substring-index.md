@@ -1,7 +1,8 @@
 ---
 {
-"title": "SUBSTRING_INDEX",
-"language": "en"
+    "title": "SUBSTRING_INDEX",
+    "language": "en",
+    "description": "The SUBSTRINGINDEX function is used to extract a portion of a string based on a specified delimiter."
 }
 ---
 

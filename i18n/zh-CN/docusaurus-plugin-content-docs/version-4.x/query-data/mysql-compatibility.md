@@ -1,7 +1,8 @@
 ---
 {
     "title": "MySQL 兼容性",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "Doris 高度兼容 MySQL 语法，支持标准 SQL。但是 Doris 与 MySQL 还是有很多不同的地方，下面给出了它们的差异点介绍。"
 }
 ---
 
@@ -265,6 +266,6 @@ Doris Function 基本覆盖绝大部分 MySQL Function。
 
 | 名称 | 设置的行为 | 未设置的行为 | 备注 |
 | :-- | :-- | :-- | :-- |
-| PIPES_AS_CONCAT | 将 `\|\|` 符号解析为 concat 函数 | 将 `\|\|` 符号解析为逻辑与操作符 | - |
+| PIPES_AS_CONCAT | 将 `\|\|` 符号解析为 concat 函数 | 将 `\|\|` 符号解析为逻辑或操作符 | - |
 | NO_BACKSLASH_ESCAPES | 将字符串中的反斜杠当做正常字符解析 | 将字符串中的反斜杠当做转义起始字符 | - |
 | ONLY_FULL_GROUP_BY | 只允许标准的聚合 | 允许聚合结果输出中包含不在聚合 KEY 中的标量值 | 自 3.1.0 版本开始支持 |

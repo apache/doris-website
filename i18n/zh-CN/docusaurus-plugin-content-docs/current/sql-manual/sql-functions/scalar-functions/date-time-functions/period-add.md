@@ -1,7 +1,8 @@
 ---
 {
     "title": "PERIOD_ADD",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "计算周期 <period>增加 <month> 个月的结果。"
 }
 ---
 

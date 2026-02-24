@@ -1,7 +1,8 @@
 ---
 {
     "title": "JSON_EXTRACT_STRING",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "JSONEXTRACTSTRING 从 JSON 对象中提取 <jsonpath> 指定的字段，并将其转换为 STRING 类型。"
 }
 ---
 

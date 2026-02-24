@@ -1,7 +1,8 @@
 ---
 {
     "title": "MIN",
-    "language": "en"
+    "language": "en",
+    "description": "The MIN function returns the minimum value of the expression."
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "FIRST_SIGNIFICANT_SUBDOMAIN",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "在 URL 中提取出“第一个有效子域”返回，若不合法则会返回空字符串。"
 }
 ---
 

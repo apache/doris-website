@@ -1,7 +1,8 @@
 ---
 {
     "title": "MASK_LAST_N",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "MASKLASTN 函数主要作用是对数据的后 N 个字节进行屏蔽，以保护敏感信息，常用于数据脱敏场景。其行为是将后 N 个字节中的大写字母替换为X，小写字母替换为x，数字替换为n。"
 }
 ---
 

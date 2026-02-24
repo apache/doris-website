@@ -1,7 +1,8 @@
 ---
 {
-"title": "COUNT_BY_ENUM",
-"language": "en"
+    "title": "COUNT_BY_ENUM",
+    "language": "en",
+    "description": "Treat the data in the column as enumeration values and count the number of each enumeration value."
 }
 ---
 

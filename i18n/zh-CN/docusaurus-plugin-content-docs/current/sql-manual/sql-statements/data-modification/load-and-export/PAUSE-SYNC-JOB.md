@@ -1,7 +1,8 @@
 ---
 {
     "title": "PAUSE SYNC JOB",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "通过 jobname 暂停一个数据库内正在运行的常驻数据同步作业。被暂停的作业将停止同步数据，并保持消费的最新位置，直到用户恢复该作业。"
 }
 ---
 

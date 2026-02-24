@@ -1,7 +1,8 @@
 ---
 {
     "title": "BITMAP_CONTAINS",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "计算输入值是否在 BITMAP 中，返回值是 boolean 值。"
 }
 ---
 

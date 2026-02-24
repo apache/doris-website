@@ -1,7 +1,8 @@
 ---
 {
     "title": "LakeSoul Catalog",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "Doris 支持通过存储在 PostgreSQL 中的元数据，访问并读取 LakeSoul 表数据。"
 }
 ---
 

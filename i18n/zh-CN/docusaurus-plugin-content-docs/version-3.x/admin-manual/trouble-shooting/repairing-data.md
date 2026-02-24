@@ -1,7 +1,8 @@
 ---
 {
     "title": "数据修复",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "对于 Unique Key Merge on Write 表，在某些 Doris 的版本中存在 Bug，可能会导致系统在计算 Delete Bitmap 时出现错误，导致出现重复主键，此时可以利用 Full Compaction 功能进行数据的修复。"
 }
 ---
 

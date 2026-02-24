@@ -1,7 +1,8 @@
 ---
 {
     "title": "BITMAP_XOR_COUNT",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "将两个及以上 Bitmap 集合进行异或操作并返回结果集的大小。"
 }
 ---
 

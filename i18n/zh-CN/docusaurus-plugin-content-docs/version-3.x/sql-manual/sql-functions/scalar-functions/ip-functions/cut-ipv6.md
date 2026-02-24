@@ -1,7 +1,8 @@
 ---
 {
     "title": "CUT_IPV6",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "接受一个 IPv6 类型的地址，并以文本格式返回一个包含指定字节数的地址的字符串。"
 }
 ---
 

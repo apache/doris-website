@@ -1,7 +1,8 @@
 ---
 {
     "title": "Node Action",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "POST /rest/v2/manager/node/{action}/broker (3.0.7+)"
 }
 ---
 

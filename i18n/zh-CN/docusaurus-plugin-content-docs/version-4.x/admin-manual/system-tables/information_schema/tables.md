@@ -1,7 +1,8 @@
 ---
 {
     "title": "tables",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "存储所有的表信息。"
 }
 ---
 

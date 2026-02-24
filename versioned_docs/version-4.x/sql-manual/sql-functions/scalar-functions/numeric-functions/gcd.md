@@ -1,7 +1,8 @@
 ---
 {
     "title": "GCD",
-    "language": "en"
+    "language": "en",
+    "description": "Calculates the greatest common divisor (GCD) of two integers."
 }
 ---
 

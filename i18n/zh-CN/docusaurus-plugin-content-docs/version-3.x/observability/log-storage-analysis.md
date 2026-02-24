@@ -1,9 +1,13 @@
 ---
 {
-    "title": "日志存储与分析",
-    "language": "zh-CN"
+    "title": "日志存储与分析 | Observability",
+    "language": "zh-CN",
+    "description": "在部署集群之前，首先应评估所需服务器硬件资源，包括以下几个关键步骤：",
+    "sidebar_label": "日志存储与分析"
 }
 ---
+
+# 日志存储与分析
 
 ### 第 1 步：评估资源
 
@@ -203,7 +207,7 @@ Apache Doris 提供开放、通用的 Stream HTTP APIs，通过这些 APIs，你
 
 1. 下载并安装 Logstash Doris Output 插件。你可选择以下两种方式之一：
 
-- 直接下载：[点此下载](https://apache-doris-releases.oss-accelerate.aliyuncs.com/extension/logstash-output-doris-1.2.0.gem)。
+- 直接下载：[点此下载](https://download.selectdb.com/extension/logstash-output-doris-1.2.0.gem)。
   
 - 从源码编译，并运行下方命令安装：
 
@@ -271,7 +275,7 @@ output {
 
 按照以下步骤操作：
 
-1. 获取支持输出至 Apache Doris 的 Filebeat 二进制文件。可 [点此下载](https://apache-doris-releases.oss-accelerate.aliyuncs.com/extension/filebeat-doris-2.1.1) 或者从 Apache Doris 源码编译。
+1. 获取支持输出至 Apache Doris 的 Filebeat 二进制文件。可 [点此下载](https://download.selectdb.com/extension/filebeat-doris-2.1.1) 或者从 Apache Doris 源码编译。
 2. 配置 Filebeat。需配置以下参数：
 
 - `filebeat_demo.yml`：配置所采集日志的具体输入路径和输出到 Apache Doris 的设置。
@@ -459,4 +463,5 @@ ORDER BY ts DESC LIMIT 10;
 - 搜索结果的字段 Top 值展示，便于发现异常值和进一步下钻分析
 
 您可以联系 dev@doris.apache.org 获得更多帮助。
+
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "PI",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "返回常量Pi值。"
 }
 ---
 

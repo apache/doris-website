@@ -1,7 +1,8 @@
 ---
 {
     "title": "重置连接缓存",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "该功能用于重置 brpc 的连接缓存。"
 }
 ---
 

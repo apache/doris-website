@@ -1,7 +1,8 @@
 ---
 {
-  "title": "部署 FoundationDB",
-  "language": "zh-CN"
+    "title": "部署 FoundationDB",
+    "language": "zh-CN",
+    "description": "FoundationDB 是基于Apache 2.0开源协议的分布式强一致性存储结构化数据的数据库，Doris 存算分离模式使用 FoundationDB 作为元数据存储。Kubernetes 上部署存算分离集群需要提前部署 FoundationDB 服务，推荐两种部署方式："
 }
 ---
 

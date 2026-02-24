@@ -1,7 +1,8 @@
 ---
 {
-  "title": "DROP CATALOG RECYCLE BIN",
-  "language": "en"
+    "title": "DROP CATALOG RECYCLE BIN",
+    "language": "en",
+    "description": "This statement is used to immediately delete databases, tables, or partitions in the recycle bin."
 }
 ---
 

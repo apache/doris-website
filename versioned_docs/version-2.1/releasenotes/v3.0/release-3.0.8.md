@@ -1,7 +1,8 @@
 ---
 {
     "title": "Release 3.0.8",
-    "language": "en"
+    "language": "en",
+    "description": "schema-change"
 }
 ---
 

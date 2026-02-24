@@ -1,7 +1,8 @@
 ---
 {
     "title": "RTRIM",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "RTRIM 函数用于去除字符串右侧（结尾部分）连续出现空格或指定字符。"
 }
 ---
 

@@ -1,9 +1,13 @@
 ---
 {
-   "title": "Tableau",
-   "language": "zh-CN"
+    "title": "Tableau | Bi",
+    "language": "zh-CN",
+    "description": "对于在 Tableau 上实现 Apache Doris 访问，Tableau 官方的 MySQL 连接器可以满足需求。 该连接器基于 MySQL JDBC Driver 实现访问数据。",
+    "sidebar_label": "Tableau"
 }
 ---
+
+# Tableau
 
 对于在 Tableau 上实现 Apache Doris 访问，Tableau 官方的 MySQL 连接器可以满足需求。 该连接器基于 MySQL JDBC Driver 实现访问数据。
 
@@ -106,3 +110,4 @@
 - 配置 安全组 限制访问。
 - 启用 SSL/TLS 连接等访问方式。
 - 细化 Doris 用户账号角色和访问权限，避免过度下放权限。
+

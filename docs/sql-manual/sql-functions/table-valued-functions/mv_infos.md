@@ -1,7 +1,8 @@
 ---
 {
     "title": "MV_INFOS",
-    "language": "en"
+    "language": "en",
+    "description": "Table function, generating temporary tables for asynchronous materialized views,"
 }
 ---
 

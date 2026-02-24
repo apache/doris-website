@@ -1,7 +1,8 @@
 ---
 {
     "title": "PAUSE ROUTINE LOAD",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "该语法用于暂停一个或所有 Routine Load 作业。被暂停的作业可以通过 RESUME 命令重新运行。"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "位操作符",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "位操作符对一个表达式或者两个表达式按照位进行制定的操作。位操作符只能接收 BIGINT 类型作为参数。所以，位操作处理的表达式都会被转换为 BIGINT 类型。"
 }
 ---
 

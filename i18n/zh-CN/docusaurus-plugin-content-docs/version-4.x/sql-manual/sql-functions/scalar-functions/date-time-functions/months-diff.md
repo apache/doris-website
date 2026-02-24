@@ -1,7 +1,8 @@
 ---
 {
     "title": "MONTHS_DIFF",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "MONTHSDIFF 函数用于计算两个日期时间值之间的整数月份差值，返回结果为 <enddate> 减去 <startdate> 后的月份数。该函数支持处理 DATE、DATETIME 类型，仅基于日期部分（年、月、日）计算，忽略时间部分（时、分、秒）。"
 }
 ---
 

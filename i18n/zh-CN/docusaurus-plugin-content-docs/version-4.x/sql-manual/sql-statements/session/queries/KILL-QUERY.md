@@ -1,7 +1,8 @@
 ---
 {
     "title": "KILL QUERY",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "每个 Doris 的连接都在一个单独的线程中运行。使用该语句终止线程。"
 }
 ---
 

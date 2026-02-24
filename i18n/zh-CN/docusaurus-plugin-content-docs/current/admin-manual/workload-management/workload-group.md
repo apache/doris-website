@@ -1,7 +1,8 @@
 ---
 {
-"title": "Workload Group",
-"language": "zh-CN"
+    "title": "Workload Group",
+    "language": "zh-CN",
+    "description": "Workload Group 是一种进程内实现的对负载进行逻辑隔离的机制，它通过对 BE 进程内的资源（CPU，IO，Memory）进行细粒度的划分或者限制，达到资源隔离的目的，它的原理如下图所示："
 }
 ---
 

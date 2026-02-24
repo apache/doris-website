@@ -1,7 +1,8 @@
 ---
 {
     "title": "SEQUENCE_COUNT",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "计算与模式匹配的事件链的数量。该函数搜索不重叠的事件链。当前链匹配后，它开始搜索下一个链。"
 }
 ---
 

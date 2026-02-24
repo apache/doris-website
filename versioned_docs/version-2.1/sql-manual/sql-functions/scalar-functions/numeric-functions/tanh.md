@@ -1,7 +1,8 @@
 ---
 {
     "title": "TANH",
-    "language": "en"
+    "language": "en",
+    "description": "Returns the hyperbolic tangent of x."
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "Show Meta Info Action",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "用于显示一些元数据信息"
 }
 ---
 

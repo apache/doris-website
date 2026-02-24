@@ -1,7 +1,8 @@
 ---
 {
     "title": "OVERVIEW",
-    "language": "en"
+    "language": "en",
+    "description": "Window functions (also known as analytic functions) are special built-in functions that perform calculations while preserving the original rows."
 }
 ---
 
@@ -45,7 +46,7 @@ Returns the same data type as the input expression.
 1. Assume we have the following stock data, with stock symbol JDR and daily closing prices:
 
 ```sql
-create table stock_ticker (stock_symbol string, closing_price decimal(8,2), closing_date timestamp);    
+create table stock_ticker (stock_symbol string, closing_price decimal(8,2), closing_date datetime);    
 ...load some data...    
 select * from stock_ticker order by stock_symbol, closing_date
 ```

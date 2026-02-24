@@ -1,7 +1,8 @@
 ---
 {
     "title": "LCASE/LOWER",
-    "language": "en"
+    "language": "en",
+    "description": "The LCASE function (alias LOWER) converts all uppercase letters in a string to lowercase."
 }
 ---
 

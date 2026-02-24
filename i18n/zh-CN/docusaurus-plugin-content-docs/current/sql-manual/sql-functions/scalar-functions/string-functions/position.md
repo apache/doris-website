@@ -1,7 +1,8 @@
 ---
 {
     "title": "POSITION",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "POSITION 函数用于查找子字符串在主字符串中的位置，位置从 1 开始计数。"
 }
 ---
 

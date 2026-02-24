@@ -1,11 +1,12 @@
 ---
 {
-    "title": "FE 配置项",
+    "title": "FE 配置项 | Config",
     "language": "zh-CN",
     "toc_min_heading_level": 2,
-    "toc_max_heading_level": 4
+    "toc_max_heading_level": 4,
+    "description": "该文档主要介绍 FE 的相关配置项。",
+    "sidebar_label": "FE 配置项"
 }
-
 ---
 
 # Doris FE 配置参数
@@ -118,3 +119,4 @@ FE 的配置项有两种方式进行配置：
 > 如需修改，请修改 `fe/fe-common/src/main/java/org/apache/doris/common/Config.java` 中的描述信息。
 
 <--DOC_PLACEHOLDER-->
+

@@ -1,7 +1,8 @@
 ---
 {
     "title": "Recycler",
-    "language": "en"
+    "language": "en",
+    "description": "In the era of big data, data lifecycle management has become one of the core challenges for distributed database systems."
 }
 ---
 

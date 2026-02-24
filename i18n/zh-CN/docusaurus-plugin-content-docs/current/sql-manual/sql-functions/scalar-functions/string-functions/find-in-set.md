@@ -1,7 +1,8 @@
 ---
 {
     "title": "FIND_IN_SET",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "返回字符串 str 在以逗号分隔的字符串列表 strlist 中第一次出现的位置（从 1 开始计数）。该函数按照 MySQL 兼容模式实现，用于在逗号分隔的值列表中查找特定字符串。"
 }
 ---
 

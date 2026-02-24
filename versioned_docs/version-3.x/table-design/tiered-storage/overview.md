@@ -1,7 +1,8 @@
 ---
 {
     "title": "Tiered Storage Overview",
-    "language": "en-US"
+    "language": "en-US",
+    "description": "To help users reduce storage costs, Doris provides flexible options for cold data management."
 }
 ---
 

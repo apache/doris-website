@@ -1,7 +1,8 @@
 ---
 {
     "title": "MAKE_SET",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "MAKESET 函数根据位掩码（bit）从多个字符串中选择组合。返回一个由逗号分隔的字符串集合，集合中包含所有对应位为 1 的字符串。"
 }
 ---
 

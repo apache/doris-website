@@ -1,7 +1,8 @@
 ---
 {
     "title": "JSON_INSERT",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "JSONINSERT 函数用于在 JSON 中插入数据并返回结果。"
 }
 ---
 

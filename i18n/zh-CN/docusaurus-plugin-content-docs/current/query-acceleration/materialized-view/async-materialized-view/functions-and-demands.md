@@ -1,7 +1,8 @@
 ---
 {
-  "title": "创建、查询与维护异步物化视图",
-  "language": "zh-CN"
+    "title": "创建、查询与维护异步物化视图",
+    "language": "zh-CN",
+    "description": "本文将详细说明物化视图创建、物化视图直查、查询改写和物化视图常见运维。"
 }
 ---
 
@@ -446,9 +447,36 @@ SELECT * FROM t1;
 
 详情参考 [CREATE ASYNC MATERIALIZED VIEW](../../../sql-manual/sql-statements/table-and-view/async-materialized-view/CREATE-ASYNC-MATERIALIZED-VIEW)
 
+#### 分区多端刷新
+“多端刷新” 允许异步物化视图有多个分区追踪表，即允许多个表的数据发生变化，物化视图都只进行分区刷新，而不是全量刷新。
+
+该特性在使用中存在以下限制：
+- 仅支持基于 INNER JOIN 或 UNION (包括 UNION ALL) 所构建的物化视图。
+- 当物化视图使用 UNION 操作时，所有参与联合的部分都必须支持分区变化追踪（PCT）。 例如物化视图的 sql 定义为：q1 union all q2, 那么要求单独使用 q1 或 q2 创建物化视图都能进行分区刷新，且推导出的分区字段的顺序一致。
+- 多 PCT 表间的分区粒度要对齐
+  - 允许的示例：
+  
+    基表 t1 的分区：[2020-01-01, 2020-01-02), [2020-01-02, 2020-01-03)
+  
+    基表 t2 的分区：[2020-01-02, 2020-01-03), [2020-01-03, 2020-01-04)
+  
+    多个基表的分区不完全一致，但是没有交叉
+
+  - 不允许的示例：
+  
+    基表 t1 的分区：[2020-01-01, 2020-01-03), [2020-01-03, 2020-01-05)
+  
+    基表 t2 的分区：[2020-01-01, 2020-01-02), [2020-01-03, 2020-01-05)
+
+    [2020-01-01, 2020-01-03) 和 [2020-01-01, 2020-01-02) 有交叉又不完全一样
+
 ### SQL 定义
 
-异步物化视图 SQL 定义没有限制。
+异步物化视图支持基于内部视图（View）进行创建，但不支持基于外部数据源中的视图构建。
+
+需要注意的是，当所依赖的内部视图发生修改或重建时，会导致异步物化视图与基表之间的数据不一致。此时，虽然物化视图中的数据仍然存在，但无法支持查询的透明改写。
+
+此外，如果结构变更影响了异步物化视图所依赖的分区追踪表或字段，或使其 Schema 发生变化，该物化视图将无法刷新成功。若变更未影响上述元素，则刷新物化视图后，即可恢复正常使用。
 
 ## 直查物化视图
 
@@ -980,6 +1008,109 @@ group by
     l_partkey,
     l_suppkey;
 ```
+
+### 窗口函数改写
+当查询和物化视图都包含窗口函数时，如果窗口函数的定义完全匹配，可以进行透明改写。
+窗口函数改写能够复用物化视图中预计算的窗口函数结果,显著提升包含复杂窗口计算的查询性能。
+目前支持所有窗口函数的透明改写。
+
+
+```sql
+CREATE MATERIALIZED VIEW mv11_0
+BUILD IMMEDIATE REFRESH AUTO ON MANUAL
+DISTRIBUTED BY RANDOM BUCKETS 2
+as
+select *
+from (
+  select 
+  o_orderkey,
+  FIRST_VALUE(o_custkey) OVER (
+        PARTITION BY o_orderdate 
+        ORDER BY o_totalprice NULLS LAST
+        RANGE BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
+    ) AS first_value,
+  RANK() OVER (
+        PARTITION BY o_orderdate, o_orderstatus 
+        ORDER BY o_totalprice NULLS LAST
+        RANGE BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
+    ) AS rank_value
+  from 
+  orders
+) t
+where o_orderkey > 1;
+```
+
+
+如下查询可以命中 mv11_0 的物化视图，节省了窗口函数的计算，可以看到查询中的条件 `o_orderkey > 2` 和物化视图不一致，也可以改写成功
+```sql
+select *
+from (
+  select 
+  o_orderkey,
+  FIRST_VALUE(o_custkey) OVER (
+        PARTITION BY o_orderdate 
+        ORDER BY o_totalprice NULLS LAST
+        RANGE BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
+    ) AS first_value,
+  RANK() OVER (
+        PARTITION BY o_orderdate, o_orderstatus 
+        ORDER BY o_totalprice NULLS LAST
+        RANGE BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
+    ) AS rank_value
+  from 
+  orders
+) t
+where o_orderkey > 2;
+```
+
+另一个例子
+
+```sql
+CREATE MATERIALIZED VIEW mv11_1
+BUILD IMMEDIATE REFRESH AUTO ON MANUAL
+DISTRIBUTED BY RANDOM BUCKETS 2
+as
+select 
+o_orderkey,
+o_orderdate,
+FIRST_VALUE(o_custkey) OVER (
+        PARTITION BY o_orderdate 
+        ORDER BY o_totalprice NULLS LAST
+        RANGE BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
+    ) AS first_value,
+RANK() OVER (
+        PARTITION BY o_orderdate, o_orderstatus 
+        ORDER BY o_totalprice NULLS LAST
+        RANGE BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
+    ) AS rank_value
+from 
+orders
+where o_orderdate > '2023-12-09';
+```
+
+如下查询可以命中 `mv11_1` 的物化视图，节省了窗口函数的计算，可以看到查询中的条件 `o_orderdate > '2023-12-10'` 和物化视图定义不一致。
+`o_orderdate` 属于窗口函数的 partition by 字段，这种情况下，虽然查询条件 `o_orderdate > '2023-12-10'` 早于
+window 函数执行，也可以进行透明改写。
+
+
+```sql
+select 
+o_orderdate,
+FIRST_VALUE(o_custkey) OVER (
+        PARTITION BY o_orderdate 
+        ORDER BY o_totalprice NULLS LAST
+        RANGE BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
+    ) AS first_value,
+RANK() OVER (
+        PARTITION BY o_orderdate, o_orderstatus 
+        ORDER BY o_totalprice NULLS LAST
+        RANGE BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
+    ) AS rank_value
+from 
+orders
+where o_orderdate > '2023-12-10';
+```
+用例中使用的是单表，多表 join 场景下，窗口函数改写同样适用。
 
 
 ### Limit 和 TopN 改写

@@ -1,7 +1,8 @@
 ---
 {
     "title": "使用 Colocate Group 优化 Join",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "Colocate Group 是一种高效的 Join 方式，使得执行引擎能有效地规避 Join 操作中数据的 shuffle 开销。相关原理介绍和案例参考详见 Colocation Join。"
 }
 ---
 

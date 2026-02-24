@@ -1,7 +1,8 @@
 ---
 {
     "title": "Floating-Point Types (FLOAT and DOUBLE)",
-    "language": "en"
+    "language": "en",
+    "description": "Doris provides two floating-point data types: FLOAT and DOUBLE."
 }
 ---
 

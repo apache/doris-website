@@ -1,7 +1,8 @@
 ---
 {
     "title": "MAP_CONTAINS_VALUE",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "判断给定 map 中是否包含特定的值 value"
 }
 ---
 

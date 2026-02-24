@@ -1,7 +1,8 @@
 ---
 {
-"title": "BITMAP_INTERSECT",
-"language": "zh-CN"
+    "title": "BITMAP_INTERSECT",
+    "language": "zh-CN",
+    "description": "用于计算分组后的 Bitmap 交集。常见使用场景如：计算用户留存率。"
 }
 ---
 

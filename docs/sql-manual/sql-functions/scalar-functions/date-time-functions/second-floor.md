@@ -1,13 +1,14 @@
 ---
 {
     "title": "SECOND_FLOOR",
-    "language": "en"
+    "language": "en",
+    "description": "SECOND_FLOOR function rounds the input datetime value down to the nearest specified second period. If origin is specified, it uses that as the basis; if not specified, the default basis is 0001-01-01 00:00:00. Supports processing DATETIME type."
 }
 ---
 
 ## Description
 
-The second_floor function rounds the input datetime value down to the nearest specified second period. If origin is specified, it uses that as the basis; otherwise, it defaults to 0001-01-01 00:00:00.
+SECOND_FLOOR function rounds the input datetime value down to the nearest specified second period. If origin is specified, it uses that as the basis; otherwise, it defaults to 0001-01-01 00:00:00. The function supports processing DATETIME type.
 
 Date calculation formula:
 $$
@@ -29,14 +30,16 @@ SECOND_FLOOR(<datetime>[, <period>][, <origin_datetime>])
 
 | Parameter | Description |
 | --------- | ----------- |
-| `<datetime>` | Required. The input datetime value. Supports datetime type. For specific datetime formats, see [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) |
+| `<datetime>` | Required. The input datetime value. Supports input of date/datetime/timestamptz types. For specific formats please see [timestamptz的转换](../../../../sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion), [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion). |
 | `<period>` | Optional. Indicates how many seconds make up each period. Supports positive integer type (INT). Default is 1 second. |
-| `<origin_datetime>` | Optional. The alignment starting point. Supports datetime type. If not specified, defaults to 0001-01-01T00:00:00. |
+| `<origin_datetime>` | Optional. The alignment starting point. Supports input of datetime type and strings that conform to datetime formats. If not specified, defaults to 0001-01-01T00:00:00. |
 
 ## Return Value
 
-Returns a value of type DATETIME, representing the time value after rounding down to the nearest specified second period based on the input datetime. The precision of the return value matches the precision of the input datetime parameter.
+Returns a value of type TIMESTAMPTZ, DATETIME or DATE. Returns the time value after rounding down to the nearest specified second period based on the input datetime. The precision of the return value matches the precision of the input datetime parameter.
 
+- If the input is TIMESTAMPTZ type, it will first be converted to local_time (for example: `2025-12-31 23:59:59+05:00` represents local_time `2026-01-01 02:59:59` when the session variable is `+08:00`), and then perform SECOND_FLOOR calculation.
+- If the input time values (`<date_or_time_expr>` and `<period>`) contain both TIMESTAMPTZ and DATETIME types, the output is DATETIME type.
 - If `<period>` is a non-positive (≤0), returns error.
 - If any parameter is NULL, returns NULL.
 - When period is not specified, defaults to a 1-second period.
@@ -103,6 +106,23 @@ SELECT SECOND_FLOOR('2025-01-23', 30) AS result;
 +---------------------+
 | 2025-01-23 00:00:00 |
 +---------------------+
+
+-- TimeStampTz sample, SET time_zone = '+08:00'
+-- Convert to local_time (2026-01-01 02:59:59) and then perform SECOND_FLOOR
+SELECT SECOND_FLOOR('2025-12-31 23:59:59+05:00');
++-------------------------------------------+
+| SECOND_FLOOR('2025-12-31 23:59:59+05:00') |
++-------------------------------------------+
+| 2026-01-01 02:59:00+08:00                 |
++-------------------------------------------+
+
+-- If parameters contain both TimeStampTz and Datetime types, output DateTime type
+SELECT SECOND_FLOOR('2025-12-31 23:59:59+05:00', '2025-12-15 00:00:00.123');
++----------------------------------------------------------------------+
+| SECOND_FLOOR('2025-12-31 23:59:59+05:00', '2025-12-15 00:00:00.123') |
++----------------------------------------------------------------------+
+| 2026-01-01 02:59:00.123                                              |
++----------------------------------------------------------------------+
 
 -- Period is non-positive, returns error
 mysql> SELECT SECOND_FLOOR('2025-01-23 12:34:56', -3) AS result;

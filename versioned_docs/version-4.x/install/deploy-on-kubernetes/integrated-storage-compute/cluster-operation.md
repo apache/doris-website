@@ -1,7 +1,8 @@
 ---
 {
-      "title": "Cluster Operation",
-      "language": "en"
+    "title": "Cluster Operation",
+    "language": "en",
+    "description": "In the k8s environment, the service will enter the CrashLoopBackOff state due to some unexpected things."
 }
 ---
 
@@ -20,7 +21,7 @@ When a pod of the service enters CrashLoopBackOff or cannot be started normally 
 
 1. **Use the following command to add annotation to the pod with problems.**
   ```shell
-  $ kubectl annotate pod ${pod_name} --namespace ${namespace} apache.com.doris/runmode=debug
+  $ kubectl annotate pod ${pod_name} --namespace ${namespace} apache.org.doris/runmode=debug
   ```
   When the service is restarted next time, the service will detect the annotation that identifies the `Debug` mode startup, and will enter the `Debug` mode to start, and the pod status will be `running`.
 

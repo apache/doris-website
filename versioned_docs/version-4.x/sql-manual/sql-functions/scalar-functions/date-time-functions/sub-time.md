@@ -1,7 +1,8 @@
 ---
 {
     "title": "SUB_TIME",
-    "language": "en"
+    "language": "en",
+    "description": "Subtracts the specified time interval from a date/time or time expression. If the second parameter is negative,"
 }
 ---
 
@@ -19,19 +20,20 @@ SUB_TIME(`<date_or_time_expr>`, `<time>`)
 
 | Parameter             | Description |
 | ---------------------| ----------- |
-| `<date_or_time_expr>`| A valid date expression. Supports input of datetime/date/time types. If the type is date, it will be converted to the start time of the day (00:00:00). For specific datetime/time formats, see [datetime conversion](../../../../../docs/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [time conversion](../../../../../docs/sql-manual/basic-element/sql-data-types/conversion/time-conversion). |
+| `<date_or_time_expr>`| A valid date expression. Supports input of timestamptz/datetime/date/time types. If the type is date, it will be converted to the start time of the day (00:00:00). For specific formats, see [timestamptz conversion](../../../../../../docs/sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion.md), [datetime conversion](../../../../../../docs/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [time conversion](../../../../../../docs/sql-manual/basic-element/sql-data-types/conversion/time-conversion). |
 | `<time>`             | A valid time expression, representing the time value to be subtracted from `<date_or_time_expr>`. If negative, it means addition. Supports input of time type. |
 
 ## Return Value
 
 Returns the result of subtracting `<time>` from `<date_or_time_expr>`. The return type depends on the type of the first parameter:
+- If the first parameter is of timestamp type, returns timestamp type.
 - If the first parameter is of datetime type, returns datetime type.
 - If the first parameter is of time type, returns time type.
 
 Special cases:
 - If any input parameter is null, returns null.
 - If the first parameter is of time type and the result exceeds the time type range, returns the maximum (or minimum) time value.
-- If the first parameter is of datetime type and the result exceeds the datetime type range, an error is thrown.
+- If the first parameter is of datetime or timestamptz type and the result exceeds the datetime type range, an error is thrown.
 
 ## Examples
 
@@ -51,6 +53,14 @@ SELECT SUB_TIME(cast('12:15:20' as time), '00:10:40');
 +------------------------------------------------+
 | 12:04:40                                       |
 +------------------------------------------------+   
+
+-- SET time_zone = '+08:00'
+select sub_time('2025-10-10 11:22:33+03:00', '3:22:33.123');
++------------------------------------------------------+
+| sub_time('2025-10-10 11:22:33+03:00', '3:22:33.123') |
++------------------------------------------------------+
+| 2025-10-10 12:59:59.877+08:00                        |
++------------------------------------------------------+
          
 -- NULL parameter test
 SELECT SUB_TIME(NULL, '01:00:00');

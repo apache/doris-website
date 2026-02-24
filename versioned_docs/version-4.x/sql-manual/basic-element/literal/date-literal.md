@@ -1,7 +1,8 @@
 ---
 {
     "title": "Date Type Literal",
-    "language": "en"
+    "language": "en",
+    "description": "Consistent with standard SQL, Doris requires the use of type keywords and strings to specify date literals."
 }
 ---
 

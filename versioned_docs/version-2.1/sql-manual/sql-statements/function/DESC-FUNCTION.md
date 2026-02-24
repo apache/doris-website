@@ -1,7 +1,8 @@
 ---
 {
     "title": "DESC FUNCTION",
-    "language": "en"
+    "language": "en",
+    "description": "Use the desc function tablevaluedfunction to obtain the schema information for the corresponding table-valued function."
 }
 ---
 
@@ -19,7 +20,7 @@ DESC FUNCTION <table_valued_function>
 
 **<table_valued_function>**
 
-> table_valued_function, the name of the table-valued function, such as CATALOGS. For a list of supported table-valued functions, please refer to the "[Table-Valued Functions](https://doris.apache.org/en/docs/dev/sql-manual/sql-functions/table-valued-functions/s3/)" section
+> table_valued_function, the name of the table-valued function, such as CATALOGS. For a list of supported table-valued functions, please refer to the "[Table-Valued Functions](https://doris.apache.org/docs/dev/lakehouse/file-analysis)" section
 
 ## Examples
 

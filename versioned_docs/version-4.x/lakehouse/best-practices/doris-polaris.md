@@ -1,7 +1,8 @@
 ---
 {
     "title": "Integration with Apache Polaris",
-    "language": "en"
+    "language": "en",
+    "description": "As data lake technologies continue to evolve, efficiently and securely managing massive amounts of data on object storage (such as AWS S3) while "
 }
 ---
 

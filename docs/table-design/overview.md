@@ -1,9 +1,13 @@
 ---
 {
-    "title": "Overview",
-    "language": "en"
+    "title": "Overview | Table Design",
+    "language": "en",
+    "description": "Users can use the CREATE TABLE statement to create a table in Doris.",
+    "sidebar_label": "Overview"
 }
 ---
+
+# Overview
 
 ## Creating tables
 
@@ -27,7 +31,7 @@ In Doris, the CREATE TABLE statement can specify [table properties](../sql-manua
 
 - **storage_policy**: Controls the migration strategy for cold and hot data separation storage.
 
-These properties apply to partitions, meaning that once a partition is created, it will have its own properties. Modifying table properties will only affect partitions created in the future and will not affect existing partitions. For more information about table properties, refer to [ALTER TABLE PROPERTY](../sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-PROPERTY).
+These properties apply to partitions, meaning that once a partition is created, it will have its own properties. Modifying table properties will only affect partitions created in the future and will not affect existing partitions. For more information about table properties, refer to [ALTER TABLE PROPERTY](../sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-PROPERTY) and [ALTER TABLE DISTRIBUTION](../sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-DISTRIBUTION).
 
 ## Notes
 
@@ -38,3 +42,4 @@ These properties apply to partitions, meaning that once a partition is created, 
 3. **Column addition operations**: Adding or removing VALUE columns is a lightweight operation that can be completed in seconds. Adding or removing KEY columns or modifying data types is a heavyweight operation, and the completion time depends on the amount of data. For large datasets, it is recommended to avoid adding or removing KEY columns or modifying data types.
 
 4. **Optimize storage strategy**: You can use tiered storage to store cold data on HDD or S3/HDFS.
+

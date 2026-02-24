@@ -1,7 +1,8 @@
 ---
 {
     "title": "DROP TABLE",
-    "language": "en"
+    "language": "en",
+    "description": "This statement is used to delete a Table."
 }
 ---
 

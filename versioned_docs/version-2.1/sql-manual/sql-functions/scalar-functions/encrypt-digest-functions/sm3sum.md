@@ -1,7 +1,8 @@
 ---
 {
-"title": "SM3SUM",
-"language": "en"
+    "title": "SM3SUM",
+    "language": "en",
+    "description": "Calculate multiple strings SM3 256-bit"
 }
 ---
 

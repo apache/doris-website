@@ -1,7 +1,8 @@
 ---
 {
     "title": "File System",
-    "language": "en"
+    "language": "en",
+    "description": "Iceberg Catalog and Paimon Catalog support accessing metadata directly from the file system."
 }
 ---
 

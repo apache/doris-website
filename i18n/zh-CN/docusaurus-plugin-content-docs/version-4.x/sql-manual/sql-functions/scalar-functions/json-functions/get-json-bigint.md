@@ -1,7 +1,8 @@
 ---
 {
     "title": "GET_JSON_BIGINT",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "函数 JSONEXTRACTBIGINT 的别名。"
 }
 ---
 

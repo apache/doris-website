@@ -1,7 +1,7 @@
 ---
 {
     "title": "ARRAY_RANGE",
-    "language": "en"
+    "language": "en",
 }
 ---
 

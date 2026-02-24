@@ -1,7 +1,8 @@
 ---
 {
     "title": "JSON_ARRAY",
-    "language": "en"
+    "language": "en",
+    "description": "Generate a json array containing the specified values, return empty if no values"
 }
 ---
 

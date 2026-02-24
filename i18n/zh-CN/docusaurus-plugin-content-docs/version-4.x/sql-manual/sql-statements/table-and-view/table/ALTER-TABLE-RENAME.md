@@ -1,7 +1,8 @@
 ---
 {
     "title": "ALTER TABLE RENAME",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "该语句用于对已有 table 属性的某些名称进行重命名操作。这个操作是同步的，命令返回表示执行完毕。"
 }
 ---
 

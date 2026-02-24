@@ -1,14 +1,15 @@
 ---
 {
-  "title": "HTTP",
-  "language": "en"
+    "title": "HTTP",
+    "language": "en",
+    "description": "HTTP table-valued-function (tvf) allows users to read and access file content on HTTP paths as if accessing relational table format data."
 }
 ---
 
 HTTP table-valued-function (tvf) allows users to read and access file content on HTTP paths as if accessing relational table format data. Currently supports `csv/csv_with_names/csv_with_names_and_types/json/parquet/orc` file formats.
 
 :::note
-Supported since 4.0.3
+Supported since 4.0.2
 :::
 
 ## Syntax

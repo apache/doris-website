@@ -1,7 +1,8 @@
 ---
 {
-  "title": "PARTITIONS",
-  "language": "en"
+    "title": "PARTITIONS",
+    "language": "en",
+    "description": "The table function generates a temporary partition TABLE, which allows you to view the PARTITION list of a certain TABLE."
 }
 ---
 

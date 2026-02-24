@@ -1,7 +1,8 @@
 ---
 {
     "title": "ALTER STATS",
-    "language": "en"
+    "language": "en",
+    "description": "Manually modify the statistics of a specified column in a specified table. Please refer to the \"Statistics\" chapter."
 }
 ---
 

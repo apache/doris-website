@@ -1,7 +1,8 @@
 ---
 {
     "title": "BigQuery",
-    "language": "en"
+    "language": "en",
+    "description": "During the process of migrating BigQuery, it is usually necessary to use object storage as an intermediate medium."
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "DEDUPLICATE_MAP",
-    "language": "en"
+    "language": "en",
+    "description": "Removes duplicate keys from a Map. By default, Doris deduplicates generated Maps (such as when importing data). However,"
 }
 ---
 

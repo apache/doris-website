@@ -1,7 +1,8 @@
 ---
 {
     "title": "schema_privileges",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "查看数据库的赋权信息"
 }
 ---
 

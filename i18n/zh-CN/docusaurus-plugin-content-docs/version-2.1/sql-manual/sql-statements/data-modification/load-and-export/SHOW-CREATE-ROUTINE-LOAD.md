@@ -1,7 +1,8 @@
 ---
 {
     "title": "SHOW CREATE ROUTINE LOAD",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "该语句用于展示例行导入作业的创建语句。"
 }
 ---
 

@@ -1,9 +1,13 @@
 ---
 {
-    "title": "EXPORT",
-    "language": "en"
+    "title": "EXPORT | Load And Export",
+    "language": "en",
+    "description": "The EXPORT command is used to export data from a specified table to files at a specified location.",
+    "sidebar_label": "EXPORT"
 }
 ---
+
+# EXPORT
 
 ## Description
 
@@ -318,8 +322,9 @@ PROPERTIES (
 ) WITH S3 (
   "s3.endpoint" = "xxxxx",
   "s3.region" = "xxxxx",
-  "s3.secret_key"="xxxx",
-  "s3.access_key" = "xxxxx"
+  "s3.access_key" = "xxxxx",
+  "s3.secret_key"="xxxx"
+  
 )
 ```
 

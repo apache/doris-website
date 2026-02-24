@@ -1,7 +1,8 @@
 ---
 {
-"title": "自定义分词",
-    "language": "zh-CN"
+    "title": "自定义分词",
+    "language": "zh-CN",
+    "description": "自定义分词可以突破内置分词的局限，根据特定需求组合字符过滤器、分词器和词元过滤器，精细定义文本如何被切分成可搜索的词项，这直接决定了搜索结果的相关性与数据分析的准确性，是提升搜索体验与数据价值的底层关键。"
 }
 ---
 
@@ -83,7 +84,13 @@ PROPERTIES (
     - `split_on_case_change`（默认 true）
     - `split_on_numerics`（默认 true）
     - `stem_english_possessive`（默认 true）
-    - `type_table`：自定义字符类型映射（如 `[+ => ALPHA, - => ALPHA]`），类型含 `ALPHA`、`ALPHANUM`、`DIGIT`、`LOWER`、`SUBWORD_DELIM`、`UPPER`
+    - `type_table`：自定义字符类型映射表，可将非字母数字字符映射为指定类型以避免被切分。示例：`["+ => ALPHA", "- => ALPHA"]`。支持映射类型：
+      - `ALPHA`（字母）
+      - `ALPHANUM`（字母数字）
+      - `DIGIT`（数字）
+      - `LOWER`（小写字母）
+      - `SUBWORD_DELIM`（非字母数字分隔符）
+      - `UPPER`（大写字母）
 - `ascii_folding`：将非 ASCII 字符映射为等效 ASCII
 - `lowercase`：将 token 文本转为小写
 - `icu_normalizer`：使用 ICU 标准化对词元进行处理。
@@ -287,3 +294,126 @@ select tokenize('hÉllo World', '"analyzer"="keyword_lowercase"');
   {"token":"hello world"}
 ]
 ```
+
+## 一列多分词索引
+
+Doris 支持在同一个列上创建多个使用不同分词器的倒排索引。这使得同一份数据可以使用不同的分词策略进行搜索，提供灵活的搜索能力。
+
+### 应用场景
+
+- **多语言支持**：在同一文本列上使用不同语言的分词器
+- **搜索精度与召回率**：使用关键词分词器进行精确匹配，使用标准分词器进行模糊搜索
+- **自动补全**：使用 edge_ngram 分词器进行前缀匹配，同时保留标准分词器用于常规搜索
+
+### 创建多个索引
+
+```sql
+-- 创建不同分词策略的分词器
+CREATE INVERTED INDEX ANALYZER IF NOT EXISTS std_analyzer
+PROPERTIES ("tokenizer" = "standard", "token_filter" = "lowercase");
+
+CREATE INVERTED INDEX ANALYZER IF NOT EXISTS kw_analyzer
+PROPERTIES ("tokenizer" = "keyword", "token_filter" = "lowercase");
+
+CREATE INVERTED INDEX TOKENIZER IF NOT EXISTS edge_ngram_tokenizer
+PROPERTIES (
+    "type" = "edge_ngram",
+    "min_gram" = "1",
+    "max_gram" = "20",
+    "token_chars" = "letter"
+);
+
+CREATE INVERTED INDEX ANALYZER IF NOT EXISTS ngram_analyzer
+PROPERTIES ("tokenizer" = "edge_ngram_tokenizer", "token_filter" = "lowercase");
+
+-- 在同一列上创建多个索引
+CREATE TABLE articles (
+    id INT,
+    content TEXT,
+    -- 标准分词器用于分词搜索
+    INDEX idx_content_std (content) USING INVERTED
+        PROPERTIES("analyzer" = "std_analyzer", "support_phrase" = "true"),
+    -- 关键词分词器用于精确匹配
+    INDEX idx_content_kw (content) USING INVERTED
+        PROPERTIES("analyzer" = "kw_analyzer"),
+    -- edge n-gram 分词器用于自动补全
+    INDEX idx_content_ngram (content) USING INVERTED
+        PROPERTIES("analyzer" = "ngram_analyzer")
+) ENGINE=OLAP
+DUPLICATE KEY(id)
+DISTRIBUTED BY HASH(id) BUCKETS 1
+PROPERTIES ("replication_allocation" = "tag.location.default: 1");
+```
+
+### 使用指定分词器查询
+
+使用 `USING ANALYZER` 子句指定使用哪个索引：
+
+```sql
+-- 插入测试数据
+INSERT INTO articles VALUES
+    (1, 'hello world'),
+    (2, 'hello'),
+    (3, 'world'),
+    (4, 'hello world test');
+
+-- 分词搜索：匹配包含 'hello' 词项的行
+-- 返回：1, 2, 4
+SELECT id FROM articles WHERE content MATCH 'hello' USING ANALYZER std_analyzer ORDER BY id;
+
+-- 精确匹配：仅匹配精确的 'hello' 字符串
+-- 返回：2
+SELECT id FROM articles WHERE content MATCH 'hello' USING ANALYZER kw_analyzer ORDER BY id;
+
+-- 使用 edge n-gram 进行前缀匹配
+-- 返回：1, 2, 4（所有以 'hel' 开头的行）
+SELECT id FROM articles WHERE content MATCH 'hel' USING ANALYZER ngram_analyzer ORDER BY id;
+```
+
+### 为已有表添加索引
+
+```sql
+-- 添加使用不同分词器的新索引
+ALTER TABLE articles ADD INDEX idx_content_chinese (content)
+USING INVERTED PROPERTIES("parser" = "chinese");
+
+-- 等待 schema change 完成
+SHOW ALTER TABLE COLUMN WHERE TableName='articles';
+```
+
+### 构建索引
+
+添加索引后，需要为已有数据构建索引：
+
+```sql
+-- 构建指定索引（非云模式）
+BUILD INDEX idx_content_chinese ON articles;
+
+-- 构建所有索引（云模式）
+BUILD INDEX ON articles;
+
+-- 查看构建进度
+SHOW BUILD INDEX WHERE TableName='articles';
+```
+
+### 重要说明
+
+1. **分词器身份识别**：两个具有相同 tokenizer 和 token_filter 配置的分词器被视为相同。不能在同一列上创建具有相同分词器身份的多个索引。
+
+2. **索引选择行为**：
+   - 使用 `USING ANALYZER` 时，如果指定分词器的索引存在且已构建，则使用该索引
+   - 如果索引未构建，查询会降级到非索引路径（结果正确，但性能较慢）
+   - 未使用 `USING ANALYZER` 时，可能使用任意可用的索引
+
+3. **内置分词器**：也可以直接使用内置分词器：
+   ```sql
+   -- 使用内置分词器
+   SELECT * FROM articles WHERE content MATCH 'hello' USING ANALYZER standard;
+   SELECT * FROM articles WHERE content MATCH 'hello' USING ANALYZER none;
+   SELECT * FROM articles WHERE content MATCH '你好' USING ANALYZER chinese;
+   ```
+
+4. **性能考虑**：
+   - 每增加一个索引都会增加存储空间和写入开销
+   - 根据实际查询模式选择分词器
+   - 如果查询模式可预测，考虑使用较少的索引

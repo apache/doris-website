@@ -1,7 +1,8 @@
 ---
 {
     "title": "N-Gram 索引",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "n-gram 分词是将一句话或一段文字拆分成多个相邻的词组的分词方法。NGram BloomFilter 索引和 BloomFilter 索引类似，也是基于 BloomFilter 的跳数索引。"
 }
 ---
 

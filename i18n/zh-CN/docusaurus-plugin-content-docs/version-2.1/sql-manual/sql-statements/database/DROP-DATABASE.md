@@ -1,7 +1,8 @@
 ---
 {
     "title": "DROP DATABASE",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "该语句用于删除数据库（database）"
 }
 ---
 

@@ -1,11 +1,12 @@
 ---
 {
-    "title": "FE 配置项",
+    "title": "FE 配置项 | Config",
     "language": "zh-CN",
     "toc_min_heading_level": 2,
-    "toc_max_heading_level": 4
+    "toc_max_heading_level": 4,
+    "description": "该文档主要介绍 FE 的相关配置项。",
+    "sidebar_label": "FE 配置项"
 }
-
 ---
 
 # Doris FE 配置参数
@@ -2158,17 +2159,17 @@ tablet 状态更新间隔
 
 删除数据库（表/分区）后，您可以使用 RECOVER stmt 恢复它。这指定了最大数据保留时间。一段时间后，数据将被永久删除。
 
-#### `storage_cooldown_second`
-
-默认值：`30 * 24 * 3600L`  （30 天）
-
-创建表（或分区）时，可以指定其存储介质（HDD 或 SSD）。如果设置为 SSD，这将指定 tablet 在 SSD 上停留的默认时间。之后，tablet 将自动移动到 HDD。您可以在 `CREATE TABLE stmt` 中设置存储冷却时间。
-
 #### `default_storage_medium`
 
 默认值：HDD
 
 创建表（或分区）时，可以指定其存储介质（HDD 或 SSD）。如果未设置，则指定创建时的默认介质。
+
+#### `default_compression_type`
+
+默认值：lz4（4.0.3 之前），zstd（4.0.3 及之后）
+
+创建表时可以指定其压缩算法。如果未设置，则此配置项指定创建表时的默认压缩类型。有效值包括：lz4、zstd。
 
 #### `enable_storage_policy`
 

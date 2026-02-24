@@ -1,7 +1,8 @@
 ---
 {
     "title": "FIELD",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "返回 <expr> 在参数列表中的位置（基于 1 的索引），常用于 ORDER BY 子句中实现自定义排序。如果 <expr> 不在参数列表中，或 <expr> 为 NULL，则返回 0。在自定义排序中，不在参数列表中的数据会被排到最前面，可通过 asc 或 desc 控制整体排序顺序；"
 }
 ---
 

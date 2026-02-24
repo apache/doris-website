@@ -1,7 +1,8 @@
 ---
 {
     "title": "BITMAP_HASH",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "对任意类型的输入，计算其 32 位的哈希值，并返回包含该哈希值的 Bitmap。"
 }
 ---
 

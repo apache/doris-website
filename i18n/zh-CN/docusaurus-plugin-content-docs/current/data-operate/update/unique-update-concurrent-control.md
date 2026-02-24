@@ -1,7 +1,8 @@
 ---
 {
     "title": "主键模型的更新并发控制",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "Doris 采用多版本并发控制机制（MVCC - Multi-Version Concurrency Control）来管理并发更新。每次数据写入操作均会分配一个写入事务，该事务确保数据写入的原子性（即写入操作要么完全成功，要么完全失败）。在写入事务提交时，系统会为其分配一个版本号。"
 }
 ---
 

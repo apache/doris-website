@@ -1,7 +1,8 @@
 ---
 {
     "title": "数据库建表最佳实践",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "只指定排序列，相同的 KEY 行不会合并。"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "STRLEFT",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "STRLEFT 函数（别名 LEFT）用于从字符串的左侧截取指定长度的字符。"
 }
 ---
 

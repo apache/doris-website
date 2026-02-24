@@ -1,7 +1,8 @@
 ---
 {
     "title": "Numeric Type Literal",
-    "language": "en"
+    "language": "en",
+    "description": "Use numeric literals to specify fixed-point and floating-point numbers."
 }
 ---
 

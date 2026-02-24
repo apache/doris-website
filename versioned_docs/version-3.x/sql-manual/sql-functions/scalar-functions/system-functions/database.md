@@ -1,7 +1,8 @@
 ---
 {
     "title": "DATABASE",
-    "language": "en"
+    "language": "en",
+    "description": "Get the database of the current sql client connection."
 }
 ---
 

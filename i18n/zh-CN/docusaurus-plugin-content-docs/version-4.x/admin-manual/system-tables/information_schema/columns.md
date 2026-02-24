@@ -1,7 +1,8 @@
 ---
 {
     "title": "columns",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "查看所有的列信息"
 }
 ---
 

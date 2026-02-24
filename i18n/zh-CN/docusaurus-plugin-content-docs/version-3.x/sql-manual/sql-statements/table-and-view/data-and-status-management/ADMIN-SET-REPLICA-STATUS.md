@@ -1,7 +1,8 @@
 ---
 {
     "title": "ADMIN SET REPLICA STATUS",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "该语句用于设置指定副本的状态，目前仅用于手动将某些副本状态设置为 BAD、DROP 和 OK，从而使得系统能够自动修复这些副本。"
 }
 ---
 

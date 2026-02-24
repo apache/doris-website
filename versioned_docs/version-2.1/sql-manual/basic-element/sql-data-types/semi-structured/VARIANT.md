@@ -1,7 +1,8 @@
 ---
 {
     "title": "VARIANT",
-    "language": "en"
+    "language": "en",
+    "description": "Introduced a new data type VARIANT in Doris 2.1, which can store semi-structured JSON data."
 }
 ---
 

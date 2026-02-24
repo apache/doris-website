@@ -1,7 +1,8 @@
 ---
 {
     "title": "REGEXP_EXTRACT",
-    "language": "en"
+    "language": "en",
+    "description": "This is a function used to perform a regular match on a given string STR and extract the POS-th matching part that conforms to the specified pattern."
 }
 ---
 

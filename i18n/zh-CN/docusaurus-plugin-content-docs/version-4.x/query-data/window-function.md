@@ -1,7 +1,8 @@
 ---
 {
     "title": "分析函数（窗口函数）",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "分析函数，也称为窗口函数，是一种在 SQL 查询中对数据集中的行进行复杂计算的函数。窗口函数的特点在于，它们不会减少查询结果的行数，而是为每一行增加一个新的计算结果。窗口函数适用于多种分析场景，如计算滚动合计、排名以及移动平均等。 具体的语法介绍可以参阅"
 }
 ---
 
@@ -478,7 +479,7 @@ where year in (1999, 2000, 2001, 2002)
 1. 假设我们有如下的股票数据，股票代码是 JDR，closing price 是每天的收盘价。
 
 ```sql
-create table stock_ticker (stock_symbol string, closing_price decimal(8,2), closing_date timestamp);    
+create table stock_ticker (stock_symbol string, closing_price decimal(8,2), closing_date datetime);    
 
 INSERT INTO stock_ticker VALUES 
     ("JDR", 12.86, "2014-10-02 00:00:00"), 

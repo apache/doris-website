@@ -1,7 +1,8 @@
 ---
 {
     "title": "RESUME SYNC JOB",
-    "language": "en"
+    "language": "en",
+    "description": "Resume a resident data synchronization job that has been suspended in a database by its jobname. Once resumed,"
 }
 ---
 

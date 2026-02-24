@@ -1,7 +1,8 @@
 ---
 {
     "title": "VAR_SAMP,VARIANCE_SAMP",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "VARSAMP 函数计算指定表达式的样本方差。与 VARIANCE（总体方差）不同，VARSAMP 使用 n-1 作为除数，这在统计学上被认为是对总体方差的无偏估计。"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "DIGITAL_MASKING",
-    "language": "en"
+    "language": "en",
+    "description": "The DIGITALMASKING function performs masking on numeric strings by replacing the middle part with in a fixed format,"
 }
 ---
 

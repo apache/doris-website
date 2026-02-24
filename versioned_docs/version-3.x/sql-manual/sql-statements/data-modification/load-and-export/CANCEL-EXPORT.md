@@ -1,9 +1,9 @@
 ---
 {
     "title": "CANCEL EXPORT",
-    "language": "en"
+    "language": "en",
+    "description": "This statement is used to undo an export job for the specified label. Or batch undo export jobs via fuzzy matching."
 }
-
 ---
 
 ## Description

@@ -1,7 +1,8 @@
 ---
 {
     "title": "workload_group_resource_usage",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "存储 Workload Group 资源的使用信息"
 }
 ---
 

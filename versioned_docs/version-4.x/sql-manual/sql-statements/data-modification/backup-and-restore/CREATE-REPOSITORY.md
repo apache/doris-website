@@ -1,9 +1,9 @@
 ---
 {
     "title": "CREATE REPOSITORY",
-    "language": "en"
+    "language": "en",
+    "description": "This statement is used to create a repository. Repositories are used for backup or restore."
 }
-
 ---
 
 ## Description

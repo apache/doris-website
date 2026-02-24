@@ -1,7 +1,8 @@
 ---
 {
     "title": "Backup",
-    "language": "en"
+    "language": "en",
+    "description": "For concepts related to backup, please refer to Backup and Restore. This guide provides the steps to create a Repository and back up data."
 }
 ---
 

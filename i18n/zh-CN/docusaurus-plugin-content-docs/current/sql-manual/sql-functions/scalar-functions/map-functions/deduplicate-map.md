@@ -1,7 +1,8 @@
 ---
 {
     "title": "DEDUPLICATE_MAP",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "去掉 Map 中的重复 key。 默认情况下 Doris 会对生成的 Map （比如在导入数据的时候）去重。 但是某些特殊场景得到的 Map 可能是未去重的，比如从外表读取的数据，比如从字符串转换为 Map 类型。 可以使用该函数对 Map 类型去重。"
 }
 ---
 

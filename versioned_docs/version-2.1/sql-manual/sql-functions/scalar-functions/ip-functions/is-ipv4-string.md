@@ -1,7 +1,8 @@
 ---
 {
     "title": "IS_IPV4_STRING",
-    "language": "en"
+    "language": "en",
+    "description": "Determine whether an IPv4-type address is a valid IPv4 address."
 }
 ---
 

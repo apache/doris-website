@@ -1,7 +1,8 @@
 ---
 {
     "title": "BITMAP_OR",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "计算两个及以上的 Bitmap 的并集，返回新的 Bitmap。"
 }
 ---
 

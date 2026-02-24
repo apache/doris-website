@@ -1,7 +1,8 @@
 ---
 {
     "title": "ALTER SQL_BLOCK_RULE",
-    "language": "en"
+    "language": "en",
+    "description": "This statement is used to modify an SQL block rule."
 }
 ---
 

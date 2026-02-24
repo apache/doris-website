@@ -1,7 +1,8 @@
 ---
 {
     "title": "TRIM",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "TRIM 函数用于删除字符串两端的空格或指定字符。如果不指定删除字符，默认删除空格。"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "DROP INDEX",
-    "language": "en"
+    "language": "en",
+    "description": "This statement is used to delete an index with a specified name from a table. Currently, only inverted indexes and ann indexes are supported."
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "ISINF",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "判断指定的值是否为无穷大。"
 }
 ---
 

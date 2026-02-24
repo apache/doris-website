@@ -1,7 +1,8 @@
 ---
 {
     "title": "Workload Group",
-    "language": "en"
+    "language": "en",
+    "description": "Workload Group is an in-process mechanism for isolating workloads. It achieves resource isolation by finely partitioning or limiting resources (CPU,"
 }
 ---
 
@@ -272,31 +273,6 @@ Query OK, 0 rows affected (0.01 sec)
 
 More details can be found in[DROP-WORKLOAD-GROUP](../../sql-manual/sql-statements/cluster-management/compute-management/DROP-WORKLOAD-GROUP)
 
-## Explanation of Switching Between CPU Soft and Hard Limit Modes
-Currently, Doris does not support running both CPU soft and hard limits simultaneously. At any given time, a Doris cluster can only operate in either CPU soft limit or CPU hard limit mode.
-Users can switch between these two modes, and the switching method is as follows:
-
-1 If the current cluster configuration is set to the default CPU soft limit and you wish to change it to CPU hard limit, you need to modify the cpu_hard_limit parameter of the Workload Group to a valid value.
-```
-alter workload group test_group properties ( 'cpu_hard_limit'='20%' );
-```
-All Workload Groups in the cluster need to be modified, and the cumulative value of cpu_hard_limit for all Workload Groups cannot exceed 100%.
-
-Since CPU hard limits cannot automatically have a valid value, simply enabling the switch without modifying the property will prevent the CPU hard limit from taking effect.
-
-2 Enable the CPU hard limit on all FE nodes
-```
-1 Modify the configuration in the fe.conf file on the disk.
-experimental_enable_cpu_hard_limit = true
-
-
-2 Modify the configuration in memory.
-ADMIN SET FRONTEND CONFIG ("enable_cpu_hard_limit" = "true");
-```
-
-If the user wishes to switch from CPU hard limit back to CPU soft limit, they need to set the value of enable_cpu_hard_limit to false on all FE nodes.
-The CPU soft limit property cpu_share will default to a valid value of 1024 (if it was not previously specified). Users can adjust the cpu_share value based on the priority of the group.
-
 ## Testing
 ### Memory hard limit
 Adhoc-type queries typically have unpredictable SQL inputs and uncertain memory usage, which poses the risk of a few queries consuming a large amount of memory.
@@ -439,22 +415,15 @@ The dataset is clickbench, and the test SQL is q29.
 2. Modify the CPU hard limit of the currently used Workload Group to 10%.
 
     ```sql
-    alter workload group g2 properties('cpu_hard_limit'='10%');
+    alter workload group g2 properties('max_cpu_percent'='10%');
     ```
-
-3. Switch to CPU hard limit mode.
-
-    ```sql
-    ADMIN SET FRONTEND CONFIG ("enable_cpu_hard_limit" = "true");
-    ```
-
-4. Re-run the load test for queries, and you can see that the current process can only use 9 to 10 cores, which is about 10% of the total cores.
+3. Re-run the load test for queries, and you can see that the current process can only use 9 to 10 cores, which is about 10% of the total cores.
 
    ![use workload group cpu](/images/workload-management/use_wg_cpu_2.png)
 
 It is important to note that this test is best conducted using query workloads, as they are more likely to reflect the effect. If testing load, it may trigger Compaction, causing the actual observed values to be higher than the values configured in the Workload Group. Currently, Compaction workloads are not managed under the Workload Group.
 
-5. In addition to using Linux system commands, you can also observe the current CPU usage of the group through Doris's system tables, where the CPU usage is around 10%.
+4. In addition to using Linux system commands, you can also observe the current CPU usage of the group through Doris's system tables, where the CPU usage is around 10%.
 
     ```sql
     mysql [information_schema]>select CPU_USAGE_PERCENT from workload_group_resource_usage where WORKLOAD_GROUP_ID=11201;

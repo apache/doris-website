@@ -1,7 +1,8 @@
 ---
 {
-"title": "EXPLODE_MAP_OUTER",
-"language": "en"
+    "title": "EXPLODE_MAP_OUTER",
+    "language": "en",
+    "description": "The explodemapouter table function accepts a map type and expands the map into multiple rows, each containing a key-value pair."
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "ARRAY_MAP",
-    "language": "en"
+    "language": "en",
+    "description": "Use a lambda expression as the input parameter to calculate the corresponding expression for the internal data of other input ARRAY parameters."
 }
 ---
 

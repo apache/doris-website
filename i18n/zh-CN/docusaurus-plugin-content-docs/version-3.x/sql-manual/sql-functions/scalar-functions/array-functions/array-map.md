@@ -1,7 +1,8 @@
 ---
 {
     "title": "ARRAY_MAP",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "使用一个 lambda 表达式作为输入参数，对其他的输入 ARRAY 参数的内部数据做对应表达式计算。 在 lambda 表达式中输入的参数为 1 个或多个，必须和后面的输入 array 列数量一致。 在 lambda 中可以执行合法的标量函数，不支持聚合函数等。"
 }
 ---
 

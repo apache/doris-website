@@ -1,7 +1,8 @@
 ---
 {
     "title": "SHOW SYNC JOB",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "此语句用于显示所有数据库中的常驻数据同步作业状态。"
 }
 ---
 

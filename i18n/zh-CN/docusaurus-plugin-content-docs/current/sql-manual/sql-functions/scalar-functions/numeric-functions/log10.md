@@ -1,7 +1,8 @@
 ---
 {
     "title": "LOG10",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "返回以10为底的x的自然对数。"
 }
 ---
 

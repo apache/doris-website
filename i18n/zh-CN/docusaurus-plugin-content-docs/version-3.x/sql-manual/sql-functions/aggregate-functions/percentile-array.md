@@ -1,7 +1,8 @@
 ---
 {
     "title": "PERCENTILE_ARRAY",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "PERCENTILEARRAY 函数用于计算精确的百分位数数组，允许一次性计算多个百分位数值。这个函数主要适用于小数据量。"
 }
 ---
 

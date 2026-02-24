@@ -1,7 +1,8 @@
 ---
 {
     "title": "高并发导入优化（Group Commit）",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "在高频小批量写入场景下，传统的导入方式存在以下问题："
 }
 ---
 

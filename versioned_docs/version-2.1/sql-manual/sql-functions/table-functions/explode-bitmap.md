@@ -1,7 +1,8 @@
 ---
 {
     "title": "EXPLODE_BITMAP",
-    "language": "en"
+    "language": "en",
+    "description": "The explodebitmap table function accepts a bitmap type data and maps each bit (bit) of the bitmap to a separate row."
 }
 ---
 

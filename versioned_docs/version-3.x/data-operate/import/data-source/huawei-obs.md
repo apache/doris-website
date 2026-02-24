@@ -1,7 +1,8 @@
 ---
 {
     "title": "Huawei Cloud OBS",
-    "language": "en"
+    "language": "en",
+    "description": "Doris provides two ways to load files from Huawei Cloud OBS:"
 }
 ---
 

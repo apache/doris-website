@@ -1,7 +1,8 @@
 ---
 {
     "title": "Audit Log",
-    "language": "en"
+    "language": "en",
+    "description": "Doris provides auditing capabilities for database operations, allowing the recording of user logins, queries,"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "ST_ANGLE_SPHERE",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "计算地球表面上两点之间的圆心角（单位为度）。输入参数依次为点 X 的经度、点 X 的纬度、点 Y 的经度、点 Y 的纬度。 圆心角是指地球球心处，连接两点的弧所对的角度。"
 }
 ---
 

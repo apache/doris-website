@@ -1,7 +1,8 @@
 ---
 {
     "title": "YEAR",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "YEAR 函数用于提取指定日期或时间值中的年份部分，返回整数形式的年份。支持处理 DATE、DATETIME 类型"
 }
 ---
 

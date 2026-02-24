@@ -1,7 +1,8 @@
 ---
 {
     "title": "BITMAP_HASH64",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "对任意类型的输入计算 64 位的哈希值，返回包含该哈希值的 Bitmap。"
 }
 ---
 

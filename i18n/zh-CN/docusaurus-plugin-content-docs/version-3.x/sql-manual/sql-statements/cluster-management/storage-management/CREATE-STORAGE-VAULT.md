@@ -3,7 +3,8 @@
     "title": "CREATE-STORAGE-VAULT",
     "language": "zh-CN",
     "toc_min_heading_level": 2,
-    "toc_max_heading_level": 4
+    "toc_max_heading_level": 4,
+    "description": "该命令用于创建存储库。本文档的主题描述了创建 Doris 自管理存储库的语法。"
 }
 ---
 

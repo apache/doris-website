@@ -1,7 +1,8 @@
 ---
 {
     "title": "Release 2.1.11",
-    "language": "en"
+    "language": "en",
+    "description": "Behavior Changes:time_series_max_tablet_version_num controls the maximum number of versions for tables using the time - series compaction strategy."
 }
 ---
 

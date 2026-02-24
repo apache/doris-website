@@ -1,7 +1,9 @@
 ---
 {
-    "title": "ARRAY",
-    "language": "en"
+    "title": "ARRAY | Semi Structured",
+    "language": "en",
+    "description": "The ARRAY<T> type is used to represent an ordered collection of elements, where each element has the same data type. For example,",
+    "sidebar_label": "ARRAY"
 }
 ---
 
@@ -325,3 +327,4 @@ select array(null) < array(-1), array(null) > array(-1);
   |    3 | [7, 8, 9]    |
   +------+--------------+
   ```
+

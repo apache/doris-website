@@ -1,7 +1,8 @@
 ---
 {
     "title": "MAX",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "MAX 函数返回表达式的最大非 NULL 值。"
 }
 ---
 

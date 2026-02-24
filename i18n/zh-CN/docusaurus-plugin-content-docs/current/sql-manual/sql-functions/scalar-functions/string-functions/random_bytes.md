@@ -1,7 +1,8 @@
 ---
 {
     "title": "RANDOM_BYTES",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "RANDOMBYTES 函数用于生成指定长度的随机字节序列。返回的字节序列以十六进制字符串形式表示。"
 }
 ---
 

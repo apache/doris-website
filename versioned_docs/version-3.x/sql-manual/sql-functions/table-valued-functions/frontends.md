@@ -1,7 +1,8 @@
 ---
 {
-  "title": "FRONTENDS",
-  "language": "en"
+    "title": "FRONTENDS",
+    "language": "en",
+    "description": "The table function generates the frontends temporary table, which allows you to view the FE node information in the current doris cluster."
 }
 ---
 

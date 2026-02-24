@@ -1,7 +1,8 @@
 ---
 {
     "title": "SUM",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "用于返回选中字段所有值的和。"
 }
 ---
 

@@ -1,9 +1,13 @@
 ---
 {
-    "title": "MinIO",
-    "language": "zh-CN"
+    "title": "MinIO | Data Source",
+    "language": "zh-CN",
+    "description": "Doris 提供两种方式从 MinIO 导入文件：",
+    "sidebar_label": "MinIO"
 }
 ---
+
+# MinIO
 
 Doris 提供两种方式从 MinIO 导入文件：
 - 使用 S3 Load 将 MinIO 文件导入到 Doris 中，这是一个异步的导入方式。
@@ -45,13 +49,10 @@ DISTRIBUTED BY HASH(user_id) BUCKETS 10;
 ### 第 3 步：使用 S3 Load 导入数据
 
 :::caution 注意
-如果您在本地网络中部署了 MinIO 并且未启用 TLS，则需要在 endpoint 字符串中明确添加 `http://`。
+使用 S3 Load 导入 MinIO 数据时，请注意：
 
-- `"s3.endpoint" = "http://localhost:9000"`
-
-S3 SDK 默认使用 virtual-hosted style 方式。但 MinIO 默认没开启 virtual-hosted style 方式的访问，此时我们可以添加 `use_path_style` 参数来强制使用 path style 方式。
-
-- `"use_path_style" = "true"`
+- 如果 MinIO 部署在本地网络且未启用 TLS，需要在 endpoint 中显式添加 `http://`，例如：`"s3.endpoint" = "http://localhost:9000"`。
+- S3 SDK 默认使用 virtual-hosted style，但 MinIO 默认未开启该访问方式。可添加 `"use_path_style" = "true"` 强制使用 path style。
 :::
 
 ```sql
@@ -139,13 +140,10 @@ DISTRIBUTED BY HASH(user_id) BUCKETS 10;
 ### 第 3 步：使用 TVF 导入数据
 
 :::caution 注意
-如果您在本地网络中部署了 MinIO 并且未启用 TLS，则需要在 endpoint 字符串中明确添加 `http://`。
+使用 TVF 导入 MinIO 数据时，请注意：
 
-- `"s3.endpoint" = "http://localhost:9000"`
-
-S3 SDK 默认使用 virtual-hosted style 方式。但 MinIO 默认没开启 virtual-hosted style 方式的访问，此时我们可以添加 `use_path_style` 参数来强制使用 path style 方式。
-
-- `"use_path_style" = "true"`
+- 如果 MinIO 部署在本地网络且未启用 TLS，需要在 endpoint 中显式添加 `http://`，例如：`"s3.endpoint" = "http://localhost:9000"`。
+- S3 SDK 默认使用 virtual-hosted style，但 MinIO 默认未开启该访问方式。可添加 `"use_path_style" = "true"` 强制使用 path style。
 :::
 
 ```sql

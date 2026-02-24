@@ -1,7 +1,8 @@
 ---
 {
     "title": "JSON_EXTRACT_DOUBLE",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "JSONEXTRACTDOUBLE 从 JSON 对象中提取 <jsonpath> 指定的字段，并将其转换为 DOUBLE 类型。"
 }
 ---
 

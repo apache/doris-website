@@ -1,7 +1,8 @@
 ---
 {
-"title": "BIT_SHIFT_LEFT",
-"language": "zh-CN"
+    "title": "BIT_SHIFT_LEFT",
+    "language": "zh-CN",
+    "description": "用于 左移 操作的函数，通常用于执行 位移操作，将二进制数字的所有位向左移动指定的位数。它是位运算的一种形式，常用于处理二进制数据或进行高效的数学计算。"
 }
 ---
 

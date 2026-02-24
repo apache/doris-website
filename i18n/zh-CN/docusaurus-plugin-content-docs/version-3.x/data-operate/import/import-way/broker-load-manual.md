@@ -1,7 +1,8 @@
 ---
 {
     "title": "Broker Load",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "Broker Load 通过 MySQL API 发起，Doris 会根据 LOAD 语句中的信息，主动从数据源拉取数据。Broker Load 是一个异步导入方式，需要通过 SHOW LOAD 语句查看导入进度和导入结果。"
 }
 ---
 

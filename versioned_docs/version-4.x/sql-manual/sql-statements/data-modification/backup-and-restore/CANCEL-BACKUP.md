@@ -1,7 +1,8 @@
 ---
 {
-"title": "CANCEL BACKUP",
-"language": "en"
+    "title": "CANCEL BACKUP",
+    "language": "en",
+    "description": "This statement is used to cancel an ongoing BACKUP task."
 }
 ---
 
@@ -12,7 +13,7 @@ This statement is used to cancel an ongoing BACKUP task.
 ## Syntax
 
 ```sql
-CANCEL BACKUP FROM <db_name>;
+CANCEL [GLOBAL] BACKUP [FROM <db_name>];
 ```
 
 ## Parameters
@@ -27,4 +28,10 @@ The name of the database to which the backup task belongs.
 
 ```sql
 CANCEL BACKUP FROM example_db;
+```
+
+2. Cancel the GLOBAL BACKUP task.
+
+```sql
+CANCEL GLOBAL BACKUP;
 ```

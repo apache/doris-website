@@ -1,7 +1,8 @@
 ---
 {
     "title": "Migrating Data from Other OLTP",
-    "language": "en"
+    "language": "en",
+    "description": "There are various ways to migrate data from other TP systems, such as MySQL/SqlServer/Oracle, to Doris."
 }
 ---
 
@@ -152,7 +153,7 @@ val jdbcDF = spark.read
   .option("password", "")
   .save() 
 ```
-For more details, refer to [JDBC To Other Databases](https://spark.apache.org/docs/latest/sql-data-sources-jdbc.html)，[Spark Doris Connector](../../../ecosystem//spark-doris-connector.md#batch-write)
+For more details, refer to [JDBC To Other Databases](https://spark.apache.org/docs/latest/sql-data-sources-jdbc.html)，[Spark Doris Connector](../../../ecosystem/spark-doris-connector.md#batch-write)
 
 ## DataX / Seatunnel / CloudCanal and other third-party tools.
 

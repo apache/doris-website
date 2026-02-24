@@ -1,7 +1,8 @@
 ---
 {
     "title": "内存控制策略",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "Doris Allocator 作为系统中大块内存申请的统一入口，在合适的时机干预限制内存分配的过程，确保内存申请的高效可控。"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "Login Action",
-    "language": "en"
+    "language": "en",
+    "description": "Used to log in to the service."
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "JDBC Catalog",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "JDBC Catalog 支持通过标准 JDBC 接口连接支持 JDBC 协议的数据库。"
 }
 ---
 

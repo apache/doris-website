@@ -1,7 +1,8 @@
 ---
 {
-"title": "COVAR,COVAR_POP",
-"language": "en"
+    "title": "COVAR,COVAR_POP",
+    "language": "en",
+    "description": "Calculate the covariance between two numeric variables."
 }
 ---
 

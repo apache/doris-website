@@ -1,7 +1,8 @@
 ---
 {
     "title": "IPV4",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "IPv4 类型，以 UInt32 的形式存储在 4 个字节中，用于表示 IPv4 地址。 取值范围是 ['0.0.0.0', '255.255.255.255']。"
 }
 ---
 

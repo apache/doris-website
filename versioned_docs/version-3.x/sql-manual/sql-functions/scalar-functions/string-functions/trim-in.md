@@ -1,7 +1,8 @@
 ---
 {
     "title": "TRIM_IN",
-    "language": "en"
+    "language": "en",
+    "description": "When there is no rhs parameter, this function removes the leading and trailing spaces from the str string. When the rhs parameter is provided,"
 }
 ---
 

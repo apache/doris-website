@@ -15,8 +15,8 @@ export default function Archive() {
     const [isZH, setIsZH] = useState(false);
     const handleMouseEnter = (id: string) => {
         const dom = document.getElementById(id);
-        dom!.style.color = '#444FD9';
-        dom!.firstChild!.style.fill = '#444FD9';
+        dom!.style.color = '#11A679';
+        dom!.firstChild!.style.fill = '#11A679';
     };
 
     const handleMouseLeave = (id: string) => {

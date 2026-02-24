@@ -1,7 +1,8 @@
 ---
 {
     "title": "MIN",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "MIN 函数返回表达式的最小非 NULL 值。"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "COT",
-    "language": "en"
+    "language": "en",
+    "description": "Returns the cotangent of x, where x is the value in radians, only input and output are supported as double. Input null value will return null value."
 }
 ---
 

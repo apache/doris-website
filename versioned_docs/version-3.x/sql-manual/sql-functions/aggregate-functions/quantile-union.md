@@ -1,7 +1,8 @@
 ---
 {
     "title": "QUANTILE_UNION",
-    "language": "en"
+    "language": "en",
+    "description": "The QUANTILEUNION function is used to merge intermediate results from multiple quantile calculations."
 }
 ---
 

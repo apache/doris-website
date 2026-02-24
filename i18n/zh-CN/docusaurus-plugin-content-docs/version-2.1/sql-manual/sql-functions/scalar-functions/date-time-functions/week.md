@@ -1,7 +1,8 @@
 ---
 {
     "title": "WEEK",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "返回指定日期的星期数。mode 的值默认为 0。 参数 mode 的作用参见下面的表格："
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "COUNTEQUAL",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "统计数组中与指定目标值相等的元素个数。"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "ARRAY_AVG",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "计算数组中所有数值元素的平均值。函数会跳过数组中的 null 值和非数值元素，只对有效的数值元素进行平均值计算。"
 }
 ---
 

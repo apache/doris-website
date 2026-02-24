@@ -1,9 +1,13 @@
 ---
 {
-  "title": "Overview",
-  "language": "en"
+    "title": "Overview | Vector Search",
+    "language": "en",
+    "description": "In generative AI applications, relying solely on a large model's internal parameter “memory” has clear limitations: (1) the model’s knowledge becomes ",
+    "sidebar_label": "Overview"
 }
 ---
+
+# Overview
 
 <!-- 
 Licensed to the Apache Software Foundation (ASF) under one
@@ -29,19 +33,6 @@ In generative AI applications, relying solely on a large model's internal parame
 To achieve this, we need a mechanism to measure semantic relatedness between a user query and documents in the knowledge base. Vector representations are a standard tool: by encoding both queries and documents into semantic vectors, we can use vector similarity to measure relevance. With the advancement of pretrained language models, generating high-quality embeddings has become mainstream. Thus, the retrieval stage of RAG becomes a typical vector similarity search problem: from a large vector collection, find the K vectors most similar to the query (i.e., candidate knowledge pieces).
 
 Vector retrieval in RAG is not limited to text; it naturally extends to multimodal scenarios. In a multimodal RAG system, images, audio, video, and other data types can also be encoded into vectors for retrieval and then supplied to the generative model as context. For example, if a user uploads an image, the system can first retrieve related descriptions or knowledge snippets, then generate explanatory content. In medical QA, RAG can retrieve patient records and literature to support more accurate diagnostic suggestions.
-
-## Brute-Force Search
-
-Starting from version 2.0, Apache Doris supports nearest-neighbor search based on vector distance. Performing vector search with SQL is natural and simple:
-
-```sql
-SELECT id, l2_distance(embedding, [1.0, 2.0, xxx, 10.0]) AS distance
-FROM   vector_table
-ORDER  BY distance
-LIMIT  10; 
-```
-
-When the dataset is small (under ~1 million rows), Doris’s exact K-Nearest Neighbor search performance is sufficient, providing 100% recall and precision. As the dataset grows, however, most users are willing to trade a small amount of recall/accuracy for significantly lower latency. The problem then becomes Approximate Nearest Neighbor (ANN) search.
 
 ## Approximate Nearest Neighbor Search
 
@@ -100,38 +91,7 @@ SELECT count(*) FROM sift_1M
 |  1000000 |
 +----------+
 ```
-
-The SIFT dataset ships with a ground-truth set for result validation. Pick one query vector and first run an exact Top-N using the precise distance:
-
-```sql
-SELECT id,
-       L2_distance(
-        embedding,
-        [0,11,77,24,3,0,0,0,28,70,125,8,0,0,0,0,44,35,50,45,9,0,0,0,4,0,4,56,18,0,3,9,16,17,59,10,10,8,57,57,100,105,125,41,1,0,6,92,8,14,73,125,29,7,0,5,0,0,8,124,66,6,3,1,63,5,0,1,49,32,17,35,125,21,0,3,2,12,6,109,21,0,0,35,74,125,14,23,0,0,6,50,25,70,64,7,59,18,7,16,22,5,0,1,125,23,1,0,7,30,14,32,4,0,2,2,59,125,19,4,0,0,2,1,6,53,33,2]
-       ) AS distance
-FROM sift_1m
-ORDER BY distance
-LIMIT 10;
---------------
-
-+--------+----------+
-| id     | distance |
-+--------+----------+
-| 178811 | 210.1595 |
-| 177646 | 217.0161 |
-| 181997 | 218.5406 |
-| 181605 | 219.2989 |
-| 821938 | 221.7228 |
-| 807785 | 226.7135 |
-| 716433 | 227.3148 |
-| 358802 | 230.7314 |
-| 803100 | 230.9112 |
-| 866737 | 231.6441 |
-+--------+----------+
-10 rows in set (0.29 sec)
-```
-
-When using `l2_distance` or `inner_product`, Doris computes the distance between the query vector and all 1,000,000 candidate vectors, then applies a TopN operator globally. Using `l2_distance_approximate` / `inner_product_approximate` triggers the index path:
+Using `l2_distance_approximate` / `inner_product_approximate` triggers the ANN index path. The function must match the index `metric_type` exactly (e.g., `metric_type=l2_distance` → use `l2_distance_approximate`; `metric_type=inner_product` → use `inner_product_approximate`). For ordering: L2 uses ascending distance (smaller is closer); inner product uses descending score (larger is closer).
 
 ```sql
 SELECT id,
@@ -139,7 +99,7 @@ SELECT id,
         embedding,
         [0,11,77,24,3,0,0,0,28,70,125,8,0,0,0,0,44,35,50,45,9,0,0,0,4,0,4,56,18,0,3,9,16,17,59,10,10,8,57,57,100,105,125,41,1,0,6,92,8,14,73,125,29,7,0,5,0,0,8,124,66,6,3,1,63,5,0,1,49,32,17,35,125,21,0,3,2,12,6,109,21,0,0,35,74,125,14,23,0,0,6,50,25,70,64,7,59,18,7,16,22,5,0,1,125,23,1,0,7,30,14,32,4,0,2,2,59,125,19,4,0,0,2,1,6,53,33,2]
        ) AS distance
-FROM sift_1m
+FROM sift_1M
 ORDER BY distance
 LIMIT 10;
 --------------
@@ -161,11 +121,18 @@ LIMIT 10;
 10 rows in set (0.02 sec)
 ```
 
-With the ANN index, query latency in this example drops from about 290 ms to 20 ms.
+To compare with exact ground truth, use `l2_distance` or `inner_product` (without the `_approximate` suffix). In this example, exact search takes ~290 ms:
+```
+10 rows in set (0.29 sec)
+```
 
-ANN indexes are built at the segment granularity. Because tables are distributed, after each segment returns its local TopN, the TopN operator merges results across tablets and segments to produce the global TopN.
+With the ANN index, query latency drops from ~290 ms to ~20 ms in this example.
 
-Note: When `metric_type = l2_distance`, a smaller distance means closer vectors. For `inner_product`, a larger value means closer vectors. Therefore, if using `inner_product`, you must use `ORDER BY dist DESC` to obtain TopN via the index.
+ANN indexes are built at segment granularity. In distributed tables, each segment returns its local TopN; then the TopN operator merges results across tablets and segments to produce the global TopN.
+
+Note on ordering:
+- For `metric_type = l2_distance`, smaller distance = closer vectors → use `ORDER BY dist ASC`.
+- For `metric_type = inner_product`, larger value = closer vectors → use `ORDER BY dist DESC` to obtain TopN via the index.
 
 ## Approximate Range Search
 
@@ -175,7 +142,7 @@ Example SQL:
 
 ```sql
 SELECT count(*)
-FROM   sift_1m
+FROM   sift_1M
 WHERE  l2_distance_approximate(
         embedding,
         [0,11,77,24,3,0,0,0,28,70,125,8,0,0,0,0,44,35,50,45,9,0,0,0,4,0,4,56,18,0,3,9,16,17,59,10,10,8,57,57,100,105,125,41,1,0,6,92,8,14,73,125,29,7,0,5,0,0,8,124,66,6,3,1,63,5,0,1,49,32,17,35,125,21,0,3,2,12,6,109,21,0,0,35,74,125,14,23,0,0,6,50,25,70,64,7,59,18,7,16,22,5,0,1,125,23,1,0,7,30,14,32,4,0,2,2,59,125,19,4,0,0,2,1,6,53,33,2])
@@ -416,3 +383,4 @@ In the era of AI, Python has become the mainstream language for data processing 
 4. If the distance function in SQL does not match the metric type defined in the index DDL, Doris cannot use the ANN index for TopN—even if you call `l2_distance_approximate` / `inner_product_approximate`.
 5. For metric type `inner_product`, only `ORDER BY inner_product_approximate(...) DESC LIMIT N` (DESC required) can be accelerated by the ANN index.
 6. The first parameter of `xxx_approximate()` must be a ColumnArray, and the second must be a CAST or ArrayLiteral. Reversing them triggers brute-force search.
+

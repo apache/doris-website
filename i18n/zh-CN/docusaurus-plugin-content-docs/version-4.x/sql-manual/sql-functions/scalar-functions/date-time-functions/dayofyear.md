@@ -1,7 +1,8 @@
 ---
 {
     "title": "DAYOFYEAR",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "DAYOFYEAR 函数用于计算日期或时间表达式对应的当年中天数，即该日期是当年的第几天。返回值为整数，范围从 1（1 月 1 日）到 366（闰年 12 月 31 日）。"
 }
 ---
 

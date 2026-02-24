@@ -1,7 +1,8 @@
 ---
 {
-"title": "数据湖查询调优",
-"language": "zh-CN"
+    "title": "数据湖查询调优",
+    "language": "zh-CN",
+    "description": "本文档主要介绍在针对湖上数据（Hive、Iceberg、Paimon 等）查询的优化手段和优化策略。"
 }
 ---
 

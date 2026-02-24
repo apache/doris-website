@@ -1,7 +1,8 @@
 ---
 {
     "title": "NUMBERS",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "表函数，生成一张只含有一列的临时表，列名为number，如果指定了constvalue，则所有元素值均为constvalue，否则为[0,number) 递增。"
 }
 ---
 

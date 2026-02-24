@@ -1,7 +1,8 @@
 ---
 {
-"title": "Built-in Authorization",
-"language": "en"
+    "title": "Built-in Authorization",
+    "language": "en",
+    "description": "Authorization refers to the mechanism by which user identities are restricted in accessing and operating Doris resources."
 }
 ---
 

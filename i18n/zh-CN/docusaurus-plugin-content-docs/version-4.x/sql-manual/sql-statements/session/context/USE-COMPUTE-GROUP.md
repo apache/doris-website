@@ -1,7 +1,8 @@
 ---
 {
     "title": "USE COMPUTE GROUP",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "在存算分离版本中，指定使用计算集群"
 }
 ---
 

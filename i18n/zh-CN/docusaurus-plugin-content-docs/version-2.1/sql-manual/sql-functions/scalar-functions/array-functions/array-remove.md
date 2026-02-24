@@ -1,7 +1,8 @@
 ---
 {
     "title": "ARRAY_REMOVE",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "移除数组中所有的指定元素"
 }
 ---
 

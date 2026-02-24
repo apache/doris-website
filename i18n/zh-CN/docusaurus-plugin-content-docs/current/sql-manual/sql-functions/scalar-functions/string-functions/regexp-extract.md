@@ -1,7 +1,8 @@
 ---
 {
     "title": "REGEXP_EXTRACT",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "此函数用于对给定字符串 STR 执行正则匹配，并提取符合指定模式的第 POS 个匹配部分。若函数要返回匹配结果，该模式必须与 STR 的某些部分完全匹配。"
 }
 ---
 

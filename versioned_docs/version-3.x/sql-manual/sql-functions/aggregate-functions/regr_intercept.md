@@ -1,7 +1,8 @@
 ---
 {
     "title": "REGR_INTERCEPT",
-    "language": "en"
+    "language": "en",
+    "description": "REGRINTERCEPT is used to calculate the y-intercept of the least squares-fit linear equation for a set of number pairs."
 }
 ---
 

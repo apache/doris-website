@@ -1,7 +1,8 @@
 ---
 {
     "title": "SHOW-CATALOGS",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "该语句用于显示已存在是数据目录（catalog）"
 }
 ---
 

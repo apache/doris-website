@@ -1,7 +1,8 @@
 ---
 {
     "title": "Table Query Plan Action",
-    "language": "en"
+    "language": "en",
+    "description": "Given a SQL, it is used to obtain the query plan corresponding to the SQL."
 }
 ---
 

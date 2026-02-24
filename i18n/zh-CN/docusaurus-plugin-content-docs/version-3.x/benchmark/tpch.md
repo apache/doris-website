@@ -1,7 +1,8 @@
 ---
 {
     "title": "TPC-H Benchmark",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "TPC-H 是一个决策支持基准（Decision Support Benchmark），它由一套面向业务的特别查询和并发数据修改组成。查询和填充数据库的数据具有广泛的行业相关性。这个基准测试演示了检查大量数据、执行高度复杂的查询并回答关键业务问题的决策支持系统。"
 }
 ---
 
@@ -56,7 +57,7 @@ TPC-H 22 个测试查询语句： [TPCH-Query-SQL](https://github.com/apache/dor
 
 这里我们使用 Apache Doris 3.0.3-rc03 (存算分离模式) 和 Apache Doris 2.1.7-rc03 版本进行对比测试，测试结果如下：
 
-| Query     | Apache Doris 3.0.3-rc03 Compute-Storage Coupled Mode (ms) | Apache Doris 2.1.7-rc03 (ms) |
+| Query     | Apache Doris 3.0.3-rc03 Compute-Storage Decoupled Mode (ms) | Apache Doris 2.1.7-rc03 (ms) |
 |-----------|-----------------------------------------------------------|------------------------------|
 | q01       | 13390                                                     | 11880                        |
 | q02       | 250                                                       | 280                          |
@@ -851,4 +852,3 @@ order by
     cntrycode;
 
 ```
-

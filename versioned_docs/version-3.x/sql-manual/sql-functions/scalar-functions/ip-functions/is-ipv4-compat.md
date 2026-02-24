@@ -1,7 +1,8 @@
 ---
 {
     "title": "IS_IPV4_COMPAT",
-    "language": "en"
+    "language": "en",
+    "description": "This function takes an IPv6 address represented in numeric form as a binary string, as returned by INET6ATON()."
 }
 ---
 

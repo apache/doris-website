@@ -1,7 +1,8 @@
 ---
 {
     "title": "COSINE_DISTANCE",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "计算两个向量（向量值为坐标）之间的余弦距离"
 }
 ---
 

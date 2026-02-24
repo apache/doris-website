@@ -1,7 +1,8 @@
 ---
 {
     "title": "Auto Partition",
-    "language": "en"
+    "language": "en",
+    "description": "The Auto Partition feature supports automatic detection of whether the corresponding partition exists during the data import process."
 }
 ---
 

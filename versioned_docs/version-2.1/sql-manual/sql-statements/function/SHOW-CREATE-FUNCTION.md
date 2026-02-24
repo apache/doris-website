@@ -1,7 +1,8 @@
 ---
 {
     "title": "SHOW CREATE FUNCTION",
-    "language": "en"
+    "language": "en",
+    "description": "This statement is used to show the creation statement of a user-defined function"
 }
 ---
 

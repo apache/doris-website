@@ -1,7 +1,8 @@
 ---
 {
     "title": "内存问题 FAQ",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "Doris BE 进程内存分析主要使用 be/log/be.INFO 日志、BE 进程内存监控 (Metrics)、Doris Bvar 统计，如果触发了 OOM Killer 需要收集 dmesg -T 执行结果，如果分析查询或导入任务的内存需要收集 Query Profile，"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
-"title": "CANCEL WARM UP",
-"language": "zh-CN"
+    "title": "CANCEL WARM UP",
+    "language": "zh-CN",
+    "description": "用于在 Doris 终止指定的预热作业。"
 }
 ---
 

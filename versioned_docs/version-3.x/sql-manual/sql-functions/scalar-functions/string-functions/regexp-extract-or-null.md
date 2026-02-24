@@ -1,7 +1,8 @@
 ---
 {
     "title": "REGEXP_EXTRACT_OR_NULL",
-    "language": "en"
+    "language": "en",
+    "description": "Extract the first substring that matches the target regular expression pattern from the text string,"
 }
 ---
 

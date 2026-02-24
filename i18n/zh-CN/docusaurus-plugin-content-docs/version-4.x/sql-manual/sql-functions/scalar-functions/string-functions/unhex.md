@@ -1,7 +1,8 @@
 ---
 {
     "title": "UNHEX",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "UNHEX 函数用于将十六进制字符串转换为原始字符串，是 HEX 函数的逆操作。该函数将每两个十六进制字符（0-9, A-F, a-f）转换为一个字节。UNHEXNULL 函数功能相同，但在遇到无效输入时返回 NULL 而不是空字符串。"
 }
 ---
 

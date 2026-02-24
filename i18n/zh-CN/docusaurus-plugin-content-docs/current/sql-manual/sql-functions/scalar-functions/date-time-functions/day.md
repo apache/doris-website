@@ -1,7 +1,8 @@
 ---
 {
     "title": "DAY",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "DAY 函数用于提取日期或时间表达式中的“日”部分，返回值为整数，范围从 1 到 31（具体取决于月份和年份）。"
 }
 ---
 

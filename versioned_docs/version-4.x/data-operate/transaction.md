@@ -1,7 +1,8 @@
 ---
 {
     "title": "Transaction",
-    "language": "en"
+    "language": "en",
+    "description": "A transaction is an operation that contains one or more SQL statements."
 }
 ---
 

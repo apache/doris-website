@@ -1,7 +1,8 @@
 ---
 {
-"title": "集群规划",
-"language": "zh-CN"
+    "title": "集群规划",
+    "language": "zh-CN",
+    "description": "在部署 Doris 时，可以根据业务选择存算一体或存算分离架构："
 }
 ---
 

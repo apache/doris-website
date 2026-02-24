@@ -1,7 +1,8 @@
 ---
 {
     "title": "ARRAY_ZIP",
-    "language": "en"
+    "language": "en",
+    "description": "The ARRAYZIP function combines multiple ARRAYs (e.g., arr1, arr2, ... , arrN) element-wise into a single ARRAY<STRUCT>,"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
-   "title": "FQDN",
-   "language": "en"
+    "title": "FQDN",
+    "language": "en",
+    "description": "This article introduces how to enable the use of Apache Doris based on FQDN (Fully Qualified Domain Name)."
 }
 ---
 

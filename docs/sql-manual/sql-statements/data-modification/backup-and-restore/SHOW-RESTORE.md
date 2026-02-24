@@ -1,7 +1,8 @@
 ---
 {
     "title": "SHOW RESTORE",
-    "language": "en"
+    "language": "en",
+    "description": "This statement is used to view RESTORE tasks"
 }
 ---
 
@@ -12,7 +13,7 @@ This statement is used to view RESTORE tasks
 ## Syntax
 
 ```SQL
-SHOW [BRIEF] RESTORE [FROM <db_name>]
+SHOW [BRIEF] [GLOBAL] RESTORE [FROM <db_name>]
 ```
 
 ## Parameters
@@ -56,3 +57,8 @@ The name of the database to which the recovery task belongs.
 SHOW RESTORE FROM example_db;
 ```
 
+2. View the latest GLOBAL RESTORE task.
+
+```sql
+SHOW GLOBAL RESTORE;
+```

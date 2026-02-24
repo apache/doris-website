@@ -1,7 +1,8 @@
 ---
 {
     "title": "STARTS_WITH",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "STARTSWITH 函数用于检查字符串是否以指定的前缀开头。这是一个布尔函数，执行精确的前缀匹配，大小写敏感。"
 }
 ---
 

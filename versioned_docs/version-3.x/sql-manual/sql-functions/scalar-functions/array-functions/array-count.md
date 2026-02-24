@@ -1,7 +1,8 @@
 ---
 {
     "title": "ARRAY_COUNT",
-    "language": "en"
+    "language": "en",
+    "description": "Use lambda expressions as input parameters to perform corresponding expression calculations on the internal data of other input ARRAY parameters."
 }
 ---
 

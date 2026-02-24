@@ -1,7 +1,8 @@
 ---
 {
     "title": "ST_INTERSECTS",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "判断两个几何图形是否相交，即存在至少一个公共点（包括边界接触或内部重叠）"
 }
 ---
 

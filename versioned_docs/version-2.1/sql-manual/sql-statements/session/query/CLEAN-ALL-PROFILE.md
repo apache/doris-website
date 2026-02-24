@@ -1,7 +1,8 @@
 ---
 {
     "title": "CLEAN ALL PROFILE",
-    "language": "en"
+    "language": "en",
+    "description": "This command is used to manually clear all historical query or load profiles."
 }
 ---
 

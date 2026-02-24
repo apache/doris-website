@@ -1,7 +1,8 @@
 ---
 {
     "title": "BITMAP_MAX",
-    "language": "en"
+    "language": "en",
+    "description": "Computes and returns the maximum value in a Bitmap."
 }
 ---
 

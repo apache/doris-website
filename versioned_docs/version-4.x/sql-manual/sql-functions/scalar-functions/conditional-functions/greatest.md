@@ -1,7 +1,8 @@
 ---
 {
     "title": "GREATEST",
-    "language": "en"
+    "language": "en",
+    "description": "Compares multiple expressions and returns the largest value among them. If any argument is NULL, returns NULL."
 }
 ---
 

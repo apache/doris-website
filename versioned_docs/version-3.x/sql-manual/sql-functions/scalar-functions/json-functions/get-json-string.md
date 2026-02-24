@@ -1,7 +1,8 @@
 ---
 {
     "title": "GET_JSON_STRING",
-    "language": "en"
+    "language": "en",
+    "description": "This function is used to extract a field's value from a JSON document and convert it to STRING type. It returns the field value at the specified path."
 }
 ---
 

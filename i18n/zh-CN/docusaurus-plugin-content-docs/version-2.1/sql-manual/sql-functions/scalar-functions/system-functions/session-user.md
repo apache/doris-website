@@ -1,7 +1,8 @@
 ---
 {
     "title": "SESSION_USER",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "获取 Doris 连接的当前用户名和 IP，兼容 MySQL 协议。"
 }
 ---
 

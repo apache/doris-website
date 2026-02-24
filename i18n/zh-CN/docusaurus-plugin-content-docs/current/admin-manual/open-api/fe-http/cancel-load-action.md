@@ -1,7 +1,8 @@
 ---
 {
     "title": "Cancel Load Action",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "用于取消掉指定 label 的导入任务。 执行完成后，会以 Json 格式返回这次导入的相关内容。当前包括以下字段 Status: 是否成功 cancel Success: 成功 cancel 事务 其他：cancel 失败 Message: 具体的失败信息"
 }
 ---
 

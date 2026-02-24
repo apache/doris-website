@@ -1,7 +1,8 @@
 ---
 {
     "title": "UPDATE",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "该语句是为进行对数据进行更新的操作，UPDATE 语句目前仅支持 UNIQUE KEY 模型。"
 }
 ---
 

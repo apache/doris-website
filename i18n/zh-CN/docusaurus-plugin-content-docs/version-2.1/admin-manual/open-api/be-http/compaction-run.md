@@ -1,7 +1,8 @@
 ---
 {
     "title": "触发 Compaction",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "POST /api/compaction/run?tableid={int}&compacttype=full 注意，tableid=xxx 只有在 compacttype=full 时指定才会生效。"
 }
 ---
 

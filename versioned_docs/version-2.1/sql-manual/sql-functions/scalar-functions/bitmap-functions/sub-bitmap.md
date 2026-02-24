@@ -1,7 +1,8 @@
 ---
 {
     "title": "SUB_BITMAP",
-    "language": "en"
+    "language": "en",
+    "description": "Extracts a subset of Bitmap elements starting from a specified position and limited by a specified cardinality limit,"
 }
 ---
 

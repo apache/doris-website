@@ -1,9 +1,9 @@
 ---
 {
     "title": "Integration with Glue + AWS S3 Tables",
-    "language": "en"
+    "language": "en",
+    "description": "AWS S3 Tables is a special type of S3 Bucket that provides read and write interfaces compatible with Apache Iceberg table format standards,"
 }
-
 ---
 
 [AWS S3 Tables](https://aws.amazon.com/s3/features/tables/) is a special type of S3 Bucket that provides read and write interfaces compatible with Apache Iceberg table format standards, built on Amazon S3, offering the same durability, availability, scalability, and performance characteristics as S3 itself. Additionally, S3 Tables provides the following features:
@@ -33,17 +33,19 @@ Here we create a Table Bucket named doris-s3-table-bucket. After creation, we wi
 
 ### 02 Create Iceberg Catalog
 
-- Create an Iceberg Catalog of type `s3tables`
+- Connecting to `s3 tables` using AWS S3 Table Rest Catalog
 
     ```sql
-    CREATE CATALOG iceberg_s3 PROPERTIES (
+    CREATE CATALOG aws_s3_tables PROPERTIES (
         'type' = 'iceberg',
-        'iceberg.catalog.type' = 's3tables',
-        'warehouse' = 'arn:aws:s3tables:<region>:<acount_id>:bucket/<s3_table_bucket_name>',
-        's3.region' = '<region>',
-        's3.endpoint' = 's3.<region>.amazonaws.com',
-        's3.access_key' = '<ak>',
-        's3.secret_key' = '<sk>'
+        'iceberg.catalog.type' = 'rest',
+        'warehouse' = 'arn:aws:s3tables:us-east-1:<account_id>:bucket/<s3_table_bucket_name>',
+        'iceberg.rest.uri' = 'https://s3tables.us-east-1.amazonaws.com/iceberg',
+        'iceberg.rest.sigv4-enabled' = 'true',
+        'iceberg.rest.signing-name' = 's3tables',
+        'iceberg.rest.signing-region' = 'us-east-1',
+        'iceberg.rest.access-key-id' = '<ak>',
+        'iceberg.rest.secret-access-key' = '<sk>'
     );
     ```
 

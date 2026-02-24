@@ -1,7 +1,8 @@
 ---
 {
     "title": "聚合模型",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "Doris 的聚合模型专为高效处理大规模数据查询中的聚合操作设计。它通过预聚合数据，减少重复计算，提升查询性能。聚合模型只存储聚合后的数据，节省存储空间并加速查询。"
 }
 ---
 
@@ -145,7 +146,12 @@ select group_concat_merge(v2) from aggstate;
 如果不想要最终的聚合结果，而希望保留中间结果，可以使用 `union` 操作：
 
 ```sql
-insert into aggstate select 3,sum_union(k2),group_concat_union(k3) from aggstate;
+insert into aggstate select 3,sum(v1),group_concat_union(v2) from aggstate;
+
+select sum(v1), group_concat_merge(v2) from aggstate;
+
+select sum(v1), group_concat_merge(v2) from aggstate where k1 != 2;
+
 ```
 
 此时表中计算如下：

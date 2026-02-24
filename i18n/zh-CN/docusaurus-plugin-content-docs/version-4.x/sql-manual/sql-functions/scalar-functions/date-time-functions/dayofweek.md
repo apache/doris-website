@@ -1,7 +1,8 @@
 ---
 {
     "title": "DAYOFWEEK",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "DAYOFWEEK 函数用于返回日期或时间表达式对应的星期索引值，遵循星期日为 1，星期一为 2，……，星期六为 7 的规则。"
 }
 ---
 

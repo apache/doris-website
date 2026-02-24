@@ -1,7 +1,8 @@
 ---
 {
     "title": "SET FRONTEND CONFIG",
-    "language": "en"
+    "language": "en",
+    "description": "This statement is used to set the configuration items of the cluster (currently only supports setting FE configuration items)."
 }
 ---
 

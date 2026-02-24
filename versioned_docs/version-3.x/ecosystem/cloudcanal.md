@@ -1,7 +1,8 @@
 ---
 {
-  "title": "BladePipe",
-  "language": "en"
+    "title": "BladePipe",
+    "language": "en",
+    "description": "BladePipe is a real-time end-to-end data replication tool, moving data between 30+ databases, message queues, search engines, caching,"
 }
 ---
 

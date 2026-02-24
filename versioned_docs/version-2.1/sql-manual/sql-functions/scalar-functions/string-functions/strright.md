@@ -1,7 +1,8 @@
 ---
 {
     "title": "STRRIGHT",
-    "language": "en"
+    "language": "en",
+    "description": "The STRRIGHT function returns a specified number of characters from the right side of a string. The length is measured in UTF8 characters."
 }
 ---
 

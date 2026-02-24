@@ -1,9 +1,13 @@
 ---
 {
-    "title": "IPV4_NUM_TO_STRING",
-    "language": "zh-CN"
+    "title": "IPV4_NUM_TO_STRING | Ip Functions",
+    "language": "zh-CN",
+    "description": "接受一个类型为 Int16、Int32、Int64 且大端表示的 IPv4 的地址，返回相应 IPv4 的字符串表现形式，格式为 A.B.C.D（以点分割的十进制数字）。",
+    "sidebar_label": "IPV4_NUM_TO_STRING"
 }
 ---
+
+# IPV4_NUM_TO_STRING
 
 ## 描述
 接受一个类型为 Int16、Int32、Int64 且大端表示的 IPv4 的地址，返回相应 IPv4 的字符串表现形式，格式为 A.B.C.D（以点分割的十进制数字）。
@@ -50,3 +54,4 @@ select num,ipv4_num_to_string(num) from ipv4_bi;
 | 4294967296 | NULL                      |
 +------------+---------------------------+
 ```
+

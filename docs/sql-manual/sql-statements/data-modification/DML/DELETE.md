@@ -1,7 +1,8 @@
 ---
 {
     "title": "DELETE",
-    "language": "en"
+    "language": "en",
+    "description": "This statement is used to conditionally delete data in the specified table (base index) partition."
 }
 ---
 

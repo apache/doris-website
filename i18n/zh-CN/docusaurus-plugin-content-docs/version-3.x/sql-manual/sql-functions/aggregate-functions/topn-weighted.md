@@ -1,7 +1,8 @@
 ---
 {
     "title": "TOPN_WEIGHTED",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "TOPNWEIGHTED 函数返回指定列中出现频率最高的 N 个值，并且可以为每个值指定权重。与普通的 TOPN 函数不同，TOPNWEIGHTED 允许通过权重来调整值的重要性。"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "SET DEFAULT STORAGE VAULT",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "该语句用于在 Doris 中设置默认存储库。默认存储库用于存储内部或系统表的数据。如果未设置默认存储库，Doris 将无法正常运行。一旦设置了默认存储库，就无法移除它。"
 }
 ---
 

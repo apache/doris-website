@@ -1,7 +1,8 @@
 ---
 {
     "title": "IS_IPV4_COMPAT",
-    "language": "en"
+    "language": "en",
+    "description": "Checks if an IPv6 address is an IPv4-compatible address."
 }
 ---
 

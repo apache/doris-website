@@ -1,7 +1,8 @@
 ---
 {
     "title": "审计日志",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "Doris 提供了对于数据库操作的审计能力，可以记录用户对数据库的登陆、查询、修改操作。在 Doris 中，可以直接通过内置系统表查询审计日志，也可以直接查看 Doris 的审计日志文件。"
 }
 ---
 

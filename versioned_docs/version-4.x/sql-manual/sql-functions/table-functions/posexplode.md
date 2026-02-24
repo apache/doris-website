@@ -1,7 +1,8 @@
 ---
 {
-"title": "POSEXPLODE",
-"language": "en"
+    "title": "POSEXPLODE",
+    "language": "en",
+    "description": "The posexplode table function expands the <array> column into multiple rows and adds a column indicating the position, returning a STRUCT type."
 }
 ---
 

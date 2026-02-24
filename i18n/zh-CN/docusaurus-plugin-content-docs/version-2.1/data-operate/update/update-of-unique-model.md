@@ -1,7 +1,8 @@
 ---
 {
     "title": "主键模型的导入更新",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "这篇文档主要介绍 Doris 主键模型基于导入的更新。"
 }
 ---
 

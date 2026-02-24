@@ -1,7 +1,8 @@
 ---
 {
     "title": "Elasticsearch Catalog",
-    "language": "en"
+    "language": "en",
+    "description": "Elasticsearch Catalog not only supports automatic mapping of ES metadata,"
 }
 ---
 

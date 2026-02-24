@@ -1,7 +1,8 @@
 ---
 {
-   "title": "Power BI",
-   "language": "en"
+    "title": "Power BI",
+    "language": "en",
+    "description": "Microsoft Power BI can query from Apache Doris or load data into memory."
 }
 ---
 

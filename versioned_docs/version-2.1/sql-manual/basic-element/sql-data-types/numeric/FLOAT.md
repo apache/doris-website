@@ -1,7 +1,8 @@
 ---
 {
     "title": "FLOAT",
-    "language": "en"
+    "language": "en",
+    "description": "FLOAT 4-byte floating point number"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
-  "title": "ADMIN COPY TABLET",
-  "language": "en"
+    "title": "ADMIN COPY TABLET",
+    "language": "en",
+    "description": "This statement is used to make a snapshot for the specified tablet, mainly used to load the tablet locally to reproduce the problem."
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "Memory Tracker",
-    "language": "en"
+    "language": "en",
+    "description": "Doris BE uses Memory Tracker to record process memory usage, including memory used in the life cycle of tasks such as query, load, compaction,"
 }
 ---
 

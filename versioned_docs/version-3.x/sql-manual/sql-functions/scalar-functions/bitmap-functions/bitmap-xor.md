@@ -1,7 +1,8 @@
 ---
 {
     "title": "BITMAP_XOR",
-    "language": "en"
+    "language": "en",
+    "description": "Computes the symmetric difference (XOR operation) of two or more input Bitmaps and returns a new Bitmap."
 }
 ---
 

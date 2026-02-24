@@ -1,7 +1,8 @@
 ---
 {
     "title": "Debug Point",
-    "language": "en"
+    "language": "en",
+    "description": "Debug point is a piece of code, inserted into FE or BE code, when program running into this code,"
 }
 ---
 

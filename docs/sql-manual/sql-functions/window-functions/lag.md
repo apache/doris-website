@@ -1,7 +1,8 @@
 ---
 {
     "title": "LAG",
-    "language": "en"
+    "language": "en",
+    "description": "LAG() is a window function that accesses data from previous rows without performing a self-join."
 }
 ---
 

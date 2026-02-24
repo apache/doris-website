@@ -1,7 +1,8 @@
 ---
 {
     "title": "Colocation Join",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "Colocation Join 旨在为某些 Join 查询提供本地性优化，来减少数据在节点间的传输耗时，加速查询。本文档主要介绍 Colocation Join 的原理、实现、使用方式和注意事项。"
 }
 ---
 

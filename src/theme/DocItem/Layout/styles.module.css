@@ -20,5 +20,5 @@
   cursor: pointer;
 }
 .footerBtn:hover {
-  border: 1px solid #444FD9;
+  border: 1px solid var(--ifm-color-primary);
 }

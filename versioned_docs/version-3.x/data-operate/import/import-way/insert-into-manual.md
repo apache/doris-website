@@ -1,7 +1,8 @@
 ---
 {
     "title": "Insert Into Select",
-    "language": "en"
+    "language": "en",
+    "description": "The INSERT INTO statement supports importing the results of a Doris query into another table. INSERT INTO is a synchronous import method,"
 }
 ---
 

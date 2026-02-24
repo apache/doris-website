@@ -1,7 +1,8 @@
 ---
 {
     "title": "SHOW QUERY STATS",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "该语句用于展示数据库中历史查询命中的库表列的情况"
 }
 ---
 

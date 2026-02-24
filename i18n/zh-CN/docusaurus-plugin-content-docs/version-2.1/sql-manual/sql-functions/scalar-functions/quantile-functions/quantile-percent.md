@@ -1,7 +1,8 @@
 ---
 {
     "title": "QUANTILE_PERCENT",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "QUANTILEPERCENT 函数用于计算给定百分比的分位数值。它接受两个参数：一个 quantilestate 列和一个表示百分比的常量浮点数。该函数返回一个浮点数，表示给定百分比位置的分位数值。"
 }
 ---
 

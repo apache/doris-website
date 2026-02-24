@@ -1,7 +1,8 @@
 ---
 {
     "title": "IBM Db2 JDBC Catalog",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "The Doris JDBC Catalog supports connecting to IBM Db2 databases through the standard JDBC interface."
 }
 ---
 
@@ -67,7 +68,7 @@ When mapping IBM Db2, Doris's Database corresponds to a Schema under the specifi
 | time             | string        |         |
 | clob             | string        |         |
 | xml              | string        |         |
-| BLOB             | varbinary     |Controlled by the `enable.mapping.varbinary` property of Catalog (supported since 4.0.3). The default is `false`, which maps to `string`; when `true`, it maps to `varbinary` type.|
+| BLOB             | varbinary     |Controlled by the `enable.mapping.varbinary` property of Catalog (supported since 4.0.2). The default is `false`, which maps to `string`; when `true`, it maps to `varbinary` type.|
 | other            | UNSUPPORTED   |         |
 
 ## Common Issues

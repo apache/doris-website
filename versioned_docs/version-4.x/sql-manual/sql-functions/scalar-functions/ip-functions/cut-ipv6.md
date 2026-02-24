@@ -1,7 +1,8 @@
 ---
 {
     "title": "CUT_IPV6",
-    "language": "en"
+    "language": "en",
+    "description": "Cuts a specified number of bytes from the end of an IPv6 address based on its type (IPv4-mapped or pure IPv6),"
 }
 ---
 

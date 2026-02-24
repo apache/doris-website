@@ -1,7 +1,8 @@
 ---
 {
-"title": "内置鉴权",
-"language": "zh-CN"
+    "title": "内置鉴权",
+    "language": "zh-CN",
+    "description": "鉴权是指根据用户身份限制其访问和操作 Doris 资源的机制。"
 }
 ---
 

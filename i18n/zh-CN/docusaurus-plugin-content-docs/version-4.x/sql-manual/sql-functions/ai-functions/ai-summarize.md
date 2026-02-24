@@ -1,7 +1,8 @@
 ---
 {
     "title": "AI_SUMMARIZE",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "用于生成文本的简明摘要"
 }
 ---
 

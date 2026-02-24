@@ -1,7 +1,8 @@
 ---
 {
     "title": "UUID",
-    "language": "en"
+    "language": "en",
+    "description": "Used to return a randomly generated UUID string."
 }
 ---
 

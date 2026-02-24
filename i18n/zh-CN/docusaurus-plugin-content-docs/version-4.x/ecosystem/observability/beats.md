@@ -1,7 +1,8 @@
 ---
 {
-"title": "Filebeat",
-"language": "zh-CN"
+    "title": "Filebeat",
+    "language": "zh-CN",
+    "description": "Beats 是一个数据采集 Agent，它支持自定义输出插件将数据写入存储系统，Beats Doris output plugin 是输出到 Doris 的插件。"
 }
 ---
 
@@ -23,7 +24,7 @@ Beats Doris output plugin 调用 [Doris Stream Load](../../data-operate/import/i
 
 ### 从官网下载
 
-https://apache-doris-releases.oss-accelerate.aliyuncs.com/extension/filebeat-doris-2.1.1
+https://download.selectdb.com/extension/filebeat-doris-2.1.1
 
 
 ### 从源码编译

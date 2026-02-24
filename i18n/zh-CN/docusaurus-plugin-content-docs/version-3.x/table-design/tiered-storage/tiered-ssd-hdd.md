@@ -1,7 +1,8 @@
 ---
 {
     "title": "SSD 和 HDD 层级存储",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "Doris 支持在不同磁盘类型（SSD 和 HDD）之间进行分层存储，结合动态分区功能，根据冷热数据的特性将数据从 SSD 动态迁移到 HDD。这种方式既降低了存储成本，又在热数据的读写上保持了高性能。"
 }
 ---
 

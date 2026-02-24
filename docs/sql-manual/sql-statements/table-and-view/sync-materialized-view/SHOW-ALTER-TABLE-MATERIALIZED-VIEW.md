@@ -1,7 +1,8 @@
 ---
 {
     "title": "SHOW ALTER TABLE MATERIALIZED VIEW",
-    "language": "en"
+    "language": "en",
+    "description": "Check the status of the synchronized materialized view build task."
 }
 ---
 

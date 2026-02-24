@@ -1,7 +1,8 @@
 ---
 {
     "title": "REGEXP_REPLACE_ONE",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "REGEXPREPLACEONE 函数是一个强大的工具，用于对给定字符串执行正则表达式匹配。它允许您查找并替换字符串中首次出现的特定模式。"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "做快照",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "该功能用于 tablet 做快照。"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "下载 load 日志",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "下载 load 错误日志文件。"
 }
 ---
 

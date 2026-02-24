@@ -1,7 +1,8 @@
 ---
 {
     "title": "SHOW BACKENDS",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "该语句用于查看 BE 节点的基本状态信息。"
 }
 ---
 

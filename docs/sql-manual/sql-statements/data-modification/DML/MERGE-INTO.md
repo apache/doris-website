@@ -1,7 +1,8 @@
 ---
 {
     "title": "MERGE-INTO",
-    "language": "en"
+    "language": "en",
+    "description": "Inserts, updates, and deletes values in a table that are based on values in a second table or a subquery."
 }
 ---
 

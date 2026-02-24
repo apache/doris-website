@@ -1,7 +1,8 @@
 ---
 {
     "title": "GRANT TO",
-    "language": "en"
+    "language": "en",
+    "description": "The GRANT command is used to:"
 }
 ---
 

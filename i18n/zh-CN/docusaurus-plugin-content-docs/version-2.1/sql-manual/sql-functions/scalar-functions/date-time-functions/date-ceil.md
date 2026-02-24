@@ -1,7 +1,8 @@
 ---
 {
     "title": "DATE_CEIL",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "dateceil 将日期转化为指定的时间间隔周期的最近上取整时刻。"
 }
 ---
 

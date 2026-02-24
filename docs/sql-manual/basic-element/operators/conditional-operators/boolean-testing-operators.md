@@ -1,7 +1,8 @@
 ---
 {
     "title": "Boolean Testing Operators",
-    "language": "en"
+    "language": "en",
+    "description": "This operator is used exclusively to check for TRUE, FALSE, or NULL. For an introduction to NULL, please refer to the \"Nulls\" section."
 }
 ---
 

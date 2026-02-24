@@ -1,7 +1,8 @@
 ---
 {
     "title": "MASK",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "MASK 函数主要作用是对数据进行屏蔽，以保护敏感信息，常用于数据脱敏场景。其行为默认是将输入的字符串中的大写字母转换为X，小写字母转换为x，数字转换为n。"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "HOUR_CEIL",
-    "language": "en"
+    "language": "en",
+    "description": "Converts the date to the nearest rounded-up timestamp of the specified time interval period."
 }
 ---
 

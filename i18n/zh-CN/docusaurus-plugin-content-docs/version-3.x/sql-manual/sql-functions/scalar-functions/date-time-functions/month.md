@@ -1,7 +1,8 @@
 ---
 {
     "title": "MONTH",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "从日期时间值中提取月份值。返回值范围为 1 到 12，分别代表一年中的 12 个月。"
 }
 ---
 

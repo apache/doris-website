@@ -1,7 +1,8 @@
 ---
 {
-"title": "SM3",
-"language": "en"
+    "title": "SM3",
+    "language": "en",
+    "description": "Calculation SM3 256-bit"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "MAP_SIZE",
-    "language": "en"
+    "language": "en",
+    "description": "Count the number of elements in a Map"
 }
 ---
 

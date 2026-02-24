@@ -1,7 +1,8 @@
 ---
 {
     "title": "SPACE",
-    "language": "en"
+    "language": "en",
+    "description": "Generate a string consisting of a specified number of spaces."
 }
 ---
 

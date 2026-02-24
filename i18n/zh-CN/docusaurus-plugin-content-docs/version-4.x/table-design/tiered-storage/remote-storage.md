@@ -1,7 +1,8 @@
 ---
 {
     "title": "远程存储",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "远程存储支持将冷数据放到外部存储（例如对象存储，HDFS）上。"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "CONCAT_WS",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "CONCATWS 函数（Concatenate With Separator）用于使用指定的分隔符连接多个字符串或数组。与 CONCAT 函数不同，CONCATWS 会自动跳过 NULL 值（但不跳过空字符串），并在非 NULL 值之间插入分隔符。该函数支持字符串参数和数组参数两种模式，"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
-"title": "BOOL_AND",
-"language": "zh-CN"
+    "title": "BOOL_AND",
+    "language": "zh-CN",
+    "description": "对表达式中所有非 NULL 值执行逻辑与（AND）聚合计算。"
 }
 ---
 

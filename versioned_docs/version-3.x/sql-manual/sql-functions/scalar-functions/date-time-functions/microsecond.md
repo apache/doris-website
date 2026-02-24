@@ -1,7 +1,8 @@
 ---
 {
     "title": "MICROSECOND",
-    "language": "en"
+    "language": "en",
+    "description": "Extracts the microsecond part from a datetime value. The returned range is from 0 to 999999."
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "Data Bucketing",
-    "language": "en"
+    "language": "en",
+    "description": "A partition can further be divided into different data buckets based on business logic. Each bucket will be stored as a physical data tablet."
 }
 ---
 
@@ -153,7 +154,7 @@ DISTRIBUTED BY HASH(region) BUCKETS AUTO
 properties("estimate_partition_size" = "20G")
 
 -- Set random bucket auto
-DISTRIBUTED BY HASH(region) BUCKETS AUTO
+DISTRIBUTED BY RANDOM BUCKETS AUTO
 properties("estimate_partition_size" = "20G")
 ```
 

@@ -1,9 +1,11 @@
 ---
 {
     "title": "Release 3.1.1",
-    "language": "en"
+    "language": "en",
+    "description": "Apache Doris 3.1.1 is a maintenance release that focuses on critical bug fixes, performance optimizations, and stability improvements."
 }
 ---
+
 ## Overview
 
 Apache Doris 3.1.1 is a maintenance release that focuses on critical bug fixes, performance optimizations, and stability improvements. This release includes numerous fixes for compaction, loading, query processing, and cloud functionality, making it more robust for production environments.

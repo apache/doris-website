@@ -1,7 +1,8 @@
 ---
 {
     "title": "ADMIN SET REPLICA VERSION",
-    "language": "en"
+    "language": "en",
+    "description": "This statement is used to manually set the version, last successful version, and last failed version of a specified replica."
 }
 ---
 

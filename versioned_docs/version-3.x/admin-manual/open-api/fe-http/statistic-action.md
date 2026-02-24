@@ -1,7 +1,8 @@
 ---
 {
     "title": "Statistic Action",
-    "language": "en"
+    "language": "en",
+    "description": "获取集群统计信息、库表数量等。"
 }
 ---
 

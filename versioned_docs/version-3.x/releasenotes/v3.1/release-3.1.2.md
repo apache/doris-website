@@ -1,7 +1,8 @@
 ---
 {
     "title": "Release 3.1.2",
-    "language": "en"
+    "language": "en",
+    "description": "#56276"
 }
 ---
 

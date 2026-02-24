@@ -1,7 +1,8 @@
 ---
 {
-   "title": "Config FE",
-   "language": "en"
+    "title": "Config FE",
+    "language": "en",
+    "description": "FE is primarily responsible for query parsing, planning, and related tasks in decoupled storage and compute mode."
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "使用 Hint 控制代价改写",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "查询优化器在生成执行计划的过程中，会应用一系列规则。这些规则主要分为两类：基于规则的优化（Rule-Based Optimizer 即 RBO）和基于代价的优化（Cost-Based Optimizer 即 CBO） 。"
 }
 ---
 

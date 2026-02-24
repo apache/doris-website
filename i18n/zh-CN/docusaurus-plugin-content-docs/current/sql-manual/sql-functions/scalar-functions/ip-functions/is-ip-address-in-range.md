@@ -1,7 +1,8 @@
 ---
 {
     "title": "IS_IP_ADDRESS_IN_RANGE",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "检查指定的 IP 地址是否在给定的 CIDR 网段范围内。支持 IPv4 和 IPv6 地址。"
 }
 ---
 

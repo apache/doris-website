@@ -1,7 +1,8 @@
 ---
 {
     "title": "HOUR",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "HOUR 函数用于提取日期时间或时间表达式中的小时部分。该函数支持多种时间类型输入，包括 DATE/DATETIME、TIME ，返回对应小时数值。"
 }
 ---
 

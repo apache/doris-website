@@ -1,7 +1,8 @@
 ---
 {
     "title": "backend_configuration",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "查看所有 Backend 的配置。"
 }
 ---
 

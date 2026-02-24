@@ -1,7 +1,8 @@
 ---
 {
     "title": "FILE",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "File 表函数（table-valued-function,tvf）是对 S3、HDFS 和 LOCAL 等表函数的封装，提供了一个统一的接口来访问不同存储系统上的文件内容。"
 }
 ---
 

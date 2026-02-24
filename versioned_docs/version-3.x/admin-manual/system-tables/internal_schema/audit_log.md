@@ -1,7 +1,8 @@
 ---
 {
     "title": "audit_log",
-    "language": "en"
+    "language": "en",
+    "description": "Store audit logs"
 }
 ---
 

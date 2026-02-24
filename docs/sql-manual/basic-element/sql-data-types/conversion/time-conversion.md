@@ -1,7 +1,8 @@
 ---
 {
     "title": "Cast to TIME Type",
-    "language": "en"
+    "language": "en",
+    "description": "Valid range for TIME type is [-838:59:59.999999, 838:59:59.999999]."
 }
 ---
 

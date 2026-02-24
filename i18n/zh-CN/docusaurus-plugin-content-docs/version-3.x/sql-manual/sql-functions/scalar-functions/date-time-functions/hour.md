@@ -1,7 +1,8 @@
 ---
 {
     "title": "HOUR",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "获得日期时间中的小时的信息。"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "INT_TO_UUID",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "对于输入的已编码 LARGEINT，转译为原始的 uuid 字符串。"
 }
 ---
 

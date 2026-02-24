@@ -1,7 +1,8 @@
-git ---
+---
 {
     "title": "MICROSECONDS_DIFF",
-    "language": "en"
+    "language": "en",
+    "description": "The MICROSECONDS_DIFF function calculates the difference in microseconds between two datetime values. The result is the number of microseconds in the interval between the end time and the start time. This function supports processing DATETIME types with microsecond precision."
 }
 ---
 

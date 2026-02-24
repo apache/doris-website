@@ -1,7 +1,8 @@
 ---
 {
     "title": "ARRAY_COMPACT",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "从数组中删除连续地重复元素，结果值的顺序由源数组中的顺序决定。"
 }
 ---
 

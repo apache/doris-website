@@ -1,7 +1,8 @@
 ---
 {
     "title": "从其他 TP 系统迁移数据",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "从其他 TP 系统，如 MySQL/SqlServer/Oracle 等，迁移数据到 Doris，可以有多种方式。"
 }
 ---
 
@@ -152,7 +153,7 @@ val jdbcDF = spark.read
   .option("password", "")
   .save() 
 ```
-具体可参考：[JDBC To Other Databases](https://spark.apache.org/docs/latest/sql-data-sources-jdbc.html)，[Spark Doris Connector](../../../ecosystem//spark-doris-connector.md#批量写入)
+具体可参考：[JDBC To Other Databases](https://spark.apache.org/docs/latest/sql-data-sources-jdbc.html)，[Spark Doris Connector](../../../ecosystem/spark-doris-connector.md#批量写入)
 
 ## DataX / Seatunnel / CloudCanal 等三方工具
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "Metadata Operations and Maintenance",
-    "language": "en"
+    "language": "en",
+    "description": "This document focuses on how to manage Doris metadata in a real production environment. It includes the proposed deployment of FE nodes,"
 }
 ---
 

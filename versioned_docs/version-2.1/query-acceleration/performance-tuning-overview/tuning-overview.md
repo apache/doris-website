@@ -1,7 +1,8 @@
 ---
 {
     "title": "Tuning Overview",
-    "language": "en"
+    "language": "en",
+    "description": "Query performance tuning is a systematic process that requires multi-level and multi-dimensional adjustments to the database system."
 }
 ---
 

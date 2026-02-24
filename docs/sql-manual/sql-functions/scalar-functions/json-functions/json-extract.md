@@ -1,7 +1,8 @@
 ---
 {
     "title": "JSON_EXTRACT",
-    "language": "en"
+    "language": "en",
+    "description": "Extract the field specified by jsonpath from JSON type data."
 }
 ---
 

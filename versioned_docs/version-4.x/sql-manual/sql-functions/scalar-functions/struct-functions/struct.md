@@ -1,9 +1,13 @@
 ---
 {
-    "title": "STRUCT",
-    "language": "en-US"
+    "title": "STRUCT | Struct Functions",
+    "language": "en-US",
+    "description": "Constructs and returns a struct based on given values. The function accepts one or more parameters and returns a struct containing all input elements.",
+    "sidebar_label": "STRUCT"
 }
 ---
+
+# STRUCT
 
 ## Description
 
@@ -92,3 +96,4 @@ Creating empty struct will report error, at least one parameter is required, con
 select struct();
 ERROR 1105 (HY000): errCode = 2, detailMessage = struct requires at least one argument, like: struct(1)
 ```
+

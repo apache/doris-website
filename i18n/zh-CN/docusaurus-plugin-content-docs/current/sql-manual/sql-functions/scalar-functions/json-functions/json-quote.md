@@ -1,7 +1,8 @@
 ---
 {
     "title": "JSON_QUOTE",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "将输入的字符串参数用双引号包围，并对字符串中的特殊字符和控制字符进行转译，该函数的主要用途是将字符串转换为合法的 json 字符串。"
 }
 ---
 

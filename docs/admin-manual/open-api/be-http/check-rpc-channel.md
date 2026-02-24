@@ -1,7 +1,8 @@
 ---
 {
     "title": "Check Stub Cache",
-    "language": "en"
+    "language": "en",
+    "description": "Check whether the connection cache is available"
 }
 ---
 

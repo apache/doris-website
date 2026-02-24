@@ -1,7 +1,8 @@
 ---
 {
     "title": "OOM Killer Crash Analysis",
-    "language": "en"
+    "language": "en",
+    "description": "If there is no error message in log/be.out after the BE process crashes, execute dmesg -T. If you see the following log,"
 }
 ---
 

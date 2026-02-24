@@ -1,7 +1,8 @@
 ---
 {
     "title": "ARRAY_SLICE",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "返回数组的子片段，支持起始偏移与长度。"
 }
 ---
 

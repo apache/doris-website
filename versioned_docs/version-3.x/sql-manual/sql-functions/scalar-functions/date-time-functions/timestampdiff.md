@@ -1,7 +1,8 @@
 ---
 {
-  "title": "TIMESTAMPDIFF",
-  "language": "en"
+    "title": "TIMESTAMPDIFF",
+    "language": "en",
+    "description": "The timestampdiff function is used to calculate the difference between two dates and returns the time interval between them."
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "STARTS_WITH",
-    "language": "en"
+    "language": "en",
+    "description": "The STARTSWITH function checks if a string starts with a specified prefix. Returns true if the string starts with the specified prefix;"
 }
 ---
 

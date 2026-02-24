@@ -1,7 +1,8 @@
 ---
 {
     "title": "JSON_OBJECT",
-    "language": "en"
+    "language": "en",
+    "description": "Generate one JSON object containing specified Key-Value pairs."
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "SQRT",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "返回一个值的平方根，要求输入值大于或等于 0。"
 }
 ---
 

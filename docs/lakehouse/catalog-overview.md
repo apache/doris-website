@@ -1,7 +1,8 @@
 ---
 {
     "title": "Data Catalog Overview",
-    "language": "en"
+    "language": "en",
+    "description": "A Data Catalog is used to describe the attributes of a data source."
 }
 ---
 

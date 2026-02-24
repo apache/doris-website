@@ -1,7 +1,8 @@
 ---
 {
     "title": "HEX",
-    "language": "en"
+    "language": "en",
+    "description": "The HEX function converts input parameters to hexadecimal string representation."
 }
 ---
 

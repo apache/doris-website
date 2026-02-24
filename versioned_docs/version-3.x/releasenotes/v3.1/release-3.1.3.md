@@ -1,7 +1,8 @@
 ---
 {
     "title": "Release 3.1.3",
-    "language": "en"
+    "language": "en",
+    "description": "Apache Doris 3.1.3 brings major improvements in:"
 }
 ---
 

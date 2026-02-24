@@ -1,7 +1,8 @@
 ---
 {
     "title": "GROUP_ARRAY_INTERSECT",
-    "language": "en"
+    "language": "en",
+    "description": "Calculate the intersection elements of the input array across all rows and return a new array."
 }
 ---
 

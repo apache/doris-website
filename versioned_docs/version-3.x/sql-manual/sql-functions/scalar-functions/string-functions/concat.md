@@ -1,7 +1,8 @@
 ---
 {
     "title": "CONCAT",
-    "language": "en"
+    "language": "en",
+    "description": "Concatenates multiple strings. Special cases:"
 }
 ---
 

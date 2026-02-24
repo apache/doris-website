@@ -1,7 +1,8 @@
 ---
 {
     "title": "Get Load State",
-    "language": "en"
+    "language": "en",
+    "description": "Returns the status of the load transaction of the specified label Return of JSON format string of the status of specified transaction: Label: The "
 }
 ---
 

@@ -1,9 +1,9 @@
 ---
 {
     "title": "Automated Service Startup",
-    "language": "en"
+    "language": "en",
+    "description": "This document describes how to configure the automatic pull-up of the Doris cluster to ensure that services are not pulled up in time after service "
 }
-
 ---
 
 # Automatic service start

@@ -1,7 +1,8 @@
 ---
 {
     "title": "SHOW CATALOG RECYCLE BIN",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "该语句用于展示回收站中可回收的库、表或分区元数据信息。"
 }
 ---
 

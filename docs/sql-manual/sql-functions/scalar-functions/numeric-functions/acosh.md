@@ -1,7 +1,8 @@
 ---
 {
     "title": "ACOSH",
-    "language": "en"
+    "language": "en",
+    "description": "Returns the hyperbolic arc cosine of x, or NULL if x is less than 1."
 }
 ---
 

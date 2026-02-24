@@ -1,7 +1,8 @@
 ---
 {
     "title": "自动分区",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "自动分区功能主要解决了用户预期基于某列对表进行分区操作，但该列的数据分布比较零散或者难以预测，在建表或调整表结构时难以准确创建所需分区，或者分区数量过多以至于手动创建过于繁琐的问题。"
 }
 ---
 
@@ -242,7 +243,7 @@ auto partition by range (date_trunc(k0, 'year'))
 )
 DISTRIBUTED BY HASH(`k0`) BUCKETS 2
 properties(
-    "dynamic_partition.enable" = "true",
+    "dynamic_partition.enable" = "false",
     "dynamic_partition.prefix" = "p",
     "dynamic_partition.start" = "-50",
     "dynamic_partition.end" = "0", --- Dynamic Partition 不创建分区

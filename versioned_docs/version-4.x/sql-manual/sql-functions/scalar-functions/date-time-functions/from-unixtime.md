@@ -1,7 +1,8 @@
 ---
 {
     "title": "FROM_UNIXTIME",
-    "language": "en"
+    "language": "en",
+    "description": "The FROMUNIXTIME function is used to convert a Unix timestamp (in seconds) to a date-time string or VARCHAR type value in a specified format."
 }
 ---
 

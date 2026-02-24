@@ -1,7 +1,8 @@
 ---
 {
     "title": "MAP_CONTAINS_KEY",
-    "language": "en"
+    "language": "en",
+    "description": "Determines whether a given map contains a specific key key"
 }
 ---
 

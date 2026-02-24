@@ -1,7 +1,8 @@
 ---
 {
     "title": "INITCAP",
-    "language": "en"
+    "language": "en",
+    "description": "The INITCAP function converts the first letter of each word in a string to uppercase and the remaining letters to lowercase."
 }
 ---
 

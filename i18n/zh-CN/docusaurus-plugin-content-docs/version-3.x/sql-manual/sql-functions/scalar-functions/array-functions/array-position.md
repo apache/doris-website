@@ -1,7 +1,8 @@
 ---
 {
     "title": "ARRAY_POSITION",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "返回value在数组中第一次出现的位置/索引。"
 }
 ---
 

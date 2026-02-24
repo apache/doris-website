@@ -1,7 +1,8 @@
 ---
 {
     "title": "JSON_QUOTE",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "将 jsonvalue 用双引号（\"）括起来，跳过其中包含的特殊转义字符。"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "XPATH_STRING",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "XPATHSTRING 函数用于解析 XML 字符串，并返回第一个匹配 XPath 表达式的 XML 节点的文本内容。使用标准的 XPath 1.0 语法。"
 }
 ---
 

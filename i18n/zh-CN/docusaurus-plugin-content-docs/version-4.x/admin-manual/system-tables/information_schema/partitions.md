@@ -1,7 +1,8 @@
 ---
 {
     "title": "partitions",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "查看数据库中所有表的 Partition 情况。"
 }
 ---
 

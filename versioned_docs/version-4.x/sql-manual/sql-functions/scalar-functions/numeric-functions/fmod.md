@@ -1,7 +1,8 @@
 ---
 {
     "title": "FMOD",
-    "language": "en"
+    "language": "en",
+    "description": "Calculate the modulo of floating-point numbers, a / b. For integer types, please use the mod function."
 }
 ---
 

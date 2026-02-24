@@ -1,7 +1,8 @@
 ---
 {
     "title": "UNSET VARIABLE",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "该语句主要是用来恢复 Doris 系统变量为默认值，可以是全局也可以是会话级别。"
 }
 ---
 

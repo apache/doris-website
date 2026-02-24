@@ -21,7 +21,7 @@ export default function HeadItem(props: any) {
                 <Link
                     target={externalLink ? '_blank' : '_self'}
                     to={externalLink || permalink}
-                    className="hover:no-underline hover:decoration-none transition-scale relative block rounded-lg border border-[#DFE5F0] px-6 py-5 hover:border-[#0065FD] "
+                    className="hover:no-underline hover:decoration-none transition-scale relative block rounded-lg border border-[#DFE5F0] px-6 py-5 hover:border-primary "
                 >
                     <div className=" ">
                         <h1 className="line-clamp-2 text-xl font-medium leading-normal text-black-dark transition group-hover:text-primary">
@@ -61,11 +61,11 @@ export default function HeadItem(props: any) {
             } flex flex-col  `}
         >
             <img
-                className="rounded-t-lg border border-b-0 border-[#DFE5F0] group-hover:border-[#0065FD]"
+                className="rounded-t-lg border border-b-0 border-[#DFE5F0] group-hover:border-primary"
                 src={image}
                 alt=""
             />
-            <div className="rounded-b-lg border border-t-0 border-[#DFE5F0] group-hover:border-[#0065FD] h-full   flex flex-col-reverse justify-between lg:flex-row lg:py-0 py-6 lg:pb-5 lg:space-x-10 px-6">
+            <div className="rounded-b-lg border border-t-0 border-[#DFE5F0] group-hover:border-primary h-full   flex flex-col-reverse justify-between lg:flex-row lg:py-0 py-6 lg:pb-5 lg:space-x-10 px-6">
                 <div className="flex-1">
                     <h1 className=" mt-4 line-clamp-2 text-2xl font-medium text-black-dark lg:text-[2rem] lg:leading-[3rem]">
                         {title}

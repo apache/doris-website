@@ -1,7 +1,8 @@
 ---
 {
-"title": "QUERY",
-"language": "zh-CN"
+    "title": "QUERY",
+    "language": "zh-CN",
+    "description": "query 表函数（table-valued-function,tvf），可用于将查询语句直接透传到某个 catalog 进行数据查询"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "Handling Data Issues",
-    "language": "en-US"
+    "language": "en-US",
+    "description": "When loading data, sometimes the types of data in the source and target columns don't match. The system tries to fix these mismatches,"
 }
 ---
 
@@ -18,7 +19,7 @@ This makes it easier to handle data loading problems and keeps data management s
 
 Strict mode serves two primary purposes:
 1. Filtering out data rows where column type conversion fails during load
-2. Restricting updates to existing columns only in partial column update scenarios
+2. Restricting updates to existing columns only in partial column update scenarios(before 3.0.x, since 3.1.0, this behavior is controlled by load property/session var `partial_update_new_key_behavior`)
 
 ### Filtering Strategy for Column Type Conversion Failures
 
@@ -63,6 +64,10 @@ The system employs different strategies based on the strict mode setting:
 :::
 
 ### Restricting Partial Column Updates to Existing Columns Only
+
+:::tip
+before 3.0.x, since 3.1.0, this behavior is controlled by load property/session var `partial_update_new_key_behavior`
+:::
 
 In strict mode, each row in a partial column update must have its Key already exist in the table. In non-strict mode, partial column updates can both update existing rows (where Key exists) and insert new rows (where Key doesn't exist).
 

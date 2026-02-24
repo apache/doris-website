@@ -1,7 +1,8 @@
 ---
 {
     "title": "events",
-    "language": "en"
+    "language": "en",
+    "description": "This table is solely used for compatibility with MySQL behavior and is always empty."
 }
 ---
 

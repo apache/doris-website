@@ -1,31 +1,34 @@
 ---
 {
     "title": "AUTO_PARTITION_NAME",
-    "language": "zh-CN"
+    "language": "en",
+    "description": "Generate datetime partition names by unit following RANGE's partition name rules"
 }
 ---
 
-:::tip 提示
-该功能自 Apache Doris 2.1.6 版本起支持
+:::tip tip
+Supported since Apache Doris 2.1.6
 :::
 
-
-## 语法
+### Description
+#### Syntax
 
 `VARCHAR AUTO_PARTITION_NAME('RANGE', 'VARCHAR unit', DATETIME datetime)`
 
 `VARCHAR AUTO_PARTITION_NAME('LIST', VARCHAR,...)`
 
-遵循 RANGE 的分区名规则将 datetime 按照 unit 生成分区名
+Generate datetime partition names by unit following RANGE's partition name rules
 
-遵循 LIST 的分区名规则将字符串转换为分区名
+Convert strings to partition names following LIST's partition name rules
 
-datetime 参数是合法的日期表达式。
+The datetime parameter is a legal date expression.
 
-unit 参数是您希望的时间间隔，可选的值如下：[`second`,`minute`,`hour`,`day`,`month`,`year`]。
-如果 unit 不符合上述可选值，结果将返回语法错误。 
+The unit parameter is the time interval you want, the available values are: [`second`, `minute`, `hour`, `day`, `month`, `year`].
+If unit does not match one of these options, a syntax error will be returned. 
 
-## 举例
+**Supported since Doris 2.1.6**
+
+### Example
 
 ```sql
 mysql> select auto_partition_name('range', 'years', '123');

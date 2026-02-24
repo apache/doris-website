@@ -1,7 +1,8 @@
 ---
 {
     "title": "DROP MATERIALIZED VIEW",
-    "language": "en"
+    "language": "en",
+    "description": "Drop a synchronized materialized view."
 }
 ---
 

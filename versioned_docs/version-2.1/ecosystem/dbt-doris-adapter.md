@@ -1,7 +1,8 @@
 ---
 {
-  "title": "DBT Doris Adapter",
-  "language": "en"
+    "title": "DBT Doris Adapter",
+    "language": "en",
+    "description": "DBT(Data Build Tool) is a component that focuses on doing T (Transform) in ELT (extraction, loading,"
 }
 ---
 

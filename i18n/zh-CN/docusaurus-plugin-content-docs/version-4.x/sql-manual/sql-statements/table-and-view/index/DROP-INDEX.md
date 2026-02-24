@@ -1,7 +1,8 @@
 ---
 {
     "title": "DROP INDEX",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "该语句用于从一个表中删除指定名称的索引，目前仅支持 inverted index, ann index 索引。"
 }
 ---
 

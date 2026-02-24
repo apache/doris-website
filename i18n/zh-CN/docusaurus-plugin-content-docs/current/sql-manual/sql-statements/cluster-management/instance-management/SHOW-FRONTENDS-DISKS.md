@@ -1,7 +1,8 @@
 ---
 {
     "title": "SHOW FRONTENDS DISKS",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "该语句用于查看 FE 节点的重要目录如：元数据、日志、审计日志、临时目录对应的磁盘信息"
 }
 ---
 

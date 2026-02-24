@@ -1,7 +1,8 @@
 ---
 {
     "title": "FROM_BASE64_BINARY",
-    "language": "en"
+    "language": "en",
+    "description": "The FROMBASE64BINARY function decodes a Base64-encoded string and returns the result as a VARBINARY value."
 }
 ---
 

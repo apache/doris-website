@@ -1,7 +1,8 @@
 ---
 {
-  "title": "WEEKS_SUB",
-  "language": "zh-CN"
+    "title": "WEEKS_SUB",
+    "language": "zh-CN",
+    "description": "用于在指定的日期或时间值上减少一定数量的周（即减去 weeks 7 天）。"
 }
 ---
 

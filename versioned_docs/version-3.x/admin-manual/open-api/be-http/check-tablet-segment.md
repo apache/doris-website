@@ -1,7 +1,8 @@
 ---
 {
     "title": "Check All Tablet Segment Lost",
-    "language": "en"
+    "language": "en",
+    "description": "There may be some exceptions that cause segment to be lost on BE node. However, the metadata shows that the tablet is normal."
 }
 ---
 

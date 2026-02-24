@@ -1,7 +1,8 @@
 ---
 {
     "title": "PERCENTILE",
-    "language": "en"
+    "language": "en",
+    "description": "Calculates the exact percentile, suitable for small datasets. First sorts the specified column in descending order,"
 }
 ---
 

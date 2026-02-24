@@ -1,7 +1,8 @@
 ---
 {
     "title": "SET PASSWORD",
-    "language": "en"
+    "language": "en",
+    "description": "The SET PASSWORD statement is used to modify a user's login password."
 }
 ---
 

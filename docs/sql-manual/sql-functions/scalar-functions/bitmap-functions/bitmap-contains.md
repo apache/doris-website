@@ -1,7 +1,8 @@
 ---
 {
     "title": "BITMAP_CONTAINS",
-    "language": "en"
+    "language": "en",
+    "description": "Calculates whether the input value is in the BITMAP and returns a boolean value."
 }
 ---
 

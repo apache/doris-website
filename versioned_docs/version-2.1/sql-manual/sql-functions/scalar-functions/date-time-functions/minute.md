@@ -1,7 +1,8 @@
 ---
 {
     "title": "MINUTE",
-    "language": "en"
+    "language": "en",
+    "description": "Extracts the minute part from a datetime value. The returned value ranges from 0 to 59."
 }
 ---
 

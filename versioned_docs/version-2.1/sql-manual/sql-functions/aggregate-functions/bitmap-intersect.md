@@ -1,7 +1,8 @@
 ---
 {
-"title": "BITMAP_INTERSECT",
-"language": "en"
+    "title": "BITMAP_INTERSECT",
+    "language": "en",
+    "description": "Aggregation function, used to calculate the bitmap intersection after grouping. Common usage scenarios such as: calculating user retention rate."
 }
 ---
 

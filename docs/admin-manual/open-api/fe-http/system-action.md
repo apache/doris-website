@@ -1,7 +1,8 @@
 ---
 {
     "title": "System Action",
-    "language": "en"
+    "language": "en",
+    "description": "System Action is used for information about the Proc system built in Doris."
 }
 ---
 

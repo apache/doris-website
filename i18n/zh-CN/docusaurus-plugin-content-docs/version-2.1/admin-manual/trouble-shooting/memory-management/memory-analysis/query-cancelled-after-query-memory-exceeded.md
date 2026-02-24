@@ -1,7 +1,8 @@
 ---
 {
     "title": "查询报错 Memory Tracker Limit Exceeded",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "当查询或导入的报错信息中出现 MEMLIMITEXCEEDED 且包含 memory tracker limit exceeded 时，说明任务超过单次执行内存限制。"
 }
 ---
 

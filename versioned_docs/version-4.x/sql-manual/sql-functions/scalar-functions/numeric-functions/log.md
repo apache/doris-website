@@ -1,7 +1,8 @@
 ---
 {
     "title": "LOG",
-    "language": "en"
+    "language": "en",
+    "description": "Returns the logarithm of x based on base b."
 }
 ---
 

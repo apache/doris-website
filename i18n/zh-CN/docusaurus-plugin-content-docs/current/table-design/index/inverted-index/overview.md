@@ -2,7 +2,8 @@
 {
     "title": "倒排索引",
     "sidebar_label": "概述",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "倒排索引，是信息检索领域常用的索引技术，将文本分成一个个词，构建 词 -> 文档编号 的索引，可以快速查找一个词在哪些文档出现。"
 }
 ---
 

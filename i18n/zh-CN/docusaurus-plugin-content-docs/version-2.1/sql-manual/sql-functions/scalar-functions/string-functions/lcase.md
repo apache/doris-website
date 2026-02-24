@@ -1,7 +1,8 @@
 ---
 {
     "title": "LCASE/LOWER",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "将参数中所有的字符串都转换成小写。"
 }
 ---
 

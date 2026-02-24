@@ -1,7 +1,8 @@
 ---
 {
     "title": "HOURS_DIFF",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "HOURSDIFF 函数用于计算两个日期时间或日期之间的小时差值，即从起始时间到结束时间所经过的小时数。该函数支持 DATE 和 DATETIME 两种输入类型，自动处理跨天、跨月、跨年的时间差计算，并返回整数结果，若输入为 DATE 类型（仅包含年月日），默认其时间部分为 00:00:00"
 }
 ---
 

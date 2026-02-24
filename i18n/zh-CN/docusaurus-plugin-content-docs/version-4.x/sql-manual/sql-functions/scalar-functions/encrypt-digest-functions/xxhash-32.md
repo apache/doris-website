@@ -1,7 +1,8 @@
 ---
 {
     "title": "XXHASH_32",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "计算输入字符串或二进制的 32 位 xxhash 值"
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "Compaction Principles",
-    "language": "en"
+    "language": "en",
+    "description": "Apache Doris uses an LSM-Tree based storage engine where data is appended sequentially to new data files during writes,"
 }
 ---
 

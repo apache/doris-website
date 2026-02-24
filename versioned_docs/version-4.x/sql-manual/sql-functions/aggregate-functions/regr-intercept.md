@@ -1,7 +1,8 @@
 ---
 {
     "title": "REGR_INTERCEPT",
-    "language": "en"
+    "language": "en",
+    "description": "Returns the intercept of the univariate linear regression line for non-null pairs in a group."
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "JSON_TYPE",
-    "language": "en"
+    "language": "en",
+    "description": "Used to determine the type of the field specified by jsonpath in the JSONB data. If the field does not exist, it returns NULL. If the field exists,"
 }
 ---
 

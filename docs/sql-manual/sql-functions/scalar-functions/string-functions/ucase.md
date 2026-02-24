@@ -1,7 +1,8 @@
 ---
 {
     "title": "UCASE/UPPER",
-    "language": "en"
+    "language": "en",
+    "description": "The UCASE function (alias UPPER) converts all lowercase letters in a string to uppercase letters."
 }
 ---
 

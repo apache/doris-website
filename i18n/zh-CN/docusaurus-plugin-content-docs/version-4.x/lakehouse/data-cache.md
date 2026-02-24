@@ -1,7 +1,8 @@
 ---
 {
     "title": "数据缓存",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "数据缓存（Data Cache）通过缓存最近访问的远端存储系统（HDFS 或对象存储）的数据文件到本地磁盘上，加速后续访问相同数据的查询。在频繁访问相同数据的查询场景中，Data Cache 可以避免重复的远端数据访问开销，提升热点数据的查询分析性能和稳定性。"
 }
 ---
 
@@ -105,6 +106,51 @@ SET GLOBAL enable_file_cache = true;
 ### 监控指标
 
 用户可以通过系统表 [`file_cache_statistics`](../admin-manual/system-tables/information_schema/file_cache_statistics) 查看各个 Backend 节点的缓存统计指标。
+
+## 缓存的配额
+
+> 该功能自 4.0.3 版本支持。
+
+缓存配额（Cache Query Limit）功能允许用户限制单个查询可以使用的文件缓存百分比。在多用户或复杂查询共享缓存资源的场景下，单个大查询可能会占用过多的缓存空间，导致其他查询的热点数据被淘汰。通过设置查询配额，可以保证资源的公平使用，防止缓存抖动。
+
+查询占用的缓存空间指的是该查询因数据未命中而填充到缓存中的数据总大小。如果该查询填充的总大小已经达到配额限制，那么查询后续填充的数据会基于 LRU 算法替换先前填充的数据。
+
+### 配置说明
+
+该功能涉及 BE 和 FE 两端的配置，以及会话变量（Session Variable）的设置。
+
+**1. BE 配置**
+
+- `enable_file_cache_query_limit`:
+  - 类型：Boolean
+  - 默认值：`false`
+  - 说明：BE 端文件缓存查询限制功能的主开关。只有开启此开关，BE 才会处理 FE 传递的查询限制参数。
+
+**2. FE 配置**
+
+- `file_cache_query_limit_max_percent`:
+  - 类型：Integer
+  - 默认值：`100`
+  - 说明：查询的最大配额约束，用于校验会话变量的上限。它确保用户设置的查询限制不会超过此值。
+
+**3. 会话变量 (Session Variables)**
+
+- `file_cache_query_limit_percent`:
+  - 类型：Integer (1-100)
+  - 说明：文件缓存查询限制百分比。设置单个查询可使用的最大缓存比例。该值上限受 `file_cache_query_limit_max_percent` 约束。建议计算后的缓存配额不低于 256MB，如果低于该值，BE 会在日志中进行告警提示。
+
+**使用示例**
+
+```sql
+-- 设置会话变量，限制单个查询最多使用 50% 的缓存
+SET file_cache_query_limit_percent = 50;
+
+-- 执行查询
+SELECT * FROM large_table;
+```
+
+**注意：**
+1. 设置的值必须在 [0, `file_cache_query_limit_max_percent`] 范围内。
 
 ## 缓存预热
 

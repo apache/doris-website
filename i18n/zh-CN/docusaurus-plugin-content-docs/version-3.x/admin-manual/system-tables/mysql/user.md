@@ -1,7 +1,8 @@
 ---
 {
     "title": "user",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "查看所有用户信息"
 }
 ---
 

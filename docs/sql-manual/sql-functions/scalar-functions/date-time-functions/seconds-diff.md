@@ -1,7 +1,8 @@
 ---
 {
     "title": "SECONDS_DIFF",
-    "language": "en"
+    "language": "en",
+    "description": "The SECONDSDIFF function calculates the difference between two datetime values and returns the result in seconds."
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
     "title": "数据类型概览",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "包括以下 4 种："
 }
 ---
 

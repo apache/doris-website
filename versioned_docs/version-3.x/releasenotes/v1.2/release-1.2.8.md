@@ -1,7 +1,8 @@
 ---
 {
     "title": "Release 1.2.8",
-    "language": "en"
+    "language": "en",
+    "description": "Quick Download: https://doris.apache.org/download/"
 }
 ---
 

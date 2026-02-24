@@ -1,7 +1,8 @@
 ---
 {
     "title": "Deploy Integrated Storage Compute Cluster Manually",
-    "language": "en"
+    "language": "en",
+    "description": "After completing the preliminary checks and planning, such as environment checks, cluster planning, and operating system inspections,"
 }
 ---
 

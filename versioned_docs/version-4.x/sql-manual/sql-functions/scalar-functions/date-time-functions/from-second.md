@@ -1,7 +1,8 @@
 ---
 {
     "title": "FROM_SECOND",
-    "language": "en"
+    "language": "en",
+    "description": "The FROMSECOND function is used to convert a Unix timestamp (in seconds) to a DATETIME type date-time value."
 }
 ---
 

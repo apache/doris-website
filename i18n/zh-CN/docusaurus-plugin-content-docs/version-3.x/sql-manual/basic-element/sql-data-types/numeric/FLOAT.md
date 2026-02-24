@@ -1,7 +1,8 @@
 ---
 {
     "title": "FLOAT",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "FLOAT 4字节浮点数"
 }
 ---
 

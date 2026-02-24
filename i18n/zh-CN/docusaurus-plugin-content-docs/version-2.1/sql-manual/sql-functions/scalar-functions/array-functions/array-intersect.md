@@ -1,7 +1,8 @@
 ---
 {
     "title": "ARRAY_INTERSECT",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "返回一个数组，包含 array1 和 array2 的交集中的所有元素，不包含重复项，如果输入参数为 NULL，则返回 NULL"
 }
 ---
 

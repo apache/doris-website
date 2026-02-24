@@ -1,7 +1,8 @@
 ---
 {
     "title": "UTC_TIMESTAMP",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "UTCTIMESTAMP 函数用于返回当前 UTC 时区在所的日期时间。该函数不受本地时区影响，始终返回基于 UTC 时区的当前时间，确保跨时区场景下的时间一致性."
 }
 ---
 

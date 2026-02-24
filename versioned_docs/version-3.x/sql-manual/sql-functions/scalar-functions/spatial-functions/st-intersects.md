@@ -1,7 +1,8 @@
 ---
 {
     "title": "ST_INTERSECTS",
-    "language": "en"
+    "language": "en",
+    "description": "Determine whether two geometric shapes intersect, i.e., there is at least one common point (including boundary contact or internal overlap)."
 }
 ---
 

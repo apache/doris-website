@@ -1,7 +1,8 @@
 ---
 {
     "title": "ARRAY_WITH_CONSTANT",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "ARRAYWITHCONSTANT 用于生成一个指定长度的数组，其中所有元素都为给定的值。"
 }
 ---
 

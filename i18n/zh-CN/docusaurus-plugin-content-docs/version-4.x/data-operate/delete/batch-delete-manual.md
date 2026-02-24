@@ -1,7 +1,8 @@
 ---
 {
     "title": "基于导入的批量删除",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "删除操作可以视为数据更新的一种特殊形式。在主键模型（Unique Key）表上，Doris 支持通过导入数据时添加删除标记来实现删除操作。"
 }
 ---
 

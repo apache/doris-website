@@ -1,7 +1,8 @@
 ---
 {
-"title": "Custom Analyzer",
-    "language": "en"
+    "title": "Custom Analyzer",
+    "language": "en",
+    "description": "Custom analyzers allow you to overcome the limitations of built-in tokenizers by combining character filters, tokenizers,"
 }
 ---
 
@@ -62,6 +63,7 @@ Available tokenizers:
   - `lowercase`:  Lowercases non-Chinese letters. Default: true
   - `trim_whitespace`: Default: true
   - `remove_duplicated_term`: When enabled, removes duplicated terms to save index space. For example, `de的` becomes `de`. Default: false. Note: Position-related queries may be influenced
+  - `ignore_pinyin_offset`: This parameter currently has no functionality. Default: true
 
 #### 3. Creating a token_filter
 

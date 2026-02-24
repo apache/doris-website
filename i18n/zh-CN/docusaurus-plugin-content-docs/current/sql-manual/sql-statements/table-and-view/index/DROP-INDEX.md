@@ -1,7 +1,8 @@
 ---
 {
     "title": "DROP INDEX",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "该语句用于从一个表中删除指定名称的索引，目前仅支持 inverted index, ann index 索引。"
 }
 ---
 
@@ -38,6 +39,6 @@ DROP INDEX [ IF EXISTS ] <index_name> ON [ <db_name> . ] <table_name>;
 - 删除索引
 
    ```sql
-   DROP INDEX IF NOT EXISTS index_name ON table1 ;
+   DROP INDEX IF EXISTS index_name ON table1 ;
    ```
 

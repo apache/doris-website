@@ -1,7 +1,8 @@
 ---
 {
     "title": "Variant",
-    "language": "en"
+    "language": "en",
+    "description": "The VARIANT type can store semi-structured JSON data,"
 }
 ---
 

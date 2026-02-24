@@ -1,7 +1,8 @@
 ---
 {
     "title": "IPV6_CIDR_TO_RANGE",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "接收一个 IPv6 和一个包含 CIDR 的 Int16 值。返回一个结构体，其中包含两个 IPv6 字段分别表示子网的较低范围（min）和较高范围（max）。"
 }
 ---
 

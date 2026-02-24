@@ -1,7 +1,8 @@
 ---
 {
     "title": "SUM0",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "用于返回选中字段所有值的和。与 SUM 函数不同的是，当输入值全为 NULL 时，SUM0 返回 0 而不是 NULL。"
 }
 ---
 

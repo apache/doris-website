@@ -1,7 +1,8 @@
 ---
 {
     "title": "CREATE SYNC MATERIALIZED VIEW",
-    "language": "en"
+    "language": "en",
+    "description": "Statement for creating a synchronized materialized view."
 }
 ---
 

@@ -1,7 +1,8 @@
 ---
 {
-"title": "BIT_COUNT",
-"language": "en"
+    "title": "BIT_COUNT",
+    "language": "en",
+    "description": "Returns the number of 1 bits in the binary representation of an integer value."
 }
 ---
 

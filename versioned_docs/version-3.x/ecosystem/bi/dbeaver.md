@@ -1,7 +1,8 @@
 ---
 {
     "title": "DBeaver",
-    "language": "en"
+    "language": "en",
+    "description": "DBeaver is a cross-platform database tool for developers, database administrators, analysts and anyone who works with data."
 }
 ---
 

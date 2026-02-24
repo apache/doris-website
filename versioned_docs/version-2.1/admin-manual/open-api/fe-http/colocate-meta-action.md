@@ -1,7 +1,8 @@
 ---
 {
     "title": "Colocate Meta Action",
-    "language": "en"
+    "language": "en",
+    "description": "Used to obtain or modify colocate group information."
 }
 ---
 

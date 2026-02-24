@@ -1,7 +1,8 @@
 ---
 {
     "title": "ARRAY_PRODUCT",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "计算数组中所有元素的乘积"
 }
 ---
 

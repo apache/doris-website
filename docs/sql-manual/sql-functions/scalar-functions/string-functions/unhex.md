@@ -1,7 +1,8 @@
 ---
 {
     "title": "UNHEX",
-    "language": "en"
+    "language": "en",
+    "description": "The UNHEX function converts a hexadecimal string back to the original string, serving as the inverse operation of the HEX function."
 }
 ---
 
