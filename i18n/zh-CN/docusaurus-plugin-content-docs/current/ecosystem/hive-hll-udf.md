@@ -224,6 +224,3 @@ select k3, hll_cardinality(hll_union(hll_from_base64(uuid))) from hive.hive_test
 +------+---------------------------------------------------+
 ```
 
-### 方法二：Spark Load
-
- 详见：[Spark Load](https://doris.apache.org/zh-CN/docs/1.2/data-operate/import/import-way/spark-load-manual) -> 基本操作  -> 创建导入 (示例 3：上游数据源是 hive binary 类型情况) 

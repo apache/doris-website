@@ -9,7 +9,7 @@
 ## 证书问题
 
 1. 查询时报错 `curl 77: Problem with the SSL CA cert.`。说明当前系统证书过旧，需要更新本地证书。
-   - 可以从 `https://curl.haxx.se/docs/caextract.html` 下载最新的 CA 证书。
+   - 可以从 `https://curl.se/docs/caextract.html` 下载最新的 CA 证书。
    - 将下载后的 cacert-xxx.pem 放到`/etc/ssl/certs/`目录，例如：`sudo cp cacert-xxx.pem  /etc/ssl/certs/ca-certificates.crt`。
 
 2. 查询时报错：`ERROR 1105 (HY000): errCode = 2, detailMessage = (x.x.x.x)[CANCELLED][INTERNAL_ERROR]error setting certificate verify locations:  CAfile: /etc/ssl/certs/ca-certificates.crt CApath: none`.

@@ -45,7 +45,7 @@ kyuubi.engine.jdbc.connection.password=***
 | kyuubi.engine.jdbc.connection.user     | JDBC 服务用户名                                    |
 | kyuubi.engine.jdbc.connection.password | JDBC 服务密码                                     |
 
-- 其他相关配置参考 [Apache Kyuubi 配置说明](https://kyuubi.readthedocs.io/en/master/deployment/settings.html) 。
+- 其他相关配置参考 [Apache Kyuubi 配置说明](https://kyuubi.readthedocs.io/en/master/configuration/settings.html) 。
 
 ### 添加 MySQL 驱动
 
