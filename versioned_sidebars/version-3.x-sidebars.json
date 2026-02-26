@@ -499,18 +499,7 @@
                         "lakehouse/data-cache",
                         "lakehouse/meta-cache",
                         "lakehouse/compute-node",
-                        "lakehouse/statistics",
-                        {
-                            "type": "category",
-                            "label": "SQL Dialect Convertor",
-                            "items": [
-                                "lakehouse/sql-convertor/sql-convertor-overview",
-                                "lakehouse/sql-convertor/presto-trino-guide",
-                                "lakehouse/sql-convertor/clickhouse-guide",
-                                "lakehouse/sql-convertor/hive-guide",
-                                "lakehouse/sql-convertor/pg-guide"
-                            ]
-                        },
+                        "lakehouse/statistics", 
                         {
                             "type": "category",
                             "label": "Lakehouse Best Practices",

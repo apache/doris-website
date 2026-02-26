@@ -81,7 +81,7 @@ Dear community members, the Apache Doris 3.0.6 version was officially released o
 #### Functional extensions
 - Added support for Alibaba Cloud OSS-HDFS Root Policy [#50678](https://github.com/apache/doris/pull/50678)
 - Dialect compatibility: Returned query results in Hive format [#49931](https://github.com/apache/doris/pull/49931) 
-  - For detailed information, please refer to documentation: [SQL Convertor](https://doris.apache.org/docs/dev/lakehouse/sql-convertor/sql-convertor-overview)
+ 
 
 ### Asynchronous Materialized Views
 
@@ -103,8 +103,7 @@ Dear community members, the Apache Doris 3.0.6 version was officially released o
 - **Memory tracker optimization**: ~10% performance gain in high-concurrency scenarios [#50462](https://github.com/apache/doris/pull/50462)
 - **Audit log enhancement**: Added `audit_plugin_max_insert_stmt_length` to limit INSERT statement length [#51314](https://github.com/apache/doris/pull/51314) 
 	- For detailed information, please refer to documentation: [Audit Plugin](https://doris.apache.org/docs/3.0/admin-manual/audit-plugin)
-- **SQL converter control**: Introduced session variables `sql_convertor_config` and `enable_sql_convertor_features` 
-	- For detailed information, please refer to documentation: [SQL Dialect](https://doris.apache.org/docs/dev/lakehouse/sql-convertor/sql-convertor-overview)
+- **SQL converter control**: Introduced session variables `sql_convertor_config` and `enable_sql_convertor_features`  
 
 ## Bug Fixes
 

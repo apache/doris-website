@@ -552,17 +552,6 @@ const sidebars: SidebarsConfig = {
                         'lakehouse/statistics',
                         {
                             type: 'category',
-                            label: 'SQL Dialect Convertor',
-                            items: [
-                                'lakehouse/sql-convertor/sql-convertor-overview',
-                                'lakehouse/sql-convertor/presto-trino-guide',
-                                'lakehouse/sql-convertor/clickhouse-guide',
-                                'lakehouse/sql-convertor/hive-guide',
-                                'lakehouse/sql-convertor/pg-guide',
-                            ],
-                        },
-                        {
-                            type: 'category',
                             label: 'Lakehouse Best Practices',
                             items: [
                                 'lakehouse/best-practices/optimization',
