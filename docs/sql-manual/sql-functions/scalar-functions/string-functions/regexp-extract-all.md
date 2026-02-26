@@ -37,6 +37,33 @@ REGEXP_EXTRACT_ALL(<str>, <pattern>)
 
 The function returns an array of strings that represent the parts of the input string that match the first sub - pattern of the specified regular expression. The return type is an array of String values. If no matches are found, or if the pattern has no sub - patterns, an empty array is returned.
 
+**Default Behavior**:
+
+| Default Setting                      | Behavior                                                                                  |
+| ------------------------------------ | ----------------------------------------------------------------------------------------- |
+| `.` matches newline                  | `.` can match `\n` (newline) by default.                                                  |
+| Case-sensitive                       | Matching is case-sensitive.                                                               |
+| `^`/`$` match full string boundaries | `^` matches only the start of the string, `$` matches only the end, not line starts/ends. |
+| Greedy quantifiers                   | `*`, `+`, etc. match as much as possible by default.                                      |
+| UTF-8                                | Strings are processed as UTF-8.                                                           |
+
+**Pattern Modifiers**:
+
+You can override the default behavior by prefixing the `pattern` with `(?flags)`. Multiple modifiers can be combined, e.g., `(?im)`; a `-` prefix disables the corresponding option, e.g., `(?-s)`.
+
+Pattern modifiers only take effect when using the default regex engine. If `enable_extended_regex=true` is enabled while using zero-width assertions (e.g., `(?<=...)`, `(?=...)`), the query will be handled by the Boost.Regex engine, and modifier behavior may not work as expected. It is recommended not to mix them.
+
+| Flag    | Meaning                                                                      |
+| ------- | ---------------------------------------------------------------------------- |
+| `(?i)`  | Case-insensitive matching                                                    |
+| `(?-i)` | Case-sensitive (default)                                                     |
+| `(?s)`  | `.` matches newline (enabled by default)                                     |
+| `(?-s)` | `.` does **not** match newline                                               |
+| `(?m)`  | Multiline mode: `^` matches start of each line, `$` matches end of each line |
+| `(?-m)` | Single-line mode: `^`/`$` match full string boundaries (default)             |
+| `(?U)`  | Non-greedy quantifiers: `*`, `+`, etc. match as little as possible           |
+| `(?-U)` | Greedy quantifiers (default): `*`, `+`, etc. match as much as possible       |
+
 ## Example
 
 Basic matching of lowercase letters around 'C'.In this example, the pattern ([[:lower:]]+)C([[:lower:]]+) matches the part of the string where one or more lowercase letters are followed by 'C' and then one or more lowercase letters. The first sub - pattern ([[:lower:]]+) before 'C' matches 'b', so the result is ['b'].
@@ -206,4 +233,51 @@ SELECT REGEXP_EXTRACT_ALL('ID:AA-1,ID:BB-2,ID:CC-3', '(?<=ID:)([A-Z]{2}-\\d)');
 +-------------------------------------------------------------------------+
 | ['AA-1','BB-2','CC-3']                                                  |
 +-------------------------------------------------------------------------+
+```
+
+Pattern Modifiers
+
+Case-insensitive matching: `(?i)` makes the match ignore case
+
+```sql
+SELECT REGEXP_EXTRACT_ALL('Hello hello HELLO', '(hello)') AS case_sensitive,
+       REGEXP_EXTRACT_ALL('Hello hello HELLO', '(?i)(hello)') AS case_insensitive;
+```
+
+```text
++----------------+---------------------------+
+| case_sensitive | case_insensitive          |
++----------------+---------------------------+
+| ['hello']      | ['Hello','hello','HELLO'] |
++----------------+---------------------------+
+```
+
+Multiline mode: `(?m)` makes `^` and `$` match start/end of each line
+
+```sql
+SELECT REGEXP_EXTRACT_ALL('foo\nbar\nbaz', '^([a-z]+)') AS single_line,
+       REGEXP_EXTRACT_ALL('foo\nbar\nbaz', '(?m)^([a-z]+)') AS multi_line;
+```
+
+```text
++-------------+---------------------+
+| single_line | multi_line          |
++-------------+---------------------+
+| ['foo']     | ['foo','bar','baz'] |
++-------------+---------------------+
+```
+
+Greedy vs non-greedy: `(?U)` makes quantifiers match as little as possible
+
+```sql
+SELECT REGEXP_EXTRACT_ALL('aXbXcXd', '(a.*X)') AS greedy,
+       REGEXP_EXTRACT_ALL('aXbXcXd', '(?U)(a.*X)') AS non_greedy;
+```
+
+```text
++----------+------------+
+| greedy   | non_greedy |
++----------+------------+
+| ['aXbXcX'] | ['aX']   |
++----------+------------+
 ```
