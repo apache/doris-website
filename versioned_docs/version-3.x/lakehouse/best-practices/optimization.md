@@ -132,7 +132,7 @@ The following are BE configuration parameters:
 
 - `enable_parquet_cache_compressed_pages`
 
-    Whether to cache compressed data pages when the compression ratio exceeds the threshold. Default is `true`.
+    Whether to cache compressed data pages when the compression ratio exceeds the threshold. Default is `false`.
 
 ### Performance Monitoring
 
