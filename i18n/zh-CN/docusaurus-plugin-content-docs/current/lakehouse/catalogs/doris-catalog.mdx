@@ -123,6 +123,8 @@ FE 之间通过 HTTP 协议同步 Schema 等元信息。BE 直接通过内部通
 
 **缺点**：对于较大的远端表来说，会获取远端表的所有信息 (分区信息，副本信息)。FE 的内存开销会上升，需要扩大 FE 内存。在各集群版本不一致时，比如高版本查询低版本，可能会出现查询失败。
 
+> 自 4.1 版本虚拟集群模式支持insert导入功能
+
 ## 列类型映射
 
 ### Arrow Flight 模式
@@ -245,3 +247,41 @@ MySQL [(none)]> explain select * from demo.inner_table a join edoris.external.ex
 |      cardinality=1, avgRowSize=7425.0, numNodes=1                                                                                         |
 |      pushAggOp=NONE
 ```
+
+## 导入操作
+
+> 自 4.1 版本支持。
+
+配置好 Catalog 后，可以通过以下的insert方式向 Catalog 中的表中导入数据：
+
+```sql
+-- 1. switch to catalog, use database and query
+SWITCH doris_ctl;
+USE doris_db;
+insert into doris_tbl values (1,2);
+
+-- 2. use doris database directly
+USE doris_ctl.doris_db;
+insert into doris_tbl values (1,2);
+
+-- 3. use full qualified name to query
+insert into doris_ctl.doris_db.doris_tbl values (1,2);
+```
+
+### 可以支持的导入形式
+
+```sql
+-- 1.insert into values
+insert into doris_ctl.doris_db.doris_tbl values (1,2);
+
+-- 2.insert into select
+insert into doris_ctl.doris_db.doris_tbl select * from doris_db.doris_tbl;
+
+-- 3. insert overwrite
+insert overwrite table doris_ctl.doris_db.doris_tbl select * from doris_db.doris_tbl;
+```
+
+### 不支持的导入能力
+配置好 Catalog 后，以下的导入能力目前不被支持：
+- [Group Commit](../../data-operate/import/group-commit-manual)
+- [事务](../../data-operate/transaction)

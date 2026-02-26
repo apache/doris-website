@@ -122,6 +122,8 @@ FEs synchronize schema and other metadata through HTTP protocol. BEs directly tr
 
 **Disadvantages**: For large remote tables, it will obtain all information of remote tables (partition information, replica information). FE memory overhead will increase, requiring FE memory expansion. When cluster versions are inconsistent, such as higher version querying lower version, query failures may occur.
 
+> since 4.1 Virtual Cluster Mode also supports insert capability
+
 ## Column Type Mapping
 
 ### Arrow Flight Mode
@@ -244,3 +246,40 @@ MySQL [(none)]> explain select * from demo.inner_table a join edoris.external.ex
 |      cardinality=1, avgRowSize=7425.0, numNodes=1                                                                                         |
 |      pushAggOp=NONE
 ```
+## Insert Operations
+
+> Supported since 4.1
+
+After configuring the Catalog in Virtual Cluster Mode, you can insert data into tables in the Catalog through the following methods:
+
+```sql
+-- 1. switch to catalog, use database and query
+SWITCH doris_ctl;
+USE doris_db;
+insert into doris_tbl values (1,2);
+
+-- 2. use doris database directly
+USE doris_ctl.doris_db;
+insert into doris_tbl values (1,2);
+
+-- 3. use full qualified name to query
+insert into doris_ctl.doris_db.doris_tbl values (1,2);
+```
+
+### supported insert forms
+
+```sql
+-- 1.insert into values
+insert into doris_ctl.doris_db.doris_tbl values (1,2);
+
+-- 2.insert into select
+insert into doris_ctl.doris_db.doris_tbl select * from doris_db.doris_tbl;
+
+-- 3. insert overwrite
+insert overwrite table doris_ctl.doris_db.doris_tbl select * from doris_db.doris_tbl;
+```
+
+### unsupported insert forms
+After configuring the Catalog in Virtual Cluster Mode, the following capabilities are not supported:
+- [Group Commit](../../data-operate/import/group-commit-manual)
+- [Transaction](../../data-operate/transaction)
