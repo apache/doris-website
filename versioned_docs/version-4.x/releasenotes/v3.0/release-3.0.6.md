@@ -103,7 +103,7 @@ Dear community members, the Apache Doris 3.0.6 version was officially released o
 - **Memory tracker optimization**: ~10% performance gain in high-concurrency scenarios [#50462](https://github.com/apache/doris/pull/50462)
 - **Audit log enhancement**: Added `audit_plugin_max_insert_stmt_length` to limit INSERT statement length [#51314](https://github.com/apache/doris/pull/51314) 
 	- For detailed information, please refer to documentation: [Audit Plugin](https://doris.apache.org/docs/3.0/admin-manual/audit-plugin)
-- **SQL converter control**: Introduced session variables `sql_convertor_config` and `enable_sql_convertor_features`  
+
 
 ## Bug Fixes
 
