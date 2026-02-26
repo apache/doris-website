@@ -48,9 +48,6 @@ According to TPC-DS benchmark tests (1TB) of Doris V2.1 against Trino,
 - Enabling file cache can further increase the overall performance of Doris by 2.2 times. (323s)
   This is achieved by a series of optimizations in I/O, parquet/ORC file reading, predicate pushdown, caching, and scan task scheduling, etc.
 
-### SQL dialects compatibility
-
-To facilitate migration to Doris and increase its compatibility with other DBMS, we have enabled SQL dialect conversion in V2.1. ([read more](../../lakehouse/sql-convertor/sql-convertor-overview.md)) For example, by set sql_dialect = "trino" in Doris, you can use the Trino SQL dialect as you're used to, without modifying your current business logic, and Doris will execute the corresponding queries for you. Tests in user production environment show that Doris V2.1 is compatible with 99% of Trino SQL.
 
 ### Arrow Flight SQL protocol
 
