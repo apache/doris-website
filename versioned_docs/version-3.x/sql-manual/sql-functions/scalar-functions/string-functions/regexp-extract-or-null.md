@@ -43,6 +43,31 @@ Return a string type, with the result being the part that matches `<pattern>`.
  If the `<pos>` < 0,return NULL;
  If the `pos` > the length of `<str>`,return NULL;
 
+**Default Behavior**:
+
+| Default Setting                      | Behavior                                                                                  |
+| ------------------------------------ | ----------------------------------------------------------------------------------------- |
+| `.` matches newline                  | `.` can match `\n` (newline) by default.                                                  |
+| Case-sensitive                       | Matching is case-sensitive.                                                               |
+| `^`/`$` match full string boundaries | `^` matches only the start of the string, `$` matches only the end, not line starts/ends. |
+| Greedy quantifiers                   | `*`, `+`, etc. match as much as possible by default.                                      |
+| UTF-8                                | Strings are processed as UTF-8.                                                           |
+
+**Pattern Modifiers**:
+
+You can override the default behavior by prefixing the `pattern` with `(?flags)`. Multiple modifiers can be combined, e.g., `(?im)`; a `-` prefix disables the corresponding option, e.g., `(?-s)`.
+
+| Flag    | Meaning                                                                      |
+| ------- | ---------------------------------------------------------------------------- |
+| `(?i)`  | Case-insensitive matching                                                    |
+| `(?-i)` | Case-sensitive (default)                                                     |
+| `(?s)`  | `.` matches newline (enabled by default)                                     |
+| `(?-s)` | `.` does **not** match newline                                               |
+| `(?m)`  | Multiline mode: `^` matches start of each line, `$` matches end of each line |
+| `(?-m)` | Single-line mode: `^`/`$` match full string boundaries (default)             |
+| `(?U)`  | Non-greedy quantifiers: `*`, `+`, etc. match as little as possible           |
+| `(?-U)` | Greedy quantifiers (default): `*`, `+`, etc. match as much as possible       |
+
 ## Example
 
 Extracting a specific group from a match. Explanation: The regular expression ([[:lower:]]+)C([[:lower:]]+) looks for sequences of one or more lowercase letters separated by 'C'. The group with index 1 corresponds to the first sequence of lowercase letters, so 'b' is returned.
@@ -227,4 +252,67 @@ mysql> SELECT REGEXP_EXTRACT_OR_NULL('123AbCdExCx', '([[:lower:]]+)C([[]ower:]]+
 ```text
 ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.2)[INVALID_ARGUMENT]Could not compile regexp pattern: ([[:lower:]]+)C([[:lower:]+)
 Error: missing ]: [[:lower:]+)
+```
+
+Pattern Modifiers
+
+Case-insensitive: `(?i)` makes the match ignore case
+
+```sql
+SELECT REGEXP_EXTRACT_OR_NULL('Hello World', '(hello)', 1) AS case_sensitive,
+       REGEXP_EXTRACT_OR_NULL('Hello World', '(?i)(hello)', 1) AS case_insensitive;
+```
+
+```text
++----------------+------------------+
+| case_sensitive | case_insensitive |
++----------------+------------------+
+| NULL           | Hello            |
++----------------+------------------+
+```
+
+`.` matches newline by default; with `(?-s)`, `.` does not match newline
+
+```sql
+SELECT REGEXP_EXTRACT_OR_NULL('foo\nbar', '^(.+)$', 1) AS dot_match_nl,
+       REGEXP_EXTRACT_OR_NULL('foo\nbar', '(?-s)^(.+)$', 1) AS dot_not_match_nl;
+```
+
+```text
++--------------+------------------+
+| dot_match_nl | dot_not_match_nl |
++--------------+------------------+
+| foo
+bar      | NULL             |
++--------------+------------------+
+```
+
+Multiline mode: `(?m)` makes `^` and `$` match start/end of each line
+
+```sql
+SELECT REGEXP_EXTRACT_OR_NULL('foo\nbar', '^(bar)', 1) AS single_line,
+       REGEXP_EXTRACT_OR_NULL('foo\nbar', '(?m)^(bar)', 1) AS multi_line;
+```
+
+```text
++-------------+------------+
+| single_line | multi_line |
++-------------+------------+
+| NULL        | bar        |
++-------------+------------+
+```
+
+Greedy vs non-greedy: `(?U)` makes quantifiers match as little as possible
+
+```sql
+SELECT REGEXP_EXTRACT_OR_NULL('aXbXc', '(a.*X)', 1) AS greedy,
+       REGEXP_EXTRACT_OR_NULL('aXbXc', '(?U)(a.*X)', 1) AS non_greedy;
+```
+
+```text
++--------+------------+
+| greedy | non_greedy |
++--------+------------+
+| aXbX   | aX         |
++--------+------------+
 ```

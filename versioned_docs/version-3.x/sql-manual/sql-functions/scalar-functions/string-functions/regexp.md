@@ -32,6 +32,31 @@ REGEXP(<str>, <pattern>)
 
 The REGEXP function returns a BOOLEAN value. If the string <str> matches the regular expression pattern <pattern>, the function returns true (represented as 1 in SQL); if not, it returns false (represented as 0 in SQL).
 
+**Default Behavior**:
+
+| Default Setting                      | Behavior                                                                                  |
+| ------------------------------------ | ----------------------------------------------------------------------------------------- |
+| `.` matches newline                  | `.` can match `\n` (newline) by default.                                                  |
+| Case-sensitive                       | Matching is case-sensitive.                                                               |
+| `^`/`$` match full string boundaries | `^` matches only the start of the string, `$` matches only the end, not line starts/ends. |
+| Greedy quantifiers                   | `*`, `+`, etc. match as much as possible by default.                                      |
+| UTF-8                                | Strings are processed as UTF-8.                                                           |
+
+**Pattern Modifiers**:
+
+You can override the default behavior by prefixing the `pattern` with `(?flags)`. Multiple modifiers can be combined, e.g., `(?im)`; a `-` prefix disables the corresponding option, e.g., `(?-s)`.
+
+| Flag    | Meaning                                                                      |
+| ------- | ---------------------------------------------------------------------------- |
+| `(?i)`  | Case-insensitive matching                                                    |
+| `(?-i)` | Case-sensitive (default)                                                     |
+| `(?s)`  | `.` matches newline (enabled by default)                                     |
+| `(?-s)` | `.` does **not** match newline                                               |
+| `(?m)`  | Multiline mode: `^` matches start of each line, `$` matches end of each line |
+| `(?-m)` | Single-line mode: `^`/`$` match full string boundaries (default)             |
+| `(?U)`  | Non-greedy quantifiers: `*`, `+`, etc. match as little as possible           |
+| `(?-U)` | Greedy quantifiers (default): `*`, `+`, etc. match as much as possible       |
+
 ## Examples
 
 ```sql
@@ -192,4 +217,63 @@ SELECT REGEXP('Hello, World!', '([a-z');
 
 ```text
 ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.2)[INTERNAL_ERROR]Invalid regex expression: ([a-z
+```
+
+Pattern Modifiers
+
+Case-insensitive matching: `(?i)` makes the match ignore case
+
+```sql
+SELECT REGEXP('Hello World', 'hello') AS case_sensitive, REGEXP('Hello World', '(?i)hello') AS case_insensitive;
+```
+
+```text
++----------------+------------------+
+| case_sensitive | case_insensitive |
++----------------+------------------+
+|              0 |                1 |
++----------------+------------------+
+```
+
+`.` matches newline by default; with `(?-s)`, `.` does not match newline
+
+```sql
+SELECT REGEXP('foo\nbar', '^.+$') AS dot_match_nl, REGEXP('foo\nbar', '(?-s)^.+$') AS dot_not_match_nl;
+```
+
+```text
++--------------+------------------+
+| dot_match_nl | dot_not_match_nl |
++--------------+------------------+
+|            1 |                0 |
++--------------+------------------+
+```
+
+Multiline mode: `(?m)` makes `^` and `$` match start/end of each line
+
+```sql
+SELECT REGEXP('foo\nbar', '^bar') AS single_line, REGEXP('foo\nbar', '(?m)^bar') AS multi_line;
+```
+
+```text
++-------------+------------+
+| single_line | multi_line |
++-------------+------------+
+|           0 |          1 |
++-------------+------------+
+```
+
+Greedy vs non-greedy: `(?U)` makes quantifiers match as little as possible
+
+```sql
+SELECT REGEXP_EXTRACT('aXbXc', '(a.*X)', 1) AS greedy,
+       REGEXP_EXTRACT('aXbXc', '(?U)(a.*X)', 1) AS non_greedy;
+```
+
+```text
++--------+------------+
+| greedy | non_greedy |
++--------+------------+
+| aXbX   | aX         |
++--------+------------+
 ```
