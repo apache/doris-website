@@ -30,7 +30,7 @@ $ git clone https://github.com/apache/doris-thirdparty.git
 $ cd doris-thirdparty
 $ git checkout trino-435
 $ cd plugin/trino-bigquery
-$ mvn clean install -DskipTest
+$ mvn clean install -DskipTests
 ```
 
 After compilation, the `trino/plugin/trino-bigquery/target/` directory will contain the `trino-bigquery-435` folder.

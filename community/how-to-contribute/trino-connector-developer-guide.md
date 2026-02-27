@@ -52,7 +52,7 @@ Trino does not provide officially compiled connector plugins, so we need to comp
 3. Enter the Kafka plugin source code directory
 `$ cd trino/plugin/trino-kafka`
 4. Compile the Kafka plugin
-`$ mvn clean install -DskipTest`
+`$ mvn clean install -DskipTests`
 5. After the compilation is completed, the target/trino-kafka-435 directory will be generated in the trino/plugin/trino-kafka/ directory.
 
 > Note: Each connector plugin is a subdirectory, not a jar package.

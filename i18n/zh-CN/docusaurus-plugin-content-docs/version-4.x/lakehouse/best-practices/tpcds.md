@@ -24,7 +24,7 @@ Doris 支持通过 [Trino Connector](https://doris.apache.org/community/how-to-c
 git clone https://github.com/trinodb/trino.git
 git checkout 435
 cd trino/plugin/trino-tpcds
-mvn clean install -DskipTest
+mvn clean install -DskipTests
 ```
 
 完成编译后，会在 `trino/plugin/trino-tpcds/target/` 下得到 `trino-tpcds-435/` 目录。
