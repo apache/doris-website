@@ -2,7 +2,7 @@
 {
     "title": "Doris Catalog",
     "language": "en",
-    "description": "Doris Catalog enables cross-cluster federated analysis across multiple Doris clusters via Arrow Flight or virtual cluster modes, with configuration, type mapping and query optimization guides."
+    "description": "Doris Catalog supports cross-cluster federated analysis across multiple Doris clusters. It supports both Arrow Flight and Virtual Cluster modes, enabling efficient multi-cluster data querying, writing, and federated analysis for distributed data warehouse scenarios."
 }
 ---
 
@@ -19,9 +19,9 @@ This is an experimental feature.
 
 Perform cross-cluster federated analysis across multiple Doris clusters.
 
-Unlike connecting to other Doris clusters through JDBC Catalog, this solution enables efficient multi-Doris cluster federated analysis through Arrow Flight or virtual cluster mode.
+Unlike connecting to other Doris clusters through JDBC Catalog, this solution enables efficient federated analysis across multiple Doris clusters through Arrow Flight or Virtual Cluster mode.
 
-## Configuring Catalog
+## Configure Catalog
 
 ### Syntax
 
@@ -40,108 +40,108 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 );
 ```
 
-* `fe_http_hosts`
+*   `fe_http_hosts`
 
-  List of remote Doris cluster FE HTTP service endpoints.
+    List of FE HTTP service endpoints for the remote Doris cluster.
 
-* `fe_arrow_hosts`
+*   `fe_arrow_hosts`
 
-  List of remote Doris cluster FE Arrow Flight service endpoints.
+    List of FE Arrow Flight service endpoints for the remote Doris cluster.
 
-* `fe_thrift_hosts`
+*   `fe_thrift_hosts`
 
-  List of remote Doris cluster FE Thrift service endpoints.
+    List of FE Thrift service endpoints for the remote Doris cluster.
 
-  > Note: In version 4.0.2, user Master FE's address. This issue will be fixed in next version.
+    > In version 4.0.2, please fill in the Master FE address. This issue will be fixed in subsequent versions.
 
-* `use_arrow_flight`
+*   `use_arrow_flight`
 
-  Whether to access the remote Doris cluster using Arrow Flight or treat remote tables as internal tables and send execution plans to the remote Doris cluster for execution.
+    Whether to access the remote Doris cluster via Arrow Flight, or send the execution plan to the remote Doris cluster as if the remote table were an internal table.
 
-* `{QueryProperties}`
+*   `{QueryProperties}`
 
-  Optional properties
-  
-  | Parameter Name | Description | Default Value |
-  |----------------|-------------|---------------|
-  | `enable_parallel_result_sink` | When enabled, local Doris BE nodes will pull data in parallel from each BE node of the remote Doris cluster. (For Arrow Flight mode) | true |
-  | `query_retry_count` | Maximum retry count for failed query requests to remote Doris. (Does not include failures that may occur during asynchronous execution after the request is accepted by remote Doris) | 3 |
-  | `query_timeout_sec` | Timeout for sending queries to remote Doris. (Does not include asynchronous execution time after the request is accepted by remote Doris) | 15 |
-  | `compatible` | Used to attempt compatibility with metadata formats when accessing remote Doris with versions lower than the local cluster. No need to enable when cluster versions are consistent. | false |
+    Optional properties.
 
-* `{HttpClientProperties}`
+    | Parameter Name                    | Description                                                                                           | Default |
+    |----------------------------------|-------------------------------------------------------------------------------------------------------|---------|
+    | `enable_parallel_result_sink`    | When enabled, local Doris BE nodes will pull data in parallel from various BE nodes of the remote Doris cluster. (For Arrow Flight mode) | true    |
+    | `query_retry_count`              | Maximum number of retries for failed query requests sent to the remote Doris. (Does not include failures that may occur during asynchronous execution after the request is accepted) | 3       |
+    | `query_timeout_sec`              | Timeout for sending queries to the remote Doris. (Does not include asynchronous execution time after the request is accepted) | 15      |
+    | `compatible`                     | Used to attempt compatibility with metadata format when accessing a remote Doris with a version lower than the local cluster. No need to enable when cluster versions are consistent. | false   |
 
-  HttpClientProperties section is used to configure HTTP Client related parameters. This client is used to send HTTP requests to synchronize remote cluster metadata. These are all optional parameters.
-    
-  | Parameter Name | Description | Default Value |
-  |----------------|-------------|---------------|
-  | `metadata_http_ssl_enabled` | Whether to enable SSL/TLS encrypted communication for HTTP metadata synchronization. | false |
-  | `metadata_sync_retry_count` | Maximum retry count for HTTP request failures | 3 |
-  | `metadata_max_idle_connections` | Maximum idle connections for HTTP metadata sync client | 5 |
-  | `metadata_keep_alive_duration_sec` | Idle connection keep-alive duration for HTTP metadata sync client | 300 |
-  | `metadata_connect_timeout_sec` | TCP connection timeout for HTTP metadata sync client | 10 |
-  | `metadata_read_timeout_sec` | Socket read timeout for HTTP metadata sync client | 10 |
-  | `metadata_write_timeout_sec` | Socket write timeout for HTTP metadata sync client | 10 |
-  | `metadata_call_timeout_sec` | HTTP request total timeout for HTTP metadata sync client | 10 |
+*   `{HttpClientProperties}`
 
-* `{CommonProperties}`
+    HttpClientProperties section is used to configure HTTP Client related parameters. This client is used to send HTTP requests to synchronize metadata from the remote cluster. These are all optional parameters.
 
-  CommonProperties section is used to fill in common properties. Please refer to the [Common Properties] section in the Data Catalog Overview.
+    | Parameter Name                       | Description                                                | Default |
+    |-------------------------------------|-----------------------------------------------------------|---------|
+    | `metadata_http_ssl_enabled`         | Whether to enable SSL/TLS encrypted communication for HTTP metadata synchronization. | false   |
+    | `metadata_sync_retry_count`         | Maximum number of retries for failed HTTP requests.        | 3       |
+    | `metadata_max_idle_connections`     | Maximum number of idle connections for HTTP metadata synchronization client. | 5       |
+    | `metadata_keep_alive_duration_sec`  | Idle connection keep-alive duration for HTTP metadata synchronization client. | 300     |
+    | `metadata_connect_timeout_sec`      | TCP connection timeout for HTTP metadata synchronization client. | 10      |
+    | `metadata_read_timeout_sec`         | Socket read timeout for HTTP metadata synchronization client. | 10      |
+    | `metadata_write_timeout_sec`        | Socket write timeout for HTTP metadata synchronization client. | 10      |
+    | `metadata_call_timeout_sec`         | Total HTTP request timeout for HTTP metadata synchronization client. | 10      |
+
+*   `{CommonProperties}`
+
+    The CommonProperties section is used to fill in common properties. Please refer to the [Common Properties] section in the Data Catalog Overview.
 
 ## Access Modes
 
 ### Arrow Flight Mode
 
-> Supported since 4.0.2.
+> Supported since version 4.0.2.
 
-When the `use_arrow_flight` property is `true`, it operates in Arrow Flight mode.
+When the `use_arrow_flight` property is set to `true`, it is in Arrow Flight mode.
 
 ![arrow-flight-mode](/images/Lakehouse/doris-catalog/arrow-flight-mode.png)
 
-In this mode, during cross-cluster queries, FEs synchronize schema and other metadata through HTTP protocol, then local cluster BE nodes access the Remote Doris cluster through Arrow Flight interface.
+In this mode, during cross-cluster queries, FEs synchronize metadata such as Schema through HTTP protocol, and then BE nodes of the local cluster access the Remote Doris cluster through the Arrow Flight interface.
 
-**Advantages**: Minimal overhead on FE, execution plan only generates query SQL to send to remote cluster
+**Advantages**: Almost no overhead for FE, as the execution plan only generates query SQL to be sent to the remote cluster.
 
-**Disadvantages**: May not be able to utilize various optimization features of Doris internal tables, such as aggregation pushdown, limited predicate pushdown, etc.
+**Disadvantages**: May not be able to leverage various optimization features of Doris internal tables, such as aggregate pushdown, limited predicate pushdown, etc.
 
 ### Virtual Cluster Mode
 
-> Supported since 4.0.3.
+> Supported since version 4.0.3.
 
-When the `use_arrow_flight` property is `false`, it operates in virtual cluster mode.
+When the `use_arrow_flight` property is set to `false`, it is in Virtual Cluster mode.
 
-> Currently, this mode only support compute-storage coupled Doris cluster. 
+> This mode currently only supports Doris clusters deployed in storage-compute coupled mode.
 
 ![virtual-cluster-mode](/images/Lakehouse/doris-catalog/virtual-cluster-mode.png)
 
 In this mode, during cross-cluster queries, Backend nodes in the Remote Doris cluster are treated as virtual nodes for query planning.
 
-FEs synchronize schema and other metadata through HTTP protocol. BEs directly transfer data through internal communication protocol.
+FEs synchronize metadata such as Schema through HTTP protocol. BEs directly transfer data through internal communication protocols.
 
-**Advantages**: Can basically utilize all optimization features of Doris internal table queries. Query execution process is consistent with single-cluster internal process.
+**Advantages**: Can basically leverage all optimization features of Doris internal table queries. Query execution flow is consistent with single-cluster internal flow.
 
-**Disadvantages**: For large remote tables, it will obtain all information of remote tables (partition information, replica information). FE memory overhead will increase, requiring FE memory expansion. When cluster versions are inconsistent, such as higher version querying lower version, query failures may occur.
+**Disadvantages**: For large remote tables, all information of the remote table (partition information, replica information) will be retrieved. FE memory overhead will increase, requiring expansion of FE memory. When cluster versions are inconsistent, such as higher version querying lower version, query failures may occur.
 
-> since 4.1 Virtual Cluster Mode also supports insert capability
+> Since version 4.1, Virtual Cluster mode supports insert loading functionality.
 
 ## Column Type Mapping
 
 ### Arrow Flight Mode
 
-The supported column types and table types in this mode depend on the capabilities of Arrow Flight SQL. Currently, it has the following capabilities and limitations:
+The column types and table types supported in this mode depend on the support capabilities of Arrow Flight SQL. Currently, the following capabilities and limitations exist:
 
-- Supports all primitive types
-- Supports all nested types (Array, Map, Struct)
-- Does not support hll, bitmap, and variant types
-- Supports all table models (detail tables, aggregate tables, and primary key tables)
+-   Supports all primitive types.
+-   Supports all nested types (Array, Map, Struct).
+-   Does not support hll, bitmap, variant types.
+-   Supports all table models (Duplicate, Aggregate, and Unique tables).
 
 ### Virtual Cluster Mode
 
-In virtual cluster mode, all column types and all table models (detail tables, aggregate tables, and primary key tables) are supported.
+In Virtual Cluster mode, all column types and all table models (Duplicate, Aggregate, and Unique tables) are supported.
 
 ## Query Operations
 
-After configuring the Catalog, you can query table data in the Catalog through the following methods:
+After configuring the Catalog, you can query table data in the Catalog using the following methods:
 
 ```sql
 -- 1. switch to catalog, use database and query
@@ -161,7 +161,7 @@ SELECT * FROM doris_ctl.doris_db.doris_tbl LIMIT 10;
 
 ### Arrow Flight Mode
 
-In this mode, Doris will try to push down predicate or function conditions and concatenate them into the generated SQL.
+In this mode, Doris will try to push down predicates or function conditions and concatenate them into the generated SQL.
 
 You can view the generated SQL statement through EXPLAIN SQL.
 
@@ -176,9 +176,9 @@ You can view the generated SQL statement through EXPLAIN SQL.
 
 ### Virtual Cluster Mode
 
-In this mode, the execution plan still shows `VOlapScanNode`.
+In this mode, what you see in the execution plan is still `VOlapScanNode`.
 
-Various optimizations for internal table queries in Doris can continue to be utilized, such as Join Runtime Filter.
+Various optimizations of Doris for internal table queries can continue to be utilized, such as Join Runtime Filter.
 
 ```sql
 MySQL [(none)]> explain select * from demo.inner_table a join edoris.external.example_tbl_duplicate b on (a.log_type = b.log_type) where error_code=2;
@@ -246,14 +246,15 @@ MySQL [(none)]> explain select * from demo.inner_table a join edoris.external.ex
 |      cardinality=1, avgRowSize=7425.0, numNodes=1                                                                                         |
 |      pushAggOp=NONE
 ```
-## Insert Operations
 
-> Supported since 4.1
+## Write Operations
 
-After configuring the Catalog in Virtual Cluster Mode, you can insert data into tables in the Catalog through the following methods:
+> Supported since version 4.1.
+
+After configuring the Catalog, you can import data into tables in the Catalog in Virtual Cluster mode using the following insert methods:
 
 ```sql
--- 1. switch to catalog, use database and query
+-- 1. switch to catalog, use database and insert
 SWITCH doris_ctl;
 USE doris_db;
 insert into doris_tbl values (1,2);
@@ -262,24 +263,26 @@ insert into doris_tbl values (1,2);
 USE doris_ctl.doris_db;
 insert into doris_tbl values (1,2);
 
--- 3. use full qualified name to query
+-- 3. use full qualified name to insert
 insert into doris_ctl.doris_db.doris_tbl values (1,2);
 ```
 
-### supported insert forms
+### Supported Import Forms
 
 ```sql
--- 1.insert into values
+-- 1. insert into values
 insert into doris_ctl.doris_db.doris_tbl values (1,2);
 
--- 2.insert into select
+-- 2. insert into select
 insert into doris_ctl.doris_db.doris_tbl select * from doris_db.doris_tbl;
 
 -- 3. insert overwrite
 insert overwrite table doris_ctl.doris_db.doris_tbl select * from doris_db.doris_tbl;
 ```
 
-### unsupported insert forms
-After configuring the Catalog in Virtual Cluster Mode, the following capabilities are not supported:
-- [Group Commit](../../data-operate/import/group-commit-manual)
-- [Transaction](../../data-operate/transaction)
+### Unsupported Import Capabilities
+
+After configuring the Catalog, the following import capabilities are currently not supported:
+
+-   [Group Commit](../../data-operate/import/group-commit-manual)
+-   [Transactions](../../data-operate/transaction)
