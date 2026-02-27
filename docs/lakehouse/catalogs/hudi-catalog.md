@@ -51,6 +51,52 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
   | ------------------------------- | -------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------- |
   | `hudi.use_hive_sync_partition`  | `use_hive_sync_partition`  | Whether to use the partition information already synchronized by Hive Metastore. If true, partition information will be obtained directly from Hive Metastore. Otherwise, it will be obtained from the metadata file of the file system. Obtaining information from Hive Metastore is more efficient, but users need to ensure that the latest metadata has been synchronized to Hive Metastore. | false |
 
+## Metadata Cache (4.0.4+) {#meta-cache-404}
+
+Starting from Doris 4.0.4, Hudi-related metadata caches are configured with the unified `meta.cache.*` properties.
+This section focuses on **how to use** and **how to observe** the Hudi cache modules.
+
+For the unified property semantics, see: [Unified External Meta Cache (4.0.4+)](../meta-cache/unified-meta-cache.md).
+
+### Cache Modules {#meta-cache-404-modules}
+
+| Module | Property key prefix | Cached content (typical) |
+|---|---|---|
+| `partition` | `meta.cache.hudi.partition.` | Hudi partition-related metadata (used by partition discovery/pruning). |
+| `fs-view` | `meta.cache.hudi.fs-view.` | Hudi filesystem view related metadata. |
+| `meta-client` | `meta.cache.hudi.meta-client.` | Hudi meta client related metadata. |
+
+Example (reduce cache footprint by lowering capacity):
+
+```sql
+ALTER CATALOG hudi_ctl SET PROPERTIES (
+  "meta.cache.hudi.partition.capacity" = "2000"
+);
+```
+
+### Observability {#meta-cache-404-observability}
+
+Hudi cache metrics are available in `information_schema.catalog_meta_cache_statistics`.
+For the table definition and metric meanings, see: [catalog_meta_cache_statistics](../../admin-manual/system-tables/information_schema/catalog_meta_cache_statistics.md).
+
+The `cache_name` values for Hudi modules are:
+
+| Module | cache_name |
+|---|---|
+| `partition` | `hudi_partition_cache` |
+| `fs-view` | `hudi_fs_view_cache` |
+| `meta-client` | `hudi_meta_client_cache` |
+
+Example query:
+
+```sql
+SELECT *
+FROM information_schema.catalog_meta_cache_statistics
+WHERE catalog_name = 'hudi_ctl'
+  AND cache_name LIKE 'hudi_%'
+ORDER BY cache_name, metric_name;
+```
+
 ### Supported Hudi Versions
 
 The current dependent Hudi version is 0.15. It is recommended to access Hudi data version 0.14 and above.

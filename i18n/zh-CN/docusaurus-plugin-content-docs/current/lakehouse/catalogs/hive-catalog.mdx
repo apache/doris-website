@@ -78,6 +78,51 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 
   CommonProperties 部分用于填写通用属性。请参阅[ 数据目录概述 ](../catalog-overview.md)中【通用属性】部分。
 
+## 元数据缓存（4.0.4+） {#meta-cache-404}
+
+从 Doris 4.0.4 开始，Hive Catalog 的外表元数据缓存使用统一键 `meta.cache.*` 进行配置。本节只介绍**如何使用**与**如何观测**。
+
+统一属性语义可参阅：[统一外表元数据缓存（4.0.4+）](../meta-cache/unified-meta-cache.md)。
+
+### 缓存模块 {#meta-cache-404-modules}
+
+| 模块 | 属性键前缀 | 典型缓存内容 |
+|---|---|---|
+| `partition-values` | `meta.cache.hive.partition-values.` | 分区值/分区名称列表（常用于分区剪枝与分区枚举）。 |
+| `partition` | `meta.cache.hive.partition.` | 分区属性（location、输入格式、存储描述等）。 |
+| `file` | `meta.cache.hive.file.` | 分区/表路径下的文件列表（减少远端 LIST 开销）。 |
+
+示例（为保证新鲜度，关闭文件列表缓存）：
+
+```sql
+ALTER CATALOG hive_ctl SET PROPERTIES (
+  "meta.cache.hive.file.ttl-second" = "0"
+);
+```
+
+### 可观测性 {#meta-cache-404-observability}
+
+Hive 缓存指标可通过 `information_schema.catalog_meta_cache_statistics` 查询。
+系统表字段与指标说明见：[catalog_meta_cache_statistics](../../admin-manual/system-tables/information_schema/catalog_meta_cache_statistics.md)。
+
+Hive 各模块对应的 `cache_name` 如下：
+
+| 模块 | cache_name |
+|---|---|
+| `partition-values` | `hive_partition_values_cache` |
+| `partition` | `hive_partition_cache` |
+| `file` | `hive_file_cache` |
+
+示例（只看某个 catalog 的 Hive 缓存）：
+
+```sql
+SELECT *
+FROM information_schema.catalog_meta_cache_statistics
+WHERE catalog_name = 'hive_ctl'
+  AND cache_name LIKE 'hive_%'
+ORDER BY cache_name, metric_name;
+```
+
 ### 支持的 Hive 版本
 
 支持 Hive 1.x，2.x，3.x，4.x。
@@ -1101,4 +1146,3 @@ DROP DATABASE [IF EXISTS] hive_ctl.hive_db;
 | -------- | ------------------------------------ |
 | 2.1.6    | 支持 Hive 表数据写回                        |
 | 3.0.4    | 支持 JsonSerDe 格式的 Hive 表。支持 Hive4 的事务表。 |
-

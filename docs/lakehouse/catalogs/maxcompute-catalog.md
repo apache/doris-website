@@ -68,6 +68,49 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 
     The CommonProperties section is used to fill in common properties. Please refer to the "Common Properties" section in [Catalog Overview](../catalog-overview.md).
 
+## Metadata Cache (4.0.4+) {#meta-cache-404}
+
+Starting from Doris 4.0.4, MaxCompute Catalog metadata caches are configured with the unified `meta.cache.*` properties.
+This section focuses on **how to use** and **how to observe** the MaxCompute-related cache module.
+
+For the unified property semantics, see: [Unified External Meta Cache (4.0.4+)](../meta-cache/unified-meta-cache.md).
+
+### Cache Modules {#meta-cache-404-modules}
+
+| Module | Property key prefix | Cached content (typical) |
+|---|---|---|
+| `partition-values` | `meta.cache.maxcompute.partition-values.` | Partition values list (reduces repeated remote listing overhead). |
+
+Example:
+
+```sql
+ALTER CATALOG mc_ctl SET PROPERTIES (
+  "meta.cache.maxcompute.partition-values.ttl-second" = "3600",
+  "meta.cache.maxcompute.partition-values.capacity" = "5000"
+);
+```
+
+### Observability {#meta-cache-404-observability}
+
+MaxCompute cache metrics are available in `information_schema.catalog_meta_cache_statistics`.
+For the table definition and metric meanings, see: [catalog_meta_cache_statistics](../../admin-manual/system-tables/information_schema/catalog_meta_cache_statistics.md).
+
+The `cache_name` value for MaxCompute module is:
+
+| Module | cache_name |
+|---|---|
+| `partition-values` | `maxcompute_partition_values_cache` |
+
+Example query:
+
+```sql
+SELECT *
+FROM information_schema.catalog_meta_cache_statistics
+WHERE catalog_name = 'mc_ctl'
+  AND cache_name LIKE 'maxcompute_%'
+ORDER BY cache_name, metric_name;
+```
+
 ### Supported MaxCompute Versions
 
 Only the public cloud version of MaxCompute is supported. For private cloud version support, please contact Doris community support.
