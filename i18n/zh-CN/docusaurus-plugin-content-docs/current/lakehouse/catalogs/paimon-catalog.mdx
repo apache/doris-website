@@ -88,6 +88,47 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 
     CommonProperties 部分用于填写通用属性。请参阅[数据目录概述](../catalog-overview.md)中【通用属性】部分。
 
+## 元数据缓存（4.0.4+） {#meta-cache-404}
+
+从 Doris 4.0.4 开始，Paimon Catalog 的外表元数据缓存使用统一键 `meta.cache.*` 进行配置。本节只介绍**如何使用**与**如何观测**。
+
+统一属性语义可参阅：[统一外表元数据缓存（4.0.4+）](../meta-cache/unified-meta-cache.md)。
+
+### 缓存模块 {#meta-cache-404-modules}
+
+| 模块 | 属性键前缀 | 典型缓存内容 |
+|---|---|---|
+| `table` | `meta.cache.paimon.table.` | Paimon 表元数据（用于查询规划，实际涉及 schema/snapshot/partition 等元数据加载）。 |
+
+示例（关闭 module 缓存，按需实时加载）：
+
+```sql
+ALTER CATALOG paimon_ctl SET PROPERTIES (
+  "meta.cache.paimon.table.ttl-second" = "0"
+);
+```
+
+### 可观测性 {#meta-cache-404-observability}
+
+Paimon 缓存指标可通过 `information_schema.catalog_meta_cache_statistics` 查询。
+系统表字段与指标说明见：[catalog_meta_cache_statistics](../../admin-manual/system-tables/information_schema/catalog_meta_cache_statistics.md)。
+
+Paimon 模块对应的 `cache_name` 如下：
+
+| 模块 | cache_name |
+|---|---|
+| `table` | `paimon_table_cache` |
+
+示例：
+
+```sql
+SELECT *
+FROM information_schema.catalog_meta_cache_statistics
+WHERE catalog_name = 'paimon_ctl'
+  AND cache_name LIKE 'paimon_%'
+ORDER BY cache_name, metric_name;
+```
+
 ### 支持的 Paimon 版本
 
 当前依赖的 Paimon 版本为 1.0.0。

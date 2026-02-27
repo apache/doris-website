@@ -68,6 +68,48 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 
     CommonProperties 部分用于填写通用属性。请参阅[数据目录概述](../catalog-overview.md)中「通用属性」部分。
 
+## 元数据缓存（4.0.4+） {#meta-cache-404}
+
+从 Doris 4.0.4 开始，MaxCompute Catalog 的外表元数据缓存使用统一键 `meta.cache.*` 进行配置。本节只介绍**如何使用**与**如何观测**。
+
+统一属性语义可参阅：[统一外表元数据缓存（4.0.4+）](../meta-cache/unified-meta-cache.md)。
+
+### 缓存模块 {#meta-cache-404-modules}
+
+| 模块 | 属性键前缀 | 典型缓存内容 |
+|---|---|---|
+| `partition-values` | `meta.cache.maxcompute.partition-values.` | 分区值列表（减少重复的远端枚举开销）。 |
+
+示例：
+
+```sql
+ALTER CATALOG mc_ctl SET PROPERTIES (
+  "meta.cache.maxcompute.partition-values.ttl-second" = "3600",
+  "meta.cache.maxcompute.partition-values.capacity" = "5000"
+);
+```
+
+### 可观测性 {#meta-cache-404-observability}
+
+MaxCompute 缓存指标可通过 `information_schema.catalog_meta_cache_statistics` 查询。
+系统表字段与指标说明见：[catalog_meta_cache_statistics](../../admin-manual/system-tables/information_schema/catalog_meta_cache_statistics.md)。
+
+MaxCompute 模块对应的 `cache_name` 如下：
+
+| 模块 | cache_name |
+|---|---|
+| `partition-values` | `maxcompute_partition_values_cache` |
+
+示例：
+
+```sql
+SELECT *
+FROM information_schema.catalog_meta_cache_statistics
+WHERE catalog_name = 'mc_ctl'
+  AND cache_name LIKE 'maxcompute_%'
+ORDER BY cache_name, metric_name;
+```
+
 ### 支持的 MaxCompute 版本
 
 仅支持公有云版本的 MaxCompute。私有云版本支持请联系 Doris 社区支持。
