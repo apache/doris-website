@@ -36,7 +36,7 @@
 
 此时参考 [BE 配置项](../../../config/be-config) 在`be/conf/be.conf`中调小`mem_limit`，调大 `max_sys_mem_available_low_water_mark_bytes`，有关内存限制和水位线计算方法、内存 GC 的更多介绍见 [内存控制策略](./../memory-feature/memory-control-strategy.md)。
 
-此外还可以调节其他参数控制内存状态刷新和 GC，包括 `memory_gc_sleep_time_ms`，`soft_mem_limit_frac`，`memory_maintenance_sleep_time_ms`，`process_minor_gc_size`，`process_full_gc_size`，`enable_query_memory_overcommit`，`thread_wait_gc_max_milliseconds` 等。
+此外还可以调节其他参数控制内存状态刷新和 GC，包括 `memory_gc_sleep_time_ms`，`soft_mem_limit_frac`，`memory_maintenance_sleep_time_ms`，`process_minor_gc_size`，`process_full_gc_size`，`thread_wait_gc_max_milliseconds` 等。
 
 ## 一些异常问题导致触发 OOM Killer
 
