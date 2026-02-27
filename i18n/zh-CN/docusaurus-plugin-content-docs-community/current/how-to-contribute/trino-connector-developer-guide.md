@@ -51,7 +51,7 @@ Trino 没有提供官方编译好的 Connector 插件，所以需要我们自己
 3. 进入到 Kafka 插件源码目录
 `$ cd trino/plugin/trino-kafka`
 4. 编译 Kafka 插件
-`$ mvn clean install -DskipTest`
+`$ mvn clean install -DskipTests`
 5. 编译完成后，在 trino/plugin/trino-kafka/ 目录下会生成 target/trino-kafka-435 目录
 
 > 注意：每一个 Connector 插件都是一个子目录，而不是一个 jar 包。

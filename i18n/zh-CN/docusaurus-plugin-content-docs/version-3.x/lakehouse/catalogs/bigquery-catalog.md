@@ -47,7 +47,7 @@ git clone https://github.com/apache/doris-thirdparty.git
 cd doris-thirdparty
 git checkout trino-435
 cd plugin/trino-bigquery
-mvn clean install -DskipTest
+mvn clean install -DskipTests
 ```
 
 完成编译后，会在 `trino/plugin/trino-bigquery/target/` 下得到 `trino-bigquery-435/` 目录。
