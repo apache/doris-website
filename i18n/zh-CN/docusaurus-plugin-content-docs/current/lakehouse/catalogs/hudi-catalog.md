@@ -51,6 +51,51 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
   | ------------------------------- | -------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- | ----- |
   | `hudi.use_hive_sync_partition` | `use_hive_sync_partition` | 是否使用 Hive Metastore 已同步的分区信息。如果为 true，则会直接从 Hive Metastore 中获取分区信息。否则，会从文件系统的元数据文件中获取分区信息。通过 Hive Metastore 获取信息性能更好，但需要用户保证最新的元数据已经同步到了 Hive Metastore。 | false |
 
+## 元数据缓存（4.0.4+） {#meta-cache-404}
+
+从 Doris 4.0.4 开始，Hudi 相关外表元数据缓存使用统一键 `meta.cache.*` 进行配置。本节只介绍**如何使用**与**如何观测**。
+
+统一属性语义可参阅：[统一外表元数据缓存（4.0.4+）](../meta-cache/unified-meta-cache.md)。
+
+### 缓存模块 {#meta-cache-404-modules}
+
+| 模块 | 属性键前缀 | 典型缓存内容 |
+|---|---|---|
+| `partition` | `meta.cache.hudi.partition.` | Hudi 分区相关元数据（用于分区发现/剪枝等）。 |
+| `fs-view` | `meta.cache.hudi.fs-view.` | Hudi FS View 相关元数据。 |
+| `meta-client` | `meta.cache.hudi.meta-client.` | Hudi Meta Client 相关元数据。 |
+
+示例（通过降低 capacity 控制缓存规模）：
+
+```sql
+ALTER CATALOG hudi_ctl SET PROPERTIES (
+  "meta.cache.hudi.partition.capacity" = "2000"
+);
+```
+
+### 可观测性 {#meta-cache-404-observability}
+
+Hudi 缓存指标可通过 `information_schema.catalog_meta_cache_statistics` 查询。
+系统表字段与指标说明见：[catalog_meta_cache_statistics](../../admin-manual/system-tables/information_schema/catalog_meta_cache_statistics.md)。
+
+Hudi 各模块对应的 `cache_name` 如下：
+
+| 模块 | cache_name |
+|---|---|
+| `partition` | `hudi_partition_cache` |
+| `fs-view` | `hudi_fs_view_cache` |
+| `meta-client` | `hudi_meta_client_cache` |
+
+示例：
+
+```sql
+SELECT *
+FROM information_schema.catalog_meta_cache_statistics
+WHERE catalog_name = 'hudi_ctl'
+  AND cache_name LIKE 'hudi_%'
+ORDER BY cache_name, metric_name;
+```
+
 ### 支持的 Hudi 版本
 
 当前依赖的 Hudi 版本为 0.15。推荐访问 0.14 版本以上的 Hudi 数据。
@@ -226,4 +271,3 @@ SELECT * from hudi_table@incr('beginTime'='xxx', ['endTime'='xxx'], ['hoodie.rea
 | Doris 版本    | 功能支持                                      |
 | ----------- | ----------------------------------------- |
 | 2.1.8/3.0.4 | Hudi 依赖升级到 0.15。新增 Hadoop Hudi JNI Scanner。 |
-

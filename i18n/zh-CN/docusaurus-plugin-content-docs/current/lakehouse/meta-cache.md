@@ -18,6 +18,11 @@
 该文档适用于 2.1.6 之后的版本。
 :::
 
+:::note
+对于 Doris 4.0.4 及之后版本，外表元数据缓存已重构并使用统一配置键 `meta.cache.*`。
+请参阅[统一外表元数据缓存（4.0.4+）](./meta-cache/unified-meta-cache.md)。
+:::
+
 ## 缓存策略
 
 大多数缓存都有如下三个策略指标：
@@ -321,6 +326,12 @@ CREATE CATALOG hive PROPERTIES (
 
 对于所有类型的 External Catalog，如果希望实时可见最新的 Table Schema，可以关闭 Schema Cache：
 
+:::note
+从 Doris 4.0.4 开始，旧的 catalog 级缓存参数 `schema.cache.ttl-second` 已不再推荐使用。
+对于 4.0.4+，仍可使用下面的 FE 配置方式进行全局控制，并参考：
+[统一外表元数据缓存（4.0.4+）](./meta-cache/unified-meta-cache.md)。
+:::
+
 - 全局关闭
 
     ```text
@@ -340,6 +351,13 @@ CREATE CATALOG hive PROPERTIES (
 ### 关闭 Hive Catalog 元数据缓存
 
 针对 Hive Catalog，如果想关闭缓存来查询到实时更新的数据，可以配置以下参数：
+
+:::note
+从 Doris 4.0.4 开始，旧的 catalog 级参数 `file.meta.cache.ttl-second` 和 `partition.cache.ttl-second`
+已不再推荐使用。请改用统一键 `meta.cache.hive.*`，并参考：
+[Hive Catalog](./catalogs/hive-catalog.mdx#meta-cache-404) 与
+[统一外表元数据缓存（4.0.4+）](./meta-cache/unified-meta-cache.md)。
+:::
 
 - 全局关闭
 

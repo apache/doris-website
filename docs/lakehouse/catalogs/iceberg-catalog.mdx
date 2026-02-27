@@ -85,6 +85,50 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 
   The CommonProperties section is for entering general properties. See the [Catalog Overview](../catalog-overview.md) for details on common properties.
 
+## Metadata Cache (4.0.4+) {#meta-cache-404}
+
+Starting from Doris 4.0.4, Iceberg Catalog metadata caches are configured with the unified `meta.cache.*` properties.
+This section focuses on **how to use** and **how to observe** the Iceberg-related cache modules.
+
+For the unified property semantics, see: [Unified External Meta Cache (4.0.4+)](../meta-cache/unified-meta-cache.md).
+
+### Cache Modules {#meta-cache-404-modules}
+
+| Module | Property key prefix | Cached content (typical) |
+|---|---|---|
+| `table` | `meta.cache.iceberg.table.` | Iceberg table metadata object (reduces catalog/metastore round trips). |
+| `manifest` | `meta.cache.iceberg.manifest.` | Manifest-related metadata (reduces repeated manifest access overhead). |
+
+Example (shorter TTL for manifest to prioritize freshness):
+
+```sql
+ALTER CATALOG iceberg_ctl SET PROPERTIES (
+  "meta.cache.iceberg.manifest.ttl-second" = "600"
+);
+```
+
+### Observability {#meta-cache-404-observability}
+
+Iceberg cache metrics are available in `information_schema.catalog_meta_cache_statistics`.
+For the table definition and metric meanings, see: [catalog_meta_cache_statistics](../../admin-manual/system-tables/information_schema/catalog_meta_cache_statistics.md).
+
+The `cache_name` values for Iceberg modules are:
+
+| Module | cache_name |
+|---|---|
+| `table` | `iceberg_table_cache` |
+| `manifest` | `iceberg_manifest_cache` |
+
+Example query:
+
+```sql
+SELECT *
+FROM information_schema.catalog_meta_cache_statistics
+WHERE catalog_name = 'iceberg_ctl'
+  AND cache_name LIKE 'iceberg_%'
+ORDER BY cache_name, metric_name;
+```
+
 ### Supported Iceberg Versions
 
 | Doris Version | Iceberg SDK Version |
