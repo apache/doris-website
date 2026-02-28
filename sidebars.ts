@@ -2038,6 +2038,8 @@ const sidebars: SidebarsConfig = {
                                 'sql-manual/sql-functions/table-functions/explode-numbers-outer',
                                 'sql-manual/sql-functions/table-functions/explode-split',
                                 'sql-manual/sql-functions/table-functions/explode-split-outer',
+                                'sql-manual/sql-functions/table-functions/json-each',
+                                'sql-manual/sql-functions/table-functions/json-each-text',
                                 'sql-manual/sql-functions/table-functions/posexplode',
                                 'sql-manual/sql-functions/table-functions/posexplode-outer',
                             ],
