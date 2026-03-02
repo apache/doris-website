@@ -60,7 +60,7 @@ EXPORT TABLE tbl
 TO "hdfs://host/path/to/export_" 
 PROPERTIES
 (
-    "line_delimiter" = ","
+    "column_separator" = ","
 )
 with HDFS (
     "fs.defaultFS"="hdfs://hdfs_host:port",
@@ -75,7 +75,7 @@ with HDFS (
 ```sql
 EXPORT TABLE tbl TO "s3://bucket/export/export_" 
 PROPERTIES (
-    "line_delimiter" = ","
+    "column_separator" = ","
 ) WITH s3 (
     "s3.endpoint" = "xxxxx",
     "s3.region" = "xxxxx",
@@ -351,7 +351,7 @@ Export 任务的底层是执行`SELECT INTO OUTFILE` SQL 语句。用户发起�
 EXPORT TABLE db.tbl TO "file:///path/to/result_"
 PROPERTIES (
   "format" = "csv",
-  "line_delimiter" = ","
+  "column_separator" = ","
 );
 ```
 
