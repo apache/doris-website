@@ -270,7 +270,7 @@ CREATE TABLE <new_table_name> LIKE <existing_table_name>
 
 **<index_property>**
 
-> The properties of the index. For detailed explanations, refer to the [Inverted Index](../../../../table-design/index/inverted-index.md) section.
+> The properties of the index. For detailed explanations, refer to the [Inverted Index](../../../../table-design/index/inverted-index/overview.md) section.
 
 ### Auto Partition Related Parameters
 
