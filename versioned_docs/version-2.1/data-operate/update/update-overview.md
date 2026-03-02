@@ -158,7 +158,7 @@ The following diagram shows how `DORIS_DELETE_SIGN` works:
 
 Starting from version 2.0, Doris supports powerful partial column update capabilities on Unique Key Models (MoW). When loading data, users only need to provide the primary key and columns to be updated; unprovided columns will maintain their original values unchanged. This greatly simplifies ETL processes for scenarios like wide table joining and real-time tag updates.
 
-To enable this feature, you need to enable the write-time Merge (MoW) mode when creating the unique key model table, and set the session variable parameter 'enable_unique_key_partial_update' to 'true'. And configure the 'partial_columns' parameter during data loading.
+To enable this feature, you need to enable Merge-on-Write (MoW) mode when creating the Unique Key Model table. For INSERT INTO, set the session variable `enable_unique_key_partial_update` to `true` to enable partial column updates; for Stream Load and other import methods, configure the `partial_columns` parameter to enable partial column updates.
 
 ```sql
 CREATE TABLE user_profiles (
