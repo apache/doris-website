@@ -113,20 +113,6 @@
 与此同时也在 TPC-DS 10TB 场景下对 Apache Doris 2.1 版本与 Spark 3.5.0 以及 3.3.1 版本进行了性能测试，查询性能分别提升 4.2 倍和 6.1 倍。
 
 
-### 多 SQL 方言兼容
-
-当用户从原有 OLAP 系统（如 Clickhouse、Trino、Presto、Hive 等）迁移至 Apache Doris 时，一方面因为 SQL 方言存在差异，需要同步修改大量的业务查询逻辑进行适配，无法进行平滑迁移。另一方面，当使用 Apache Doris 作为统一数据分析网关时，需要对接原先的 Hive、Spark 等系统、以满足不同数据源的查询需求。
-
-因此在 Apache Doris 2.1 版本中我们引入了多 SQL 方言转换功能，用户可以直接使用原先系统的 SQL 方言在 Doris 中进行数据查询而无需修改业务逻辑。在部署好 SQL 转换服务后，用户只需通过会话变量 `sql_dialect`设置当前会话的 SQL 方言类型，即可使用对应的 SQL 方言进行查询。
-
-该功能目前为实验性质功能，当前已经支持 ClickHouse、Presto、Trino、Hive、Spark。在此我们以 Trino 为例，部署完 SQL 转换服务后，在会话变量中设置 `set sql_dialect = trino` ，即可直接采取 Trino SQL 语法执行查询。在某些社区用户的实际线上业务 SQL 兼容性测试中，在全部 3w 多条查询语句中与 Trino SQL 兼容度高达 99% 以上。也欢迎所有用户在使用过程中向我们反馈不兼容的 Case，帮助 Apache Doris 更加完善。
-
-:::note
-- [演示 Demo](https://www.bilibili.com/video/BV1cS421A7kA/?spm_id_from=333.999.0.0)
-
-- 参考文档：[SQL 方言兼容](../../lakehouse/sql-convertor/sql-convertor-overview.md)
-
-:::
 
 ### 高速数据读取，数据传输效率提升 100 倍
 

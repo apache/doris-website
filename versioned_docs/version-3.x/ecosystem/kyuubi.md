@@ -49,7 +49,7 @@ kyuubi.engine.jdbc.connection.password=***
 | kyuubi.engine.jdbc.connection.password | JDBC password                                                 |
 
 - For other configuration in Apache Kyuubi, please refer
-  to [Apache Kyuubi Configuration Docs](https://kyuubi.readthedocs.io/en/master/deployment/settings.html) .
+  to [Apache Kyuubi Configuration Docs](https://kyuubi.readthedocs.io/en/master/configuration/settings.html).
 
 ### Add MySQL JDBC Driver
 

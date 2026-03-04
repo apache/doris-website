@@ -18,7 +18,7 @@ enable_feature_binlog=true
 
 2.1. 从如下链接下载最新的包
 
-`https://apache-doris-releases.oss-accelerate.aliyuncs.com/ccr-release/ccr-syncer-3.0.6-rc05-x64.tar.xz`
+`https://download.selectdb.com/ccr-release/ccr-syncer-3.0.6-rc05-x64.tar.xz`
 
 2.2. 启动和停止 Syncer
 

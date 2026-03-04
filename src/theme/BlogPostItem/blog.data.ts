@@ -174,10 +174,6 @@ export const BLOG_RELATED_EXTERNAL_LINK = [
         externalLink: 'https://www.velodb.io/blog/1427',
     },
     {
-        path: '/blog/from-presto-trino-clickhouse-and-hive-to-apache-doris-sql-convertor-for-easy-migration',
-        externalLink: 'https://www.velodb.io/blog/377',
-    },
-    {
         path: '/blog/from-snowflake-to-apache-doris-real-time-analytics-with-80-percentage-cost-savings',
         externalLink: 'https://www.velodb.io/blog/1435',
     },

@@ -200,7 +200,7 @@ Doris 目前兼容各时区下的数据向 Doris 中进行导入。而由于 Dor
    :::tip
     * Stream Load、Broker Load 等导入方式中，header `timezone` 会覆盖 Doris 集群 `time_zone`，因此在导入时应当保持一致。
     * Stream Load、Broker Load 等导入方式中，header `timezone` 会影响导入转换中使用的函数。
-    * 如果导入时未指定 header `timezone`，则默认使用东八区。
+    * 如果导入时未指定 header `timezone`，则默认为集群当前时区。
    :::
 
 **综上所述，处理时区问题最佳的实践是：**

@@ -115,11 +115,13 @@
                                 "table-design/data-partitioning/dynamic-partitioning",
                                 "table-design/data-partitioning/auto-partitioning",
                                 "table-design/data-partitioning/data-bucketing",
-                                "table-design/data-partitioning/common-issues"
+                                "table-design/data-partitioning/common-issues",
+                                "table-design/data-partitioning/basic-concepts"
                             ]
                         },
                         "table-design/data-type",
                         "table-design/column-compression",
+                        "table-design/storage-format",
                         {
                             "type": "category",
                             "label": "Table Indexes",
@@ -190,7 +192,8 @@
                                 "data-operate/import/import-way/routine-load-manual",
                                 "data-operate/import/import-way/insert-into-manual",
                                 "data-operate/import/import-way/insert-into-values-manual",
-                                "data-operate/import/import-way/mysql-load-manual"
+                                "data-operate/import/import-way/mysql-load-manual",
+                                "data-operate/import/import-way/log-storage-analysis"
                             ]
                         },
                         {
@@ -230,7 +233,14 @@
                                 "data-operate/import/load-internals/stream-load-in-complex-network"
                             ]
                         },
-                        "data-operate/import/streaming-job"
+                        {
+                            "type": "category",
+                            "label": "Continuous Load",
+                            "items": [
+                                "data-operate/import/streaming-job/streaming-job-tvf",
+                                "data-operate/import/streaming-job/streaming-job-multi-table"
+                            ]
+                        }
                     ]
                 },
                 {
@@ -441,13 +451,50 @@
                             "label": "Data Catalogs",
                             "items": [
                                 "lakehouse/catalogs/hive-catalog",
-                                "lakehouse/catalogs/iceberg-catalog",
-                                "lakehouse/catalogs/hudi-catalog",
-                                "lakehouse/catalogs/paimon-catalog",
-                                "lakehouse/catalogs/maxcompute-catalog",
+                                {
+                                    "type": "category",
+                                    "label": "Iceberg Catalog",
+                                    "link": {"type": "doc", "id": "lakehouse/catalogs/iceberg-catalog"},
+                                    "items": [
+                                        "lakehouse/best-practices/doris-iceberg",
+                                        "lakehouse/best-practices/doris-aws-s3tables",
+                                        "lakehouse/best-practices/doris-polaris",
+                                        "lakehouse/best-practices/doris-gravitino",
+                                        "lakehouse/best-practices/doris-onelake",
+                                        "lakehouse/best-practices/doris-unity-catalog",
+                                        "lakehouse/best-practices/doris-lakekeeper",
+                                        "lakehouse/best-practices/doris-nessie"
+                                    ]
+                                },
+                                {
+                                    "type": "category",
+                                    "label": "Paimon Catalog",
+                                    "link": {"type": "doc", "id": "lakehouse/catalogs/paimon-catalog"},
+                                    "items": [
+                                        "lakehouse/best-practices/doris-paimon",
+                                        "lakehouse/best-practices/doris-dlf-paimon"
+                                    ]
+                                },
+                                {
+                                    "type": "category",
+                                    "label": "Hudi Catalog",
+                                    "link": {"type": "doc", "id": "lakehouse/catalogs/hudi-catalog"},
+                                    "items": [
+                                        "lakehouse/best-practices/doris-hudi"
+                                    ]
+                                },
+                                {
+                                    "type": "category",
+                                    "label": "MaxCompute Catalog",
+                                    "link": {"type": "doc", "id": "lakehouse/catalogs/maxcompute-catalog"},
+                                    "items": [
+                                        "lakehouse/best-practices/doris-maxcompute"
+                                    ]
+                                },
                                 "lakehouse/catalogs/delta-lake-catalog",
                                 "lakehouse/catalogs/bigquery-catalog",
                                 "lakehouse/catalogs/kudu-catalog",
+                                "lakehouse/catalogs/kafka-catalog",
                                 "lakehouse/catalogs/es-catalog",
                                 "lakehouse/catalogs/doris-catalog",
                                 "lakehouse/catalogs/jdbc-catalog-overview",
@@ -503,35 +550,12 @@
                         "lakehouse/data-cache",
                         "lakehouse/meta-cache",
                         "lakehouse/compute-node",
-                        "lakehouse/statistics",
-                        {
-                            "type": "category",
-                            "label": "SQL Dialect Convertor",
-                            "items": [
-                                "lakehouse/sql-convertor/sql-convertor-overview",
-                                "lakehouse/sql-convertor/presto-trino-guide",
-                                "lakehouse/sql-convertor/clickhouse-guide",
-                                "lakehouse/sql-convertor/hive-guide",
-                                "lakehouse/sql-convertor/pg-guide"
-                            ]
-                        },
+                        "lakehouse/statistics", 
                         {
                             "type": "category",
                             "label": "Lakehouse Best Practices",
                             "items": [
                                 "lakehouse/best-practices/optimization",
-                                "lakehouse/best-practices/doris-hudi",
-                                "lakehouse/best-practices/doris-paimon",
-                                "lakehouse/best-practices/doris-iceberg",
-                                "lakehouse/best-practices/doris-aws-s3tables",
-                                "lakehouse/best-practices/doris-polaris",
-                                "lakehouse/best-practices/doris-gravitino",
-                                "lakehouse/best-practices/doris-onelake",
-                                "lakehouse/best-practices/doris-unity-catalog",
-                                "lakehouse/best-practices/doris-lakekeeper",
-                                "lakehouse/best-practices/doris-nessie",
-                                "lakehouse/best-practices/doris-dlf-paimon",
-                                "lakehouse/best-practices/doris-maxcompute",
                                 "lakehouse/best-practices/kerberos",
                                 "lakehouse/best-practices/tpch",
                                 "lakehouse/best-practices/tpcds"
@@ -605,7 +629,7 @@
                                     "label": "Authentication",
                                     "items": [
                                         "admin-manual/auth/authentication/internal",
-                                        "admin-manual/auth/authentication/federation"
+                                        "admin-manual/auth/authentication/ldap"
                                     ]
                                 },
                                 {
@@ -1172,6 +1196,7 @@
                         "sql-manual/basic-element/reserved-keywords",
                         "sql-manual/basic-element/variables",
                         "sql-manual/basic-element/comments",
+                        "sql-manual/basic-element/file-path-pattern",
                         {
                             "type": "category",
                             "label": "Operators",
@@ -1464,6 +1489,7 @@
                                         "sql-manual/sql-functions/scalar-functions/date-time-functions/next-day",
                                         "sql-manual/sql-functions/scalar-functions/date-time-functions/period-add",
                                         "sql-manual/sql-functions/scalar-functions/date-time-functions/period-diff",
+                                        "sql-manual/sql-functions/scalar-functions/date-time-functions/previous-day",
                                         "sql-manual/sql-functions/scalar-functions/date-time-functions/quarter",
                                         "sql-manual/sql-functions/scalar-functions/date-time-functions/quarters-add",
                                         "sql-manual/sql-functions/scalar-functions/date-time-functions/quarters-sub",
@@ -1524,10 +1550,13 @@
                                         "sql-manual/sql-functions/scalar-functions/spatial-functions/st-circle",
                                         "sql-manual/sql-functions/scalar-functions/spatial-functions/st-contains",
                                         "sql-manual/sql-functions/scalar-functions/spatial-functions/st-disjoint",
+                                        "sql-manual/sql-functions/scalar-functions/spatial-functions/st-distance",
                                         "sql-manual/sql-functions/scalar-functions/spatial-functions/st-distance-sphere",
                                         "sql-manual/sql-functions/scalar-functions/spatial-functions/st-geometryfromtext",
                                         "sql-manual/sql-functions/scalar-functions/spatial-functions/st-geometryfromwkb",
+                                        "sql-manual/sql-functions/scalar-functions/spatial-functions/st-geometrytype",
                                         "sql-manual/sql-functions/scalar-functions/spatial-functions/st-intersects",
+                                        "sql-manual/sql-functions/scalar-functions/spatial-functions/st-length",
                                         "sql-manual/sql-functions/scalar-functions/spatial-functions/st-linefromtext",
                                         "sql-manual/sql-functions/scalar-functions/spatial-functions/st-point",
                                         "sql-manual/sql-functions/scalar-functions/spatial-functions/st-polygon",
@@ -2250,6 +2279,7 @@
                                         "sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-REPLACE",
                                         "sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-PROPERTY",
                                         "sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-COMMENT",
+                                        "sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-DISTRIBUTION",
                                         "sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-ADD-GENERATED-COLUMN",
                                         "sql-manual/sql-statements/table-and-view/table/CANCEL-ALTER-TABLE",
                                         "sql-manual/sql-statements/table-and-view/table/SHOW-ALTER-TABLE",
@@ -2531,6 +2561,7 @@
                     "type": "category",
                     "label": "v4.0",
                     "items": [
+                        "releasenotes/v4.0/release-4.0.3",
                         "releasenotes/v4.0/release-4.0.2",
                         "releasenotes/v4.0/release-4.0.1",
                         "releasenotes/v4.0/release-4.0.0"

@@ -86,7 +86,6 @@
 #### 功能扩展
 - 支持阿里云 OSS-HDFS Root Policy 功能 [#50678](https://github.com/apache/doris/pull/50678)
 - 方言兼容：返回 Hive 格式查询结果 [#49931](https://github.com/apache/doris/pull/49931) 
-	- 详情参考文档：[SQL 转换器](https://doris.apache.org/docs/dev/lakehouse/sql-convertor/sql-convertor-overview)
 
 ### 异步物化视图
 
@@ -108,8 +107,7 @@
 - **内存追踪优化**：高并发场景性能提升约 10% [#50462](https://github.com/apache/doris/pull/50462)
 - **审计日志增强**：通过 `audit_plugin_max_insert_stmt_length` 限制 INSERT 语句长度 [#51314](https://github.com/apache/doris/pull/51314) 
 	- 详情请参考文档：[审计插件](https://doris.apache.org/docs/3.0/admin-manual/audit-plugin)
-- **SQL 转换器控制**：新增会话变量 `sql_convertor_config` 和 `enable_sql_convertor_features` 
-	- 详情请参考文档：[SQL 转换器](https://doris.apache.org/docs/dev/lakehouse/sql-convertor/sql-convertor-overview)
+
 
 ## 缺陷修复
 

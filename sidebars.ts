@@ -113,10 +113,12 @@ const sidebars: SidebarsConfig = {
                                 'table-design/data-partitioning/auto-partitioning',
                                 'table-design/data-partitioning/data-bucketing',
                                 'table-design/data-partitioning/common-issues',
+                                'table-design/data-partitioning/basic-concepts',
                             ],
                         },
                         'table-design/data-type',
                         'table-design/column-compression',
+                        'table-design/storage-format',
                         {
                             type: 'category',
                             label: 'Table Indexes',
@@ -186,6 +188,7 @@ const sidebars: SidebarsConfig = {
                                 'data-operate/import/import-way/insert-into-manual',
                                 'data-operate/import/import-way/insert-into-values-manual',
                                 'data-operate/import/import-way/mysql-load-manual',
+                                "data-operate/import/import-way/log-storage-analysis"
                             ],
                         },
                         {
@@ -196,6 +199,7 @@ const sidebars: SidebarsConfig = {
                                 'data-operate/import/file-format/json',
                                 'data-operate/import/file-format/parquet',
                                 'data-operate/import/file-format/orc',
+                                'data-operate/import/file-format/native',
                             ],
                         },
                         {
@@ -225,7 +229,14 @@ const sidebars: SidebarsConfig = {
                                 'data-operate/import/load-internals/stream-load-in-complex-network',
                             ],
                         },
-                        "data-operate/import/streaming-job"
+                        {
+                            type: 'category',
+                            label: 'Continuous Load',
+                            items: [
+                                'data-operate/import/streaming-job/streaming-job-tvf',
+                                'data-operate/import/streaming-job/streaming-job-multi-table',
+                            ],
+                        }
                     ],
                 },
                 {
@@ -284,7 +295,11 @@ const sidebars: SidebarsConfig = {
                         {
                             type: 'category',
                             label: 'User Defined Functions',
-                            items: ['query-data/udf/alias-function', 'query-data/udf/java-user-defined-function'],
+                            items: [
+                                'query-data/udf/alias-function',
+                                'query-data/udf/java-user-defined-function',
+                                'query-data/udf/python-user-defined-function',
+                            ],
                         },
                         'query-data/complex-type',
                         'query-data/lateral-view',
@@ -434,6 +449,7 @@ const sidebars: SidebarsConfig = {
                             type: 'category',
                             label: 'Data Catalogs',
                             items: [
+                                'lakehouse/catalogs/hive-catalog',
                                 {
                                     type: 'category',
                                     label: 'Iceberg Catalog',
@@ -458,12 +474,26 @@ const sidebars: SidebarsConfig = {
                                         'lakehouse/best-practices/doris-dlf-paimon'
                                     ],
                                 },
-                                'lakehouse/catalogs/hive-catalog',
-                                'lakehouse/catalogs/hudi-catalog',
-                                'lakehouse/catalogs/maxcompute-catalog',
+                                {
+                                    type: 'category',
+                                    label: 'Hudi Catalog',
+                                    link: {type: 'doc', id: 'lakehouse/catalogs/hudi-catalog'},
+                                    items: [
+                                        'lakehouse/best-practices/doris-hudi'
+                                    ],
+                                },
+                                {
+                                    type: 'category',
+                                    label: 'MaxCompute Catalog',
+                                    link: {type: 'doc', id: 'lakehouse/catalogs/maxcompute-catalog'},
+                                    items: [
+                                        'lakehouse/best-practices/doris-maxcompute'
+                                    ],
+                                },
                                 'lakehouse/catalogs/delta-lake-catalog',
                                 'lakehouse/catalogs/bigquery-catalog',
                                 'lakehouse/catalogs/kudu-catalog',
+                                'lakehouse/catalogs/kafka-catalog',
                                 'lakehouse/catalogs/es-catalog',
                                 'lakehouse/catalogs/doris-catalog',
                                 'lakehouse/catalogs/jdbc-catalog-overview',
@@ -522,22 +552,9 @@ const sidebars: SidebarsConfig = {
                         'lakehouse/statistics',
                         {
                             type: 'category',
-                            label: 'SQL Dialect Convertor',
-                            items: [
-                                'lakehouse/sql-convertor/sql-convertor-overview',
-                                'lakehouse/sql-convertor/presto-trino-guide',
-                                'lakehouse/sql-convertor/clickhouse-guide',
-                                'lakehouse/sql-convertor/hive-guide',
-                                'lakehouse/sql-convertor/pg-guide',
-                            ],
-                        },
-                        {
-                            type: 'category',
                             label: 'Lakehouse Best Practices',
                             items: [
                                 'lakehouse/best-practices/optimization',
-                                'lakehouse/best-practices/doris-hudi',
-                                'lakehouse/best-practices/doris-maxcompute',
                                 'lakehouse/best-practices/kerberos',
                                 'lakehouse/best-practices/tpch',
                                 'lakehouse/best-practices/tpcds',
@@ -611,7 +628,7 @@ const sidebars: SidebarsConfig = {
                                     label: 'Authentication',
                                     items: [
                                         'admin-manual/auth/authentication/internal',
-                                        'admin-manual/auth/authentication/federation',
+                                        'admin-manual/auth/authentication/ldap',
                                     ],
                                 },
                                 {
@@ -645,7 +662,7 @@ const sidebars: SidebarsConfig = {
                                 'admin-manual/auth/integrations/aws-authentication-and-authorization',
                                 'admin-manual/auth/integrations/aws-iam-role',
                             ],
-                        },
+                        }
                     ],
                 },
             ],
@@ -958,7 +975,7 @@ const sidebars: SidebarsConfig = {
                             ],
                         },
                     ],
-                },
+                }
             ],
         },
         {
@@ -1026,7 +1043,7 @@ const sidebars: SidebarsConfig = {
                         'ecosystem/hive-hll-udf',
                         'ecosystem/spark-load',
                     ],
-                },
+                }
             ],
         },
         {
@@ -1164,6 +1181,7 @@ const sidebars: SidebarsConfig = {
                         'sql-manual/basic-element/reserved-keywords',
                         'sql-manual/basic-element/variables',
                         'sql-manual/basic-element/comments',
+                        'sql-manual/basic-element/file-path-pattern',
                         {
                             type: 'category',
                             label: 'Operators',
@@ -1457,6 +1475,7 @@ const sidebars: SidebarsConfig = {
                                         'sql-manual/sql-functions/scalar-functions/date-time-functions/next-day',
                                         'sql-manual/sql-functions/scalar-functions/date-time-functions/period-add',
                                         'sql-manual/sql-functions/scalar-functions/date-time-functions/period-diff',
+                                        'sql-manual/sql-functions/scalar-functions/date-time-functions/previous-day',
                                         'sql-manual/sql-functions/scalar-functions/date-time-functions/quarter',
                                         'sql-manual/sql-functions/scalar-functions/date-time-functions/quarters-add',
                                         'sql-manual/sql-functions/scalar-functions/date-time-functions/quarters-sub',
@@ -1517,10 +1536,13 @@ const sidebars: SidebarsConfig = {
                                         'sql-manual/sql-functions/scalar-functions/spatial-functions/st-circle',
                                         'sql-manual/sql-functions/scalar-functions/spatial-functions/st-contains',
                                         'sql-manual/sql-functions/scalar-functions/spatial-functions/st-disjoint',
+                                        'sql-manual/sql-functions/scalar-functions/spatial-functions/st-distance',
                                         'sql-manual/sql-functions/scalar-functions/spatial-functions/st-distance-sphere',
                                         'sql-manual/sql-functions/scalar-functions/spatial-functions/st-geometryfromtext',
                                         'sql-manual/sql-functions/scalar-functions/spatial-functions/st-geometryfromwkb',
+                                        'sql-manual/sql-functions/scalar-functions/spatial-functions/st-geometrytype',
                                         'sql-manual/sql-functions/scalar-functions/spatial-functions/st-intersects',
+                                        'sql-manual/sql-functions/scalar-functions/spatial-functions/st-length',
                                         'sql-manual/sql-functions/scalar-functions/spatial-functions/st-linefromtext',
                                         'sql-manual/sql-functions/scalar-functions/spatial-functions/st-point',
                                         'sql-manual/sql-functions/scalar-functions/spatial-functions/st-polygon',
@@ -2243,6 +2265,7 @@ const sidebars: SidebarsConfig = {
                                         'sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-REPLACE',
                                         'sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-PROPERTY',
                                         'sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-COMMENT',
+                                        'sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-DISTRIBUTION',
                                         'sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-ADD-GENERATED-COLUMN',
                                         'sql-manual/sql-statements/table-and-view/table/CANCEL-ALTER-TABLE',
                                         'sql-manual/sql-statements/table-and-view/table/SHOW-ALTER-TABLE',
@@ -2522,6 +2545,7 @@ const sidebars: SidebarsConfig = {
                     type: 'category',
                     label: 'v4.0',
                     items: [
+                        'releasenotes/v4.0/release-4.0.3',
                         'releasenotes/v4.0/release-4.0.2',
                         'releasenotes/v4.0/release-4.0.1',
                         'releasenotes/v4.0/release-4.0.0'

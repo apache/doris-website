@@ -30,9 +30,9 @@ $ git clone https://github.com/apache/doris-thirdparty.git
 $ cd doris-thirdparty
 $ git checkout trino-435
 $ cd plugin/trino-delta-lake
-$ mvn clean install -DskipTest
+$ mvn clean install -DskipTests
 $ cd ../../lib/trino-hdfs
-$ mvn clean install -DskipTest
+$ mvn clean install -DskipTests
 ```
 
 After compiling, you will find the `trino-delta-lake-435` directory under `trino/plugin/trino-delta-lake/target/` and the `hdfs` directory under `trino/lib/trino-hdfs/target/`.

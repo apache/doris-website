@@ -13,7 +13,7 @@
 ## 语法
 
 ```sql
-CANCEL RESTORE FROM <db_name>;
+CANCEL [GLOBAL] RESTORE [FROM <db_name>];
 ```
 
 ## 参数
@@ -34,3 +34,8 @@ CANCEL RESTORE FROM <db_name>;
 CANCEL RESTORE FROM example_db;
 ```
 
+2. 取消 GLOBAL RESTORE 任务。
+
+```sql
+CANCEL GLOBAL RESTORE;
+```

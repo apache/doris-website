@@ -183,11 +183,13 @@ GRANT
 - 通过 `SHOW STORAGE VAULTS` 查看该 Storage Vault 的信息；
 - 建表时在 `PROPERTIES` 中指定使用该 Storage Vault。
 
-### 撤销
+**示例**
 
 ```sql
 grant usage_priv on storage vault my_storage_vault to user1
 ```
+
+### 撤销
 
 撤销指定的 MySQL 用户的 Storage Vault 权限。
 

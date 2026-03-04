@@ -2,7 +2,7 @@
 {
     "title": "集成阿里云 DLF Rest Catalog",
     "language": "zh-CN",
-    "description": "阿里云数据湖构建 Data Lake Formation，DLF 作为云原生数据湖架构核心组成部分，帮助用户快速地构建云原生数据湖架构。数据湖构建提供湖上元数据统一管理、企业级权限控制，并无缝对接多种计算引擎，打破数据孤岛，洞察业务价值。"
+    "description": "本文介绍如何使用 Apache Doris 集成阿里云 DLF（Data Lake Formation）Rest Catalog，实现 Paimon 表数据的无缝访问与分析，包括创建 Catalog、查询数据、增量读取等操作指南。"
 }
 ---
 
@@ -24,10 +24,10 @@
 
     深度整合阿里云产品，包括流批计算引擎，实现开箱即用，提升用户体验与操作便捷性。
 
-DLF 2.5 版本开始支持 Paimon Rest Catalog。Doris 自 3.1.0 版本开始，支持集成 DLF 2.5+ 版本的 Paimon Rest Catalog，可以无缝对接 DLF，访问并分析 Paimon 表数据。本文将演示如何使用 Apache Doris 对接 DLF 2.5+ 版本并进行 Paimon 表数据访问。
+DLF 自 2.5 版本开始支持 Paimon Rest Catalog。Doris 自 3.0.3/3.1.0 版本开始，支持集成 DLF 2.5+ 版本的 Paimon Rest Catalog，可以无缝对接 DLF，访问并分析 Paimon 表数据。本文将演示如何使用 Apache Doris 对接 DLF 2.5+ 版本并进行 Paimon 表数据访问。
 
 :::tip
-该功能从 Doris 3.1 开始支持
+该功能从 Doris 3.0.3/3.1.0 版本开始支持。
 :::
 
 ## 使用指南
@@ -89,7 +89,7 @@ DLF 2.5 版本开始支持 Paimon Rest Catalog。Doris 自 3.1.0 版本开始，
     org.apache.paimon.oss.OSSLoader
     ```
 
-### 03 使用 Doris 链接 DLF
+### 03 使用 Doris 连接 DLF
 
 - 创建 Paimon Catalog
 

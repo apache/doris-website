@@ -136,6 +136,6 @@ Doris 的元数据要求时间精度要小于 5000ms，所以所有集群所有�
 通常情况下，可以通过配置 NTP 服务保证各节点时钟同步。
 
 ```bash
-sudo systemctl start_ntpd.service
-sudo systemctl enable_ntpd.service
+sudo systemctl start ntpd.service
+sudo systemctl enable ntpd.service
 ```

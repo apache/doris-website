@@ -257,10 +257,10 @@ BE 重启后该配置将失效。如果想持久化修改结果，使用如下�
 
 #### `brpc_num_threads`
 
-* 描述：该配置主要用来修改 brpc 中 bthreads 的数量。该配置的默认值被设置为 -1, 这意味着 bthreads 的数量将被设置为机器的 cpu 核数。
+* 描述：该配置主要用来修改 brpc 中 bthreads 的数量。该配置的默认值被设置为 256。
 
   - 用户可以将该配置的值调大来获取更好的 QPS 性能。更多的信息可以参考 `https://github.com/apache/brpc/blob/master/docs/cn/benchmark.md`。
-* 默认值：-1
+* 默认值：256
 
 #### `thrift_rpc_timeout_ms`
 
@@ -437,7 +437,7 @@ Thrift 服务器接收请求消息的大小（字节数）上限。如果客户�
 
 * 类型：int32
 * 描述：在列式 compaction 中，输出的 segment 文件最大值，单位是 m 字节。
-* 默认值：268435456
+* 默认值：1073741824
 
 #### `enable_ordered_data_compaction`
 
@@ -609,12 +609,6 @@ BaseCompaction:546859:
 * 类型：int32
 * 描述：当 segment 数量超过此阈值时触发 segment compaction，该配置也限制了单个 segment compaction 任务中的最大原始 segment 数量。
 * 默认值：10
-
-#### `segcompaction_candidate_max_rows`
-
-* 类型：int32
-* 描述：当 segment 的行数超过此大小时则会在 segment compaction 时被 compact，否则跳过
-* 默认值：1048576
 
 #### `segcompaction_candidate_max_rows`
 
