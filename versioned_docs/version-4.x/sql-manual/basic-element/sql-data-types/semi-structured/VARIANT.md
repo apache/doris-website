@@ -191,6 +191,54 @@ v1 VARIANT<
 
 Matched subpaths are materialized as columns by default. If too many paths match and generate excessive columns, consider enabling `variant_enable_typed_paths_to_sparse` (see “Configuration”).
 
+### Skip patterns
+
+> This feature is supported since version 4.1.0
+
+You can define `SKIP` rules in a VARIANT Schema Template to prune matched JSON paths during ingestion, so the corresponding data is not stored.
+
+- `SKIP 'pattern'`: glob matching.
+- `SKIP MATCH_NAME 'path'`: exact path matching.
+- Matching is based on dot-separated paths (for example, `a.b.temp_1`).
+- If a path matches both a typed path rule and a skip rule, `SKIP` takes precedence.
+- Skip rules are defined in `CREATE TABLE` and currently cannot be altered online.
+
+Example 1: skip debug and secret fields.
+
+```sql
+CREATE TABLE t_variant_skip (
+    id BIGINT,
+    data VARIANT<SKIP 'debug_*', SKIP MATCH_NAME 'secret'>
+)
+DISTRIBUTED BY HASH(id) BUCKETS 1
+PROPERTIES ("replication_num" = "1");
+
+INSERT INTO t_variant_skip VALUES
+(1, '{"name":"alice","debug_flag":true,"secret":"token1","payload":{"k":"v"}}'),
+(2, '{"name":"bob","debug_cost":12,"secret":"token2","payload":{"x":1}}');
+
+SELECT data FROM t_variant_skip ORDER BY id;
+-- {"name":"alice","payload":{"k":"v"}}
+-- {"name":"bob","payload":{"x":1}}
+```
+
+Example 2: `SKIP` and typed paths coexist, and `SKIP` wins on overlap.
+
+```sql
+CREATE TABLE t_variant_skip_with_typed (
+    id BIGINT,
+    data VARIANT<SKIP 'num_*', 'num_*': BIGINT, 'name': STRING>
+)
+DISTRIBUTED BY HASH(id) BUCKETS 1
+PROPERTIES ("replication_num" = "1");
+
+INSERT INTO t_variant_skip_with_typed VALUES
+(1, '{"name":"alice","num_a":100,"num_b":200}');
+
+SELECT data FROM t_variant_skip_with_typed;
+-- {"name":"alice"}
+```
+
 ## Type conflicts and promotion rules
 
 When incompatible types appear on the same path (e.g., the same field shows up as both integer and string), the type is promoted to JSONB to avoid information loss:

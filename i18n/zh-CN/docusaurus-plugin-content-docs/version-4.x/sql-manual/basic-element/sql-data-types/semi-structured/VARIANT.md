@@ -191,6 +191,54 @@ v1 VARIANT<
 
 匹配成功的子路径默认会展开为独立列。若匹配子列过多导致列数暴增，建议开启 `variant_enable_typed_paths_to_sparse`（见“配置”）。
 
+### Skip Patterns
+
+> 该功能自 4.1.0 版本支持
+
+可在 VARIANT 的 Schema Template 中定义 `SKIP` 规则，在导入阶段剪枝命中的 JSON 路径，使对应数据不进行存储。
+
+- `SKIP 'pattern'`：按 glob 模式匹配。
+- `SKIP MATCH_NAME 'path'`：按完整路径精确匹配。
+- 匹配基于点分路径（如 `a.b.temp_1`）。
+- 若同一路径同时命中 typed path 规则与 skip 规则，则以 `SKIP` 为准。
+- Skip 规则需在 `CREATE TABLE` 中声明，当前不支持在线 ALTER 修改。
+
+示例 1：跳过 debug 与 secret 字段。
+
+```sql
+CREATE TABLE t_variant_skip (
+    id BIGINT,
+    data VARIANT<SKIP 'debug_*', SKIP MATCH_NAME 'secret'>
+)
+DISTRIBUTED BY HASH(id) BUCKETS 1
+PROPERTIES ("replication_num" = "1");
+
+INSERT INTO t_variant_skip VALUES
+(1, '{"name":"alice","debug_flag":true,"secret":"token1","payload":{"k":"v"}}'),
+(2, '{"name":"bob","debug_cost":12,"secret":"token2","payload":{"x":1}}');
+
+SELECT data FROM t_variant_skip ORDER BY id;
+-- {"name":"alice","payload":{"k":"v"}}
+-- {"name":"bob","payload":{"x":1}}
+```
+
+示例 2：`SKIP` 与 typed path 共存，重叠命中时 `SKIP` 优先。
+
+```sql
+CREATE TABLE t_variant_skip_with_typed (
+    id BIGINT,
+    data VARIANT<SKIP 'num_*', 'num_*': BIGINT, 'name': STRING>
+)
+DISTRIBUTED BY HASH(id) BUCKETS 1
+PROPERTIES ("replication_num" = "1");
+
+INSERT INTO t_variant_skip_with_typed VALUES
+(1, '{"name":"alice","num_a":100,"num_b":200}');
+
+SELECT data FROM t_variant_skip_with_typed;
+-- {"name":"alice"}
+```
+
 ## 类型冲突与提升规则
 
 当同一路径出现不兼容类型（如同一字段既出现整数又出现字符串）时，将提升为 JSONB 类型以避免信息丢失：
