@@ -163,7 +163,7 @@ jobs:
 
       - uses: peter-evans/create-pull-request@v6
         with:
-          base: main
+          base: master
           branch: auto/i18n-ja-${{ github.run_id }}
           commit-message: chore(i18n):auto translate docs to ja
           title: "[auto-i18n] Translate docs to Japanese"
