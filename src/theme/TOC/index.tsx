@@ -11,6 +11,7 @@ import { SlackIcon } from '../../components/Icons/slack-icon';
 import useIsBrowser from '@docusaurus/useIsBrowser';
 import { DOWNLOAD_PDFS } from '@site/src/constant/download.data';
 import { VERSIONS, DEFAULT_VERSION } from '@site/src/constant/version';
+import { normalizePathname } from '@site/src/utils/locale';
 import { Spin } from 'antd';
 import Link from '@docusaurus/Link';
 
@@ -22,9 +23,11 @@ const LINK_CLASS_NAME = 'table-of-contents__link toc-highlight';
 const LINK_ACTIVE_CLASS_NAME = 'table-of-contents__link--active';
 
 export default function TOC({ className, ...props }: Props): React.ReactElement {
-    const { siteConfig } = useDocusaurusContext();
+    const {
+        i18n: { currentLocale, locales },
+    } = useDocusaurusContext();
     const isBrowser = useIsBrowser();
-    const isCN = siteConfig.baseUrl.indexOf('zh-CN') > -1;
+    const isCN = currentLocale === 'zh-CN';
     const [currentVersion, setCurrentVersion] = useState(DEFAULT_VERSION);
     const [loading, setLoading] = useState(false);
 
@@ -65,19 +68,16 @@ export default function TOC({ className, ...props }: Props): React.ReactElement 
 
     useEffect(() => {
         if (typeof window !== 'undefined') {
-            const pathname = location.pathname.includes('zh-CN/docs')
-                ? location.pathname.split('/')[2]
-                : location.pathname.split('/')[1];
-            const secPath = location.pathname.includes('zh-CN/docs')
-                ? location.pathname.split('/')[3]
-                : location.pathname.split('/')[2];
+            const normalizedPathname = normalizePathname(location.pathname, locales);
+            const pathname = normalizedPathname.split('/')[1];
+            const secPath = normalizedPathname.split('/')[2];
             if (pathname === 'docs' && VERSIONS.includes(secPath)) {
                 setCurrentVersion(secPath);
             } else {
                 setCurrentVersion(DEFAULT_VERSION);
             }
         }
-    }, [typeof window !== 'undefined' && location.pathname]);
+    }, [locales, typeof window !== 'undefined' && location.pathname]);
 
     return (
         <div className={clsx(styles.tableOfContents, 'thin-scrollbar', 'toc-container', className)}>

@@ -30,7 +30,7 @@ under the License.
 测试涉及到的机器规格都是 16C64GB的机器，CPU型号为 Intel(R) Xeon(R) Platinum 8369B CPU @ 2.70GHz。FE BE 混合部署在一台 16C64GB 的机器上（注意这个不是推荐的生产环境部署方式，生产环境上建议 FE 与 BE 分离部署），测试的版本是 Apache Doris 4.0.2。采用的测试数据集是 VectorDBBench Performance768D1M，该数据集向量的维度为 768 维，一共一百万行。
 
 ## 测试结果
-![performance](/images/vector-search/ann_index_performance_0.jpg)
+![performance](/images/vector-search/ann-index-performance-0.jpg)
 ## 结果分析
 ```
                     ┌──────────────────────┐

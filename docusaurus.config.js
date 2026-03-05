@@ -54,7 +54,7 @@ const config = {
     trailingSlash: true,
     i18n: {
         defaultLocale: 'en',
-        locales: ['en', 'zh-CN'],
+        locales: ['en', 'zh-CN', 'ja'],
         localeConfigs: {
             en: {
                 label: 'English',
@@ -63,6 +63,10 @@ const config = {
             'zh-CN': {
                 label: '中文',
                 htmlLang: 'zh-Hans-CN',
+            },
+            ja: {
+                label: '日本語',
+                htmlLang: 'ja-JP',
             },
         },
     },
@@ -234,7 +238,7 @@ const config = {
             '@yang1666204/docusaurus-search-local',
             {
                 hashed: true,
-                language: ['en', 'zh'],
+                language: ['en', 'zh', 'ja'],
                 highlightSearchTermsOnTargetPage: true,
                 // indexPages: true,
                 indexDocs: true,
@@ -406,6 +410,34 @@ const config = {
                             {
                                 label: 'Archived',
                                 to: `/archive-docs`,
+                            },
+                        ],
+                    },
+                ],
+            },
+            docNavbarJA: {
+                title: '',
+                logo: {
+                    alt: 'Apache Doris',
+                    src: logoImg,
+                },
+                items: [
+                    {
+                        type: 'search',
+                        position: 'left',
+                        className: 'docs-search',
+                    },
+                    {
+                        type: 'localeDropdown',
+                        position: 'right',
+                    },
+                    {
+                        type: 'docsVersionDropdown',
+                        position: 'right',
+                        dropdownItemsAfter: [
+                            {
+                                label: 'Archived',
+                                to: `/ja/archive-docs`,
                             },
                         ],
                     },
