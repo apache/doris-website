@@ -50,7 +50,7 @@ select * from S3(
 ### Check import status
 
 ```SQL
-select * from job(type=insert) where ExecuteType = "streaming"
+select * from jobs("type"="insert") where ExecuteType = "STREAMING"
                Id: 1758538737484
              Name: my_job1
           Definer: root
@@ -165,10 +165,10 @@ The module description is as follows:
 
 #### Job
 
-After a job is successfully submitted, you can execute **select \* from job("insert") where ExecuteType = 'Streaming'** to check the current status of the job.
+After a job is successfully submitted, you can execute **select \* from jobs("type"="insert") where ExecuteType = 'STREAMING'** to check the current status of the job.
 
 ```SQL
-select * from job(type=insert) where ExecuteType = "streaming"
+select * from jobs("type"="insert") where ExecuteType = "STREAMING"
                Id: 1758538737484
              Name: my_job1
           Definer: root
@@ -223,12 +223,12 @@ The specific parameter results are displayed as follows:
 
 #### Task
 
-You can execute `select \* from tasks(type='insert') where jobId='1758534452459'` to view the running status of each Task.
+You can execute `select \* from tasks("type"="insert") where jobId='1758534452459'` to view the running status of each Task.
 
 Note: Only the latest Task information will be retained.
 
 ```SQL
-mysql> select * from tasks(type='insert') where jobId='1758534452459'\G
+mysql> select * from tasks("type"="insert") where jobId='1758534452459'\G
 *************************** 1. row ***************************
        TaskId: 1758534723330
         JobId: 1758534452459
