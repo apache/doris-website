@@ -73,8 +73,8 @@ const config = {
             'data-website-id': 'a5fb90df-217a-4097-95c0-80490220314b',
             'data-modal-title': 'Apache Doris AI',
             'data-project-name': 'Apache Doris Website',
-            'data-button-hide':"true",
-            'data-modal-override-open-selector':"#navbar-ask-ai-btn",
+            'data-button-hide': "true",
+            'data-modal-override-open-selector': "#navbar-ask-ai-btn",
             'data-project-logo': 'https://cdn.selectdb.com/static/doris_1_3c42247c63.png',
             'data-modal-image': 'https://cdn.selectdb.com/static/doris_logo_cc5a30d886.png',
             'data-project-color': '#11A679',
@@ -265,12 +265,17 @@ const config = {
                     //    <span>Apache Doris x Milvus 联合 Webinar：解锁 DB for AI 的无限可能</span> 
                     //    <p style="margin-left:0.675rem;color:#52CAA3;font-size:0.875rem;line-height:1rem;font-weight:700;letter-spacing:0.28px;">查看详情 -></p> 
                     //        </a>`,
-                            en: `<a href="https://forms.gle/7RKm6CGSNhdW8ZnK9" target="_blank" style="display:flex; width: 100%; align-items: center; justify-content: center; margin-left: 4px; text-decoration: none;">
-                            <img style="width: 19px; height: 19px; margin-right: 3px;" src="/images/navbar-star-white.svg">
-                            <span style="font-size:0.875rem;font-weight:700;line-height:1rem; margin-right:0.675rem; text-decoration: none;">NEW EVENTS</span>
-                           <span>Help Shape the Future of Apache Doris: 2026 User Survey</span> 
-                           <p style="margin-left:0.675rem;font-size:0.875rem;line-height:1rem;font-weight:700;letter-spacing:0.28px;">Register Now -></p> 
-                               </a>`
+                    //     en: `<a href="https://forms.gle/7RKm6CGSNhdW8ZnK9" target="_blank" style="display:flex; width: 100%; align-items: center; justify-content: center; margin-left: 4px; text-decoration: none;">
+                    //     <img style="width: 19px; height: 19px; margin-right: 3px;" src="/images/navbar-star-white.svg">
+                    //     <span style="font-size:0.875rem;font-weight:700;line-height:1rem; margin-right:0.675rem; text-decoration: none;">NEW EVENTS</span>
+                    //    <span>Help Shape the Future of Apache Doris: 2026 User Survey</span> 
+                    //    <p style="margin-left:0.675rem;font-size:0.875rem;line-height:1rem;font-weight:700;letter-spacing:0.28px;">Register Now -></p> 
+                    //        </a>`
+                    en: `<a href="https://forms.gle/7RKm6CGSNhdW8ZnK9" target="_blank" style="display:flex; width: 100%; align-items: center; justify-content: center; margin-left: 4px; text-decoration: none;">
+                        <img style="width: 19px; height: 19px; margin-right: 3px;" src="/images/navbar-star-white.svg">
+                        <span style="font-size:0.875rem;font-weight:700;line-height:1rem; margin-right:0.675rem; text-decoration: none;">NEW</span>
+                       <span>Help Shape the Future of Apache Doris: 2026 User Survey</span> 
+                           </a>`
                     //     }),
                     //     content: JSON.stringify({
                     //         zh: `<a href="https://doris-summit.org.cn" target="_blank" style="display:flex; width: 100%; align-items: center; justify-content: center; margin-left: 4px; text-decoration: none;">
