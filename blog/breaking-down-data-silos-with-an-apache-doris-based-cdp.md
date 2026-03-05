@@ -3,7 +3,8 @@
     'title': "Breaking down data silos with a unified data warehouse: an Apache Doris-based CDP",
     'description': "The insurance company uses Apache Doris, a unified data warehouse, in replacement of Spark + Impala + HBase + NebulaGraph, in their Customer Data Platform for 4 times faster customer grouping.",
     'date': '2024-03-05',
-    'author': 'Apache Doris',
+    'author': 'velodb.io · VeloDB Engineering Team',
+    'externalLink': 'https://www.velodb.io/blog/172',
     'tags': ['Best Practice'],
     "image": '/images/breaking-down-data-silos-with-an-apache-doris-based-cdp.png'
 }
@@ -129,4 +130,4 @@ In Apache Doris, this is implemented by the BITMAP functions: `BITMAP_CONTAINS` 
 
 ## Conclusion
 
-From CDP 1.0 to CDP 2.0, the insurance company adopts Apache Doris, a unified data warehouse, to replace Spark+Impala+HBase+NebulaGraph. That increases their data processing efficiency by breaking down the data silos and streamlining data processing pipelines. In CDP 3.0 to come, they want to group their customer by combining real-time tags and offline tags for more diversified and flexible analysis. The [Apache Doris community](https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-2unfw3a3q-MtjGX4pAd8bCGC1UV0sKcw) and the [VeloDB](https://www.velodb.io) team will continue to be a supporting partner during this upgrade.  
+From CDP 1.0 to CDP 2.0, the insurance company adopts Apache Doris, a unified data warehouse, to replace Spark+Impala+HBase+NebulaGraph. That increases their data processing efficiency by breaking down the data silos and streamlining data processing pipelines. In CDP 3.0 to come, they want to group their customer by combining real-time tags and offline tags for more diversified and flexible analysis. The [Apache Doris community](https://doris.apache.org/slack) and the [VeloDB](https://www.velodb.io) team will continue to be a supporting partner during this upgrade.  

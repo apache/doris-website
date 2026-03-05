@@ -1,28 +1,9 @@
 ---
 {
-"title": "Beats Doris Output Plugin",
+"title": "Filebeat",
 "language": "en"
 }
 ---
-
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
 
 # Beats Doris output plugin
 
@@ -30,7 +11,7 @@ under the License.
 
 The Beats Doris output plugin supports [Filebeat](https://github.com/elastic/beats/tree/master/filebeat), [Metricbeat](https://github.com/elastic/beats/tree/master/metricbeat), [Packetbeat](https://github.com/elastic/beats/tree/master/packetbeat), [Winlogbeat](https://github.com/elastic/beats/tree/master/winlogbeat), [Auditbeat](https://github.com/elastic/beats/tree/master/auditbeat), and [Heartbeat](https://github.com/elastic/beats/tree/master/heartbeat).
 
-By invoking the [Doris Stream Load](../data-operate/import/stream-load-manual.md) HTTP interface, the Beats Doris output plugin writes data into Doris in real-time, offering capabilities such as multi-threaded concurrency, failure retries, custom Stream Load formats and parameters, and output write speed.
+By invoking the [Doris Stream Load](../data-operate/import/import-way/stream-load-manual) HTTP interface, the Beats Doris output plugin writes data into Doris in real-time, offering capabilities such as multi-threaded concurrency, failure retries, custom Stream Load formats and parameters, and output write speed.
 
 To use the Beats Doris output plugin, there are three main steps:
 1. Download or compile the Beats binary program that includes the Doris output plugin.
@@ -41,7 +22,7 @@ To use the Beats Doris output plugin, there are three main steps:
 
 ### Download from the Official Website
 
-[https://apache-doris-releases.oss-accelerate.aliyuncs.com/filebeat-doris-2.0.0](https://apache-doris-releases.oss-accelerate.aliyuncs.com/filebeat-doris-2.0.0)
+[https://download.selectdb.com/extension/filebeat-doris-2.1.1](https://download.selectdb.com/extension/filebeat-doris-2.1.1)
 
 ### Compile from Source Code
 
@@ -62,8 +43,8 @@ go build -o heartbeat-doris heartbeat/heartbeat.go
 
 The configuration for the Beats Doris output plugin is as follows:
 
-Configuration | Description
---- | ---
+Configuration           | Description
+----------------------- | ---------------------------------------------------------
 `http_hosts` | Stream Load HTTP address, formatted as a string array, can have one or more elements, each element is host:port. For example: ["http://fe1:8030", "http://fe2:8030"]
 `user` | Doris username, this user needs to have import permissions for the corresponding Doris database and table
 `password` | Doris user's password

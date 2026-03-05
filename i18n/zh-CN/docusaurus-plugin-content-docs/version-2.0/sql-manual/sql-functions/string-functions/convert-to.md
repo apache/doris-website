@@ -5,44 +5,34 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
-:::tip 提示
-该功能自 Apache Doris  1.2 版本起支持
-:::
-
-## convert_to
 ## 描述
+
+将指定的 VARCHAR 列的字符编码转换为目标字符集，常用于 ORDER BY 子句中对包含中文的列进行按拼音排序。当前仅支持将 `<character>` 转换为 `'gbk'` 编码。
+
 ## 语法
 
-`VARCHAR convert_to(VARCHAR column, VARCHAR character)`
-在 order by 子句中使用，例如 order by convert(column using gbk), 现在仅支持 character 转为'gbk'.
-因为当 order by column 中包含中文时，其排列不是按照汉语拼音的顺序。
-将 column 的字符编码转为 gbk 后，可实现按拼音的排列的效果。
+```sql
+CONVERT_TO(<column>, <character>)
+```
 
+## 参数
 
+| 参数           | 说明                                                  |
+|----------------|-------------------------------------------------------|
+| `<column>`     | 需要转换字符编码的 VARCHAR 列。                        |
+| `<character>`  | 目标字符集，目前仅支持 `'gbk'`。                        |
+
+## 返回值
+
+返回转换编码后的 VARCHAR 值，可用于 ORDER BY 子句中按拼音顺序排序。
 
 ## 举例
 
+```sql
+SELECT * FROM class_test ORDER BY class_name;
 ```
-mysql> select * from class_test order by class_name;
+
+```text
 +----------+------------+-------------+
 | class_id | class_name | student_ids |
 +----------+------------+-------------+
@@ -55,8 +45,13 @@ mysql> select * from class_test order by class_name;
 |        4 | 张         | [4]         |
 |        5 | 我         | [5]         |
 +----------+------------+-------------+
+```
 
-mysql> select * from class_test order by convert(class_name using gbk);
+```sql
+SELECT * FROM class_test ORDER BY CONVERT_TO(class_name, 'gbk');
+```
+
+```text
 +----------+------------+-------------+
 | class_id | class_name | student_ids |
 +----------+------------+-------------+
@@ -69,7 +64,4 @@ mysql> select * from class_test order by convert(class_name using gbk);
 |        5 | 我         | [5]         |
 |        4 | 张         | [4]         |
 +----------+------------+-------------+
-
 ```
-### keywords
-    convert_to

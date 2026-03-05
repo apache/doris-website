@@ -5,25 +5,6 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 Since version 1.2.1, Doris has supported the Compute Node feature.
 
 Starting from this version, BE nodes can be divided into two categories:
@@ -126,7 +107,7 @@ At the same time, compute nodes, as stateless BE nodes, can easily scale up and 
 
 3. Can compute nodes and mixed nodes configure a file cache directory
 
-    [File cache](../lakehouse/filecache) caches data files from remote storage systems (HDFS or object storage) that have been recently accessed, speeding up subsequent queries for the same data.
+    [File cache](./filecache) caches data files from remote storage systems (HDFS or object storage) that have been recently accessed, speeding up subsequent queries for the same data.
     
     Both compute nodes and mixed nodes can set a file cache directory. The file cache directory needs to be created in advance.
     

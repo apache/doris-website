@@ -5,25 +5,6 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 # Data export
 
 Export is a function provided by Doris to export data. This function can export user-specified table or partition data in text format to remote storage through Broker process, such as HDFS / Object storage (supports S3 protocol) etc.
@@ -129,9 +110,9 @@ WITH BROKER "hdfs"
 ```
 
 * `label`: The identifier of this export job. You can use this identifier to view the job status later.
-* `column_separator`: Column separator. The default is `\t`. Supports invisible characters, such as'\x07'.
+* `column_separator`: Column separator. The default is `\t`. Supports invisible characters, such as `'\x07'`.
 * `column`: columns to be exported, separated by commas, if this parameter is not filled in, all columns of the table will be exported by default.
-* `line_delimiter`: Line separator. The default is `\n`. Supports invisible characters, such as'\x07'.
+* `line_delimiter`: Line separator. The default is `\n`. Supports invisible characters, such as `'\x07'`.
 * `exec_mem_limit`: Represents the memory usage limitation of a query plan on a single BE in an Export job. Default 2GB. Unit bytes.
 * `timeout`: homework timeout. Default 2 hours. Unit seconds.
 * `tablet_num_per_task`: The maximum number of fragments allocated per query plan. The default is 5.

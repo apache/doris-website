@@ -3,8 +3,9 @@
     'title': 'Data analysis for live streaming: what happens in real time is analyzed in real time',
     'description': "As live streaming emerges as a way of doing business, the need for data analysis follows up. This post is about how a live streaming service provider with 800 million end users found the right database to support its analytic solution.",
     'date': '2023-10-30',
-    'author': 'He Gong',
+    'author': 'velodb.io · He Gong',
     'tags': ['Best Practice'],
+    'externalLink': 'https://www.velodb.io/blog/139',
     "image": '/images/live-streaming.png'
 }
 
@@ -213,7 +214,7 @@ limit 1,10;
 
 ## Conclusion
 
-Data analysis in live streaming is challenging for the underlying database, but it is also where the key competitiveness of Apache Doris comes to play. First of all, Apache Doris can handle most data processing workloads, so platform builders don't have to worry about putting many components together and consequential maintenance issues. Secondly, it has a lot of query-accelerating features, including but not limited to indexes. After tackling the speed issues, the [Apache Doris developer community](https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-2unfw3a3q-MtjGX4pAd8bCGC1UV0sKcw) has been exploring its boundaries, such as introducing a more efficient cost-based query optimizer in version 2.0 and inverted index for text searches, fuzzy queries, and range queries. These features are embraced by the live streaming service provider as they are actively testing them and planning to transfer their log analytic workloads to Apache Doris, too. 
+Data analysis in live streaming is challenging for the underlying database, but it is also where the key competitiveness of Apache Doris comes to play. First of all, Apache Doris can handle most data processing workloads, so platform builders don't have to worry about putting many components together and consequential maintenance issues. Secondly, it has a lot of query-accelerating features, including but not limited to indexes. After tackling the speed issues, the [Apache Doris developer community](https://doris.apache.org/slack) has been exploring its boundaries, such as introducing a more efficient cost-based query optimizer in version 2.0 and inverted index for text searches, fuzzy queries, and range queries. These features are embraced by the live streaming service provider as they are actively testing them and planning to transfer their log analytic workloads to Apache Doris, too. 
 
 
 

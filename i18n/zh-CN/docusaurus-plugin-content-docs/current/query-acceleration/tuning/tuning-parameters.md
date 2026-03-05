@@ -1,30 +1,10 @@
 ---
 {
     "title": "常见调优参数",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "Apache Doris常见调优参数指南：详解enable_nereids_planner新优化器开关、enable_nereids_dml DML支持、parallel_pipeline_task_num并行度配置、runtime_filter_mode运行时过滤模式等关键参数的作用场景、默认值和升级迁移设置建议，帮助用户优化查询性能和系统配置。"
 }
 ---
-
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
-
 
 | 参数                       | 说明                        | 默认值 | 使用场景                                                     |
 | -------------------------- | --------------------------- | ------ | ------------------------------------------------------------ |

@@ -1,28 +1,10 @@
 ---
 {
     "title": "时区管理",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "Doris 支持自定义时区设置"
 }
 ---
-
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
 
 Doris 支持自定义时区设置
 
@@ -30,7 +12,7 @@ Doris 支持自定义时区设置
 
 Doris 内部存在以下两个时区相关参数：
 
-- system_time_zone : 当服务器启动时，会根据机器设置时区自动设置，设置后不可修改。
+- system_time_zone : 当服务器启动时，系统会根据机器设置时区自动设置，设置后不可修改。
 
 - time_zone : 集群当前时区，可以修改。集群启动时，该变量会设置为与 `system_time_zone` 相同，之后不再变动，除非用户手动修改。
 
@@ -75,6 +57,33 @@ Doris 内部存在以下两个时区相关参数：
 - 如果数据带有时区，如 "2020-12-12 12:12:12+08:00"，而 Stream Load 指定的 Header `timezone` 为 `+00:00` ，则数据导入 Doris 得到实际值为 "2020-12-12 04:12:12"。
 
 - 如果数据不带有时区，如 "2020-12-12 12:12:12"，则认为该时间为绝对时间，不发生任何转换。
+
+对于`TIMESTAMPTZ`类型，也支持导入数据时对时区进行转换，将输入的时间值统一转换为 UTC（世界协调时间），输出的时候加上当前会话的时区。
+
+- 如果数据带有时区，如 "2020-12-12 12:12:12+08:00"，Doris 会使用该时区信息进行转换。
+
+- 如果数据不带时区，如 "2020-12-12 12:12:12"，Doris 会使用当前会话的时区设置进行转换。
+
+当前会话的 `time_zone` 会影响`TIMESTAMPTZ`类型的输出，例如，假设当前会话`time_zone="+08:00"`，`TIMESTAMPTZ`类型值是`2020-12-12 12:12:12+08:00`，改变`time_zone`后，输出值会变：
+```
+set time_zone = "+08:00";
+
+select * from tz_test;
++---------------------------+
+| tz                        |
++---------------------------+
+| 2020-12-12 12:12:12+08:00 |
++---------------------------+
+
+set time_zone = "+07:00";
+
+select * from tz_test;
++---------------------------+
+| tz                        |
++---------------------------+
+| 2020-12-12 11:12:12+07:00 |
++---------------------------+
+```
 
 ### 3. 夏令时
 
@@ -191,7 +200,7 @@ Doris 目前兼容各时区下的数据向 Doris 中进行导入。而由于 Dor
    :::tip
     * Stream Load、Broker Load 等导入方式中，header `timezone` 会覆盖 Doris 集群 `time_zone`，因此在导入时应当保持一致。
     * Stream Load、Broker Load 等导入方式中，header `timezone` 会影响导入转换中使用的函数。
-    * 如果导入时未指定 header `timezone`，则默认使用东八区。
+    * 如果导入时未指定 header `timezone`，则默认为集群当前时区。
    :::
 
 **综上所述，处理时区问题最佳的实践是：**

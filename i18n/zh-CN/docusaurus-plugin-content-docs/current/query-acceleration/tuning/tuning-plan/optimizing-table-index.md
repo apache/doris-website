@@ -1,28 +1,10 @@
 ---
 {
     "title": "优化索引设计和使用",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "Doris 目前支持两类索引："
 }
 ---
-
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
 
 ## 概述
 
@@ -84,7 +66,7 @@ PROPERTIES (
 
 Doris 支持倒排索引作为二级索引，以加速等值、范围及文本类型的全文检索等业务场景。倒排索引的创建和管理是独立的，它能够在不影响原始表 Schema 和无需重新导入表数据的情况下，便捷地进行业务性能优化。
 
-关于典型的使用场景、语法及案例，可参考[倒排索引](../../../table-design/index/inverted-index.md)，查看详细介绍，本章节不再重复阐述。
+关于典型的使用场景、语法及案例，可参考[倒排索引](../../../table-design/index/inverted-index/overview)，查看详细介绍，本章节不再重复阐述。
 
 :::tip 优化建议
 

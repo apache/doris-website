@@ -32,48 +32,20 @@ We have graduated from Apache incubator successfully and become an Top-Level Pro
 <hr />
 
 
-## 🌟 More Stars on Github
-<a href="https://star-history.com/#apache/doris&Date">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=apache/doris&type=Date&theme=dark" />
-    <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=apache/doris&type=Date" />
-    <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=apache/doris&type=Date" />
-  </picture>
-</a>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-**We deeply appreciate 🔗[community contributors](https://github.com/apache/doris/graphs/contributors) for their contribution to Apache Doris.**
-
-
-
-
-<hr />
 
 ## Don't Miss Out the Latest News and Events
 
 Learn our latest techniques, get inspirations from our rich use cases, and see what the community has been up to !
 
 
-- Join our heated discussions -  💬 [Slack](https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-2unfw3a3q-MtjGX4pAd8bCGC1UV0sKcw) 📇 [Github](https://github.com/apache/doris) 
+- Join our heated discussions -  💬 [Slack](https://doris.apache.org/slack) 📇 [Github](https://github.com/apache/doris) 
 
 - Use cases and tech insight -  📭 [Twitter](https://twitter.com/doris_apache) 
 
 - Come and connect with us - 🌐 [LinkedIn](https://www.linkedin.com/company/doris-apache/) 
 
-- Events Videos - ▶️ [YouTube](https://www.youtube.com/@Select_DB) 📺 [Bilibili](https://space.bilibili.com/362350065) 
+- Events Videos - ▶️ [YouTube](https://www.youtube.com/hashtag/apachedoris) 📺 [Bilibili](https://space.bilibili.com/362350065) 
 
 
 

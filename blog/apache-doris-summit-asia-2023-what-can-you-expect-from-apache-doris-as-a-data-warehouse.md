@@ -56,7 +56,7 @@ Apache Doris has become one of the world's most active open-source big data proj
 
 ![Apache-Doris-monthly-active-contributors](/images/summit2023/Apache-Doris-monthly-active-contributors.png)
 
-Along with such growth, we've also witnessed higher diversity among contributors. They are engineers from tech giants and database unicorns, like VeloDB, which is the commercial company based on Apache Doris. Many cloud service providers, including Alibaba Cloud, Tencent Cloud, Huawei Cloud, AWS and GCP (coming soon), have also jumped on the bandwagon and provided Doris-based data warehouse cloud hosting services.
+Along with such growth, we've also witnessed higher diversity among contributors. They are engineers from tech giants and database unicorns, like VeloDB, which is a commercial company with products based on Apache Doris. Many cloud service providers, including Alibaba Cloud, Tencent Cloud, Huawei Cloud, AWS and GCP (coming soon), have also jumped on the bandwagon and provided Doris-based data warehouse cloud hosting services.
 
 ## Fast-expanding user base
 
@@ -158,7 +158,7 @@ For **workload management**, we will enable higher flexibility. Users will be ab
 
 ### Cloud-nativeness and storage-compute separation
 
-When Apache Doris 2.0 was released, we previewed the merging of the SelectDB Cloud storage-compute separation solution into the Apache Doris project. After some intense code refactoring and compatibility building, this functionallity will be good and ready in Apache Doris 2.2, and users will be able to experience the elastic computation capability. 
+When Apache Doris 2.0 was released, we previewed the merging of the SelectDB Cloud storage-compute separation solution into the Apache Doris project. After some intense code refactoring and compatibility building, this functionality will be good and ready in Apache Doris 2.2, and users will be able to experience the elastic computation capability. 
 
 ![storage-compute-separation](/images/summit2023/storage-compute-separation.png)
 
@@ -174,4 +174,4 @@ From the self-developed pre-aggregation storage engine, materialized views, and 
 - We want to keep inspiring the data world by presenting more use cases.
 - We want to provide more and better choices for users by collaborating with partners along the data pipeline and cloud service providers.
 
-By choosing Apache Doris, you choose to stay in the heartbeat of innovation. The [Apache Doris community](https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-2unfw3a3q-MtjGX4pAd8bCGC1UV0sKcw) awaits newcomers.
+By choosing Apache Doris, you choose to stay in the heartbeat of innovation. The [Apache Doris community](https://doris.apache.org/slack) awaits newcomers.

@@ -1,28 +1,10 @@
 ---
 {
     "title": "Routine Load",
-    "language": "en"
+    "language": "en",
+    "description": "Doris can continuously consume data from Kafka Topic through the Routine Load method. After submitting a Routine Load job,"
 }
 ---
-
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
 
 Doris can continuously consume data from Kafka Topic through the Routine Load method. After submitting a Routine Load job, Doris will continuously run the load job, generating real-time loading tasks to constantly consume messages from the specified Topic in the Kafka cluster.
 
@@ -76,6 +58,24 @@ The specific import process of Routine Load is shown in the following diagram:
 
 5. The newly generated Routine Load Tasks continue to be scheduled by the Task Scheduler in a continuous cycle.
 
+### Auto Resume
+
+To ensure high availability of jobs, an auto-resume mechanism has been introduced. In the event of an unexpected pause, the Routine Load Scheduler thread will attempt to auto-resume the job. For unexpected Kafka outages or other scenarios where the system is unable to function, the auto-resume mechanism ensures that once Kafka is restored, the routine load job can continue running normally without manual intervention.
+
+Situations where auto-resume will not occur:
+
+- The user manually executes the PAUSE ROUTINE LOAD command.
+
+- There are issues with data quality.
+
+- Situations where resuming is not possible, such as when a database table is deleted.
+
+Apart from these three situations, other paused jobs will attempt to resume automatically.
+
+### FAQ
+
+Auto-resume may encounter some issues during cluster restarts or upgrades. Before version 2.1.7, there was a high probability that tasks would not automatically resume after being paused due to cluster restarts or upgrades. Since version 2.1.7, the likelihood of tasks not resuming automatically after such events has decreased.
+
 ## Quick Start
 
 ### Create Job
@@ -89,7 +89,7 @@ In Doris, you can create persistent Routine Load  tasks using the `CREATE ROUTIN
     In Kafka, there is the following sample data:
 
     ```SQL
-    kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic test-routine-load-csv --from-beginnin
+    kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic test-routine-load-csv --from-beginning
     1,Emily,25
     2,Benjamin,35
     3,Olivia,28
@@ -170,6 +170,9 @@ In Doris, you can create persistent Routine Load  tasks using the `CREATE ROUTIN
         "kafka_broker_list" = "192.168.88.62:9092"
     );
     ```
+:::info Note
+If you need to load the JSON object at the root node of a JSON file, the jsonpaths should be specified as $., e.g., `PROPERTIES("jsonpaths"="$.")`"
+:::
 
 ### Viewing Status
 
@@ -302,7 +305,7 @@ The modules for creating a loading job are explained as follows:
 | job_name               | Specifies the name of the created loading job. The job name must be unique within the same database. |
 | tbl_name               | Specifies the name of the table to be loaded. This parameter is optional. If not specified, the dynamic table mode will be used, where Kafka data should contain the table name information. |
 | merge_type             | Specifies the data merge type. The default value is APPEND. Possible merge_type options are: <ul><li>APPEND: Append load mode</li><li>MERGE: Merge load mode</li><li>DELETE: load data as delete records</li></ul> |
-| load_properties        | Describes the load properties, including:<ul><li>colum_spearator clause</li><li>columns_mapping clause</li><li>preceding_filter clause</li><li>where_predicates clause</li><li>partitions clause</li><li>delete_on clause</li><li>order_by clause</li></ul> |
+| load_properties        | Describes the load properties, including:<ul><li>column_spearator clause</li><li>columns_mapping clause</li><li>preceding_filter clause</li><li>where_predicates clause</li><li>partitions clause</li><li>delete_on clause</li><li>order_by clause</li></ul> |
 | job_properties         | Specifies the general load parameters for Routine Load.      |
 | data_source_properties | Describes the properties of Kafka data source.               |
 | comment                | Describes any additional comments for the loading job.       |
@@ -311,65 +314,19 @@ The modules for creating a loading job are explained as follows:
 
 **01 FE Configuration Parameters**
 
-**max_routine_load_task_concurrent_num**
-
-- Default Value: 256
-
-- Dynamic Configuration: Yes
-
-- FE Master Exclusive: Yes
-
-- Parameter Description: Limits the maximum number of concurrent subtasks for Routine Load jobs. It is recommended to keep it at the default value. Setting it too high may result in excessive concurrent tasks and resource consumption.
-
-**max_routine_load_task_num_per_be**
-
-- Default Value: 1024
-
-- Dynamic Configuration: Yes
-
-- FE Master Exclusive: Yes
-
-- Parameter Description: Limits the maximum number of concurrent Routine Load tasks per backend (BE). `max_routine_load_task_num_per_be` should be smaller than the `routine_load_thread_pool_size` parameter.
-
-**max_routine_load_job_num**
-
-- Default Value: 100
-
-- Dynamic Configuration: Yes
-
-- FE Master Exclusive: Yes
-
-- Parameter Description: Limits the maximum number of Routine Load jobs, including those in NEED_SCHEDULED, RUNNING, and PAUSE states.
-
-**max_tolerable_backend_down_num**
-
-- Default Value: 0
-
-- Dynamic Configuration: Yes
-
-- FE Master Exclusive: Yes
-
-- Parameter Description: If any BE goes down, Routine Load cannot automatically recover. Under certain conditions, Doris can reschedule PAUSED tasks and transition them to the RUNNING state. Setting this parameter to 0 means that re-scheduling is only allowed when all BE nodes are in the alive state.
-
-**period_of_auto_resume_min**
-
-- Default Value: 5 (minutes)
-
-- Dynamic Configuration: Yes
-
-- FE Master Exclusive: Yes
-
-- Parameter Description: The period for automatically resuming Routine Load.
+| Parameter Name                          | Default Value | Dynamic Configuration | FE Master Exclusive Configuration | Description                                                                                     |
+|-----------------------------------------|---------------|-----------------------|----------------------------------|-------------------------------------------------------------------------------------------------|
+| max_routine_load_task_concurrent_num   | 256           | Yes                   | Yes                              | Limits the maximum number of concurrent subtasks for Routine Load jobs. It is recommended to maintain the default value. If set too high, it may lead to excessive concurrent tasks, consuming cluster resources. |
+| max_routine_load_task_num_per_be       | 1024          | Yes                   | Yes                              | The maximum number of concurrent Routine Load tasks allowed per BE. `max_routine_load_task_num_per_be` should be less than `routine_load_thread_pool_size`. |
+| max_routine_load_job_num                | 100           | Yes                   | Yes                              | Limits the maximum number of Routine Load jobs, including NEED_SCHEDULED, RUNNING, and PAUSE. |
+| max_tolerable_backend_down_num          | 0             | Yes                   | Yes                              | If any BE is down, Routine Load cannot automatically recover. Under certain conditions, Doris can reschedule PAUSED tasks to RUNNING state. A value of 0 means that rescheduling is only allowed when all BE nodes are alive. |
+| period_of_auto_resume_min               | 5 (minutes)   | Yes                   | Yes                              | The period for automatically resuming Routine Load. |
 
 **02 BE Configuration Parameters**
 
-**max_consumer_num_per_group**
-
-- Default Value: 3
-
-- Dynamic Configuration: Yes
-
-- Description: Specifies the maximum number of consumers generated per subtask. For Kafka data sources, a consumer can consume one or multiple Kafka partitions. For example, if a task needs to consume 6 Kafka partitions, it will generate 3 consumers, with each consumer consuming 2 partitions. If there are only 2 partitions, it will generate 2 consumers, with each consumer consuming 1 partition.
+| Parameter Name                     | Default Value | Dynamic Configuration | Description                                                                                                           |
+|------------------------------------|---------------|-----------------------|-----------------------------------------------------------------------------------------------------------------------|
+| max_consumer_num_per_group         | 3             | Yes                   | The maximum number of consumers that can be generated for a subtask to consume data. For Kafka data sources, a consumer may consume one or more Kafka partitions. If a task needs to consume 6 Kafka partitions, it will generate 3 consumers, each consuming 2 partitions. If there are only 2 partitions, it will generate only 2 consumers, each consuming 1 partition. |
 
 ### Load Configuration Parameters
 
@@ -1619,8 +1576,8 @@ The columns in the result set provide the following information:
     | 2022-05-06 | 10001 | Test01   | Shanghai    | windows | NULL |
     | 2022-05-05 | 10002 | Test01   | Beijing     | linux   | NULL |
     | 2022-05-06 | 10002 | Test01   | Shanghai    | linux   | NULL |
-    | 2022-05-05 | 10004 | Test01   | Heibei      | windows | NULL |
-    | 2022-05-06 | 10004 | Test01   | Shanxi      | windows | NULL |
+    | 2022-05-05 | 10004 | Test01   | Hebei      | windows | NULL |
+    | 2022-05-06 | 10004 | Test01   | Shaanxi      | windows | NULL |
     | 2022-05-05 | 10003 | Test01   | Beijing     | macos   | NULL |
     | 2022-05-06 | 10003 | Test01   | Jiangsu     | macos   | NULL |
     +------------+-------+----------+----------+---------+------+
@@ -1637,171 +1594,97 @@ The columns in the result set provide the following information:
 
 ### Kafka Security Authentication
 
-**Loading Kafka data with SSL authentication**
+**Loading Kafka Data with SSL Authentication**
 
-1. Loading sample data:
+Example load command:
 
-    ```sql
-    { "id" : 1, "name" : "Benjamin", "age":18 }
-    { "id" : 2, "name" : "Emily", "age":20 }
-    { "id" : 3, "name" : "Alexander", "age":22 }
-    ```
+```SQL
+CREATE ROUTINE LOAD demo.kafka_job20 ON routine_test20
+        PROPERTIES
+        (
+            "format" = "json"
+        )
+        FROM KAFKA
+        (
+            "kafka_broker_list" = "192.168.100.129:9092",
+            "kafka_topic" = "routineLoad21",
+            "property.security.protocol" = "ssl",
+            "property.ssl.ca.location" = "FILE:ca.pem",
+            "property.ssl.certificate.location" = "FILE:client.pem",
+            "property.ssl.key.location" = "FILE:client.key",
+            "property.ssl.key.password" = "ssl_passwd"
+        );  
+```
 
-2. Create table:
+Parameter descriptions:
 
-    ```sql
-    CREATE TABLE demo.routine_test20 (
-        id      INT            NOT NULL  COMMENT "id",
-        name    VARCHAR(30)    NOT NULL  COMMENT "name",
-        age     INT                      COMMENT "age"
-    )
-    DUPLICATE KEY(`id`)
-    DISTRIBUTED BY HASH(`id`) BUCKETS 1;
-    ```
+| Parameter                          | Description                                                  |
+|------------------------------------|--------------------------------------------------------------|
+| property.security.protocol         | The security protocol used, in this example it is SSL       |
+| property.ssl.ca.location           | The location of the CA (Certificate Authority) certificate   |
+| property.ssl.certificate.location  | The location of the Client's public key (required if client authentication is enabled on the Kafka server) |
+| property.ssl.key.location          | The location of the Client's private key (required if client authentication is enabled on the Kafka server) |
+| property.ssl.key.password          | The password for the Client's private key (required if client authentication is enabled on the Kafka server) |
 
-3. Load command:
+**Loading Kafka Data with Kerberos Authentication**
 
-    ```sql
-    CREATE ROUTINE LOAD demo.kafka_job20 ON routine_test20
-            PROPERTIES
-            (
-                "format" = "json"
-            )
-            FROM KAFKA
-            (
-                "kafka_broker_list" = "192.168.100.129:9092",
-                "kafka_topic" = "routineLoad21",
-                "property.security.protocol" = "ssl",
-                "property.ssl.ca.location" = "FILE:ca.pem",
-                "property.ssl.certificate.location" = "FILE:client.pem",
-                "property.ssl.key.location" = "FILE:client.key",
-                "property.ssl.key.password" = "ssl_passwd"
-            );  
-    ```
+Example load command:
 
-4. Load result:
+```SQL
+CREATE ROUTINE LOAD demo.kafka_job21 ON routine_test21
+        PROPERTIES
+        (
+            "format" = "json"
+        )
+        FROM KAFKA
+        (
+            "kafka_broker_list" = "192.168.100.129:9092",
+            "kafka_topic" = "routineLoad21",
+            "property.security.protocol" = "SASL_PLAINTEXT",
+            "property.sasl.kerberos.service.name" = "kafka",
+            "property.sasl.kerberos.keytab"="/opt/third/kafka/kerberos/kafka_client.keytab",
+            "property.sasl.kerberos.principal" = "clients/stream.dt.local@EXAMPLE.COM"
+        );  
+```
 
-    ```sql
-    mysql> select * from routine_test20;
-    +------+----------------+------+
-    | id   | name           | age  |
-    +------+----------------+------+
-    |    1 | Benjamin       |   18 |
-    |    2 | Emily          |   20 |
-    |    3 | Alexander      |   22 |
-    +------+----------------+------+
-    3 rows in set (0.01 sec)
-    ```
+Parameter descriptions:
 
-**Loading Kafka data with Kerberos authentication**
+| Parameter                           | Description                                               |
+|-------------------------------------|-----------------------------------------------------------|
+| property.security.protocol          | The security protocol used, in this example it is SASL_PLAINTEXT |
+| property.sasl.kerberos.service.name | Specifies the broker service name, default is Kafka       |
+| property.sasl.kerberos.keytab       | The location of the keytab file                           |
+| property.sasl.kerberos.principal    | Specifies the Kerberos principal                          |
 
-1. Loading sample data:
+**Loading Kafka Cluster with PLAIN Authentication**
 
-    ```sql
-    { "id" : 1, "name" : "Benjamin", "age":18 }
-    { "id" : 2, "name" : "Emily", "age":20 }
-    { "id" : 3, "name" : "Alexander", "age":22 }
-    ```
+1. Example load command:
 
-2. Create table:
+```SQL
+CREATE ROUTINE LOAD demo.kafka_job22 ON routine_test22
+        PROPERTIES
+        (
+            "format" = "json"
+        )
+        FROM KAFKA
+        (
+            "kafka_broker_list" = "192.168.100.129:9092",
+            "kafka_topic" = "routineLoad22",
+            "property.security.protocol"="SASL_PLAINTEXT",
+            "property.sasl.mechanism"="PLAIN",
+            "property.sasl.username"="admin",
+            "property.sasl.password"="admin"
+        );  
+```
 
-    ```sql
-    CREATE TABLE demo.routine_test21 (
-        id      INT            NOT NULL  COMMENT "id",
-        name    VARCHAR(30)    NOT NULL  COMMENT "name",
-        age     INT                      COMMENT "age"
-    )
-    DUPLICATE KEY(`id`)
-    DISTRIBUTED BY HASH(`id`) BUCKETS 1;
-    ```
+Parameter descriptions:
 
-3. Load command:
-
-    ```sql
-    CREATE ROUTINE LOAD demo.kafka_job21 ON routine_test21
-    PROPERTIES
-    (
-        "format" = "json"
-    )
-    FROM KAFKA
-    (
-        "kafka_broker_list" = "192.168.100.129:9092",
-        "kafka_topic" = "routineLoad21",
-        "property.security.protocol" = "SASL_PLAINTEXT",
-        "property.sasl.kerberos.service.name" = "kafka",
-        "property.sasl.kerberos.keytab"="/path/to/kafka_client.keytab",
-        "property.sasl.kerberos.principal" = "clients/stream.dt.local@EXAMPLE.COM"
-    );  
-    ```
-
-4. Load result:
-
-    ```sql
-    mysql> select * from routine_test21;
-    +------+----------------+------+
-    | id   | name           | age  |
-    +------+----------------+------+
-    |    1 | Benjamin       |   18 |
-    |    2 | Emily          |   20 |
-    |    3 | Alexander      |   22 |
-    +------+----------------+------+
-    3 rows in set (0.01 sec)
-    ```
-
-**Loading Kafka data with PLAIN authentication in Kafka cluster**
-
-1. Loading sample data:
-
-    ```sql
-    { "id" : 1, "name" : "Benjamin", "age":18 }
-    { "id" : 2, "name" : "Emily", "age":20 }
-    { "id" : 3, "name" : "Alexander", "age":22 }
-    ```
-
-2. Create table:
-
-    ```sql
-    CREATE TABLE demo.routine_test22 (
-        id      INT            NOT NULL  COMMENT "id",
-        name    VARCHAR(30)    NOT NULL  COMMENT "name",
-        age     INT                      COMMENT "age"
-    )
-    DUPLICATE KEY(`id`)
-    DISTRIBUTED BY HASH(`id`) BUCKETS 1;
-    ```
-
-3. Load command:
-
-    ```sql
-    CREATE ROUTINE LOAD demo.kafka_job22 ON routine_test22
-            PROPERTIES
-            (
-                "format" = "json"
-            )
-            FROM KAFKA
-            (
-                "kafka_broker_list" = "192.168.100.129:9092",
-                "kafka_topic" = "routineLoad22",
-                "property.security.protocol"="SASL_PLAINTEXT",
-                "property.sasl.mechanism"="PLAIN",
-                "property.sasl.username"="admin",
-                "property.sasl.password"="admin"
-            );  
-    ```
-
-4. Load result
-
-    ```sql
-    mysql> select * from routine_test22;
-    +------+----------------+------+
-    | id   | name           | age  |
-    +------+----------------+------+
-    |    1 | Benjamin       |   18 |
-    |    2 | Emily          |   20 |
-    |    3 | Alexander      |   22 |
-    +------+----------------+------+
-    3 rows in set (0.02 sec)
-    ```
+| Parameter                          | Description                                               |
+|------------------------------------|-----------------------------------------------------------|
+| property.security.protocol         | The security protocol used, in this example it is SASL_PLAINTEXT |
+| property.sasl.mechanism           | Specifies the SASL authentication mechanism as PLAIN      |
+| property.sasl.username            | The username for SASL                                    |
+| property.sasl.password            | The password for SASL                                    |
 
 ### Single-task Loading to Multiple Tables  
 
@@ -1840,6 +1723,30 @@ FROM KAFKA
     "kafka_topic" = "my_topic"
 );
 ```
+
+## Connect to the SASL Kafka service
+
+Here we take accessing the StreamNative message service as an example:
+
+```
+CREATE ROUTINE LOAD example_db.test1 ON example_tbl
+COLUMNS(user_id, name, age)
+FROM KAFKA (
+"kafka_broker_list" = "pc-xxxx.aws-mec1-test-xwiqv.aws.snio.cloud:9093",
+"kafka_topic" = "my_topic",
+"property.security.protocol" = "SASL_SSL",
+"property.sasl.mechanism" = "PLAIN",
+"property.sasl.username" = "user",
+"property.sasl.password" = "token:eyJhbxxx",
+"property.group.id" = "my_group_id_1",
+"property.client.id" = "my_client_id_1",
+"property.enable.ssl.certificate.verification" = "false"
+);
+```
+
+Note that if the trusted CA certificate path is not configured on the BE side, you need to set `"property.enable.ssl.certificate.verification" = "false"` to not verify whether the server certificate is credible.
+
+Otherwise, you need to configure the trusted CA certificate path: `"property.ssl.ca.location" = "/path/to/ca-cert.pem"`.
 
 ## More Details
 

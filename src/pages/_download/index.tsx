@@ -22,7 +22,7 @@ import DropdownNavbarItem from '@theme/NavbarItem/DropdownNavbarItem';
 
 const BINARY_VERSION = [
     { label: `${VersionEnum.Latest} ( Latest )`, value: VersionEnum.Latest },
-    { label: `${VersionEnum.Prev} ( Stable )`, value: VersionEnum.Prev },
+    { label: `${VersionEnum.Prev}`, value: VersionEnum.Prev },
     { label: `${VersionEnum.Earlier} ( Stable )`, value: VersionEnum.Earlier },
 ];
 
@@ -36,6 +36,7 @@ export default function Download(): JSX.Element {
         siteConfig,
         i18n: { currentLocale, locales, localeConfigs },
     } = useDocusaurusContext();
+    const dataLocale = currentLocale === 'zh-CN' ? 'zh-CN' : 'en';
 
     const [version, setVersion] = useState<string>(VersionEnum.Latest);
     const [cpus, setCpus] = useState<any[]>([]);
@@ -44,9 +45,9 @@ export default function Download(): JSX.Element {
     const [current, setCurrent] = useState<DownloadLinkProps>();
     const [downloadWay, setDownloadWay] = useState<string>('all-in-one');
 
-    const FLINK_CONNECTOR = getAllFlinkConnectorDownloadLinks(currentLocale);
-    const SPARK_CONNECTOR = getAllSparkConnectorDownloadLinks(currentLocale);
-    const ALL_RELEASE = getAllRelease(currentLocale);
+    const FLINK_CONNECTOR = getAllFlinkConnectorDownloadLinks(dataLocale);
+    const SPARK_CONNECTOR = getAllSparkConnectorDownloadLinks(dataLocale);
+    const ALL_RELEASE = getAllRelease(dataLocale);
     let ALL_RELEASE_VERSION = {};
     ALL_RELEASE.forEach(item => {
         const info: any = Array.isArray(item.download) ? item.download.find(item => item.cpu === 'X64 ( avx2 )') : {};
@@ -72,7 +73,7 @@ export default function Download(): JSX.Element {
 
     const getDownloadLinks = () => {
         const text = `${version}-${cpu}-${jdk}`;
-        const linkObj = getAllDownloadLinks(currentLocale).find(item => item.id === text);
+        const linkObj = getAllDownloadLinks(dataLocale).find(item => item.id === text);
         setCurrent(linkObj);
         if (linkObj && !linkObj.sh) {
             setDownloadWay('download');
@@ -95,9 +96,9 @@ export default function Download(): JSX.Element {
 
     const downloadDocument = () => {
         const url =
-            currentLocale === 'en'
-                ? 'https://cdnd.selectdb.com/assets/files/Apache Doris Docs (English).pdf'
-                : 'https://cdnd.selectdb.com/assets/files/Apache Doris Docs (中文).pdf';
+            currentLocale === 'zh-CN'
+                ? 'https://doris.apache.org/assets/files/Apache Doris Docs (中文).pdf'
+                : 'https://doris.apache.org/assets/files/Apache Doris Docs (English).pdf';
         downloadFile(url);
     };
 
@@ -109,7 +110,7 @@ export default function Download(): JSX.Element {
 
     const getCpus = version => {
         const currentCpus = [];
-        getAllDownloadLinks(currentLocale).forEach(item => {
+        getAllDownloadLinks(dataLocale).forEach(item => {
             if (item.id.includes(version)) {
                 const matchCpu = CPU.find(cpu => item.id.includes(cpu.value));
                 currentCpus.push(matchCpu);

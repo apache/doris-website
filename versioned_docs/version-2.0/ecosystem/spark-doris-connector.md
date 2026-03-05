@@ -5,25 +5,6 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 # Spark Doris Connector
 
 Spark Doris Connector can support reading data stored in Doris and writing data to Doris through Spark.
@@ -267,8 +248,8 @@ kafkaSource.selectExpr("CAST(key AS STRING)", "CAST(value as STRING)")
 | doris.write.fields               | --                | Specifies the fields (or the order of the fields) to write to the Doris table, fileds separated by commas.<br/>By default, all fields are written in the order of Doris table fields.                                                                                                                                                                                                                                                                                           |
 | doris.sink.batch.size            | 100000            | Maximum number of lines in a single write BE                                                                                                                                                                                                                                                                                                                                                                                                                                    |
 | doris.sink.max-retries           | 0                 | Number of retries after writing BE, Since version 1.3.0, the default value is 0, which means no retries are performed by default. When this parameter is set greater than 0, batch-level failure retries will be performed, and data of the configured size of `doris.sink.batch.size` will be cached in the Spark Executor memory. The memory allocation may need to be appropriately increased.                                              |
-| doris.sink.properties.format     | --                | Data format of the stream load.<br/>Supported formats: csv, json, arrow <br/> [More Multi-parameter details](../data-operate/import/stream-load-manual.md)                                                                                                                                                                                                                                                     |
-| doris.sink.properties.*          | --                | Import parameters for Stream Load. <br/>For example:<br/>Specify column separator: `'doris.sink.properties.column_separator' = ','`.<br/>[More parameter details](../data-operate/import/stream-load-manual.md)                                                                                                                                                                                                                    |
+| doris.sink.properties.format     | --                | Data format of the stream load.<br/>Supported formats: csv, json, arrow <br/> [More Multi-parameter details](../data-operate/import/import-way/stream-load-manual)                                                                                                                                                                                                                                                     |
+| doris.sink.properties.*          | --                | Import parameters for Stream Load. <br/>For example:<br/>Specify column separator: `'doris.sink.properties.column_separator' = ','`.<br/>[More parameter details](../data-operate/import/import-way/stream-load-manual)                                                                                                                                                                                                                    |
 | doris.sink.task.partition.size   | --                | The number of partitions corresponding to the Writing task. After filtering and other operations, the number of partitions written in Spark RDD may be large, but the number of records corresponding to each Partition is relatively small, resulting in increased writing frequency and waste of computing resources. The smaller this value is set, the less Doris write frequency and less Doris merge pressure. It is generally used with doris.sink.task.use.repartition. |
 | doris.sink.task.use.repartition  | false             | Whether to use repartition mode to control the number of partitions written by Doris. The default value is false, and coalesce is used (note: if there is no Spark action before the write, the whole computation will be less parallel). If it is set to true, then repartition is used (note: you can set the final number of partitions at the cost of shuffle).                                                                                                             |
 | doris.sink.batch.interval.ms     | 50                | The interval time of each batch sink, unit ms.                                                                                                                                                                                                                                                                                                                                                                                                                                  |

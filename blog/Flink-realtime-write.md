@@ -33,7 +33,7 @@ under the License.
 With the increasing demand for real-time analysis, the timeliness of data is becoming more and more important to the refined operation of enterprises. With the massive data, real-time data warehouse plays an irreplaceable role in effectively digging out valuable information, quickly obtaining data feedback, helping companies make faster decisions and better product iterations.
 
 In this situation, Apache Doris stands out as a real-time MPP analytic database, which is high performance and easy to use, and supports various data import methods. Combined with Apache Flink, users can quickly import unstructured data from Kafka and CDC(Change Data Capture) from upstream database like MySQL. Apache Doris also provides sub-second analytic query capabilities, which can effectively satisfy the needs of several real-time scenarios: multi-dimensional analysis, dashboard and data serving etc.
-# Challange
+# Challenge
 
 Usually, there are many challenges to ensure high end-to-end concurrency and low latency for real-time data warehouses , such as:
 
@@ -49,7 +49,7 @@ Within the challenges above , we conducted an in-depth research on the business 
 
 # Optimization
 
-### Streamming Write
+### Streaming Write
 
 The initial practice of Flink Doris Connector is to cache the data into the memory batch after receiving data.The method of data writing is saving batches, and using parameters such as `batch.size` and `batch.interval` to control the timing of Stream Load writing at the same time.
 
@@ -161,7 +161,7 @@ When accessing data in real time through Flink CDC, the upstream business table 
 
 This way requires human intervention, which will bring a great operation burden to users. In subsequent versions, real-time schema changes will support CDC scenarios, and the upstream schema changes will be synchronized to the downstream in real-time, which will comprehensively improve the efficiency of schema changes.
 
--  **Doris Multi-table Writting**
+-  **Doris Multi-table Writing**
 
 At present, the Doris Sink operator only supports synchronizing a single table, so for the entire database, it still has to divide the flow manually at the Flink level and write to multiple Doris Sinks, which will increase the difficulty of developers. In subsequent versions, we will support a single Doris Sink to synchronize multiple tables, which greatly simplifies the user's operation.
 

@@ -1,28 +1,13 @@
 ---
 {
-    "title": "STRUCT",
-    "language": "zh-CN"
+    "title": "STRUCT | Complex Types",
+    "language": "zh-CN",
+    "description": "STRUCT<fieldname:fieldtype [COMMENT 'commentstring'], ... > 表示由多个 Field 组成的结构体，也可被理解为多个列的集合。",
+    "sidebar_label": "STRUCT"
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
+# STRUCT
 
 `STRUCT<field_name:field_type [COMMENT 'comment_string'], ... >` 表示由多个 Field 组成的结构体，也可被理解为多个列的集合。
 
@@ -39,7 +24,7 @@ BOOLEAN, TINYINT, SMALLINT, INT, BIGINT, LARGEINT, FLOAT, DOUBLE, DECIMAL, DECIM
 DATE, DATEV2, DATETIME, DATETIMEV2, CHAR, VARCHAR, STRING
 ```
 
-## CSV格式导入
+## CSV 格式导入
 
 ### 第 1 步：准备数据
 
@@ -95,7 +80,7 @@ mysql> SELECT * FROM struct_test;
 5 rows in set (0.01 sec)
 ```
 
-## JSON格式导入
+## JSON 格式导入
 
 ### 第 1 步：准备数据
 
@@ -152,3 +137,4 @@ mysql> SELECT * FROM struct_test;
 +------+--------------------------------------+
 5 rows in set (0.00 sec)
 ```
+

@@ -1,28 +1,10 @@
 ---
 {
     "title": "Basic concepts",
-    "language": "en"
+    "language": "en",
+    "description": "This document explains basic concepts of table creation and data partitioning in Apache Doris 2.1, including rows and columns, partition and bucket design, example CREATE TABLE syntax, and advanced features like auto partitioning and auto bucketing."
 }
 ---
-
-
-{/* Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License. */}
-
 
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
@@ -124,7 +106,7 @@ more convenient. Rewrite the above example with Auto Range Partition as follows:
 
 <Tabs>
 <TabItem value="Auto Partition" label="Auto Partition" default>
-<p>
+<div>
 [Auto Partition](./auto-partitioning) supports automatic creation of corresponding partitions according to user-defined rules during data import.
 
 ```sql
@@ -154,11 +136,11 @@ PROPERTIES
 
 As above, when the data is imported, Doris will automatically create the corresponding partitions as `date` with a granularity of month level. `2018-12-01` and `2018-12-31` will fall into the same partition, while `2018-11-12` will fall into the leading partition. Auto Partition also supports List partition, please check Auto Partition's documentation for more usage.
 
-</p>
+</div>
 </TabItem>
 
 <TabItem value="Dynamic Partition" label="Dynamic Partition">
-<p>
+<div>
 
 [Dynamic Partition](./dynamic-partitioning) is an automatic partition creation and recovery management method based on the real time, rewrite the above example with dynamic partitioning as follows:
 
@@ -195,11 +177,11 @@ PROPERTIES
 
 Dynamic partition supports tiered storage, customised copy number and other features, see the dynamic partition documentation for details.
 
-</p>
+</div>
 </TabItem>
 
 <TabItem value="Auto&Dynamic Partition" label="Auto&Dynamic Partition">
-<p>
+<div>
 
 :::tip
 Supported since Doris 2.1.7
@@ -240,13 +222,13 @@ PROPERTIES
 
 For detailed suggestions on this feature, see [Auto Partition Conjunct with Dynamic Partition](./auto-partitioning#conjunct-with-dynamic-partition).
 
-</p>
+</div>
 </TabItem>
 
 <TabItem value="Auto Bucket" label="Auto Bucket">
-<p>
+<div>
 
-When the user is not sure of a reasonable number of buckets, [Auto Bucket](./auto-bucket) for Doris to complete the estimation, and the user only needs to provide the estimated amount of table data:
+When the user is not sure of a reasonable number of buckets, Auto Bucket for Doris to complete the estimation, and the user only needs to provide the estimated amount of table data:
 
 ```sql
 CREATE TABLE IF NOT EXISTS example_range_tbl
@@ -281,7 +263,7 @@ PROPERTIES
 
 Note that this approach does not apply to cases where the amount of table data is particularly large. 
 
-</p>
+</div>
 </TabItem>
 
 </Tabs>

@@ -1,28 +1,13 @@
 ---
 {
-    "title": "MinIO",
-    "language": "en"
+    "title": "MinIO | Data Source",
+    "language": "en",
+    "description": "Doris provides two ways to load files from MinIO:",
+    "sidebar_label": "MinIO"
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
+# MinIO
 
 Doris provides two ways to load files from MinIO:
 - Use S3 Load to load MinIO files into Doris, which is an asynchronous load method.
@@ -64,13 +49,10 @@ DISTRIBUTED BY HASH(user_id) BUCKETS 10;
 ### Step 3: Load data using S3 Load
 
 :::caution Caution
-If you deployed MinIO in a local network and did not have TLS enabled, you need to explicitly add `http://` in the endpoint string.
+When importing data from MinIO with S3 Load, note the following:
 
-- `"s3.endpoint" = "http://localhost:9000"`
-
-The S3 SDK uses the virtual-hosted style by default. However, MinIO does not enable virtual-hosted style access by default. In this case, we can add the `use_path_style` parameter to force the use of the path style.
-
-- `"use_path_style" = "true"`
+- If MinIO is deployed in a local network without TLS, explicitly add `http://` in the endpoint, for example: `"s3.endpoint" = "http://localhost:9000"`.
+- The S3 SDK uses virtual-hosted style by default, while MinIO does not enable it by default. Add `"use_path_style" = "true"` to force path-style access.
 :::
 
 ```sql
@@ -158,14 +140,10 @@ DISTRIBUTED BY HASH(user_id) BUCKETS 10;
 ### Step 3: Load data using TVF
 
 :::caution Caution
-If you deployed MinIO in a local network and did not have TLS enabled, you need to explicitly add `http://` in the endpoint string.
+When importing data from MinIO with TVF, note the following:
 
-- `"s3.endpoint" = "http://localhost:9000"`
-
-
-The S3 SDK uses the virtual-hosted style by default. However, MinIO does not enable virtual-hosted style access by default. In this case, we can add the `use_path_style` parameter to force the use of the path style.
-
-- `"use_path_style" = "true"`
+- If MinIO is deployed in a local network without TLS, explicitly add `http://` in the endpoint, for example: `"s3.endpoint" = "http://localhost:9000"`.
+- The S3 SDK uses virtual-hosted style by default, while MinIO does not enable it by default. Add `"use_path_style" = "true"` to force path-style access.
 :::
 
 ```sql

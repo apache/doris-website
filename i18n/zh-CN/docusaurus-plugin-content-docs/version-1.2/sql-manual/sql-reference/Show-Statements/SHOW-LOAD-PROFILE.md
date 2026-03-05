@@ -5,25 +5,6 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 ## SHOW-LOAD-PROFILE
 
 ### Name
@@ -32,7 +13,7 @@ SHOW LOAD PROFILE
 
 ## 描述
 
-该语句是用来查看导入操作的Profile信息，该功能需要用户打开 Profile 设置，0.15 之前版本执行下面的设置：
+该语句是用来查看导入操作的 Profile 信息，该功能需要用户打开 Profile 设置，0.15 之前版本执行下面的设置：
 
 ```sql
 SET is_report_success=true;
@@ -64,45 +45,45 @@ show load profile "/[queryId]/[TaskId]/[FragmentId]/[InstanceId]"
 
 1. 列出所有的 Load Profile
 
-   ```sql
-   mysql> show load profile "/"\G
+```sql
+mysql> show load profile "/"\G
 *************************** 1. row ***************************
-                 JobId: 20010
-               QueryId: 980014623046410a-af5d36f23381017f
-                  User: root
-             DefaultDb: default_cluster:test
-                   SQL: LOAD LABEL xxx
-             QueryType: Load
-             StartTime: 2023-03-07 19:48:24
-               EndTime: 2023-03-07 19:50:45
-             TotalTime: 2m21s
-            QueryState: N/A
-               TraceId:
-          AnalysisTime: NULL
-              PlanTime: NULL
-          ScheduleTime: NULL
-       FetchResultTime: NULL
-       WriteResultTime: NULL
+               JobId: 20010
+            QueryId: 980014623046410a-af5d36f23381017f
+               User: root
+            DefaultDb: default_cluster:test
+                  SQL: LOAD LABEL xxx
+            QueryType: Load
+            StartTime: 2023-03-07 19:48:24
+            EndTime: 2023-03-07 19:50:45
+            TotalTime: 2m21s
+         QueryState: N/A
+            TraceId:
+         AnalysisTime: NULL
+            PlanTime: NULL
+         ScheduleTime: NULL
+      FetchResultTime: NULL
+      WriteResultTime: NULL
 WaitAndFetchResultTime: NULL
 *************************** 2. row ***************************
-                 JobId: N/A
-               QueryId: 7cc2d0282a7a4391-8dd75030185134d8
-                  User: root
-             DefaultDb: default_cluster:test
-                   SQL: insert into xxx
-             QueryType: Load
-             StartTime: 2023-03-07 19:49:15
-               EndTime: 2023-03-07 19:49:15
-             TotalTime: 102ms
-            QueryState: OK
-               TraceId:
-          AnalysisTime: 825.277us
-              PlanTime: 4.126ms
-          ScheduleTime: N/A
-       FetchResultTime: 0ns
-       WriteResultTime: 0ns
+               JobId: N/A
+            QueryId: 7cc2d0282a7a4391-8dd75030185134d8
+               User: root
+            DefaultDb: default_cluster:test
+                  SQL: insert into xxx
+            QueryType: Load
+            StartTime: 2023-03-07 19:49:15
+            EndTime: 2023-03-07 19:49:15
+            TotalTime: 102ms
+         QueryState: OK
+            TraceId:
+         AnalysisTime: 825.277us
+            PlanTime: 4.126ms
+         ScheduleTime: N/A
+      FetchResultTime: 0ns
+      WriteResultTime: 0ns
 WaitAndFetchResultTime: N/A
-   ```
+```
 
 2. 查看有导入作业的子任务概况：
 
@@ -114,6 +95,7 @@ WaitAndFetchResultTime: N/A
    | 980014623046410a-af5d36f23381017f | 3m14s      |
    +-----------------------------------+------------+
    ```
+
 3. 查看子任务的执行树：
 
    ```sql
@@ -156,11 +138,11 @@ WaitAndFetchResultTime: N/A
                                     │Fragment: 1      │ │Fragment: 1  │
                                     └─────────────────┘ └─────────────┘
 
-   ```sql
+   ```
 
    这一层会显示子任务的查询树，其中标注了 Fragment id。
 
-4. 查看指定Fragment 的 Instance 概况
+4. 查看指定 Fragment 的 Instance 概况，同时
 
    ```sql
    mysql> show load profile "/980014623046410a-af5d36f23381017f/980014623046410a-af5d36f23381017f/1";
@@ -226,5 +208,4 @@ WaitAndFetchResultTime: N/A
 
     SHOW, LOAD, PROFILE
 
-### Best Practice
 

@@ -99,6 +99,10 @@
     "message": "数据库分析",
     "description": "The label for category Querying Databases in sidebar docs"
   },
+  "sidebar.docs.category.Observability": {
+    "message": "可观测性",
+    "description": "Observability"
+  },
   "sidebar.docs.category.Data Queries": {
     "message": "数据查询",
     "description": "The label for category Data Queries in sidebar docs"

@@ -5,26 +5,6 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
-
 亲爱的社区小伙伴们，我们很高兴地向大家宣布，在 3 月 8 日我们引来了 Apache Doris 2.1.0 版本的正式发布，欢迎大家下载使用。
 
 - 在查询性能方面，2.1 系列版本我们着重提升了开箱盲测性能，力争不做调优的情况下取得较好的性能表现，包含了对复杂 SQL 查询性能的进一步提升，在 TPC-DS 1TB 测试数据集上获得超过 100% 的性能提升，查询性能居于业界领先地位。
@@ -104,7 +84,7 @@ under the License.
 ![Local Shuffle Clickbench and TPCH-100](/images/2.1-doris-clickbench-tpch.png)
 
 :::note 备注
-参考文档：[Pipeline X 执行引擎](../../query-acceleration/pipeline-execution-engine)
+参考文档：[Pipeline X 执行引擎](../../query/pipeline-execution-engine.md)
 :::
 
 ## ARM 架构深度适配，性能提升 230% 
@@ -132,20 +112,6 @@ under the License.
 与此同时也在 TPC-DS 10TB 场景下对 Apache Doris 2.1 版本与 Spark 3.5.0 以及 3.3.1 版本进行了性能测试，查询性能分别提升 4.2 倍和 6.1 倍。
 
 
-### 多 SQL 方言兼容
-
-当用户从原有 OLAP 系统（如 Clickhouse、Trino、Presto、Hive 等）迁移至 Apache Doris 时，一方面因为 SQL 方言存在差异，需要同步修改大量的业务查询逻辑进行适配，无法进行平滑迁移。另一方面，当使用 Apache Doris 作为统一数据分析网关时，需要对接原先的 Hive、Spark 等系统、以满足不同数据源的查询需求。
-
-因此在 Apache Doris 2.1 版本中我们引入了多 SQL 方言转换功能，用户可以直接使用原先系统的 SQL 方言在 Doris 中进行数据查询而无需修改业务逻辑。在部署好 SQL 转换服务后，用户只需通过会话变量 `sql_dialect`设置当前会话的 SQL 方言类型，即可使用对应的 SQL 方言进行查询。
-
-该功能目前为实验性质功能，当前已经支持 ClickHouse、Presto、Trino、Hive、Spark。在此我们以 Trino 为例，部署完 SQL 转换服务后，在会话变量中设置 `set sql_dialect = trino` ，即可直接采取 Trino SQL 语法执行查询。在某些社区用户的实际线上业务 SQL 兼容性测试中，在全部 3w 多条查询语句中与 Trino SQL 兼容度高达 99% 以上。也欢迎所有用户在使用过程中向我们反馈不兼容的 Case，帮助 Apache Doris 更加完善。
-
-:::note
-- [演示 Demo](https://www.bilibili.com/video/BV1cS421A7kA/?spm_id_from=333.999.0.0)
-
-- 参考文档：[SQL 方言兼容](../../lakehouse/sql-dialect.md)
-
-:::
 
 ### 高速数据读取，数据传输效率提升 100 倍
 
@@ -302,7 +268,7 @@ CREATE MATERIALIZED VIEW mv1
 
 :::note
 - 演示 Demo: https://www.bilibili.com/video/BV1s2421T71z/?spm_id_from=333.999.0.0
-- 参考文档：[异步物化视图](../../query-acceleration/materialized-view/async-materialized-view/overview)
+- 参考文档：[异步物化视图](../../query/view-materialized-view/materialized-view.md)
 :::
 
 ## 存储能力增强
@@ -408,7 +374,7 @@ PROPERTIES (
 
 :::note
 
-参考文档：[数据划分](../../table-design/data-partitioning/basic-concepts)
+参考文档：[数据划分](../../table-design/data-partitioning/manual-partitioning.md)
 :::
 
 ### INSERT INTO SELECT 导入性能提升 100%
@@ -470,7 +436,7 @@ MemTable 前移在 2.1 版本中默认开启，用户无需修改原有的导入
 :::note
 - 演示 Demo：https://www.bilibili.com/video/BV1um411o7Ha/?spm_id_from=333.999.0.0
 
-- 参考文档和完整测试报告：[Group Commit](../../data-operate/import/import-way/group-commit-manual)
+- 参考文档和完整测试报告：[Group Commit](https://doris.apache.org/docs/2.1/data-operate/import/group-commit-manual)
 
 :::
 
@@ -542,7 +508,7 @@ SELECT v["properties"]["title"] from ${table_name}
 :::note
 - 演示 Demo: https://www.bilibili.com/video/BV13u4m1g7ra/?spm_id_from=333.999.0.0
 
-- 参考文档：[VARIANT](../../sql-manual/sql-data-types/semi-structured/VARIANT.md)
+- 参考文档：[VARIANT](https://doris.apache.org/docs/2.1/sql-manual/basic-element/sql-data-types/semi-structured/VARIANT)
 
 :::
 
@@ -556,10 +522,7 @@ SELECT v["properties"]["title"] from ${table_name}
 - IPV4_CIDR_TO_RANGE：接收一个 IPv4 和一个包含 CIDR 的 Int16 值，返回一个结构体，其中包含两个 IPv4 字段分别表示子网的较低范围（min）和较高范围（max）；
 - INET_ATON：获取包含 IPv4 地址的字符串，格式为 A.B.C.D（点分隔的十进制数字）
 
-:::note
-参考文档：[IPV6](../../sql-manual/sql-data-types/ip/IPV6)
 
-:::
 
 ### 复杂数据类型分析函数完善
 
@@ -705,6 +668,10 @@ mysql> select struct(1,"2") not in (struct(1,3), struct(1,"2"), struct(1,1), nul
 
 ### TopSQL
 
+:::tip
+自 2.1.1 版本之后，active_queries() 已经废弃，TopSQl 主要通过 Doris 内置的系统表实现，参考文档 [工作负载诊断与分析](https://doris.apache.org/docs/2.1/admin-manual/workload-management/analysis-diagnosis)
+:::
+
 当集群出现预期外的大查询导致集群整体负载上升、查询可用性下降时，用户难以快速找到这些大查询并进行相应的降级操作。因此在 Apache Doris 2.1 版本中我们支持了运行时查看 SQL 资源用量的功能，具体指标如下：
 
 ```SQL
@@ -757,7 +724,7 @@ select QueryId,max(BePeakMemoryBytes) as be_peak_mem from active_queries() group
 目前主要展示的负载类型包括 Select 和`Insert Into……Select`，预计在 2.1 版本之上的三位迭代版本中会支持 Stream Load 和 Broker Load 的资源用量展示。
 
 :::note
-参考文档：[ACTIVE_QUERIES](../../sql-manual/sql-functions/table-functions/active_queries.md)
+参考文档：[ACTIVE_QUERIES](https://doris.apache.org/docs/2.1/admin-manual/system-tables/information_schema/active_queries)
 :::
 
 
@@ -858,7 +825,7 @@ JOB e_daily
 
 :::caution 注意事项
 
-当前 Job Scheduler 仅支持 Insert 内表，参考文档：[CREATE-JOB](../../sql-manual/sql-statements/Data-Definition-Statements/Create/CREATE-JOB.md)
+当前 Job Scheduler 仅支持 Insert 内表，参考文档：[CREATE-JOB](https://doris.apache.org/docs/2.1/sql-manual/sql-statements/job/CREATE-JOB)
 
 :::
 

@@ -6,25 +6,6 @@
 
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 # 扩容缩容
 
 Doris 可以很方便的扩容和缩容 FE、BE、Broker 实例。
@@ -131,8 +112,8 @@ DECOMMISSION 语句如下：
 > 3. 该命令**不一定执行成功**。比如剩余 BE 存储空间不足以容纳下线 BE 上的数据，或者剩余机器数量不满足最小副本数时，该命令都无法完成，并且 BE 会一直处于 `SystemDecommissioned` 为 true 的状态。
 > 4. DECOMMISSION 的进度，可以通过 ```SHOW PROC '/backends';``` 中的 TabletNum 查看，如果正在进行，TabletNum 将不断减少。
 > 5. 该操作可以通过:  
-     > 		```CANCEL DECOMMISSION BACKEND "be_host:be_heartbeat_service_port";```  
-     > 	命令取消。取消后，该 BE 上的数据将维持当前剩余的数据量。后续 Doris 重新进行负载均衡
+> 		```CANCEL DECOMMISSION BACKEND "be_host:be_heartbeat_service_port";```  
+> 	命令取消。取消后，该 BE 上的数据将维持当前剩余的数据量。后续 Doris 重新进行负载均衡
 
 **对于多租户部署环境下，BE 节点的扩容和缩容，请参阅 [多租户设计文档](../multi-tenant.md)。**
 

@@ -1,12 +1,12 @@
 const themes = require('prism-react-renderer').themes;
-const { ssrTemplate } = require('./config/ssrTemplate');
-const customDocusaurusPlugin = require('./config/custom-docusaurus-plugin');
 const versionsPlugin = require('./config/versions-plugin');
 const VERSIONS = require('./versions.json');
 const { markdownBoldPlugin } = require('./config/markdown-bold-plugin');
+const { DEFAULT_VERSION } = require('./src/constant/version');
+
 const lightCodeTheme = themes.dracula;
 
-const logoImg = 'https://cdnd.selectdb.com/images/logo.svg';
+const logoImg = '/images/logo-doris.svg';
 
 function getDocsVersions() {
     const result = {};
@@ -23,13 +23,17 @@ function getDocsVersions() {
                 banner: 'none',
                 badge: false,
             };
+            if (version === DEFAULT_VERSION) {
+                result[version].label = DEFAULT_VERSION;
+                result[version].path = DEFAULT_VERSION;
+            }
         }
     });
     return result;
 }
 
 function getLatestVersion() {
-    return VERSIONS.includes('2.1') ? '2.1' : VERSIONS[0];
+    return VERSIONS.includes(DEFAULT_VERSION) ? DEFAULT_VERSION : VERSIONS[0];
 }
 
 /** @type {import('@docusaurus/types').Config} */
@@ -43,12 +47,14 @@ const config = {
     onBrokenMarkdownLinks: 'ignore',
     favicon: 'images/favicon.ico',
     organizationName: 'Apache',
+    trailingSlash: false,
     markdown: {
         format: 'detect',
     },
+    trailingSlash: true,
     i18n: {
         defaultLocale: 'en',
-        locales: ['en', 'zh-CN'],
+        locales: ['en', 'zh-CN', 'ja'],
         localeConfigs: {
             en: {
                 label: 'English',
@@ -58,32 +64,30 @@ const config = {
                 label: '中文',
                 htmlLang: 'zh-Hans-CN',
             },
+            ja: {
+                label: '日本語',
+                htmlLang: 'ja-JP',
+            },
         },
     },
-    scripts: ['/js/custom-script.js'],
-    headTags: [
+    scripts: ['/js/custom-script.js',
         {
-            tagName: 'link',
-            attributes: {
-                rel: 'preconnect',
-                href: 'https://fonts.googleapis.com',
-            },
-        },
-        {
-            tagName: 'link',
-            attributes: {
-                rel: 'preconnect',
-                href: 'https://fonts.gstatic.com',
-                crossorigin: 'anonymous',
-            },
-        },
-        {
-            tagName: 'link',
-            attributes: {
-                href: 'https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap',
-                rel: 'stylesheet',
-            },
-        },
+            async: true,
+            src: 'https://widget.kapa.ai/kapa-widget.bundle.js',
+            'data-website-id': 'a5fb90df-217a-4097-95c0-80490220314b',
+            'data-modal-title': 'Apache Doris AI',
+            'data-project-name': 'Apache Doris Website',
+            'data-button-hide':"true",
+            'data-modal-override-open-selector':"#navbar-ask-ai-btn",
+            'data-project-logo': 'https://cdn.selectdb.com/static/doris_1_3c42247c63.png',
+            'data-modal-image': 'https://cdn.selectdb.com/static/doris_logo_cc5a30d886.png',
+            'data-project-color': '#11A679',
+            'data-modal-disclaimer': 'This is a custom LLM with access to all [Doris documentation](https://doris.apache.org/docs/4.x/gettingStarted/what-is-apache-doris).',
+            'data-consent-required': true,
+            'data-consent-screen-disclaimer': "By clicking &quot;I agree, let's chat&quot;, you consent to the use of the AI assistant in accordance with kapa.ai's [Privacy Policy](https://www.kapa.ai/content/privacy-policy). This service uses reCAPTCHA, which requires your consent to Google's [Privacy Policy](https://policies.google.com/privacy) and [Terms of Service](https://policies.google.com/terms). By proceeding, you explicitly agree to both kapa.ai's and Google's privacy policies.",
+            'data-user-analytics-cookie-enabled': false,
+            'data-bot-protection-mechanism': "hcaptcha"
+        }
     ],
     stylesheets: [
         // 'https://cdn-font.hyperos.mi.com/font/css?family=MiSans:100,200,300,400,450,500,600,650,700,900:Chinese_Simplify,Latin&display=swap',
@@ -92,8 +96,11 @@ const config = {
         // 'https://fonts.googleapis.com',
         // 'https://fonts.gstatic.com',
         // 'https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap'
+        {
+            href: '/css/katex.min.css',
+            type: 'text/css',
+        },
     ],
-    organizationName: 'apache/doris-website', // Usually your GitHub org/user name.
     projectName: 'apache/doris-website', // Usually your repo name.
     customFields: {},
     future: {
@@ -114,8 +121,6 @@ const config = {
                 sidebarPath: require.resolve('./sidebarsCommunity.json'),
             }),
         ],
-        process.env.NODE_ENV === 'development' ? null : customDocusaurusPlugin,
-
         async function tailwindcssPlugin(context, options) {
             return {
                 name: 'docusaurus-tailwindcss',
@@ -135,13 +140,34 @@ const config = {
                     // /docs/oldDoc -> /docs/newDoc
                     {
                         from: '/docs/dev/summary/basic-summary',
-                        to: '/docs/gettingStarted/quick-start',
+                        to: `/docs/${DEFAULT_VERSION}/gettingStarted/quick-start`,
                     },
                     {
                         from: '/docs/dev/get-starting/',
-                        to: '/docs/gettingStarted/quick-start',
+                        to: `/docs/${DEFAULT_VERSION}/gettingStarted/quick-start`,
                     },
+                    {
+                        from: '/docs/4.0/releasenotes/v4.0/release-4.0.0/',
+                        to: '/docs/4.x/releasenotes/v4.0/release-4.0.0'
+                    },
+                    {
+                        from: '/slack',
+                        to: 'https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-3b8tlr3le-Z~IrrVxkzqniFjhL17d1oQ'
+                    }
                 ],
+                createRedirects(existingPath) {
+                    if (existingPath.includes('/gettingStarted/what-is-apache-doris') || existingPath.startsWith('/docs/3.x/')) {
+                        // Redirect from /gettingStarted/what-is-new to /gettingStarted/what-is-apache-doris
+                        return [
+                            existingPath.replace(
+                                '/gettingStarted/what-is-apache-doris',
+                                '/gettingStarted/what-is-new',
+                            ),
+                            existingPath.replace('/docs/3.x/', '/docs/'), existingPath.replace('/docs/3.x/', '/docs/3.0/')
+                        ];
+                    }
+                    return undefined; // Return a falsy value: no redirect created
+                },
             },
         ],
     ],
@@ -153,7 +179,7 @@ const config = {
                 docs: {
                     lastVersion: getLatestVersion(),
                     versions: getDocsVersions(),
-                    sidebarPath: require.resolve('./sidebars.json'),
+                    sidebarPath: require.resolve('./sidebars.ts'),
                     // editUrl: ({ locale, versionDocsDirPath, docPath }) => {
                     //     return `https://github.com/apache/doris-website/edit/master/docs/${locale}/docs/${docPath}`;
                     //     // if (versionDocsDirPath === 'versioned_docs/version-dev') {
@@ -161,8 +187,16 @@ const config = {
                     //     // }
                     // },
                     showLastUpdateAuthor: false,
-                    showLastUpdateTime: false,
-                    remarkPlugins: [markdownBoldPlugin],
+                    showLastUpdateTime: true,
+                    remarkPlugins: [markdownBoldPlugin, require('remark-math')],
+                    rehypePlugins: [
+                        [
+                            require('rehype-katex'),
+                            {
+                                strict: process.env.CI === 'true' || process.env.GITHUB_ACTIONS === 'true' ? false : 'warn',
+                            }
+                        ]
+                    ]
                 },
                 blog: {
                     blogTitle: 'Apache Doris - Blog | Latest news and events ',
@@ -172,22 +206,23 @@ const config = {
                     blogSidebarCount: 0,
                     showReadingTime: false,
                     onUntruncatedBlogPosts: 'ignore',
+                    onInlineAuthors: 'ignore',
                 },
                 theme: {
                     customCss: require.resolve('./src/scss/custom.scss'),
-                },
-                gtag: {
-                    trackingID: 'G-DT7W9E9722',
-                    anonymizeIP: true,
                 },
                 sitemap: {
                     changefreq: 'weekly',
                     priority: 0.5,
                     filename: 'sitemap.xml',
-                    createSitemapItems: async (params) => {
+                    createSitemapItems: async params => {
                         const { defaultCreateSitemapItems, ...rest } = params;
                         const items = await defaultCreateSitemapItems(rest);
                         for (let item of items) {
+                            if (item.url.includes('docs')) {
+                                item.changefreq = 'daily';
+                                item.priority = 0.8;
+                            }
                             if (item.url.includes('docs/1.2')) {
                                 item.priority = 0.2;
                             }
@@ -200,14 +235,14 @@ const config = {
     ],
     themes: [
         [
-            '@easyops-cn/docusaurus-search-local',
+            '@yang1666204/docusaurus-search-local',
             {
                 hashed: true,
-                language: ['en', 'zh'],
+                language: ['en', 'zh', 'ja'],
                 highlightSearchTermsOnTargetPage: true,
                 // indexPages: true,
                 indexDocs: true,
-                // docsRouteBasePath: '/docs',
+                docsRouteBasePath: ['/docs/2.1', '/docs/3.x', '/docs/4.x', '/docs/dev'],
                 indexBlog: false,
                 explicitSearchResultPath: true,
                 searchBarShortcut: true,
@@ -226,13 +261,35 @@ const config = {
                 jsLoader: 'matomo.js',
             },
             announcementBar: {
-                id: 'apache_doris_meetup_singapore',
-                content: `<a href="https://github.com/apache/doris" target="_blank" style="display: flex; width: 100%; align-items: center; justify-content: center; margin-left: 4px; text-decoration: none; color: white">Do you ❤️ Doris? Give us a 🌟 on GitHub 
-                <img style="width: 1.2rem; height: 1.2rem; margin-left: 0.4rem;" src="/images/github-white-icon.svg">
-                    </a>`,
-                backgroundColor: '#3C2FD4',
-                textColor: '#FFFFFF',
-                // isCloseable: false,
+                id: 'join_us',
+                content: JSON.stringify({
+                    //         zh: `<a href="https://www.selectdb.com/resources/events/doris-webinar-20250828" target="_blank" style="display:flex; width: 100%; align-items: center; justify-content: center; margin-left: 4px; text-decoration: none;">
+                    //     <img style="width: 19px; height: 19px; margin-right: 3px;" src="/images/nav-star.svg">
+                    //     <span style="color:#52CAA3;font-size:0.875rem;font-weight:700;line-height:1rem; margin-right:0.675rem; text-decoration: none;">NEW</span>
+                    //    <span>Apache Doris x Milvus 联合 Webinar：解锁 DB for AI 的无限可能</span> 
+                    //    <p style="margin-left:0.675rem;color:#52CAA3;font-size:0.875rem;line-height:1rem;font-weight:700;letter-spacing:0.28px;">查看详情 -></p> 
+                    //        </a>`,
+                            en: `<a href="https://forms.gle/7RKm6CGSNhdW8ZnK9" target="_blank" style="display:flex; width: 100%; align-items: center; justify-content: center; margin-left: 4px; text-decoration: none;">
+                            <img style="width: 19px; height: 19px; margin-right: 3px;" src="/images/navbar-star-white.svg">
+                            <span style="font-size:0.875rem;font-weight:700;line-height:1rem; margin-right:0.675rem; text-decoration: none;">NEW EVENTS</span>
+                           <span>Help Shape the Future of Apache Doris: 2026 User Survey</span> 
+                           <p style="margin-left:0.675rem;font-size:0.875rem;line-height:1rem;font-weight:700;letter-spacing:0.28px;">Register Now -></p> 
+                               </a>`
+                    //     }),
+                    //     content: JSON.stringify({
+                    //         zh: `<a href="https://doris-summit.org.cn" target="_blank" style="display:flex; width: 100%; align-items: center; justify-content: center; margin-left: 4px; text-decoration: none;">
+                    //     <img style="width: 60px; height: 24px; margin-right: 34px;" src="/images/doris-summit.svg">
+                    //    <span style="font-weight:700; font-size:0.875rem; line-height: 120%;">Powering Real-Time Analytics & Search  in the AI Era | 2025 年 11 月 05 日-06 日 · 全网直播</span> 
+                    //    <p style="margin-left:2.5rem;color:#FFF;font-size:0.875rem;line-height:120%;font-weight:600;">立即报名 -></p> 
+                    //        </a>`,
+                    //         en: `<a href="https://www.airmeet.com/e/10fb98e0-9921-11f0-89cc-795d82447e40?utm_source=Apache_Doris_Banner" target="_blank" style="display:flex; width: 100%; align-items: center; justify-content: center; margin-left: 4px; text-decoration: none;">
+                    //         <img style="width: 60px; height: 24px; margin-right: 34px;" src="/images/doris-summit.svg">
+                    //        <span style="font-weight:700; font-size:0.875rem; line-height: 120%;">Apache Doris Summit 2025 · Virtual</span> 
+                    //        <p style="margin-left:2.5rem;color:#FFF;font-size:0.875rem;line-height:120%;font-weight:600;">See Full Agenda and Register Now -></p> 
+                    //            </a>`,
+                }),
+                textColor: '#FFF',
+                isCloseable: false,
             },
             navbar: {
                 title: '',
@@ -245,7 +302,7 @@ const config = {
                     {
                         position: 'left',
                         label: 'Docs',
-                        to: '/docs/gettingStarted/what-is-apache-doris',
+                        to: `/docs/${DEFAULT_VERSION}/gettingStarted/what-is-apache-doris`,
                         target: '_blank',
                     },
                     { to: '/blog', label: 'Blog', position: 'left' },
@@ -261,8 +318,18 @@ const config = {
                         position: 'left',
                     },
                     {
+                        label: 'Events',
+                        to: '/events',
+                        position: 'left',
+                    },
+                    {
                         label: 'Community',
                         to: '/community/join-community',
+                        position: 'left',
+                    },
+                    {
+                        label: 'Vendors',
+                        to: '/vendors',
                         position: 'left',
                     },
                     // {
@@ -311,6 +378,12 @@ const config = {
                     {
                         type: 'docsVersionDropdown',
                         position: 'right',
+                        dropdownItemsAfter: [
+                            {
+                                label: '归档文档',
+                                to: `/zh-CN/archive-docs`,
+                            },
+                        ],
                     },
                 ],
             },
@@ -333,6 +406,40 @@ const config = {
                     {
                         type: 'docsVersionDropdown',
                         position: 'right',
+                        dropdownItemsAfter: [
+                            {
+                                label: 'Archived',
+                                to: `/archive-docs`,
+                            },
+                        ],
+                    },
+                ],
+            },
+            docNavbarJA: {
+                title: '',
+                logo: {
+                    alt: 'Apache Doris',
+                    src: logoImg,
+                },
+                items: [
+                    {
+                        type: 'search',
+                        position: 'left',
+                        className: 'docs-search',
+                    },
+                    {
+                        type: 'localeDropdown',
+                        position: 'right',
+                    },
+                    {
+                        type: 'docsVersionDropdown',
+                        position: 'right',
+                        dropdownItemsAfter: [
+                            {
+                                label: 'Archived',
+                                to: `/ja/archive-docs`,
+                            },
+                        ],
                     },
                 ],
             },
@@ -346,7 +453,7 @@ const config = {
                     {
                         position: 'left',
                         label: 'Docs',
-                        to: '/docs/gettingStarted/what-is-apache-doris',
+                        to: `/docs/${DEFAULT_VERSION}/gettingStarted/what-is-apache-doris`,
                         target: '_blank',
                     },
                     { to: '/blog', label: 'Blog', position: 'left' },
@@ -362,8 +469,18 @@ const config = {
                         position: 'left',
                     },
                     {
+                        label: 'Events',
+                        to: '/events',
+                        position: 'left',
+                    },
+                    {
                         label: 'Community',
                         to: '/community/join-community',
+                        position: 'left',
+                    },
+                    {
+                        label: 'Vendors',
+                        to: '/vendors',
                         position: 'left',
                     },
                     {
@@ -447,7 +564,7 @@ const config = {
                         items: [
                             {
                                 label: 'How to contribute',
-                                href: '/community/how-to-contribute/',
+                                href: '/community/how-to-contribute/contribute-to-doris',
                             },
                             {
                                 label: 'Source code',
@@ -494,7 +611,6 @@ const config = {
             //     },
             // ],s
         }),
-    ssrTemplate,
 };
 
 module.exports = config;

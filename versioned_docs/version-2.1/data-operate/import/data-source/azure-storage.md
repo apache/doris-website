@@ -1,28 +1,10 @@
 ---
 {
     "title": "Azure Storage",
-    "language": "en"
+    "language": "en",
+    "description": "Doris provides two ways to load files from Azure Storage:"
 }
 ---
-
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
 
 Doris provides two ways to load files from Azure Storage:
 - Use S3 Load to load Azure Storage files into Doris, which is an asynchronous load method.
@@ -64,10 +46,10 @@ DISTRIBUTED BY HASH(user_id) BUCKETS 10;
 ### Step 3: Load data using S3 Load
 
 :::caution Caution
-Azure Storage requires HTTPS transmission by default, with the corresponding storage account configuration being `Secure transfer required: Enabled`.
-To access Azure Storage properly, you need to set `s3_client_http_scheme = https` in Doris's `be.conf`.
+When importing data from Azure Storage with S3 Load, note the following:
 
-The `s3.region` setting for Azure S3 properties can be omitted.
+- Azure Storage requires HTTPS transmission by default (`Secure transfer required: Enabled`). To access Azure Storage properly, set `s3_client_http_scheme = https` in Doris `be.conf`.
+- The `s3.region` setting in Azure S3 properties can be omitted.
 :::
 
 ```sql
@@ -154,10 +136,10 @@ DISTRIBUTED BY HASH(user_id) BUCKETS 10;
 ### Step 3: Load data using TVF
 
 :::caution Caution
-Azure Storage requires HTTPS transmission by default, with the corresponding storage account configuration being `Secure transfer required: Enabled`.
-To access Azure Storage properly, you need to set `s3_client_http_scheme = https` in Doris's `be.conf`.
+When importing data from Azure Storage with TVF, note the following:
 
-The `s3.region` setting for Azure S3 properties can be omitted.
+- Azure Storage requires HTTPS transmission by default (`Secure transfer required: Enabled`). To access Azure Storage properly, set `s3_client_http_scheme = https` in Doris `be.conf`.
+- The `s3.region` setting in Azure S3 properties can be omitted.
 :::
 
 ```sql

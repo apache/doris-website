@@ -1,5 +1,6 @@
 import Link from '@docusaurus/Link';
 import React, { CSSProperties } from 'react';
+import { useAlternatePageUtils } from '@docusaurus/theme-common';
 
 interface ReadMoreProps {
     to: string;
@@ -13,6 +14,12 @@ export default function LinkWithArrow(props: ReadMoreProps) {
         <Link
             className={`flex group text-primary items-center text-base cursor-pointer hover:no-underline ${props?.className}`}
             to={props.to}
+            onClick={e => {
+                if (props.to.includes('release-4.0.0')) {
+                    e.preventDefault();
+                    window.open('https://doris.apache.org/zh-CN/docs/dev/releasenotes/v4.0/release-4.0.0');
+                }
+            }}
             style={props.style}
         >
             <span className="mr-2">{props.text}</span>

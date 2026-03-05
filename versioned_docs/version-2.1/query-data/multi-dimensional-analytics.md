@@ -1,28 +1,10 @@
 ---
 {
     "title": "Multi-Dimensional Analytics",
-    "language": "en"
+    "language": "en",
+    "description": "In a database, ROLLUP, CUBE, and GROUPING SETS are advanced SQL statements used for multidimensional data aggregation."
 }
 ---
-
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
 
 In a database, ROLLUP, CUBE, and GROUPING SETS are advanced SQL statements used for multidimensional data aggregation. These features significantly enhance the capabilities of the GROUP BY clause, enabling users to obtain multiple levels of summary results in a single query, which is semantically equivalent to using UNION ALL to connect multiple aggregation statements.
 

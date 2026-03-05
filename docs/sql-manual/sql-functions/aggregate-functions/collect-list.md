@@ -1,72 +1,71 @@
 ---
 {
     "title": "COLLECT_LIST",
-    "language": "en"
+    "language": "en",
+    "description": "Aggregation function, used to aggregate all values of a column into an array."
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
+## Description
 
-  http://www.apache.org/licenses/LICENSE-2.0
+Aggregation function, used to aggregate all values of a column into an array.
 
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
+## Alias
 
-## COLLECT_LIST
-### description
-#### Syntax
+- GROUP_ARRAY
 
-`ARRAY<T> collect_list(expr)`
+## Syntax
 
-Returns an array consisting of all values in expr within the group, and ,with the optional `max_size` parameter limits the size of the resulting array to `max_size` elements.The order of elements in the array is non-deterministic. NULL values are excluded.
-It has an alias `group_array`.
-
-### example
-
-```
-mysql> select k1,k2,k3 from collect_list_test order by k1;
-+------+------------+-------+
-| k1   | k2         | k3    |
-+------+------------+-------+
-|    1 | 2023-01-01 | hello |
-|    2 | 2023-01-02 | NULL  |
-|    2 | 2023-01-02 | hello |
-|    3 | NULL       | world |
-|    3 | 2023-01-02 | hello |
-|    4 | 2023-01-02 | sql   |
-|    4 | 2023-01-03 | sql   |
-+------+------------+-------+
-
-mysql> select collect_list(k1),collect_list(k1,3) from collect_list_test;
-+-------------------------+--------------------------+
-| collect_list(`k1`)      | collect_list(`k1`,3)     |
-+-------------------------+--------------------------+
-| [1,2,2,3,3,4,4]         | [1,2,2]                  |
-+-------------------------+--------------------------+
-
-mysql> select k1,collect_list(k2),collect_list(k3,1) from collect_list_test group by k1 order by k1;
-+------+-------------------------+--------------------------+
-| k1   | collect_list(`k2`)      | collect_list(`k3`,1)     |
-+------+-------------------------+--------------------------+
-|    1 | [2023-01-01]            | [hello]                  |
-|    2 | [2023-01-02,2023-01-02] | [hello]                  |
-|    3 | [2023-01-02]            | [world]                  |
-|    4 | [2023-01-02,2023-01-03] | [sql]                    |
-+------+-------------------------+--------------------------+
-
+```sql
+COLLECT_LIST(<expr> [,<max_size>])
 ```
 
-### keywords
-COLLECT_LIST,GROUP_ARRAY,COLLECT_SET,ARRAY
+## Parameters
+
+| Parameter | Description |
+| -- | -- |
+| `<expr>` | An expression to determine the values to be placed into the array. Supported types: Bool, TinyInt, SmallInt, Integer, BigInt, LargeInt, Float, Double, Decimal, Date, Datetime, Timestamptz, IPV4, IPV6, String, Array, Map, Struct. |
+| `<max_size>` | Optional parameter to limit the result array size to max_size elements. Supported type: Integer. |
+
+## Return Value
+
+Returns ARRAY type, containing all non-NULL values. If there is no valid data in the group, returns an empty array.
+
+## Example
+
+```sql
+-- setup
+CREATE TABLE collect_list_test (
+	k1 INT,
+	k2 INT,
+	k3 STRING
+) DISTRIBUTED BY HASH(k1) BUCKETS 1
+PROPERTIES ("replication_num" = "1");
+INSERT INTO collect_list_test VALUES (1, 10, 'a'), (1, 20, 'b'), (1, 30, 'c'), (2, 100, 'x'), (2, 200, 'y'), (3, NULL, NULL);
+```
+
+```sql
+select collect_list(k1),collect_list(k1,3) from collect_list_test;
+```
+
+```text
++--------------------+--------------------+
+| collect_list(k1)   | collect_list(k1,3) |
++--------------------+--------------------+
+| [1, 1, 1, 2, 2, 3] | [1, 1, 1]          |
++--------------------+--------------------+
+```
+
+```sql
+select k1,collect_list(k2),collect_list(k3,1) from collect_list_test group by k1 order by k1;
+```
+
+```text
++------+------------------+--------------------+
+| k1   | collect_list(k2) | collect_list(k3,1) |
++------+------------------+--------------------+
+|    1 | [10, 20, 30]     | ["a"]              |
+|    2 | [100, 200]       | ["x"]              |
+|    3 | []               | []                 |
++------+------------------+--------------------+
+```

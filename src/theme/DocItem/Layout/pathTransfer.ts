@@ -1,8 +1,10 @@
 const transformPathWithoutZhCN = (pathname: string): string => {
     if(pathname.startsWith('/docs')){
         const pathWithoutDocs = pathname.replace('/docs', '');
-        if (pathname.includes('/3.0')) {
-            return `/versioned_docs/version-3.0${pathWithoutDocs.replace('/3.0', '')}.md`;
+        if(pathname.includes('/4.x')){
+            return `/versioned_docs/version-4.x${pathWithoutDocs.replace('/4.x', '')}.md`;
+        }else if (pathname.includes('/3.x')) {
+            return `/versioned_docs/version-3.x${pathWithoutDocs.replace('/3.x', '')}.md`;
         } else if (pathname.includes('/2.0')) {
             return `/versioned_docs/version-2.0${pathWithoutDocs.replace('/2.0', '')}.md`;
         } else if (pathname.includes('/1.2')) {
@@ -17,10 +19,24 @@ const transformPathWithoutZhCN = (pathname: string): string => {
          return `${pathname}.md`
     }
 };
+
+const stripLocalePrefix = (pathname: string): string => {
+    const segments = pathname.split('/').filter(Boolean);
+    if (segments.length === 0) {
+        return pathname;
+    }
+    if (/^[a-z]{2}(?:-[A-Z]{2})?$/.test(segments[0])) {
+        return `/${segments.slice(1).join('/')}`;
+    }
+    return pathname;
+};
+
 const transformPathWithZhCN = (pathname: string): string => {
     if (pathname.startsWith('/zh-CN/docs')) {
-        if (pathname.includes('/3.0')) {
-            return `/i18n/zh-CN/docusaurus-plugin-content-docs/version-3.0${pathname.replace('/zh-CN/docs/3.0', '')}.md`;
+        if(pathname.includes('/4.x')){
+            return `/i18n/zh-CN/docusaurus-plugin-content-docs/version-4.x${pathname.replace('/zh-CN/docs/4.x', '')}.md`;
+        }else if (pathname.includes('/3.x')) {
+            return `/i18n/zh-CN/docusaurus-plugin-content-docs/version-3.x${pathname.replace('/zh-CN/docs/3.x', '')}.md`;
         } else if (pathname.includes('/2.0')) {
             return `/i18n/zh-CN/docusaurus-plugin-content-docs/version-2.0${pathname.replace('/zh-CN/docs/2.0', '')}.md`;
         } else if (pathname.includes('/1.2')) {
@@ -39,7 +55,7 @@ const transformDocPath = (pathname: string): string => {
     if (pathname.startsWith('/zh-CN')) {
         return transformPathWithZhCN(pathname)
     } else {
-        return transformPathWithoutZhCN(pathname);
+        return transformPathWithoutZhCN(stripLocalePrefix(pathname));
     }
 };
 

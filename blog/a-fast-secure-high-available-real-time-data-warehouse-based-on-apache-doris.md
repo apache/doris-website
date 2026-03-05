@@ -3,7 +3,8 @@
     'title': "Financial data warehousing: fast, secure, and highly available with Apache Doris",
     'description': "A whole-journey guide for financial users looking for fast data processing performance, data security, and high service availability.",
     'date': '2024-01-08',
-    'author': 'Apache Doris',
+    'author': 'velodb.io · VeloDB Engineering Team',
+    'externalLink': 'https://www.velodb.io/blog/155',
     'tags': ['Best Practice'],
     "image": '/images/apache-doris-a-fast-secure-and-highly-available-real-time-data-warehouse.png'
 }
@@ -146,4 +147,4 @@ Disaster recovery is crucial for the financial industry. The user leverages the 
 
 ## Conclusion
 
-We appreciate the user for their active [communication](https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-2unfw3a3q-MtjGX4pAd8bCGC1UV0sKcw) with us along the way and are glad to see so many Apache Doris features fit in their needs. They are also planning on exploring federated query, compute-storage separation, and auto maintenance with Apache Doris. We look forward to more best practice and feedback from them.
+We appreciate the user for their active [communication](https://doris.apache.org/slack) with us along the way and are glad to see so many Apache Doris features fit in their needs. They are also planning on exploring federated query, compute-storage separation, and auto maintenance with Apache Doris. We look forward to more best practice and feedback from them.

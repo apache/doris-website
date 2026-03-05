@@ -5,46 +5,38 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
+## Description
+The MONTHS_ADD function is used to add or subtract a specified number of months to a given date and returns the resulting date.
 
-  http://www.apache.org/licenses/LICENSE-2.0
+## Syntax
 
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
+````sql
+MONTHS_ADD(<datetime/date>, <nums>)
+````
 
-## months_add
-### description
-#### Syntax
+## Parameters
 
-`DATETIME MONTHS_ADD(DATETIME date, INT months)`
+| Parameter         | Description                                                |
+|-------------------|------------------------------------------------------------|
+| `<datetime/date>` | The date value to which months will be added or subtracted |
+| `<nums>`          | The number of months to add or subtract                    |
 
-Add the specified month from the date
+## Return Value
+The return value is of the same type as the input <datetime/date>.
+Special cases:
+- If the <datetime/date> input is 0000-00-00 or 0000-00-00 00:00:00, the function returns NULL.
+- If the <datetime/date> input is NULL, the function returns NULL.
+- If the input is MONTHS_ADD("9999-12-31", 1), the function will return NULL.
 
-The parameter date can be DATETIME or DATE, and the return type is consistent with that of the parameter date.
+## Example
 
-### example
-
+``` sql
+select months_add("2020-01-31 02:02:02", 1),months_add("2020-01-31", 1),months_add("2020-01-31", -1);
 ```
-mysql> select months_add("2020-01-31 02:02:02", 1);
-+--------------------------------------+
-| months_add('2020-01-31 02:02:02', 1) |
-+--------------------------------------+
-| 2020-02-29 02:02:02                  |
-+--------------------------------------+
+```text
++-------------------------------------------------------------+---------------------------------------------+----------------------------------------------+
+| months_add(cast('2020-01-31 02:02:02' as DATETIMEV2(0)), 1) | months_add(cast('2020-01-31' as DATEV2), 1) | months_add(cast('2020-01-31' as DATEV2), -1) |
++-------------------------------------------------------------+---------------------------------------------+----------------------------------------------+
+| 2020-02-29 02:02:02                                         | 2020-02-29                                  | 2019-12-31                                   |
++-------------------------------------------------------------+---------------------------------------------+----------------------------------------------+
 ```
-
-### keywords
-
-    MONTHS_ADD

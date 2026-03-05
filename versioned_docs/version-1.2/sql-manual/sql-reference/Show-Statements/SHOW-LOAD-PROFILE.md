@@ -5,25 +5,6 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 ## SHOW-LOAD-PROFILE
 
 ### Name
@@ -66,7 +47,7 @@ This command will list all currently saved import profiles. Each line correspond
 
    ```sql
    mysql> show load profile "/"\G
-*************************** 1. row ***************************
+   *************************** 1. row ***************************
                  JobId: 20010
                QueryId: 980014623046410a-af5d36f23381017f
                   User: root
@@ -83,8 +64,8 @@ This command will list all currently saved import profiles. Each line correspond
           ScheduleTime: NULL
        FetchResultTime: NULL
        WriteResultTime: NULL
-WaitAndFetchResultTime: NULL
-*************************** 2. row ***************************
+   WaitAndFetchResultTime: NULL
+   *************************** 2. row ***************************
                  JobId: N/A
                QueryId: 7cc2d0282a7a4391-8dd75030185134d8
                   User: root
@@ -101,7 +82,7 @@ WaitAndFetchResultTime: NULL
           ScheduleTime: N/A
        FetchResultTime: 0ns
        WriteResultTime: 0ns
-WaitAndFetchResultTime: N/A
+   WaitAndFetchResultTime: N/A
    ```
 
 2. View an overview of the subtasks with imported jobs:
@@ -157,7 +138,7 @@ WaitAndFetchResultTime: N/A
                                     │Fragment: 1      │ │Fragment: 1  │
                                     └─────────────────┘ └─────────────┘
 
-   ```sql
+   ```
 
    This will show the plan tree and fragment id on it
 
@@ -226,6 +207,4 @@ WaitAndFetchResultTime: N/A
 ### Keywords
 
     SHOW, LOAD, PROFILE
-
-### Best Practice
 

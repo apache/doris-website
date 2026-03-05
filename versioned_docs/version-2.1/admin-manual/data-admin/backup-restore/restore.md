@@ -1,34 +1,16 @@
 ---
 {
     "title": "Restore",
-    "language": "en"
+    "language": "en",
+    "description": "The following SQL statement can be used to view existing backups in the Repository named examplerepo."
 }
 ---
-
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
 
 ## Prerequisites
 
 1. Ensure you have **administrator** privileges to perform the restore operation.
 2. Ensure you have an existing **Repository** to store the backup. If not, follow the steps to create a Repository and perform a [backup](backup.md).
-3. Ensure you have a valid **backup** snapshot available for restoration.
+3. Ensure you have a valid **backup** snapshot available for restore.
 
 ## 1. Get the Backup Timestamp of the Snapshot
 
@@ -88,7 +70,7 @@ PROPERTIES
 
 ### Option 4: Restore Partitions and Tables from Snapshot
 
-Restore partitions p1 and p2 of the table `backup_tbl`, as well as the table `backup_tbl2` to the current database `example_db1`, renaming it to `new_tbl`, from the backup snapshot `snapshot_2`, with the snapshot label timestamp `"2018-05-04-17-11-01"`.
+Restore partitions p1 and p2 of the table `backup_tbl`, as well as the table `backup_tbl2` to the current database `example_db1`, renaming it to `new_tbl`, from the backup snapshot `snapshot_2`, with the snapshot timestamp `"2018-05-04-17-11-01"`.
 
    ```sql
    RESTORE SNAPSHOT `restore_label1`
@@ -106,7 +88,7 @@ Restore partitions p1 and p2 of the table `backup_tbl`, as well as the table `ba
 
 ## 3. Check the Execution Status of the Restore Job
 
-      ```sql
+```sql
    mysql> SHOW RESTORE\G;
    *************************** 1. row ***************************
                   JobId: 17891851
@@ -145,4 +127,4 @@ Restore partitions p1 and p2 of the table `backup_tbl`, as well as the table `ba
                  Status: [OK]
                 Timeout: 86400
    1 row in set (0.01 sec)
-   ```
+```

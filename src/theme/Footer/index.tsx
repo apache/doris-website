@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
 import { useThemeConfig } from '@docusaurus/theme-common';
+import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import FooterLinks from '@theme/Footer/Links';
 import FooterLogo from '@theme/Footer/Logo';
 import FooterCopyright from '@theme/Footer/Copyright';
@@ -17,25 +18,27 @@ import { LinkedinIcon } from '@site/src/components/Icons/linkedin';
 import { MediumIcon } from '@site/src/components/Icons/medium';
 import Translate from '@docusaurus/Translate';
 import Link from '@docusaurus/Link';
+import { normalizePathname } from '@site/src/utils/locale';
 
-function Footer(): JSX.Element | null {
+function Footer(): React.ReactElement | null {
     const { footer } = useThemeConfig();
     if (!footer) {
         return null;
     }
     const { copyright, links, logo, style } = footer;
+    const {
+        i18n: { locales },
+    } = useDocusaurusContext();
 
     const [isDocsPage, setIsDocsPage] = useState(false); // docs page or community page
     useEffect(() => {
         if (typeof window !== 'undefined') {
-            const pathname = location.pathname.split('/')[1];
-            const docsPage =
-                pathname === 'docs' ||
-                location.pathname.includes('zh-CN/docs') ||
-                location.pathname.includes('community');
+            const normalizedPathname = normalizePathname(location.pathname, locales);
+            const pathname = normalizedPathname.split('/')[1];
+            const docsPage = pathname === 'docs' || normalizedPathname.startsWith('/community');
             setIsDocsPage(docsPage);
         }
-    }, [typeof window !== 'undefined' && location.pathname]);
+    }, [locales, typeof window !== 'undefined' && location.pathname]);
 
     const ResourcesItems = (links.find(e => e.title === 'Resources')?.items || []) as any[];
     const CommunityItems = (links.find(e => e.title === 'Community')?.items || []) as any[];
@@ -89,7 +92,7 @@ function Footer(): JSX.Element | null {
                                     <TwitterIcon />
                                 </a>
                                 <a
-                                    href="https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-2unfw3a3q-MtjGX4pAd8bCGC1UV0sKcw"
+                                    href="https://doris.apache.org/slack"
                                     title="slack"
                                     target="_blank"
                                     className="item"
@@ -99,7 +102,7 @@ function Footer(): JSX.Element | null {
                             </div>
                             <div className="social">
                                 <a
-                                    href="https://www.youtube.com/@apachedoris/channels"
+                                    href="https://www.youtube.com/hashtag/apachedoris"
                                     title="youtube"
                                     target="_blank"
                                     className="item"
@@ -121,13 +124,6 @@ function Footer(): JSX.Element | null {
                                     className="item"
                                 >
                                     <MediumIcon />
-                                </a>
-                                <a className="item wechat">
-                                    <WechatIcon />
-                                    <div className="wechat-dropdown">
-                                        <p className="text-[#4c576c] text-xs">Connect on WeChat</p>
-                                        <img src={require('@site/static/images/doris-wechat.png').default} alt="" />
-                                    </div>
                                 </a>
                             </div>
                         </div>

@@ -1,34 +1,19 @@
 ---
 {
-"title": "统计信息",
-"language": "zh-CN"
+    "title": "统计信息 | Optimization Technology Principle",
+    "language": "zh-CN",
+    "description": "从 2.0 版本开始，Doris 在优化器中加入了 CBO 的能力。统计信息是 CBO 的基石，其准确性直接决定了代价估算的准确性，对于选择最优 Plan 至关重要。本文主要介绍统计信息的收集和管理方法、相关配置项以及常见问题。",
+    "sidebar_label": "统计信息"
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
+# 统计信息
 
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
-从 2.0 版本开始，Doris 在优化器中加入了 CBO 的能力。统计信息是 CBO 的基石，其准确性直接决定了代价估算的准确性，对于选择最优 Plan 至关重要。本文是 Doris 2.1 版本的统计信息使用指南，主要介绍统计信息的收集和管理方法、相关配置项以及常见问题。
+从 2.0 版本开始，Doris 在优化器中加入了 CBO 的能力。统计信息是 CBO 的基石，其准确性直接决定了代价估算的准确性，对于选择最优 Plan 至关重要。本文主要介绍统计信息的收集和管理方法、相关配置项以及常见问题。
 
 ## 统计信息的收集
 
-Doris 2.1 版本默认会开启内表的自动抽样收集，因此绝大多数情况下用户不用关注统计信息的收集。Doris 收集统计信息的对象是列，它会在表级别收集每一列的统计信息，收集的内容包括：
+Doris 默认会开启内表的自动抽样收集，因此绝大多数情况下用户不用关注统计信息的收集。Doris 收集统计信息的对象是列，它会在表级别收集每一列的统计信息，收集的内容包括：
 
 | 信息          | 描述               |
 | ------------- | ------------------ |
@@ -119,7 +104,7 @@ SET GLOBAL auto_analyze_table_width_threshold = 350;
 
 2. 表的健康度低于阈值（默认为 90，可通过 `table_stats_health_threshold` 变量进行调整）。健康度表示从上次收集统计信息到当前时刻，表中数据保持不变的比例：100 表示完全没有变化；0 表示全部改变；当健康度低于 90 时，表示当前的统计信息已有较大偏差，需要重新收集。通过健康度评估，可以降低不必要的重复收集，从而节省系统资源。
 
-为了降低后台作业的开销并提高收集速度，自动收集采用采样收集方式，默认采样 4194304`（2^22）`行。如果用户希望采样更多行以获得更准确的数据分布信息，可通过调整参数 `huge_table_default_sample_rows` 来增加采样行数。
+为了降低后台作业的开销并提高收集速度，自动收集采用采样收集方式，默认采样 4194304，即 2^22 行。如果用户希望采样更多行以获得更准确的数据分布信息，可通过调整参数 `huge_table_default_sample_rows` 来增加采样行数。
 
 如果担心自动收集作业会对业务造成干扰，可根据自身需求通过设置参数 `auto_analyze_start_time` 和 `auto_analyze_end_time` 来指定自动收集作业在业务负载较低的时间段内执行。此外，也可以通过将参数 `enable_auto_analyze` 设置为 `false` 来完全停用此功能。
 
@@ -171,7 +156,7 @@ ALTER CATALOG external_catalog SET PROPERTIES ('enable.auto.analyze'='false'); /
 
 **4. 对于 JDBC 表**
 
-系统会调用 JDBC 后端对应数据库的行数获取语句来获取表的行数。只有在后端数据库收集了表的行数信息的情况下，才可以获取到。 当前支持获取 MySQL, Oracle, Postgresql 和 SQLServer表的行数。
+系统会调用 JDBC 后端对应数据库的行数获取语句来获取表的行数。只有在后端数据库收集了表的行数信息的情况下，才可以获取到。当前支持获取 MySQL, Oracle, Postgresql 和 SQLServer 表的行数。
 
 **5. 对于其他外表**
 
@@ -474,7 +459,7 @@ Set global auto_analyze_table_width_threshold=350
 
 ### Q3：为什么部分列没有统计信息？
 
-目前，系统仅支持收集基本类型列的统计信息。对于复杂类型的列，如 JSONV、VARIANT、MAP、STRUCT、ARRAY、HLL、BITMAP、TIME 以及 TIMEV2 等系统会选择跳过。
+目前，系统仅支持收集基本类型列的统计信息。对于复杂类型的列，如 JSONB、VARIANT、MAP、STRUCT、ARRAY、HLL、BITMAP、TIME 以及 TIMEV2 等系统会选择跳过。
 
 ### Q4：报错 "Stats table not available, please make sure your cluster status is normal"
 
@@ -509,3 +494,4 @@ ADMIN DIAGNOSE TABLET tablet_id
 对于某些特殊表，如分区众多的表或单个 Tablet 体积庞大的表，可能会出现内存占用较多的情况。
 
 建议用户在建表时合理规划 Tablet 数量，避免产生超大 Tablet。若 Tablet 结构不易调整，建议在系统低峰期开启自动收集，或于低峰期手动收集这些大表，以免在高峰期影响业务运行。在 Doris 3.x 系列中，我们将针对此类场景进行优化。
+

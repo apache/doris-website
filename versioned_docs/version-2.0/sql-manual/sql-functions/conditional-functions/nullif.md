@@ -5,57 +5,57 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
+## Description
 
-  http://www.apache.org/licenses/LICENSE-2.0
+Returns `NULL` if the two input values are equal; otherwise, returns the first input value. This function is equivalent to the following `CASE WHEN` expression:
 
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
-## nullif
-### description
-#### Syntax
-
-`nullif(expr1, expr2)`
-
-
-If the two parameters are equal, null is returned. Otherwise, the value of the first parameter is returned. It has the same effect as the following `case when`
-
-```
+```sql
 CASE
-     WHEN expr1 = expr2 THEN NULL
-     ELSE expr1
+    WHEN <expr1> = <expr2> THEN NULL
+    ELSE <expr1>
 END
 ```
 
-### example
+## Syntax
 
+```sql
+NULLIF(<expr1>, <expr2>)
 ```
-mysql> select nullif(1,1);
+
+## Parameters
+
+| Parameter | Description |
+|-----------|-------------|
+| `<expr1>` | The first input value to compare. |
+| `<expr2>` | The second input value to compare against the first. |
+
+## Return Value
+
+- Returns `NULL` if `<expr1>` is equal to `<expr2>`.
+- Otherwise, returns the value of `<expr1>`.
+
+## Examples
+
+```sql
+SELECT NULLIF(1, 1);
+```
+
+```text
 +--------------+
-| nullif(1, 1) |
+| NULLIF(1, 1) |
 +--------------+
 |         NULL |
 +--------------+
+```
 
-mysql> select nullif(1,0);
+```sql
+SELECT NULLIF(1, 0);
+```
+
+```text
 +--------------+
-| nullif(1, 0) |
+| NULLIF(1, 0) |
 +--------------+
 |            1 |
 +--------------+
 ```
-### keywords
-NULLIF

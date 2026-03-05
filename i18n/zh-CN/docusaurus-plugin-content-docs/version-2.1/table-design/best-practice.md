@@ -1,28 +1,10 @@
 ---
 {
     "title": "数据库建表最佳实践",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "Doris数据库建表最佳实践全面指南，涵盖DUPLICATE KEY、UNIQUE KEY、AGGREGATE KEY三种数据表模型选择、前缀索引、ZoneMap索引、倒排索引、BloomFilter索引、Bitmap索引等六大索引优化策略，以及字段类型选择、分区分桶配置、数据分布优化等核心技术要点，帮助用户设计高性能、可扩展的数据库表结构。"
 }
 ---
-
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
 
 ## 1 数据表模型
 
@@ -476,7 +458,6 @@ show partitions from tbl_unique_merge_on_write_p;
 ```
 
 
-
 :::caution
 **强制规约**
 
@@ -514,7 +495,6 @@ show partitions from tbl_unique_merge_on_write_p;
     
     f. 事实表
 
-
 5.  对于有大量历史分区数据，但是历史数据比较少，或者不均衡，或者查询概率的情况，使用如下方式将数据放在特殊分区。
     
     对于历史数据，如果数据量比较小我们可以创建历史分区（比如年分区，月分区），将所有历史数据放到对应分区里创建历史分区方式例如：`FROM ("2000-01-01") TO ("2022-01-01") INTERVAL 1 YEAR`，具体参考：
@@ -538,4 +518,9 @@ show partitions from tbl_unique_merge_on_write_p;
      )
     ```
 
+6.  单表物化视图不能超过 6 个
+
+    a. 单表物化视图是实时构建
+
+    b. 在 Unqiue 模型上物化视图只能起到 Key 重新排序的作用，不能做数据的聚合，因为 Unqiue 模型的聚合模型是 Replace
 :::

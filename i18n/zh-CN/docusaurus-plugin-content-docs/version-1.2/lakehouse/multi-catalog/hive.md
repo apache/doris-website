@@ -5,25 +5,6 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 # Hive
 
 通过连接 Hive Metastore，或者兼容 Hive Metatore 的元数据服务，Doris 可以自动获取 Hive 的库表信息，并进行数据查询。
@@ -204,24 +185,24 @@ CREATE CATALOG hive PROPERTIES (
 
 适用于 Hive/Iceberge/Hudi
 
-| HMS Type | Doris Type | Comment |
-|---|---|---|
-| boolean| boolean | |
-| tinyint|tinyint | |
-| smallint| smallint| |
-| int| int | |
-| bigint| bigint | |
-| date| date| |
-| timestamp| datetime| |
-| float| float| |
-| double| double| |
-| char| char | |
-| varchar| varchar| |
-| decimal| decimal | |
-| `array<type>` | `array<type>`| 支持array嵌套，如 `array<array<int>>` |
-| `map<KeyType, ValueType>` | `map<KeyType, ValueType>` | 暂不支持嵌套，KeyType 和 ValueType 需要为基础类型 |
-| `struct<col1: Type1, col2: Type2, ...>` | `struct<col1: Type1, col2: Type2, ...>` | 暂不支持嵌套，Type1, Type2, ... 需要为基础类型 |
-| other | unsupported | |
+| HMS Type                                | Doris Type                              | Comment                                      |
+|-----------------------------------------|-----------------------------------------|----------------------------------------------|
+| boolean                                 | boolean                                 |                                              |
+| tinyint                                 | tinyint                                 |                                              |
+| smallint                                | smallint                                |                                              |
+| int                                     | int                                     |                                              |
+| bigint                                  | bigint                                  |                                              |
+| date                                    | date                                    |                                              |
+| timestamp                               | datetime                                |                                              |
+| float                                   | float                                   |                                              |
+| double                                  | double                                  |                                              |
+| char                                    | char                                    |                                              |
+| varchar                                 | varchar                                 |                                              |
+| decimal                                 | decimal                                 |                                              |
+| `array<type>`                           | `array<type>`                           | 支持array嵌套，如 `array<array<int>>`          |
+| `map<KeyType, ValueType>`               | `map<KeyType, ValueType>`               | 暂不支持嵌套，KeyType 和 ValueType 需要为基础类型 |
+| `struct<col1: Type1, col2: Type2, ...>` | `struct<col1: Type1, col2: Type2, ...>` | 暂不支持嵌套，Type1, Type2, ... 需要为基础类型    |
+| other                                   | unsupported                             |                                              |
 
 ## 使用Ranger进行权限校验
 

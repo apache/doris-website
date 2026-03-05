@@ -5,25 +5,6 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 # 导入分析
 
 Doris 提供了一个图形化的命令以帮助用户更方便的分析一个具体的导入。本文介绍如何使用该功能。
@@ -116,14 +97,14 @@ WaitAndFetchResultTime: N/A
 
    
 
-   ```sql
+```sql
    mysql> show load profile "/980014623046410a-af5d36f23381017f";
    +-----------------------------------+------------+
    | TaskId                            | ActiveTime |
    +-----------------------------------+------------+
    | 980014623046410a-af5d36f23381017f | 3m14s      |
    +-----------------------------------+------------+
-   ```
+```
 
    如上图，表示 `980014623046410a-af5d36f23381017f` 这个导入作业总共有一个子任务，其中 ActiveTime 表示这个子任务中耗时最长的 Instance 的执行时间。
 
@@ -133,7 +114,7 @@ WaitAndFetchResultTime: N/A
 
    
 
-   ```sql
+```sql
    mysql> show load profile "/980014623046410a-af5d36f23381017f/980014623046410a-af5d36f23381017f";
    +-----------------------------------+------------------+------------+
    | Instances                         | Host             | ActiveTime |
@@ -143,7 +124,7 @@ WaitAndFetchResultTime: N/A
    | 980014623046410a-88e260f0c43031f4 | 10.81.85.89:9067 | 3m10s      |
    | 980014623046410a-88e260f0c43031f5 | 10.81.85.89:9067 | 3m14s      |
    +-----------------------------------+------------------+------------+
-   ```
+```
 
    这里展示了 980014623046410a-af5d36f23381017f 这个子任务的四个 Instance 耗时，并且还展示了 Instance 所在的执行节点。
 
@@ -153,7 +134,7 @@ WaitAndFetchResultTime: N/A
 
    
 
-   ```sql
+```sql
    mysql> show load profile "/980014623046410a-af5d36f23381017f/980014623046410a-af5d36f23381017f/980014623046410a-88e260f0c43031f5"\G
    *************************** 1. row ***************************
    Instance:
@@ -194,7 +175,7 @@ WaitAndFetchResultTime: N/A
    │      - TotalReadThroughput: 30.39858627319336 MB/sec│
    │      - WaitScannerTime: 56s528ms                    │
    └-----------------------------------------------------┘
-   ```
+```
 
    上图展示了子任务 980014623046410a-af5d36f23381017f 中，Instance 980014623046410a-88e260f0c43031f5 的各个算子的具体 Profile。
 

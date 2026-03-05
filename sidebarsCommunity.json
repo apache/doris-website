@@ -16,7 +16,8 @@
                 "how-to-contribute/pull-request",
                 "how-to-contribute/contribute-doc",
                 "how-to-contribute/how-to-share-blogs",
-                "how-to-contribute/trino-connector-developer-guide"
+                "how-to-contribute/trino-connector-developer-guide",
+                "how-to-contribute/jdbc-catalog-developer-guide"
             ]
         },
         "release-versioning",
@@ -66,6 +67,7 @@
                 "developer-guide/pipeline-tracing",
                 "developer-guide/fe-eclipse-dev",
                 "developer-guide/fe-profiler",
+                "developer-guide/arthas",
                 "developer-guide/fe-idea-dev",
                 "developer-guide/fe-vscode-dev",
                 "developer-guide/be-vscode-dev",

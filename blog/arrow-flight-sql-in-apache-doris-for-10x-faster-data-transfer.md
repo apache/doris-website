@@ -3,8 +3,9 @@
     'title': "Arrow Flight SQL for 10X faster data transfer",
     'description': "Apache Doris 2.1 supports Arrow Flight SQL protocol for reading data from Doris. It delivers tens-fold speedups compared to PyMySQL and Pandas.",
     'date': '2024-04-16',
-    'author': 'Apache Doris',
+    'author': 'velodb.io · VeloDB Engineering Team',
     'tags': ['Tech Sharing'],
+    'externalLink': 'https://www.velodb.io/blog/295',
     "image": '/images/arrow-flight-sql-in-apache-doris-for-10x-faster-data-transfer.png'
 }
 
@@ -95,11 +96,15 @@ Create a client for interacting with the Doris Arrow Flight SQL service. Prerequ
 
 Configure parameters for Doris frontend (FE) and backend (BE):
 
-- In `fe/conf/fe.conf`, set `arrow_flight_sql_port ` to an available port, such as 9090.
+- In `fe/conf/fe.conf`, set `arrow_flight_sql_port ` to an available port, such as 8070.
 
-- In `be/conf/be.conf`, set `arrow_flight_sql_port ` to an available port, such as 9091.
+- In `be/conf/be.conf`, set `arrow_flight_sql_port ` to an available port, such as 8050.
 
-Suppose that the Arrow Flight SQL services for the Doris instance will run on ports 9090 and 9091 for FE and BE respectively, and the Doris username/password is "user" and "pass", the connection process would be:
+`Note: The arrow_flight_sql_port port number configured in fe.conf and be.conf is different`
+
+After modifying the configuration and restarting the cluster, searching for `Arrow Flight SQL service is started` in the fe/log/fe.log file indicates that the Arrow Flight Server of FE has been successfully started; searching for `Arrow Flight Service bind to host` in the be/log/be.INFO file indicates that the Arrow Flight Server of BE has been successfully started.
+
+Suppose that the Arrow Flight SQL services for the Doris instance will run on ports 8070 and 8050 for FE and BE respectively, and the Doris username/password is "user" and "pass", the connection process would be:
 
 ```C++
 conn = flight_sql.connect(uri="grpc://{FE_HOST}:{fe.conf:arrow_flight_sql_port}", db_kwargs={
@@ -249,8 +254,8 @@ import adbc_driver_manager
 import adbc_driver_flightsql.dbapi as flight_sql
 
 # step 2, create a client that interacts with the Doris Arrow Flight SQL service.
-# Modify arrow_flight_sql_port in fe/conf/fe.conf to an available port, such as 9090.
-# Modify arrow_flight_sql_port in be/conf/be.conf to an available port, such as 9091.
+# Modify arrow_flight_sql_port in fe/conf/fe.conf to an available port, such as 8070.
+# Modify arrow_flight_sql_port in be/conf/be.conf to an available port, such as 8050.
 conn = flight_sql.connect(uri="grpc://{FE_HOST}:{fe.conf:arrow_flight_sql_port}", db_kwargs={
             adbc_driver_manager.DatabaseOptions.USERNAME.value: "root",
             adbc_driver_manager.DatabaseOptions.PASSWORD.value: "",
@@ -456,4 +461,4 @@ For Spark users, apart from connecting to Flight SQL Server using JDBC and JAVA,
 
 A number of enterprise users of Doris has tried loading data from Doris to Python, Spark, and Flink using Arrow Flight SQL and enjoyed much faster data reading speed. In the future, we plan to include the support for Arrow Flight SQL in data writing, too. By then, most systems built with mainstream programming languages will be able to read and write data from/to Apache Doris by an ADBC client. That's high-speed data interaction which opens up numerous possibilities. On our to-do list, we also envision leveraging Arrow Flight to implement parallel data reading by multiple backends and facilitate federated queries across Doris and Spark. 
 
-Download [Apache Doris 2.1](https://doris.apache.org/download/) and get a taste of 100 times faster data transfer powered by Arrow Flight SQL. If you need assistance, come find us in the [Apache Doris developer and user community](https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-2unfw3a3q-MtjGX4pAd8bCGC1UV0sKcw). 
+Download [Apache Doris 2.1](https://doris.apache.org/download/) and get a taste of 100 times faster data transfer powered by Arrow Flight SQL. If you need assistance, come find us in the [Apache Doris developer and user community](https://doris.apache.org/slack). 

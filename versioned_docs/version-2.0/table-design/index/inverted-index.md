@@ -5,26 +5,6 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
-
 ## Indexing Principle
 
 [Inverted Index](https://en.wikipedia.org/wiki/Inverted_index) is a commonly used indexing technique in the field of information retrieval. It divides text into individual words and constructs a word -> document IDs index, allowing for quick searches to determine which documents contain a specific word.
@@ -136,7 +116,7 @@ Syntax explanation:
   **Specifies whether the index supports MATCH_PHRASE phrase query acceleration**
   <p>- true: supported, but the index requires more storage space</p>
   <p>- false: not supported, more storage efficient, can use MATCH_ALL to query multiple keywords</p>
-  <p>- default false</p>
+  <p>- From versions 2.0.14, 2.1.5 and 3.0.1, the default is true if parser is set. Otherwise default to false.</p>
 
   For example, the following example specifies Chinese tokenization, coarse-grained mode, and supports phrase query acceleration.
 ```sql
@@ -302,6 +282,7 @@ SELECT * FROM table_name WHERE content MATCH_PHRASE 'keyword1 keyword2 ~3';
 SELECT * FROM table_name WHERE content MATCH_PHRASE 'keyword1 keyword2 ~3+';
 
 -- 2.3 Prefix matching the last word keyword2, with a default limit of 50 prefixes (controlled by session variable inverted_index_max_expansions)
+-- It is necessary to ensure that keyword1 and keyword2 remain adjacent in the original text after tokenization, with no other words in between.
 -- 'keyword1 keyword2abc' matches because keyword1 is identical and keyword2abc is a prefix of keyword2
 -- 'keyword1 keyword2' also matches because keyword2 is a prefix of keyword2
 -- 'keyword1 keyword3' does not match because keyword3 is not a prefix of keyword2
@@ -313,7 +294,7 @@ SELECT * FROM table_name WHERE content MATCH_PHRASE_PREFIX 'keyword1';
 
 -- 2.5 Regular expression matching on tokenized words, with a default limit of 50 matches (controlled by session variable inverted_index_max_expansions)
 -- Similar to MATCH_PHRASE_PREFIX but with regex instead of prefix
-SELECT * FROM table_name WHERE content MATCH_REGEXP 'key*';
+SELECT * FROM table_name WHERE content MATCH_REGEXP 'key.*';
 ```
 
 ```sql

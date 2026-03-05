@@ -5,27 +5,6 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
-
-
 ## 数值类型
 
 包括以下 4 种：
@@ -72,9 +51,7 @@ under the License.
 
 1. [CHAR(M)](../../sql-manual/sql-data-types/string/CHAR.md)：定长字符串，固定长度 M 字节，M 的范围是 [1, 255]。
 
-2. [VARCHAR(M)](../../sql-manual/sql-data-types/string/VARCHAR.md)：不定长字符串，M 是最大长度，M 的范围是 [1, 65533]。
-
-3. [STRING](../../sql-manual/sql-data-types/string/STRING.md)：不定长字符串，默认最长 1048576 字节（1MB），可调大到 2147483643 字节（2GB），BE 配置 string_type_length_soft_limit_bytes。
+2. [STRING](../../sql-manual/sql-data-types/string/STRING.md)：不定长字符串，默认最长 1048576 字节（1MB），可调大到 2147483643 字节（2GB），BE 配置 string_type_length_soft_limit_bytes。
 
 ## 半结构化类型
 
@@ -94,15 +71,8 @@ under the License.
 
 2. [HLL](../../sql-manual/sql-data-types/aggregate/HLL.md)：用于近似去重，性能优于 COUNT DISTINCT。配合  hll_union_agg、hll_raw_agg、hll_cardinality、hll_hash 等 HLL 函数使用。
 
-3. [QUANTILE_STATE](../../sql-manual/sql-data-types/aggregate/QUANTILE_STATE.md)：用于分位数近似计算，性能优于 PERCENTILE。配合 QUANTILE_PERCENT、QUANTILE_UNION、TO_QUANTILE_STATE 等函数使用。
+3. [QUANTILE_STATE](../../sql-manual/sql-data-types/aggregate/QUANTILE-STATE.md)：用于分位数近似计算，性能优于 PERCENTILE。配合 QUANTILE_PERCENT、QUANTILE_UNION、TO_QUANTILE_STATE 等函数使用。
 
-4. [AGG_STATE](../../sql-manual/sql-data-types/aggregate/AGG_STATE.md)：用于聚合计算加速，配合 state/merge/union 聚合函数组合器使用。
+4. [AGG_STATE](../../sql-manual/sql-data-types/aggregate/AGG-STATE.md)：用于聚合计算加速，配合 state/merge/union 聚合函数组合器使用。
 
 
-## IP 类型
-
-IP 类型以二进制形式存储 IP 地址，比用字符串存储更省空间查询速度更快，支持 2 种类型：
-
-1. [IPv4](../../sql-manual/sql-data-types/ip/IPV4.md)：以 4 字节二进制存储 IPv4 地址，配合 ipv4_* 系列函数使用。
-
-2. [IPv6](../../sql-manual/sql-data-types/ip/IPV6.md)：以 16 字节二进制存储 IPv6 地址，配合 ipv6_* 系列函数使用。

@@ -5,12 +5,17 @@ import NavbarItem, { type Props as NavbarItemConfig } from '@theme/NavbarItem';
 import NavbarColorModeToggle from '@theme/Navbar/ColorModeToggle';
 import NavbarMobileSidebarToggle from '@theme/Navbar/MobileSidebar/Toggle';
 import { useLocation } from '@docusaurus/router';
+import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import Link from '@docusaurus/Link';
 import Translate from '@docusaurus/Translate';
 import { NavbarDocsLeft, NavbarDocsRight, NavbarDocsBottom } from './components/NavbarDocs';
 import { NavbarCommunityLeft, NavbarCommunityBottom, NavbarCommunityRight } from './components/NavbarCommunity';
 import { NavbarCommonLeft, NavbarCommonRight } from './components/NavbarCommon';
 import { DataContext } from '../../Layout';
+import { ARCHIVE_PATH } from '@site/src/constant/common';
+import { STAR_COUNT } from '../../../constant/github.data';
+import { StarGreenIcon } from '@site/src/components/Icons/star-green-icon';
+import { isCommunityPath, normalizePathname } from '@site/src/utils/locale';
 
 import styles from './styles.module.css';
 
@@ -58,48 +63,33 @@ function NavbarContentLayout({ left, right, bottom }: { left: ReactNode; right: 
     );
 }
 
-const getCurrentNavBar = (pathname: string) => {
-    if (pathname.includes(NavBar.DOCS)) return NavBar.DOCS;
-    if (pathname.split('/')[1] === NavBar.COMMUNITY || pathname.includes('zh-CN/community')) return NavBar.COMMUNITY;
+const getCurrentNavBar = (pathname: string, locales: string[]) => {
+    const normalizedPathname = normalizePathname(pathname, locales);
+    if (normalizedPathname.includes(`/${NavBar.DOCS}`) || normalizedPathname.includes(ARCHIVE_PATH)) {
+        return NavBar.DOCS;
+    }
+    if (isCommunityPath(normalizedPathname, locales)) {
+        return NavBar.COMMUNITY;
+    }
     return NavBar.COMMON;
 };
 
 export default function NavbarContent(): ReactNode {
     const location = useLocation();
-    const [currentNavbar, setCurrentNavbar] = useState(getCurrentNavBar(location.pathname));
-    const [isEN, setIsEN] = useState(!location.pathname.includes('zh-CN'));
+    const {
+        i18n: { currentLocale, locales },
+    } = useDocusaurusContext();
+    const [currentNavbar, setCurrentNavbar] = useState(getCurrentNavBar(location.pathname, locales));
+    const isZH = currentLocale === 'zh-CN';
 
     const mobileSidebar = useNavbarMobileSidebar();
     const { showSearchPageMobile } = useContext(DataContext);
-    const [star, setStar] = useState<string>('');
-
-    async function getGithubStar() {
-        try {
-            const res = await fetch('https://api.github.com/repos/apache/doris');
-            const data = await res.json();
-            if (data && data.stargazers_count) {
-                const starStr = (+parseFloat(formatStar(data.stargazers_count)).toFixed(1)).toString();
-                setStar(starStr);
-            }
-        } catch (err) {
-            console.error(err);
-        }
-    }
-
-    function formatStar(star) {
-        return String(star)
-            .split('')
-            .reverse()
-            .reduce((prev, next, index) => {
-                return (index % 3 ? next : next + '.') + prev;
-            });
-    }
 
     const NavbarTypes = {
         [NavBar.DOCS]: {
-            left: <NavbarDocsLeft isEN={isEN} />,
-            right: <NavbarDocsRight isEN={isEN} />,
-            bottom: <NavbarDocsBottom isEN={isEN} />,
+            left: <NavbarDocsLeft isEN={!isZH} />,
+            right: <NavbarDocsRight isEN={!isZH} />,
+            bottom: <NavbarDocsBottom isEN={!isZH} />,
         },
         [NavBar.COMMUNITY]: {
             left: <NavbarCommunityLeft />,
@@ -108,42 +98,35 @@ export default function NavbarContent(): ReactNode {
         },
         [NavBar.COMMON]: {
             left: <NavbarCommonLeft />,
-            right: <NavbarCommonRight star={star} />,
+            right: <NavbarCommonRight star={STAR_COUNT} />,
             bottom: null,
         },
     };
 
     useEffect(() => {
         if (typeof window !== 'undefined') {
-            const pathname = location.pathname.split('/')[1];
-            location.pathname.includes('zh-CN') ? setIsEN(false) : setIsEN(true);
-            if (location.pathname.includes(NavBar.DOCS)) {
-                setCurrentNavbar(NavBar.DOCS);
-            } else if (pathname === NavBar.COMMUNITY || location.pathname.includes('zh-CN/community')) {
-                setCurrentNavbar(NavBar.COMMUNITY);
-            } else {
-                setCurrentNavbar(NavBar.COMMON);
-            }
+            setCurrentNavbar(getCurrentNavBar(location.pathname, locales));
         }
-    }, [typeof window !== 'undefined' && location.pathname]);
-
-    useEffect(() => {
-        getGithubStar();
-    }, []);
+    }, [locales, typeof window !== 'undefined' && location.pathname]);
 
     return (
         <NavbarContentLayout
             left={NavbarTypes[currentNavbar].left}
             right={
                 <>
+                    <button
+                        className="rounded-full flex items-center gap-x-2 px-4 py-[5px] border border-primary bg-[#F0FFF7] text-[1rem]/[1.625rem] font-medium text-[#1D1D1D]"
+                        id="navbar-ask-ai-btn"
+                    >
+                        <StarGreenIcon />
+                        Ask AI
+                    </button>
                     {NavbarTypes[currentNavbar].right}
                     {!mobileSidebar.disabled && !showSearchPageMobile && <NavbarMobileSidebarToggle />}
                     <NavbarColorModeToggle className={styles.colorModeToggle} />
-                    <Link className="header-right-button-primary navbar-download-desktop" to="/download">
+                    <Link className="header-right-button-primary navbar-download-desktop font-medium" to="/download">
                         <Translate id="navbar.download">
-                            {typeof window !== 'undefined' && location.pathname.includes('zh-CN/docs')
-                                ? '下载'
-                                : 'Download'}
+                            {isZH ? '下载' : 'Download'}
                         </Translate>
                     </Link>
                 </>

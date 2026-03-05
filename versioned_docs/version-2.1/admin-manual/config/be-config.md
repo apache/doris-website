@@ -3,28 +3,10 @@
     "title": "BE Configuration",
     "language": "en",
     "toc_min_heading_level": 2,
-    "toc_max_heading_level": 4
+    "toc_max_heading_level": 4,
+    "description": "This document mainly introduces the relevant configuration items of BE."
 }
 ---
-
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
 
 <!-- Please sort the configuration alphabetically -->
 
@@ -248,9 +230,9 @@ There are two ways to configure BE configuration items:
 
 #### `brpc_num_threads`
 
-* Description: This configuration is mainly used to modify the number of bthreads for brpc. The default value is set to -1, which means the number of bthreads is #cpu-cores.
-  - User can set this configuration to a larger value to get better QPS performance. For more information, please refer to `https://github.com/apache/incubator-brpc/blob/master/docs/cn/benchmark.md`
-* Default value: -1
+* Description: This configuration is mainly used to modify the number of bthreads for brpc. The default value is set to 256.
+  - User can set this configuration to a larger value to get better QPS performance. For more information, please refer to `https://github.com/apache/brpc/blob/master/docs/cn/benchmark.md`
+* Default value: 256
 
 #### `thrift_rpc_timeout_ms`
 
@@ -387,7 +369,7 @@ The maximum size of a (received) message of the thrift server, in bytes. If the 
 
 * Type: int32
 * Description: The number of threads in the Scanner thread pool. In Doris' scanning tasks, each Scanner will be submitted as a thread task to the thread pool to be scheduled. This parameter determines the size of the Scanner thread pool.
-* Default value: 48
+* Default value: Depending on cpu cores. Equal to `max(48, 2 * num_of_cpu_cores)`
 
 #### `doris_max_remote_scanner_thread_pool_thread_num`
 
@@ -623,7 +605,7 @@ BaseCompaction:546859:
 #### `segcompaction_batch_size`
 
 * Type: int32
-* Description: Max number of segments allowed in a single segment compaction task.
+* Description: Segment compaction is triggered when the number of segments exceeds this threshold. This configuration also limits the maximum number of raw segments in a single segment compaction task.
 * Default value: 10
 
 #### `segcompaction_candidate_max_rows`
@@ -1479,7 +1461,6 @@ This configuration is supported since the Apache Doris 1.2 version
 * Default value: true
 
 
-
 #### `enable_query_memory_overcommit`
 
 * Description: If true, when the process does not exceed the soft mem limit, the query memory will not be limited; when the process memory exceeds the soft mem limit, the query with the largest ratio between the currently used memory and the exec_mem_limit will be canceled. If false, cancel query when the memory used exceeds exec_mem_limit.
@@ -1513,12 +1494,13 @@ This configuration is supported since the Apache Doris 1.2 version
   group_commit_wal_path=/data1/storage/wal;/data2/storage/wal;/data3/storage/wal
   ```
 
-#### `group_commit_memory_rows_for_max_filter_ratio`
-
-* Description: The `max_filter_ratio` limit can only work if the total rows of `group commit` is less than this value. See [Group Commit](../../data-operate/import/group-commit-manual.md) for more details
-* Default: 10000
-
 #### `default_tzfiles_path`
 
 * Description: Doris comes with its own time zone database. If the time zone file is not found in the system directory, the data in that directory is enabled.
 * Default: "${DORIS_HOME}/zoneinfo"
+
+#### `time_series_max_tablet_version_num`
+
+* Type: int
+* Description: Limit the number of versions of a single tablet under the time-series compaction policy. It is used to prevent a large number of version accumulation problems caused by too frequent load or delayed compaction. When the limit is exceeded, the load task will be rejected. Supported since version 2.1.11
+* Default value: 20000

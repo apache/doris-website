@@ -1,34 +1,14 @@
 ---
 {
     "title": "手动分区",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "分区列通常为时间列，以方便的管理新旧数据。Range 分区支持的列类型 DATE, DATETIME, TIMESTAMPTZ, TINYINT, SMALLINT, INT, BIGINT, LARGEINT。"
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
-
 ## 分区列
 
--   分区列可以指定一列或多列，分区列必须为 KEY 列。多列分区的使用方式在后面多列分区小结介绍。
--   PARTITION 列默认必须为 NOT NULL 列，如果需要使用 NULL 列，应设置 session variable `allow_partition_column_nullable = true`。对于 LIST PARTITION，支持真正的 NULL 分区。对于 RANGE PARTITION，NULL 值会被划归**最小的 LESS THAN 分区**。
+-   分区列可以指定一列或多列，分区列必须为 KEY 列。
 -   不论分区列是什么类型，在写分区值时，都需要加双引号。
 -   分区数量理论上没有上限。但默认限制每张表 4096 个分区，如果想突破这个限制，可以修改 FE 配置`max_multi_partition_num`和`max_dynamic_partition_num `。
 -   当不使用分区建表时，系统会自动生成一个和表名同名的，全值范围的分区。该分区对用户不可见，并且不可删改。
@@ -36,7 +16,7 @@ under the License.
 
 ## Range 分区
 
-分区列通常为时间列，以方便的管理新旧数据。Range 分区支持的列类型 DATE,  DATETIME, TINYINT, SMALLINT, INT, BIGINT, LARGEINT。
+分区列通常为时间列，以方便的管理新旧数据。Range 分区支持的列类型 DATE,  DATETIME, TIMESTAMPTZ, TINYINT, SMALLINT, INT, BIGINT, LARGEINT。
 
 **分区信息，支持四种写法：**            
 
@@ -127,7 +107,7 @@ PARTITION BY RANGE(col)
 
 ## List 分区
 
-分区列支持 `BOOLEAN, TINYINT, SMALLINT, INT, BIGINT, LARGEINT, DATE, DATETIME, CHAR, VARCHAR` 数据类型，分区值为枚举值。只有当数据为目标分区枚举值其中之一时，才可以命中分区。
+分区列支持 `BOOLEAN, TINYINT, SMALLINT, INT, BIGINT, LARGEINT, DATE, DATETIME, TIMESTAMPTZ, CHAR, VARCHAR` 数据类型，分区值为枚举值。只有当数据为目标分区枚举值其中之一时，才可以命中分区。
 
 Partition 支持通过 `VALUES IN (...)` 来指定每个分区包含的枚举值。
 

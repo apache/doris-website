@@ -128,7 +128,7 @@ Here we use Apache Doris 1.2.0-rc01, Apache Doris 1.1.3 and Apache Doris 0.15.0 
 
 ## 6. Environmental Preparation
 
-Please refer to the [official document](https://doris.apache.org/docs/install/cluster-deployment/standard-deployment/) to install and deploy Doris to obtain a normal running Doris cluster (at least 1 FE 1 BE, 1 FE 3 BE is recommended).
+Please refer to the [official document](https://doris.apache.org/docs/install/deploy-manually/storage-compute-coupled-deploy-manually/) to install and deploy Doris to obtain a normal running Doris cluster (at least 1 FE 1 BE, 1 FE 3 BE is recommended).
 
 ## 7. Data Preparation
 
@@ -186,7 +186,7 @@ export DB='tpch1'
 ```shell
 sh create-tpch-tables.sh
 ```
-Or copy the table creation statement in [create-tpch-tables.sql](https://github.com/apache/incubator-doris/blob/master/tools/tpch-tools/create-tpch-tables.sql) and excute it in Doris.
+Or copy the table creation statement in [create-tpch-tables.sql](https://github.com/apache/incubator-doris/blob/master/tools/tpch-tools/create-tpch-tables.sql) and execute it in Doris.
 
 
 ### 7.4 Import Data

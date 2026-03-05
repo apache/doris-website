@@ -1,62 +1,43 @@
 ---
 {
     "title": "triggers",
-    "language": "zh-CN"
+    "language": "zh-CN",
+    "description": "此表仅用于兼容 MySQL 行为。永远为空。"
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
+## Overview
 
-  http://www.apache.org/licenses/LICENSE-2.0
+`triggers` 表提供了关于触发器的信息。
+目前，Apache Doris 支持此表是为了兼容 MySQL，但不支持用户自定义触发器。此表始终为空。
 
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
-## 概述
-
-此表仅用于兼容 MySQL 行为。永远为空。
-
-## 所属数据库
-
+## Database
 
 `information_schema`
 
+## Table Information
 
-## 表信息
-
-| 列名                       | 类型          | 说明 |
-| :------------------------- | :------------ | :--- |
-| TRIGGER_CATALOG            | varchar(512)  |      |
-| TRIGGER_SCHEMA             | varchar(64)   |      |
-| TRIGGER_NAME               | varchar(64)   |      |
-| EVENT_MANIPULATION         | varchar(6)    |      |
-| EVENT_OBJECT_CATALOG       | varchar(512)  |      |
-| EVENT_OBJECT_SCHEMA        | varchar(64)   |      |
-| EVENT_OBJECT_TABLE         | varchar(64)   |      |
-| ACTION_ORDER               | varchar(4)    |      |
-| ACTION_CONDITION           | varchar(512)  |      |
-| ACTION_STATEMENT           | varchar(512)  |      |
-| ACTION_ORIENTATION         | varchar(9)    |      |
-| ACTION_TIMING              | varchar(6)    |      |
-| ACTION_REFERENCE_OLD_TABLE | varchar(64)   |      |
-| ACTION_REFERENCE_NEW_TABLE | varchar(64)   |      |
-| ACTION_REFERENCE_OLD_ROW   | varchar(3)    |      |
-| ACTION_REFERENCE_NEW_ROW   | varchar(3)    |      |
-| CREATED                    | datetime      |      |
-| SQL_MODE                   | varchar(8192) |      |
-| DEFINER                    | varchar(77)   |      |
-| CHARACTER_SET_CLIENT       | varchar(32)   |      |
-| COLLATION_CONNECTION       | varchar(32)   |      |
-| DATABASE_COLLATION         | varchar(32)   |      |
+| Column Name | Type | Description |
+|---|---|---|
+| TRIGGER_CATALOG | varchar(512) | 触发器所属的目录名称。始终为 'def'。 |
+| TRIGGER_SCHEMA | varchar(64) | 触发器所属的模式（数据库）名称。 |
+| TRIGGER_NAME | varchar(64) | 触发器名称。 |
+| EVENT_MANIPULATION | varchar(6) | 触发器事件 (INSERT, UPDATE, DELETE)。 |
+| EVENT_OBJECT_CATALOG | varchar(512) | 与触发器关联的表的目录名称。始终为 'def'。 |
+| EVENT_OBJECT_SCHEMA | varchar(64) | 与触发器关联的表的模式（数据库）名称。 |
+| EVENT_OBJECT_TABLE | varchar(64) | 与触发器关联的表的名称。 |
+| ACTION_ORDER | bigint | 触发器的序号定义顺序。 |
+| ACTION_CONDITION | varchar(512) | null |
+| ACTION_STATEMENT | varchar(512) | 触发器主体。 |
+| ACTION_ORIENTATION | varchar(9) | 始终为 'ROW'。 |
+| ACTION_TIMING | varchar(6) | 触发器时机 (BEFORE, AFTER)。 |
+| ACTION_REFERENCE_OLD_TABLE | varchar(64) | null |
+| ACTION_REFERENCE_NEW_TABLE | varchar(64) | null |
+| ACTION_REFERENCE_OLD_ROW | varchar(3) | 始终为 'OLD'。 |
+| ACTION_REFERENCE_NEW_ROW | varchar(3) | 始终为 'NEW'。 |
+| CREATED | datetime | 触发器创建时间。 |
+| SQL_MODE | varchar(8192) | 触发器创建时生效的 SQL 模式。 |
+| DEFINER | varchar(77) | 创建触发器的账户。 |
+| CHARACTER_SET_CLIENT | varchar(32) | 触发器创建时 character_set_client 系统变量的会话值。 |
+| COLLATION_CONNECTION | varchar(32) | 触发器创建时 collation_connection 系统变量的会话值。 |
+| DATABASE_COLLATION | varchar(32) | 与触发器关联的数据库的排序规则。 |

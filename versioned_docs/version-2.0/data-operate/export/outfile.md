@@ -5,27 +5,6 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
-
-
 This document describes how to use the  [SELECT INTO OUTFILE](../../sql-manual/sql-reference/Data-Manipulation-Statements/OUTFILE)  command to export query results.
 
 `SELECT INTO OUTFILE` is a synchronous command, which means that the operation is completed when the command returns. It also returns a row of results to show the execution result of the export.
@@ -158,6 +137,8 @@ ERROR 1064 (HY000): errCode = 2, detailMessage = Open broker writer failed ...
 
 ## Notice
 
+* The current version of the Nereids optimizer does not support concurrent Outfile. If the Nereids optimizer is enabled, concurrent Outfile will directly revert to the old optimizer, which will handle the concurrent Outfile export. Similarly, the current version of the pipeline engine also does not support concurrent Outfile. If the pipeline engine is enabled, concurrent Outfile will revert to single-threaded export.
+
 * The CSV format does not support exporting binary types, such as BITMAP and HLL types. These types will be output as `\N`, which is null.
 
 * If you do not enable concurrent export, the query result is exported by a single BE node in a single thread. Therefore, the export time and the export result set size are positively correlated. Turning on concurrent export can reduce the export time.
@@ -170,7 +151,7 @@ ERROR 1064 (HY000): errCode = 2, detailMessage = Open broker writer failed ...
 
 * For empty result query, there will be an empty file.
 
-* File spliting will ensure that a row of data is stored in a single file. Therefore, the size of the file is not strictly equal to `max_file_size`.
+* File splitting will ensure that a row of data is stored in a single file. Therefore, the size of the file is not strictly equal to `max_file_size`.
 
 * For functions whose output is invisible characters, such as BITMAP and HLL types, the output is `\N`, which is NULL.
 

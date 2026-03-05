@@ -7,25 +7,6 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 <!-- Please sort the configuration alphabetically -->
 
 # BE Configuration
@@ -72,7 +53,9 @@ There are two ways to configure BE configuration items:
 
    By adding in the `be.conf` file:
 
-   ```max_base_compaction_threads=5```
+   ```
+   max_base_compaction_threads=5
+   ```
 
    Then restart the BE process to take effect the configuration.
 
@@ -255,9 +238,9 @@ There are two ways to configure BE configuration items:
 
 #### `brpc_num_threads`
 
-* Description: This configuration is mainly used to modify the number of bthreads for brpc. The default value is set to -1, which means the number of bthreads is #cpu-cores.
+* Description: This configuration is mainly used to modify the number of bthreads for brpc. The default value is set to 256.
   - User can set this configuration to a larger value to get better QPS performance. For more information, please refer to `https://github.com/apache/incubator-brpc/blob/master/docs/cn/benchmark.md`
-* Default value: -1
+* Default value: 256
 
 #### `thrift_rpc_timeout_ms`
 

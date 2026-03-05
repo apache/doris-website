@@ -1,1 +1,1 @@
-export * from "@generated/@easyops-cn/docusaurus-search-local/default/generated.js";
+export * from "@generated/@yang1666204/docusaurus-search-local/default/generated.js";

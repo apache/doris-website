@@ -1,67 +1,58 @@
 ---
 {
-    "title": "ADMIN-CHECK-TABLET",
+    "title": "ADMIN CHECK TABLET",
     "language": "en"
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
-## ADMIN-CHECK-TABLET
-
-### Name
-
-ADMIN CHECK TABLET
-
-### Description
+## Description
 
 This statement is used to perform the specified check operation on a set of tablets.
 
-grammar:
+## Syntax
 
 ```sql
-ADMIN CHECK TABLET (tablet_id1, tablet_id2, ...)
-PROPERTIES("type" = "...");
+ADMIN CHECK TABLET ( <tablet_id> [,...] ) PROPERTIES("type" = "<type_value>")
 ```
 
-illustrate:
+## Required Parameters
 
-1. A list of tablet ids must be specified along with the type property in PROPERTIES.
-2. Type only supports:
+**1. `<tablet_id>`**
 
-    * consistency: Check the consistency of the replica of the tablet. This command is an asynchronous command. After sending, Doris will start to execute the consistency check job of the corresponding tablet. The final result will be reflected in the InconsistentTabletNum column in the result of `SHOW PROC "/cluster_health/tablet_health";`.
+The ID of the tablet on which the specified check operation will be performed.
 
 
-### Example
+## Optional Parameters
 
-1. Perform a replica data consistency check on a specified set of tablets.
+**1. `<type_value>`**
 
-    ```
-    ADMIN CHECK TABLET (10000, 10001) 
-   PROPERTIES("type" = "consistency");
-   ```
+Currently, only consistency is supported.
 
-### Keywords
+- consistency:
 
-    ADMIN, CHECK, TABLET
+  Checks the replica data consistency of the tablet. This command is asynchronous, meaning that after sending it, Doris will start executing the consistency check job for the corresponding tablet.
 
-### Best Practice
+## Return Value
 
+The final result of the statement will be reflected in the InconsistentNum column of the result from `SHOW PROC "/cluster_health/tablet_health";`.
+
+| Column          | DataType | Note                                 |
+|-----------------|----------|--------------------------------------|
+| InconsistentNum | Int      | Number of tablets with inconsistency |
+
+
+## Access Control Requirements
+
+The user executing this SQL command must have at least the following privileges:
+
+| Privilege  | Object   | Notes                                                                                                                            |
+|:-----------|:---------|:---------------------------------------------------------------------------------------------------------------------------------|
+| Admin_priv | Database | Required to execute administrative operations on the database, including managing tables, partitions, and system-level commands. |
+
+## Examples
+- Perform a replica data consistency check on a specified set of tablets
+
+  ```sql
+  admin check tablet (10000, 10001) PROPERTIES("type" = "consistency");
+  ```
 

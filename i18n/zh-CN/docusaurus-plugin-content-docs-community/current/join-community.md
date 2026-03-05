@@ -31,26 +31,6 @@ under the License.
 
 
 
-## 🌟 更多用户认可我们
-
-<a href="https://star-history.com/#apache/doris&Date">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=apache/doris&type=Date&theme=dark" />
-    <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=apache/doris&type=Date" />
-    <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=apache/doris&type=Date" />
-  </picture>
-</a>
-
-
-
-
-
-
-
-
-**我们非常感谢 🔗[社区贡献者](https://github.com/apache/doris/graphs/contributors) 对 Apache Doris 的大力支持！**
-
-
 
 
 ## 👋 想要了解更多？别错过社区最新动态！
@@ -58,10 +38,10 @@ under the License.
 一起加入 Apache Doris 社区，了解头部企业如何基于 Apache Doris 构建统一实时数仓，从技术见解获得更多灵感！
 
 
-- 加入社群参与讨论 -  💬 [Slack](https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-2unfw3a3q-MtjGX4pAd8bCGC1UV0sKcw) 📇 [Github](https://github.com/apache/doris) 
+- 加入社群参与讨论 -  💬 [Slack](https://doris.apache.org/slack) 📇 [Github](https://github.com/apache/doris) 
 
 - 用户案例与技术见解 -  📭 [Twitter](https://twitter.com/doris_apache) 
 
 - 来领英拓展技术大牛社交圈 - 🌐 [LinkedIn](https://www.linkedin.com/company/doris-apache/) 
 
-- 活动视频回顾 - ▶️ [YouTube](https://www.youtube.com/@Select_DB) 📺 [Bilibili](https://space.bilibili.com/362350065) 
+- 活动视频回顾 - ▶️ [YouTube](https://www.youtube.com/hashtag/apachedoris) 📺 [Bilibili](https://space.bilibili.com/362350065) 

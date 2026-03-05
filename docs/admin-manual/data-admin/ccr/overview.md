@@ -1,29 +1,13 @@
 ---
 {
-   "title": "Overview",
-    "language": "en"
+    "title": "Overview | CCR",
+    "language": "en",
+    "description": "CCR (Cross Cluster Replication) is a cross-cluster data synchronization mechanism that synchronizes data changes from the source cluster to the ",
+    "sidebar_label": "Overview"
 }
-  
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
+# Overview
 
 ## Overview
 
@@ -94,3 +78,19 @@ CCR supports four synchronization methods:
 | **Partial Sync**       | The upstream performs table or partition-level backups, and the downstream performs table or partition-level restores. | Triggered by specific operations, for trigger conditions, please refer to [Feature Details](./feature.md). |
 | **TXN**                | Incremental data synchronization, starting synchronization after the upstream commits. | Triggered by specific operations, for trigger conditions, please refer to [Feature Details](./feature.md). |
 | **SQL**                | Replaying upstream SQL operations on the downstream.   | Triggered by specific operations, for trigger conditions, please refer to [Feature Details](./feature.md). |
+
+## Download
+
+requirement: glibc >= 2.28
+
+| Version | Arch  | Tarball                                                                                                                                        | SHA256                                                           |
+|---------|-------|------------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------|
+| 2.1     | ARM64 | [ccr-syncer-2.1.10-rc06-arm64.tar.xz](https://download.selectdb.com/ccr-release/ccr-syncer-2.1.10-rc06-arm64.tar.xz) | a2e56dc1909b065db98c037a037d6ec918dec7e20eb7cccbac9da729ce9be155 |
+| 2.1     | X64   | [ccr-syncer-2.1.10-rc06-x64.tar.xz](https://download.selectdb.com/ccr-release/ccr-syncer-2.1.10-rc06-x64.tar.xz)     | ebeebbe47a85c8b52f69394fd1d839663e3e7ca2cab93d7a443b44ec3f6d35ae |
+| 3.0     | ARM64 | [ccr-syncer-3.0.6-rc05-arm64.tar.xz](https://download.selectdb.com/ccr-release/ccr-syncer-3.0.6-rc05-arm64.tar.xz) | dd5f154c68007732c3c3a9f808f16a7f287fd742bd35d0272ef596779f0eb8e6 |
+| 3.0     | X64   | [ccr-syncer-3.0.6-rc05-x64.tar.xz](https://download.selectdb.com/ccr-release/ccr-syncer-3.0.6-rc05-x64.tar.xz)   | 77a4e4e2a74c376ffaef0207cfdef957729380fa3718418bccece015a41ad15a |
+| 4.0     | ARM64 | [ccr-syncer-4.0.1-rc01-arm64.tar.xz](https://download.selectdb.com/ccr-release/ccr-syncer-4.0.1-rc01-arm64.tar.xz) | ed9decc7da157afa7f42ea696babc02f13b9a809a418f80e23e45a8afb347618 |
+| 4.0     | X64   | [ccr-syncer-4.0.1-rc01-x64.tar.xz](https://download.selectdb.com/ccr-release/ccr-syncer-4.0.1-rc01-x64.tar.xz)   | 9f2a049bb2cf107be1a4f79081c1e9da204ebebc410104793996dce3beb87865 |
+
+
+

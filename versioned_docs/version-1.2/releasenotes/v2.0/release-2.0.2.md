@@ -5,25 +5,6 @@
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
 # Release 2.0.2
 
 Thanks to our community users and developers, 489 improvements and bug fixes have been made in Doris 2.0.2.
@@ -36,7 +17,7 @@ Thanks to our community users and developers, 489 improvements and bug fixes hav
 - [Start the script to set metadata_failure_recovery #24308](https://github.com/apache/doris/pull/24308)
 
   Move metadata_failure_recovery from fe.conf to start_fe.sh argument to prevent being used unexpectedly.
-- [Change ordinary type null value is \N,complex type null value is null #24207](https://github.com/apache/doris/pull/24207)
+- [Change ordinary type null value is `\N`,complex type null value is null #24207](https://github.com/apache/doris/pull/24207)
 - [Optimize priority_ network matching logic for be #23795](https://github.com/apache/doris/pull/23795)
 - [Fix cancel load failed because Job could not be cancelled… #17730](https://github.com/apache/doris/pull/17730)
   
@@ -63,7 +44,7 @@ Thanks to our community users and developers, 489 improvements and bug fixes hav
 - [Support basic jdbc external table stats collection. #23965](https://github.com/apache/doris/pull/23965)
 - [Skip unknown col stats check on __internal_scheam and information_schema #24625](https://github.com/apache/doris/pull/24625)
 
-### Better support for JDBC, HDFS, Hive, MySQL, Max Compute, Multi-Catalog
+### Better support for JDBC, HDFS, Hive, MySQL, MaxCompute, Multi-Catalog
 
 - [Support hadoop viewfs. #24168](https://github.com/apache/doris/pull/24168)
 - [Avoid calling checksum when replaying creating jdbc catalog and fix ranger issue #22369](https://github.com/apache/doris/pull/22369)
@@ -72,7 +53,7 @@ Thanks to our community users and developers, 489 improvements and bug fixes hav
   Improve property check and error message for JDBC catalog
 - [Fix mc decimal type parse, fix wrong obj location #24242](https://github.com/apache/doris/pull/24242) 
 
-  Fix some issues for Max Compute catalog
+  Fix some issues for MaxCompute catalog
 - [Support sql cache for hms catalog #23391](https://github.com/apache/doris/pull/23391) 
 
   SQL cache for Hive catalog
@@ -121,7 +102,7 @@ Improve performance of MATCH
 - [Need to call 'set_version' in nested functions #24381](https://github.com/apache/doris/pull/24381)
 - [windown_funnel compatibility issue with multi backends #24385](https://github.com/apache/doris/pull/24385)
 - [correlated anti join shouldn't be translated to null aware anti join #24290](https://github.com/apache/doris/pull/24290)
-- [Change ordinary type null value is \N,complex type null value is null #24207](https://github.com/apache/doris/pull/24207)
+- [Change ordinary type null value is `\N`,complex type null value is null #24207](https://github.com/apache/doris/pull/24207)
 - [Fix analyze failed when there are thousands of partitions. #24521](https://github.com/apache/doris/pull/24521)
 - [Do not use enum as the data type for JavaUdfDataType. #24460](https://github.com/apache/doris/pull/24460)
 - [Fix multi window projection issue temporarily #24568](https://github.com/apache/doris/pull/24568)

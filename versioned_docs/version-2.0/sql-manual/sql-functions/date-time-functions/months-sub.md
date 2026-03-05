@@ -5,46 +5,38 @@
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
+## Description
+The MONTHS_SUB function is used to add or subtract a specified number of months to a given date and returns the resulting date.
 
-  http://www.apache.org/licenses/LICENSE-2.0
+## Syntax
 
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
-## months_sub
-### description
-#### Syntax
-
-`DATETIME MONTHS_SUB(DATETIME date, INT months)`
-
-Subtracts a specified number of months from a datetime or date
-
-The parameter date can be DATETIME or DATE, and the return type is consistent with that of the parameter date.
-
-### example
-
-```
-mysql> select months_sub("2020-02-02 02:02:02", 1);
-+--------------------------------------+
-| months_sub('2020-02-02 02:02:02', 1) |
-+--------------------------------------+
-| 2020-01-02 02:02:02                  |
-+--------------------------------------+
+```sql
+MONTHS_SUB(<datetime/date>,  <nums>)
 ```
 
-### keywords
+## Parameters
 
-    MONTHS_SUB
+| Parameter         | Description                                                |
+|-------------------|------------------------------------------------------------|
+| `<datetime/date>` | The date value to which months will be added or subtracted |
+| `<nums>`          | The number of months to add or subtract                    |
+
+## Return Value
+The return value is of the same type as the input <datetime/date>.
+Special cases:
+- If the <datetime/date> input is 0000-00-00 or 0000-00-00 00:00:00, the function returns NULL.
+- If the <datetime/date> input is NULL, the function returns NULL.
+- If the input is MONTHS_SUB("9999-12-31", -1), the function will return NULL.
+
+## Example
+
+``` sql
+select months_sub("2020-01-31 02:02:02", 1),months_sub("2020-01-31", 1),months_sub("2020-01-31", -1);
+```
+```text
++-------------------------------------------------------------+---------------------------------------------+----------------------------------------------+
+| months_sub(cast('2020-01-31 02:02:02' as DATETIMEV2(0)), 1) | months_sub(cast('2020-01-31' as DATEV2), 1) | months_sub(cast('2020-01-31' as DATEV2), -1) |
++-------------------------------------------------------------+---------------------------------------------+----------------------------------------------+
+| 2019-12-31 02:02:02                                         | 2019-12-31                                  | 2020-02-29                                   |
++-------------------------------------------------------------+---------------------------------------------+----------------------------------------------+
+```
