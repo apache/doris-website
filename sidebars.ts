@@ -227,7 +227,15 @@ const sidebars: SidebarsConfig = {
                                 'data-operate/import/streaming-job/streaming-job-tvf',
                                 'data-operate/import/streaming-job/streaming-job-multi-table',
                             ],
-                        }
+                        },
+                        {
+                            type: 'category',
+                            label: 'Load Internals',
+                            items: [
+                                'data-operate/import/load-internals/routine-load-internals',
+                                'data-operate/import/load-internals/stream-load-in-complex-network',
+                            ],
+                        },
                     ],
                 },
                 {
@@ -607,6 +615,16 @@ const sidebars: SidebarsConfig = {
                         },
                         {
                             type: 'category',
+                            label: 'Join Optimization',
+                            items: [
+                                'query-acceleration/colocation-join',
+                                'query-acceleration/tuning/tuning-plan/optimizing-join-with-colocate-group',
+                                'query-acceleration/tuning/tuning-plan/adjusting-join-shuffle',
+                                'query-acceleration/tuning/tuning-plan/reordering-join-with-leading-hint',
+                            ],
+                        },
+                        {
+                            type: 'category',
                             label: 'Caching',
                             items: [
                                 'query-acceleration/sql-cache-manual',
@@ -616,12 +634,12 @@ const sidebars: SidebarsConfig = {
                         },
                         {
                             type: 'category',
-                            label: 'Join Optimization',
+                            label: 'Execution Tuning',
                             items: [
-                                'query-acceleration/colocation-join',
-                                'query-acceleration/tuning/tuning-plan/optimizing-join-with-colocate-group',
-                                'query-acceleration/tuning/tuning-plan/adjusting-join-shuffle',
-                                'query-acceleration/tuning/tuning-plan/reordering-join-with-leading-hint',
+                                'query-acceleration/tuning/tuning-execution/adjustment-of-runtimefilter-wait-time',
+                                'query-acceleration/tuning/tuning-execution/data-skew-handling',
+                                'query-acceleration/tuning/tuning-execution/parallelism-tuning',
+                                'query-acceleration/tuning/tuning-plan/controlling-hints-with-cbo-rule',
                             ],
                         },
                         {
@@ -651,16 +669,6 @@ const sidebars: SidebarsConfig = {
                         },
                         {
                             type: 'category',
-                            label: 'Execution Tuning',
-                            items: [
-                                'query-acceleration/tuning/tuning-execution/adjustment-of-runtimefilter-wait-time',
-                                'query-acceleration/tuning/tuning-execution/data-skew-handling',
-                                'query-acceleration/tuning/tuning-execution/parallelism-tuning',
-                                'query-acceleration/tuning/tuning-plan/controlling-hints-with-cbo-rule',
-                            ],
-                        },
-                        {
-                            type: 'category',
                             label: 'Query Profile & Parameters',
                             items: [
                                 'query-acceleration/query-profile',
@@ -674,8 +682,6 @@ const sidebars: SidebarsConfig = {
                     label: 'Load Performance',
                     items: [
                         'data-operate/import/load-internals/load-internals',
-                        'data-operate/import/load-internals/routine-load-internals',
-                        'data-operate/import/load-internals/stream-load-in-complex-network',
                         'query-acceleration/tuning/tuning-plan/dml-tuning-plan',
                     ],
                 },
