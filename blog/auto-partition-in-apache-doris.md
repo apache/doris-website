@@ -414,7 +414,7 @@ Dynamic Partition does not slow down data ingestion speed, while Auto Partition 
 
 ## Auto Partition: ingestion workflow
 
-This part is about how data ingestion is implemented with the Auto Partition mechanism, and we use [Stream Load](https://doris.apache.org/docs/data-operate/import/stream-load-manual) as an example. When Doris initiates a data import, one of the Doris Backend nodes takes on the role of the Coordinator. It is responsible for the initial data processing work and then dispatching the data to the appropriate BE nodes, known as the Executors, for execution.
+This part is about how data ingestion is implemented with the Auto Partition mechanism, and we use [Stream Load](https://doris.apache.org/docs/data-operate/import/import-way/stream-load-manual) as an example. When Doris initiates a data import, one of the Doris Backend nodes takes on the role of the Coordinator. It is responsible for the initial data processing work and then dispatching the data to the appropriate BE nodes, known as the Executors, for execution.
 
 ![Auto Partition: ingestion workflow](/images/auto-partition-ingestion-workflow.png)
 

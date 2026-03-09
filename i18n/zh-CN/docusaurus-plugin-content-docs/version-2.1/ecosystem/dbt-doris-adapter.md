@@ -229,7 +229,7 @@ models:
 
 ### dbt-doris adapter seed
 
-[`seed`](https://docs.getdbt.com/faqs/seeds/build-one-seed) 是用于加载 csv 等数据文件时的功能模块，它是一种加载文件入库参与模型构建的一种方式，但有以下注意事项：
+[`seed`](https://docs.getdbt.com/docs/build/seeds) 是用于加载 csv 等数据文件时的功能模块，它是一种加载文件入库参与模型构建的一种方式，但有以下注意事项：
 
 1. seed 不应用于加载原始数据（例如，从生产数据库导出大型 CSV 文件）。
 

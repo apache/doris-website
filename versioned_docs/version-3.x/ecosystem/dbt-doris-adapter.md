@@ -217,7 +217,7 @@ The details of the above configuration items are as follows:
 
 ### dbt-doris adapter seed
 
-[`seed`](https://docs.getdbt.com/faqs/seeds/build-one-seed) is a functional module used to load data files such as csv. It is a way to load files into the library and participate in model building, but there are the following precautions:
+[`seed`](https://docs.getdbt.com/docs/build/seeds) is a functional module used to load data files such as csv. It is a way to load files into the library and participate in model building, but there are the following precautions:
 1. Seeds should not be used to load raw data (for example, large CSV exports from a production database).
 2. Since seeds are version controlled, they are best suited to files that contain business-specific logic, for example a list of country codes or user IDs of employees.
 3. Loading CSVs using dbt's seed functionality is not performant for large files. Consider using `streamload` to load these CSVs into doris.

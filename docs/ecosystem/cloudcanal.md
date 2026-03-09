@@ -28,7 +28,7 @@ For more functions and parameter settings, please refer to [BladePipe Connection
 :::
 
 ## Installation
-Follow the instructions in [Install Worker (Docker)](https://doc.bladepipe.com/productOP/docker/install_worker_docker) or [Install Worker (Binary)](https://doc.bladepipe.com/productOP/binary/install_worker_binary) to download and install a BladePipe Worker.
+Follow the instructions in [Install Worker (Docker)](https://www.bladepipe.com/docs/productOP/byoc/installation/install_worker_docker) or [Install Worker (Binary)](https://www.bladepipe.com/docs/productOP/byoc/installation/install_worker_binary) to download and install a BladePipe Worker.
 
 ## Example
 Taking a MySQL instance as an example, the following part describes how to move data from MySQL to Doris. 
