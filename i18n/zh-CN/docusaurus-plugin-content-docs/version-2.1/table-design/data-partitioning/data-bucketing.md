@@ -123,7 +123,7 @@ DISTRIBUTED BY RANDOM BUCKETS 8
 
 在决定分桶数量时，通常遵循数量与大小两个原则，当发生冲突时，优先考虑大小原则：
 
-* **大小原则**：建议一个 tablet 的大小在 1-10G 范围内。过小的 tablet 可能导致聚合效果不佳，增加元数据管理压力；过大的 tablet 则不利于副本迁移、补齐，且会增加 Schema Change 操作的失败重试代价；
+* **大小原则**：建议每个 tablet 的压缩后数据大小（不含索引）保持在 **1 GB 到 20 GB** 之间，Unique Key 表建议不超过 **10 GB**。过小的 tablet 可能导致聚合效果不佳，增加元数据管理压力；过大的 tablet 则不利于副本迁移、补齐，且会增加 Schema Change 操作的失败重试代价。可以通过 `SHOW TABLETS FROM your_table` 查看实际 tablet 大小；
 
 * **数量原则**：在不考虑扩容的情况下，一个表的 tablet 数量建议略多于整个集群的磁盘数量。
 

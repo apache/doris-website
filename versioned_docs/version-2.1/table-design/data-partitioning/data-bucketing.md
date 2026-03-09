@@ -123,7 +123,7 @@ DISTRIBUTED BY RANDOM BUCKETS 8
 
 When determining the number of buckets, two principles are usually followed: quantity and size. If there is a conflict between the two, the size principle is prioritized:
 
-* **Size Principle:** It is recommended that the size of a tablet should be within the range of 1-10GB. Too small a tablet may result in poor aggregation effect and increase metadata management pressure; too large a tablet is not conducive to replica migration and supplementation and will increase the cost of retrying Schema Change operations.
+* **Size Principle:** Keep each tablet between **1 GB and 20 GB** compressed data (excluding index), or under **10 GB** for Unique Key tables. Too small a tablet may result in poor aggregation effect and increase metadata management pressure; too large a tablet is not conducive to replica migration and supplementation and will increase the cost of retrying Schema Change operations. You can check actual tablet sizes with `SHOW TABLETS FROM your_table`.
 
 * **Quantity Principle:** Without considering expansion, it is recommended that the number of tablets for a table be slightly more than the number of disks in the entire cluster.
 
