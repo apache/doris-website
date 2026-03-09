@@ -1,0 +1,94 @@
+---
+{
+  "title": "全てのリリース",
+  "language": "ja",
+  "description": "この文書は、1年以内にリリースされたApache Dorisバージョンの概要を、時系列の逆順で示したものです。"
+}
+---
+このドキュメントは、1年以内にリリースされたApache Dorisのバージョンの概要を、新しい順に一覧表示しています。
+
+:::tip 最新リリース
+🎉 Version 3.1.3がリリースされました。🔗[Release Notes](../releasenotes/v3.1/release-3.1.3)をこちらでご確認ください。Doris 3.1では、VARIANTデータ型にスパース列とスキーマテンプレートが導入され、ログやJSONデータなどの動的フィールドを持つ大規模データセットの保存とクエリがより効率的になりました。レイクハウス機能については、非同期マテリアライズドビューが強化され、IcebergやPaimonのサポートが拡張されて、データレイクとデータウェアハウス間のより強力な橋渡しを構築します。
+
+<br />
+
+🎉 Version 3.0.8が現在リリースされています。🔗[Release Notes](../releasenotes/v3.0/release-3.0.8)をこちらでご確認ください。バージョン3.Xから、Apache Dorisはクラスターデプロイメントにおいて、従来のコンピュート・ストレージ結合モードに加えて、コンピュート・ストレージ分離モードをサポートしています。計算層とストレージ層を分離するクラウドネイティブアーキテクチャにより、ユーザーは複数のコンピュートクラスター間でクエリ負荷を物理的に分離し、読み取りと書き込み負荷を分離することができます。
+
+<br />
+
+🎉 Version 2.1.11が現在リリースされています。🔗[Release Notes](../releasenotes/v2.1/release-2.1.11)をこちらでご確認ください。2.1バージョンは、TPC-DS 1TBテストで証明された100%高速なout-of-the-boxクエリによる優れたパフォーマンス、TrinoやSparkより4～6倍高速な強化されたデータレイク分析、新しいVariant型と一連の分析関数による半構造化データ分析の強固なサポート、クエリ高速化のための非同期マテリアライズドビュー、大規模でのリアルタイム書き込みの最適化、および安定性とランタイムSQLリソース追跡による改善されたワークロード管理を提供します。
+
+:::
+
+
+<br />
+
+- [2025-11-24, Apache Doris 3.1.3 is released](../releasenotes/v3.1/release-3.1.3.md)
+
+- [2025-10-27, Apache Doris 3.1.2 is released](../releasenotes/v3.1/release-3.1.2.md)
+
+- [2025-09-26, Apache Doris 3.1.1 is released](../releasenotes/v3.1/release-3.1.1.md)
+
+- [2025-09-19, Apache Doris 3.0.8 is released](../releasenotes/v3.0/release-3.0.8.md)
+
+- [2025-09-04, Apache Doris 3.1.0 is released](../releasenotes/v3.1/release-3.1.0.md)
+
+- [2025-08-25, Apache Doris 3.0.7 is released](../releasenotes/v3.0/release-3.0.7.md)
+
+- [2025-08-15, Apache Doris 2.1.11 is released](../releasenotes/v2.1/release-2.1.11.md)
+
+- [2025-06-16, Apache Doris 3.0.6 is released](../releasenotes/v3.0/release-3.0.6.md)
+
+- [2025-05-17, Apache Doris 2.1.10 is released](../releasenotes/v2.1/release-2.1.10.md)
+
+- [2025-04-28, Apache Doris 3.0.5 is released](../releasenotes/v3.0/release-3.0.5.md)
+
+- [2025-04-02, Apache Doris 2.1.9 is released](../releasenotes/v2.1/release-2.1.9.md)
+
+- [2025-02-28, Apache Doris 3.0.4 is released](../releasenotes/v3.0/release-3.0.4.md)
+
+- [2025-01-24, Apache Doris 2.1.8 is released](../releasenotes/v2.1/release-2.1.8.md)
+
+- [2024-12-02, Apache Doris 3.0.3 is released](../releasenotes/v3.0/release-3.0.3.md)
+
+- [2024-11-10, Apache Doris 2.1.7 is released](../releasenotes/v2.1/release-2.1.7.md)
+
+- [2024-10-15, Apache Doris 3.0.2 is released](../releasenotes/v3.0/release-3.0.2.md)
+
+- [2024-09-30, Apache Doris 2.0.15 is released](../releasenotes/v2.0/release-2.0.15.md)
+
+- [2024-09-10, Apache Doris 2.1.6 is released](../releasenotes/v2.1/release-2.1.6.md)
+
+- [2024-08-23, Apache Doris 3.0.1 is released](../releasenotes/v3.0/release-3.0.1.md)
+
+- [2024-07-24, Apache Doris 2.1.5 is released](../releasenotes/v2.1/release-2.1.5.md)
+
+- [2024-07-17, Apache Doris 2.0.13 is released](../releasenotes/v2.0/release-2.0.13.md)
+
+- [2024-06-27, Apache Doris 2.0.12 is released](../releasenotes/v2.0/release-2.0.12.md)
+
+- [2024-06-26, Apache Doris 2.1.4 is released](../releasenotes/v2.1/release-2.1.4.md)
+
+- [2024-06-05, Apache DOris 2.0.11 is released](../releasenotes/v2.0/release-2.0.11.md)
+
+- [2024-05-21, Apache Doris 2.1.3 is released](../releasenotes/v2.1/release-2.1.3.md)
+
+- [2024-05-16, Apache Doris 2.0.10 is released](../releasenotes/v2.0/release-2.0.10.md)
+
+- [2024-04-23, Apache Doris 2.0.9 is released](../releasenotes/v2.0/release-2.0.9.md)
+
+- [2024-04-12, Apache Doris 2.1.2 is released](../releasenotes/v2.1/release-2.1.2.md)
+
+- [2024-04-09, Apache Doris 2.0.8 is released](../releasenotes/v2.0/release-2.0.8.md)
+
+- [2024-04-03, Apache Doris 2.1.1 is released](../releasenotes/v2.1/release-2.1.1.md)
+
+- [2024-03-26, Apache Doris 2.0.7 is released](../releasenotes/v2.0/release-2.0.7.md)
+
+- [2024-03-12, Apache Doris 2.1.0 is released](../releasenotes/v2.1/release-2.1.0.md)
+
+- [2024-03-11, Apache Doris 2.0.6 is released](../releasenotes/v2.0/release-2.0.6.md)
+
+- [2024-02-28, Apache Doris 2.0.5 is released](../releasenotes/v2.0/release-2.0.5.md)
+
+- [2024-01-26, Apache Doris 2.0.4 is released](../releasenotes/v2.0/release-2.0.4.md)
