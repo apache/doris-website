@@ -9,6 +9,8 @@
 
 # Must Read Before the POC
 
+This guide covers the key decisions for table design, data loading, and query tuning to help you get the best performance from your Doris POC.
+
 ## Table Design
 
 Creating a table in Doris involves four decisions that affect load and query performance. Some of them — like the data model — cannot be changed later. Understanding **why** each decision exists helps you get it right the first time.
