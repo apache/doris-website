@@ -84,7 +84,7 @@ DISTRIBUTED BY HASH(user_id) BUCKETS 10
 
 Hash 与 Random 分桶的详细对比见[数据分桶](../table-design/data-partitioning/data-bucketing)。
 
-## 关键注意事项
+## 重要说明
 
 新用户常踩的坑。建表前请务必阅读。
 

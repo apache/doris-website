@@ -84,7 +84,7 @@ DISTRIBUTED BY HASH(user_id) BUCKETS 10
 
 For details on choosing between Hash and Random bucketing, see [Data Bucketing](../table-design/data-partitioning/data-bucketing).
 
-## Critical Points
+## Important Notes
 
 Things that surprise new users. Read these before you create your first table.
 
