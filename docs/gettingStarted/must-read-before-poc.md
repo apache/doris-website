@@ -13,7 +13,7 @@ This document highlights common issues that new users may encounter, with the go
 
 ## Table Design
 
-Creating a table in Doris involves four decisions that affect load and query performance. Some of them, like the data model, cannot be changed later.
+Creating a table in Doris involves four decisions that affect load and query performance.
 
 ### Data Model
 
