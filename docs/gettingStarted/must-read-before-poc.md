@@ -2,7 +2,7 @@
 {
     "title": "Must Read Before the POC",
     "language": "en",
-    "description": "Understand the four table design decisions in Apache Doris — data model, sort key, partitioning, and bucketing — and why each one matters for your POC.",
+    "description": "Common issues new users encounter with table design, data loading, and query tuning in Apache Doris.",
     "sidebar_label": "Must Read Before the POC"
 }
 ---
@@ -101,13 +101,13 @@ DISTRIBUTED BY HASH(site_id) BUCKETS 10;
 - **Don't use `INSERT INTO VALUES` for bulk data.** Use [Stream Load](../data-operate/import/import-way/stream-load-manual) or [Broker Load](../data-operate/import/import-way/broker-load-manual) instead. See [Loading Overview](../data-operate/import/load-manual).
 - **Batch writes on the client side.** High-frequency small imports cause version accumulation. If not feasible, use [Group Commit](../data-operate/import/group-commit-manual).
 - **Break large imports into smaller batches.** A failed long-running import must restart from scratch. Use [INSERT INTO SELECT with S3 TVF](../data-operate/import/streaming-job/streaming-job-tvf) for incremental import.
-- **Enable `load_to_single_tablet`** for Duplicate Key tables with Random bucketing.
+- **Enable `load_to_single_tablet`** for Duplicate Key tables with Random bucketing to reduce write amplification.
 
 See [Load Best Practices](../data-operate/import/load-best-practices).
 
 ### Query
 
 - **Data skew.** Check tablet sizes with `SHOW TABLETS`. Switch to Random bucketing or a higher-cardinality bucket column if sizes vary significantly.
-- **Wrong sort key order.** See [Sort Key](#sort-key) above.
+- **Wrong sort key order.** See [Sort Key](#sort-key).
 
 See [Query Profile](../query-acceleration/query-profile) to diagnose slow queries.

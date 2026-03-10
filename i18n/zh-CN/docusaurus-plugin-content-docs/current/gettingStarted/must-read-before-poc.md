@@ -2,7 +2,7 @@
 {
     "title": "POC 前必读",
     "language": "zh-CN",
-    "description": "了解 Apache Doris 建表时的四个关键决策——数据模型、排序键、分区和分桶——以及它们为什么对 POC 性能至关重要。",
+    "description": "新用户在 Apache Doris 建表设计、数据导入和查询调优中常见的问题。",
     "sidebar_label": "POC 前必读"
 }
 ---
@@ -101,13 +101,13 @@ DISTRIBUTED BY HASH(site_id) BUCKETS 10;
 - **批量数据不要用 `INSERT INTO VALUES`。**请使用 [Stream Load](../data-operate/import/import-way/stream-load-manual) 或 [Broker Load](../data-operate/import/import-way/broker-load-manual)。详见[导入概述](../data-operate/import/load-manual)。
 - **优先在客户端合并写入。**高频小批次导入导致版本堆积。如不可行，使用 [Group Commit](../data-operate/import/group-commit-manual)。
 - **将大型导入拆分为小批次。**长时间运行的导入失败后必须从头重试。使用 [INSERT INTO SELECT 配合 S3 TVF](../data-operate/import/streaming-job/streaming-job-tvf) 实现增量导入。
-- **Random 分桶的 Duplicate Key 表启用 `load_to_single_tablet`。**
+- **Random 分桶的 Duplicate Key 表启用 `load_to_single_tablet`**，减少写放大。
 
 详见[导入最佳实践](../data-operate/import/load-best-practices)。
 
 ### 查询
 
 - **数据倾斜。**通过 `SHOW TABLETS` 检查 tablet 大小。差异明显时切换为 Random 分桶或选择基数更高的分桶列。
-- **排序键顺序不当。**参见上方 [Sort Key（排序键）](#sort-key排序键)。
+- **排序键顺序不当。**参见 [Sort Key（排序键）](#sort-key排序键)。
 
 诊断慢查询请使用 [Query Profile](../query-acceleration/query-profile)。
