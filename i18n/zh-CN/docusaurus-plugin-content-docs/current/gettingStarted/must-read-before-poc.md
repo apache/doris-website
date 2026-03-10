@@ -112,7 +112,5 @@ DISTRIBUTED BY HASH(site_id) BUCKETS 10;
 
 - **数据倾斜。**通过 `SHOW TABLETS` 检查 tablet 大小——差异明显时切换为 Random 分桶或选择基数更高的分桶列。
 - **排序键顺序不当。**将最常过滤的列放在最前面。需要时添加[倒排索引](../table-design/index/inverted-index)。
-- **缺少分区裁剪。**WHERE 条件中务必包含分区列。
-- **宽表避免 `SELECT *`。**只查询需要的列。
 
 诊断慢查询请使用 [Query Profile](../query-acceleration/query-profile)。

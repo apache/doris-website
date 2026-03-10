@@ -112,7 +112,5 @@ See [Load Best Practices](../data-operate/import/load-best-practices).
 
 - **Data skew.** Check tablet sizes with `SHOW TABLETS` — switch to Random bucketing or a higher-cardinality bucket column if sizes vary significantly.
 - **Wrong sort key order.** Put the most frequently filtered column first. Add [inverted indexes](../table-design/index/inverted-index) when needed.
-- **Missing partition pruning.** Always filter on the partition column in WHERE clauses.
-- **Avoid `SELECT *` on wide tables.** Only select columns you need.
 
 See [Query Profile](../query-acceleration/query-profile) to diagnose slow queries.
