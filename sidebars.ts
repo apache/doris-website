@@ -9,6 +9,7 @@ const sidebars: SidebarsConfig = {
             items: [
                 'gettingStarted/what-is-apache-doris',
                 'gettingStarted/quick-start',
+                'gettingStarted/must-read-before-poc',
                 {
                     type: 'category',
                     label: 'Tech Alternatives',
