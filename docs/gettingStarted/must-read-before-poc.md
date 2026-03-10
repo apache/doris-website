@@ -25,7 +25,7 @@ Creating a table in Doris involves four decisions that affect load and query per
 | Updated by primary key (CDC, upsert) | **Unique Key** | New rows replace old rows with the same key. |
 | Pre-aggregated metrics (PV, UV, sums) | **Aggregate Key** | Rows are merged with SUM/MAX/MIN at write time. |
 
-**Duplicate Key works for most POC scenarios.** Data model cannot be changed after table creation. See [Data Model Overview](../table-design/data-model/overview).
+**Duplicate Key works for most POC scenarios.** See [Data Model Overview](../table-design/data-model/overview).
 
 ### Sort Key
 
@@ -110,6 +110,6 @@ See [Load Best Practices](../data-operate/import/load-best-practices).
 ### Query
 
 - **Data skew.** Check tablet sizes with `SHOW TABLETS`. Switch to Random bucketing or a higher-cardinality bucket column if sizes vary significantly.
-- **Wrong sort key order.** Put the most frequently filtered column first. Add [inverted indexes](../table-design/index/inverted-index) when needed.
+- **Wrong sort key order.** See [Sort Key](#sort-key) above.
 
 See [Query Profile](../query-acceleration/query-profile) to diagnose slow queries.

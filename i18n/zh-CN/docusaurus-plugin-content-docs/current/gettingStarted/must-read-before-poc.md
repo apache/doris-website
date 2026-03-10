@@ -25,7 +25,7 @@
 | 按主键更新（CDC、Upsert） | **Unique Key** | 新行按相同 Key 替换旧行。 |
 | 预聚合指标（PV、UV、汇总） | **Aggregate Key** | 写入时按 SUM/MAX/MIN 合并行。 |
 
-**Duplicate Key 适用于大多数 POC 场景。**数据模型建表后不可更改。详见[数据模型概述](../table-design/data-model/overview)。
+**Duplicate Key 适用于大多数 POC 场景。**详见[数据模型概述](../table-design/data-model/overview)。
 
 ### Sort Key（排序键）
 
@@ -110,6 +110,6 @@ DISTRIBUTED BY HASH(site_id) BUCKETS 10;
 ### 查询
 
 - **数据倾斜。**通过 `SHOW TABLETS` 检查 tablet 大小。差异明显时切换为 Random 分桶或选择基数更高的分桶列。
-- **排序键顺序不当。**将最常过滤的列放在最前面。需要时添加[倒排索引](../table-design/index/inverted-index)。
+- **排序键顺序不当。**参见上方 [Sort Key（排序键）](#sort-key排序键)。
 
 诊断慢查询请使用 [Query Profile](../query-acceleration/query-profile)。
