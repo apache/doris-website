@@ -102,7 +102,7 @@ DISTRIBUTED BY HASH(site_id) BUCKETS 10;
 
 - **Don't use `INSERT INTO VALUES` for bulk data.** Use [Stream Load](../data-operate/import/import-way/stream-load-manual) or [Broker Load](../data-operate/import/import-way/broker-load-manual) instead. See [Loading Overview](../data-operate/import/load-manual).
 - **Batch writes on the client side.** High-frequency small imports cause version accumulation. If not feasible, use [Group Commit](../data-operate/import/group-commit-manual).
-- **Break large imports into smaller batches.** A failed long-running import must restart from scratch. Use [INSERT INTO SELECT with S3 TVF](../data-operate/import/import-way/insert-into-manual) for incremental import.
+- **Break large imports into smaller batches.** A failed long-running import must restart from scratch. Use [INSERT INTO SELECT with S3 TVF](../data-operate/import/streaming-job/streaming-job-tvf) for incremental import.
 - **Enable `load_to_single_tablet`** for Duplicate Key tables with Random bucketing.
 
 See [Load Best Practices](../data-operate/import/load-best-practices).
