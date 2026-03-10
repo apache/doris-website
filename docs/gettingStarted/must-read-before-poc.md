@@ -65,7 +65,11 @@ For full syntax and advanced options, see [Auto Partition](../table-design/data-
 
 **Partitions first, then buckets.** Both partitioning and bucketing increase tablet count, but partitions also enable pruning and are easier to manage (add/drop). When you need more parallelism, prefer adding partitions before increasing bucket count.
 
-**Keep bucket count as low as possible, and make it a multiple of the number of BEs.** Fewer buckets mean larger tablets, which improves scan efficiency and reduces metadata overhead. Setting it as a multiple of BEs ensures even distribution across nodes. In production, large tables typically have many partitions, and queries often span multiple partitions, so overall parallelism comes primarily from partitions — performance is not sensitive to bucket count.
+**How to choose bucket count:** Follow these three rules:
+
+1. **Make it a multiple of the number of BEs** — ensures even data distribution across nodes.
+2. **Keep it as low as possible** — fewer buckets mean larger tablets, which improves scan efficiency and reduces metadata overhead. In production, large tables have many partitions and queries span multiple partitions, so parallelism comes primarily from partitions — performance is not sensitive to bucket count.
+3. **Compressed data per bucket should not exceed 20 GB** (under **10 GB** for Unique Key tables) — check with `SHOW TABLETS FROM your_table`.
 
 **Default is Random bucketing** — you can omit the `DISTRIBUTED BY` clause entirely. For Duplicate Key tables, Random bucketing is recommended because it enables `load_to_single_tablet` for lower memory usage and higher load throughput.
 
@@ -95,7 +99,7 @@ Things that surprise new users. Read these before you create your first table.
 
 **Aggregate Key tables don't support `count(*)` well.** Because values are pre-aggregated, `count(*)` cannot simply count rows. The workaround is to add a column like `row_count BIGINT SUM DEFAULT '1'` and query `SELECT SUM(row_count)` instead.
 
-**Bucket count on existing partitions cannot be changed.** You can only adjust bucket count for **new** partitions. Keep each tablet between **1 GB and 20 GB** compressed data (excluding index), or under **10 GB** for Unique Key tables — check with `SHOW TABLETS FROM your_table`. If data per partition is under 1 GB, a single bucket is fine. Otherwise, use multiple buckets so each tablet stays within the range. Too few buckets limits query parallelism; too many creates excessive small files.
+**Bucket count on existing partitions cannot be changed.** You can only adjust bucket count for **new** partitions. Follow the three rules in the Bucketing section above to choose the right count upfront.
 
 ## Typical Use Cases
 
