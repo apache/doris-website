@@ -41,7 +41,7 @@ Default is **Random bucketing** (recommended for Duplicate Key tables). Use `DIS
 
 **How to choose bucket count:**
 
-1. **Multiple of BE count** — ensures even data distribution.
+1. **Multiple of BE count** — ensures even data distribution. When BEs are added later, queries typically scan multiple partitions, so performance can sustain.
 2. **As low as possible** — parallelism comes primarily from partitions, not buckets.
 3. **Compressed data per bucket ≤ 20 GB** (≤ 10 GB for Unique Key) — check with `SHOW TABLETS FROM your_table`.
 4. **No more than 128 per partition** — consider partitioning first if you need more.
