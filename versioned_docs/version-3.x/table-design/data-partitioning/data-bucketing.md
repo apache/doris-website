@@ -135,7 +135,7 @@ For example, assuming there are 10 BE machines with one disk per BE, you can fol
 | -------------- | ----------------------------- |
 | < 1 GB         | 1 bucket                      |
 | 1-10 GB        | 10 buckets                    |
-| 10-50 GB       | 10-50 buckets                 |
+| 10-50 GB       | 10 buckets                    |
 | 50-200 GB      | 50-100 buckets                |
 | > 200 GB       | Consider partitioning first   |
 
