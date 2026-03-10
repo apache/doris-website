@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Apache Ozone | Storages",
+    "title": "Apache Ozone",
     "language": "en",
     "description": "Starting from version 4.0.4, Doris supports accessing Apache Ozone through the S3 Gateway.",
     "sidebar_label": "Apache Ozone"
@@ -42,6 +42,7 @@ Notes:
 - `ozone.access_key` and `ozone.secret_key` must be configured together.
 - `fs.s3a.*` keys are not parsed directly by Ozone properties. Use `ozone.*` or compatible `s3.*` keys.
 - Ozone supports `s3://`, `s3a://`, and `s3n://` URI schemas.
+- Setting `ozone.endpoint` (or `s3.endpoint`) alone does not enable Ozone. You must set `fs.ozone.support=true`.
 
 ## Example Configuration
 

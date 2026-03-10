@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Apache Ozone | Storages",
+    "title": "Apache Ozone",
     "language": "zh-CN",
     "description": "自 4.0.4 版本起，Doris 支持通过 S3 Gateway 访问 Apache Ozone。",
     "sidebar_label": "Apache Ozone"
@@ -42,6 +42,7 @@
 - `ozone.access_key` 和 `ozone.secret_key` 需要成对配置。
 - `fs.s3a.*` 参数不会被 Ozone 属性直接解析，请使用 `ozone.*` 或兼容的 `s3.*` 参数。
 - Ozone 支持 `s3://`、`s3a://`、`s3n://` 三种 URI 协议。
+- 仅配置 `ozone.endpoint`（或 `s3.endpoint`）不会自动启用 Ozone，必须同时设置 `fs.ozone.support=true`。
 
 ## 配置示例
 
