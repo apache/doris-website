@@ -1181,7 +1181,6 @@ const sidebars: SidebarsConfig = {
                         'sql-manual/basic-element/object-identifiers',
                         'sql-manual/basic-element/reserved-keywords',
                         'sql-manual/basic-element/variables',
-                        'sql-manual/basic-element/session-variables',
                         'sql-manual/basic-element/comments',
                         'sql-manual/basic-element/file-path-pattern',
                         {

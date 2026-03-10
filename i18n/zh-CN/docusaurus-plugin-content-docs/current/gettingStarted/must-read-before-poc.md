@@ -139,7 +139,7 @@ UNIQUE KEY(user_id)
 DISTRIBUTED BY HASH(user_id) BUCKETS 10;
 ```
 
-- **Unique Key** ——按 `user_id` 新行替换旧行，支持 [CDC 同步](../data-operate/import/data-source/doris-other-oltp)
+- **Unique Key** ——按 `user_id` 新行替换旧行，支持 [CDC 同步](../data-operate/import/data-source/migrate-data-from-other-oltp)
 - **无分区** ——维度表，数据量小且非时序
 
 ### 指标聚合

@@ -139,7 +139,7 @@ UNIQUE KEY(user_id)
 DISTRIBUTED BY HASH(user_id) BUCKETS 10;
 ```
 
-- **Unique Key** — new rows replace old by `user_id`, enabling [CDC sync](../data-operate/import/data-source/doris-other-oltp)
+- **Unique Key** — new rows replace old by `user_id`, enabling [CDC sync](../data-operate/import/data-source/migrate-data-from-other-oltp)
 - **No partition** — dimension table, small and not time-series
 
 ### Metrics Aggregation
