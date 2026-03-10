@@ -13,7 +13,7 @@ This document highlights common issues that new users may encounter, with the go
 
 ## Table Design
 
-Creating a table in Doris involves four decisions that affect load and query performance. Some of them — like the data model — cannot be changed later. Understanding **why** each decision exists helps you get it right the first time.
+Creating a table in Doris involves four decisions that affect load and query performance. Some of them, like the data model, cannot be changed later.
 
 ### Data Model
 
@@ -29,11 +29,11 @@ Creating a table in Doris involves four decisions that affect load and query per
 
 ### Sort Key
 
-Put the column you filter on most frequently first, with fixed-size types (INT, BIGINT, DATE) before VARCHAR — Doris builds a [prefix index](../table-design/index/prefix-index) on the first 36 bytes of key columns, but stops at the first VARCHAR. Add [inverted indexes](../table-design/index/inverted-index) for other columns that need fast filtering.
+Put the column you filter on most frequently first, with fixed-size types (INT, BIGINT, DATE) before VARCHAR. Doris builds a [prefix index](../table-design/index/prefix-index) on the first 36 bytes of key columns but stops at the first VARCHAR. Add [inverted indexes](../table-design/index/inverted-index) for other columns that need fast filtering.
 
 ### Partitioning
 
-If you have a time column, use `AUTO PARTITION BY RANGE(date_trunc(time_col, 'day'))` to enable [partition pruning](../table-design/data-partitioning/auto-partitioning) — Doris skips irrelevant partitions automatically.
+If you have a time column, use `AUTO PARTITION BY RANGE(date_trunc(time_col, 'day'))` to enable [partition pruning](../table-design/data-partitioning/auto-partitioning). Doris skips irrelevant partitions automatically.
 
 ### Bucketing
 
@@ -41,10 +41,10 @@ Default is **Random bucketing** (recommended for Duplicate Key tables). Use `DIS
 
 **How to choose bucket count:**
 
-1. **Multiple of BE count** — ensures even data distribution. When BEs are added later, queries typically scan multiple partitions, so performance can sustain.
-2. **As low as possible** — avoids small files.
-3. **Compressed data per bucket ≤ 20 GB** (≤ 10 GB for Unique Key) — check with `SHOW TABLETS FROM your_table`.
-4. **No more than 128 per partition** — consider partitioning first if you need more.
+1. **Multiple of BE count** to ensure even data distribution. When BEs are added later, queries typically scan multiple partitions, so performance holds up.
+2. **As low as possible** to avoid small files.
+3. **Compressed data per bucket ≤ 20 GB** (≤ 10 GB for Unique Key). Check with `SHOW TABLETS FROM your_table`.
+4. **No more than 128 per partition.** Consider partitioning first if you need more.
 
 ## Example Templates
 
@@ -102,7 +102,6 @@ DISTRIBUTED BY HASH(site_id) BUCKETS 10;
 
 - **Don't use `INSERT INTO VALUES` for bulk data.** Use [Stream Load](../data-operate/import/import-way/stream-load-manual) or [Broker Load](../data-operate/import/import-way/broker-load-manual) instead. See [Loading Overview](../data-operate/import/load-manual).
 - **Batch writes on the client side.** High-frequency small imports cause version accumulation. If not feasible, use [Group Commit](../data-operate/import/group-commit-manual).
-- **Avoid too many small tablets.** Start with fewer partitions/buckets and add later — reducing tablets is costly.
 - **Break large imports into smaller batches.** A failed long-running import must restart from scratch. Use [INSERT INTO SELECT with S3 TVF](../data-operate/import/import-way/insert-into-manual) for incremental import.
 - **Enable `load_to_single_tablet`** for Duplicate Key tables with Random bucketing.
 
@@ -110,7 +109,7 @@ See [Load Best Practices](../data-operate/import/load-best-practices).
 
 ### Query
 
-- **Data skew.** Check tablet sizes with `SHOW TABLETS` — switch to Random bucketing or a higher-cardinality bucket column if sizes vary significantly.
+- **Data skew.** Check tablet sizes with `SHOW TABLETS`. Switch to Random bucketing or a higher-cardinality bucket column if sizes vary significantly.
 - **Wrong sort key order.** Put the most frequently filtered column first. Add [inverted indexes](../table-design/index/inverted-index) when needed.
 
 See [Query Profile](../query-acceleration/query-profile) to diagnose slow queries.

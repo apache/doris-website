@@ -13,7 +13,7 @@
 
 ## 建表设计
 
-在 Doris 中建表涉及四个影响导入和查询性能的决策。其中一些（如数据模型）建表后无法更改。理解每个决策**为什么**存在，可以帮助你一次做对。
+在 Doris 中建表涉及四个影响导入和查询性能的决策。其中一些（如数据模型）建表后无法更改。
 
 ### 数据模型
 
@@ -29,11 +29,11 @@
 
 ### Sort Key（排序键）
 
-将最常用于过滤的列放在最前面，定长类型（INT、BIGINT、DATE）放在 VARCHAR 之前——Doris 在排序键的前 36 字节上构建[前缀索引](../table-design/index/prefix-index)，但遇到 VARCHAR 会立即截断。其他需要快速过滤的列可添加[倒排索引](../table-design/index/inverted-index)。
+将最常用于过滤的列放在最前面，定长类型（INT、BIGINT、DATE）放在 VARCHAR 之前。Doris 在排序键的前 36 字节上构建[前缀索引](../table-design/index/prefix-index)，但遇到 VARCHAR 会立即截断。其他需要快速过滤的列可添加[倒排索引](../table-design/index/inverted-index)。
 
 ### 分区
 
-如果有时间列，使用 `AUTO PARTITION BY RANGE(date_trunc(time_col, 'day'))` 启用[分区裁剪](../table-design/data-partitioning/auto-partitioning)——Doris 自动跳过无关分区。
+如果有时间列，使用 `AUTO PARTITION BY RANGE(date_trunc(time_col, 'day'))` 启用[分区裁剪](../table-design/data-partitioning/auto-partitioning)。Doris 会自动跳过无关分区。
 
 ### 分桶
 
@@ -41,10 +41,10 @@
 
 **如何选择分桶数：**
 
-1. **设为 BE 数量的整数倍**——确保数据均匀分布。后续扩容 BE 时，查询通常涉及多个分区，性能不会受影响。
-2. **尽可能少**——避免小文件。
-3. **每个分桶的压缩后数据 ≤ 20 GB**（Unique Key 表 ≤ 10 GB）——可通过 `SHOW TABLETS FROM your_table` 查看。
-4. **每个分区不超过 128 个分桶**——需要更多时优先考虑分区。
+1. **设为 BE 数量的整数倍**，确保数据均匀分布。后续扩容 BE 时，查询通常涉及多个分区，性能不会受影响。
+2. **尽可能少**，避免小文件。
+3. **每个分桶的压缩后数据 ≤ 20 GB**（Unique Key 表 ≤ 10 GB）。可通过 `SHOW TABLETS FROM your_table` 查看。
+4. **每个分区不超过 128 个分桶。**需要更多时优先考虑分区。
 
 ## 建表模板
 
@@ -102,7 +102,6 @@ DISTRIBUTED BY HASH(site_id) BUCKETS 10;
 
 - **批量数据不要用 `INSERT INTO VALUES`。**请使用 [Stream Load](../data-operate/import/import-way/stream-load-manual) 或 [Broker Load](../data-operate/import/import-way/broker-load-manual)。详见[导入概述](../data-operate/import/load-manual)。
 - **优先在客户端合并写入。**高频小批次导入导致版本堆积。如不可行，使用 [Group Commit](../data-operate/import/group-commit-manual)。
-- **避免过多小 tablet。**从少量分区/分桶开始，按需增加——事后减少代价很大。
 - **将大型导入拆分为小批次。**长时间运行的导入失败后必须从头重试。使用 [INSERT INTO SELECT 配合 S3 TVF](../data-operate/import/import-way/insert-into-manual) 实现增量导入。
 - **Random 分桶的 Duplicate Key 表启用 `load_to_single_tablet`。**
 
@@ -110,7 +109,7 @@ DISTRIBUTED BY HASH(site_id) BUCKETS 10;
 
 ### 查询
 
-- **数据倾斜。**通过 `SHOW TABLETS` 检查 tablet 大小——差异明显时切换为 Random 分桶或选择基数更高的分桶列。
+- **数据倾斜。**通过 `SHOW TABLETS` 检查 tablet 大小。差异明显时切换为 Random 分桶或选择基数更高的分桶列。
 - **排序键顺序不当。**将最常过滤的列放在最前面。需要时添加[倒排索引](../table-design/index/inverted-index)。
 
 诊断慢查询请使用 [Query Profile](../query-acceleration/query-profile)。
