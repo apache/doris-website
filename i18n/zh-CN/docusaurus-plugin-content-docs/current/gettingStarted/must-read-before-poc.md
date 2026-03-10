@@ -27,7 +27,9 @@ CREATE TABLE my_table
 
 :::
 
-## 1. 数据模型
+## 建表设计
+
+### 1. 数据模型
 
 **为什么重要：**数据模型决定 Doris 是保留每一行、按主键只保留最新行，还是在写入时预聚合数据。
 
@@ -41,19 +43,19 @@ CREATE TABLE my_table
 
 POC 阶段，**Duplicate Key 适用于大多数场景**。只有在明确需要更新或预聚合时才切换。详细对比见[数据模型概述](../table-design/data-model/overview)。
 
-## 2. Sort Key（排序键）
+### 2. Sort Key（排序键）
 
 **为什么重要：**排序键决定数据在磁盘上的**物理排列顺序**。Doris 会在排序键的前 36 字节上自动构建[前缀索引](../table-design/index/prefix-index)，使基于这些列的过滤查询显著加速。但当遇到 `VARCHAR` 列时，前缀索引会立即截断——后续列不会被包含。因此，请将定长列（INT、BIGINT、DATE）放在 VARCHAR 前面，以最大化索引覆盖范围。
 
 **如何选择：**将最常用于过滤的列放在最前面，定长类型在 VARCHAR 类型之前。之后可以为需要快速过滤的列添加[倒排索引](../table-design/index/inverted-index)。
 
-## 3. 分区
+### 3. 分区
 
 **为什么重要：**分区将数据拆分为独立的管理单元。当查询的 WHERE 条件包含分区列时，Doris 只扫描相关分区——即**分区裁剪**，可以跳过绝大部分数据。
 
 **如何选择：**如果有时间列，使用 `AUTO PARTITION BY RANGE(date_trunc(time_col, 'day'))`。分区在导入时自动创建，无需手动管理。完整语法和高级选项见 [Auto Partition](../table-design/data-partitioning/auto-partitioning)。
 
-## 4. 分桶
+### 4. 分桶
 
 **为什么重要：**每个分桶存储为一个或多个 **tablet**（每个副本一个）。一个 tablet 位于单个 BE 节点上，因此扫描一个 tablet 只能使用那一个 BE。对于单个查询，并行度由 `分区数 × 分桶数` 决定——副本不会同时参与。对于并发查询，不同副本可以服务不同查询，因此总 tablet 数 `分区数 × 分桶数 × 副本数` 决定集群整体吞吐量。需要更多并行度时，优先增加分区，其次才增加分桶数——分区还能启用裁剪且更易管理。
 
@@ -78,9 +80,7 @@ DISTRIBUTED BY HASH(user_id) BUCKETS 10
 
 Hash 与 Random 分桶的详细对比见[数据分桶](../table-design/data-partitioning/data-bucketing)。
 
-## 重要说明
-
-新用户常踩的坑。建表前请务必阅读。
+### 重要说明
 
 :::caution
 

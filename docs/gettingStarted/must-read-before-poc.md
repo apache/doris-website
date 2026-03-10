@@ -27,7 +27,9 @@ This is the simplest syntax — Doris defaults to Duplicate Key, a single partit
 
 :::
 
-## 1. Data Model
+## Table Design
+
+### 1. Data Model
 
 **Why it matters:** The data model controls whether Doris keeps every row, keeps only the latest row per key, or pre-aggregates rows at write time.
 
@@ -41,19 +43,19 @@ This is the simplest syntax — Doris defaults to Duplicate Key, a single partit
 
 For a POC, **Duplicate Key works for most scenarios**. Switch only if you have a clear need for upsert or pre-aggregation. For a detailed comparison, see [Data Model Overview](../table-design/data-model/overview).
 
-## 2. Sort Key
+### 2. Sort Key
 
 **Why it matters:** Key columns determine the **physical sort order** on disk. Doris builds a [prefix index](../table-design/index/prefix-index) on the first 36 bytes of key columns, so queries that filter on these columns run significantly faster. However, when a `VARCHAR` column is encountered, the prefix index stops immediately — no subsequent columns are included. So place fixed-size columns (INT, BIGINT, DATE) before VARCHAR to maximize index coverage.
 
 **How to choose:** Put the column you filter on most frequently first, with fixed-size types before VARCHAR types. You can add [inverted indexes](../table-design/index/inverted-index) later for any column that needs fast filtering.
 
-## 3. Partitioning
+### 3. Partitioning
 
 **Why it matters:** Partitioning splits data into independent units. When a query includes a partition column in its WHERE clause, Doris only scans the relevant partitions — this is called **partition pruning** and it can skip the vast majority of data.
 
 **How to choose:** If you have a time column, use `AUTO PARTITION BY RANGE(date_trunc(time_col, 'day'))`. Partitions are created automatically during import, no manual management needed. For full syntax and advanced options, see [Auto Partition](../table-design/data-partitioning/auto-partitioning).
 
-## 4. Bucketing
+### 4. Bucketing
 
 **Why it matters:** Each bucket is stored as one or more **tablets** (one per replica). A tablet lives on a single BE node, so scanning a tablet can only use that one BE. For a single query, parallelism is determined by `partitions × buckets` — replicas are not used simultaneously. For concurrent queries, different replicas can serve different queries, so the total tablet count `partitions × buckets × replicas` determines cluster-wide throughput. When you need more parallelism, prefer adding partitions before increasing bucket count — partitions also enable pruning and are easier to manage.
 
@@ -78,9 +80,7 @@ DISTRIBUTED BY HASH(user_id) BUCKETS 10
 
 For details on choosing between Hash and Random bucketing, see [Data Bucketing](../table-design/data-partitioning/data-bucketing).
 
-## Important Notes
-
-Things that surprise new users. Read these before you create your first table.
+### Important Notes
 
 :::caution
 
