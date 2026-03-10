@@ -632,6 +632,7 @@
                             "label": "Caching",
                             "items": [
                                 "query-acceleration/sql-cache-manual",
+                                "query-acceleration/query-cache",
                                 "query-acceleration/condition-cache",
                                 "query-acceleration/tuning/tuning-plan/accelerating-queries-with-sql-cache"
                             ]
