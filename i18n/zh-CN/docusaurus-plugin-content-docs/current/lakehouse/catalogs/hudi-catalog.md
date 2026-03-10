@@ -53,7 +53,8 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 
 ## 元数据缓存（4.1.x+） {#meta-cache-unified}
 
-从 Doris 4.1.x 开始，Hudi 相关外表元数据缓存使用统一键 `meta.cache.*` 进行配置。本节只介绍**如何使用**与**如何观测**。
+从 Doris 4.1.x 开始，Hudi 相关外表元数据缓存使用统一键 `meta.cache.*` 进行配置。
+本节说明 Hudi 相关 cache 模块的配置与观测方式。
 
 统一属性语义可参阅：[统一外表元数据缓存（4.1.x+）](../meta-cache/unified-meta-cache.md)。
 
@@ -61,15 +62,21 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 
 | 模块 | 属性键前缀 | 典型缓存内容 |
 |---|---|---|
+| `schema` | `meta.cache.hudi.schema.` | 表 schema 加载对应的 schema cache entry。 |
 | `partition` | `meta.cache.hudi.partition.` | Hudi 分区相关元数据（用于分区发现/剪枝等）。 |
-| `fs-view` | `meta.cache.hudi.fs-view.` | Hudi FS View 相关元数据。 |
-| `meta-client` | `meta.cache.hudi.meta-client.` | Hudi Meta Client 相关元数据。 |
+| `fs_view` | `meta.cache.hudi.fs_view.` | Hudi FS View 相关元数据。 |
+| `meta_client` | `meta.cache.hudi.meta_client.` | Hudi Meta Client 相关元数据。 |
 
-示例（通过降低 capacity 控制缓存规模）：
+说明：
+
+- 属性键使用上表中的模块名。这些名字也会出现在 `information_schema.catalog_meta_cache_statistics` 的 `ENTRY_NAME` 中。
+- 如果 Hudi 表是通过 HMS catalog 提供访问的，`meta.cache.hudi.*` 也配置在该 HMS catalog 上。
+
+示例：
 
 ```sql
 ALTER CATALOG hudi_ctl SET PROPERTIES (
-  "meta.cache.hudi.partition.capacity" = "2000"
+  "meta.cache.hudi.fs_view.capacity" = "2000"
 );
 ```
 
@@ -78,22 +85,25 @@ ALTER CATALOG hudi_ctl SET PROPERTIES (
 Hudi 缓存指标可通过 `information_schema.catalog_meta_cache_statistics` 查询。
 系统表字段与指标说明见：[catalog_meta_cache_statistics](../../admin-manual/system-tables/information_schema/catalog_meta_cache_statistics.md)。
 
-Hudi 各模块对应的 `cache_name` 如下：
+Hudi 常见 entry：
 
-| 模块 | cache_name |
+| Entry | 含义 |
 |---|---|
-| `partition` | `hudi_partition_cache` |
-| `fs-view` | `hudi_fs_view_cache` |
-| `meta-client` | `hudi_meta_client_cache` |
+| `schema` | Schema cache entry |
+| `partition` | 分区元数据缓存 entry |
+| `fs_view` | FS View 缓存 entry |
+| `meta_client` | Meta Client 缓存 entry |
 
-示例：
+示例查询：
 
 ```sql
-SELECT *
+SELECT catalog_name, engine_name, entry_name,
+       effective_enabled, ttl_second, capacity,
+       estimated_size, hit_rate, load_failure_count, last_error
 FROM information_schema.catalog_meta_cache_statistics
 WHERE catalog_name = 'hudi_ctl'
-  AND cache_name LIKE 'hudi_%'
-ORDER BY cache_name, metric_name;
+  AND engine_name = 'hudi'
+ORDER BY entry_name;
 ```
 
 ### 支持的 Hudi 版本
