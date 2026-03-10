@@ -68,13 +68,13 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 
     CommonProperties 部分用于填写通用属性。请参阅[数据目录概述](../catalog-overview.md)中「通用属性」部分。
 
-## 元数据缓存（4.0.4+） {#meta-cache-404}
+## 元数据缓存（4.1.x+） {#meta-cache-unified}
 
-从 Doris 4.0.4 开始，MaxCompute Catalog 的外表元数据缓存使用统一键 `meta.cache.*` 进行配置。本节只介绍**如何使用**与**如何观测**。
+从 Doris 4.1.x 开始，MaxCompute Catalog 的外表元数据缓存使用统一键 `meta.cache.*` 进行配置。本节只介绍**如何使用**与**如何观测**。
 
-统一属性语义可参阅：[统一外表元数据缓存（4.0.4+）](../meta-cache/unified-meta-cache.md)。
+统一属性语义可参阅：[统一外表元数据缓存（4.1.x+）](../meta-cache/unified-meta-cache.md)。
 
-### 缓存模块 {#meta-cache-404-modules}
+### 缓存模块 {#meta-cache-unified-modules}
 
 | 模块 | 属性键前缀 | 典型缓存内容 |
 |---|---|---|
@@ -89,7 +89,7 @@ ALTER CATALOG mc_ctl SET PROPERTIES (
 );
 ```
 
-### 可观测性 {#meta-cache-404-observability}
+### 可观测性 {#meta-cache-unified-observability}
 
 MaxCompute 缓存指标可通过 `information_schema.catalog_meta_cache_statistics` 查询。
 系统表字段与指标说明见：[catalog_meta_cache_statistics](../../admin-manual/system-tables/information_schema/catalog_meta_cache_statistics.md)。

@@ -68,14 +68,14 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 
     The CommonProperties section is used to fill in common properties. Please refer to the "Common Properties" section in [Catalog Overview](../catalog-overview.md).
 
-## Metadata Cache (4.0.4+) {#meta-cache-404}
+## Metadata Cache (4.1.x+) {#meta-cache-unified}
 
-Starting from Doris 4.0.4, MaxCompute Catalog metadata caches are configured with the unified `meta.cache.*` properties.
+Starting from Doris 4.1.x, MaxCompute Catalog metadata caches are configured with the unified `meta.cache.*` properties.
 This section focuses on **how to use** and **how to observe** the MaxCompute-related cache module.
 
-For the unified property semantics, see: [Unified External Meta Cache (4.0.4+)](../meta-cache/unified-meta-cache.md).
+For the unified property semantics, see: [Unified External Meta Cache (4.1.x+)](../meta-cache/unified-meta-cache.md).
 
-### Cache Modules {#meta-cache-404-modules}
+### Cache Modules {#meta-cache-unified-modules}
 
 | Module | Property key prefix | Cached content (typical) |
 |---|---|---|
@@ -90,7 +90,7 @@ ALTER CATALOG mc_ctl SET PROPERTIES (
 );
 ```
 
-### Observability {#meta-cache-404-observability}
+### Observability {#meta-cache-unified-observability}
 
 MaxCompute cache metrics are available in `information_schema.catalog_meta_cache_statistics`.
 For the table definition and metric meanings, see: [catalog_meta_cache_statistics](../../admin-manual/system-tables/information_schema/catalog_meta_cache_statistics.md).

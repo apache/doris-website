@@ -1,12 +1,12 @@
 ---
 {
-    "title": "统一外表元数据缓存（4.0.4+）",
+    "title": "统一外表元数据缓存（4.1.x+）",
     "language": "zh-CN",
     "description": "面向用户的统一外表元数据缓存使用说明：统一配置键 meta.cache.*、缓存覆盖范围、以及各类 Catalog 的配置入口。"
 }
 ---
 
-从 **Doris 4.0.4** 开始，External Catalog 的外表元数据缓存能力进行了统一化重构。对用户来说，主要关注三件事：
+从 **Doris 4.1.x** 开始，External Catalog 的外表元数据缓存能力进行了统一化重构。对用户来说，主要关注三件事：
 
 | 你需要关心的问题 | 对应入口 |
 |---|---|
@@ -15,7 +15,7 @@
 | 如何观测 | 通过 `information_schema.catalog_meta_cache_statistics` 查看指标（见本文观测章节）。 |
 
 :::tip
-适用于 Doris 4.0.4 及之后版本。
+适用于 Doris 4.1.x 及之后版本。
 :::
 
 ## 统一属性模型
@@ -55,11 +55,11 @@ ALTER CATALOG hive_ctl SET PROPERTIES (
 
 | Catalog 引擎 | module 缓存配置与可观测性 |
 |---|---|
-| Hive | [Hive Catalog](../catalogs/hive-catalog.mdx#meta-cache-404) |
-| Iceberg | [Iceberg Catalog](../catalogs/iceberg-catalog.mdx#meta-cache-404) |
-| Paimon | [Paimon Catalog](../catalogs/paimon-catalog.mdx#meta-cache-404) |
-| Hudi | [Hudi Catalog](../catalogs/hudi-catalog.md#meta-cache-404) |
-| MaxCompute | [MaxCompute Catalog](../catalogs/maxcompute-catalog.md#meta-cache-404) |
+| Hive | [Hive Catalog](../catalogs/hive-catalog.mdx#meta-cache-unified) |
+| Iceberg | [Iceberg Catalog](../catalogs/iceberg-catalog.mdx#meta-cache-unified) |
+| Paimon | [Paimon Catalog](../catalogs/paimon-catalog.mdx#meta-cache-unified) |
+| Hudi | [Hudi Catalog](../catalogs/hudi-catalog.md#meta-cache-unified) |
+| MaxCompute | [MaxCompute Catalog](../catalogs/maxcompute-catalog.md#meta-cache-unified) |
 
 ## 观测方式
 
@@ -82,4 +82,4 @@ ORDER BY catalog_name, cache_name, metric_name;
 
 ## 旧参数迁移说明
 
-从 Doris 4.0.4 开始，旧版 catalog cache 参数（例如 `schema.cache.ttl-second`、`file.meta.cache.ttl-second`）已不再推荐使用。请改用 `meta.cache.*` 统一键，并参考上文对应的 catalog 文档。
+从 Doris 4.1.x 开始，旧版 catalog cache 参数（例如 `schema.cache.ttl-second`、`file.meta.cache.ttl-second`）已不再推荐使用。请改用 `meta.cache.*` 统一键，并参考上文对应的 catalog 文档。

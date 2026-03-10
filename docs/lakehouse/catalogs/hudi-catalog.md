@@ -51,14 +51,14 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
   | ------------------------------- | -------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------- |
   | `hudi.use_hive_sync_partition`  | `use_hive_sync_partition`  | Whether to use the partition information already synchronized by Hive Metastore. If true, partition information will be obtained directly from Hive Metastore. Otherwise, it will be obtained from the metadata file of the file system. Obtaining information from Hive Metastore is more efficient, but users need to ensure that the latest metadata has been synchronized to Hive Metastore. | false |
 
-## Metadata Cache (4.0.4+) {#meta-cache-404}
+## Metadata Cache (4.1.x+) {#meta-cache-unified}
 
-Starting from Doris 4.0.4, Hudi-related metadata caches are configured with the unified `meta.cache.*` properties.
+Starting from Doris 4.1.x, Hudi-related metadata caches are configured with the unified `meta.cache.*` properties.
 This section focuses on **how to use** and **how to observe** the Hudi cache modules.
 
-For the unified property semantics, see: [Unified External Meta Cache (4.0.4+)](../meta-cache/unified-meta-cache.md).
+For the unified property semantics, see: [Unified External Meta Cache (4.1.x+)](../meta-cache/unified-meta-cache.md).
 
-### Cache Modules {#meta-cache-404-modules}
+### Cache Modules {#meta-cache-unified-modules}
 
 | Module | Property key prefix | Cached content (typical) |
 |---|---|---|
@@ -74,7 +74,7 @@ ALTER CATALOG hudi_ctl SET PROPERTIES (
 );
 ```
 
-### Observability {#meta-cache-404-observability}
+### Observability {#meta-cache-unified-observability}
 
 Hudi cache metrics are available in `information_schema.catalog_meta_cache_statistics`.
 For the table definition and metric meanings, see: [catalog_meta_cache_statistics](../../admin-manual/system-tables/information_schema/catalog_meta_cache_statistics.md).

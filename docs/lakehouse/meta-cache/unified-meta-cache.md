@@ -1,12 +1,12 @@
 ---
 {
-    "title": "Unified External Meta Cache (4.0.4+)",
+    "title": "Unified External Meta Cache (4.1.x+)",
     "language": "en",
     "description": "User guide for unified external metadata cache: unified meta.cache.* properties, what is cached, and where to configure per catalog."
 }
 ---
 
-Starting from **Doris 4.0.4**, external metadata caching is unified for major External Catalog engines. As a user, you only need to know:
+Starting from **Doris 4.1.x**, external metadata caching is unified for major External Catalog engines. As a user, you only need to know:
 
 | You want to know | Where in docs |
 |---|---|
@@ -15,7 +15,7 @@ Starting from **Doris 4.0.4**, external metadata caching is unified for major Ex
 | How to observe | `information_schema.catalog_meta_cache_statistics` (see the observability section below). |
 
 :::tip
-Applies to Doris 4.0.4 and later.
+Applies to Doris 4.1.x and later.
 :::
 
 ## Unified Property Model
@@ -55,11 +55,11 @@ For each catalog engine, the supported cache modules and the recommended propert
 
 | Catalog engine | Where to configure module caches |
 |---|---|
-| Hive | [Hive Catalog](../catalogs/hive-catalog.mdx#meta-cache-404) |
-| Iceberg | [Iceberg Catalog](../catalogs/iceberg-catalog.mdx#meta-cache-404) |
-| Paimon | [Paimon Catalog](../catalogs/paimon-catalog.mdx#meta-cache-404) |
-| Hudi | [Hudi Catalog](../catalogs/hudi-catalog.md#meta-cache-404) |
-| MaxCompute | [MaxCompute Catalog](../catalogs/maxcompute-catalog.md#meta-cache-404) |
+| Hive | [Hive Catalog](../catalogs/hive-catalog.mdx#meta-cache-unified) |
+| Iceberg | [Iceberg Catalog](../catalogs/iceberg-catalog.mdx#meta-cache-unified) |
+| Paimon | [Paimon Catalog](../catalogs/paimon-catalog.mdx#meta-cache-unified) |
+| Hudi | [Hudi Catalog](../catalogs/hudi-catalog.md#meta-cache-unified) |
+| MaxCompute | [MaxCompute Catalog](../catalogs/maxcompute-catalog.md#meta-cache-unified) |
 
 ## Observability
 
@@ -81,4 +81,4 @@ Naming convention:
 
 ## Migration Note (Legacy Properties)
 
-Starting from Doris 4.0.4, legacy catalog cache properties (for example, `schema.cache.ttl-second`, `file.meta.cache.ttl-second`) are deprecated. Use `meta.cache.*` properties instead and follow the catalog-specific pages above.
+Starting from Doris 4.1.x, legacy catalog cache properties (for example, `schema.cache.ttl-second`, `file.meta.cache.ttl-second`) are deprecated. Use `meta.cache.*` properties instead and follow the catalog-specific pages above.
