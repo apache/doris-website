@@ -9,9 +9,9 @@
 
 # Must Read Before the POC
 
-Creating a table in Doris involves four decisions that affect load and query performance. Some of them — like the data model — cannot be changed later. Understanding **why** each decision exists helps you get it right the first time.
-
 ## Table Design
+
+Creating a table in Doris involves four decisions that affect load and query performance. Some of them — like the data model — cannot be changed later. Understanding **why** each decision exists helps you get it right the first time.
 
 ### Data Model
 
