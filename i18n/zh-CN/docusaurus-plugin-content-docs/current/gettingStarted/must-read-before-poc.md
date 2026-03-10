@@ -106,20 +106,6 @@ AUTO PARTITION BY RANGE(date_trunc(`dt`, 'day'))
 DISTRIBUTED BY HASH(site_id) BUCKETS 10;
 ```
 
-### 湖仓查询（无需建表）
-
-```sql
-CREATE CATALOG lakehouse PROPERTIES (
-    'type' = 'iceberg',
-    'iceberg.catalog.type' = 'rest',
-    'uri' = 'http://iceberg-rest:8181'
-);
-
-SELECT * FROM lakehouse.db.events WHERE dt = '2025-01-01';
-```
-
-在现有数据上验证 Doris 性能的最快方式。详见[湖仓一体概述](../lakehouse/lakehouse-overview)。
-
 ## 性能陷阱
 
 ### 导入

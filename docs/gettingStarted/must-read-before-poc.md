@@ -106,20 +106,6 @@ AUTO PARTITION BY RANGE(date_trunc(`dt`, 'day'))
 DISTRIBUTED BY HASH(site_id) BUCKETS 10;
 ```
 
-### Lakehouse Query (No Table Needed)
-
-```sql
-CREATE CATALOG lakehouse PROPERTIES (
-    'type' = 'iceberg',
-    'iceberg.catalog.type' = 'rest',
-    'uri' = 'http://iceberg-rest:8181'
-);
-
-SELECT * FROM lakehouse.db.events WHERE dt = '2025-01-01';
-```
-
-This is the fastest way to validate Doris on your existing data. See [Lakehouse Overview](../lakehouse/lakehouse-overview).
-
 ## Performance Pitfalls
 
 ### Load
