@@ -65,11 +65,12 @@ For full syntax and advanced options, see [Auto Partition](../table-design/data-
 
 **Partitions first, then buckets.** Both partitioning and bucketing increase tablet count, but partitions also enable pruning and are easier to manage (add/drop). When you need more parallelism, prefer adding partitions before increasing bucket count.
 
-**How to choose bucket count:** Follow these three rules:
+**How to choose bucket count:** Follow these four rules:
 
 1. **Make it a multiple of the number of BEs** — ensures even data distribution across nodes.
 2. **Keep it as low as possible** — fewer buckets mean larger tablets, which improves scan efficiency and reduces metadata overhead. In production, large tables have many partitions and queries span multiple partitions, so parallelism comes primarily from partitions — performance is not sensitive to bucket count.
 3. **Compressed data per bucket should not exceed 20 GB** (under **10 GB** for Unique Key tables) — check with `SHOW TABLETS FROM your_table`.
+4. **Bucket count per partition should not exceed 128** — if you need more, consider partitioning the table first.
 
 **Default is Random bucketing** — you can omit the `DISTRIBUTED BY` clause entirely. For Duplicate Key tables, Random bucketing is recommended because it enables `load_to_single_tablet` for lower memory usage and higher load throughput.
 
