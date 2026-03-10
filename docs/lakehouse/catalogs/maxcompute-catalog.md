@@ -71,7 +71,7 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 ## Metadata Cache (4.1.x+) {#meta-cache-unified}
 
 Starting from Doris 4.1.x, MaxCompute Catalog metadata caches are configured with the unified `meta.cache.*` properties.
-This section focuses on **how to use** and **how to observe** the MaxCompute-related cache module.
+This section covers configuration and observability for MaxCompute-related cache modules.
 
 For the unified property semantics, see: [Unified External Meta Cache (4.1.x+)](../meta-cache/unified-meta-cache.md).
 
@@ -79,36 +79,38 @@ For the unified property semantics, see: [Unified External Meta Cache (4.1.x+)](
 
 | Module | Property key prefix | Cached content (typical) |
 |---|---|---|
-| `partition-values` | `meta.cache.maxcompute.partition-values.` | Partition values list (reduces repeated remote listing overhead). |
+| `schema` | `meta.cache.maxcompute.schema.` | Schema cache entry for table schema loading. |
+| `partition_values` | `meta.cache.maxcompute.partition_values.` | Partition values cache entry used for partition pruning and partition enumeration. |
 
-Example:
+Notes:
 
-```sql
-ALTER CATALOG mc_ctl SET PROPERTIES (
-  "meta.cache.maxcompute.partition-values.ttl-second" = "3600",
-  "meta.cache.maxcompute.partition-values.capacity" = "5000"
-);
-```
+- Property keys use the module names shown above. The same names appear as `ENTRY_NAME` in `information_schema.catalog_meta_cache_statistics`.
+- `partition_values` is configured through `meta.cache.maxcompute.partition_values.*`.
+- The stats table exposes `partition_values` and `schema` as the two MaxCompute entries.
+- There is no dedicated MaxCompute catalog-level hot-reload hook for `meta.cache.maxcompute.*`.
 
 ### Observability {#meta-cache-unified-observability}
 
 MaxCompute cache metrics are available in `information_schema.catalog_meta_cache_statistics`.
 For the table definition and metric meanings, see: [catalog_meta_cache_statistics](../../admin-manual/system-tables/information_schema/catalog_meta_cache_statistics.md).
 
-The `cache_name` value for MaxCompute module is:
+Common MaxCompute entries:
 
-| Module | cache_name |
+| Entry | Meaning |
 |---|---|
-| `partition-values` | `maxcompute_partition_values_cache` |
+| `schema` | Schema cache entry |
+| `partition_values` | Partition values cache entry |
 
 Example query:
 
 ```sql
-SELECT *
+SELECT catalog_name, engine_name, entry_name,
+       effective_enabled, ttl_second, capacity,
+       estimated_size, hit_rate, load_failure_count, last_error
 FROM information_schema.catalog_meta_cache_statistics
 WHERE catalog_name = 'mc_ctl'
-  AND cache_name LIKE 'maxcompute_%'
-ORDER BY cache_name, metric_name;
+  AND engine_name = 'maxcompute'
+ORDER BY entry_name;
 ```
 
 ### Supported MaxCompute Versions

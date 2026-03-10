@@ -70,7 +70,8 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 
 ## 元数据缓存（4.1.x+） {#meta-cache-unified}
 
-从 Doris 4.1.x 开始，MaxCompute Catalog 的外表元数据缓存使用统一键 `meta.cache.*` 进行配置。本节只介绍**如何使用**与**如何观测**。
+从 Doris 4.1.x 开始，MaxCompute Catalog 的外表元数据缓存使用统一键 `meta.cache.*` 进行配置。
+本节说明 MaxCompute 相关 cache 模块的配置与观测方式。
 
 统一属性语义可参阅：[统一外表元数据缓存（4.1.x+）](../meta-cache/unified-meta-cache.md)。
 
@@ -78,36 +79,38 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 
 | 模块 | 属性键前缀 | 典型缓存内容 |
 |---|---|---|
-| `partition-values` | `meta.cache.maxcompute.partition-values.` | 分区值列表（减少重复的远端枚举开销）。 |
+| `schema` | `meta.cache.maxcompute.schema.` | 表 schema 加载对应的 schema cache entry。 |
+| `partition_values` | `meta.cache.maxcompute.partition_values.` | 分区值缓存 entry，用于分区剪枝与分区枚举。 |
 
-示例：
+说明：
 
-```sql
-ALTER CATALOG mc_ctl SET PROPERTIES (
-  "meta.cache.maxcompute.partition-values.ttl-second" = "3600",
-  "meta.cache.maxcompute.partition-values.capacity" = "5000"
-);
-```
+- 属性键使用上表中的模块名。这些名字也会出现在 `information_schema.catalog_meta_cache_statistics` 的 `ENTRY_NAME` 中。
+- `partition_values` 通过 `meta.cache.maxcompute.partition_values.*` 配置。
+- stats 表里能直接看到的 MaxCompute entry 只有 `partition_values` 和 `schema`。
+- `meta.cache.maxcompute.*` 目前没有专门的热生效 hook。
 
 ### 可观测性 {#meta-cache-unified-observability}
 
 MaxCompute 缓存指标可通过 `information_schema.catalog_meta_cache_statistics` 查询。
 系统表字段与指标说明见：[catalog_meta_cache_statistics](../../admin-manual/system-tables/information_schema/catalog_meta_cache_statistics.md)。
 
-MaxCompute 模块对应的 `cache_name` 如下：
+MaxCompute 常见 entry：
 
-| 模块 | cache_name |
+| Entry | 含义 |
 |---|---|
-| `partition-values` | `maxcompute_partition_values_cache` |
+| `schema` | Schema cache entry |
+| `partition_values` | 分区值缓存 entry |
 
-示例：
+示例查询：
 
 ```sql
-SELECT *
+SELECT catalog_name, engine_name, entry_name,
+       effective_enabled, ttl_second, capacity,
+       estimated_size, hit_rate, load_failure_count, last_error
 FROM information_schema.catalog_meta_cache_statistics
 WHERE catalog_name = 'mc_ctl'
-  AND cache_name LIKE 'maxcompute_%'
-ORDER BY cache_name, metric_name;
+  AND engine_name = 'maxcompute'
+ORDER BY entry_name;
 ```
 
 ### 支持的 MaxCompute 版本

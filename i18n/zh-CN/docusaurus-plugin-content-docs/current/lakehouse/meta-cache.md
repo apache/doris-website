@@ -21,6 +21,13 @@
 :::note
 对于 Doris 4.1.x 及之后版本，外表元数据缓存已重构并使用统一配置键 `meta.cache.*`。
 请参阅[统一外表元数据缓存（4.1.x+）](./meta-cache/unified-meta-cache.md)。
+
+从 Doris 4.1.x 开始，外表元数据缓存可以分成两层来理解：
+
+- 通用 catalog 缓存：库/表名称列表、库/表对象等，仍由 `max_meta_object_cache_num`、`external_cache_refresh_time_minutes`、`external_cache_expire_time_seconds_after_access` 等 FE 配置控制。
+- 引擎特定 entry 缓存：schema、分区元数据、manifest、文件列表等，这些按 catalog 使用统一键 `meta.cache.<engine>.<entry>.{enable,ttl-second,capacity}` 配置。
+
+统一文档主要描述第二层。
 :::
 
 ## 缓存策略

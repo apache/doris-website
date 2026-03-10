@@ -21,6 +21,13 @@ This document applies to versions after 2.1.6.
 :::note
 For Doris 4.1.x and later, external meta cache has been refactored with unified configuration keys `meta.cache.*`.
 See [Unified External Meta Cache (4.1.x+)](./meta-cache/unified-meta-cache.md).
+
+Starting from Doris 4.1.x, external metadata caching can be understood as two layers:
+
+- Generic catalog caches: database/table name lists and database/table objects. These are still controlled by FE configs such as `max_meta_object_cache_num`, `external_cache_refresh_time_minutes`, and `external_cache_expire_time_seconds_after_access`.
+- Engine-specific entry caches: schema, partition metadata, manifests, file lists, and similar engine-dependent entries. These use unified per-catalog keys in the form `meta.cache.<engine>.<entry>.{enable,ttl-second,capacity}`.
+
+The unified document focuses on the second layer.
 :::
 
 ## Cache Strategies

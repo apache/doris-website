@@ -54,7 +54,7 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 ## Metadata Cache (4.1.x+) {#meta-cache-unified}
 
 Starting from Doris 4.1.x, Hudi-related metadata caches are configured with the unified `meta.cache.*` properties.
-This section focuses on **how to use** and **how to observe** the Hudi cache modules.
+This section covers configuration and observability for Hudi-related cache modules.
 
 For the unified property semantics, see: [Unified External Meta Cache (4.1.x+)](../meta-cache/unified-meta-cache.md).
 
@@ -62,15 +62,21 @@ For the unified property semantics, see: [Unified External Meta Cache (4.1.x+)](
 
 | Module | Property key prefix | Cached content (typical) |
 |---|---|---|
+| `schema` | `meta.cache.hudi.schema.` | Schema cache entry for table schema loading. |
 | `partition` | `meta.cache.hudi.partition.` | Hudi partition-related metadata (used by partition discovery/pruning). |
-| `fs-view` | `meta.cache.hudi.fs-view.` | Hudi filesystem view related metadata. |
-| `meta-client` | `meta.cache.hudi.meta-client.` | Hudi meta client related metadata. |
+| `fs_view` | `meta.cache.hudi.fs_view.` | Hudi filesystem view related metadata. |
+| `meta_client` | `meta.cache.hudi.meta_client.` | Hudi meta client related metadata. |
 
-Example (reduce cache footprint by lowering capacity):
+Notes:
+
+- Property keys use the module names shown above. The same names appear as `ENTRY_NAME` in `information_schema.catalog_meta_cache_statistics`.
+- When Hudi tables are accessed through an HMS catalog, configure `meta.cache.hudi.*` on that HMS catalog.
+
+Example:
 
 ```sql
 ALTER CATALOG hudi_ctl SET PROPERTIES (
-  "meta.cache.hudi.partition.capacity" = "2000"
+  "meta.cache.hudi.fs_view.capacity" = "2000"
 );
 ```
 
@@ -79,22 +85,25 @@ ALTER CATALOG hudi_ctl SET PROPERTIES (
 Hudi cache metrics are available in `information_schema.catalog_meta_cache_statistics`.
 For the table definition and metric meanings, see: [catalog_meta_cache_statistics](../../admin-manual/system-tables/information_schema/catalog_meta_cache_statistics.md).
 
-The `cache_name` values for Hudi modules are:
+Common Hudi entries:
 
-| Module | cache_name |
+| Entry | Meaning |
 |---|---|
-| `partition` | `hudi_partition_cache` |
-| `fs-view` | `hudi_fs_view_cache` |
-| `meta-client` | `hudi_meta_client_cache` |
+| `schema` | Schema cache entry |
+| `partition` | Partition metadata cache entry |
+| `fs_view` | File system view cache entry |
+| `meta_client` | Meta client cache entry |
 
 Example query:
 
 ```sql
-SELECT *
+SELECT catalog_name, engine_name, entry_name,
+       effective_enabled, ttl_second, capacity,
+       estimated_size, hit_rate, load_failure_count, last_error
 FROM information_schema.catalog_meta_cache_statistics
 WHERE catalog_name = 'hudi_ctl'
-  AND cache_name LIKE 'hudi_%'
-ORDER BY cache_name, metric_name;
+  AND engine_name = 'hudi'
+ORDER BY entry_name;
 ```
 
 ### Supported Hudi Versions

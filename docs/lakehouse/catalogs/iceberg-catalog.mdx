@@ -88,7 +88,7 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 ## Metadata Cache (4.1.x+) {#meta-cache-unified}
 
 Starting from Doris 4.1.x, Iceberg Catalog metadata caches are configured with the unified `meta.cache.*` properties.
-This section focuses on **how to use** and **how to observe** the Iceberg-related cache modules.
+This section covers configuration and observability for Iceberg-related cache modules.
 
 For the unified property semantics, see: [Unified External Meta Cache (4.1.x+)](../meta-cache/unified-meta-cache.md).
 
@@ -96,13 +96,23 @@ For the unified property semantics, see: [Unified External Meta Cache (4.1.x+)](
 
 | Module | Property key prefix | Cached content (typical) |
 |---|---|---|
+| `schema` | `meta.cache.iceberg.schema.` | Schema cache entry for table schema loading. |
 | `table` | `meta.cache.iceberg.table.` | Iceberg table metadata object (reduces catalog/metastore round trips). |
+| `view` | `meta.cache.iceberg.view.` | Iceberg view metadata object. |
 | `manifest` | `meta.cache.iceberg.manifest.` | Manifest-related metadata (reduces repeated manifest access overhead). |
 
-Example (shorter TTL for manifest to prioritize freshness):
+Notes:
+
+- Property keys use the module names shown above. The same names appear as `ENTRY_NAME` in `information_schema.catalog_meta_cache_statistics`.
+- `manifest` is disabled by default in the current implementation. Enable it explicitly before tuning TTL/capacity.
+- `view` entries are only populated when Doris accesses Iceberg views.
+- `ALTER CATALOG ... SET PROPERTIES` updates are applied through the unified hot-reload path.
+
+Example:
 
 ```sql
 ALTER CATALOG iceberg_ctl SET PROPERTIES (
+  "meta.cache.iceberg.manifest.enable" = "true",
   "meta.cache.iceberg.manifest.ttl-second" = "600"
 );
 ```
@@ -112,21 +122,25 @@ ALTER CATALOG iceberg_ctl SET PROPERTIES (
 Iceberg cache metrics are available in `information_schema.catalog_meta_cache_statistics`.
 For the table definition and metric meanings, see: [catalog_meta_cache_statistics](../../admin-manual/system-tables/information_schema/catalog_meta_cache_statistics.md).
 
-The `cache_name` values for Iceberg modules are:
+Common Iceberg entries:
 
-| Module | cache_name |
+| Entry | Meaning |
 |---|---|
-| `table` | `iceberg_table_cache` |
-| `manifest` | `iceberg_manifest_cache` |
+| `schema` | Schema cache entry |
+| `table` | Table metadata cache entry |
+| `view` | View metadata cache entry |
+| `manifest` | Manifest payload cache entry |
 
 Example query:
 
 ```sql
-SELECT *
+SELECT catalog_name, engine_name, entry_name,
+       effective_enabled, ttl_second, capacity,
+       estimated_size, hit_rate, load_failure_count, last_error
 FROM information_schema.catalog_meta_cache_statistics
 WHERE catalog_name = 'iceberg_ctl'
-  AND cache_name LIKE 'iceberg_%'
-ORDER BY cache_name, metric_name;
+  AND engine_name = 'iceberg'
+ORDER BY entry_name;
 ```
 
 ### Supported Iceberg Versions

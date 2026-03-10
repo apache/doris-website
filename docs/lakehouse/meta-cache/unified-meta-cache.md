@@ -20,7 +20,7 @@ Applies to Doris 4.1.x and later.
 
 ## Unified Property Model
 
-All engine cache modules share the same property key pattern:
+All engine cache entries share the same property key pattern:
 
 `meta.cache.<engine>.<module>.{enable,ttl-second,capacity}`
 
@@ -32,7 +32,12 @@ The following table describes the property semantics:
 | `ttl-second` | `600`, `0`, `-1` | `0` disables the module; `-1` means no expiration; otherwise expire after access by TTL. |
 | `capacity` | `10000` | Max entry count (count-based). `0` disables the module. |
 
-Example (edit catalog properties):
+Notes:
+
+- `<module>` uses the cache entry name shown in the catalog documentation and the stats table, for example `partition_values`, `fs_view`, `meta_client`.
+- There is currently no per-entry refresh interval property. Async refresh behavior still uses the FE config `external_cache_refresh_time_minutes`.
+
+Example:
 
 ```sql
 ALTER CATALOG hive_ctl SET PROPERTIES (
@@ -42,12 +47,29 @@ ALTER CATALOG hive_ctl SET PROPERTIES (
 
 ## What External Meta Cache Includes
 
-External meta cache covers different kinds of metadata. Some are configured by unified catalog properties, and some are controlled by FE configs:
+There are two layers of metadata caching that are easy to confuse:
+
+- Catalog object/name caches: `SHOW DATABASES`, `SHOW TABLES`, database objects, table objects, and related generic caches described in [Metadata Cache](../meta-cache.md).
+- Engine entry caches: engine-specific runtime metadata such as Hive partitions/files, Iceberg manifests, Paimon table handles, and schema entries. This page focuses on this layer.
+
+External meta cache entries cover different kinds of metadata. Some are configured by unified catalog properties, and some also inherit FE-level defaults:
 
 | Category | Examples | How to configure |
 |---|---|---|
-| Engine module caches | Hive partitions/files, Iceberg manifests, Paimon table metadata, etc. | Catalog `PROPERTIES`: `meta.cache.<engine>.<module>.*` |
-| Schema cache | Table schema, isolated by schema version token | FE configs (for example: `max_external_schema_cache_num`) |
+| Engine entry caches | Hive `partition_values` / `partition` / `file`, Iceberg `manifest`, Paimon `table`, etc. | Catalog `PROPERTIES`: `meta.cache.<engine>.<module>.*` |
+| Schema cache | Per-engine `schema` entry, isolated by schema version token | FE configs provide defaults; catalog `meta.cache.<engine>.schema.*` can override them |
+
+## Support Matrix
+
+The following table summarizes the current implementation:
+
+| Engine | Entries you will see in stats | Property key prefix | `ALTER CATALOG ... SET PROPERTIES` hot-reload |
+|---|---|---|---|
+| Hive | `schema`, `partition_values`, `partition`, `file` | `meta.cache.hive.<entry>.*` | Changes to `meta.cache.hive.*` are not applied through the unified hot-reload path; recreate the catalog or restart FE to apply new specs |
+| Iceberg | `schema`, `table`, `view`, `manifest` | `meta.cache.iceberg.<entry>.*` | Supported |
+| Paimon | `schema`, `table` | `meta.cache.paimon.<entry>.*` | Supported |
+| Hudi | `schema`, `partition`, `fs_view`, `meta_client` | `meta.cache.hudi.<entry>.*` | Supported through HMS catalog property updates |
+| MaxCompute | `schema`, `partition_values` | `meta.cache.maxcompute.<entry>.*` | No dedicated hot-reload hook |
 
 ## Catalog-Specific Configuration (Links)
 
@@ -66,18 +88,24 @@ For each catalog engine, the supported cache modules and the recommended propert
 Use the system table to observe cache metrics:
 
 ```sql
-SELECT *
+SELECT catalog_name, engine_name, entry_name,
+       effective_enabled, ttl_second, capacity,
+       estimated_size, hit_rate, load_failure_count, last_error
 FROM information_schema.catalog_meta_cache_statistics
-ORDER BY catalog_name, cache_name, metric_name;
+ORDER BY catalog_name, engine_name, entry_name;
 ```
 
 This table is documented at: [catalog_meta_cache_statistics](../../admin-manual/system-tables/information_schema/catalog_meta_cache_statistics.md).
 
-Naming convention:
+Read the table as follows:
 
 | Field | Convention |
 |---|---|
-| `cache_name` | `<engine>_<module>_cache` (module `-` is converted to `_`) |
+| `ENGINE_NAME` | Cache engine, such as `hive` or `iceberg` |
+| `ENTRY_NAME` | Exact entry name used by that engine, such as `partition_values`, `fs_view`, `manifest` |
+| `EFFECTIVE_ENABLED` | Final enable state after evaluating `enable`, `ttl-second`, and `capacity` |
+
+Common queries filter by `catalog_name` and `engine_name`. This table no longer uses the old `cache_name` / `metric_name` pivoted model.
 
 ## Migration Note (Legacy Properties)
 
