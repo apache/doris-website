@@ -1,4 +1,4 @@
-name: Code Review
+name: OpenCode Review
 
 on:
   issue_comment:
@@ -113,4 +113,4 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           PROMPT=$(cat /tmp/review_prompt.txt)
-          opencode run "$PROMPT" -m "github-copilot/claude-opus-4.6"
+          opencode run "$PROMPT" -m "github-copilot/claude-sonnet-4.6"
