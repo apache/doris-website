@@ -25,7 +25,7 @@
 | 按主键更新（CDC、Upsert） | **Unique Key** | 新行按相同 Key 替换旧行。 |
 | 预聚合指标（PV、UV、汇总） | **Aggregate Key** | 写入时按 SUM/MAX/MIN 合并行。 |
 
-**Duplicate Key 适用于大多数 POC 场景。**详见[数据模型概述](../table-design/data-model/overview)。
+**Duplicate Key 适用于大多数场景。**详见[数据模型概述](../table-design/data-model/overview)。
 
 ### Sort Key（排序键）
 
