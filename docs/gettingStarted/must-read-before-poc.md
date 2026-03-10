@@ -54,8 +54,6 @@ For a POC, **Duplicate Key works for most scenarios**. Switch only if you have a
 **How to choose:**
 
 - **Have a time column?** → Use `AUTO PARTITION BY RANGE(date_trunc(time_col, 'day'))`. Partitions are created automatically during import, no manual management needed.
-- **No time column, data < 50 GB?** → Skip partitioning entirely. Doris creates a single partition by default.
-- **No time column, data > 50 GB?** → Consider `AUTO PARTITION BY LIST(category_col)` on a categorical dimension.
 
 For full syntax and advanced options, see [Auto Partition](../table-design/data-partitioning/auto-partitioning).
 
