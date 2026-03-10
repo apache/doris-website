@@ -65,6 +65,8 @@ For full syntax and advanced options, see [Auto Partition](../table-design/data-
 
 **Partitions first, then buckets.** Both partitioning and bucketing increase tablet count, but partitions also enable pruning and are easier to manage (add/drop). When you need more parallelism, prefer adding partitions before increasing bucket count.
 
+**Keep bucket count as low as possible, and make it a multiple of the number of BEs.** Fewer buckets mean larger tablets, which improves scan efficiency and reduces metadata overhead. Setting it as a multiple of BEs ensures even distribution across nodes. In production, large tables typically have many partitions, and queries often span multiple partitions, so overall parallelism comes primarily from partitions — performance is not sensitive to bucket count.
+
 **Default is Random bucketing** — you can omit the `DISTRIBUTED BY` clause entirely. For Duplicate Key tables, Random bucketing is recommended because it enables `load_to_single_tablet` for lower memory usage and higher load throughput.
 
 **When to specify Hash bucketing:** If you frequently filter or join on a specific column, `DISTRIBUTED BY HASH(that_column)` enables **bucket pruning** — Doris skips irrelevant buckets, which is faster than scanning all of them.
