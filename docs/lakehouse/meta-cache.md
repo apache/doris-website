@@ -19,8 +19,8 @@ This document applies to versions after 2.1.6.
 :::
 
 :::note
-For Doris 4.0.4 and later, external meta cache has been refactored with unified configuration keys `meta.cache.*`.
-See [Unified External Meta Cache (4.0.4+)](./meta-cache/unified-meta-cache.md).
+For Doris 4.1.x and later, external meta cache has been refactored with unified configuration keys `meta.cache.*`.
+See [Unified External Meta Cache (4.1.x+)](./meta-cache/unified-meta-cache.md).
 :::
 
 ## Cache Strategies
@@ -327,9 +327,9 @@ This section mainly introduces the cache behavior that users may be concerned ab
 For all types of External Catalogs, if you want to see the latest Table Schema in real time, you can disable the Schema Cache:
 
 :::note
-Starting from Doris 4.0.4, the legacy catalog-level cache property `schema.cache.ttl-second` is deprecated.
-For 4.0.4+, keep using the FE config method below, and refer to:
-[Unified External Meta Cache (4.0.4+)](./meta-cache/unified-meta-cache.md).
+Starting from Doris 4.1.x, the legacy catalog-level cache property `schema.cache.ttl-second` is deprecated.
+For 4.1.x+, keep using the FE config method below, and refer to:
+[Unified External Meta Cache (4.1.x+)](./meta-cache/unified-meta-cache.md).
 :::
 
 - Disable globally
@@ -353,10 +353,10 @@ After setting, Doris will see the latest Table Schema in real time. However, thi
 For Hive Catalog, if you want to disable the cache to query real-time updated data, you can configure the following parameters:
 
 :::note
-Starting from Doris 4.0.4, the legacy catalog-level properties `file.meta.cache.ttl-second` and `partition.cache.ttl-second`
+Starting from Doris 4.1.x, the legacy catalog-level properties `file.meta.cache.ttl-second` and `partition.cache.ttl-second`
 are deprecated. Use unified `meta.cache.hive.*` properties instead. See:
-[Hive Catalog](./catalogs/hive-catalog.mdx#meta-cache-404) and
-[Unified External Meta Cache (4.0.4+)](./meta-cache/unified-meta-cache.md).
+[Hive Catalog](./catalogs/hive-catalog.mdx#meta-cache-unified) and
+[Unified External Meta Cache (4.1.x+)](./meta-cache/unified-meta-cache.md).
 :::
 
 - Disable globally
