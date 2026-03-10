@@ -127,15 +127,17 @@ When determining the number of buckets, two principles are usually followed: qua
 
 * **Quantity Principle:** Without considering expansion, it is recommended that the number of tablets for a table be slightly more than the number of disks in the entire cluster.
 
+The bucket count should be a multiple of the number of BEs for even data distribution. Generally, the bucket count per partition should not exceed **128** — if you need more, consider partitioning the table first.
+
 For example, assuming there are 10 BE machines with one disk per BE, you can follow the recommendations below for data bucketing:
 
-| Table Size | Recommended Number of Buckets          |
-| ---------- | -------------------------------------- |
-| 500MB      | 4-8 buckets                            |
-| 5GB        | 6-16 buckets                           |
-| 50GB       | 32 buckets                             |
-| 500GB      | Partition recommended, 50GB per partition, 16-32 buckets per partition |
-| 5TB        | Partition recommended, 50GB per partition, 16-32 buckets per partition |
+| Partition Size | Recommended Number of Buckets |
+| -------------- | ----------------------------- |
+| < 1 GB         | 1 bucket                      |
+| 1-10 GB        | 10 buckets                    |
+| 10-50 GB       | 10-50 buckets                 |
+| 50-200 GB      | 50-100 buckets                |
+| > 200 GB       | Consider partitioning first   |
 
 :::tip Note
 
