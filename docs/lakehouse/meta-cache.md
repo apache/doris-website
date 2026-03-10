@@ -30,6 +30,9 @@ Starting from Doris 4.1.x, external metadata caching can be understood as two la
 The unified document focuses on the second layer.
 :::
 
+This page mainly records FE-level defaults and legacy catalog properties used by the 2.1.x / 3.x cache model.
+For the current engine-specific cache entry matrix in Doris 4.1.x+, use the unified page and the catalog-specific pages.
+
 ## Cache Strategies
 
 Most caches have the following three strategy indicators:
@@ -64,6 +67,19 @@ Most caches have the following three strategy indicators:
 
 ## Cache Types
 
+The following sections describe representative FE-level defaults and legacy cache controls.
+They should not be read as the complete cache entry matrix for Doris 4.1.x+.
+
+| Category | Scope | Main FE defaults | Notes |
+|---|---|---|---|
+| Database / table name lists | Per catalog / per database | `external_cache_expire_time_seconds_after_access`, `external_cache_refresh_time_minutes` | Used by `SHOW DATABASES` / `SHOW TABLES` |
+| Database / table objects | Per catalog / per database | `max_meta_object_cache_num`, `external_cache_expire_time_seconds_after_access`, `external_cache_refresh_time_minutes` | Object cache can diverge temporarily from name-list cache |
+| Table schema | Per catalog | `max_external_schema_cache_num`, `external_cache_expire_time_seconds_after_access`, `external_cache_refresh_time_minutes` | Legacy per-catalog override: `schema.cache.ttl-second` |
+| Hive partition values | Per Hive catalog | `max_hive_partition_table_cache_num`, `external_cache_expire_time_seconds_after_access`, `external_cache_refresh_time_minutes` | Legacy per-catalog override: `partition.cache.ttl-second` |
+| Hive partition properties | Per Hive catalog | `max_hive_partition_cache_num`, `external_cache_expire_time_seconds_after_access` | No legacy per-catalog TTL override |
+| Hive file lists | Per Hive catalog | `max_external_file_cache_num`, `external_cache_expire_time_seconds_after_access`, `external_cache_refresh_time_minutes` | Legacy per-catalog override: `file.meta.cache.ttl-second` |
+| Hudi / Iceberg / Paimon legacy table-level metadata | Per catalog | `max_external_table_cache_num`, `external_cache_expire_time_seconds_after_access`, `external_cache_refresh_time_minutes` | For Doris 4.1.x+, use the catalog pages for current cache entries such as `fs_view`, `meta_client`, `view`, and `manifest` |
+
 ### Database and Table Name Lists
 
 The database name list refers to the list of all database names under a Catalog.
@@ -96,7 +112,7 @@ Note that the list of objects in this cache may be inconsistent with the **datab
 
 For example, through the `SHOW TABLES` command, you get tables `A`, `B`, and `C` from the name list cache. Suppose table `D` is added to the external data source at this time, then `SELECT * FROM D` can access table `D`, and the [table object] cache will add the table `D` object, but the [table name list] cache may still be `A`, `B`, `C`. Only when the [table name list] cache is refreshed will it become `A`, `B`, `C`, `D`.
 
-Each Catalog has a database name list cache. Each database has a table name list cache.
+Each Catalog has a database object cache. Each database has a table object cache.
 
 - Maximum cache count
 
@@ -116,7 +132,7 @@ Each Catalog has a database name list cache. Each database has a table name list
 
 Caches the schema information of tables, such as column names. This cache is mainly used to load the schema of accessed tables on demand, to prevent synchronizing a large number of unnecessary table schemas and occupying FE memory.
 
-This cache is shared by all Catalogs and is globally unique.
+This cache is managed per catalog.
 
 - Maximum cache count
 
@@ -184,7 +200,7 @@ Used to cache the file list information under a single partition of a Hive table
 
 - Maximum cache count
 
-    Controlled by the FE configuration item `max_external_file_cache_num`, default is 100000.
+    Controlled by the FE configuration item `max_external_file_cache_num`, default is 10000.
 
     You can adjust this parameter appropriately according to the number of files to be accessed.
 
@@ -198,13 +214,14 @@ Used to cache the file list information under a single partition of a Hive table
 
 - Minimum refresh time
 
-    Controlled by the FE configuration item `external_cache_expire_time_minutes_after_access`, in minutes. Default is 10 minutes. Reducing this time allows you to see the latest partition properties in Doris more in real time, but increases the frequency of accessing external data sources.
+    Controlled by the FE configuration item `external_cache_expire_time_minutes_after_access`, in minutes. Default is 10 minutes. Reducing this time allows you to see the latest file list in Doris more in real time, but increases the frequency of accessing external data sources.
 
     After version 3.0.7, the configuration item name is changed to `external_cache_refresh_time_minutes`. The default value remains unchanged.
 
 ### Hudi Table Partitions
 
-Used to cache partition information of Hudi tables.
+Legacy summary of Hudi partition metadata caching.
+Current Hudi cache entries in Doris 4.1.x+ also include `fs_view` and `meta_client`; see [Hudi Catalog](./catalogs/hudi-catalog.md#meta-cache-unified).
 
 This cache, each Hudi Catalog has one.
 
@@ -226,7 +243,8 @@ This cache, each Hudi Catalog has one.
 
 ### Iceberg Table Information
 
-Used to cache Iceberg table objects. The object is loaded and constructed through the Iceberg API.
+Legacy summary of Iceberg table metadata caching. The table object is loaded and constructed through the Iceberg API.
+For Doris 4.1.x+, the current observable cache entries are documented in [Iceberg Catalog](./catalogs/iceberg-catalog.mdx#meta-cache-unified).
 
 This cache, each Iceberg Catalog has one.
 
@@ -246,10 +264,10 @@ This cache, each Iceberg Catalog has one.
 
     After version 3.0.7, the configuration item name is changed to `external_cache_refresh_time_minutes`. The default value remains unchanged.
 
-### Iceberg Table Snapshot
+### Iceberg Snapshot-Related Metadata
 
-Used to cache the snapshot list of Iceberg tables. The object is loaded and constructed through the Iceberg API.
-This cache, each Iceberg Catalog has one.
+Legacy summary of snapshot-related metadata derived from Iceberg table metadata.
+In current implementations, this should not be read as a separate 4.1.x cache entry alongside `table`, `view`, or `manifest`.
 
 - Maximum cache count
 
@@ -269,37 +287,19 @@ This cache, each Iceberg Catalog has one.
 
 ## Cache Refresh
 
-In addition to the refresh and eviction strategies of each cache above, users can also directly refresh the metadata cache manually or on a schedule.
+In addition to the refresh and eviction strategies above, users can also refresh metadata manually or on a schedule.
 
 ### Manual Refresh
 
-Users can manually refresh metadata using the `REFRESH` command.
+Use the `REFRESH` statement to invalidate catalog, database, or table metadata.
+For current syntax, privileges, and examples, see [REFRESH](../sql-manual/sql-statements/catalog/REFRESH.md).
 
-1. REFRESH CATALOG
+Behavior summary:
 
-    Refresh the specified Catalog.
-
-    `REFRESH CATALOG ctl1 PROPERTIES("invalid_cache" = "true");`
-
-    - This command refreshes the database list, table column names, and all cache information of the specified Catalog.
-    - `invalid_cache` indicates whether to refresh caches such as partitions and file lists. The default is true. If false, only the database and table lists of the Catalog will be refreshed, but not caches such as partitions and file lists. This parameter is suitable for cases where the user only wants to synchronize newly added or deleted databases and tables, and can be set to false.
-
-2. REFRESH DATABASE
-
-    Refresh the specified Database.
-
-    `REFRESH DATABASE [ctl.]db1 PROPERTIES("invalid_cache" = "true");`
-
-    - This command refreshes the table column names and all cache information under the specified Database.
-    - The meaning of the `invalid_cache` property is the same as above. The default is true. If false, only the table list of the Database will be refreshed, but not the cache information. This parameter is suitable for cases where the user only wants to synchronize newly added or deleted tables.
-
-3. REFRESH TABLE
-
-    Refresh the specified Table.
-
-    `REFRESH TABLE [ctl.][db.]tbl1;`
-
-    - This command refreshes all cache information under the specified Table.
+- `REFRESH CATALOG` invalidates catalog-level object caches and, by default, lower-level metadata caches.
+- `REFRESH DATABASE` invalidates metadata under one database.
+- `REFRESH TABLE` invalidates metadata for one table.
+- For `REFRESH CATALOG`, `invalid_cache = false` keeps lower-level caches and refreshes only object/name lists.
 
 ### Scheduled Refresh
 
@@ -315,7 +315,7 @@ CREATE CATALOG hive PROPERTIES (
 
 In the above example, `metadata_refresh_interval_sec` means the Catalog is refreshed every 3600 seconds. This is equivalent to automatically executing once every 3600 seconds:
 
-`REFRESH CATALOG ctl1 PROPERTIES("invalid_cache" = "true");`
+`REFRESH CATALOG ctl1;`
 
 ## Best Practices
 
@@ -334,9 +334,8 @@ This section mainly introduces the cache behavior that users may be concerned ab
 For all types of External Catalogs, if you want to see the latest Table Schema in real time, you can disable the Schema Cache:
 
 :::note
-Starting from Doris 4.1.x, the legacy catalog-level cache property `schema.cache.ttl-second` is deprecated.
-For 4.1.x+, keep using the FE config method below, and refer to:
-[Unified External Meta Cache (4.1.x+)](./meta-cache/unified-meta-cache.md).
+For Doris 4.1.x+, prefer the unified per-catalog property `meta.cache.<engine>.schema.ttl-second = "0"`.
+See [Unified External Meta Cache (4.1.x+)](./meta-cache/unified-meta-cache.md).
 :::
 
 - Disable globally
@@ -346,11 +345,18 @@ For 4.1.x+, keep using the FE config method below, and refer to:
     max_external_schema_cache_num=0 // Disable Schema cache.
     ```
 
-- Disable at Catalog level
+- Disable at Catalog level in Doris 4.1.x+
 
     ```text
     -- Catalog property
-    "schema.cache.ttl-second" = "0" // For a specific Catalog, disable Schema cache (supported in 2.1.11, 3.0.6)
+    "meta.cache.<engine>.schema.ttl-second" = "0"
+    ```
+
+- Legacy catalog-level property
+
+    ```text
+    -- Catalog property
+    "schema.cache.ttl-second" = "0" // Legacy property, supported in 2.1.11 / 3.0.6
     ```
 
 After setting, Doris will see the latest Table Schema in real time. However, this setting may increase the pressure on the metadata service.
@@ -360,8 +366,7 @@ After setting, Doris will see the latest Table Schema in real time. However, thi
 For Hive Catalog, if you want to disable the cache to query real-time updated data, you can configure the following parameters:
 
 :::note
-Starting from Doris 4.1.x, the legacy catalog-level properties `file.meta.cache.ttl-second` and `partition.cache.ttl-second`
-are deprecated. Use unified `meta.cache.hive.*` properties instead. See:
+For Doris 4.1.x+, prefer unified `meta.cache.hive.*` properties. See:
 [Hive Catalog](./catalogs/hive-catalog.mdx#meta-cache-unified) and
 [Unified External Meta Cache (4.1.x+)](./meta-cache/unified-meta-cache.md).
 :::
@@ -372,19 +377,30 @@ are deprecated. Use unified `meta.cache.hive.*` properties instead. See:
     -- fe.conf
     max_external_file_cache_num=0    // Disable file list cache
     max_hive_partition_table_cache_num=0  // Disable partition list cache
+    max_hive_partition_cache_num=0   // Disable partition property cache
     ```
 
-- Disable at Catalog level
+- Disable at Catalog level in Doris 4.1.x+
 
     ```text
     -- Catalog property
-    "file.meta.cache.ttl-second" = "0" // For a specific Catalog, disable file list cache
-    "partition.cache.ttl-second" = "0" // For a specific Catalog, disable partition list cache (supported in 2.1.11, 3.0.6)
+    "meta.cache.hive.partition_values.ttl-second" = "0" // Disable partition list cache
+    "meta.cache.hive.partition.ttl-second" = "0"        // Disable partition property cache
+    "meta.cache.hive.file.ttl-second" = "0"             // Disable file list cache
+    ```
+
+- Legacy catalog-level properties
+
+    ```text
+    -- Catalog property
+    "file.meta.cache.ttl-second" = "0" // Disable file list cache
+    "partition.cache.ttl-second" = "0" // Disable partition list cache (supported in 2.1.11 / 3.0.6)
     ```
 
 After setting the above parameters:
 
 - New partitions in the external data source can be queried in real time.
 - Changes in partition data files can be queried in real time.
+- Changes in partition properties require disabling the partition property cache as well.
 
 But this will increase the access pressure on external data sources (such as Hive Metastore and HDFS), which may cause unstable metadata access latency and other phenomena.
