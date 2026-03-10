@@ -87,7 +87,8 @@ The user executing this SQL command must have at least the following permissions
   
 
   ```sql
-  CREATE INDEX index1 ON table1 USING INVERTED;
+it fails .. must mention to add col. in the documentation
+CREATE INDEX index1 ON t1sa (col1) USING INVERTED;
   ```
 
 - Create an NGram BloomFilter index `index2` on `table1`
