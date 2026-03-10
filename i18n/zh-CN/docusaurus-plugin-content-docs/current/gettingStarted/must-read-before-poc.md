@@ -44,18 +44,6 @@
 3. **每个分桶的压缩后数据 ≤ 20 GB**（Unique Key 表 ≤ 10 GB）——可通过 `SHOW TABLETS FROM your_table` 查看。
 4. **每个分区不超过 128 个分桶**——需要更多时优先考虑分区。
 
-### 重要说明
-
-:::caution
-
-**数据模型不可更改。**建表后无法从 Duplicate 改为 Unique 或 Aggregate。
-
-:::
-
-- **Key 列和分区列请使用 `VARCHAR` 而非 `STRING`。**`STRING` 仅适用于 Value 列。详见[数据类型](../table-design/data-type)。
-- **Aggregate Key 表：**`count(*)` 不能正常工作。添加 `row_count BIGINT SUM DEFAULT '1'` 列，查询时使用 `SUM(row_count)` 代替。
-- **已有分区的分桶数不可更改。**请提前选好。
-
 ## 建表模板
 
 ### 日志 / 事件分析

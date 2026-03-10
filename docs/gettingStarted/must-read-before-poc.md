@@ -44,18 +44,6 @@ Default is **Random bucketing** (recommended for Duplicate Key tables). Use `DIS
 3. **Compressed data per bucket ≤ 20 GB** (≤ 10 GB for Unique Key) — check with `SHOW TABLETS FROM your_table`.
 4. **No more than 128 per partition** — consider partitioning first if you need more.
 
-### Important Notes
-
-:::caution
-
-**Data model is permanent.** Cannot change from Duplicate to Unique or Aggregate after table creation.
-
-:::
-
-- **Use `VARCHAR` instead of `STRING` for key/partition columns.** `STRING` is only for value columns. See [Data Types](../table-design/data-type).
-- **Aggregate Key tables:** `count(*)` doesn't work well. Add `row_count BIGINT SUM DEFAULT '1'` and use `SUM(row_count)` instead.
-- **Bucket count on existing partitions cannot be changed.** Choose carefully upfront.
-
 ## Example Templates
 
 ### Log / Event Analytics
