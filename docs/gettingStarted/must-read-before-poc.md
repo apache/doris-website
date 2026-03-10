@@ -17,8 +17,6 @@ Creating a table in Doris involves four decisions that affect load and query per
 
 ### Data Model
 
-*Do I need to update rows?*
-
 | If your data is... | Use | Why |
 |---|---|---|
 | Append-only (logs, events, facts) | **Duplicate Key** (default) | Keeps all rows. Best query performance. |
