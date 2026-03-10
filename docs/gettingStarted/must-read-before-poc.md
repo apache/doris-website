@@ -9,7 +9,7 @@
 
 # Must Read Before the POC
 
-This guide covers the key decisions for table design, data loading, and query tuning to help you get the best performance from your Doris POC.
+This document highlights common issues that new users may encounter, with the goal of accelerating the POC process.
 
 ## Table Design
 
