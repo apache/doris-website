@@ -11,22 +11,6 @@
 
 在 Doris 中建表涉及四个影响导入和查询性能的决策。其中一些（如数据模型）建表后无法更改。理解每个决策**为什么**存在，可以帮助你一次做对。
 
-:::tip 最简建表语句
-
-```sql
-CREATE TABLE my_table
-(
-    id          INT,
-    name        VARCHAR(100),
-    created_at  DATETIME,
-    amount      DECIMAL(10,2)
-);
-```
-
-这是最简语法——Doris 默认使用 Duplicate Key 模型、单分区和 Random 分桶。它可以运行，但**在大多数 POC 场景中性能不佳。**请阅读以下内容，了解需要调整什么以及为什么。
-
-:::
-
 ## 建表设计
 
 ### 数据模型

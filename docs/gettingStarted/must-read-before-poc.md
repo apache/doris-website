@@ -11,22 +11,6 @@
 
 Creating a table in Doris involves four decisions that affect load and query performance. Some of them — like the data model — cannot be changed later. Understanding **why** each decision exists helps you get it right the first time.
 
-:::tip The simplest valid CREATE TABLE
-
-```sql
-CREATE TABLE my_table
-(
-    id          INT,
-    name        VARCHAR(100),
-    created_at  DATETIME,
-    amount      DECIMAL(10,2)
-);
-```
-
-This is the simplest syntax — Doris defaults to Duplicate Key, a single partition, and Random bucketing. It works, but **it won't give you good performance for most POC scenarios.** Read below to understand what to tune and why.
-
-:::
-
 ## Table Design
 
 ### Data Model
