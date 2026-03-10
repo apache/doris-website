@@ -1,0 +1,120 @@
+---
+{
+  "title": "MAP | 複合型",
+  "language": "ja",
+  "description": "MAP<K, V> K、Vアイテムのマップで、キーカラムとして使用することはできません。現在MAPはDuplicateおよびUnique Modelテーブルでのみ使用できます。",
+  "sidebar_label": "MAP"
+}
+---
+# MAP
+
+`MAP<K, V>` K、Vアイテムのマップで、キー列として使用することはできません。現在MAPはDuplicateおよびUnique Modelテーブルでのみ使用できます。
+
+K、Vは以下のいずれかになります：
+
+```sql
+BOOLEAN, TINYINT, SMALLINT, INT, BIGINT, LARGEINT, FLOAT, DOUBLE, DECIMAL, DECIMALV3, DATE,
+DATEV2, DATETIME, DATETIMEV2, CHAR, VARCHAR, STRING
+```
+## CSV形式のインポート
+
+### ステップ1: データを準備する
+
+以下のcsvファイルを作成してください: `test_map.csv`
+区切り文字は、マップ内のカンマと区別するため、カンマの代わりに`|`を使用します。
+
+```
+1|{"Emily":101,"age":25}
+2|{"Benjamin":102}
+3|{}
+4|null
+```
+### ステップ2: データベースにテーブルを作成する
+
+```sql
+CREATE TABLE map_test (
+    id       INT                 NOT NULL,
+    c_map    MAP<STRING, INT>    NULL
+)
+DUPLICATE KEY(id)
+DISTRIBUTED BY HASH(id) BUCKETS 1
+PROPERTIES (
+    "replication_allocation" = "tag.location.default: 1"
+);
+```
+### ステップ3: データの読み込み
+
+```bash
+curl --location-trusted \
+        -u "root":"" \
+        -H "column_separator:|" \
+        -H "columns: id, c_map" \
+        -T "test_map.csv" \
+        http://localhost:8040/api/testdb/map_test/_stream_load
+```
+### ステップ4: インポートされたデータを確認する
+
+```sql
+mysql> SELECT * FROM map_test;
++------+-------------------------+
+| id   | c_map                   |
++------+-------------------------+
+|    1 | {"Emily":101, "age":25} |
+|    2 | {"Benjamin":102}        |
+|    3 | {}                      |
+|    4 | NULL                    |
++------+-------------------------+
+4 rows in set (0.01 sec)
+```
+## JSON形式のインポート
+
+### ステップ1: データを準備する
+
+以下のJSONファイル`test_map.json`を作成します
+
+```json
+[
+    {"id":1, "c_map":{"Emily":101, "age":25}},
+    {"id":2, "c_map":{"Benjamin":102}},
+    {"id":3, "c_map":{}},
+    {"id":4, "c_map":null}
+]
+```
+### ステップ2: データベースにテーブルを作成する
+
+```sql
+CREATE TABLE map_test (
+    id       INT                 NOT NULL,
+    c_map    MAP<STRING, INT>    NULL
+)
+DUPLICATE KEY(id)
+DISTRIBUTED BY HASH(id) BUCKETS 1
+PROPERTIES (
+    "replication_allocation" = "tag.location.default: 1"
+);
+```
+### ステップ3: データを読み込む
+
+```bash
+curl --location-trusted \
+        -u "root":"" \
+        -H "format:json" \
+        -H "columns: id, c_map" \
+        -H "strip_outer_array:true" \
+        -T "test_map.json" \
+        http://localhost:8040/api/testdb/map_test/_stream_load
+```
+### ステップ4: インポートされたデータを確認する
+
+```sql
+mysql> SELECT * FROM map_test;
++------+-------------------------+
+| id   | c_map                   |
++------+-------------------------+
+|    1 | {"Emily":101, "age":25} |
+|    2 | {"Benjamin":102}        |
+|    3 | {}                      |
+|    4 | NULL                    |
++------+-------------------------+
+4 rows in set (0.01 sec)
+```
