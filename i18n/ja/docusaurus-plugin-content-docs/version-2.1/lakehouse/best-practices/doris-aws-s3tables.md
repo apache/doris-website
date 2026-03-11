@@ -24,11 +24,11 @@ Amazon S3 TablesのIceberg APIとの高い互換性のおかげで、Apache Dori
 
 S3 table バケットは、S3によって開始された3番目のタイプのバケットで、以前のGeneral purpose bucketおよびDirectory bucketと同等です。
 
-![AWS S3 table バケット](/images/レイクハウス/s3-table-bucket.png)
+![AWS S3 table バケット](/images/Lakehouse/s3-table-bucket.png)
 
 ここでは、doris-s3-table-bucketという名前のtable バケットを作成します。作成後、ARNで表されるtable バケットが取得されます。
 
-![AWS S3 table バケット Create](/images/レイクハウス/s3-table-bucket-create.png)
+![AWS S3 table バケット Create](/images/Lakehouse/s3-table-bucket-create.png)
 
 ### 02 Iceberg カタログの作成
 
