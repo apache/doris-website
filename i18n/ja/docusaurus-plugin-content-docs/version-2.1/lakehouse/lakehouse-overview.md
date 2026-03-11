@@ -11,7 +11,7 @@
 
 Dorisは、拡張可能なコネクターフレームワーク、コンピュートストレージ分離アーキテクチャ、高性能データ処理エンジン、およびデータエコシステムの開放性を通じて、ユーザーに優れたlakhouseソリューションを提供します。
 
-![doris lakehouse architecture](/images/レイクハウス/lakehouse-arch-1.jpeg)
+![doris lakehouse architecture](/images/Lakehouse/lakehouse-arch-1.jpeg)
 
 ### 柔軟なデータアクセス
 
