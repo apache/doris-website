@@ -5,7 +5,7 @@
   "description": "コミュニティの皆様、Apache Doris バージョン 2.1.7 が 2024年11月10日に正式リリースされました。このバージョンでは継続的なアップグレードと改善が行われています。"
 }
 ---
-コミュニティの皆様、**Apache Doris バージョン 2.1.7 が 2024年11月10日に正式リリースされました。** このバージョンでは、継続的なアップグレードと改善が提供されています。さらに、Lakehouse、Async Materialized Views、Semi-Structured Data Management、Query Optimizer、Permission Management などの分野でいくつかの修正が実装されています。
+コミュニティの皆様、**Apache Doris バージョン 2.1.7 が 2024年11月10日に正式リリースされました。** このバージョンでは、継続的なアップグレードと改善が提供されています。さらに、レイクハウス、Async Materialized Views、Semi-Structured Data Management、Query Optimizer、Permission Management などの分野でいくつかの修正が実装されています。
 
 **クイックダウンロード:** https://doris.apache.org/download/
 
@@ -50,13 +50,13 @@
 
 ## 改善
 
-### Lakehouse
+### レイクハウス
 
 - Hive テキスト形式テーブルへのデータ書き込みをサポートしました。[#40537](https://github.com/apache/doris/pull/40537)
   - 詳細については、[ドキュメント](../../lakehouse/catalogs/hive-catalog)を参照してください
 - MaxCompute Open Storage API を使用した MaxCompute データへのアクセス。[#41610](https://github.com/apache/doris/pull/41610)
   - 詳細については、[ドキュメント](../../lakehouse/catalogs/maxcompute-catalog)を参照してください
-- Paimon DLF Catalog をサポートしました。[#41694](https://github.com/apache/doris/pull/41694)
+- Paimon DLF カタログ をサポートしました。[#41694](https://github.com/apache/doris/pull/41694)
   - 詳細については、[ドキュメント](../../lakehouse/catalogs/paimon-catalog)を参照してください
 - Hive パーティション情報を直接クエリする `table$partitions` 構文が追加されました。[#41230](https://github.com/apache/doris/pull/41230)
   - 詳細については、[ドキュメント](../../lakehouse/catalogs/hive-catalog)を参照してください
@@ -96,19 +96,19 @@
 
 ## バグ修正
 
-### Lakehouse
+### レイクハウス
 
 - INSERT OVERWRITE の Hive との動作の不一致を修正しました。[#39840](https://github.com/apache/doris/pull/39840)
 - HDFS 上の空フォルダが多すぎる問題に対処するため、一時的に作成されたフォルダをクリーンアップするようにしました。[#40424](https://github.com/apache/doris/pull/40424)
-- 一部のケースで JDBC Catalog の使用により FE で発生するメモリリークを解決しました。[#40923](https://github.com/apache/doris/pull/40923)
-- 一部のケースで JDBC Catalog の使用により BE で発生するメモリリークを解決しました。[#41266](https://github.com/apache/doris/pull/41266)
+- 一部のケースで JDBC カタログ の使用により FE で発生するメモリリークを解決しました。[#40923](https://github.com/apache/doris/pull/40923)
+- 一部のケースで JDBC カタログ の使用により BE で発生するメモリリークを解決しました。[#41266](https://github.com/apache/doris/pull/41266)
 - 特定のシナリオで Snappy 圧縮形式を読み取る際のエラーを修正しました。[#40862](https://github.com/apache/doris/pull/40862)
 - 特定のシナリオで FE 側で発生する可能性のある FileSystem リークに対処しました。[#41108](https://github.com/apache/doris/pull/41108)
 - EXPLAIN VERBOSE を使用して外部テーブル実行プランを表示する際に、一部のケースで null ポインター例外が発生する可能性のある問題を解決しました。[#41231] (https://github.com/apache/doris/pull/41231)
 - Paimon parquet 形式のテーブルが読み取れない問題を修正しました。[#41487](https://github.com/apache/doris/pull/41487)
-- JDBC Oracle Catalog の互換性変更によって導入されたパフォーマンスの問題に対処しました。[#41407](https://github.com/apache/doris/pull/41407)
-- 暗黙的変換後の述語プッシュダウンを無効にして、JDBC Catalog の一部のケースで不正なクエリ結果となる問題を解決しました。[#42242](https://github.com/apache/doris/pull/42242)
-- External Catalog でのテーブル名の大文字小文字を区別するアクセスの問題を修正しました。[#42261](https://github.com/apache/doris/pull/42261)
+- JDBC Oracle カタログ の互換性変更によって導入されたパフォーマンスの問題に対処しました。[#41407](https://github.com/apache/doris/pull/41407)
+- 暗黙的変換後の述語プッシュダウンを無効にして、JDBC カタログ の一部のケースで不正なクエリ結果となる問題を解決しました。[#42242](https://github.com/apache/doris/pull/42242)
+- External カタログ でのテーブル名の大文字小文字を区別するアクセスの問題を修正しました。[#42261](https://github.com/apache/doris/pull/42261)
 
 ### Async Materialized View
 
@@ -151,7 +151,7 @@
 - Memtable migration での不正確な bvar 統計を解決しました。[#40985](https://github.com/apache/doris/pull/40985)
 - S3 ロードの不正確な進行状況レポートを修正しました。[#40987](https://github.com/apache/doris/pull/40987)
 
-### Permissions
+### 許可
 
 - show columns、show sync、show data from db.table に関連する権限の問題を修正しました。[#39726](https://github.com/apache/doris/pull/39726)
 

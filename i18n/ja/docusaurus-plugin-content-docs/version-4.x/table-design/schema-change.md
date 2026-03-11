@@ -2,10 +2,10 @@
 {
   "title": "スキーマ変更",
   "language": "ja",
-  "description": "ユーザーはAlter Table操作を通じてDorisテーブルのスキーマを変更できます。スキーマ変更は主にカラムの変更とインデックスの変更を含みます。"
+  "description": "ユーザーはAlter table操作を通じてDorisテーブルのスキーマを変更できます。スキーマ変更は主にカラムの変更とインデックスの変更を含みます。"
 }
 ---
-ユーザーは [Alter Table](../sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-COLUMN.md) 操作を通じて Doris テーブルのスキーマを変更できます。スキーマ変更は主にカラムの変更とインデックスの変更に関わります。この記事では主にカラムに関するスキーマ変更について紹介します。インデックス関連の変更については、[Table Index](./index/index-overview.md) を参照してインデックス変更の異なる方法について理解してください。
+ユーザーは [Alter table](../sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-COLUMN.md) 操作を通じて Doris テーブルのスキーマを変更できます。スキーマ変更は主にカラムの変更とインデックスの変更に関わります。この記事では主にカラムに関するスキーマ変更について紹介します。インデックス関連の変更については、[table Index](./index/index-overview.md) を参照してインデックス変更の異なる方法について理解してください。
 
 ## 原理の紹介
 

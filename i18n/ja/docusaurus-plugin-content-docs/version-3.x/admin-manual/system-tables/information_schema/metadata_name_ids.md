@@ -17,11 +17,11 @@
 
 ## テーブル情報
 
-| Column Name   | Type         | Description          |
+| Column Name   | タイプ         | 詳細          |
 | ------------- | ------------ | -------------------- |
-| CATALOG_ID    | bigint       | CatalogのID    |
-| CATALOG_NAME  | varchar(512) | Catalogの名前  |
+| CATALOG_ID    | bigint       | カタログのID    |
+| CATALOG_NAME  | varchar(512) | カタログの名前  |
 | DATABASE_ID   | bigint       | DatabaseのID   |
 | DATABASE_NAME | varchar(64)  | Databaseの名前 |
-| TABLE_ID      | bigint       | TableのID      |
-| TABLE_NAME    | varchar(64)  | Tableの名前    |
+| TABLE_ID      | bigint       | tableのID      |
+| TABLE_NAME    | varchar(64)  | tableの名前    |

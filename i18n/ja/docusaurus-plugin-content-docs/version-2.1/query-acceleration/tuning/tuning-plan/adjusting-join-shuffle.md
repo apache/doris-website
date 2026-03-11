@@ -32,7 +32,7 @@ Dorisは、Join操作におけるデータshuffle形式を調整するためのh
 現在、Dorisは優れたout-of-the-box機能を持っています。これは、ほとんどのシナリオにおいて、Dorisが様々な場面でパフォーマンスを適応的に最適化し、ユーザーがパフォーマンスチューニングのためにhintを手動で制御する必要がないことを意味します。この章で紹介する内容は主に専門的なチューナー向けであり、ビジネス担当者は簡単に理解するだけで十分です。
 :::
 
-現在、DorisはJoinにおける右側テーブルのDistribute Typeを指定するために、`[shuffle]`と`[broadcast]`の2つの独立した[Distribute Hint](../../../query-acceleration/hints/distribute-hint.md)をサポートしています。Distribute Typeは、Joinの右側テーブルの前に配置し、角括弧`[]`で囲む必要があります。さらに、DorisはLeading HintとDistribute Hintを組み合わせて使用することで、shuffle modeを指定できます（詳細については、[Reordering Join With Leading Hint](reordering-join-with-leading-hint.md)を参照してください）。
+現在、DorisはJoinにおける右側テーブルのDistribute タイプを指定するために、`[shuffle]`と`[broadcast]`の2つの独立した[Distribute Hint](../../../query-acceleration/hints/distribute-hint.md)をサポートしています。Distribute タイプは、Joinの右側テーブルの前に配置し、角括弧`[]`で囲む必要があります。さらに、DorisはLeading HintとDistribute Hintを組み合わせて使用することで、shuffle modeを指定できます（詳細については、[Reordering Join With Leading Hint](reordering-join-with-leading-hint.md)を参照してください）。
 
 例は以下の通りです：
 

@@ -3,7 +3,7 @@
   "title": "概要 | メモリ管理",
   "language": "ja",
   "description": "メモリ管理はDorisの最も重要なコンポーネントの1つです。Dorisの動作中、",
-  "sidebar_label": "Overview"
+  "sidebar_label": "概要"
 }
 ---
 # 概要

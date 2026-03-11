@@ -144,10 +144,6 @@ mysql> show databases;
     ```shell
     vim /etc/rsyslog.d/haproxy.conf
     ```
-I notice that the markers you've provided (<<<BEGIN>>> and <<<END>>>) don't contain any content between them. There is only "Content as follows:" but no actual content to translate. 
-
-Could you please provide the English technical documentation content that you'd like me to translate into Japanese?
-
     ```text
     $ModLoad imudp 
     $UDPServerRun 514

@@ -21,7 +21,7 @@ CloudDM のバージョンは 2.8.0.0 以上である必要があります。
 
 1. CloudDM にログインします。
 2. **DataSources** > **Add DataSources** をクリックします。
-3. Type で **Doris** を選択します。
+3. タイプ で **Doris** を選択します。
 
    ![add datasource](/images/clouddm1-en.png)
 

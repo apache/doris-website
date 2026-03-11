@@ -1,25 +1,25 @@
 ---
 {
-  "title": "SQL Server JDBC カタログ",
+  "title": "SQL サーバー JDBC カタログ",
   "language": "ja",
-  "description": "Doris JDBC CatalogはJDBCの標準インターフェースを通じてSQL Serverデータベースへの接続をサポートしています。"
+  "description": "Doris JDBC カタログはJDBCの標準インターフェースを通じてSQL サーバーデータベースへの接続をサポートしています。"
 }
 ---
-Doris JDBC Catalogは、標準のJDBCインターフェースを通じてSQL Serverデータベースへの接続をサポートしています。このドキュメントでは、SQL Serverデータベース接続の設定方法について説明します。
+Doris JDBC カタログは、標準のJDBCインターフェースを通じてSQL サーバーデータベースへの接続をサポートしています。このドキュメントでは、SQL サーバーデータベース接続の設定方法について説明します。
 
-JDBC Catalogの概要については、次を参照してください：[JDBC Catalog Overview](./jdbc-catalog-overview.md)
+JDBC カタログの概要については、次を参照してください：[JDBC カタログ 概要](./jdbc-catalog-overview.md)
 
 ## 使用上の注意事項
 
-SQL Serverデータベースに接続するには、以下が必要です
+SQL サーバーデータベースに接続するには、以下が必要です
 
-* SQL Server 2012以降、またはAzure SQL Database。
+* SQL サーバー 2012以降、またはAzure SQL Database。
 
-* SQL Serverデータベース用のJDBCドライバー。最新版または指定されたバージョンを[Maven Repository](https://mvnrepository.com/artifact/com.microsoft.sqlserver/mssql-jdbc)からダウンロードできます。SQL Server JDBC Driver 11.2.x以上の使用を推奨します。
+* SQL サーバーデータベース用のJDBCドライバー。最新版または指定されたバージョンを[Maven Repository](https://mvnrepository.com/artifact/com.microsoft.sqlserver/mssql-jdbc)からダウンロードできます。SQL サーバー JDBC Driver 11.2.x以上の使用を推奨します。
 
-* DorisのFEおよびBEノードとSQL Serverサーバー間のネットワーク接続。デフォルトポートは1433です。
+* DorisのFEおよびBEノードとSQL サーバーサーバー間のネットワーク接続。デフォルトポートは1433です。
 
-## SQL Serverへの接続
+## SQL サーバーへの接続
 
 ```sql
 CREATE CATALOG sqlserver_catalog PROPERTIES (

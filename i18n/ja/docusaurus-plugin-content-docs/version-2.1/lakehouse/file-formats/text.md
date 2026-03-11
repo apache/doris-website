@@ -9,7 +9,7 @@
 
 ## Text/CSV
 
-* Catalog
+* カタログ
 
   `org.apache.hadoop.mapred.TextInputFormat`フォーマットのHiveテーブルの読み取りをサポートします。
 
@@ -19,7 +19,7 @@
   - `org.apache.hadoop.hive.serde2.OpenCSVSerde` (Since 2.1.7)
   - `org.apache.hadoop.hive.serde2.MultiDelimitSerDe` (Since 3.1.0)
 
-* Table Valued Function
+* table Valued Function
 
 * Import
 
@@ -42,7 +42,7 @@
 
 ## JSON
 
-### Catalog
+### カタログ
 
 - `org.apache.hadoop.hive.serde2.JsonSerDe` (Since 3.0.4)
 

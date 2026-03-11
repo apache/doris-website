@@ -2,12 +2,12 @@
 {
   "title": "MySQL JDBCカタログ",
   "language": "ja",
-  "description": "Doris JDBC Catalogは標ードJDBCインターフェースを介してMySQLデータベースへの接続をサポートします。"
+  "description": "Doris JDBC カタログは標ードJDBCインターフェースを介してMySQLデータベースへの接続をサポートします。"
 }
 ---
-Doris JDBC Catalogは、標準のJDBCインターフェースを介してMySQLデータベースへの接続をサポートします。このドキュメントでは、MySQLデータベース接続の設定方法について説明します。
+Doris JDBC カタログは、標準のJDBCインターフェースを介してMySQLデータベースへの接続をサポートします。このドキュメントでは、MySQLデータベース接続の設定方法について説明します。
 
-JDBC Catalogの概要については、[JDBC Catalog Overview](./jdbc-catalog-overview.md)を参照してください。
+JDBC カタログの概要については、[JDBC カタログ 概要](./jdbc-catalog-overview.md)を参照してください。
 
 ## 使用上の注意
 

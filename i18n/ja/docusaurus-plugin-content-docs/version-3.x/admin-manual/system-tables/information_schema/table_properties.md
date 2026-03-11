@@ -17,9 +17,9 @@
 
 ## テーブル情報
 
-| Column Name    | Type        | Description                             |
+| Column Name    | タイプ        | 詳細                             |
 | -------------- | ----------- | --------------------------------------- |
-| TABLE_CATALOG  | varchar(64) | テーブルが属するCatalog  |
+| TABLE_CATALOG  | varchar(64) | テーブルが属するカタログ  |
 | TABLE_SCHEMA   | varchar(64) | テーブルが属するDatabase |
 | TABLE_NAME     | varchar(64) | テーブルの名前                   |
 | PROPERTY_NAME  | string      | プロパティの名前                |

@@ -5,7 +5,7 @@
   "description": "クエリパフォーマンスの最適化、バージョンアップグレード、およびSQL実行における適応的並列処理のための、enable_nereids_planner、parallel_pipeline_task_num、runtime_filter_modeを含む重要なデータベースチューニングパラメータを学習する。"
 }
 ---
-| Parameter                  | Description                                         | Default Value | Usage Scenario                                               |
+| Parameter                  | 詳細                                         | Default Value | Usage シナリオ                                               |
 | -------------------------- | --------------------------------------------------- | ------------- | ------------------------------------------------------------ |
 | enable_nereids_planner     | 新しいオプティマイザーを有効にするかどうか                 | TRUE          | 低バージョンからのアップグレードなどのシナリオでは、最初はfalseに設定し、アップグレード後にtrueに設定できます |
 | enable_nereids_dml         | 新しいオプティマイザーのDMLサポートを有効にするかどうか | TRUE          | 低バージョンからのアップグレードなどのシナリオでは、最初はfalseに設定し、アップグレード後にtrueに設定できます |

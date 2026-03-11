@@ -1,8 +1,7 @@
 ---
 {
   "title": "BIT_LENGTH",
-  "language": "ja",
-  "description": "I notice the text you've provided is actually in Chinese, not English. According to your instructions, I should translate English text into Japanese, but the source text is in Chinese.\n\nThe Chinese text \"返回字符串或二进制值的位长度（实际长度就是字节数 8。）\" translates to Japanese as:\n\n文字列またはバイナリ値のビット長を返す（実際の長さはバイト数×8）。"
+  "language": "ja"
 }
 ---
 ## 説明

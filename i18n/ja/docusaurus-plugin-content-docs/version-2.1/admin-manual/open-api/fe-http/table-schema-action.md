@@ -5,13 +5,13 @@
   "description": "指定されたテーブルのテーブル構造情報を取得するために使用されます。このインターフェースは現在Spark/Flink Doris Connectorで使用されています。"
 }
 ---
-# Table Schema Action
+# table Schema Action
 
 ## Request
 
 `GET /api/<db>/<table>/_schema`
 
-## Description
+## 詳細
 
 指定されたテーブルのテーブル構造情報を取得するために使用されます。このインターフェースは現在Spark/Flink Doris Connectorで使用され、Dorisテーブル構造情報を取得します。
 

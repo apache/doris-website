@@ -19,19 +19,19 @@
 - より多くのGEO型計算関数のサポートを追加しました：`ST_CONTAINS`、`ST_INTERSECTS`、`ST_TOUCHES`、`GeometryFromText`、`ST_Intersects`、`ST_Disjoint`、`ST_Touches`。[ #49665](https://github.com/apache/doris/pull/49665) [ #48695](https://github.com/apache/doris/pull/48695)
 - `years_of_week`関数のサポートを追加しました。[ #48870](https://github.com/apache/doris/pull/48870)
 
-### Lakehouse
+### レイクハウス
 
-- Hive Catalogでカタログレベルのパーティションキャッシュ制御がサポートされました。[ #50724](https://github.com/apache/doris/pull/50724)
+- Hive カタログでカタログレベルのパーティションキャッシュ制御がサポートされました。[ #50724](https://github.com/apache/doris/pull/50724)
   - 詳細については、[ ](https://doris.apache.org/docs/dev/lakehouse/meta-cache)[ドキュメント](https://doris.apache.org/docs/dev/lakehouse/meta-cache#disable-hive-catalog-metadata-cache)を参照してください。
 
 ## 改善
 
-### Lakehouse
+### レイクハウス
 
 - Paimon依存関係のバージョンを1.0.1にアップグレードしました。
 - Iceberg依存関係のバージョンを1.6.1にアップグレードしました。
 - Parquet FooterのメモリオーバーヘッドをMemory Trackerに含めて、潜在的なOOM問題を回避するようにしました。[ #49037](https://github.com/apache/doris/pull/49037)
-- JDBC Catalogの述語プッシュダウンロジックを最適化し、AND/ORで接続された述語のプッシュダウンをサポートしました。[ #50542](https://github.com/apache/doris/pull/50542)
+- JDBC カタログの述語プッシュダウンロジックを最適化し、AND/ORで接続された述語のプッシュダウンをサポートしました。[ #50542](https://github.com/apache/doris/pull/50542)
 - プリコンパイル版にAlibaba Cloud oss-hdfsアクセスをサポートするためのJindofs拡張パッケージがデフォルトで含まれるようになりました。
 
 ### Semi-Structured Data Management
@@ -53,7 +53,7 @@
 
 ## バグ修正
 
-### Lakehouse 
+### レイクハウス 
 
 - Hiveで新規作成されたテーブルがDorisで即座に表示されない問題を修正しました。[ #50188](https://github.com/apache/doris/pull/50188)
 - 特定のTextフォーマットのHiveテーブルにアクセス時に「Storage schema reading not supported」エラーが発生する問題を修正しました。[ #50038](https://github.com/apache/doris/pull/50038)
@@ -63,8 +63,8 @@
 - カンマを含むパーティションキー値を持つHiveテーブルへのアクセスが失敗する問題を修正しました。[ #49382](https://github.com/apache/doris/pull/49382)
 - 特定のケースでPaimonテーブルのSplit割り当てが不均等になる問題を修正しました。[ #50083](https://github.com/apache/doris/pull/50083)
 - ossに保存されているPaimonテーブルを読み取る際にDeleteファイルが正しく処理されない問題を修正しました。[ #49645](https://github.com/apache/doris/pull/49645)
-- MaxCompute Catalogで高精度Timestampカラムの読み取りが失敗する問題を修正しました。[ #49600](https://github.com/apache/doris/pull/49600)
-- 特定のケースでCatalog削除時の潜在的なリソースリークを修正しました。[ #49621](https://github.com/apache/doris/pull/49621)
+- MaxCompute カタログで高精度Timestampカラムの読み取りが失敗する問題を修正しました。[ #49600](https://github.com/apache/doris/pull/49600)
+- 特定のケースでカタログ削除時の潜在的なリソースリークを修正しました。[ #49621](https://github.com/apache/doris/pull/49621)
 - 特定のケースでLZO圧縮データの読み取りが失敗する問題を修正しました。[ #49538](https://github.com/apache/doris/pull/49538)
 - ORC遅延マテリアライゼーションが複合型読み取り時にエラーを引き起こす問題を修正しました。[ #50136](https://github.com/apache/doris/pull/50136)
 - pyorc-0.3バージョンで生成されたORCファイルの読み取りが失敗する問題を修正しました。[ #50358](https://github.com/apache/doris/pull/50358)

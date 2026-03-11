@@ -3,7 +3,7 @@
   "title": "Dorisクラスターのデプロイ | ストレージコンピュート統合",
   "language": "ja",
   "description": "Kubernetes上でDorisクラスターをデプロイするには、Doris Operatorがデプロイされていることを確認してください。",
-  "sidebar_label": "Deploy Doris Cluster"
+  "sidebar_label": "Deploy Doris クラスター"
 }
 ---
 # Dorisクラスターのデプロイ

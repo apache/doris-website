@@ -11,7 +11,7 @@
 
 `GET /rest/v2/api/cluster_overview`
 
-## Description
+## 詳細
 
 クラスターの統計情報、データベースとテーブルの数量などを取得します。
     

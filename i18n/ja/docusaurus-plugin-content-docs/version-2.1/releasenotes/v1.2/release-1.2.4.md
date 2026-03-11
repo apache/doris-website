@@ -17,13 +17,13 @@
 
 # 改善
 
-### JDBC Catalog
+### JDBC カタログ
 
-- JDBC CatalogによるTrino/Prestoへの接続をサポート
+- JDBC カタログによるTrino/Prestoへの接続をサポート
 
 ​        参照: [https://doris.apache.org/docs/dev/lakehouse/multi-catalog/jdbc#trino](https://doris.apache.org/docs/dev/lakehouse/multi-catalog/jdbc#trino)
 
-- JDBC CatalogのClickhouseデータソース接続でArrayタイプマッピングをサポート
+- JDBC カタログのClickhouseデータソース接続でArrayタイプマッピングをサポート
 
 ​        参照: [https://doris.apache.org/docs/dev/lakehouse/multi-catalog/jdbc#clickhouse](https://doris.apache.org/docs/dev/lakehouse/multi-catalog/jdbc#clickhouse)
 
@@ -35,13 +35,13 @@
 
 ## バグ修正
 
-- Hive Catalogでのいくつかの接続問題を修正しました。
+- Hive カタログでのいくつかの接続問題を修正しました。
 
-- Hudi CatalogでのClassNotFound問題を修正しました。
+- Hudi カタログでのClassNotFound問題を修正しました。
 
-- JDBC Catalogの接続プールを最適化し、接続数の過多を回避します。
+- JDBC カタログの接続プールを最適化し、接続数の過多を回避します。
 
-- JDBC Catalogを通じて他のDorisクラスターからデータをインポートする際にOOMが発生する問題を修正しました。
+- JDBC カタログを通じて他のDorisクラスターからデータをインポートする際にOOMが発生する問題を修正しました。
 
 - いくつかのクエリおよびインポート計画の問題を修正しました。
 
@@ -49,7 +49,7 @@
 
 - いくつかのBDBJE問題を修正し、一部のケースでのFEメタデータ異常の問題を解決しました。
 
-- `CREATE VIEW`ステートメントがTable Valued Functionをサポートしない問題を修正しました。
+- `CREATE VIEW`ステートメントがtable Valued Functionをサポートしない問題を修正しました。
 
 - いくつかのメモリ統計問題を修正しました。
 

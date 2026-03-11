@@ -7,7 +7,7 @@
 ---
 この文書は、CCRを使用する際に調整または注意が必要な設定を提供します。
 
-## FE Configuration
+## FE 設定
 
 `fe.conf`で設定します。例：`restore_reset_index_id = true`
 
@@ -34,7 +34,7 @@
 |`max_download_speed_kbps`|下流BEの各ダウンロードワーカーのダウンロード速度制限、デフォルトはスレッド当たり50MB/s。|50MB/s| 全バージョン |
 |`download_worker_count`|ダウンロードタスクのスレッド数、ネットワークカード、ディスク、負荷に応じて設定。| 1 | 全バージョン |
 
-## Table Attributes
+## table Attributes
 
 `Create Table`または`Alter Table`で設定します。
 

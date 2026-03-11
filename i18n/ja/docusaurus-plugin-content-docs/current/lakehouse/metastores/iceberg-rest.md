@@ -1,11 +1,11 @@
 ---
 {
-  "title": "Iceberg Rest Catalog API",
+  "title": "Iceberg Rest カタログ API",
   "language": "ja",
-  "description": "この文書では、Iceberg Rest Catalogインターフェースをサポートするメタデータサービスへの接続およびアクセス時にサポートされるパラメータについて説明します。"
+  "description": "この文書では、Iceberg Rest カタログインターフェースをサポートするメタデータサービスへの接続およびアクセス時にサポートされるパラメータについて説明します。"
 }
 ---
-このドキュメントは、`CREATE CATALOG`文を通じてIceberg Rest Catalogインターフェースをサポートするメタデータサービスに接続し、アクセスする際にサポートされるパラメータについて説明しています。
+このドキュメントは、`CREATE CATALOG`文を通じてIceberg Rest カタログインターフェースをサポートするメタデータサービスに接続し、アクセスする際にサポートされるパラメータについて説明しています。
 
 ## パラメータ概要
 
@@ -19,7 +19,7 @@
 | iceberg.rest.oauth2.credential | | `server-uri`にアクセスしてトークンを取得するために使用される`oauth2`クレデンシャル | - | いいえ |
 | iceberg.rest.oauth2.server-uri | | `oauth2`トークンを取得するためのURIアドレス、`iceberg.rest.oauth2.credential`と併用 | - | いいえ |
 | iceberg.rest.vended-credentials-enabled | | `vended-credentials`機能を有効にするかどうか。有効にした場合、restサーバーから`access-key`や`secret-key`などのストレージシステムアクセスクレデンシャルを取得し、手動指定が不要になります。restサーバーがこの機能をサポートしている必要があります。 | `false` | いいえ |
-| iceberg.rest.nested-namespace-enabled | | （バージョン3.1.2+からサポート）Nested Namespaceのサポートを有効にするかどうか。デフォルトは`false`。`true`の場合、Nested Namespaceは平坦化され、`parent_ns.child_ns`のようにDatabase名として表示されます。AWS GlueなどのRest CatalogサービスはNested Namespaceをサポートしていないため、このパラメータは`false`に設定する必要があります | いいえ |
+| iceberg.rest.nested-namespace-enabled | | （バージョン3.1.2+からサポート）Nested Namespaceのサポートを有効にするかどうか。デフォルトは`false`。`true`の場合、Nested Namespaceは平坦化され、`parent_ns.child_ns`のようにDatabase名として表示されます。AWS GlueなどのRest カタログサービスはNested Namespaceをサポートしていないため、このパラメータは`false`に設定する必要があります | いいえ |
 
 > 注意:
 >
@@ -27,11 +27,11 @@
 >
 > 2. 3.1.0より前のバージョンでは、旧名称を使用してください。
 >
-> 3. AWS Glue Rest Catalogについては、[AWS Glueドキュメント](./aws-glue.md)を参照してください
+> 3. AWS Glue Rest カタログについては、[AWS Glueドキュメント](./aws-glue.md)を参照してください
 
 ## Nested Namespace
 
-3.1.2以降、Nested Namespaceに完全にアクセスするには、Catalogプロパティで`iceberg.rest.nested-namespace-enabled`を`true`に設定することに加えて、以下のグローバルパラメータも有効にする必要があります：
+3.1.2以降、Nested Namespaceに完全にアクセスするには、カタログプロパティで`iceberg.rest.nested-namespace-enabled`を`true`に設定することに加えて、以下のグローバルパラメータも有効にする必要があります：
 
 ```
 SET GLOBAL enable_nested_namespace=true;

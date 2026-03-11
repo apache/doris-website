@@ -13,7 +13,7 @@ Doris MemoryReclamationは、利用可能メモリが不足した際にメモリ
 
 ## Doris Allocator
 
-![Memory Management Overview](/images/memory-management-overview.png)
+![Memory Management 概要](/images/memory-management-overview.png)
 
 Allocatorは、システムからメモリを申請し、MemTrackerを使用してアプリケーションプロセス中のメモリ申請とリリースのサイズを追跡します。バッチでオペレーターを実行するために必要な大容量メモリは、異なるデータ構造によって管理されます。
 

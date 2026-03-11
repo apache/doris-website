@@ -46,7 +46,7 @@
 
 - 一時テーブルでのlateral view explode_splitのバグを修正。[#13643](https://github.com/apache/doris/pull/13643)
 
-- 同一テーブル2つでのBucket shuffle joinプランが間違っている問題。[#12930](https://github.com/apache/doris/pull/12930)
+- 同一テーブル2つでのバケット shuffle joinプランが間違っている問題。[#12930](https://github.com/apache/doris/pull/12930)
 
 - alterとload実行時にタブレットバージョンが間違う可能性があるバグを修正。[#13070](https://github.com/apache/doris/pull/13070)
 

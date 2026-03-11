@@ -11,7 +11,7 @@
 
 `POST /api/pad_rowset?tablet_id={int}&start_version={int}&end_version={int}`
 
-## Description
+## 詳細
 
 エラーレプリカの代替として1つの空のrowsetをpadします。
 

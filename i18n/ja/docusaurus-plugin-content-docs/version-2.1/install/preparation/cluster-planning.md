@@ -11,13 +11,13 @@ Dorisインスタンスはネットワーク上で通信し、正常に機能す
 
 | インスタンス名 | ポート名                | デフォルトポート | 通信方向                        | 説明                                                    |
 | ------------- | ----------------------- | ------------ | ------------------------------ | ------------------------------------------------------ |
-| BE            | be_port                 | 9060         | FE -> BE                        | BE上のThrift Serverポート、FEからのリクエストを受信するために使用 |
-| BE            | webserver_port          | 8040         | BE <-> BE                       | BE上のHTTP Serverポート                                  |
+| BE            | be_port                 | 9060         | FE -> BE                        | BE上のThrift サーバーポート、FEからのリクエストを受信するために使用 |
+| BE            | webserver_port          | 8040         | BE <-> BE                       | BE上のHTTP サーバーポート                                  |
 | BE            | heartbeat_service_port  | 9050         | FE -> BE                        | BE上のハートビートサービスポート（Thrift）、FEからのハートビートを受信するために使用 |
 | BE            | brpc_port               | 8060         | FE <-> BE, BE <-> BE            | BE上のBRPCポート、BE間の通信に使用                        |
-| FE            | http_port               | 8030         | FE <-> FE, Client <-> FE       | FE上のHTTP Serverポート                                  |
-| FE            | rpc_port                | 9020         | BE -> FE, FE <-> FE            | FE上のThrift Serverポート、各FEは同じ設定にする必要があります |
-| FE            | query_port              | 9030         | Client <-> FE                  | FE上のMySQL Serverポート                                 |
+| FE            | http_port               | 8030         | FE <-> FE, Client <-> FE       | FE上のHTTP サーバーポート                                  |
+| FE            | rpc_port                | 9020         | BE -> FE, FE <-> FE            | FE上のThrift サーバーポート、各FEは同じ設定にする必要があります |
+| FE            | query_port              | 9030         | Client <-> FE                  | FE上のMySQL サーバーポート                                 |
 | FE            | edit_log_port           | 9010         | FE <-> FE                       | FE上のbdbje通信ポート                                    |
 
 

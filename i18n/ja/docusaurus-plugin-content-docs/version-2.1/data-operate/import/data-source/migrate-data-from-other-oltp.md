@@ -7,9 +7,9 @@
 ---
 他のTPシステム（MySQL/SqlServer/Oracle など）からDorisにデータを移行する方法はさまざまあります。
 
-## Multi-Catalog
+## Multi-カタログ
 
-Catalogを使用して外部テーブルとしてマッピングし、INSERT INTO または CREATE-TABLE-AS-SELECT ステートメントを使用してデータロードを完了します。
+カタログを使用して外部テーブルとしてマッピングし、INSERT INTO または CREATE-TABLE-AS-SELECT ステートメントを使用してデータロードを完了します。
 
 例えば、MySQLの場合：
 

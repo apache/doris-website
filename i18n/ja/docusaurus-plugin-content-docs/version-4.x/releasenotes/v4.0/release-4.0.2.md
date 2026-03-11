@@ -33,31 +33,31 @@
 
 Apache Dorisリリースノートの専門的な翻訳です：
 
-- Doris Catalogを追加
-  - この機能により、ユーザーはCatalog機能を通じて複数の独立したDorisクラスターを接続し、効率的な連合データクエリを実行できます。Dorisクラスター間でのデータクエリができない問題を解決します。
+- Doris カタログを追加
+  - この機能により、ユーザーはカタログ機能を通じて複数の独立したDorisクラスターを接続し、効率的な連合データクエリを実行できます。Dorisクラスター間でのデータクエリができない問題を解決します。
   - ドキュメント: https://doris.apache.org/docs/4.x/lakehouse/catalogs/doris-catalog
 - rewrite_data_filesメソッドによるIcebergテーブルコンパクションをサポート
   - この操作により、ユーザーは小さなIcebergファイルをマージでき、読み取りパフォーマンスを最適化できます。
   - ドキュメント: https://doris.apache.org/docs/4.x/lakehouse/catalogs/iceberg-catalog#rewrite_data_files
 - WARM UPステートメントを使用した外部テーブル（Hive、Iceberg、Paimonなど）のキャッシュウォームアップをサポート
   - ドキュメント: https://doris.apache.org/docs/4.x/lakehouse/data-cache#cache-warmup
-- ALTERステートメントによるIcebergテーブルPartition Evolution操作をサポート
+- ALTERステートメントによるIcebergテーブルパーティション Evolution操作をサポート
   - ドキュメント: https://doris.apache.org/docs/4.x/lakehouse/catalogs/iceberg-catalog#partition-evolution
-- HTTP Table Valued Functionをサポート
-  - Table Valued Functionを通じてHTTPリソースファイルを直接読み取り可能。
+- HTTP table Valued Functionをサポート
+  - table Valued Functionを通じてHTTPリソースファイルを直接読み取り可能。
   - ドキュメント: https://doris.apache.org/docs/4.x/sql-manual/sql-functions/table-valued-functions/http
 - Hugging Face上のデータセットへの直接アクセスをサポート
   - ドキュメント: https://doris.apache.org/docs/4.x/lakehouse/huggingface
-- Iceberg REST CatalogプロトコルによるMicrosoft OneLakeへのアクセスをサポート
+- Iceberg REST カタログプロトコルによるMicrosoft OneLakeへのアクセスをサポート
   - ドキュメント: https://doris.apache.org/docs/4.x/lakehouse/best-practices/doris-onelake
 - Hive、Iceberg、Paimon、JDBC外部テーブルのバイナリ型のDoris varbinary型への直接マッピングをサポート
-  - 各Catalogのドキュメントの「Column Mapping」セクションを参照してください。
+  - 各カタログのドキュメントの「Column Mapping」セクションを参照してください。
 
 ## 最適化
 
 - `FROM_UNIXTIME`関数のパフォーマンスを最適化 (#57423)
 - PartitionKey比較における`castTo`変換操作を削除してパーティション処理効率を改善 (#57518)
-- CatalogのColumnクラスのメモリ使用量を削減 (#57401)
+- カタログのColumnクラスのメモリ使用量を削減 (#57401)
 - Annインデックスが複数の小さなデータバッチを蓄積してからトレーニングを行うことでトレーニング効率を改善 (#57623)
 - Hadoop依存関係をバージョン3.4.2にアップグレード (#58307)
 - FEとBEのグレースフルシャットダウンメカニズムを最適化してノード退出のクエリへの影響を最小化 (#56601)
@@ -99,7 +99,7 @@ Apache Dorisリリースノートの専門的な翻訳です：
 - 特定のケースで外部テーブルメタデータキャッシュが潜在的デッドロック問題を引き起こす問題を修正 (#57856)
 - BE側での不合理なs3クライアントスレッド数による低いI/Oスループットを修正 (#58511)
 - 特定のケースで非S3オブジェクトストレージに保存された外部テーブルへの書き込み失敗を修正 (#58504)
-- 特定のケースでJDBC Catalogがquery()を使用する際のSQLパススルー失敗を修正 (#57745)
+- 特定のケースでJDBC カタログがquery()を使用する際のSQLパススルー失敗を修正 (#57745)
 - JNI Reader時間統計による読み取り操作のパフォーマンス低下を修正 (#58224)
 - BE側でjni.logが印刷できない問題を修正 (#58457)
 

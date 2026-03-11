@@ -15,7 +15,7 @@
 
 ## テーブル情報
 
-| Column Name    | Type          | Description                    |
+| Column Name    | タイプ          | 詳細                    |
 | -------------- | ------------- | ------------------------------ |
 | VARIABLE_NAME  | varchar(64)   | 変数の名前                     |
 | VARIABLE_VALUE | varchar(1024) | 変数の現在値                   |

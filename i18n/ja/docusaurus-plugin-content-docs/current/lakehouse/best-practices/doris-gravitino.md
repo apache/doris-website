@@ -7,13 +7,13 @@
 ---
 データレイク技術の急速な発展に伴い、統一的で安全かつ効率的なlakehouseアーキテクチャの構築は、企業のデジタルトランスフォーメーションにおける中核的な課題となっています。Apache Gravitinoは、次世代の統一メタデータ管理プラットフォームとして、マルチクラウドおよびマルチエンジン環境におけるデータガバナンスの完全なソリューションを提供します。様々なデータソースやコンピュートエンジンの統一管理をサポートするだけでなく、credential vendingメカニズムを通じてデータアクセスのセキュリティと制御可能性を確保します。
 
-本記事では、Apache DorisとApache Gravitinoを深く統合し、Iceberg REST Catalogベースの現代的なlakehouseアーキテクチャを構築する方法について詳細に紹介します。Gravitinoの統一メタデータ管理と動的credential配布機能により、S3上のIcebergデータへの効率的で安全なアクセスを実現できます。
+本記事では、Apache DorisとApache Gravitinoを深く統合し、Iceberg REST カタログベースの現代的なlakehouseアーキテクチャを構築する方法について詳細に紹介します。Gravitinoの統一メタデータ管理と動的credential配布機能により、S3上のIcebergデータへの効率的で安全なアクセスを実現できます。
 
 **このドキュメントを通じて、以下を素早く理解できます：**
 
 * **AWS環境の準備**: AWSでS3バケットとIAMロールを作成し、Gravitino用の安全なcredential管理システムを構成し、一時credentialの動的配布を実装する方法。
 
-* **Gravitinoのデプロイと設定**: Gravitinoサービスを迅速にデプロイし、Iceberg REST Catalogを設定し、vended-credentials機能を有効にする方法。
+* **Gravitinoのデプロイと設定**: Gravitinoサービスを迅速にデプロイし、Iceberg REST カタログを設定し、vended-credentials機能を有効にする方法。
 
 * **DorisのGravitino接続**: DorisがGravitinoのREST API経由でIcebergデータにアクセスする方法の詳細説明。
 

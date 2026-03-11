@@ -15,11 +15,11 @@
 
 ## テーブル情報
 
-| Column Name    | Type         | Description                                    |
+| Column Name    | タイプ         | 詳細                                    |
 | -------------- | ------------ | ---------------------------------------------- |
 | GRANTEE        | varchar(81)  | 認可されたユーザー                             |
-| TABLE_CATALOG  | varchar(512) | Catalogの名前                                  |
+| TABLE_CATALOG  | varchar(512) | カタログの名前                                  |
 | TABLE_SCHEMA   | varchar(64)  | Databaseの名前                                 |
-| TABLE_NAME     | varchar(64)  | Tableの名前                                    |
+| TABLE_NAME     | varchar(64)  | tableの名前                                    |
 | PRIVILEGE_TYPE | varchar(64)  | 権限の種類                                     |
 | IS_GRANTABLE   | varchar(3)   | 権限を他者に付与できるかどうか                 |

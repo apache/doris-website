@@ -5,7 +5,7 @@
   "description": "AES暗号化関数。この関数はMySQLのAESENCRYPT関数と同じ動作をします。デフォルトアルゴリズムはAES128ECBです。"
 }
 ---
-## Description
+## 詳細
 
 AES暗号化関数。この関数はMySQLの`AES_ENCRYPT`関数と同じ動作をします。デフォルトのアルゴリズムは`AES_128_ECB`で、パディングモードは`PKCS7`です。
 

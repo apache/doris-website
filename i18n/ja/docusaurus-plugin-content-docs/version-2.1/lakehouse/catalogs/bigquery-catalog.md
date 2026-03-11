@@ -2,10 +2,10 @@
 {
   "title": "BigQuery カタログ",
   "language": "ja",
-  "description": "BigQuery CatalogはTrino Connector互換性フレームワークを使用して、BigQuery Connectorを通じてBigQueryテーブルにアクセスします。"
+  "description": "BigQuery カタログはTrino Connector互換性フレームワークを使用して、BigQuery Connectorを通じてBigQueryテーブルにアクセスします。"
 }
 ---
-BigQuery CatalogはBigQueryテーブルにBigQuery Connectorを通じてアクセスするために[Trino Connector](https://doris.apache.org/zh-CN/community/how-to-contribute/trino-connector-developer-guide/)互換性フレームワークを使用します。
+BigQuery カタログはBigQueryテーブルにBigQuery Connectorを通じてアクセスするために[Trino Connector](https://doris.apache.org/zh-CN/community/how-to-contribute/trino-connector-developer-guide/)互換性フレームワークを使用します。
 
 :::note
 この機能は実験的であり、バージョン3.0.1以降でサポートされています。

@@ -40,14 +40,14 @@ https://dbeaver.io にアクセスしてDBeaverをダウンロードしてイン
 
     **Connection Settings**ウィンドウの**main**タブで、以下の接続情報を設定します：
 
-  - Server Host: DorisクラスターのFE host IPアドレス。
+  - サーバー Host: DorisクラスターのFE host IPアドレス。
   - Port: DorisクラスターのFEクエリポート（例：9030）。
   - Database: Dorisクラスター内の対象データベース。
   - Username: Dorisクラスターにログインするために使用するユーザー名（例：admin）。
   - Password: Dorisクラスターにログインするために使用するユーザーパスワード。
 
    :::tip
-   Databaseはinternal catalogとexternal catalogを区別するために使用できます。Database名のみが入力された場合、現在のデータソースはデフォルトでinternal catalogに接続されます。形式がcatalog.dbの場合、現在のデータソースはDatabaseに入力されたcatalogにデフォルトで接続され、DBeaverに表示されるデータベーステーブルも接続されたcatalog内のデータベーステーブルになるため、DBeaverのMySQLドライバーを使用して複数のDorisデータソースを作成し、Doris内の異なるCatalogを管理できます。
+   Databaseはinternal catalogとexternal catalogを区別するために使用できます。Database名のみが入力された場合、現在のデータソースはデフォルトでinternal catalogに接続されます。形式がcatalog.dbの場合、現在のデータソースはDatabaseに入力されたcatalogにデフォルトで接続され、DBeaverに表示されるデータベーステーブルも接続されたcatalog内のデータベーステーブルになるため、DBeaverのMySQLドライバーを使用して複数のDorisデータソースを作成し、Doris内の異なるカタログを管理できます。
    :::
 
    :::info Note

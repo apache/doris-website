@@ -11,7 +11,7 @@ Dorisがサポートするデータ型のリストは以下の通りです：
 
 ## [数値データ型](../sql-manual/basic-element/sql-data-types/data-type-overview#numeric-types)  
   
-| Type Name                                                    | Storage (bytes) | Description                                                  |  
+| タイプ Name                                                    | Storage (bytes) | 詳細                                                  |  
 | ---------------------------------------------------------- | --------------- | ------------------------------------------------------------ |  
 | [BOOLEAN](../sql-manual/basic-element/sql-data-types/numeric/BOOLEAN)       | 1               | 2つの値のみを格納するBooleanデータ型：0はfalseを表し、1はtrueを表します。 |  
 | [TINYINT](../sql-manual/basic-element/sql-data-types/numeric/TINYINT)       | 1               | 整数値、符号付き範囲は-128から127です。                 |  
@@ -25,13 +25,13 @@ Dorisがサポートするデータ型のリストは以下の通りです：
 
 ## [日時データ型](../sql-manual/basic-element/sql-data-types/data-type-overview#date-types)
 
-| Type name      | Storeage (bytes)| Description                                                  |
+| タイプ name      | Storeage (bytes)| 詳細                                                  |
 | -------------- | --------------- | ------------------------------------------------------------ |
 |  [DATE](../sql-manual/basic-element/sql-data-types/date-time/DATE)             | 4              | DATEは暦年、月、日の値を保持し、サポート範囲は['0000-01-01', '9999-12-31']です。デフォルトの印刷形式：'yyyy-MM-dd'。 |
 | [DATETIME](../sql-manual/basic-element/sql-data-types/date-time/DATETIME)        | 8              | DATEとTIMEの組み合わせ　形式：DATETIME ([P])。　オプションパラメータPは時間精度を表し、値の範囲は[0,6]で、最大6桁の小数（マイクロ秒）をサポートします。設定しない場合は0です。　サポート範囲は['0000-01-01 00:00:00 [.000000]', '9999-12-31 23:59:59 [.999999]']です。　デフォルトの印刷形式：'yyy-MM-dd HH: mm: ss. SSSSSS '。 |
 
 ## [文字列データ型](../sql-manual/basic-element/sql-data-types/data-type-overview#string-types)
-| Type name      | Storeage (bytes)| Description                                                  |
+| タイプ name      | Storeage (bytes)| 詳細                                                  |
 | -------------- | --------------- | ------------------------------------------------------------ |
 | [CHAR](../sql-manual/basic-element/sql-data-types/string-type/CHAR)            | M               | 固定長文字列、パラメータMは文字単位での列長を指定します。Mの範囲は1から255です。 |
 | [VARCHAR](../sql-manual/basic-element/sql-data-types/string-type/VARCHAR)         | Variable Length | 可変長文字列、パラメータMは文字単位での最大文字列長を指定します。Mの範囲は1から65533です。　可変長文字列はUTF-8エンコーディングで格納されます。英文字は1バイト、中国語文字は3バイトを占有します。 |
@@ -39,7 +39,7 @@ Dorisがサポートするデータ型のリストは以下の通りです：
 
 ## [半構造化データ型](../sql-manual/basic-element/sql-data-types/data-type-overview#semi-structured-types)
 
-| Type name      | Storeage (bytes)| Description                                                  |
+| タイプ name      | Storeage (bytes)| 詳細                                                  |
 | -------------- | --------------- | ------------------------------------------------------------ |
 | [ARRAY](../sql-manual/basic-element/sql-data-types/semi-structured/ARRAY)          | Variable Length | 型Tの要素で構成された配列で、key列として使用できません。現在、DuplicateおよびUniqueモデルのテーブルでの使用がサポートされています。 |
 | [MAP](../sql-manual/basic-element/sql-data-types/semi-structured/MAP)            | Variable Length | 型Kと型Vの要素で構成されたマップで、Key列として使用できません。これらのマップは現在、DuplicateおよびUniqueモデルを使用するテーブルでサポートされています。 |
@@ -49,7 +49,7 @@ Dorisがサポートするデータ型のリストは以下の通りです：
 
 ## [集約データ型](../sql-manual/basic-element/sql-data-types/data-type-overview#aggregation-types)
 
-| Type name      | Storeage (bytes)| Description                                                  |
+| タイプ name      | Storeage (bytes)| 詳細                                                  |
 | -------------- | --------------- | ------------------------------------------------------------ |
 | [HLL](../sql-manual/basic-element/sql-data-types/aggregate/HLL)            | Variable Length | HLLはHyperLogLogの略で、ファジー重複除去です。大規模データセットを扱う際、Count Distinctより優れたパフォーマンスを発揮します。　HLLのエラー率は通常約1%で、時には2%に達することもあります。HLLはkey列として使用できず、テーブル作成時の集約タイプはHLL_UNIONです。　データの集約レベルに基づいて内部で制御されるため、ユーザーは長さやデフォルト値を指定する必要がありません。　HLL列は、hll_union_agg、hll_raw_agg、hll_cardinality、hll_hashなどの付随関数を通じてのみクエリまたは使用できます。 |
 | [BITMAP](../sql-manual/basic-element/sql-data-types/aggregate/BITMAP)         | Variable Length | BITMAP型はAggregateテーブル、UniqueテーブルまたはDuplicateテーブルで使用できます。- UniqueテーブルまたはDuplicateテーブルで使用する場合、BITMAPは非key列として使用する必要があります。- Aggregateテーブルで使用する場合、BITMAPも非key列として機能し、テーブル作成時に集約タイプをBITMAP_UNIONに設定する必要があります。　データの集約レベルに基づいて内部で制御されるため、ユーザーは長さやデフォルト値を指定する必要がありません。BITMAP列は、bitmap_union_count、bitmap_union、bitmap_hash、bitmap_hash64などの付随関数を通じてのみクエリまたは使用できます。 |
@@ -58,7 +58,7 @@ Dorisがサポートするデータ型のリストは以下の通りです：
 
 ## [IP型](../sql-manual/basic-element/sql-data-types/data-type-overview#ip-types)
 
-| Type Name                                                    | Storage (bytes) | Description                                                  |  
+| タイプ Name                                                    | Storage (bytes) | 詳細                                                  |  
 | ---------------------------------------------------------- | --------------- | ------------------------------------------------------------ |  
 | [IPv4](../sql-manual/basic-element/sql-data-types/ip/IPV4)                 | 4               | `ipv4_*`関数ファミリーと組み合わせて使用されます。 |  
 | [IPv6](../sql-manual/basic-element/sql-data-types/ip/IPV6)                 | 16              | `ipv6_*`関数ファミリーと組み合わせて使用されます。 |

@@ -2,12 +2,12 @@
 {
   "title": "DROP TABLE",
   "language": "ja",
-  "description": "このステートメントはTableを削除するために使用されます。"
+  "description": "このステートメントはtableを削除するために使用されます。"
 }
 ---
 ## 説明
 
-このステートメントはTableを削除するために使用されます。
+このステートメントはtableを削除するために使用されます。
 ## 構文
 
 ```sql

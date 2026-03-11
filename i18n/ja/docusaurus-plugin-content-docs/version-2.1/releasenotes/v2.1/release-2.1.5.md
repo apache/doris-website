@@ -13,7 +13,7 @@
 
 ## 動作変更
 
-- JDBC Catalog のデフォルトコネクションプールサイズが、高並行性シナリオでの接続不足を防ぐため、10から30に増加されました。[#37023](https://github.com/apache/doris/pull/37023)
+- JDBC カタログ のデフォルトコネクションプールサイズが、高並行性シナリオでの接続不足を防ぐため、10から30に増加されました。[#37023](https://github.com/apache/doris/pull/37023)
 
 - システムの予約メモリ（low water mark）が BE OOM の問題を軽減するため、`min(6.4GB, MemTotal * 5%)` に調整されました。
 
@@ -21,7 +21,7 @@
 
 - 非同期マテリアライズドビューのデータの直接変更が許可されなくなりました。[#37129](https://github.com/apache/doris/pull/37129)
 
-- CTAS（Create Table As Select）における varchar および char 型の長さ生成の動作を制御するセッション変数 `use_max_length_of_varchar_in_ctas` が追加されました。デフォルト値は true です。false に設定すると、最大長ではなく派生された varchar 長が使用されます。[#37284](https://github.com/apache/doris/pull/37284)
+- CTAS（Create table As Select）における varchar および char 型の長さ生成の動作を制御するセッション変数 `use_max_length_of_varchar_in_ctas` が追加されました。デフォルト値は true です。false に設定すると、最大長ではなく派生された varchar 長が使用されます。[#37284](https://github.com/apache/doris/pull/37284)
 
 - 統計収集で、ファイルサイズに基づく Hive テーブルの行数推定機能がデフォルトで有効になりました。[#37694](https://github.com/apache/doris/pull/37694)
 
@@ -31,7 +31,7 @@
 
 ## 新機能
 
-### Lakehouse
+### レイクハウス
 
 - セッション変数 `read_csv_empty_line_as_null` を使用して、CSV 形式ファイルを読み取る際に空行を無視するかどうかを制御できます。[#37153](https://github.com/apache/doris/pull/37153)
 
@@ -39,7 +39,7 @@
 
 - `serde_dialect="presto"` を設定することで、Presto の複合型出力形式との互換性を有効にできます。[#37253](https://github.com/apache/doris/pull/37253)
 
-### Multi-Table Materialized View
+### Multi-table Materialized View
 
 - マテリアライズドビューの構築において非決定的関数をサポートします。[#37651](https://github.com/apache/doris/pull/37651)
 
@@ -65,7 +65,7 @@
 
 - `explode_json_object` 関数が JSON Object 行を列に転置します。[#36887](https://github.com/apache/doris/pull/36887)
 
-- ES Catalog で ES NESTED または OBJECT 型が Doris JSON 型にマップされるようになりました。[#37101](https://github.com/apache/doris/pull/37101)
+- ES カタログ で ES NESTED または OBJECT 型が Doris JSON 型にマップされるようになりました。[#37101](https://github.com/apache/doris/pull/37101)
 
 - match_phrase シリーズクエリのパフォーマンスを向上させるため、指定されたアナライザーを持つ転置インデックスでは、デフォルトで support_phrase が有効になります。[#37949](https://github.com/apache/doris/pull/37949)
 
@@ -85,7 +85,7 @@
 
 ## 改善
 
-### Lakehouse
+### レイクハウス
 
 - Paimon をバージョン 0.8.1 にアップグレード
 
@@ -97,7 +97,7 @@
 
 - セッション変数 `fetch_splits_max_wait_time_ms` で設定可能。
 
-- SQLServer JDBC Catalog のデフォルト接続ロジックを改善。[#36971](https://github.com/apache/doris/pull/36971)
+- SQLServer JDBC カタログ のデフォルト接続ロジックを改善。[#36971](https://github.com/apache/doris/pull/36971)
 
   デフォルトでは、接続暗号化設定には介入しません。`force_sqlserver_jdbc_encrypt_false` が true に設定されている場合のみ、認証エラーを減らすため JDBC URL に encrypt=false が強制的に追加されます。これにより暗号化動作をより柔軟に制御でき、必要に応じて有効または無効にできます。
 
@@ -113,7 +113,7 @@
 
 - Hive 書き込み操作のメタデータアクセス数を最適化。[#37127](https://github.com/apache/doris/pull/37127)
 
-- ES Catalog で nested/object 型の Doris Json 型へのマッピングをサポート。[#37182](https://github.com/apache/doris/pull/37182)
+- ES カタログ で nested/object 型の Doris Json 型へのマッピングをサポート。[#37182](https://github.com/apache/doris/pull/37182)
 
 - 古いバージョンの ojdbc ドライバを使用して Oracle に接続する際のエラーメッセージを改善。[#37634](https://github.com/apache/doris/pull/37634)
 
@@ -123,7 +123,7 @@
 
 - Hive metastore イベントリスナーが有効な場合、古いバージョンから新しいバージョンへのアップグレード時の FE メタデータリプレイエラーの問題を修正。[#37757](https://github.com/apache/doris/pull/37757)
 
-### Multi-Table Materialized View
+### Multi-table Materialized View
 
 - 非同期マテリアライズドビューのキー列選択を自動化。[#36601](https://github.com/apache/doris/pull/36601)
 
@@ -181,7 +181,7 @@
 
 ## バグ修正
 
-### Lakehouse
+### レイクハウス
 
 - Parquet 形式クエリ時に一部のケースで BE クラッシュを引き起こす問題を修正。[#37086](https://github.com/apache/doris/pull/37086)
 
@@ -203,7 +203,7 @@
 
 - 一部のケースで Ranger を使用したカタログ作成がクライアントをハングさせる問題を修正。[#37551](https://github.com/apache/doris/pull/37551)
 
-### Multi-Table Materialized View
+### Multi-table Materialized View
 
 - ベーステーブルに新しいパーティションを追加した後、パーティション集約ロールアップリライト後に不正な結果になる問題を修正。[#37651](https://github.com/apache/doris/pull/37651)
 
@@ -227,7 +227,7 @@
 
 - 1.x から 2.x 以上のバージョンにアップグレードする際の MAP データ型関連の coredump 問題を修正。[#36937](https://github.com/apache/doris/pull/36937)
 
-- ES Catalog の Array 型サポートを改善。[#36936](https://github.com/apache/doris/pull/36936)
+- ES カタログ の Array 型サポートを改善。[#36936](https://github.com/apache/doris/pull/36936)
 
 ### 転置インデックス
 

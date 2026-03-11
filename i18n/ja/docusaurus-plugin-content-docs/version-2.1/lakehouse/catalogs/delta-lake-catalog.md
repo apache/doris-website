@@ -2,10 +2,10 @@
 {
   "title": "Delta Lake カタログ",
   "language": "ja",
-  "description": "Delta Lake CatalogはTrino Connector互換性フレームワークを使用して、Delta Lake Connectorを通じてDelta Lakeテーブルにアクセスします。"
+  "description": "Delta Lake カタログはTrino Connector互換性フレームワークを使用して、Delta Lake Connectorを通じてDelta Lakeテーブルにアクセスします。"
 }
 ---
-Delta Lake Catalogは[Trino Connector](https://doris.apache.org/zh-CN/community/how-to-contribute/trino-connector-developer-guide/)互換性フレームワークを使用して、Delta Lake Connectorを通じてDelta Lakeテーブルにアクセスします。
+Delta Lake カタログは[Trino Connector](https://doris.apache.org/zh-CN/community/how-to-contribute/trino-connector-developer-guide/)互換性フレームワークを使用して、Delta Lake Connectorを通じてDelta Lakeテーブルにアクセスします。
 
 :::note
 この機能は実験的であり、バージョン3.0.1以降でサポートされています。

@@ -18,7 +18,7 @@
 
 ## テーブル情報
 
-| Column Name | Type        | Description |
+| Column Name | タイプ        | 詳細 |
 | ----------- | ----------- | ----------- |
 | SCHEMA_NAME | varchar(64) |             |
 | TABLE_NAME  | varchar(64) |             |

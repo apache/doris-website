@@ -45,13 +45,13 @@
 
 - 一時テーブルでのlateral view explode_splitバグを修正。[#13643](https://github.com/apache/doris/pull/13643)
 
-- 同じテーブル2つでのBucket shuffle join計画が間違っている。[#12930](https://github.com/apache/doris/pull/12930)
+- 同じテーブル2つでのバケット shuffle join計画が間違っている。[#12930](https://github.com/apache/doris/pull/12930)
 
 - alterとload実行時にタブレットバージョンが間違う可能性があるバグを修正。[#13070](https://github.com/apache/doris/pull/13070)
 
 - md5sum()/sm3sum()でbrokerを使用してデータをロードするときのBEコア。[#13009](https://github.com/apache/doris/pull/13009)
 
-# Upgrade Notes
+# Upgrade 注
 
 PageCacheとChunkAllocatorはメモリ使用量を削減するためデフォルトで無効になっており、設定項目`disable_storage_page_cache`と`chunk_reserved_bytes_limit`を変更することで再有効化できます。
 

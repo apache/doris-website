@@ -10,8 +10,8 @@
 
 この文書では、DorisにおけるParquetファイル形式の読み書きサポートについて説明します。以下の機能に適用されます：
 
-* Catalogでのデータの読み書き
-* Table Valued Functionsを使用したデータの読み込み
+* カタログでのデータの読み書き
+* table Valued Functionsを使用したデータの読み込み
 * Broker Loadでのデータの読み込み
 * Export時のデータの書き出し
 * Outfileでのデータの書き出し
@@ -38,7 +38,7 @@
 
     HiveテーブルからParquetデータ型を読み込む際、Dorisはデフォルトで、Hiveテーブルの列と同じ名前を持つParquetファイル内の列からデータを読み込みます。この変数が`false`に設定されている場合、Dorisは列名に関係なく、Hiveテーブルの列順序に基づいてParquetファイルからデータを読み込みます。これはHiveの`parquet.column.index.access`変数と似ています。このパラメータはトップレベルの列名にのみ適用され、Struct内の列には効果がありません。
 
-### BE Configuration
+### BE 設定
 
 * `enable_parquet_page_index` (2.1.5+, 3.0+)
 

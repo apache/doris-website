@@ -5,13 +5,13 @@
   "description": "SQLが与えられると、そのSQLに対応するクエリプランを取得するために使用されます。"
 }
 ---
-# Table Query Plan Action
+# table Query Plan Action
 
 ## Request
 
 `POST /api/<db>/<table>/_query_plan`
 
-## Description
+## 詳細
 
 SQLが与えられた場合、そのSQLに対応するクエリプランを取得するために使用されます。
 

@@ -19,7 +19,7 @@
 
 ## テーブル情報
 
-| Column Name | Type | Description |
+| Column Name | タイプ | 詳細 |
 |---|---|---|
 | BE_ID | BIGINT | BEノードID |
 | BE_IP | VARCHAR(256) | BEノードIP |

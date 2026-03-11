@@ -24,7 +24,7 @@
      - 事前割り当てメモリ失敗。これはテーブル内の行のバイト長が100KBを超えているためかもしれません。
      - `Too many open files`。開いているファイルハンドル数がLinuxシステム制限を超えています。Linuxシステムのハンドル制限を変更する必要があります。
 
-* データタブレット作成時にタイムアウトが発生した場合、fe.confファイルで`tablet_create_timeout_second=xxx`と`max_create_table_timeout_second=xxx`を設定してタイムアウトを延長することもできます。デフォルトでは、`tablet_create_timeout_second`は1秒に設定され、`max_create_table_timeout_second`は60秒に設定されています。全体のタイムアウトは`min(tablet_create_timeout_second * replication_num, max_create_table_timeout_second)`として計算されます。具体的なパラメータ設定については、[FE Configuration](../../admin-manual/config/fe-config)セクションを参照してください。
+* データタブレット作成時にタイムアウトが発生した場合、fe.confファイルで`tablet_create_timeout_second=xxx`と`max_create_table_timeout_second=xxx`を設定してタイムアウトを延長することもできます。デフォルトでは、`tablet_create_timeout_second`は1秒に設定され、`max_create_table_timeout_second`は60秒に設定されています。全体のタイムアウトは`min(tablet_create_timeout_second * replication_num, max_create_table_timeout_second)`として計算されます。具体的なパラメータ設定については、[FE 設定](../../admin-manual/config/fe-config)セクションを参照してください。
 
 3. テーブル作成コマンドが長時間結果を返さない。
 

@@ -7,19 +7,19 @@
 ---
 # 新機能
 
-### Lakehouse 
+### レイクハウス 
 
 - Hive metastoreの自動同期をサポート。
 
 - Iceberg Snapshotの読み取りと、Snapshot履歴の表示をサポート。
 
-- JDBC CatalogでPostgreSQL、Clickhouse、Oracle、SQLServerをサポート
+- JDBC カタログでPostgreSQL、Clickhouse、Oracle、SQLServerをサポート
 
-- JDBC CatalogでInsert操作をサポート
+- JDBC カタログでInsert操作をサポート
 
 参考: [https://doris.apache.org/docs/dev/lakehouse/multi-catalog/](https://doris.apache.org/docs/dev/lakehouse/multi-catalog/)
 
-### Auto Bucket
+### Auto バケット
 
 異なるパーティションのバケット数を設定・スケールし、tabletの数を比較的適切な範囲に保つ。
 
@@ -49,15 +49,15 @@
 
 - `Segment ompaction`をサポート。高頻度インポートでの-238および-235の問題を修正。
 
-### Lakehouse
+### レイクハウス
 
-- Hive CatalogがHiveバージョン1/2/3と互換性を持つ
+- Hive カタログがHiveバージョン1/2/3と互換性を持つ
 
-- Hive CatalogがBrokerを使用してJuiceFSベースのHDFSにアクセス可能。
+- Hive カタログがBrokerを使用してJuiceFSベースのHDFSにアクセス可能。
 
-- Iceberg CatalogでHive MetastoreおよびRest Catalogタイプをサポート。
+- Iceberg カタログでHive MetastoreおよびRest カタログタイプをサポート。
 
-- ES Catalogで_id列マッピングをサポート。
+- ES カタログで_id列マッピングをサポート。
 
 - 削除行数が多いIceberg V2の読み取りパフォーマンスを最適化。
 
@@ -97,7 +97,7 @@
 
 - バージョン1.1からバージョン1.2へのアップグレード時の可能なメタデータ互換性問題を修正。
 
-- ResourceでJDBC Catalogを作成する際のメタデータ問題を修正。
+- ResourceでJDBC カタログを作成する際のメタデータ問題を修正。
 
 - ロード操作による高CPU使用率の問題を修正。
 

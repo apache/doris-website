@@ -27,7 +27,29 @@ export default function TOC({ className, ...props }: Props): React.ReactElement 
         i18n: { currentLocale, locales },
     } = useDocusaurusContext();
     const isBrowser = useIsBrowser();
-    const isCN = currentLocale === 'zh-CN';
+    const locale = currentLocale;
+    const isCN = locale === 'zh-CN';
+    const uiText =
+        locale === 'ja'
+            ? {
+                  homepage: 'Doris ホーム',
+                  downloadPdf: 'PDF をダウンロード',
+                  onThisPage: 'このページ',
+                  forum: '技術フォーラム',
+              }
+            : locale === 'zh-CN'
+              ? {
+                    homepage: 'Doris 首页',
+                    downloadPdf: '下载 PDF',
+                    onThisPage: '本页导航',
+                    forum: '技术论坛',
+                }
+              : {
+                    homepage: 'Doris Homepage',
+                    downloadPdf: 'Download PDF',
+                    onThisPage: 'On This Page',
+                    forum: 'Forum',
+                };
     const [currentVersion, setCurrentVersion] = useState(DEFAULT_VERSION);
     const [loading, setLoading] = useState(false);
 
@@ -85,7 +107,7 @@ export default function TOC({ className, ...props }: Props): React.ReactElement 
                 <Link to={'/'}>
                     <div className="toc-icon-content group">
                         <HomeIcon className="group-hover:text-primary" />
-                        <span className="group-hover:text-primary">{isCN ? 'Doris 首页' : 'Doris Homepage'}</span>
+                        <span className="group-hover:text-primary">{uiText.homepage}</span>
                     </div>
                 </Link>
                 {isCN && ['4.x', '3.x', '2.0', '2.1'].includes(currentVersion) ? (
@@ -98,7 +120,7 @@ export default function TOC({ className, ...props }: Props): React.ReactElement 
                         }}
                     >
                         <PdfIcon className="group-hover:text-primary" />
-                        <span className={` group-hover:text-primary mr-2`}>{isCN ? '下载 PDF' : 'Download PDF'}</span>
+                        <span className={` group-hover:text-primary mr-2`}>{uiText.downloadPdf}</span>
                         <Spin size="small" spinning={loading} />
                     </div>
                 ) : null}
@@ -106,7 +128,7 @@ export default function TOC({ className, ...props }: Props): React.ReactElement 
                     <Link to={'https://doris-forum.org.cn'}>
                         <div className="toc-icon-content group">
                             <ForumIcon className="group-hover:text-primary" />{' '}
-                            <span className="group-hover:text-primary">技术论坛</span>
+                            <span className="group-hover:text-primary">{uiText.forum}</span>
                         </div>
                     </Link>
                 ) : null}
@@ -132,7 +154,7 @@ export default function TOC({ className, ...props }: Props): React.ReactElement 
                 ) : null}
             </div>
             <div>
-                <span className="ml-4 title-text">{!isCN ? 'On This Page' : '本页导航'}</span>
+                <span className="ml-4 title-text">{uiText.onThisPage}</span>
                 <TOCItems {...props} linkClassName={LINK_CLASS_NAME} linkActiveClassName={LINK_ACTIVE_CLASS_NAME} />
             </div>
         </div>

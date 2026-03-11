@@ -9,7 +9,7 @@
 
 - パーティション列は1つまたは複数の列として指定することができ、パーティション列はKEY列である必要があります。
 
-- `allow_partition_column_nullable`がtrueに設定されている場合、RangeパーティションはNULLパーティション列の使用をサポートします。List PartitionはNULLパーティション列を常にサポートしません。
+- `allow_partition_column_nullable`がtrueに設定されている場合、RangeパーティションはNULLパーティション列の使用をサポートします。List パーティションはNULLパーティション列を常にサポートしません。
 
 - パーティション列のタイプに関わらず、パーティション値を記述する際は二重引用符が必要です。
 

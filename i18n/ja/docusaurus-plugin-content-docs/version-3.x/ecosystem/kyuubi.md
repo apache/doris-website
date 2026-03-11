@@ -9,7 +9,7 @@
 
 ## 概要
 
-[Apache Kyuubi](https://kyuubi.apache.org/)は、データウェアハウスとLakehouse上でサーバーレスSQLを提供する分散型・マルチテナント対応ゲートウェイです。
+[Apache Kyuubi](https://kyuubi.apache.org/)は、データウェアハウスとレイクハウス上でサーバーレスSQLを提供する分散型・マルチテナント対応ゲートウェイです。
 Apache KyuubiはThrift、Trino、MySQLなどの多様なプロトコルを提供し、Spark、Flink、Hive、JDBCなどのエンジンに対応しています。
 DorisはApache KyuubiでサポートされているDoris方言を使用してJDBCデータソースとして接続できます。
 Apache Kyuubiは、HA、サービスディスカバリー、統一認証、エンジンライフサイクル管理など、一連の有用な機能も提供しています。

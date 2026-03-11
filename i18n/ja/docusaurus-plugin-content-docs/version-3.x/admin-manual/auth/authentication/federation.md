@@ -69,11 +69,11 @@ LDAP グループ認可は、LDAP グループを Doris ロールにマップし
 
 ログインユーザーの権限は、Doris ユーザーとグループ権限に関連しており、次の表に示すとおりです。
 
-| LDAP User      | Doris User     | Login User's Permissions                        |
+| LDAP User      | Doris User     | Login User's 許可                        |
 | -------------- | -------------- | ----------------------------------------------- |
-| Exists         | Exists         | LDAP Group Permissions + Doris User Permissions |
-| Does Not Exist | Exists         | Doris User Permissions                          |
-| Exists         | Does Not Exist | LDAP Group Permissions                          |
+| Exists         | Exists         | LDAP Group 許可 + Doris User 許可 |
+| Does Not Exist | Exists         | Doris User 許可                          |
+| Exists         | Does Not Exist | LDAP Group 許可                          |
 
 ログインユーザーが一時ユーザーでグループ権限を持たない場合、そのユーザーはデフォルトで information_schema の select_priv 権限を持ちます。
 

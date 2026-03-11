@@ -24,7 +24,7 @@ Apache Doris 3.1の開発期間中、**90人以上の貢献者**が**1,000を超
   - VARIANTの**Schema template**により、柔軟性を失うことなく、より高速なクエリ、より安定したインデックス、制御可能なコストを実現
   - **Inverted Indexes Storage Format**をV2からV3にアップグレードし、ストレージ使用量を最大**20%**削減
   - 3つの新しいtokenizer：**ICU Tokenizer**、**IK Tokenizer**、**Basic Tokenizer**。また、**custom tokenizers**のサポートを追加し、多様なシナリオでの検索再現率を大幅に向上
-- **Lakehouse アップグレード**
+- **レイクハウス アップグレード**
   - **Better materialized views features**をデータレイクに導入し、データレイクとデータウェアハウス間の橋渡しを強化
   - **Iceberg**と**Paimon**の幅広いサポート
   - **Dynamic partition pruning**と**batch splits scheduling**により、特定のクエリワークロードを最大**40%**改善し、FE（フロントエンド）メモリ消費を削減

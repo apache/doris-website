@@ -14,7 +14,7 @@
 `GET /api/compaction/run_status?tablet_id={int}`
 
 
-## Description
+## 詳細
 
 手動で比較をトリガーし、ステータスを表示するために使用されます。
 

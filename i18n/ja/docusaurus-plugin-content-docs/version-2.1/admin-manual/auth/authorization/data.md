@@ -5,7 +5,7 @@
   "description": "Dorisの行レベルポリシーを使用することで、機密データに対するきめ細かいアクセス制御を実現できます。"
 }
 ---
-## Row Permissions
+## Row 許可
 
 DorisのRow-level policiesを使用することで、機密データに対する細かい粒度のアクセス制御を実現できます。テーブルレベルで定義されたセキュリティポリシーに基づいて、どのユーザーまたはロールがテーブル内の特定のレコードにアクセスできるかを決定できます。
 
@@ -18,7 +18,7 @@ Row Policyが設定されたユーザーがクエリを実行する際に、Row 
 デフォルトユーザーのrootとadminにはRow Policyを設定できません。
 
 ### 関連コマンド
-- Row Permission Policiesの表示 [SHOW ROW POLICY](../../../sql-manual/sql-statements/data-governance/SHOW-ROW-POLICY.md)
+- Row 権限ポリシーの表示 [SHOW ROW POLICY](../../../sql-manual/sql-statements/data-governance/SHOW-ROW-POLICY.md)
 - Row Permission Policyの作成 [CREATE ROW POLICY](../../../sql-manual/sql-statements/data-governance/CREATE-ROW-POLICY.md)
 
 ### Row Permission例

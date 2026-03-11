@@ -7,7 +7,7 @@
 ---
 [Hugging Face](https://huggingface.co/)は、ユーザーが機械学習モデル、データセット、その他のリソースを保存、共有、および協力して構築できる人気の集中型プラットフォームです。[Hugging Face Dataset](https://huggingface.co/datasets)リポジトリには、CSV、Parquet、JSONLなどの様々な形式のデータファイルが含まれている場合があります。
 
-DorisはSQLを使用して[HTTP Table Valued Function](../sql-manual/sql-functions/table-valued-functions/http.md)を通じてHugging Faceデータセットのデータに直接アクセスし、分析することができます。
+DorisはSQLを使用して[HTTP table Valued Function](../sql-manual/sql-functions/table-valued-functions/http.md)を通じてHugging Faceデータセットのデータに直接アクセスし、分析することができます。
 
 :::note
 この機能はバージョン4.0.2以降でサポートされています。
@@ -22,7 +22,7 @@ DorisはSQLを使用して[HTTP Table Valued Function](../sql-manual/sql-functio
 | サポートされるファイル形式 | CSV、JSON、Parquet、ORC |
 | データ操作 | `CREATE TABLE AS SELECT`と`INSERT INTO ... SELECT`をサポート |
 
-パラメータはFile Table Valued Functionと同じです。
+パラメータはFile table Valued Functionと同じです。
 
 ## URI構文
 

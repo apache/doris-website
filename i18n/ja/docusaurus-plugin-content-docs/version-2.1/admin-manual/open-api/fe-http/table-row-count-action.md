@@ -5,13 +5,13 @@
   "description": "指定されたテーブルの行数に関する統計情報を取得するために使用されます。このインターフェースは現在Spark-Doris-Connectorで使用されています。"
 }
 ---
-# Table Row Count Action
+# table Row Count Action
 
 ## Request
 
 `GET /api/<db>/<table>/_count`
 
-## Description
+## 詳細
 
 指定されたテーブルの行数の統計情報を取得するために使用されます。このインターフェースは現在Spark-Doris-Connectorで使用されています。SparkはDorisテーブルの統計情報を取得します。
     

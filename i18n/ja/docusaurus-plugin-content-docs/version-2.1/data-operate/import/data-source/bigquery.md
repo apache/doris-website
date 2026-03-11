@@ -16,7 +16,7 @@ BigQueryの移行プロセスでは、通常オブジェクトストレージを
 
 ## データ型マッピング
 
-| BigQuery           | Doris          | Comment                 |
+| BigQuery           | Doris          | コメント                 |
 | ------------------ | -------------- | -------------------- |
 | Array              | Array          |                      |
 | BOOLEAN            | BOOLEAN        |                      |

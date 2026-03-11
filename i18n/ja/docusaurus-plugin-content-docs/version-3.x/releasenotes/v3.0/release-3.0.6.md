@@ -14,13 +14,13 @@
 ## 動作変更
 
 - **Uniqueテーブルの時系列compactionを禁止** [#49905](https://github.com/apache/doris/pull/49905)
-- **コンピュート・ストレージ分離シナリオにおいて、Auto Bucketサイズをバケット当たり10GBに調整** [#50566](https://github.com/apache/doris/pull/50566)
+- **コンピュート・ストレージ分離シナリオにおいて、Auto バケットサイズをバケット当たり10GBに調整** [#50566](https://github.com/apache/doris/pull/50566)
 
 ## 新機能
 
-### Lakehouse
+### レイクハウス
 
-- **AWS S3 Table BucketsにおけるIcebergテーブル形式へのアクセスサポートを追加**
+- **AWS S3 table BucketsにおけるIcebergテーブル形式へのアクセスサポートを追加**
 	- 詳細情報については、以下のドキュメントを参照してください: [Iceberg on S3 Tables](https://doris.apache.org/docs/dev/lakehouse/catalogs/iceberg-catalog#iceberg-on-s3-tables)
 
 ### Storage
@@ -65,11 +65,11 @@
 - **詳細プロファイリング**: tablet/segment footerディメンションメトリクスを追加 [#49945](https://github.com/apache/doris/pull/49945) [#50564](https://github.com/apache/doris/pull/50564) [#50326](https://github.com/apache/doris/pull/50326)
 - **Schema Change回復力**: -230エラー防止のためNew Tablet Compactionをデフォルト有効化 [#51070](https://github.com/apache/doris/pull/51070)
 
-### Lakehouse
+### レイクハウス
 
-#### Catalog強化
+#### カタログ強化
 
-- Hive Catalogにパーティションキャッシュ TTL制御（`partition.cache.ttl-second`）を追加 [#50724](https://github.com/apache/doris/pull/50724)
+- Hive カタログにパーティションキャッシュ TTL制御（`partition.cache.ttl-second`）を追加 [#50724](https://github.com/apache/doris/pull/50724)
 	- 詳細情報については、ドキュメントを参照してください: [Metadata Cache](https://doris.apache.org/docs/dev/lakehouse/meta-cache)
 - Hiveテーブル用`skip.header.line.count`プロパティをサポート [#49929](https://github.com/apache/doris/pull/49929)
 - `org.openx.data.jsonserde.JsonSerDe`を使用するHiveテーブルの互換性を追加 [#49958](https://github.com/apache/doris/pull/49958)
@@ -135,17 +135,17 @@
 - Tablet Cacheによるクエリパフォーマンス問題を解決 [#51193](https://github.com/apache/doris/pull/51193) [#49420](https://github.com/apache/doris/pull/49420)
 - 残存Tablet Cacheによるパフォーマンス変動を解消 [#50200](https://github.com/apache/doris/pull/50200)
 
-### Lakehouse
+### レイクハウス
 
 - **エクスポート修正**
   - FEメモリリークを修正 [#51171](https://github.com/apache/doris/pull/51171)
   - FEデッドロックを防止 [#50088](https://github.com/apache/doris/pull/50088)
 - **カタログ修正**
-  - JDBC Catalogの複合述語プッシュダウンを有効化 [#50542](https://github.com/apache/doris/pull/50542)
+  - JDBC カタログの複合述語プッシュダウンを有効化 [#50542](https://github.com/apache/doris/pull/50542)
   - Alibaba Cloud OSS PaimonテーブルのDeletion Vector読み取りを修正 [#49645](https://github.com/apache/doris/pull/49645)
   - カンマを含むHiveパーティション値をサポート [#49382](https://github.com/apache/doris/pull/49382)
   - MaxCompute Timestampカラム解析を修正 [#49600](https://github.com/apache/doris/pull/49600)
-  - Trino Catalogで`information_schema`システムテーブルを有効化 [#49912](https://github.com/apache/doris/pull/49912)
+  - Trino カタログで`information_schema`システムテーブルを有効化 [#49912](https://github.com/apache/doris/pull/49912)
 - **ファイル形式**
   - LZO圧縮読み取り失敗を修正 [#49538](https://github.com/apache/doris/pull/49538)
   - レガシーORCファイル互換性を追加 [#50358](https://github.com/apache/doris/pull/50358)

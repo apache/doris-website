@@ -2,13 +2,11 @@
 {
   "title": "パイモンカタログ",
   "language": "ja",
-  "description": "Apache DorisのPaimon Catalogは複数のPaimonメタデータサービスに接続し、HDFSとクラウドオブジェクトストレージ全体でPaimonテーブルをクエリし、詳細な設定、プロパティ、クエリ操作を提供し、書き込みサポートが計画されています。"
+  "description": "Apache DorisのPaimon カタログは複数のPaimonメタデータサービスに接続し、HDFSとクラウドオブジェクトストレージ全体でPaimonテーブルをクエリし、詳細な設定、プロパティ、クエリ操作を提供し、書き込みサポートが計画されています。"
 }
 ---
-```javascript
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
-```
 
 Dorisは現在、様々なメタデータサービスを通じてPaimonテーブルメタデータへのアクセスと、Paimonデータのクエリをサポートしています。
 
@@ -24,7 +22,7 @@ Dorisは現在、様々なメタデータサービスを通じてPaimonテーブ
 | データ統合 | Paimonデータを読み取ってDoris内部テーブルに書き込むか、Dorisコンピューティングエンジンを使用してZeroETL操作を実行します。 |
 | データ書き戻し | まだサポートされていません。 |
 
-## Catalogの設定
+## カタログの設定
 
 ### 構文
 
@@ -628,8 +626,6 @@ OSS-HDFSを使用する
 </TabItem>
         <TabItem value='OSS' label='OSS'>
             OSSを使用
-<<<END>>>
-
             ```sql
             CREATE CATALOG paimon_base_filesystem_paimon_oss PROPERTIES (
                 'type' = 'paimon',
@@ -641,7 +637,7 @@ OSS-HDFSを使用する
                 'oss.secret_key'='<sk>'
             );
             ```
-OSS-HDFSを使用する
+            OSS-HDFSを使用する
 
             ```sql
             CREATE CATALOG paimon_base_filesystem_paimon_oss_hdfs PROPERTIES (
@@ -655,7 +651,7 @@ OSS-HDFSを使用する
                 'oss.region' = 'cn-hangzhou'
             );
             ```
-</TabItem>
+        </TabItem>
         <TabItem value='COS' label='COS'>
 
             ```sql

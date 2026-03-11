@@ -11,7 +11,7 @@
 
 `GET /api/reload_tablet?tablet_id={int}&schema_hash={int}&path={string}"`
 
-## Description
+## 詳細
 
 tabletを再読み込みする
 

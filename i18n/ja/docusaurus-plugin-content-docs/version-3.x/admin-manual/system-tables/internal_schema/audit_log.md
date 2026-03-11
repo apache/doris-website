@@ -21,7 +21,7 @@
 | time              | datetime(3)  | クエリが実行された時刻（ミリ秒単位）                           |
 | client_ip         | varchar(128) | クエリを送信するクライアントのIPアドレス                   |
 | user              | varchar(128) | ユーザー                                                         |
-| catalog           | varchar(128) | ステートメント実行時の現在のCatalog                   |
+| catalog           | varchar(128) | ステートメント実行時の現在のカタログ                   |
 | db                | varchar(128) | ステートメント実行時の現在のDatabase                  |
 | state             | varchar(128) | ステートメントの実行ステータス                            |
 | error_code        | int          | エラーコード                                                   |

@@ -11,7 +11,7 @@
 
 `GET /api/fe_version_info`
 
-## Description
+## 詳細
 
 feホストからfeバージョン情報を取得します。
     

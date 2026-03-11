@@ -5,7 +5,7 @@
   "description": "JSONEXTRACTは、JSONデータからjsonpathで指定されたフィールドを抽出し、異なる一連の関数を提供する関数シリーズです"
 }
 ---
-## Description
+## 詳細
 JSON_EXTRACTは、JSONデータからjson_pathで指定されたフィールドを抽出し、抽出するフィールドのタイプに応じて異なる一連の関数を提供する関数シリーズです。
 
 * JSON_EXTRACTはVARCHARタイプのjson文字列に対してVARCHARタイプを返します。

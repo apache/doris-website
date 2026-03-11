@@ -22,7 +22,7 @@
 
 ダイナミックパーティショニングを使用する際は、以下のルールに従う必要があります：
 
-* ダイナミックパーティショニングは Cross-Cluster Replication（CCR）と同時に使用すると失敗します。
+* ダイナミックパーティショニングは Cross-クラスター Replication（CCR）と同時に使用すると失敗します。
 * ダイナミックパーティショニングは DATE/DATETIME 列での Range タイプパーティションのみをサポートします。
 * ダイナミックパーティショニングは単一のパーティションキーのみをサポートします。
 
@@ -50,7 +50,7 @@ PROPERTIES(
 ```
 上記の例では、以下の仕様で動的パーティションテーブルが作成されました。
 
-詳細な`dynamic_partition`パラメータについては、[Dynamic Partition Parameter Description](#dynamic-partition-property-parameters)を参照してください。
+詳細な`dynamic_partition`パラメータについては、[Dynamic パーティション Parameter 詳細](#dynamic-partition-property-parameters)を参照してください。
 
 ## 動的パーティションの管理
 

@@ -15,7 +15,7 @@ vectorized engineとnon-vectorized engineの両方に対して、より正確な
 
 ### 現在のクエリ表示とクエリ終了のAPI追加
 
-### ODBC Table経由でのUTF16絵文字の読み書きサポート
+### ODBC table経由でのUTF16絵文字の読み書きサポート
 
 # Improvements
 

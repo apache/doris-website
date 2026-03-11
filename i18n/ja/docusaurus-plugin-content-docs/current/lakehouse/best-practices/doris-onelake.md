@@ -7,7 +7,7 @@
 ---
 **Microsoft OneLake**は、Fabricエコシステムの一部であり、組織に一元化された論理的なデータストレージ層を提供する統合されたオープンなSaaSデータレイクです。OneLakeのデータは**Parquet**フォーマットで保存され、**Delta Lake**と**Apache Iceberg**のメタデータを同時に維持できます。この設計により、複数の分析エンジンが**データの重複や移行なしに**共有データセットに直接アクセスでき、データ管理とガバナンスが大幅に簡素化されます。
 
-**Apache DorisのIceberg REST Catalog**を活用することで、ユーザーはOneLakeに保存されたデータを、再びコピーや移動なしに直接クエリして分析できます。
+**Apache DorisのIceberg REST カタログ**を活用することで、ユーザーはOneLakeに保存されたデータを、再びコピーや移動なしに直接クエリして分析できます。
 
 この統合により、単一のデータレイク上で**エンドツーエンドの分析パイプライン**を構築でき、OneLakeの統合されたストレージとガバナンス機能をDorisの高性能分析コンピュートと組み合わせることができます。
 
@@ -19,7 +19,7 @@
 
 ## Onelakeセットアップ
 
-まず**Fabric (OneLake)**側でデータと認証のセットアップを準備し、次にDorisでそのデータにアクセスするための**Iceberg REST Catalog**の作成方法を示します。
+まず**Fabric (OneLake)**側でデータと認証のセットアップを準備し、次にDorisでそのデータにアクセスするための**Iceberg REST カタログ**の作成方法を示します。
 
 ### OneLakeへのデータロード
 
@@ -27,11 +27,11 @@
 
    ![onelake1](/images/integrations/lakehouse/onelake/onelake-1.png)
 
-2. ワークスペース内で、**New Item → Lakehouse**を選択してLakehouseインスタンスを作成します。
+2. ワークスペース内で、**New Item → レイクハウス**を選択してレイクハウスインスタンスを作成します。
 
    ![onelake2](/images/integrations/lakehouse/onelake/onelake-2.png)
 
-3. **Workspace Settings**に移動し、必要な機能トグルを有効にしてLakehouse機能をアクティベートします。
+3. **Workspace Settings**に移動し、必要な機能トグルを有効にしてレイクハウス機能をアクティベートします。
 
    ![onelake3](/images/integrations/lakehouse/onelake/onelake-3.png)
 
@@ -53,7 +53,7 @@
 
 ### 認証セットアップ
 
-DorisがIceberg REST Catalog経由でOneLakeにアクセスできるようにするには、Azureポータルで**アプリケーション登録と権限**を設定する必要があります：
+DorisがIceberg REST カタログ経由でOneLakeにアクセスできるようにするには、Azureポータルで**アプリケーション登録と権限**を設定する必要があります：
 
 1. **Azure Portal → App registrations → New registration**を開き、後で使用するために以下の値を記録します：
 
@@ -63,7 +63,7 @@ DorisがIceberg REST Catalog経由でOneLakeにアクセスできるようにす
 
    ![onelake7](/images/integrations/lakehouse/onelake/onelake-7.png)
 
-* **API Permissions**で、**Azure Storage**に必要な権限を追加します（最小権限の原則に従います）。
+* **API 許可**で、**Azure Storage**に必要な権限を追加します（最小権限の原則に従います）。
 
   ![onelake8](/images/integrations/lakehouse/onelake/onelake-8.png)
 
@@ -79,9 +79,9 @@ DorisがIceberg REST Catalog経由でOneLakeにアクセスできるようにす
 
 ## Apache DorisからOneLakeへの接続
 
-次に、Dorisで**Iceberg REST Catalog**を作成し、OneLakeデータに接続しましょう。
+次に、Dorisで**Iceberg REST カタログ**を作成し、OneLakeデータに接続しましょう。
 
-### Catalogの作成
+### カタログの作成
 
 ```sql
 Doris> CREATE CATALOG onelake_doris PROPERTIES (

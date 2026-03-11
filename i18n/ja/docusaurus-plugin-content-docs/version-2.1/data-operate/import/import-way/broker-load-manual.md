@@ -9,7 +9,7 @@ Broker LoadはMySQL APIから開始されます。DorisはLOAD文の情報に基
 
 Broker Loadは、ソースデータがHDFSなどのリモートストレージシステムに保存されており、データ量が比較的大きいシナリオに適しています。
 
-HDFSやS3からの直接読み取りは、[Lakehouse/TVF](../../../data-operate/import/file-format/csv#TVF Load)のHDFS TVFやS3 TVFを通じてインポートすることもできます。現在のTVFベースの「Insert Into」は同期インポートですが、Broker Loadは非同期インポート方法です。
+HDFSやS3からの直接読み取りは、[レイクハウス/TVF](../../../data-operate/import/file-format/csv#TVF Load)のHDFS TVFやS3 TVFを通じてインポートすることもできます。現在のTVFベースの「Insert Into」は同期インポートですが、Broker Loadは非同期インポート方法です。
 
 Dorisの初期バージョンでは、S3 LoadとHDFS Loadの両方が`WITH BROKER`を使用して特定のBrokerプロセスに接続することで実装されていました。
 新しいバージョンでは、S3 LoadとHDFS Loadは最も一般的に使用されるインポート方法として最適化されており、追加のBrokerプロセスに依存しなくなりましたが、Broker Loadと似た構文を引き続き使用しています。

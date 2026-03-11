@@ -16,13 +16,13 @@
 
 ## 注意事項
 
-1. バージョン2.1.7以降、MaxCompute Catalogは[オープンストレージSDK](https://help.aliyun.com/zh/maxcompute/user-guide/overview-1)をベースに開発されています。これ以前は、Tunnel APIをベースに開発されていました。
+1. バージョン2.1.7以降、MaxCompute カタログは[オープンストレージSDK](https://help.aliyun.com/zh/maxcompute/user-guide/overview-1)をベースに開発されています。これ以前は、Tunnel APIをベースに開発されていました。
 
 2. オープンストレージSDKの使用には一定の制限があります。この[ドキュメント](https://help.aliyun.com/zh/maxcompute/user-guide/overview-1)の`利用制限`セクションを参照してください。
 
 3. Dorisバージョン3.1.3以前では、MaxComputeの`Project`はDorisの`Database`と同等です。3.1.3以降では、`mc.enable.namespace.schema`パラメータを使用してMaxComputeスキーマレベルを導入できます。
 
-## Catalogの設定
+## カタログの設定
 
 ### 構文
 

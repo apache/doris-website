@@ -7,8 +7,8 @@
 ---
 このドキュメントでは、Huawei Cloud OBSへのアクセスに必要なパラメータについて説明します。これらのパラメータは以下のシナリオに適用されます：
 
-- Catalogプロパティ
-- Table Valued Functionプロパティ
+- カタログプロパティ
+- table Valued Functionプロパティ
 - Broker Loadプロパティ
 - Exportプロパティ
 - Outfileプロパティ
@@ -17,7 +17,7 @@
 
 ## パラメータ概要
 
-| Property Name                | Former Name              | Description                                                  | Default Value | Required |
+| Property Name                | Former Name              | 詳細                                                  | Default Value | Required |
 | ---------------------------- | ------------------------ | ------------------------------------------------------------ | ------------- | -------- |
 | obs.endpoint                 | s3.endpoint              | OBSエンドポイント、Huawei Cloud OBSのアクセスエンドポイントを指定 |               | Yes      |
 | obs.access_key               | s3.access_key            | OBSアクセスキー、認証に使用                     |               | Yes      |

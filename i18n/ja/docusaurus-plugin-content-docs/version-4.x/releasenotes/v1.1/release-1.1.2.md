@@ -15,7 +15,7 @@
 
 ### 現在のクエリ表示とクエリ強制終了のAPI追加
 
-### ODBC Table経由でのUTF16絵文字の読み書きサポート
+### ODBC table経由でのUTF16絵文字の読み書きサポート
 
 # Improvements
 

@@ -6,8 +6,8 @@
 }
 ---
 :::caution
-Partition AttributesとTable Attributesの違い
-- Partition attributesは一般的にバケット数（buckets）、ストレージメディア（storage_medium）、レプリケーション数（replication_num）、ホット/コールドデータ分離ポリシー（storage_policy）に焦点を当てています。
+パーティション Attributesとtable Attributesの違い
+- パーティション attributesは一般的にバケット数（buckets）、ストレージメディア（storage_medium）、レプリケーション数（replication_num）、ホット/コールドデータ分離ポリシー（storage_policy）に焦点を当てています。
   - 既存のパーティションについては、ALTER TABLE {tableName} MODIFY PARTITION ({partitionName}) SET ({key}={value})を使用して変更できますが、バケット数（buckets）は変更できません。
   - 未作成のdynamic partitionsについては、ALTER TABLE {tableName} SET (dynamic_partition.{key} = {value})を使用してそれらの属性を変更できます。
   - 未作成のauto partitionsについては、ALTER TABLE {tableName} SET ({key} = {value})を使用してそれらの属性を変更できます。

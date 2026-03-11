@@ -23,7 +23,7 @@
 
 Iceberg V2をサポート（Position Deleteのみサポート、Equality Deleteは後続バージョンでサポート予定）。
 
-Iceberg V2形式のテーブルは、Multi-Catalog機能を通じてアクセスできます。
+Iceberg V2形式のテーブルは、Multi-カタログ機能を通じてアクセスできます。
 
 ### OR条件からINへの変換をサポート
 
@@ -66,7 +66,7 @@ CHDFS、BOS、AFS上のデータはBrokerを通じてアクセスできます。
 
 - FE設定項目`enable_new_load_scan_node`のデフォルト値がtrueに変更されました。インポートタスクは新しいFile Scan Nodeを使用して実行されます。ユーザーへの影響はありません。[#14808](https://github.com/apache/doris/pull/14808)
 
-- FE設定項目`enable_multi_catalog`を削除。Multi-Catalog機能はデフォルトで有効になります。
+- FE設定項目`enable_multi_catalog`を削除。Multi-カタログ機能はデフォルトで有効になります。
 
 - ベクター化実行エンジンがデフォルトで強制的に有効化されます。[#15213](https://github.com/apache/doris/pull/15213)
 

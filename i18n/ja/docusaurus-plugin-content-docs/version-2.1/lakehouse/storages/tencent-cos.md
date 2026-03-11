@@ -7,8 +7,8 @@
 ---
 このドキュメントでは、Tencent Cloud COSへのアクセスに必要なパラメータについて説明します。以下のシナリオに適用されます：
 
-- Catalogプロパティ
-- Table Valued Functionプロパティ
+- カタログプロパティ
+- table Valued Functionプロパティ
 - Broker Loadプロパティ
 - Exportプロパティ
 - Outfileプロパティ
@@ -17,7 +17,7 @@
 
 ## パラメータ概要
 
-| Property Name                  | Legacy Name              | Description                                                  | Default Value | Required |
+| Property Name                  | Legacy Name              | 詳細                                                  | Default Value | Required |
 | ------------------------------ | ------------------------ | ------------------------------------------------------------ | ------------- | -------- |
 | cos.endpoint                   | s3.endpoint              | COSエンドポイント、Tencent Cloud COSのアクセスエンドポイントを指定 |               | Yes      |
 | cos.access_key                 | s3.access_key            | COSアクセスキー、COSへのアクセス認証に使用       |               | Yes      |

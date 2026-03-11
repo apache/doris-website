@@ -2,12 +2,12 @@
 {
   "title": "OceanBase JDBC カタログ",
   "language": "ja",
-  "description": "Doris JDBC CatalogはOceanBaseデータベースに標準JDBCインターフェースを通じて接続することをサポートしています。"
+  "description": "Doris JDBC カタログはOceanBaseデータベースに標準JDBCインターフェースを通じて接続することをサポートしています。"
 }
 ---
-Doris JDBC Catalogは、標準のJDBCインターフェースを通じてOceanBaseデータベースへの接続をサポートしています。このドキュメントでは、OceanBaseデータベース接続の設定方法について説明します。
+Doris JDBC カタログは、標準のJDBCインターフェースを通じてOceanBaseデータベースへの接続をサポートしています。このドキュメントでは、OceanBaseデータベース接続の設定方法について説明します。
 
-JDBC Catalogの概要については、以下を参照してください：[JDBC Catalog Overview](./jdbc-catalog-overview.md)
+JDBC カタログの概要については、以下を参照してください：[JDBC カタログ 概要](./jdbc-catalog-overview.md)
 
 ## 使用上の注意
 

@@ -2,10 +2,10 @@
 {
   "title": "Kudu カタログ",
   "language": "ja",
-  "description": "Kudu CatalogはTrino Connector互換性フレームワークを使用して、Kudu Connectorを通じてKuduテーブルにアクセスします。"
+  "description": "Kudu カタログはTrino Connector互換性フレームワークを使用して、Kudu Connectorを通じてKuduテーブルにアクセスします。"
 }
 ---
-Kudu Catalog は [Trino Connector](https://doris.apache.org/zh-CN/community/how-to-contribute/trino-connector-developer-guide/) 互換性フレームワークを使用して、Kudu Connector を通じて Kudu テーブルにアクセスします。
+Kudu カタログ は [Trino Connector](https://doris.apache.org/zh-CN/community/how-to-contribute/trino-connector-developer-guide/) 互換性フレームワークを使用して、Kudu Connector を通じて Kudu テーブルにアクセスします。
 
 :::note
 この機能は実験的機能であり、バージョン 3.0.1 からサポートされています。

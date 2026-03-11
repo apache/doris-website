@@ -15,9 +15,9 @@
 
 ## テーブル情報
 
-| Column Name                | Type         | Description                                           |
+| Column Name                | タイプ         | 詳細                                           |
 | -------------------------- | ------------ | ----------------------------------------------------- |
-| CATALOG_NAME               | varchar(512) | Catalogの名前                               |
+| CATALOG_NAME               | varchar(512) | カタログの名前                               |
 | SCHEMA_NAME                | varchar(32)  | Databaseの名前                              |
 | DEFAULT_CHARACTER_SET_NAME | varchar(32)  | MySQLとの互換性のためのみ、実際の機能はありません |
 | DEFAULT_COLLATION_NAME     | varchar(32)  | MySQLとの互換性のためのみ、実際の機能はありません |

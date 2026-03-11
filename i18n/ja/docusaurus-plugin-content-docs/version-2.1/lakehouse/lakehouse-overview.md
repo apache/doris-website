@@ -11,25 +11,25 @@
 
 Dorisは、拡張可能なコネクターフレームワーク、コンピュートストレージ分離アーキテクチャ、高性能データ処理エンジン、およびデータエコシステムの開放性を通じて、ユーザーに優れたlakhouseソリューションを提供します。
 
-![doris lakehouse architecture](/images/Lakehouse/lakehouse-arch-1.jpeg)
+![doris lakehouse architecture](/images/レイクハウス/lakehouse-arch-1.jpeg)
 
 ### 柔軟なデータアクセス
 
-Dorisは、拡張可能なコネクターフレームワークを通じて主要なデータシステムとデータ形式へのアクセスをサポートし、SQLベースの統合データ分析機能を提供します。これにより、ユーザーは既存のデータを移動することなく、クロスプラットフォームデータクエリと分析を簡単に実行できます。詳細については、[Catalog Overview](./catalog-overview.md)を参照してください。
+Dorisは、拡張可能なコネクターフレームワークを通じて主要なデータシステムとデータ形式へのアクセスをサポートし、SQLベースの統合データ分析機能を提供します。これにより、ユーザーは既存のデータを移動することなく、クロスプラットフォームデータクエリと分析を簡単に実行できます。詳細については、[カタログ 概要](./catalog-overview.md)を参照してください。
 
 ### データソースコネクター
 
 Hive、Iceberg、Hudi、Paimon、またはJDBCプロトコルをサポートするデータベースシステムであっても、Dorisは簡単に接続し、効率的にデータにアクセスできます。
 
-lakhouseシステムの場合、DorisはHive Metastore、AWS Glue、Unity Catalogなどのメタデータサービスからデータテーブルの構造と分散情報を取得し、合理的なクエリプランニングを実行し、MPPアーキテクチャを活用した分散コンピューティングを行います。
+lakhouseシステムの場合、DorisはHive Metastore、AWS Glue、Unity カタログなどのメタデータサービスからデータテーブルの構造と分散情報を取得し、合理的なクエリプランニングを実行し、MPPアーキテクチャを活用した分散コンピューティングを行います。
 
-詳細については、[Iceberg Catalog](./catalogs/iceberg-catalog.mdx)などの各catalogドキュメントを参照してください。
+詳細については、[Iceberg カタログ](./catalogs/iceberg-catalog.mdx)などの各catalogドキュメントを参照してください。
 
 #### 拡張可能なコネクターフレームワーク
 
 Dorisは、開発者が企業内の独自のデータソースに迅速に接続し、高速なデータ相互運用性を実現するための優れた拡張性フレームワークを提供します。
 
-DorisはCatalog、Database、Tableの3レベルの標準を定義し、開発者が必要なデータソースレベルに簡単にマッピングできるようにします。Dorisはまた、メタデータサービスとストレージサービスアクセスのための標準インターフェースを提供し、開発者は対応するインターフェースを実装するだけでデータソース接続を完了できます。
+Dorisはカタログ、Database、tableの3レベルの標準を定義し、開発者が必要なデータソースレベルに簡単にマッピングできるようにします。Dorisはまた、メタデータサービスとストレージサービスアクセスのための標準インターフェースを提供し、開発者は対応するインターフェースを実装するだけでデータソース接続を完了できます。
 
 DorisはTrino Connectorプラグインと互換性があり、TrinoプラグインパッケージをDorisクラスターに直接デプロイでき、最小限の設定で対応するデータソースにアクセスできます。Dorisはすでに[Kudu](./catalogs/kudu-catalog.md)、[BigQuery](./catalogs/bigquery-catalog.md)、[Delta Lake](./catalogs/delta-lake-catalog.md)などのデータソースへの接続を完了しています。[新しいプラグインを自分で適応させる](https://doris.apache.org/community/how-to-contribute/trino-connector-developer-guide)ことも可能です。
 

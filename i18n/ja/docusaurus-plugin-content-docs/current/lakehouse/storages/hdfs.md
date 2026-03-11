@@ -10,8 +10,8 @@
 
 このドキュメントでは、HDFSにアクセスするために必要なパラメータについて説明します。これらのパラメータは以下に適用されます：
 
-* Catalogプロパティ
-* Table Valued Functionプロパティ
+* カタログプロパティ
+* table Valued Functionプロパティ
 * Broker Loadプロパティ
 * Exportプロパティ
 * Outfileプロパティ

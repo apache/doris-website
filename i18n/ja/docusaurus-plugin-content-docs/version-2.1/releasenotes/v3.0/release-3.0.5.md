@@ -14,10 +14,10 @@
 
 ## 新機能
 
-### Lakehouse
+### レイクハウス
 
-- FE Metrics に Catalog/Database/Table 数量監視メトリクスを追加 ([#47891](https://github.com/apache/doris/pull/47891))
-- MaxCompute Catalog で Timestamp 型をサポート ([#48768](https://github.com/apache/doris/pull/48768))
+- FE Metrics に カタログ/Database/table 数量監視メトリクスを追加 ([#47891](https://github.com/apache/doris/pull/47891))
+- MaxCompute カタログ で Timestamp 型をサポート ([#48768](https://github.com/apache/doris/pull/48768))
 
 ### Query Execution
 
@@ -47,10 +47,10 @@
 - File Cache の安定性とパフォーマンス問題を複数修正 ([#48786](https://github.com/apache/doris/pull/48786) [#48623](https://github.com/apache/doris/pull/48623) [#48687](https://github.com/apache/doris/pull/48687) [#49050](https://github.com/apache/doris/pull/49050) [#48318](https://github.com/apache/doris/pull/48318))
 - Storage Vault 作成の検証ロジックを改善 ([#48073](https://github.com/apache/doris/pull/48073) [#48369](https://github.com/apache/doris/pull/48369))
 
-### Lakehouse
+### レイクハウス
 
-- Trino Connector Catalog の BE Scanner クローズロジックを最適化してメモリ解放を高速化 ([#47857](https://github.com/apache/doris/pull/47857))
-- ClickHouse JDBC Catalog で異なるドライバーバージョンに自動適応 ([#46026](https://github.com/apache/doris/pull/46026))
+- Trino Connector カタログ の BE Scanner クローズロジックを最適化してメモリ解放を高速化 ([#47857](https://github.com/apache/doris/pull/47857))
+- ClickHouse JDBC カタログ で異なるドライバーバージョンに自動適応 ([#46026](https://github.com/apache/doris/pull/46026))
 
 ### 非同期マテリアライズドビュー
 
@@ -108,7 +108,7 @@
 - K8s 環境でのファイルキャッシュクリーンアップ失敗を修正 ([#49199](https://github.com/apache/doris/pull/49199))
 - 高頻度取り込み中の読み書きロックによる FE CPU スパイクを修正 ([#48564](https://github.com/apache/doris/pull/48564))
 
-### Lakehouse
+### レイクハウス
 
 **Data Lakes**
 
@@ -118,15 +118,15 @@
 - Iceberg テーブル作成での Tencent Cloud COS サポートを追加 ([#49885](https://github.com/apache/doris/pull/49885))
 - HDFS 上の Paimon データでの Kerberos 認証を修正 ([#47192](https://github.com/apache/doris/pull/47192))
 - Hudi Jni Scanner でのメモリリークを修正 ([#48955](https://github.com/apache/doris/pull/48955))
-- MaxCompute Catalog でのマルチパーティションリスト読み取りを修正 ([#48325](https://github.com/apache/doris/pull/48325))
+- MaxCompute カタログ でのマルチパーティションリスト読み取りを修正 ([#48325](https://github.com/apache/doris/pull/48325))
 
 **JDBC**
 
-- JDBC Catalog からの行数取得時の NPE を修正 ([#49442](https://github.com/apache/doris/pull/49442))
+- JDBC カタログ からの行数取得時の NPE を修正 ([#49442](https://github.com/apache/doris/pull/49442))
 - OceanBase Oracle モード接続テストを修正 ([#49442](https://github.com/apache/doris/pull/49442))
-- JDBC Catalog 同時アクセスでのカラム型長さ不整合を修正 ([#48541](https://github.com/apache/doris/pull/48541))
-- JDBC Catalog BE での Classloader リークを修正 ([#46912](https://github.com/apache/doris/pull/46912))
-- PostgreSQL JDBC Catalog での接続スレッドリークを修正 ([#49568](https://github.com/apache/doris/pull/49568))
+- JDBC カタログ 同時アクセスでのカラム型長さ不整合を修正 ([#48541](https://github.com/apache/doris/pull/48541))
+- JDBC カタログ BE での Classloader リークを修正 ([#46912](https://github.com/apache/doris/pull/46912))
+- PostgreSQL JDBC カタログ での接続スレッドリークを修正 ([#49568](https://github.com/apache/doris/pull/49568))
 
 **Export**
 
@@ -138,7 +138,7 @@
 - FE WebUI 経由での TVF クエリ実行時の NPE を修正 ([#49213](https://github.com/apache/doris/pull/49213))
 - Hadoop Libhdfs スレッドローカル null pointer exception を修正 ([#48280](https://github.com/apache/doris/pull/48280))
 - FE Hadoop アクセスでの "Filesystem already closed" エラーを修正 ([#48351](https://github.com/apache/doris/pull/48351))
-- Catalog コメント永続化問題を修正 ([#46946](https://github.com/apache/doris/pull/46946))
+- カタログ コメント永続化問題を修正 ([#46946](https://github.com/apache/doris/pull/46946))
 - Parquet 複合型読み取りエラーを修正 ([#47734](https://github.com/apache/doris/pull/47734))
 
 ### 非同期マテリアライズドビュー

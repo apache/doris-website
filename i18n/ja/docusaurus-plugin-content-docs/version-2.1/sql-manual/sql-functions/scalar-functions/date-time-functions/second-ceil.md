@@ -5,7 +5,7 @@
   "description": "この関数は、指定された期間に基づいて入力されたdatetime値を最も近い秒境界まで上方向に整列し、整列されたdatetimeを返します"
 }
 ---
-## Description
+## 詳細
 この関数は、指定された期間に基づいて入力されたdatetime値を最も近い秒境界まで上方向に整列し、整列されたdatetime値を返します。
 
 ## Syntax

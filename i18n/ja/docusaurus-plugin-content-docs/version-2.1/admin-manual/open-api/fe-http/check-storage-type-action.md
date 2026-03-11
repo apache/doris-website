@@ -5,7 +5,7 @@
   "description": "指定されたデータベース配下のテーブルのストレージ形式が行ストレージ形式かどうかを確認するために使用されます。（行形式は非推奨です）"
 }
 ---
-# Check Storage Type Action
+# Check Storage タイプ Action
 
 ## リクエスト
 

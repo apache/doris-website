@@ -7,8 +7,8 @@
 ---
 この文書では、Huawei Cloud OBSへのアクセスに必要なパラメータについて説明します。これらは以下のシナリオに適用されます：
 
-- Catalog properties
-- Table Valued Function properties
+- カタログ properties
+- table Valued Function properties
 - Broker Load properties
 - Export properties
 - Outfile properties

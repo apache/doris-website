@@ -29,7 +29,7 @@
 | drop_priv                              | char(1)        | ユーザーがDrop権限を持つかどうか。                  |
 | usage_priv                             | char(1)        | ユーザーがUsage権限を持つかどうか。                 |
 | show_view_priv                         | char(1)        | ユーザーがShow View権限を持つかどうか。             |
-| cluster_usage_priv                     | char(1)        | ユーザーがCluster usage権限を持つかどうか。         |
+| cluster_usage_priv                     | char(1)        | ユーザーがクラスター usage権限を持つかどうか。         |
 | stage_usage_priv                       | char(1)        | ユーザーがStage usage権限を持つかどうか。           |
 | ssl_type                               | char(9)        | 常に空、MySQL互換性のためのみ。                     |
 | ssl_cipher                             | varchar(65533) | 常に空、MySQL互換性のためのみ。                     |

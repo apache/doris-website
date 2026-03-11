@@ -31,7 +31,7 @@
 
 - タスク自体のメモリ使用量が非常に少ない場合は、[Process memory other than query and load is too large]を参照してプロセス内の他の場所でのメモリ使用量を削減し、クエリやその他のタスク実行のためにより多くのメモリを確保するよう試してください。
 
-メモリ制限、閾値計算方法、およびメモリGCについての詳細情報は、[Memory Control Strategy](./../memory-feature/memory-control-strategy.md)を参照してください。
+メモリ制限、閾値計算方法、およびメモリGCについての詳細情報は、[Memory Control ストラテジー](./../memory-feature/memory-control-strategy.md)を参照してください。
 
 ### 1 メモリFull GCでキャンセルされた場合
 

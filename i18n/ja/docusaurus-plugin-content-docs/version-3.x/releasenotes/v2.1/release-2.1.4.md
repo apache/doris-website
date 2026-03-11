@@ -53,7 +53,7 @@
 
 - Apache Paimon deletion vector のネイティブリーダーをサポート [#35241](https://github.com/apache/doris/pull/35241)
 
-- Table Valued Functions での Resource 使用をサポート [#35139](https://github.com/apache/doris/pull/35139)
+- table Valued Functions での Resource 使用をサポート [#35139](https://github.com/apache/doris/pull/35139)
 
 - Hive Ranger プラグインによるアクセスコントローラーが Data Mask をサポート
 
@@ -180,7 +180,7 @@
 
 - 2.0.x から 2.1.x にアップグレードする際の潜在的なメタリプレイ問題を修正。[#35532](https://github.com/apache/doris/pull/35532)
 
-- Table Valued Function が空の snappy 圧縮ファイルを読み取れない問題を修正。[#34926](https://github.com/apache/doris/pull/34926)
+- table Valued Function が空の snappy 圧縮ファイルを読み取れない問題を修正。[#34926](https://github.com/apache/doris/pull/34926)
 
 - 無効な min-max 列統計を持つ Parquet ファイルを読み取れない問題を修正 [#35041](https://github.com/apache/doris/pull/35041)
 
@@ -212,9 +212,9 @@
 
 - Iceberg のタイムスタンプ列タイプを読み取る際のタイムゾーン問題を修正 [#36435](https://github.com/apache/doris/pull/36435)
 
-- Iceberg Table での DATETIME 変換エラーとデータパスエラーを修正。[#35708](https://github.com/apache/doris/pull/35708)
+- Iceberg table での DATETIME 変換エラーとデータパスエラーを修正。[#35708](https://github.com/apache/doris/pull/35708)
 
-- Table Valued Functions の追加のユーザー定義プロパティを S3 SDK に保持して渡すことをサポート。[#35515](https://github.com/apache/doris/pull/35515)
+- table Valued Functions の追加のユーザー定義プロパティを S3 SDK に保持して渡すことをサポート。[#35515](https://github.com/apache/doris/pull/35515)
 
 ### データインポート
 

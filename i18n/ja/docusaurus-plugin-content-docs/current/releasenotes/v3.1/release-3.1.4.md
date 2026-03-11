@@ -15,7 +15,7 @@
 
 ### Data Lake & External Catalogs
 
-- Catalog で `AwsCredentialsProviderChain` 経由での認証情報読み込みをサポート [#59054](https://github.com/apache/doris/pull/59054)
+- カタログ で `AwsCredentialsProviderChain` 経由での認証情報読み込みをサポート [#59054](https://github.com/apache/doris/pull/59054)
 - S3 アクセス用に `credentials_provider_type` を BE に渡すことをサポート [#59158](https://github.com/apache/doris/pull/59158)
 - Elasticsearch の `flatten` データ型をサポート [#58793](https://github.com/apache/doris/pull/58793)
 
@@ -38,7 +38,7 @@
 
 - Hive パーティションプルーニングと書き込みパフォーマンスを向上させ、大きなパーティションテーブルの書き込み遅延を大幅に削減 [#58886](https://github.com/apache/doris/pull/58886), [#58932](https://github.com/apache/doris/pull/58932)
 - Iceberg で dangling deletes を無視して COUNT プッシュダウンを改善することをサポート [#59069](https://github.com/apache/doris/pull/59069)
-- Iceberg REST Catalog の接続性チェックとネットワークタイムアウト処理を強化 [#58433](https://github.com/apache/doris/pull/58433), [#58434](https://github.com/apache/doris/pull/58434)
+- Iceberg REST カタログ の接続性チェックとネットワークタイムアウト処理を強化 [#58433](https://github.com/apache/doris/pull/58433), [#58434](https://github.com/apache/doris/pull/58434)
 - 単一スナップショットシナリオで Paimon 増分クエリの動作を Spark と整合 [#58253](https://github.com/apache/doris/pull/58253)
 
 ### Doris Cloud（コンピュート・ストレージ分離）
@@ -52,7 +52,7 @@
 
 ### セキュリティと安定性
 
-- 外部カタログセキュリティを向上させるために Glue Catalog で HTTPS を強制 [#58366](https://github.com/apache/doris/pull/58366)
+- 外部カタログセキュリティを向上させるために Glue カタログ で HTTPS を強制 [#58366](https://github.com/apache/doris/pull/58366)
 - Create Stage で SSRF 検証を追加 [#58874](https://github.com/apache/doris/pull/58874)
 
 ## バグ修正
@@ -71,7 +71,7 @@
 - JSON Reader の複数回呼び出しによる未定義動作を修正し、潜在的なデータ破損を防止 [#58192](https://github.com/apache/doris/pull/58192)
 - Broker Load での `COLUMNS FROM PATH` に関する不正な動作を修正 [#58351](https://github.com/apache/doris/pull/58351), [#58904](https://github.com/apache/doris/pull/58904)
 - ノードがオフラインまたは廃止された時の Group Commit の異常動作を修正 [#59118](https://github.com/apache/doris/pull/59118)
-- 特定のエッジ条件下での Load / Delete / Partial Update の失敗を修正 [#58553](https://github.com/apache/doris/pull/58553), [#58230](https://github.com/apache/doris/pull/58230), [#59096](https://github.com/apache/doris/pull/59096)
+- 特定のエッジ条件下での Load / Delete / Partial アップデート の失敗を修正 [#58553](https://github.com/apache/doris/pull/58553), [#58230](https://github.com/apache/doris/pull/58230), [#59096](https://github.com/apache/doris/pull/59096)
 
 ### Doris Cloud（コンピュート・ストレージ分離）
 

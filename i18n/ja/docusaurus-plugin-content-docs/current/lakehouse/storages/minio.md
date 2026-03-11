@@ -10,8 +10,8 @@
 
 このドキュメントでは、以下のシナリオに適用されるMinIOにアクセスするために必要なパラメータについて説明します：
 
-- Catalogプロパティ
-- Table Valued Functionプロパティ
+- カタログプロパティ
+- table Valued Functionプロパティ
 - Broker Loadプロパティ
 - Exportプロパティ
 - Outfileプロパティ

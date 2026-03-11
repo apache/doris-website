@@ -2,10 +2,10 @@
 {
   "title": "Iceberg JDBC カタログ",
   "language": "ja",
-  "description": "このドキュメントは、JDBCインターフェースを使用してIceberg Catalogメタデータサービスに接続およびアクセスする際にサポートされるパラメータについて説明します。"
+  "description": "このドキュメントは、JDBCインターフェースを使用してIceberg カタログメタデータサービスに接続およびアクセスする際にサポートされるパラメータについて説明します。"
 }
 ---
-この文書では、`CREATE CATALOG`文を通じてJDBCインターフェースを使用してIceberg Catalogメタデータサービスに接続およびアクセスする際にサポートされるパラメータについて説明します。
+この文書では、`CREATE CATALOG`文を通じてJDBCインターフェースを使用してIceberg カタログメタデータサービスに接続およびアクセスする際にサポートされるパラメータについて説明します。
 
 :::tip Note
 これは実験的機能で、バージョン4.1.0以降でサポートされています。
@@ -13,21 +13,21 @@
 
 ## パラメータ概要
 
-| Property Name | Description | Default Value | Required |
+| Property Name | 詳細 | Default Value | Required |
 | --- | --- | --- | --- | 
 | iceberg.jdbc.uri | JDBC接続URIを指定 | - | Yes |
 | iceberg.jdbc.user | JDBC接続ユーザー名 | - | Yes |
 | iceberg.jdbc.password | JDBC接続パスワード | - | Yes |
 | warehouse | icebergウェアハウスを指定 | - | Yes |
-| iceberg.jdbc.init-catalog-tables | 初回使用時にCatalog関連のテーブル構造を自動的に初期化するかどうか | `true` | No |
-| iceberg.jdbc.schema-version | JDBC Catalogで使用されるスキーマバージョン、`V0`と`V1`をサポート | `V0` | No |
+| iceberg.jdbc.init-catalog-tables | 初回使用時にカタログ関連のテーブル構造を自動的に初期化するかどうか | `true` | No |
+| iceberg.jdbc.schema-version | JDBC カタログで使用されるスキーマバージョン、`V0`と`V1`をサポート | `V0` | No |
 | iceberg.jdbc.strict-mode | 厳密モードを有効にするかどうか、メタデータのより厳密な検証を実行 | `false` | No |
 | iceberg.jdbc.driver_class | JDBCドライバークラス名、例：`org.postgresql.Driver`、`com.mysql.cj.jdbc.Driver`など | - | No |
 | iceberg.jdbc.driver_url | JDBCドライバーJARファイルへのパス | - | No |
 
 > 注意:
 >
-> 1. Iceberg JDBC CatalogはPostgreSQL、MySQL、SQLiteなどの様々なリレーショナルデータベースをバックエンドストレージとしてサポートします。
+> 1. Iceberg JDBC カタログはPostgreSQL、MySQL、SQLiteなどの様々なリレーショナルデータベースをバックエンドストレージとしてサポートします。
 >
 > 2. JDBCドライバーJARファイルにアクセスできることを確認してください。`iceberg.jdbc.driver_url`でドライバーの場所を指定できます。
 

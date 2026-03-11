@@ -2,10 +2,10 @@
 {
   "title": "MaxComputeからDorisへ",
   "language": "ja",
-  "description": "この文書では、MaxCompute Catalogを使用してAlibaba Cloud MaxComputeからApache Dorisにデータを迅速にインポートする方法について説明します。"
+  "description": "この文書では、MaxCompute カタログを使用してAlibaba Cloud MaxComputeからApache Dorisにデータを迅速にインポートする方法について説明します。"
 }
 ---
-この文書では、[MaxCompute Catalog](../catalogs/maxcompute-catalog.md)を使用して、Alibaba Cloud MaxComputeからApache Dorisにデータを迅速にインポートする方法について説明します。
+この文書では、[MaxCompute カタログ](../catalogs/maxcompute-catalog.md)を使用して、Alibaba Cloud MaxComputeからApache Dorisにデータを迅速にインポートする方法について説明します。
 
 この文書はApache Dorisバージョン2.1.9に基づいています。
 

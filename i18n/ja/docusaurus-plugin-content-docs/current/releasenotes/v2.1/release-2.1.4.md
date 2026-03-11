@@ -49,11 +49,11 @@
 
 - 新しいオプティマイザーがポイントクエリ機能を完全にサポート [#36205](https://github.com/apache/doris/pull/36205)。
 
-### Data Lakehouse
+### Data レイクハウス
 
 - Apache Paimon deletion vectorのネイティブリーダーをサポート [#35241](https://github.com/apache/doris/pull/35241)
 
-- Table Valued FunctionsでResourceの使用をサポート [#35139](https://github.com/apache/doris/pull/35139)
+- table Valued FunctionsでResourceの使用をサポート [#35139](https://github.com/apache/doris/pull/35139)
 
 - Hive Ranger pluginを使用したアクセスコントローラーでData Maskをサポート
 
@@ -172,7 +172,7 @@
 
 - メモリ不足時のクローン操作中にBEがコアダンプする問題を修正。[#34702](https://github.com/apache/doris/pull/34702)
 
-### Data Lakehouse
+### Data レイクハウス
 
 - `ctl.db.tbl`などの完全修飾名でHiveテーブルが作成できない問題を修正 [#34984](https://github.com/apache/doris/pull/34984)
 
@@ -180,7 +180,7 @@
 
 - 2.0.xから2.1.xにアップグレード時の潜在的なメタリプレイ問題を修正。[#35532](https://github.com/apache/doris/pull/35532)
 
-- Table Valued Functionが空のsnappy圧縮ファイルを読み取れない問題を修正。[#34926](https://github.com/apache/doris/pull/34926)
+- table Valued Functionが空のsnappy圧縮ファイルを読み取れない問題を修正。[#34926](https://github.com/apache/doris/pull/34926)
 
 - 無効なmin-max列統計を持つParquetファイルを読み取れない問題を修正 [#35041](https://github.com/apache/doris/pull/35041)
 
@@ -212,9 +212,9 @@
 
 - Icebergのtimestamp列タイプ読み取り時のタイムゾーン問題を修正 [#36435](https://github.com/apache/doris/pull/36435)
 
-- Iceberg TableでのDATETIME変換エラーとデータパスエラーを修正。[#35708](https://github.com/apache/doris/pull/35708)
+- Iceberg tableでのDATETIME変換エラーとデータパスエラーを修正。[#35708](https://github.com/apache/doris/pull/35708)
 
-- Table Valued Functionsでユーザー定義の追加プロパティを保持し、S3 SDKに渡すことをサポート。[#35515](https://github.com/apache/doris/pull/35515)
+- table Valued Functionsでユーザー定義の追加プロパティを保持し、S3 SDKに渡すことをサポート。[#35515](https://github.com/apache/doris/pull/35515)
 
 ### データインポート
 

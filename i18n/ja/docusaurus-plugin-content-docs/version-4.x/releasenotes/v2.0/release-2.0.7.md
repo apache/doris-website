@@ -37,7 +37,7 @@
 
 - BIツールとの互換性向上のため、`information_schema`テーブルにDEFAULT_ENCRYPTION列を追加し、`processlist`テーブルを追加
 
-- JDBC Catalog作成時にデフォルトで自動的に接続性をテスト
+- JDBC カタログ作成時にデフォルトで自動的に接続性をテスト
 
 - routine loadを安定させるためにauto resumeを強化
 

@@ -3,7 +3,7 @@
   "title": "概要 | Open Api",
   "language": "ja",
   "description": "Apache Dorisの運用保守管理の補完として、",
-  "sidebar_label": "Overview"
+  "sidebar_label": "概要"
 }
 ---
 # 概要

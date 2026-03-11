@@ -15,7 +15,7 @@
 
 ## テーブル情報
 
-| Column Name     | Type        | Description |
+| Column Name     | タイプ        | 詳細 |
 | --------------- | ----------- | ----------- |
 | TABLE_CATALOG   | varchar(64) |             |
 | TABLE_SCHEMA    | varchar(64) |             |

@@ -13,7 +13,7 @@
 `POST/DELETE /api/colocate/group_stable`
 `POST /api/colocate/bucketseq`
 
-## Description
+## 詳細
 
 colocateグループ情報の取得または変更に使用されます。
 

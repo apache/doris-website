@@ -5,11 +5,11 @@
   "description": "パーティション列は通常、古いデータと新しいデータの便利な管理のための時間列です。RANGEパーティショニングはDATE等の列タイプをサポートします、"
 }
 ---
-## Partition columns
+## パーティション columns
 
-- Partition columnsは1つまたは複数の列として指定でき、partition columnsはKEY columnsである必要があります。
+- パーティション columnsは1つまたは複数の列として指定でき、partition columnsはKEY columnsである必要があります。
 
-- `allow_partition_column_nullable`がtrueに設定されている場合、Range partitionはNULL partition columnsの使用をサポートします。List PartitionはNULL partition columnsを常時サポートしません。
+- `allow_partition_column_nullable`がtrueに設定されている場合、Range partitionはNULL partition columnsの使用をサポートします。List パーティションはNULL partition columnsを常時サポートしません。
 
 - partition columnのタイプに関係なく、partition valuesを記述する際にはダブルクォートが必要です。
 
@@ -21,9 +21,9 @@
 
 ## RANGE partitioning
 
-Partition columnsは通常、古いデータと新しいデータの便利な管理のためのtime columnsです。RANGE partitioningは`DATE`、`DATETIME`、`TINYINT`、`SMALLINT`、`INT`、`BIGINT`、`LARGEINT`などのcolumn typesをサポートします。
+パーティション columnsは通常、古いデータと新しいデータの便利な管理のためのtime columnsです。RANGE partitioningは`DATE`、`DATETIME`、`TINYINT`、`SMALLINT`、`INT`、`BIGINT`、`LARGEINT`などのcolumn typesをサポートします。
 
-Partition情報は以下の4つの記述方法をサポートします：
+パーティション情報は以下の4つの記述方法をサポートします：
 
 - `FIXED RANGE`：この方法はpartitionを左閉右開区間として定義します。
 

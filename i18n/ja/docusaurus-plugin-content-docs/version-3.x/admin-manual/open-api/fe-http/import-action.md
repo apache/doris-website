@@ -12,7 +12,7 @@
 `POST /api/import/file_review`
 
 
-## Description
+## 詳細
 
 CSVまたはPARQUET形式のファイルの内容を表示します。
 

@@ -33,7 +33,7 @@
 
 [#56476](https://github.com/apache/doris/pull/56476)
 
-- **AWS Glue Catalog** が IAM AssumeRole 経由で S3 にアクセスできるようになりました。
+- **AWS Glue カタログ** が IAM AssumeRole 経由で S3 にアクセスできるようになりました。
 
 [#57036](https://github.com/apache/doris/pull/57036)
 

@@ -14,7 +14,7 @@ SnowflakeからDorisへの移行時には、オブジェクトストレージが
 
 ## データタイプマッピング
 
-| Snowflake                                        | Doris          | Comment                                            |
+| Snowflake                                        | Doris          | コメント                                            |
 | ------------------------------------------------ | -------------- | -------------------------------------------------- |
 | NUMBER(p, s)/DECIMAL(p, s)/NUMERIC(p,s)          | DECIMAL(p, s)  |                                                    |
 | INT/INTEGER                                      | INT            |                                                    |

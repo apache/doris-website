@@ -11,7 +11,7 @@
 
 `GET /api/show_meta_info`
 
-## Description
+## 詳細
 
 いくつかのメタデータ情報を表示するために使用されます
     

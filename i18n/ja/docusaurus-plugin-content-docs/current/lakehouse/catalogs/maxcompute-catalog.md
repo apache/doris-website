@@ -2,7 +2,7 @@
 {
   "title": "MaxCompute カタログ",
   "language": "ja",
-  "description": "Apache Doris MaxCompute Catalogは、Alibaba Cloud MaxComputeデータに対する連合クエリをサポートし、データ移行なしにクロスソース分析のためのデータ統合と書き戻しを可能にします。"
+  "description": "Apache Doris MaxCompute カタログは、Alibaba Cloud MaxComputeデータに対する連合クエリをサポートし、データ移行なしにクロスソース分析のためのデータ統合と書き戻しを可能にします。"
 }
 ---
 [MaxCompute](https://help.aliyun.com/zh/maxcompute/)は、Alibaba Cloud上のエンタープライズレベルSaaS（Software as a Service）クラウドデータウェアハウスです。MaxComputeが提供するオープンストレージSDKを通じて、DorisはMaxComputeテーブル情報を取得し、クエリや書き込みを実行できます。
@@ -12,17 +12,17 @@
 | シナリオ | 説明 |
 | ---- | ------------------------------------------------------ |
 | データ統合 | MaxComputeデータを読み取り、Doris内部テーブルに書き込みます。 |
-| データライトバック | INSERTコマンドを使用してMaxCompute Tableにデータを書き込みます。（バージョン4.1.0以降でサポート） |
+| データライトバック | INSERTコマンドを使用してMaxCompute tableにデータを書き込みます。（バージョン4.1.0以降でサポート） |
 
 ## 使用上の注意
 
-1. バージョン2.1.7以降、MaxCompute Catalogは[Open Storage SDK](https://help.aliyun.com/zh/maxcompute/user-guide/overview-1)に基づいて開発されています。このバージョン以前は、Tunnel APIに基づいて開発されていました。
+1. バージョン2.1.7以降、MaxCompute カタログは[Open Storage SDK](https://help.aliyun.com/zh/maxcompute/user-guide/overview-1)に基づいて開発されています。このバージョン以前は、Tunnel APIに基づいて開発されていました。
 
 2. Open Storage SDKを使用する際には一定の制限があります。この[文書](https://help.aliyun.com/zh/maxcompute/user-guide/overview-1)の`Usage Limitations`セクションを参照してください。
 
 3. Dorisバージョン3.1.3以前では、MaxComputeのProjectはDorisのDatabaseに対応します。バージョン3.1.3では、`mc.enable.namespace.schema`パラメータを通じてMaxComputeスキーマ階層を導入できます。
 
-## Catalogの設定
+## カタログの設定
 
 ### 構文
 

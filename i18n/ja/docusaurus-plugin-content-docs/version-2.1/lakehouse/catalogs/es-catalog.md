@@ -2,10 +2,10 @@
 {
   "title": "Elasticsearchカタログ",
   "language": "ja",
-  "description": "Elasticsearch Catalogは、ESメタデータの自動マッピングをサポートするだけでなく、"
+  "description": "Elasticsearch カタログは、ESメタデータの自動マッピングをサポートするだけでなく、"
 }
 ---
-Elasticsearch Catalogは、ESメタデータの自動マッピングをサポートするだけでなく、Dorisの分散クエリ計画機能とES（Elasticsearch）の全文検索機能を組み合わせて、より包括的なOLAP分析ソリューションを提供します：
+Elasticsearch カタログは、ESメタデータの自動マッピングをサポートするだけでなく、Dorisの分散クエリ計画機能とES（Elasticsearch）の全文検索機能を組み合わせて、より包括的なOLAP分析ソリューションを提供します：
 
 1. ESにおけるマルチインデックス分散Joinクエリ
 

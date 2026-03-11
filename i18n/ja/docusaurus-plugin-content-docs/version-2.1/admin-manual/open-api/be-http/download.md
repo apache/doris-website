@@ -11,7 +11,7 @@
 
 `GET /api/_load_error_log?token={string}&file={string}`
 
-## Description
+## 詳細
 
 load error に関するログファイルをダウンロードします
 

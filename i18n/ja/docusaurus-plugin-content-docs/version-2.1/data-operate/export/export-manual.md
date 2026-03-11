@@ -16,7 +16,7 @@
 
 `EXPORT`コマンドの詳細な紹介については、以下を参照してください：[EXPORT](../../sql-manual/sql-statements/data-modification/load-and-export/EXPORT)
 
-`SELECT INTO OUTFILE`と`EXPORT`の選択方法については、[Export Overview](../../data-operate/export/export-overview.md)を参照してください。
+`SELECT INTO OUTFILE`と`EXPORT`の選択方法については、[Export 概要](../../data-operate/export/export-overview.md)を参照してください。
 
 ## 適用可能なシナリオ
 

@@ -17,14 +17,14 @@
 
 - Parquet/ORC形式へのデータエクスポート時、`bitmap`、`quantile_state`、`hll`タイプはBinary形式でエクスポートされます。また、`jsonb`と`variant`タイプのエクスポートサポートが追加され、これらは`string`としてエクスポートされます。[#44041](https://github.com/apache/doris/pull/44041)
 
-  - 詳細については、ドキュメントを参照してください：[Export Overview - Apache Doris](https://doris.apache.org/docs/3.0/data-operate/export/export-overview)
+  - 詳細については、ドキュメントを参照してください：[Export 概要 - Apache Doris](https://doris.apache.org/docs/3.0/data-operate/export/export-overview)
 
-- External Catalogを通じて、大文字小文字を区別しないテーブル名のデータソース（Hiveなど）をクエリする際、以前のバージョンでは任意の大文字小文字でテーブル名をクエリできましたが、バージョン3.0.4では、Doris自体のテーブル名大文字小文字区別ポリシーが厳密に適用されます。
+- External カタログを通じて、大文字小文字を区別しないテーブル名のデータソース（Hiveなど）をクエリする際、以前のバージョンでは任意の大文字小文字でテーブル名をクエリできましたが、バージョン3.0.4では、Doris自体のテーブル名大文字小文字区別ポリシーが厳密に適用されます。
 - Hudi JNI ScannerがSpark APIからHadoop APIに置き換えられ、互換性が強化されました。ユーザーはセッション変数`set hudi_jni_scanner=spark/hadoop`で切り替えることができます。[#44396](https://github.com/apache/doris/pull/44396)
 - Colocateテーブルでの`auto bucket`の使用が禁止されました。[#44396](https://github.com/apache/doris/pull/44396)
-- PaimonキャッシュがCatalogに追加され、リアルタイムデータクエリが除去されました。[#44911 ](https://github.com/apache/doris/pull/44911)
+- Paimonキャッシュがカタログに追加され、リアルタイムデータクエリが除去されました。[#44911 ](https://github.com/apache/doris/pull/44911)
 - Broker Loadによる大規模データインポートのパフォーマンスを向上させるため、`max_broker_concurrency`のデフォルト値が増加されました。[#44929](https://github.com/apache/doris/pull/44929)
-- Auto Partitionパーティションの`storage medium`のデフォルト値が、システムのデフォルト値ではなく、現在のテーブルの`storage medium`属性値に変更されました。[#45955](https://github.com/apache/doris/pull/45955)
+- Auto パーティションパーティションの`storage medium`のデフォルト値が、システムのデフォルト値ではなく、現在のテーブルの`storage medium`属性値に変更されました。[#45955](https://github.com/apache/doris/pull/45955)
 - Schema Change実行中のKeyカラムのカラム更新が禁止されました。[#46347](https://github.com/apache/doris/pull/46347)
 - 自動インクリメントカラムを含むKeyカラムに対して、自動インクリメントカラムを提供せずにカラム更新を行えるサポートが追加されました。[#44528](https://github.com/apache/doris/pull/44528)
 - FE IDジェネレータ戦略が時間ベースのアプローチに切り替えられ、IDは10000から開始されなくなりました。[#44790](https://github.com/apache/doris/pull/44790)
@@ -51,7 +51,7 @@
 - 超高頻度インポート時のFEによるコンピュートグループ取得のパフォーマンス問題が最適化されました。[#47203](https://github.com/apache/doris/pull/47203)
 - リアルタイム高同時実行インポートの安定性を向上させるため、コンピューティング・ストレージ分離における主キーテーブルのインポート関連パラメータが改善されました。[#47295](https://github.com/apache/doris/pull/47295), [#46750](https://github.com/apache/doris/pull/46750), [#46365](https://github.com/apache/doris/pull/46365)
 
-### Lakehouse
+### レイクハウス
 
 - JSON形式のHiveテーブル読み取りがサポートされました。[#43469](https://github.com/apache/doris/pull/46393)
 
@@ -116,7 +116,7 @@
 - 高頻度リアルタイムインポート時の大きなDelete Bitmapによる主キーテーブルでのBase Compactionの継続的失敗問題が解決されました。[#46969](https://github.com/apache/doris/pull/46969)
 - 堅牢性を強化するため、コンピューティング・ストレージ分離モードでの主キーテーブルにおけるSchema Changeの不正な再試行ロジックが修正されました。[#46748](https://github.com/apache/doris/pull/46748)
 
-### Lakehouse
+### レイクハウス
 
 #### Hive
 
@@ -133,7 +133,7 @@
 
 #### Paimon
 
-- Paimon CatalogがAlibaba Cloud OSS-HDFSにアクセスできない問題が修正されました。[#42585](https://github.com/apache/doris/pull/42585)
+- Paimon カタログがAlibaba Cloud OSS-HDFSにアクセスできない問題が修正されました。[#42585](https://github.com/apache/doris/pull/42585)
 
 #### Hudi
 
@@ -141,7 +141,7 @@
 
 #### JDBC
 
-- 大文字小文字を区別しないテーブル名を有効にした後、JDBC Catalogを使用してテーブルを取得できない問題が修正されました。
+- 大文字小文字を区別しないテーブル名を有効にした後、JDBC カタログを使用してテーブルを取得できない問題が修正されました。
 
 #### MaxCompute
 
@@ -206,4 +206,4 @@
 
 - `CREATE_PRIV`の付与時に、対応するリソースの存在確認が行われなくなりました。[#45125](https://github.com/apache/doris/pull/45125)
 - 極端なシナリオで、参照テーブルの権限不足により権限付きビューのクエリが失敗する問題が修正されました。[#44621](https://github.com/apache/doris/pull/44621)
-- `use db`の権限チェックが内部および外部Catalogを区別しない問題が解決されました。[#45720](https://github.com/apache/doris/pull/45720)
+- `use db`の権限チェックが内部および外部カタログを区別しない問題が解決されました。[#45720](https://github.com/apache/doris/pull/45720)

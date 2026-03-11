@@ -1,7 +1,7 @@
 ---
 {
   "title": "転置インデックス | 転置インデックス",
-  "sidebar_label": "Overview",
+  "sidebar_label": "概要",
   "language": "ja",
   "description": "転置インデックスは情報検索分野で一般的に使用されるインデックス技術です。"
 }

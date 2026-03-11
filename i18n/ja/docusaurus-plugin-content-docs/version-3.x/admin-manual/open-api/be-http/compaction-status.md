@@ -12,7 +12,7 @@
 `GET /api/compaction/run_status`
 `GET /api/compaction/show?tablet_id={int}`
 
-## Description
+## 詳細
 
 BEノードの全体的なcompactionステータスと指定されたtabletのcompactionステータスを表示するために使用されます。
 

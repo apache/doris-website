@@ -13,7 +13,7 @@
 
 ## 動作変更
 
-- JDBC Catalog のデフォルトコネクションプールサイズを10から30に増加し、高並行性シナリオでのコネクション不足を防止します。[#37023](https://github.com/apache/doris/pull/37023)
+- JDBC カタログ のデフォルトコネクションプールサイズを10から30に増加し、高並行性シナリオでのコネクション不足を防止します。[#37023](https://github.com/apache/doris/pull/37023)
 
 - システムの予約メモリ（low water mark）を `min(6.4GB, MemTotal * 5%)` に調整し、BE OOM問題を軽減します。
 
@@ -21,7 +21,7 @@
 
 - 非同期マテリアライズドビューのデータの直接変更は許可されなくなりました。[#37129](https://github.com/apache/doris/pull/37129)
 
-- CTAS（Create Table As Select）中のvarcharおよびchar型の長さ生成の動作を制御するセッション変数 `use_max_length_of_varchar_in_ctas` が追加されました。デフォルト値はtrueです。falseに設定すると、最大長ではなく派生したvarchar長が使用されます。[#37284](https://github.com/apache/doris/pull/37284)
+- CTAS（Create table As Select）中のvarcharおよびchar型の長さ生成の動作を制御するセッション変数 `use_max_length_of_varchar_in_ctas` が追加されました。デフォルト値はtrueです。falseに設定すると、最大長ではなく派生したvarchar長が使用されます。[#37284](https://github.com/apache/doris/pull/37284)
 
 - 統計収集では、ファイルサイズに基づくHiveテーブルの行数推定機能がデフォルトで有効になりました。[#37694](https://github.com/apache/doris/pull/37694)
 
@@ -31,7 +31,7 @@
 
 ## 新機能
 
-### Lakehouse
+### レイクハウス
 
 - セッション変数 `read_csv_empty_line_as_null` を使用して、CSV形式ファイル読み取り時に空行を無視するかどうかを制御できます。[#37153](https://github.com/apache/doris/pull/37153)
 
@@ -39,7 +39,7 @@
 
 - `serde_dialect="presto"` を設定することで、Prestoの複合型出力形式との互換性を有効にできます。[#37253](https://github.com/apache/doris/pull/37253)
 
-### Multi-Table Materialized View
+### Multi-table Materialized View
 
 - マテリアライズドビュー構築で非決定的関数をサポートします。[#37651](https://github.com/apache/doris/pull/37651)
 
@@ -65,7 +65,7 @@
 
 - `explode_json_object` 関数がJSON Objectの行を列に転置します。[#36887](https://github.com/apache/doris/pull/36887)
 
-- ES CatalogがES NESTEDまたはOBJECT型をDoris JSON型にマッピングします。[#37101](https://github.com/apache/doris/pull/37101)
+- ES カタログがES NESTEDまたはOBJECT型をDoris JSON型にマッピングします。[#37101](https://github.com/apache/doris/pull/37101)
 
 - match_phraseシリーズクエリのパフォーマンス向上のため、指定されたアナライザーを持つ転置インデックスでsupport_phraseがデフォルトで有効になりました。[#37949](https://github.com/apache/doris/pull/37949)
 
@@ -85,7 +85,7 @@
 
 ## 改善
 
-### Lakehouse
+### レイクハウス
 
 - Paimonをバージョン0.8.1にアップグレードしました
 
@@ -97,7 +97,7 @@
 
 - セッション変数 `fetch_splits_max_wait_time_ms` で設定可能です。
 
-- SQLServer JDBC Catalogのデフォルト接続ロジックを改善しました。[#36971](https://github.com/apache/doris/pull/36971)
+- SQLServer JDBC カタログのデフォルト接続ロジックを改善しました。[#36971](https://github.com/apache/doris/pull/36971)
 
   デフォルトでは、接続暗号化設定に介入しません。`force_sqlserver_jdbc_encrypt_false` がtrueに設定された場合のみ、認証エラーを減らすためにJDBC URLにencrypt=falseが強制的に追加されます。これにより暗号化動作をより柔軟に制御でき、必要に応じてオンまたはオフにできます。
 
@@ -113,7 +113,7 @@
 
 - Hive書き込み操作のメタデータアクセス数を最適化しました。[#37127](https://github.com/apache/doris/pull/37127)
 
-- ES Catalogがnested/object型をDorisのJson型にマッピングすることをサポートします。[#37182](https://github.com/apache/doris/pull/37182)
+- ES カタログがnested/object型をDorisのJson型にマッピングすることをサポートします。[#37182](https://github.com/apache/doris/pull/37182)
 
 - 古いバージョンのojdbcドライバーを使用してOracleに接続する際のエラーメッセージを改善しました。[#37634](https://github.com/apache/doris/pull/37634)
 
@@ -123,7 +123,7 @@
 
 - Hive metastore event listenerが有効な場合の古いバージョンから新しいバージョンへのアップグレード時のFEメタデータリプレイエラーの問題を修正しました。[#37757](https://github.com/apache/doris/pull/37757)
 
-### Multi-Table Materialized View
+### Multi-table Materialized View
 
 - 非同期マテリアライズドビューのキー列選択を自動化しました。[#36601](https://github.com/apache/doris/pull/36601)
 
@@ -181,7 +181,7 @@
 
 ## バグ修正
 
-### Lakehouse
+### レイクハウス
 
 - Parquet形式照会時に一部のケースでBEクラッシュを引き起こす問題を修正しました。[#37086](https://github.com/apache/doris/pull/37086)
 
@@ -203,7 +203,7 @@
 
 - 一部のケースでRangerを使用したカタログ作成がクライアントハングを引き起こす問題を修正しました。[#37551](https://github.com/apache/doris/pull/37551)
 
-### Multi-Table Materialized View
+### Multi-table Materialized View
 
 - ベーステーブルに新しいパーティションを追加した後、パーティション集約ロールアップリライト後に不正な結果が生じる可能性がある問題を修正しました。[#37651](https://github.com/apache/doris/pull/37651)
 
@@ -227,7 +227,7 @@
 
 - 1.xから2.x以上のバージョンにアップグレードする際のMAPデータ型に関連するcoredump問題を修正しました。[#36937](https://github.com/apache/doris/pull/36937)
 
-- ES CatalogのArray型サポートを改善しました。[#36936](https://github.com/apache/doris/pull/36936)
+- ES カタログのArray型サポートを改善しました。[#36936](https://github.com/apache/doris/pull/36936)
 
 ### 転置インデックス
 

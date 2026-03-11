@@ -44,7 +44,7 @@ async function fetchAutoCompleteJS() {
 }
 
 function getVersionUrl(baseUrl, pathname, locales, currentLocale, defaultLocale) {
-    let versionUrl = `${baseUrl}${getLocalePrefix(currentLocale, defaultLocale).replace(/^\//, '')}`;
+    let versionUrl = `${baseUrl}`;
     if (!versionUrl.endsWith('/')) {
         versionUrl += '/';
     }

@@ -45,15 +45,15 @@
 
 ## バグ修正
 
-### Lakehouse
+### レイクハウス
 
 - BE krb5.confパス設定問題を修正。[#47679](https://github.com/apache/doris/pull/47679)
 - 重複データエクスポートを避けるため`SELECT OUTFILE`ステートメントの再試行を防止。[#48095](https://github.com/apache/doris/pull/48095)
 - PaimonテーブルへのJAVA APIアクセスを修正。[#47192](https://github.com/apache/doris/pull/47192)
 - `s3a://`ストレージロケーションを持つHiveテーブルへの書き込みを解決。[#47162](https://github.com/apache/doris/pull/47162)
-- CatalogのCommentフィールドが永続化されない問題を修正。[#46946](https://github.com/apache/doris/pull/46946)
+- カタログのコメントフィールドが永続化されない問題を修正。[#46946](https://github.com/apache/doris/pull/46946)
 - 特定条件下でのJDBC BEクラスローディングリークを対処。[#46912](https://github.com/apache/doris/pull/46912)
-- 高バージョンClickHouse JDBC DriverとJDBC Catalogの互換性を解決。[#46026](https://github.com/apache/doris/pull/46026)
+- 高バージョンClickHouse JDBC DriverとJDBC カタログの互換性を解決。[#46026](https://github.com/apache/doris/pull/46026)
 - Iceberg Position Delete読み取り時のBEクラッシュを修正。[#47977](https://github.com/apache/doris/pull/47977)
 - マルチパーティションカラム下でのMaxComputeテーブルデータ読み取りを修正。[#48325](https://github.com/apache/doris/pull/48325)
 - Parquet複合カラムタイプの読み取りエラーを修正。[#47734](https://github.com/apache/doris/pull/47734)

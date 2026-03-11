@@ -11,7 +11,7 @@
 
 `GET /api/query_detail`
 
-## Description
+## 詳細
 
 指定した時点以降のすべてのクエリに関する情報を取得するために使用されます
 

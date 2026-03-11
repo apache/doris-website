@@ -13,10 +13,10 @@
 - es-likeなboolean queryを実装 [#58545](https://github.com/apache/doris/pull/58545)
 - search関数にlucene bool modeを導入 [#59394](https://github.com/apache/doris/pull/59394)
 
-## Lakehouse
+## レイクハウス
 
-- AwsCredentialsProviderChain経由でのCatalog Credentials読み込みサポート [#58740](https://github.com/apache/doris/pull/58740)
-- OSSHDFS Storageを使用するPaimon DLF Catalogをサポート [#59245](https://github.com/apache/doris/pull/59245)
+- AwsCredentialsProviderChain経由でのカタログ Credentials読み込みサポート [#58740](https://github.com/apache/doris/pull/58740)
+- OSSHDFS Storageを使用するPaimon DLF カタログをサポート [#59245](https://github.com/apache/doris/pull/59245)
 - Icebergテーブル用のmanifest-levelキャッシュを追加 [#59056](https://github.com/apache/doris/pull/59056)
 
 ## Query Engine
@@ -31,7 +31,7 @@
 - views、materialized views、generated columns、alias functionsでセッション変数の永続化を有効化 [#58031](https://github.com/apache/doris/pull/58031)
 - table query plan actionから受信したsqlを監査ログに追加 [#58739](https://github.com/apache/doris/pull/58739)
 - stream loadレコードの監査ログシステムテーブルへの記録を有効化 [#57530](https://github.com/apache/doris/pull/57530)
-- Column PurningによるComplex Type Column読み取りを最適化
+- Column PurningによるComplex タイプ Column読み取りを最適化
 - mysql MOD構文と互換性を確保 [#58432](https://github.com/apache/doris/pull/58432)
 - sql_digest生成用の動的設定を追加 [#59102](https://github.com/apache/doris/pull/59102)
 - PGとの整合性を図るためREGR_SLOPE/INTERCEPTにYoungs-Cramerを使用 [#55940](https://github.com/apache/doris/pull/55940)

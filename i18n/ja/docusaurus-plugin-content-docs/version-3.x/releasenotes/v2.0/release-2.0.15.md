@@ -57,11 +57,11 @@ NA
 
 - `DROP CACHED STATS table_name` を使用してキャッシュされた統計の削除をサポートしました。[#39367](https://github.com/apache/doris/pull/39367)
 
-### Multi CatalogとOthers
+### Multi カタログとOthers
 
-- JDBC Catalogのrefreshを最適化し、client作成の頻度を削減しました。[#40261](https://github.com/apache/doris/pull/40261)
+- JDBC カタログのrefreshを最適化し、client作成の頻度を削減しました。[#40261](https://github.com/apache/doris/pull/40261)
 
-- 特定の条件下でのJDBC Catalogでのthread leakを修正しました。[#39423](https://github.com/apache/doris/pull/39423)
+- 特定の条件下でのJDBC カタログでのthread leakを修正しました。[#39423](https://github.com/apache/doris/pull/39423)
 
 - ARRAY MAP STRUCT型で `REPLACE_IF_NOT_NULL` をサポートしました。[#38304](https://github.com/apache/doris/pull/38304)
 

@@ -12,7 +12,7 @@ Alibaba Cloud Container Service ACKは、ECSインスタンスを購入した後
 
 ### 既存のクラスタ
 
-Container Serviceクラスタがすでに作成されている場合、このドキュメントを参照して修正できます：[Cluster Environment OS Checking](../../install/preparation/os-checking.md)      
+Container Serviceクラスタがすでに作成されている場合、このドキュメントを参照して修正できます：[クラスター Environment OS Checking](../../install/preparation/os-checking.md)      
 BEの起動パラメータ要件に注目してください：  
 1. swapを無効化して閉じる：有効になっていない場合、`swapon --show`は出力されません
 2. システム内の開いているファイルハンドルの最大数を確認する `ulimit -n`

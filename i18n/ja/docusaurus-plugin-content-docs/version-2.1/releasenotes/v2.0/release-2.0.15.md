@@ -59,9 +59,9 @@
 
 ### マルチカタログとその他
 
-- クライアント作成の頻度を減らすためにJDBC Catalogのリフレッシュを最適化しました。[#40261](https://github.com/apache/doris/pull/40261)
+- クライアント作成の頻度を減らすためにJDBC カタログのリフレッシュを最適化しました。[#40261](https://github.com/apache/doris/pull/40261)
 
-- 特定の条件下でのJDBC Catalogのスレッドリークを修正しました。[#39423](https://github.com/apache/doris/pull/39423)
+- 特定の条件下でのJDBC カタログのスレッドリークを修正しました。[#39423](https://github.com/apache/doris/pull/39423)
 
 - ARRAY MAP STRUCT型で`REPLACE_IF_NOT_NULL`がサポートされました。[#38304](https://github.com/apache/doris/pull/38304)
 

@@ -4,15 +4,25 @@ const VERSIONS = require('./versions.json');
 const { markdownBoldPlugin } = require('./config/markdown-bold-plugin');
 const { DEFAULT_VERSION } = require('./src/constant/version');
 
-const lightCodeTheme = themes.dracula;
+	const lightCodeTheme = themes.dracula;
 
-const logoImg = '/images/logo-doris.svg';
+	const logoImg = '/images/logo-doris.svg';
 
-function getDocsVersions() {
-    const result = {};
-    VERSIONS.map(version => {
-        if (version === 'current') {
-            result[version] = {
+	// Docusaurus "last updated" metadata runs `git log` for many files during build.
+	// This can fail with spawn errors like `EAGAIN` (resource temporarily unavailable) on some machines.
+	// Note: some environments set CI=1 locally (e.g. IDE terminals), so don't enable by generic CI.
+	// Enable only when explicitly requested, or on GitHub Actions.
+	const enableGitLastUpdate =
+	    process.env.DOCUSAURUS_DISABLE_GIT_LAST_UPDATE === 'true'
+	        ? false
+	        : process.env.DOCUSAURUS_ENABLE_GIT_LAST_UPDATE === 'true' ||
+	          process.env.GITHUB_ACTIONS === 'true';
+
+	function getDocsVersions() {
+	    const result = {};
+	    VERSIONS.map(version => {
+	        if (version === 'current') {
+	            result[version] = {
                 label: 'Dev',
                 path: 'dev',
                 banner: 'unreleased',
@@ -74,7 +84,7 @@ const config = {
         {
             async: true,
             src: 'https://widget.kapa.ai/kapa-widget.bundle.js',
-            'data-website-id': 'a5fb90df-217a-4097-95c0-80490220314b',
+            'data-website-id': '10c44fc4-7375-4b37-9554-b39132bcb855',
             'data-modal-title': 'Apache Doris AI',
             'data-project-name': 'Apache Doris Website',
             'data-button-hide':"true",
@@ -185,14 +195,14 @@ const config = {
                     //     // if (versionDocsDirPath === 'versioned_docs/version-dev') {
                     //     //     return `https://github.com/apache/doris-website/edit/master/docs/${locale}/docs/${docPath}`;
                     //     // }
-                    // },
-                    showLastUpdateAuthor: false,
-                    showLastUpdateTime: true,
-                    remarkPlugins: [markdownBoldPlugin, require('remark-math')],
-                    rehypePlugins: [
-                        [
-                            require('rehype-katex'),
-                            {
+	                    // },
+	                    showLastUpdateAuthor: false,
+	                    showLastUpdateTime: enableGitLastUpdate,
+	                    remarkPlugins: [markdownBoldPlugin, require('remark-math')],
+	                    rehypePlugins: [
+	                        [
+	                            require('rehype-katex'),
+	                            {
                                 strict: process.env.CI === 'true' || process.env.GITHUB_ACTIONS === 'true' ? false : 'warn',
                             }
                         ]
@@ -242,7 +252,7 @@ const config = {
                 highlightSearchTermsOnTargetPage: true,
                 // indexPages: true,
                 indexDocs: true,
-                docsRouteBasePath: ['/docs/2.1', '/docs/3.x', '/docs/4.x', '/docs/dev'],
+                docsRouteBasePath: ['docs','ja/docs','zh-CN/docs'],
                 indexBlog: false,
                 explicitSearchResultPath: true,
                 searchBarShortcut: true,

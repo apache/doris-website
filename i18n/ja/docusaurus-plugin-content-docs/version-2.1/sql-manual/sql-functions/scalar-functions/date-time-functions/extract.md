@@ -5,7 +5,7 @@
   "description": "extract関数は、年、月、日、時、分、秒などの日付や時刻値の指定された部分を抽出するために使用されます。"
 }
 ---
-## Description
+## 詳細
 
 `extract`関数は、年、月、日、時、分、秒などの日付または時刻値の指定された部分を抽出するために使用されます。この関数は、計算、比較、または表示のためにdatetimeフィールドから特定の時刻コンポーネントを抽出するために一般的に使用されます。
 
@@ -15,7 +15,7 @@
 
 ## Parameters
 
-| Parameter | Description |
+| Parameter | 詳細 |
 | -- | -- |
 | `unit` | DATETIMEから抽出する単位。可能な値は year、month、day、hour、minute、second、または microsecond です |
 | `datetime` | 引数は有効な日付式です |

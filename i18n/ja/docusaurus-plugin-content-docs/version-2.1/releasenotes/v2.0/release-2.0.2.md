@@ -44,11 +44,11 @@
 - [Support basic jdbc external table stats collection. #23965](https://github.com/apache/doris/pull/23965)
 - [Skip unknown col stats check on __internal_scheam and information_schema #24625](https://github.com/apache/doris/pull/24625)
 
-### JDBC、HDFS、Hive、MySQL、MaxCompute、Multi-Catalogのより良いサポート
+### JDBC、HDFS、Hive、MySQL、MaxCompute、Multi-カタログのより良いサポート
 
 - [Support hadoop viewfs. #24168](https://github.com/apache/doris/pull/24168)
 - [Avoid calling checksum when replaying creating jdbc catalog and fix ranger issue #22369](https://github.com/apache/doris/pull/22369)
-- [Optimize the JDBC Catalog connection error message #23868](https://github.com/apache/doris/pull/23868) 
+- [Optimize the JDBC カタログ connection error message #23868](https://github.com/apache/doris/pull/23868) 
 
   JDBCカタログのプロパティチェックとエラーメッセージを改善
 - [Fix mc decimal type parse, fix wrong obj location #24242](https://github.com/apache/doris/pull/24242) 
@@ -126,7 +126,7 @@ MATCHのパフォーマンスを改善
 - [Make metadata compatible for future version after 2.0.2 #24800](https://github.com/apache/doris/pull/24800)
 - [Fix map/array deserialize string with quote pair #24808](https://github.com/apache/doris/pull/24808)
 - [Failed on arm platform, with clang compiler and pch on, close #24633 #24636](https://github.com/apache/doris/pull/24636)
-- [Table column order is changed if add a column and do truncate #24981](https://github.com/apache/doris/pull/24981)
+- [table column order is changed if add a column and do truncate #24981](https://github.com/apache/doris/pull/24981)
 - [Make parser mode coarse grained by default #24949](https://github.com/apache/doris/pull/24949)
 
 改善とバグ修正の完全なリストは[github](https://github.com/apache/doris/issues?q=label%3Adev%2F2.0.2-merged+is%3Aclosed)をご覧ください。

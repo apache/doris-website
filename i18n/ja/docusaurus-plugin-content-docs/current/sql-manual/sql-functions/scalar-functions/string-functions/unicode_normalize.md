@@ -5,7 +5,7 @@
   "description": "入力文字列に対してUnicode正規化を実行します。"
 }
 ---
-## Description
+## 詳細
 
 入力文字列に対して[Unicode Normalization](https://unicode-org.github.io/icu/userguide/transforms/normalization/)を実行します。
 

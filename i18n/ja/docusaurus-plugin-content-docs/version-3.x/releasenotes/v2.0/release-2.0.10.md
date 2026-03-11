@@ -19,7 +19,7 @@
 
 - チェックステータスがIO_ERRORでない場合、ディスクパスは破損リストに追加すべきではありません。これにより、実際のI/Oエラーがあるディスクのみが破損としてマークされることが保証されます。
 
-- 外部テーブルからCreate Table As Select (CTAS)操作を実行する際、`VARCHAR`列を`STRING`型に変換します。
+- 外部テーブルからCreate table As Select (CTAS)操作を実行する際、`VARCHAR`列を`STRING`型に変換します。
 
 - Paimonカラムタイプ「ROW」からDorisタイプ「STRUCT」へのマッピングをサポート
 

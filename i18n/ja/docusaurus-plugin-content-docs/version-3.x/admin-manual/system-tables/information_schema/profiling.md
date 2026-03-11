@@ -15,7 +15,7 @@
 
 ## テーブル情報
 
-| Column Name         | Type        | Description |
+| Column Name         | タイプ        | 詳細 |
 | ------------------- | ----------- | ----------- |
 | QUERY_ID            | int         |             |
 | SEQ                 | int         |             |

@@ -9,8 +9,8 @@
 
 このドキュメントでは、Microsoft Azure Blobストレージにアクセスするために必要なパラメータについて説明します。これらのパラメータは以下のシナリオに適用されます：
 
-- Catalogプロパティ
-- Table Valued Functionプロパティ
+- カタログプロパティ
+- table Valued Functionプロパティ
 - Broker Loadプロパティ
 - Exportプロパティ
 - Outfileプロパティ
@@ -35,7 +35,7 @@
 
   1. [Azure Portal](https://portal.azure.com)にログイン
   2. **Storage Accounts**を開き、対象のアカウントを選択
-  3. **Overview**ページで**Storage Account Name**を確認できます
+  3. **概要**ページで**Storage Account Name**を確認できます
 
   ```properties
   "azure.account_name" = "myblobstorage"

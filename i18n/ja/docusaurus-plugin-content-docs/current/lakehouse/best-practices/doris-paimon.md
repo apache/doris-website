@@ -2,39 +2,39 @@
 {
   "title": "DorisとPaimonの使用",
   "language": "ja",
-  "description": "新しいオープンデータ管理アーキテクチャとして、Data Lakehouseはdata warehouseの高性能かつリアルタイム機能と"
+  "description": "新しいオープンデータ管理アーキテクチャとして、Data レイクハウスはdata warehouseの高性能かつリアルタイム機能と"
 }
 ---
-新しいオープンデータ管理アーキテクチャとして、Data Lakehouseはデータウェアハウスの高性能とリアルタイム機能を、データレイクの低コストと柔軟性と統合し、ユーザーが様々なデータ処理と分析ニーズをより便利に満たすことを支援します。企業のビッグデータシステムにおいて、ますます適用されています。
+新しいオープンデータ管理アーキテクチャとして、Data レイクハウスはデータウェアハウスの高性能とリアルタイム機能を、データレイクの低コストと柔軟性と統合し、ユーザーが様々なデータ処理と分析ニーズをより便利に満たすことを支援します。企業のビッグデータシステムにおいて、ますます適用されています。
 
-最近のバージョンでは、Apache Dorisはデータレイクとの統合を深化させ、成熟したData Lakehouseソリューションを発展させました。
+最近のバージョンでは、Apache Dorisはデータレイクとの統合を深化させ、成熟したData レイクハウスソリューションを発展させました。
 
 - バージョン0.15以降、Apache DorisはHiveとIcebergの外部テーブルを導入し、データレイク向けのApache Icebergとの結合機能を探求しました。
-- バージョン1.2以降、Apache Dorisは正式にMulti-Catalog機能を導入し、様々なデータソースに対する自動メタデータマッピングとデータアクセスを実現し、外部データの読み取りとクエリ実行に関する多くのパフォーマンス最適化を行いました。現在は高速でユーザーフレンドリーなLakehouseアーキテクチャを構築する能力を完全に備えています。
-- バージョン2.1では、Apache DorisのData Lakehouseアーキテクチャが大幅に強化され、主要データレイクフォーマット（Hudi、Iceberg、Paimonなど）の読み書き機能を強化し、複数のSQL方言との互換性を導入し、既存システムからApache Dorisへのシームレスな移行を実現しました。データサイエンスと大規模データ読み取りシナリオのために、DorisはArrow Flight高速読み取りインターフェースを統合し、データ転送効率を100倍向上させました。
+- バージョン1.2以降、Apache Dorisは正式にMulti-カタログ機能を導入し、様々なデータソースに対する自動メタデータマッピングとデータアクセスを実現し、外部データの読み取りとクエリ実行に関する多くのパフォーマンス最適化を行いました。現在は高速でユーザーフレンドリーなレイクハウスアーキテクチャを構築する能力を完全に備えています。
+- バージョン2.1では、Apache DorisのData レイクハウスアーキテクチャが大幅に強化され、主要データレイクフォーマット（Hudi、Iceberg、Paimonなど）の読み書き機能を強化し、複数のSQL方言との互換性を導入し、既存システムからApache Dorisへのシームレスな移行を実現しました。データサイエンスと大規模データ読み取りシナリオのために、DorisはArrow Flight高速読み取りインターフェースを統合し、データ転送効率を100倍向上させました。
 
 ![Building lakehouse using Doris and Paimon](/images/lakehouse-architecture-for-doris-and-paimon.png)
 
 ## Apache Doris & Paimon
 
-Apache Paimonは、データレイクフォーマットとLSM構造の利点を革新的に組み合わせたデータレイクフォーマットで、効率的なリアルタイムストリーミング更新機能をデータレイクアーキテクチャに成功裏に導入しています。これにより、Paimonはデータを効率的に管理してリアルタイム分析を実行でき、リアルタイムData Lakehouseアーキテクチャの構築に強力なサポートを提供します。
+Apache Paimonは、データレイクフォーマットとLSM構造の利点を革新的に組み合わせたデータレイクフォーマットで、効率的なリアルタイムストリーミング更新機能をデータレイクアーキテクチャに成功裏に導入しています。これにより、Paimonはデータを効率的に管理してリアルタイム分析を実行でき、リアルタイムData レイクハウスアーキテクチャの構築に強力なサポートを提供します。
 
 Paimonの機能を最大限に活用し、Paimonデータのクエリ効率を向上させるため、Apache DorisはPaimonの最新機能のいくつかにネイティブサポートを提供します：
 
 - Hive MetastoreやFileSystemなど、様々な種類のPaimon Catalogsをサポートします。
-- Paimon 0.6のPrimary Key Table Read Optimized機能をネイティブサポートします。
-- Paimon 0.8のPrimary Key Table Deletion Vector機能をネイティブサポートします。
+- Paimon 0.6のPrimary Key table Read Optimized機能をネイティブサポートします。
+- Paimon 0.8のPrimary Key table Deletion Vector機能をネイティブサポートします。
 
 Apache Dorisの高性能クエリエンジンとApache Paimonの効率的なリアルタイムストリーミング更新機能により、ユーザーは以下を実現できます：
 
 - レイクへのリアルタイムデータ取り込み：PaimonのLSM-Treeモデルを活用することで、レイクへのデータ取り込みを分レベルの適時性まで短縮できます。さらに、Paimonは集約、重複排除、部分列更新を含む様々なデータ更新機能をサポートし、データフローをより柔軟で効率的にします。
-- 高性能データ処理と分析：PaimonのAppend Only Table、Read Optimized、Deletion VectorなどのテクノロジーをDorisの強力なクエリエンジンとシームレスに統合でき、レイクデータに対する高速クエリと分析応答を実現します。
+- 高性能データ処理と分析：PaimonのAppend Only table、Read Optimized、Deletion VectorなどのテクノロジーをDorisの強力なクエリエンジンとシームレスに統合でき、レイクデータに対する高速クエリと分析応答を実現します。
 
 将来的に、Apache DorisはTime Travelや増分データ読み取りなど、Apache Paimonのより高度な機能を段階的にサポートし、統一された高性能リアルタイムlakehouseプラットフォームを共同で構築します。
 
 この記事では、Docker環境でApache Doris + Apache Paimonのテストおよびデモンストレーション環境を迅速にセットアップする方法を説明し、様々な機能の使用方法を実演します。
 
-詳細については、[Paimon Catalog](../catalogs/paimon-catalog.mdx)を参照してください。
+詳細については、[Paimon カタログ](../catalogs/paimon-catalog.mdx)を参照してください。
 
 ## ユーザーガイド
 

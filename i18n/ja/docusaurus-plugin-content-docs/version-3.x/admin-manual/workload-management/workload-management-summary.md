@@ -3,7 +3,7 @@
   "title": "概要 | ワークロード管理",
   "language": "ja",
   "description": "ワークロード管理はDorisの非常に重要な機能であり、システム全体の管理において重要な役割を果たしています。",
-  "sidebar_label": "Overview"
+  "sidebar_label": "概要"
 }
 ---
 # 概要

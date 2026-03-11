@@ -17,7 +17,7 @@
 
 | カラム名        | タイプ        | 説明                                                         |
 | --------------- | ------------- | ------------------------------------------------------------ |
-| TABLE_CATALOG   | varchar(512)  | テーブルが属するCatalog                                      |
+| TABLE_CATALOG   | varchar(512)  | テーブルが属するカタログ                                      |
 | TABLE_SCHEMA    | varchar(64)   | テーブルが属するDatabase                                     |
 | TABLE_NAME      | varchar(64)   | テーブルの名前                                               |
 | TABLE_TYPE      | varchar(64)   | テーブルのタイプ。以下を含む: SYSTEM VIEW、VIEW、BASE TABLE  |

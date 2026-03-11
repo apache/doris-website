@@ -83,7 +83,7 @@ HEAD リクエストは指定されたログタイプのログファイル一覧
     < Vary: Access-Control-Request-Method
     < Vary: Access-Control-Request-Headers
     < Content-Disposition: attachment;fileName=fe.audit.log
-    < Content-Type: application/octet-stream;charset=UTF-8
+    < Content-タイプ: application/octet-stream;charset=UTF-8
     < Transfer-Encoding: chunked
     
     ... File Content ...

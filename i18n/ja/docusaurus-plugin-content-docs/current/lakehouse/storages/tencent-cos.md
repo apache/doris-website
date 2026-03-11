@@ -8,7 +8,7 @@
 このドキュメントでは、Tencent Cloud COSにアクセスするために必要なパラメータについて説明します。これらのパラメータは以下のシナリオに適用されます：
 
 - カタログプロパティ
-- Table Valued Functionプロパティ
+- table Valued Functionプロパティ
 - Broker Loadプロパティ
 - Exportプロパティ
 - Outfileプロパティ

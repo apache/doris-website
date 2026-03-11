@@ -5,30 +5,30 @@
   "description": "データカタログは、データソースの属性を記述するために使用されます。"
 }
 ---
-Data Catalogはデータソースの属性を記述するために使用されます。
+Data カタログはデータソースの属性を記述するために使用されます。
 
 Dorisでは、異なるデータソース（Hive、Iceberg、MySQLなど）を指すために複数のcatalogを作成できます。Dorisはcatalogを通じて、対応するデータソースのデータベース、テーブル、カラム、パーティション、データの場所などを自動的に取得します。ユーザーは標準SQLステートメントを通じてこれらのcatalogにアクセスしてデータ分析を行い、複数のcatalogのデータに対してjoinクエリを実行できます。
 
 Dorisには2種類のcatalogがあります：
 
-| Type                         | Description |
+| タイプ                         | 詳細 |
 | ---------------- | -------------------------------------------------------- |
-| Internal Catalog | 組み込みのcatalogで、`internal`という名前が付けられ、Doris内部テーブルデータの保存に使用されます。作成、変更、削除はできません。      |
-| External Catalog | External catalogはInternal Catalog以外のすべてのcatalogを指します。ユーザーはexternal catalogの作成、変更、削除ができます。 |
+| Internal カタログ | 組み込みのcatalogで、`internal`という名前が付けられ、Doris内部テーブルデータの保存に使用されます。作成、変更、削除はできません。      |
+| External カタログ | External catalogはInternal カタログ以外のすべてのcatalogを指します。ユーザーはexternal catalogの作成、変更、削除ができます。 |
 
-Catalogは主に以下の3つのシナリオに適用されますが、異なるcatalogは異なるシナリオに適しています。詳細については、対応するcatalogのドキュメントを参照してください。
+カタログは主に以下の3つのシナリオに適用されますが、異なるcatalogは異なるシナリオに適しています。詳細については、対応するcatalogのドキュメントを参照してください。
 
-| Scenario | Description      |
+| シナリオ | 詳細      |
 | ---- | ------------------------------------------- |
-| Query Acceleration | Hive、Iceberg、Paimonなどのデータレイクに対する直接クエリ加速。      |
-| Data Integration | ZeroETLソリューション、異なるデータソースに直接アクセスして結果データを生成、または異なるデータソース間のデータフローを促進。 |
-| Data Write-back | Dorisを介したデータ処理後、外部データソースへの書き戻し。                |
+| クエリ加速 | Hive、Iceberg、Paimonなどのデータレイクに対する直接クエリ加速。      |
+| Data 統合 | ZeroETLソリューション、異なるデータソースに直接アクセスして結果データを生成、または異なるデータソース間のデータフローを促進。 |
+| データ書き戻し | Dorisを介したデータ処理後、外部データソースへの書き戻し。                |
 
-本ドキュメントでは[Iceberg Catalog](./catalogs/iceberg-catalog.mdx)を例として、catalogの基本操作に焦点を当てます。異なるcatalogの詳細な説明については、対応するcatalogのドキュメントを参照してください。
+本ドキュメントでは[Iceberg カタログ](./catalogs/iceberg-catalog.mdx)を例として、catalogの基本操作に焦点を当てます。異なるcatalogの詳細な説明については、対応するcatalogのドキュメントを参照してください。
 
-## Catalogの作成
+## カタログの作成
 
-`CREATE CATALOG`ステートメントを使用してIceberg Catalogを作成します。
+`CREATE CATALOG`ステートメントを使用してIceberg カタログを作成します。
 
 ```sql
 CREATE CATALOG iceberg_catalog PROPERTIES (

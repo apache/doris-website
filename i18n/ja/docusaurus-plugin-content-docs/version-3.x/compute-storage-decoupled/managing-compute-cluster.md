@@ -12,7 +12,7 @@
 - ユーザーレベルでのcompute groupsのバインディング（`default_compute_group`）によるユーザーレベル分離
 
 *注意*
-バージョン3.0.2より前では、これはCompute Clusterと呼ばれていました。
+バージョン3.0.2より前では、これはCompute クラスターと呼ばれていました。
 
 ## Compute Group使用シナリオ
 

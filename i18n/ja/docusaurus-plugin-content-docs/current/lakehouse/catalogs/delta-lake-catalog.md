@@ -2,12 +2,12 @@
 {
   "title": "Delta Lake カタログ",
   "language": "ja",
-  "description": "Apache Doris Delta Lake Catalog ユーザーガイド：Trino Connector フレームワークを通じてDelta Lakeデータレイクに接続し、Delta Lakeテーブルデータのクエリと統合を行います。Hive Metastore、複数のデータ型マッピング、およびDelta LakeとDoris間の迅速な統合をサポートします。"
+  "description": "Apache Doris Delta Lake カタログ ユーザーガイド：Trino Connector フレームワークを通じてDelta Lakeデータレイクに接続し、Delta Lakeテーブルデータのクエリと統合を行います。Hive Metastore、複数のデータ型マッピング、およびDelta LakeとDoris間の迅速な統合をサポートします。"
 }
 ---
 ## 概要
 
-Delta Lake Catalogは、Delta Lakeテーブルにアクセスするために、Trino Delta Lake Connectorと[Trino Connector](https://doris.apache.org/community/how-to-contribute/trino-connector-developer-guide/)互換性フレームワークを使用します。
+Delta Lake カタログは、Delta Lakeテーブルにアクセスするために、Trino Delta Lake Connectorと[Trino Connector](https://doris.apache.org/community/how-to-contribute/trino-connector-developer-guide/)互換性フレームワークを使用します。
 
 :::note
 - これは実験的機能で、バージョン3.0.1以降でサポートされています。

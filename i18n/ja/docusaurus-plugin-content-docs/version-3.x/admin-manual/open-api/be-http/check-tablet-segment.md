@@ -11,7 +11,7 @@
 
 `GET /api/check_tablet_segment_lost?repair={bool}`
 
-## Description
+## 詳細
 
 BEノードでsegmentが失われる原因となる例外が発生する場合があります。しかし、メタデータではタブレットが正常であることが示されます。この異常なレプリカはFEによって検出されず、自動的に修復することができません。クエリが実行されると、`failed to initialize storage reader`という例外情報がスローされます。このインターフェースの機能は、現在のBEノード上でsegmentが失われたすべてのタブレットをチェックすることです。
 

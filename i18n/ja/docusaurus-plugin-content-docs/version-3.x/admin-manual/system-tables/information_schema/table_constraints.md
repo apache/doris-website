@@ -15,7 +15,7 @@
 
 ## テーブル情報
 
-| Column Name        | Type         | Description |
+| Column Name        | タイプ         | 詳細 |
 | ------------------ | ------------ | ----------- |
 | CONSTRAINT_CATALOG | varchar(512) |             |
 | CONSTRAINT_SCHEMA  | varchar(64)  |             |

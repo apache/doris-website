@@ -36,7 +36,7 @@ Random bucketingを使用する場合、load_to_single_tabletをtrueに設定す
 
 非圧縮CSVとJSONファイル：Dorisは自動的にファイルを分割し、並行してロードします。
 
-並行性戦略については以下を参照してください：[Broker Load Configuration Parameters](./import-way/broker-load-manual#Related-Configurations)
+並行性戦略については以下を参照してください：[Broker Load 設定 Parameters](./import-way/broker-load-manual#Related-Configurations)
 
 ## Stream Load並行性
 

@@ -25,7 +25,7 @@
 
 - クエリプロファイルにより多くの転置インデックスメトリクスを追加しました。[#36545](https://github.com/apache/doris/pull/36545)
 
-- Cross-Cluster Replication (CCR)が転置インデックスをサポートしました。[#31743](https://github.com/apache/doris/pull/31743)
+- Cross-クラスター Replication (CCR)が転置インデックスをサポートしました。[#31743](https://github.com/apache/doris/pull/31743)
 
 完全なリストはGitHubの[link](https://github.com/apache/doris/compare/2.0.11...2.0.12)からアクセスでき、主要な機能と改善が以下にハイライトされています。
 

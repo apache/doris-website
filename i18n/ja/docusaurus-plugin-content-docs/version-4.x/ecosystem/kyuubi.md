@@ -2,14 +2,14 @@
 {
   "title": "九尾",
   "language": "ja",
-  "description": "Apache Kyuubiは、データウェアハウスおよびLakehouse上でサーバーレスSQLを提供する分散型マルチテナントゲートウェイです。"
+  "description": "Apache Kyuubiは、データウェアハウスおよびレイクハウス上でサーバーレスSQLを提供する分散型マルチテナントゲートウェイです。"
 }
 ---
 # DorisでKyuubiを使用する
 
 ## はじめに
 
-[Apache Kyuubi](https://kyuubi.apache.org/)は、データウェアハウスやLakehouse上でサーバーレスSQLを提供する分散・マルチテナントゲートウェイです。
+[Apache Kyuubi](https://kyuubi.apache.org/)は、データウェアハウスやレイクハウス上でサーバーレスSQLを提供する分散・マルチテナントゲートウェイです。
 Apache KyuubiはThrift、Trino、MySQLなどの多様なプロトコルを、Spark、Flink、Hive、JDBCなどのエンジンに提供しています。
 DorisはApache KyuubiでサポートされているDoris dialectを使用して、JDBCデータソースとして接続できます。
 Apache Kyuubiは、HA、サービスディスカバリー、統合認証、エンジンライフサイクル管理など、一連の有用な機能も提供します。

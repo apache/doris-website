@@ -39,19 +39,19 @@
 
 - `routineload`の属性を変更した後、`show`の表示結果が期待通りにならない問題を修正しました。[#53038](https://github.com/apache/doris/pull/53038)
 
-### Lakehouse Integration
+### レイクハウス 統合
 
 - 特定の場合においてIceberg equality deleteで不正確なデータ読み取りが発生する問題を修正しました。[#51253](https://github.com/apache/doris/pull/51253)
-- Kerberos環境でのIceberg Hadoop Catalogのエラーを修正しました。[#50623](https://github.com/apache/doris/pull/50623) [#52149](https://github.com/apache/doris/pull/52149)
+- Kerberos環境でのIceberg Hadoop カタログのエラーを修正しました。[#50623](https://github.com/apache/doris/pull/50623) [#52149](https://github.com/apache/doris/pull/52149)
 - Kerberos環境でIcebergテーブルに書き込む際のトランザクション送信失敗の問題を修正しました。[#51508](https://github.com/apache/doris/pull/51508)
 - Icebergテーブルに書き込む際のトランザクション送信エラーを修正しました。[#52716](https://github.com/apache/doris/pull/52716)
 - 特定の状況下でKerberos環境のHudiテーブルにアクセスする際のエラーを修正しました。[#51713 ](https://github.com/apache/doris/pull/51713)
-- SQL Server CatalogがIDENTITY列情報の識別をサポートするようになりました。[#51285](https://github.com/apache/doris/pull/51285)
-- 一部の場合においてJdbc Catalogテーブルが行数情報を取得できない問題を修正しました。[#50901](https://github.com/apache/doris/pull/50901)
+- SQL サーバー カタログがIDENTITY列情報の識別をサポートするようになりました。[#51285](https://github.com/apache/doris/pull/51285)
+- 一部の場合においてJdbc カタログテーブルが行数情報を取得できない問題を修正しました。[#50901](https://github.com/apache/doris/pull/50901)
 - x86環境でのORC zlib解凍パフォーマンスを最適化し、潜在的な問題を修正しました。[#51775](https://github.com/apache/doris/pull/51775)
 - ProfileにParquet/ORC条件フィルタリングおよび遅延マテリアライゼーションに関連する指標を追加しました。[#51248](https://github.com/apache/doris/pull/51248)
 - ORC Footerの読み取りパフォーマンスを最適化しました。[#51117](https://github.com/apache/doris/pull/51117)
-- Table Valued Functionが圧縮JSONファイルを読み取れない問題を修正しました。[#51983](https://github.com/apache/doris/pull/51983)
+- table Valued Functionが圧縮JSONファイルを読み取れない問題を修正しました。[#51983](https://github.com/apache/doris/pull/51983)
 - 一部の場合において並行catalogリフレッシュが原因で発生するメタデータの不整合問題を修正しました。[#51787](https://github.com/apache/doris/pull/51787)
 
 ### Index
@@ -59,7 +59,7 @@
 - CAST操作を含むIN述語を処理する際の転置インデックスのクエリエラーを修正し、不正確なクエリ結果が返されることを防ぎました。[#50860](https://github.com/apache/doris/pull/50860)
 - 異常実行状況における転置インデックスのメモリリーク問題を修正しました。[#52747](https://github.com/apache/doris/pull/52747)
 
-### Semi-structured Data Type
+### Semi-structured Data タイプ
 
 - 一部のJSON関数がnull値を処理する際に不正確な結果を返す問題を修正しました。
 - JSON関数に関連するいくつかのバグを修正しました。[#52543](https://github.com/apache/doris/pull/52543) [#51516](https://github.com/apache/doris/pull/51516)

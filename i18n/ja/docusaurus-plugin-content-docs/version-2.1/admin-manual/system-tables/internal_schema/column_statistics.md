@@ -23,12 +23,12 @@
 | カラム名           | 型             | 説明                                             |
 | ------------------ | -------------- | ------------------------------------------------ |
 | id                 | varchar(4096)  | 一意ID                                           |
-| catalog_id         | varchar(64)    | CatalogのID                                      |
+| catalog_id         | varchar(64)    | カタログのID                                      |
 | db_id              | varchar(64)    | DatabaseのID                                     |
-| tbl_id             | varchar(64)    | TableのID                                        |
+| tbl_id             | varchar(64)    | tableのID                                        |
 | idx_id             | varchar(64)    | IndexのID                                        |
 | col_id             | varchar(64)    | カラムのID、現在はカラム名を格納                 |
-| part_id            | varchar(64)    | PartitionのID、常に空                            |
+| part_id            | varchar(64)    | パーティションのID、常に空                            |
 | count              | bigint         | 行数                                             |
 | ndv                | bigint         | 個別値の数                                       |
 | null_count         | bigint         | NULLの数                                         |

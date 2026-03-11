@@ -17,12 +17,12 @@
 
 | カラム名           | 型             | 説明                                           |
 | ------------------ | -------------- | ------------------------------------------------ |
-| catalog_id         | varchar(64)    | CatalogのID                                     |
+| catalog_id         | varchar(64)    | カタログのID                                     |
 | db_id              | varchar(64)    | DatabaseのID                                    |
-| tbl_id             | varchar(64)    | TableのID                                       |
+| tbl_id             | varchar(64)    | tableのID                                       |
 | idx_id             | varchar(64)    | IndexのID                                       |
-| part_name          | varchar(64)    | Partitionの名前                                 |
-| part_id            | bigint         | PartitionのID                                   |
+| part_name          | varchar(64)    | パーティションの名前                                 |
+| part_id            | bigint         | パーティションのID                                   |
 | col_id             | varchar(64)    | カラムのID、現在はカラム名を格納                |
 | count              | bigint         | 行数                                           |
 | ndv                | hll            | 個別値の数                                     |

@@ -19,8 +19,8 @@
 - Broker Loadに関する複数の問題を修正
 - CTAS実行に関する複数の問題を修正
 - バックアップとリストアに関する複数の問題を修正
-- audit logに"Catalog"列を追加
-- Iceberg Catalogのメタデータキャッシュを最適化
+- audit logに"カタログ"列を追加
+- Iceberg カタログのメタデータキャッシュを最適化
 - outfile/exportフィーチャーに関する複数の問題を修正
 - "replayEraseTable" edit logがFE起動を失敗させる問題を修正
 - セキュリティに関する複数の問題を修正

@@ -19,7 +19,7 @@ Distribute hintはJoinのshuffle方法を制御するために使用されます
 
 ## 構文
 
-- 右側のテーブルに対してDistribute Typeの指定をサポートしており、`[shuffle]`または`[broadcast]`のいずれかを指定できます。Joinの右側のテーブルの前に記述する必要があります。
+- 右側のテーブルに対してDistribute タイプの指定をサポートしており、`[shuffle]`または`[broadcast]`のいずれかを指定できます。Joinの右側のテーブルの前に記述する必要があります。
 - 任意の数のDistribute Hintsをサポートします。
 - 正しくプランを生成できないDistribute Hintに遭遇した場合、システムはエラーを表示しません。hintを適用するために最善の努力を行い、最終的なDistribute方法はEXPLAIN出力に表示されます。
 

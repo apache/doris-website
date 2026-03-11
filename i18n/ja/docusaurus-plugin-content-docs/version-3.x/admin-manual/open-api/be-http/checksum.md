@@ -11,7 +11,7 @@
 
 `GET /api/checksum?tablet_id={int}&version={int}&schema_hash={int}`
 
-## Description
+## 詳細
 
 Checksum
 

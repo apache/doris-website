@@ -5,7 +5,7 @@
   "description": "64ビットmurmur3ハッシュ値を計算する"
 }
 ---
-## Description
+## 詳細
 
 64-bit murmur3 ハッシュ値を計算します
 

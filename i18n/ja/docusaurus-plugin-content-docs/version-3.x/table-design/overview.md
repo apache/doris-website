@@ -3,7 +3,7 @@
   "title": "概要 | テーブル設計",
   "language": "ja",
   "description": "ユーザーはCREATE TABLE文を使用してDorisにテーブルを作成できます。",
-  "sidebar_label": "Overview"
+  "sidebar_label": "概要"
 }
 ---
 # 概要

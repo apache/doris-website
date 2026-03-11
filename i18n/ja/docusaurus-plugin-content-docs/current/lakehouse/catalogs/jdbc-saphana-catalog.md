@@ -2,12 +2,12 @@
 {
   "title": "SAP HANA JDBCカタログ",
   "language": "ja",
-  "description": "Doris JDBC CatalogはSAP HANAデータベースへの接続を標準JDBC interfaceを通じてサポートします。"
+  "description": "Doris JDBC カタログはSAP HANAデータベースへの接続を標準JDBC interfaceを通じてサポートします。"
 }
 ---
-Doris JDBC Catalogは、標準のJDBCインターフェース経由でSAP HANAデータベースへの接続をサポートします。このドキュメントでは、SAP HANAデータベース接続の設定方法について説明します。
+Doris JDBC カタログは、標準のJDBCインターフェース経由でSAP HANAデータベースへの接続をサポートします。このドキュメントでは、SAP HANAデータベース接続の設定方法について説明します。
 
-JDBC Catalogの概要については、以下を参照してください: [JDBC Catalog Overview](./jdbc-catalog-overview.md)
+JDBC カタログの概要については、以下を参照してください: [JDBC カタログ 概要](./jdbc-catalog-overview.md)
 
 ## 使用上の注意事項
 

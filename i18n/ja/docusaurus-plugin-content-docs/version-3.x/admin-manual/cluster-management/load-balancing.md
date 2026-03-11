@@ -64,10 +64,6 @@ Nginxを正しくインストールするには、[Nginx](https://nginx.org/en/d
 ```shell
 vim /usr/local/nginx/conf/default.conf
 ```
-I notice that the content between the markers "<<<BEGIN>>>" and "<<<END>>>" appears to be empty or contains only "Content as follows:" without any actual content to translate.
-
-Could you please provide the actual English technical documentation content that you'd like me to translate into Japanese?
-
 ```text
 events {
 worker_connections 1024;

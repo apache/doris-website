@@ -2,12 +2,12 @@
 {
   "title": "DataX Doriswriter",
   "language": "ja",
-  "description": "DataX DoriswriterプラグインはMySQL、Oracle、SQL Serverなどの様々なデータソースからのデータ同期をサポートしています。"
+  "description": "DataX DoriswriterプラグインはMySQL、Oracle、SQL サーバーなどの様々なデータソースからのデータ同期をサポートしています。"
 }
 ---
 # DataX Doriswriter
 
-[DataX](https://github.com/alibaba/DataX) Doriswriterプラグインは、MySQL、Oracle、SQL Serverなどの様々なデータソースから、Stream Load方式を使用してDorisにデータを同期することをサポートしています。
+[DataX](https://github.com/alibaba/DataX) Doriswriterプラグインは、MySQL、Oracle、SQL サーバーなどの様々なデータソースから、Stream Load方式を使用してDorisにデータを同期することをサポートしています。
 
 :::info Note
 このプラグインはDataXサービスと組み合わせて使用する必要があります。

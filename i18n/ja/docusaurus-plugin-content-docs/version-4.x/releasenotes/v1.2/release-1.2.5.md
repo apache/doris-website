@@ -23,11 +23,11 @@
 
 - FE設定`recover_with_skip_missing_version`を追加し、特定の障害条件下で問題のあるレプリカをスキップするクエリに使用されます。
 
-- 行レベル権限機能が外部Catalogをサポートします。
+- 行レベル権限機能が外部カタログをサポートします。
 
-- Hive CatalogがBE側でのkerberosチケットの自動更新をサポートし、手動更新が不要になりました。
+- Hive カタログがBE側でのkerberosチケットの自動更新をサポートし、手動更新が不要になりました。
 
-- JDBC CatalogがMySQL/ClickHouseシステムデータベース（`information_schema`）下のテーブルをサポートします。
+- JDBC カタログがMySQL/ClickHouseシステムデータベース（`information_schema`）下のテーブルをサポートします。
 
 # バグ修正
 
@@ -41,9 +41,9 @@
 
 - クエリ実行と計画に関する複数の問題を修正しました。
 
-- JDBC Catalogに関する複数の問題を修正しました。
+- JDBC カタログに関する複数の問題を修正しました。
 
-- Hive Catalogに関するクエリ関連の複数の問題、およびHive Metastoreメタデータ同期の問題を修正しました。
+- Hive カタログに関するクエリ関連の複数の問題、およびHive Metastoreメタデータ同期の問題を修正しました。
 
 - `SHOW LOAD PROFILE`ステートメントの結果が不正である問題を修正しました。
 

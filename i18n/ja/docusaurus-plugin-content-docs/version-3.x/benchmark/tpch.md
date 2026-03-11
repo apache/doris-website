@@ -17,7 +17,7 @@ TPC-H標準テストデータセットの22のクエリにおいて、compute-st
 
 ## 1. ハードウェア環境
 
-| Hardware           | Configuration Instructions               |
+| Hardware           | 設定 Instructions               |
 |--------------------|------------------------------------------|
 | Number of Machines | 4 Aliyun Virtual Machine (1FE，3BEs)      |
 | CPU                | Intel Xeon (Ice Lake) Platinum 8369B 32C |
@@ -37,7 +37,7 @@ TPC-H標準テストデータセットの22のクエリにおいて、compute-st
 
 テスト全体のシミュレーションによって生成されたTPC-H 1000Gデータを、それぞれApache Doris 3.0.3-rc03 (Compute-Storage Decoupled Mode)とApache Doris 2.1.7-rc03にインポートしてテストしました。以下はテーブルの関連する説明とデータ量です。
 
-| TPC-H Table Name | Rows          | Annotation    |
+| TPC-H table Name | Rows          | Annotation    |
 |:-----------------|:--------------|:--------------|
 | REGION           | 5             | Region        |
 | NATION           | 25            | Nation        |

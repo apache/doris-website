@@ -94,7 +94,7 @@ https://sdb-cloud-third-party.s3.amazonaws.com/doris-cf/cloudformation_doris.tem
 
 ![find the connection address for FE ](/images/find-connection-address-for-fe-3.jpeg)
 
-**3. デプロイされたDoris Clusterに接続するため、CloudFormationを使用してDorisをデプロイした後のデフォルト値は以下のとおりです：**
+**3. デプロイされたDoris クラスターに接続するため、CloudFormationを使用してDorisをデプロイした後のデフォルト値は以下のとおりです：**
 
 - **FE IP**: 前のセクションの手順に従ってFEのIPアドレスを取得します。
 

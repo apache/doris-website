@@ -2,12 +2,12 @@
 {
   "title": "共通テーブル式",
   "language": "ja",
-  "description": "Common Table Expression (CTE) は、SQL文のスコープ内で複数回参照できる一時的な結果セットを定義します。"
+  "description": "Common table Expression (CTE) は、SQL文のスコープ内で複数回参照できる一時的な結果セットを定義します。"
 }
 ---
 ## 説明
 
-Common Table Expression（CTE）は、SQL文のスコープ内で複数回参照できる一時的な結果セットを定義します。CTEは主にSELECT文で使用されます。
+Common table Expression（CTE）は、SQL文のスコープ内で複数回参照できる一時的な結果セットを定義します。CTEは主にSELECT文で使用されます。
 
 CTEを指定するには、1つ以上のカンマ区切りの句を含む`WITH`句を使用します。各句は結果セットを生成するサブクエリを提供し、サブクエリに名前を関連付けます。
 

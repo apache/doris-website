@@ -8,7 +8,7 @@
 分離されたコンピュート・ストレージクラスターでは、さまざまなコンポーネントのノードを管理するために管理システムが使用する認証情報など、特定の設定がクラスターレベルで適用されます。
 
 ## 管理ユーザー名とパスワードの設定
-Dorisノードを管理するには、MySQLプロトコルを介してユーザー名とパスワードを使用してライブのFrontend（FE）ノードに接続する必要があります。Dorisは[ロールベースアクセス制御（RBAC）に類似した認可メカニズム](../../../admin-manual/auth/authentication-and-authorization)を実装しており、ノード管理操作には[Node_priv](../../../admin-manual/auth/authentication-and-authorization#Types-of-Permissions)権限を持つユーザーアカウントが必要です。
+Dorisノードを管理するには、MySQLプロトコルを介してユーザー名とパスワードを使用してライブのFrontend（FE）ノードに接続する必要があります。Dorisは[ロールベースアクセス制御（RBAC）に類似した認可メカニズム](../../../admin-manual/auth/authentication-and-authorization)を実装しており、ノード管理操作には[Node_priv](../../../admin-manual/auth/authentication-and-authorization#Types-of-許可)権限を持つユーザーアカウントが必要です。
 
 デフォルトでは、Doris Operatorは、DorisDisaggregatedClusterリソースで定義されたクラスターのデプロイと管理にrootユーザー（完全な権限を持ち、パスワードなし）を使用します。rootアカウントにパスワードが割り当てられると、DorisDisaggregatedClusterリソースでNode_priv権限を持つユーザー名とパスワードを明示的に設定して、Doris Operatorが自動管理タスクを継続して実行できるようにする必要があります。
 

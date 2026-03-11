@@ -55,7 +55,7 @@
 
 - Recyclerでオブジェクトストレージのレート制限とサーバサイドのレート制限再試行機能をサポートしました。[#37663](https://github.com/apache/doris/pull/37663) [#37680](https://github.com/apache/doris/pull/37680)
 
-### Lakehouse
+### レイクハウス
 
 - 複雑型の出力フォーマットを設定するセッション変数`serde_dialect`を追加しました。[#37039](https://github.com/apache/doris/pull/37039)
 
@@ -81,7 +81,7 @@
 
 ### Semi-Structured Data Management
 
-- ES CatalogでElasticsearchの`nested`または`object`型をDorisのJSON型にマッピングするようになりました。[#37101](https://github.com/apache/doris/pull/37101)
+- ES カタログでElasticsearchの`nested`または`object`型をDorisのJSON型にマッピングするようになりました。[#37101](https://github.com/apache/doris/pull/37101)
 
 - 複数フィールドでキーワードマッチングをサポートし、転置インデックスを活用して検索を高速化する`MULTI_MATCH`関数を追加しました。[#37722](https://github.com/apache/doris/pull/37722)
 
@@ -139,11 +139,11 @@
 
 - バックオフ再試行によりローカルファイルキャッシュの潜在的な不整合が原因の読み取り失敗を最適化しました。[#38645](https://github.com/apache/doris/pull/38645)
 
-### Lakehouse
+### レイクハウス
 
 - Parquet/ORCフォーマットの読み書き操作のメモリ統計を最適化しました。[#37234](https://github.com/apache/doris/pull/37234)
 
-- Trino Connector Catalogで述語プッシュダウンをサポートしました。[#37874](https://github.com/apache/doris/pull/37874)
+- Trino Connector カタログで述語プッシュダウンをサポートしました。[#37874](https://github.com/apache/doris/pull/37874)
 
 - 外部テーブルの`count(*)`プッシュダウン最適化を有効にするかどうかを制御するセッション変数`enable_count_push_down_for_external_table`を追加しました。[#37046](https://github.com/apache/doris/pull/37046)
 

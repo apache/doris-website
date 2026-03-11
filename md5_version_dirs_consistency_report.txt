@@ -1,0 +1,159 @@
+Version Docs MD5 Directory Consistency Report
+================================================
+
+Scope:
+- 2.1: versioned_docs/version-2.1
+- 3.x: versioned_docs/version-3.x
+- 4.x: versioned_docs/version-4.x
+- current: docs
+
+Rule:
+- A top-level directory is IDENTICAL only when both versions contain the same .md/.mdx files and every corresponding file has the same MD5.
+
+Per-version top-level directory stats:
+- 2.1: 16 dirs, 1274 docs
+- 3.x: 17 dirs, 1362 docs
+- 4.x: 17 dirs, 1501 docs
+- current: 17 dirs, 1517 docs
+
+Pairwise comparison results:
+
+[2.1 vs 3.x]
+- Common top-level dirs: 15
+- Identical dirs: 2
+- Identical dir list:
+  - db-connect
+  - observability
+- Non-identical dirs: 13
+  (format: dir_name | file_count_left | file_count_right | same_md5_in_common_paths)
+  - admin-manual | 185 | 191 | 148
+  - benchmark | 3 | 3 | 0
+  - data-operate | 58 | 60 | 43
+  - ecosystem | 33 | 34 | 27
+  - faq | 7 | 7 | 4
+  - gettingStarted | 5 | 5 | 3
+  - install | 10 | 17 | 2
+  - lakehouse | 54 | 63 | 36
+  - query-acceleration | 39 | 39 | 31
+  - query-data | 10 | 10 | 8
+  - releasenotes | 53 | 58 | 50
+  - sql-manual | 784 | 831 | 606
+  - table-design | 27 | 29 | 8
+
+[2.1 vs 4.x]
+- Common top-level dirs: 15
+- Identical dirs: 0
+- Identical dir list: (none)
+- Non-identical dirs: 15
+  (format: dir_name | file_count_left | file_count_right | same_md5_in_common_paths)
+  - admin-manual | 185 | 195 | 145
+  - benchmark | 3 | 3 | 0
+  - data-operate | 58 | 64 | 32
+  - db-connect | 2 | 2 | 0
+  - ecosystem | 33 | 35 | 24
+  - faq | 7 | 7 | 4
+  - gettingStarted | 5 | 5 | 2
+  - install | 10 | 17 | 2
+  - lakehouse | 54 | 63 | 30
+  - observability | 3 | 3 | 1
+  - query-acceleration | 39 | 42 | 23
+  - query-data | 10 | 10 | 7
+  - releasenotes | 53 | 62 | 45
+  - sql-manual | 784 | 940 | 237
+  - table-design | 27 | 29 | 5
+
+[2.1 vs current]
+- Common top-level dirs: 15
+- Identical dirs: 0
+- Identical dir list: (none)
+- Non-identical dirs: 15
+  (format: dir_name | file_count_left | file_count_right | same_md5_in_common_paths)
+  - admin-manual | 185 | 196 | 142
+  - benchmark | 3 | 3 | 0
+  - data-operate | 58 | 66 | 31
+  - db-connect | 2 | 2 | 0
+  - ecosystem | 33 | 36 | 22
+  - faq | 7 | 7 | 4
+  - gettingStarted | 5 | 5 | 2
+  - install | 10 | 17 | 2
+  - lakehouse | 54 | 63 | 30
+  - observability | 3 | 3 | 1
+  - query-acceleration | 39 | 42 | 23
+  - query-data | 10 | 11 | 6
+  - releasenotes | 53 | 62 | 45
+  - sql-manual | 784 | 950 | 231
+  - table-design | 27 | 29 | 6
+
+[3.x vs 4.x]
+- Common top-level dirs: 16
+- Identical dirs: 0
+- Identical dir list: (none)
+- Non-identical dirs: 16
+  (format: dir_name | file_count_left | file_count_right | same_md5_in_common_paths)
+  - admin-manual | 191 | 195 | 147
+  - benchmark | 3 | 3 | 0
+  - compute-storage-decoupled | 9 | 11 | 4
+  - data-operate | 60 | 64 | 39
+  - db-connect | 2 | 2 | 0
+  - ecosystem | 34 | 35 | 28
+  - faq | 7 | 7 | 6
+  - gettingStarted | 5 | 5 | 3
+  - install | 17 | 17 | 8
+  - lakehouse | 63 | 63 | 55
+  - observability | 3 | 3 | 1
+  - query-acceleration | 39 | 42 | 22
+  - query-data | 10 | 10 | 8
+  - releasenotes | 58 | 62 | 48
+  - sql-manual | 831 | 940 | 307
+  - table-design | 29 | 29 | 9
+
+[3.x vs current]
+- Common top-level dirs: 16
+- Identical dirs: 0
+- Identical dir list: (none)
+- Non-identical dirs: 16
+  (format: dir_name | file_count_left | file_count_right | same_md5_in_common_paths)
+  - admin-manual | 191 | 196 | 142
+  - benchmark | 3 | 3 | 0
+  - compute-storage-decoupled | 9 | 11 | 4
+  - data-operate | 60 | 66 | 38
+  - db-connect | 2 | 2 | 0
+  - ecosystem | 34 | 36 | 27
+  - faq | 7 | 7 | 6
+  - gettingStarted | 5 | 5 | 3
+  - install | 17 | 17 | 8
+  - lakehouse | 63 | 63 | 55
+  - observability | 3 | 3 | 1
+  - query-acceleration | 39 | 42 | 22
+  - query-data | 10 | 11 | 6
+  - releasenotes | 58 | 62 | 48
+  - sql-manual | 831 | 950 | 305
+  - table-design | 29 | 29 | 10
+
+[4.x vs current]
+- Common top-level dirs: 17
+- Identical dirs: 5
+- Identical dir list:
+  - benchmark
+  - db-connect
+  - faq
+  - install
+  - observability
+- Non-identical dirs: 12
+  (format: dir_name | file_count_left | file_count_right | same_md5_in_common_paths)
+  - admin-manual | 195 | 196 | 179
+  - ai | 13 | 14 | 7
+  - compute-storage-decoupled | 11 | 11 | 10
+  - data-operate | 64 | 66 | 59
+  - ecosystem | 35 | 36 | 32
+  - gettingStarted | 5 | 5 | 4
+  - lakehouse | 63 | 63 | 60
+  - query-acceleration | 42 | 42 | 36
+  - query-data | 10 | 11 | 7
+  - releasenotes | 62 | 62 | 61
+  - sql-manual | 940 | 950 | 824
+  - table-design | 29 | 29 | 25
+
+Directories identical across all 4 versions:
+- Common dirs in all versions: 15
+- Fully identical across all versions: 0

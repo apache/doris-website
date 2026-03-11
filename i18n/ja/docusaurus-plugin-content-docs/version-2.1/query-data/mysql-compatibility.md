@@ -103,7 +103,7 @@ Dorisにはいくつかの固有のデータ型があります。詳細は以下
 
 ### DDL
 
-#### 01 DorisでのCreate Tableシンタックス
+#### 01 DorisでのCreate tableシンタックス
 
 ```sql
 CREATE TABLE [IF NOT EXISTS] [database.]table

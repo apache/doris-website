@@ -17,7 +17,7 @@
 
 明確にするため、このセクションではbucketを初期bucketとその後のbucketの2つの期間に分けます。初期とその後は、この機能を明確に説明するためにこの記事で使用される用語に過ぎず、Apache Dorisには初期や後続のbucketは存在しません。
 
-上記のbucket作成に関するセクションで分かるように、`BUCKET_DESC`は非常にシンプルですが、bucketの数を指定する必要があります。自動bucket予測機能では、BUCKET_DESCの構文により、bucketの数を直接`Auto`に変更し、新しいPropertiesの設定を追加します。
+上記のbucket作成に関するセクションで分かるように、`BUCKET_DESC`は非常にシンプルですが、bucketの数を指定する必要があります。自動bucket予測機能では、BUCKET_DESCの構文により、bucketの数を直接`Auto`に変更し、新しいプロパティの設定を追加します。
 
 ```sql
 -- old version of the creation syntax for specifying the number of buckets

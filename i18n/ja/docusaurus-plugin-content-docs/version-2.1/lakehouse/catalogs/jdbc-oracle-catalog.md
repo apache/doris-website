@@ -2,12 +2,12 @@
 {
   "title": "Oracle JDBC カタログ",
   "language": "ja",
-  "description": "Apache Doris JDBC CatalogはJDBCの標準インターフェースを介してOracleデータベースへの接続をサポートしています。"
+  "description": "Apache Doris JDBC カタログはJDBCの標準インターフェースを介してOracleデータベースへの接続をサポートしています。"
 }
 ---
-Apache Doris JDBC Catalogは、標準のJDBCインターフェースを介してOracleデータベースへの接続をサポートします。このドキュメントでは、Oracleデータベース接続の設定方法について説明します。
+Apache Doris JDBC カタログは、標準のJDBCインターフェースを介してOracleデータベースへの接続をサポートします。このドキュメントでは、Oracleデータベース接続の設定方法について説明します。
 
-JDBC Catalogの概要については、以下を参照してください: [JDBC Catalog Overview](./jdbc-catalog-overview.md)
+JDBC カタログの概要については、以下を参照してください: [JDBC カタログ 概要](./jdbc-catalog-overview.md)
 
 ## 使用上の注意
 

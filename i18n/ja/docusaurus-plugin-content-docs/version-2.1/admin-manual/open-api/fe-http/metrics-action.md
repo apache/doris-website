@@ -11,7 +11,7 @@
 
 `GET /api/metrics`
 
-## Description
+## 詳細
 
 dorisメトリクス情報を取得するために使用されます。
     

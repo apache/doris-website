@@ -5,7 +5,7 @@
   "description": "クエリテーブル関数（table-valued-function、tvf）は、データクエリのためにクエリステートメントを透過的にカタログに直接送信するために使用できます"
 }
 ---
-## Description
+## 詳細
 
 クエリテーブル関数（table-valued-function、tvf）は、データクエリのためにクエリステートメントを直接catalogに透過的に送信するために使用できます。
 

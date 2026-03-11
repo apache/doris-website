@@ -34,8 +34,8 @@
 - 読み込み列統計例外をキャッチし、fe.outへの過度なスタック情報の出力を回避
 - SQLでview名を指定してmaterialized viewを選択
 - 自動分析最大テーブル幅のデフォルト値を100に変更
-- JDBC CatalogでのRecovery predicate pushdownにおける列の文字エスケープ
-- JDBC MYSQL Catalog `to_date`関数pushdownを修正
+- JDBC カタログでのRecovery predicate pushdownにおける列の文字エスケープ
+- JDBC MYSQL カタログ `to_date`関数pushdownを修正
 - JDBCクライアントのクローズロジックを最適化
 - JDBC接続プールパラメータ設定を最適化
 - HMSのAPIを通じてhudiパーティション情報を取得

@@ -7,11 +7,11 @@
 ---
 Doris BEは、Memory Trackerを使用してプロセスメモリ使用量を記録します。これには、query、load、compaction、schema changeなどのタスクのライフサイクルで使用されるメモリや、さまざまなキャッシュが含まれます。Webページでのリアルタイム表示をサポートし、メモリ関連エラーが報告された際にBEログに出力することで、メモリ分析とメモリ問題のトラブルシューティングに使用されます。
 
-Memory Trackerの表示方法、異なるMemory Trackerで表される過度なメモリ使用の原因、およびそれらのメモリ使用量を削減するための分析方法については、Doris BEメモリ構造と併せて[Overview](./../overview.md)で紹介されています。この記事では、Memory Trackerの原理、構造、および一般的な問題のみを紹介します。
+Memory Trackerの表示方法、異なるMemory Trackerで表される過度なメモリ使用の原因、およびそれらのメモリ使用量を削減するための分析方法については、Doris BEメモリ構造と併せて[概要](./../overview.md)で紹介されています。この記事では、Memory Trackerの原理、構造、および一般的な問題のみを紹介します。
 
 ## Memory Tracking原理
 
-Memory Trackerは、各メモリのアプリケーションと解放を追跡するためにDoris Allocatorに依存しています。Doris Allocatorの紹介については、[Memory Control Strategy](./memory-control-strategy.md)を参照してください。
+Memory Trackerは、各メモリのアプリケーションと解放を追跡するためにDoris Allocatorに依存しています。Doris Allocatorの紹介については、[Memory Control ストラテジー](./memory-control-strategy.md)を参照してください。
 
 プロセスメモリ：Doris BEは定期的にシステムからDoris BEプロセスメモリを取得し、Cgroupと互換性があります。
 

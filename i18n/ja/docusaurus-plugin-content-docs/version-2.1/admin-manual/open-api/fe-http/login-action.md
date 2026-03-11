@@ -11,7 +11,7 @@
 
 `POST /rest/v1/login`
 
-## Description
+## 詳細
 
 サービスにログインするために使用されます。
 

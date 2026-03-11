@@ -12,7 +12,7 @@
 -   libhdfsを3.4.2にアップグレード ([#57638](https://github.com/apache/doris/pull/57638))
 -   S3 readerにTotalGetRequestTimeプロファイルメトリックを追加 ([#57636](https://github.com/apache/doris/pull/57636))
 
-### Catalog
+### カタログ
 
 -   MaxCompute catalog（project-schema-table）をサポート ([#57286](https://github.com/apache/doris/pull/57286))
 -   dialect SQL実行時のエラー後に元のSQLの再試行をサポート ([#57498](https://github.com/apache/doris/pull/57498))
@@ -76,7 +76,7 @@
 -   peer読み取りのバグとスレッド処理を修正 ([#57910](https://github.com/apache/doris/pull/57910), [#57807](https://github.com/apache/doris/pull/57807))
 -   filecacheメトリクスとmicrobenchの問題を修正 ([#57535](https://github.com/apache/doris/pull/57535), [#57536](https://github.com/apache/doris/pull/57536))
 
-### Catalog
+### カタログ
 
 -   MaxCompute述語プッシュダウンのnull pointerを修正 ([#57567](https://github.com/apache/doris/pull/57567))
 -   Iceberg client.regionとREST認証情報の問題を修正 ([#57539](https://github.com/apache/doris/pull/57539))

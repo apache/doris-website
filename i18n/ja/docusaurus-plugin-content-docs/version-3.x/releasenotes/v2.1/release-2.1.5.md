@@ -13,7 +13,7 @@
 
 ## 動作の変更
 
-- JDBC Catalogのデフォルト接続プールサイズが10から30に増加され、高同時実行シナリオでの接続枯渇を防止します。[#37023](https://github.com/apache/doris/pull/37023)
+- JDBC カタログのデフォルト接続プールサイズが10から30に増加され、高同時実行シナリオでの接続枯渇を防止します。[#37023](https://github.com/apache/doris/pull/37023)
 
 - システムの予約メモリ（low water mark）が`min(6.4GB, MemTotal * 5%)`に調整され、BE OOMの問題を軽減します。
 
@@ -21,7 +21,7 @@
 
 - 非同期マテリアライズドビューのデータの直接変更は許可されなくなりました。[#37129](https://github.com/apache/doris/pull/37129)
 
-- CTAS（Create Table As Select）中のvarcharとchar型の長さ生成の動作を制御するセッション変数`use_max_length_of_varchar_in_ctas`が追加されました。デフォルト値はtrueです。falseに設定すると、最大長ではなく導出されたvarchar長が使用されます。[#37284](https://github.com/apache/doris/pull/37284)
+- CTAS（Create table As Select）中のvarcharとchar型の長さ生成の動作を制御するセッション変数`use_max_length_of_varchar_in_ctas`が追加されました。デフォルト値はtrueです。falseに設定すると、最大長ではなく導出されたvarchar長が使用されます。[#37284](https://github.com/apache/doris/pull/37284)
 
 - 統計収集では、ファイルサイズに基づいてHiveテーブルの行数を推定する機能がデフォルトで有効になりました。[#37694](https://github.com/apache/doris/pull/37694)
 
@@ -31,7 +31,7 @@
 
 ## 新機能
 
-### Lakehouse
+### レイクハウス
 
 - セッション変数`read_csv_empty_line_as_null`を使用して、CSV形式ファイル読み取り時に空行を無視するかどうかを制御できます。[#37153](https://github.com/apache/doris/pull/37153)
 
@@ -39,7 +39,7 @@
 
 - `serde_dialect="presto"`を設定することで、Prestoの複合型出力形式との互換性を有効にできます。[#37253](https://github.com/apache/doris/pull/37253)
 
-### Multi-Table Materialized View
+### Multi-table Materialized View
 
 - マテリアライズドビューの構築において非決定的関数をサポートします。[#37651](https://github.com/apache/doris/pull/37651)
 
@@ -65,7 +65,7 @@
 
 - `explode_json_object`関数がJSON Objectの行を列に転置します。[#36887](https://github.com/apache/doris/pull/36887)
 
-- ES CatalogでES NESTEDまたはOBJECT型をDoris JSON型にマップします。[#37101](https://github.com/apache/doris/pull/37101)
+- ES カタログでES NESTEDまたはOBJECT型をDoris JSON型にマップします。[#37101](https://github.com/apache/doris/pull/37101)
 
 - match_phraseシリーズクエリのパフォーマンスを向上させるため、指定されたアナライザーを持つ転置インデックスでsupport_phraseがデフォルトで有効になります。[#37949](https://github.com/apache/doris/pull/37949)
 
@@ -79,13 +79,13 @@
 
 - キャッシュをクリアするHTTP APIが追加されました。[#36599](https://github.com/apache/doris/pull/36599)
 
-### Permissions
+### 許可
 
 - テーブル値関数（TVF）内のリソースの認可をサポートします。[#37132](https://github.com/apache/doris/pull/37132)
 
 ## 改善
 
-### Lakehouse
+### レイクハウス
 
 - Paimonをバージョン0.8.1にアップグレード
 
@@ -97,7 +97,7 @@
 
 - セッション変数`fetch_splits_max_wait_time_ms`で設定可能。
 
-- SQLServer JDBC Catalogのデフォルト接続ロジックを改善。[#36971](https://github.com/apache/doris/pull/36971)
+- SQLServer JDBC カタログのデフォルト接続ロジックを改善。[#36971](https://github.com/apache/doris/pull/36971)
 
   デフォルトでは接続暗号化設定に介入しません。`force_sqlserver_jdbc_encrypt_false`がtrueに設定された場合のみ、認証エラーを減らすためにJDBC URLにencrypt=falseが強制的に追加されます。これにより、必要に応じて暗号化の有効/無効を切り替える、より柔軟な暗号化動作の制御が可能になります。
 
@@ -113,7 +113,7 @@
 
 - Hive書き込み操作のメタデータアクセス回数を最適化。[#37127](https://github.com/apache/doris/pull/37127)
 
-- ES Catalogでnested/object型のDoris Json型へのマッピングをサポート。[#37182](https://github.com/apache/doris/pull/37182)
+- ES カタログでnested/object型のDoris Json型へのマッピングをサポート。[#37182](https://github.com/apache/doris/pull/37182)
 
 - 古いバージョンのojdbcドライバーを使用してOracleに接続する際のエラーメッセージを改善。[#37634](https://github.com/apache/doris/pull/37634)
 
@@ -123,7 +123,7 @@
 
 - Hive metastoreイベントリスナーが有効な場合に、古いバージョンから新しいバージョンへのアップグレード中にFEメタデータリプレイエラーが発生する問題を修正。[#37757](https://github.com/apache/doris/pull/37757)
 
-### Multi-Table Materialized View
+### Multi-table Materialized View
 
 - 非同期マテリアライズドビューのキーカラム選択を自動化。[#36601](https://github.com/apache/doris/pull/36601)
 
@@ -181,7 +181,7 @@
 
 ## バグ修正
 
-### Lakehouse
+### レイクハウス
 
 - 一部のケースでParquet形式をクエリする際にBEクラッシュを引き起こす問題を修正。[#37086](https://github.com/apache/doris/pull/37086)
 
@@ -203,7 +203,7 @@
 
 - 一部のケースでRangerを使用してカタログを作成するとクライアントがハングする問題を修正。[#37551](https://github.com/apache/doris/pull/37551)
 
-### Multi-Table Materialized View
+### Multi-table Materialized View
 
 - ベーステーブルに新しいパーティションを追加した後、パーティション集約ロールアップリライト後に間違った結果を導く問題を修正。[#37651](https://github.com/apache/doris/pull/37651)
 
@@ -227,7 +227,7 @@
 
 - 1.xから2.x以上のバージョンにアップグレードする際のMAPデータ型に関連するcoredumpの問題を修正。[#36937](https://github.com/apache/doris/pull/36937)
 
-- Array型のES Catalogサポートを改善。[#36936](https://github.com/apache/doris/pull/36936)
+- Array型のES カタログサポートを改善。[#36936](https://github.com/apache/doris/pull/36936)
 
 ### Inverted Index
 

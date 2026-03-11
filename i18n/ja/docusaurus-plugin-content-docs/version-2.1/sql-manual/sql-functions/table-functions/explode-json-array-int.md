@@ -5,7 +5,7 @@
   "description": "explodejsonarrayintテーブル関数は、各要素がinteger型であるJSON配列を受け取ります。"
 }
 ---
-## Description
+## 詳細
 
 `explode_json_array_int`テーブル関数は、各要素が整数型のJSON配列を受け取り、配列内の各整数を複数の行に展開します。各行には1つの整数が含まれます。LATERAL VIEWと組み合わせて使用されます。
 

@@ -2,12 +2,12 @@
 {
   "title": "ClickHouse JDBC カタログ",
   "language": "ja",
-  "description": "Doris JDBC CatalogはClickHouseデータベースに標準JDBC interfaceを介して接続することをサポートします。"
+  "description": "Doris JDBC カタログはClickHouseデータベースに標準JDBC interfaceを介して接続することをサポートします。"
 }
 ---
-Doris JDBC Catalogは標準のJDBCインターフェースを介してClickHouseデータベースへの接続をサポートします。この文書では、ClickHouseデータベース接続の設定方法について説明します。
+Doris JDBC カタログは標準のJDBCインターフェースを介してClickHouseデータベースへの接続をサポートします。この文書では、ClickHouseデータベース接続の設定方法について説明します。
 
-JDBC Catalogの概要については、以下を参照してください：[JDBC Catalog Overview](./jdbc-catalog-overview.md)
+JDBC カタログの概要については、以下を参照してください：[JDBC カタログ 概要](./jdbc-catalog-overview.md)
 
 ## 使用上の注意
 

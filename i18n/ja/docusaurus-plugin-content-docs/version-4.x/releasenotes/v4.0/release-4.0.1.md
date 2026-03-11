@@ -29,7 +29,7 @@
 - 転置インデックスのデフォルトストレージ形式をV2からV3にアップグレードしました。[#57140](https://github.com/apache/doris/pull/57140)
 - char_filterコンポーネントを追加してカスタムトークナイザーパイプラインのサポートを強化し、アナライザーフレームワークに2つの組み込みトークナイザー（basic tokenizerとICU tokenizer）を導入し、組み込みトークナイザーのエイリアスを追加し、同名コンポーネント設定をサポートして統一アナライザーフレームワークを最適化しました。[#56243](https://github.com/apache/doris/pull/56243) [#57055](https://github.com/apache/doris/pull/57055)
 
-## Lakehouse
+## レイクハウス
 
 - 特定の条件下で外部テーブルのMerge IOで深刻な読み取り増幅の問題に対処するため、セッション変数merge_io_read_slice_size_bytesを追加しました。ドキュメント：https://doris.apache.org/docs/3.x/lakehouse/best-practices/optimization#merge-io-optimization
 
@@ -48,13 +48,13 @@
 - トークン化されていないフィールドの検索クエリ結果の問題を修正し、MOWテーブルでのsearch関数の実行を有効にしました。[#56914](https://github.com/apache/doris/pull/56914) [#56927](https://github.com/apache/doris/pull/56927)
 - IS NULL述語でフィルタリングする際の転置インデックスの計算エラーを修正しました。[#56964](https://github.com/apache/doris/pull/56964)
 
-## Lakehouse
+## レイクハウス
 
 - 特定の条件下でプレディケートプッシュダウンがParquet Page Indexを使用できない問題を修正しました。[#55795](https://github.com/apache/doris/pull/55795)
 - 特定の条件下で外部テーブルクエリでのシャード読み取りが欠落する問題を修正しました。[#57071](https://github.com/apache/doris/pull/57071)
-- 特定の条件下でHadoopファイルシステムキャッシュが有効になっているときにCatalogプロパティの変更が反映されない問題を修正しました。[#57063](https://github.com/apache/doris/pull/57063)
+- 特定の条件下でHadoopファイルシステムキャッシュが有効になっているときにカタログプロパティの変更が反映されない問題を修正しました。[#57063](https://github.com/apache/doris/pull/57063)
 - 特定の条件下で古いバージョンからのアップグレード時に接続プロパティ検証によるメタデータリプレイ失敗の問題を修正しました。[#56929](https://github.com/apache/doris/pull/56929)
-- 特定の条件下でRefresh Catalogによって引き起こされるFEスレッドデッドロックの問題を修正しました。[#56639](https://github.com/apache/doris/pull/56639)
+- 特定の条件下でRefresh カタログによって引き起こされるFEスレッドデッドロックの問題を修正しました。[#56639](https://github.com/apache/doris/pull/56639)
 - HiveからコンバートされたIcebergテーブルを読み取れない問題を修正しました。[#56918](https://github.com/apache/doris/pull/56918)
 - 特定の条件下でQuery Profilesの収集によって引き起こされるBEクラッシュの問題を修正しました。[#56806](https://github.com/apache/doris/pull/56806)
 

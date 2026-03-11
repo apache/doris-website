@@ -81,7 +81,7 @@
 
 ### 半構造化データ管理
 
-- ES CatalogがElasticsearchの`nested`または`object`型をDorisのJSON型にマップするようになりました。[#37101](https://github.com/apache/doris/pull/37101)
+- ES カタログがElasticsearchの`nested`または`object`型をDorisのJSON型にマップするようになりました。[#37101](https://github.com/apache/doris/pull/37101)
 
 - 複数フィールド間でのキーワードマッチングをサポートし、転置インデックスを活用して検索を高速化できる`MULTI_MATCH`関数を追加しました。[#37722](https://github.com/apache/doris/pull/37722)
 
@@ -143,7 +143,7 @@
 
 - Parquet/ORC形式の読み書き操作のメモリ統計を最適化しました。[#37234](https://github.com/apache/doris/pull/37234)
 
-- Trino Connector Catalogが述語プッシュダウンをサポートしました。[#37874](https://github.com/apache/doris/pull/37874)
+- Trino Connector カタログが述語プッシュダウンをサポートしました。[#37874](https://github.com/apache/doris/pull/37874)
 
 - 外部テーブルの`count(*)`プッシュダウン最適化を有効にするかどうかを制御するセッション変数`enable_count_push_down_for_external_table`を追加しました。[#37046](https://github.com/apache/doris/pull/37046)
 

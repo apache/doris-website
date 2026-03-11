@@ -126,7 +126,7 @@ CREATE TABLE `demo`.`tbl` (
 
   ```
 
-### Constraints and Limitations
+### 制約と制限
 
 - Auto-increment columns can only be used in Duplicate or Unique model tables.
 - A table can have only one auto-increment column.

@@ -46,7 +46,7 @@
 
   - https://github.com/apache/doris/pull/33137
 
-3. DB2 Catalog作成時にユーザーが接続を確認できるよう、DB2データベースにテスト接続機能を追加しました。
+3. DB2 カタログ作成時にユーザーが接続を確認できるよう、DB2データベースにテスト接続機能を追加しました。
 
   - https://github.com/apache/doris/pull/33335
 
@@ -62,7 +62,7 @@
 ## バグ修正
 
 
-1. HMSとHadoopのIceberg CatalogがIcebergでmanifest cacheを有効にする"io.manifest.cache-enabled"などのIcebergプロパティをサポートしない問題を修正しました。
+1. HMSとHadoopのIceberg カタログがIcebergでmanifest cacheを有効にする"io.manifest.cache-enabled"などのIcebergプロパティをサポートしない問題を修正しました。
 
   - https://github.com/apache/doris/pull/33113
 

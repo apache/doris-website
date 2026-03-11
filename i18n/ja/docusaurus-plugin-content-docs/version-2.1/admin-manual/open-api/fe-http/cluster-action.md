@@ -5,13 +5,13 @@
   "description": "クラスターのhttp、mysql接続情報を取得するために使用されます。"
 }
 ---
-# Cluster Action
+# クラスター Action
 
 ## Request
 
 `GET /rest/v2/manager/cluster/cluster_info/conn_info`
 
-## Cluster Connection Information
+## クラスター Connection Information
 
 `GET /rest/v2/manager/cluster/cluster_info/conn_info`
 

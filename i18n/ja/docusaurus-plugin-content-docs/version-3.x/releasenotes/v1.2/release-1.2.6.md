@@ -17,7 +17,7 @@
 - expr context のメモリリークを修正しました。
 - `explode_split` 関数が一部のケースで正しく実行されない問題を修正しました。
 
-## Multi Catalog
+## Multi カタログ
 
 - hive メタデータの同期により FE の replay edit log が失敗する問題を修正しました。
 - `refresh catalog` 操作により FE で OOM が発生する問題を修正しました。

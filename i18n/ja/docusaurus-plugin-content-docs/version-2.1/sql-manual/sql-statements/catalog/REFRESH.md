@@ -2,12 +2,12 @@
 {
   "title": "リフレッシュ",
   "language": "ja",
-  "description": "このステートメントは、指定されたCatalog/Database/Tableのメタデータを更新します。"
+  "description": "このステートメントは、指定されたカタログ/Database/tableのメタデータを更新します。"
 }
 ---
 ## 説明
 
-このステートメントは、指定されたCatalog/Database/Tableのメタデータを更新します。
+このステートメントは、指定されたカタログ/Database/tableのメタデータを更新します。
 
 ## 構文
 

@@ -71,14 +71,14 @@
 - 可観測性を最適化し、指定されたsegmentファイルキャッシュを削除するインターフェースを提供しました。[#38489](https://github.com/apache/doris/pull/38489) [#42896](https://github.com/apache/doris/pull/42896) [#41037](https://github.com/apache/doris/pull/41037) [#43412](https://github.com/apache/doris/pull/43412)
 - Meta-service運用保守インターフェースを最適化：RPC速度制限とtabletメタデータ修正。[#42413](https://github.com/apache/doris/pull/42413) [#43884](https://github.com/apache/doris/pull/43884) [#41782](https://github.com/apache/doris/pull/41782) [#43460](https://github.com/apache/doris/pull/43460)
 
-### Lakehouse
+### レイクハウス
 
-- Paimon CatalogでAlibaba Cloud DLFとOSS-HDFSストレージをサポートしました。[#41247](https://github.com/apache/doris/pull/41247) [#42585](https://github.com/apache/doris/pull/42585)
+- Paimon カタログでAlibaba Cloud DLFとOSS-HDFSストレージをサポートしました。[#41247](https://github.com/apache/doris/pull/41247) [#42585](https://github.com/apache/doris/pull/42585)
   
   - [ドキュメント](../../lakehouse/catalogs/paimon-catalog)を見る
 
 - OpenCSV形式のHiveテーブル読み取りをサポートしました。[#42257](https://github.com/apache/doris/pull/42257) [#42942](https://github.com/apache/doris/pull/42942)
-- External Catalogの`information_schema.columns`テーブルアクセスパフォーマンスを最適化しました。[#41659](https://github.com/apache/doris/pull/41659) [#41962](https://github.com/apache/doris/pull/41962)
+- External カタログの`information_schema.columns`テーブルアクセスパフォーマンスを最適化しました。[#41659](https://github.com/apache/doris/pull/41659) [#41962](https://github.com/apache/doris/pull/41962)
 - 新しいMaxComputeオープンストレージAPIを使用してMaxComputeデータソースにアクセスするようになりました。[#41614](https://github.com/apache/doris/pull/41614)
 - PaimonテーブルのJNI部分のスケジューリングポリシーを最適化し、スキャンタスクをより均衡させました。[#43310](https://github.com/apache/doris/pull/43310)
 - 小さなORCファイルの読み取りパフォーマンスを最適化しました。[#42004](https://github.com/apache/doris/pull/42004) [#43467](https://github.com/apache/doris/pull/43467)
@@ -145,14 +145,14 @@
 - FE follower information_schemaバージョンが適時更新されない問題を修正しました。[#43496](https://github.com/apache/doris/pull/43496)
 - ファイルキャッシュリネームのアトミック性と不正確なメトリクスの問題を修正しました。[#42869](https://github.com/apache/doris/pull/42869) [#43504](https://github.com/apache/doris/pull/43504) [#43220](https://github.com/apache/doris/pull/43220)
 
-### Lakehouse
+### レイクハウス
 
 - JDBCデータソースへの暗黙的変換述語のプッシュダウンを禁止し、一貫しないクエリ結果を避けるようにしました。[#42102](https://github.com/apache/doris/pull/42102)
 - 高バージョンHiveトランザクショナルテーブルの一部の読み取り問題を修正しました。[#42226](https://github.com/apache/doris/pull/42226)
 - Exportコマンドがデッドロックを引き起こす可能性がある問題を修正しました。[#43083](https://github.com/apache/doris/pull/43083) [#43402](https://github.com/apache/doris/pull/43402)
 - SparkによるHiveビュー作成をクエリできない問題を修正しました。[#43552](https://github.com/apache/doris/pull/43552)
 - 特殊文字を含むHiveパーティションパスが不正確なパーティションプルーニングを引き起こす問題を修正しました。[#42906](https://github.com/apache/doris/pull/42906)
-- Iceberg CatalogでAWS Glueを使用できない問題を修正しました。[#41084](https://github.com/apache/doris/pull/41084)
+- Iceberg カタログでAWS Glueを使用できない問題を修正しました。[#41084](https://github.com/apache/doris/pull/41084)
 
 ### 非同期マテリアライズドビュー
 

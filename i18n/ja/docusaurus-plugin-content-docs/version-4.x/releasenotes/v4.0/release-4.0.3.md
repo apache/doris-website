@@ -13,10 +13,10 @@
 - es-likeブール演算クエリを実装 [#58545](https://github.com/apache/doris/pull/58545)
 - 検索機能にlucene boolモードを導入 [#59394](https://github.com/apache/doris/pull/59394)
 
-## Lakehouse
+## レイクハウス
 
-- AwsCredentialsProviderChain経由でのCatalog認証情報の読み込みをサポート [#58740](https://github.com/apache/doris/pull/58740)
-- OSSHDFSストレージを使用するPaimon DLF Catalogをサポート [#59245](https://github.com/apache/doris/pull/59245)
+- AwsCredentialsProviderChain経由でのカタログ認証情報の読み込みをサポート [#58740](https://github.com/apache/doris/pull/58740)
+- OSSHDFSストレージを使用するPaimon DLF カタログをサポート [#59245](https://github.com/apache/doris/pull/59245)
 - Icebergテーブル用のマニフェストレベルキャッシュを追加 [#59056](https://github.com/apache/doris/pull/59056)
 
 ## Query Engine

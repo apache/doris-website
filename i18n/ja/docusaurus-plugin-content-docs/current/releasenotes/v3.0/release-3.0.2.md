@@ -44,7 +44,7 @@
 
 ### レイクハウス
 
-- 新しいLakesoul Catalogが追加されました。
+- 新しいLakesoul カタログが追加されました。
 - 外部カタログの各種メタデータキャッシュの使用状況を確認するための新しいシステムテーブル`catalog_meta_cache_statistics`が追加されました。[#40155](https://github.com/apache/doris/pull/40155)  
 
 ### クエリオプティマイザー
@@ -105,11 +105,11 @@
 
 - CSV形式のテーブル読み込み時に、`\r`シンボルの読み込み動作を制御するセッション`keep_carriage_return`設定をサポートしました。[#39980](https://github.com/apache/doris/pull/39980)  
 - BEのJVMのデフォルト最大メモリを2GBに調整しました（新規デプロイメントのみに影響）。[#41403](https://github.com/apache/doris/pull/41403)  
-- Hive Catalogに`hive.recursive_directories_table`と`hive.ignore_absent_partitions`プロパティを追加し、データディレクトリの再帰的トラバーサルと欠損パーティションの無視を指定できるようになりました。[#39494](https://github.com/apache/doris/pull/39494)  
-- リフレッシュ中の大量接続生成を回避するため、Catalogリフレッシュロジックを最適化しました。[#39205](https://github.com/apache/doris/pull/39205)  
+- Hive カタログに`hive.recursive_directories_table`と`hive.ignore_absent_partitions`プロパティを追加し、データディレクトリの再帰的トラバーサルと欠損パーティションの無視を指定できるようになりました。[#39494](https://github.com/apache/doris/pull/39494)  
+- リフレッシュ中の大量接続生成を回避するため、カタログリフレッシュロジックを最適化しました。[#39205](https://github.com/apache/doris/pull/39205)  
 - 外部データソースの`SHOW CREATE DATABASE`と`SHOW CREATE TABLE`でロケーション情報が表示されるようになりました。[#39179](https://github.com/apache/doris/pull/39179)  
 - 新しいオプティマイザーで`INSERT INTO`文を使用したJDBC外部テーブルへのデータ挿入をサポートしました。[#41511](https://github.com/apache/doris/pull/41511)  
-- MaxCompute Catalogで複合データタイプをサポートしました。[#39259](https://github.com/apache/doris/pull/39259)  
+- MaxCompute カタログで複合データタイプをサポートしました。[#39259](https://github.com/apache/doris/pull/39259)  
 - 外部テーブルのデータシャード読み込みとマージロジックを最適化しました。[#38311](https://github.com/apache/doris/pull/38311)  
 - 外部テーブルメタデータキャッシュの一部リフレッシュ戦略を最適化しました。[#38506](https://github.com/apache/doris/pull/38506)  
 - Paimonテーブルで`IN/NOT IN`述語のプッシュダウンをサポートしました。[#38390](https://github.com/apache/doris/pull/38390)  
@@ -186,7 +186,7 @@
 - group commitが有効なinsert intoが停止する可能性がある問題を修正しました。[#39391](https://github.com/apache/doris/pull/39391)  
 - インポート時にgroup commitオプションを有効にしない場合にテーブルが見つからないエラーが発生する可能性がある問題を修正しました。[#39731](https://github.com/apache/doris/pull/39731)  
 - タブレット数が多すぎることによるトランザクション送信タイムアウトの問題を修正しました。[#40031](https://github.com/apache/doris/pull/40031)  
-- Auto Partitionでの同時オープンの問題を修正しました。[#38605](https://github.com/apache/doris/pull/38605)  
+- Auto パーティションでの同時オープンの問題を修正しました。[#38605](https://github.com/apache/doris/pull/38605)  
 - インポートロック粒度が大きすぎる問題を修正しました。[#40134](https://github.com/apache/doris/pull/40134)  
 - 長さゼロのvarcharによるcoredumpの問題を修正しました。[#40940](https://github.com/apache/doris/pull/40940)  
 - ログ出力での不正確なインデックスId値の問題を修正しました。[#38790](https://github.com/apache/doris/pull/38790)  

@@ -4,7 +4,7 @@
   "language": "ja"
 }
 ---
-[Lakekeeper](https://lakekeeper.io/)は、Rustで書かれたオープンソースのApache Iceberg REST Catalogの実装です。AWS S3、Alibaba Cloud OSS、MinIOを含む複数のストレージバックエンドをサポートする、軽量で高性能なメタデータ管理サービスを提供します。
+[Lakekeeper](https://lakekeeper.io/)は、Rustで書かれたオープンソースのApache Iceberg REST カタログの実装です。AWS S3、Alibaba Cloud OSS、MinIOを含む複数のストレージバックエンドをサポートする、軽量で高性能なメタデータ管理サービスを提供します。
 
 この記事では、Apache DorisとLakekeeperを統合して、Icebergデータの効率的なクエリと管理を実現する方法をガイドします。環境準備から最終的なクエリまで、全てのプロセスをステップバイステップで説明します。
 
@@ -22,7 +22,7 @@
 
 ### 1.1 S3ストレージバケットの作成
 
-まず、後で作成するIcebergテーブルデータを格納するために、`lakekeeper-doris-demo`という名前のS3 Bucketを作成します。
+まず、後で作成するIcebergテーブルデータを格納するために、`lakekeeper-doris-demo`という名前のS3 バケットを作成します。
 
 ```bash
 # Create S3 storage bucket

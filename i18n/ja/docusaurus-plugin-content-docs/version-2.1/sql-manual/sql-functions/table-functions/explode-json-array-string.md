@@ -5,7 +5,7 @@
   "description": "explodejsonarraystring テーブル関数は、各要素が文字列型のJSON配列を受け取ります。"
 }
 ---
-## Description
+## 詳細
 
 `explode_json_array_string` テーブル関数は、各要素が文字列型のJSON配列を受け取り、配列内の各文字列を複数の行に展開し、各行が1つの文字列を含むようにします。この関数はLATERAL VIEWと組み合わせて使用されます。
 

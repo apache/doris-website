@@ -15,7 +15,7 @@
 `GET /api/meta/namespaces/<ns>/databases/<db>/tables/<tbl>/schema`
 
 
-## Description
+## 詳細
 
 クラスターに関するメタデータ情報を取得するために使用されます。データベース一覧、テーブル一覧、テーブルスキーマが含まれます。
 

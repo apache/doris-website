@@ -342,7 +342,7 @@ SELECT TOKENIZE('I love Doris','"parser"="english"');
 
 Demonstrating the creation of an inverted index, full-text search, and regular queries using 1 million records from HackerNews. This includes a simple performance comparison with queries without indexing.
 
-### Table Creation
+### table Creation
 
 ```sql
 CREATE DATABASE test_inverted_index;

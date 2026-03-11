@@ -2,7 +2,7 @@
 {
   "title": "MV_INFOS",
   "language": "ja",
-  "description": "非同期マテリアライズドビューのための一時テーブルを生成するTable関数"
+  "description": "非同期マテリアライズドビューのための一時テーブルを生成するtable関数"
 }
 ---
 ## 説明

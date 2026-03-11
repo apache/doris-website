@@ -17,7 +17,7 @@ inverted indexが成熟して安定したため、古いBITMAP INDEXを置き換
 
 ## 2 改善と最適化
 
-- JSONとTIME用のTrino JDBC Catalogタイプマッピングを追加
+- JSONとTIME用のTrino JDBC カタログタイプマッピングを追加
 
 - 未知の状態と大量のログを防ぐため、(非)masterへの転送に失敗した場合にFEを終了
 

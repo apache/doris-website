@@ -3,7 +3,7 @@
   "title": "概要 | Ai Functions",
   "language": "ja",
   "description": "AI Functionは、人工知能（AI）機能に基づいてDorisが提供する組み込み関数です。",
-  "sidebar_label": "Overview"
+  "sidebar_label": "概要"
 }
 ---
 # 概要

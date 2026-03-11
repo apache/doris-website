@@ -11,7 +11,7 @@
 
 `GET /api/reset_rpc_channel/{endpoints}`
 
-## Description
+## 詳細
 
 brpcの接続キャッシュをリセットする
 

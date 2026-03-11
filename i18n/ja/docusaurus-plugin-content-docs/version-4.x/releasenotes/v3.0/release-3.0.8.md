@@ -54,7 +54,7 @@
 - schema change中に例外がスローされた後にgroup commitがブロックされる問題を修正 [#54312](https://github.com/apache/doris/pull/54312)
 
 
-### Lakehouse
+### レイクハウス
 
 - 一部のケースでJDBC SQL pass-throughの解析が失敗する問題を修正 [#54077](https://github.com/apache/doris/pull/54077)
 - decimalパーティションを持つicebergテーブルへの書き込み失敗問題を修正 [#54557](https://github.com/apache/doris/pull/54557)
@@ -67,7 +67,7 @@
 - `select distinct`とwindow関数を併用した際の潜在的な結果エラーを修正 [#54133](https://github.com/apache/doris/pull/54133)
 - lambda式が予期しない位置に現れた際により分かりやすいエラーメッセージを提供 [#53657](https://github.com/apache/doris/pull/53657)
 
-### Permissions
+### 許可
 
 - 外部ビューをクエリする際にビュー内のベーステーブルの権限を誤ってチェックする問題を修正 [#53786](https://github.com/apache/doris/pull/53786)
 

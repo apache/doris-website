@@ -14,9 +14,9 @@ Python UDFは2つの実行モードをサポートします：
 - **Vectorized Mode**：データをバッチで処理し、高性能コンピューティングのためにPandasを活用します
 
 :::tip Note
-**環境依存関係**：Python UDFを使用する前に、すべてのBEノードのPython環境に**`pandas`**と**`pyarrow`**ライブラリを事前にインストールする必要があります。これらはDoris Python UDF機能の必須依存関係です。[Python UDF Environment Configuration](python-user-defined-function#python-udfudafudtf-environment-configuration-and-multi-version-management)を参照してください。
+**環境依存関係**：Python UDFを使用する前に、すべてのBEノードのPython環境に**`pandas`**と**`pyarrow`**ライブラリを事前にインストールする必要があります。これらはDoris Python UDF機能の必須依存関係です。[Python UDF Environment 設定](python-user-defined-function#python-udfudafudtf-environment-configuration-and-multi-version-management)を参照してください。
 
-**ログパス**：Python UDF Serverのランタイムログは`output/be/log/python_udf_output.log`にあります。ユーザーはこのログでPython Serverの動作ステータス、関数実行情報、およびデバッグエラーを確認できます。
+**ログパス**：Python UDF サーバーのランタイムログは`output/be/log/python_udf_output.log`にあります。ユーザーはこのログでPython サーバーの動作ステータス、関数実行情報、およびデバッグエラーを確認できます。
 :::
 
 ### Python UDFの作成

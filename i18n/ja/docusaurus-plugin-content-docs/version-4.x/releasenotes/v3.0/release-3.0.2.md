@@ -42,9 +42,9 @@
 - コンピューティング・ストレージ分離モードでのFEの複数followerロールの追加をサポートしました。[#38388](https://github.com/apache/doris/pull/38388)  
 - ディスクがない環境や低性能HDDの環境でクエリを高速化するため、メモリをfile cacheとして使用することをサポートしました。[#38811](https://github.com/apache/doris/pull/38811)  
 
-### Lakehouse
+### レイクハウス
 
-- 新しいLakesoul Catalogが追加されました。
+- 新しいLakesoul カタログが追加されました。
 - 外部catalogの各種メタデータキャッシュの使用状況を確認するための新しいシステムテーブル`catalog_meta_cache_statistics`が追加されました。[#40155](https://github.com/apache/doris/pull/40155)  
 
 ### Query Optimizer
@@ -101,15 +101,15 @@
 - mowテーブルのインポート時のdelete bitmap計算のタイムアウト戦略が最適化されました。[#40562](https://github.com/apache/doris/pull/40562)  [#40333](https://github.com/apache/doris/pull/40333)  
 - be.confのenable_file_cacheがコンピューティング・ストレージ分離モードでデフォルトで有効になりました。[#41502](https://github.com/apache/doris/pull/41502)  
 
-### Lakehouse
+### レイクハウス
 
 - CSV形式のテーブル読み取り時、`\r`記号の読み取り動作を制御するセッション設定`keep_carriage_return`をサポートしました。[#39980](https://github.com/apache/doris/pull/39980)  
 - BEのJVMのデフォルト最大メモリが2GBに調整されました（新規デプロイメントのみ影響）。[#41403](https://github.com/apache/doris/pull/41403)  
-- Hive Catalogに`hive.recursive_directories_table`と`hive.ignore_absent_partitions`プロパティが追加され、データディレクトリの再帰的走査の可否と欠落パーティションの無視可否を指定できます。[#39494](https://github.com/apache/doris/pull/39494)  
-- リフレッシュ時に大量の接続が生成されないよう、Catalogリフレッシュロジックが最適化されました。[#39205](https://github.com/apache/doris/pull/39205)  
+- Hive カタログに`hive.recursive_directories_table`と`hive.ignore_absent_partitions`プロパティが追加され、データディレクトリの再帰的走査の可否と欠落パーティションの無視可否を指定できます。[#39494](https://github.com/apache/doris/pull/39494)  
+- リフレッシュ時に大量の接続が生成されないよう、カタログリフレッシュロジックが最適化されました。[#39205](https://github.com/apache/doris/pull/39205)  
 - 外部データソースの`SHOW CREATE DATABASE`と`SHOW CREATE TABLE`でlocation情報が表示されるようになりました。[#39179](https://github.com/apache/doris/pull/39179)  
 - 新しいオプティマイザーが`INSERT INTO`文を使用したJDBC外部テーブルへのデータ挿入をサポートしました。[#41511](https://github.com/apache/doris/pull/41511)  
-- MaxCompute Catalogで複合データ型がサポートされました。[#39259](https://github.com/apache/doris/pull/39259)  
+- MaxCompute カタログで複合データ型がサポートされました。[#39259](https://github.com/apache/doris/pull/39259)  
 - 外部テーブルのデータシャード読み取りとマージのロジックが最適化されました。[#38311](https://github.com/apache/doris/pull/38311)  
 - 外部テーブルのメタデータキャッシュのリフレッシュ戦略が最適化されました。[#38506](https://github.com/apache/doris/pull/38506)  
 - PaimonテーブルでIN/NOT IN述語のプッシュダウンがサポートされました。[#38390](https://github.com/apache/doris/pull/38390)  
@@ -130,7 +130,7 @@
 ### Query Execution
 
 - prepareパイプラインタスクの並列実行によりクエリ遅延が削減されました。[#40874](https://github.com/apache/doris/pull/40874)  
-- ProfileにCatalog情報が表示されます。[#38283](https://github.com/apache/doris/pull/38283)  
+- Profileにカタログ情報が表示されます。[#38283](https://github.com/apache/doris/pull/38283)  
 - `IN`フィルタリング条件の計算性能が最適化されました。[#40917](https://github.com/apache/doris/pull/40917)  
 - K8SでDorisのメモリ使用量を制限するcgroupv2がサポートされました。[#39256](https://github.com/apache/doris/pull/39256)  
 - 文字列からdatetime型への変換性能が最適化されました。[#38385](https://github.com/apache/doris/pull/38385)  
@@ -186,7 +186,7 @@
 - group commit有効なinsert intoがスタックする可能性がある問題を修正しました。[#39391](https://github.com/apache/doris/pull/39391)  
 - インポート時にgroup commitオプションを有効にしないとテーブルが見つからないエラーが発生する可能性がある問題を修正しました。[#39731](https://github.com/apache/doris/pull/39731)  
 - タブレット数が多すぎることによるトランザクション送信タイムアウトの問題を修正しました。[#40031](https://github.com/apache/doris/pull/40031)  
-- Auto Partitionでの並行オープンの問題を修正しました。[#38605](https://github.com/apache/doris/pull/38605)  
+- Auto パーティションでの並行オープンの問題を修正しました。[#38605](https://github.com/apache/doris/pull/38605)  
 - インポートロック粒度が大きすぎる問題を修正しました。[#40134](https://github.com/apache/doris/pull/40134)  
 - 長さ0のvarcharによるcoredumpの問題を修正しました。[#40940](https://github.com/apache/doris/pull/40940)  
 - ログ出力でのindex Id値が不正確な問題を修正しました。[#38790](https://github.com/apache/doris/pull/38790)  

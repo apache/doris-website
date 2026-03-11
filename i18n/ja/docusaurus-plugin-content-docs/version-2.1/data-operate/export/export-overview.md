@@ -68,7 +68,7 @@ ParquetとORCファイル形式は独自のデータ型を持っています。D
 
 - ORC
 
-    | Doris Type | Orc Type |
+    | Doris タイプ | Orc タイプ |
     | ---------- | -------- |
     | boolean    | boolean |
     | tinyint    | tinyint |
@@ -97,7 +97,7 @@ ParquetとORCファイル形式は独自のデータ型を持っています。D
 
     DorisがParquetファイル形式にエクスポートされる際、Dorisメモリデータは最初にArrowメモリデータ形式に変換され、その後ArrowによってParquetファイル形式に書き出されます。
 
-    | Doris Type | Arrow Type | Parquet Physical Type | Parquet Logical Type |
+    | Doris タイプ | Arrow タイプ | Parquet Physical タイプ | Parquet Logical タイプ |
     | ---------- | ---------- | -------- | ------- |
     | boolean    | boolean | BOOLEAN | |
     | tinyint    | int8 | INT32 | INT_8 |

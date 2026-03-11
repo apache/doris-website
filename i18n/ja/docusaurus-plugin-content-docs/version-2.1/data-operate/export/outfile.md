@@ -11,7 +11,7 @@
 
 `SELECT INTO OUTFILE` は同期コマンドであり、コマンドの復帰はエクスポートが完了したことを意味します。エクスポートが成功した場合、エクスポートされたファイルの数、サイズ、パスなどの情報が返されます。エクスポートが失敗した場合、エラー情報が返されます。
 
-`SELECT INTO OUTFILE` と `EXPORT` のどちらを選択するかについては、[Export Overview](./export-overview.md) を参照してください。
+`SELECT INTO OUTFILE` と `EXPORT` のどちらを選択するかについては、[Export 概要](./export-overview.md) を参照してください。
 
 `SELECT INTO OUTFILE` コマンドの詳細な説明については、[SELECT INTO OUTFILE](../../sql-manual/sql-statements/data-modification/load-and-export/OUTFILE) を参照してください。
 

@@ -39,7 +39,7 @@
 
 - https://github.com/apache/doris/pull/32162
 
-2. 2.0.xから2.1.xへのローリングアップグレード時にJDBC Catalogでクエリエラーが発生する問題。
+2. 2.0.xから2.1.xへのローリングアップグレード時にJDBC カタログでクエリエラーが発生する問題。
 
 - https://github.com/apache/doris/pull/32618
 

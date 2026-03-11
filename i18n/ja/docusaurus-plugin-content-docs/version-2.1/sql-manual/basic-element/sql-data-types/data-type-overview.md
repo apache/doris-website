@@ -3,7 +3,7 @@
   "title": "概要 | Sql データ型",
   "language": "ja",
   "description": "Dorisは以下の数値データ型をサポートしています：",
-  "sidebar_label": "Overview"
+  "sidebar_label": "概要"
 }
 ---
 # 概要

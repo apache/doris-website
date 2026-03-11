@@ -2,12 +2,12 @@
 {
   "title": "BigQuery カタログ",
   "language": "ja",
-  "description": "Apache DorisでBigQuery Catalogを設定・使用してGoogle BigQueryデータウェアハウスに接続する方法を学習します。Trino Connectorフレームワークを通じてBigQueryテーブルデータのクエリ、データ統合、リアルタイム分析を実装します。Google Cloud ADC認証と様々なデータ型マッピング（ARRAY、MAP、STRUCTなどの複合型を含む）をサポートします。完全なインストール、デプロイメント、設定パラメータ、使用例を提供し、ユーザーがBigQueryとDoris間のデータ相互運用性を迅速に実現できるよう支援します。"
+  "description": "Apache DorisでBigQuery カタログを設定・使用してGoogle BigQueryデータウェアハウスに接続する方法を学習します。Trino Connectorフレームワークを通じてBigQueryテーブルデータのクエリ、データ統合、リアルタイム分析を実装します。Google Cloud ADC認証と様々なデータ型マッピング（ARRAY、MAP、STRUCTなどの複合型を含む）をサポートします。完全なインストール、デプロイメント、設定パラメータ、使用例を提供し、ユーザーがBigQueryとDoris間のデータ相互運用性を迅速に実現できるよう支援します。"
 }
 ---
 ## 概要
 
-BigQuery Catalogは、[Trino Connector](https://doris.apache.org/community/how-to-contribute/trino-connector-developer-guide/)互換性フレームワークを通じてBigQueryテーブルにアクセスするためにTrino BigQuery Connectorを使用します。
+BigQuery カタログは、[Trino Connector](https://doris.apache.org/community/how-to-contribute/trino-connector-developer-guide/)互換性フレームワークを通じてBigQueryテーブルにアクセスするためにTrino BigQuery Connectorを使用します。
 
 :::note
 - この機能は実験的機能で、バージョン3.0.1以降でサポートされています。

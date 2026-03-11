@@ -211,7 +211,7 @@ langfuse-worker     selectdb/langfuse-worker:latest   "dumb-init -- ./work…"  
 - URL: http://localhost:3000
 
 **初期化手順**：
-1. ブラウザを開き、http://localhost:3000にアクセスします
+1. ブラウザを開き、http://localhost:3000 にアクセスします
 2. 管理者アカウントを作成してログインします
 3. 新しい組織とプロジェクトを作成します
 4. プロジェクトのAPI Keys（Public KeyとSecret Key）を取得します

@@ -15,7 +15,7 @@
 
 ## テーブル情報
 
-| Column Name                            | Type           | Description                                         |
+| Column Name                            | タイプ           | 詳細                                         |
 | -------------------------------------- | -------------- | --------------------------------------------------- |
 | host                                   | character(255) | ユーザーが接続を許可されているホスト。                           |
 | user                                   | char(32)       | ユーザー名。                                            |
@@ -29,7 +29,7 @@
 | drop_priv                              | char(1)        | ユーザーがDrop権限を持っているかどうか。                        |
 | usage_priv                             | char(1)        | ユーザーがUsage権限を持っているかどうか。                       |
 | show_view_priv                         | char(1)        | ユーザーがShow View権限を持っているかどうか。                   |
-| cluster_usage_priv                     | char(1)        | ユーザーがCluster usage権限を持っているかどうか。               |
+| cluster_usage_priv                     | char(1)        | ユーザーがクラスター usage権限を持っているかどうか。               |
 | stage_usage_priv                       | char(1)        | ユーザーがStage usage権限を持っているかどうか。                 |
 | ssl_type                               | char(9)        | 常に空、MySQL互換性のためのみ。                              |
 | ssl_cipher                             | varchar(65533) | 常に空、MySQL互換性のためのみ。                              |

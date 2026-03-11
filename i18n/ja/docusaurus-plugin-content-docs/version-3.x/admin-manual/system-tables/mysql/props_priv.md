@@ -15,7 +15,7 @@
 
 ## テーブル情報
 
-| Column Name  | Type     | Description |
+| Column Name  | タイプ     | 詳細 |
 | ------------ | -------- | ----------- |
 | host         | char(60) |             |
 | db           | char(64) |             |

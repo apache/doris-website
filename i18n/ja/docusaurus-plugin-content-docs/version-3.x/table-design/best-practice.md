@@ -1,6 +1,6 @@
 ---
 {
-  "title": "ベストプラクティス | Table設計",
+  "title": "ベストプラクティス | table設計",
   "language": "ja",
   "description": "ソート列のみが指定された場合、同じキーを持つ行はマージされません。",
   "sidebar_label": "Best Practices"

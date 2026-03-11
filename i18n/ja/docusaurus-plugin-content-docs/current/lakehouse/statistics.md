@@ -1,6 +1,6 @@
 ---
 {
-  "title": "統計 | Lakehouse",
+  "title": "統計 | レイクハウス",
   "language": "ja",
   "description": "Dorisは、Hive、Iceberg、Paimonなどの外部データソースからのテーブルに対して、自動または手動の統計情報収集をサポートしています。",
   "sidebar_label": "Statistics"

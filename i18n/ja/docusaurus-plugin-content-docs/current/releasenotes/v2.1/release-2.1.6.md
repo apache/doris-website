@@ -5,7 +5,7 @@
   "description": "コミュニティの皆様、Apache Doris バージョン2.1.6が2024年9月10日に正式リリースされました。"
 }
 ---
-親愛なるコミュニティの皆様、**Apache Doris バージョン 2.1.6 が 2024 年 9 月 10 日に正式にリリースされました。**このバージョンでは、Lakehouse、Async Materialized Views、および半構造化データ管理に継続的なアップグレードと改善をもたらします。さらに、クエリオプティマイザー、実行エンジン、ストレージ管理、権限管理などの領域でいくつかの修正が実装されています。
+親愛なるコミュニティの皆様、**Apache Doris バージョン 2.1.6 が 2024 年 9 月 10 日に正式にリリースされました。**このバージョンでは、レイクハウス、Async Materialized Views、および半構造化データ管理に継続的なアップグレードと改善をもたらします。さらに、クエリオプティマイザー、実行エンジン、ストレージ管理、権限管理などの領域でいくつかの修正が実装されています。
 
 **クイックダウンロード:** https://doris.apache.org/download/
 
@@ -33,7 +33,7 @@
 
 ## 新機能
 
-### Lakehouse
+### レイクハウス
 
 - Iceberg テーブルの書き戻しをサポートしました。
 
@@ -93,7 +93,7 @@
 
 ## 改善
 
-### Lakehouse
+### レイクハウス
 
 - 外部テーブルメタデータキャッシュメカニズムを再実装しました。
 
@@ -117,7 +117,7 @@
 
 - `SHOW CREATE DATABASE/TABLE` に location などの属性を追加しました。[#39644](https://github.com/apache/doris/pull/39644)
 
-- MaxCompute Catalog で複合型をサポートしました。[#39822](https://github.com/apache/doris/pull/39822)
+- MaxCompute カタログ で複合型をサポートしました。[#39822](https://github.com/apache/doris/pull/39822)
 
 - 非同期ローディングを使用してファイルキャッシュローディング戦略を最適化し、BE の長い起動時間を回避しました。[#39036](https://github.com/apache/doris/pull/39036)
 
@@ -278,11 +278,11 @@
 ### 権限
 
 - Ranger 認証プラグインを有効にした後のアクセスパフォーマンスを最適化しました。[#38575](https://github.com/apache/doris/pull/38575)
-- Refresh Catalog/Database/Table 操作の権限戦略を最適化し、ユーザーが SHOW 権限のみでこれらの操作を実行できるようにしました。[#39008](https://github.com/apache/doris/pull/39008)
+- Refresh カタログ/Database/table 操作の権限戦略を最適化し、ユーザーが SHOW 権限のみでこれらの操作を実行できるようにしました。[#39008](https://github.com/apache/doris/pull/39008)
 
 ## バグ修正
 
-### Lakehouse
+### レイクハウス
 
 - カタログ切り替えでデータベースが見つからないエラーが発生する可能性のある問題を修正しました。[#38114](https://github.com/apache/doris/pull/38114)
 
@@ -298,15 +298,15 @@
 
 - Parquet Struct カラム型での不足するサブカラムによるエラーを解決しました。[#39192](https://github.com/apache/doris/pull/39192)
 
-- JDBC Catalog での述語プッシュダウンのいくつかの問題を対処しました。[#39082](https://github.com/apache/doris/pull/39082)
+- JDBC カタログ での述語プッシュダウンのいくつかの問題を対処しました。[#39082](https://github.com/apache/doris/pull/39082)
 
 - 一部の歴史的な Parquet 形式が不正なクエリ結果につながる問題を修正しました。[#39375](https://github.com/apache/doris/pull/39375)
 
-- Oracle JDBC Catalog での ojdbc6 ドライバーとの互換性を改善しました。[#39408](https://github.com/apache/doris/pull/39408)
+- Oracle JDBC カタログ での ojdbc6 ドライバーとの互換性を改善しました。[#39408](https://github.com/apache/doris/pull/39408)
 
-- Refresh Catalog/Database/Table 操作による潜在的な FE メモリリークを解決しました。[#39186](https://github.com/apache/doris/pull/39186) [#39871](https://github.com/apache/doris/pull/39871)
+- Refresh カタログ/Database/table 操作による潜在的な FE メモリリークを解決しました。[#39186](https://github.com/apache/doris/pull/39186) [#39871](https://github.com/apache/doris/pull/39871)
 
-- 特定の条件下での JDBC Catalog でのスレッドリークを修正しました。[#39666](https://github.com/apache/doris/pull/39666) [#39582](https://github.com/apache/doris/pull/39582)
+- 特定の条件下での JDBC カタログ でのスレッドリークを修正しました。[#39666](https://github.com/apache/doris/pull/39666) [#39582](https://github.com/apache/doris/pull/39582)
 
 - Hive Metastore イベント購読を有効にした後の潜在的なイベント処理失敗を対処しました。[#39239](https://github.com/apache/doris/pull/39239)
 

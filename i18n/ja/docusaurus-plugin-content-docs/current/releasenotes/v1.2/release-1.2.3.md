@@ -2,16 +2,16 @@
 {
   "title": "リリース 1.2.3",
   "language": "ja",
-  "description": "現在、Jdbc Catalogは別のDorisデータベースに接続するためにJDBC jarパッケージの5.xバージョンの使用のみをサポートしています。8を使用する場合。"
+  "description": "現在、Jdbc カタログは別のDorisデータベースに接続するためにJDBC jarパッケージの5.xバージョンの使用のみをサポートしています。8を使用する場合。"
 }
 ---
 # 改善
 
-### JDBC Catalog 
+### JDBC カタログ 
 
-- JDBC Catalogを通じたDorisクラスターへの接続をサポート。
+- JDBC カタログを通じたDorisクラスターへの接続をサポート。
 
-現在、Jdbc Catalogは5.xバージョンのJDBC jarパッケージを使用して別のDorisデータベースに接続することのみサポートしています。8.xバージョンのJDBC jarパッケージを使用する場合、カラムのデータ型が一致しない可能性があります。
+現在、Jdbc カタログは5.xバージョンのJDBC jarパッケージを使用して別のDorisデータベースに接続することのみサポートしています。8.xバージョンのJDBC jarパッケージを使用する場合、カラムのデータ型が一致しない可能性があります。
 
 参考: [https://doris.apache.org/docs/dev/lakehouse/multi-catalog/jdbc/#doris](https://doris.apache.org/docs/dev/lakehouse/multi-catalog/jdbc/#doris)
 
@@ -21,9 +21,9 @@
 
 参考: [https://doris.apache.org/docs/dev/lakehouse/multi-catalog/jdbc](https://doris.apache.org/docs/dev/lakehouse/multi-catalog/jdbc)
 
-- JDBC Catalogの読み込みパフォーマンスを最適化。
+- JDBC カタログの読み込みパフォーマンスを最適化。
 
-### Elasticsearch Catalog
+### Elasticsearch カタログ
 
 - Array型マッピングをサポート。
 
@@ -31,13 +31,13 @@
 
 参考: [https://doris.apache.org/docs/dev/lakehouse/multi-catalog/es](https://doris.apache.org/docs/dev/lakehouse/multi-catalog/es)
 
-### Hive Catalog
+### Hive カタログ
 
 - Hiveテーブルのデフォルトパーティション`_HIVE_DEFAULT_PARTITION_`をサポート。
 
 - Hive Metastoreメタデータの自動同期で圧縮形式での通知イベントをサポート。
 
-### Dynamic Partition改善
+### Dynamic パーティション改善
 
 - Dynamic partitionで`storage_medium`パラメータを指定して新しく追加されるパーティションのストレージメディアを制御することをサポート。
 
@@ -60,7 +60,7 @@
 
 - 一部のオペレーティングシステムでJDBC catalogの使用がBEクラッシュを引き起こす問題を修正。
 
-- Multi-Catalogの問題を修正。
+- Multi-カタログの問題を修正。
 
 - メモリ統計と最適化の問題を修正。
 

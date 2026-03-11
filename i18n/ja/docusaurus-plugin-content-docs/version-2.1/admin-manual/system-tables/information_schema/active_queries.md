@@ -17,7 +17,7 @@
 
 ## テーブル情報
 
-| Column Name       | Type         | Description                                                  |
+| Column Name       | タイプ         | 詳細                                                  |
 | ----------------- | ------------ | ------------------------------------------------------------ |
 | QUERY_ID          | varchar(256) | クエリのID                                          |
 | QUERY_START_TIME  | varchar(256) | クエリの開始時刻                                  |

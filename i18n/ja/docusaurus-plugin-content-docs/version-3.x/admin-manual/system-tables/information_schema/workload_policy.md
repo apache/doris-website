@@ -15,7 +15,7 @@ Workload Policiesの設定情報を記録します。
 
 ## テーブル情報
 
-| Column Name    | Type         | Description                                    |
+| Column Name    | タイプ         | 詳細                                    |
 | -------------- | ------------ | ---------------------------------------------- |
 | ID             | bigint       | Workload PolicyのID                            |
 | NAME           | varchar(256) | Workload Policyの名前                          |

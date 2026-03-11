@@ -15,7 +15,7 @@ Redshiftの移行プロセスでは、通常、オブジェクトストレージ
 
 ## データ型マッピング
 
-| Redshift         | Doris          | Comment                 |
+| Redshift         | Doris          | コメント                 |
 | ---------------- | -------------- | -------------------- |
 | SMALLINT         | SMALLINT       |                      |
 | INTEGER          | INT            |                      |

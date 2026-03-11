@@ -67,7 +67,7 @@ PROPERTIES(
 );
 ```
 :::warning Note
-UNIQUE テーブルで `"enable_unique_key_merge_on_write" = "true"` が設定されている場合、この機能は使用できません。
+UNIQUE tableで `"enable_unique_key_merge_on_write" = "true"` が設定されている場合、この機能は使用できません。
 :::
 
 ### コールドデータをHDFSに保存する
@@ -112,7 +112,7 @@ PROPERTIES(
 );
 ```
 :::warning Note
-UNIQUE テーブルが `"enable_unique_key_merge_on_write" = "true"` に設定されている場合、この機能は使用できません。
+UNIQUE tableが `"enable_unique_key_merge_on_write" = "true"` に設定されている場合、この機能は使用できません。
 :::
 
 ### 既存のテーブルをリモートストレージにCooling
@@ -130,7 +130,7 @@ ALTER TABLE create_table_not_have_policy set ("storage_policy" = "test_policy");
 ALTER TABLE create_table_partition MODIFY PARTITION (*) SET("storage_policy"="test_policy");
 ```
 :::tip
-テーブル作成時にユーザーがテーブル全体と一部のPartitionに対して異なるStorage Policyを指定した場合、Partitionに設定されたStorage Policyは無視され、テーブルのすべてのPartitionはテーブルのPolicyを使用することに注意してください。PartitionのPolicyを他と異なるものにする必要がある場合は、既存のPartitionにStorage Policyを関連付ける上記の方法を使用して変更できます。
+テーブル作成時にユーザーがテーブル全体と一部のパーティションに対して異なるStorage Policyを指定した場合、パーティションに設定されたStorage Policyは無視され、テーブルのすべてのパーティションはテーブルのPolicyを使用することに注意してください。パーティションのPolicyを他と異なるものにする必要がある場合は、既存のパーティションにStorage Policyを関連付ける上記の方法を使用して変更できます。
 
 詳細については、[RESOURCE](../../sql-manual/sql-statements/cluster-management/compute-management/CREATE-RESOURCE)、[STORAGE POLICY](../../sql-manual/sql-statements/cluster-management/storage-management/CREATE-STORAGE-POLICY)、[CREATE TABLE](../../sql-manual/sql-statements/table-and-view/table/CREATE-TABLE)、[ALTER TABLE](../../sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-COLUMN)などのDocsディレクトリを参照してください。
 :::

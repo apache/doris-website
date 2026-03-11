@@ -17,7 +17,7 @@
 
 ## テーブル情報
 
-| Column Name    | Type         | Description                                    |
+| Column Name    | タイプ         | 詳細                                    |
 | -------------- | ------------ | ---------------------------------------------- |
 | GRANTEE        | varchar(81)  | 認可されたユーザー                             |
 | TABLE_CATALOG  | varchar(512) | カタログ名、常に 'def'                         |

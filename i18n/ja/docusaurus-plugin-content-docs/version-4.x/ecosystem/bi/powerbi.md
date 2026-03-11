@@ -29,7 +29,7 @@ Apache Doris の接続詳細を収集します
 
 Apache Doris インスタンスに接続するには、以下の詳細が必要です：
 
-| Parameter | Description | Example                      |
+| Parameter | 詳細 | Example                      |
 | ---- | ---- |------------------------------|
 | **Doris Data Source** | Database connection string, host + port | 127.0.1.28:9030              |
 | **Database** | Database name | test_db                      |

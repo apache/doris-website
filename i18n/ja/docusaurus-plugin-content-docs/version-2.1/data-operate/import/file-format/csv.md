@@ -242,7 +242,7 @@ DorisはCSV形式のデータを読み込むための以下の方法をサポー
 
     ```
     Data File:
-    # User Information Table
+    # User Information table
     # Created Time: 2024-01-01
     John,25,New York
     Mary,30,Los Angeles

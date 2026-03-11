@@ -19,7 +19,7 @@ Dorisは、Javaを使用してUDF、UDAF、UDTFの開発をサポートしてい
 
 ## 型対応表
 
-| Type                  | UDF Argument Type            |
+| タイプ                  | UDF Argument タイプ            |
 |-----------------------|------------------------------|
 | Bool                  | Boolean                      |
 | TinyInt               | Byte                         |
@@ -40,7 +40,7 @@ Dorisは、Javaを使用してUDF、UDAF、UDTFの開発をサポートしてい
 | VarBinary     | byte[], Byte[] (The VARBINARY type is supported starting from version 4.0; prefer using byte[] to avoid an extra conversion layer.) |
 
 :::tip
-`array/map/struct`型は他の型とネストできます。例えば、Doris: `array<array<int>>`はJAVA UDF Argument Type: `ArrayList<ArrayList<Integer>>`に対応します。他の型も同じパターンに従います。
+`array/map/struct`型は他の型とネストできます。例えば、Doris: `array<array<int>>`はJAVA UDF Argument タイプ: `ArrayList<ArrayList<Integer>>`に対応します。他の型も同じパターンに従います。
 そして`List`、`Map`クラスはバージョン3.1.0からサポートされています
 :::
 

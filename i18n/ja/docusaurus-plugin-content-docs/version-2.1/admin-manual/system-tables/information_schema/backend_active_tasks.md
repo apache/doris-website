@@ -17,7 +17,7 @@ Backends上で現在実行中のQueryまたはLoadタスクのリソース使用
 
 ## テーブル情報
 
-| Column Name               | Type         | Description                                      |
+| Column Name               | タイプ         | 詳細                                      |
 | ------------------------- | ------------ | ------------------------------------------------ |
 | BE_ID                     | bigint       | タスクを実行しているBackendのID                         |
 | FE_HOST                   | varchar(256) | タスクを発行したFrontendのアドレス                        |

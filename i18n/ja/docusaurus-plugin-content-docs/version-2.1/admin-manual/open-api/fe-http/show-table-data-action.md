@@ -5,7 +5,7 @@
   "description": "全ての内部カタログ配下の全てのデータベースの全てのテーブルのデータサイズ、または指定されたデータベースやテーブルのデータサイズを取得するために使用される。単位はbyte。"
 }
 ---
-# Show Table Data Action
+# Show table Data Action
 
 ## Request
 

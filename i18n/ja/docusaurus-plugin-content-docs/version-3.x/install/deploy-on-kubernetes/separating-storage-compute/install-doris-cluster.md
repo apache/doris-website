@@ -3,7 +3,7 @@
   "title": "Dorisクラスターのデプロイ | ストレージとコンピュートの分離",
   "language": "ja",
   "description": "Kubernetes上で機能的な分離されたストレージとコンピュートDorisクラスターをデプロイするには、4つの主要なステップがあります：",
-  "sidebar_label": "Deploy Doris Cluster"
+  "sidebar_label": "Deploy Doris クラスター"
 }
 ---
 # Dorisクラスターのデプロイ

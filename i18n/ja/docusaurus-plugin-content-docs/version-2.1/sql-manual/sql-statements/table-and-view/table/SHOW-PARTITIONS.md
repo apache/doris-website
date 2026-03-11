@@ -2,12 +2,12 @@
 {
   "title": "SHOW PARTITIONS",
   "language": "ja",
-  "description": "このステートメントはpartition情報を表示するために使用されます。Internal catalogとHive Catalogの両方をサポートしています。"
+  "description": "このステートメントはpartition情報を表示するために使用されます。Internal catalogとHive カタログの両方をサポートしています。"
 }
 ---
 ## 説明
 
-このステートメントはパーティション情報を表示するために使用されます。Internal catalogとHive Catalogの両方をサポートしています。
+このステートメントはパーティション情報を表示するために使用されます。Internal catalogとHive カタログの両方をサポートしています。
 
 `Hive Catalog`の場合：
 

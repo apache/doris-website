@@ -19,7 +19,7 @@ DorisはJavaを使用したUDF、UDAF、UDTFの開発をサポートしていま
 
 ## 型対応
 
-| Type                  | UDF Argument Type            |
+| タイプ                  | UDF Argument タイプ            |
 |-----------------------|------------------------------|
 | Bool                  | Boolean                      |
 | TinyInt               | Byte                         |
@@ -38,7 +38,7 @@ DorisはJavaを使用したUDF、UDAF、UDTFの開発をサポートしていま
 | `struct<Type...>`     | `ArrayList<Object>` (バージョン3.0.0から) |
 
 :::tip
-`array/map/struct`型は他の型とネストできます。例えば、Doris：`array<array<int>>`はJAVA UDF Argument Type：`ArrayList<ArrayList<Integer>>`に対応します。他の型も同様のパターンに従います。
+`array/map/struct`型は他の型とネストできます。例えば、Doris：`array<array<int>>`はJAVA UDF Argument タイプ：`ArrayList<ArrayList<Integer>>`に対応します。他の型も同様のパターンに従います。
 :::
 
 :::caution Warning
