@@ -63,6 +63,8 @@ AUTO PARTITION BY RANGE(date_trunc(`log_time`, 'day'))
 DISTRIBUTED BY RANDOM BUCKETS 10;
 ```
 
+仅在查询实际过滤的列上添加倒排索引。不必要的索引会增加存储开销并降低导入速度。可通过 [Query Profile](../query-acceleration/query-profile) 确认索引是否被使用。
+
 ### 实时看板与 Upsert（CDC）
 
 ```sql

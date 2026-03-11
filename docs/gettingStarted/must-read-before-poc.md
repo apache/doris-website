@@ -63,6 +63,8 @@ AUTO PARTITION BY RANGE(date_trunc(`log_time`, 'day'))
 DISTRIBUTED BY RANDOM BUCKETS 10;
 ```
 
+Only add inverted indexes on columns your queries actually filter on. Unnecessary indexes increase storage and slow down imports. Check with [Query Profile](../query-acceleration/query-profile) to verify the index is being used.
+
 ### Real-Time Dashboard with Upsert (CDC)
 
 ```sql
