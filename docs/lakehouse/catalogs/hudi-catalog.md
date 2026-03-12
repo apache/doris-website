@@ -51,60 +51,69 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
   | ------------------------------- | -------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------- |
   | `hudi.use_hive_sync_partition`  | `use_hive_sync_partition`  | Whether to use the partition information already synchronized by Hive Metastore. If true, partition information will be obtained directly from Hive Metastore. Otherwise, it will be obtained from the metadata file of the file system. Obtaining information from Hive Metastore is more efficient, but users need to ensure that the latest metadata has been synchronized to Hive Metastore. | false |
 
-## Metadata Cache (4.1.x+) {#meta-cache-unified}
+## Metadata Cache {#meta-cache}
 
-Starting from Doris 4.1.x, Hudi-related metadata caches are configured with the unified `meta.cache.*` properties.
-This section covers configuration and observability for Hudi-related cache modules.
+To improve the performance of accessing external data sources, Apache Doris caches Hudi metadata. Metadata includes table structure (Schema), partition information, FS View, and Meta Client objects.
 
-For the unified property semantics, see: [Unified External Meta Cache (4.1.x+)](../meta-cache/unified-meta-cache.md).
+:::tip
+For versions before Doris 4.1.x, metadata caching is mainly controlled globally by FE configuration items. For details, see [Metadata Cache](../meta-cache.md).
+Starting from Doris 4.1.x, Hudi-related external metadata cache is configured using the unified `meta.cache.*` keys.
+:::
+
+### Unified Property Model (4.1.x+) {#meta-cache-unified-model}
+
+Each engine's cache entry uses a unified configuration key format: `meta.cache.<engine>.<entry>.{enable,ttl-second,capacity}`.
+
+| Property | Example | Meaning |
+|---|---|---|
+| `enable` | `true/false` | Whether to enable this cache module. |
+| `ttl-second` | `600`, `0`, `-1` | `0` means disable cache (takes effect immediately, can be used to see the latest data); `-1` means never expire; other positive integers mean TTL in seconds based on access time. |
+| `capacity` | `10000` | Maximum number of cache entries (by count). `0` means disable. |
+
+**Effective Logic:** The module cache only takes effect when `enable=true`, `ttl-second != 0`, and `capacity > 0`.
 
 ### Cache Modules {#meta-cache-unified-modules}
 
-| Module | Property key prefix | Cached content (typical) |
+Hudi Catalog includes the following cache modules:
+
+| Module (`<entry>`) | Property Key Prefix | Cached Content and Impact |
 |---|---|---|
-| `schema` | `meta.cache.hudi.schema.` | Schema cache entry for table schema loading. |
-| `partition` | `meta.cache.hudi.partition.` | Hudi partition-related metadata (used by partition discovery/pruning). |
-| `fs_view` | `meta.cache.hudi.fs_view.` | Hudi filesystem view related metadata. |
-| `meta_client` | `meta.cache.hudi.meta_client.` | Hudi meta client related metadata. |
+| `schema` | `meta.cache.hudi.schema.` | Caches table structure. Impact: Visibility of table column information. If disabled, the latest Schema is pulled for each query. |
+| `partition` | `meta.cache.hudi.partition.` | Caches Hudi partition-related metadata. Impact: Used for partition discovery and pruning. |
+| `fs_view` | `meta.cache.hudi.fs_view.` | Caches Hudi filesystem view related metadata. |
+| `meta_client` | `meta.cache.hudi.meta_client.` | Caches Hudi Meta Client objects. Impact: Reduces redundant loading of Hudi metadata. |
 
-Notes:
+### Legacy Parameter Mapping and Conversion {#meta-cache-mapping}
 
-- Property keys use the module names shown above. The same names appear as `ENTRY_NAME` in `information_schema.catalog_meta_cache_statistics`.
-- When Hudi tables are accessed through an HMS catalog, configure `meta.cache.hudi.*` on that HMS catalog.
+In version 4.1.x and later, unified keys are recommended. The following is the mapping between legacy Catalog properties and 4.1.x+ unified keys:
 
-Example:
+| Legacy Property Key | 4.1.x+ Unified Key | Description |
+|---|---|---|
+| `schema.cache.ttl-second` | `meta.cache.hudi.schema.ttl-second` | Expiration time of table structure cache |
 
-```sql
-ALTER CATALOG hudi_ctl SET PROPERTIES (
-  "meta.cache.hudi.fs_view.capacity" = "2000"
-);
-```
+### Best Practices {#meta-cache-best-practices}
+
+* **Real-time access to the latest data**: If you want each query to see the latest data changes or schema changes for Hudi tables, you can set the `ttl-second` for `schema` or `partition` to `0`.
+  ```sql
+  -- Disable partition metadata cache to detect the latest partition changes in Hudi tables
+  ALTER CATALOG hudi_ctl SET PROPERTIES ("meta.cache.hudi.partition.ttl-second" = "0");
+  ```
+* **Performance optimization**: Changes via `ALTER CATALOG ... SET PROPERTIES` support hot-reload in Hudi (via the HMS catalog property update path).
 
 ### Observability {#meta-cache-unified-observability}
 
-Hudi cache metrics are available in `information_schema.catalog_meta_cache_statistics`.
-For the table definition and metric meanings, see: [catalog_meta_cache_statistics](../../admin-manual/system-tables/information_schema/catalog_meta_cache_statistics.md).
-
-Common Hudi entries:
-
-| Entry | Meaning |
-|---|---|
-| `schema` | Schema cache entry |
-| `partition` | Partition metadata cache entry |
-| `fs_view` | File system view cache entry |
-| `meta_client` | Meta client cache entry |
-
-Example query:
+Cache metrics can be observed through the `information_schema.catalog_meta_cache_statistics` system table:
 
 ```sql
 SELECT catalog_name, engine_name, entry_name,
        effective_enabled, ttl_second, capacity,
        estimated_size, hit_rate, load_failure_count, last_error
 FROM information_schema.catalog_meta_cache_statistics
-WHERE catalog_name = 'hudi_ctl'
-  AND engine_name = 'hudi'
+WHERE catalog_name = 'hudi_ctl' AND engine_name = 'hudi'
 ORDER BY entry_name;
 ```
+
+See the documentation for this system table: [catalog_meta_cache_statistics](../../admin-manual/system-tables/information_schema/catalog_meta_cache_statistics.md).
 
 ### Supported Hudi Versions
 

@@ -51,60 +51,73 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
   | ------------------------------- | -------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- | ----- |
   | `hudi.use_hive_sync_partition` | `use_hive_sync_partition` | 是否使用 Hive Metastore 已同步的分区信息。如果为 true，则会直接从 Hive Metastore 中获取分区信息。否则，会从文件系统的元数据文件中获取分区信息。通过 Hive Metastore 获取信息性能更好，但需要用户保证最新的元数据已经同步到了 Hive Metastore。 | false |
 
-## 元数据缓存（4.1.x+） {#meta-cache-unified}
+## 元数据缓存 {#meta-cache}
 
+为了提升访问外部数据源的性能，Apache Doris 会对 Hudi 的元数据进行缓存。元数据包括表结构（Schema）、分区信息、FS View 和 Meta Client 对象等。
+
+:::tip
+对于 Doris 4.1.x 之前的版本，元数据缓存主要由 FE 配置项全局控制，详情请参阅[元数据缓存](../meta-cache.md)。
 从 Doris 4.1.x 开始，Hudi 相关外表元数据缓存使用统一键 `meta.cache.*` 进行配置。
-本节说明 Hudi 相关 cache 模块的配置与观测方式。
+:::
 
-统一属性语义可参阅：[统一外表元数据缓存（4.1.x+）](../meta-cache/unified-meta-cache.md)。
+### 统一属性模型（4.1.x+） {#meta-cache-unified-model}
+
+各引擎 cache entry 使用统一的配置键格式：`meta.cache.<engine>.<entry>.{enable,ttl-second,capacity}`。
+
+| 属性 | 示例 | 含义 |
+|---|---|---|
+| `enable` | `true/false` | 是否启用该缓存模块。 |
+| `ttl-second` | `600`、`0`、`-1` | `0` 表示关闭缓存（即刻生效，可用于查看最新数据）；`-1` 表示永不过期；其他正整数表示按访问时间计算 TTL（秒）。 |
+| `capacity` | `10000` | 最大缓存条目数（按条目数量计）。`0` 表示关闭。 |
+
+**生效逻辑说明：** 只有当 `enable=true` 且 `ttl-second != 0` 且 `capacity > 0` 时，该模块缓存才会生效。
 
 ### 缓存模块 {#meta-cache-unified-modules}
 
-| 模块 | 属性键前缀 | 典型缓存内容 |
+Hudi Catalog 包含以下缓存模块：
+
+| 模块 (`<entry>`) | 属性键前缀 | 缓存内容与影响 |
 |---|---|---|
-| `schema` | `meta.cache.hudi.schema.` | 表 schema 加载对应的 schema cache entry。 |
-| `partition` | `meta.cache.hudi.partition.` | Hudi 分区相关元数据（用于分区发现/剪枝等）。 |
-| `fs_view` | `meta.cache.hudi.fs_view.` | Hudi FS View 相关元数据。 |
-| `meta_client` | `meta.cache.hudi.meta_client.` | Hudi Meta Client 相关元数据。 |
+| `schema` | `meta.cache.hudi.schema.` | 缓存表结构。影响：列新增、删除、类型变更在 Doris 中的可见性。若关闭，每次查询都会拉取最新 Schema。 |
+| `partition` | `meta.cache.hudi.partition.` | 缓存 Hudi 分区相关元数据。影响：分区发现、分区裁剪，以及新增/删除分区何时在 Doris 中可见。 |
+| `fs_view` | `meta.cache.hudi.fs_view.` | 缓存 Hudi 文件系统视图相关元数据。影响：查询规划时选择到的最新 base file / log file 以及 file slice 视图的新鲜度。 |
+| `meta_client` | `meta.cache.hudi.meta_client.` | 缓存 Hudi Meta Client 对象。影响：时间线（timeline）、表配置等底层元数据重新加载的频率，以及提交/表配置变更何时被感知。 |
 
-说明：
+### 旧参数映射与转换 {#meta-cache-mapping}
 
-- 属性键使用上表中的模块名。这些名字也会出现在 `information_schema.catalog_meta_cache_statistics` 的 `ENTRY_NAME` 中。
-- 如果 Hudi 表是通过 HMS catalog 提供访问的，`meta.cache.hudi.*` 也配置在该 HMS catalog 上。
+在 4.1.x 之前，Hudi 的 Schema 缓存有 Catalog 兼容属性，分区与表级元数据则主要遵循旧的 FE 全局缓存模型，详见[元数据缓存](../meta-cache.md)。升级到 4.1.x 后，建议统一改写为 `meta.cache.hudi.*`，并分别配置分区、FS View 和 Meta Client。
 
-示例：
+| 4.1 前属性键/旧模型 | 适用范围 | 4.1.x+ 统一键 | 升级建议与影响 |
+|---|---|---|---|
+| `schema.cache.ttl-second` | 4.1 前 Hudi Catalog 兼容属性 | `meta.cache.hudi.schema.ttl-second` | 控制 Schema 新鲜度。若希望列变更每次查询立即可见，设置为 `0`。 |
+| Hudi 分区旧模型 | 4.1 前 FE 全局缓存策略（见旧版元数据缓存文档） | `meta.cache.hudi.partition.ttl-second` | 控制分区发现与分区可见性。若希望新增/删除分区每次查询立即可见，设置为 `0`。 |
+| 无一一对应的旧 Catalog 键 | 4.1 前未单独暴露 `fs_view` / `meta_client` TTL | `meta.cache.hudi.fs_view.*`、`meta.cache.hudi.meta_client.*` | 这是 4.1.x 中拆分出的新模块。若希望更快感知最新 file slice 或提交时间线，分别调低对应 `ttl-second`。 |
 
-```sql
-ALTER CATALOG hudi_ctl SET PROPERTIES (
-  "meta.cache.hudi.fs_view.capacity" = "2000"
-);
-```
+4.1.x 的统一模型把缓存拆分为 `enable`、`ttl-second`、`capacity` 三个维度；旧模型主要描述 TTL/全局缓存行为。升级后如果仍沿用旧理解，容易遗漏 `fs_view`、`meta_client` 这类新模块的单独配置。
+
+### 最佳实践 {#meta-cache-best-practices}
+
+* **实时查看最新数据**：如果您希望每次查询都能看到 Hudi 表的最新数据变动或 Schema 变更，可以将 `schema` 或 `partition` 的 `ttl-second` 设置为 `0`。
+  ```sql
+  -- 关闭分区元数据缓存，以感知 Hudi 表的最新分区变动
+  ALTER CATALOG hudi_ctl SET PROPERTIES ("meta.cache.hudi.partition.ttl-second" = "0");
+  ```
+* **性能优化**：`ALTER CATALOG ... SET PROPERTIES` 的修改在 Hudi 中支持热生效（通过 HMS catalog 属性更新路径）。
 
 ### 可观测性 {#meta-cache-unified-observability}
 
-Hudi 缓存指标可通过 `information_schema.catalog_meta_cache_statistics` 查询。
-系统表字段与指标说明见：[catalog_meta_cache_statistics](../../admin-manual/system-tables/information_schema/catalog_meta_cache_statistics.md)。
-
-Hudi 常见 entry：
-
-| Entry | 含义 |
-|---|---|
-| `schema` | Schema cache entry |
-| `partition` | 分区元数据缓存 entry |
-| `fs_view` | FS View 缓存 entry |
-| `meta_client` | Meta Client 缓存 entry |
-
-示例查询：
+可以通过 `information_schema.catalog_meta_cache_statistics` 系统表观测缓存指标：
 
 ```sql
 SELECT catalog_name, engine_name, entry_name,
        effective_enabled, ttl_second, capacity,
        estimated_size, hit_rate, load_failure_count, last_error
 FROM information_schema.catalog_meta_cache_statistics
-WHERE catalog_name = 'hudi_ctl'
-  AND engine_name = 'hudi'
+WHERE catalog_name = 'hudi_ctl' AND engine_name = 'hudi'
 ORDER BY entry_name;
 ```
+
+该系统表文档见：[catalog_meta_cache_statistics](../../admin-manual/system-tables/information_schema/catalog_meta_cache_statistics.md)。
 
 ### 支持的 Hudi 版本
 

@@ -324,7 +324,8 @@ REFRESH TABLE catalog_name.db_name.table_name;
 
 Doris 也支持关闭元数据缓存，以便能够实时访问到最新的元数据。
 
-关于元数据缓存的详细介绍和配置，请参阅：[元数据缓存](./meta-cache.md)
+- Doris 4.1.x 之前：请参阅[元数据缓存](./meta-cache.md)。
+- Doris 4.1.x 及之后：请参阅各 Catalog 文档中的“元数据缓存”章节，例如 [Hive Catalog](./catalogs/hive-catalog.md#meta-cache)、[Iceberg Catalog](./catalogs/iceberg-catalog.mdx#meta-cache)、[Hudi Catalog](./catalogs/hudi-catalog.md#meta-cache)、[Paimon Catalog](./catalogs/paimon-catalog.mdx#meta-cache)、[MaxCompute Catalog](./catalogs/maxcompute-catalog.md#meta-cache)。
 
 ## 修改数据目录
 

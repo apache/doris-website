@@ -87,63 +87,81 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 
     CommonProperties 部分用于填写通用属性。请参阅[数据目录概述](../catalog-overview.md)中【通用属性】部分。
 
-## 元数据缓存（4.1.x+） {#meta-cache-unified}
+## 元数据缓存 {#meta-cache}
 
+为了提升访问外部数据源的性能，Apache Doris 会对 Iceberg 的元数据进行缓存。元数据包括表结构（Schema）、表对象、View 对象和 Manifest 详情等。
+
+:::tip
+对于 Doris 4.1.x 之前的版本，元数据缓存主要由 FE 配置项全局控制，详情请参阅[元数据缓存](../meta-cache.md)。
 从 Doris 4.1.x 开始，Iceberg Catalog 的外表元数据缓存使用统一键 `meta.cache.*` 进行配置。
-本节说明 Iceberg 相关 cache 模块的配置与观测方式。
+:::
 
-统一属性语义可参阅：[统一外表元数据缓存（4.1.x+）](../meta-cache/unified-meta-cache.md)。
+### 统一属性模型（4.1.x+） {#meta-cache-unified-model}
+
+各引擎 cache entry 使用统一的配置键格式：`meta.cache.<engine>.<entry>.{enable,ttl-second,capacity}`。
+
+| 属性 | 示例 | 含义 |
+|---|---|---|
+| `enable` | `true/false` | 是否启用该缓存模块。 |
+| `ttl-second` | `600`、`0`、`-1` | `0` 表示关闭缓存（即刻生效，可用于查看最新数据）；`-1` 表示永不过期；其他正整数表示按访问时间计算 TTL（秒）。 |
+| `capacity` | `10000` | 最大缓存条目数（按条目数量计）。`0` 表示关闭。 |
+
+**生效逻辑说明：** 只有当 `enable=true` 且 `ttl-second != 0` 且 `capacity > 0` 时，该模块缓存才会生效。
 
 ### 缓存模块 {#meta-cache-unified-modules}
 
-| 模块 | 属性键前缀 | 典型缓存内容 |
+Iceberg Catalog 包含以下缓存模块：
+
+| 模块 (`<entry>`) | 属性键前缀 | 缓存内容与影响 |
 |---|---|---|
-| `schema` | `meta.cache.iceberg.schema.` | 表 schema 加载对应的 schema cache entry。 |
-| `table` | `meta.cache.iceberg.table.` | Iceberg 表元数据对象（减少 catalog/metastore 往返）。 |
-| `view` | `meta.cache.iceberg.view.` | Iceberg View 元数据对象。 |
-| `manifest` | `meta.cache.iceberg.manifest.` | manifest 相关元数据（减少重复读取 manifest 的开销）。 |
+| `schema` | `meta.cache.iceberg.schema.` | 缓存表结构。影响：列新增、删除、类型变更在 Doris 中的可见性。若关闭，每次查询都会拉取最新 Schema。 |
+| `table` | `meta.cache.iceberg.table.` | 缓存 Iceberg 表元数据对象。影响：最新 Snapshot、Partition Spec、Sort Order、表属性等表级元数据在 Doris 中的可见性；若关闭，每次规划都会重新加载表元数据。 |
+| `view` | `meta.cache.iceberg.view.` | 缓存 Iceberg View 元数据对象。影响：View 定义、Schema、属性变更在 Doris 中的可见性。 |
+| `manifest` | `meta.cache.iceberg.manifest.` | 缓存 Manifest 详情。主要影响查询规划时重复读取 Manifest 文件的开销，通常不直接决定表或 Snapshot 是否可见。注意：该模块默认关闭，需手动启用。 |
 
-说明：
+### 旧参数映射与转换 {#meta-cache-mapping}
 
-- 属性键使用上表中的模块名。这些名字也会出现在 `information_schema.catalog_meta_cache_statistics` 的 `ENTRY_NAME` 中。
-- 当前实现中，`manifest` 默认是关闭的，调 TTL / capacity 之前要先显式打开。
-- `view` entry 只有在 Doris 访问 Iceberg View 时才会出现。
-- `ALTER CATALOG ... SET PROPERTIES` 的修改通过统一热生效路径应用。
+在 4.1.x 之前，Iceberg 表级元数据主要受 FE 全局缓存策略控制，`schema.cache.ttl-second` 是常见的 Catalog 兼容属性；详见[元数据缓存](../meta-cache.md)。升级到 4.1.x 后，建议改写为 `meta.cache.iceberg.*`，并按需要分别配置表、View 和 Manifest 缓存。
 
-示例：
+| 4.1 前属性键/旧模型 | 适用范围 | 4.1.x+ 统一键 | 升级建议与影响 |
+|---|---|---|---|
+| `schema.cache.ttl-second` | 4.1 前 Iceberg Catalog 兼容属性 | `meta.cache.iceberg.schema.ttl-second` | 控制 Schema 新鲜度。若希望列变更每次查询立即可见，设置为 `0`。 |
+| Iceberg 表信息旧模型 | 4.1 前 FE 全局缓存策略（见旧版元数据缓存文档） | `meta.cache.iceberg.table.ttl-second` | 控制表级元数据新鲜度。若希望每次查询都读取最新 Snapshot/表属性，设置为 `0`。 |
+| 无一一对应的旧 Catalog 键 | 4.1 前未单独暴露 View / Manifest TTL | `meta.cache.iceberg.view.*`、`meta.cache.iceberg.manifest.*` | 这是 4.1.x 中拆分出的新模块。升级后如需保证最新 View 定义，单独调低 `view.ttl-second`；`manifest` 主要用于性能优化。 |
 
-```sql
-ALTER CATALOG iceberg_ctl SET PROPERTIES (
-  "meta.cache.iceberg.manifest.enable" = "true",
-  "meta.cache.iceberg.manifest.ttl-second" = "600"
-);
-```
+4.1.x 的统一模型把缓存拆分为 `enable`、`ttl-second`、`capacity` 三个维度；旧模型主要描述 TTL/全局缓存行为，不覆盖这些新模块的独立开关和容量上限。升级时建议一并评估是否需要补充 `enable/capacity`。
+
+### 最佳实践 {#meta-cache-best-practices}
+
+* **实时查看最新数据**：如果您希望每次查询都能看到 Iceberg 表的最新快照或 Schema 变动，可以将 `schema` 或 `table` 的 `ttl-second` 设置为 `0`。
+  ```sql
+  -- 关闭表对象缓存，以便感知快照变动
+  ALTER CATALOG iceberg_ctl SET PROPERTIES ("meta.cache.iceberg.table.ttl-second" = "0");
+  ```
+* **性能优化**：
+    * 启用 Manifest 缓存可以显著提升大表的查询规划速度：
+      ```sql
+      ALTER CATALOG iceberg_ctl SET PROPERTIES (
+        "meta.cache.iceberg.manifest.enable" = "true",
+        "meta.cache.iceberg.manifest.ttl-second" = "600"
+      );
+      ```
+    * `ALTER CATALOG ... SET PROPERTIES` 的修改在 Iceberg Catalog 中支持热生效。
 
 ### 可观测性 {#meta-cache-unified-observability}
 
-Iceberg 缓存指标可通过 `information_schema.catalog_meta_cache_statistics` 查询。
-系统表字段与指标说明见：[catalog_meta_cache_statistics](../../admin-manual/system-tables/information_schema/catalog_meta_cache_statistics.md)。
-
-Iceberg 常见 entry：
-
-| Entry | 含义 |
-|---|---|
-| `schema` | Schema cache entry |
-| `table` | 表元数据缓存 entry |
-| `view` | View 元数据缓存 entry |
-| `manifest` | Manifest payload 缓存 entry |
-
-示例查询：
+可以通过 `information_schema.catalog_meta_cache_statistics` 系统表观测缓存指标：
 
 ```sql
 SELECT catalog_name, engine_name, entry_name,
        effective_enabled, ttl_second, capacity,
        estimated_size, hit_rate, load_failure_count, last_error
 FROM information_schema.catalog_meta_cache_statistics
-WHERE catalog_name = 'iceberg_ctl'
-  AND engine_name = 'iceberg'
+WHERE catalog_name = 'iceberg_ctl' AND engine_name = 'iceberg'
 ORDER BY entry_name;
 ```
+
+该系统表文档见：[catalog_meta_cache_statistics](../../admin-manual/system-tables/information_schema/catalog_meta_cache_statistics.md)。
 
 ### 支持的 Iceberg 版本
 
