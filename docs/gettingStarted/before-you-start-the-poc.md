@@ -27,7 +27,7 @@ Creating a table in Doris involves four decisions that affect load and query per
 
 ### Sort Key
 
-Put the column you filter on most frequently first, with fixed-size types (INT, BIGINT, DATE) before VARCHAR. Doris builds a [prefix index](../table-design/index/prefix-index) on the first 36 bytes of key columns but stops at the first VARCHAR. Add [inverted indexes](../table-design/index/inverted-index) for other columns that need fast filtering.
+Put the column you filter on most frequently first, with fixed-size types (INT, BIGINT, DATE) before VARCHAR. Doris builds a [prefix index](../table-design/index/prefix-index) on the first 36 bytes of key columns but stops at the first VARCHAR. Add [inverted indexes](../table-design/index/inverted-index/overview) for other columns that need fast filtering.
 
 ### Partitioning
 
