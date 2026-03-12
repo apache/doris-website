@@ -69,7 +69,7 @@ INTO TABLE "<tbl_name>"
 | max_filter_ratio | The maximum tolerable ratio of filterable data (due to reasons such as data irregularities), with a default of zero tolerance. |
 | timeout | Specify the import timeout period in seconds. The default is 600 seconds, and the valid range is from 1 second to 259,200 seconds. |
 | strict_mode | Users can specify whether to enable strict mode for this import. The default is disabled. |
-| timezone | Specify the time zone for this import. The default is the East Eight Time Zone. This parameter will affect the results of all time - zone - related functions involved in the import. |
+| timezone | Specify the time zone for this import. The default is the current cluster time zone. This parameter will affect the results of all time - zone - related functions involved in the import. |
 | exec_mem_limit | The import memory limit, with a default of 2GB in bytes. |
 | trim_double_quotes | A boolean type with a default value of `false`. When set to `true`, it means trimming the outermost double quotes of each field in the imported file. |
 | enclose | Enclosure character. When a CSV data field contains a line separator or column separator, to prevent accidental truncation, a single - byte character can be specified as the enclosure character for protection. For example, if the column separator is ",", the enclosure character is "'", and the data is "a,'b,c'", then "b,c" will be parsed as one field. Note: When `enclose` is set to `""`, `trim_double_quotes` must be set to `true`. |
@@ -89,87 +89,4 @@ Users executing this SQL command must have at least the following permissions:
 
 ## Examples
 
-1. Import data from the client's local file `testData` into the table `testTbl` in the database `testDb`. Specify a timeout of 100 seconds.
-
-    ```sql
-    LOAD DATA LOCAL
-    INFILE 'testData'
-    INTO TABLE testDb.testTbl
-    PROPERTIES ("timeout"="100")
-    ```
-
-2. Import data from the server's local file `/root/testData` (you need to set the FE configuration `mysql_load_server_secure_path` to `/root`) into the table `testTbl` in the database `testDb`. Specify a timeout of 100 seconds.
-
-    ```sql
-    LOAD DATA
-    INFILE '/root/testData'
-    INTO TABLE testDb.testTbl
-    PROPERTIES ("timeout"="100")
-    ```
-
-3. Import data from the client's local file `testData` into the table `testTbl` in the database `testDb`, allowing an error rate of 20%.
-
-    ```sql
-    LOAD DATA LOCAL
-    INFILE 'testData'
-    INTO TABLE testDb.testTbl
-    PROPERTIES ("max_filter_ratio"="0.2")
-    ```
-
-4. Import data from the client's local file `testData` into the table `testTbl` in the database `testDb`, allowing an error rate of 20%, and specify the column names of the file.
-
-    ```sql
-    LOAD DATA LOCAL
-    INFILE 'testData'
-    INTO TABLE testDb.testTbl
-    (k2, k1, v1)
-    PROPERTIES ("max_filter_ratio"="0.2")
-    ```
-
-5. Import data from the local file `testData` into partitions `p1` and `p2` of the table `testTbl` in the database `testDb`, allowing an error rate of 20%.
-
-    ```sql
-    LOAD DATA LOCAL
-    INFILE 'testData'
-    INTO TABLE testDb.testTbl
-    PARTITION (p1, p2)
-    PROPERTIES ("max_filter_ratio"="0.2")
-    ```
-
-6. Import data from the local CSV file `testData` with a line separator of `0102` and a column separator of `0304` into the table `testTbl` in the database `testDb`.
-
-    ```sql
-    LOAD DATA LOCAL
-    INFILE 'testData'
-    INTO TABLE testDb.testTbl
-    COLUMNS TERMINATED BY '0304'
-    LINES TERMINATED BY '0102'
-    ```
-
-7. Import data from the local file `testData` into partitions `p1` and `p2` of the table `testTbl` in the database `testDb` and skip the first 3 lines.
-
-    ```sql
-    LOAD DATA LOCAL
-    INFILE 'testData'
-    INTO TABLE testDb.testTbl
-    PARTITION (p1, p2)
-    IGNORE 3 LINES
-    ```
-
-8. Import data with strict mode filtering and set the time zone to `Africa/Abidjan`.
-
-    ```sql
-    LOAD DATA LOCAL
-    INFILE 'testData'
-    INTO TABLE testDb.testTbl
-    PROPERTIES ("strict_mode"="true", "timezone"="Africa/Abidjan")
-    ```
-
-9. Limit the import memory to 10GB and set a timeout of 10 minutes for the data import.
-
-    ```sql
-    LOAD DATA LOCAL
-    INFILE 'testData'
-    INTO TABLE testDb.testTbl
-    PROPERTIES ("exec_mem_limit"="10737418240", "timeout"="600")
-    ```
+For complete examples covering local file import, partition selection, column mapping, strict mode, and more, refer to [MySQL Load](../../../../data-operate/import/import-way/mysql-load-manual.md) in the Data Import guide.

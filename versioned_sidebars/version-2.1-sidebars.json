@@ -90,7 +90,8 @@
                                 "table-design/data-partitioning/dynamic-partitioning",
                                 "table-design/data-partitioning/auto-partitioning",
                                 "table-design/data-partitioning/data-bucketing",
-                                "table-design/data-partitioning/common-issues"
+                                "table-design/data-partitioning/common-issues",
+                                "table-design/data-partitioning/basic-concepts"
                             ]
                         },
                         "table-design/data-type",
@@ -158,7 +159,8 @@
                                 "data-operate/import/import-way/routine-load-manual",
                                 "data-operate/import/import-way/insert-into-manual",
                                 "data-operate/import/import-way/insert-into-values-manual",
-                                "data-operate/import/import-way/mysql-load-manual"
+                                "data-operate/import/import-way/mysql-load-manual",
+                                "data-operate/import/import-way/log-storage-analysis"
                             ]
                         },
                         {
@@ -424,18 +426,7 @@
                         "lakehouse/data-cache",
                         "lakehouse/meta-cache",
                         "lakehouse/compute-node",
-                        "lakehouse/statistics",
-                        {
-                            "type": "category",
-                            "label": "SQL Dialect Convertor",
-                            "items": [
-                                "lakehouse/sql-convertor/sql-convertor-overview",
-                                "lakehouse/sql-convertor/presto-trino-guide",
-                                "lakehouse/sql-convertor/clickhouse-guide",
-                                "lakehouse/sql-convertor/hive-guide",
-                                "lakehouse/sql-convertor/pg-guide"
-                            ]
-                        },
+                        "lakehouse/statistics", 
                         {
                             "type": "category",
                             "label": "Lakehouse Best Practices",
@@ -860,6 +851,7 @@
                     "items": [
                         "ecosystem/bi/apache-superset",
                         "ecosystem/bi/finebi",
+                        "ecosystem/bi/metabase",
                         "ecosystem/bi/powerbi",
                         "ecosystem/bi/tableau",
                         "ecosystem/bi/quicksight",
@@ -1195,7 +1187,6 @@
                                         "sql-manual/sql-functions/scalar-functions/date-time-functions/from-microsecond",
                                         "sql-manual/sql-functions/scalar-functions/date-time-functions/from-millisecond",
                                         "sql-manual/sql-functions/scalar-functions/date-time-functions/from-second",
-                                        "sql-manual/sql-functions/scalar-functions/date-time-functions/from-second",
                                         "sql-manual/sql-functions/scalar-functions/date-time-functions/from-unixtime",
                                         "sql-manual/sql-functions/scalar-functions/date-time-functions/hour",
                                         "sql-manual/sql-functions/scalar-functions/date-time-functions/hour-ceil",
@@ -1259,10 +1250,10 @@
                                         "sql-manual/sql-functions/scalar-functions/date-time-functions/year",
                                         "sql-manual/sql-functions/scalar-functions/date-time-functions/year-ceil",
                                         "sql-manual/sql-functions/scalar-functions/date-time-functions/year-floor",
+                                        "sql-manual/sql-functions/scalar-functions/date-time-functions/yearweek",
                                         "sql-manual/sql-functions/scalar-functions/date-time-functions/years-add",
                                         "sql-manual/sql-functions/scalar-functions/date-time-functions/years-diff",
-                                        "sql-manual/sql-functions/scalar-functions/date-time-functions/years-sub",
-                                        "sql-manual/sql-functions/scalar-functions/date-time-functions/yearweek"
+                                        "sql-manual/sql-functions/scalar-functions/date-time-functions/years-sub"
                                     ]
                                 },
                                 {

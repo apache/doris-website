@@ -9,6 +9,7 @@ const sidebars: SidebarsConfig = {
             items: [
                 'gettingStarted/what-is-apache-doris',
                 'gettingStarted/quick-start',
+                'gettingStarted/must-read-before-poc',
                 {
                     type: 'category',
                     label: 'Tech Alternatives',
@@ -113,10 +114,12 @@ const sidebars: SidebarsConfig = {
                                 'table-design/data-partitioning/auto-partitioning',
                                 'table-design/data-partitioning/data-bucketing',
                                 'table-design/data-partitioning/common-issues',
+                                'table-design/data-partitioning/basic-concepts',
                             ],
                         },
                         'table-design/data-type',
                         'table-design/column-compression',
+                        'table-design/storage-format',
                         {
                             type: 'category',
                             label: 'Table Indexes',
@@ -186,6 +189,7 @@ const sidebars: SidebarsConfig = {
                                 'data-operate/import/import-way/insert-into-manual',
                                 'data-operate/import/import-way/insert-into-values-manual',
                                 'data-operate/import/import-way/mysql-load-manual',
+                                "data-operate/import/import-way/log-storage-analysis"
                             ],
                         },
                         {
@@ -196,6 +200,7 @@ const sidebars: SidebarsConfig = {
                                 'data-operate/import/file-format/json',
                                 'data-operate/import/file-format/parquet',
                                 'data-operate/import/file-format/orc',
+                                'data-operate/import/file-format/native',
                             ],
                         },
                         {
@@ -218,14 +223,20 @@ const sidebars: SidebarsConfig = {
                         'data-operate/import/load-best-practices',
                         {
                             type: 'category',
+                            label: 'Continuous Load',
+                            items: [
+                                'data-operate/import/streaming-job/streaming-job-tvf',
+                                'data-operate/import/streaming-job/streaming-job-multi-table',
+                            ],
+                        },
+                        {
+                            type: 'category',
                             label: 'Load Internals',
                             items: [
-                                'data-operate/import/load-internals/load-internals',
                                 'data-operate/import/load-internals/routine-load-internals',
                                 'data-operate/import/load-internals/stream-load-in-complex-network',
                             ],
                         },
-                        "data-operate/import/streaming-job"
                     ],
                 },
                 {
@@ -284,112 +295,14 @@ const sidebars: SidebarsConfig = {
                         {
                             type: 'category',
                             label: 'User Defined Functions',
-                            items: ['query-data/udf/alias-function', 'query-data/udf/java-user-defined-function'],
+                            items: [
+                                'query-data/udf/alias-function',
+                                'query-data/udf/java-user-defined-function',
+                                'query-data/udf/python-user-defined-function',
+                            ],
                         },
                         'query-data/complex-type',
                         'query-data/lateral-view',
-                    ],
-                },
-                {
-                    type: 'category',
-                    label: 'Queries Acceleration',
-                    items: [
-                        {
-                            type: 'category',
-                            label: 'Performance Tuning Overview',
-                            items: [
-                                'query-acceleration/performance-tuning-overview/tuning-overview',
-                                'query-acceleration/performance-tuning-overview/diagnostic-tools',
-                                'query-acceleration/performance-tuning-overview/analysis-tools',
-                                'query-acceleration/performance-tuning-overview/tuning-process',
-                            ],
-                        },
-                        {
-                            type: 'category',
-                            label: 'Materialize View',
-                            items: [
-                                'query-acceleration/materialized-view/overview',
-                                'query-acceleration/materialized-view/sync-materialized-view',
-                                {
-                                    type: 'category',
-                                    label: 'Async-Materialized View',
-                                    items: [
-                                        'query-acceleration/materialized-view/async-materialized-view/overview',
-                                        'query-acceleration/materialized-view/async-materialized-view/functions-and-demands',
-                                        'query-acceleration/materialized-view/async-materialized-view/use-guide',
-                                        'query-acceleration/materialized-view/async-materialized-view/use-advice',
-                                        'query-acceleration/materialized-view/async-materialized-view/faq',
-                                    ],
-                                },
-                            ],
-                        },
-                        'query-acceleration/sql-cache-manual',
-                        'query-acceleration/condition-cache',
-                        'query-acceleration/high-concurrent-point-query',
-                        'query-acceleration/dictionary',
-                        'query-acceleration/query-profile',
-                        {
-                            type: 'category',
-                            label: 'Distincting Counts',
-                            items: [
-                                'query-acceleration/distinct-counts/bitmap-precise-deduplication',
-                                'query-acceleration/distinct-counts/hll-approximate-deduplication',
-                            ],
-                        },
-                        'query-acceleration/colocation-join',
-                        {
-                            type: 'category',
-                            label: 'Hints',
-                            items: [
-                                'query-acceleration/hints/hints-overview',
-                                'query-acceleration/hints/leading-hint',
-                                'query-acceleration/hints/distribute-hint',
-                            ],
-                        },
-                        {
-                            type: 'category',
-                            label: 'Tuning',
-                            items: [
-                                {
-                                    type: 'category',
-                                    label: 'Tuning Plan',
-                                    items: [
-                                        'query-acceleration/tuning/tuning-plan/optimizing-table-schema',
-                                        'query-acceleration/tuning/tuning-plan/optimizing-table-index',
-                                        'query-acceleration/tuning/tuning-plan/optimizing-table-scanning',
-                                        'query-acceleration/tuning/tuning-plan/transparent-rewriting-with-sync-mv',
-                                        'query-acceleration/tuning/tuning-plan/transparent-rewriting-with-async-mv',
-                                        'query-acceleration/tuning/tuning-plan/optimizing-join-with-colocate-group',
-                                        'query-acceleration/tuning/tuning-plan/adjusting-join-shuffle',
-                                        'query-acceleration/tuning/tuning-plan/controlling-hints-with-cbo-rule',
-                                        'query-acceleration/tuning/tuning-plan/reordering-join-with-leading-hint',
-                                        'query-acceleration/tuning/tuning-plan/accelerating-queries-with-sql-cache',
-                                        'query-acceleration/tuning/tuning-plan/dml-tuning-plan',
-                                    ],
-                                },
-                                {
-                                    type: 'category',
-                                    label: 'Tuning Execution',
-                                    items: [
-                                        'query-acceleration/tuning/tuning-execution/adjustment-of-runtimefilter-wait-time',
-                                        'query-acceleration/tuning/tuning-execution/data-skew-handling',
-                                        'query-acceleration/tuning/tuning-execution/parallelism-tuning',
-                                    ],
-                                },
-                                'query-acceleration/tuning/tuning-parameters',
-                            ],
-                        },
-                        {
-                            type: 'category',
-                            label: 'Optimization Technology Principle',
-                            items: [
-                                'query-acceleration/optimization-technology-principle/query-optimizer',
-                                'query-acceleration/optimization-technology-principle/pipeline-execution-engine',
-                                'query-acceleration/optimization-technology-principle/runtime-filter',
-                                'query-acceleration/optimization-technology-principle/topn-optimization',
-                                'query-acceleration/optimization-technology-principle/statistics',
-                            ],
-                        },
                     ],
                 },
                 {
@@ -435,13 +348,50 @@ const sidebars: SidebarsConfig = {
                             label: 'Data Catalogs',
                             items: [
                                 'lakehouse/catalogs/hive-catalog',
-                                'lakehouse/catalogs/iceberg-catalog',
-                                'lakehouse/catalogs/hudi-catalog',
-                                'lakehouse/catalogs/paimon-catalog',
-                                'lakehouse/catalogs/maxcompute-catalog',
+                                {
+                                    type: 'category',
+                                    label: 'Iceberg Catalog',
+                                    link: {type: 'doc', id: 'lakehouse/catalogs/iceberg-catalog'},
+                                    items: [
+                                        'lakehouse/best-practices/doris-iceberg',
+                                        'lakehouse/best-practices/doris-aws-s3tables',
+                                        'lakehouse/best-practices/doris-polaris',
+                                        'lakehouse/best-practices/doris-gravitino',
+                                        'lakehouse/best-practices/doris-onelake',
+                                        'lakehouse/best-practices/doris-unity-catalog',
+                                        'lakehouse/best-practices/doris-lakekeeper',
+                                        'lakehouse/best-practices/doris-nessie'
+                                    ],
+                                },
+                                {
+                                    type: 'category',
+                                    label: 'Paimon Catalog',
+                                    link: {type: 'doc', id: 'lakehouse/catalogs/paimon-catalog'},
+                                    items: [
+                                        'lakehouse/best-practices/doris-paimon',
+                                        'lakehouse/best-practices/doris-dlf-paimon'
+                                    ],
+                                },
+                                {
+                                    type: 'category',
+                                    label: 'Hudi Catalog',
+                                    link: {type: 'doc', id: 'lakehouse/catalogs/hudi-catalog'},
+                                    items: [
+                                        'lakehouse/best-practices/doris-hudi'
+                                    ],
+                                },
+                                {
+                                    type: 'category',
+                                    label: 'MaxCompute Catalog',
+                                    link: {type: 'doc', id: 'lakehouse/catalogs/maxcompute-catalog'},
+                                    items: [
+                                        'lakehouse/best-practices/doris-maxcompute'
+                                    ],
+                                },
                                 'lakehouse/catalogs/delta-lake-catalog',
                                 'lakehouse/catalogs/bigquery-catalog',
                                 'lakehouse/catalogs/kudu-catalog',
+                                'lakehouse/catalogs/kafka-catalog',
                                 'lakehouse/catalogs/es-catalog',
                                 'lakehouse/catalogs/doris-catalog',
                                 'lakehouse/catalogs/jdbc-catalog-overview',
@@ -500,32 +450,9 @@ const sidebars: SidebarsConfig = {
                         'lakehouse/statistics',
                         {
                             type: 'category',
-                            label: 'SQL Dialect Convertor',
-                            items: [
-                                'lakehouse/sql-convertor/sql-convertor-overview',
-                                'lakehouse/sql-convertor/presto-trino-guide',
-                                'lakehouse/sql-convertor/clickhouse-guide',
-                                'lakehouse/sql-convertor/hive-guide',
-                                'lakehouse/sql-convertor/pg-guide',
-                            ],
-                        },
-                        {
-                            type: 'category',
                             label: 'Lakehouse Best Practices',
                             items: [
                                 'lakehouse/best-practices/optimization',
-                                'lakehouse/best-practices/doris-hudi',
-                                'lakehouse/best-practices/doris-paimon',
-                                'lakehouse/best-practices/doris-iceberg',
-                                'lakehouse/best-practices/doris-aws-s3tables',
-                                'lakehouse/best-practices/doris-polaris',
-                                'lakehouse/best-practices/doris-gravitino',
-                                'lakehouse/best-practices/doris-onelake',
-                                'lakehouse/best-practices/doris-unity-catalog',
-                                'lakehouse/best-practices/doris-lakekeeper',
-                                'lakehouse/best-practices/doris-nessie',
-                                'lakehouse/best-practices/doris-dlf-paimon',
-                                'lakehouse/best-practices/doris-maxcompute',
                                 'lakehouse/best-practices/kerberos',
                                 'lakehouse/best-practices/tpch',
                                 'lakehouse/best-practices/tpcds',
@@ -599,7 +526,7 @@ const sidebars: SidebarsConfig = {
                                     label: 'Authentication',
                                     items: [
                                         'admin-manual/auth/authentication/internal',
-                                        'admin-manual/auth/authentication/federation',
+                                        'admin-manual/auth/authentication/ldap',
                                     ],
                                 },
                                 {
@@ -633,7 +560,141 @@ const sidebars: SidebarsConfig = {
                                 'admin-manual/auth/integrations/aws-authentication-and-authorization',
                                 'admin-manual/auth/integrations/aws-iam-role',
                             ],
+                        }
+                    ],
+                },
+            ],
+        },
+        {
+            type: 'category',
+            label: 'Performance',
+            collapsed: false,
+            items: [
+                {
+                    type: 'category',
+                    label: 'Getting Started with Performance Tuning',
+                    items: [
+                        'query-acceleration/performance-tuning-overview/tuning-overview',
+                        'query-acceleration/performance-tuning-overview/diagnostic-tools',
+                        'query-acceleration/performance-tuning-overview/analysis-tools',
+                        'query-acceleration/performance-tuning-overview/tuning-process',
+                    ],
+                },
+                {
+                    type: 'category',
+                    label: 'Query Performance',
+                    items: [
+                        {
+                            type: 'category',
+                            label: 'Schema & Index Optimization',
+                            items: [
+                                'query-acceleration/tuning/tuning-plan/optimizing-table-schema',
+                                'query-acceleration/tuning/tuning-plan/optimizing-table-index',
+                                'query-acceleration/tuning/tuning-plan/optimizing-table-scanning',
+                            ],
                         },
+                        {
+                            type: 'category',
+                            label: 'Materialized View',
+                            items: [
+                                'query-acceleration/materialized-view/overview',
+                                'query-acceleration/materialized-view/sync-materialized-view',
+                                'query-acceleration/tuning/tuning-plan/transparent-rewriting-with-sync-mv',
+                                {
+                                    type: 'category',
+                                    label: 'Async Materialized View',
+                                    items: [
+                                        'query-acceleration/materialized-view/async-materialized-view/overview',
+                                        'query-acceleration/materialized-view/async-materialized-view/functions-and-demands',
+                                        'query-acceleration/materialized-view/async-materialized-view/use-guide',
+                                        'query-acceleration/materialized-view/async-materialized-view/use-advice',
+                                        'query-acceleration/materialized-view/async-materialized-view/faq',
+                                        'query-acceleration/tuning/tuning-plan/transparent-rewriting-with-async-mv',
+                                    ],
+                                },
+                            ],
+                        },
+                        {
+                            type: 'category',
+                            label: 'Join Optimization',
+                            items: [
+                                'query-acceleration/colocation-join',
+                                'query-acceleration/tuning/tuning-plan/optimizing-join-with-colocate-group',
+                                'query-acceleration/tuning/tuning-plan/adjusting-join-shuffle',
+                                'query-acceleration/tuning/tuning-plan/reordering-join-with-leading-hint',
+                            ],
+                        },
+                        {
+                            type: 'category',
+                            label: 'Caching',
+                            items: [
+                                'query-acceleration/sql-cache-manual',
+                                'query-acceleration/condition-cache',
+                                'query-acceleration/tuning/tuning-plan/accelerating-queries-with-sql-cache',
+                            ],
+                        },
+                        {
+                            type: 'category',
+                            label: 'Execution Tuning',
+                            items: [
+                                'query-acceleration/tuning/tuning-execution/adjustment-of-runtimefilter-wait-time',
+                                'query-acceleration/tuning/tuning-execution/data-skew-handling',
+                                'query-acceleration/tuning/tuning-execution/parallelism-tuning',
+                                'query-acceleration/tuning/tuning-plan/controlling-hints-with-cbo-rule',
+                            ],
+                        },
+                        {
+                            type: 'category',
+                            label: 'High Concurrency & Point Queries',
+                            items: [
+                                'query-acceleration/high-concurrent-point-query',
+                                'query-acceleration/dictionary',
+                            ],
+                        },
+                        {
+                            type: 'category',
+                            label: 'Distinct Counts',
+                            items: [
+                                'query-acceleration/distinct-counts/bitmap-precise-deduplication',
+                                'query-acceleration/distinct-counts/hll-approximate-deduplication',
+                            ],
+                        },
+                        {
+                            type: 'category',
+                            label: 'Hints',
+                            items: [
+                                'query-acceleration/hints/hints-overview',
+                                'query-acceleration/hints/leading-hint',
+                                'query-acceleration/hints/distribute-hint',
+                            ],
+                        },
+                        {
+                            type: 'category',
+                            label: 'Query Profile & Parameters',
+                            items: [
+                                'query-acceleration/query-profile',
+                                'query-acceleration/tuning/tuning-parameters',
+                            ],
+                        },
+                    ],
+                },
+                {
+                    type: 'category',
+                    label: 'Load Performance',
+                    items: [
+                        'data-operate/import/load-internals/load-internals',
+                        'query-acceleration/tuning/tuning-plan/dml-tuning-plan',
+                    ],
+                },
+                {
+                    type: 'category',
+                    label: 'Optimization Technology Principles',
+                    items: [
+                        'query-acceleration/optimization-technology-principle/query-optimizer',
+                        'query-acceleration/optimization-technology-principle/pipeline-execution-engine',
+                        'query-acceleration/optimization-technology-principle/runtime-filter',
+                        'query-acceleration/optimization-technology-principle/topn-optimization',
+                        'query-acceleration/optimization-technology-principle/statistics',
                     ],
                 },
             ],
@@ -946,7 +1007,7 @@ const sidebars: SidebarsConfig = {
                             ],
                         },
                     ],
-                },
+                }
             ],
         },
         {
@@ -973,6 +1034,7 @@ const sidebars: SidebarsConfig = {
                     items: [
                         'ecosystem/bi/apache-superset',
                         'ecosystem/bi/finebi',
+                        'ecosystem/bi/metabase',
                         'ecosystem/bi/powerbi',
                         'ecosystem/bi/tableau',
                         'ecosystem/bi/quicksight',
@@ -1013,7 +1075,7 @@ const sidebars: SidebarsConfig = {
                         'ecosystem/hive-hll-udf',
                         'ecosystem/spark-load',
                     ],
-                },
+                }
             ],
         },
         {
@@ -1151,6 +1213,7 @@ const sidebars: SidebarsConfig = {
                         'sql-manual/basic-element/reserved-keywords',
                         'sql-manual/basic-element/variables',
                         'sql-manual/basic-element/comments',
+                        'sql-manual/basic-element/file-path-pattern',
                         {
                             type: 'category',
                             label: 'Operators',
@@ -1444,6 +1507,7 @@ const sidebars: SidebarsConfig = {
                                         'sql-manual/sql-functions/scalar-functions/date-time-functions/next-day',
                                         'sql-manual/sql-functions/scalar-functions/date-time-functions/period-add',
                                         'sql-manual/sql-functions/scalar-functions/date-time-functions/period-diff',
+                                        'sql-manual/sql-functions/scalar-functions/date-time-functions/previous-day',
                                         'sql-manual/sql-functions/scalar-functions/date-time-functions/quarter',
                                         'sql-manual/sql-functions/scalar-functions/date-time-functions/quarters-add',
                                         'sql-manual/sql-functions/scalar-functions/date-time-functions/quarters-sub',
@@ -1504,10 +1568,13 @@ const sidebars: SidebarsConfig = {
                                         'sql-manual/sql-functions/scalar-functions/spatial-functions/st-circle',
                                         'sql-manual/sql-functions/scalar-functions/spatial-functions/st-contains',
                                         'sql-manual/sql-functions/scalar-functions/spatial-functions/st-disjoint',
+                                        'sql-manual/sql-functions/scalar-functions/spatial-functions/st-distance',
                                         'sql-manual/sql-functions/scalar-functions/spatial-functions/st-distance-sphere',
                                         'sql-manual/sql-functions/scalar-functions/spatial-functions/st-geometryfromtext',
                                         'sql-manual/sql-functions/scalar-functions/spatial-functions/st-geometryfromwkb',
+                                        'sql-manual/sql-functions/scalar-functions/spatial-functions/st-geometrytype',
                                         'sql-manual/sql-functions/scalar-functions/spatial-functions/st-intersects',
+                                        'sql-manual/sql-functions/scalar-functions/spatial-functions/st-length',
                                         'sql-manual/sql-functions/scalar-functions/spatial-functions/st-linefromtext',
                                         'sql-manual/sql-functions/scalar-functions/spatial-functions/st-point',
                                         'sql-manual/sql-functions/scalar-functions/spatial-functions/st-polygon',
@@ -1791,6 +1858,7 @@ const sidebars: SidebarsConfig = {
                                     items: [
                                         'sql-manual/sql-functions/scalar-functions/other-functions/convert-to',
                                         'sql-manual/sql-functions/scalar-functions/other-functions/esquery',
+                                        'sql-manual/sql-functions/scalar-functions/other-functions/default',
                                         'sql-manual/sql-functions/scalar-functions/other-functions/field',
                                         'sql-manual/sql-functions/scalar-functions/other-functions/g',
                                         'sql-manual/sql-functions/scalar-functions/other-functions/grouping',
@@ -2081,11 +2149,6 @@ const sidebars: SidebarsConfig = {
                                         'sql-manual/sql-statements/data-modification/load-and-export/SHOW-ROUTINE-LOAD',
                                         'sql-manual/sql-statements/data-modification/load-and-export/SHOW-ROUTINE-LOAD-TASK',
                                         'sql-manual/sql-statements/data-modification/load-and-export/SHOW-CREATE-ROUTINE-LOAD',
-                                        'sql-manual/sql-statements/data-modification/load-and-export/CREATE-SYNC-JOB',
-                                        'sql-manual/sql-statements/data-modification/load-and-export/PAUSE-SYNC-JOB',
-                                        'sql-manual/sql-statements/data-modification/load-and-export/RESUME-SYNC-JOB',
-                                        'sql-manual/sql-statements/data-modification/load-and-export/STOP-SYNC-JOB',
-                                        'sql-manual/sql-statements/data-modification/load-and-export/SHOW-SYNC-JOB',
                                         'sql-manual/sql-statements/data-modification/load-and-export/SYNC',
                                         'sql-manual/sql-statements/data-modification/load-and-export/EXPORT',
                                         'sql-manual/sql-statements/data-modification/load-and-export/CANCEL-EXPORT',
@@ -2229,6 +2292,7 @@ const sidebars: SidebarsConfig = {
                                         'sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-REPLACE',
                                         'sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-PROPERTY',
                                         'sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-COMMENT',
+                                        'sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-DISTRIBUTION',
                                         'sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-ADD-GENERATED-COLUMN',
                                         'sql-manual/sql-statements/table-and-view/table/CANCEL-ALTER-TABLE',
                                         'sql-manual/sql-statements/table-and-view/table/SHOW-ALTER-TABLE',
@@ -2508,6 +2572,7 @@ const sidebars: SidebarsConfig = {
                     type: 'category',
                     label: 'v4.0',
                     items: [
+                        'releasenotes/v4.0/release-4.0.3',
                         'releasenotes/v4.0/release-4.0.2',
                         'releasenotes/v4.0/release-4.0.1',
                         'releasenotes/v4.0/release-4.0.0'

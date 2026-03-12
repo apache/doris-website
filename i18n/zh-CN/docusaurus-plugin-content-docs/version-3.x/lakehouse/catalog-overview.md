@@ -2,13 +2,13 @@
 {
     "title": "数据目录概述",
     "language": "zh-CN",
-    "description": "数据目录（Data Catalog）用于描述一个数据源的属性。"
+    "description": "了解 Apache Doris 数据目录（Data Catalog）的概念与使用方法。通过创建外部数据目录，接入 Hive、Iceberg、Paimon、PostgreSQL 等多种数据源，实现跨源联邦查询、数据导入与写回。"
 }
 ---
 
 数据目录（Data Catalog）用于描述一个数据源的属性。
 
-在 Doris 中，可以创建多个数据目录指向不同的数据源（如 Hive、Iceberg、MySQL）。Doris 会通过数据目录，自动获取对应数据源的库、表、Schema、分区、数据位置等。用户可以通过标准的 SQL 语句访问这些数据目录进行数据分析，并且可以对多个数据目录中的数据进行关联查询。
+在 Doris 中，可以创建多个数据目录指向不同的数据源（如 Hive、Iceberg、Paimon、PostgreSQL）。Doris 会通过数据目录，自动获取对应数据源的库、表、Schema、分区、数据位置等。用户可以通过标准的 SQL 语句访问这些数据目录进行数据分析，并且可以对多个数据目录中的数据进行关联查询。
 
 Doris 中的数据目录分为两种：
 
@@ -46,18 +46,105 @@ CREATE CATALOG iceberg_catalog PROPERTIES (
 
 ### 通用属性
 
-除每个数据目录特有的属性集合外，这里介绍所有数据目录通用的属性 `{CommonProperites}`。
+除每个数据目录特有的属性集合外，这里介绍所有数据目录通用的属性 `{CommonProperties}`。
 
 | 属性名                     | 描述                                                                        | 示例                                    |
 | ----------------------- | ------------------------------------------------------------------------- | ------------------------------------- |
 | `include_database_list` | 支持只同步指定的多个 Database，以 `,` 分隔。默认同步所有 Database。Database 名称是大小写敏感的。当外部数据源有大量 Database，但仅需访问个别 Database 时，可以使用此参数，避免大量的元数据同步。          | `'include_database_list' = 'db1,db2'` |
-| `exclude_database_list` | 支持指定不需要同步的多个 Database，以 `,` 分割。默认不做任何过滤，同步所有 Database。Database 名称是大小写敏感的。适用场景同上，反向排除不需要访问的数据库。如果冲突，`exclude` 优先级高于 `include` | `'exclude_database_list' = 'db1,db2'` |
+| `exclude_database_list` | 支持指定不需要同步的多个 Database，以 `,` 分隔。默认不做任何过滤，同步所有 Database。Database 名称是大小写敏感的。适用场景同上，反向排除不需要访问的数据库。如果冲突，`exclude` 优先级高于 `include`。 | `'exclude_database_list' = 'db1,db2'` |
+| `include_table_list`    | 支持只同步指定的多个表，以 `db.tbl` 格式指定，多个表之间以 `,` 分隔。设置后，列举某个 Database 下的表时将仅返回指定的表，而不会从远端元数据服务获取完整的表列表。适用于外部数据源表数量庞大、获取全量表列表可能超时的场景。 | `'include_table_list' = 'db1.tbl1,db1.tbl2,db2.tbl3'` |
+| `lower_case_table_names`  | Catalog 级别的表名大小写控制。取值及含义见下方 [表名大小写](#表名大小写lower_case_table_names) 小节。默认值继承全局变量 `lower_case_table_names` 的设置。 | `'lower_case_table_names' = '1'`   |
+| `lower_case_database_names` | Catalog 级别的数据库名大小写控制。取值及含义见下方 [数据库名大小写](#数据库名大小写lower_case_database_names) 小节。默认值为 `0`（大小写敏感）。 | `'lower_case_database_names' = '2'` |
+
+### 指定表列表
+
+该功能自 4.1.0 版本起支持。
+
+当外部数据源（如 Hive Metastore）包含大量表时，从远端元数据服务获取完整的表列表可能非常耗时甚至超时。通过设置 `include_table_list` 属性，可以指定需要同步的表，避免从远端获取全量表列表。
+
+`include_table_list` 使用 `db.tbl` 的格式，多个表之间以英文逗号 `,` 分隔。
+
+```sql
+CREATE CATALOG hive_catalog PROPERTIES (
+    'type' = 'hms',
+    'hive.metastore.uris' = 'thrift://hms-host:9083',
+    'include_table_list' = 'db1.table1,db1.table2,db2.table3'
+);
+```
+
+设置后的行为：
+
+- 当列举 `db1` 下的表时，仅返回 `table1` 和 `table2`，不会调用远端元数据服务的全量表列表接口。
+- 当列举 `db2` 下的表时，仅返回 `table3`。
+- 对于未在 `include_table_list` 中出现的 Database（如 `db3`），仍然会从远端元数据服务获取完整的表列表。
+- `include_table_list` 中的格式不正确的条目（非 `db.tbl` 格式）将被忽略。
+
+:::tip
+此属性可以与 `include_database_list` 配合使用。例如先通过 `include_database_list` 过滤出需要的 Database，再通过 `include_table_list` 进一步精确指定需要的表。
+:::
+
+### 表名大小写
+
+该功能自 4.1.0 版本起支持。
+
+通过 `lower_case_table_names` 属性，可以在 Catalog 级别控制表名的大小写处理方式。该属性支持三种模式：
+
+| 值 | 模式 | 描述 |
+| -- | ---- | ---- |
+| `0` | 大小写敏感（默认） | 表名按原始大小写存储和比较。引用表名时必须与远端元数据中的表名大小写完全一致。 |
+| `1` | 转为小写存储 | 表名在 Doris 中存储为小写形式。适用于希望统一使用小写表名访问外部数据源的场景。 |
+| `2` | 大小写不敏感比较 | 表名在比较时忽略大小写，但在显示时保留远端元数据中的原始大小写。适用于外部数据源中表名大小写不统一，希望以不区分大小写的方式访问表的场景。 |
+
+如果未设置此属性，默认继承全局变量 `lower_case_table_names` 的值。
+
+```sql
+CREATE CATALOG hive_catalog PROPERTIES (
+    'type' = 'hms',
+    'hive.metastore.uris' = 'thrift://hms-host:9083',
+    'lower_case_table_names' = '2'
+);
+```
+
+:::caution
+当 `lower_case_table_names` 设置为 `1` 或 `2` 时，如果远端元数据中存在仅大小写不同的同名表（如 `MyTable` 和 `mytable`），可能会导致冲突。Doris 会检测此类冲突并报错。
+:::
+
+### 数据库名大小写
+
+该功能自 4.1.0 版本起支持。
+
+通过 `lower_case_database_names` 属性，可以在 Catalog 级别控制数据库名的大小写处理方式。该属性支持三种模式：
+
+| 值 | 模式 | 描述 |
+| -- | ---- | ---- |
+| `0` | 大小写敏感（默认） | 数据库名按原始大小写存储和比较。引用数据库名时必须与远端元数据中的数据库名大小写完全一致。 |
+| `1` | 转为小写存储 | 数据库名在 Doris 中存储为小写形式。适用于希望统一使用小写数据库名访问外部数据源的场景。 |
+| `2` | 大小写不敏感比较 | 数据库名在比较时忽略大小写，但在显示时保留远端元数据中的原始大小写。适用于外部数据源中数据库名大小写不统一，希望以不区分大小写的方式访问数据库的场景。 |
+
+默认值为 `0`（大小写敏感）。
+
+```sql
+CREATE CATALOG hive_catalog PROPERTIES (
+    'type' = 'hms',
+    'hive.metastore.uris' = 'thrift://hms-host:9083',
+    'lower_case_database_names' = '2',
+    'lower_case_table_names' = '2'
+);
+```
+
+:::caution
+当 `lower_case_database_names` 设置为 `1` 或 `2` 时，如果远端元数据中存在仅大小写不同的同名数据库（如 `MyDB` 和 `mydb`），可能会导致冲突。Doris 会检测此类冲突并报错。
+:::
+
+:::info
+`lower_case_database_names` 和 `lower_case_table_names` 可以独立设置，互不影响。例如，可以设置数据库名大小写敏感（`0`），而表名大小写不敏感（`2`）。
+:::
 
 ### 列类型映射
 
 用户创建数据目录后，Doris 会自动同步数据目录的数据库、表和 Schema。不同数据目录的列类型映射规则请参阅对应的数据目录文档。
 
-对于当前无法映射到 Doris 列类型的外部数据类型，如 `UNION`, `INTERVAL` 等，Doris 会将列类型映射为 `UNSUPPORTED` 类型。对于 `UNSUPPORTED` 类型的查询，示例如下：
+对于当前无法映射到 Doris 列类型的外部数据类型，如 `UNION`、`INTERVAL` 等，Doris 会将列类型映射为 `UNSUPPORTED` 类型。对于 `UNSUPPORTED` 类型的查询，示例如下：
 
 假设同步后的表 Schema 为：
 
@@ -82,9 +169,9 @@ SELECT k1, k4 FROM table;           -- Query OK.
 Doris 目前对外表列的 Nullable 属性支持有特殊限制，具体行为如下：
 
 | 源类型 | Doris 读取行为 | Doris 写入行为 |
-| ---   | ------------  | ------------ |
-| Nullable | Nullable  | 允许写入 Null 值 |
-| Not Null | Nullable，即依然当做可允许为 NULL 的列进行读取 | 允许写入 Null 值，即不对 Null 值进行严格检查。用户需要自行保证数据的完整性和一致性。|
+| --- | --- | --- |
+| Nullable | Nullable | 允许写入 Null 值 |
+| Not Null | Nullable，即依然当做可允许为 NULL 的列进行读取 | 允许写入 Null 值，即不对 Null 值进行严格检查。用户需要自行保证数据的完整性和一致性。 |
 
 ## 使用数据目录
 
@@ -152,9 +239,11 @@ jdbc:mysql://host:9030/iceberg_catalog.iceberg_db
 SET PROPERTY default_init_catalog=hive_catalog;
 ```
 
-注意 1：如果 MySQL 命令行或 JDBC 连接串中已经明确指定了数据目录，则以指定的为准，`default_init_catalog` 用户属性不生效；
-注意 2：如果用户属性 `default_init_catalog` 设置的数据目录已经不存在，则自动切换到默认的 `internal` 数据目录；
-注意 3：该功能从 v3.1.x 版本开始生效；
+注意 1：如果 MySQL 命令行或 JDBC 连接串中已经明确指定了数据目录，则以指定的为准，`default_init_catalog` 用户属性不生效。
+
+注意 2：如果用户属性 `default_init_catalog` 设置的数据目录已经不存在，则自动切换到默认的 `internal` 数据目录。
+
+注意 3：该功能从 3.1.x 版本开始生效。
 
 ### 简单查询
 
@@ -212,11 +301,11 @@ SELECT * FROM iceberg_catalog.iceberg_db.table1;
 
 Doris 支持通过 `INSERT` 语句直接将数据写回到外部数据源。具体参阅：
 
-* [ Hive Catalog ](./catalogs/hive-catalog.mdx)
+* [Hive Catalog](./catalogs/hive-catalog.mdx)
 
-* [ Iceberg Catalog](./catalogs/iceberg-catalog.mdx)
+* [Iceberg Catalog](./catalogs/iceberg-catalog.mdx)
 
-* [ JDBC Catalog](./catalogs/jdbc-catalog-overview.md)
+* [JDBC Catalog](./catalogs/jdbc-catalog-overview.md)
 
 ## 刷新数据目录
 
@@ -265,4 +354,3 @@ DROP CATALOG [IF EXISTS] iceberg_catalog;
 ## 权限管理
 
 外部数据目录中库表的权限管理和内表一致。具体可参阅 [认证和鉴权](../admin-manual/auth/authentication-and-authorization.md) 文档。
-

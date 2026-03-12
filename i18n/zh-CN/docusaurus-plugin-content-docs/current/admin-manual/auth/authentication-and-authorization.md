@@ -81,11 +81,22 @@ Doris 支持以下密码策略，可以帮助用户更好的进行密码管理�
 
 4. 密码强度
 
-    该功能由全局变量 `validate_password_policy` 控制。默认为 `NONE/0`，即不检查密码强度。如果设置为 `STRONG/2`，则密码必须包含“大写字母”，“小写字母”，“数字”和“特殊字符”中的 3 项，并且长度必须大于等于 8。
+    该功能由全局变量 `validate_password_policy` 控制。默认为 `NONE/0`，即不检查密码强度。如果设置为 `STRONG/2`，则密码必须包含"大写字母"，"小写字母"，"数字"和"特殊字符"中的 3 项，并且长度必须大于等于 8。
 
     示例：
 
     - `SET validate_password_policy=STRONG`
+
+    自 Doris 4.0.4 版本起，密码强度验证策略做了以下增强：
+
+    1. 当 `validate_password_policy` 设置为 `STRONG/2` 时，密码必须**同时包含全部 4 种字符类型**（大写字母、小写字母、数字和特殊字符），而不是之前的"4 选 3"。
+
+    2. 新增**字典词检查**功能：密码不能包含常见的弱密码词（如 password、admin、test、root 等）。系统内置了常见弱密码词典，当密码中包含这些词时会被拒绝。
+
+    3. 支持**自定义字典文件**：可以通过全局变量 `validate_password_dictionary_file` 指定自定义的字典文件名。字典文件需放置在 `${DORIS_HOME}/plugins/security/` 目录下。文件格式为每行一个词，空行和以 `#` 开头的行会被忽略。
+
+       示例：
+       - `SET GLOBAL validate_password_dictionary_file = 'my_dictionary.txt'`
 
 更多帮助，请参阅[ALTER USER](../../sql-manual/sql-statements/account-management/ALTER-USER)。
 

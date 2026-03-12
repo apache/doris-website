@@ -123,19 +123,22 @@ DISTRIBUTED BY RANDOM BUCKETS 8
 
 When determining the number of buckets, two principles are usually followed: quantity and size. If there is a conflict between the two, the size principle is prioritized:
 
-* **Size Principle:** It is recommended that the size of a tablet should be within the range of 1-10GB. Too small a tablet may result in poor aggregation effect and increase metadata management pressure; too large a tablet is not conducive to replica migration and supplementation and will increase the cost of retrying Schema Change operations.
+* **Size Principle:** Keep each tablet between **1 GB and 20 GB** compressed data (excluding index), or under **10 GB** for Unique Key tables. Too small a tablet may result in poor aggregation effect and increase metadata management pressure; too large a tablet is not conducive to replica migration and supplementation and will increase the cost of retrying Schema Change operations. You can check actual tablet sizes with `SHOW TABLETS FROM your_table`.
 
 * **Quantity Principle:** Without considering expansion, it is recommended that the number of tablets for a table be slightly more than the number of disks in the entire cluster.
 
+The bucket count should be a multiple of the number of BEs for even data distribution. Generally, the bucket count per partition should not exceed **128** — if you need more, consider partitioning the table first.
+
 For example, assuming there are 10 BE machines with one disk per BE, you can follow the recommendations below for data bucketing:
 
-| Table Size | Recommended Number of Buckets          |
-| ---------- | -------------------------------------- |
-| 500MB      | 4-8 buckets                            |
-| 5GB        | 6-16 buckets                           |
-| 50GB       | 32 buckets                             |
-| 500GB      | Partition recommended, 50GB per partition, 16-32 buckets per partition |
-| 5TB        | Partition recommended, 50GB per partition, 16-32 buckets per partition |
+| Partition Size | Recommended Number of Buckets |
+| -------------- | ----------------------------- |
+| < 1 GB         | 1 bucket                      |
+| 1-10 GB        | 10 buckets                    |
+| 10-200 GB      | 10-20 buckets                 |
+| > 200 GB       | Consider partitioning first   |
+
+Data sizes refer to compressed data size in Doris. You can check actual sizes with `SHOW TABLETS FROM your_table`.
 
 :::tip Note
 
@@ -154,7 +157,7 @@ DISTRIBUTED BY HASH(region) BUCKETS AUTO
 properties("estimate_partition_size" = "20G")
 
 -- Set random bucket auto
-DISTRIBUTED BY HASH(region) BUCKETS AUTO
+DISTRIBUTED BY RANDOM BUCKETS AUTO
 properties("estimate_partition_size" = "20G")
 ```
 

@@ -13,7 +13,7 @@
 ## 语法
 
 ```sql
-RESTORE SNAPSHOT [<db_name>.]<snapshot_name>
+RESTORE [GLOBAL] SNAPSHOT [<db_name>.]<snapshot_name>
 FROM `<repository_name>`
 [ { ON | EXCLUDE } ] (
     `<table_name>` [PARTITION (`<partition_name>`, ...)] [AS `<table_alias>`]
@@ -43,6 +43,7 @@ FROM `<repository_name>`
 - "backup_timestamp" = "2018-05-04-16-45-08"：指定了恢复对应备份的哪个时间版本，必填。该信息可以通过 `SHOW SNAPSHOT ON repo;` 语句获得。
 - "replication_num" = "3"：指定恢复的表或分区的副本数。默认为 3。若恢复已存在的表或分区，则副本数必须和已存在表或分区的副本数相同。同时，必须有足够的 host 容纳多个副本。
 - "reserve_replica" = "true"：默认为 false。当该属性为 true 时，会忽略 replication_num 属性，恢复的表或分区的副本数将与备份之前一样。支持多个表或表内多个分区有不同的副本数。
+- "reserve_colocate" = "true"：默认为 false。该属性为 true 时，恢复的表会保留 colocate 属性；为 false 时不保留。
 - "reserve_dynamic_partition_enable" = "true"：默认为 false。当该属性为 true 时，恢复的表会保留该表备份之前的'dynamic_partition_enable'属性值。该值不为 true 时，则恢复出来的表的'dynamic_partition_enable'属性值会设置为 false。
 - "timeout" = "3600"：任务超时时间，默认为一天。单位秒。
 - "meta_version" = 40：使用指定的 meta_version 来读取之前备份的元数据。注意，该参数作为临时方案，仅用于恢复老版本 Doris 备份的数据。最新版本的备份数据中已经包含 meta version，无需再指定。
@@ -51,6 +52,9 @@ FROM `<repository_name>`
 - "atomic_restore"：先将数据加载到临时表中，再以原子方式替换原表，确保恢复过程中不影响目标表的读写。
 - "force_replace"：当表存在且架构与备份表不同时，强制替换。
   - 注意，要启用 "force_replace"，必须启用 "atomic_restore"
+- "reserve_privilege" = "true"：是否恢复权限信息，与 `RESTORE GLOBAL` 一起使用。
+- "reserve_catalog" = "true"：是否恢复 catalog 信息，与 `RESTORE GLOBAL` 一起使用。
+- "reserve_workload_group" = "true"：是否恢复 workload group 信息，与 `RESTORE GLOBAL` 一起使用。
 
 ## 可选参数
 
@@ -128,3 +132,28 @@ PROPERTIES
 );
 ```
 
+4. 从 example_repo 中恢复备份 snapshot_4 的权限、catalog 和 workload group 信息，时间版本为 "2018-05-04-18-12-18"。
+
+```sql
+RESTORE GLOBAL SNAPSHOT `snapshot_4`
+FROM `example_repo`
+EXCLUDE ( `backup_tbl` )
+PROPERTIES
+(
+    "backup_timestamp"="2018-05-04-18-12-18"
+);
+```
+
+5. 从 example_repo 中恢复备份 snapshot_5 的权限和 workload group 信息，时间版本为 "2018-05-04-18-12-18"。
+
+```sql
+RESTORE GLOBAL SNAPSHOT `snapshot_5`
+FROM `example_repo`
+EXCLUDE ( `backup_tbl` )
+PROPERTIES
+(
+    "backup_timestamp"="2018-05-04-18-12-18",
+    "reserve_privilege" = "true",
+    "reserve_workload_group" = "true"
+);
+```

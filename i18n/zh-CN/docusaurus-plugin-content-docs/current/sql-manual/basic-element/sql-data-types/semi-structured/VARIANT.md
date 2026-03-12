@@ -440,6 +440,7 @@ SELECT * FROM tbl WHERE v['str'] MATCH 'Doris';
 
 ## 限制
 
+- **大宽表优化**：针对 `VARIANT` 类型可能产生大量动态子列（例如超过 2000 列）的大宽表场景，强烈建议开启 **V3 存储格式**。通过在建表 `PROPERTIES` 中指定 `"storage_format" = "V3"`，可以将列元数据与 Segment Footer 解耦，加快文件打开速度并降低内存占用。
 - JSON key 长度 ≤ 255。
 - 不支持作为主键或排序键。
 - 不支持与其他类型嵌套（如 `Array<Variant>`、`Struct<Variant>`）。
@@ -481,10 +482,10 @@ CREATE TABLE example_table (
 ```
 
 <table>
-<tr><td>稀疏列属性<br/></td><td>描述<br/></td></tr>
-<tr><td>`variant_max_subcolumns_count`<br/></td><td>控制 Path 物化列数的上限；超过后新增路径可能存放于共享数据结构。默认 0 表示不限，建议设置为 2048；不推荐超过 10000。<br/></td></tr>
-<tr><td>`variant_enable_typed_paths_to_sparse`<br/></td><td>默认指定了 Path 类型后，该 Path 一定会被提取（不计入 `variant_max_subcolumns_count`）。设置为 `true` 后也会计入阈值，可能被收敛到共享结构。<br/></td></tr>
-<tr><td>`variant_sparse_hash_shard_count`<br/></td><td>控制稀疏列的分片数量。将稀疏子列分散存储到多个稀疏列中，以提升查询性能。默认值为 1，建议根据稀疏子列数量适当调整。<br/></td></tr>
+<tr><td>稀疏列属性</td><td>描述</td></tr>
+<tr><td>`variant_max_subcolumns_count`</td><td>控制 Path 物化列数的上限；超过后新增路径可能存放于共享数据结构。默认 2048（推荐），0 表示不限制；不推荐超过 10000。</td></tr>
+<tr><td>`variant_enable_typed_paths_to_sparse`</td><td>默认指定了 Path 类型后，该 Path 一定会被提取（不计入 `variant_max_subcolumns_count`）。设置为 `true` 后也会计入阈值，可能被收敛到共享结构。</td></tr>
+<tr><td>`variant_sparse_hash_shard_count`</td><td>控制稀疏列的分片数量。将稀疏子列分散存储到多个稀疏列中，以提升查询性能。默认值为 1，建议根据稀疏子列数量适当调整。</td></tr>
 </table>
 
 ```sql
@@ -503,10 +504,10 @@ CREATE TABLE example_table (
 ```
 
 <table>
-<tr><td>DOC 编码属性<br/></td><td>描述<br/></td></tr>
-<tr><td>`variant_enable_doc_mode`<br/></td><td>是否启用 DOC 编码模式。设置为 `true` 时，原始 JSON 会作为存储字段保存，用于快速返回整个 JSON 文档。启用后将无法使用稀疏列机制。默认值为 `false`。<br/></td></tr>
-<tr><td>`variant_doc_materialization_min_rows`<br/></td><td>DOC 编码模式下触发子列物化的最小行数阈值。当写入行数低于该值时，仅存储原始 JSON；当文件合并后行数达到该阈值时，才将子列物化为独立子列。用于减少小批量写入时的开销。<br/></td></tr>
-<tr><td>`variant_doc_hash_shard_count`<br/></td><td>控制 DOC 编码的分片数量。原始 JSON 会被拆散存储到指定数量的列中，查询整个 JSON 时再组装这些分片。默认值为 64，可根据 JSON 大小和并发需求调整。<br/></td></tr>
+<tr><td>DOC 编码属性</td><td>描述</td></tr>
+<tr><td>`variant_enable_doc_mode`</td><td>是否启用 DOC 编码模式。设置为 `true` 时，原始 JSON 会作为存储字段保存，用于快速返回整个 JSON 文档；启用后将无法使用稀疏列机制。默认值为 `false`。</td></tr>
+<tr><td>`variant_doc_materialization_min_rows`</td><td>DOC 编码模式下触发子列物化的最小行数阈值。当写入行数低于该值时，仅存储原始 JSON；当文件合并后行数达到该阈值时，才将子列物化为独立子列，用于减少小批量写入时的开销。</td></tr>
+<tr><td>`variant_doc_hash_shard_count`</td><td>控制 DOC 编码的分片数量。原始 JSON 会被拆散存储到指定数量的列中，查询整个 JSON 时再组装这些分片。默认值为 64，可根据 JSON 大小和并发需求调整。</td></tr>
 </table>
 
 达到上限后的行为与调优建议：

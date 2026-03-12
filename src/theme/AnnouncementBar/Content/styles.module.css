@@ -10,7 +10,7 @@
 }
 
 .content a:active {
-  background-color: #3C2FD4;
+  background-color: linear-gradient(90deg, #1FCD94 0%, #11A679 100%), #FFF;
 }
 
 .content p:hover {

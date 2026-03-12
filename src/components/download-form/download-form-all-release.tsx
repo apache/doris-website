@@ -170,14 +170,14 @@ export default function DownloadFormAllRelease(props: DownloadFormProps) {
                                     width="8"
                                     height="8"
                                     rx="0.564706"
-                                    stroke="#1FCD94"
+                                    stroke="#11A679"
                                     strokeWidth="1.2"
                                 />
                                 <path
                                     fillRule="evenodd"
                                     clipRule="evenodd"
                                     d="M6.0999 1.89996C5.43716 1.89996 4.8999 2.43722 4.8999 3.09996V5.49995H6.0999V3.09996L12.8999 3.09996V9.89996H10.5V11.1H12.8999C13.5626 11.1 14.0999 10.5627 14.0999 9.89996V3.09996C14.0999 2.43722 13.5626 1.89996 12.8999 1.89996H6.0999Z"
-                                    fill="#1FCD94"
+                                    fill="#11A679"
                                 />
                             </svg>
                         </div>

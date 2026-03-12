@@ -312,7 +312,9 @@ The INSERT command is a synchronous command. If it returns a result, that indica
 
 ## Ingest data by TVF
 
-Doris can directly query and analyze files stored in object storage or HDFS as tables through the Table Value Functions (TVFs), which supports automatic column type inference. For detailed information, please refer to the [Lakehouse/TVF documentation](https://doris.apache.org/docs/3.0/lakehouse/file-analysis).
+Doris can directly query and analyze files stored in object storage or HDFS as tables through the Table Value Functions (TVFs), which supports automatic column type inference. For detailed information, please refer to the [Lakehouse/TVF documentation](../../../lakehouse/file-analysis).
+
+TVF supports wildcards (`*`, `?`, `[...]`) and range patterns (`{1..10}`) in file paths. For complete syntax, see [File Path Pattern](../../../sql-manual/basic-element/file-path-pattern).
 
 ### Automatic column type inference
 

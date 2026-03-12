@@ -109,7 +109,7 @@ CREATE TABLE IF NOT EXISTS `test`.`hive_bitmap_table`(
 ) stored as textfile 
 ```
 
-2. [Creating a Catalog in Doris](../lakehouse/catalogs/hive-catalog.mdx)
+2. [Creating a Catalog in Doris](../lakehouse/catalogs/hive-catalog)
 
 ```sql
 CREATE CATALOG hive PROPERTIES (
@@ -140,6 +140,3 @@ PROPERTIES (
 insert into doris_bitmap_table select k1, k2, k3, bitmap_from_base64(uuid) from hive.test.hive_bitmap_table;
 ```
 
-### Method 2: Spark Load
-
- see details: [Spark Load](https://doris.apache.org/zh-CN/docs/1.2/data-operate/import/import-way/spark-load-manual) -> Basic operation -> Create load(Example 3: when the upstream data source is hive binary type table)

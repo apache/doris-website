@@ -253,9 +253,9 @@ There are two ways to configure BE configuration items:
 
 #### `brpc_num_threads`
 
-* Description: This configuration is mainly used to modify the number of bthreads for brpc. The default value is set to -1, which means the number of bthreads is #cpu-cores.
+* Description: This configuration is mainly used to modify the number of bthreads for brpc. The default value is set to 256.
   - User can set this configuration to a larger value to get better QPS performance. For more information, please refer to `https://github.com/apache/incubator-brpc/blob/master/docs/cn/benchmark.md`
-* Default value: -1
+* Default value: 256
 
 #### `thrift_rpc_timeout_ms`
 
@@ -856,7 +856,7 @@ BaseCompaction:546859:
 #### `webserver_num_workers`
 
 * Description: Webserver default number of worker threads
-* Default value: 48
+* Default value: 128
 
 #### `send_batch_thread_pool_thread_num`
 
@@ -1320,11 +1320,6 @@ Indicates how many tablets failed to load in the data directory. At the same tim
 #### `enable_simdjson_reader`
 
 * Description: Whether enable simdjson to parse json while stream load
-* Default value: true
-
-#### `enable_query_memory_overcommit`
-
-* Description: If true, when the process does not exceed the soft mem limit, the query memory will not be limited; when the process memory exceeds the soft mem limit, the query with the largest ratio between the currently used memory and the exec_mem_limit will be canceled. If false, cancel query when the memory used exceeds `exec_mem_limit`.
 * Default value: true
 
 #### `user_files_secure_path`

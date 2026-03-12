@@ -2,32 +2,10 @@
 {
     "title": "REGEXP_EXTRACT_ALL",
     "language": "zh-CN",
-    "description": "<<<<<<< HEAD ======="
+    "description": "REGEXP_EXTRACT_ALL 是用于字符串正则匹配的 SQL 函数，返回所有匹配结果中第一个子模式的字符串数组，支持 UTF-8 与 RE2 语法。"
 }
 ---
 
-<<<<<<< HEAD
-=======
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-
->>>>>>> 3ce78af1b (squash commit)
 ## 描述
 
 REGEXP_EXTRACT_ALL 函数用于对给定字符串str执行正则表达式匹配，所有与指定 pattern 匹配的文本串当中的与第一个子模式匹配的部分。为了使函数返回表示模式匹配部分的字符串数组，该模式必须与输入字符串 str 的一部分完全匹配。如果没有匹配项，或模式不包含任何子模式，则返回空字符串。

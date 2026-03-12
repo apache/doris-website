@@ -10,6 +10,10 @@
 
 The COUNT_SUBSTRINGS function counts the number of occurrences of a specified substring within a string. Note: The current implementation continues searching after shifting by the length of the substring when a match is found. For example, when str='ccc' and pattern='cc', the result returned is 1.
 
+:::note
+Since 3.1.1
+:::
+
 ## Syntax
 
 ```sql

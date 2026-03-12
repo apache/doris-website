@@ -57,7 +57,7 @@ TPC-H 22 个测试查询语句： [TPCH-Query-SQL](https://github.com/apache/dor
 
 这里我们使用 Apache Doris 3.0.3-rc03 (存算分离模式) 和 Apache Doris 2.1.7-rc03 版本进行对比测试，测试结果如下：
 
-| Query     | Apache Doris 3.0.3-rc03 Compute-Storage Coupled Mode (ms) | Apache Doris 2.1.7-rc03 (ms) |
+| Query     | Apache Doris 3.0.3-rc03 Compute-Storage Decoupled Mode (ms) | Apache Doris 2.1.7-rc03 (ms) |
 |-----------|-----------------------------------------------------------|------------------------------|
 | q01       | 13390                                                     | 11880                        |
 | q02       | 250                                                       | 280                          |
@@ -852,4 +852,3 @@ order by
     cntrycode;
 
 ```
-

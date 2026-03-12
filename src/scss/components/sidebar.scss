@@ -45,13 +45,10 @@
     }
 
     .menu__list-item-collapsible {
+        /* For categories without a separate CollapseButton (no href), size the link :after icon */
         .menu__link--sublist-caret {
             &:after {
                 background-size: 1.5rem;
-                position: absolute;
-                left: 0;
-                top: 50%;
-                margin-top: -0.625rem;
 
                 @media screen and (max-width: 996px) {
                     position: static;
@@ -60,9 +57,12 @@
             }
         }
 
+        /* For categories with href + items, use the same chevron icon on the CollapseButton */
         .menu__caret {
             &::before {
-                background-size: 1.5rem;
+                content: '';
+                background: url('@site/static/images/chevron-down.svg') no-repeat center;
+                background-size: 1.0rem;
             }
 
             &:hover {

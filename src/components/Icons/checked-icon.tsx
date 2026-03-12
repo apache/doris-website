@@ -7,7 +7,7 @@ export function CheckedIcon(props: any) {
                 <rect width="16" height="16" fill="white" />
                 <path
                     d="M1.5 8.19781L2.81207 6.84098L6.14286 10.2844L13.1861 3L14.5 4.35875L6.14286 13L1.5 8.19781Z"
-                    fill="#1FCD94"
+                    fill="#11A679"
                 />
             </svg>
         </span>

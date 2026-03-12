@@ -7,7 +7,7 @@
     align-items: center;
     height: var(--docusaurus-announcement-bar-height);
     /* background: linear-gradient(0deg, rgba(247, 249, 254, 0.8) 0%, rgba(247, 249, 254, 0.8) 100%), #fff; */
-    background: linear-gradient(89deg, #9748FF 0.05%, #471CF0 74.19%);
+    background: linear-gradient(90deg, #1FCD94 0%, #11A679 100%), #FFF;
     color: var(--ifm-color-black);
 
     /*

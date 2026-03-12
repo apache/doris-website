@@ -2,7 +2,7 @@
 {
     "title": "Hive Catalog",
     "language": "en",
-    "description": "Hive Catalog in Apache Doris 3.x connects to Hive Metastore and compatible services to query and write Hive, Iceberg and Hudi tables across HDFS and object storage, with configuration guides, supported services, formats and examples."
+    "description": "Hive Catalog in Apache Doris connects to Hive Metastore and compatible services to query and write Hive, Iceberg and Hudi tables across HDFS and object storage, with rich configuration, type mapping, query and write operations support."
 }
 ---
 
@@ -70,6 +70,8 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 
   * `hive.ignore_absent_partitions`: Whether to ignore non-existent partitions. Defaults to `true`. If set to `false`, the query will report an error when encountering non-existent partitions. This parameter has been supported since version 3.0.2.
 
+  * `hive.staging_dir`: Used to set the temporary staging root directory for Hive write operations. During the write process, data is first written to this directory and then moved to the final Hive table directory after completion. This path can be either a relative path relative to the Hive table root directory or an absolute path. The default value is `/tmp/.doris_staging`. In some cases, when writing to Hive tables, you may encounter issues where the `/tmp` directory and the table directory belong to different namespaces, causing write failures. In such cases, you can modify this parameter to use a relative path to resolve the issue. This parameter is supported since version 4.0.3.
+
 * `{CommonProperties}`
 
   The CommonProperties section is for entering common attributes. Please see the "Common Properties" section in the [Catalog Overview](../catalog-overview.md).
@@ -87,6 +89,14 @@ Hive transactional tables are supported from version 3.x onwards. For details, r
 * [Aliyun DLF](../metastores/aliyun-dlf.md)
 
 > Note: The service types and parameters supported by different Doris versions are slightly different. Please refer to the [Examples] section.
+
+### Hive Catalog Feature Support Matrix
+
+| Metadata Service | Table Query | View Query | DDL Operations | Data Writeback |
+|------------------|-------------|------------|----------------|----------------|
+| Hive             | ✅          | ✅         | ✅             | ✅             |
+| AWS Glue         | ✅          | ✅         | ❌             | ❌             |
+| DLF              | ✅          | ✅         | ✅             | ✅             |
 
 ### Supported Storage Systems
 
@@ -143,6 +153,7 @@ Hive transactional tables are supported from version 3.x onwards. For details, r
 | varchar(N)    | varchar(N)    |                                                |
 | string        | string        |                                                |
 | binary        | string/varbinary  | Controlled by the `enable.mapping.varbinary` property of Catalog (supported since 4.0.2). The default is `false`, which maps to `string`; when `true`, it maps to `varbinary` type.|
+| timestamp with local time zone| datetime/timestamptz | The `enable.mapping.timestamp_tz` property (supported since version 4.0.3) controls the mapping behavior.  By default, it is set to `false`, in which case the type is mapped to `datetime`.  When set to `true`, it is mapped to the `timestamptz` type.     |
 | array         | array         |                                                |
 | map           | map           |                                                |
 | struct        | struct        |                                                |
@@ -668,6 +679,15 @@ You can query Hive Views, but there are some limitations:
 
 * Some functions supported by HiveQL may have the same name as those in Doris but behave differently. This could lead to discrepancies between the results obtained from Hive and Doris. If you encounter such issues, please report them to the community.
 
+### Related Parameters
+
+* Session variables
+
+| Parameter name | Default value | Desciption | Since version |
+| ----------| ---- | ---- | --- |
+| `hive_parquet_use_column_names` | `true` | When Doris reads the Parquet data type of the Hive table, it will find the column with the same name from the Parquet file to read the data according to the column name of the Hive table by default. When this variable is `false`, Doris will read data from the Parquet file according to the column order in the Hive table, regardless of the column name. Similar to the `parquet.column.index.access` variable in Hive. This parameter only applies to the top-level column name and is invalid inside the Struct. | 2.1.6+, 3.0.3+ |
+| `hive_orc_use_column_names` | `true` | Similar to `hive_parquet_use_column_names`, it is for the Hive table ORC data type. Similar to the `orc.force.positional.evolution` variable in Hive. | 2.1.6+, 3.0.3+ |
+
 ## Write Operations
 
 Data can be written to Hive tables using the INSERT statement. This is supported for Hive tables created by Doris or existing Hive tables with compatible formats.
@@ -729,14 +749,7 @@ AS SELECT col1, pt1 AS col2, pt2 AS pt1 FROM test_ctas.part_ctas_src WHERE col1 
 
 ### Related Parameters
 
-* Session variables
-
-| Parameter name | Default value | Desciption | Since version |
-| ----------| ---- | ---- | --- |
-| `hive_parquet_use_column_names` | `true` | When Doris reads the Parquet data type of the Hive table, it will find the column with the same name from the Parquet file to read the data according to the column name of the Hive table by default. When this variable is `false`, Doris will read data from the Parquet file according to the column order in the Hive table, regardless of the column name. Similar to the `parquet.column.index.access` variable in Hive. This parameter only applies to the top-level column name and is invalid inside the Struct. | 2.1.6+, 3.0.3+ |
-| `hive_orc_use_column_names` | `true` | Similar to `hive_parquet_use_column_names`, it is for the Hive table ORC data type. Similar to the `orc.force.positional.evolution` variable in Hive. | 2.1.6+, 3.0.3+ |
-
-* BE
+* BE Configuration
 
   | Parameter Name                                                                | Default Value                                                                                                     | Description |
   | ----------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- | ----------- |

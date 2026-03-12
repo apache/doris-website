@@ -70,6 +70,7 @@
                 "developer-guide/arthas",
                 "developer-guide/fe-idea-dev",
                 "developer-guide/fe-vscode-dev",
+                "developer-guide/be-multi-directory",
                 "developer-guide/be-vscode-dev",
                 "developer-guide/be-clion-dev",
                 {

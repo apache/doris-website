@@ -72,6 +72,8 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 
   * `hive.ignore_absent_partitions`：是否忽略不存在的分区。默认为 `true`。如果设为 `false`，当遇到不存在的分区时，查询会报错。该参数自 3.0.2 版本支持。
 
+  * `hive.staging_dir`：用于设置 Hive 写操作的临时 staging 根目录。写入过程中数据会先写入该目录，写入完成后再移动到最终的 Hive 表目录。该路径可以是相对于 Hive 表根目录的相对路径，也可以是绝对路径。默认值为 `/tmp/.doris_staging`。某些情况下，写入 Hive 表时会遇到 `/tmp` 目录和表目录分属不同 namespace，导致无法写入的问题，此时可以通过修改此参数，使用相对路径解决该问题。该参数自 4.0.3 版本开始支持。
+
 * `{CommonProperties}`
 
   CommonProperties 部分用于填写通用属性。请参阅[ 数据目录概述 ](../catalog-overview.md)中【通用属性】部分。
@@ -113,6 +115,14 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 > 如果需要通过 Doris 创建 Hive 表并写入数据，需要在 Catalog 属性中显式增加 `fs.defaultFS` 属性。如果创建 Catalog 仅用于查询，则该参数可以省略。
 > 
 > 不同 Doris 版本所支持的服务类型和参数略有区别，请参考【基础示例】章节。
+
+### Hive Catalog 功能支持矩阵
+
+| 元数据服务 | 表查询 | 视图查询 |DDL 操作| 数据写回|
+| ---------- | -------- | -------- | -------- | -------- |
+| Hive       | ✅       | ✅        | ✅        | ✅        |
+| AWS Glue   | ✅       | ✅        | ❌        | ❌       |
+| DLF        | ✅       | ✅        | ✅        | ✅        |
 
 ### 支持的数据格式
 
@@ -676,6 +686,15 @@ Hive Transactional 表是 Hive 中支持 ACID 语义的表。详情可见 [Hive 
 
 * 部分 HiveQL 支持的函数可能和 Doris 支持的函数同名，但行为不一致，这可能导致最终结果和使用 Hive 查询的结果不一致。如果用户遇到此类问题，可以向社区反馈。
 
+### 相关参数
+
+* Session 变量
+
+  | 参数名称  | 描述  | 默认值 | 版本 |
+  | ----------| ---- | ---- | --- |
+  | `hive_parquet_use_column_names` | `true` | Doris 在读取 Hive 表 Parquet 数据类型时，默认会根据 Hive 表的列名从 Parquet 文件中找同名的列来读取数据。当该变量为 `false` 时，Doris 会根据 Hive 表中的列顺序从 Parquet 文件中读取数据，与列名无关。类似于 Hive 中的 `parquet.column.index.access` 变量。该参数只适用于顶层列名，对 Struct 内部无效。 | 2.1.6+, 3.0.3+ |
+  | `hive_orc_use_column_names`     | `true` | 与 `hive_parquet_use_column_names` 类似，针对的是 Hive 表 ORC 数据类型。类似于 Hive 中的 `orc.force.positional.evolution` 变量。  | 2.1.6+, 3.0.3+ |
+
 ## 写入操作
 
 可以通过 INSERT 语句将数据写入到 Hive 表中。支持写入到由 Doris 创建的 Hive 表，或者 Hive 中已存在的且格式支持的表。
@@ -736,13 +755,6 @@ AS SELECT col1,pt1 as col2,pt2 as pt1 FROM test_ctas.part_ctas_src WHERE col1>0;
 ```
 
 ### 相关参数
-
-* Session 变量
-
-  | 参数名称  | 描述  | 默认值 | 版本 |
-  | ----------| ---- | ---- | --- |
-  | `hive_parquet_use_column_names` | `true` | Doris 在读取 Hive 表 Parquet 数据类型时，默认会根据 Hive 表的列名从 Parquet 文件中找同名的列来读取数据。当该变量为 `false` 时，Doris 会根据 Hive 表中的列顺序从 Parquet 文件中读取数据，与列名无关。类似于 Hive 中的 `parquet.column.index.access` 变量。该参数只适用于顶层列名，对 Struct 内部无效。 | 2.1.6+, 3.0.3+ |
-  | `hive_orc_use_column_names`     | `true` | 与 `hive_parquet_use_column_names` 类似，针对的是 Hive 表 ORC 数据类型。类似于 Hive 中的 `orc.force.positional.evolution` 变量。  | 2.1.6+, 3.0.3+ |
 
 * BE 配置
 

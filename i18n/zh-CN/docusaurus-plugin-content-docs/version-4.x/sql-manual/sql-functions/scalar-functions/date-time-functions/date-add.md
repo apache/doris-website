@@ -13,6 +13,8 @@ DATE_ADD 函数用于向指定的日期或时间值添加指定的时间间隔�
 - 支持的输入日期类型包括 DATE、DATETIME、TIMESTAMPTZ（如 '2023-12-31'、'2023-12-31 23:59:59'、'2023-12-31 23:59:59+08:00'）。
 - 时间间隔由数值（`expre`）和单位（`time_unit`）共同指定，`expr` 为正数时表示“添加”，为负数时等效于“减去”对应间隔。
 
+该函数与 MySQL 的[DATE_ADD函数](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_date-add)行为一致。
+
 ## 别名
 
 - days_add
@@ -21,7 +23,7 @@ DATE_ADD 函数用于向指定的日期或时间值添加指定的时间间隔�
 ## 语法
 
 ```sql
-DATE_ADD(<date_or_time_expr>, <expr> <time_unit>)
+DATE_ADD(<date_or_time_expr>, INTERVAL <expr> <time_unit>)
 ```
 
 ## 参数
@@ -29,8 +31,35 @@ DATE_ADD(<date_or_time_expr>, <expr> <time_unit>)
 | 参数 | 说明 |
 | -- | -- |
 | `<date_or_time_expr>` | 待处理的日期/时间值。支持类型：为 timestamptz, datetime 或者 date 类型，最高有六位秒数的精度（如 2022-12-28 23:59:59.999999），具体格式请查看 [timestamptz的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion), [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion)|
-| `<expr>` | 希望添加的时间间隔，为 `INT` 类型|
-| `<time_unit>` | 枚举值：YEAR, QUARTER, MONTH, WEEK,DAY, HOUR, MINUTE, SECOND, DAY_SECOND, DAY_HOUR, MINUTE_SECOND, SECOND_MICROSECOND |
+| `<expr>` | 希望添加的时间间隔，对于独立单位(如`YEAR`)为 `INT` 类型; 对于复合单位(如`YEAR_MONT`)为字符串类型, 且接受所有非数字作为分隔符，所以对于例如`INTERVAL 6/4 HOUR_MINUTE`，Doris会将其识别为 6 小时 4 分，而非1小时30分(6/4 == 1.5)。对于复合单位, 如果输入的时间间隔值过短，会将空出的大单位的值设为 0。该值的正负性仅由第一个出现的非数字字符是否为`-`决定。|
+| `<time_unit>` | 枚举值：YEAR, QUARTER, MONTH, WEEK,DAY, HOUR, MINUTE, SECOND, YEAR_MONTH, DAY_HOUR, DAY_MINUTE, DAY_SECOND, DAY_MICROSECOND, HOUR_MINUTE, HOUR_SECOND, HOUR_MICROSECOND, MINUTE_SECOND, MINUTE_MICROSECOND, SECOND_MICROSECOND。|
+
+| time_unit          | 预期格式(接受所有非数字作为分隔符)        |
+| ------------------ | ----------------------------------------- |
+| YEAR               | 'YEARS'                                   |
+| QUARTER            | 'QUARTERS'                                |
+| MONTH              | 'MONTHS'                                  |
+| WEEK               | 'WEEKS'                                   |
+| DAY                | 'DAYS'                                    |
+| HOUR               | 'HOURS'                                   |
+| MINUTE             | 'MINUTES'                                 |
+| SECOND             | 'SECONDS'                                 |
+| MICROSECOND        | 'MICROSECONDS'                            |
+| YEAR_MONTH         | 'YEARS-MONTHS'                            |
+| DAY_HOUR           | 'DAYS HOURS'                              |
+| DAY_MINUTE         | 'DAYS HOURS:MINUTES'                      |
+| DAY_SECOND         | 'DAYS HOURS:MINUTES:SECONDS'              |
+| DAY_MICROSECOND    | 'DAYS HOURS:MINUTES:SECONDS.MICROSECONDS' |
+| HOUR_MINUTE        | 'HOURS:MINUTES'                           |
+| HOUR_SECOND        | 'HOURS:MINUTES:SECONDS'                   |
+| HOUR_MICROSECOND   | 'HOURS:MINUTES:SECONDS.MICROSECONDS'      |
+| MINUTE_SECOND      | 'MINUTES:SECONDS'                         |
+| MINUTE_MICROSECOND | 'MINUTES:SECONDS.MICROSECONDS'            |
+| SECOND_MICROSECOND | 'SECONDS.MICROSECONDS'                    |
+
+:::note
+复合单位除`MINUTE`, `SECOND`, `DAY_SECOND`, `DAY_HOUR`, `MINUTE_SECOND`, `SECOND_MICROSECOND`, 其余从4.0.4开始支持。
+:::
 
 ## 返回值
 
@@ -43,6 +72,7 @@ DATE_ADD(<date_or_time_expr>, <expr> <time_unit>)
 特殊情况：
 - 任何参数为 NULL 时，返回 NULL；
 - 非法单位或非数值 expr 时，报错；
+- 对于复合单位，如果输入的部分过多或其中某一部分超出允许最大值922337203685477579, 报错。
 - 计算后超出日期类型范围（如 '0000-00-00 23:59:59' 之前，'9999-12-31 23:59:59' 之后）时，返回错误。
 - 若是下月不足输入日期的天数，会自动设置为下月最后一天
 
@@ -113,6 +143,14 @@ mysql>  select DATE_ADD('2025-10-23 10:10:10', INTERVAL '1 2' DAY_HOUR);
 | 2025-10-24 12:10:10                                      |
 +----------------------------------------------------------+
 
+-- 对于复合单位, 接受所有非数字作为分隔符
+select DATE_ADD('2025-10-23 10:10:10', INTERVAL '   *1@#$2' DAY_HOUR);
++----------------------------------------------------------------+
+| DATE_ADD('2025-10-23 10:10:10', INTERVAL '   *1@#$2' DAY_HOUR) |
++----------------------------------------------------------------+
+| 2025-10-24 12:10:10                                            |
++----------------------------------------------------------------+
+
 -- 添加 MINUTE_SECOND
 mysql> select DATE_ADD('2025-10-23 10:10:10', INTERVAL '1:1' MINUTE_SECOND);
 +---------------------------------------------------------------+
@@ -129,13 +167,41 @@ mysql>  select date_add("2025-10-10 10:10:10.123456", INTERVAL "1.1" SECOND_MICR
 | 2025-10-10 10:10:11.223456                                                |
 +---------------------------------------------------------------------------+
 
--- TimestampTz类型示例，SET time_zone = '+08:00'
+-- 对于复合单位，时间间隔的正负性仅由第一个出现的非数字字符是否为`-`决定
+-- 后续的所有 `-` 会被认为是分隔符的一部分
+select 
+    DATE_ADD('2025-10-23 10:10:10', INTERVAL '#-1:-1' MINUTE_SECOND) AS first_not_sub,
+    DATE_ADD('2025-10-23 10:10:10', INTERVAL '  -1:1' MINUTE_SECOND) AS first_sub;
++---------------------+---------------------+
+| first_not_sub       | first_sub           |
++---------------------+---------------------+
+| 2025-10-23 10:11:11 | 2025-10-23 10:09:09 |
++---------------------+---------------------+
+
+-- 对于复合单位, 如果输入的时间间隔值过短，会将空出的大单位的值设为 0
+select DATE_ADD('2025-10-23 10:10:10', INTERVAL '1' MINUTE_SECOND) AS minute_interval_is_zero
++-------------------------+
+| minute_interval_is_zero |
++-------------------------+
+| 2025-10-23 10:10:11     |
++-------------------------+
+
+-- TimestampTz类型示例, SET time_zone = '+08:00'
 select DATE_ADD('2023-01-01 23:22:33+03:00', INTERVAL 1 DAY);
 +-------------------------------------------------------+
 | DATE_ADD('2023-01-01 23:22:33+03:00', INTERVAL 1 DAY) |
 +-------------------------------------------------------+
 | 2023-01-03 04:22:33+08:00                             |
 +-------------------------------------------------------+
+
+-- 对于复合单位，如果输入时间间隔数量过多，报错
+select DATE_ADD('2025-10-23 10:10:10', INTERVAL '1:2:3.4' SECOND_MICROSECOND);
+-- ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.3)[INVALID_ARGUMENT]Operation second_microsecond_add of 1:2:3.4 is invalid
+
+-- 对于复合单位, 如果其中一部分的值超过最大值922337203685477580，报错
+select DATE_ADD('2025-10-10 1:2:3', INTERVAL '922337203685477580' DAY_MICROSECOND);
+-- ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.3)[E-218]Operation day_microsecond_add of 2025-10-10 01:02:03, 922337203685477580 out of range
+
 
 ---非法单位
 select DATE_ADD('2023-12-31 23:00:00', INTERVAL 2 sa);

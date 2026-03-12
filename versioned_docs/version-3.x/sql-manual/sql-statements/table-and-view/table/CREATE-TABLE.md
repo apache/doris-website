@@ -93,7 +93,7 @@ partitions_definition
     <origin_partitions_definition>
 ```
 
-- 其中：
+- Where:
 
     ```sql
     <origin_partitions_definition>

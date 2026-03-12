@@ -18,7 +18,7 @@ Fluent Bit Doris Output Plugin 调用 [Doris Stream Load](../data-operate/import
 
 ### 从官网下载
 
-https://apache-doris-releases.oss-accelerate.aliyuncs.com/integrations/fluent-bit-doris-3.1.9
+https://download.selectdb.com/integrations/fluent-bit-doris-3.1.9
 
 ### 从源码编译
 

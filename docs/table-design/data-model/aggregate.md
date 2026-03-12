@@ -45,17 +45,17 @@ When creating a table, the **AGGREGATE KEY** keyword can be used to specify the 
 CREATE TABLE IF NOT EXISTS example_tbl_agg
 (
     user_id             LARGEINT    NOT NULL,
-    load_dt             DATE        NOT NULL,
+    load_date           DATE        NOT NULL,
     city                VARCHAR(20),
     last_visit_dt       DATETIME    REPLACE DEFAULT "1970-01-01 00:00:00",
     cost                BIGINT      SUM DEFAULT "0",
     max_dwell           INT         MAX DEFAULT "0",
 )
-AGGREGATE KEY(user_id, load_dt, city)
+AGGREGATE KEY(user_id, load_date, city)
 DISTRIBUTED BY HASH(user_id) BUCKETS 10;
 ```
 
-In the example above, a fact table for user information and access behavior is defined, where `user_id`, `load_dt`, and `city` are used as Key columns for aggregation. During data import, the Key columns are aggregated into one row, and the Value columns are aggregated according to the specified aggregation types. 
+In the example above, a fact table for user information and access behavior is defined, where `user_id`, `load_date`, and `city` are used as Key columns for aggregation. During data import, the Key columns are aggregated into one row, and the Value columns are aggregated according to the specified aggregation types. 
 
 The following types of dimension aggregation are supported in the Aggregate Key Table:
 
@@ -185,4 +185,3 @@ mysql> select sum_merge(k2) , group_concat_merge(k3)from aggstate where k1 != 2;
 |            16 | c,b,a,d,c,b,a          |
 +---------------+------------------------+
 ```
-

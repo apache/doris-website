@@ -123,19 +123,22 @@ DISTRIBUTED BY RANDOM BUCKETS 8
 
 在决定分桶数量时，通常遵循数量与大小两个原则，当发生冲突时，优先考虑大小原则：
 
-* **大小原则**：建议一个 tablet 的大小在 1-10G 范围内。过小的 tablet 可能导致聚合效果不佳，增加元数据管理压力；过大的 tablet 则不利于副本迁移、补齐，且会增加 Schema Change 操作的失败重试代价；
+* **大小原则**：建议每个 tablet 的压缩后数据大小（不含索引）保持在 **1 GB 到 20 GB** 之间，Unique Key 表建议不超过 **10 GB**。过小的 tablet 可能导致聚合效果不佳，增加元数据管理压力；过大的 tablet 则不利于副本迁移、补齐，且会增加 Schema Change 操作的失败重试代价。可以通过 `SHOW TABLETS FROM your_table` 查看实际 tablet 大小；
 
 * **数量原则**：在不考虑扩容的情况下，一个表的 tablet 数量建议略多于整个集群的磁盘数量。
 
+分桶数应设为 BE 数量的整数倍，以确保数据均匀分布。通常每个分区的分桶数不应超过 **128**——如果需要更多，应优先考虑对表进行分区。
+
 例如，假设有 10 台 BE 机器，每个 BE 一块磁盘，可以按照以下建议进行数据分桶：
 
-| 单表大小  | 建议分桶数量                        |
-|-------|-------------------------------|
-| 500MB | 4-8 个分桶                       |
-| 5GB   | 6-16 个分桶                      |
-| 50GB  | 32 个分桶                        |
-| 500GB | 建议分区，每个分区 50GB，每个分区 16-32 个分桶 |
-| 5TB   | 建议分区，每个分区 50GB，每个分区 16-32 个分桶 |
+| 分区大小     | 建议分桶数量       |
+|------------|-----------------|
+| < 1 GB     | 1 个分桶          |
+| 1-10 GB    | 10 个分桶         |
+| 10-200 GB  | 10-20 个分桶       |
+| > 200 GB   | 建议优先进行分区    |
+
+数据大小指 Doris 中的压缩后数据大小，可通过 `SHOW TABLETS FROM your_table` 查看实际大小。
 
 :::tip 提示
 
@@ -153,7 +156,7 @@ DISTRIBUTED BY HASH(region) BUCKETS AUTO
 properties("estimate_partition_size" = "20G")
 
 -- Set random bucket auto
-DISTRIBUTED BY HASH(region) BUCKETS AUTO
+DISTRIBUTED BY RANDOM BUCKETS AUTO
 properties("estimate_partition_size" = "20G")
 ```
 
@@ -192,4 +195,3 @@ SET ("dynamic_partition.buckets"="16");
 ```
 
 在修改分桶数量后，可以通过 SHOW PARTITION 命令查看修改后的分桶数量。
-

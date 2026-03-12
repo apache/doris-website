@@ -54,7 +54,6 @@ None
 
 
     ```
-    curl http://127.0.0.1:8040/api/tablets_json?limit=all
+    curl http://127.0.0.1:8040/tablets_json?limit=all
 
     ```
-

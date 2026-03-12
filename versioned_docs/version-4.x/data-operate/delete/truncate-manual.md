@@ -13,18 +13,15 @@ Use this statement to clear data from a specified table and its partitions.
 ## Syntax
 
 ```sql
-TRUNCATE TABLE [db.]tbl [PARTITION(p1, p2, ...)];
+TRUNCATE TABLE [db.]tbl [PARTITION(p1, p2, ...)] [FORCE];
 ```
 
-- This statement clears the data but retains the table or partition structure.
-
-- Unlike DELETE, TRUNCATE only performs metadata operations, making it faster and not affecting query performance.
-
-- Data removed by this operation cannot be recovered.
-
-- The table status must be NORMAL, and there should be no ongoing SCHEMA CHANGE operations.
-
-- This command may cause ongoing import tasks to fail.
+- This statement only clears the data within a table or partition but preserves the table or partition itself.
+- Unlike DELETE, this statement can only clear the specified table or partition as a whole and cannot be added with filter conditions.
+- Unlike DELETE, truncating data will not affect query performance.
+- The data deleted by this operation can be recovered through the RECOVER statement (for a period of time). See [RECOVER](../../sql-manual/sql-statements/recycle/RECOVER) statement for details. If you execute the command with FORCE, the data will be deleted directly and cannot be recovered. This operation is generally not recommended.
+- When using this command, the table status must be NORMAL, which means that tables undergoing SCHEMA CHANGE cannot be truncated.
+- This command may cause ongoing imports to fail.
 
 ## Examples
 
@@ -38,4 +35,10 @@ TRUNCATE TABLE example_db.tbl;
 
 ```sql
 TRUNCATE TABLE tbl PARTITION(p1, p2);
+```
+
+**3. Clear the table `tbl` in the `example_db` database with FORCE**
+
+```sql
+TRUNCATE TABLE example_db.tbl FORCE;
 ```

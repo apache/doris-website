@@ -211,7 +211,7 @@ SHOW BUILD INDEX where TableName = "table1";
 通过 `CANCEL BUILD INDEX` 取消 `BUILD INDEX`：
 ```sql
 CANCEL BUILD INDEX ON table_name;
-CANCEL BUILD INDEX ON table_name (job_id1,jobid_2,...);
+CANCEL BUILD INDEX ON table_name (job_id1,job_id2,...);
 ```
 
 :::tip
