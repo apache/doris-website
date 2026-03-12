@@ -47,6 +47,11 @@ Supported approximate distance functions:
 - `l2_distance_approximate` (`ORDER BY ... ASC`)
 - `inner_product_approximate` (`ORDER BY ... DESC`)
 
+Cosine note:
+
+- ANN index does not support `metric_type="cosine"` directly.
+- For cosine-based retrieval, normalize vectors first, then use `inner_product`.
+
 ## 2. Prerequisites and Constraints
 
 Before using ANN indexes, confirm the following:
@@ -67,6 +72,21 @@ DUPLICATE KEY(id)
 DISTRIBUTED BY HASH(id) BUCKETS 8
 PROPERTIES ("replication_num" = "1");
 ```
+
+## 2.1 Using Cosine Similarity in Doris ANN
+
+If your ranking metric is cosine similarity, use this pattern:
+
+1. Normalize every vector to unit length before ingestion.
+2. Build ANN index with `metric_type="inner_product"`.
+3. Query with `inner_product_approximate(...)` and `ORDER BY ... DESC`.
+
+Reason:
+
+- `cos(x, y) = (x · y) / (||x|| ||y||)`
+- After normalization, `||x|| = ||y|| = 1`, so `cos(x, y) = x · y`
+
+That is why cosine ranking can be implemented through inner product in Doris ANN.
 
 ## 3. End-to-End Workflow
 

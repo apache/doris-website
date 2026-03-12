@@ -48,6 +48,11 @@ Apache Doris 4.x 支持 ANN 向量索引，常见场景包括：
 - `l2_distance_approximate`（`ORDER BY ... ASC`）
 - `inner_product_approximate`（`ORDER BY ... DESC`）
 
+Cosine 说明：
+
+- ANN 索引不支持直接配置 `metric_type=\"cosine\"`。
+- 如果业务指标是 cosine，请先归一化向量，再使用 `inner_product`。
+
 ## 2. 前置条件与限制
 
 使用 ANN 索引前请确认：
@@ -68,6 +73,21 @@ DUPLICATE KEY(id)
 DISTRIBUTED BY HASH(id) BUCKETS 8
 PROPERTIES ("replication_num" = "1");
 ```
+
+## 2.1 Doris ANN 中如何使用 Cosine 相似度
+
+如果业务按 cosine 相似度排序，建议使用以下模式：
+
+1. 数据写入前将向量做 L2 归一化（单位向量）。
+2. 建 ANN 索引时使用 `metric_type=\"inner_product\"`。
+3. 查询时使用 `inner_product_approximate(...)`，并按 `ORDER BY ... DESC` 排序。
+
+原理：
+
+- `cos(x, y) = (x · y) / (||x|| ||y||)`
+- 归一化后 `||x|| = ||y|| = 1`，则 `cos(x, y) = x · y`
+
+因此在单位向量空间中，cosine 排序与 inner product 排序等价。
 
 ## 3. 端到端操作流程
 
