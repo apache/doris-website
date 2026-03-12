@@ -6,32 +6,19 @@
 }
 ---
 
+:::tip
+该文档主要适用于 Doris 4.1.x 之前的版本。
+对于 Doris 4.1.x 及之后版本，外表元数据缓存已重构并使用统一配置键 `meta.cache.*`，请直接参阅各 [Catalog](./catalog-overview.md) 文档中的“元数据缓存”章节。
+如果您正在从 4.1.x 之前的版本升级，请以各 Catalog 页中的“旧参数映射与转换”为准，将旧参数改写为 `meta.cache.*` 统一键。
+:::
+
 为了提升访问外部数据源的性能，Apache Doris 会对外部数据源的**元数据**进行缓存。
 
 元数据包括库、表、列信息、分区信息、快照信息、文件列表等。
 
-本文详细介绍缓存的元数据的种类、策略和相关参数配置。
+本文详细介绍旧版本（pre-4.1）中缓存的元数据的种类、策略和相关参数配置。
 
 关于**数据缓存**，可参阅[数据缓存文档](./data-cache.md)。
-
-:::tip
-该文档适用于 2.1.6 之后的版本。
-:::
-
-:::note
-对于 Doris 4.1.x 及之后版本，外表元数据缓存已重构并使用统一配置键 `meta.cache.*`。
-请参阅[统一外表元数据缓存（4.1.x+）](./meta-cache/unified-meta-cache.md)。
-
-从 Doris 4.1.x 开始，外表元数据缓存可以分成两层来理解：
-
-- 通用 catalog 缓存：库/表名称列表、库/表对象等，仍由 `max_meta_object_cache_num`、`external_cache_refresh_time_minutes`、`external_cache_expire_time_seconds_after_access` 等 FE 配置控制。
-- 引擎特定 entry 缓存：schema、分区元数据、manifest、文件列表等，这些按 catalog 使用统一键 `meta.cache.<engine>.<entry>.{enable,ttl-second,capacity}` 配置。
-
-统一文档主要描述第二层。
-:::
-
-本文主体主要记录 2.1.x / 3.x 旧缓存模型中的 FE 默认值与兼容参数。
-对于 Doris 4.1.x+ 的当前引擎级 cache entry，请直接阅读统一页和各 Catalog 文档。
 
 ## 缓存策略
 
@@ -220,7 +207,7 @@
 ### Hudi 表分区
 
 这里描述的是 Hudi 分区元数据缓存的旧模型摘要。
-对于 Doris 4.1.x+ 的当前 Hudi cache entry（如 `fs_view`、`meta_client`），请参阅 [Hudi Catalog](./catalogs/hudi-catalog.md#meta-cache-unified)。
+对于 Doris 4.1.x+ 的当前 Hudi cache entry（如 `fs_view`、`meta_client`），请参阅 [Hudi Catalog](./catalogs/hudi-catalog.md#meta-cache)。
 
 该缓存，每个 Hudi Catalog 有一个。
 
@@ -243,7 +230,7 @@
 ### Iceberg 表信息
 
 这里描述的是 Iceberg 表元数据缓存的旧模型摘要。表对象通过 Iceberg API 加载并构建。
-对于 Doris 4.1.x+ 的当前可观测 cache entry，请参阅 [Iceberg Catalog](./catalogs/iceberg-catalog.mdx#meta-cache-unified)。
+对于 Doris 4.1.x+ 的当前可观测 cache entry，请参阅 [Iceberg Catalog](./catalogs/iceberg-catalog.mdx#meta-cache)。
 
 该缓存，每个 Iceberg Catalog 有一个。
 
@@ -332,24 +319,11 @@ CREATE CATALOG hive PROPERTIES (
 
 对于所有类型的 External Catalog，如果希望实时可见最新的 Table Schema，可以关闭 Schema Cache：
 
-:::note
-对于 Doris 4.1.x+，推荐使用统一键 `meta.cache.<engine>.schema.ttl-second = "0"`。
-详细说明请参阅：
-[统一外表元数据缓存（4.1.x+）](./meta-cache/unified-meta-cache.md)。
-:::
-
 - 全局关闭
 
     ```text
     -- fe.conf
     max_external_schema_cache_num=0 // 关闭 Schema 缓存。
-    ```
-
-- Doris 4.1.x+ 的 catalog 级关闭方式
-
-    ```text
-    -- Catalog property
-    "meta.cache.<engine>.schema.ttl-second" = "0"
     ```
 
 - 旧的 catalog 级兼容参数
@@ -365,12 +339,6 @@ CREATE CATALOG hive PROPERTIES (
 
 针对 Hive Catalog，如果想关闭缓存来查询到实时更新的数据，可以配置以下参数：
 
-:::note
-对于 Doris 4.1.x+，推荐优先使用统一键 `meta.cache.hive.*`，并参考：
-[Hive Catalog](./catalogs/hive-catalog.mdx#meta-cache-unified) 与
-[统一外表元数据缓存（4.1.x+）](./meta-cache/unified-meta-cache.md)。
-:::
-
 - 全局关闭
 
     ```text
@@ -378,15 +346,6 @@ CREATE CATALOG hive PROPERTIES (
     max_external_file_cache_num=0    // 关闭文件列表缓存
     max_hive_partition_table_cache_num=0  // 关闭分区列表缓存
     max_hive_partition_cache_num=0   // 关闭分区属性缓存
-    ```
-
-- Doris 4.1.x+ 的 catalog 级关闭方式
-
-    ```text
-    -- Catalog property
-    "meta.cache.hive.partition_values.ttl-second" = "0" // 关闭分区列表缓存
-    "meta.cache.hive.partition.ttl-second" = "0"        // 关闭分区属性缓存
-    "meta.cache.hive.file.ttl-second" = "0"             // 关闭文件列表缓存
     ```
 
 - 旧的 catalog 级兼容参数

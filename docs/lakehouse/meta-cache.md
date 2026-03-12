@@ -6,32 +6,18 @@
 }
 ---
 
+:::tip
+This document applies to versions before 4.1.x.
+For Doris 4.1.x and later, external meta cache has been refactored with unified configuration keys `meta.cache.*`. Please refer to the "Metadata Cache" section in each [Catalog](./catalog-overview.md) document.
+:::
+
 To improve the performance of accessing external data sources, Apache Doris caches the **metadata** of external data sources.
 
 Metadata includes information such as databases, tables, columns, partitions, snapshots, file lists, etc.
 
-This article details the types, strategies, and related parameter configurations of cached metadata.
+This article details the types, strategies, and related parameter configurations of cached metadata for legacy versions (pre-4.1).
 
 For **data cache**, refer to the [data cache documentation](./data-cache.md).
-
-:::tip
-This document applies to versions after 2.1.6.
-:::
-
-:::note
-For Doris 4.1.x and later, external meta cache has been refactored with unified configuration keys `meta.cache.*`.
-See [Unified External Meta Cache (4.1.x+)](./meta-cache/unified-meta-cache.md).
-
-Starting from Doris 4.1.x, external metadata caching can be understood as two layers:
-
-- Generic catalog caches: database/table name lists and database/table objects. These are still controlled by FE configs such as `max_meta_object_cache_num`, `external_cache_refresh_time_minutes`, and `external_cache_expire_time_seconds_after_access`.
-- Engine-specific entry caches: schema, partition metadata, manifests, file lists, and similar engine-dependent entries. These use unified per-catalog keys in the form `meta.cache.<engine>.<entry>.{enable,ttl-second,capacity}`.
-
-The unified document focuses on the second layer.
-:::
-
-This page mainly records FE-level defaults and legacy catalog properties used by the 2.1.x / 3.x cache model.
-For the current engine-specific cache entry matrix in Doris 4.1.x+, use the unified page and the catalog-specific pages.
 
 ## Cache Strategies
 
@@ -333,23 +319,11 @@ This section mainly introduces the cache behavior that users may be concerned ab
 
 For all types of External Catalogs, if you want to see the latest Table Schema in real time, you can disable the Schema Cache:
 
-:::note
-For Doris 4.1.x+, prefer the unified per-catalog property `meta.cache.<engine>.schema.ttl-second = "0"`.
-See [Unified External Meta Cache (4.1.x+)](./meta-cache/unified-meta-cache.md).
-:::
-
 - Disable globally
 
     ```text
     -- fe.conf
     max_external_schema_cache_num=0 // Disable Schema cache.
-    ```
-
-- Disable at Catalog level in Doris 4.1.x+
-
-    ```text
-    -- Catalog property
-    "meta.cache.<engine>.schema.ttl-second" = "0"
     ```
 
 - Legacy catalog-level property
@@ -365,12 +339,6 @@ After setting, Doris will see the latest Table Schema in real time. However, thi
 
 For Hive Catalog, if you want to disable the cache to query real-time updated data, you can configure the following parameters:
 
-:::note
-For Doris 4.1.x+, prefer unified `meta.cache.hive.*` properties. See:
-[Hive Catalog](./catalogs/hive-catalog.mdx#meta-cache-unified) and
-[Unified External Meta Cache (4.1.x+)](./meta-cache/unified-meta-cache.md).
-:::
-
 - Disable globally
 
     ```text
@@ -378,15 +346,6 @@ For Doris 4.1.x+, prefer unified `meta.cache.hive.*` properties. See:
     max_external_file_cache_num=0    // Disable file list cache
     max_hive_partition_table_cache_num=0  // Disable partition list cache
     max_hive_partition_cache_num=0   // Disable partition property cache
-    ```
-
-- Disable at Catalog level in Doris 4.1.x+
-
-    ```text
-    -- Catalog property
-    "meta.cache.hive.partition_values.ttl-second" = "0" // Disable partition list cache
-    "meta.cache.hive.partition.ttl-second" = "0"        // Disable partition property cache
-    "meta.cache.hive.file.ttl-second" = "0"             // Disable file list cache
     ```
 
 - Legacy catalog-level properties
