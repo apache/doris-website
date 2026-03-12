@@ -1,13 +1,13 @@
 ---
 {
-    "title": "Must Read Before the POC",
+    "title": "Before You Start the POC",
     "language": "en",
     "description": "Common issues new users encounter with table design, data loading, and query tuning in Apache Doris.",
-    "sidebar_label": "Must Read Before the POC"
+    "sidebar_label": "Before You Start the POC"
 }
 ---
 
-# Must Read Before the POC
+# Before You Start the POC
 
 This document highlights common issues that new users may encounter, with the goal of accelerating the POC process.
 
