@@ -33,3 +33,4 @@
 | CREATION_TIME          | datetime    | Rowset 的创建时间。                    |
 | NEWEST_WRITE_TIMESTAMP | datetime    | Rowset 的最近写入时间。                |
 | SCHEMA_VERSION         | int         | Rowset 数据对应的表 Schema 版本号。    |
+| COMMIT_TSO             | bigint      | Rowset 元数据中记录的提交 TSO（64 位）。 |
