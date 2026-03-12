@@ -26,6 +26,9 @@ under the License.
 -->
 
 这里介绍 Doris Ann Index 的查询性能与导入性能。所有的性能测试都是通过 [VectorDBBench](https://github.com/zilliztech/VectorDBBench) 完成的。
+
+如需查看单机与分布式下更大规模（10M/100M 级）数据集的测试结果，请参考[大规模性能实测](./performance-large-scale.md)。
+
 ## 测试环境
 测试涉及到的机器规格都是 16C64GB的机器，CPU型号为 Intel(R) Xeon(R) Platinum 8369B CPU @ 2.70GHz。FE BE 混合部署在一台 16C64GB 的机器上（注意这个不是推荐的生产环境部署方式，生产环境上建议 FE 与 BE 分离部署），测试的版本是 Apache Doris 4.0.2。采用的测试数据集是 VectorDBBench Performance768D1M，该数据集向量的维度为 768 维，一共一百万行。
 
