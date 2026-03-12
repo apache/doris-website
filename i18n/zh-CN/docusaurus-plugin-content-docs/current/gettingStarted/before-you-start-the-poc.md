@@ -27,7 +27,7 @@
 
 ### Sort Key（排序键）
 
-将最常用于过滤的列放在最前面，定长类型（INT、BIGINT、DATE）放在 VARCHAR 之前。Doris 在排序键的前 36 字节上构建[前缀索引](../table-design/index/prefix-index)，但遇到 VARCHAR 会立即截断。其他需要快速过滤的列可添加[倒排索引](../table-design/index/inverted-index)。
+将最常用于过滤的列放在最前面，定长类型（INT、BIGINT、DATE）放在 VARCHAR 之前。Doris 在排序键的前 36 字节上构建[前缀索引](../table-design/index/prefix-index)，但遇到 VARCHAR 会立即截断。其他需要快速过滤的列可添加[倒排索引](../table-design/index/inverted-index/overview)。
 
 ### 分区
 
