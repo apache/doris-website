@@ -33,7 +33,7 @@ ENTROPY(<expr1> [, <expr2>, ... , <exprN>])
 
 | Parameter | Description |
 |----------|-------------|
-| `<expr1> [, <expr2>, ...]` | One or more expressions or columns. Supported types: TinyInt, SmallInt, Integer, BigInt, LargeInt, Float, Double, Decimal, String, IPv4/IPv6, Array, Map,Struct. When multiple expressions are provided, their values are serialized together to form a single composite key, and entropy is computed over the frequency distribution of these composite keys. |
+| `<expr1> [, <expr2>, ...]` | One or more expressions or columns. Supported types: TinyInt, SmallInt, Integer, BigInt, LargeInt, Float, Double, Decimal, String, IPv4/IPv6, Array, Map, Struct. When multiple expressions are provided, their values are serialized together to form a single composite key, and entropy is computed over the frequency distribution of these composite keys. |
 
 ## Return Value
 
@@ -47,29 +47,49 @@ Returns a DOUBLE representing the Shannon entropy in bits.
 ```sql
 CREATE TABLE t1 (
     id INT,
-    v  INT
+    c1 INT,
+    c2 STRING
 ) DISTRIBUTED BY HASH(id) BUCKETS 1
 PROPERTIES ("replication_num"="1");
 
 INSERT INTO t1 VALUES
-    (1, 1),
-    (2, 2),
-    (3, 2),
-    (4, NULL);
+    (1, 1, "a"),
+    (2, 1, "a"),
+    (3, 1, "b"),
+    (4, 2, "a"),
+    (5, NULL, "a");
 ```
 
 ```sql
-SELECT entropy(v) FROM t1;
+SELECT entropy(c1) FROM t1;
 ```
 
-Distribution: `{1:1, 2:2}`      $H = -\left(\frac{1}{3}\log_2\frac{1}{3} + \frac{2}{3}\log_2\frac{2}{3}\right)=0.9183$
+Distribution: 1 → 3, 2 → 1
+
+$H = -\left(\frac{1}{4}\log_2\frac{1}{4} + \frac{3}{4}\log_2\frac{3}{4}\right)=0.811$
 
 ```text
 +--------------------+
-| entropy(x)         |
+| entropy(c1)        |
 +--------------------+
-| 0.9182958340544896 |
+| 0.8112781244591328 |
 +--------------------+
+```
+
+```sql
+SELECT entropy(c1, c2) FROM t1;
+```
+
+Distribution: (1, "a") → 2, (1, "b") → 1, (2, "a") → 1
+
+$H = -\left(\frac{1}{4}\log_2\frac{1}{4} + \frac{2}{4}\log_2\frac{2}{4}+ \frac{1}{4}\log_2\frac{1}{4}\right)=1.5$
+
+```text
++-----------------+
+| entropy(c1, c2) |
++-----------------+
+|             1.5 |
++-----------------+
 ```
 
 ```sql
@@ -92,7 +112,7 @@ SELECT entropy(NULL) FROM t1;
 
 Returns NULL if all values are NULL or the input is empty.
 
-```sql
+```text
 +---------------+
 | entropy(NULL) |
 +---------------+
