@@ -88,6 +88,71 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 
     CommonProperties 部分用于填写通用属性。请参阅[数据目录概述](../catalog-overview.md)中【通用属性】部分。
 
+## 元数据缓存 {#meta-cache}
+
+为了提升访问外部数据源的性能，Apache Doris 会对 Paimon 的元数据进行缓存。元数据包括表结构（Schema）和表对象等。
+
+:::tip
+对于 Doris 4.1.x 之前的版本，元数据缓存主要由 FE 配置项全局控制，详情请参阅[元数据缓存](../meta-cache.md)。
+从 Doris 4.1.x 开始，Paimon Catalog 的外表元数据缓存使用统一键 `meta.cache.*` 进行配置。
+:::
+
+### 统一属性模型（4.1.x+） {#meta-cache-unified-model}
+
+各引擎 cache entry 使用统一的配置键格式：`meta.cache.<engine>.<entry>.{enable,ttl-second,capacity}`。
+
+| 属性 | 示例 | 含义 |
+|---|---|---|
+| `enable` | `true/false` | 是否启用该缓存模块。 |
+| `ttl-second` | `600`、`0`、`-1` | `0` 表示关闭缓存（即刻生效，可用于查看最新数据）；`-1` 表示永不过期；其他正整数表示按访问时间计算 TTL（秒）。 |
+| `capacity` | `10000` | 最大缓存条目数（按条目数量计）。`0` 表示关闭。 |
+
+**生效逻辑说明：** 只有当 `enable=true` 且 `ttl-second != 0` 且 `capacity > 0` 时，该模块缓存才会生效。
+
+### 缓存模块 {#meta-cache-unified-modules}
+
+Paimon Catalog 包含以下缓存模块：
+
+| 模块 (`<entry>`) | 属性键前缀 | 缓存内容与影响 |
+|---|---|---|
+| `schema` | `meta.cache.paimon.schema.` | 缓存表结构。影响：列新增、删除、类型变更在 Doris 中的可见性。若关闭，每次查询都会拉取最新 Schema。 |
+| `table` | `meta.cache.paimon.table.` | 缓存 Paimon 表元数据对象。影响：最新 Snapshot、Schema 演进、分支/标签引用等表级元数据在 Doris 中的可见性，同时减少查询规划时的元数据加载开销。 |
+
+### 旧参数映射与转换 {#meta-cache-mapping}
+
+在 4.1.x 之前，Paimon 的 Schema 与表级元数据主要遵循旧的 Catalog 兼容属性或 FE 全局缓存模型，详见[元数据缓存](../meta-cache.md)。升级到 4.1.x 后，建议改写为 `meta.cache.paimon.*`，并单独评估表级缓存是否需要更强的新鲜度。
+
+| 4.1 前属性键/旧模型 | 适用范围 | 4.1.x+ 统一键 | 升级建议与影响 |
+|---|---|---|---|
+| `schema.cache.ttl-second` | 4.1 前 Paimon Catalog 兼容属性 | `meta.cache.paimon.schema.ttl-second` | 控制 Schema 新鲜度。若希望列变更每次查询立即可见，设置为 `0`。 |
+| Paimon 表级旧模型 | 4.1 前 FE 全局缓存策略（见旧版元数据缓存文档中的旧表级元数据模型说明） | `meta.cache.paimon.table.ttl-second` | 控制最新 Snapshot/表级元数据的可见性。若希望每次查询都读取最新表快照，设置为 `0`。 |
+
+4.1.x 的统一模型把缓存拆分为 `enable`、`ttl-second`、`capacity` 三个维度；旧模型主要表达 TTL/全局缓存行为。升级后建议不要只替换键名，还要同时评估是否需要显式配置 `enable/capacity`。
+
+### 最佳实践 {#meta-cache-best-practices}
+
+* **实时查看最新数据**：如果您希望每次查询都能看到 Paimon 表的最新数据变动或 Schema 变更，可以将 `schema` 或 `table` 的 `ttl-second` 设置为 `0`。
+  ```sql
+  -- 关闭表对象缓存，以感知 Paimon 表的最新快照
+  ALTER CATALOG paimon_ctl SET PROPERTIES ("meta.cache.paimon.table.ttl-second" = "0");
+  ```
+* **性能优化**：`ALTER CATALOG ... SET PROPERTIES` 的修改在 Paimon Catalog 中支持热生效。
+
+### 可观测性 {#meta-cache-unified-observability}
+
+可以通过 `information_schema.catalog_meta_cache_statistics` 系统表观测缓存指标：
+
+```sql
+SELECT catalog_name, engine_name, entry_name,
+       effective_enabled, ttl_second, capacity,
+       estimated_size, hit_rate, load_failure_count, last_error
+FROM information_schema.catalog_meta_cache_statistics
+WHERE catalog_name = 'paimon_ctl' AND engine_name = 'paimon'
+ORDER BY entry_name;
+```
+
+该系统表文档见：[catalog_meta_cache_statistics](../../admin-manual/system-tables/information_schema/catalog_meta_cache_statistics.md)。
+
 ### 支持的 Paimon 版本
 
 当前依赖的 Paimon 版本为 1.0.0。

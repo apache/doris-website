@@ -88,6 +88,68 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 
   The CommonProperties section is used to fill in common properties. Please refer to the [Catalog Overview](../catalog-overview.md) section on [Common Properties].
   
+## Metadata Cache {#meta-cache}
+
+To improve the performance of accessing external data sources, Apache Doris caches Paimon metadata. Metadata includes table structure (Schema) and table objects.
+
+:::tip
+For versions before Doris 4.1.x, metadata caching is mainly controlled globally by FE configuration items. For details, see [Metadata Cache](../meta-cache.md).
+Starting from Doris 4.1.x, Paimon Catalog's external metadata cache is configured using the unified `meta.cache.*` keys.
+:::
+
+### Unified Property Model (4.1.x+) {#meta-cache-unified-model}
+
+Each engine's cache entry uses a unified configuration key format: `meta.cache.<engine>.<entry>.{enable,ttl-second,capacity}`.
+
+| Property | Example | Meaning |
+|---|---|---|
+| `enable` | `true/false` | Whether to enable this cache module. |
+| `ttl-second` | `600`, `0`, `-1` | `0` means disable cache (takes effect immediately, can be used to see the latest data); `-1` means never expire; other positive integers mean TTL in seconds based on access time. |
+| `capacity` | `10000` | Maximum number of cache entries (by count). `0` means disable. |
+
+**Effective Logic:** The module cache only takes effect when `enable=true`, `ttl-second != 0`, and `capacity > 0`.
+
+### Cache Modules {#meta-cache-unified-modules}
+
+Paimon Catalog includes the following cache modules:
+
+| Module (`<entry>`) | Property Key Prefix | Cached Content and Impact |
+|---|---|---|
+| `schema` | `meta.cache.paimon.schema.` | Caches table structure. Impact: Visibility of table column information. If disabled, the latest Schema is pulled for each query. |
+| `table` | `meta.cache.paimon.table.` | Caches Paimon table metadata objects. Impact: Reduces metadata loading overhead during query planning. |
+
+### Legacy Parameter Mapping and Conversion {#meta-cache-mapping}
+
+In version 4.1.x and later, unified keys are recommended. The following is the mapping between legacy Catalog properties and 4.1.x+ unified keys:
+
+| Legacy Property Key | 4.1.x+ Unified Key | Description |
+|---|---|---|
+| `schema.cache.ttl-second` | `meta.cache.paimon.schema.ttl-second` | Expiration time of table structure cache |
+
+### Best Practices {#meta-cache-best-practices}
+
+* **Real-time access to the latest data**: If you want each query to see the latest data changes or schema changes for Paimon tables, you can set the `ttl-second` for `schema` or `table` to `0`.
+  ```sql
+  -- Disable table object cache to detect the latest snapshots of Paimon tables
+  ALTER CATALOG paimon_ctl SET PROPERTIES ("meta.cache.paimon.table.ttl-second" = "0");
+  ```
+* **Performance optimization**: Changes via `ALTER CATALOG ... SET PROPERTIES` support hot-reload in Paimon Catalog.
+
+### Observability {#meta-cache-unified-observability}
+
+Cache metrics can be observed through the `information_schema.catalog_meta_cache_statistics` system table:
+
+```sql
+SELECT catalog_name, engine_name, entry_name,
+       effective_enabled, ttl_second, capacity,
+       estimated_size, hit_rate, load_failure_count, last_error
+FROM information_schema.catalog_meta_cache_statistics
+WHERE catalog_name = 'paimon_ctl' AND engine_name = 'paimon'
+ORDER BY entry_name;
+```
+
+See the documentation for this system table: [catalog_meta_cache_statistics](../../admin-manual/system-tables/information_schema/catalog_meta_cache_statistics.md).
+
 ### Supported Paimon Versions
 
 The currently dependent Paimon version is 1.0.0.
