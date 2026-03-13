@@ -328,6 +328,7 @@
                             "label": "Vector Search",
                             "items": [
                                 "ai/vector-search/overview",
+                                "ai/vector-search/practical-guide",
                                 "ai/vector-search/hnsw",
                                 "ai/vector-search/ivf",
                                 "ai/vector-search/index-management",
