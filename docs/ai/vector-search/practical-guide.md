@@ -230,7 +230,8 @@ SET optimize_index_scan_parallelism = true;
 
 ### Capacity planning
 
-As a practical baseline, estimate vector memory with `dim * 4 bytes * row_count`, then add ANN structure overhead and reserve memory headroom for non-vector columns and execution operators.
+As a practical baseline, estimate vector memory with `dim * 4 bytes * row_count`, then add ANN structure overhead and reserve memory headroom for non-vector columns and execution operators.  
+For single-node and distributed sizing references at 10M/100M scale, see [Large-scale Performance Benchmark](./performance-large-scale.md).
 
 ## 6. Index Operations
 

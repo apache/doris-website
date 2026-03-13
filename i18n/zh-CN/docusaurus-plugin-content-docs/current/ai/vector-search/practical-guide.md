@@ -227,7 +227,8 @@ SET optimize_index_scan_parallelism = true;
 2. 控制 segment 规模，避免过大影响召回。
 3. 在同一数据集上对多组参数做 A/B 压测。
 
-容量评估可先按 `dim * 4 bytes * row_count` 估算向量内存，再叠加 ANN 结构开销，并为非向量列和执行算子预留内存水位。
+容量评估可先按 `dim * 4 bytes * row_count` 估算向量内存，再叠加 ANN 结构开销，并为非向量列和执行算子预留内存水位。  
+10M/100M 规模下单机与分布式的容量参考可见[大规模性能测试](./performance-large-scale.md)。
 
 ## 6. 索引管理
 
