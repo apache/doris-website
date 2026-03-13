@@ -288,6 +288,7 @@ const sidebars: SidebarsConfig = {
                     items: [
                         'query-data/mysql-compatibility',
                         'query-data/join',
+                        'query-data/asof-join',
                         'query-data/subquery',
                         'query-data/multi-dimensional-analytics',
                         'query-data/window-function',
