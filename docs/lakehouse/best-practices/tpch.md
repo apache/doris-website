@@ -24,7 +24,7 @@ This feature is supported starting from Doris version 3.0.0.
 git clone https://github.com/trinodb/trino.git
 git checkout 435
 cd trino/plugin/trino-tpch
-mvn clean install -DskipTest
+mvn clean install -DskipTests
 ```
 
 After compilation, you will get the `trino-tpch-435/` directory under `trino/plugin/trino-tpch/target/`.

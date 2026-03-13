@@ -86,8 +86,7 @@ In actual user scenarios, Doris reduces average query latency by 20% and 95th pe
 ### Convenient Service Migration
 
 In the process of integrating multiple data sources and achieving lakehouse transformation, migrating SQL queries to Doris is a challenge due to differences in SQL dialects across systems in terms of syntax and function support. Without a suitable migration plan, the business side may need significant modifications to adapt to the new system's SQL syntax.
-
-To address this issue, Doris provides a [SQL Dialect Conversion Service](sql-convertor/sql-convertor-overview.md), allowing users to directly use SQL dialects from other systems for data queries. The conversion service converts these SQL dialects into Doris SQL, greatly reducing user migration costs. Currently, Doris supports SQL dialect conversion for common query engines such as Presto/Trino, Hive, PostgreSQL, and Clickhouse, achieving a compatibility of over 99% in some actual user scenarios.
+ 
 
 ### Modern Deployment Architecture
 

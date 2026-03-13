@@ -89,7 +89,7 @@ TO DATABASE target_test_db (
 ### Check Import Status
 
 ```sql
-select * from jobs(type=insert) where ExecuteType = "STREAMING"
+select * from jobs("type"="insert") where ExecuteType = "STREAMING"
        Id: 1765332859199
        Name: mysql_db_sync
       Definer: root
@@ -212,7 +212,7 @@ TO DATABASE <target_db> (
 After submitting a job, you can run the following SQL to check the job status:
 
 ```sql
-select * from jobs(type=insert) where ExecuteType = "STREAMING"
+select * from jobs("type"="insert") where ExecuteType = "STREAMING"
 *************************** 1. row ***************************
                Id: 1765332859199
              Name: mysql_db_sync
@@ -259,7 +259,7 @@ CanceledTaskCount: 0
 You can run the following SQL to check the status of each Task:
 
 ```sql
-select * from tasks(type='insert') where jobId='1765336137066'
+select * from tasks("type"="insert") where jobId='1765336137066'
 *************************** 1. row ***************************
        TaskId: 1765336137066
         JobId: 1765332859199

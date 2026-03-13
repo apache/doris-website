@@ -132,7 +132,7 @@ Parquet Page Cache 是针对 Parquet 文件的页级缓存机制。该功能与 
 
 - `enable_parquet_cache_compressed_pages`
 
-    当压缩比超过阈值时，是否缓存压缩的数据页。默认为 `true`。
+    当压缩比超过阈值时，是否缓存压缩的数据页。默认为 `false`。
 
 ### 性能监控
 

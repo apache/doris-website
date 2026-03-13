@@ -19,6 +19,32 @@ This document describes the parameters required to access Microsoft Azure Blob s
 
 **Azure Blob Storage currently does not support ARM architectures.**
 
+## Configure BE CA Certificate for HTTPS
+
+Starting from Doris 3.1.5 and 4.0.5, you can explicitly configure `ca_cert_file_paths` in `be.conf` when Doris BE accesses Azure Blob Storage over HTTPS.
+
+By default, if `ca_cert_file_paths` is not configured, Doris uses the operating system's default CA certificates. In most environments, you do not need to set this parameter manually. Configure it in the following cases:
+
+- The BE node is missing system CA certificates, or the installed CA bundle is too old.
+- The BE node runs in a minimal container or image that does not include the `ca-certificates` package.
+- The default CA file path on the BE node is invalid, or the Doris process does not have read permission on the CA file.
+- Your environment uses a self-signed certificate, a private CA, or a corporate proxy or gateway that re-signs TLS traffic.
+- You encounter errors such as `Problem with the SSL CA cert` or `curl 77: Problem with the SSL CA cert (path? access rights?)` when accessing Azure Blob Storage.
+
+Example:
+
+```properties
+# be.conf
+ca_cert_file_paths = /etc/ssl/certs/ca-certificates.crt
+```
+
+Common CA bundle paths:
+
+- Debian / Ubuntu: `/etc/ssl/certs/ca-certificates.crt`
+- CentOS / RockyLinux: `/etc/pki/ca-trust/extracted/openssl/ca-bundle.trust.crt`
+
+Configure this item on every BE node that may access Azure Blob Storage, and ensure that the certificate file exists and is readable by the Doris process. After updating `be.conf`, restart the affected BE nodes to apply the change.
+
 ## Parameter Overview
 
 | Property Name                  | Former Name   | Description                     | Default Value | Required |

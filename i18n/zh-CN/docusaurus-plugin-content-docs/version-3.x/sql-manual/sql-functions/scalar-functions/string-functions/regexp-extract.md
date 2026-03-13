@@ -56,6 +56,31 @@ REGEXP_EXTRACT(<str>, <pattern>, <pos>)
 
 模式的匹配部分，类型为 Varchar。若未找到匹配项，将返回空字符串
 
+**默认行为**：
+
+| 默认配置 | 行为说明 |
+| -------- | -------- |
+| `.` 匹配换行符 | `.` 默认可以匹配 `\n`（换行符）。 |
+| 大小写敏感 | 匹配时区分大小写。 |
+| `^`/`$` 匹配整个字符串边界 | `^` 仅匹配字符串开头，`$` 仅匹配字符串结尾，而非每行的行首/行尾。 |
+| 量词贪婪 | `*`、`+` 等量词默认尽可能多地匹配。 |
+| UTF-8 | 字符串按 UTF-8 处理。 |
+
+**模式修饰符**：
+
+可通过在 `pattern` 前缀写入 `(?flags)` 来覆盖默认行为。多个修饰符可组合，如 `(?im)`；`-` 前缀表示关闭对应选项，如 `(?-s)`。
+
+| 标志 | 含义 |
+| ---- | ---- |
+| `(?i)` | 大小写不敏感匹配 |
+| `(?-i)` | 大小写敏感（默认） |
+| `(?s)` | `.` 匹配换行符（默认已开启） |
+| `(?-s)` | `.` 不匹配换行符 |
+| `(?m)` | 多行模式：`^` 匹配每行行首，`$` 匹配每行行尾 |
+| `(?-m)` | 单行模式：`^`/`$` 匹配整个字符串首尾（默认） |
+| `(?U)` | 量词非贪婪：`*`、`+` 等尽可能少地匹配 |
+| `(?-U)` | 量词贪婪（默认）：`*`、`+` 等尽可能多地匹配 |
+
 ## 示例
 
 提取第一个匹配部分,在此示例中，正则表达式([[:lower:]]+)C([[:lower:]]+)匹配字符串中一个或多个小写字母后跟 'C' 再跟一个或多个小写字母的部分。'C' 之前的第一个捕获组([[:lower:]]+)匹配 'b'，因此结果为 'b'
@@ -202,4 +227,67 @@ SELECT regexp_extract('AbCdE', '([[:digit:]]+', 1);
 ```text
 ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.2)[INVALID_ARGUMENT]Could not compile regexp pattern: ([[:digit:]]+
 Error: missing ): ([[:digit:]]+
+```
+
+模式修饰符
+
+大小写不敏感：`(?i)` 使匹配忽略大小写
+
+```sql
+SELECT REGEXP_EXTRACT('Hello World', '(hello)', 1) AS case_sensitive,
+       REGEXP_EXTRACT('Hello World', '(?i)(hello)', 1) AS case_insensitive;
+```
+
+```text
++----------------+------------------+
+| case_sensitive | case_insensitive |
++----------------+------------------+
+|                | Hello            |
++----------------+------------------+
+```
+
+`.` 默认匹配换行符；使用 `(?-s)` 后 `.` 不匹配换行符
+
+```sql
+SELECT REGEXP_EXTRACT('foo\nbar', '^(.+)$', 1) AS dot_match_nl,
+       REGEXP_EXTRACT('foo\nbar', '(?-s)^(.+)$', 1) AS dot_not_match_nl;
+```
+
+```text
++--------------+------------------+
+| dot_match_nl | dot_not_match_nl |
++--------------+------------------+
+| foo
+bar      |                  |
++--------------+------------------+
+```
+
+多行模式：`(?m)` 使 `^` 和 `$` 匹配每行行首/行尾
+
+```sql
+SELECT REGEXP_EXTRACT('foo\nbar', '^(bar)', 1) AS single_line,
+       REGEXP_EXTRACT('foo\nbar', '(?m)^(bar)', 1) AS multi_line;
+```
+
+```text
++-------------+------------+
+| single_line | multi_line |
++-------------+------------+
+|             | bar        |
++-------------+------------+
+```
+
+贪婪与非贪婪：`(?U)` 使量词尽可能少地匹配
+
+```sql
+SELECT REGEXP_EXTRACT('aXbXc', '(a.*X)', 1) AS greedy,
+       REGEXP_EXTRACT('aXbXc', '(?U)(a.*X)', 1) AS non_greedy;
+```
+
+```text
++--------+------------+
+| greedy | non_greedy |
++--------+------------+
+| aXbX   | aX         |
++--------+------------+
 ```

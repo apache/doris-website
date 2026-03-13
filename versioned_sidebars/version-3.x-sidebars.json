@@ -499,18 +499,7 @@
                         "lakehouse/data-cache",
                         "lakehouse/meta-cache",
                         "lakehouse/compute-node",
-                        "lakehouse/statistics",
-                        {
-                            "type": "category",
-                            "label": "SQL Dialect Convertor",
-                            "items": [
-                                "lakehouse/sql-convertor/sql-convertor-overview",
-                                "lakehouse/sql-convertor/presto-trino-guide",
-                                "lakehouse/sql-convertor/clickhouse-guide",
-                                "lakehouse/sql-convertor/hive-guide",
-                                "lakehouse/sql-convertor/pg-guide"
-                            ]
-                        },
+                        "lakehouse/statistics", 
                         {
                             "type": "category",
                             "label": "Lakehouse Best Practices",
@@ -1275,7 +1264,6 @@
                                         "sql-manual/sql-functions/scalar-functions/string-functions/url-encode",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/uuid",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/xpath-string",
-                                        "sql-manual/sql-functions/scalar-functions/string-functions/regexp-count",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/week-ceil",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/week-floor"
                                     ]
@@ -1417,7 +1405,6 @@
                                         "sql-manual/sql-functions/scalar-functions/encrypt-digest-functions/md5sum",
                                         "sql-manual/sql-functions/scalar-functions/encrypt-digest-functions/murmur-hash3-32",
                                         "sql-manual/sql-functions/scalar-functions/encrypt-digest-functions/murmur-hash3-64",
-                                        "sql-manual/sql-functions/scalar-functions/encrypt-digest-functions/murmur-hash3-64-v2",
                                         "sql-manual/sql-functions/scalar-functions/encrypt-digest-functions/sha",
                                         "sql-manual/sql-functions/scalar-functions/encrypt-digest-functions/sha2",
                                         "sql-manual/sql-functions/scalar-functions/encrypt-digest-functions/sm3",
@@ -1731,7 +1718,6 @@
                                 "sql-manual/sql-functions/aggregate-functions/hll-union-agg",
                                 "sql-manual/sql-functions/aggregate-functions/intersect-count",
                                 "sql-manual/sql-functions/aggregate-functions/kurt",
-                                "sql-manual/sql-functions/aggregate-functions/linear-histogram",
                                 "sql-manual/sql-functions/aggregate-functions/map-agg",
                                 "sql-manual/sql-functions/aggregate-functions/max",
                                 "sql-manual/sql-functions/aggregate-functions/max-by",
@@ -1742,8 +1728,6 @@
                                 "sql-manual/sql-functions/aggregate-functions/percentile-array",
                                 "sql-manual/sql-functions/aggregate-functions/percentile_approx_weighted",
                                 "sql-manual/sql-functions/aggregate-functions/quantile-union",
-                                "sql-manual/sql-functions/aggregate-functions/regr_intercept",
-                                "sql-manual/sql-functions/aggregate-functions/regr_slope",
                                 "sql-manual/sql-functions/aggregate-functions/retention",
                                 "sql-manual/sql-functions/aggregate-functions/sequence-count",
                                 "sql-manual/sql-functions/aggregate-functions/sequence-match",
@@ -1875,11 +1859,6 @@
                                         "sql-manual/sql-statements/data-modification/load-and-export/SHOW-ROUTINE-LOAD",
                                         "sql-manual/sql-statements/data-modification/load-and-export/SHOW-ROUTINE-LOAD-TASK",
                                         "sql-manual/sql-statements/data-modification/load-and-export/SHOW-CREATE-ROUTINE-LOAD",
-                                        "sql-manual/sql-statements/data-modification/load-and-export/CREATE-SYNC-JOB",
-                                        "sql-manual/sql-statements/data-modification/load-and-export/PAUSE-SYNC-JOB",
-                                        "sql-manual/sql-statements/data-modification/load-and-export/RESUME-SYNC-JOB",
-                                        "sql-manual/sql-statements/data-modification/load-and-export/STOP-SYNC-JOB",
-                                        "sql-manual/sql-statements/data-modification/load-and-export/SHOW-SYNC-JOB",
                                         "sql-manual/sql-statements/data-modification/load-and-export/SYNC",
                                         "sql-manual/sql-statements/data-modification/load-and-export/EXPORT",
                                         "sql-manual/sql-statements/data-modification/load-and-export/CANCEL-EXPORT",

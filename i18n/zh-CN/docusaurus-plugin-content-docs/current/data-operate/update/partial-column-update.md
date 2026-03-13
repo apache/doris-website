@@ -258,6 +258,7 @@ $ cat test1.json
 ```
 ```shell
 curl --location-trusted -u root: \
+-H "Expect:100-continue" \
 -H "strict_mode:false" \
 -H "format:json" \
 -H "read_json_by_line:true" \
