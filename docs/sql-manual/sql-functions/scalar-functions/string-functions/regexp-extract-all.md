@@ -8,7 +8,7 @@
 
 ## Description
 
-The `REGEXP_EXTRACT_ALL` function is used to perform a regular expression match on a given string `str` and extract all the parts that match the first sub - pattern of the specified `pattern`. For the function to return an array of strings representing the matched parts of the pattern, the pattern must exactly match a portion of the input string `str`. If there is no match, or if the pattern does not contain any sub - patterns, an empty string is returned.
+The `REGEXP_EXTRACT_ALL` function is used to perform a regular expression match on a given string `str` and extract all the parts that match the first sub - pattern of the specified `pattern`. The function returns a string representing the matched part of the pattern, and the pattern must exactly match a portion of the input string `str`. If there is no match, or if the pattern does not contain any sub - patterns, an empty string is returned.
 
 It should be noted that when handling character set matching, Utf-8 standard character classes should be used.  This ensures that functions can correctly identify and process various characters from different languages.
 
@@ -35,7 +35,9 @@ REGEXP_EXTRACT_ALL(<str>, <pattern>)
 
 ## Return value
 
-The function returns an array of strings that represent the parts of the input string that match the first sub - pattern of the specified regular expression. The return type is an array of String values. If no matches are found, or if the pattern has no sub - patterns, an empty array is returned.
+The function returns a string that represents the part of the input string that matches the first sub - pattern of the specified regular expression. The return type is String. If no matches are found, or if the pattern has no sub - patterns, an empty string is returned.
+
+For the array-returning variant, see [REGEXP_EXTRACT_ALL_ARRAY](./regexp-extract-all-array.md).
 
 **Default Behavior**:
 
@@ -88,7 +90,7 @@ mysql> SELECT regexp_extract_all('AbCdEfCg', '([[:lower:]]+)C([[:lower:]]+)');
 +-----------------------------------------------------------------+
 ```
 
-Extracting keys from key - value pairs.The pattern matches key - value pairs in the string. The first sub - pattern captures the keys, so the result is an array of the keys ['abc', 'def', 'ghi'].
+Extracting keys from key - value pairs.The pattern matches key - value pairs in the string. The first sub - pattern captures the keys, so the result is ['abc', 'def', 'ghi'].
 
 ```sql
 mysql> SELECT regexp_extract_all('abc=111, def=222, ghi=333','("[^"]+"|\\w+)=("[^"]+"|\\w+)');
