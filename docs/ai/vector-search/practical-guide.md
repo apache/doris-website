@@ -230,7 +230,7 @@ SET optimize_index_scan_parallelism = true;
 
 ### Capacity planning
 
-For memory and CPU sizing, see [ANN Resource Estimation Guide](./resource-estimation.md).
+As a practical baseline, estimate vector memory with `dim * 4 bytes * row_count`, then add ANN structure overhead and reserve memory headroom for non-vector columns and execution operators.
 
 ## 6. Index Operations
 

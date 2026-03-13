@@ -227,7 +227,7 @@ SET optimize_index_scan_parallelism = true;
 2. 控制 segment 规模，避免过大影响召回。
 3. 在同一数据集上对多组参数做 A/B 压测。
 
-容量规划可参考 [ANN 资源评估指南](./resource-estimation.md)。
+容量评估可先按 `dim * 4 bytes * row_count` 估算向量内存，再叠加 ANN 结构开销，并为非向量列和执行算子预留内存水位。
 
 ## 6. 索引管理
 
