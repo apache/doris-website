@@ -112,6 +112,8 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 
 * [Azure Blob](../storages/azure-blob.md)
 
+* [Apache Ozone](../storages/ozone.md)（自 4.0.4 起支持）
+
 * [阿里云 OSS](../storages/aliyun-oss.md)
 
 * [腾讯云 COS](../storages/tencent-cos.md)
@@ -367,6 +369,21 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
                 'azure.account_key' = '<account_key>',
                 'azure.endpoint' = 'https://<account_name>.blob.core.windows.net',
                 'fs.azure.support'='true'
+            );
+            ```
+        </TabItem>
+        <TabItem value='Ozone' label='Ozone'>
+            自 4.0.4 起支持
+            ```sql
+            CREATE CATALOG `hive_hms_on_ozone_new_catalog` PROPERTIES (
+                'type' = 'hms',
+                'hive.metastore.uris' = 'thrift://127.0.0.1:9383',
+                'fs.ozone.support' = 'true',
+                'ozone.endpoint' = 'http://ozone-s3g:9878',
+                'ozone.access_key' = '<ak>',
+                'ozone.secret_key' = '<sk>',
+                'ozone.region' = 'us-east-1',
+                'ozone.use_path_style' = 'true'
             );
             ```
         </TabItem>
@@ -1101,4 +1118,3 @@ DROP DATABASE [IF EXISTS] hive_ctl.hive_db;
 | -------- | ------------------------------------ |
 | 2.1.6    | 支持 Hive 表数据写回                        |
 | 3.0.4    | 支持 JsonSerDe 格式的 Hive 表。支持 Hive4 的事务表。 |
-

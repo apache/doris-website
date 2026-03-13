@@ -114,6 +114,8 @@ The currently dependent Paimon version is 1.0.0.
 
 * [Google Cloud Storage](../storages/gcs.md)
 
+* [Apache Ozone](../storages/ozone.md) (supported since 4.0.4)
+
 * [Alibaba Cloud OSS](../storages/aliyun-oss.md)
 
 * [Tencent Cloud COS](../storages/tencent-cos.md)
@@ -258,6 +260,23 @@ Supported since version 4.0.3, `timestamp_with_local_time_zone` can be mapped to
                 'fs.gcs.support' = 'true',
                 'gs.secret_key' = '<sk>',
                 'gs.access_key' = '<ak>'
+            );
+            ```
+        </TabItem>
+        <TabItem value='Ozone' label='Ozone'>
+            Supported since 4.0.4
+            ```sql
+            CREATE CATALOG paimon_hms_on_ozone_catalog PROPERTIES (
+                'type' = 'paimon',
+                'paimon.catalog.type' = 'hms',
+                'warehouse' = 's3a://test-bucket/paimon-warehouse',
+                'hive.metastore.uris' = 'thrift://127.0.0.1:9383',
+                'fs.ozone.support' = 'true',
+                'ozone.endpoint' = 'http://ozone-s3g:9878',
+                'ozone.access_key' = '<ak>',
+                'ozone.secret_key' = '<sk>',
+                'ozone.region' = 'us-east-1',
+                'ozone.use_path_style' = 'true'
             );
             ```
         </TabItem>

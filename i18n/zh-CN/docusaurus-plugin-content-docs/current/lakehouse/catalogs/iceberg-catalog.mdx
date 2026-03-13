@@ -140,6 +140,8 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 
 * [Azure Blob](../storages/azure-blob.md)
 
+* [Apache Ozone](../storages/ozone.md)（自 4.0.4 起支持）
+
 * [阿里云 OSS](../storages/aliyun-oss.md)
 
 * [腾讯云 COS](../storages/tencent-cos.md)
@@ -1122,6 +1124,22 @@ Iceberg 的元数层级关系是 Catalog -> Namespace -> Table。其中 Namespac
                 'azure.account_key' = '<account_key>',
                 'azure.endpoint' = 'https://<account_name>.blob.core.windows.net',
                 'fs.azure.support' = 'true'
+            );
+            ```
+        </TabItem>
+        <TabItem value='Ozone' label='Ozone'>
+            自 4.0.4 起支持
+            ```sql
+            CREATE CATALOG iceberg_fs_on_ozone_catalog PROPERTIES (
+                'type' = 'iceberg',
+                'iceberg.catalog.type' = 'hadoop',
+                'warehouse' = 's3a://bucket/iceberg_warehouse',
+                'fs.ozone.support' = 'true',
+                'ozone.endpoint' = 'http://ozone-s3g:9878',
+                'ozone.access_key' = '<ak>',
+                'ozone.secret_key' = '<sk>',
+                'ozone.region' = 'us-east-1',
+                'ozone.use_path_style' = 'true'
             );
             ```
         </TabItem>
