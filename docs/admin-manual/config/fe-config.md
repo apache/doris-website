@@ -360,6 +360,88 @@ Is it possible to dynamically configure: true
 
 Is it a configuration item unique to the Master FE node: false
 
+### TSO (Timestamp Oracle)
+
+#### `enable_feature_tso`
+
+Default：false
+
+IsMutable：true
+
+Is it a configuration item unique to the Master FE node: true
+
+Whether to enable TSO (Timestamp Oracle) related experimental features, such as recording rowset commit TSO and exposing it via system tables.
+
+#### `tso_service_update_interval_ms`
+
+Default：50（ms）
+
+IsMutable：false
+
+Is it a configuration item unique to the Master FE node: true
+
+The update interval of the TSO service in milliseconds. The daemon periodically checks clock drift/backward and renews the time window.
+
+#### `max_update_tso_retry_count`
+
+Default：3
+
+IsMutable：true
+
+Is it a configuration item unique to the Master FE node: true
+
+Maximum retry count when the TSO service updates the global timestamp (for example, when persisting a new window end).
+
+#### `max_get_tso_retry_count`
+
+Default：10
+
+IsMutable：true
+
+Is it a configuration item unique to the Master FE node: true
+
+Maximum retry count when generating a new TSO.
+
+#### `tso_service_window_duration_ms`
+
+Default：5000（ms）
+
+IsMutable：true
+
+Is it a configuration item unique to the Master FE node: true
+
+The duration of a leased TSO time window in milliseconds. The Master FE persists the window end to reduce persistence frequency while keeping monotonicity across master failover.
+
+#### `tso_time_offset_debug_mode`
+
+Default：0（ms）
+
+IsMutable：true
+
+Is it a configuration item unique to the Master FE node: false
+
+Time offset for the TSO service in milliseconds. For test/debug only.
+
+#### `enable_tso_persist_journal`
+
+Default：false
+
+IsMutable：true
+
+Is it a configuration item unique to the Master FE node: true
+
+Whether to persist the TSO window end into edit log. Enabling this may emit new operation codes and may break rollback compatibility with older versions.
+
+#### `enable_tso_checkpoint_module`
+
+Default：false
+
+IsMutable：true
+
+Is it a configuration item unique to the Master FE node: true
+
+Whether to include TSO information as a checkpoint image module for faster recovery. Older versions may need to ignore unknown modules when reading newer images.
+
 ### Service
 
 #### `query_port`

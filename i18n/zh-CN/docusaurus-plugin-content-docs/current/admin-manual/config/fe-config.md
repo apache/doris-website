@@ -361,6 +361,88 @@ heartbeat_mgr 中处理心跳事件的线程数。
 
 是否为 Master FE 节点独有的配置项：false
 
+### TSO（Timestamp Oracle）
+
+#### `enable_feature_tso`
+
+默认值：false
+
+是否可以动态配置：true
+
+是否为 Master FE 节点独有配置项：true
+
+是否启用 TSO（全局时间戳）相关实验能力，例如记录 Rowset 的提交 TSO，并在系统表中暴露相关字段。
+
+#### `tso_service_update_interval_ms`
+
+默认值：50（ms）
+
+是否可以动态配置：false
+
+是否为 Master FE 节点独有配置项：true
+
+TSO 服务的更新间隔（毫秒）。守护线程会周期性检查时钟漂移/回拨，并在需要时续租时间窗口。
+
+#### `max_update_tso_retry_count`
+
+默认值：3
+
+是否可以动态配置：true
+
+是否为 Master FE 节点独有配置项：true
+
+TSO 服务更新全局时间戳（例如持久化新的时间窗口右界）失败时的最大重试次数。
+
+#### `max_get_tso_retry_count`
+
+默认值：10
+
+是否可以动态配置：true
+
+是否为 Master FE 节点独有配置项：true
+
+获取/生成 TSO 失败时的最大重试次数。
+
+#### `tso_service_window_duration_ms`
+
+默认值：5000（ms）
+
+是否可以动态配置：true
+
+是否为 Master FE 节点独有配置项：true
+
+TSO 时间窗口时长（毫秒）。Master FE 会持久化窗口右界以降低持久化频率，并保证切主后的单调性。
+
+#### `tso_time_offset_debug_mode`
+
+默认值：0（ms）
+
+是否可以动态配置：true
+
+是否为 Master FE 节点独有配置项：false
+
+TSO 服务时间偏移（毫秒），仅用于测试/调试。
+
+#### `enable_tso_persist_journal`
+
+默认值：false
+
+是否可以动态配置：true
+
+是否为 Master FE 节点独有配置项：true
+
+是否启用将 TSO 时间窗口右界写入 EditLog。开启后可能会产生新的操作码，回滚到旧版本可能不兼容。
+
+#### `enable_tso_checkpoint_module`
+
+默认值：false
+
+是否可以动态配置：true
+
+是否为 Master FE 节点独有配置项：true
+
+是否启用将 TSO 信息作为 checkpoint 镜像模块参与持久化。开启后镜像中包含新模块，旧版本读取新镜像可能需要忽略未知模块。
+
 ### 服务
 
 #### `query_port`
