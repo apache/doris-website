@@ -1920,6 +1920,7 @@ const sidebars: SidebarsConfig = {
                                 'sql-manual/sql-functions/aggregate-functions/count-by-enum',
                                 'sql-manual/sql-functions/aggregate-functions/covar',
                                 'sql-manual/sql-functions/aggregate-functions/covar-samp',
+                                'sql-manual/sql-functions/aggregate-functions/entropy',
                                 'sql-manual/sql-functions/aggregate-functions/group-array-intersect',
                                 'sql-manual/sql-functions/aggregate-functions/group-array-union',
                                 'sql-manual/sql-functions/aggregate-functions/group-bit-and',
