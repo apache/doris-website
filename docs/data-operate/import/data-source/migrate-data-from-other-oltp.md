@@ -155,6 +155,30 @@ val jdbcDF = spark.read
 ```
 For more details, refer to [JDBC To Other Databases](https://spark.apache.org/docs/latest/sql-data-sources-jdbc.html)，[Spark Doris Connector](../../../ecosystem/spark-doris-connector.md#batch-write)
 
+## Streaming Job
+
+Use Streaming Job to synchronize data from MySQL or Postgres.
+
+```sql
+CREATE JOB multi_table_sync
+ON STREAMING
+FROM MYSQL (
+        "jdbc_url" = "jdbc:mysql://127.0.0.1:3306",
+        "driver_url" = "mysql-connector-j-8.0.31.jar",
+        "driver_class" = "com.mysql.cj.jdbc.Driver",
+        "user" = "root",
+        "password" = "123456",
+        "database" = "test",
+        "include_tables" = "user_info,order_info",
+        "offset" = "initial"
+)
+TO DATABASE target_test_db (
+    "table.create.properties.replication_num" = "1"
+)
+```
+
+For more details, refer to: [Postgres/MySQL Continuous Load](../streaming-job/streaming-job-multi-table.md)
+
 ## DataX / Seatunnel / CloudCanal and other third-party tools.
 
 In addition, you can also use third-party synchronization tools for data synchronization. For more details, please refer to:

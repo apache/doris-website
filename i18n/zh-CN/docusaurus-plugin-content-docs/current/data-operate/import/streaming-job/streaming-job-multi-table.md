@@ -89,7 +89,7 @@ TO DATABASE target_test_db (
 ### 查看导入状态
 
 ```sql
-select * from jobs(type=insert) where ExecuteType = "STREAMING"
+select * from jobs("type"="insert") where ExecuteType = "STREAMING"
              Id: 1765332859199
              Name: mysql_db_sync
           Definer: root
@@ -212,7 +212,7 @@ TO DATABASE <target_db> (
 Job 提交成功后，可以执行如下 SQL 查看 Job 当前状态：
 
 ```sql
-select * from jobs(type=insert) where ExecuteType = "STREAMING"
+select * from jobs("type"="insert") where ExecuteType = "STREAMING"
 *************************** 1. row ***************************
                Id: 1765332859199
              Name: mysql_db_sync
@@ -261,7 +261,7 @@ CanceledTaskCount: 0
 可以执行如下 SQL 查看每次 Task 的运行状态：
 
 ```sql
-select * from tasks(type='insert') where jobId='1765336137066'
+select * from tasks("type"="insert") where jobId='1765336137066'
 *************************** 1. row ***************************
        TaskId: 1765336137066
         JobId: 1765332859199
