@@ -228,7 +228,11 @@ const config = {
                     createSitemapItems: async params => {
                         const { defaultCreateSitemapItems, ...rest } = params;
                         const items = await defaultCreateSitemapItems(rest);
-                        for (let item of items) {
+                        const filteredItems = items.filter(item => {
+                            const pathname = new URL(item.url).pathname.replace(/\/+$/, '');
+                            return !['/search', '/ja/search', '/zh-CN/search'].includes(pathname);
+                        });
+                        for (let item of filteredItems) {
                             if (item.url.includes('docs')) {
                                 item.changefreq = 'daily';
                                 item.priority = 0.8;
@@ -237,7 +241,7 @@ const config = {
                                 item.priority = 0.2;
                             }
                         }
-                        return items;
+                        return filteredItems;
                     },
                 },
             }),
