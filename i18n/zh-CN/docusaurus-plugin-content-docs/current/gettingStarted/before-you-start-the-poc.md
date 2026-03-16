@@ -42,11 +42,11 @@
 1. **设为 BE 数量的整数倍**，确保数据均匀分布。后续扩容 BE 时，查询通常涉及多个分区，性能不会受影响。
 2. **尽可能少**，避免小文件。
 3. **每个分桶的压缩后数据 ≤ 20 GB**（Unique Key 表 ≤ 10 GB）。可通过 `SHOW TABLETS FROM your_table` 查看。
-4. **每个分区不超过 128 个分桶。**需要更多时优先考虑分区。
+4. **每个分区不超过 128 个分桶。**需要更多时优先考虑分区。极端情况下上限为 1024，但生产环境中很少需要。
 
-## 建表模板
+### 建表模板
 
-### 日志 / 事件分析
+#### 日志 / 事件分析
 
 ```sql
 CREATE TABLE app_logs
@@ -63,7 +63,7 @@ AUTO PARTITION BY RANGE(date_trunc(`log_time`, 'day'))
 DISTRIBUTED BY RANDOM BUCKETS 10;
 ```
 
-### 实时看板与 Upsert（CDC）
+#### 实时看板与 Upsert（CDC）
 
 ```sql
 CREATE TABLE user_profiles
@@ -78,7 +78,7 @@ UNIQUE KEY(user_id)
 DISTRIBUTED BY HASH(user_id) BUCKETS 10;
 ```
 
-### 指标聚合
+#### 指标聚合
 
 ```sql
 CREATE TABLE site_metrics
@@ -107,7 +107,9 @@ DISTRIBUTED BY HASH(site_id) BUCKETS 10;
 
 ### 查询
 
-- **数据倾斜。**通过 `SHOW TABLETS` 检查 tablet 大小。差异明显时切换为 Random 分桶或选择基数更高的分桶列。
-- **排序键顺序不当。**参见 [Sort Key（排序键）](#sort-key排序键)。
+- **避免数据倾斜。**通过 `SHOW TABLETS` 检查 tablet 大小。差异明显时切换为 Random 分桶或选择基数更高的分桶列。
+- **不要分桶过多。**过多的小 tablet 会产生调度开销，查询性能最多可下降 50%。参见[分桶](#分桶)了解分桶数选择。
+- **不要分桶过少。**过少的 tablet 会限制 CPU 并行度。参见[分桶](#分桶)了解分桶数选择。
+- **正确设置排序键。**与 PostgreSQL 等系统不同，Doris 仅对排序键的前 36 字节建立索引，且遇到 VARCHAR 会立即截断。超出前缀范围的列无法从排序键受益，需添加[倒排索引](../table-design/index/inverted-index/overview)。参见 [Sort Key（排序键）](#sort-key排序键)。
 
 诊断慢查询请使用 [Query Profile](../query-acceleration/query-profile)。
