@@ -9,7 +9,7 @@ const sidebars: SidebarsConfig = {
             items: [
                 'gettingStarted/what-is-apache-doris',
                 'gettingStarted/quick-start',
-                'gettingStarted/must-read-before-poc',
+                'gettingStarted/before-you-start-the-poc',
                 {
                     type: 'category',
                     label: 'Tech Alternatives',
@@ -288,6 +288,7 @@ const sidebars: SidebarsConfig = {
                     items: [
                         'query-data/mysql-compatibility',
                         'query-data/join',
+                        'query-data/asof-join',
                         'query-data/subquery',
                         'query-data/multi-dimensional-analytics',
                         'query-data/window-function',
@@ -328,10 +329,14 @@ const sidebars: SidebarsConfig = {
                             label: 'Vector Search',
                             items: [
                                 'ai/vector-search/overview',
+                                'ai/vector-search/practical-guide',
                                 'ai/vector-search/hnsw',
                                 'ai/vector-search/ivf',
                                 'ai/vector-search/index-management',
+                                'ai/vector-search/resource-estimation',
+                                'ai/vector-search/quantization-survey',
                                 'ai/vector-search/performance',
+                                'ai/vector-search/performance-large-scale',
                                 'ai/vector-search/behind-index',
                             ],
                         },

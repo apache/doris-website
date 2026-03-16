@@ -66,6 +66,34 @@ PROPERTIES (
 | `pq_m` | 'quantizer=pq' 时需要指定 | 正整数 | （无） | 指定将原始的高维向量分割成多少个子向量(向量维度 dim 必须能被 pq_m 整除)。 |
 | `pq_nbits` | 'quantizer=pq' 时需要指定 | 正整数 | （无） | 指定每个子向量量化的比特数, 它决定了每个子空间码本的大小(k = 2 ^ pq_nbits), 在faiss中pq_nbits值一般要求不大于24。 |
 
+## 如果业务需要使用 Cosine 相似度
+
+Doris 的 ANN 索引 `metric_type` 目前只支持 `l2_distance` 和 `inner_product`，不直接支持 `cosine`。
+
+当业务指标是 cosine 相似度时，推荐做法是：
+
+1. 写入前对向量做 L2 归一化（归一化到单位长度）。
+2. 建索引时使用 `metric_type="inner_product"`。
+3. 查询时使用 `inner_product_approximate(...)`，并按 `ORDER BY ... DESC` 排序。
+
+示例：
+
+```sql
+CREATE INDEX idx_emb_cosine ON your_table (embedding) USING ANN PROPERTIES (
+  "index_type"="hnsw",
+  "metric_type"="inner_product",
+  "dim"="768"
+);
+```
+
+原理如下：
+
+- Cosine 相似度公式：`cos(x, y) = (x · y) / (||x|| ||y||)`
+- 当向量已做 L2 归一化时（`||x|| = ||y|| = 1`）：`cos(x, y) = x · y`
+
+因此，在单位向量空间里，最大化 cosine 相似度等价于最大化 inner product。  
+如果不做归一化，inner product 与 cosine 不再等价。
+
 通过 S3 TVF 导入数据：
 ```sql
 INSERT INTO sift_1M

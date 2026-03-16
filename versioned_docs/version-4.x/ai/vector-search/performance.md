@@ -27,6 +27,8 @@ under the License.
 
 This document introduces the query and ingestion performance of Doris ANN Index. All benchmarks are conducted using [VectorDBBench](https://github.com/zilliztech/VectorDBBench).
 
+For larger-scale results (10M/100M-level datasets) in single-node and distributed setups, see [Large-scale Performance Benchmark](./performance-large-scale.md).
+
 ## Test Environment
 All machines used in the tests have 16 CPU cores and 64 GB memory, with CPUs of model Intel(R) Xeon(R) Platinum 8369B CPU @ 2.70GHz. FE and BE are co-located on a single 16C64GB machine (note: this is not a recommended production deployment; in production, FE and BE should be deployed separately). The tested version is Apache Doris 4.0.2. The dataset used is VectorDBBench Performance768D1M, which contains 1 million vectors of 768 dimensions.
 

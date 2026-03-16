@@ -74,6 +74,34 @@ PROPERTIES (
 | `pq_m` | Required when 'quantizer=pq' | Positive integer | (none) | Specifies how many subvectors are used (vector dimension dim must be divisible by pq_m). |
 | `pq_nbits` | Required when 'quantizer=pq' | Positive integer | (none) | The number of bits used to represent each subvector, in faiss pq_nbits is generally required to be no greater than 24. |
 
+## If You Need Cosine Similarity
+
+ANN index `metric_type` in Doris supports `l2_distance` and `inner_product`, but not `cosine` directly.
+
+If your business metric is cosine similarity, the recommended approach is:
+
+1. L2-normalize vectors to unit length before writing data.
+2. Build ANN index with `metric_type="inner_product"`.
+3. Query with `inner_product_approximate(...)` and `ORDER BY ... DESC`.
+
+Example DDL:
+
+```sql
+CREATE INDEX idx_emb_cosine ON your_table (embedding) USING ANN PROPERTIES (
+  "index_type"="hnsw",
+  "metric_type"="inner_product",
+  "dim"="768"
+);
+```
+
+Why this works:
+
+- Cosine similarity: `cos(x, y) = (x · y) / (||x|| ||y||)`
+- After L2 normalization (`||x|| = ||y|| = 1`): `cos(x, y) = x · y`
+
+So maximizing cosine similarity is equivalent to maximizing inner product on normalized vectors.
+If vectors are not normalized, inner product is no longer equivalent to cosine.
+
 Import via S3 TVF:
 
 ```sql
@@ -122,7 +150,6 @@ LIMIT 10;
 ```
 
 To compare with exact ground truth, use `l2_distance` or `inner_product` (without the `_approximate` suffix). In this example, exact search takes ~290 ms:
-
 ```
 10 rows in set (0.29 sec)
 ```
@@ -384,4 +411,3 @@ In the era of AI, Python has become the mainstream language for data processing 
 4. If the distance function in SQL does not match the metric type defined in the index DDL, Doris cannot use the ANN index for TopN—even if you call `l2_distance_approximate` / `inner_product_approximate`.
 5. For metric type `inner_product`, only `ORDER BY inner_product_approximate(...) DESC LIMIT N` (DESC required) can be accelerated by the ANN index.
 6. The first parameter of `xxx_approximate()` must be a ColumnArray, and the second must be a CAST or ArrayLiteral. Reversing them triggers brute-force search.
-

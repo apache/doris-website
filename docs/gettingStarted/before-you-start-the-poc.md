@@ -1,13 +1,13 @@
 ---
 {
-    "title": "Must Read Before the POC",
+    "title": "Before You Start the POC",
     "language": "en",
     "description": "Common issues new users encounter with table design, data loading, and query tuning in Apache Doris.",
-    "sidebar_label": "Must Read Before the POC"
+    "sidebar_label": "Before You Start the POC"
 }
 ---
 
-# Must Read Before the POC
+# Before You Start the POC
 
 This document highlights common issues that new users may encounter, with the goal of accelerating the POC process.
 
@@ -27,7 +27,7 @@ Creating a table in Doris involves four decisions that affect load and query per
 
 ### Sort Key
 
-Put the column you filter on most frequently first, with fixed-size types (INT, BIGINT, DATE) before VARCHAR. Doris builds a [prefix index](../table-design/index/prefix-index) on the first 36 bytes of key columns but stops at the first VARCHAR. Add [inverted indexes](../table-design/index/inverted-index) for other columns that need fast filtering.
+Put the column you filter on most frequently first, with fixed-size types (INT, BIGINT, DATE) before VARCHAR. Doris builds a [prefix index](../table-design/index/prefix-index) on the first 36 bytes of key columns but stops at the first VARCHAR. Add [inverted indexes](../table-design/index/inverted-index/overview) for other columns that need fast filtering.
 
 ### Partitioning
 
