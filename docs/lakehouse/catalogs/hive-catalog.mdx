@@ -104,6 +104,7 @@ Hive transactional tables are supported from version 3.x onwards. For details, r
 * [AWS S3](../storages/s3.md)
 * [Google Cloud Storage](../storages/gcs.md)
 * [Azure Blob](../storages/azure-blob.md)
+* [Apache Ozone](../storages/ozone.md) (supported since 4.0.4)
 * [Alibaba Cloud OSS](../storages/aliyun-oss.md)
 * [Tencent Cloud COS](../storages/tencent-cos.md)
 * [Huawei Cloud OBS](../storages/huawei-obs.md)
@@ -356,6 +357,21 @@ Hive transactional tables are supported from version 3.x onwards. For details, r
                 'azure.account_key' = '<account_key>',
                 'azure.endpoint' = 'https://<account_name>.blob.core.windows.net',
                 'fs.azure.support'='true'
+            );
+            ```
+        </TabItem>
+        <TabItem value='Ozone' label='Ozone'>
+            Supported since 4.0.4
+            ```sql
+            CREATE CATALOG `hive_hms_on_ozone_new_catalog` PROPERTIES (
+                'type' = 'hms',
+                'hive.metastore.uris' = 'thrift://127.0.0.1:9383',
+                'fs.ozone.support' = 'true',
+                'ozone.endpoint' = 'http://ozone-s3g:9878',
+                'ozone.access_key' = '<ak>',
+                'ozone.secret_key' = '<sk>',
+                'ozone.region' = 'us-east-1',
+                'ozone.use_path_style' = 'true'
             );
             ```
         </TabItem>

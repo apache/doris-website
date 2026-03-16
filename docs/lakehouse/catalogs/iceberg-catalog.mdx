@@ -127,6 +127,7 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 * [AWS S3](../storages/s3.md)
 * [Google Cloud Storage](../storages/gcs.md)
 * [Azure Blob](../storages/azure-blob.md)
+* [Apache Ozone](../storages/ozone.md) (supported since 4.0.4)
 * [Aliyun OSS](../storages/aliyun-oss.md)
 * [Tencent COS](../storages/tencent-cos.md)
 * [Huawei OBS](../storages/huawei-obs.md)
@@ -406,6 +407,22 @@ Support for Nested Namespace needs to be explicitly enabled. For details, please
                 'azure.account_key' = '<account_key>',
                 'azure.endpoint' = 'https://<account_name>.blob.core.windows.net',
                 'fs.azure.support'='true'
+            );
+            ```
+        </TabItem>
+        <TabItem value='Ozone' label='Ozone'>
+            Supported since 4.0.4
+            ```sql
+            CREATE CATALOG iceberg_fs_on_ozone_catalog PROPERTIES (
+                'type' = 'iceberg',
+                'iceberg.catalog.type' = 'hadoop',
+                'warehouse' = 's3a://bucket/iceberg_warehouse',
+                'fs.ozone.support' = 'true',
+                'ozone.endpoint' = 'http://ozone-s3g:9878',
+                'ozone.access_key' = '<ak>',
+                'ozone.secret_key' = '<sk>',
+                'ozone.region' = 'us-east-1',
+                'ozone.use_path_style' = 'true'
             );
             ```
         </TabItem>
