@@ -123,7 +123,7 @@ Download the [source code](https://github.com/apache/doris/tree/master/extension
 
 * **loadProps**
 
-  - Description: The request parameter of StreamLoad. For details, refer to the StreamLoad introduction page. [Stream load - Apache Doris](https://doris.apache.org/docs/data-operate/import/stream-load-manual)
+  - Description: The request parameter of StreamLoad. For details, refer to the StreamLoad introduction page. [Stream load - Apache Doris](../data-operate/import/import-way/stream-load-manual.md)
 
     This includes the imported data format: format, etc. The imported data format defaults to csv, which supports JSON. For details, please refer to the type conversion section below, or refer to the official information of Stream load above.
 
@@ -325,4 +325,3 @@ Total Records Read                     : 2
 Total Read/Write Failures              : 0
 
 ```
-

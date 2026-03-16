@@ -50,7 +50,7 @@ select * from S3(
 ### 查看导入状态
 
 ```SQL
-select * from job(type=insert) where ExecuteType = "streaming"
+select * from jobs("type"="insert") where ExecuteType = "STREAMING"
                Id: 1758538737484
              Name: my_job1
           Definer: root
@@ -164,10 +164,10 @@ DO <Insert_Command>
 
 #### Job
 
-Job 提交成功后，可以执行 **select \* from job("insert") where ExecuteType = 'Streaming'** 来查看 Job 当前的状态
+Job 提交成功后，可以执行 **select \* from jobs("type"="insert") where ExecuteType = 'STREAMING'** 来查看 Job 当前的状态
 
 ```SQL
-select * from job(type=insert) where ExecuteType = "streaming"
+select * from jobs("type"="insert") where ExecuteType = "STREAMING"
                Id: 1758538737484
              Name: my_job1
           Definer: root
@@ -222,12 +222,12 @@ CanceledTaskCount: 0
 
 #### Task
 
-可以执行**select \* from tasks(type='insert') where jobId='1758534452459'** 来查看每次 Task 的运行状态。
+可以执行**select \* from tasks("type"="insert") where jobId='1758534452459'** 来查看每次 Task 的运行状态。
 
 注：只会保留当前最新的一次 Task 信息。
 
 ```SQL
-mysql> select * from tasks(type='insert') where jobId='1758534452459'\G
+mysql> select * from tasks("type"="insert") where jobId='1758534452459'\G
 *************************** 1. row ***************************
        TaskId: 1758534723330
         JobId: 1758534452459

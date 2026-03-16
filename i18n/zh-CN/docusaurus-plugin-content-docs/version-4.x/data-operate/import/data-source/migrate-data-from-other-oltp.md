@@ -155,6 +155,30 @@ val jdbcDF = spark.read
 ```
 具体可参考：[JDBC To Other Databases](https://spark.apache.org/docs/latest/sql-data-sources-jdbc.html)，[Spark Doris Connector](../../../ecosystem/spark-doris-connector.md#批量写入)
 
+## Streaming Job
+
+使用 Streaming Job 同步 MySQL 或者 Postgres 的数据
+
+```sql
+CREATE JOB multi_table_sync
+ON STREAMING
+FROM MYSQL (
+        "jdbc_url" = "jdbc:mysql://127.0.0.1:3306",
+        "driver_url" = "mysql-connector-j-8.0.31.jar",
+        "driver_class" = "com.mysql.cj.jdbc.Driver",
+        "user" = "root",
+        "password" = "123456",
+        "database" = "test",
+        "include_tables" = "user_info,order_info",
+        "offset" = "initial"
+)
+TO DATABASE target_test_db (
+    "table.create.properties.replication_num" = "1"
+)
+```
+
+具体可参考： [Postgres/MySQL Continuous Load](../streaming-job/streaming-job-multi-table.md)
+
 ## DataX / Seatunnel / CloudCanal 等三方工具
 
 除此之外，也可以使用第三方同步工具来进行数据同步，更多可参考：
