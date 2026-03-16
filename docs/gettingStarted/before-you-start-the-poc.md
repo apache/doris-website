@@ -42,7 +42,7 @@ Default is **Random bucketing** (recommended for Duplicate Key tables). Use `DIS
 1. **Multiple of BE count** to ensure even data distribution. When BEs are added later, queries typically scan multiple partitions, so performance holds up.
 2. **As low as possible** to avoid small files.
 3. **Compressed data per bucket ≤ 20 GB** (≤ 10 GB for Unique Key). Check with `SHOW TABLETS FROM your_table`.
-4. **No more than 128 per partition.** Consider partitioning first if you need more.
+4. **No more than 128 per partition.** Consider partitioning first if you need more. In extreme cases the upper bound is 1024, but this is rarely needed in production.
 
 ### Example Templates
 
