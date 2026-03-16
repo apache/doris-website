@@ -24,7 +24,7 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-# HNSW and How to use it in Apaceh Doris
+# HNSW and How to use it in Apache Doris
 
 HNSW (Malkov & Yashunin, 2016) has become the de facto standard for high‑performance online vector search thanks to its ability to achieve high recall and low latency with relatively modest resource consumption. Since Apache Doris 4.x, an ANN index based on HNSW has been supported. This document walks through the HNSW algorithm, key parameters, and engineering practices, and explains how to build and tune HNSW‑based ANN indexes in production Doris clusters.
 

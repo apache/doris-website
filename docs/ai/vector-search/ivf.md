@@ -23,7 +23,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# IVF and How to use it in Apaceh Doris
+# IVF and How to use it in Apache Doris
 
 
 IVF index is an efficient data structure used for Approximate Nearest Neighbor (ANN) search. It helps narrow down the scope of vectors during search, significantly improving search speed. Since Apache Doris 4.x, an ANN index based on IVF has been supported. This document walks through the IVF algorithm, key parameters, and engineering practices, and explains how to build and tune IVF‑based ANN indexes in production Doris clusters.
@@ -364,4 +364,3 @@ NUM_PER_BATCH=1000000 python3 -m vectordbbench doris --host 127.0.0.1 --port 903
 # search
 NUM_PER_BATCH=1000000 python3 -m vectordbbench doris --host 127.0.0.1 --port 9030 --case-type Performance768D1M --db-name Performance768D1M --search-concurrent --search-serial --num-concurrency 10,40,80 --stream-load-rows-per-batch 500000 --index-prop index_type=ivf,nlist=1024 --session-var ivf_nprobe=64 --skip-load --skip-drop-old
 ```
-
