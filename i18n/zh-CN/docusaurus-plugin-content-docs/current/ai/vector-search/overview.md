@@ -49,17 +49,18 @@ PROPERTIES (
   "replication_num" = "1"
 );
 ```
-- index_type: hnsw 表示使用 [Hierarchical Navigable Small World 算法](https://en.wikipedia.org/wiki/Hierarchical_navigable_small_world)
-- metric: l2_distance 表示使用 L2 距离作为距离函数
+- index_type: 可选 `hnsw`（[Hierarchical Navigable Small World 算法](https://en.wikipedia.org/wiki/Hierarchical_navigable_small_world)）或 `ivf`（倒排文件索引）
+- metric_type: l2_distance 表示使用 L2 距离作为距离函数
 - dim: 128 表示向量维度为 128 
 - quantizer: flat 表示按原始 float32 存储各维度
 
 
 | 参数 | 是否必填 | 支持/可选值 | 默认值 | 说明 |
 |------|----------|-------------|--------|------|
-| `index_type` | 是 | 仅支持：hnsw | （无） | 指定所使用的 ANN 索引算法。当前只支持 HNSW。 |
+| `index_type` | 是 | 支持：`hnsw`、`ivf` | （无） | 指定所使用的 ANN 索引算法。当前支持 HNSW 和 IVF。 |
 | `metric_type` | 是 | `l2_distance`，`inner_product` | （无） | 指定向量相似度/距离度量方式。L2 为欧氏距离，inner_product 可用于余弦相似时需先归一化向量。 |
 | `dim` | 是 | 正整数 (> 0) | （无） | 指定向量维度，后续导入的所有向量的维度必须与此一致，否则报错。 |
+| `nlist` | 否 | 正整数 | `1024` | IVF 的倒排桶数量。在 `index_type=ivf` 时生效；取值越大通常有助于召回率/速度权衡，但会增加构建开销。 |
 | `max_degree` | 否 | 正整数 | `32` | HNSW 图中单个节点的最大邻居数（M），影响索引内存与搜索性能。 |
 | `ef_construction` | 否 | 正整数 | `40` | HNSW 构建阶段的候选队列大小（efConstruction），越大构图质量越好但构建更慢。 |
 | `quantizer` | 否 | `flat`，`sq8`，`sq4`, `pq` | `flat` | 指定向量编码/量化方式：`flat` 为原始存储，`sq8`/`sq4` 为标量量化（8/4 bit）, `pq` 为乘积量化。 |
