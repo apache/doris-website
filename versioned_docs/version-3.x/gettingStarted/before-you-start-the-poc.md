@@ -27,7 +27,7 @@ Creating a table in Doris involves four decisions that affect load and query per
 
 ### Sort Key
 
-Put the column you filter on most frequently first, with fixed-size types (INT, BIGINT, DATE) before VARCHAR. Doris builds a [prefix index](../table-design/index/prefix-index) on the first 36 bytes of key columns but stops at the first VARCHAR. Add [inverted indexes](../table-design/index/inverted-index/overview) for other columns that need fast filtering.
+Put the column you filter on most frequently first, with fixed-size types (INT, BIGINT, DATE) before VARCHAR. Doris builds a [prefix index](../table-design/index/prefix-index) on the first 36 bytes of key columns but stops at the first VARCHAR. Add [inverted indexes](../table-design/index/inverted-index) for other columns that need fast filtering.
 
 ### Partitioning
 
@@ -100,7 +100,7 @@ DISTRIBUTED BY HASH(site_id) BUCKETS 10;
 
 - **Don't use `INSERT INTO VALUES` for bulk data.** Use [Stream Load](../data-operate/import/import-way/stream-load-manual) or [Broker Load](../data-operate/import/import-way/broker-load-manual) instead. See [Loading Overview](../data-operate/import/load-manual).
 - **Batch writes on the client side.** High-frequency small imports cause version accumulation. If not feasible, use [Group Commit](../data-operate/import/group-commit-manual).
-- **Break large imports into smaller batches.** A failed long-running import must restart from scratch. Use [INSERT INTO SELECT with S3 TVF](../data-operate/import/streaming-job/streaming-job-tvf) for incremental import.
+- **Break large imports into smaller batches.** A failed long-running import must restart from scratch. Use INSERT INTO SELECT with S3 TVF for incremental import.
 - **Enable `load_to_single_tablet`** for Duplicate Key tables with Random bucketing to reduce write amplification.
 
 See [Load Best Practices](../data-operate/import/load-best-practices).
@@ -110,6 +110,6 @@ See [Load Best Practices](../data-operate/import/load-best-practices).
 - **Avoid data skew.** Check tablet sizes with `SHOW TABLETS`. Switch to Random bucketing or a higher-cardinality bucket column if sizes vary significantly.
 - **Don't over-bucket.** Too many small tablets create scheduling overhead and can degrade query performance by up to 50%. See [Bucketing](#bucketing) for sizing guidelines.
 - **Don't under-bucket.** Too few tablets limit CPU parallelism. See [Bucketing](#bucketing) for sizing guidelines.
-- **Put the right columns in the sort key.** Unlike systems such as PostgreSQL, Doris only indexes the first 36 bytes of key columns and stops at the first VARCHAR. Columns beyond this prefix won't benefit from the sort key. Add [inverted indexes](../table-design/index/inverted-index/overview) for those columns. See [Sort Key](#sort-key).
+- **Put the right columns in the sort key.** Unlike systems such as PostgreSQL, Doris only indexes the first 36 bytes of key columns and stops at the first VARCHAR. Columns beyond this prefix won't benefit from the sort key. Add [inverted indexes](../table-design/index/inverted-index) for those columns. See [Sort Key](#sort-key).
 
-See [Query Profile](../query-acceleration/query-profile) to diagnose slow queries.
+Use [Query Profile](../admin-manual/open-api/fe-http/query-profile-action) to diagnose slow queries.

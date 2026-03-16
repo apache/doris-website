@@ -27,7 +27,7 @@
 
 ### Sort Key（排序键）
 
-将最常用于过滤的列放在最前面，定长类型（INT、BIGINT、DATE）放在 VARCHAR 之前。Doris 在排序键的前 36 字节上构建[前缀索引](../table-design/index/prefix-index)，但遇到 VARCHAR 会立即截断。其他需要快速过滤的列可添加[倒排索引](../table-design/index/inverted-index/overview)。
+将最常用于过滤的列放在最前面，定长类型（INT、BIGINT、DATE）放在 VARCHAR 之前。Doris 在排序键的前 36 字节上构建[前缀索引](../table-design/index/prefix-index)，但遇到 VARCHAR 会立即截断。其他需要快速过滤的列可添加[倒排索引](../table-design/index/inverted-index)。
 
 ### 分区
 
@@ -100,7 +100,7 @@ DISTRIBUTED BY HASH(site_id) BUCKETS 10;
 
 - **批量数据不要用 `INSERT INTO VALUES`。**请使用 [Stream Load](../data-operate/import/import-way/stream-load-manual) 或 [Broker Load](../data-operate/import/import-way/broker-load-manual)。详见[导入概述](../data-operate/import/load-manual)。
 - **优先在客户端合并写入。**高频小批次导入导致版本堆积。如不可行，使用 [Group Commit](../data-operate/import/group-commit-manual)。
-- **将大型导入拆分为小批次。**长时间运行的导入失败后必须从头重试。使用 [INSERT INTO SELECT 配合 S3 TVF](../data-operate/import/streaming-job/streaming-job-tvf) 实现增量导入。
+- **将大型导入拆分为小批次。**长时间运行的导入失败后必须从头重试。使用 INSERT INTO SELECT 配合 S3 TVF 实现增量导入。
 - **Random 分桶的 Duplicate Key 表启用 `load_to_single_tablet`**，减少写放大。
 
 详见[导入最佳实践](../data-operate/import/load-best-practices)。
@@ -110,6 +110,6 @@ DISTRIBUTED BY HASH(site_id) BUCKETS 10;
 - **避免数据倾斜。**通过 `SHOW TABLETS` 检查 tablet 大小。差异明显时切换为 Random 分桶或选择基数更高的分桶列。
 - **不要分桶过多。**过多的小 tablet 会产生调度开销，查询性能最多可下降 50%。参见[分桶](#分桶)了解分桶数选择。
 - **不要分桶过少。**过少的 tablet 会限制 CPU 并行度。参见[分桶](#分桶)了解分桶数选择。
-- **正确设置排序键。**与 PostgreSQL 等系统不同，Doris 仅对排序键的前 36 字节建立索引，且遇到 VARCHAR 会立即截断。超出前缀范围的列无法从排序键受益，需添加[倒排索引](../table-design/index/inverted-index/overview)。参见 [Sort Key（排序键）](#sort-key排序键)。
+- **正确设置排序键。**与 PostgreSQL 等系统不同，Doris 仅对排序键的前 36 字节建立索引，且遇到 VARCHAR 会立即截断。超出前缀范围的列无法从排序键受益，需添加[倒排索引](../table-design/index/inverted-index)。参见 [Sort Key（排序键）](#sort-key排序键)。
 
-诊断慢查询请使用 [Query Profile](../query-acceleration/query-profile)。
+诊断慢查询请使用 [Query Profile](../admin-manual/open-api/fe-http/query-profile-action)。
