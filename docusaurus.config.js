@@ -8,16 +8,6 @@ const { DEFAULT_VERSION } = require('./src/constant/version');
 
 	const logoImg = '/images/logo-doris.svg';
 
-	// Docusaurus "last updated" metadata runs `git log` for many files during build.
-	// This can fail with spawn errors like `EAGAIN` (resource temporarily unavailable) on some machines.
-	// Note: some environments set CI=1 locally (e.g. IDE terminals), so don't enable by generic CI.
-	// Enable only when explicitly requested, or on GitHub Actions.
-	const enableGitLastUpdate =
-	    process.env.DOCUSAURUS_DISABLE_GIT_LAST_UPDATE === 'true'
-	        ? false
-	        : process.env.DOCUSAURUS_ENABLE_GIT_LAST_UPDATE === 'true' ||
-	          process.env.GITHUB_ACTIONS === 'true';
-
 	function getDocsVersions() {
 	    const result = {};
 	    VERSIONS.map(version => {
@@ -197,7 +187,7 @@ const config = {
                     //     // }
 	                    // },
 	                    showLastUpdateAuthor: false,
-	                    showLastUpdateTime: enableGitLastUpdate,
+	                    showLastUpdateTime: false,
 	                    remarkPlugins: [markdownBoldPlugin, require('remark-math')],
 	                    rehypePlugins: [
 	                        [
