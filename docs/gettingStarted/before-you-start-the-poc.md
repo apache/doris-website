@@ -1,13 +1,13 @@
 ---
 {
-    "title": "Must Read Before the POC",
+    "title": "Before You Start the POC",
     "language": "en",
     "description": "Common issues new users encounter with table design, data loading, and query tuning in Apache Doris.",
-    "sidebar_label": "Must Read Before the POC"
+    "sidebar_label": "Before You Start the POC"
 }
 ---
 
-# Must Read Before the POC
+# Before You Start the POC
 
 This document highlights common issues that new users may encounter, with the goal of accelerating the POC process.
 
@@ -27,7 +27,7 @@ Creating a table in Doris involves four decisions that affect load and query per
 
 ### Sort Key
 
-Put the column you filter on most frequently first, with fixed-size types (INT, BIGINT, DATE) before VARCHAR. Doris builds a [prefix index](../table-design/index/prefix-index) on the first 36 bytes of key columns but stops at the first VARCHAR. Add [inverted indexes](../table-design/index/inverted-index) for other columns that need fast filtering.
+Put the column you filter on most frequently first, with fixed-size types (INT, BIGINT, DATE) before VARCHAR. Doris builds a [prefix index](../table-design/index/prefix-index) on the first 36 bytes of key columns but stops at the first VARCHAR. Add [inverted indexes](../table-design/index/inverted-index/overview) for other columns that need fast filtering.
 
 ### Partitioning
 
@@ -42,11 +42,11 @@ Default is **Random bucketing** (recommended for Duplicate Key tables). Use `DIS
 1. **Multiple of BE count** to ensure even data distribution. When BEs are added later, queries typically scan multiple partitions, so performance holds up.
 2. **As low as possible** to avoid small files.
 3. **Compressed data per bucket ≤ 20 GB** (≤ 10 GB for Unique Key). Check with `SHOW TABLETS FROM your_table`.
-4. **No more than 128 per partition.** Consider partitioning first if you need more.
+4. **No more than 128 per partition.** Consider partitioning first if you need more. In extreme cases the upper bound is 1024, but this is rarely needed in production.
 
-## Example Templates
+### Example Templates
 
-### Log / Event Analytics
+#### Log / Event Analytics
 
 ```sql
 CREATE TABLE app_logs
@@ -63,7 +63,7 @@ AUTO PARTITION BY RANGE(date_trunc(`log_time`, 'day'))
 DISTRIBUTED BY RANDOM BUCKETS 10;
 ```
 
-### Real-Time Dashboard with Upsert (CDC)
+#### Real-Time Dashboard with Upsert (CDC)
 
 ```sql
 CREATE TABLE user_profiles
@@ -78,7 +78,7 @@ UNIQUE KEY(user_id)
 DISTRIBUTED BY HASH(user_id) BUCKETS 10;
 ```
 
-### Metrics Aggregation
+#### Metrics Aggregation
 
 ```sql
 CREATE TABLE site_metrics
@@ -107,7 +107,9 @@ See [Load Best Practices](../data-operate/import/load-best-practices).
 
 ### Query
 
-- **Data skew.** Check tablet sizes with `SHOW TABLETS`. Switch to Random bucketing or a higher-cardinality bucket column if sizes vary significantly.
-- **Wrong sort key order.** See [Sort Key](#sort-key).
+- **Avoid data skew.** Check tablet sizes with `SHOW TABLETS`. Switch to Random bucketing or a higher-cardinality bucket column if sizes vary significantly.
+- **Don't over-bucket.** Too many small tablets create scheduling overhead and can degrade query performance by up to 50%. See [Bucketing](#bucketing) for sizing guidelines.
+- **Don't under-bucket.** Too few tablets limit CPU parallelism. See [Bucketing](#bucketing) for sizing guidelines.
+- **Put the right columns in the sort key.** Unlike systems such as PostgreSQL, Doris only indexes the first 36 bytes of key columns and stops at the first VARCHAR. Columns beyond this prefix won't benefit from the sort key. Add [inverted indexes](../table-design/index/inverted-index/overview) for those columns. See [Sort Key](#sort-key).
 
 See [Query Profile](../query-acceleration/query-profile) to diagnose slow queries.

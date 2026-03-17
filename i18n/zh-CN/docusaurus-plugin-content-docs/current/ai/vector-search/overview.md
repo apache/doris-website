@@ -49,22 +49,51 @@ PROPERTIES (
   "replication_num" = "1"
 );
 ```
-- index_type: hnsw 表示使用 [Hierarchical Navigable Small World 算法](https://en.wikipedia.org/wiki/Hierarchical_navigable_small_world)
-- metric: l2_distance 表示使用 L2 距离作为距离函数
+- index_type: 可选 `hnsw`（[Hierarchical Navigable Small World 算法](https://en.wikipedia.org/wiki/Hierarchical_navigable_small_world)）或 `ivf`（倒排文件索引）
+- metric_type: l2_distance 表示使用 L2 距离作为距离函数
 - dim: 128 表示向量维度为 128 
 - quantizer: flat 表示按原始 float32 存储各维度
 
 
 | 参数 | 是否必填 | 支持/可选值 | 默认值 | 说明 |
 |------|----------|-------------|--------|------|
-| `index_type` | 是 | 仅支持：hnsw | （无） | 指定所使用的 ANN 索引算法。当前只支持 HNSW。 |
+| `index_type` | 是 | 支持：`hnsw`、`ivf` | （无） | 指定所使用的 ANN 索引算法。当前支持 HNSW 和 IVF。 |
 | `metric_type` | 是 | `l2_distance`，`inner_product` | （无） | 指定向量相似度/距离度量方式。L2 为欧氏距离，inner_product 可用于余弦相似时需先归一化向量。 |
 | `dim` | 是 | 正整数 (> 0) | （无） | 指定向量维度，后续导入的所有向量的维度必须与此一致，否则报错。 |
+| `nlist` | 否 | 正整数 | `1024` | IVF 的倒排桶数量。在 `index_type=ivf` 时生效；取值越大通常有助于召回率/速度权衡，但会增加构建开销。 |
 | `max_degree` | 否 | 正整数 | `32` | HNSW 图中单个节点的最大邻居数（M），影响索引内存与搜索性能。 |
 | `ef_construction` | 否 | 正整数 | `40` | HNSW 构建阶段的候选队列大小（efConstruction），越大构图质量越好但构建更慢。 |
 | `quantizer` | 否 | `flat`，`sq8`，`sq4`, `pq` | `flat` | 指定向量编码/量化方式：`flat` 为原始存储，`sq8`/`sq4` 为标量量化（8/4 bit）, `pq` 为乘积量化。 |
 | `pq_m` | 'quantizer=pq' 时需要指定 | 正整数 | （无） | 指定将原始的高维向量分割成多少个子向量(向量维度 dim 必须能被 pq_m 整除)。 |
 | `pq_nbits` | 'quantizer=pq' 时需要指定 | 正整数 | （无） | 指定每个子向量量化的比特数, 它决定了每个子空间码本的大小(k = 2 ^ pq_nbits), 在faiss中pq_nbits值一般要求不大于24。 |
+
+## 如果业务需要使用 Cosine 相似度
+
+Doris 的 ANN 索引 `metric_type` 目前只支持 `l2_distance` 和 `inner_product`，不直接支持 `cosine`。
+
+当业务指标是 cosine 相似度时，推荐做法是：
+
+1. 写入前对向量做 L2 归一化（归一化到单位长度）。
+2. 建索引时使用 `metric_type="inner_product"`。
+3. 查询时使用 `inner_product_approximate(...)`，并按 `ORDER BY ... DESC` 排序。
+
+示例：
+
+```sql
+CREATE INDEX idx_emb_cosine ON your_table (embedding) USING ANN PROPERTIES (
+  "index_type"="hnsw",
+  "metric_type"="inner_product",
+  "dim"="768"
+);
+```
+
+原理如下：
+
+- Cosine 相似度公式：`cos(x, y) = (x · y) / (||x|| ||y||)`
+- 当向量已做 L2 归一化时（`||x|| = ||y|| = 1`）：`cos(x, y) = x · y`
+
+因此，在单位向量空间里，最大化 cosine 相似度等价于最大化 inner product。  
+如果不做归一化，inner product 与 cosine 不再等价。
 
 通过 S3 TVF 导入数据：
 ```sql
