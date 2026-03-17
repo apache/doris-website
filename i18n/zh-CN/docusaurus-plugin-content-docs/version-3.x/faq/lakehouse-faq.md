@@ -279,6 +279,34 @@ ln -s /etc/pki/ca-trust/extracted/openssl/ca-bundle.trust.crt /etc/ssl/certs/ca-
 
     如果 `session` 时区已经是 `Asia/Shanghai`，且查询仍然报错，说明生成 ORC 文件时的时区是 `+08:00`, 导致在读取时解析 `footer` 时需要用到 `+08:00` 时区，可以尝试在 `/usr/share/zoneinfo/` 目录下面软链到相同时区上。
 
+14. **查询 Hive Catalog 表时，优化阶段极慢并伴随 `nereids cost too much time` 报错，且每次访问 HMS 的耗时稳定在 10 秒左右。**
+
+    **问题分析：**
+    这类问题通常并非 HMS 服务本身的 RPC 执行慢引起，而是由于 **Doris FE 所在机器的 DNS 配置异常** 导致。
+    在 Hive Metastore Client 初始化阶段，底层会触发 hostname 解析。如果系统配置了无效的 DNS Server 或 DNS 服务不可达，会导致每次新建 HMS Client 时发生解析超时（通常为 10 秒），从而严重拖慢元数据获取速度。
+
+    **典型现象：**
+    - **基础网络正常**：HMS 端口端到端连通正常，但 Doris 获取元数据依然极慢。
+    - **规律性延迟**：耗时常常稳定在一个固定的超时时间（如 10 秒）。
+    - **规避无效**：单纯调大 Catalog 属性中的 HMS Client Timeout 只能暂时规避报错，但无法消除每次建立连接时的固定延迟。
+
+    **排查步骤：**
+    在 Doris FE 节点上执行以下命令，检查 DNS 和主机名解析是否正常：
+
+    ```bash
+    # 查看当前配置的 DNS server
+    cat /etc/resolv.conf
+    # 测试 DNS server 是否可达及解析耗时
+    ping <nameserver_ip>
+    dig @<nameserver_ip> example.com
+    dig @<nameserver_ip> -x <hms_ip>
+    ```
+
+    **解决方案（任选其一即可）：**
+    1. **修复 DNS 配置（推荐）**：修正 Doris FE 节点上 `/etc/resolv.conf` 中的 `nameserver` 配置，确保域名解析服务正常且快速响应。如果局域网内无需 DNS 且无公网访问需求，可注释掉无效的 nameserver。
+    2. **配置 Hosts 静态映射**：在 FE 节点的 `/etc/hosts` 中添加 HMS 节点的 IP 与 Hostname 映射。
+    3. **规范 Catalog 配置**：创建 Catalog 时，`hive.metastore.uris` 参数建议优先使用正确的 Hostname 而不是裸 IP。
+
 ## HDFS
 
 1. 访问 HDFS 3.x 时报错：`java.lang.VerifyError: xxx`
@@ -378,3 +406,37 @@ ln -s /etc/pki/ca-trust/extracted/openssl/ca-bundle.trust.crt /etc/ssl/certs/ca-
         `./parquet-tools meta /path/to/file.parquet`
 
     4. 更多功能，可参阅 [Apache Parquet Cli 文档](https://github.com/apache/parquet-java/tree/apache-parquet-1.14.0/parquet-cli)
+
+## 诊断工具
+
+### Pulse
+
+[Pulse](https://github.com/CalvinKirs/Pulse) 是一个轻量级的连通性测试工具集，专为诊断数据湖环境中的基础设施依赖问题而设计。它包含了多个针对性工具，可以帮助用户快速定位外部表访问中的环境问题。
+
+Pulse 主要包含以下工具集：
+
+1. **HMS 诊断工具 (`hms-tools`)**：
+   - 专门用于排查 Hive Metastore (HMS) 相关问题。
+   - 支持健康检查、Ping 测试、元数据对象检索以及配置诊断。
+   - **性能压测**：提供 `bench` 模式，用于测量 HMS 的性能分布和响应延迟，帮助判断瓶颈是否在元数据层。
+
+2. **Kerberos 诊断工具 (`kerberos-tools`)**：
+   - 用于在使用 Kerberos 认证的环境中验证 `krb5.conf` 配置。
+   - 支持测试 KDC 可达性、检查 Keytab 文件以及执行登录测试，确保认证层不会阻断连接。
+
+3. **对象存储诊断工具 (`s3-tools`, `gcs-tools`, `azure-blob-cpp`)**：
+   - 针对主流云存储（AWS S3, Google GCS, Azure Blob）的诊断工具。
+   - 用于排查“权限拒绝（Access Denied）”或“存储桶不存在（Bucket Not Found）”等常见的外部表数据访问问题。
+   - 支持验证凭据来源、STS 身份以及执行 Bucket 级别的操作测试。
+
+**常用命令示例（以 HMS 为例）：**
+
+```bash
+# 使用 hms-tools 测试 HMS 基础连通性与耗时细节
+java -jar hms-tools.jar ping --uris thrift://<hms_host>:<port> --count 3 --verbose
+
+# 使用 hms-tools 压测实际元数据 RPC 的延时分布
+java -jar hms-tools.jar bench --uris thrift://<hms_host>:<port> --rpc get_all_databases --iterations 10
+```
+
+当遇到元数据访问慢或外部表连接异常时，推荐根据问题类型（如认证失败、元数据慢或存储无法访问）选用对应的 Pulse 工具进行辅助定位。如果发现 `connect` 阶段极快，但整体初始化阶段存在明显且固定的延迟，请优先参考上文 FAQ 检查 FE 节点的 DNS 及 hostname 解析配置。

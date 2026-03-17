@@ -245,13 +245,41 @@ ln -s /etc/pki/ca-trust/extracted/openssl/ca-bundle.trust.crt /etc/ssl/certs/ca-
 
     Since after inserting the data, the corresponding statistical information needs to be updated, and this update operation requires the alter privilege. Therefore, the alter privilege needs to be added for this user on Ranger.
 
-13. When querying ORC files, if an error like  
-   `Orc row reader nextBatch failed. reason = Can't open /usr/share/zoneinfo/+08:00`  
-   occurs.
+13. When querying ORC files, if an error like
+    `Orc row reader nextBatch failed. reason = Can't open /usr/share/zoneinfo/+08:00`
+    occurs.
 
-   First check the `time_zone` setting of the current session. It is recommended to use a region-based timezone name such as `Asia/Shanghai`.
+    First check the `time_zone` setting of the current session. It is recommended to use a region-based timezone name such as `Asia/Shanghai`.
 
-   If the session timezone is already set to `Asia/Shanghai` but the query still fails, it indicates that the ORC file was generated with the timezone `+08:00`. During query execution, this timezone is required when parsing the ORC footer. In this case, you can try creating a symbolic link under the `/usr/share/zoneinfo/` directory that points `+08:00` to an equivalent timezone.
+    If the session timezone is already set to `Asia/Shanghai` but the query still fails, it indicates that the ORC file was generated with the timezone `+08:00`. During query execution, this timezone is required when parsing the ORC footer. In this case, you can try creating a symbolic link under the `/usr/share/zoneinfo/` directory that points `+08:00` to an equivalent timezone.
+
+14. **When querying Hive Catalog tables, query planning is extremely slow, the `nereids cost too much time` error occurs, and each HMS access takes a consistently long time (e.g., around 10 seconds).**
+
+    **Root Cause Analysis:**
+    This issue is usually not caused by slow execution of the HMS RPC itself. Instead, the most common root cause is **incorrect DNS configuration on the Doris FE node**.
+    During the initialization phase of the Hive Metastore Client, hostname resolution is triggered. If the configured DNS server is unreachable or unresponsive, it causes a DNS resolution timeout (typically 10 seconds) every time a new HMS client connection is established, which severely slows down metadata fetching.
+
+    **Typical Symptoms:**
+    - **Normal Network Connectivity:** The HMS port is reachable, but metadata access in Doris remains extremely slow.
+    - **Consistent Delay:** The delay consistently hits a fixed timeout threshold (e.g., 10 seconds).
+    - **Workarounds Fail:** Simply increasing the HMS client timeout parameter in the Catalog properties only masks the error but does not eliminate the fixed 10-second delay on each connection.
+
+    **Troubleshooting Steps:**
+    Run the following commands on the Doris FE node to verify the DNS and hostname resolution:
+
+    ```bash
+    # Check current DNS server configuration
+    cat /etc/resolv.conf
+    # Test if the DNS server is reachable and measure resolution latency
+    ping <nameserver_ip>
+    dig @<nameserver_ip> example.com
+    dig @<nameserver_ip> -x <hms_ip>
+    ```
+
+    **Solutions (Choose One):**
+    1. **Fix DNS Configuration (Recommended):** Correct the `nameserver` entries in `/etc/resolv.conf` on the Doris FE node to ensure the DNS service is reachable and responds quickly. If DNS is not required in your local network environment, consider commenting out the invalid nameservers.
+    2. **Configure Static Hosts Mapping:** Add the IP and Hostname mapping of the HMS nodes to `/etc/hosts` on the FE node.
+    3. **Standardize Catalog Properties:** When creating the Catalog, it is highly recommended to use a resolvable hostname instead of a bare IP address for the `hive.metastore.uris` property.
 
 ## HDFS
 
@@ -347,3 +375,37 @@ ln -s /etc/pki/ca-trust/extracted/openssl/ca-bundle.trust.crt /etc/ssl/certs/ca-
         `./parquet-tools meta /path/to/file.parquet`
 
     4. For more functionalities, refer to [Apache Parquet Cli documentation](https://github.com/apache/parquet-java/tree/apache-parquet-1.14.0/parquet-cli)
+
+## Diagnostic Tools
+
+### Pulse
+
+[Pulse](https://github.com/CalvinKirs/Pulse) is a lightweight connectivity testing toolkit designed to diagnose infrastructure dependencies in data lake environments. It includes several specialized tools to help users quickly pinpoint environment-related issues in external table access.
+
+Pulse consists of the following key toolsets:
+
+1.  **HMS Diagnostic Tool (`hms-tools`)**:
+    *   Designed specifically for troubleshooting Hive Metastore (HMS) issues.
+    *   Supports health checks, ping tests, object metadata retrieval, and configuration diagnostics.
+    *   **Performance Benchmarking**: Features a `bench` mode to measure the response distribution and latency of HMS, helping determine if the bottleneck is at the metadata layer.
+
+2.  **Kerberos Diagnostic Tool (`kerberos-tools`)**:
+    *   Used to validate `krb5.conf` configurations in environments with Kerberos authentication.
+    *   Supports testing KDC reachability, inspecting keytab files, and performing login tests to ensure the security layer is not blocking the connection.
+
+3.  **Object Storage Diagnostic Tools (`s3-tools`, `gcs-tools`, `azure-blob-cpp`)**:
+    *   Diagnostic tools for major cloud storage services (AWS S3, Google GCS, Azure Blob Storage).
+    *   Used for troubleshooting common external table access issues such as "Access Denied" or "Bucket Not Found".
+    *   Supports validating credential sources and STS identities, and performing bucket-level operation tests.
+
+**Example Commands (e.g., HMS):**
+
+```bash
+# Test basic HMS connectivity and latency details using hms-tools
+java -jar hms-tools.jar ping --uris thrift://<hms_host>:<port> --count 3 --verbose
+
+# Benchmark actual metadata RPC response distribution using hms-tools
+java -jar hms-tools.jar bench --uris thrift://<hms_host>:<port> --rpc get_all_databases --iterations 10
+```
+
+When metadata access is slow or external table connectivity fails, it is recommended to use the corresponding Pulse tool based on the issue type (e.g., authentication failure, slow metadata, or storage reachability) for investigation. If the `connect` phase is extremely fast but there are significant and consistent delays during the overall initialization, please refer to the FAQ above to check the DNS and hostname resolution settings on the FE node.
