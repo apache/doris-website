@@ -27,7 +27,7 @@
 
 ### Sort Key（排序键）
 
-将最常用于过滤的列放在最前面，定长类型（INT、BIGINT、DATE）放在 VARCHAR 之前。Doris 在排序键的前 36 字节上构建[前缀索引](../table-design/index/prefix-index)，但遇到 VARCHAR 会立即截断。其他需要快速过滤的列可添加[倒排索引](../table-design/index/inverted-index)。
+将最常用于过滤的列放在最前面，定长类型（INT、BIGINT、DATE）放在 VARCHAR 之前。Doris 在排序键的前 36 字节上构建[前缀索引](../table-design/index/prefix-index)，但遇到 VARCHAR 会立即截断。其他需要快速过滤的列可添加倒排索引。
 
 ### 分区
 
@@ -110,6 +110,6 @@ DISTRIBUTED BY HASH(site_id) BUCKETS 10;
 - **避免数据倾斜。**通过 `SHOW TABLETS` 检查 tablet 大小。差异明显时切换为 Random 分桶或选择基数更高的分桶列。
 - **不要分桶过多。**过多的小 tablet 会产生调度开销，查询性能最多可下降 50%。参见[分桶](#分桶)了解分桶数选择。
 - **不要分桶过少。**过少的 tablet 会限制 CPU 并行度。参见[分桶](#分桶)了解分桶数选择。
-- **正确设置排序键。**与 PostgreSQL 等系统不同，Doris 仅对排序键的前 36 字节建立索引，且遇到 VARCHAR 会立即截断。超出前缀范围的列无法从排序键受益，需添加[倒排索引](../table-design/index/inverted-index)。参见 [Sort Key（排序键）](#sort-key排序键)。
+- **正确设置排序键。**与 PostgreSQL 等系统不同，Doris 仅对排序键的前 36 字节建立索引，且遇到 VARCHAR 会立即截断。超出前缀范围的列无法从排序键受益，需添加倒排索引。参见 [Sort Key（排序键）](#sort-key排序键)。
 
 诊断慢查询请使用 [Query Profile](../admin-manual/open-api/fe-http/query-profile-action)。
