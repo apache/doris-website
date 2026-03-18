@@ -63,6 +63,19 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
   | `mc.datetime_predicate_push_down` | `true` | Whether to allow predicate push-down for `timestamp/timestamp_ntz` types. Doris loses precision (9 -> 6) when syncing these two types. Therefore, if the original data precision is higher than 6 digits, predicate push-down may lead to inaccurate results. | 2.1.9/3.0.5 (inclusive) and later |
   | `mc.account_format` | `name` | The account systems of Alibaba Cloud International and China sites are inconsistent. For international site users, if you encounter errors like `user 'RAM$xxxxxx:xxxxx' is not a valid aliyun account`, you can set this parameter to `id`. | 3.0.9/3.1.1 (inclusive) and later |
   | `mc.enable.namespace.schema` | `false` | Whether to support MaxCompute schema hierarchy. See: https://help.aliyun.com/zh/maxcompute/user-guide/schema-related-operations | 3.1.3 (inclusive) and later |
+  | `mc.max_field_size_bytes` | `8388608` (8 MB) | Maximum bytes allowed for a single field in a write session. When writing data that contains large string or binary fields, the write may fail if the field size exceeds this value. You can increase this value based on your actual data. | 4.1.0 (inclusive) and later |
+
+  - `mc.max_field_size_bytes`
+
+    MaxCompute allows a maximum of 8 MB per field by default. If the data being written contains large string or binary fields, the write may fail.
+
+    To adjust this limit, first execute the following command in the MaxCompute console SQL editor:
+
+    `setproject odps.sql.cfile2.field.maxsize=262144;`
+
+    This adjusts the maximum bytes for a single field. The unit is KB and the maximum value is 262144.
+
+    Then set `mc.max_field_size_bytes` to 262144 in the Doris catalog properties (this value must not exceed the MaxCompute setting).
 
 * `{CommonProperties}`
 
@@ -179,6 +192,31 @@ SELECT * FROM mc_tbl LIMIT 10;
 -- 3. use full qualified name to query
 SELECT * FROM mc_ctl.mc_db.mc_tbl LIMIT 10;
 ```
+
+### Query Optimization
+
+- LIMIT Query Optimization (Since 4.1.0)
+
+    This parameter is only applicable to scenarios where `LIMIT 1` is frequently used to check whether data exists.
+
+    When querying MaxCompute tables, if the query contains only partition column equality predicates (`=` or `IN`) with a `LIMIT` clause, you can enable the Session Variable `enable_mc_limit_split_optimization` to optimize the split generation strategy.
+
+    When enabled, the system uses a `row_offset` strategy to read only the required number of rows, instead of generating splits for all data. This can reduce the split count from many to exactly one, significantly reducing query latency.
+
+    This optimization applies to queries like:
+
+    ```sql
+    SELECT * FROM mc_tbl WHERE pt = 'value' LIMIT 100;
+    SELECT * FROM mc_tbl WHERE pt IN ('v1', 'v2') LIMIT 100;
+    ```
+
+    To enable:
+
+    ```sql
+    SET enable_mc_limit_split_optimization = true;
+    ```
+
+    > This parameter is disabled by default. The optimization will not take effect when the query contains non-partition column filters, non-equality predicates (such as `>`, `<`, `!=`), or does not have a `LIMIT` clause.
 
 ## Write Operations
 
@@ -310,7 +348,7 @@ For MaxCompute Database, after deletion, all tables under it will also be delete
   DROP TABLE [IF EXISTS] mc_tbl;
   ```
 
-## Appendix
+## FAQ
 
 ### How to Obtain Endpoint and Quota (Applicable for Doris 2.1.7 and Later)
 
@@ -356,3 +394,15 @@ Note:
 1. This method can only control the concurrent request count for a single table within a single Query, and cannot control resource usage across multiple SQL statements.
 
 2. Reducing concurrency means increasing the Query execution time.
+
+### Write Best Practices
+
+- It is recommended to write to specified partitions whenever possible, e.g. `INSERT INTO mc_tbl PARTITION(ds='20250201')`. When no partition is specified, due to limitations of the MaxCompute Storage API, data for each partition must be written sequentially. As a result, the execution plan will sort data based on the partition columns, which can consume significant memory resources when the data volume is large and may cause the write to fail.
+
+- When writing without specifying a partition, do not set `set enable_strict_consistency_dml=false`. This forcefully removes the sort node, causing partition data to be written out of order, which will ultimately result in an error from MaxCompute.
+
+- Do not add a `LIMIT` clause. When a `LIMIT` clause is added, Doris will use only a single thread for writing to guarantee the write count. This can be used for small-scale testing, but if the `LIMIT` value is large, write performance will be poor.
+
+### Write Error: `Data invalid: ODPS-0020041:StringOutOfMaxLength`
+
+Refer to the description of `mc.max_field_size_bytes`.
