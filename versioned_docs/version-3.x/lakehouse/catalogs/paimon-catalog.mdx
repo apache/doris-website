@@ -49,6 +49,8 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 
   * `dlf`: Uses Alibaba Cloud DLF as the metadata service.
 
+  * `jdbc`: Uses JDBC interface to connect to a relational database as the metadata service (supported since version 4.1.0).
+
 * `<paimon_warehouse>`
 
   The warehouse path for Paimon. This parameter must be specified when `<paimon_catalog_type>` is `filesystem`.
@@ -101,6 +103,8 @@ The currently dependent Paimon version is 1.0.0.
 * [Hive Metastore](../metastores/hive-metastore.md)
 
 * [Aliyun DLF](../metastores/aliyun-dlf.md)
+
+* [Paimon JDBC Catalog](../metastores/paimon-jdbc.md) (supported since version 4.1.0)
 
 * [FileSystem](../metastores/filesystem.md)
 
@@ -670,6 +674,56 @@ Supported since version 4.0.3, `timestamp_with_local_time_zone` can be mapped to
                 's3.access_key' = '<ak>',
                 's3.secret_key' = '<sk>',
                 's3.path.style.access' = 'true'
+            );
+            ```
+        </TabItem>
+    </Tabs>
+</details>
+
+### Paimon JDBC Catalog
+
+:::tip Note
+This is an experimental feature, supported since version 4.1.0.
+:::
+
+<details>
+    <summary>Version 4.1+</summary>
+    <Tabs>
+        <TabItem value='PostgreSQL' label='PostgreSQL' default>
+            Using PostgreSQL as metadata storage with S3 storage
+            ```sql
+            CREATE CATALOG paimon_jdbc_postgresql PROPERTIES (
+                'type' = 'paimon',
+                'paimon.catalog.type' = 'jdbc',
+                'paimon.jdbc.uri' = 'jdbc:postgresql://127.0.0.1:5432/paimon_db',
+                'paimon.jdbc.user' = 'paimon_user',
+                'paimon.jdbc.password' = 'password',
+                'paimon.jdbc.driver_class' = 'org.postgresql.Driver',
+                'paimon.jdbc.driver_url' = '<jdbc_driver_jar>',
+                'warehouse' = 's3://bucket/warehouse',
+                's3.access_key' = '<ak>',
+                's3.secret_key' = '<sk>',
+                's3.endpoint' = 'https://s3.us-east-1.amazonaws.com',
+                's3.region' = 'us-east-1'
+            );
+            ```
+        </TabItem>
+        <TabItem value='MySQL' label='MySQL'>
+            Using MySQL as metadata storage with S3 storage
+            ```sql
+            CREATE CATALOG paimon_jdbc_mysql PROPERTIES (
+                'type' = 'paimon',
+                'paimon.catalog.type' = 'jdbc',
+                'paimon.jdbc.uri' = 'jdbc:mysql://127.0.0.1:3306/paimon_db',
+                'paimon.jdbc.user' = 'paimon_user',
+                'paimon.jdbc.password' = 'password',
+                'paimon.jdbc.driver_class' = 'com.mysql.cj.jdbc.Driver',
+                'paimon.jdbc.driver_url' = '<jdbc_driver_jar>',
+                'warehouse' = 's3://bucket/warehouse',
+                's3.access_key' = '<ak>',
+                's3.secret_key' = '<sk>',
+                's3.endpoint' = 'https://s3.us-east-1.amazonaws.com',
+                's3.region' = 'us-east-1'
             );
             ```
         </TabItem>

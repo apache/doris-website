@@ -49,6 +49,8 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 
     * `dlf`：使用阿里云 DLF 作为元数据服务。
 
+    * `jdbc`：使用 JDBC 接口连接关系型数据库作为元数据服务（自 4.1.0 版本支持）。
+
 * `<paimon_warehouse>`
 
     Paimon 的仓库路径。当 `<paimon_catalog_type>` 为 `filesystem` 时，需指定这个参数。
@@ -101,6 +103,8 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 * [Hive Metastore](../metastores/hive-metastore.md)
 
 * [Aliyun DLF ](../metastores/aliyun-dlf.md)
+
+* [Paimon JDBC Catalog](../metastores/paimon-jdbc.md)（自 4.1.0 版本支持）
 
 * [FileSystem](../metastores/filesystem.md)
 
@@ -674,6 +678,56 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
                 's3.access_key' = '<ak>',
                 's3.secret_key' = '<sk>',
                 's3.path.style.access' = 'true'
+            );
+            ```
+        </TabItem>
+    </Tabs>
+</details>
+
+### Paimon JDBC Catalog
+
+:::tip 提示
+该功能为试验功能，自 4.1.0 版本支持。
+:::
+
+<details>
+    <summary>4.1+ 版本</summary>
+    <Tabs>
+        <TabItem value='PostgreSQL' label='PostgreSQL' default>
+            使用 PostgreSQL 作为元数据存储，配合 S3 存储
+            ```sql
+            CREATE CATALOG paimon_jdbc_postgresql PROPERTIES (
+                'type' = 'paimon',
+                'paimon.catalog.type' = 'jdbc',
+                'paimon.jdbc.uri' = 'jdbc:postgresql://127.0.0.1:5432/paimon_db',
+                'paimon.jdbc.user' = 'paimon_user',
+                'paimon.jdbc.password' = 'password',
+                'paimon.jdbc.driver_class' = 'org.postgresql.Driver',
+                'paimon.jdbc.driver_url' = '<jdbc_driver_jar>',
+                'warehouse' = 's3://bucket/warehouse',
+                's3.access_key' = '<ak>',
+                's3.secret_key' = '<sk>',
+                's3.endpoint' = 'https://s3.us-east-1.amazonaws.com',
+                's3.region' = 'us-east-1'
+            );
+            ```
+        </TabItem>
+        <TabItem value='MySQL' label='MySQL'>
+            使用 MySQL 作为元数据存储，配合 S3 存储
+            ```sql
+            CREATE CATALOG paimon_jdbc_mysql PROPERTIES (
+                'type' = 'paimon',
+                'paimon.catalog.type' = 'jdbc',
+                'paimon.jdbc.uri' = 'jdbc:mysql://127.0.0.1:3306/paimon_db',
+                'paimon.jdbc.user' = 'paimon_user',
+                'paimon.jdbc.password' = 'password',
+                'paimon.jdbc.driver_class' = 'com.mysql.cj.jdbc.Driver',
+                'paimon.jdbc.driver_url' = '<jdbc_driver_jar>',
+                'warehouse' = 's3://bucket/warehouse',
+                's3.access_key' = '<ak>',
+                's3.secret_key' = '<sk>',
+                's3.endpoint' = 'https://s3.us-east-1.amazonaws.com',
+                's3.region' = 'us-east-1'
             );
             ```
         </TabItem>
