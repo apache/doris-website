@@ -563,7 +563,9 @@ create table dim_city(
   'jdbc-url' = 'jdbc:mysql://127.0.0.1:9030',
   'table.identifier' = 'dim.dim_city',
   'username' = 'root',
-  'password' = ''
+  'password' = '',
+  'lookup.cache.max-rows' = '100000',
+  'lookup.cache.ttl' = '300s'
 );
 
 SELECT a.id, a.name, a.city, c.province, c.country,c.level 
