@@ -1,10 +1,14 @@
 ---
 {
-    "title": "Dynamic Partitioning(Outdated)",
+    "title": "Dynamic Partitioning",
     "language": "zh-CN",
     "description": "Dynamic partitioning will add and remove partitions in a rolling manner according to predefined rules,"
 }
 ---
+
+:::info
+We highly recommend using [Auto Partitioning](./auto-partitioning) for automated partition management, as it serves as a superior alternative to dynamic partitioning.
+:::
 
 Dynamic partitioning will add and remove partitions in a rolling manner according to predefined rules, thereby managing the lifecycle of table partitions (TTL) and reducing data storage pressure. In scenarios such as log management and time-series data management, dynamic partitioning can typically be used to roll-delete expired data.
 
