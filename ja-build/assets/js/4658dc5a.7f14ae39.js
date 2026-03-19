@@ -1,0 +1,1 @@
+"use strict";(globalThis.webpackChunkdoris_website=globalThis.webpackChunkdoris_website||[]).push([[67787],{300335(s){s.exports=JSON.parse('{"name":"@yang1666204/docusaurus-search-local","id":"default"}')}}]);

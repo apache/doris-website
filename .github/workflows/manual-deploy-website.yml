@@ -42,6 +42,13 @@ jobs:
                   yarn cache clean
                   export NODE_OPTIONS=--max-old-space-size=8192
                   yarn && yarn build
+                  if [ ! -d "./ja-build" ]; then
+                      echo "ja-build directory not found, aborting to avoid publishing incorrect ja content."
+                      exit 1
+                  fi
+                  rm -rf ./build/ja
+                  mkdir -p ./build/ja
+                  cp -a ./ja-build/. ./build/ja/
                   touch build/.dummy
                   cp .asf-site.yaml ./build/.asf.yaml
                   cp versions.json ./build/

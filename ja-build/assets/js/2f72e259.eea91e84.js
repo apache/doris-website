@@ -1,0 +1,1 @@
+"use strict";(globalThis.webpackChunkdoris_website=globalThis.webpackChunkdoris_website||[]).push([[10623],{809895(e,s,i){i.r(s),i.d(s,{default:()=>t});i(296540);var r=i(474848);function t(){return(0,r.jsx)(r.Fragment,{})}}}]);

@@ -40,6 +40,13 @@ jobs:
                   yarn
                   node ./scripts/update_github_info.js
                   yarn build
+                  if [ ! -d "./ja-build" ]; then
+                      echo "ja-build directory not found, aborting to avoid publishing incorrect ja content."
+                      exit 1
+                  fi
+                  rm -rf ./build/ja
+                  mkdir -p ./build/ja
+                  cp -a ./ja-build/. ./build/ja/
                   touch build/.dummy
                   cp .asf-site.yaml ./build/.asf.yaml
                   cp versions.json ./build/
