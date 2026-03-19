@@ -63,6 +63,19 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
   | `mc.datetime_predicate_push_down` | `true`             | 是否允许下推 `timestamp/timestamp_ntz` 类型的谓词条件。Doris 对这两个类型的同步会丢失精度（9 -> 6）。因此如果原数据精度高于 6 位，则条件下推可能导致结果不准确。         | 2.1.9/3.0.5（含）之后  |
   | `mc.account_format` | `name`             | 阿里云国际站和中国站的账号系统不一致，对于国际站用户，如出现如 `user 'RAM$xxxxxx:xxxxx' is not a valid aliyun account` 的错误，可指定该参数为 `id`。 | 3.0.9/3.1.1（含）之后  |
   | `mc.enable.namespace.schema` | `false`             | 是否支持 MaxCompute 的 schema 层级。详见：https://help.aliyun.com/zh/maxcompute/user-guide/schema-related-operations | 3.1.3（含）之后  |
+  | `mc.max_field_size_bytes` | `8388608`（8 MB）            | 写入会话中单个字段允许的最大字节数。当写入包含大型字符串或二进制字段的数据时，如果字段大小超过该值，可能会导致写入失败。可根据实际数据情况适当调大该值。 | 4.1.0（含）之后  |
+
+  - `mc.max_field_size_bytes`
+
+    MaxCompute 默认允许单个字段最大为 8MB，如果写入的数据中包含大型字符串或二进制字段，可能会导致写入失败。
+
+    如需调整，需要先在 MaxCompute 控制台的 SQL 编辑器中执行：
+
+    `setproject odps.sql.cfile2.field.maxsize=262144;`
+
+    以调整单个字段的最大字节数。单位为 KB，最大值为 262144。
+
+    然后在 Doris 的 catalog 属性中设置 `mc.max_field_size_bytes` 为 262144（该值不能大于 MaxCompute 的设置值）。
 
 * `{CommonProperties}`
 
@@ -179,6 +192,31 @@ SELECT * FROM mc_tbl LIMIT 10;
 -- 3. use full qualified name to query
 SELECT * FROM mc_ctl.mc_db.mc_tbl LIMIT 10;
 ```
+
+### 查询优化
+
+- LIMIT 查询优化 (自 4.1.0 起)
+
+    该参数仅适用于需要频繁使用 `LIMIT 1` 来检测数据是否存在的场景。
+
+    当查询 MaxCompute 表时，如果查询仅包含分区列的等值条件（`=` 或 `IN`）并且带有 `LIMIT` 子句，可以通过开启 Session Variable `enable_mc_limit_split_optimization` 来优化 Split 的生成策略。
+
+    开启后，系统会使用 `row_offset` 策略，仅读取所需数量的行数据，而不是为所有数据生成 Split。这可以将 Split 数量从多个减少为一个，从而显著降低查询延迟。
+
+    该优化适用于如下形式的查询：
+
+    ```sql
+    SELECT * FROM mc_tbl WHERE pt = 'value' LIMIT 100;
+    SELECT * FROM mc_tbl WHERE pt IN ('v1', 'v2') LIMIT 100;
+    ```
+
+    开启方式：
+
+    ```sql
+    SET enable_mc_limit_split_optimization = true;
+    ```
+
+    > 该参数默认关闭。当查询包含非分区列的过滤条件、非等值条件（如 `>`、`<`、`!=`）、或不带 `LIMIT` 子句时，该优化不会生效。
 
 ## 写入操作
 
@@ -310,7 +348,7 @@ DROP DATABASE [IF EXISTS] mc.mc_schema;
   DROP TABLE [IF EXISTS] mc_tbl;
   ```
 
-## 附录
+## 常见问题
 
 ### 如何获取 Endpoint 和 Quota（适用于 Doris 2.1.7 之后）
 
@@ -356,3 +394,15 @@ MaxCompute Endpoint 和 Tunnel Endpoint 的配置请参见[各地域及不同网
 1. 该方法只能控制单个 Query 中单张表的并发请求数量，无法控制多个 SQL 的资源使用量。
 
 2. 降低并发数量意味着会提高 Query 的查询时间。
+
+### 写入最佳实践
+
+- 建议优先选择指定分区写入，如 `INSERT INTO mc_tbl PARTITION(ds='20250201')`。当不指定分区时，由于 MaxCompute Storage API 的限制，各个分区的数据需要顺序写入，所以在执行计划中会基于 Partition 字段进行排序，当数据量较大时，对内存资源消耗较大，可能导致写入失败。
+
+- 当不指定分区写入时，不要设置 `set enable_strict_consistency_dml=false`。该方法会强制取消排序节点，导致分区数据乱序写入，最终 MaxCompute 会报错。
+
+- 不要添加 `LIMIT` 子句。当添加 `LIMIT` 子句时，Doris 仅会使用单线程写出，以保证写入的数量。可以用于小数据量测试，如果 `LIMIT` 数量较大，写入性能不佳。
+
+### 写入报错：`Data invalid: ODPS-0020041:StringOutOfMaxLength`
+
+参考 `mc.max_field_size_bytes` 的说明。

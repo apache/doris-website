@@ -422,6 +422,7 @@ const sidebars: SidebarsConfig = {
                                 'lakehouse/metastores/aliyun-dlf',
                                 'lakehouse/metastores/iceberg-rest',
                                 'lakehouse/metastores/iceberg-jdbc',
+                                'lakehouse/metastores/paimon-jdbc',
                                 'lakehouse/metastores/filesystem',
                             ],
                         },
@@ -1637,6 +1638,7 @@ const sidebars: SidebarsConfig = {
                                         'sql-manual/sql-functions/scalar-functions/array-functions/array-contains',
                                         'sql-manual/sql-functions/scalar-functions/array-functions/array-contains_all',
                                         'sql-manual/sql-functions/scalar-functions/array-functions/array-count',
+                                        'sql-manual/sql-functions/scalar-functions/array-functions/array-cross-product',
                                         'sql-manual/sql-functions/scalar-functions/array-functions/array-cum-sum',
                                         'sql-manual/sql-functions/scalar-functions/array-functions/array-difference',
                                         'sql-manual/sql-functions/scalar-functions/array-functions/array-distinct',
@@ -1883,6 +1885,7 @@ const sidebars: SidebarsConfig = {
                                     type: 'category',
                                     label: 'Conditional Functions',
                                     items: [
+                                        'sql-manual/sql-functions/scalar-functions/conditional-functions/overview',
                                         'sql-manual/sql-functions/scalar-functions/conditional-functions/coalesce',
                                         'sql-manual/sql-functions/scalar-functions/conditional-functions/greatest',
                                         'sql-manual/sql-functions/scalar-functions/conditional-functions/if',
@@ -2577,6 +2580,7 @@ const sidebars: SidebarsConfig = {
                     type: 'category',
                     label: 'v4.0',
                     items: [
+                        'releasenotes/v4.0/release-4.0.4',
                         'releasenotes/v4.0/release-4.0.3',
                         'releasenotes/v4.0/release-4.0.2',
                         'releasenotes/v4.0/release-4.0.1',

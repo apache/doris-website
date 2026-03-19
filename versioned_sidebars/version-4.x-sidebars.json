@@ -7,6 +7,7 @@
             "items": [
                 "gettingStarted/what-is-apache-doris",
                 "gettingStarted/quick-start",
+                "gettingStarted/before-you-start-the-poc",
                 {
                     "type": "category",
                     "label": "Tech Alternatives",
@@ -422,6 +423,7 @@
                                 "lakehouse/metastores/aliyun-dlf",
                                 "lakehouse/metastores/iceberg-rest",
                                 "lakehouse/metastores/iceberg-jdbc",
+                                "lakehouse/metastores/paimon-jdbc",
                                 "lakehouse/metastores/filesystem"
                             ]
                         },
@@ -1392,6 +1394,7 @@
                                         "sql-manual/sql-functions/scalar-functions/string-functions/first-significant-subdomain",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/format",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/format-number",
+                                        "sql-manual/sql-functions/scalar-functions/string-functions/hamming_distance",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/hex",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/initcap",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/instr",
@@ -1399,6 +1402,7 @@
                                         "sql-manual/sql-functions/scalar-functions/string-functions/is-uuid",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/lcase",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/length",
+                                        "sql-manual/sql-functions/scalar-functions/string-functions/levenshtein",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/locate",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/lpad",
                                         "sql-manual/sql-functions/scalar-functions/string-functions/ltrim",
@@ -1651,6 +1655,7 @@
                                         "sql-manual/sql-functions/scalar-functions/array-functions/array-contains",
                                         "sql-manual/sql-functions/scalar-functions/array-functions/array-contains_all",
                                         "sql-manual/sql-functions/scalar-functions/array-functions/array-count",
+                                        "sql-manual/sql-functions/scalar-functions/array-functions/array-cross-product",
                                         "sql-manual/sql-functions/scalar-functions/array-functions/array-cum-sum",
                                         "sql-manual/sql-functions/scalar-functions/array-functions/array-difference",
                                         "sql-manual/sql-functions/scalar-functions/array-functions/array-distinct",
@@ -1896,6 +1901,7 @@
                                     "type": "category",
                                     "label": "Conditional Functions",
                                     "items": [
+                                        "sql-manual/sql-functions/scalar-functions/conditional-functions/overview",
                                         "sql-manual/sql-functions/scalar-functions/conditional-functions/coalesce",
                                         "sql-manual/sql-functions/scalar-functions/conditional-functions/greatest",
                                         "sql-manual/sql-functions/scalar-functions/conditional-functions/if",
@@ -2593,6 +2599,7 @@
                     "type": "category",
                     "label": "v4.0",
                     "items": [
+                        "releasenotes/v4.0/release-4.0.4",
                         "releasenotes/v4.0/release-4.0.3",
                         "releasenotes/v4.0/release-4.0.2",
                         "releasenotes/v4.0/release-4.0.1",
