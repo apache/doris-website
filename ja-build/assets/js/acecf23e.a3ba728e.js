@@ -1,1 +1,0 @@
-"use strict";(globalThis.webpackChunkdoris_website=globalThis.webpackChunkdoris_website||[]).push([[81903],{101912(s){s.exports=JSON.parse('{"blogBasePath":"/ja/blog","blogTitle":"Apache Doris - Blog | Latest news and events ","authorsListPath":"/ja/blog/authors"}')}}]);
