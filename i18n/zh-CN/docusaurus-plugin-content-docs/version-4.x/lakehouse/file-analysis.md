@@ -2,11 +2,11 @@
 {
     "title": "分析 S3/HDFS 上的文件",
     "language": "zh-CN",
-    "description": "了解如何使用 Apache Doris Table Value Function (TVF) 直接查询和分析 S3、HDFS 等存储系统上的 Parquet、ORC、CSV、JSON 文件，支持自动 Schema 推断、多文件匹配和数据导入。"
+    "description": "了解如何使用 Apache Doris Table Value Function (TVF) 直接查询和分析 S3、HDFS 等存储系统上的 Parquet、ORC、CSV、JSON 文件，支持自动 Schema 推断、多文件匹配、数据导入以及导出查询结果到文件。"
 }
 ---
 
-通过 Table Value Function（TVF）功能，Doris 可以直接将对象存储或 HDFS 上的文件作为表进行查询分析，无需事先导入数据，并且支持自动的列类型推断。
+通过 Table Value Function（TVF）功能，Doris 可以直接将对象存储或 HDFS 上的文件作为表进行查询分析，无需事先导入数据，并且支持自动的列类型推断。同时，自 4.1.0 版本起，还支持通过 `INSERT INTO` TVF 的方式将查询结果导出到文件系统中。
 
 ## 支持的存储系统
 
@@ -112,6 +112,113 @@ FROM s3(
     's3.secret_key' = 'sk'
 );
 ```
+
+### 场景四：导出查询结果到文件
+
+:::tip
+该功能自 Apache Doris 4.1.0 版本起支持，当前为实验性功能。
+:::
+
+通过 `INSERT INTO` TVF 语法，可以将查询结果直接导出为文件，写入到本地文件系统、HDFS 或 S3 兼容的对象存储中，支持 CSV、Parquet 和 ORC 格式。
+
+**语法：**
+
+```sql
+INSERT INTO tvf_name(
+    "file_path" = "<file_path_prefix>",
+    "format" = "<file_format>",
+    ... -- 其他连接属性和格式选项
+)
+[WITH LABEL label_name]
+SELECT ... ;
+```
+
+其中 `tvf_name` 可以为：
+
+| TVF 名称 | 目标存储 | 说明 |
+|---------|---------|------|
+| `local` | 本地文件系统 | 导出到 BE 节点的本地磁盘，需指定 `backend_id` |
+| `hdfs` | HDFS | 导出到 Hadoop 分布式文件系统 |
+| `s3` | S3 兼容对象存储 | 导出到 AWS S3、阿里云 OSS、腾讯云 COS 等 |
+
+**通用属性：**
+
+| 属性 | 是否必须 | 说明 |
+|------|---------|------|
+| `file_path` | 是 | 输出文件路径前缀。实际生成的文件名格式为 `{prefix}{query_id}_{idx}.{ext}` |
+| `format` | 否 | 输出文件格式，支持 `csv`（默认）、`parquet`、`orc` |
+| `max_file_size` | 否 | 单个文件的最大大小（字节），超过后自动拆分生成新文件 |
+| `delete_existing_files` | 否 | 是否在写入前删除目标目录下的已有文件，默认 `false` |
+
+**CSV 格式的额外属性：**
+
+| 属性 | 说明 |
+|------|------|
+| `column_separator` | 列分隔符，默认为 `,` |
+| `line_delimiter` | 行分隔符，默认为 `\n` |
+| `compress_type` | 压缩格式，支持 `gz`、`zstd`、`lz4`、`snappy` |
+
+**示例 1：导出 CSV 到 HDFS**
+
+```sql
+INSERT INTO hdfs(
+    "file_path" = "/tmp/export/csv_data_",
+    "format" = "csv",
+    "column_separator" = ",",
+    "hadoop.username" = "doris",
+    "fs.defaultFS" = "hdfs://namenode:8020",
+    "delete_existing_files" = "true"
+)
+SELECT * FROM my_table ORDER BY id;
+```
+
+**示例 2：导出 Parquet 到 S3**
+
+```sql
+INSERT INTO s3(
+    "uri" = "s3://bucket/export/parquet_data_",
+    "s3.access_key" = "ak",
+    "s3.secret_key" = "sk",
+    "s3.endpoint" = "https://s3.us-east-1.amazonaws.com",
+    "s3.region" = "us-east-1",
+    "format" = "parquet"
+)
+SELECT * FROM my_table WHERE dt = '2024-01-01';
+```
+
+**示例 3：导出 ORC 到 S3**
+
+```sql
+INSERT INTO s3(
+    "uri" = "s3://bucket/export/orc_data_",
+    "s3.access_key" = "ak",
+    "s3.secret_key" = "sk",
+    "s3.endpoint" = "https://s3.us-east-1.amazonaws.com",
+    "s3.region" = "us-east-1",
+    "format" = "orc",
+    "delete_existing_files" = "true"
+)
+SELECT c_int, c_varchar, c_string FROM my_table WHERE c_int IS NOT NULL ORDER BY c_int;
+```
+
+**示例 4：导出 CSV 到本地 BE 节点**
+
+```sql
+INSERT INTO local(
+    "file_path" = "/tmp/export/local_csv_",
+    "backend_id" = "10001",
+    "format" = "csv"
+)
+SELECT * FROM my_table ORDER BY id;
+```
+
+:::note
+- `file_path` 是文件名前缀，实际生成的文件名格式为 `{prefix}{query_id}_{idx}.{ext}`，其中 `idx` 从 0 开始递增。
+- 使用 `local` TVF 时，需要通过 `backend_id` 指定写入文件的 BE 节点。
+- 使用 `delete_existing_files` 时，系统会在写入前删除 `file_path` 所在目录下的所有文件，请谨慎使用。
+- 执行 `INSERT INTO TVF` 需要 ADMIN 或 LOAD 权限。
+- 对于 S3 TVF，`file_path` 属性对应的是 `uri` 属性。
+:::
 
 ## 核心功能
 

@@ -439,6 +439,7 @@ const sidebars: SidebarsConfig = {
                                 'lakehouse/storages/huawei-obs',
                                 'lakehouse/storages/baidu-bos',
                                 'lakehouse/storages/minio',
+                                'lakehouse/storages/juicefs',
                             ],
                         },
                         {
