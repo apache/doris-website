@@ -10,6 +10,8 @@ export default function AnnouncementBarContent(props: Props): React.ReactElement
     const { i18n } = useDocusaurusContext();
     const { currentLocale } = i18n;
     const { content } = announcementBar!;
+    const contentMap = JSON.parse(content);
+    const localeContent = currentLocale === 'zh-CN' ? contentMap.zh : contentMap.en;
 
     return (
         <div
@@ -18,7 +20,7 @@ export default function AnnouncementBarContent(props: Props): React.ReactElement
             // Developer provided the HTML, so assume it's safe.
             // eslint-disable-next-line react/no-danger
             dangerouslySetInnerHTML={{
-                __html: currentLocale === 'en' ? JSON.parse(content).en : JSON.parse(content).zh,
+                __html: localeContent,
             }}
         />
     );

@@ -43,7 +43,7 @@ However, this family of algorithms has two main issues:
 1. As the dataset grows, the number of iterations in the routing phase increases roughly following a power‑law.
 2. It is difficult to build a high‑quality proximity graph; local clusters and poor global connectivity are very common.
 
-![low_quality_pgraph](/images/vector-search/low_quality_pgraph.png)
+![low quality pgraph](/images/vector-search/low-quality-pgraph.png)
 
 The figure above intuitively shows the shape of a problematic proximity graph. Darker points represent nodes with poorer connectivity; some nodes barely have any neighbors at all, which makes them very hard to reach during search.
 

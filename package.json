@@ -6,6 +6,8 @@
         "docusaurus": "docusaurus",
         "start": "docusaurus start",
         "start:zh-CN": "docusaurus start --locale zh-CN",
+        "start:ja": "docusaurus start --locale ja",
+        "postinstall": "node scripts/patch-search-tokenize.js",
         "build": "PWA_SERVICE_WORKER_URL=https://doris.apache.org/sw.js docusaurus build",
         "build:version": "docusaurus set-versions && docusaurus build",
         "swizzle": "docusaurus swizzle",
@@ -15,6 +17,7 @@
         "build:zip": "rm -rf portal.zip && zip -r portal.zip build/**",
         "generatePDF": "npx vitpress-generate-pdf -buildDirPath='./build/'  --firstDocPath='/docs/summary/basic-summary/' --paginationSelector='.pagination-nav__link--next' --contentSelector='article' --coverImage='https://cdn.selectdb.com/images/doris-logo-512.png' --coverTitle='Apache Doris 1.1 (English)' --outputPDFFilename='Apache Doris 1.1 (English).pdf'",
         "write-translations": "docusaurus write-translations --locale zh-CN",
+        "write-translations:ja": "docusaurus write-translations --locale ja",
         "write-heading-ids": "docusaurus write-heading-ids",
         "typecheck": "tsc"
     },

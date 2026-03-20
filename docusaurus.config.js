@@ -4,15 +4,15 @@ const VERSIONS = require('./versions.json');
 const { markdownBoldPlugin } = require('./config/markdown-bold-plugin');
 const { DEFAULT_VERSION } = require('./src/constant/version');
 
-const lightCodeTheme = themes.dracula;
+	const lightCodeTheme = themes.dracula;
 
-const logoImg = '/images/logo-doris.svg';
+	const logoImg = '/images/logo-doris.svg';
 
-function getDocsVersions() {
-    const result = {};
-    VERSIONS.map(version => {
-        if (version === 'current') {
-            result[version] = {
+	function getDocsVersions() {
+	    const result = {};
+	    VERSIONS.map(version => {
+	        if (version === 'current') {
+	            result[version] = {
                 label: 'Dev',
                 path: 'dev',
                 banner: 'unreleased',
@@ -54,7 +54,7 @@ const config = {
     trailingSlash: true,
     i18n: {
         defaultLocale: 'en',
-        locales: ['en', 'zh-CN'],
+        locales: ['en', 'zh-CN', 'ja'],
         localeConfigs: {
             en: {
                 label: 'English',
@@ -64,13 +64,17 @@ const config = {
                 label: '中文',
                 htmlLang: 'zh-Hans-CN',
             },
+            ja: {
+                label: '日本語',
+                htmlLang: 'ja-JP',
+            },
         },
     },
     scripts: ['/js/custom-script.js',
         {
             async: true,
             src: 'https://widget.kapa.ai/kapa-widget.bundle.js',
-            'data-website-id': 'a5fb90df-217a-4097-95c0-80490220314b',
+            'data-website-id': '10c44fc4-7375-4b37-9554-b39132bcb855',
             'data-modal-title': 'Apache Doris AI',
             'data-project-name': 'Apache Doris Website',
             'data-button-hide': "true",
@@ -181,14 +185,14 @@ const config = {
                     //     // if (versionDocsDirPath === 'versioned_docs/version-dev') {
                     //     //     return `https://github.com/apache/doris-website/edit/master/docs/${locale}/docs/${docPath}`;
                     //     // }
-                    // },
-                    showLastUpdateAuthor: false,
-                    showLastUpdateTime: true,
-                    remarkPlugins: [markdownBoldPlugin, require('remark-math')],
-                    rehypePlugins: [
-                        [
-                            require('rehype-katex'),
-                            {
+	                    // },
+	                    showLastUpdateAuthor: false,
+	                    showLastUpdateTime: false,
+	                    remarkPlugins: [markdownBoldPlugin, require('remark-math')],
+	                    rehypePlugins: [
+	                        [
+	                            require('rehype-katex'),
+	                            {
                                 strict: process.env.CI === 'true' || process.env.GITHUB_ACTIONS === 'true' ? false : 'warn',
                             }
                         ]
@@ -214,7 +218,11 @@ const config = {
                     createSitemapItems: async params => {
                         const { defaultCreateSitemapItems, ...rest } = params;
                         const items = await defaultCreateSitemapItems(rest);
-                        for (let item of items) {
+                        const filteredItems = items.filter(item => {
+                            const pathname = new URL(item.url).pathname.replace(/\/+$/, '');
+                            return !['/search', '/ja/search', '/zh-CN/search'].includes(pathname);
+                        });
+                        for (let item of filteredItems) {
                             if (item.url.includes('docs')) {
                                 item.changefreq = 'daily';
                                 item.priority = 0.8;
@@ -223,7 +231,7 @@ const config = {
                                 item.priority = 0.2;
                             }
                         }
-                        return items;
+                        return filteredItems;
                     },
                 },
             }),
@@ -234,11 +242,11 @@ const config = {
             '@yang1666204/docusaurus-search-local',
             {
                 hashed: true,
-                language: ['en', 'zh'],
+                language: ['en', 'zh', 'ja'],
                 highlightSearchTermsOnTargetPage: true,
                 // indexPages: true,
                 indexDocs: true,
-                docsRouteBasePath: ['/docs/2.1', '/docs/3.x', '/docs/4.x', '/docs/dev'],
+                docsRouteBasePath: ['docs','ja/docs','zh-CN/docs'],
                 indexBlog: false,
                 explicitSearchResultPath: true,
                 searchBarShortcut: true,
@@ -411,6 +419,34 @@ const config = {
                             {
                                 label: 'Archived',
                                 to: `/archive-docs`,
+                            },
+                        ],
+                    },
+                ],
+            },
+            docNavbarJA: {
+                title: '',
+                logo: {
+                    alt: 'Apache Doris',
+                    src: logoImg,
+                },
+                items: [
+                    {
+                        type: 'search',
+                        position: 'left',
+                        className: 'docs-search',
+                    },
+                    {
+                        type: 'localeDropdown',
+                        position: 'right',
+                    },
+                    {
+                        type: 'docsVersionDropdown',
+                        position: 'right',
+                        dropdownItemsAfter: [
+                            {
+                                label: 'Archived',
+                                to: `/ja/archive-docs`,
                             },
                         ],
                     },

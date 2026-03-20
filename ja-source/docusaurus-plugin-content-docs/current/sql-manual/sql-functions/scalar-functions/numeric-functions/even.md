@@ -1,0 +1,92 @@
+---
+{
+  "title": "EVEN",
+  "language": "ja",
+  "description": "ゼロから離れる方向に丸めて次の偶数に丸める。"
+}
+---
+<!-- 
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+## 説明
+
+ゼロから離れる方向に丸めることにより、次の偶数に丸める。
+
+## 構文
+
+```sql
+EVEN(<a>)
+```
+## パラメータ
+
+| Parameter | Description |
+| -- | -- |
+| `<a>` | 次の偶数に丸める数値式 |
+
+## 戻り値
+
+以下の規則に基づいて偶数の整数を返します：
+
+- x > 0 の場合、最も近い偶数に切り上げます。
+- x < 0 の場合、最も近い偶数に切り下げます。
+- x が既に偶数の場合、そのまま返します。
+- x が NULL の場合、NULL を返します。
+
+## 例
+
+```sql
+select even(2.9);
+```
+```text
++----------+
+| even(2.9) |
++----------+
+|        4 |
++----------+
+```
+```sql
+select even(-2.9);
+```
+```text
++-----------+
+| even(-2.9) |
++-----------+
+|       -4  |
++-----------+
+```
+```sql
+select even(4);
+```
+```text
++--------+
+| even(4) |
++--------+
+|      4 |
++--------+
+```
+```sql
+select even(NULL);
+```
+```text
++------------+
+| even(NULL) |
++------------+
+|       NULL |
++------------+
+```

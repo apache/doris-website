@@ -1,0 +1,36 @@
+---
+{
+  "title": "Smartbi",
+  "language": "ja",
+  "description": "Smartbiは、Oracle、SQL サーバーを含む様々なデータソースに接続できるソフトウェアサービスとアプリケーションコネクタの集合です。"
+}
+---
+## Smartbi紹介
+
+Smartbiは、Oracle、SQL サーバー、MySQL、Dorisなど様々なデータソースに接続できるソフトウェアサービスとアプリケーションコネクタのコレクションであり、ユーザーが簡単にデータを統合・クレンジングできます。Smartbiのデータモデリング機能により、ユーザーは複雑なリレーショナルモデルを作成できるだけでなく、データ分析式を記述し、データ関係を確立することで、高度なデータ分析と可視化の基盤を築くことができます。SmartBIは、様々な種類のチャート、地理的マップ、インタラクティブダッシュボード、カスタマイズ可能な可視化ツールなど、多様な可視化オプションを提供します。これらの強力なツールは、ユーザーがデータをより直感的かつ包括的に理解し、提示することを支援し、データ分析の有効性と効率性を向上させます。
+
+## 前提条件
+
+https://www.smartbi.info/download にアクセスしてSmartbiをダウンロード・インストールできます。
+
+## データ接続とアプリケーション
+
+1. Smartbiにログインし、Data Connectionsをクリックします。
+
+   ![main page](/images/bi-smartbi-en-1.png)
+
+2. データ接続をクリックした後、接続するデータベースのリストが表示されるので、Dorisデータベースを選択します。
+
+   ![selectdb](/images/bi-smartbi-en-2.png)
+
+3. データベースを選択した後、Dorisデータベースの接続情報を入力します。
+
+   ![data source connection](/images/bi-smartbi-en-3.png)
+
+4. 情報が正しく、ネットワークが接続されている場合、テストが成功したことを示すメッセージが表示されます。
+
+   ![test passed](/images/bi-smartbi-en-4.png)
+
+5. 接続が成功した後、データ分析モジュールのSelf-service dashboardで必要なレポート情報をカスタマイズ・設定できます。
+
+   ![data analysis](/images/bi-smartbi-en-5.png)

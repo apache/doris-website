@@ -5,6 +5,7 @@ import AnnouncementBarCloseButton from '@theme/AnnouncementBar/CloseButton';
 import AnnouncementBarContent from '@theme/AnnouncementBar/Content';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import { useLocation } from '@docusaurus/router';
+import { isDocsPath } from '@site/src/utils/locale';
 
 import styles from './styles.module.css';
 
@@ -12,22 +13,20 @@ export default function AnnouncementBar(): React.ReactElement | null {
     const { announcementBar } = useThemeConfig();
     const { isActive, close } = useAnnouncementBar();
     const { i18n } = useDocusaurusContext();
-    const { currentLocale } = i18n;
+    const { currentLocale, locales } = i18n;
     const location = useLocation();
     const { backgroundColor, textColor, isCloseable, content } = announcementBar!;
+    const contentMap = JSON.parse(content);
+    const localeContent = currentLocale === 'zh-CN' ? contentMap.zh : contentMap.en;
     
-    if (
-        !isActive ||
-        (currentLocale === 'en' && !JSON.parse(content).en) ||
-        (currentLocale === 'zh-CN' && !JSON.parse(content).zh)
-    ) {
+    if (!isActive || !localeContent) {
         return null;
     }
     return (
         <div
             className={styles.announcementBar}
             style={
-                location.pathname.startsWith('/zh-CN/docs') || location.pathname.startsWith('/docs')
+                isDocsPath(location.pathname, locales)
                     ? { backgroundColor, color: textColor }
                     : { display: 'none' }
             }

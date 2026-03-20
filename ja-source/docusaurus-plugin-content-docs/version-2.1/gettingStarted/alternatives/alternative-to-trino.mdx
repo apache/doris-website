@@ -1,0 +1,183 @@
+---
+{
+  "title": "Apache Doris vs Trino / Presto",
+  "language": "ja",
+  "description": "Apache DorisとTrino/Prestoはどちらも人気のあるデータレイクハウスクエリエンジンですが、Dorisはパフォーマンスの面でTrino/Prestoを上回ります。"
+}
+---
+Apache DorisとTrino/Prestoはどちらも人気のデータレイクハウスクエリエンジンですが、DorisはTrino/Prestoよりもパフォーマンス面で優れています。Trino/Prestoが主にクエリエンジンである一方、Dorisはスタンドアロンデータウェアハウスとしても機能できます。これにより、企業はDorisでデータウェアハウスとレイクハウスクエリエンジンを統合でき、データアーキテクチャを簡素化できます
+
+- **統合**: Dorisはデータウェアハウスとレイクハウスクエリエンジンを統合し、技術スタックを簡素化します
+
+- **10倍のクエリパフォーマンス**: Dorisネイティブテーブルは、Presto/Trinoと比較してクエリパフォーマンスを最大10倍向上させます
+
+- **2～3倍高速**: レイクハウスエンジンとしてのDorisは、Presto/Trinoより2～3倍高速です
+
+
+## 主要な移行事例
+
+<div style={{ display:'flex', justifyContent:'space-between' }}>
+
+    <div style={{paddingTop:'2rem', paddingBottom:'2rem',paddingLeft:'2rem',paddingRight:'2.5rem', boxSizing:'border-box', borderWidth:'0.5px', borderRadius:'0.75px', borderColor:'#e5e7eb'}}>
+    
+        <div style={{ display:'flex', justifyContent:'space-between', flexDirection:'column' }}>
+            <div style={{marginBottom:'1.25rem'}}>
+                <img alt='tencent-music' loading="lazy" width="200" height="40" decoding="async" data-nimg="1" style={{color:'transparent'}} src="/images/comparisons/cisco.png" />
+            </div>
+            <div style={{marginBbottom:'1.25rem'}}>
+            "世界的に有名なインターネット大手企業として、我々の初期のデータプラットフォームはTrino、Pinot、Iceberg、Kyuubiを使用していましたが、複雑性、冗長性、パフォーマンスの悪さに直面していました。これらをApache Dorisに置き換えることで、データレイクハウスとクエリエンジンを統合し、**パフォーマンスを向上させ、コストを30%削減しました。**"
+            </div>
+        </div>
+    
+    </div>
+
+    <div style={{paddingTop:'2rem', paddingBottom:'2rem',paddingLeft:'2rem',paddingRight:'2.5rem', boxSizing:'border-box', borderWidth:'0.5px', borderRadius:'0.75px', borderColor:'#e5e7eb'}}>
+    
+        <div style={{ display:'flex', justifyContent:'space-between', flexDirection:'column' }}>
+            <div style={{marginBottom:'1.25rem'}}>
+                <img alt='tencent-music' loading="lazy" width="200" height="40" decoding="async" data-nimg="1" style={{color:'transparent'}} src="/images/comparisons/netease-games.png" />
+            </div>
+            <div style={{marginBbottom:'1.25rem'}}>
+            "PrestoからDorisに切り替えた後、クエリパフォーマンスが大幅に改善され、**クエリ時間が20～40秒から1～2秒に短縮されました。** 一般的なデータディメンションに基づいて2～3つのマテリアライズドビューを設計することで、Dorisはクエリに最適なビューを自動的にマッチングでき、パフォーマンスをさらに向上させることができます。"
+            </div>
+        </div>
+    
+    </div>
+
+     <div style={{paddingTop:'2rem', paddingBottom:'2rem',paddingLeft:'2rem',paddingRight:'2.5rem', boxSizing:'border-box', borderWidth:'0.5px', borderRadius:'0.75px', borderColor:'#e5e7eb'}}>
+    
+        <div style={{ display:'flex', justifyContent:'space-between', flexDirection:'column' }}>
+            <div style={{marginBottom:'1.25rem'}}>
+                <img alt='tencent-music' loading="lazy" width="150" height="40" decoding="async" data-nimg="1" style={{color:'transparent'}} src="/images/comparisons/zto.png" />
+            </div>
+            <div style={{marginBbottom:'1.25rem'}}>
+            "TrinoとSparkSQLを使用していた時は、クエリレイテンシが分単位で、パフォーマンスが低かったです。**Dorisに切り替えた後、パフォーマンスが2倍向上しました。** Dorisはまた技術スタックを統合し、リアルタイムおよびインタラクティブ分析ツールの管理を簡素化しました。"
+            </div>            
+        </div>
+    
+    </div>
+
+</div> 
+
+
+## Apache Doris vs. Trino / Presto
+
+
+<table border="1">
+    <thead>
+        <tr>
+            <th></th>
+            <th>Apache Doris</th>
+            <th>Trino / Presto</th>
+        </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td><strong>アーキテクチャ</strong></td>
+        <td>
+        <ul>
+            <li style={{fontSize:'14px'}}>**統合アーキテクチャ:** データウェアハウスとレイクハウスクエリエンジンの機能を結合</li>
+        </ul>
+        </td>
+        <td>
+        <ul>
+            <li style={{fontSize:'14px'}}>**フェデレーテッドクエリ:** データ移動なしで複数の異種データソース間でのクエリに優れているが、内蔵ストレージは不足</li>
+        </ul>
+        </td>
+    </tr>
+      <tr>
+        <td><strong>実行エンジン</strong></td>
+        <td>
+         <ul>
+            <li style={{fontSize:'14px'}}>C++で実装された完全ベクトル化実行エンジンで、高性能データ処理を実現</li>
+        </ul>
+        </td>
+        <td>
+        <ul>
+            <li style={{fontSize:'14px'}}>主にJavaで実装され、ベクトル化は現在Hummingbirdプロジェクトの一部として開発中</li>
+        </ul>
+        </td>
+    </tr>
+    <tr>
+        <td><strong>クエリオプティマイザ</strong></td>
+        <td>
+        <ul>
+            <li style={{fontSize:'14px'}}>結合、集約、ソートなどの複雑なSQL操作に対するコストベース最適化を備えた高度なクエリオプティマイザ</li>
+        </ul>
+        </td>
+        <td>
+        <ul>
+            <li style={{fontSize:'14px'}}>コストベース最適化をサポートしているが、統計収集が高度でなく、手動での完全収集が必要</li>
+        </ul>
+        </td>
+    </tr>
+    <tr>
+        <td><strong>キャッシュメカニズム</strong></td>
+        <td>
+         <ul>
+            <li style={{fontSize:'14px'}}>**メタデータキャッシュ:** TTL、自動更新、増分同期を備えたインメモリメタデータキャッシュ</li>
+            <li style={{fontSize:'14px'}}>**データキャッシュ:** ネットワークI/Oを削減するためのローカルSSD上のホットデータキャッシュ</li>
+            <li style={{fontSize:'14px'}}>**クエリキャッシュ:** クエリ結果キャッシュ用のSQL Cacheとパーティション Cache</li>
+        </ul>
+        </td>
+        <td>
+        <ul>
+            <li style={{fontSize:'14px'}}>**データキャッシュ:** Alluxioなどの外部キャッシュソリューションに依存</li>
+        </ul>
+        </td>
+    </tr>
+    <tr>
+        <td><strong>マテリアライズドビュー</strong></td>
+        <td>
+        <ul>
+            <li style={{fontSize:'14px'}}>**増分更新:** 増分更新と複数の更新戦略をサポート</li>
+            <li style={{fontSize:'14px'}}>**透明な高速化:** クエリオプティマイザが自動的に最適なマテリアライズドビューにクエリをルーティング</li>
+        </ul>
+        </td>
+        <td>
+          <ul>
+            <li style={{fontSize:'14px'}}>**手動更新:** 手動での完全更新のみで、高度な機能は制限的</li>
+        </ul>
+        </td>
+    </tr>
+    <tr>
+        <td><strong>使用事例</strong></td>
+        <td>
+        <ul>
+            <li style={{fontSize:'14px'}}>高並行リアルタイム分析</li>
+            <li style={{fontSize:'14px'}}>インタラクティブ分析</li>
+        </ul>
+        </td>
+        <td>
+          <ul>
+            <li style={{fontSize:'14px'}}>インタラクティブ分析のみ</li>
+        </ul>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+## パフォーマンス比較
+
+### TPC-DS 1TBベンチマーク
+
+
+<div style={{ display:'flex', justifyContent:'space-between', flexDirection:'column', paddingTop:'0.5rem',paddingBottom:'0.5rem'}}>
+    <div style={{marginRight:'2rem'}}>
+        <p>TPC-DS 1TBベンチマークは、24テーブルにわたる63.5億レコードを含む1TBデータセットを使用してデータウェアハウスパフォーマンスを評価します。結合、集約、サブクエリをテストする99の複雑なクエリが含まれています。スノーフレークスキーマに基づいて、実世界の販売シナリオをシミュレートします。クエリの複雑性により、1TBスケールは挑戦的です。</p>
+        <p>テスト環境は以下で構成されています：</p>
+        <ul>
+            <li>1つのFE/Coordinatorノードと5つのBE/Workerノード。</li>
+            <li>各ノードは64コア、1.5TBのメモリ、SSDストレージを持っています。</li>
+            <li>HDFSはこれらのノードに共存しており、Hiveテーブルが作成されています。</li>
+        </ul>
+        <p>このテストでは、同じデータセットと同等のコンピューティングサービスを使用して、結果は以下を示しています：</p>
+        <ul>
+            <li>**データがDorisの内部テーブルにインポートされ、Dorisを使用してクエリされる場合、最短の実行時間を達成します。**</li>
+            <li>**DorisとTrinoがそれぞれHiveテーブルから直接データをクエリする場合、Dorisはデータレイクにおいて優れたクエリ高速化パフォーマンスを実証します。**</li>
+        </ul>
+    </div>
+    <div>
+        <img alt="TPC-DS 1TB  Benchmark" loading="lazy" width="400" height="338" decoding="async" data-nimg="1" src="/images/comparisons/tpc-ds-1tb-trino.png" style={{color: 'transparent', marginTop:0}} />
+    </div>
+</div>

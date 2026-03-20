@@ -1,0 +1,56 @@
+---
+{
+  "title": "IPv4",
+  "language": "ja",
+  "description": "IPv4型、4バイトのUInt32形式で格納され、IPv4アドレスを表現するために使用されます。値の範囲は['0.0.0.0', '255.255.255.255']です。"
+}
+---
+## IPV4
+
+### description
+
+IPv4型は、IPv4アドレスを表現するために使用され、4バイトでUInt32の形式で格納されます。
+値の範囲は['0.0.0.0', '255.255.255.255']です。
+
+`値の範囲を超えるか、無効な形式の入力はNULLを返します`
+
+### example
+
+テーブル作成例:
+
+```
+CREATE TABLE ipv4_test (
+  `id` int,
+  `ip_v4` ipv4
+) ENGINE=OLAP
+DISTRIBUTED BY HASH(`id`) BUCKETS 4
+PROPERTIES (
+"replication_allocation" = "tag.location.default: 1"
+);
+```
+データ挿入の例:
+
+```
+insert into ipv4_test values(1, '0.0.0.0');
+insert into ipv4_test values(2, '127.0.0.1');
+insert into ipv4_test values(3, '59.50.185.152');
+insert into ipv4_test values(4, '255.255.255.255');
+insert into ipv4_test values(5, '255.255.255.256'); // invalid data
+```
+データ選択の例:
+
+```
+mysql> select * from ipv4_test order by id;
++------+-----------------+
+| id   | ip_v4           |
++------+-----------------+
+|    1 | 0.0.0.0         |
+|    2 | 127.0.0.1       |
+|    3 | 59.50.185.152   |
+|    4 | 255.255.255.255 |
+|    5 | NULL            |
++------+-----------------+
+```
+### keywords
+
+IPV4

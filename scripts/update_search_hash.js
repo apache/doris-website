@@ -11,7 +11,7 @@ function ensureArray(object, key) {
 
 const searchConfig = {
     hashed: true,
-    language: ['en', 'zh'],
+    language: ['en', 'zh', 'ja'],
     highlightSearchTermsOnTargetPage: true,
     docsDir: ['docs', 'versioned_docs', 'i18n'],
     blogDir: 'blog',

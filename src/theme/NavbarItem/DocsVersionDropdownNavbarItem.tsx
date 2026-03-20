@@ -7,6 +7,7 @@ import {
 } from '@docusaurus/plugin-content-docs/client';
 import { translate } from '@docusaurus/Translate';
 import { useLocation } from '@docusaurus/router';
+import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import DefaultNavbarItem from '@theme/NavbarItem/DefaultNavbarItem';
 import DropdownNavbarItem from '@theme/NavbarItem/DropdownNavbarItem';
 import type { Props } from '@theme/NavbarItem/DocsVersionDropdownNavbarItem';
@@ -32,6 +33,9 @@ export default function DocsVersionDropdownNavbarItem({
     ...props
 }: Props): JSX.Element {
     const { search, hash } = useLocation();
+    const {
+        i18n: { currentLocale },
+    } = useDocusaurusContext();
     const activeDocContext = useActiveDocContext(docsPluginId);
     const versions = useVersions(docsPluginId);
     const { savePreferredVersionName } = useDocsPreferredVersion(docsPluginId);
@@ -95,7 +99,7 @@ export default function DocsVersionDropdownNavbarItem({
             mobile={mobile}
             label={
                 <span className="text-sm">
-                    {typeof window !== 'undefined' && location.pathname.includes('zh-CN') ? '版本: ' : 'Versions: '}
+                    {currentLocale === 'zh-CN' ? '版本: ' : 'Versions: '}
                     {versionLinks.find(e => e.isActive())?.label}
                 </span>
             }
