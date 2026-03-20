@@ -54,6 +54,10 @@ PROPERTIES (
 
 ### Table Property Configuration
 
+:::info
+`group_commit_mode` table property is supported from **4.1.0**.
+:::
+
 You can set the default Group Commit mode at the table level. When Stream Load does not set the `group_commit` HTTP Header, the mode from the table property will be used.
 
 **Configure during table creation:**

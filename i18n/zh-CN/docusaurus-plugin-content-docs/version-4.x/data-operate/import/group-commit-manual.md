@@ -54,6 +54,10 @@ PROPERTIES (
 
 ### 表属性配置
 
+:::info
+`group_commit_mode` 表属性从 **4.1.0** 版本开始支持。
+:::
+
 可以在表级别设置默认的 Group Commit 模式。当 Stream Load 未设置 `group_commit` HTTP Header 时，将使用表属性中的模式。
 
 **建表时配置：**
