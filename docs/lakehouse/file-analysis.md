@@ -2,11 +2,11 @@
 {
     "title": "Analyzing Files on S3/HDFS",
     "language": "en",
-    "description": "Learn how to use Apache Doris Table Value Function (TVF) to directly query and analyze Parquet, ORC, CSV, and JSON files on storage systems like S3 and HDFS, with support for automatic schema inference, multi-file matching, and data import."
+    "description": "Learn how to use Apache Doris Table Value Function (TVF) to directly query and analyze Parquet, ORC, CSV, and JSON files on storage systems like S3 and HDFS, with support for automatic schema inference, multi-file matching, data import, and exporting query results to files."
 }
 ---
 
-Through the Table Value Function (TVF) feature, Doris can directly query and analyze files on object storage or HDFS as tables without importing data in advance, and supports automatic column type inference.
+Through the Table Value Function (TVF) feature, Doris can directly query and analyze files on object storage or HDFS as tables without importing data in advance, and supports automatic column type inference. Starting from version 4.1.0, it also supports exporting query results to file systems via `INSERT INTO` TVF syntax.
 
 ## Supported Storage Systems
 
@@ -112,6 +112,113 @@ FROM s3(
     's3.secret_key' = 'sk'
 );
 ```
+
+### Scenario 4: Exporting Query Results to Files (Since Version 4.1.0) {#export-query-results}
+
+:::tip
+This feature is supported since Apache Doris version 4.1.0 and is currently an experimental feature.
+:::
+
+Using the `INSERT INTO` TVF syntax, you can directly export query results as files to local file systems, HDFS, or S3-compatible object storage, supporting CSV, Parquet, and ORC formats.
+
+**Syntax:**
+
+```sql
+INSERT INTO tvf_name(
+    "file_path" = "<file_path_prefix>",
+    "format" = "<file_format>",
+    ... -- other connection properties and format options
+)
+[WITH LABEL label_name]
+SELECT ... ;
+```
+
+Where `tvf_name` can be:
+
+| TVF Name | Target Storage | Description |
+|----------|---------------|-------------|
+| `local` | Local file system | Export to the local disk of a BE node, requires specifying `backend_id` |
+| `hdfs` | HDFS | Export to Hadoop Distributed File System |
+| `s3` | S3-compatible object storage | Export to AWS S3, Alibaba Cloud OSS, Tencent Cloud COS, etc. |
+
+**Common Properties:**
+
+| Property | Required | Description |
+|----------|----------|-------------|
+| `file_path` | Yes | Output file path prefix. The actual generated file name format is `{prefix}{query_id}_{idx}.{ext}` |
+| `format` | No | Output file format, supports `csv` (default), `parquet`, `orc` |
+| `max_file_size` | No | Maximum size per file (in bytes). A new file is automatically created when exceeded |
+| `delete_existing_files` | No | Whether to delete existing files in the target directory before writing, default `false` |
+
+**Additional Properties for CSV Format:**
+
+| Property | Description |
+|----------|-------------|
+| `column_separator` | Column separator, default is `,` |
+| `line_delimiter` | Line delimiter, default is `\n` |
+| `compress_type` | Compression format, supports `gz`, `zstd`, `lz4`, `snappy` |
+
+**Example 1: Export CSV to HDFS**
+
+```sql
+INSERT INTO hdfs(
+    "file_path" = "/tmp/export/csv_data_",
+    "format" = "csv",
+    "column_separator" = ",",
+    "hadoop.username" = "doris",
+    "fs.defaultFS" = "hdfs://namenode:8020",
+    "delete_existing_files" = "true"
+)
+SELECT * FROM my_table ORDER BY id;
+```
+
+**Example 2: Export Parquet to S3**
+
+```sql
+INSERT INTO s3(
+    "uri" = "s3://bucket/export/parquet_data_",
+    "s3.access_key" = "ak",
+    "s3.secret_key" = "sk",
+    "s3.endpoint" = "https://s3.us-east-1.amazonaws.com",
+    "s3.region" = "us-east-1",
+    "format" = "parquet"
+)
+SELECT * FROM my_table WHERE dt = '2024-01-01';
+```
+
+**Example 3: Export ORC to S3**
+
+```sql
+INSERT INTO s3(
+    "uri" = "s3://bucket/export/orc_data_",
+    "s3.access_key" = "ak",
+    "s3.secret_key" = "sk",
+    "s3.endpoint" = "https://s3.us-east-1.amazonaws.com",
+    "s3.region" = "us-east-1",
+    "format" = "orc",
+    "delete_existing_files" = "true"
+)
+SELECT c_int, c_varchar, c_string FROM my_table WHERE c_int IS NOT NULL ORDER BY c_int;
+```
+
+**Example 4: Export CSV to Local BE Node**
+
+```sql
+INSERT INTO local(
+    "file_path" = "/tmp/export/local_csv_",
+    "backend_id" = "10001",
+    "format" = "csv"
+)
+SELECT * FROM my_table ORDER BY id;
+```
+
+:::note
+- `file_path` is a file name prefix. The actual generated file name format is `{prefix}{query_id}_{idx}.{ext}`, where `idx` starts from 0 and increments.
+- When using the `local` TVF, you need to specify the BE node to write files to via `backend_id`.
+- When using `delete_existing_files`, the system will delete all files in the directory where `file_path` is located before writing. Use with caution.
+- Executing `INSERT INTO TVF` requires ADMIN or LOAD privileges.
+- For S3 TVF, the `file_path` property corresponds to the `uri` property.
+:::
 
 ## Core Features
 
