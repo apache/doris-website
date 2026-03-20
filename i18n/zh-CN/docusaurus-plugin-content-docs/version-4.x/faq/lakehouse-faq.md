@@ -307,6 +307,32 @@ ln -s /etc/pki/ca-trust/extracted/openssl/ca-bundle.trust.crt /etc/ssl/certs/ca-
     2. **配置 Hosts 静态映射**：在 FE 节点的 `/etc/hosts` 中添加 HMS 节点的 IP 与 Hostname 映射。
     3. **规范 Catalog 配置**：创建 Catalog 时，`hive.metastore.uris` 参数建议优先使用正确的 Hostname 而不是裸 IP。
 
+15. **查询 Hive Catalog 表时，偶尔出现查询卡住约 10 秒（默认 socket 超时时间）后才继续执行，或者报错传输异常，但紧接着再次查询又恢复正常。**
+
+    **问题描述：**
+    这种情况通常发生在 Catalog 空闲一段时间后的首次查询。表现为请求首次发起 HMS RPC 时卡住，等待约 10 秒后（对应默认的 `hive.metastore.client.socket.timeout`）抛出超时或异常，或者在重试后成功。一旦该连接被剔除并重建，后续查询会立即恢复正常。
+
+    **问题分析：**
+    Doris 为每个 HMS Catalog 维护了一个 client pool 以复用连接。在复杂的网络环境中（如跨 VPC、经过防火墙或 NAT 网关），中间网络设备往往会对空闲连接设置 `idle timeout`。
+    当连接空闲时间超过阈值时，网络设备会静默丢弃连接状态，且通常不会通知应用两端（不发送 FIN/RST）。Doris 侧仍认为连接可用，下次复用该“僵尸连接”时，由于链路已不可达，必须等待完整的 socket timeout 才能感知到失效。
+
+    **排查建议：**
+    - 确认 Doris FE 与 HMS 之间是否经过了防火墙、云厂商 NAT 网关或负载均衡器。
+    - 使用下文提到的 **Pulse (hms-tools)** 工具。如果探测显示网络连通极快，但长时间放置后首次执行 RPC 出现稳定超时，则基本可判定为长连接被中间设备静默回收。
+
+    **解决方案：**
+    利用 Hive Client 原生的生命周期管理能力，在 Catalog 属性中配置 `hive.metastore.client.socket.lifetime`，使其略短于中间网络设备的空闲超时时间（例如设为 300 秒）：
+
+    ```sql
+    CREATE CATALOG hive_catalog PROPERTIES (
+        "type" = "hms",
+        "hive.metastore.uris" = "thrift://<hms_host>:<port>",
+        -- 设置比中间设备 idle timeout 更短的时间，例如 300s
+        "hive.metastore.client.socket.lifetime" = "300s"
+    );
+    ```
+    配置后， HMS Client 在执行 RPC 前会检查连接年龄。如果已超过 `lifetime`，它会主动重新建立连接，从而规避因复用失效连接导致的 10 秒卡顿。
+
 ## HDFS
 
 1. 访问 HDFS 3.x 时报错：`java.lang.VerifyError: xxx`

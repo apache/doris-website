@@ -281,6 +281,31 @@ ln -s /etc/pki/ca-trust/extracted/openssl/ca-bundle.trust.crt /etc/ssl/certs/ca-
     2. **Configure Static Hosts Mapping:** Add the IP and Hostname mapping of the HMS nodes to `/etc/hosts` on the FE node.
     3. **Standardize Catalog Properties:** When creating the Catalog, it is highly recommended to use a resolvable hostname instead of a bare IP address for the `hive.metastore.uris` property.
 
+15. **Queries on Hive Catalog tables occasionally experience extremely long hangs or directly report the optimizer timeout error `nereids cost too much time`, but subsequent queries work fine immediately after.**
+
+    **Problem Description:**
+    This usually happens after the Catalog has been idle for a while. When an HMS RPC is initiated, if a stale connection from the pool is reused, the request will hang for the duration of the Socket Timeout (default 10s). Due to the Hive Client's internal retry mechanism, this can result in cumulative waits of 20-30 seconds if multiple retries occur. This causes the query planning phase to be extremely slow, often triggering the Doris FE optimizer timeout error `nereids cost too much time`. Once the connection is purged and rebuilt, performance returns to normal.
+
+    **Root Cause Analysis:**
+    Doris maintains a Client Pool for each HMS Catalog to reuse connections. In complex network environments (e.g., across VPCs, through firewalls, or NAT gateways), idle TCP connections are "silently" reclaimed by network devices after an `idle timeout`. Since these devices typically do not send FIN/RST packets to notify the endpoints, Doris still believes the connection is valid. Reusing such a "zombie connection" requires waiting for a full Socket Timeout before the failure is detected and a retry is triggered.
+
+    **Troubleshooting Steps:**
+    - Verify if there are firewalls, NAT gateways, or Load Balancers between Doris FE and HMS.
+    - Use the **Pulse (hms-tools)** diagnostic tool. If the tool shows fast network connectivity but stable delays that are multiples of 10s when executing RPCs after a long idle period, it confirms that idle connections are being silently reclaimed.
+
+    **Solution:**
+    Configure the connection lifetime in your Catalog properties to be slightly shorter than the network device's idle timeout. We recommend using Hive's native socket lifetime property:
+
+    ```sql
+    CREATE CATALOG hive_catalog PROPERTIES (
+        "type" = "hms",
+        "hive.metastore.uris" = "thrift://<hms_host>:<port>",
+        -- Set a value shorter than your network's idle timeout (e.g., 300s)
+        "hive.metastore.client.socket.lifetime" = "300s"
+    );
+    ```
+    When set, the HMS Client will check the connection age before sending an RPC. If it exceeds the `lifetime`, it proactively reconnects, avoiding long hangs and optimizer timeouts caused by stale connections.
+
 ## HDFS
 1. When accessing HDFS 3.x, if you encounter the error `java.lang.VerifyError: xxx`, in versions prior to 1.2.1, Doris depends on Hadoop version 2.8. You need to update to 2.10.2 or upgrade Doris to versions after 1.2.2.
 
