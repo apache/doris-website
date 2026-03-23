@@ -114,13 +114,15 @@ export default function NavbarContent(): ReactNode {
             left={NavbarTypes[currentNavbar].left}
             right={
                 <>
-                    <button
-                        className="rounded-full flex items-center gap-x-2 px-4 py-[5px] border border-primary bg-[#F0FFF7] text-[1rem]/[1.625rem] font-medium text-[#1D1D1D]"
-                        id="navbar-ask-ai-btn"
-                    >
-                        <StarGreenIcon />
-                        Ask AI
-                    </button>
+                    {currentNavbar !== NavBar.DOCS && (
+                        <button
+                            className="navbar-ask-ai-btn rounded-full flex items-center gap-x-2 px-4 py-[5px] border border-primary bg-[#F0FFF7] text-[1rem]/[1.625rem] font-medium text-[#1D1D1D]"
+                            id="navbar-ask-ai-btn"
+                        >
+                            <StarGreenIcon />
+                            Ask AI
+                        </button>
+                    )}
                     {NavbarTypes[currentNavbar].right}
                     {!mobileSidebar.disabled && !showSearchPageMobile && <NavbarMobileSidebarToggle />}
                     <NavbarColorModeToggle className={styles.colorModeToggle} />

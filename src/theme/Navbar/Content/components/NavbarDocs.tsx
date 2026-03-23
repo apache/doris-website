@@ -16,6 +16,7 @@ import { DataContext } from '../../../Layout';
 import { ARCHIVE_PATH } from '../../../../constant/common' ;
 import { DEFAULT_VERSION } from '../../../../constant/version' ;
 import { getLocalePrefix, normalizePathname } from '@site/src/utils/locale';
+import { StarGreenIcon } from '@site/src/components/Icons/star-green-icon';
 
 interface NavbarDocsProps {
     isEN: boolean;
@@ -39,6 +40,8 @@ export const NavbarDocsLeft = ({ isEN }: NavbarDocsProps) => {
     if(location.pathname.includes(ARCHIVE_PATH)){
         leftDocItems = leftDocItems.filter((item)=>item.type !== 'search')
     }
+    const searchItem = getNavItem(leftDocItems, 'search');
+    const leftDocItemsWithoutSearch = leftDocItems.filter((item) => item.type !== 'search');
     useEffect(() => {
         const normalizedPathname = normalizePathname(location.pathname, locales);
         const pathSegments = normalizedPathname.split('/');
@@ -66,7 +69,19 @@ export const NavbarDocsLeft = ({ isEN }: NavbarDocsProps) => {
                 </div>
             </div>
             <div className={`${styles.navbarLeftToc}`}>
-                <NavbarItems items={leftDocItems} isDocsPage={true} />
+                <NavbarItems items={leftDocItemsWithoutSearch} isDocsPage={true} />
+                {searchItem && (
+                    <div className="docs-search-container">
+                        <NavbarItems items={[searchItem]} isDocsPage={true} />
+                        <button
+                            className="navbar-ask-ai-btn rounded-full flex items-center gap-x-2 px-4 py-[5px] border border-primary bg-[#F0FFF7] text-[1rem]/[1.625rem] font-medium text-[#1D1D1D]"
+                            id="navbar-ask-ai-btn"
+                        >
+                            <StarGreenIcon />
+                            Ask AI
+                        </button>
+                    </div>
+                )}
             </div>
         </div>
     );
