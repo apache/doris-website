@@ -78,6 +78,82 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 
   CommonProperties 部分用于填写通用属性。请参阅[ 数据目录概述 ](../catalog-overview.md)中【通用属性】部分。
 
+## 元数据缓存 {#meta-cache}
+
+为了提升访问外部数据源的性能，Apache Doris 会对 Hive 的元数据进行缓存。元数据包括表结构（Schema）、分区列表、分区属性和文件列表等。
+
+:::tip
+对于 Doris 4.1.x 之前的版本，元数据缓存主要由 FE 配置项全局控制，详情请参阅[元数据缓存](../meta-cache.md)。
+从 Doris 4.1.x 开始，Hive Catalog 的外表元数据缓存使用统一键 `meta.cache.*` 进行配置。
+:::
+
+### 统一属性模型（4.1.x+） {#meta-cache-unified-model}
+
+各引擎 cache entry 使用统一的配置键格式：`meta.cache.<engine>.<entry>.{enable,ttl-second,capacity}`。
+
+| 属性 | 示例 | 含义 |
+|---|---|---|
+| `enable` | `true/false` | 是否启用该缓存模块。 |
+| `ttl-second` | `600`、`0`、`-1` | `0` 表示关闭缓存（即刻生效，可用于查看最新数据）；`-1` 表示永不过期；其他正整数表示按访问时间计算 TTL（秒）。 |
+| `capacity` | `10000` | 最大缓存条目数（按条目数量计）。`0` 表示关闭。 |
+
+**生效逻辑说明：** 只有当 `enable=true` 且 `ttl-second != 0` 且 `capacity > 0` 时，该模块缓存才会生效。
+
+### 缓存模块 {#meta-cache-unified-modules}
+
+Hive Catalog 包含以下缓存模块：
+
+| 模块 (`<entry>`) | 属性键前缀 | 缓存内容与影响 |
+|---|---|---|
+| `schema` | `meta.cache.hive.schema.` | 缓存表结构。影响：列新增、删除、类型变更在 Doris 中的可见性。若关闭，每次查询都会拉取最新 Schema。 |
+| `partition_values` | `meta.cache.hive.partition_values.` | 缓存分区值/分区名称列表。影响：`SHOW PARTITIONS`、分区枚举、分区裁剪，以及外部新增/删除分区何时在 Doris 中可见。若关闭，可实时查看到分区变动。 |
+| `partition` | `meta.cache.hive.partition.` | 缓存分区属性（Location、InputFormat、Serde 等）。影响：单个分区位置、格式、Serde 等属性变更的可见性。 |
+| `file` | `meta.cache.hive.file.` | 缓存文件列表。影响：新增/删除文件、文件大小变化被 Doris 感知的时效性，同时减少远端 LIST 操作开销。若关闭，每次查询都会重新加载文件列表。 |
+
+### 旧参数映射与转换 {#meta-cache-mapping}
+
+在 4.1.x 之前，Hive 元数据缓存一部分通过 Catalog 兼容属性控制，一部分仍受 FE 全局缓存参数控制，详见[元数据缓存](../meta-cache.md)。升级到 4.1.x 后，建议显式改写为 `meta.cache.hive.*`，不要继续沿用旧键名。
+
+| 4.1 前属性键 | 适用范围 | 4.1.x+ 统一键 | 升级建议与影响 |
+|---|---|---|---|
+| `schema.cache.ttl-second` | 4.1 前 Hive Catalog 兼容属性 | `meta.cache.hive.schema.ttl-second` | 仅对应 Schema 新鲜度。若希望列变更每次查询立即可见，设置为 `0`；`enable` 和 `capacity` 需按需单独配置。 |
+| `partition.cache.ttl-second` | 4.1 前 Hive Catalog 兼容属性 | `meta.cache.hive.partition_values.ttl-second` | 仅对应分区列表新鲜度。若希望新增/删除分区每次查询立即可见，设置为 `0`。 |
+| `file.meta.cache.ttl-second` | 4.1 前 Hive Catalog 兼容属性 | `meta.cache.hive.file.ttl-second` | 仅对应文件列表新鲜度。若希望新增/删除文件每次查询立即可见，设置为 `0`。 |
+
+`meta.cache.hive.partition.*` 是 4.1.x 中单独可调的新模块，4.1 前没有一一对应的 Catalog 级 TTL 键。若您关心分区 Location、Serde、InputFormat 等属性变更的可见性，需要在升级后单独设置它。
+
+4.1.x 的统一模型把每个缓存拆分为 `enable`、`ttl-second`、`capacity` 三个维度；旧键只表达 TTL，不表达是否启用和容量上限。升级后如果只完成键名替换而不评估 `enable/capacity`，则其余行为会落到 4.1.x 的默认值。
+
+### 最佳实践 {#meta-cache-best-practices}
+
+* **实时查看最新数据**：如果您希望每次查询都能看到外部数据源的最新分区或文件变动，可以将对应的 `ttl-second` 设置为 `0`。
+  ```sql
+  -- 关闭文件列表缓存，实时看到文件变动
+  ALTER CATALOG hive_ctl SET PROPERTIES ("meta.cache.hive.file.ttl-second" = "0");
+  -- 关闭分区值缓存，实时看到新增分区
+  ALTER CATALOG hive_ctl SET PROPERTIES ("meta.cache.hive.partition_values.ttl-second" = "0");
+  ```
+* **性能优化**：对于元数据变动不频繁的场景，建议适当增大 `capacity` 和 `ttl-second` 以减少对 Hive Metastore 和文件系统的访问压力。
+
+:::caution
+**Hive Catalog 注意事项**：Hive 的 `meta.cache.hive.*` 属性修改**不支持热生效**。修改配置后，必须重建 Catalog 或重启 FE 节点才能应用新的缓存配置。
+:::
+
+### 可观测性 {#meta-cache-unified-observability}
+
+可以通过 `information_schema.catalog_meta_cache_statistics` 系统表观测缓存指标：
+
+```sql
+SELECT catalog_name, engine_name, entry_name,
+       effective_enabled, ttl_second, capacity,
+       estimated_size, hit_rate, load_failure_count, last_error
+FROM information_schema.catalog_meta_cache_statistics
+WHERE catalog_name = 'hive_ctl' AND engine_name = 'hive'
+ORDER BY entry_name;
+```
+
+该系统表文档见：[catalog_meta_cache_statistics](../../admin-manual/system-tables/information_schema/catalog_meta_cache_statistics.md)。
+
 ### 支持的 Hive 版本
 
 支持 Hive 1.x，2.x，3.x，4.x。
@@ -1101,4 +1177,3 @@ DROP DATABASE [IF EXISTS] hive_ctl.hive_db;
 | -------- | ------------------------------------ |
 | 2.1.6    | 支持 Hive 表数据写回                        |
 | 3.0.4    | 支持 JsonSerDe 格式的 Hive 表。支持 Hive4 的事务表。 |
-
