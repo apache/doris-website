@@ -726,6 +726,7 @@ const sidebars: SidebarsConfig = {
                         'admin-manual/cluster-management/load-balancing',
                         'admin-manual/cluster-management/time-zone',
                         'admin-manual/cluster-management/fqdn',
+                        'admin-manual/cluster-management/tso',
                     ],
                 },
                 {
@@ -985,6 +986,7 @@ const sidebars: SidebarsConfig = {
                                 'admin-manual/open-api/fe-http/meta-info-action-V2',
                                 'admin-manual/open-api/fe-http/debug-point-action',
                                 'admin-manual/open-api/fe-http/statistic-action',
+                                'admin-manual/open-api/fe-http/tso-action',
                             ],
                         },
                         {

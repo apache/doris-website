@@ -370,6 +370,7 @@ The functionality of creating synchronized materialized views with rollup is lim
 | enable_mow_light_delete | Whether to enable writing Delete predicate with Delete statements on Unique tables with Mow. If enabled, it will improve the performance of Delete statements, but partial column updates after Delete may result in some data errors. If disabled, it will reduce the performance of Delete statements to ensure correctness. The default value of this property is `false`. This property can only be enabled on Unique Merge-on-Write tables. |
 | Dynamic Partitioning Related Properties | For dynamic partitioning, refer to [Data Partitioning - Dynamic Partitioning](../../../../table-design/data-partitioning/dynamic-partitioning) |
 | enable_unique_key_skip_bitmap_column | Whether to enable the [Flexible Column Update feature](../../../../data-operate/update/update-of-unique-model.md#flexible-partial-column-updates) on Unique Merge-on-Write tables. This property can only be enabled on Unique Merge-on-Write tables. |
+| enable_tso | Whether to enable TSO-related features for this table (for example, recording Rowset commit TSO and exposing `information_schema.rowsets.COMMIT_TSO`). |
 
 ## Access Control Requirements
 

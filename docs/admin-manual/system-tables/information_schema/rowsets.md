@@ -33,3 +33,4 @@ Returns basic information about the Rowset.
 | CREATION_TIME          | datetime    | The creation time of the Rowset.                             |
 | NEWEST_WRITE_TIMESTAMP | datetime    | The most recent write time of the Rowset.                    |
 | SCHEMA_VERSION         | int         | The Schema version number of the table corresponding to the Rowset data. |
+| COMMIT_TSO             | bigint      | The commit TSO recorded in the Rowset metadata (64-bit).     |
