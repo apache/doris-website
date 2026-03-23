@@ -122,7 +122,7 @@ DROP JOB where jobName = <job_name> ;
 
 ### Import command
 
-创建一个 Job + TVF 常驻导入作业语法如下：
+The syntax for creating a Job + TVF continuous import job is as follows:
 
 ```SQL
 CREATE JOB <job_name>
@@ -134,23 +134,22 @@ DO <Insert_Command>
 
 The module description is as follows:
 
-| Module | Description |
-
+| Module         | Description                                                  |
 | -------------- | ------------------------------------------------------------ |
-| job_name | Task name |
-| job_properties | General import parameters used to specify the Job |
-| comment | Remarks used to describe the Job |
+| job_name       | Task name                                                    |
+| job_properties | General import parameters used to specify the Job            |
+| comment        | Remarks used to describe the Job                             |
 | Insert_Command | SQL to execute; currently only Insert into table select * from s3() is supported |
 
 ### Importing Parameters
 
 #### FE Configuration Parameters
 
-| Parameter | Default Value | |
-| ------------------------------------ | ------ | ------------------------------------------- |
-| max_streaming_job_num | 1024 | Maximum number of Streaming jobs |
-| job_streaming_task_exec_thread_num | 10 | Number of threads used to execute StreamingTasks |
-| max_streaming_task_show_count | 100 | Maximum number of task execution records kept in memory for a StreamingTask |
+| Parameter                          | Default Value | Description                                                  |
+| ---------------------------------- | ------------- | ------------------------------------------------------------ |
+| max_streaming_job_num              | 1024          | Maximum number of Streaming jobs                             |
+| job_streaming_task_exec_thread_num | 10            | Number of threads used to execute StreamingTasks             |
+| max_streaming_task_show_count      | 100           | Maximum number of task execution records kept in memory for a StreamingTask |
 
 #### Import Configuration Parameters
 
