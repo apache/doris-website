@@ -55,6 +55,13 @@ FROM `<repository_name>`
 - "reserve_privilege" = "true"：是否恢复权限信息，与 `RESTORE GLOBAL` 一起使用。
 - "reserve_catalog" = "true"：是否恢复 catalog 信息，与 `RESTORE GLOBAL` 一起使用。
 - "reserve_workload_group" = "true"：是否恢复 workload group 信息，与 `RESTORE GLOBAL` 一起使用。
+- "storage_medium"：控制恢复表的存储介质。默认为 "same_with_upstream"，保留源表的存储介质设置。
+  - "same_with_upstream"：使用与备份源表相同的存储介质（默认）
+  - "hdd"：强制使用 HDD 存储
+  - "ssd"：强制使用 SSD 存储
+- "medium_allocation_mode"：指定在存储介质不可用时的处理方式。默认为 "strict"。
+  - "strict"：严格使用指定的存储介质。如果介质不可用则恢复失败（单介质环境除外）
+  - "adaptive"：优先使用指定介质，但如果不可用则自动切换到可用介质
 
 ## 可选参数
 
@@ -155,5 +162,33 @@ PROPERTIES
     "backup_timestamp"="2018-05-04-18-12-18",
     "reserve_privilege" = "true",
     "reserve_workload_group" = "true"
+);
+```
+
+6. 从 snapshot_4 中恢复表 backup_tbl，使用 SSD 存储且严格模式（如果 SSD 不可用则恢复失败）：
+
+```sql
+RESTORE SNAPSHOT example_db1.`snapshot_4`
+FROM `example_repo`
+ON ( `backup_tbl` )
+PROPERTIES
+(
+    "backup_timestamp"="2018-05-04-19-20-30",
+    "storage_medium"="ssd",
+    "medium_allocation_mode"="strict"
+);
+```
+
+7. 从 snapshot_5 中恢复表 backup_tbl，保留原始存储介质且使用自适应模式（如果原始介质不可用则自动切换到可用介质）：
+
+```sql
+RESTORE SNAPSHOT example_db1.`snapshot_5`
+FROM `example_repo`
+ON ( `backup_tbl` )
+PROPERTIES
+(
+    "backup_timestamp"="2018-05-04-20-30-40",
+    "storage_medium"="same_with_upstream",
+    "medium_allocation_mode"="adaptive"
 );
 ```
