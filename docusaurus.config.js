@@ -74,7 +74,7 @@ const config = {
         {
             async: true,
             src: 'https://widget.kapa.ai/kapa-widget.bundle.js',
-            'data-website-id': '10c44fc4-7375-4b37-9554-b39132bcb855',
+            'data-website-id': 'a5fb90df-217a-4097-95c0-80490220314b',
             'data-modal-title': 'Apache Doris AI',
             'data-project-name': 'Apache Doris Website',
             'data-button-hide': "true",
