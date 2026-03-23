@@ -230,6 +230,124 @@ Field explanations:
 * ScanBytesFromRemoteStorage: Amount of data scanned and read from remote storage.
 * BytesWriteIntoCache: Amount of data written to Data Cache during this warmup.
 
+## Cache Admission Control
+
+The cache admission control feature is disabled by default and needs to be enabled by setting relevant parameters in FE.
+
+### FE Configuration
+
+First, configure the cache admission rule information in `fe.conf` and restart the FE node to make the configuration effective.
+
+| Parameter                                       | Required | Description                               |
+| ----------------------------------------------- | -------- |-------------------------------------------|
+| `enable_file_cache_admission_control`           | Yes      | Whether to enable cache admission control, default is false. |
+| `file_cache_admission_control_json_dir`         | Yes      | The directory path for storing admission rules JSON files. All `.json` files in this directory will be automatically loaded, and any modifications will take effect dynamically. |
+
+### JSON File Format
+#### Field Description
+| Field Name | Type | Description | Example |
+|--------|------|-------------------------------|-----------------------|
+| `id` | Long | Rule ID | `1` |
+| `user_identity` | String | User identity (format: user@host, e.g., `%` matches all IPs), empty means matching all users | `"user@%"` |
+| `catalog_name` | String | Catalog name, empty means matching all catalogs | `"catalog"` |
+| `database_name` | String | Database name, empty means matching all databases | `"database"` |
+| `table_name` | String | Table name, empty means matching all tables | `"table"` |
+| `partition_pattern` | String | (Not implemented yet) Partition regular expression, empty means matching all partitions | |
+| `rule_type` | Integer | Rule type: 0 - Deny cache, 1 - Allow cache | `0` |
+| `enabled` | Boolean | Whether enabled: 0 - Disabled, 1 - Enabled | `1` |
+| `created_time` | Long | Creation time (UNIX timestamp, seconds) | `1766557246` |
+| `updated_time` | Long | Update time (UNIX timestamp, seconds) | `1766557246` |
+
+#### JSON File Example
+```json
+[
+  {
+    "id": 1,
+    "user_identity": "user@%",
+    "catalog_name": "catalog",
+    "database_name": "database",
+    "table_name": "table",
+    "partition_pattern": "",
+    "rule_type": 0,
+    "enabled": 1,
+    "created_time": 1766557246,
+    "updated_time": 1766557246
+  },
+  {
+    "id": 2,
+    "user_identity": "",
+    "catalog_name": "catalog",
+    "database_name": "",
+    "table_name": "",
+    "partition_pattern": "",
+    "rule_type": 1,
+    "enabled": 1,
+    "created_time": 1766557246,
+    "updated_time": 1766557246
+  }
+]
+```
+#### Import Rules from MySQL
+An auxiliary script is provided in the `tools/export_mysql_rule_to_json.sh` path of the Doris source code repository to export cache admission rules already stored in a MySQL database into a JSON configuration file that complies with the above format.
+
+### Rule Matching
+#### Rule Scope Combinations
+| user_identity | catalog_name | database_name | table_name | Rule Type |
+|---------------|--------------|---------------|------------|------------------|
+| Not empty | Empty | Empty | Empty | Global rule for specified user |
+| Not empty | Not empty | Empty | Empty | Catalog-level rule for specified user |
+| Not empty | Not empty | Not empty | Empty | Database-level rule for specified user |
+| Not empty | Not empty | Not empty | Not empty | Table-level rule for specified user |
+| Empty | Not empty | Empty | Empty | Catalog-level rule for all users |
+| Empty | Not empty | Not empty | Empty | Database-level rule for all users |
+| Empty | Not empty | Not empty | Not empty | Table-level rule for all users |
+
+Description:
+- "Empty" means the field is an empty string ("") or omitted in JSON (effect is the same as empty).
+- "Not empty" means the field must be a explicitly specified string (e.g., "catalog").
+
+The above seven combinations of fields constitute all valid rules. Any rules that do not comply with the hierarchical dependency are considered invalid, for example: Database is specified but Catalog is empty, or Table is specified but Database is empty.
+
+#### Matching Principles
+- **Exact Match First**: Match in order from specific to abstract by hierarchy (Table → Database → Catalog → Global), prioritizing the most precise rule level.
+- **Security First**: Deny cache rules (blacklist) always take precedence over allow cache rules (whitelist) during matching, ensuring that decisions to deny access at the same level are identified first.
+#### Matching Order
+```text
+1. Table-level rule
+   a) Blacklist rule (rule_type=0)
+   b) Whitelist rule (rule_type=1)
+2. Database-level rule
+   a) Blacklist rule
+   b) Whitelist rule
+3. Catalog-level rule
+   a) Blacklist rule
+   b) Whitelist rule
+4. Global rule (user_identity is empty)
+   a) Blacklist rule
+   b) Whitelist rule
+5. Default rule (If no rules match, caching is denied by default, equivalent to a blacklist)
+```
+### Display of Cache Decision
+You can view the cache admission decision details of a table via the `EXPLAIN` command, including: decision result, decision basis, and decision time cost.
+```text
+|   0:VHIVE_SCAN_NODE(74)                                                                                          |
+|      table: test_file_cache_features.tpch1_parquet.lineitem                                                      |
+|      inputSplitNum=10, totalFileSize=205792918, scanRanges=10                                                    |
+|      partition=1/1                                                                                               |
+|      cardinality=1469949, numNodes=1                                                                             |
+|      pushdown agg=NONE                                                                                           |
+|      file cache request ADMITTED: user_identity:root@%, reason:user table-level whitelist rule, cost:0.058215 ms |
+|      limit: 1                                                                                                    |
+```
+Output field description:
+- ADMITTED: Cache request is admitted (DENIED means rejected)
+- user_identity: The user executing the query
+- reason: The decision reason for hitting the rule. Common values include:
+  - user table-level whitelist rule: Table-level whitelist rule for specified user (current example)
+  - common table-level blacklist rule: Table-level blacklist rule for all users
+  - Other similar rules, format: [scope] [rule level] [rule type] rule
+- cost: Time cost of the decision process (milliseconds)
+
 ## Appendix
 
 ### Principle

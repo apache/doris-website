@@ -230,6 +230,124 @@ FROM <table_reference>
 * ScanBytesFromRemoteStorage：从远端存储扫描读取的数据量。
 * BytesWriteIntoCache：本次预热写入 Data Cache 的数据量。
 
+## 缓存准入控制
+
+缓存准入控制功能是默认关闭的，需要在 FE 中设置相关参数进行开启。
+
+### FE 配置
+
+首先，需要在 `fe.conf` 中配置缓存准入规则信息，并重启 FE 节点让配置生效。
+
+| 参数                                            | 必选项 | 说明                                  |
+| ----------------------------------------------- | ------ |-------------------------------------|
+| `enable_file_cache_admission_control`           | 是     | 是否启用缓存准入控制，默认 false。                |
+| `file_cache_admission_control_json_dir`         | 是     | 存储缓存准入规则 JSON 文件的目录路径。该目录下的所有 `.json` 文件都会被自动加载并监听修改，动态生效。 |
+
+### JSON 文件格式
+#### 字段说明
+| 字段名 | 类型 | 说明                            | 示例                    |
+|--------|------|-------------------------------|-----------------------|
+| `id` | 长整型 | 规则ID                          | `1`                   |
+| `user_identity` | 字符串 | 用户标识（格式：user@host，其中 `%` 表示匹配所有IP），为空表示匹配所有用户 | `"user@%"`            |
+| `catalog_name` | 字符串 | 目录名，为空表示匹配所有目录                | `"catalog"`      |
+| `database_name` | 字符串 | 数据库名，为空表示匹配所有数据库              | `"database"`          |
+| `table_name` | 字符串 | 表名，为空表示匹配所有表                  | `"table"`            |
+| `partition_pattern` | 字符串 | （功能暂未实现） 分区正则表达式，为空表示匹配所有分区   |  |
+| `rule_type` | 整型 | 规则类型：0-禁止缓存，1-允许缓存            | `0`                   |
+| `enabled` | 布尔类型 | 是否启用：0-停用，1-启用                | `1`                   |
+| `created_time` | 长整型 | 创建时间（UNIX时间戳，秒）               | `1766557246`          |
+| `updated_time` | 长整型 | 更新时间（UNIX时间戳，秒）               | `1766557246`          |
+
+#### JSON 文件样例
+```json
+[
+  {
+    "id": 1,
+    "user_identity": "user@%",
+    "catalog_name": "catalog",
+    "database_name": "database",
+    "table_name": "table",
+    "partition_pattern": "",
+    "rule_type": 0,
+    "enabled": 1,
+    "created_time": 1766557246,
+    "updated_time": 1766557246
+  },
+  {
+    "id": 2,
+    "user_identity": "",
+    "catalog_name": "catalog",
+    "database_name": "",
+    "table_name": "",
+    "partition_pattern": "",
+    "rule_type": 1,
+    "enabled": 1,
+    "created_time": 1766557246,
+    "updated_time": 1766557246
+  }
+]
+```
+#### 从 MySQL 导入规则
+在 Doris 源码库的 `tools/export_mysql_rule_to_json.sh` 路径下提供了辅助脚本，可将已存储在 MySQL 数据库中的缓存准入规则导出为符合上述格式的 JSON 配置文件。
+
+### 规则匹配
+#### 规则作用域组合
+| user_identity | catalog_name | database_name | table_name | 规则类型             |
+|---------------|--------------|---------------|------------|------------------|
+| 非空            | 空            | 空             | 空          | 指定用户全局规则         |
+| 非空            | 非空           | 空             | 空          | 指定用户catalog级规则   |
+| 非空            | 非空           | 非空            | 空          | 指定用户database库级规则 |
+| 非空            | 非空           | 非空            | 非空         | 指定用户table级规则     |
+| 空             | 非空           | 空             | 空          | 全体用户catalog级规则   |
+| 空             | 非空           | 非空            | 空          | 全体用户database级规则  |
+| 空             | 非空           | 非空            | 非空         | 全体用户Table级规则     |
+
+说明：
+- “空”表示该字段在 JSON 中为空字符串 ("") 或省略（效果等同为空）。
+- “非空”表示该字段必须为明确指定的字符串（如 "catalog"）。
+
+以上七种字段组合构成了所有有效规则。任何不符合层级依赖关系的规则均视为无效，例如：指定了 Database 但 Catalog 为空，或指定了 Table 但 Database 为空。
+
+#### 匹配原则
+- **精确优先原则**：按层级从具体到抽象的顺序匹配（Table → Database → Catalog → 全局），优先匹配最精确的规则层级。
+- **安全优先原则**：禁止缓存规则（黑名单）始终优先于允许缓存规则（白名单）进行匹配，确保同层级拒绝访问的决策最先被识别。
+#### 匹配顺序
+```text
+1. Table级规则
+   a) 黑名单规则 (rule_type=0)
+   b) 白名单规则 (rule_type=1)
+2. Database级规则
+   a) 黑名单规则
+   b) 白名单规则
+3. Catalog级规则
+   a) 黑名单规则
+   b) 白名单规则
+4. 全局规则 (user_identity为空)
+   a) 黑名单规则
+   b) 白名单规则
+5. 默认规则 (如果所有规则都不匹配，则默认拒绝缓存，等同于黑名单)
+```
+### 缓存决策展示
+可以通过 `EXPLAIN` 命令查看某张表的缓存准入决策详情，包括：决策结果、决策依据以及决策耗时。
+```text
+|   0:VHIVE_SCAN_NODE(74)                                                                                          |
+|      table: test_file_cache_features.tpch1_parquet.lineitem                                                      |
+|      inputSplitNum=10, totalFileSize=205792918, scanRanges=10                                                    |
+|      partition=1/1                                                                                               |
+|      cardinality=1469949, numNodes=1                                                                             |
+|      pushdown agg=NONE                                                                                           |
+|      file cache request ADMITTED: user_identity:root@%, reason:user table-level whitelist rule, cost:0.058215 ms |
+|      limit: 1                                                                                                    |
+```
+输出字段说明：
+- ADMITTED：缓存请求已准入（若为 DENIED 则表示被拒绝）
+- user_identity：执行查询的用户
+- reason：命中规则的决策原因。常见值包括：
+  - user table-level whitelist rule：指定用户Table级白名单规则（当前示例）
+  - common table-level blacklist rule：全体用户Table级黑名单规则
+  - 其他类似规则，格式为：[作用范围] [规则层级] [规则类型] rule
+- cost：决策过程耗时（毫秒）
+
 ## 附录
 
 ### 原理
