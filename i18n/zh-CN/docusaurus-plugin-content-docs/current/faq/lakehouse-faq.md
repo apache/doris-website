@@ -279,6 +279,59 @@ ln -s /etc/pki/ca-trust/extracted/openssl/ca-bundle.trust.crt /etc/ssl/certs/ca-
 
     如果 `session` 时区已经是 `Asia/Shanghai`，且查询仍然报错，说明生成 ORC 文件时的时区是 `+08:00`, 导致在读取时解析 `footer` 时需要用到 `+08:00` 时区，可以尝试在 `/usr/share/zoneinfo/` 目录下面软链到相同时区上。
 
+14. **查询 Hive Catalog 表时，优化阶段极慢并伴随 `nereids cost too much time` 报错，且每次访问 HMS 的耗时稳定在 10 秒左右。**
+
+    **问题分析：**
+    这类问题通常并非 HMS 服务本身的 RPC 执行慢引起，而是由于 **Doris FE 所在机器的 DNS 配置异常** 导致。
+    在 Hive Metastore Client 初始化阶段，底层会触发 hostname 解析。如果系统配置了无效的 DNS Server 或 DNS 服务不可达，会导致每次新建 HMS Client 时发生解析超时（通常为 10 秒），从而严重拖慢元数据获取速度。
+
+    **典型现象：**
+    - **基础网络正常**：HMS 端口端到端连通正常，但 Doris 获取元数据依然极慢。
+    - **规律性延迟**：耗时常常稳定在一个固定的超时时间（如 10 秒）。
+    - **规避无效**：单纯调大 Catalog 属性中的 HMS Client Timeout 只能暂时规避报错，但无法消除每次建立连接时的固定延迟。
+
+    **排查步骤：**
+    在 Doris FE 节点上执行以下命令，检查 DNS 和主机名解析是否正常：
+
+    ```bash
+    # 查看当前配置的 DNS server
+    cat /etc/resolv.conf
+    # 测试 DNS server 是否可达及解析耗时
+    ping <nameserver_ip>
+    dig @<nameserver_ip> example.com
+    dig @<nameserver_ip> -x <hms_ip>
+    ```
+
+    **解决方案（任选其一即可）：**
+    1. **修复 DNS 配置（推荐）**：修正 Doris FE 节点上 `/etc/resolv.conf` 中的 `nameserver` 配置，确保域名解析服务正常且快速响应。如果局域网内无需 DNS 且无公网访问需求，可注释掉无效的 nameserver。
+    2. **配置 Hosts 静态映射**：在 FE 节点的 `/etc/hosts` 中添加 HMS 节点的 IP 与 Hostname 映射。
+    3. **规范 Catalog 配置**：创建 Catalog 时，`hive.metastore.uris` 参数建议优先使用正确的 Hostname 而不是裸 IP。
+
+15. **查询 Hive Catalog 表时，偶尔出现查询长时间卡住，或者直接报错优化器超时 `nereids cost too much time`，但紧接着再次查询又恢复正常。**
+
+    **问题描述：**
+    这种情况通常发生在 Catalog 空闲一段时间后的首次查询。表现为请求在发起 HMS RPC 时卡住，由于 Hive Client 内部存在重试机制，复用到失效的长连接时会等待 Socket Timeout（默认 10 秒），重试可能导致累积等待时间长达 20-30 秒。这会导致查询规划阶段极慢，甚至直接触发 Doris FE 的优化器超时报错 `nereids cost too much time`。一旦该连接被剔除并重建，后续查询会立即恢复正常。
+
+    **问题分析：**
+    Doris 为每个 HMS Catalog 维护了一个 Client Pool 以复用连接。在复杂的网络环境中（如跨 VPC、经过防火墙或 NAT 网关），中间网络设备往往会对空闲连接设置 `idle timeout`。当连接空闲时间超过阈值时，网络设备会静默丢弃连接状态，且通常不会发送 FIN/RST 包通知两端。Doris 侧仍认为连接可用，下次复用该“僵尸连接”时，由于链路已不可达，必须等待完整的 Socket Timeout 才能感知到失效并触发重试。
+
+    **排查建议：**
+    - 确认 Doris FE 与 HMS 之间是否经过了防火墙、云厂商 NAT 网关或负载均衡器。
+    - 使用下文提到的 **Pulse (hms-tools)** 工具。如果探测显示网络连通极快，但长时间放置后首次执行 RPC 出现稳定且倍数于 10s 的延迟，则基本可判定为长连接被中间设备静默回收。
+
+    **解决方案：**
+    利用 Hive Client 原生的生命周期管理能力，在 Catalog 属性中配置 `hive.metastore.client.socket.lifetime`，使其略短于中间网络设备的空闲超时时间（例如设为 300 秒）：
+
+    ```sql
+    CREATE CATALOG hive_catalog PROPERTIES (
+        "type" = "hms",
+        "hive.metastore.uris" = "thrift://<hms_host>:<port>",
+        -- 设置比中间设备 idle timeout 更短的时间，例如 300s
+        "hive.metastore.client.socket.lifetime" = "300s"
+    );
+    ```
+    配置后，HMS Client 在执行 RPC 前会检查连接年龄。如果已超过 `lifetime`，它会主动重新建立连接，从而规避因复用失效连接导致的长时间卡顿或优化器超时。
+
 ## HDFS
 
 1. 访问 HDFS 3.x 时报错：`java.lang.VerifyError: xxx`
@@ -378,3 +431,37 @@ ln -s /etc/pki/ca-trust/extracted/openssl/ca-bundle.trust.crt /etc/ssl/certs/ca-
         `./parquet-tools meta /path/to/file.parquet`
 
     4. 更多功能，可参阅 [Apache Parquet Cli 文档](https://github.com/apache/parquet-java/tree/apache-parquet-1.14.0/parquet-cli)
+
+## 诊断工具
+
+### Pulse
+
+[Pulse](https://github.com/CalvinKirs/Pulse) 是一个轻量级的连通性测试工具集，专为诊断数据湖环境中的基础设施依赖问题而设计。它包含了多个针对性工具，可以帮助用户快速定位外部表访问中的环境问题。
+
+Pulse 主要包含以下工具集：
+
+1. **HMS 诊断工具 (`hms-tools`)**：
+   - 专门用于排查 Hive Metastore (HMS) 相关问题。
+   - 支持健康检查、Ping 测试、元数据对象检索以及配置诊断。
+   - **性能压测**：提供 `bench` 模式，用于测量 HMS 的性能分布和响应延迟，帮助判断瓶颈是否在元数据层。
+
+2. **Kerberos 诊断工具 (`kerberos-tools`)**：
+   - 用于在使用 Kerberos 认证的环境中验证 `krb5.conf` 配置。
+   - 支持测试 KDC 可达性、检查 Keytab 文件以及执行登录测试，确保认证层不会阻断连接。
+
+3. **对象存储诊断工具 (`s3-tools`, `gcs-tools`, `azure-blob-cpp`)**：
+   - 针对主流云存储（AWS S3, Google GCS, Azure Blob）的诊断工具。
+   - 用于排查“权限拒绝（Access Denied）”或“存储桶不存在（Bucket Not Found）”等常见的外部表数据访问问题。
+   - 支持验证凭据来源、STS 身份以及执行 Bucket 级别的操作测试。
+
+**常用命令示例（以 HMS 为例）：**
+
+```bash
+# 使用 hms-tools 测试 HMS 基础连通性与耗时细节
+java -jar hms-tools.jar ping --uris thrift://<hms_host>:<port> --count 3 --verbose
+
+# 使用 hms-tools 压测实际元数据 RPC 的延时分布
+java -jar hms-tools.jar bench --uris thrift://<hms_host>:<port> --rpc get_all_databases --iterations 10
+```
+
+当遇到元数据访问慢或外部表连接异常时，推荐根据问题类型（如认证失败、元数据慢或存储无法访问）选用对应的 Pulse 工具进行辅助定位。如果发现 `connect` 阶段极快，但整体初始化阶段存在明显且固定的延迟，请优先参考上文 FAQ 检查 FE 节点的 DNS 及 hostname 解析配置。
