@@ -279,6 +279,28 @@ ln -s /etc/pki/ca-trust/extracted/openssl/ca-bundle.trust.crt /etc/ssl/certs/ca-
 
     如果 `session` 时区已经是 `Asia/Shanghai`，且查询仍然报错，说明生成 ORC 文件时的时区是 `+08:00`, 导致在读取时解析 `footer` 时需要用到 `+08:00` 时区，可以尝试在 `/usr/share/zoneinfo/` 目录下面软链到相同时区上。
 
+14. 查询使用 JSON SerDe（如 `org.openx.data.jsonserde.JsonSerDe`）的 Hive 表时，报错：`failed to get schema` 或 `Storage schema reading not supported`
+
+    当 Hive 表使用 JSON 格式存储（ROW FORMAT SERDE 为 `org.openx.data.jsonserde.JsonSerDe`）时，Hive Metastore 可能无法通过默认方式读取表的 Schema 信息，导致 Doris 查询时报错：
+
+    ```
+    errCode = 2, detailMessage = failed to get schema for table xxx in db xxx.
+    reason: org.apache.hadoop.hive.metastore.api.MetaException:
+    java.lang.UnsupportedOperationException: Storage schema reading not supported
+    ```
+
+    可以在 Catalog 属性中添加 `"get_schema_from_table" = "true"` 解决，该参数会让 Doris 直接从 Hive 表的元数据中获取 Schema，而不依赖底层存储的 Schema Reader。
+
+    ```sql
+    CREATE CATALOG hive PROPERTIES (
+        'type' = 'hms',
+        'hive.metastore.uris' = 'thrift://x.x.x.x:9083',
+        'get_schema_from_table' = 'true'
+    );
+    ```
+
+    该参数自 2.1.10 和 3.0.6 版本支持。
+
 ## HDFS
 
 1. 访问 HDFS 3.x 时报错：`java.lang.VerifyError: xxx`
@@ -352,6 +374,23 @@ ln -s /etc/pki/ca-trust/extracted/openssl/ca-bundle.trust.crt /etc/ssl/certs/ca-
         使用下面的任意一种解决方案即可：
         - 拷贝 `hdfs-site.xml` 以及 `core-site.xml` 到 `fe/conf` 和 `be/conf` 目录。(推荐)
         - 在 `hdfs-site.xml` 找到相应的配置 `dfs.data.transfer.protection`，并且在 catalog 里面设置该参数。
+
+5. 查询 Hive Catalog 表时报错：`RPC response has a length of xxx exceeds maximum data length`
+
+    例如：
+
+    ```
+    RPC response has a length of 1213486160 exceeds maximum data length
+    ```
+
+    其中 `1213486160` 转换为十六进制为 `0x48545450`，对应 ASCII 字符串 `"HTTP"`。这说明 Doris FE 尝试连接 HDFS NameNode 的 RPC 端口时，实际收到了 HTTP 响应。
+
+    根本原因是 Catalog 中或 `hdfs-site.xml` 中配置的 HDFS NameNode 端口不正确——错误地使用了 HTTP 端口而非 RPC 端口。HDFS NameNode 通常暴露两种端口：
+
+    - **RPC 端口**（默认：`8020` 或 `9000`）：用于 HDFS 客户端通信（Doris 应使用此端口）。
+    - **HTTP 端口**（默认：`9870` 或 `50070`）：用于 NameNode Web UI。
+
+    请检查 Catalog 属性或 `fe/conf`、`be/conf` 下 `hdfs-site.xml` 中的 HDFS NameNode 端口配置，确保使用的是 RPC 端口（`dfs.namenode.rpc-address`），而非 HTTP 端口（`dfs.namenode.http-address`）。
 
 ## DLF Catalog
 

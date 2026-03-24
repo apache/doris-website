@@ -253,6 +253,28 @@ ln -s /etc/pki/ca-trust/extracted/openssl/ca-bundle.trust.crt /etc/ssl/certs/ca-
 
    If the session timezone is already set to `Asia/Shanghai` but the query still fails, it indicates that the ORC file was generated with the timezone `+08:00`. During query execution, this timezone is required when parsing the ORC footer. In this case, you can try creating a symbolic link under the `/usr/share/zoneinfo/` directory that points `+08:00` to an equivalent timezone.
 
+14. When querying a Hive table that uses JSON SerDe (e.g., `org.openx.data.jsonserde.JsonSerDe`), an error occurs: `failed to get schema` or `Storage schema reading not supported`
+
+    When a Hive table uses JSON format storage (ROW FORMAT SERDE is `org.openx.data.jsonserde.JsonSerDe`), the Hive Metastore may not be able to read the table's schema information through the default method, causing the following error when querying from Doris:
+
+    ```
+    errCode = 2, detailMessage = failed to get schema for table xxx in db xxx.
+    reason: org.apache.hadoop.hive.metastore.api.MetaException:
+    java.lang.UnsupportedOperationException: Storage schema reading not supported
+    ```
+
+    This can be resolved by adding `"get_schema_from_table" = "true"` in the Catalog properties. This parameter instructs Doris to retrieve the schema directly from the Hive table metadata instead of relying on the underlying storage's Schema Reader.
+
+    ```sql
+    CREATE CATALOG hive PROPERTIES (
+        'type' = 'hms',
+        'hive.metastore.uris' = 'thrift://x.x.x.x:9083',
+        'get_schema_from_table' = 'true'
+    );
+    ```
+
+    This parameter is supported since versions 2.1.10 and 3.0.6.
+
 ## HDFS
 
 1. When accessing HDFS 3.x, if you encounter the error `java.lang.VerifyError: xxx`, in versions prior to 1.2.1, Doris depends on Hadoop version 2.8. You need to update to 2.10.2 or upgrade Doris to versions after 1.2.2.
@@ -321,6 +343,23 @@ ln -s /etc/pki/ca-trust/extracted/openssl/ca-bundle.trust.crt /etc/ssl/certs/ca-
         Use any of the following solutions:
         - Copy `hdfs-site.xml` and `core-site.xml` to `fe/conf` and `be/conf`. (Recommended)
         - In `hdfs-site.xml`, find the corresponding configuration `dfs.data.transfer.protection` and set this parameter in the catalog.
+
+5. When querying a Hive Catalog table, an error occurs: `RPC response has a length of xxx exceeds maximum data length`
+
+    For example:
+
+    ```
+    RPC response has a length of 1213486160 exceeds maximum data length
+    ```
+
+    The value `1213486160` in hexadecimal is `0x48545450`, which corresponds to the ASCII string `"HTTP"`. This indicates that the Doris FE attempted to connect to an HDFS NameNode RPC port, but received an HTTP response instead.
+
+    The root cause is that the HDFS NameNode port configured in the Catalog or in `hdfs-site.xml` is incorrect — an HTTP port was used where an RPC port is required. HDFS NameNode typically exposes two types of ports:
+
+    - **RPC port** (default: `8020` or `9000`): Used for HDFS client communication (this is the correct port for Doris).
+    - **HTTP port** (default: `9870` or `50070`): Used for the NameNode Web UI.
+
+    Check the HDFS NameNode port configuration in the Catalog properties or in `hdfs-site.xml` under `fe/conf` and `be/conf`, and ensure it is set to the RPC port (`dfs.namenode.rpc-address`), not the HTTP port (`dfs.namenode.http-address`).
 
 ## DLF Catalog
 
