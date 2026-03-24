@@ -13,11 +13,12 @@ Currently, Doris possesses excellent out-of-the-box capabilities. In most scenar
 
 ## Hint Classification
 
-Doris currently supports several types of hints, including leading hint, ordered hint, and distribute hint:
+Doris currently supports several types of hints, including leading hint, ordered hint, distribute hint, and skew hint:
 
 - [Leading Hint](leading-hint.md)：Specifies the join order according to the order provided in the leading hint.
 - [Ordered Hint](leading-hint.md)：A specific type of leading hint that specifies the join order as the original text sequence.
 - [Distribute Hint](distribute-hint.md)：Specifies the data distribution method for joins as either shuffle or broadcast.
+- [Skew Hint](skew-hint.md): Mitigates data skew in joins, distinct aggregations, and window functions.
 
 ## Hint Example
 Imagine a table with a large amount of data. In certain specific cases, you may know that the join order of the tables can affect query performance. In such situations, the Leading Hint allows you to specify the table join order you want the optimizer to follow.
@@ -85,6 +86,6 @@ Users can view the effectiveness and reasons for non-effectiveness through the H
 
 ## Summary
 
-Hints are powerful tools for manually managing execution plans. Currently, Doris supports leading hint, ordered hint, distribute hint, etc., enabling users to manually manage join order, shuffle methods, and other variable configurations, providing users with more convenient and effective operational capabilities.
+Hints are powerful tools for manually managing execution plans. Currently, Doris supports leading hint, ordered hint, distribute hint, skew hint, etc., enabling users to manually manage join order, shuffle methods, and skew-related execution strategies.
 
 

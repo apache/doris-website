@@ -673,6 +673,7 @@ const sidebars: SidebarsConfig = {
                                 'query-acceleration/hints/hints-overview',
                                 'query-acceleration/hints/leading-hint',
                                 'query-acceleration/hints/distribute-hint',
+                                'query-acceleration/hints/skew-hint',
                             ],
                         },
                         {

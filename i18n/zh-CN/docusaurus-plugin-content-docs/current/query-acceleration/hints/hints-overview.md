@@ -13,11 +13,12 @@
 
 ## Hint 分类
 
-Doris 目前支持以下几种 hint 类型，包括 leading hint，ordered hint，distribute hint 等：
+Doris 目前支持以下几种 hint 类型，包括 leading hint，ordered hint，distribute hint，skew hint 等：
 
 - [Leading Hint](leading-hint.md)：用于指定 join order 为 leading 中提供的 order 顺序；
 - [Ordered Hint](leading-hint.md)：一种特定的 leading hint, 用于指定 join order 为原始文本序；
 - [Distribute Hint](distribute-hint.md)：用于指定 join 的数据分发方式为 shuffle 还是 broadcast。
+- [Skew Hint](skew-hint.md)：用于缓解 Join、DISTINCT 聚合和窗口函数中的数据倾斜问题。
 
 ## Hint 示例
 
@@ -86,4 +87,4 @@ Hint Log 分为三个状态：
 
 ## 总结
 
-Hint 是手动管理执行计划的强大工具。当前 Doris 支持的 leading hint, ordered hint, distribute hint 等，可以支撑用户手动管理 join order, shuffle 方式以及其他变量配置，给用户提供更方便有效的运维能力。
+Hint 是手动管理执行计划的强大工具。当前 Doris 支持的 leading hint, ordered hint, distribute hint, skew hint 等，可以支撑用户手动管理 join order、shuffle 方式以及倾斜场景下的执行策略，给用户提供更方便有效的运维能力。
