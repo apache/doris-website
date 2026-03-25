@@ -36,7 +36,7 @@ Doris builds a [prefix index](../table-design/index/prefix-index) on the first 3
 
 - **Frequently filtered columns first**: Put the columns most commonly used in WHERE conditions at the front.
 - **Fixed-size types first**: Place INT, BIGINT, DATE, and other fixed-size types before VARCHAR, because the prefix index stops at the first VARCHAR column.
-- **Add inverted indexes**: For columns not covered by the prefix index, add [inverted indexes](../table-design/index/inverted-index/overview) to speed up filtering.
+- **Add inverted indexes**: For columns not covered by the prefix index, add [inverted indexes](../table-design/index/inverted-index.md) to speed up filtering.
 
 ### Partitioning
 
@@ -111,7 +111,7 @@ Choose the right loading method and follow these best practices to avoid common 
 
 - **Don't use `INSERT INTO VALUES` for bulk data.** Use [Stream Load](../data-operate/import/import-way/stream-load-manual) or [Broker Load](../data-operate/import/import-way/broker-load-manual) instead. See [Loading Overview](../data-operate/import/load-manual).
 - **Batch writes on the client side.** High-frequency small imports cause version accumulation. If not feasible, use [Group Commit](../data-operate/import/group-commit-manual).
-- **Break large imports into smaller batches.** A failed long-running import must restart from scratch. Use [INSERT INTO SELECT with S3 TVF](../data-operate/import/streaming-job/streaming-job-tvf) for incremental import.
+- **Break large imports into smaller batches.** A failed long-running import must restart from scratch. Use [INSERT INTO SELECT with S3 TVF](../data-operate/import/import-way/insert-into-manual.md) for incremental import.
 - **Enable `load_to_single_tablet`** for Duplicate Key tables with Random bucketing to reduce write amplification.
 
 See [Load Best Practices](../data-operate/import/load-best-practices).
@@ -130,11 +130,11 @@ See [Bucketing](#bucketing) for sizing guidelines.
 
 ### Indexes
 
-- **Put the right columns in the sort key.** Unlike systems such as PostgreSQL, Doris only indexes the first 36 bytes of key columns and stops at the first VARCHAR. Columns beyond this prefix won't benefit from the sort key. Add [inverted indexes](../table-design/index/inverted-index/overview) for those columns. See [Sort Key](#sort-key).
+- **Put the right columns in the sort key.** Unlike systems such as PostgreSQL, Doris only indexes the first 36 bytes of key columns and stops at the first VARCHAR. Columns beyond this prefix won't benefit from the sort key. Add [inverted indexes](../table-design/index/inverted-index.md) for those columns. See [Sort Key](#sort-key).
 
 ### Diagnostic Tools
 
-See [Query Profile](../query-acceleration/query-profile) to diagnose slow queries.
+See [Query Profile](../query-acceleration/performance-tuning-overview/analysis-tools) to diagnose slow queries.
 
 ## Data Lake Queries
 
@@ -171,7 +171,7 @@ Data lake storage often contains a large number of small files. Small files get 
 
 ### Use Query Profile for Diagnosis
 
-The bottleneck of data lake queries is typically IO rather than computation. [Query Profile](../query-acceleration/query-profile) can help locate the root cause of slow queries. Focus on:
+The bottleneck of data lake queries is typically IO rather than computation. [Query Profile](../query-acceleration/performance-tuning-overview/analysis-tools) can help locate the root cause of slow queries. Focus on:
 
 - **Split count and data volume**: Determine if too much data is being scanned.
 - **MergeIO metrics**: If `MergedBytes` is much larger than `RequestBytes`, read amplification is severe. Reduce `merge_io_read_slice_size_bytes` (default 8 MB) to mitigate.
