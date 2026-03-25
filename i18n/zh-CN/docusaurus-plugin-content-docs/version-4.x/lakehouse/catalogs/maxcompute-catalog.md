@@ -30,19 +30,49 @@
 ```sql
 CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
     'type' = 'max_compute',
+    {McAuthProperties},
     {McRequiredProperties},
     {McOptionalProperties},
     {CommonProperties}
 );
 ```
 
+* `{McAuthProperties}`
+
+  这些属性用于控制 Doris 通过 Catalog 访问 MaxCompute 时的认证方式，适用于查询和写入场景。
+
+  > 版本说明：`mc.auth.type`、`mc.ram_role_arn` 和 `mc.ecs_ram_role` 自 **4.0.4** 起支持。
+
+  | 属性名 | 默认值 | 说明 | 是否必填 | 支持的 Doris 版本 |
+  | -------------------------- | ------------- | -------------------------------------------------------------------------- | ------------ | ------------ |
+  | `mc.auth.type` | `ak_sk` | 认证类型。支持 `ak_sk`、`ram_role_arn` 和 `ecs_ram_role`。 | 否 | 4.0.4（含）之后 |
+  | `mc.access_key` | 无 | 阿里云 AccessKey。 | 当 `mc.auth.type` 为 `ak_sk`（默认）或 `ram_role_arn` 时必填。 | |
+  | `mc.secret_key` | 无 | 阿里云 SecretKey。 | 当 `mc.auth.type` 为 `ak_sk`（默认）或 `ram_role_arn` 时必填。 | |
+  | `mc.ram_role_arn` | 无 | 阿里云 RAM Role ARN。 | 当 `mc.auth.type` 为 `ram_role_arn` 时必填。 | 4.0.4（含）之后 |
+  | `mc.ecs_ram_role` | 无 | ECS 实例绑定的 RAM Role 名称。 | 当 `mc.auth.type` 为 `ecs_ram_role` 时必填。 | 4.0.4（含）之后 |
+
+  `mc.auth.type` 可选值：
+
+  | 取值 | 说明 |
+  | --- | --- |
+  | `ak_sk` | 使用阿里云 AccessKey / SecretKey 直接访问 MaxCompute。 |
+  | `ram_role_arn` | 使用 `mc.access_key` 和 `mc.secret_key` 作为源凭证调用 STS `AssumeRole`，再使用返回的临时凭证访问 MaxCompute。 |
+  | `ecs_ram_role` | 通过 ECS Metadata Service 获取临时凭证。请确保访问 MaxCompute 的 Doris FE 和 BE 节点都可以使用 `mc.ecs_ram_role` 指定的角色。 |
+
+  生效规则：
+
+  1. 未配置 `mc.auth.type` 时，默认使用 `ak_sk`。
+  2. 当 `mc.auth.type` 为 `ram_role_arn` 时，必须同时配置 `mc.access_key`、`mc.secret_key` 和 `mc.ram_role_arn`。
+  3. 当 `mc.auth.type` 为 `ecs_ram_role` 时，必须配置 `mc.ecs_ram_role`。
+  4. 使用 `mc.access_key` 和 `mc.secret_key` 时，这两个参数必须成对配置。
+
+  不同认证方式的 SQL 示例请参见下方的[基础示例](#基础示例)。
+
 * `{McRequiredProperties}`
 
   | 属性名                | 说明                                                                                                                 | 支持的 Doris 版本 |
   | ------------------ | ------------------------------------------------------------------------------------------------------------------ | ------------ |
   | `mc.default.project` | 想要访问的 MaxCompute 项目名称。可以在 [MaxCompute 项目列表](https://maxcompute.console.aliyun.com/cn-beijing/project-list) 中创建和管理。 |              |
-  | `mc.access_key`     | AccessKey。可以在 [阿里云控制台](https://ram.console.aliyun.com/manage/ak) 中创建和管理。                                           |              |
-  | `mc.secret_key`     | SecretKey。可以在 [阿里云控制台](https://ram.console.aliyun.com/manage/ak) 中创建和管理。                                           |              |
   | `mc.region`          | MaxCompute 开通的地域。可以从 Endpoint 中找到对应的 Region                                                                        | 2.1.7（不含）之前 |
   | `mc.endpoint`       | MaxCompute 开通的地域。请参照下文的如何获取 Endpoint 和 Quota 来配置。                                                                    | 2.1.7（含）之后  |
 
@@ -136,13 +166,41 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 
 ## 基础示例
 
+默认 `ak_sk` 认证：
+
 ```sql
 CREATE CATALOG mc_catalog PROPERTIES (
     'type' = 'max_compute',
     'mc.default.project' = 'project',
-    'mc.access_key' = 'sk',
-    'mc.secret_key' = 'ak',
-    'mc.endpoint' = 'http://service.cn-beijing-vpc.MaxCompute.aliyun-inc.com/api'
+    'mc.access_key' = 'AKxxxxx',
+    'mc.secret_key' = 'SKxxxxx',
+    'mc.endpoint' = 'http://service.cn-beijing-vpc.maxcompute.aliyun-inc.com/api'
+);
+```
+
+`ram_role_arn` 认证（4.0.4+）：
+
+```sql
+CREATE CATALOG mc_catalog PROPERTIES (
+    'type' = 'max_compute',
+    'mc.default.project' = 'project',
+    'mc.auth.type' = 'ram_role_arn',
+    'mc.access_key' = 'AKxxxxx',
+    'mc.secret_key' = 'SKxxxxx',
+    'mc.ram_role_arn' = 'acs:ram::<your_account_id>:role/<your_role_name>',
+    'mc.endpoint' = 'http://service.cn-beijing-vpc.maxcompute.aliyun-inc.com/api'
+);
+```
+
+`ecs_ram_role` 认证（4.0.4+）：
+
+```sql
+CREATE CATALOG mc_catalog PROPERTIES (
+    'type' = 'max_compute',
+    'mc.default.project' = 'project',
+    'mc.auth.type' = 'ecs_ram_role',
+    'mc.ecs_ram_role' = '<your_ecs_ram_role_name>',
+    'mc.endpoint' = 'http://service.cn-beijing-vpc.maxcompute.aliyun-inc.com/api'
 );
 ```
 

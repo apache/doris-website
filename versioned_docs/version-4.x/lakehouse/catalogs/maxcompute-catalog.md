@@ -30,19 +30,49 @@
 ```sql
 CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
     'type' = 'max_compute',
+    {McAuthProperties},
     {McRequiredProperties},
     {McOptionalProperties},
     {CommonProperties}
 );
 ```
 
+* `{McAuthProperties}`
+
+  These properties control how Doris authenticates to MaxCompute for both query and write operations.
+
+  > Version note: `mc.auth.type`, `mc.ram_role_arn`, and `mc.ecs_ram_role` are supported since **4.0.4**.
+
+  | Property Name | Default Value | Description | Required | Supported Doris Version |
+  | -------------------------- | ------------- | -------------------------------------------------------------------------- | ------------ | ------------ |
+  | `mc.auth.type` | `ak_sk` | Authentication type. Supported values: `ak_sk`, `ram_role_arn`, and `ecs_ram_role`. | No | 4.0.4 (inclusive) and later |
+  | `mc.access_key` | None | Alibaba Cloud AccessKey. | Required when `mc.auth.type` is `ak_sk` (default) or `ram_role_arn`. | |
+  | `mc.secret_key` | None | Alibaba Cloud SecretKey. | Required when `mc.auth.type` is `ak_sk` (default) or `ram_role_arn`. | |
+  | `mc.ram_role_arn` | None | Alibaba Cloud RAM Role ARN. | Required when `mc.auth.type` is `ram_role_arn`. | 4.0.4 (inclusive) and later |
+  | `mc.ecs_ram_role` | None | Alibaba Cloud ECS RAM Role name attached to the instance. | Required when `mc.auth.type` is `ecs_ram_role`. | 4.0.4 (inclusive) and later |
+
+  Supported values for `mc.auth.type`:
+
+  | Value | Description |
+  | --- | --- |
+  | `ak_sk` | Use Alibaba Cloud AccessKey and SecretKey directly. |
+  | `ram_role_arn` | Use `mc.access_key` and `mc.secret_key` as source credentials to call STS `AssumeRole`, then access MaxCompute with the returned temporary credentials. |
+  | `ecs_ram_role` | Obtain temporary credentials from the ECS metadata service. Ensure the Doris FE and BE nodes that access MaxCompute can use the role specified by `mc.ecs_ram_role`. |
+
+  Validation rules:
+
+  1. If `mc.auth.type` is omitted, Doris uses `ak_sk`.
+  2. When `mc.auth.type` is `ram_role_arn`, you must configure `mc.access_key`, `mc.secret_key`, and `mc.ram_role_arn`.
+  3. When `mc.auth.type` is `ecs_ram_role`, you must configure `mc.ecs_ram_role`.
+  4. When `mc.access_key` and `mc.secret_key` are used, they must be configured together.
+
+  For SQL examples of different authentication types, see [Basic Example](#basic-example).
+
 * `{McRequiredProperties}`
 
   | Property Name | Description | Supported Doris Version |
   | ------------------ | ------------------------------------------------------------------------------------------------------------------ | ------------ |
   | `mc.default.project` | The name of the MaxCompute project to access. You can create and manage projects in the [MaxCompute Project List](https://maxcompute.console.aliyun.com/cn-beijing/project-list). | |
-  | `mc.access_key` | AccessKey. You can create and manage it in the [Alibaba Cloud Console](https://ram.console.aliyun.com/manage/ak). | |
-  | `mc.secret_key` | SecretKey. You can create and manage it in the [Alibaba Cloud Console](https://ram.console.aliyun.com/manage/ak). | |
   | `mc.region` | The region where MaxCompute is activated. You can find the corresponding Region from the Endpoint. | Before 2.1.7 (exclusive) |
   | `mc.endpoint` | The region where MaxCompute is activated. Please refer to the "How to Obtain Endpoint and Quota" section below for configuration. | 2.1.7 (inclusive) and later |
 
@@ -136,13 +166,41 @@ Only the public cloud version of MaxCompute is supported. For private cloud vers
 
 ## Basic Example
 
+Default `ak_sk` authentication:
+
 ```sql
 CREATE CATALOG mc_catalog PROPERTIES (
     'type' = 'max_compute',
     'mc.default.project' = 'project',
-    'mc.access_key' = 'sk',
-    'mc.secret_key' = 'ak',
-    'mc.endpoint' = 'http://service.cn-beijing-vpc.MaxCompute.aliyun-inc.com/api'
+    'mc.access_key' = 'AKxxxxx',
+    'mc.secret_key' = 'SKxxxxx',
+    'mc.endpoint' = 'http://service.cn-beijing-vpc.maxcompute.aliyun-inc.com/api'
+);
+```
+
+`ram_role_arn` authentication (4.0.4+):
+
+```sql
+CREATE CATALOG mc_catalog PROPERTIES (
+    'type' = 'max_compute',
+    'mc.default.project' = 'project',
+    'mc.auth.type' = 'ram_role_arn',
+    'mc.access_key' = 'AKxxxxx',
+    'mc.secret_key' = 'SKxxxxx',
+    'mc.ram_role_arn' = 'acs:ram::<your_account_id>:role/<your_role_name>',
+    'mc.endpoint' = 'http://service.cn-beijing-vpc.maxcompute.aliyun-inc.com/api'
+);
+```
+
+`ecs_ram_role` authentication (4.0.4+):
+
+```sql
+CREATE CATALOG mc_catalog PROPERTIES (
+    'type' = 'max_compute',
+    'mc.default.project' = 'project',
+    'mc.auth.type' = 'ecs_ram_role',
+    'mc.ecs_ram_role' = '<your_ecs_ram_role_name>',
+    'mc.endpoint' = 'http://service.cn-beijing-vpc.maxcompute.aliyun-inc.com/api'
 );
 ```
 
