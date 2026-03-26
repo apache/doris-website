@@ -30,6 +30,8 @@ DELETE FROM table_name
     [PARTITION partition_name | PARTITIONS (partition_name [, partition_name])]
     [USING additional_tables]
     WHERE condition
+    [ORDER BY column [ASC | DESC] [NULLS FIRST | NULLS LAST] [, ...]]
+    [LIMIT [offset,] count]
 ```
 
 #### Required Parameters
@@ -46,6 +48,8 @@ DELETE FROM table_name
 + PARTITION partition_name | PARTITIONS (partition_name [, partition_name]): Specifies the partition or partitions to select rows for removal
 + table_alias: alias of table
 + USING additional_tables: If you need to refer to additional tables in the WHERE clause to help identify the rows to be removed, then specify those table names in the USING clause. You can also use the USING clause to specify subqueries that identify the rows to be removed.
++ ORDER BY column: Specifies the order in which rows are deleted. Used together with LIMIT to control which rows are affected.
++ LIMIT [offset,] count: Limits the number of rows to be deleted. When used with ORDER BY, deletes the first `count` rows after sorting. If `offset` is specified, skips the first `offset` rows before deleting.
 
 #### Note
 
@@ -177,6 +181,18 @@ This feature is supported since the Apache Doris 1.2 version
    delete from lineitem
    using discount_orders
    where lineitem.o_orderkey = discount_orders.o_orderkey;
+   ```
+
+6. Delete with ORDER BY and LIMIT — delete the first 3 rows ordered by k1 in ascending order
+
+   ```sql
+   DELETE FROM my_table ORDER BY k1 ASC LIMIT 3;
+   ```
+
+7. Delete with ORDER BY, LIMIT and offset — skip the first 10 rows and delete the next 5 rows ordered by k1
+
+   ```sql
+   DELETE FROM my_table ORDER BY k1 ASC LIMIT 10, 5;
    ```
 
 ## Keywords

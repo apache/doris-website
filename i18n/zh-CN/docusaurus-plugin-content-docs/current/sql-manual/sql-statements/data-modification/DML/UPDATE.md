@@ -20,6 +20,8 @@ UPDATE target_table [table_alias]
     SET assignment_list
     [ FROM additional_tables]
     WHERE condition
+    [ORDER BY column [ASC | DESC] [NULLS FIRST | NULLS LAST] [, ...]]
+    [LIMIT [offset,] count]
 ```
 
 #### Required Parameters
@@ -33,6 +35,8 @@ UPDATE target_table [table_alias]
 + cte: 通用表达式。可以是 'WITH a AS SELECT * FROM tbl' 形式
 + table_alias: 表的别名
 + FROM additional_tables: 指定一个或多个表，用于选中更新的行，或者获取更新的值。注意，如需要在此列表中再次使用目标表，需要为其显式指定别名。
++ ORDER BY column: 指定更新行的排序方式。通常与 LIMIT 一起使用，以控制哪些行会被更新。
++ LIMIT [offset,] count: 限制更新的行数。与 ORDER BY 一起使用时，排序后更新前 `count` 行。如果指定了 `offset`，则跳过排序后的前 `offset` 行再进行更新。
 
 #### Note
 
@@ -150,6 +154,18 @@ with discount_orders as (
 update lineitem  set l_discount = l_discount*0.9
 from discount_orders 
 where lineitem.o_orderkey = discount_orders.o_orderkey;
+```
+
+5. 使用 ORDER BY 和 LIMIT 更新数据——按照 v1 列降序排列，更新满足 k1 > 0 条件的前 3 行的 v1 列为 0
+
+```sql
+UPDATE test SET v1 = 0 WHERE k1 > 0 ORDER BY v1 DESC LIMIT 3;
+```
+
+6. 使用 ORDER BY、LIMIT 和 offset 更新数据——按照 k1 列升序排列，跳过前 10 行，更新接下来的 5 行
+
+```sql
+UPDATE test SET v1 = 100 ORDER BY k1 ASC LIMIT 10, 5;
 ```
 
 ## 关键词

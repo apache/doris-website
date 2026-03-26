@@ -30,6 +30,8 @@ DELETE FROM table_name [table_alias]
     [PARTITION partition_name | PARTITIONS (partition_name [, partition_name])]
     [USING additional_tables]
     WHERE condition
+    [ORDER BY column [ASC | DESC] [NULLS FIRST | NULLS LAST] [, ...]]
+    [LIMIT [offset,] count]
 ```
 
 #### Required Parameters
@@ -46,6 +48,8 @@ DELETE FROM table_name [table_alias]
 + PARTITION partition_name | PARTITIONS (partition_name [, partition_name]): 指定执行删除数据的分区名，如果表不存在此分区，则报错
 + table_alias: 表的别名
 + USING additional_tables: 如果需要在 WHERE 语句中使用其他的表来帮助识别需要删除的行，则可以在 USING 中指定这些表或者查询。
++ ORDER BY column: 指定删除行的排序方式。通常与 LIMIT 一起使用，以控制哪些行会被删除。
++ LIMIT [offset,] count: 限制删除的行数。与 ORDER BY 一起使用时，排序后删除前 `count` 行。如果指定了 `offset`，则跳过排序后的前 `offset` 行再进行删除。
 
 #### Note
 
@@ -172,6 +176,18 @@ DELETE FROM table_name [table_alias]
    delete from lineitem
    using discount_orders
    where lineitem.o_orderkey = discount_orders.o_orderkey;
+   ```
+
+6. 使用 ORDER BY 和 LIMIT 删除数据——按照 k1 列升序排列，删除前 3 行
+
+   ```sql
+   DELETE FROM my_table ORDER BY k1 ASC LIMIT 3;
+   ```
+
+7. 使用 ORDER BY、LIMIT 和 offset 删除数据——按照 k1 列升序排列，跳过前 10 行，删除接下来的 5 行
+
+   ```sql
+   DELETE FROM my_table ORDER BY k1 ASC LIMIT 10, 5;
    ```
 
 ## 关键词

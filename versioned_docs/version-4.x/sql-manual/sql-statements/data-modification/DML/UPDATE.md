@@ -19,6 +19,8 @@ UPDATE target_table [table_alias]
     SET assignment_list
     [ FROM additional_tables]
     WHERE condition
+    [ORDER BY column [ASC | DESC] [NULLS FIRST | NULLS LAST] [, ...]]
+    [LIMIT [offset,] count]
 ```
 
 #### Required Parameters
@@ -32,6 +34,12 @@ UPDATE target_table [table_alias]
 + cte: Common Table Expression, eg 'WITH a AS SELECT * FROM tbl'
 + table_alias: alias of table
 + FROM additional_tables: Specifies one or more tables to use for selecting rows to update or for setting new values. Note that if you want use target table here, you should give it a alias explicitly.
++ ORDER BY column: Specifies the order in which rows are updated. Used together with LIMIT to control which rows are affected.
++ LIMIT [offset,] count: Limits the number of rows to be updated. When used with ORDER BY, updates the first `count` rows after sorting. If `offset` is specified, skips the first `offset` rows before updating.
+
+:::tip
+ORDER BY and LIMIT in UPDATE statements are supported since version 4.1.0.
+:::
 
 #### Note
 
@@ -149,6 +157,18 @@ with discount_orders as (
 update lineitem  set l_discount = l_discount*0.9
 from discount_orders 
 where lineitem.o_orderkey = discount_orders.o_orderkey;
+```
+
+5. Update with ORDER BY and LIMIT — update the v1 column to 0 for the first 3 rows with the largest v1 values where k1 > 0
+
+```sql
+UPDATE test SET v1 = 0 WHERE k1 > 0 ORDER BY v1 DESC LIMIT 3;
+```
+
+6. Update with ORDER BY, LIMIT and offset — skip the first 10 rows and update the next 5 rows ordered by k1
+
+```sql
+UPDATE test SET v1 = 100 ORDER BY k1 ASC LIMIT 10, 5;
 ```
 
 ## Keywords
