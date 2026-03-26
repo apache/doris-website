@@ -29,7 +29,7 @@ Syntax 2: This syntax can only used on UNIQUE KEY model
 DELETE FROM table_name
     [PARTITION partition_name | PARTITIONS (partition_name [, partition_name])]
     [USING additional_tables]
-    WHERE condition
+    [WHERE condition]
     [ORDER BY column [ASC | DESC] [NULLS FIRST | NULLS LAST] [, ...]]
     [LIMIT [offset,] count]
 ```
@@ -48,7 +48,7 @@ DELETE FROM table_name
 + PARTITION partition_name | PARTITIONS (partition_name [, partition_name]): Specifies the partition or partitions to select rows for removal
 + table_alias: alias of table
 + USING additional_tables: If you need to refer to additional tables in the WHERE clause to help identify the rows to be removed, then specify those table names in the USING clause. You can also use the USING clause to specify subqueries that identify the rows to be removed.
-+ ORDER BY column: Specifies the order in which rows are deleted. Used together with LIMIT to control which rows are affected.
++ ORDER BY column: Specifies the order in which rows are deleted. Typically used together with LIMIT to control which rows are affected.
 + LIMIT [offset,] count: Limits the number of rows to be deleted. When used with ORDER BY, deletes the first `count` rows after sorting. If `offset` is specified, skips the first `offset` rows before deleting.
 
 #### Note

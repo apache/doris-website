@@ -19,7 +19,7 @@ UPDATE 操作目前只支持更新 Value 列，Key 列的更新可参考[使用 
 UPDATE target_table [table_alias]
     SET assignment_list
     [ FROM additional_tables]
-    WHERE condition
+    [WHERE condition]
     [ORDER BY column [ASC | DESC] [NULLS FIRST | NULLS LAST] [, ...]]
     [LIMIT [offset,] count]
 ```

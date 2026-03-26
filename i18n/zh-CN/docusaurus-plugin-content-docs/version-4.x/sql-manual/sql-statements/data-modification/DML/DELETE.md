@@ -29,7 +29,7 @@ column_name op { value | value_list } [ AND column_name op { value | value_list 
 DELETE FROM table_name [table_alias]
     [PARTITION partition_name | PARTITIONS (partition_name [, partition_name])]
     [USING additional_tables]
-    WHERE condition
+    [WHERE condition]
     [ORDER BY column [ASC | DESC] [NULLS FIRST | NULLS LAST] [, ...]]
     [LIMIT [offset,] count]
 ```

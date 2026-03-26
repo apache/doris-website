@@ -18,7 +18,7 @@ The UPDATE operation currently only supports updating the Value column. The upda
 UPDATE target_table [table_alias]
     SET assignment_list
     [ FROM additional_tables]
-    WHERE condition
+    [WHERE condition]
     [ORDER BY column [ASC | DESC] [NULLS FIRST | NULLS LAST] [, ...]]
     [LIMIT [offset,] count]
 ```
@@ -34,7 +34,7 @@ UPDATE target_table [table_alias]
 + cte: Common Table Expression, eg 'WITH a AS SELECT * FROM tbl'
 + table_alias: alias of table
 + FROM additional_tables: Specifies one or more tables to use for selecting rows to update or for setting new values. Note that if you want use target table here, you should give it a alias explicitly.
-+ ORDER BY column: Specifies the order in which rows are updated. Used together with LIMIT to control which rows are affected.
++ ORDER BY column: Specifies the order in which rows are updated. Typically used together with LIMIT to control which rows are affected.
 + LIMIT [offset,] count: Limits the number of rows to be updated. When used with ORDER BY, updates the first `count` rows after sorting. If `offset` is specified, skips the first `offset` rows before updating.
 
 :::tip
