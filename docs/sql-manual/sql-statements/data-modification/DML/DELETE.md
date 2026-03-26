@@ -40,7 +40,6 @@ DELETE FROM table_name
 + column_name: column belong to table_name
 + op: Logical comparison operator, The optional types of op include: =, >, <, >=, <=, !=, in, not in
 + value | value_list: value or value list used for logial comparison
-+ WHERE condition: Specifies a condition to use to select rows for removal
 
 #### Optional Parameters
 
@@ -48,8 +47,9 @@ DELETE FROM table_name
 + PARTITION partition_name | PARTITIONS (partition_name [, partition_name]): Specifies the partition or partitions to select rows for removal
 + table_alias: alias of table
 + USING additional_tables: If you need to refer to additional tables in the WHERE clause to help identify the rows to be removed, then specify those table names in the USING clause. You can also use the USING clause to specify subqueries that identify the rows to be removed.
++ WHERE condition: Specifies a condition to use to select rows for removal. Required for Syntax 1. Optional for Syntax 2.
 + ORDER BY column: Specifies the order in which rows are deleted. Typically used together with LIMIT to control which rows are affected.
-+ LIMIT [offset,] count: Limits the number of rows to be deleted. When used with ORDER BY, deletes the first `count` rows after sorting. If `offset` is specified, skips the first `offset` rows before deleting.
++ LIMIT [offset,] count: Limits the number of rows to be deleted. When used with ORDER BY, deletes the first `count` rows after sorting. If `offset` is specified, skips the first `offset` rows before deleting. If used without ORDER BY, the set of affected rows is non-deterministic.
 
 #### Note
 
@@ -63,6 +63,7 @@ This feature is supported since the Apache Doris 1.2 version
 :::
 
 5. This statement may reduce query efficiency for a period of time after execution. The degree of impact depends on the number of delete conditions specified in the statement. The more conditions you specify, the greater the impact.
+6. When neither `WHERE` nor `LIMIT` is specified in Syntax 2, all rows in the table will be deleted. Always verify the intended scope before omitting the `WHERE` clause.
 
 ## Example
 

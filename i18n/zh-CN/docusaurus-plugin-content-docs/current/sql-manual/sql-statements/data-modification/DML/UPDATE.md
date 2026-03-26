@@ -28,19 +28,21 @@ UPDATE target_table [table_alias]
 
 + target_table: 待更新数据的目标表。可以是 'db_name.table_name' 形式
 + assignment_list: 待更新的目标列，形如 'col_name = value, col_name = value' 格式
-+ WHERE condition: 期望更新的条件，一个返回 true 或者 false 的表达式即可
 
 #### Optional Parameters
 
 + cte: 通用表达式。可以是 'WITH a AS SELECT * FROM tbl' 形式
 + table_alias: 表的别名
 + FROM additional_tables: 指定一个或多个表，用于选中更新的行，或者获取更新的值。注意，如需要在此列表中再次使用目标表，需要为其显式指定别名。
++ WHERE condition: 期望更新的条件，一个返回 true 或者 false 的表达式即可。
 + ORDER BY column: 指定更新行的排序方式。通常与 LIMIT 一起使用，以控制哪些行会被更新。
-+ LIMIT [offset,] count: 限制更新的行数。与 ORDER BY 一起使用时，排序后更新前 `count` 行。如果指定了 `offset`，则跳过排序后的前 `offset` 行再进行更新。
++ LIMIT [offset,] count: 限制更新的行数。与 ORDER BY 一起使用时，排序后更新前 `count` 行。如果指定了 `offset`，则跳过排序后的前 `offset` 行再进行更新。如果不配合 ORDER BY 使用，受影响的行是不确定的。
 
 #### Note
 
 当前 UPDATE 语句仅支持在 UNIQUE KEY 模型上的行更新。
+
+如果既未指定 `WHERE` 也未指定 `LIMIT`，则会更新表中的所有行。请在省略 `WHERE` 子句前务必确认操作范围。
 
 ## 示例
 

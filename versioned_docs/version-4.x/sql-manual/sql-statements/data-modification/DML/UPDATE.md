@@ -27,15 +27,15 @@ UPDATE target_table [table_alias]
 
 + target_table: The target table of the data to be updated. Can be of the form 'db_name.table_name'
 + assignment_list: The target column to be updated, in the format 'col_name = value, col_name = value'
-+ where condition: the condition that is expected to be updated, an expression that returns true or false can be
 
 #### Optional Parameters
 
 + cte: Common Table Expression, eg 'WITH a AS SELECT * FROM tbl'
 + table_alias: alias of table
 + FROM additional_tables: Specifies one or more tables to use for selecting rows to update or for setting new values. Note that if you want use target table here, you should give it a alias explicitly.
++ WHERE condition: The condition that is expected to be updated, an expression that returns true or false.
 + ORDER BY column: Specifies the order in which rows are updated. Typically used together with LIMIT to control which rows are affected.
-+ LIMIT [offset,] count: Limits the number of rows to be updated. When used with ORDER BY, updates the first `count` rows after sorting. If `offset` is specified, skips the first `offset` rows before updating.
++ LIMIT [offset,] count: Limits the number of rows to be updated. When used with ORDER BY, updates the first `count` rows after sorting. If `offset` is specified, skips the first `offset` rows before updating. If used without ORDER BY, the set of affected rows is non-deterministic.
 
 :::tip
 ORDER BY and LIMIT in UPDATE statements are supported since version 4.1.0.
@@ -44,6 +44,8 @@ ORDER BY and LIMIT in UPDATE statements are supported since version 4.1.0.
 #### Note
 
 The current UPDATE statement only supports row updates on the UNIQUE KEY model.
+
+When neither `WHERE` nor `LIMIT` is specified, all rows in the table will be updated. Always verify the intended scope before omitting the `WHERE` clause.
 
 ## Example
 
