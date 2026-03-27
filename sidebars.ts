@@ -332,6 +332,7 @@ const sidebars: SidebarsConfig = {
                                 'ai/vector-search/practical-guide',
                                 'ai/vector-search/hnsw',
                                 'ai/vector-search/ivf',
+                                'ai/vector-search/ivf-on-disk',
                                 'ai/vector-search/index-management',
                                 'ai/vector-search/resource-estimation',
                                 'ai/vector-search/quantization-survey',
