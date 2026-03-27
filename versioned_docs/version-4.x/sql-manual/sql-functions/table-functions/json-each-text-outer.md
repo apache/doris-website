@@ -14,6 +14,10 @@ Unlike [`json_each_text`](json-each-text.md), when the input is NULL or an empty
 
 Must be used with [`LATERAL VIEW`](../../../query-data/lateral-view.md).
 
+:::note
+Since 4.1.0
+:::
+
 ## Syntax
 
 ```sql

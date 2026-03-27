@@ -13,7 +13,7 @@ The `json_each_text` table function expands the top-level JSON object into a set
 Must be used with [`LATERAL VIEW`](../../../query-data/lateral-view.md).
 
 :::note
-This function has been supported since 4.1.0
+Since 4.1.0
 :::
 
 ## Syntax
