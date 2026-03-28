@@ -1602,6 +1602,7 @@ const sidebars: SidebarsConfig = {
                                         'sql-manual/sql-functions/scalar-functions/encrypt-digest-functions/murmur-hash3-32',
                                         'sql-manual/sql-functions/scalar-functions/encrypt-digest-functions/murmur-hash3-64',
                                         'sql-manual/sql-functions/scalar-functions/encrypt-digest-functions/murmur-hash3-64-v2',
+                                        "sql-manual/sql-functions/scalar-functions/encrypt-digest-functions/murmur-hash3-u64-v2",
                                         'sql-manual/sql-functions/scalar-functions/encrypt-digest-functions/sha',
                                         'sql-manual/sql-functions/scalar-functions/encrypt-digest-functions/sha2',
                                         'sql-manual/sql-functions/scalar-functions/encrypt-digest-functions/sm3',
