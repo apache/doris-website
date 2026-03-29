@@ -1484,6 +1484,7 @@ const sidebars: SidebarsConfig = {
                                         'sql-manual/sql-functions/scalar-functions/date-time-functions/hours-add',
                                         'sql-manual/sql-functions/scalar-functions/date-time-functions/hours-diff',
                                         'sql-manual/sql-functions/scalar-functions/date-time-functions/hours-sub',
+                                        'sql-manual/sql-functions/scalar-functions/date-time-functions/human_readable_seconds',
                                         'sql-manual/sql-functions/scalar-functions/date-time-functions/last-day',
                                         'sql-manual/sql-functions/scalar-functions/date-time-functions/makedate',
                                         'sql-manual/sql-functions/scalar-functions/date-time-functions/maketime',
