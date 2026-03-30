@@ -9,7 +9,7 @@
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
-Doris 支持通过多种元数据服务访问 Iceberg 表数据。除支持数据读取外，Doris 也支持对 Iceberg 表进行写入操作。
+Doris 支持通过多种元数据服务访问 Iceberg 表数据。除支持数据读取外，Doris 也支持对 Iceberg 表进行写入操作，包括 INSERT、INSERT OVERWRITE、UPDATE、DELETE 和 MERGE INTO。
 
 [使用 Docker 快速体验 Apache Doris & Iceberg](../best-practices/doris-iceberg.md)
 
@@ -1397,6 +1397,37 @@ SELECT * FROM iceberg_tbl FOR VERSION AS OF 'tag1';
 - 仅支持 `hms` 类型的 Iceberg Catalog。
 - 视图的定义 SQL 需要与 Doris SQL 方言兼容，否则会出现解析错误（后续版本会提供方言转换功能）。
 
+### Iceberg V3 隐藏列（Row Lineage）
+
+:::tip 提示
+该功能为实验功能，自 4.1.0 版本支持。
+:::
+
+Doris 支持查询 Iceberg V3 表的行血缘（Row Lineage）隐藏列。Iceberg V3 引入了包含行血缘数据的系统隐藏列，用于追踪数据的变更记录，非常适合用于增量同步或数据审查：
+
+- `_row_id`：唯一标识数据行的数值（基于数据写入时所在文件和位置生成）。
+- `_last_updated_sequence_number`：最后一次修改此行的 Sequence Number。当执行 `UPDATE` 或 `MERGE INTO` 操作更新数据时，该数值会随着版本号自动递增。
+
+**如何查询隐藏列：**
+
+默认情况下，使用 `DESC` 或 `SELECT *` 时隐藏列不可见。你可以通过直接指定列名来显式查询它们：
+
+```sql
+SELECT id, _row_id, _last_updated_sequence_number FROM iceberg_tbl;
+```
+
+你也可以通过开启会话变量 `show_hidden_columns` 来使隐藏列在常规展示（如 `DESC` 和 `SELECT *` 中）可见：
+
+```sql
+SET show_hidden_columns = true;
+DESC iceberg_tbl;
+```
+
+**注意事项：**
+
+1. 必须确保 Iceberg 表的格式版本（`format-version`）配置为 `3` 时，才会生成上述行级别参数。对于 V1 和 V2 格式表查询行血缘列可能报错。
+2. 隐藏列由系统进行维护，不允许用户在使用 `INSERT` 等写入语句时显式指定写入 `_row_id` 或 `_last_updated_sequence_number` 列。
+
 ## 系统表
 
 > 该功能自 3.1.0 版本支持
@@ -1702,6 +1733,191 @@ AS SELECT col1,pt1 as col2,pt2 as pt1 FROM test_ctas.part_ctas_src WHERE col1>0;
 INSERT INTO iceberg_table@branch(b1) SELECT * FROM other_table;
 INSERT OVERWRITE TABLE iceberg_table@branch(b1) SELECT * FROM other_table;
 ```
+
+### DELETE
+
+:::tip 提示
+该功能为实验功能，自 4.1.0 版本支持。
+:::
+
+DELETE 操作用于删除 Iceberg 表中满足指定条件的数据行。主要基于以下底层机制实现：对于 V2 格式表，系统将写入 Position Delete 文件；对于 V3 格式表，系统将写入 Puffin 格式的 Deletion Vectors 文件。
+
+**前提条件：**
+
+- Iceberg 表的格式版本（format-version）必须为 2 或更高版本。V1 格式的表不支持 DELETE 操作。
+
+**语法：**
+
+```sql
+DELETE FROM iceberg_tbl WHERE <condition>;
+```
+
+**示例：**
+
+```sql
+-- 删除单行
+DELETE FROM iceberg_tbl WHERE id = 1;
+
+-- 使用复合条件删除
+DELETE FROM iceberg_tbl WHERE age > 30 AND name = 'Bob';
+
+-- 使用子查询删除
+DELETE FROM iceberg_tbl WHERE id IN (SELECT id FROM other_table WHERE status = 'inactive');
+```
+
+分区表的 DELETE 操作用法一致：
+
+```sql
+DELETE FROM iceberg_partition_tbl WHERE id = 10;
+```
+
+### UPDATE
+
+:::tip 提示
+该功能为实验功能，自 4.1.0 版本支持。
+:::
+
+UPDATE 操作用于修改 Iceberg 表中满足指定条件的数据行。内部实现为先写入删除标记信息（V2 使用 Position Delete 文件，V3 使用 Puffin 格式的 Deletion Vectors 文件）标记旧数据行失效，然后追加写入更新后的新数据文件（如果开启的是 V3 格式选项，新插入行的提取追踪值 `_last_updated_sequence_number` 将会自动推进）。
+
+**前提条件：**
+
+- Iceberg 表的格式版本（format-version）必须为 2 或更高版本。V1 格式的表不支持 UPDATE 操作。
+
+**语法：**
+
+```sql
+UPDATE iceberg_tbl SET <column1> = <value1> [, <column2> = <value2>, ...] WHERE <condition>;
+```
+
+**示例：**
+
+```sql
+-- 更新单列
+UPDATE iceberg_tbl SET name = 'Alice_new' WHERE id = 1;
+
+-- 更新多列
+UPDATE iceberg_tbl SET name = 'Updated', age = 28 WHERE id = 2;
+
+-- 使用表达式更新
+UPDATE iceberg_tbl SET age = age * 2 + 1, name = concat(name, '-modified') WHERE id = 3;
+
+-- 使用子查询作为条件
+UPDATE iceberg_tbl SET name = 'UpdatedViaSubquery' WHERE id IN (SELECT id FROM other_table);
+```
+
+分区表的 UPDATE 操作用法一致：
+
+```sql
+UPDATE iceberg_partition_tbl SET name = 'Updated' WHERE id = 10;
+```
+
+### MERGE INTO
+
+:::tip 提示
+该功能为实验功能，自 4.1.0 版本支持。
+:::
+
+MERGE INTO 操作用于将源数据与目标 Iceberg 表进行匹配，并根据匹配结果执行插入、更新或删除操作。适合用于数据同步、增量更新等场景。
+
+**前提条件：**
+
+- Iceberg 表的格式版本（format-version）必须为 2 或更高版本。V1 格式的表不支持 MERGE INTO 操作。
+
+**语法：**
+
+```sql
+MERGE INTO target_table t
+USING <source> s
+ON <merge_condition>
+[WHEN MATCHED [AND <condition>] THEN DELETE]
+[WHEN MATCHED [AND <condition>] THEN UPDATE SET <column1> = <value1> [, ...]]
+[WHEN NOT MATCHED [AND <condition>] THEN INSERT (<columns>) VALUES (<values>)]
+```
+
+其中 `<source>` 可以是子查询或另一张表。
+
+**示例：**
+
+- 完整匹配操作（包含更新、删除和插入）：
+
+    ```sql
+    MERGE INTO iceberg_tbl t
+    USING (
+        SELECT 1 AS id, 'Alice_new' AS name, 26 AS age, 'U' AS flag
+        UNION ALL
+        SELECT 2, 'Bob', 30, 'D'
+        UNION ALL
+        SELECT 4, 'Dora', 28, 'I'
+    ) s
+    ON t.id = s.id
+    WHEN MATCHED AND s.flag = 'D' THEN DELETE
+    WHEN MATCHED THEN UPDATE SET
+        name = s.name,
+        age = s.age
+    WHEN NOT MATCHED THEN INSERT (id, name, age)
+    VALUES (s.id, s.name, s.age);
+    ```
+
+    上述示例中：
+
+    * `id = 2` 的行因 `flag = 'D'` 被删除。
+    * `id = 1` 的行被更新为新的 `name` 和 `age`。
+    * `id = 4` 的行因在目标表中不存在而被插入。
+
+- 仅执行匹配更新：
+
+    ```sql
+    MERGE INTO iceberg_tbl t
+    USING (SELECT 1 AS id, 'Alice_matched' AS name, 26 AS age) s
+    ON t.id = s.id
+    WHEN MATCHED THEN UPDATE SET name = s.name, age = s.age;
+    ```
+
+- 仅执行不匹配时的插入：
+
+    ```sql
+    MERGE INTO iceberg_tbl t
+    USING (SELECT 4 AS id, 'Dora' AS name, 40 AS age) s
+    ON t.id = s.id
+    WHEN NOT MATCHED THEN INSERT (id, name, age) VALUES (s.id, s.name, s.age);
+    ```
+
+- 使用子查询作为数据源：
+
+    ```sql
+    MERGE INTO iceberg_tbl t
+    USING (SELECT id FROM other_table WHERE id = 2) s
+    ON t.id = s.id
+    WHEN MATCHED THEN UPDATE SET name = 'UpdatedViaSubquery';
+    ```
+
+- 分区表的 MERGE INTO 操作：
+
+    ```sql
+    MERGE INTO iceberg_partition_tbl t
+    USING (
+        SELECT 1 AS id, 'Alice_new' AS name, 26 AS age, DATE '2024-01-01' AS dt, 'U' AS flag
+        UNION ALL
+        SELECT 2, 'Bob', 30, DATE '2024-01-02', 'D'
+        UNION ALL
+        SELECT 4, 'Dora', 28, DATE '2024-01-04', 'I'
+    ) s
+    ON t.id = s.id
+    WHEN MATCHED AND s.flag = 'D' THEN DELETE
+    WHEN MATCHED THEN UPDATE SET
+        name = s.name,
+        age = s.age
+    WHEN NOT MATCHED THEN INSERT (id, name, age, dt)
+    VALUES (s.id, s.name, s.age, s.dt);
+    ```
+
+**注意事项：**
+
+1. 以上三种操作（DELETE、UPDATE、MERGE INTO）均要求 Iceberg 表的格式版本（`format-version`）为 2 或更高版本。如果对 V1 格式的表执行这些操作，会报错：`must have format version 2 or higher for position deletes`。当执行于 V3 格式表时，系统不仅会使用 Puffin 格式存储 Deletion Vectors 代替原有的 Position Delete 数据，如果涉及内容更新，还会自动调整写入记录的血缘生命周期属性（`_last_updated_sequence_number`）。
+2. 这些操作支持 Parquet 和 ORC 两种文件格式。
+3. 并发写入场景下，Iceberg 提供了乐观并发控制机制。当发生写入冲突时，操作可能会抛出事务冲突异常。
+4. UPDATE 和 MERGE INTO 中的 UPDATE 操作支持使用表达式和函数，例如 `age = age * 2 + 1` 或 `name = concat(name, '-modified')`。
+5. 这些操作同时适用于分区表和非分区表。
 
 ### 相关参数
 

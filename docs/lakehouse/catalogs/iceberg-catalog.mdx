@@ -9,7 +9,7 @@
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
-Doris supports accessing Iceberg table data through various metadata services. In addition to reading data, Doris also supports writing to Iceberg tables.
+Doris supports accessing Iceberg table data through various metadata services. In addition to reading data, Doris also supports writing to Iceberg tables, including INSERT, INSERT OVERWRITE, UPDATE, DELETE, and MERGE INTO.
 
 [Quick start with Apache Doris and Apache Iceberg](../best-practices/doris-iceberg.md).
 
@@ -1386,6 +1386,37 @@ Supports querying Iceberg views. View queries work the same way as regular table
 - Only `hms` type Iceberg Catalog is supported.
 - The view definition SQL must be compatible with Doris SQL dialect, otherwise parsing errors will occur. (Dialect conversion functionality will be provided in future versions).
 
+### Iceberg V3 Hidden Columns (Row Lineage)
+
+:::tip
+This is an experimental feature, supported since version 4.1.0.
+:::
+
+Doris supports querying Row Lineage hidden columns of Iceberg V3 tables. Iceberg V3 introduces system hidden columns that contain row lineage data, which is used to track data change records. This is highly suitable for incremental synchronization or data auditing:
+
+- `_row_id`: A numerical value that uniquely identifies a row of data (generated based on the file and position where the data is written).
+- `_last_updated_sequence_number`: The Sequence Number of the last modification to this row. When an `UPDATE` or `MERGE INTO` operation updates the data, this numerical value automatically increments along with the version number.
+
+**How to query hidden columns:**
+
+By default, hidden columns are not visible when using `DESC` or `SELECT *`. You can explicitly query them by specifying the column names directly:
+
+```sql
+SELECT id, _row_id, _last_updated_sequence_number FROM iceberg_tbl;
+```
+
+You can also make hidden columns visible in regular displays (like `DESC` and `SELECT *`) by enabling the session variable `show_hidden_columns`:
+
+```sql
+SET show_hidden_columns = true;
+DESC iceberg_tbl;
+```
+
+**Notes:**
+
+1. The Iceberg table's format version (`format-version`) must be configured as `3` for these row-level parameters to be generated. Querying row lineage columns on V1 and V2 format tables may result in errors.
+2. Hidden columns are maintained by the system. Users are not allowed to explicitly specify or write to the `_row_id` or `_last_updated_sequence_number` columns when using writing statements like `INSERT`.
+
 ## System Tables
 
 > Since 3.1.0
@@ -1692,6 +1723,190 @@ AS SELECT col1, pt1 AS col2, pt2 AS pt1 FROM test_ctas.part_ctas_src WHERE col1 
 INSERT INTO iceberg_table@branch(b1) SELECT * FROM other_table;
 INSERT OVERWRITE TABLE iceberg_table@branch(b1) SELECT * FROM other_table;
 ```
+
+### DELETE
+
+:::tip
+This is an experimental feature, supported since version 4.1.0.
+:::
+
+The `DELETE` operation is used to delete rows of data in an Iceberg table that meet specified conditions. This operation is primarily based on the following underlying mechanisms: for V2 format tables, the system writes Position Delete files; for V3 format tables, the system writes Puffin-format Deletion Vectors files.
+
+**Prerequisites:**
+
+- The Iceberg table's format version (`format-version`) must be 2 or higher. V1 format tables do not support the `DELETE` operation.
+
+**Syntax:**
+
+```sql
+DELETE FROM iceberg_tbl WHERE <condition>;
+```
+
+**Examples:**
+
+```sql
+-- Delete a single row
+DELETE FROM iceberg_tbl WHERE id = 1;
+
+-- Delete using multiple conditions
+DELETE FROM iceberg_tbl WHERE age > 30 AND name = 'Bob';
+
+-- Delete using a subquery
+DELETE FROM iceberg_tbl WHERE id IN (SELECT id FROM other_table WHERE status = 'inactive');
+```
+
+The usage is identical for partitioned tables:
+
+```sql
+DELETE FROM iceberg_partition_tbl WHERE id = 10;
+```
+
+### UPDATE
+
+:::tip
+This is an experimental feature, supported since version 4.1.0.
+:::
+
+The `UPDATE` operation is used to modify rows of data in an Iceberg table that meet specified conditions. Internally, the implementation involves first writing deletion tracking information (using Position Delete files for V2, and Puffin-format Deletion Vectors for V3) to mark the old data rows as invalid, and then appending the updated new data files (if the V3 format option is enabled, the newly inserted row's tracking value `_last_updated_sequence_number` will automatically advance).
+
+**Prerequisites:**
+
+- The Iceberg table's format version (`format-version`) must be 2 or higher. V1 format tables do not support the `UPDATE` operation.
+
+**Syntax:**
+
+```sql
+UPDATE iceberg_tbl SET <column1> = <value1> [, <column2> = <value2>, ...] WHERE <condition>;
+```
+
+**Examples:**
+
+```sql
+-- Update a single column
+UPDATE iceberg_tbl SET name = 'Alice_new' WHERE id = 1;
+
+-- Update multiple columns
+UPDATE iceberg_tbl SET name = 'Updated', age = 28 WHERE id = 2;
+
+-- Update using expressions
+UPDATE iceberg_tbl SET age = age * 2 + 1, name = concat(name, '-modified') WHERE id = 3;
+
+-- Update using a subquery as condition
+UPDATE iceberg_tbl SET name = 'UpdatedViaSubquery' WHERE id IN (SELECT id FROM other_table);
+```
+
+The usage is identical for partitioned tables:
+
+```sql
+UPDATE iceberg_partition_tbl SET name = 'Updated' WHERE id = 10;
+```
+
+### MERGE INTO
+
+:::tip
+This is an experimental feature, supported since version 4.1.0.
+:::
+
+The `MERGE INTO` operation is used to match source data with a target Iceberg table and perform insert, update, or delete operations based on the matching results. This is suitable for scenarios such as data synchronization and incremental updates.
+
+**Prerequisites:**
+
+- The Iceberg table's format version (`format-version`) must be 2 or higher. V1 format tables do not support the `MERGE INTO` operation.
+
+**Syntax:**
+
+```sql
+MERGE INTO target_table t
+USING <source> s
+ON <merge_condition>
+[WHEN MATCHED [AND <condition>] THEN DELETE]
+[WHEN MATCHED [AND <condition>] THEN UPDATE SET <column1> = <value1> [, ...]]
+[WHEN NOT MATCHED [AND <condition>] THEN INSERT (<columns>) VALUES (<values>)]
+```
+
+Where `<source>` can be a subquery or another table.
+
+**Examples:**
+
+- Full match operation (includes update, delete, and insert):
+
+    ```sql
+    MERGE INTO iceberg_tbl t
+    USING (
+        SELECT 1 AS id, 'Alice_new' AS name, 26 AS age, 'U' AS flag
+        UNION ALL
+        SELECT 2, 'Bob', 30, 'D'
+        UNION ALL
+        SELECT 4, 'Dora', 28, 'I'
+    ) s
+    ON t.id = s.id
+    WHEN MATCHED AND s.flag = 'D' THEN DELETE
+    WHEN MATCHED THEN UPDATE SET
+        name = s.name,
+        age = s.age
+    WHEN NOT MATCHED THEN INSERT (id, name, age)
+    VALUES (s.id, s.name, s.age);
+    ```
+
+    In the above example:
+    * The row with `id = 2` is deleted because `flag = 'D'`.
+    * The row with `id = 1` is updated with new `name` and `age`.
+    * The row with `id = 4` is inserted because it does not exist in the target table.
+
+- Execute matching updates only:
+
+    ```sql
+    MERGE INTO iceberg_tbl t
+    USING (SELECT 1 AS id, 'Alice_matched' AS name, 26 AS age) s
+    ON t.id = s.id
+    WHEN MATCHED THEN UPDATE SET name = s.name, age = s.age;
+    ```
+
+- Execute inserts on not matched only:
+
+    ```sql
+    MERGE INTO iceberg_tbl t
+    USING (SELECT 4 AS id, 'Dora' AS name, 40 AS age) s
+    ON t.id = s.id
+    WHEN NOT MATCHED THEN INSERT (id, name, age) VALUES (s.id, s.name, s.age);
+    ```
+
+- Use a subquery as the data source:
+
+    ```sql
+    MERGE INTO iceberg_tbl t
+    USING (SELECT id FROM other_table WHERE id = 2) s
+    ON t.id = s.id
+    WHEN MATCHED THEN UPDATE SET name = 'UpdatedViaSubquery';
+    ```
+
+- `MERGE INTO` operation for partitioned tables:
+
+    ```sql
+    MERGE INTO iceberg_partition_tbl t
+    USING (
+        SELECT 1 AS id, 'Alice_new' AS name, 26 AS age, DATE '2024-01-01' AS dt, 'U' AS flag
+        UNION ALL
+        SELECT 2, 'Bob', 30, DATE '2024-01-02', 'D'
+        UNION ALL
+        SELECT 4, 'Dora', 28, DATE '2024-01-04', 'I'
+    ) s
+    ON t.id = s.id
+    WHEN MATCHED AND s.flag = 'D' THEN DELETE
+    WHEN MATCHED THEN UPDATE SET
+        name = s.name,
+        age = s.age
+    WHEN NOT MATCHED THEN INSERT (id, name, age, dt)
+    VALUES (s.id, s.name, s.age, s.dt);
+    ```
+
+**Notes:**
+
+1. The above three operations (`DELETE`, `UPDATE`, `MERGE INTO`) all require the Iceberg table's format version (`format-version`) to be 2 or higher. Attempting these operations on a V1 format table will result in the error: `must have format version 2 or higher for position deletes`. When executed on a V3 format table, the system not only uses Puffin-format Deletion Vectors to replace the original Position Delete data, but also automatically adjusts the lineage lifecycle attributes (`_last_updated_sequence_number`) of the written records if content updates are involved.
+2. These operations support both Parquet and ORC file formats.
+3. In concurrent writing scenarios, Iceberg provides an optimistic concurrency control mechanism. When write conflicts occur, the operation may throw a transaction conflict exception.
+4. The `UPDATE` operation, both independently and within `MERGE INTO`, supports using expressions and functions, such as `age = age * 2 + 1` or `name = concat(name, '-modified')`.
+5. These operations apply to both partitioned and non-partitioned tables.
 
 ### Related Parameters
 
