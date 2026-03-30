@@ -17,7 +17,7 @@ The VARIANT type stores semi-structured JSON data. It can contain different prim
 
 - Hot paths participate in Subcolumnization, so they benefit from columnar performance, file pruning, and vectorized execution.
 - Key paths can use path-level indexes, full-text search, and still benefit from Doris sparse-index pruning.
-- In Doris 3.1 and later, wide-column optimizations keep automatic Subcolumnization practical at 10k-scale subcolumns.
+- In Doris 3.1 and later, wide-column optimizations keep automatic Subcolumnization practical at 10k-scale subcolumns. Note that DOC mode, the recommended storage layout for 10k-scale wide columns, is available starting from Doris 4.x; for 3.x, see the [Workload Guide](./variant-workload-guide) for tuning guidance.
 :::
 
 :::note Before you configure a workload

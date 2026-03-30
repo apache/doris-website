@@ -1170,7 +1170,11 @@ const sidebars: SidebarsConfig = {
                                             },
                                             collapsed: false,
                                             items: [
-                                                'sql-manual/basic-element/sql-data-types/semi-structured/VARIANT',
+                                                {
+                                                    type: 'doc',
+                                                    id: 'sql-manual/basic-element/sql-data-types/semi-structured/VARIANT',
+                                                    label: 'VARIANT Reference',
+                                                },
                                             ],
                                         },
                                     ],

@@ -17,7 +17,7 @@ VARIANT 类型用于存储半结构化 JSON 数据，可包含不同基础类型
 
 - 热点路径会参与子列列式提取（Subcolumnization），因此能直接受益于列存性能、文件裁剪和向量化计算。
 - 关键路径可以建立路径级索引，支持全文检索，同时继续受益于 Doris 的稀疏索引裁剪能力。
-- 在 Doris 3.1 及以上版本中，面向宽列场景的优化让万级子列规模的自动子列列式提取（Subcolumnization）保持可用。
+- 在 Doris 3.1 及以上版本中，面向宽列场景的优化让万级子列规模的自动子列列式提取（Subcolumnization）保持可用。注意：DOC 模式作为万级宽列场景的推荐存储布局，从 Doris 4.x 开始提供；3.x 版本的调优建议请参阅 [VARIANT 使用与配置指南](./variant-workload-guide)。
 :::
 
 :::note 在配置 workload 之前
