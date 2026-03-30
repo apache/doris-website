@@ -433,7 +433,6 @@ const sidebars: SidebarsConfig = {
                             items: [
                                 'lakehouse/storages/hdfs',
                                 'lakehouse/storages/s3',
-                                'lakehouse/storages/ozone',
                                 'lakehouse/storages/azure-blob',
                                 'lakehouse/storages/gcs',
                                 'lakehouse/storages/aliyun-oss',
@@ -442,6 +441,7 @@ const sidebars: SidebarsConfig = {
                                 'lakehouse/storages/baidu-bos',
                                 'lakehouse/storages/minio',
                                 'lakehouse/storages/juicefs',
+                                'lakehouse/storages/ozone'
                             ],
                         },
                         {
