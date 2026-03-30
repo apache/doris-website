@@ -55,11 +55,11 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 
   * `dlf`：使用阿里云 DLF 作为元数据服务。
 
-  * `s3tables`: 使用 AWS S3 Tables Catalog 访问 [S3 Table Bucket](https://aws.amazon.com/s3/features/tables/).
+  * `s3tables`：使用 AWS S3 Tables Catalog 访问 [S3 Table Bucket](https://aws.amazon.com/s3/features/tables/)。
 
 * `<warehouse>`
 
-    Iceberg 的仓库路径。当 `<iceberg_catalog_type>` 为 `hadoop` 时，需指定这个参数。
+    Iceberg 的仓库路径。当 `<iceberg_catalog_type>` 为 `hadoop` 时，需指定该参数。
 
     `warehouse` 的路径必须指向 `Database` 路径的上一级。如您的表路径是 `s3://bucket/path/to/db1/table1`，那么 `warehouse` 应该是 `s3://bucket/path/to/`。
 
@@ -118,7 +118,7 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 
 * [FileSystem](../metastores/filesystem.md)
 
-> 注意：不同 Doris 版本所支持的服务类型和参数略有区别，请参考【基础示例】章节。
+> 注意：不同 Doris 版本所支持的服务类型和参数略有区别，请参阅【基础示例】章节。
 
 ### Iceberg Catalog 功能支持矩阵
 
@@ -126,7 +126,7 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 | -------------------- | ------ | -------- | -------------- | -------------- | ------------------ |
 | Hive MetaStore       | ✅     | ✅       | ✅             | ✅             | ✅                 |
 | AWS Glue             | ✅     | ✅       | ❌             | ❌             | ✅                 |
-| Aliyun DLF           | ✅     | ✅       | ❌              | ❌              | ❌                   |
+| Aliyun DLF           | ✅     | ✅       | ❌             | ❌             | ❌                 |
 | Iceberg Rest Catalog | ✅     | ✅       | 取决于服务提供方 | 取决于服务提供方 | 取决于服务提供方   |
 | FileSystem           | ✅     | ✅       | ✅             | ✅             | ✅                 |
 
@@ -140,6 +140,8 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 
 * [Azure Blob](../storages/azure-blob.md)
 
+* [Apache Ozone](../storages/ozone.md)（自 4.0.4 起支持）
+
 * [阿里云 OSS](../storages/aliyun-oss.md)
 
 * [腾讯云 COS](../storages/tencent-cos.md)
@@ -148,7 +150,7 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 
 * [MINIO](../storages/minio.md)
 
-> 注意：不同 Doris 版本所支持的服务类型和参数略有区别，请参考【基础示例】章节。
+> 注意：不同 Doris 版本所支持的服务类型和参数略有区别，请参阅【基础示例】章节。
 
 ### 支持的数据格式
 
@@ -188,7 +190,7 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 
 ## Namespace 映射
 
-Iceberg 的元数层级关系是 Catalog -> Namespace -> Table。其中 Namespace 可以有多级（Nested Namespace）。
+Iceberg 的元数据层级关系是 Catalog -> Namespace -> Table。其中 Namespace 可以有多级（Nested Namespace）。
 
 ```
       ┌─────────┐             
@@ -982,7 +984,7 @@ Iceberg 的元数层级关系是 Catalog -> Namespace -> Table。其中 Namespac
                 'iceberg.jdbc.init-catalog-tables' = 'true',
                 'iceberg.jdbc.schema-version' = 'V1',
                 'iceberg.jdbc.driver_class' = 'org.postgresql.Driver',
-                'iceberg.jdbc.driver_url' = '<jdbc_driver_jar>'
+                'iceberg.jdbc.driver_url' = '<jdbc_driver_jar>',
                 'warehouse' = 's3://bucket/warehouse',
                 's3.access_key' = '<ak>',
                 's3.secret_key' = '<sk>',
@@ -1003,7 +1005,7 @@ Iceberg 的元数层级关系是 Catalog -> Namespace -> Table。其中 Namespac
                 'iceberg.jdbc.init-catalog-tables' = 'true',
                 'iceberg.jdbc.schema-version' = 'V1',
                 'iceberg.jdbc.driver_class' = 'com.mysql.cj.jdbc.Driver',
-                'iceberg.jdbc.driver_url' = '<jdbc_driver_jar>'
+                'iceberg.jdbc.driver_url' = '<jdbc_driver_jar>',
                 'warehouse' = 's3://bucket/warehouse',
                 's3.access_key' = '<ak>',
                 's3.secret_key' = '<sk>',
@@ -1022,7 +1024,7 @@ Iceberg 的元数层级关系是 Catalog -> Namespace -> Table。其中 Namespac
                 'iceberg.jdbc.init-catalog-tables' = 'true',
                 'iceberg.jdbc.schema-version' = 'V1',
                 'iceberg.jdbc.driver_class' = 'org.sqlite.JDBC',
-                'iceberg.jdbc.driver_url' = '<jdbc_driver_jar>'
+                'iceberg.jdbc.driver_url' = '<jdbc_driver_jar>',
                 'warehouse' = 's3://bucket/warehouse',
                 's3.access_key' = '<ak>',
                 's3.secret_key' = '<sk>',
@@ -1129,7 +1131,7 @@ Iceberg 的元数层级关系是 Catalog -> Namespace -> Table。其中 Namespac
                 'type' = 'iceberg',
                 'iceberg.catalog.type' = 'hadoop',
                 'warehouse' = 'gs://bucket/iceberg_warehouse',
-                'fs.gcs.support'='true',
+                'fs.gcs.support' = 'true',
                 'gs.access_key' = '<ak>',
                 'gs.secret_key' = '<sk>'
             );
@@ -1146,6 +1148,22 @@ Iceberg 的元数层级关系是 Catalog -> Namespace -> Table。其中 Namespac
                 'azure.account_key' = '<account_key>',
                 'azure.endpoint' = 'https://<account_name>.blob.core.windows.net',
                 'fs.azure.support' = 'true'
+            );
+            ```
+        </TabItem>
+        <TabItem value='Ozone' label='Ozone'>
+            自 4.0.4 起支持
+            ```sql
+            CREATE CATALOG iceberg_fs_on_ozone_catalog PROPERTIES (
+                'type' = 'iceberg',
+                'iceberg.catalog.type' = 'hadoop',
+                'warehouse' = 's3a://bucket/iceberg_warehouse',
+                'fs.ozone.support' = 'true',
+                'ozone.endpoint' = 'http://ozone-s3g:9878',
+                'ozone.access_key' = '<ak>',
+                'ozone.secret_key' = '<sk>',
+                'ozone.region' = 'us-east-1',
+                'ozone.use_path_style' = 'true'
             );
             ```
         </TabItem>
@@ -1316,20 +1334,22 @@ Iceberg 的元数层级关系是 Catalog -> Namespace -> Table。其中 Namespac
 
 <details>
     <summary>3.0.6+ 版本</summary>
-    <TabItem value='FileSystem Catalog' label='FileSystem Catalog' default>
-        可参阅 [集成 S3 Tables](../best-practices/doris-aws-s3tables.md) 文档。
-        ```sql
-        CREATE CATALOG test_s3tables_catalog PROPERTIES (
-            'type' = 'iceberg',
-            'iceberg.catalog.type' = 's3tables',
-            'warehouse' = 'arn:aws:s3tables:ap-east-1:9527:bucket/doris-s3-table-bucket',
-            's3.region' = 'ap-east-1',
-            's3.endpoint' = 'https://s3.ap-east-1.amazonaws.com',
-            's3.access_key' = '<ak>',
-            's3.secret_key' = '<sk>'
-        );
-        ```
-    </TabItem>
+    <Tabs>
+        <TabItem value='FileSystem Catalog' label='FileSystem Catalog' default>
+            可参阅 [集成 S3 Tables](../best-practices/doris-aws-s3tables.md) 文档。
+            ```sql
+            CREATE CATALOG test_s3tables_catalog PROPERTIES (
+                'type' = 'iceberg',
+                'iceberg.catalog.type' = 's3tables',
+                'warehouse' = 'arn:aws:s3tables:ap-east-1:9527:bucket/doris-s3-table-bucket',
+                's3.region' = 'ap-east-1',
+                's3.endpoint' = 'https://s3.ap-east-1.amazonaws.com',
+                's3.access_key' = '<ak>',
+                's3.secret_key' = '<sk>'
+            );
+            ```
+        </TabItem>
+    </Tabs>
 </details>
 
 ## 查询操作
@@ -1390,9 +1410,9 @@ SELECT * FROM iceberg_tbl FOR VERSION AS OF 868895038966572;
 
 ### Branch 和 Tag
 
-> 该功能自 3.1.0 版本支持
+> 该功能自 3.1.0 版本支持。
 >
-> 关于 Branch、Tag 的创建、删除和维护操作，请参阅【管理 Branch & Tag】
+> 关于 Branch、Tag 的创建、删除和维护操作，请参阅【管理 Branch & Tag】章节。
 
 支持读取指定 Iceberg 表的分支（Branch）和标签（Tag）。
 
@@ -1416,7 +1436,7 @@ SELECT * FROM iceberg_tbl FOR VERSION AS OF 'tag1';
 
 > 该功能自 3.1.0 版本支持
 
-支持查询 Iceberg 视图。视图查询方式和普通表方式一样。有以下几点注意事项：
+支持查询 Iceberg 视图。视图查询方式与普通表方式一样。有以下几点注意事项：
 
 - 仅支持 `hms` 类型的 Iceberg Catalog。
 - 视图的定义 SQL 需要与 Doris SQL 方言兼容，否则会出现解析错误（后续版本会提供方言转换功能）。
@@ -1456,7 +1476,7 @@ DESC iceberg_tbl;
 
 > 该功能自 3.1.0 版本支持
 
-Doris 支持查询 Iceberg 系统表，用来查询表的相关元信息。支持使用系统表查看快照历史、清单文件、数据文件、分区等信息。
+Doris 支持查询 Iceberg 系统表，用于查询表的相关元信息。支持使用系统表查看快照历史、清单文件、数据文件、分区等信息。
 
 要访问 Iceberg 表的元数据，可以在表名后添加 `$` 符号，后跟系统表名称：
 
@@ -1966,7 +1986,7 @@ SWITCH iceberg;
 CREATE DATABASE [IF NOT EXISTS] iceberg_db;
 ```
 
-也可以使用全限定名创建，或指定 location（目前只有 hms 类型的 Catalog 支持指定 location），如：
+也可以使用全限定名创建，或指定 location（目前只有 `hms` 类型的 Catalog 支持指定 location），如：
 
 ```sql
 CREATE DATABASE [IF NOT EXISTS] iceberg.iceberg_db;
@@ -1993,7 +2013,7 @@ DROP DATABASE [IF EXISTS] iceberg.iceberg_db;
 ```
 
 :::caution
-对于 Iceberg Database，必须先删除这个 Database 下的所有表后，才能删除 Database，否则会报错
+对于 Iceberg Database，必须先删除该 Database 下的所有表后，才能删除 Database，否则会报错。
 :::
 
 ### 创建和删除表
@@ -2388,9 +2408,9 @@ DROP DATABASE [IF EXISTS] iceberg.iceberg_db;
 
 ## Iceberg 表操作
 
-> 该功能自 4.0.2 版本开始支持。具体支持版本参见各个操作的说明
+> 该功能自 4.0.2 版本开始支持。具体支持版本参见各个操作的说明。
 >
-> 该功能是实验性功能。
+> 该功能为实验性功能。
 
 Doris 支持通过 `ALTER TABLE EXECUTE` 语法来执行 Iceberg 表的特定操作（Actions）。该语法提供了统一的接口来执行表优化和快照管理等各种操作。
 
@@ -2855,7 +2875,7 @@ EXECUTE set_current_snapshot ("ref" = "v1.0");
     CASE
       WHEN file_size_in_bytes BETWEEN 0 AND 8 * 1024 * 1024 THEN '0-8M'
       WHEN file_size_in_bytes BETWEEN 8 * 1024 * 1024 + 1 AND 32 * 1024 * 1024 THEN '8-32M'
-      WHEN file_size_in_bytes BETWEEN 2 * 1024 * 1024 + 1 AND 128 * 1024 * 1024 THEN '32-128M'
+      WHEN file_size_in_bytes BETWEEN 32 * 1024 * 1024 + 1 AND 128 * 1024 * 1024 THEN '32-128M'
       WHEN file_size_in_bytes BETWEEN 128 * 1024 * 1024 + 1 AND 512 * 1024 * 1024 THEN '128-512M'
       WHEN file_size_in_bytes > 512 * 1024 * 1024 THEN '> 512M'
       ELSE 'Unknown'

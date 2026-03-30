@@ -392,7 +392,7 @@ Support for Nested Namespace needs to be explicitly enabled. For details, please
                 'warehouse' = 'gs://bucket/iceberg_warehouse',
                 'gs.access_key' = '<ak>',
                 'gs.secret_key' = '<sk>',
-                'fs.gcs.support'='true'
+                'fs.gcs.support' = 'true'
             );
             ```
         </TabItem>
@@ -406,7 +406,7 @@ Support for Nested Namespace needs to be explicitly enabled. For details, please
                 'azure.account_name' = '<account_name>',
                 'azure.account_key' = '<account_key>',
                 'azure.endpoint' = 'https://<account_name>.blob.core.windows.net',
-                'fs.azure.support'='true'
+                'fs.azure.support' = 'true'
             );
             ```
         </TabItem>
@@ -546,7 +546,7 @@ Support for Nested Namespace needs to be explicitly enabled. For details, please
                 's3.access_key' = '<ak>',
                 's3.secret_key' = '<sk>'
             );
-                ```
+            ```
         </TabItem>
     </Tabs>
 </details>
@@ -651,7 +651,7 @@ Support for Nested Namespace needs to be explicitly enabled. For details, please
             ```sql
             CREATE CATALOG iceberg_dlf_catalog_catalog PROPERTIES (
                 'type' = 'iceberg',
-                'iceberg.catalog.type'='dlf',
+                'iceberg.catalog.type' = 'dlf',
                 'warehouse' = 'oss://bucket/iceberg-dlf-oss-warehouse',
                 'dlf.uid' = '203225413946383283',
                 'dlf.catalog_id' = 'p2_regression_case',
@@ -671,7 +671,7 @@ Support for Nested Namespace needs to be explicitly enabled. For details, please
             ```sql
             CREATE CATALOG iceberg_dlf_catalog_catalog PROPERTIES (
                 'type' = 'iceberg',
-                'iceberg.catalog.type'='dlf',
+                'iceberg.catalog.type' = 'dlf',
                 'warehouse' = 'oss://bucket/iceberg-dlf-oss-warehouse',
                 'dlf.uid' = '203225413946383283',
                 'dlf.catalog.id' = 'catalog_id',
@@ -1071,7 +1071,7 @@ This is an experimental feature, supported since version 4.1.0.
                 'warehouse' = 'hdfs://127.0.0.1:8520/iceberg-fs-hdfs-warehouse',
                 'fs.defaultFS' = 'hdfs://127.0.0.1:8520',
                 'hadoop.security.authentication' = 'kerberos',
-                'hadoop.kerberos.principal'='hive/presto-master.docker.cluster@LABS.TERADATA.COM',
+                'hadoop.kerberos.principal' = 'hive/presto-master.docker.cluster@LABS.TERADATA.COM',
                 'hadoop.kerberos.keytab' = '/keytabs/hive-presto-master.keytab'
             );
 
@@ -1145,7 +1145,7 @@ This is an experimental feature, supported since version 4.1.0.
                 'type' = 'iceberg',
                 'iceberg.catalog.type' = 'hadoop',
                 'warehouse' = 'gs://bucket/iceberg_warehouse',
-                'fs.gcs.support'='true',
+                'fs.gcs.support' = 'true',
                 'gs.access_key' = '<ak>',
                 'gs.secret_key' = '<sk>'
             );
@@ -1155,9 +1155,9 @@ This is an experimental feature, supported since version 4.1.0.
             ```sql
             CREATE CATALOG test_iceberg_fs_on_minio PROPERTIES (
                 'type' = 'iceberg',
-                'iceberg.catalog.type'='hadoop',
+                'iceberg.catalog.type' = 'hadoop',
                 'warehouse' = 's3://warehouse/wh',
-                'fs.minio.support'='true',
+                'fs.minio.support' = 'true',
                 'minio.endpoint' = 'http://127.0.0.1:19001',
                 'minio.access_key' = 'admin',
                 'minio.secret_key' = 'password',
@@ -1319,20 +1319,22 @@ This is an experimental feature, supported since version 4.1.0.
 
 <details >
     <summary>3.0.6+ Version</summary>
-    <TabItem value='FileSystem Catalog' label='FileSystem Catalog' default>
-        Please refer to the [S3 Tables Integration](../best-practices/doris-aws-s3tables.md) documentation.
-        ```sql
-        CREATE CATALOG test_s3tables_catalog PROPERTIES (
-            'type' = 'iceberg',
-            'iceberg.catalog.type' = 's3tables',
-            'warehouse' = 'arn:aws:s3tables:ap-east-1:9527:bucket/doris-s3-table-bucket',
-            's3.region' = 'ap-east-1',
-            's3.endpoint' = 'https://s3.ap-east-1.amazonaws.com',
-            's3.access_key' = '<ak>',
-            's3.secret_key' = '<sk>'
-        );
-        ```
-    </TabItem>
+    <Tabs>
+        <TabItem value='FileSystem Catalog' label='FileSystem Catalog' default>
+            Please refer to the [S3 Tables Integration](../best-practices/doris-aws-s3tables.md) documentation.
+            ```sql
+            CREATE CATALOG test_s3tables_catalog PROPERTIES (
+                'type' = 'iceberg',
+                'iceberg.catalog.type' = 's3tables',
+                'warehouse' = 'arn:aws:s3tables:ap-east-1:9527:bucket/doris-s3-table-bucket',
+                's3.region' = 'ap-east-1',
+                's3.endpoint' = 'https://s3.ap-east-1.amazonaws.com',
+                's3.access_key' = '<ak>',
+                's3.secret_key' = '<sk>'
+            );
+            ```
+        </TabItem>
+    </Tabs>
 </details>
 
 ## Query Operations
@@ -1395,9 +1397,9 @@ SELECT * FROM iceberg_table FOR VERSION AS OF 123456789;
 
 ### Branch and Tag
 
-> Since 3.1.0
+> Since 3.1.0.
 >
-> For creating, dropping and managing branch and tag, please refer to [Managing Branch & Tag]
+> For creating, dropping and managing branch and tag, please refer to the [Managing Branch & Tag] section.
 
 Reading specific branches and tags of Iceberg tables is supported.
 
@@ -2906,7 +2908,7 @@ You can use the following SQL to analyze the data distribution and delete file c
         CASE
             WHEN file_size_in_bytes BETWEEN 0 AND 8 * 1024 * 1024 THEN '0-8M'
             WHEN file_size_in_bytes BETWEEN 8 * 1024 * 1024 + 1 AND 32 * 1024 * 1024 THEN '8-32M'
-            WHEN file_size_in_bytes BETWEEN 2 * 1024 * 1024 + 1 AND 128 * 1024 * 1024 THEN '32-128M'
+            WHEN file_size_in_bytes BETWEEN 32 * 1024 * 1024 + 1 AND 128 * 1024 * 1024 THEN '32-128M'
             WHEN file_size_in_bytes BETWEEN 128 * 1024 * 1024 + 1 AND 512 * 1024 * 1024 THEN '128-512M'
             WHEN file_size_in_bytes > 512 * 1024 * 1024 THEN '> 512M'
             ELSE 'Unknown'
