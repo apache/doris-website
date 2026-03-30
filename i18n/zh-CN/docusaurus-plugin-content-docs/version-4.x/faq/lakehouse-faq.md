@@ -328,7 +328,7 @@
     2. **配置 Hosts 静态映射**：在 FE 节点的 `/etc/hosts` 中添加 HMS 节点的 IP 与 Hostname 映射。
     3. **规范 Catalog 配置**：创建 Catalog 时，`hive.metastore.uris` 参数建议优先使用正确的 Hostname 而不是裸 IP。
 
-16. **查询 Hive Catalog 表时，偶尔出现查询长时间卡住，或者直接报错优化器超时 `nereids cost too much time`，但紧接着再次查询又恢复正常。**
+16. 查询 Hive Catalog 表时，偶尔出现查询长时间卡住，或者直接报错优化器超时 `nereids cost too much time`，但紧接着再次查询又恢复正常。
 
     **问题描述：**
 

@@ -253,7 +253,29 @@
 
     If the session timezone is already set to `Asia/Shanghai` but the query still fails, it indicates that the ORC file was generated with the timezone `+08:00`. During query execution, this timezone is required when parsing the ORC footer. In this case, you can try creating a symbolic link under the `/usr/share/zoneinfo/` directory that points `+08:00` to an equivalent timezone.
 
-15. **When querying Hive Catalog tables, query planning is extremely slow, the `nereids cost too much time` error occurs, and each HMS access takes a consistently long time (e.g., around 10 seconds).**
+14. When querying a Hive table that uses JSON SerDe (e.g., `org.openx.data.jsonserde.JsonSerDe`), an error occurs: `failed to get schema` or `Storage schema reading not supported`
+
+    When a Hive table uses JSON format storage (ROW FORMAT SERDE is `org.openx.data.jsonserde.JsonSerDe`), the Hive Metastore may not be able to read the table's schema information through the default method, causing the following error when querying from Doris:
+
+    ```
+    errCode = 2, detailMessage = failed to get schema for table xxx in db xxx.
+    reason: org.apache.hadoop.hive.metastore.api.MetaException:
+    java.lang.UnsupportedOperationException: Storage schema reading not supported
+    ```
+
+    This can be resolved by adding `"get_schema_from_table" = "true"` in the Catalog properties. This parameter instructs Doris to retrieve the schema directly from the Hive table metadata instead of relying on the underlying storage's Schema Reader.
+
+    ```sql
+    CREATE CATALOG hive PROPERTIES (
+        'type' = 'hms',
+        'hive.metastore.uris' = 'thrift://x.x.x.x:9083',
+        'get_schema_from_table' = 'true'
+    );
+    ```
+
+    This parameter is supported since versions 2.1.10 and 3.0.6.
+
+15. When querying Hive Catalog tables, query planning is extremely slow, the `nereids cost too much time` error occurs, and each HMS access takes a consistently long time (e.g., around 10 seconds).
 
     **Root Cause Analysis:**
 
@@ -284,29 +306,7 @@
     2. **Configure Static Hosts Mapping:** Add the IP and Hostname mapping of the HMS nodes to `/etc/hosts` on the FE node.
     3. **Standardize Catalog Properties:** When creating the Catalog, it is highly recommended to use a resolvable hostname instead of a bare IP address for the `hive.metastore.uris` property.
 
-16. When querying a Hive table that uses JSON SerDe (e.g., `org.openx.data.jsonserde.JsonSerDe`), an error occurs: `failed to get schema` or `Storage schema reading not supported`
-
-    When a Hive table uses JSON format storage (ROW FORMAT SERDE is `org.openx.data.jsonserde.JsonSerDe`), the Hive Metastore may not be able to read the table's schema information through the default method, causing the following error when querying from Doris:
-
-    ```
-    errCode = 2, detailMessage = failed to get schema for table xxx in db xxx.
-    reason: org.apache.hadoop.hive.metastore.api.MetaException:
-    java.lang.UnsupportedOperationException: Storage schema reading not supported
-    ```
-
-    This can be resolved by adding `"get_schema_from_table" = "true"` in the Catalog properties. This parameter instructs Doris to retrieve the schema directly from the Hive table metadata instead of relying on the underlying storage's Schema Reader.
-
-    ```sql
-    CREATE CATALOG hive PROPERTIES (
-        'type' = 'hms',
-        'hive.metastore.uris' = 'thrift://x.x.x.x:9083',
-        'get_schema_from_table' = 'true'
-    );
-    ```
-
-    This parameter is supported since versions 2.1.10 and 3.0.6.
-
-17. **Queries on Hive Catalog tables occasionally experience extremely long hangs or directly report the optimizer timeout error `nereids cost too much time`, but subsequent queries work fine immediately after.**
+16. Queries on Hive Catalog tables occasionally experience extremely long hangs or directly report the optimizer timeout error `nereids cost too much time`, but subsequent queries work fine immediately after.
 
     **Problem Description:**
 
