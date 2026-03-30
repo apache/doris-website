@@ -14,8 +14,11 @@
 - Export 属性
 - Outfile 属性
 
-**Doris 使用 S3 Client，通过 S3 兼容协议访问华为云 OBS。**
+**Doris 支持通过 S3 兼容协议（使用 S3 Client）或 OBS 原生协议（基于原生 SDK）访问华为云 OBS。**
 
+:::info
+自 3.0.5 和 4.1.0 版本开始，Doris 默认内置了华为云 OBS 的原生 SDK。用户可以直接通过 `obs://` 前缀访问 OBS 数据（如 Paimon Catalog），并且能够更好地支持华为云的并行文件系统（PFS）。
+:::
 ## 参数总览
 
 | 属性名称                     | 曾用名                   | 描述                                                         | 默认值 | 是否必须 |

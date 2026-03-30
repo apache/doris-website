@@ -609,6 +609,30 @@ Iceberg 的元数层级关系是 Catalog -> Namespace -> Table。其中 Namespac
 
 ### Aliyun DLF
 <details>
+    <summary>4.1+ 版本</summary>
+    <Tabs>
+        <TabItem value='DLF 2.5+' label='DLF 2.5+' default>
+            ```sql
+            CREATE CATALOG iceberg_dlf2_catalog PROPERTIES (
+                'type' = 'iceberg',
+                'iceberg.catalog.type' = 'rest',
+                'iceberg.rest.uri' = 'http://<region>-vpc.dlf.aliyuncs.com/iceberg',
+                'warehouse' = '<your-catalog-name>',
+                'iceberg.rest.sigv4-enabled' = 'true',
+                'iceberg.rest.signing-name' = 'DlfNext',
+                'iceberg.rest.access-key-id' = '<ak>',
+                'iceberg.rest.secret-access-key' = '<sk>',
+                'iceberg.rest.signing-region' = '<region>',
+                'iceberg.rest.vended-credentials-enabled' = 'true',
+                'io-impl' = 'org.apache.iceberg.rest.DlfFileIO',
+                'fs.oss.support' = 'true'
+            );
+            ```
+        </TabItem>
+    </Tabs>
+</details>
+
+<details>
     <summary>3.1+ 版本</summary>
     <Tabs>
         <TabItem value='DLF 1.0' label='DLF 1.0' default>

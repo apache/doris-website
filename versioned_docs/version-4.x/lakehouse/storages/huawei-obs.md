@@ -14,8 +14,11 @@ This document describes the parameters required to access Huawei Cloud OBS, whic
 - Export properties
 - Outfile properties
 
-**Doris uses S3 Client to access Huawei Cloud OBS through S3-compatible protocol.**
+**Doris supports accessing Huawei Cloud OBS through S3-compatible protocol (using S3 Client) or OBS native protocol (using native SDK).**
 
+:::info
+Starting from versions 3.0.5 and 4.1.0, Doris natively integrates the Huawei Cloud OBS SDK. Users can access OBS data (such as Paimon Catalog) directly with the `obs://` prefix, enabling better support for Huawei Cloud's Parallel File System (PFS).
+:::
 ## Parameter Overview
 
 | Property Name                | Former Name              | Description                                                  | Default Value | Required |
