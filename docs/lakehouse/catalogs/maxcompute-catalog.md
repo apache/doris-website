@@ -120,7 +120,7 @@ For versions before Doris 4.1.x, metadata caching is mainly controlled globally 
 Starting from Doris 4.1.x, MaxCompute Catalog's external metadata cache is configured using the unified `meta.cache.*` keys.
 :::
 
-### Unified Property Model (4.1.x+) {#meta-cache-unified-model}
+### Cache Property Configuration (4.1.x+) {#meta-cache-unified-model}
 
 Each engine's cache entry uses a unified configuration key format: `meta.cache.<engine>.<entry>.{enable,ttl-second,capacity}`.
 

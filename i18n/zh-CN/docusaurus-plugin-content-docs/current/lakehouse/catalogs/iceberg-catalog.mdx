@@ -96,7 +96,7 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 从 Doris 4.1.x 开始，Iceberg Catalog 的外表元数据缓存使用统一键 `meta.cache.*` 进行配置。
 :::
 
-### 统一属性模型（4.1.x+） {#meta-cache-unified-model}
+### 缓存属性配置（4.1.x+） {#meta-cache-unified-model}
 
 各引擎 cache entry 使用统一的配置键格式：`meta.cache.<engine>.<entry>.{enable,ttl-second,capacity}`。
 
