@@ -1161,7 +1161,18 @@ const sidebars: SidebarsConfig = {
                                         'sql-manual/basic-element/sql-data-types/semi-structured/MAP',
                                         'sql-manual/basic-element/sql-data-types/semi-structured/STRUCT',
                                         'sql-manual/basic-element/sql-data-types/semi-structured/JSON',
-                                        'sql-manual/basic-element/sql-data-types/semi-structured/VARIANT',
+                                        {
+                                            type: 'category',
+                                            label: 'VARIANT',
+                                            link: {
+                                                type: 'doc',
+                                                id: 'sql-manual/basic-element/sql-data-types/semi-structured/variant-workload-guide',
+                                            },
+                                            collapsed: false,
+                                            items: [
+                                                'sql-manual/basic-element/sql-data-types/semi-structured/VARIANT',
+                                            ],
+                                        },
                                     ],
                                 },
                                 {

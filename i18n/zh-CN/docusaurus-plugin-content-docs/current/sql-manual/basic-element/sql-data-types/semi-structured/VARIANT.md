@@ -2,7 +2,7 @@
 {
     "title": "VARIANT",
     "language": "zh-CN",
-    "description": "VARIANT 类型用于存储半结构化 JSON 数据，可包含不同基础类型（整数、字符串、布尔等）以及一层数组与嵌套对象。写入时会自动基于 JSON Path 推断子列结构与类型，并将高频路径物化为独立子列，充分利用列式存储和向量化执行，兼顾灵活性与性能。"
+    "description": "VARIANT 类型用于存储半结构化 JSON 数据，可包含不同基础类型（整数、字符串、布尔等）以及一层数组与嵌套对象。写入时会自动基于 JSON Path 推断子列结构与类型，并对高频路径执行子列列式提取（Subcolumnization），使其以独立子列的形式参与分析，兼顾灵活性与性能。"
 }
 ---
 
@@ -10,7 +10,17 @@
 
 ## 描述
 
-VARIANT 类型用于存储半结构化 JSON 数据，可包含不同基础类型（整数、字符串、布尔等）以及一层数组与嵌套对象。写入时会自动基于 JSON Path 推断子列结构与类型，并将高频路径物化为独立子列，充分利用列式存储和向量化执行，兼顾灵活性与性能。
+VARIANT 类型用于存储半结构化 JSON 数据，可包含不同基础类型（整数、字符串、布尔等）以及一层数组与嵌套对象。写入时会自动基于 JSON Path 推断子列结构与类型，并对高频路径执行子列列式提取（Subcolumnization），使其以独立子列的形式参与分析，兼顾灵活性与性能。
+
+:::tip 为什么使用 VARIANT
+如果文档结构会持续变化，但查询仍集中在少数热点路径上，`VARIANT` 的优势主要体现在三点：
+
+- 热点路径会参与子列列式提取（Subcolumnization），因此能直接受益于列存性能、文件裁剪和向量化计算。
+- 关键路径可以建立路径级索引，支持全文检索，同时继续受益于 Doris 的稀疏索引裁剪能力。
+- 面向宽列场景的存储优化，让万级子列规模的自动子列列式提取（Subcolumnization）保持可用。若参与子列列式提取（Subcolumnization）的路径接近 10000，对硬件要求会明显提高，通常应优先评估 DOC mode。
+
+如果你还在决定默认模式、Sparse、DOC mode 还是 Schema Template，建议先阅读 [VARIANT 使用与配置指南](./variant-workload-guide)。本页主要提供语法、类型规则、索引、限制和配置参考。
+:::
 
 ## 使用 VARIANT 类型
 
@@ -192,7 +202,7 @@ v1 VARIANT<
 > NULL
 ```
 
-匹配成功的子路径默认会展开为独立列。若匹配子列过多导致列数暴增，建议开启 `variant_enable_typed_paths_to_sparse`（见“配置”）。
+匹配成功的子路径默认会参与子列列式提取（Subcolumnization），并展开为独立列。若匹配子列过多导致列数暴增，建议开启 `variant_enable_typed_paths_to_sparse`（见“配置”）。
 
 ## 类型冲突与提升规则
 
@@ -393,7 +403,9 @@ SELECT * FROM tbl WHERE v['str'] MATCH 'Doris';
 
 ## 宽列
 
-当导入数据包含大量不同的 JSON key 时，VARIANT 的子列会迅速增多；当规模达到一定程度，可能出现元数据膨胀、写入/合并开销增大、查询性能下降等问题。为应对“宽列”（子列过多），VARIANT 提供两种机制：**稀疏列** 与 **DOC 编码**。
+当导入数据包含大量不同的 JSON key 时，通过子列列式提取（Subcolumnization）生成的子列会迅速增多；当规模达到一定程度，可能出现元数据膨胀、写入/合并开销增大、查询性能下降等问题。为应对“宽列”（子列过多），VARIANT 提供两种机制：**稀疏列** 与 **DOC 编码**。
+
+如果你要决定什么时候选 Sparse、什么时候选 DOC mode，请先看 [VARIANT 使用与配置指南](./variant-workload-guide)。本节只说明机制本身及其相关属性。
 
 注意：这两种机制**互斥**——启用 DOC 编码后将无法使用稀疏列机制，反之亦然。
 
@@ -401,37 +413,28 @@ SELECT * FROM tbl WHERE v['str'] MATCH 'Doris';
 
 **机制说明**
 
-- 系统会按“非空比例/稀疏度”对路径排序：高频（不稀疏）路径优先物化为独立子列；可物化的最大子列数量由 `variant_max_subcolumns_count` 指定，其余低频（稀疏）路径会被合并存放到稀疏列中。
+- 系统会按“非空比例/稀疏度”对路径排序：高频（不稀疏）路径优先执行子列列式提取（Subcolumnization），并存为独立子列；可执行 Subcolumnization 的最大子列数量由 `variant_max_subcolumns_count` 指定，其余低频（稀疏）路径会被合并存放到稀疏列中。
 - 如果对子列指定了预定义 Schema，默认情况下该子列不会被放入稀疏列中；可通过 `variant_enable_typed_paths_to_sparse` 允许“指定了类型”的子列进入稀疏列。
 - 稀疏列支持 sharding：通过将稀疏子路径分散到多个稀疏列中，降低单列读取负担、提升读取效率；可通过 `variant_sparse_hash_shard_count` 指定稀疏列的实际存储个数。
 
-**适用场景**
-- JSON key 总量大，但查询主要集中在少数高频字段（热点字段）。
-- key 分布高度不均匀（少数 key 高频出现，大量 key 偶发出现）：希望兼顾存储效率与热点查询性能。
-- 更关注“常用路径”的查询速度，能接受低频路径通过稀疏列读取（仍可正常查询，但通常更慢）。
+**参考说明**
 
-**限制与配置**
 - JSON key 总量大，但各个 JSON key 的“非空比例/稀疏度”都比较接近、缺乏区分度：这种情况下很难区分哪些列是真正稀疏的，稀疏列机制的效果会被降低。
-- 物化为独立子列的数目（`variant_max_subcolumns_count`）建议最大上限为 **10000**。
-- 如果对“指定了预定义 Schema”的子列有较高查询要求，建议 `variant_enable_typed_paths_to_sparse` 设为 **false**。
+- `variant_max_subcolumns_count` 默认就是 `2048`，已经足够覆盖大多数 workload。不要为了预留更多自动提取子列而激进调大；如果场景确实需要大规模子列列式提取（Subcolumnization），优先参考 <a href="./variant-workload-guide#doc-mode-template">DOC mode</a>。实践上仍建议不超过 **10000**。
 - `variant_sparse_hash_shard_count` 的设置可按“进入稀疏列的总列数 / 128”粗略估算。例如：VARIANT 中所有 JSON key 为 1 万，设置 `variant_max_subcolumns_count = 2000`，进入稀疏列的总列数约为 8000，则 `variant_sparse_hash_shard_count` 可参考 `8000/128`。
 
 ### DOC 编码机制
 
 **机制说明**
 
-- 子路径仍可物化为独立子列用于按路径查询，同时会额外保存一份“原始 JSON”作为存储字段，以便更快返回整条 JSON 文档。
+- 子路径仍可执行子列列式提取（Subcolumnization）用于按路径查询，同时会额外保存一份“原始 JSON”作为存储字段，以便更快返回整条 JSON 文档。
 - DOC 编码支持 sharding：原始 JSON 会被拆分到多个列中存储，读取整条 JSON 时再组装这些分片；可通过 `variant_doc_hash_shard_count` 指定 DOC 编码的实际分片数。
-- 小批量写入时可以不物化子列，后续合并时再触发子列物化：该行为由 `variant_doc_materialization_min_rows` 决定。例如 `variant_doc_materialization_min_rows = 10000`，当写入行数低于 1 万时，该批次只写入原始 JSON，不会物化子列。
+- 小批量写入时可以暂不执行子列列式提取（Subcolumnization），后续合并时再触发：该行为由 `variant_doc_materialization_min_rows` 决定。例如 `variant_doc_materialization_min_rows = 10000`，当写入行数低于 1 万时，该批次只写入原始 JSON，不会触发 Subcolumnization。
+- 对超宽列 workload，DOC mode 也是更稳定的选择，尤其是在 Subcolumnization 规模接近万列时。相比默认的即时 Subcolumnization，compaction 内存可下降约 2/3，在稀疏宽列导入场景下导入性能可提升约 5~10 倍。
+- 当 `VARIANT` 列非常宽、查询又经常读取整条文档时，DOC mode 相比从大量子列重组文档，`SELECT variant_col` 的效率可获得数量级提升。
 
-**适用场景**
+**参考说明**
 
-- JSON 的“总体 key 种类很多”，但“单行 key 数量相对少”，单行 key 数量占总体的 5% 以下（典型稀疏宽列场景）。
-- 业务经常需要返回整条 JSON（例如 `SELECT *`/整行回显/原始文档取回），不希望从大量子列重组 JSON。
-- 希望降低小批量写入时的子列物化开销，并在后续合并时再触发子列物化。
-- 可以接受额外存储开销（因为会保存原始 JSON 存储字段）。
-
-**限制与配置**
 - 需开启 `variant_enable_doc_mode`。
 - 使用 DOC 编码机制时，指定了预定义 Schema 的子列类型只能是数值类型、字符串类型、array 类型。
 - `variant_doc_hash_shard_count` 的设置可按 “JSON key 的总个数 / 128” 粗略估算。
@@ -440,11 +443,11 @@ SELECT * FROM tbl WHERE v['str'] MATCH 'Doris';
 
 ## 限制
 
-- **大宽表优化**：针对 `VARIANT` 类型可能产生大量动态子列（例如超过 2000 列）的大宽表场景，强烈建议开启 **V3 存储格式**。通过在建表 `PROPERTIES` 中指定 `"storage_format" = "V3"`，可以将列元数据与 Segment Footer 解耦，加快文件打开速度并降低内存占用。
+- **大宽表优化**：对于会通过子列列式提取（Subcolumnization）生成大量独立子列的宽表场景（例如超过 2000 列），强烈建议开启 **V3 存储格式**。通过在建表 `PROPERTIES` 中指定 `"storage_format" = "V3"`，可以将列元数据与 Segment Footer 解耦，加快文件打开速度并降低内存占用。
 - JSON key 长度 ≤ 255。
 - 不支持作为主键或排序键。
 - 不支持与其他类型嵌套（如 `Array<Variant>`、`Struct<Variant>`）。
-- 读取整个 VARIANT 列会扫描所有子字段。若列包含大量子字段，建议额外存储原始 JSON 的 STRING/JSONB 列，以优化如 `LIKE` 等整体匹配：
+- 在未启用 DOC mode 时，读取整个 VARIANT 列会扫描所有子字段。对于超宽列，一般不建议直接 `SELECT variant_col`；如果整列读取是主要查询模式，建议优先使用 DOC mode。若列包含大量子字段，也可额外存储原始 JSON 的 STRING/JSONB 列，以优化如 `LIKE` 等整体匹配：
 
 ```sql
 CREATE TABLE example_table (
@@ -483,8 +486,8 @@ CREATE TABLE example_table (
 
 <table>
 <tr><td>稀疏列属性</td><td>描述</td></tr>
-<tr><td>`variant_max_subcolumns_count`</td><td>控制 Path 物化列数的上限；超过后新增路径可能存放于共享数据结构。默认 2048（推荐），0 表示不限制；不推荐超过 10000。</td></tr>
-<tr><td>`variant_enable_typed_paths_to_sparse`</td><td>默认指定了 Path 类型后，该 Path 一定会被提取（不计入 `variant_max_subcolumns_count`）。设置为 `true` 后也会计入阈值，可能被收敛到共享结构。</td></tr>
+<tr><td>`variant_max_subcolumns_count`</td><td>控制可参与子列列式提取（Subcolumnization）的路径数上限；超过后新增路径可能存放于共享数据结构。默认 2048（推荐），已经覆盖大多数 workload；避免设置得过大。若场景确实需要大规模自动提取子列，优先参考 <a href="./variant-workload-guide#doc-mode-template">DOC mode</a>。0 表示不限制；不推荐超过 10000。</td></tr>
+<tr><td>`variant_enable_typed_paths_to_sparse`</td><td>默认指定了 Path 类型后，该 Path 一定会参与子列列式提取（Subcolumnization），且不计入 `variant_max_subcolumns_count`。设置为 `true` 后也会计入阈值，可能被收敛到共享结构。</td></tr>
 <tr><td>`variant_sparse_hash_shard_count`</td><td>控制稀疏列的分片数量。将稀疏子列分散存储到多个稀疏列中，以提升查询性能。默认值为 1，建议根据稀疏子列数量适当调整。</td></tr>
 </table>
 
@@ -506,15 +509,15 @@ CREATE TABLE example_table (
 <table>
 <tr><td>DOC 编码属性</td><td>描述</td></tr>
 <tr><td>`variant_enable_doc_mode`</td><td>是否启用 DOC 编码模式。设置为 `true` 时，原始 JSON 会作为存储字段保存，用于快速返回整个 JSON 文档；启用后将无法使用稀疏列机制。默认值为 `false`。</td></tr>
-<tr><td>`variant_doc_materialization_min_rows`</td><td>DOC 编码模式下触发子列物化的最小行数阈值。当写入行数低于该值时，仅存储原始 JSON；当文件合并后行数达到该阈值时，才将子列物化为独立子列，用于减少小批量写入时的开销。</td></tr>
+<tr><td>`variant_doc_materialization_min_rows`</td><td>DOC 编码模式下触发子列列式提取（Subcolumnization）的最小行数阈值。当写入行数低于该值时，仅存储原始 JSON；当文件合并后行数达到该阈值时，才执行 Subcolumnization，用于减少小批量写入时的开销。</td></tr>
 <tr><td>`variant_doc_hash_shard_count`</td><td>控制 DOC 编码的分片数量。原始 JSON 会被拆散存储到指定数量的列中，查询整个 JSON 时再组装这些分片。默认值为 64，可根据 JSON 大小和并发需求调整。</td></tr>
 </table>
 
 达到上限后的行为与调优建议：
 
 1. 超过上限后，新路径写入共享结构；Rowset 合并后也可能触发部分路径回收为共享结构。
-2. 系统会优先保留非空比例高、访问频率高的路径为物化列。
-3. 若接近 10000 物化列，对硬件要求较高（建议单机 ≥128G 内存、≥32C）。
+2. 系统会优先让非空比例高、访问频率高的路径保留在子列列式提取（Subcolumnization）中。
+3. 若参与子列列式提取（Subcolumnization）的路径接近 10000，对硬件要求较高（建议单机 ≥128G 内存、≥32C）。如果 workload 已经接近这个规模，建议优先评估 DOC mode。
 4. 写入侧调优：适度增大客户端 batch_size，或使用 Group Commit（按需增大 `group_commit_interval_ms`/`group_commit_data_bytes`）。
 5. 若无分桶裁剪需求，建议采用 RANDOM 分桶，并开启 single tablet 导入以降低 compaction 写放大。
 6. BE 配置可按导入压力调整 `max_cumu_compaction_threads`（建议 ≥8）、`vertical_compaction_num_columns_per_group=500`（提升纵向合并效率，增加内存占用）、`segment_cache_memory_percentage=20`（提升元数据缓存命中）。
@@ -531,7 +534,7 @@ CREATE TABLE example_table (
 SELECT variant_type(v) FROM variant_tbl;
 ```
 
-方案二：扩展 `DESC` 展示已物化的子列（仅展示被提取的路径）：
+方案二：扩展 `DESC` 展示已完成子列列式提取（Subcolumnization）的子路径：
 
 ```sql
 SET describe_extend_variant_column = true;
@@ -546,7 +549,7 @@ DESCRIBE ${table_name} PARTITION ($partition_name);
 
 ## 对比 JSON 类型
 
-- 存储：JSON 类型以 JSONB（行存）写入；VARIANT 写入时类型推断并列存化，压缩率更高、存储更小。
+- 存储：JSON 类型以 JSONB（行存）写入；VARIANT 写入时执行子列列式提取（Subcolumnization），压缩率更高、存储更小。
 - 查询：JSON 需解析；VARIANT 直接列式扫描，通常显著更快。
 
 改造的 ClickBench 测试结果（43 条查询）：

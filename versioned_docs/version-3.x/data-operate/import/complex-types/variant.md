@@ -2,11 +2,13 @@
 {
     "title": "Variant",
     "language": "en",
-    "description": "The VARIANT type can store semi-structured JSON data,"
+    "description": "Quick start for loading CSV and JSON data into VARIANT columns in Doris 3.x."
 }
 ---
 
-The VARIANT type can store semi-structured JSON data, allowing for the storage of complex data structures that contain different data types (such as integers, strings, booleans, etc.) without the need to predefine specific columns in the table structure. This type is particularly suitable for handling complex nested structures that may change at any time. During the writing process, the VARIANT type can automatically infer the structure and type of the columns, dynamically merging the written schema, and storing the JSON keys and their corresponding values as columns and dynamic sub-columns. For more documentation, please refer to [VARIANT](../../../sql-manual/basic-element/sql-data-types/semi-structured/VARIANT).
+Use this page to load CSV or JSON data into `VARIANT` in Doris 3.x.
+
+If you are still deciding whether `VARIANT` fits the workload, when to enable sparse columns, or when to add Schema Template and path-specific indexes, start with [VARIANT Workload Guide](../../../sql-manual/basic-element/sql-data-types/semi-structured/variant-workload-guide). For syntax, type rules, and indexes, see [VARIANT](../../../sql-manual/basic-element/sql-data-types/semi-structured/VARIANT).
 
 ## Usage Limitations
 
