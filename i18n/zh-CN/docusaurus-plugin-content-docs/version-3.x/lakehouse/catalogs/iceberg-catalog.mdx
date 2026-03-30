@@ -2175,6 +2175,21 @@ DROP DATABASE [IF EXISTS] iceberg.iceberg_db;
 
     通过 `MODIFY COLUMN` 语句修改列的属性，包括类型、nullable、默认值、注释和列位置。
 
+    自 4.0.4 版本起，Doris 支持修改复杂类型（STRUCT、ARRAY、MAP），包括安全的类型推导和追加 Struct 字段。
+    
+    嵌套类型中支持的安全类型推导：
+    - INT -> BIGINT, LARGEINT
+    - TINYINT -> SMALLINT, INT, BIGINT, LARGEINT
+    - SMALLINT -> INT, BIGINT, LARGEINT
+    - BIGINT -> LARGEINT
+    - FLOAT -> DOUBLE
+    - VARCHAR(n) -> VARCHAR(m) 其中 m > n
+    
+    修改复杂类型的限制：
+    - 所有新的嵌套字段必须为 nullable。
+    - 不能将可选（optional）改为必填（required）。
+    - 复杂类型的默认值仅支持 NULL。
+
     注意：修改列的属性时，所有没有被修改的属性也应该显式地指定为原来的值。
 
   ```sql
@@ -2190,6 +2205,23 @@ DROP DATABASE [IF EXISTS] iceberg.iceberg_db;
   );
   -- 修改 id 列的类型为 BIGINT，设置为 NOT NULL，默认值为 0，并添加注释
   ALTER TABLE iceberg_table MODIFY COLUMN id BIGINT NOT NULL DEFAULT 0 COMMENT 'This is a modified id column' FIRST;
+  ```
+
+  修改复杂类型的示例：
+
+  ```sql
+  -- 创建包含复杂类型的 Iceberg 表
+  CREATE TABLE iceberg_tbl (
+      id BIGINT,
+      user_info STRUCT<name:STRING, scores:ARRAY<INT>, age:INT>,
+      dt STRING
+  );
+
+  -- 为 STRUCT 类型的列追加新字段 (email)
+  ALTER TABLE iceberg_tbl MODIFY COLUMN user_info STRUCT<name:STRING, scores:ARRAY<INT>, age:INT, email:STRING>;
+
+  -- 将嵌套 ARRAY 元素类型从 INT 提升为 BIGINT
+  ALTER TABLE iceberg_tbl MODIFY COLUMN user_info STRUCT<name:STRING, scores:ARRAY<BIGINT>, age:INT, email:STRING>;
   ```
 
 * **重新排序**

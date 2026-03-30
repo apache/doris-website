@@ -2163,6 +2163,21 @@ Supported schema change operations include:
 
     Use the `MODIFY COLUMN` statement to modify column attributes, including type, nullable, default value, comment, and column position.
 
+    Since version 4.0.4, Doris supports modifying complex types (STRUCT, ARRAY, MAP), including safe type promotions and appending struct fields.
+    
+    Safe type promotions supported in nested types:
+    - INT -> BIGINT, LARGEINT
+    - TINYINT -> SMALLINT, INT, BIGINT, LARGEINT
+    - SMALLINT -> INT, BIGINT, LARGEINT
+    - BIGINT -> LARGEINT
+    - FLOAT -> DOUBLE
+    - VARCHAR(n) -> VARCHAR(m) where m > n
+    
+    Constraints for complex types:
+    - All new nested fields must be nullable.
+    - Cannot change optional to required.
+    - Default values for complex types only support NULL.
+
     Note: When modifying column attributes, all attributes that are not being modified should also be explicitly specified with their original values.
 
     ```sql
@@ -2178,6 +2193,23 @@ Supported schema change operations include:
   );
   -- Modify the id column type to BIGINT, set as NOT NULL, default value to 0, and add comment
   ALTER TABLE iceberg_table MODIFY COLUMN id BIGINT NOT NULL DEFAULT 0 COMMENT 'This is a modified id column';
+  ```
+
+  Example of modifying complex types:
+
+  ```sql
+  -- Create Iceberg table with complex types
+  CREATE TABLE iceberg_tbl (
+      id BIGINT,
+      user_info STRUCT<name:STRING, scores:ARRAY<INT>, age:INT>,
+      dt STRING
+  );
+
+  -- Append a new field (email) to the STRUCT column
+  ALTER TABLE iceberg_tbl MODIFY COLUMN user_info STRUCT<name:STRING, scores:ARRAY<INT>, age:INT, email:STRING>;
+
+  -- Promote the nested ARRAY element type from INT to BIGINT
+  ALTER TABLE iceberg_tbl MODIFY COLUMN user_info STRUCT<name:STRING, scores:ARRAY<BIGINT>, age:INT, email:STRING>;
   ```
 
 * **Reorder Columns**
