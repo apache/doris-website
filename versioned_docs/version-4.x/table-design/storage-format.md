@@ -34,7 +34,7 @@ In V2, every column's `ColumnMetaPB` sits in the Segment Footer. When a table ha
 
 V3 moves `ColumnMetaPB` out of the Footer into a dedicated area in the file. The Footer keeps only lightweight pointers.
 
-![Storage Format V2 vs V3 — Segment File Layout](/images/variant/storage-format-v3-layout.png)
+<img src="/images/variant/storage-format-v3-layout.png" alt="Storage Format V2 vs V3 — Segment File Layout" width="720" />
 
 Result: the system loads a small Footer first, then fetches metadata only for the columns the query needs. On object storage (S3, OSS), this cuts cold-start latency considerably.
 
@@ -50,7 +50,7 @@ V3 introduces `BINARY_PLAIN_ENCODING_V2` for strings and JSONB. The new layout u
 
 The following test was run on a wide table with 10,000 Segments, each containing 7,000 columns.
 
-![Storage Format V3 — Metadata Open Efficiency](/images/variant/storage-format-v3-benchmark.png)
+<img src="/images/variant/storage-format-v3-benchmark.png" alt="Storage Format V3 — Metadata Open Efficiency" width="600" />
 
 | Metric | V2 | V3 | Improvement |
 |---|---:|---:|---|
