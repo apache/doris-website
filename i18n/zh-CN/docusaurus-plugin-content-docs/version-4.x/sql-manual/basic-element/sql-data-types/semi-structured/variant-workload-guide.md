@@ -60,7 +60,7 @@
 
 ## 关键概念
 
-阅读下面的模板之前，先确认以下术语清晰。每个概念用 2-3 行讲清边界；实现细节请参考 [VARIANT](./VARIANT)。
+阅读下面的存储模式之前，先确认以下术语清晰。每个概念用 2-3 行讲清边界；实现细节请参考 [VARIANT](./VARIANT)。
 
 **子列列式提取（Subcolumnization）。** 写入 `VARIANT` 列时，Doris 会自动发现 JSON Path，并对热点路径执行子列列式提取，使其以独立子列的形式参与分析。
 
@@ -80,11 +80,19 @@
 
 ![Sparse Sharding：长尾路径并行读取](/images/variant/variant-sparse-sharding.png)
 
-**DOC mode。** 写入时延迟子列列式提取（Subcolumnization），并额外存储一份 map 格式的原始 JSON。这带来了快速导入和高效整条文档返回能力，代价是额外存储。后续 Compaction 时仍会完成 Subcolumnization。
+**DOC mode。** 写入时延迟子列列式提取（Subcolumnization），并额外存储一份 map 格式的原始 JSON（即 **doc map**）。这带来了快速导入和高效整条文档返回能力，代价是额外存储。后续 Compaction 时仍会完成 Subcolumnization。
 
 ![DOC Mode：延迟提取 + 快速文档返回](/images/variant/variant-doc-mode.png)
 
 如上图所示，写入时 JSON 被原样保存到 Doc Store 以实现快速导入。子列在后续 Compaction 过程中提取。读取时，按路径查询（如 `SELECT v['user_id']`）从物化子列中以列式速度读取；而整条文档查询（`SELECT v`）则直接从 Doc Store 中读取，无需从大量子列重组文档。
+
+DOC mode 的读取路径取决于被查询的路径是否已经物化：
+
+![DOC Mode：读取路径详情](/images/variant/variant-doc-mode-readpaths.png)
+
+- **DOC Materialized**：被查询的路径已经提取为 subcolumn（Compaction 后或 `variant_doc_materialization_min_rows` 条件满足后）。以列式速度读取，与默认 VARIANT 一样快。
+- **DOC Map**：被查询的路径尚未物化。查询回退到扫描整个 doc map 来查找值 —— 在宽 JSON 上显著变慢。
+- **DOC Map（分片）**：同样的回退路径，但通过 `variant_doc_hash_shard_count` 将 doc map 分散到多个物理列，实现并行扫描，大幅加速恢复速度。
 
 **Storage Format V3。** 把列元数据从 Segment Footer 中解耦出来。推荐在所有 `VARIANT` 表上使用，尤其是宽 JSON 场景，因为它消除了上千子列同时存在时的元数据瓶颈。
 
@@ -92,18 +100,9 @@
 
 ![VARIANT 模式决策路径](/images/variant/variant-decision-flowchart.png)
 
-## 几个常见起点
+## 存储模式
 
-- 事件日志或审计日志，查询主要围绕 `event_type`、`user_id`、`app_version` 这类常见路径：先用默认 `VARIANT`，只有在路径数持续增长时再考虑 Sparse。
-- 广告、遥测或用户画像载荷，属性很多，但稳定查询的只是少量热点字段：先从 Sparse 开始。
-- 模型输出、Trace 快照或文档归档，查询经常需要整条 JSON：先从 DOC mode 开始。
-- 订单、支付或设备载荷里，只有少数路径如 `order_id`、`status`、`device_id` 必须保持稳定类型并建立索引：只给这些路径加 Schema Template。
-
-对大多数 workload 来说，默认配置已经是合适的起点。只有在访问模式比较特殊时，才需要按场景调优。典型例子包括 AI 训练特征载荷、车联网遥测、用户标签系统这类需要支撑大规模子列列式提取（Subcolumnization）和大量路径级索引的场景。
-
-## 推荐起步模板
-
-先用下表选一个起点，再看对应模板。
+先用下表选一个起点，再看对应章节。
 
 | | 典型场景 | 推荐模式 | 关键配置 |
 |---|---|---|---|
@@ -112,7 +111,7 @@
 | **C** | 模型输出/Trace/归档（写入优先或整条返回） | DOC mode + V3 | `variant_enable_doc_mode`、`variant_doc_materialization_min_rows` |
 | **D** | 订单/支付/设备（关键路径需稳定类型） | Schema Template + A 或 B | 只定义关键路径 |
 
-### 模板 A：默认半结构化分析
+### 默认模式
 
 这是大多数新 `VARIANT` 场景最稳妥的起点。
 
@@ -139,7 +138,7 @@ PROPERTIES (
 - 不要在没有证据的情况下，一开始就把 `variant_max_subcolumns_count` 调得很大。
 - 如果 JSON 并不宽，开启 Sparse 或 DOC mode 只会增加复杂度而没有收益。
 
-### 模板 B：宽 JSON + 热点路径分析
+### Sparse 模式
 
 当 JSON 很宽，但查询依然集中在少量热点路径上时，优先 Sparse。
 
@@ -170,9 +169,9 @@ PROPERTIES (
 
 注意：
 - 如果瓶颈还是热点路径分析，就不要先跳到 DOC mode。
-- `variant_max_subcolumns_count` 默认就是 `2048`，已经覆盖大多数 workload 的自动子列列式提取需求。不要把它设得过大，导致事实上全部路径都被列化；如果场景确实需要更大规模的子列列式提取，优先参考 [模板 C（DOC mode）](#doc-mode-template)。
+- `variant_max_subcolumns_count` 默认就是 `2048`，已经覆盖大多数 workload 的自动子列列式提取需求。不要把它设得过大，导致事实上全部路径都被列化；如果场景确实需要更大规模的子列列式提取，优先参考 [DOC 模式](#doc-mode-template)。
 
-### 模板 C：导入优先或整条文档返回 {#doc-mode-template}
+### DOC 模式 {#doc-mode-template}
 
 当整条 JSON 返回能力或写入效率比路径分析更重要时，优先 DOC mode。
 
@@ -180,10 +179,10 @@ PROPERTIES (
 
 **DOC mode 更适合下面几类诉求：**
 
-- 更稳定地支撑超大规模子列列式提取（Subcolumnization），例如万列级别。若参与子列列式提取（Subcolumnization）的路径接近 10000，对硬件要求会明显提高，因此应优先评估 DOC mode。
+- 当子列列式提取规模接近万列级别时，硬件要求会明显提高。DOC mode 在这个规模下更稳定。
 - 相比默认的即时 Subcolumnization，compaction 内存可下降约 2/3。
-- 在稀疏宽列导入场景下，导入性能可提升约 5~10 倍。
-- 如果列非常宽，且查询经常直接读取整个 `VARIANT` 值，DOC mode 相比从大量子列重组文档，`SELECT variant_col` 的效率可获得数量级提升。
+- 在稀疏宽列导入场景下，导入性能可提升约 5～10 倍。
+- 当查询直接读取整个 `VARIANT` 值（`SELECT variant_col`）时，DOC mode 无需从数千子列重组文档，效率可获得数量级提升。
 
 **开始使用：**
 
@@ -214,7 +213,7 @@ PROPERTIES (
 - DOC mode 不是所有宽 JSON 场景的默认答案。若核心诉求是热点路径分析，通常还是 Sparse 更合适。
 - DOC mode 和 Sparse 互斥，不能同时开启。
 
-### 模板 D：关键路径稳定治理
+### Schema Template 模式
 
 当只有少量路径需要稳定类型、稳定行为或路径级索引时，优先 Schema Template。
 
@@ -244,6 +243,28 @@ PROPERTIES (
 注意：
 - 不要试图把整个 JSON 都静态模板化，这会削弱 `VARIANT` 的意义。
 - Schema Template 只用于关键路径，其余保持动态。
+
+## 性能
+
+下图对比了 10K 路径宽列数据集上的单路径提取耗时（200K 行，提取 key5000，16 CPU，3 次取中位数）。
+
+![宽列单路径提取：查询耗时](/images/variant/variant-bench-query-time.svg)
+
+| 模式 | 查询耗时 | 峰值内存 |
+|---|---:|---:|
+| DOC Materialized | 76 ms | 1 MiB |
+| VARIANT 默认 | 76 ms | 1 MiB |
+| DOC Map（分片） | 148 ms | 1 MiB |
+| JSONB | 887 ms | 32 GiB |
+| DOC Map | 2,533 ms | 1 MiB |
+| MAP\<STRING,STRING\> | 2,800 ms | 1 MiB |
+| STRING (原始 JSON) | 6,104 ms | 48 GiB |
+
+要点：
+
+- **物化子列最快。** 默认模式和 DOC Materialized 均约 76 ms —— 是原始 STRING 的 80 倍、JSONB 的 12 倍。
+- **DOC Map 分片有效。** 分片后 doc map 查询从 2.5 s 降至 148 ms。
+- **JSONB 和 STRING 内存开销大。** 峰值内存 32–48 GiB，而 VARIANT 各模式仅 1 MiB。
 
 ## 最佳实践
 

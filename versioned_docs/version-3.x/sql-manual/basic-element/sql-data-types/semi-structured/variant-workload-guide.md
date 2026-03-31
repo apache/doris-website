@@ -43,7 +43,7 @@ Prefer static columns when these conditions dominate:
 
 ## Key Concepts
 
-Before reading the templates below, make sure these terms are clear. Each is explained in 2-3 lines; for implementation details, see [VARIANT](./VARIANT).
+Before reading the storage modes below, make sure these terms are clear. Each is explained in 2-3 lines; for implementation details, see [VARIANT](./VARIANT).
 
 **Subcolumnization.** When data is written into a `VARIANT` column, Doris automatically discovers JSON paths and extracts hot paths as independent columnar subcolumns for efficient analytics.
 
@@ -67,9 +67,9 @@ For wide JSON where most queries return the whole document, Doris 3.x `VARIANT` 
 
 For most workloads, the default configuration is already the right starting point. Tune only when the access pattern is clearly unusual. Typical examples include AI training feature payloads, connected-vehicle telemetry, and user-tag systems that, in Doris 3.1 and later, need unusually large-scale Subcolumnization together with many path-level indexes.
 
-## Recommended templates
+## Storage Modes
 
-Use the table below to pick a starting point, then read the matching template.
+Use the table below to pick a starting point, then read the matching section.
 
 | | Typical scenario | Recommended mode | Key configuration |
 |---|---|---|---|
@@ -77,7 +77,7 @@ Use the table below to pick a starting point, then read the matching template.
 | **B** | Advertising / telemetry / user profiles (wide, hot paths few) | Sparse (3.1+) | `variant_max_subcolumns_count` |
 | **C** | Orders / payments / devices (key paths need stable types) | Schema Template (3.1+) + A or B | Define only key paths |
 
-### Template A: Default semi-structured analytics
+### Default Mode
 
 This is the safest starting point for most new `VARIANT` workloads.
 
@@ -103,7 +103,7 @@ Watch for:
 - Do not raise `variant_max_subcolumns_count` early unless path growth is already causing pressure.
 - If the JSON is not wide, enabling sparse columns adds complexity without benefit.
 
-### Template B: Wide JSON with hot-path analytics
+### Sparse Mode
 
 > This template requires Doris 3.1.0 or later.
 
@@ -137,7 +137,7 @@ Watch for:
 - If hot-path analytics is the bottleneck, sparse columns are the right direction in 3.x.
 - Do not set `variant_max_subcolumns_count` so large that effectively all paths go through Subcolumnization. That defeats the purpose and increases metadata and compaction cost.
 
-### Template C: Stable key paths and path-level governance
+### Schema Template
 
 > This template requires Doris 3.1.0 or later.
 
@@ -168,6 +168,24 @@ Use it when only a few fields are business-critical and those paths need stricte
 Watch for:
 - Do not turn the whole JSON schema into a static template. That defeats the point of `VARIANT`.
 - Schema Template should cover key paths only; the rest stays dynamic.
+
+## Performance
+
+The chart below compares single-path extraction time on a 10K-path wide-column dataset (200K rows, extracting one key, 16 CPUs, median of 3 runs).
+
+![Wide-Column Single-Path Extraction: Query Time](/images/variant/variant-bench-query-time-3x.svg)
+
+| Mode | Query Time | Peak Memory |
+|---|---:|---:|
+| VARIANT Default | 76 ms | 1 MiB |
+| JSONB | 887 ms | 32 GiB |
+| MAP\<STRING,STRING\> | 2,800 ms | 1 MiB |
+| STRING (raw JSON) | 6,104 ms | 48 GiB |
+
+Key takeaways:
+
+- **VARIANT Default is fastest.** 76 ms — 12× faster than JSONB, 80× faster than raw STRING.
+- **JSONB and STRING are memory-heavy.** They consume 32–48 GiB peak memory vs. 1 MiB for VARIANT.
 
 ## Best Practices
 

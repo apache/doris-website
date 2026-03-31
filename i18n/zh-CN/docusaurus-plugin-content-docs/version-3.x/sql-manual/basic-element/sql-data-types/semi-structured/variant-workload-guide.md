@@ -43,7 +43,7 @@
 
 ## 关键概念
 
-阅读下面的模板之前，先确认以下术语清晰。每个概念用 2-3 行讲清边界；实现细节请参考 [VARIANT](./VARIANT)。
+阅读下面的存储模式之前，先确认以下术语清晰。每个概念用 2-3 行讲清边界；实现细节请参考 [VARIANT](./VARIANT)。
 
 **子列列式提取（Subcolumnization）。** 写入 `VARIANT` 列时，Doris 会自动发现 JSON Path，并对热点路径执行子列列式提取，使其以独立子列的形式参与分析。
 
@@ -67,9 +67,9 @@
 
 对大多数 workload 来说，默认配置已经是合适的起点。只有在访问模式比较特殊时，才需要按场景调优。典型例子包括 AI 训练特征载荷、车联网遥测、用户标签系统这类在 Doris 3.1 及以上版本中需要支撑大规模子列列式提取（Subcolumnization）和大量路径级索引的场景。
 
-## 推荐起步模板
+## 存储模式
 
-先用下表选一个起点，再看对应模板。
+先用下表选一个起点，再看对应章节。
 
 | | 典型场景 | 推荐模式 | 关键配置 |
 |---|---|---|---|
@@ -77,7 +77,7 @@
 | **B** | 广告/遥测/用户画像（宽、热点少） | Sparse（3.1+） | `variant_max_subcolumns_count` |
 | **C** | 订单/支付/设备（关键路径需稳定类型） | Schema Template（3.1+） + A 或 B | 只定义关键路径 |
 
-### 模板 A：默认半结构化分析
+### 默认模式
 
 这是大多数新 `VARIANT` 场景最稳妥的起点。
 
@@ -103,7 +103,7 @@ PROPERTIES (
 - 不要在没有证据的情况下，一开始就把 `variant_max_subcolumns_count` 调得很大。
 - 如果 JSON 并不宽，开启 Sparse 只会增加复杂度而没有收益。
 
-### 模板 B：宽 JSON + 热点路径分析
+### Sparse 模式
 
 > 此模板需要 Doris 3.1.0 及以上版本。
 
@@ -137,7 +137,7 @@ PROPERTIES (
 - 如果瓶颈还是热点路径分析，Sparse 是 3.x 中的正确方向。
 - 不要把 `variant_max_subcolumns_count` 设得过大，导致事实上全部路径都被列化。这会增加元数据和 Compaction 开销。
 
-### 模板 C：关键路径稳定类型与治理
+### Schema Template 模式
 
 > 此模板需要 Doris 3.1.0 及以上版本。
 
@@ -168,6 +168,24 @@ PROPERTIES (
 注意：
 - 不要试图把整个 JSON schema 都固化成静态模板，这会抵消 `VARIANT` 的价值。
 - Schema Template 只用于关键路径，其余保持动态。
+
+## 性能
+
+下图对比了 10K 路径宽列数据集上的单路径提取耗时（200K 行，提取 key5000，16 CPU，3 次取中位数）。
+
+![宽列单路径提取：查询耗时](/images/variant/variant-bench-query-time-3x.svg)
+
+| 模式 | 查询耗时 | 峰值内存 |
+|---|---:|---:|
+| VARIANT 默认 | 76 ms | 1 MiB |
+| JSONB | 887 ms | 32 GiB |
+| MAP\<STRING,STRING\> | 2,800 ms | 1 MiB |
+| STRING（原始 JSON） | 6,104 ms | 48 GiB |
+
+要点：
+
+- **VARIANT 默认最快。** 76 ms —— 是 JSONB 的 12 倍、原始 STRING 的 80 倍。
+- **JSONB 和 STRING 内存开销大。** 峰值内存 32–48 GiB，而 VARIANT 仅 1 MiB。
 
 ## 最佳实践
 
