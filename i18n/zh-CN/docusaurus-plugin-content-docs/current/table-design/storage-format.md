@@ -30,7 +30,7 @@ under the License.
 
 ### 外部列元数据（External Column Meta）
 
-V2 中，所有列的 `ColumnMetaPB` 都放在 Segment Footer 里。当表有几百甚至几千列时，Footer 可以膨胀到几 MB。打开一个 Segment 就要加载和反序列化全部元数据，即使查询只需读两个列。
+V2 中，所有列的 `ColumnMetaPB` 都放在 Segment Footer 里。当表有几百甚至几千列时，Footer 可以膨胀到几 MB。打开一个 Segment 就要加载和反序列化全部元数据，即使查询只需读两列。
 
 V3 将 `ColumnMetaPB` 从 Footer 移到文件内的独立区域，Footer 只保留轻量指针。
 
