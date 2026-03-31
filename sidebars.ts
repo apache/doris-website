@@ -455,7 +455,6 @@ const sidebars: SidebarsConfig = {
                         },
                         'lakehouse/data-cache',
                         'lakehouse/meta-cache',
-                        'lakehouse/meta-cache/unified-meta-cache',
                         'lakehouse/compute-node',
                         'lakehouse/statistics',
                         {
