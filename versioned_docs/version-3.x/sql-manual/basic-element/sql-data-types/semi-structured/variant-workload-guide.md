@@ -47,7 +47,7 @@ Before reading the storage modes below, make sure these terms are clear. Each is
 
 **Subcolumnization.** When data is written into a `VARIANT` column, Doris automatically discovers JSON paths and extracts hot paths as independent columnar subcolumns for efficient analytics.
 
-![Default VARIANT: Automatic Subcolumn Extraction](/images/variant/variant-default-storage.png)
+<img src="/images/variant/variant-default-storage.png" alt="Default VARIANT: Automatic Subcolumn Extraction" width="720" />
 
 **Schema Template (3.1+).** A declaration on a `VARIANT` column that pins selected paths to stable types. Use it for key business fields that must stay typed, indexable, and predictable. Do not try to enumerate every possible path.
 
@@ -55,13 +55,13 @@ Before reading the storage modes below, make sure these terms are clear. Each is
 
 **Sparse columns (3.1+).** When wide JSON has a clear hot/cold split, sparse columns keep hot paths in Subcolumnization while pushing cold (long-tail) paths into shared sparse storage. Use `variant_max_subcolumns_count` to control the boundary.
 
-![Sparse Columns: Hot/Cold Path Separation](/images/variant/variant-sparse-storage.png)
+<img src="/images/variant/variant-sparse-storage.png" alt="Sparse Columns: Hot/Cold Path Separation" width="720" />
 
 As shown above, hot paths (such as `user_id`, `page`) stay as independent columnar subcolumns with full analytics speed, while thousands of long-tail paths converge into shared sparse storage. The threshold is controlled by `variant_max_subcolumns_count`.
 
 ## Recommended Decision Path
 
-![VARIANT Mode Decision Path (Doris 3.x)](/images/variant/variant-decision-flowchart-3x.png)
+<img src="/images/variant/variant-decision-flowchart-3x.png" alt="VARIANT Mode Decision Path (Doris 3.x)" width="600" />
 
 For wide JSON where most queries return the whole document, Doris 3.x `VARIANT` is usually not the best fit because there is no DOC mode. Avoid making `SELECT variant_col` the main query pattern on very wide columns.
 
@@ -173,7 +173,7 @@ Watch for:
 
 The chart below compares single-path extraction time on a 10K-path wide-column dataset (200K rows, extracting one key, 16 CPUs, median of 3 runs).
 
-![Wide-Column Single-Path Extraction: Query Time](/images/variant/variant-bench-query-time-3x.svg)
+<img src="/images/variant/variant-bench-query-time-3x.svg" alt="Wide-Column Single-Path Extraction: Query Time" width="720" />
 
 | Mode | Query Time | Peak Memory |
 |---|---:|---:|

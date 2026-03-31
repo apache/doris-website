@@ -64,7 +64,7 @@
 
 **子列列式提取（Subcolumnization）。** 写入 `VARIANT` 列时，Doris 会自动发现 JSON Path，并对热点路径执行子列列式提取，使其以独立子列的形式参与分析。
 
-![默认 VARIANT：自动子列提取](/images/variant/variant-default-storage.png)
+<img src="/images/variant/variant-default-storage.png" alt="默认 VARIANT：自动子列提取" width="720" />
 
 **Schema Template。** 一种在 `VARIANT` 列上的声明，用来把部分路径固定为稳定类型。它适合少量关键业务字段，让这些路径的类型、索引和行为更可控；不应试图穷举所有可能路径。
 
@@ -72,23 +72,23 @@
 
 **Sparse columns（稀疏列）。** 当宽 JSON 有明显的冷热分布时，Sparse 让热点路径继续保留子列列式提取（Subcolumnization）的结果，而冷门（长尾）路径进入共享的稀疏存储。稀疏存储支持分片，将对多个物理列进行分散存储以提升读并行度。
 
-![Sparse Columns：冷热路径分离](/images/variant/variant-sparse-storage.png)
+<img src="/images/variant/variant-sparse-storage.png" alt="Sparse Columns：冷热路径分离" width="720" />
 
 如上图所示，热点路径（如 `user_id`、`page`）继续以独立列式子列的形式保持高性能分析能力，而数千个长尾路径则汇入共享稀疏存储。阈值通过 `variant_max_subcolumns_count` 控制。
 
 **Sparse sharding（稀疏分片）。** 当长尾路径数量非常大时，单个稀疏列可能成为读取瓶颈。稀疏分片通过哈希将长尾路径分散到多个物理列（`variant_sparse_hash_shard_count`），从而可以并行扫描。
 
-![Sparse Sharding：长尾路径并行读取](/images/variant/variant-sparse-sharding.png)
+<img src="/images/variant/variant-sparse-sharding.png" alt="Sparse Sharding：长尾路径并行读取" width="720" />
 
 **DOC mode。** 写入时延迟子列列式提取（Subcolumnization），并额外存储一份 map 格式的原始 JSON（即 **doc map**）。这带来了快速导入和高效整条文档返回能力，代价是额外存储。后续 Compaction 时仍会完成 Subcolumnization。
 
-![DOC Mode：延迟提取 + 快速文档返回](/images/variant/variant-doc-mode.png)
+<img src="/images/variant/variant-doc-mode.png" alt="DOC Mode：延迟提取 + 快速文档返回" width="700" />
 
 如上图所示，写入时 JSON 被原样保存到 Doc Store 以实现快速导入。子列在后续 Compaction 过程中提取。读取时，按路径查询（如 `SELECT v['user_id']`）从物化子列中以列式速度读取；而整条文档查询（`SELECT v`）则直接从 Doc Store 中读取，无需从大量子列重组文档。
 
 DOC mode 的读取路径取决于被查询的路径是否已经物化：
 
-![DOC Mode：读取路径详情](/images/variant/variant-doc-mode-readpaths.png)
+<img src="/images/variant/variant-doc-mode-readpaths.png" alt="DOC Mode：读取路径详情" width="720" />
 
 - **DOC Materialized**：被查询的路径已经提取为 subcolumn（Compaction 后或 `variant_doc_materialization_min_rows` 条件满足后）。以列式速度读取，与默认 VARIANT 一样快。
 - **DOC Map**：被查询的路径尚未物化。查询回退到扫描整个 doc map 来查找值 —— 在宽 JSON 上显著变慢。
@@ -98,7 +98,7 @@ DOC mode 的读取路径取决于被查询的路径是否已经物化：
 
 ## 推荐决策路径
 
-![VARIANT 模式决策路径](/images/variant/variant-decision-flowchart.png)
+<img src="/images/variant/variant-decision-flowchart.png" alt="VARIANT 模式决策路径" width="520" />
 
 ## 存储模式
 
@@ -248,7 +248,7 @@ PROPERTIES (
 
 下图对比了 10K 路径宽列数据集上的单路径提取耗时（200K 行，提取 key5000，16 CPU，3 次取中位数）。
 
-![宽列单路径提取：查询耗时](/images/variant/variant-bench-query-time.svg)
+<img src="/images/variant/variant-bench-query-time.svg" alt="宽列单路径提取：查询耗时" width="720" />
 
 | 模式 | 查询耗时 | 峰值内存 |
 |---|---:|---:|

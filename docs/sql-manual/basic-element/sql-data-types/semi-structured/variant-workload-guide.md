@@ -64,7 +64,7 @@ Before reading the storage modes below, make sure these terms are clear. Each is
 
 **Subcolumnization.** When data is written into a `VARIANT` column, Doris automatically discovers JSON paths and extracts hot paths as independent columnar subcolumns for efficient analytics.
 
-![Default VARIANT: Automatic Subcolumn Extraction](/images/variant/variant-default-storage.png)
+<img src="/images/variant/variant-default-storage.png" alt="Default VARIANT: Automatic Subcolumn Extraction" width="720" />
 
 **Schema Template.** A declaration on a `VARIANT` column that pins selected paths to stable types. Use it for key business fields that must stay typed, indexable, and predictable. Do not try to enumerate every possible path.
 
@@ -72,23 +72,23 @@ Before reading the storage modes below, make sure these terms are clear. Each is
 
 **Sparse columns.** When wide JSON has a clear hot/cold split, sparse columns keep hot paths in Subcolumnization while pushing cold (long-tail) paths into shared sparse storage. Sparse storage supports sharding across multiple physical columns for better read parallelism.
 
-![Sparse Columns: Hot/Cold Path Separation](/images/variant/variant-sparse-storage.png)
+<img src="/images/variant/variant-sparse-storage.png" alt="Sparse Columns: Hot/Cold Path Separation" width="720" />
 
 As shown above, hot paths (such as `user_id`, `page`) stay as independent columnar subcolumns with full analytics speed, while thousands of long-tail paths converge into shared sparse storage. The threshold is controlled by `variant_max_subcolumns_count`.
 
 **Sparse sharding.** When the long-tail path count is very large, a single sparse column can become a read bottleneck. Sparse sharding distributes long-tail paths by hash across multiple physical columns (`variant_sparse_hash_shard_count`), so they can be scanned in parallel.
 
-![Sparse Sharding: Parallel Read for Long-Tail Paths](/images/variant/variant-sparse-sharding.png)
+<img src="/images/variant/variant-sparse-sharding.png" alt="Sparse Sharding: Parallel Read for Long-Tail Paths" width="720" />
 
 **DOC mode.** Delays Subcolumnization at write time and additionally stores the original JSON as a map-format stored field (the **doc map**). This gives fast ingest and efficient whole-document return at the cost of extra storage. Subcolumnization still happens later during compaction.
 
-![DOC Mode: Deferred Extraction + Fast Document Return](/images/variant/variant-doc-mode.png)
+<img src="/images/variant/variant-doc-mode.png" alt="DOC Mode: Deferred Extraction + Fast Document Return" width="700" />
 
 As illustrated above, during write the JSON is preserved as-is into a Doc Store for fast ingest. Subcolumns are extracted later during compaction. At read time, path-based queries (e.g. `SELECT v['user_id']`) read from materialized subcolumns at full columnar speed, while whole-document queries (`SELECT v`) read directly from the Doc Store without reconstructing from subcolumns.
 
 DOC mode has three distinct read paths depending on whether the queried path has been materialized:
 
-![DOC Mode: Read Path Details](/images/variant/variant-doc-mode-readpaths.png)
+<img src="/images/variant/variant-doc-mode-readpaths.png" alt="DOC Mode: Read Path Details" width="720" />
 
 - **DOC Materialized**: The queried path has already been extracted into a subcolumn (after compaction or when `variant_doc_materialization_min_rows` is met). Reads at full columnar speed, same as default VARIANT.
 - **DOC Map**: The queried path has not been materialized yet. The query falls back to scanning the entire doc map to find the value — significantly slower on wide JSON.
@@ -98,7 +98,7 @@ DOC mode has three distinct read paths depending on whether the queried path has
 
 ## Recommended Decision Path
 
-![VARIANT Mode Decision Path](/images/variant/variant-decision-flowchart.png)
+<img src="/images/variant/variant-decision-flowchart.png" alt="VARIANT Mode Decision Path" width="520" />
 
 ## Storage Modes
 
@@ -248,7 +248,7 @@ Watch for:
 
 The chart below compares single-path extraction time on a 10K-path wide-column dataset (200K rows, extracting one key, 16 CPUs, median of 3 runs).
 
-![Wide-Column Single-Path Extraction: Query Time](/images/variant/variant-bench-query-time.svg)
+<img src="/images/variant/variant-bench-query-time.svg" alt="Wide-Column Single-Path Extraction: Query Time" width="720" />
 
 | Mode | Query Time | Peak Memory |
 |---|---:|---:|

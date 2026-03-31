@@ -47,7 +47,7 @@
 
 **子列列式提取（Subcolumnization）。** 写入 `VARIANT` 列时，Doris 会自动发现 JSON Path，并对热点路径执行子列列式提取，使其以独立子列的形式参与分析。
 
-![默认 VARIANT：自动子列提取](/images/variant/variant-default-storage.png)
+<img src="/images/variant/variant-default-storage.png" alt="默认 VARIANT：自动子列提取" width="720" />
 
 **Schema Template（3.1+）。** 一种在 `VARIANT` 列上的声明，用来把部分路径固定为稳定类型。它适合少量关键业务字段，让这些路径的类型、索引和行为更可控；不应试图穷举所有可能路径。
 
@@ -55,13 +55,13 @@
 
 **Sparse columns（稀疏列，3.1+）。** 当宽 JSON 有明显的冷热分布时，Sparse 让热点路径继续保留子列列式提取（Subcolumnization）的结果，而冷门（长尾）路径进入共享的稀疏存储。使用 `variant_max_subcolumns_count` 控制边界。
 
-![Sparse Columns：冷热路径分离](/images/variant/variant-sparse-storage.png)
+<img src="/images/variant/variant-sparse-storage.png" alt="Sparse Columns：冷热路径分离" width="720" />
 
 如上图所示，热点路径（如 `user_id`、`page`）继续以独立列式子列的形式保持高性能分析能力，而数千个长尾路径则汇入共享稀疏存储。阈值通过 `variant_max_subcolumns_count` 控制。
 
 ## 推荐决策路径
 
-![VARIANT 模式决策路径 (Doris 3.x)](/images/variant/variant-decision-flowchart-3x.png)
+<img src="/images/variant/variant-decision-flowchart-3x.png" alt="VARIANT 模式决策路径 (Doris 3.x)" width="600" />
 
 如果宽 JSON 的主访问模式是整条文档返回，Doris 3.x 的 `VARIANT` 往往不是最佳匹配，因为没有 DOC mode。不建议在超宽列上把 `SELECT variant_col` 作为主查询模式。
 
@@ -173,7 +173,7 @@ PROPERTIES (
 
 下图对比了 10K 路径宽列数据集上的单路径提取耗时（200K 行，提取 key5000，16 CPU，3 次取中位数）。
 
-![宽列单路径提取：查询耗时](/images/variant/variant-bench-query-time-3x.svg)
+<img src="/images/variant/variant-bench-query-time-3x.svg" alt="宽列单路径提取：查询耗时" width="720" />
 
 | 模式 | 查询耗时 | 峰值内存 |
 |---|---:|---:|
