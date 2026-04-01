@@ -51,7 +51,7 @@ To reduce memory usage, Doris supports vector quantization (`sq8`, `sq4`, `pq`).
 Prepare the following inputs:
 - Vector dimension `D`
 - Total row count `N`
-- Index type (`hnsw` or `ivf`)
+- Index type (`hnsw`, `ivf`, or `ivf_on_disk`)
 - Quantizer (`flat`, `sq8`, `sq4`, `pq`)
 - HNSW parameter `max_degree` (if using HNSW)
 - Target QPS and latency goal
@@ -102,6 +102,8 @@ Quantizer-based approximations:
 - `sq8`: about `1/4` of `flat`
 - `sq4`: about `1/8` of `flat`
 - `pq`: typically close to `sq4`
+
+`ivf_on_disk` uses the same IVF training model (`nlist` / `ivf_nprobe`), but stores IVF list payload on disk and serves it through cache. For planning, you can use the IVF estimate above as an upper bound for full in-memory residency, then size `ann_index_ivf_list_cache_limit` based on the memory budget you want to reserve for hot list data.
 
 ### Quick Reference (`D=768`)
 

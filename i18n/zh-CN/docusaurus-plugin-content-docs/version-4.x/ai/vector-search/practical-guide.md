@@ -128,7 +128,7 @@ PROPERTIES ("replication_num" = "1");
 
 通用参数：
 
-- `index_type`：`hnsw` 或 `ivf`
+- `index_type`：`hnsw`、`ivf` 或 `ivf_on_disk`
 - `metric_type`：`l2_distance` 或 `inner_product`
 - `dim`：向量维度
 - `quantizer`：`flat`、`sq8`、`sq4`、`pq`（可选）
@@ -140,7 +140,7 @@ HNSW 参数：
 
 IVF 参数：
 
-- `nlist`（默认 `1024`）
+- `nlist`（默认 `1024`，`ivf` 和 `ivf_on_disk` 都使用该参数）
 
 示例：
 

@@ -87,16 +87,16 @@ ALTER TABLE <table_name> ADD INDEX <index_name>(<column_name>)
 
 ### General Properties
 
-- `index_type`: The type of ANN index. Supported values: `"ivf"` or `"hnsw"`.
+- `index_type`: The type of ANN index. Supported values: `"ivf"`, `"ivf_on_disk"`, or `"hnsw"`.
 - `metric_type`: The distance metric. Supported values: `"l2_distance"`, `"inner_product"`.
 - `dim`: The dimension of the vector column.
 - `quantizer`: The quantizer type. Supported values: `flat`, `sq4`, `sq8`, `pq`. Default to `flat` when not specified.
 
 ### Index-Specific Properties
 
-#### IVF Index Properties
+#### IVF / IVF On-Disk Index Properties
 
-- `nlist`: Number of clusters (inverted lists). Default: 1024. Higher values improve recall but increase build time and memory usage.
+- `nlist`: Number of clusters (inverted lists). Default: 1024. Required by both `ivf` and `ivf_on_disk`. Higher values improve recall but increase build time and resource usage.
 
 #### HNSW Index Properties
 
