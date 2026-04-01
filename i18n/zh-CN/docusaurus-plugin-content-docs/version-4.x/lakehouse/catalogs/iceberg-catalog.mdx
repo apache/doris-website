@@ -9,7 +9,7 @@
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
-Doris 支持通过多种元数据服务访问 Iceberg 表数据。除支持数据读取外，Doris 也支持对 Iceberg 表进行写入操作。
+Doris 支持通过多种元数据服务访问 Iceberg 表数据。除支持数据读取外，Doris 也支持对 Iceberg 表进行写入操作，包括 INSERT、INSERT OVERWRITE、UPDATE、DELETE 和 MERGE INTO。
 
 [使用 Docker 快速体验 Apache Doris & Iceberg](../best-practices/doris-iceberg.md)
 
@@ -55,11 +55,11 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 
   * `dlf`：使用阿里云 DLF 作为元数据服务。
 
-  * `s3tables`: 使用 AWS S3 Tables Catalog 访问 [S3 Table Bucket](https://aws.amazon.com/s3/features/tables/).
+  * `s3tables`：使用 AWS S3 Tables Catalog 访问 [S3 Table Bucket](https://aws.amazon.com/s3/features/tables/)。
 
 * `<warehouse>`
 
-    Iceberg 的仓库路径。当 `<iceberg_catalog_type>` 为 `hadoop` 时，需指定这个参数。
+    Iceberg 的仓库路径。当 `<iceberg_catalog_type>` 为 `hadoop` 时，需指定该参数。
 
     `warehouse` 的路径必须指向 `Database` 路径的上一级。如您的表路径是 `s3://bucket/path/to/db1/table1`，那么 `warehouse` 应该是 `s3://bucket/path/to/`。
 
@@ -86,6 +86,82 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 * `{CommonProperties}`
 
     CommonProperties 部分用于填写通用属性。请参阅[数据目录概述](../catalog-overview.md)中【通用属性】部分。
+
+## 元数据缓存 {#meta-cache}
+
+为了提升访问外部数据源的性能，Apache Doris 会对 Iceberg 的元数据进行缓存。元数据包括表结构（Schema）、表对象、View 对象和 Manifest 详情等。
+
+:::tip
+对于 Doris 4.1.x 之前的版本，元数据缓存主要由 FE 配置项全局控制，详情请参阅[元数据缓存](../meta-cache.md)。
+从 Doris 4.1.x 开始，Iceberg Catalog 的外表元数据缓存使用统一键 `meta.cache.*` 进行配置。
+:::
+
+### 缓存属性配置（4.1.x+） {#meta-cache-unified-model}
+
+各引擎 cache entry 使用统一的配置键格式：`meta.cache.<engine>.<entry>.{enable,ttl-second,capacity}`。
+
+| 属性 | 示例 | 含义 |
+|---|---|---|
+| `enable` | `true/false` | 是否启用该缓存模块。 |
+| `ttl-second` | `600`、`0`、`-1` | `0` 表示关闭缓存（即刻生效，可用于查看最新数据）；`-1` 表示永不过期；其他正整数表示按访问时间计算 TTL（秒）。 |
+| `capacity` | `10000` | 最大缓存条目数（按条目数量计）。`0` 表示关闭。 |
+
+**生效逻辑说明：** 只有当 `enable=true` 且 `ttl-second != 0` 且 `capacity > 0` 时，该模块缓存才会生效。
+
+### 缓存模块 {#meta-cache-unified-modules}
+
+Iceberg Catalog 包含以下缓存模块：
+
+| 模块 (`<entry>`) | 属性键前缀 | 缓存内容与影响 |
+|---|---|---|
+| `schema` | `meta.cache.iceberg.schema.` | 缓存表结构。影响：列新增、删除、类型变更在 Doris 中的可见性。若关闭，每次查询都会拉取最新 Schema。 |
+| `table` | `meta.cache.iceberg.table.` | 缓存 Iceberg 表元数据对象。影响：最新 Snapshot、Partition Spec、Sort Order、表属性等表级元数据在 Doris 中的可见性；若关闭，每次规划都会重新加载表元数据。 |
+| `view` | `meta.cache.iceberg.view.` | 缓存 Iceberg View 元数据对象。影响：View 定义、Schema、属性变更在 Doris 中的可见性。 |
+| `manifest` | `meta.cache.iceberg.manifest.` | 缓存 Manifest 详情。主要影响查询规划时重复读取 Manifest 文件的开销，通常不直接决定表或 Snapshot 是否可见。注意：该模块默认关闭，需手动启用。 |
+
+### 旧参数映射与转换 {#meta-cache-mapping}
+
+在 4.1.x 之前，Iceberg 表级元数据主要受 FE 全局缓存策略控制，`schema.cache.ttl-second` 是常见的 Catalog 兼容属性；详见[元数据缓存](../meta-cache.md)。升级到 4.1.x 后，建议改写为 `meta.cache.iceberg.*`，并按需要分别配置表、View 和 Manifest 缓存。
+
+| 4.1 前属性键/旧模型 | 适用范围 | 4.1.x+ 统一键 | 升级建议与影响 |
+|---|---|---|---|
+| `schema.cache.ttl-second` | 4.1 前 Iceberg Catalog 兼容属性 | `meta.cache.iceberg.schema.ttl-second` | 控制 Schema 新鲜度。若希望列变更每次查询立即可见，设置为 `0`。 |
+| Iceberg 表信息旧模型 | 4.1 前 FE 全局缓存策略（见旧版元数据缓存文档） | `meta.cache.iceberg.table.ttl-second` | 控制表级元数据新鲜度。若希望每次查询都读取最新 Snapshot/表属性，设置为 `0`。 |
+| 无一一对应的旧 Catalog 键 | 4.1 前未单独暴露 View / Manifest TTL | `meta.cache.iceberg.view.*`、`meta.cache.iceberg.manifest.*` | 这是 4.1.x 中拆分出的新模块。升级后如需保证最新 View 定义，单独调低 `view.ttl-second`；`manifest` 主要用于性能优化。 |
+
+4.1.x 的统一模型把缓存拆分为 `enable`、`ttl-second`、`capacity` 三个维度；旧模型主要描述 TTL/全局缓存行为，不覆盖这些新模块的独立开关和容量上限。升级时建议一并评估是否需要补充 `enable/capacity`。
+
+### 最佳实践 {#meta-cache-best-practices}
+
+* **实时查看最新数据**：如果您希望每次查询都能看到 Iceberg 表的最新快照或 Schema 变动，可以将 `schema` 或 `table` 的 `ttl-second` 设置为 `0`。
+  ```sql
+  -- 关闭表对象缓存，以便感知快照变动
+  ALTER CATALOG iceberg_ctl SET PROPERTIES ("meta.cache.iceberg.table.ttl-second" = "0");
+  ```
+* **性能优化**：
+    * 启用 Manifest 缓存可以显著提升大表的查询规划速度：
+      ```sql
+      ALTER CATALOG iceberg_ctl SET PROPERTIES (
+        "meta.cache.iceberg.manifest.enable" = "true",
+        "meta.cache.iceberg.manifest.ttl-second" = "600"
+      );
+      ```
+    * `ALTER CATALOG ... SET PROPERTIES` 的修改在 Iceberg Catalog 中支持热生效。
+
+### 可观测性 {#meta-cache-unified-observability}
+
+可以通过 `information_schema.catalog_meta_cache_statistics` 系统表观测缓存指标：
+
+```sql
+SELECT catalog_name, engine_name, entry_name,
+       effective_enabled, ttl_second, capacity,
+       estimated_size, hit_rate, load_failure_count, last_error
+FROM information_schema.catalog_meta_cache_statistics
+WHERE catalog_name = 'iceberg_ctl' AND engine_name = 'iceberg'
+ORDER BY entry_name;
+```
+
+该系统表文档见：[catalog_meta_cache_statistics](../../admin-manual/system-tables/information_schema/catalog_meta_cache_statistics.md)。
 
 ### 支持的 Iceberg 版本
 
@@ -118,7 +194,7 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 
 * [FileSystem](../metastores/filesystem.md)
 
-> 注意：不同 Doris 版本所支持的服务类型和参数略有区别，请参考【基础示例】章节。
+> 注意：不同 Doris 版本所支持的服务类型和参数略有区别，请参阅【基础示例】章节。
 
 ### Iceberg Catalog 功能支持矩阵
 
@@ -126,7 +202,7 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 | -------------------- | ------ | -------- | -------------- | -------------- | ------------------ |
 | Hive MetaStore       | ✅     | ✅       | ✅             | ✅             | ✅                 |
 | AWS Glue             | ✅     | ✅       | ❌             | ❌             | ✅                 |
-| Aliyun DLF           | ✅     | ✅       | ❌              | ❌              | ❌                   |
+| Aliyun DLF           | ✅     | ✅       | ❌             | ❌             | ❌                 |
 | Iceberg Rest Catalog | ✅     | ✅       | 取决于服务提供方 | 取决于服务提供方 | 取决于服务提供方   |
 | FileSystem           | ✅     | ✅       | ✅             | ✅             | ✅                 |
 
@@ -140,6 +216,8 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 
 * [Azure Blob](../storages/azure-blob.md)
 
+* [Apache Ozone](../storages/ozone.md)（自 4.0.4 起支持）
+
 * [阿里云 OSS](../storages/aliyun-oss.md)
 
 * [腾讯云 COS](../storages/tencent-cos.md)
@@ -148,7 +226,7 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 
 * [MINIO](../storages/minio.md)
 
-> 注意：不同 Doris 版本所支持的服务类型和参数略有区别，请参考【基础示例】章节。
+> 注意：不同 Doris 版本所支持的服务类型和参数略有区别，请参阅【基础示例】章节。
 
 ### 支持的数据格式
 
@@ -188,7 +266,7 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 
 ## Namespace 映射
 
-Iceberg 的元数层级关系是 Catalog -> Namespace -> Table。其中 Namespace 可以有多级（Nested Namespace）。
+Iceberg 的元数据层级关系是 Catalog -> Namespace -> Table。其中 Namespace 可以有多级（Nested Namespace）。
 
 ```
       ┌─────────┐             
@@ -609,6 +687,30 @@ Iceberg 的元数层级关系是 Catalog -> Namespace -> Table。其中 Namespac
 
 ### Aliyun DLF
 <details>
+    <summary>4.1+ 版本</summary>
+    <Tabs>
+        <TabItem value='DLF 2.5+' label='DLF 2.5+' default>
+            ```sql
+            CREATE CATALOG iceberg_dlf2_catalog PROPERTIES (
+                'type' = 'iceberg',
+                'iceberg.catalog.type' = 'rest',
+                'iceberg.rest.uri' = 'http://<region>-vpc.dlf.aliyuncs.com/iceberg',
+                'warehouse' = '<your-catalog-name>',
+                'iceberg.rest.sigv4-enabled' = 'true',
+                'iceberg.rest.signing-name' = 'DlfNext',
+                'iceberg.rest.access-key-id' = '<ak>',
+                'iceberg.rest.secret-access-key' = '<sk>',
+                'iceberg.rest.signing-region' = '<region>',
+                'iceberg.rest.vended-credentials-enabled' = 'true',
+                'io-impl' = 'org.apache.iceberg.rest.DlfFileIO',
+                'fs.oss.support' = 'true'
+            );
+            ```
+        </TabItem>
+    </Tabs>
+</details>
+
+<details>
     <summary>3.1+ 版本</summary>
     <Tabs>
         <TabItem value='DLF 1.0' label='DLF 1.0' default>
@@ -958,7 +1060,7 @@ Iceberg 的元数层级关系是 Catalog -> Namespace -> Table。其中 Namespac
                 'iceberg.jdbc.init-catalog-tables' = 'true',
                 'iceberg.jdbc.schema-version' = 'V1',
                 'iceberg.jdbc.driver_class' = 'org.postgresql.Driver',
-                'iceberg.jdbc.driver_url' = '<jdbc_driver_jar>'
+                'iceberg.jdbc.driver_url' = '<jdbc_driver_jar>',
                 'warehouse' = 's3://bucket/warehouse',
                 's3.access_key' = '<ak>',
                 's3.secret_key' = '<sk>',
@@ -979,7 +1081,7 @@ Iceberg 的元数层级关系是 Catalog -> Namespace -> Table。其中 Namespac
                 'iceberg.jdbc.init-catalog-tables' = 'true',
                 'iceberg.jdbc.schema-version' = 'V1',
                 'iceberg.jdbc.driver_class' = 'com.mysql.cj.jdbc.Driver',
-                'iceberg.jdbc.driver_url' = '<jdbc_driver_jar>'
+                'iceberg.jdbc.driver_url' = '<jdbc_driver_jar>',
                 'warehouse' = 's3://bucket/warehouse',
                 's3.access_key' = '<ak>',
                 's3.secret_key' = '<sk>',
@@ -998,7 +1100,7 @@ Iceberg 的元数层级关系是 Catalog -> Namespace -> Table。其中 Namespac
                 'iceberg.jdbc.init-catalog-tables' = 'true',
                 'iceberg.jdbc.schema-version' = 'V1',
                 'iceberg.jdbc.driver_class' = 'org.sqlite.JDBC',
-                'iceberg.jdbc.driver_url' = '<jdbc_driver_jar>'
+                'iceberg.jdbc.driver_url' = '<jdbc_driver_jar>',
                 'warehouse' = 's3://bucket/warehouse',
                 's3.access_key' = '<ak>',
                 's3.secret_key' = '<sk>',
@@ -1105,7 +1207,7 @@ Iceberg 的元数层级关系是 Catalog -> Namespace -> Table。其中 Namespac
                 'type' = 'iceberg',
                 'iceberg.catalog.type' = 'hadoop',
                 'warehouse' = 'gs://bucket/iceberg_warehouse',
-                'fs.gcs.support'='true',
+                'fs.gcs.support' = 'true',
                 'gs.access_key' = '<ak>',
                 'gs.secret_key' = '<sk>'
             );
@@ -1122,6 +1224,22 @@ Iceberg 的元数层级关系是 Catalog -> Namespace -> Table。其中 Namespac
                 'azure.account_key' = '<account_key>',
                 'azure.endpoint' = 'https://<account_name>.blob.core.windows.net',
                 'fs.azure.support' = 'true'
+            );
+            ```
+        </TabItem>
+        <TabItem value='Ozone' label='Ozone'>
+            自 4.0.4 起支持
+            ```sql
+            CREATE CATALOG iceberg_fs_on_ozone_catalog PROPERTIES (
+                'type' = 'iceberg',
+                'iceberg.catalog.type' = 'hadoop',
+                'warehouse' = 's3a://bucket/iceberg_warehouse',
+                'fs.ozone.support' = 'true',
+                'ozone.endpoint' = 'http://ozone-s3g:9878',
+                'ozone.access_key' = '<ak>',
+                'ozone.secret_key' = '<sk>',
+                'ozone.region' = 'us-east-1',
+                'ozone.use_path_style' = 'true'
             );
             ```
         </TabItem>
@@ -1292,20 +1410,22 @@ Iceberg 的元数层级关系是 Catalog -> Namespace -> Table。其中 Namespac
 
 <details>
     <summary>3.0.6+ 版本</summary>
-    <TabItem value='FileSystem Catalog' label='FileSystem Catalog' default>
-        可参阅 [集成 S3 Tables](../best-practices/doris-aws-s3tables.md) 文档。
-        ```sql
-        CREATE CATALOG test_s3tables_catalog PROPERTIES (
-            'type' = 'iceberg',
-            'iceberg.catalog.type' = 's3tables',
-            'warehouse' = 'arn:aws:s3tables:ap-east-1:9527:bucket/doris-s3-table-bucket',
-            's3.region' = 'ap-east-1',
-            's3.endpoint' = 'https://s3.ap-east-1.amazonaws.com',
-            's3.access_key' = '<ak>',
-            's3.secret_key' = '<sk>'
-        );
-        ```
-    </TabItem>
+    <Tabs>
+        <TabItem value='FileSystem Catalog' label='FileSystem Catalog' default>
+            可参阅 [集成 S3 Tables](../best-practices/doris-aws-s3tables.md) 文档。
+            ```sql
+            CREATE CATALOG test_s3tables_catalog PROPERTIES (
+                'type' = 'iceberg',
+                'iceberg.catalog.type' = 's3tables',
+                'warehouse' = 'arn:aws:s3tables:ap-east-1:9527:bucket/doris-s3-table-bucket',
+                's3.region' = 'ap-east-1',
+                's3.endpoint' = 'https://s3.ap-east-1.amazonaws.com',
+                's3.access_key' = '<ak>',
+                's3.secret_key' = '<sk>'
+            );
+            ```
+        </TabItem>
+    </Tabs>
 </details>
 
 ## 查询操作
@@ -1366,9 +1486,9 @@ SELECT * FROM iceberg_tbl FOR VERSION AS OF 868895038966572;
 
 ### Branch 和 Tag
 
-> 该功能自 3.1.0 版本支持
+> 该功能自 3.1.0 版本支持。
 >
-> 关于 Branch、Tag 的创建、删除和维护操作，请参阅【管理 Branch & Tag】
+> 关于 Branch、Tag 的创建、删除和维护操作，请参阅【管理 Branch & Tag】章节。
 
 支持读取指定 Iceberg 表的分支（Branch）和标签（Tag）。
 
@@ -1392,16 +1512,47 @@ SELECT * FROM iceberg_tbl FOR VERSION AS OF 'tag1';
 
 > 该功能自 3.1.0 版本支持
 
-支持查询 Iceberg 视图。视图查询方式和普通表方式一样。有以下几点注意事项：
+支持查询 Iceberg 视图。视图查询方式与普通表方式一样。有以下几点注意事项：
 
 - 仅支持 `hms` 类型的 Iceberg Catalog。
 - 视图的定义 SQL 需要与 Doris SQL 方言兼容，否则会出现解析错误（后续版本会提供方言转换功能）。
+
+### Iceberg V3 隐藏列（Row Lineage）
+
+:::tip 提示
+该功能为实验功能，自 4.1.0 版本支持。
+:::
+
+Doris 支持查询 Iceberg V3 表的行血缘（Row Lineage）隐藏列。Iceberg V3 引入了包含行血缘数据的系统隐藏列，用于追踪数据的变更记录，非常适合用于增量同步或数据审查：
+
+- `_row_id`：唯一标识数据行的数值（基于数据写入时所在文件和位置生成）。
+- `_last_updated_sequence_number`：最后一次修改此行的 Sequence Number。当执行 `UPDATE` 或 `MERGE INTO` 操作更新数据时，该数值会随着版本号自动递增。
+
+**如何查询隐藏列：**
+
+默认情况下，使用 `DESC` 或 `SELECT *` 时隐藏列不可见。你可以通过直接指定列名来显式查询它们：
+
+```sql
+SELECT id, _row_id, _last_updated_sequence_number FROM iceberg_tbl;
+```
+
+你也可以通过开启会话变量 `show_hidden_columns` 来使隐藏列在常规展示（如 `DESC` 和 `SELECT *` 中）可见：
+
+```sql
+SET show_hidden_columns = true;
+DESC iceberg_tbl;
+```
+
+**注意事项：**
+
+1. 必须确保 Iceberg 表的格式版本（`format-version`）配置为 `3` 时，才会生成上述行级别参数。对于 V1 和 V2 格式表查询行血缘列可能报错。
+2. 隐藏列由系统进行维护，不允许用户在使用 `INSERT` 等写入语句时显式指定写入 `_row_id` 或 `_last_updated_sequence_number` 列。
 
 ## 系统表
 
 > 该功能自 3.1.0 版本支持
 
-Doris 支持查询 Iceberg 系统表，用来查询表的相关元信息。支持使用系统表查看快照历史、清单文件、数据文件、分区等信息。
+Doris 支持查询 Iceberg 系统表，用于查询表的相关元信息。支持使用系统表查看快照历史、清单文件、数据文件、分区等信息。
 
 要访问 Iceberg 表的元数据，可以在表名后添加 `$` 符号，后跟系统表名称：
 
@@ -1703,6 +1854,191 @@ INSERT INTO iceberg_table@branch(b1) SELECT * FROM other_table;
 INSERT OVERWRITE TABLE iceberg_table@branch(b1) SELECT * FROM other_table;
 ```
 
+### DELETE
+
+:::tip 提示
+该功能为实验功能，自 4.1.0 版本支持。
+:::
+
+DELETE 操作用于删除 Iceberg 表中满足指定条件的数据行。主要基于以下底层机制实现：对于 V2 格式表，系统将写入 Position Delete 文件；对于 V3 格式表，系统将写入 Puffin 格式的 Deletion Vectors 文件。
+
+**前提条件：**
+
+- Iceberg 表的格式版本（format-version）必须为 2 或更高版本。V1 格式的表不支持 DELETE 操作。
+
+**语法：**
+
+```sql
+DELETE FROM iceberg_tbl WHERE <condition>;
+```
+
+**示例：**
+
+```sql
+-- 删除单行
+DELETE FROM iceberg_tbl WHERE id = 1;
+
+-- 使用复合条件删除
+DELETE FROM iceberg_tbl WHERE age > 30 AND name = 'Bob';
+
+-- 使用子查询删除
+DELETE FROM iceberg_tbl WHERE id IN (SELECT id FROM other_table WHERE status = 'inactive');
+```
+
+分区表的 DELETE 操作用法一致：
+
+```sql
+DELETE FROM iceberg_partition_tbl WHERE id = 10;
+```
+
+### UPDATE
+
+:::tip 提示
+该功能为实验功能，自 4.1.0 版本支持。
+:::
+
+UPDATE 操作用于修改 Iceberg 表中满足指定条件的数据行。内部实现为先写入删除标记信息（V2 使用 Position Delete 文件，V3 使用 Puffin 格式的 Deletion Vectors 文件）标记旧数据行失效，然后追加写入更新后的新数据文件（如果开启的是 V3 格式选项，新插入行的提取追踪值 `_last_updated_sequence_number` 将会自动推进）。
+
+**前提条件：**
+
+- Iceberg 表的格式版本（format-version）必须为 2 或更高版本。V1 格式的表不支持 UPDATE 操作。
+
+**语法：**
+
+```sql
+UPDATE iceberg_tbl SET <column1> = <value1> [, <column2> = <value2>, ...] WHERE <condition>;
+```
+
+**示例：**
+
+```sql
+-- 更新单列
+UPDATE iceberg_tbl SET name = 'Alice_new' WHERE id = 1;
+
+-- 更新多列
+UPDATE iceberg_tbl SET name = 'Updated', age = 28 WHERE id = 2;
+
+-- 使用表达式更新
+UPDATE iceberg_tbl SET age = age * 2 + 1, name = concat(name, '-modified') WHERE id = 3;
+
+-- 使用子查询作为条件
+UPDATE iceberg_tbl SET name = 'UpdatedViaSubquery' WHERE id IN (SELECT id FROM other_table);
+```
+
+分区表的 UPDATE 操作用法一致：
+
+```sql
+UPDATE iceberg_partition_tbl SET name = 'Updated' WHERE id = 10;
+```
+
+### MERGE INTO
+
+:::tip 提示
+该功能为实验功能，自 4.1.0 版本支持。
+:::
+
+MERGE INTO 操作用于将源数据与目标 Iceberg 表进行匹配，并根据匹配结果执行插入、更新或删除操作。适合用于数据同步、增量更新等场景。
+
+**前提条件：**
+
+- Iceberg 表的格式版本（format-version）必须为 2 或更高版本。V1 格式的表不支持 MERGE INTO 操作。
+
+**语法：**
+
+```sql
+MERGE INTO target_table t
+USING <source> s
+ON <merge_condition>
+[WHEN MATCHED [AND <condition>] THEN DELETE]
+[WHEN MATCHED [AND <condition>] THEN UPDATE SET <column1> = <value1> [, ...]]
+[WHEN NOT MATCHED [AND <condition>] THEN INSERT (<columns>) VALUES (<values>)]
+```
+
+其中 `<source>` 可以是子查询或另一张表。
+
+**示例：**
+
+- 完整匹配操作（包含更新、删除和插入）：
+
+    ```sql
+    MERGE INTO iceberg_tbl t
+    USING (
+        SELECT 1 AS id, 'Alice_new' AS name, 26 AS age, 'U' AS flag
+        UNION ALL
+        SELECT 2, 'Bob', 30, 'D'
+        UNION ALL
+        SELECT 4, 'Dora', 28, 'I'
+    ) s
+    ON t.id = s.id
+    WHEN MATCHED AND s.flag = 'D' THEN DELETE
+    WHEN MATCHED THEN UPDATE SET
+        name = s.name,
+        age = s.age
+    WHEN NOT MATCHED THEN INSERT (id, name, age)
+    VALUES (s.id, s.name, s.age);
+    ```
+
+    上述示例中：
+
+    * `id = 2` 的行因 `flag = 'D'` 被删除。
+    * `id = 1` 的行被更新为新的 `name` 和 `age`。
+    * `id = 4` 的行因在目标表中不存在而被插入。
+
+- 仅执行匹配更新：
+
+    ```sql
+    MERGE INTO iceberg_tbl t
+    USING (SELECT 1 AS id, 'Alice_matched' AS name, 26 AS age) s
+    ON t.id = s.id
+    WHEN MATCHED THEN UPDATE SET name = s.name, age = s.age;
+    ```
+
+- 仅执行不匹配时的插入：
+
+    ```sql
+    MERGE INTO iceberg_tbl t
+    USING (SELECT 4 AS id, 'Dora' AS name, 40 AS age) s
+    ON t.id = s.id
+    WHEN NOT MATCHED THEN INSERT (id, name, age) VALUES (s.id, s.name, s.age);
+    ```
+
+- 使用子查询作为数据源：
+
+    ```sql
+    MERGE INTO iceberg_tbl t
+    USING (SELECT id FROM other_table WHERE id = 2) s
+    ON t.id = s.id
+    WHEN MATCHED THEN UPDATE SET name = 'UpdatedViaSubquery';
+    ```
+
+- 分区表的 MERGE INTO 操作：
+
+    ```sql
+    MERGE INTO iceberg_partition_tbl t
+    USING (
+        SELECT 1 AS id, 'Alice_new' AS name, 26 AS age, DATE '2024-01-01' AS dt, 'U' AS flag
+        UNION ALL
+        SELECT 2, 'Bob', 30, DATE '2024-01-02', 'D'
+        UNION ALL
+        SELECT 4, 'Dora', 28, DATE '2024-01-04', 'I'
+    ) s
+    ON t.id = s.id
+    WHEN MATCHED AND s.flag = 'D' THEN DELETE
+    WHEN MATCHED THEN UPDATE SET
+        name = s.name,
+        age = s.age
+    WHEN NOT MATCHED THEN INSERT (id, name, age, dt)
+    VALUES (s.id, s.name, s.age, s.dt);
+    ```
+
+**注意事项：**
+
+1. 以上三种操作（DELETE、UPDATE、MERGE INTO）均要求 Iceberg 表的格式版本（`format-version`）为 2 或更高版本。如果对 V1 格式的表执行这些操作，会报错：`must have format version 2 or higher for position deletes`。当执行于 V3 格式表时，系统不仅会使用 Puffin 格式存储 Deletion Vectors 代替原有的 Position Delete 数据，如果涉及内容更新，还会自动调整写入记录的血缘生命周期属性（`_last_updated_sequence_number`）。
+2. 这些操作支持 Parquet 和 ORC 两种文件格式。
+3. 并发写入场景下，Iceberg 提供了乐观并发控制机制。当发生写入冲突时，操作可能会抛出事务冲突异常。
+4. UPDATE 和 MERGE INTO 中的 UPDATE 操作支持使用表达式和函数，例如 `age = age * 2 + 1` 或 `name = concat(name, '-modified')`。
+5. 这些操作同时适用于分区表和非分区表。
+
 ### 相关参数
 
 * BE
@@ -1726,7 +2062,7 @@ SWITCH iceberg;
 CREATE DATABASE [IF NOT EXISTS] iceberg_db;
 ```
 
-也可以使用全限定名创建，或指定 location（目前只有 hms 类型的 Catalog 支持指定 location），如：
+也可以使用全限定名创建，或指定 location（目前只有 `hms` 类型的 Catalog 支持指定 location），如：
 
 ```sql
 CREATE DATABASE [IF NOT EXISTS] iceberg.iceberg_db;
@@ -1753,7 +2089,7 @@ DROP DATABASE [IF EXISTS] iceberg.iceberg_db;
 ```
 
 :::caution
-对于 Iceberg Database，必须先删除这个 Database 下的所有表后，才能删除 Database，否则会报错
+对于 Iceberg Database，必须先删除该 Database 下的所有表后，才能删除 Database，否则会报错。
 :::
 
 ### 创建和删除表
@@ -1935,6 +2271,21 @@ DROP DATABASE [IF EXISTS] iceberg.iceberg_db;
 
     通过 `MODIFY COLUMN` 语句修改列的属性，包括类型、nullable、默认值、注释和列位置。
 
+    自 4.0.4 版本起，Doris 支持修改复杂类型（STRUCT、ARRAY、MAP），包括安全的类型推导和追加 Struct 字段。
+    
+    嵌套类型中支持的安全类型推导：
+    - INT -> BIGINT, LARGEINT
+    - TINYINT -> SMALLINT, INT, BIGINT, LARGEINT
+    - SMALLINT -> INT, BIGINT, LARGEINT
+    - BIGINT -> LARGEINT
+    - FLOAT -> DOUBLE
+    - VARCHAR(n) -> VARCHAR(m) 其中 m > n
+    
+    修改复杂类型的限制：
+    - 所有新的嵌套字段必须为 nullable。
+    - 不能将可选（optional）改为必填（required）。
+    - 复杂类型的默认值仅支持 NULL。
+
     注意：修改列的属性时，所有没有被修改的属性也应该显式地指定为原来的值。
 
   ```sql
@@ -1950,6 +2301,23 @@ DROP DATABASE [IF EXISTS] iceberg.iceberg_db;
   );
   -- 修改 id 列的类型为 BIGINT，设置为 NOT NULL，默认值为 0，并添加注释
   ALTER TABLE iceberg_table MODIFY COLUMN id BIGINT NOT NULL DEFAULT 0 COMMENT 'This is a modified id column' FIRST;
+  ```
+
+  修改复杂类型的示例：
+
+  ```sql
+  -- 创建包含复杂类型的 Iceberg 表
+  CREATE TABLE iceberg_tbl (
+      id BIGINT,
+      user_info STRUCT<name:STRING, scores:ARRAY<INT>, age:INT>,
+      dt STRING
+  );
+
+  -- 为 STRUCT 类型的列追加新字段 (email)
+  ALTER TABLE iceberg_tbl MODIFY COLUMN user_info STRUCT<name:STRING, scores:ARRAY<INT>, age:INT, email:STRING>;
+
+  -- 将嵌套 ARRAY 元素类型从 INT 提升为 BIGINT
+  ALTER TABLE iceberg_tbl MODIFY COLUMN user_info STRUCT<name:STRING, scores:ARRAY<BIGINT>, age:INT, email:STRING>;
   ```
 
 * **重新排序**
@@ -2116,9 +2484,9 @@ DROP DATABASE [IF EXISTS] iceberg.iceberg_db;
 
 ## Iceberg 表操作
 
-> 该功能自 4.0.2 版本开始支持。具体支持版本参见各个操作的说明
+> 该功能自 4.0.2 版本开始支持。具体支持版本参见各个操作的说明。
 >
-> 该功能是实验性功能。
+> 该功能为实验性功能。
 
 Doris 支持通过 `ALTER TABLE EXECUTE` 语法来执行 Iceberg 表的特定操作（Actions）。该语法提供了统一的接口来执行表优化和快照管理等各种操作。
 
@@ -2583,7 +2951,7 @@ EXECUTE set_current_snapshot ("ref" = "v1.0");
     CASE
       WHEN file_size_in_bytes BETWEEN 0 AND 8 * 1024 * 1024 THEN '0-8M'
       WHEN file_size_in_bytes BETWEEN 8 * 1024 * 1024 + 1 AND 32 * 1024 * 1024 THEN '8-32M'
-      WHEN file_size_in_bytes BETWEEN 2 * 1024 * 1024 + 1 AND 128 * 1024 * 1024 THEN '32-128M'
+      WHEN file_size_in_bytes BETWEEN 32 * 1024 * 1024 + 1 AND 128 * 1024 * 1024 THEN '32-128M'
       WHEN file_size_in_bytes BETWEEN 128 * 1024 * 1024 + 1 AND 512 * 1024 * 1024 THEN '128-512M'
       WHEN file_size_in_bytes > 512 * 1024 * 1024 THEN '> 512M'
       ELSE 'Unknown'

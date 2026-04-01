@@ -2,7 +2,7 @@
 {
     "title": "VARIANT",
     "language": "en",
-    "description": "The VARIANT type stores semi-structured JSON data. It can contain different primitive types (integers, strings, booleans, etc.), one-dimensional arrays, and nested objects. On write, Doris infers the structure and type of sub-paths based on JSON paths and materializes frequent paths as independent subcolumns, leveraging columnar storage and vectorized execution for both flexibility and performance."
+    "description": "The VARIANT type stores semi-structured JSON data. It can contain different primitive types (integers, strings, booleans, etc.), one-dimensional arrays, and nested objects. On write, Doris infers the structure and type of sub-paths based on JSON paths and performs Subcolumnization on frequent paths, exposing them as independent columnar subcolumns for both flexibility and performance."
 }
 ---
 
@@ -10,7 +10,19 @@
 
 ## Overview
 
-The VARIANT type stores semi-structured JSON data. It can contain different primitive types (integers, strings, booleans, etc.), one-dimensional arrays, and nested objects. On write, Doris infers the structure and type of sub-paths based on JSON paths and materializes frequent paths as independent subcolumns, leveraging columnar storage and vectorized execution for both flexibility and performance.
+The VARIANT type stores semi-structured JSON data. It can contain different primitive types (integers, strings, booleans, etc.), one-dimensional arrays, and nested objects. On write, Doris infers the structure and type of sub-paths based on JSON paths and performs Subcolumnization on frequent paths, exposing them as independent columnar subcolumns for both flexibility and performance.
+
+:::tip Why choose VARIANT
+`VARIANT` is a good fit when fields change over time but queries still depend on a small set of hot paths.
+
+- Hot paths participate in Subcolumnization, so they benefit from columnar performance, file pruning, and vectorized execution.
+- Key paths can use path-level indexes, full-text search, and still benefit from Doris sparse-index pruning.
+- In Doris 3.1 and later, wide-column optimizations keep automatic Subcolumnization practical at 10k-scale subcolumns. Note that DOC mode, the recommended storage layout for 10k-scale wide columns, is available starting from Doris 4.x; for 3.x, see the [Workload Guide](./variant-workload-guide) for tuning guidance.
+:::
+
+:::note Before you configure a workload
+If this is your first `VARIANT` workload on Doris 3.x, start with [VARIANT Workload Guide](./variant-workload-guide). This page is the reference for syntax, type rules, indexes, limits, and configuration.
+:::
 
 ## Using VARIANT
 
@@ -193,7 +205,7 @@ v1 VARIANT<
 > NULL
 ```
 
-Matched subpaths are materialized as columns by default. If too many paths match and generate excessive columns, consider enabling `variant_enable_typed_paths_to_sparse` (see “Configuration”).
+Matched subpaths participate in Subcolumnization by default and are exposed as columns. If too many paths match and generate excessive columns, consider enabling `variant_enable_typed_paths_to_sparse` (see “Configuration”).
 
 ## Type conflicts and promotion rules
 
@@ -444,8 +456,8 @@ SELECT * FROM tbl WHERE v['str'] MATCH 'Doris';
 
 ## Limitations
 
-- `variant_max_subcolumns_count`(only versions above 3.1 support this): default 0 (no limit). In production, set to 2048 (tablet level) to control the number of materialized paths. Above the threshold, low-frequency/sparse paths are moved to a shared data structure; reading from it may be slower (see “Configuration”).
-- If a path type is specified via Schema Template((only versions above 3.1 support this)), that path will be forced to be materialized; when `variant_enable_typed_paths_to_sparse = true`, it also counts toward the threshold and may be moved to the shared structure.
+- `variant_max_subcolumns_count` (3.1+): default 0 (no limit). In production, set to 2048 (tablet level) to control the number of paths that go through Subcolumnization. Above the threshold, low-frequency/sparse paths are moved to a shared data structure; reading from it may be slower (see “Configuration”).
+- If a path type is specified via Schema Template (3.1+), that path will be forced into Subcolumnization; when `variant_enable_typed_paths_to_sparse = true`, it also counts toward the threshold and may be moved to the shared structure.
 - JSON key length ≤ 255.
 - Cannot be a primary key or sort key.
 - Cannot be nested within other types (e.g., `Array<Variant>`, `Struct<Variant>`).
@@ -469,7 +481,7 @@ SELECT * FROM example_table WHERE data_string LIKE '%doris%';
 
 ## Configuration
 
-> Since version 3.1.0, the properties `variant_max_subcolumns_count` and `variant_enable_typed_paths_to_sparse` are supported, and they cannot be modified using `ALTER`.
+> Since version 3.1.0, all column-level VARIANT properties below are supported. They can only be specified at table creation and cannot be modified using `ALTER`.
 
 ```sql
 CREATE TABLE example_table (
@@ -487,15 +499,15 @@ CREATE TABLE example_table (
 
 <table>
 <tr><td>Property</td><td>Description</td></tr>
-<tr><td>`variant_max_subcolumns_count` (only versions above 3.1 support this)</td><td>Max number of materialized paths. Above the threshold, new paths may be stored in a shared data structure. Default: 2048 (Recommended). 0 means no limit; do not exceed 10000.</td></tr>
-<tr><td>`variant_enable_typed_paths_to_sparse` (only versions above 3.1 support this)</td><td>By default, typed paths are always materialized (and do not count against `variant_max_subcolumns_count`). When set to `true`, typed paths also count toward the threshold and may be moved to the shared structure.</td></tr>
+<tr><td>`variant_max_subcolumns_count`</td><td>Max number of paths that can go through Subcolumnization. Above the threshold, new paths may be stored in a shared data structure. Default: 2048 (Recommended). 0 means no limit; do not exceed 10000.</td></tr>
+<tr><td>`variant_enable_typed_paths_to_sparse`</td><td>By default, typed paths always participate in Subcolumnization (and do not count against `variant_max_subcolumns_count`). When set to `true`, typed paths also count toward the threshold and may be moved to the shared structure.</td></tr>
 </table>
 
-Behavior at limits and tuning suggestions:
+Behavior at limits and tuning suggestions (items 1-3 apply to 3.1+ only):
 
-1. After exceeding the threshold, new paths are written into the shared structure; Rowset merges may also recycle some paths into the shared structure (only versions above 3.1 support this).
-2. The system prefers to keep paths with higher non-null ratios and higher access frequencies materialized (only versions above 3.1 support this).
-3. Close to 10,000 materialized paths requires strong hardware (≥128G RAM, ≥32C per node recommended) (only versions above 3.1 support this).
+1. After exceeding the threshold, new paths are written into the shared structure; Rowset merges may also recycle some paths into the shared structure.
+2. The system prefers to keep paths with higher non-null ratios and higher access frequencies in Subcolumnization.
+3. Close to 10,000 paths in Subcolumnization requires strong hardware (≥128G RAM, ≥32C per node recommended).
 4. Ingestion tuning: increase client `batch_size` appropriately, or use Group Commit (increase `group_commit_interval_ms`/`group_commit_data_bytes` as needed).
 5. If partition pruning is not needed, consider RANDOM bucketing and enabling single-tablet loading to reduce compaction write amplification.
 6. BE tuning knobs: `max_cumu_compaction_threads` (≥8), `vertical_compaction_num_columns_per_group=500` (improves vertical compaction but increases memory), `segment_cache_memory_percentage=20` (improves metadata cache efficiency).
@@ -514,7 +526,7 @@ Approach 1: use `variant_type` to inspect per-row schema (more precise, higher c
 SELECT variant_type(v) FROM variant_tbl;
 ```
 
-Approach 2: extended `DESC` to show materialized subpaths (only those extracted):
+Approach 2: extended `DESC` to show subpaths extracted through Subcolumnization:
 
 ```sql
 SET describe_extend_variant_column = true;
@@ -529,7 +541,7 @@ Use both: Approach 1 is precise; Approach 2 is efficient.
 
 ## Compared with JSON type
 
-- Storage: JSON is stored as JSONB (row-oriented). VARIANT is inferred and materialized into columns on write (higher compression, smaller size).
+- Storage: JSON is stored as JSONB (row-oriented). VARIANT uses Subcolumnization on write (higher compression, smaller size).
 - Query: JSON requires parsing. VARIANT scans columns directly and is usually much faster.
 
 ClickBench (43 queries):

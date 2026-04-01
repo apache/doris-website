@@ -2,7 +2,7 @@
 {
     "title": "Data Cache",
     "language": "en",
-    "description": "Data Cache accelerates subsequent queries of the same data by caching recently accessed data files from remote storage systems (HDFS or object "
+    "description": "Apache Doris Data Cache accelerates Lakehouse queries by caching HDFS and object storage data locally. Supports cache warmup, quota control, and admission control for Hive, Iceberg, Hudi, and Paimon tables."
 }
 ---
 
@@ -198,6 +198,7 @@ Usage restrictions:
   FROM hive_db.tpch100_parquet.lineitem
   WHERE dt = '2025-01-01';
   ```
+
 3. Warm up partial columns by filter conditions
 
   ```sql
@@ -224,14 +225,147 @@ The system directly returns scan and cache write statistics for each BE (Note: S
 
 Field explanations:
 
-* ScanRows: Number of rows scanned and read.
-* ScanBytes: Amount of data scanned and read.
-* ScanBytesFromLocalStorage: Amount of data scanned and read from local cache.
-* ScanBytesFromRemoteStorage: Amount of data scanned and read from remote storage.
-* BytesWriteIntoCache: Amount of data written to Data Cache during this warmup.
+* `ScanRows`: Number of rows scanned and read.
+* `ScanBytes`: Amount of data scanned and read.
+* `ScanBytesFromLocalStorage`: Amount of data scanned and read from local cache.
+* `ScanBytesFromRemoteStorage`: Amount of data scanned and read from remote storage.
+* `BytesWriteIntoCache`: Amount of data written to Data Cache during this warmup.
+
+## Cache Admission Control
+
+> This is an experimental feature and is supported since version 4.1.0.
+
+The cache admission control feature provides a mechanism that allows users to control whether data read by a query is allowed to enter the File Cache (Data Cache) based on dimensions such as User, Catalog, Database, and Table.
+In scenarios with massive cold data reads (e.g., large-scale ETL jobs or heavy ad-hoc queries), if all read data is allowed to enter the cache, it may cause existing hot data to be frequently evicted (i.e., "cache pollution"), leading to a drop in cache hit rates and overall query performance. When enabled, data denied admission will be pulled directly from remote underlying storage (e.g., HDFS, S3), effectively protecting core hot data from being swapped out.
+
+The cache admission control feature is disabled by default and needs to be enabled by configuring relevant parameters in the FE.
+
+### FE Configuration
+
+You need to enable this feature and specify the rule configuration file path in `fe.conf`, then restart the FE node for it to take effect. Modifications to the rule files themselves can be loaded dynamically.
+
+| Parameter                                       | Required | Description                               |
+| ----------------------------------------------- | -------- |-------------------------------------------|
+| `enable_file_cache_admission_control`           | Yes      | Whether to enable cache admission control. Default is `false`. |
+| `file_cache_admission_control_json_dir`         | Yes      | The directory path for storing admission rules JSON files. All `.json` files in this directory will be automatically loaded, and any rule additions, deletions, or modifications will **take effect dynamically**. |
+
+### Admission Rules Configuration Format
+
+Rule configurations are placed in `.json` files under the `file_cache_admission_control_json_dir` directory. The file content must be in a JSON array format.
+
+#### Field Description
+
+| Field Name | Type | Description | Example |
+|--------|------|-------------------------------|-----------------------|
+| `id` | Long | Rule ID. | `1` |
+| `user_identity` | String | User identity (format: `user@host`, e.g., `%` matches all IPs). **Leaving it empty or omitting it matches all users globally.** | `"root@%"` |
+| `catalog_name` | String | Catalog name. **Leaving it empty or omitting it matches all catalogs.** | `"hive_cat"` |
+| `database_name` | String | Database name. **Leaving it empty or omitting it matches all databases.** | `"db1"` |
+| `table_name` | String | Table name. **Leaving it empty or omitting it matches all tables.** | `"tbl1"` |
+| `partition_pattern` | String | (Not implemented yet) Partition regular expression. Empty means matching all partitions. | `""` |
+| `rule_type` | Integer | Rule type: `0` means deny cache (blacklist); `1` means allow cache (whitelist). | `0` |
+| `enabled` | Integer | Whether the current rule is enabled: `0` means disabled; `1` means enabled. | `1` |
+| `created_time` | Long | Creation time (UNIX timestamp, seconds). | `1766557246` |
+| `updated_time` | Long | Update time (UNIX timestamp, seconds). | `1766557246` |
+
+#### JSON File Example
+
+```json
+[
+  {
+    "id": 1,
+    "user_identity": "root@%",
+    "catalog_name": "hive_cat",
+    "database_name": "db1",
+    "table_name": "table1",
+    "partition_pattern": "",
+    "rule_type": 0,
+    "enabled": 1,
+    "created_time": 1766557246,
+    "updated_time": 1766557246
+  },
+  {
+    "id": 2,
+    "user_identity": "",
+    "catalog_name": "hive_cat",
+    "database_name": "",
+    "table_name": "",
+    "partition_pattern": "",
+    "rule_type": 1,
+    "enabled": 1,
+    "created_time": 1766557246,
+    "updated_time": 1766557246
+  }
+]
+```
+
+#### Import Rules from MySQL
+
+For users with automated system integration needs, an auxiliary script is provided at `tools/export_mysql_rule_to_json.sh` in the Doris source code repository. This script can be used to export cache admission rules pre-stored in a MySQL database table into JSON configuration files that comply with the above format.
+
+### Rule Matching Principles
+
+#### Rule Scope Categories
+
+By combining different fields (`user_identity`, `catalog_name`, `database_name`, `table_name`) as either empty or specific values, the system supports 7 dimensions of valid rules. **Any rule configuration that does not comply with hierarchical dependencies (for example, skipping Database to specify Table directly) will be considered invalid.**
+
+| user_identity | catalog_name | database_name | table_name | Level and Scope             |
+|---------------|--------------|---------------|------------|------------------|
+| **Specified**      | **Specified**     | **Specified**      | **Specified**   | Table-level rule for specified user |
+| Empty or Omitted       | **Specified**     | **Specified**      | **Specified**   | Table-level rule for all users |
+| **Specified**      | **Specified**     | **Specified**      | Empty or Omitted   | Database-level rule for specified user |
+| Empty or Omitted       | **Specified**     | **Specified**      | Empty or Omitted   | Database-level rule for all users |
+| **Specified**      | **Specified**     | Empty or Omitted      | Empty or Omitted   | Catalog-level rule for specified user |
+| Empty or Omitted       | **Specified**     | Empty or Omitted      | Empty or Omitted   | Catalog-level rule for all users |
+| **Specified**      | Empty or Omitted      | Empty or Omitted      | Empty or Omitted   | Global rule for specified user |
+
+#### Matching Priority and Order
+
+When a query accesses a table's data, the system comprehensively evaluates all rules to make an admission decision. The judgment process follows these principles:
+
+1. **Exact Match First**: Matching is conducted in order from specific to broad hierarchy (Table → Database → Catalog → Global). Once successfully matched at the most precise level (e.g., Table level), the judgment terminates immediately.
+2. **Blacklist First (Security Principle)**: Within the same rule level, **deny cache rules always take precedence over allow cache rules**. If both a blacklist and a whitelist are matched simultaneously, the blacklist operation executes first, ensuring that access denial decisions at the same level take effect first.
+
+The complete decision derivation sequence is as follows:
+
+```text
+1. Table-level rule matching
+   a) Hit Blacklist (rule_type=0) -> Deny
+   b) Hit Whitelist (rule_type=1) -> Allow
+2. Database-level rule matching
+   ...
+3. Catalog-level rule matching
+   ...
+4. Global rule matching (only user_identity matched)
+   ...
+5. Default fallback decision: If no rules at any level above match, caching is [Denied] by default (equivalent to a global blacklist).
+```
+
+> **Tip**: Because the system's fallback strategy is default-deny, best practice when deploying this feature is generally to establish a broad global allowance rule (e.g., a whitelist for all users, or for an important business Catalog), and then configure targeted Table-level blacklists for large tables known to undergo offline full-table scans. This achieves refined separation of cold and hot data.
+
+### Cache Decision Observability
+
+After successfully enabling and applying the configuration, users can view detailed cache admission decisions at the file data level for a single table via the `EXPLAIN` command (refer to the `file cache request` output below).
+
+```text
+|   0:VHIVE_SCAN_NODE(74)                                                                                          |
+|      table: test_file_cache_features.tpch1_parquet.lineitem                                                      |
+|      inputSplitNum=10, totalFileSize=205792918, scanRanges=10                                                    |
+|      partition=1/1                                                                                               |
+|      cardinality=1469949, numNodes=1                                                                             |
+|      pushdown agg=NONE                                                                                           |
+|      file cache request ADMITTED: user_identity:root@%, reason:user table-level whitelist rule, cost:0.058 ms    |
+|      limit: 1                                                                                                    |
+```
+
+Key fields and decision descriptions:
+- **ADMITTED** / **DENIED**: Represents whether the request is allowed (ADMITTED) or rejected (DENIED) from entering the cache.
+- **user_identity**: The user identity verified during the execution of this query.
+- **reason**: The specific decision reason (the matched rule) that triggered the result. Common outputs include: `user table-level whitelist rule` (Current example: Table-level whitelist for a specified user); `common table-level blacklist rule` (Table-level blacklist for all users). The format is generally `[Scope] [Rule Level] [Rule Type] rule`.
+- **cost**: The time cost to complete the entire admission matching calculation (in milliseconds). If the overhead is too large, it can be optimized by adjusting the number of rule hierarchies.
 
 ## Appendix
 
 ### Principle
 
-Data caching caches accessed remote data to the local BE node. The original data file is split into Blocks based on the accessed IO size, and Blocks are stored in the local file `cache_path/hash(filepath).substr(0, 3)/hash(filepath)/offset`, with Block metadata saved in the BE node. When accessing the same remote file, doris checks whether the cache data of the file exists in the local cache and determines which data to read from the local Block and which data to pull from the remote based on the Block's offset and size, caching the newly pulled remote data. When the BE node restarts, it scans the `cache_path` directory to restore Block metadata. When the cache size reaches the upper limit, it cleans up long-unused Blocks according to the LRU principle.
+Data caching caches accessed remote data to the local BE node. The original data file is split into Blocks based on the accessed IO size, and Blocks are stored in the local file `cache_path/hash(filepath).substr(0, 3)/hash(filepath)/offset`, with Block metadata saved in the BE node. When accessing the same remote file, Doris checks whether the cache data of the file exists in the local cache and determines which data to read from the local Block and which data to pull from the remote based on the Block's offset and size, caching the newly pulled remote data. When the BE node restarts, it scans the `cache_path` directory to restore Block metadata. When the cache size reaches the upper limit, it cleans up long-unused Blocks according to the LRU principle.

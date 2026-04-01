@@ -2,7 +2,7 @@
 {
     "title": "VARIANT",
     "language": "zh-CN",
-    "description": "VARIANT 类型用于存储半结构化 JSON 数据，可包含不同基础类型（整数、字符串、布尔等）以及一层数组与嵌套对象。写入时会自动基于 JSON Path 推断子列结构与类型，并将高频路径物化为独立子列，充分利用列式存储和向量化执行，兼顾灵活性与性能。"
+    "description": "VARIANT 类型用于存储半结构化 JSON 数据，可包含不同基础类型（整数、字符串、布尔等）以及一层数组与嵌套对象。写入时会自动基于 JSON Path 推断子列结构与类型，并对高频路径执行子列列式提取（Subcolumnization），使其以独立子列的形式参与分析，兼顾灵活性与性能。"
 }
 ---
 
@@ -10,7 +10,19 @@
 
 ## 描述
 
-VARIANT 类型用于存储半结构化 JSON 数据，可包含不同基础类型（整数、字符串、布尔等）以及一层数组与嵌套对象。写入时会自动基于 JSON Path 推断子列结构与类型，并将高频路径物化为独立子列，充分利用列式存储和向量化执行，兼顾灵活性与性能。
+VARIANT 类型用于存储半结构化 JSON 数据，可包含不同基础类型（整数、字符串、布尔等）以及一层数组与嵌套对象。写入时会自动基于 JSON Path 推断子列结构与类型，并对高频路径执行子列列式提取（Subcolumnization），使其以独立子列的形式参与分析，兼顾灵活性与性能。
+
+:::tip 为什么使用 VARIANT
+如果字段会持续变化，但查询仍集中在少数热点路径上，`VARIANT` 的优势主要体现在三点：
+
+- 热点路径会参与子列列式提取（Subcolumnization），因此能直接受益于列存性能、文件裁剪和向量化计算。
+- 关键路径可以建立路径级索引，支持全文检索，同时继续受益于 Doris 的稀疏索引裁剪能力。
+- 在 Doris 3.1 及以上版本中，面向宽列场景的优化让万级子列规模的自动子列列式提取（Subcolumnization）保持可用。注意：DOC 模式作为万级宽列场景的推荐存储布局，从 Doris 4.x 开始提供；3.x 版本的调优建议请参阅 [VARIANT 使用与配置指南](./variant-workload-guide)。
+:::
+
+:::note 在配置 workload 之前
+如果这是你第一次在 Doris 3.x 落地 `VARIANT`，建议先阅读 [VARIANT 使用与配置指南](./variant-workload-guide)。本页主要提供语法、类型规则、索引、限制和配置参考。
+:::
 
 ## 使用 VARIANT 类型
 
@@ -195,7 +207,7 @@ v1 VARIANT<
 > NULL
 ```
 
-匹配成功的子路径默认会展开为独立列。若匹配子列过多导致列数暴增，建议开启 `variant_enable_typed_paths_to_sparse`（见“配置”）。
+匹配成功的子路径默认会参与子列列式提取（Subcolumnization），并展开为独立列。若匹配子列过多导致列数暴增，建议开启 `variant_enable_typed_paths_to_sparse`（见“配置”）。
 
 ## 类型冲突与提升规则
 
@@ -444,8 +456,8 @@ SELECT * FROM tbl WHERE v['str'] MATCH 'Doris';
 
 ## 限制
 
-- `variant_max_subcolumns_count`(仅 3.1 以上的版本支持)：默认 0（不限制 Path 物化列数）。建议在生产设置为 2048（Tablet 级别）以控制列数。超过阈值后，低频/稀疏路径会被收敛到共享数据结构，从该结构查询可能带来性能下降（详见“配置”）。
-- 若 Schema Template(仅 3.1 以上的版本支持) 指定了 Path 类型，则该 Path 会被强制提取；当 `variant_enable_typed_paths_to_sparse = true` 时，它也会计入阈值，可能被收敛到共享结构。
+- `variant_max_subcolumns_count`（仅 3.1 以上版本支持）：默认 0（不限制）。建议在生产设置为 2048（Tablet 级别），用于控制参与子列列式提取（Subcolumnization）的路径数。超过阈值后，低频/稀疏路径会被收敛到共享数据结构，从该结构查询可能带来性能下降（详见“配置”）。
+- 若 Schema Template（仅 3.1 以上版本支持）指定了 Path 类型，则该 Path 会被强制纳入子列列式提取（Subcolumnization）；当 `variant_enable_typed_paths_to_sparse = true` 时，它也会计入阈值，可能被收敛到共享结构。
 - JSON key 长度 ≤ 255。
 - 不支持作为主键或排序键。
 - 不支持与其他类型嵌套（如 `Array<Variant>`、`Struct<Variant>`）。
@@ -469,7 +481,7 @@ SELECT * FROM example_table WHERE data_string LIKE '%doris%';
 
 ## 配置
 
-> 自 3.1.0 版本支持 `variant_max_subcolumns_count` 和 `variant_enable_typed_paths_to_sparse`属性，且不支持 `ALTER` 修改改
+> 自 3.1.0 版本起，支持下列 VARIANT 列级属性，且不支持通过 `ALTER` 修改。
 
 ```sql
 CREATE TABLE example_table (
@@ -487,15 +499,15 @@ CREATE TABLE example_table (
 
 <table>
 <tr><td>属性</td><td>描述</td></tr>
-<tr><td>`variant_max_subcolumns_count` (仅 3.1 以上的版本支持)</td><td>控制 Path 物化列数的上限；超过后新增路径可能存放于共享数据结构。默认 2048（推荐），0 表示不限制；不推荐超过 10000。</td></tr>
-<tr><td>`variant_enable_typed_paths_to_sparse` (仅 3.1 以上的版本支持)</td><td>默认指定了 Path 类型后，该 Path 一定会被提取（不计入 `variant_max_subcolumns_count`）。设置为 `true` 后也会计入阈值，可能被收敛到共享结构。</td></tr>
+<tr><td>`variant_max_subcolumns_count`</td><td>控制可参与子列列式提取（Subcolumnization）的路径数上限；超过后新增路径可能存放于共享数据结构。默认 2048（推荐），0 表示不限制；不推荐超过 10000。</td></tr>
+<tr><td>`variant_enable_typed_paths_to_sparse`</td><td>默认指定了 Path 类型后，该 Path 一定会参与子列列式提取（Subcolumnization），且不计入 `variant_max_subcolumns_count`。设置为 `true` 后也会计入阈值，可能被收敛到共享结构。</td></tr>
 </table>
 
-达到上限后的行为与调优建议：
+达到上限后的行为与调优建议（其中 1-3 项仅适用于 3.1+）：
 
-1. 超过上限后，新路径写入共享结构；Rowset 合并后也可能触发部分路径回收为共享结构 (仅 3.1 以上的版本支持)。
-2. 系统会优先保留非空比例高、访问频率高的路径为物化列 (仅 3.1 以上的版本支持)。
-3. 若接近 10000 物化列，对硬件要求较高（建议单机 ≥128G 内存、≥32C）（仅 3.1 以上的版本支持）。
+1. 超过上限后，新路径写入共享结构；Rowset 合并后也可能触发部分路径回收为共享结构。
+2. 系统会优先让非空比例高、访问频率高的路径保留在子列列式提取（Subcolumnization）中。
+3. 若参与子列列式提取（Subcolumnization）的路径接近 10000，对硬件要求较高（建议单机 ≥128G 内存、≥32C）。
 4. 写入侧调优：适度增大客户端 batch_size，或使用 Group Commit（按需增大 `group_commit_interval_ms`/`group_commit_data_bytes`）。
 5. 若无分桶裁剪需求，建议采用 RANDOM 分桶，并开启 single tablet 导入以降低 compaction 写放大。
 6. BE 配置可按导入压力调整 `max_cumu_compaction_threads`（建议 ≥8）、`vertical_compaction_num_columns_per_group=500`（提升纵向合并效率，增加内存占用）、`segment_cache_memory_percentage=20`（提升元数据缓存命中）。
@@ -514,7 +526,7 @@ CREATE TABLE example_table (
 SELECT variant_type(v) FROM variant_tbl;
 ```
 
-方案二：扩展 `DESC` 展示已物化的子列（仅展示被提取的路径）：
+方案二：扩展 `DESC` 展示已完成子列列式提取（Subcolumnization）的子路径：
 
 ```sql
 SET describe_extend_variant_column = true;
@@ -529,7 +541,7 @@ DESCRIBE ${table_name} PARTITION ($partition_name);
 
 ## 对比 JSON 类型
 
-- 存储：JSON 类型以 JSONB（行存）写入；VARIANT 写入时类型推断并列存化，压缩率更高、存储更小。
+- 存储：JSON 类型以 JSONB（行存）写入；VARIANT 写入时执行子列列式提取（Subcolumnization），压缩率更高、存储更小。
 - 查询：JSON 需解析；VARIANT 直接列式扫描，通常显著更快。
 
 改造的 ClickBench 测试结果（43 条查询）：

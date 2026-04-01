@@ -11,9 +11,9 @@
 ## Applicable Scenarios
 
 | Scenario | Description |
-| ---- | ------------------------------------------------------ |
+| ---- | ---- |
 | Data Integration | Read MaxCompute data and write to Doris internal tables. |
-| Data Write-back | Using INSERT command to write data into MaxCompute Table. (Supported since version 4.1.0) |
+| Data Write-back | Using INSERT command to write data into MaxCompute tables. (Supported since version 4.1.0) |
 
 ## Usage Notes
 
@@ -30,56 +30,148 @@
 ```sql
 CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
     'type' = 'max_compute',
+    {McAuthProperties},
     {McRequiredProperties},
     {McOptionalProperties},
     {CommonProperties}
 );
 ```
 
+* `{McAuthProperties}`
+
+    These properties control how Doris authenticates to MaxCompute for both query and write operations.
+
+    > Version note: `mc.auth.type`, `mc.ram_role_arn`, and `mc.ecs_ram_role` are supported since **4.0.4**.
+
+    | Property Name | Default Value | Description | Required | Supported Doris Version |
+    | --- | --- | --- | --- | --- |
+    | `mc.auth.type` | `ak_sk` | Authentication type. Supported values: `ak_sk`, `ram_role_arn`, and `ecs_ram_role`. | No | 4.0.4 (inclusive) and later |
+    | `mc.access_key` | None | Alibaba Cloud AccessKey. | Required when `mc.auth.type` is `ak_sk` (default) or `ram_role_arn`. | |
+    | `mc.secret_key` | None | Alibaba Cloud SecretKey. | Required when `mc.auth.type` is `ak_sk` (default) or `ram_role_arn`. | |
+    | `mc.ram_role_arn` | None | Alibaba Cloud RAM Role ARN. | Required when `mc.auth.type` is `ram_role_arn`. | 4.0.4 (inclusive) and later |
+    | `mc.ecs_ram_role` | None | Alibaba Cloud ECS RAM Role name attached to the instance. | Required when `mc.auth.type` is `ecs_ram_role`. | 4.0.4 (inclusive) and later |
+
+    Supported values for `mc.auth.type`:
+
+    | Value | Description |
+    | --- | --- |
+    | `ak_sk` | Use Alibaba Cloud AccessKey and SecretKey directly. |
+    | `ram_role_arn` | Use `mc.access_key` and `mc.secret_key` as source credentials to call STS `AssumeRole`, then access MaxCompute with the returned temporary credentials. |
+    | `ecs_ram_role` | Obtain temporary credentials from the ECS metadata service. Ensure the Doris FE and BE nodes that access MaxCompute can use the role specified by `mc.ecs_ram_role`. |
+
+    Validation rules:
+
+    1. If `mc.auth.type` is omitted, Doris uses `ak_sk`.
+    2. When `mc.auth.type` is `ram_role_arn`, you must configure `mc.access_key`, `mc.secret_key`, and `mc.ram_role_arn`.
+    3. When `mc.auth.type` is `ecs_ram_role`, you must configure `mc.ecs_ram_role`.
+    4. When `mc.access_key` and `mc.secret_key` are used, they must be configured together.
+
+    For SQL examples of different authentication types, see [Basic Example](#basic-example).
+
 * `{McRequiredProperties}`
 
-  | Property Name | Description | Supported Doris Version |
-  | ------------------ | ------------------------------------------------------------------------------------------------------------------ | ------------ |
-  | `mc.default.project` | The name of the MaxCompute project to access. You can create and manage projects in the [MaxCompute Project List](https://maxcompute.console.aliyun.com/cn-beijing/project-list). | |
-  | `mc.access_key` | AccessKey. You can create and manage it in the [Alibaba Cloud Console](https://ram.console.aliyun.com/manage/ak). | |
-  | `mc.secret_key` | SecretKey. You can create and manage it in the [Alibaba Cloud Console](https://ram.console.aliyun.com/manage/ak). | |
-  | `mc.region` | The region where MaxCompute is activated. You can find the corresponding Region from the Endpoint. | Before 2.1.7 (exclusive) |
-  | `mc.endpoint` | The region where MaxCompute is activated. Please refer to the "How to Obtain Endpoint and Quota" section below for configuration. | 2.1.7 (inclusive) and later |
+    | Property Name | Description | Supported Doris Version |
+    | --- | --- | --- |
+    | `mc.default.project` | The name of the MaxCompute project to access. You can create and manage projects in the [MaxCompute Project List](https://maxcompute.console.aliyun.com/cn-beijing/project-list). | |
+    | `mc.region` | The region where MaxCompute is activated. You can find the corresponding Region from the Endpoint. | Before 2.1.7 (exclusive) |
+    | `mc.endpoint` | The region where MaxCompute is activated. Please refer to the "How to Obtain Endpoint and Quota" section below for configuration. | 2.1.7 (inclusive) and later |
 
 * `{McOptionalProperties}`
 
-  | Property Name | Default Value | Description | Supported Doris Version |
-  | -------------------------- | ------------- | -------------------------------------------------------------------------- | ------------ |
-  | `mc.tunnel_endpoint` | None | Refer to "Custom Service Address" in the appendix. | Before 2.1.7 (exclusive) |
-  | `mc.odps_endpoint` | None | Refer to "Custom Service Address" in the appendix. | Before 2.1.7 (exclusive) |
-  | `mc.quota` | `pay-as-you-go` | Quota name. Please refer to the "How to Obtain Endpoint and Quota" section below for configuration. | 2.1.7 (inclusive) and later |
-  | `mc.split_strategy` | `byte_size` | Sets the split partitioning method. Can be set to partition by byte size `byte_size` or by row count `row_count`. | 2.1.7 (inclusive) and later |
-  | `mc.split_byte_size` | `268435456` | The file size each split reads, in bytes. Default is 256MB. Only effective when `"mc.split_strategy" = "byte_size"`. | 2.1.7 (inclusive) and later |
-  | `mc.split_row_count` | `1048576` | Number of rows each split reads. Only effective when `"mc.split_strategy" = "row_count"`. | 2.1.7 (inclusive) and later |
-  | `mc.split_cross_partition` | `false` | Whether the generated splits cross partitions. | 2.1.8 (inclusive) and later |
-  | `mc.connect_timeout` | `10s` | Connection timeout for MaxCompute. | 2.1.8 (inclusive) and later |
-  | `mc.read_timeout` | `120s` | Read timeout for MaxCompute. | 2.1.8 (inclusive) and later |
-  | `mc.retry_count` | `4` | Number of retries after timeout. | 2.1.8 (inclusive) and later |
-  | `mc.datetime_predicate_push_down` | `true` | Whether to allow predicate push-down for `timestamp/timestamp_ntz` types. Doris loses precision (9 -> 6) when syncing these two types. Therefore, if the original data precision is higher than 6 digits, predicate push-down may lead to inaccurate results. | 2.1.9/3.0.5 (inclusive) and later |
-  | `mc.account_format` | `name` | The account systems of Alibaba Cloud International and China sites are inconsistent. For international site users, if you encounter errors like `user 'RAM$xxxxxx:xxxxx' is not a valid aliyun account`, you can set this parameter to `id`. | 3.0.9/3.1.1 (inclusive) and later |
-  | `mc.enable.namespace.schema` | `false` | Whether to support MaxCompute schema hierarchy. See: https://help.aliyun.com/zh/maxcompute/user-guide/schema-related-operations | 3.1.3 (inclusive) and later |
-  | `mc.max_field_size_bytes` | `8388608` (8 MB) | Maximum bytes allowed for a single field in a write session. When writing data that contains large string or binary fields, the write may fail if the field size exceeds this value. You can increase this value based on your actual data. | 4.1.0 (inclusive) and later |
+    | Property Name | Default Value | Description | Supported Doris Version |
+    | --- | --- | --- | --- |
+    | `mc.tunnel_endpoint` | None | Refer to "Custom Service Address" in the appendix. | Before 2.1.7 (exclusive) |
+    | `mc.odps_endpoint` | None | Refer to "Custom Service Address" in the appendix. | Before 2.1.7 (exclusive) |
+    | `mc.quota` | `pay-as-you-go` | Quota name. Please refer to the "How to Obtain Endpoint and Quota" section below for configuration. | 2.1.7 (inclusive) and later |
+    | `mc.split_strategy` | `byte_size` | Sets the Split partitioning method. Can be set to partition by byte size `byte_size` or by row count `row_count`. | 2.1.7 (inclusive) and later |
+    | `mc.split_byte_size` | `268435456` | The file size each Split reads, in bytes. Default is 256 MB. Only effective when `"mc.split_strategy" = "byte_size"`. | 2.1.7 (inclusive) and later |
+    | `mc.split_row_count` | `1048576` | Number of rows each Split reads. Only effective when `"mc.split_strategy" = "row_count"`. | 2.1.7 (inclusive) and later |
+    | `mc.split_cross_partition` | `false` | Whether the generated Splits cross partitions. | 2.1.8 (inclusive) and later |
+    | `mc.connect_timeout` | `10s` | Connection timeout for MaxCompute. | 2.1.8 (inclusive) and later |
+    | `mc.read_timeout` | `120s` | Read timeout for MaxCompute. | 2.1.8 (inclusive) and later |
+    | `mc.retry_count` | `4` | Number of retries after timeout. | 2.1.8 (inclusive) and later |
+    | `mc.datetime_predicate_push_down` | `true` | Whether to allow predicate push-down for `timestamp/timestamp_ntz` types. Doris loses precision (9 -> 6) when syncing these two types. Therefore, if the original data precision is higher than 6 digits, predicate push-down may lead to inaccurate results. | 2.1.9/3.0.5 (inclusive) and later |
+    | `mc.account_format` | `name` | The account systems of Alibaba Cloud International and China sites are inconsistent. For international site users, if you encounter errors like `user 'RAM$xxxxxx:xxxxx' is not a valid aliyun account`, you can set this parameter to `id`. | 3.0.9/3.1.1 (inclusive) and later |
+    | `mc.enable.namespace.schema` | `false` | Whether to support MaxCompute Schema hierarchy. See: https://help.aliyun.com/zh/maxcompute/user-guide/schema-related-operations | 3.1.3 (inclusive) and later |
+    | `mc.max_field_size_bytes` | `8388608` (8 MB) | Maximum bytes allowed for a single field in a write session. When writing data that contains large string or binary fields, the write may fail if the field size exceeds this value. You can increase this value based on your actual data. | 4.1.0 (inclusive) and later |
 
-  - `mc.max_field_size_bytes`
+    - `mc.max_field_size_bytes`
 
-    MaxCompute allows a maximum of 8 MB per field by default. If the data being written contains large string or binary fields, the write may fail.
+        MaxCompute allows a maximum of 8 MB per field by default. If the data being written contains large string or binary fields, the write may fail.
 
-    To adjust this limit, first execute the following command in the MaxCompute console SQL editor:
+        To adjust this limit, first execute the following command in the MaxCompute console SQL editor:
 
-    `setproject odps.sql.cfile2.field.maxsize=262144;`
+        `setproject odps.sql.cfile2.field.maxsize=262144;`
 
-    This adjusts the maximum bytes for a single field. The unit is KB and the maximum value is 262144.
+        This adjusts the maximum bytes for a single field. The unit is KB and the maximum value is 262144.
 
-    Then set `mc.max_field_size_bytes` to 262144 in the Doris catalog properties (this value must not exceed the MaxCompute setting).
+        Then set `mc.max_field_size_bytes` to the corresponding byte value in the Doris Catalog properties (this value must not exceed the MaxCompute setting).
 
 * `{CommonProperties}`
 
     The CommonProperties section is used to fill in common properties. Please refer to the "Common Properties" section in [Catalog Overview](../catalog-overview.md).
+
+## Metadata Cache {#meta-cache}
+
+To improve the performance of accessing external data sources, Apache Doris caches MaxCompute metadata. Metadata includes table structure (Schema) and partition lists.
+
+:::tip
+For versions before Doris 4.1.x, metadata caching is mainly controlled globally by FE configuration items. For details, see [Metadata Cache](../meta-cache.md).
+Starting from Doris 4.1.x, MaxCompute Catalog's external metadata cache is configured using the unified `meta.cache.*` keys.
+:::
+
+### Cache Property Configuration (4.1.x+) {#meta-cache-unified-model}
+
+Each engine's cache entry uses a unified configuration key format: `meta.cache.<engine>.<entry>.{enable,ttl-second,capacity}`.
+
+| Property | Example | Meaning |
+|---|---|---|
+| `enable` | `true/false` | Whether to enable this cache module. |
+| `ttl-second` | `600`, `0`, `-1` | `0` means disable cache (takes effect immediately, can be used to see the latest data); `-1` means never expire; other positive integers mean TTL in seconds based on access time. |
+| `capacity` | `10000` | Maximum number of cache entries (by count). `0` means disable. |
+
+**Effective Logic:** The module cache only takes effect when `enable=true`, `ttl-second != 0`, and `capacity > 0`.
+
+### Cache Modules {#meta-cache-unified-modules}
+
+MaxCompute Catalog includes the following cache modules:
+
+| Module (`<entry>`) | Property Key Prefix | Cached Content and Impact |
+|---|---|---|
+| `schema` | `meta.cache.maxcompute.schema.` | Caches table structure. Impact: Visibility of table column information. If disabled, the latest Schema is pulled for each query. |
+| `partition_values` | `meta.cache.maxcompute.partition_values.` | Caches partition value lists. Impact: Partition pruning and enumeration. If disabled, new external partitions can be seen in real-time. |
+
+### Legacy Parameter Mapping and Conversion {#meta-cache-mapping}
+
+In version 4.1.x and later, unified keys are recommended. The following is the mapping between legacy Catalog properties and 4.1.x+ unified keys:
+
+| Legacy Property Key | 4.1.x+ Unified Key | Description |
+|---|---|---|
+| `schema.cache.ttl-second` | `meta.cache.maxcompute.schema.ttl-second` | Expiration time of table structure cache |
+
+### Best Practices {#meta-cache-best-practices}
+
+* **Real-time access to the latest data**: If you want each query to see the latest partition or schema changes for MaxCompute tables, you can set the `ttl-second` for `schema` or `partition_values` to `0`.
+  ```sql
+  -- Disable partition value cache to detect the latest partitions in MaxCompute tables
+  ALTER CATALOG mc_ctl SET PROPERTIES ("meta.cache.maxcompute.partition_values.ttl-second" = "0");
+  ```
+* **Note**: `meta.cache.maxcompute.*` currently does not have a dedicated hot-reload hook. After changing the configuration, it is recommended to recreate the Catalog or restart FE to ensure it takes effect.
+
+### Observability {#meta-cache-unified-observability}
+
+Cache metrics can be observed through the `information_schema.catalog_meta_cache_statistics` system table:
+
+```sql
+SELECT catalog_name, engine_name, entry_name,
+       effective_enabled, ttl_second, capacity,
+       estimated_size, hit_rate, load_failure_count, last_error
+FROM information_schema.catalog_meta_cache_statistics
+WHERE catalog_name = 'mc_ctl' AND engine_name = 'maxcompute'
+ORDER BY entry_name;
+```
+
+See the documentation for this system table: [catalog_meta_cache_statistics](../../admin-manual/system-tables/information_schema/catalog_meta_cache_statistics.md).
 
 ### Supported MaxCompute Versions
 
@@ -93,7 +185,7 @@ Only the public cloud version of MaxCompute is supported. For private cloud vers
 
 ## Hierarchy Mapping
 
-- When `mc.enable.namespace.schema` is false
+- When `mc.enable.namespace.schema` is `false`
 
   | Doris | MaxCompute |
   | -------- | ---------- |
@@ -101,7 +193,7 @@ Only the public cloud version of MaxCompute is supported. For private cloud vers
   | Database | Project |
   | Table | Table |
 
-- When `mc.enable.namespace.schema` is true
+- When `mc.enable.namespace.schema` is `true`
 
   | Doris | MaxCompute |
   | -------- | ---------- |
@@ -121,7 +213,7 @@ Only the public cloud version of MaxCompute is supported. For private cloud vers
 | bigint | bigint | |
 | float | float | |
 | double | double | |
-| decimal(P, S) | decimal(P, S) | 1 <= P <= 38, 0 <= scale <= 18 |
+| decimal(P, S) | decimal(P, S) | 1 <= P <= 38, 0 <= S <= 18 |
 | char(N) | char(N) | |
 | varchar(N) | varchar(N) | |
 | string | string | |
@@ -136,17 +228,45 @@ Only the public cloud version of MaxCompute is supported. For private cloud vers
 
 ## Basic Example
 
+Default `ak_sk` authentication:
+
 ```sql
 CREATE CATALOG mc_catalog PROPERTIES (
     'type' = 'max_compute',
     'mc.default.project' = 'project',
-    'mc.access_key' = 'sk',
-    'mc.secret_key' = 'ak',
-    'mc.endpoint' = 'http://service.cn-beijing-vpc.MaxCompute.aliyun-inc.com/api'
+    'mc.access_key' = 'AKxxxxx',
+    'mc.secret_key' = 'SKxxxxx',
+    'mc.endpoint' = 'http://service.cn-beijing-vpc.maxcompute.aliyun-inc.com/api'
 );
 ```
 
-If using a version before 2.1.7 (exclusive), please use the following statement. (It is recommended to upgrade to 2.1.8 or later)
+`ram_role_arn` authentication (4.0.4+):
+
+```sql
+CREATE CATALOG mc_catalog PROPERTIES (
+    'type' = 'max_compute',
+    'mc.default.project' = 'project',
+    'mc.auth.type' = 'ram_role_arn',
+    'mc.access_key' = 'AKxxxxx',
+    'mc.secret_key' = 'SKxxxxx',
+    'mc.ram_role_arn' = 'acs:ram::<your_account_id>:role/<your_role_name>',
+    'mc.endpoint' = 'http://service.cn-beijing-vpc.maxcompute.aliyun-inc.com/api'
+);
+```
+
+`ecs_ram_role` authentication (4.0.4+):
+
+```sql
+CREATE CATALOG mc_catalog PROPERTIES (
+    'type' = 'max_compute',
+    'mc.default.project' = 'project',
+    'mc.auth.type' = 'ecs_ram_role',
+    'mc.ecs_ram_role' = '<your_ecs_ram_role_name>',
+    'mc.endpoint' = 'http://service.cn-beijing-vpc.maxcompute.aliyun-inc.com/api'
+);
+```
+
+If using a version before 2.1.7 (exclusive), please use the following statement (it is recommended to upgrade to 2.1.8 or later):
 
 ```sql
 CREATE CATALOG mc_catalog PROPERTIES (
@@ -180,16 +300,16 @@ CREATE CATALOG mc_catalog PROPERTIES (
 ### Basic Query
 
 ```sql
--- 1. switch to catalog, use database and query
+-- 1. Switch to Catalog, use database and query
 SWITCH mc_ctl;
-USE mc_ctl;
+USE mc_db;
 SELECT * FROM mc_tbl LIMIT 10;
 
--- 2. use mc database directly
+-- 2. Use mc database directly
 USE mc_ctl.mc_db;
 SELECT * FROM mc_tbl LIMIT 10;
 
--- 3. use full qualified name to query
+-- 3. Use full qualified name to query
 SELECT * FROM mc_ctl.mc_db.mc_tbl LIMIT 10;
 ```
 
@@ -276,7 +396,7 @@ Starting from version 4.1.0, Doris supports creating and dropping MaxCompute dat
 - Does not support creating clustered tables, transactional tables, Delta Tables, or external tables.
 :::
 
-> This feature is only available when the `mc.enable.namespace.schema` property is set to `true`.
+This feature is only available when the `mc.enable.namespace.schema` property is set to `true`.
 
 ### Creating and Dropping Databases
 
@@ -377,11 +497,11 @@ By default, MaxCompute Catalog generates endpoints based on `mc.region` and `mc.
 The generated format is as follows:
 
 | `mc.public_access` | `mc.odps_endpoint` | `mc.tunnel_endpoint` |
-| ------------------- | -------------------------------------------------------- | ----------------------------------------------- |
-| false | `http://service.{mc.region}.maxcompute.aliyun-inc.com/api` | `http://dt.{mc.region}.maxcompute.aliyun-inc.com` |
-| true | `http://service.{mc.region}.maxcompute.aliyun.com/api` | `http://dt.{mc.region}.maxcompute.aliyun.com` |
+| --- | --- | --- |
+| `false` | `http://service.{mc.region}.maxcompute.aliyun-inc.com/api` | `http://dt.{mc.region}.maxcompute.aliyun-inc.com` |
+| `true` | `http://service.{mc.region}.maxcompute.aliyun.com/api` | `http://dt.{mc.region}.maxcompute.aliyun.com` |
 
-Users can also specify `mc.odps_endpoint` and `mc.tunnel_endpoint` individually to customize the service address, which is suitable for some privately deployed MaxCompute environments.
+Users can also specify `mc.odps_endpoint` and `mc.tunnel_endpoint` individually to customize the service address, which is suitable for privately deployed MaxCompute environments.
 
 For configuring MaxCompute Endpoint and Tunnel Endpoint, please refer to [Endpoints for Different Regions and Network Connection Methods](https://help.aliyun.com/zh/maxcompute/user-guide/endpoints).
 
@@ -399,7 +519,7 @@ Note:
 
 - It is recommended to write to specified partitions whenever possible, e.g. `INSERT INTO mc_tbl PARTITION(ds='20250201')`. When no partition is specified, due to limitations of the MaxCompute Storage API, data for each partition must be written sequentially. As a result, the execution plan will sort data based on the partition columns, which can consume significant memory resources when the data volume is large and may cause the write to fail.
 
-- When writing without specifying a partition, do not set `set enable_strict_consistency_dml=false`. This forcefully removes the sort node, causing partition data to be written out of order, which will ultimately result in an error from MaxCompute.
+- When writing without specifying a partition, do not set `SET enable_strict_consistency_dml = false`. This forcefully removes the sort node, causing partition data to be written out of order, which will ultimately result in an error from MaxCompute.
 
 - Do not add a `LIMIT` clause. When a `LIMIT` clause is added, Doris will use only a single thread for writing to guarantee the write count. This can be used for small-scale testing, but if the `LIMIT` value is large, write performance will be poor.
 

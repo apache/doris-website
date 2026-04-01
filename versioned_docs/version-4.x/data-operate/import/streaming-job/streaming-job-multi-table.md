@@ -1,35 +1,28 @@
 ---
 {
-  "title": "Postgres/MySQL Continuous Load",
+  "title": "MySQL/PostgreSQL Continuous Load",
   "language": "en",
-  "description": "Doris can continuously synchronize full and incremental data from multiple tables in MySQL, Postgres, etc. to Doris using Streaming Job."
+  "description": "Doris can continuously synchronize full and incremental data from multiple tables in MySQL, PostgreSQL, etc. to Doris using Streaming Job."
 }
 ---
 
 ## Overview
 
-Supports using Job to continuously synchronize full and incremental data from multiple tables in MySQL, Postgres, etc. to Doris via Streaming Job. Suitable for scenarios requiring real-time multi-table data synchronization to Doris.
+Supports using Job to continuously synchronize full and incremental data from multiple tables in MySQL, PostgreSQL, etc. to Doris via Streaming Job. Suitable for scenarios requiring real-time multi-table data synchronization to Doris.
 
-## Supported Data Sources
-
-- MySQL
-- Postgres
-
-## Basic Principles
-
-By integrating [Flink CDC](https://github.com/apache/flink-cdc), Doris supports reading change logs from MySQL, Postgres, etc., enabling full and incremental multi-table data synchronization. When synchronizing for the first time, Doris automatically creates downstream tables (primary key tables) and keeps the primary key consistent with the upstream.
+By integrating [Flink CDC](https://github.com/apache/flink-cdc), Doris supports reading change logs from MySQL, PostgreSQL, etc., enabling full and incremental multi-table data synchronization. When synchronizing for the first time, Doris automatically creates downstream tables (primary key tables) and keeps the primary key consistent with the upstream.
 
 **Notes:**
 
 1. Currently only at-least-once semantics are guaranteed.
 2. Only primary key tables are supported for synchronization.
 3. LOAD privilege is required. If the downstream table does not exist, CREATE privilege is also required.
+4. During automatic table creation, if the target table already exists, it will be skipped, and users can customize tables according to different scenarios.
 
-## Quick Start
+## MySQL Continuous Load
 
 ### Prerequisites
 
-#### MySQL
 Enable Binlog on MySQL by adding the following to my.cnf:
 ```ini
 log-bin=mysql-bin
@@ -37,15 +30,7 @@ binlog_format=ROW
 server-id=1
 ```
 
-#### Postgres
-Enable logical replication on Postgres by adding the following to postgresql.conf:
-```ini
-wal_level=logical
-```
-
 ### Creating an Import Job
-
-#### MySQL
 
 ```sql
 CREATE JOB multi_table_sync
@@ -61,11 +46,35 @@ FROM MYSQL (
         "offset" = "initial"
 )
 TO DATABASE target_test_db (
-    "table.create.properties.replication_num" = "1"
+    "table.create.properties.replication_num" = "1"  -- Set to 1 for single BE deployment
 )
 ```
 
-#### Postgres
+### MySQL Source Parameters
+
+| Parameter     | Default | Description                                 |
+| ------------- | ------- | ------------------------------------------- |
+| jdbc_url      | -       | MySQL JDBC connection string           |
+| driver_url    | -       | JDBC driver jar path                        |
+| driver_class  | -       | JDBC driver class name                      |
+| user          | -       | Database username                           |
+| password      | -       | Database password                           |
+| database      | -       | Database name                               |
+| include_tables| -       | Tables to synchronize, comma separated      |
+| offset        | initial | initial: full + incremental, latest: incremental only |
+| snapshot_split_size | 8096 | The size (in number of rows) of each split. During full synchronization, a table will be divided into multiple splits for synchronization. |
+| snapshot_parallelism | 1 | The parallelism level during the full synchronization phase, i.e., the maximum number of splits a single task can schedule at once. |
+
+## PostgreSQL Continuous Load
+
+### Prerequisites
+
+Enable logical replication on PostgreSQL by adding the following to postgresql.conf:
+```ini
+wal_level=logical
+```
+
+### Creating an Import Job
 
 ```sql
 CREATE JOB test_postgres_job
@@ -82,9 +91,27 @@ FROM POSTGRES (
     "offset" = "latest"
 )
 TO DATABASE target_test_db (
-  "table.create.properties.replication_num" = "1"
+  "table.create.properties.replication_num" = "1"  -- Set to 1 for single BE deployment
 )
 ```
+
+### PostgreSQL Source Parameters
+
+| Parameter     | Default | Description                                 |
+| ------------- | ------- | ------------------------------------------- |
+| jdbc_url      | -       | PostgreSQL JDBC connection string           |
+| driver_url    | -       | JDBC driver jar path                        |
+| driver_class  | -       | JDBC driver class name                      |
+| user          | -       | Database username                           |
+| password      | -       | Database password                           |
+| database      | -       | Database name                               |
+| schema        | -       | Schema name                                 |
+| include_tables| -       | Tables to synchronize, comma separated. If not specified, all tables will be synchronized by default.      |
+| offset        | initial | initial: full + incremental, latest: incremental only |
+| snapshot_split_size | 8096 | The size (in number of rows) of each split. During full synchronization, a table will be divided into multiple splits for synchronization. |
+| snapshot_parallelism | 1 | The parallelism level during the full synchronization phase, i.e., the maximum number of splits a single task can schedule at once. |
+
+## Common Operations
 
 ### Check Import Status
 
@@ -162,7 +189,7 @@ TO DATABASE <target_db> (
 | job_name             | Job name                    |
 | job_properties       | General import parameters   |
 | comment              | Job comment                 |
-| source_properties    | Source (MySQL/PG) parameters|
+| source_properties    | Source (MySQL/PostgreSQL) parameters|
 | target_properties    | Doris target DB parameters  |
 
 ### Import Parameters
@@ -180,22 +207,6 @@ TO DATABASE <target_db> (
 | Parameter     | Default | Description                                 |
 | ------------- | ------- | ------------------------------------------- |
 | max_interval  | 10s     | Idle scheduling interval when no new data   |
-
-#### Source Configuration Parameters
-
-| Parameter     | Default | Description                                 |
-| ------------- | ------- | ------------------------------------------- |
-| jdbc_url      | -       | JDBC connection string (MySQL/PG)           |
-| driver_url    | -       | JDBC driver jar path                        |
-| driver_class  | -       | JDBC driver class name                      |
-| user          | -       | Database username                           |
-| password      | -       | Database password                           |
-| database      | -       | Database name                               |
-| schema        | -       | Schema name                                 |
-| include_tables| -       | Tables to synchronize, comma separated      |
-| offset        | initial | initial: full + incremental, latest: incremental only |
-| snapshot_split_size | 8096 | The size (in number of rows) of each split. During full synchronization, a table will be divided into multiple splits for synchronization. |
-| snapshot_parallelism | 1 | The parallelism level during the full synchronization phase, i.e., the maximum number of splits a single task can schedule at once. |
 
 #### Doris Target DB Parameters
 

@@ -414,7 +414,8 @@
                                         "lakehouse/best-practices/doris-onelake",
                                         "lakehouse/best-practices/doris-unity-catalog",
                                         "lakehouse/best-practices/doris-lakekeeper",
-                                        "lakehouse/best-practices/doris-nessie"
+                                        "lakehouse/best-practices/doris-nessie",
+                                        "lakehouse/best-practices/doris-dlf-iceberg"
                                     ]
                                 },
                                 {
@@ -1069,7 +1070,22 @@
                                         "sql-manual/basic-element/sql-data-types/semi-structured/MAP",
                                         "sql-manual/basic-element/sql-data-types/semi-structured/STRUCT",
                                         "sql-manual/basic-element/sql-data-types/semi-structured/JSON",
-                                        "sql-manual/basic-element/sql-data-types/semi-structured/VARIANT"
+                                        {
+                                            "type": "category",
+                                            "label": "VARIANT",
+                                            "link": {
+                                                "type": "doc",
+                                                "id": "sql-manual/basic-element/sql-data-types/semi-structured/variant-workload-guide"
+                                            },
+                                            "collapsed": false,
+                                            "items": [
+                                                {
+                                                    "type": "doc",
+                                                    "id": "sql-manual/basic-element/sql-data-types/semi-structured/VARIANT",
+                                                    "label": "VARIANT Reference"
+                                                }
+                                            ]
+                                        }
                                     ]
                                 },
                                 {

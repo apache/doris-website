@@ -1,35 +1,28 @@
 ---
 {
-        "title": "Postgres/MySQL 持续导入",
+        "title": "MySQL/PostgreSQL 持续导入",
         "language": "zh-CN",
-        "description": "Doris 可以通过 Streaming Job 的方式，将 MySQL、Postgres 等多张表的全量和增量数据持续同步到 Doris 中。"
+        "description": "Doris 可以通过 Streaming Job 的方式，将 MySQL、PostgreSQL 等多张表的全量和增量数据持续同步到 Doris 中。"
 }
 ---
 
 ## 概述
 
-支持通过 Job 将 MySQL、Postgres 等数据库的多张表的全量和增量数据，通过 Stream Load 的方式持续同步到 Doris 中。适用于需要实时同步多表数据到 Doris 的场景。
+支持通过 Job 将 MySQL、PostgreSQL 等数据库的多张表的全量和增量数据，通过 Stream Load 的方式持续同步到 Doris 中。适用于需要实时同步多表数据到 Doris 的场景。
 
-## 支持的数据源
-
-- MySQL
-- Postgres
-
-## 基本原理
-
-通过集成 [Flink CDC](https://github.com/apache/flink-cdc) 能力，Doris 支持从 MySQL、Postgres 等数据库读取变更日志，实现多表的全量和增量数据同步。首次同步时会自动创建 Doris 下游表（主键表），并保持主键与上游一致。
+通过集成 [Flink CDC](https://github.com/apache/flink-cdc) 能力，Doris 支持从 MySQL、PostgreSQL 等数据库读取变更日志，实现多表的全量和增量数据同步。首次同步时会自动创建 Doris 下游表 (主键表)，并保持主键与上游一致。
 
 **注意事项：**
 
 1. 目前只能保证 at-least-once 语义。
 2. 目前只支持主键表同步。
 3. 需要 Load 权限，若下游表不存在还需有 Create 权限。
+4. 自动创建表阶段，如果目标表已存在则会跳过，用户可以根据不同的场景自定义表。
 
-## 快速上手
+## MySQL 持续导入
 
 ### 前提条件
 
-#### MySQL 
 需要在 MySQL 端开启 Binlog，即 my.cnf 配置文件中增加：
 ```ini
 log-bin=mysql-bin
@@ -37,15 +30,7 @@ binlog_format=ROW
 server-id=1
 ```
 
-#### Postgres
-需要在 Postgres 端配置逻辑复制，即 postgresql.conf 增加：
-```ini
-wal_level=logical
-```
-
 ### 创建导入作业
-
-#### MySQL
 
 ```sql
 CREATE JOB multi_table_sync
@@ -61,11 +46,35 @@ FROM MYSQL (
         "offset" = "initial"
 )
 TO DATABASE target_test_db (
-    "table.create.properties.replication_num" = "1"
+    "table.create.properties.replication_num" = "1"  -- 单BE部署时需要设置为1
 )
 ```
 
-#### Postgres
+### MySQL 数据源参数
+
+| 参数           | 默认值  | 说明                                                         |
+| -------------- | ------- | ------------------------------------------------------------ |
+| jdbc_url       | -       | MySQL JDBC 连接串                                       |
+| driver_url     | -       | JDBC 驱动 jar 包路径                                          |
+| driver_class   | -       | JDBC 驱动类名                                                |
+| user           | -       | 数据库用户名                                                  |
+| password       | -       | 数据库密码                                                    |
+| database       | -       | 数据库名                                                      |
+| include_tables | -       | 需要同步的表名，多个表用逗号分隔                              |
+| offset         | initial | initial: 全量 + 增量同步，latest: 仅增量同步                    |
+| snapshot_split_size         | 8096 | split 的大小 (行数)，全量同步时，表会被切分成多个 split 进行同步   |
+| snapshot_parallelism         | 1 | 全量阶段同步的并行度，即单次 Task 最多调度的 split 数量   |
+
+## PostgreSQL 持续导入
+
+### 前提条件
+
+需要在 PostgreSQL 端配置逻辑复制，即 postgresql.conf 增加：
+```ini
+wal_level=logical
+```
+
+### 创建导入作业
 
 ```sql
 CREATE JOB test_postgres_job
@@ -82,9 +91,27 @@ FROM POSTGRES (
     "offset" = "latest"
 )
 TO DATABASE target_test_db (
-  "table.create.properties.replication_num" = "1"
+  "table.create.properties.replication_num" = "1"  -- 单BE部署时需要设置为1
 )
 ```
+
+### PostgreSQL 数据源参数
+
+| 参数           | 默认值  | 说明                                                         |
+| -------------- | ------- | ------------------------------------------------------------ |
+| jdbc_url       | -       | PostgreSQL JDBC 连接串                                       |
+| driver_url     | -       | JDBC 驱动 jar 包路径                                          |
+| driver_class   | -       | JDBC 驱动类名                                                |
+| user           | -       | 数据库用户名                                                  |
+| password       | -       | 数据库密码                                                    |
+| database       | -       | 数据库名                                                      |
+| schema         | -       | schema 名称                                                      |
+| include_tables | -       | 需要同步的表名，多个表用逗号分隔，不填默认所有的表                              |
+| offset         | initial | initial: 全量 + 增量同步，latest: 仅增量同步                    |
+| snapshot_split_size         | 8096 | split 的大小 (行数),全量同步时，表会被切分成多个 split 进行同步   |
+| snapshot_parallelism         | 1 | 全量阶段同步的并行度，即单次 Task 最多调度的 split 数量   |
+
+## 通用操作
 
 ### 查看导入状态
 
@@ -142,7 +169,7 @@ DROP JOB where jobName = <job_name> ;
 
 ### 导入命令
 
-创建一个多表同步作业语法如下：
+创建多表同步作业语法如下：
 
 ```sql
 CREATE JOB <job_name>
@@ -162,7 +189,7 @@ TO DATABASE <target_db> (
 | job_name           | 任务名                    |
 | job_properties     | 用于指定 Job 的通用导入参数 |
 | comment            | 用于描述 Job 作业的备注信息 |
-| source_properties  | 源端（MySQL/PG 等）相关参数   |
+| source_properties  | 源端（MySQL/PostgreSQL 等）相关参数   |
 | target_properties  | Doris 目标库相关参数       |
 
 ### 导入参数
@@ -180,22 +207,6 @@ TO DATABASE <target_db> (
 | 参数         | 默认值 | 说明                                   |
 | ------------ | ------ | -------------------------------------- |
 | max_interval | 10s    | 当上游没有新增数据时，空闲的调度间隔。 |
-
-#### 数据源配置参数
-
-| 参数           | 默认值  | 说明                                                         |
-| -------------- | ------- | ------------------------------------------------------------ |
-| jdbc_url       | -       | JDBC 连接串（MySQL/PG）                                       |
-| driver_url     | -       | JDBC 驱动 jar 包路径                                          |
-| driver_class   | -       | JDBC 驱动类名                                                |
-| user           | -       | 数据库用户名                                                  |
-| password       | -       | 数据库密码                                                    |
-| database       | -       | 数据库名                                                      |
-| schema       | -       | schema 名称                                                      |
-| include_tables | -       | 需要同步的表名，多个表用逗号分隔                              |
-| offset         | initial | initial: 全量 + 增量同步，latest: 仅增量同步                    |
-| snapshot_split_size         | 8096 | split 的大小 (行数)，全量同步时，表会被切分成多个 split 进行同步   |
-| snapshot_parallelism         | 1 | 全量阶段同步的并行度，即单次 Task 最多调度的 split 数量   |
 
 #### Doris 目标库端配置参数
 
@@ -293,5 +304,7 @@ RunningOffset: {"endOffset":{"ts_sec":"1765284495","file":"binlog.000002","pos":
 | StartTime     | Task 的开始时间                                       |
 | FinishTime    | Task 的完成时间                                       |
 | LoadStatistic | Task 的统计信息                                       |
+| User          | task 的执行者                                         |
+| RunningOffset | 当前 Task 同步的 Offset 信息。只有 Job.ExecuteType=Streaming 才有值 |
 | User          | task 的执行者                                         |
 | RunningOffset | 当前 Task 同步的 Offset 信息。只有 Job.ExecuteType=Streaming 才有值 |

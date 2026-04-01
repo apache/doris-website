@@ -9,7 +9,7 @@
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
-Doris supports accessing Iceberg table data through various metadata services. In addition to reading data, Doris also supports writing to Iceberg tables.
+Doris supports accessing Iceberg table data through various metadata services. In addition to reading data, Doris also supports writing to Iceberg tables, including INSERT, INSERT OVERWRITE, UPDATE, DELETE, and MERGE INTO.
 
 [Quick start with Apache Doris and Apache Iceberg](../best-practices/doris-iceberg.md).
 
@@ -84,6 +84,78 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 * `{CommonProperties}`
 
   The CommonProperties section is for entering general properties. See the [Catalog Overview](../catalog-overview.md) for details on common properties.
+
+## Metadata Cache {#meta-cache}
+
+To improve the performance of accessing external data sources, Apache Doris caches Iceberg metadata. Metadata includes table structure (Schema), table objects, view objects, and manifest details.
+
+:::tip
+For versions before Doris 4.1.x, metadata caching is mainly controlled globally by FE configuration items. For details, see [Metadata Cache](../meta-cache.md).
+Starting from Doris 4.1.x, Iceberg Catalog's external metadata cache is configured using the unified `meta.cache.*` keys.
+:::
+
+### Cache Property Configuration (4.1.x+) {#meta-cache-unified-model}
+
+Each engine's cache entry uses a unified configuration key format: `meta.cache.<engine>.<entry>.{enable,ttl-second,capacity}`.
+
+| Property | Example | Meaning |
+|---|---|---|
+| `enable` | `true/false` | Whether to enable this cache module. |
+| `ttl-second` | `600`, `0`, `-1` | `0` means disable cache (takes effect immediately, can be used to see the latest data); `-1` means never expire; other positive integers mean TTL in seconds based on access time. |
+| `capacity` | `10000` | Maximum number of cache entries (by count). `0` means disable. |
+
+**Effective Logic:** The module cache only takes effect when `enable=true`, `ttl-second != 0`, and `capacity > 0`.
+
+### Cache Modules {#meta-cache-unified-modules}
+
+Iceberg Catalog includes the following cache modules:
+
+| Module (`<entry>`) | Property Key Prefix | Cached Content and Impact |
+|---|---|---|
+| `schema` | `meta.cache.iceberg.schema.` | Caches table structure. Impact: Visibility of table column information. If disabled, the latest Schema is pulled for each query. |
+| `table` | `meta.cache.iceberg.table.` | Caches Iceberg table metadata objects. Impact: Reduces Catalog/Metastore round-trips. |
+| `view` | `meta.cache.iceberg.view.` | Caches Iceberg View metadata objects. |
+| `manifest` | `meta.cache.iceberg.manifest.` | Caches manifest details. Impact: Reduces repeated manifest access overhead. Note: This module is disabled by default and must be enabled manually. |
+
+### Legacy Parameter Mapping and Conversion {#meta-cache-mapping}
+
+In version 4.1.x and later, unified keys are recommended. The following is the mapping between legacy Catalog properties and 4.1.x+ unified keys:
+
+| Legacy Property Key | 4.1.x+ Unified Key | Description |
+|---|---|---|
+| `schema.cache.ttl-second` | `meta.cache.iceberg.schema.ttl-second` | Expiration time of table structure cache |
+
+### Best Practices {#meta-cache-best-practices}
+
+* **Real-time access to the latest data**: If you want each query to see the latest snapshots or schema changes for Iceberg tables, you can set the `ttl-second` for `schema` or `table` to `0`.
+  ```sql
+  -- Disable table object cache to detect snapshot changes
+  ALTER CATALOG iceberg_ctl SET PROPERTIES ("meta.cache.iceberg.table.ttl-second" = "0");
+  ```
+* **Performance optimization**:
+    * Enabling manifest cache can significantly speed up query planning for large tables:
+      ```sql
+      ALTER CATALOG iceberg_ctl SET PROPERTIES (
+        "meta.cache.iceberg.manifest.enable" = "true",
+        "meta.cache.iceberg.manifest.ttl-second" = "600"
+      );
+      ```
+    * Changes via `ALTER CATALOG ... SET PROPERTIES` support hot-reload in Iceberg Catalog.
+
+### Observability {#meta-cache-unified-observability}
+
+Cache metrics can be observed through the `information_schema.catalog_meta_cache_statistics` system table:
+
+```sql
+SELECT catalog_name, engine_name, entry_name,
+       effective_enabled, ttl_second, capacity,
+       estimated_size, hit_rate, load_failure_count, last_error
+FROM information_schema.catalog_meta_cache_statistics
+WHERE catalog_name = 'iceberg_ctl' AND engine_name = 'iceberg'
+ORDER BY entry_name;
+```
+
+See the documentation for this system table: [catalog_meta_cache_statistics](../../admin-manual/system-tables/information_schema/catalog_meta_cache_statistics.md).
 
 ### Supported Iceberg Versions
 
@@ -391,7 +463,7 @@ Support for Nested Namespace needs to be explicitly enabled. For details, please
                 'warehouse' = 'gs://bucket/iceberg_warehouse',
                 'gs.access_key' = '<ak>',
                 'gs.secret_key' = '<sk>',
-                'fs.gcs.support'='true'
+                'fs.gcs.support' = 'true'
             );
             ```
         </TabItem>
@@ -405,7 +477,23 @@ Support for Nested Namespace needs to be explicitly enabled. For details, please
                 'azure.account_name' = '<account_name>',
                 'azure.account_key' = '<account_key>',
                 'azure.endpoint' = 'https://<account_name>.blob.core.windows.net',
-                'fs.azure.support'='true'
+                'fs.azure.support' = 'true'
+            );
+            ```
+        </TabItem>
+        <TabItem value='Ozone' label='Ozone'>
+            Supported since 4.0.4
+            ```sql
+            CREATE CATALOG iceberg_fs_on_ozone_catalog PROPERTIES (
+                'type' = 'iceberg',
+                'iceberg.catalog.type' = 'hadoop',
+                'warehouse' = 's3a://bucket/iceberg_warehouse',
+                'fs.ozone.support' = 'true',
+                'ozone.endpoint' = 'http://ozone-s3g:9878',
+                'ozone.access_key' = '<ak>',
+                'ozone.secret_key' = '<sk>',
+                'ozone.region' = 'us-east-1',
+                'ozone.use_path_style' = 'true'
             );
             ```
         </TabItem>
@@ -529,7 +617,7 @@ Support for Nested Namespace needs to be explicitly enabled. For details, please
                 's3.access_key' = '<ak>',
                 's3.secret_key' = '<sk>'
             );
-                ```
+            ```
         </TabItem>
     </Tabs>
 </details>
@@ -605,13 +693,36 @@ Support for Nested Namespace needs to be explicitly enabled. For details, please
 
 ### Aliyun DLF
 <details>
+    <summary>4.1+ Version</summary>
+    <Tabs>
+        <TabItem value='DLF 2.5+' label='DLF 2.5+' default>
+            ```sql
+            CREATE CATALOG iceberg_dlf2_catalog PROPERTIES (
+                'type' = 'iceberg',
+                'iceberg.catalog.type' = 'rest',
+                'iceberg.rest.uri' = 'http://<region>-vpc.dlf.aliyuncs.com/iceberg',
+                'warehouse' = '<your-catalog-name>',
+                'iceberg.rest.sigv4-enabled' = 'true',
+                'iceberg.rest.signing-name' = 'DlfNext',
+                'iceberg.rest.access-key-id' = '<ak>',
+                'iceberg.rest.secret-access-key' = '<sk>',
+                'iceberg.rest.signing-region' = '<region>',
+                'iceberg.rest.vended-credentials-enabled' = 'true',
+                'io-impl' = 'org.apache.iceberg.rest.DlfFileIO',
+                'fs.oss.support' = 'true'
+            );
+            ```
+        </TabItem>
+    </Tabs>
+</details>
+<details>
     <summary>3.1+ Version</summary>
     <Tabs>
         <TabItem value='DLF 1.0' label='DLF 1.0' default>
             ```sql
             CREATE CATALOG iceberg_dlf_catalog_catalog PROPERTIES (
                 'type' = 'iceberg',
-                'iceberg.catalog.type'='dlf',
+                'iceberg.catalog.type' = 'dlf',
                 'warehouse' = 'oss://bucket/iceberg-dlf-oss-warehouse',
                 'dlf.uid' = '203225413946383283',
                 'dlf.catalog_id' = 'p2_regression_case',
@@ -631,7 +742,7 @@ Support for Nested Namespace needs to be explicitly enabled. For details, please
             ```sql
             CREATE CATALOG iceberg_dlf_catalog_catalog PROPERTIES (
                 'type' = 'iceberg',
-                'iceberg.catalog.type'='dlf',
+                'iceberg.catalog.type' = 'dlf',
                 'warehouse' = 'oss://bucket/iceberg-dlf-oss-warehouse',
                 'dlf.uid' = '203225413946383283',
                 'dlf.catalog.id' = 'catalog_id',
@@ -1031,7 +1142,7 @@ This is an experimental feature, supported since version 4.1.0.
                 'warehouse' = 'hdfs://127.0.0.1:8520/iceberg-fs-hdfs-warehouse',
                 'fs.defaultFS' = 'hdfs://127.0.0.1:8520',
                 'hadoop.security.authentication' = 'kerberos',
-                'hadoop.kerberos.principal'='hive/presto-master.docker.cluster@LABS.TERADATA.COM',
+                'hadoop.kerberos.principal' = 'hive/presto-master.docker.cluster@LABS.TERADATA.COM',
                 'hadoop.kerberos.keytab' = '/keytabs/hive-presto-master.keytab'
             );
 
@@ -1105,7 +1216,7 @@ This is an experimental feature, supported since version 4.1.0.
                 'type' = 'iceberg',
                 'iceberg.catalog.type' = 'hadoop',
                 'warehouse' = 'gs://bucket/iceberg_warehouse',
-                'fs.gcs.support'='true',
+                'fs.gcs.support' = 'true',
                 'gs.access_key' = '<ak>',
                 'gs.secret_key' = '<sk>'
             );
@@ -1115,9 +1226,9 @@ This is an experimental feature, supported since version 4.1.0.
             ```sql
             CREATE CATALOG test_iceberg_fs_on_minio PROPERTIES (
                 'type' = 'iceberg',
-                'iceberg.catalog.type'='hadoop',
+                'iceberg.catalog.type' = 'hadoop',
                 'warehouse' = 's3://warehouse/wh',
-                'fs.minio.support'='true',
+                'fs.minio.support' = 'true',
                 'minio.endpoint' = 'http://127.0.0.1:19001',
                 'minio.access_key' = 'admin',
                 'minio.secret_key' = 'password',
@@ -1279,20 +1390,22 @@ This is an experimental feature, supported since version 4.1.0.
 
 <details >
     <summary>3.0.6+ Version</summary>
-    <TabItem value='FileSystem Catalog' label='FileSystem Catalog' default>
-        Please refer to the [S3 Tables Integration](../best-practices/doris-aws-s3tables.md) documentation.
-        ```sql
-        CREATE CATALOG test_s3tables_catalog PROPERTIES (
-            'type' = 'iceberg',
-            'iceberg.catalog.type' = 's3tables',
-            'warehouse' = 'arn:aws:s3tables:ap-east-1:9527:bucket/doris-s3-table-bucket',
-            's3.region' = 'ap-east-1',
-            's3.endpoint' = 'https://s3.ap-east-1.amazonaws.com',
-            's3.access_key' = '<ak>',
-            's3.secret_key' = '<sk>'
-        );
-        ```
-    </TabItem>
+    <Tabs>
+        <TabItem value='FileSystem Catalog' label='FileSystem Catalog' default>
+            Please refer to the [S3 Tables Integration](../best-practices/doris-aws-s3tables.md) documentation.
+            ```sql
+            CREATE CATALOG test_s3tables_catalog PROPERTIES (
+                'type' = 'iceberg',
+                'iceberg.catalog.type' = 's3tables',
+                'warehouse' = 'arn:aws:s3tables:ap-east-1:9527:bucket/doris-s3-table-bucket',
+                's3.region' = 'ap-east-1',
+                's3.endpoint' = 'https://s3.ap-east-1.amazonaws.com',
+                's3.access_key' = '<ak>',
+                's3.secret_key' = '<sk>'
+            );
+            ```
+        </TabItem>
+    </Tabs>
 </details>
 
 ## Query Operations
@@ -1355,9 +1468,9 @@ SELECT * FROM iceberg_table FOR VERSION AS OF 123456789;
 
 ### Branch and Tag
 
-> Since 3.1.0
+> Since 3.1.0.
 >
-> For creating, dropping and managing branch and tag, please refer to [Managing Branch & Tag]
+> For creating, dropping and managing branch and tag, please refer to the [Managing Branch & Tag] section.
 
 Reading specific branches and tags of Iceberg tables is supported.
 
@@ -1385,6 +1498,37 @@ Supports querying Iceberg views. View queries work the same way as regular table
 
 - Only `hms` type Iceberg Catalog is supported.
 - The view definition SQL must be compatible with Doris SQL dialect, otherwise parsing errors will occur. (Dialect conversion functionality will be provided in future versions).
+
+### Iceberg V3 Hidden Columns (Row Lineage)
+
+:::tip
+This is an experimental feature, supported since version 4.1.0.
+:::
+
+Doris supports querying Row Lineage hidden columns of Iceberg V3 tables. Iceberg V3 introduces system hidden columns that contain row lineage data, which is used to track data change records. This is highly suitable for incremental synchronization or data auditing:
+
+- `_row_id`: A numerical value that uniquely identifies a row of data (generated based on the file and position where the data is written).
+- `_last_updated_sequence_number`: The Sequence Number of the last modification to this row. When an `UPDATE` or `MERGE INTO` operation updates the data, this numerical value automatically increments along with the version number.
+
+**How to query hidden columns:**
+
+By default, hidden columns are not visible when using `DESC` or `SELECT *`. You can explicitly query them by specifying the column names directly:
+
+```sql
+SELECT id, _row_id, _last_updated_sequence_number FROM iceberg_tbl;
+```
+
+You can also make hidden columns visible in regular displays (like `DESC` and `SELECT *`) by enabling the session variable `show_hidden_columns`:
+
+```sql
+SET show_hidden_columns = true;
+DESC iceberg_tbl;
+```
+
+**Notes:**
+
+1. The Iceberg table's format version (`format-version`) must be configured as `3` for these row-level parameters to be generated. Querying row lineage columns on V1 and V2 format tables may result in errors.
+2. Hidden columns are maintained by the system. Users are not allowed to explicitly specify or write to the `_row_id` or `_last_updated_sequence_number` columns when using writing statements like `INSERT`.
 
 ## System Tables
 
@@ -1693,6 +1837,190 @@ INSERT INTO iceberg_table@branch(b1) SELECT * FROM other_table;
 INSERT OVERWRITE TABLE iceberg_table@branch(b1) SELECT * FROM other_table;
 ```
 
+### DELETE
+
+:::tip
+This is an experimental feature, supported since version 4.1.0.
+:::
+
+The `DELETE` operation is used to delete rows of data in an Iceberg table that meet specified conditions. This operation is primarily based on the following underlying mechanisms: for V2 format tables, the system writes Position Delete files; for V3 format tables, the system writes Puffin-format Deletion Vectors files.
+
+**Prerequisites:**
+
+- The Iceberg table's format version (`format-version`) must be 2 or higher. V1 format tables do not support the `DELETE` operation.
+
+**Syntax:**
+
+```sql
+DELETE FROM iceberg_tbl WHERE <condition>;
+```
+
+**Examples:**
+
+```sql
+-- Delete a single row
+DELETE FROM iceberg_tbl WHERE id = 1;
+
+-- Delete using multiple conditions
+DELETE FROM iceberg_tbl WHERE age > 30 AND name = 'Bob';
+
+-- Delete using a subquery
+DELETE FROM iceberg_tbl WHERE id IN (SELECT id FROM other_table WHERE status = 'inactive');
+```
+
+The usage is identical for partitioned tables:
+
+```sql
+DELETE FROM iceberg_partition_tbl WHERE id = 10;
+```
+
+### UPDATE
+
+:::tip
+This is an experimental feature, supported since version 4.1.0.
+:::
+
+The `UPDATE` operation is used to modify rows of data in an Iceberg table that meet specified conditions. Internally, the implementation involves first writing deletion tracking information (using Position Delete files for V2, and Puffin-format Deletion Vectors for V3) to mark the old data rows as invalid, and then appending the updated new data files (if the V3 format option is enabled, the newly inserted row's tracking value `_last_updated_sequence_number` will automatically advance).
+
+**Prerequisites:**
+
+- The Iceberg table's format version (`format-version`) must be 2 or higher. V1 format tables do not support the `UPDATE` operation.
+
+**Syntax:**
+
+```sql
+UPDATE iceberg_tbl SET <column1> = <value1> [, <column2> = <value2>, ...] WHERE <condition>;
+```
+
+**Examples:**
+
+```sql
+-- Update a single column
+UPDATE iceberg_tbl SET name = 'Alice_new' WHERE id = 1;
+
+-- Update multiple columns
+UPDATE iceberg_tbl SET name = 'Updated', age = 28 WHERE id = 2;
+
+-- Update using expressions
+UPDATE iceberg_tbl SET age = age * 2 + 1, name = concat(name, '-modified') WHERE id = 3;
+
+-- Update using a subquery as condition
+UPDATE iceberg_tbl SET name = 'UpdatedViaSubquery' WHERE id IN (SELECT id FROM other_table);
+```
+
+The usage is identical for partitioned tables:
+
+```sql
+UPDATE iceberg_partition_tbl SET name = 'Updated' WHERE id = 10;
+```
+
+### MERGE INTO
+
+:::tip
+This is an experimental feature, supported since version 4.1.0.
+:::
+
+The `MERGE INTO` operation is used to match source data with a target Iceberg table and perform insert, update, or delete operations based on the matching results. This is suitable for scenarios such as data synchronization and incremental updates.
+
+**Prerequisites:**
+
+- The Iceberg table's format version (`format-version`) must be 2 or higher. V1 format tables do not support the `MERGE INTO` operation.
+
+**Syntax:**
+
+```sql
+MERGE INTO target_table t
+USING <source> s
+ON <merge_condition>
+[WHEN MATCHED [AND <condition>] THEN DELETE]
+[WHEN MATCHED [AND <condition>] THEN UPDATE SET <column1> = <value1> [, ...]]
+[WHEN NOT MATCHED [AND <condition>] THEN INSERT (<columns>) VALUES (<values>)]
+```
+
+Where `<source>` can be a subquery or another table.
+
+**Examples:**
+
+- Full match operation (includes update, delete, and insert):
+
+    ```sql
+    MERGE INTO iceberg_tbl t
+    USING (
+        SELECT 1 AS id, 'Alice_new' AS name, 26 AS age, 'U' AS flag
+        UNION ALL
+        SELECT 2, 'Bob', 30, 'D'
+        UNION ALL
+        SELECT 4, 'Dora', 28, 'I'
+    ) s
+    ON t.id = s.id
+    WHEN MATCHED AND s.flag = 'D' THEN DELETE
+    WHEN MATCHED THEN UPDATE SET
+        name = s.name,
+        age = s.age
+    WHEN NOT MATCHED THEN INSERT (id, name, age)
+    VALUES (s.id, s.name, s.age);
+    ```
+
+    In the above example:
+    * The row with `id = 2` is deleted because `flag = 'D'`.
+    * The row with `id = 1` is updated with new `name` and `age`.
+    * The row with `id = 4` is inserted because it does not exist in the target table.
+
+- Execute matching updates only:
+
+    ```sql
+    MERGE INTO iceberg_tbl t
+    USING (SELECT 1 AS id, 'Alice_matched' AS name, 26 AS age) s
+    ON t.id = s.id
+    WHEN MATCHED THEN UPDATE SET name = s.name, age = s.age;
+    ```
+
+- Execute inserts on not matched only:
+
+    ```sql
+    MERGE INTO iceberg_tbl t
+    USING (SELECT 4 AS id, 'Dora' AS name, 40 AS age) s
+    ON t.id = s.id
+    WHEN NOT MATCHED THEN INSERT (id, name, age) VALUES (s.id, s.name, s.age);
+    ```
+
+- Use a subquery as the data source:
+
+    ```sql
+    MERGE INTO iceberg_tbl t
+    USING (SELECT id FROM other_table WHERE id = 2) s
+    ON t.id = s.id
+    WHEN MATCHED THEN UPDATE SET name = 'UpdatedViaSubquery';
+    ```
+
+- `MERGE INTO` operation for partitioned tables:
+
+    ```sql
+    MERGE INTO iceberg_partition_tbl t
+    USING (
+        SELECT 1 AS id, 'Alice_new' AS name, 26 AS age, DATE '2024-01-01' AS dt, 'U' AS flag
+        UNION ALL
+        SELECT 2, 'Bob', 30, DATE '2024-01-02', 'D'
+        UNION ALL
+        SELECT 4, 'Dora', 28, DATE '2024-01-04', 'I'
+    ) s
+    ON t.id = s.id
+    WHEN MATCHED AND s.flag = 'D' THEN DELETE
+    WHEN MATCHED THEN UPDATE SET
+        name = s.name,
+        age = s.age
+    WHEN NOT MATCHED THEN INSERT (id, name, age, dt)
+    VALUES (s.id, s.name, s.age, s.dt);
+    ```
+
+**Notes:**
+
+1. The above three operations (`DELETE`, `UPDATE`, `MERGE INTO`) all require the Iceberg table's format version (`format-version`) to be 2 or higher. Attempting these operations on a V1 format table will result in the error: `must have format version 2 or higher for position deletes`. When executed on a V3 format table, the system not only uses Puffin-format Deletion Vectors to replace the original Position Delete data, but also automatically adjusts the lineage lifecycle attributes (`_last_updated_sequence_number`) of the written records if content updates are involved.
+2. These operations support both Parquet and ORC file formats.
+3. In concurrent writing scenarios, Iceberg provides an optimistic concurrency control mechanism. When write conflicts occur, the operation may throw a transaction conflict exception.
+4. The `UPDATE` operation, both independently and within `MERGE INTO`, supports using expressions and functions, such as `age = age * 2 + 1` or `name = concat(name, '-modified')`.
+5. These operations apply to both partitioned and non-partitioned tables.
+
 ### Related Parameters
 
 * BE (Backend)
@@ -1925,6 +2253,21 @@ Supported schema change operations include:
 
     Use the `MODIFY COLUMN` statement to modify column attributes, including type, nullable, default value, comment, and column position.
 
+    Since version 4.0.4, Doris supports modifying complex types (STRUCT, ARRAY, MAP), including safe type promotions and appending struct fields.
+    
+    Safe type promotions supported in nested types:
+    - INT -> BIGINT, LARGEINT
+    - TINYINT -> SMALLINT, INT, BIGINT, LARGEINT
+    - SMALLINT -> INT, BIGINT, LARGEINT
+    - BIGINT -> LARGEINT
+    - FLOAT -> DOUBLE
+    - VARCHAR(n) -> VARCHAR(m) where m > n
+    
+    Constraints for complex types:
+    - All new nested fields must be nullable.
+    - Cannot change optional to required.
+    - Default values for complex types only support NULL.
+
     Note: When modifying column attributes, all attributes that are not being modified should also be explicitly specified with their original values.
 
     ```sql
@@ -1940,6 +2283,23 @@ Supported schema change operations include:
   );
   -- Modify the id column type to BIGINT, set as NOT NULL, default value to 0, and add comment
   ALTER TABLE iceberg_table MODIFY COLUMN id BIGINT NOT NULL DEFAULT 0 COMMENT 'This is a modified id column';
+  ```
+
+  Example of modifying complex types:
+
+  ```sql
+  -- Create Iceberg table with complex types
+  CREATE TABLE iceberg_tbl (
+      id BIGINT,
+      user_info STRUCT<name:STRING, scores:ARRAY<INT>, age:INT>,
+      dt STRING
+  );
+
+  -- Append a new field (email) to the STRUCT column
+  ALTER TABLE iceberg_tbl MODIFY COLUMN user_info STRUCT<name:STRING, scores:ARRAY<INT>, age:INT, email:STRING>;
+
+  -- Promote the nested ARRAY element type from INT to BIGINT
+  ALTER TABLE iceberg_tbl MODIFY COLUMN user_info STRUCT<name:STRING, scores:ARRAY<BIGINT>, age:INT, email:STRING>;
   ```
 
 * **Reorder Columns**
@@ -2619,7 +2979,7 @@ You can use the following SQL to analyze the data distribution and delete file c
         CASE
             WHEN file_size_in_bytes BETWEEN 0 AND 8 * 1024 * 1024 THEN '0-8M'
             WHEN file_size_in_bytes BETWEEN 8 * 1024 * 1024 + 1 AND 32 * 1024 * 1024 THEN '8-32M'
-            WHEN file_size_in_bytes BETWEEN 2 * 1024 * 1024 + 1 AND 128 * 1024 * 1024 THEN '32-128M'
+            WHEN file_size_in_bytes BETWEEN 32 * 1024 * 1024 + 1 AND 128 * 1024 * 1024 THEN '32-128M'
             WHEN file_size_in_bytes BETWEEN 128 * 1024 * 1024 + 1 AND 512 * 1024 * 1024 THEN '128-512M'
             WHEN file_size_in_bytes > 512 * 1024 * 1024 THEN '> 512M'
             ELSE 'Unknown'

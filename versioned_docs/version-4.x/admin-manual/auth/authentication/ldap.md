@@ -2,7 +2,7 @@
 {
     "title": "LDAP",
     "language": "en",
-    "description": "Detailed guide on Apache Doris federated authentication: unified identity verification and group authorization through LDAP integration, covering configuration steps, login methods, permission mapping rules, and common troubleshooting."
+    "description": "Detailed guide on Apache Doris federated authentication: unified identity verification and group authorization through LDAP/LDAPS integration, covering configuration steps, login methods, permission mapping rules, and common troubleshooting."
 }
 ---
 
@@ -55,6 +55,8 @@ In LDAP, data is organized in a tree structure. Here's an example of a typical L
     ldap_user_filter = (&(uid={login}))
     ldap_group_basedn = ou=group,o=emr
     ```
+
+    > To enable LDAPS (encrypted connection to the LDAP server), see the [LDAPS (Encrypted Connection)](#ldaps-encrypted-connection) section below.
 
 3. After starting `fe`, log in to Doris with `root` or `admin` account and set the LDAP admin password:
 
@@ -233,6 +235,52 @@ If user jack belongs to LDAP groups `doris_rd`, `doris_qa`, `doris_pm`, and Dori
 > - Which `group` a `user` belongs to is independent of the LDAP tree's organizational structure. `user2` in the example above doesn't necessarily belong to `group2`.
 > - To make `user2` belong to `group2`, you need to explicitly add `user2` to the `member` attribute of `group2`.
 
+## LDAPS (Encrypted Connection)
+
+:::info Supported since version 4.0.5
+:::
+
+By default, Doris communicates with the LDAP server over plain LDAP (unencrypted). Starting from version 4.0.5, Doris supports LDAPS (LDAP over SSL/TLS) to encrypt the connection between Doris FE and the LDAP server.
+
+### Enabling LDAPS
+
+To enable LDAPS, add the following configuration to `fe/conf/ldap.conf`:
+
+```
+ldap_use_ssl = true
+```
+
+When `ldap_use_ssl` is set to `true`, Doris uses the `ldaps://` protocol to connect to the LDAP server. You should also update the port to the standard LDAPS port (typically `636`):
+
+```
+ldap_host = ldap-host
+ldap_port = 636
+ldap_use_ssl = true
+```
+
+### Configuring Certificate Trust
+
+When using LDAPS, the LDAP server's SSL certificate must be trusted by the Doris FE JVM. If your LDAP server uses a certificate signed by a well-known public CA, no additional configuration is needed.
+
+If using a custom or self-signed Certificate Authority (CA), you must import the CA certificate into a Java trustStore and configure the JVM to use it. Add the following parameters to `JAVA_OPTS` in `fe/conf/fe.conf`:
+
+```
+# Example for JDK 17
+JAVA_OPTS_FOR_JDK_17 = "-Djavax.net.ssl.trustStore=/path/to/your/cacerts -Djavax.net.ssl.trustStorePassword=changeit ..."
+```
+
+> **Steps to import a self-signed CA certificate:**
+>
+> 1. Obtain the CA certificate file (e.g., `ca.crt`).
+> 2. Import it into a Java trustStore using `keytool`:
+>
+>     ```shell
+>     keytool -importcert -alias ldap-ca -keystore /path/to/your/cacerts -file /path/to/ca.crt -storepass changeit -noprompt
+>     ```
+>
+> 3. Configure the trustStore path in `JAVA_OPTS` as shown above.
+> 4. Restart the Doris FE for the changes to take effect.
+
 ## Cache Management
 
 To avoid frequent access to LDAP services, Doris caches LDAP information in memory.
@@ -250,7 +298,8 @@ You can refresh the cache with the `refresh ldap` statement. See [REFRESH-LDAP](
 
 ## Known Limitations
 
-- Currently, Doris's LDAP functionality only supports cleartext password verification, meaning that when users log in, passwords are transmitted in plaintext between `client` and `fe`, and between `fe` and LDAP service.
+- Doris's LDAP functionality only supports cleartext password verification for the client-to-FE segment, meaning that when users log in, passwords are transmitted in plaintext between `client` and `fe`. SSL/TLS encryption between the client and Doris FE must be configured separately (see [Client Connection](#step-2-client-connection)).
+- For the FE-to-LDAP segment, the connection is unencrypted by default (`ldap_use_ssl = false`). To encrypt this segment, set `ldap_use_ssl = true` to use LDAPS (see [LDAPS (Encrypted Connection)](#ldaps-encrypted-connection)).
 
 ## FAQ
 
@@ -266,3 +315,12 @@ Check the following items step by step:
 2. Check whether the expected `group` is located under the organizational structure corresponding to `ldap_group_basedn`.
 3. Check whether the expected `group` contains the `member` attribute.
 4. Check whether the `member` attribute of the expected `group` contains the current user's `dn`.
+
+**Q: LDAPS connection fails, how to troubleshoot?**
+
+Check the following items step by step:
+
+1. Confirm that `ldap_use_ssl = true` is set in `fe/conf/ldap.conf`.
+2. Confirm that `ldap_port` is set to the correct LDAPS port (typically `636`).
+3. Verify that the LDAP server's SSL certificate is trusted by the JVM. Check the `fe.log` for SSL handshake errors such as `SSLHandshakeException` or `PKIX path building failed`.
+4. If using a self-signed CA, ensure the CA certificate has been imported into the trustStore and the trustStore path is correctly configured in `JAVA_OPTS`.

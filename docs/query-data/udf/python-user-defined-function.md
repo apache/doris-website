@@ -182,6 +182,10 @@ In module mode, the `symbol` parameter is used to specify the function's locatio
 - The `module_name` part is used as the module path for dynamic import via `importlib`
 - If `package_name` is specified, the entire path must form a valid Python import path, and the ZIP package structure must match this path
 
+:::caution Warning
+Namespaces should be unique and avoid naming conflicts with the Python standard library or commonly used third-party libraries to prevent dependency conflicts and runtime exceptions caused by module overshadowing.
+:::
+
 **Example Illustrations**:
 
 **Example A: No Package Structure (Two-Part)**
@@ -1286,6 +1290,10 @@ In module mode, the `symbol` parameter is used to specify the class's location i
   - If **two** substrings are obtained, they are `module_name` and `ClassName`
   - If **three or more** substrings are obtained, the beginning is `package_name`, middle is `module_name`, and end is `ClassName`
 
+:::caution Warning
+Namespaces should be unique and avoid naming conflicts with the Python standard library or commonly used third-party libraries to prevent dependency conflicts and runtime exceptions caused by module overshadowing.
+:::
+
 **Step 5: Create UDAF Functions**
 
 ```sql
@@ -2228,6 +2236,10 @@ In module mode, the `symbol` parameter is used to specify the function's locatio
 - Doris will split the `symbol` string by `.`:
   - If **two** substrings are obtained, they are `module_name` and `function_name`
   - If **three or more** substrings are obtained, the beginning is `package_name`, middle is `module_name`, and end is `function_name`
+
+:::caution Warning
+Namespaces should be unique and avoid naming conflicts with the Python standard library or commonly used third-party libraries to prevent dependency conflicts and runtime exceptions caused by module overshadowing.
+:::
 
 **Step 5: Create UDTF Functions**
 

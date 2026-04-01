@@ -27,6 +27,7 @@ Apache Doris provides native support for several core features of Iceberg:
 - Supports querying Iceberg table snapshot history through table functions.
 - Supports Time Travel functionality.
 - Native support for the Iceberg table engine. It allows Apache Doris to directly create, manage, and write data to Iceberg tables. It supports comprehensive partition Transform functions, providing capabilities like hidden partitioning and partition layout evolution.
+- Supports row-level DML on Iceberg V2 tables, including `UPDATE`, `DELETE`, and `MERGE INTO`.
 
 Users can quickly build an efficient Data Lakehouse solution based on Apache Doris + Apache Iceberg to flexibly address various real-time data analysis and processing needs.
 
@@ -34,7 +35,7 @@ Users can quickly build an efficient Data Lakehouse solution based on Apache Dor
 - Manage and build Iceberg tables directly through Doris, complete data cleaning, processing, and writing to Iceberg tables in Doris, building a **unified data processing platform for data lakes**.
 - Share Doris data with other upstream and downstream systems for further processing through the Iceberg table engine, building a **unified open data storage platform**.
 
-In the future, Apache Iceberg will serve as one of the native table engines for Apache Doris, providing more comprehensive analysis and management functions for lake-formatted data. Apache Doris will also gradually support more advanced features of Apache Iceberg, including Update/Delete/Merge, sorting during write-back, incremental data reading, metadata management, etc., to jointly build a unified, high-performance, real-time data lake platform.
+In the future, Apache Iceberg will serve as one of the native table engines for Apache Doris, providing more comprehensive analysis and management functions for lake-formatted data. Apache Doris already supports core Iceberg row-level DML, including `INSERT`, `UPDATE`, `DELETE`, and `MERGE INTO`, and will continue to improve capabilities such as write-side sorting, incremental data reading, and metadata management to jointly build a unified, high-performance, real-time data lake platform.
 
 For more information, please refer to [Iceberg Catalog](../catalogs/iceberg-catalog.mdx)
 
@@ -286,9 +287,116 @@ mysql> SELECT * FROM iceberg.nyc.taxis FOR TIME AS OF "2024-07-29 03:40:22";
 4 rows in set (0.05 sec)
 ```
 
-### 07 Interacting with PyIceberg
+### 07 Iceberg Row-level DML
+
+For row-level DML (`UPDATE`, `DELETE`, and `MERGE INTO`), the target table must use Iceberg V2. To keep the `iceberg.nyc.taxis` state from the Time Travel section unchanged, the following example initializes a dedicated table from `iceberg.nyc.taxis2`.
+
+```sql
+mysql> CREATE TABLE iceberg.nyc.taxis_dml
+       (
+           vendor_id BIGINT,
+           trip_id BIGINT,
+           trip_distance FLOAT,
+           fare_amount DOUBLE,
+           store_and_fwd_flag STRING,
+           ts DATETIME
+       )
+       PARTITION BY LIST (vendor_id, DAY(ts)) ()
+       PROPERTIES (
+           "format-version" = "2",
+           "compression-codec" = "zstd",
+           "write-format" = "parquet"
+       );
+Query OK, 0 rows affected (0.18 sec)
+
+mysql> INSERT INTO iceberg.nyc.taxis_dml SELECT * FROM iceberg.nyc.taxis2;
+Query OK, 4 rows affected (0.32 sec)
+{'status':'COMMITTED', 'txnId':'10089'}
+```
+
+Update rows in the Iceberg table:
+
+```sql
+mysql> UPDATE iceberg.nyc.taxis_dml
+       SET fare_amount = fare_amount + 3,
+           store_and_fwd_flag = 'Y'
+       WHERE trip_id = 1000371;
+Query OK, 1 row affected (0.44 sec)
+{'status':'COMMITTED', 'txnId':'10090'}
+
+mysql> SELECT trip_id, fare_amount, store_and_fwd_flag
+       FROM iceberg.nyc.taxis_dml
+       WHERE trip_id = 1000371;
++---------+-------------+--------------------+
+| trip_id | fare_amount | store_and_fwd_flag |
++---------+-------------+--------------------+
+| 1000371 |       18.32 | Y                  |
++---------+-------------+--------------------+
+1 row in set (0.07 sec)
+```
+
+Delete rows from the Iceberg table:
+
+```sql
+mysql> DELETE FROM iceberg.nyc.taxis_dml
+       WHERE trip_id = 1000373;
+Query OK, 1 row affected (0.31 sec)
+{'status':'COMMITTED', 'txnId':'10091'}
+
+mysql> SELECT trip_id
+       FROM iceberg.nyc.taxis_dml
+       ORDER BY trip_id;
++---------+
+| trip_id |
++---------+
+| 1000371 |
+| 1000372 |
+| 1000374 |
++---------+
+3 rows in set (0.06 sec)
+```
+
+Use `MERGE INTO` to update existing rows and insert new rows in one statement:
+
+```sql
+mysql> MERGE INTO iceberg.nyc.taxis_dml t
+       USING (
+           SELECT 2 AS vendor_id, 1000372 AS trip_id, 2.5 AS trip_distance,
+                  30.00 AS fare_amount, 'Y' AS store_and_fwd_flag,
+                  CAST('2024-01-02 12:10:11' AS DATETIME) AS ts
+           UNION ALL
+           SELECT 3, 1000380, 6.7, 28.50, 'N', CAST('2024-01-04 10:20:00' AS DATETIME)
+       ) s
+       ON t.trip_id = s.trip_id
+       WHEN MATCHED THEN UPDATE SET
+           fare_amount = s.fare_amount,
+           store_and_fwd_flag = s.store_and_fwd_flag
+       WHEN NOT MATCHED THEN INSERT
+           (vendor_id, trip_id, trip_distance, fare_amount, store_and_fwd_flag, ts)
+       VALUES
+           (s.vendor_id, s.trip_id, s.trip_distance, s.fare_amount, s.store_and_fwd_flag, s.ts);
+Query OK, 2 rows affected (0.53 sec)
+{'status':'COMMITTED', 'txnId':'10092'}
+
+mysql> SELECT vendor_id, trip_id, fare_amount, store_and_fwd_flag
+       FROM iceberg.nyc.taxis_dml
+       ORDER BY trip_id;
++-----------+---------+-------------+--------------------+
+| vendor_id | trip_id | fare_amount | store_and_fwd_flag |
++-----------+---------+-------------+--------------------+
+|         1 | 1000371 |       18.32 | Y                  |
+|         2 | 1000372 |       30.00 | Y                  |
+|         1 | 1000374 |       42.13 | Y                  |
+|         3 | 1000380 |       28.50 | N                  |
++-----------+---------+-------------+--------------------+
+4 rows in set (0.09 sec)
+```
+
+### 08 Interacting with PyIceberg
 
 > Please use Doris 2.1.8/3.0.4 or above.
+
+To keep the previous examples unchanged, the examples below use `nyc.taxis2`.
 
 Load an iceberg table:
 
@@ -305,7 +413,7 @@ catalog = load_catalog(
 		"s3.endpoint" = "http://minio:9000"
 	},
 )
-table = catalog.load_table("nyc.taxis")
+table = catalog.load_table("nyc.taxis2")
 ```
 
 Read table as `Arrow Table`:
@@ -363,7 +471,7 @@ shape: (4, 6)
 
 > Write iceberg table by PyIceberg, please see [step](#write-iceberg-table-by-pyiceberg)
 
-### 08 Appendix
+### 09 Appendix
 
 #### Write iceberg table by PyIceberg
 
@@ -382,7 +490,7 @@ catalog = load_catalog(
 		"s3.endpoint" = "http://minio:9000"
 	},
 )
-table = catalog.load_table("nyc.taxis")
+table = catalog.load_table("nyc.taxis2")
 ```
 
 Write table with `Arrow Table` :
