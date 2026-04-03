@@ -2,8 +2,6 @@
     'title': 'Apache Doris 4.0: Native Hybrid Search for AI Workloads'
     'summary': 'Apache Doris offers vector search, full-text search, and structured analytics in a single SQL engine, providing a hybrid search and analytical processing infra solution for AI workloads.'
     'description': 'Apache Doris offers vector search, full-text search, and structured analytics in a single SQL engine, providing a hybrid search and analytical processing infra solution for AI workloads.'
-    'picked': "true"
-    'order': "1"    
     'date': '2026-1-20'
     'author': 'velodb.io · Jack Jiang'
     'externalLink': 'https://www.velodb.io/blog/apache-doris-4-native-hybrid-search-for-ai-workloads'
