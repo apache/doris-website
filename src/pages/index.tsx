@@ -15,6 +15,7 @@ import { CoreCapabilitiesCard } from '../components/core-capabilities-card/core-
 import GetStarted from '@site/src/components/get-started/get-started';
 import HomeEvenStarIcon from '@site/static/images/home-event-star.svg';
 import { HomeEventStarIcon } from '../components/Icons/home-event-star-icon';
+import { WarningIcon } from '../components/Icons/warning-icon';
 import { UserCaseCarousel } from '../components/user-case-carousel';
 import { NewsLetterSwiper } from '../components/newsletter-swiper';
 import { DEFAULT_VERSION } from '@site/src/constant/version';
@@ -42,8 +43,7 @@ export default function Home(): JSX.Element {
     ];
     const banner = {
         title: (
-            <div
-            >
+            <div>
                 <p>
                     <Translate id="homepage.banner.title">Open Source, Real-Time</Translate>
                 </p>
@@ -70,21 +70,40 @@ export default function Home(): JSX.Element {
             </div>
         ),
         event: (
-            <Link
-                to={'https://forms.gle/7RKm6CGSNhdW8ZnK9'}
-                style={{ background: 'linear-gradient(0deg, var(--Doris-Green-Doris-green-50, #F0FFF7) 0%, var(--Doris-Green-Doris-green-50, #F0FFF7) 100%), #FFF', textDecoration: 'none' }}
-                className="lg:rounded-full rounded-[1.625rem] mb-8 text-center group lg:w-[45rem] mx-auto lg:flex-row flex-col flex py-4 px-[2.25rem] items-center justify-center"
+            // <Link
+            //     to={'https://forms.gle/7RKm6CGSNhdW8ZnK9'}
+            //     style={{ background: 'linear-gradient(0deg, var(--Doris-Green-Doris-green-50, #F0FFF7) 0%, var(--Doris-Green-Doris-green-50, #F0FFF7) 100%), #FFF', textDecoration: 'none' }}
+            //     className="lg:rounded-full rounded-[1.625rem] mb-8 text-center group lg:w-[45rem] mx-auto lg:flex-row flex-col flex py-4 px-[2.25rem] items-center justify-center"
+            // >
+            //     <div className="lg:mb-0 mb-4 flex items-center">
+            //         <HomeEventStarIcon className="text-primary"/>
+            //         <span className="ml-[3px] group-hover:text-primary font-bold text-[#11A679] text-[0.875rem]/[1rem]">
+            //             NEW
+            //         </span>
+            //     </div>
+            //     <p className="lg:ml-[0.75rem] group-hover:text-primary text-[1rem]/[1rem] text-[#000]">
+            //         Help Shape the Future of Apache Doris: 2026 User Survey
+            //     </p>
+            // </Link>
+            <p
+                style={{
+                    background:
+                        'linear-gradient(0deg, var(--Doris-Green-Doris-green-50, #F0FFF7) 0%, var(--Doris-Green-Doris-green-50, #F0FFF7) 100%), #FFF',
+                    textDecoration: 'none',
+                }}
+                className="homepage-warning-banner lg:rounded-full rounded-[1.625rem] mb-8 group lg:w-[45rem] mx-auto py-4 px-[2.25rem]"
             >
-                <div className="lg:mb-0 mb-4 flex items-center">
-                    <HomeEventStarIcon className="text-primary"/>
-                    <span className="ml-[3px] group-hover:text-primary font-bold text-[#11A679] text-[0.875rem]/[1rem]">
-                        NEW
+                <span className="homepage-warning-banner__content">
+                    <WarningIcon className="homepage-warning-banner__icon" />
+                    <span>
+                        Slack community removed due to a Slack-side issue. Awaiting their resolution. Pls reach us on{' '}
+                        <Link className="homepage-warning-banner__link" to="https://discord.com/invite/tGTh2SQV">
+                            Discord
+                        </Link>{' '}
+                        in the meantime.
                     </span>
-                </div>
-                <p className="lg:ml-[0.75rem] group-hover:text-primary text-[1rem]/[1rem] text-[#000]">
-                    Help Shape the Future of Apache Doris: 2026 User Survey
-                </p>
-            </Link>
+                </span>
+            </p>
         ),
         bannerImg: require('@site/static/images/home-banner.png').default,
         buttons,

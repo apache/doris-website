@@ -1,4 +1,8 @@
 .navbar {
+    button {
+        cursor: pointer !important;
+    }
+
     height: var(--global-header-height);
     background-color: var(--global-colors-white);
     padding: 0;
@@ -15,13 +19,25 @@
 
     .navbar-left {
         display: flex;
-        .docs-search {
+        .docs-search-container {
             position: absolute;
             left: 50%;
-            transform: translateX(-50%);
-            width: 38vw;
             top: 12px;
-            max-width: 443px;
+            transform: translateX(-50%);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+
+            .docs-search {
+                position: static;
+                transform: none;
+                width: 38vw;
+                max-width: 443px;
+            }
+
+            .navbar-ask-ai-btn {
+                white-space: nowrap;
+            }
         }
 
         .navbar__link {
@@ -216,6 +232,10 @@
         }
     }
 
+    .navbar-ask-ai-btn {
+        cursor: pointer;
+    }
+
     .dropdown__menu {
         box-shadow: 0px 6px 20px rgba(6, 128, 95, 0.12);
         border-radius: 0.5rem;
@@ -350,6 +370,9 @@
                         height: 2rem;
                     }
                 }
+            }
+            .docs-search-container {
+                display: none;
             }
             .docs-search {
                 display: none;

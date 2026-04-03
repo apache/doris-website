@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import clsx from 'clsx';
 import { useWindowSize } from '@docusaurus/theme-common';
 import { useDoc } from '@docusaurus/plugin-content-docs/client';
+import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import DocItemPaginator from '@theme/DocItem/Paginator';
 import Link from '@docusaurus/Link';
 import DocVersionBanner from '@theme/DocVersionBanner';
@@ -43,15 +44,15 @@ function useDocTOC() {
 export default function DocItemLayout({ children }: Props): JSX.Element {
     const docTOC = useDocTOC();
     const { metadata } = useDoc();
+    const {
+        i18n: { currentLocale },
+    } = useDocusaurusContext();
     const [isNew, setIsNew] = useState(true);
-    const [isZH, setIsZH] = useState(false);
+    const isZH = currentLocale === 'zh-CN';
 
     useEffect(() => {
         if (typeof window !== 'undefined') {
-            const notBanner = ['gettingStarted', 'benchmark', 'ecosystem', 'faq', 'releasenotes'];
-            const isShow = notBanner.some(item => location.pathname.includes(item));
             setIsNew(location.pathname.includes('what-is-new'));
-            setIsZH(location.pathname.includes('zh-CN'));
         }
     }, [typeof window !== 'undefined' && location.pathname]);
     return (

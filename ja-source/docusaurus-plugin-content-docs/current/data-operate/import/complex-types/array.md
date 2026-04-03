@@ -1,0 +1,114 @@
+---
+{
+  "title": "ARRAY | 複合型",
+  "language": "ja",
+  "description": "ARRAY<T> T型アイテムの配列。詳細を学ぶにはARRAYをクリックしてください。",
+  "sidebar_label": "ARRAY"
+}
+---
+# ARRAY
+
+`ARRAY<T>` T型項目の配列。詳細については[ARRAY](../../../sql-manual/basic-element/sql-data-types/semi-structured/ARRAY.md)をクリックしてください。
+
+## CSV形式インポート
+
+### ステップ1: データの準備
+
+以下のcsvファイルを作成します: `test_array.csv`
+区切り文字は配列内のカンマと区別するため、カンマではなく`|`を使用します。
+
+```
+1|[1,2,3,4,5]
+2|[6,7,8]
+3|[]
+4|null
+```
+### ステップ2: データベースにテーブルを作成する
+
+```sql
+CREATE TABLE `array_test` (
+    `id`         INT           NOT NULL,
+    `c_array`    ARRAY<INT>    NULL
+)
+DUPLICATE KEY(`id`)
+DISTRIBUTED BY HASH(`id`) BUCKETS 1
+PROPERTIES (
+    "replication_allocation" = "tag.location.default: 1"
+);
+```
+### ステップ 3: データの読み込み
+
+```bash
+curl --location-trusted \
+        -u "root":"" \
+        -H "column_separator:|" \
+        -H "columns: id, c_array" \
+        -T "test_array.csv" \
+        http://localhost:8040/api/testdb/array_test/_stream_load
+```
+### ステップ4: インポートしたデータを確認する
+
+```sql
+mysql> SELECT * FROM array_test;
++------+-----------------+
+| id   | c_array         |
++------+-----------------+
+|    1 | [1, 2, 3, 4, 5] |
+|    2 | [6, 7, 8]       |
+|    3 | []              |
+|    4 | NULL            |
++------+-----------------+
+4 rows in set (0.01 sec)
+```
+## JSON形式のインポート
+
+### ステップ1: データを準備する
+
+以下のJSONファイル `test_array.json` を作成してください
+
+```json
+[
+    {"id":1, "c_array":[1,2,3,4,5]},
+    {"id":2, "c_array":[6,7,8]},
+    {"id":3, "c_array":[]},
+    {"id":4, "c_array":null}
+]
+```
+### ステップ2: データベースにテーブルを作成する
+
+```sql
+CREATE TABLE `array_test` (
+    `id`         INT           NOT NULL,
+    `c_array`    ARRAY<INT>    NULL
+)
+DUPLICATE KEY(`id`)
+DISTRIBUTED BY HASH(`id`) BUCKETS 1
+PROPERTIES (
+    "replication_allocation" = "tag.location.default: 1"
+);
+```
+### ステップ3: データをロードする
+
+```bash
+curl --location-trusted \
+        -u "root":"" \
+        -H "format:json" \
+        -H "columns: id, c_array" \
+        -H "strip_outer_array:true" \
+        -T "test_array.json" \
+        http://localhost:8040/api/testdb/array_test/_stream_load
+```
+### ステップ4: インポートしたデータを確認する
+
+```sql
+mysql> SELECT * FROM array_test;
++------+-----------------+
+| id   | c_array         |
++------+-----------------+
+|    1 | [1, 2, 3, 4, 5] |
+|    2 | [6, 7, 8]       |
+|    3 | []              |
+|    4 | NULL            |
++------+-----------------+
+4 rows in set (0.01 sec)
+```

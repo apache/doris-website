@@ -1,14 +1,18 @@
 import { useState, useEffect } from 'react';
+import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
+import { isDocsPath } from '@site/src/utils/locale';
 
 export default function useIsDocPage(defaultValue: boolean) {
     const [isDocsPage, setIsDocsPage] = useState(defaultValue);
+    const {
+        i18n: { locales },
+    } = useDocusaurusContext();
     useEffect(() => {
         if (typeof window !== 'undefined') {
-            const pathname = location.pathname.split('/')[1];
-            const docsPage = pathname === 'docs' || location.pathname.includes('zh-CN/docs');
+            const docsPage = isDocsPath(location.pathname, locales);
             setIsDocsPage(docsPage);
         }
-    }, [typeof window !== 'undefined' && location.pathname]);
+    }, [locales, typeof window !== 'undefined' && location.pathname]);
 
     return [isDocsPage, setIsDocsPage];
 }

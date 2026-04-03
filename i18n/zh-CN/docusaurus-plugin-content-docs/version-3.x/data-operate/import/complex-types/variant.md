@@ -2,11 +2,13 @@
 {
     "title": "Variant",
     "language": "zh-CN",
-    "description": "VARIANT 类型可以存储半结构化的 JSON 数据，允许存储包含不同数据类型（如整数、字符串、布尔值等）的复杂数据结构，而无需在表结构中预先定义具体的列。该类型特别适合处理复杂的嵌套结构，这些结构可能会随时发生变化。在写入过程中，VARIANT 类型能够自动推断列的结构和类型，"
+    "description": "Doris 3.x 中 VARIANT 列的 CSV 和 JSON 导入快速上手文档。"
 }
 ---
 
-VARIANT 类型可以存储半结构化的 JSON 数据，允许存储包含不同数据类型（如整数、字符串、布尔值等）的复杂数据结构，而无需在表结构中预先定义具体的列。该类型特别适合处理复杂的嵌套结构，这些结构可能会随时发生变化。在写入过程中，VARIANT 类型能够自动推断列的结构和类型，动态合并写入的 schema，并通过将 JSON 键及其对应的值存储为列和动态子列。更多文档请参考[VARIANT](../../../sql-manual/basic-element/sql-data-types/semi-structured/VARIANT)。
+本页用于演示如何在 Doris 3.x 中把 CSV 或 JSON 数据导入 `VARIANT`。
+
+如果你需要先判断是否应该使用 `VARIANT`、何时开启 Sparse，或何时增加 Schema Template 和路径级索引，建议先阅读 [VARIANT 使用与配置指南](../../../sql-manual/basic-element/sql-data-types/semi-structured/variant-workload-guide)。如果你需要查看语法、类型规则或索引参考，请阅读 [VARIANT](../../../sql-manual/basic-element/sql-data-types/semi-structured/VARIANT)。
 
 ## 使用限制
 

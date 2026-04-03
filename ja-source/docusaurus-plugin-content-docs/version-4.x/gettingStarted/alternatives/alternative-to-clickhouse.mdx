@@ -1,0 +1,306 @@
+---
+{
+  "title": "ClickHouseの代替",
+  "language": "ja",
+  "description": "Apache DorisはClickHouseと比較して、結合クエリが10倍高速、ストレージ・コンピュート分離により最大70%のコスト削減、およびリアルタイム更新パフォーマンスが34倍向上を提供します。"
+}
+---
+Apache DorisとClickHouseは、いずれもカラム型ストレージと高速クエリ機能を備えた主要なリアルタイム分析データベースです。Apache Dorisは、3つの重要な領域でClickHouseに対して大きな優位性を提供します：Cost-Based Optimizerを搭載した高度なMPPアーキテクチャによる**10倍高速なjoinクエリパフォーマンス**、リソースの独立スケーリングを可能にするcompute-storage separationによる**より低いインフラストラクチャコスト**、高頻度のデータ変更時にもクエリ速度を維持するMerge-on-Writeエンジンによる**優れたリアルタイム更新パフォーマンス**です。
+
+## 注目の移行事例
+
+<div style={{ display:'flex', justifyContent:'space-between' }}>
+
+    <div style={{paddingTop:'2rem', paddingBottom:'2rem',paddingLeft:'2rem',paddingRight:'2.5rem', boxSizing:'border-box', borderWidth:'0.5px', borderRadius:'0.75px', borderColor:'#e5e7eb'}}>
+
+        <div style={{ display:'flex', justifyContent:'space-between', flexDirection:'column' }}>
+            <div style={{marginBottom:'1.25rem'}}>
+                <img alt='tencent-music' loading="lazy" width="331" height="40" decoding="async" data-nimg="1" style={{color:'transparent'}} src="/images/comparisons/tencent-music.png" />
+            </div>
+            <div style={{marginBbottom:'1.25rem'}}>
+            "Tencent Musicのデータプラットフォームは、ClickHouseからApache Dorisに移行し、データの適時性を改善し、メンテナンスコストを削減しました。Dorisの柔軟な取り込み方法と堅牢な一貫性プロトコルにより、高可用性と信頼性が確保されています。"
+            </div>
+            <div style={{marginBbottom:'1.25rem'}}>
+                <p><strong>ハイライト：</strong></p>
+                <ul>
+                    <li>マルチテーブルjoinパフォーマンスの大幅な向上。</li>
+                    <li>簡単なスケーリングとメンテナンス。</li>
+                    <li>効率的なデータ処理とリアルタイム更新。</li>
+                </ul>
+            </div>
+        </div>
+
+    </div>
+
+    <div style={{paddingTop:'2rem', paddingBottom:'2rem',paddingLeft:'2rem',paddingRight:'2.5rem', boxSizing:'border-box', borderWidth:'0.5px', borderRadius:'0.75px', borderColor:'#e5e7eb'}}>
+
+        <div style={{ display:'flex', justifyContent:'space-between', flexDirection:'column' }}>
+            <div style={{marginBottom:'1.25rem'}}>
+                <img alt='tencent-music' loading="lazy" width="150" height="40" decoding="async" data-nimg="1" style={{color:'transparent'}} src="/images/comparisons/youzan.png" />
+            </div>
+            <div style={{marginBbottom:'1.25rem'}}>
+            "Apache Dorisは、大部分のシナリオ、特に複雑なjoinシナリオにおいて、ClickHouseよりも高速なクエリ応答時間を実現し、そのパフォーマンスはClickHouseを大幅に上回っています。"
+            </div>
+            <div style={{marginBbottom:'1.25rem'}}>
+                <p><strong>ハイライト：</strong></p>
+                <ul>
+                    <li>コアビジネスクエリが2-3倍。</li>
+                    <li>複雑なjoinクエリが2-10倍。</li>
+                    <li>すべてのClickHouse OOMクエリを実行可能。</li>
+                </ul>
+            </div>
+        </div>
+
+    </div>
+
+     <div style={{paddingTop:'2rem', paddingBottom:'2rem',paddingLeft:'2rem',paddingRight:'2.5rem', boxSizing:'border-box', borderWidth:'0.5px', borderRadius:'0.75px', borderColor:'#e5e7eb'}}>
+
+        <div style={{ display:'flex', justifyContent:'space-between', flexDirection:'column' }}>
+            <div style={{marginBottom:'1.25rem'}}>
+                <img alt='tencent-music' loading="lazy" width="120" height="40" decoding="async" data-nimg="1" style={{color:'transparent'}} src="/images/comparisons/kwai.png" />
+            </div>
+            <div style={{marginBbottom:'1.25rem'}}>
+            "ClickHouseをDorisに置き換えることで、Kwaiはレイクハウスアーキテクチャへのアップグレードに成功し、データパイプラインを簡素化し、Dorisがデータレイクデータに直接アクセスできるため、データインポートの必要性を排除しました。"
+            </div>
+            <div style={{marginBbottom:'1.25rem'}}>
+                <p><strong>ハイライト：</strong></p>
+                <ul>
+                    <li>データレイクデータの直接クエリ。</li>
+                    <li>クエリパフォーマンスの向上。</li>
+                    <li>materialized viewsによる柔軟なデータガバナンス。</li>
+                </ul>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+
+## Apache Doris vs. ClickHouse
+
+
+<table border="1">
+    <thead>
+        <tr>
+            <th></th>
+            <th>Apache Doris</th>
+            <th>ClickHouse</th>
+        </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td><strong>アーキテクチャ & SQL</strong></td>
+        <td>
+        <ul>
+            <li style={{fontSize:'14px'}}>MPPアーキテクチャベース</li>
+            <li style={{fontSize:'14px'}}>標準SQLサポート、MySQL互換</li>
+        </ul>
+        </td>
+        <td>
+        <ul>
+            <li style={{fontSize:'14px'}}>Scatter-Gatherアーキテクチャを使用</li>
+            <li style={{fontSize:'14px'}}>SQL的機能を持つが非標準SQL</li>
+        </ul>
+        </td>
+    </tr>
+      <tr>
+        <td><strong>Joinクエリパフォーマンス</strong></td>
+        <td>
+        <ul>
+            <li style={{fontSize:'14px'}}><strong>2-10倍高速なjoin</strong> - ノード間での真の分散join実行</li>
+            <li style={{fontSize:'14px'}}>高度なCost-Based Optimizer (CBO)が最適なjoin戦略を自動選択（broadcast、shuffle、colocate）</li>
+            <li style={{fontSize:'14px'}}>Colocate Joinは事前パーティション済みテーブルのネットワークshuffleを排除</li>
+            <li style={{fontSize:'14px'}}>Runtime Filter pushdownによりデータスキャンを最大90%削減</li>
+            <li style={{fontSize:'14px'}}>透過的なクエリ高速化 - ベーステーブルのクエリが自動的にmaterialized viewsを使用するよう書き換え</li>
+            <li style={{fontSize:'14px'}}>ClickHouseでOOMを引き起こす複雑なTPC-DSクエリを処理</li>
+        </ul>
+        </td>
+        <td>
+        <ul>
+            <li style={{fontSize:'14px'}}>限定的なjoin機能 - サブクエリと非正規化に依存</li>
+            <li style={{fontSize:'14px'}}>Cost-Based Optimizerなし；手動でのクエリチューニングが必要</li>
+            <li style={{fontSize:'14px'}}>Scatter-Gatherアーキテクチャは分散joinのために設計されていない</li>
+            <li style={{fontSize:'14px'}}>TPC-DSクエリの約50%がサポート対象外の相関サブクエリのため失敗</li>
+            <li style={{fontSize:'14px'}}>自動クエリ書き換えなし - materialized viewsを明示的にクエリする必要；ベーステーブルのクエリを高速化できない</li>
+            <li style={{fontSize:'14px'}}>大規模マルチテーブルクエリで頻繁なOOMエラー</li>
+        </ul>
+        </td>
+    </tr>
+    <tr>
+        <td><strong>リアルタイム更新</strong></td>
+        <td><ul>
+            <li style={{fontSize:'14px'}}><strong>34倍高速なクエリパフォーマンス</strong> - リアルタイム更新ワークロードでClickHouseより高速</li>
+            <li style={{fontSize:'14px'}}>delete bitmapを用いたMerge-on-Write (MoW)エンジンにより、更新頻度に関係なくクエリパフォーマンスが一定</li>
+            <li style={{fontSize:'14px'}}>強一貫性プライマリキーモデル - 更新は即座に可視化され、stale readなし</li>
+            <li style={{fontSize:'14px'}}>クエリパフォーマンス劣化なしで高スループットUPSERT操作をサポート</li>
+            <li style={{fontSize:'14px'}}>部分カラム更新により書き込み増幅を最小化</li>
+        </ul></td>
+        <td><ul>
+            <li style={{fontSize:'14px'}}>ReplacingMergeTreeは結果整合性のみサポート - バックグラウンドマージまでstaleデータが可視</li>
+            <li style={{fontSize:'14px'}}>一貫性読み込みのための<code>FINAL</code>キーワード使用により2-10倍のクエリ速度低下</li>
+            <li style={{fontSize:'14px'}}>高頻度更新により過度なマージオーバーヘッドとクエリ遅延スパイクが発生</li>
+        </ul></td>
+    </tr>
+    <tr>
+        <td><strong>トランザクションサポート</strong></td>
+        <td><ul>
+            <li style={{fontSize:'14px'}}>データ取り込みでの完全なACIDトランザクションサポート</li>
+            <li style={{fontSize:'14px'}}>アトミックバッチインポート - すべてのデータロードが成功または一括失敗</li>
+            <li style={{fontSize:'14px'}}>Two-phase commitにより分散ノード間でのデータ一貫性を保証</li>
+        </ul></td>
+        <td><ul>
+            <li style={{fontSize:'14px'}}>トランザクションサポートなし</li>
+            <li style={{fontSize:'14px'}}>失敗したインポート時に部分データが可視になる可能性</li>
+            <li style={{fontSize:'14px'}}>データ一貫性のためのアプリケーションレベルでの処理が必要</li>
+        </ul></td>
+    </tr>
+    <tr>
+        <td><strong>クエリ同時実行性</strong></td>
+        <td><ul>
+            <li style={{fontSize:'14px'}}><strong>10倍高い同時実行性</strong> - 数千の同時クエリをサポート</li>
+            <li style={{fontSize:'14px'}}>効率的なメモリ管理により高負荷下でのOOMを防止</li>
+            <li style={{fontSize:'14px'}}>ワークロード分離を備えたクエリキュー管理</li>
+        </ul></td>
+        <td><ul>
+            <li style={{fontSize:'14px'}}>限定的な同時クエリサポート（通常100未満）</li>
+            <li style={{fontSize:'14px'}}>メモリ集約的クエリによりクラスターが不安定になる</li>
+            <li style={{fontSize:'14px'}}>内蔵ワークロード管理なし</li>
+        </ul></td>
+    </tr>
+    <tr>
+        <td><strong>データAPI</strong></td>
+        <td><ul><li style={{fontSize:'14px'}}>Arrow-flightベースの高スループット読み取りAPIを提供し、データサイエンス/AIツールなど他エンジンとの統合を促進</li></ul></td>
+        <td><ul><li style={{fontSize:'14px'}}>JDBC API経由での非効率的なデータ読み取りのみ</li></ul></td>
+    </tr>
+    <tr>
+        <td><strong>オープンレイクハウス構築</strong></td>
+        <td><ul><li style={{fontSize:'14px'}}>レイクハウスのSQLエンジンとして機能し、Hive、Hudi、Iceberg、Parquetデータレイク形式のクエリをサポート</li></ul></td>
+        <td><ul><li style={{fontSize:'14px'}}>限定的なレイクハウス統合機能</li></ul></td>
+    </tr>
+    <tr>
+        <td><strong>運用 & メンテナンス</strong></td>
+        <td><ul><li style={{fontSize:'14px'}}>自動スケールイン、スケールアウト、レプリカバランシングをサポート</li></ul></td>
+        <td><ul><li style={{fontSize:'14px'}}>スケーリング操作時の手動リバランシングが必要</li></ul></td>
+    </tr>
+    <tr>
+        <td><strong>パフォーマンス</strong></td>
+        <td>
+        <ul>
+            <li style={{fontSize:'14px'}}>wide tableベンチマーク（ClickBench）において、Dorisは2022年10月と2024年10月で1位または2位にランクインし、ClickHouseを上回る結果</li>
+            <li style={{fontSize:'14px'}}>大規模TPC-HおよびTPC-DSテストでDorisが最高レベルのパフォーマンスを達成</li>
+        </ul>
+        </td>
+        <td>
+          <ul>
+            <li style={{fontSize:'14px'}}>ClickBenchパフォーマンスの点で、ClickHouseとDorisが交互に首位</li>
+            <li style={{fontSize:'14px'}}>大規模TPC-HおよびTPC-DSテストで多数のOOM（Out of Memory）クエリが発生</li>
+        </ul>
+        </td>
+    </tr>
+    <tr>
+        <td><strong>コスト効率性（Storage-Compute Separation）</strong></td>
+        <td>
+            <ul>
+                <li style={{fontSize:'14px'}}><strong>最大70%のコスト削減</strong> - computeとstorageの独立スケーリング</li>
+                <li style={{fontSize:'14px'}}>コールドデータは低コストオブジェクトストレージ（S3、HDFS、OSS）に、ホットデータはローカルSSDを使用</li>
+                <li style={{fontSize:'14px'}}>エラスティックcomputeスケーリング - データリバランシングなしでノード追加/削除</li>
+                <li style={{fontSize:'14px'}}>自動データ温度管理による多層ストレージ</li>
+                <li style={{fontSize:'14px'}}>任意時点で必要なcomputeリソースのみの料金</li>
+                <li style={{fontSize:'14px'}}>バージョン3.0以降でオープンソース機能として利用可能</li>
+            </ul>
+        </td>
+        <td>
+            <ul>
+                <li style={{fontSize:'14px'}}>storageとcomputeの密結合 - スケーリングには両方が必要</li>
+                <li style={{fontSize:'14px'}}>Storage-compute separationはプロプライエタリなClickHouse Cloudのみ</li>
+                <li style={{fontSize:'14px'}}>スケーリングには高コストなノード間データリバランシングが必要</li>
+                <li style={{fontSize:'14px'}}>ピーク負荷処理のためのcomputeオーバープロビジョニングが必要</li>
+                <li style={{fontSize:'14px'}}>変動ワークロードでの総所有コストが高い</li>
+            </ul>
+        </td>
+    </tr>
+    <tr>
+        <td><strong>オープンソース</strong></td>
+        <td>
+            <ul>
+                <li style={{fontSize:'14px'}}>Apache Software Foundation下での完全オープンソース；ライセンスとガバナンスはコミュニティ主導で、単一エンティティによって変更されることはない。</li>
+            </ul>
+        </td>
+        <td>
+            <ul>
+                <li style={{fontSize:'14px'}}>オープンソースだが、商用企業によってコントロールされている。</li>
+            </ul>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+## パフォーマンス比較
+
+### ClickBench Benchmark
+
+<div style={{ display:'flex', justifyContent:'space-between', flexDirection:'row', paddingTop:'0.5rem',paddingBottom:'0.5rem'}}>
+    <div style={{marginRight:'2rem'}}>
+        <p>ClickBenchは、ClickHouseチームによって作成・維持されている分析データベースのパフォーマンス評価ツールです。</p>
+        <p>**複雑なマルチテーブルjoinではなく、大規模で平坦なテーブルのパフォーマンス**のテストに焦点を当てています。主要なウェブ分析プラットフォームの実世界データを使用し、clickstreamの分析や構造化ログなどの典型的なシナリオをカバーします。</p>
+        <p>このベンチマークは、集約操作とシングルテーブルパフォーマンスをテストするクエリセットで構成されており、複雑なjoinは含まれません。これにより、リアルタイム分析と大規模データ処理に最適化されたデータベースの評価に特に有用です。</p>
+    </div>
+    <div>
+        <img alt="ClickBench  Benchmark" loading="lazy" width="1200" height="338" decoding="async" data-nimg="1" src="/images/comparisons/clickbench-ck.png" style={{color: 'transparent', marginTop:0}} />
+    </div>
+</div>
+
+
+### SSB-Flat SF100 Benchmark
+
+<div style={{ display:'flex', justifyContent:'space-between', flexDirection:'row', paddingTop:'0.5rem',paddingBottom:'0.5rem'}}>
+    <div style={{marginRight:'2rem'}}>
+        <p>SSB-Flat SF100は、大規模wideテーブル処理における分析データベースのパフォーマンスをテストするよう設計されたベンチマークです。</p>
+        <p>Star Schema Benchmark (SSB)から派生していますが、スタースキーマを単一のwideテーブルに平坦化し、**シングルテーブルクエリのパフォーマンス**に焦点を当てます。</p>
+        <p>SF100はデータスケールがベースサイズの100倍であることを示し、クエリパフォーマンスとシステムスケーラビリティの評価における重要なテストとなります。</p>
+    </div>
+    <div>
+        <img alt="ClickBench  Benchmark" loading="lazy" width="720" height="338" decoding="async" data-nimg="1" src="/images/comparisons/ssb-flat-sf100-benchmark-ck.png" style={{color: 'transparent', marginTop:0}} />
+    </div>
+</div>
+
+### TPC-H SF100 Benchmark
+
+
+
+<div style={{ display:'flex', justifyContent:'space-between', flexDirection:'row', paddingTop:'0.5rem',paddingBottom:'0.5rem'}}>
+    <div style={{marginRight:'2rem'}}>
+        <p>スケールファクター100 (SF100)のTPC-H benchmarkは、データベースパフォーマンス評価に広く使用されている標準です。実世界のビジネスインテリジェンスワークロードをシミュレートするよう設計された複雑なSQLクエリセットが含まれています。</p>
+        <p>SF100はデータサイズがベースサイズの100倍であることを示し、クエリパフォーマンスとシステムスケーラビリティを測定する大規模テストとなります。</p>
+        <p>**注意：ClickHouseが7つのクエリの実行に失敗したため、総実行時間はDorisが全22クエリを実行する時間、ClickHouseが15クエリのみを実行する時間を指します。**</p>
+    </div>
+    <div>
+        <img alt="ClickBench  Benchmark" loading="lazy" width="1050" height="338" decoding="async" data-nimg="1" src="/images/comparisons/tpch-sf100-ck.png" style={{color: 'transparent', marginTop:0}} />
+    </div>
+</div>
+
+### TPC-DS 1TB Benchmark
+
+
+
+<div style={{ display:'flex', justifyContent:'space-between', flexDirection:'row', paddingTop:'0.5rem',paddingBottom:'0.5rem'}}>
+    <div style={{marginRight:'2rem'}}>
+        <p>TPC-DS 1TBは、データウェアハウスと分析データベースのパフォーマンス評価に広く認知されているベンチマークです。24テーブルに分散した約63.5億レコードを含む、約1TBサイズのデータセットが関与します。</p>
+        <p>このベンチマークには、join、集約、サブクエリなど、データベースパフォーマンスの様々な側面をテストするよう設計された99の複雑なクエリが含まれています。</p>
+        <p>TPC-DSスキーマは、ウェブ、カタログ、店舗売上などの実世界シナリオを表現するスノーフレークスキーマベースです。1TBスケールはデータウェアハウスにとって中程度のサイズと考えられますが、クエリの複雑さと大量のレコード数により依然として挑戦的です</p>
+        <p>**注意：TPC-DSは相関サブクエリを多用しますが、これらは（2024年9月のテスト時点で）ClickHouseでサポートされていません。その結果、ベンチマーククエリの約50%がエラーで失敗します。**</p>
+    </div>
+    <div>
+        <img alt="ClickBench  Benchmark" loading="lazy" width="1300" height="338" decoding="async" data-nimg="1" src="/images/comparisons/tpc-ds-1tb-ck.png" style={{color: 'transparent', marginTop:0}} />
+    </div>
+</div>
+
+## その他の移行ストーリー
+
+- [Less components, higher performance: Apache Doris instead of ClickHouse, MySQL, Presto, and HBase](https://doris.apache.org/blog/less-components-higher-performance-apache-doris-instead-of-clickhouse-mysql-presto-and-hbase)
+
+
+- [Migrating from ClickHouse to Apache Doris: What happened?](https://doris.apache.org/blog/migrating-from-clickhouse-to-apache-doris-what-happened)
+
+- [ClickHouse & Kudu to Doris: 10X concurrency increased, 70% latency down](https://doris.apache.org/blog/linkedcare)

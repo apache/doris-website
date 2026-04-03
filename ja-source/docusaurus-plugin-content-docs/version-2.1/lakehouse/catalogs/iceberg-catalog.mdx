@@ -1,0 +1,2519 @@
+---
+{
+  "title": "Iceberg カタログ",
+  "language": "ja",
+  "description": "Apache DoriのIceberg カタログは、複数のIcebergメタデータサービスに接続し、HDFSとクラウドオブジェクトストレージ全体でIcebergテーブルのクエリと書き込みを行います。詳細な設定、プロパティ、クエリおよび書き込み操作を含みます。"
+}
+---
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+Dorisは様々なメタデータサービスを通じてIcebergテーブルデータへのアクセスをサポートしています。データの読み取りに加えて、DorisはIcebergテーブルへの書き込みもサポートしています。
+
+[Apache DorisとApache Icebergのクイックスタート](../best-practices/doris-iceberg.md)。
+
+:::tip
+ユーザーはHive カタログを通じてHive Metastoreをメタデータとして使用してIcebergテーブルにアクセスできます。ただし、互換性の問題を回避するため、Iceberg カタログを直接使用することを推奨します。
+:::
+
+## 適用シナリオ
+
+| シナリオ    | 説明                                                                 |
+| ----------- | --------------------------------------------------------------------------- |
+| クエリ加速 | Dorisの分散コンピューティングエンジンを使用してIcebergデータに直接アクセスし、より高速なクエリを実現します。      |
+| Data 統合  | Icebergデータを読み取ってDoris内部テーブルに書き込むか、Dorisコンピューティングエンジンを使用してZeroETL操作を実行します。 |
+| データ書き戻し   | Dorisがサポートする任意のデータソースからデータを処理し、Icebergテーブルストレージに書き戻します。       |
+
+## カタログの設定
+
+### 構文
+
+```sql
+CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
+    'type' = 'iceberg',
+    'iceberg.catalog.type' = '<iceberg_catalog_type>',
+    'warehouse' = '<warehouse>' --optional
+    {MetaStoreProperties},
+    {StorageProperties},
+    {IcebergProperties},
+    {CommonProperties}
+);
+```
+* `<iceberg_catalog_type>`
+
+  Iceberg Catalogのタイプで、以下のオプションをサポートします：
+
+  * `hms`: Hive Metastoreをメタデータサービスとして使用します。
+
+  * `rest`: Iceberg Rest Catalogインターフェースと互換性のあるメタデータサービスです。
+
+  * `hadoop`: ファイルシステムに保存されたメタデータに直接アクセスします。
+
+  * `glue`: AWS Glueをメタデータサービスとして使用します。
+
+  * `dlf`: Alibaba Cloud DLFをメタデータサービスとして使用します。
+
+  * `s3tables`: AWS S3 Tables Catalogを使用して[S3 Table Bucket](https://aws.amazon.com/s3/features/tables/)にアクセスします。
+
+* `<warehouse>`
+
+  Icebergのwarehouseパスです。このパラメータは`<iceberg_catalog_type>`が`hadoop`の場合に必須です。
+
+  `warehouse`パスは`Database`パスの1つ上のレベルを指定する必要があります。例えば、テーブルパスが`s3://bucket/path/to/db1/table1`の場合、`warehouse`は`s3://bucket/path/to/`にする必要があります。
+
+* `{MetaStoreProperties}`
+
+  MetaStorePropertiesセクションは、Metastoreメタデータサービスの接続と認証情報を入力するためのものです。[Supported Metadata Services]のセクションを参照してください。
+
+* `{StorageProperties}`
+
+  StoragePropertiesセクションは、ストレージシステムに関連する接続と認証情報を入力するためのものです。[Supported Storage Systems]のセクションを参照してください。
+
+* `{IcebergProperties}`
+
+  IcebergPropertiesセクションは、Iceberg Catalog固有のパラメータを入力するために使用されます。
+
+  - `list-all-tables`
+
+    Hive Metastoreをメタデータサービスとして使用するIceberg Catalog用です。デフォルトは`true`です。デフォルトでは、`SHOW TABLES`操作は現在のDatabaseのすべてのタイプのテーブルを一覧表示します（Hive MetastoreはIceberg以外のタイプのテーブルも格納する場合があります）。このアプローチは最高のパフォーマンスを提供します。
+    
+    `false`に設定した場合、Dorisは各テーブルのタイプを1つずつチェックし、Icebergタイプのテーブルのみを返します。このモードは多数のテーブルがある場合にパフォーマンスが低下します。
+
+* `{CommonProperties}`
+
+  CommonPropertiesセクションは、一般的なプロパティを入力するためのものです。共通プロパティの詳細については[Catalog Overview](../catalog-overview.md)を参照してください。
+
+### サポートされているIcebergバージョン
+
+| Doris Version | Iceberg SDK Version |
+| --- | --- |
+| 2.1 | 1.6.1 |
+| 3.0 | 1.6.1 |
+| 3.1 | 1.9.1 |
+| 4.0 | 1.9.1 |
+
+### サポートされているIcebergフォーマット
+
+* Iceberg V1/V2フォーマットをサポートします。
+* Position DeleteとEquality Deleteの読み取りをサポートします。
+* Deletion Vectorの読み取りをサポートします（4.1.0以降）。
+
+### サポートされているメタデータサービス
+
+* [Hive Metastore](../metastores/hive-metastore.md)
+* [AWS Glue](../metastores/aws-glue.md)
+* [Aliyun DLF](../metastores/aliyun-dlf.md)
+* [Iceberg Rest Catalog](../metastores/iceberg-rest.md)
+* [FileSystem](../metastores/filesystem.md)
+
+> 注意：異なるDorisバージョンでサポートされるサービスタイプとパラメータは若干異なります。[Examples]セクションを参照してください。
+
+### Iceberg Catalog機能サポートマトリクス
+
+| Metadata Service       | Table Query | View Query | DDL Operations                | Data Writeback                | System Tables (3.1以降でサポート) |
+| ---------------------- | ----------- | ---------- | ----------------------------- | ----------------------------- | ------------------------------------ |
+| Hive MetaStore         | ✅          | ✅         | ✅                            | ✅                            | ✅                                   |
+| AWS Glue               | ✅          | ✅         | ❌                            | ❌                            | ✅                                   |
+| Aliyun DLF             | ✅          | ✅         | ❌                            | ❌                            | ❌                                   |
+| Iceberg Rest Catalog   | ✅          | ✅         | サービスプロバイダーに依存 | サービスプロバイダーに依存 | サービスプロバイダーに依存      |
+| FileSystem             | ✅          | ✅         | ✅                            | ✅                            | ✅                                   |
+
+### サポートされているストレージシステム
+
+* [HDFS](../storages/hdfs.md)
+* [AWS S3](../storages/s3.md)
+* [Google Cloud Storage](../storages/gcs.md)
+* [Azure Blob](../storages/azure-blob.md)
+* [Aliyun OSS](../storages/aliyun-oss.md)
+* [Tencent COS](../storages/tencent-cos.md)
+* [Huawei OBS](../storages/huawei-obs.md)
+* [MINIO](../storages/minio.md)
+
+> 注意：異なるDorisバージョンでサポートされるサービスタイプとパラメータは若干異なります。[Examples]セクションを参照してください。
+
+### サポートされているデータフォーマット
+
+* [Parquet](../file-formats/parquet.md)
+* [ORC](../file-formats/orc.md)
+
+## カラムタイプマッピング
+
+| Iceberg Type                           | Doris Type           | Comment                                 |
+| -------------------------------------- | -------------------- | --------------------------------------- |
+| boolean                                | boolean              |                                         |
+| integer                                | int                  |                                         |
+| long                                   | bigint               |                                         |
+| float                                  | float                |                                         |
+| double                                 | double               |                                         |
+| decimal(P, S)                          | decimal(P, S)        |                                         |
+| date                                   | date                 |                                         |
+| timestamp (Timestamp without timezone) | datetime(6)          | 精度6のdatetimeにマッピング     |
+| timestamptz (Timestamp with timezone)  | datetime(6)          | 精度6のdatetimeにマッピング     |
+| fixed(N)                               | char(N)              |                                         |
+| string                                 | string               |                                         |
+| binary                                 | string/varbinary     | Catalogの`enable.mapping.varbinary`プロパティによって制御されます（4.0.2以降でサポート）。デフォルトは`false`で`string`にマッピングされ、`true`の場合は`varbinary`タイプにマッピングされます。|
+| uuid                                   | string/varbinary     | バージョン < 4.0.2では`string`タイプにマッピング、バージョン == 4.0.2では`varbinary`タイプにマッピング。バージョン > 4.0.2では、propertiesの`enable.mapping.varbinary`プロパティによって制御されます。デフォルトは`false`で`string`にマッピングされます。|
+| struct                                 | struct (バージョン2.1.3以降でサポート) |                                         |
+| map                                    | map (バージョン2.1.3以降でサポート)    |                                         |
+| list                                   | array                |                                         |
+| other                                  | UNSUPPORTED          |                                         |
+
+> 注意：
+>
+> Dorisは現在、タイムゾーン付きの`Timestamp`タイプをサポートしていません。すべての`timestamp`と`timestamptz`は一律に`datetime(N)`タイプにマッピングされます。ただし、読み取りと書き込み時に、Dorisは実際のソースタイプに基づいてタイムゾーンを正しく処理します。例えば、`SET time_zone=<tz>`でタイムゾーンを指定した後、`timestamptz`カラムの読み取りと書き込みの結果に影響します。
+>
+> `DESCRIBE table_name`文のExtraカラムで、ソースタイプにタイムゾーン情報があるかどうかを確認できます。`WITH_TIMEZONE`と表示されている場合、ソースタイプがタイムゾーン対応タイプであることを示します。（3.1.0以降でサポート）。
+
+## Namespaceマッピング
+
+Icebergのメタデータ階層はCatalog -> Namespace -> Tableです。Namespaceは複数レベル（Nested Namespace）を持つことができます。
+
+```
+      ┌─────────┐             
+      │ Catalog │             
+      └────┬────┘             
+           │                  
+     ┌─────┴─────┐            
+  ┌──▼──┐     ┌──▼──┐         
+  │ NS1 │     │ NS2 │         
+  └──┬──┘     └──┬──┘         
+     │           │            
+┌────▼───┐    ┌──▼──┐         
+│ Table1 │    │ NS3 │         
+└────────┘    └──┬──┘         
+                 │            
+          ┌──────┴───────┐    
+     ┌────▼───┐     ┌────▼───┐
+     │ Table2 │     │ Table3 │
+     └────────┘     └────────┘
+```
+バージョン 3.1.2 から、Iceberg Rest Catalog において、Doris は Nested Namespace のマッピングをサポートしています。
+
+上記の例では、テーブルは以下のロジックに従って Doris メタデータにマッピングされます：
+
+| Catalog | Database | Table |
+| --- | --- | --- |
+| Catalog | NS1 | Table1 |
+| Catalog | NS2.NS3 | Table2 |
+| Catalog | NS2.NS3 | Table3 |
+
+Nested Namespace のサポートは明示的に有効にする必要があります。詳細については、[Iceberg Rest Catalog](../metastores/iceberg-rest.md) を参照してください。
+
+## 例
+
+### Hive Metastore
+<details>
+    <summary>3.1+ Version</summary>
+    <Tabs>
+        <TabItem value='HDFS' label='HDFS' default>
+            Kerberos 認証なしで HMS と HDFS サービスにアクセス
+
+            ```sql
+            CREATE CATALOG iceberg_hms_on_hdfs_catalog PROPERTIES (
+                'type' = 'iceberg',
+                'iceberg.catalog.type' = 'hms',
+                'warehouse' = 'hdfs://127.0.0.1:8320/user/iceberg/warehouse/iceberg-hms-hdfs-warehouse',
+                'hive.metastore.uris' = 'thrift://127.0.0.1:9383',
+                'fs.defaultFS' = 'hdfs://127.0.0.1:8320',
+                'hadoop.username' = 'doris'
+            );
+            ```
+Kerberos認証が有効化されたHMSおよびHDFSサービスへのアクセス
+
+            ```sql
+            CREATE CATALOG iceberg_hms_on_hdfs_kerberos_hdfs_catalog PROPERTIES (
+                'type' = 'iceberg',
+                'iceberg.catalog.type' = 'hms',
+                'warehouse' = 'hdfs://127.0.0.1:8520/iceberg-hms-hdfs-warehouse',
+                'hive.metastore.uris' = 'thrift://127.0.0.1:9583',
+                'hive.metastore.client.principal' = 'hive/presto-master.docker.cluster@LABS.TERADATA.COM',
+                'hive.metastore.client.keytab' = '/keytabs/hive-presto-master.keytab',
+                'hive.metastore.service.principal' = 'hive/hadoop-master@LABS.TERADATA.COM',
+                'hive.metastore.sasl.enabled ' = 'true',
+                'hive.metastore.authentication.type' = 'kerberos',
+                'hadoop.security.auth_to_local' = 'RULE:[2:\$1@\$0](.*@LABS.TERADATA.COM)s/@.*//
+                RULE:[2:\$1@\$0](.*@OTHERLABS.TERADATA.COM)s/@.*//
+                RULE:[2:\$1@\$0](.*@OTHERREALM.COM)s/@.*//
+                DEFAULT',
+                'fs.defaultFS' = 'hdfs://127.0.0.1:8520',
+                'hadoop.security.authentication' = 'kerberos',
+                'hadoop.kerberos.principal'='hive/presto-master.docker.cluster@LABS.TERADATA.COM',
+                'hadoop.kerberos.keytab' = '/keytabs/hive-presto-master.keytab'
+            );
+            ```
+</TabItem>
+        <TabItem value='S3' label='S3'>
+            Kerberos認証なしでHMSにアクセス
+
+            ```sql
+            CREATE CATALOG iceberg_hms_on_s3_catalog PROPERTIES (
+                'type' = 'iceberg',
+                'iceberg.catalog.type' = 'hms',
+                'hive.metastore.uris' = 'thrift://127.0.0.1:9383',
+                'warehouse' = 's3://selectdb-qa-datalake-test-hk/refactor-test/iceberg-hms-s3-warehouse',
+                's3.region' = 'ap-east-1',
+                's3.access_key' = '<ak>',
+                's3.secret_key' = '<sk>'
+            );
+            ```
+IAM Assumed Roleを使用したS3アクセス認証情報の取得（3.1.2+）
+
+            ```sql
+            CREATE CATALOG iceberg_hms_on_s3_iamrole PROPERTIES (
+                'type' = 'iceberg',
+                'iceberg.catalog.type' = 'hms',
+                'hive.metastore.uris' = 'thrift://127.0.0.1:9383',
+                'warehouse' = 's3://bucket/warehouse',
+                's3.region' = 'us-east-1',
+                's3.role_arn' = 'arn:aws:iam::543815668950:role/role'
+            );
+            ```
+</TabItem>
+        <TabItem value='OSS' label='OSS'>
+            Kerberos認証なしでHMSにアクセス
+
+            ```sql
+            CREATE CATALOG iceberg_hms_on_oss_catalog PROPERTIES (
+                'type' = 'iceberg',
+                'iceberg.catalog.type' = 'hms',
+                'warehouse' = 'oss://bucket/iceberg/iceberg-hms-warehouse',
+                'hive.metastore.uris' = 'thrift://127.0.0.1:9083',
+                'oss.region' = 'cn-beijing',
+                'oss.endpoint' = 'oss-cn-beijing.aliyuncs.com',
+                'oss.access_key' = '<ak>',
+                'oss.secret_key' = '<sk>'
+            );
+            ```
+Kerberos認証が有効化されたHMSへのアクセス
+
+            ```sql
+            CREATE CATALOG iceberg_hms_on_oss_kerberos_new_catalog PROPERTIES (
+                'type' = 'iceberg',
+                'iceberg.catalog.type' = 'hms',
+                'warehouse' = 'oss://bucket/iceberg/iceberg-hms-warehouse',
+                'hive.metastore.uris' = 'thrift://127.0.0.1:9583',
+                'hive.metastore.client.principal' = 'presto-server/presto-master.docker.cluster@LABS.TERADATA.COM',
+                'hive.metastore.client.keytab' = '/keytabs/presto-server.keytab',
+                'hive.metastore.authentication.type' = 'kerberos',
+                'hive.metastore.service.principal' = 'hive/hadoop-master@LABS.TERADATA.COM',
+                'hive.metastore.sasl.enabled ' = 'true',
+                'hadoop.security.auth_to_local' = 'RULE:[2:\$1@\$0](.*@LABS.TERADATA.COM)s/@.*//
+                RULE:[2:\$1@\$0](.*@OTHERLABS.TERADATA.COM)s/@.*//
+                RULE:[2:\$1@\$0](.*@OTHERREALM.COM)s/@.*//
+                DEFAULT',
+                'oss.region' = 'cn-beijing',
+                'oss.endpoint' = 'oss-cn-beijing.aliyuncs.com',
+                'oss.access_key' = '<ak>',
+                'oss.secret_key' = '<sk>'
+            );
+            ```
+</TabItem>
+        <TabItem value='COS' label='COS'>
+            Kerberos認証なしでHMSにアクセス
+
+            ```sql
+            CREATE CATALOG `iceberg_hms_on_cos_catalog` PROPERTIES (
+                'type' = 'iceberg',
+                'iceberg.catalog.type' = 'hms',
+                'warehouse' = 'cos://bucket/iceberg-hms-cos-warehouse',
+                'hive.metastore.uris' = 'thrift://127.0.0.1:9383',
+                'cos.region' = 'ap-beijing',
+                'cos.endpoint' = 'cos.ap-beijing.myqcloud.com',
+                'cos.secret_key' = '<sk>',
+                'cos.access_key' = '<ak>'
+            );
+            ```
+Kerberos認証が有効になっているHMSへのアクセス
+
+            ```sql
+            CREATE CATALOG `iceberg_hms_on_cos_kerberos_new_catalog` PROPERTIES (
+                'type' = 'iceberg',
+                'iceberg.catalog.type' = 'hms',
+                'warehouse' = 'cos://bucket/iceberg-hms-cos-warehouse',
+                'hive.metastore.uris' = 'thrift://127.0.0.1:9583',
+                'hive.metastore.service.principal' = 'hive/hadoop-master@LABS.TERADATA.COM',
+                'hive.metastore.sasl.enabled' = 'true',
+                'hive.metastore.client.principal' = 'hive/presto-master.docker.cluster@LABS.TERADATA.COM',
+                'hive.metastore.client.keytab' = '/keytabs/keytabs/hive-presto-master.keytab',
+                'hadoop.security.auth_to_local' = 'RULE:[2:$1@$0](.*@LABS.TERADATA.COM)s/@.*//
+                RULE:[2:$1@$0](.*@OTHERLABS.TERADATA.COM)s/@.*//
+                RULE:[2:$1@$0](.*@OTHERREALM.COM)s/@.*//
+                DEFAULT',
+                'cos.region' = 'ap-beijing',
+                'cos.endpoint' = 'cos.ap-beijing.myqcloud.com',
+                'cos.secret_key' = '<sk>',
+                'cos.access_key' = '<ak>'
+            );
+            ```
+</TabItem>
+        <TabItem value='OBS' label='OBS'>
+            Kerberos認証なしでHMSにアクセス
+
+            ```sql
+            CREATE CATALOG test_iceberg_on_hms_obs_catalog PROPERTIES (
+                'type' = 'iceberg',
+                'iceberg.catalog.type' = 'hms',
+                'warehouse' = 'obs://bucket/regression/iceberg',
+                'hive.metastore.uris' = 'thrift://127.0.0.1:9383',
+                'obs.region' = 'cn-north-4',
+                'obs.endpoint' = 'obs.cn-north-4.myhuaweicloud.com',
+                'obs.access_key' = '<ak>',
+                'obs.secret_key' = '<sk>'
+            );
+            ```
+Kerberos認証が有効化されたHMSへのアクセス
+
+            ```sql
+            CREATE CATALOG obs PROPERTIES (
+                'type' = 'iceberg',
+                'iceberg.catalog.type' = 'hms',
+                'warehouse' = 'obs://bucket/regression/iceberg1',
+                'hive.metastore.uris' = 'thrift://127.0.0.1:9583',
+                'hive.metastore.service.principal' = 'hive/hadoop-master@LABS.TERADATA.COM',
+                'hive.metastore.sasl.enabled' = 'true',
+                'hive.metastore.client.principal' = 'hive/presto-master.docker.cluster@LABS.TERADATA.COM',
+                'hive.metastore.client.keytab' = '/keytabs/hive-presto-master.keytab',
+                'hive.metastore.authentication.type' = 'kerberos',
+                'hadoop.security.auth_to_local' = 'RULE:[2:\$1@\$0](.*@LABS.TERADATA.COM)s/@.*//
+                RULE:[2:\$1@\$0](.*@OTHERLABS.TERADATA.COM)s/@.*//
+                RULE:[2:\$1@\$0](.*@OTHERREALM.COM)s/@.*//
+                DEFAULT',
+                'obs.region' = 'cn-north-4',
+                'obs.endpoint' = 'obs.cn-north-4.myhuaweicloud.com',
+                'obs.access_key' = '<ak>',
+                'obs.secret_key' = '<sk>'
+            );
+            ```
+</TabItem>
+        <TabItem value='GCS' label='GCS'>
+
+            ```sql
+            CREATE CATALOG `iceberg_hms_on_gcs_kerberos_new_catalog` PROPERTIES (
+                'type' = 'iceberg',
+                'iceberg.catalog.type' = 'hms',
+                'hive.metastore.uris' = 'thrift://127.0.0.1:9383',
+                'warehouse' = 'gs://bucket/iceberg_warehouse',
+                'gs.access_key' = '<ak>',
+                'gs.secret_key' = '<sk>',
+                'fs.gcs.support'='true'
+            );
+            ```
+</TabItem>
+        <TabItem value='Azure Blob' label='Azure Blob '>
+            3.1.3以降でサポート
+
+            ```sql
+            CREATE CATALOG iceberg_fs_on_azure_blob_catalog PROPERTIES (
+                'type' = 'iceberg',
+                'iceberg.catalog.type' = 'hadoop',
+                'warehouse' = 'abfs://<container>@<account_name>.dfs.core.windows.net/iceberg-warehouse',
+                'azure.account_name' = '<account_name>',
+                'azure.account_key' = '<account_key>',
+                'azure.endpoint' = 'https://<account_name>.blob.core.windows.net',
+                'fs.azure.support'='true'
+            );
+            ```
+</TabItem>
+        <TabItem value='MinIO' label='MinIO'>
+
+            ```sql
+            CREATE CATALOG test_iceberg_on_hms_minio_catalog PROPERTIES (
+                'type' = 'iceberg',
+                'iceberg.catalog.type' = 'hms',
+                'warehouse' = 's3://warehouse/wh',
+                'hive.metastore.uris' = 'thrift://127.0.0.1:9383',
+                'fs.minio.support' = 'true',
+                'minio.use_path_style' = 'true',
+                'minio.endpoint' = 'http://127.0.0.1:19001',
+                'minio.access_key' = '<ak>',
+                'minio.secret_key' = '<sk>'
+            );
+            ```
+</TabItem>
+    </Tabs>
+</details>
+
+<details >
+    <summary>2.1 & 3.0 バージョン</summary>
+    <Tabs>
+        <TabItem value='HDFS' label='HDFS' default>
+            Kerberos認証なしでHMSとHDFSサービスにアクセス
+
+            ```sql
+            CREATE CATALOG iceberg_hms_on_hdfs_catalog PROPERTIES (
+                'type' = 'iceberg',
+                'iceberg.catalog.type' = 'hms',
+                'hive.metastore.uris' = 'thrift://127.0.0.1:9383',
+                'warehouse' = 'hdfs://127.0.0.1:8320/user/iceberg/warehouse/iceberg-hms-hdfs-warehouse',
+                'hadoop.username' = 'doris',
+                'fs.defaultFS' = 'hdfs://127.0.0.1:8320'
+            );
+            ```
+Kerberos認証が有効化されたHMSおよびHDFSサービスへのアクセス
+
+            ```sql
+            CREATE CATALOG iceberg_hms_on_hdfs_kerberos_hdfs_catalog PROPERTIES (
+                'type' = 'iceberg',
+                'iceberg.catalog.type' = 'hms',
+                'warehouse' = 'hdfs://127.0.0.1:8520/iceberg-hms-hdfs-warehouse',
+                'hive.metastore.uris' = 'thrift://127.0.0.1:9583',
+                'hive.metastore.kerberos.principal' = 'hive/hadoop-master@LABS.TERADATA.COM',
+                'hive.metastore.sasl.enabled ' = 'true',
+                'hive.metastore.authentication.type' = 'kerberos',
+                'hadoop.security.auth_to_local' = 'RULE:[2:\$1@\$0](.*@LABS.TERADATA.COM)s/@.*//
+                RULE:[2:\$1@\$0](.*@OTHERLABS.TERADATA.COM)s/@.*//
+                RULE:[2:\$1@\$0](.*@OTHERREALM.COM)s/@.*//
+                DEFAULT',
+                'fs.defaultFS' = 'hdfs://127.0.0.1:8520',
+                'hadoop.security.authentication' = 'kerberos',
+                'hadoop.kerberos.principal'='hive/presto-master.docker.cluster@LABS.TERADATA.COM',
+                'hadoop.kerberos.keytab' = '/keytabs/hive-presto-master.keytab'
+            );
+            ```
+</TabItem>
+        <TabItem value='S3' label='S3'>
+
+            ```sql
+            CREATE CATALOG iceberg_hms_on_s3_catalog PROPERTIES (
+                'type' = 'iceberg',
+                'iceberg.catalog.type' = 'hms',
+                'hive.metastore.uris' = 'thrift://127.0.0.1:9383',
+                'warehouse' = 's3://selectdb-qa-datalake-test-hk/refactor-test/iceberg-hms-s3-warehouse',
+                's3.region' = 'ap-east-1',
+                's3.access_key' = '<ak>',
+                's3.secret_key' = '<sk>'
+            );
+            ```
+</TabItem>
+        <TabItem value='OSS' label='OSS'>
+
+            ```sql
+            CREATE CATALOG iceberg_hms_on_oss_catalog PROPERTIES (
+                'type' = 'iceberg',
+                'iceberg.catalog.type' = 'hms',
+                'hive.metastore.uris' = 'thrift://127.0.0.1:9083',
+                'warehouse' = 'oss://bucket/iceberg/iceberg-hms-warehouse',
+                'oss.region' = 'cn-beijing',
+                'oss.endpoint' = 'oss-cn-beijing.aliyuncs.com',
+                'oss.access_key' = '<ak>',
+                'oss.secret_key' = '<sk>'
+            );
+            ```
+</TabItem>
+        <TabItem value='COS' label='COS'>
+
+            ```sql
+            CREATE CATALOG `iceberg_hms_on_cos_catalog` PROPERTIES (
+                'type' = 'iceberg',
+                'iceberg.catalog.type' = 'hms',
+                'warehouse' = 'cos://bucket/iceberg-hms-cos-warehouse',
+                'hive.metastore.uris' = 'thrift://127.0.0.1:9383',
+                'cos.region' = 'ap-beijing',
+                'cos.endpoint' = 'cos.ap-beijing.myqcloud.com',
+                'cos.secret_key' = '<sk>',
+                'cos.access_key' = '<ak>'
+            );
+            ```
+</TabItem>
+        <TabItem value='OBS' label='OBS'>
+
+            ```sql
+            CREATE CATALOG test_iceberg_on_hms_obs_catalog PROPERTIES (
+                'type' = 'iceberg',
+                'iceberg.catalog.type' = 'hms',
+                'hive.metastore.uris' = 'thrift://127.0.0.1:9383',
+                'warehouse' = 'obs://bucket/regression/iceberg',
+                'obs.region' = 'cn-north-4',
+                'obs.endpoint' = 'obs.cn-north-4.myhuaweicloud.com',
+                'obs.access_key' = '<ak>',
+                'obs.secret_key' = '<sk>'
+            );
+            ```
+</TabItem>
+        <TabItem value='MinIO' label='MinIO'>
+
+            ```sql
+            CREATE CATALOG test_iceberg_on_hms_minio_catalog PROPERTIES (
+            'type' = 'iceberg',
+            'iceberg.catalog.type' = 'hms',
+            'warehouse' = 's3://warehouse/iceberg',
+            'hive.metastore.uris' = 'thrift://127.0.0.1:9383',
+            's3.endpoint' = 'http://127.0.0.1:19001',
+            's3.access_key' = '<ak>',
+            's3.secret_key' = '<sk>'
+                );
+                ```
+</TabItem>
+    </Tabs>
+</details>
+
+
+### AWS Glue
+<details>
+    <summary>3.1+ Version</summary>
+    <Tabs>
+        <TabItem value='S3' label='S3' default>
+            AWS GlueとS3ストレージサービスは同じ認証資格情報を共有します。
+
+            ```sql
+            CREATE CATALOG `iceberg_glue_on_s3_catalog_` PROPERTIES (
+                'type' = 'iceberg',
+                'iceberg.catalog.type' = 'glue',
+                'warehouse' = 's3://bucket/iceberg-glue-s3-warehouse',
+                'glue.region' = 'ap-northeast-1',
+                'glue.endpoint' = 'https://glue.ap-northeast-1.amazonaws.com',
+                'glue.access_key' = '<ak>',
+                'glue.secret_key' = '<sk>'
+            );
+            ```
+Glueサービスの認証資格情報とS3の認証資格情報が異なる場合、以下の方法を使用してS3の認証資格情報を個別に指定できます。
+
+            ```sql
+            CREATE CATALOG `iceberg_glue_on_s3_catalog_` PROPERTIES (
+                'type' = 'iceberg',
+                'iceberg.catalog.type' = 'glue',
+                'warehouse' = 's3://selectdb-qa-datalake-test/iceberg-glue-s3-warehouse',
+                'glue.region' = 'ap-northeast-1',
+                'glue.endpoint' = 'https://glue.ap-northeast-1.amazonaws.com',
+                'glue.access_key' = '<ak>',
+                'glue.secret_key' = '<sk>',
+                's3.endpoint' = 's3.ap-northeast-1.amazonaws.com',
+                's3.region' = 'ap-northeast-1',
+                's3.access_key' = '<ak>',
+                's3.secret_key' = '<sk>'
+            );
+            ```
+IAM Assumed Roleを使用してS3アクセス認証情報を取得する（3.1.2以降）
+
+            ```sql
+            CREATE CATALOG `glue_iceberg_iamrole` PROPERTIES (
+                'type' = 'iceberg',
+                'iceberg.catalog.type' = 'glue',
+                'warehouse' = 's3://bucket/warehouse',
+                'glue.region' = 'us-east-1',                    
+                'glue.endpoint' = 'https://glue.us-east-1.amazonaws.com',
+                'glue.role_arn' = '<role_arn>'                
+            );
+            ```
+</TabItem>
+    </Tabs>
+</details>
+<details >
+    <summary>2.1 & 3.0 バージョン</summary>
+    <Tabs>
+        <TabItem value='S3' label='S3' default>
+            AWS GlueとS3ストレージサービスは同じ認証資格情報を共有します。
+
+            非EC2環境では、[aws configure](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-files.html)を使用してCredentials情報を設定し、~/.awsディレクトリにcredentialsファイルを生成する必要があります。
+
+            ```sql
+            CREATE CATALOG glue PROPERTIES (
+                'type'='iceberg',
+                'iceberg.catalog.type' = 'glue',
+                'glue.endpoint' = 'https://glue.us-east-1.amazonaws.com',
+                'glue.access_key' = '<ak>',
+                'glue.secret_key' = '<sk>'
+            );
+            ```
+</TabItem>
+
+    </Tabs>
+</details>
+
+### Aliyun DLF
+<details>
+    <summary>3.1+ バージョン</summary>
+    <Tabs>
+        <TabItem value='DLF 1.0' label='DLF 1.0' default>
+
+            ```sql
+            CREATE CATALOG iceberg_dlf_catalog_catalog PROPERTIES (
+                'type' = 'iceberg',
+                'iceberg.catalog.type'='dlf',
+                'warehouse' = 'oss://bucket/iceberg-dlf-oss-warehouse',
+                'dlf.uid' = '203225413946383283',
+                'dlf.catalog_id' = 'p2_regression_case',
+                'dlf.region' = 'cn-beijing',
+                'dlf.endpoint' = 'datalake.cn-beijing.aliyuncs.com',
+                'dlf.access_key' = '<ak>',
+                'dlf.secret_key' = '<sk>'
+            );
+            ```
+</TabItem>
+    </Tabs>
+</details>
+<details >
+    <summary>2.1 & 3.0 バージョン</summary>
+    <Tabs>
+        <TabItem value='DLF 1.0' label='DLF 1.0' default>
+
+            ```sql
+            CREATE CATALOG iceberg_dlf_catalog_catalog PROPERTIES (
+                'type' = 'iceberg',
+                'iceberg.catalog.type'='dlf',
+                'warehouse' = 'oss://bucket/iceberg-dlf-oss-warehouse',
+                'dlf.uid' = '203225413946383283',
+                'dlf.catalog.id' = 'catalog_id',
+                'dlf.region' = 'cn-beijing',
+                'dlf.access_key' = '<ak>',
+                'dlf.secret_key' = '<sk>'
+            );
+            ```
+</TabItem>
+    </Tabs>
+</details>
+
+
+### Iceberg Rest Catalog
+<details>
+    <summary>3.1+ バージョン</summary>
+
+    <Tabs>
+        <TabItem value='s3' label='S3' default>
+            <Tabs>
+                <TabItem value='s3-noauth' label='認証なし' default>
+
+                    ```sql
+                    CREATE CATALOG iceberg_static_s3 PROPERTIES (
+                        'type' = 'iceberg',
+                        'warehouse' = 's3://warehouse',
+                        'iceberg.catalog.type' = 'rest',
+                        'iceberg.rest.uri' = 'http://127.0.0.1:8181',
+                        's3.endpoint' = 'https://s3.ap-east-1.amazonaws.com',
+                        's3.access_key' = '<ak>',
+                        's3.secret_key' = '<sk>',
+                        's3.region' = 'ap-east-1'
+                    );
+                    ```
+</TabItem>
+                <TabItem value='s3-oauth2' label='OAuth2認証'>
+
+                    ```sql
+                    CREATE CATALOG polaris_oauth2_credential_static_s3 PROPERTIES (
+                        'type' = 'iceberg',
+                        'warehouse' = 'doris_test',
+                        'iceberg.catalog.type' = 'rest',
+                        'iceberg.rest.uri' = 'http://127.0.0.1:8181/api/catalog',
+                        'iceberg.rest.security.type' = 'oauth2',
+                        'iceberg.rest.oauth2.credential' = 'root:secret123',
+                        'iceberg.rest.oauth2.server-uri' = 'http://127.0.0.1:8181/api/catalog/v1/oauth/tokens',
+                        'iceberg.rest.oauth2.scope' = 'PRINCIPAL_ROLE:ALL',
+                        's3.endpoint' = 'https://s3.us-west-2.amazonaws.com',
+                        's3.access_key' = '<ak>',
+                        's3.secret_key' = '<sk>',
+                        's3.region' = 'us-west-2'
+                    );
+                    ```
+</TabItem>
+                <TabItem value='s3-vended' label='提供された認証情報'>
+
+                    ```sql
+                    CREATE CATALOG gravitino_vended_s3 PROPERTIES (
+                        'type' = 'iceberg',
+                        'warehouse' = 'warehouse',
+                        'iceberg.catalog.type' = 'rest',
+                        'iceberg.rest.uri' = 'http://127.0.0.1:9001/iceberg/',
+                        'iceberg.rest.vended-credentials-enabled' = 'true'
+                    );
+                    ```
+</TabItem>
+            </Tabs>
+        </TabItem>
+
+        <TabItem value='oss' label='OSS'>
+            <Tabs>
+                <TabItem value='oss-noauth' label='認証なし' default>
+
+                    ```sql
+                    CREATE CATALOG iceberg_static_oss PROPERTIES (
+                        'type' = 'iceberg',
+                        'warehouse' = 's3://warehouse',
+                        'iceberg.catalog.type' = 'rest',
+                        'iceberg.rest.uri' = 'http://127.0.0.1:8181',
+                        'oss.endpoint' = 'https://oss-cn-beijing.aliyuncs.com',
+                        'oss.access_key' = '<ak>',
+                        'oss.secret_key' = '<sk>',
+                        'oss.region' = 'cn-beijing'
+                    );
+                    ```
+</TabItem>
+                <TabItem value='oss-oauth2' label='OAuth2認証'>
+
+                    ```sql
+                    CREATE CATALOG polaris_oauth2_credential_static_oss PROPERTIES (
+                        'type' = 'iceberg',
+                        'warehouse' = 'doris_test',
+                        'iceberg.catalog.type' = 'rest',
+                        'iceberg.rest.uri' = 'http://127.0.0.1:8181/api/catalog',
+                        'iceberg.rest.security.type' = 'oauth2',
+                        'iceberg.rest.oauth2.credential' = 'root:secret123',
+                        'iceberg.rest.oauth2.server-uri' = 'http://127.0.0.1:8181/api/catalog/v1/oauth/tokens',
+                        'iceberg.rest.oauth2.scope' = 'PRINCIPAL_ROLE:ALL',
+                        'oss.endpoint' = 'https://oss-cn-beijing.aliyuncs.com',
+                        'oss.access_key' = '<ak>',
+                        'oss.secret_key' = '<sk>',
+                        'oss.region' = 'cn-beijing'
+                    );
+                    ```
+</TabItem>
+            </Tabs>
+        </TabItem>
+
+        <TabItem value='cos' label='COS'>
+            <Tabs>
+                <TabItem value='cos-noauth' label='認証なし' default>
+
+                    ```sql
+                    CREATE CATALOG iceberg_static_cos PROPERTIES (
+                        'type' = 'iceberg',
+                        'warehouse' = 's3://warehouse',
+                        'iceberg.catalog.type' = 'rest',
+                        'iceberg.rest.uri' = 'http://127.0.0.1:8181',
+                        'cos.endpoint' = 'https://cos.ap-beijing.myqcloud.com',
+                        'cos.access_key' = '<ak>',
+                        'cos.secret_key' = '<sk>',
+                        'cos.region' = 'ap-beijing'
+                    );
+                    ```
+</TabItem>
+                <TabItem value='cos-oauth2' label='OAuth2認証'>
+
+                    ```sql
+                    CREATE CATALOG polaris_oauth2_credential_static_cos PROPERTIES (
+                        'type' = 'iceberg',
+                        'warehouse' = 'doris_test',
+                        'iceberg.catalog.type' = 'rest',
+                        'iceberg.rest.uri' = 'http://127.0.0.1:8181/api/catalog',
+                        'iceberg.rest.security.type' = 'oauth2',
+                        'iceberg.rest.oauth2.credential' = 'root:secret123',
+                        'iceberg.rest.oauth2.server-uri' = 'http://127.0.0.1:8181/api/catalog/v1/oauth/tokens',
+                        'iceberg.rest.oauth2.scope' = 'PRINCIPAL_ROLE:ALL',
+                        'cos.endpoint' = 'https://cos.ap-beijing.myqcloud.com',
+                        'cos.access_key' = '<ak>',
+                        'cos.secret_key' = '<sk>',
+                        'cos.region' = 'ap-beijing'
+                    );
+                    ```
+</TabItem>
+            </Tabs>
+        </TabItem>
+
+        <TabItem value='obs' label='OBS'>
+            <Tabs>
+                <TabItem value='obs-noauth' label='認証なし' default>
+
+                    ```sql
+                    CREATE CATALOG iceberg_static_obs PROPERTIES (
+                        'type' = 'iceberg',
+                        'warehouse' = 's3://warehouse',
+                        'iceberg.catalog.type' = 'rest',
+                        'iceberg.rest.uri' = 'http://127.0.0.1:8181',
+                        'obs.endpoint' = 'obs.cn-north-4.myhuaweicloud.com',
+                        'obs.access_key' = '<ak>',
+                        'obs.secret_key' = '<sk>',
+                        'obs.region' = 'cn-north-4'
+                    );
+                    ```
+</TabItem>
+                <TabItem value='obs-oauth2' label='OAuth2認証'>
+
+                    ```sql
+                    CREATE CATALOG polaris_oauth2_credential_static_obs PROPERTIES (
+                        'type' = 'iceberg',
+                        'warehouse' = 'doris_test',
+                        'iceberg.catalog.type' = 'rest',
+                        'iceberg.rest.uri' = 'http://127.0.0.1:8181/api/catalog',
+                        'iceberg.rest.security.type' = 'oauth2',
+                        'iceberg.rest.oauth2.credential' = 'root:secret123',
+                        'iceberg.rest.oauth2.server-uri' = 'http://127.0.0.1:8181/api/catalog/v1/oauth/tokens',
+                        'iceberg.rest.oauth2.scope' = 'PRINCIPAL_ROLE:ALL',
+                        'obs.endpoint' = 'obs.cn-north-4.myhuaweicloud.com',
+                        'obs.access_key' = '<ak>',
+                        'obs.secret_key' = '<sk>',
+                        'obs.region' = 'cn-north-4'
+                    );
+                    ```
+</TabItem>
+            </Tabs>
+        </TabItem>
+
+        <TabItem value='gcs' label='GCS'>
+            <Tabs>
+                <TabItem value='gcs-noauth' label='認証なし' default>
+
+                    ```sql
+                    CREATE CATALOG iceberg_static_gcs PROPERTIES (
+                        'type' = 'iceberg',
+                        'warehouse' = 'gs://warehouse',
+                        'iceberg.catalog.type' = 'rest',
+                        'iceberg.rest.uri' = 'http://127.0.0.1:8181',
+                        'gs.endpoint' = 'https://storage.googleapis.com',
+                        'gs.access_key' = '<ak>',
+                        'gs.secret_key' = '<sk>'
+                    );
+                    ```
+</TabItem>
+                <TabItem value='gcs-oauth2' label='OAuth2認証'>
+
+                    ```sql
+                    CREATE CATALOG polaris_oauth2_credential_static_gcs PROPERTIES (
+                        'type' = 'iceberg',
+                        'warehouse' = 'doris_test',
+                        'iceberg.catalog.type' = 'rest',
+                        'iceberg.rest.uri' = 'http://127.0.0.1:8181/api/catalog',
+                        'iceberg.rest.security.type' = 'oauth2',
+                        'iceberg.rest.oauth2.credential' = 'root:secret123',
+                        'iceberg.rest.oauth2.server-uri' = 'http://127.0.0.1:8181/api/catalog/v1/oauth/tokens',
+                        'iceberg.rest.oauth2.scope' = 'PRINCIPAL_ROLE:ALL',
+                        'gs.endpoint' = 'https://storage.googleapis.com',
+                        'gs.access_key' = '<ak>',
+                        'gs.secret_key' = '<sk>'
+                        
+                    );
+                    ```
+</TabItem>
+            </Tabs>
+        </TabItem>
+
+        <TabItem value='hdfs' label='HDFS'>
+
+            ```sql
+            CREATE CATALOG iceberg_static_hdfs PROPERTIES (
+                'type' = 'iceberg',
+                'warehouse' = 'hdfs://127.0.0.1:8020/user/iceberg/warehouse',
+                'iceberg.catalog.type' = 'rest',
+                'iceberg.rest.uri' = 'http://127.0.0.1:8181',
+                'fs.defaultFS' = 'hdfs://127.0.0.1:8020'
+            );
+            ```
+</TabItem>
+    </Tabs>
+
+</details>
+
+<details >
+    <summary>2.1 & 3.0 バージョン</summary>
+
+    <Tabs>
+        <TabItem value='S3' label='S3' default>
+
+            ```sql
+            CREATE CATALOG iceberg_static_s3 PROPERTIES (
+                'type' = 'iceberg',
+                'warehouse' = 's3://warehouse',
+                'iceberg.catalog.type' = 'rest',
+                'uri' = 'http://127.0.0.1:8181',
+                's3.endpoint' = 'https://s3.ap-east-1.amazonaws.com',
+                's3.access_key' = '<ak>',
+                's3.secret_key' = '<sk>',
+                's3.region' = 'ap-east-1'
+            );
+            ```
+</TabItem>
+        <TabItem value='OSS' label='OSS'>
+
+            ```sql
+            CREATE CATALOG iceberg_static_oss PROPERTIES (
+                'type' = 'iceberg',
+                'warehouse' = 's3://warehouse',
+                'iceberg.catalog.type' = 'rest',
+                'uri' = 'http://127.0.0.1:8181',
+                's3.endpoint' = 'https://oss-cn-beijing.aliyuncs.com',
+                's3.access_key' = '<ak>',
+                's3.secret_key' = '<sk>',
+                's3.region' = 'cn-beijing'
+            );
+            ```
+</TabItem>
+        <TabItem value='COS' label='COS'>
+
+            ```sql
+            CREATE CATALOG iceberg_static_cos PROPERTIES (
+                'type' = 'iceberg',
+                'warehouse' = 's3://warehouse',
+                'iceberg.catalog.type' = 'rest',
+                'uri' = 'http://127.0.0.1:8181',
+                's3.endpoint' = 'https://cos.ap-beijing.myqcloud.com',
+                's3.access_key' = '<ak>',
+                's3.secret_key' = '<sk>',
+                's3.region' = 'ap-beijing'
+            );
+            ```
+</TabItem>
+        <TabItem value='OBS' label='OBS'>
+
+            ```sql
+            CREATE CATALOG iceberg_static_obs PROPERTIES (
+                'type' = 'iceberg',
+                'warehouse' = 's3://warehouse',
+                'iceberg.catalog.type' = 'rest',
+                'uri' = 'http://127.0.0.1:8181',
+                's3.endpoint' = 'obs.cn-north-4.myhuaweicloud.com',
+                's3.access_key' = '<ak>',
+                's3.secret_key' = '<sk>',
+                's3.region' = 'cn-north-4'
+            );
+            ```
+</TabItem>
+        <TabItem value='HDFS' label='HDFS'>
+
+            ```sql
+            CREATE CATALOG iceberg_static_hdfs PROPERTIES (
+                'type' = 'iceberg',
+                'warehouse' = 'hdfs://127.0.0.1:8020/user/iceberg/warehouse',
+                'iceberg.catalog.type' = 'rest',
+                'uri' = 'http://127.0.0.1:8181',
+                'fs.defaultFS' = 'hdfs://127.0.0.1:8020'
+            );
+            ```
+</TabItem>
+
+    </Tabs>
+
+</details>
+
+### FileSystem
+<details>
+    <summary>3.1+ Version</summary>
+    <Tabs>
+        <TabItem value='HDFS' label='HDFS' default>
+            Kerberos認証なしでHDFSサービスにアクセス
+
+            ```sql
+            CREATE CATALOG iceberg_fs_on_hdfs_catalog PROPERTIES (
+                'type' = 'iceberg',
+                'iceberg.catalog.type' = 'hadoop',
+                'warehouse' = 'hdfs://127.0.0.1:8320/user/iceberg/warehouse/iceberg-fs-hdfs-warehouse',
+                'hadoop.username' = 'doris',
+                'fs.defaultFS' = 'hdfs://127.0.0.1:8320'
+            );
+            ```
+Kerberos認証が有効化されたHDFSサービスにアクセスする
+
+            ```sql
+            CREATE CATALOG iceberg_fs_on_hdfs_kerberos_catalog PROPERTIES (
+                'type' = 'iceberg',
+                'iceberg.catalog.type' = 'hadoop',
+                'warehouse' = 'hdfs://127.0.0.1:8520/iceberg-fs-hdfs-warehouse',
+                'fs.defaultFS' = 'hdfs://127.0.0.1:8520',
+                'hadoop.security.authentication' = 'kerberos',
+                'hadoop.kerberos.principal'='hive/presto-master.docker.cluster@LABS.TERADATA.COM',
+                'hadoop.kerberos.keytab' = '/keytabs/hive-presto-master.keytab'
+            );
+
+            ```
+</TabItem>
+        <TabItem value='S3' label='S3'>
+
+            ```sql
+            CREATE CATALOG iceberg_fs_on_glue_catalog PROPERTIES (
+                'type' = 'iceberg',
+                'iceberg.catalog.type' = 'hadoop',
+                'warehouse' = 's3://selectdb-qa-datalake-test-hk/refactor-test/iceberg-fs-s3-warehouse',
+                's3.region' = 'ap-east-1',
+                's3.access_key' = '<ak>',
+                's3.secret_key' = '<sk>'
+            );
+            ```
+IAM Assumed Roleを使用したS3アクセス認証情報の取得 (3.1.2+)
+
+            ```sql
+            CREATE CATALOG iceberg_fs_on_s3_iamrole PROPERTIES (
+                'type' = 'iceberg',
+                'iceberg.catalog.type' = 'hadoop',
+                'warehouse' = 's3://bucket/warehouse',
+                's3.region' = 'us-east-1',
+                's3.role_arn' = 'arn:aws:iam::543815668950:role/role'
+            );
+            ```
+</TabItem>
+        <TabItem value='COS' label='COS'>
+
+            ```sql
+            CREATE CATALOG iceberg_fs_on_cos_catalog PROPERTIES (
+                'type' = 'iceberg',
+                'iceberg.catalog.type' = 'hadoop',
+                'warehouse' = 'cos://doris-build-1308700295/iceberg-fs-cos-warehouse',
+                'cos.region' = 'ap-beijing',
+                'cos.endpoint' = 'cos.ap-beijing.myqcloud.com',
+                'cos.access_key' = '<ak>',
+                'cos.secret_key' = '<sk>'
+            );
+
+            ```
+</TabItem>
+        <TabItem value='OSS' label='OSS'>
+
+            ```sql
+            CREATE CATALOG iceberg_fs_on_oss_catalog PROPERTIES (
+                'type' = 'iceberg',
+                'iceberg.catalog.type' = 'hadoop',
+                'warehouse' = 'oss://doris-regression-bj/refactor-test/iceberg-fs-oss-warehouse',
+                'oss.region' = 'cn-beijing',
+                'oss.endpoint' = 'oss-cn-beijing.aliyuncs.com',
+                'oss.access_key' = '<ak>',
+                'oss.secret_key' = '<sk>'
+            );
+            ```
+</TabItem>
+        <TabItem value='OBS' label='OBS'>
+
+            ```sql
+            CREATE CATALOG test_fs_on_obs_catalog PROPERTIES (
+                'type' = 'iceberg',
+                'iceberg.catalog.type' = 'hadoop',
+                'warehouse' = 'obs://bucket/regression/iceberg',
+                'obs.region' = 'cn-north-4',
+                'obs.endpoint' = 'obs.cn-north-4.myhuaweicloud.com',
+                'obs.access_key' = '<ak>',
+                'obs.secret_key' = '<sk>'
+            );
+            ```
+</TabItem>
+        <TabItem value='GCS' label='GCS'>
+
+            ```sql
+            CREATE CATALOG iceberg_fs_on_gcs_catalog PROPERTIES (
+                'type' = 'iceberg',
+                'iceberg.catalog.type' = 'hadoop',
+                'warehouse' = 'gs://bucket/iceberg_warehouse',
+                'fs.gcs.support'='true',
+                'gs.access_key' = '<ak>',
+                'gs.secret_key' = '<sk>'
+            );
+            ```
+</TabItem>
+        <TabItem value='MinIO' label='MinIO'>
+
+            ```sql
+            CREATE CATALOG test_iceberg_fs_on_minio PROPERTIES (
+                'type' = 'iceberg',
+                'iceberg.catalog.type'='hadoop',
+                'warehouse' = 's3://warehouse/wh',
+                'fs.minio.support'='true',
+                'minio.endpoint' = 'http://127.0.0.1:19001',
+                'minio.access_key' = 'admin',
+                'minio.secret_key' = 'password',
+                'minio.use_path_style' = 'true'
+            );
+            ```
+</TabItem>
+    </Tabs>
+</details>
+<details >
+    <summary>2.1 & 3.0 バージョン</summary>
+    <Tabs>
+        <TabItem value='HDFS' label='HDFS' default>
+            Kerberos認証なしでHDFSサービスにアクセス
+
+            ```sql
+            CREATE CATALOG iceberg_fs_on_hdfs_catalog PROPERTIES (
+                'type' = 'iceberg',
+                'iceberg.catalog.type' = 'hadoop',
+                'warehouse' = 'hdfs://127.0.0.1:8320/user/iceberg/warehouse/iceberg-fs-hdfs-warehouse',
+                'hadoop.username' = 'doris',
+                'fs.defaultFS' = 'hdfs://127.0.0.1:8320'
+            );
+            ```
+Kerberos認証を有効にしたHDFSサービスへのアクセス
+
+            ```sql
+            CREATE CATALOG iceberg_fs_on_hdfs_kerberos_catalog PROPERTIES (
+                'type' = 'iceberg',
+                'iceberg.catalog.type' = 'hadoop',
+                'warehouse' = 'hdfs://127.0.0.1:8520/iceberg-fs-hdfs-warehouse',
+                'fs.defaultFS' = 'hdfs://127.0.0.1:8520',
+                'hadoop.security.authentication' = 'kerberos',
+                'hadoop.kerberos.principal'='hive/presto-master.docker.cluster@LABS.TERADATA.COM',
+                'hadoop.kerberos.keytab' = '/keytabs/hive-presto-master.keytab'
+            );
+            ```
+</TabItem>
+        <TabItem value='S3' label='S3'>
+
+            ```sql
+            CREATE CATALOG iceberg_fs_on_s3_catalog PROPERTIES (
+                'type' = 'iceberg',
+                'iceberg.catalog.type' = 'hadoop',
+                'warehouse' = 's3://selectdb-qa-datalake-test-hk/refactor-test/iceberg-fs-s3-warehouse',
+                's3.region' = 'ap-east-1',
+                's3.endpoint' = 's3.ap-east-1.amazonaws.com',
+                's3.access_key' = '<ak>',
+                's3.secret_key' = '<sk>'
+            );
+            ```
+</TabItem>
+        <TabItem value='COS' label='COS'>
+
+            ```sql
+            CREATE CATALOG iceberg_fs_on_cos_catalog PROPERTIES (
+                'type' = 'iceberg',
+                'iceberg.catalog.type' = 'hadoop',
+                'warehouse' = 'cos://doris-build-1308700295/iceberg-fs-cos-warehouse',
+                'cos.region' = 'ap-beijing',
+                'cos.endpoint' = 'cos.ap-beijing.myqcloud.com',
+                'cos.access_key' = '<ak>',
+                'cos.secret_key' = '<sk>'
+            );
+            ```
+</TabItem>
+        <TabItem value='OSS' label='OSS'>
+
+            ```sql
+            CREATE CATALOG iceberg_fs_on_oss_catalog PROPERTIES (
+                'type' = 'iceberg',
+                'iceberg.catalog.type' = 'hadoop',
+                'warehouse' = 'oss://bucket/refactor-test/iceberg-fs-oss-warehouse',
+                'oss.region' = 'cn-beijing',
+                'oss.endpoint' = 'oss-cn-beijing.aliyuncs.com',
+                'oss.access_key' = '<ak>',
+                'oss.secret_key' = '<sk>'
+            );
+            ```
+</TabItem>
+        <TabItem value='GCS' label='GCS'>
+
+            ```sql
+            CREATE CATALOG iceberg_fs_on_gcs_catalog PROPERTIES (
+                'type'='iceberg',
+                'iceberg.catalog.type'='hadoop',
+                'warehouse' = 's3://bucket/iceberg_warehouse',
+                'gs.endpoint'='storage.googleapis.com',
+                'gs.access_key' = '<ak>',
+                'gs.secret_key' = '<sk>'
+            );
+            ```
+</TabItem>
+        <TabItem value='MinIO' label='MinIO'>
+
+            ```sql
+            CREATE CATALOG test_iceberg_fs_on_minio PROPERTIES (
+                'type' = 'iceberg',
+                'iceberg.catalog.type'='hadoop',
+                'warehouse' = 's3://warehouse/wh',
+                's3.region' = 'ap-east-1',
+                's3.endpoint' = 'http://minio:9000',
+                's3.access_key' = '<ak>',
+                's3.secret_key' = '<sk>'
+            );
+            ```
+</TabItem>
+    </Tabs>
+</details>
+
+
+### AWS S3 Tables
+<details>
+    <summary>3.1+ Version</summary>
+    <Tabs>
+        <TabItem value='S3 Tables Rest Catalog' label='S3 Tables Rest Catalog' default>
+            [S3 Tables Integration](../best-practices/doris-aws-s3tables.md) ドキュメントを参照してください。
+
+            ```sql
+            CREATE CATALOG aws_s3_tables PROPERTIES (
+                'type' = 'iceberg',
+                'iceberg.catalog.type' = 'rest',
+                'warehouse' = 'arn:aws:s3tables:us-east-1:<account_id>:bucket/<s3_table_bucket_name>',
+                'iceberg.rest.uri' = 'https://s3tables.us-east-1.amazonaws.com/iceberg',
+                'iceberg.rest.sigv4-enabled' = 'true',
+                'iceberg.rest.signing-name' = 's3tables',
+                'iceberg.rest.signing-region' = 'us-east-1',
+                'iceberg.rest.access-key-id' = '<ak>',
+                'iceberg.rest.secret-access-key' = '<sk>'
+            );
+            ```
+</TabItem>
+        <TabItem value='AWS Glue Rest Catalog' label='AWS Glue Rest Catalog' default>
+            [S3 Tables Integration](../best-practices/doris-aws-s3tables.md)のドキュメントを参照してください。
+
+            ```sql
+            CREATE CATALOG glue_s3 PROPERTIES (
+                'type' = 'iceberg',
+                'iceberg.catalog.type' = 'rest',
+                'iceberg.rest.uri' = 'https://glue.ap-east-1.amazonaws.com/iceberg',
+                'warehouse' = '<acount_id>:s3tablescatalog/<s3_table_bucket_name>',
+                'iceberg.rest.sigv4-enabled' = 'true',
+                'iceberg.rest.signing-name' = 'glue',
+                'iceberg.rest.access-key-id' = '<ak>',
+                'iceberg.rest.secret-access-key' = '<sk>',
+                'iceberg.rest.signing-region' = 'ap-east-1'
+            );
+            ```
+</TabItem>
+        <TabItem value='FileSystem Catalog' label='FileSystem Catalog' default>
+            [S3 Tables Integration](../best-practices/doris-aws-s3tables.md)のドキュメントを参照してください。
+
+            ```sql
+            CREATE CATALOG test_s3tables_write_insert PROPERTIES (
+                'type' = 'iceberg',
+                'iceberg.catalog.type' = 's3tables',
+                'warehouse' = 'arn:aws:s3tables:ap-east-1:12345:bucket/doris-s3-table-bucket',
+                's3.region' = 'ap-east-1',
+                's3.endpoint' = 'https://s3.ap-east-1.amazonaws.com',
+                's3.access_key' = '<ak>',
+                's3.secret_key' = '<sk>'
+            );
+            ```
+</TabItem>
+    </Tabs>
+
+
+</details>
+
+<details >
+    <summary>3.0.6+ Version</summary>
+    <TabItem value='FileSystem Catalog' label='FileSystem Catalog' default>
+        [S3 Tables Integration](../best-practices/doris-aws-s3tables.md)のドキュメントを参照してください。
+
+        ```sql
+        CREATE CATALOG test_s3tables_catalog PROPERTIES (
+            'type' = 'iceberg',
+            'iceberg.catalog.type' = 's3tables',
+            'warehouse' = 'arn:aws:s3tables:ap-east-1:9527:bucket/doris-s3-table-bucket',
+            's3.region' = 'ap-east-1',
+            's3.endpoint' = 'https://s3.ap-east-1.amazonaws.com',
+            's3.access_key' = '<ak>',
+            's3.secret_key' = '<sk>'
+        );
+        ```
+</TabItem>
+</details>
+
+## クエリ操作
+
+### 基本クエリ
+
+```sql
+-- 1. switch to catalog, use database and query
+SWITCH iceberg;
+USE iceberg_db;
+SELECT * FROM iceberg_tbl LIMIT 10;
+
+-- 2. use iceberg database directly
+USE iceberg.iceberg_db;
+SELECT * FROM iceberg_tbl LIMIT 10;
+
+-- 3. use full qualified name to query
+SELECT * FROM iceberg.iceberg_db.iceberg_tbl LIMIT 10;
+```
+### Time Travel
+
+Iceberg テーブルの特定のスナップショットを読み取ることができます。
+
+デフォルトでは、読み取りリクエストは最新のスナップショットバージョンにアクセスします。
+
+`iceberg_meta()` テーブル関数を使用して、Iceberg テーブルの特定のスナップショットをクエリできます:
+
+```sql
+SELECT * FROM iceberg_meta(
+    'table' = 'iceberg_ctl.iceberg_db.iceberg_tbl',
+    'query_type' = 'snapshots'
+)\G
+
+*************************** 1. row ***************************
+ committed_at: 2024-11-28 11:07:29
+  snapshot_id: 8903826400153112036
+    parent_id: -1
+    operation: append
+manifest_list: oss://path/to/metadata/snap-8903826400153112036-1-3835e66d-9a18-4cb0-b9b0-9ec80527ad8d.avro
+      summary: {"added-data-files":"2","added-records":"3","added-files-size":"2742","changed-partition-count":"2","total-records":"3","total-files-size":"2742","total-data-files":"2","total-delete-files":"0","total-position-deletes":"0","total-equality-deletes":"0"}
+*************************** 2. row ***************************
+ committed_at: 2024-11-28 11:10:11
+  snapshot_id: 6099853805930794326
+    parent_id: 8903826400153112036
+    operation: append
+manifest_list: oss://path/to/metadata/snap-6099853805930794326-1-dd46a1bd-219b-4fb0-bb46-ac441d8b3105.avro
+      summary: {"added-data-files":"1","added-records":"1","added-files-size":"1367","changed-partition-count":"1","total-records":"4","total-files-size":"4109","total-data-files":"3","total-delete-files":"0","total-position-deletes":"0","total-equality-deletes":"0"}
+```
+`FOR TIME AS OF`と`FOR VERSION AS OF`句を使用して、スナップショットIDまたはスナップショットが作成された時刻に基づいて履歴データを読み取ることができます。以下にいくつかの例を示します：
+
+```sql
+-- Read data as of a specific timestamp
+SELECT * FROM iceberg_table FOR TIME AS OF '2023-01-01 00:00:00';
+
+-- Read data as of a specific snapshot ID
+SELECT * FROM iceberg_table FOR VERSION AS OF 123456789;
+```
+### Branch と Tag
+
+> 3.1.0以降
+>
+> branchとtagの作成、削除、管理については、[Managing Branch & Tag]を参照してください
+
+Icebergテーブルの特定のbranchとtagの読み取りがサポートされています。
+
+Spark/Trinoなどのシステムとの互換性を保つため、複数の構文形式がサポートされています。
+
+```sql
+-- BRANCH
+SELECT * FROM iceberg_tbl@branch(branch1);
+SELECT * FROM iceberg_tbl@branch("name" = "branch1");
+SELECT * FROM iceberg_tbl FOR VERSION AS OF 'branch1';
+
+-- TAG
+SELECT * FROM iceberg_tbl@tag(tag1);
+SELECT * FROM iceberg_tbl@tag("name" = "tag1");
+SELECT * FROM iceberg_tbl FOR VERSION AS OF 'tag1';
+```
+`FOR VERSION AS OF`構文では、DorisはパラメータがタイムスタンプかBranch/Tag名かを自動的に判定します。
+
+### View
+
+> Since 3.1.0
+
+Iceberg viewのクエリをサポートします。Viewクエリは通常のテーブルクエリと同じように動作します。以下にご注意ください：
+
+- `hms`タイプのIceberg Catalogのみがサポートされています。
+- view定義SQLはDoris SQL dialectと互換性がなければならず、そうでない場合は解析エラーが発生します。（dialect変換機能は将来のバージョンで提供される予定です）。
+
+## System Tables
+
+> Since 3.1.0
+
+Dorisは、テーブルのメタデータ情報を取得するためのIceberg system tablesのクエリをサポートします。system tablesを使用して、スナップショット履歴、manifestファイル、データファイル、パーティション、その他のメタデータを表示できます。
+
+Icebergテーブルのメタデータにアクセスするには、テーブル名に`$`シンボルとそれに続くsystem table名を追加します：
+
+```sql
+SELECT * FROM iceberg_table$system_table_name;
+```
+例えば、テーブルの履歴を表示するには、以下を実行できます：
+
+```sql
+SELECT * FROM iceberg_table$history;
+```
+> 現在、`all_manifests`と`position_deletes`システムテーブルはまだサポートされておらず、将来のバージョンでサポートされる予定です。
+
+### entries
+
+テーブルの現在のスナップショットのすべてのマニフェストエントリを表示します：
+
+`all_entries`と`entries`は似ていますが、`all_entries`はすべてのスナップショットからのエントリを含むのに対し、`entries`は現在のスナップショットからのエントリのみを含むという違いがあります。
+
+```sql
+SELECT * FROM iceberg_table$entries;
+```
+結果:
+
+```text
++--------+---------------------+-----------------+----------------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| status | snapshot_id         | sequence_number | file_sequence_number | data_file                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             | readable_metrics                                                                                                                                                                                                                                                   |
++--------+---------------------+-----------------+----------------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+|      2 | 4890031351138056789 |               1 |                    1 | {"content":0, "file_path":"s3://.../iceberg_table/data/id=1/00000-16-79ef2fd7-9997-47eb-a91a-9f7af8201315-0-00001.parquet", "file_format":"PARQUET", "spec_id":0, "partition":{"id":1}, "record_count":1, "file_size_in_bytes":625, "column_sizes":{1:36, 2:41}, "value_counts":{1:1, 2:1}, "null_value_counts":{1:0, 2:0}, "nan_value_counts":{}, "lower_bounds":{1:"   ", 2:"Alice"}, "upper_bounds":{1:"   ", 2:"Alice"}, "key_metadata":null, "split_offsets":[4], "equality_ids":null, "sort_order_id":0, "first_row_id":null, "referenced_data_file":null, "content_offset":null, "content_size_in_bytes":null} | {"id":{"column_size":36, "value_count":1, "null_value_count":0, "nan_value_count":null, "lower_bound":1, "upper_bound":1}, "name":{"column_size":41, "value_count":1, "null_value_count":0, "nan_value_count":null, "lower_bound":"Alice", "upper_bound":"Alice"}} |
+|      0 | 1851184769713369003 |               1 |                    1 | {"content":0, "file_path":"s3://.../iceberg_table/data/id=2/00000-16-79ef2fd7-9997-47eb-a91a-9f7af8201315-0-00002.parquet", "file_format":"PARQUET", "spec_id":0, "partition":{"id":2}, "record_count":1, "file_size_in_bytes":611, "column_sizes":{1:36, 2:39}, "value_counts":{1:1, 2:1}, "null_value_counts":{1:0, 2:0}, "nan_value_counts":{}, "lower_bounds":{1:"   ", 2:"Bob"}, "upper_bounds":{1:"   ", 2:"Bob"}, "key_metadata":null, "split_offsets":[4], "equality_ids":null, "sort_order_id":0, "first_row_id":null, "referenced_data_file":null, "content_offset":null, "content_size_in_bytes":null}     | {"id":{"column_size":36, "value_count":1, "null_value_count":0, "nan_value_count":null, "lower_bound":2, "upper_bound":2}, "name":{"column_size":39, "value_count":1, "null_value_count":0, "nan_value_count":null, "lower_bound":"Bob", "upper_bound":"Bob"}}     |
++--------+---------------------+-----------------+----------------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+```
+### files
+
+テーブルの現在のスナップショットのファイルリストを表示します：
+
+```sql
+SELECT * FROM iceberg_table$files;
+```
+結果:
+
+```text
++---------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------+-------------+---------+-----------+--------------+--------------------+--------------+--------------+-------------------+------------------+-----------------------+-----------------------+--------------+---------------+--------------+---------------+--------------+----------------------+----------------+-----------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| content | file_path                                                                                       | file_format | spec_id | partition | record_count | file_size_in_bytes | column_sizes | value_counts | null_value_counts | nan_value_counts | lower_bounds          | upper_bounds          | key_metadata | split_offsets | equality_ids | sort_order_id | first_row_id | referenced_data_file | content_offset | content_size_in_bytes | readable_metrics                                                                                                                                                                                                                                                   |
++---------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------+-------------+---------+-----------+--------------+--------------------+--------------+--------------+-------------------+------------------+-----------------------+-----------------------+--------------+---------------+--------------+---------------+--------------+----------------------+----------------+-----------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+|       0 | s3://.../iceberg_table/data/id=2/00000-16-79ef2fd7-9997-47eb-a91a-9f7af8201315-0-00002.parquet  | PARQUET     |       0 | {"id":2}  |            1 |                611 | {1:36, 2:39} | {1:1, 2:1}   | {1:0, 2:0}        | {}               | {1:"   ", 2:"Bob"}   | {1:"   ", 2:"Bob"}   | NULL         | [4]           | NULL         |             0 |         NULL | NULL                 |           NULL |                  NULL | {"id":{"column_size":36, "value_count":1, "null_value_count":0, "nan_value_count":null, "lower_bound":2, "upper_bound":2}, "name":{"column_size":39, "value_count":1, "null_value_count":0, "nan_value_count":null, "lower_bound":"Bob", "upper_bound":"Bob"}}     |
+|       0 | s3://.../iceberg_table/data/id=4/00000-16-79ef2fd7-9997-47eb-a91a-9f7af8201315-0-00004.parquet  | PARQUET     |       0 | {"id":4}  |            1 |                618 | {1:36, 2:40} | {1:1, 2:1}   | {1:0, 2:0}        | {}               | {1:"   ", 2:"Dave"}  | {1:"   ", 2:"Dave"}  | NULL         | [4]           | NULL         |             0 |         NULL | NULL                 |           NULL |                  NULL | {"id":{"column_size":36, "value_count":1, "null_value_count":0, "nan_value_count":null, "lower_bound":4, "upper_bound":4}, "name":{"column_size":40, "value_count":1, "null_value_count":0, "nan_value_count":null, "lower_bound":"Dave", "upper_bound":"Dave"}}   |
+|       0 | s3://.../iceberg_table/data/id=6/00000-16-79ef2fd7-9997-47eb-a91a-9f7af8201315-0-00006.parquet  | PARQUET     |       0 | {"id":6}  |            1 |                625 | {1:36, 2:41} | {1:1, 2:1}   | {1:0, 2:0}        | {}               | {1:"   ", 2:"Frank"} | {1:"   ", 2:"Frank"} | NULL         | [4]           | NULL         |             0 |         NULL | NULL                 |           NULL |                  NULL | {"id":{"column_size":36, "value_count":1, "null_value_count":0, "nan_value_count":null, "lower_bound":6, "upper_bound":6}, "name":{"column_size":41, "value_count":1, "null_value_count":0, "nan_value_count":null, "lower_bound":"Frank", "upper_bound":"Frank"}} |
+|       0 | s3://.../iceberg_table/data/id=8/00000-16-79ef2fd7-9997-47eb-a91a-9f7af8201315-0-00008.parquet  | PARQUET     |       0 | {"id":8}  |            1 |                625 | {1:36, 2:41} | {1:1, 2:1}   | {1:0, 2:0}        | {}               | {1:"   ", 2:"Heidi"} | {1:"   ", 2:"Heidi"} | NULL         | [4]           | NULL         |             0 |         NULL | NULL                 |           NULL |                  NULL | {"id":{"column_size":36, "value_count":1, "null_value_count":0, "nan_value_count":null, "lower_bound":8, "upper_bound":8}, "name":{"column_size":41, "value_count":1, "null_value_count":0, "nan_value_count":null, "lower_bound":"Heidi", "upper_bound":"Heidi"}} |
+|       0 | s3://.../iceberg_table/data/id=10/00000-16-79ef2fd7-9997-47eb-a91a-9f7af8201315-0-00010.parquet | PARQUET     |       0 | {"id":10} |            1 |                618 | {1:36, 2:40} | {1:1, 2:1}   | {1:0, 2:0}        | {}               | {1:"   ", 2:"Judy"}  | {1:"   ", 2:"Judy"}  | NULL         | [4]           | NULL         |             0 |         NULL | NULL                 |           NULL |                  NULL | {"id":{"column_size":36, "value_count":1, "null_value_count":0, "nan_value_count":null, "lower_bound":10, "upper_bound":10}, "name":{"column_size":40, "value_count":1, "null_value_count":0, "nan_value_count":null, "lower_bound":"Judy", "upper_bound":"Judy"}} |
++---------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------+-------------+---------+-----------+--------------+--------------------+--------------+--------------+-------------------+------------------+-----------------------+-----------------------+--------------+---------------+--------------+---------------+--------------+----------------------+----------------+-----------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+```
+`files`システムテーブルと同様に、以下のシステムテーブルを通じて特定のファイルタイプ情報をクエリすることもできます：
+
+```sql
+-- Query data files for the current snapshot
+SELECT * FROM iceberg_table$data_files;
+
+-- Query delete files for the current snapshot
+SELECT * FROM iceberg_table$delete_files;
+
+-- Query all files (including data and delete files) from all snapshots
+SELECT * FROM iceberg_table$all_files;
+
+-- Query data files from all snapshots
+SELECT * FROM iceberg_table$all_data_files;
+
+-- Query delete files from all snapshots
+SELECT * FROM iceberg_table$all_delete_files;
+```
+これらのテーブルの結果形式は`files`システムテーブルと似ていますが、それぞれがデータファイルまたは削除ファイルに特化しています。`all_`プレフィックスを持つシステムテーブルは、現在のスナップショットからのファイルだけでなく、すべてのスナップショットからのファイルを含みます。
+
+注意：特定のタイプのファイルがテーブルに存在しない場合（例えば、テーブルに削除ファイルがない場合に`delete_files`をクエリする場合）、クエリ結果が空になることがあります。
+
+### history
+
+テーブルのすべての履歴を表示します：
+
+```sql
+SELECT * FROM iceberg_table$history;
+```
+結果:
+
+```text
++----------------------------+---------------------+---------------------+---------------------+
+| made_current_at            | snapshot_id         | parent_id           | is_current_ancestor |
++----------------------------+---------------------+---------------------+---------------------+
+| 2025-06-12 22:29:16.357000 | 1851184769713369003 |                NULL |                   1 |
+| 2025-06-12 22:29:39.922000 | 4890031351138056789 | 1851184769713369003 |                   1 |
++----------------------------+---------------------+---------------------+---------------------+
+```
+### manifests
+
+テーブルのマニフェストファイル情報を表示します:
+
+```sql
+SELECT * FROM iceberg_table$manifests;
+```
+結果:
+
+```text
++---------+------------------------------------------------------------------------------------------------------------------------------------------------+--------+-------------------+---------------------+------------------------+---------------------------+--------------------------+--------------------------+-----------------------------+----------------------------+--------------------------------------------------------------------------------+
+| content | path                                                                         | length | partition_spec_id | added_snapshot_id   | added_data_files_count | existing_data_files_count | deleted_data_files_count | added_delete_files_count | existing_delete_files_count | deleted_delete_files_count | partition_summaries                                                            |
++---------+------------------------------------------------------------------------------------------------------------------------------------------------+--------+-------------------+---------------------+------------------------+---------------------------+--------------------------+--------------------------+-----------------------------+----------------------------+--------------------------------------------------------------------------------+
+|       0 | s3://.../iceberg_table/metadata/3194eb8b-5ea4-4cbe-95ba-073229458e7b-m0.avro |   7138 |                 0 | 4890031351138056789 |                      0 |                         5 |                        5 |                        0 |                           0 |                          0 | [{"contains_null":0, "contains_nan":0, "lower_bound":"1", "upper_bound":"10"}] |
++---------+------------------------------------------------------------------------------------------------------------------------------------------------+--------+-------------------+---------------------+------------------------+---------------------------+--------------------------+--------------------------+-----------------------------+----------------------------+--------------------------------------------------------------------------------+
+```
+### metadata_log_entries
+
+テーブルのメタログを表示します：
+
+```sql
+SELECT * FROM iceberg_table$metadata_log_entries;
+```
+結果:
+
+```text
++----------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------+---------------------+------------------+------------------------+
+| timestamp                  | file                                                                                     | latest_snapshot_id  | latest_schema_id | latest_sequence_number |
++----------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------+---------------------+------------------+------------------------+
+| 2025-06-12 22:29:06.948000 | s3://.../iceberg_table/metadata/00000-e373aa16-15f1-4e69-ae7d-5ed64199cf9a.metadata.json |                NULL |             NULL |                   NULL |
+| 2025-06-12 22:29:16.357000 | s3://.../iceberg_table/metadata/00001-bbc8e244-e41c-4958-92f4-63b8c3ee1196.metadata.json | 1851184769713369003 |                0 |                      1 |
+| 2025-06-12 22:29:39.922000 | s3://.../iceberg_table/metadata/00002-7dc00d6a-6269-4200-9d28-5f8c1c6b9f99.metadata.json | 4890031351138056789 |                0 |                      2 |
++----------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------+---------------------+------------------+------------------------+
+```
+### partitions
+
+テーブルのパーティションを表示します：
+
+```sql
+SELECT * FROM iceberg_table$partitions;
+```
+結果:
+
+```text
++-----------+---------+--------------+------------+-------------------------------+------------------------------+----------------------------+------------------------------+----------------------------+----------------------------+--------------------------+
+| partition | spec_id | record_count | file_count | total_data_file_size_in_bytes | position_delete_record_count | position_delete_file_count | equality_delete_record_count | equality_delete_file_count | last_updated_at            | last_updated_snapshot_id |
++-----------+---------+--------------+------------+-------------------------------+------------------------------+----------------------------+------------------------------+----------------------------+----------------------------+--------------------------+
+| {"id":8}  |       0 |            1 |          1 |                           625 |                            0 |                          0 |                            0 |                          0 | 2025-06-12 22:29:16.357000 |      1851184769713369003 |
+| {"id":6}  |       0 |            1 |          1 |                           625 |                            0 |                          0 |                            0 |                          0 | 2025-06-12 22:29:16.357000 |      1851184769713369003 |
+| {"id":10} |       0 |            1 |          1 |                           618 |                            0 |                          0 |                            0 |                          0 | 2025-06-12 22:29:16.357000 |      1851184769713369003 |
+| {"id":4}  |       0 |            1 |          1 |                           618 |                            0 |                          0 |                            0 |                          0 | 2025-06-12 22:29:16.357000 |      1851184769713369003 |
+| {"id":2}  |       0 |            1 |          1 |                           611 |                            0 |                          0 |                            0 |                          0 | 2025-06-12 22:29:16.357000 |      1851184769713369003 |
++-----------+---------+--------------+------------+-------------------------------+------------------------------+----------------------------+------------------------------+----------------------------+----------------------------+--------------------------+
+```
+注意:
+
+1. 非パーティションテーブルの場合、`partitions`テーブルには`partition`と`spec_id`フィールドが含まれません。
+2. `partitions`テーブルは、現在のスナップショット内でデータファイルまたは削除ファイルを含むパーティションを表示します。ただし、削除ファイルは適用されていないため、パーティション内のすべてのデータ行が削除ファイルによって削除済みとしてマークされている場合でも、パーティションが表示される可能性があります。
+
+### refs
+
+テーブルのすべての既知のスナップショット参照（ブランチとタグ）を表示します:
+
+```sql
+SELECT * FROM iceberg_table$refs;
+```
+結果:
+
+```text
++------+--------+---------------------+-------------------------+-----------------------+------------------------+
+| name | type   | snapshot_id         | max_reference_age_in_ms | min_snapshots_to_keep | max_snapshot_age_in_ms |
++------+--------+---------------------+-------------------------+-----------------------+------------------------+
+| main | BRANCH | 4890031351138056789 |                    NULL |                  NULL |                   NULL |
++------+--------+---------------------+-------------------------+-----------------------+------------------------+
+```
+### snapshots
+
+テーブルのすべてのスナップショットを表示します：
+
+```sql
+SELECT * FROM iceberg_table$snapshots;
+```
+結果:
+
+```text
++----------------------------+---------------------+---------------------+-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| committed_at               | snapshot_id         | parent_id           | operation | manifest_list                                                                                        | summary                                                                                                                                                                                                                                                                                                                      |
++----------------------------+---------------------+---------------------+-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| 2025-06-12 22:29:16.357000 | 1851184769713369003 |                NULL | append    | s3://.../iceberg_table/metadata/snap-1851184769713369003-1-82059f57-821a-4983-b083-002cc2cde313.avro | {"spark.app.id":"application_1738810850199_0472", "added-data-files":"10", "added-records":"10", "added-files-size":"6200", "changed-partition-count":"10", "total-records":"10", "total-files-size":"6200", "total-data-files":"10", "total-delete-files":"0", "total-position-deletes":"0", "total-equality-deletes":"0"}  |
+| 2025-06-12 22:29:39.922000 | 4890031351138056789 | 1851184769713369003 | overwrite | s3://.../iceberg_table/metadata/snap-4890031351138056789-1-3194eb8b-5ea4-4cbe-95ba-073229458e7b.avro | {"spark.app.id":"application_1738810850199_0472", "deleted-data-files":"5", "deleted-records":"5", "removed-files-size":"3103", "changed-partition-count":"5", "total-records":"5", "total-files-size":"3097", "total-data-files":"5", "total-delete-files":"0", "total-position-deletes":"0", "total-equality-deletes":"0"} |
++----------------------------+---------------------+---------------------+-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+```
+## 書き込み操作
+
+### INSERT INTO
+
+INSERT操作は対象テーブルにデータを追加します。
+
+例：
+
+```sql
+INSERT INTO iceberg_tbl VALUES (val1, val2, val3, val4);
+INSERT INTO iceberg.iceberg_db.iceberg_tbl SELECT col1, col2 FROM internal.db1.tbl1;
+
+INSERT INTO iceberg_tbl(col1, col2) VALUES (val1, val2);
+INSERT INTO iceberg_tbl(col1, col2, partition_col1, partition_col2) VALUES (1, 2, 'beijing', '2023-12-12');
+```
+バージョン3.1.0以降、指定されたブランチへのデータ書き込みをサポート:
+
+```sql
+INSERT INTO iceberg_tbl@branch(b1) values (val1, val2, val3, val4);
+INSERT INTO iceberg_tbl@branch(b1) (col3, col4) values (val3, val4);
+```
+### INSERT OVERWRITE
+
+INSERT OVERWRITE操作は、テーブル内の既存データを新しいデータで完全に置き換えます。
+
+```sql
+INSERT OVERWRITE TABLE iceberg_tbl VALUES (val1, val2, val3, val4);
+INSERT OVERWRITE TABLE iceberg.iceberg_db.iceberg_tbl(col1, col2) SELECT col1, col2 FROM internal.db1.tbl1;
+```
+バージョン 3.1.0 以降、指定したブランチへのデータ書き込みをサポート:
+
+```sql
+INSERT OVERWRITE TABLE iceberg_tbl@branch(b1) values (val1, val2, val3, val4);
+INSERT OVERWRITE TABLE iceberg_tbl@branch(b1) (col3, col4) values (val3, val4);
+```
+### CTAS
+
+`CTAS`（Create Table As Select）文を使用してIcebergテーブルを作成し、データを書き込むことができます：
+
+```sql
+CREATE TABLE iceberg_ctas AS SELECT * FROM other_table;
+```
+CTASはファイル形式、パーティショニング、およびその他のプロパティの指定をサポートしています：
+
+```sql
+CREATE TABLE iceberg_ctas
+PARTITION BY LIST (pt1, pt2) ()
+AS SELECT col1, pt1, pt2 FROM part_ctas_src WHERE col1 > 0;
+
+CREATE TABLE iceberg.iceberg_db.iceberg_ctas (col1, col2, pt1)
+PARTITION BY LIST (pt1) ()
+PROPERTIES (
+    'write-format'='parquet',
+    'compression-codec'='zstd'
+)
+AS SELECT col1, pt1 AS col2, pt2 AS pt1 FROM test_ctas.part_ctas_src WHERE col1 > 0;
+```
+### INSERT INTO BRANCH
+
+> 3.1.0以降
+
+```sql
+INSERT INTO iceberg_table@branch(b1) SELECT * FROM other_table;
+INSERT OVERWRITE TABLE iceberg_table@branch(b1) SELECT * FROM other_table;
+```
+### 関連パラメータ
+
+* BE (Backend)
+
+  | パラメータ名                                                               | デフォルト値 | 説明 |
+  | ----------------------------------------------------------------------------- | ------------- | ----------- |
+  | `iceberg_sink_max_file_size`                                                  | 1GB           | 最大データファイルサイズ。書き込まれたデータがこのサイズを超えると、現在のファイルが閉じられ、新しいファイルが作成されて書き込みが継続されます。 |
+  | `table_sink_partition_write_max_partition_nums_per_writer`                    | 128           | BEノード上で各インスタンスが書き込み可能なパーティションの最大数。 |
+  | `table_sink_non_partition_write_scaling_data_processed_threshold`             | 25MB          | 非パーティションテーブルでscaling-writeを開始するためのデータ閾値。追加の`table_sink_non_partition_write_scaling_data_processed_threshold`分のデータごとに新しいwriter（インスタンス）が使用されます。このメカニズムは、データ量に基づいてwriterの数を調整し、リソースを節約し、小さなデータ量のファイル数を最小化しながらスループットを向上させます。 |
+  | `table_sink_partition_write_min_data_processed_rebalance_threshold`           | 25MB          | パーティションテーブルのリバランシングをトリガーする最小データ量閾値。`現在の累積データ量` - `前回のリバランシング以降のデータ量` >= `table_sink_partition_write_min_data_processed_rebalance_threshold`の場合にリバランシングが開始されます。この閾値を下げると、ファイルサイズの差が大きい場合にバランスが改善される可能性がありますが、リバランシングコストが増加し、パフォーマンスに影響を与える場合があります。 |
+  | `table_sink_partition_write_min_partition_data_processed_rebalance_threshold` |               | リバランシングをトリガーする最小パーティションデータ量閾値。`現在のパーティションデータ量` >= `閾値` \* `パーティションに既に割り当てられているタスク数`の場合にリバランシングが開始されます。この閾値を下げると、ファイルサイズの差が大きい場合にバランスが改善される可能性がありますが、リバランシングコストが増加し、パフォーマンスに影響を与える場合があります。 |
+  
+## データベースとテーブル管理
+
+### データベースの作成と削除
+
+`SWITCH`文を使用して目的のカタログに切り替え、`CREATE DATABASE`コマンドを実行できます：
+
+```sql
+SWITCH iceberg;
+CREATE DATABASE [IF NOT EXISTS] iceberg_db;
+```
+完全修飾名を使用してデータベースを作成することも、場所を指定することもできます（現在、HMS タイプのカタログのみが場所の指定をサポートしています）。例：
+
+```sql
+CREATE DATABASE [IF NOT EXISTS] iceberg.iceberg_db;
+
+CREATE DATABASE [IF NOT EXISTS] iceberg.iceberg_db
+PROPERTIES ('location'='hdfs://172.21.16.47:4007/path/to/db/');
+```
+`SHOW CREATE DATABASE`コマンドを使用してデータベースの場所情報を表示できます：
+
+```sql
+mysql> SHOW CREATE DATABASE iceberg_db;
++-------------+-------------------------------------------------------------------------------------------------+
+| Database    | Create Database                                                                                 |
++-------------+-------------------------------------------------------------------------------------------------+
+| iceberg_db  | CREATE DATABASE iceberg_db LOCATION 'hdfs://172.21.16.47:4007/usr/hive/warehouse/iceberg_db.db' |
++-------------+-------------------------------------------------------------------------------------------------+
+```
+データベースを削除するには:
+
+```sql
+DROP DATABASE [IF EXISTS] iceberg.iceberg_db;
+```
+:::caution
+Iceberg Databaseでは、データベース自体を削除する前に、そのデータベース配下のすべてのテーブルを先に削除する必要があります。そうしないとエラーが発生します。
+:::
+
+### テーブルの作成と削除
+
+* **テーブルの作成**
+
+  DorisはIcebergにおいて、パーティション分割されたテーブルと非パーティション分割されたテーブルの両方の作成をサポートしています。
+
+  例：
+
+  ```sql
+  -- Create unpartitioned iceberg table
+  CREATE TABLE unpartitioned_table (
+    `col1` BOOLEAN COMMENT 'col1',
+    `col2` INT COMMENT 'col2',
+    `col3` BIGINT COMMENT 'col3',
+    `col4` FLOAT COMMENT 'col4',
+    `col5` DOUBLE COMMENT 'col5',
+    `col6` DECIMAL(9,4) COMMENT 'col6',
+    `col7` STRING COMMENT 'col7',
+    `col8` DATE COMMENT 'col8',
+    `col9` DATETIME COMMENT 'col9'
+  )
+  PROPERTIES (
+    'write-format'='parquet'
+  );
+
+  -- Create partitioned iceberg table
+  -- The partition columns must be in table's column definition list
+  CREATE TABLE partition_table (
+    `ts` DATETIME COMMENT 'ts',
+    `col1` BOOLEAN COMMENT 'col1',
+    `col2` INT COMMENT 'col2',
+    `col3` BIGINT COMMENT 'col3',
+    `col4` FLOAT COMMENT 'col4',
+    `col5` DOUBLE COMMENT 'col5',
+    `col6` DECIMAL(9,4) COMMENT 'col6',
+    `col7` STRING COMMENT 'col7',
+    `col8` DATE COMMENT 'col8',
+    `col9` DATETIME COMMENT 'col9',
+    `pt1` STRING COMMENT 'pt1',
+    `pt2` STRING COMMENT 'pt2'
+  )
+  PARTITION BY LIST (day(ts), pt1, pt2) ()
+  PROPERTIES (
+    'write-format'='orc',
+    'compression-codec'='zlib'
+  );
+  ```
+作成後、`SHOW CREATE TABLE`コマンドを使用してIcebergテーブルの作成ステートメントを表示できます。パーティション関数の詳細については、[Partitioning](#)セクションを参照してください。
+
+* **テーブルの削除**
+
+  `DROP TABLE`ステートメントを使用してIcebergテーブルを削除できます。テーブルを削除すると、パーティションデータを含むそのデータも削除されます。
+
+  例：
+
+  ```sql
+  DROP TABLE [IF EXISTS] iceberg_tbl;
+  ```
+* **Column Type Mapping**
+
+  [Column Type Mapping](#) セクションを参照してください。
+
+* **パーティショニング**
+
+  IcebergのパーティションタイプはDorisのListパーティションに対応します。そのため、DorisでIcebergパーティションテーブルを作成する際は、Listパーティショニング構文を使用しますが、各パーティションを明示的に列挙する必要はありません。Dorisはデータ挿入時にデータ値に基づいて、対応するIcebergパーティションを自動的に作成します。
+
+  * 単一カラムまたは複数カラムのパーティションテーブルの作成をサポートします。
+
+  * Icebergの暗黙的パーティショニングとパーティション進化を有効にするパーティション変換関数をサポートします。特定のIcebergパーティション変換関数については、[Iceberg partition transforms](https://iceberg.apache.org/spec/#partition-transforms)を参照してください：
+
+    * `year(ts)` または `years(ts)`
+
+    * `month(ts)` または `months(ts)`
+
+    * `day(ts)` または `days(ts)` または `date(ts)`
+
+    * `hour(ts)` または `hours(ts)` または `date_hour(ts)`
+
+    * `bucket(N, col)`
+
+    * `truncate(L, col)`
+
+* **ファイル形式**
+
+  * Parquet（デフォルト）
+
+    Dorisによって作成されたIcebergテーブルでは、Datetimeは`timestamp_ntz`タイプに対応することに注意してください。
+
+    3.1.0以降のバージョンでは、DatetimeタイプがParquetファイルに書き込まれる際、使用される物理タイプはINT96ではなくINT64です。
+    
+    また、Icebergテーブルが他のシステムによって作成された場合、`timestamp`と`timestamp_ntz`タイプは両方ともDoris Datetimeタイプにマッピングされますが、書き込み時には実際のタイプに基づいてタイムゾーンを処理する必要があるかどうかを判定します。
+
+  * ORC
+
+* **圧縮形式**
+
+  * Parquet: snappy、zstd（デフォルト）、plain（圧縮なし）。
+
+  * ORC: snappy、zlib（デフォルト）、zstd、plain（圧縮なし）。
+
+* **ストレージメディア**
+
+  * HDFS
+
+  * オブジェクトストレージ
+
+### スキーマ変更
+
+3.1.0から、DorisはIcebergテーブルのスキーマ変更をサポートし、`ALTER TABLE`文を使用して変更できます。
+
+サポートされるスキーマ変更操作には以下が含まれます：
+
+* **カラム名変更**
+
+  `RENAME COLUMN`句を使用してカラム名を変更します。ネストされたタイプ内のカラム名変更はサポートされていません。
+
+  ```sql
+  ALTER TABLE iceberg_table RENAME COLUMN old_col_name TO new_col_name;
+  ```
+* **列の追加**
+
+  新しい列を追加するには`ADD COLUMN`を使用します。ネストした型への新しい列の追加はサポートされていません。
+
+  新しい列を追加する際、nullable属性、デフォルト値、コメント、列の位置を指定できます。
+
+  ```sql
+  ALTER TABLE iceberg_table ADD COLUMN col_name col_type [NULL|NOT NULL, [DEFAULT default_value, [COMMENT 'comment', [FIRST|AFTER col_name]]]];
+  ```
+例:
+
+  ```sql
+  ALTER TABLE iceberg_table ADD COLUMN new_col STRING NOT NULL DEFAULT 'default_value' COMMENT 'This is a new col' AFTER old_col;
+  ```
+* **列の追加**
+
+  `ADD COLUMN`を使用して複数の列を追加することもできます。新しい列はテーブルの末尾に追加されます。複数列での列の位置指定はサポートされていません。ネストされた型への新しい列の追加はサポートされていません。
+
+  各列の構文は単一列を追加する場合と同じです。
+
+  ```sql
+  ALTER TABLE iceberg_table ADD COLUMN (col_name1 col_type1 [NULL|NOT NULL, [DEFAULT default_value, [COMMENT 'comment']]], col_name2 col_type2 [NULL|NOT NULL, [DEFAULT default_value, [COMMENT 'comment']]] ...);
+  ```
+* **Drop Column**
+
+  `DROP COLUMN`を使用して列を削除します。ネストされた型内の列の削除はサポートされていません。
+
+  ```sql
+  ALTER TABLE iceberg_table DROP COLUMN col_name;
+  ```
+* **列の変更**
+
+  `MODIFY COLUMN`文を使用して、型、nullable、デフォルト値、コメント、列の位置を含む列の属性を変更します。
+
+  注意: 列の属性を変更する際は、変更されない全ての属性についても、元の値を明示的に指定する必要があります。
+
+  ```sql
+  ALTER TABLE iceberg_table MODIFY COLUMN col_name col_type [NULL|NOT NULL, [DEFAULT default_value, [COMMENT 'comment', [FIRST|AFTER col_name]]]];
+  ```
+例:
+
+  ```sql
+  CREATE TABLE iceberg_table (
+      id INT,
+      name STRING
+  );
+  -- Modify the id column type to BIGINT, set as NOT NULL, default value to 0, and add comment
+  ALTER TABLE iceberg_table MODIFY COLUMN id BIGINT NOT NULL DEFAULT 0 COMMENT 'This is a modified id column';
+  ```
+* **列の並び替え**
+
+  `ORDER BY`を使用して新しい列の順序を指定することで列を並び替えます。
+
+  ```sql
+  ALTER TABLE iceberg_table ORDER BY (col_name1, col_name2, ...);
+  ```
+### Partition Evolution
+
+バージョン4.0.2以降、DorisはIcebergテーブルに対して`ALTER`文によるPartition Evolutionをサポートしています。
+
+サポートされているパーティション変換には以下が含まれます：
+
+| Transform | Syntax | Example |
+|-----------|--------|---------|
+| bucket | `bucket(N, column)` | `bucket(16, id)` |
+| truncate | `truncate(N, column)` | `truncate(10, name)` |
+| year | `year(column)` | `year(ts)` |
+| month | `month(column)` | `month(ts)` |
+| day | `day(column)` | `day(ts)` |
+| hour | `hour(column)` | `hour(ts)` |
+| identity | `column` | `category` |
+
+サポートされている操作には以下が含まれます：
+
+- **パーティションキーの追加**
+
+    ```sql
+    -- use optional AS keyword to specify a custom name for the partition field
+    ALTER TABLE table_name ADD PARTITION KEY partition_transform [AS key_name];
+
+    -- example
+    ALTER TABLE prod.db.sample ADD PARTITION KEY bucket(16, id);
+    ALTER TABLE prod.db.sample ADD PARTITION KEY truncate(4, data);
+    ALTER TABLE prod.db.sample ADD PARTITION KEY year(ts);
+    -- use optional AS keyword to specify a custom name for the partition field 
+    ALTER TABLE prod.db.sample ADD PARTITION KEY bucket(16, id) AS shard;
+    ```
+- **パーティションキーを削除**
+
+    ```sql
+    ALTER TABLE table_name DROP PARTITION KEY partition_transform｜key_name;
+
+    -- example
+    ALTER TABLE prod.db.sample DROP PARTITION KEY catalog;
+    ALTER TABLE prod.db.sample DROP PARTITION KEY bucket(16, id);
+    ALTER TABLE prod.db.sample DROP PARTITION KEY truncate(4, data);
+    ALTER TABLE prod.db.sample DROP PARTITION KEY year(ts);
+    ALTER TABLE prod.db.sample DROP PARTITION KEY shard;
+    ```
+- **パーティションキーを置換する**
+
+    ```sql
+    -- use optional AS keyword to specify a custom name for the partition field
+    ALTER TABLE table_name REPLACE PARTITION KEY key_name WITH partition_transform [AS key_name];
+
+    -- example
+    ALTER TABLE prod.db.sample REPLACE PARTITION KEY ts_day WITH day(ts);
+    -- use optional AS keyword to specify a custom name for the new partition field 
+    ALTER TABLE prod.db.sample REPLACE PARTITION KEY ts_day WITH day(ts) AS day_of_ts;
+    ```
+### ブランチとタグの管理
+
+> Since 3.1.0
+
+* **ブランチの作成**
+
+  構文:
+
+  ```sql
+  ALTER TABLE [catalog.][database.]table_name
+  CREATE [OR REPLACE] BRANCH [IF NOT EXISTS] <branch_name>
+  [AS OF VERSION <snapshot_id>]
+  [RETAIN <num> { DAYS | HOURS | MINUTES }]
+  [WITH SNAPSHOT RETENTION { snapshotKeep | timeKeep }]
+
+  snapshotKeep:
+    <num> SNAPSHOTS [<num> { DAYS | HOURS | MINUTES }]
+
+  timeKeep:
+    <num> { DAYS | HOURS | MINUTES }
+  ```
+例:
+
+  ```sql
+  -- Create branch "b1".
+  ALTER TABLE tbl CREATE BRANCH b1;
+  ALTER TABLE tb1 CREATE BRANCH IF NOT EXISTS b1;
+  -- Create or replace branch "b1".
+  ALTER TABLE tb1 CREATE OR REPLACE BRANCH b1;
+  -- Create or replace branch "b1" based on snapshot "123456".
+  ALTER TABLE tb1 CREATE OR REPLACE BRANCH b1 AS OF VERSION 123456;
+  -- Create or replace branch "b1" based on snapshot "123456", branch retained for 1 day.
+  ALTER TABLE tb1 CREATE OR REPLACE BRANCH b1 AS OF VERSION 123456 RETAIN 1 DAYS;
+  -- Create branch "b1" based on snapshot "123456", branch retained for 30 days. Keep the latest 3 snapshots in the branch.
+  ALTER TABLE tb1 CREATE BRANCH b1 AS OF VERSION 123456 RETAIN 30 DAYS WITH SNAPSHOT RETENTION 3 SNAPSHOTS;
+  -- Create branch "b1" based on snapshot "123456", branch retained for 30 days. Snapshots in the branch are retained for at most 2 days.
+  ALTER TABLE tb1 CREATE BRANCH b1 AS OF VERSION 123456 RETAIN 30 DAYS WITH SNAPSHOT RETENTION 2 DAYS;
+  -- Create branch "b1" based on snapshot "123456", branch retained for 30 days. Keep the latest 3 snapshots in the branch, and snapshots in the branch are retained for at most 2 days.
+  ALTER TABLE tb1 CREATE BRANCH b1 AS OF VERSION 123456 RETAIN 30 DAYS WITH SNAPSHOT RETENTION 3 SNAPSHOTS 2 DAYS;
+  ```
+* **ブランチの削除**
+
+  構文:
+
+  ```sql
+  ALTER TABLE [catalog.][database.]table_name
+  DROP BRANCH [IF EXISTS] <branch_name>;
+  ```
+例:
+
+  ```sql
+  ALTER TABLE tbl DROP BRANCH b1;
+  ```
+* **タグの作成**
+
+  構文:
+
+  ```sql
+  ALTER TABLE [catalog.][database.]table_name
+  CREATE [OR REPLACE] TAG [IF NOT EXISTS] <tag_name>
+  [AS OF VERSION <snapshot_id>]
+  [RETAIN <num> { DAYS | HOURS | MINUTES }]
+  ```
+例:
+
+  ```sql
+  -- Create tag "t1".
+  ALTER TABLE tbl CREATE TAG t1;
+  ALTER TABLE tb1 CREATE TAG IF NOT EXISTS t1;
+  -- Create or replace tag "t1".
+  ALTER TABLE tb1 CREATE OR REPLACE TAG t1;
+  -- Create or replace tag "t1" based on snapshot "123456".
+  ALTER TABLE tb1 CREATE OR REPLACE TAG b1 AS OF VERSION 123456;
+  -- Create or replace tag "b1" based on snapshot "123456", tag retained for 1 day.
+  ALTER TABLE tb1 CREATE OR REPLACE TAG b1 AS OF VERSION 123456 RETAIN 1 DAYS;
+  ```
+* **Drop Tag**
+
+  構文:
+
+  ```sql
+  ALTER TABLE [catalog.][database.]table_name
+  DROP TAG [IF EXISTS] <tag_name>;
+  ```
+例：
+
+  ```sql
+  ALTER TABLE tbl DROP TAG t1;
+  ```
+## Iceberg Table Actions
+
+> この機能は4.0.2以降でサポートされています
+>
+> これは実験的な機能です。
+
+Dorisは`ALTER TABLE EXECUTE`構文を通じてIcebergテーブルで特定のアクションを実行することをサポートしています。この構文は、テーブル最適化やスナップショット管理などの様々なアクションを実行するための統一されたインターフェースを提供します。
+
+```sql
+ALTER TABLE [catalog.][database.]table_name
+EXECUTE <action_name> ("key1" = "value1", "key2" = "value2", ...)
+[WHERE <condition>]
+```
+* `action_name`: 実行するアクションの名前
+* `("key1" = "value1", ...)`: キーと値のペアとして提供されるアクション関連のパラメータ。パラメータ名は二重引用符で囲む必要があります
+* `[WHERE <condition>]`: 操作の対象となるパーティションやデータ範囲を指定するためのオプションのWHERE条件（一部の操作でのみサポート）
+
+### rewrite_data_files
+
+`rewrite_data_files`操作は、Icebergテーブル内のデータファイルを書き直して小さなファイルの統合を実装し、クエリパフォーマンスとストレージ効率を最適化します。これは同期操作です。
+
+**構文:**
+
+```sql
+ALTER TABLE [catalog.][database.]table_name
+EXECUTE rewrite_data_files ("key1" = "value1", "key2" = "value2", ...) [WHERE <condition>]
+```
+**パラメータ:**
+
+| パラメータ名 | 型 | デフォルト値 | 説明 |
+| -------------- | ---- | ------------- | ----------- |
+| `target-file-size-bytes` | Long | 536870912 (512MB) | 出力ファイルの目標ファイルサイズ（バイト単位） |
+| `min-file-size-bytes` | Long | target-file-size-bytes * 0.75 | 最小ファイルサイズ（バイト単位）。これより小さいファイルは書き換えされます。指定されない場合は、目標ファイルサイズの75%がデフォルトになります |
+| `max-file-size-bytes` | Long | target-file-size-bytes * 1.8 | 最大ファイルサイズ（バイト単位）。これより大きいファイルは分割されます。指定されない場合は、目標ファイルサイズの180%がデフォルトになります |
+| `min-input-files` | Integer | 5 | 書き換えをトリガーする入力ファイルの最小数。書き換えするファイル数がこの閾値に達したときのみ書き換えが実行されます |
+| `rewrite-all` | Boolean | false | ファイルサイズに関係なくすべてのファイルを書き換えするかどうか |
+| `max-file-group-size-bytes` | Long | 107374182400 (100GB) | ファイルグループの最大サイズ（バイト単位）。単一の書き換えタスクで処理されるデータ量を制限するために使用されます |
+| `delete-file-threshold` | Integer | Integer.MAX_VALUE | 書き換えをトリガーするのに必要な削除ファイルの最小数 |
+| `delete-ratio-threshold` | Double | 0.3 | 書き換えをトリガーするのに必要な削除レコードと全レコードの最小比率（削除レコード / 全レコード）。範囲: 0.0 - 1.0 |
+| `output-spec-id` | Long | 2 | 出力ファイルのパーティション仕様ID |
+
+**戻り値:**
+
+`rewrite_data_files`を実行すると、以下の4列を含む結果セットが返されます:
+
+| 列名 | 型 | 説明 |
+| ----------- | ---- | ----------- |
+| `rewritten_data_files_count` | INT | 書き換えされたデータファイルの数 |
+| `added_data_files_count` | INT | 新しく書き込まれたデータファイルの数 |
+| `rewritten_bytes_count` | INT | 書き換えされたバイト数 |
+| `removed_delete_files_count` | BIGINT | 削除された削除ファイルの数 |
+
+**例:**
+
+```sql
+-- Rewrite data files with default parameters
+ALTER TABLE iceberg_db.iceberg_table EXECUTE rewrite_data_files();
+
+-- Specify target file size and minimum input files
+ALTER TABLE iceberg_db.iceberg_table 
+EXECUTE rewrite_data_files (
+  "target-file-size-bytes" = "134217728",
+  "min-input-files" = "10"
+);
+
+-- Use WHERE condition to rewrite specific partition data
+ALTER TABLE iceberg_db.iceberg_table 
+EXECUTE rewrite_data_files (
+  "target-file-size-bytes" = "268435456"
+)
+WHERE date_col = '2024-01-01';
+
+-- Rewrite all files
+ALTER TABLE iceberg_db.iceberg_table 
+EXECUTE rewrite_data_files (
+  "rewrite-all" = "true",
+  "target-file-size-bytes" = "536870912"
+);
+```
+**注意事項:**
+
+1. `rewrite_data_files`操作はデータファイルの読み取りと書き換えを行うため、追加のI/Oおよび計算オーバーヘッドが発生します。クラスタリソースを適切に割り当ててください。
+2. 実行前に、[データファイル配布の表示](#view-data-file-distribution)セクションのSQLを使用して、書き換え操作が必要かどうかを評価できます
+3. WHERE条件を使用して、書き換えのパーティションまたはデータ範囲を制限できます。この条件は、WHERE条件に一致するデータを含まないファイルを除外し、書き換えるファイル数とデータ量を削減します
+4. 実行前に、[書き換えファイル選択ロジック](#rewrite-file-selection-logic)セクションのSQLを使用して、どのファイルが書き換えられるかを計算できます
+
+### cherrypick_snapshot
+
+`cherrypick_snapshot`操作は、指定されたスナップショットからの変更を現在のテーブル状態にマージし、元のスナップショットを変更または削除することなく新しいスナップショットを作成します。
+
+**構文:**
+
+```sql
+ALTER TABLE [catalog.][database.]table_name
+EXECUTE cherrypick_snapshot ("snapshot_id" = "<snapshot_id>")
+```
+**パラメータ:**
+
+| Parameter Name | Type | Required | Description |
+| -------------- | ---- | -------- | ----------- |
+| `snapshot_id` | Long | Yes | マージするスナップショットID |
+
+**戻り値:**
+
+`cherrypick_snapshot`を実行すると、以下の2つのカラムを持つ結果セットが返されます:
+
+| Column Name | Type | Description |
+| ----------- | ---- | ----------- |
+| `source_snapshot_id` | BIGINT | 変更がマージされたスナップショットID |
+| `current_snapshot_id` | BIGINT | マージ操作後に作成され、現在のスナップショットとして設定された新しいスナップショットのID |
+
+**例:**
+
+```sql
+-- Merge changes from snapshot 123456789 into current table state
+ALTER TABLE iceberg_db.iceberg_table 
+EXECUTE cherrypick_snapshot ("snapshot_id" = "123456789");
+```
+**注意:**
+
+1. この操作はWHERE条件をサポートしていません
+2. 指定されたスナップショットが存在しない場合、操作は失敗します
+3. マージ操作は新しいスナップショットを作成し、元のスナップショットは削除されません
+
+### fast_forward
+
+`fast_forward`操作は、あるブランチの現在のスナップショットを別のブランチの最新のスナップショットに早送りします。
+
+**構文:**
+
+```sql
+ALTER TABLE [catalog.][database.]table_name
+EXECUTE fast_forward ("branch" = "<branch_name>", "to" = "<target_branch>")
+```
+**パラメータ:**
+
+| Parameter Name | Type | Required | Description |
+| -------------- | ---- | -------- | ----------- |
+| `branch` | String | Yes | fast-forwardするbranchの名前 |
+| `to` | String | Yes | ターゲットbranchの名前。`branch`はこのbranchの最新snapshotにfast-forwardされます |
+
+**戻り値:**
+
+`fast_forward`を実行すると、以下の3つのカラムを持つ結果セットが返されます:
+
+| Column Name | Type | Description |
+| ----------- | ---- | ----------- |
+| `branch_updated` | STRING | fast-forwardされたbranchの名前 |
+| `previous_ref` | BIGINT | fast-forward操作前にbranchが指していたsnapshot ID（NULLの場合があります） |
+| `updated_ref` | BIGINT | fast-forward操作後にbranchが指しているsnapshot ID |
+
+**例:**
+
+```sql
+-- Fast-forward feature branch to the latest snapshot of main branch
+ALTER TABLE iceberg_db.iceberg_table 
+EXECUTE fast_forward ("branch" = "feature", "to" = "main");
+```
+**注意:**
+
+1. この操作はWHERE条件をサポートしません
+2. 指定されたブランチが存在しない場合、操作は失敗します
+3. ブランチのみがfast-forwardできます。tagはできません
+
+### rollback_to_snapshot
+
+`rollback_to_snapshot`操作は、Icebergテーブルを指定されたスナップショットにロールバックします。
+
+**構文:**
+
+```sql
+ALTER TABLE [catalog.][database.]table_name
+EXECUTE rollback_to_snapshot ("snapshot_id" = "<snapshot_id>")
+```
+**パラメータ:**
+
+| Parameter Name | Type | Required | Description |
+| -------------- | ---- | -------- | ----------- |
+| `snapshot_id` | Long | Yes | ロールバック先のスナップショットID |
+
+**戻り値:**
+
+`rollback_to_snapshot`を実行すると、以下の2つの列を持つ結果セットが返されます:
+
+| Column Name | Type | Description |
+| ----------- | ---- | ----------- |
+| `previous_snapshot_id` | BIGINT | ロールバック操作前に現在だったスナップショットID |
+| `current_snapshot_id` | BIGINT | 指定されたスナップショットにロールバック後に現在として設定されたスナップショットID |
+
+**例:**
+
+```sql
+-- Rollback to snapshot 987654321
+ALTER TABLE iceberg_db.iceberg_table 
+EXECUTE rollback_to_snapshot ("snapshot_id" = "987654321");
+```
+**注記:**
+
+1. この操作はWHERE条件をサポートしません
+2. 指定されたスナップショットが存在しない場合、操作は失敗します
+3. 現在のスナップショットが既にターゲットスナップショットである場合、操作は新しいスナップショットを作成せずに直接戻ります
+
+### rollback_to_timestamp
+
+`rollback_to_timestamp`操作は、指定されたタイムスタンプのスナップショットにIcebergテーブルをロールバックします。
+
+**構文:**
+
+```sql
+ALTER TABLE [catalog.][database.]table_name
+EXECUTE rollback_to_timestamp ("timestamp" = "<timestamp>")
+```
+**パラメータ:**
+
+| Parameter Name | Type | Required | Description |
+| -------------- | ---- | -------- | ----------- |
+| `timestamp` | String | Yes | ロールバック先のタイムスタンプ。2つの形式をサポートします:<br />1. ISO datetime形式: `yyyy-MM-dd HH:mm:ss.SSS` (例: `2024-01-01 10:30:00.000`)<br />2. ミリ秒タイムスタンプ (例: `1704067200000`) |
+
+**戻り値:**
+
+`rollback_to_timestamp`を実行すると、以下の2列を持つ結果セットが返されます:
+
+| Column Name | Type | Description |
+| ----------- | ---- | ----------- |
+| `previous_snapshot_id` | BIGINT | ロールバック操作前に現在だったスナップショットID |
+| `current_snapshot_id` | BIGINT | 指定されたタイムスタンプで現在だったスナップショットIDで、現在設定されているもの |
+
+**例:**
+
+```sql
+-- Rollback to specified timestamp (ISO format)
+ALTER TABLE iceberg_db.iceberg_table 
+EXECUTE rollback_to_timestamp ("timestamp" = "2024-01-01 10:30:00.000");
+
+-- Rollback to specified timestamp (timestamp format)
+ALTER TABLE iceberg_db.iceberg_table 
+EXECUTE rollback_to_timestamp ("timestamp" = "1704067200000");
+```
+**注意事項:**
+
+1. この操作はWHERE条件をサポートしません
+2. `timestamp`パラメータはISOの日時形式（`yyyy-MM-dd HH:mm:ss.SSS`）またはミリ秒のタイムスタンプ形式をサポートします
+3. 指定されたタイムスタンプに対応するスナップショットが存在しない場合、操作は失敗します
+
+### set_current_snapshot
+
+`set_current_snapshot`操作は、Icebergテーブルの現在のスナップショットを指定されたスナップショットIDまたは参照（ブランチまたはタグ）に設定します。
+
+**構文:**
+
+```sql
+ALTER TABLE [catalog.][database.]table_name
+EXECUTE set_current_snapshot ("snapshot_id" = "<snapshot_id>" | "ref" = "<ref_name>")
+```
+**パラメータ:**
+
+| Parameter Name | Type | Required | Description |
+| -------------- | ---- | -------- | ----------- |
+| `snapshot_id` | Long | Either one | 現在として設定するスナップショットID |
+| `ref` | String | Either one | 現在として設定する参照名（ブランチまたはタグ） |
+
+**戻り値:**
+
+`set_current_snapshot` を実行すると、以下の2つの列を持つ結果セットが返されます:
+
+| Column Name | Type | Description |
+| ----------- | ---- | ----------- |
+| `previous_snapshot_id` | BIGINT | 新しい現在のスナップショットを設定する前に現在だったスナップショットID |
+| `current_snapshot_id` | BIGINT | 現在として設定されたスナップショットID（`snapshot_id` パラメータから、または `ref` パラメータから解決された） |
+
+**例:**
+
+```sql
+-- Set current snapshot by snapshot ID
+ALTER TABLE iceberg_db.iceberg_table 
+EXECUTE set_current_snapshot ("snapshot_id" = "123456789");
+
+-- Set current snapshot by branch name
+ALTER TABLE iceberg_db.iceberg_table 
+EXECUTE set_current_snapshot ("ref" = "feature_branch");
+
+-- Set current snapshot by tag name
+ALTER TABLE iceberg_db.iceberg_table 
+EXECUTE set_current_snapshot ("ref" = "v1.0");
+```
+**注記:**
+
+1. この操作はWHERE条件をサポートしていません
+2. `snapshot_id`と`ref`パラメータは相互排他的で、どちらか一方のみ指定できます
+3. 指定されたスナップショットIDまたは参照が存在しない場合、操作は失敗します
+4. 現在のスナップショットが既にターゲットスナップショットである場合、操作は新しいスナップショットを作成せずに直接戻ります
+
+## Icebergテーブル最適化
+
+### データファイル分散の確認
+
+以下のSQLを使用してIcebergテーブルのデータ分散と削除ファイル数を分析し、`rewrite_data_files`などの最適化が必要かどうかを判断できます。
+
+- データファイルサイズ分散を表示します。これにより、ファイルが多すぎるかどうかを特定するのに役立ちます
+
+  ```sql
+  SELECT
+    CASE
+      WHEN file_size_in_bytes BETWEEN 0 AND 8 * 1024 * 1024 THEN '0-8M'
+      WHEN file_size_in_bytes BETWEEN 8 * 1024 * 1024 + 1 AND 32 * 1024 * 1024 THEN '8-32M'
+      WHEN file_size_in_bytes BETWEEN 2 * 1024 * 1024 + 1 AND 128 * 1024 * 1024 THEN '32-128M'
+      WHEN file_size_in_bytes BETWEEN 128 * 1024 * 1024 + 1 AND 512 * 1024 * 1024 THEN '128-512M'
+      WHEN file_size_in_bytes > 512 * 1024 * 1024 THEN '> 512M'
+      ELSE 'Unknown'
+    END AS SizeRange,
+    COUNT(*) AS FileNum
+  FROM store_sales$data_files
+  GROUP BY
+    SizeRange;
+
+  +-----------+---------+
+  | SizeRange | FileNum |
+  +-----------+---------+
+  | 0-8M      |       8 |
+  | 8-32M     |       6 |
+  +-----------+---------+
+  ```
+- データファイル数と削除ファイル数を表示する
+
+  ```sql
+  SELECT
+    CASE
+      WHEN content = 0 THEN 'DataFile'
+      WHEN content = 1 THEN 'PositionDeleteFile'
+      WHEN content = 2 THEN 'EqualityDeleteFile'
+      ELSE 'Unknown'
+    END AS ContentType,
+    COUNT(*) AS FileNum,
+    SUM(file_size_in_bytes) AS SizeInBytes,
+    SUM(record_count) AS Records
+  FROM
+    iceberg_table$files
+  GROUP BY
+    ContentType;
+
+  +--------------------+---------+-------------+---------+
+  | ContentType        | FileNum | SizeInBytes | Records |
+  +--------------------+---------+-------------+---------+
+  | EqualityDeleteFile |    2787 |     1432518 |   27870 |
+  | DataFile           |    2787 |     4062416 |   38760 |
+  | PositionDeleteFile |      11 |       36608 |   10890 |
+  +--------------------+---------+-------------+---------+
+  ```
+### Dangling Delete
+
+場合によっては、`rewrite_data_files`アクションを実行した後、特定のPosition Deleteへの参照がSnapshotメタデータから削除されていない可能性があります（Dangling Delete）。この状況で、メタデータの行番号情報を直接使用すると、結果が不正確になる可能性があります。
+
+したがって、デフォルトでは、`COUNT(*)`クエリに対して、Position Deleteファイルが見つかった場合、COUNTプッシュダウン最適化は有効化されず、代わりにファイルを直接読み取って実際の`COUNT(*)`結果を取得します。しかし、この方法は時間がかかります。
+
+ユーザーがDangling Deleteの問題がないことを保証できる場合、Dorisセッション変数`ignore_iceberg_dangling_delete`を使用してこのチェックをスキップできます。この変数のデフォルトは`false`です。`true`に設定すると、システムはメタデータの行数情報に基づいて直接`COUNT(*)`結果を返し、クエリ効率を向上させます。
+
+この機能はバージョン3.1.4および4.0.3からサポートされています。
+
+## 付録
+
+### `rewrite_data_files`ファイル選択戦略
+
+このセクションを確認して、書き換え対象ファイルを選択するロジックを理解できます。また、以下のSQLクエリを使用して、システムテーブル情報に基づいてどのファイルが書き換えられるかを分析することもできます。これは、実際の書き換え操作を実行する前に、書き換え動作をデバッグし理解するのに役立ちます。
+
+書き換え操作は二段階のフィルタリングとグループ化戦略を使用します：
+
+1. ステージ1：ファイルレベルフィルタリング
+
+    最初に、ファイルレベルの条件に基づいてファイルがフィルタリングされます。以下の条件のうち少なくとも1つを満たすファイルのみが書き換え対象として考慮されます：
+
+    1. **ファイルサイズが範囲外**：ファイルが`min-file-size-bytes`より小さい、または`max-file-size-bytes`より大きい
+    2. **削除ファイルが多すぎる**：関連する削除ファイルの数 >= `delete-file-threshold`
+    3. **削除率が高い**：削除レコード率 >= `delete-ratio-threshold`
+
+    **削除ファイル条件に関する注意：** 削除ファイルに関連する条件（`delete-file-threshold`と`delete-ratio-threshold`）はファイル書き換え選択に影響しますが、システムテーブルのSQLクエリでは正確に計算できません。これは、現在のシステムテーブル情報では、どのデータファイルが削除ファイルの影響を受けるかを正確に判定するのに不十分だからです。削除ファイルは特定のデータファイル（特にPosition Deleteファイル）にのみ影響を与える可能性があり、削除ファイルとデータファイルの関連付けには、現在のシステムテーブルでは利用できない、より詳細なメタデータが必要です。実際の書き換え操作では、システムテーブルで公開されていない、より詳細なメタデータに基づいてこれらの条件を評価します。
+
+2. ステージ2：BinPackグループ化とグループレベルフィルタリング
+
+    ファイルレベルフィルタリング後、ファイルはパーティションごとにグループ化され、各パーティション内で、ファイルサイズと`max-file-group-size-bytes`に基づいて**BinPackアルゴリズム**を使用してグループ化されます。BinPackアルゴリズムは、書き換え操作を最適化するために、ファイルをグループに効率的にパックします。
+
+    グループ化後、ファイルグループはグループレベルの条件に基づいてフィルタリングされます。ファイルグループは以下の条件のうち少なくとも1つを満たす場合に書き換えられます：
+
+    1. **入力ファイルが十分**：グループ内のファイル数 > 1 かつ ファイル数 >= `min-input-files`
+    2. **コンテンツが十分**：グループ内のファイル数 > 1 かつ 合計サイズ > `target-file-size-bytes`
+    3. **コンテンツが多すぎる**：グループの合計サイズ > `max-file-group-size-bytes`
+    4. **削除ファイル問題のあるファイルを含む**：グループ内の少なくとも1つのファイルが削除ファイルが多すぎるか、削除率が高い。
+
+    **BinPackグループ化に関する注意：** 各パーティション内のファイルをグループ化するために使用されるBinPackアルゴリズムは、システムテーブルのSQLクエリでは正確にシミュレートできない複雑な最適化アルゴリズムです。このアルゴリズムはファイルサイズと`max-file-group-size-bytes`を考慮してファイルをグループに効率的にパックするため、単純なパーティションベースのグループ化とは異なるグループ化結果になる可能性があります。したがって、以下で提供されるSQLクエリは、ファイルレベルの条件を満たすファイルのみを特定できますが、書き換えられる最終的なファイルグループを正確に計算することはできません。
+
+以下はいくつかのクエリ戦略の例です：
+
+- クエリ1：ファイルレベル条件を満たすファイルの特定
+
+    このクエリは、ファイルレベル条件（ファイルサイズ）を満たし、書き換え対象として考慮されるファイルを特定します：
+
+    ```sql
+    -- Set parameters (adjust according to your rewrite parameters)
+    SET @min_file_size_bytes = 16 * 1024 * 1024;   -- 16 MB (default: target-file-size-bytes * 0.75)
+    SET @max_file_size_bytes = 768 * 1024 * 1024;  -- 768 MB (default: target-file-size-bytes * 1.8)
+
+    SELECT 
+        file_path,
+        `partition`,
+        file_size_in_bytes / 1024.0 / 1024.0 AS file_size_mb,
+        record_count,
+        CASE 
+            WHEN file_size_in_bytes < @min_file_size_bytes THEN 'Too small'
+            WHEN file_size_in_bytes > @max_file_size_bytes THEN 'Too large'
+        END AS size_issue
+    FROM iceberg_table$data_files
+    WHERE file_size_in_bytes < @min_file_size_bytes 
+    OR file_size_in_bytes > @max_file_size_bytes
+    ORDER BY `partition`, file_size_in_bytes DESC;
+    ```
+**サンプル出力:**
+
+    ```
+    +----------------------------------------------------------------------------------------+---------------------------+-------------+--------------+------------+
+    | file_path                                                                             | partition                 | file_size_mb | record_count | size_issue |
+    +----------------------------------------------------------------------------------------+---------------------------+-------------+--------------+------------+
+    | s3a://bucket/path/to/table/data/date_col=2024-01-01/00000-0-00000-00000-0.parquet   | {"date_col":"2024-01-01"} |     0.00215  |            5 | Too small  |
+    | s3a://bucket/path/to/table/data/date_col=2024-01-01/00001-0-00001-00001-0.parquet     | {"date_col":"2024-01-01"} |     0.00198  |            5 | Too small  |
+    | s3a://bucket/path/to/table/data/date_col=2024-01-02/00002-0-00002-00002-0.parquet     | {"date_col":"2024-01-02"} |     0.00231  |            5 | Too small  |
+    | s3a://bucket/path/to/table/data/date_col=2024-01-02/00003-0-00003-00003-0.parquet     | {"date_col":"2024-01-02"} |   850.23456  |      1250000 | Too large  |
+    | s3a://bucket/path/to/table/data/date_col=2024-01-03/00004-0-00004-00004-0.parquet     | {"date_col":"2024-01-03"} |     0.00245  |            5 | Too small  |
+    +----------------------------------------------------------------------------------------+---------------------------+-------------+--------------+------------+
+    5 rows in set
+    ```
+**注意:** このクエリは、ファイルレベルの条件（ファイルサイズ）を満たすファイルのみを識別できます。実際に書き換えられるファイルグループは、SQLクエリでは正確にシミュレートできないBinPackグルーピングアルゴリズムに依存します。このクエリで識別されたファイルは、BinPackアルゴリズムによって異なる方法でグループ化される可能性があり、一部のグループはグループレベルの条件に基づいてフィルタリングされる場合があります。
+
+- Query 2: 全体統計サマリー
+
+    このクエリは、ファイルレベルの条件を満たすファイルに関する全体統計を提供します：
+
+    ```sql
+    -- Set parameters (adjust according to your rewrite parameters)
+    SET @min_file_size_bytes = 16 * 1024 * 1024;
+    SET @max_file_size_bytes = 768 * 1024 * 1024;
+
+    WITH file_analysis AS (
+        SELECT 
+            `partition`,
+            file_path,
+            file_size_in_bytes,
+            record_count,
+            (file_size_in_bytes < @min_file_size_bytes OR file_size_in_bytes > @max_file_size_bytes) AS meets_file_level_conditions
+        FROM iceberg_table$data_files
+    )
+    SELECT 
+        'Total files' AS metric, 
+        COUNT(*) AS value
+    FROM file_analysis
+    UNION ALL
+    SELECT 
+        'Files meeting file-level conditions', 
+        SUM(CASE WHEN meets_file_level_conditions THEN 1 ELSE 0 END)
+    FROM file_analysis
+    UNION ALL
+    SELECT 
+        'Total size (GB)', 
+        ROUND(SUM(file_size_in_bytes) / 1024.0 / 1024.0 / 1024.0, 2)
+    FROM file_analysis
+    UNION ALL
+    SELECT 
+        'Size meeting file-level conditions (GB)', 
+        ROUND(SUM(CASE WHEN meets_file_level_conditions THEN file_size_in_bytes ELSE 0 END) / 1024.0 / 1024.0 / 1024.0, 2)
+    FROM file_analysis
+    UNION ALL
+    SELECT 
+        'Percentage meeting file-level conditions (%)', 
+        ROUND(SUM(CASE WHEN meets_file_level_conditions THEN 1 ELSE 0 END) * 100.0 / COUNT(*), 2)
+    FROM file_analysis;
+    ```
+**サンプル出力:**
+
+    ```
+    +----------------------------------------------+--------+
+    | metric                                       | value  |
+    +----------------------------------------------+--------+
+    | Total files                                  |  15.00 |
+    | Total size (GB)                              |   2.45 |
+    | Files meeting file-level conditions          |  12.00 |
+    | Size meeting file-level conditions (GB)      |   1.85 |
+    | Percentage meeting file-level conditions (%) |  80.00 |
+    +----------------------------------------------+--------+
+    5 rows in set
+    ```
+**注意:**
+
+    - 例の`iceberg_table`を実際のテーブル名に置き換えてください
+    - 実際のrewriteパラメータに応じてパラメータ値（`@min_file_size_bytes`、`@max_file_size_bytes`）を調整してください
+    - 上記に示されたデフォルト値は、デフォルトのrewriteパラメータに対応しています（min-file-size-bytes = target-file-size-bytes * 0.75、max-file-size-bytes = target-file-size-bytes * 1.8）
+
+- スナップショットとブランチの関係を表示する
+
+    ```sql
+    SELECT
+    refs_data.snapshot_id,
+    snapshots.committed_at,
+    snapshots.operation,
+    ARRAY_SORT(refs_data.refs)
+    FROM (
+    SELECT
+        snapshot_id,
+        ARRAY_AGG(CONCAT(type, ':', name)) AS refs
+    FROM
+        iceberg_table$refs
+    GROUP BY
+        snapshot_id
+    ) AS refs_data
+    JOIN (
+    SELECT
+        snapshot_id,
+        committed_at,
+        operation
+    FROM
+        iceberg_table$snapshots
+    ) AS snapshots
+    ON refs_data.snapshot_id = snapshots.snapshot_id
+    ORDER BY
+    snapshots.committed_at;
+
+    +---------------------+----------------------------+-----------+-------------------------------------+
+    | snapshot_id         | committed_at               | operation | ARRAY_SORT(refs_data.refs)          |
+    +---------------------+----------------------------+-----------+-------------------------------------+
+    | 8272911997874079853 | 2025-07-10 15:27:07.177000 | append    | ["BRANCH:b1", "TAG:t1"]             |
+    | 1325777059626757917 | 2025-07-10 15:27:07.530000 | append    | ["BRANCH:b2", "TAG:t2"]             |
+    |   76492482642020578 | 2025-07-10 15:27:07.865000 | append    | ["BRANCH:b3", "TAG:t3"]             |
+    | 1788715857849070138 | 2025-07-12 04:15:19.626000 | append    | ["BRANCH:main", "TAG:t4", "TAG:t5"] |
+    +---------------------+----------------------------+-----------+-------------------------------------+
+    ```

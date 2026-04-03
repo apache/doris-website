@@ -1,6 +1,7 @@
 import styles from '../styles.module.css';
 import React, { useState, useEffect, useContext } from 'react';
 import { useHistory, useLocation } from '@docusaurus/router';
+import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import { useThemeConfig } from '@docusaurus/theme-common';
 import { useNavbarMobileSidebar } from '@docusaurus/theme-common/internal';
 import { splitNavbarItems } from '@docusaurus/theme-common/internal';
@@ -14,6 +15,8 @@ import CloseIcon from '@site/static/images/icon/close.svg';
 import { DataContext } from '../../../Layout';
 import { ARCHIVE_PATH } from '../../../../constant/common' ;
 import { DEFAULT_VERSION } from '../../../../constant/version' ;
+import { getLocalePrefix, normalizePathname } from '@site/src/utils/locale';
+import { StarGreenIcon } from '@site/src/components/Icons/star-green-icon';
 
 interface NavbarDocsProps {
     isEN: boolean;
@@ -23,28 +26,40 @@ export const NavbarDocsLeft = ({ isEN }: NavbarDocsProps) => {
     const [currentVersion, setCurrentVersion] = useState(DEFAULT_VERSION);
     const location = useLocation();
     const history = useHistory();
-    const docItems = isEN ? useThemeConfig().docNavbarEN.items : useThemeConfig().docNavbarZH.items;
+    const {
+        i18n: { currentLocale, defaultLocale, locales },
+    } = useDocusaurusContext();
+    const themeConfig = useThemeConfig();
+    const docItems =
+        currentLocale === 'zh-CN'
+            ? themeConfig.docNavbarZH.items
+            : currentLocale === 'ja' && themeConfig.docNavbarJA
+              ? themeConfig.docNavbarJA.items
+              : themeConfig.docNavbarEN.items;
     let [leftDocItems] = splitNavbarItems(docItems);
     if(location.pathname.includes(ARCHIVE_PATH)){
         leftDocItems = leftDocItems.filter((item)=>item.type !== 'search')
     }
+    const searchItem = getNavItem(leftDocItems, 'search');
+    const leftDocItemsWithoutSearch = leftDocItems.filter((item) => item.type !== 'search');
     useEffect(() => {
-        const secPath = location.pathname.includes('zh-CN/docs')
-            ? location.pathname.split('/')[3]
-            : location.pathname.split('/')[2];
-        if (location.pathname.includes('docs') && ['dev', '2.1', '2.0', '1.2'].includes(secPath)) {
+        const normalizedPathname = normalizePathname(location.pathname, locales);
+        const pathSegments = normalizedPathname.split('/');
+        const section = pathSegments[1];
+        const secPath = pathSegments[2];
+        if (section === 'docs' && ['dev', '2.1', '2.0', '1.2'].includes(secPath)) {
             setCurrentVersion(secPath);
         } else {
             setCurrentVersion(DEFAULT_VERSION);
         }
-    }, [typeof window !== 'undefined' && location.pathname]);
+    }, [locales, typeof window !== 'undefined' && location.pathname]);
     return (
         <div className={`navbar-left `}>
             <div className="navbar-logo-wrapper flex items-center">
                 <div
                     className="cursor-pointer docs"
                     onClick={() => {
-                        const url = `${isEN ? '' : '/zh-CN'}/docs${
+                        const url = `${getLocalePrefix(currentLocale, defaultLocale)}/docs${
                             currentVersion === '' ? '' : `/${currentVersion}`
                         }/gettingStarted/what-is-apache-doris`;
                         history.push(url);
@@ -54,14 +69,35 @@ export const NavbarDocsLeft = ({ isEN }: NavbarDocsProps) => {
                 </div>
             </div>
             <div className={`${styles.navbarLeftToc}`}>
-                <NavbarItems items={leftDocItems} isDocsPage={true} />
+                <NavbarItems items={leftDocItemsWithoutSearch} isDocsPage={true} />
+                {searchItem && (
+                    <div className="docs-search-container">
+                        <NavbarItems items={[searchItem]} isDocsPage={true} />
+                        <button
+                            className="navbar-ask-ai-btn rounded-full flex items-center gap-x-2 px-4 py-[5px] border border-primary bg-[#F0FFF7] text-[1rem]/[1.625rem] font-medium text-[#1D1D1D]"
+                            id="navbar-ask-ai-btn"
+                        >
+                            <StarGreenIcon />
+                            Ask AI
+                        </button>
+                    </div>
+                )}
             </div>
         </div>
     );
 };
 
 export const NavbarDocsRight = ({ isEN }: NavbarDocsProps) => {
-    const docItems = isEN ? useThemeConfig().docNavbarEN.items : useThemeConfig().docNavbarZH.items;
+    const {
+        i18n: { currentLocale },
+    } = useDocusaurusContext();
+    const themeConfig = useThemeConfig();
+    const docItems =
+        currentLocale === 'zh-CN'
+            ? themeConfig.docNavbarZH.items
+            : currentLocale === 'ja' && themeConfig.docNavbarJA
+              ? themeConfig.docNavbarJA.items
+              : themeConfig.docNavbarEN.items;
     const [, rightDocItems] = splitNavbarItems(docItems);
     const { showSearchPageMobile, setShowSearchPageMobile } = useContext(DataContext);
 
@@ -87,7 +123,16 @@ export const NavbarDocsRight = ({ isEN }: NavbarDocsProps) => {
 };
 
 export const NavbarDocsBottom = ({ isEN }: NavbarDocsProps) => {
-    const docItems = isEN ? useThemeConfig().docNavbarEN.items : useThemeConfig().docNavbarZH.items;
+    const {
+        i18n: { currentLocale },
+    } = useDocusaurusContext();
+    const themeConfig = useThemeConfig();
+    const docItems =
+        currentLocale === 'zh-CN'
+            ? themeConfig.docNavbarZH.items
+            : currentLocale === 'ja' && themeConfig.docNavbarJA
+              ? themeConfig.docNavbarJA.items
+              : themeConfig.docNavbarEN.items;
     const [, rightDocItems] = splitNavbarItems(docItems);
     return (
         <div className="docs-nav-version-locale">

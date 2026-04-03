@@ -83,7 +83,7 @@ Behavior after setting:
 This property can be used in combination with `include_database_list`. For example, first filter the required databases using `include_database_list`, then further specify the required tables using `include_table_list`.
 :::
 
-### Table Name Case Sensitivity
+### Table Name Case Sensitivity {#table-name-case-sensitivity-lower_case_table_names}
 
 This feature is supported since version 4.1.0.
 
@@ -109,7 +109,7 @@ CREATE CATALOG hive_catalog PROPERTIES (
 When `lower_case_table_names` is set to `1` or `2`, if tables with names that differ only in case exist in the remote metadata (such as `MyTable` and `mytable`), conflicts may occur. Doris will detect such conflicts and report an error.
 :::
 
-### Database Name Case Sensitivity
+### Database Name Case Sensitivity {#database-name-case-sensitivity-lower_case_database_names}
 
 This feature is supported since version 4.1.0.
 
@@ -243,7 +243,7 @@ Note 1: If a data catalog is explicitly specified in the MySQL command line or J
 
 Note 2: If the data catalog set by the user property `default_init_catalog` no longer exists, the session will automatically switch to the default `internal` data catalog.
 
-Note 3: This feature is available starting from version 3.1.x.
+Note 3: This feature is supported since version 3.1.x.
 
 ### Simple Queries
 
@@ -324,7 +324,13 @@ REFRESH TABLE catalog_name.db_name.table_name;
 
 Doris also supports disabling metadata caching to enable real-time access to the latest metadata.
 
-For detailed information and configuration of metadata caching, please refer to: [Metadata Cache](./meta-cache.md)
+- Before Doris 4.1.x: please refer to [Metadata Cache](./meta-cache.md).
+- Doris 4.1.x and later: please refer to the "Metadata Cache" section in each Catalog documentation.
+    - [Hive Catalog](./catalogs/hive-catalog.mdx#meta-cache)
+    - [Iceberg Catalog](./catalogs/iceberg-catalog.mdx#meta-cache)
+    - [Hudi Catalog](./catalogs/hudi-catalog.md#meta-cache)
+    - [Paimon Catalog](./catalogs/paimon-catalog.mdx#meta-cache)
+    - [MaxCompute Catalog](./catalogs/maxcompute-catalog.md#meta-cache)
 
 ## Modifying Data Catalogs
 

@@ -87,16 +87,16 @@ ALTER TABLE <table_name> ADD INDEX <index_name>(<column_name>)
 
 ### 通用属性
 
-- `index_type`: ANN 索引的类型。支持的值："ivf" 或 "hnsw"。
+- `index_type`: ANN 索引的类型。支持的值："ivf"、"ivf_on_disk" 或 "hnsw"。
 - `metric_type`: 度量类型。支持的值："l2_distance"、"inner_product"。
 - `dim`: 向量列的维度。
 - `quantizer`: 量化器类型。支持的值：flat、sq4、sq8、pq。不指定时默认为 flat。
 
 ### 索引特定属性
 
-#### IVF 索引属性
+#### IVF / IVF On-Disk 索引属性
 
-- `nlist`: 聚类数量（倒排列表）。默认：1024。更高的值改善召回率但增加构建时间和内存使用。
+- `nlist`: 聚类数量（倒排列表）。默认：1024。`ivf` 和 `ivf_on_disk` 都需要该参数。更高的值改善召回率，但会增加构建时间和资源消耗。
 
 #### HNSW 索引属性
 

@@ -4,15 +4,15 @@ const VERSIONS = require('./versions.json');
 const { markdownBoldPlugin } = require('./config/markdown-bold-plugin');
 const { DEFAULT_VERSION } = require('./src/constant/version');
 
-const lightCodeTheme = themes.dracula;
+	const lightCodeTheme = themes.dracula;
 
-const logoImg = '/images/logo-doris.svg';
+	const logoImg = '/images/logo-doris.svg';
 
-function getDocsVersions() {
-    const result = {};
-    VERSIONS.map(version => {
-        if (version === 'current') {
-            result[version] = {
+	function getDocsVersions() {
+	    const result = {};
+	    VERSIONS.map(version => {
+	        if (version === 'current') {
+	            result[version] = {
                 label: 'Dev',
                 path: 'dev',
                 banner: 'unreleased',
@@ -54,7 +54,7 @@ const config = {
     trailingSlash: true,
     i18n: {
         defaultLocale: 'en',
-        locales: ['en', 'zh-CN'],
+        locales: ['en', 'zh-CN', 'ja'],
         localeConfigs: {
             en: {
                 label: 'English',
@@ -63,6 +63,10 @@ const config = {
             'zh-CN': {
                 label: '中文',
                 htmlLang: 'zh-Hans-CN',
+            },
+            ja: {
+                label: '日本語',
+                htmlLang: 'ja-JP',
             },
         },
     },
@@ -181,14 +185,14 @@ const config = {
                     //     // if (versionDocsDirPath === 'versioned_docs/version-dev') {
                     //     //     return `https://github.com/apache/doris-website/edit/master/docs/${locale}/docs/${docPath}`;
                     //     // }
-                    // },
-                    showLastUpdateAuthor: false,
-                    showLastUpdateTime: true,
-                    remarkPlugins: [markdownBoldPlugin, require('remark-math')],
-                    rehypePlugins: [
-                        [
-                            require('rehype-katex'),
-                            {
+	                    // },
+	                    showLastUpdateAuthor: false,
+	                    showLastUpdateTime: false,
+	                    remarkPlugins: [markdownBoldPlugin, require('remark-math')],
+	                    rehypePlugins: [
+	                        [
+	                            require('rehype-katex'),
+	                            {
                                 strict: process.env.CI === 'true' || process.env.GITHUB_ACTIONS === 'true' ? false : 'warn',
                             }
                         ]
@@ -214,7 +218,11 @@ const config = {
                     createSitemapItems: async params => {
                         const { defaultCreateSitemapItems, ...rest } = params;
                         const items = await defaultCreateSitemapItems(rest);
-                        for (let item of items) {
+                        const filteredItems = items.filter(item => {
+                            const pathname = new URL(item.url).pathname.replace(/\/+$/, '');
+                            return !['/search', '/ja/search', '/zh-CN/search'].includes(pathname);
+                        });
+                        for (let item of filteredItems) {
                             if (item.url.includes('docs')) {
                                 item.changefreq = 'daily';
                                 item.priority = 0.8;
@@ -223,7 +231,7 @@ const config = {
                                 item.priority = 0.2;
                             }
                         }
-                        return items;
+                        return filteredItems;
                     },
                 },
             }),
@@ -234,11 +242,11 @@ const config = {
             '@yang1666204/docusaurus-search-local',
             {
                 hashed: true,
-                language: ['en', 'zh'],
+                language: ['en', 'zh', 'ja'],
                 highlightSearchTermsOnTargetPage: true,
                 // indexPages: true,
                 indexDocs: true,
-                docsRouteBasePath: ['/docs/2.1', '/docs/3.x', '/docs/4.x', '/docs/dev'],
+                docsRouteBasePath: ['docs','ja/docs','zh-CN/docs'],
                 indexBlog: false,
                 explicitSearchResultPath: true,
                 searchBarShortcut: true,
@@ -271,13 +279,17 @@ const config = {
                     //    <span>Help Shape the Future of Apache Doris: 2026 User Survey</span> 
                     //    <p style="margin-left:0.675rem;font-size:0.875rem;line-height:1rem;font-weight:700;letter-spacing:0.28px;">Register Now -></p> 
                     //        </a>`
-                    en: `<a href="https://forms.gle/7RKm6CGSNhdW8ZnK9" target="_blank" style="display:flex; width: 100%; align-items: center; justify-content: center; margin-left: 4px; text-decoration: none;">
-                        <img style="width: 19px; height: 19px; margin-right: 3px;" src="/images/navbar-star-white.svg">
-                        <span style="font-size:0.875rem;font-weight:700;line-height:1rem; margin-right:0.675rem; text-decoration: none;">NEW</span>
-                       <span>Help Shape the Future of Apache Doris: 2026 User Survey</span> 
-                           </a>`
-                    //     }),
-                    //     content: JSON.stringify({
+                    // en: `<a href="https://forms.gle/7RKm6CGSNhdW8ZnK9" target="_blank" style="display:flex; width: 100%; align-items: center; justify-content: center; margin-left: 4px; text-decoration: none;">
+                    //     <img style="width: 19px; height: 19px; margin-right: 3px;" src="/images/navbar-star-white.svg">
+                    //     <span style="font-size:0.875rem;font-weight:700;line-height:1rem; margin-right:0.675rem; text-decoration: none;">NEW</span>
+                    //    <span>Help Shape the Future of Apache Doris: 2026 User Survey</span> 
+                    //        </a>`
+                    en: `<p style="display:flex; width: 100%; align-items: center; justify-content: center; margin-left: 4px; text-decoration: none;">
+                    <img style="width: 19px; height: 19px; margin-right: 3px;" src="/images/navbar-warning.svg">
+                    <span>Slack community removed due to a Slack-side issue. Awaiting their resolution. Pls reach us on <a style="font-weight:600;" href="https://discord.com/invite/tGTh2SQV" target="_blank" >Discord</a> in the meantime.</span>
+                    </p>`
+                        //     }),
+                        //     content: JSON.stringify({
                     //         zh: `<a href="https://doris-summit.org.cn" target="_blank" style="display:flex; width: 100%; align-items: center; justify-content: center; margin-left: 4px; text-decoration: none;">
                     //     <img style="width: 60px; height: 24px; margin-right: 34px;" src="/images/doris-summit.svg">
                     //    <span style="font-weight:700; font-size:0.875rem; line-height: 120%;">Powering Real-Time Analytics & Search  in the AI Era | 2025 年 11 月 05 日-06 日 · 全网直播</span> 
@@ -411,6 +423,34 @@ const config = {
                             {
                                 label: 'Archived',
                                 to: `/archive-docs`,
+                            },
+                        ],
+                    },
+                ],
+            },
+            docNavbarJA: {
+                title: '',
+                logo: {
+                    alt: 'Apache Doris',
+                    src: logoImg,
+                },
+                items: [
+                    {
+                        type: 'search',
+                        position: 'left',
+                        className: 'docs-search',
+                    },
+                    {
+                        type: 'localeDropdown',
+                        position: 'right',
+                    },
+                    {
+                        type: 'docsVersionDropdown',
+                        position: 'right',
+                        dropdownItemsAfter: [
+                            {
+                                label: 'Archived',
+                                to: `/ja/archive-docs`,
                             },
                         ],
                     },

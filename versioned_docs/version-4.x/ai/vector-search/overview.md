@@ -58,17 +58,17 @@ PROPERTIES (
 );
 ```
 
-- index_type: `hnsw` (for [Hierarchical Navigable Small World](https://en.wikipedia.org/wiki/Hierarchical_navigable_small_world)) or `ivf` (for inverted file)
+- index_type: `hnsw` (for [Hierarchical Navigable Small World](https://en.wikipedia.org/wiki/Hierarchical_navigable_small_world)), `ivf` (for inverted file), or `ivf_on_disk` (for IVF with inverted lists stored on disk and served through cache)
 - metric_type: `l2_distance` means using L2 distance as the distance function
 - dim: `128` means the vector dimension is 128
 - quantizer: `flat` means each vector dimension is stored as original float32
 
 | Parameter | Required | Supported/Options | Default | Description |
 |-----------|----------|-------------------|---------|-------------|
-| `index_type` | Yes | `hnsw`, `ivf` | (none) | ANN index algorithm. Currently supports HNSW and IVF. |
+| `index_type` | Yes | `hnsw`, `ivf`, `ivf_on_disk` | (none) | ANN index algorithm. Supports HNSW, in-memory IVF, and IVF On-Disk. |
 | `metric_type` | Yes | `l2_distance`, `inner_product` | (none) | Vector similarity/distance metric. L2 = Euclidean; inner_product can approximate cosine if vectors are normalized. |
 | `dim` | Yes | Positive integer (> 0) | (none) | Vector dimension. All imported vectors must match or an error is raised. |
-| `nlist` | No | Positive integer | `1024` | IVF inverted-list count. Effective when `index_type=ivf`; larger values may improve recall/speed trade-offs but increase build overhead. |
+| `nlist` | No | Positive integer | `1024` | IVF inverted-list count. Effective when `index_type=ivf` or `index_type=ivf_on_disk`; larger values may improve recall/speed trade-offs but increase build overhead. |
 | `max_degree` | No | Positive integer | `32` | HNSW M (max neighbors per node). Affects index memory and search performance. |
 | `ef_construction` | No | Positive integer | `40` | HNSW efConstruction (candidate queue size during build). Larger gives better quality but slower build. |
 | `quantizer` | No | `flat`, `sq8`, `sq4`, `pq` | `flat` | Vector encoding/quantization: `flat` = raw; `sq8`/`sq4` = scalar quantization (8/4 bit), `pq` = product quantization to reduce memory. |

@@ -24,43 +24,58 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-Doris Storage Format V3 is a major evolution from the Segment V2 format. Through metadata decoupling and encoding strategy optimization, it specifically improves performance for wide tables, complex data types (such as Variant), and cloud-native storage-compute separation scenarios.
+Storage Format V3 is the successor to Segment V2. The main change: column metadata is no longer packed inside the Segment Footer, but stored in a separate area of the file. This removes the metadata bottleneck that V2 hits when tables grow to hundreds or thousands of columns.
 
 ## Key Optimizations
 
 ### External Column Meta
-*   **Background**: In Segment V2, metadata for all columns (`ColumnMetaPB`) is stored in the Footer of the Segment file. For wide tables with thousands of columns or auto-scaling Variant scenarios, the Footer can grow to several megabytes.
-*   **Optimization**: V3 decouples `ColumnMetaPB` from the Footer and stores it in a separate area within the file (External Column Meta Area).
-*   **Benefits**:
-    *   **Ultra-fast Metadata Loading**: Significantly reduces Segment Footer size, speeding up initial file opening.
-    *   **On-demand Loading**: Metadata can be loaded on demand from the independent area, reducing memory usage and improving cold start query performance on object storage (like S3/OSS).
+
+In V2, every column's `ColumnMetaPB` sits in the Segment Footer. When a table has hundreds or thousands of columns, the Footer can reach several MB. Opening a Segment means loading and deserializing all of that, even if the query only touches two columns.
+
+V3 moves `ColumnMetaPB` out of the Footer into a dedicated area in the file. The Footer keeps only lightweight pointers.
+
+<img src="/images/variant/storage-format-v3-layout.png" alt="Storage Format V2 vs V3 — Segment File Layout" width="720" />
+
+Result: the system loads a small Footer first, then fetches metadata only for the columns the query needs. On object storage (S3, OSS), this cuts cold-start latency considerably.
 
 ### Integer Type Plain Encoding
-*   **Optimization**: V3 defaults to `PLAIN_ENCODING` (raw binary storage) for numerical types (such as `INT`, `BIGINT`), instead of the traditional BitShuffle.
-*   **Benefits**: Combined with LZ4/ZSTD compression, `PLAIN_ENCODING` provides higher read throughput and lower CPU overhead. In modern high-speed IO environments, this "trading decompression for performance" strategy offers a clear advantage when scanning large volumes of data.
+
+V3 switches the default encoding for numeric types (`INT`, `BIGINT`, etc.) from BitShuffle to `PLAIN_ENCODING` (raw binary). With LZ4 or ZSTD compression on top, this combination reads faster and uses less CPU than BitShuffle during large scans.
 
 ### Binary Plain Encoding V2
-*   **Optimization**: Introduces `BINARY_PLAIN_ENCODING_V2`, using a `[length(varuint)][raw_data]` streaming layout, replacing the old format that relied on trailing offset tables.
-*   **Benefits**: Eliminates large trailing offset tables, making data storage more compact and significantly reducing storage consumption for string and JSONB types.
 
-## Design Philosophy
-The design philosophy of V3 can be summarized as: **"Metadata Decoupling, Encoding Simplification, and Streaming Layout"**. By reducing metadata processing bottlenecks and leveraging the high efficiency of modern CPUs in processing simple encodings, it achieves high-performance analysis under complex schemas.
+V3 introduces `BINARY_PLAIN_ENCODING_V2` for strings and JSONB. The new layout uses `[length(varuint)][raw_data]` in a streaming fashion, eliminating the trailing offset table that V2 required. This makes string storage more compact.
 
-## Use Cases
-- **Wide Tables**: Tables with more than 2000 columns or long column names.
-- **Semi-structured Data**: Heavy use of `VARIANT` or `JSON` types.
-- **Tiered Storage/Cloud Native**: Scenarios sensitive to object storage loading latency.
-- **High-performance Scanning**: Analytical tasks with extreme requirements for scan throughput.
+## Performance
+
+The following test was run on a wide table with 10,000 Segments, each containing 7,000 columns.
+
+<img src="/images/variant/storage-format-v3-benchmark.png" alt="Storage Format V3 — Metadata Open Efficiency" width="600" />
+
+| Metric | V2 | V3 | Improvement |
+|---|---:|---:|---|
+| Segment open time | 65 s | 4 s | 16× faster |
+| Memory during open | 60 GB | < 1 GB | 60× less |
+
+With V2, the system must deserialize the entire Footer (containing all column metadata) even when the query reads only a few columns. That causes massive I/O and memory waste. V3 reads a slim Footer, then loads column metadata on demand.
+
+## When to Use V3
+
+- Wide tables with hundreds or thousands of columns.
+- Tables using `VARIANT`, where subcolumn expansion can push the effective column count higher.
+- Object storage or tiered storage where metadata loading latency matters.
+
+For tables with a small number of columns, V2 works fine. V3 helps most when the column count is large.
 
 ## Usage
 
-### Enable When Creating a New Table
-Specify `storage_format` as `V3` in the `PROPERTIES` of the `CREATE TABLE` statement:
+Specify `storage_format` as `V3` in `PROPERTIES` when creating a table:
 
 ```sql
 CREATE TABLE table_v3 (
     id BIGINT,
-    data VARIANT
+    name VARCHAR(128),
+    attrs VARIANT
 )
 DISTRIBUTED BY HASH(id) BUCKETS 32
 PROPERTIES (

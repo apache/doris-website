@@ -16,6 +16,7 @@ import BlogPostItems from '@theme/BlogPostItems';
 import { useHistory, useLocation } from '@docusaurus/router';
 // import BlogListPageStructuredData from '@theme/BlogListPage/StructuredData';
 const allText = 'All';
+const HIDDEN_BLOG_TABS = new Set(['Release Notes', 'Top News']);
 
 function getBlogCategories(props) {
     const { siteConfig } = useDocusaurusContext();
@@ -30,21 +31,28 @@ function getBlogCategories(props) {
     items.forEach(({ content: BlogPostContent }) => {
         const { frontMatter } = BlogPostContent;
         const tags = frontMatter.tags || [];
+
+        if (allCategory.values.every(val => val.metadata.permalink !== BlogPostContent.metadata.permalink)) {
+            allCategory.values.push(BlogPostContent);
+        }
+
         if (tags.length > 0) {
             tags.forEach(tag => {
-                const index = categories.length > 0 ? categories.findIndex(cate => cate.label === tag) : -1;
+                const tagLabel = typeof tag === 'string' ? tag : tag?.label;
+                if (!tagLabel || HIDDEN_BLOG_TABS.has(tagLabel)) {
+                    return;
+                }
+
+                const index = categories.length > 0 ? categories.findIndex(cate => cate.label === tagLabel) : -1;
                 if (index > -1) {
                     const curCategory = categories[index];
                     curCategory.values.push(BlogPostContent);
                 } else {
                     const category = {
-                        label: tag,
+                        label: tagLabel,
                         values: [BlogPostContent],
                     };
                     categories.push(category);
-                }
-                if (allCategory.values.every(val => val.metadata.permalink !== BlogPostContent.metadata.permalink)) {
-                    allCategory.values.push(BlogPostContent);
                 }
             });
         }

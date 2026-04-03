@@ -33,13 +33,13 @@ WINDOW_FUNNEL(<window>, <mode>, <timestamp>, <event_1>[, event_2, ... , event_n]
 
 **Mode**
 
-    - `default`: Defualt mode.
+    - `default`: Standard funnel calculation. Doris searches for the longest event chain that matches the specified order within the time window. Events that do not match any condition are ignored.
 
-    - `deduplication`: If the same event holds for the sequence of events, then such repeating event interrupts further processing. E.g. the array parameter is [event1='A', event2='B', event3='C', event4='D'], and the original event chain is "A-B-C-B-D". Since event B repeats, the filtered event chain can only be "A-B-C" and the max event level is 3.
+    - `deduplication`: Based on `default`, but an event that has already been matched in the current chain cannot appear again. For example, if the condition list is [event1='A', event2='B', event3='C', event4='D'] and the original event chain is `A-B-C-B-D`, the second `B` breaks the chain, so the matched event chain is `A-B-C` and the max level is `3`.
 
-    - `fixed`: Don't allow interventions of other events. E.g. the array parameter is [event1='A', event2='B', event3='C', event4='D'], and the original event chain is A->B->D->C, it stops finding A->B->C at the D and the max event level is 2.
+    - `fixed`: The chain must advance in the specified order and cannot skip intermediate steps. If an event that matches a later condition appears before its immediate predecessor is matched, the chain stops. Starting from Doris 4.1, events that do not match any condition are ignored and do not break the chain. For example, with [event1='A', event2='B', event3='C', event4='D'], `A-B-D-C` returns `A-B` and level `2`; with `A-B-X-C-D` (`X` matches none of the conditions), Doris 4.1 and later returns `A-B-C-D`, while earlier versions stop at `A-B`.
 
-    - `increase`: Apply conditions only to events with strictly increasing timestamps.
+    - `increase`: Based on `default`, but matched events must have strictly increasing timestamps. If two matched events have the same timestamp, the later event cannot advance the chain.
 
 ## Return Value
 Returns an integer representing the maximum number of consecutive steps completed within the specified time window.
@@ -104,7 +104,7 @@ order BY
 +---------+-------+
 ```
 
-For `uesr_id=100123`, because the time when the `payment` event occurred exceeds the time window, the matched event chain is `login-visit-order`.
+For `user_id=100123`, because the time when the `payment` event occurred exceeds the time window, the matched event chain is `login-visit-order`.
 
 ### example2: deduplication mode
 
@@ -125,7 +125,7 @@ VALUES
     (100123, 'login', '2022-05-14 10:01:00', 'HONOR', 1),
     (100123, 'visit', '2022-05-14 10:02:00', 'HONOR', 2),
     (100123, 'login', '2022-05-14 10:03:00', 'HONOR', 3),
-    (100123, 'order', '2022-05-14 10:04:00', "HONOR", 4),
+    (100123, 'order', '2022-05-14 10:04:00', 'HONOR', 4),
     (100123, 'payment', '2022-05-14 10:10:00', 'HONOR', 4),
     (100125, 'login', '2022-05-15 11:00:00', 'XIAOMI', 1),
     (100125, 'visit', '2022-05-15 11:01:00', 'XIAOMI', 2),
@@ -164,7 +164,7 @@ order BY
 |  100127 |     2 |
 +---------+-------+
 ```
-For `uesr_id=100123`, after matching the `visit` event, the `login` event appears repeatedly, so the matched event chain is `login-visit`.
+For `user_id=100123`, after matching the `visit` event, the `login` event appears repeatedly, so the matched event chain is `login-visit`.
 
 ### example3: fixed mode
 
@@ -184,8 +184,8 @@ INSERT INTO
 VALUES
     (100123, 'login', '2022-05-14 10:01:00', 'HONOR', 1),
     (100123, 'visit', '2022-05-14 10:02:00', 'HONOR', 2),
-    (100123, 'order', '2022-05-14 10:03:00', "HONOR", 4),
-    (100123, 'login2', '2022-05-14 10:04:00', 'HONOR', 3),
+    (100123, 'login2', '2022-05-14 10:03:00', 'HONOR', 3),
+    (100123, 'order', '2022-05-14 10:04:00', 'HONOR', 4),
     (100123, 'payment', '2022-05-14 10:10:00', 'HONOR', 4),
     (100125, 'login', '2022-05-15 11:00:00', 'XIAOMI', 1),
     (100125, 'visit', '2022-05-15 11:01:00', 'XIAOMI', 2),
@@ -218,13 +218,13 @@ order BY
 +---------+-------+
 | user_id | level |
 +---------+-------+
-|  100123 |     3 |
+|  100123 |     4 |
 |  100125 |     3 |
 |  100126 |     2 |
 |  100127 |     2 |
 +---------+-------+
 ```
-For `uesr_id=100123`, after matching the `order` event, the event chain is interrupted by the `login2` event, so the matched event chain is `login-visit-order`.
+For `user_id=100123`, `login2` does not match any condition in the funnel. Starting from Doris 4.1, such unrelated events do not break the `fixed` chain, so the matched event chain is `login-visit-order-payment`. In Doris versions earlier than 4.1, the same data would stop at `login-visit` and return level `2`.
 
 ### example4: increase mode
 
@@ -244,7 +244,7 @@ INSERT INTO
 VALUES
     (100123, 'login', '2022-05-14 10:01:00', 'HONOR', 1),
     (100123, 'visit', '2022-05-14 10:02:00', 'HONOR', 2),
-    (100123, 'order', '2022-05-14 10:04:00', "HONOR", 4),
+    (100123, 'order', '2022-05-14 10:04:00', 'HONOR', 4),
     (100123, 'payment', '2022-05-14 10:04:00', 'HONOR', 4),
     (100125, 'login', '2022-05-15 11:00:00', 'XIAOMI', 1),
     (100125, 'visit', '2022-05-15 11:01:00', 'XIAOMI', 2),
@@ -283,4 +283,4 @@ order BY
 |  100127 |     2 |
 +---------+-------+
 ```
-For `uesr_id=100123`, the timestamp of the `payment` event and the timestamp of the `order` event occur in the same second and are not incremented, so the matched event chain is `login-visit-order`.
+For `user_id=100123`, the timestamp of the `payment` event and the timestamp of the `order` event occur in the same second and are not incremented, so the matched event chain is `login-visit-order`.

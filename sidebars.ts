@@ -225,8 +225,34 @@ const sidebars: SidebarsConfig = {
                             type: 'category',
                             label: 'Continuous Load',
                             items: [
-                                'data-operate/import/streaming-job/streaming-job-tvf',
-                                'data-operate/import/streaming-job/streaming-job-multi-table',
+                                'data-operate/import/streaming-job/continuous-load-overview',
+                                {
+                                    type: 'category',
+                                    label: 'MySQL',
+                                    items: [
+                                        'data-operate/import/streaming-job/continuous-load-mysql-single',
+                                        'data-operate/import/streaming-job/continuous-load-mysql-multi',
+                                    ],
+                                },
+                                {
+                                    type: 'category',
+                                    label: 'PostgreSQL',
+                                    items: [
+                                        'data-operate/import/streaming-job/continuous-load-postgresql-single',
+                                        'data-operate/import/streaming-job/continuous-load-postgresql-multi',
+                                    ],
+                                },
+                                'data-operate/import/streaming-job/continuous-load-s3',
+                                {
+                                    type: 'category',
+                                    label: 'Setup Guide',
+                                    items: [
+                                        'data-operate/import/streaming-job/prerequisites/amazon-rds-mysql',
+                                        'data-operate/import/streaming-job/prerequisites/amazon-aurora-mysql',
+                                        'data-operate/import/streaming-job/prerequisites/amazon-rds-postgresql',
+                                        'data-operate/import/streaming-job/prerequisites/amazon-aurora-postgresql',
+                                    ],
+                                },
                             ],
                         },
                         {
@@ -332,6 +358,7 @@ const sidebars: SidebarsConfig = {
                                 'ai/vector-search/practical-guide',
                                 'ai/vector-search/hnsw',
                                 'ai/vector-search/ivf',
+                                'ai/vector-search/ivf-on-disk',
                                 'ai/vector-search/index-management',
                                 'ai/vector-search/resource-estimation',
                                 'ai/vector-search/quantization-survey',
@@ -365,7 +392,8 @@ const sidebars: SidebarsConfig = {
                                         'lakehouse/best-practices/doris-onelake',
                                         'lakehouse/best-practices/doris-unity-catalog',
                                         'lakehouse/best-practices/doris-lakekeeper',
-                                        'lakehouse/best-practices/doris-nessie'
+                                        'lakehouse/best-practices/doris-nessie',
+                                        'lakehouse/best-practices/doris-dlf-iceberg'
                                     ],
                                 },
                                 {
@@ -422,6 +450,7 @@ const sidebars: SidebarsConfig = {
                                 'lakehouse/metastores/aliyun-dlf',
                                 'lakehouse/metastores/iceberg-rest',
                                 'lakehouse/metastores/iceberg-jdbc',
+                                'lakehouse/metastores/paimon-jdbc',
                                 'lakehouse/metastores/filesystem',
                             ],
                         },
@@ -438,6 +467,8 @@ const sidebars: SidebarsConfig = {
                                 'lakehouse/storages/huawei-obs',
                                 'lakehouse/storages/baidu-bos',
                                 'lakehouse/storages/minio',
+                                'lakehouse/storages/juicefs',
+                                'lakehouse/storages/ozone'
                             ],
                         },
                         {
@@ -1022,9 +1053,30 @@ const sidebars: SidebarsConfig = {
             label: 'Ecosystem',
             collapsed: false,
             items: [
-                'ecosystem/spark-doris-connector',
-                'ecosystem/flink-doris-connector',
-                'ecosystem/doris-kafka-connector',
+                {
+                    type: 'category',
+                    label: 'Spark Doris Connector',
+                    items: [
+                        'ecosystem/spark-doris-connector/spark-doris-connector',
+                        'ecosystem/spark-doris-connector/release-notes',
+                    ],
+                },
+                {
+                    type: 'category',
+                    label: 'Flink Doris Connector',
+                    items: [
+                        'ecosystem/flink-doris-connector/flink-doris-connector',
+                        'ecosystem/flink-doris-connector/release-notes',
+                    ],
+                },
+                {
+                    type: 'category',
+                    label: 'Doris Kafka Connector',
+                    items: [
+                        'ecosystem/doris-kafka-connector/doris-kafka-connector',
+                        'ecosystem/doris-kafka-connector/release-notes',
+                    ],
+                },
                 {
                     type: 'category',
                     label: 'Doris Operator',
@@ -1161,7 +1213,22 @@ const sidebars: SidebarsConfig = {
                                         'sql-manual/basic-element/sql-data-types/semi-structured/MAP',
                                         'sql-manual/basic-element/sql-data-types/semi-structured/STRUCT',
                                         'sql-manual/basic-element/sql-data-types/semi-structured/JSON',
-                                        'sql-manual/basic-element/sql-data-types/semi-structured/VARIANT',
+                                        {
+                                            type: 'category',
+                                            label: 'VARIANT',
+                                            link: {
+                                                type: 'doc',
+                                                id: 'sql-manual/basic-element/sql-data-types/semi-structured/variant-workload-guide',
+                                            },
+                                            collapsed: false,
+                                            items: [
+                                                {
+                                                    type: 'doc',
+                                                    id: 'sql-manual/basic-element/sql-data-types/semi-structured/VARIANT',
+                                                    label: 'VARIANT Reference',
+                                                },
+                                            ],
+                                        },
                                     ],
                                 },
                                 {
@@ -1602,6 +1669,7 @@ const sidebars: SidebarsConfig = {
                                         'sql-manual/sql-functions/scalar-functions/encrypt-digest-functions/murmur-hash3-32',
                                         'sql-manual/sql-functions/scalar-functions/encrypt-digest-functions/murmur-hash3-64',
                                         'sql-manual/sql-functions/scalar-functions/encrypt-digest-functions/murmur-hash3-64-v2',
+                                        "sql-manual/sql-functions/scalar-functions/encrypt-digest-functions/murmur-hash3-u64-v2",
                                         'sql-manual/sql-functions/scalar-functions/encrypt-digest-functions/sha',
                                         'sql-manual/sql-functions/scalar-functions/encrypt-digest-functions/sha2',
                                         'sql-manual/sql-functions/scalar-functions/encrypt-digest-functions/sm3',
@@ -1886,6 +1954,7 @@ const sidebars: SidebarsConfig = {
                                     type: 'category',
                                     label: 'Conditional Functions',
                                     items: [
+                                        'sql-manual/sql-functions/scalar-functions/conditional-functions/overview',
                                         'sql-manual/sql-functions/scalar-functions/conditional-functions/coalesce',
                                         'sql-manual/sql-functions/scalar-functions/conditional-functions/greatest',
                                         'sql-manual/sql-functions/scalar-functions/conditional-functions/if',
@@ -2078,6 +2147,10 @@ const sidebars: SidebarsConfig = {
                                 'sql-manual/sql-functions/table-functions/explode-numbers-outer',
                                 'sql-manual/sql-functions/table-functions/explode-split',
                                 'sql-manual/sql-functions/table-functions/explode-split-outer',
+                                'sql-manual/sql-functions/table-functions/json-each',
+                                'sql-manual/sql-functions/table-functions/json-each-outer',
+                                'sql-manual/sql-functions/table-functions/json-each-text',
+                                'sql-manual/sql-functions/table-functions/json-each-text-outer',
                                 'sql-manual/sql-functions/table-functions/posexplode',
                                 'sql-manual/sql-functions/table-functions/posexplode-outer',
                             ],
@@ -2087,6 +2160,7 @@ const sidebars: SidebarsConfig = {
                             label: 'Table Valued Functions',
                             items: [
                                 'sql-manual/sql-functions/table-valued-functions/backends',
+                                'sql-manual/sql-functions/table-valued-functions/cdc-stream',
                                 'sql-manual/sql-functions/table-valued-functions/catalogs',
                                 'sql-manual/sql-functions/table-valued-functions/file',
                                 'sql-manual/sql-functions/table-valued-functions/frontends',
@@ -2580,6 +2654,7 @@ const sidebars: SidebarsConfig = {
                     type: 'category',
                     label: 'v4.0',
                     items: [
+                        'releasenotes/v4.0/release-4.0.4',
                         'releasenotes/v4.0/release-4.0.3',
                         'releasenotes/v4.0/release-4.0.2',
                         'releasenotes/v4.0/release-4.0.1',

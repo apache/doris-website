@@ -1,0 +1,357 @@
+---
+{
+  "title": "基本概念",
+  "language": "ja",
+  "description": "この文書では、Apache Doris 3.xにおけるテーブル作成とデータpartitioningの基本概念について説明します。行と列、partitionとbucket設計、CREATE TABLE構文の例、auto partitioningやauto bucketingなどの高度な機能を含みます。"
+}
+---
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+本ドキュメントは主にDorisにおけるテーブル作成とデータパーティショニング、およびテーブル作成操作中に発生する可能性のある問題と解決策を紹介しています。
+
+## 行と列
+
+Dorisでは、データはテーブルの形式で論理的に記述されます。
+
+テーブルは行と列で構成されます：
+
+- 行：ユーザーデータの単一行を表します；
+
+- 列：データの行における異なるフィールドを記述するために使用されます；
+
+- 列は2つのタイプに分けることができます：KeyとValue。ビジネスの観点から、KeyとValueはそれぞれディメンション列とメトリック列に対応します。Apache DorisのKey列は、テーブル作成文で指定される列であり、`unique key`、`aggregate key`、または`duplicate key`キーワードに続く列です。残りの列はValue列です。集約モデルの観点から、同じKey列を持つ行は単一の行に集約されます。Value列の集約方法は、テーブル作成時にユーザーによって指定されます。集約モデルの詳細については、Dorisの[Data Model](../../table-design/data-model/overview)を参照してください。
+
+## パーティションとバケット
+
+Dorisは、データを整理・管理するために2レベルのパーティショニングとバケッティング手法を使用します。
+
+### パーティション
+
+パーティションは、テーブル内の特定の列値に基づいて、テーブルをより小さく、より管理しやすい、重複しないサブセットに分割することを指します。各データのサブセットはパーティションと呼ばれます。各データ行は正確に1つの特定のパーティションに属します。パーティションは最小の論理管理単位と見なすことができます。
+
+現在、DorisはRangeとListの2種類のパーティショニングをサポートしています。テーブル作成時にパーティションが指定されない場合、Dorisはテーブル内のすべてのデータを含むデフォルトパーティションを生成し、これはユーザーには透過的です。
+
+データ分散とクエリパターンに基づくパーティショニングには、以下の利点があります：
+
+- **クエリパフォーマンスの向上**：パーティショニングにより、システムはクエリ条件に基づいて無関係なパーティションをプルーニングでき、スキャンするデータ量を削減し、クエリ効率を大幅に向上させます。これは大規模なデータセットを扱う場合に特に有益であり、パーティション戦略によってI/Oオーバーヘッドを大幅に削減できます。
+
+- **柔軟な管理**：パーティショニングにより、時間や地理などのロジックに基づいてデータを分割でき、データアーカイブ、クリーニング、バックアップが容易になります。例えば、時間によるパーティショニングは履歴データと新しく追加されたデータを効果的に管理でき、効率的な時間ベースのデータメンテナンス戦略をサポートします。
+
+### バケット
+
+バケッティングは、パーティション内のデータを何らかのルールに従って、より小さな重複しない単位にさらに分割することを指します。各データ行は正確に1つの特定のバケットに属します。特定の列値に基づいてデータを分割するパーティショニングとは異なり、バケッティングは事前定義されたバケット間でデータを均等に分散させ、データスキューを削減しようとします。バケッティングは均等なデータ分散を確保し、データの局所性を向上させることでクエリパフォーマンスを改善します。
+
+現在、DorisはHashとRandomの2種類のバケッティングをサポートしています。
+
+バケットは物理レベルでデータシャード（Tablet）に対応し、データシャードは物理的に独立して保存されます。これらはデータ移動や複製などの操作における最小の物理ストレージ単位です。
+
+適切なバケッティングには以下の利点があります：
+
+- **均等なデータ分散**：バケッティングはバケット間でデータを均等に分散させ、データの集中やスキューのリスクを削減し、特定のノードやストレージデバイスでのリソースオーバーロードを防ぎます。
+
+- **ホットスポットの削減**：データを均等に分散させることで、バケッティングは特定のノードやパーティションのオーバーロードのリスクを削減し、ホットスポットを防ぎ、システムの安定性と処理能力を向上させます。
+
+- **並行性パフォーマンスの向上**：バケッティングは並行クエリのパフォーマンスを向上させます。特に複数のクエリリクエストが同じパーティション内の異なるデータにアクセスする必要がある場合に有効です。バケッティングの粒度により、システムは複数のリクエストを並列で効率的に処理でき、スループットが向上します。
+
+## テーブル作成の例
+
+Apache Dorisの`CREATE TABLE`は同期コマンドであり、SQLが実行されると結果を返します。正常に返されることはテーブル作成が成功したことを示します。詳細については、[CREATE-TABLE](../../sql-manual/sql-statements/table-and-view/table/CREATE-TABLE)を参照するか、`HELP CREATE TABLE`コマンドを入力してください。
+
+以下のコードサンプルでは、RANGEパーティショニングとHashバケットによってApache Dorisでテーブルを作成する方法を紹介しています。
+
+```sql
+-- Range Partition
+CREATE TABLE IF NOT EXISTS example_range_tbl
+(
+    `user_id` LARGEINT NOT NULL COMMENT "User ID",
+    `date` DATE NOT NULL COMMENT "Date when the data are imported",
+    `timestamp` DATETIME NOT NULL COMMENT "Timestamp when the data are imported",
+    `city` VARCHAR(20) COMMENT "User location city",
+    `age` SMALLINT COMMENT "User age",
+    `sex` TINYINT COMMENT "User gender",
+    `last_visit_date` DATETIME REPLACE DEFAULT "1970-01-01 00:00:00" COMMENT "User last visit time",
+    `cost` BIGINT SUM DEFAULT "0" COMMENT "Total user consumption",
+    `max_dwell_time` INT MAX DEFAULT "0" COMMENT "Maximum user dwell time",
+    `min_dwell_time` INT MIN DEFAULT "99999" COMMENT "Minimum user dwell time"   
+)
+ENGINE=OLAP
+AGGREGATE KEY(`user_id`, `date`, `timestamp`, `city`, `age`, `sex`)
+PARTITION BY RANGE(`date`)
+(
+    PARTITION `p201701` VALUES [("2017-01-01"),  ("2017-02-01")),
+    PARTITION `p201702` VALUES [("2017-02-01"), ("2017-03-01")),
+    PARTITION `p201703` VALUES [("2017-03-01"), ("2017-04-01"))
+)
+DISTRIBUTED BY HASH(`user_id`) BUCKETS 16
+PROPERTIES
+(
+    "replication_num" = "1"
+);
+```
+ここではAggregate Key Modelを例として使用します。Aggregate Key Modelでは、集計タイプ（SUM、REPLACE、MAX、またはMIN）で指定されたすべてのカラムがValueカラムです。残りはKeyカラムです。
+
+`CREATE TABLE`の`PROPERTIES`セクションで設定できるフィールドの詳細については、[CREATE-TABLE](../../sql-manual/sql-statements/table-and-view/table/CREATE-TABLE.md)を参照してください。
+
+`ENGINE`のデフォルトタイプは`OLAP`です。OLAPのみがApache Doris自体によるデータ管理と保存を担当します。MySQL、Broker、ESなどの他のエンジンタイプは、本質的には他の外部データベースやシステム内のテーブルへのマッピングに過ぎず、Apache Dorisがこのデータを読み取れるようにしています。しかし、Apache Doris自体はOLAP以外のエンジンタイプのテーブルやデータを作成、管理、保存することはありません。
+
+`IF NOT EXISTS`は、テーブルが以前に作成されていない場合に作成されることを示します。これはテーブル名が存在するかどうかのみをチェックし、新しいテーブルのスキーマが既存のテーブルのスキーマと同じかどうかはチェックしないことに注意してください。したがって、同じ名前で異なるスキーマのテーブルがある場合でも、このコマンドは成功を返しますが、新しいスキーマを持つ新しいテーブルが作成されたことを意味するわけではありません。
+
+### 高度な機能と例
+
+DorisはDynamic Partition、Auto Partition、Auto Bucketを含む高度なデータパーティショニング方法をサポートしており、より柔軟なデータ管理を可能にします。以下は実装例です：
+
+<Tabs>
+<TabItem value="Auto Partition" label="Auto Partition" default>
+<div>
+
+[Auto Partition](./auto-partitioning)は、データインポート中にユーザー定義のルールに従って対応するパーティションの自動作成をサポートし、より便利です。上記の例をAuto Range Partitionで書き直すと以下のようになります：
+
+```sql
+CREATE TABLE IF NOT EXISTS example_range_tbl
+(
+    `user_id` LARGEINT NOT NULL COMMENT "User ID",
+    `date` DATE NOT NULL COMMENT "Date when the data are imported",
+    `timestamp` DATETIME NOT NULL COMMENT "Timestamp when the data are imported",
+    `city` VARCHAR(20) COMMENT "User location city",
+    `age` SMALLINT COMMENT "User age",
+    `sex` TINYINT COMMENT "User gender",
+    `last_visit_date` DATETIME REPLACE DEFAULT "1970-01-01 00:00:00" COMMENT "User last visit time",
+    `cost` BIGINT SUM DEFAULT "0" COMMENT "Total user consumption",
+    `max_dwell_time` INT MAX DEFAULT "0" COMMENT "Maximum user dwell time",
+    `min_dwell_time` INT MIN DEFAULT "99999" COMMENT "Minimum user dwell time"   
+)
+ENGINE=OLAP
+AGGREGATE KEY(`user_id`, `date`, `timestamp`, `city`, `age`, `sex`)
+AUTO PARTITION BY RANGE(date_trunc(`date`, 'month')) --- Using months as partition granularity
+()
+DISTRIBUTED BY HASH(`user_id`) BUCKETS 16
+PROPERTIES
+(
+    "replication_num" = "1"
+);
+```
+上記のように、データがインポートされると、Dorisは自動的に対応するパーティションを月レベルの粒度で`date`として作成します。`2018-12-01`と`2018-12-31`は同じパーティションに含まれ、`2018-11-12`は先頭のパーティションに含まれます。Auto Partitionは List partitionもサポートしているため、より詳しい使用法についてはAuto Partitionのドキュメントを確認してください。
+
+</div>
+</TabItem>
+
+<TabItem value="Dynamic Partition" label="Dynamic Partition">
+<div>
+
+[Dynamic Partition](./dynamic-partitioning)は、リアルタイムに基づく自動パーティション作成と復旧管理手法です。上記の例をdynamic partitioningを使用して以下のように書き換えます：
+
+```sql
+CREATE TABLE IF NOT EXISTS example_range_tbl
+(
+    `user_id` LARGEINT NOT NULL COMMENT "User ID",
+    `date` DATE NOT NULL COMMENT "Date when the data are imported",
+    `timestamp` DATETIME NOT NULL COMMENT "Timestamp when the data are imported",
+    `city` VARCHAR(20) COMMENT "User location city",
+    `age` SMALLINT COMMENT "User age",
+    `sex` TINYINT COMMENT "User gender",
+    `last_visit_date` DATETIME REPLACE DEFAULT "1970-01-01 00:00:00" COMMENT "User last visit time",
+    `cost` BIGINT SUM DEFAULT "0" COMMENT "Total user consumption",
+    `max_dwell_time` INT MAX DEFAULT "0" COMMENT "Maximum user dwell time",
+    `min_dwell_time` INT MIN DEFAULT "99999" COMMENT "Minimum user dwell time"   
+)
+ENGINE=OLAP
+AGGREGATE KEY(`user_id`, `date`, `timestamp`, `city`, `age`, `sex`)
+PARTITION BY RANGE(`date`)
+()
+DISTRIBUTED BY HASH(`user_id`) BUCKETS 16
+PROPERTIES
+(
+    "replication_num" = "1",
+    "dynamic_partition.enable" = "true",
+    "dynamic_partition.time_unit" = "WEEK", --- Partition granularity is week
+    "dynamic_partition.start" = "-2", --- Retain two weeks forward
+    "dynamic_partition.end" = "2", --- Two weeks after creation in advance
+    "dynamic_partition.prefix" = "p",
+    "dynamic_partition.buckets" = "8"
+);
+```
+動的パーティションは階層ストレージ、カスタマイズされたコピー数、その他の機能をサポートしています。詳細については動的パーティションドキュメントを参照してください。
+
+</div>
+</TabItem>
+
+<TabItem value="Auto&Dynamic Partition" label="Auto&Dynamic Partition">
+<div>
+
+Auto PartitionとDynamic Partitionはそれぞれに利点があり、この2つを組み合わせることで、柔軟なオンデマンドパーティション作成と自動回収が可能になります：
+
+```sql
+CREATE TABLE IF NOT EXISTS example_range_tbl
+(
+    `user_id` LARGEINT NOT NULL COMMENT "User ID",
+    `date` DATE NOT NULL COMMENT "Date when the data are imported",
+    `timestamp` DATETIME NOT NULL COMMENT "Timestamp when the data are imported",
+    `city` VARCHAR(20) COMMENT "User location city",
+    `age` SMALLINT COMMENT "User age",
+    `sex` TINYINT COMMENT "User gender",
+    `last_visit_date` DATETIME REPLACE DEFAULT "1970-01-01 00:00:00" COMMENT "User last visit time",
+    `cost` BIGINT SUM DEFAULT "0" COMMENT "Total user consumption",
+    `max_dwell_time` INT MAX DEFAULT "0" COMMENT "Maximum user dwell time",
+    `min_dwell_time` INT MIN DEFAULT "99999" COMMENT "Minimum user dwell time"   
+)
+ENGINE=OLAP
+AGGREGATE KEY(`user_id`, `date`, `timestamp`, `city`, `age`, `sex`)
+AUTO PARTITION BY RANGE(date_trunc(`date`, 'month')) --- Using months as partition granularity
+()
+DISTRIBUTED BY HASH(`user_id`) BUCKETS 16
+PROPERTIES
+(
+    "replication_num" = "1",
+    "dynamic_partition.enable" = "true",
+    "dynamic_partition.time_unit" = "month", --- Both must have the same granularity
+    "dynamic_partition.start" = "-2", --- Dynamic Partition automatically cleans up partitions that are more than two weeks old
+    "dynamic_partition.end" = "0", --- Dynamic Partition does not create future partitions. it is left entirely to Auto Partition.
+    "dynamic_partition.prefix" = "p",
+    "dynamic_partition.buckets" = "8"
+);
+```
+この機能に関する詳細な提案については、[Auto Partition Conjunct with Dynamic Partition](./auto-partitioning#conjunct-with-dynamic-partition)を参照してください。
+
+</div>
+</TabItem>
+
+<TabItem value="Auto Bucket" label="Auto Bucket">
+<div>
+
+ユーザーが適切なバケット数が分からない場合、Auto BucketによってDorisが推定を完了し、ユーザーはテーブルデータの推定量を提供するだけで済みます：
+
+```sql
+CREATE TABLE IF NOT EXISTS example_range_tbl
+(
+    `user_id` LARGEINT NOT NULL COMMENT "User ID",
+    `date` DATE NOT NULL COMMENT "Date when the data are imported",
+    `timestamp` DATETIME NOT NULL COMMENT "Timestamp when the data are imported",
+    `city` VARCHAR(20) COMMENT "User location city",
+    `age` SMALLINT COMMENT "User age",
+    `sex` TINYINT COMMENT "User gender",
+    `last_visit_date` DATETIME REPLACE DEFAULT "1970-01-01 00:00:00" COMMENT "User last visit time",
+    `cost` BIGINT SUM DEFAULT "0" COMMENT "Total user consumption",
+    `max_dwell_time` INT MAX DEFAULT "0" COMMENT "Maximum user dwell time",
+    `min_dwell_time` INT MIN DEFAULT "99999" COMMENT "Minimum user dwell time"   
+)
+ENGINE=OLAP
+AGGREGATE KEY(`user_id`, `date`, `timestamp`, `city`, `age`, `sex`)
+PARTITION BY RANGE(`date`)
+(
+    PARTITION `p201701` VALUES LESS THAN ("2017-02-01"),
+    PARTITION `p201702` VALUES LESS THAN ("2017-03-01"),
+    PARTITION `p201703` VALUES LESS THAN ("2017-04-01"),
+    PARTITION `p2018` VALUES [("2018-01-01"), ("2019-01-01"))
+)
+DISTRIBUTED BY HASH(`user_id`) BUCKETS AUTO
+PROPERTIES
+(
+    "replication_num" = "1",
+    "estimate_partition_size" = "2G" --- User estimate of the amount of data a partition will have, defaults to 10G if not provided 
+);
+```
+なお、このアプローチはテーブルデータの量が特に多い場合には適用されないことに注意してください。
+
+</div>
+</TabItem>
+
+</Tabs>
+
+## パーティションの表示
+
+`show create table`コマンドを実行してテーブルのパーティション情報を表示します。
+
+```sql
+> show create table  example_range_tbl 
++-------------------+---------------------------------------------------------------------------------------------------------+                                                                                                            
+| Table             | Create Table                                                                                            |                                                                                                            
++-------------------+---------------------------------------------------------------------------------------------------------+                                                                                                            
+| example_range_tbl | CREATE TABLE `example_range_tbl` (                                                                      |                                                                                                            
+|                   |   `user_id` largeint(40) NOT NULL COMMENT 'User ID',                                                     |                                                                                                            
+|                   |   `date` date NOT NULL COMMENT 'Date when the data are imported',                                                      |                                                                                                            
+|                   |   `timestamp` datetime NOT NULL COMMENT 'Timestamp when the data are imported',                                             |                                                                                                            
+|                   |   `city` varchar(20) NULL COMMENT 'User location city',                                                       |                                                                                                            
+|                   |   `age` smallint(6) NULL COMMENT 'User age',                                                            |                                                                                                            
+|                   |   `sex` tinyint(4) NULL COMMENT 'User gender',                                                             |                                                                                                            
+|                   |   `last_visit_date` datetime REPLACE NULL DEFAULT "1970-01-01 00:00:00" COMMENT 'User last visit time', |                                                                                                            
+|                   |   `cost` bigint(20) SUM NULL DEFAULT "0" COMMENT 'Total user consumption',                                          |                                                                                                            
+|                   |   `max_dwell_time` int(11) MAX NULL DEFAULT "0" COMMENT 'Maximum user dwell time',                             |                                                                                                            
+|                   |   `min_dwell_time` int(11) MIN NULL DEFAULT "99999" COMMENT 'Minimum user dwell time'                          |                                                                                                            
+|                   | ) ENGINE=OLAP                                                                                           |                                                                                                            
+|                   | AGGREGATE KEY(`user_id`, `date`, `timestamp`, `city`, `age`, `sex`)                                     |                                                                                                            
+|                   | COMMENT 'OLAP'                                                                                          |                                                                                                            
+|                   | PARTITION BY RANGE(`date`)                                                                              |                                                                                                            
+|                   | (PARTITION p201701 VALUES [('0000-01-01'), ('2017-02-01')),                                             |                                                                                                            
+|                   | PARTITION p201702 VALUES [('2017-02-01'), ('2017-03-01')),                                              |                                                                                                            
+|                   | PARTITION p201703 VALUES [('2017-03-01'), ('2017-04-01')))                                              |                                                                                                            
+|                   | DISTRIBUTED BY HASH(`user_id`) BUCKETS 16                                                               |                                                                                                            
+|                   | PROPERTIES (                                                                                            |                                                                                                            
+|                   | "replication_allocation" = "tag.location.default: 1",                                                   |                                                                                                            
+|                   | "is_being_synced" = "false",                                                                            |                                                                                                            
+|                   | "storage_format" = "V2",                                                                                |                                                                                                            
+|                   | "light_schema_change" = "true",                                                                         |                                                                                                            
+|                   | "disable_auto_compaction" = "false",                                                                    |                                                                                                            
+|                   | "enable_single_replica_compaction" = "false"                                                            |                                                                                                            
+|                   | );                                                                                                      |                                                                                                            
++-------------------+---------------------------------------------------------------------------------------------------------+   
+```
+または`show partitions from your_table`コマンドを実行してください。
+
+```sql
+> show partitions from example_range_tbl
++-------------+---------------+----------------+---------------------+--------+--------------+--------------------------------------------------------------------------------+-----------------+---------+----------------+---------------
++---------------------+---------------------+--------------------------+----------+------------+-------------------------+-----------+                                                                                                     
+| PartitionId | PartitionName | VisibleVersion | VisibleVersionTime  | State  | PartitionKey | Range                                                                          | DistributionKey | Buckets | ReplicationNum | StorageMedium 
+| CooldownTime        | RemoteStoragePolicy | LastConsistencyCheckTime | DataSize | IsInMemory | ReplicaAllocation       | IsMutable |                                                                                                     
++-------------+---------------+----------------+---------------------+--------+--------------+--------------------------------------------------------------------------------+-----------------+---------+----------------+---------------
++---------------------+---------------------+--------------------------+----------+------------+-------------------------+-----------+                                                                                                     
+| 28731       | p201701       | 1              | 2024-01-25 10:50:51 | NORMAL | date         | [types: [DATEV2]; keys: [0000-01-01]; ..types: [DATEV2]; keys: [2017-02-01]; ) | user_id         | 16      | 1              | HDD           
+| 9999-12-31 23:59:59 |                     |                    | 0.000    | false      | tag.location.default: 1 | true      |                                                                                                     
+| 28732       | p201702       | 1              | 2024-01-25 10:50:51 | NORMAL | date         | [types: [DATEV2]; keys: [2017-02-01]; ..types: [DATEV2]; keys: [2017-03-01]; ) | user_id         | 16      | 1              | HDD           
+| 9999-12-31 23:59:59 |                     |                    | 0.000    | false      | tag.location.default: 1 | true      |                                                                                                     
+| 28733       | p201703       | 1              | 2024-01-25 10:50:51 | NORMAL | date         | [types: [DATEV2]; keys: [2017-03-01]; ..types: [DATEV2]; keys: [2017-04-01]; ) | user_id         | 16      | 1              | HDD           
+| 9999-12-31 23:59:59 |                     |                    | 0.000    | false      | tag.location.default: 1 | true      |                                                                                                     
++-------------+---------------+----------------+---------------------+--------+--------------+--------------------------------------------------------------------------------+-----------------+---------+----------------+---------------
++---------------------+---------------------+--------------------------+----------+------------+-------------------------+-----------+                  
+```
+## パーティションの変更
+
+`alter table add partition` コマンドを実行することで、新しいパーティションを追加できます。
+
+```sql
+ALTER TABLE example_range_tbl ADD PARTITION p201704 VALUES LESS THAN("2020-05-01") DISTRIBUTED BY HASH(`user_id`) BUCKETS 5;
+```
+パーティションの変更方法の詳細については、[ALTER-TABLE-PARTITION](../../sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-PARTITION.md)を参照してください。
+
+## パーティション取得
+
+`partitions`テーブル関数と`information_schema.partitions`システムテーブル（3.0.2以降でサポート）は、クラスターのパーティション情報を記録します。パーティションを自動管理する際に使用するため、対応するテーブルからパーティション情報を抽出できます：
+
+```sql
+--- Find the partition with the corresponding value in the Auto Partition table.
+mysql> select * from partitions("catalog"="internal", "database"="optest", "table"="DAILY_TRADE_VALUE") where PartitionName = auto_partition_name('range', 'year', '2008-02-03');
++-------------+-----------------+----------------+---------------------+--------+--------------+--------------------------------------------------------------------------------+-----------------+---------+----------------+---------------+---------------------+---------------------+--------------------------+-----------+------------+-------------------------+-----------+--------------------+--------------+
+| PartitionId | PartitionName   | VisibleVersion | VisibleVersionTime  | State  | PartitionKey | Range                                                                          | DistributionKey | Buckets | ReplicationNum | StorageMedium | CooldownTime        | RemoteStoragePolicy | LastConsistencyCheckTime | DataSize  | IsInMemory | ReplicaAllocation       | IsMutable | SyncWithBaseTables | UnsyncTables |
++-------------+-----------------+----------------+---------------------+--------+--------------+--------------------------------------------------------------------------------+-----------------+---------+----------------+---------------+---------------------+---------------------+--------------------------+-----------+------------+-------------------------+-----------+--------------------+--------------+
+|      127095 | p20080101000000 |              2 | 2024-11-14 17:29:02 | NORMAL | TRADE_DATE   | [types: [DATEV2]; keys: [2008-01-01]; ..types: [DATEV2]; keys: [2009-01-01]; ) | TRADE_DATE      |      10 |              1 | HDD           | 9999-12-31 23:59:59 |                     | \N                       | 985.000 B |          0 | tag.location.default: 1 |         1 |                  1 | \N           |
++-------------+-----------------+----------------+---------------------+--------+--------------+--------------------------------------------------------------------------------+-----------------+---------+----------------+---------------+---------------------+---------------------+--------------------------+-----------+------------+-------------------------+-----------+--------------------+--------------+
+1 row in set (0.30 sec)
+
+mysql> select * from information_schema.partitions where TABLE_SCHEMA='optest' and TABLE_NAME='list_table1' and PARTITION_NAME=auto_partition_name('list', null);
++---------------+--------------+-------------+----------------+-------------------+----------------------------+-------------------------------+------------------+---------------------+----------------------+-------------------------+-----------------------+------------+----------------+-------------+-----------------+--------------+-----------+-------------+---------------------+---------------------+----------+-------------------+-----------+-----------------+
+| TABLE_CATALOG | TABLE_SCHEMA | TABLE_NAME  | PARTITION_NAME | SUBPARTITION_NAME | PARTITION_ORDINAL_POSITION | SUBPARTITION_ORDINAL_POSITION | PARTITION_METHOD | SUBPARTITION_METHOD | PARTITION_EXPRESSION | SUBPARTITION_EXPRESSION | PARTITION_DESCRIPTION | TABLE_ROWS | AVG_ROW_LENGTH | DATA_LENGTH | MAX_DATA_LENGTH | INDEX_LENGTH | DATA_FREE | CREATE_TIME | UPDATE_TIME         | CHECK_TIME          | CHECKSUM | PARTITION_COMMENT | NODEGROUP | TABLESPACE_NAME |
++---------------+--------------+-------------+----------------+-------------------+----------------------------+-------------------------------+------------------+---------------------+----------------------+-------------------------+-----------------------+------------+----------------+-------------+-----------------+--------------+-----------+-------------+---------------------+---------------------+----------+-------------------+-----------+-----------------+
+| internal      | optest       | list_table1 | pX             | NULL              |                          0 |                             0 | LIST             | NULL                | str                  | NULL                    | (NULL)                |          1 |           1266 |        1266 |               0 |            0 |         0 |           0 | 2024-11-14 19:58:45 | 0000-00-00 00:00:00 |        0 |                   |           |                 |
++---------------+--------------+-------------+----------------+-------------------+----------------------------+-------------------------------+------------------+---------------------+----------------------+-------------------------+-----------------------+------------+----------------+-------------+-----------------+--------------+-----------+-------------+---------------------+---------------------+----------+-------------------+-----------+-----------------+
+1 row in set (0.24 sec)
+
+--- Find the partition that corresponds to the starting point
+mysql> select * from information_schema.partitions where TABLE_NAME='DAILY_TRADE_VALUE' and PARTITION_DESCRIPTION like "[('2012-01-01'),%";
++---------------+--------------+-------------------+-----------------+-------------------+----------------------------+-------------------------------+------------------+---------------------+----------------------+-------------------------+----------------------------------+------------+----------------+-------------+-----------------+--------------+-----------+-------------+---------------------+---------------------+----------+-------------------+-----------+-----------------+
+| TABLE_CATALOG | TABLE_SCHEMA | TABLE_NAME        | PARTITION_NAME  | SUBPARTITION_NAME | PARTITION_ORDINAL_POSITION | SUBPARTITION_ORDINAL_POSITION | PARTITION_METHOD | SUBPARTITION_METHOD | PARTITION_EXPRESSION | SUBPARTITION_EXPRESSION | PARTITION_DESCRIPTION            | TABLE_ROWS | AVG_ROW_LENGTH | DATA_LENGTH | MAX_DATA_LENGTH | INDEX_LENGTH | DATA_FREE | CREATE_TIME | UPDATE_TIME         | CHECK_TIME          | CHECKSUM | PARTITION_COMMENT | NODEGROUP | TABLESPACE_NAME |
++---------------+--------------+-------------------+-----------------+-------------------+----------------------------+-------------------------------+------------------+---------------------+----------------------+-------------------------+----------------------------------+------------+----------------+-------------+-----------------+--------------+-----------+-------------+---------------------+---------------------+----------+-------------------+-----------+-----------------+
+| internal      | optest       | DAILY_TRADE_VALUE | p20120101000000 | NULL              |                          0 |                             0 | RANGE            | NULL                | TRADE_DATE           | NULL                    | [('2012-01-01'), ('2013-01-01')) |          1 |            985 |         985 |               0 |            0 |         0 |           0 | 2024-11-14 17:29:02 | 0000-00-00 00:00:00 |        0 |                   |           |                 |
++---------------+--------------+-------------------+-----------------+-------------------+----------------------------+-------------------------------+------------------+---------------------+----------------------+-------------------------+----------------------------------+------------+----------------+-------------+-----------------+--------------+-----------+-------------+---------------------+---------------------+----------+-------------------+-----------+-----------------+
+1 row in set (0.65 sec)
+```

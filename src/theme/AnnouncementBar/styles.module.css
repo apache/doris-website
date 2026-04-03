@@ -39,6 +39,10 @@ html[data-announcement-bar-initially-dismissed='true'] .announcementBar {
 }
 
 .announcementBarContent:hover p {
+    text-decoration: none !important;
+}
+
+.announcementBarContent a:hover {
     text-decoration: underline !important;
 }
 

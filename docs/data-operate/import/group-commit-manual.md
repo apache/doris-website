@@ -52,6 +52,69 @@ PROPERTIES (
 );
 ```
 
+### Table Property Configuration
+
+:::info
+`group_commit_mode` table property is supported from **4.1.0**.
+:::
+
+You can set the default Group Commit mode at the table level. When Stream Load does not set the `group_commit` HTTP Header, the mode from the table property will be used.
+
+**Configure during table creation:**
+
+```sql
+CREATE TABLE `dt` (
+    `id` int(11) NOT NULL,
+    `name` varchar(50) NULL,
+    `score` int(11) NULL
+) ENGINE=OLAP
+DUPLICATE KEY(`id`)
+DISTRIBUTED BY HASH(`id`) BUCKETS 1
+PROPERTIES (
+    "replication_num" = "1",
+    "group_commit_mode" = "async_mode"
+);
+```
+
+**Modify table property:**
+
+```sql
+# Modify to synchronous mode
+ALTER TABLE dt SET ("group_commit_mode" = "sync_mode");
+
+# Disable Group Commit
+ALTER TABLE dt SET ("group_commit_mode" = "off_mode");
+```
+
+**View table property:**
+
+`SHOW CREATE TABLE` displays the `group_commit_mode` property (unless the value is `off_mode`):
+
+```sql
+mysql> SHOW CREATE TABLE dt;
++-------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Table | Create Table                                                                                                                                                                                                       |
++-------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| dt    | CREATE TABLE `dt` (
+  `id` int(11) NOT NULL,
+  `name` varchar(50) NULL,
+  `score` int(11) NULL
+) ENGINE=OLAP
+DUPLICATE KEY(`id`)
+DISTRIBUTED BY HASH(`id`) BUCKETS 1
+PROPERTIES (
+    "group_commit_mode" = "async_mode"
+) |
++-------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+1 row in set (0.00 sec)
+```
+
+**Priority Description:**
+
+- For Stream Load: If the `group_commit` HTTP Header is set, the Header value takes priority; otherwise, the table property value is used
+- For INSERT INTO VALUES: Session variable `group_commit` has higher priority than table property
+
+
 ### Using JDBC
 
 When users write using JDBC's `insert into values` method, to reduce SQL parsing and planning overhead, we support MySQL protocol's `PreparedStatement` feature on the FE side. When using `PreparedStatement`, SQL and its load plan are cached in session-level memory cache, and subsequent loads directly use the cached objects, reducing FE CPU pressure. Here's an example of using `PreparedStatement` in JDBC:
@@ -233,6 +296,8 @@ func logInsertStatistics() {
 
 ### INSERT INTO VALUES
 
+Enable Group Commit by setting the Session variable `group_commit`. Session variables have higher priority than table properties.
+
 * Asynchronous Mode
 
 ```sql
@@ -297,6 +362,10 @@ mysql> set group_commit = off_mode;
 ```
 
 ### Stream Load
+
+When importing via Stream Load, you can enable Group Commit by setting the `group_commit` parameter in the HTTP Header.
+
+**Note**: If the `group_commit` Header is not set but `group_commit_mode` is configured in the table property, the table property mode will be used automatically.
 
 Assuming `data.csv` contains:
 

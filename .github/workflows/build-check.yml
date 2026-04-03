@@ -75,5 +75,6 @@ jobs:
                   npm install -g yarn
                   yarn cache clean
                   export NODE_OPTIONS=--max-old-space-size=8192
-                  yarn && yarn build
+                  yarn
+                  PWA_SERVICE_WORKER_URL=https://doris.apache.org/sw.js yarn docusaurus build --locale en --locale zh-CN
                   rm -rf build

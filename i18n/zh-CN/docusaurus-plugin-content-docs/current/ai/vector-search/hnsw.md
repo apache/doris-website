@@ -39,7 +39,7 @@ HNSW (Hierarchical Navigable Small World) 算法是在 [Efficient and robust app
 1. 随着数据量的增加，查询路由阶段的迭代次数会有幂律级别的增加。
 2. 构建一个高质量的 proximity graph 很难，很容易出现局部聚集导致图不具备全局联通的问题。
 
-![low_quality_pgraph](/images/vector-search/low_quality_pgraph.png)
+![low quality pgraph](/images/vector-search/low-quality-pgraph.png)
 
 这里有一张示意图可以直观展示一个不理想的 proximity graph 的形状。图中颜色越深的点表示该点的连通性越差，可以看到有个别点几乎没有找到自己的邻居，那么在搜索阶段这些点就很难被路由到。
 

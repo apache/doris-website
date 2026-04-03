@@ -68,11 +68,11 @@ function checkFileLinks(filePath) {
 
   const cleanedContent = removeCodeBlocks(content); 
   const matches = [...cleanedContent.matchAll(linkRegex)];
-
   for (const match of matches) {
     const rawLink = match[1].split("#")[0]; // Remove anchor point
     if (!isLocalLink(rawLink)) continue;
-
+    console.log('rawLink',rawLink);
+    
     let fullPath = path.resolve(dir, rawLink);
     if (!fs.existsSync(fullPath)) {
       // Try adding a .md/.mdx suffix and try again

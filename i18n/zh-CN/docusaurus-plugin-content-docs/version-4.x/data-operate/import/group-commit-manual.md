@@ -52,6 +52,68 @@ PROPERTIES (
 );
 ```
 
+### 表属性配置
+
+:::info
+`group_commit_mode` 表属性从 **4.1.0** 版本开始支持。
+:::
+
+可以在表级别设置默认的 Group Commit 模式。当 Stream Load 未设置 `group_commit` HTTP Header 时，将使用表属性中的模式。
+
+**建表时配置：**
+
+```sql
+CREATE TABLE `dt` (
+    `id` int(11) NOT NULL,
+    `name` varchar(50) NULL,
+    `score` int(11) NULL
+) ENGINE=OLAP
+DUPLICATE KEY(`id`)
+DISTRIBUTED BY HASH(`id`) BUCKETS 1
+PROPERTIES (
+    "replication_num" = "1",
+    "group_commit_mode" = "async_mode"
+);
+```
+
+**修改表属性：**
+
+```sql
+# 修改为同步模式
+ALTER TABLE dt SET ("group_commit_mode" = "sync_mode");
+
+# 关闭 Group Commit
+ALTER TABLE dt SET ("group_commit_mode" = "off_mode");
+```
+
+**查看表属性：**
+
+`SHOW CREATE TABLE` 会显示 `group_commit_mode` 属性（除非值为 `off_mode`）：
+
+```sql
+mysql> SHOW CREATE TABLE dt;
++-------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Table | Create Table                                                                                                                                                                                                       |
++-------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| dt    | CREATE TABLE `dt` (
+  `id` int(11) NOT NULL,
+  `name` varchar(50) NULL,
+  `score` int(11) NULL
+) ENGINE=OLAP
+DUPLICATE KEY(`id`)
+DISTRIBUTED BY HASH(`id`) BUCKETS 1
+PROPERTIES (
+    "group_commit_mode" = "async_mode"
+) |
++-------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+1 row in set (0.00 sec)
+```
+
+**优先级说明：**
+
+- 对于 Stream Load：如果设置了 `group_commit` HTTP Header，则优先使用 Header 中的值；否则使用表属性中的值
+- 对于 INSERT INTO VALUES：Session 变量 `group_commit` 的优先级高于表属性
+
 ### 使用 JDBC
 
 当用户使用 JDBC `insert into values`方式写入时，为了减少 SQL 解析和生成规划的开销，我们在 FE 端支持了 MySQL 协议的 `PreparedStatement` 特性。当使用 `PreparedStatement` 时，SQL 和其导入规划将被缓存到 Session 级别的内存缓存中，后续的导入直接使用缓存对象，降低了 FE 的 CPU 压力。下面是在 JDBC 中使用 `PreparedStatement` 的例子：
@@ -233,6 +295,8 @@ func logInsertStatistics() {
 
 ### INSERT INTO VALUES
 
+通过设置 Session 变量 `group_commit` 来启用 Group Commit。Session 变量的优先级高于表属性。
+
 * 异步模式
 
 ```sql
@@ -297,6 +361,10 @@ mysql> set group_commit = off_mode;
 ```
 
 ### Stream Load
+
+通过 Stream Load 进行导入时，可以在 HTTP Header 中设置 `group_commit` 参数来启用 Group Commit。
+
+**注意**：如果未设置 `group_commit` Header 且表属性中配置了 `group_commit_mode`，则自动使用表属性中的模式。
 
 假如`data.csv`的内容为：
 

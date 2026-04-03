@@ -2,91 +2,91 @@
 {
     "title": "常见数据湖问题",
     "language": "zh-CN",
-    "description": "通常是因为 Kerberos 认证信息填写不正确导致的，可以通过以下步骤排查："
+    "description": "Apache Doris 数据湖（Lakehouse）常见问题排查指南，涵盖证书、Kerberos 认证、JDBC Catalog、Hive Catalog、HDFS、DLF Catalog 等场景的报错解决方案与诊断工具使用说明。"
 }
 ---
 
 ## 证书问题
 
 1. 查询时报错 `curl 77: Problem with the SSL CA cert.`。说明当前系统证书过旧，需要更新本地证书。
-   - 可以从 `https://curl.se/docs/caextract.html` 下载最新的 CA 证书。
-   - 将下载后的 cacert-xxx.pem 放到`/etc/ssl/certs/`目录，例如：`sudo cp cacert-xxx.pem  /etc/ssl/certs/ca-certificates.crt`。
+    - 可以从 `https://curl.se/docs/caextract.html` 下载最新的 CA 证书。
+    - 将下载后的 cacert-xxx.pem 放到 `/etc/ssl/certs/` 目录，例如：`sudo cp cacert-xxx.pem /etc/ssl/certs/ca-certificates.crt`。
 
-2. 查询时报错：`ERROR 1105 (HY000): errCode = 2, detailMessage = (x.x.x.x)[CANCELLED][INTERNAL_ERROR]error setting certificate verify locations:  CAfile: /etc/ssl/certs/ca-certificates.crt CApath: none`.
+2. 查询时报错：`ERROR 1105 (HY000): errCode = 2, detailMessage = (x.x.x.x)[CANCELLED][INTERNAL_ERROR]error setting certificate verify locations: CAfile: /etc/ssl/certs/ca-certificates.crt CApath: none`。
 
-```
-yum install -y ca-certificates
-ln -s /etc/pki/ca-trust/extracted/openssl/ca-bundle.trust.crt /etc/ssl/certs/ca-certificates.crt
-```
+    ```
+    yum install -y ca-certificates
+    ln -s /etc/pki/ca-trust/extracted/openssl/ca-bundle.trust.crt /etc/ssl/certs/ca-certificates.crt
+    ```
 
 ## Kerberos
 
 1. 连接 Kerberos 认证的 Hive Metastore 报错：`GSS initiate failed`
 
-   通常是因为 Kerberos 认证信息填写不正确导致的，可以通过以下步骤排查：
+    通常是因为 Kerberos 认证信息填写不正确导致的，可以通过以下步骤排查：
 
     1. 1.2.1 之前的版本中，Doris 依赖的 libhdfs3 库没有开启 gsasl。请更新至 1.2.2 之后的版本。
     2. 确认对各个组件，设置了正确的 keytab 和 principal，并确认 keytab 文件存在于所有 FE、BE 节点上。
 
-        1. `hadoop.kerberos.keytab`/`hadoop.kerberos.principal`：用于 Hadoop hdfs 访问，填写 hdfs 对应的值。
-        2. `hive.metastore.kerberos.principal`：用于 hive metastore。
+        1. `hadoop.kerberos.keytab`/`hadoop.kerberos.principal`：用于 Hadoop HDFS 访问，填写 HDFS 对应的值。
+        2. `hive.metastore.kerberos.principal`：用于 Hive Metastore。
 
-    3. 尝试将 principal 中的 ip 换成域名（不要使用默认的 `_HOST` 占位符）
+    3. 尝试将 principal 中的 IP 换成域名（不要使用默认的 `_HOST` 占位符）。
     4. 确认 `/etc/krb5.conf` 文件存在于所有 FE、BE 节点上。
 
 2. 通过 Hive Catalog 连接 Hive 数据库报错：`RemoteException: SIMPLE authentication is not enabled.  Available:[TOKEN, KERBEROS]`.
 
-    如果在 `show databases` 和 `show tables` 都是没问题的情况下，查询的时候出现上面的错误，我们需要进行下面两个操作：
-    - fe/conf、be/conf 目录下需放置 core-site.xml 和 hdfs-site.xml
-    - BE 节点执行 Kerberos 的 kinit 然后重启 BE，然后再去执行查询即可。
+    如果在 `show databases` 和 `show tables` 都是没问题的情况下，查询的时候出现上面的错误，需要进行下面两个操作：
+    - `fe/conf`、`be/conf` 目录下需放置 `core-site.xml` 和 `hdfs-site.xml`。
+    - BE 节点执行 Kerberos 的 `kinit` 然后重启 BE，然后再去执行查询即可。
 
 3. 查询配置了 Kerberos 的外表，遇到该报错：`GSSException: No valid credentials provided (Mechanism level: Failed to find any Kerberos Ticket)`，一般重启 FE 和 BE 能够解决该问题。
 
-    - 重启所有节点前可在`"${DORIS_HOME}/be/conf/be.conf"`中的 JAVA_OPTS 参数里配置`-Djavax.security.auth.useSubjectCredsOnly=false`，通过底层机制去获取 JAAS credentials 信息，而不是应用程序。
-    - 在[JAAS Troubleshooting](https://docs.oracle.com/javase/8/docs/technotes/guides/security/jgss/tutorials/Troubleshooting.html)中可获取更多常见 JAAS 报错的解决方法。
+    - 重启所有节点前可在 `"${DORIS_HOME}/be/conf/be.conf"` 中的 JAVA_OPTS 参数里配置 `-Djavax.security.auth.useSubjectCredsOnly=false`，通过底层机制去获取 JAAS credentials 信息，而不是应用程序。
+    - 在 [JAAS Troubleshooting](https://docs.oracle.com/javase/8/docs/technotes/guides/security/jgss/tutorials/Troubleshooting.html) 中可获取更多常见 JAAS 报错的解决方法。
 
-4. 在 Catalog 中配置 Kerberos 时，报错`Unable to obtain password from user`的解决方法：
+4. 在 Catalog 中配置 Kerberos 时，报错 `Unable to obtain password from user` 的解决方法：
 
-    - 用到的 principal 必须在 klist 中存在，使用`klist -kt your.keytab`检查。
-    - 检查 catalog 配置是否正确，比如漏配`yarn.resourcemanager.principal`。
-    - 若上述检查没问题，则当前系统 yum 或者其他包管理软件安装的 JDK 版本存在不支持的加密算法，建议自行安装 JDK 并设置`JAVA_HOME`环境变量。
+    - 用到的 principal 必须在 klist 中存在，使用 `klist -kt your.keytab` 检查。
+    - 检查 Catalog 配置是否正确，比如漏配 `yarn.resourcemanager.principal`。
+    - 若上述检查没问题，则当前系统 yum 或者其他包管理软件安装的 JDK 版本存在不支持的加密算法，建议自行安装 JDK 并设置 `JAVA_HOME` 环境变量。
     - Kerberos 默认使用 AES-256 来进行加密。如果使用 Oracle JDK，则必须安装 JCE。如果是 OpenJDK，OpenJDK 的某些发行版会自动提供无限强度的 JCE，因此不需要安装 JCE。
-    - JCE 与 JDK 版本是对应的，需要根据 JDK 的版本来选择 JCE 版本，下载 JCE 的 zip 包并解压到`$JAVA_HOME/jre/lib/security`目录下：
-      - JDK6：[JCE6](http://www.oracle.com/technetwork/java/javase/downloads/jce-6-download-429243.html)
-      - JDK7：[JCE7](http://www.oracle.com/technetwork/java/embedded/embedded-se/downloads/jce-7-download-432124.html)
-      - JDK8：[JCE8](http://www.oracle.com/technetwork/java/javase/downloads/jce8-download-2133166.html)
+    - JCE 与 JDK 版本是对应的，需要根据 JDK 的版本来选择 JCE 版本，下载 JCE 的 zip 包并解压到 `$JAVA_HOME/jre/lib/security` 目录下：
+        - JDK6：[JCE6](http://www.oracle.com/technetwork/java/javase/downloads/jce-6-download-429243.html)
+        - JDK7：[JCE7](http://www.oracle.com/technetwork/java/embedded/embedded-se/downloads/jce-7-download-432124.html)
+        - JDK8：[JCE8](http://www.oracle.com/technetwork/java/javase/downloads/jce8-download-2133166.html)
 
 5. 使用 KMS 访问 HDFS 时报错：`java.security.InvalidKeyException: Illegal key size`
 
-   升级 JDK 版本到 >= Java 8 u162 的版本。或者下载安装 JDK 相应的 JCE Unlimited Strength Jurisdiction Policy Files。
+    升级 JDK 版本到 >= Java 8 u162 的版本，或者下载安装 JDK 相应的 JCE Unlimited Strength Jurisdiction Policy Files。
 
-6. 在 Catalog 中配置 Kerberos 时，如果报错`SIMPLE authentication is not enabled. Available:[TOKEN, KERBEROS]`，那么需要将`core-site.xml`文件放到`"${DORIS_HOME}/be/conf"`目录下。
+6. 在 Catalog 中配置 Kerberos 时，如果报错 `SIMPLE authentication is not enabled. Available:[TOKEN, KERBEROS]`，那么需要将 `core-site.xml` 文件放到 `"${DORIS_HOME}/be/conf"` 目录下。
 
-    如果访问 HDFS 报错`No common protection layer between client and server`，检查客户端和服务端的`hadoop.rpc.protection`属性，使他们保持一致。
+    如果访问 HDFS 报错 `No common protection layer between client and server`，检查客户端和服务端的 `hadoop.rpc.protection` 属性，使它们保持一致。
 
+    ```xml
+    <?xml version="1.0" encoding="UTF-8"?>
+    <?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+
+    <configuration>
+
+        <property>
+            <name>hadoop.security.authentication</name>
+            <value>kerberos</value>
+        </property>
+
+    </configuration>
     ```
-        <?xml version="1.0" encoding="UTF-8"?>
-        <?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
-        
-        <configuration>
-        
-            <property>
-                <name>hadoop.security.authentication</name>
-                <value>kerberos</value>
-            </property>
-            
-        </configuration>
-    ```
 
-7. 在使用 Broker Load 时，配置了 Kerberos，如果报错`Cannot locate default realm.`。
+7. 在使用 Broker Load 时，配置了 Kerberos，如果报错 `Cannot locate default realm.`。
 
-   将 `-Djava.security.krb5.conf=/your-path` 配置项添加到 Broker Load 启动脚本的 `start_broker.sh` 的 `JAVA_OPTS`里。
+    将 `-Djava.security.krb5.conf=/your-path` 配置项添加到 Broker Load 启动脚本的 `start_broker.sh` 的 `JAVA_OPTS` 里。
 
-8. 当在 Catalog 里使用 Kerberos 配置时，不能同时使用`hadoop.username`属性。
+8. 当在 Catalog 里使用 Kerberos 配置时，不能同时使用 `hadoop.username` 属性。
 
 9. 使用 JDK 17 访问 Kerberos
 
-    如果使用 JDK 17 运行 Doris 并访问 Kerberos 服务，可能会出现因使用已废弃的加密算法而导致无法访问的现象。需要在 krb5.conf 中添加 `allow_weak_crypto=true` 属性。或升级 Kerberos 的加密算法。
+    如果使用 JDK 17 运行 Doris 并访问 Kerberos 服务，可能会出现因使用已废弃的加密算法而导致无法访问的现象。需要在 `krb5.conf` 中添加 `allow_weak_crypto=true` 属性，或升级 Kerberos 的加密算法。
 
     详情参阅：<https://seanjmullan.org/blog/2021/09/14/jdk17#kerberos>
 
@@ -94,52 +94,51 @@ ln -s /etc/pki/ca-trust/extracted/openssl/ca-bundle.trust.crt /etc/ssl/certs/ca-
 
 1. 通过 JDBC Catalog 连接 SQLServer 报错：`unable to find valid certification path to requested target`
 
-   请在 `jdbc_url` 中添加 `trustServerCertificate=true` 选项。
+    请在 `jdbc_url` 中添加 `trustServerCertificate=true` 选项。
 
 2. 通过 JDBC Catalog 连接 MySQL 数据库，中文字符乱码，或中文字符条件查询不正确
 
-   请在 `jdbc_url` 中添加 `useUnicode=true&characterEncoding=utf-8`
+    请在 `jdbc_url` 中添加 `useUnicode=true&characterEncoding=utf-8`。
 
-   > 注：1.2.3 版本后，使用 JDBC Catalog 连接 MySQL 数据库，会自动添加这些参数。
+    > 注：1.2.3 版本后，使用 JDBC Catalog 连接 MySQL 数据库，会自动添加这些参数。
 
 3. 通过 JDBC Catalog 连接 MySQL 数据库报错：`Establishing SSL connection without server's identity verification is not recommended`
 
-   请在 `jdbc_url` 中添加 `useSSL=true`
+    请在 `jdbc_url` 中添加 `useSSL=true`。
 
-4. 使用 JDBC Catalog 将 MySQL 数据同步到 Doris 中，日期数据同步错误。需要校验下 MySQL 的版本是否与 MySQL 的驱动包是否对应，比如 MySQL8 以上需要使用驱动 com.mysql.cj.jdbc.Driver。
-   
+4. 使用 JDBC Catalog 将 MySQL 数据同步到 Doris 中，日期数据同步错误。需要校验 MySQL 的版本与 MySQL 的驱动包是否对应，比如 MySQL 8 以上需要使用驱动 `com.mysql.cj.jdbc.Driver`。
 5. 单个字段过大，查询时 BE 侧 Java 内存 OOM
 
-   Jdbc Scanner 在通过 jdbc 读取时，由 session variable `batch_size` 决定每批次数据在 JVM 中处理的数量，如果单个字段过大，导致 `字段大小 * batch_size`(近似值，由于 JVM 中 static 以及数据 copy 占用) 超过 JVM 内存限制，就会出现 OOM。
+    JDBC Scanner 在通过 JDBC 读取时，由 Session Variable `batch_size` 决定每批次数据在 JVM 中处理的数量，如果单个字段过大，导致 `字段大小 * batch_size`（近似值，由于 JVM 中 static 以及数据 copy 占用）超过 JVM 内存限制，就会出现 OOM。
 
-   解决方法：
+    解决方法：
 
-   - 减小 `batch_size` 的值，可以通过 `set batch_size = 512;` 来调整，默认值为 4064。
-   - 增大 BE 的 JVM 内存，通过修改 `JAVA_OPTS` 参数中的 `-Xmx` 来调整 JVM 最大堆内存大小。例如：`"-Xmx8g`。
+    - 减小 `batch_size` 的值，可以通过 `set batch_size = 512;` 来调整，默认值为 4064。
+    - 增大 BE 的 JVM 内存，通过修改 `JAVA_OPTS` 参数中的 `-Xmx` 来调整 JVM 最大堆内存大小。例如：`-Xmx8g`。
 
 ## Hive Catalog
 
 1. 通过 Hive Catalog 访问 Iceberg 或 Hive 表报错：`failed to get schema` 或 `Storage schema reading not supported`
 
-   可以尝试以下方法：
+    可以尝试以下方法：
 
-   * 在 Hive 的 lib/ 目录放上 `iceberg` 运行时有关的 jar 包。
+    - 在 Hive 的 `lib/` 目录放上 `iceberg` 运行时有关的 jar 包。
 
-   * 在 `hive-site.xml` 配置：
+    - 在 `hive-site.xml` 配置：
 
-       ```
-       metastore.storage.schema.reader.impl=org.apache.hadoop.hive.metastore.SerDeStorageSchemaReader
-       ```
+        ```
+        metastore.storage.schema.reader.impl=org.apache.hadoop.hive.metastore.SerDeStorageSchemaReader
+        ```
 
-       配置完成后需要重启 Hive Metastore。
+        配置完成后需要重启 Hive Metastore。
 
-   * 在 Catalog 属性中添加 `"get_schema_from_table" = "true"`
+    - 在 Catalog 属性中添加 `"get_schema_from_table" = "true"`。
 
-       该参数自 2.1.10 和 3.0.6 版本支持。
+        该参数自 2.1.10 和 3.0.6 版本支持。
 
 2. 连接 Hive Catalog 报错：`Caused by: java.lang.NullPointerException`
 
-   如 fe.log 中有如下堆栈：
+    如 fe.log 中有如下堆栈：
 
     ```
     Caused by: java.lang.NullPointerException
@@ -150,17 +149,17 @@ ln -s /etc/pki/ca-trust/extracted/openssl/ca-bundle.trust.crt /etc/ssl/certs/ca-
         at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[?:1.8.0_181]
     ```
 
-   可以尝试在 `create catalog` 语句中添加 `"metastore.filter.hook" = "org.apache.hadoop.hive.metastore.DefaultMetaStoreFilterHookImpl"` 解决。
+    可以尝试在 `CREATE CATALOG` 语句中添加 `"metastore.filter.hook" = "org.apache.hadoop.hive.metastore.DefaultMetaStoreFilterHookImpl"` 解决。
 
-3. 如果创建 Hive Catalog 后能正常`show tables`，但查询时报`java.net.UnknownHostException: xxxxx`
+3. 如果创建 Hive Catalog 后能正常 `show tables`，但查询时报 `java.net.UnknownHostException: xxxxx`
 
-    可以在 CATALOG 的 PROPERTIES 中添加
+    可以在 Catalog 的 PROPERTIES 中添加：
 
     ```
     'fs.defaultFS' = 'hdfs://<your_nameservice_or_actually_HDFS_IP_and_port>'
     ```
 
-4. Hive 1.x 的 orc 格式的表可能会遇到底层 orc 文件 schema 中列名为 `_col0`，`_col1`，`_col2`... 这类系统列名，此时需要在 catalog 配置中添加 `hive.version` 为 1.x.x，这样就会使用 hive 表中的列名进行映射。
+4. Hive 1.x 的 ORC 格式的表可能会遇到底层 ORC 文件 Schema 中列名为 `_col0`、`_col1`、`_col2`... 这类系统列名，此时需要在 Catalog 配置中添加 `hive.version` 为 1.x.x，这样就会使用 Hive 表中的列名进行映射。
 
     ```sql
     CREATE CATALOG hive PROPERTIES (
@@ -168,7 +167,7 @@ ln -s /etc/pki/ca-trust/extracted/openssl/ca-bundle.trust.crt /etc/ssl/certs/ca-
     );
     ```
 
-5. 使用 Catalog 查询表数据时发现与 Hive Metastore 相关的报错：`Invalid method name`，需要设置`hive.version`参数。
+5. 使用 Catalog 查询表数据时发现与 Hive Metastore 相关的报错：`Invalid method name`，需要设置 `hive.version` 参数。
 
     ```sql
     CREATE CATALOG hive PROPERTIES (
@@ -178,15 +177,15 @@ ln -s /etc/pki/ca-trust/extracted/openssl/ca-bundle.trust.crt /etc/ssl/certs/ca-
 
 6. 查询 ORC 格式的表，FE 报错 `Could not obtain block` 或 `Caused by: java.lang.NoSuchFieldError: types`
 
-   对于 ORC 文件，在默认情况下，FE 会访问 HDFS 获取文件信息，进行文件切分。部分情况下，FE 可能无法访问到 HDFS。可以通过添加以下参数解决：
+    对于 ORC 文件，在默认情况下，FE 会访问 HDFS 获取文件信息，进行文件切分。部分情况下，FE 可能无法访问到 HDFS。可以通过添加以下参数解决：
 
-   `"hive.exec.orc.split.strategy" = "BI"`
+    `"hive.exec.orc.split.strategy" = "BI"`
 
-   其他选项：HYBRID（默认），ETL。
+    其他选项：HYBRID（默认）、ETL。
 
-7. 在 hive 上可以查到 hudi 表分区字段的值，但是在 doris 查不到。
+7. 在 Hive 上可以查到 Hudi 表分区字段的值，但是在 Doris 查不到。
 
-    doris 和 hive 目前查询 hudi 的方式不一样，doris 需要在 hudi 表结构的 avsc 文件里添加上分区字段，如果没加，就会导致 doris 查询 partition_val 为空（即使设置了 hoodie.datasource.hive_sync.partition_fields=partition_val 也不可以）
+    Doris 和 Hive 目前查询 Hudi 的方式不一样，Doris 需要在 Hudi 表结构的 avsc 文件里添加上分区字段，如果没加，就会导致 Doris 查询 `partition_val` 为空（即使设置了 `hoodie.datasource.hive_sync.partition_fields=partition_val` 也不可以）。
 
     ```
     {
@@ -215,26 +214,26 @@ ln -s /etc/pki/ca-trust/extracted/openssl/ca-bundle.trust.crt /etc/ssl/certs/ca-
     }
     ```
 
-8. 查询 hive 外表，遇到该报错：`java.lang.ClassNotFoundException: Class com.hadoop.compression.lzo.LzoCodec not found`
+8. 查询 Hive 外表，遇到该报错：`java.lang.ClassNotFoundException: Class com.hadoop.compression.lzo.LzoCodec not found`
 
-   去 hadoop 环境搜索`hadoop-lzo-*.jar`放在`"${DORIS_HOME}/fe/lib/"`目录下并重启 fe。
+    去 Hadoop 环境搜索 `hadoop-lzo-*.jar` 放在 `"${DORIS_HOME}/fe/lib/"` 目录下并重启 FE。
 
-   从 2.0.2 版本起，可以将这个文件放置在 FE 的 `custom_lib/` 目录下（如不存在，手动创建即可），以防止升级集群时因为 lib 目录被替换而导致文件丢失。
+    从 2.0.2 版本起，可以将这个文件放置在 FE 的 `custom_lib/` 目录下（如不存在，手动创建即可），以防止升级集群时因为 `lib` 目录被替换而导致文件丢失。
 
-9. 创建 hive 表指定 serde 为 `org.apache.hadoop.hive.contrib.serde2.MultiDelimitserDe`，访问表时报错：`storage schema reading not supported`
+9. 创建 Hive 表指定 serde 为 `org.apache.hadoop.hive.contrib.serde2.MultiDelimitserDe`，访问表时报错：`storage schema reading not supported`
 
-   在 hive-site.xml 文件中增加以下配置，并重启 hms 服务：
+    在 `hive-site.xml` 文件中增加以下配置，并重启 HMS 服务：
 
-   ```
-   <property>
-      <name>metastore.storage.schema.reader.impl</name>
-      <value>org.apache.hadoop.hive.metastore.SerDeStorageSchemaReader</value>
-   </property> 
-   ```
+    ```xml
+    <property>
+        <name>metastore.storage.schema.reader.impl</name>
+        <value>org.apache.hadoop.hive.metastore.SerDeStorageSchemaReader</value>
+    </property>
+    ```
 
-10. 报错：java.security.InvalidAlgorithmParameterException: the trustAnchors parameter must be non-empty
+10. 报错：`java.security.InvalidAlgorithmParameterException: the trustAnchors parameter must be non-empty`
 
-    FE日志中完整报错信息如下：
+    FE 日志中完整报错信息如下：
 
     ```
     org.apache.doris.common.UserException: errCode = 2, detailMessage = S3 list path failed. path=s3://bucket/part-*,msg=errors while get file status listStatus on s3://bucket: com.amazonaws.SdkClientException: Unable to execute HTTP request: Unexpected error: java.security.InvalidAlgorithmParameterException: the trustAnchors parameter must be non-empty: Unable to execute HTTP request: Unexpected error: java.security.InvalidAlgorithmParameterException: the trustAnchors parameter must be non-empty
@@ -246,7 +245,7 @@ ln -s /etc/pki/ca-trust/extracted/openssl/ca-bundle.trust.crt /etc/ssl/certs/ca-
     Caused by: java.security.InvalidAlgorithmParameterException: the trustAnchors parameter must be non-empty
     ```
 
-    尝试更新FE节点CA证书，使用 `update-ca-trust（CentOS/RockyLinux）`，然后重启FE进程即可。
+    尝试更新 FE 节点 CA 证书，使用 `update-ca-trust`（CentOS/RockyLinux），然后重启 FE 进程即可。
 
 11. BE 报错：`java.lang.InternalError`
 
@@ -267,39 +266,119 @@ ln -s /etc/pki/ca-trust/extracted/openssl/ca-bundle.trust.crt /etc/ssl/certs/ca-
 
     是因为 Doris 自带的 libz.a 和系统环境中的 libz.so 冲突了。
 
-    为了解决这个问题，需要先执行 `export LD_LIBRARY_PATH=/path/to/be/lib:$LD_LIBRARY_PATH` 然后重启 BE 进程。
+    为了解决这个问题，需要先执行 `export LD_LIBRARY_PATH=/path/to/be/lib:$LD_LIBRARY_PATH`，然后重启 BE 进程。
 
-12. 在插入 hive 数据的时候报错：`HiveAccessControlException Permission denied: user [user_a] does not have [UPDATE] privilege on [database/table]`。
+12. 在插入 Hive 数据的时候报错：`HiveAccessControlException Permission denied: user [user_a] does not have [UPDATE] privilege on [database/table]`。
 
-    因为插入数据之后，需要更新对应的统计信息，这个更新的操作需要 alter 权限，所以要在 ranger 上给该用户新增 alter 权限。
+    因为插入数据之后，需要更新对应的统计信息，这个更新的操作需要 ALTER 权限，所以要在 Ranger 上给该用户新增 ALTER 权限。
 
 13. 在查询 ORC 文件时，如果出现报错类似 `Orc row reader nextBatch failed. reason = Can't open /usr/share/zoneinfo/+08:00`
 
     首先检查当前 `session` 下 `time_zone` 的时区设置是多少，推荐使用类似 `Asia/Shanghai` 的写法。
 
-    如果 `session` 时区已经是 `Asia/Shanghai`，且查询仍然报错，说明生成 ORC 文件时的时区是 `+08:00`, 导致在读取时解析 `footer` 时需要用到 `+08:00` 时区，可以尝试在 `/usr/share/zoneinfo/` 目录下面软链到相同时区上。
+    如果 `session` 时区已经是 `Asia/Shanghai`，且查询仍然报错，说明生成 ORC 文件时的时区是 `+08:00`，导致在读取时解析 `footer` 时需要用到 `+08:00` 时区，可以尝试在 `/usr/share/zoneinfo/` 目录下面软链到相同时区上。
+
+14. 查询使用 JSON SerDe（如 `org.openx.data.jsonserde.JsonSerDe`）的 Hive 表时，报错：`failed to get schema` 或 `Storage schema reading not supported`
+
+    当 Hive 表使用 JSON 格式存储（ROW FORMAT SERDE 为 `org.openx.data.jsonserde.JsonSerDe`）时，Hive Metastore 可能无法通过默认方式读取表的 Schema 信息，导致 Doris 查询时报错：
+
+    ```
+    errCode = 2, detailMessage = failed to get schema for table xxx in db xxx.
+    reason: org.apache.hadoop.hive.metastore.api.MetaException:
+    java.lang.UnsupportedOperationException: Storage schema reading not supported
+    ```
+
+    可以在 Catalog 属性中添加 `"get_schema_from_table" = "true"` 解决，该参数会让 Doris 直接从 Hive 表的元数据中获取 Schema，而不依赖底层存储的 Schema Reader。
+
+    ```sql
+    CREATE CATALOG hive PROPERTIES (
+        'type' = 'hms',
+        'hive.metastore.uris' = 'thrift://x.x.x.x:9083',
+        'get_schema_from_table' = 'true'
+    );
+    ```
+
+    该参数自 2.1.10 和 3.0.6 版本支持。
+
+15. 查询 Hive Catalog 表时，优化阶段极慢并伴随 `nereids cost too much time` 报错，且每次访问 HMS 的耗时稳定在 10 秒左右。
+
+    **问题分析：**
+    这类问题通常并非 HMS 服务本身的 RPC 执行慢引起，而是由于 **Doris FE 所在机器的 DNS 配置异常** 导致。
+    在 Hive Metastore Client 初始化阶段，底层会触发 hostname 解析。如果系统配置了无效的 DNS Server 或 DNS 服务不可达，会导致每次新建 HMS Client 时发生解析超时（通常为 10 秒），从而严重拖慢元数据获取速度。
+
+    **典型现象：**
+    - **基础网络正常**：HMS 端口端到端连通正常，但 Doris 获取元数据依然极慢。
+    - **规律性延迟**：耗时常常稳定在一个固定的超时时间（如 10 秒）。
+    - **规避无效**：单纯调大 Catalog 属性中的 HMS Client Timeout 只能暂时规避报错，但无法消除每次建立连接时的固定延迟。
+
+    **排查步骤：**
+    在 Doris FE 节点上执行以下命令，检查 DNS 和主机名解析是否正常：
+
+    ```bash
+    # 查看当前配置的 DNS server
+    cat /etc/resolv.conf
+    # 测试 DNS server 是否可达及解析耗时
+    ping <nameserver_ip>
+    dig @<nameserver_ip> example.com
+    dig @<nameserver_ip> -x <hms_ip>
+    ```
+
+    **解决方案（任选其一即可）：**
+    1. **修复 DNS 配置（推荐）**：修正 Doris FE 节点上 `/etc/resolv.conf` 中的 `nameserver` 配置，确保域名解析服务正常且快速响应。如果局域网内无需 DNS 且无公网访问需求，可注释掉无效的 nameserver。
+    2. **配置 Hosts 静态映射**：在 FE 节点的 `/etc/hosts` 中添加 HMS 节点的 IP 与 Hostname 映射。
+    3. **规范 Catalog 配置**：创建 Catalog 时，`hive.metastore.uris` 参数建议优先使用正确的 Hostname 而不是裸 IP。
+
+16. 查询 Hive Catalog 表时，偶尔出现查询长时间卡住，或者直接报错优化器超时 `nereids cost too much time`，但紧接着再次查询又恢复正常。
+
+    **问题描述：**
+
+    这种情况通常发生在 Catalog 空闲一段时间后的首次查询。表现为请求在发起 HMS RPC 时卡住，由于 Hive Client 内部存在重试机制，复用到失效的长连接时会等待 Socket Timeout（默认 10 秒），重试可能导致累积等待时间长达 20-30 秒。这会导致查询规划阶段极慢，甚至直接触发 Doris FE 的优化器超时报错 `nereids cost too much time`。一旦该连接被剔除并重建，后续查询会立即恢复正常。
+
+    **问题分析：**
+
+    Doris 为每个 HMS Catalog 维护了一个 Client Pool 以复用连接。在复杂的网络环境中（如跨 VPC、经过防火墙或 NAT 网关），中间网络设备往往会对空闲连接设置 `idle timeout`。当连接空闲时间超过阈值时，网络设备会静默丢弃连接状态，且通常不会发送 FIN/RST 包通知两端。Doris 侧仍认为连接可用，下次复用该“僵尸连接”时，由于链路已不可达，必须等待完整的 Socket Timeout 才能感知到失效并触发重试。
+
+    **排查建议：**
+
+    - 确认 Doris FE 与 HMS 之间是否经过了防火墙、云厂商 NAT 网关或负载均衡器。
+    - 使用下文提到的 **Pulse (hms-tools)** 工具。如果探测显示网络连通极快，但长时间放置后首次执行 RPC 出现稳定且倍数于 10s 的延迟，则基本可判定为长连接被中间设备静默回收。
+
+    **解决方案：**
+    
+    利用 Hive Client 原生的生命周期管理能力，在 Catalog 属性中配置 `hive.metastore.client.socket.lifetime`，使其略短于中间网络设备的空闲超时时间（例如设为 300 秒）：
+
+    ```sql
+    CREATE CATALOG hive_catalog PROPERTIES (
+        "type" = "hms",
+        "hive.metastore.uris" = "thrift://<hms_host>:<port>",
+        -- 设置比中间设备 idle timeout 更短的时间，例如 300s
+        "hive.metastore.client.socket.lifetime" = "300s"
+    );
+    ```
+
+    配置后，HMS Client 在执行 RPC 前会检查连接年龄。如果已超过 `lifetime`，它会主动重新建立连接，从而规避因复用失效连接导致的长时间卡顿或优化器超时。
 
 ## HDFS
 
 1. 访问 HDFS 3.x 时报错：`java.lang.VerifyError: xxx`
 
-   1.2.1 之前的版本中，Doris 依赖的 Hadoop 版本为 2.8。需更新至 2.10.2。或更新 Doris 至 1.2.2 之后的版本。
+    1.2.1 之前的版本中，Doris 依赖的 Hadoop 版本为 2.8，需更新至 2.10.2，或更新 Doris 至 1.2.2 之后的版本。
 
-2. 使用 Hedged Read 优化 HDFS 读取慢的问题。
+2. 使用 Hedged Read 优化 HDFS 读取慢的问题
 
     在某些情况下，HDFS 的负载较高可能导致读取某个 HDFS 上的数据副本的时间较长，从而拖慢整体的查询效率。HDFS Client 提供了 Hedged Read 功能。
-    该功能可以在一个读请求超过一定阈值未返回时，启动另一个读线程读取同一份数据，哪个先返回就是用哪个结果。
+    该功能可以在一个读请求超过一定阈值未返回时，启动另一个读线程读取同一份数据，哪个先返回就使用哪个结果。
 
     注意：该功能可能会增加 HDFS 集群的负载，请酌情使用。
 
     可以通过以下方式开启这个功能：
 
-    ```
-    create catalog regression properties (
-        'type'='hms',
+    ```sql
+    CREATE CATALOG regression PROPERTIES (
+        'type' = 'hms',
         'hive.metastore.uris' = 'thrift://172.21.16.47:7004',
         'dfs.client.hedged.read.threadpool.size' = '128',
-        'dfs.client.hedged.read.threshold.millis' = "500"
+        'dfs.client.hedged.read.threshold.millis' = '500'
     );
     ```
 
@@ -309,15 +388,15 @@ ln -s /etc/pki/ca-trust/extracted/openssl/ca-bundle.trust.crt /etc/ssl/certs/ca-
 
     开启后，可以在 Query Profile 中看到相关参数：
 
-    `TotalHedgedRead`: 发起 Hedged Read 的次数。
+    `TotalHedgedRead`：发起 Hedged Read 的次数。
 
-    `HedgedReadWins`：Hedged Read 成功的次数（发起并且比原请求更快返回的次数）
+    `HedgedReadWins`：Hedged Read 成功的次数（发起并且比原请求更快返回的次数）。
 
     注意，这里的值是单个 HDFS Client 的累计值，而不是单个查询的数值。同一个 HDFS Client 会被多个查询复用。
 
 3. `Couldn't create proxy provider class org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider`
 
-    在 FE 和 BE 的 start 脚本中，会将环境变量 `HADOOP_CONF_DIR` 加入 CLASSPATH。如果 `HADOOP_CONF_DIR` 设置错误，比如指向了不存在的路径或错误路径，则可能加载到错误的 xxx-site.xml 文件，从而读取到错误的信息。
+    在 FE 和 BE 的启动脚本中，会将环境变量 `HADOOP_CONF_DIR` 加入 CLASSPATH。如果 `HADOOP_CONF_DIR` 设置错误，比如指向了不存在的路径或错误路径，则可能加载到错误的 `xxx-site.xml` 文件，从而读取到错误的信息。
 
     需检查 `HADOOP_CONF_DIR` 是否配置正确，或将这个环境变量删除。
 
@@ -325,7 +404,7 @@ ln -s /etc/pki/ca-trust/extracted/openssl/ca-bundle.trust.crt /etc/ssl/certs/ca-
 
     可能的处理方式有：
     - 通过 `hdfs fsck file -files -blocks -locations` 来查看具体该文件是否健康。
-    - 通过 `telnet` 来检查与 datanode 的连通性。
+    - 通过 `telnet` 来检查与 DataNode 的连通性。
 
         在错误日志中可能会打印如下错误：
 
@@ -339,7 +418,7 @@ ln -s /etc/pki/ca-trust/extracted/openssl/ca-bundle.trust.crt /etc/ssl/certs/ca-
 
         同时，请检查 `fe/conf` 和 `be/conf` 下放置的 `hdfs-site.xml` 文件中，该参数是否为 true。
 
-    - 查看 datanode 日志。
+    - 查看 DataNode 日志。
 
         如果出现以下错误：
 
@@ -347,34 +426,85 @@ ln -s /etc/pki/ca-trust/extracted/openssl/ca-bundle.trust.crt /etc/ssl/certs/ca-
         org.apache.hadoop.hdfs.server.datanode.DataNode: Failed to read expected SASL data transfer protection handshake from client at /XXX.XXX.XXX.XXX:XXXXX. Perhaps the client is running an older version of Hadoop which does not support SASL data transfer protection
         ```
 
-        则为当前 hdfs 开启了加密传输方式，而客户端未开启导致的错误。
+        则为当前 HDFS 开启了加密传输方式，而客户端未开启导致的错误。
 
         使用下面的任意一种解决方案即可：
-        - 拷贝 `hdfs-site.xml` 以及 `core-site.xml` 到 `fe/conf` 和 `be/conf` 目录。(推荐)
-        - 在 `hdfs-site.xml` 找到相应的配置 `dfs.data.transfer.protection`，并且在 catalog 里面设置该参数。
+        - 拷贝 `hdfs-site.xml` 以及 `core-site.xml` 到 `fe/conf` 和 `be/conf` 目录。（推荐）
+        - 在 `hdfs-site.xml` 找到相应的配置 `dfs.data.transfer.protection`，并且在 Catalog 里面设置该参数。
+
+5. 查询 Hive Catalog 表时报错：`RPC response has a length of xxx exceeds maximum data length`
+
+    例如：
+
+    ```
+    RPC response has a length of 1213486160 exceeds maximum data length
+    ```
+
+    其中 `1213486160` 转换为十六进制为 `0x48545450`，对应 ASCII 字符串 `"HTTP"`。这说明 Doris FE 尝试连接 HDFS NameNode 的 RPC 端口时，实际收到了 HTTP 响应。
+
+    根本原因是 Catalog 中或 `hdfs-site.xml` 中配置的 HDFS NameNode 端口不正确——错误地使用了 HTTP 端口而非 RPC 端口。HDFS NameNode 通常暴露两种端口：
+
+    - **RPC 端口**（默认：`8020` 或 `9000`）：用于 HDFS 客户端通信（Doris 应使用此端口）。
+    - **HTTP 端口**（默认：`9870` 或 `50070`）：用于 NameNode Web UI。
+
+    请检查 Catalog 属性或 `fe/conf`、`be/conf` 下 `hdfs-site.xml` 中的 HDFS NameNode 端口配置，确保使用的是 RPC 端口（`dfs.namenode.rpc-address`），而非 HTTP 端口（`dfs.namenode.http-address`）。
 
 ## DLF Catalog
 
-1. 使用 DLF Catalog 时，BE 读在取 JindoFS 数据出现`Invalid address`，需要在`/ets/hosts`中添加日志中出现的域名到 IP 的映射。
+1. 使用 DLF Catalog 时，BE 读取 JindoFS 数据出现 `Invalid address`，需要在 `/etc/hosts` 中添加日志中出现的域名到 IP 的映射。
 
-2. 读取数据无权限时，使用`hadoop.username`属性指定有权限的用户。
+2. 读取数据无权限时，使用 `hadoop.username` 属性指定有权限的用户。
 
-3. DLF Catalog 中的元数据和 DLF 保持一致。当使用 DLF 管理元数据时，Hive 新导入的分区，可能未被 DLF 同步，导致出现 DLF 和 Hive 元数据不一致的情况，对此，需要先保证 Hive 元数据被 DLF 完全同步。
+3. DLF Catalog 中的元数据和 DLF 保持一致。当使用 DLF 管理元数据时，Hive 新导入的分区可能未被 DLF 同步，导致出现 DLF 和 Hive 元数据不一致的情况。对此，需要先保证 Hive 元数据被 DLF 完全同步。
 
 ## 其他问题
 
 1. Binary 类型映射到 Doris 后，查询乱码
 
-    Doris 原生不支持 Binary 类型，所以各类数据湖或数据库中的 Binary 类型映射到 Doris 中，通常使用 String 类型进行映射。String 类型只能展示可打印字符。如果需要查询 Binary 的内容，可以使用 `TO_BASE64()` 函数转换为 Base64 编码后，在进行下一步处理。
+    Doris 原生不支持 Binary 类型，所以各类数据湖或数据库中的 Binary 类型映射到 Doris 中，通常使用 String 类型进行映射。String 类型只能展示可打印字符。如果需要查询 Binary 的内容，可以使用 `TO_BASE64()` 函数转换为 Base64 编码后，再进行下一步处理。
 
 2. 分析 Parquet 文件
 
-    在查询 Parquet 文件时，由于不同系统生成的 Parquet 文件格式可能有所差异，比如 RowGroup 的数量，索引的值等，有时需要检查 Parquet 文件的元数据进行问题定位或性能分析。这里提供一个工具帮助用户更方便的分析 Parquet 文件：
+    在查询 Parquet 文件时，由于不同系统生成的 Parquet 文件格式可能有所差异，比如 RowGroup 的数量、索引的值等，有时需要检查 Parquet 文件的元数据进行问题定位或性能分析。这里提供一个工具帮助用户更方便地分析 Parquet 文件：
 
-    1. 下载并解压 [Apache Parquet Cli 1.14.0](https://github.com/morningman/tools/releases/download/apache-parquet-cli-1.14.0/apache-parquet-cli-1.14.0.tar.xz)
-    2. 将需要分析的 Parquet 文件下载到本地，假设路径为 `/path/to/file.parquet`
+    1. 下载并解压 [Apache Parquet Cli 1.14.0](https://github.com/morningman/tools/releases/download/apache-parquet-cli-1.14.0/apache-parquet-cli-1.14.0.tar.xz)。
+    2. 将需要分析的 Parquet 文件下载到本地，假设路径为 `/path/to/file.parquet`。
     3. 使用如下命令分析 Parquet 文件元信息：
 
         `./parquet-tools meta /path/to/file.parquet`
 
-    4. 更多功能，可参阅 [Apache Parquet Cli 文档](https://github.com/apache/parquet-java/tree/apache-parquet-1.14.0/parquet-cli)
+    4. 更多功能，可参阅 [Apache Parquet Cli 文档](https://github.com/apache/parquet-java/tree/apache-parquet-1.14.0/parquet-cli)。
+
+## 诊断工具
+
+### Pulse
+
+[Pulse](https://github.com/CalvinKirs/Pulse) 是一个轻量级的连通性测试工具集，专为诊断数据湖环境中的基础设施依赖问题而设计。它包含了多个针对性工具，可以帮助用户快速定位外部表访问中的环境问题。
+
+Pulse 主要包含以下工具集：
+
+1. **HMS 诊断工具 (`hms-tools`)**：
+   - 专门用于排查 Hive Metastore (HMS) 相关问题。
+   - 支持健康检查、Ping 测试、元数据对象检索以及配置诊断。
+   - **性能压测**：提供 `bench` 模式，用于测量 HMS 的性能分布和响应延迟，帮助判断瓶颈是否在元数据层。
+
+2. **Kerberos 诊断工具 (`kerberos-tools`)**：
+   - 用于在使用 Kerberos 认证的环境中验证 `krb5.conf` 配置。
+   - 支持测试 KDC 可达性、检查 Keytab 文件以及执行登录测试，确保认证层不会阻断连接。
+
+3. **对象存储诊断工具 (`s3-tools`, `gcs-tools`, `azure-blob-cpp`)**：
+   - 针对主流云存储（AWS S3、Google GCS、Azure Blob）的诊断工具。
+   - 用于排查“权限拒绝（Access Denied）”或“存储桶不存在（Bucket Not Found）”等常见的外部表数据访问问题。
+   - 支持验证凭据来源、STS 身份以及执行 Bucket 级别的操作测试。
+
+**常用命令示例（以 HMS 为例）：**
+
+```bash
+# 使用 hms-tools 测试 HMS 基础连通性与耗时细节
+java -jar hms-tools.jar ping --uris thrift://<hms_host>:<port> --count 3 --verbose
+
+# 使用 hms-tools 压测实际元数据 RPC 的延时分布
+java -jar hms-tools.jar bench --uris thrift://<hms_host>:<port> --rpc get_all_databases --iterations 10
+```
+
+当遇到元数据访问慢或外部表连接异常时，推荐根据问题类型（如认证失败、元数据慢或存储无法访问）选用对应的 Pulse 工具进行辅助定位。如果发现 `connect` 阶段极快，但整体初始化阶段存在明显且固定的延迟，请优先参考上文 FAQ 检查 FE 节点的 DNS 及 hostname 解析配置。

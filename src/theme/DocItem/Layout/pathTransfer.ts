@@ -19,6 +19,18 @@ const transformPathWithoutZhCN = (pathname: string): string => {
          return `${pathname}.md`
     }
 };
+
+const stripLocalePrefix = (pathname: string): string => {
+    const segments = pathname.split('/').filter(Boolean);
+    if (segments.length === 0) {
+        return pathname;
+    }
+    if (/^[a-z]{2}(?:-[A-Z]{2})?$/.test(segments[0])) {
+        return `/${segments.slice(1).join('/')}`;
+    }
+    return pathname;
+};
+
 const transformPathWithZhCN = (pathname: string): string => {
     if (pathname.startsWith('/zh-CN/docs')) {
         if(pathname.includes('/4.x')){
@@ -43,7 +55,7 @@ const transformDocPath = (pathname: string): string => {
     if (pathname.startsWith('/zh-CN')) {
         return transformPathWithZhCN(pathname)
     } else {
-        return transformPathWithoutZhCN(pathname);
+        return transformPathWithoutZhCN(stripLocalePrefix(pathname));
     }
 };
 

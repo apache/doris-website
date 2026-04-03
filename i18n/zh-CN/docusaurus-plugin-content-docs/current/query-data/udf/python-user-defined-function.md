@@ -182,6 +182,10 @@ Python 模块压缩包支持多种部署方式，均通过 `file` 参数指定 `
 - `module_name` 部分作为模块路径，用于通过 `importlib` 动态导入
 - 若指定了 `package_name`，则整个路径需构成一个合法的 Python 导入路径，且 ZIP 包结构必须与该路径一致
 
+:::caution Warning
+命名空间应具备唯一性，避免与 Python 标准库或常用第三方库同名，以避免因模块遮蔽导致的依赖冲突及运行时异常
+:::
+
 **示例说明**:
 
 **示例 A: 无包结构(两段式)**
@@ -1286,6 +1290,10 @@ zip stats_udaf.zip stats_udaf.py
   - 如果得到**两个**子字符串，分别为 `module_name` 和 `ClassName`
   - 如果得到**三个及以上**的子字符串，开头为 `package_name`，中间为 `module_name`，结尾为 `ClassName`
 
+:::caution Warning
+命名空间应具备唯一性，避免与 Python 标准库或常用第三方库同名，以避免因模块遮蔽导致的依赖冲突及运行时异常
+:::
+
 **步骤 5: 创建 UDAF 函数**
 
 ```sql
@@ -2228,6 +2236,10 @@ zip text_udtf.zip text_udtf.py
 - Doris 会将 `symbol` 字符串按 `.` 分割:
   - 如果得到**两个**子字符串，分别为 `module_name` 和 `function_name`
   - 如果得到**三个及以上**的子字符串，开头为 `package_name`，中间为 `module_name`，结尾为 `function_name`
+
+:::caution Warning
+命名空间应具备唯一性，避免与 Python 标准库或常用第三方库同名，以避免因模块遮蔽导致的依赖冲突及运行时异常
+:::
 
 **步骤 5: 创建 UDTF 函数**
 

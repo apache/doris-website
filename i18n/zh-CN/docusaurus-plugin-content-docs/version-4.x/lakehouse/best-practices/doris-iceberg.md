@@ -27,6 +27,7 @@ Apache Doris 对 Iceberg 多项核心特性提供了原生支持：
 - 支持通过表函数查询 Iceberg 表快照历史。
 - 支持时间旅行（Time Travel）功能。
 - 原生支持 Iceberg 表引擎。可以通过 Apache Doris 直接创建、管理以及将数据写入到 Iceberg 表。支持完善的分区 Transform 函数，从而提供隐藏分区和分区布局演进等能力。
+- 支持 Iceberg V2 表上的行级 DML，包括 `UPDATE`、`DELETE` 和 `MERGE INTO`。
 
 用户可以基于 Apache Doris + Apache Iceberg 快速构建高效的湖仓一体解决方案，以灵活应对实时数据分析与处理的各种需求：
 
@@ -34,7 +35,7 @@ Apache Doris 对 Iceberg 多项核心特性提供了原生支持：
 - 通过 Doris 直接管理和构建 Iceberg 表，在 Doris 中完成对数据的清洗、加工并写入到 Iceberg 表，构建**统一的湖仓数据处理平台**。
 - 通过 Iceberg 表引擎，将 Doris 数据共享给其他上下游系统做进一步处理，构建**统一的开放数据存储平台**。
 
-未来，Apache Iceberg 将作为 Apache Doris 的原生表引擎之一，提供更加完善的湖格式数据的分析、管理功能。Apache Doris 也将逐步支持包括 Update/Delete/Merge、写回时排序、增量数据读取、元数据管理等 Apache Iceberg 更多高级特性，共同构建统一、高性能、实时的湖仓平台。
+未来，Apache Iceberg 将作为 Apache Doris 的原生表引擎之一，提供更加完善的湖格式数据的分析、管理功能。Apache Doris 已经支持 Iceberg 的核心行级 DML，包括 `INSERT`、`UPDATE`、`DELETE` 和 `MERGE INTO`，并将继续增强写回时排序、增量数据读取、元数据管理等能力，共同构建统一、高性能、实时的湖仓平台。
 
 关于更多说明，请参阅 [Iceberg Catalog](../catalogs/iceberg-catalog)
 
@@ -286,9 +287,116 @@ mysql> SELECT * FROM iceberg.nyc.taxis FOR TIME AS OF "2024-07-29 03:40:22";
 4 rows in set (0.05 sec)
 ```
 
-### 07 与 PyIceberg 交互
+### 07 Iceberg 行级 DML
+
+对于行级 DML（`UPDATE`、`DELETE` 和 `MERGE INTO`），目标表需要使用 Iceberg V2。为了保持 Time Travel 章节中 `iceberg.nyc.taxis` 的当前状态不变，下面的示例使用 `iceberg.nyc.taxis2` 初始化一张独立的表。
+
+```sql
+mysql> CREATE TABLE iceberg.nyc.taxis_dml
+       (
+           vendor_id BIGINT,
+           trip_id BIGINT,
+           trip_distance FLOAT,
+           fare_amount DOUBLE,
+           store_and_fwd_flag STRING,
+           ts DATETIME
+       )
+       PARTITION BY LIST (vendor_id, DAY(ts)) ()
+       PROPERTIES (
+           "format-version" = "2",
+           "compression-codec" = "zstd",
+           "write-format" = "parquet"
+       );
+Query OK, 0 rows affected (0.18 sec)
+
+mysql> INSERT INTO iceberg.nyc.taxis_dml SELECT * FROM iceberg.nyc.taxis2;
+Query OK, 4 rows affected (0.32 sec)
+{'status':'COMMITTED', 'txnId':'10089'}
+```
+
+使用 `UPDATE` 更新 Iceberg 表中的数据：
+
+```sql
+mysql> UPDATE iceberg.nyc.taxis_dml
+       SET fare_amount = fare_amount + 3,
+           store_and_fwd_flag = 'Y'
+       WHERE trip_id = 1000371;
+Query OK, 1 row affected (0.44 sec)
+{'status':'COMMITTED', 'txnId':'10090'}
+
+mysql> SELECT trip_id, fare_amount, store_and_fwd_flag
+       FROM iceberg.nyc.taxis_dml
+       WHERE trip_id = 1000371;
++---------+-------------+--------------------+
+| trip_id | fare_amount | store_and_fwd_flag |
++---------+-------------+--------------------+
+| 1000371 |       18.32 | Y                  |
++---------+-------------+--------------------+
+1 row in set (0.07 sec)
+```
+
+使用 `DELETE` 删除 Iceberg 表中的数据：
+
+```sql
+mysql> DELETE FROM iceberg.nyc.taxis_dml
+       WHERE trip_id = 1000373;
+Query OK, 1 row affected (0.31 sec)
+{'status':'COMMITTED', 'txnId':'10091'}
+
+mysql> SELECT trip_id
+       FROM iceberg.nyc.taxis_dml
+       ORDER BY trip_id;
++---------+
+| trip_id |
++---------+
+| 1000371 |
+| 1000372 |
+| 1000374 |
++---------+
+3 rows in set (0.06 sec)
+```
+
+使用 `MERGE INTO` 在一条语句中同时完成更新和插入：
+
+```sql
+mysql> MERGE INTO iceberg.nyc.taxis_dml t
+       USING (
+           SELECT 2 AS vendor_id, 1000372 AS trip_id, 2.5 AS trip_distance,
+                  30.00 AS fare_amount, 'Y' AS store_and_fwd_flag,
+                  CAST('2024-01-02 12:10:11' AS DATETIME) AS ts
+           UNION ALL
+           SELECT 3, 1000380, 6.7, 28.50, 'N', CAST('2024-01-04 10:20:00' AS DATETIME)
+       ) s
+       ON t.trip_id = s.trip_id
+       WHEN MATCHED THEN UPDATE SET
+           fare_amount = s.fare_amount,
+           store_and_fwd_flag = s.store_and_fwd_flag
+       WHEN NOT MATCHED THEN INSERT
+           (vendor_id, trip_id, trip_distance, fare_amount, store_and_fwd_flag, ts)
+       VALUES
+           (s.vendor_id, s.trip_id, s.trip_distance, s.fare_amount, s.store_and_fwd_flag, s.ts);
+Query OK, 2 rows affected (0.53 sec)
+{'status':'COMMITTED', 'txnId':'10092'}
+
+mysql> SELECT vendor_id, trip_id, fare_amount, store_and_fwd_flag
+       FROM iceberg.nyc.taxis_dml
+       ORDER BY trip_id;
++-----------+---------+-------------+--------------------+
+| vendor_id | trip_id | fare_amount | store_and_fwd_flag |
++-----------+---------+-------------+--------------------+
+|         1 | 1000371 |       18.32 | Y                  |
+|         2 | 1000372 |       30.00 | Y                  |
+|         1 | 1000374 |       42.13 | Y                  |
+|         3 | 1000380 |       28.50 | N                  |
++-----------+---------+-------------+--------------------+
+4 rows in set (0.09 sec)
+```
+
+### 08 与 PyIceberg 交互
 
 > 请使用 Doris 2.1.8/3.0.4 以上版本。
+
+为了保持前面示例中的数据不变，下面的 PyIceberg 示例使用 `nyc.taxis2`。
 
 加载 Iceberg 表：
 
@@ -305,7 +413,7 @@ catalog = load_catalog(
         "s3.endpoint" = "http://minio:9000"
     },
 )
-table = catalog.load_table("nyc.taxis")
+table = catalog.load_table("nyc.taxis2")
 ```
 
 读取为 Arrow Table：
@@ -363,7 +471,7 @@ shape: (4, 6)
 
 > 通过 pyiceberg 写入 iceberg 数据，请参阅[步骤](#通过-pyiceberg-写入数据)
 
-### 08 附录
+### 09 附录
 
 #### 通过 PyIceberg 写入数据
 
@@ -382,7 +490,7 @@ catalog = load_catalog(
         "s3.endpoint" = "http://minio:9000"
     },
 )
-table = catalog.load_table("nyc.taxis")
+table = catalog.load_table("nyc.taxis2")
 ```
 
 Arrow Table 写入 Iceberg：
@@ -451,4 +559,3 @@ df = pl.DataFrame(
 ).with_columns(pl.col("ts").str.strptime(pl.Datetime, "%Y-%m-%d %H:%M:%S"))
 table.append(df.to_arrow())
 ```
-

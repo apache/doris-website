@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import Layout from '@site/src/theme/Layout';
 import Link from '@docusaurus/Link';
-import { Divider } from 'antd';
 import Translate, { translate } from '@docusaurus/Translate';
+import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import PdfIcon from '@site/static/images/toc-icon/pdf.svg';
+import { getLocalePrefix } from '@site/src/utils/locale';
 import './index.scss';
 
 const PREVIEW_LINK_ZH = 'https://cdn.selectdb.com/static/doris_1_2_2_18e810982b.pdf';
@@ -12,7 +13,11 @@ const PREVIEW_LINK_EN = 'https://cdn.selectdb.com/static/doris_1_2_en_0d0a9b6a03
 const DATE_LINK = '2025-01-17';
 
 export default function Archive() {
-    const [isZH, setIsZH] = useState(false);
+    const {
+        i18n: { currentLocale, defaultLocale },
+    } = useDocusaurusContext();
+    const isZH = currentLocale === 'zh-CN';
+    const localePrefix = getLocalePrefix(currentLocale, defaultLocale);
     const handleMouseEnter = (id: string) => {
         const dom = document.getElementById(id);
         dom!.style.color = '#11A679';
@@ -25,11 +30,6 @@ export default function Archive() {
         dom!.firstChild!.style.fill = '#7F7F83';
     };
 
-    useEffect(() => {
-        if (typeof window !== 'undefined') {
-            setIsZH(location.pathname.includes('zh-CN'));
-        }
-    }, [typeof window !== 'undefined' && location.pathname]);
     return (
         <Layout
             title={translate({
@@ -112,7 +112,10 @@ export default function Archive() {
                         id="archive-tips-2"
                         values={{
                             latestVersion: (
-                                <Link className='latest-version-link' to={`/${isZH ? 'zh-CN/' : ''}docs/3.x/gettingStarted/what-is-apache-doris`}>
+                                <Link
+                                    className="latest-version-link"
+                                    to={`${localePrefix}/docs/3.x/gettingStarted/what-is-apache-doris`}
+                                >
                                     <Translate id="archive.latest.version">latest version</Translate>
                                 </Link>
                             ),

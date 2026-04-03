@@ -157,6 +157,34 @@
 .ready-start {
 }
 
+.homepage-warning-banner {
+    text-align: center;
+}
+
+.homepage-warning-banner__content {
+    display: inline-flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    text-align: left;
+    color: #000;
+    line-height: 1.5;
+}
+
+.homepage-warning-banner__icon {
+    flex: none;
+    margin-top: 0.1rem;
+}
+
+.homepage-warning-banner__link {
+    color: var(--ifm-link-color);
+    text-decoration: underline;
+
+    &:hover {
+        color: var(--ifm-link-hover-color);
+        text-decoration: underline;
+    }
+}
+
 @media (max-width: 996px) {
     .core-features {
         display: flex;
@@ -203,6 +231,10 @@
         .start-title {
             font-size: 2rem;
         }
+    }
+
+    .homepage-warning-banner {
+        text-align: left;
     }
 }
 

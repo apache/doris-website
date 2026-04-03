@@ -69,10 +69,8 @@ export default function DownloadFormTools(props: DownloadFormToolsProps) {
 
     useEffect(() => {
         if (tool) {
-            if (tool === ToolsEnum.Flink) {
+            if (tool === ToolsEnum.Flink || tool === ToolsEnum.Spark) {
                 form.setFieldValue('version', [getOptions[0].value, getOptions[0].children[0].value]);
-            } else if (tool === ToolsEnum.Spark) {
-                form.setFieldValue('version', [getOptions[1].value, getOptions[1].children[1].value]);
             } else {
                 form.setFieldValue('version', getOptions[0].value);
             }

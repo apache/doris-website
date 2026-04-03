@@ -2,11 +2,13 @@
 {
     "title": "Variant",
     "language": "zh-CN",
-    "description": "VARIANT 类型可以存储半结构化的 JSON 数据，允许存储包含不同数据类型（如整数、字符串、布尔值等）的复杂数据结构，而无需在表结构中预先定义具体的列。该类型特别适合处理复杂的嵌套结构，这些结构可能会随时发生变化。在写入过程中，VARIANT 类型能够自动推断列的结构和类型，"
+    "description": "VARIANT 列的 CSV 和 JSON 导入快速上手文档。"
 }
 ---
 
-VARIANT 类型可以存储半结构化的 JSON 数据，允许存储包含不同数据类型（如整数、字符串、布尔值等）的复杂数据结构，而无需在表结构中预先定义具体的列。该类型特别适合处理复杂的嵌套结构，这些结构可能会随时发生变化。在写入过程中，VARIANT 类型能够自动推断列的结构和类型，动态合并写入的 schema，并通过将 JSON 键及其对应的值存储为列和动态子列。更多文档请参考[VARIANT](../../../sql-manual/basic-element/sql-data-types/semi-structured/VARIANT)。
+本页用于演示如何把 CSV 或 JSON 数据导入 `VARIANT`。
+
+如果你还在决定默认模式、Sparse、DOC mode 或 Schema Template，建议先看 [VARIANT 使用与配置指南](../../../sql-manual/basic-element/sql-data-types/semi-structured/variant-workload-guide)。如果你需要查看语法、索引、限制或配置参考，请阅读 [VARIANT](../../../sql-manual/basic-element/sql-data-types/semi-structured/VARIANT)。
 
 ## 使用限制
 
@@ -14,15 +16,9 @@ VARIANT 类型可以存储半结构化的 JSON 数据，允许存储包含不同
 
 ## 存储优化 (V3)
 
-对于使用 `VARIANT` 类型可能产生大量动态子列（例如超过 2000 列）的大宽表场景，强烈建议开启 **V3 存储格式**。
+对于新的 `VARIANT` 表，尤其是宽 JSON 场景，除非你已经有明确理由，否则建议直接使用 **V3 存储格式**。如需了解设计原因，请参见 [Storage Format V3](../../../table-design/storage-format)。
 
-### V3 对 Variant 的优势
-- **元数据解耦**：V3 将列元数据 (`ColumnMetaPB`) 从 Segment Footer 中剥离，提升了拥有成千上万个动态列时的文件初次打开速度，并显著降低内存占用。
-- **按需加载**：元数据可以按需加载，这在存算分离场景下能显著降低访问对象存储的延迟。
-- **更紧凑的存储**：通过 `BINARY_PLAIN_ENCODING_V2` 消除了庞大的末尾偏移表，降低了 `VARIANT` 中字符串和 JSONB 类型的存储空间。
-- **更高的数值扫描速度**：整数类型默认采用 `PLAIN_ENCODING`，配合 LZ4/ZSTD 时能提供更高的读取吞吐。
-
-在建表时可以通过以下属性开启 V3：
+在建表时可以通过以下属性开启：
 ```sql
 CREATE TABLE table_v3 (
     id BIGINT,

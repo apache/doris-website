@@ -29,7 +29,9 @@ column_name op { value | value_list } [ AND column_name op { value | value_list 
 DELETE FROM table_name [table_alias]
     [PARTITION partition_name | PARTITIONS (partition_name [, partition_name])]
     [USING additional_tables]
-    WHERE condition
+    [WHERE condition]
+    [ORDER BY column [ASC | DESC] [NULLS FIRST | NULLS LAST] [, ...]]
+    [LIMIT [offset,] count]
 ```
 
 #### Required Parameters
@@ -38,7 +40,6 @@ DELETE FROM table_name [table_alias]
 + column_name: 属于 table_name 的列
 + op: 逻辑比较操作符，可选类型包括：=, >, <, >=, <=, !=, in, not in
 + value | value_list: 做逻辑比较的值或值列表
-+ WHERE condition: 指定一个用于选择删除行的条件
 
 #### Optional Parameters
 
@@ -46,6 +47,9 @@ DELETE FROM table_name [table_alias]
 + PARTITION partition_name | PARTITIONS (partition_name [, partition_name]): 指定执行删除数据的分区名，如果表不存在此分区，则报错
 + table_alias: 表的别名
 + USING additional_tables: 如果需要在 WHERE 语句中使用其他的表来帮助识别需要删除的行，则可以在 USING 中指定这些表或者查询。
++ WHERE condition: 指定一个用于选择删除行的条件。语法一中为必填项，语法二中为可选项。
++ ORDER BY column: 指定删除行的排序方式。通常与 LIMIT 一起使用，以控制哪些行会被删除。
++ LIMIT [offset,] count: 限制删除的行数。与 ORDER BY 一起使用时，排序后删除前 `count` 行。如果指定了 `offset`，则跳过排序后的前 `offset` 行再进行删除。如果不配合 ORDER BY 使用，受影响的行是不确定的。
 
 #### Note
 
@@ -54,6 +58,7 @@ DELETE FROM table_name [table_alias]
 3. 语法一中，条件之间只能是“与”的关系。若希望达成“或”的关系，需要将条件分写在两个 DELETE 语句中。
 4. 语法一中，如果为分区表，需要指定分区，如果不指定，doris 会从条件中推断出分区。两种情况下，doris 无法从条件中推断出分区：1) 条件中不包含分区列；2) 分区列的 op 为 not in。如果分区表不是 Unique 表，当分区表未指定分区，或者无法从条件中推断分区的时候，需要设置会话变量 delete_without_partition 为 true，此时 delete 会应用到所有分区。
 5. 该语句可能会降低执行后一段时间内的查询效率。影响程度取决于语句中指定的删除条件的数量。指定的条件越多，影响越大。
+6. 在语法二中，如果既未指定 `WHERE` 也未指定 `LIMIT`，则会删除表中的所有行。请在省略 `WHERE` 子句前务必确认操作范围。
 
 ## 示例
 
@@ -172,6 +177,18 @@ DELETE FROM table_name [table_alias]
    delete from lineitem
    using discount_orders
    where lineitem.o_orderkey = discount_orders.o_orderkey;
+   ```
+
+6. 使用 ORDER BY 和 LIMIT 删除数据——按照 k1 列升序排列，删除前 3 行
+
+   ```sql
+   DELETE FROM my_table ORDER BY k1 ASC LIMIT 3;
+   ```
+
+7. 使用 ORDER BY、LIMIT 和 offset 删除数据——按照 k1 列升序排列，跳过前 10 行，删除接下来的 5 行
+
+   ```sql
+   DELETE FROM my_table ORDER BY k1 ASC LIMIT 10, 5;
    ```
 
 ## 关键词

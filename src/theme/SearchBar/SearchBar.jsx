@@ -27,6 +27,7 @@ import { normalizeContextByPath } from '../../utils/normalizeContextByPath';
 import { searchResultLimits } from "../../utils/proxiedGeneratedConstants";
 import useIsDocPage from '@site/src/hooks/use-is-doc';
 import { debounce } from '@site/src/utils/debounce';
+import { getLocalePrefix, normalizePathname } from '@site/src/utils/locale';
 import { DataContext } from '../Layout';
 
 async function fetchAutoCompleteJS() {
@@ -42,13 +43,14 @@ async function fetchAutoCompleteJS() {
     return autoComplete;
 }
 
-function getVersionUrl(baseUrl, pathname) {
-    let versionUrl = baseUrl;
-    if (pathname && pathname.includes('zh-CN') && !versionUrl.includes('zh-CN')) {
-        versionUrl = baseUrl + 'zh-CN/';
+function getVersionUrl(baseUrl, pathname, locales, currentLocale, defaultLocale) {
+    let versionUrl = `${baseUrl}`;
+    if (!versionUrl.endsWith('/')) {
+        versionUrl += '/';
     }
-    if (pathname?.startsWith('/docs') || pathname?.startsWith('/zh-CN/docs')) {
-        let version = pathname?.startsWith('/docs') ? pathname.split('/')[2] : pathname.split('/')[3];
+    const normalizedPathname = normalizePathname(pathname, locales);
+    if (normalizedPathname?.startsWith('/docs')) {
+        const version = normalizedPathname.split('/')[2];
         if (VERSIONS.includes(version) && version !== DEFAULT_VERSION) {
             versionUrl += `docs/${version}/`;
         }
@@ -64,12 +66,12 @@ export default function SearchBar({ handleSearchBarToggle }) {
     const { setShowSearchPageMobile } = useContext(DataContext);
     const {
         siteConfig: { baseUrl },
-        i18n: { currentLocale },
+        i18n: { currentLocale, defaultLocale, locales },
     } = useDocusaurusContext();
     // It returns undefined for non-docs pages
     const activePlugin = useActivePlugin();
     const [isDocsPage] = useIsDocPage(false);
-    let versionUrl = getVersionUrl(baseUrl, location.pathname);
+    let versionUrl = getVersionUrl(baseUrl, location.pathname, locales, currentLocale, defaultLocale);
 
     // For non-docs pages while using plugin-content-docs with custom ids,
     // this will throw an error of:
