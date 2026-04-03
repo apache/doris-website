@@ -126,6 +126,18 @@ Doris 的 Ranger Client 在执行 Kerberos 登录时，底层使用 JVM 的 `Krb
 - 配置完成后需要**重启 FE** 使配置生效。
 :::
 
+:::warning 已知限制：多 Catalog 下的全局 UGI 覆盖问题
+目前 Doris 中嵌入的 Ranger Plugin 依赖 Hadoop 的 `UserGroupInformation` (UGI) 进行 Kerberos 登录。由于 JVM 进程中通常共享同一个全局登录用户状态，当您在 Doris 中配置了**多个开启 Kerberos 认证的 Ranger Catalog**（且它们使用了不同的 Principal）时，会出现 UGI 互相覆盖的问题。
+
+**具体表现**：
+1. Catalog A 初始化并使用 `keytab_A` 登录后，全局 UGI 为 `Principal_A`。
+2. 随后 Catalog B 初始化并使用 `keytab_B` 登录，全局 UGI 会被覆写为 `Principal_B`。
+3. 此时 Catalog A 的 Ranger 插件后台线程在向 Ranger Admin 拉取权限策略时，会错误地携带 `Principal_B` 的票据，导致鉴权失败，策略拉取报错。
+
+**当前建议**：
+在同一个 Doris 集群中，针对开启了 Ranger 的所有 Kerberos 数据源，**强烈建议统一规划，使用相同的 Kerberos Principal 与同一份 Keytab 文件**，以避免互相覆盖导致鉴权失效。
+:::
+
 ### 权限示例
 1. 在 Doris 中创建 `user1`。
 2. 在 Doris 中，先使用 `admin` 用户创建一个 Catalog：`hive`。
