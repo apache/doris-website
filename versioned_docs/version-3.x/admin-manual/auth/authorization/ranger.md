@@ -52,6 +52,89 @@ Apache Ranger is a security framework used for monitoring, enabling services, an
    Among which, the `ranger.plugin.doris.policy.cache.dir` and `ranger.plugin.doris.policy.rest.url` need to be modified to their actual values.
 3. Start the cluster.
 
+### Configuration when Ranger Server Enables Kerberos
+
+When the Ranger Admin service itself has Kerberos authentication enabled, the Doris Ranger Client needs to authenticate with the Ranger Admin using a Kerberos identity when fetching policies. Otherwise, policy fetching will fail, and authorization will not take effect. Two additional configuration steps are required.
+
+#### 1. Merge krb5.conf
+
+When the Doris Ranger Client performs Kerberos login, the underlying JVM `Krb5LoginModule` reads the KDC address from `/etc/krb5.conf` on **each FE/BE node**. If there are multiple Kerberos Realms in your environment (for example, the Realm of the HDFS cluster differs from the Realm of the Ranger Admin cluster), you must **merge** the KDC information for all Realms into a single `/etc/krb5.conf` file, and deploy this file across all FE and BE nodes.
+
+Example of a merged `krb5.conf`:
+
+```ini
+[libdefaults]
+    default_realm = HADOOP.EXAMPLE.COM
+    dns_lookup_realm = true
+    dns_lookup_kdc = true
+
+[realms]
+    # Realm for HDFS / Hive clusters
+    HADOOP.EXAMPLE.COM = {
+        kdc = hadoop-kdc.example.com:88
+        admin_server = hadoop-kdc.example.com
+    }
+    # Realm for the Ranger Admin cluster (merge it if different from the above)
+    RANGER.EXAMPLE.COM = {
+        kdc = ranger-kdc.example.com:88
+        admin_server = ranger-kdc.example.com
+    }
+
+[domain_realm]
+    hadoop-kdc.example.com = HADOOP.EXAMPLE.COM
+    ranger-admin.example.com = RANGER.EXAMPLE.COM
+```
+
+:::caution Note
+After modifying or adding `/etc/krb5.conf`, you need to restart all FEs and BEs for the configuration to take effect.
+:::
+
+#### 2. Configure Kerberos UGI in ranger-hive-security.xml (or ranger-doris-security.xml)
+
+In the `fe/conf/` directory of the FE node, find (or create) `ranger-hive-security.xml` (when using Hive Ranger authorization) or `ranger-doris-security.xml` (when using Doris Ranger authorization). Append the following 4 properties inside `<configuration>`:
+
+```xml
+<!-- Enable UGI Kerberos Login -->
+<property>
+    <name>ranger.plugin.hive.ugi.initialize</name>
+    <value>true</value>
+</property>
+<!-- Login Type: keytab -->
+<property>
+    <name>ranger.plugin.hive.ugi.login.type</name>
+    <value>keytab</value>
+</property>
+<!-- The corresponding principal in the keytab file -->
+<property>
+    <name>ranger.plugin.hive.ugi.keytab.principal</name>
+    <value>hive/hostname@RANGER.EXAMPLE.COM</value>
+</property>
+<!-- Path to the keytab file (needs to be deployed on every FE node) -->
+<property>
+    <name>ranger.plugin.hive.ugi.keytab.file</name>
+    <value>/etc/security/keytabs/hive.keytab</value>
+</property>
+```
+
+:::tip
+- `ranger.plugin.hive.ugi.keytab.principal`: The actual principal that exists in the keytab file, such as `hive/your-host@YOUR-REALM.COM`. You can verify this using `klist -kt /path/to/hive.keytab`.
+- `ranger.plugin.hive.ugi.keytab.file`: The absolute path to the keytab file. Ensure the user running the Doris FE process has read access to this file (recommended: `chmod 400`).
+- If you are using **Doris Ranger authorization** (`ranger-doris-security.xml`), replace `hive` with `doris` in the above properties, e.g. `ranger.plugin.doris.ugi.initialize`.
+- **Restart FE** for these configurations to take effect.
+:::
+
+:::warning Known Limitation: Global UGI Overwrite in Multi-Catalog Scenarios
+Currently, the embedded Ranger Plugin in Doris uses Hadoop's `UserGroupInformation` (UGI) for Kerberos logins. Because JVM processes share a single global login user state, configuring **multiple Ranger Catalogs with Kerberos authentication enabled** (using different Principals) will cause UGI overwrites.
+
+**Specific behavior**:
+1. Catalog A initializes and logs in using `keytab_A`, setting the global UGI to `Principal_A`.
+2. Subsequently, Catalog B initializes and logs in using `keytab_B`, overwriting the global UGI to `Principal_B`.
+3. When Catalog A's Ranger Plugin background threads fetch authorization policies from Ranger Admin, they will erroneously use `Principal_B`'s ticket, leading to authentication failure and policy fetch errors.
+
+**Recommendation**:
+Within the same Doris cluster, for all Kerberos data sources utilizing Ranger, it is **strongly recommended to use the same Kerberos Principal and Keytab file** to prevent authentication failures caused by overwrites.
+:::
+
 ### Permission Example
 1. Create `user1` in Doris.
 2. In Doris, first use the `admin` user to create a Catalog: `hive`.

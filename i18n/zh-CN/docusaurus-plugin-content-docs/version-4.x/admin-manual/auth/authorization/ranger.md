@@ -52,6 +52,90 @@ Ranger 的安装和配置见下文：安装和配置 Doris Ranger 插件
 
    其中需要将 `ranger.plugin.doris.policy.cache.dir` 和 `ranger.plugin.doris.policy.rest.url` 改为实际值。
 3. 启动集群
+
+### Ranger Server 开启 Kerberos 时的配置
+
+当 Ranger Admin 服务本身开启了 Kerberos 认证时，Doris 的 Ranger Client 在拉取策略时需要以 Kerberos 身份向 Ranger Admin 鉴权，否则会导致策略拉取失败、鉴权无法生效。此时需要额外完成以下两步配置。
+
+#### 1. 合并 krb5.conf
+
+Doris 的 Ranger Client 在执行 Kerberos 登录时，底层使用 JVM 的 `Krb5LoginModule`，它从 **每台 FE/BE 节点上的 `/etc/krb5.conf`** 读取 KDC 地址。如果你的环境中同时存在多个 Kerberos Realm（例如 HDFS 集群的 Realm 和 Ranger Admin 所在集群的 Realm 不同），则需要将所有 Realm 的 KDC 信息**合并**到同一个 `/etc/krb5.conf` 文件中，并将该文件部署到所有 FE 和 BE 节点。
+
+合并后的 `krb5.conf` 示例如下：
+
+```ini
+[libdefaults]
+    default_realm = HADOOP.EXAMPLE.COM
+    dns_lookup_realm = true
+    dns_lookup_kdc = true
+
+[realms]
+    # HDFS / Hive 集群的 Realm
+    HADOOP.EXAMPLE.COM = {
+        kdc = hadoop-kdc.example.com:88
+        admin_server = hadoop-kdc.example.com
+    }
+    # Ranger Admin 所在集群的 Realm（如与上方不同，则需合并进来）
+    RANGER.EXAMPLE.COM = {
+        kdc = ranger-kdc.example.com:88
+        admin_server = ranger-kdc.example.com
+    }
+
+[domain_realm]
+    hadoop-kdc.example.com = HADOOP.EXAMPLE.COM
+    ranger-admin.example.com = RANGER.EXAMPLE.COM
+```
+
+:::caution 注意
+修改或新增 `/etc/krb5.conf` 后，需要重启所有 FE 和 BE 才能使配置生效。
+:::
+
+#### 2. 配置 ranger-hive-security.xml（或 ranger-doris-security.xml）中的 Kerberos UGI
+
+在 FE 节点的 `fe/conf/` 目录下，找到（或创建）`ranger-hive-security.xml`（使用 Hive Ranger 鉴权时）或 `ranger-doris-security.xml`（使用 Doris Ranger 鉴权时），在 `<configuration>` 中追加以下 4 个配置项：
+
+```xml
+<!-- 开启 UGI Kerberos 登录 -->
+<property>
+    <name>ranger.plugin.hive.ugi.initialize</name>
+    <value>true</value>
+</property>
+<!-- 登录方式：keytab -->
+<property>
+    <name>ranger.plugin.hive.ugi.login.type</name>
+    <value>keytab</value>
+</property>
+<!-- keytab 文件中对应的 principal -->
+<property>
+    <name>ranger.plugin.hive.ugi.keytab.principal</name>
+    <value>hive/hostname@RANGER.EXAMPLE.COM</value>
+</property>
+<!-- keytab 文件路径（需要部署到每台 FE 节点） -->
+<property>
+    <name>ranger.plugin.hive.ugi.keytab.file</name>
+    <value>/etc/security/keytabs/hive.keytab</value>
+</property>
+```
+
+:::tip 说明
+- `ranger.plugin.hive.ugi.keytab.principal`：填写 keytab 文件中实际存在的 principal，例如 `hive/your-host@YOUR-REALM.COM`，可使用 `klist -kt /path/to/hive.keytab` 查看。
+- `ranger.plugin.hive.ugi.keytab.file`：keytab 文件的绝对路径，需确保运行 Doris FE 进程的用户对该文件有读权限（建议 `chmod 400`）。
+- 如果使用的是 **Doris Ranger 鉴权**（`ranger-doris-security.xml`），则将上述配置中的 `hive` 替换为 `doris`，例如 `ranger.plugin.doris.ugi.initialize` 等。
+- 配置完成后需要**重启 FE** 使配置生效。
+:::
+
+:::warning 已知限制：多 Catalog 下的全局 UGI 覆盖问题
+目前 Doris 中嵌入的 Ranger Plugin 依赖 Hadoop 的 `UserGroupInformation` (UGI) 进行 Kerberos 登录。由于 JVM 进程中通常共享同一个全局登录用户状态，当您在 Doris 中配置了**多个开启 Kerberos 认证的 Ranger Catalog**（且它们使用了不同的 Principal）时，会出现 UGI 互相覆盖的问题。
+
+**具体表现**：
+1. Catalog A 初始化并使用 `keytab_A` 登录后，全局 UGI 为 `Principal_A`。
+2. 随后 Catalog B 初始化并使用 `keytab_B` 登录，全局 UGI 会被覆写为 `Principal_B`。
+3. 此时 Catalog A 的 Ranger 插件后台线程在向 Ranger Admin 拉取权限策略时，会错误地携带 `Principal_B` 的票据，导致鉴权失败，策略拉取报错。
+
+**当前建议**：
+在同一个 Doris 集群中，针对开启了 Ranger 的所有 Kerberos 数据源，**强烈建议统一规划，使用相同的 Kerberos Principal 与同一份 Keytab 文件**，以避免互相覆盖导致鉴权失效。
+:::
+
 ### 权限示例
 1. 在 Doris 中创建 `user1`。
 2. 在 Doris 中，先使用 `admin` 用户创建一个 Catalog：`hive`。
