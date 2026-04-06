@@ -336,6 +336,7 @@ const sidebars: SidebarsConfig = {
                         'data-operate/import/data-source/local-file',
                         'data-operate/import/data-source/kafka',
                         'data-operate/import/data-source/aws-msk',
+                                'data-operate/import/data-source/aws-kinesis',
                         'data-operate/import/data-source/flink',
                         'data-operate/import/data-source/hdfs',
                         'data-operate/import/data-source/amazon-s3',
