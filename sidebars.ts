@@ -160,6 +160,7 @@ const sidebars: SidebarsConfig = {
                             type: 'category',
                             label: 'Data Source',
                             items: [
+                                'data-operate/import/data-source/aws-kinesis',
                                 'data-operate/import/data-source/local-file',
                                 'data-operate/import/data-source/kafka',
                                 'data-operate/import/data-source/flink',
