@@ -53,7 +53,7 @@ Query:
 SELECT * FROM tbl_point_query WHERE key = 100;
 ```
 
-For more information on point query usage, please refer to [High-Concurrent Point Query](../query-acceleration/high-concurrent-point-query).
+For more information on point query usage, please refer to [High-Concurrent Point Query](../query/high-concurrent-point-query).
 
 
 ## Notice
