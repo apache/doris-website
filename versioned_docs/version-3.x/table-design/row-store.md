@@ -17,7 +17,7 @@ To solve this, Doris supports **Hybrid Row-Columnar Storage** since version 2.0.
 Row storage is recommended in the following scenarios:
 
 - **High-concurrency primary key point queries** on Unique Key merge-on-write (MOW) tables, where each query looks up a specific row by the full primary key.
-- **Wide-table SELECT \* queries** on Duplicate or MOW tables where only a small number of rows are returned (TOPN pattern).
+- **Wide-table `SELECT *` queries** on Duplicate or MOW tables where only a small number of rows are returned (TOPN pattern).
 
 If your workload is primarily analytical (aggregation, complex filtering on a few columns), columnar storage alone is usually sufficient.
 
