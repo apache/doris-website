@@ -15,7 +15,7 @@ OceanBaseデータベースに接続するには、以下が必要です
 
 * OceanBase 3.1.0以上
 
-* OceanBaseデータベース用JDBCドライバー。[Maven Repository](https://mvnrepository.com/artifact/com.oceanbase/oceanbase-client)から最新版または指定されたバージョンのOceanBase JDBCドライバーをダウンロードできます。OceanBase Connector/J 2.4.8以上の使用を推奨します。
+* OceanBaseデータベース用JDBCドライバー。[Maven Repository](https://mvnrepository.com/artifact/com.oceanbase/oceanbase-client)からOceanBase JDBCドライバーをダウンロードできます。OceanBase Connector/J 2.4.8を使用してください。
 
 * DorisのFEおよびBEノードとOceanBaseサーバー間のネットワーク接続。
 

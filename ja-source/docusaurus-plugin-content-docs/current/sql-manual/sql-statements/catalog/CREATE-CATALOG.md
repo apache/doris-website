@@ -150,7 +150,7 @@ CREATE CATALOG [IF NOT EXISTS] <catalog_name> [ COMMENT "<comment>"]
        "user"="root",
        "password"="",
        "jdbc_url" = "jdbc:oceanbase://localhost:2881/demo",
-       "driver_url" = "file:///path/to/oceanbase-client-2.4.2.jar",
+       "driver_url" = "file:///path/to/oceanbase-client-2.4.8.jar",
        "driver_class" = "com.oceanbase.jdbc.Driver"
 	);
     ```
