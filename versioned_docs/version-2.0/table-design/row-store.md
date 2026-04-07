@@ -15,16 +15,18 @@ The principle of row storage is that an additional column is added during storag
 
 ## Syntax
 
-When creating a table, specify whether to enable row storage in the table's PROPERTIES.
-``` 
-"store_row_column" = "true"
-```
+When creating a table, specify whether to enable row storage and its page size in the table's `PROPERTIES`.
+
+| Property | Default | Description |
+|---|---|---|
+| `"store_row_column"` | `false` | Enable row storage for all columns. |
+| `"row_store_page_size"` | `16384` (16 KB) | Size of the row-store page in bytes. A smaller value increases storage overhead but yields better point-query performance. |
 
 ## Example
 
 The example below creates an 8-column table with row storage enabled.
 
-``` 
+```sql
 CREATE TABLE `tbl_point_query` (
      `key` int(11) NULL,
      `v1` decimal(27, 9) NULL,
@@ -45,8 +47,9 @@ PROPERTIES (
 );
 ```
 
-Query
-```
+Query:
+
+```sql
 SELECT * FROM tbl_point_query WHERE key = 100;
 ```
 
@@ -56,4 +59,4 @@ For more information on point query usage, please refer to [High-Concurrent Poin
 ## Notice
 
 1. Enabling row storage will increase the storage space used. The increase in storage space is related to the data characteristics and is generally 2 to 10 times the size of the original table. The exact space usage needs to be tested with actual data.
-2. Alter the `store_row_column` is not supported in 2.0
+2. Modifying the `store_row_column` property via `ALTER TABLE` is not supported.
