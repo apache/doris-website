@@ -42,9 +42,9 @@ FROM KAFKA(
     "kafka_broker_list" = "your_msk_broker_list",
     "kafka_topic" = "your_kafka_topic",
 
-    "aws.region" = "___",
-    "aws.access_key" = "___________",
-    "aws.secret_key" = "___________",
+    "aws.region" = "us-west-1",
+    "aws.access_key" = "<your-ak>",
+    "aws.secret_key" = "<your-sk>",
 
     "property.kafka_default_offsets" = "OFFSET_BEGINNING",
     "property.security.protocol" = "SASL_SSL",
@@ -66,7 +66,7 @@ FROM KAFKA(
     "kafka_broker_list" = "your_msk_broker_list",
     "kafka_topic" = "your_kafka_topic",
 
-    "aws.region" = "___",
+    "aws.region" = "us-west-1",
     "aws.role_arn" = "arn:aws:iam::123456789012:role/demo-role",
     "aws.credentials_provider" = "INSTANCE_PROFILE",
 
@@ -86,7 +86,7 @@ FROM KAFKA(
     "kafka_broker_list" = "your_msk_broker_list",
     "kafka_topic" = "your_kafka_topic",
 
-    "aws.region" = "___",
+    "aws.region" = "us-west-1",
     "aws.role_arn" = "arn:aws:iam::123456789012:role/demo-role",
     "aws.credentials_provider" = "ENV",
 
@@ -106,7 +106,7 @@ FROM KAFKA(
     "kafka_broker_list" = "your_msk_broker_list",
     "kafka_topic" = "your_kafka_topic",
 
-    "aws.region" = "___",
+    "aws.region" = "us-west-1",
     "aws.role_arn" = "arn:aws:iam::123456789012:role/demo-role",
     "aws.credentials_provider" = "DEFAULT",
 
@@ -128,8 +128,8 @@ FROM KAFKA(
     "kafka_broker_list" = "your_msk_broker_list",
     "kafka_topic" = "your_kafka_topic",
 
-    "aws.region" = "___",
-    "aws.credentials_provider" = "___",
+    "aws.region" = "us-west-1",
+    "aws.credentials_provider" = "INSTANCE_PROFILE",
 
     "property.kafka_default_offsets" = "OFFSET_BEGINNING",
     "property.security.protocol" = "SASL_SSL",
