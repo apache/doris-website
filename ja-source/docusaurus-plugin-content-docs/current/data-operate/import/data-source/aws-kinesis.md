@@ -37,7 +37,22 @@ Kinesis インポート時の AWS 認証方式は、MSK からのデータイン
 
 ## クイックスタート
 
-Doris は Routine Load で Kinesis からデータを読み取るため、基本的な操作は [Routine Load Manual](../import-way/routine-load-manual.md) と同じです。ここでは `SHOW ROUTINE LOAD` の出力における Kinesis 関連フィールドのみを示します。
+Doris は Routine Load で Kinesis からデータを読み取るため、基本的な操作は [Routine Load Manual](../import-way/routine-load-manual.md) と同じです。
+
+### インポートの作成
+
+```SQL
+CREATE ROUTINE LOAD [db_name.]job_name ON table_name
+[load_properties]
+[job_properties]
+FROM KINESIS
+(
+    "aws.region" = "us-east-1",
+    "aws.kinesis_stream" = "<your_stream_name>",
+    "aws.access_key" = "<your_ak>",
+    "aws.secret_key" = "<your_sk>"
+);
+```
 
 ### インポート状態の確認
 
@@ -53,3 +68,21 @@ SHOW ROUTINE LOAD FOR job_name;
 | DataSourceProperties | Kinesis データソース設定（region, stream, shards） |
 | Progress | 消費進捗（各 Shard の Sequence Number） |
 | Lag | 消費遅延（各 Shard が最新データに追いつくまでのミリ秒） |
+
+### インポートジョブの一時停止
+
+```SQL
+PAUSE ROUTINE LOAD FOR job_name;
+```
+
+### インポートジョブの再開
+
+```SQL
+RESUME ROUTINE LOAD FOR job_name;
+```
+
+### インポートジョブの削除
+
+```SQL
+STOP ROUTINE LOAD FOR job_name;
+```

@@ -37,7 +37,22 @@ For AWS authentication when importing from Kinesis, you can fully refer to the a
 
 ## Quick Start
 
-Because Doris reads data from Kinesis through Routine Load, the operation flow is consistent with the [Routine Load Manual](../import-way/routine-load-manual.md). Here we only list fields related to Kinesis in the `SHOW ROUTINE LOAD` output:
+Because Doris reads data from Kinesis through Routine Load, the operation flow is consistent with the [Routine Load Manual](../import-way/routine-load-manual.md).
+
+### Create Import
+
+```SQL
+CREATE ROUTINE LOAD [db_name.]job_name ON table_name
+[load_properties]
+[job_properties]
+FROM KINESIS
+(
+    "aws.region" = "us-east-1",
+    "aws.kinesis_stream" = "<your_stream_name>",
+    "aws.access_key" = "<your_ak>",
+    "aws.secret_key" = "<your_sk>"
+);
+```
 
 ### View Import Status
 
@@ -53,3 +68,21 @@ Output field description (Kinesis-related fields only)
 | DataSourceProperties | Kinesis data source configurations (region, stream, shards) |
 | Progress | Consumption progress (Sequence Number for each shard) |
 | Lag | Consumption lag (milliseconds from each shard to the latest data) |
+
+### Pause Import Job
+
+```SQL
+PAUSE ROUTINE LOAD FOR job_name;
+```
+
+### Resume Import Job
+
+```SQL
+RESUME ROUTINE LOAD FOR job_name;
+```
+
+### Delete Import Job
+
+```SQL
+STOP ROUTINE LOAD FOR job_name;
+```
