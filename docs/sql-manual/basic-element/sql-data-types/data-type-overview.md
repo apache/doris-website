@@ -102,3 +102,9 @@ IP data types store IP addresses in a binary format, which is faster and more sp
 - **[IPv4](../sql-data-types/ip/IPV4.md)**: It stores IPv4 addresses as a 4-byte binary value. It is used in conjunction with the `ipv4_*` family of functions.
 - **[IPv6](../sql-data-types/ip/IPV6.md)**: It stores IPv6 addresses as a 16-byte binary value. It is used in conjunction with the `ipv6_*` family of functions.
 
+## File Type
+
+The FILE type is a semantic data type that represents object storage file metadata. It stores a fixed-schema struct (URI, file name, content type, size, credentials) in JSON binary format.
+
+- **[FILE](../sql-data-types/semi-structured/FILE.md)**: Represents a file in object storage (S3, OSS, COS, OBS, HDFS). FILE type can only be used in [Fileset Tables](../../sql-statements/table-and-view/table/CREATE-FILESET-TABLE.md) (ENGINE = fileset). It is designed to work with AI functions such as `embed()` for multimodal data processing.
+
