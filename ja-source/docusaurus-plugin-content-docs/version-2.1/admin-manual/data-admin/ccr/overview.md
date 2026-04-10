@@ -84,9 +84,9 @@ CCRは4つの同期方法をサポートします：
 
 | Version | Arch  | Tarball                                                                                                                                        | SHA256                                                           |
 |---------|-------|------------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------|
-| 2.1     | ARM64 | [ccr-syncer-2.1.10-rc07-arm64.tar.xz](https://download.selectdb.com/ccr-release/ccr-syncer-2.1.10-rc07-arm64.tar.xz) | 0620e71c59535546db194d83eccd1a08ffbdf3e6f7107a4f1734f013cc56a349 |
-| 2.1     | X64   | [ccr-syncer-2.1.10-rc07-x64.tar.xz](https://download.selectdb.com/ccr-release/ccr-syncer-2.1.10-rc07-x64.tar.xz)     | 783105dbd322451cd995ab327eca231654fec9db0ade899748c0d31fb1e00c40 |
-| 3.0     | ARM64 | [ccr-syncer-3.0.6-rc06-arm64.tar.xz](https://download.selectdb.com/ccr-release/ccr-syncer-3.0.6-rc06-arm64.tar.xz) | 97afaa6de13406dc32b7e8c46eb946ff41477baeb8865a702d1bef564c8c46e2 |
-| 3.0     | X64   | [ccr-syncer-3.0.6-rc06-x64.tar.xz](https://download.selectdb.com/ccr-release/ccr-syncer-3.0.6-rc06-x64.tar.xz)   | fcb8e63c309a1730bf592ebff2fbe0f713ffbf8624a8c6080627d691d9d472e1 |
-| 4.0     | ARM64 | [ccr-syncer-4.0.1-rc02-arm64.tar.xz](https://download.selectdb.com/ccr-release/ccr-syncer-4.0.1-rc02-arm64.tar.xz) | da8eee22b6bf174944dcf742618bebc809578e6427dd12c7634e96580891290f |
-| 4.0     | X64   | [ccr-syncer-4.0.1-rc02-x64.tar.xz](https://download.selectdb.com/ccr-release/ccr-syncer-4.0.1-rc02-x64.tar.xz)   | c87e7afe08e4b002badb92a6ce109c4cbd083f3a06ef0e54f8b4a606efee43b9 |
+| 2.1     | ARM64 | [ccr-syncer-2.1.10-rc08-arm64.tar.xz](https://download.selectdb.com/ccr-release/ccr-syncer-2.1.10-rc08-arm64.tar.xz) | 060093e90150ee24f8a784066436a0a4a1116876ebd6f33d5a844e2dc67f10b0 |
+| 2.1     | X64   | [ccr-syncer-2.1.10-rc08-x64.tar.xz](https://download.selectdb.com/ccr-release/ccr-syncer-2.1.10-rc08-x64.tar.xz)     | 656c0a46e3f0e12b9ff2fb76116ad8362e344a8d1ac31f1b26834aaaa1987a7b |
+| 3.0     | ARM64 | [ccr-syncer-3.0.6-rc07-arm64.tar.xz](https://download.selectdb.com/ccr-release/ccr-syncer-3.0.6-rc07-arm64.tar.xz) | bb136f5c9db60f18c174d32304557065e1581e96ce14009f8e8f9aa4d58628f1 |
+| 3.0     | X64   | [ccr-syncer-3.0.6-rc07-x64.tar.xz](https://download.selectdb.com/ccr-release/ccr-syncer-3.0.6-rc07-x64.tar.xz)   | 31e514b4d55fb4f11204cd023369ef5988ffda3cb3728e974899623ea81dc1ad |
+| 4.0     | ARM64 | [ccr-syncer-4.0.1-rc03-arm64.tar.xz](https://download.selectdb.com/ccr-release/ccr-syncer-4.0.1-rc03-arm64.tar.xz) | 5ea016773c0589b437311a40fe5c2397e01ab4dd5d04a62ba9d6c1d4975522ac |
+| 4.0     | X64   | [ccr-syncer-4.0.1-rc03-x64.tar.xz](https://download.selectdb.com/ccr-release/ccr-syncer-4.0.1-rc03-x64.tar.xz)   | bb26d5cc31403e6d6c9d2feccf82347ff7fde81f174b53907ffec067c5a87b54 |

@@ -17,7 +17,7 @@ enable_feature_binlog=true
 
 2.1. 以下のリンクから最新のパッケージをダウンロードしてください：
 
-`https://download.selectdb.com/ccr-release/ccr-syncer-3.0.6-rc06-x64.tar.xz`
+`https://download.selectdb.com/ccr-release/ccr-syncer-3.0.6-rc07-x64.tar.xz`
 
 2.2. Syncerの開始と停止
 
