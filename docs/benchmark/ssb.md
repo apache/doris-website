@@ -8,18 +8,18 @@
 
 # Star Schema Benchmark
 
-[Star Schema Benchmark(SSB)](https://www.cs.umb.edu/~poneil/StarSchemaB.PDF) is a lightweight performance test set in the data warehouse scenario. SSB provides a simplified star schema data based on [TPC-H](http://www.tpc.org/tpch/), which is mainly used to test the performance of multi-table JOIN query under star schema.  In addition, the industry usually flattens SSB into a wide table model (Referred as: SSB flat) to test the performance of the query engine.
+[Star Schema Benchmark(SSB)](https://www.cs.umb.edu/~poneil/StarSchemaB.PDF) is a lightweight performance test set in the data warehouse scenario. SSB provides a simplified star schema data based on [TPC-H](http://www.tpc.org/tpch/), which is mainly used to test the performance of multi-table JOIN query under star schema.
 
-This document mainly introduces the performance of Doris on the SSB 1000G test set.
+This document mainly introduces the performance of Doris on the SSB SF1000 test set.
 
-We tested 13 queries on the SSB standard test dataset based on Apache Doris version 2.0.15.1.
+We tested 13 queries on the SSB standard test dataset based on Apache Doris.
 
 ## 1. Hardware Environment
 
 | Hardware           | Configuration Instructions               |
 |--------------------|------------------------------------------|
-| Number of Machines | 4 Aliyun Virtual Machine (1FE，3BEs)      |
-| CPU                | Intel Xeon (Ice Lake) Platinum 8369B 32C |
+| Number of Machines | 4 [Aliyun g9i Virtual Machine](https://www.alibabacloud.com/help/en/ecs/user-guide/general-purpose-instance-families#g9i) (1FE，3BEs)      |
+| CPU                | Intel® Xeon® Granite Rapids 32C |
 | Memory             | 128G                                     |
 | Disk               | Enterprise SSD (PL0)                     |
 
@@ -28,8 +28,7 @@ We tested 13 queries on the SSB standard test dataset based on Apache Doris vers
 - Doris Deployed 3BEs and 1FE
 - Kernel Version: Linux version 5.15.0-101-generic 
 - OS version: Ubuntu 20.04 LTS (Focal Fossa)
-- Doris software version: Apache Doris 2.0.15.1
-- JDK: openjdk version "1.8.0_352-352"
+- JDK: openjdk 17.0.2
 
 ## 3. Test Data Volume
 
@@ -42,57 +41,35 @@ We tested 13 queries on the SSB standard test dataset based on Apache Doris vers
 | dates          | 2,556         | Date                             |
 | lineorder_flat | 5,999,989,709 | Wide Table after Data Flattening |
 
-## 4. SSB Flat Test Results
+## 4. Standard SSB Test Results
 
-Here we use Apache Doris 2.0.15.1 for comparative testing. In the test, we use Query Time(ms) as the main performance indicator. The test results are as follows:
+In the test, we use Query Time(ms) as the main performance indicator. The test results are as follows:
 
-| Query     | Doris 2.0.15.1 (ms) |
-|-----------|---------------------|
-| q1.1      | 80                  |
-| q1.2      | 10                  |
-| q1.3      | 110                 |
-| q2.1      | 1680                |
-| q2.2      | 1210                |
-| q2.3      | 1060                |
-| q3.1      | 2010                |
-| q3.2      | 1560                |
-| q3.3      | 600                 |
-| q3.4      | 10                  |
-| q4.1      | 2380                |
-| q4.2      | 190                 |
-| q4.3      | 120                 |
-| **Total** | **11020**           |
+| Query     | Doris 2.1.11 (ms) | Doris 3.1.4 (ms) | Doris 4.0.5 (ms) | Doris 4.1.0 (ms) |
+|-----------|-------------------|------------------|------------------|------------------|
+| **Total** | **13270**         | **11591**        | **12495**        | **10934**        |
+| q1.1      | 140               | 179              | 151              | 126              |
+| q1.2      | 70                | 105              | 114              | 82               |
+| q1.3      | 70                | 96               | 107              | 79               |
+| q2.1      | 1520              | 1066             | 1263             | 1096             |
+| q2.2      | 1630              | 1425             | 1311             | 1293             |
+| q2.3      | 1250              | 1086             | 1199             | 1008             |
+| q3.1      | 2470              | 2020             | 2174             | 2142             |
+| q3.2      | 1450              | 1165             | 1484             | 1395             |
+| q3.3      | 870               | 847              | 1080             | 314              |
+| q3.4      | 130               | 167              | 148              | 68               |
+| q4.1      | 2860              | 2485             | 2517             | 2427             |
+| q4.2      | 520               | 597              | 563              | 563              |
+| q4.3      | 290               | 353              | 384              | 341              |
 
-
-## 5. Standard SSB Test Results
-
-Here we use Apache Doris 2.0.15.1 for comparative testing. In the test, we use Query Time(ms) as the main performance indicator. The test results are as follows:
-
-| Query     | Doris 2.0.15.1 (ms) |
-|-----------|---------------------|
-| q1.1      | 330                 |
-| q1.2      | 80                  |
-| q1.3      | 80                  |
-| q2.1      | 1780                |
-| q2.2      | 1970                |
-| q2.3      | 1510                |
-| q3.1      | 4000                |
-| q3.2      | 1720                |
-| q3.3      | 1510                |
-| q3.4      | 160                 |
-| q4.1      | 4010                |
-| q4.2      | 840                 |
-| q4.3      | 400                 |
-| **Total** | **19390**           |
-
-## 6. Environment Preparation
+## 5. Environment Preparation
 
 Please first refer to the [official documentation](../install/deploy-manually/separating-storage-compute-deploy-manually) to install and deploy Apache Doris first to obtain a Doris cluster which is working well(including at least 1 FE 1 BE, 1 FE 3 BEs is recommended).
 
 
-## 7. Data Preparation
+## 6. Data Preparation
 
-### 7.1 Download and Install the SSB Data Generation Tool.
+### 6.1 Download and Install the SSB Data Generation Tool.
 
 Execute the following script to download and compile the [ssb-tools](https://github.com/apache/doris/tree/master/tools/ssb-tools) tool.
 
@@ -102,7 +79,7 @@ sh bin/build-ssb-dbgen.sh
 
 After successful installation, the `dbgen` binary will be generated under the `ssb-dbgen/` directory.
 
-### 7.2 Generate SSB Test Set
+### 6.2 Generate SSB Test Set
 
 Execute the following script to generate the SSB dataset:
 
@@ -114,11 +91,11 @@ sh bin/gen-ssb-data.sh -s 1000
 >
 > Note 2: The data will be generated under the `ssb-data/` directory with the suffix `.tbl`. The total file size is about 600GB and may need a few minutes to an hour to generate.
 >
-> Note 3: A standard test data set of 100G is generated by default.
+> Note 3: A standard test data set of SF100 is generated by default.
 
-### 7.3 Create Table
+### 6.3 Create Table
 
-#### 7.3.1 Prepare the `doris-cluster.conf` File.
+#### 6.3.1 Prepare the `doris-cluster.conf` File.
 
 Before import the script, you need to write the FE’s ip port and other information in the `doris-cluster.conf` file.
 
@@ -141,7 +118,7 @@ export PASSWORD=''
 export DB='ssb'
 ```
 
-#### 7.3.2 Execute the Following Script to Generate and Create the SSB Table:
+#### 6.3.2 Execute the Following Script to Generate and Create the SSB Table:
 
 ```shell
 sh bin/create-ssb-tables.sh -s 1000
@@ -149,7 +126,7 @@ sh bin/create-ssb-tables.sh -s 1000
 
 Or copy the table creation statements in [create-ssb-tables.sql](https://github.com/apache/doris/blob/master/tools/ssb-tools/ddl/create-ssb-tables-sf1000.sql) and [create-ssb-flat-table.sql](https://github.com/apache/doris/blob/master/tools/ssb-tools/ddl/create-ssb-flat-tables-sf1000.sql) and then execute them in the MySQL client.
 
-### 7.4 Import data
+### 6.4 Import data
 
 We use the following command to complete all data import of SSB test set and SSB FLAT wide table data synthesis and then import into the table.
 
@@ -157,7 +134,7 @@ We use the following command to complete all data import of SSB test set and SSB
  sh bin/load-ssb-data.sh
 ```
 
-### 7.5 Checking Imported data
+### 6.5 Checking Imported data
 
 ```sql
 select count(*) from part;
@@ -168,176 +145,13 @@ select count(*) from lineorder;
 select count(*) from lineorder_flat;
 ```
 
-### 7.6 Query Test
+### 6.6 Query Test
 
 - SSB-Flat Query Statement: [ ssb-flat-queries](https://github.com/apache/doris/tree/master/tools/ssb-tools/ssb-flat-queries)
 - Standard SSB Queries: [ ssb-queries](https://github.com/apache/doris/tree/master/tools/ssb-tools/ssb-queries)
 
-#### 7.6.1 SSB FLAT Test for SQL
 
-```sql
---Q1.1
-SELECT SUM(LO_EXTENDEDPRICE * LO_DISCOUNT) AS revenue
-FROM lineorder_flat
-WHERE
-    LO_ORDERDATE >= 19930101
-    AND LO_ORDERDATE <= 19931231
-    AND LO_DISCOUNT BETWEEN 1 AND 3
-    AND LO_QUANTITY < 25;
-
---Q1.2
-SELECT SUM(LO_EXTENDEDPRICE * LO_DISCOUNT) AS revenue
-FROM lineorder_flat
-WHERE
-    LO_ORDERDATE >= 19940101
-  AND LO_ORDERDATE <= 19940131
-  AND LO_DISCOUNT BETWEEN 4 AND 6
-  AND LO_QUANTITY BETWEEN 26 AND 35;
-
---Q1.3
-SELECT SUM(LO_EXTENDEDPRICE * LO_DISCOUNT) AS revenue
-FROM lineorder_flat
-WHERE
-    weekofyear(LO_ORDERDATE) = 6
-  AND LO_ORDERDATE >= 19940101
-  AND LO_ORDERDATE <= 19941231
-  AND LO_DISCOUNT BETWEEN 5 AND 7
-  AND LO_QUANTITY BETWEEN 26 AND 35;
-
---Q2.1
-SELECT
-    SUM(LO_REVENUE), (LO_ORDERDATE DIV 10000) AS YEAR,
-    P_BRAND
-FROM lineorder_flat
-WHERE P_CATEGORY = 'MFGR#12' AND S_REGION = 'AMERICA'
-GROUP BY YEAR, P_BRAND
-ORDER BY YEAR, P_BRAND;
-
---Q2.2
-SELECT
-    SUM(LO_REVENUE), (LO_ORDERDATE DIV 10000) AS YEAR,
-    P_BRAND
-FROM lineorder_flat
-WHERE
-    P_BRAND >= 'MFGR#2221'
-  AND P_BRAND <= 'MFGR#2228'
-  AND S_REGION = 'ASIA'
-GROUP BY YEAR, P_BRAND
-ORDER BY YEAR, P_BRAND;
-
---Q2.3
-SELECT
-    SUM(LO_REVENUE), (LO_ORDERDATE DIV 10000) AS YEAR,
-    P_BRAND
-FROM lineorder_flat
-WHERE
-    P_BRAND = 'MFGR#2239'
-  AND S_REGION = 'EUROPE'
-GROUP BY YEAR, P_BRAND
-ORDER BY YEAR, P_BRAND;
-
---Q3.1
-SELECT
-    C_NATION,
-    S_NATION, (LO_ORDERDATE DIV 10000) AS YEAR,
-    SUM(LO_REVENUE) AS revenue
-FROM lineorder_flat
-WHERE
-    C_REGION = 'ASIA'
-  AND S_REGION = 'ASIA'
-  AND LO_ORDERDATE >= 19920101
-  AND LO_ORDERDATE <= 19971231
-GROUP BY C_NATION, S_NATION, YEAR
-ORDER BY YEAR ASC, revenue DESC;
-
---Q3.2
-SELECT
-    C_CITY,
-    S_CITY, (LO_ORDERDATE DIV 10000) AS YEAR,
-    SUM(LO_REVENUE) AS revenue
-FROM lineorder_flat
-WHERE
-    C_NATION = 'UNITED STATES'
-  AND S_NATION = 'UNITED STATES'
-  AND LO_ORDERDATE >= 19920101
-  AND LO_ORDERDATE <= 19971231
-GROUP BY C_CITY, S_CITY, YEAR
-ORDER BY YEAR ASC, revenue DESC;
-
---Q3.3
-SELECT
-    C_CITY,
-    S_CITY, (LO_ORDERDATE DIV 10000) AS YEAR,
-    SUM(LO_REVENUE) AS revenue
-FROM lineorder_flat
-WHERE
-    C_CITY IN ('UNITED KI1', 'UNITED KI5')
-  AND S_CITY IN ('UNITED KI1', 'UNITED KI5')
-  AND LO_ORDERDATE >= 19920101
-  AND LO_ORDERDATE <= 19971231
-GROUP BY C_CITY, S_CITY, YEAR
-ORDER BY YEAR ASC, revenue DESC;
-
---Q3.4
-SELECT
-    C_CITY,
-    S_CITY, (LO_ORDERDATE DIV 10000) AS YEAR,
-    SUM(LO_REVENUE) AS revenue
-FROM lineorder_flat
-WHERE
-    C_CITY IN ('UNITED KI1', 'UNITED KI5')
-  AND S_CITY IN ('UNITED KI1', 'UNITED KI5')
-  AND LO_ORDERDATE >= 19971201
-  AND LO_ORDERDATE <= 19971231
-GROUP BY C_CITY, S_CITY, YEAR
-ORDER BY YEAR ASC, revenue DESC;
-
---Q4.1
-SELECT (LO_ORDERDATE DIV 10000) AS YEAR,
-    C_NATION,
-    SUM(LO_REVENUE - LO_SUPPLYCOST) AS profit
-FROM lineorder_flat
-WHERE
-    C_REGION = 'AMERICA'
-  AND S_REGION = 'AMERICA'
-  AND P_MFGR IN ('MFGR#1', 'MFGR#2')
-GROUP BY YEAR, C_NATION
-ORDER BY YEAR ASC, C_NATION ASC;
-
---Q4.2
-SELECT (LO_ORDERDATE DIV 10000) AS YEAR,
-    S_NATION,
-    P_CATEGORY,
-    SUM(LO_REVENUE - LO_SUPPLYCOST) AS profit
-FROM lineorder_flat
-WHERE
-    C_REGION = 'AMERICA'
-  AND S_REGION = 'AMERICA'
-  AND LO_ORDERDATE >= 19970101
-  AND LO_ORDERDATE <= 19981231
-  AND P_MFGR IN ('MFGR#1', 'MFGR#2')
-GROUP BY YEAR, S_NATION, P_CATEGORY
-ORDER BY
-    YEAR ASC,
-    S_NATION ASC,
-    P_CATEGORY ASC;
-
---Q4.3
-SELECT (LO_ORDERDATE DIV 10000) AS YEAR,
-    S_CITY,
-    P_BRAND,
-    SUM(LO_REVENUE - LO_SUPPLYCOST) AS profit
-FROM lineorder_flat
-WHERE
-    S_NATION = 'UNITED STATES'
-  AND LO_ORDERDATE >= 19970101
-  AND LO_ORDERDATE <= 19981231
-  AND P_CATEGORY = 'MFGR#14'
-GROUP BY YEAR, S_CITY, P_BRAND
-ORDER BY YEAR ASC, S_CITY ASC, P_BRAND ASC;
-```
-
-#### 7.6.2 SSB Standard Test for SQL
+#### 6.6.1 SSB Standard Test for SQL
 
 ```sql
 --Q1.1

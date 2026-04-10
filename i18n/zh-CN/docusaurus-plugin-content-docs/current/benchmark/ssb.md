@@ -8,18 +8,18 @@
 
 # Star Schema Benchmark
 
-[Star Schema Benchmark(SSB)](https://www.cs.umb.edu/~poneil/StarSchemaB.PDF) 是一个轻量级的数仓场景下的性能测试集。SSB 基于 [TPC-H](http://www.tpc.org/tpch/) 提供了一个简化版的星型模型数据集，主要用于测试在星型模型下，多表关联查询的性能表现。另外，业界内通常也会将 SSB 打平为宽表模型（以下简称：SSB flat），来测试查询引擎的性能。
+[Star Schema Benchmark(SSB)](https://www.cs.umb.edu/~poneil/StarSchemaB.PDF) 是一个轻量级的数仓场景下的性能测试集。SSB 基于 [TPC-H](http://www.tpc.org/tpch/) 提供了一个简化版的星型模型数据集，主要用于测试在星型模型下，多表关联查询的性能表现。
 
-本文档主要介绍 Apache Doris 在 SSB 1000G 测试集上的性能表现。
+本文档主要介绍 Apache Doris 在 SSB SF1000 测试集上的性能表现。
 
-在 SSB 标准测试数据集上的 13 个查询上，我们基于 Apache Doris 2.0.15.1 版本进行了测试。
+在 SSB 标准测试数据集上的 13 个查询上，我们对 Apache Doris 进行了测试。
 
 ## 1. 硬件环境
 
 | 硬件   | 配置说明                                     |
 |------|------------------------------------------|
-| 机器数量 | 4 台阿里云主机（1 个 FE，3 个 BE）                  |
-| CPU  | Intel Xeon (Ice Lake) Platinum 8369B 32 核 |
+| 机器数量 | 4 台[阿里云g9i实例](https://help.aliyun.com/zh/ecs/user-guide/general-purpose-instance-families#g9i)（1 个 FE，3 个 BE）                  |
+| CPU  | Intel® Xeon® Granite Rapids 32 核 |
 | 内存   | 128G                                     |
 | 磁盘   | 阿里云 ESSD (PL0)                           |
 
@@ -28,8 +28,7 @@
 - Doris 部署 3BE 1FE
 - 内核版本：Linux version 5.15.0-101-generic 
 - 操作系统版本：Ubuntu 20.04 LTS (Focal Fossa)
-- Doris 软件版本：Apache Doris 2.0.15.1
-- JDK：openjdk version "1.8.0_352-352"
+- JDK：openjdk 17.0.2
 
 ## 3. 测试数据量
 
@@ -42,55 +41,32 @@
 | dates          | 2,556         | 日期表      |
 | lineorder_flat | 5,999,989,709 | 数据展平后的宽表 |
 
-## 4. SSB 宽表测试结果
+## 4. 标准 SSB 测试结果
 
-使用 Apache Doris 2.0.15.1 版本进行测试结果如下：
+| Query     | Doris 2.1.11 (ms) | Doris 3.1.4 (ms) | Doris 4.0.5 (ms) | Doris 4.1.0 (ms) |
+|-----------|-------------------|------------------|------------------|------------------|
+| **Total** | **13270**         | **11591**        | **12495**        | **10934**        |
+| q1.1      | 140               | 179              | 151              | 126              |
+| q1.2      | 70                | 105              | 114              | 82               |
+| q1.3      | 70                | 96               | 107              | 79               |
+| q2.1      | 1520              | 1066             | 1263             | 1096             |
+| q2.2      | 1630              | 1425             | 1311             | 1293             |
+| q2.3      | 1250              | 1086             | 1199             | 1008             |
+| q3.1      | 2470              | 2020             | 2174             | 2142             |
+| q3.2      | 1450              | 1165             | 1484             | 1395             |
+| q3.3      | 870               | 847              | 1080             | 314              |
+| q3.4      | 130               | 167              | 148              | 68               |
+| q4.1      | 2860              | 2485             | 2517             | 2427             |
+| q4.2      | 520               | 597              | 563              | 563              |
+| q4.3      | 290               | 353              | 384              | 341              |
 
-| Query     | Doris 2.0.15.1 (ms) |
-|-----------|---------------------|
-| q1.1      | 80                  |
-| q1.2      | 10                  |
-| q1.3      | 110                 |
-| q2.1      | 1680                |
-| q2.2      | 1210                |
-| q2.3      | 1060                |
-| q3.1      | 2010                |
-| q3.2      | 1560                |
-| q3.3      | 600                 |
-| q3.4      | 10                  |
-| q4.1      | 2380                |
-| q4.2      | 190                 |
-| q4.3      | 120                 |
-| **Total** | **11020**           |
-
-## 5. 标准 SSB 测试结果
-
-使用 Apache Doris 2.0.15.1 版本进行测试结果如下：
-
-| Query     | Doris 2.0.15.1 (ms) |
-|-----------|---------------------|
-| q1.1      | 330                 |
-| q1.2      | 80                  |
-| q1.3      | 80                  |
-| q2.1      | 1780                |
-| q2.2      | 1970                |
-| q2.3      | 1510                |
-| q3.1      | 4000                |
-| q3.2      | 1720                |
-| q3.3      | 1510                |
-| q3.4      | 160                 |
-| q4.1      | 4010                |
-| q4.2      | 840                 |
-| q4.3      | 400                 |
-| **Total** | **19390**           |
-
-## 6. 环境准备
+## 5. 环境准备
 
 请先参照 [官方文档](../install/deploy-manually/integrated-storage-compute-deploy-manually) 进行 Apache Doris 的安装部署，以获得一个正常运行中的 Doris 集群（至少包含 1 FE 1 BE，推荐 1 FE 3 BE）。
 
-## 7. 数据准备
+## 6. 数据准备
 
-### 7.1 下载安装 SSB 数据生成工具。
+### 6.1 下载安装 SSB 数据生成工具。
 
 执行以下脚本下载并编译 [ssb-tools](https://github.com/apache/doris/tree/master/tools/ssb-tools) 工具。
 
@@ -100,7 +76,7 @@ sh bin/build-ssb-dbgen.sh
 
 安装成功后，将在 `ssb-dbgen/` 目录下生成 `dbgen` 二进制文件。
 
-### 7.2 生成 SSB 测试集
+### 6.2 生成 SSB 测试集
 
 执行以下脚本生成 SSB 数据集：
 
@@ -112,11 +88,11 @@ sh bin/gen-ssb-data.sh -s 1000
 >
 > 注 2：数据会以 `.tbl` 为后缀生成在  `ssb-data/` 目录下。文件总大小约 600GB。生成时间可能在数分钟到 1 小时不等。
 >
-> 注 3：默认生成 100G 的标准测试数据集
+> 注 3：默认生成 SF100 的标准测试数据集
 
-### 7.3 建表
+### 6.3 建表
 
-#### 7.3.1 准备 `doris-cluster.conf` 文件
+#### 6.3.1 准备 `doris-cluster.conf` 文件
 
 在调用导入脚本前，需要将 FE 的 ip 端口等信息写在 `doris-cluster.conf` 文件中。
 
@@ -139,7 +115,7 @@ export PASSWORD=''
 export DB='ssb'
 ```
 
-#### 7.3.2 执行以下脚本生成创建 SSB 表
+#### 6.3.2 执行以下脚本生成创建 SSB 表
 
 ```shell
 sh bin/create-ssb-tables.sh -s 1000
@@ -147,7 +123,7 @@ sh bin/create-ssb-tables.sh -s 1000
 或者复制 [create-ssb-tables.sql](https://github.com/apache/doris/blob/master/tools/ssb-tools/ddl/create-ssb-tables-sf1000.sql)  和 [create-ssb-flat-table.sql](https://github.com/apache/doris/blob/master/tools/ssb-tools/ddl/create-ssb-flat-tables-sf1000.sql)  中的建表语句，在 MySQL 客户端中执行。
 
 
-### 7.4 导入数据
+### 6.4 导入数据
 
 我们使用以下命令完成 SSB 测试集所有数据导入及 SSB FLAT 宽表数据合成并导入到表里。
 
@@ -156,7 +132,7 @@ sh bin/create-ssb-tables.sh -s 1000
 sh bin/load-ssb-data.sh
 ```
 
-### 7.5 检查导入数据
+### 6.5 检查导入数据
 
 ```sql
 select count(*) from part;
@@ -167,180 +143,14 @@ select count(*) from lineorder;
 select count(*) from lineorder_flat;
 ```
 
-### 7.6 查询测试
+### 6.6 查询测试
 
 SSB-FlAT 查询语句：[ssb-flat-queries](https://github.com/apache/doris/tree/master/tools/ssb-tools/ssb-flat-queries)
 
 
 标准 SSB 查询语句：[ssb-queries](https://github.com/apache/doris/tree/master/tools/ssb-tools/ssb-queries)
 
-
-####  7.6.1 SSB FLAT 测试 SQL
-
-
-```sql
---Q1.1
-SELECT SUM(LO_EXTENDEDPRICE * LO_DISCOUNT) AS revenue
-FROM lineorder_flat
-WHERE
-    LO_ORDERDATE >= 19930101
-    AND LO_ORDERDATE <= 19931231
-    AND LO_DISCOUNT BETWEEN 1 AND 3
-    AND LO_QUANTITY < 25;
-
---Q1.2
-SELECT SUM(LO_EXTENDEDPRICE * LO_DISCOUNT) AS revenue
-FROM lineorder_flat
-WHERE
-    LO_ORDERDATE >= 19940101
-  AND LO_ORDERDATE <= 19940131
-  AND LO_DISCOUNT BETWEEN 4 AND 6
-  AND LO_QUANTITY BETWEEN 26 AND 35;
-
---Q1.3
-SELECT SUM(LO_EXTENDEDPRICE * LO_DISCOUNT) AS revenue
-FROM lineorder_flat
-WHERE
-    weekofyear(LO_ORDERDATE) = 6
-  AND LO_ORDERDATE >= 19940101
-  AND LO_ORDERDATE <= 19941231
-  AND LO_DISCOUNT BETWEEN 5 AND 7
-  AND LO_QUANTITY BETWEEN 26 AND 35;
-
---Q2.1
-SELECT
-    SUM(LO_REVENUE), (LO_ORDERDATE DIV 10000) AS YEAR,
-    P_BRAND
-FROM lineorder_flat
-WHERE P_CATEGORY = 'MFGR#12' AND S_REGION = 'AMERICA'
-GROUP BY YEAR, P_BRAND
-ORDER BY YEAR, P_BRAND;
-
---Q2.2
-SELECT
-    SUM(LO_REVENUE), (LO_ORDERDATE DIV 10000) AS YEAR,
-    P_BRAND
-FROM lineorder_flat
-WHERE
-    P_BRAND >= 'MFGR#2221'
-  AND P_BRAND <= 'MFGR#2228'
-  AND S_REGION = 'ASIA'
-GROUP BY YEAR, P_BRAND
-ORDER BY YEAR, P_BRAND;
-
---Q2.3
-SELECT
-    SUM(LO_REVENUE), (LO_ORDERDATE DIV 10000) AS YEAR,
-    P_BRAND
-FROM lineorder_flat
-WHERE
-    P_BRAND = 'MFGR#2239'
-  AND S_REGION = 'EUROPE'
-GROUP BY YEAR, P_BRAND
-ORDER BY YEAR, P_BRAND;
-
---Q3.1
-SELECT
-    C_NATION,
-    S_NATION, (LO_ORDERDATE DIV 10000) AS YEAR,
-    SUM(LO_REVENUE) AS revenue
-FROM lineorder_flat
-WHERE
-    C_REGION = 'ASIA'
-  AND S_REGION = 'ASIA'
-  AND LO_ORDERDATE >= 19920101
-  AND LO_ORDERDATE <= 19971231
-GROUP BY C_NATION, S_NATION, YEAR
-ORDER BY YEAR ASC, revenue DESC;
-
---Q3.2
-SELECT
-    C_CITY,
-    S_CITY, (LO_ORDERDATE DIV 10000) AS YEAR,
-    SUM(LO_REVENUE) AS revenue
-FROM lineorder_flat
-WHERE
-    C_NATION = 'UNITED STATES'
-  AND S_NATION = 'UNITED STATES'
-  AND LO_ORDERDATE >= 19920101
-  AND LO_ORDERDATE <= 19971231
-GROUP BY C_CITY, S_CITY, YEAR
-ORDER BY YEAR ASC, revenue DESC;
-
---Q3.3
-SELECT
-    C_CITY,
-    S_CITY, (LO_ORDERDATE DIV 10000) AS YEAR,
-    SUM(LO_REVENUE) AS revenue
-FROM lineorder_flat
-WHERE
-    C_CITY IN ('UNITED KI1', 'UNITED KI5')
-  AND S_CITY IN ('UNITED KI1', 'UNITED KI5')
-  AND LO_ORDERDATE >= 19920101
-  AND LO_ORDERDATE <= 19971231
-GROUP BY C_CITY, S_CITY, YEAR
-ORDER BY YEAR ASC, revenue DESC;
-
---Q3.4
-SELECT
-    C_CITY,
-    S_CITY, (LO_ORDERDATE DIV 10000) AS YEAR,
-    SUM(LO_REVENUE) AS revenue
-FROM lineorder_flat
-WHERE
-    C_CITY IN ('UNITED KI1', 'UNITED KI5')
-  AND S_CITY IN ('UNITED KI1', 'UNITED KI5')
-  AND LO_ORDERDATE >= 19971201
-  AND LO_ORDERDATE <= 19971231
-GROUP BY C_CITY, S_CITY, YEAR
-ORDER BY YEAR ASC, revenue DESC;
-
---Q4.1
-SELECT (LO_ORDERDATE DIV 10000) AS YEAR,
-    C_NATION,
-    SUM(LO_REVENUE - LO_SUPPLYCOST) AS profit
-FROM lineorder_flat
-WHERE
-    C_REGION = 'AMERICA'
-  AND S_REGION = 'AMERICA'
-  AND P_MFGR IN ('MFGR#1', 'MFGR#2')
-GROUP BY YEAR, C_NATION
-ORDER BY YEAR ASC, C_NATION ASC;
-
---Q4.2
-SELECT (LO_ORDERDATE DIV 10000) AS YEAR,
-    S_NATION,
-    P_CATEGORY,
-    SUM(LO_REVENUE - LO_SUPPLYCOST) AS profit
-FROM lineorder_flat
-WHERE
-    C_REGION = 'AMERICA'
-  AND S_REGION = 'AMERICA'
-  AND LO_ORDERDATE >= 19970101
-  AND LO_ORDERDATE <= 19981231
-  AND P_MFGR IN ('MFGR#1', 'MFGR#2')
-GROUP BY YEAR, S_NATION, P_CATEGORY
-ORDER BY
-    YEAR ASC,
-    S_NATION ASC,
-    P_CATEGORY ASC;
-
---Q4.3
-SELECT (LO_ORDERDATE DIV 10000) AS YEAR,
-    S_CITY,
-    P_BRAND,
-    SUM(LO_REVENUE - LO_SUPPLYCOST) AS profit
-FROM lineorder_flat
-WHERE
-    S_NATION = 'UNITED STATES'
-  AND LO_ORDERDATE >= 19970101
-  AND LO_ORDERDATE <= 19981231
-  AND P_CATEGORY = 'MFGR#14'
-GROUP BY YEAR, S_CITY, P_BRAND
-ORDER BY YEAR ASC, S_CITY ASC, P_BRAND ASC;
-```
-
-#### 7.6.2 SSB 标准测试 SQL
+#### 6.6.1 SSB 标准测试 SQL
 
 ```sql
 --Q1.1
