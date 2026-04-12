@@ -157,7 +157,7 @@ ORDER BY entry_name;
 
 See the documentation for this system table: [catalog_meta_cache_statistics](../../admin-manual/system-tables/information_schema/catalog_meta_cache_statistics.md).
 
-### Supported Iceberg Versions
+## Supported Iceberg Versions
 
 | Doris Version | Iceberg SDK Version |
 | --- | --- |
@@ -166,13 +166,13 @@ See the documentation for this system table: [catalog_meta_cache_statistics](../
 | 3.1 | 1.9.1 |
 | 4.0 | 1.9.1 |
 
-### Supported Iceberg Formats
+## Supported Iceberg Formats
 
 * Supports Iceberg V1/V2 formats.
 * Supports reading Position Delete and Equality Delete.
 * Supports reading Deletion Vector (Since 4.1.0).
 
-### Supported Metadata Services
+## Supported Metadata Services
 
 * [Hive Metastore](../metastores/hive-metastore.md)
 * [AWS Glue](../metastores/aws-glue.md)
@@ -183,7 +183,7 @@ See the documentation for this system table: [catalog_meta_cache_statistics](../
 
 > Note: The service types and parameters supported by different Doris versions are slightly different. Please refer to the [Examples] section.
 
-### Iceberg Catalog Feature Support Matrix
+## Iceberg Catalog Feature Support Matrix
 
 | Metadata Service       | Table Query | View Query | DDL Operations                | Data Writeback                | System Tables (Supported since 3.1+) |
 | ---------------------- | ----------- | ---------- | ----------------------------- | ----------------------------- | ------------------------------------ |
@@ -193,7 +193,7 @@ See the documentation for this system table: [catalog_meta_cache_statistics](../
 | Iceberg Rest Catalog   | ✅          | ✅         | Depends on the service provider | Depends on the service provider | Depends on the service provider      |
 | FileSystem             | ✅          | ✅         | ✅                            | ✅                            | ✅                                   |
 
-### Supported Storage Systems
+## Supported Storage Systems
 
 * [HDFS](../storages/hdfs.md)
 * [AWS S3](../storages/s3.md)
@@ -206,7 +206,7 @@ See the documentation for this system table: [catalog_meta_cache_statistics](../
 
 > Note: The service types and parameters supported by different Doris versions are slightly different. Please refer to the [Examples] section.
 
-### Supported Data Formats
+## Supported Data Formats
 
 * [Parquet](../file-formats/parquet.md)
 * [ORC](../file-formats/orc.md)

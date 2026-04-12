@@ -163,7 +163,7 @@ ORDER BY entry_name;
 
 该系统表文档见：[catalog_meta_cache_statistics](../../admin-manual/system-tables/information_schema/catalog_meta_cache_statistics.md)。
 
-### 支持的 Iceberg 版本
+## 支持的 Iceberg 版本
 
 | Doris 版本 | Iceberg SDK 版本 |
 | --- | --- |
@@ -171,8 +171,9 @@ ORDER BY entry_name;
 | 3.0 | 1.6.1 |
 | 3.1 | 1.9.1 |
 | 4.0 | 1.9.1 |
+| 4.1 | 1.10.1 |
 
-### 支持的 Iceberg 格式
+## 支持的 Iceberg 格式
 
 * 支持 Iceberg V1/V2 格式。
 
@@ -180,7 +181,7 @@ ORDER BY entry_name;
 
 * 支持读取 Deletion Vector（自 4.1.0 版本支持）。
 
-### 支持的元数据服务
+## 支持的元数据服务
 
 * [Hive Metastore](../metastores/hive-metastore.md)
 
@@ -196,7 +197,7 @@ ORDER BY entry_name;
 
 > 注意：不同 Doris 版本所支持的服务类型和参数略有区别，请参阅【基础示例】章节。
 
-### Iceberg Catalog 功能支持矩阵
+## Iceberg Catalog 功能支持矩阵
 
 | 元数据服务           | 表查询 | 视图查询 | DDL 操作       | 数据写回       | 系统表 (3.1+ 支持) |
 | -------------------- | ------ | -------- | -------------- | -------------- | ------------------ |
@@ -206,7 +207,7 @@ ORDER BY entry_name;
 | Iceberg Rest Catalog | ✅     | ✅       | 取决于服务提供方 | 取决于服务提供方 | 取决于服务提供方   |
 | FileSystem           | ✅     | ✅       | ✅             | ✅             | ✅                 |
 
-### 支持的存储系统
+## 支持的存储系统
 
 * [HDFS](../storages/hdfs.md)
 
@@ -228,7 +229,7 @@ ORDER BY entry_name;
 
 > 注意：不同 Doris 版本所支持的服务类型和参数略有区别，请参阅【基础示例】章节。
 
-### 支持的数据格式
+## 支持的数据格式
 
 * [Parquet](../file-formats/parquet.md)
 
