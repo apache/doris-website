@@ -52,7 +52,7 @@ LDB Toolchain 全称 Linux Distribution Based Toolchain Generator，它有助于
 **2. 执行以下命令生成 ldb toolchain**
 
 ```bash
-sh ldb_toolchain_gen.sh /path/to/ldb_toolchain/
+bash ldb_toolchain_gen.sh /path/to/ldb_toolchain/
 ```
 
 其中 `/path/to/ldb_toolchain/` 为安装 Toolchain 目录。执行成功后，会在 `/path/to/ldb_toolchain/` 下生成如下目录结构：
