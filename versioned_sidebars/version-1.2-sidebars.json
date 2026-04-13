@@ -1228,28 +1228,6 @@
                 "faq/lakehouse-faq",
                 "faq/bi-faq"
             ]
-        },
-        {
-            "type": "category",
-            "label": "Releases",
-            "collapsed": false,
-            "items": [
-                {
-                    "type": "category",
-                    "label": "v1.2",
-                    "items": [
-                        "releasenotes/v1.2/release-1.2.8",
-                        "releasenotes/v1.2/release-1.2.7",
-                        "releasenotes/v1.2/release-1.2.6",
-                        "releasenotes/v1.2/release-1.2.5",
-                        "releasenotes/v1.2/release-1.2.4",
-                        "releasenotes/v1.2/release-1.2.3",
-                        "releasenotes/v1.2/release-1.2.2",
-                        "releasenotes/v1.2/release-1.2.1",
-                        "releasenotes/v1.2/release-1.2.0"
-                    ]
-                }
-            ]
         }
     ]
 }
