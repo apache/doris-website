@@ -35,7 +35,7 @@ The system employs different strategies based on the strict mode setting:
 | ----------------- | -------------------- | ----------------------------- | ----------- | ------ |
 | NULL              | \N                   | NULL                          | ON/OFF      | NULL   |
 | Non-NULL          | "abc" or 2000       | NULL                          | ON          | Invalid (Filtered) |
-| Non-NULL          | "abc"               | NULL                          | OFF         | NULL    |
+| Non-NULL          | "abc" or 2000       | NULL                          | OFF         | NULL    |
 | Non-NULL          | 1                   | 1                             | ON/OFF      | Loaded Successfully |
 
 :::tip
@@ -51,14 +51,28 @@ The system employs different strategies based on the strict mode setting:
 | NULL              | \N                   | NULL                         | ON/OFF      | NULL   |
 | Non-NULL          | aaa                 | NULL                         | ON          | Invalid (Filtered) |
 | Non-NULL          | aaa                 | NULL                         | OFF         | NULL    |
-| Non-NULL          | 1 or 10             | 1 or 10                      | ON/OFF      | Loaded Successfully |
+| Non-NULL          | 10                  | NULL (overflow)              | ON          | Filtered            |
+| Non-NULL          | 10                  | NULL (overflow)              | OFF         | NULL              |
 
 :::tip
 1. The column in the table allows NULL values
 
 2. `abc` becomes NULL after conversion to Decimal due to type issues. When strict mode is ON, such data will be filtered out. When OFF, NULL will be loaded.
 
-3. Although `10` exceeds the range, since its type meets decimal requirements, strict mode does not affect it.
+3. `10` is a value outside the range of Decimal(1, 0) and will be converted to NULL. It will be filtered out if strict mode is enabled. If strict mode is disabled, `null` will be imported.
+:::
+
+**3. Example of a column type char(10)**
+
+| Original data type | Original Data Example | Value after conversion to char(10) | Strict mode | Result |
+| ------------------ | --------------------- | ---------------------------------- | ----------  | ------ |
+| NULL               | \N                    | NULL                               | ON/OFF      | NULL   |
+| Non-NULL           | a1234567890           | a1234567890                        | ON          | Too long, filtered |
+| Non-NULL           | a1234567890           | a1234567890                        | OFF         | a123456789 (truncated) |
+
+:::tip
+
+1. The column in the table allows NULL values
 :::
 
 ### Enable Strict Mode
@@ -183,5 +197,5 @@ SET insert_max_filter_ratio = 0.1;
 INSERT INTO test_table FROM S3/HDFS/LOCAL();```
 
 :::tip
-For Insert Into statements, `insert_max_filter_ratio` only takes effect when `enable_insert_strict = false`, and only applies to `INSERT INTO FROM S3/HDFS/LOCAL()` syntax. The default value is 1.0, which means that all abnormal data are allowed to be filtered.
+For Insert Into statements, `insert_max_filter_ratio` only takes effect when `enable_insert_strict = false`. The default value is 1.0, which means that all abnormal data are allowed to be filtered.
 :::
