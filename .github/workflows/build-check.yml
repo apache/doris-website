@@ -70,11 +70,115 @@ jobs:
                     exit 1
                 fi
 
+            - name: Detect changed doc versions and locales
+              id: detect
+              run: |
+                BASE_SHA=$(git merge-base origin/${{ github.base_ref }} HEAD)
+                CHANGED_FILES=$(git diff --name-only "$BASE_SHA" HEAD)
+
+                echo "=== Changed files ==="
+                echo "$CHANGED_FILES"
+
+                VERSIONS=""
+                LOCALES="en"
+                NEED_FULL_BUILD="false"
+
+                # Check each changed file and map to doc version
+                while IFS= read -r file; do
+                    case "$file" in
+                        # English current (dev) docs
+                        docs/*)
+                            VERSIONS="current,$VERSIONS"
+                            ;;
+                        # English versioned docs
+                        versioned_docs/version-*/*)
+                            ver=$(echo "$file" | sed -n 's|versioned_docs/version-\([^/]*\)/.*|\1|p')
+                            VERSIONS="${ver},$VERSIONS"
+                            ;;
+                        # Chinese current docs
+                        i18n/zh-CN/docusaurus-plugin-content-docs/current/*)
+                            VERSIONS="current,$VERSIONS"
+                            LOCALES="en,zh-CN"
+                            ;;
+                        # Chinese versioned docs
+                        i18n/zh-CN/docusaurus-plugin-content-docs/version-*/*)
+                            ver=$(echo "$file" | sed -n 's|i18n/zh-CN/docusaurus-plugin-content-docs/version-\([^/]*\)/.*|\1|p')
+                            VERSIONS="${ver},$VERSIONS"
+                            LOCALES="en,zh-CN"
+                            ;;
+                        # Chinese community docs
+                        i18n/zh-CN/docusaurus-plugin-content-docs-community/*|i18n/zh-CN/code.json)
+                            LOCALES="en,zh-CN"
+                            ;;
+                        # Sidebar for current (dev) version
+                        sidebars.ts)
+                            VERSIONS="current,$VERSIONS"
+                            ;;
+                        # Versioned sidebars: extract version from filename
+                        # e.g. versioned_sidebars/version-4.x-sidebars.json → 4.x
+                        versioned_sidebars/version-*-sidebars.json)
+                            ver=$(echo "$file" | sed -n 's|versioned_sidebars/version-\(.*\)-sidebars\.json|\1|p')
+                            VERSIONS="${ver},$VERSIONS"
+                            ;;
+                        # Blog and community are independent plugins, not
+                        # controlled by DOCS_VERSIONS. They are always built
+                        # regardless of version filtering.
+                        blog/*|community/*)
+                            NEED_BUILD="true"
+                            ;;
+                        # Config, source code, or other structural changes
+                        # require a full build to validate
+                        sidebarsCommunity.json|docusaurus.config.js|src/*|static/*|config/*|package.json|yarn.lock|tailwind.config.js)
+                            NEED_FULL_BUILD="true"
+                            ;;
+                    esac
+                done <<< "$CHANGED_FILES"
+
+                # Deduplicate versions
+                if [ "$NEED_FULL_BUILD" = "true" ]; then
+                    # Structural changes: build all active versions
+                    DOCS_VERSIONS=""
+                    echo "Structural changes detected, will build ALL versions."
+                elif [ -n "$VERSIONS" ]; then
+                    # Only doc content changes: build only affected versions
+                    DOCS_VERSIONS=$(echo "$VERSIONS" | tr ',' '\n' | sort -u | grep -v '^$' | tr '\n' ',' | sed 's/,$//')
+                    echo "Doc-only changes detected for versions: $DOCS_VERSIONS"
+                else
+                    # No versioned doc changes (e.g., only blog, community, or scripts).
+                    # Blog and community plugins are always compiled by Docusaurus
+                    # regardless of DOCS_VERSIONS, so we just set the minimal docs
+                    # scope to keep the build fast.
+                    DOCS_VERSIONS="current"
+                    echo "No doc version changes detected, doing minimal build with 'current' only."
+                    echo "(Blog and community plugins are always built regardless.)"
+                fi
+
+                # Determine locales for the build command
+                LOCALE_ARGS=""
+                IFS=',' read -ra LOCALE_ARR <<< "$LOCALES"
+                for locale in "${LOCALE_ARR[@]}"; do
+                    LOCALE_ARGS="$LOCALE_ARGS --locale $locale"
+                done
+
+                echo "docs_versions=$DOCS_VERSIONS" >> "$GITHUB_OUTPUT"
+                echo "locale_args=$LOCALE_ARGS" >> "$GITHUB_OUTPUT"
+                echo "need_full_build=$NEED_FULL_BUILD" >> "$GITHUB_OUTPUT"
+
+                echo ""
+                echo "=== Build plan ==="
+                echo "  DOCS_VERSIONS:  ${DOCS_VERSIONS:-all}"
+                echo "  LOCALE_ARGS:    $LOCALE_ARGS"
+                echo "  NEED_FULL_BUILD: $NEED_FULL_BUILD"
+
             - name: Build
+              env:
+                  DOCS_VERSIONS: ${{ steps.detect.outputs.docs_versions }}
               run: |
                   npm install -g yarn
                   yarn cache clean
                   export NODE_OPTIONS=--max-old-space-size=8192
                   yarn
-                  PWA_SERVICE_WORKER_URL=https://doris.apache.org/sw.js yarn docusaurus build --locale en --locale zh-CN
+
+                  echo "Building with DOCS_VERSIONS=${DOCS_VERSIONS:-all}"
+                  PWA_SERVICE_WORKER_URL=https://doris.apache.org/sw.js yarn docusaurus build ${{ steps.detect.outputs.locale_args }}
                   rm -rf build
