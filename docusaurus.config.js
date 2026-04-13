@@ -4,6 +4,14 @@ const VERSIONS = require('./versions.json');
 const { markdownBoldPlugin } = require('./config/markdown-bold-plugin');
 const { DEFAULT_VERSION } = require('./src/constant/version');
 
+// Allow filtering doc versions via environment variable.
+// Usage: DOCS_VERSIONS="current,4.x" yarn docusaurus build
+// This uses Docusaurus's native onlyIncludeVersions option
+// instead of modifying versions.json.
+const ONLY_VERSIONS = process.env.DOCS_VERSIONS
+    ? process.env.DOCS_VERSIONS.split(',').map(v => v.trim()).filter(Boolean)
+    : null;
+
 const lightCodeTheme = themes.dracula;
 
 const logoImg = '/images/logo-doris.svg';
@@ -177,7 +185,12 @@ const config = {
             /** @type {import('@docusaurus/preset-classic').Options} */
             ({
                 docs: {
-                    lastVersion: getLatestVersion(),
+                    ...(ONLY_VERSIONS && { onlyIncludeVersions: ONLY_VERSIONS }),
+                    // When filtering versions, lastVersion must be in the
+                    // included list. Fall back to the first included version.
+                    lastVersion: ONLY_VERSIONS && !ONLY_VERSIONS.includes(getLatestVersion())
+                        ? ONLY_VERSIONS[0]
+                        : getLatestVersion(),
                     versions: getDocsVersions(),
                     sidebarPath: require.resolve('./sidebars.ts'),
                     // editUrl: ({ locale, versionDocsDirPath, docPath }) => {
