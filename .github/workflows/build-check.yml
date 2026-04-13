@@ -123,12 +123,16 @@ jobs:
                         # Blog and community are independent plugins, not
                         # controlled by DOCS_VERSIONS. They are always built
                         # regardless of version filtering.
-                        blog/*|community/*)
+                        blog/*|community/*|releasenotes/*)
                             NEED_BUILD="true"
+                            ;;
+                        # Releases i18n docs
+                        i18n/zh-CN/docusaurus-plugin-content-docs-releases/*)
+                            LOCALES="en,zh-CN"
                             ;;
                         # Config, source code, or other structural changes
                         # require a full build to validate
-                        sidebarsCommunity.json|docusaurus.config.js|src/*|static/*|config/*|package.json|yarn.lock|tailwind.config.js)
+                        sidebarsCommunity.json|sidebarsReleases.json|docusaurus.config.js|src/*|static/*|config/*|package.json|yarn.lock|tailwind.config.js)
                             NEED_FULL_BUILD="true"
                             ;;
                     esac

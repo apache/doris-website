@@ -155,15 +155,6 @@ const config = {
             {
                 fromExtensions: ['html', 'htm'],
                 redirects: [
-                    // /docs/oldDoc -> /docs/newDoc
-                    {
-                        from: '/docs/dev/summary/basic-summary',
-                        to: `/docs/${DEFAULT_VERSION}/gettingStarted/quick-start`,
-                    },
-                    {
-                        from: '/docs/dev/get-starting/',
-                        to: `/docs/${DEFAULT_VERSION}/gettingStarted/quick-start`,
-                    },
                     {
                         from: '/slack',
                         to: 'https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-3b8tlr3le-Z~IrrVxkzqniFjhL17d1oQ'
@@ -171,6 +162,16 @@ const config = {
                 ],
                 createRedirects(existingPath) {
                     const redirects = [];
+
+                    // Redirect old dev doc paths to the current default version.
+                    // Placed in createRedirects (not static redirects) because the
+                    // target version may not be built during incremental CI checks.
+                    if (existingPath === `/docs/${DEFAULT_VERSION}/gettingStarted/quick-start`) {
+                        redirects.push(
+                            '/docs/dev/summary/basic-summary',
+                            '/docs/dev/get-starting/',
+                        );
+                    }
 
                     if (existingPath.includes('/gettingStarted/what-is-apache-doris') || existingPath.startsWith('/docs/3.x/')) {
                         // Redirect from /gettingStarted/what-is-new to /gettingStarted/what-is-apache-doris
