@@ -11,7 +11,7 @@
 Returns the average of the independent variable `x` over non-null `(y, x)` pairs in a group, where `x` is the independent variable and `y` is the dependent variable.
 
 :::info
-This function is supported since Apache Doris version 4.1.0.
+This function is supported since Apache Doris version 4.1.1.
 :::
 
 ## Syntax

@@ -11,7 +11,7 @@
 Returns the sum of squared deviations of the dependent variable `y` from its mean, computed over non-null `(y, x)` pairs in a group, where `x` is the independent variable and `y` is the dependent variable. It is equivalent to `REGR_COUNT(y, x) * VAR_POP(y)`.
 
 :::info
-This function is supported since Apache Doris version 4.1.0.
+This function is supported since Apache Doris version 4.1.1.
 :::
 
 ## Syntax
