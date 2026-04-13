@@ -1,19 +1,19 @@
 ---
 {
-    "title": "REGR_SLOPE",
+    "title": "REGR_AVGX",
     "language": "en",
-    "description": "Returns the slope of the linear regression line for non-null pairs in a group."
+    "description": "Returns the average of the independent variable (x) for non-null pairs in a group."
 }
 ---
 
 ## Description
 
-Returns the slope of the linear regression line computed over non-null `(y, x)` pairs in a group, where `x` is the independent variable and `y` is the dependent variable.
+Returns the average of the independent variable `x` over non-null `(y, x)` pairs in a group, where `x` is the independent variable and `y` is the dependent variable.
 
 ## Syntax
 
 ```sql
-REGR_SLOPE(<y>, <x>)
+REGR_AVGX(<y>, <x>)
 ```
 
 ## Parameters
@@ -25,7 +25,7 @@ REGR_SLOPE(<y>, <x>)
 
 ## Return Value
 
-Returns a Double value representing the slope of the linear regression line.
+Returns a Double value representing the average of `x` for non-null `(y, x)` pairs.
 If there are no rows in the group, or all rows contain NULLs for the expressions, the function returns `NULL`.
 
 ## Example
@@ -51,14 +51,14 @@ INSERT INTO test_regr VALUES
 ```
 
 ```sql
-SELECT id, REGR_SLOPE(y, x) FROM test_regr GROUP BY id ORDER BY id;
+SELECT id, REGR_AVGX(y, x) FROM test_regr GROUP BY id ORDER BY id;
 ```
 
 ```text
 +------+--------------------+
-| id   | REGR_SLOPE(y, x)   |
+| id   | REGR_AVGX(y, x)   |
 +------+--------------------+
 |    1 |               NULL |
-|    2 |                2.0 |
+|    2 |                2.5 |
 +------+--------------------+
 ```

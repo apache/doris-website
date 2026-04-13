@@ -1,19 +1,19 @@
 ---
 {
-    "title": "REGR_SLOPE",
+    "title": "REGR_SXX",
     "language": "zh-CN",
-    "description": "REGRSLOPE 函数用于计算线性回归方程中的斜率。它返回组内非空值对的单变量线性回归线的斜率。"
+    "description": "REGRSXX 函数用于返回组内非空值对中自变量 (x) 的离差平方和。"
 }
 ---
 
 ## 描述
 
-返回基于组内非空 `(y, x)` 值对计算得到的线性回归线斜率，其中 `x` 为自变量，`y` 为因变量。
+返回自变量 `x` 相对于其均值的离差平方和，基于组内非空 `(y, x)` 值对计算，其中 `x` 为自变量，`y` 为因变量。它等价于 `REGR_COUNT(y, x) * VAR_POP(x)`。
 
 ## 语法
 
 ```sql
-REGR_SLOPE(<y>, <x>)
+REGR_SXX(<y>, <x>)
 ```
 
 ## 参数
@@ -25,7 +25,7 @@ REGR_SLOPE(<y>, <x>)
 
 ## 返回值
 
-返回 Double 类型的值，表示线性回归线的斜率。
+返回 Double 类型的值，表示 `x` 相对于其均值的离差平方和。
 如果组内没有行，或者表达式都为 `NULL`，函数返回 `NULL`。
 
 ## 举例
@@ -51,14 +51,14 @@ INSERT INTO test_regr VALUES
 ```
 
 ```sql
-SELECT id, REGR_SLOPE(y, x) FROM test_regr GROUP BY id ORDER BY id;
+SELECT id, REGR_SXX(y, x) FROM test_regr GROUP BY id ORDER BY id;
 ```
 
 ```text
 +------+---------------------+
-| id   | REGR_SLOPE(y, x)    |
+| id   | REGR_SXX(y, x)      |
 +------+---------------------+
 |    1 |                NULL |
-|    2 |                 2.0 |
+|    2 |                 5.0 |
 +------+---------------------+
 ```

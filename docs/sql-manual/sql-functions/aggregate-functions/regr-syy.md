@@ -1,19 +1,19 @@
 ---
 {
-    "title": "REGR_SLOPE",
+    "title": "REGR_SYY",
     "language": "en",
-    "description": "Returns the slope of the linear regression line for non-null pairs in a group."
+    "description": "Returns the sum of squares of the dependent variable (y) for non-null pairs in a group."
 }
 ---
 
 ## Description
 
-Returns the slope of the linear regression line computed over non-null `(y, x)` pairs in a group, where `x` is the independent variable and `y` is the dependent variable.
+Returns the sum of squared deviations of the dependent variable `y` from its mean, computed over non-null `(y, x)` pairs in a group, where `x` is the independent variable and `y` is the dependent variable. It is equivalent to `REGR_COUNT(y, x) * VAR_POP(y)`.
 
 ## Syntax
 
 ```sql
-REGR_SLOPE(<y>, <x>)
+REGR_SYY(<y>, <x>)
 ```
 
 ## Parameters
@@ -25,7 +25,7 @@ REGR_SLOPE(<y>, <x>)
 
 ## Return Value
 
-Returns a Double value representing the slope of the linear regression line.
+Returns a Double value representing the sum of squared deviations of `y` from its mean.
 If there are no rows in the group, or all rows contain NULLs for the expressions, the function returns `NULL`.
 
 ## Example
@@ -51,14 +51,14 @@ INSERT INTO test_regr VALUES
 ```
 
 ```sql
-SELECT id, REGR_SLOPE(y, x) FROM test_regr GROUP BY id ORDER BY id;
+SELECT id, REGR_SYY(y, x) FROM test_regr GROUP BY id ORDER BY id;
 ```
 
 ```text
-+------+--------------------+
-| id   | REGR_SLOPE(y, x)   |
-+------+--------------------+
-|    1 |               NULL |
-|    2 |                2.0 |
-+------+--------------------+
++------+-----------------+
+| id   | REGR_SYY(y, x) |
++------+-----------------+
+|    1 |            NULL |
+|    2 |            20.0 |
++------+-----------------+
 ```
