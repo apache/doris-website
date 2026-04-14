@@ -60,7 +60,7 @@ SELECT id, REGR_AVGX(y, x) FROM test_regr GROUP BY id ORDER BY id;
 
 ```text
 +------+--------------------+
-| id   | REGR_AVGX(y, x)   |
+| id   | REGR_AVGX(y, x)    |
 +------+--------------------+
 |    1 |               NULL |
 |    2 |                2.5 |

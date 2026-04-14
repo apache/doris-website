@@ -56,7 +56,7 @@ SELECT id, REGR_COUNT(y, x) FROM test_regr GROUP BY id ORDER BY id;
 
 ```text
 +------+-------------------+
-| id   | REGR_COUNT(y, x) |
+| id   | REGR_COUNT(y, x)  |
 +------+-------------------+
 |    1 |                 0 |
 |    2 |                 4 |

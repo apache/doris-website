@@ -8,7 +8,7 @@
 
 ## Description
 
-Returns the slope of the linear regression line computed over non-null `(y, x)` pairs in a group, where `x` is the independent variable and `y` is the dependent variable.
+Returns the slope of the linear regression line computed over non-null `(y, x)` pairs in a group, where `x` is the independent variable and `y` is the dependent variable. It is equivalent to `COVAR_POP(y, x) / VAR_POP(x)`.
 
 ## Syntax
 
@@ -56,7 +56,7 @@ SELECT id, REGR_SLOPE(y, x) FROM test_regr GROUP BY id ORDER BY id;
 
 ```text
 +------+--------------------+
-| id   | REGR_SLOPE(y, x)  |
+| id   | REGR_SLOPE(y, x)   |
 +------+--------------------+
 |    1 |               NULL |
 |    2 |                2.0 |

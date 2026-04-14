@@ -8,7 +8,7 @@
 
 ## Description
 
-Returns the slope of the linear regression line computed over non-null `(y, x)` pairs in a group, where `x` is the independent variable and `y` is the dependent variable.
+Returns the slope of the linear regression line computed over non-null `(y, x)` pairs in a group, where `x` is the independent variable and `y` is the dependent variable. It is equivalent to `COVAR_POP(y, x) / VAR_POP(x)`.
 
 ## Syntax
 

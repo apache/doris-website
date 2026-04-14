@@ -56,7 +56,7 @@ SELECT id, REGR_SXY(y, x) FROM test_regr GROUP BY id ORDER BY id;
 
 ```text
 +------+-----------------+
-| id   | REGR_SXY(y, x) |
+| id   | REGR_SXY(y, x)  |
 +------+-----------------+
 |    1 |            NULL |
 |    2 |            10.0 |

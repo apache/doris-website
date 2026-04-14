@@ -56,7 +56,7 @@ SELECT id, REGR_AVGY(y, x) FROM test_regr GROUP BY id ORDER BY id;
 
 ```text
 +------+------------------+
-| id   | REGR_AVGY(y, x) |
+| id   | REGR_AVGY(y, x)  |
 +------+------------------+
 |    1 |             NULL |
 |    2 |              6.0 |

@@ -63,7 +63,7 @@ SELECT id, REGR_R2(y, x) FROM test_regr GROUP BY id ORDER BY id;
 
 ```text
 +------+---------------------+
-| id   | REGR_R2(y, x)      |
+| id   | REGR_R2(y, x)       |
 +------+---------------------+
 |    1 |                NULL |
 |    2 |                 1.0 |

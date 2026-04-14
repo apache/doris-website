@@ -56,9 +56,9 @@ SELECT id, REGR_INTERCEPT(y, x) FROM test_regr GROUP BY id ORDER BY id;
 
 ```text
 +------+------------------------+
-| id   | REGR_INTERCEPT(y, x)  |
+| id   | REGR_INTERCEPT(y, x)   |
 +------+------------------------+
 |    1 |                   NULL |
-|    2 |                  1.0 |
+|    2 |                    1.0 |
 +------+------------------------+
 ```
