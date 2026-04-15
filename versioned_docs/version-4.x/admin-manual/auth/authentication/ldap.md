@@ -62,6 +62,7 @@ In LDAP, data is organized in a tree structure. Here's an example of a typical L
     ```
 
     > To enable LDAPS (encrypted connection to the LDAP server), see the [LDAPS (Encrypted Connection)](#ldaps-encrypted-connection) section below.
+
 3. After starting `fe`, log in to Doris with `root` or `admin` account and set the LDAP admin password:
 
     ```sql
@@ -139,9 +140,10 @@ LDAP authentication means password verification through LDAP service to suppleme
 
 > Note on Empty Passwords:
 >
-> By default, Doris allows login with an empty password if the user exists in LDAP (`ldap_allow_empty_pass = true`). 
+> By default, in legacy authentication mode Doris allows login with an empty password if the user exists in LDAP (`ldap_allow_empty_pass = true`). 
 > This behavior can be disabled by setting `ldap_allow_empty_pass = false` in `ldap.conf`.
 > With such setting Doris will reject all login attempts with empty password and return an error message.
+> New plugin-based LDAP authentication mode (since 4.1.0) always rejects attempts to login with empty LDAP password despite of value `ldap_allow_empty_pass = true`
 
 ### Login Behavior Overview
 
@@ -316,15 +318,10 @@ You can refresh the cache with the `refresh ldap` statement. See [REFRESH-LDAP](
 
 ## Known Limitations
 
-<<<<<<< HEAD
 - Doris's LDAP functionality only supports cleartext password verification for the client-to-FE segment, meaning that when users log in, passwords are transmitted in plaintext between `client` and `fe`. SSL/TLS encryption between the client and Doris FE must be configured separately (see [Client Connection](#step-2-client-connection)).
 - For the FE-to-LDAP segment, the connection is unencrypted by default (`ldap_use_ssl = false`). To encrypt this segment, set `ldap_use_ssl = true` to use LDAPS (see [LDAPS (Encrypted Connection)](#ldaps-encrypted-connection)).
-=======
-- Currently, Doris's LDAP functionality only supports cleartext password verification, meaning that when users log in, passwords are transmitted in plaintext between `client` and `fe`, but connection between `fe` and LDAP service can be secured optionally.
--   **For `ldap_use_ssl = false` (default behavior)**: Passwords are transmitted in plain text between the Doris FE and the LDAP server.
--   **To secure the connection**: Set `ldap_use_ssl = true` to encrypt traffic between Doris FE and the LDAP server. Note that SSL/TLS encryption between the **client and Doris FE** must be configured separately.
--   **Empty password behavior:** By default, Doris allows login with an empty password if the user exists in LDAP (`ldap_allow_empty_pass = true`). This can be disabled by setting `ldap_allow_empty_pass = false` in `ldap.conf`. 
->>>>>>> a2a830554a (add docs for allow_empty_pass option for 3.x and 4.x versions)
+- **Empty password behavior in legacy LDAP authentication mode:** By default, Doris allows login with an empty password if the user exists in LDAP (`ldap_allow_empty_pass = true`). This can be disabled by setting `ldap_allow_empty_pass = false` in `ldap.conf`. 
+- **Empty password behavior in new plugin-based LDAP authentication:** By default, logins for users with empty LDAP passwords are rejected by LDAP authentication plugin despite of actual value of setting `ldap_allow_empty_pass` in `ldap.conf`. 
 
 ## FAQ
 
