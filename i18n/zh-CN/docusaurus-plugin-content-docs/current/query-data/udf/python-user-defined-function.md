@@ -449,6 +449,8 @@ SELECT py_safe_divide(10.0, NULL);  -- 结果: NULL
 
 :::caution 注意
 为确保系统正确识别向量化模式，请在函数签名中使用类型注解(如 `a: pd.Series`)并在函数逻辑中直接操作批量数据结构。若未明确使用向量化类型，系统将回退到标量模式(Scalar Mode)。
+
+若函数签名同时包含 `pd.Series` 类型与普通类型参数，系统会将普通类型参数对应的输入列按常量列处理（即整批数据复用同一个值），可能导致结果与预期不一致。建议在向量化模式下保持入参风格一致：要么全部使用 `pandas.Series` 类型注解，要么全部使用普通类型参数（标量模式）。
 :::
 
 ```python
@@ -528,6 +530,61 @@ def sqrt(x: pd.Series) -> pd.Series:
 $$;
 
 SELECT py_vec_sqrt(16); -- 结果: 4.0
+```
+
+**示例 4: 函数签名参数类型不一致(同时包含 `pd.Series` 类型与普通类型)**
+```sql
+CREATE TABLE t_bug_013 (
+    id INT,
+    a INT,
+    b INT
+) ENGINE=OLAP
+DUPLICATE KEY(id)
+DISTRIBUTED BY HASH(id) BUCKETS 1
+PROPERTIES ("replication_num" = "1");
+
+INSERT INTO t_bug_013 VALUES
+    (1, 1, 10),
+    (2, 2, 20),
+    (3, 3, 30),
+    (4, 4, NULL),
+    (5, NULL, 50);
+
+DROP FUNCTION IF EXISTS py_mixed_vector_add(INT, INT);
+
+CREATE FUNCTION py_mixed_vector_add(INT, INT)
+RETURNS INT
+PROPERTIES (
+  "type"="PYTHON_UDF",
+  "symbol"="py_mixed_vector_add_impl",
+  "always_nullable"="true",
+  "runtime_version"="3.12.11"
+)
+AS $$
+import pandas as pd
+
+# 建议保持入参风格一致
+def py_mixed_vector_add_impl(x: pd.Series, y: int):
+    return x + y
+$$;
+
+SELECT
+	id
+	a,
+	b,
+	py_mixed_vector_add(a, b) AS vector_val
+FROM t_bug_013
+ORDER BY id;
+-- 将 b 列视为常量列处理
++------+------+------+------------+
+| id   | a    | b    | vector_val |
++------+------+------+------------+
+|    1 |    1 |   10 |         11 |
+|    2 |    2 |   20 |         12 |
+|    3 |    3 |   30 |         13 |
+|    4 |    4 | NULL |         14 |
+|    5 | NULL |   50 |       NULL |
++------+------+------+------------+
 ```
 
 #### 向量化模式的优势
