@@ -96,6 +96,11 @@ Doris 通过[资源机制](../sql-manual/sql-statements/cluster-management/compu
 
 `ai.retry_delay_second`: 可选，重试的延迟时间（秒）。默认值为 0。
 
+:::caution Note
+当前仅支持静态 API Key 方式进行鉴权（通过请求头直接携带凭证）。
+对于需要通过私钥签名并交换临时访问令牌的鉴权机制（如 OAuth / Service Account 等），暂不支持。
+:::
+
 ## 厂商支持
 
 目前直接支持的厂商有：OpenAI、Anthropic、Gemini、DeepSeek、Local、MoonShot、MiniMax、Zhipu、Qwen、Baichuan。

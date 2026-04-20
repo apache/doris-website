@@ -96,6 +96,11 @@ The currently available parameters are as follows:
 
 `ai.retry_delay_second`: Optional, delay time (in seconds) between retries. Default is 0.
 
+:::caution Note
+Currently, only static API Key authentication is supported (credentials are carried directly in request headers).
+Authentication mechanisms that require private-key signing and temporary access token exchange (such as OAuth / Service Account) are not supported yet.
+:::
+
 ## Supported Providers
 
 Currently supported providers include: OpenAI, Anthropic, Gemini, DeepSeek, Local, MoonShot, MiniMax, Zhipu, Qwen, Baichuan.

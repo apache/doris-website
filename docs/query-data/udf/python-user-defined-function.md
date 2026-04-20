@@ -449,6 +449,8 @@ Vectorized mode uses Pandas for batch data processing, offering better performan
 
 :::caution Note
 To ensure the system correctly recognizes vectorized mode, please use type annotations in function signatures (such as `a: pd.Series`) and directly operate on batch data structures in function logic. If vectorized types are not explicitly used, the system will fall back to Scalar Mode.
+
+If a function signature mixes `pd.Series` parameters with regular (non-Series) parameters, Doris treats the regular-parameter input columns as constant columns (that is, one value is reused for the whole batch), which may produce results different from expectations. To avoid this, keep parameter styles consistent in vectorized scenarios: either all parameters use `pandas.Series` annotations, or all parameters are regular scalar parameters (Scalar Mode).
 :::
 
 ```python
@@ -528,6 +530,61 @@ def sqrt(x: pd.Series) -> pd.Series:
 $$;
 
 SELECT py_vec_sqrt(16); -- Result: 4.0
+```
+
+**Example 4: Function signature parameter types are inconsistent(mixes `pd.Series` parameters with regular (non-Series) parameters)**
+```sql
+CREATE TABLE t_bug_013 (
+    id INT,
+    a INT,
+    b INT
+) ENGINE=OLAP
+DUPLICATE KEY(id)
+DISTRIBUTED BY HASH(id) BUCKETS 1
+PROPERTIES ("replication_num" = "1");
+
+INSERT INTO t_bug_013 VALUES
+    (1, 1, 10),
+    (2, 2, 20),
+    (3, 3, 30),
+    (4, 4, NULL),
+    (5, NULL, 50);
+
+DROP FUNCTION IF EXISTS py_mixed_vector_add(INT, INT);
+
+CREATE FUNCTION py_mixed_vector_add(INT, INT)
+RETURNS INT
+PROPERTIES (
+  "type"="PYTHON_UDF",
+  "symbol"="py_mixed_vector_add_impl",
+  "always_nullable"="true",
+  "runtime_version"="3.12.11"
+)
+AS $$
+import pandas as pd
+
+# Suggest to maintain consistent parameter style
+def py_mixed_vector_add_impl(x: pd.Series, y: int):
+    return x + y
+$$;
+
+SELECT
+	id
+	a,
+	b,
+	py_mixed_vector_add(a, b) AS vector_val
+FROM t_bug_013
+ORDER BY id;
+-- treat column b as a constant column
++------+------+------+------------+
+| id   | a    | b    | vector_val |
++------+------+------+------------+
+|    1 |    1 |   10 |         11 |
+|    2 |    2 |   20 |         12 |
+|    3 |    3 |   30 |         13 |
+|    4 |    4 | NULL |         14 |
+|    5 | NULL |   50 |       NULL |
++------+------+------+------------+
 ```
 
 #### Advantages of Vectorized Mode
