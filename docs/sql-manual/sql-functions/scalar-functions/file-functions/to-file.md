@@ -44,6 +44,7 @@ For each input, the function:
 
 ```sql
 TO_FILE(url, region, endpoint, ak, sk)
+TO_FILE(url, region, endpoint, ak, sk, role_arn, external_id)
 ```
 
 ## Parameters
@@ -55,6 +56,8 @@ TO_FILE(url, region, endpoint, ak, sk)
 | **endpoint** | VARCHAR | The object storage service endpoint URL (e.g., `https://s3.us-east-1.amazonaws.com`). The `http://` prefix will be added automatically if missing |
 | **ak** | VARCHAR | The access key for authentication |
 | **sk** | VARCHAR | The secret key for authentication |
+| **role_arn** | VARCHAR | authentication of role arn |
+| **external_id** | VARCHAR | authentication of external id |
 
 ## Return Value
 
@@ -68,6 +71,8 @@ Returns a value of [FILE](../../../basic-element/sql-data-types/semi-structured/
 - `endpoint`: Normalized endpoint URL
 - `ak`: Access key
 - `sk`: Secret key
+- `role_arn`: IAM Role
+- `external_id`: external id
 
 Returns NULL if any input parameter is NULL (propagates nullability).
 
@@ -94,6 +99,31 @@ SELECT to_file(
 |  "region":"us-east-1","endpoint":"https://s3.us-east-1.      |
 |  amazonaws.com","ak":"AKIA...","sk":"wJa...",                |
 |  "role_arn":null,"external_id":null}                         |
++--------------------------------------------------------------+
+```
+
+```sql
+SELECT to_file(
+    's3://my-bucket/data/report.csv',
+    'us-east-1',
+    'https://s3.us-east-1.amazonaws.com',
+    '',
+    '',
+    'arn:aws:iam::447051187841:role/lzq-role-test',
+    '1001'
+);
+```
+
+```text
++--------------------------------------------------------------+
+| to_file(...)                                                 |
++--------------------------------------------------------------+
+| {"uri":"s3://my-bucket/data/report.csv","file_name":         |
+|  "report.csv","content_type":"text/csv","size":1024000,      |
+|  "region":"us-east-1","endpoint":"https://s3.us-east-1.      |
+|  amazonaws.com","ak":null,"sk":null,                         |
+|  "role_arn":"arn:aws:iam::447051187841:role/lzq-role-test",  |
+|  "external_id":"1001"}                                       |
 +--------------------------------------------------------------+
 ```
 

@@ -38,6 +38,7 @@ under the License.
 
 ```sql
 TO_FILE(url, region, endpoint, ak, sk)
+TO_FILE(url, region, endpoint, ak, sk, role_arn, external_id)
 ```
 
 ## 参数
@@ -49,6 +50,8 @@ TO_FILE(url, region, endpoint, ak, sk)
 | **endpoint** | VARCHAR | 对象存储服务端点 URL（如 `https://s3.us-east-1.amazonaws.com`）。如果缺少 `http://` 前缀会自动添加 |
 | **ak** | VARCHAR | 认证访问密钥 |
 | **sk** | VARCHAR | 认证密钥 |
+| **role_arn** | VARCHAR | 认证访问role arn |
+| **external_id** | VARCHAR | 认证访问external id |
 
 ## 返回值
 
@@ -62,6 +65,8 @@ TO_FILE(url, region, endpoint, ak, sk)
 - `endpoint`：规范化的端点 URL
 - `ak`：访问密钥
 - `sk`：密钥
+- `role_arn`: IAM Role
+- `external_id`: external id
 
 如果任何输入参数为 NULL，则返回 NULL。
 
@@ -88,6 +93,31 @@ SELECT to_file(
 |  "region":"us-east-1","endpoint":"https://s3.us-east-1.      |
 |  amazonaws.com","ak":"AKIA...","sk":"wJa...",                |
 |  "role_arn":null,"external_id":null}                         |
++--------------------------------------------------------------+
+```
+
+```sql
+SELECT to_file(
+    's3://my-bucket/data/report.csv',
+    'us-east-1',
+    'https://s3.us-east-1.amazonaws.com',
+    '',
+    '',
+    'arn:aws:iam::447051187841:role/lzq-role-test',
+    '1001'
+);
+```
+
+```text
++--------------------------------------------------------------+
+| to_file(...)                                                 |
++--------------------------------------------------------------+
+| {"uri":"s3://my-bucket/data/report.csv","file_name":         |
+|  "report.csv","content_type":"text/csv","size":1024000,      |
+|  "region":"us-east-1","endpoint":"https://s3.us-east-1.      |
+|  amazonaws.com","ak":null,"sk":null,                         |
+|  "role_arn":"arn:aws:iam::447051187841:role/lzq-role-test",  |
+|  "external_id":"1001"}                                       |
 +--------------------------------------------------------------+
 ```
 
