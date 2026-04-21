@@ -3,6 +3,13 @@
         "all-release",
         {
             "type": "category",
+            "label": "v4.1",
+            "items": [
+                "v4.1/release-4.1.0"
+            ]
+        },
+        {
+            "type": "category",
             "label": "v4.0",
             "items": [
                 "v4.0/release-4.0.5",
