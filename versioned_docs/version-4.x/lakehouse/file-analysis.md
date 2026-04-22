@@ -19,6 +19,15 @@ Doris provides the following TVFs for accessing different storage systems:
 | [HTTP](../sql-manual/sql-functions/table-valued-functions/http.md) | HTTP | Supports accessing files from HTTP addresses (since version 4.0.2) |
 | [FILE](../sql-manual/sql-functions/table-valued-functions/file.md) | S3/HDFS/HTTP/Local | Unified table function supporting multiple storage types (since version 3.1.0) |
 
+## Supported File Formats
+
+TVF supports reading and analyzing the following file formats. Click the links for format-specific details and parameters:
+
+- [Parquet](./file-formats/parquet.md)
+- [ORC](./file-formats/orc.md)
+- [Text / CSV / JSON](./file-formats/text.md)
+- [Lance](./file-formats/lance.md) (experimental, since version 5.0.0)
+
 ## Use Cases
 
 ### Scenario 1: Direct Query and Analysis of Files
