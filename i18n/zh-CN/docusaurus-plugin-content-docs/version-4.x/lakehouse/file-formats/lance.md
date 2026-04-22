@@ -45,7 +45,7 @@ my_dataset.lance/
     └── ...
 ```
 
-通过 TVF 查询时，`uri` / `file_path` 需要指向数据集目录下 `data/` 子目录中的某一个 `.lance` 数据文件。Doris 会自动从该路径中解析出数据集根目录，并读取整个数据集的所有 Fragment。
+通过 TVF 查询时，`uri` / `file_path` 应当匹配数据集目录下 `data/` 子目录中的一个或多个 `.lance` 数据文件。每个 Scan Range 会精确读取一个 Fragment，Doris 会自动从匹配到的路径中解析出数据集根目录。若要读取整个多 Fragment 数据集，请使用类似 `data/*.lance` 的通配符，使每个 Fragment 文件都被分配到独立的 Scan Range 上。由于真实 Lance 数据集的 Fragment 文件通常以 UUID 命名，使用通配符也是最自然的引用方式。
 
 ## 使用示例
 
@@ -53,7 +53,7 @@ my_dataset.lance/
 
 ```sql
 SELECT * FROM s3(
-    "uri" = "s3://bucket/path/to/my_dataset.lance/data/fragment.lance",
+    "uri" = "s3://bucket/path/to/my_dataset.lance/data/*.lance",
     "format" = "lance",
     "s3.access_key" = "ak",
     "s3.secret_key" = "sk",
@@ -67,7 +67,7 @@ SELECT * FROM s3(
 ```sql
 -- 可通过 SHOW BACKENDS; 获取 backend_id
 SELECT * FROM local(
-    "file_path" = "data/my_dataset.lance/data/fragment.lance",
+    "file_path" = "data/my_dataset.lance/data/*.lance",
     "backend_id" = "<backend_id>",
     "format" = "lance"
 ) ORDER BY id LIMIT 10;
@@ -77,7 +77,7 @@ SELECT * FROM local(
 
 ```sql
 SELECT count(*), min(id), max(id) FROM s3(
-    "uri" = "s3://bucket/path/to/large.lance/data/fragment.lance",
+    "uri" = "s3://bucket/path/to/large.lance/data/*.lance",
     "format" = "lance",
     "s3.access_key" = "ak",
     "s3.secret_key" = "sk",
@@ -89,7 +89,6 @@ SELECT count(*), min(id), max(id) FROM s3(
 ## 使用限制
 
 - **仅支持 TVF 方式**：当前仅支持通过 `s3` 和 `local` TVF 读取，尚不支持 `CREATE CATALOG`。
-- **单次匹配单个数据文件**：`file_path` / `uri` 必须精确匹配到数据集中的一个 `.lance` 数据文件。如果通配符匹配到同一数据集中多个 `.lance` 文件，会导致重复打开整个数据集，产生重复数据。
 - **不支持 Data Cache**：Lance 读取不会经过 Doris `BlockFileCache`，S3 数据不会缓存到本地磁盘。
 - **不支持谓词 / 向量下推**：`WHERE` 过滤、向量检索、全文检索等条件不会下推到 Lance Reader。
 - **只读**：暂不支持通过 `OUTFILE`、`EXPORT` 或 `INSERT INTO` TVF 写入 Lance 文件。

@@ -45,7 +45,7 @@ my_dataset.lance/
     └── ...
 ```
 
-When querying via TVF, the `uri` / `file_path` must point to a single `.lance` data file inside the `data/` subdirectory of the dataset. Doris automatically resolves the dataset root from this path and reads all fragments belonging to the dataset.
+When querying via TVF, the `uri` / `file_path` should match one or more `.lance` data files inside the `data/` subdirectory of the dataset. Each scan range reads exactly one fragment, and Doris automatically resolves the dataset root from the matched path. To read an entire multi-fragment dataset, use a glob such as `data/*.lance` so that every fragment file is assigned to its own scan range. In practice, real Lance datasets use UUID-named fragment files, so globbing is the natural way to reference them.
 
 ## Usage Examples
 
@@ -53,7 +53,7 @@ When querying via TVF, the `uri` / `file_path` must point to a single `.lance` d
 
 ```sql
 SELECT * FROM s3(
-    "uri" = "s3://bucket/path/to/my_dataset.lance/data/fragment.lance",
+    "uri" = "s3://bucket/path/to/my_dataset.lance/data/*.lance",
     "format" = "lance",
     "s3.access_key" = "ak",
     "s3.secret_key" = "sk",
@@ -67,7 +67,7 @@ SELECT * FROM s3(
 ```sql
 -- Get backend_id via: SHOW BACKENDS;
 SELECT * FROM local(
-    "file_path" = "data/my_dataset.lance/data/fragment.lance",
+    "file_path" = "data/my_dataset.lance/data/*.lance",
     "backend_id" = "<backend_id>",
     "format" = "lance"
 ) ORDER BY id LIMIT 10;
@@ -77,7 +77,7 @@ SELECT * FROM local(
 
 ```sql
 SELECT count(*), min(id), max(id) FROM s3(
-    "uri" = "s3://bucket/path/to/large.lance/data/fragment.lance",
+    "uri" = "s3://bucket/path/to/large.lance/data/*.lance",
     "format" = "lance",
     "s3.access_key" = "ak",
     "s3.secret_key" = "sk",
@@ -89,7 +89,6 @@ SELECT count(*), min(id), max(id) FROM s3(
 ## Limitations
 
 - **TVF only**: Only the `s3` and `local` TVFs are supported. `CREATE CATALOG` is not supported yet.
-- **Single data file per glob**: The `file_path` / `uri` must match exactly one `.lance` data file per dataset. If a glob matches multiple `.lance` files within the same multi-fragment dataset, each scan range will reopen the full dataset and produce duplicate rows.
 - **No data cache**: Lance reads bypass Doris's `BlockFileCache`; S3 reads are not cached on the local disk.
 - **No predicate / vector pushdown**: `WHERE` filters, vector search, and full-text search are not pushed down to the Lance reader.
 - **Read-only**: Writing Lance files via `OUTFILE`, `EXPORT`, or `INSERT INTO` TVF is not supported.
