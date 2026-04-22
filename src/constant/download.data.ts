@@ -31,8 +31,8 @@ export enum ToolsEnum {
 export const ORIGIN = 'https://download.selectdb.com/';
 export enum VersionEnum {
     Latest = '4.1.0',
-    Prev = '3.1.4',
-    Earlier = '3.0.8',
+    Prev = '4.0.5',
+    Earlier = '3.1.4',
 }
 
 export enum DownloadTypeEnum {
