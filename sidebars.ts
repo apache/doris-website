@@ -479,6 +479,7 @@ const sidebars: SidebarsConfig = {
                                 'lakehouse/file-formats/parquet',
                                 'lakehouse/file-formats/orc',
                                 'lakehouse/file-formats/text',
+                                'lakehouse/file-formats/lance',
                             ],
                         },
                         'lakehouse/data-cache',
