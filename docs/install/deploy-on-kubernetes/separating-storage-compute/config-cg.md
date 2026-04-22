@@ -139,7 +139,7 @@ spec:
 2. Deploy the ConfigMap
    Use the following command to deploy the custom ConfigMap containing the startup configuration to the Kubernetes cluster:
     ```yaml
-    kubectl -n ${namespace} -f ${beConfigMapFileName}.yaml
+    kubectl apply -n ${namespace} -f ${beConfigMapFileName}.yaml
     ```
    Here, `${namespace}` is the namespace where the `DorisDisaggregatedCluster` is deployed, and `${beConfigMapFileName}` is the name of the file containing the custom ConfigMap.
 

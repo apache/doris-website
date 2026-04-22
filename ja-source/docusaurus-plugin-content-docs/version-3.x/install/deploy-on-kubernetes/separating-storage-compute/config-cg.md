@@ -145,7 +145,7 @@ spec:
     以下のコマンドを使用して、スタートアップ設定を含むカスタムConfigMapをKubernetesクラスターにデプロイします：
 
     ```yaml
-    kubectl -n ${namespace} -f ${beConfigMapFileName}.yaml
+    kubectl apply -n ${namespace} -f ${beConfigMapFileName}.yaml
     ```
 ここで、`${namespace}` は `DorisDisaggregatedCluster` がデプロイされる名前空間であり、`${beConfigMapFileName}` はカスタム ConfigMap を含むファイルの名前です。
 
