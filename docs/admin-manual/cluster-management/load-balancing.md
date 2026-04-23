@@ -121,7 +121,229 @@ mysql> show databases;
 2 rows in set (0.00 sec)
 ```
 
-### 03 HAProxy
+### 03 NJet
+
+You can use [NJet](https://docs.njet.org.cn/) to keep an Nginx-like experience while gaining enhanced features such as dynamic management and health checks. The following example also uses `192.168.1.100` as the proxy node and `192.168.1.101/102/103`.
+
+#### Install NJet
+
+Please refer to the official NJet installation guide: https://docs.njet.org.cn/docs/v4.0.0/guide/install/index.html. Below are example installation steps for Docker and Ubuntu.
+
+1. Docker
+
+```shell
+## Pull NJET image
+docker pull tmlake/njet:latest
+
+## Run NJET
+docker run -d --rm --privileged tmlake/njet:latest
+```
+
+2. Ubuntu
+
+```shell
+## Prepare repo
+sudo apt-get update
+sudo apt-get install ca-certificates curl gnupg
+sudo install -m 0755 -d /etc/apt/keyrings
+curl -fsSL https://njet.org.cn/download/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/njet.gpg
+sudo chmod a+r /etc/apt/keyrings/njet.gpg
+
+## Add APT source
+echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/njet.gpg] https://njet.org.cn/download/linux/ubuntu $(. /etc/os-release && echo \"$VERSION_CODENAME\") stable" | sudo tee /etc/apt/sources.list.d/njet.list > /dev/null
+sudo apt-get update
+
+## Install and start
+sudo apt-get install njet
+sudo systemctl start njet
+```
+
+#### Initial NJet configuration
+
+`njet.conf` example:
+
+```text
+events {
+        worker_connections 1024;
+}
+stream {
+    upstream mysqld {
+        hash $remote_addr consistent;
+        server 192.168.1.101:9030 weight=1 max_fails=2 fail_timeout=60s;
+        server 192.168.1.102:9030 weight=1 max_fails=2 fail_timeout=60s;
+        server 192.168.1.103:9030 weight=1 max_fails=2 fail_timeout=60s;
+    }
+    server {
+        # Proxy port
+        listen 6030;
+        proxy_connect_timeout 300s;
+        proxy_timeout 300s;
+        proxy_pass mysqld;
+    }
+}
+```
+
+#### Dynamic upstream member management
+
+OpenNJet provides HTTP APIs to dynamically add/remove upstream members. To enable this you need to enable related modules on both data plane and control plane.
+
+Data plane `njet.conf` example:
+
+```text
+helper broker modules/njt_helper_broker_module.so conf/mqtt.conf;
+helper ctrl modules/njt_helper_ctrl_module.so conf/ctrl.conf;
+load_module modules/njt_http_upstream_member_module.so;
+
+stream {
+    upstream mysqld {
+        zone mysqld 16k; # shared memory required
+        hash $remote_addr consistent;
+        server 192.168.1.101:9030 weight=1 max_fails=2 fail_timeout=60s;
+        server 192.168.1.102:9030 weight=1 max_fails=2 fail_timeout=60s;
+        server 192.168.1.103:9030 weight=1 max_fails=2 fail_timeout=60s;
+    }
+    server {
+        listen 6030;
+        proxy_connect_timeout 300s;
+        proxy_timeout 300s;
+        proxy_pass mysqld;
+    }
+}
+```
+
+Control plane `njet_ctrl.conf` example:
+
+```text
+load_module modules/njt_http_sendmsg_module.so;
+load_module modules/njt_http_upstream_api_module.so;
+load_module modules/njt_helper_health_check_module.so;
+
+http {
+    server {
+        listen 8081;
+        location /api {
+            dyn_module_api;
+        }
+    }
+}
+```
+
+##### Add an upstream member
+
+When you add a new FE node (for example `192.168.1.104:9030`), you can add it via API. OpenNJet will assign an ID to the newly added server which can be used for later queries, removal, or update.
+
+POST URL: `POST http://{ip}:8081/api/v1/upstream_api/stream/upstreams/{upstream_name}/servers/`
+
+```bash
+curl -X POST http://127.0.0.1:8081/api/v1/upstream_api/stream/upstreams/mysqld/servers/ -d '{
+    "server": "192.168.1.104:9030",
+    "weight": 2,
+    "max_conns": 2,
+    "max_fails": 1,
+    "fail_timeout": "5s",
+    "slow_start": "5s",
+    "route": "",
+    "backup": false,
+    "down": false
+}'
+```
+
+##### Remove an upstream member
+
+DELETE URL: `DELETE http://{ip}:8081/api/v1/upstream_api/stream/upstreams/{upstream_name}/servers/{id}`
+
+```bash
+curl -X DELETE http://127.0.0.1:8081/api/v1/upstream_api/stream/upstreams/mysqld/servers/3
+```
+
+#### Configure active health checks
+
+Active health checks are enabled by default; you can configure them via `http://{ip}:8081/api/v1/hc/smysql/{upstream}`:
+
+```bash
+curl -X 'POST' \
+    'http://127.0.0.1:8081/api/v1/hc/smysql/mysqld' \
+    -H 'accept: application/json' \
+    -H 'Content-Type: application/json' \
+    -d '{
+    "interval": "5s",
+    "jitter": "1s",
+    "timeout": "5s",
+    "passes": 1,
+    "fails": 1,
+    "sql": {
+        "select": "select 1",
+        "useSsl": true,
+        "user": "root",
+        "password": "123456",
+        "db": "db"
+    }
+}'
+```
+
+Field notes:
+
+- `interval`: required, health check frequency.
+- `visit_interval`: optional, if the server has been accessed by clients within this interval, skip the health check; `interval` should be greater than `visit_interval`.
+- `jitter`: required, maximum timer jitter for the health check to avoid synchronized checks.
+- `timeout`: required, timeout for the health check.
+- `passes`: required, number of consecutive successful checks to mark server healthy.
+- `fails`: required, number of consecutive failures to mark server unhealthy.
+- `port`: optional, override the port used for health checks; if omitted, the upstream server port is used.
+- `sql`: contains `select/useSsl/user/password/db` fields; `db` is required.
+
+#### JSON configuration support
+
+NJet supports JSON configuration which is helpful for automation. Convert `njet.conf` to `njet.json` and load it with `njet -c conf/njet.json`.
+
+```json
+[
+    {
+        "cmd": "events",
+        "args": [],
+        "block": [
+            {
+                "cmd": "worker_connections",
+                "args": ["1024"]
+            }
+        ]
+    },
+    {
+        "cmd": "stream",
+        "args": [],
+        "block": [
+            {
+                "cmd": "upstream",
+                "args": ["mysqld"],
+                "block": [
+                    {"cmd": "hash", "args": ["$remote_addr", "consistent"]},
+                    {"cmd": "server", "args": ["192.168.1.101:9030", "weight=1", "max_fails=2", "fail_timeout=60s"]},
+                    {"cmd": "server", "args": ["192.168.1.102:9030", "weight=1", "max_fails=2", "fail_timeout=60s"]},
+                    {"cmd": "server", "args": ["192.168.1.103:9030", "weight=1", "max_fails=2", "fail_timeout=60s"]}
+                ]
+            },
+            {
+                "cmd": "server",
+                "args": [],
+                "block": [
+                    {"cmd": "listen", "args": ["6030"]},
+                    {"cmd": "proxy_connect_timeout", "args": ["300s"]},
+                    {"cmd": "proxy_timeout", "args": ["300s"]},
+                    {"cmd": "proxy_pass", "args": ["mysqld"]}
+                ]
+            }
+        ]
+    }
+]
+```
+
+More references:
+
+- OpenNJet installation: https://docs.njet.org.cn/docs/v4.0.0/guide/install/index.html
+- Health check details: https://docs.njet.org.cn/docs/v4.0.0/reference/upstream/health_check/mysql_health_check/index.html
+- Upstream API: https://docs.njet.org.cn/docs/v4.0.0/reference/upstream/upstream_api/index.html
+
+### 04 HAProxy
 
 [HAProxy](https://www.haproxy.org/) is a high-performance TCP/HTTP load balancer written in C language.
 
@@ -244,7 +466,7 @@ mysql> show databases;
 
 `mysql -h 192.168.1.100 -uroot -P6030 -p`
 
-### 04 ProxySQL
+### 05 ProxySQL
 
 [ProxySQL](https://proxysql.com/) is an open-source MySQL database proxy software written in C language. It can implement connection management, read-write splitting, load balancing, failover, and other functions. It has advantages such as high performance, configurability, and dynamic management, and is commonly used in Web services, big data platforms, cloud databases, and other scenarios.
 
