@@ -49,7 +49,7 @@ PROPERTIES (
   "replication_num" = "1"
 );
 ```
-- index_type: 可选 `hnsw`（[Hierarchical Navigable Small World 算法](https://en.wikipedia.org/wiki/Hierarchical_navigable_small_world)）、`ivf`（倒排文件索引）或 `ivf_on_disk`（倒排列表落盘并通过缓存提供查询能力的 IVF）
+- index_type: 可选 `hnsw`（[Hierarchical Navigable Small World 算法](https://en.wikipedia.org/wiki/Hierarchical_navigable_small_world)）、`ivf`（倒排文件索引）、`ivf_on_disk`（倒排列表落盘并通过缓存提供查询能力的 IVF）或 `pq_on_disk`（将 PQ 编码向量落盘、用于过滤后向量重排加速）
 - metric_type: l2_distance 表示使用 L2 距离作为距离函数
 - dim: 128 表示向量维度为 128 
 - quantizer: flat 表示按原始 float32 存储各维度
@@ -57,15 +57,15 @@ PROPERTIES (
 
 | 参数 | 是否必填 | 支持/可选值 | 默认值 | 说明 |
 |------|----------|-------------|--------|------|
-| `index_type` | 是 | 支持：`hnsw`、`ivf`、`ivf_on_disk` | （无） | 指定所使用的 ANN 索引算法。当前支持 HNSW、内存 IVF 和 IVF On-Disk。 |
+| `index_type` | 是 | 支持：`hnsw`、`ivf`、`ivf_on_disk`、`pq_on_disk` | （无） | 指定所使用的 ANN 索引算法。当前支持 HNSW、内存 IVF、IVF On-Disk，以及面向高选择性过滤后重排的 PQ On-Disk。 |
 | `metric_type` | 是 | `l2_distance`，`inner_product` | （无） | 指定向量相似度/距离度量方式。L2 为欧氏距离，inner_product 可用于余弦相似时需先归一化向量。 |
 | `dim` | 是 | 正整数 (> 0) | （无） | 指定向量维度，后续导入的所有向量的维度必须与此一致，否则报错。 |
 | `nlist` | 否 | 正整数 | `1024` | IVF 的倒排桶数量。在 `index_type=ivf` 或 `index_type=ivf_on_disk` 时生效；取值越大通常有助于召回率/速度权衡，但会增加构建开销。 |
 | `max_degree` | 否 | 正整数 | `32` | HNSW 图中单个节点的最大邻居数（M），影响索引内存与搜索性能。 |
 | `ef_construction` | 否 | 正整数 | `40` | HNSW 构建阶段的候选队列大小（efConstruction），越大构图质量越好但构建更慢。 |
 | `quantizer` | 否 | `flat`，`sq8`，`sq4`, `pq` | `flat` | 指定向量编码/量化方式：`flat` 为原始存储，`sq8`/`sq4` 为标量量化（8/4 bit）, `pq` 为乘积量化。 |
-| `pq_m` | 'quantizer=pq' 时需要指定 | 正整数 | （无） | 指定将原始的高维向量分割成多少个子向量(向量维度 dim 必须能被 pq_m 整除)。 |
-| `pq_nbits` | 'quantizer=pq' 时需要指定 | 正整数 | （无） | 指定每个子向量量化的比特数, 它决定了每个子空间码本的大小(k = 2 ^ pq_nbits), 在faiss中pq_nbits值一般要求不大于24。 |
+| `pq_m` | `quantizer=pq` 或 `index_type=pq_on_disk` 时需要指定 | 正整数 | （无） | 指定将原始的高维向量分割成多少个子向量，向量维度 `dim` 必须能被 `pq_m` 整除。 |
+| `pq_nbits` | `quantizer=pq` 时需要指定；`index_type=pq_on_disk` 时可选 | 正整数 | `pq_on_disk` 默认 `8` | 指定每个子向量量化的比特数。它决定了每个子空间码本的大小（k = 2 ^ pq_nbits），在 Faiss 中一般要求不大于 24。 |
 
 ## 如果业务需要使用 Cosine 相似度
 
@@ -292,6 +292,8 @@ PROPERTIES (
 | Cohere-LARGE-10M | 768D | Doris SQ INT8   | 35.016 GB (25.329 + 9.687) | 25.329 GB | 9.687 GB | INT8 量化，索引显著减小 |
 
 量化会带来额外构建开销，原因是构建阶段需要大量距离计算，且每次计算需对量化值解码。以 128 维向量为例，随行数增长构建时间上升，SQ 相比 FLAT 可能引入约 10 倍构建成本。
+
+对于以 `tenant_id = ?`、`user_id = ?` 等高选择性过滤为主的查询，Doris 还提供了 [`pq_on_disk`](./pq-on-disk.md)。它不像 HNSW / IVF 那样构建面向全局召回的结构，而是通过磁盘上的 PQ 编码向量，加速过滤后候选集上的向量重排。这使它在多租户向量检索场景下尤其有价值：当一个 segment 中混合了多个租户的数据时，全局 ANN 结构在指定租户后可能召回下降，而 `pq_on_disk` 更适合这种“先过滤、后重排”的模式。
 
 类似的, Doris也支持乘积量化, 不过需要注意的是在使用PQ时需要提供额外的参数:
 
