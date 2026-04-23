@@ -2,7 +2,7 @@
 {
     "title": "PQ On-Disk",
     "language": "zh-CN",
-    "description": "PQ On-Disk 是 Apache Doris 面向过滤后小候选集向量重排场景提供的 ANN 索引形态，通过将 PQ codes 存储在磁盘并配合专用 chunk cache，在低内存占用下实现更高效的近似重排。"
+    "description": "PQ On-Disk 是 Apache Doris 面向过滤优先向量检索场景提供的向量索引形态，特别适用于多租户检索：通过在过滤后的候选集上使用 PQ 编码向量加速暴力距离计算，在较低内存占用下获得更稳定的效果。"
 }
 ---
 
@@ -27,41 +27,132 @@ under the License.
 
 # Apache Doris 中的 PQ On-Disk
 
-`pq_on_disk` 是 Doris 面向过滤后小候选集重排场景提供的 ANN 索引类型。它将 PQ codes 按 rowid 顺序存储在磁盘上，只将 PQ codebook 常驻内存，并仅对已经通过标量过滤的候选行计算近似距离。
+:::note
+此功能依赖开发版本待合入实现 apache/doris#61986，当前已发布的 4.x 版本不支持。
+:::
 
-与 `ivf`、`ivf_on_disk` 不同，`pq_on_disk` 不是一个面向全局召回的 ANN 结构。它更适合这类查询：`WHERE user_id = ? ORDER BY l2_distance_approximate(...) LIMIT N`。也就是先用过滤条件把候选集缩小，再对这个较小的候选集做快速近似向量重排。
+`pq_on_disk` 是 Apache Doris 面向**过滤优先（filter-first）向量检索**场景提供的一种向量索引模式。它将 Product Quantization（PQ）编码后的向量存储在磁盘上，仅将 PQ codebook 和热点 chunk 保留在内存中，并在标量过滤完成后，利用压缩后的向量加速过滤结果上的暴力距离计算。
 
-## 为什么需要 PQ On-Disk
+这个特性尤其适合**多租户向量检索**。在很多 SaaS 类业务中，不同租户的向量会被写入同一个 segment。如果直接在这些混合数据上构建全局 `hnsw` 或 `ivf` 索引，再执行 `WHERE tenant_id = ?` 这类查询，召回率往往会明显下降，因为全局召回结构是基于所有租户的混合数据构建的，而不是针对某一个租户的局部子集。`pq_on_disk` 不依赖这样的全局跨租户召回结构，而是先按租户过滤，再在过滤后的子集上通过 PQ 编码向量加速排序，因此更适合多租户场景。
 
-有些向量检索场景并不需要 ANN 在整个 segment 上做全局搜索，而是先通过 `user_id`、`tag` 或倒排索引等普通过滤条件把候选行缩小到较小范围，然后才需要在这个过滤后的子集内做 Top-N 向量排序。
+## 适用场景
 
-`pq_on_disk` 就是为这种工作模式设计的：
+当查询模式通常是下面这样时，优先考虑 `pq_on_disk`：
 
-- 面向过滤后的候选集，典型规模是几千到几万行。
-- 通过将 PQ codes 存储在磁盘上，降低常驻内存占用。
-- 继续复用 Doris 现有的 SQL 距离函数和 ANN DDL。
-- 当候选集已经比较明确时，避免维护全局 IVF 或图结构带来的额外开销。
+```sql
+WHERE <高选择性过滤条件>
+ORDER BY l2_distance_approximate(...) LIMIT N
+```
 
-## 对用户的价值
+常见例子包括：
 
-与 Doris 中其他 ANN 索引相比，`pq_on_disk` 解决的是另一类问题：
+- `WHERE tenant_id = ?`
+- `WHERE user_id = ?`
+- `WHERE category_id = ? AND status = 'active'`
+- `WHERE tag MATCH_ANY '...'
+  ORDER BY l2_distance_approximate(...) LIMIT N`
 
-- `hnsw` 和 `ivf` 更适合在大规模向量集合上做全局 ANN 召回。
-- `ivf_on_disk` 保留 IVF 的召回模型，只是把 IVF list 主体放到磁盘以节省内存。
-- `pq_on_disk` 则聚焦在过滤后小候选集上的近似重排。
+这和全局 ANN 的目标不同：
 
-它适合以下场景：
+- `hnsw` 和 `ivf` 更适合在大规模向量集合上做**全局 ANN 召回**。
+- `ivf_on_disk` 仍然保留 IVF 的全局召回模型，只是将主要索引数据落盘以降低内存压力。
+- `pq_on_disk` 聚焦的是**过滤后子集上的向量重排**，即候选集已经被普通谓词显著缩小，Doris 只需要更快地对这些候选行做向量打分。
 
-- 查询几乎总是带有高选择性的标量过滤条件。
-- 相同过滤键对应的行具有较好的物理局部性。
-- 即使候选集已经被过滤缩小，暴力计算距离仍然开销较大。
-- 希望比内存型 ANN 结构有更低的常驻内存占用。
+## 为什么它适合多租户检索
+
+假设一个 segment 中混合存储了 10,000 个租户的向量。如果在这些数据上构建全局 HNSW 或 IVF 索引，而查询是：
+
+```sql
+SELECT doc_id
+FROM tenant_embeddings
+WHERE tenant_id = 10001
+ORDER BY l2_distance_approximate(embedding, <query_vector>)
+LIMIT 20;
+```
+
+这个查询只关心某一个租户的数据，但全局 ANN 结构的训练、聚类或图连接都基于所有租户的混合向量。对于“全局召回”有效的图路径、邻接关系或 IVF 分桶，并不一定适合“租户过滤之后”的局部召回，因此很容易出现指定租户后召回率下降的问题。
+
+`pq_on_disk` 的处理方式不同：
+
+1. Doris 先执行 `tenant_id = 10001` 这样的标量过滤。
+2. 得到该租户对应的候选集。
+3. 不再依赖全局 ANN 结构在这个子集内做召回，而是使用 PQ 编码向量更快地计算这些候选行的距离。
+4. PQ code 按 rowid 顺序存储在磁盘，并通过专用 chunk cache 做复用。
+
+因此，当满足以下条件时，`pq_on_disk` 往往比全局 ANN 结构更合适：
+
+- 过滤条件具有高选择性；
+- 租户过滤后的召回稳定性比全局 ANN 更重要；
+- 原始 float32 向量上的暴力距离计算仍然代价较高。
+
+## 快速开始
+
+### 建表
+
+下面的例子使用 `tenant_id` 作为主过滤列：
+
+```sql
+CREATE TABLE tenant_embeddings (
+  tenant_id BIGINT NOT NULL,
+  doc_id BIGINT NOT NULL,
+  embedding ARRAY<FLOAT> NOT NULL,
+  INDEX idx_embedding (embedding) USING ANN PROPERTIES (
+    "index_type" = "pq_on_disk",
+    "metric_type" = "l2_distance",
+    "dim" = "768",
+    "pq_m" = "96",
+    "pq_nbits" = "8"
+  )
+) ENGINE=OLAP
+DUPLICATE KEY(tenant_id, doc_id)
+DISTRIBUTED BY HASH(tenant_id) BUCKETS 8
+PROPERTIES (
+  "replication_num" = "1"
+);
+```
+
+先写入一行验证连通性。只有一行时，Segment 使用下文说明的暴力搜索回退；此步骤不代表已训练 PQ 索引。实际训练需要每个 Segment 都有足够行数。
+
+```sql
+INSERT INTO tenant_embeddings VALUES
+(10001, 1, array_repeat(CAST(0.01 AS FLOAT), 768));
+```
+
+### 基础查询
+
+```sql
+SELECT doc_id,
+       l2_distance_approximate(embedding, array_repeat(CAST(0.01 AS FLOAT), 768)) AS score
+FROM tenant_embeddings
+WHERE tenant_id = 10001
+ORDER BY score ASC
+LIMIT 20;
+```
+
+```text
+doc_id  score
+1       0
+```
+
+这正是 `pq_on_disk` 的核心目标场景：先过滤，再在过滤后的结果里执行高效的 Top-N 向量排序。
+
+## 工作原理
+
+从实现角度看，`pq_on_disk` 的执行过程大致如下：
+
+1. Doris 为 segment 训练 PQ codebook。
+2. 原始向量被编码为紧凑的 PQ codes。
+3. PQ codes 按 rowid 顺序写入磁盘。
+4. 查询时，Doris 先计算普通谓词过滤。
+5. 对于通过过滤的行，再加载对应的 PQ chunk，并基于 PQ code 计算近似距离，而不是直接对原始 float32 向量做全量暴力计算。
+
+因此，`pq_on_disk` 更适合被理解为**基于 PQ 的过滤后暴力计算加速**，而不是像 HNSW / IVF 那样的全局召回结构。
 
 ## 用户接口
 
-### 1）建索引 DDL
+### 1）索引 DDL
 
-通过 `index_type="pq_on_disk"` 创建 ANN 索引。
+通过 `index_type="pq_on_disk"` 创建索引：
 
 ```sql
 CREATE TABLE image_pool (
@@ -81,34 +172,35 @@ DISTRIBUTED BY HASH(user_id) BUCKETS 8
 PROPERTIES ("replication_num" = "1");
 ```
 
-说明：
-
-- `metric_type` 支持 `l2_distance` 和 `inner_product`。
-- `dim` 为必填参数。
-- `pq_m` 为必填参数。
-- `dim` 必须能够被 `pq_m` 整除。
-- `pq_nbits` 为可选参数，默认值为 `8`。
-- 查询语法保持不变，仍使用 `l2_distance_approximate` 和 `inner_product_approximate`。
-
 ### 2）典型查询模式
 
-过滤后的 Top-N 重排：
+过滤后的 Top-N：
 
 ```sql
 SELECT photo_id
 FROM image_pool
 WHERE user_id = 10001
-ORDER BY l2_distance_approximate(embedding, [0.12, 0.44, 0.33 /* ... */])
+ORDER BY l2_distance_approximate(embedding, array_repeat(CAST(0.01 AS FLOAT), 768)) ASC
 LIMIT 20;
 ```
 
-如果使用内积，相应地按降序排序：
+Prepared Statement 风格查询：
+
+```sql
+SELECT photo_id
+FROM image_pool
+WHERE user_id = ?
+ORDER BY l2_distance_approximate(embedding, CAST(? AS ARRAY<FLOAT>)) ASC
+LIMIT 20;
+```
+
+如果使用内积，则按降序排序：
 
 ```sql
 SELECT photo_id
 FROM image_pool
 WHERE user_id = 10001
-ORDER BY inner_product_approximate(embedding, [0.12, 0.44, 0.33 /* ... */]) DESC
+ORDER BY inner_product_approximate(embedding, array_repeat(CAST(0.01 AS FLOAT), 768)) DESC
 LIMIT 20;
 ```
 
@@ -118,20 +210,9 @@ LIMIT 20;
 SELECT photo_id
 FROM image_pool
 WHERE user_id = 10001
-  AND l2_distance_approximate(embedding, [0.12, 0.44, 0.33 /* ... */]) < 5.0
+  AND l2_distance_approximate(embedding, array_repeat(CAST(0.01 AS FLOAT), 768)) < 500.0
 ORDER BY photo_id;
 ```
-
-`pq_on_disk` 最重要的使用特征，就是它本身就是为“带过滤条件的向量重排”设计的，这一点和 `ivf_on_disk` 有明显区别。
-
-### 3）BE 缓存配置
-
-`pq_on_disk` 使用专用的 PQ chunk cache：
-
-- `ann_index_pq_chunk_cache_limit`（默认：`60%`）
-- `ann_index_pq_chunk_cache_stale_sweep_time_sec`（默认：`1800`）
-
-其中 `ann_index_pq_chunk_cache_limit` 的百分比基准是 BE 进程可用内存（受 `mem_limit` 约束），不是整机物理内存。
 
 ## 参数与约束
 
@@ -142,12 +223,12 @@ ORDER BY photo_id;
 | `index_type` | 是 | - | 必须为 `pq_on_disk`。 |
 | `metric_type` | 是 | - | `l2_distance` 或 `inner_product`。 |
 | `dim` | 是 | - | 向量维度。 |
-| `pq_m` | 是 | - | PQ 子量化器数量，必须整除 `dim`。 |
-| `pq_nbits` | 否 | `8` | 每个子量化器编码使用的 bit 数。 |
+| `pq_m` | 是 | - | PQ 子量化器数量，必须能整除 `dim`。 |
+| `pq_nbits` | 否 | `8` | 每个子量化编码的 bit 数。 |
 
-### 训练行为
+### 训练要求
 
-`pq_on_disk` 需要足够的数据来训练 PQ codebook。最小训练行数公式为：
+`pq_on_disk` 需要足够的行数来训练 PQ codebook。最小训练行数为：
 
 ```text
 (1 << pq_nbits) * 100
@@ -155,50 +236,67 @@ ORDER BY photo_id;
 
 例如：
 
-- `pq_nbits = 8` 时，至少需要 `25600` 行训练数据。
+- `pq_nbits = 8` 时，至少需要 `25600` 行训练数据；
 - `pq_nbits = 4` 时，至少需要 `1600` 行训练数据。
 
-如果某个 segment 的数据量不足以训练 PQ 索引，Doris 可能会对该 segment 回退到暴力搜索。
+如果某个 segment 的数据量不足以训练 PQ 索引，Doris 可能会对该 segment 回退为暴力搜索。
+
+## BE 缓存配置
+
+`pq_on_disk` 使用专用的 PQ chunk cache：
+
+- `ann_index_pq_chunk_cache_limit`（默认：`60%`）
+- `ann_index_pq_chunk_cache_stale_sweep_time_sec`（默认：`1800`）
+
+其中 `ann_index_pq_chunk_cache_limit` 的百分比基准是 BE 进程可用内存（受 `mem_limit` 约束），不是整机物理内存。
 
 ## 可观测性
 
-`pq_on_disk` 引入了专用的 BE 缓存 `AnnIndexPqChunkCache`。
+`pq_on_disk` 引入了专用 BE 缓存 `AnnIndexPqChunkCache`。
 
-排查性能问题时，建议优先确认两件事：
+排查问题时，建议优先关注：
 
-- 查询是否真的具有足够高的过滤选择性。
-- PQ chunk cache 是否足够大，能够避免热点候选区间被重复从磁盘读取。
+- 查询是否真的足够高选择性；
+- 过滤后的行是否具备较好的物理局部性；
+- PQ chunk cache 是否足够大，是否频繁发生重复磁盘读取；
+- 某些 segment 是否因为训练数据不足而回退为暴力搜索。
 
 ## 使用说明
 
-- `pq_on_disk` 更适合“先过滤，再向量重排”的场景，不适合替代全局 ANN 召回索引。
-- 它与 Doris 现有 ANN 索引共享通用约束，例如向量列类型和 ANN 表达式的使用方式。
-- 它支持 `l2_distance` 和 `inner_product` 两种度量，也支持 Top-N 与 range search 风格的查询。
-- 查询结果的排序方向需要与度量语义一致：`l2_distance_approximate` 用升序，`inner_product_approximate` 用降序。
-- 数据局部性很重要。如果相同过滤键对应的行在物理上更连续，`pq_on_disk` 读取 PQ codes 时就更容易形成顺序 I/O。
-- 对于非常小的 segment 或训练数据不足的 segment，索引可能不会被真正构建，查询会回退到暴力搜索。
+- `pq_on_disk` 面向的是**过滤优先**的向量检索，而不是对整个 segment 做全局 ANN 召回。
+- 它尤其适合**多租户向量检索**，即多个租户的数据混合存储在同一个 segment 中的场景。
+- 它同时支持 `l2_distance` 和 `inner_product`，也支持 Top-N 与 range search 风格的查询。
+- 查询时排序方向要和度量语义一致：`l2_distance_approximate` 用升序，`inner_product_approximate` 用降序。
+- 数据局部性非常重要。如果同一过滤键对应的数据在物理上更连续，PQ chunk 读取就更容易形成顺序 I/O。
+- 对于非常小的 segment 或训练样本不足的 segment，Doris 可能不会真正构建 PQ 索引，而是回退为暴力搜索。
 
 ## 最佳实践
 
-1. 当查询模式主要是“先过滤，后重排”时，优先考虑 `pq_on_disk`。
-2. 让过滤列尽可能具有较高选择性。过滤后的候选集越小，`pq_on_disk` 越能发挥优势。
-3. 选择 `pq_m` 时，先确保 `dim / pq_m` 合理，并尽量与现有 PQ 经验保持一致。
-4. 除非明确需要用更小 code size 换取更低精度，否则建议先从 `pq_nbits = 8` 开始。
-5. 联合观察缓存效果和查询延迟。如果同类过滤查询仍然频繁触发磁盘 I/O，可以提高 `ann_index_pq_chunk_cache_limit` 后重新测试。
-6. 在正式上线前，务必基于真实业务数据验证召回质量，尤其要关注真实过滤分布下的效果。
+1. 当主要查询模式是**先过滤，后重排**时，优先考虑 `pq_on_disk`。
+2. 对于 `WHERE tenant_id = ? ORDER BY ... LIMIT N` 这类**租户级检索**，优先评估 `pq_on_disk`。
+3. 让过滤列尽可能保持高选择性。过滤后候选集越小，`pq_on_disk` 越能发挥优势。
+4. 除非明确要用更小 code size 换取更低存储，否则建议从 `pq_nbits = 8` 开始。
+5. 选择 `pq_m` 时，要结合向量维度、模型特征以及实际召回目标综合评估。
+6. 对于 768 维及以上查询向量，建议使用 prepared statement，减少 SQL 解析开销。
+7. 在上线前务必基于真实业务分布进行验证，尤其是在不同租户数据量差异较大时。
 
-## 如何在 `ivf_on_disk` 和 `pq_on_disk` 之间选择
+## 如何在 `hnsw`、`ivf_on_disk` 与 `pq_on_disk` 之间选择
+
+以下场景更适合 `hnsw`：
+
+- 需要高召回的全局 ANN 搜索；
+- 查询延迟最优先，且内存资源足够。
 
 以下场景更适合 `ivf_on_disk`：
 
-- 需要在大规模全局向量集合上做 ANN 搜索。
-- 主要调优模型仍然是 `nlist` 和 `nprobe`。
-- 查询性能依赖于 IVF list 的探测与召回。
+- 仍然需要基于 IVF 的全局 ANN 召回模型；
+- 内存有限，但查询仍然面向大规模全局向量集合。
 
 以下场景更适合 `pq_on_disk`：
 
-- 查询本身已经带有高选择性的标量过滤条件。
-- 过滤后的候选集规模相对较小。
-- 主要需求是在过滤后的候选行中做快速近似重排，而不是做全局 ANN 召回。
+- 查询本身已经带有高选择性的标量过滤条件；
+- 不同租户或不同用户的数据混合存储在同一个 segment 中；
+- 指定租户或用户过滤后，全局 ANN 的召回效果不理想；
+- 希望通过压缩向量来加速过滤后候选集上的暴力距离计算。
 
-可以简单理解为：`ivf_on_disk` 是磁盘化的全局 ANN 索引，而 `pq_on_disk` 是磁盘化的过滤后近似重排索引。
+可以简单理解为：`pq_on_disk` 并不是替代所有 ANN 结构的统一方案，而是当主要问题变成**如何在过滤后的子集内高效完成向量重排**时，尤其是在多租户场景下，更合适的选择。

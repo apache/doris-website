@@ -2,7 +2,7 @@
 {
     "title": "PQ On-Disk",
     "language": "en",
-    "description": "PQ On-Disk is an ANN index mode in Apache Doris for reranking small post-filter candidate sets, storing PQ codes on disk and using a dedicated chunk cache to reduce memory usage."
+    "description": "PQ On-Disk is a disk-backed vector reranking mode in Apache Doris. It is designed for selective filter-first workloads such as multi-tenant vector search, and uses PQ-encoded vectors to accelerate brute-force distance evaluation on filtered rows."
 }
 ---
 
@@ -27,35 +27,126 @@ under the License.
 
 # PQ On-Disk in Apache Doris
 
-`pq_on_disk` is an ANN index type in Doris designed for reranking small candidate sets after scalar filtering. It stores PQ codes on disk in rowid order, keeps only the PQ codebook in memory, and computes approximate distances only for rows that have already passed the filter.
+:::note
+This feature requires the pending development implementation in apache/doris#61986. It is not available in released 4.x versions.
+:::
 
-Compared with `ivf` and `ivf_on_disk`, `pq_on_disk` is not a global ANN recall structure. It is designed for queries such as `WHERE user_id = ? ORDER BY l2_distance_approximate(...) LIMIT N`, where the filter first narrows the search scope to a relatively small candidate set and the vector index is then used for fast approximate reranking.
+`pq_on_disk` is a vector index mode in Apache Doris for **filter-first vector search**. It stores Product Quantization (PQ) codes on disk, keeps only the PQ codebook and hot chunks in memory, and uses the compressed vectors to accelerate brute-force-style distance evaluation on rows that have already passed scalar filtering.
 
-## Why PQ On-Disk
+This feature is especially useful in **multi-tenant vector search**. In many SaaS-style workloads, vectors from many tenants are stored together in the same segment. If you build a global `hnsw` or `ivf` index on that mixed data and then query with predicates such as `WHERE tenant_id = ?`, the ANN recall can degrade significantly because the global recall structure was built across all tenants rather than for one tenant's local subset. `pq_on_disk` avoids this problem by not depending on a global cross-tenant recall structure. Instead, Doris first applies the tenant filter, then uses PQ codes to accelerate vector scoring inside the filtered subset.
 
-Some vector-search workloads do not need ANN to search the whole segment. Instead, they first use ordinary predicates such as `user_id`, `tag`, or other inverted-index filters to reduce the candidate set, and only then need fast Top-N vector ranking inside that filtered subset.
+## When to Use PQ On-Disk
 
-`pq_on_disk` is designed for this operating point:
+Use `pq_on_disk` when your query pattern is usually:
 
-- Work on filtered candidate sets, typically thousands to tens of thousands of rows.
-- Keep memory footprint low by storing PQ codes on disk.
-- Reuse standard SQL distance functions and ANN DDL.
-- Avoid the overhead of maintaining a global IVF or graph structure when the candidate set is already known.
+```sql
+WHERE <highly_selective_filter>
+ORDER BY l2_distance_approximate(...) LIMIT N
+```
 
-## Scope and User Value
+Typical examples include:
 
-Compared with other ANN index types in Doris, `pq_on_disk` focuses on a different problem:
+- `WHERE tenant_id = ?`
+- `WHERE user_id = ?`
+- `WHERE category_id = ? AND status = 'active'`
+- `WHERE tag MATCH_ANY '...'
+  ORDER BY l2_distance_approximate(...) LIMIT N`
 
-- `hnsw` and `ivf` are optimized for global ANN retrieval across large vector collections.
-- `ivf_on_disk` keeps the IVF recall model but moves IVF lists to disk to save memory.
-- `pq_on_disk` is optimized for post-filter approximate reranking on small candidate sets.
+This is a different operating point from global ANN search:
 
-This makes it useful when:
+- `hnsw` and `ivf` are designed for **global ANN recall** across a large vector collection.
+- `ivf_on_disk` keeps the IVF recall model but moves the main IVF data to disk to reduce memory pressure.
+- `pq_on_disk` is designed for **filtered-subset reranking**, where the candidate set is already narrowed down by ordinary predicates and Doris needs a faster way to score those rows.
 
-- The query almost always includes a highly selective scalar filter.
-- Rows for the same filter key have good locality.
-- Full brute-force distance evaluation on the filtered rows is still too expensive.
-- You want lower steady-state memory usage than an in-memory ANN structure.
+## Why It Helps in Multi-Tenant Search
+
+Suppose a segment contains vectors from 10,000 tenants. A global HNSW or IVF index is built over all rows in the segment. If the query is:
+
+```sql
+SELECT doc_id
+FROM tenant_embeddings
+WHERE tenant_id = 10001
+ORDER BY l2_distance_approximate(embedding, <query_vector>)
+LIMIT 20;
+```
+
+The query only cares about one tenant's rows, but the global ANN structure was trained or connected using vectors from all tenants. The nearest paths, graph edges, or IVF partitions that are good for global recall are not necessarily good for recall **after tenant filtering**.
+
+`pq_on_disk` addresses this case differently:
+
+1. Doris first applies the scalar predicate such as `tenant_id = 10001`.
+2. It obtains a filtered candidate set for that tenant.
+3. Instead of computing full float32 brute-force distances on every filtered row, Doris uses PQ-encoded vectors to evaluate distances much faster.
+4. PQ code data is read from disk in rowid order and reused through a dedicated chunk cache.
+
+As a result, `pq_on_disk` is often a better fit than global ANN structures when:
+
+- the filter is highly selective,
+- recall under post-filter/global ANN is unstable,
+- and full brute-force over raw vectors is still too expensive.
+
+## Quick Start
+
+### Create a table
+
+The following example uses `tenant_id` as the main filter column:
+
+```sql
+CREATE TABLE tenant_embeddings (
+  tenant_id BIGINT NOT NULL,
+  doc_id BIGINT NOT NULL,
+  embedding ARRAY<FLOAT> NOT NULL,
+  INDEX idx_embedding (embedding) USING ANN PROPERTIES (
+    "index_type" = "pq_on_disk",
+    "metric_type" = "l2_distance",
+    "dim" = "768",
+    "pq_m" = "96",
+    "pq_nbits" = "8"
+  )
+) ENGINE=OLAP
+DUPLICATE KEY(tenant_id, doc_id)
+DISTRIBUTED BY HASH(tenant_id) BUCKETS 8
+PROPERTIES (
+  "replication_num" = "1"
+);
+```
+
+Insert one row for a connectivity smoke check before running the basic query. With only one row, the segment uses the documented brute-force fallback; this does not demonstrate PQ index training. A trained index requires enough rows in each segment.
+
+```sql
+INSERT INTO tenant_embeddings VALUES
+(10001, 1, array_repeat(CAST(0.01 AS FLOAT), 768));
+```
+
+### Basic query
+
+```sql
+SELECT doc_id,
+       l2_distance_approximate(embedding, array_repeat(CAST(0.01 AS FLOAT), 768)) AS score
+FROM tenant_embeddings
+WHERE tenant_id = 10001
+ORDER BY score ASC
+LIMIT 20;
+```
+
+```text
+doc_id  score
+1       0
+```
+
+This query pattern is the primary target of `pq_on_disk`: filter first, then do fast vector Top-N inside the filtered rows.
+
+## How PQ On-Disk Works
+
+At a high level:
+
+1. Doris trains a PQ codebook for the segment.
+2. Raw vectors are encoded into compact PQ codes.
+3. PQ codes are stored on disk in rowid order.
+4. At query time, Doris first evaluates ordinary predicates.
+5. For rows that survive filtering, Doris loads the corresponding PQ chunks and computes approximate distances using PQ codes instead of full raw vectors.
+
+So `pq_on_disk` is best understood as **PQ-accelerated filtered brute-force**, rather than a global ANN recall structure like HNSW or IVF.
 
 ## User-Facing Interfaces
 
@@ -81,34 +172,35 @@ DISTRIBUTED BY HASH(user_id) BUCKETS 8
 PROPERTIES ("replication_num" = "1");
 ```
 
-Notes:
-
-- `metric_type` supports `l2_distance` and `inner_product`.
-- `dim` is required.
-- `pq_m` is required.
-- `dim` must be divisible by `pq_m`.
-- `pq_nbits` is optional and defaults to `8`.
-- Query syntax remains the same: `l2_distance_approximate` and `inner_product_approximate`.
-
 ### 2) Typical query patterns
 
-Top-N reranking after filtering:
+Top-N after filtering:
 
 ```sql
 SELECT photo_id
 FROM image_pool
 WHERE user_id = 10001
-ORDER BY l2_distance_approximate(embedding, [0.12, 0.44, 0.33 /* ... */])
+ORDER BY l2_distance_approximate(embedding, array_repeat(CAST(0.01 AS FLOAT), 768)) ASC
 LIMIT 20;
 ```
 
-For inner-product search, sort in descending order:
+Prepared-statement style query:
+
+```sql
+SELECT photo_id
+FROM image_pool
+WHERE user_id = ?
+ORDER BY l2_distance_approximate(embedding, CAST(? AS ARRAY<FLOAT>)) ASC
+LIMIT 20;
+```
+
+For inner-product search, first create a separate table whose index uses `metric_type="inner_product"`, then sort in descending order. The L2 table above does not provide an inner-product index:
 
 ```sql
 SELECT photo_id
 FROM image_pool
 WHERE user_id = 10001
-ORDER BY inner_product_approximate(embedding, [0.12, 0.44, 0.33 /* ... */]) DESC
+ORDER BY inner_product_approximate(embedding, array_repeat(CAST(0.01 AS FLOAT), 768)) DESC
 LIMIT 20;
 ```
 
@@ -118,20 +210,9 @@ Range search is also supported:
 SELECT photo_id
 FROM image_pool
 WHERE user_id = 10001
-  AND l2_distance_approximate(embedding, [0.12, 0.44, 0.33 /* ... */]) < 5.0
+  AND l2_distance_approximate(embedding, array_repeat(CAST(0.01 AS FLOAT), 768)) < 500.0
 ORDER BY photo_id;
 ```
-
-The most important usage characteristic is that `pq_on_disk` is intended to work with filters. This is the main scenario where it differs from `ivf_on_disk`.
-
-### 3) BE cache configuration
-
-`pq_on_disk` uses a dedicated chunk cache for PQ code data:
-
-- `ann_index_pq_chunk_cache_limit` (default: `60%`)
-- `ann_index_pq_chunk_cache_stale_sweep_time_sec` (default: `1800`)
-
-The percentage value of `ann_index_pq_chunk_cache_limit` is based on process-available memory (`mem_limit`), not total machine memory.
 
 ## Parameters and Constraints
 
@@ -142,8 +223,8 @@ The percentage value of `ann_index_pq_chunk_cache_limit` is based on process-ava
 | `index_type` | Yes | - | Must be `pq_on_disk`. |
 | `metric_type` | Yes | - | `l2_distance` or `inner_product`. |
 | `dim` | Yes | - | Vector dimension. |
-| `pq_m` | Yes | - | Number of PQ subquantizers. Must divide `dim`. |
-| `pq_nbits` | No | `8` | Number of bits per subquantizer code. |
+| `pq_m` | Yes | - | Positive number of PQ subquantizers. Must divide the positive vector dimension `dim`. |
+| `pq_nbits` | No | `8` | Number of bits per subquantizer code, a positive integer from 1 to 24. Values above 24 are rejected; large values greatly increase training and codebook costs. |
 
 ### Training behavior
 
@@ -160,42 +241,62 @@ Examples:
 
 If a segment does not have enough rows to train the PQ index, Doris can fall back to brute-force search for that segment.
 
+## BE Cache Configuration
+
+`pq_on_disk` uses a dedicated chunk cache for PQ code data:
+
+- `ann_index_pq_chunk_cache_limit` (default: `60%`)
+- `ann_index_pq_chunk_cache_stale_sweep_time_sec` (default: `1800`)
+
+The percentage value of `ann_index_pq_chunk_cache_limit` is based on process-available memory (`mem_limit`), not total machine memory.
+
 ## Observability
 
 `pq_on_disk` introduces a dedicated BE cache named `AnnIndexPqChunkCache`.
 
-When troubleshooting, first check whether queries are actually selective enough and whether the PQ chunk cache is large enough to avoid repeated disk reads on hot candidate ranges.
+When troubleshooting, check the following first:
+
+- Whether the query is actually selective enough.
+- Whether the filtered rows have good locality.
+- Whether the PQ chunk cache is large enough to avoid repeated disk reads.
+- Whether some segments are falling back to brute force because they do not have enough rows for PQ training.
 
 ## Usage Notes
 
-- `pq_on_disk` is best suited for selective filter + vector reranking, not global ANN recall.
-- It shares the common ANN table constraints in Doris, such as vector column type and ANN expression usage.
-- It supports both `l2_distance` and `inner_product`, including Top-N and range-search style predicates.
-- Query result ordering follows the metric semantics: `l2_distance_approximate` uses ascending order, while `inner_product_approximate` uses descending order.
-- Data locality matters. It works best when rows belonging to the same filter key are physically close, so PQ code reads are more sequential.
-- For very small segments or very small training sets, the index may not be built and the query can fall back to brute force.
+- `pq_on_disk` is intended for **filter-first** workloads, not for global ANN recall across the whole segment.
+- It is particularly suitable for **multi-tenant vector search** where rows from many tenants are mixed in the same segment.
+- It supports both `l2_distance` and `inner_product`, including Top-N and range-search style queries.
+- Query result ordering must match metric semantics: `l2_distance_approximate` uses ascending order, while `inner_product_approximate` uses descending order.
+- Data locality matters. It works best when rows for the same filter key are physically close so PQ chunk reads are more sequential.
+- For very small segments or insufficient training data, Doris may not build the PQ index and can fall back to brute force.
 
 ## Best Practices
 
-1. Choose `pq_on_disk` when the query pattern is usually `filter first, rerank second`.
-2. Keep the filter column selective. The smaller the post-filter candidate set, the more suitable `pq_on_disk` becomes.
-3. Choose `pq_m` so that `dim / pq_m` is reasonable and easy to manage. A common starting point is to align `pq_m` with the dimensional decomposition you already use in other PQ-based systems.
-4. Start with `pq_nbits = 8` unless you have strong reasons to trade recall for smaller code size.
-5. Watch cache effectiveness and latency together. If repeated filtered queries are still I/O-heavy, increase `ann_index_pq_chunk_cache_limit` and retest.
-6. Validate on real business data before production rollout, especially for recall quality under your actual filter distribution.
+1. Choose `pq_on_disk` when the query pattern is usually **filter first, rerank second**.
+2. Prefer it for **tenant-aware retrieval** such as `WHERE tenant_id = ? ORDER BY ... LIMIT N`.
+3. Keep the filter column selective. The smaller the filtered candidate set, the more suitable `pq_on_disk` becomes.
+4. Start with `pq_nbits = 8` unless you intentionally want a smaller code size at the cost of recall.
+5. Choose `pq_m` so that `dim / pq_m` is reasonable for your model dimension and business recall target.
+6. Use prepared statements for 768-D and higher query vectors to reduce SQL parsing overhead.
+7. Validate on real business distributions, especially when tenant sizes are very uneven.
 
-## How to Choose Between `ivf_on_disk` and `pq_on_disk`
+## How to Choose Between `hnsw`, `ivf_on_disk`, and `pq_on_disk`
+
+Use `hnsw` when:
+
+- You need high-recall global ANN search.
+- Query latency is the top priority and enough memory is available.
 
 Use `ivf_on_disk` when:
 
-- You need ANN to search across a large global vector collection.
-- Your main tuning model is still `nlist` and `nprobe`.
-- Query performance depends on probing a subset of IVF lists.
+- You still need a global IVF-style ANN recall model.
+- Memory is limited, but the query still searches a large global vector collection.
 
 Use `pq_on_disk` when:
 
-- The query already has a selective scalar filter.
-- The candidate set after filtering is relatively small.
-- You mainly need fast approximate reranking within filtered rows rather than global ANN recall.
+- The query already has a highly selective scalar filter.
+- Rows from different tenants or users are mixed in the same segment.
+- Global ANN recall under tenant/user filtering is poor.
+- You want to accelerate filtered brute-force scoring with compressed vectors.
 
-In short, `ivf_on_disk` is a disk-backed global ANN index, while `pq_on_disk` is a disk-backed post-filter reranking index.
+In short, `pq_on_disk` is not a replacement for all ANN structures. It is the right choice when the main problem is **efficient vector reranking inside a filtered subset**, especially in multi-tenant workloads.
