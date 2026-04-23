@@ -1,9 +1,9 @@
 ---
 {
-    "title": "MySQL Single Table Sync",
-    "sidebar_label": "Single Table Sync",
+    "title": "MySQL Table-level Sync",
+    "sidebar_label": "Table-level Sync",
     "language": "en",
-    "description": "Doris supports continuously synchronizing full and incremental data from a single MySQL table into Doris using Job + CDC Stream TVF."
+    "description": "Doris can continuously sync MySQL data into a specified Doris table using Job + CDC Stream TVF at the table level, with support for column mapping and data transformation."
 }
 ---
 
@@ -13,9 +13,9 @@ This feature is supported since version 4.1.0.
 
 ## Overview
 
-Doris supports continuously synchronizing full and incremental data from a single MySQL table into a specified Doris table using Job + [CDC Stream TVF](../../../sql-manual/sql-functions/table-valued-functions/cdc-stream.md). This is suitable for real-time synchronization scenarios that require flexible column mapping and data transformation on a single table.
+Table-level Sync is implemented via Job + [CDC Stream TVF](../../../sql-manual/sql-functions/table-valued-functions/cdc-stream.md), targeting an existing Doris table (`INSERT INTO tbl SELECT * FROM cdc_stream(...)`). It leverages Doris SQL to support column mapping, filtering and data transformation, with exactly-once semantics. Suitable for real-time sync scenarios that require data processing.
 
-By integrating [Flink CDC](https://github.com/apache/flink-cdc) reading capabilities, Doris supports reading change logs (Binlog) from MySQL databases, enabling full and incremental data synchronization for a single table.
+By integrating [Flink CDC](https://github.com/apache/flink-cdc), Doris reads change logs (Binlog) from MySQL, enabling full + incremental sync from the source table to the target table. If you prefer Doris to auto-create downstream tables or sync a group of tables at the database granularity, see [MySQL Database-level Sync](./continuous-load-mysql-database.md).
 
 **Notes:**
 

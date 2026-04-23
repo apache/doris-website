@@ -1,17 +1,17 @@
 ---
 {
-    "title": "MySQL 整库同步",
-    "sidebar_label": "整库同步",
+    "title": "MySQL 库级同步",
+    "sidebar_label": "库级同步",
     "language": "zh-CN",
-    "description": "Doris 可以通过 Streaming Job 的方式，将 MySQL 整库的全量和增量数据持续同步到 Doris 中。"
+    "description": "Doris 可以通过 Streaming Job 的方式，以库为单位将 MySQL 一组表的全量和增量数据持续同步到 Doris 中，首次同步自动创建下游表。"
 }
 ---
 
 ## 概述
 
-支持通过 Job 将 MySQL 整库或指定多张表的全量和增量数据，通过 Stream Load 的方式持续同步到 Doris 中。适用于需要实时同步整库数据到 Doris 的场景。
+库级同步通过原生 `FROM MYSQL (...) TO DATABASE (...)` DDL 实现，**以库为同步单位，目标是一个 Doris database 容器**；可以通过 `include_tables` 控制同步一张、多张或全部表，首次同步时 Doris 会自动创建下游主键表，并保持主键与上游一致。适用于不需要对数据做 SQL 加工、希望下游表结构自动跟随上游的镜像复制场景。
 
-通过集成 [Flink CDC](https://github.com/apache/flink-cdc) 能力，Doris 支持从 MySQL 数据库读取变更日志，实现整库的全量和增量数据同步。首次同步时会自动创建 Doris 下游表（主键表），并保持主键与上游一致。
+通过集成 [Flink CDC](https://github.com/apache/flink-cdc) 能力，Doris 从 MySQL 读取变更日志，将一组表的全量 + 增量数据通过 Stream Load 持续写入 Doris。若需要在同步过程中做列映射、过滤或数据转换，请参考 [MySQL 表级同步](./continuous-load-mysql-table.md)。
 
 **注意事项：**
 
@@ -99,7 +99,7 @@ TO DATABASE target_test_db
 
 ### 导入命令
 
-创建整库同步作业语法如下：
+创建库级同步作业语法如下：
 
 ```sql
 CREATE JOB <job_name>
