@@ -52,6 +52,22 @@ Data masking is a method to protect sensitive data by modifying, replacing, or h
 
 For example, administrators can choose to replace part or all of the digits of sensitive fields such as credit card numbers or ID numbers with asterisks * or other characters, or replace real names with pseudonyms.
 
-Starting from version 2.1.2, data masking is supported through Apache Ranger's Data Masking to set masking policies for certain columns, currently only through [Apache Ranger](ranger.md).
+Currently, data masking policies can be configured in two ways:
+
+### 1. Doris Built-in Data Masking Policies
+### Related Commands
+- Create a data masking policy [CREATE DATA MASK POLICY](../../../sql-manual/sql-statements/data-governance/CREATE-DATA-MASK-POLICY)
+- View data masking policies [SHOW DATA MASK POLICY](../../../sql-manual/sql-statements/data-governance/SHOW-DATA-MASK-POLICY)
+- Drop a data masking policy [DROP DATA MASK POLICY](../../../sql-manual/sql-statements/data-governance/DROP-DATA-MASK-POLICY)
+### Data Masking Policy Example
+1. Apply the MASK_HASH policy to the t1.c1 column for the test user
+
+```sql
+CREATE DATA MASK POLICY test_policy_1 ON t1.c1
+TO test USING MASK_HASH;
+```
+### 2. External Configuration via Apache Ranger
+
+Starting from version 2.1.2, data masking policies can be configured for specific columns through Apache Ranger Data Masking. For details, refer to： [Apache Ranger](./ranger)
 
 > Data Masking settings for admin/root users will not take effect.
