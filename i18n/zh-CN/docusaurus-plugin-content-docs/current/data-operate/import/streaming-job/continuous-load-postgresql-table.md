@@ -1,9 +1,9 @@
 ---
 {
-    "title": "PostgreSQL 单表同步",
+    "title": "PostgreSQL 表级同步",
     "language": "zh-CN",
-    "sidebar_label": "单表同步",
-    "description": "Doris 可以通过 Job + CDC Stream TVF 的方式，将 PostgreSQL 单张表的全量和增量数据持续同步到 Doris 中。"
+    "sidebar_label": "表级同步",
+    "description": "Doris 可以通过 Job + CDC Stream TVF 的方式，以表为单位将 PostgreSQL 数据持续同步到指定的 Doris 表中，支持列映射与数据转换。"
 }
 ---
 
@@ -13,9 +13,9 @@
 
 ## 概述
 
-Doris 支持通过 Job + [CDC Stream TVF](../../../sql-manual/sql-functions/table-valued-functions/cdc-stream.md) 的方式，将 PostgreSQL 单张表的全量和增量数据持续同步到指定的 Doris 表中。适用于需要对单张表进行灵活列映射和数据转换的实时同步场景。
+表级同步通过 Job + [CDC Stream TVF](../../../sql-manual/sql-functions/table-valued-functions/cdc-stream.md) 实现，目标是一张已存在的 Doris 表（`INSERT INTO tbl SELECT * FROM cdc_stream(...)`），借助 Doris SQL 的表达能力支持列映射、过滤和数据转换，保证 exactly-once 语义。适用于对数据需要做加工的实时同步场景。
 
-通过集成 [Flink CDC](https://github.com/apache/flink-cdc) 的读取能力，Doris 支持从 PostgreSQL 数据库读取变更日志（WAL），实现单表的全量和增量数据同步。
+通过集成 [Flink CDC](https://github.com/apache/flink-cdc) 的读取能力，Doris 从 PostgreSQL 读取变更日志（WAL），实现源表到目标表的全量 + 增量同步。若希望 Doris 自动创建下游表、按库为单位同步一组表，请参考 [PostgreSQL 库级同步](./continuous-load-postgresql-database.md)。
 
 **注意事项：**
 

@@ -234,16 +234,16 @@
                                     "type": "category",
                                     "label": "MySQL",
                                     "items": [
-                                        "data-operate/import/streaming-job/continuous-load-mysql-single",
-                                        "data-operate/import/streaming-job/continuous-load-mysql-multi"
+                                        "data-operate/import/streaming-job/continuous-load-mysql-table",
+                                        "data-operate/import/streaming-job/continuous-load-mysql-database"
                                     ]
                                 },
                                 {
                                     "type": "category",
                                     "label": "PostgreSQL",
                                     "items": [
-                                        "data-operate/import/streaming-job/continuous-load-postgresql-single",
-                                        "data-operate/import/streaming-job/continuous-load-postgresql-multi"
+                                        "data-operate/import/streaming-job/continuous-load-postgresql-table",
+                                        "data-operate/import/streaming-job/continuous-load-postgresql-database"
                                     ]
                                 },
                                 "data-operate/import/streaming-job/continuous-load-s3",

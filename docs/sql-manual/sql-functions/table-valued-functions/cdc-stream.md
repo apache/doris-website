@@ -13,7 +13,7 @@
 
 The CDC Stream table-valued-function (TVF) enables users to read change data from relational databases (such as MySQL, PostgreSQL) via CDC. By integrating [Flink CDC](https://github.com/apache/flink-cdc) reading capabilities, it supports full and incremental data synchronization.
 
-It is typically used with `CREATE JOB ON STREAMING` to achieve continuous single-table data synchronization. For detailed usage, see [MySQL Single-table Import](../../../data-operate/import/streaming-job/continuous-load-mysql-single.md) and [PostgreSQL Single-table Import](../../../data-operate/import/streaming-job/continuous-load-postgresql-single.md).
+It is typically used with `CREATE JOB ON STREAMING` to achieve continuous table-level data synchronization. For detailed usage, see [MySQL Table-level Sync](../../../data-operate/import/streaming-job/continuous-load-mysql-table.md) and [PostgreSQL Table-level Sync](../../../data-operate/import/streaming-job/continuous-load-postgresql-table.md).
 
 ## Syntax
 

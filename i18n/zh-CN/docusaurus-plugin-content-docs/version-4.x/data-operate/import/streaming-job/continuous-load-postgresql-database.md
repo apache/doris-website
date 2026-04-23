@@ -1,17 +1,17 @@
 ---
 {
-    "title": "MySQL 整库同步",
+    "title": "PostgreSQL 库级同步",
+    "sidebar_label": "库级同步",
     "language": "zh-CN",
-    "sidebar_label": "整库同步",
-    "description": "Doris 可以通过 Streaming Job 的方式，将 MySQL 整库的全量和增量数据持续同步到 Doris 中。"
+    "description": "Doris 可以通过 Streaming Job 的方式，以库为单位将 PostgreSQL 一组表的全量和增量数据持续同步到 Doris 中，首次同步自动创建下游表。"
 }
 ---
 
 ## 概述
 
-支持通过 Job 将 MySQL 整库或指定多张表的全量和增量数据，通过 Stream Load 的方式持续同步到 Doris 中。适用于需要实时同步整库数据到 Doris 的场景。
+库级同步通过原生 `FROM POSTGRES (...) TO DATABASE (...)` DDL 实现，**以库为同步单位，目标是一个 Doris database 容器**；可以通过 `include_tables` 控制同步一张、多张或全部表，首次同步时 Doris 会自动创建下游主键表，并保持主键与上游一致。适用于不需要对数据做 SQL 加工、希望下游表结构自动跟随上游的镜像复制场景。
 
-通过集成 [Flink CDC](https://github.com/apache/flink-cdc) 能力，Doris 支持从 MySQL 数据库读取变更日志，实现整库的全量和增量数据同步。首次同步时会自动创建 Doris 下游表（主键表），并保持主键与上游一致。
+通过集成 [Flink CDC](https://github.com/apache/flink-cdc) 能力，Doris 从 PostgreSQL 读取变更日志，将一组表的全量 + 增量数据通过 Stream Load 持续写入 Doris。若需要在同步过程中做列映射、过滤或数据转换，请参考 [PostgreSQL 表级同步](./continuous-load-postgresql-table.md)。
 
 **注意事项：**
 
@@ -27,55 +27,28 @@
 使用 [CREATE STREAMING JOB](../../../sql-manual/sql-statements/job/CREATE-STREAMING-JOB.md) 创建持续导入作业：
 
 ```sql
-CREATE JOB multi_table_sync
+CREATE JOB test_postgres_job
 ON STREAMING
-FROM MYSQL (
-        "jdbc_url" = "jdbc:mysql://127.0.0.1:3306",
-        "driver_url" = "mysql-connector-java-8.0.25.jar",
-        "driver_class" = "com.mysql.cj.jdbc.Driver",
-        "user" = "root",
-        "password" = "123456",
-        "database" = "test",
-        "include_tables" = "user_info,order_info",
-        "offset" = "initial"
+FROM POSTGRES (
+    "jdbc_url" = "jdbc:postgresql://127.0.0.1:5432/postgres",
+    "driver_url" = "postgresql-42.5.1.jar",
+    "driver_class" = "org.postgresql.Driver",
+    "user" = "postgres",
+    "password" = "postgres",
+    "database" = "postgres",
+    "schema" = "public",
+    "include_tables" = "test_tbls",
+    "offset" = "latest"
 )
 TO DATABASE target_test_db (
-    "table.create.properties.replication_num" = "1"  -- 单BE部署时需要设置为1
+  "table.create.properties.replication_num" = "1"  -- 单BE部署时需要设置为1
 )
 ```
 
 ### 查看导入状态
 
 ```sql
-select * from jobs("type"="insert") where ExecuteType = "STREAMING"
-             Id: 1765332859199
-             Name: mysql_db_sync
-          Definer: root
-      ExecuteType: STREAMING
-RecurringStrategy: \N
-           Status: RUNNING
-       ExecuteSql: FROM MYSQL('include_tables'='user_info','database'='test','driver_class'='com.mysql.cj.jdbc.Driver','driver_url'='mysql-connector-java-8.0.25.jar','offset'='initial','jdbc_url'='jdbc:mysql://127.0.0.1:3306','user'='root' ) TO DATABASE target_test_db ('table.create.properties.replication_num'='1')
-       CreateTime: 2025-12-10 10:19:35
- SucceedTaskCount: 1
-  FailedTaskCount: 0
-CanceledTaskCount: 0
-          Comment: 
-       Properties: \N
-    CurrentOffset: {"ts_sec":"1765284495","file":"binlog.000002","pos":"9350","kind":"SPECIFIC","splitId":"binlog-split","row":"1","event":"2","server_id":"1"}
-        EndOffset: \N
-    LoadStatistic: {"scannedRows":24,"loadBytes":1146,"fileNumber":0,"fileSize":0}
-         ErrorMsg: \N
-```
-
-### 修改导入作业
-
-```sql
-ALTER JOB <job_name>
-FROM MYSQL (
-    "user" = "root",
-    "password" = "123456"
-)
-TO DATABASE target_test_db
+select * from jobs("type"="insert") where ExecuteType = "STREAMING";
 ```
 
 更多通用操作（暂停、恢复、删除、查看 Task 等）请参考[持续导入概览](./continuous-load-overview.md)。
@@ -84,12 +57,13 @@ TO DATABASE target_test_db
 
 | 参数           | 默认值  | 说明                                                         |
 | -------------- | ------- | ------------------------------------------------------------ |
-| jdbc_url       | -       | MySQL JDBC 连接串                                             |
+| jdbc_url       | -       | PostgreSQL JDBC 连接串                                        |
 | driver_url     | -       | JDBC 驱动 jar 包路径，支持文件名、本地绝对路径和 HTTP 地址三种方式，详见 [JDBC Catalog 概述](../../../lakehouse/catalogs/jdbc-catalog-overview.md) |
 | driver_class   | -       | JDBC 驱动类名                                                |
 | user           | -       | 数据库用户名                                                  |
 | password       | -       | 数据库密码                                                    |
 | database       | -       | 数据库名                                                      |
+| schema         | -       | Schema 名称                                                   |
 | include_tables | -       | 需要同步的表名，多个表用逗号分隔，不填默认所有的表            |
 | offset         | initial | initial: 全量 + 增量同步，latest: 仅增量同步                    |
 | snapshot_split_size | 8096 | split 的大小（行数），全量同步时，表会被切分成多个 split 进行同步 |
@@ -99,14 +73,14 @@ TO DATABASE target_test_db
 
 ### 导入命令
 
-创建整库同步作业语法如下：
+创建库级同步作业语法如下：
 
 ```sql
 CREATE JOB <job_name>
 ON STREAMING
 [job_properties]
 [ COMMENT <comment> ]
-FROM MYSQL (
+FROM POSTGRES (
     [source_properties]
 )
 TO DATABASE <target_db> (
@@ -119,7 +93,7 @@ TO DATABASE <target_db> (
 | job_name           | 任务名                    |
 | job_properties     | 用于指定 Job 的通用导入参数 |
 | comment            | 用于描述 Job 作业的备注信息 |
-| source_properties  | MySQL 源端相关参数         |
+| source_properties  | PostgreSQL 源端相关参数    |
 | target_properties  | Doris 目标库相关参数       |
 
 ### Doris 目标库端配置参数
