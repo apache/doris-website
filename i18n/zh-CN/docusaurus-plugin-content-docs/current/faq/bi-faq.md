@@ -6,6 +6,8 @@
 }
 ---
 
+<!-- governance-pilot: fixture edit to exercise i18n-sync-source-counterpart; remove before merge -->
+
 ## Power BI
 
 ### Q1. JDBC 拉取表到 Desktop Power BI 时报错 Timeout expired. The timeout period elapsed prior to completion of the operation or the server is not responding.
