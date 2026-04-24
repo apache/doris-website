@@ -10,6 +10,8 @@ const { lintMarkdownStructure } = require('../lint-markdown-structure');
 const { lintSidebar } = require('../lint-sidebar');
 const { filterLinkFindings, hasLinkErrors, lintLinks } = require('../lint-links');
 const { filterSeoFindings, lintSeo } = require('../lint-seo');
+const { lintFeatureDocs } = require('../lint-feature-docs');
+const { lintSqlFunctionDocs } = require('../lint-sql-function-docs');
 const { printGithubAnnotations, runChecks } = require('../report');
 
 const fixtureRoot = path.join(__dirname, '..', '__fixtures__', 'repo');
@@ -23,6 +25,12 @@ function withTempFixture(mutator, callback) {
   } finally {
     fs.rmSync(tempRoot, { recursive: true, force: true });
   }
+}
+
+function writeFixtureFile(rootDir, relativePath, content) {
+  const absPath = path.join(rootDir, relativePath);
+  fs.mkdirSync(path.dirname(absPath), { recursive: true });
+  fs.writeFileSync(absPath, `${content.trim()}\n`, 'utf8');
 }
 
 test('buildManifest maps docs across roots to stable identities', () => {
@@ -406,6 +414,577 @@ test('filterSeoFindings keeps changed page findings without full-site SEO noise'
     filterSeoFindings(findings, ['docs/changed.md']).map((finding) => finding.path),
     ['docs/changed.md'],
   );
+});
+
+test('runChecks reports SQL function documentation structure issues', () => {
+  const badPath = 'docs/sql-manual/sql-functions/bad-function.md';
+  const report = withTempFixture(
+    (rootDir) => {
+      writeFixtureFile(
+        rootDir,
+        badPath,
+        `
+---
+title: BAD_FUNCTION
+description: Fixture SQL function with intentionally invalid structure.
+---
+
+# BAD_FUNCTION
+
+## Syntax
+
+Use this function form:
+
+\`\`\`text
+BAD_FUNCTION(<value>)
+\`\`\`
+
+## Description
+
+Returns a transformed value.
+
+## Parameters
+
+The value to transform.
+
+## Return Value
+
+Result value.
+
+## Example
+
+\`\`\`sql
+SELECT BAD_FUNCTION(1);
+\`\`\`
+`,
+      );
+    },
+    (rootDir) => runChecks({
+      rootDir,
+      changedFiles: [badPath, 'docs/sql-manual/sql-functions/concat.md'],
+    }),
+  );
+
+  const sqlFindings = report.findings.filter((finding) => finding.rule.startsWith('sql-function-'));
+  assert.ok(sqlFindings.some((finding) => finding.path === badPath && finding.rule === 'sql-function-section-order'));
+  assert.ok(sqlFindings.some((finding) => finding.path === badPath && finding.rule === 'sql-function-syntax-sql-code-block'));
+  assert.ok(sqlFindings.some((finding) => finding.path === badPath && finding.rule === 'sql-function-parameters-table'));
+  assert.ok(sqlFindings.some((finding) => finding.path === badPath && finding.rule === 'sql-function-return-type'));
+  assert.ok(sqlFindings.some((finding) => finding.path === badPath && finding.rule === 'sql-function-return-null'));
+  assert.ok(sqlFindings.some((finding) => finding.path === badPath && finding.rule === 'sql-function-example-output'));
+  assert.ok(!sqlFindings.some((finding) => finding.path === 'docs/sql-manual/sql-functions/concat.md'));
+});
+
+test('runChecks accepts Chinese SQL function section names and table headers', () => {
+  const zhPath = 'i18n/zh-CN/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/good-zh.md';
+  const report = withTempFixture(
+    (rootDir) => {
+      writeFixtureFile(
+        rootDir,
+        zhPath,
+        `
+---
+title: GOOD_ZH
+description: 中文 SQL 函数治理测试页面，包含完整结构。
+---
+
+# GOOD_ZH
+
+## 描述
+
+GOOD_ZH 函数返回输入字符串；如果输入为 NULL，则返回 NULL。
+
+## 语法
+
+\`\`\`sql
+GOOD_ZH(<value>)
+\`\`\`
+
+## 参数
+
+| 参数 | 描述 |
+| --- | --- |
+| \`<value>\` | VARCHAR 类型的输入值。 |
+
+## 返回值
+
+返回 VARCHAR 类型。如果输入为 NULL，则返回 NULL。
+
+## 示例
+
+\`\`\`sql
+SELECT GOOD_ZH(NULL);
+\`\`\`
+
+\`\`\`text
++---------------+
+| good_zh(NULL) |
++---------------+
+| NULL          |
++---------------+
+\`\`\`
+`,
+      );
+    },
+    (rootDir) => runChecks({ rootDir, changedFiles: [zhPath] }),
+  );
+
+  assert.ok(!report.findings.some((finding) => finding.path === zhPath && finding.rule.startsWith('sql-function-')));
+});
+
+test('runChecks accepts SQL function examples organized under nested headings', () => {
+  const nestedExamplePath = 'docs/sql-manual/sql-functions/nested-example.md';
+  const report = withTempFixture(
+    (rootDir) => {
+      writeFixtureFile(
+        rootDir,
+        nestedExamplePath,
+        `
+---
+title: NESTED_EXAMPLE
+description: SQL function fixture with examples grouped by subheading.
+---
+
+# NESTED_EXAMPLE
+
+## Description
+
+Returns the input value. Returns NULL when the input is NULL.
+
+## Syntax
+
+\`\`\`sql
+NESTED_EXAMPLE(<value>)
+\`\`\`
+
+## Parameters
+
+| Parameter | Description |
+| --- | --- |
+| \`<value>\` | VARCHAR input value. |
+
+## Return Value
+
+Returns VARCHAR. Returns NULL when \`<value>\` is NULL.
+
+## Example
+
+### NULL input
+
+\`\`\`sql
+SELECT NESTED_EXAMPLE(NULL);
+\`\`\`
+
+\`\`\`text
++----------------------+
+| nested_example(NULL) |
++----------------------+
+| NULL                 |
++----------------------+
+\`\`\`
+`,
+      );
+    },
+    (rootDir) => runChecks({ rootDir, changedFiles: [nestedExamplePath] }),
+  );
+
+  assert.ok(
+    !report.findings.some(
+      (finding) => finding.path === nestedExamplePath && finding.rule.startsWith('sql-function-'),
+    ),
+  );
+});
+
+test('runChecks requires SQL Return Value to state the returned type', () => {
+  const missingTypePath = 'docs/sql-manual/sql-functions/missing-return-type.md';
+  const report = withTempFixture(
+    (rootDir) => {
+      writeFixtureFile(
+        rootDir,
+        missingTypePath,
+        `
+---
+title: MISSING_RETURN_TYPE
+description: SQL function fixture that documents NULL behavior but omits the return type.
+---
+
+# MISSING_RETURN_TYPE
+
+## Description
+
+Returns a value for testing.
+
+## Syntax
+
+\`\`\`sql
+MISSING_RETURN_TYPE(<value>)
+\`\`\`
+
+## Parameters
+
+| Parameter | Description |
+| --- | --- |
+| \`<value>\` | Input value. |
+
+## Return Value
+
+Returns NULL when \`<value>\` is NULL.
+
+## Example
+
+\`\`\`sql
+SELECT MISSING_RETURN_TYPE(NULL);
+\`\`\`
+
+\`\`\`text
++---------------------------+
+| missing_return_type(NULL) |
++---------------------------+
+| NULL                      |
++---------------------------+
+\`\`\`
+`,
+      );
+    },
+    (rootDir) => runChecks({ rootDir, changedFiles: [missingTypePath] }),
+  );
+
+  assert.ok(
+    report.findings.some(
+      (finding) => finding.path === missingTypePath && finding.rule === 'sql-function-return-type',
+    ),
+  );
+  assert.ok(
+    !report.findings.some(
+      (finding) => finding.path === missingTypePath && finding.rule === 'sql-function-return-null',
+    ),
+  );
+});
+
+test('runChecks reports SQL function structure issues as info for 2.1 and earlier versions', () => {
+  const legacyPath = 'versioned_docs/version-2.1/sql-manual/sql-functions/legacy-bad.md';
+  const report = withTempFixture(
+    (rootDir) => {
+      writeFixtureFile(
+        rootDir,
+        legacyPath,
+        `
+---
+title: LEGACY_BAD
+description: Legacy fixture that should be report-only for Week 5.
+---
+
+# LEGACY_BAD
+
+Legacy content without the required SQL function sections.
+`,
+      );
+    },
+    (rootDir) => runChecks({ rootDir, changedFiles: [legacyPath] }),
+  );
+
+  const legacyFindings = report.findings.filter(
+    (finding) => finding.path === legacyPath && finding.rule.startsWith('sql-function-'),
+  );
+  assert.ok(legacyFindings.length > 0);
+  assert.ok(legacyFindings.every((finding) => finding.severity === 'info'));
+});
+
+test('lintSqlFunctionDocs checks existing manifest SQL function entries only', () => {
+  const sqlPath = 'docs/sql-manual/sql-functions/index.md';
+  const conceptPath = 'docs/sql-manual/sql-functions/concept-only.md';
+  const findings = withTempFixture(
+    (rootDir) => {
+      writeFixtureFile(
+        rootDir,
+        sqlPath,
+        `
+---
+title: SQL Function Index
+description: Existing manifest entry that should be governed by doc_type.
+---
+
+# SQL Function Index
+
+This page intentionally lacks SQL function sections.
+`,
+      );
+      writeFixtureFile(
+        rootDir,
+        conceptPath,
+        `
+---
+title: Concept Only
+description: Existing file that is not a SQL function in the supplied manifest.
+---
+
+# Concept Only
+
+This page should not be checked because its manifest doc_type is concept_doc.
+`,
+      );
+    },
+    (rootDir) =>
+      lintSqlFunctionDocs({
+        rootDir,
+        manifest: {
+          entries: [
+            {
+              source_path: sqlPath,
+              doc_type: 'sql_function',
+              version: 'current',
+              owner: '@owner',
+            },
+            {
+              source_path: conceptPath,
+              doc_type: 'concept_doc',
+              version: 'current',
+              owner: '@owner',
+            },
+            {
+              source_path: 'docs/sql-manual/sql-functions/missing-file.md',
+              doc_type: 'sql_function',
+              version: 'current',
+              owner: '@owner',
+            },
+          ],
+        },
+      }),
+  );
+
+  assert.ok(findings.some((finding) => finding.path === sqlPath && finding.rule === 'sql-function-section-order'));
+  assert.ok(!findings.some((finding) => finding.path === conceptPath));
+  assert.ok(!findings.some((finding) => finding.path.includes('missing-file.md')));
+});
+
+test('runChecks reports feature documentation section gaps only for feature docs', () => {
+  const badPath = 'docs/data-operate/bad-feature.md';
+  const ordinaryPath = 'docs/data-operate/ordinary-concept.md';
+  const goodPath = 'docs/data-operate/good-feature.md';
+  const report = withTempFixture(
+    (rootDir) => {
+      writeFixtureFile(
+        rootDir,
+        badPath,
+        `
+---
+title: Bad Feature
+description: Feature fixture missing most required sections.
+doc_type: feature
+---
+
+# Bad Feature
+
+## Overview
+
+This feature fixture intentionally omits most required sections.
+`,
+      );
+      writeFixtureFile(
+        rootDir,
+        ordinaryPath,
+        `
+---
+title: Ordinary Concept
+description: Ordinary concept fixture without feature governance metadata.
+---
+
+# Ordinary Concept
+
+Short conceptual page.
+`,
+      );
+      writeFixtureFile(
+        rootDir,
+        goodPath,
+        `
+---
+title: Good Feature
+description: Feature fixture with every required quality section.
+doc_type: feature
+---
+
+# Good Feature
+
+## Overview
+
+This feature is used when users need a governed feature documentation example.
+
+## Quick Start
+
+Run the minimal setup before using the feature.
+
+## Options
+
+| Option | Required | Description |
+| --- | --- | --- |
+| \`enabled\` | Yes | Enables the feature. |
+
+## Examples
+
+\`\`\`sql
+SELECT 1;
+\`\`\`
+
+\`\`\`text
++---+
+| 1 |
++---+
+| 1 |
++---+
+\`\`\`
+
+## Error handling and caveats
+
+Invalid options return a validation error.
+
+## Best practices
+
+Use the smallest configuration that satisfies the workload.
+`,
+      );
+    },
+    (rootDir) => runChecks({ rootDir, changedFiles: [badPath, ordinaryPath, goodPath] }),
+  );
+
+  const featureFindings = report.findings.filter((finding) => finding.rule.startsWith('feature-doc-'));
+  assert.ok(featureFindings.some((finding) => finding.path === badPath && finding.message.includes('Quick Start')));
+  assert.ok(featureFindings.some((finding) => finding.path === badPath && finding.message.includes('Parameters/Options')));
+  assert.ok(featureFindings.some((finding) => finding.path === badPath && finding.message.includes('Examples')));
+  assert.ok(featureFindings.some((finding) => finding.path === badPath && finding.message.includes('Error handling')));
+  assert.ok(featureFindings.some((finding) => finding.path === badPath && finding.message.includes('Best practices')));
+  assert.ok(!featureFindings.some((finding) => finding.path === ordinaryPath));
+  assert.ok(!featureFindings.some((finding) => finding.path === goodPath));
+});
+
+test('lintFeatureDocs recognizes manifest doc_type feature without front matter marker', () => {
+  const featurePath = 'docs/data-operate/manifest-feature.md';
+  const findings = withTempFixture(
+    (rootDir) => {
+      writeFixtureFile(
+        rootDir,
+        featurePath,
+        `
+---
+title: Manifest Feature
+description: Feature classification supplied by the governance manifest.
+---
+
+# Manifest Feature
+
+## Overview
+
+Manifest-classified feature page that lacks the rest of the required sections.
+`,
+      );
+    },
+    (rootDir) =>
+      lintFeatureDocs({
+        rootDir,
+        manifest: {
+          entries: [
+            {
+              source_path: featurePath,
+              doc_type: 'feature',
+              version: 'current',
+              owner: '@owner',
+            },
+          ],
+        },
+      }),
+  );
+
+  assert.ok(findings.some((finding) => finding.path === featurePath && finding.message.includes('Quick Start')));
+  assert.ok(findings.some((finding) => finding.path === featurePath && finding.message.includes('Parameters/Options')));
+});
+
+test('runChecks accepts Chinese feature documentation section names', () => {
+  const featurePath = 'docs/data-operate/good-zh-feature.md';
+  const report = withTempFixture(
+    (rootDir) => {
+      writeFixtureFile(
+        rootDir,
+        featurePath,
+        `
+---
+title: 中文 Feature
+description: 使用中文章节名的 Feature 文档治理测试页面。
+doc_type: feature
+---
+
+# 中文 Feature
+
+## 概览
+
+说明功能是什么、什么时候使用，以及用户开始前需要知道的限制。
+
+## 基本使用
+
+提供可以立即运行的最小端到端示例。
+
+## 参数
+
+| 参数 | 描述 |
+| --- | --- |
+| \`enabled\` | 是否启用该功能。 |
+
+## 示例
+
+\`\`\`sql
+SELECT 1;
+\`\`\`
+
+\`\`\`text
++---+
+| 1 |
++---+
+| 1 |
++---+
+\`\`\`
+
+## 注意事项
+
+无效参数会返回校验错误。
+
+## 最佳实践
+
+优先使用满足需求的最小配置。
+`,
+      );
+    },
+    (rootDir) => runChecks({ rootDir, changedFiles: [featurePath] }),
+  );
+
+  assert.ok(!report.findings.some((finding) => finding.path === featurePath && finding.rule.startsWith('feature-doc-')));
+});
+
+test('Week 5 governance scripts and author templates are exposed', () => {
+  const rootDir = path.join(__dirname, '..', '..', '..');
+  const packageJson = JSON.parse(fs.readFileSync(path.join(rootDir, 'package.json'), 'utf8'));
+
+  assert.equal(packageJson.scripts['docs:sql-functions'], 'node scripts/docs-governance/lint-sql-function-docs.js');
+  assert.equal(packageJson.scripts['docs:sql-functions:changed'], 'node scripts/docs-governance/lint-sql-function-docs.js --changed');
+  assert.equal(packageJson.scripts['docs:features'], 'node scripts/docs-governance/lint-feature-docs.js');
+  assert.equal(packageJson.scripts['docs:features:changed'], 'node scripts/docs-governance/lint-feature-docs.js --changed');
+
+  const sqlTemplate = fs.readFileSync(
+    path.join(rootDir, 'website-quality-governance/templates/sql-function-doc.md'),
+    'utf8',
+  );
+  const featureTemplate = fs.readFileSync(
+    path.join(rootDir, 'website-quality-governance/templates/feature-doc.md'),
+    'utf8',
+  );
+
+  for (const heading of ['## Description', '## Syntax', '## Parameters', '## Return Value', '## Example']) {
+    assert.ok(sqlTemplate.includes(heading));
+  }
+  assert.ok(sqlTemplate.includes('```sql'));
+  assert.ok(sqlTemplate.includes('```text'));
+
+  for (const heading of ['## Overview', '## Quick Start', '## Parameters / Options', '## Examples', '## Error handling and caveats', '## Best practices']) {
+    assert.ok(featureTemplate.includes(heading));
+  }
 });
 
 test('runChecks returns a unified report with manifest summary and findings', () => {
