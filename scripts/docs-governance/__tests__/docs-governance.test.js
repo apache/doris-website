@@ -1244,6 +1244,209 @@ description: Apache Doris 中文同步测试页面。
   assert.ok(report.findings.some((finding) => finding.rule === 'i18n-sync-locale-counterpart'));
 });
 
+test('buildAiReviewPacket includes PR context, AGENTS guidance, prompts, sync groups, and related docs', () => {
+  const sourcePath = 'docs/gettingStarted/what-is-apache-doris.md';
+  const versionPath = 'versioned_docs/version-4.x/gettingStarted/what-is-apache-doris.md';
+  const zhCurrentPath = 'i18n/zh-CN/docusaurus-plugin-content-docs/current/gettingStarted/what-is-apache-doris.md';
+  const zh4XPath = 'i18n/zh-CN/docusaurus-plugin-content-docs/version-4.x/gettingStarted/what-is-apache-doris.md';
+  const packet = withTempFixture(
+    (rootDir) => {
+      writeFixtureFile(
+        rootDir,
+        'AGENTS.md',
+        `
+# Fixture AGENTS
+
+Follow the repository review guide.
+`,
+      );
+      writeFixtureFile(
+        rootDir,
+        zh4XPath,
+        `
+---
+title: 什么是 Apache Doris
+description: Apache Doris 4.x 中文同步测试页面。
+---
+
+# 什么是 Apache Doris
+`,
+      );
+    },
+    (rootDir) => {
+      const { buildAiReviewPacket } = require('../prepare-ai-review');
+      return buildAiReviewPacket({
+        rootDir,
+        changedFiles: [sourcePath],
+        diffText: `diff --git a/${sourcePath} b/${sourcePath}\n+Added PR context\n`,
+      });
+    },
+  );
+
+  assert.equal(packet.schema_version, 1);
+  assert.deepEqual(packet.changed_files, [sourcePath]);
+  assert.match(packet.diff.text, /Added PR context/);
+  assert.equal(packet.agent_instructions.repository_guide.path, 'AGENTS.md');
+  assert.equal(packet.agent_instructions.repository_guide.included, true);
+  assert.ok(packet.agent_instructions.repository_guide.content_preview.includes('Fixture AGENTS'));
+  assert.deepEqual(
+    packet.review_agents.map((agent) => agent.id),
+    ['seo-geo', 'docs-clarity', 'i18n-version-sync', 'links-navigation', 'frontend-accessibility'],
+  );
+
+  const syncGroup = packet.sync_groups.find((group) => group.sync_group_id === 'main_docs:gettingStarted/what-is-apache-doris');
+  assert.ok(syncGroup);
+  assert.ok(syncGroup.entries.some((entry) => entry.source_path === sourcePath));
+  assert.ok(syncGroup.entries.some((entry) => entry.source_path === versionPath));
+  assert.ok(syncGroup.entries.some((entry) => entry.source_path === zhCurrentPath));
+  assert.ok(syncGroup.entries.some((entry) => entry.source_path === zh4XPath));
+  assert.ok(syncGroup.source_counterparts.includes(sourcePath));
+  assert.ok(syncGroup.localized_counterparts.includes(zhCurrentPath));
+  assert.ok(syncGroup.version_counterparts.includes(versionPath));
+  assert.ok(packet.related_manifest_entries.some((entry) => entry.source_path === sourcePath));
+  assert.ok(packet.related_context.neighboring_docs.some((entry) => entry.source_path === 'docs/gettingStarted/with-links.mdx'));
+  assert.ok(
+    packet.document_context.changed_files.some(
+      (entry) => entry.path === sourcePath && entry.included && entry.content_preview.includes('Apache Doris'),
+    ),
+  );
+  assert.ok(
+    packet.document_context.related_docs.some(
+      (entry) => entry.path === 'docs/gettingStarted/with-links.mdx' && entry.included,
+    ),
+  );
+  assert.equal(packet.output_schema.path, 'website-quality-governance/ai-review/output-schema.json');
+});
+
+test('buildAiReviewPacket identifies high-risk docs and navigation paths', () => {
+  const packet = withTempFixture(
+    (rootDir) => {
+      writeFixtureFile(rootDir, 'AGENTS.md', '# Fixture AGENTS');
+    },
+    (rootDir) => {
+      const { buildAiReviewPacket } = require('../prepare-ai-review');
+      return buildAiReviewPacket({
+        rootDir,
+        changedFiles: ['docs/sql-manual/sql-functions/concat.md', 'sidebars.ts'],
+        diffText: 'diff --git a/sidebars.ts b/sidebars.ts\n+sidebar change\n',
+      });
+    },
+  );
+
+  assert.equal(packet.high_risk.required, true);
+  assert.ok(
+    packet.high_risk.matched_paths.some(
+      (match) => match.path === 'docs/sql-manual/sql-functions/concat.md' && match.rule === 'docs/sql-manual/',
+    ),
+  );
+  assert.ok(
+    packet.high_risk.matched_paths.some(
+      (match) => match.path === 'sidebars.ts' && match.rule === 'sidebars.ts',
+    ),
+  );
+});
+
+test('validateAiReviewOutput enforces required finding schema and human verification for unverified facts', () => {
+  const { validateAiReviewOutput } = require('../validate-ai-review-output');
+  const validFinding = {
+    severity: 'warning',
+    path: 'docs/gettingStarted/what-is-apache-doris.md',
+    line: 12,
+    issue: 'The heading is unclear for first-time readers.',
+    evidence: 'The packet includes the changed heading and neighboring introduction.',
+    suggested_fix: 'Use a concrete task-oriented heading.',
+    blocking_recommendation: false,
+    needs_human_verification: false,
+  };
+
+  assert.doesNotThrow(() => validateAiReviewOutput([validFinding]));
+  assert.doesNotThrow(() => validateAiReviewOutput({ findings: [validFinding] }));
+  assert.throws(
+    () => validateAiReviewOutput([{ ...validFinding, severity: 'critical' }]),
+    /severity/,
+  );
+  assert.throws(
+    () => {
+      const { suggested_fix: _suggestedFix, ...missingSuggestedFix } = validFinding;
+      validateAiReviewOutput([missingSuggestedFix]);
+    },
+    /suggested_fix/,
+  );
+  assert.throws(
+    () =>
+      validateAiReviewOutput([
+        {
+          ...validFinding,
+          issue: 'Doris SQL function FOO returns a VARCHAR for all numeric inputs.',
+          evidence: '',
+          needs_human_verification: false,
+        },
+      ]),
+    /needs_human_verification/,
+  );
+});
+
+test('dedupeAiReviewFindings returns stable unique findings', () => {
+  const { dedupeAiReviewFindings } = require('../dedupe-ai-review-comments');
+  const duplicate = {
+    severity: 'warning',
+    path: 'docs/a.md',
+    line: 7,
+    issue: 'Repeated issue',
+    evidence: 'Same evidence.',
+    suggested_fix: 'Same fix.',
+    blocking_recommendation: false,
+    needs_human_verification: false,
+  };
+  const uniqueFindings = dedupeAiReviewFindings([
+    duplicate,
+    { ...duplicate, evidence: 'Duplicate with different wording.' },
+    { ...duplicate, line: 8 },
+    { ...duplicate, key: 'explicit-key', issue: 'Explicit key issue' },
+    { ...duplicate, key: 'explicit-key', issue: 'Explicit key duplicate' },
+  ]);
+  const repeat = dedupeAiReviewFindings([
+    duplicate,
+    { ...duplicate, evidence: 'Duplicate with different wording.' },
+    { ...duplicate, line: 8 },
+    { ...duplicate, key: 'explicit-key', issue: 'Explicit key issue' },
+    { ...duplicate, key: 'explicit-key', issue: 'Explicit key duplicate' },
+  ]);
+
+  assert.equal(uniqueFindings.length, 3);
+  assert.equal(uniqueFindings[0].issue, 'Repeated issue');
+  assert.equal(uniqueFindings[1].line, 8);
+  assert.equal(uniqueFindings[2].key, 'explicit-key');
+  assert.deepEqual(
+    uniqueFindings.map((finding) => finding.dedupe_key),
+    repeat.map((finding) => finding.dedupe_key),
+  );
+});
+
+test('Week 7 AI review scripts and workflow are exposed without replacing the generic review workflow', () => {
+  const rootDir = path.join(__dirname, '..', '..', '..');
+  const packageJson = JSON.parse(fs.readFileSync(path.join(rootDir, 'package.json'), 'utf8'));
+  const docsAiReviewWorkflow = fs.readFileSync(
+    path.join(rootDir, '.github/workflows/docs-ai-review.yml'),
+    'utf8',
+  );
+  const openCodeWorkflow = fs.readFileSync(
+    path.join(rootDir, '.github/workflows/opencode-review.yml'),
+    'utf8',
+  );
+
+  assert.equal(packageJson.scripts['docs:ai-review:prepare'], 'node scripts/docs-governance/prepare-ai-review.js');
+  assert.equal(packageJson.scripts['docs:ai-review:validate'], 'node scripts/docs-governance/validate-ai-review-output.js');
+  assert.equal(packageJson.scripts['docs:ai-review:dedupe'], 'node scripts/docs-governance/dedupe-ai-review-comments.js');
+  assert.match(docsAiReviewWorkflow, /\/review-docs/);
+  assert.match(docsAiReviewWorkflow, /ai-review-docs/);
+  assert.match(docsAiReviewWorkflow, /pull-requests: read/);
+  assert.match(docsAiReviewWorkflow, /contents: read/);
+  assert.match(docsAiReviewWorkflow, /issues: write/);
+  assert.ok(docsAiReviewWorkflow.indexOf('Checkout PR head') < docsAiReviewWorkflow.indexOf('issues: write'));
+  assert.match(openCodeWorkflow, /\/review/);
+});
+
 test('Week 5 and Week 6 governance scripts and author templates are exposed', () => {
   const rootDir = path.join(__dirname, '..', '..', '..');
   const packageJson = JSON.parse(fs.readFileSync(path.join(rootDir, 'package.json'), 'utf8'));
