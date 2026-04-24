@@ -4,7 +4,7 @@ on:
   issue_comment:
     types: [created]
   pull_request:
-    types: [labeled]
+    types: [labeled, synchronize, reopened]
   workflow_dispatch:
     inputs:
       pr_number:
@@ -42,6 +42,11 @@ jobs:
         github.event_name == 'pull_request' &&
         github.event.action == 'labeled' &&
         github.event.label.name == 'ai-review-docs'
+      ) ||
+      (
+        github.event_name == 'pull_request' &&
+        (github.event.action == 'synchronize' || github.event.action == 'reopened') &&
+        contains(github.event.pull_request.labels.*.name, 'ai-review-docs')
       )
     steps:
       - name: Get PR info
@@ -85,6 +90,9 @@ jobs:
       - name: Prepare docs AI review packet
         env:
           BASE_SHA: ${{ steps.pr.outputs.base_sha }}
+          HEAD_SHA: ${{ steps.pr.outputs.head_sha }}
+          PR_NUMBER: ${{ steps.pr.outputs.number }}
+          TRIGGER_NAME: ${{ github.event_name }}
         run: |
           mkdir -p website-quality-governance/generated
           changed_files=$(git diff --name-only "$BASE_SHA" HEAD | paste -sd, -)
@@ -94,68 +102,19 @@ jobs:
             --output website-quality-governance/generated/ai-review-packet.json
           jq '{schema_version, changed_files, high_risk, review_agents: [.review_agents[].id], sync_groups: [.sync_groups[].sync_group_id]}' \
             website-quality-governance/generated/ai-review-packet.json
+          jq -n \
+            --arg pr_number "$PR_NUMBER" \
+            --arg head_sha "$HEAD_SHA" \
+            --arg base_sha "$BASE_SHA" \
+            --arg trigger "$TRIGGER_NAME" \
+            '{pr_number: $pr_number, head_sha: $head_sha, base_sha: $base_sha, trigger: $trigger}' \
+            > website-quality-governance/generated/pr-metadata.json
 
       - name: Upload review packet artifact
         uses: actions/upload-artifact@v4
         with:
           name: docs-ai-review-packet-${{ steps.pr.outputs.number }}
-          path: website-quality-governance/generated/ai-review-packet.json
+          path: |
+            website-quality-governance/generated/ai-review-packet.json
+            website-quality-governance/generated/pr-metadata.json
           if-no-files-found: error
-
-  upsert-advisory-comment:
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-    needs: prepare-docs-ai-review
-    if: needs.prepare-docs-ai-review.result == 'success'
-    permissions:
-      contents: read
-      issues: write
-      pull-requests: read
-    steps:
-      - name: Download review packet artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: docs-ai-review-packet-${{ needs.prepare-docs-ai-review.outputs.pr_number }}
-          path: website-quality-governance/generated
-
-      - name: Upsert advisory PR comment
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          PR_NUMBER: ${{ needs.prepare-docs-ai-review.outputs.pr_number }}
-          HEAD_SHA: ${{ needs.prepare-docs-ai-review.outputs.head_sha }}
-          BASE_SHA: ${{ needs.prepare-docs-ai-review.outputs.base_sha }}
-          TRIGGER_NAME: ${{ github.event_name }}
-        run: |
-          marker='<!-- docs-ai-review:packet -->'
-          changed_count=$(jq '.changed_files | length' website-quality-governance/generated/ai-review-packet.json)
-          high_risk=$(jq -r '.high_risk.required' website-quality-governance/generated/ai-review-packet.json)
-          agent_count=$(jq '.review_agents | length' website-quality-governance/generated/ai-review-packet.json)
-
-          cat > /tmp/docs-ai-review-comment.md <<EOF
-          $marker
-          Docs AI review packet prepared for this PR.
-
-          - Trigger: \`$TRIGGER_NAME\`
-          - Changed files in packet: \`$changed_count\`
-          - High-risk docs path matched: \`$high_risk\`
-          - Review agents included: \`$agent_count\`
-          - Base SHA: \`$BASE_SHA\`
-          - Head SHA: \`$HEAD_SHA\`
-
-          This MVP uploads the packet as a workflow artifact for advisory AI review. AI findings, when produced, are suggestions only; deterministic governance CI remains the blocking signal.
-          EOF
-
-          existing_comment_id=$(
-            gh api repos/${{ github.repository }}/issues/${PR_NUMBER}/comments \
-              --jq ".[] | select(.user.type == \"Bot\" and (.body | contains(\"$marker\"))) | .id" \
-              | tail -n 1
-          )
-
-          if [ -n "$existing_comment_id" ]; then
-            gh api \
-              --method PATCH \
-              repos/${{ github.repository }}/issues/comments/${existing_comment_id} \
-              -f body="$(cat /tmp/docs-ai-review-comment.md)"
-          else
-            gh pr comment "$PR_NUMBER" --body-file /tmp/docs-ai-review-comment.md
-          fi

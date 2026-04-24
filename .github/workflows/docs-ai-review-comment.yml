@@ -1,0 +1,97 @@
+name: Docs AI Review Comment
+
+on:
+  workflow_run:
+    workflows: ["Docs AI Review"]
+    types: [completed]
+
+permissions:
+  contents: read
+  actions: read
+  issues: write
+
+jobs:
+  upsert-advisory-comment:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    if: github.event.workflow_run.conclusion == 'success'
+    steps:
+      - name: Locate review packet artifact
+        id: locate
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RUN_ID: ${{ github.event.workflow_run.id }}
+        run: |
+          artifacts_json=$(gh api \
+            "repos/${{ github.repository }}/actions/runs/${RUN_ID}/artifacts" \
+            --paginate)
+          artifact_name=$(echo "$artifacts_json" \
+            | jq -r '.artifacts[] | select(.name | startswith("docs-ai-review-packet-")) | .name' \
+            | head -n 1)
+          if [ -z "$artifact_name" ]; then
+            echo "No docs-ai-review-packet artifact in run ${RUN_ID}; nothing to comment."
+            echo "found=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "found=true" >> "$GITHUB_OUTPUT"
+            echo "name=$artifact_name" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Download review packet artifact
+        if: steps.locate.outputs.found == 'true'
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ steps.locate.outputs.name }}
+          path: artifact
+          run-id: ${{ github.event.workflow_run.id }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upsert advisory PR comment
+        if: steps.locate.outputs.found == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          packet=artifact/ai-review-packet.json
+          metadata=artifact/pr-metadata.json
+
+          PR_NUMBER=$(jq -r '.pr_number' "$metadata")
+          HEAD_SHA=$(jq -r '.head_sha' "$metadata")
+          BASE_SHA=$(jq -r '.base_sha' "$metadata")
+          TRIGGER_NAME=$(jq -r '.trigger' "$metadata")
+
+          marker='<!-- docs-ai-review:packet -->'
+          changed_count=$(jq '.changed_files | length' "$packet")
+          high_risk=$(jq -r '.high_risk.required' "$packet")
+          agent_count=$(jq '.review_agents | length' "$packet")
+
+          cat > /tmp/docs-ai-review-comment.md <<EOF
+          $marker
+          Docs AI review packet prepared for this PR.
+
+          - Trigger: \`$TRIGGER_NAME\`
+          - Changed files in packet: \`$changed_count\`
+          - High-risk docs path matched: \`$high_risk\`
+          - Review agents included: \`$agent_count\`
+          - Base SHA: \`$BASE_SHA\`
+          - Head SHA: \`$HEAD_SHA\`
+
+          This MVP uploads the packet as a workflow artifact for advisory AI review. AI findings, when produced, are suggestions only; deterministic governance CI remains the blocking signal.
+          EOF
+
+          existing_comment_id=$(
+            gh api "repos/${{ github.repository }}/issues/${PR_NUMBER}/comments" \
+              --paginate \
+              --jq ".[] | select(.user.type == \"Bot\" and (.body | contains(\"$marker\"))) | .id" \
+              | tail -n 1
+          )
+
+          if [ -n "$existing_comment_id" ]; then
+            gh api \
+              --method PATCH \
+              "repos/${{ github.repository }}/issues/comments/${existing_comment_id}" \
+              -f body="$(cat /tmp/docs-ai-review-comment.md)"
+          else
+            gh api \
+              --method POST \
+              "repos/${{ github.repository }}/issues/${PR_NUMBER}/comments" \
+              -f body="$(cat /tmp/docs-ai-review-comment.md)"
+          fi
