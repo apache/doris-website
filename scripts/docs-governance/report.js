@@ -10,6 +10,7 @@ const { lintLinks } = require('./lint-links');
 const { lintSeo } = require('./lint-seo');
 const { lintSqlFunctionDocs } = require('./lint-sql-function-docs');
 const { lintFeatureDocs } = require('./lint-feature-docs');
+const { lintI18nSync } = require('./lint-i18n-sync');
 const { ensureDirForFile, getChangedFiles, getChangedRecords, parseArgs } = require('./lib');
 
 function filterFindings(findings, changedFiles) {
@@ -41,6 +42,7 @@ function runChecks(options = {}) {
       ...lintSeo({ rootDir, manifest }),
       ...lintSqlFunctionDocs({ rootDir, manifest }),
       ...lintFeatureDocs({ rootDir, manifest }),
+      ...lintI18nSync({ rootDir, manifest, changedFiles }),
     ],
     changedFiles,
   );

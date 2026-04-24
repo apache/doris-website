@@ -28,6 +28,8 @@
         "docs:sql-functions:changed": "node scripts/docs-governance/lint-sql-function-docs.js --changed",
         "docs:features": "node scripts/docs-governance/lint-feature-docs.js",
         "docs:features:changed": "node scripts/docs-governance/lint-feature-docs.js --changed",
+        "docs:i18n-sync": "node scripts/docs-governance/lint-i18n-sync.js",
+        "docs:i18n-sync:changed": "node scripts/docs-governance/lint-i18n-sync.js --changed",
         "docs:lint": "node scripts/docs-governance/report.js --format github",
         "docs:lint:changed": "node scripts/docs-governance/report.js --changed --format github",
         "docs:report": "node scripts/docs-governance/report.js --format json --output website-quality-governance/generated/docs-governance-report.json",

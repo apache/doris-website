@@ -14,6 +14,10 @@ const { lintFeatureDocs } = require('../lint-feature-docs');
 const { lintSqlFunctionDocs } = require('../lint-sql-function-docs');
 const { printGithubAnnotations, runChecks } = require('../report');
 
+function loadI18nSyncLinter() {
+  return require('../lint-i18n-sync');
+}
+
 const fixtureRoot = path.join(__dirname, '..', '__fixtures__', 'repo');
 
 function withTempFixture(mutator, callback) {
@@ -958,7 +962,289 @@ SELECT 1;
   assert.ok(!report.findings.some((finding) => finding.path === featurePath && finding.rule.startsWith('feature-doc-')));
 });
 
-test('Week 5 governance scripts and author templates are exposed', () => {
+test('lintI18nSync reports current English changes that need Chinese current sync', () => {
+  const sourcePath = 'docs/gettingStarted/what-is-apache-doris.md';
+  const zhPath = 'i18n/zh-CN/docusaurus-plugin-content-docs/current/gettingStarted/what-is-apache-doris.md';
+  const findings = withTempFixture(
+    (rootDir) => {
+      writeFixtureFile(
+        rootDir,
+        zhPath,
+        `
+---
+title: 什么是 Apache Doris
+description: Apache Doris 中文同步测试页面。
+---
+
+# 什么是 Apache Doris
+`,
+      );
+    },
+    (rootDir) => {
+      const { lintI18nSync } = loadI18nSyncLinter();
+      const manifest = buildManifest({ rootDir });
+      return lintI18nSync({ rootDir, manifest, changedFiles: [sourcePath] });
+    },
+  );
+
+  assert.ok(
+    findings.some(
+      (finding) =>
+        finding.rule === 'i18n-sync-locale-counterpart' &&
+        finding.severity === 'warning' &&
+        finding.path === sourcePath &&
+        finding.related_paths.includes(zhPath),
+    ),
+  );
+});
+
+test('lintI18nSync reports 4.x changes that need current and zh 4.x sync', () => {
+  const versionPath = 'versioned_docs/version-4.x/gettingStarted/what-is-apache-doris.md';
+  const currentPath = 'docs/gettingStarted/what-is-apache-doris.md';
+  const zh4xPath = 'i18n/zh-CN/docusaurus-plugin-content-docs/version-4.x/gettingStarted/what-is-apache-doris.md';
+  const findings = withTempFixture(
+    (rootDir) => {
+      writeFixtureFile(
+        rootDir,
+        zh4xPath,
+        `
+---
+title: 什么是 Apache Doris
+description: Apache Doris 4.x 中文同步测试页面。
+---
+
+# 什么是 Apache Doris
+`,
+      );
+    },
+    (rootDir) => {
+      const { lintI18nSync } = loadI18nSyncLinter();
+      const manifest = buildManifest({ rootDir });
+      return lintI18nSync({ rootDir, manifest, changedFiles: [versionPath] });
+    },
+  );
+
+  assert.ok(
+    findings.some(
+      (finding) =>
+        finding.rule === 'i18n-sync-version-counterpart' &&
+        finding.severity === 'warning' &&
+        finding.path === versionPath &&
+        finding.related_paths.includes(currentPath),
+    ),
+  );
+  assert.ok(
+    findings.some(
+      (finding) =>
+        finding.rule === 'i18n-sync-locale-counterpart' &&
+        finding.severity === 'warning' &&
+        finding.path === versionPath &&
+        finding.related_paths.includes(zh4xPath),
+    ),
+  );
+});
+
+test('lintI18nSync reports missing current or 4.x counterpart for strongly synchronized docs', () => {
+  const sourcePath = 'docs/gettingStarted/current-only.md';
+  const findings = withTempFixture(
+    (rootDir) => {
+      writeFixtureFile(
+        rootDir,
+        sourcePath,
+        `
+---
+title: Current Only
+description: Current-only fixture used to verify missing 4.x sync detection.
+---
+
+# Current Only
+`,
+      );
+    },
+    (rootDir) => {
+      const { lintI18nSync } = loadI18nSyncLinter();
+      const manifest = buildManifest({ rootDir });
+      return lintI18nSync({ rootDir, manifest, changedFiles: [sourcePath] });
+    },
+  );
+
+  assert.ok(
+    findings.some(
+      (finding) =>
+        finding.rule === 'i18n-sync-version-missing' &&
+        finding.severity === 'warning' &&
+        finding.path === sourcePath &&
+        finding.related_paths.includes('versioned_docs/version-4.x/gettingStarted/current-only.md'),
+    ),
+  );
+});
+
+test('lintI18nSync reports Chinese-only changes that need English source confirmation', () => {
+  const sourcePath = 'docs/gettingStarted/what-is-apache-doris.md';
+  const zhPath = 'i18n/zh-CN/docusaurus-plugin-content-docs/current/gettingStarted/what-is-apache-doris.md';
+  const findings = withTempFixture(
+    (rootDir) => {
+      writeFixtureFile(
+        rootDir,
+        zhPath,
+        `
+---
+title: 什么是 Apache Doris
+description: Apache Doris 中文同步测试页面。
+---
+
+# 什么是 Apache Doris
+`,
+      );
+    },
+    (rootDir) => {
+      const { lintI18nSync } = loadI18nSyncLinter();
+      const manifest = buildManifest({ rootDir });
+      return lintI18nSync({ rootDir, manifest, changedFiles: [zhPath] });
+    },
+  );
+
+  assert.ok(
+    findings.some(
+      (finding) =>
+        finding.rule === 'i18n-sync-source-counterpart' &&
+        finding.severity === 'warning' &&
+        finding.path === zhPath &&
+        finding.related_paths.includes(sourcePath),
+    ),
+  );
+});
+
+test('lintI18nSync treats 3.x as non-blocking candidate and ignores 2.1 or older versions', () => {
+  const sourcePath = 'docs/gettingStarted/what-is-apache-doris.md';
+  const threeXPath = 'versioned_docs/version-3.x/gettingStarted/what-is-apache-doris.md';
+  const zhThreeXPath = 'i18n/zh-CN/docusaurus-plugin-content-docs/version-3.x/gettingStarted/what-is-apache-doris.md';
+  const legacyPath = 'versioned_docs/version-2.1/gettingStarted/legacy-only.md';
+  const result = withTempFixture(
+    (rootDir) => {
+      writeFixtureFile(
+        rootDir,
+        threeXPath,
+        `
+---
+title: What Is Apache Doris
+description: Apache Doris 3.x sync candidate fixture.
+---
+
+# What Is Apache Doris
+`,
+      );
+      writeFixtureFile(
+        rootDir,
+        zhThreeXPath,
+        `
+---
+title: 什么是 Apache Doris
+description: Apache Doris 3.x 中文同步候选测试页面。
+---
+
+# 什么是 Apache Doris
+`,
+      );
+      writeFixtureFile(
+        rootDir,
+        legacyPath,
+        `
+---
+title: Legacy Only
+description: Legacy fixture that should be ignored by i18n sync.
+---
+
+# Legacy Only
+`,
+      );
+    },
+    (rootDir) => {
+      const { lintI18nSync } = loadI18nSyncLinter();
+      const manifest = buildManifest({ rootDir });
+      return {
+        currentFindings: lintI18nSync({ rootDir, manifest, changedFiles: [sourcePath, legacyPath] }),
+        threeXFindings: lintI18nSync({ rootDir, manifest, changedFiles: [threeXPath, legacyPath] }),
+      };
+    },
+  );
+
+  assert.ok(
+    result.currentFindings.some(
+      (finding) =>
+        finding.rule === 'i18n-sync-version-candidate' &&
+        finding.severity === 'info' &&
+        finding.path === sourcePath &&
+        finding.related_paths.includes(threeXPath),
+    ),
+  );
+  assert.ok(
+    result.threeXFindings.some(
+      (finding) =>
+        finding.rule === 'i18n-sync-locale-counterpart' &&
+        finding.severity === 'info' &&
+        finding.path === threeXPath &&
+        finding.related_paths.includes(zhThreeXPath),
+    ),
+  );
+  assert.ok(!result.currentFindings.some((finding) => finding.path === legacyPath));
+  assert.ok(!result.threeXFindings.some((finding) => finding.path === legacyPath));
+  assert.ok(
+    ![...result.currentFindings, ...result.threeXFindings].some(
+      (finding) =>
+        finding.severity === 'warning' &&
+        finding.related_paths.some((relatedPath) => relatedPath.includes('version-2.1/')),
+    ),
+  );
+});
+
+test('lintI18nSync reports Japanese candidate translations as info only', () => {
+  const sourcePath = 'docs/gettingStarted/what-is-apache-doris.md';
+  const findings = withTempFixture(
+    () => {},
+    (rootDir) => {
+      const { lintI18nSync } = loadI18nSyncLinter();
+      const manifest = buildManifest({ rootDir });
+      return lintI18nSync({ rootDir, manifest, changedFiles: [sourcePath] });
+    },
+  );
+
+  assert.ok(
+    findings.some(
+      (finding) =>
+        finding.rule === 'i18n-sync-locale-candidate' &&
+        finding.severity === 'info' &&
+        finding.path === sourcePath &&
+        finding.message.includes('Japanese'),
+    ),
+  );
+});
+
+test('runChecks includes i18n sync findings for changed docs', () => {
+  const sourcePath = 'docs/gettingStarted/what-is-apache-doris.md';
+  const zhPath = 'i18n/zh-CN/docusaurus-plugin-content-docs/current/gettingStarted/what-is-apache-doris.md';
+  const report = withTempFixture(
+    (rootDir) => {
+      writeFixtureFile(
+        rootDir,
+        zhPath,
+        `
+---
+title: 什么是 Apache Doris
+description: Apache Doris 中文同步测试页面。
+---
+
+# 什么是 Apache Doris
+`,
+      );
+    },
+    (rootDir) => runChecks({ rootDir, changedFiles: [sourcePath] }),
+  );
+
+  assert.ok(report.findings.some((finding) => finding.rule === 'i18n-sync-locale-counterpart'));
+});
+
+test('Week 5 and Week 6 governance scripts and author templates are exposed', () => {
   const rootDir = path.join(__dirname, '..', '..', '..');
   const packageJson = JSON.parse(fs.readFileSync(path.join(rootDir, 'package.json'), 'utf8'));
 
@@ -966,6 +1252,8 @@ test('Week 5 governance scripts and author templates are exposed', () => {
   assert.equal(packageJson.scripts['docs:sql-functions:changed'], 'node scripts/docs-governance/lint-sql-function-docs.js --changed');
   assert.equal(packageJson.scripts['docs:features'], 'node scripts/docs-governance/lint-feature-docs.js');
   assert.equal(packageJson.scripts['docs:features:changed'], 'node scripts/docs-governance/lint-feature-docs.js --changed');
+  assert.equal(packageJson.scripts['docs:i18n-sync'], 'node scripts/docs-governance/lint-i18n-sync.js');
+  assert.equal(packageJson.scripts['docs:i18n-sync:changed'], 'node scripts/docs-governance/lint-i18n-sync.js --changed');
 
   const sqlTemplate = fs.readFileSync(
     path.join(rootDir, 'website-quality-governance/templates/sql-function-doc.md'),
