@@ -10,10 +10,14 @@ on:
         required: true
         type: string
 
+# Same trust model as opencode-review.yml:
+# - triggered by a trusted maintainer/collaborator comment
+# - comments directly from this workflow
+# - does not rely on pull_request -> artifact -> workflow_run
 permissions:
   contents: read
   issues: write
-  pull-requests: read
+  pull-requests: write
 
 jobs:
   docs-ai-review:
@@ -32,13 +36,27 @@ jobs:
       )
 
     steps:
+      - name: Validate trigger command
+        if: github.event_name == 'issue_comment'
+        run: |
+          body=$(jq -r '.comment.body' "$GITHUB_EVENT_PATH")
+
+          # Require /review-docs as a standalone command on its own line.
+          # This avoids accidental triggers from prose and keeps it distinct from /review.
+          if ! printf '%s\n' "$body" | grep -Eq '^/review-docs([[:space:]]|$)'; then
+            echo "No standalone /review-docs command found; skipping."
+            exit 78
+          fi
+
       - name: Get PR info
         id: pr
         env:
-          GH_TOKEN: ${{ github.token }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           EVENT_NAME: ${{ github.event_name }}
           DISPATCH_PR_NUMBER: ${{ inputs.pr_number }}
         run: |
+          set -euo pipefail
+
           if [ "$EVENT_NAME" = "workflow_dispatch" ]; then
             PR_NUMBER="$DISPATCH_PR_NUMBER"
           else
@@ -46,18 +64,37 @@ jobs:
           fi
 
           PR_JSON=$(gh api repos/${{ github.repository }}/pulls/${PR_NUMBER})
+
           HEAD_SHA=$(echo "$PR_JSON" | jq -r '.head.sha')
           BASE_SHA=$(echo "$PR_JSON" | jq -r '.base.sha')
+          HEAD_REF=$(echo "$PR_JSON" | jq -r '.head.ref')
+          BASE_REF=$(echo "$PR_JSON" | jq -r '.base.ref')
+          HEAD_REPO=$(echo "$PR_JSON" | jq -r '.head.repo.full_name')
+          BASE_REPO=$(echo "$PR_JSON" | jq -r '.base.repo.full_name')
 
           echo "number=$PR_NUMBER" >> "$GITHUB_OUTPUT"
           echo "head_sha=$HEAD_SHA" >> "$GITHUB_OUTPUT"
           echo "base_sha=$BASE_SHA" >> "$GITHUB_OUTPUT"
+          echo "head_ref=$HEAD_REF" >> "$GITHUB_OUTPUT"
+          echo "base_ref=$BASE_REF" >> "$GITHUB_OUTPUT"
+          echo "head_repo=$HEAD_REPO" >> "$GITHUB_OUTPUT"
+          echo "base_repo=$BASE_REPO" >> "$GITHUB_OUTPUT"
 
       - name: Checkout PR head
         uses: actions/checkout@v4
         with:
+          repository: ${{ steps.pr.outputs.head_repo }}
           ref: ${{ steps.pr.outputs.head_sha }}
           fetch-depth: 0
+
+      - name: Fetch base commit
+        env:
+          BASE_REPO: ${{ steps.pr.outputs.base_repo }}
+          BASE_SHA: ${{ steps.pr.outputs.base_sha }}
+        run: |
+          set -euo pipefail
+          git remote add base "https://github.com/${BASE_REPO}.git" || true
+          git fetch --no-tags --depth=1 base "$BASE_SHA"
 
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -73,7 +110,10 @@ jobs:
           BASE_SHA: ${{ steps.pr.outputs.base_sha }}
           HEAD_SHA: ${{ steps.pr.outputs.head_sha }}
         run: |
+          set -euo pipefail
+
           mkdir -p website-quality-governance/generated
+
           changed_files=$(git diff --name-only "$BASE_SHA" "$HEAD_SHA" | paste -sd, -)
 
           yarn docs:ai-review:prepare \
@@ -86,31 +126,37 @@ jobs:
 
       - name: Upsert advisory PR comment
         env:
-          GH_TOKEN: ${{ github.token }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PR_NUMBER: ${{ steps.pr.outputs.number }}
           HEAD_SHA: ${{ steps.pr.outputs.head_sha }}
           BASE_SHA: ${{ steps.pr.outputs.base_sha }}
         run: |
+          set -euo pipefail
+
           packet=website-quality-governance/generated/ai-review-packet.json
-
           marker='<!-- docs-ai-review:packet -->'
-          changed_count=$(jq '.changed_files | length' "$packet")
-          high_risk=$(jq -r '.high_risk.required' "$packet")
-          agent_count=$(jq '.review_agents | length' "$packet")
 
-          cat > /tmp/docs-ai-review-comment.md <<EOF
+          changed_count=$(jq '.changed_files | length' "$packet")
+          high_risk=$(jq -r '.high_risk.required // false' "$packet")
+          agent_count=$(jq '.review_agents | length' "$packet")
+          sync_group_count=$(jq '.sync_groups | length' "$packet")
+
+          cat > /tmp/docs-ai-review-comment.md <<EOF_COMMENT
           $marker
+          ## Docs AI Review
+
           Docs AI review packet prepared for this PR.
 
           - Trigger: \`/review-docs\`
           - Changed files in packet: \`$changed_count\`
           - High-risk docs path matched: \`$high_risk\`
           - Review agents included: \`$agent_count\`
+          - Sync groups included: \`$sync_group_count\`
           - Base SHA: \`$BASE_SHA\`
           - Head SHA: \`$HEAD_SHA\`
 
           This MVP prepares the packet for advisory AI review. AI findings, when produced, are suggestions only; deterministic governance CI remains the blocking signal.
-          EOF
+          EOF_COMMENT
 
           existing_comment_id=$(
             gh api "repos/${{ github.repository }}/issues/${PR_NUMBER}/comments" \
@@ -125,6 +171,8 @@ jobs:
               "repos/${{ github.repository }}/issues/comments/${existing_comment_id}" \
               -f body="$(cat /tmp/docs-ai-review-comment.md)"
           else
+            # Same effective behavior as: gh pr comment "$PR_NUMBER" --body-file /tmp/docs-ai-review-comment.md
+            # Use REST API so we can preserve the upsert-by-marker behavior above.
             gh api \
               --method POST \
               "repos/${{ github.repository }}/issues/${PR_NUMBER}/comments" \
