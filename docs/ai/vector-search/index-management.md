@@ -50,21 +50,7 @@ CREATE TABLE [IF NOT EXISTS] <table_name> (
     "<key>" = "<value>" [, ...]
   )
 )
-[ <key_type> KEY (<key_cols>)
-    [ CLUSTER BY (<cluster_cols>) ]
-]
-[ COMMENT '<table_comment>' ]
-[ <partitions_definition> ]
-[ DISTRIBUTED BY { HASH (<distribute_cols>) | RANDOM }
-    [ BUCKETS { <bucket_count> | AUTO } ]
-]
-[ <roll_up_definition> ]
-[ PROPERTIES (
-    -- Table property
-    <table_property>
-    -- Additional table properties
-    [ , ... ])
-]
+...
 ```
 
 2. **Create the index separately**: Define the index first, then build it on existing data using `BUILD INDEX`.
