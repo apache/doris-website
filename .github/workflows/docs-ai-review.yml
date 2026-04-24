@@ -3,12 +3,6 @@ name: Docs AI Review
 on:
   issue_comment:
     types: [created]
-  workflow_dispatch:
-    inputs:
-      pr_number:
-        description: Pull request number to run docs AI review for
-        required: true
-        type: string
 
 # Same trust model as opencode-review.yml:
 # - triggered by a trusted maintainer/collaborator comment
@@ -24,20 +18,16 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     if: >-
-      github.event_name == 'workflow_dispatch' ||
+      github.event.issue.pull_request &&
+      contains(github.event.comment.body, '/review-docs') &&
       (
-        github.event.issue.pull_request &&
-        contains(github.event.comment.body, '/review-docs') &&
-        (
-          github.event.comment.author_association == 'MEMBER' ||
-          github.event.comment.author_association == 'OWNER' ||
-          github.event.comment.author_association == 'COLLABORATOR'
-        )
+        github.event.comment.author_association == 'MEMBER' ||
+        github.event.comment.author_association == 'OWNER' ||
+        github.event.comment.author_association == 'COLLABORATOR'
       )
 
     steps:
       - name: Validate trigger command
-        if: github.event_name == 'issue_comment'
         run: |
           body=$(jq -r '.comment.body' "$GITHUB_EVENT_PATH")
 
@@ -52,16 +42,10 @@ jobs:
         id: pr
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          EVENT_NAME: ${{ github.event_name }}
-          DISPATCH_PR_NUMBER: ${{ inputs.pr_number }}
         run: |
           set -euo pipefail
 
-          if [ "$EVENT_NAME" = "workflow_dispatch" ]; then
-            PR_NUMBER="$DISPATCH_PR_NUMBER"
-          else
-            PR_NUMBER=$(jq -r '.issue.number' "$GITHUB_EVENT_PATH")
-          fi
+          PR_NUMBER=$(jq -r '.issue.number' "$GITHUB_EVENT_PATH")
 
           PR_JSON=$(gh api repos/${{ github.repository }}/pulls/${PR_NUMBER})
 
@@ -124,6 +108,23 @@ jobs:
           jq '{schema_version, changed_files, high_risk, review_agents: [.review_agents[].id], sync_groups: [.sync_groups[].sync_group_id]}' \
             website-quality-governance/generated/ai-review-packet.json
 
+      - name: Run changed docs governance report
+        env:
+          BASE_SHA: ${{ steps.pr.outputs.base_sha }}
+          HEAD_SHA: ${{ steps.pr.outputs.head_sha }}
+        run: |
+          set -euo pipefail
+
+          changed_files=$(git diff --name-only "$BASE_SHA" "$HEAD_SHA" | paste -sd, -)
+
+          node scripts/docs-governance/report.js \
+            --files "$changed_files" \
+            --format json \
+            --output website-quality-governance/generated/docs-governance-report.json
+
+          jq '{summary, findings: [.findings[] | {severity, rule, path, line, message, related_paths}]}' \
+            website-quality-governance/generated/docs-governance-report.json
+
       - name: Upsert advisory PR comment
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -134,29 +135,15 @@ jobs:
           set -euo pipefail
 
           packet=website-quality-governance/generated/ai-review-packet.json
+          report=website-quality-governance/generated/docs-governance-report.json
           marker='<!-- docs-ai-review:packet -->'
 
-          changed_count=$(jq '.changed_files | length' "$packet")
-          high_risk=$(jq -r '.high_risk.required // false' "$packet")
-          agent_count=$(jq '.review_agents | length' "$packet")
-          sync_group_count=$(jq '.sync_groups | length' "$packet")
-
-          cat > /tmp/docs-ai-review-comment.md <<EOF_COMMENT
-          $marker
-          ## Docs AI Review
-
-          Docs AI review packet prepared for this PR.
-
-          - Trigger: \`/review-docs\`
-          - Changed files in packet: \`$changed_count\`
-          - High-risk docs path matched: \`$high_risk\`
-          - Review agents included: \`$agent_count\`
-          - Sync groups included: \`$sync_group_count\`
-          - Base SHA: \`$BASE_SHA\`
-          - Head SHA: \`$HEAD_SHA\`
-
-          This MVP prepares the packet for advisory AI review. AI findings, when produced, are suggestions only; deterministic governance CI remains the blocking signal.
-          EOF_COMMENT
+          node scripts/docs-governance/render-ai-review-comment.js \
+            --packet "$packet" \
+            --report "$report" \
+            --base-sha "$BASE_SHA" \
+            --head-sha "$HEAD_SHA" \
+            --output /tmp/docs-ai-review-comment.md
 
           existing_comment_id=$(
             gh api "repos/${{ github.repository }}/issues/${PR_NUMBER}/comments" \

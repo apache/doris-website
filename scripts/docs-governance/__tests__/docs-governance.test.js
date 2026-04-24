@@ -1423,6 +1423,64 @@ test('dedupeAiReviewFindings returns stable unique findings', () => {
   );
 });
 
+test('renderDocsAiReviewComment lists actionable changed-file findings', () => {
+  const { renderDocsAiReviewComment } = require('../render-ai-review-comment');
+  const comment = renderDocsAiReviewComment({
+    packet: {
+      changed_files: ['docs/sql-manual/sql-functions/bad-function.md'],
+      high_risk: {
+        required: true,
+        matched_paths: [
+          {
+            path: 'docs/sql-manual/sql-functions/bad-function.md',
+            rule: 'docs/sql-manual/',
+          },
+        ],
+      },
+      review_agents: [{ id: 'docs-clarity' }, { id: 'i18n-version-sync' }],
+      sync_groups: [{ sync_group_id: 'main_docs:sql-manual/sql-functions/bad-function' }],
+    },
+    report: {
+      summary: {
+        findings: 2,
+        by_severity: { error: 1, warning: 1 },
+      },
+      findings: [
+        {
+          severity: 'error',
+          rule: 'sql-function-section-order',
+          path: 'docs/sql-manual/sql-functions/bad-function.md',
+          line: 12,
+          message: 'SQL function docs must contain sections in the required order.',
+          owner: '@apache/doris-website-maintainers',
+        },
+        {
+          severity: 'warning',
+          rule: 'i18n-sync-locale-counterpart',
+          path: 'docs/sql-manual/sql-functions/bad-function.md',
+          line: 1,
+          message: 'Chinese localized counterpart needs the same update.',
+          related_paths: [
+            'i18n/zh-CN/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/bad-function.md',
+          ],
+        },
+      ],
+    },
+    baseSha: '9f5aa557f929f98e064426fcabe90dfc40dc743e',
+    headSha: '2288afd2f3727fa50c438ee3d2be1a813ee7d292',
+  });
+
+  assert.match(comment, /<!-- docs-ai-review:packet -->/);
+  assert.match(comment, /Findings to fix/);
+  assert.match(comment, /`docs\/sql-manual\/sql-functions\/bad-function.md:12`/);
+  assert.match(comment, /sql-function-section-order/);
+  assert.match(comment, /Update the SQL function page so it follows the required function documentation structure/);
+  assert.match(comment, /i18n\/zh-CN\/docusaurus-plugin-content-docs\/current\/sql-manual\/sql-functions\/bad-function.md/);
+  assert.match(comment, /High-risk docs path matched: `true`/);
+  assert.match(comment, /Base SHA: `9f5aa557/);
+  assert.match(comment, /Head SHA: `2288afd2/);
+});
+
 test('Week 7 AI review scripts and workflow are exposed without replacing the generic review workflow', () => {
   const rootDir = path.join(__dirname, '..', '..', '..');
   const packageJson = JSON.parse(fs.readFileSync(path.join(rootDir, 'package.json'), 'utf8'));
@@ -1438,12 +1496,18 @@ test('Week 7 AI review scripts and workflow are exposed without replacing the ge
   assert.equal(packageJson.scripts['docs:ai-review:prepare'], 'node scripts/docs-governance/prepare-ai-review.js');
   assert.equal(packageJson.scripts['docs:ai-review:validate'], 'node scripts/docs-governance/validate-ai-review-output.js');
   assert.equal(packageJson.scripts['docs:ai-review:dedupe'], 'node scripts/docs-governance/dedupe-ai-review-comments.js');
+  assert.equal(packageJson.scripts['docs:ai-review:comment'], 'node scripts/docs-governance/render-ai-review-comment.js');
   assert.match(docsAiReviewWorkflow, /\/review-docs/);
-  assert.match(docsAiReviewWorkflow, /ai-review-docs/);
-  assert.match(docsAiReviewWorkflow, /pull-requests: read/);
+  assert.match(docsAiReviewWorkflow, /issue_comment:/);
+  assert.doesNotMatch(docsAiReviewWorkflow, /workflow_dispatch:/);
+  assert.match(docsAiReviewWorkflow, /docs-governance-report\.json/);
+  assert.match(docsAiReviewWorkflow, /render-ai-review-comment\.js/);
+  assert.doesNotMatch(docsAiReviewWorkflow, /DISPATCH_PR_NUMBER/);
+  assert.match(docsAiReviewWorkflow, /pull-requests: write/);
   assert.match(docsAiReviewWorkflow, /contents: read/);
   assert.match(docsAiReviewWorkflow, /issues: write/);
-  assert.ok(docsAiReviewWorkflow.indexOf('Checkout PR head') < docsAiReviewWorkflow.indexOf('issues: write'));
+  assert.ok(docsAiReviewWorkflow.indexOf('Checkout PR head') < docsAiReviewWorkflow.indexOf('Run changed docs governance report'));
+  assert.ok(docsAiReviewWorkflow.indexOf('Run changed docs governance report') < docsAiReviewWorkflow.indexOf('Upsert advisory PR comment'));
   assert.match(openCodeWorkflow, /\/review/);
 });
 
