@@ -208,6 +208,28 @@ test('lintLinks reports inbound links and redirect review for deleted or renamed
   );
 });
 
+test('lintLinks ignores moved or deleted markdown outside governed content roots', () => {
+  const manifest = buildManifest({ rootDir: fixtureRoot });
+  const findings = lintLinks({
+    rootDir: fixtureRoot,
+    manifest,
+    changedFiles: [
+      'website-quality-governance/weekly-todo.md',
+      'website-quality-governance/baseline-audit.md',
+    ],
+    changedRecords: [
+      { status: 'D', path: 'website-quality-governance/weekly-todo.md' },
+      {
+        status: 'R',
+        oldPath: 'website-quality-governance/baseline-audit.md',
+        path: 'website-quality-governance/quality-baseline.md',
+      },
+    ],
+  });
+
+  assert.ok(!findings.some((finding) => finding.rule === 'link-path-change-redirect-review'));
+});
+
 test('filterLinkFindings keeps changed paths and related moved-file findings only', () => {
   const findings = [
     {

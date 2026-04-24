@@ -16,6 +16,16 @@ const {
 } = require('./lib');
 const { loadSidebarRefs } = require('./lint-sidebar');
 
+const GOVERNED_MARKDOWN_PREFIXES = [
+  'blog/',
+  'community/',
+  'docs/',
+  'i18n/',
+  'ja-source/',
+  'releasenotes/',
+  'versioned_docs/',
+];
+
 function makeFinding(severity, rule, pathName, line, message, owner, relatedPaths = []) {
   return {
     severity,
@@ -96,6 +106,11 @@ function isExternal(target) {
 
 function isSkippable(target) {
   return !target || target.startsWith('mailto:') || target.startsWith('tel:') || target.startsWith('javascript:');
+}
+
+function isGovernedMarkdownPath(filePath) {
+  const normalized = normalizePath(filePath || '');
+  return isMarkdownFile(normalized) && GOVERNED_MARKDOWN_PREFIXES.some((prefix) => normalized.startsWith(prefix));
 }
 
 function buildIndexes(rootDir, manifest) {
@@ -235,7 +250,7 @@ function recordOldPaths(records) {
       oldPath: record.oldPath || record.path,
       path: record.path,
     }))
-    .filter((record) => isMarkdownFile(record.oldPath));
+    .filter((record) => isGovernedMarkdownPath(record.oldPath));
 }
 
 function targetMatchesOldPath(sourcePath, target, oldPath) {
@@ -345,7 +360,7 @@ function frontMatterSlug(raw) {
 function lintSlugChanges(rootDir, changedFiles) {
   const findings = [];
   for (const changedFile of changedFiles || []) {
-    if (!isMarkdownFile(changedFile)) {
+    if (!isGovernedMarkdownPath(changedFile)) {
       continue;
     }
     const absPath = path.join(rootDir, changedFile);
