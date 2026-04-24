@@ -187,6 +187,10 @@ jobs:
                   PWA_SERVICE_WORKER_URL=https://doris.apache.org/sw.js yarn docusaurus build ${{ steps.detect.outputs.locale_args }}
                   rm -rf build
 
+            - name: Docs changed link gate
+              run: |
+                  yarn docs:links:changed --fail-on-errors --output website-quality-governance/generated/docs-links-report.json
+
             - name: Docs governance report
               if: always()
               continue-on-error: true

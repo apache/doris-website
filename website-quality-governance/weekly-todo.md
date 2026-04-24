@@ -137,26 +137,26 @@ scripts/docs-governance/
 
 ### TODO
 
-- [ ] 合并现有死链脚本，形成一个统一 `lint-links.js`。
-- [ ] 覆盖 Markdown 链接、MDX 链接、Docusaurus absolute path、relative path、anchor、图片路径。
-- [ ] 检查链接时忽略代码块和 inline code，避免误报。
-- [ ] 对移动和删除文件做全仓引用检查，确保 `docs/`、`versioned_docs/`、`i18n/`、`community/`、sidebars 都被覆盖。
-- [ ] 将 PR build 的 `onBrokenLinks` 和 `onBrokenMarkdownLinks` 行为从 ignore 迁移到 fail-fast。建议先通过环境变量控制，例如 CI 使用 throw，本地默认 warn。
-- [ ] 生成 redirect 检查：如果路径、文件名、slug、heading anchor 改变，要求检查 `@docusaurus/plugin-client-redirects` 或更新所有引用。
-- [ ] 定义外链策略：PR 不阻塞外链，scheduled 巡检检查外链并创建 issue。
-- [ ] 输出 `broken-links-baseline.md`，列出历史死链和分批修复优先级。
+- [x] 合并现有死链脚本，形成一个统一 `lint-links.js`。
+- [x] 覆盖 Markdown 链接、MDX 链接、Docusaurus absolute path、relative path、anchor、图片路径。
+- [x] 检查链接时忽略代码块和 inline code，避免误报。
+- [x] 对移动和删除文件做全仓引用检查，确保 `docs/`、`versioned_docs/`、`i18n/`、`community/`、sidebars 都被覆盖。
+- [x] 将 `onBrokenLinks` 和 `onBrokenMarkdownLinks` 从固定 ignore 改为环境变量控制；当前 CI build 保持 warn，PR 通过 changed-only link gate 阻塞新增内部死链，历史清理完成后再切换 Docusaurus build 为 throw。
+- [x] 生成 redirect 检查：如果路径、文件名、slug、heading anchor 改变，要求检查 `@docusaurus/plugin-client-redirects` 或更新所有引用。
+- [x] 定义外链策略：PR 不阻塞外链，scheduled 巡检检查外链并创建 issue。
+- [x] 输出 `broken-links-baseline.md`，列出历史死链和分批修复优先级。
 
 ### 验收标准
 
-- [ ] 新增或修改的内部死链会阻塞 PR。
-- [ ] 移动或删除文档时，所有 inbound links 和 sidebar references 都能被检测。
-- [ ] Docusaurus build 不再掩盖 broken link 问题。
-- [ ] 外链失败不会因为临时网络问题阻塞普通 PR。
+- [x] 新增或修改的内部死链会通过 `docs:links:changed --fail-on-errors` 阻塞 PR。
+- [x] 移动或删除文档时，所有 inbound links 和 sidebar references 都能被检测。
+- [x] Docusaurus build 已支持通过环境变量开启 fail-fast；当前默认 warn，避免历史死链阻塞所有 PR。
+- [x] 外链失败不会因为临时网络问题阻塞普通 PR。
 
 ### 风险和处理
 
 - Docusaurus route 和 Markdown 文件路径不完全等价。脚本需要同时检查源文件路径和构建后 URL。
-- 大量历史死链可能存在。先只阻塞 changed files 和新增问题，全量死链进入巡检 issue。
+- 大量历史死链已经存在。当前先只阻塞 changed files 和新增问题，全量死链进入 baseline 和巡检 issue；全量 Docusaurus `throw` 要等历史错误清理到可控范围后再启用。
 
 ## Week 4: SEO 和 GEO 基线建设
 

@@ -180,6 +180,49 @@ function getChangedFiles(rootDir) {
   }
 }
 
+function parseNameStatus(raw) {
+  return raw
+    .split(/\r?\n/)
+    .map((line) => line.trim())
+    .filter(Boolean)
+    .map((line) => {
+      const parts = line.split(/\t+/);
+      const status = parts[0];
+      if (status.startsWith('R') || status.startsWith('C')) {
+        return { status: status[0], oldPath: normalizePath(parts[1] || ''), path: normalizePath(parts[2] || '') };
+      }
+      return { status: status[0], path: normalizePath(parts[1] || '') };
+    })
+    .filter((record) => record.path || record.oldPath);
+}
+
+function getChangedRecords(rootDir) {
+  const { execSync } = require('child_process');
+  const fallback = () => parseNameStatus(execSync('git diff --name-status HEAD', {
+    cwd: rootDir,
+    encoding: 'utf8',
+  }));
+
+  if (!process.env.GITHUB_BASE_REF) {
+    return fallback();
+  }
+
+  const baseRef = `origin/${process.env.GITHUB_BASE_REF}`;
+  try {
+    const base = execSync(`git merge-base ${baseRef} HEAD`, {
+      cwd: rootDir,
+      encoding: 'utf8',
+      stdio: ['ignore', 'pipe', 'ignore'],
+    }).trim();
+    return parseNameStatus(execSync(`git diff --name-status ${base} HEAD`, {
+      cwd: rootDir,
+      encoding: 'utf8',
+    }));
+  } catch (err) {
+    return fallback();
+  }
+}
+
 function ensureDirForFile(filePath) {
   fs.mkdirSync(path.dirname(filePath), { recursive: true });
 }
@@ -193,6 +236,7 @@ module.exports = {
   ensureDirForFile,
   fileExists,
   getChangedFiles,
+  getChangedRecords,
   isMarkdownFile,
   loadExceptions,
   loadOwners,

@@ -6,25 +6,35 @@ const { buildManifest } = require('./manifest');
 const { lintFrontmatter } = require('./lint-frontmatter');
 const { lintMarkdownStructure } = require('./lint-markdown-structure');
 const { lintSidebar } = require('./lint-sidebar');
-const { ensureDirForFile, getChangedFiles, parseArgs } = require('./lib');
+const { lintLinks } = require('./lint-links');
+const { ensureDirForFile, getChangedFiles, getChangedRecords, parseArgs } = require('./lib');
 
 function filterFindings(findings, changedFiles) {
   if (!changedFiles || changedFiles.length === 0) {
     return findings;
   }
   const changed = new Set(changedFiles);
-  return findings.filter((finding) => changed.has(finding.path) || changed.has(finding.path.replace(/^\.\//, '')));
+  return findings.filter((finding) => {
+    const related = finding.related_paths || [];
+    return (
+      changed.has(finding.path) ||
+      changed.has(finding.path.replace(/^\.\//, '')) ||
+      related.some((relatedPath) => changed.has(relatedPath))
+    );
+  });
 }
 
 function runChecks(options = {}) {
   const rootDir = options.rootDir || process.cwd();
   const changedFiles = options.changedFiles || null;
+  const changedRecords = options.changedRecords || [];
   const manifest = buildManifest({ rootDir });
   const findings = filterFindings(
     [
       ...lintFrontmatter({ rootDir, manifest }),
       ...lintMarkdownStructure({ rootDir, manifest }),
       ...lintSidebar({ rootDir, manifest }),
+      ...lintLinks({ rootDir, manifest, changedFiles: changedFiles || [], changedRecords }),
     ],
     changedFiles,
   );
@@ -59,7 +69,11 @@ function escapeAnnotation(value) {
 
 function printGithubAnnotations(findings) {
   for (const finding of findings) {
-    const level = finding.severity === 'error' ? 'error' : 'warning';
+    const level = finding.severity === 'error'
+      ? 'error'
+      : finding.severity === 'info'
+        ? 'notice'
+        : 'warning';
     const file = escapeAnnotation(finding.path);
     const line = finding.line || 1;
     const title = escapeAnnotation(finding.rule);
@@ -72,7 +86,8 @@ function runCli() {
   const args = parseArgs(process.argv.slice(2));
   const rootDir = args.root ? path.resolve(args.root) : process.cwd();
   const changedFiles = args.changed ? getChangedFiles(rootDir) : args.files ? args.files.split(',') : null;
-  const report = runChecks({ rootDir, changedFiles });
+  const changedRecords = args.changed ? getChangedRecords(rootDir) : [];
+  const report = runChecks({ rootDir, changedFiles, changedRecords });
   const format = args.format || 'github';
 
   if (format === 'github') {
@@ -104,4 +119,3 @@ module.exports = {
   printGithubAnnotations,
   runChecks,
 };
-
