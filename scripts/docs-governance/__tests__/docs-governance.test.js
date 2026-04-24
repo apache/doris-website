@@ -1,4 +1,6 @@
 const assert = require('node:assert/strict');
+const fs = require('node:fs');
+const os = require('node:os');
 const path = require('node:path');
 const test = require('node:test');
 
@@ -10,6 +12,17 @@ const { filterLinkFindings, hasLinkErrors, lintLinks } = require('../lint-links'
 const { printGithubAnnotations, runChecks } = require('../report');
 
 const fixtureRoot = path.join(__dirname, '..', '__fixtures__', 'repo');
+
+function withTempFixture(mutator, callback) {
+  const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'docs-governance-fixture-'));
+  fs.cpSync(fixtureRoot, tempRoot, { recursive: true });
+  try {
+    mutator(tempRoot);
+    return callback(tempRoot);
+  } finally {
+    fs.rmSync(tempRoot, { recursive: true, force: true });
+  }
+}
 
 test('buildManifest maps docs across roots to stable identities', () => {
   const manifest = buildManifest({ rootDir: fixtureRoot });
@@ -87,8 +100,27 @@ test('lintSidebar reports missing sidebar targets and orphan docs', () => {
 });
 
 test('lintLinks validates markdown links, images, routes, anchors, and code exclusions', () => {
-  const manifest = buildManifest({ rootDir: fixtureRoot });
-  const findings = lintLinks({ rootDir: fixtureRoot, manifest });
+  const findings = withTempFixture(
+    (rootDir) => {
+      fs.appendFileSync(
+        path.join(rootDir, 'docs/gettingStarted/with-links.mdx'),
+        [
+          '',
+          'Missing relative page: [Missing](./missing-page.md)',
+          '',
+          'Missing anchor: [Missing anchor](./what-is-apache-doris.md#missing-anchor)',
+          '',
+          'External link: [Apache](https://apache.org/)',
+          '',
+        ].join('\n'),
+        'utf8',
+      );
+    },
+    (rootDir) => {
+      const manifest = buildManifest({ rootDir });
+      return lintLinks({ rootDir, manifest });
+    },
+  );
 
   assert.ok(
     findings.some(
@@ -137,15 +169,26 @@ test('lintLinks validates markdown links, images, routes, anchors, and code excl
 });
 
 test('lintLinks reports inbound links and redirect review for deleted or renamed docs', () => {
-  const manifest = buildManifest({ rootDir: fixtureRoot });
-  const findings = lintLinks({
-    rootDir: fixtureRoot,
-    manifest,
-    changedFiles: ['docs/gettingStarted/old-page.md', 'docs/gettingStarted/new-page.md'],
-    changedRecords: [
-      { status: 'R', oldPath: 'docs/gettingStarted/old-page.md', path: 'docs/gettingStarted/new-page.md' },
-    ],
-  });
+  const findings = withTempFixture(
+    (rootDir) => {
+      fs.appendFileSync(
+        path.join(rootDir, 'docs/gettingStarted/with-links.mdx'),
+        ['', 'Old page reference: [Old page](./old-page.md)', ''].join('\n'),
+        'utf8',
+      );
+    },
+    (rootDir) => {
+      const manifest = buildManifest({ rootDir });
+      return lintLinks({
+        rootDir,
+        manifest,
+        changedFiles: ['docs/gettingStarted/old-page.md', 'docs/gettingStarted/new-page.md'],
+        changedRecords: [
+          { status: 'R', oldPath: 'docs/gettingStarted/old-page.md', path: 'docs/gettingStarted/new-page.md' },
+        ],
+      });
+    },
+  );
 
   assert.ok(
     findings.some(
@@ -220,7 +263,16 @@ test('hasLinkErrors treats only error severity as blocking', () => {
 });
 
 test('runChecks returns a unified report with manifest summary and findings', () => {
-  const report = runChecks({ rootDir: fixtureRoot });
+  const report = withTempFixture(
+    (rootDir) => {
+      fs.appendFileSync(
+        path.join(rootDir, 'docs/gettingStarted/with-links.mdx'),
+        ['', 'External link: [Apache](https://apache.org/)', ''].join('\n'),
+        'utf8',
+      );
+    },
+    (rootDir) => runChecks({ rootDir }),
+  );
 
   assert.equal(report.schema_version, 1);
   assert.equal(report.summary.entries, report.manifest.entries.length);
