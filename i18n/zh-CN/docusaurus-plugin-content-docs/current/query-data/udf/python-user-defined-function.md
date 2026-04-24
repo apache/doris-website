@@ -40,6 +40,7 @@ PROPERTIES (
     "type" = "PYTHON_UDF",
     "symbol" = "entry_function_name",
     "runtime_version" = "python_version",
+    "volatility" = "immutable|stable|volatile",
     "always_nullable" = "true|false"
 )
 AS $$
@@ -58,7 +59,8 @@ RETURNS INT
 PROPERTIES (
     "type" = "PYTHON_UDF",
     "symbol" = "evaluate",
-    "runtime_version" = "3.10.12"
+    "runtime_version" = "3.10.12",
+    "volatility" = "immutable"
 )
 AS $$
 def evaluate(a, b):
@@ -77,7 +79,8 @@ RETURNS STRING
 PROPERTIES (
     "type" = "PYTHON_UDF",
     "symbol" = "evaluate",
-    "runtime_version" = "3.10.12"
+    "runtime_version" = "3.10.12",
+    "volatility" = "immutable"
 )
 AS $$
 def evaluate(s1, s2):
@@ -247,6 +250,7 @@ PROPERTIES (
     "file" = "file:///path/to/python_udf_scalar_ops.zip",
     "symbol" = "python_udf_scalar_ops.add_three_numbers",
     "runtime_version" = "3.10.12",
+    "volatility" = "immutable",
     "always_nullable" = "true"
 );
 
@@ -257,6 +261,7 @@ PROPERTIES (
     "file" = "file:///path/to/python_udf_scalar_ops.zip",
     "symbol" = "python_udf_scalar_ops.reverse_string",
     "runtime_version" = "3.10.12",
+    "volatility" = "immutable",
     "always_nullable" = "true"
 );
 
@@ -267,6 +272,7 @@ PROPERTIES (
     "file" = "file:///path/to/python_udf_scalar_ops.zip",
     "symbol" = "python_udf_scalar_ops.is_prime",
     "runtime_version" = "3.10.12",
+    "volatility" = "immutable",
     "always_nullable" = "true"
 );
 ```
@@ -284,6 +290,7 @@ PROPERTIES (
     "file" = "https://your-storage.com/udf/python_udf_scalar_ops.zip",
     "symbol" = "python_udf_scalar_ops.add_three_numbers",
     "runtime_version" = "3.10.12",
+    "volatility" = "immutable",
     "always_nullable" = "true"
 );
 
@@ -294,6 +301,7 @@ PROPERTIES (
     "file" = "https://your-storage.com/udf/python_udf_scalar_ops.zip",
     "symbol" = "python_udf_scalar_ops.reverse_string",
     "runtime_version" = "3.10.12",
+    "volatility" = "immutable",
     "always_nullable" = "true"
 );
 
@@ -304,6 +312,7 @@ PROPERTIES (
     "file" = "https://your-storage.com/udf/python_udf_scalar_ops.zip",
     "symbol" = "python_udf_scalar_ops.is_prime",
     "runtime_version" = "3.10.12",
+    "volatility" = "immutable",
     "always_nullable" = "true"
 );
 ```
@@ -320,6 +329,7 @@ PROPERTIES (
     "file" = "file:///path/to/my_udf.zip",
     "symbol" = "my_udf.math_ops.multiply_by_two",
     "runtime_version" = "3.10.12",
+    "volatility" = "immutable",
     "always_nullable" = "true"
 );
 ```
@@ -362,6 +372,7 @@ DROP FUNCTION IF EXISTS py_is_prime(INT);
 | `symbol` | 是 | - | Python 函数入口名称。<br>• **内联模式**: 直接写函数名，如 `"evaluate"`<br>• **模块模式**: 格式为 `[package_name.]module_name.func_name`，详见模块模式说明 |
 | `file` | 否 | - | Python `.zip` 包路径，仅模块模式需要。支持三种协议:<br>• `file://` - 本地文件系统路径<br>• `http://` - HTTP 远程下载<br>• `https://` - HTTPS 远程下载 |
 | `runtime_version` | 是 | - | Python 运行时版本，如 `"3.10.12"`，需填写完整的版本号 |
+| `volatility` | 否 | `volatile` | Python UDF 的易变性。可选值为 `immutable`、`stable`、`volatile`。<br>`immutable`：相同输入在不同语句中始终产生相同输出，且实现不依赖当前时间、随机数或外部可变状态。<br>`stable`：相同输入在单条语句内产生相同结果，但不同语句之间结果可能变化，典型例子有 `now()` 和 `current_timestamp()`。<br>`volatile`：每次调用的结果都可能变化，典型例子有 `uuid()` 和 `random()`。<br>正确标记后，优化器可以更安全地处理查询改写和其他优化场景；错误标记可能导致错误的查询结果。 |
 | `always_nullable` | 否 | `true` | 是否总是返回可空结果 |
 
 #### 运行时版本说明
@@ -427,6 +438,7 @@ PROPERTIES (
     "type" = "PYTHON_UDF",
     "symbol" = "evaluate",
     "runtime_version" = "3.10.12",
+    "volatility" = "immutable",
     "always_nullable" = "true"
 )
 AS $$
@@ -473,6 +485,7 @@ PROPERTIES (
     "type" = "PYTHON_UDF",
     "symbol" = "add",
     "runtime_version" = "3.10.12",
+    "volatility" = "immutable",
     "always_nullable" = "true"
 )
 AS $$
@@ -495,6 +508,7 @@ PROPERTIES (
     "type" = "PYTHON_UDF",
     "symbol" = "to_upper",
     "runtime_version" = "3.10.12",
+    "volatility" = "immutable",
     "always_nullable" = "true"
 )
 AS $$
@@ -517,6 +531,7 @@ PROPERTIES (
     "type" = "PYTHON_UDF",
     "symbol" = "sqrt",
     "runtime_version" = "3.10.12",
+    "volatility" = "immutable",
     "always_nullable" = "true"
 )
 AS $$
@@ -586,6 +601,7 @@ PROPERTIES (
     "type" = "PYTHON_UDF",
     "symbol" = "evaluate",
     "runtime_version" = "3.10.12",
+    "volatility" = "immutable",
     "always_nullable" = "true"
 )
 AS $$
@@ -609,6 +625,7 @@ PROPERTIES (
     "type" = "PYTHON_UDF",
     "symbol" = "evaluate",
     "runtime_version" = "3.10.12",
+    "volatility" = "immutable",
     "always_nullable" = "true"
 )
 AS $$
@@ -633,6 +650,7 @@ PROPERTIES (
     "type" = "PYTHON_UDF",
     "symbol" = "evaluate",
     "runtime_version" = "3.10.12",
+    "volatility" = "immutable",
     "always_nullable" = "true"
 )
 AS $$
@@ -656,6 +674,7 @@ PROPERTIES (
     "type" = "PYTHON_UDF",
     "symbol" = "evaluate",
     "runtime_version" = "3.10.12",
+    "volatility" = "immutable",
     "always_nullable" = "true"
 )
 AS $$
@@ -680,6 +699,7 @@ PROPERTIES (
     "type" = "PYTHON_UDF",
     "symbol" = "evaluate",
     "runtime_version" = "3.10.12",
+    "volatility" = "immutable",
     "always_nullable" = "true"
 )
 AS $$
@@ -705,7 +725,8 @@ RETURNS STRING
 PROPERTIES (
     "type" = "PYTHON_UDF",
     "symbol" = "evaluate",
-    "runtime_version" = "3.10.12"
+    "runtime_version" = "3.10.12",
+    "volatility" = "immutable"
 )
 AS $$
 def evaluate(email):
@@ -731,7 +752,8 @@ RETURNS INT
 PROPERTIES (
     "type" = "PYTHON_UDF",
     "symbol" = "evaluate",
-    "runtime_version" = "3.10.12"
+    "runtime_version" = "3.10.12",
+    "volatility" = "immutable"
 )
 AS $$
 def evaluate(s1, s2):
@@ -768,7 +790,8 @@ RETURNS INT
 PROPERTIES (
     "type" = "PYTHON_UDF",
     "symbol" = "evaluate",
-    "runtime_version" = "3.10.12"
+    "runtime_version" = "3.10.12",
+    "volatility" = "immutable"
 )
 AS $$
 from datetime import datetime
@@ -797,7 +820,8 @@ RETURNS BOOLEAN
 PROPERTIES (
     "type" = "PYTHON_UDF",
     "symbol" = "evaluate",
-    "runtime_version" = "3.10.12"
+    "runtime_version" = "3.10.12",
+    "volatility" = "immutable"
 )
 AS $$
 def evaluate(id_card):
@@ -1410,6 +1434,8 @@ DROP FUNCTION IF EXISTS py_variance(DOUBLE);
 | `file` | 否 | - | Python `.zip` 包路径，仅模块模式需要。支持三种协议:<br>• `file://` - 本地文件系统路径<br>• `http://` - HTTP 远程下载<br>• `https://` - HTTPS 远程下载 |
 | `runtime_version` | 是 | - | Python 运行时版本，如 `"3.10.12"` |
 | `always_nullable` | 否 | `true` | 是否总是返回可空结果 |
+
+`volatility` 仅支持标量 Python UDF，不支持 Python UDAF。
 
 #### runtime_version 说明
 
@@ -2407,6 +2433,8 @@ CREATE TABLES FUNCTION py_split(STRING, STRING) ...;
 | `runtime_version` | 是 | - | Python 运行时版本，如 `"3.10.12"` |
 | `always_nullable` | 否 | `true` | 是否总是返回可空结果 |
 
+`volatility` 仅支持标量 Python UDF，不支持 Python UDTF。
+
 #### runtime_version 说明
 
 - 必须填写 Python 版本的**完整版本号**，格式为 `x.x.x` 或 `x.x.xx`
@@ -2962,6 +2990,7 @@ PROPERTIES (
     "type" = "PYTHON_UDF",
     "symbol" = "evaluate",
     "runtime_version" = "3.12.11",  -- 必须指定完整版本号，匹配 Python 3.12.11
+    "volatility" = "immutable",
     "always_nullable" = "true"
 )
 AS $$
@@ -3064,6 +3093,7 @@ PROPERTIES (
     "type" = "PYTHON_UDF",
     "symbol" = "evaluate",
     "runtime_version" = "3.9.18",  -- 必须指定完整版本号，匹配 Python 3.9.18
+    "volatility" = "immutable",
     "always_nullable" = "true"
 )
 AS $$
@@ -3078,6 +3108,7 @@ PROPERTIES (
     "type" = "PYTHON_UDF",
     "symbol" = "evaluate",
     "runtime_version" = "3.12.11",  -- 必须指定完整版本号，匹配 Python 3.12.11
+    "volatility" = "immutable",
     "always_nullable" = "true"
 )
 AS $$

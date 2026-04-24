@@ -75,6 +75,11 @@ CREATE [ GLOBAL ]
 > - `symbol`: Indicates the class name containing the UDF class. This parameter is mandatory.
 > - `type`: Indicates the UDF call type. The default is Native. Use JAVA_UDF when using a Java UDF.
 > - `always_nullable`: Indicates whether the UDF result may contain NULL values. This is an optional parameter with a default value of true.
+> - `volatility`: Indicates the volatility of a scalar Java UDF or scalar Python UDF. This is an optional parameter with a default value of `volatile`. Valid values are `immutable`, `stable`, and `volatile`. `immutable` means identical inputs always produce identical outputs across statements, and the implementation does not depend on current time, random numbers, or external mutable state. `stable` means identical inputs produce the same result within a single statement, but the result may change between statements; examples include `now()` and `current_timestamp()`. `volatile` means the function result may change for each call; examples include `uuid()` and `random()`. Correct marking allows the optimizer to handle query rewrites more safely; incorrect marking may lead to wrong query results. This property is not supported for UDAF, UDTF, RPC, or alias functions.
+
+:::note
+The `volatility` property is supported since 4.1.0.
+:::
 
 ## Access Control Requirements
 
@@ -91,11 +96,12 @@ To execute this command, the user must have `ADMIN_PRIV` privileges.
        "file"="file:///path/to/java-udf-demo-jar-with-dependencies.jar",
        "symbol"="org.apache.doris.udf.AddOne",
        "always_nullable"="true",
-       "type"="JAVA_UDF"
+       "type"="JAVA_UDF",
+       "volatility"="immutable"
    );
    ```
 
-2. Create a custom UDAF function.
+2. Create a custom UDAF function. The `volatility` property is not supported for UDAF.
 
    
 
@@ -108,7 +114,7 @@ To execute this command, the user must have `ADMIN_PRIV` privileges.
    );
    ```
 
-3. Create a custom UDTF function.
+3. Create a custom UDTF function. The `volatility` property is not supported for UDTF.
 
    
 
@@ -136,3 +142,91 @@ To execute this command, the user must have `ADMIN_PRIV` privileges.
    ```sql
    CREATE GLOBAL ALIAS FUNCTION id_masking(INT) WITH PARAMETER(id) AS CONCAT(LEFT(id, 3), '****', RIGHT(id, 4));
    ```
+
+6. Create a volatile Python UDF. Functions such as `uuid.uuid4()` that depend on randomness should keep the default `volatility = volatile` and must not be incorrectly marked as `immutable`.
+
+   ```sql
+   CREATE TABLE cte_uuid_seed (id INT) ENGINE=OLAP DUPLICATE KEY(id)
+   DISTRIBUTED BY HASH(id) BUCKETS 1 PROPERTIES ("replication_num" = "1");
+   INSERT INTO cte_uuid_seed VALUES (1),(2),(3);
+
+   DROP FUNCTION IF EXISTS py_uuid_token(INT);
+   CREATE FUNCTION py_uuid_token(INT)
+   RETURNS STRING
+   PROPERTIES (
+       "type" = "PYTHON_UDF",
+       "symbol" = "py_uuid_token_impl",
+       "always_nullable" = "false",
+       "runtime_version" = "3.12.11",
+       "volatility" = "volatile"
+   )
+   AS $$
+   import uuid
+   def py_uuid_token_impl(x):
+       return f"{x}-{uuid.uuid4()}"
+   $$;
+
+   SET enable_cte_materialize = true;
+   SET inline_cte_referenced_threshold = 10;
+
+   WITH cte AS (SELECT id, py_uuid_token(id) AS token FROM cte_uuid_seed)
+   SELECT id, COUNT(DISTINCT token) AS distinct_tokens
+   FROM (SELECT id, token FROM cte UNION ALL SELECT id, token FROM cte) u
+   GROUP BY id ORDER BY id;
+   ```
+
+   Correct result:
+
+   ```text
+   +------+-----------------+
+   | id   | distinct_tokens |
+   +------+-----------------+
+   |    1 |               1 |
+   |    2 |               1 |
+   |    3 |               1 |
+   +------+-----------------+
+   ```
+
+   For this function, the following definition is incorrect:
+
+   ```sql
+   DROP FUNCTION IF EXISTS py_uuid_token(INT);
+   CREATE FUNCTION py_uuid_token(INT)
+   RETURNS STRING
+   PROPERTIES (
+       "type" = "PYTHON_UDF",
+       "symbol" = "py_uuid_token_impl",
+       "always_nullable" = "false",
+       "runtime_version" = "3.12.11",
+       "volatility" = "immutable"
+   )
+   AS $$
+   import uuid
+   def py_uuid_token_impl(x):
+       return f"{x}-{uuid.uuid4()}"
+   $$;
+   ```
+
+   Run the same query again:
+
+   ```sql
+   WITH cte AS (SELECT id, py_uuid_token(id) AS token FROM cte_uuid_seed)
+   SELECT id, COUNT(DISTINCT token) AS distinct_tokens
+   FROM (SELECT id, token FROM cte UNION ALL SELECT id, token FROM cte) u
+   GROUP BY id ORDER BY id;
+   ```
+
+   Incorrect result:
+
+   ```text
+   +------+-----------------+
+   | id   | distinct_tokens |
+   +------+-----------------+
+   |    1 |               2 |
+   |    2 |               2 |
+   |    3 |               2 |
+   +------+-----------------+
+   ```
+
+   Why this is wrong:
+   Because `py_uuid_token` is volatile, each call to `uuid.uuid4()` generates a new value. If the function is incorrectly marked as `volatility = immutable`, the optimizer may treat repeated references as safe to rewrite and may choose a plan that evaluates the UDF separately on both sides of `UNION ALL`. As a result, the same `id` can produce two different `token` values, and `COUNT(DISTINCT token)` changes from `1` to `2`.
