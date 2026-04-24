@@ -341,6 +341,26 @@ The currently dependent Paimon version is 1.0.0.
                 'oss.secret_key' = '<sk>'
             );
             ```
+
+            For Doris 2.1 and 3.0, when the Paimon table is stored in Alibaba Cloud OSS-HDFS and the path uses an OSS-HDFS endpoint such as `oss-dls.aliyuncs.com`, add the OSS-HDFS and Jindo FileSystem properties explicitly:
+
+            ```sql
+            CREATE CATALOG paimon_hms_on_oss_hdfs_catalog PROPERTIES (
+                'type' = 'paimon',
+                'paimon.catalog.type' = 'hms',
+                'warehouse' = 'oss://bucket.cn-beijing.oss-dls.aliyuncs.com/path/to/paimon_warehouse',
+                'hive.metastore.uris' = 'thrift://127.0.0.1:9383',
+                'fs.oss.accessKeyId' = '<ak>',
+                'fs.oss.accessKeySecret' = '<sk>',
+                'fs.oss.endpoint' = 'cn-beijing.oss-dls.aliyuncs.com',
+                'oss.access_key' = '<ak>',
+                'oss.secret_key' = '<sk>',
+                'oss.endpoint' = 'cn-beijing.oss-dls.aliyuncs.com',
+                'oss.hdfs.enabled' = 'true',
+                'fs.oss.impl' = 'com.aliyun.jindodata.oss.JindoOssFileSystem',
+                'fs.AbstractFileSystem.oss.impl' = 'com.aliyun.jindodata.oss.OSS'
+            );
+            ```
         </TabItem>
         <TabItem value='COS' label='COS'>
             ```sql

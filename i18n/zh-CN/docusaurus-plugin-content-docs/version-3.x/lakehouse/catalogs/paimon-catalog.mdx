@@ -433,6 +433,26 @@ ORDER BY entry_name;
                 'oss.secret_key' = '<sk>'
             );
             ```
+
+            对于 Doris 2.1 和 3.0 版本，如果 Paimon 表存储在阿里云 OSS-HDFS 中，且路径使用 `oss-dls.aliyuncs.com` 这类 OSS-HDFS Endpoint，需要显式添加 OSS-HDFS 和 Jindo FileSystem 相关属性：
+
+            ```sql
+            CREATE CATALOG paimon_hms_on_oss_hdfs_catalog PROPERTIES (
+                'type' = 'paimon',
+                'paimon.catalog.type' = 'hms',
+                'warehouse' = 'oss://bucket.cn-beijing.oss-dls.aliyuncs.com/path/to/paimon_warehouse',
+                'hive.metastore.uris' = 'thrift://127.0.0.1:9383',
+                'fs.oss.accessKeyId' = '<ak>',
+                'fs.oss.accessKeySecret' = '<sk>',
+                'fs.oss.endpoint' = 'cn-beijing.oss-dls.aliyuncs.com',
+                'oss.access_key' = '<ak>',
+                'oss.secret_key' = '<sk>',
+                'oss.endpoint' = 'cn-beijing.oss-dls.aliyuncs.com',
+                'oss.hdfs.enabled' = 'true',
+                'fs.oss.impl' = 'com.aliyun.jindodata.oss.JindoOssFileSystem',
+                'fs.AbstractFileSystem.oss.impl' = 'com.aliyun.jindodata.oss.OSS'
+            );
+            ```
         </TabItem>
         <TabItem value='COS' label='COS'>
             ```sql
