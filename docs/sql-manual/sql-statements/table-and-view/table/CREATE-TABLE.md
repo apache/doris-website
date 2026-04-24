@@ -32,7 +32,7 @@ CREATE [ TEMPORARY | EXTERNAL ] TABLE [ IF NOT EXISTS ] <table_name>
     (<columns_definition> [ <indexes_definition> ])
     [ ENGINE = <table_engine_type> ]
     [ <key_type> KEY (<key_cols>)
-        [ CLUSTER BY (<cluster_cols>) ]
+        [ ORDER BY (<cluster_cols>) ]
     ]
     [ COMMENT '<table_comment>' ]
     [ <partitions_definition> ]
@@ -47,6 +47,8 @@ CREATE [ TEMPORARY | EXTERNAL ] TABLE [ IF NOT EXISTS ] <table_name>
           [ , ... ]) 
     ]
 ```
+
+> Note: `ORDER BY` is supported since 4.1.0
 
 Where:
 
@@ -143,7 +145,7 @@ CREATE
     [ <index_definitions> ]
     [ ENGINE = <storage_engine_type> ]
     [ <partitioning_key_type> KEY ( <key_columns> )
-        [ CLUSTER BY ( <clustering_columns> ) ]
+        [ ORDER BY ( <clustering_columns> ) ]
     ]
     [ COMMENT '<table_description>' ]
     [ <partition_definitions> ]
@@ -157,6 +159,8 @@ CREATE
     ) ]
 [ AS ] <query>;
 ```
+
+> Note: `ORDER BY` is supported since 4.1.0
 
 ### CREATE TABLE ... LIKE
 
