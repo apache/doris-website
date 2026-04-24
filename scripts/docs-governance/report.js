@@ -7,6 +7,7 @@ const { lintFrontmatter } = require('./lint-frontmatter');
 const { lintMarkdownStructure } = require('./lint-markdown-structure');
 const { lintSidebar } = require('./lint-sidebar');
 const { lintLinks } = require('./lint-links');
+const { lintSeo } = require('./lint-seo');
 const { ensureDirForFile, getChangedFiles, getChangedRecords, parseArgs } = require('./lib');
 
 function filterFindings(findings, changedFiles) {
@@ -35,6 +36,7 @@ function runChecks(options = {}) {
       ...lintMarkdownStructure({ rootDir, manifest }),
       ...lintSidebar({ rootDir, manifest }),
       ...lintLinks({ rootDir, manifest, changedFiles: changedFiles || [], changedRecords }),
+      ...lintSeo({ rootDir, manifest }),
     ],
     changedFiles,
   );

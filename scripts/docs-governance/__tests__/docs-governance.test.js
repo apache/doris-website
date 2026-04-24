@@ -9,6 +9,7 @@ const { lintFrontmatter } = require('../lint-frontmatter');
 const { lintMarkdownStructure } = require('../lint-markdown-structure');
 const { lintSidebar } = require('../lint-sidebar');
 const { filterLinkFindings, hasLinkErrors, lintLinks } = require('../lint-links');
+const { filterSeoFindings, lintSeo } = require('../lint-seo');
 const { printGithubAnnotations, runChecks } = require('../report');
 
 const fixtureRoot = path.join(__dirname, '..', '__fixtures__', 'repo');
@@ -284,6 +285,129 @@ test('hasLinkErrors treats only error severity as blocking', () => {
   );
 });
 
+test('lintSeo reports duplicate titles and non-specific descriptions for indexable pages', () => {
+  const findings = withTempFixture(
+    (rootDir) => {
+      fs.writeFileSync(
+        path.join(rootDir, 'docs/gettingStarted/duplicate-title.md'),
+        [
+          '---',
+          'title: What Is Apache Doris',
+          'description: Apache Doris documentation.',
+          '---',
+          '',
+          '# Duplicate title',
+          '',
+        ].join('\n'),
+        'utf8',
+      );
+    },
+    (rootDir) => {
+      const manifest = buildManifest({ rootDir });
+      return lintSeo({ rootDir, manifest });
+    },
+  );
+
+  assert.ok(
+    findings.some(
+      (finding) =>
+        finding.rule === 'seo-title-duplicate' &&
+        finding.path === 'docs/gettingStarted/duplicate-title.md',
+    ),
+  );
+  assert.ok(
+    findings.some(
+      (finding) =>
+        finding.rule === 'seo-description-generic' &&
+        finding.path === 'docs/gettingStarted/duplicate-title.md',
+    ),
+  );
+});
+
+test('lintSeo checks static robots, llms, and sitemap policy drafts', () => {
+  const findings = withTempFixture(
+    (rootDir) => {
+      fs.mkdirSync(path.join(rootDir, 'static'), { recursive: true });
+      fs.writeFileSync(
+        path.join(rootDir, 'static/robots.txt'),
+        [
+          'User-agent: Googlebot',
+          'Allow: /',
+          '',
+          'User-agent: Bingbot',
+          'Allow: /',
+          '',
+          'User-agent: GPTBot',
+          'Allow: /',
+          '',
+          'User-agent: PerplexityBot',
+          'Allow: /',
+          '',
+          '# Training-style AI crawlers may access public documentation.',
+          'User-agent: CCBot',
+          'Allow: /',
+          'Sitemap: https://doris.apache.org/sitemap.xml',
+          '',
+        ].join('\n'),
+        'utf8',
+      );
+      fs.writeFileSync(
+        path.join(rootDir, 'static/llms.txt'),
+        [
+          '# Apache Doris documentation for LLMs',
+          '',
+          '- Overview: https://doris.apache.org/docs/4.x/gettingStarted/what-is-apache-doris',
+          '- Getting Started: https://doris.apache.org/docs/4.x/gettingStarted/quick-start',
+          '- SQL Manual: https://doris.apache.org/docs/4.x/sql-manual/',
+          '- Load: https://doris.apache.org/docs/4.x/data-operate/import/',
+          '- Lakehouse: https://doris.apache.org/docs/4.x/lakehouse/',
+          '- AI: https://doris.apache.org/docs/4.x/ai/',
+          '- Admin: https://doris.apache.org/docs/4.x/admin-manual/',
+          '- Release Notes: https://doris.apache.org/releases/all-release',
+          '- Community: https://doris.apache.org/community/join-community',
+          '',
+        ].join('\n'),
+        'utf8',
+      );
+      fs.writeFileSync(
+        path.join(rootDir, 'docusaurus.config.js'),
+        [
+          'module.exports = {',
+          "  presets: [[ 'classic', { sitemap: { filename: 'sitemap.xml', createSitemapItems: async () => {",
+          "    return items.filter(item => !['/search', '/ja/search', '/zh-CN/search'].includes(new URL(item.url).pathname.replace(/\\/+$/, '')));",
+          '  } } } ]],',
+          '};',
+          '',
+        ].join('\n'),
+        'utf8',
+      );
+    },
+    (rootDir) => {
+      const manifest = buildManifest({ rootDir });
+      return lintSeo({ rootDir, manifest });
+    },
+  );
+
+  assert.ok(!findings.some((finding) => finding.rule === 'seo-robots-missing'));
+  assert.ok(!findings.some((finding) => finding.rule === 'seo-robots-search-engine-policy'));
+  assert.ok(!findings.some((finding) => finding.rule === 'seo-llms-missing'));
+  assert.ok(!findings.some((finding) => finding.rule === 'seo-llms-required-entry'));
+  assert.ok(!findings.some((finding) => finding.rule === 'seo-sitemap-search-exclusion'));
+});
+
+test('filterSeoFindings keeps changed page findings without full-site SEO noise', () => {
+  const findings = [
+    { rule: 'seo-description-length', path: 'docs/changed.md', message: 'Changed page.' },
+    { rule: 'seo-description-length', path: 'docs/unrelated.md', message: 'Unrelated page.' },
+    { rule: 'seo-robots-missing', path: 'static/robots.txt', message: 'Site policy.' },
+  ];
+
+  assert.deepEqual(
+    filterSeoFindings(findings, ['docs/changed.md']).map((finding) => finding.path),
+    ['docs/changed.md'],
+  );
+});
+
 test('runChecks returns a unified report with manifest summary and findings', () => {
   const report = withTempFixture(
     (rootDir) => {
@@ -301,6 +425,7 @@ test('runChecks returns a unified report with manifest summary and findings', ()
   assert.ok(report.summary.findings > 0);
   assert.ok(report.findings.every((finding) => finding.path && finding.rule && finding.message));
   assert.ok(report.findings.some((finding) => finding.rule.startsWith('link-')));
+  assert.ok(report.findings.some((finding) => finding.rule.startsWith('seo-')));
 });
 
 test('printGithubAnnotations maps info, warning, and error severities to GitHub levels', () => {
