@@ -15,6 +15,14 @@ const ONLY_VERSIONS = process.env.DOCS_VERSIONS
     ? process.env.DOCS_VERSIONS.split(',').map(v => v.trim()).filter(Boolean)
     : null;
 
+const LINK_BEHAVIOR_VALUES = new Set(['ignore', 'log', 'warn', 'throw']);
+function getBrokenLinkBehavior(envName, fallback) {
+    const value = process.env[envName];
+    return LINK_BEHAVIOR_VALUES.has(value) ? value : fallback;
+}
+
+const DEFAULT_BROKEN_LINK_BEHAVIOR = 'warn';
+
 const lightCodeTheme = themes.dracula;
 
 const logoImg = '/images/logo-doris.svg';
@@ -54,8 +62,8 @@ const config = {
     tagline: 'Apache Doris',
     url: 'https://doris.apache.org',
     baseUrl: '/',
-    onBrokenLinks: 'ignore',
-    onBrokenMarkdownLinks: 'ignore',
+    onBrokenLinks: getBrokenLinkBehavior('DORIS_DOCUSAURUS_BROKEN_LINKS', DEFAULT_BROKEN_LINK_BEHAVIOR),
+    onBrokenMarkdownLinks: getBrokenLinkBehavior('DORIS_DOCUSAURUS_BROKEN_MARKDOWN_LINKS', DEFAULT_BROKEN_LINK_BEHAVIOR),
     favicon: 'images/favicon.ico',
     organizationName: 'Apache',
     trailingSlash: false,

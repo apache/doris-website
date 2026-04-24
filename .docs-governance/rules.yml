@@ -1,0 +1,340 @@
+# Apache Doris website documentation governance rules.
+#
+# Week 1 scope: policy and schema only. These rules are intended to be consumed
+# by future scripts under scripts/docs-governance/.
+
+schema_version: 1
+
+site:
+  canonical_url: "https://doris.apache.org"
+  default_locale: en
+  supported_locales:
+    en:
+      label: English
+      html_lang: en-US
+      source_state: canonical
+      rollout_level: blocking
+    zh-CN:
+      label: Chinese
+      html_lang: zh-Hans-CN
+      source_state: localized
+      rollout_level: blocking
+    ja:
+      label: Japanese
+      html_lang: ja-JP
+      source_state: localized
+      rollout_level: report_only
+      note: "Japanese content is currently published through ja-build/ja-source and should not block PRs until the i18n flow is unified."
+
+versions:
+  active:
+    - "4.x"
+    - "3.x"
+    - "2.1"
+    - current
+  archived:
+    - "2.0"
+    - "1.2"
+  default_version: "4.x"
+  current_route_version: dev
+  blocking_scope:
+    active_versions: true
+    archived_versions: false
+  version_labels:
+    current: Dev
+
+content_roots:
+  docs:
+    plugin: main_docs
+    locale: en
+    version: current
+    source_root: docs
+    route_base: "/docs/dev"
+    sidebar: sidebars.ts
+    blocking_scope: true
+  versioned_docs:
+    plugin: main_docs
+    locale: en
+    version_from_path_pattern: "^versioned_docs/version-([^/]+)/"
+    source_root: versioned_docs
+    route_base_pattern: "/docs/{version}"
+    sidebar_pattern: "versioned_sidebars/version-{version}-sidebars.json"
+    blocking_scope: active_versions_only
+  zh_current_docs:
+    plugin: main_docs
+    locale: zh-CN
+    version: current
+    source_root: i18n/zh-CN/docusaurus-plugin-content-docs/current
+    route_base: "/zh-CN/docs/dev"
+    sidebar: sidebars.ts
+    blocking_scope: true
+  zh_versioned_docs:
+    plugin: main_docs
+    locale: zh-CN
+    version_from_path_pattern: "^i18n/zh-CN/docusaurus-plugin-content-docs/version-([^/]+)/"
+    source_root: i18n/zh-CN/docusaurus-plugin-content-docs
+    route_base_pattern: "/zh-CN/docs/{version}"
+    sidebar_pattern: "versioned_sidebars/version-{version}-sidebars.json"
+    blocking_scope: active_versions_only
+  community:
+    plugin: community
+    locale: en
+    version: current
+    source_root: community
+    route_base: "/community"
+    sidebar: sidebarsCommunity.json
+    blocking_scope: true
+  zh_community:
+    plugin: community
+    locale: zh-CN
+    version: current
+    source_root: i18n/zh-CN/docusaurus-plugin-content-docs-community/current
+    route_base: "/zh-CN/community"
+    sidebar: sidebarsCommunity.json
+    blocking_scope: true
+  releases:
+    plugin: releases
+    locale: en
+    version: current
+    source_root: releasenotes
+    route_base: "/releases"
+    sidebar: sidebarsReleases.json
+    blocking_scope: true
+  zh_releases:
+    plugin: releases
+    locale: zh-CN
+    version: current
+    source_root: i18n/zh-CN/docusaurus-plugin-content-docs-releases/current
+    route_base: "/zh-CN/releases"
+    sidebar: sidebarsReleases.json
+    blocking_scope: true
+  blog:
+    plugin: blog
+    locale: en
+    source_root: blog
+    route_base: "/blog"
+    blocking_scope: true
+  ja_source:
+    plugin: main_docs
+    locale: ja
+    source_root: ja-source/docusaurus-plugin-content-docs
+    route_base: "/ja/docs"
+    blocking_scope: report_only
+
+manifest_schema:
+  required_fields:
+    - doc_id
+    - source_path
+    - content_root
+    - plugin
+    - locale
+    - version
+    - route_path
+    - canonical_route_path
+    - sidebar_source
+    - title
+    - description
+    - doc_type
+    - owner
+    - is_archived
+    - sync_group_id
+    - blocking_level
+  optional_fields:
+    - slug
+    - keywords
+    - tags
+    - sidebar_label
+    - sidebar_position
+    - last_modified
+    - front_matter_format
+    - source_counterpart
+    - localized_counterparts
+    - version_counterparts
+    - route_aliases
+    - heading_anchors
+    - inbound_links
+    - outbound_links
+    - exceptions
+
+doc_id:
+  algorithm:
+    - "Normalize source path with POSIX separators."
+    - "Map localized roots back to their canonical English relative path when possible."
+    - "Remove root prefix and .md/.mdx suffix."
+    - "Prefix plugin name for non-main-docs content, for example community:join-community."
+    - "Do not include locale or version in doc_id."
+  examples:
+    - source_path: "docs/gettingStarted/what-is-apache-doris.md"
+      doc_id: "gettingStarted/what-is-apache-doris"
+      sync_group_id: "main_docs:gettingStarted/what-is-apache-doris"
+    - source_path: "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/string-functions/concat.md"
+      doc_id: "sql-manual/sql-functions/scalar-functions/string-functions/concat"
+      sync_group_id: "main_docs:sql-manual/sql-functions/scalar-functions/string-functions/concat"
+    - source_path: "community/how-to-contribute/pull-request.md"
+      doc_id: "community:how-to-contribute/pull-request"
+      sync_group_id: "community:how-to-contribute/pull-request"
+
+route_path:
+  rules:
+    - "current English docs route to /docs/dev/{doc_id} unless front matter slug overrides the final segment."
+    - "default version 4.x route remains /docs/4.x/{doc_id}."
+    - "localized routes prefix locale, for example /zh-CN/docs/4.x/{doc_id}."
+    - "community, releases, and blog use their configured routeBasePath."
+    - "route_path must be derived, not hand-authored in content files."
+
+doc_type_detection:
+  ordered_rules:
+    - doc_type: sql_function
+      path_patterns:
+        - "^docs/sql-manual/sql-functions/"
+        - "^versioned_docs/version-[^/]+/sql-manual/sql-functions/"
+        - "^i18n/zh-CN/docusaurus-plugin-content-docs/(current|version-[^/]+)/sql-manual/sql-functions/"
+      required_sections:
+        en:
+          - Description
+          - Syntax
+          - Parameters
+          - Return Value
+          - Example
+        zh-CN:
+          - 描述
+          - 语法
+          - 参数
+          - 返回值
+          - 示例
+      rollout_level: blocking_after_week_5
+    - doc_type: sql_statement
+      path_patterns:
+        - "^docs/sql-manual/sql-statements/"
+        - "^versioned_docs/version-[^/]+/sql-manual/sql-statements/"
+        - "^i18n/zh-CN/docusaurus-plugin-content-docs/(current|version-[^/]+)/sql-manual/sql-statements/"
+      rollout_level: warning
+    - doc_type: release_notes
+      path_patterns:
+        - "^releasenotes/"
+        - "^i18n/zh-CN/docusaurus-plugin-content-docs-releases/current/"
+      rollout_level: warning
+    - doc_type: community
+      path_patterns:
+        - "^community/"
+        - "^i18n/zh-CN/docusaurus-plugin-content-docs-community/current/"
+      rollout_level: warning
+    - doc_type: blog
+      path_patterns:
+        - "^blog/"
+      rollout_level: warning
+    - doc_type: feature_doc
+      path_patterns:
+        - "^docs/(install|lakehouse|data-operate|table-design|admin-manual|query-data|query-acceleration|compute-storage-decoupled|ai|ecosystem|db-connect)/"
+        - "^versioned_docs/version-[^/]+/(install|lakehouse|data-operate|table-design|admin-manual|query-data|query-acceleration|compute-storage-decoupled|ai|ecosystem|db-connect)/"
+        - "^i18n/zh-CN/docusaurus-plugin-content-docs/(current|version-[^/]+)/(install|lakehouse|data-operate|table-design|admin-manual|query-data|query-acceleration|compute-storage-decoupled|ai|ecosystem|db-connect)/"
+      expected_sections:
+        - overview
+        - quick_start_or_basic_usage
+        - parameters_or_options
+        - examples
+        - error_handling_or_caveats
+        - best_practices
+      rollout_level: warning
+    - doc_type: concept_doc
+      path_patterns:
+        - ".*"
+      rollout_level: warning
+
+sync_policy:
+  default:
+    source_locale: en
+    blocking_locales:
+      - zh-CN
+    report_only_locales:
+      - ja
+  version_rules:
+    - when: "source version is current"
+      required_counterparts:
+        - locale: zh-CN
+          version: current
+      recommended_counterparts:
+        - locale: en
+          version: "4.x"
+    - when: "source version is 4.x"
+      required_counterparts:
+        - locale: zh-CN
+          version: "4.x"
+      recommended_counterparts:
+        - locale: en
+          version: current
+    - when: "source version is 3.x"
+      required_counterparts:
+        - locale: zh-CN
+          version: "3.x"
+    - when: "source version is 2.1"
+      required_counterparts:
+        - locale: zh-CN
+          version: "2.1"
+      note: "2.1 is active but older. Require localized consistency, but do not require new feature backports without explicit owner confirmation."
+  archived_version_rule:
+    rollout_level: report_only
+    versions:
+      - "2.0"
+      - "1.2"
+
+severity:
+  p0_blocking:
+    description: "Build failure, unreachable active page, broken navigation, wrong redirect, or severe user confusion."
+    ci_default: fail
+  p1_blocking_after_rollout:
+    description: "Missing required metadata, required SQL doc structure, or active version/localized counterpart without an exception."
+    ci_default: warn_until_rule_stable
+  p2_warning:
+    description: "Clarity, SEO quality, accessibility, example completeness, or maintainability issue."
+    ci_default: warn
+  p3_report_only:
+    description: "Archived version debt, external link instability, Search Console trend, or report-only locale issue."
+    ci_default: report
+
+seo_policy:
+  indexable_roots:
+    - docs
+    - versioned_docs
+    - i18n/zh-CN/docusaurus-plugin-content-docs
+    - community
+    - releasenotes
+    - blog
+  noindex_routes:
+    - "/search"
+    - "/zh-CN/search"
+    - "/ja/search"
+  front_matter:
+    title:
+      required: true
+      unique_within_locale_and_version: true
+    description:
+      required: true
+      min_length: 50
+      max_length: 180
+    keywords:
+      required: false
+  robots:
+    policy_owner: "Doris website maintainers"
+    search_crawlers: allow
+    ai_search_crawlers: allow_recommended
+    ai_training_crawlers: community_decision_required
+
+exceptions:
+  file: ".docs-governance/exceptions.yml"
+  required_fields:
+    - id
+    - type
+    - scope
+    - reason
+    - owner
+    - expires
+  allowed_types:
+    - missing_locale
+    - version_difference
+    - skip_seo
+    - external_link_allowlist
+    - archived_version_debt
+    - route_redirect_pending
+    - doc_type_override
+

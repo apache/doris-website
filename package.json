@@ -19,6 +19,13 @@
         "write-translations": "docusaurus write-translations --locale zh-CN",
         "write-translations:ja": "docusaurus write-translations --locale ja",
         "write-heading-ids": "docusaurus write-heading-ids",
+        "docs:manifest": "node scripts/docs-governance/manifest.js --output website-quality-governance/generated/docs-manifest.json",
+        "docs:links": "node scripts/docs-governance/lint-links.js",
+        "docs:links:changed": "node scripts/docs-governance/lint-links.js --changed",
+        "docs:lint": "node scripts/docs-governance/report.js --format github",
+        "docs:lint:changed": "node scripts/docs-governance/report.js --changed --format github",
+        "docs:report": "node scripts/docs-governance/report.js --format json --output website-quality-governance/generated/docs-governance-report.json",
+        "docs-governance:test": "node --test scripts/docs-governance/__tests__/*.test.js",
         "typecheck": "tsc"
     },
     "dependencies": {
