@@ -17,8 +17,9 @@ This is an experimental feature, supported since version 4.1.0.
 | Property Name | Description | Default Value | Required |
 | --- | --- | --- | --- | 
 | iceberg.jdbc.uri | Specifies the JDBC connection URI | - | Yes |
-| iceberg.jdbc.user | JDBC connection username | - | Yes |
-| iceberg.jdbc.password | JDBC connection password | - | Yes |
+| iceberg.jdbc.catalog_name | Specifies the `catalog_name` isolation key in Iceberg JDBC metadata tables. This value can be different from the Doris catalog name. | - | Yes |
+| iceberg.jdbc.user | JDBC connection username | - | No |
+| iceberg.jdbc.password | JDBC connection password | - | No |
 | warehouse | Specifies the iceberg warehouse | - | Yes |
 | iceberg.jdbc.init-catalog-tables | Whether to automatically initialize Catalog-related table structures on first use | `true` | No |
 | iceberg.jdbc.schema-version | Schema version used by JDBC Catalog, supports `V0` and `V1` | `V0` | No |
@@ -31,6 +32,10 @@ This is an experimental feature, supported since version 4.1.0.
 > 1. Iceberg JDBC Catalog supports various relational databases as backend storage, including PostgreSQL, MySQL, SQLite, etc.
 >
 > 2. Ensure the JDBC driver JAR file is accessible. You can specify the driver location via `iceberg.jdbc.driver_url`.
+>
+> 3. `iceberg.jdbc.catalog_name` must match the Iceberg JDBC catalog name used by the writer, such as `spark_catalog` for metadata written by Spark.
+>
+> 4. If `iceberg.jdbc.driver_url` is specified, `iceberg.jdbc.driver_class` must also be specified.
 
 ## Example Configurations
 
@@ -42,6 +47,7 @@ Using PostgreSQL database to store Iceberg metadata:
 CREATE CATALOG iceberg_jdbc_postgresql PROPERTIES (
     'type' = 'iceberg',
     'iceberg.catalog.type' = 'jdbc',
+    'iceberg.jdbc.catalog_name' = 'iceberg_jdbc_postgresql',
     'iceberg.jdbc.uri' = 'jdbc:postgresql://127.0.0.1:5432/iceberg_db',
     'iceberg.jdbc.user' = 'iceberg_user',
     'iceberg.jdbc.password' = 'password',
@@ -65,13 +71,14 @@ Using MySQL database to store Iceberg metadata:
 CREATE CATALOG iceberg_jdbc_mysql PROPERTIES (
     'type' = 'iceberg',
     'iceberg.catalog.type' = 'jdbc',
+    'iceberg.jdbc.catalog_name' = 'iceberg_jdbc_mysql',
     'iceberg.jdbc.uri' = 'jdbc:mysql://127.0.0.1:3306/iceberg_db',
     'iceberg.jdbc.user' = 'iceberg_user',
     'iceberg.jdbc.password' = 'password',
     'iceberg.jdbc.init-catalog-tables' = 'true',
     'iceberg.jdbc.schema-version' = 'V1',
     'iceberg.jdbc.driver_class' = 'com.mysql.cj.jdbc.Driver',
-    'iceberg.jdbc.driver_url' = '<jdbc_driver_jar>'
+    'iceberg.jdbc.driver_url' = '<jdbc_driver_jar>',
     'warehouse' = 's3://bucket/warehouse',
     's3.access_key' = '<ak>',
     's3.secret_key' = '<sk>',
@@ -88,11 +95,12 @@ Using SQLite database to store Iceberg metadata (suitable for testing environmen
 CREATE CATALOG iceberg_jdbc_sqlite PROPERTIES (
     'type' = 'iceberg',
     'iceberg.catalog.type' = 'jdbc',
+    'iceberg.jdbc.catalog_name' = 'iceberg_jdbc_sqlite',
     'iceberg.jdbc.uri' = 'jdbc:sqlite:/tmp/iceberg_catalog.db',
     'iceberg.jdbc.init-catalog-tables' = 'true',
     'iceberg.jdbc.schema-version' = 'V1',
     'iceberg.jdbc.driver_class' = 'org.sqlite.JDBC',
-    'iceberg.jdbc.driver_url' = '<jdbc_driver_jar>'
+    'iceberg.jdbc.driver_url' = '<jdbc_driver_jar>',
     'warehouse' = 's3://bucket/warehouse',
     's3.access_key' = '<ak>',
     's3.secret_key' = '<sk>',

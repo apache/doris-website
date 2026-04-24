@@ -55,6 +55,8 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 
   * `dlf`: Uses Alibaba Cloud DLF as the metadata service.
 
+  * `jdbc`: Uses Iceberg JDBC Catalog as the metadata service.
+
   * `s3tables`: Uses AWS S3 Tables Catalog to visit [S3 Table Bucket](https://aws.amazon.com/s3/features/tables/).
 
 * `<warehouse>`
@@ -1062,6 +1064,7 @@ This is an experimental feature, supported since version 4.1.0.
             CREATE CATALOG iceberg_jdbc_postgresql PROPERTIES (
                 'type' = 'iceberg',
                 'iceberg.catalog.type' = 'jdbc',
+                'iceberg.jdbc.catalog_name' = 'iceberg_jdbc_postgresql',
                 'iceberg.jdbc.uri' = 'jdbc:postgresql://127.0.0.1:5432/iceberg_db',
                 'iceberg.jdbc.user' = 'iceberg_user',
                 'iceberg.jdbc.password' = 'password',
@@ -1083,6 +1086,7 @@ This is an experimental feature, supported since version 4.1.0.
             CREATE CATALOG iceberg_jdbc_mysql PROPERTIES (
                 'type' = 'iceberg',
                 'iceberg.catalog.type' = 'jdbc',
+                'iceberg.jdbc.catalog_name' = 'iceberg_jdbc_mysql',
                 'iceberg.jdbc.uri' = 'jdbc:mysql://127.0.0.1:3306/iceberg_db',
                 'iceberg.jdbc.user' = 'iceberg_user',
                 'iceberg.jdbc.password' = 'password',
@@ -1104,6 +1108,7 @@ This is an experimental feature, supported since version 4.1.0.
             CREATE CATALOG iceberg_jdbc_sqlite PROPERTIES (
                 'type' = 'iceberg',
                 'iceberg.catalog.type' = 'jdbc',
+                'iceberg.jdbc.catalog_name' = 'iceberg_jdbc_sqlite',
                 'iceberg.jdbc.uri' = 'jdbc:sqlite:/tmp/iceberg_catalog.db',
                 'iceberg.jdbc.init-catalog-tables' = 'true',
                 'iceberg.jdbc.schema-version' = 'V1',
