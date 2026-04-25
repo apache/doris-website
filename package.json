@@ -33,6 +33,7 @@
         "docs:ai-review:prepare": "node scripts/docs-governance/prepare-ai-review.js",
         "docs:ai-review:validate": "node scripts/docs-governance/validate-ai-review-output.js",
         "docs:ai-review:dedupe": "node scripts/docs-governance/dedupe-ai-review-comments.js",
+        "docs:ai-review:comment": "node scripts/docs-governance/render-ai-review-comment.js",
         "docs:lint": "node scripts/docs-governance/report.js --format github",
         "docs:lint:changed": "node scripts/docs-governance/report.js --changed --format github",
         "docs:report": "node scripts/docs-governance/report.js --format json --output website-quality-governance/generated/docs-governance-report.json",
