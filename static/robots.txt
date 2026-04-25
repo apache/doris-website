@@ -1,30 +1,48 @@
 User-agent: Googlebot
 Allow: /
+Disallow: /docs-next/
+Disallow: /zh-CN/docs-next/
 
 User-agent: Bingbot
 Allow: /
+Disallow: /docs-next/
+Disallow: /zh-CN/docs-next/
 
 # Search-style AI crawlers may index public documentation for answer retrieval.
 User-agent: OAI-SearchBot
 Allow: /
+Disallow: /docs-next/
+Disallow: /zh-CN/docs-next/
 
 User-agent: PerplexityBot
 Allow: /
+Disallow: /docs-next/
+Disallow: /zh-CN/docs-next/
 
 User-agent: Claude-SearchBot
 Allow: /
+Disallow: /docs-next/
+Disallow: /zh-CN/docs-next/
 
 # Training-style AI crawlers may access public documentation.
 User-agent: GPTBot
 Allow: /
+Disallow: /docs-next/
+Disallow: /zh-CN/docs-next/
 
 User-agent: CCBot
 Allow: /
+Disallow: /docs-next/
+Disallow: /zh-CN/docs-next/
 
 User-agent: Google-Extended
 Allow: /
+Disallow: /docs-next/
+Disallow: /zh-CN/docs-next/
 
 User-agent: *
 Allow: /
+Disallow: /docs-next/
+Disallow: /zh-CN/docs-next/
 
 Sitemap: https://doris.apache.org/sitemap.xml

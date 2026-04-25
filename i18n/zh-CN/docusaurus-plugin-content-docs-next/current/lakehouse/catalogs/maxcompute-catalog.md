@@ -1,0 +1,531 @@
+---
+{
+    "title": "MaxCompute Catalog",
+    "language": "zh-CN",
+    "description": "Apache Doris MaxCompute Catalog 支持联邦查询阿里云 MaxCompute 数据，实现数据集成与写入，无需数据迁移即可进行跨源分析。"
+}
+---
+
+[MaxCompute](https://help.aliyun.com/zh/maxcompute/) 是阿里云上的企业级 SaaS（Software as a Service）模式云数据仓库。通过 MaxCompute 提供的开放存储 SDK，Doris 可以获取 MaxCompute 的表信息，并进行查询和写入操作。
+
+## 适用场景
+
+| 场景 | 说明 |
+| ---- | ---- |
+| 数据集成 | 读取 MaxCompute 数据并写入到 Doris 内表。 |
+| 数据写回 | 通过 INSERT 命令将数据写入 MaxCompute 表。（4.1.0 版本支持） |
+
+## 使用须知
+
+1. 自 2.1.7 版本开始，MaxCompute Catalog 基于[开放存储 SDK](https://help.aliyun.com/zh/maxcompute/user-guide/overview-1) 开发，在这之前，基于 Tunnel API 进行开发。
+
+2. 开放存储 SDK 的使用有一定的限制，请参照该[文档](https://help.aliyun.com/zh/maxcompute/user-guide/overview-1)中「使用限制」的章节。
+
+3. 在 Doris 3.1.3 版本之前，MaxCompute 中的 Project 相当于 Doris 中的 Database。3.1.3 版本中，可以通过 `mc.enable.namespace.schema` 参数引入 MaxCompute 的 schema 层级。
+
+## 配置 Catalog
+
+### 语法
+
+```sql
+CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
+    'type' = 'max_compute',
+    {McAuthProperties},
+    {McRequiredProperties},
+    {McOptionalProperties},
+    {CommonProperties}
+);
+```
+
+* `{McAuthProperties}`
+
+    这些属性用于控制 Doris 通过 Catalog 访问 MaxCompute 时的认证方式，适用于查询和写入场景。
+
+    > 版本说明：`mc.auth.type`、`mc.ram_role_arn` 和 `mc.ecs_ram_role` 自 **4.0.4** 起支持。
+
+    | 属性名 | 默认值 | 说明 | 是否必填 | 支持的 Doris 版本 |
+    | --- | --- | --- | --- | --- |
+    | `mc.auth.type` | `ak_sk` | 认证类型。支持 `ak_sk`、`ram_role_arn` 和 `ecs_ram_role`。 | 否 | 4.0.4（含）之后 |
+    | `mc.access_key` | 无 | 阿里云 AccessKey。 | 当 `mc.auth.type` 为 `ak_sk`（默认）或 `ram_role_arn` 时必填。 | |
+    | `mc.secret_key` | 无 | 阿里云 SecretKey。 | 当 `mc.auth.type` 为 `ak_sk`（默认）或 `ram_role_arn` 时必填。 | |
+    | `mc.ram_role_arn` | 无 | 阿里云 RAM Role ARN。 | 当 `mc.auth.type` 为 `ram_role_arn` 时必填。 | 4.0.4（含）之后 |
+    | `mc.ecs_ram_role` | 无 | ECS 实例绑定的 RAM Role 名称。 | 当 `mc.auth.type` 为 `ecs_ram_role` 时必填。 | 4.0.4（含）之后 |
+
+    `mc.auth.type` 可选值：
+
+    | 取值 | 说明 |
+    | --- | --- |
+    | `ak_sk` | 使用阿里云 AccessKey / SecretKey 直接访问 MaxCompute。 |
+    | `ram_role_arn` | 使用 `mc.access_key` 和 `mc.secret_key` 作为源凭证调用 STS `AssumeRole`，再使用返回的临时凭证访问 MaxCompute。 |
+    | `ecs_ram_role` | 通过 ECS Metadata Service 获取临时凭证。请确保访问 MaxCompute 的 Doris FE 和 BE 节点都可以使用 `mc.ecs_ram_role` 指定的角色。 |
+
+    生效规则：
+
+    1. 未配置 `mc.auth.type` 时，默认使用 `ak_sk`。
+    2. 当 `mc.auth.type` 为 `ram_role_arn` 时，必须同时配置 `mc.access_key`、`mc.secret_key` 和 `mc.ram_role_arn`。
+    3. 当 `mc.auth.type` 为 `ecs_ram_role` 时，必须配置 `mc.ecs_ram_role`。
+    4. 使用 `mc.access_key` 和 `mc.secret_key` 时，这两个参数必须成对配置。
+
+    不同认证方式的 SQL 示例请参见下方的[基础示例](#基础示例)。
+
+* `{McRequiredProperties}`
+
+    | 属性名 | 说明 | 支持的 Doris 版本 |
+    | --- | --- | --- |
+    | `mc.default.project` | 想要访问的 MaxCompute 项目名称。可以在 [MaxCompute 项目列表](https://maxcompute.console.aliyun.com/cn-beijing/project-list)中创建和管理。 | |
+    | `mc.region` | MaxCompute 开通的地域。可以从 Endpoint 中找到对应的 Region。 | 2.1.7（不含）之前 |
+    | `mc.endpoint` | MaxCompute 开通的地域。请参照下文的「如何获取 Endpoint 和 Quota」来配置。 | 2.1.7（含）之后 |
+
+* `{McOptionalProperties}`
+
+    | 属性名 | 默认值 | 说明 | 支持的 Doris 版本 |
+    | --- | --- | --- | --- |
+    | `mc.tunnel_endpoint` | 无 | 参考附录中的「自定义服务地址」。 | 2.1.7（不含）之前 |
+    | `mc.odps_endpoint` | 无 | 参考附录中的「自定义服务地址」。 | 2.1.7（不含）之前 |
+    | `mc.quota` | `pay-as-you-go` | Quota 名称。请参照下文的「如何获取 Endpoint 和 Quota」来配置。 | 2.1.7（含）之后 |
+    | `mc.split_strategy` | `byte_size` | 设置 Split 的划分方式，可设置为按照字节大小划分 `byte_size` 和按照数据行数划分 `row_count`。 | 2.1.7（含）之后 |
+    | `mc.split_byte_size` | `268435456` | 每个 Split 读取的文件大小，单位为字节，默认为 256 MB。当且仅当 `"mc.split_strategy" = "byte_size"` 时生效。 | 2.1.7（含）之后 |
+    | `mc.split_row_count` | `1048576` | 每个 Split 读多少行。当且仅当 `"mc.split_strategy" = "row_count"` 时生效。 | 2.1.7（含）之后 |
+    | `mc.split_cross_partition` | `false` | 生成的 Split 是否跨分区。 | 2.1.8（含）之后 |
+    | `mc.connect_timeout` | `10s` | 连接 MaxCompute 的超时时间。 | 2.1.8（含）之后 |
+    | `mc.read_timeout` | `120s` | 读取 MaxCompute 的超时时间。 | 2.1.8（含）之后 |
+    | `mc.retry_count` | `4` | 超时后的重试次数。 | 2.1.8（含）之后 |
+    | `mc.datetime_predicate_push_down` | `true` | 是否允许下推 `timestamp/timestamp_ntz` 类型的谓词条件。Doris 对这两个类型的同步会丢失精度（9 -> 6）。因此如果原数据精度高于 6 位，则条件下推可能导致结果不准确。 | 2.1.9/3.0.5（含）之后 |
+    | `mc.account_format` | `name` | 阿里云国际站和中国站的账号系统不一致，对于国际站用户，如出现如 `user 'RAM$xxxxxx:xxxxx' is not a valid aliyun account` 的错误，可指定该参数为 `id`。 | 3.0.9/3.1.1（含）之后 |
+    | `mc.enable.namespace.schema` | `false` | 是否支持 MaxCompute 的 Schema 层级。详见：https://help.aliyun.com/zh/maxcompute/user-guide/schema-related-operations 。 | 3.1.3（含）之后 |
+    | `mc.max_field_size_bytes` | `8388608`（8 MB） | 写入会话中单个字段允许的最大字节数。当写入包含大型字符串或二进制字段的数据时，如果字段大小超过该值，可能会导致写入失败。可根据实际数据情况适当调大该值。 | 4.1.0（含）之后 |
+
+    - `mc.max_field_size_bytes`
+
+        MaxCompute 默认允许单个字段最大为 8 MB，如果写入的数据中包含大型字符串或二进制字段，可能会导致写入失败。
+
+        如需调整，需要先在 MaxCompute 控制台的 SQL 编辑器中执行：
+
+        `setproject odps.sql.cfile2.field.maxsize=262144;`
+
+        以调整单个字段的最大字节数。单位为 KB，最大值为 262144。
+
+        然后在 Doris 的 Catalog 属性中设置 `mc.max_field_size_bytes` 为对应的字节值（该值不能大于 MaxCompute 的设置值）。
+
+* `{CommonProperties}`
+
+    CommonProperties 部分用于填写通用属性。请参阅[数据目录概述](../catalog-overview.md)中「通用属性」部分。
+
+## 元数据缓存 {#meta-cache}
+
+为了提升访问外部数据源的性能，Apache Doris 会对 MaxCompute 的元数据进行缓存。元数据包括表结构（Schema）和分区列表等。
+
+:::tip
+对于 Doris 4.1.x 之前的版本，元数据缓存主要由 FE 配置项全局控制，详情请参阅[元数据缓存](../meta-cache.md)。
+从 Doris 4.1.x 开始，MaxCompute Catalog 的外表元数据缓存使用统一键 `meta.cache.*` 进行配置。
+:::
+
+### 缓存属性配置（4.1.x+） {#meta-cache-unified-model}
+
+各引擎 cache entry 使用统一的配置键格式：`meta.cache.<engine>.<entry>.{enable,ttl-second,capacity}`。
+
+| 属性 | 示例 | 含义 |
+|---|---|---|
+| `enable` | `true/false` | 是否启用该缓存模块。 |
+| `ttl-second` | `600`、`0`、`-1` | `0` 表示关闭缓存（即刻生效，可用于查看最新数据）；`-1` 表示永不过期；其他正整数表示按访问时间计算 TTL（秒）。 |
+| `capacity` | `10000` | 最大缓存条目数（按条目数量计）。`0` 表示关闭。 |
+
+**生效逻辑说明：** 只有当 `enable=true` 且 `ttl-second != 0` 且 `capacity > 0` 时，该模块缓存才会生效。
+
+### 缓存模块 {#meta-cache-unified-modules}
+
+MaxCompute Catalog 包含以下缓存模块：
+
+| 模块 (`<entry>`) | 属性键前缀 | 缓存内容与影响 |
+|---|---|---|
+| `schema` | `meta.cache.maxcompute.schema.` | 缓存表结构。影响：列新增、删除、类型变更在 Doris 中的可见性。若关闭，每次查询都会拉取最新 Schema。 |
+| `partition_values` | `meta.cache.maxcompute.partition_values.` | 缓存分区值列表。影响：分区裁剪、分区枚举，以及新增/删除分区何时在 Doris 中可见。若关闭，可实时查看到分区变动。 |
+
+### 旧参数映射与转换 {#meta-cache-mapping}
+
+在 4.1.x 之前，MaxCompute 的 Schema 和分区相关缓存主要通过 Catalog 兼容属性或 FE 全局缓存策略控制。升级到 4.1.x 后，建议统一改写为 `meta.cache.maxcompute.*`。
+
+| 4.1 前属性键/旧模型 | 适用范围 | 4.1.x+ 统一键 | 升级建议与影响 |
+|---|---|---|---|
+| `schema.cache.ttl-second` | 4.1 前 MaxCompute Catalog 兼容属性 | `meta.cache.maxcompute.schema.ttl-second` | 控制 Schema 新鲜度。若希望列变更每次查询立即可见，设置为 `0`。 |
+| MaxCompute 分区值旧模型 | 4.1 前 FE 全局缓存策略 | `meta.cache.maxcompute.partition_values.ttl-second` | 控制分区枚举与分区可见性。若希望新增/删除分区每次查询立即可见，设置为 `0`。 |
+
+4.1.x 的统一模型把缓存拆分为 `enable`、`ttl-second`、`capacity` 三个维度；旧模型主要表达 TTL/全局缓存行为。升级后如果只迁移 TTL 而不评估 `enable/capacity`，其余行为会使用 4.1.x 的默认值。
+
+### 最佳实践 {#meta-cache-best-practices}
+
+* **实时查看最新数据**：如果您希望每次查询都能看到 MaxCompute 表的最新分区变动或 Schema 变更，可以将 `schema` 或 `partition_values` 的 `ttl-second` 设置为 `0`。
+  ```sql
+  -- 关闭分区值缓存，以感知 MaxCompute 表的最新分区
+  ALTER CATALOG mc_ctl SET PROPERTIES ("meta.cache.maxcompute.partition_values.ttl-second" = "0");
+  ```
+* **注意**：`meta.cache.maxcompute.*` 目前没有专门的热生效 hook。修改配置后，建议重建 Catalog 或重启 FE 以确保生效。
+
+### 可观测性 {#meta-cache-unified-observability}
+
+可以通过 `information_schema.catalog_meta_cache_statistics` 系统表观测缓存指标：
+
+```sql
+SELECT catalog_name, engine_name, entry_name,
+       effective_enabled, ttl_second, capacity,
+       estimated_size, hit_rate, load_failure_count, last_error
+FROM information_schema.catalog_meta_cache_statistics
+WHERE catalog_name = 'mc_ctl' AND engine_name = 'maxcompute'
+ORDER BY entry_name;
+```
+
+该系统表文档见：[catalog_meta_cache_statistics](../../admin-manual/system-tables/information_schema/catalog_meta_cache_statistics.md)。
+
+### 支持的 MaxCompute 版本
+
+仅支持公有云版本的 MaxCompute。私有云版本支持请联系 Doris 社区支持。
+
+### 支持的 MaxCompute 表
+
+* 支持读取分区表、聚簇表、物化视图。
+
+* 不支持读取 MaxCompute 的外部表、逻辑视图、Delta Table。
+
+## 层级映射
+
+- `mc.enable.namespace.schema` 为 `false`
+
+  | Doris    | MaxCompute |
+  | -------- | ---------- |
+  | Catalog  | N/A        |
+  | Database | Project    |
+  | Table    | Table      |
+
+- `mc.enable.namespace.schema` 为 `true`
+
+  | Doris    | MaxCompute |
+  | -------- | ---------- |
+  | Catalog  | Project    |
+  | Database | Schema     |
+  | Table    | Table      |
+
+## 列类型映射
+
+| MaxCompute Type | Doris Type    | Comment                                                                      |
+| ---------------- | ------------- | ---------------------------------------------------------------------------- |
+| boolean          | boolean       |                                                                              |
+| tiny             | tinyint       |                                                                              |
+| tinyint          | tinyint       |                                                                              |
+| smallint         | smallint      |                                                                              |
+| int              | int           |                                                                              |
+| bigint           | bigint        |                                                                              |
+| float            | float         |                                                                              |
+| double           | double        |                                                                              |
+| decimal(P, S)    | decimal(P, S) | 1 <= P <= 38，0 <= S <= 18                                                   |
+| char(N)          | char(N)       |                                                                              |
+| varchar(N)       | varchar(N)    |                                                                              |
+| string           | string        |                                                                              |
+| date             | date          |                                                                              |
+| datetime         | datetime(3)   | 固定映射到精度 3。可以通过 `SET [GLOBAL] time_zone = 'Asia/Shanghai'` 来指定时区。              |
+| timestamp_ntz    | datetime(6)   | MaxCompute 的 `timestamp_ntz` 精度为 9，Doris 的 DATETIME 最大精度只有 6，故读取数据时会将多的部分直接截断。 |
+| timestamp        | datetime(6)   | 自 2.1.9/3.0.5 支持。MaxCompute 的 `timestamp` 精度为 9，Doris 的 DATETIME 最大精度只有 6，故读取数据时会将多的部分直接截断。 |
+| array            | array         |                                                                              |
+| map              | map           |                                                                              |
+| struct           | struct        |                                                                              |
+| other            | UNSUPPORTED   |                                                                              |
+
+## 基础示例
+
+默认 `ak_sk` 认证：
+
+```sql
+CREATE CATALOG mc_catalog PROPERTIES (
+    'type' = 'max_compute',
+    'mc.default.project' = 'project',
+    'mc.access_key' = 'AKxxxxx',
+    'mc.secret_key' = 'SKxxxxx',
+    'mc.endpoint' = 'http://service.cn-beijing-vpc.maxcompute.aliyun-inc.com/api'
+);
+```
+
+`ram_role_arn` 认证（4.0.4+）：
+
+```sql
+CREATE CATALOG mc_catalog PROPERTIES (
+    'type' = 'max_compute',
+    'mc.default.project' = 'project',
+    'mc.auth.type' = 'ram_role_arn',
+    'mc.access_key' = 'AKxxxxx',
+    'mc.secret_key' = 'SKxxxxx',
+    'mc.ram_role_arn' = 'acs:ram::<your_account_id>:role/<your_role_name>',
+    'mc.endpoint' = 'http://service.cn-beijing-vpc.maxcompute.aliyun-inc.com/api'
+);
+```
+
+`ecs_ram_role` 认证（4.0.4+）：
+
+```sql
+CREATE CATALOG mc_catalog PROPERTIES (
+    'type' = 'max_compute',
+    'mc.default.project' = 'project',
+    'mc.auth.type' = 'ecs_ram_role',
+    'mc.ecs_ram_role' = '<your_ecs_ram_role_name>',
+    'mc.endpoint' = 'http://service.cn-beijing-vpc.maxcompute.aliyun-inc.com/api'
+);
+```
+
+如使用 2.1.7（不含）之前的版本，请使用如下语句（建议升级到 2.1.8 后使用）：
+
+```sql
+CREATE CATALOG mc_catalog PROPERTIES (
+    'type' = 'max_compute',
+    'mc.region' = 'cn-beijing',
+    'mc.default.project' = 'project',
+    'mc.access_key' = 'ak',
+    'mc.secret_key' = 'sk',
+    'mc.odps_endpoint' = 'http://service.cn-beijing.maxcompute.aliyun-inc.com/api',
+    'mc.tunnel_endpoint' = 'http://dt.cn-beijing.maxcompute.aliyun-inc.com'
+);
+```
+
+支持 Schema：
+
+```sql
+CREATE CATALOG mc_catalog PROPERTIES (
+    'type' = 'max_compute',
+    'mc.region' = 'cn-beijing',
+    'mc.default.project' = 'project',
+    'mc.access_key' = 'ak',
+    'mc.secret_key' = 'sk',
+    'mc.odps_endpoint' = 'http://service.cn-beijing.maxcompute.aliyun-inc.com/api',
+    'mc.tunnel_endpoint' = 'http://dt.cn-beijing.maxcompute.aliyun-inc.com',
+    'mc.enable.namespace.schema' = 'true'
+);
+```
+
+## 查询操作
+
+### 基础查询
+
+```sql
+-- 1. 切换到 Catalog，使用 Database 并查询
+SWITCH mc_ctl;
+USE mc_db;
+SELECT * FROM mc_tbl LIMIT 10;
+
+-- 2. 直接使用 Database
+USE mc_ctl.mc_db;
+SELECT * FROM mc_tbl LIMIT 10;
+
+-- 3. 使用全限定名查询
+SELECT * FROM mc_ctl.mc_db.mc_tbl LIMIT 10;
+```
+
+### 查询优化
+
+- LIMIT 查询优化（自 4.1.0 起）
+
+    该参数仅适用于需要频繁使用 `LIMIT 1` 来检测数据是否存在的场景。
+
+    当查询 MaxCompute 表时，如果查询仅包含分区列的等值条件（`=` 或 `IN`）并且带有 `LIMIT` 子句，可以通过开启 Session Variable `enable_mc_limit_split_optimization` 来优化 Split 的生成策略。
+
+    开启后，系统会使用 `row_offset` 策略，仅读取所需数量的行数据，而不是为所有数据生成 Split。这可以将 Split 数量从多个减少为一个，从而显著降低查询延迟。
+
+    该优化适用于如下形式的查询：
+
+    ```sql
+    SELECT * FROM mc_tbl WHERE pt = 'value' LIMIT 100;
+    SELECT * FROM mc_tbl WHERE pt IN ('v1', 'v2') LIMIT 100;
+    ```
+
+    开启方式：
+
+    ```sql
+    SET enable_mc_limit_split_optimization = true;
+    ```
+
+    > 该参数默认关闭。当查询包含非分区列的过滤条件、非等值条件（如 `>`、`<`、`!=`）、或不带 `LIMIT` 子句时，该优化不会生效。
+
+## 写入操作
+
+自 4.1.0 版本开始，Doris 支持对 MaxCompute 表的写入操作。您可以通过标准的 INSERT 语句，将其他数据源的数据通过 Doris 直接写入 MaxCompute 表。
+
+:::note
+- 该功能为实验功能，自 4.1.0 版本开始支持。
+- 支持写入分区表和非分区表。
+- 不支持聚簇表、事务表、Delta Table 和外部表的写入。
+:::
+
+### INSERT INTO
+
+INSERT 操作会将数据以追加的方式写入到目标表中。
+
+例如：
+
+```sql
+INSERT INTO mc_tbl values (val1, val2, val3, val4);
+INSERT INTO mc_tbl SELECT col1, col2 FROM internal.db1.tbl1;
+
+INSERT INTO mc_tbl(col1, col2) values (val1, val2);
+INSERT INTO mc_tbl(col1, col2, partition_col1, partition_col2) values (1, 2, "beijing", "2023-12-12");
+
+-- 指定分区写入 (可以仅指定部分分区列，其余分区动态写入)
+INSERT INTO mc_tbl PARTITION(ds='20250201') SELECT id, name FROM source_tbl;
+INSERT INTO mc_tbl PARTITION(ds='20250101', region='bj') VALUES (1, 'v1'), (2, 'v2');
+```
+
+### INSERT OVERWRITE
+
+INSERT OVERWRITE 会使用新的数据完全覆盖原有表中的数据。
+
+```sql
+INSERT OVERWRITE TABLE mc_tbl VALUES(val1, val2, val3, val4);
+INSERT OVERWRITE TABLE mc_tbl(col1, col2) SELECT col1, col2 FROM internal.db1.tbl1;
+
+-- 指定分区写入
+INSERT OVERWRITE TABLE mc_tbl PARTITION(ds='20250101') VALUES (10, 'new1');
+```
+
+### CTAS
+
+可以通过 `CTAS` 语句创建 MaxCompute 表并写入数据：
+
+```sql
+CREATE TABLE mc_tbl AS SELECT * FROM other_table;
+```
+
+## 库表管理
+
+自 4.1.0 版本起，Doris 支持创建和删除 MaxCompute 的库表。
+
+:::note
+- 该功能为实验功能，自 4.1.0 版本开始支持。
+- 支持创建和删除分区表和非分区表。
+- 不支持创建聚簇表、事务表、Delta Table 和外部表。
+:::
+
+该功能仅在 `mc.enable.namespace.schema` 属性为 `true` 时可用。
+
+### 创建和删除库
+
+可以通过 `SWITCH` 语句切换到对应的 Catalog 下，执行 `CREATE DATABASE` 语句：
+
+```sql
+SWITCH mc;
+CREATE DATABASE [IF NOT EXISTS] mc_schema;
+```
+
+也可以使用全限定名创建：
+
+```sql
+CREATE DATABASE [IF NOT EXISTS] mc.mc_schema;
+```
+
+删除库：
+
+```sql
+DROP DATABASE [IF EXISTS] mc.mc_schema;
+```
+
+:::caution
+对于 MaxCompute Database，删除后会同时删除其下的所有表。
+:::
+
+### 创建和删除表
+
+* **创建**
+
+  Doris 支持在 MaxCompute 中创建分区或非分区表。
+
+  例如：
+
+  ```sql
+  CREATE TABLE mc_schema.mc_tbl1 (
+      bool_col BOOLEAN,
+      int_col INT,
+      bigint_col BIGINT,
+      float_col FLOAT,
+      double_col DOUBLE,
+      decimal_col DECIMAL(18,6),
+      string_col STRING,
+      varchar_col VARCHAR(200),
+      char_col CHAR(50),
+      date_col DATE,
+      datetime_col DATETIME,
+      arr_col ARRAY<STRING>,
+      map_col MAP<STRING, STRING>,
+      struct_col STRUCT<f1:STRING, f2:INT>
+  );
+
+  CREATE TABLE mc_schema.mc_tbl2 (
+    id INT,
+    val STRING,
+    ds STRING,
+    region STRING
+  )
+  PARTITION BY (ds, region)();
+  ```
+
+* **删除**
+
+  可以通过 `DROP TABLE` 语句删除一个 MaxCompute 表。当前删除表后，会同时删除数据，包括分区数据。
+
+  例如：
+
+  ```sql
+  DROP TABLE [IF EXISTS] mc_tbl;
+  ```
+
+## 常见问题
+
+### 如何获取 Endpoint 和 Quota（适用于 Doris 2.1.7 及之后）
+
+1. 如果使用数据传输服务独享资源组
+
+    请参照该[文档](https://help.aliyun.com/zh/maxcompute/user-guide/purchase-and-use-exclusive-resource-groups-for-dts)中「使用独享数据服务资源组」章节中的「2. 授权」来开启相应的权限，并在「配额（Quota）管理」列表中，查看并复制对应的 `QuotaName`，指定 `"mc.quota" = "QuotaName"`。此时您可以选择 VPC 或公网来访问 MaxCompute，但是走 VPC 的带宽有保障，公网带宽资源小。
+
+2. 如果使用按量付费
+
+    请参照该[文档](https://help.aliyun.com/zh/maxcompute/user-guide/overview-1)中「使用开放存储（按量付费）」的章节，来开启开放存储（Storage API）开关，并给 AK、SK 对应的用户赋予权限。此时 `mc.quota` 为默认值 `pay-as-you-go`，不需要额外指定该值。按量付费情况下，只能使用 VPC 来访问 MaxCompute，无法通过公网访问。只有预付费用户才能通过公网访问 MaxCompute。
+
+3. 根据[阿里云 Endpoints 文档](https://help.aliyun.com/zh/maxcompute/user-guide/endpoints)中的「地域 Endpoint 对照表」来配置 `mc.endpoint`
+
+    使用 VPC 访问的用户，需要根据「各地域 Endpoint 对照表（阿里云 VPC 网络连接方式）」表中的「VPC 网络 Endpoint」列来配置 `mc.endpoint`。使用公网访问的用户，可以选择「各地域 Endpoint 对照表（阿里云经典网络连接方式）」表中的「经典网络 Endpoint」列、或者选择「各地域 Endpoint 对照表（外网连接方式）」表中的「外网 Endpoint」列来配置 `mc.endpoint`。
+
+### 自定义服务地址（适用于 Doris 2.1.7 之前）
+
+在 Doris 2.1.7 之前的版本中，使用 Tunnel SDK 与 MaxCompute 交互，因此需要使用以下两个 endpoint 属性：
+
+* `mc.odps_endpoint`：MaxCompute Endpoint，用于获取 MaxCompute 元数据（库表信息）。
+
+* `mc.tunnel_endpoint`：Tunnel Endpoint，用于读取 MaxCompute 数据。
+
+默认情况下，MaxCompute Catalog 根据 `mc.region` 和 `mc.public_access` 去生成 endpoint。
+
+生成后的格式如下：
+
+| `mc.public_access` | `mc.odps_endpoint` | `mc.tunnel_endpoint` |
+| --- | --- | --- |
+| `false` | `http://service.{mc.region}.maxcompute.aliyun-inc.com/api` | `http://dt.{mc.region}.maxcompute.aliyun-inc.com` |
+| `true` | `http://service.{mc.region}.maxcompute.aliyun.com/api` | `http://dt.{mc.region}.maxcompute.aliyun.com` |
+
+用户也可以单独指定 `mc.odps_endpoint` 和 `mc.tunnel_endpoint` 来自定义服务地址，适用于私有部署的 MaxCompute 环境。
+
+MaxCompute Endpoint 和 Tunnel Endpoint 的配置，请参见[各地域及不同网络连接方式下的 Endpoint](https://help.aliyun.com/zh/maxcompute/user-guide/endpoints)。
+
+### 资源使用控制
+
+用户可以通过调整 `parallel_pipeline_task_num` 和 `num_scanner_threads` 这两个 Session Variable 来调整[表级别请求并发数量](https://help.aliyun.com/zh/maxcompute/user-guide/data-transfer-service-quota-manage?spm=a2c4g.11186623.help-menu-search-27797.d_2)，以控制数据传输服务中的资源消耗。其对应的并发数量等于 `max(parallel_pipeline_task_num * be num * num_scanner_threads)`。
+
+需要注意：
+
+1. 该方法只能控制单个 Query 中单张表的并发请求数量，无法控制多个 SQL 的资源使用量。
+
+2. 降低并发数量意味着会提高 Query 的查询时间。
+
+### 写入最佳实践
+
+- 建议优先选择指定分区写入，如 `INSERT INTO mc_tbl PARTITION(ds='20250201')`。当不指定分区时，由于 MaxCompute Storage API 的限制，各个分区的数据需要顺序写入，因此执行计划中会基于分区字段进行排序。当数据量较大时，对内存资源消耗较大，可能导致写入失败。
+
+- 当不指定分区写入时，不要设置 `SET enable_strict_consistency_dml = false`。该方法会强制取消排序节点，导致分区数据乱序写入，最终 MaxCompute 会报错。
+
+- 不要添加 `LIMIT` 子句。当添加 `LIMIT` 子句时，Doris 仅会使用单线程写出，以保证写入的数量。该方式可以用于小数据量测试，但如果 `LIMIT` 数量较大，写入性能不佳。
+
+### 写入报错：`Data invalid: ODPS-0020041:StringOutOfMaxLength`
+
+参考 `mc.max_field_size_bytes` 的说明。
