@@ -23,14 +23,15 @@
 #   ./local_dev.sh [command] [options]
 #
 # Commands:
-#   start       Start dev server (English, default)
-#   start-zh    Start dev server (Chinese)
-#   build       Full production build (en + zh-CN)
-#   build-en    Production build (English only)
-#   serve       Serve a previous production build
-#   install     Install dependencies only
-#   clean       Clean build artifacts and caches
-#   help        Show this help message
+#   start            Start dev server (English, default)
+#   start-zh         Start dev server (Chinese)
+#   build            Full production build (en + zh-CN)
+#   build-en         Production build (English only)
+#   build-docs-next  Start docs-next dev server (hot reload, current only)
+#   serve            Serve a previous production build
+#   install          Install dependencies only
+#   clean            Clean build artifacts and caches
+#   help             Show this help message
 #
 # Options:
 #   --port PORT         Dev server port (default: 3000)
@@ -45,9 +46,9 @@
 #   ./local_dev.sh                        # start English dev server
 #   ./local_dev.sh start --port 8080      # start on port 8080
 #   ./local_dev.sh start-zh               # start Chinese dev server
-#   ./local_dev.sh build-en               # build English only
 #   ./local_dev.sh build                  # full build (slow)
 #   ./local_dev.sh build --versions "4.x" # build only 4.x version
+#   ./local_dev.sh build-docs-next        # start docs-next dev server (hot reload)
 #   ./local_dev.sh clean                  # clean caches
 ##############################################################
 
@@ -256,6 +257,27 @@ cmd_build() {
     info "Run './local_dev.sh serve' to preview the build."
 }
 
+cmd_build_docs_next_only() {
+    local port="${OPT_PORT}"
+    local host="${OPT_HOST}"
+
+    validate_env
+    if [[ "${OPT_SKIP_INSTALL}" != "true" ]]; then
+        do_install
+    fi
+
+    apply_versions_env "current"
+    export NODE_OPTIONS="--max-old-space-size=${OPT_MAX_MEM}"
+
+    step "Starting docs-next dev server on ${host}:${port}"
+    info "Navigate to http://${host}:${port}/docs-next/dev/"
+    info "Press Ctrl+C to stop"
+    echo ""
+
+    cd "${PROJECT_ROOT}"
+    "${YARN_BIN}" docusaurus start --no-open --host "${host}" --port "${port}"
+}
+
 cmd_serve() {
     validate_env
 
@@ -304,8 +326,9 @@ cmd_help() {
     echo -e "${BOLD}Quick start:${NC}"
     echo "  ./local_dev.sh              # Start English dev server"
     echo "  ./local_dev.sh start-zh     # Start Chinese dev server"
-    echo "  ./local_dev.sh build        # Build English only (default)"
-    echo "  ./local_dev.sh build-all    # Full production build (en + zh-CN)"
+    echo "  ./local_dev.sh build        # Full build (en only, default)"
+    echo "  ./local_dev.sh build-all   # Full build (en + zh-CN)"
+    echo "  ./local_dev.sh build-docs-next  # docs-next dev server (hot reload)"
     echo ""
 }
 
@@ -343,15 +366,16 @@ done
 
 # ─── Dispatch command ────────────────────────────────────────
 case "${COMMAND}" in
-    start)      cmd_start ;;
-    start-zh)   cmd_start_zh ;;
-    build)      cmd_build "en" ;;
-    build-all)  cmd_build "en zh-CN" ;;
-    build-en)   cmd_build "en" ;;
-    serve)      cmd_serve ;;
-    install)    cmd_install ;;
-    clean)      cmd_clean ;;
-    help|-h|--help) cmd_help ;;
+    start)              cmd_start ;;
+    start-zh)           cmd_start_zh ;;
+    build)              cmd_build "en" ;;
+    build-all)          cmd_build "en zh-CN" ;;
+    build-en)          cmd_build "en" ;;
+    build-docs-next)    cmd_build_docs_next_only ;;
+    serve)              cmd_serve ;;
+    install)            cmd_install ;;
+    clean)              cmd_clean ;;
+    help|-h|--help)     cmd_help ;;
     *)
         error "Unknown command: ${COMMAND}"
         cmd_help

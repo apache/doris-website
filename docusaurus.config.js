@@ -150,7 +150,7 @@ const config = {
                 sidebarPath: require.resolve('./sidebarsReleases.json'),
             }),
         ],
-        [
+        process.env.SKIP_DOCS_NEXT ? null : [
             'content-docs',
             /** @type {import('@docusaurus/plugin-content-docs').Options} */
             ({

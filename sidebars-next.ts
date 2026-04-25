@@ -9,10 +9,11 @@ const sidebars: SidebarsConfig = {
             items: [
                 'gettingStarted/what-is-apache-doris',
                 'gettingStarted/quick-start',
+                'use-cases/overview',
                 'gettingStarted/before-you-start-the-poc',
                 {
                     type: 'category',
-                    label: 'Tech Alternatives',
+                    label: 'Migration & Doris vs.',
                     items: [
                         'gettingStarted/alternatives/alternative-to-clickhouse',
                         'gettingStarted/alternatives/alternative-to-elasticsearch',
@@ -23,66 +24,89 @@ const sidebars: SidebarsConfig = {
         },
         {
             type: 'category',
-            label: 'Guides',
+            label: 'Architecture & Concepts',
+            collapsed: false,
+            items: [
+                'architecture-concepts/overview',
+                'architecture-concepts/system-architecture',
+                'architecture-concepts/storage-compute-decoupled',
+                'architecture-concepts/mpp-execution-engine',
+                'architecture-concepts/storage-layer',
+                'architecture-concepts/metadata-management',
+            ],
+        },
+        {
+            type: 'category',
+            label: 'Installation & Deployment',
             collapsed: false,
             items: [
                 {
                     type: 'category',
-                    label: 'Installation and Deployment',
+                    label: 'Installation Preparation',
+                    items: [
+                        'install/preparation/env-checking',
+                        'install/preparation/cluster-planning',
+                        'install/preparation/os-checking',
+                    ],
+                },
+                {
+                    type: 'category',
+                    label: 'Cluster Deployment Manually',
+                    items: [
+                        'install/deploy-manually/integrated-storage-compute-deploy-manually',
+                        'install/deploy-manually/separating-storage-compute-deploy-manually',
+                    ],
+                },
+                {
+                    type: 'category',
+                    label: 'Deploying on Kubernetes',
                     items: [
                         {
                             type: 'category',
-                            label: 'Installation Preparation',
+                            label: 'Integrated Storage Compute',
                             items: [
-                                'install/preparation/env-checking',
-                                'install/preparation/cluster-planning',
-                                'install/preparation/os-checking',
+                                'install/deploy-on-kubernetes/integrated-storage-compute/install-doris-operator',
+                                'install/deploy-on-kubernetes/integrated-storage-compute/install-config-cluster',
+                                'install/deploy-on-kubernetes/integrated-storage-compute/install-doris-cluster',
+                                'install/deploy-on-kubernetes/integrated-storage-compute/access-cluster',
+                                'install/deploy-on-kubernetes/integrated-storage-compute/cluster-operation',
                             ],
                         },
                         {
                             type: 'category',
-                            label: 'Cluster Deployment Manually',
+                            label: 'Separating Storage Compute',
                             items: [
-                                'install/deploy-manually/integrated-storage-compute-deploy-manually',
-                                'install/deploy-manually/separating-storage-compute-deploy-manually',
+                                'install/deploy-on-kubernetes/separating-storage-compute/install-fdb',
+                                'install/deploy-on-kubernetes/separating-storage-compute/config-cluster',
+                                'install/deploy-on-kubernetes/separating-storage-compute/config-ms',
+                                'install/deploy-on-kubernetes/separating-storage-compute/config-fe',
+                                'install/deploy-on-kubernetes/separating-storage-compute/config-cg',
+                                'install/deploy-on-kubernetes/separating-storage-compute/install-doris-cluster',
                             ],
-                        },
-                        {
-                            type: 'category',
-                            label: 'Deploying on Kubernetes',
-                            items: [
-                                {
-                                    type: 'category',
-                                    label: 'Integrated Storage Compute',
-                                    items: [
-                                        'install/deploy-on-kubernetes/integrated-storage-compute/install-doris-operator',
-                                        'install/deploy-on-kubernetes/integrated-storage-compute/install-config-cluster',
-                                        'install/deploy-on-kubernetes/integrated-storage-compute/install-doris-cluster',
-                                        'install/deploy-on-kubernetes/integrated-storage-compute/access-cluster',
-                                        'install/deploy-on-kubernetes/integrated-storage-compute/cluster-operation',
-                                    ],
-                                },
-                                {
-                                    type: 'category',
-                                    label: 'Separating Storage Compute',
-                                    items: [
-                                        'install/deploy-on-kubernetes/separating-storage-compute/install-fdb',
-                                        'install/deploy-on-kubernetes/separating-storage-compute/config-cluster',
-                                        'install/deploy-on-kubernetes/separating-storage-compute/config-ms',
-                                        'install/deploy-on-kubernetes/separating-storage-compute/config-fe',
-                                        'install/deploy-on-kubernetes/separating-storage-compute/config-cg',
-                                        'install/deploy-on-kubernetes/separating-storage-compute/install-doris-cluster',
-                                    ],
-                                },
-                            ],
-                        },
-                        {
-                            type: 'category',
-                            label: 'Deploying on Cloud',
-                            items: ['install/deploy-on-cloud/doris-on-aws'],
                         },
                     ],
                 },
+                {
+                    type: 'category',
+                    label: 'Deploying on Cloud',
+                    items: ['install/deploy-on-cloud/doris-on-aws'],
+                },
+                {
+                    type: 'category',
+                    label: 'Doris Operator',
+                    items: [
+                        'ecosystem/doris-operator/doris-operator-overview',
+                        'ecosystem/doris-operator/on-alibaba',
+                        'ecosystem/doris-operator/on-aws',
+                    ],
+                },
+            ],
+        },
+        {
+            type: 'category',
+            label: 'Connect & Develop',
+            collapsed: false,
+            items: [
                 {
                     type: 'category',
                     label: 'Database Connection',
@@ -90,53 +114,95 @@ const sidebars: SidebarsConfig = {
                 },
                 {
                     type: 'category',
-                    label: 'Data Table Design',
+                    label: 'BI Tools',
                     items: [
-                        'table-design/overview',
+                        'ecosystem/bi/apache-superset',
+                        'ecosystem/bi/finebi',
+                        'ecosystem/bi/metabase',
+                        'ecosystem/bi/powerbi',
+                        'ecosystem/bi/tableau',
+                        'ecosystem/bi/quicksight',
+                        'ecosystem/bi/quickbi',
+                        'ecosystem/bi/smartbi',
+                    ],
+                },
+                {
+                    type: 'category',
+                    label: 'SQL Clients',
+                    items: ['ecosystem/bi/clouddm', 'ecosystem/bi/dbeaver', 'ecosystem/bi/datagrip'],
+                },
+            ],
+        },
+        {
+            type: 'category',
+            label: 'Table Design',
+            collapsed: false,
+            items: [
+                'table-design/overview',
+                {
+                    type: 'category',
+                    label: 'Table Models',
+                    items: [
+                        'table-design/data-model/overview',
+                        'table-design/data-model/duplicate',
+                        'table-design/data-model/unique',
+                        'table-design/data-model/aggregate',
+                        'table-design/data-model/tips',
+                    ],
+                },
+                'table-design/data-type',
+                {
+                    type: 'category',
+                    label: 'Partitioning & Bucketing',
+                    items: [
+                        'table-design/data-partitioning/data-distribution',
+                        'table-design/data-partitioning/manual-partitioning',
+                        'table-design/data-partitioning/dynamic-partitioning',
+                        'table-design/data-partitioning/auto-partitioning',
+                        'table-design/data-partitioning/data-bucketing',
+                        'table-design/data-partitioning/common-issues',
+                        'table-design/data-partitioning/basic-concepts',
+                    ],
+                },
+                {
+                    type: 'category',
+                    label: 'Indexes',
+                    items: [
+                        'table-design/index/index-overview',
+                        'table-design/index/prefix-index',
+                        'table-design/index/bloomfilter',
+                        'table-design/index/ngram-bloomfilter-index',
                         {
                             type: 'category',
-                            label: 'Table Types',
+                            label: 'Inverted Index (Fulltext)',
                             items: [
-                                'table-design/data-model/overview',
-                                'table-design/data-model/duplicate',
-                                'table-design/data-model/unique',
-                                'table-design/data-model/aggregate',
-                                'table-design/data-model/tips',
+                                'table-design/index/inverted-index/overview',
+                                'ai/text-search/custom-analyzer',
+                                'ai/text-search/custom-normalizer',
                             ],
                         },
                         {
                             type: 'category',
-                            label: 'Data Partitioning',
+                            label: 'Vector Index',
                             items: [
-                                'table-design/data-partitioning/data-distribution',
-                                'table-design/data-partitioning/manual-partitioning',
-                                'table-design/data-partitioning/dynamic-partitioning',
-                                'table-design/data-partitioning/auto-partitioning',
-                                'table-design/data-partitioning/data-bucketing',
-                                'table-design/data-partitioning/common-issues',
-                                'table-design/data-partitioning/basic-concepts',
+                                'ai/vector-search/hnsw',
+                                'ai/vector-search/ivf',
+                                'ai/vector-search/ivf-on-disk',
+                                'ai/vector-search/index-management',
+                                'ai/vector-search/quantization-survey',
+                                'ai/vector-search/resource-estimation',
+                                'ai/vector-search/behind-index',
                             ],
                         },
-                        'table-design/data-type',
-                        'table-design/column-compression',
+                    ],
+                },
+                {
+                    type: 'category',
+                    label: 'Storage Layout',
+                    items: [
                         'table-design/storage-format',
-                        {
-                            type: 'category',
-                            label: 'Table Indexes',
-                            items: [
-                                'table-design/index/index-overview',
-                                'table-design/index/prefix-index',
-                                {
-                                    type: 'category',
-                                    label: 'Inverted Index',
-                                    items: ['table-design/index/inverted-index/overview'],
-                                },
-                                'table-design/index/bloomfilter',
-                                'table-design/index/ngram-bloomfilter-index',
-                            ],
-                        },
-                        'table-design/schema-change',
-                        'table-design/auto-increment',
+                        'table-design/column-compression',
+                        'table-design/row-store',
                         {
                             type: 'category',
                             label: 'Tiered Storage',
@@ -146,11 +212,29 @@ const sidebars: SidebarsConfig = {
                                 'table-design/tiered-storage/remote-storage',
                             ],
                         },
-                        'table-design/row-store',
-                        'table-design/temporary-table',
-                        'table-design/best-practice',
                     ],
                 },
+                {
+                    type: 'category',
+                    label: 'Schema Evolution',
+                    items: [
+                        'table-design/schema-change',
+                        'table-design/auto-increment',
+                    ],
+                },
+                {
+                    type: 'category',
+                    label: 'Special Tables',
+                    items: ['table-design/temporary-table'],
+                },
+                'table-design/best-practice',
+            ],
+        },
+        {
+            type: 'category',
+            label: 'Data Operations',
+            collapsed: false,
+            items: [
                 {
                     type: 'category',
                     label: 'Loading Data',
@@ -190,7 +274,7 @@ const sidebars: SidebarsConfig = {
                                 'data-operate/import/import-way/insert-into-manual',
                                 'data-operate/import/import-way/insert-into-values-manual',
                                 'data-operate/import/import-way/mysql-load-manual',
-                                "data-operate/import/import-way/log-storage-analysis"
+                                'data-operate/import/import-way/log-storage-analysis',
                             ],
                         },
                         {
@@ -309,303 +393,232 @@ const sidebars: SidebarsConfig = {
                         'data-operate/export/export-best-practice',
                     ],
                 },
+            ],
+        },
+        {
+            type: 'category',
+            label: 'Querying',
+            collapsed: false,
+            items: [
+                'query-data/mysql-compatibility',
+                'query-data/join',
+                'query-data/asof-join',
+                'query-data/subquery',
+                'query-data/multi-dimensional-analytics',
+                'query-data/window-function',
+                'query-data/cte',
                 {
                     type: 'category',
-                    label: 'Data Queries',
+                    label: 'User Defined Functions',
                     items: [
-                        'query-data/mysql-compatibility',
-                        'query-data/join',
-                        'query-data/asof-join',
-                        'query-data/subquery',
-                        'query-data/multi-dimensional-analytics',
-                        'query-data/window-function',
-                        'query-data/cte',
+                        'query-data/udf/alias-function',
+                        'query-data/udf/java-user-defined-function',
+                        'query-data/udf/python-user-defined-function',
+                    ],
+                },
+                'query-data/complex-type',
+                'query-data/lateral-view',
+            ],
+        },
+        {
+            type: 'category',
+            label: 'Lakehouse',
+            collapsed: false,
+            items: [
+                'lakehouse/lakehouse-overview',
+                'lakehouse/catalog-overview',
+                {
+                    type: 'category',
+                    label: 'Data Catalogs',
+                    items: [
+                        'lakehouse/catalogs/hive-catalog',
                         {
                             type: 'category',
-                            label: 'User Defined Functions',
+                            label: 'Iceberg Catalog',
+                            link: {type: 'doc', id: 'lakehouse/catalogs/iceberg-catalog'},
                             items: [
-                                'query-data/udf/alias-function',
-                                'query-data/udf/java-user-defined-function',
-                                'query-data/udf/python-user-defined-function',
+                                'lakehouse/best-practices/doris-iceberg',
+                                'lakehouse/best-practices/doris-aws-s3tables',
+                                'lakehouse/best-practices/doris-polaris',
+                                'lakehouse/best-practices/doris-gravitino',
+                                'lakehouse/best-practices/doris-onelake',
+                                'lakehouse/best-practices/doris-unity-catalog',
+                                'lakehouse/best-practices/doris-lakekeeper',
+                                'lakehouse/best-practices/doris-nessie',
+                                'lakehouse/best-practices/doris-dlf-iceberg',
                             ],
                         },
-                        'query-data/complex-type',
-                        'query-data/lateral-view',
+                        {
+                            type: 'category',
+                            label: 'Paimon Catalog',
+                            link: {type: 'doc', id: 'lakehouse/catalogs/paimon-catalog'},
+                            items: [
+                                'lakehouse/best-practices/doris-paimon',
+                                'lakehouse/best-practices/doris-dlf-paimon',
+                            ],
+                        },
+                        {
+                            type: 'category',
+                            label: 'Hudi Catalog',
+                            link: {type: 'doc', id: 'lakehouse/catalogs/hudi-catalog'},
+                            items: ['lakehouse/best-practices/doris-hudi'],
+                        },
+                        {
+                            type: 'category',
+                            label: 'MaxCompute Catalog',
+                            link: {type: 'doc', id: 'lakehouse/catalogs/maxcompute-catalog'},
+                            items: ['lakehouse/best-practices/doris-maxcompute'],
+                        },
+                        'lakehouse/catalogs/delta-lake-catalog',
+                        'lakehouse/catalogs/bigquery-catalog',
+                        'lakehouse/catalogs/kudu-catalog',
+                        'lakehouse/catalogs/kafka-catalog',
+                        'lakehouse/catalogs/es-catalog',
+                        'lakehouse/catalogs/doris-catalog',
+                        'lakehouse/catalogs/jdbc-catalog-overview',
+                        'lakehouse/catalogs/jdbc-mysql-catalog',
+                        'lakehouse/catalogs/jdbc-pg-catalog',
+                        'lakehouse/catalogs/jdbc-oracle-catalog',
+                        'lakehouse/catalogs/jdbc-sqlserver-catalog',
+                        'lakehouse/catalogs/jdbc-ibmdb2-catalog',
+                        'lakehouse/catalogs/jdbc-clickhouse-catalog',
+                        'lakehouse/catalogs/jdbc-saphana-catalog',
+                        'lakehouse/catalogs/jdbc-oceanbase-catalog',
+                    ],
+                },
+                'lakehouse/file-analysis',
+                'lakehouse/huggingface',
+                {
+                    type: 'category',
+                    label: 'Metastores',
+                    items: [
+                        'lakehouse/metastores/hive-metastore',
+                        'lakehouse/metastores/aws-glue',
+                        'lakehouse/metastores/google-dataproc-metastore',
+                        'lakehouse/metastores/aliyun-dlf',
+                        'lakehouse/metastores/iceberg-rest',
+                        'lakehouse/metastores/iceberg-jdbc',
+                        'lakehouse/metastores/paimon-jdbc',
+                        'lakehouse/metastores/filesystem',
                     ],
                 },
                 {
                     type: 'category',
-                    label: 'AI',
+                    label: 'Storages',
                     items: [
-                        'ai/ai-overview',
-                        'ai/ai-function-overview',
-                        {
-                            type: 'category',
-                            label: 'Text Search',
-                            items: [
-                                'ai/text-search/overview',
-                                'ai/text-search/search-operators',
-                                'ai/text-search/search-function',
-                                'ai/text-search/custom-analyzer',
-                                'ai/text-search/custom-normalizer',
-                                'ai/text-search/scoring',
-                            ],
-                        },
-                        {
-                            type: 'category',
-                            label: 'Vector Search',
-                            items: [
-                                'ai/vector-search/overview',
-                                'ai/vector-search/practical-guide',
-                                'ai/vector-search/hnsw',
-                                'ai/vector-search/ivf',
-                                'ai/vector-search/ivf-on-disk',
-                                'ai/vector-search/index-management',
-                                'ai/vector-search/resource-estimation',
-                                'ai/vector-search/quantization-survey',
-                                'ai/vector-search/performance',
-                                'ai/vector-search/performance-large-scale',
-                                'ai/vector-search/behind-index',
-                            ],
-                        },
+                        'lakehouse/storages/hdfs',
+                        'lakehouse/storages/s3',
+                        'lakehouse/storages/azure-blob',
+                        'lakehouse/storages/gcs',
+                        'lakehouse/storages/aliyun-oss',
+                        'lakehouse/storages/tencent-cos',
+                        'lakehouse/storages/huawei-obs',
+                        'lakehouse/storages/baidu-bos',
+                        'lakehouse/storages/minio',
+                        'lakehouse/storages/juicefs',
+                        'lakehouse/storages/ozone',
                     ],
                 },
                 {
                     type: 'category',
-                    label: 'Data Lakehouse',
+                    label: 'File Format',
                     items: [
-                        'lakehouse/lakehouse-overview',
-                        'lakehouse/catalog-overview',
-                        {
-                            type: 'category',
-                            label: 'Data Catalogs',
-                            items: [
-                                'lakehouse/catalogs/hive-catalog',
-                                {
-                                    type: 'category',
-                                    label: 'Iceberg Catalog',
-                                    link: {type: 'doc', id: 'lakehouse/catalogs/iceberg-catalog'},
-                                    items: [
-                                        'lakehouse/best-practices/doris-iceberg',
-                                        'lakehouse/best-practices/doris-aws-s3tables',
-                                        'lakehouse/best-practices/doris-polaris',
-                                        'lakehouse/best-practices/doris-gravitino',
-                                        'lakehouse/best-practices/doris-onelake',
-                                        'lakehouse/best-practices/doris-unity-catalog',
-                                        'lakehouse/best-practices/doris-lakekeeper',
-                                        'lakehouse/best-practices/doris-nessie',
-                                        'lakehouse/best-practices/doris-dlf-iceberg'
-                                    ],
-                                },
-                                {
-                                    type: 'category',
-                                    label: 'Paimon Catalog',
-                                    link: {type: 'doc', id: 'lakehouse/catalogs/paimon-catalog'},
-                                    items: [
-                                        'lakehouse/best-practices/doris-paimon',
-                                        'lakehouse/best-practices/doris-dlf-paimon'
-                                    ],
-                                },
-                                {
-                                    type: 'category',
-                                    label: 'Hudi Catalog',
-                                    link: {type: 'doc', id: 'lakehouse/catalogs/hudi-catalog'},
-                                    items: [
-                                        'lakehouse/best-practices/doris-hudi'
-                                    ],
-                                },
-                                {
-                                    type: 'category',
-                                    label: 'MaxCompute Catalog',
-                                    link: {type: 'doc', id: 'lakehouse/catalogs/maxcompute-catalog'},
-                                    items: [
-                                        'lakehouse/best-practices/doris-maxcompute'
-                                    ],
-                                },
-                                'lakehouse/catalogs/delta-lake-catalog',
-                                'lakehouse/catalogs/bigquery-catalog',
-                                'lakehouse/catalogs/kudu-catalog',
-                                'lakehouse/catalogs/kafka-catalog',
-                                'lakehouse/catalogs/es-catalog',
-                                'lakehouse/catalogs/doris-catalog',
-                                'lakehouse/catalogs/jdbc-catalog-overview',
-                                'lakehouse/catalogs/jdbc-mysql-catalog',
-                                'lakehouse/catalogs/jdbc-pg-catalog',
-                                'lakehouse/catalogs/jdbc-oracle-catalog',
-                                'lakehouse/catalogs/jdbc-sqlserver-catalog',
-                                'lakehouse/catalogs/jdbc-ibmdb2-catalog',
-                                'lakehouse/catalogs/jdbc-clickhouse-catalog',
-                                'lakehouse/catalogs/jdbc-saphana-catalog',
-                                'lakehouse/catalogs/jdbc-oceanbase-catalog',
-                            ],
-                        },
-                        'lakehouse/file-analysis',
-                        'lakehouse/huggingface',
-                        {
-                            type: 'category',
-                            label: 'Metastores',
-                            items: [
-                                'lakehouse/metastores/hive-metastore',
-                                'lakehouse/metastores/aws-glue',
-                                'lakehouse/metastores/google-dataproc-metastore',
-                                'lakehouse/metastores/aliyun-dlf',
-                                'lakehouse/metastores/iceberg-rest',
-                                'lakehouse/metastores/iceberg-jdbc',
-                                'lakehouse/metastores/paimon-jdbc',
-                                'lakehouse/metastores/filesystem',
-                            ],
-                        },
-                        {
-                            type: 'category',
-                            label: 'Storages',
-                            items: [
-                                'lakehouse/storages/hdfs',
-                                'lakehouse/storages/s3',
-                                'lakehouse/storages/azure-blob',
-                                'lakehouse/storages/gcs',
-                                'lakehouse/storages/aliyun-oss',
-                                'lakehouse/storages/tencent-cos',
-                                'lakehouse/storages/huawei-obs',
-                                'lakehouse/storages/baidu-bos',
-                                'lakehouse/storages/minio',
-                                'lakehouse/storages/juicefs',
-                                'lakehouse/storages/ozone'
-                            ],
-                        },
-                        {
-                            type: 'category',
-                            label: 'File Format',
-                            items: [
-                                'lakehouse/file-formats/parquet',
-                                'lakehouse/file-formats/orc',
-                                'lakehouse/file-formats/text',
-                                'lakehouse/file-formats/lance',
-                            ],
-                        },
-                        'lakehouse/data-cache',
-                        'lakehouse/meta-cache',
-                        'lakehouse/compute-node',
-                        'lakehouse/statistics',
-                        {
-                            type: 'category',
-                            label: 'Lakehouse Best Practices',
-                            items: [
-                                'lakehouse/best-practices/optimization',
-                                'lakehouse/best-practices/kerberos',
-                                'lakehouse/best-practices/tpch',
-                                'lakehouse/best-practices/tpcds',
-                            ],
-                        },
+                        'lakehouse/file-formats/parquet',
+                        'lakehouse/file-formats/orc',
+                        'lakehouse/file-formats/text',
+                        'lakehouse/file-formats/lance',
                     ],
                 },
+                'lakehouse/data-cache',
+                'lakehouse/meta-cache',
+                'lakehouse/compute-node',
+                'lakehouse/statistics',
                 {
                     type: 'category',
-                    label: 'Observability',
+                    label: 'Lakehouse Best Practices',
                     items: [
-                        'observability/overview',
-                        'observability/log',
-                        'observability/trace',
-                        {
-                            type: 'category',
-                            label: 'Integrations',
-                            items: [
-                                'ecosystem/observability/logstash',
-                                'ecosystem/observability/beats',
-                                'ecosystem/observability/opentelemetry',
-                                'ecosystem/observability/fluentbit',
-                                'ecosystem/observability/loongcollector',
-                                'ecosystem/observability/langfuse',
-                                'ecosystem/observability/vector',
-                            ],
-                        },
-                    ],
-                },
-                {
-                    type: 'category',
-                    label: 'Compute-Storage Decoupled',
-                    items: [
-                        'compute-storage-decoupled/overview',
-                        'compute-storage-decoupled/before-deployment',
-                        'compute-storage-decoupled/compilation-and-deployment',
-                        'compute-storage-decoupled/managing-storage-vault',
-                        'compute-storage-decoupled/managing-compute-cluster',
-                        {
-                            type: 'category',
-                            label: 'File Cache',
-                            items: [
-                                'compute-storage-decoupled/file-cache/file-cache',
-                                'compute-storage-decoupled/file-cache/file-cache-internals',
-                            ],
-                        },
-                        {
-                            type: 'category',
-                            label: 'Read-Write Separation',
-                            items: [
-                                'compute-storage-decoupled/rw/read-write-separation',
-                                'compute-storage-decoupled/rw/file-cache-rw-compute-group-best-practice',
-                            ],
-                        },
-                        'compute-storage-decoupled/recycler',
-                        'compute-storage-decoupled/upgrade',
-                    ],
-                },
-                {
-                    type: 'category',
-                    label: 'Security',
-                    items: [
-                        'admin-manual/auth/security-overview',
-                        {
-                            type: 'category',
-                            label: 'Authentication and Authorization',
-                            items: [
-                                'admin-manual/auth/authentication-and-authorization',
-                                {
-                                    type: 'category',
-                                    label: 'Authentication',
-                                    items: [
-                                        'admin-manual/auth/authentication/internal',
-                                        'admin-manual/auth/authentication/ldap',
-                                    ],
-                                },
-                                {
-                                    type: 'category',
-                                    label: 'Authorization',
-                                    items: [
-                                        'admin-manual/auth/authorization/internal',
-                                        'admin-manual/auth/authorization/ranger',
-                                        'admin-manual/auth/authorization/data',
-                                    ],
-                                },
-                            ],
-                        },
-                        'admin-manual/audit-plugin',
-                        {
-                            type: 'category',
-                            label: 'Data Encryption',
-                            items: [
-                                {
-                                    type: 'category',
-                                    label: 'Encryption in Transit',
-                                    items: ['admin-manual/auth/certificate', 'admin-manual/auth/fe-certificate'],
-                                },
-                                'admin-manual/auth/encryption-function',
-                            ],
-                        },
-                        {
-                            type: 'category',
-                            label: 'Integrations',
-                            items: [
-                                'admin-manual/auth/integrations/aws-authentication-and-authorization',
-                                'admin-manual/auth/integrations/aws-iam-role',
-                            ],
-                        }
+                        'lakehouse/best-practices/optimization',
+                        'lakehouse/best-practices/kerberos',
+                        'lakehouse/best-practices/tpch',
+                        'lakehouse/best-practices/tpcds',
                     ],
                 },
             ],
         },
         {
             type: 'category',
-            label: 'Performance',
+            label: 'Hybrid Search',
+            collapsed: false,
+            items: [
+                'hybrid-search/overview',
+                {
+                    type: 'category',
+                    label: 'Full-Text Search',
+                    items: [
+                        'ai/text-search/overview',
+                        'ai/text-search/search-operators',
+                        'ai/text-search/search-function',
+                        'ai/text-search/scoring',
+                    ],
+                },
+                {
+                    type: 'category',
+                    label: 'Vector Search',
+                    items: [
+                        'ai/vector-search/overview',
+                        'ai/vector-search/practical-guide',
+                        'ai/vector-search/performance',
+                        'ai/vector-search/performance-large-scale',
+                    ],
+                },
+                'hybrid-search/recipes',
+                'hybrid-search/rag',
+            ],
+        },
+        {
+            type: 'category',
+            label: 'AI',
+            collapsed: false,
+            items: [
+                'ai/ai-overview',
+                'ai/ai-function-overview',
+                'ai/model-providers',
+                'ai/end-to-end-examples',
+            ],
+        },
+        {
+            type: 'category',
+            label: 'Compute-Storage Decoupled',
+            collapsed: false,
+            items: [
+                'compute-storage-decoupled/overview',
+                'compute-storage-decoupled/before-deployment',
+                'compute-storage-decoupled/compilation-and-deployment',
+                'compute-storage-decoupled/managing-storage-vault',
+                'compute-storage-decoupled/managing-compute-cluster',
+                {
+                    type: 'category',
+                    label: 'File Cache',
+                    items: [
+                        'compute-storage-decoupled/file-cache/file-cache',
+                        'compute-storage-decoupled/file-cache/file-cache-internals',
+                    ],
+                },
+                {
+                    type: 'category',
+                    label: 'Read-Write Separation',
+                    items: [
+                        'compute-storage-decoupled/rw/read-write-separation',
+                        'compute-storage-decoupled/rw/file-cache-rw-compute-group-best-practice',
+                    ],
+                },
+                'compute-storage-decoupled/recycler',
+                'compute-storage-decoupled/upgrade',
+            ],
+        },
+        {
+            type: 'category',
+            label: 'Performance & Tuning',
             collapsed: false,
             items: [
                 {
@@ -735,22 +748,21 @@ const sidebars: SidebarsConfig = {
                         'query-acceleration/optimization-technology-principle/statistics',
                     ],
                 },
+                {
+                    type: 'category',
+                    label: 'Benchmarks',
+                    items: ['benchmark/ssb', 'benchmark/tpch', 'benchmark/tpcds'],
+                },
             ],
         },
         {
             type: 'category',
-            label: 'Benchmark',
-            collapsed: false,
-            items: ['benchmark/ssb', 'benchmark/tpch', 'benchmark/tpcds'],
-        },
-        {
-            type: 'category',
-            label: 'Management',
+            label: 'Administration',
             collapsed: false,
             items: [
                 {
                     type: 'category',
-                    label: 'Managing Cluster',
+                    label: 'Cluster Management',
                     items: [
                         'admin-manual/cluster-management/upgrade',
                         'admin-manual/cluster-management/elastic-expansion',
@@ -761,7 +773,7 @@ const sidebars: SidebarsConfig = {
                 },
                 {
                     type: 'category',
-                    label: 'Managing Workload',
+                    label: 'Workload Management',
                     items: [
                         'admin-manual/workload-management/workload-management-summary',
                         {
@@ -784,7 +796,7 @@ const sidebars: SidebarsConfig = {
                 },
                 {
                     type: 'category',
-                    label: 'Managing Disaster Recovery',
+                    label: 'Disaster Recovery',
                     items: [
                         'admin-manual/data-admin/overview',
                         {
@@ -813,12 +825,59 @@ const sidebars: SidebarsConfig = {
                 },
                 {
                     type: 'category',
-                    label: 'Log Management',
-                    items: ['admin-manual/log-management/fe-log', 'admin-manual/log-management/be-log'],
+                    label: 'Security & Authentication',
+                    items: [
+                        'admin-manual/auth/security-overview',
+                        {
+                            type: 'category',
+                            label: 'Authentication and Authorization',
+                            items: [
+                                'admin-manual/auth/authentication-and-authorization',
+                                {
+                                    type: 'category',
+                                    label: 'Authentication',
+                                    items: [
+                                        'admin-manual/auth/authentication/internal',
+                                        'admin-manual/auth/authentication/ldap',
+                                    ],
+                                },
+                                {
+                                    type: 'category',
+                                    label: 'Authorization',
+                                    items: [
+                                        'admin-manual/auth/authorization/internal',
+                                        'admin-manual/auth/authorization/ranger',
+                                        'admin-manual/auth/authorization/data',
+                                    ],
+                                },
+                            ],
+                        },
+                        'admin-manual/audit-plugin',
+                        {
+                            type: 'category',
+                            label: 'Data Encryption',
+                            items: [
+                                {
+                                    type: 'category',
+                                    label: 'Encryption in Transit',
+                                    items: ['admin-manual/auth/certificate', 'admin-manual/auth/fe-certificate'],
+                                },
+                                'admin-manual/auth/encryption-function',
+                            ],
+                        },
+                        {
+                            type: 'category',
+                            label: 'Integrations',
+                            items: [
+                                'admin-manual/auth/integrations/aws-authentication-and-authorization',
+                                'admin-manual/auth/integrations/aws-iam-role',
+                            ],
+                        },
+                    ],
                 },
                 {
                     type: 'category',
-                    label: 'Maintenance',
+                    label: 'Monitoring & Alerting',
                     items: [
                         'admin-manual/maint-monitor/metrics',
                         'admin-manual/maint-monitor/monitor-alert',
@@ -829,7 +888,12 @@ const sidebars: SidebarsConfig = {
                 },
                 {
                     type: 'category',
-                    label: 'Managing Configuration',
+                    label: 'Log Management',
+                    items: ['admin-manual/log-management/fe-log', 'admin-manual/log-management/be-log'],
+                },
+                {
+                    type: 'category',
+                    label: 'Configuration',
                     items: [
                         'admin-manual/config/config-dir',
                         'admin-manual/config/fe-config',
@@ -910,53 +974,7 @@ const sidebars: SidebarsConfig = {
                 },
                 {
                     type: 'category',
-                    label: 'Trouble Shooting',
-                    items: [
-                        {
-                            type: 'category',
-                            label: 'Managing Memory',
-                            items: [
-                                'admin-manual/trouble-shooting/memory-management/overview',
-                                'admin-manual/trouble-shooting/memory-management/memory-issue-faq',
-                                {
-                                    type: 'category',
-                                    label: 'Managing Memory Analysis',
-                                    items: [
-                                        'admin-manual/trouble-shooting/memory-management/memory-analysis/jemalloc-memory-analysis',
-                                        'admin-manual/trouble-shooting/memory-management/memory-analysis/global-memory-analysis',
-                                        'admin-manual/trouble-shooting/memory-management/memory-analysis/doris-cache-memory-analysis',
-                                        'admin-manual/trouble-shooting/memory-management/memory-analysis/metadata-memory-analysis',
-                                        'admin-manual/trouble-shooting/memory-management/memory-analysis/query-memory-analysis',
-                                        'admin-manual/trouble-shooting/memory-management/memory-analysis/load-memory-analysis',
-                                        'admin-manual/trouble-shooting/memory-management/memory-analysis/query-cancelled-after-process-memory-exceeded',
-                                        'admin-manual/trouble-shooting/memory-management/memory-analysis/query-cancelled-after-query-memory-exceeded',
-                                        'admin-manual/trouble-shooting/memory-management/memory-analysis/oom-crash-analysis',
-                                        'admin-manual/trouble-shooting/memory-management/memory-analysis/memory-log-analysis',
-                                        'admin-manual/trouble-shooting/memory-management/memory-analysis/heap-profile-memory-analysis',
-                                    ],
-                                },
-                                {
-                                    type: 'category',
-                                    label: 'Managing Memory Feature',
-                                    items: [
-                                        'admin-manual/trouble-shooting/memory-management/memory-feature/memory-tracker',
-                                        'admin-manual/trouble-shooting/memory-management/memory-feature/memory-control-strategy',
-                                    ],
-                                },
-                            ],
-                        },
-                        'admin-manual/trouble-shooting/compaction',
-                        'admin-manual/trouble-shooting/compaction-principles',
-                        'admin-manual/trouble-shooting/metadata-operation',
-                        'admin-manual/trouble-shooting/frontend-lock-manager',
-                        'admin-manual/trouble-shooting/tablet-local-debug',
-                        'admin-manual/trouble-shooting/tablet-meta-tool',
-                        'admin-manual/trouble-shooting/repairing-data',
-                    ],
-                },
-                {
-                    type: 'category',
-                    label: 'OPEN API',
+                    label: 'HTTP API',
                     items: [
                         'admin-manual/open-api/overview',
                         {
@@ -1045,70 +1063,58 @@ const sidebars: SidebarsConfig = {
                             ],
                         },
                     ],
-                }
+                },
             ],
         },
         {
             type: 'category',
-            label: 'Ecosystem',
+            label: 'Observability with Doris',
+            collapsed: false,
+            items: [
+                'observability/overview',
+                'observability/log',
+                'observability/trace',
+            ],
+        },
+        {
+            type: 'category',
+            label: 'Ecosystem & Integrations',
             collapsed: false,
             items: [
                 {
                     type: 'category',
-                    label: 'Spark Doris Connector',
+                    label: 'Connectors',
                     items: [
-                        'ecosystem/spark-doris-connector/spark-doris-connector',
-                        'ecosystem/spark-doris-connector/release-notes',
-                    ],
-                },
-                {
-                    type: 'category',
-                    label: 'Flink Doris Connector',
-                    items: [
-                        'ecosystem/flink-doris-connector/flink-doris-connector',
-                        'ecosystem/flink-doris-connector/release-notes',
-                    ],
-                },
-                {
-                    type: 'category',
-                    label: 'Doris Kafka Connector',
-                    items: [
-                        'ecosystem/doris-kafka-connector/doris-kafka-connector',
-                        'ecosystem/doris-kafka-connector/release-notes',
-                    ],
-                },
-                {
-                    type: 'category',
-                    label: 'Doris Operator',
-                    items: [
-                        'ecosystem/doris-operator/doris-operator-overview',
-                        'ecosystem/doris-operator/on-alibaba',
-                        'ecosystem/doris-operator/on-aws',
+                        {
+                            type: 'category',
+                            label: 'Spark Doris Connector',
+                            items: [
+                                'ecosystem/spark-doris-connector/spark-doris-connector',
+                                'ecosystem/spark-doris-connector/release-notes',
+                            ],
+                        },
+                        {
+                            type: 'category',
+                            label: 'Flink Doris Connector',
+                            items: [
+                                'ecosystem/flink-doris-connector/flink-doris-connector',
+                                'ecosystem/flink-doris-connector/release-notes',
+                            ],
+                        },
+                        {
+                            type: 'category',
+                            label: 'Doris Kafka Connector',
+                            items: [
+                                'ecosystem/doris-kafka-connector/doris-kafka-connector',
+                                'ecosystem/doris-kafka-connector/release-notes',
+                            ],
+                        },
                     ],
                 },
                 'ecosystem/doris-streamloader',
                 {
                     type: 'category',
-                    label: 'BI',
-                    items: [
-                        'ecosystem/bi/apache-superset',
-                        'ecosystem/bi/finebi',
-                        'ecosystem/bi/metabase',
-                        'ecosystem/bi/powerbi',
-                        'ecosystem/bi/tableau',
-                        'ecosystem/bi/quicksight',
-                        'ecosystem/bi/quickbi',
-                        'ecosystem/bi/smartbi',
-                    ],
-                },
-                {
-                    type: 'category',
-                    label: 'SQL Clients',
-                    items: ['ecosystem/bi/clouddm', 'ecosystem/bi/dbeaver', 'ecosystem/bi/datagrip'],
-                },
-                {
-                    type: 'category',
-                    label: 'Observability',
+                    label: 'Doris Monitoring',
                     items: [
                         'ecosystem/observability/logstash',
                         'ecosystem/observability/beats',
@@ -1121,7 +1127,7 @@ const sidebars: SidebarsConfig = {
                 },
                 {
                     type: 'category',
-                    label: 'More',
+                    label: 'ETL & Workflow',
                     items: [
                         'ecosystem/cloudcanal',
                         'ecosystem/datax',
@@ -1134,21 +1140,73 @@ const sidebars: SidebarsConfig = {
                         'ecosystem/hive-hll-udf',
                         'ecosystem/spark-load',
                     ],
-                }
+                },
             ],
         },
         {
             type: 'category',
-            label: 'FAQ',
+            label: 'Troubleshooting & FAQ',
             collapsed: false,
             items: [
-                'faq/install-faq',
-                'faq/data-faq',
-                'faq/sql-faq',
-                'faq/lakehouse-faq',
-                'faq/bi-faq',
-                'faq/correctness-faq',
-                'faq/load-faq',
+                {
+                    type: 'category',
+                    label: 'Troubleshooting',
+                    items: [
+                        {
+                            type: 'category',
+                            label: 'Memory Management',
+                            items: [
+                                'admin-manual/trouble-shooting/memory-management/overview',
+                                'admin-manual/trouble-shooting/memory-management/memory-issue-faq',
+                                {
+                                    type: 'category',
+                                    label: 'Memory Analysis',
+                                    items: [
+                                        'admin-manual/trouble-shooting/memory-management/memory-analysis/jemalloc-memory-analysis',
+                                        'admin-manual/trouble-shooting/memory-management/memory-analysis/global-memory-analysis',
+                                        'admin-manual/trouble-shooting/memory-management/memory-analysis/doris-cache-memory-analysis',
+                                        'admin-manual/trouble-shooting/memory-management/memory-analysis/metadata-memory-analysis',
+                                        'admin-manual/trouble-shooting/memory-management/memory-analysis/query-memory-analysis',
+                                        'admin-manual/trouble-shooting/memory-management/memory-analysis/load-memory-analysis',
+                                        'admin-manual/trouble-shooting/memory-management/memory-analysis/query-cancelled-after-process-memory-exceeded',
+                                        'admin-manual/trouble-shooting/memory-management/memory-analysis/query-cancelled-after-query-memory-exceeded',
+                                        'admin-manual/trouble-shooting/memory-management/memory-analysis/oom-crash-analysis',
+                                        'admin-manual/trouble-shooting/memory-management/memory-analysis/memory-log-analysis',
+                                        'admin-manual/trouble-shooting/memory-management/memory-analysis/heap-profile-memory-analysis',
+                                    ],
+                                },
+                                {
+                                    type: 'category',
+                                    label: 'Memory Feature',
+                                    items: [
+                                        'admin-manual/trouble-shooting/memory-management/memory-feature/memory-tracker',
+                                        'admin-manual/trouble-shooting/memory-management/memory-feature/memory-control-strategy',
+                                    ],
+                                },
+                            ],
+                        },
+                        'admin-manual/trouble-shooting/compaction',
+                        'admin-manual/trouble-shooting/compaction-principles',
+                        'admin-manual/trouble-shooting/metadata-operation',
+                        'admin-manual/trouble-shooting/frontend-lock-manager',
+                        'admin-manual/trouble-shooting/tablet-local-debug',
+                        'admin-manual/trouble-shooting/tablet-meta-tool',
+                        'admin-manual/trouble-shooting/repairing-data',
+                    ],
+                },
+                {
+                    type: 'category',
+                    label: 'FAQ',
+                    items: [
+                        'faq/install-faq',
+                        'faq/data-faq',
+                        'faq/sql-faq',
+                        'faq/lakehouse-faq',
+                        'faq/bi-faq',
+                        'faq/correctness-faq',
+                        'faq/load-faq',
+                    ],
+                },
             ],
         },
         {
@@ -2658,6 +2716,12 @@ const sidebars: SidebarsConfig = {
                     ],
                 },
             ],
+        },
+        {
+            type: 'category',
+            label: 'Release Notes',
+            collapsed: false,
+            items: ['release-notes/overview'],
         },
     ],
 };
