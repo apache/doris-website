@@ -275,7 +275,7 @@ cmd_build_docs_next_only() {
     echo ""
 
     cd "${PROJECT_ROOT}"
-    "${YARN_BIN}" docusaurus start --no-open --host "${host}" --port "${port}"
+    "${YARN_BIN}" docusaurus start --no-open --locale zh-CN --host "${host}" --port "${port}"
 }
 
 cmd_serve() {
