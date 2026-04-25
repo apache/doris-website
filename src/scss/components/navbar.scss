@@ -125,10 +125,12 @@
     }
 
     &__brand {
-        height: 1.875rem;
+        display: flex;
+        align-items: center;
+        min-height: 1.875rem;
         margin: 0;
         margin-right: 2.75rem;
-        overflow: hidden;
+        overflow: visible;
 
         @media screen and (max-width: 1200px) {
             margin-right: 1rem;
@@ -136,11 +138,18 @@
     }
 
     &__logo {
-        height: 1.875rem;
-        overflow: hidden;
+        display: flex;
+        align-items: center;
+        flex: none;
+        max-height: 1.875rem;
+        overflow: visible;
 
         img {
             display: block;
+            width: auto;
+            height: 100%;
+            max-height: 1.875rem;
+            object-fit: contain;
         }
     }
 
@@ -399,11 +408,15 @@
             height: 1.5rem;
         }
         &__brand {
-            height: 2rem;
+            min-height: 2rem;
         }
 
         &__logo {
-            height: 2rem;
+            max-height: 2rem;
+
+            img {
+                max-height: 2rem;
+            }
         }
 
         .navbar__toggle {
