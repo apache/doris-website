@@ -312,7 +312,7 @@ JOIN 时，假设大表 orders 和小表 customers 按 customer_id JOIN：
 
 **效果：** 在星型模型中，大表 fact JOIN 小表 dimension 时，Runtime Filter 可将大表扫描量降低数倍至数十倍。
 
-## FAQ {#faq}
+## 常见问题 {#faq}
 
 **Q: 分区和分桶有什么区别？**
 

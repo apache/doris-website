@@ -322,7 +322,7 @@ SET max_file_split_num = 50000;
 SET group_commit_mode = 'async_mode';
 ```
 
-## FAQ
+## 常见问题
 
 **Q: POC 验证需要多久？**
 
