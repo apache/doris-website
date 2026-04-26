@@ -14,30 +14,30 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
----
-name: Need_2_Approval
+# ---
+# name: Need_2_Approval
 
-on:
-  pull_request_review:
-    types: [ submitted ]
+# on:
+#   pull_request_review:
+#     types: [ submitted ]
 
-jobs:
-  Need_2_Approval:
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
-    steps:
-      - uses: actions/checkout@v3
-      - name: Install Python dependencies
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.10'  # Adjust if needed
-      - name: Install match library
-        run: |
-          pip install --upgrade pip 
-          pip install match
-          pip install requests
-      - name: Run Python script
-        run: |
-          python tools/check_review.py  ${{ github.event.pull_request.number }} ${{secrets.GITHUB_TOKEN}}
-env:
-  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
+# jobs:
+#   Need_2_Approval:
+#     runs-on: ubuntu-latest
+#     timeout-minutes: 5
+#     steps:
+#       - uses: actions/checkout@v3
+#       - name: Install Python dependencies
+#         uses: actions/setup-python@v5
+#         with:
+#           python-version: '3.10'  # Adjust if needed
+#       - name: Install match library
+#         run: |
+#           pip install --upgrade pip
+#           pip install match
+#           pip install requests
+#       - name: Run Python script
+#         run: |
+#           python tools/check_review.py  ${{ github.event.pull_request.number }} ${{secrets.GITHUB_TOKEN}}
+# env:
+#   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
