@@ -1,0 +1,1359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Apache Doris · 30s Overview</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --doris-green: #11A679;
+    --doris-green-dark: #06805F;
+    --doris-green-bright: #0DBE85;
+    --doris-green-soft: #C9FFE6;
+    --doris-green-mist: #EEFEFA;
+    --doris-ink: #18201D;
+    --doris-text: #232d3e;
+    --doris-muted: #63646d;
+    --doris-line: #DFE5F0;
+    --doris-line-soft: #ECF1F7;
+    --doris-accent: #5c65de;
+    --doris-accent-soft: #E9EBFC;
+    --doris-bg: #FAFCFB;
+    --doris-bg-card: #FFFFFF;
+    --font: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  }
+
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0;
+    width: 100%; height: 100%;
+    background: #0a0c0e;
+    overflow: hidden;
+    font-family: var(--font);
+    color: var(--doris-text);
+    font-feature-settings: "cv11", "ss01", "tnum";
+  }
+
+  /* ── Stage 自适应缩放 ─────────────────────────── */
+  .stage-wrap {
+    position: fixed; left: 0; right: 0; top: 0; bottom: 0;
+    display: flex; align-items: center; justify-content: center;
+    background: radial-gradient(ellipse at center, #1a2624 0%, #0a0c0e 100%);
+  }
+  .stage {
+    position: relative;
+    width: 1920px; height: 1080px;
+    flex: 0 0 1920px;
+    min-width: 1920px;
+    background: var(--doris-bg);
+    overflow: hidden;
+    transform-origin: center center;
+    box-shadow: 0 30px 120px rgba(0,0,0,0.5);
+    border-radius: 12px;
+  }
+  .stage::before {
+    content: '';
+    position: absolute; inset: 0;
+    background-image:
+      radial-gradient(circle at 20% 30%, rgba(13,190,133,0.04) 0%, transparent 45%),
+      radial-gradient(circle at 80% 70%, rgba(92,101,222,0.035) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: 0;
+  }
+  .stage::after {
+    content: '';
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(rgba(35,45,62,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(35,45,62,0.03) 1px, transparent 1px);
+    background-size: 64px 64px;
+    background-position: 0 0;
+    mask-image: radial-gradient(ellipse at center, black 30%, transparent 80%);
+    -webkit-mask-image: radial-gradient(ellipse at center, black 30%, transparent 80%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ── Scene 通用 ─────────────────────────── */
+  .scene {
+    position: absolute; inset: 0;
+    opacity: 0;
+    z-index: 1;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    padding: 0 100px;
+  }
+
+  .eyebrow {
+    font-family: var(--font);
+    font-size: 26px;
+    font-weight: 700;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: var(--doris-green);
+    margin-bottom: 28px;
+  }
+  .title-en {
+    font-family: var(--font);
+    font-weight: 700;
+    font-size: 80px;
+    color: var(--doris-ink);
+    letter-spacing: -0.025em;
+    line-height: 1.08;
+    margin: 0 0 18px;
+  }
+  .subtitle {
+    font-family: var(--font);
+    font-weight: 400;
+    font-size: 24px;
+    color: var(--doris-muted);
+    line-height: 1.55;
+    text-align: center;
+    max-width: 1000px;
+    margin: 0;
+  }
+
+  /* ── Scene 1 · Hero ─────────────────────────── */
+  .hero-row {
+    display: flex;
+    align-items: center;
+    gap: 40px;
+    margin-bottom: 36px;
+  }
+  .hero-logo {
+    width: 168px; height: auto;
+    flex-shrink: 0;
+    transform-origin: center;
+  }
+  .hero-logo svg { width: 100%; height: auto; display: block; }
+  .hero-mark {
+    font-family: var(--font);
+    font-size: 168px;
+    font-weight: 800;
+    color: var(--doris-ink);
+    letter-spacing: -0.035em;
+    line-height: 1;
+    margin: 0;
+    white-space: nowrap;
+  }
+  .hero-mark .accent { color: var(--doris-green); }
+  .hero-tagline {
+    font-family: var(--font);
+    font-size: 36px;
+    font-weight: 500;
+    color: var(--doris-text);
+    margin-top: 16px;
+    letter-spacing: 0.04em;
+  }
+  .hero-tagline .dot {
+    display: inline-block;
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: var(--doris-green);
+    margin: 0 22px 9px;
+    vertical-align: middle;
+  }
+  .hero-sub {
+    font-family: var(--font);
+    font-size: 22px;
+    font-weight: 400;
+    color: var(--doris-muted);
+    margin-top: 28px;
+    letter-spacing: 0.01em;
+  }
+
+  /* ── Scene 2 · Metrics ─────────────────────────── */
+  .scene-head {
+    text-align: center;
+    margin-bottom: 64px;
+  }
+  .metrics {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 28px;
+    width: 100%;
+    max-width: 1500px;
+  }
+  .metric-card {
+    background: var(--doris-bg-card);
+    border: 1px solid var(--doris-line);
+    border-radius: 16px;
+    padding: 40px 32px 36px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 1px 0 rgba(35,45,62,0.04), 0 8px 24px -16px rgba(35,45,62,0.10);
+  }
+  .metric-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; height: 3px;
+    background: var(--doris-green);
+    transform: scaleX(0);
+    transform-origin: left;
+  }
+  .metric-card.lit::before { transform: scaleX(1); transition: transform 0.6s cubic-bezier(0.16,1,0.3,1); }
+  .metric-label {
+    font-family: var(--font);
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--doris-muted);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    margin-bottom: 24px;
+  }
+  .metric-value {
+    font-family: var(--font);
+    font-size: 72px;
+    font-weight: 700;
+    color: var(--doris-ink);
+    line-height: 0.95;
+    letter-spacing: -0.035em;
+    display: flex;
+    align-items: baseline;
+    gap: 4px;
+  }
+  .metric-value .unit {
+    font-size: 28px;
+    font-weight: 600;
+    color: var(--doris-green-dark);
+    margin-left: 4px;
+    letter-spacing: -0.01em;
+  }
+  .metric-desc {
+    font-family: var(--font);
+    font-size: 18px;
+    font-weight: 500;
+    color: var(--doris-text);
+    margin-top: 22px;
+    line-height: 1.4;
+  }
+  .metric-foot {
+    font-family: var(--font);
+    font-size: 13px;
+    color: var(--doris-muted);
+    margin-top: 6px;
+    letter-spacing: 0.04em;
+  }
+
+  /* ── Scene 3 · Use cases ─────────────────────────── */
+  .pillars {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 26px;
+    width: 100%;
+    max-width: 1500px;
+  }
+  .pillar {
+    position: relative;
+    background: var(--doris-bg-card);
+    border: 1px solid var(--doris-line);
+    border-radius: 18px;
+    padding: 40px 36px;
+    transition: filter 0.6s cubic-bezier(0.16,1,0.3,1), transform 0.6s cubic-bezier(0.16,1,0.3,1);
+    transform-origin: center;
+  }
+  .pillar.dim {
+    filter: brightness(0.85) saturate(0.5) blur(2.5px);
+    opacity: 0.55;
+  }
+  .pillar.focus {
+    box-shadow: 0 24px 60px -20px rgba(13,190,133,0.35);
+    border-color: var(--doris-green);
+  }
+  .pillar-icon {
+    width: 56px; height: 56px;
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 24px;
+    font-family: var(--font);
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+  }
+  .pillar-1 .pillar-icon { background: var(--doris-green-mist); color: var(--doris-green-dark); }
+  .pillar-2 .pillar-icon { background: var(--doris-green-soft); color: var(--doris-green-dark); }
+  .pillar-3 .pillar-icon { background: var(--doris-accent-soft); color: var(--doris-accent); }
+  .pillar-name {
+    font-family: var(--font);
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--doris-ink);
+    margin: 0 0 8px;
+    letter-spacing: -0.015em;
+  }
+  .pillar-zh {
+    font-family: var(--font);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    color: var(--doris-muted);
+    text-transform: uppercase;
+    margin-bottom: 22px;
+  }
+  .pillar-list {
+    list-style: none;
+    padding: 0; margin: 0;
+    display: flex; flex-direction: column; gap: 11px;
+  }
+  .pillar-list li {
+    font-family: var(--font);
+    font-size: 17px;
+    font-weight: 400;
+    color: var(--doris-text);
+    display: flex; gap: 10px;
+    line-height: 1.4;
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  .pillar-list li::before {
+    content: '';
+    flex-shrink: 0;
+    width: 6px; height: 6px;
+    background: var(--doris-green);
+    border-radius: 50%;
+    margin-top: 9px;
+  }
+  .pillar-3 .pillar-list li::before { background: var(--doris-accent); }
+  .pillar-list li.show { opacity: 1; transform: translateY(0); transition: all 0.5s cubic-bezier(0.16,1,0.3,1); }
+  .pillar-tag {
+    position: absolute;
+    top: 28px; right: 28px;
+    font-family: var(--font);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    color: var(--doris-accent);
+    background: var(--doris-accent-soft);
+    padding: 4px 10px;
+    border-radius: 999px;
+    opacity: 0;
+  }
+  .pillar-tag.show { opacity: 1; transition: opacity 0.4s; }
+
+  /* ── Scene 4 · Architecture ─────────────────────────── */
+  .arch {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 56px;
+    width: 100%;
+    max-width: 1500px;
+    align-items: stretch;
+  }
+  .arch-col {
+    background: var(--doris-bg-card);
+    border: 1px solid var(--doris-line);
+    border-radius: 18px;
+    padding: 32px 32px 36px;
+    display: flex; flex-direction: column;
+    position: relative;
+  }
+  .arch-divider {
+    width: 1px;
+    background: linear-gradient(transparent, var(--doris-line) 30%, var(--doris-line) 70%, transparent);
+    position: relative;
+  }
+  .arch-divider .vs {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%,-50%);
+    background: var(--doris-bg);
+    color: var(--doris-muted);
+    font-family: var(--font);
+    font-style: italic;
+    font-size: 20px;
+    font-weight: 500;
+    padding: 6px 14px;
+    border: 1px solid var(--doris-line);
+    border-radius: 999px;
+  }
+  .arch-name {
+    font-family: var(--font);
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--doris-ink);
+    margin: 0;
+    letter-spacing: -0.01em;
+  }
+  .arch-name .pin {
+    display: inline-block;
+    font-family: var(--font);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    background: var(--doris-green-mist);
+    color: var(--doris-green-dark);
+    padding: 3px 9px;
+    border-radius: 6px;
+    margin-right: 12px;
+    vertical-align: middle;
+    transform: translateY(-2px);
+  }
+  .scene-4 .arch-col:nth-child(3) .arch-name .pin { background: var(--doris-accent-soft); color: var(--doris-accent); }
+  .arch-desc {
+    font-family: var(--font);
+    font-size: 15px;
+    color: var(--doris-muted);
+    margin: 8px 0 24px;
+    line-height: 1.55;
+  }
+  .arch-diagram {
+    flex: 1;
+    display: flex; flex-direction: column;
+    gap: 14px;
+    position: relative;
+  }
+  .arch-row {
+    border: 1.5px solid var(--doris-line);
+    border-radius: 10px;
+    padding: 14px 16px;
+    display: flex; gap: 10px; align-items: center;
+    background: var(--doris-bg);
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  .arch-row.show { opacity: 1; transform: translateY(0); transition: all 0.5s cubic-bezier(0.16,1,0.3,1); }
+  .arch-row.fe { border-color: var(--doris-green); background: var(--doris-green-mist); }
+  .arch-row.be-group {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    background: transparent;
+    border: none;
+    padding: 0;
+  }
+  .arch-row.be-group .be-cell {
+    border: 1.5px solid var(--doris-line);
+    border-radius: 10px;
+    padding: 14px 12px;
+    background: var(--doris-bg-card);
+    text-align: center;
+  }
+  .arch-tier {
+    font-family: var(--font);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    color: var(--doris-muted);
+    text-transform: uppercase;
+  }
+  .arch-cell-name {
+    font-family: var(--font);
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--doris-ink);
+    margin-top: 4px;
+    letter-spacing: -0.005em;
+  }
+  .arch-row .arch-tag {
+    margin-left: auto;
+    font-family: var(--font);
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--doris-muted);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+  .arch-row.compute {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    background: transparent; border: none; padding: 0;
+  }
+  .arch-row.compute .cg {
+    border: 1.5px solid var(--doris-line);
+    border-radius: 10px;
+    padding: 14px 14px;
+    background: var(--doris-bg-card);
+  }
+  .arch-row.compute .cg.primary {
+    border-color: var(--doris-accent);
+    background: var(--doris-accent-soft);
+  }
+  .arch-row.storage {
+    border-color: var(--doris-accent);
+    background: var(--doris-accent-soft);
+  }
+  .arch-arrow {
+    height: 24px;
+    display: flex; justify-content: center; align-items: center;
+    opacity: 0;
+  }
+  .arch-arrow.show { opacity: 1; transition: opacity 0.4s 0.1s; }
+  .arch-arrow svg { display: block; }
+
+  /* ── Scene 5 · SQL ─────────────────────────── */
+  .sql-shell {
+    width: 100%;
+    max-width: 1280px;
+    background: #1a1f2c;
+    border-radius: 14px;
+    box-shadow: 0 32px 80px -24px rgba(35,45,62,0.4);
+    overflow: hidden;
+    font-family: var(--font);
+  }
+  .sql-bar {
+    background: #232a3a;
+    padding: 12px 18px;
+    display: flex; align-items: center; gap: 8px;
+    border-bottom: 1px solid #2d3548;
+  }
+  .sql-bar .dot {
+    width: 12px; height: 12px; border-radius: 50%;
+    background: #ff5f57;
+  }
+  .sql-bar .dot:nth-child(2) { background: #febc2e; }
+  .sql-bar .dot:nth-child(3) { background: #28c840; }
+  .sql-bar .label {
+    margin-left: 18px;
+    font-size: 13px;
+    font-weight: 500;
+    color: #94a3b8;
+    letter-spacing: 0.05em;
+  }
+  .sql-body {
+    padding: 36px 44px;
+    font-size: 22px;
+    font-weight: 500;
+    line-height: 1.85;
+    color: #d6dde9;
+    min-height: 320px;
+    letter-spacing: 0.01em;
+    font-feature-settings: "tnum", "ss01";
+  }
+  .sql-line { display: block; opacity: 0; }
+  .sql-line.show { opacity: 1; transition: opacity 0.3s; }
+  .sql-kw { color: #ff8da1; font-weight: 600; }
+  .sql-fn { color: #6ee7b7; font-weight: 600; }
+  .sql-str { color: #fcd34d; }
+  .sql-num { color: #93c5fd; }
+  .sql-tag {
+    display: inline-block;
+    margin-left: 14px;
+    padding: 3px 10px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  .sql-tag.show { opacity: 1; transform: translateY(0); transition: all 0.4s cubic-bezier(0.34,1.56,0.64,1); }
+  .sql-tag.vec { background: rgba(92,101,222,0.18); color: #b4baff; border: 1px solid rgba(92,101,222,0.4); }
+  .sql-tag.full { background: rgba(13,190,133,0.18); color: #6ee7b7; border: 1px solid rgba(13,190,133,0.4); }
+  .sql-tag.struct { background: rgba(252,211,77,0.16); color: #fcd34d; border: 1px solid rgba(252,211,77,0.35); }
+  .sql-foot {
+    margin-top: 22px;
+    text-align: center;
+    font-family: var(--font);
+    font-size: 19px;
+    font-weight: 400;
+    color: var(--doris-muted);
+    opacity: 0;
+  }
+  .sql-foot.show { opacity: 1; transition: opacity 0.5s 0.1s; }
+  .sql-foot strong { color: var(--doris-ink); font-weight: 700; }
+
+  /* ── Scene 6 · Closer ─────────────────────────── */
+  .scene-6 { gap: 0; }
+  .closer-stats {
+    display: flex; gap: 96px;
+    margin-bottom: 56px;
+    align-items: flex-end;
+  }
+  .closer-stat .num {
+    font-family: var(--font);
+    font-size: 100px;
+    font-weight: 800;
+    color: var(--doris-ink);
+    letter-spacing: -0.04em;
+    line-height: 1;
+  }
+  .closer-stat .num .small { font-size: 38px; font-weight: 700; color: var(--doris-green-dark); margin-left: 4px; letter-spacing: -0.01em; }
+  .closer-stat .lbl {
+    font-family: var(--font);
+    font-size: 19px;
+    font-weight: 500;
+    color: var(--doris-muted);
+    margin-top: 14px;
+    letter-spacing: 0.02em;
+  }
+  .closer-divider {
+    width: 1px;
+    height: 96px;
+    background: var(--doris-line);
+  }
+  .closer-brand-row {
+    display: flex;
+    align-items: center;
+    gap: 26px;
+    margin-bottom: 18px;
+  }
+  .closer-brand-row .doris-logo-mini { width: 78px; flex-shrink: 0; }
+  .closer-brand-row .doris-logo-mini svg { width: 100%; height: auto; display: block; }
+  .closer-mark {
+    font-family: var(--font);
+    font-size: 84px;
+    font-weight: 800;
+    color: var(--doris-ink);
+    letter-spacing: -0.035em;
+    line-height: 1;
+    margin: 0;
+  }
+  .closer-mark .accent { color: var(--doris-green); }
+  .closer-foot-text {
+    font-family: var(--font);
+    font-size: 19px;
+    font-weight: 400;
+    color: var(--doris-muted);
+    letter-spacing: 0.01em;
+  }
+  .closer-foot-text .accent {
+    color: var(--doris-green);
+    font-weight: 600;
+  }
+
+  /* ── Scene tag (top-left) ─────────────────────────── */
+  .scene-tag {
+    position: absolute;
+    top: 36px; left: 48px;
+    font-family: var(--font);
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    color: var(--doris-muted);
+    z-index: 60;
+  }
+  .scene-tag .num { color: var(--doris-green); margin-right: 12px; font-weight: 700; }
+
+  /* ── Bottom interactive control bar (inside stage) ─────────────────────────── */
+  .ctrl-bar {
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    padding: 0 36px;
+    background: rgba(10, 12, 14, 0.92);
+    border-top: 1px solid rgba(255,255,255,0.08);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    z-index: 1000;
+    color: rgba(255,255,255,0.95);
+    font-family: var(--font);
+    user-select: none;
+    border-bottom-left-radius: 12px;
+    border-bottom-right-radius: 12px;
+  }
+  .ctrl-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    padding: 9px 18px;
+    border: 1px solid rgba(255,255,255,0.18);
+    background: rgba(255,255,255,0.04);
+    color: rgba(255,255,255,0.92);
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    cursor: pointer;
+    transition: background 0.18s, border-color 0.18s;
+  }
+  .ctrl-btn:hover {
+    background: rgba(255,255,255,0.10);
+    border-color: rgba(255,255,255,0.32);
+  }
+  .ctrl-btn:active { background: rgba(255,255,255,0.14); }
+  .ctrl-btn .icon {
+    display: inline-flex;
+    width: 12px; height: 12px;
+    align-items: center; justify-content: center;
+  }
+  .ctrl-btn .icon svg { width: 100%; height: 100%; fill: currentColor; }
+  .ctrl-time {
+    font-family: var(--font);
+    font-size: 14px;
+    font-weight: 500;
+    color: rgba(255,255,255,0.72);
+    letter-spacing: 0.04em;
+    min-width: 150px;
+    font-feature-settings: "tnum";
+  }
+  .ctrl-time .sep { margin: 0 8px; color: rgba(255,255,255,0.4); }
+  .ctrl-progress {
+    flex: 1;
+    height: 6px;
+    background: rgba(255,255,255,0.14);
+    border-radius: 999px;
+    position: relative;
+    cursor: pointer;
+    /* expanded hit area for easier clicking */
+    padding-block: 12px;
+    background-clip: content-box;
+  }
+  .ctrl-progress .fill {
+    position: absolute;
+    top: 12px; left: 0;
+    height: 6px;
+    background: rgba(255,255,255,0.95);
+    border-radius: 999px;
+    width: 0%;
+    pointer-events: none;
+    transition: width 0.05s linear;
+  }
+  .ctrl-progress .knob {
+    position: absolute;
+    top: 50%;
+    width: 14px; height: 14px;
+    border-radius: 50%;
+    background: white;
+    transform: translate(-50%, -50%);
+    left: 0%;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.18s;
+  }
+  .ctrl-progress:hover .knob,
+  .ctrl-progress.dragging .knob { opacity: 1; }
+
+</style>
+</head>
+<body>
+
+<div class="stage-wrap">
+  <div class="stage" id="stage">
+
+    <div class="scene-tag" id="sceneTag">
+      <span class="num">01</span><span class="name">INTRO</span>
+    </div>
+
+    <!-- ─── Scene 1 · Hero ─────────────────────────── -->
+    <div class="scene scene-1" id="s1">
+      <div class="hero-row">
+        <div class="hero-logo" id="heroLogo">
+          <svg viewBox="0 0 24 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M14.5129 4.89337L11.0415 1.42201C10.1214 0.501891 8.86667 7.62939e-06 7.65379 7.62939e-06C6.52455 7.62939e-06 5.39531 0.418244 4.51702 1.25472C3.63872 2.13301 3.13684 3.26225 3.13684 4.51696C3.13684 5.77166 3.5969 6.9009 4.47519 7.7792L10.7906 14.0946C11.0415 14.3455 11.5016 14.3455 11.7943 14.0946L14.5129 11.376C14.6802 11.1669 17.566 7.90467 14.5129 4.89337Z" fill="#0DBE85"/>
+            <path d="M20.2426 10.4559C19.5734 9.82857 18.9042 9.15939 18.2769 8.40657C18.2769 8.40657 18.2769 8.40657 18.235 8.36475C18.235 8.40657 18.1932 8.49022 18.1932 8.57386C17.9423 10.0795 17.2313 11.4179 16.0602 12.5889C12.3797 16.2276 8.65743 19.9917 5.0606 23.5885L4.60054 24.0486C3.76407 24.8851 3.30401 25.7634 3.17853 26.6417C3.01124 27.98 3.4713 29.4857 4.47507 30.5731C5.35336 31.535 6.52442 32.0369 7.77913 31.9951C9.20113 32.0369 9.91214 31.8278 10.9577 30.824C15.1401 26.7253 19.3224 22.5848 22.501 19.448C24.0067 17.9423 24.3413 15.5166 23.2957 13.8436C22.4174 12.5471 21.33 11.5015 20.2426 10.4559Z" fill="#0DBE85"/>
+            <path d="M0 8.28109V23.714C0 24.1322 0.292763 24.3832 0.543705 24.5086C0.794646 24.6341 1.17106 24.6341 1.46383 24.3414L9.24301 16.5622C9.53578 16.2694 9.53578 15.7675 9.24301 15.4329L1.46383 7.65374C1.29653 7.48644 1.04559 7.40279 0.878295 7.40279C0.752824 7.40279 0.627352 7.44462 0.543705 7.48644C0.292763 7.61191 0 7.86286 0 8.28109Z" fill="#0DBE85"/>
+          </svg>
+        </div>
+        <h1 class="hero-mark" id="heroMark">
+          <span>Apache</span> <span class="accent">Doris</span>
+        </h1>
+      </div>
+      <div class="hero-tagline" id="heroTagline">
+        <span class="word">Fast</span><span class="dot"></span><span class="word">Simple</span><span class="dot"></span><span class="word">Unified</span>
+      </div>
+      <div class="hero-sub" id="heroSub">An MPP-based high-performance real-time analytical database</div>
+    </div>
+
+    <!-- ─── Scene 2 · Metrics ─────────────────────────── -->
+    <div class="scene scene-2" id="s2">
+      <div class="scene-head">
+        <div class="eyebrow">Core Performance</div>
+        <h2 class="title-en">Why Apache Doris</h2>
+        <p class="subtitle">Sub-second latency, massive concurrency, PB-scale storage — one engine for both high-concurrency point queries and high-throughput analytics.</p>
+      </div>
+      <div class="metrics" id="metrics">
+        <div class="metric-card" data-i="0">
+          <div class="metric-label">Query Latency</div>
+          <div class="metric-value">&lt; <span class="num" data-target="1">0</span><span class="unit">s</span></div>
+          <div class="metric-desc">Sub-second response</div>
+          <div class="metric-foot">P99 query latency</div>
+        </div>
+        <div class="metric-card" data-i="1">
+          <div class="metric-label">Concurrency</div>
+          <div class="metric-value"><span class="num" data-target="10000">0</span><span class="unit">+ QPS</span></div>
+          <div class="metric-desc">High-concurrency point queries</div>
+          <div class="metric-foot">Linearly scalable</div>
+        </div>
+        <div class="metric-card" data-i="2">
+          <div class="metric-label">Storage Scale</div>
+          <div class="metric-value">PB<span class="unit"> level</span></div>
+          <div class="metric-desc">Hundreds of nodes per cluster</div>
+          <div class="metric-foot">Columnar compression + indexes</div>
+        </div>
+        <div class="metric-card" data-i="3">
+          <div class="metric-label">SQL Interface</div>
+          <div class="metric-value">Unified<span class="unit"> engine</span></div>
+          <div class="metric-desc">ANSI SQL compatible</div>
+          <div class="metric-foot">Plug-and-play with BI tools</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── Scene 3 · Use Cases ─────────────────────────── -->
+    <div class="scene scene-3" id="s3">
+      <div class="scene-head">
+        <div class="eyebrow">Use Cases</div>
+        <h2 class="title-en">Three Core Scenarios</h2>
+      </div>
+      <div class="pillars" id="pillars">
+        <div class="pillar pillar-1">
+          <div class="pillar-icon">RT</div>
+          <h3 class="pillar-name">Real-time Analytics</h3>
+          <div class="pillar-zh">STREAMING · DASHBOARDS</div>
+          <ul class="pillar-list">
+            <li>Real-time dashboards &amp; KPIs</li>
+            <li>User profiling &amp; segmentation</li>
+            <li>Log search &amp; diagnostics</li>
+            <li>A/B experiments &amp; behavior</li>
+          </ul>
+        </div>
+        <div class="pillar pillar-2">
+          <div class="pillar-icon">LH</div>
+          <h3 class="pillar-name">Lakehouse Analytics</h3>
+          <div class="pillar-zh">FEDERATION · WAREHOUSE</div>
+          <ul class="pillar-list">
+            <li>Unified ODS / DW / DM layers</li>
+            <li>Federated lake query acceleration</li>
+            <li>Iceberg · Hudi · Hive native</li>
+            <li>Elastic mixed workloads</li>
+          </ul>
+        </div>
+        <div class="pillar pillar-3">
+          <div class="pillar-icon">AI</div>
+          <span class="pillar-tag">AI DATA STACK</span>
+          <h3 class="pillar-name">Hybrid Search &amp; AI</h3>
+          <div class="pillar-zh">VECTOR · KEYWORD · SQL</div>
+          <ul class="pillar-list">
+            <li>Agent-facing real-time decisions</li>
+            <li>RAG knowledge bases &amp; copilots</li>
+            <li>Semantic search &amp; synonyms</li>
+            <li>AI observability &amp; tracing</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── Scene 4 · Architecture ─────────────────────────── -->
+    <div class="scene scene-4" id="s4">
+      <div class="scene-head">
+        <div class="eyebrow">Deployment</div>
+        <h2 class="title-en">Two Architectures, One Choice</h2>
+      </div>
+      <div class="arch">
+        <div class="arch-col">
+          <h3 class="arch-name"><span class="pin">A</span>Compute Storage Coupled</h3>
+          <div class="arch-desc">Two process types · Multi-replica storage · HA-ready</div>
+          <div class="arch-diagram">
+            <div class="arch-row fe" data-i="0">
+              <div>
+                <div class="arch-tier">Frontend</div>
+                <div class="arch-cell-name">FE · Master / Follower / Observer</div>
+              </div>
+              <div class="arch-tag">Parsing · Metadata</div>
+            </div>
+            <div class="arch-arrow" data-i="1">
+              <svg width="20" height="14" viewBox="0 0 20 14" fill="none">
+                <path d="M10 0V14M10 14L4 8M10 14L16 8" stroke="#11A679" stroke-width="1.6" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <div class="arch-row be-group" data-i="2">
+              <div class="be-cell">
+                <div class="arch-tier">BE 1</div>
+                <div class="arch-cell-name">Data + Compute</div>
+              </div>
+              <div class="be-cell">
+                <div class="arch-tier">BE 2</div>
+                <div class="arch-cell-name">Data + Compute</div>
+              </div>
+              <div class="be-cell">
+                <div class="arch-tier">BE N</div>
+                <div class="arch-cell-name">Data + Compute</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="arch-divider"><span class="vs">vs</span></div>
+
+        <div class="arch-col">
+          <h3 class="arch-name"><span class="pin">B</span>Compute Storage Decoupled</h3>
+          <div class="arch-desc">Independent storage &amp; compute · Multi-tenant · Elastic</div>
+          <div class="arch-diagram">
+            <div class="arch-row compute" data-i="0">
+              <div class="cg primary">
+                <div class="arch-tier">Compute Group A</div>
+                <div class="arch-cell-name">Tenant / Workload</div>
+              </div>
+              <div class="cg">
+                <div class="arch-tier">Compute Group B</div>
+                <div class="arch-cell-name">Tenant / Workload</div>
+              </div>
+            </div>
+            <div class="arch-arrow" data-i="1">
+              <svg width="20" height="14" viewBox="0 0 20 14" fill="none">
+                <path d="M10 0V14M10 14L4 8M10 14L16 8" stroke="#5c65de" stroke-width="1.6" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <div class="arch-row storage" data-i="2">
+              <div>
+                <div class="arch-tier">Shared Storage</div>
+                <div class="arch-cell-name">S3 · HDFS · OSS</div>
+              </div>
+              <div class="arch-tag">Independent capacity</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── Scene 5 · SQL ─────────────────────────── -->
+    <div class="scene scene-5" id="s5">
+      <div class="scene-head">
+        <div class="eyebrow">Hybrid Search</div>
+        <h2 class="title-en">One SQL · Three Search Modes</h2>
+      </div>
+      <div class="sql-shell">
+        <div class="sql-bar">
+          <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+          <span class="label">doris &gt; hybrid_search.sql</span>
+        </div>
+        <div class="sql-body" id="sqlBody">
+          <span class="sql-line" id="sql-l1"><span class="sql-kw">SELECT</span> * <span class="sql-kw">FROM</span> products</span>
+          <span class="sql-line" id="sql-l2"><span class="sql-kw">WHERE</span> <span class="sql-fn">match</span>(query_vector, <span class="sql-str">'summer breathable shoes'</span>)
+            <span class="sql-tag vec" id="tag-vec">Vector Index</span></span>
+          <span class="sql-line" id="sql-l3">  <span class="sql-kw">AND</span> body <span class="sql-fn">MATCH</span> <span class="sql-str">'breathable lightweight'</span>
+            <span class="sql-tag full" id="tag-full">Inverted Index</span></span>
+          <span class="sql-line" id="sql-l4">  <span class="sql-kw">AND</span> category_id = <span class="sql-num">1</span>
+            <span class="sql-tag struct" id="tag-struct">Columnar Storage</span></span>
+          <span class="sql-line" id="sql-l5"><span class="sql-kw">GROUP BY</span> brand <span class="sql-kw">ORDER BY</span> sales_count <span class="sql-kw">DESC</span>;</span>
+        </div>
+      </div>
+      <div class="sql-foot" id="sqlFoot">
+        No data migration · No heterogeneous systems · <strong>5–10× speedup from vectorized execution</strong>
+      </div>
+    </div>
+
+    <!-- ─── Scene 6 · Closer ─────────────────────────── -->
+    <div class="scene scene-6" id="s6">
+      <div class="closer-stats">
+        <div class="closer-stat">
+          <div class="num"><span class="cnt" data-target="700">0</span><span class="small">+</span></div>
+          <div class="lbl">Global Contributors</div>
+        </div>
+        <div class="closer-divider"></div>
+        <div class="closer-stat">
+          <div class="num"><span class="cnt" data-target="10000">0</span><span class="small">+</span></div>
+          <div class="lbl">Enterprise Users</div>
+        </div>
+        <div class="closer-divider"></div>
+        <div class="closer-stat">
+          <div class="num">2022<span class="small">·06</span></div>
+          <div class="lbl">Apache Top-Level Project</div>
+        </div>
+      </div>
+      <div class="closer-brand-row">
+        <div class="doris-logo-mini">
+          <svg viewBox="0 0 24 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M14.5129 4.89337L11.0415 1.42201C10.1214 0.501891 8.86667 7.62939e-06 7.65379 7.62939e-06C6.52455 7.62939e-06 5.39531 0.418244 4.51702 1.25472C3.63872 2.13301 3.13684 3.26225 3.13684 4.51696C3.13684 5.77166 3.5969 6.9009 4.47519 7.7792L10.7906 14.0946C11.0415 14.3455 11.5016 14.3455 11.7943 14.0946L14.5129 11.376C14.6802 11.1669 17.566 7.90467 14.5129 4.89337Z" fill="#0DBE85"/>
+            <path d="M20.2426 10.4559C19.5734 9.82857 18.9042 9.15939 18.2769 8.40657C18.2769 8.40657 18.2769 8.40657 18.235 8.36475C18.235 8.40657 18.1932 8.49022 18.1932 8.57386C17.9423 10.0795 17.2313 11.4179 16.0602 12.5889C12.3797 16.2276 8.65743 19.9917 5.0606 23.5885L4.60054 24.0486C3.76407 24.8851 3.30401 25.7634 3.17853 26.6417C3.01124 27.98 3.4713 29.4857 4.47507 30.5731C5.35336 31.535 6.52442 32.0369 7.77913 31.9951C9.20113 32.0369 9.91214 31.8278 10.9577 30.824C15.1401 26.7253 19.3224 22.5848 22.501 19.448C24.0067 17.9423 24.3413 15.5166 23.2957 13.8436C22.4174 12.5471 21.33 11.5015 20.2426 10.4559Z" fill="#0DBE85"/>
+            <path d="M0 8.28109V23.714C0 24.1322 0.292763 24.3832 0.543705 24.5086C0.794646 24.6341 1.17106 24.6341 1.46383 24.3414L9.24301 16.5622C9.53578 16.2694 9.53578 15.7675 9.24301 15.4329L1.46383 7.65374C1.29653 7.48644 1.04559 7.40279 0.878295 7.40279C0.752824 7.40279 0.627352 7.44462 0.543705 7.48644C0.292763 7.61191 0 7.86286 0 8.28109Z" fill="#0DBE85"/>
+          </svg>
+        </div>
+        <h2 class="closer-mark"><span>Apache</span> <span class="accent">Doris</span></h2>
+      </div>
+      <div class="closer-foot-text">
+        <span class="accent">doris.apache.org</span>　·　Join the open community
+      </div>
+    </div>
+
+    <!-- ── Bottom interactive control bar (inside stage) ─────────────────────────── -->
+    <div class="ctrl-bar">
+      <button class="ctrl-btn" id="btnPlay" type="button">
+        <span class="icon" id="btnPlayIcon">
+          <svg viewBox="0 0 12 12"><rect x="2" y="1.5" width="2.6" height="9" rx="0.6"/><rect x="7.4" y="1.5" width="2.6" height="9" rx="0.6"/></svg>
+        </span>
+        <span id="btnPlayLabel">Pause</span>
+      </button>
+      <button class="ctrl-btn" id="btnRestart" type="button">
+        <span class="icon">
+          <svg viewBox="0 0 12 12"><path d="M3 1.5v9M11 1.5L4 6l7 4.5z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" fill="currentColor"/></svg>
+        </span>
+        <span>Restart</span>
+      </button>
+      <div class="ctrl-time">
+        <span id="timeCur">0.00</span>s<span class="sep">/</span><span id="timeTotal">30.00</span>s
+      </div>
+      <div class="ctrl-progress" id="ctrlProgress">
+        <div class="fill" id="ctrlFill"></div>
+        <div class="knob" id="ctrlKnob"></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+(function() {
+  'use strict';
+
+  // ── Stage 自适应缩放 ────────────────────────────
+  const STAGE_W = 1920, STAGE_H = 1080;
+  const isEmbedded = new URLSearchParams(window.location.search).get('embed') === '1';
+  if (isEmbedded) document.documentElement.classList.add('embed');
+
+  const stage = document.getElementById('stage');
+  function resize() {
+    const sw = window.innerWidth, sh = window.innerHeight;
+    const s = Math.min(sw / STAGE_W, sh / STAGE_H) * 0.96;
+    stage.style.transform = `scale(${s})`;
+  }
+  window.addEventListener('resize', resize);
+  resize();
+
+  // ── Scene 时间轴 ────────────────────────────
+  // 6 scenes / 30s, FADE = 1s in + 1s out = 2s 过渡（每场切换固定 2 秒）
+  const DURATION = 30;
+  const SCENES = [
+    { id: 's1', start:  0.0, end:  4.5, num: '01', name: 'INTRO' },
+    { id: 's2', start:  4.5, end: 10.0, num: '02', name: 'METRICS' },
+    { id: 's3', start: 10.0, end: 17.0, num: '03', name: 'USE CASES' },
+    { id: 's4', start: 17.0, end: 21.5, num: '04', name: 'ARCHITECTURE' },
+    { id: 's5', start: 21.5, end: 26.5, num: '05', name: 'HYBRID SEARCH' },
+    { id: 's6', start: 26.5, end: 30.0, num: '06', name: 'COMMUNITY' },
+  ];
+  const FADE = 1.0;
+
+  // ── Easing ────────────────────────────
+  const expoOut = t => t <= 0 ? 0 : t >= 1 ? 1 : 1 - Math.pow(2, -10 * t);
+  const lerp = (a, b, t) => a + (b - a) * t;
+  const clamp01 = t => Math.max(0, Math.min(1, t));
+  const interp = (t, [a, b], [v0, v1], ease = expoOut) => {
+    if (t <= a) return v0;
+    if (t >= b) return v1;
+    return lerp(v0, v1, ease((t - a) / (b - a)));
+  };
+
+  // ── 元素缓存 ────────────────────────────
+  const sceneTagEl = document.getElementById('sceneTag');
+  const ctrlFill = document.getElementById('ctrlFill');
+  const ctrlKnob = document.getElementById('ctrlKnob');
+  const ctrlProgress = document.getElementById('ctrlProgress');
+  const timeCur = document.getElementById('timeCur');
+  const timeTotal = document.getElementById('timeTotal');
+  const btnPlay = document.getElementById('btnPlay');
+  const btnPlayLabel = document.getElementById('btnPlayLabel');
+  const btnPlayIcon = document.getElementById('btnPlayIcon');
+  const btnRestart = document.getElementById('btnRestart');
+
+  timeTotal.textContent = DURATION.toFixed(2);
+
+  const sceneEls = {};
+  SCENES.forEach(s => sceneEls[s.id] = document.getElementById(s.id));
+  const metricsCards = [...document.querySelectorAll('#metrics .metric-card')];
+  const pillarEls = [...document.querySelectorAll('#pillars .pillar')];
+  const archCols = [...document.querySelectorAll('.scene-4 .arch-col')];
+
+  function sceneOpacity(t, scene) {
+    const fadeIn = clamp01((t - scene.start) / FADE);
+    const fadeOut = clamp01((scene.end - t) / FADE);
+    return Math.min(fadeIn, fadeOut);
+  }
+
+  // ── render(t) ────────────────────────────
+  const fired = new Set();
+  function fireOnce(key, fn) { if (!fired.has(key)) { fired.add(key); fn(); } }
+  function reset() {
+    fired.clear();
+    document.querySelectorAll('.show, .lit, .focus, .dim').forEach(el => {
+      el.classList.remove('show', 'lit', 'focus', 'dim');
+    });
+    metricsCards.forEach(c => {
+      const num = c.querySelector('.num');
+      if (num) num.textContent = '0';
+    });
+    document.querySelectorAll('#s6 .cnt').forEach(el => { el.textContent = '0'; });
+    cancelAllCounters();
+  }
+
+  // ── Counter animation (cancellable) ────────
+  const activeCounters = new Map();
+  function cancelAllCounters() {
+    activeCounters.forEach(({ raf }) => cancelAnimationFrame(raf));
+    activeCounters.clear();
+  }
+  function animateCount(el, target, duration, ease = expoOut) {
+    if (activeCounters.has(el)) cancelAnimationFrame(activeCounters.get(el).raf);
+    const start = performance.now();
+    const step = (now) => {
+      const k = Math.min(1, (now - start) / (duration * 1000));
+      const v = target * ease(k);
+      el.textContent = formatNum(target, v);
+      if (k < 1) {
+        const raf = requestAnimationFrame(step);
+        activeCounters.set(el, { raf });
+      } else {
+        el.textContent = formatNum(target, target);
+        activeCounters.delete(el);
+      }
+    };
+    const raf = requestAnimationFrame(step);
+    activeCounters.set(el, { raf });
+  }
+  function formatNum(target, v) {
+    if (target >= 1000) return Math.round(v).toLocaleString('en-US');
+    if (target === 1) return v.toFixed(2);
+    return Math.round(v).toString();
+  }
+
+  // ── 场景渲染 ────────────────────────────
+  function render(t) {
+    SCENES.forEach(s => {
+      const o = sceneOpacity(t, s);
+      sceneEls[s.id].style.opacity = o.toFixed(3);
+      sceneEls[s.id].style.pointerEvents = o > 0.1 ? 'auto' : 'none';
+    });
+
+    const cur = SCENES.find(s => t >= s.start && t < s.end) || SCENES[SCENES.length - 1];
+    sceneTagEl.querySelector('.num').textContent = cur.num;
+    sceneTagEl.querySelector('.name').textContent = cur.name;
+
+    const pct = (t / DURATION) * 100;
+    ctrlFill.style.width = pct + '%';
+    ctrlKnob.style.left = pct + '%';
+    timeCur.textContent = t.toFixed(2);
+
+    // ─── Scene 1 · Hero (start = 0)
+    {
+      const s1start = 0;
+      const local = t - s1start;
+      const heroLogo = document.getElementById('heroLogo');
+      const heroMark = document.getElementById('heroMark');
+      const heroTagline = document.getElementById('heroTagline');
+      const heroSub = document.getElementById('heroSub');
+
+      const logoScale = interp(local, [0.1, 1.4], [0.5, 1], expoOut);
+      const logoOpacity = interp(local, [0.1, 0.9], [0, 1], expoOut);
+      heroLogo.style.transform = `scale(${logoScale})`;
+      heroLogo.style.opacity = logoOpacity;
+
+      const markY = interp(local, [0.6, 1.6], [40, 0], expoOut);
+      const markO = interp(local, [0.6, 1.4], [0, 1], expoOut);
+      heroMark.style.transform = `translateY(${markY}px)`;
+      heroMark.style.opacity = markO;
+
+      const tagY = interp(local, [1.2, 2.1], [20, 0], expoOut);
+      const tagO = interp(local, [1.2, 2.0], [0, 1], expoOut);
+      heroTagline.style.transform = `translateY(${tagY}px)`;
+      heroTagline.style.opacity = tagO;
+
+      const subO = interp(local, [1.6, 2.4], [0, 1], expoOut);
+      heroSub.style.opacity = subO;
+    }
+
+    // ─── Scene 2 · Metrics (start = 4.5)
+    {
+      const s2start = 4.5;
+      metricsCards.forEach((card, i) => {
+        const local = t - s2start - 0.4 - i * 0.12;
+        const y = interp(local, [0, 0.7], [40, 0], expoOut);
+        const o = interp(local, [0, 0.6], [0, 1], expoOut);
+        card.style.transform = `translateY(${y}px)`;
+        card.style.opacity = o;
+        if (local > 0.3) card.classList.add('lit');
+
+        const numEl = card.querySelector('.num[data-target]');
+        if (numEl && local > 0.4) {
+          fireOnce(`m${i}-cnt`, () => {
+            animateCount(numEl, parseFloat(numEl.dataset.target), 1.4);
+          });
+        }
+      });
+    }
+
+    // ─── Scene 3 · Use cases (start = 10.0)
+    {
+      const s3start = 10.0;
+      const local = t - s3start;
+
+      pillarEls.forEach((p, i) => {
+        const y = interp(local - i * 0.15, [0.3, 1.2], [40, 0], expoOut);
+        const o = interp(local - i * 0.15, [0.3, 1.1], [0, 1], expoOut);
+        let baseTransform = `translateY(${y}px)`;
+        if (p.classList.contains('focus')) baseTransform = `scale(1.04) ` + baseTransform;
+        p.style.transform = baseTransform;
+        p.style.opacity = o;
+
+        const items = p.querySelectorAll('.pillar-list li');
+        items.forEach((li, j) => {
+          if (local - i * 0.15 > 1.0 + j * 0.08) li.classList.add('show');
+        });
+      });
+
+      // 焦点切换：scene 3 长 7s，3.2s 后聚焦 AI 列
+      if (local >= 3.2) {
+        pillarEls[0].classList.add('dim');
+        pillarEls[1].classList.add('dim');
+        pillarEls[2].classList.add('focus');
+        pillarEls[2].querySelector('.pillar-tag').classList.add('show');
+      } else {
+        pillarEls[0].classList.remove('dim');
+        pillarEls[1].classList.remove('dim');
+        pillarEls[2].classList.remove('focus');
+      }
+    }
+
+    // ─── Scene 4 · Architecture (start = 17.0)
+    {
+      const s4start = 17.0;
+      const local = t - s4start;
+
+      archCols.forEach((col, ci) => {
+        const cy = interp(local - ci * 0.2, [0.2, 1.0], [30, 0], expoOut);
+        const co = interp(local - ci * 0.2, [0.2, 0.9], [0, 1], expoOut);
+        col.style.transform = `translateY(${cy}px)`;
+        col.style.opacity = co;
+
+        const rows = col.querySelectorAll('.arch-row, .arch-arrow');
+        rows.forEach((r, i) => {
+          if (local - ci * 0.2 > 0.7 + i * 0.18) r.classList.add('show');
+        });
+      });
+    }
+
+    // ─── Scene 5 · SQL (start = 21.5)
+    {
+      const s5start = 21.5;
+      const local = t - s5start;
+
+      ['sql-l1', 'sql-l2', 'sql-l3', 'sql-l4', 'sql-l5'].forEach((id, i) => {
+        if (local > 0.3 + i * 0.32) document.getElementById(id).classList.add('show');
+      });
+
+      if (local > 1.4) document.getElementById('tag-vec').classList.add('show');
+      if (local > 1.8) document.getElementById('tag-full').classList.add('show');
+      if (local > 2.2) document.getElementById('tag-struct').classList.add('show');
+      if (local > 3.0) document.getElementById('sqlFoot').classList.add('show');
+    }
+
+    // ─── Scene 6 · Closer (start = 26.5)
+    {
+      const s6start = 26.5;
+      const local = t - s6start;
+      if (local > 0.2) {
+        document.querySelectorAll('#s6 .cnt').forEach(el => {
+          fireOnce(`closer-${el.dataset.target}`, () => {
+            animateCount(el, parseInt(el.dataset.target, 10), 1.2);
+          });
+        });
+      }
+    }
+  }
+
+  // ── Tick loop ────────────
+  let time = 0;
+  let playing = false;
+  let lastTick = null;
+
+  function tick(now) {
+    if (lastTick === null) {
+      lastTick = now;
+      window.__ready = true;
+      // 关键修复：首帧渲染 current `time`，而不是 0。否则 __seek 后下一帧会被 reset 回 0
+      render(time);
+      requestAnimationFrame(tick);
+      return;
+    }
+    const dt = (now - lastTick) / 1000;
+    lastTick = now;
+
+    if (playing) {
+      let nt = time + dt;
+      if (nt >= DURATION) {
+        nt = window.__recording ? DURATION - 0.001 : 0;
+        if (!window.__recording) reset();
+      }
+      time = nt;
+      render(time);
+    }
+    requestAnimationFrame(tick);
+  }
+
+  function setPlayingState(p) {
+    playing = p;
+    if (p) {
+      btnPlayLabel.textContent = 'Pause';
+      btnPlayIcon.innerHTML = '<svg viewBox="0 0 12 12"><rect x="2" y="1.5" width="2.6" height="9" rx="0.6"/><rect x="7.4" y="1.5" width="2.6" height="9" rx="0.6"/></svg>';
+    } else {
+      btnPlayLabel.textContent = 'Play';
+      btnPlayIcon.innerHTML = '<svg viewBox="0 0 12 12"><path d="M2.5 1.5v9L10.5 6z" fill="currentColor"/></svg>';
+    }
+  }
+
+  window.__seek = (t) => {
+    reset();
+    time = Math.max(0, Math.min(DURATION - 0.001, t));
+    lastTick = null;
+    render(time);
+  };
+
+  // ── Control bar handlers ────────────
+  btnPlay.addEventListener('click', () => setPlayingState(!playing));
+  btnRestart.addEventListener('click', () => {
+    window.__seek(0);
+    setPlayingState(true);
+  });
+
+  // 进度条点击/拖动 seek
+  let dragging = false;
+  function seekFromEvent(e) {
+    const rect = ctrlProgress.getBoundingClientRect();
+    const x = (e.touches ? e.touches[0].clientX : e.clientX) - rect.left;
+    const ratio = Math.max(0, Math.min(1, x / rect.width));
+    window.__seek(ratio * DURATION);
+  }
+  ctrlProgress.addEventListener('mousedown', (e) => {
+    dragging = true;
+    ctrlProgress.classList.add('dragging');
+    seekFromEvent(e);
+    e.preventDefault();
+  });
+  document.addEventListener('mousemove', (e) => { if (dragging) { seekFromEvent(e); e.preventDefault(); } });
+  document.addEventListener('mouseup', () => {
+    if (dragging) { dragging = false; ctrlProgress.classList.remove('dragging'); }
+  });
+  ctrlProgress.addEventListener('touchstart', (e) => {
+    dragging = true;
+    ctrlProgress.classList.add('dragging');
+    seekFromEvent(e);
+  }, { passive: true });
+  document.addEventListener('touchmove', (e) => { if (dragging) seekFromEvent(e); }, { passive: true });
+  document.addEventListener('touchend', () => {
+    if (dragging) { dragging = false; ctrlProgress.classList.remove('dragging'); }
+  });
+
+  // 键盘快捷键
+  document.addEventListener('keydown', (e) => {
+    if (e.code === 'Space') { e.preventDefault(); setPlayingState(!playing); }
+    else if (e.code === 'ArrowLeft') { window.__seek(time - 1); }
+    else if (e.code === 'ArrowRight') { window.__seek(time + 1); }
+    else if (e.code === 'KeyR') { window.__seek(0); setPlayingState(true); }
+  });
+
+  // ── Boot ────────────
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(() => {
+      render(0);
+      setPlayingState(true);
+      requestAnimationFrame(tick);
+    });
+  } else {
+    setTimeout(() => {
+      render(0);
+      setPlayingState(true);
+      requestAnimationFrame(tick);
+    }, 300);
+  }
+})();
+</script>
+
+</body>
+</html>
