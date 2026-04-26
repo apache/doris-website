@@ -24,15 +24,14 @@ const sidebars: SidebarsConfig = {
         },
         {
             type: 'category',
-            label: 'Architecture & Concepts',
+            label: 'Features & Architecture',
+            link: {type: 'doc', id: 'features-architecture/getting-started'},
             collapsed: true,
             items: [
-                'architecture-concepts/overview',
-                'architecture-concepts/system-architecture',
-                'architecture-concepts/storage-compute-decoupled',
-                'architecture-concepts/mpp-execution-engine',
-                'architecture-concepts/storage-layer',
-                'architecture-concepts/metadata-management',
+                'features-architecture/system-architecture',
+                'features-architecture/product-concepts',
+                'features-architecture/feature-overview',
+                'features-architecture/versioning',
             ],
         },
         {

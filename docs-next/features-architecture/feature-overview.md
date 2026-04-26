@@ -1,6 +1,6 @@
 ---
 {
-  "title": "Storage Layer (Tablet / Rowset)",
+  "title": "Features Overview",
   "language": "en"
 }
 ---

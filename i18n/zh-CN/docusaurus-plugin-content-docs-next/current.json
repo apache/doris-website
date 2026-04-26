@@ -743,6 +743,10 @@
     "message": "VARIANT 函数",
     "description": "The label for category Variant Functions in sidebar docs"
   },
+  "sidebar.docs.category.Features & Architecture": {
+    "message": "功能与架构",
+    "description": "The label for category Features & Architecture in sidebar docs"
+  },
   "sidebar.docs.category.Architecture & Concepts": {
     "message": "架构与概念",
     "description": "The label for category Architecture & Concepts in sidebar docs"

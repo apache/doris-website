@@ -1,6 +1,6 @@
 ---
 {
-  "title": "Metadata Management",
+  "title": "Product Concept",
   "language": "en"
 }
 ---
