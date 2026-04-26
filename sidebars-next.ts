@@ -25,6 +25,7 @@ const sidebars: SidebarsConfig = {
         {
             type: 'category',
             label: 'Features & Architecture',
+            link: {type: 'doc', id: 'features-architecture/getting-started'},
             collapsed: true,
             items: [
                 'features-architecture/system-architecture',
