@@ -17,8 +17,12 @@ jobs:
         id: changed
         run: |
           # Get list of files changed in the PR compared to base branch
-          FILES=$(git diff --name-only ${{ github.event.pull_request.base.sha }} HEAD | head -100)
-          echo "files=$FILES" >> $GITHUB_OUTPUT
+          # Use delimiter syntax for multi-line output
+          {
+            echo 'files<<EOF'
+            git diff --name-only ${{ github.event.pull_request.base.sha }} HEAD | head -100
+            echo EOF
+          } >> $GITHUB_OUTPUT
 
       - name: Check file sizes
         run: |
