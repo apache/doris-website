@@ -1,6 +1,6 @@
 ---
 {
-  "title": "Storage Layer (Tablet / Rowset)",
+  "title": "System Architecture",
   "language": "en"
 }
 ---

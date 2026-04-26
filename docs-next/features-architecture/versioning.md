@@ -1,6 +1,6 @@
 ---
 {
-  "title": "MPP Execution Engine",
+  "title": "System Architecture",
   "language": "en"
 }
 ---

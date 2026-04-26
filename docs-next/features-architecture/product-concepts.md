@@ -1,6 +1,6 @@
 ---
 {
-  "title": "Metadata Management",
+  "title": "System Architecture",
   "language": "en"
 }
 ---
