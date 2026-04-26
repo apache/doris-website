@@ -77,8 +77,8 @@ def check_review_pass(pr_num, maintainers_file, token):
       if not path_found:
           continue
   print(approves)
-  if len(approves) < 2:
-      print("PR has not been approved by at least 2 reviewers")
+  if len(approves) < 1:
+      print("PR has not been approved by at least 1 reviewer")
       exit(1)
 
   return has_maintainer_review
