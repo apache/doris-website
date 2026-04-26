@@ -208,7 +208,7 @@
     "description": "The label for category Ecosystem in sidebar docs"
   },
   "sidebar.docs.category.Doris Operator": {
-    "message": "Doris Operator",
+    "message": "Doris Operator 简介",
     "description": "The label for category Doris Operator in sidebar docs"
   },
   "sidebar.docs.category.Managing Cluster": {

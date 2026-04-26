@@ -1,137 +1,201 @@
 ---
 {
-    "title": "在阿里云上的部署建议",
+    "title": "阿里云容器服务部署 Doris 集群指南",
+    "sidebar_label": "阿里云容器服务部署建议",
     "language": "zh-CN",
-    "description": "阿里云容器服务 ACK 属于 购买 ECS 实例后，托管容器化服务的，因此可以获得完全访问控制权限来进行相关系统参数调整，使用实例镜像：Alibaba Cloud Linux 3 当前系统参数完全满足运行 Doris 需求。不符合要求的也能够通过 K8s 特权模式在容器内进行修正，以保证稳定运行。"
+    "description": "阿里云 ACK/ACS 部署 Doris 建议指南，包括环境检查、配置调优、镜像仓库配置、常见问题排查。解决 BE 节点无法启动、swap 未禁用、大页内存配置等问题。"
 }
 ---
 
-## 阿里云容器服务 ACK  
+## 阿里云容器服务概述
 
-阿里云容器服务 ACK 属于 购买 ECS 实例后，托管容器化服务的，因此可以获得完全访问控制权限来进行相关系统参数调整，使用实例镜像：Alibaba Cloud Linux 3 当前系统参数完全满足运行 Doris 需求。不符合要求的也能够通过 K8s 特权模式在容器内进行修正，以保证稳定运行。  
-**阿里云 ACK 集群，使用 Doris Operator 部署，大部分环境要求，ECS 默认配置即可满足，未满足的，Doris Operator 可自行修正**。用户亦可手动修正，如下：
+阿里云提供两种容器服务：
 
-### 已存在集群
+| 服务 | 说明 | 适用场景 |
+|------|------|----------|
+| **ACK** (Container Service for Kubernetes) | 购买 ECS 实例后托管的容器化服务，可获得完全访问控制权限 | 需要控制底层 ECS、需特权模式部署 BE 节点 |
+| **ACS** (Container Service ACS) | 以 K8s 为界面的云计算服务，按需计费，无需关注底层 ECS | 纯弹性算力、按需付费 |
 
-若容器服务集群已经创建，则可以参考此文档进行修改：[操作系统检查](../../install/preparation/os-checking.md)  
-重点关注 BE 启动参数要求：  
-1. 禁用和关闭 swap： `swapon --show`  未开启则无输出
-2. 查看系统最大打开文件句柄数 `ulimit -n`
-3. 查看修改虚拟内存区域数量  `sysctl vm.max_map_count`
-4. 透明大页是否关闭  `cat /sys/kernel/mm/transparent_hugepage/enabled`  是否包含 never  
-   对应参数的默认值如下：  
-  ```shell
-  [root@iZj6c12a1czxk5oer9rbp8Z ~]# swapon --show
-  [root@iZj6c12a1czxk5oer9rbp8Z ~]# ulimit -n
-  65535
-  [root@iZj6c12a1czxk5oer9rbp8Z ~]# sysctl vm.max_map_count
-  vm.max_map_count = 262144
-  [root@iZj6c12a1czxk5oer9rbp8Z ~]# cat /sys/kernel/mm/transparent_hugepage/enabled
-  [always] madvise never
-  ```  
+本文档分别介绍这两种服务上使用 Doris Operator 部署集群的方法。
 
-### 新建集群  
+## ACK 部署
 
-若集群未购买和创建，则可以在阿里云 容器服务 ACK 控制台 点击“创建集群”购买，可以按需调整配置，上述参数可以在 创建集群的“节点池配置”步骤中在“实例预自定义数据”添加系统调整脚本。
-在集群启动后，重启节点即可实现配置完成。参考脚本如下：  
+ACK 属于购买 ECS 实例后托管的容器化服务，可获得完全访问控制权限进行系统参数调整。使用 Alibaba Cloud Linux 3 镜像时，当前系统参数完全满足 Doris 运行需求；其他镜像可通过 K8s 特权模式在容器内修正参数。
+
+**使用 ACK + Doris Operator 部署时，大多数 ECS 默认配置即可满足要求，未满足的参数 Operator 会自行修正。**
+
+### 场景一：已有集群
+
+如果容器服务集群已创建，按以下步骤检查并修正参数：
+
+#### 步骤 1：检查 swap 状态
+
+```bash
+swapon --show
+```
+
+**预期结果**：无输出（swap 已禁用）。如有关闭 swap 的输出，需执行 `swapoff -a` 并重启。
+
+#### 步骤 2：检查最大文件句柄数
+
+```bash
+ulimit -n
+```
+
+**预期结果**：不小于 65535。如低于此值，需在 `/etc/security/limits.conf` 中添加：
+
+```shell
+* soft nofile 1000000
+* hard nofile 1000000
+```
+
+#### 步骤 3：检查虚拟内存区域数量
+
+```bash
+sysctl vm.max_map_count
+```
+
+**预期结果**：不小于 262144。如需修改，执行 `sysctl -w vm.max_map_count=2000000`。
+
+#### 步骤 4：检查透明大页
+
+```bash
+cat /sys/kernel/mm/transparent_hugepage/enabled
+```
+
+**预期结果**：包含 `[never]`。如为 `[always]`，需执行：
+
+```bash
+echo never > /sys/kernel/mm/transparent_hugepage/enabled
+echo never > /sys/kernel/mm/transparent_hugepage/defrag
+```
+
+详细说明请参考：[操作系统检查](../../install/preparation/os-checking.md)
+
+### 场景二：新建集群
+
+如需创建新集群，可在阿里云容器服务 ACK 控制台点击”创建集群”。在**节点池配置**步骤的”实例预自定义数据”中添加以下脚本：
 
 ```shell
 #!/bin/bash
 chmod +x /etc/rc.d/rc.local
-echo "sudo systemctl stop firewalld.service" >> /etc/rc.d/rc.local
-echo "sudo systemctl disable firewalld.service" >> /etc/rc.d/rc.local
-echo "sysctl -w vm.max_map_count=2000000" >> /etc/rc.d/rc.local
-echo "swapoff -a" >> /etc/rc.d/rc.local
+
+# 关闭防火墙
+echo “sudo systemctl stop firewalld.service” >> /etc/rc.d/rc.local
+echo “sudo systemctl disable firewalld.service” >> /etc/rc.d/rc.local
+
+# 设置虚拟内存区域数量
+echo “sysctl -w vm.max_map_count=2000000” >> /etc/rc.d/rc.local
+
+# 禁用 swap
+echo “swapoff -a” >> /etc/rc.d/rc.local
+
+# 设置文件句柄限制
 current_limit=$(ulimit -n)
 desired_limit=1000000
-config_file="/etc/security/limits.conf"
- if [ "$current_limit" -ne "$desired_limit" ]; then
-    echo "* soft nofile 1000000" >> "$config_file"
-    echo "* hard nofile 1000000" >> "$config_file"
+config_file=”/etc/security/limits.conf”
+if [ “$current_limit” -ne “$desired_limit” ]; then
+   echo “* soft nofile 1000000” >> “$config_file”
+   echo “* hard nofile 1000000” >> “$config_file”
 fi
 ```
 
-## 阿里云容器服务 ACS
+集群启动后重启节点即可生效。
 
-ACS 服务是以 K8s 为使用界面供给容器算力资源的云计算服务，提供按需计费的弹性算力资源。和上述 ACK 不同的是不需要关注具体使用 ECS。
-需要注意使用 ACS 的事项如下：
+## ACS 部署
 
-### 镜像仓库访问
+ACS 是以 K8s 为界面的云计算服务，提供按需计费的弹性算力。无需关注底层 ECS，但 BE 节点启动需要特权模式来修改系统参数（如 `vm.max_map_count`）。
 
-使用 ACS 推荐使用配套的阿里云镜像 [Container Registry](https://www.alibabacloud.com/en/product/container-registry)(ACR) 个人版和企业版按需开启。  
-在配置好镜像仓库和镜像中转的环境后，需要把 Doris 提供的官方镜像迁移到对应的阿里云镜像仓库中。
-
-若使用私有镜像仓库开启了鉴权，可以参考以下步骤：  
-
-1. 需要提前设置类型为 `docker-registry` 的 `secret` 用以配置访问镜像仓库的身份认证信息。 
-
-  ```shell
-  kubectl create secret docker-registry image-hub-secret --docker-server={your-server} --docker-username={your-username} --docker-password={your-pwd}
-  ```
-2. 在 DCR 上配置使用上述步骤的 secret：    
-
-  ```yaml
-  spec:
-    feSpec:
-      replicas: 1
-      image: crpi-4q6quaxa0ta96k7h-vpc.cn-hongkong.personal.cr.aliyuncs.com/selectdb-test/doris.fe-ubuntu:3.0.3
-      imagePullSecrets:
-      - name: image-hub-secret
-    beSpec:
-      replicas: 3
-      image: crpi-4q6quaxa0ta96k7h-vpc.cn-hongkong.personal.cr.aliyuncs.com/selectdb-test/doris.be-ubuntu:3.0.3
-      imagePullSecrets:
-      - name: image-hub-secret
-      systemInitialization:
-        initImage: crpi-4q6quaxa0ta96k7h-vpc.cn-hongkong.personal.cr.aliyuncs.com/selectdb-test/alpine:latest
-  ```
-
-### Be systemInitialization  
-
-目前阿里云逐步推送 在完全托管的 ACS 服务上 提供开启特权模式 的能力（部分地域可能暂未开启，可提交工单申请开启能力加白）。  
-Doris BE 节点启动需要依赖一些特殊环境参数 比如，修改虚拟内存区域数量 `sysctl -w vm.max_map_count=2000000`   
-在容器内部设置此参数需要 修改宿主机配置，因此常规的 K8s 集群需要在 pod 内开启特权模式。Operator 通过 `systemInitialization` 为 BE pod 添加 `InitContainer` 来执行此类操作。  
-
-:::tip 提示  
-**如果当前集群无法使用特权模式，则无法启动 BE 节点**。可以选择 ACK 容器服务 + 宿主机的形式来部署集群。
+:::tip 提示
+如果当前集群无法使用特权模式，则无法启动 BE 节点。建议选择 ACK + 宿主机的形式部署。
 :::
 
-### Service 限制
+### 步骤 1：配置镜像仓库
 
-由于 ACS 服务是以 K8s 为使用界面供给容器算力资源的云计算服务，提供算力资源。其 node 是虚拟计算资源，用户无需关注，按使用资源量收费，可以无限拓展，即，不存在常规的 node 这个物理概念： 
+ACS 推荐使用配套的阿里云镜像仓库 [Container Registry (ACR)](https://www.alibabacloud.com/en/product/container-registry)，分为个人版和企业版。
 
-```shell
-$ kubectl get nodes
-NAME                            STATUS   ROLES   AGE   VERSION
-virtual-kubelet-cn-hongkong-d   Ready    agent   27h   v1.31.1-aliyun.1
+将 Doris 官方镜像迁移到阿里云镜像仓库后，如使用私有镜像需创建 secret：
+
+```bash
+kubectl create secret docker-registry image-hub-secret \
+  --docker-server={your-server} \
+  --docker-username={your-username} \
+  --docker-password={your-pwd}
 ```
 
-因此，部署 Doris 集群时 serviceType 禁用 NodePort 模式，允许使用 ClusterIP 和 LB 模式。  
-- ClusterIP 模式：  
+### 步骤 2：配置 DCR 使用私有镜像
 
-  Operator 默认的网络模式，具体使用和访问方式可参考[此文档](https://kubernetes.io/docs/concepts/services-networking/service/#type-clusterip)
+在 DorisCluster CR 中配置 `imagePullSecrets`：
 
-- 负载均衡模式：  
+```yaml
+spec:
+  feSpec:
+    replicas: 1
+    image: <your-acr-registry>/selectdb-test/doris.fe-ubuntu:3.0.3
+    imagePullSecrets:
+    - name: image-hub-secret
+  beSpec:
+    replicas: 3
+    image: <your-acr-registry>/selectdb-test/doris.be-ubuntu:3.0.3
+    imagePullSecrets:
+    - name: image-hub-secret
+    systemInitialization:
+      initImage: <your-acr-registry>/selectdb-test/alpine:latest
+```
 
-  使用时可以通过如下方式来配置（注意事项：https://help.aliyun.com/zh/ack/ack-managed-and-ack-dedicated/user-guide/considerations-for-configuring-a-loadbalancer-type-service-1）：
+### 步骤 3：配置 Service
 
-  - 通过 Operator 提供的 DCR 的 service annotations 来配置 LB 接入，步骤如下：
-    1. 已通过负载均衡控制台创建 CLB 或 NLB 实例，且该实例与 ACK 集群处于同一地域。如果尚未创建，请参见[创建和管理 CLB 实例](https://help.aliyun.com/zh/slb/classic-load-balancer/user-guide/create-and-manage-a-clb-instance#task-ctx-xsm-vdb)和[创建和管理 NLB 实例](https://help.aliyun.com/zh/slb/network-load-balancer/user-guide/create-and-manage-an-nlb-instance)。
-    2. 通过 DCR 配置，上述 LB 的访问 annotations，参考格式如下：
-      ```yaml
-        feSpec:
-          replicas: 3
-          image: crpi-4q6quaxa0ta96k7h-vpc.cn-hongkong.personal.cr.aliyuncs.com/selectdb-test/doris.fe-ubuntu:3.0.3
-          service:
-            type: LoadBalancer
-            annotations:
-              service.beta.kubernetes.io/alibaba-cloud-loadbalancer-address-type: "intranet"
-      ```  
+ACS 不存在常规 Node 概念，Service 限制使用 NodePort 模式。可用以下模式：
 
-  - 通过 ACS 控制台托管 LB 服务，生成绑定 FE 或 BE 对应资源管控的 statefulset 的 service
-    步骤如下：
-    1. serviceType 为 ClusterIP（默认策略）
-    2. 可以通过阿里云控制台界面：容器计算服务 ACS -> 集群列表 -> 集群 -> 服务，通过 `创建` 按钮创建负载均衡服务。
-    3. 在创建 `服务` 的界面 选择新建的 LB，会和 `service` 绑定，也会随着 该 `service` 的注销而注销。但是此 `service` 不受 Doris Operator 管控。
+#### ClusterIP 模式（默认）
+
+Operator 默认网络模式，参考 [Kubernetes Service 文档](https://kubernetes.io/docs/concepts/services-networking/service/#type-clusterip)。
+
+#### 负载均衡模式
+
+**方式一：通过 DCR 配置 annotations**
+
+```yaml
+feSpec:
+  replicas: 3
+  image: <your-image>
+  service:
+    type: LoadBalancer
+    annotations:
+      service.beta.kubernetes.io/alibaba-cloud-loadbalancer-address-type: "intranet"
+```
+
+**方式二：通过 ACS 控制台托管**
+
+1. DCR 中 serviceType 设为 ClusterIP（默认）
+2. 在 ACS 控制台：容器计算服务 ACS → 集群列表 → 集群 → 服务 → 创建
+3. 选择新建的 LB 进行绑定。该 Service 随 Doris Operator 管理，不受 Operator 管控。
+
+---
+
+## 常见问题
+
+### Q: BE 节点无法启动怎么办？
+
+检查以下几点：
+1. **特权模式未开启**：ACS 需要特权模式修改 `vm.max_map_count`，如无法开启请使用 ACK
+2. **镜像拉取失败**：检查 `imagePullSecrets` 是否正确配置
+3. **虚拟内存区域数量不足**：执行 `sysctl vm.max_map_count`，确保不小于 262144
+
+### Q: 集群节点显示为 virtual-kubelet 正常吗？
+
+正常。ACS 使用虚拟节点调度容器，节点名类似 `virtual-kubelet-cn-hongkong-d` 是 ACS 的正常行为。
+
+### Q: 阿里云地域未开启特权模式怎么办？
+
+提交工单申请开启 ACS 特权模式能力加白。
+
+### Q: 如何选择 ACK 还是 ACS？
+
+| 场景 | 推荐 |
+|------|------|
+| 需要完全控制底层 ECS | ACK |
+| 纯弹性按需付费，无需关注底层 | ACS |
+| BE 节点需要特权模式 | ACK |
 
 
