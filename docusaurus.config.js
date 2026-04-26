@@ -23,7 +23,7 @@ function getBrokenLinkBehavior(envName, fallback) {
 
 const DEFAULT_BROKEN_LINK_BEHAVIOR = 'warn';
 
-const lightCodeTheme = themes.dracula;
+const lightCodeTheme = themes.oneLight;
 
 const logoImg = '/images/logo-doris.svg';
 

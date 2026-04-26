@@ -5,15 +5,15 @@ const sidebars: SidebarsConfig = {
         {
             type: 'category',
             label: 'Getting Started',
+            link: {type: 'doc', id: 'gettingStarted/getting-started'},
             collapsed: true,
             items: [
                 'gettingStarted/what-is-apache-doris',
                 'gettingStarted/quick-start',
-                'use-cases/overview',
                 'gettingStarted/before-you-start-the-poc',
                 {
                     type: 'category',
-                    label: 'Migration & Doris vs.',
+                    label: 'Tech Alternatives',
                     items: [
                         'gettingStarted/alternatives/alternative-to-clickhouse',
                         'gettingStarted/alternatives/alternative-to-elasticsearch',

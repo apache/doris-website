@@ -8,7 +8,7 @@
     "description": "The label for category Getting Started in sidebar docs"
   },
   "sidebar.docs.category.Tech Alternatives": {
-    "message": "技术对比",
+    "message": "选型与对比",
     "description": "The label for category Getting Started in sidebar docs"
   },
   "sidebar.docs.category.Guides": {
@@ -746,10 +746,6 @@
   "sidebar.docs.category.Architecture & Concepts": {
     "message": "架构与概念",
     "description": "The label for category Architecture & Concepts in sidebar docs"
-  },
-  "sidebar.docs.category.Migration & Doris vs.": {
-    "message": "迁移与对比",
-    "description": "The label for category Migration & Doris vs. in sidebar docs"
   },
   "sidebar.docs.category.Installation & Deployment": {
     "message": "安装与部署",
