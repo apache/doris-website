@@ -5,15 +5,15 @@ const sidebars: SidebarsConfig = {
         {
             type: 'category',
             label: 'Getting Started',
-            collapsed: false,
+            link: {type: 'doc', id: 'gettingStarted/getting-started'},
+            collapsed: true,
             items: [
                 'gettingStarted/what-is-apache-doris',
                 'gettingStarted/quick-start',
-                'use-cases/overview',
                 'gettingStarted/before-you-start-the-poc',
                 {
                     type: 'category',
-                    label: 'Migration & Doris vs.',
+                    label: 'Tech Alternatives',
                     items: [
                         'gettingStarted/alternatives/alternative-to-clickhouse',
                         'gettingStarted/alternatives/alternative-to-elasticsearch',
@@ -25,7 +25,7 @@ const sidebars: SidebarsConfig = {
         {
             type: 'category',
             label: 'Architecture & Concepts',
-            collapsed: false,
+            collapsed: true,
             items: [
                 'architecture-concepts/overview',
                 'architecture-concepts/system-architecture',
@@ -38,7 +38,7 @@ const sidebars: SidebarsConfig = {
         {
             type: 'category',
             label: 'Installation & Deployment',
-            collapsed: false,
+            collapsed: true,
             items: [
                 {
                     type: 'category',
@@ -100,12 +100,41 @@ const sidebars: SidebarsConfig = {
                         'ecosystem/doris-operator/on-aws',
                     ],
                 },
+                {
+                    type: 'category',
+                    label: 'Compute-Storage Decoupled',
+                    items: [
+                        'compute-storage-decoupled/overview',
+                        'compute-storage-decoupled/before-deployment',
+                        'compute-storage-decoupled/compilation-and-deployment',
+                        'compute-storage-decoupled/managing-storage-vault',
+                        'compute-storage-decoupled/managing-compute-cluster',
+                        {
+                            type: 'category',
+                            label: 'File Cache',
+                            items: [
+                                'compute-storage-decoupled/file-cache/file-cache',
+                                'compute-storage-decoupled/file-cache/file-cache-internals',
+                            ],
+                        },
+                        {
+                            type: 'category',
+                            label: 'Read-Write Separation',
+                            items: [
+                                'compute-storage-decoupled/rw/read-write-separation',
+                                'compute-storage-decoupled/rw/file-cache-rw-compute-group-best-practice',
+                            ],
+                        },
+                        'compute-storage-decoupled/recycler',
+                        'compute-storage-decoupled/upgrade',
+                    ],
+                },
             ],
         },
         {
             type: 'category',
             label: 'Connect & Develop',
-            collapsed: false,
+            collapsed: true,
             items: [
                 {
                     type: 'category',
@@ -136,7 +165,7 @@ const sidebars: SidebarsConfig = {
         {
             type: 'category',
             label: 'Table Design',
-            collapsed: false,
+            collapsed: true,
             items: [
                 'table-design/overview',
                 {
@@ -233,7 +262,7 @@ const sidebars: SidebarsConfig = {
         {
             type: 'category',
             label: 'Data Operations',
-            collapsed: false,
+            collapsed: true,
             items: [
                 {
                     type: 'category',
@@ -398,7 +427,7 @@ const sidebars: SidebarsConfig = {
         {
             type: 'category',
             label: 'Querying',
-            collapsed: false,
+            collapsed: true,
             items: [
                 'query-data/mysql-compatibility',
                 'query-data/join',
@@ -423,7 +452,7 @@ const sidebars: SidebarsConfig = {
         {
             type: 'category',
             label: 'Lakehouse',
-            collapsed: false,
+            collapsed: true,
             items: [
                 'lakehouse/lakehouse-overview',
                 'lakehouse/catalog-overview',
@@ -548,7 +577,7 @@ const sidebars: SidebarsConfig = {
         {
             type: 'category',
             label: 'Hybrid Search',
-            collapsed: false,
+            collapsed: true,
             items: [
                 'hybrid-search/overview',
                 {
@@ -578,7 +607,7 @@ const sidebars: SidebarsConfig = {
         {
             type: 'category',
             label: 'AI',
-            collapsed: false,
+            collapsed: true,
             items: [
                 'ai/ai-overview',
                 'ai/ai-function-overview',
@@ -588,38 +617,8 @@ const sidebars: SidebarsConfig = {
         },
         {
             type: 'category',
-            label: 'Compute-Storage Decoupled',
-            collapsed: false,
-            items: [
-                'compute-storage-decoupled/overview',
-                'compute-storage-decoupled/before-deployment',
-                'compute-storage-decoupled/compilation-and-deployment',
-                'compute-storage-decoupled/managing-storage-vault',
-                'compute-storage-decoupled/managing-compute-cluster',
-                {
-                    type: 'category',
-                    label: 'File Cache',
-                    items: [
-                        'compute-storage-decoupled/file-cache/file-cache',
-                        'compute-storage-decoupled/file-cache/file-cache-internals',
-                    ],
-                },
-                {
-                    type: 'category',
-                    label: 'Read-Write Separation',
-                    items: [
-                        'compute-storage-decoupled/rw/read-write-separation',
-                        'compute-storage-decoupled/rw/file-cache-rw-compute-group-best-practice',
-                    ],
-                },
-                'compute-storage-decoupled/recycler',
-                'compute-storage-decoupled/upgrade',
-            ],
-        },
-        {
-            type: 'category',
             label: 'Performance & Tuning',
-            collapsed: false,
+            collapsed: true,
             items: [
                 {
                     type: 'category',
@@ -758,7 +757,7 @@ const sidebars: SidebarsConfig = {
         {
             type: 'category',
             label: 'Administration',
-            collapsed: false,
+            collapsed: true,
             items: [
                 {
                     type: 'category',
@@ -1069,17 +1068,30 @@ const sidebars: SidebarsConfig = {
         {
             type: 'category',
             label: 'Observability with Doris',
-            collapsed: false,
+            collapsed: true,
             items: [
                 'observability/overview',
                 'observability/log',
                 'observability/trace',
+                {
+                    type: 'category',
+                    label: 'Observability integration',
+                    items: [
+                        'ecosystem/observability/logstash',
+                        'ecosystem/observability/beats',
+                        'ecosystem/observability/opentelemetry',
+                        'ecosystem/observability/fluentbit',
+                        'ecosystem/observability/loongcollector',
+                        'ecosystem/observability/langfuse',
+                        'ecosystem/observability/vector',
+                    ],
+                },
             ],
         },
         {
             type: 'category',
             label: 'Ecosystem & Integrations',
-            collapsed: false,
+            collapsed: true,
             items: [
                 {
                     type: 'category',
@@ -1114,19 +1126,6 @@ const sidebars: SidebarsConfig = {
                 'ecosystem/doris-streamloader',
                 {
                     type: 'category',
-                    label: 'Doris Monitoring',
-                    items: [
-                        'ecosystem/observability/logstash',
-                        'ecosystem/observability/beats',
-                        'ecosystem/observability/opentelemetry',
-                        'ecosystem/observability/fluentbit',
-                        'ecosystem/observability/loongcollector',
-                        'ecosystem/observability/langfuse',
-                        'ecosystem/observability/vector',
-                    ],
-                },
-                {
-                    type: 'category',
                     label: 'ETL & Workflow',
                     items: [
                         'ecosystem/cloudcanal',
@@ -1146,7 +1145,7 @@ const sidebars: SidebarsConfig = {
         {
             type: 'category',
             label: 'Troubleshooting & FAQ',
-            collapsed: false,
+            collapsed: true,
             items: [
                 {
                     type: 'category',
@@ -1212,7 +1211,7 @@ const sidebars: SidebarsConfig = {
         {
             type: 'category',
             label: 'Reference',
-            collapsed: false,
+            collapsed: true,
             items: [
                 {
                     type: 'category',
@@ -1278,7 +1277,7 @@ const sidebars: SidebarsConfig = {
                                                 type: 'doc',
                                                 id: 'sql-manual/basic-element/sql-data-types/semi-structured/variant-workload-guide',
                                             },
-                                            collapsed: false,
+                                            collapsed: true,
                                             items: [
                                                 {
                                                     type: 'doc',
@@ -2716,12 +2715,6 @@ const sidebars: SidebarsConfig = {
                     ],
                 },
             ],
-        },
-        {
-            type: 'category',
-            label: 'Release Notes',
-            collapsed: false,
-            items: ['release-notes/overview'],
         },
     ],
 };

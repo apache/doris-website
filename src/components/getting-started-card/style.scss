@@ -1,0 +1,43 @@
+.getting-started-card {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 1.5rem;
+    background: #ffffff;
+    border: 1px solid #e6e7e9;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    color: inherit;
+
+    &:hover {
+        border-color: var(--ifm-color-primary);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        transform: translateY(-2px);
+    }
+
+    .card-content {
+        flex: 1;
+
+        h3 {
+            margin: 0 0 0.5rem 0;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #1d1d1d;
+        }
+
+        p {
+            margin: 0;
+            font-size: 0.9rem;
+            color: #4c576c;
+            line-height: 1.5;
+        }
+    }
+}
+
+.cards-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+    margin: 1.5rem 0;
+}
