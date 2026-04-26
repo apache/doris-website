@@ -1,6 +1,6 @@
 ---
 {
-  "title": "System Architecture",
+  "title": "Features Overview",
   "language": "en"
 }
 ---

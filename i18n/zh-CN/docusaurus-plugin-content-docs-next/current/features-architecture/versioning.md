@@ -1,7 +1,7 @@
 ---
 {
-  "title": "Product Concept",
-  "language": "en"
+  "title": "版本说明",
+  "language": "zh-CN"
 }
 ---
 
