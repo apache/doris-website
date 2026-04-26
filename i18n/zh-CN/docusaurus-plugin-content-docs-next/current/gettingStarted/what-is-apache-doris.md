@@ -7,7 +7,20 @@
 }
 ---
 
-Apache Doris 是一款基于 MPP 架构的高性能、实时分析型数据库，以**高效、简单、统一**著称：在亚秒级时间内返回海量数据查询结果，一套系统同时支持高并发点查询和高吞吐复杂分析。
+<div class="doris-doc-intro-animation" align="center">
+  <iframe
+    class="doris-doc-intro-animation__frame"
+    src="/zh-CN/animations/what-is-apache-doris-intro.html?embed=1&v=3"
+    title="Apache Doris intro animation"
+    width="960"
+    height="540"
+    loading="lazy"
+  ></iframe>
+</div>
+
+<p>
+Apache Doris 是一款基于 MPP 架构的高性能、实时分析型数据库，以<strong>高效、简单、统一</strong>著称：在亚秒级时间内返回海量数据查询结果，一套系统同时支持高并发点查询和高吞吐复杂分析。
+</p>
 
 <div align="center">
 
@@ -146,4 +159,3 @@ Apache Doris 起源于百度广告报表业务（Palo 项目），2017 年开源
 - **云厂商支持**：AWS、Azure、GCP、阿里云、腾讯云、华为云、火山云等。
 
 欢迎加入社区建设：https://doris.apache.org/community/join-community
-
