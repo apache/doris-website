@@ -39,6 +39,7 @@ const sidebars: SidebarsConfig = {
             label: 'Installation & Deployment',
             collapsed: true,
             items: [
+                'install/choosing-deployment-mode',
                 {
                     type: 'category',
                     label: 'Installation Preparation',
@@ -50,7 +51,7 @@ const sidebars: SidebarsConfig = {
                 },
                 {
                     type: 'category',
-                    label: 'Cluster Deployment Manually',
+                    label: 'Deploying Manually',
                     items: [
                         'install/deploy-manually/integrated-storage-compute-deploy-manually',
                         'install/deploy-manually/separating-storage-compute-deploy-manually',
@@ -60,6 +61,15 @@ const sidebars: SidebarsConfig = {
                     type: 'category',
                     label: 'Deploying on Kubernetes',
                     items: [
+                        {
+                            type: 'category',
+                            label: 'Doris Operator',
+                            items: [
+                                'install/doris-operator/doris-operator-overview',
+                                'install/doris-operator/on-alibaba',
+                                'install/doris-operator/on-aws',
+                            ],
+                        },
                         {
                             type: 'category',
                             label: 'Integrated Storage Compute',
@@ -77,8 +87,8 @@ const sidebars: SidebarsConfig = {
                             items: [
                                 'install/deploy-on-kubernetes/separating-storage-compute/install-fdb',
                                 'install/deploy-on-kubernetes/separating-storage-compute/config-cluster',
-                                'install/deploy-on-kubernetes/separating-storage-compute/config-ms',
                                 'install/deploy-on-kubernetes/separating-storage-compute/config-fe',
+                                'install/deploy-on-kubernetes/separating-storage-compute/config-ms',
                                 'install/deploy-on-kubernetes/separating-storage-compute/config-cg',
                                 'install/deploy-on-kubernetes/separating-storage-compute/install-doris-cluster',
                             ],
@@ -89,44 +99,6 @@ const sidebars: SidebarsConfig = {
                     type: 'category',
                     label: 'Deploying on Cloud',
                     items: ['install/deploy-on-cloud/doris-on-aws'],
-                },
-                {
-                    type: 'category',
-                    label: 'Doris Operator',
-                    items: [
-                        'ecosystem/doris-operator/doris-operator-overview',
-                        'ecosystem/doris-operator/on-alibaba',
-                        'ecosystem/doris-operator/on-aws',
-                    ],
-                },
-                {
-                    type: 'category',
-                    label: 'Compute-Storage Decoupled',
-                    items: [
-                        'compute-storage-decoupled/overview',
-                        'compute-storage-decoupled/before-deployment',
-                        'compute-storage-decoupled/compilation-and-deployment',
-                        'compute-storage-decoupled/managing-storage-vault',
-                        'compute-storage-decoupled/managing-compute-cluster',
-                        {
-                            type: 'category',
-                            label: 'File Cache',
-                            items: [
-                                'compute-storage-decoupled/file-cache/file-cache',
-                                'compute-storage-decoupled/file-cache/file-cache-internals',
-                            ],
-                        },
-                        {
-                            type: 'category',
-                            label: 'Read-Write Separation',
-                            items: [
-                                'compute-storage-decoupled/rw/read-write-separation',
-                                'compute-storage-decoupled/rw/file-cache-rw-compute-group-best-practice',
-                            ],
-                        },
-                        'compute-storage-decoupled/recycler',
-                        'compute-storage-decoupled/upgrade',
-                    ],
                 },
             ],
         },
