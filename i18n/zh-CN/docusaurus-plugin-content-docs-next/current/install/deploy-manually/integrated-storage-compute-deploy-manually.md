@@ -337,24 +337,22 @@
 
 ## 常见问题
 
-**Q: FE 启动失败如何排查？**
+### Q: FE 启动失败如何排查？
 
-A: 1. 检查 Java 环境：`echo $JAVA_HOME` 确保 JDK 已安装
+1. 检查 Java 环境：`echo $JAVA_HOME` 确保 JDK 已安装
 2. 查看日志：`tail -100 log/fe.log` 查找 `Exception` 或 `ERROR`
 3. 常见错误：
    - **端口被占用**：检查 `fe.conf` 中的 `query_port`（默认 9030）是否被占用
    - **元数据目录权限**：确保 `doris-meta` 目录可读写
 
-**Q: BE 无法注册到 FE 集群怎么办？**
+### Q: BE 无法注册到 FE 集群怎么办？
 
-A: 1. 确认 FE 集群正常运行：`show frontends` 检查 Alive 状态
+1. 确认 FE 集群正常运行：`show frontends` 检查 Alive 状态
 2. 检查网络连通性：`telnet <fe_ip> 9030` 测试端口
 3. 检查 BE 配置：`be.conf` 中 `priority_networks` 是否与实际 IP 匹配
 4. 查看 BE 日志：`tail -100 log/be.log` 查找注册失败原因
 
-**Q: 如何检查集群健康状态？**
-
-A:
+### Q: 如何检查集群健康状态？
 
 ```SQL
 -- 检查 FE 状态
@@ -365,9 +363,9 @@ SHOW BACKENDS;
 -- 确认所有 BE 的 Alive 为 true
 ```
 
-**Q: 如果忘记 root 密码，如何重置？**
+### Q: 如果忘记 root 密码，如何重置？
 
-A: 在 FE 节点通过 127.0.0.1 进行连接，可以使用 root 用户免密登录，然后修改密码：
+在 FE 节点通过 127.0.0.1 进行连接，可以使用 root 用户免密登录，然后修改密码：
 
 ```Bash
 mysql -h127.0.0.1 -P9030 -uroot
@@ -378,7 +376,7 @@ SET PASSWORD = PASSWORD('your_new_password');
 
 ---
 
-## 故障排查（Troubleshooting）
+## 故障排查
 
 | 问题现象 | 可能原因 | 解决方案 |
 |---------|---------|---------|

@@ -107,15 +107,15 @@ Doris Operator 适用于以下场景：
 
 ## 常见问题
 
-**Q: Doris Operator 和手动在 Kubernetes 上部署 Doris 有什么区别？**
+### Q: Doris Operator 和手动在 Kubernetes 上部署 Doris 有什么区别？
 
-A: Doris Operator 通过 CRD 自动化管理集群生命周期，包括创建、扩缩容、升级、故障恢复等，无需手动执行 kubectl 命令操作每个 Pod。
+Doris Operator 通过 CRD 自动化管理集群生命周期，包括创建、扩缩容、升级、故障恢复等，无需手动执行 kubectl 命令操作每个 Pod。
 
-**Q: 存算一体和存算分离版本如何选择？**
+### Q: 存算一体和存算分离版本如何选择？
 
-A: 存算一体版本适用于中小规模集群，部署简单；存算分离版本适用于大规模、弹性扩展需求场景。具体可参考 [存算一体部署文档](../../install/deploy-on-kubernetes/integrated-storage-compute/install-doris-operator.md) 和 [存算分离部署文档](../../install/deploy-on-kubernetes/separating-storage-compute/install-doris-cluster.md)。
+存算一体版本适用于中小规模集群，部署简单；存算分离版本适用于大规模、弹性扩展需求场景。具体可参考 [存算一体部署文档](../../install/deploy-on-kubernetes/integrated-storage-compute/install-doris-operator.md) 和 [存算分离部署文档](../../install/deploy-on-kubernetes/separating-storage-compute/install-doris-cluster.md)。
 
-**Q: Doris Operator 支持哪些 Kubernetes 版本？**
+### Q: Doris Operator 支持哪些 Kubernetes 版本？
 
-A: 兼容 Kubernetes 1.19 及以上版本，包括阿里云 ACK、AWS EKS、公有云私有化部署等标准 K8s 平台。
+兼容 Kubernetes 1.19 及以上版本，包括阿里云 ACK、AWS EKS、公有云私有化部署等标准 K8s 平台。
 

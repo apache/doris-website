@@ -225,33 +225,33 @@ select * from demo.mytable;
 
 ## 常见问题
 
-**Q: Docker 部署适合生产环境吗？**
+### Q: Docker 部署适合生产环境吗？
 
-A: 不适合。Docker 部署仅用于本地开发和测试，数据在容器销毁时会丢失。生产环境请使用本地完整部署或多节点部署。
+不适合。Docker 部署仅用于本地开发和测试，数据在容器销毁时会丢失。生产环境请使用本地完整部署或多节点部署。
 
-**Q: 如何在 Mac 上安装 Docker？**
+### Q: 如何在 Mac 上安装 Docker？
 
-A: 下载并安装 [Docker Desktop](https://www.docker.com/products/docker-desktop/)。
+下载并安装 [Docker Desktop](https://www.docker.com/products/docker-desktop/)。
 
-**Q: Mac 安装 Docker Desktop 后提示 "Docker environment not detected"？**
+### Q: Mac 安装 Docker Desktop 后提示 "Docker environment not detected"？
 
-A: 创建符号链接：
+创建符号链接：
 
 ```shell
 sudo ln -s /Applications/Docker.app/Contents/Resources/bin/docker /usr/local/bin/docker
 ```
 
-**Q: Mac 上 Docker 报 "error getting credentials"？**
+### Q: Mac 上 Docker 报 "error getting credentials"？
 
-A: 删除 `~/.docker/config.json` 中的 `credsStore` 字段作为临时方案。注意：这会以明文存储凭据，仅限本地开发环境使用。
+删除 `~/.docker/config.json` 中的 `credsStore` 字段作为临时方案。注意：这会以明文存储凭据，仅限本地开发环境使用。
 
-**Q: BE 节点添加后仍显示 "Dead"？**
+### Q: BE 节点添加后仍显示 "Dead"？
 
-A: 检查 BE 的 `priority_networks` 是否与 FE 所在网段一致，并确认 BE 端口（9050/9060/8040/8060）未被防火墙拦截。
+检查 BE 的 `priority_networks` 是否与 FE 所在网段一致，并确认 BE 端口（9050/9060/8040/8060）未被防火墙拦截。
 
-**Q: 如何确认集群整体健康？**
+### Q: 如何确认集群整体健康？
 
-A: 执行 `SHOW FRONTENDS;` 和 `SHOW BACKENDS;`，确保所有节点的 `Alive` 列为 `true`。
+执行 `SHOW FRONTENDS;` 和 `SHOW BACKENDS;`，确保所有节点的 `Alive` 列为 `true`。
 
 ---
 
