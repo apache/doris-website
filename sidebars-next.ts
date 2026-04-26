@@ -5,19 +5,19 @@ const sidebars: SidebarsConfig = {
         {
             type: 'category',
             label: 'Getting Started',
-            link: {type: 'doc', id: 'gettingStarted/getting-started'},
+            link: {type: 'doc', id: 'getting-started/getting-started'},
             collapsed: true,
             items: [
-                'gettingStarted/what-is-apache-doris',
-                'gettingStarted/quick-start',
-                'gettingStarted/before-you-start-the-poc',
+                'getting-started/what-is-apache-doris',
+                'getting-started/quick-start',
+                'getting-started/before-you-start-the-poc',
                 {
                     type: 'category',
                     label: 'Tech Alternatives',
                     items: [
-                        'gettingStarted/alternatives/alternative-to-clickhouse',
-                        'gettingStarted/alternatives/alternative-to-elasticsearch',
-                        'gettingStarted/alternatives/alternative-to-trino',
+                        'getting-started/alternatives/alternative-to-clickhouse',
+                        'getting-started/alternatives/alternative-to-elasticsearch',
+                        'getting-started/alternatives/alternative-to-trino',
                     ],
                 },
             ],
