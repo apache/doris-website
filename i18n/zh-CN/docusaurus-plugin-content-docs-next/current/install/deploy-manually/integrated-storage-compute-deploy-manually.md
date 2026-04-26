@@ -18,7 +18,19 @@
 <!-- 知识类型: 操作步骤 -->
 <!-- 适用场景: 集群部署 / 环境验收 -->
 
-## 部署前置检查
+部署存算一体集群分为四步：
+
+1. **部署 FE Master 节点**：部署第一个 FE 节点作为 Master 节点；
+  
+2. **部署 FE 集群（可选）**：部署 FE 集群，添加 Follower 或 Observer FE 节点；
+  
+3. **部署 BE 节点**：向 FE 集群中注册 BE 节点；
+
+4. **验证集群正确性**：部署完成后连接并验证集群正确性。
+
+在开始部署操作前，可以[下载](https://doris.apache.org/download)对应的 Doris 版本。
+
+## 前置条件
 
 在开始部署前，请确认以下条件已满足：
 
@@ -31,17 +43,6 @@
 
 在完成前置检查及规划后，如[环境检查](../preparation/env-checking.md)、[操作系统检查](../preparation/os-checking.md)、[集群规划](../preparation/cluster-planning.md)，可以开始部署集存算一体集群。
 
-存算一体集群架构如下，部署存算一体集群分为四步：
-
-1. **部署 FE Master 节点**：部署第一个 FE 节点作为 Master 节点；
-  
-2. **部署 FE 集群（可选）**：部署 FE 集群，添加 Follower 或 Observer FE 节点；
-  
-3. **部署 BE 节点**：向 FE 集群中注册 BE 节点；
-
-4. **验证集群正确性**：部署完成后连接并验证集群正确性。
-
-在开始部署操作前，可以[下载](https://doris.apache.org/download)对应的 Doris 版本。
 
 ## 第 1 步：部署 FE Master 节点
 
@@ -325,6 +326,14 @@
    +------+-------+------+------+
 
 ---
+
+## 注意事项
+
+- FE 元数据目录建议使用独立的 SSD 硬盘，不建议放在 Doris 安装目录下。
+- BE 数据目录可以配置多盘，使用 `storage_root_path` 参数，格式为 `path1,medium:HDD;path2,medium:SSD`。
+- 生产环境建议部署 3 个 FE Follower 节点组成高可用模式。
+- `lower_case_table_names` 参数在集群创建后不能再修改，请在初始化时确认设置正确。
+- `priority_networks` 参数需要根据实际网络配置，确保与节点 IP 所在网段匹配。
 
 ## 常见问题
 
