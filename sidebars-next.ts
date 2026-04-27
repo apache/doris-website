@@ -64,8 +64,8 @@ const sidebars: SidebarsConfig = {
                         {
                             type: 'category',
                             label: 'Doris Operator',
-                            link: {type: 'doc', id: 'install/doris-operator/doris-operator-overview'},
                             items: [
+                                'install/doris-operator/doris-operator-overview',
                                 'install/doris-operator/on-alibaba',
                                 'install/doris-operator/on-aws',
                             ],
@@ -73,6 +73,8 @@ const sidebars: SidebarsConfig = {
                         {
                             type: 'category',
                             label: 'Integrated Storage Compute',
+                            link: {type: 'doc', id: 'install/deploy-on-kubernetes/integrated-storage-compute/intro'},
+                            collapsed: true,
                             items: [
                                 'install/deploy-on-kubernetes/integrated-storage-compute/install-doris-operator',
                                 'install/deploy-on-kubernetes/integrated-storage-compute/install-config-cluster',

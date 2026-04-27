@@ -2,7 +2,8 @@
 {
     "title": "访问 Doris 集群",
     "language": "zh-CN",
-    "description": "Kubernetes 通过 Service 作为 vip 和负载均衡器的能力，Service 有三种对外暴漏模式 ClusterIP 、 NodePort 、 LoadBalancer。"
+    "description": "了解在 Kubernetes 上通过 ClusterIP、NodePort、LoadBalancer 三种模式访问 Doris 集群的方法，包括 MySQL 客户端连接和 StreamLoad 配置。",
+    "keywords": ["访问 Doris 集群", "MySQL 客户端", "ClusterIP", "NodePort", "LoadBalancer", "StreamLoad", "Service", "K8s"]
 }
 ---
 
