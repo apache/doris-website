@@ -780,6 +780,7 @@ const sidebars: SidebarsConfig = {
                         'admin-manual/workload-management/concurrency-control-and-queuing',
                         'admin-manual/workload-management/spill-disk',
                         'admin-manual/workload-management/sql-blocking',
+                        'admin-manual/workload-management/query-progress-monitor',
                         'admin-manual/workload-management/kill-query',
                         'admin-manual/workload-management/job-scheduler',
                     ],
