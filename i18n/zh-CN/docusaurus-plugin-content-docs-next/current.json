@@ -47,6 +47,10 @@
     "message": "部署前准备",
     "description": "The label for category Installation Preparation in sidebar docs"
   },
+  "sidebar.docs.category.Preparation": {
+    "message": "部署前准备",
+    "description": "The label for category Installation Preparation in sidebar docs"
+  },
   "sidebar.docs.category.Cluster Deployment Manually": {
     "message": "手动部署集群",
     "description": "The label for category Cluster Deployment Manually in sidebar docs"

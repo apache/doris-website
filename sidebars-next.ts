@@ -66,18 +66,18 @@ const sidebars: SidebarsConfig = {
                     items: [
                         {
                             type: 'category',
-                            label: 'Doris Operator',
-                            link: {type: 'doc', id: 'install/doris-operator/intro'},
+                            label: 'Preparation',
+                            link: {type: 'doc', id: 'install/deploy-on-kubernetes/doris-operator/intro'},
                             items: [
-                                'install/doris-operator/doris-operator-overview',
-                                'install/doris-operator/on-alibaba',
-                                'install/doris-operator/on-aws',
+                                'install/deploy-on-kubernetes/doris-operator/doris-operator-overview',
+                                'install/deploy-on-kubernetes/doris-operator/on-alibaba',
+                                'install/deploy-on-kubernetes/doris-operator/on-aws',
                             ],
                         },
                         {
                             type: 'category',
                             label: 'Integrated Storage Compute',
-                            link: {type: 'doc', id: 'install/deploy-on-kubernetes/integrated-storage-compute/install-doris-cluster'},
+                            link: {type: 'doc', id: 'install/deploy-on-kubernetes/integrated-storage-compute/intro'},
                             collapsed: true,
                             items: [
                                 'install/deploy-on-kubernetes/integrated-storage-compute/install-doris-operator',
@@ -90,7 +90,7 @@ const sidebars: SidebarsConfig = {
                         {
                             type: 'category',
                             label: 'Separating Storage Compute',
-                            link: {type: 'doc', id: 'install/deploy-on-kubernetes/separating-storage-compute/intro'},
+                            link: {type: 'doc', id: 'install/deploy-on-kubernetes/separating-storage-compute/install-doris-cluster'},
                             collapsed: true,
                             items: [
                                 'install/deploy-on-kubernetes/separating-storage-compute/install-fdb',
@@ -114,16 +114,13 @@ const sidebars: SidebarsConfig = {
             label: 'Connect & Develop',
             collapsed: true,
             items: [
-                {
-                    type: 'category',
-                    label: 'Database Connection',
-                    items: ['db-connect/database-connect', 'db-connect/arrow-flight-sql-connect'],
-                },
+                'db-connect/mysql-proto',
+                'db-connect/arrow-flight-sql-connect',
                 {
                     type: 'category',
                     label: 'BI Tools',
                     items: [
-                        'ecosystem/bi/apache-superset',
+                        'db-connect/bi/apache-superset',
                         'ecosystem/bi/finebi',
                         'ecosystem/bi/metabase',
                         'ecosystem/bi/powerbi',
