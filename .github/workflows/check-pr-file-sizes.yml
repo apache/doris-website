@@ -1,0 +1,53 @@
+name: Check PR File Sizes
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  check-file-sizes:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout PR
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Get changed files in PR
+        id: changed
+        run: |
+          # Get list of files changed in the PR compared to base branch
+          # Use delimiter syntax for multi-line output
+          {
+            echo 'files<<EOF'
+            git diff --name-only ${{ github.event.pull_request.base.sha }} HEAD | head -100
+            echo EOF
+          } >> $GITHUB_OUTPUT
+
+      - name: Check file sizes
+        run: |
+          MAX_SIZE=512000  # 500KB in bytes
+          OVER_LIMIT=()
+
+          while IFS= read -r file; do
+            [ -z "$file" ] && continue
+            if [ -f "$file" ]; then
+              size=$(stat -c%s "$file" 2>/dev/null || stat -f%z "$file" 2>/dev/null)
+              if [ "$size" -gt "$MAX_SIZE" ]; then
+                size_kb=$((size / 1024))
+                OVER_LIMIT+=("❌ $file (${size_kb}KB)")
+              fi
+            fi
+          done <<< "${{ steps.changed.outputs.files }}"
+
+          if [ ${#OVER_LIMIT[@]} -gt 0 ]; then
+            echo "❌ The following files exceed 500KB:"
+            for f in "${OVER_LIMIT[@]}"; do
+              echo "  $f"
+            done
+            echo ""
+            echo "Please reduce file sizes or use Git LFS to store large files."
+            exit 1
+          fi
+
+          echo "✅ All files are under 500KB"

@@ -1,0 +1,167 @@
+name: Docs AI Review
+
+on:
+  issue_comment:
+    types: [created]
+
+# Same trust model as opencode-review.yml:
+# - triggered by a trusted maintainer/collaborator comment
+# - comments directly from this workflow
+# - does not rely on pull_request -> artifact -> workflow_run
+permissions:
+  contents: read
+  issues: write
+  pull-requests: write
+
+jobs:
+  docs-ai-review:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    if: >-
+      github.event.issue.pull_request &&
+      contains(github.event.comment.body, '/review-docs') &&
+      (
+        github.event.comment.author_association == 'MEMBER' ||
+        github.event.comment.author_association == 'OWNER' ||
+        github.event.comment.author_association == 'COLLABORATOR'
+      )
+
+    steps:
+      - name: Validate trigger command
+        run: |
+          body=$(jq -r '.comment.body' "$GITHUB_EVENT_PATH")
+
+          # Require /review-docs as a standalone command on its own line.
+          # This avoids accidental triggers from prose and keeps it distinct from /review.
+          if ! printf '%s\n' "$body" | grep -Eq '^/review-docs([[:space:]]|$)'; then
+            echo "No standalone /review-docs command found; skipping."
+            exit 78
+          fi
+
+      - name: Get PR info
+        id: pr
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+
+          PR_NUMBER=$(jq -r '.issue.number' "$GITHUB_EVENT_PATH")
+
+          PR_JSON=$(gh api repos/${{ github.repository }}/pulls/${PR_NUMBER})
+
+          HEAD_SHA=$(echo "$PR_JSON" | jq -r '.head.sha')
+          BASE_SHA=$(echo "$PR_JSON" | jq -r '.base.sha')
+          HEAD_REF=$(echo "$PR_JSON" | jq -r '.head.ref')
+          BASE_REF=$(echo "$PR_JSON" | jq -r '.base.ref')
+          HEAD_REPO=$(echo "$PR_JSON" | jq -r '.head.repo.full_name')
+          BASE_REPO=$(echo "$PR_JSON" | jq -r '.base.repo.full_name')
+
+          echo "number=$PR_NUMBER" >> "$GITHUB_OUTPUT"
+          echo "head_sha=$HEAD_SHA" >> "$GITHUB_OUTPUT"
+          echo "base_sha=$BASE_SHA" >> "$GITHUB_OUTPUT"
+          echo "head_ref=$HEAD_REF" >> "$GITHUB_OUTPUT"
+          echo "base_ref=$BASE_REF" >> "$GITHUB_OUTPUT"
+          echo "head_repo=$HEAD_REPO" >> "$GITHUB_OUTPUT"
+          echo "base_repo=$BASE_REPO" >> "$GITHUB_OUTPUT"
+
+      - name: Checkout PR head
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ steps.pr.outputs.head_repo }}
+          ref: ${{ steps.pr.outputs.head_sha }}
+          fetch-depth: 0
+
+      - name: Fetch base commit
+        env:
+          BASE_REPO: ${{ steps.pr.outputs.base_repo }}
+          BASE_SHA: ${{ steps.pr.outputs.base_sha }}
+        run: |
+          set -euo pipefail
+          git remote add base "https://github.com/${BASE_REPO}.git" || true
+          git fetch --no-tags --depth=1 base "$BASE_SHA"
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: yarn
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Prepare docs AI review packet
+        env:
+          BASE_SHA: ${{ steps.pr.outputs.base_sha }}
+          HEAD_SHA: ${{ steps.pr.outputs.head_sha }}
+        run: |
+          set -euo pipefail
+
+          mkdir -p website-quality-governance/generated
+
+          changed_files=$(git diff --name-only "$BASE_SHA" "$HEAD_SHA" | paste -sd, -)
+
+          yarn docs:ai-review:prepare \
+            --files "$changed_files" \
+            --base "$BASE_SHA" \
+            --output website-quality-governance/generated/ai-review-packet.json
+
+          jq '{schema_version, changed_files, high_risk, review_agents: [.review_agents[].id], sync_groups: [.sync_groups[].sync_group_id]}' \
+            website-quality-governance/generated/ai-review-packet.json
+
+      - name: Run changed docs governance report
+        env:
+          BASE_SHA: ${{ steps.pr.outputs.base_sha }}
+          HEAD_SHA: ${{ steps.pr.outputs.head_sha }}
+        run: |
+          set -euo pipefail
+
+          changed_files=$(git diff --name-only "$BASE_SHA" "$HEAD_SHA" | paste -sd, -)
+
+          node scripts/docs-governance/report.js \
+            --files "$changed_files" \
+            --format json \
+            --output website-quality-governance/generated/docs-governance-report.json
+
+          jq '{summary, findings: [.findings[] | {severity, rule, path, line, message, related_paths}]}' \
+            website-quality-governance/generated/docs-governance-report.json
+
+      - name: Upsert advisory PR comment
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ steps.pr.outputs.number }}
+          HEAD_SHA: ${{ steps.pr.outputs.head_sha }}
+          BASE_SHA: ${{ steps.pr.outputs.base_sha }}
+        run: |
+          set -euo pipefail
+
+          packet=website-quality-governance/generated/ai-review-packet.json
+          report=website-quality-governance/generated/docs-governance-report.json
+          marker='<!-- docs-ai-review:packet -->'
+
+          node scripts/docs-governance/render-ai-review-comment.js \
+            --packet "$packet" \
+            --report "$report" \
+            --base-sha "$BASE_SHA" \
+            --head-sha "$HEAD_SHA" \
+            --output /tmp/docs-ai-review-comment.md
+
+          existing_comment_id=$(
+            gh api "repos/${{ github.repository }}/issues/${PR_NUMBER}/comments" \
+              --paginate \
+              --jq ".[] | select(.user.type == \"Bot\" and (.body | contains(\"$marker\"))) | .id" \
+              | tail -n 1
+          )
+
+          if [ -n "$existing_comment_id" ]; then
+            gh api \
+              --method PATCH \
+              "repos/${{ github.repository }}/issues/comments/${existing_comment_id}" \
+              -f body="$(cat /tmp/docs-ai-review-comment.md)"
+          else
+            # Same effective behavior as: gh pr comment "$PR_NUMBER" --body-file /tmp/docs-ai-review-comment.md
+            # Use REST API so we can preserve the upsert-by-marker behavior above.
+            gh api \
+              --method POST \
+              "repos/${{ github.repository }}/issues/${PR_NUMBER}/comments" \
+              -f body="$(cat /tmp/docs-ai-review-comment.md)"
+          fi

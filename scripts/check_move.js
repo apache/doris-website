@@ -18,12 +18,23 @@ if (!commitHash) {
 const linkRegex = /\[.*?\]\((.*?)\)/g;
 let hasBrokenLinks = false;
 
+// docs-next is the graceful-rollout sibling tree; broken-link checks are
+// skipped here while the new IA is still in flux. See
+// website-quality-governance/docs-next-implementation-plan.md.
+function isDocsNextPath(filePath) {
+  const normalized = filePath.replace(/\\/g, "/").replace(/^\.\//, "");
+  return (
+    normalized.startsWith("docs-next/") ||
+    normalized.includes("/docusaurus-plugin-content-docs-next/")
+  );
+}
+
 // Get the modified or newly added .md/.mdx files in the commit
 function getModifiedMarkdownFiles(commit) {
   const output = execSync(`git show --name-status ${commit}`, { encoding: "utf-8" });
   const lines = output.split("\n");
   console.log('lines',lines);
-  
+
   const files = [];
 
   for (const line of lines) {
@@ -31,6 +42,10 @@ function getModifiedMarkdownFiles(commit) {
     if (parts.length === 2) {
       const [status, filePath] = parts;
       if ((status === "A" || status === "M") && (filePath.endsWith(".md") || filePath.endsWith(".mdx"))) {
+        if (isDocsNextPath(filePath)) {
+          console.log(`⏭  Skipping docs-next file: ${filePath}`);
+          continue;
+        }
         files.push(filePath);
       }
     }

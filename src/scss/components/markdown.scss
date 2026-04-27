@@ -65,10 +65,7 @@
     }
 
     .theme-code-block,
-    table,
-    .theme-admonition,
-    details,
-    img {
+    pre {
         margin-bottom: calc(var(--custom-leading) * var(--custom-other-rhythm-margin));
         margin-top: calc(var(--custom-leading) * var(--custom-other-rhythm-margin));
     }
@@ -157,10 +154,14 @@
     }
 
     pre {
+        background-color: #e8faf5;
+        border-radius: 8px;
+        border: 1px solid #d1e8df;
         code {
             padding: 0.725rem 1.25rem;
-            background-color: #262a37;
+            background-color: transparent;
             line-height: 1.875;
+            color: #1f1f26;
         }
     }
 
@@ -266,6 +267,52 @@
         border-bottom: 1.2px solid #ccd4e2;
         box-sizing: border-box;
         bottom: 0;
+    }
+
+    .case-studies {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1.5rem;
+        margin: 1.5rem 0;
+
+        section {
+            border: 1px solid #e5e7eb;
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        h3 {
+            margin-top: 0;
+            margin-bottom: 0.75rem;
+            font-size: 1.1rem;
+        }
+
+        img {
+            height: 40px;
+            width: auto;
+            margin-bottom: 1rem;
+        }
+
+        blockquote {
+            margin: 1rem 0;
+            padding: 0.75rem 1rem;
+            background: rgba(0, 0, 0, 0.02);
+            border-left: 3px solid var(--ifm-color-primary);
+            border-radius: 0 0.25rem 0.25rem 0;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        ul {
+            margin-top: 0.75rem;
+            margin-bottom: 0;
+            font-size: 0.875rem;
+        }
+
+        li {
+            margin-bottom: 0.25rem !important;
+        }
     }
 }
 

@@ -1,0 +1,15 @@
+---
+{
+    "title": "BIGINT",
+    "language": "en",
+    "description": "BIGINT 8-byte signed integer, range [-9223372036854775808, 9223372036854775807]"
+}
+---
+
+## BIGINT
+### Description
+BIGINT
+8-byte signed integer, range [-9223372036854775808, 9223372036854775807]
+
+### keywords
+BIGINT

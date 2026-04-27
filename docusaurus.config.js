@@ -15,7 +15,15 @@ const ONLY_VERSIONS = process.env.DOCS_VERSIONS
     ? process.env.DOCS_VERSIONS.split(',').map(v => v.trim()).filter(Boolean)
     : null;
 
-const lightCodeTheme = themes.dracula;
+const LINK_BEHAVIOR_VALUES = new Set(['ignore', 'log', 'warn', 'throw']);
+function getBrokenLinkBehavior(envName, fallback) {
+    const value = process.env[envName];
+    return LINK_BEHAVIOR_VALUES.has(value) ? value : fallback;
+}
+
+const DEFAULT_BROKEN_LINK_BEHAVIOR = 'warn';
+
+const lightCodeTheme = themes.oneLight;
 
 const logoImg = '/images/logo-doris.svg';
 
@@ -54,8 +62,8 @@ const config = {
     tagline: 'Apache Doris',
     url: 'https://doris.apache.org',
     baseUrl: '/',
-    onBrokenLinks: 'ignore',
-    onBrokenMarkdownLinks: 'ignore',
+    onBrokenLinks: getBrokenLinkBehavior('DORIS_DOCUSAURUS_BROKEN_LINKS', DEFAULT_BROKEN_LINK_BEHAVIOR),
+    onBrokenMarkdownLinks: getBrokenLinkBehavior('DORIS_DOCUSAURUS_BROKEN_MARKDOWN_LINKS', DEFAULT_BROKEN_LINK_BEHAVIOR),
     favicon: 'images/favicon.ico',
     organizationName: 'Apache',
     trailingSlash: false,
@@ -140,6 +148,38 @@ const config = {
                 path: 'releasenotes',
                 routeBasePath: '/releases',
                 sidebarPath: require.resolve('./sidebarsReleases.json'),
+            }),
+        ],
+        process.env.SKIP_DOCS_NEXT ? null : [
+            'content-docs',
+            /** @type {import('@docusaurus/plugin-content-docs').Options} */
+            ({
+                id: 'next',
+                path: 'docs-next',
+                routeBasePath: 'docs-next',
+                sidebarPath: require.resolve('./sidebars-next.ts'),
+                includeCurrentVersion: true,
+                onlyIncludeVersions: ['current'],
+                lastVersion: 'current',
+                versions: {
+                    current: {
+                        label: 'Dev',
+                        path: 'dev',
+                        banner: 'none',
+                        badge: false,
+                    },
+                },
+                showLastUpdateAuthor: false,
+                showLastUpdateTime: false,
+                remarkPlugins: [markdownBoldPlugin, require('remark-math')],
+                rehypePlugins: [
+                    [
+                        require('rehype-katex'),
+                        {
+                            strict: process.env.CI === 'true' || process.env.GITHUB_ACTIONS === 'true' ? false : 'warn',
+                        }
+                    ]
+                ],
             }),
         ],
         process.env.NODE_ENV === 'development' ? null : customDocusaurusPlugin,
@@ -257,7 +297,12 @@ const config = {
                         const items = await defaultCreateSitemapItems(rest);
                         const filteredItems = items.filter(item => {
                             const pathname = new URL(item.url).pathname.replace(/\/+$/, '');
-                            return !['/search', '/ja/search', '/zh-CN/search'].includes(pathname);
+                            if (['/search', '/ja/search', '/zh-CN/search'].includes(pathname)) return false;
+                            // 灰度期 docs-next 不进 sitemap
+                            if (pathname.startsWith('/docs-next') || pathname.startsWith('/zh-CN/docs-next')) {
+                                return false;
+                            }
+                            return true;
                         });
                         for (let item of filteredItems) {
                             if (item.url.includes('docs')) {
@@ -283,6 +328,9 @@ const config = {
                 highlightSearchTermsOnTargetPage: true,
                 // indexPages: true,
                 indexDocs: true,
+                // 灰度期保持只索引旧版 docs, 不索引 docs-next
+                // 阶段 4 切换默认时改为:
+                // ['docs-next', 'zh-CN/docs-next', 'docs', 'zh-CN/docs', 'ja/docs']
                 docsRouteBasePath: ['docs', 'ja/docs', 'zh-CN/docs'],
                 indexBlog: false,
                 explicitSearchResultPath: true,
