@@ -86,13 +86,14 @@ const sidebars: SidebarsConfig = {
                         {
                             type: 'category',
                             label: 'Separating Storage Compute',
+                            link: {type: 'doc', id: 'install/deploy-on-kubernetes/separating-storage-compute/install-doris-cluster'},
+                            collapsed: true,
                             items: [
                                 'install/deploy-on-kubernetes/separating-storage-compute/install-fdb',
-                                'install/deploy-on-kubernetes/separating-storage-compute/config-cluster',
-                                'install/deploy-on-kubernetes/separating-storage-compute/config-fe',
                                 'install/deploy-on-kubernetes/separating-storage-compute/config-ms',
+                                'install/deploy-on-kubernetes/separating-storage-compute/config-fe',
                                 'install/deploy-on-kubernetes/separating-storage-compute/config-cg',
-                                'install/deploy-on-kubernetes/separating-storage-compute/install-doris-cluster',
+                                'install/deploy-on-kubernetes/separating-storage-compute/config-cluster',
                             ],
                         },
                     ],

@@ -1,6 +1,6 @@
 ---
 {
-    "title": "部署 Doris Operator",
+    "title": "01 部署 Doris Operator",
     "language": "zh-CN",
     "description": "在 Kubernetes 上安装 Apache Doris Operator 的完整指南，涵盖 CRD 安装、Operator 部署及状态验证流程。",
     "keywords": ["Doris Operator", "Kubernetes", "K8s", "CRD", "Operator 部署", "存算一体"]

@@ -1,6 +1,6 @@
 ---
 {
-    "title": "部署 Doris 集群",
+    "title": "03 部署 Doris 集群",
     "language": "zh-CN",
     "description": "在 Kubernetes 上使用 Doris Operator 部署 Apache Doris 集群的完整指南，涵盖下载部署模板、配置集群、验证集群状态等步骤。",
     "keywords": ["Doris 集群部署", "Kubernetes", "K8s", "DorisCluster", "存算一体", "快速部署"]

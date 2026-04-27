@@ -1,6 +1,6 @@
 ---
 {
-    "title": "配置 Doris 集群",
+    "title": "02 配置 Doris 集群",
     "language": "zh-CN",
     "description": "DorisCluster 资源配置指南：镜像设置、副本数规划、计算资源分配、持久化存储配置、ConfigMap 定制、Service 访问模式及用户名密码管理。",
     "keywords": ["DorisCluster", "资源配置", "副本数", "ConfigMap", "持久化存储", "NodePort", "LoadBalancer", "ClusterIP", "访问配置", "存算一体"]

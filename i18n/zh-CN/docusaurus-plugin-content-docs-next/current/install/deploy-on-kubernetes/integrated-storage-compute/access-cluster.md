@@ -1,6 +1,6 @@
 ---
 {
-    "title": "访问 Doris 集群",
+    "title": "04 访问 Doris 集群",
     "language": "zh-CN",
     "description": "了解在 Kubernetes 上通过 ClusterIP、NodePort、LoadBalancer 三种模式访问 Doris 集群的方法，包括 MySQL 客户端连接和 StreamLoad 配置。",
     "keywords": ["访问 Doris 集群", "MySQL 客户端", "ClusterIP", "NodePort", "LoadBalancer", "StreamLoad", "Service", "K8s"]
