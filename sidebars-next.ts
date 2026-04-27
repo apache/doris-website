@@ -115,7 +115,7 @@ const sidebars: SidebarsConfig = {
             collapsed: true,
             items: [
                 'db-connect/mysql-proto',
-                'db-connect/arrow-flight-sql-connect',
+                'db-connect/arrow-flight-sql',
                 {
                     type: 'category',
                     label: 'BI Tools',
