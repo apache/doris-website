@@ -1,18 +1,19 @@
 export const RECENT_BLOGS_POSTS = [
     {
-        label: 'When to Scale PostgreSQL Analytics? Advancing Analytics without unnecessary tool sprawl',
-        link: 'https://www.velodb.io/blog/when-to-scale-postgresql-analytics',
+        label: 'How an Autonomous Driving Company Unified Multimodal Search on a Single Analytics Engine',
+        link: 'https://www.velodb.io/blog/autonomous-driving-company-unified-multimodal-search-on-apache-doris',
+    },
+    {
+        label: 'Querying Apache Doris Data as a Graph with PuppyGraph',
+        link: 'https://www.velodb.io/blog/querying-apache-doris-data-as-a-graph-with-puppygraph',
+    },
+    {
+        label: 'Set Up a Lakehouse with PostgreSQL, Apache Iceberg, and Apache Doris in 15 Minutes',
+        link: 'https://www.velodb.io/blog/set-up-a-lakehouse-with-postgresql-apache-iceberg-and-apache-doris',
     },
     {
         label: 'From ClickHouse + Elasticsearch to Apache Doris: How Kwai Unified Trillion-Scale Ad Analytics',
         link: 'https://www.velodb.io/blog/from-clickhouse-elasticsearch-to-apache-doris-how-kwai-unified-trillion-scale-ad-analytics',
     },
-    {
-        label: 'Why a Mexican Mining Giant Migrated from Azure Synapse to Apache Doris',
-        link: 'https://www.velodb.io/blog/mexican-mining-giant-migrated-from-azure-synapse-to-apache-doris',
-    },
-    {
-        label: 'How Xanh SM, Leading EV ride hailer in Vietnam, Built Real-Time Recommendations with Apache Doris',
-        link: 'https://www.velodb.io/blog/how-xanhsm-built-real-time-recommendations-with-apache-doris',
-    },
+    
 ];
