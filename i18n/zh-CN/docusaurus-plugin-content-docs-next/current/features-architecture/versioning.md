@@ -117,9 +117,7 @@ TODO
 
 ### Q: 如何确认当前 Doris 版本？
 
-```sql
-SELECT VERSION();
-```
+使用 `SELECT VERSION();` 查询当前版本。
 
 ### Q: Latest 和 Stable 版本分别在哪里下载？
 

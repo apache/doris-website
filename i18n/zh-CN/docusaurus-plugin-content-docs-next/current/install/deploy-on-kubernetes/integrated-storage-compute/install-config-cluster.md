@@ -1,8 +1,9 @@
 ---
 {
-    "title": "配置 Doris 集群",
+    "title": "02 配置 Doris 集群",
     "language": "zh-CN",
-    "description": "默认部署的 DorisCluster 资源中，FE 和 BE 的镜像可能并非最新版本，且默认副本数均为 3。默认情况下，FE 使用的计算资源配置为 6c 12Gi，BE 使用的资源是 8c 16Gi。以下介绍如何根据需求调整这些默认配置。"
+    "description": "DorisCluster 资源配置指南：镜像设置、副本数规划、计算资源分配、持久化存储配置、ConfigMap 定制、Service 访问模式及用户名密码管理。",
+    "keywords": ["DorisCluster", "资源配置", "副本数", "ConfigMap", "持久化存储", "NodePort", "LoadBalancer", "ClusterIP", "访问配置", "存算一体"]
 }
 ---
 
