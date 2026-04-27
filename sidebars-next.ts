@@ -5,7 +5,7 @@ const sidebars: SidebarsConfig = {
         {
             type: 'category',
             label: 'Getting Started',
-            link: {type: 'doc', id: 'getting-started/getting-started'},
+            link: {type: 'doc', id: 'getting-started/intro'},
             collapsed: true,
             items: [
                 'getting-started/what-is-apache-doris',
@@ -25,7 +25,7 @@ const sidebars: SidebarsConfig = {
         {
             type: 'category',
             label: 'Features & Architecture',
-            link: {type: 'doc', id: 'features-architecture/getting-started'},
+            link: {type: 'doc', id: 'features-architecture/intro'},
             collapsed: true,
             items: [
                 'features-architecture/system-architecture',
@@ -37,6 +37,7 @@ const sidebars: SidebarsConfig = {
         {
             type: 'category',
             label: 'Installation & Deployment',
+            link: {type: 'doc', id: 'install/intro'},
             collapsed: true,
             items: [
                 'install/choosing-deployment-mode',
@@ -52,6 +53,7 @@ const sidebars: SidebarsConfig = {
                 {
                     type: 'category',
                     label: 'Deploying Manually',
+                    link: {type: 'doc', id: 'install/deploy-manually/intro'},
                     items: [
                         'install/deploy-manually/integrated-storage-compute-deploy-manually',
                         'install/deploy-manually/separating-storage-compute-deploy-manually',
@@ -60,10 +62,12 @@ const sidebars: SidebarsConfig = {
                 {
                     type: 'category',
                     label: 'Deploying on Kubernetes',
+                    link: {type: 'doc', id: 'install/deploy-on-kubernetes/intro'},
                     items: [
                         {
                             type: 'category',
                             label: 'Doris Operator',
+                            link: {type: 'doc', id: 'install/doris-operator/intro'},
                             items: [
                                 'install/doris-operator/doris-operator-overview',
                                 'install/doris-operator/on-alibaba',
@@ -73,7 +77,7 @@ const sidebars: SidebarsConfig = {
                         {
                             type: 'category',
                             label: 'Integrated Storage Compute',
-                            link: {type: 'doc', id: 'install/deploy-on-kubernetes/integrated-storage-compute/intro'},
+                            link: {type: 'doc', id: 'install/deploy-on-kubernetes/integrated-storage-compute/install-doris-cluster'},
                             collapsed: true,
                             items: [
                                 'install/deploy-on-kubernetes/integrated-storage-compute/install-doris-operator',
@@ -86,7 +90,7 @@ const sidebars: SidebarsConfig = {
                         {
                             type: 'category',
                             label: 'Separating Storage Compute',
-                            link: {type: 'doc', id: 'install/deploy-on-kubernetes/separating-storage-compute/install-doris-cluster'},
+                            link: {type: 'doc', id: 'install/deploy-on-kubernetes/separating-storage-compute/intro'},
                             collapsed: true,
                             items: [
                                 'install/deploy-on-kubernetes/separating-storage-compute/install-fdb',

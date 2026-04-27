@@ -1,0 +1,59 @@
+---
+{
+    "title": "Installation & Deployment",
+    "language": "en",
+    "description": "Choose the right approach to install and deploy Apache Doris in your environment."
+}
+---
+
+import GettingStartedCard from '@site/src/components/getting-started-card/getting-started-card';
+
+# Installation & Deployment
+
+This section guides you through installing and deploying Apache Doris. Start by choosing a deployment mode that fits your needs, then follow the corresponding guide.
+
+## Before You Deploy
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="Choosing a Deployment Mode"
+    description="Compare integrated vs. decoupled storage-compute, and manual vs. Kubernetes vs. cloud deployment"
+    link="choosing-deployment-mode"
+/>
+
+<GettingStartedCard
+    title="Installation Preparation"
+    description="Check environment, plan your cluster, and verify operating system requirements"
+    link="preparation/env-checking"
+/>
+</div>
+
+## Deployment Options
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="Deploying Manually"
+    description="Install Apache Doris directly on physical or virtual machines"
+    link="deploy-manually/intro"
+/>
+
+<GettingStartedCard
+    title="Deploying on Kubernetes"
+    description="Deploy Apache Doris on Kubernetes using Doris Operator"
+    link="deploy-on-kubernetes/intro"
+/>
+
+<GettingStartedCard
+    title="Deploying on Cloud"
+    description="Deploy Apache Doris on public cloud platforms such as AWS"
+    link="deploy-on-cloud/doris-on-aws"
+/>
+</div>
+
+## What's Next
+
+After your cluster is up and running, you can explore:
+
+- **[Connect & Develop](../db-connect/database-connect)** - Connect to Doris and start developing
+- **[Table Design](../table-design/overview)** - Design tables that match your workload
+- **[Administration](../admin-manual/cluster-management/upgrade)** - Operate and maintain your cluster

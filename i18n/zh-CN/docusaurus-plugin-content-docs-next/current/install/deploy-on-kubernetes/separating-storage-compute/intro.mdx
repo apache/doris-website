@@ -1,0 +1,45 @@
+---
+{
+    "title": "存算分离部署",
+    "language": "zh-CN",
+    "description": "在 Kubernetes 上部署存算分离架构的 Apache Doris 集群。"
+}
+---
+
+import GettingStartedCard from '@site/src/components/getting-started-card/getting-started-card';
+
+# 在 Kubernetes 上部署存算分离架构
+
+在 Kubernetes 上部署存算分离架构的 Doris 集群需要按顺序完成以下步骤。
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="1. 安装 FoundationDB"
+    description="安装 FoundationDB 作为元数据存储后端"
+    link="install-fdb"
+/>
+
+<GettingStartedCard
+    title="2. 配置 Meta Service"
+    description="配置 Meta Service 组件"
+    link="config-ms"
+/>
+
+<GettingStartedCard
+    title="3. 配置 Frontend"
+    description="配置 Doris Frontend (FE) 组件"
+    link="config-fe"
+/>
+
+<GettingStartedCard
+    title="4. 配置 Compute Group"
+    description="配置 Doris 计算组（Compute Group）"
+    link="config-cg"
+/>
+
+<GettingStartedCard
+    title="5. 配置集群"
+    description="应用集群级配置, 完成整体部署"
+    link="config-cluster"
+/>
+</div>
