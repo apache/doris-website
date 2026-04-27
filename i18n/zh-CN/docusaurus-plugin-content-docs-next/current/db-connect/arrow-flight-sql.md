@@ -22,6 +22,10 @@
 <!-- 知识类型: 能力定义 + 操作步骤 + 故障排查 -->
 <!-- 适用场景: 高速读取 Doris 数据 / Python/Java 接入 / BI 工具集成 / 故障排查 -->
 
+:::caution 实验特性
+本文所述的 Arrow Flight SQL 高速数据传输能力目前为**实验特性**，使用过程中如遇到问题，欢迎通过邮件组或 [GitHub Issue](https://github.com/apache/doris/issues) 反馈。
+:::
+
 自 Doris 2.1 版本起，基于 Arrow Flight SQL 协议实现了高速数据传输链路，支持多种语言使用 SQL 从 Doris 高速读取大批量数据。相比 MySQL Client 或 JDBC/ODBC 驱动方案，部分场景性能提升数十倍至百倍。Arrow Flight SQL 还提供通用 JDBC 驱动，可与同样遵循该协议的数据库无缝交互。
 
 ## 适用场景
@@ -320,19 +324,22 @@ cursor.close()
 <!-- 知识类型: 操作步骤 + 架构选型决策 -->
 <!-- 适用场景: Java 应用接入 Doris -->
 
-Java 端共有三种连接方式可选，特点对比如下：
+Java 端共有三种连接方式可选，各方式的特点与选型建议如下：
 
-| 连接方式                            | URL 形式                      | 返回格式               | 适用场景                                       |
-| ----------------------------------- | ----------------------------- | ---------------------- | ---------------------------------------------- |
-| **JDBC（`jdbc:arrow-flight-sql`）** | `jdbc:arrow-flight-sql://...` | JDBC ResultSet（行存） | 兼容 BI 工具及现有 JDBC 代码，下游使用行存格式 |
-| **Flight ADBC Driver**              | `grpc://...`                  | Arrow（列存）          | 下游使用 Arrow/列存格式，追求最优性能          |
-| **Flight JDBC Driver（ADBC 包装）** | `jdbc:arrow-flight-sql://...` | Arrow（列存）          | 同 ADBC，但希望沿用 JDBC URL 形式              |
+| 连接方式                            | URL 形式                      | 返回格式               | 推荐场景                                                            |
+| ----------------------------------- | ----------------------------- | ---------------------- | ------------------------------------------------------------------- |
+| **JDBC（`jdbc:arrow-flight-sql`）** | `jdbc:arrow-flight-sql://...` | JDBC ResultSet（行存） | 下游分析使用**行存格式**；需兼容 BI 工具或现有 JDBC 代码            |
+| **Flight ADBC Driver**              | `grpc://...`                  | Arrow（列存）          | 下游分析使用 **Arrow/列存格式**，追求最优性能                       |
+| **Flight JDBC Driver（ADBC 包装）** | `jdbc:arrow-flight-sql://...` | Arrow（列存）          | 同 Flight ADBC Driver，但项目中需沿用 `jdbc:arrow-flight-sql` URL 形式 |
 
-**快速选型：**
+可参考 [JDBC/Java Arrow Flight SQL Sample](https://github.com/apache/doris/blob/master/samples/arrow-flight-sql/java/README.md) 中的 Demo 测试不同连接方式的性能，预期执行结果见 [Add Arrow Flight Sql demo for Java](https://github.com/apache/doris/pull/45306)。与传统 `jdbc:mysql` 相比，Java Arrow Flight SQL 各连接方式的性能测试见 [GitHub Issue 25514（Section 6.2）](https://github.com/apache/doris/issues/25514)。
 
-- 下游分析使用**行存格式**或需兼容现有 JDBC 代码 → 选 **JDBC（`jdbc:arrow-flight-sql`）**
-- 下游分析使用 **Arrow/列存格式**，追求最优性能 → 选 **Flight ADBC Driver**
-- 与上一项相同，但项目中需沿用 JDBC URL 形式 → 选 **Flight JDBC Driver（ADBC 包装）**
+**补充建议：**
+
+- 无论解析 JDBC `ResultSet` 还是 Arrow 数据，所耗时间都大于读取数据本身。如果 Arrow Flight SQL 性能与 `jdbc:mysql://` 相比提升有限，可优先排查解析数据耗时是否过长。
+- 对所有连接方式而言，JDK 17 都比 JDK 1.8 读取数据更快。
+- 当数据量非常大时，Arrow Flight SQL 比 `jdbc:mysql://` 内存占用更少，受内存不足困扰时可优先尝试 Arrow Flight SQL。
+- 上述三种方式之外，还可使用原生 `FlightClient` 直接连接 Arrow Flight Server，更加灵活地并行读取多个 Endpoint。Flight ADBC Driver 即基于 `FlightClient` 创建链接，相较直接使用 `FlightClient` 更为简单。
 
 :::caution
 使用 Java 9 及以上版本时，必须在 Java 命令中添加 `--add-opens=java.base/java.nio=ALL-UNNAMED` 来暴露部分 JDK 内部结构，否则会出现以下报错之一：
@@ -356,7 +363,7 @@ $ env _JAVA_OPTIONS="--add-opens=java.base/java.nio=ALL-UNNAMED" java -jar ...
 ![arrow-flight-sql-IntelliJ](/images/db-connect/arrow-flight-sql/arrow-flight-sql-IntelliJ.png)
 :::
 
-### 方式一：JDBC（`jdbc:arrow-flight-sql`）
+### 方式一：`jdbc:arrow-flight-sql`
 
 Arrow Flight SQL 协议的开源 JDBC 驱动兼容标准 JDBC API，可用于大多数 BI 工具通过 JDBC 访问 Doris，并支持高速传输 Apache Arrow 数据。使用方式与 MySQL JDBC 驱动类似，只需将连接 URL 中的 `jdbc:mysql` 协议替换为 `jdbc:arrow-flight-sql` 协议，查询返回的结果依然是 JDBC 的 `ResultSet` 数据结构。
 
@@ -401,7 +408,7 @@ stmt.close();
 conn.close();
 ```
 
-### 方式二与方式三：Flight ADBC Driver / Flight JDBC Driver
+### 方式二：Flight ADBC Driver / Flight JDBC Driver
 
 除了使用 JDBC 之外，Java 也可以创建 Driver 直接读取 Doris 并返回 Arrow 格式数据。下面分别给出使用 ADBC Driver 和 JDBC Driver（ADBC 包装）连接 Doris Arrow Flight Server 的示例。
 
@@ -515,25 +522,6 @@ try (
     e.printStackTrace();
 }
 ```
-
-### Java 连接方式选型建议
-
-可参考 [JDBC/Java Arrow Flight SQL Sample](https://github.com/apache/doris/blob/master/samples/arrow-flight-sql/java/README.md) 中的 Demo 测试不同连接方式的性能，预期执行结果见 [Add Arrow Flight Sql demo for Java](https://github.com/apache/doris/pull/45306)。
-
-与传统 `jdbc:mysql` 相比，Java Arrow Flight SQL 各连接方式的性能测试见 [GitHub Issue 25514（Section 6.2）](https://github.com/apache/doris/issues/25514)。基于测试结论，给出以下建议：
-
-1. 三种 Java Arrow Flight SQL 连接方式的取舍：
-
-    - 若下游分析使用行存格式，推荐 `jdbc:arrow-flight-sql`，返回 JDBC `ResultSet`。
-    - 若下游分析使用 Arrow 或其他列存格式，推荐 Flight ADBC Driver 或 Flight JDBC Driver，直接返回 Arrow 数据，避免行列转换并可利用 Arrow 加速解析。
-
-2. 无论解析 JDBC `ResultSet` 还是 Arrow 数据，所耗时间都大于读取数据本身。如果 Arrow Flight SQL 性能与 `jdbc:mysql://` 相比提升有限，可优先排查解析数据耗时是否过长。
-
-3. 对所有连接方式而言，JDK 17 都比 JDK 1.8 读取数据更快。
-
-4. 当数据量非常大时，Arrow Flight SQL 比 `jdbc:mysql://` 内存占用更少。受内存不足困扰时可优先尝试 Arrow Flight SQL。
-
-5. 上述三种方式之外，还可使用原生 `FlightClient` 直接连接 Arrow Flight Server，更加灵活地并行读取多个 Endpoint。Flight ADBC Driver 即基于 `FlightClient` 创建链接，相较直接使用 `FlightClient` 更为简单。
 
 ## 与第三方组件集成
 

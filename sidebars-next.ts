@@ -119,15 +119,16 @@ const sidebars: SidebarsConfig = {
                 {
                     type: 'category',
                     label: 'BI Tools',
+                    link: {type: 'doc', id: 'db-connect/bi/intro'},
                     items: [
                         'db-connect/bi/apache-superset',
-                        'ecosystem/bi/finebi',
-                        'ecosystem/bi/metabase',
-                        'ecosystem/bi/powerbi',
-                        'ecosystem/bi/tableau',
-                        'ecosystem/bi/quicksight',
-                        'ecosystem/bi/quickbi',
-                        'ecosystem/bi/smartbi',
+                        'db-connect/bi/finebi',
+                        'db-connect/bi/metabase',
+                        'db-connect/bi/powerbi',
+                        'db-connect/bi/tableau',
+                        'db-connect/bi/quicksight',
+                        'db-connect/bi/quickbi',
+                        'db-connect/bi/smartbi',
                     ],
                 },
                 {
