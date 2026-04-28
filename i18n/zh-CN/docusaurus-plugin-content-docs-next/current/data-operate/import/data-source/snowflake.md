@@ -10,7 +10,7 @@
 
 ## 注意事项
 
-在迁移之前，需要根据 Snowflake 的表结构选择 Doris 的[数据模型](../../../table-design/data-model/overview.md)，以及[分区](../../../table-design/data-partitioning/dynamic-partitioning.md)和[分桶](../../../table-design/data-partitioning/data-bucketing.md)的策略，更多创建表策略可参考[导入最佳实践](../load-best-practices.md)。
+在迁移之前，需要根据 Snowflake 的表结构选择 Doris 的[数据模型](../../../table-design/data-model/intro.mdx)，以及[分区](../../../table-design/data-partitioning/dynamic-partitioning.md)和[分桶](../../../table-design/data-partitioning/data-bucketing.md)的策略，更多创建表策略可参考[导入最佳实践](../load-best-practices.md)。
 
 ## 数据类型映射
 

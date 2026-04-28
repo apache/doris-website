@@ -213,11 +213,11 @@ CREATE TABLE <table_name> LIKE <source_table>
 
 **<key_type>**
 
-> 表的数据模型。可选值为 DUPLICATE（明细模型）、UNIQUE（主键模型）、AGGREGATE（聚合模型）。有关数据模型的详细信息，请参阅[数据模型](../../../../table-design/data-model/overview.md)章节。
+> 表的数据模型。可选值为 DUPLICATE（明细模型）、UNIQUE（主键模型）、AGGREGATE（聚合模型）。有关数据模型的详细信息，请参阅[数据模型](../../../../table-design/data-model/intro.mdx)章节。
 
 **<key_cols>**
 
-> 表的 key 列。Doris 中 Key 列必须是表的前 K 个列。单个 tablet 中的数据会按照这些列保持有序。关于 Key 的限制，以及如何选择 Key 列，请参阅[数据模型](../../../../table-design/data-model/overview.md)章节中的各个小节。
+> 表的 key 列。Doris 中 Key 列必须是表的前 K 个列。单个 tablet 中的数据会按照这些列保持有序。关于 Key 的限制，以及如何选择 Key 列，请参阅[数据模型](../../../../table-design/data-model/intro.mdx)章节中的各个小节。
 
 **<cluster_cols>**
 

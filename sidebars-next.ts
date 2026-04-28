@@ -158,13 +158,13 @@ const sidebars: SidebarsConfig = {
             type: 'category',
             label: 'Table Design',
             collapsed: true,
+            link: {type: 'doc', id: 'table-design/overview'},
             items: [
-                'table-design/overview',
                 {
                     type: 'category',
                     label: 'Table Models',
+                    link: {type: 'doc', id: 'table-design/data-model/intro'},
                     items: [
-                        'table-design/data-model/overview',
                         'table-design/data-model/duplicate',
                         'table-design/data-model/unique',
                         'table-design/data-model/aggregate',
@@ -175,14 +175,13 @@ const sidebars: SidebarsConfig = {
                 {
                     type: 'category',
                     label: 'Partitioning & Bucketing',
+                    link: {type: 'doc', id: 'table-design/data-partitioning/basic-concepts'},
                     items: [
-                        'table-design/data-partitioning/data-distribution',
                         'table-design/data-partitioning/manual-partitioning',
                         'table-design/data-partitioning/dynamic-partitioning',
                         'table-design/data-partitioning/auto-partitioning',
                         'table-design/data-partitioning/data-bucketing',
                         'table-design/data-partitioning/common-issues',
-                        'table-design/data-partitioning/basic-concepts',
                     ],
                 },
                 {
