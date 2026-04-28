@@ -121,11 +121,11 @@ In the traditional path, Doris runs full optimization (parsing, semantic analysi
 Doris implements vector indexes as external (pluggable) indexes, which simplifies management and supports asynchronous builds, but introduces performance challenges such as avoiding redundant computation and IO. ANN indexes can return distances in addition to row IDs. Doris leverages this by short-circuiting distance expressions within the Scan operator via “virtual columns,” and the Ann Index Only Scan fully eliminates distance-related read IO.
 In the naive flow, Scan pushes predicates to the index, the index returns row IDs, and Scan then reads data pages and computes expressions before returning N rows upstream.
 
-![alt text](/images/vector-search/image-3.png)
+![alt text](/images/vector-search/image-3.jpg)
 
 With Index Only Scan applied, the flow becomes:
 
-![alt text](/images/vector-search/image-4.png)
+![alt text](/images/vector-search/image-4.jpg)
 
 For example, `SELECT l2_distance_approximate(embedding, [...]) AS dist FROM tbl ORDER BY dist LIMIT 100;` executes without touching data files.
 
