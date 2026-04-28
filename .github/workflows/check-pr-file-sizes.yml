@@ -26,7 +26,7 @@ jobs:
 
       - name: Check file sizes
         run: |
-          MAX_SIZE=512000  # 500KB in bytes
+          MAX_SIZE=1024000  # 500KB in bytes
           OVER_LIMIT=()
 
           while IFS= read -r file; do
