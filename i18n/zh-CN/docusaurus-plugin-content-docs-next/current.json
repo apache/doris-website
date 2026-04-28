@@ -767,13 +767,13 @@
     "message": "安装与部署",
     "description": "The label for category Installation & Deployment in sidebar docs"
   },
-  "sidebar.docs.category.Connect & Develop": {
-    "message": "连接与开发",
-    "description": "The label for category Connect & Develop in sidebar docs"
+  "sidebar.docs.category.Connection & Integration": {
+    "message": "连接与集成",
+    "description": "The label for category Connection & Integration in sidebar docs"
   },
-  "sidebar.docs.category.BI Tools": {
-    "message": "BI 工具",
-    "description": "The label for category BI Tools in sidebar docs"
+  "sidebar.docs.category.Data Integration": {
+    "message": "数据集成",
+    "description": "The label for category Data Integration in sidebar docs"
   },
   "sidebar.docs.category.Table Design": {
     "message": "表设计",

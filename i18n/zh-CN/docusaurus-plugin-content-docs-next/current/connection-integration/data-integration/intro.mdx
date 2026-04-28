@@ -1,0 +1,247 @@
+---
+{
+    "title": "数据集成",
+    "language": "zh-CN",
+    "description": "将 Apache Doris 与 BI、数据同步、流处理、日志可观测性、开发管理和数据建模工具集成。"
+}
+---
+
+import GettingStartedCard from '@site/src/components/getting-started-card/getting-started-card';
+
+# 数据集成
+
+Apache Doris 支持与多类数据生态工具集成。您可以按照使用场景选择合适的工具，将 Doris 用于数据可视化、数据迁移同步、实时写入、日志与可观测性分析、数据库开发管理，以及数据建模转换。
+
+## BI 与可视化分析
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="Apache Superset"
+    icon="/images/next/connection-integration/data-integration/logos/apache-superset.png"
+    description="在 Superset 中配置 Doris 数据源，进行自助分析、图表制作和仪表盘搭建"
+    link="./apache-superset"
+/>
+
+<GettingStartedCard
+    title="Metabase"
+    icon="/images/next/connection-integration/data-integration/logos/metabase.svg"
+    description="通过 Metabase Doris Driver 查询 Doris，并构建交互式分析看板"
+    link="./metabase"
+/>
+
+<GettingStartedCard
+    title="FineBI"
+    icon="/images/next/connection-integration/data-integration/logos/finebi.svg"
+    description="使用 FineBI 连接 Doris，完成数据建模、多维分析和 Dashboard 构建"
+    link="./finebi"
+/>
+
+<GettingStartedCard
+    title="Power BI"
+    icon="/images/next/connection-integration/data-integration/logos/powerbi.svg"
+    description="在 Power BI Desktop 中通过 Doris 连接器查询或导入 Doris 数据"
+    link="./powerbi"
+/>
+
+<GettingStartedCard
+    title="Tableau"
+    icon="/images/next/connection-integration/data-integration/logos/tableau.svg"
+    description="通过 Tableau 官方 MySQL 连接器访问 Doris，并基于 Doris 数据制作可视化"
+    link="./tableau"
+/>
+
+<GettingStartedCard
+    title="QuickSight"
+    icon="/images/next/connection-integration/data-integration/logos/quicksight.svg"
+    description="使用 AWS QuickSight 的 MySQL 数据源以直查或导入模式连接 Doris"
+    link="./quicksight"
+/>
+
+<GettingStartedCard
+    title="Quick BI"
+    icon="/images/next/connection-integration/data-integration/logos/quickbi.png"
+    description="在阿里云 Quick BI 中创建 Doris 数据源和数据集，搭建可视化分析报表"
+    link="./quickbi"
+/>
+
+<GettingStartedCard
+    title="Smartbi"
+    icon="/images/next/connection-integration/data-integration/logos/smartbi.jpeg"
+    description="将 Smartbi 与 Doris 集成，用于数据连接、建模和可视化分析"
+    link="./smartbi"
+/>
+</div>
+
+## 数据库开发与管理
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="DataGrip"
+    icon="/images/next/connection-integration/data-integration/logos/datagrip.svg"
+    description="使用 DataGrip 的 MySQL 数据源连接 Doris，查询和管理 internal catalog 与 external catalog"
+    link="./datagrip"
+/>
+
+<GettingStartedCard
+    title="DBeaver"
+    icon="/images/next/connection-integration/data-integration/logos/dbeaver.svg"
+    description="通过 DBeaver 的 MySQL 驱动连接 Doris，进行 SQL 查询和可视化数据库管理"
+    link="./dbeaver"
+/>
+
+<GettingStartedCard
+    title="CloudDM"
+    icon="/images/next/connection-integration/data-integration/logos/clouddm.svg"
+    description="使用 CloudDM 管理 Doris 数据源，支持查询、可视化编辑、权限管控和数据库 CI/CD"
+    link="./clouddm"
+/>
+</div>
+
+## 数据迁移、同步与批量导入
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="CloudCanal"
+    icon="/images/next/connection-integration/data-integration/logos/cloudcanal.svg"
+    description="通过 CloudCanal 将 MySQL、Oracle、PostgreSQL、SQL Server 等源端数据迁移或同步到 Doris"
+    link="./cloudcanal"
+/>
+
+<GettingStartedCard
+    title="DataX Doriswriter"
+    icon="/images/next/connection-integration/data-integration/logos/datax.jpg"
+    description="使用 DataX Doriswriter 通过 Stream Load 将多种数据源的数据同步到 Doris"
+    link="./datax"
+/>
+
+<GettingStartedCard
+    title="Kettle Doris Plugin"
+    icon="/images/next/connection-integration/data-integration/logos/kettle.png"
+    description="在 Kettle 作业中使用 Doris 插件，通过 Stream Load 将处理后的数据写入 Doris"
+    link="./kettle"
+/>
+
+<GettingStartedCard
+    title="SeaTunnel Doris Sink"
+    icon="/images/next/connection-integration/data-integration/logos/seatunnel.png"
+    description="通过 SeaTunnel Doris Sink 进行分布式数据同步，支持实时同步和 exactly-once 写入"
+    link="./seatunnel"
+/>
+
+<GettingStartedCard
+    title="Doris Streamloader"
+    icon="/images/next/connection-integration/data-integration/logos/doris.png"
+    description="使用 Doris Streamloader 执行多文件、多并发的 Stream Load 导入，并支持断点续传"
+    link="./doris-streamloader"
+/>
+
+<GettingStartedCard
+    title="Spark Load"
+    icon="/images/next/connection-integration/data-integration/logos/spark.png"
+    description="借助外部 Spark 资源预处理并导入大规模历史数据，降低 Doris 集群导入压力"
+    link="./spark-load"
+/>
+</div>
+
+## 流式接入与大数据计算
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="Flink Doris Connector"
+    icon="/images/next/connection-integration/data-integration/logos/flink.png"
+    description="在 Flink 中读写 Doris，支持流批写入、Lookup Join，以及基于 Flink CDC 的整库同步"
+    link="./flink-doris-connector"
+/>
+
+<GettingStartedCard
+    title="Spark Doris Connector"
+    icon="/images/next/connection-integration/data-integration/logos/spark.png"
+    description="在 Spark 中通过 RDD、DataFrame 或 Spark SQL 读写 Doris，支持批量和流式写入"
+    link="./spark-doris-connector"
+/>
+
+<GettingStartedCard
+    title="Doris Kafka Connector"
+    icon="/images/next/connection-integration/data-integration/logos/kafka.png"
+    description="使用 Kafka Connect 将 Kafka Topic 中的数据持续写入 Doris"
+    link="./doris-kafka-connector"
+/>
+
+<GettingStartedCard
+    title="AutoMQ Load"
+    icon="/images/next/connection-integration/data-integration/logos/automq.png"
+    description="通过 Doris Routine Load 消费 AutoMQ 的 Kafka 兼容 Topic，实现实时数据导入"
+    link="./automq"
+/>
+</div>
+
+## 日志与可观测性
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="Filebeat"
+    icon="/images/next/connection-integration/data-integration/logos/filebeat.svg"
+    description="使用 Beats Doris output plugin 采集日志、指标或审计数据，并实时写入 Doris"
+    link="./beats"
+/>
+
+<GettingStartedCard
+    title="Fluent Bit"
+    icon="/images/next/connection-integration/data-integration/logos/fluentbit.svg"
+    description="通过 Fluent Bit Doris Output Plugin 采集日志，并经 Stream Load 写入 Doris"
+    link="./fluentbit"
+/>
+
+<GettingStartedCard
+    title="Logstash"
+    icon="/images/next/connection-integration/data-integration/logos/logstash.svg"
+    description="使用 Logstash Doris output plugin 采集、预处理日志，并实时写入 Doris"
+    link="./logstash"
+/>
+
+<GettingStartedCard
+    title="LoongCollector"
+    icon="/images/next/connection-integration/data-integration/logos/loongcollector.png"
+    description="通过 LoongCollector Doris Flusher 采集和处理日志，并将数据写入 Doris"
+    link="./loongcollector"
+/>
+
+<GettingStartedCard
+    title="OpenTelemetry"
+    icon="/images/next/connection-integration/data-integration/logos/opentelemetry.svg"
+    description="将 OpenTelemetry 的日志、链路追踪和指标数据导出到 Doris 进行统一分析"
+    link="./opentelemetry"
+/>
+
+<GettingStartedCard
+    title="Vector"
+    icon="/images/next/connection-integration/data-integration/logos/vector.svg"
+    description="使用 Vector Doris Sink 收集、转换并路由日志、指标和链路追踪数据到 Doris"
+    link="./vector"
+/>
+
+<GettingStartedCard
+    title="Langfuse on Doris"
+    icon="/images/next/connection-integration/data-integration/logos/langfuse.svg"
+    description="部署以 Doris 作为分析后端的 Langfuse，用于 LLM 应用可观测性分析"
+    link="./langfuse"
+/>
+</div>
+
+## 数据建模与 SQL 接入
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="DBT Doris Adapter"
+    icon="/images/next/connection-integration/data-integration/logos/dbt.svg"
+    description="使用 dbt-doris adapter 在 Doris 中运行 dbt 模型，完成 ELT 转换和数据建模"
+    link="./dbt-doris-adapter"
+/>
+
+<GettingStartedCard
+    title="Kyuubi"
+    icon="/images/next/connection-integration/data-integration/logos/kyuubi.png"
+    description="通过 Apache Kyuubi 的 JDBC Engine 将 Doris 作为 SQL 查询数据源接入"
+    link="./kyuubi"
+/>
+</div>
