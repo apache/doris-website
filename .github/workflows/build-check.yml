@@ -130,6 +130,13 @@ jobs:
                         i18n/zh-CN/docusaurus-plugin-content-docs-releases/*)
                             LOCALES="en,zh-CN"
                             ;;
+                        # Static image assets are copied verbatim to the
+                        # build output and don't affect page rendering, so
+                        # they should NOT trigger a full rebuild on their
+                        # own. Any doc change that references these images
+                        # will trigger its own version-scoped build above.
+                        static/images/*|static/images/**)
+                            ;;
                         # Config, source code, or other structural changes
                         # require a full build to validate
                         sidebarsCommunity.json|sidebarsReleases.json|docusaurus.config.js|src/*|static/*|config/*|package.json|yarn.lock|tailwind.config.js)

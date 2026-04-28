@@ -122,11 +122,11 @@ FAISS_PRAGMA_IMPRECISE_FUNCTION_END
 Apache Doris 的向量索引采用外挂方式。外挂索引便于管理与异步构建，但也带来性能挑战：如何避免重复计算与多余 IO。ANN 索引除返回命中行号外，还可返回向量间距离。为高效利用这些额外信息，执行引擎在 Scan 算子阶段对距离相关表达式进行“提前短路”。Doris 通过“虚拟列”机制自动完成该短路，并以 Ann Index Only Scan 完全消除与距离计算相关的读 IO。
 在朴素流程中，Scan 将谓词下推至索引，索引返回行号；随后 Scan 按行号读取数据页（Data Page），再计算表达式并向上返回 N 行结果。
 
-![alt text](/images/vector-search/image-3.png)
+![alt text](/images/vector-search/image-3.jpg)
 
 应用 Index Only Scan 后，流程变为：
 
-![alt text](/images/vector-search/image-4.png)
+![alt text](/images/vector-search/image-4.jpg)
 
 例如 `SELECT l2_distance_approximate(embedding, [...]) AS dist FROM tbl ORDER BY dist LIMIT 100;`，执行过程将不再触发数据文件 IO。
 
