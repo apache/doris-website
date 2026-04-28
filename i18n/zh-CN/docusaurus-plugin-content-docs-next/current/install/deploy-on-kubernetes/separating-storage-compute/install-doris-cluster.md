@@ -7,7 +7,7 @@
 }
 ---
 
-本文面向首次在 Kubernetes 上搭建 Doris 存算分离集群的同学，提供从零部署到可写入数据的端到端教程。读完本文你将能够：
+本文面向首次在 Kubernetes 上搭建 Doris 存算分离集群的用户，提供从零部署到可写入数据的端到端教程。读完本文你将能够：
 
 - 完成 FoundationDB（元数据存储）的部署或接入
 - 在 Kubernetes 上部署 Doris Operator

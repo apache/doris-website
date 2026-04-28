@@ -1,5 +1,6 @@
 import React from 'react';
 import Link from '@docusaurus/Link';
+import useBaseUrl from '@docusaurus/useBaseUrl';
 import {useDoc} from '@docusaurus/plugin-content-docs/client';
 import './style.scss';
 
@@ -36,11 +37,27 @@ function resolveDocRelativeLink(link: string, metadata: DocLikeMetadata): string
     return url.pathname + url.search + url.hash;
 }
 
+function isImageSource(value: string): boolean {
+    return /^(https?:)?\/\//.test(value) || value.startsWith('/') || /\.(svg|png|jpe?g|webp|gif)$/i.test(value);
+}
+
+function CardIcon({ icon, title }: { icon: string; title: string }) {
+    const isImage = isImageSource(icon);
+    const isAbsoluteUrl = /^(https?:)?\/\//.test(icon);
+    const resolved = useBaseUrl(isImage && !isAbsoluteUrl ? icon : '');
+    if (!isImage) return <>{icon}</>;
+    return <img src={isAbsoluteUrl ? icon : resolved} alt={`${title} logo`} />;
+}
+
 export default function GettingStartedCard({ title, description, link, icon }: CardProps) {
     const { metadata } = useDoc();
     return (
         <Link to={resolveDocRelativeLink(link, metadata)} className="getting-started-card">
-            {icon && <div className="card-icon">{icon}</div>}
+            {icon && (
+                <div className="card-icon">
+                    <CardIcon icon={icon} title={title} />
+                </div>
+            )}
             <div className="card-content">
                 <h3>{title}</h3>
                 <p>{description}</p>
