@@ -226,35 +226,31 @@ const sidebars: SidebarsConfig = {
                 {
                     type: 'category',
                     label: 'Storage Layout',
+                    link: {
+                        type: 'doc',
+                        id: 'table-design/storage-layout-overview',
+                    },
                     items: [
-                        'table-design/storage-format',
                         'table-design/column-compression',
                         'table-design/row-store',
                         {
                             type: 'category',
                             label: 'Tiered Storage',
+                            link: {
+                                type: 'doc',
+                                id: 'table-design/tiered-storage/overview',
+                            },
                             items: [
-                                'table-design/tiered-storage/overview',
                                 'table-design/tiered-storage/tiered-ssd-hdd',
                                 'table-design/tiered-storage/remote-storage',
                             ],
                         },
+                        'table-design/storage-format',
                     ],
                 },
-                {
-                    type: 'category',
-                    label: 'Schema Evolution',
-                    items: [
-                        'table-design/schema-change',
-                        'table-design/auto-increment',
-                    ],
-                },
-                {
-                    type: 'category',
-                    label: 'Special Tables',
-                    items: ['table-design/temporary-table'],
-                },
-                'table-design/best-practice',
+                'table-design/schema-change',
+                'table-design/auto-increment',
+                'table-design/temporary-table',
             ],
         },
         {
