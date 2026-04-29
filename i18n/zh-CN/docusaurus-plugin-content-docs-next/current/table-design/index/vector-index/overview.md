@@ -467,23 +467,27 @@ PROPERTIES (
 
 常见 embedding 模型输出通常为 768 维或更高。若将该向量作为字面量直接写入 SQL，**解析耗时可能超过实际执行时间**，因此建议使用 Prepared Statement。当前 Doris 不支持通过 mysql client 直接执行相关命令，需要通过 JDBC 调用。
 
-```
 1. 在 jdbc url 里面开启服务端 prepared statement
-url = jdbc:mysql://127.0.0.1:9030/demo?useServerPrepStmts=true
+
+    ```shell
+    url = jdbc:mysql://127.0.0.1:9030/demo?useServerPrepStmts=true
+    ```
+
 2. 使用 prepared statement
-// use `?` for placement holders, readStatement should be reused
 
-PreparedStatement readStatement = conn.prepareStatement("SELECT id, l2_distance_approximate(embedding, cast (? as ARRAY<FLOAT>)) AS distance
-  FROM l2_distance_approximate
-  ORDER BY distance
-  LIMIT 10");
-  
-...
-
-readStatement.setString("[0,11,77,24,3,0,0,0,28,70,125,8,0,0,0,0,44,35,50,45,9,0,0,0,4,0,4,56,18,0,3,9,16,17,59,10,10,8,57,57,100,105,125,41,1,0,6,92,8,14,73,125,29,7,0,5,0,0,8,124,66,6,3,1,63,5,0,1,49,32,17,35,125,21,0,3,2,12,6,109,21,0,0,35,74,125,14,23,0,0,6,50,25,70,64,7,59,18,7,16,22,5,0,1,125,23,1,0,7,30,14,32,4,0,2,2,59,125,19,4,0,0,2,1,6,53,33,2]");
-
-ResultSet resultSet = readStatement.executeQuery();
-```
+    ```java
+    // use `?` for placement holders, readStatement should be reused
+    PreparedStatement readStatement = conn.prepareStatement("SELECT id, l2_distance_approximate(embedding, cast (? as ARRAY<FLOAT>)) AS distance
+        FROM l2_distance_approximate
+        ORDER BY distance
+        LIMIT 10");
+      
+    ...
+    
+    readStatement.setString("[0,11,77,24,3,0,0,0,28,70,125,8,0,0,0,0,44,35,50,45,9,0,0,0,4,0,4,56,18,0,3,9,16,17,59,10,10,8,57,57,100,105,125,41,1,0,6,92,8,14,73,125,29,7,0,5,0,0,8,124,66,6,3,1,63,5,0,1,49,32,17,35,125,21,0,3,2,12,6,109,21,0,0,35,74,125,14,23,0,0,6,50,25,70,64,7,59,18,7,16,22,5,0,1,125,23,1,0,7,30,14,32,4,0,2,2,59,125,19,4,0,0,2,1,6,53,33,2]");
+    
+    ResultSet resultSet = readStatement.executeQuery();
+    ```
 
 ### 减少 segment 数量
 
