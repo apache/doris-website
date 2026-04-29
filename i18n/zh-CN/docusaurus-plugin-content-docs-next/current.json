@@ -119,13 +119,13 @@
     "message": "文件格式",
     "description": "The label for category File Formats in sidebar docs"
   },
-  "sidebar.docs.category.Complex Data Types": {
-    "message": "复杂数据类型",
-    "description": "The label for category Complex Data Types in sidebar docs"
+  "sidebar.docs.category.Complex Data Types Import": {
+    "message": "复杂数据类型导入",
+    "description": "The label for category Complex Data Types Import in sidebar docs"
   },
-  "sidebar.docs.category.Load Internals": {
-    "message": "导入原理",
-    "description": "The label for category Load Internals in sidebar docs"
+  "sidebar.docs.category.Load Best Practices": {
+    "message": "导入最佳实践",
+    "description": "The label for category Load Best Practices in sidebar docs"
   },
   "sidebar.docs.category.Continuous Load": {
     "message": "持续导入",

@@ -257,12 +257,16 @@ const sidebars: SidebarsConfig = {
             type: 'category',
             label: 'Data Operations',
             collapsed: true,
+            link: {type: 'doc', id: 'data-operate/overview'},
             items: [
                 {
                     type: 'category',
                     label: 'Loading Data',
+                    link: {
+                        type: 'doc',
+                        id: 'data-operate/import/load-manual',
+                    },
                     items: [
-                        'data-operate/import/load-manual',
                         {
                             type: 'category',
                             label: 'Data Source',
@@ -297,7 +301,34 @@ const sidebars: SidebarsConfig = {
                                 'data-operate/import/import-way/insert-into-manual',
                                 'data-operate/import/import-way/insert-into-values-manual',
                                 'data-operate/import/import-way/mysql-load-manual',
-                                'data-operate/import/import-way/log-storage-analysis',
+                                {
+                                    type: 'category',
+                                    label: 'Continuous Load',
+                                    link: {type: 'doc', id: 'data-operate/import/import-way/streaming-job/continuous-load-overview'},
+                                    items: [
+                                        {
+                                            type: 'category',
+                                            label: 'MySQL',
+                                            items: [
+                                                'data-operate/import/import-way/streaming-job/continuous-load-mysql-table',
+                                                'data-operate/import/import-way/streaming-job/continuous-load-mysql-database',
+                                                'data-operate/import/import-way/streaming-job/prerequisites/amazon-rds-mysql',
+                                                'data-operate/import/import-way/streaming-job/prerequisites/amazon-aurora-mysql',
+                                            ],
+                                        },
+                                        {
+                                            type: 'category',
+                                            label: 'PostgreSQL',
+                                            items: [
+                                                'data-operate/import/import-way/streaming-job/continuous-load-postgresql-table',
+                                                'data-operate/import/import-way/streaming-job/continuous-load-postgresql-database',
+                                                'data-operate/import/import-way/streaming-job/prerequisites/amazon-rds-postgresql',
+                                                'data-operate/import/import-way/streaming-job/prerequisites/amazon-aurora-postgresql',
+                                            ],
+                                        },
+                                        'data-operate/import/import-way/streaming-job/continuous-load-s3',
+                                    ],
+                                },
                             ],
                         },
                         {
@@ -313,7 +344,7 @@ const sidebars: SidebarsConfig = {
                         },
                         {
                             type: 'category',
-                            label: 'Complex Data Types',
+                            label: 'Complex Data Types Import',
                             items: [
                                 'data-operate/import/complex-types/array',
                                 'data-operate/import/complex-types/map',
@@ -326,49 +357,15 @@ const sidebars: SidebarsConfig = {
                         },
                         'data-operate/import/handling-messy-data',
                         'data-operate/import/load-data-convert',
-                        'data-operate/import/load-high-availability',
-                        'data-operate/import/group-commit-manual',
-                        'data-operate/import/load-best-practices',
                         {
                             type: 'category',
-                            label: 'Continuous Load',
+                            label: 'Load Best Practices',
+                            link: {type: 'doc', id: 'data-operate/import/load-best-practices/load-best-practices'},
                             items: [
-                                'data-operate/import/streaming-job/continuous-load-overview',
-                                {
-                                    type: 'category',
-                                    label: 'MySQL',
-                                    items: [
-                                        'data-operate/import/streaming-job/continuous-load-mysql-table',
-                                        'data-operate/import/streaming-job/continuous-load-mysql-database',
-                                    ],
-                                },
-                                {
-                                    type: 'category',
-                                    label: 'PostgreSQL',
-                                    items: [
-                                        'data-operate/import/streaming-job/continuous-load-postgresql-table',
-                                        'data-operate/import/streaming-job/continuous-load-postgresql-database',
-                                    ],
-                                },
-                                'data-operate/import/streaming-job/continuous-load-s3',
-                                {
-                                    type: 'category',
-                                    label: 'Setup Guide',
-                                    items: [
-                                        'data-operate/import/streaming-job/prerequisites/amazon-rds-mysql',
-                                        'data-operate/import/streaming-job/prerequisites/amazon-aurora-mysql',
-                                        'data-operate/import/streaming-job/prerequisites/amazon-rds-postgresql',
-                                        'data-operate/import/streaming-job/prerequisites/amazon-aurora-postgresql',
-                                    ],
-                                },
-                            ],
-                        },
-                        {
-                            type: 'category',
-                            label: 'Load Internals',
-                            items: [
-                                'data-operate/import/load-internals/routine-load-internals',
-                                'data-operate/import/load-internals/stream-load-in-complex-network',
+                                'data-operate/import/load-best-practices/load-high-availability',
+                                'data-operate/import/load-best-practices/group-commit-manual',
+                                'data-operate/import/load-best-practices/routine-load-best-practices',
+                                'data-operate/import/load-best-practices/stream-load-in-complex-network',
                             ],
                         },
                     ],
@@ -376,12 +373,13 @@ const sidebars: SidebarsConfig = {
                 {
                     type: 'category',
                     label: 'Data Update and Delete',
+                    link: {type: 'doc', id: 'data-operate/update-and-delete'},
                     items: [
                         {
                             type: 'category',
                             label: 'Updating Data',
+                            link: {type: 'doc', id: 'data-operate/update/update-overview'},
                             items: [
-                                'data-operate/update/update-overview',
                                 'data-operate/update/unique-update-sql',
                                 'data-operate/update/update-of-unique-model',
                                 'data-operate/update/update-of-aggregate-model',
@@ -393,8 +391,8 @@ const sidebars: SidebarsConfig = {
                         {
                             type: 'category',
                             label: 'Deleting Data',
+                            link: {type: 'doc', id: 'data-operate/delete/delete-overview'},
                             items: [
-                                'data-operate/delete/delete-overview',
                                 'data-operate/delete/delete-manual',
                                 'data-operate/delete/batch-delete-manual',
                                 'data-operate/delete/truncate-manual',
@@ -408,8 +406,8 @@ const sidebars: SidebarsConfig = {
                 {
                     type: 'category',
                     label: 'Exporting Data',
+                    link: { type: 'doc', id: 'data-operate/export/export-overview' },
                     items: [
-                        'data-operate/export/export-overview',
                         'data-operate/export/export-manual',
                         'data-operate/export/outfile',
                         'data-operate/export/export-with-mysql-dump',
@@ -706,7 +704,6 @@ const sidebars: SidebarsConfig = {
                     type: 'category',
                     label: 'Load Performance',
                     items: [
-                        'data-operate/import/load-internals/load-internals',
                         'query-acceleration/tuning/tuning-plan/dml-tuning-plan',
                     ],
                 },
@@ -1047,19 +1044,7 @@ const sidebars: SidebarsConfig = {
                 'observability/overview',
                 'observability/log',
                 'observability/trace',
-                {
-                    type: 'category',
-                    label: 'Observability integration',
-                    items: [
-                        'ecosystem/observability/logstash',
-                        'ecosystem/observability/beats',
-                        'ecosystem/observability/opentelemetry',
-                        'ecosystem/observability/fluentbit',
-                        'ecosystem/observability/loongcollector',
-                        'ecosystem/observability/langfuse',
-                        'ecosystem/observability/vector',
-                    ],
-                },
+                'observability/log-storage-analysis'
             ],
         },
         {
@@ -1069,46 +1054,8 @@ const sidebars: SidebarsConfig = {
             items: [
                 {
                     type: 'category',
-                    label: 'Connectors',
-                    items: [
-                        {
-                            type: 'category',
-                            label: 'Spark Doris Connector',
-                            items: [
-                                'ecosystem/spark-doris-connector/spark-doris-connector',
-                                'ecosystem/spark-doris-connector/release-notes',
-                            ],
-                        },
-                        {
-                            type: 'category',
-                            label: 'Flink Doris Connector',
-                            items: [
-                                'ecosystem/flink-doris-connector/flink-doris-connector',
-                                'ecosystem/flink-doris-connector/release-notes',
-                            ],
-                        },
-                        {
-                            type: 'category',
-                            label: 'Doris Kafka Connector',
-                            items: [
-                                'ecosystem/doris-kafka-connector/doris-kafka-connector',
-                                'ecosystem/doris-kafka-connector/release-notes',
-                            ],
-                        },
-                    ],
-                },
-                'ecosystem/doris-streamloader',
-                {
-                    type: 'category',
                     label: 'ETL & Workflow',
                     items: [
-                        'ecosystem/cloudcanal',
-                        'ecosystem/datax',
-                        'ecosystem/dbt-doris-adapter',
-                        'ecosystem/seatunnel',
-                        'ecosystem/kettle',
-                        'ecosystem/kyuubi',
-                        'ecosystem/automq-load',
                         'ecosystem/hive-bitmap-udf',
                         'ecosystem/hive-hll-udf',
                         'ecosystem/spark-load',

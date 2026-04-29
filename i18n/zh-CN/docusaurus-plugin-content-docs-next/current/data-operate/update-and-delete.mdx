@@ -1,0 +1,33 @@
+---
+{
+    "title": "数据更新与删除",
+    "language": "zh-CN",
+    "description": "在 Apache Doris 中更新和删除数据，并通过事务管理写入操作。"
+}
+---
+
+import GettingStartedCard from '@site/src/components/getting-started-card/getting-started-card';
+
+# 数据更新与删除
+
+Apache Doris 提供灵活的数据更新与删除机制，并通过事务能力保证写入操作的可靠性与一致性。
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="数据更新"
+    description="通过 SQL UPDATE、部分列更新以及 Unique Key 模型 Upsert 更新已有数据"
+    link="./update/update-overview"
+/>
+
+<GettingStartedCard
+    title="数据删除"
+    description="使用 DELETE、批量删除、TRUNCATE、原子覆盖以及临时分区清理数据"
+    link="./delete/delete-overview"
+/>
+
+<GettingStartedCard
+    title="事务"
+    description="使用显式与隐式事务，将多个写入操作组合为原子单元"
+    link="./transaction"
+/>
+</div>
