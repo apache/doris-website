@@ -1130,7 +1130,7 @@ In the whole database synchronization tool provided by the Connector, no additio
 
 3. **errCode = 2, detailMessage = current running txns on db 10006 is 100, larger than limit 100**
 
-   This is because the concurrent imports into the same database exceed 100. It can be solved by adjusting the parameter `max_running_txn_num_per_db` in `fe.conf`. For specific details, please refer to [max_running_txn_num_per_db](../../admin-manual/config/fe-config#max_running_txn_num_per_db).
+   This is because the concurrent imports into the same database exceed 100. It can be solved by adjusting the parameter `max_running_txn_num_per_db` in `fe.conf`. For specific details, please refer to [FE Configuration](../../admin-manual/config/fe-config).
 
    Meanwhile, frequently modifying the label and restarting a task may also lead to this error. In the 2pc scenario (for Duplicate/Aggregate models), the label of each task needs to be unique. And when restarting from a checkpoint, the Flink task will actively abort the transactions that have been pre-committed successfully but not yet committed. Frequent label modifications and restarts will result in a large number of pre-committed successful transactions that cannot be aborted and thus occupy transactions. In the Unique model, 2pc can also be disabled to achieve idempotent writes.
 
