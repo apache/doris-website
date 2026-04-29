@@ -58,22 +58,22 @@ PROPERTIES (
 );
 ```
 
-- index_type: `hnsw` (for [Hierarchical Navigable Small World](https://en.wikipedia.org/wiki/Hierarchical_navigable_small_world)), `ivf` (for inverted file), or `ivf_on_disk` (for IVF with inverted lists stored on disk and served through cache)
+- index_type: `hnsw` (for [Hierarchical Navigable Small World](https://en.wikipedia.org/wiki/Hierarchical_navigable_small_world)), `ivf` (for inverted file), `ivf_on_disk` (for IVF with inverted lists stored on disk and served through cache), or `pq_on_disk` (for filter-first reranking accelerated by PQ-encoded vectors stored on disk)
 - metric_type: `l2_distance` means using L2 distance as the distance function
 - dim: `128` means the vector dimension is 128
 - quantizer: `flat` means each vector dimension is stored as original float32
 
 | Parameter | Required | Supported/Options | Default | Description |
 |-----------|----------|-------------------|---------|-------------|
-| `index_type` | Yes | `hnsw`, `ivf`, `ivf_on_disk` | (none) | ANN index algorithm. Supports HNSW, in-memory IVF, and IVF On-Disk. |
+| `index_type` | Yes | `hnsw`, `ivf`, `ivf_on_disk`, `pq_on_disk` | (none) | ANN index algorithm. Supports HNSW, in-memory IVF, IVF On-Disk, and PQ On-Disk for selective filter-first reranking. |
 | `metric_type` | Yes | `l2_distance`, `inner_product` | (none) | Vector similarity/distance metric. L2 = Euclidean; inner_product can approximate cosine if vectors are normalized. |
 | `dim` | Yes | Positive integer (> 0) | (none) | Vector dimension. All imported vectors must match or an error is raised. |
 | `nlist` | No | Positive integer | `1024` | IVF inverted-list count. Effective when `index_type=ivf` or `index_type=ivf_on_disk`; larger values may improve recall/speed trade-offs but increase build overhead. |
 | `max_degree` | No | Positive integer | `32` | HNSW M (max neighbors per node). Affects index memory and search performance. |
 | `ef_construction` | No | Positive integer | `40` | HNSW efConstruction (candidate queue size during build). Larger gives better quality but slower build. |
 | `quantizer` | No | `flat`, `sq8`, `sq4`, `pq` | `flat` | Vector encoding/quantization: `flat` = raw; `sq8`/`sq4` = scalar quantization (8/4 bit), `pq` = product quantization to reduce memory. |
-| `pq_m` | Required when 'quantizer=pq' | Positive integer | (none) | Specifies how many subvectors are used (vector dimension dim must be divisible by pq_m). |
-| `pq_nbits` | Required when 'quantizer=pq' | Positive integer | (none) | The number of bits used to represent each subvector, in faiss pq_nbits is generally required to be no greater than 24. |
+| `pq_m` | Required when `quantizer=pq` or `index_type=pq_on_disk` | Positive integer | (none) | Number of subvectors. The vector dimension `dim` must be divisible by `pq_m`. |
+| `pq_nbits` | Required when `quantizer=pq`; optional when `index_type=pq_on_disk` | Positive integer | `8` for `pq_on_disk` | Number of bits used to represent each subvector. In Faiss, `pq_nbits` is generally required to be no greater than 24. |
 
 ## If You Need Cosine Similarity
 
@@ -312,6 +312,8 @@ On 768-D Cohere-MEDIUM-1M and Cohere-LARGE-10M datasets, SQ8 reduces index size 
 | Cohere-LARGE-10M | 768D | Doris SQ INT8 | 35.016 GB (25.329 + 9.687) | 25.329 GB | 9.687 GB | INT8 quantization |
 
 Quantization introduces extra build-time overhead because each distance computation must decode quantized values. For 128-D vectors, build time increases with row count; SQ vs. FLAT can be up to ~10× slower to build.
+
+For workloads dominated by highly selective filters such as `tenant_id = ?` or `user_id = ?`, Doris also provides [`pq_on_disk`](./pq-on-disk.md). Unlike global ANN structures such as HNSW or IVF, `pq_on_disk` is designed to accelerate vector reranking inside the filtered subset by using PQ-encoded vectors stored on disk. This makes it especially useful for multi-tenant vector search, where global ANN structures built on mixed-tenant segments may suffer recall degradation after tenant filtering.
 
 Similarly, Doris also supports product quantization, but note that when using PQ, additional parameters need to be provided:
 
