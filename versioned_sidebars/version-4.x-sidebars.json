@@ -180,6 +180,8 @@
                                 "data-operate/import/data-source/snowflake",
                                 "data-operate/import/data-source/bigquery",
                                 "data-operate/import/data-source/redshift",
+                                "data-operate/import/data-source/mysql",
+                                "data-operate/import/data-source/postgresql",
                                 "data-operate/import/data-source/migrate-data-from-other-olap",
                                 "data-operate/import/data-source/migrate-data-from-other-oltp"
                             ]
