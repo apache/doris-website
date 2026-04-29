@@ -1803,6 +1803,7 @@ const sidebars: SidebarsConfig = {
                                         'sql-manual/sql-functions/scalar-functions/json-functions/json-keys',
                                         'sql-manual/sql-functions/scalar-functions/json-functions/json-length',
                                         'sql-manual/sql-functions/scalar-functions/json-functions/json-object',
+                                        'sql-manual/sql-functions/scalar-functions/json-functions/json-object-flatten',
                                         'sql-manual/sql-functions/scalar-functions/json-functions/json-parse',
                                         'sql-manual/sql-functions/scalar-functions/json-functions/json-parse-error-to-null',
                                         'sql-manual/sql-functions/scalar-functions/json-functions/json-parse-error-to-value',
