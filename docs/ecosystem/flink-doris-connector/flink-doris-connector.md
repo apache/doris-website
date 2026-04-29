@@ -1149,3 +1149,12 @@ In the whole database synchronization tool provided by the Connector, no additio
 7. **stream load error: HTTP/1.1 307 Temporary Redirect**
 
    Flink will first request FE, and after receiving 307, it will request BE after redirection. When FE is in FullGC/high pressure/network delay, HttpClient will send data without waiting for a response within a certain period of time (3 seconds) by default. Since the request body is InputStream by default, when a 307 response is received, the data cannot be replayed and an error will be reported directly. There are three ways to solve this problem: 1. Upgrade to Connector25.1.0 or above to increase the default time; 2. Modify auto-redirect=false to directly initiate a request to BE (not applicable to some cloud scenarios); 3. The unique key model can enable batch mode.
+
+8. **When using Flink CDC to sync large tables from databases such as Oracle, an `I/O exception (java.net.SocketException) ... Broken pipe` error is reported. How to handle it?**
+
+   This error usually occurs when the data volume of a single Stream Load request exceeds the limit on the BE side. You can adjust it from the following aspects:
+   - Increase the `streaming_load_max_mb` parameter in `be.conf` on the BE side (default 10240, in MB), so that a single Stream Load can carry more data. The BE needs to be restarted to take effect.
+   - Enable batch mode (`sink.enable.batch-mode=true`), so that the Connector automatically splits the data into batches internally, avoiding too much data in a single Stream Load.
+   - Try to increase the parallelism of Oracle CDC by adding `--oracle-conf scan.incremental.snapshot.enabled=true` (experimental feature) to the startup command, which enables parallel reading of Oracle full data.
+   
+   For more Flink CDC related issues, please refer to [Flink CDC FAQ](https://nightlies.apache.org/flink/flink-cdc-docs-release-3.6/docs/faq/faq/).
