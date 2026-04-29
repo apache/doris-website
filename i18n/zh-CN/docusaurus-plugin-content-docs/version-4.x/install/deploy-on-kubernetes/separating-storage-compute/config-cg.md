@@ -134,7 +134,7 @@ spec:
 2. 部署 ConfigMap  
    使用如下命令将自定义启动配置信息的 ConfigMap 部署到 Kubernetes 集群中：
     ```shell
-    kubectl -n ${namespace} -f ${beConfigMapFileName}.yaml 
+    kubectl apply -n ${namespace} -f ${beConfigMapFileName}.yaml 
     ```
    `${namespace}` 为 `DorisDisaggregatedCluster` 部署的命名空间，${beConfigMapFileName} 为包含自定义 ConfigMap 的文件名称。
 
