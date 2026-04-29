@@ -133,7 +133,7 @@ You can leverage Flink to achieve offline and real-time synchronization for TP s
       --sink-conf sink.label-prefix=label \
       --table-conf replication_num=1 
   ```    
-  For more details, refer to [Full Database Synchronization](../../../ecosystem/flink-doris-connector.md#full-database-synchronization)
+  For more details, refer to [Full Database Synchronization](../../../ecosystem/flink-doris-connector/flink-doris-connector.md#full-database-synchronization)
 
 ## Spark Connector
 You can use the JDBC Source and Doris Sink of the Spark Connector to complete the data write.
@@ -153,7 +153,7 @@ val jdbcDF = spark.read
   .option("password", "")
   .save() 
 ```
-For more details, refer to [JDBC To Other Databases](https://spark.apache.org/docs/latest/sql-data-sources-jdbc.html)，[Spark Doris Connector](../../../ecosystem/spark-doris-connector.md#batch-write)
+For more details, refer to [JDBC To Other Databases](https://spark.apache.org/docs/latest/sql-data-sources-jdbc.html)，[Spark Doris Connector](../../../ecosystem/spark-doris-connector/spark-doris-connector.md#batch-write)
 
 ## DataX / Seatunnel / CloudCanal and other third-party tools.
 

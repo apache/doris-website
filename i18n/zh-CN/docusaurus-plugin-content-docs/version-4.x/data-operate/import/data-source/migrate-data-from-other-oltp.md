@@ -133,7 +133,7 @@ SELECT * FROM iceberg_catalog.iceberg_db.table1;
       --sink-conf sink.label-prefix=label \
       --table-conf replication_num=1 
   ```    
-  具体可参考：[整库同步](../../../ecosystem/flink-doris-connector.md#整库同步)
+  具体可参考：[整库同步](../../../ecosystem/flink-doris-connector/flink-doris-connector.md#整库同步)
 
 ## Spark Connector
 可以通过 Spark Connector 的 JDBC Source 和 Doris Sink 完成数据的写入。
@@ -153,7 +153,7 @@ val jdbcDF = spark.read
   .option("password", "")
   .save() 
 ```
-具体可参考：[JDBC To Other Databases](https://spark.apache.org/docs/latest/sql-data-sources-jdbc.html)，[Spark Doris Connector](../../../ecosystem/spark-doris-connector.md#批量写入)
+具体可参考：[JDBC To Other Databases](https://spark.apache.org/docs/latest/sql-data-sources-jdbc.html)，[Spark Doris Connector](../../../ecosystem/spark-doris-connector/spark-doris-connector.md#批量写入)
 
 ## DataX / Seatunnel / CloudCanal 等三方工具
 
