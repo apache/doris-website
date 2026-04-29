@@ -28,7 +28,7 @@ Choose the model based on how your data is written:
 | Updated by primary key (CDC, upsert) | **Unique Key** | New rows replace old rows with the same key |
 | Pre-aggregated metrics (PV, UV, sums) | **Aggregate Key** | Rows are merged with SUM/MAX/MIN at write time |
 
-**Duplicate Key works for most scenarios.** See [Data Model Overview](../table-design/data-model/overview).
+**Duplicate Key works for most scenarios.** See [Data Model Overview](../table-design/data-model/intro).
 
 ### Sort Key
 

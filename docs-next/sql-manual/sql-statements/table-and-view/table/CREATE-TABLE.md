@@ -211,11 +211,11 @@ CREATE TABLE <new_table_name> LIKE <existing_table_name>
 
 **<key_type>**
 
-> The data model of the table. Optional values are DUPLICATE (detail model), UNIQUE (primary key model), AGGREGATE (aggregation model). For details on data models, see the [Data Model](../../../../table-design/data-model/overview.md) section.
+> The data model of the table. Optional values are DUPLICATE (detail model), UNIQUE (primary key model), AGGREGATE (aggregation model). For details on data models, see the [Data Model](../../../../table-design/data-model/intro.mdx) section.
 
 **<key_cols>**
 
-> The key columns of the table. In Doris, Key columns must be the first K columns of the table. Data in a single tablet will be kept in order by these columns. For restrictions on Keys and how to choose Key columns, see the various subsections in the [Data Model](../../../../table-design/data-model/overview.md) section.
+> The key columns of the table. In Doris, Key columns must be the first K columns of the table. Data in a single tablet will be kept in order by these columns. For restrictions on Keys and how to choose Key columns, see the various subsections in the [Data Model](../../../../table-design/data-model/intro.mdx) section.
 
 **<cluster_cols>**
 

@@ -10,7 +10,7 @@ During the process of migrating Redshift, it is usually necessary to use object 
 
 ## Considerations
 
-1. Before the migration, it is necessary to select Doris' [Data Model](../../../table-design/data-model/overview.md), as well as the strategies for [Partitioning](../../../table-design/data-partitioning/dynamic-partitioning.md) and [Bucketing](../../../table-design/data-partitioning/data-bucketing.md) according to the table structure of Redshift. For more table creation strategies, please refer to [Load Best Practices](../load-best-practices.md).
+1. Before the migration, it is necessary to select Doris' [Data Model](../../../table-design/data-model/intro.mdx), as well as the strategies for [Partitioning](../../../table-design/data-partitioning/dynamic-partitioning.md) and [Bucketing](../../../table-design/data-partitioning/data-bucketing.md) according to the table structure of Redshift. For more table creation strategies, please refer to [Load Best Practices](../load-best-practices.md).
 2. When Redshift exports data of the Time type, it is necessary to export it after casting it to the Varchar type.
    
 

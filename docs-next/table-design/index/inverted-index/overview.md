@@ -1,756 +1,245 @@
 ---
 {
-    "title": "Inverted Index | Inverted Index",
-    "sidebar_label": "Overview",
-    "language": "en",
-    "description": "Inverted Index is a commonly used indexing technique in the field of information retrieval."
+    "title": "倒排索引（文本搜索）",
+    "sidebar_label": "概述",
+    "language": "zh-CN",
+    "description": "Doris 文本搜索基于倒排索引，支持全文检索、短语匹配、正则匹配、自定义分词与 BM25 相关性打分，可与向量搜索结合用于 RAG 等混合检索场景。"
 }
 ---
 
-# Inverted Index
+<!-- 知识类型: Feature 介绍 + 快速上手 -->
+<!-- 适用场景: 关键词检索 / 短语匹配 / RAG 混合检索 / 相关性排序 -->
 
-## Indexing Principle
+文本搜索用于在数据集中检索包含特定词项或短语的文档，并根据相关性对结果进行排序。
 
-[Inverted Index](https://en.wikipedia.org/wiki/Inverted_index) is a commonly used indexing technique in the field of information retrieval. It divides text into individual words and constructs a word -> document IDs index, allowing for quick searches to determine which documents contain a specific word.
+| 检索方式 | 优势 | 适用场景 |
+|----------|------|----------|
+| 文本搜索 | “找准”——可控、可解释的精确匹配，确保关键词命中与过滤条件的确定性 | 关键词检索、短语匹配、布尔条件过滤 |
+| 向量搜索 | “找全”——利用语义相似性扩展召回范围 | 语义检索、近似匹配 |
 
-Starting from version 2.0.0, Doris supports inverted indexes, which can be used for full-text searches on text types, equality, and range queries on normal numerical and date types, and quickly filtering rows that meet the criteria from massive amounts of data.
+在生成式 AI 应用中，尤其是检索增强生成（RAG）场景下，文本搜索与向量搜索相辅相成，两者协同：
 
-In Doris's implementation of the inverted index, each row in the table corresponds to a document, and each column corresponds to a field in the document. Thus, using an inverted index, you can quickly locate rows containing specific keywords, thereby accelerating the WHERE clause.
+- 兼顾语义广度与词法精度
+- 既提升召回率，又保证结果的准确性与可解释性
+- 共同构建可靠的检索基础，为大模型提供更准确、更相关的上下文
 
-Unlike other indexes in Doris, the inverted index uses independent files at the storage layer, corresponding one-to-one with data files but physically stored independently. This approach allows for creating and deleting indexes without rewriting data files, significantly reducing processing overhead.
+## Doris 文本搜索的演进
 
-## Usage Scenarios
+从 2.0.0 版本开始，Doris 引入了倒排索引（Inverted Index）以支持高性能的全文搜索。随着检索场景的多样化与查询复杂度的提升，Doris 在后续版本中持续扩展文本搜索能力。
 
-Inverted indexes have a wide range of applications and can accelerate equality, range, and full-text searches (keyword matching, phrase matching, etc.). A table can have multiple inverted indexes, and the conditions of multiple inverted indexes can be combined arbitrarily during queries.
+| 阶段 | 版本 | 关键能力 |
+|------|------|----------|
+| 基础阶段 | 2.0+ | 引入列级倒排索引；提供基础全文检索算子（`MATCH_ANY`、`MATCH_ALL`）和多语言分词器，支持在大规模数据集中进行高效的关键词检索 |
+| 功能扩展 | 2.x → 3.x | 完善算子体系，新增短语匹配（`MATCH_PHRASE`）、前缀搜索（`MATCH_PHRASE_PREFIX`）、正则匹配（`MATCH_REGEXP`）等高级算子；3.1 版本引入自定义分词能力 |
+| 能力增强 | 4.0+ | 引入 BM25 相关性打分与统一查询入口 `SEARCH` 函数，支持文本相关性排序与混合排序 |
 
-The functionality of inverted indexes is briefly introduced as follows:
+其中，4.0+ 版本的核心增强包括：
 
-**1. Accelerate full-text searches for string types**
+- **BM25 相关性打分**：通过 `score()` 函数根据文本相关性对结果进行排序，可与向量相似度分数结合，实现混合排序。
+- **SEARCH 函数**：提供统一的查询 DSL，支持跨列查询与布尔逻辑组合，简化复杂查询构建，同时进一步提升查询性能。
 
-- Support for keyword search, including matching multiple keywords simultaneously `MATCH_ALL` and matching any one keyword `MATCH_ANY`.
+---
 
-- Support for phrase queries `MATCH_PHRASE`
-  - Support for specifying slop for word distence
-  - Support for phrase + prefix `MATCH_PHRASE_PREFIX`
+## Doris 核心文本搜索特性
 
-- Support for tokenized regular expression queries `MATCH_REGEXP`
+### 1. 丰富的文本算子
 
-- Support for English, Chinese, and Unicode tokenizers
+Doris 提供了一套覆盖多种检索模式的全文搜索算子，可满足从基础关键词匹配到复杂短语查询的不同需求。
 
-**2. Accelerate normal equality and range queries, covering and replacing the functionality of BITMAP index**
+当前版本支持的主要算子：
 
-- Support for fast filtering of string, numerical, and datetime types for =, !=, >, >=, <, <=
+| 算子 | 说明 | 典型场景 |
+|------|------|----------|
+| `MATCH_ANY` / `MATCH_ALL` | 任意词匹配（OR）与全词匹配（AND） | 通用关键词检索 |
+| `MATCH_PHRASE` | 精确短语匹配，支持自定义词距（slop）与顺序控制 | 邻近词语查询 |
+| `MATCH_PHRASE_PREFIX` | 短语前缀匹配 | 自动补全、增量搜索 |
+| `MATCH_REGEXP` | 基于正则表达式的匹配 | 模式化文本检索 |
 
-- Support for fast filtering of string, numerical, and datetime array types for `array_contains`
-
-**3. Support for comprehensive logical combinations**
-
-- Not only supports acceleration for AND conditions but also for OR and NOT conditions
-
-- Supports arbitrary logical combinations of multiple conditions with AND, OR, NOT
-
-**4. Flexible and efficient index management**
-
-- Support for defining inverted indexes when creating a table
-
-- Support for adding inverted indexes to existing tables, with incremental index construction without rewriting existing data in the table
-
-- Support for deleting inverted indexes from existing tables without rewriting existing data in the table
-
-:::tip
-
-There are some limitations to using inverted indexes:
-
-1. Floating-point types FLOAT and DOUBLE, which have precision issues, do not support inverted indexes due to inaccurate precision. The solution is to use the precisely accurate DECIMAL type, which supports inverted indexes.
-
-2. Some complex data types do not yet support inverted indexes, including MAP, STRUCT, JSON, HLL, BITMAP, QUANTILE_STATE, AGG_STATE.
-
-3. DUPLICATE and UNIQUE table models with Merge-on-Write enabled support building inverted indexes on any column. However, AGGREGATE and UNIQUE models without Merge-on-Write enabled only support building inverted indexes on Key columns, as non-Key columns cannot have inverted indexes. This is because these two models require reading all data for merging, so indexes cannot be used for pre-filtering.
-
-:::
-
-## Managing Indexes
-
-### Defining Inverted Indexes When Creating a Table
-
-In the table creation statement, after the COLUMN definition, is the index definition:
+这些算子可独立使用，也可通过 `SEARCH()` 函数组合构建复杂逻辑查询。例如：
 
 ```sql
-CREATE TABLE table_name
-(
-  column_name1 TYPE1,
-  column_name2 TYPE2,
-  column_name3 TYPE3,
-  INDEX idx_name1(column_name1) USING INVERTED [PROPERTIES(...)] [COMMENT 'your comment'],
-  INDEX idx_name2(column_name2) USING INVERTED [PROPERTIES(...)] [COMMENT 'your comment']
-)
-table_properties;
+-- 精确短语搜索
+SELECT * FROM docs WHERE content MATCH_PHRASE '倒排 索引';
+
+-- 前缀搜索
+SELECT * FROM docs WHERE content MATCH_PHRASE_PREFIX '数据 仓';
 ```
 
-Syntax explanation:
+[查看所有算子 →](./search-operators.md)
 
-**1. `idx_column_name(column_name)` is mandatory, `column_name` is the name of the column for the index, must be a column defined earlier, `idx_column_name` is the index name, must be unique at the table level, recommended naming convention: prefix `idx_` before the column name**
+---
 
-**2. `USING INVERTED` is mandatory to specify that the index type is an inverted index**
+### 2. 自定义分词（3.1+）
 
-**3. `PROPERTIES` is optional to specify additional properties of the inverted index, currently supported properties are:**
+在文本搜索中，分词方式直接决定了检索精度与召回效果。从 3.1 版本起，Doris 支持**自定义分词器（Custom Analyzer）**，允许用户根据业务需求灵活定义分词流程。
 
-<details>
-  <summary>parser: specifies the tokenizer</summary>
-  <p>- By default, it is unspecified, meaning no tokenization</p>
-  <p>- `english`: English tokenization, suitable for columns with English text, uses spaces and punctuation for tokenization, high performance</p>
-  <p>- `chinese`: Chinese tokenization, suitable for columns with mainly Chinese text, lower performance than English tokenization</p>
-  <p>- `unicode`: Unicode tokenization, suitable for mixed Chinese and English, and mixed multilingual texts. It can tokenize email prefixes and suffixes, IP addresses, and mixed character and number strings, and can tokenize Chinese by characters.</p>
-  <p>- `icu` (Supported since 3.1.0): ICU (International Components for Unicode) tokenization, based on the ICU library. Ideal for internationalized text with complex writing systems and multilingual documents. Supports languages like Arabic, Thai, and other Unicode-based scripts.</p>
-  <p>- `basic` (Supported since 3.1.0): Basic rule-based tokenization using simple character type recognition. Suitable for scenarios with extremely high performance requirements or simple text processing needs. Rules: continuous alphanumeric characters are treated as one token, each Chinese character is a separate token, and punctuation/spaces/special characters are ignored. This tokenizer provides the best performance among all tokenizers but with simpler tokenization logic compared to unicode or icu.</p>
-  <p>- `ik` (Supported since 3.1.0): IK Chinese tokenization, specifically designed for Chinese text analysis.</p>
+自定义分词通过组合以下三类组件实现细粒度的文本控制：
 
-  Tokenization results can be verified using the `TOKENIZE` SQL function, see the following sections for details.
-</details>
-
-<details>
-  <summary>parser_mode</summary>
-
-  **Specifies the tokenization mode, currently supported modes for `parser = chinese` are:**
-  <p>- fine_grained: fine-grained mode, tends to generate shorter, more words, e.g., '武汉市长江大桥' will be tokenized into '武汉', '武汉市', '市长', '长江', '长江大桥', '大桥'</p>
-  <p>- coarse_grained: coarse-grained mode, tends to generate longer, fewer words, e.g., '武汉市长江大桥' will be tokenized into '武汉市', '长江大桥'</p>
-  <p>- default coarse_grained</p>
-</details>
-
-<details>
-  <summary>support_phrase</summary>
-
-  **Specifies whether the index supports MATCH_PHRASE phrase query acceleration**
-  <p>- true: supported, but the index requires more storage space</p>
-  <p>- false: not supported, more storage efficient, can use MATCH_ALL to query multiple keywords</p>
-  <p>- From versions 2.0.14, 2.1.5 and 3.0.1, the default is true if parser is set. Otherwise default to false.</p>
-
-  For example, the following example specifies Chinese tokenization, coarse-grained mode, and supports phrase query acceleration.
-```sql
-   INDEX idx_name(column_name) USING INVERTED PROPERTIES("parser" = "chinese", "parser_mode" = "coarse_grained", "support_phrase" = "true")
-```
-</details>
-
-<details>
-  <summary>char_filter</summary>
-
-  **Specifies preprocessing the text before tokenization, usually to affect tokenization behavior**
-
-  <p>char_filter_type: specifies different functional char_filters (currently only supports char_replace)</p>
-
-  <p>char_replace replaces each char in the pattern with a char in the replacement</p>
-  <p>- char_filter_pattern: characters to be replaced</p>
-  <p>- char_filter_replacement: replacement character array, optional, defaults to a space character</p>
-
-  For example, the following example replaces dots and underscores with spaces, thus treating them as word separators, affecting tokenization behavior.
-```sql
-   INDEX idx_name(column_name) USING INVERTED PROPERTIES("parser" = "unicode", "char_filter_type" = "char_replace", "char_filter_pattern" = "._", "char_filter_replacement" = " ")
-```
-`
-</details>
-
-<details>
-  <summary>ignore_above</summary>
-
-  **Specifies the length limit for non-tokenized string indexes (parser not specified)**
-  <p>- Strings longer than the length set by ignore_above will not be indexed. For string arrays, ignore_above applies to each array element separately, and elements longer than ignore_above will not be indexed.</p>
-  <p>- Default is 256, unit is bytes</p>
-
-</details>
-
-<details>
-  <summary>lower_case</summary>
-
-  **Whether to convert tokens to lowercase for case-insensitive matching**
-  <p>- true: convert to lowercase</p>
-  <p>- false: do not convert to lowercase</p>
-  <p>- From versions 2.0.7 and 2.1.2, the default is true, automatically converting to lowercase. Earlier versions default to false.</p>
-</details>
-
-<details>
-  <summary>stopwords</summary>
-
-  **Specifying the stopword list to use, which will affect the behavior of the tokenizer**
-  <p>- The default built-in stopword list includes meaningless words such as 'is,' 'the,' 'a,' etc. When writing or querying, the tokenizer will ignore words that are in the stopword list.</p>
-  <p>- none: Use an empty stopword list</p>
-</details>
-
-<details>
-  <summary>dict_compression (Supported since 3.1.0)</summary>
-
-  **Specifies whether to enable ZSTD dictionary compression for the inverted index term dictionary**
-  <p>- true: Enable dictionary compression, which can reduce index storage size by up to 20%, especially effective for large-scale text data and log analysis scenarios</p>
-  <p>- false: Disable dictionary compression (default)</p>
-  <p>- Recommendation: Enable for scenarios with large text datasets, log analytics, or when storage cost is a concern. Works best with inverted_index_storage_format = "V3"</p>
-
-  For example:
-```sql
-   INDEX idx_name(column_name) USING INVERTED PROPERTIES("parser" = "english", "dict_compression" = "true")
-```
-</details>
-
-**4. `COMMENT` is optional for specifying index comments**
-
-**5. Table-level property `inverted_index_storage_format` (Supported since 3.1.0)**
-
-  To use the new V3 storage format for inverted indexes, specify this property when creating the table:
+- **字符过滤器（char_filter）**：在分词前进行符号替换、去除或标准化
+- **分词器（tokenizer）**：选择分词算法，支持 `standard`、`ngram`、`edge_ngram`、`keyword`、`icu` 等多种类型，用于处理不同语言和结构的文本
+- **词元过滤器（token_filter）**：如 `lowercase`、`word_delimiter`、`ascii_folding` 等，用于规范化和精炼分词结果
 
 ```sql
-CREATE TABLE table_name (
-    column_name TEXT,
-    INDEX idx_name(column_name) USING INVERTED PROPERTIES("parser" = "english", "dict_compression" = "true")
-) PROPERTIES (
-    "inverted_index_storage_format" = "V3"
+-- 示例：定义自定义分词器
+CREATE INVERTED INDEX ANALYZER IF NOT EXISTS keyword_lowercase
+PROPERTIES (
+    "tokenizer" = "keyword",
+    "token_filter" = "asciifolding, lowercase"
+);
+
+-- 在建表时使用自定义分词器
+CREATE TABLE docs (
+    id BIGINT,
+    content TEXT,
+    INDEX idx_content (content) USING INVERTED PROPERTIES(
+        "analyzer" = "keyword_lowercase",
+        "support_phrase" = "true"
+    )
 );
 ```
 
-  **inverted_index_storage_format values:**
-  <p>- "V2": Default storage format</p>
-  <p>- "V3": New storage format with optimized compression. Compared to V2, V3 provides:</p>
-  <p>  - Smaller index files, reducing disk usage and I/O overhead</p>
-  <p>  - Up to 20% storage space savings for large-scale text data and log analysis scenarios</p>
-  <p>  - ZSTD dictionary compression for term dictionaries (when dict_compression is enabled)</p>
-  <p>  - Compression for positional information associated with each term</p>
-  <p>- Recommendation: Use V3 for new tables with large text datasets, log analytics workloads, or when storage optimization is important</p>
+[了解自定义分词 →](./custom-analyzer.md)
 
-### Adding Inverted Indexes to Existing Tables
+---
 
-**1. ADD INDEX**
+### 3. BM25 相关性打分（4.0+）
 
-Supports both `CREATE INDEX` and `ALTER TABLE ADD INDEX` syntax. The parameters are the same as those used when defining indexes during table creation.
+Doris 实现了 **BM25（Best Matching 25）** 算法用于文本相关性计算，为全文搜索提供排序与打分能力。
+
+BM25 的核心特性：
+
+- 基于词频（TF）、逆文档频率（IDF）和文档长度的概率模型
+- 对长短文本均具良好鲁棒性
+- 可通过参数 `k1`、`b` 调整加权策略
 
 ```sql
--- Syntax 1
-CREATE INDEX idx_name ON table_name(column_name) USING INVERTED [PROPERTIES(...)] [COMMENT 'your comment'];
--- Syntax 2
-ALTER TABLE table_name ADD INDEX idx_name(column_name) USING INVERTED [PROPERTIES(...)] [COMMENT 'your comment'];
+SELECT id, title, score() AS relevance
+FROM docs
+WHERE content MATCH_ANY '实时 OLAP 分析'
+ORDER BY relevance DESC
+LIMIT 10;
 ```
 
-**2. BUILD INDEX**
+[了解更多打分机制 →](./scoring.md)
 
-The `CREATE / ADD INDEX` operation only adds the index definition. New data written after this operation will generate inverted indexes, but existing data requires using `BUILD INDEX` to trigger indexing:
+---
+
+### 4. SEARCH 函数：统一查询入口（4.0+）
+
+`SEARCH()` 函数提供统一的文本检索语法入口，支持多列搜索与布尔逻辑组合，使复杂查询表达更简洁：
 
 ```sql
--- Syntax 1, by default, builds the index for all partitions in the table
-BUILD INDEX index_name ON table_name;
--- Syntax 2, you can specify partitions, one or more
-BUILD INDEX index_name ON table_name PARTITIONS(partition_name1, partition_name2);
+SELECT id, title, score() AS relevance
+FROM docs
+WHERE SEARCH('title:Machine AND tags:ANY(database sql)')
+ORDER BY relevance DESC
+LIMIT 20;
 ```
 
-To check the progress of `BUILD INDEX`, use `SHOW BUILD INDEX`:
+[完整 SEARCH 函数指南 →](./search-function.md)
+
+---
+
+## 快速开始
+
+### 步骤 1：创建带倒排索引的表
 
 ```sql
-SHOW BUILD INDEX [FROM db_name];
--- Example 1, view the progress of all BUILD INDEX tasks
-SHOW BUILD INDEX;
--- Example 2, view the progress of BUILD INDEX tasks for a specific table
-SHOW BUILD INDEX where TableName = "table1";
-```
-
-To cancel `BUILD INDEX`, use `CANCEL BUILD INDEX`:
-
-```sql
-CANCEL BUILD INDEX ON table_name;
-CANCEL BUILD INDEX ON table_name (job_id1, job_id2, ...);
-```
-
-:::tip
-
-`BUILD INDEX` creates an asynchronous task executed by multiple threads on each BE. The number of threads can be set using the BE config `alter_index_worker_count`, with a default value of 3.
-
-In versions before 2.0.12 and 2.1.4, `BUILD INDEX` would keep retrying until it succeeded. Starting from these versions, failure and timeout mechanisms prevent endless retries. 3.0 (Cloud Mode) does not support this command as this moment.
-
-1. If the majority of replicas for a tablet fail to `BUILD INDEX`, the entire `BUILD INDEX` operation fails.
-2. If the time exceeds `alter_table_timeout_second`, the `BUILD INDEX` operation times out.
-3. Users can trigger `BUILD INDEX` multiple times; indexes that have already been built successfully will not be rebuilt.
-
-:::
-
-### Deleting Inverted Indexes from Existing Tables
-
-```sql
--- Syntax 1
-DROP INDEX idx_name ON table_name;
--- Syntax 2
-ALTER TABLE table_name DROP INDEX idx_name;
-```
-
-:::tip
-
-`DROP INDEX` deletes the index definition, so new data will no longer write to the index. This creates an asynchronous task to perform the index deletion, executed by multiple threads on each BE. The number of threads can be set using the BE parameter `alter_index_worker_count`, with a default value of 3.
-
-:::
-
-### Viewing Inverted Index
-
--- Syntax 1: The INDEX section in the table schema with USING INVERTED indicates an inverted index
-SHOW CREATE TABLE table_name;
-
--- Syntax 2: IndexType as INVERTED indicates an inverted index
-SHOW INDEX FROM idx_name;
-
-## Using Indexes
-
-### Accelerating Queries with Inverted Indexes
-
-```sql
--- 1. Full-text search keyword matching using MATCH_ANY and MATCH_ALL
-SELECT * FROM table_name WHERE column_name MATCH_ANY | MATCH_ALL 'keyword1 ...';
-
--- 1.1 Rows in the content column containing keyword1
-SELECT * FROM table_name WHERE content MATCH_ANY 'keyword1';
-
--- 1.2 Rows in the content column containing keyword1 or keyword2; you can add more keywords
-SELECT * FROM table_name WHERE content MATCH_ANY 'keyword1 keyword2';
-
--- 1.3 Rows in the content column containing both keyword1 and keyword2; you can add more keywords
-SELECT * FROM table_name WHERE content MATCH_ALL 'keyword1 keyword2';
-```
-
-```sql
--- 2. Full-text search phrase matching using MATCH_PHRASE
-
--- 2.1 Rows in the content column containing both keyword1 and keyword2, where keyword2 must immediately follow keyword1
--- 'keyword1 keyword2', 'wordx keyword1 keyword2', 'wordx keyword1 keyword2 wordy' all match because they contain 'keyword1 keyword2' with keyword2 immediately following keyword1
--- 'keyword1 wordx keyword2' does not match because there is a word between keyword1 and keyword2
--- 'keyword2 keyword1' does not match because the order is reversed
--- To use MATCH_PHRASE, you need to enable "support_phrase" = "true" in PROPERTIES.
-SELECT * FROM table_name WHERE content MATCH_PHRASE 'keyword1 keyword2';
-
--- 2.2 Rows in the content column containing both keyword1 and keyword2, with a slop (maximum word distance) of 3
--- 'keyword1 keyword2', 'keyword1 a keyword2', 'keyword1 a b c keyword2' all match because the slop is 0, 1, and 3 respectively, all within 3
--- 'keyword1 a b c d keyword2' does not match because the slop is 4, exceeding 3
--- 'keyword2 keyword1', 'keyword2 a keyword1', 'keyword2 a b c keyword1' also match because when slop > 0, the order of keyword1 and keyword2 is not required. To enforce the order, Doris provides a + sign after slop
-SELECT * FROM table_name WHERE content MATCH_PHRASE 'keyword1 keyword2 ~3';
--- To enforce order, use a positive sign with slop; 'keyword1 a b c keyword2' matches, while 'keyword2 a b c keyword1' does not
-SELECT * FROM table_name WHERE content MATCH_PHRASE 'keyword1 keyword2 ~3+';
-
--- 2.3 Prefix matching the last word keyword2, with a default limit of 50 prefixes (controlled by session variable inverted_index_max_expansions)
--- It is necessary to ensure that keyword1 and keyword2 remain adjacent in the original text after tokenization, with no other words in between.
--- 'keyword1 keyword2abc' matches because keyword1 is identical and keyword2abc is a prefix of keyword2
--- 'keyword1 keyword2' also matches because keyword2 is a prefix of keyword2
--- 'keyword1 keyword3' does not match because keyword3 is not a prefix of keyword2
--- 'keyword1 keyword3abc' does not match because keyword3abc is not a prefix of keyword2
-SELECT * FROM table_name WHERE content MATCH_PHRASE_PREFIX 'keyword1 keyword2';
-
--- 2.4 If only one word is provided, it defaults to a prefix query with a limit of 50 prefixes (controlled by session variable inverted_index_max_expansions)
-SELECT * FROM table_name WHERE content MATCH_PHRASE_PREFIX 'keyword1';
-
--- 2.5 Regular expression matching on tokenized words, with a default limit of 50 matches (controlled by session variable inverted_index_max_expansions)
--- Similar to MATCH_PHRASE_PREFIX but with regex instead of prefix
-SELECT * FROM table_name WHERE content MATCH_REGEXP 'key.*';
-
--- 3. Normal equality, range, IN, and NOT IN queries using standard SQL syntax, for example:
-SELECT * FROM table_name WHERE id = 123;
-SELECT * FROM table_name WHERE ts > '2023-01-01 00:00:00';
-SELECT * FROM table_name WHERE op_type IN ('add', 'delete');
-
--- 4. Full-text search across multiple columns using the multi_match function
--- Parameters:
---   First N parameters are column names to search
---   Second-to-last parameter specifies match mode: 'any'/'all'/'phrase'/'phrase_prefix'
---   Last parameter is the keyword or phrase to search for
-
--- 4.1 Rows where 'keyword1' appears in ANY of col1,col2,col3 (OR logic)
-select * FROM table_name WHERE multi_match(col1, col2, col3, 'any', 'keyword1');
-
--- 4.2 Rows where 'keyword1' appears in ALL of col1,col2,col3 (AND logic)
-select * FROM table_name WHERE multi_match(col1, col2, col3, 'all', 'keyword1');
-
--- 4.3 Rows where the exact phrase 'keyword1' appears in ANY of col1,col2,col3 (exact phrase match)
-select * FROM table_name WHERE multi_match(col1, col2, col3, 'phrase', 'keyword1');
-
--- 4.4 Rows where a phrase starting with 'keyword1' appears in ANY of col1,col2,col3 (phrase prefix match)
--- For example, will match content like "keyword123"
-select * FROM table_name WHERE multi_match(col1, col2, col3, 'phrase_prefix', 'keyword1');
-```
-
-### Analyzing Index Acceleration Effects Through Profiles
-
-Inverted query acceleration can be toggled using the session variable `enable_inverted_index_query`, which is set to true by default. To verify the acceleration effect of the index, it can be set to false to turn it off.
-
-The acceleration effect of the inverted index can be analyzed using the following metrics in the Query Profile:
-- RowsInvertedIndexFiltered: The number of rows filtered by the inverted index, which can be compared with other Rows values to analyze the filtering effect of the index.
-- InvertedIndexFilterTime: The time consumed by the inverted index.
-  - InvertedIndexSearcherOpenTime: The time taken to open the inverted index.
-  - InvertedIndexSearcherSearchTime: The time taken for internal queries within the inverted index.
-
-
-### Verifying Tokenization Effects Using Tokenization Functions
-
-To check the actual effect of tokenization or to tokenize a piece of text, you can use the `TOKENIZE` function for verification.
-
-The first parameter of the `TOKENIZE` function is the text to be tokenized, and the second parameter specifies the tokenization parameters used when creating the index.
-
-```sql
--- English tokenization
-SELECT TOKENIZE('I love Doris','"parser"="english"');
-+------------------------------------------------+
-| tokenize('I love Doris', '"parser"="english"') |
-+------------------------------------------------+
-| ["i", "love", "doris"]                         |
-+------------------------------------------------+
-
--- ICU tokenization for multilingual text (Supported since 3.1.0)
-SELECT TOKENIZE('مرحبا بالعالم Hello 世界', '"parser"="icu"');
-+--------------------------------------------------------+
-| tokenize('مرحبا بالعالم Hello 世界', '"parser"="icu"') |
-+--------------------------------------------------------+
-| ["مرحبا", "بالعالم", "Hello", "世界"]                   |
-+--------------------------------------------------------+
-
-SELECT TOKENIZE('มนไมเปนไปตามความตองการ', '"parser"="icu"');
-+-------------------------------------------------------------------+
-| tokenize('มนไมเปนไปตามความตองการ', '"parser"="icu"')            |
-+-------------------------------------------------------------------+
-| ["มน", "ไมเปน", "ไป", "ตาม", "ความ", "ตองการ"]                  |
-+-------------------------------------------------------------------+
-
--- Basic tokenization for high performance (Supported since 3.1.0)
-SELECT TOKENIZE('Hello World! This is a test.', '"parser"="basic"');
-+-----------------------------------------------------------+
-| tokenize('Hello World! This is a test.', '"parser"="basic"') |
-+-----------------------------------------------------------+
-| ["hello", "world", "this", "is", "a", "test"]              |
-+-----------------------------------------------------------+
-
-SELECT TOKENIZE('你好世界', '"parser"="basic"');
-+-------------------------------------------+
-| tokenize('你好世界', '"parser"="basic"')   |
-+-------------------------------------------+
-| ["你", "好", "世", "界"]                    |
-+-------------------------------------------+
-
-SELECT TOKENIZE('Hello你好World世界', '"parser"="basic"');
-+------------------------------------------------------+
-| tokenize('Hello你好World世界', '"parser"="basic"')    |
-+------------------------------------------------------+
-| ["hello", "你", "好", "world", "世", "界"]             |
-+------------------------------------------------------+
-
-SELECT TOKENIZE('GET /images/hm_bg.jpg HTTP/1.0', '"parser"="basic"');
-+---------------------------------------------------------------------+
-| tokenize('GET /images/hm_bg.jpg HTTP/1.0', '"parser"="basic"')      |
-+---------------------------------------------------------------------+
-| ["get", "images", "hm", "bg", "jpg", "http", "1", "0"]              |
-+---------------------------------------------------------------------+
-```
-
-## Usage Example
-
-Demonstrating the creation of an inverted index, full-text search, and regular queries using 1 million records from HackerNews. This includes a simple performance comparison with queries without indexing.
-
-### Table Creation
-
-```sql
-CREATE DATABASE test_inverted_index;
-
-USE test_inverted_index;
-
--- Create a table with an inverted index on the comment field
---   USING INVERTED specifies the index type as an inverted index
---   PROPERTIES("parser" = "english") specifies using the "english" tokenizer; other options include "chinese" for Chinese tokenization and "unicode" for mixed-language tokenization. If the "parser" parameter is not specified, no tokenization is applied.
-
-CREATE TABLE hackernews_1m
-(
-    `id` BIGINT,
-    `deleted` TINYINT,
-    `type` String,
-    `author` String,
-    `timestamp` DateTimeV2,
-    `comment` String,
-    `dead` TINYINT,
-    `parent` BIGINT,
-    `poll` BIGINT,
-    `children` Array<BIGINT>,
-    `url` String,
-    `score` INT,
-    `title` String,
-    `parts` Array<INT>,
-    `descendants` INT,
-    INDEX idx_comment (`comment`) USING INVERTED PROPERTIES("parser" = "english") COMMENT 'inverted index for comment'
+CREATE TABLE docs (
+    id BIGINT,
+    title STRING,
+    content STRING,
+    category STRING,
+    tags ARRAY<STRING>,
+    created_at DATETIME,
+    -- 文本搜索索引
+    INDEX idx_title(title) USING INVERTED PROPERTIES ("parser" = "chinese"),
+    INDEX idx_content(content) USING INVERTED PROPERTIES ("parser" = "chinese", "support_phrase" = "true"),
+    INDEX idx_category(category) USING INVERTED,
+    INDEX idx_tags(tags) USING INVERTED
 )
-DUPLICATE KEY(`id`)
-DISTRIBUTED BY HASH(`id`) BUCKETS 10
-PROPERTIES ("replication_num" = "1");
+DUPLICATE KEY(id)
+DISTRIBUTED BY HASH(id) BUCKETS 10;
 ```
 
-### Data Import
-
-**Importing Data via Stream Load**
-
-```
-wget https://qa-build.oss-cn-beijing.aliyuncs.com/regression/index/hacknernews_1m.csv.gz
-
-curl --location-trusted -u root: -H "compress_type:gz" -T hacknernews_1m.csv.gz http://127.0.0.1:8030/api/test_inverted_index/hackernews_1m/_stream_load
-{
-    "TxnId": 2,
-    "Label": "a8a3e802-2329-49e8-912b-04c800a461a6",
-    "TwoPhaseCommit": "false",
-    "Status": "Success",
-    "Message": "OK",
-    "NumberTotalRows": 1000000,
-    "NumberLoadedRows": 1000000,
-    "NumberFilteredRows": 0,
-    "NumberUnselectedRows": 0,
-    "LoadBytes": 130618406,
-    "LoadTimeMs": 8988,
-    "BeginTxnTimeMs": 23,
-    "StreamLoadPutTimeMs": 113,
-    "ReadDataTimeMs": 4788,
-    "WriteDataTimeMs": 8811,
-    "CommitAndPublishTimeMs": 38
-}
-```
-
-**Confirm Data Import Success with SQL count()**
+### 步骤 2：运行文本查询
 
 ```sql
-SELECT count() FROM hackernews_1m;
-+---------+
-| count() |
-+---------+
-| 1000000 |
-+---------+
+-- 简单关键词搜索
+SELECT * FROM docs WHERE content MATCH_ANY 'apache doris';
+
+-- 短语搜索
+SELECT * FROM docs WHERE content MATCH_PHRASE '全文检索';
+
+-- 使用 SEARCH 进行布尔查询
+SELECT * FROM docs
+WHERE SEARCH('title:apache AND (category:数据库 OR tags:ANY(sql nosql))');
+
+-- 基于相关性的排序
+SELECT id, title, score() AS relevance
+FROM docs
+WHERE content MATCH_ANY '实时 分析 OLAP'
+ORDER BY relevance DESC
+LIMIT 10;
 ```
 
-### Queries
+## 混合搜索：文本 + 向量
 
-**01 Full-Text Search**
-
-- Using `LIKE` to match and count rows containing 'OLAP' in the `comment` column took 0.18s.
-
-  ```sql
-  SELECT count() FROM hackernews_1m WHERE comment LIKE '%OLAP%';
-  +---------+
-  | count() |
-  +---------+
-  |      34 |
-  +---------+
-  ```
-
-- Using full-text search with `MATCH_ANY` based on the inverted index to count rows containing 'OLAP' in the `comment` column took 0.02s, resulting in a 9x speedup. The performance improvement would be even more significant on larger datasets.
-  
-  The difference in the number of results is due to the inverted index normalizing the terms by converting them to lowercase, among other processes, hence `MATCH_ANY` yields more results than `LIKE`.
-
-  ```sql
-  SELECT count() FROM hackernews_1m WHERE comment MATCH_ANY 'OLAP';
-  +---------+
-  | count() |
-  +---------+
-  |      35 |
-  +---------+
-  ```
-
-- Similarly, comparing the performance for counting occurrences of 'OLTP', 0.07s vs 0.01s. Due to caching, both `LIKE` and `MATCH_ANY` improved, but the inverted index still provided a 7x speedup.
-
-  ```sql
-  SELECT count() FROM hackernews_1m WHERE comment LIKE '%OLTP%';
-  +---------+
-  | count() |
-  +---------+
-  |      48 |
-  +---------+
-
-
-  SELECT count() FROM hackernews_1m WHERE comment MATCH_ANY 'OLTP';
-  +---------+
-  | count() |
-  +---------+
-  |      51 |
-  +---------+
-  ```
-
-- Counting rows where both 'OLAP' and 'OLTP' appear took 0.13s vs 0.01s, a 13x speedup.
-
-  To require multiple terms to appear simultaneously (AND relationship), use `MATCH_ALL 'keyword1 keyword2 ...'`.
-
-  ```sql
-  SELECT count() FROM hackernews_1m WHERE comment LIKE '%OLAP%' AND comment LIKE '%OLTP%';
-  +---------+
-  | count() |
-  +---------+
-  |      14 |
-  +---------+
-
-
-  SELECT count() FROM hackernews_1m WHERE comment MATCH_ALL 'OLAP OLTP';
-  +---------+
-  | count() |
-  +---------+
-  |      15 |
-  +---------+
-  ```
-
-- Counting rows where either 'OLAP' or 'OLTP' appears took 0.12s vs 0.01s, a 12x speedup.
-  
-  To require any one or more of multiple terms to appear (OR relationship), use `MATCH_ANY 'keyword1 keyword2 ...'`.
-
-  ```sql
-  SELECT count() FROM hackernews_1m WHERE comment LIKE '%OLAP%' OR comment LIKE '%OLTP%';
-  +---------+
-  | count() |
-  +---------+
-  |      68 |
-  +---------+
-  
-  SELECT count() FROM hackernews_1m WHERE comment MATCH_ANY 'OLAP OLTP';
-  +---------+
-  | count() |
-  +---------+
-  |      71 |
-  +---------+
-  ```
-
-  ### 02 Standard Equality and Range Queries
-
-- Range query on a `DateTime` type column
-
-  ```sql
-  SELECT count() FROM hackernews_1m WHERE timestamp > '2007-08-23 04:17:00';
-  +---------+
-  | count() |
-  +---------+
-  |  999081 |
-  +---------+
-  ```
-
-- Adding an inverted index for the `timestamp` column
-
-  ```sql
-  -- For date-time types, USING INVERTED does not require specifying a parser
-  -- CREATE INDEX is one syntax for creating an index, another method will be shown later
-  CREATE INDEX idx_timestamp ON hackernews_1m(timestamp) USING INVERTED;
-  ```
-
-  ```sql
-  BUILD INDEX idx_timestamp ON hackernews_1m;
-  ```
-
-- Checking the index creation progress. From the difference between `FinishTime` and `CreateTime`, we can see that building the inverted index for 1 million rows on the `timestamp` column took only 1 second.
-
-  ```sql
-  SHOW ALTER TABLE COLUMN;
-  +-------+---------------+-------------------------+-------------------------+---------------+---------+---------------+---------------+---------------+----------+------+----------+---------+
-  | JobId | TableName     | CreateTime              | FinishTime              | IndexName     | IndexId | OriginIndexId | SchemaVersion | TransactionId | State    | Msg  | Progress | Timeout |
-  +-------+---------------+-------------------------+-------------------------+---------------+---------+---------------+---------------+---------------+----------+------+----------+---------+
-  | 10030 | hackernews_1m | 2023-02-10 19:44:12.929 | 2023-02-10 19:44:13.938 | hackernews_1m | 10031   | 10008         | 1:1994690496  | 3             | FINISHED |      | NULL     | 2592000 |
-  +-------+---------------+-------------------------+-------------------------+---------------+---------+---------------+---------------+---------------+----------+------+----------+---------+
-  ```
-
-  ```sql
-  -- If the table has no partitions, PartitionName defaults to TableName
-  SHOW BUILD INDEX;
-  +-------+---------------+---------------+----------------------------------------------------------+-------------------------+-------------------------+---------------+----------+------+----------+
-  | JobId | TableName     | PartitionName | AlterInvertedIndexes                                     | CreateTime              | FinishTime              | TransactionId | State    | Msg  | Progress |
-  +-------+---------------+---------------+----------------------------------------------------------+-------------------------+-------------------------+---------------+----------+------+----------+
-  | 10191 | hackernews_1m | hackernews_1m | [ADD INDEX idx_timestamp (`timestamp`) USING INVERTED],  | 2023-06-26 15:32:33.894 | 2023-06-26 15:32:34.847 | 3             | FINISHED |      | NULL     |
-  +-------+---------------+---------------+----------------------------------------------------------+-------------------------+-------------------------+---------------+----------+------+----------+
-  ```
-
-- After the index is created, range queries use the same query syntax. Doris will automatically recognize the index for optimization. However, due to the small dataset, the performance difference is not significant.
-
-  ```sql
-  SELECT count() FROM hackernews_1m WHERE timestamp > '2007-08-23 04:17:00';
-  +---------+
-  | count() |
-  +---------+
-  |  999081 |
-  +---------+
-  ```
-
-- Performing similar operations on a numeric column `parent` with an equality match query.
-
-  ```sql
-  SELECT count() FROM hackernews_1m WHERE parent = 11189;
-  +---------+
-  | count() |
-  +---------+
-  |       2 |
-  +---------+
-
-  -- For numeric types, USING INVERTED does not require specifying a parser
-  -- ALTER TABLE t ADD INDEX is the second syntax for creating an index
-  ALTER TABLE hackernews_1m ADD INDEX idx_parent(parent) USING INVERTED;
-
-
-  -- Execute BUILD INDEX to create the inverted index for existing data
-  BUILD INDEX idx_parent ON hackernews_1m;
-
-
-  SHOW ALTER TABLE COLUMN;
-  +-------+---------------+-------------------------+-------------------------+---------------+---------+---------------+---------------+---------------+----------+------+----------+---------+
-  | JobId | TableName     | CreateTime              | FinishTime              | IndexName     | IndexId | OriginIndexId | SchemaVersion | TransactionId | State    | Msg  | Progress | Timeout |
-  +-------+---------------+-------------------------+-------------------------+---------------+---------+---------------+---------------+---------------+----------+------+----------+---------+
-  | 10030 | hackernews_1m | 2023-02-10 19:44:12.929 | 2023-02-10 19:44:13.938 | hackernews_1m | 10031   | 10008         | 1:1994690496  | 3             | FINISHED |      | NULL     | 2592000 |
-  | 10053 | hackernews_1m | 2023-02-10 19:49:32.893 | 2023-02-10 19:49:33.982 | hackernews_1m | 10054   | 10008         | 1:378856428   | 4             | FINISHED |      | NULL     | 2592000 |
-  +-------+---------------+-------------------------+-------------------------+---------------+---------+---------------+---------------+---------------+----------+------+----------+---------+
-
-  SHOW BUILD INDEX;
-  +-------+---------------+---------------+----------------------------------------------------+-------------------------+-------------------------+---------------+----------+------+----------+
-  | JobId | TableName     | PartitionName | AlterInvertedIndexes                               | CreateTime              | FinishTime              | TransactionId | State    | Msg  | Progress |
-  +-------+---------------+---------------+----------------------------------------------------+-------------------------+-------------------------+---------------+----------+------+----------+
-  | 11005 | hackernews_1m | hackernews_1m | [ADD INDEX idx_parent (`parent`) USING INVERTED],  | 2023-06-26 16:25:10.167 | 2023-06-26 16:25:10.838 | 1002          | FINISHED |      | NULL     |
-  +-------+---------------+---------------+----------------------------------------------------+-------------------------+-------------------------+---------------+----------+------+----------+
-
-
-  SELECT count() FROM hackernews_1m WHERE parent = 11189;
-  +---------+
-  | count() |
-  +---------+
-  |       2 |
-  +---------+
-  ```
-
-- Creating an inverted index for the string column `author` without tokenization. Equality queries can also leverage the index for speedup.
-
-  ```sql
-  SELECT count() FROM hackernews_1m WHERE author = 'faster';
-  +---------+
-  | count() |
-  +---------+
-  |      20 |
-  +---------+
-
-  
-  -- Here, USING INVERTED is used without tokenizing the `author` column, treating it as a single term
-  ALTER TABLE hackernews_1m ADD INDEX idx_author(author) USING INVERTED;
-
-  
-  -- Execute BUILD INDEX to add the inverted index for existing data
-  BUILD INDEX idx_author ON hackernews_1m;
-
-  
-Creating an incremental index for 1 million author records took only 1.5 seconds.
+在 RAG 应用中结合文本搜索和向量相似度，可以实现更全面的检索：
 
 ```sql
-SHOW ALTER TABLE COLUMN;
-+-------+---------------+-------------------------+-------------------------+---------------+---------+---------------+---------------+---------------+----------+------+----------+---------+
-| JobId | TableName     | CreateTime              | FinishTime              | IndexName     | IndexId | OriginIndexId | SchemaVersion | TransactionId | State    | Msg  | Progress | Timeout |
-+-------+---------------+-------------------------+-------------------------+---------------+---------+---------------+---------------+---------------+----------+------+----------+---------+
-| 10030 | hackernews_1m | 2023-02-10 19:44:12.929 | 2023-02-10 19:44:13.938 | hackernews_1m | 10031   | 10008         | 1:1994690496  | 3             | FINISHED |      | NULL     | 2592000 |
-| 10053 | hackernews_1m | 2023-02-10 19:49:32.893 | 2023-02-10 19:49:33.982 | hackernews_1m | 10054   | 10008         | 1:378856428   | 4             | FINISHED |      | NULL     | 2592000 |
-| 10076 | hackernews_1m | 2023-02-10 19:54:20.046 | 2023-02-10 19:54:21.521 | hackernews_1m | 10077   | 10008         | 1:1335127701  | 5             | FINISHED |      | NULL     | 2592000 |
-+-------+---------------+-------------------------+-------------------------+---------------+---------+---------------+---------------+---------------+----------+------+----------+---------+
+-- 混合检索：语义相似度 + 关键词过滤
+SELECT id, title, score() AS text_relevance
+FROM docs
+WHERE
+    -- 向量过滤实现语义相似度
+    cosine_distance(embedding, [0.1, 0.2, ...]) < 0.3
+    -- 文本过滤实现关键词约束
+    AND SEARCH('title:搜索 AND content:引擎 AND category:技术')
+ORDER BY text_relevance DESC
+LIMIT 10;
 ```
+
+## 管理倒排索引
+
+### 创建索引
 
 ```sql
-SHOW BUILD INDEX ORDER BY CreateTime DESC LIMIT 1;
-+-------+---------------+---------------+----------------------------------------------------+-------------------------+-------------------------+---------------+----------+------+----------+
-| JobId | TableName     | PartitionName | AlterInvertedIndexes                               | CreateTime              | FinishTime              | TransactionId | State    | Msg  | Progress |
-+-------+---------------+---------------+----------------------------------------------------+-------------------------+-------------------------+---------------+----------+------+----------+
-| 13006 | hackernews_1m | hackernews_1m | [ADD INDEX idx_author (`author`) USING INVERTED],  | 2023-06-26 17:23:02.610 | 2023-06-26 17:23:03.755 | 3004          | FINISHED |      | NULL     |
-+-------+---------------+---------------+----------------------------------------------------+-------------------------+-------------------------+---------------+----------+------+----------+
+-- 在建表时创建
+CREATE TABLE t (
+    content STRING,
+    INDEX idx(content) USING INVERTED PROPERTIES ("parser" = "chinese")
+);
+
+-- 在现有表上创建
+CREATE INDEX idx_content ON docs(content) USING INVERTED PROPERTIES ("parser" = "chinese");
+
+-- 为现有数据构建索引
+BUILD INDEX idx_content ON docs;
 ```
 
--- After creating the index, string equality matches also showed significant acceleration.
+### 删除索引
 
 ```sql
-SELECT count() FROM hackernews_1m WHERE author = 'faster';
-+---------+
-| count() |
-+---------+
-|      20 |
-+---------+
+DROP INDEX idx_content ON docs;
 ```
 
+### 查看索引
+
+```sql
+SHOW CREATE TABLE docs;
+SHOW INDEX FROM docs;
+```
+
+## 延伸阅读
+
+### 核心文档
+
+- [文本搜索算子](./search-operators.md) — 完整算子参考和查询加速
+- [SEARCH 函数](./search-function.md) — 统一查询 DSL 语法和示例
+- [相关性打分](./scoring.md) — 相关性排序算法和用法
+
+### 高级主题
+
+- [自定义分析器](./custom-analyzer.md) — 构建特定领域的分词器和过滤器
+- [向量搜索](../vector-search/overview.md) — 使用嵌入向量进行语义相似度搜索

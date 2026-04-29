@@ -1,56 +1,85 @@
 ---
 {
-    "title": "Sort Key and Prefix Index",
-    "language": "en",
-    "description": "Doris stores data in a structure similar to SSTable (Sorted String Table)."
+    "title": "前缀索引与排序键",
+    "language": "zh-CN",
+    "description": "前缀索引是 Apache Doris 内置的稀疏索引，基于排序键的前 36 字节定位数据块，无需手动创建即可加速等值查询与范围查询。",
+    "keywords": [
+        "前缀索引",
+        "排序键",
+        "Sort Key",
+        "Prefix Index",
+        "Apache Doris",
+        "稀疏索引",
+        "查询加速",
+        "Key 列设计"
+    ]
 }
 ---
 
-## Index Principles
+<!-- 知识类型: Feature 介绍 + 设计指南 -->
+<!-- 适用场景: 表结构设计 / 查询性能调优 -->
 
-Doris stores data in a structure similar to SSTable (Sorted String Table). This structure is an ordered data structure that can be sorted and stored according to one or more specified columns. In such a data structure, looking up conditions on all or part of the sorted columns is highly efficient.
+前缀索引（Prefix Index）是 Apache Doris **内置且自动维护**的稀疏索引，依据排序键的前 36 字节快速定位数据块，无需用户手动创建。在表结构设计阶段合理选择排序键，即可显著加速 WHERE 条件中的等值查询和范围查询。
 
-In the Aggregate, Unique, and Duplicate data models, the underlying data storage is sorted according to the columns specified in the CREATE TABLE statement under AGGREGATE KEY, UNIQUE KEY, and DUPLICATE KEY respectively. These keys are referred to as sort keys. With sort keys, Doris can quickly locate the required data without scanning the entire table by specifying conditions on the sorted columns during a query, thereby reducing search complexity and speeding up the query.
+## 工作原理
 
-Based on the sort keys, Doris introduces a prefix index. The prefix index is a sparse index. The data in the table forms a logical data block (Data Block) according to the corresponding number of rows. Each logical data block stores an index entry in the prefix index table, where the length of the index entry does not exceed 36 bytes. The entry content is the prefix composed of the sorted columns of the first row in the data block. When looking up the prefix index table, it helps determine the starting row number of the logical data block where the row data is located. Because the prefix index is relatively small, it can be fully cached in memory, allowing for quick data block location and significantly improving query efficiency.
+![Prefix Index](/images/next/table-design/prefix-index.jpg)
+
+### 排序键（Sort Key）
+
+Apache Doris 的数据存储在类似 SSTable（Sorted String Table）的有序结构中，可以按指定的一列或多列排序存储。这些用于排序的列称为**排序键（Sort Key）**。
+
+不同数据模型的排序键定义来源不同：
+
+| 数据模型 | 排序键来源 |
+| --- | --- |
+| Aggregate | 建表语句中的 Aggregate Key |
+| Unique | 建表语句中的 Unique Key |
+| Duplicate | 建表语句中的 Duplicate Key |
+
+借助排序键，查询时只要 WHERE 条件命中排序列，Doris 就能快速跳转到对应数据范围，避免全表扫描，从而降低搜索复杂度、加速查询。
+
+### 前缀索引（Prefix Index）
+
+在排序键的基础上，Apache Doris 进一步引入了前缀索引：
+
+1. 表中每隔若干行的数据组成一个逻辑数据块（Data Block）。
+2. 每个数据块在前缀索引表中只保留一条索引项，索引项内容为该块**第一行排序列拼接而成的前缀**，长度不超过 36 字节。
+3. 由于前缀索引体积小，可以**全量缓存在内存中**，能够快速定位到目标数据块的起始行号，大幅提升查询效率。
+
+### 36 字节截断规则
+
+前缀索引取一行排序列的前 36 字节作为索引内容，但遇到 `VARCHAR` 类型时会**直接截断**：
+
+- 排序列拼接到 `VARCHAR` 列时，无论是否凑满 36 字节，都会在该列结束处截断。
+- 若第一列就是 `VARCHAR`，即使长度不足 36 字节，也会截断，后续列不再加入前缀索引。
+
+## 适用场景
+
+前缀索引主要服务于以下查询场景：
+
+- **等值查询**：`col = value`、`col IN (...)`
+- **范围查询**：`col > value`、`BETWEEN ... AND ...` 等
+
+只要 WHERE 条件命中排序键的**前缀**（即从最左列开始的若干列），即可被前缀索引加速。
+
+## 表结构设计建议
+
+由于一个表的排序键定义是唯一的，因此**一个表只能拥有一组前缀索引**。建表时排序键的选择直接决定了前缀索引的加速效果，可参考以下原则：
+
+1. **优先选择最常出现在 WHERE 过滤条件中的列作为 Key 列**。
+2. **将查询频率更高的列放在前面**，因为前缀索引仅对从最左列开始连续命中的条件有效。
+3. **谨慎将 `VARCHAR` 列放在排序键前部**，避免触发截断导致后续列无法进入前缀索引。
 
 :::tip
-
-The first 36 bytes of a row in a data block are used as the prefix index for that row. When encountering a VARCHAR type, the prefix index is directly truncated. If the first column is VARCHAR, even if it does not reach 36 bytes, it will be directly truncated, and the subsequent columns will not be included in the prefix index.
+若高频查询条件无法通过调整排序键来命中前缀索引，可参考下文 [无法命中前缀索引时的替代方案](#无法命中前缀索引时的替代方案)。
 :::
 
-## Use Cases
+## 使用示例
 
-Prefix indexes can speed up equality queries and range queries.
+### 示例 1：前缀索引未发生截断
 
-## Managing Indexes
-
-There is no specific syntax to define a prefix index. When creating a table, the first 36 bytes of the table's Key are automatically taken as the prefix index.
-
-### Recommendations for Prefix Index Selection
-
-:::tip
-
-Because the Key definition of a table is unique, a table has only one set of prefix indexes. Therefore, it is important to choose an appropriate prefix index when designing the table structure. The following recommendations can be considered:
-1. Choose the fields most commonly used in WHERE filtering conditions as the Key.
-2. Place the more frequently used fields at the front, as prefix indexes are only effective for fields in the WHERE condition that are part of the Key's prefix.
-
-For queries that use other columns not covered by the prefix index as conditions, the efficiency may not meet the requirements. There are two solutions:
-1. Create an inverted index on the columns that require accelerated queries, as a table can have many inverted indexes.
-2. For DUPLICATE tables, multi-prefix indexes can be indirectly achieved by creating corresponding strongly consistent materialized views with adjusted column orders. For more details, refer to query acceleration/materialized views.
-
-:::
-
-## Using Indexes
-
-Prefix indexes are used to accelerate equality and range queries in the WHERE clause. They automatically take effect when applicable, and there is no special syntax required.
-
-The acceleration effect of the prefix index can be analyzed using the following metrics in the Query Profile:
-- RowsKeyRangeFiltered: The number of rows filtered by the prefix index, which can be compared with other Rows values to analyze the filtering effect of the index.
-
-## Example Usage
-
--   Suppose the sorted columns of a table are as follows, then the prefix index would be: user_id (8 Bytes) + age (4 Bytes) + message (prefix 20 Bytes).
+排序键如下，前缀索引为 `user_id (8 Bytes) + age (4 Bytes) + message (前 20 Bytes)`，合计 32 Bytes：
 
 | ColumnName     | Type         |
 | -------------- | ------------ |
@@ -60,7 +89,9 @@ The acceleration effect of the prefix index can be analyzed using the following 
 | max_dwell_time | DATETIME     |
 | min_dwell_time | DATETIME     |
 
--   Suppose the sorted columns of a table are as follows, then the prefix index would be user_name (20 Bytes). Even if it does not reach 36 bytes, it is directly truncated due to encountering VARCHAR, and subsequent columns are not included.
+### 示例 2：首列即为 VARCHAR 触发截断
+
+排序键如下，前缀索引仅为 `user_name (20 Bytes)`。即便未达到 36 字节，因首列为 `VARCHAR` 而直接截断，后续列不会进入前缀索引：
 
 | ColumnName     | Type         |
 | -------------- | ------------ |
@@ -70,16 +101,53 @@ The acceleration effect of the prefix index can be analyzed using the following 
 | max_dwell_time | DATETIME     |
 | min_dwell_time | DATETIME     |
 
--   When our query condition is the prefix of the prefix index, it can significantly speed up the query. For example, in the first example, executing the following query:
+### 示例 3：查询命中 vs 未命中前缀索引
 
-```sql
-SELECT * FROM table WHERE user_id = 1829239 AND age = 20;
-```
+基于示例 1 的表结构：
 
-This query will be much more efficient than the following query:
+- **命中前缀索引**（条件覆盖排序键最左侧的两列，效率高）：
 
-```sql
-SELECT * FROM table WHERE age = 20;
-```
+    ```sql
+    SELECT * FROM table WHERE user_id = 1829239 AND age = 20;
+    ```
 
-Therefore, choosing the correct column order when creating a table can greatly improve query efficiency.
+- **未命中前缀索引**（条件跳过了 `user_id`，无法使用前缀定位）：
+
+    ```sql
+    SELECT * FROM table WHERE age = 20;
+    ```
+
+因此，建表时正确选择列顺序，能够极大提高查询效率。
+
+## 验证索引效果
+
+前缀索引在能加速时**自动生效，没有特殊语法**。可通过 [Query Profile](../../query-acceleration/query-profile.md) 中的以下指标验证加速效果：
+
+| 指标 | 含义 |
+| --- | --- |
+| `RowsKeyRangeFiltered` | 通过前缀索引过滤掉的行数。可与其他 `Rows*` 指标对比，评估索引过滤效果。 |
+
+## 无法命中前缀索引时的替代方案
+
+当高频查询条件无法命中前缀索引时（例如某些常用过滤列并非排序键前缀），可考虑以下两种方案：
+
+1. **创建[倒排索引](./inverted-index/overview.md)**：一个表可创建多个倒排索引，灵活覆盖不同查询条件列。
+2. **使用单表物化视图（Duplicate 模型）**：通过创建调整了列顺序的单表强一致[同步物化视图](../../query-acceleration/materialized-view/sync-materialized-view.md)，间接实现多组前缀索引。
+
+## 常见问题（FAQ）
+
+**Q1：前缀索引需要手动创建吗？**
+
+不需要。建表时 Doris 会自动取排序键的前 36 字节作为前缀索引，没有专门的 DDL 语法。
+
+**Q2：一张表可以有多组前缀索引吗？**
+
+不可以。由于排序键唯一，一张表只能有一组前缀索引。如需多组，建议借助倒排索引或物化视图实现。
+
+**Q3：为什么我的前缀索引比预期短很多？**
+
+最常见原因是排序键中靠前的位置出现了 `VARCHAR` 列，触发了截断规则。建议把定长类型（如 `BIGINT`、`INT`、`DATETIME`）放在排序键前部。
+
+**Q4：前缀索引能加速 `LIKE` 或文本检索吗？**
+
+不能。`LIKE` 模糊匹配和全文检索建议分别使用 [NGram BloomFilter 索引](./ngram-bloomfilter-index.md) 与 [倒排索引](./inverted-index/overview.md)。

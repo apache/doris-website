@@ -8,7 +8,7 @@
 
 ## Table Model Selection
 
-It is recommended to prioritize using the Duplicate Key model, which offers advantages in both data loading and query performance compared to other models. For more information, please refer to: [Data Model](../../table-design/data-model/overview)
+It is recommended to prioritize using the Duplicate Key model, which offers advantages in both data loading and query performance compared to other models. For more information, please refer to: [Data Model](../../table-design/data-model/intro)
 
 ## Partition and Bucket Configuration
 

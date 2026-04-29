@@ -11,7 +11,7 @@ During the process of migrating BigQuery, it is usually necessary to use object 
 
 ## Considerations
 
-1. Before the migration, it is necessary to select Doris' [Data Model](../../../table-design/data-model/overview.md), as well as the strategies for [Partitioning](../../../table-design/data-partitioning/dynamic-partitioning.md) and [Bucketing](../../../table-design/data-partitioning/data-bucketing.md) according to the table structure of BigQuery. For more table creation strategies, please refer to [Load Best Practices](../load-best-practices.md).
+1. Before the migration, it is necessary to select Doris' [Data Model](../../../table-design/data-model/intro.mdx), as well as the strategies for [Partitioning](../../../table-design/data-partitioning/dynamic-partitioning.md) and [Bucketing](../../../table-design/data-partitioning/data-bucketing.md) according to the table structure of BigQuery. For more table creation strategies, please refer to [Load Best Practices](../load-best-practices.md).
 2. When BigQuery exports data in JSON type, it does not support exporting in Parquet format. You can export it in JSON format instead.
 3. When BigQuery exports data of the Time type, it is necessary to export it after casting it to the String type.
 

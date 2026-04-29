@@ -11,7 +11,7 @@ During the migration from Snowflake to Doris, object storage is typically used a
 
 ## Considerations
 
-Before migration, select Doris' [data model](../../../table-design/data-model/overview.md), [partitioning](../../../table-design/data-partitioning/dynamic-partitioning.md), and [bucketing](../../../table-design/data-partitioning/data-bucketing.md) strategies based on Snowflake's table structure. For more table creation strategies, refer to [Load Best Practices](../load-best-practices.md).
+Before migration, select Doris' [data model](../../../table-design/data-model/intro.mdx), [partitioning](../../../table-design/data-partitioning/dynamic-partitioning.md), and [bucketing](../../../table-design/data-partitioning/data-bucketing.md) strategies based on Snowflake's table structure. For more table creation strategies, refer to [Load Best Practices](../load-best-practices.md).
 
 ## Data type mapping
 
