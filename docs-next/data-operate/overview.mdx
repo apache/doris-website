@@ -1,0 +1,31 @@
+---
+{
+    "title": "Data Operations",
+    "language": "en",
+    "description": "Load, update, delete, and export data in Apache Doris — covering ingestion methods, write semantics, and result-set export."
+}
+---
+
+import GettingStartedCard from '@site/src/components/getting-started-card/getting-started-card';
+
+Apache Doris provides a complete set of data operation capabilities, covering the full lifecycle from ingestion to export. You can load data from a wide range of sources, update or delete rows with transactional guarantees, and export query results or table data to external storage.
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="Loading Data"
+    description="Ingest data from files, message queues, transactional databases, and other OLAP systems via Stream Load, Broker Load, Routine Load, INSERT, and continuous load jobs."
+    link="./import/load-manual"
+/>
+
+<GettingStartedCard
+    title="Data Update and Delete"
+    description="Update existing rows, remove data with DELETE / TRUNCATE / atomic replace, and group write operations into transactions."
+    link="./update-and-delete"
+/>
+
+<GettingStartedCard
+    title="Exporting Data"
+    description="Export query results or table data to HDFS, object storage, or local files using EXPORT, SELECT INTO OUTFILE, or mysqldump."
+    link="./export/export-overview"
+/>
+</div>

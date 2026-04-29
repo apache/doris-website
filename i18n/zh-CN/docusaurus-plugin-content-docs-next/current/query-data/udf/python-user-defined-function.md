@@ -2,37 +2,78 @@
 {
     "title": "Python UDF, UDAF, UDWF, UDTF",
     "language": "zh-CN",
-    "description": "Python UDF 为用户提供使用 Python 语言编写 UDF 的接口，以方便用户使用 Python 语言进行自定义函数的执行。 Doris 支持使用 Python 编写 UDF、UDAF 和 UDTF。下文如无特殊说明，使用 UDF 统称所有用户自定义函数。"
+    "description": "如何在 Apache Doris 中使用 Python 编写 UDF、UDAF、UDTF：覆盖创建、向量化、环境配置与常见问题排查。",
+    "keywords": [
+        "Doris Python UDF",
+        "Python UDAF",
+        "Python UDTF",
+        "向量化 UDF",
+        "Pandas UDF",
+        "PYTHON_UDF runtime_version",
+        "Conda Python 环境",
+        "venv Python 环境",
+        "Python environment not found"
+    ]
 }
 ---
 
-## Python UDF
+<!-- 知识类型: Feature 概览 + 操作指南 + 配置参数 -->
+<!-- 适用场景: 在 Doris 中扩展 SQL 能力 / 使用 Python 实现自定义计算、聚合与表函数 -->
 
-Python UDF (User Defined Function) 是 Apache Doris 提供的自定义标量函数扩展机制，允许用户使用 Python 语言编写自定义函数，用于数据查询和处理。通过 Python UDF，用户可以灵活地实现复杂的业务逻辑，处理各种数据类型，并充分利用 Python 丰富的生态库。
+Python UDF/UDAF/UDTF 是 Apache Doris 提供的自定义函数扩展机制，允许用户使用 Python 语言编写标量函数、聚合函数和表函数，用于在 SQL 中完成内置函数难以表达的复杂计算逻辑，并复用 Python 丰富的生态库。
 
-Python UDF 支持两种执行模式:
-- **标量模式 (Scalar Mode)**: 逐行处理数据，适用于简单的转换和计算
-- **向量化模式 (Vectorized Mode)**: 批量处理数据，利用 Pandas 进行高性能计算
+本文从典型用户场景出发，分别介绍三类函数的用法、参数、数据类型映射、性能建议、限制以及多版本 Python 环境的部署方式。
+
+## 何时选择 Python UDF/UDAF/UDTF
+
+<!-- 知识类型: 选型决策 -->
+
+| 你的场景 | 推荐使用 | 关系 |
+| --- | --- | --- |
+| 需要按行进行复杂转换、清洗、脱敏、校验 | Python UDF（标量函数） | 一行输入 → 一行输出 |
+| 需要在 GROUP BY 或窗口（OVER 子句）上自定义聚合指标 | Python UDAF（聚合函数） | 多行输入 → 一行输出 |
+| 需要将一行数据展开为多行，例如 CSV/JSON 拆解、序列生成 | Python UDTF（表函数） | 一行输入 → 零行/多行输出 |
+
+如对性能要求极高，建议优先使用 Doris 内置（C++ 实现的）函数；Python UDF 适合内置函数无法满足、且数据量适中的场景。
+
+## 通用前置条件
+
+<!-- 知识类型: 部署前检查 -->
+<!-- 适用场景: 首次启用 Python UDF -->
+
+在创建任何 Python UDF/UDAF/UDTF 之前，请先完成以下准备：
+
+1. **启用 Python UDF 功能并配置好 Python 环境**：在 BE 节点的 `be.conf` 中开启相关参数，并配置 Conda 或 venv 形式的 Python 多版本环境。详见 [Python UDF/UDAF/UDTF 环境配置与多版本管理](#python-udfudafudtf-环境配置与多版本管理)。
+2. **强制依赖**：必须在所有 BE 节点对应的 Python 环境中预装 **`pandas`** 与 **`pyarrow`**，这是 Doris Python UDF 功能的强制依赖，未安装将无法运行。
+3. **运行日志**：Python UDF Server 的运行日志位于 `output/be/log/python_udf_output.log`，可在该日志中查看函数执行情况和报错信息，便于调试。
 
 :::tip 提示
-**环境依赖**: 使用 Python UDF 前，必须在所有 BE 节点的 Python 环境中预先安装 **`pandas`** 和 **`pyarrow`** 两个库，这是 Doris Python UDF 功能的强制依赖。详见 [Python UDF 环境配置](python-user-defined-function#python-udfudafudtf-环境配置与多版本管理)。
-
-**日志路径**: Python UDF Server 的运行日志位于 `output/be/log/python_udf_output.log`。用户可以在该日志中查看 Python Server 的运行情况、函数执行信息和调试错误。
+所有创建语句都必须显式指定 `runtime_version`，并填写完整版本号（如 `"3.10.12"`），不能只写主次版本号（如 `"3.10"`），否则函数调用时会报错。
 :::
+
+## Python UDF（标量函数）
+
+<!-- 知识类型: 操作指南 -->
+
+Python UDF（User Defined Function）用于按行处理数据，每行调用一次函数并返回单个结果。它支持两种执行模式：
+
+- **标量模式（Scalar Mode）**：逐行处理数据，适合简单的转换和计算。
+- **向量化模式（Vectorized Mode）**：批量处理数据，借助 Pandas 进行高性能计算。
 
 ### 创建 Python UDF
 
-Python UDF 支持两种创建方式: `内联模式 (Inline)` 和 `模块模式 (Module)`。
+Python UDF 支持两种创建方式：**内联模式（Inline）** 与 **模块模式（Module）**。
 
 :::caution 注意
-如果同时指定了 `file` 参数和 `AS $$` 内联 Python 代码，Doris 将会优先加载**内联 Python 代码**，采用内联模式运行 Python UDF。
+若同时指定了 `file` 参数和 `AS $$` 内联 Python 代码，Doris 将**优先加载内联 Python 代码**，按内联模式运行。
 :::
 
-#### 内联模式 (Inline Mode)
+#### 内联模式（Inline Mode）
 
-内联模式允许直接在 SQL 中编写 Python 代码，适合简单的函数逻辑。
+内联模式允许直接在 SQL 中编写 Python 代码，适合简单逻辑。
 
-**语法**:
+**语法**：
+
 ```sql
 CREATE FUNCTION function_name(parameter_type1, parameter_type2, ...)
 RETURNS return_type
@@ -49,7 +90,8 @@ def entry_function_name(param1, param2, ...):
 $$;
 ```
 
-**示例 1: 整数加法**
+**示例 1：整数加法**
+
 ```sql
 DROP FUNCTION IF EXISTS py_add(INT, INT);
 
@@ -68,7 +110,8 @@ $$;
 SELECT py_add(10, 20) AS result; -- 结果: 30
 ```
 
-**示例 2: 字符串拼接**
+**示例 2：字符串拼接（含 NULL 处理）**
+
 ```sql
 DROP FUNCTION IF EXISTS py_concat(STRING, STRING);
 
@@ -87,17 +130,17 @@ def evaluate(s1, s2):
 $$;
 
 SELECT py_concat('Hello', ' World') AS result; -- 结果: Hello World
-SELECT py_concat(NULL, ' World') AS result; -- 结果: NULL
-SELECT py_concat('Hello', NULL) AS result; -- 结果: NULL
+SELECT py_concat(NULL, ' World') AS result;    -- 结果: NULL
+SELECT py_concat('Hello', NULL) AS result;     -- 结果: NULL
 ```
 
-#### 模块模式 (Module Mode)
+#### 模块模式（Module Mode）
 
-模块模式适合复杂的函数逻辑，需要将 Python 代码打包成 `.zip` 压缩包，并在函数创建时引用。
+模块模式适合复杂逻辑：将 Python 代码打包成 `.zip` 压缩包，在创建函数时通过 `file` 参数引用。
 
-**步骤 1: 编写 Python 模块**
+**步骤 1：编写 Python 模块**
 
-创建 `python_udf_scalar_ops.py` 文件:
+创建 `python_udf_scalar_ops.py` 文件：
 
 ```python
 def add_three_numbers(a, b, c):
@@ -127,77 +170,74 @@ def is_prime(n):
     return True
 ```
 
-**步骤 2: 打包 Python 模块**
+**步骤 2：打包 Python 模块**
 
-**必须**将 Python 文件打包成 `.zip` 格式(即使只有单个文件):
+**必须**将 Python 文件打包成 `.zip` 格式（即使只有单个文件）：
+
 ```bash
 zip python_udf_scalar_ops.zip python_udf_scalar_ops.py
 ```
 
-如果有多个 Python 文件:
+如果有多个 Python 文件：
+
 ```bash
 zip python_udf_scalar_ops.zip python_udf_scalar_ops.py utils.py helper.py ...
 ```
 
-**步骤 3: 设置 Python 模块压缩包的路径**
+**步骤 3：设置 `.zip` 包的路径**
 
-Python 模块压缩包支持多种部署方式，均通过 `file` 参数指定 `.zip` 包的路径:
+通过 `file` 参数指定 `.zip` 包的路径，支持以下两种方式：
 
-**方式 1: 本地文件系统** (使用 `file://` 协议)
-```sql
-"file" = "file:///path/to/python_udf_scalar_ops.zip"
-```
-适用于 `.zip` 包已存放在 BE 节点本地文件系统的场景。
-
-**方式 2: HTTP/HTTPS 远程下载** (使用 `http://` 或 `https://` 协议)
-```sql
-"file" = "http://example.com/udf/python_udf_scalar_ops.zip"
-"file" = "https://s3.amazonaws.com/bucket/python_udf_scalar_ops.zip"
-```
-适用于从对象存储(如 S3、OSS、COS 等)或 HTTP 服务器下载 `.zip` 包的场景。Doris 会自动下载并缓存到本地。
+| 部署方式 | 写法 | 适用场景 |
+| --- | --- | --- |
+| 本地文件系统 | `"file" = "file:///path/to/python_udf_scalar_ops.zip"` | `.zip` 包已存放于 BE 节点本地文件系统 |
+| HTTP/HTTPS 远程下载 | `"file" = "http://example.com/udf/xx.zip"` 或 `"file" = "https://s3.amazonaws.com/bucket/xx.zip"` | 从对象存储（S3、OSS、COS 等）或 HTTP 服务器下载 `.zip` 包，Doris 自动下载并缓存到本地 |
 
 :::caution 注意
-- 使用远程下载方式时，需确保所有 BE 节点都能访问该 URL
-- 首次调用时会下载文件，可能有一定延迟
-- 文件会被缓存，后续调用无需重复下载
+- 使用远程下载方式时，需确保所有 BE 节点都能访问该 URL。
+- 首次调用时会下载文件，可能有一定延迟。
+- 文件会被缓存，后续调用无需重复下载。
 :::
 
-**步骤 4: 设置 symbol 参数**
+**步骤 4：设置 `symbol` 参数**
 
-在模块模式下，`symbol` 参数用于指定函数在 ZIP 包中的位置，格式为:
+在模块模式下，`symbol` 用于指定目标函数在 ZIP 包中的位置，格式为：
 
 ```
 [package_name.]module_name.func_name
 ```
 
-**参数说明**:
-- `package_name`(可选): ZIP 压缩包内顶层 Python 包的名称。若函数位于包的根模块下，或者 ZIP 压缩包中无 package，则可省略
-- `module_name`(必填): 包含目标函数的 Python 模块文件名(不含 `.py` 后缀)
-- `func_name`(必填): 用户定义的函数名
+参数说明：
 
-**解析规则**:
-- Doris 会将 `symbol` 字符串按 `.` 分割:
-  - 如果得到**两个**子字符串，分别为 `module_name` 和 `func_name`
-  - 如果得到**三个及以上**的子字符串，开头为 `package_name`，中间为 `module_name`，结尾为 `func_name`
-- `module_name` 部分作为模块路径，用于通过 `importlib` 动态导入
-- 若指定了 `package_name`，则整个路径需构成一个合法的 Python 导入路径，且 ZIP 包结构必须与该路径一致
+- `package_name`（可选）：ZIP 包内顶层 Python 包的名称。若函数位于包的根模块下，或 ZIP 包中无 package，则可省略。
+- `module_name`（必填）：包含目标函数的 Python 模块文件名（不含 `.py` 后缀）。
+- `func_name`（必填）：用户定义的函数名。
+
+解析规则：
+
+- Doris 会将 `symbol` 字符串按 `.` 分割：
+    - 如果得到**两个**子字符串，分别为 `module_name` 和 `func_name`。
+    - 如果得到**三个及以上**的子字符串，开头为 `package_name`，中间为 `module_name`，结尾为 `func_name`。
+- `module_name` 部分作为模块路径，用于通过 `importlib` 动态导入。
+- 若指定了 `package_name`，则整个路径需构成一个合法的 Python 导入路径，且 ZIP 包结构必须与该路径一致。
 
 :::caution Warning
-命名空间应具备唯一性，避免与 Python 标准库或常用第三方库同名，以避免因模块遮蔽导致的依赖冲突及运行时异常
+命名空间应具备唯一性，避免与 Python 标准库或常用第三方库同名，以避免因模块遮蔽导致的依赖冲突及运行时异常。
 :::
 
-**示例说明**:
+**示例 A：无包结构（两段式）**
 
-**示例 A: 无包结构(两段式)**
 ```
 ZIP 结构:
 math_ops.py
 
 symbol = "math_ops.add"
 ```
+
 表示函数 `add` 定义在 ZIP 包根目录下的 `math_ops.py` 文件中。
 
-**示例 B: 有包结构(三段式)**
+**示例 B：有包结构（三段式）**
+
 ```
 ZIP 结构:
 mylib/
@@ -206,12 +246,15 @@ mylib/
 
 symbol = "mylib.string_helper.split_text"
 ```
-表示函数 `split_text` 定义在 `mylib/string_helper.py` 文件中，其中:
+
+表示函数 `split_text` 定义在 `mylib/string_helper.py` 文件中，其中：
+
 - `package_name` = `mylib`
 - `module_name` = `string_helper`
 - `func_name` = `split_text`
 
-**示例 C: 嵌套包结构(四段式)**
+**示例 C：嵌套包结构（四段式）**
+
 ```
 ZIP 结构:
 mylib/
@@ -222,19 +265,22 @@ mylib/
 
 symbol = "mylib.utils.string_helper.split_text"
 ```
-表示函数 `split_text` 定义在 `mylib/utils/string_helper.py` 文件中，其中:
+
+表示函数 `split_text` 定义在 `mylib/utils/string_helper.py` 文件中，其中：
+
 - `package_name` = `mylib`
 - `module_name` = `utils.string_helper`
 - `func_name` = `split_text`
 
-> **注意**:
-> - 若 `symbol` 格式不合法(如缺少函数名、模块名为空、路径中存在空组件等)，Doris 将在函数调用时报错
-> - ZIP 包内的目录结构必须与 `symbol` 指定的路径一致
-> - 每个包目录下都需要包含 `__init__.py` 文件(可以为空)
+> **注意**：
+> - 若 `symbol` 格式不合法（如缺少函数名、模块名为空、路径中存在空组件等），Doris 将在函数调用时报错。
+> - ZIP 包内的目录结构必须与 `symbol` 指定的路径一致。
+> - 每个包目录下都需要包含 `__init__.py` 文件（可以为空）。
 
-**步骤 5: 创建 UDF 函数**
+**步骤 5：创建 UDF 函数**
 
-**示例 1: 使用本地文件(无包结构)**
+示例 1：使用本地文件（无包结构）
+
 ```sql
 DROP FUNCTION IF EXISTS py_add_three(INT, INT, INT);
 DROP FUNCTION IF EXISTS py_reverse(STRING);
@@ -271,7 +317,8 @@ PROPERTIES (
 );
 ```
 
-**示例 2: 使用 HTTP/HTTPS 远程文件**
+示例 2：使用 HTTP/HTTPS 远程文件
+
 ```sql
 DROP FUNCTION IF EXISTS py_add_three(INT, INT, INT);
 DROP FUNCTION IF EXISTS py_reverse(STRING);
@@ -308,7 +355,8 @@ PROPERTIES (
 );
 ```
 
-**示例 3: 使用包结构**
+示例 3：使用包结构
+
 ```sql
 DROP FUNCTION IF EXISTS py_multiply(INT);
 
@@ -324,12 +372,12 @@ PROPERTIES (
 );
 ```
 
-**步骤 6: 使用函数**
+**步骤 6：使用函数**
 
 ```sql
 SELECT py_add_three(10, 20, 30) AS sum_result; -- 结果: 60
-SELECT py_reverse('hello') AS reversed; -- 结果: olleh
-SELECT py_is_prime(17) AS is_prime; -- 结果: true
+SELECT py_reverse('hello') AS reversed;        -- 结果: olleh
+SELECT py_is_prime(17) AS is_prime;            -- 结果: true
 ```
 
 ### 删除 Python UDF
@@ -349,7 +397,7 @@ DROP FUNCTION IF EXISTS py_is_prime(INT);
 #### CREATE FUNCTION 参数
 
 | 参数 | 是否必需 | 说明 |
-|------|---------|------|
+| --- | --- | --- |
 | `function_name` | 是 | 函数名称，需要符合标识符命名规则 |
 | `parameter_type` | 是 | 参数类型列表，支持 Doris 的各种数据类型 |
 | `return_type` | 是 | 返回值类型 |
@@ -357,67 +405,70 @@ DROP FUNCTION IF EXISTS py_is_prime(INT);
 #### PROPERTIES 参数
 
 | 参数 | 是否必需 | 默认值 | 说明 |
-|------|---------|--------|------|
+| --- | --- | --- | --- |
 | `type` | 是 | - | 固定为 `"PYTHON_UDF"` |
-| `symbol` | 是 | - | Python 函数入口名称。<br>• **内联模式**: 直接写函数名，如 `"evaluate"`<br>• **模块模式**: 格式为 `[package_name.]module_name.func_name`，详见模块模式说明 |
-| `file` | 否 | - | Python `.zip` 包路径，仅模块模式需要。支持三种协议:<br>• `file://` - 本地文件系统路径<br>• `http://` - HTTP 远程下载<br>• `https://` - HTTPS 远程下载 |
+| `symbol` | 是 | - | Python 函数入口名称。<br/>• **内联模式**：直接写函数名，如 `"evaluate"`<br/>• **模块模式**：格式为 `[package_name.]module_name.func_name`，详见模块模式说明 |
+| `file` | 否 | - | Python `.zip` 包路径，仅模块模式需要。支持三种协议：<br/>• `file://` —— 本地文件系统路径<br/>• `http://` —— HTTP 远程下载<br/>• `https://` —— HTTPS 远程下载 |
 | `runtime_version` | 是 | - | Python 运行时版本，如 `"3.10.12"`，需填写完整的版本号 |
 | `always_nullable` | 否 | `true` | 是否总是返回可空结果 |
 
 #### 运行时版本说明
 
-- 支持 Python 3.x 版本
-- 需要指定完整版本号(如 `"3.10.12"`)，不能只填写主次版本号(如 `"3.10"`)
-- 如果不指定 `runtime_version`，函数调用时将报错
+- 支持 Python 3.x 版本。
+- 需要指定完整版本号（如 `"3.10.12"`），不能只填写主次版本号（如 `"3.10"`）。
+- 如果不指定 `runtime_version`，函数调用时将报错。
 
 ### 数据类型映射
+
+<!-- 知识类型: Reference -->
 
 下表列出了 Doris 数据类型与 Python 类型之间的映射关系：
 
 | 类型分类 | Doris 类型 | Python 类型 | 说明 |
-|---------|-----------|------------|------|
+| --- | --- | --- | --- |
 | 空类型 | `NULL` | `None` | 空值 |
 | 布尔类型 | `BOOLEAN` | `bool` | 布尔值 |
 | 整数类型 | `TINYINT` | `int` | 8 位整数 |
-| | `SMALLINT` | `int` | 16 位整数 |
-| | `INT` | `int` | 32 位整数 |
-| | `BIGINT` | `int` | 64 位整数 |
-| | `LARGEINT` | `int` | 128 位整数 |
+|  | `SMALLINT` | `int` | 16 位整数 |
+|  | `INT` | `int` | 32 位整数 |
+|  | `BIGINT` | `int` | 64 位整数 |
+|  | `LARGEINT` | `int` | 128 位整数 |
 | 浮点类型 | `FLOAT` | `float` | 32 位浮点数 |
-| | `DOUBLE` | `float` | 64 位浮点数 |
-| | `TIME` / `TIMEV2` | `float` | 时间类型(以浮点数表示) |
+|  | `DOUBLE` | `float` | 64 位浮点数 |
+|  | `TIME` / `TIMEV2` | `float` | 时间类型（以浮点数表示） |
 | 字符串类型 | `CHAR` | `str` | 定长字符串 |
-| | `VARCHAR` | `str` | 变长字符串 |
-| | `STRING` | `str` | 字符串 |
-| | `JSONB` | `str` | JSON 二进制格式(转换为字符串) |
-| | `VARIANT` | `str` | 变体类型(转换为字符串) |
-| | `DATE` | `str` | 日期字符串，格式为 `'YYYY-MM-DD'` |
-| | `DATETIME` | `str` | 日期时间字符串，格式为 `'YYYY-MM-DD HH:MM:SS'` |
+|  | `VARCHAR` | `str` | 变长字符串 |
+|  | `STRING` | `str` | 字符串 |
+|  | `JSONB` | `str` | JSON 二进制格式（转换为字符串） |
+|  | `VARIANT` | `str` | 变体类型（转换为字符串） |
+|  | `DATE` | `str` | 日期字符串，格式为 `'YYYY-MM-DD'` |
+|  | `DATETIME` | `str` | 日期时间字符串，格式为 `'YYYY-MM-DD HH:MM:SS'` |
 | 日期时间类型 | `DATEV2` | `datetime.date` | 日期对象 |
-| | `DATETIMEV2` | `datetime.datetime` | 日期时间对象 |
-| | `TIMESTAMPTZ` | `datetime.datetime` | 带时区的日期时间对象 |
+|  | `DATETIMEV2` | `datetime.datetime` | 日期时间对象 |
+|  | `TIMESTAMPTZ` | `datetime.datetime` | 带时区的日期时间对象 |
 | Decimal 类型 | `DECIMAL` / `DECIMALV2` | `decimal.Decimal` | 高精度小数 |
-| | `DECIMAL32` | `decimal.Decimal` | 32 位定点数 |
-| | `DECIMAL64` | `decimal.Decimal` | 64 位定点数 |
-| | `DECIMAL128` | `decimal.Decimal` | 128 位定点数 |
-| | `DECIMAL256` | `decimal.Decimal` | 256 位定点数 |
+|  | `DECIMAL32` | `decimal.Decimal` | 32 位定点数 |
+|  | `DECIMAL64` | `decimal.Decimal` | 64 位定点数 |
+|  | `DECIMAL128` | `decimal.Decimal` | 128 位定点数 |
+|  | `DECIMAL256` | `decimal.Decimal` | 256 位定点数 |
 | IP 类型 | `IPV4` | `ipaddress.IPv4Address` | IPv4 地址 |
-| | `IPV6` | `ipaddress.IPv6Address` | IPv6 地址 |
+|  | `IPV6` | `ipaddress.IPv6Address` | IPv6 地址 |
 | 二进制类型 | `BITMAP` | `bytes` | 位图数据（暂不支持该类型） |
-| | `HLL` | `bytes` | HyperLogLog 数据（暂不支持该类型） |
-| | `QUANTILE_STATE` | `bytes` | 分位数状态数据（暂不支持该类型） |
+|  | `HLL` | `bytes` | HyperLogLog 数据（暂不支持该类型） |
+|  | `QUANTILE_STATE` | `bytes` | 分位数状态数据（暂不支持该类型） |
 | 复杂数据类型 | `ARRAY<T>` | `list` | 数组，元素类型为 T |
-| | `MAP<K,V>` | `dict` | 字典，键类型为 K，值类型为 V |
-| | `STRUCT<f1:T1, f2:T2, ...>` | `dict` | 结构体，字段名为键，字段值为值 |
+|  | `MAP<K,V>` | `dict` | 字典，键类型为 K，值类型为 V |
+|  | `STRUCT<f1:T1, f2:T2, ...>` | `dict` | 结构体，字段名为键，字段值为值 |
 
 #### NULL 值处理
 
-- Doris 的 `NULL` 值在 Python 中映射为 `None`
-- 如果函数参数为 `NULL`，Python 函数接收到的是 `None`
-- 如果 Python 函数返回 `None`，Doris 将其视为 `NULL`
-- 建议在函数中显式处理 `None` 值，避免运行时错误
+- Doris 的 `NULL` 值在 Python 中映射为 `None`。
+- 如果函数参数为 `NULL`，Python 函数接收到的是 `None`。
+- 如果 Python 函数返回 `None`，Doris 将其视为 `NULL`。
+- 建议在函数中显式处理 `None` 值，避免运行时错误。
 
-示例:
+示例：
+
 ```sql
 DROP FUNCTION IF EXISTS py_safe_divide(DOUBLE, DOUBLE);
 
@@ -445,10 +496,12 @@ SELECT py_safe_divide(10.0, NULL);  -- 结果: NULL
 
 ### 向量化模式
 
+<!-- 适用场景: 大批量数据计算 / 性能优化 -->
+
 向量化模式使用 Pandas 批量处理数据，性能优于标量模式。在向量化模式下，函数参数为 `pandas.Series` 对象，返回值也应为 `pandas.Series`。
 
 :::caution 注意
-为确保系统正确识别向量化模式，请在函数签名中使用类型注解(如 `a: pd.Series`)并在函数逻辑中直接操作批量数据结构。若未明确使用向量化类型，系统将回退到标量模式(Scalar Mode)。
+为确保系统正确识别向量化模式，请在函数签名中使用类型注解（如 `a: pd.Series`），并在函数逻辑中直接操作批量数据结构。若未明确使用向量化类型，系统将回退到标量模式（Scalar Mode）。
 
 若函数签名同时包含 `pd.Series` 类型与普通类型参数，系统会将普通类型参数对应的输入列按常量列处理（即整批数据复用同一个值），可能导致结果与预期不一致。建议在向量化模式下保持入参风格一致：要么全部使用 `pandas.Series` 类型注解，要么全部使用普通类型参数（标量模式）。
 :::
@@ -465,7 +518,8 @@ def add(a, b):
 
 #### 基本示例
 
-**示例 1: 向量化整数加法**
+**示例 1：向量化整数加法**
+
 ```sql
 DROP FUNCTION IF EXISTS py_vec_add(INT, INT);
 
@@ -487,7 +541,8 @@ $$;
 SELECT py_vec_add(1, 2); -- 结果: 4
 ```
 
-**示例 2: 向量化字符串处理**
+**示例 2：向量化字符串处理**
+
 ```sql
 DROP FUNCTION IF EXISTS py_vec_upper(STRING);
 
@@ -509,7 +564,8 @@ $$;
 SELECT py_vec_upper('hello'); -- 结果: 'HELLO'
 ```
 
-**示例 3: 向量化数学运算**
+**示例 3：向量化数学运算**
+
 ```sql
 DROP FUNCTION IF EXISTS py_vec_sqrt(DOUBLE);
 
@@ -532,7 +588,8 @@ $$;
 SELECT py_vec_sqrt(16); -- 结果: 4.0
 ```
 
-**示例 4: 函数签名参数类型不一致(同时包含 `pd.Series` 类型与普通类型)**
+**示例 4：函数签名参数类型不一致（同时包含 `pd.Series` 类型与普通类型）**
+
 ```sql
 CREATE TABLE t_bug_013 (
     id INT,
@@ -589,9 +646,9 @@ ORDER BY id;
 
 #### 向量化模式的优势
 
-1. **性能优化**: 批量处理数据，减少 Python 与 Doris 之间的交互次数
-2. **利用 Pandas/NumPy**: 充分发挥向量化计算的性能优势
-3. **简洁代码**: 使用 Pandas API 可以更简洁地表达复杂逻辑
+1. **性能优化**：批量处理数据，减少 Python 与 Doris 之间的交互次数。
+2. **利用 Pandas/NumPy**：充分发挥向量化计算的性能优势。
+3. **简洁代码**：使用 Pandas API 可以更简洁地表达复杂逻辑。
 
 #### 使用向量化函数
 
@@ -633,7 +690,8 @@ FROM test_table;
 
 #### ARRAY 类型
 
-**示例: 数组元素求和**
+**示例：数组元素求和**
+
 ```sql
 DROP FUNCTION IF EXISTS py_array_sum(ARRAY<INT>);
 
@@ -656,7 +714,8 @@ $$;
 SELECT py_array_sum([1, 2, 3, 4, 5]) AS result; -- 结果: 15
 ```
 
-**示例: 数组过滤**
+**示例：数组过滤**
+
 ```sql
 DROP FUNCTION IF EXISTS py_array_filter_positive(ARRAY<INT>);
 
@@ -680,7 +739,8 @@ SELECT py_array_filter_positive([1, -2, 3, -4, 5]) AS result; -- 结果: [1, 3, 
 
 #### MAP 类型
 
-**示例: 获取 MAP 的键数量**
+**示例：获取 MAP 的键数量**
+
 ```sql
 DROP FUNCTION IF EXISTS py_map_size(MAP<STRING, INT>);
 
@@ -703,7 +763,8 @@ $$;
 SELECT py_map_size({'a': 1, 'b': 2, 'c': 3}) AS result; -- 结果: 3
 ```
 
-**示例: 获取 MAP 中的值**
+**示例：获取 MAP 中的值**
+
 ```sql
 DROP FUNCTION IF EXISTS py_map_get(MAP<STRING, STRING>, STRING);
 
@@ -727,7 +788,8 @@ SELECT py_map_get({'name': 'Alice', 'age': '30'}, 'name') AS result; -- 结果: 
 
 #### STRUCT 类型
 
-**示例: 访问 STRUCT 字段**
+**示例：访问 STRUCT 字段**
+
 ```sql
 DROP FUNCTION IF EXISTS py_struct_get_name(STRUCT<name: STRING, age: INT>);
 
@@ -752,7 +814,9 @@ SELECT py_struct_get_name({'Alice', 30}) AS result; -- 结果: Alice
 
 ### 实际应用场景
 
-#### 场景 1: 数据脱敏
+<!-- 知识类型: 场景示例 -->
+
+#### 场景 1：数据脱敏
 
 ```sql
 DROP FUNCTION IF EXISTS py_mask_email(STRING);
@@ -778,7 +842,7 @@ $$;
 SELECT py_mask_email('user@example.com') AS masked; -- 结果: u***@example.com
 ```
 
-#### 场景 2: 字符串相似度计算
+#### 场景 2：字符串相似度计算
 
 ```sql
 DROP FUNCTION IF EXISTS py_levenshtein_distance(STRING, STRING);
@@ -815,7 +879,7 @@ $$;
 SELECT py_levenshtein_distance('kitten', 'sitting') AS distance; -- 结果: 3
 ```
 
-#### 场景 3: 日期计算
+#### 场景 3：日期计算
 
 ```sql
 DROP FUNCTION IF EXISTS py_days_between(DATE, DATE);
@@ -844,7 +908,7 @@ $$;
 SELECT py_days_between('2024-01-01', '2024-12-31') AS days; -- 结果: 365
 ```
 
-#### 场景 4: 身份证号校验
+#### 场景 4：身份证号校验
 
 ```sql
 DROP FUNCTION IF EXISTS py_validate_id_card(STRING);
@@ -876,8 +940,7 @@ def evaluate(id_card):
     return id_card[17].upper() == check_code
 $$;
 
-SELECT py_validate_id_card('11010519491231002X') AS is_valid; -- 结果: True
-
+SELECT py_validate_id_card('11010519491231002X') AS is_valid;  -- 结果: True
 SELECT py_validate_id_card('110105194912310021x') AS is_valid; -- 结果: False
 ```
 
@@ -885,7 +948,7 @@ SELECT py_validate_id_card('110105194912310021x') AS is_valid; -- 结果: False
 
 #### 1. 优先使用向量化模式
 
-向量化模式性能显著优于标量模式:
+向量化模式性能显著优于标量模式：
 
 ```python
 # 标量模式 - 逐行处理
@@ -910,125 +973,128 @@ def vector_process(x: pd.Series) -> pd.Series:
 
 #### 1. Python 版本支持
 
-- 仅支持 Python 3.x 版本
-- 建议使用 Python 3.10 或更高版本
-- 确保 Doris 集群已安装对应的 Python 运行时
+- 仅支持 Python 3.x 版本。
+- 建议使用 Python 3.10 或更高版本。
+- 确保 Doris 集群已安装对应的 Python 运行时。
 
 #### 2. 依赖库
 
-- 内置支持 Python 标准库
-- 如需使用第三方库，需要在集群环境中预先安装
+- 内置支持 Python 标准库。
+- 如需使用第三方库，需要在集群环境中预先安装。
 
 #### 3. 性能考虑
 
-- Python UDF 性能低于 Doris 内置函数(C++ 实现)
-- 对于性能敏感场景，建议优先考虑 Doris 内置函数
-- 大数据量场景建议使用向量化模式
+- Python UDF 性能低于 Doris 内置函数（C++ 实现）。
+- 对于性能敏感场景，建议优先考虑 Doris 内置函数。
+- 大数据量场景建议使用向量化模式。
 
 #### 4. 安全性
 
-- UDF 代码在 Doris 进程中执行，需要确保代码安全可信
-- 避免在 UDF 中执行危险操作(如系统命令、文件删除等)
-- 生产环境建议对 UDF 代码进行审核
+- UDF 代码在 Doris 进程中执行，需要确保代码安全可信。
+- 避免在 UDF 中执行危险操作（如系统命令、文件删除等）。
+- 生产环境建议对 UDF 代码进行审核。
 
 #### 5. 资源限制
 
-- UDF 执行会占用 BE 节点的 CPU 和内存资源
-- 大量使用 UDF 可能影响集群整体性能
-- 建议监控 UDF 的资源消耗情况
+- UDF 执行会占用 BE 节点的 CPU 和内存资源。
+- 大量使用 UDF 可能影响集群整体性能。
+- 建议监控 UDF 的资源消耗情况。
 
 ### 常见问题
 
-#### Q1: 如何在 Python UDF 中使用第三方库?
+<!-- 知识类型: FAQ -->
 
-A: 需要在所有 BE 节点上安装对应的 Python 库。例如:
+#### Q1：如何在 Python UDF 中使用第三方库？
+
+A：需要在所有 BE 节点上安装对应的 Python 库。例如：
+
 ```bash
 pip3 install numpy pandas
 conda install numpy pandas
 ```
 
-#### Q2: Python UDF 是否支持递归函数?
+#### Q2：Python UDF 是否支持递归函数？
 
-A: 支持，但需要注意递归深度，避免栈溢出。
+A：支持，但需要注意递归深度，避免栈溢出。
 
-#### Q3: 如何调试 Python UDF?
+#### Q3：如何调试 Python UDF？
 
-A: 可以在本地 Python 环境中先调试函数逻辑，确保无误后再创建 UDF。可以查看 BE 日志获取错误信息。
+A：可以在本地 Python 环境中先调试函数逻辑，确保无误后再创建 UDF。可以查看 BE 日志获取错误信息。
 
-#### Q4: Python UDF 是否支持全局变量?
+#### Q4：Python UDF 是否支持全局变量？
 
-A: 支持，但不建议使用全局变量，因为在分布式环境中全局变量的行为可能不符合预期。
+A：支持，但不建议使用全局变量，因为在分布式环境中全局变量的行为可能不符合预期。
 
-#### Q5: 如何更新已存在的 Python UDF?
+#### Q5：如何更新已存在的 Python UDF？
 
-A: 先删除旧的 UDF，再创建新的:
+A：先删除旧的 UDF，再创建新的：
+
 ```sql
 DROP FUNCTION IF EXISTS function_name(parameter_types);
 CREATE FUNCTION function_name(...) ...;
 ```
 
-#### Q6: Python UDF 能否访问外部资源?
+#### Q6：Python UDF 能否访问外部资源？
 
-A: 技术上可以，但**强烈不建议**。Python UDF 中可以使用网络请求库(如 `requests`)访问外部 API、数据库等，但这会严重影响性能和稳定性。原因包括:
-- 网络延迟会导致查询变慢
-- 外部服务不可用时会导致 UDF 失败
-- 大量并发请求可能造成外部服务压力
-- 难以控制超时和错误处理
+A：技术上可以，但**强烈不建议**。Python UDF 中可以使用网络请求库（如 `requests`）访问外部 API、数据库等，但这会严重影响性能和稳定性。原因包括：
 
-## Python UDAF
+- 网络延迟会导致查询变慢。
+- 外部服务不可用时会导致 UDF 失败。
+- 大量并发请求可能造成外部服务压力。
+- 难以控制超时和错误处理。
 
-Python UDAF (User Defined Aggregate Function) 是 Apache Doris 提供的自定义聚合函数扩展机制，允许用户使用 Python 语言编写自定义聚合函数，用于数据分组聚合和窗口计算。通过 Python UDAF，用户可以灵活地实现复杂的聚合逻辑，如统计分析、数据收集、自定义指标计算等。
+## Python UDAF（聚合函数）
 
-Python UDAF 的核心特点:
-- **分布式聚合**: 支持分布式环境下的数据聚合，自动处理数据的分区、合并和最终计算
-- **状态管理**: 通过类实例维护聚合状态，支持复杂的状态对象
-- **窗口函数支持**: 可用于窗口函数 (OVER 子句)，实现移动聚合、排名等高级功能
-- **灵活性强**: 可实现任意复杂的聚合逻辑，不受内置聚合函数限制
+<!-- 知识类型: 操作指南 -->
 
-:::tip 提示
-**环境依赖**: 使用 Python UDAF 前，必须在所有 BE 节点的 Python 环境中预先安装 **`pandas`** 和 **`pyarrow`** 两个库，这是 Doris Python UDAF 功能的强制依赖。详见 [Python UDAF 环境配置](python-user-defined-function#python-udfudafudtf-环境配置与多版本管理)。
+Python UDAF（User Defined Aggregate Function）允许用户自定义聚合函数，用于数据分组聚合和窗口计算。通过 Python UDAF，可以灵活实现复杂的聚合逻辑，如统计分析、数据收集、自定义指标计算等。
 
-**日志路径**: Python UDAF Server 的运行日志位于 `output/be/log/python_udf_output.log`。用户可以在该日志中查看 Python Server 的运行情况、聚合函数执行信息和调试错误。
-:::
+Python UDAF 的核心特点：
+
+- **分布式聚合**：支持分布式环境下的数据聚合，自动处理数据的分区、合并和最终计算。
+- **状态管理**：通过类实例维护聚合状态，支持复杂的状态对象。
+- **窗口函数支持**：可用于窗口函数（OVER 子句），实现移动聚合、排名等高级功能。
+- **灵活性强**：可实现任意复杂的聚合逻辑，不受内置聚合函数限制。
 
 ### UDAF 基本概念
 
 #### 聚合函数的生命周期
 
-Python UDAF 通过类来实现，一个聚合函数的执行包含以下阶段:
+Python UDAF 通过类来实现，一个聚合函数的执行包含以下阶段：
 
-1. **初始化 (__init__)**: 创建聚合状态对象，初始化状态变量
-2. **累积 (accumulate)**: 处理单行数据，更新聚合状态
-3. **合并 (merge)**: 合并多个分区的聚合状态（分布式场景）
-4. **完成 (finish)**: 计算并返回最终聚合结果
+1. **初始化（`__init__`）**：创建聚合状态对象，初始化状态变量。
+2. **累积（`accumulate`）**：处理单行数据，更新聚合状态。
+3. **合并（`merge`）**：合并多个分区的聚合状态（分布式场景）。
+4. **完成（`finish`）**：计算并返回最终聚合结果。
 
 #### 必需的类方法和属性
 
-一个完整的 Python UDAF 类必须实现以下方法:
+一个完整的 Python UDAF 类必须实现以下方法：
 
 | 方法/属性 | 说明 | 是否必需 |
-|----------|------|---------|
+| --- | --- | --- |
 | `__init__(self)` | 初始化聚合状态 | 是 |
 | `accumulate(self, *args)` | 累积单行数据 | 是 |
 | `merge(self, other_state)` | 合并其他分区的状态 | 是 |
 | `finish(self)` | 返回最终聚合结果 | 是 |
-| `aggregate_state` (属性) | 返回可序列化的聚合状态，**必须支持 pickle 序列化** | 是 |
+| `aggregate_state`（属性） | 返回可序列化的聚合状态，**必须支持 pickle 序列化** | 是 |
 
 ### 基本语法
 
 #### 创建 Python UDAF
 
-Python UDAF 支持两种创建方式:`内联模式 (Inline)` 和 `模块模式 (Module)`。
+Python UDAF 支持两种创建方式：**内联模式（Inline）** 与 **模块模式（Module）**。
 
 :::tip 注意
-如果同时指定了 `file` 参数和 `AS $$` 内联 Python 代码，Doris 将会**优先加载内联 Python 代码**，采用内联模式运行 Python UDAF。
+若同时指定了 `file` 参数和 `AS $$` 内联 Python 代码，Doris 将**优先加载内联 Python 代码**，按内联模式运行 Python UDAF。
 :::
 
-##### 内联模式 (Inline Mode)
+##### 内联模式（Inline Mode）
 
 内联模式允许直接在 SQL 中编写 Python 类，适合简单的聚合逻辑。
 
-**语法**:
+**语法**：
+
 ```sql
 CREATE AGGREGATE FUNCTION function_name(parameter_type1, parameter_type2, ...)
 RETURNS return_type
@@ -1058,7 +1124,7 @@ class ClassName:
 $$;
 ```
 
-**示例 1: 求和聚合**
+**示例 1：求和聚合**
 
 ```sql
 DROP TABLE IF EXISTS sales;
@@ -1125,7 +1191,7 @@ ORDER BY category;
 +-------------+--------------+
 ```
 
-**示例 2: 平均值聚合**
+**示例 2：平均值聚合**
 
 ```sql
 DROP TABLE IF EXISTS employees;
@@ -1198,13 +1264,13 @@ ORDER BY department;
 +-------------+------------+
 ```
 
-##### 模块模式 (Module Mode)
+##### 模块模式（Module Mode）
 
 模块模式适合复杂的聚合逻辑，需要将 Python 代码打包成 `.zip` 压缩包，并在函数创建时引用。
 
-**步骤 1: 编写 Python 模块**
+**步骤 1：编写 Python 模块**
 
-创建 `stats_udaf.py` 文件:
+创建 `stats_udaf.py` 文件：
 
 ```python
 import math
@@ -1302,56 +1368,53 @@ class MedianUDAF:
             return sorted_vals[n//2]
 ```
 
-**步骤 2: 打包 Python 模块**
+**步骤 2：打包 Python 模块**
 
-**必须**将 Python 文件打包成 `.zip` 格式(即使只有单个文件):
+**必须**将 Python 文件打包成 `.zip` 格式（即使只有单个文件）：
+
 ```bash
 zip stats_udaf.zip stats_udaf.py
 ```
 
-**步骤 3: 设置 Python 模块压缩包的路径**
+**步骤 3：设置 `.zip` 包的路径**
 
-支持多种部署方式，通过 `file` 参数指定 `.zip` 包的路径:
+通过 `file` 参数指定 `.zip` 包的路径：
 
-**方式 1: 本地文件系统** (使用 `file://` 协议)
-```sql
-"file" = "file:///path/to/stats_udaf.zip"
-```
+| 部署方式 | 写法 |
+| --- | --- |
+| 本地文件系统（`file://` 协议） | `"file" = "file:///path/to/stats_udaf.zip"` |
+| HTTP/HTTPS 远程下载（`http://` 或 `https://` 协议） | `"file" = "http://example.com/udaf/stats_udaf.zip"`<br/>`"file" = "https://s3.amazonaws.com/bucket/stats_udaf.zip"` |
 
-**方式 2: HTTP/HTTPS 远程下载** (使用 `http://` 或 `https://` 协议)
-```sql
-"file" = "http://example.com/udaf/stats_udaf.zip"
-"file" = "https://s3.amazonaws.com/bucket/stats_udaf.zip"
-```
+> **注意**：
+> - 使用远程下载方式时，需确保所有 BE 节点都能访问该 URL。
+> - 首次调用时会下载文件，可能有一定延迟。
+> - 文件会被缓存，后续调用无需重复下载。
 
-> **注意**: 
-> - 使用远程下载方式时，需确保所有 BE 节点都能访问该 URL
-> - 首次调用时会下载文件，可能有一定延迟
-> - 文件会被缓存，后续调用无需重复下载
+**步骤 4：设置 `symbol` 参数**
 
-**步骤 4: 设置 symbol 参数**
-
-在模块模式下，`symbol` 参数用于指定类在 ZIP 包中的位置，格式为:
+在模块模式下，`symbol` 用于指定类在 ZIP 包中的位置，格式为：
 
 ```
 [package_name.]module_name.ClassName
 ```
 
-**参数说明**:
-- `package_name`(可选): ZIP 压缩包内顶层 Python 包的名称
-- `module_name`(必填): 包含目标类的 Python 模块文件名(不含 `.py` 后缀)
-- `ClassName`(必填): UDAF 类名
+参数说明：
 
-**解析规则**:
-- Doris 会将 `symbol` 字符串按 `.` 分割:
-  - 如果得到**两个**子字符串，分别为 `module_name` 和 `ClassName`
-  - 如果得到**三个及以上**的子字符串，开头为 `package_name`，中间为 `module_name`，结尾为 `ClassName`
+- `package_name`（可选）：ZIP 包内顶层 Python 包的名称。
+- `module_name`（必填）：包含目标类的 Python 模块文件名（不含 `.py` 后缀）。
+- `ClassName`（必填）：UDAF 类名。
+
+解析规则：
+
+- Doris 会将 `symbol` 字符串按 `.` 分割：
+    - 如果得到**两个**子字符串，分别为 `module_name` 和 `ClassName`。
+    - 如果得到**三个及以上**的子字符串，开头为 `package_name`，中间为 `module_name`，结尾为 `ClassName`。
 
 :::caution Warning
-命名空间应具备唯一性，避免与 Python 标准库或常用第三方库同名，以避免因模块遮蔽导致的依赖冲突及运行时异常
+命名空间应具备唯一性，避免与 Python 标准库或常用第三方库同名，以避免因模块遮蔽导致的依赖冲突及运行时异常。
 :::
 
-**步骤 5: 创建 UDAF 函数**
+**步骤 5：创建 UDAF 函数**
 
 ```sql
 DROP FUNCTION IF EXISTS py_variance(DOUBLE);
@@ -1389,7 +1452,7 @@ PROPERTIES (
 );
 ```
 
-**步骤 6: 使用函数**
+**步骤 6：使用函数**
 
 ```sql
 DROP TABLE IF EXISTS exam_results;
@@ -1453,30 +1516,31 @@ DROP FUNCTION IF EXISTS py_variance(DOUBLE);
 #### CREATE AGGREGATE FUNCTION 参数
 
 | 参数 | 说明 |
-|------|------|
+| --- | --- |
 | `function_name` | 函数名称，遵循 SQL 标识符命名规则 |
-| `parameter_types` | 参数类型列表，如 `INT`， `DOUBLE`， `STRING` 等 |
+| `parameter_types` | 参数类型列表，如 `INT`、`DOUBLE`、`STRING` 等 |
 | `RETURNS return_type` | 返回值类型 |
 
 #### PROPERTIES 参数
 
 | 参数 | 是否必需 | 默认值 | 说明 |
-|------|---------|--------|------|
+| --- | --- | --- | --- |
 | `type` | 是 | - | 固定为 `"PYTHON_UDF"` |
-| `symbol` | 是 | - | Python 类名。<br>• **内联模式**: 直接写类名，如 `"SumUDAF"`<br>• **模块模式**: 格式为 `[package_name.]module_name.ClassName` |
-| `file` | 否 | - | Python `.zip` 包路径，仅模块模式需要。支持三种协议:<br>• `file://` - 本地文件系统路径<br>• `http://` - HTTP 远程下载<br>• `https://` - HTTPS 远程下载 |
+| `symbol` | 是 | - | Python 类名。<br/>• **内联模式**：直接写类名，如 `"SumUDAF"`<br/>• **模块模式**：格式为 `[package_name.]module_name.ClassName` |
+| `file` | 否 | - | Python `.zip` 包路径，仅模块模式需要。支持三种协议：<br/>• `file://` —— 本地文件系统路径<br/>• `http://` —— HTTP 远程下载<br/>• `https://` —— HTTPS 远程下载 |
 | `runtime_version` | 是 | - | Python 运行时版本，如 `"3.10.12"` |
 | `always_nullable` | 否 | `true` | 是否总是返回可空结果 |
 
 #### runtime_version 说明
 
-- 必须填写 Python 版本的**完整版本号**，格式为 `x.x.x` 或 `x.x.xx`
-- Doris 会在配置的 Python 环境中查找匹配该版本的解释器
+- 必须填写 Python 版本的**完整版本号**，格式为 `x.x.x` 或 `x.x.xx`。
+- Doris 会在配置的 Python 环境中查找匹配该版本的解释器。
 
-### 窗口函数 (Window Functions)
+### 窗口函数（Window Functions）
 
-Python UDAF 可以与窗口函数 (OVER 子句) 结合使用:
-> 若将 Python UDAF 用于窗口函数（OVER 子句）, Doris 会在计算每个 window frame 后调用 UDAF 的 reset 方法，需要在类中实现它以将聚合状态重置为初始值
+Python UDAF 可以与窗口函数（OVER 子句）结合使用：
+
+> 若将 Python UDAF 用于窗口函数（OVER 子句），Doris 会在计算每个 window frame 后调用 UDAF 的 `reset` 方法，需要在类中实现它以将聚合状态重置为初始值。
 
 ```sql
 DROP TABLE IF EXISTS daily_sales_data;
@@ -1563,17 +1627,17 @@ ORDER BY sales_date;
 
 Python UDAF 使用与 Python UDF 完全相同的数据类型映射规则，包括整数、浮点、字符串、日期时间、Decimal、布尔等所有类型。
 
-**详细的数据类型映射关系请参考**: [数据类型映射](python-user-defined-function#数据类型映射)
+**详细的数据类型映射关系请参考**：[数据类型映射](#数据类型映射)。
 
 #### NULL 值处理
 
-- Doris 会将 SQL 中的 `NULL` 值映射为 Python 的 `None`
-- 在 `accumulate` 方法中，需要检查参数是否为 `None`
-- 聚合函数可以返回 `None` 表示结果为 `NULL`
+- Doris 会将 SQL 中的 `NULL` 值映射为 Python 的 `None`。
+- 在 `accumulate` 方法中，需要检查参数是否为 `None`。
+- 聚合函数可以返回 `None` 表示结果为 `NULL`。
 
 ### 实际应用场景
 
-#### 场景 1: 计算百分位数
+#### 场景 1：计算百分位数
 
 ```sql
 DROP FUNCTION IF EXISTS py_percentile(DOUBLE, INT);
@@ -1668,7 +1732,7 @@ ORDER BY category;
 +----------+-------+-------+-------+-------+
 ```
 
-#### 场景 2: 字符串去重合并
+#### 场景 2：字符串去重合并
 
 ```sql
 DROP FUNCTION IF EXISTS py_collect_set(STRING);
@@ -1746,7 +1810,7 @@ ORDER BY user_id;
 +---------+---------------------------+
 ```
 
-#### 场景 3: 移动平均
+#### 场景 3：移动平均
 
 ```sql
 DROP TABLE IF EXISTS daily_sales;
@@ -1801,11 +1865,12 @@ ORDER BY date;
 
 #### 1. 优化状态对象大小
 
-- 避免在状态对象中存储大量原始数据
-- 尽量使用聚合后的统计量而不是完整数据列表
-- 对于必须存储数据的场景(如中位数)，考虑采样或限制数据量
+- 避免在状态对象中存储大量原始数据。
+- 尽量使用聚合后的统计量而不是完整数据列表。
+- 对于必须存储数据的场景（如中位数），考虑采样或限制数据量。
 
-**不推荐如下用法**:
+**不推荐如下用法**：
+
 ```python
 class BadMedianUDAF:
     def __init__(self):
@@ -1818,59 +1883,61 @@ class BadMedianUDAF:
 
 #### 2. 减少对象创建
 
-- 复用状态对象，避免频繁创建新对象
-- 使用原始数据类型而非复杂对象
+- 复用状态对象，避免频繁创建新对象。
+- 使用原始数据类型而非复杂对象。
 
 #### 3. 简化 merge 逻辑
 
-- `merge` 方法在分布式环境下会被频繁调用
-- 确保 merge 操作高效且正确
+- `merge` 方法在分布式环境下会被频繁调用。
+- 确保 merge 操作高效且正确。
 
 #### 4. 使用增量计算
 
-- 对于可以增量计算的指标(如平均值)，使用增量方式而非存储所有数据
+- 对于可以增量计算的指标（如平均值），使用增量方式而非存储所有数据。
 
 #### 5. 避免使用外部资源
 
-- 不要在 UDAF 中访问数据库或外部 API
-- 所有计算应基于传入的数据和内部状态
+- 不要在 UDAF 中访问数据库或外部 API。
+- 所有计算应基于传入的数据和内部状态。
 
 ### 限制与注意事项
 
 #### 1. 性能考虑
 
-- Python UDAF 性能低于内置聚合函数
-- 建议用于逻辑复杂但数据量适中的场景
-- 大数据量场景优先考虑使用内置函数或优化 UDAF 实现
+- Python UDAF 性能低于内置聚合函数。
+- 建议用于逻辑复杂但数据量适中的场景。
+- 大数据量场景优先考虑使用内置函数或优化 UDAF 实现。
 
 #### 2. 状态序列化
 
-- `aggregate_state` 返回的对象**必须支持 pickle 序列化**
-- 支持的类型：基本类型（int、float、str、bool）、列表、字典、元组、set，以及支持 pickle 序列化的自定义类实例
-- 不支持：文件句柄、数据库连接、socket 连接、线程锁等不可 pickle 序列化的对象
-- 如果状态对象不能被 pickle 序列化，函数执行时会报错
-- **建议优先使用内置类型**（dict、list、tuple）作为状态对象，以确保兼容性和可维护性
+- `aggregate_state` 返回的对象**必须支持 pickle 序列化**。
+- 支持的类型：基本类型（int、float、str、bool）、列表、字典、元组、set，以及支持 pickle 序列化的自定义类实例。
+- 不支持：文件句柄、数据库连接、socket 连接、线程锁等不可 pickle 序列化的对象。
+- 如果状态对象不能被 pickle 序列化，函数执行时会报错。
+- **建议优先使用内置类型**（dict、list、tuple）作为状态对象，以确保兼容性和可维护性。
 
 #### 3. 内存限制
 
-- 状态对象会占用内存，避免存储过多数据
-- 大状态对象会影响性能和稳定性
+- 状态对象会占用内存，避免存储过多数据。
+- 大状态对象会影响性能和稳定性。
 
 #### 4. 函数命名
 
-- 同一函数名在不同数据库中可重复定义
-- 调用时需指定数据库名 (如 `db.func()`) 以避免歧义
+- 同一函数名在不同数据库中可重复定义。
+- 调用时需指定数据库名（如 `db.func()`）以避免歧义。
 
 #### 5. 环境一致性
 
-- 所有 BE 节点的 Python 环境必须一致
-- 包括 Python 版本、依赖包版本、环境配置
+- 所有 BE 节点的 Python 环境必须一致。
+- 包括 Python 版本、依赖包版本、环境配置。
 
 ### 常见问题 FAQ
 
-#### Q1: UDAF 和 UDF 的区别是什么?
+<!-- 知识类型: FAQ -->
 
-A: **UDF**用于处理单行数据，返回单行结果。每行调用一次函数。 **UDAF**用于处理多行数据，返回单个聚合结果。配合 GROUP BY 使用。
+#### Q1：UDAF 和 UDF 的区别是什么？
+
+A：**UDF** 用于处理单行数据，返回单行结果，每行调用一次函数。**UDAF** 用于处理多行数据，返回单个聚合结果，配合 GROUP BY 使用。
 
 ```sql
 -- UDF: 每行都会调用
@@ -1880,83 +1947,82 @@ SELECT id, py_upper(name) FROM users;
 SELECT category, py_sum(amount) FROM sales GROUP BY category;
 ```
 
-#### Q2: aggregate_state 属性的作用是什么?
+#### Q2：`aggregate_state` 属性的作用是什么？
 
-A: `aggregate_state` 用于在分布式环境下序列化和传输聚合状态:
-- **序列化**: 将状态对象转换为可传输的格式，使用 **pickle 协议**进行序列化
-- **合并**: 在不同节点间合并部分聚合结果
-- **必须支持 pickle 序列化**: 可以返回基本类型、列表、字典、元组、set，以及支持 pickle 序列化的自定义类实例
-- **禁止返回**: 文件句柄、数据库连接、socket 连接、线程锁等不可 pickle 序列化的对象，否则函数执行会报错
+A：`aggregate_state` 用于在分布式环境下序列化和传输聚合状态：
 
-#### Q3: UDAF 可以在窗口函数中使用吗?
+- **序列化**：将状态对象转换为可传输的格式，使用 **pickle 协议**进行序列化。
+- **合并**：在不同节点间合并部分聚合结果。
+- **必须支持 pickle 序列化**：可以返回基本类型、列表、字典、元组、set，以及支持 pickle 序列化的自定义类实例。
+- **禁止返回**：文件句柄、数据库连接、socket 连接、线程锁等不可 pickle 序列化的对象，否则函数执行会报错。
 
-A: 可以。Python UDAF 完全支持窗口函数 (OVER 子句)。
+#### Q3：UDAF 可以在窗口函数中使用吗？
 
-#### Q4: merge 方法什么时候会被调用?
+A：可以。Python UDAF 完全支持窗口函数（OVER 子句）。
 
-A: `merge` 方法在以下情况被调用:
-- **分布式聚合**: 合并不同 BE 节点的部分聚合结果
-- **并行处理**: 合并同一节点内不同线程的部分结果
-- **窗口函数**: 合并窗口框架内的部分结果
+#### Q4：`merge` 方法什么时候会被调用？
+
+A：`merge` 方法在以下情况被调用：
+
+- **分布式聚合**：合并不同 BE 节点的部分聚合结果。
+- **并行处理**：合并同一节点内不同线程的部分结果。
+- **窗口函数**：合并窗口框架内的部分结果。
 
 因此 `merge` 的实现必须正确，否则会导致结果错误。
 
+## Python UDTF（表函数）
 
-## Python UDTF
+<!-- 知识类型: 操作指南 -->
 
-Python UDTF (User Defined Table Function) 是 Apache Doris 提供的自定义表函数扩展机制，允许用户使用 Python 语言编写自定义表函数，用于将单行数据转换为多行输出。通过 Python UDTF，用户可以灵活地实现数据拆分、展开、生成等复杂逻辑。
+Python UDTF（User Defined Table Function）允许用户自定义表函数，将单行数据转换为多行输出，可用于数据拆分、展开、生成等场景。
 
-Python UDTF 的核心特点:
-- **一行转多行**: 接收单行输入，输出零行、一行或多行结果
-- **灵活的输出结构**: 可以定义任意数量和类型的输出列，支持简单类型和复杂 STRUCT 类型
-- **侧视图支持**: 配合 `LATERAL VIEW` 使用，实现数据展开和关联
-- **函数式编程**: 使用 Python 函数和 `yield` 语句，简洁直观
+Python UDTF 的核心特点：
 
-:::tip 提示
-**环境依赖**: 使用 Python UDTF 前，必须在所有 BE 节点的 Python 环境中预先安装 **`pandas`** 和 **`pyarrow`** 两个库，这是 Doris Python UDTF 功能的强制依赖。详见 [Python UDTF 环境配置](python-user-defined-function#python-udfudafudtf-环境配置与多版本管理)。
-
-**日志路径**: Python UDTF Server 的运行日志位于 `output/be/log/python_udf_output.log`。用户可以在该日志中查看 Python Server 的运行情况、聚合函数执行信息和调试错误。
-:::
+- **一行转多行**：接收单行输入，输出零行、一行或多行结果。
+- **灵活的输出结构**：可以定义任意数量和类型的输出列，支持简单类型和复杂 STRUCT 类型。
+- **侧视图支持**：配合 `LATERAL VIEW` 使用，实现数据展开和关联。
+- **函数式编程**：使用 Python 函数和 `yield` 语句，简洁直观。
 
 ### UDTF 基本概念
 
 #### 表函数的执行方式
 
-Python UDTF 通过**函数**实现（而非类），函数的执行流程如下:
+Python UDTF 通过**函数**实现（而非类），函数的执行流程如下：
 
-1. **接收输入**: 函数接收单行数据的各列值作为参数
-2. **处理与产出**: 通过 `yield` 语句产出零行或多行结果
-3. **无状态**: 每次函数调用独立处理一行，不保留上一行的状态
+1. **接收输入**：函数接收单行数据的各列值作为参数。
+2. **处理与产出**：通过 `yield` 语句产出零行或多行结果。
+3. **无状态**：每次函数调用独立处理一行，不保留上一行的状态。
 
 #### 函数要求
 
-Python UDTF 函数必须满足以下要求:
+Python UDTF 函数必须满足以下要求：
 
-- **使用 yield 产出结果**: 通过 `yield` 语句产出输出行
-- **参数类型对应**: 函数参数与 SQL 中定义的参数类型对应
-- **输出格式匹配**: `yield` 的数据格式必须与 `RETURNS ARRAY<...>` 定义一致
+- **使用 yield 产出结果**：通过 `yield` 语句产出输出行。
+- **参数类型对应**：函数参数与 SQL 中定义的参数类型对应。
+- **输出格式匹配**：`yield` 的数据格式必须与 `RETURNS ARRAY<...>` 定义一致。
 
 #### 输出方式
 
-- **单列输出**: `yield value` 产出单个值
-- **多列输出**: `yield (value1, value2, ...)` 产出多个值的元组
-- **条件跳过**: 不调用 `yield`，该行不产生任何输出
+- **单列输出**：`yield value` 产出单个值。
+- **多列输出**：`yield (value1, value2, ...)` 产出多个值的元组。
+- **条件跳过**：不调用 `yield`，该行不产生任何输出。
 
 ### 基本语法
 
 #### 创建 Python UDTF
 
-Python UDTF 支持两种创建方式:内联模式 (Inline) 和模块模式 (Module)。
+Python UDTF 支持两种创建方式：**内联模式（Inline）** 与 **模块模式（Module）**。
 
 :::caution 注意
-如果同时指定了 `file` 参数和 `AS $$` 内联 Python 代码，Doris 将会**优先加载内联 Python 代码**，采用内联模式运行 Python UDTF。
+若同时指定了 `file` 参数和 `AS $$` 内联 Python 代码，Doris 将**优先加载内联 Python 代码**，按内联模式运行 Python UDTF。
 :::
 
-##### 内联模式 (Inline Mode)
+##### 内联模式（Inline Mode）
 
 内联模式允许直接在 SQL 中编写 Python 函数，适合简单的表函数逻辑。
 
-**语法**:
+**语法**：
+
 ```sql
 CREATE TABLES FUNCTION function_name(parameter_type1, parameter_type2, ...)
 RETURNS ARRAY<return_type>
@@ -1976,12 +2042,13 @@ def function_name(param1, param2, ...):
 $$;
 ```
 
-> **重要语法说明**:
-> - 使用 `CREATE TABLES FUNCTION`（注意是 **TABLES**，复数形式）
-> - 单列输出: `ARRAY<类型>`，如 `ARRAY<INT>`
-> - 多列输出: `ARRAY<STRUCT<col1:type1, col2:type2, ...>>`
+> **重要语法说明**：
+> - 使用 `CREATE TABLES FUNCTION`（注意是 **TABLES**，复数形式）。
+> - 单列输出：`ARRAY<类型>`，如 `ARRAY<INT>`。
+> - 多列输出：`ARRAY<STRUCT<col1:type1, col2:type2, ...>>`。
 
-**示例 1: 字符串分割（单列输出）**
+**示例 1：字符串分割（单列输出）**
+
 ```sql
 DROP FUNCTION IF EXISTS py_split(STRING, STRING);
 
@@ -2016,7 +2083,8 @@ LATERAL VIEW py_split(fruits, ',') tmp AS part;
 +--------+
 ```
 
-**示例 2: 生成数字序列（单列输出）**
+**示例 2：生成数字序列（单列输出）**
+
 ```sql
 DROP FUNCTION IF EXISTS py_range(INT, INT);
 
@@ -2067,7 +2135,8 @@ LATERAL VIEW py_range(start_val, end_val) tmp AS n;
 +------------+
 ```
 
-**示例 3: 多列输出（STRUCT）**
+**示例 3：多列输出（STRUCT）**
+
 ```sql
 DROP FUNCTION IF EXISTS py_duplicate(STRING, INT);
 
@@ -2100,7 +2169,8 @@ LATERAL VIEW py_duplicate(text, times) tmp AS output, idx;
 +--------+------+
 ```
 
-**示例 4: 笛卡尔积（多列 STRUCT）**
+**示例 4：笛卡尔积（多列 STRUCT）**
+
 ```sql
 DROP FUNCTION IF EXISTS py_cartesian(STRING, STRING);
 
@@ -2139,7 +2209,8 @@ LATERAL VIEW py_cartesian(list1, list2) tmp AS item1, item2;
 +-------+-------+
 ```
 
-**示例 5: JSON 数组解析**
+**示例 5：JSON 数组解析**
+
 ```sql
 DROP FUNCTION IF EXISTS py_explode_json(STRING);
 
@@ -2179,13 +2250,13 @@ LATERAL VIEW py_explode_json(json_data) tmp AS element;
 +---------+
 ```
 
-##### 模块模式 (Module Mode)
+##### 模块模式（Module Mode）
 
 模块模式适合复杂的表函数逻辑，需要将 Python 代码打包成 `.zip` 压缩包，并在函数创建时引用。
 
-**步骤 1: 编写 Python 模块**
+**步骤 1：编写 Python 模块**
 
-创建 `text_udtf.py` 文件:
+创建 `text_udtf.py` 文件：
 
 ```python
 import json
@@ -2248,57 +2319,54 @@ def ngram_udtf(text, n):
             yield (ngram,)
 ```
 
-**步骤 2: 打包 Python 模块**
+**步骤 2：打包 Python 模块**
 
-**必须**将 Python 文件打包成 `.zip` 格式(即使只有单个文件):
+**必须**将 Python 文件打包成 `.zip` 格式（即使只有单个文件）：
+
 ```bash
 zip text_udtf.zip text_udtf.py
 ```
 
-**步骤 3: 设置 Python 模块压缩包的路径**
+**步骤 3：设置 `.zip` 包的路径**
 
-支持多种部署方式，通过 `file` 参数指定 `.zip` 包的路径:
+通过 `file` 参数指定 `.zip` 包的路径：
 
-**方式 1: 本地文件系统** (使用 `file://` 协议)
-```sql
-"file" = "file:///path/to/text_udtf.zip"
-```
-
-**方式 2: HTTP/HTTPS 远程下载** (使用 `http://` 或 `https://` 协议)
-```sql
-"file" = "http://example.com/udtf/text_udtf.zip"
-"file" = "https://s3.amazonaws.com/bucket/text_udtf.zip"
-```
+| 部署方式 | 写法 |
+| --- | --- |
+| 本地文件系统（`file://` 协议） | `"file" = "file:///path/to/text_udtf.zip"` |
+| HTTP/HTTPS 远程下载（`http://` 或 `https://` 协议） | `"file" = "http://example.com/udtf/text_udtf.zip"`<br/>`"file" = "https://s3.amazonaws.com/bucket/text_udtf.zip"` |
 
 :::caution 注意
-- 使用远程下载方式时，需确保所有 BE 节点都能访问该 URL
-- 首次调用时会下载文件，可能有一定延迟
-- 文件会被缓存，后续调用无需重复下载
+- 使用远程下载方式时，需确保所有 BE 节点都能访问该 URL。
+- 首次调用时会下载文件，可能有一定延迟。
+- 文件会被缓存，后续调用无需重复下载。
 :::
 
-**步骤 4: 设置 symbol 参数**
+**步骤 4：设置 `symbol` 参数**
 
-在模块模式下，`symbol` 参数用于指定函数在 ZIP 包中的位置，格式为:
+在模块模式下，`symbol` 用于指定函数在 ZIP 包中的位置，格式为：
 
 ```
 [package_name.]module_name.function_name
 ```
 
-**参数说明**:
-- `package_name`(可选): ZIP 压缩包内顶层 Python 包的名称
-- `module_name`(必填): 包含目标函数的 Python 模块文件名(不含 `.py` 后缀)
-- `function_name`(必填): UDTF 函数名
+参数说明：
 
-**解析规则**:
-- Doris 会将 `symbol` 字符串按 `.` 分割:
-  - 如果得到**两个**子字符串，分别为 `module_name` 和 `function_name`
-  - 如果得到**三个及以上**的子字符串，开头为 `package_name`，中间为 `module_name`，结尾为 `function_name`
+- `package_name`（可选）：ZIP 包内顶层 Python 包的名称。
+- `module_name`（必填）：包含目标函数的 Python 模块文件名（不含 `.py` 后缀）。
+- `function_name`（必填）：UDTF 函数名。
+
+解析规则：
+
+- Doris 会将 `symbol` 字符串按 `.` 分割：
+    - 如果得到**两个**子字符串，分别为 `module_name` 和 `function_name`。
+    - 如果得到**三个及以上**的子字符串，开头为 `package_name`，中间为 `module_name`，结尾为 `function_name`。
 
 :::caution Warning
-命名空间应具备唯一性，避免与 Python 标准库或常用第三方库同名，以避免因模块遮蔽导致的依赖冲突及运行时异常
+命名空间应具备唯一性，避免与 Python 标准库或常用第三方库同名，以避免因模块遮蔽导致的依赖冲突及运行时异常。
 :::
 
-**步骤 5: 创建 UDTF 函数**
+**步骤 5：创建 UDTF 函数**
 
 ```sql
 DROP FUNCTION IF EXISTS py_split_lines(STRING);
@@ -2358,7 +2426,7 @@ PROPERTIES (
 );
 ```
 
-**步骤 6: 使用函数**
+**步骤 6：使用函数**
 
 ```sql
 SELECT line
@@ -2437,7 +2505,7 @@ DROP FUNCTION IF EXISTS py_explode_json(STRING);
 
 #### 修改 Python UDTF
 
-Doris 不支持直接修改已有函数，需要先删除再重新创建:
+Doris 不支持直接修改已有函数，需要先删除再重新创建：
 
 ```sql
 DROP FUNCTION IF EXISTS py_split(STRING, STRING);
@@ -2449,41 +2517,41 @@ CREATE TABLES FUNCTION py_split(STRING, STRING) ...;
 #### CREATE TABLES FUNCTION 参数
 
 | 参数 | 说明 |
-|------|------|
+| --- | --- |
 | `function_name` | 函数名称，遵循 SQL 标识符命名规则 |
-| `parameter_types` | 参数类型列表，如 `INT`， `STRING`， `DOUBLE` 等 |
-| `RETURNS ARRAY<...>` | 返回的数组类型，定义输出结构<br>• 单列: `ARRAY<类型>`<br>• 多列: `ARRAY<STRUCT<col1:type1, col2:type2, ...>>` |
+| `parameter_types` | 参数类型列表，如 `INT`、`STRING`、`DOUBLE` 等 |
+| `RETURNS ARRAY<...>` | 返回的数组类型，定义输出结构<br/>• 单列：`ARRAY<类型>`<br/>• 多列：`ARRAY<STRUCT<col1:type1, col2:type2, ...>>` |
 
 #### PROPERTIES 参数
 
 | 参数 | 是否必需 | 默认值 | 说明 |
-|------|---------|--------|------|
+| --- | --- | --- | --- |
 | `type` | 是 | - | 固定为 `"PYTHON_UDF"` |
-| `symbol` | 是 | - | Python 函数名。<br>• **内联模式**: 直接写函数名，如 `"split_string_udtf"`<br>• **模块模式**: 格式为 `[package_name.]module_name.function_name` |
-| `file` | 否 | - | Python `.zip` 包路径，仅模块模式需要。支持三种协议:<br>• `file://` - 本地文件系统路径<br>• `http://` - HTTP 远程下载<br>• `https://` - HTTPS 远程下载 |
+| `symbol` | 是 | - | Python 函数名。<br/>• **内联模式**：直接写函数名，如 `"split_string_udtf"`<br/>• **模块模式**：格式为 `[package_name.]module_name.function_name` |
+| `file` | 否 | - | Python `.zip` 包路径，仅模块模式需要。支持三种协议：<br/>• `file://` —— 本地文件系统路径<br/>• `http://` —— HTTP 远程下载<br/>• `https://` —— HTTPS 远程下载 |
 | `runtime_version` | 是 | - | Python 运行时版本，如 `"3.10.12"` |
 | `always_nullable` | 否 | `true` | 是否总是返回可空结果 |
 
 #### runtime_version 说明
 
-- 必须填写 Python 版本的**完整版本号**，格式为 `x.x.x` 或 `x.x.xx`
-- Doris 会在配置的 Python 环境中查找匹配该版本的解释器
+- 必须填写 Python 版本的**完整版本号**，格式为 `x.x.x` 或 `x.x.xx`。
+- Doris 会在配置的 Python 环境中查找匹配该版本的解释器。
 
 ### 数据类型映射
 
 Python UDTF 使用与 Python UDF 完全相同的数据类型映射规则，包括整数、浮点、字符串、日期时间、Decimal、布尔、数组、STRUCT 等所有类型。
 
-**详细的数据类型映射关系请参考**: [数据类型映射](python-user-defined-function#数据类型映射)
+**详细的数据类型映射关系请参考**：[数据类型映射](#数据类型映射)。
 
 #### NULL 值处理
 
-- Doris 会将 SQL 中的 `NULL` 值映射为 Python 的 `None`
-- 在函数中，需要检查参数是否为 `None`
-- `yield` 产出的值可以包含 `None`，表示该列为 `NULL`
+- Doris 会将 SQL 中的 `NULL` 值映射为 Python 的 `None`。
+- 在函数中，需要检查参数是否为 `None`。
+- `yield` 产出的值可以包含 `None`，表示该列为 `NULL`。
 
 ### 实际应用场景
 
-#### 场景 1: CSV 数据解析
+#### 场景 1：CSV 数据解析
 
 ```sql
 DROP FUNCTION IF EXISTS py_parse_csv(STRING);
@@ -2526,7 +2594,7 @@ LATERAL VIEW py_parse_csv(data) tmp AS name, age, city;
 +---------+------+-----------+
 ```
 
-#### 场景 2: 日期范围生成
+#### 场景 2：日期范围生成
 
 ```sql
 DROP FUNCTION IF EXISTS py_date_range(STRING, STRING);
@@ -2574,7 +2642,7 @@ LATERAL VIEW py_date_range(start_date, end_date) tmp AS date;
 +------------+
 ```
 
-#### 场景 3: 文本分词
+#### 场景 3：文本分词
 
 ```sql
 DROP FUNCTION IF EXISTS py_tokenize(STRING);
@@ -2617,7 +2685,7 @@ LATERAL VIEW py_tokenize(text) tmp AS word, position;
 +----------+----------+
 ```
 
-#### 场景 4: URL 参数解析
+#### 场景 4：URL 参数解析
 
 ```sql
 DROP FUNCTION IF EXISTS py_parse_url_params(STRING);
@@ -2663,7 +2731,7 @@ LATERAL VIEW py_parse_url_params(url) tmp AS param_name, param_value;
 +------------+-------------+
 ```
 
-#### 场景 5: IP 范围展开
+#### 场景 5：IP 范围展开
 
 ```sql
 DROP FUNCTION IF EXISTS py_expand_ip_range(STRING, STRING);
@@ -2718,12 +2786,12 @@ LATERAL VIEW py_expand_ip_range(start_ip, end_ip) tmp AS ip;
 
 #### 1. 控制输出行数
 
-- 对于可能产生大量输出的场景，设置合理的上限
-- 避免笛卡尔积爆炸
+- 对于可能产生大量输出的场景，设置合理的上限。
+- 避免笛卡尔积爆炸。
 
 #### 2. 避免重复计算
 
-如果需要多次使用同一个计算结果，预先计算:
+如果需要多次使用同一个计算结果，预先计算：
 
 ```python
 # 不推荐
@@ -2741,7 +2809,7 @@ def good_split_udtf(text):
 
 #### 3. 使用生成器表达式
 
-利用 Python 的生成器特性，避免创建中间列表:
+利用 Python 的生成器特性，避免创建中间列表：
 
 ```python
 # 不推荐
@@ -2762,55 +2830,58 @@ def good_filter_udtf(text, delimiter):
 
 #### 4. 避免访问外部资源
 
-- 不要在 UDTF 中访问数据库、文件、网络
-- 所有处理应基于输入参数
+- 不要在 UDTF 中访问数据库、文件、网络。
+- 所有处理应基于输入参数。
 
 ### 限制与注意事项
 
 #### 1. 无状态限制
 
-- Python UDTF 是**无状态**的，每次函数调用独立处理一行
-- 不能在多次调用之间保留状态
-- 如果需要跨行聚合，应使用 UDAF
+- Python UDTF 是**无状态**的，每次函数调用独立处理一行。
+- 不能在多次调用之间保留状态。
+- 如果需要跨行聚合，应使用 UDAF。
 
 #### 2. 性能考虑
 
-- Python UDTF 性能低于内置表函数
-- 适用于逻辑复杂但数据量适中的场景
-- 大数据量场景优先考虑优化或使用内置函数
+- Python UDTF 性能低于内置表函数。
+- 适用于逻辑复杂但数据量适中的场景。
+- 大数据量场景优先考虑优化或使用内置函数。
 
 #### 3. 输出类型固定
 
-- `RETURNS ARRAY<...>` 定义的类型是固定的
-- `yield` 产出的值必须与定义匹配
-- 单列: `yield value`或`yield (value,)`，多列: `yield (value1, value2, ...)`
+- `RETURNS ARRAY<...>` 定义的类型是固定的。
+- `yield` 产出的值必须与定义匹配。
+- 单列：`yield value` 或 `yield (value,)`；多列：`yield (value1, value2, ...)`。
 
 #### 4. 函数命名
 
-- 同一函数名在不同数据库中可重复定义
-- 调用时建议指定数据库名以避免歧义
+- 同一函数名在不同数据库中可重复定义。
+- 调用时建议指定数据库名以避免歧义。
 
 #### 5. 环境一致性
 
-- 所有 BE 节点的 Python 环境必须一致
-- 包括 Python 版本、依赖包版本、环境配置
+- 所有 BE 节点的 Python 环境必须一致。
+- 包括 Python 版本、依赖包版本、环境配置。
 
 ### 常见问题 FAQ
 
-#### Q1: UDTF 和 UDF 的区别是什么?
+<!-- 知识类型: FAQ -->
 
-A: **UDF** 输入单行，输出单行，为一对一关系。**UDTF** 输入单行，输出零行或多行，为一对多关系。
+#### Q1：UDTF 和 UDF 的区别是什么？
 
-示例:
+A：**UDF** 输入单行，输出单行，为一对一关系。**UDTF** 输入单行，输出零行或多行，为一对多关系。
+
+示例：
+
 ```sql
 SELECT py_upper(name) FROM users;
 
 SELECT tag FROM users LATERAL VIEW py_split(tags, ',') tmp AS tag;
 ```
 
-#### Q2: 如何输出多列?
+#### Q2：如何输出多列？
 
-A: 多列输出使用 STRUCT 定义返回类型，并在 `yield` 时产出元组:
+A：多列输出使用 STRUCT 定义返回类型，并在 `yield` 时产出元组：
 
 ```sql
 CREATE TABLES FUNCTION func(...)
@@ -2821,21 +2892,22 @@ def func(...):
     yield (123, 'hello')  # 对应 col1 和 col2
 ```
 
-#### Q3: 为什么我的 UDTF 没有输出?
+#### Q3：为什么我的 UDTF 没有输出？
 
-A: 可能的原因:
-1. **未调用 yield**: 确保在函数中调用了 `yield`
-2. **条件过滤**: 所有数据都被过滤掉了
-3. **异常被捕获**: 检查是否有 try-except 吞掉了错误
-4. **NULL 输入**: 输入是 NULL 且函数直接返回
+A：可能的原因：
 
-#### Q4: UDTF 可以维护状态吗?
+1. **未调用 yield**：确保在函数中调用了 `yield`。
+2. **条件过滤**：所有数据都被过滤掉了。
+3. **异常被捕获**：检查是否有 try-except 吞掉了错误。
+4. **NULL 输入**：输入是 NULL 且函数直接返回。
 
-A: 不能。Python UDTF 是无状态的，每次函数调用独立处理一行。如果需要跨行聚合或维护状态，应使用 Python UDAF。
+#### Q4：UDTF 可以维护状态吗？
 
-#### Q5: 如何限制 UDTF 的输出行数?
+A：不能。Python UDTF 是无状态的，每次函数调用独立处理一行。如果需要跨行聚合或维护状态，应使用 Python UDAF。
 
-A: 在函数中添加计数器或条件判断:
+#### Q5：如何限制 UDTF 的输出行数？
+
+A：在函数中添加计数器或条件判断：
 
 ```python
 def limited_udtf(data):
@@ -2848,23 +2920,27 @@ def limited_udtf(data):
         count += 1
 ```
 
-#### Q6: UDTF 输出的数据类型有限制吗?
+#### Q6：UDTF 输出的数据类型有限制吗？
 
-A: UDTF 支持所有 Doris 数据类型，包括基本类型（INT、STRING、DOUBLE 等）和复杂类型（ARRAY、STRUCT、MAP 等）。输出类型必须在 `RETURNS ARRAY<...>` 中明确定义。
+A：UDTF 支持所有 Doris 数据类型，包括基本类型（INT、STRING、DOUBLE 等）和复杂类型（ARRAY、STRUCT、MAP 等）。输出类型必须在 `RETURNS ARRAY<...>` 中明确定义。
 
-#### Q7: 可以在 UDTF 中访问外部资源吗?
+#### Q7：可以在 UDTF 中访问外部资源吗？
 
-A: 技术上可以，但**强烈不推荐**。UDTF 应该是纯函数式的，只基于输入参数进行处理。访问外部资源（数据库、文件、网络）会导致性能问题和不可预测的行为。
+A：技术上可以，但**强烈不推荐**。UDTF 应该是纯函数式的，只基于输入参数进行处理。访问外部资源（数据库、文件、网络）会导致性能问题和不可预测的行为。
 
 ## Python UDF/UDAF/UDTF 环境配置与多版本管理
 
+<!-- 知识类型: 部署与配置 -->
+<!-- 适用场景: 集群初始化 / 多版本 Python UDF 共存 -->
+
 ### Python 环境管理
 
-在使用 Python UDF/UDAF/UDTF 之前，请确保 Doris 的 Backend (BE) 节点已正确配置 Python 运行环境。Doris 支持通过 **Conda** 或 **Virtual Environment (venv)** 管理 Python 环境，允许不同的 UDF 使用不同版本的 Python 解释器和依赖库。
+在使用 Python UDF/UDAF/UDTF 之前，请确保 Doris 的 Backend（BE）节点已正确配置 Python 运行环境。Doris 支持通过 **Conda** 或 **Virtual Environment（venv）** 管理 Python 环境，允许不同的 UDF 使用不同版本的 Python 解释器和依赖库。
 
-Doris 提供两种 Python 环境管理方式:
-- **Conda 模式**: 使用 Miniconda/Anaconda 管理多版本环境
-- **Venv 模式**: 使用 Python 内置的虚拟环境 (venv) 管理多版本环境
+Doris 提供两种 Python 环境管理方式：
+
+- **Conda 模式**：使用 Miniconda/Anaconda 管理多版本环境。
+- **Venv 模式**：使用 Python 内置的虚拟环境（venv）管理多版本环境。
 
 ### 第三方库的安装与使用
 
@@ -2872,31 +2948,33 @@ Python UDF、UDAF、UDTF 都可以使用第三方库。但由于 Doris 的分布
 
 #### 安装步骤
 
-1. **在每个 BE 节点上安装依赖**:
-   ```bash
-   # 使用 pip 安装
-   pip install numpy pandas requests
-   
-   # 或使用 conda 安装
-   conda install numpy pandas requests -y
-   ```
+1. **在每个 BE 节点上安装依赖**：
 
-2. **在函数中导入并使用**:
-   ```python
-   import numpy as np
-   import pandas as pd
-   
-   # 在 UDF/UDAF/UDTF 函数中使用
-   def my_function(x):
-       return np.sqrt(x)
-   ```
+    ```bash
+    # 使用 pip 安装
+    pip install numpy pandas requests
+    
+    # 或使用 conda 安装
+    conda install numpy pandas requests -y
+    ```
+
+2. **在函数中导入并使用**：
+
+    ```python
+    import numpy as np
+    import pandas as pd
+    
+    # 在 UDF/UDAF/UDTF 函数中使用
+    def my_function(x):
+        return np.sqrt(x)
+    ```
 
 #### 注意事项
 
-- **`pandas` 和 `pyarrow` 是强制依赖**，必须在所有 Python 环境中预先安装，否则 Python UDF/UDAF/UDTF 无法运行
-- 必须在**所有 BE 节点**上安装相同版本的依赖，否则会导致部分节点执行失败
-- 安装路径要与对应 UDF/UDAF/UDTF 使用的 Python 运行时环境一致
-- 建议使用虚拟环境或 Conda 环境管理依赖，避免与系统 Python 环境冲突
+- **`pandas` 和 `pyarrow` 是强制依赖**，必须在所有 Python 环境中预先安装，否则 Python UDF/UDAF/UDTF 无法运行。
+- 必须在**所有 BE 节点**上安装相同版本的依赖，否则会导致部分节点执行失败。
+- 安装路径要与对应 UDF/UDAF/UDTF 使用的 Python 运行时环境一致。
+- 建议使用虚拟环境或 Conda 环境管理依赖，避免与系统 Python 环境冲突。
 
 ### BE 配置参数
 
@@ -2905,19 +2983,19 @@ Python UDF、UDAF、UDTF 都可以使用第三方库。但由于 Doris 的分布
 #### 配置参数说明
 
 | 参数名 | 类型 | 可选值 | 默认值 | 说明 |
-|--------|------|--------|--------|------|
+| --- | --- | --- | --- | --- |
 | `enable_python_udf_support` | bool | `true` / `false` | `false` | 是否启用 Python UDF 功能 |
 | `python_env_mode` | string | `conda` / `venv` | `""` | Python 多版本环境管理方式 |
-| `python_conda_root_path` | string | 目录路径 | `""` | Miniconda 的根目录<br>仅在 `python_env_mode = conda` 时生效 |
-| `python_venv_root_path` | string | 目录路径 | `${DORIS_HOME}/lib/udf/python` | venv 多版本管理的根目录<br>仅在 `python_env_mode = venv` 时生效 |
-| `python_venv_interpreter_paths` | string | 路径列表(用 `:` 分隔) | `""` | 可用 Python 解释器的目录列表<br>仅在 `python_env_mode = venv` 时生效 |
-| `max_python_process_num` | int32 | 整数 | `0` | Python Server 进程池最多运行的进程数<br>`0` 表示使用 CPU 核数作为默认值，用户可以设置其他正整数覆盖默认值 |
+| `python_conda_root_path` | string | 目录路径 | `""` | Miniconda 的根目录<br/>仅在 `python_env_mode = conda` 时生效 |
+| `python_venv_root_path` | string | 目录路径 | `${DORIS_HOME}/lib/udf/python` | venv 多版本管理的根目录<br/>仅在 `python_env_mode = venv` 时生效 |
+| `python_venv_interpreter_paths` | string | 路径列表（用 `:` 分隔） | `""` | 可用 Python 解释器的目录列表<br/>仅在 `python_env_mode = venv` 时生效 |
+| `max_python_process_num` | int32 | 整数 | `0` | Python Server 进程池最多运行的进程数<br/>`0` 表示使用 CPU 核数作为默认值，用户可以设置其他正整数覆盖默认值 |
 
-### 方式一: 使用 Conda 管理 Python 环境
+### 方式一：使用 Conda 管理 Python 环境
 
 #### 1. 配置 BE
 
-在 `be.conf` 中添加以下配置:
+在 `be.conf` 中添加以下配置：
 
 ```properties
 ## be.conf
@@ -2930,15 +3008,17 @@ python_conda_root_path = /path/to/miniconda3
 
 Doris 会在 `${python_conda_root_path}/envs/` 目录下查找与 UDF 中 `runtime_version` 匹配的 Conda 环境。
 
-**匹配规则**:
-- `runtime_version` **必须填写 Python 版本的完整版本号**，格式为 `x.x.x` 或 `x.x.xx`，例如 `"3.9.18"`、`"3.12.11"`
-- Doris 会遍历所有 Conda 环境，检查每个环境中 Python 解释器的实际版本是否与 `runtime_version` 完全匹配
-- 如果找不到匹配的环境，则会报错: `Python environment with version x.x.x not found`
+**匹配规则**：
 
-**示例**:
-- UDF 中指定 `runtime_version = "3.9.18"`，Doris 会在所有环境中查找 Python 版本为 3.9.18 的环境
-- 环境名称可以是任意的 (如 `py39`、`my-env`、`data-science` 等)，只要该环境中的 Python 版本为 3.9.18 即可
-- 必须填写完整版本号，不能使用版本前缀，如 `"3.9"` 或 `"3.12"`
+- `runtime_version` **必须填写 Python 版本的完整版本号**，格式为 `x.x.x` 或 `x.x.xx`，例如 `"3.9.18"`、`"3.12.11"`。
+- Doris 会遍历所有 Conda 环境，检查每个环境中 Python 解释器的实际版本是否与 `runtime_version` 完全匹配。
+- 如果找不到匹配的环境，则会报错：`Python environment with version x.x.x not found`。
+
+**示例**：
+
+- UDF 中指定 `runtime_version = "3.9.18"`，Doris 会在所有环境中查找 Python 版本为 3.9.18 的环境。
+- 环境名称可以是任意的（如 `py39`、`my-env`、`data-science` 等），只要该环境中的 Python 版本为 3.9.18 即可。
+- 必须填写完整版本号，不能使用版本前缀，如 `"3.9"` 或 `"3.12"`。
 
 #### 3. 目录结构示意图
 
@@ -2983,10 +3063,10 @@ Doris 会在 `${python_conda_root_path}/envs/` 目录下查找与 UDF 中 `runti
 #### 4. 创建 Conda 环境
 
 :::caution 注意
-Doris Python UDF/UDAF/UDTF 功能**强制依赖** `pandas` 和 `pyarrow` 两个库,**必须**在所有 Python 环境中预先安装这两个依赖,否则 UDF 将无法正常运行。
+Doris Python UDF/UDAF/UDTF 功能**强制依赖** `pandas` 和 `pyarrow` 两个库，**必须**在所有 Python 环境中预先安装这两个依赖，否则 UDF 将无法正常运行。
 :::
 
-**在所有 BE 节点上**执行以下命令创建 Python 环境:
+**在所有 BE 节点上**执行以下命令创建 Python 环境：
 
 ```bash
 # 安装 Miniconda (如果尚未安装)
@@ -3031,11 +3111,11 @@ $$;
 -- runtime_version 只关注 Python 版本，不关注环境名称
 ```
 
-### 方式二: 使用 Venv 管理 Python 环境
+### 方式二：使用 Venv 管理 Python 环境
 
 #### 1. 配置 BE
 
-在 `be.conf` 中添加以下配置:
+在 `be.conf` 中添加以下配置：
 
 ```properties
 ## be.conf
@@ -3047,8 +3127,8 @@ python_venv_interpreter_paths = /opt/python3.9/bin/python3.9:/opt/python3.12/bin
 
 #### 2. 配置参数说明
 
-- **`python_venv_root_path`**: 虚拟环境的根目录，所有 venv 环境都将创建在此目录下
-- **`python_venv_interpreter_paths`**: 以英文冒号 `:` 分隔的 Python 解释器绝对路径列表。Doris 会检查每个解释器的版本，并根据 UDF 中指定的 `runtime_version` (完整版本号，如 `"3.9.18"`) 匹配对应的解释器
+- **`python_venv_root_path`**：虚拟环境的根目录，所有 venv 环境都将创建在此目录下。
+- **`python_venv_interpreter_paths`**：以英文冒号 `:` 分隔的 Python 解释器绝对路径列表。Doris 会检查每个解释器的版本，并根据 UDF 中指定的 `runtime_version`（完整版本号，如 `"3.9.18"`）匹配对应的解释器。
 
 #### 3. 目录结构示意图
 
@@ -3085,10 +3165,10 @@ python_venv_root_path = /doris/python_envs
 #### 4. 创建 Venv 环境
 
 :::caution 注意
-Doris Python UDF/UDAF/UDTF 功能**强制依赖** `pandas` 和 `pyarrow` 两个库,**必须**在所有 Python 环境中预先安装这两个依赖,否则 UDF 将无法正常运行。
+Doris Python UDF/UDAF/UDTF 功能**强制依赖** `pandas` 和 `pyarrow` 两个库，**必须**在所有 Python 环境中预先安装这两个依赖，否则 UDF 将无法正常运行。
 :::
 
-**在所有 BE 节点上**执行以下命令:
+**在所有 BE 节点上**执行以下命令：
 
 ```bash
 # 创建虚拟环境根目录
@@ -3150,15 +3230,17 @@ $$;
 #### 1. 选择合适的管理方式
 
 | 场景 | 推荐方式 | 原因 |
-|------|---------|------|
+| --- | --- | --- |
 | 需要频繁切换 Python 版本 | Conda | 环境隔离性好，依赖管理简单 |
 | 已有 Conda 环境 | Conda | 可直接复用现有环境 |
 | 系统资源有限 | Venv | 占用空间小，启动快 |
 | 已有 Python 系统环境 | Venv | 无需额外安装 Conda |
 
 #### 2. 环境一致性要求
+
 :::caution 注意
-所有 BE 节点必须配置**完全相同**的 Python 环境，包括:
+所有 BE 节点必须配置**完全相同**的 Python 环境，包括：
+
 - Python 版本必须一致
 - 已安装的依赖包及其版本必须一致
 - 环境目录路径必须一致
@@ -3168,12 +3250,12 @@ $$;
 
 #### 1. 配置修改生效
 
-- 修改 `be.conf` 后，**必须重启 BE 进程**才能生效
-- 重启前请确保配置正确，避免服务中断
+- 修改 `be.conf` 后，**必须重启 BE 进程**才能生效。
+- 重启前请确保配置正确，避免服务中断。
 
 #### 2. 路径验证
 
-配置前请确保路径正确:
+配置前请确保路径正确：
 
 ```bash
 # Conda 模式: 验证 conda 路径
@@ -3187,7 +3269,7 @@ ls -la /opt/miniconda3/bin/conda
 
 #### 3. 权限设置
 
-确保 Doris BE 进程有权限访问 Python 环境目录:
+确保 Doris BE 进程有权限访问 Python 环境目录：
 
 ```bash
 # Conda 模式
@@ -3200,7 +3282,7 @@ chown -R doris:doris /doris/python_envs  # 假设 BE 进程用户为 doris
 
 #### 4. 资源限制
 
-根据实际需求调整 Python 进程池参数:
+根据实际需求调整 Python 进程池参数：
 
 ```properties
 ## 确认使用 CPU 核数（推荐，max_python_process_num = 0）
@@ -3215,7 +3297,7 @@ max_python_process_num = 32
 
 ### 环境验证
 
-#### 在每个 BE 节点上验证环境是否正确:
+#### 在每个 BE 节点上验证环境是否正确
 
 ```bash
 # Conda 模式
@@ -3227,10 +3309,12 @@ max_python_process_num = 32
 /doris/python_envs/python3.9.18/bin/python -c "import pandas; print(pandas.__version__)"
 ```
 
-#### 展示所有 BE 共有的 python 版本
+#### 展示所有 BE 共有的 Python 版本
+
 ```sql
 SHOW PYTHON VERSIONS;
 ```
+
 ```text
 +---------+---------+---------+-------------------+----------------------------------------+
 | Version | EnvName | EnvType | BasePath          | ExecutablePath                         |
@@ -3240,11 +3324,15 @@ SHOW PYTHON VERSIONS;
 ```
 
 #### 展示指定版本中已安装的依赖
-使用`SHOW PYTHON PACKAGES IN '<version>'` 来展示指定版本中已安装的依赖，如果各 BE 存在依赖不相同的情况，会列出不相
+
+使用 `SHOW PYTHON PACKAGES IN '<version>'` 来展示指定版本中已安装的依赖，如果各 BE 存在依赖不相同的情况，会列出不相同的部分。
+
 ```sql
 SHOW PYTHON PACKAGES IN '3.9.18'
 ```
-各 BE 依赖安装情况完全相同:
+
+各 BE 依赖安装情况完全相同：
+
 ```text
 +-----------------+-------------+
 | Package         | Version     |
@@ -3269,7 +3357,9 @@ SHOW PYTHON PACKAGES IN '3.9.18'
 | numexpr         | 2.10.1      |
 +-----------------+-------------+
 ```
-各 BE 安装依赖情况不同:
+
+各 BE 安装依赖情况不同：
+
 ```text
 +-----------------+-------------+------------+----------------+
 | Package         | Version     | Consistent | Backends       |
@@ -3298,13 +3388,18 @@ SHOW PYTHON PACKAGES IN '3.9.18'
 
 ### 常见问题排查
 
-#### Q1: UDF 调用时提示 "Python environment not found"
+<!-- 知识类型: Troubleshooting -->
+<!-- 适用场景: Python UDF 部署后运行报错 -->
 
-**原因**: 
-- `runtime_version` 指定的版本在系统中不存在
-- 环境路径配置不正确
+#### Q1：UDF 调用时提示 "Python environment not found"
 
-**解决方案**:
+**原因**：
+
+- `runtime_version` 指定的版本在系统中不存在。
+- 环境路径配置不正确。
+
+**解决方案**：
+
 ```bash
 # 检查 Conda 环境列表
 conda env list
@@ -3316,61 +3411,64 @@ ls -la /opt/python3.9/bin/python3.9
 grep python /path/to/be.conf
 ```
 
-#### Q2: UDF 调用时提示 "ModuleNotFoundError: No module named 'xxx'"
+#### Q2：UDF 调用时提示 "ModuleNotFoundError: No module named 'xxx'"
 
-**原因**: Python 环境中未安装所需依赖包
+**原因**：Python 环境中未安装所需依赖包。
 
-#### Q3: 不同 BE 节点执行结果不一致
+#### Q3：不同 BE 节点执行结果不一致
 
-**原因**: 各 BE 节点的 Python 环境或依赖版本不一致
+**原因**：各 BE 节点的 Python 环境或依赖版本不一致。
 
-**解决方案**:
-1. 检查所有节点的 Python 版本和依赖版本
-2. 验证所有节点环境一致性
+**解决方案**：
+
+1. 检查所有节点的 Python 版本和依赖版本。
+2. 验证所有节点环境一致性。
 3. 统一使用 `requirements.txt`（pip）或 `environment.yml`（Conda）部署环境，常见用法示例：
 
-- 使用 `requirements.txt`（pip）:
-```bash
-# 在开发环境中导出依赖
-pip freeze > requirements.txt
-# 在 BE 节点上使用目标 Python 安装依赖
-/path/to/python -m pip install -r requirements.txt
-```
+- 使用 `requirements.txt`（pip）：
 
-- 使用 `environment.yml`（Conda）:
-```bash
-# 导出依赖
-conda env export --from-history -n py312 -f environment.yml
-# 在 BE 节点上创建环境
-conda env create -f environment.yml -n py312
-# 或更新已有环境
-conda env update -f environment.yml -n py312
-```
+    ```bash
+    # 在开发环境中导出依赖
+    pip freeze > requirements.txt
+    # 在 BE 节点上使用目标 Python 安装依赖
+    /path/to/python -m pip install -r requirements.txt
+    ```
+
+- 使用 `environment.yml`（Conda）：
+
+    ```bash
+    # 导出依赖
+    conda env export --from-history -n py312 -f environment.yml
+    # 在 BE 节点上创建环境
+    conda env create -f environment.yml -n py312
+    # 或更新已有环境
+    conda env update -f environment.yml -n py312
+    ```
 
 :::caution 注意
-- 必须确保 `pandas` 和 `pyarrow` 出现在依赖文件中，并在所有 BE 节点中安装相同版本
-- 安装时务必使用与 Doris 配置一致的 Python 解释器或 Conda 路径（例如 `/opt/miniconda3/bin/conda` 或指定的 venv 解释器）
-- 建议将依赖文件纳入版本控制或放入共享存储，由运维统一分发到所有 BE 节点
-- 更多参考：[pip 官方文档](https://pip.pypa.io/en/stable/cli/pip/)，[Conda 环境导出/导入说明](https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html#exporting-the-environment)
+- 必须确保 `pandas` 和 `pyarrow` 出现在依赖文件中，并在所有 BE 节点中安装相同版本。
+- 安装时务必使用与 Doris 配置一致的 Python 解释器或 Conda 路径（例如 `/opt/miniconda3/bin/conda` 或指定的 venv 解释器）。
+- 建议将依赖文件纳入版本控制或放入共享存储，由运维统一分发到所有 BE 节点。
+- 更多参考：[pip 官方文档](https://pip.pypa.io/en/stable/cli/pip/)，[Conda 环境导出/导入说明](https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html#exporting-the-environment)。
 :::
 
-#### Q4: 修改 be.conf 后未生效
+#### Q4：修改 be.conf 后未生效
 
-**可能的原因**: 未重启 BE 进程
+**可能的原因**：未重启 BE 进程。
 
 ### 使用限制
 
-1. **性能考虑**:
-   - Python UDF 性能低于内置函数，建议用于逻辑复杂但数据量不大的场景
-   - 对于大数据量处理，优先考虑向量化模式
+1. **性能考虑**：
+    - Python UDF 性能低于内置函数，建议用于逻辑复杂但数据量不大的场景。
+    - 对于大数据量处理，优先考虑向量化模式。
 
-2. **类型限制**:
-   - 不支持 HLL、Bitmap 等特殊类型
+2. **类型限制**：
+    - 不支持 HLL、Bitmap 等特殊类型。
 
-3. **环境隔离**:
-   - 同一函数名在不同数据库中可重复定义
-   - 调用时需指定数据库名 (如 `db.func()`) 以避免歧义
+3. **环境隔离**：
+    - 同一函数名在不同数据库中可重复定义。
+    - 调用时需指定数据库名（如 `db.func()`）以避免歧义。
 
-4. **并发限制**:
-   - Python UDF 通过进程池执行，并发数受 `max_python_process_num` 限制
-   - 高并发场景需适当调大该参数
+4. **并发限制**：
+    - Python UDF 通过进程池执行，并发数受 `max_python_process_num` 限制。
+    - 高并发场景需适当调大该参数。
