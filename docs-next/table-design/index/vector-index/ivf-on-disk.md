@@ -1,17 +1,17 @@
 ---
 {
     "title": "IVF On-Disk",
-    "language": "zh-CN",
-    "description": "Apache Doris IVF On-Disk 索引将倒排列表落盘并配合专用缓存，降低大规模向量检索的内存占用。",
+    "language": "en",
+    "description": "The Apache Doris IVF On-Disk index stores inverted lists on disk and uses a dedicated cache to reduce memory footprint for large-scale vector retrieval.",
     "keywords": [
         "IVF On-Disk",
-        "Apache Doris 向量索引",
-        "ANN 索引",
+        "Apache Doris vector index",
+        "ANN index",
         "ivf_on_disk",
-        "向量检索内存优化",
+        "vector retrieval memory optimization",
         "ivf_nprobe",
         "ann_index_ivf_list_cache_limit",
-        "大规模向量检索"
+        "large-scale vector retrieval"
     ]
 }
 ---
@@ -35,56 +35,56 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# Apache Doris 中的 IVF On-Disk
+# IVF On-Disk in Apache Doris
 
-<!-- 知识类型: 能力定义 + 配置参数 + 性能参考 -->
-<!-- 适用场景: 大规模向量检索 / 内存预算受限 / ANN 索引选型 -->
+<!-- Knowledge type: Capability definition + Configuration parameters + Performance reference -->
+<!-- Applicable scenarios: Large-scale vector retrieval / Constrained memory budget / ANN index selection -->
 
-`ivf_on_disk` 是 Apache Doris 面向大规模向量检索（ANN）场景提供的索引类型。它将 IVF 倒排列表主体存放在磁盘上，并通过专用缓存按需加载热点数据，在保留 IVF 检索能力的同时显著降低常驻内存占用。
+`ivf_on_disk` is an index type that Apache Doris provides for large-scale vector retrieval (ANN) scenarios. It stores the main body of the IVF inverted lists on disk and loads hot data on demand through a dedicated cache, significantly reducing resident memory usage while preserving IVF retrieval capabilities.
 
-## 快速导航
+## Quick navigation
 
-- 想了解为什么需要 `ivf_on_disk`：阅读 [背景与目标](#背景与目标)。
-- 想直接建表使用：阅读 [建索引 DDL](#1建索引-ddl) 与 [查询参数](#2查询参数)。
-- 想控制内存占用：阅读 [BE 缓存配置](#3be-缓存配置) 与 [调优建议](#调优建议)。
-- 想评估实际表现：阅读 [性能参考数据](#性能参考数据)。
-- 想对比纯内存 IVF：阅读 [与 IVF 的对比](#与-ivf-的对比)。
+- To learn why `ivf_on_disk` is needed, read [Background and goals](#background-and-goals).
+- To start using it directly in table creation, read [Index DDL](#1-index-ddl) and [Query parameters](#2-query-parameters).
+- To control memory usage, read [BE cache configuration](#3-be-cache-configuration) and [Tuning recommendations](#tuning-recommendations).
+- To evaluate real-world behavior, read [Performance reference data](#performance-reference-data).
+- To compare with in-memory IVF, read [Comparison with IVF](#comparison-with-ivf).
 
-## 背景与目标
+## Background and goals
 
-<!-- 知识类型: 能力定义 -->
+<!-- Knowledge type: Capability definition -->
 
-当向量规模达到千万乃至更高时，纯内存 IVF 的索引内存成本会快速攀升，并成为资源瓶颈。`ivf_on_disk` 的设计目标包括：
+When the vector scale reaches tens of millions or more, the index memory cost of pure in-memory IVF rises rapidly and becomes a resource bottleneck. The design goals of `ivf_on_disk` include:
 
-- 保持 IVF 的参数模型与检索语义（`nlist` / `nprobe`）。
-- 将“必须全量驻内存”的模式转为“磁盘 + 专用缓存”模式。
-- 让用户继续沿用现有 ANN 的 SQL 使用方式与运维习惯。
+- Preserve the parameter model and retrieval semantics of IVF (`nlist` / `nprobe`).
+- Switch from a "must reside fully in memory" mode to a "disk + dedicated cache" mode.
+- Allow users to continue using existing ANN SQL usage and operational practices.
 
-简而言之，`ivf_on_disk` 主要面向 **内存预算受限但仍需要 ANN 加速** 的生产场景。
+In short, `ivf_on_disk` is mainly aimed at production scenarios where **the memory budget is constrained but ANN acceleration is still required**.
 
-## 与 IVF 的对比
+## Comparison with IVF
 
-<!-- 知识类型: 架构选型决策 -->
+<!-- Knowledge type: Architecture selection decision -->
 
-下表帮助快速判断在什么场景下应选择 `ivf_on_disk` 而不是 `ivf`。
+The following table helps you quickly decide when to choose `ivf_on_disk` over `ivf`.
 
-| 对比维度       | `ivf`（内存）       | `ivf_on_disk`（磁盘 + 缓存）           |
-| -------------- | ------------------- | -------------------------------------- |
-| 倒排列表存储   | 全量内存            | 磁盘为主，缓存按需加载                 |
-| 内存占用       | 高，随数据量线性增长 | 显著降低，可由缓存上限显式控制         |
-| 查询延迟       | 最低                | 略高于内存 IVF，受缓存命中率影响       |
-| 参数模型       | `nlist` / `nprobe`  | 完全相同                               |
-| 查询函数       | ANN 查询函数        | 完全相同                               |
-| 适用规模       | 中小规模            | 千万级及以上                           |
-| 迁移成本       | -                   | 低，仅需修改 `index_type`              |
+| Comparison dimension | `ivf` (in memory)   | `ivf_on_disk` (disk + cache)                |
+| -------------------- | ------------------- | ------------------------------------------- |
+| Inverted list storage | Fully in memory    | Mainly on disk, loaded on demand via cache  |
+| Memory usage         | High, grows linearly with data volume | Significantly lower, can be explicitly capped by the cache limit |
+| Query latency        | Lowest              | Slightly higher than in-memory IVF, affected by cache hit ratio |
+| Parameter model      | `nlist` / `nprobe`  | Identical                                   |
+| Query functions      | ANN query functions | Identical                                   |
+| Applicable scale     | Small to medium     | Tens of millions and above                  |
+| Migration cost       | -                   | Low, only requires changing `index_type`    |
 
-## 用户接口
+## User interface
 
-### 1）建索引 DDL
+### 1) Index DDL
 
-<!-- 知识类型: 操作步骤 -->
+<!-- Knowledge type: Operational steps -->
 
-通过 `index_type="ivf_on_disk"` 创建 ANN 索引：
+Create an ANN index by specifying `index_type="ivf_on_disk"`:
 
 ```sql
 CREATE TABLE vec_tbl (
@@ -102,49 +102,49 @@ DISTRIBUTED BY HASH(id) BUCKETS 8
 PROPERTIES ("replication_num" = "1");
 ```
 
-关键说明：
+Key notes:
 
-- `ivf` 与 `ivf_on_disk` 都必须显式指定 `nlist`。
-- `metric_type` 支持 `l2_distance` 与 `inner_product`。
-- 查询函数保持一致，仍使用 `l2_distance_approximate` / `inner_product_approximate`。
+- Both `ivf` and `ivf_on_disk` must explicitly specify `nlist`.
+- `metric_type` supports `l2_distance` and `inner_product`.
+- The query functions remain the same: `l2_distance_approximate` / `inner_product_approximate`.
 
-### 2）查询参数
+### 2) Query parameters
 
-<!-- 知识类型: 配置参数 -->
+<!-- Knowledge type: Configuration parameters -->
 
-`ivf_nprobe` 仍是 IVF 系列最关键的查询阶段参数：
+`ivf_nprobe` remains the most critical query-phase parameter for the IVF family:
 
 ```sql
 SET ivf_nprobe = 64;
 ```
 
-一般而言，`nprobe` 越大，召回率越高，但查询延迟也会相应上升。
+In general, a larger `nprobe` yields a higher recall, but query latency rises accordingly.
 
-### 3）BE 缓存配置
+### 3) BE cache configuration
 
-<!-- 知识类型: 配置参数 -->
+<!-- Knowledge type: Configuration parameters -->
 
-`ivf_on_disk` 引入了 IVF 倒排列表专用缓存，相关 BE 配置如下：
+`ivf_on_disk` introduces a dedicated cache for IVF inverted lists. The related BE configurations are as follows:
 
-| 配置项                                          | 默认值 | 说明                                                       |
-| ----------------------------------------------- | ------ | ---------------------------------------------------------- |
-| `ann_index_ivf_list_cache_limit`                | `70%`  | 缓存上限，百分比基准为 BE 进程可用内存（受 `mem_limit` 约束），不是整机物理内存。 |
-| `ann_index_ivf_list_cache_stale_sweep_time_sec` | `3600` | 缓存中陈旧条目的清理周期，单位为秒。                       |
+| Configuration item                              | Default | Description                                                |
+| ----------------------------------------------- | ------- | ---------------------------------------------------------- |
+| `ann_index_ivf_list_cache_limit`                | `70%`   | Cache upper limit. The percentage is based on the BE process available memory (constrained by `mem_limit`), not the physical memory of the entire machine. |
+| `ann_index_ivf_list_cache_stale_sweep_time_sec` | `3600`  | Cleanup interval for stale entries in the cache, in seconds. |
 
-## 可观测性
+## Observability
 
-<!-- 知识类型: 监控指标 -->
-<!-- 适用场景: 故障排查 / 性能调优 -->
+<!-- Knowledge type: Monitoring metrics -->
+<!-- Applicable scenarios: Troubleshooting / Performance tuning -->
 
-为了定位 `ivf_on_disk` 的性能瓶颈，新增了专用的 Profile 计数器和 BE 指标，可用于判断当前缓存大小是否合适，以及延迟主要来自磁盘缺页还是检索计算本身。
+To help locate performance bottlenecks of `ivf_on_disk`, dedicated Profile counters and BE metrics are provided. They can be used to determine whether the current cache size is appropriate and whether latency mainly comes from disk page faults or from the retrieval computation itself.
 
-常用 Profile 字段：
+Common Profile fields:
 
 - `AnnIvfOnDiskLoadCosts`
 - `AnnIvfOnDiskCacheHitCnt`
 - `AnnIvfOnDiskCacheMissCnt`
 
-常用 BE 指标：
+Common BE metrics:
 
 - `ann_ivf_on_disk_fetch_page_costs_ms`
 - `ann_ivf_on_disk_fetch_page_cnt`
@@ -153,70 +153,70 @@ SET ivf_nprobe = 64;
 - `ann_ivf_on_disk_cache_hit_cnt`
 - `ann_ivf_on_disk_cache_miss_cnt`
 
-## 使用说明
+## Usage notes
 
-<!-- 知识类型: 使用约束 -->
+<!-- Knowledge type: Usage constraints -->
 
-- `ivf_on_disk` 与现有 ANN 索引共享主要使用约束（如向量列类型、索引参数合法性等）。
-- 训练质量与检索效果仍依赖数据规模和参数组合（`nlist`、`ivf_nprobe`）。
-- `ivf_on_disk` 支持 Stream Load 等常见导入路径，建议在生产上线前结合业务数据进行验证。
+- `ivf_on_disk` shares the major usage constraints of existing ANN indexes (such as vector column types and the validity of index parameters).
+- Training quality and retrieval effectiveness still depend on the data scale and the parameter combination (`nlist`, `ivf_nprobe`).
+- `ivf_on_disk` supports common ingestion paths such as Stream Load. You are advised to validate it with your business data before going to production.
 
-## 性能参考数据
+## Performance reference data
 
-<!-- 知识类型: 性能参考 -->
+<!-- Knowledge type: Performance reference -->
 
-下表为一组参考压测快照，用于展示缓存覆盖率、内存占用与延迟之间的实际权衡关系。
+The following table is a reference benchmark snapshot that illustrates the practical trade-offs among cache coverage, memory usage, and latency.
 
-| 场景                   | 内存使用量 (GB) | AnnIndexIVFListCache 命中率 | Max QPS | Recall@100 | 平均延迟 (s) | P99 延迟 (s) | P95 延迟 (s) |
-| ---------------------- | --------------: | --------------------------: | ------: | ---------: | -----------: | -----------: | -----------: |
-| Brute Force (No Index) |               - |                           - |  0.2922 |     0.0000 |     292.5394 |     307.9490 |     307.9442 |
-| IVF In Memory          |            32.0 |                        100% | 71.8535 |     0.9598 |       0.4167 |       0.5623 |       0.5151 |
-| OnDisk Cache 100%      |            32.0 |                        100% | 72.3649 |     0.9599 |       0.8274 |       1.1236 |       1.0395 |
-| OnDisk Cache 79%       |            22.0 |                         70% | 45.0266 |     0.9599 |       1.9900 |       4.4059 |       3.3568 |
-| OnDisk Cache 60%       |            16.7 |                         55% | 38.3141 |     0.9599 |       2.3281 |       4.0063 |       3.5542 |
+| Scenario               | Memory usage (GB) | AnnIndexIVFListCache hit ratio | Max QPS | Recall@100 | Average latency (s) | P99 latency (s) | P95 latency (s) |
+| ---------------------- | ----------------: | -----------------------------: | ------: | ---------: | ------------------: | --------------: | --------------: |
+| Brute Force (No Index) |                 - |                              - |  0.2922 |     0.0000 |            292.5394 |        307.9490 |        307.9442 |
+| IVF In Memory          |              32.0 |                           100% | 71.8535 |     0.9598 |              0.4167 |          0.5623 |          0.5151 |
+| OnDisk Cache 100%      |              32.0 |                           100% | 72.3649 |     0.9599 |              0.8274 |          1.1236 |          1.0395 |
+| OnDisk Cache 79%       |              22.0 |                            70% | 45.0266 |     0.9599 |              1.9900 |          4.4059 |          3.3568 |
+| OnDisk Cache 60%       |              16.7 |                            55% | 38.3141 |     0.9599 |              2.3281 |          4.0063 |          3.5542 |
 
-阅读建议：
+Reading guidance:
 
-- 在召回率接近（约 0.96）的情况下，缓存降低会显著减少内存占用，但尾延迟会上升。
-- 当缓存覆盖接近 100% 时，`ivf_on_disk` 可保持接近内存 IVF 的召回率，但延迟会有一定增加。
-- 生产环境中建议持续观察命中率指标，用于反向调优 `ann_index_ivf_list_cache_limit`。
+- When the recall is roughly the same (around 0.96), reducing the cache significantly lowers memory usage but raises tail latency.
+- When the cache coverage approaches 100%, `ivf_on_disk` can maintain a recall close to in-memory IVF, but with some increase in latency.
+- In production, you are advised to continuously monitor the hit ratio metric and use it to back-tune `ann_index_ivf_list_cache_limit`.
 
-## 调优建议
+## Tuning recommendations
 
-<!-- 知识类型: 操作步骤 -->
-<!-- 适用场景: 性能调优 -->
+<!-- Knowledge type: Operational steps -->
+<!-- Applicable scenarios: Performance tuning -->
 
-推荐按照如下步骤迭代调优：
+The recommended iterative tuning steps are:
 
-1. 先复用 `ivf` 的 `nlist` / `ivf_nprobe` 基线参数启动测试。
-2. 根据内存预算设置 `ann_index_ivf_list_cache_limit`，再观察命中率与延迟波动。
-3. 若召回稳定但延迟抖动明显，优先提高缓存比例并复测命中情况。
-4. 缓存比例变化后，再次联合调节 `ivf_nprobe`，平衡召回率与延迟。
+1. Start tests by reusing the baseline `nlist` / `ivf_nprobe` parameters from `ivf`.
+2. Set `ann_index_ivf_list_cache_limit` according to the memory budget, then observe the hit ratio and latency variation.
+3. If recall is stable but latency jitter is significant, prioritize raising the cache ratio and re-test the hit situation.
+4. After the cache ratio changes, jointly adjust `ivf_nprobe` again to balance recall and latency.
 
 ## FAQ
 
-<!-- 知识类型: 常见问题 -->
+<!-- Knowledge type: Frequently asked questions -->
 
-**Q1：`ivf_on_disk` 和 `ivf` 的 SQL 用法有差别吗？**
+**Q1: Is there any difference in SQL usage between `ivf_on_disk` and `ivf`?**
 
-没有差别。建索引时仅需将 `index_type` 修改为 `ivf_on_disk`，查询函数（`l2_distance_approximate` / `inner_product_approximate`）和参数（`ivf_nprobe`）保持一致。
+There is no difference. When creating the index, you only need to change `index_type` to `ivf_on_disk`. The query functions (`l2_distance_approximate` / `inner_product_approximate`) and parameters (`ivf_nprobe`) remain the same.
 
-**Q2：`ann_index_ivf_list_cache_limit` 的百分比基准是什么？**
+**Q2: What is the percentage baseline for `ann_index_ivf_list_cache_limit`?**
 
-是 BE 进程可用内存（受 `mem_limit` 约束），并非整机物理内存。请结合 BE 内存上限规划缓存比例。
+It is the BE process available memory (constrained by `mem_limit`), not the physical memory of the entire machine. Plan the cache ratio based on the BE memory upper limit.
 
-**Q3：缓存命中率多少算合理？**
+**Q3: What hit ratio is considered reasonable?**
 
-视业务可接受的尾延迟而定。从参考数据看，命中率 100% 时延迟最稳定；命中率降到 55%-70% 时，内存占用大幅下降，但 P99 延迟可能升至秒级。建议结合可观测性指标持续调优。
+It depends on the tail latency that the business can tolerate. According to the reference data, latency is most stable when the hit ratio is 100%; when the hit ratio drops to 55%-70%, memory usage decreases substantially, but P99 latency can rise to the seconds level. Continuously tune based on observability metrics.
 
-**Q4：什么时候应选择 `ivf_on_disk` 而不是 `ivf`？**
+**Q4: When should `ivf_on_disk` be chosen over `ivf`?**
 
-当向量规模较大（千万级以上）、内存预算紧张，但仍需要 ANN 加速时优先选择 `ivf_on_disk`；对延迟极度敏感且内存充足时可选择 `ivf`。
+Choose `ivf_on_disk` first when the vector scale is large (tens of millions or more), the memory budget is tight, and ANN acceleration is still required. Choose `ivf` when latency is extremely sensitive and memory is sufficient.
 
-## 相关文档
+## Related documents
 
-- [向量索引概览](./overview.md)
-- [IVF 索引](./ivf.md)
-- [HNSW 索引](./hnsw.md)
-- [向量索引管理](./index-management.md)
-- [大规模向量检索性能](./performance-large-scale.md)
+- [Vector index overview](./overview.md)
+- [IVF index](./ivf.md)
+- [HNSW index](./hnsw.md)
+- [Vector index management](./index-management.md)
+- [Large-scale vector retrieval performance](./performance-large-scale.md)

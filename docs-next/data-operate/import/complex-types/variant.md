@@ -1,24 +1,48 @@
 ---
 {
-    "title": "Variant",
+    "title": "VARIANT",
     "language": "en",
-    "description": "Quick start for loading CSV and JSON data into VARIANT columns."
+    "description": "How do you load CSV and JSON data into a Doris VARIANT column? Provides the full steps for table creation, Stream Load commands, and type inference verification.",
+    "keywords": [
+        "Doris VARIANT load",
+        "Load CSV into VARIANT",
+        "Load JSON into VARIANT",
+        "semi-structured data",
+        "Stream Load JSON",
+        "Storage Format V3",
+        "describe_extend_variant_column",
+        "VARIANT type inference"
+    ]
 }
 ---
 
-Use this page to load CSV or JSON data into `VARIANT`.
+<!-- Knowledge type: Procedure -->
+<!-- Applicable scenario: Semi-structured data load / VARIANT table initialization -->
 
-If you are still choosing between default behavior, sparse columns, DOC mode, and Schema Template, start with [Variant Workload Guide](../../../sql-manual/basic-element/sql-data-types/semi-structured/variant-workload-guide). For syntax, indexes, limits, and configuration, see [VARIANT](../../../sql-manual/basic-element/sql-data-types/semi-structured/VARIANT).
+This document describes how to load CSV or JSON data into a Doris `VARIANT` column, covering the full flow from table creation to data load and result verification.
 
-## Usage Limitations
+## Target audience and prerequisite reading
 
-Supports CSV and JSON formats.
+Before reading this document, choose the reference that best matches your needs:
 
-## Storage Optimization (V3)
+| Your need | Recommended reading |
+| --- | --- |
+| Quickly complete a CSV / JSON load | Continue with this document |
+| Choose between the default mode, Sparse, DOC mode, or Schema Template | [VARIANT Usage and Configuration Guide](../../../sql-manual/basic-element/sql-data-types/semi-structured/variant-workload-guide) |
+| Look up VARIANT query syntax, indexes, limitations, or configuration reference | [VARIANT](../../../sql-manual/basic-element/sql-data-types/semi-structured/VARIANT) |
 
-For new `VARIANT` tables, especially wide JSON workloads, start with **Storage Format V3** unless you already have a reason not to. For the architectural rationale, see [Storage Format V3](../../../table-design/storage-format).
+## Limitations
 
-To enable it, specify the storage format in the table properties:
+- Currently, only **CSV** and **JSON** data formats are supported for loading into a `VARIANT` column.
+
+## Storage format recommendation (V3)
+
+<!-- Knowledge type: Architecture selection decision -->
+
+For newly created `VARIANT` tables, especially for wide JSON scenarios, use **Storage Format V3** directly unless you have a clear reason to use another format. For the design rationale, see [Storage Format V3](../../../table-design/storage-format).
+
+Enable it explicitly through `PROPERTIES` when creating the table:
+
 ```sql
 CREATE TABLE table_v3 (
     id BIGINT,
@@ -30,9 +54,9 @@ PROPERTIES (
 );
 ```
 
-## Loading CSV Format
+## Loading CSV format
 
-### Step 1: Prepare Data
+### Step 1: Prepare the data
 
 Create a CSV file named `test_variant.csv` with the following content:
 
@@ -40,9 +64,9 @@ Create a CSV file named `test_variant.csv` with the following content:
 14186154924|PushEvent|{"avatar_url":"https://avatars.githubusercontent.com/u/282080?","display_login":"brianchandotcom","gravatar_id":"","id":282080,"login":"brianchandotcom","url":"https://api.github.com/users/brianchandotcom"}|{"id":1920851,"name":"brianchandotcom/liferay-portal","url":"https://api.github.com/repos/brianchandotcom/liferay-portal"}|{"before":"abb58cc0db673a0bd5190000d2ff9c53bb51d04d","commits":[""],"distinct_size":4,"head":"91edd3c8c98c214155191feb852831ec535580ba","push_id":6027092734,"ref":"refs/heads/master","size":4}|1|2020-11-14 02:00:00
 ```
 
-### Step 2: Create Table in Database
+### Step 2: Create the table in the database
 
-Execute the following SQL statement to create the table:
+Run the following SQL statement to create the table:
 
 ```SQL
 CREATE TABLE IF NOT EXISTS testdb.test_variant (
@@ -60,15 +84,15 @@ DISTRIBUTED BY HASH(id) BUCKETS 10
 properties("replication_num" = "1");
 ```
 
-### Step 3: Load Data
+### Step 3: Load the data
 
-Using stream load as an example, use the following command to load data:
+Using Stream Load as an example, load the data with the following command:
 
 ```SQL
 curl --location-trusted -u root:  -T test_variant.csv -H "column_separator:|" http://127.0.0.1:8030/api/testdb/test_variant/_stream_load
 ```
 
-Example of load results:
+Example response on a successful load:
 
 ```SQL
 {
@@ -93,9 +117,9 @@ Example of load results:
 }
 ```
 
-### Step 4: Check Loaded Data
+### Step 4: Verify the loaded data
 
-Use the following SQL query to check the loaded data:
+Use the following SQL query to confirm that the data has been written:
 
 ```SQL
 mysql> select * from testdb.test_variant\G
@@ -109,9 +133,9 @@ mysql> select * from testdb.test_variant\G
 created_at: 2020-11-14 02:00:00
 ```
 
-## Loading JSON Format
+## Loading JSON format
 
-### Step 1: Prepare Data
+### Step 1: Prepare the data
 
 Create a JSON file named `test_variant.json` with the following content:
 
@@ -119,9 +143,9 @@ Create a JSON file named `test_variant.json` with the following content:
 {"id": "14186154924","type": "PushEvent","actor": {"id": 282080,"login":"brianchandotcom","display_login": "brianchandotcom","gravatar_id": "","url": "https://api.github.com/users/brianchandotcom","avatar_url": "https://avatars.githubusercontent.com/u/282080?"},"repo": {"id": 1920851,"name": "brianchandotcom/liferay-portal","url": "https://api.github.com/repos/brianchandotcom/liferay-portal"},"payload": {"push_id": 6027092734,"size": 4,"distinct_size": 4,"ref": "refs/heads/master","head": "91edd3c8c98c214155191feb852831ec535580ba","before": "abb58cc0db673a0bd5190000d2ff9c53bb51d04d","commits": [""]},"public": true,"created_at": "2020-11-13T18:00:00Z"}
 ```
 
-### Step 2: Create Table in Database
+### Step 2: Create the table in the database
 
-Execute the following SQL statement to create the table:
+Run the following SQL statement to create the table:
 
 ```SQL
 CREATE TABLE IF NOT EXISTS testdb.test_variant (
@@ -138,15 +162,15 @@ DUPLICATE KEY(`id`)
 DISTRIBUTED BY HASH(id) BUCKETS 10;
 ```
 
-### Step 3: Load Data
+### Step 3: Load the data
 
-Using stream load as an example, use the following command to load data:
+Using Stream Load as an example, load the data with the following command:
 
 ```SQL
 curl --location-trusted -u root:  -T test_variant.json -H "format:json"  http://127.0.0.1:8030/api/testdb/test_variant/_stream_load
 ```
 
-Example of load results:
+Example response on a successful load:
 
 ```SQL
 {
@@ -171,9 +195,9 @@ Example of load results:
 }
 ```
 
-### Step 4: Check Loaded Data
+### Step 4: Verify the loaded data
 
-Use the following SQL query to check the loaded data:
+Use the following SQL query to confirm that the data has been written:
 
 ```SQL
 mysql> select * from testdb.test_variant\G
@@ -187,12 +211,15 @@ mysql> select * from testdb.test_variant\G
 created_at: 2020-11-14 02:00:00
 ```
 
-### Step 5: Check type inference
+### Step 5: Verify type inference
 
-Running desc command to view schema information, sub-columns will automatically expand at the storage layer and undergo type inference.
+<!-- Knowledge type: Procedure -->
+<!-- Applicable scenario: VARIANT subcolumn type confirmation / schema exploration -->
+
+By default, `DESC` only shows the top-level VARIANT column and does not expand the inner subcolumns:
 
 ``` sql
-mysql> desc test_variant;
+mysql> desc github_events;
 +------------------------------------------------------------+------------+------+-------+---------+-------+
 | Field                                                      | Type       | Null | Key   | Default | Extra |
 +------------------------------------------------------------+------------+------+-------+---------+-------+
@@ -204,11 +231,15 @@ mysql> desc test_variant;
 | public                                                     | BOOLEAN    | Yes  | false | NULL    | NONE  |
 +------------------------------------------------------------+------------+------+-------+---------+-------+
 6 rows in set (0.07 sec)
+```
 
+After enabling `describe_extend_variant_column`, you can view the subcolumn types inferred from the VARIANT column:
+
+``` sql
 mysql> set describe_extend_variant_column = true;
 Query OK, 0 rows affected (0.01 sec)
 
-mysql> desc test_variant;
+mysql> desc github_events;
 +------------------------------------------------------------+------------+------+-------+---------+-------+
 | Field                                                      | Type       | Null | Key   | Default | Extra |
 +------------------------------------------------------------+------------+------+-------+---------+-------+
@@ -230,8 +261,45 @@ mysql> desc test_variant;
 +------------------------------------------------------------+------------+------+-------+---------+-------+
 406 rows in set (0.07 sec)
 ```
-DESC can be used to specify partition and view the schema of a particular partition. The syntax is as follows:
+
+You can also display the inference results per partition:
 
 ``` sql
 DESCRIBE ${table_name} PARTITION ($partition_name);
 ```
+
+## FAQ
+
+### Q1: Which data formats does VARIANT support for loading?
+
+Currently, loading into a `VARIANT` column is only supported for **CSV** and **JSON** formats. Other formats must be converted before loading.
+
+### Q2: When is Storage Format V3 required?
+
+For newly created `VARIANT` tables, especially for wide JSON scenarios with many fields, use V3 storage format directly. Earlier storage formats are not recommended unless you have a clear reason to use them.
+
+### Q3: Why does `DESC` not show the subcolumns inferred from VARIANT?
+
+By default, `DESC` only displays the top-level VARIANT column. First run:
+
+```sql
+SET describe_extend_variant_column = true;
+```
+
+After that, running `DESC` again shows all inferred subcolumns and their types. You can also view them per partition with `DESCRIBE ${table_name} PARTITION ($partition_name)`.
+
+### Q4: How do the table creation statements differ between the CSV and JSON loading methods?
+
+The table creation statements are essentially the same. The only difference is that the CSV example explicitly declares `"replication_num" = "1"`. The load difference is in the Stream Load command:
+
+| Format | Key Header |
+| --- | --- |
+| CSV | `-H "column_separator:,"` |
+| JSON | `-H "format:json"` |
+
+### Q5: How do you confirm whether a Stream Load succeeded?
+
+Check the `Status` field in the returned JSON:
+
+- `Status` of `Success` indicates a successful load.
+- `NumberLoadedRows` should equal `NumberTotalRows`, and `NumberFilteredRows` should be `0`.

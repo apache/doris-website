@@ -21,7 +21,7 @@
 在迁移 Redshift 数据到 Apache Doris 的过程中，通常需要借助对象存储（如 Amazon S3）作为中间媒介。整体迁移流程如下：
 
 1. 在 Doris 中根据源表结构创建目标表。
-2. 通过 Redshift 的 [UNLOAD](https://docs.aws.amazon.com/zh_cn/redshift/latest/dg/r_UNLOAD.html) 语句，将数据导出到对象存储。
+2. 通过 Redshift 的 [UNLOAD](https://docs.aws.amazon.com/redshift/latest/dg/r_UNLOAD.html) 语句，将数据导出到对象存储。
 3. 利用 Doris 的 S3 Load 功能从对象存储读取数据并导入 Doris，详细可参考 [S3 导入](./amazon-s3.md)。
 
 ## 注意事项

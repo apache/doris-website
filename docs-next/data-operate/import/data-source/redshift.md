@@ -2,42 +2,70 @@
 {
     "title": "Redshift",
     "language": "en",
-    "description": "During the process of migrating Redshift, it is usually necessary to use object storage as an intermediate medium."
+    "description": "Migrate data from Redshift to Doris by exporting to S3 with Redshift UNLOAD and then loading into Doris with S3 Load. Covers table creation, data type mapping, error handling, and batch loading.",
+    "keywords": [
+        "Redshift to Doris migration",
+        "Redshift UNLOAD",
+        "S3 Load",
+        "Redshift data type mapping",
+        "Doris data import",
+        "Parquet load",
+        "ETL_QUALITY_UNSATISFIED"
+    ]
 }
 ---
 
-During the process of migrating Redshift, it is usually necessary to use object storage as an intermediate medium. The core process is as follows: First, use the [UNLOAD](https://docs.aws.amazon.com/zh_cn/redshift/latest/dg/r_UNLOAD.html) statement of Redshift to export data to the object storage; then, use the S3 Load function of Doris to read data from the object storage and import it into Doris. For details, please refer to [S3 Load](./amazon-s3.md)。
+<!-- Knowledge type: Procedure -->
+<!-- Applicable scenario: Data migration / Redshift to Doris -->
 
-## Considerations
+When migrating data from Redshift to Apache Doris, an object storage service (such as Amazon S3) is typically used as an intermediate medium. The overall migration flow is as follows:
 
-1. Before the migration, it is necessary to select Doris' [Data Model](../../../table-design/data-model/intro.mdx), as well as the strategies for [Partitioning](../../../table-design/data-partitioning/dynamic-partitioning.md) and [Bucketing](../../../table-design/data-partitioning/data-bucketing.md) according to the table structure of Redshift. For more table creation strategies, please refer to [Load Best Practices](../load-best-practices.md).
-2. When Redshift exports data of the Time type, it is necessary to export it after casting it to the Varchar type.
-   
+1. Create the target table in Doris based on the source table schema.
+2. Export the data to object storage with the Redshift [UNLOAD](https://docs.aws.amazon.com/redshift/latest/dg/r_UNLOAD.html) statement.
+3. Use the Doris S3 Load feature to read the data from object storage and load it into Doris. For details, see [S3 Load](./amazon-s3.md).
 
-## Data type mapping
+## Notes
 
-| Redshift         | Doris          | Comment                 |
-| ---------------- | -------------- | -------------------- |
-| SMALLINT         | SMALLINT       |                      |
-| INTEGER          | INT            |                      |
-| BIGINT           | BIGINT         |                      |
-| DECIMAL          | DECIMAL        |                      |
-| REAL             | FLOAT          |                      |
-| DOUBLE PRECISION | DOUBLE         |                      |
-| BOOLEAN          | BOOLEAN        |                      |
-| CHAR             | CHAR           |                      |
-| VARCHAR          | VARCHAR/STRING | VARCHAR maximum length is 65535 |
-| DATE             | DATE           |                      |
-| TIMESTAMP        | DATETIME       |                      |
-| TIME/TIMEZ       | STRING         |                      |
-| SUPER            | VARIANT        |                      |
-| OTHER            | UNSUPPORTED    |                      |
+Before performing the migration, pay attention to the following points:
 
-## 1. Create Table
+- **Modeling and partitioning strategy**: Choose an appropriate Doris [data model](../../../table-design/data-model/intro.mdx) based on the Redshift source table schema, and define a [partitioning](../../../table-design/data-partitioning/dynamic-partitioning.md) and [bucketing](../../../table-design/data-partitioning/data-bucketing.md) strategy. For more table design recommendations, see [Load Best Practices](../load-best-practices/load-best-practices.md).
+- **Type conversion**: When Redshift exports the `TIME` type, you must first `CAST` it to `VARCHAR` before exporting.
+- **Complex type limitations**: Parquet/ORC files that contain complex types (Struct/Array/Map) currently must be loaded with [TVF Load](./amazon-s3.md#load-with-tvf).
 
-To migrate a Redshift table to Doris, first create the Doris table.
+## Data Type Mapping
 
-Assume we have the following table and data in Redshift:
+<!-- Knowledge type: Configuration -->
+
+Before the migration, map the Redshift data types to Doris data types according to the table below:
+
+| Redshift         | Doris          | Notes                            |
+| ---------------- | -------------- | -------------------------------- |
+| SMALLINT         | SMALLINT       |                                  |
+| INTEGER          | INT            |                                  |
+| BIGINT           | BIGINT         |                                  |
+| DECIMAL          | DECIMAL        |                                  |
+| REAL             | FLOAT          |                                  |
+| DOUBLE PRECISION | DOUBLE         |                                  |
+| BOOLEAN          | BOOLEAN        |                                  |
+| CHAR             | CHAR           |                                  |
+| VARCHAR          | VARCHAR/STRING | VARCHAR maximum length is 65535  |
+| DATE             | DATE           |                                  |
+| TIMESTAMP        | DATETIME       |                                  |
+| TIME/TIMEZ       | STRING         |                                  |
+| SUPER            | VARIANT        |                                  |
+| OTHER            | UNSUPPORTED    |                                  |
+
+## Migration Steps
+
+### 1. Create the Doris Table
+
+<!-- Knowledge type: Procedure -->
+
+Before the migration, create the corresponding target table in Doris.
+
+**Goal**: Plan the Doris data model, partitioning, and bucketing strategy based on the Redshift source table schema.
+
+**Redshift source table example**:
 
 ```SQL
 CREATE TABLE sales_data (
@@ -56,7 +84,7 @@ INSERT INTO sales_data VALUES
 (4, 'Diana', '2025-04-10', 200.00, 'Australia');
 ```
 
-According to this table structure, a Doris primary key partitioned table can be created. The partition field should be selected according to the business scenario. Here, the partition field is "order_date", and it is partitioned on a daily basis.
+**Doris target table example**: Based on the schema above, create a Unique Key partitioned table that uses `order_date` as the partition column and partitions by day:
 
 ```sql
 CREATE TABLE `sales_data` (
@@ -83,11 +111,15 @@ PROPERTIES (
 );
 ```
 
-## 2. Export Data from Redshift
+### 2. Export Data from Redshift to S3
 
-**2.1 Export to S3 Parquet Files via UNLOAD**
+<!-- Knowledge type: Procedure -->
 
-When exporting to S3, export according to the **Partition field of Doris**, as follows:
+#### 2.1 Use UNLOAD to Export as Parquet
+
+**Goal**: Export Redshift data as Parquet files split by the Doris partition column, so that the data can later be loaded partition by partition.
+
+**Command**:
 
 ```sql
 unload ('select * from sales_data')
@@ -97,23 +129,31 @@ PARQUET
 PARTITION BY (order_date) INCLUDE
 ```
 
-**2.2 Verify Exported Files on S3**
+**Note**: It is recommended to export with the same partition column used in Doris, so that the data can be loaded in batches by partition.
 
-Exported files are organized into **subdirectories by partition** on S3:
+#### 2.2 Verify the Exported Files on S3
+
+After the export, S3 generates a subdirectory for each partition, and each directory contains the data of one partition:
 
 ![redshift_out](/images/data-operate/redshift_out.png)
 
 ![redshift_out2](/images/data-operate/redshift_out2.png)
 
-## 3. Load Data to Doris
+### 3. Load Data into Doris
 
-S3 Load is an asynchronous data load method. After execution, Doris actively pulls data from the data source. The data source supports object storage compatible with the S3 protocol, including ([AWS S3](./amazon-s3.md)，[GCS](./google-cloud-storage.md)，[AZURE](./azure-storage.md)，etc)
+<!-- Knowledge type: Procedure -->
 
-This method is suitable for scenarios involving large volumes of data that require asynchronous processing in the background. For data imports that need to be handled synchronously, refer to  [TVF Load](./amazon-s3.md#load-with-tvf)。
+The load uses **S3 Load**, an asynchronous data load method in which Doris actively pulls data from the data source after the job is submitted. The data source supports any S3-compatible object storage, including [AWS S3](./amazon-s3.md), [GCS](./google-cloud-storage.md), and [AZURE](./azure-storage.md).
 
-*Note: For **Parquet/ORC format files that contain complex types (Struct/Array/Map)**, TVF Load must be used.*
+Comparison of applicable scenarios:
 
-**3.1 Load a Single Partition**
+| Scenario                                          | Recommended method                              |
+| ------------------------------------------------- | ----------------------------------------------- |
+| Large data volume, can be processed asynchronously | S3 Load                                         |
+| Synchronous data load is required                 | [TVF Load](./amazon-s3.md#load-with-tvf)        |
+| Files contain complex types (Struct/Array/Map)    | [TVF Load](./amazon-s3.md#load-with-tvf) is required |
+
+#### 3.1 Load a Single Partition
 
 ```sql
 LOAD LABEL sales_data_2025_04_08
@@ -133,9 +173,9 @@ WITH S3
 );
 ```
 
-**3.2 Check Load Status via SHOW LOAD**
+#### 3.2 Check Job Status with SHOW LOAD
 
- Since S3 Load import is submitted asynchronously, you can check the status of a specific label using SHOW LOAD:
+Because S3 Load is submitted asynchronously, you can use `SHOW LOAD` with the job label to check load progress:
 
 ```yaml
 mysql> show load where label = "label_sales_data_2025_04_08"\G
@@ -162,9 +202,12 @@ LoadFinishTime: 2025-04-10 17:50:54
 1 row in set (0.00 sec)
 ```
 
-**3.3 Handle Load Errors**
+#### 3.3 Handle Errors During the Load
 
- When there are multiple load tasks, you can use the following statement to query the dates and reasons for data load failures.
+<!-- Knowledge type: Troubleshooting -->
+<!-- Applicable scenario: Troubleshooting / Data quality errors -->
+
+**Step 1**: Query failed load jobs. When a batch load contains multiple jobs, you can use the following statement to filter the labels and reasons of the failed jobs:
 
 ```SQL
 mysql> show load where state='CANCELLED' and label like "label_test%"\G
@@ -190,7 +233,7 @@ LoadFinishTime: 2025-04-15 17:33:02
        Comment: 
 ```
 
- As shown in the example above, the issue is a **data quality error**(ETL_QUALITY_UNSATISFIED). To view the detailed error, you need to visit the URL provided in the result. For example, the data exceeded the defined length of the country column in the table schema:
+**Step 2**: Interpret the error type. The example above is a **data quality error** (`ETL_QUALITY_UNSATISFIED`). Open the `URL` returned in the output to see the detailed error. For example, the error below indicates that the data exceeds the actual length of the `country` column defined in the schema:
 
 ```python
 [root@VM-10-6-centos ~]$ curl "http://10.16.10.6:28747/api/_load_error_log?file=__shard_2/error_log_insert_stmt_7602ccd7c3a4854-95307efca7bfe342_7602ccd7c3a4854_95307efca7bfe342"
@@ -200,10 +243,40 @@ Reason: column_name[country], the length of input is too long than schema. first
 Reason: column_name[country], the length of input is too long than schema. first 32 bytes of input str: [Australia] schema length: 1; actual length: 9; . src line [];
 ```
 
- For data quality errors, if you want to allow skipping erroneous records, you can set a fault tolerance rate in the Properties section of the S3 Load task. For details, refer to [Import Configuration Parameters](../../import/import-way/broker-load-manual.md#related-configurations)。
+**Step 3**: Set an error tolerance ratio (optional). If you can tolerate skipping some erroneous rows, set the error tolerance ratio in the `PROPERTIES` of the S3 Load. For details, see [Load Configuration Parameters](https://doris.apache.org/zh-CN/docs/dev/data-operate/import/import-way/broker-load-manual#导入配置参数).
 
-**3.4 Load data for multiple partitions**
+#### 3.4 Load Multiple Partitions in Batches
 
- When migrating a large volume of historical data, it is recommended to use a batch load strategy. Each batch corresponds to one or a few partitions in Doris. It is recommended to keep the data size under 100GB per batch to reduce system load and lower the cost of retries in case of load failures.
+When migrating large historical datasets, follow these guidelines for batch loading:
 
- You can refer to the script [s3_load_demo.sh](https://github.com/apache/doris/blob/master/samples/load/shell/s3_load_demo.sh), which can poll the partition directory on S3 and submit the S3 Load task to Doris to achieve batch load.
+- Each batch should correspond to one Doris partition or a small number of partitions.
+- The size of a single batch should not exceed **100 GB**, to reduce system pressure and lower the cost of retrying after a failed load.
+- You can use the [s3_load_demo.sh](https://github.com/apache/doris/blob/master/samples/load/shell/s3_load_demo.sh) script as a reference. It iterates over the partition directories on S3 and automatically submits S3 Load jobs to Doris for batch loading.
+
+## FAQ
+
+<!-- Knowledge type: FAQ -->
+
+**Q1: Why can the Redshift TIME type not be loaded directly into Doris?**
+
+Doris does not support the `TIME` type. When Redshift exports the `TIME/TIMEZ` type, you must use `CAST` to convert it to `VARCHAR` before exporting, and store it as `STRING` in Doris.
+
+**Q2: Can S3 Load be used for Parquet/ORC files that contain complex types such as Struct/Array/Map?**
+
+No. Currently, you must use [TVF Load](./amazon-s3.md#load-with-tvf) for files that contain complex types.
+
+**Q3: Is S3 Load synchronous or asynchronous? How can the result be queried?**
+
+S3 Load is an **asynchronous** load method. After submitting the job, run `SHOW LOAD WHERE label = "<your_label>"` to check the progress and result.
+
+**Q4: How should the `ETL_QUALITY_UNSATISFIED` error be handled?**
+
+This error indicates that the data quality does not meet requirements. To handle it:
+
+1. Open the `URL` returned in the `SHOW LOAD` output to retrieve the detailed error log.
+2. Adjust the Doris table schema or the source data based on the error log (such as field length overflow or type mismatch).
+3. If some erroneous rows are tolerable, adjust the `max_filter_ratio` error tolerance ratio in the `PROPERTIES` of the S3 Load.
+
+**Q5: How can a one-shot load failure be avoided when migrating large data volumes?**
+
+It is recommended to load data in batches by Doris partition, keep each batch under 100 GB, and use the [s3_load_demo.sh](https://github.com/apache/doris/blob/master/samples/load/shell/s3_load_demo.sh) script to automate batch submission.

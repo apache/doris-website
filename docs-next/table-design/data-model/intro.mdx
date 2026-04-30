@@ -2,133 +2,133 @@
 {
     "title": "Table Model Overview",
     "language": "en",
-    "description": "Doris table model selection guide: Duplicate Key for raw data, Unique Key for primary-key updates, Aggregate Key for pre-aggregation."
+    "description": "Doris table model selection guide: the Duplicate model retains raw data, the Unique model deduplicates and updates by primary key, and the Aggregate model pre-aggregates to accelerate analytical queries."
 }
 ---
 
 import GettingStartedCard from '@site/src/components/getting-started-card/getting-started-card';
 
-{/* Knowledge type: architecture decision */}
-{/* Use case: table design / data modeling */}
+{/* Knowledge type: Architecture selection decision */}
+{/* Applicable scenarios: Table creation selection / Data modeling */}
 
-When creating a table in Doris, you must specify a **table model**, which determines how data is stored, deduplicated, aggregated, and updated. Doris provides three table models — **Duplicate Key**, **Unique Key**, and **Aggregate Key** — covering the three most common scenarios: preserving raw data, updating rows by primary key, and pre-aggregating data for analytics. Once a table is created, its model cannot be changed, so picking the right one upfront is critical.
+When you create a table in Doris, you must specify a **Table Model**, which determines how data is stored, deduplicated, aggregated, and updated. Doris provides three table models: the **Duplicate model** (Duplicate Key), the **Unique model** (Unique Key), and the **Aggregate model** (Aggregate Key). They cover three typical scenarios: retaining raw data, updating by primary key, and pre-aggregated analysis. The table model cannot be changed after the table is created, so the choice is critical.
 
 ## Choose a Table Model by Scenario
 
-Use this table to quickly decide which model fits your workload before creating the table:
+The following table helps you quickly decide which table model to use before creating a table:
 
-| Business Scenario                                                                | Recommended Model                | Key Characteristics                                              |
-| -------------------------------------------------------------------------------- | -------------------------------- | ---------------------------------------------------------------- |
-| Logs, events, or behavior data where every original record must be preserved     | **Duplicate Key Model**          | Key columns may repeat; ideal for ad-hoc queries on any dimension |
-| Real-time dimension tables, orders, or user profiles requiring updates by key    | **Unique Key Model**             | Each Key is unique; only the latest write per Key is retained    |
-| Reports, traffic statistics, or other fixed-schema analytics needing aggregation | **Aggregate Key Model**          | Pre-aggregates by Key columns to cut scan size and computation   |
+| Business Scenario                                                                              | Recommended Model                   | Key Characteristics                                                          |
+| ---------------------------------------------------------------------------------------------- | ----------------------------------- | ---------------------------------------------------------------------------- |
+| Logs, events, behavior analysis, and other cases that need to retain all raw records           | **Duplicate model** (Duplicate Key) | Key columns may repeat; suitable for ad-hoc queries on any dimension         |
+| Real-time dimension tables, orders, user profiles, and other cases that update by primary key  | **Unique model** (Unique Key)       | Key columns are unique; only the latest data for the same Key is kept        |
+| Report rollups, traffic statistics, and other fixed analyses that require pre-aggregation      | **Aggregate model** (Aggregate Key) | Pre-aggregates by Key columns to reduce scan volume and computation          |
 
-## Three Table Models in Detail
+## The Three Table Models in Detail
 
 ### Duplicate Key Model
 
-- **Mechanism**: Allows the specified Key columns to repeat. The storage layer keeps every written row without deduplication or aggregation.
-- **Use cases**: Scenarios where all original records must be preserved, such as logs, detailed events, and behavior streams.
-- **Strengths**: Free from aggregation constraints. Takes full advantage of columnar storage — queries read only the needed columns rather than all Key columns — making it ideal for ad-hoc analytics on arbitrary dimensions.
-- **Trade-offs**: Cannot benefit from pre-aggregation acceleration.
-- **Details**: [Duplicate Key Model](./duplicate)
+- **Core mechanism**: The specified Key columns are allowed to repeat. The storage layer keeps all written data without deduplication or aggregation.
+- **Applicable scenarios**: Cases that must retain all raw data records, such as logs, detail events, and behavior streams.
+- **Advantages**: Free from aggregation constraints, it can fully take advantage of columnar storage. Queries read only the relevant columns and do not need to read all Key columns, which makes it suitable for ad-hoc queries on any dimension.
+- **Limitations**: Cannot benefit from the query acceleration provided by pre-aggregation.
+- **Details**: [Duplicate model](./duplicate)
 
 ### Unique Key Model
 
-- **Mechanism**: Each row's Key value is unique. The storage layer keeps only the latest data for each Key.
-- **Use cases**: Workloads that need a unique-key constraint and continuous updates, such as real-time dimension tables, order status, and user profiles.
-- **Strengths**: Guarantees primary-key uniqueness. Supports `UPDATE` and `DELETE` statements, plus full-row and partial-column updates during ingestion.
-- **Trade-offs**: Cannot leverage pre-aggregation features such as ROLLUP.
-- **Details**: [Unique Key Model](./unique)
+- **Core mechanism**: The Key value of each row is unique. The storage layer keeps only the latest data written for each Key.
+- **Applicable scenarios**: Cases that require a unique primary key constraint and where data is continuously updated, such as real-time dimension tables, order status, and user profiles.
+- **Advantages**: Guarantees primary key uniqueness, supports `UPDATE` and `DELETE` statements, and supports both whole-row updates and partial-column updates during ingestion.
+- **Limitations**: Cannot benefit from the query acceleration provided by pre-aggregation features such as ROLLUP.
+- **Details**: [Unique model](./unique)
 
 ### Aggregate Key Model
 
-- **Mechanism**: Pre-aggregates Value columns by Key columns. The storage layer keeps only the aggregated result.
-- **Use cases**: Fixed-dimension reporting, such as metric roll-ups, traffic statistics, and ad-click aggregation.
-- **Strengths**: Pre-aggregation drastically reduces both scanned data and computation at query time.
-- **Trade-offs**:
+- **Core mechanism**: Pre-aggregates Value columns by Key columns. The storage layer keeps only the aggregated results.
+- **Applicable scenarios**: Report-style queries with fixed dimensions, such as metric rollups, traffic statistics, and ad click aggregation.
+- **Advantages**: Pre-aggregation greatly reduces the amount of data scanned and the computation required at query time.
+- **Limitations**:
     - Not friendly to `count(*)` queries.
-    - The aggregation method on Value columns is fixed at table creation. When running other types of aggregation queries, semantic correctness must be verified.
-- **Details**: [Aggregate Key Model](./aggregate)
+    - The aggregation method of Value columns is fixed at table creation time. When running other types of aggregation queries, you must consider semantic correctness.
+- **Details**: [Aggregate model](./aggregate)
 
-:::tip Partial Column Updates
-Both Unique Key and Aggregate Key models support partial column updates. See [Partial Column Updates in Unique Key Model](../../data-operate/update/update-of-unique-model) and [Partial Column Updates in Aggregate Model](../../data-operate/update/update-of-aggregate-model) for usage guidance.
+:::tip Partial column update
+Both the Unique model and the Aggregate model support partial column updates. See [Partial column update of the Unique model](../../data-operate/update/update-of-unique-model) and [Partial column update of the Aggregate model](../../data-operate/update/update-of-aggregate-model) for usage recommendations.
 :::
 
 ## Sort Key
 
-{/* Knowledge type: concept definition */}
+{/* Knowledge type: Concept definition */}
 
-Doris stores data in columnar format. The columns of a table fall into two roles:
+In Doris, data is stored by column, and the columns of a table fall into two categories:
 
-- **Key columns**: Used for grouping and sorting. Specified explicitly at table creation.
-- **Value columns**: Stored alongside Key columns and used for aggregation.
+- **Key columns**: Used for grouping and sorting, explicitly specified at table creation time.
+- **Value columns**: Stored along with the Key columns and used for aggregation calculations.
 
-Key columns may consist of one or more fields. Regardless of which table model you choose, Key columns must be specified at table creation, and data is sorted on disk by these columns. The role of Key columns differs slightly across models:
+Key columns can consist of one or more fields. No matter which table model you use, you must specify Key columns at table creation time, and data is sorted and stored by Key columns in the storage layer. The meaning of Key columns differs slightly across models:
 
-| Table Model               | Role of Key Columns                                  |
-| ------------------------- | ---------------------------------------------------- |
-| Duplicate Key Model       | Sorting only; no uniqueness enforced                 |
-| Unique Key Model          | Sorting + uniqueness; used for primary-key dedup     |
-| Aggregate Key Model       | Sorting + uniqueness; used for pre-aggregation by Key |
+| Table Model                     | Role of Key Columns                                                    |
+| ------------------------------- | ---------------------------------------------------------------------- |
+| Duplicate model (Duplicate Key) | Used only for sorting; uniqueness is not enforced                      |
+| Unique model (Unique Key)       | Sorting plus uniqueness constraint; used to deduplicate by primary key |
+| Aggregate model (Aggregate Key) | Sorting plus uniqueness constraint; used to pre-aggregate by Key       |
 
 ### Benefits of a Well-Designed Sort Key
 
-A well-designed sort key improves performance in three ways:
+A well-designed sort key improves performance in the following three ways:
 
-1. **Faster queries**: Range and filter queries can locate data directly through the sort key, and queries that need ordering avoid extra sorting overhead.
-2. **Better compression**: Similar values cluster together when sorted, significantly increasing the compression ratio and reducing storage footprint.
-3. **Lower deduplication cost**: For Unique Key tables, the sort key lets Doris perform primary-key deduplication more efficiently.
+1. **Accelerates query performance**: The sort key helps reduce the amount of data scanned. Range queries or filter queries can locate data directly based on the sort key, and queries that require sorting can also be accelerated by the sort key.
+2. **Optimizes data compression**: Similar data is clustered together by the sort key, which significantly improves the compression ratio and reduces storage usage.
+3. **Reduces deduplication cost**: In the Unique model, the sort key allows Doris to deduplicate primary keys more efficiently and guarantee data uniqueness.
 
 ### Sort Key Design Recommendations
 
-When choosing Key columns, follow these guidelines:
+When designing Key columns, follow these principles:
 
-- **Place Key columns before all Value columns.**
-- **Prefer integer types**: integers are far more efficient than strings for computation and lookup.
-- **Use the smallest sufficient integer width**: pick a length that covers your business range without over-provisioning.
-- **Use the smallest sufficient `VARCHAR` / `STRING` length**: avoid declaring overly long fields.
+- **Key columns must come before all Value columns**.
+- **Prefer integer types**: Integers are far more efficient than strings for computation and lookup.
+- **Use integer lengths only as large as needed**: Within the range required by the business, choose the shortest integer type possible.
+- **Use `VARCHAR` and `STRING` lengths only as large as needed**: Avoid reserving overly long field lengths.
 
-## Capability Comparison
+## Capability Comparison of Table Models
 
-The table below summarizes how the three models differ in deduplication, materialized views, updates, and ingestion:
+The following table summarizes the differences across the three table models in deduplication, views, updates, and ingestion:
 
-| Capability                          | Duplicate Key Model      | Unique Key Model | Aggregate Key Model |
-| ----------------------------------- | ------------------------ | ---------------- | ------------------- |
-| Key column uniqueness               | Not supported (Key may repeat) | Supported        | Supported           |
-| Synchronous materialized view       | Supported                | Supported        | Supported           |
-| Asynchronous materialized view      | Supported                | Supported        | Supported           |
-| `UPDATE` statement                  | Not supported            | Supported        | Not supported       |
-| `DELETE` statement                  | Partially supported      | Supported        | Not supported       |
-| Full-row update on ingestion        | Not supported            | Supported        | Not supported       |
-| Partial-column update on ingestion  | Not supported            | Supported        | Partially supported |
+| Capability                             | Duplicate Model                              | Unique Model  | Aggregate Model     |
+| -------------------------------------- | -------------------------------------------- | ------------- | ------------------- |
+| Key column uniqueness constraint       | Not supported; Key columns may repeat        | Supported     | Supported           |
+| Synchronous materialized view          | Supported                                    | Supported     | Supported           |
+| Asynchronous materialized view         | Supported                                    | Supported     | Supported           |
+| `UPDATE` statement                     | Not supported                                | Supported     | Not supported       |
+| `DELETE` statement                     | Partially supported                          | Supported     | Not supported       |
+| Whole-row update during ingestion      | Not supported                                | Supported     | Not supported       |
+| Partial column update during ingestion | Not supported                                | Supported     | Partially supported |
 
 ## Next Steps
 
-Once you have picked a model, dive into the dedicated guide for the model you chose:
+After understanding the differences between the models, continue with the detailed documentation for each:
 
 <div className="cards-grid">
 <GettingStartedCard
-    title="Duplicate Key Model"
-    description="Syntax and write behavior of the Duplicate Key model — for logs, events, and any workload that must preserve raw records"
+    title="Duplicate Model"
+    description="Duplicate Key model in detail: table creation syntax and write behavior. Suitable for scenarios that need to retain raw records, such as logs and events."
     link="./duplicate"
 />
 
 <GettingStartedCard
-    title="Unique Key Model"
-    description="Primary-key dedup, UPDATE/DELETE, and partial column updates — for workloads with continuous row-level updates"
+    title="Unique Model"
+    description="Unique Key model in detail: primary key deduplication, UPDATE/DELETE, and partial column updates. Suitable for real-time update scenarios."
     link="./unique"
 />
 
 <GettingStartedCard
-    title="Aggregate Key Model"
-    description="Pre-aggregation mechanism and aggregation function selection — for reports and metric roll-ups"
+    title="Aggregate Model"
+    description="Aggregate Key model in detail: the pre-aggregation mechanism and the choice of aggregation functions. Suitable for report and metric rollup analysis."
     link="./aggregate"
 />
 
 <GettingStartedCard
-    title="Usage Tips"
-    description="Model selection advice, Aggregate Key limitations, and best practices for Key columns and data types at table creation"
+    title="Best Practices"
+    description="Table model selection recommendations, limitations of the Aggregate model, and best practices for Key columns and data types at table creation time."
     link="./tips"
 />
 </div>

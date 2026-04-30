@@ -1,33 +1,31 @@
 ---
 {
-    "title": "Storage Layout Overview",
+    "title": "Storage Layout Optimization",
     "language": "en",
-    "description": "Apache Doris storage layout — tune storage cost, point-query latency, and cold data cost through column compression, hybrid row-columnar storage, and tiered storage."
+    "description": "Apache Doris storage layout overview: optimize storage cost, point-query latency, and historical data cost through capabilities such as columnar compression, hybrid row-column storage, and hot-cold data tiering."
 }
 ---
 
 import GettingStartedCard from '@site/src/components/getting-started-card/getting-started-card';
 
-Apache Doris exposes its on-disk storage layout as a set of tunable knobs. By configuring them you can lower storage cost, accelerate point queries on wide tables, and reduce the cost of historical / cold data — without changing your table model or queries.
-
-## Capabilities
+Apache Doris exposes the on-disk storage layout to users as tunable parameters. By configuring the storage layout properly, you can reduce storage cost, accelerate wide-table point queries, and lower the storage overhead of historical and cold data, all without changing the table model or queries.
 
 <div className="cards-grid">
 <GettingStartedCard
-    title="Column Compression"
-    description="Choose per-column compression algorithms (LZ4, ZSTD, Snappy, Zlib, ...) to balance storage cost against query CPU and decompression speed."
+    title="Data Compression"
+    description="Choose a compression algorithm per column (LZ4, ZSTD, Snappy, Zlib, and others) to flexibly trade off storage cost against query CPU and decompression speed."
     link="column-compression"
 />
 
 <GettingStartedCard
-    title="Hybrid Row-Columnar Storage"
-    description="Add a row-oriented copy alongside columnar storage to collapse multi-column point queries into a single IO — ideal for high-concurrency primary-key lookups and wide-table SELECT *."
+    title="Hybrid Row-Column Storage"
+    description="Add a row-store copy on top of columnar storage to merge multi-column point lookups into a single IO, significantly improving high-concurrency primary-key point queries and wide-table SELECT * scenarios."
     link="row-store"
 />
 
 <GettingStartedCard
-    title="Tiered Storage"
-    description="Sink cold data to cheaper media — local HDD, object storage, or HDFS — while keeping hot data on high-performance storage. Includes compute-storage separation, local tiering, and remote tiering."
+    title="Hot-Cold Data Tiering"
+    description="Move cold data down to low-cost media (HDD, object storage, HDFS) while keeping hot data on high-performance storage. Covers three modes: storage-compute separation, local tiering, and remote tiering."
     link="tiered-storage/overview"
 />
 </div>

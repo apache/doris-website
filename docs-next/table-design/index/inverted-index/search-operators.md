@@ -1,129 +1,129 @@
 ---
 {
-    "title": "全文检索与查询加速算子",
-    "language": "zh-CN",
-    "description": "Apache Doris 倒排索引支持的全文检索与查询加速算子参考：MATCH_ANY/ALL/PHRASE/REGEXP 等 8 种检索算子覆盖关键词、短语、前缀、正则等场景，并加速等值、范围、数组等结构化查询。"
+    "title": "Full-Text Search and Query Acceleration Operators",
+    "language": "en",
+    "description": "Reference for full-text search and query acceleration operators supported by Apache Doris inverted index: 8 search operators including MATCH_ANY/ALL/PHRASE/REGEXP cover keyword, phrase, prefix, and regex scenarios, and accelerate equality, range, and array structured queries."
 }
 ---
 
-<!-- 知识类型: 算子参考 / 使用示例 -->
-<!-- 适用场景: 全文检索查询编写 / 倒排索引查询加速 -->
+<!-- Knowledge type: Operator reference / Usage examples -->
+<!-- Applicable scenarios: Full-text search query authoring / Inverted index query acceleration -->
 
-本文介绍 Apache Doris 倒排索引支持的查询算子，包括两大类：
+This document introduces the query operators supported by Apache Doris inverted index, in two categories:
 
-- **全文检索算子**：用于文本字段的关键词、短语、前缀、正则等模糊匹配场景。
-- **倒排索引查询加速**：用于结构化字段的等值、范围、集合、数组等精确过滤场景。
+- **Full-text search operators**: For fuzzy matching scenarios on text fields, such as keywords, phrases, prefixes, and regex.
+- **Inverted index query acceleration**: For precise filtering scenarios on structured fields, such as equality, range, set, and array.
 
-## 全文检索算子
+## Full-Text Search Operators
 
-下表列出全部全文检索算子及其典型使用场景：
+The following table lists all full-text search operators and their typical use cases:
 
-| 算子 | 典型场景 | 匹配规则 |
+| Operator | Typical Scenario | Matching Rule |
 |------|----------|----------|
-| `MATCH_ANY` | 关键词「或」搜索 | 命中任意一个关键词即可 |
-| `MATCH_ALL` | 关键词「与」搜索 | 必须命中全部关键词 |
-| `MATCH_PHRASE` | 严格短语搜索 | 词项相邻且顺序一致 |
-| `MATCH_PHRASE`（带 slop） | 容错短语搜索 | 允许词项之间存在间隔 |
-| `MATCH_PHRASE`（严格顺序） | 固定词序的短语搜索 | 间隔范围内词序固定 |
-| `MATCH_PHRASE_PREFIX` | 输入联想 / 前缀补全 | 末词按前缀匹配 |
-| `MATCH_REGEXP` | 词项级正则匹配 | 对分词结果应用正则 |
-| `MATCH_PHRASE_EDGE` | 多端模糊匹配 | 首词后缀 + 中间精确 + 末词前缀 |
+| `MATCH_ANY` | Keyword "OR" search | Matches if any keyword is hit |
+| `MATCH_ALL` | Keyword "AND" search | Must hit all keywords |
+| `MATCH_PHRASE` | Strict phrase search | Terms are adjacent and in the same order |
+| `MATCH_PHRASE` (with slop) | Fault-tolerant phrase search | Allows gaps between terms |
+| `MATCH_PHRASE` (strict order) | Phrase search with fixed term order | Term order is fixed within the gap range |
+| `MATCH_PHRASE_PREFIX` | Input suggestion / prefix completion | Last term matches by prefix |
+| `MATCH_REGEXP` | Term-level regex matching | Applies regex to tokenized results |
+| `MATCH_PHRASE_EDGE` | Multi-edge fuzzy matching | First-term suffix + middle exact + last-term prefix |
 
-### 关键词搜索：MATCH_ANY / MATCH_ALL
+### Keyword Search: MATCH_ANY / MATCH_ALL
 
-适用于「输入若干关键词，查找包含这些词的文档」的场景。
+Suitable for the scenario "given several keywords, find documents that contain these words."
 
-- **MATCH_ANY**：匹配包含任一关键词的行。
+- **MATCH_ANY**: Matches rows that contain any of the keywords.
 
     ```sql
     SELECT * FROM table_name WHERE content MATCH_ANY 'keyword1 keyword2';
     ```
 
-- **MATCH_ALL**：匹配同时包含所有关键词的行。
+- **MATCH_ALL**: Matches rows that contain all of the keywords simultaneously.
 
     ```sql
     SELECT * FROM table_name WHERE content MATCH_ALL 'keyword1 keyword2';
     ```
 
-### 短语搜索：MATCH_PHRASE 系列
+### Phrase Search: MATCH_PHRASE Family
 
-适用于「关键词需相邻或保持词序」的精确短语匹配场景。
+Suitable for precise phrase matching scenarios where "keywords need to be adjacent or maintain term order."
 
-#### 严格短语匹配
+#### Strict Phrase Matching
 
-要求词项相邻且顺序一致。如需索引加速，请在索引属性中开启 `"support_phrase" = "true"`。
+Requires terms to be adjacent and in the same order. To enable index acceleration, set `"support_phrase" = "true"` in the index properties.
 
 ```sql
 SELECT * FROM table_name WHERE content MATCH_PHRASE 'keyword1 keyword2';
 ```
 
-#### 带 slop 的短语匹配
+#### Phrase Matching with Slop
 
-允许关键词之间存在最多 `slop` 个词的间隔，词序可不固定。
+Allows up to `slop` words between keywords, and term order can vary.
 
 ```sql
--- 允许 keyword1 与 keyword2 之间最多间隔 3 个词
+-- Allow up to 3 words between keyword1 and keyword2
 SELECT * FROM table_name WHERE content MATCH_PHRASE 'keyword1 keyword2 ~3';
 ```
 
-#### 严格顺序的短语匹配
+#### Strict-Order Phrase Matching
 
-结合 `+` 与 slop，要求词序固定。
+Combines `+` with slop to require a fixed term order.
 
 ```sql
 SELECT * FROM table_name WHERE content MATCH_PHRASE 'keyword1 keyword2 ~3+';
 ```
 
-### 前缀与边缘匹配
+### Prefix and Edge Matching
 
-适用于「输入联想」「前后缀模糊匹配」等场景。
+Suitable for scenarios such as "input suggestion" and "prefix/suffix fuzzy matching."
 
 #### MATCH_PHRASE_PREFIX
 
-短语匹配，最后一个词按前缀匹配。当只给出一个词时，退化为该词的前缀匹配。
+Phrase matching where the last word matches by prefix. When only a single word is given, this degenerates into a prefix match for that word.
 
 ```sql
--- 最后一个词按前缀匹配
+-- The last word matches by prefix
 SELECT * FROM table_name WHERE content MATCH_PHRASE_PREFIX 'keyword1 key';
 
--- 单词退化为前缀匹配
+-- A single word degenerates into a prefix match
 SELECT * FROM table_name WHERE content MATCH_PHRASE_PREFIX 'keyword1';
 ```
 
 #### MATCH_PHRASE_EDGE
 
-边缘短语匹配，匹配规则如下：
+Edge phrase matching, with the following matching rules:
 
-- 首词按**后缀**匹配
-- 中间词按**精确**匹配
-- 末词按**前缀**匹配
-- 词项之间需相邻
+- The first word matches by **suffix**
+- Middle words match by **exact match**
+- The last word matches by **prefix**
+- Terms must be adjacent
 
 ```sql
 SELECT * FROM table_name WHERE content MATCH_PHRASE_EDGE 'search engine optim';
 ```
 
-### 正则匹配：MATCH_REGEXP
+### Regex Matching: MATCH_REGEXP
 
-针对分词后的词项进行正则匹配。
+Performs regex matching on tokenized terms.
 
 ```sql
 SELECT * FROM table_name WHERE content MATCH_REGEXP '^key_word.*';
 ```
 
-## 使用 USING ANALYZER 指定分词器
+## Specifying an Analyzer with USING ANALYZER
 
-当一个列上创建了多个使用不同分词器的倒排索引时，可以使用 `USING ANALYZER` 子句指定查询时使用哪个分词器。
+When multiple inverted indexes using different analyzers are created on a single column, you can use the `USING ANALYZER` clause to specify which analyzer to use at query time.
 
-### 语法
+### Syntax
 
 ```sql
 SELECT * FROM table_name WHERE column MATCH 'keywords' USING ANALYZER analyzer_name;
 ```
 
-### 支持的算子
+### Supported Operators
 
-所有 MATCH 算子都支持 `USING ANALYZER` 子句：
+All MATCH operators support the `USING ANALYZER` clause:
 
 - `MATCH` / `MATCH_ANY`
 - `MATCH_ALL`
@@ -132,56 +132,56 @@ SELECT * FROM table_name WHERE column MATCH 'keywords' USING ANALYZER analyzer_n
 - `MATCH_PHRASE_EDGE`
 - `MATCH_REGEXP`
 
-### 内置分词器
+### Built-in Analyzers
 
-| 名称 | 说明 |
+| Name | Description |
 |------|------|
-| `none` | 精确匹配，不分词 |
-| `standard` | 标准分词 |
-| `chinese` | 中文分词 |
+| `none` | Exact match, no tokenization |
+| `standard` | Standard tokenization |
+| `chinese` | Chinese tokenization |
 
-### 使用示例
+### Usage Examples
 
 ```sql
--- 使用标准分词器（将文本分词）
+-- Use the standard analyzer (tokenizes the text)
 SELECT * FROM articles WHERE content MATCH 'hello world' USING ANALYZER std_analyzer;
 
--- 使用关键词分词器（精确匹配，不分词）
+-- Use the keyword analyzer (exact match, no tokenization)
 SELECT * FROM articles WHERE content MATCH 'hello world' USING ANALYZER kw_analyzer;
 
--- 配合 MATCH_PHRASE 使用
+-- Combined with MATCH_PHRASE
 SELECT * FROM articles WHERE content MATCH_PHRASE 'hello world' USING ANALYZER std_analyzer;
 
--- 使用内置分词器
+-- Use built-in analyzers
 SELECT * FROM articles WHERE content MATCH 'hello' USING ANALYZER standard;
 SELECT * FROM articles WHERE content MATCH 'hello' USING ANALYZER none;
 ```
 
-### 注意事项
+### Notes
 
-- 如果指定分词器的索引未构建，查询会自动降级到非索引路径（结果正确，但性能较慢）。
-- 如果未指定分词器，系统会使用任意可用的索引。
+- If the index for the specified analyzer has not been built, the query automatically falls back to the non-index path (results are correct, but performance is slower).
+- If no analyzer is specified, the system uses any available index.
 
-## 倒排索引查询加速
+## Inverted Index Query Acceleration
 
-除全文检索外，倒排索引同样可加速结构化字段的精确过滤。支持的运算符与函数如下：
+In addition to full-text search, inverted index can also accelerate precise filtering on structured fields. The supported operators and functions are as follows:
 
-| 类别 | 运算符 / 函数 |
+| Category | Operator / Function |
 |------|---------------|
-| 等值与集合 | `=`、`!=`、`IN`、`NOT IN` |
-| 范围 | `>`、`>=`、`<`、`<=`、`BETWEEN` |
-| 空值判断 | `IS NULL`、`IS NOT NULL` |
-| 数组 | `array_contains`、`array_overlaps` |
+| Equality and set | `=`, `!=`, `IN`, `NOT IN` |
+| Range | `>`, `>=`, `<`, `<=`, `BETWEEN` |
+| Null check | `IS NULL`, `IS NOT NULL` |
+| Array | `array_contains`, `array_overlaps` |
 
-使用示例：
+Usage examples:
 
 ```sql
--- 范围查询
+-- Range query
 SELECT * FROM t WHERE price >= 100 AND price < 200;
 
--- 集合查询
+-- Set query
 SELECT * FROM t WHERE tags IN ('a', 'b', 'c');
 
--- 数组查询
+-- Array query
 SELECT * FROM t WHERE array_contains(attributes, 'color');
 ```

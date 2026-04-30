@@ -1,15 +1,15 @@
 ---
 {
-    "title": "Routine Load导入原理及最佳实践",
-    "language": "zh-CN",
-    "description": "深入解析 Apache Doris Routine Load 消费 Kafka 的实现原理、Exactly Once 语义、调优参数与常见问题排查方法。",
+    "title": "Routine Load Principles and Best Practices",
+    "language": "en",
+    "description": "An in-depth analysis of how Apache Doris Routine Load consumes Kafka, including its Exactly Once semantics, tuning parameters, and common troubleshooting methods.",
     "keywords": [
         "Routine Load",
-        "Apache Doris Kafka 导入",
-        "Doris 流式导入",
+        "Apache Doris Kafka import",
+        "Doris streaming load",
         "Exactly Once",
-        "Kafka Topic 消费",
-        "数据堆积排查",
+        "Kafka topic consumption",
+        "data backlog troubleshooting",
         "max_batch_interval",
         "desired_concurrent_number",
         "out of range"
@@ -17,63 +17,63 @@
 }
 ---
 
-<!-- 知识类型: 架构原理 + 配置参数 + 故障排查 -->
-<!-- 适用场景: 流式导入原理理解 / 性能调优 / 故障排查 -->
+<!-- Knowledge type: Architecture principles + Configuration parameters + Troubleshooting -->
+<!-- Applicable scenarios: Understanding streaming load principles / Performance tuning / Troubleshooting -->
 
-## 1. 概述
+## 1. Overview
 
-Routine Load 用于持续消费 Kafka 数据并写入 Apache Doris。用户可以通过创建 Routine Load Job，自动订阅指定的 Kafka Topic。其核心特性包括：
+Routine Load continuously consumes data from Kafka and writes it into Apache Doris. By creating a Routine Load Job, you can automatically subscribe to a specified Kafka topic. Its core features include:
 
-- **高可用：** 支持 7×24 小时不间断消费 Kafka 数据，且故障恢复后可自动恢复运行。
-- **低延迟：** Kafka 消息可实现秒级可见。
-- **Exactly Once 语义：** 确保消费 Kafka 数据不丢不重，实现精确一次消费。
+- **High availability:** Supports 7x24 uninterrupted consumption of Kafka data, and can automatically resume operation after a failure.
+- **Low latency:** Kafka messages can become visible within seconds.
+- **Exactly Once semantics:** Ensures that Kafka data is consumed without loss or duplication, achieving exactly-once consumption.
 
-本文将深入解析其实现原理，给出典型场景的最佳实践，并提供常见问题的排查思路，帮助用户快速上手并高效运维。
+This document provides an in-depth analysis of its implementation principles, presents best practices for typical scenarios, and offers troubleshooting approaches for common issues, helping you get started quickly and operate it efficiently.
 
-阅读路径建议：
+Recommended reading paths:
 
-1. 想了解工作机制 → 阅读 [实现原理](#2-实现原理)
-2. 想优化性能 → 阅读 [最佳实践](#3-最佳实践)
-3. 遇到问题排查 → 阅读 [常见问题排查](#4-常见问题排查)
+1. To understand the working mechanism, read [Implementation Principles](#2-implementation-principles).
+2. To optimize performance, read [Best Practices](#3-best-practices).
+3. To troubleshoot issues, read [Common Troubleshooting](#4-common-troubleshooting).
 
-## 2. 实现原理
+## 2. Implementation Principles
 
-<!-- 知识类型: 架构原理 -->
+<!-- Knowledge type: Architecture principles -->
 
-Kafka 数据以流形式存在，Doris 以「微批」（micro-batch）方式消费 Kafka 流式数据。创建 Routine Load Job 后，系统会根据配置的并发度将其拆分为多个 Task 并发执行，每个 Task 负责消费 Kafka Topic 中特定 Partition 的数据。每个 Task 对应一个事务，执行完成后会生成新的 Task 继续消费下一批数据。
+Kafka data exists as a stream, and Doris consumes Kafka streaming data in a "micro-batch" manner. After a Routine Load Job is created, the system splits it into multiple Tasks for concurrent execution based on the configured concurrency. Each Task is responsible for consuming data from specific partitions of the Kafka topic. Each Task corresponds to a transaction, and after execution completes, a new Task is generated to continue consuming the next batch of data.
 
-下文从三个维度展开说明：
+The following sections cover three dimensions:
 
-- Job 与 Task 的调度机制
-- Exactly Once 语义的实现方式
-- 一流多表写入的执行流程
+- The scheduling mechanism for Jobs and Tasks
+- How Exactly Once semantics are implemented
+- The execution flow for one-stream-multi-table writing
 
-### 2.1 作业（Job）与任务（Task）调度
+### 2.1 Job and Task Scheduling
 
-Routine Load 采用两级调度模型：
+Routine Load adopts a two-level scheduling model:
 
-| 调度层级       | 职责                                                       |
-| -------------- | ---------------------------------------------------------- |
-| **Job 调度**   | 负责任务拆分、故障恢复与生命周期管理                       |
-| **Task 调度** | 负责将具体的数据拉取、转换与写入操作的任务分发到 BE 节点执行 |
+| Scheduling Level | Responsibility                                                                |
+| ---------------- | ----------------------------------------------------------------------------- |
+| **Job scheduling**  | Responsible for task splitting, failure recovery, and lifecycle management |
+| **Task scheduling** | Responsible for dispatching the actual data fetching, transformation, and writing operations to BE nodes for execution |
 
-#### 2.1.1 Job 调度
+#### 2.1.1 Job Scheduling
 
-**Job 状态机**
+**Job State Machine**
 
-| 状态           | 含义                                |
-| -------------- | ----------------------------------- |
-| NEED_SCHEDULE  | 等待首次调度或需要重新调度          |
-| RUNNING        | 正常消费中                          |
-| PAUSED         | 主动或异常暂停，可自动恢复          |
-| CANCELLED      | 因库/表被删除等不可恢复错误而终止   |
-| STOPPED        | 手动停止且不可恢复                  |
+| State          | Meaning                                                          |
+| -------------- | ---------------------------------------------------------------- |
+| NEED_SCHEDULE  | Waiting for the first scheduling or needs to be rescheduled      |
+| RUNNING        | Consuming normally                                               |
+| PAUSED         | Paused either actively or due to an exception, can auto-resume   |
+| CANCELLED      | Terminated due to unrecoverable errors such as the database or table being dropped |
+| STOPPED        | Manually stopped and cannot be recovered                         |
 
-**调度行为**
+**Scheduling Behavior**
 
-调度线程每周期（10s）根据 Job 状态执行以下动作：
+Each scheduling cycle (10s), the scheduling thread performs the following actions based on the Job state:
 
-- **NEED_SCHEDULE：** 获取 Topic 元数据（Partition 数、起始 Offset），按以下公式拆分 Task，并将 Task 放入 `needScheduleTasksQueue` 等待 Task 调度线程开始调度：
+- **NEED_SCHEDULE:** Fetches topic metadata (number of partitions, starting offsets), splits Tasks according to the following formula, and places them into `needScheduleTasksQueue` to wait for the Task scheduling thread to start scheduling them:
 
     ```Plain
     taskNum = min(topic_partition_num,
@@ -81,142 +81,142 @@ Routine Load 采用两级调度模型：
                   max_routine_load_task_concurrent_num)
     ```
 
-- **RUNNING：** 周期获取 Topic 元数据，若 Partition 数变化立即重调度。
+- **RUNNING:** Periodically fetches topic metadata, and immediately reschedules if the number of partitions changes.
 
-- **PAUSED：** 为了确保作业的高可用性，引入了 auto-resume 机制。在非预期暂停的情况下，Routine Load Scheduler 调度线程会尝试自动恢复作业。对于 Kafka 侧的意外宕机或其他无法工作的情况，自动恢复机制可以确保在 Kafka 恢复后，无需人工干预，导入作业能够继续正常运行。需要注意的是，存在三种**不会**自动恢复的情况：
+- **PAUSED:** To ensure high availability of the Job, an auto-resume mechanism is introduced. In the case of an unexpected pause, the Routine Load Scheduler thread attempts to automatically resume the Job. For unexpected Kafka downtime or other situations where Kafka cannot work, the auto-resume mechanism ensures that, after Kafka recovers, the load Job can continue to run normally without manual intervention. Note that there are three situations where the Job will **not** auto-resume:
 
-    1. 用户手动执行 `PAUSE ROUTINE LOAD` 命令。
-    2. 数据质量存在问题。
-    3. 无法自动恢复的情况，例如库表被删除。
+    1. The user manually executes the `PAUSE ROUTINE LOAD` command.
+    2. There are data quality issues.
+    3. Situations that cannot be auto-recovered, such as the database or table being dropped.
 
-    除上述三种情况外，其他暂停状态的作业都会尝试自动恢复。
+    Apart from these three situations, all other paused Jobs will attempt to auto-resume.
 
-- **CANCELLED / STOPPED：** 延迟回收资源。
+- **CANCELLED / STOPPED:** Resources are reclaimed with a delay.
 
-#### 2.1.2 Task 调度
+#### 2.1.2 Task Scheduling
 
-**调度条件**
+**Scheduling Conditions**
 
-Task 调度需要满足以下条件之一：
+Task scheduling requires meeting one of the following conditions:
 
-- Task 未读到 Partition 末尾，即仍然还有数据可以消费，以避免无效占用资源。
-- 若上一次已读到 EOF，则距上次开始执行必须超过 `max_batch_interval` 才会发起新一轮调度，目的是在消费速度大于生产速度条件下适当攒批，防止生成太多的小事务。
+- The Task has not yet read to the end of the partition, meaning there is still data to consume, to avoid wasting resources.
+- If the previous run already read to EOF, the time since the last execution started must exceed `max_batch_interval` before a new round of scheduling is initiated. The purpose is to accumulate batches appropriately when consumption speed exceeds production speed, preventing too many small transactions from being generated.
 
-**负载均衡策略**
+**Load Balancing Strategy**
 
-调度器按以下顺序选择执行 Task 的 BE 节点：
+The scheduler selects BE nodes to execute Tasks in the following order:
 
-1. 优先选择当前运行 Task 数量最少的 BE。
-2. 若多个 BE 的 Task 数相同，则优先复用已缓存 Kafka Consumer 的节点，以减少初始化开销。
+1. Prefer BEs that are currently running the fewest Tasks.
+2. If multiple BEs have the same Task count, prefer nodes that have a cached Kafka Consumer to reduce initialization overhead.
 
-**批边界（Batch Boundary）**
+**Batch Boundary**
 
-任一条件满足即结束当前 Task：
+The current Task ends when any of the following conditions is met:
 
-- 达到 `max_batch_interval` 定义的时间。
-- 达到 `max_batch_rows` 定义的行数。
-- 达到 `max_batch_size` 定义的 bytes 大小。
-- 读取到 Kafka EOF，即消费到流末尾。
+- The time defined by `max_batch_interval` is reached.
+- The number of rows defined by `max_batch_rows` is reached.
+- The byte size defined by `max_batch_size` is reached.
+- Kafka EOF is read, meaning consumption reaches the end of the stream.
 
-Task 结束后提交事务，并立即生成新 Task 放入队列等待下一次调度，实现持续消费。
+After a Task ends, the transaction is committed, and a new Task is immediately generated and placed into the queue to wait for the next scheduling, achieving continuous consumption.
 
-### 2.2 Exactly Once 语义
+### 2.2 Exactly Once Semantics
 
-<!-- 知识类型: 架构原理 -->
+<!-- Knowledge type: Architecture principles -->
 
-Routine Load 通过「持久化消费进度」+「提交校验」双重机制，确保 Kafka 数据不丢不重。
+Routine Load ensures Kafka data is consumed without loss or duplication through a dual mechanism of "persisting consumption progress" plus "commit verification."
 
-#### 2.2.1 持久化消费进度
+#### 2.2.1 Persisting Consumption Progress
 
-每个 Task 在事务提交时，将消费进度（progress）随事务信息一起写入 FE 的 edit log，利用 Berkeley DB JE 同步给所有 FE Follower。Master 切换/重启后，进度信息依旧准确。
+When each Task commits its transaction, it writes the consumption progress along with the transaction information into the FE edit log, and uses Berkeley DB JE to synchronize this to all FE Followers. After Master switching or restart, the progress information remains accurate.
 
-#### 2.2.2 提交校验
+#### 2.2.2 Commit Verification
 
-当 Job 因手动暂停、切主或 Topic 元数据变化被重调度时，可能短暂出现两个 Task 并发消费同一 Partition 的场景。为防止重复写入：
+When a Job is rescheduled due to manual pause, master switching, or topic metadata changes, two Tasks may briefly consume the same partition concurrently. To prevent duplicate writes:
 
-- 每个 Job 在内存中维护 `routineLoadTaskInfoList`。
-- Task 提交前会校验自己是否仍在 `routineLoadTaskInfoList` 中，否则拒绝提交。
+- Each Job maintains `routineLoadTaskInfoList` in memory.
+- Before committing, a Task verifies that it is still in `routineLoadTaskInfoList`; otherwise, the commit is rejected.
 
-### 2.3 一流多表写入
+### 2.3 One-Stream-Multi-Table Writing
 
-一流多表用于单个 Routine Load Job 同时写入多张目标表，核心流程如下：
+One-stream-multi-table is used to write to multiple target tables simultaneously from a single Routine Load Job. The core flow is as follows:
 
-1. **规划阶段：** 由于目标表无法在创建 Job 时完全确定，执行计划会被延迟到运行时，由 BE 动态向 FE Master 获取。
-2. **数据缓存：** BE 先将数据缓存在本地的 multi-table pipe。如果缓存至 200 条记录，或 5 张尚未请求执行计划的新表，就会发起执行计划请求并执行，防止数据积压。
-3. **执行计划复用：** 同一事务内会复用已缓存的执行计划，事务间重新请求，保障元信息实时性。
+1. **Planning phase:** Because target tables cannot be fully determined when the Job is created, the execution plan is deferred to runtime, where the BE dynamically requests it from the FE Master.
+2. **Data caching:** The BE first caches data in a local multi-table pipe. If 200 records are cached, or if there are 5 new tables that have not yet requested an execution plan, the BE initiates an execution plan request and executes it, preventing data backlog.
+3. **Execution plan reuse:** Within the same transaction, cached execution plans are reused, while new plans are requested between transactions to ensure metadata freshness.
 
-## 3. 最佳实践
+## 3. Best Practices
 
-<!-- 知识类型: 配置参数 -->
-<!-- 适用场景: 性能调优 -->
+<!-- Knowledge type: Configuration parameters -->
+<!-- Applicable scenarios: Performance tuning -->
 
-Routine Load 默认参数已满足绝大多数场景。仅在以下三种典型场景下需要手动调优：
+The default parameters of Routine Load satisfy the vast majority of scenarios. Manual tuning is only required in the following three typical scenarios:
 
-| 场景               | 推荐修改参数                                          |
-| ------------------ | ----------------------------------------------------- |
-| 低延迟需求         | 将 `max_batch_interval` 由默认 60s 调小               |
-| 小数据量、资源敏感 | 将 `desired_concurrent_number` 调小                   |
-| 高吞吐             | 将 `max_batch_interval` 由默认 60s 调大至 120-180s    |
+| Scenario                          | Recommended Parameter Changes                                       |
+| --------------------------------- | ------------------------------------------------------------------- |
+| Low-latency requirements          | Reduce `max_batch_interval` from the default 60s                    |
+| Small data volume, resource-sensitive | Reduce `desired_concurrent_number`                              |
+| High throughput                   | Increase `max_batch_interval` from the default 60s to 120-180s      |
 
-## 4. 常见问题排查
+## 4. Common Troubleshooting
 
-<!-- 知识类型: 故障排查 -->
-<!-- 适用场景: Routine Load 异常排查 -->
+<!-- Knowledge type: Troubleshooting -->
+<!-- Applicable scenarios: Routine Load exception troubleshooting -->
 
-### 4.1 数据堆积
+### 4.1 Data Backlog
 
-按以下三步定位数据堆积原因并优化：
+Follow these three steps to identify the cause of data backlog and optimize:
 
-**步骤 1：查看任务状态**
+**Step 1: Check Task Status**
 
-通过 `SHOW ROUTINE LOAD\G` 查看任务状态，重点关注：
+Use `SHOW ROUTINE LOAD\G` to check Task status, focusing on:
 
-- `State` 是否为 `RUNNING`，如果为其他状态，可查看 `ReasonOfStateChanged` 字段了解原因。
-- `OtherMsg` 是否有报错信息。
+- Whether `State` is `RUNNING`. If it is in another state, check the `ReasonOfStateChanged` field for the reason.
+- Whether there is any error message in `OtherMsg`.
 
-**步骤 2：判断是否已触达吞吐上限**
+**Step 2: Determine Whether the Throughput Limit Has Been Reached**
 
-通过 BE 日志判断是否已触达吞吐上限。搜索 `consumer group done` 日志，其中的 `left_time / left_rows / left_bytes` 会显示最先触发的阈值，进而针对性调大 `max_batch_size` 或 `max_batch_rows`：
+Use BE logs to determine whether the throughput limit has been reached. Search for `consumer group done` log entries; the `left_time / left_rows / left_bytes` values show which threshold was triggered first, so you can correspondingly increase `max_batch_size` or `max_batch_rows`:
 
 ```C++
 consumer group done: 894fc32d5b9d3e93-7387a02da6dafd88. consume time(ms)=34004, received rows=2679540, received bytes=2147484043, eos: 0, left_time: 25996, left_rows: 17320460, left_bytes: -395, blocking get time(us): 949236, blocking put time(us): 28730419, id=69616a41fc064f1e-a93ff0ddd217f0a0, job_id=48121487, txn_id=61763720, label=ods_hq_market_unique_jobs_0-48121487-69616a41fc064f1e-a93ff0ddd217f0a0-61763720, elapse(s)=34
 ```
 
-上例中 `left_bytes: -395` 表示 34 秒内就因 `max_batch_size` 到达上限而结束批次。此时可适当调大 `max_batch_size`，让单个批次在 `max_batch_interval` 内尽量满载，以提升吞吐。
+In the example above, `left_bytes: -395` indicates that the batch ended within 34 seconds because `max_batch_size` reached its limit. In this case, you can increase `max_batch_size` appropriately so that a single batch is loaded as fully as possible within `max_batch_interval`, improving throughput.
 
-**步骤 3：增加并发与吞吐量**
+**Step 3: Increase Concurrency and Throughput**
 
-- 将 `desired_concurrent_number` 提高到与 Topic 的 Partition 数一致。
-- 适度增加 `max_batch_interval`（如 120s ~ 180s）/ `max_batch_size` / `max_batch_rows` 以提升单事务数据量，增加单批次数据量，减少事务开销。
+- Increase `desired_concurrent_number` to match the number of partitions in the topic.
+- Moderately increase `max_batch_interval` (such as 120s to 180s), `max_batch_size`, or `max_batch_rows` to enlarge the data volume per transaction, increase the data volume per batch, and reduce transaction overhead.
 
-### 4.2 任务异常暂停
+### 4.2 Task Unexpectedly Paused
 
-Routine Load 内置自动恢复机制，绝大多数非预期暂停都会重试。若任务持续处于 `PAUSED` 且无法自动恢复，可执行 `SHOW ROUTINE LOAD` 并按以下方向排查：
+Routine Load has a built-in auto-resume mechanism, and most unexpected pauses are retried. If a Task remains in `PAUSED` and cannot auto-resume, run `SHOW ROUTINE LOAD` and investigate in the following directions:
 
-- 是否手动执行了 `PAUSE ROUTINE LOAD`。
-- 是否存在数据质量问题（如格式错误、字段缺失）。
-- Kafka 数据是否已经过期，报错 `out of range`。
+- Whether `PAUSE ROUTINE LOAD` was manually executed.
+- Whether there are data quality issues (such as format errors or missing fields).
+- Whether the Kafka data has expired, with an `out of range` error.
 
 ## 5. FAQ
 
-<!-- 知识类型: FAQ -->
+<!-- Knowledge type: FAQ -->
 
-**Q1：Routine Load 如何保证 Exactly Once 语义？**
+**Q1: How does Routine Load guarantee Exactly Once semantics?**
 
-通过两个机制：（1）每个 Task 在事务提交时将消费进度写入 FE edit log 并通过 Berkeley DB JE 同步至所有 FE Follower；（2）Task 提交前会校验自己是否仍在 `routineLoadTaskInfoList` 中，否则拒绝提交，避免并发重复写入。
+Through two mechanisms: (1) When each Task commits its transaction, the consumption progress is written to the FE edit log and synchronized to all FE Followers via Berkeley DB JE. (2) Before committing, a Task verifies that it is still in `routineLoadTaskInfoList`; otherwise, the commit is rejected, avoiding concurrent duplicate writes.
 
-**Q2：Job 进入 PAUSED 状态会自动恢复吗？**
+**Q2: Will a Job in PAUSED state auto-resume?**
 
-大多数非预期暂停都会自动恢复。但以下三种情况**不会**自动恢复：手动执行 `PAUSE ROUTINE LOAD`、数据质量问题、库表被删除等不可恢复错误。
+Most unexpected pauses will auto-resume. However, the following three situations will **not** auto-resume: manually executing `PAUSE ROUTINE LOAD`, data quality issues, and unrecoverable errors such as the database or table being dropped.
 
-**Q3：Task 数量由什么决定？**
+**Q3: What determines the number of Tasks?**
 
-由以下公式决定：`taskNum = min(topic_partition_num, desired_concurrent_number, max_routine_load_task_concurrent_num)`。
+It is determined by the following formula: `taskNum = min(topic_partition_num, desired_concurrent_number, max_routine_load_task_concurrent_num)`.
 
-**Q4：什么情况下需要调大 `max_batch_interval`？**
+**Q4: When should `max_batch_interval` be increased?**
 
-在高吞吐场景下，将其由默认 60s 调大至 120s-180s，可让单事务数据量更大，减少事务开销，提升整体吞吐。
+In high-throughput scenarios, increasing it from the default 60s to 120s-180s allows for a larger data volume per transaction, reducing transaction overhead and improving overall throughput.
 
-**Q5：日志中出现 `out of range` 报错是什么意思？**
+**Q5: What does the `out of range` error in the log mean?**
 
-表示 Kafka 中要消费的数据已经过期（被 Kafka 的保留策略清理），导致消费位点失效。需要检查 Kafka Topic 的保留时长，或重置 Routine Load 的消费起始 Offset。
+It means the data to be consumed in Kafka has expired (cleaned up by the Kafka retention policy), causing the consumption offset to become invalid. You need to check the Kafka topic's retention period, or reset the starting offset for Routine Load consumption.

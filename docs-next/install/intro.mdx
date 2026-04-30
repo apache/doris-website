@@ -1,59 +1,51 @@
 ---
 {
-    "title": "Installation & Deployment",
+    "title": "Installation and Deployment",
     "language": "en",
-    "description": "Choose the right approach to install and deploy Apache Doris in your environment."
+    "description": "Choose the right way to install and deploy Apache Doris."
 }
 ---
 
 import GettingStartedCard from '@site/src/components/getting-started-card/getting-started-card';
 
-# Installation & Deployment
+# Installation and Deployment
 
-This section guides you through installing and deploying Apache Doris. Start by choosing a deployment mode that fits your needs, then follow the corresponding guide.
+This chapter guides you through installing and deploying Apache Doris. First select the deployment mode that fits your needs, then refer to the corresponding deployment guide.
 
-## Before You Deploy
+## Pre-deployment Preparation
 
 <div className="cards-grid">
 <GettingStartedCard
     title="Choosing a Deployment Mode"
-    description="Compare integrated vs. decoupled storage-compute, and manual vs. Kubernetes vs. cloud deployment"
+    description="Compare integrated storage-compute versus storage-compute separation, manual deployment versus Kubernetes deployment, and cloud deployment"
     link="choosing-deployment-mode"
 />
 
 <GettingStartedCard
     title="Installation Preparation"
-    description="Check environment, plan your cluster, and verify operating system requirements"
+    description="Check the environment, plan the cluster size, and verify operating system requirements"
     link="preparation/env-checking"
 />
 </div>
 
-## Deployment Options
+## Deployment Methods
 
 <div className="cards-grid">
 <GettingStartedCard
-    title="Deploying Manually"
+    title="Manual Deployment"
     description="Install Apache Doris directly on physical or virtual machines"
     link="deploy-manually/intro"
 />
 
 <GettingStartedCard
-    title="Deploying on Kubernetes"
+    title="Kubernetes Deployment"
     description="Deploy Apache Doris on Kubernetes using Doris Operator"
     link="deploy-on-kubernetes/intro"
 />
 
 <GettingStartedCard
-    title="Deploying on Cloud"
+    title="Cloud Deployment"
     description="Deploy Apache Doris on public cloud platforms such as AWS"
     link="deploy-on-cloud/doris-on-aws"
 />
 </div>
-
-## What's Next
-
-After your cluster is up and running, you can explore:
-
-- **[Connect & Develop](../db-connect/database-connect)** - Connect to Doris and start developing
-- **[Table Design](../table-design/overview)** - Design tables that match your workload
-- **[Administration](../admin-manual/cluster-management/upgrade)** - Operate and maintain your cluster

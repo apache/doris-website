@@ -137,7 +137,7 @@
    ## connect a alive FE node
    mysql -uroot -P<fe_query_port> -h<fe_ip_address>
    
-   ## registe a new FE follower node
+   ## register a new FE follower node
    ALTER SYSTEM ADD FOLLOWER "<fe_ip_address>:<fe_edit_log_port>"
    ```
 
@@ -210,7 +210,7 @@
    ## connect a alive FE node
    mysql -uroot -P<fe_query_port> -h<fe_ip_address>
       
-   ## registe BE node
+   ## register BE node
    ALTER SYSTEM ADD BACKEND "<be_ip_address>:<be_heartbeat_service_port>"
    ```
 

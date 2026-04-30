@@ -1,93 +1,113 @@
 ---
 {
-    "title": "Handling Data Issues",
-    "language": "en-US",
-    "description": "When loading data, sometimes the types of data in the source and target columns don't match. The system tries to fix these mismatches,"
+    "title": "Handling Messy Data",
+    "language": "en",
+    "description": "How to handle type conversion failures, oversized fields, and precision overflow during data import? Use strict_mode and max_filter_ratio to flexibly control dirty data.",
+    "keywords": [
+        "Doris messy data handling",
+        "strict_mode",
+        "max_filter_ratio",
+        "import data type conversion failure",
+        "dirty data filtering",
+        "Stream Load messy data",
+        "Broker Load data filtering",
+        "Routine Load strict_mode",
+        "Insert Into enable_insert_strict"
+    ]
 }
 ---
 
-When loading data, sometimes the types of data in the source and target columns don't match. The system tries to fix these mismatches, but problems like wrong types, too long fields, or wrong precision can cause errors.
+<!-- Knowledge type: Configuration parameters + Operational steps -->
+<!-- Applicable scenarios: Data import / Dirty data governance / Troubleshooting -->
 
-To deal with these problems, Doris has two key settings:
+During the import process, the data types of source columns and target columns may be inconsistent. Doris converts inconsistent types during import, but the conversion process may encounter the following issues that prevent some data from being correctly loaded:
 
-- Strict Mode (strict_mode): Decide if rows with errors should be removed.
-- Max Filter Ratio (max_filter_ratio): Sets the highest allowed percentage of data that can be removed during loading.
+- Field type mismatch (for example, writing the string `"abc"` into a `TinyInt` column)
+- Field too long (for example, writing 11 characters into a `char(10)` column)
+- Precision mismatch / numeric overflow (for example, writing `10` into a `Decimal(1,0)` column)
 
-This makes it easier to handle data loading problems and keeps data management strong and simple.
+To handle such exceptions, Doris provides two core import control parameters:
 
-## Strict Mode
+| Parameter | Function | Default value |
+| --- | --- | --- |
+| `strict_mode` | Controls whether to filter out data rows that fail column type conversion | `false` |
+| `max_filter_ratio` | Sets the maximum tolerable ratio of abnormal data to total data | `0` |
 
-The main function of strict mode is to filter out data rows where column type conversion fails during load.
+> By combining these two parameters, you can flexibly trade off between "strictly guaranteeing data quality" and "tolerating a small amount of dirty data".
+
+## Strict Mode (strict_mode)
+
+<!-- Knowledge type: Configuration parameter description -->
+
+The main function of strict mode (`strict_mode`) is to filter out data rows whose **column type conversion fails** during the import process.
 
 ### Filtering Strategy for Column Type Conversion Failures
 
-The system employs different strategies based on the strict mode setting:
+Depending on the strict mode setting, the system applies different processing strategies:
 
-- When strict mode is OFF: Fields that fail conversion are set to NULL, and rows containing these NULL values are loaded along with the correct data rows.
+- **Strict mode disabled**: Fields that fail conversion are set to `NULL`, and abnormal data rows containing these `NULL` values are imported together with the correct data rows.
+- **Strict mode enabled**: The system filters out data rows that fail conversion and only imports correct data rows. Here, "conversion failure" specifically means: the original data is not `NULL`, but the result is `NULL` after column type conversion. Note that the column type conversion here does not include `NULL` values produced by function computation.
+- **NULL value handling**: Both correct data rows and abnormal data rows may contain `NULL` values. If the target column is defined as not allowing `NULL` values, data rows containing `NULL` values are filtered out.
 
-- When strict mode is ON: The system filters out rows with conversion failures and only loads correct data rows. Here, "conversion failure" specifically refers to cases where the original data is non-NULL but becomes NULL after column type conversion. Note that NULL values resulting from function calculations are not included in this type of conversion.
+The following three typical column type examples illustrate the behavioral differences when strict mode is enabled versus disabled.
 
-- Handling NULL values: Both correct and abnormal data rows may contain NULL values. If the target column is defined as NOT NULL, all rows containing NULL values will be filtered out.
+#### Example 1: Column Type TinyInt
 
-**1. Example with TinyInt column type:**
-
-| Original Data Type | Original Data Example | Value After TinyInt Conversion | Strict Mode | Result |
-| ----------------- | -------------------- | ----------------------------- | ----------- | ------ |
-| NULL              | \N                   | NULL                          | ON/OFF      | NULL   |
-| Non-NULL          | "abc" or 2000       | NULL                          | ON          | Invalid (Filtered) |
-| Non-NULL          | "abc" or 2000       | NULL                          | OFF         | NULL    |
-| Non-NULL          | 1                   | 1                             | ON/OFF      | Loaded Successfully |
-
-:::tip
-1. The column in the table allows NULL values
-
-2. Both `abc` and `2000` become NULL after conversion to TinyInt due to type or precision issues. When strict mode is ON, such data will be filtered out. When OFF, NULL will be loaded.
-:::
-
-**2. Example with Decimal(1,0) type:**
-
-| Original Data Type | Original Data Example | Value After Decimal Conversion | Strict Mode | Result |
-| ----------------- | -------------------- | ---------------------------- | ----------- | ------ |
-| NULL              | \N                   | NULL                         | ON/OFF      | NULL   |
-| Non-NULL          | aaa                 | NULL                         | ON          | Invalid (Filtered) |
-| Non-NULL          | aaa                 | NULL                         | OFF         | NULL    |
-| Non-NULL          | 10                  | NULL (overflow)              | ON          | Filtered            |
-| Non-NULL          | 10                  | NULL (overflow)              | OFF         | NULL              |
+| Source data type | Source data example | Value after conversion to TinyInt | Strict mode | Result |
+| ------------ | ---------------- | --------------------- | ------------ | ---------------- |
+| Null value | `\N` | `NULL` | Enabled or disabled | `NULL` |
+| Non-null value | `"abc"` or `2000` | `NULL` | Enabled | Invalid value (filtered) |
+| Non-null value | `"abc"` or `2000` | `NULL` | Disabled | `NULL` |
+| Non-null value | `1` | `1` | Enabled or disabled | Imported correctly |
 
 :::tip
-1. The column in the table allows NULL values
-
-2. `abc` becomes NULL after conversion to Decimal due to type issues. When strict mode is ON, such data will be filtered out. When OFF, NULL will be loaded.
-
-3. `10` is a value outside the range of Decimal(1, 0) and will be converted to NULL. It will be filtered out if strict mode is enabled. If strict mode is disabled, `null` will be imported.
+1. The columns in the table allow null values to be imported.
+2. After being converted to `TinyInt`, `abc` and `2000` become `NULL` due to type or precision issues. When strict mode is enabled, this kind of data is filtered out; when it is disabled, `NULL` is imported.
 :::
 
-**3. Example of a column type char(10)**
+#### Example 2: Column Type Decimal(1,0)
 
-| Original data type | Original Data Example | Value after conversion to char(10) | Strict mode | Result |
-| ------------------ | --------------------- | ---------------------------------- | ----------  | ------ |
-| NULL               | \N                    | NULL                               | ON/OFF      | NULL   |
-| Non-NULL           | a1234567890           | a1234567890                        | ON          | Too long, filtered |
-| Non-NULL           | a1234567890           | a1234567890                        | OFF         | a123456789 (truncated) |
+| Source data type | Source data example | Value after conversion to Decimal | Strict mode | Result |
+| ------------ | ------------ | --------------------- | ------------ | ---------------- |
+| Null value | `\N` | `NULL` | Enabled or disabled | `NULL` |
+| Non-null value | `aaa` | `NULL` | Enabled | Invalid value (filtered) |
+| Non-null value | `aaa` | `NULL` | Disabled | `NULL` |
+| Non-null value | `10` | `NULL` (overflow) | Enabled | Filtered |
+| Non-null value | `10` | `NULL` (overflow) | Disabled | `NULL` |
 
 :::tip
-
-1. The column in the table allows NULL values
+1. The columns in the table allow null values to be imported.
+2. After being converted to `Decimal`, `aaa` becomes `NULL` due to type issues. When strict mode is enabled, this kind of data is filtered out; when it is disabled, `NULL` is imported.
+3. `10` is a value that exceeds the range of `Decimal(1, 0)` and is converted to `NULL`. When strict mode is enabled, it is filtered out; when strict mode is disabled, `NULL` is imported.
 :::
 
-### Enable Strict Mode
+#### Example 3: Column Type char(10)
 
-Strict mode (strict_mode) defaults to False. Here's how to set it for different load methods:
+| Source data type | Source data example | Value after conversion to char(10) | Strict mode | Result |
+| ------------ | -------------- | ---------------------- | -------- | ------------------- |
+| Null value | `\N` | `NULL` | Enabled or disabled | `NULL` |
+| Non-null value | `a1234567890` | `a1234567890` | Enabled | Too long, filtered |
+| Non-null value | `a1234567890` | `a1234567890` | Disabled | `a123456789` (truncated) |
+
+:::tip
+The columns in the table allow null values to be imported.
+:::
+
+### Enabling Strict Mode
+
+`strict_mode` defaults to `false`. Examples of enabling strict mode for various import methods are as follows:
 
 **Stream Load**
+
 ```shell
 curl --location-trusted -u user:passwd \
--H "strict_mode: true" \
--T data.txt \
-http://host:port/api/example_db/test_table/_stream_load
+    -H "strict_mode: true" \
+    -T data.txt \
+    http://host:port/api/example_db/test_table/_stream_load
 ```
 
 **Broker Load**
+
 ```sql
 LOAD LABEL example_db.label_1
 (
@@ -102,6 +122,7 @@ PROPERTIES
 ```
 
 **Routine Load**
+
 ```sql
 CREATE ROUTINE LOAD example_db.job1 ON test_table
 PROPERTIES
@@ -112,6 +133,7 @@ FROM KAFKA (...);
 ```
 
 **MySQL Load**
+
 ```sql
 LOAD DATA LOCAL INFILE 'data.txt'
 INTO TABLE test_table
@@ -122,42 +144,54 @@ PROPERTIES
 ```
 
 **Insert Into**
+
 ```sql
 SET enable_insert_strict = true;
 INSERT INTO test_table ...;
 ```
 
-## Maximum Filter Ratio
+## Maximum Filter Ratio (max_filter_ratio)
 
-Maximum Filter Ratio (max_filter_ratio) is a crucial load control parameter that defines the maximum allowable ratio of filtered data to total data during load. If the actual filter ratio is below the set maximum, the load task will continue and filtered data will be ignored; if it exceeds this ratio, the load task fails.
+<!-- Knowledge type: Configuration parameter description -->
 
-### Filter Ratio Calculation Method
+The maximum filter ratio (`max_filter_ratio`) is an important import control parameter that defines the maximum tolerable ratio of abnormal data to total data during the import process:
 
-- Filtered Rows: Data filtered out due to quality issues, including type errors, precision errors, string length exceeding limits, file column count mismatches, and rows filtered due to missing corresponding partitions.
+- If the actual filter ratio is **lower than** the configured maximum filter ratio, the import job continues and the abnormal data is ignored.
+- If the actual filter ratio **exceeds** the configured maximum filter ratio, the import job fails.
 
-- Unselected Rows: Data rows filtered out due to [Pre-filtering](./load-data-convert.md#pre-filtering) or [Post-filtering](./load-data-convert.md#post-filtering) conditions.
+### How the Filter Ratio Is Calculated
 
-- Loaded Rows: Data rows successfully loaded.
+During import, data rows are divided into the following three categories:
 
-The filter ratio is calculated as:
+| Category | Description |
+| --- | --- |
+| **Filtered Rows** | Rows filtered out due to data quality issues. Data quality issues include type errors, precision errors, oversized string length, mismatched column counts in files, and other data format problems, as well as data rows filtered out because no corresponding partition exists. |
+| **Unselected Rows** | Data rows filtered out by [pre-filter](./load-data-convert.md#pre-filtering) or [post-filter](./load-data-convert.md#post-filtering) conditions. |
+| **Loaded Rows** | Data rows that are imported correctly. |
+
+The filter ratio is calculated as follows:
+
 ```Plain
 #Filtered Rows / (#Filtered Rows + #Loaded Rows)
 ```
 
-Note that `Unselected Rows` are not included in the filter ratio calculation.
+In other words, `Unselected Rows` are not included in the filter ratio calculation.
 
-### Configuring the Maximum Filter Ratio
-The maximum filter ratio (max_filter_ratio) defaults to 0, meaning no filtered data is allowed. Here's how to set it for different load methods:
+### Setting the Maximum Filter Ratio
+
+`max_filter_ratio` defaults to `0`, which means no abnormal data is allowed. Examples for various import methods are as follows:
 
 **Stream Load**
+
 ```shell
 curl --location-trusted -u user:passwd \
--H "max_filter_ratio: 0.1" \
--T data.txt \
-http://host:port/api/example_db/test_table/_stream_load
+    -H "max_filter_ratio: 0.1" \
+    -T data.txt \
+    http://host:port/api/example_db/my_table/_stream_load
 ```
 
 **Broker Load**
+
 ```sql
 LOAD LABEL example_db.label_1
 (
@@ -172,6 +206,7 @@ PROPERTIES
 ```
 
 **Routine Load**
+
 ```sql
 CREATE ROUTINE LOAD example_db.job1 ON test_table
 PROPERTIES
@@ -182,6 +217,7 @@ FROM KAFKA (...);
 ```
 
 **MySQL Load**
+
 ```sql
 LOAD DATA LOCAL INFILE 'data.txt'
 INTO TABLE test_table
@@ -192,10 +228,38 @@ PROPERTIES
 ```
 
 **Insert Into**
+
 ```sql
 SET insert_max_filter_ratio = 0.1;
-INSERT INTO test_table FROM S3/HDFS/LOCAL();```
+INSERT INTO test_table FROM S3/HDFS/LOCAL();
+```
 
 :::tip
-For Insert Into statements, `insert_max_filter_ratio` only takes effect when `enable_insert_strict = false`. The default value is 1.0, which means that all abnormal data are allowed to be filtered.
+For Insert Into statements, `insert_max_filter_ratio` only takes effect when `enable_insert_strict = false`. Its default value is `1.0`, which means all abnormal data is allowed to be filtered.
 :::
+
+## FAQ
+
+<!-- Knowledge type: FAQ -->
+
+**Q1: How should `strict_mode` and `max_filter_ratio` be used together?**
+
+- If you require **strict data quality**: enable `strict_mode = true` and set `max_filter_ratio` to a small value (such as `0`). Any conversion failure causes the import to fail.
+- If you want to **tolerate a small amount of dirty data**: disable `strict_mode` (or keep the default value) and set `max_filter_ratio` to an acceptable ratio (such as `0.1`). Abnormal data is filtered out without affecting the overall import.
+
+**Q2: Are `NULL` values produced by function computation filtered by strict mode?**
+
+No. Strict mode only targets the case where "the original data is not NULL, but the result is NULL after column type conversion". `NULL` values produced by function computation do not fall into this category.
+
+**Q3: Are data rows filtered by pre-filter or post-filter conditions counted toward `max_filter_ratio`?**
+
+No. `Unselected Rows` are not included in the filter ratio calculation. The filter ratio is based only on `Filtered Rows` and `Loaded Rows`.
+
+**Q4: What is the relationship between `enable_insert_strict` and `insert_max_filter_ratio` in Insert Into?**
+
+`insert_max_filter_ratio` only takes effect when `enable_insert_strict = false`. Its default value is `1.0`, which means all abnormal data is allowed to be filtered.
+
+**Q5: What is the behavioral difference between strict mode and non-strict mode when a `char(10)` column encounters oversized data?**
+
+- Strict mode enabled: oversized data is filtered out.
+- Strict mode disabled: oversized data is truncated and then imported (for example, `a1234567890` is truncated to `a123456789`).

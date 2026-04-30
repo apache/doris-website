@@ -1,12 +1,12 @@
 ---
 {
-    "title": "性能测试与分析",
-    "language": "zh-CN",
-    "description": "这里介绍 Doris Ann Index 的查询性能与导入性能。所有的性能测试都是通过 VectorDBBench 完成的。"
+    "title": "Performance Testing and Analysis",
+    "language": "en",
+    "description": "Apache Doris vector index (ANN Index) query performance, recall, and ingestion speed benchmarks: VectorDBBench 768D1M dataset results and tuning recommendations."
 }
 ---
 
-<!-- 
+<!--
 Licensed to the Apache Software Foundation (ASF) under one
 or more contributor license agreements.  See the NOTICE file
 distributed with this work for additional information
@@ -25,19 +25,50 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-这里介绍 Doris Ann Index 的查询性能与导入性能。所有的性能测试都是通过 [VectorDBBench](https://github.com/zilliztech/VectorDBBench) 完成的。
+<!-- Knowledge type: Performance benchmark / Tuning reference -->
+<!-- Applicable scenarios: Selection evaluation / Performance verification / Parameter tuning -->
 
-如需查看单机与分布式下更大规模（10M/100M 级）数据集的测试结果，请参考[大规模性能实测](./performance-large-scale.md)。
+This document presents the query and ingestion performance benchmark results of the Apache Doris vector index (ANN Index). All tests are performed with [VectorDBBench](https://github.com/zilliztech/VectorDBBench), and the results help you:
 
-## 测试环境
-测试涉及到的机器规格都是 16C64GB的机器，CPU型号为 Intel(R) Xeon(R) Platinum 8369B CPU @ 2.70GHz。FE BE 混合部署在一台 16C64GB 的机器上（注意这个不是推荐的生产环境部署方式，生产环境上建议 FE 与 BE 分离部署），测试的版本是 Apache Doris 4.0.2。采用的测试数据集是 VectorDBBench Performance768D1M，该数据集向量的维度为 768 维，一共一百万行。
+- Evaluate whether Doris vector retrieval meets your business requirements.
+- Understand the trade-offs among recall, query performance, and ingestion speed.
+- Reproduce the test results locally and verify production-environment behavior.
 
-## 测试结果
+For benchmark results on larger datasets (10M / 100M scale) under single-node and distributed deployments, see [Large-Scale Performance Benchmarks](./performance-large-scale.md).
+
+## Test Environment
+
+<!-- Knowledge type: Test environment configuration -->
+
+| Item              | Configuration                                                  |
+| ----------------- | -------------------------------------------------------------- |
+| Machine spec      | 16C 64GB                                                       |
+| CPU model         | Intel(R) Xeon(R) Platinum 8369B CPU @ 2.70GHz                  |
+| Deployment        | FE and BE co-located on the same machine                       |
+| Doris version     | Apache Doris 4.0.2                                             |
+| Test dataset      | VectorDBBench Performance768D1M (768-dimensional vectors, 1 million rows) |
+
+:::caution Note
+Co-locating FE and BE is **not the recommended production deployment**. In production, deploy FE and BE on separate machines.
+:::
+
+## Test Results
+
 ![performance](/images/vector-search/ann-index-performance-0.jpg)
-## 结果分析
+
+On the Performance768D1M dataset, Apache Doris reaches **989.1 QPS** while maintaining **above 97% recall**, and its ingestion performance is significantly better than that of comparable systems.
+
+## Result Analysis
+
+### The "Performance Triangle" of Vector Databases
+
+<!-- Knowledge type: Concept explanation -->
+
+In vector search scenarios, a mature vector database that runs reliably in production typically has to trade off among the following three dimensions:
+
 ```
                     ┌──────────────────────┐
-                    │      召回率 Recall    │
+                    │      Recall          │
                     │  (Higher is Better)  │
                     └──────────▲───────────┘
                                / \
@@ -51,24 +82,91 @@ under the License.
              │                                     │
              ▼                                     ▼
  ┌──────────────────────┐                 ┌────────────────────────┐
- │      查询性能 QPS     │                 │     导入速度 Indexing   │
- │   (Latency / QPS)     │                 │     Throughput         │
- │  (Lower Latency Better)│                │  (Higher is Better)    │
+ │      Query QPS       │                 │     Indexing           │
+ │   (Latency / QPS)    │                 │     Throughput         │
+ │  (Lower Latency Better)│               │  (Higher is Better)    │
  └──────────────────────┘                 └────────────────────────┘
 ```
-在向量搜索场景下，对于一个成熟且可在生产环境稳定运行的向量数据库而言，查询性能（QPS/延迟）、召回率（Recall）、导入速度（Index Build Throughput） 三者通常构成一个难以同时最大化的 性能铁三角。向量数据库的系统设计往往需要在这三者之间进行取舍和权衡。
-以目前业界最广泛使用的 HNSW（Hierarchical Navigable Small World）向量索引为例，它依赖图结构进行搜索优化。在 HNSW 中有三个关键超参数可调优：
 
-- max_degree：图中每个节点的最大出度，决定图的稠密程度与整体连通性；
-- ef_construction：构建索引时使用的“候选集大小”，越大意味着构建出的图质量越高；
-- hnsw_ef_search：查询时的探索窗口大小，直接影响召回率和查询延迟。
+| Dimension                    | Metric                                | Desired direction |
+| ---------------------------- | ------------------------------------- | ----------------- |
+| Recall                       | Top-K hit ratio                       | Higher is better  |
+| Query QPS / Latency          | Queries per second / per-query latency | Higher QPS, lower latency |
+| Indexing Throughput          | Index build throughput                | Higher is better  |
 
-从原理上讲，增大索引阶段的 max_degree 和 ef_construction 可以显著提高图结构的连通性与导航效率，从而带来更高的召回率。同时更高质量的图也意味着在查询阶段可以将 hnsw_ef_search 设置得更小，从而降低搜索代价、提升查询性能。然而，这些索引构建超参数的调大会带来显著的副作用：索引构建需要更多计算与内存资源，导入性能因此下降。这正是向量数据库在设计时需要面对的典型三难困境。
-**Apache Doris 在设计其向量搜索能力时，目标是构建一个更加均衡的性能三角形。它通过底层执行引擎的优化、存储格式改进，以及对 HNSW 构建流程的工程级并行化加速，使得在不牺牲索引质量与高召回的前提下，显著提升整体索引导入速度。**
+These three are typically hard to maximize at the same time, so vector database design has to balance them.
 
-在 Performance768D1M 数据集上的测试结果表明：在保持索引质量一致的前提下，Apache Doris 的导入性能明显优于同类系统。更重要的是，Doris 并未因为提升导入速度而降低图结构的质量。在实际测试中，Apache Doris 能够在 QPS 达到 989.1 的情况下仍然保持 97% 以上的召回率，在性能三角的三个维度上均取得了较为均衡的结果。
+### Key HNSW Parameters and Trade-offs
 
-## 复现方式
+<!-- Knowledge type: Configuration parameters -->
+
+Take HNSW (Hierarchical Navigable Small World), the most widely used vector index in the industry, as an example. It relies on a graph structure for search optimization and has three main tunable hyperparameters:
+
+| Parameter         | Role                                  | Impact                                        |
+| ----------------- | ------------------------------------- | --------------------------------------------- |
+| `max_degree`      | Maximum out-degree of each node in the graph | Determines graph density and overall connectivity |
+| `ef_construction` | Candidate set size during index construction | A larger value produces a higher-quality graph |
+| `hnsw_ef_search`  | Exploration window size during querying | Directly affects recall and query latency    |
+
+Typical tuning trade-offs:
+
+1. Increasing `max_degree` and `ef_construction` significantly improves graph connectivity and navigation efficiency, which leads to higher recall.
+2. A higher-quality graph allows `hnsw_ef_search` to be set smaller during queries, which reduces search cost and improves query performance.
+3. The cost is that index construction consumes more compute and memory, which **lowers ingestion performance**.
+
+This is the typical "trilemma" that vector database design must face.
+
+### Apache Doris Optimization Approach
+
+<!-- Knowledge type: Architecture selection decision -->
+
+When designing vector search capabilities, Apache Doris aims to build a **more balanced performance triangle** by:
+
+- Optimizing the underlying execution engine.
+- Improving the storage format.
+- Engineering-level parallel acceleration of the HNSW build pipeline.
+
+The result is that Doris significantly improves overall index ingestion speed **without sacrificing index quality or high recall**.
+
+The benchmark results on the Performance768D1M dataset confirm this design goal:
+
+- With consistent index quality, Doris ingestion performance is significantly better than that of comparable systems.
+- Graph quality is not reduced in exchange for higher ingestion speed.
+- QPS reaches **989.1**, recall stays **above 97%**, and the result is balanced across all three dimensions.
+
+## Reproduction Steps
+
+<!-- Knowledge type: Operation steps -->
+<!-- Applicable scenarios: Performance benchmark reproduction -->
+
+Use the following command to reproduce the test locally:
+
+```bash
+NUM_PER_BATCH=500000 vectordbbench doris \
+    --host 127.0.0.1 \
+    --port 9030 \
+    --http-port 8030 \
+    --case-type Performance768D1M \
+    --db-name vdb \
+    --num-concurrency 80 \
+    --stream-load-rows-per-batch 500000 \
+    --index-prop max_degree=128,ef_construction=256 \
+    --session-var hnsw_ef_search=100
 ```
-NUM_PER_BATCH=500000 vectordbbench doris --host 127.0.0.1 --port 9030 --http-port 8030 --case-type Performance768D1M --db-name vdb --num-concurrency 80 --stream-load-rows-per-batch 500000 --index-prop max_degree=128,ef_construction=256 --session-var hnsw_ef_search=100
-```
+
+Key parameters:
+
+| Parameter                         | Meaning                                  |
+| --------------------------------- | ---------------------------------------- |
+| `--case-type`                     | Selects the test case (here, the 768D1M dataset) |
+| `--num-concurrency`               | Query concurrency                        |
+| `--stream-load-rows-per-batch`    | Rows per batch for Stream Load           |
+| `--index-prop`                    | Index build parameters (`max_degree`, `ef_construction`) |
+| `--session-var`                   | Session variables at query time (`hnsw_ef_search`) |
+
+## Related Documents
+
+- [Large-Scale Performance Benchmarks](./performance-large-scale.md): Test results on 10M / 100M scale datasets under single-node and distributed deployments.
+- [HNSW Index Internals](./hnsw.md)
+- [Vector Index Overview](./overview.md)
+- [Vector Index Practical Guide](./practical-guide.md)

@@ -1,16 +1,16 @@
 ---
 {
-    "title": "复杂网络环境下的 Stream Load 实践",
-    "language": "zh-CN",
-    "description": "如何在公有云、私有云、Kubernetes 跨集群等复杂网络下使用 Doris Stream Load？多端点配置与 Group Commit 调度方案。",
+    "title": "Stream Load Practices in Complex Network Environments",
+    "language": "en",
+    "description": "How to use Doris Stream Load in complex networks such as public cloud, private cloud, and Kubernetes cross-cluster scenarios? Multi-endpoint configuration and Group Commit scheduling solutions.",
     "keywords": [
         "Stream Load",
         "Group Commit",
-        "复杂网络",
-        "公有云导入",
-        "Kubernetes 数据导入",
-        "VPC 跨集群",
-        "负载均衡器",
+        "complex network",
+        "public cloud ingestion",
+        "Kubernetes data ingestion",
+        "VPC cross-cluster",
+        "load balancer",
         "public_endpoint",
         "private_endpoint",
         "redirect-policy"
@@ -18,84 +18,82 @@
 }
 ---
 
-<!-- 知识类型: 架构选型决策 + 操作步骤 -->
-<!-- 适用场景: 公有云 / 私有云 / Kubernetes 跨集群环境下的数据导入配置 -->
+<!-- Knowledge type: architecture decision + operational steps -->
+<!-- Applicable scenarios: data ingestion configuration in public cloud / private cloud / Kubernetes cross-cluster environments -->
 
-## 概述
+In complex network environments such as public cloud, private cloud, and Kubernetes cross-cluster deployments, data ingestion faces unique challenges. Load balancers (LB) and network isolation (intra-VPC and external access) affect both the flexibility of request routing and the efficiency of batch processing.
 
-在公有云、私有云、Kubernetes 跨集群等复杂网络环境中，数据导入面临独特挑战。负载均衡器（LB）和网络隔离（VPC 内外访问）会影响请求路由的灵活性和批处理效率。
+Apache Doris addresses these challenges with the following two features:
 
-Apache Doris 通过以下两个特性解决这些挑战：
+- **Multi-endpoint support for Stream Load**: allows you to flexibly configure multiple network endpoints for BE nodes.
+- **Group Commit LB scheduling optimization**: ensures that requests can still be efficiently batched after passing through a load balancer.
 
-- **Stream Load 多端点支持**：支持为 BE 节点灵活配置多个网络端点。
-- **Group Commit LB 调度优化**：确保请求经过负载均衡器时仍能高效批处理。
+> Version requirement: Doris 3.1.0 or later is required.
 
-> 版本要求：需要 Doris 3.1.0 或更高版本。
-
-## 背景知识
+## Background
 
 ### Stream Load
 
-Stream Load 是基于 HTTP 的数据导入方式，支持 JSON、CSV 等格式。作为推送式方法，客户端通过 HTTP 请求直接将数据发送到 BE 节点，绕过 MySQL 协议。这种设计支持高并发、低延迟和高吞吐，特别适合小批量、高频写入场景。
+Stream Load is an HTTP-based data ingestion method that supports formats such as JSON and CSV. As a push-based method, the client sends data directly to BE nodes through HTTP requests, bypassing the MySQL protocol. This design supports high concurrency, low latency, and high throughput, making it well suited for small-batch, high-frequency write scenarios.
 
 ### Group Commit
 
-Group Commit 通过在服务端将多个小请求合并为大批量操作来优化吞吐量，减少磁盘 I/O、锁竞争和 Compaction 开销。为实现最佳效率，Group Commit 要求同一表的请求路由到同一 BE 节点。
+Group Commit optimizes throughput by merging multiple small requests into large batch operations on the server side, reducing disk I/O, lock contention, and Compaction overhead. To achieve the best efficiency, Group Commit requires that requests for the same table be routed to the same BE node.
 
-### 复杂网络环境下的核心问题
+### Core Challenges in Complex Network Environments
 
-在云环境中，负载均衡器会将请求随机分发到各 BE 节点，破坏了 Group Commit 所需的"节点亲和性"，导致同一表的请求分散到不同节点。测试表明，高并发场景下吞吐量可能因此下降 20-50%。
+In cloud environments, load balancers distribute requests randomly across BE nodes, breaking the "node affinity" that Group Commit depends on. As a result, requests for the same table are scattered to different nodes. Tests show that throughput in high-concurrency scenarios can drop by 20-50% as a result.
 
-## Stream Load 多端点支持
+## Multi-Endpoint Support for Stream Load
 
-<!-- 知识类型: 配置参数 -->
+<!-- Knowledge type: configuration parameters -->
 
-### 三种 BE 地址类型
+### Three Types of BE Addresses
 
-Doris BE 节点支持三种地址类型，以适配不同的网络访问场景：
+A Doris BE node supports three types of addresses to fit different network access scenarios:
 
-| 地址类型             | 用途                                  | 示例                  |
-| -------------------- | ------------------------------------- | --------------------- |
-| `be_host`            | 集群内部通信                          | `192.168.1.1:9050`    |
-| `public_endpoint`    | 外部公网访问（通过 LB 或公网 IP）     | `11.10.20.12:8010`    |
-| `private_endpoint`   | VPC 内部或 Kubernetes Service IP 访问 | `10.10.10.9:8020`     |
+| Address type         | Purpose                                                | Example               |
+| -------------------- | ------------------------------------------------------ | --------------------- |
+| `be_host`            | Internal cluster communication                         | `192.168.1.1:9050`    |
+| `public_endpoint`    | External public network access (via LB or public IP)   | `11.10.20.12:8010`    |
+| `private_endpoint`   | Intra-VPC or Kubernetes Service IP access              | `10.10.10.9:8020`     |
 
-### 配置 BE 端点
+### Configuring BE Endpoints
 
-通过 SQL 语句为 BE 节点添加或修改端点信息：
+Use SQL statements to add or modify endpoint information for a BE node:
 
 ```sql
--- 添加 BE 节点并配置端点
+-- Add a BE node and configure its endpoints
 ALTER SYSTEM ADD BACKEND '192.168.1.1:9050' PROPERTIES(
     'tag.public_endpoint' = '11.10.20.12:8010',
     'tag.private_endpoint' = '10.10.10.9:8020'
 );
 
--- 修改现有 BE 节点的端点
+-- Modify the endpoints of an existing BE node
 ALTER SYSTEM MODIFY BACKEND '192.168.1.1:9050' SET (
     'tag.public_endpoint' = '11.10.20.12:8010',
     'tag.private_endpoint' = '10.10.10.9:8020'
 );
 ```
 
-### 重定向策略（redirect-policy）
+### Redirect Policy (redirect-policy)
 
-通过在 Stream Load 请求中设置 `redirect-policy` HTTP 头，可以控制请求路由到的目标端点：
+By setting the `redirect-policy` HTTP header in a Stream Load request, you can control which endpoint the request is routed to:
 
-| 策略         | 行为                          | 适用场景                       |
-| ------------ | ----------------------------- | ------------------------------ |
-| `direct`     | 路由到 `be_host`              | 内部低延迟通信、Pod 间通信     |
-| `public`     | 路由到 `public_endpoint`      | 外部公网访问                   |
-| `private`    | 路由到 `private_endpoint`     | VPC 内部或跨集群访问           |
-| 默认（空）   | 根据主机名自动选择            | 通用场景                       |
+| Policy        | Behavior                              | Applicable scenarios                              |
+| ------------- | ------------------------------------- | ------------------------------------------------- |
+| `direct`      | Routes to `be_host`                   | Internal low-latency communication, pod-to-pod   |
+| `public`      | Routes to `public_endpoint`           | External public network access                    |
+| `private`     | Routes to `private_endpoint`          | Intra-VPC or cross-cluster access                 |
+| Default (empty) | Selects the endpoint automatically based on the host name | General scenarios |
 
-未显式设置 `redirect-policy` 时，FE 按以下顺序自动选择端点：
+When `redirect-policy` is not explicitly set, the FE selects an endpoint automatically in the following order:
 
-1. 若请求主机名与 `public_endpoint` 主机名匹配，路由到 `public_endpoint`。
-2. 否则若配置了 `private_endpoint`，路由到 `private_endpoint`。
-3. 否则回退到 `be_host`。
+1. If the request host name matches the host name of `public_endpoint`, route to `public_endpoint`.
+2. Otherwise, if `private_endpoint` is configured, route to `private_endpoint`.
+3. Otherwise, fall back to `be_host`.
 
-### 请求示例
+### Request Example
 
 ```bash
 curl --location-trusted -u user:pass \
@@ -104,35 +102,35 @@ curl --location-trusted -u user:pass \
     http://doris.example.com:8030/api/db_name/table_name/_stream_load
 ```
 
-### 工作原理
+### How It Works
 
-1. 客户端向 FE 发送 Stream Load 请求，可携带 `redirect-policy` 头。
-2. FE 根据策略从 BE 地址池中选择目标地址。
-3. FE 返回 HTTP 重定向响应，指向选定的端点。
+1. The client sends a Stream Load request to the FE, optionally carrying the `redirect-policy` header.
+2. The FE selects a target address from the BE address pool according to the policy.
+3. The FE returns an HTTP redirect response pointing to the selected endpoint.
 
-## Group Commit LB 调度优化
+## Group Commit LB Scheduling Optimization
 
-<!-- 知识类型: 架构机制 -->
+<!-- Knowledge type: architecture mechanism -->
 
-### 两阶段转发机制
+### Two-Stage Forwarding Mechanism
 
-为在负载均衡器后保持 Group Commit 效率，Doris 实现了两阶段转发机制：
+To preserve Group Commit efficiency behind a load balancer, Doris implements a two-stage forwarding mechanism:
 
-**第一阶段：FE 重定向**
+**Stage 1: FE redirect**
 
-- FE 根据 `redirect-policy` 选择合适的端点。
-- FE 确定应处理目标表的 BE 节点。
-- 请求经 LB 重定向，LB 随机分发到某个 BE 节点。
+- The FE selects an appropriate endpoint according to `redirect-policy`.
+- The FE determines which BE node should handle the target table.
+- The request is redirected through the LB, which distributes it randomly to a BE node.
 
-**第二阶段：BE 转发**
+**Stage 2: BE forwarding**
 
-- 若接收请求的 BE（BE1）不是该表的指定节点。
-- BE1 通过 `be_host` 将请求内部转发到正确的 BE（BE2）。
-- 确保同一表的所有请求到达同一节点。
+- If the BE that receives the request (BE1) is not the designated node for that table.
+- BE1 internally forwards the request through `be_host` to the correct BE (BE2).
+- This ensures that all requests for the same table reach the same node.
 
-### 启用 Group Commit 的请求示例
+### Request Example with Group Commit Enabled
 
-只需在请求头中加入 `group_commit` 参数，即可启用对应的 Group Commit 模式：
+To enable the corresponding Group Commit mode, simply add the `group_commit` parameter to the request header:
 
 ```bash
 curl --location-trusted -u user:pass \
@@ -142,49 +140,49 @@ curl --location-trusted -u user:pass \
     http://doris.example.com:8030/api/db_name/table_name/_stream_load
 ```
 
-### 性能表现
+### Performance
 
-两阶段转发引入的开销极小（毫秒级），而 Group Commit 的批处理优化可在高并发场景下提升 20-50% 的吞吐量。
+The overhead introduced by two-stage forwarding is minimal (millisecond-level), while the batch optimization provided by Group Commit can improve throughput by 20-50% in high-concurrency scenarios.
 
-## 典型应用场景
+## Typical Use Cases
 
-<!-- 适用场景: 不同业务形态下的端点与 Group Commit 组合选型 -->
+<!-- Applicable scenarios: endpoint and Group Commit combinations for different business forms -->
 
-| 场景               | 配置                                       | 收益                       |
-| ------------------ | ------------------------------------------ | -------------------------- |
-| 实时日志采集       | Group Commit + 多端点                      | 高吞吐 + 灵活路由          |
-| 云原生 BI          | `public_endpoint` 外部访问                 | 安全的外部用户访问         |
-| Kubernetes 跨集群  | `private_endpoint` 配合 Pod / Service IP    | 高效跨集群通信             |
+| Scenario                | Configuration                                       | Benefits                              |
+| ----------------------- | --------------------------------------------------- | ------------------------------------- |
+| Real-time log ingestion | Group Commit + multi-endpoint                       | High throughput + flexible routing    |
+| Cloud-native BI         | External access via `public_endpoint`               | Secure access for external users      |
+| Kubernetes cross-cluster | `private_endpoint` together with Pod / Service IP   | Efficient cross-cluster communication |
 
-## 注意事项
+## Notes
 
-- **配置规划**：确保端点地址配置正确，尤其在 Kubernetes 环境中，需要与 Service / Pod IP 规划保持一致。
-- **监控**：使用监控工具跟踪转发率和性能指标，关注两阶段转发的命中率。
-- **版本要求**：需要 Doris 3.1.0 或更高版本。
+- **Configuration planning**: ensure that endpoint addresses are configured correctly. In Kubernetes environments in particular, they must be consistent with the Service / Pod IP plan.
+- **Monitoring**: use monitoring tools to track the forwarding rate and performance metrics, paying attention to the hit rate of two-stage forwarding.
+- **Version requirement**: Doris 3.1.0 or later is required.
 
 ## FAQ
 
-**Q1：什么时候需要配置 `public_endpoint` 和 `private_endpoint`？**
+**Q1: When do I need to configure `public_endpoint` and `private_endpoint`?**
 
-当客户端与 BE 节点之间存在网络隔离（如 VPC 内外、Kubernetes 集群内外）时，需要分别配置 `public_endpoint`（公网/外部访问）和 `private_endpoint`（内网/VPC 访问），以便不同网络位置的客户端能够正确访问 BE。
+When network isolation exists between clients and BE nodes (for example, inside vs. outside a VPC, or inside vs. outside a Kubernetes cluster), you need to configure `public_endpoint` (for public/external access) and `private_endpoint` (for internal/VPC access) separately, so that clients in different network locations can access BEs correctly.
 
-**Q2：经过负载均衡器后 Group Commit 还有效吗？**
+**Q2: Does Group Commit still work behind a load balancer?**
 
-有效。Doris 通过两阶段转发机制确保即使 LB 随机分发请求，BE 之间也会将同一表的请求转发到同一节点，从而保留 Group Commit 的批处理优势。
+Yes. Through the two-stage forwarding mechanism, Doris ensures that even when the LB distributes requests randomly, BEs forward requests for the same table to the same node, preserving the batch-processing benefits of Group Commit.
 
-**Q3：`redirect-policy` 不设置会怎样？**
+**Q3: What happens if `redirect-policy` is not set?**
 
-FE 会根据请求主机名自动选择端点：先尝试匹配 `public_endpoint`，再尝试 `private_endpoint`，最后回退到 `be_host`。
+The FE selects an endpoint automatically based on the request host name: it first tries to match `public_endpoint`, then `private_endpoint`, and finally falls back to `be_host`.
 
-**Q4：两阶段转发是否会显著增加延迟？**
+**Q4: Does two-stage forwarding significantly increase latency?**
 
-不会。BE 之间的内部转发开销在毫秒级，相对于 Group Commit 在高并发下带来的 20-50% 吞吐量提升，可以忽略不计。
+No. Internal forwarding between BEs incurs only millisecond-level overhead, which is negligible compared with the 20-50% throughput improvement that Group Commit provides under high concurrency.
 
 ## Troubleshooting
 
-| 现象                                              | 可能原因                                              | 解决方案                                                                  |
-| ------------------------------------------------- | ----------------------------------------------------- | ------------------------------------------------------------------------- |
-| 客户端无法访问重定向后的 BE 地址                  | `public_endpoint` / `private_endpoint` 配置与实际网络不符 | 通过 `ALTER SYSTEM MODIFY BACKEND` 修正端点配置                           |
-| 高并发下 Stream Load 吞吐未达预期                 | 未启用 Group Commit，或请求未经过两阶段转发           | 在请求头加入 `group_commit: async_mode`，并确认 BE 间网络互通             |
-| 跨 Kubernetes 集群导入失败                        | 缺少 `private_endpoint` 或未指定 `redirect-policy`    | 配置 `private_endpoint` 为 Pod / Service IP，并设置 `redirect-policy: private` |
-| 默认重定向行为路由到错误的端点                    | 主机名匹配规则未命中预期                              | 显式指定 `redirect-policy: public` 或 `private`                           |
+| Symptom                                                | Possible cause                                                            | Solution                                                                                              |
+| ------------------------------------------------------ | ------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------- |
+| Client cannot access the BE address after redirect     | `public_endpoint` / `private_endpoint` does not match the actual network  | Correct the endpoint configuration with `ALTER SYSTEM MODIFY BACKEND`                                 |
+| Stream Load throughput falls short under high concurrency | Group Commit is not enabled, or requests do not go through two-stage forwarding | Add `group_commit: async_mode` to the request header and confirm network connectivity between BEs    |
+| Cross-Kubernetes-cluster ingestion fails               | `private_endpoint` is missing or `redirect-policy` is not specified       | Configure `private_endpoint` as the Pod / Service IP and set `redirect-policy: private`               |
+| Default redirect routes to the wrong endpoint          | The host name matching rule does not hit as expected                      | Explicitly specify `redirect-policy: public` or `private`                                             |
