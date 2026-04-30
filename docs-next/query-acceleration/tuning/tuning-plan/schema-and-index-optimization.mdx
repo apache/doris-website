@@ -1,0 +1,33 @@
+---
+{
+    "title": "Schema & Index Optimization",
+    "language": "en",
+    "description": "Optimize table schema, index design, and table scanning to unlock Apache Doris query performance."
+}
+---
+
+import GettingStartedCard from '@site/src/components/getting-started-card/getting-started-card';
+
+Well-designed schemas, the right indexes, and efficient scan patterns set the ceiling for query performance. Optimize each layer in turn.
+
+## Optimization Topics
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="Optimizing Table Schema Design"
+    description="Choose table engines, partition and bucket columns, key columns, and field types to avoid skew and unlock parallelism."
+    link="optimizing-table-schema"
+/>
+
+<GettingStartedCard
+    title="Optimizing Table Index Design"
+    description="Pick the right index type — prefix, BloomFilter, NGram BloomFilter, or inverted — and apply it where it pays off."
+    link="optimizing-table-index"
+/>
+
+<GettingStartedCard
+    title="Optimizing Table Scanning"
+    description="Use partition pruning, prefix index push-down, and runtime filters to scan less data per query."
+    link="optimizing-table-scanning"
+/>
+</div>

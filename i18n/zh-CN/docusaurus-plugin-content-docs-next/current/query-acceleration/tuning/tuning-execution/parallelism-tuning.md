@@ -1,37 +1,31 @@
 ---
 {
-    "title": "Doris 并行度调优：parallel_pipeline_task_num 参数设置指南",
+    "title": "并行度调优：parallel_pipeline_task_num 参数设置指南",
+    "sidebar_label": "并行度调优",
     "language": "zh-CN",
     "description": "如何调优 Doris 查询并行度？本文详解 parallel_pipeline_task_num 配置原则、SQL/会话/全局三级调整方法、CPU 利用率优化案例与常见问题。",
     "keywords": ["Doris 并行度调优", "parallel_pipeline_task_num", "Doris CPU 利用率", "MPP 并行执行", "Pipeline 执行引擎", "查询性能调优"],
-    "sidebar_label": "并行度调优"
 }
 ---
 
-# Doris 并行度调优
-
 <!-- 知识类型：概念 + 操作 -->
 <!-- 适用场景：查询性能调优、CPU 资源利用优化、高并发压测 -->
-
-## 概述
 
 Doris 是 MPP 执行框架，每条查询都会在多个 BE 上并行执行；单个 BE 内部也通过多线程并行加速执行。所有语句（Query、DML、DDL）均支持并行执行。
 
 **一句话定义**：`parallel_pipeline_task_num` 控制单个 BE 内单个 Fragment 执行时使用的工作任务数。
 
-### 适用读者快速 Checklist
+### 快速排查
 
 在开始调优之前，请先确认：
 
--   [ ] 是否通过 `PROFILE` 工具确认查询为 CPU 瓶颈？
--   [ ] 当前 BE 的 CPU 核数是多少？
--   [ ] 查询类型属于点查、JOIN/聚合、压测还是复杂查询？
--   [ ] 是否使用 Duplicate 或 Unique Key Merge-On-Write 表模型？
--   [ ] 计划在 SQL、会话还是全局级别调整？
+- 是否通过 `PROFILE` 工具确认查询为 CPU 瓶颈？
+- 当前 BE 的 CPU 核数是多少？
+- 查询类型属于点查、JOIN/聚合、压测还是复杂查询？
+- 是否使用 Duplicate 或 Unique Key Merge-On-Write 表模型？
+- 计划在 SQL、会话还是全局级别调整？
 
 > 默认值为 `0`，等同于 BE 的 CPU 核数的一半。该默认值已平衡了单查询和并发资源利用，**通常不需要用户介入调整**。
-
----
 
 ## 并行度调优原则
 
@@ -231,7 +225,7 @@ SET parallel_pipeline_task_num = 16;
 
 ---
 
-## Troubleshooting 故障排查
+## 故障排查
 
 <!-- 知识类型：故障排查 -->
 <!-- 适用场景：调优后遇到性能异常 -->
@@ -242,8 +236,6 @@ SET parallel_pipeline_task_num = 16;
 | CPU 利用率打满但查询变慢 | 并行度过高导致上下文切换 | 调低并行度，关注高并发场景设为 1 |
 | 全局调整未生效 | 已有连接未应用新配置 | 重启 FE 或重连客户端 |
 | 大分片读取速度慢 | 版本低于 2.1，受分片数限制 | 升级到 2.1+，确认表模型为 Duplicate 或 MoW |
-
----
 
 ## 总结
 

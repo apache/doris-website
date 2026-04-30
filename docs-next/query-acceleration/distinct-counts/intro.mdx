@@ -1,0 +1,31 @@
+---
+{
+    "title": "Distinct Counts",
+    "language": "en",
+    "description": "Navigate Apache Doris distinct count solutions: precise deduplication with BITMAP and approximate deduplication with HLL."
+}
+---
+
+import GettingStartedCard from '@site/src/components/getting-started-card/getting-started-card';
+
+Distinct count (deduplication) is one of the most resource-intensive operations in analytics. Apache Doris provides two purpose-built data types to replace `COUNT DISTINCT` with far lower memory and latency cost: choose **BITMAP** when you need exact results, and **HLL** when a 1%–2% error is acceptable in exchange for even smaller storage.
+
+## Precise Deduplication
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="BITMAP Precise Deduplication"
+    description="Replace COUNT DISTINCT with the BITMAP type for exact deduplication, faster queries, and lower memory and disk usage."
+    link="bitmap-precise-deduplication"
+/>
+</div>
+
+## Approximate Deduplication
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="HLL Approximate Deduplication"
+    description="Use HyperLogLog for high-cardinality UV and distinct-count workloads with controlled 1%–2% error and minimal storage footprint."
+    link="hll-approximate-deduplication"
+/>
+</div>

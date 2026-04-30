@@ -14,22 +14,13 @@
 }
 ---
 
-# BITMAP 精准去重
-
 <!-- 知识类型: 能力定义 / 操作步骤 -->
 <!-- 适用场景: 大数据量精确去重 / 查询性能调优 -->
 
-**一句话定义**：BITMAP 精准去重是一种利用位图数据结构替代 `COUNT DISTINCT`，在大数据量下实现高性能精确去重的能力。相比 `COUNT DISTINCT`，使用 Bitmap 进行精确去重具备以下优势：
+BITMAP 精准去重是一种利用位图数据结构替代 `COUNT DISTINCT`，在大数据量下实现高性能精确去重的能力。相比 `COUNT DISTINCT`，使用 Bitmap 进行精确去重具备以下优势：
 
 - 提高查询速度
 - 减少内存 / 磁盘占用
-
-## 快速导航
-
-- [为什么需要 BITMAP](#count-distinct-的实现)：理解 `COUNT DISTINCT` 在大数据量下的性能瓶颈
-- [适用场景与限制](#使用场景)：判断是否可以使用 Bitmap 精准去重
-- [操作步骤](#使用-bitmap-进行精确去重)：建表 → 导入 → 查询完整流程
-- [FAQ](#faq)：常见问题与排查
 
 ## COUNT DISTINCT 的实现
 
@@ -48,26 +39,7 @@
 
 执行 `select count(distinct name) from t` 时，Doris 会按下图进行计算：先根据 `name` 列 `group by` 完成一阶段去重，shuffle 之后二阶段再次去重，最终计算 `count`。
 
-```SQL
-        Scan                              1st Group By                       2nd Group By                     Count 
-  +---------------+                   +------------+                       +------------+                +------------+ 
-  | id  | name    |                   |   name     |                       |   name     |                | count(name)| 
-  +-----+---------+                   +------------+                       +------------+                +------------+ 
-  |  1  |   bob   |  ---------------> |    bob     |                       |    bob     |    ------->    |     4      | 
-  |  2  |   alex  |                   |    alex    |                       |    alex    |                +------------+ 
-  |  5  |   bob   |                   +------------+                       |    jack    | 
-  |  6  |   alex  |                                                        |    tom     | 
-  +---------------+                                                        +------------+ 
-                                                        ----------------> 
-                                           
-                                           
-  +---------------+                   +------------+ 
-  | id  | name    |                   |   name     | 
-  +-----+---------+  ---------------> +------------+ 
-  |  3  |  jack   |                   |    jack    | 
-  |  4  |   tom   |                   |    tom     | 
-  +-----+---------+                   +------------+
-```
+![Count Distinct](/images/next/query-acceleration/count-distinct.jpg)
 
 由于 `COUNT DISTINCT` 需要保存计算明细数据，并且需要进行 shuffle，当数据量增大时，查询会越来越慢。使用 Bitmap 精准去重，正是为了解决 `COUNT DISTINCT` 在大数据量场景下的性能问题。
 
@@ -190,7 +162,7 @@ mysql> select bitmap_union_count(uv) from test_bitmap group by dt;
 2 rows in set (0.01 sec)
 ```
 
-## FAQ
+## 常见问题
 
 <!-- 知识类型: 故障排查 -->
 <!-- 适用场景: 常见问题 -->

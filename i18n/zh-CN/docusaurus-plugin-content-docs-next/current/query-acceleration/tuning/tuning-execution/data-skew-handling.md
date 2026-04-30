@@ -1,6 +1,7 @@
 ---
 {
     "title": "数据倾斜处理：定位与优化 Doris MPP 查询单点瓶颈",
+    "sidebar_label": "数据倾斜处理",
     "language": "zh-CN",
     "description": "如何在 Doris MPP 查询中发现数据倾斜并解决单线程执行瓶颈？本文通过 Profile 指标、Broadcast 与 Leading Hint 提供定位与调优方法。",
     "keywords": ["Doris 数据倾斜", "MPP 查询优化", "Join Shuffle", "Broadcast Join", "Leading Hint", "数据倾斜处理", "Profile 调优"]
@@ -9,13 +10,6 @@
 
 <!-- 知识类型：概念 + 操作 + 案例 -->
 <!-- 适用场景：Doris MPP 查询出现单点慢、Join 不均衡、计划顺序异常 -->
-
-# 数据倾斜处理
-
-## 概述
-
-<!-- 知识类型：概念 -->
-<!-- 适用场景：理解数据倾斜的成因 -->
 
 数据倾斜是指 Shuffle 后数据在各 BE instance 上分布不均，导致单个线程成为整体查询的瓶颈。Doris 是一个 MPP 数据库，依赖数据 Shuffle 进行并行计算加速；当 Join Key 或过滤列存在倾斜时，会出现单线程执行瓶颈，拖慢整体查询。
 
@@ -28,11 +22,11 @@
 
 在动手优化前，建议先按以下步骤排查：
 
-- [ ] 通过 `EXPLAIN` 查看执行计划，确认 Join 顺序与 Shuffle 方式。
-- [ ] 通过 `PROFILE` 查看算子的 `ExecTime`、`ProbeRows` 等指标的 `max / avg / min`。
-- [ ] 判断 `max` 与 `avg` 是否存在数量级差异（典型倾斜信号）。
-- [ ] 确认倾斜来源：Join Key 分布不均，还是过滤后行数估算偏差。
-- [ ] 选择对应调优手段：Broadcast Hint 或 Leading Hint。
+- 通过 `EXPLAIN` 查看执行计划，确认 Join 顺序与 Shuffle 方式。
+- 通过 `PROFILE` 查看算子的 `ExecTime`、`ProbeRows` 等指标的 `max / avg / min`。
+- 判断 `max` 与 `avg` 是否存在数量级差异（典型倾斜信号）。
+- 确认倾斜来源：Join Key 分布不均，还是过滤后行数估算偏差。
+- 选择对应调优手段：Broadcast Hint 或 Leading Hint。
 
 ## 倾斜场景对比
 
@@ -148,7 +142,7 @@ and o_orderdate < '1920-01-02';
 
 - **说明**：可参考「使用 Leading Hint 控制 Join 顺序」章节，通过 leading hint 强制生成 `customer` join `orders` 的连接顺序。
 
-## FAQ
+## 常见问题
 
 <!-- 知识类型：FAQ -->
 <!-- 适用场景：常见疑问与误区 -->

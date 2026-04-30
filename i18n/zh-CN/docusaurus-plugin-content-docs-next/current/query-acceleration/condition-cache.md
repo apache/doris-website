@@ -1,5 +1,6 @@
 ---
 title: Condition Cache 条件缓存加速重复过滤查询
+sidebar_label: Condition Cache
 description: Doris Condition Cache 如何通过缓存 Segment 过滤结果加速重复条件查询？本文详解原理、配置与命中率监控。
 keywords:
     - Doris Condition Cache
@@ -15,8 +16,6 @@ keywords:
 <!-- 知识类型: 能力定义 / 配置参数 / 性能调优 -->
 <!-- 适用场景: 高频重复条件查询 / 查询性能优化 -->
 
-## 简介
-
 **Condition Cache** 是 Apache Doris 针对重复条件查询的查询加速机制：它将特定过滤条件在某个 Segment 上的结果缓存为压缩 bit 向量，后续查询命中后可直接复用，避免重复扫描与过滤，从而降低 CPU 与 IO 开销并缩短查询延迟。
 
 在大规模分析型场景中，查询往往包含重复的过滤条件（Condition），例如：
@@ -27,13 +26,6 @@ SELECT count(*) FROM orders WHERE region = 'ASIA';
 ```
 
 这类查询会在相同的数据分片（Segment）上反复执行相同的过滤逻辑，造成 **CPU 与 IO 的冗余开销**。Condition Cache 通过复用过滤结果，**减少不必要的扫描与过滤**，显著降低查询延迟。
-
-### 快速导航
-
-- [我的查询能否使用 Condition Cache？](#适用场景)
-- [如何开启与配置？](#配置与管理)
-- [如何观察缓存效果？](#缓存统计与监控)
-- [常见问题](#常见问题-faq)
 
 ## 工作原理
 
@@ -156,7 +148,7 @@ WHERE region = 'ASIA' AND order_date >= '2023-01-01';
 - **缓存不会持久化**：Doris 重启后，Condition Cache 会被清空。
 - **删除操作会禁用缓存**：涉及删除标记的 Segment 必须保证强一致性，因此不会使用 Condition Cache。
 
-## 常见问题 FAQ
+## 常见问题
 
 **Q1：Condition Cache 与 Query Cache 有什么区别？**
 

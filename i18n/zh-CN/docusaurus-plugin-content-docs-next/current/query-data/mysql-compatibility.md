@@ -1,6 +1,6 @@
 ---
 {
-    "title": "MySQL 兼容性",
+    "title": "MySQL 兼容性说明",
     "language": "zh-CN",
     "description": "Doris 与 MySQL 兼容性差异速查：覆盖数据类型、DDL/DML 语法、SQL 函数与 SQL Mode 的关键不同点。",
     "keywords": [

@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Doris 慢 SQL 诊断工具：Audit Log 与 audit_log 表使用指南",
+    "title": "慢 SQL 诊断工具：审计日志和审计表",
     "language": "zh-CN",
     "description": "如何在 Apache Doris 中定位慢 SQL？本文介绍 Doris Manager 日志、fe.audit.log 与 audit_log 系统表三种诊断工具的使用方法。",
     "keywords": ["Doris 慢 SQL", "Doris 诊断工具", "fe.audit.log", "audit_log 系统表", "SqlDigest", "Doris 性能调优", "qe_slow_log_ms"]
@@ -10,19 +10,14 @@
 <!-- 知识类型：概念 + 操作 -->
 <!-- 适用场景：DBA 或开发者排查慢查询、定位性能瓶颈、做调优分析 -->
 
-## 概述
-
-<!-- 知识类型：概念 -->
-<!-- 适用场景：初次了解 Doris 诊断能力 -->
-
 性能诊断工具用于快速定位有问题的业务 SQL，是保障数据库 SLA 的关键。Doris 默认将执行时间超过 5 秒的 SQL 认定为慢 SQL，阈值可通过 `config.qe_slow_log_ms` 配置。
 
 **开始前 Checklist：**
 
--   [ ] 是否已知慢 SQL 阈值（默认 5000 ms）。
--   [ ] 是否可访问 FE 节点的 `fe/log/fe.audit.log` 文件。
--   [ ] 是否使用 Doris 2.1 及以上版本（系统表方式所需）。
--   [ ] 是否部署了 Doris Manager（可选，用于 UI 化筛选）。
+- 是否已知慢 SQL 阈值（默认 5000 ms）。
+- 是否可访问 FE 节点的 `fe/log/fe.audit.log` 文件。
+- 是否使用 Doris 2.1 及以上版本（系统表方式所需）。
+- 是否部署了 Doris Manager（可选，用于 UI 化筛选）。
 
 **三种诊断渠道对比：**
 
@@ -194,7 +189,7 @@ mysql> desc audit_log;
 
 通过 `audit_log` 内部表，可使用 SQL 查询详细执行信息，做慢查询筛选与统计分析。
 
-## FAQ 与 Troubleshooting
+## 常见问题
 
 <!-- 知识类型：问题诊断 -->
 <!-- 适用场景：常见问题快速定位 -->

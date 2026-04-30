@@ -46,6 +46,10 @@ Currently, SQL Cache supports both internal OlapTables and external Hive tables.
 
 4. In contrast, the `random()` function is difficult to utilize cache because its results vary each time it is executed. Therefore, the use of such non-deterministic functions in queries should be avoided as much as possible.
 
+### Metric Column Extension
+
+SQL Cache is keyed by the exact projection columns in the SQL text, so it does **not** support reusing a cache built with fewer metrics to satisfy a query that requests additional metrics. For example, a cached result for two metrics cannot be reused when a subsequent query asks for three metrics — the new query will be re-executed and a separate cache entry created. Keep query templates and the set of selected metrics stable to maximize cache reuse.
+
 ## Principles
 
 ### BE Principle

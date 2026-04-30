@@ -10,20 +10,18 @@
 <!-- 知识类型：概念 + 操作指南 -->
 <!-- 适用场景：聚合预计算、前缀索引匹配、预过滤、表达式预计算 -->
 
-## 一句话定义
-
 同步物化视图（Sync Materialized View）是 Doris 中基于基表 SELECT 语句预先计算并存储结果的特殊表，由 Doris 自动维护，写入时与基表保持强一致，查询时自动匹配最优视图加速读取。
 
-## 快速 Checklist
+## 使用须知
 
 在使用同步物化视图前，请确认以下要点：
 
-- [ ] 仅针对**单表** SELECT，不涉及 JOIN、HAVING、LIMIT、LATERAL VIEW
-- [ ] SELECT 列表无自增列、常量、重复表达式、窗口函数、VARBINARY 类型
-- [ ] SELECT 列表中聚合函数为根表达式（支持 `sum(a + 1)`，不支持 `sum(a) + 1`）
-- [ ] 物化视图列名与基表及其他视图列名不冲突（可通过 `col as xxx` 别名规避）
-- [ ] 已评估单表上视图数量对导入性能的影响
-- [ ] Unique Key 模型仅用于改变列顺序，不可用于聚合
+- 仅针对**单表** SELECT，不涉及 JOIN、HAVING、LIMIT、LATERAL VIEW
+- SELECT 列表无自增列、常量、重复表达式、窗口函数、VARBINARY 类型
+- SELECT 列表中聚合函数为根表达式（支持 `sum(a + 1)`，不支持 `sum(a) + 1`）
+- 物化视图列名与基表及其他视图列名不冲突（可通过 `col as xxx` 别名规避）
+- 已评估单表上视图数量对导入性能的影响
+- Unique Key 模型仅用于改变列顺序，不可用于聚合
 
 ## 什么是同步物化视图
 
@@ -644,7 +642,7 @@ drop materialized view store_amt on sales_records;
         d_table;
     ```
 
-## 常见问题（FAQ / Troubleshooting）
+## 常见问题
 
 <!-- 知识类型：FAQ -->
 

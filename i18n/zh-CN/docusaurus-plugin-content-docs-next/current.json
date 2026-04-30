@@ -644,7 +644,7 @@
     "description": "The label for category Binary Data Type in sidebar docs"
   },
   "sidebar.docs.category.Caching": {
-    "message": "查询缓存",
+    "message": "缓存",
     "description": "The label for category Caching in sidebar docs"
   },
   "sidebar.docs.category.Distinct Counts": {
@@ -663,9 +663,9 @@
     "message": "Flink Doris Connector",
     "description": "The label for category Flink Doris Connector in sidebar docs"
   },
-  "sidebar.docs.category.Getting Started with Performance Tuning": {
-    "message": "性能调优入门",
-    "description": "The label for category Getting Started with Performance Tuning in sidebar docs"
+  "sidebar.docs.category.Performance Tuning Overview": {
+    "message": "性能调优概述",
+    "description": "The label for category Performance Tuning Overview in sidebar docs"
   },
   "sidebar.docs.category.High Concurrency & Point Queries": {
     "message": "高并发与点查",
