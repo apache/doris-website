@@ -65,11 +65,21 @@
         max-width: 1280px;
         margin: 0 auto;
         padding: 36px 56px 0;
-        align-items: start;
+        // Stretch so the left column can grow to match the right column's
+        // height — needed for the bottom-aligned logos frame.
+        align-items: stretch;
     }
 
     &__left {
         padding-top: 4px;
+        // Grid items default to min-width: auto, which would let the
+        // max-content marquee track inside push this column past its
+        // 1fr track. Forcing 0 keeps the column aligned to its grid track.
+        min-width: 0;
+        // Flex column lets the logos frame use margin-top: auto to pin
+        // itself to the bottom of the column.
+        display: flex;
+        flex-direction: column;
     }
 
     // ── Eyebrow ────────────────────────────────────────────────────────────
@@ -247,10 +257,94 @@
         text-transform: none;
     }
 
+    // ── User logo marquee ──────────────────────────────────────────────────
+
+    // Frame wrapper: uses margin-top: auto inside the flex left column to
+    // push itself to the bottom so its bottom edge lines up with the right
+    // column's last card.
+    &__logos-frame {
+        // Push the frame to the bottom of the flex left column so its
+        // bottom edge lines up with the right column's last card. The
+        // right column is taller than the title/CTAs/meta stack above,
+        // so this auto resolves to a real positive gap.
+        margin-top: auto;
+        padding: 14px 18px 16px;
+        border: 1px solid rgba(245, 239, 228, 0.12);
+        border-radius: 10px;
+        background: rgba(0, 0, 0, 0.18);
+        box-shadow: 0 0 0 1px rgba(255, 210, 63, 0.04);
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        // Critical: clip the inner max-content track horizontally.
+        min-width: 0;
+        overflow: hidden;
+    }
+
+    &__logos {
+        position: relative;
+        // Stay aligned with the frame even when the inner track is wider.
+        width: 100%;
+        max-width: 100%;
+        overflow: hidden;
+        // Soft fade on both edges so logos appear/disappear gracefully.
+        mask-image: linear-gradient(90deg, transparent 0, #000 6%, #000 94%, transparent 100%);
+        -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 6%, #000 94%, transparent 100%);
+
+        // Pause animation on hover so users can read / click a logo.
+        &:hover .hero-next__logos-track {
+            animation-play-state: paused;
+        }
+    }
+
+    &__logos-track {
+        display: flex;
+        gap: 36px;
+        align-items: center;
+        width: max-content;
+        animation: hero-next-logo-scroll 38s linear infinite;
+    }
+
+    &__user-logo {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 96px;
+        height: 44px;
+        border-radius: 6px;
+        background: rgba(245, 239, 228, 0.92);
+        padding: 6px 10px;
+        transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+        flex-shrink: 0;
+        cursor: pointer;
+        text-decoration: none !important;
+
+        img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            user-select: none;
+            display: block;
+        }
+
+        &:hover {
+            transform: translateY(-2px);
+            background: var(--hn-cream-light);
+            box-shadow: 0 8px 18px rgba(0, 0, 0, 0.25);
+            text-decoration: none !important;
+        }
+
+        &--placeholder {
+            // Same look as a real link until hrefs get wired up.
+            cursor: default;
+        }
+    }
+
     // ── Right column ───────────────────────────────────────────────────────
 
     &__right {
         padding-top: 0;
+        min-width: 0;
     }
 
     &__card-wrap {
@@ -485,6 +579,13 @@
 
 @keyframes hn-blink {
     50% { opacity: 0; }
+}
+
+// Track holds two copies of the logo list; sliding by exactly -50%
+// re-aligns the second copy with the start, producing a seamless loop.
+@keyframes hero-next-logo-scroll {
+    from { transform: translate3d(0, 0, 0); }
+    to   { transform: translate3d(-50%, 0, 0); }
 }
 
 // ─── Search Results ───────────────────────────────────────────────────────────

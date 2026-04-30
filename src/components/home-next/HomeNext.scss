@@ -6,29 +6,3 @@
     padding: 0 56px;
 }
 
-// ── Section placeholders (still pending real design) ──────────────────────────
-
-.home-next-placeholder-label {
-    display: inline-block;
-    margin-bottom: 1rem;
-    padding: 0.25rem 0.75rem;
-    border-radius: 9999px;
-    background: #e0f2fe;
-    color: #0369a1;
-    font-size: 0.75rem;
-    font-weight: 600;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-}
-
-.home-next-stats,
-.home-next-features,
-.home-next-use-cases,
-.home-next-community,
-.home-next-get-started {
-    padding: 5rem 0;
-
-    &:nth-child(even) {
-        background: #f7fafc;
-    }
-}

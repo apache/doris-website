@@ -112,9 +112,8 @@ export function NavbarNext(): JSX.Element {
     return (
         <nav className="navbar-next">
             <div className="navbar-next__inner">
-                <Link to="/" className="navbar-next__logo">
+                <Link to="/" className="navbar-next__logo" aria-label="Apache Doris">
                     <img src="/images/logo-doris.svg" alt="Apache Doris" />
-                    <span>Doris</span>
                 </Link>
 
                 <div className="navbar-next__nav">

@@ -1,0 +1,152 @@
+.usecases-next {
+    background: #0F1A14;
+    padding: 88px 0 96px;
+    color: #FAF6EE;
+
+    &__inner {
+        max-width: 1280px;
+        margin: 0 auto;
+        padding: 0 56px;
+    }
+
+    // ── Header ────────────────────────────────────────────────────────────────
+
+    &__header {
+        margin-bottom: 52px;
+    }
+
+    &__eyebrow {
+        display: inline-block;
+        font-family: 'JetBrains Mono', 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: #2DDFA8;
+        margin-bottom: 14px;
+    }
+
+    &__title {
+        font-family: 'JetBrains Mono', 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+        font-size: clamp(28px, 3vw, 42px);
+        font-weight: 700;
+        line-height: 1.15;
+        color: #FAF6EE;
+        margin: 0;
+        letter-spacing: -0.02em;
+    }
+
+    &__title-accent {
+        color: #FFD23F;
+    }
+
+    // ── Body ──────────────────────────────────────────────────────────────────
+
+    &__body {
+        display: grid;
+        grid-template-columns: 280px 1fr;
+        gap: 48px;
+        align-items: start;
+    }
+
+    // ── Tabs ──────────────────────────────────────────────────────────────────
+
+    &__tabs {
+        display: flex;
+        flex-direction: column;
+        border-left: 1px solid rgba(245, 239, 228, 0.1);
+    }
+
+    &__tab {
+        position: relative;
+        display: block;
+        width: 100%;
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 14px 0 14px 20px;
+        text-align: left;
+        transition: background 0.15s;
+
+        &:hover .usecases-next__tab-label {
+            color: #FAF6EE;
+        }
+
+        &--active .usecases-next__tab-label {
+            color: #FAF6EE;
+            font-weight: 700;
+        }
+
+        // Left accent border for active item
+        &--active::before {
+            content: '';
+            position: absolute;
+            left: -1px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: #FFD23F;
+        }
+    }
+
+    &__tab-label {
+        display: block;
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        font-size: 14px;
+        font-weight: 500;
+        color: rgba(245, 239, 228, 0.55);
+        transition: color 0.15s;
+        line-height: 1.3;
+    }
+
+    // Thin yellow progress bar that sweeps across the bottom of the active tab
+    &__tab-progress {
+        position: absolute;
+        bottom: 0;
+        left: 20px;
+        height: 2px;
+        background: rgba(255, 210, 63, 0.35);
+        border-radius: 1px;
+        transition: width 50ms linear;
+    }
+
+    // ── Content pane ──────────────────────────────────────────────────────────
+
+    &__pane {
+        padding: 14px 0;
+        animation: usecases-fade-in 0.35s ease;
+    }
+
+    &__pane-text {
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        font-size: 17px;
+        line-height: 1.7;
+        color: rgba(245, 239, 228, 0.82);
+        margin: 0 0 28px;
+        max-width: 680px;
+    }
+
+    &__pane-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        font-family: 'JetBrains Mono', 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+        font-size: 12.5px;
+        font-weight: 600;
+        letter-spacing: 0.04em;
+        color: #2DDFA8;
+        text-decoration: none !important;
+        transition: gap 0.15s, color 0.15s;
+
+        &:hover {
+            color: #FAF6EE;
+            gap: 12px;
+            text-decoration: none !important;
+        }
+    }
+}
+
+@keyframes usecases-fade-in {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+}

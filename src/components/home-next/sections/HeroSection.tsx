@@ -262,6 +262,73 @@ function SearchResults(): JSX.Element {
     );
 }
 
+// ─── User Logo Marquee ───────────────────────────────────────────────────────
+
+interface UserLogo {
+    name: string;
+    file: string;       // path under /images/user-logo (URL-encoded by encodeURI at render time)
+    href: string;       // empty string = no target yet
+}
+
+const USER_LOGOS: UserLogo[] = [
+    { name: 'ByteDance',           file: 'Technology/ByteDance.jpg',                       href: '' },
+    { name: 'Xiaomi',              file: 'Technology/Xiaomi.jpg',                          href: '' },
+    { name: 'Baidu',               file: 'Technology/Baidu.jpg',                           href: '' },
+    { name: 'JD.com',              file: 'Technology/JD.com.jpg',                          href: '' },
+    { name: 'Tencent',             file: 'Technology/Tencent.jpg',                         href: '' },
+    { name: 'NIO',                 file: 'Telecom & Manufacturing/NIO.jpg',                href: '' },
+    { name: 'Lenovo',              file: 'Telecom & Manufacturing/Lenovo.jpg',             href: '' },
+    { name: 'Bank of China',       file: 'Finance/Bank of China.jpg',                      href: '' },
+    { name: 'Ping An',             file: 'Finance/Ping An Insurance Group.jpg',            href: '' },
+    { name: 'Meituan',             file: 'Media & Entertainment/Meituan.jpg',              href: '' },
+    { name: 'TikTok',              file: 'Media & Entertainment/TikTok.jpg',               href: '' },
+    { name: 'NetEase',             file: 'Media & Entertainment/NetEase.jpg',              href: '' },
+];
+
+function UserLogoItem({ logo }: { logo: UserLogo }): JSX.Element {
+    const src = `/images/user-logo/${encodeURI(logo.file)}`;
+    const content = (
+        <img
+            src={src}
+            alt={logo.name}
+            title={logo.name}
+            loading="lazy"
+            draggable={false}
+        />
+    );
+    if (logo.href) {
+        return (
+            <a className="hero-next__user-logo" href={logo.href} aria-label={logo.name}>
+                {content}
+            </a>
+        );
+    }
+    // Render a button-like span when no link is wired up yet, so the slot still
+    // looks clickable but has no destination.
+    return (
+        <span className="hero-next__user-logo hero-next__user-logo--placeholder" role="link" aria-label={logo.name}>
+            {content}
+        </span>
+    );
+}
+
+function UserLogoMarquee(): JSX.Element {
+    // Render the list twice back-to-back so the CSS translate animation can
+    // loop seamlessly (the second copy slides in as the first slides out).
+    return (
+        <div className="hero-next__logos" aria-label="Companies using Apache Doris">
+            <div className="hero-next__logos-track">
+                {USER_LOGOS.map((logo, i) => (
+                    <UserLogoItem key={`a-${i}`} logo={logo} />
+                ))}
+                {USER_LOGOS.map((logo, i) => (
+                    <UserLogoItem key={`b-${i}`} logo={logo} />
+                ))}
+            </div>
+        </div>
+    );
+}
+
 // ─── HeroSection ─────────────────────────────────────────────────────────────
 
 export function HeroSection(): JSX.Element {
@@ -292,8 +359,12 @@ export function HeroSection(): JSX.Element {
                             <span className="hero-next__title-accent">Fast</span>
                             <LightningSvg size={56} />
                         </span>
-                        <span className="hero-next__title-line">Analytics and</span>
-                        <span className="hero-next__title-line">Search Database</span>
+                        <span className="hero-next__title-line">
+                            <span className="hero-next__title-accent">Analytics</span> and
+                        </span>
+                        <span className="hero-next__title-line">
+                            <span className="hero-next__title-accent">Search</span> Database
+                        </span>
                     </h1>
 
                     <p className="hero-next__sub">
@@ -334,6 +405,10 @@ export function HeroSection(): JSX.Element {
                             <span className="hero-next__meta-num">Apache 2.0</span>
                             <span>License</span>
                         </div>
+                    </div>
+
+                    <div className="hero-next__logos-frame">
+                        <UserLogoMarquee />
                     </div>
                 </div>
 

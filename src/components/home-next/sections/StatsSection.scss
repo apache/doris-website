@@ -1,0 +1,47 @@
+.stats-next {
+    background: #054C39;
+    border-top: 1px solid rgba(245, 239, 228, 0.08);
+    border-bottom: 1px solid rgba(245, 239, 228, 0.08);
+
+    &__inner {
+        max-width: 1280px;
+        margin: 0 auto;
+        padding: 0 56px;
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+    }
+
+    &__item {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        padding: 28px 0;
+        border-right: 1px solid rgba(245, 239, 228, 0.08);
+
+        &:last-child {
+            border-right: none;
+        }
+
+        &:not(:first-child) {
+            padding-left: 48px;
+        }
+    }
+
+    &__num {
+        font-family: 'JetBrains Mono', 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+        font-size: 32px;
+        font-weight: 700;
+        color: #FFD23F;
+        letter-spacing: -0.02em;
+        line-height: 1;
+    }
+
+    &__label {
+        font-family: 'JetBrains Mono', 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+        font-size: 11px;
+        font-weight: 500;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: rgba(245, 239, 228, 0.6);
+    }
+}

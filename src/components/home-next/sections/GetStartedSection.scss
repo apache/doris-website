@@ -1,0 +1,143 @@
+.gs-next {
+    --gs-green: #06805F;
+    --gs-deep: #054C39;
+    --gs-yellow: #FFD23F;
+    --gs-cream: #FAF6EE;
+    --gs-ink: #0F1A14;
+    --gs-mono: 'JetBrains Mono', 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+    --gs-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+
+    position: relative;
+    overflow: hidden;
+    background: var(--gs-green);
+    padding: 104px 0 112px;
+    text-align: center;
+
+    // ── Background decorations ────────────────────────────────────────────────
+
+    &__glow {
+        position: absolute;
+        inset: 0;
+        z-index: 1;
+        background:
+            radial-gradient(ellipse at 50% 0%, rgba(255, 210, 63, 0.12), transparent 60%),
+            radial-gradient(ellipse at 20% 100%, rgba(45, 223, 168, 0.12), transparent 50%);
+        pointer-events: none;
+    }
+
+    &__grid-bg {
+        position: absolute;
+        inset: 0;
+        z-index: 2;
+        background-image: radial-gradient(rgba(245, 239, 228, 0.07) 1.2px, transparent 1.2px);
+        background-size: 28px 28px;
+        mask-image: linear-gradient(180deg, transparent, black 20%, black 80%, transparent);
+        pointer-events: none;
+    }
+
+    // ── Content ───────────────────────────────────────────────────────────────
+
+    &__inner {
+        position: relative;
+        z-index: 10;
+        max-width: 720px;
+        margin: 0 auto;
+        padding: 0 56px;
+    }
+
+    &__eyebrow {
+        display: inline-block;
+        font-family: var(--gs-mono);
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: rgba(245, 239, 228, 0.6);
+        margin-bottom: 18px;
+    }
+
+    &__title {
+        font-family: var(--gs-mono);
+        font-size: clamp(32px, 4vw, 52px);
+        font-weight: 700;
+        line-height: 1.1;
+        color: var(--gs-cream);
+        margin: 0 0 16px;
+        letter-spacing: -0.025em;
+    }
+
+    &__title-accent {
+        color: var(--gs-yellow);
+    }
+
+    &__sub {
+        font-family: var(--gs-sans);
+        font-size: 16px;
+        line-height: 1.65;
+        color: rgba(245, 239, 228, 0.7);
+        margin: 0 0 40px;
+    }
+
+    // ── CTA buttons ───────────────────────────────────────────────────────────
+
+    &__ctas {
+        display: flex;
+        gap: 14px;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    &__btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.55rem;
+        padding: 0.85rem 1.5rem;
+        font-family: var(--gs-mono);
+        font-size: 13px;
+        font-weight: 600;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        border-radius: 4px;
+        border: 1.5px solid transparent;
+        cursor: pointer;
+        text-decoration: none !important;
+        transition: transform 0.15s, background 0.15s, border-color 0.15s;
+        white-space: nowrap;
+
+        &:hover {
+            transform: translateY(-2px);
+            text-decoration: none !important;
+        }
+
+        &--yellow {
+            background: var(--gs-yellow);
+            color: var(--gs-ink) !important;
+            border-color: var(--gs-yellow);
+
+            &:hover { background: #FFE066; }
+        }
+
+        &--outline {
+            background: transparent;
+            color: var(--gs-cream) !important;
+            border-color: var(--gs-cream);
+
+            &:hover {
+                background: rgba(245, 239, 228, 0.1);
+                color: var(--gs-cream) !important;
+            }
+        }
+
+        &--ghost {
+            background: transparent;
+            color: rgba(245, 239, 228, 0.82) !important;
+            border-color: rgba(245, 239, 228, 0.3);
+
+            &:hover {
+                background: rgba(245, 239, 228, 0.08);
+                border-color: rgba(245, 239, 228, 0.6);
+                color: var(--gs-cream) !important;
+            }
+        }
+    }
+}
