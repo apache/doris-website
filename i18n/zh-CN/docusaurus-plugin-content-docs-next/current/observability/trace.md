@@ -1,60 +1,66 @@
 ---
 {
-    "title": "Trace",
+    "title": "链路追踪与分析",
+    "sidebar_label": "Trace",
     "language": "zh-CN",
-    "description": "本文介绍可观测性核心数据之一 Trace 的存储分析实践，可观测性整体方案介绍请参考概述，资源评估、集群部署和优化可以参考 Log。"
+    "description": "如何在 Apache Doris 中存储与分析 Trace 数据？本文涵盖建表、OpenTelemetry 采集对接与 Grafana 查询的完整实践。",
+    "keywords": [
+        "Doris Trace",
+        "OpenTelemetry",
+        "分布式链路追踪",
+        "Trace 存储",
+        "可观测性",
+        "Doris Exporter",
+        "OTLP",
+        "Grafana Trace"
+    ]
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
+<!-- 知识类型: 能力定义 + 操作步骤 -->
+<!-- 适用场景: 可观测性建设 / 分布式链路追踪存储与分析 -->
 
-  http://www.apache.org/licenses/LICENSE-2.0
+本文介绍如何在 Apache Doris 中完成 **Trace 数据**的存储与分析实践，覆盖建表、采集与查询全链路。
 
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
+- 可观测性整体方案：参考[概述](./overview.mdx)
+- 资源评估、集群部署与优化：参考 [Log](./log.md)
 
-# Trace
+## 快速导航
 
-本文介绍可观测性核心数据之一 Trace 的存储分析实践，可观测性整体方案介绍请参考[概述](./overview.mdx)，资源评估、集群部署和优化可以参考 [Log](./log.md)。
+整体接入流程包含三个步骤，可按顺序完成：
 
+| 步骤 | 内容 | 目标 |
+| :--- | :--- | :--- |
+| 1. [建表](#1-建表) | 在 Doris 中创建 Trace 存储表 | 针对 Trace 写入与查询模式优化性能 |
+| 2. [采集](#2-trace-采集) | 通过 OpenTelemetry 将 Trace 写入 Doris | 打通应用 → Collector → Doris 链路 |
+| 3. [查询](#3-trace-查询) | 在 Grafana 中可视化分析 Trace | 检索、查看延迟分布与链路详情 |
 
 ## 1. 建表
 
-Trace 数据的写入和查询模式有明显的特征，在建表时进行针对性的配置会有更好的性能表现。参考下面的关键说明创建表：
+<!-- 知识类型: 配置参数 + 操作步骤 -->
 
-**分区和排序**
-- 分区使用时间字段上的 RANGE 分区，开启动态 Partition 按天自动管理分区
-- 使用 service_name 和 DATETIME 类型的时间字段作为 Key，在查询指定 service 一段时间的 Trace 时有数倍加速
+Trace 数据的写入和查询模式有明显特征，建表时进行针对性配置可获得更好的性能表现。
 
-**分桶**
-- 分桶个数大致是集群磁盘总数的 3 倍
-- 分桶策略使用 RANDOM，配合写入时的 single tablet 导入可以提升写入 batch 效果
+### 1.1 关键配置项说明
 
-**compaction**
-- 使用 time_series compaction 策略减少写放大，对于高吞吐 Trace 写入的资源优化很重要
+下表汇总了建表时的关键配置维度与推荐做法：
 
-**VARIANT 数据类型**
-- 对于 Trace 扩展字段比如 span_attributes 和 resource_attributes 使用半结构化数据类型 VARIANT，自动将 JSON 数据拆分成子列存储，提升压缩率降低存储空间，提升过滤和分析子列的性能
+| 配置维度 | 推荐做法 | 说明 |
+| :--- | :--- | :--- |
+| 分区 | 时间字段上的 RANGE 分区，开启动态 Partition 按天自动管理 | 自动滚动分区，便于冷热分离与过期清理 |
+| 排序键 | 使用 `service_name` 与 `DATETIME` 类型的时间字段作为 Key | 查询指定 service 一段时间的 Trace 时有数倍加速 |
+| 分桶数 | 大致为集群磁盘总数的 3 倍 | 兼顾并行度与小文件控制 |
+| 分桶策略 | 使用 `RANDOM`，配合写入时的 single tablet 导入 | 提升写入 batch 效果 |
+| Compaction | 使用 `time_series` compaction 策略 | 减少写放大，对高吞吐 Trace 写入资源优化非常关键 |
+| 半结构化字段 | `span_attributes`、`resource_attributes` 使用 VARIANT 类型 | 自动将 JSON 拆分为子列存储，提升压缩率与子列过滤分析性能 |
+| 索引 | 对常用查询字段建倒排索引 | 加速等值过滤与范围查询 |
+| 全文检索 | 指定分词器 `parser` 参数（一般 `unicode` 即可），按需开启 `support_phrase` | `support_phrase` 支持短语查询；不需要可关闭以降低存储空间 |
+| 副本 | 云盘可配置 1 副本；物理盘至少配置 2 副本 | 平衡可靠性与成本 |
+| 冷热分离 | 配置 `log_s3` 对象存储与 `log_policy_3day` 策略 | 超过 3 天的数据自动转存 S3，降低热存成本 |
 
-**索引**
-- 对经常查询的字段建索引
-- 需要全文检索的字段指定分词器 parser 参数，unicode 分词一般能满足绝大多数需求，开启 support_phrase 选项以支持短语查询，如果不需要可以设置为 false 降低存储空间
+### 1.2 建表 SQL 示例
 
-**存储**
-- 热存数据，如果使用云盘可以配置 1 副本，如果使用物理盘至少配置 2 副本
-- 使用冷热分离配置 log_s3 对象存储和 log_policy_3day 超过 3 天转存 s3 策略
+下面的示例覆盖资源、存储策略与表的完整创建过程：
 
 ```sql
 CREATE DATABASE log_db;
@@ -81,46 +87,46 @@ PROPERTIES(
 );
 
 CREATE TABLE trace_table
-(        
-    service_name          VARCHAR(200),        
+(
+    service_name          VARCHAR(200),
     timestamp             DATETIME(6),
     service_instance_id   VARCHAR(200),
-    trace_id              VARCHAR(200),        
-    span_id               STRING,        
-    trace_state           STRING,        
-    parent_span_id        STRING,        
-    span_name             STRING,        
-    span_kind             STRING,        
-    end_time              DATETIME(6),        
-    duration              BIGINT,        
-    span_attributes       VARIANT,        
-    events                ARRAY<STRUCT<timestamp:DATETIME(6), name:STRING, attributes:MAP<STRING, STRING>>>,        
-    links                 ARRAY<STRUCT<trace_id:STRING, span_id:STRING, trace_state:STRING, attributes:MAP<STRING, STRING>>>,        
-    status_message        STRING,        
-    status_code           STRING,        
-    resource_attributes   VARIANT,        
-    scope_name            STRING,        
+    trace_id              VARCHAR(200),
+    span_id               STRING,
+    trace_state           STRING,
+    parent_span_id        STRING,
+    span_name             STRING,
+    span_kind             STRING,
+    end_time              DATETIME(6),
+    duration              BIGINT,
+    span_attributes       VARIANT,
+    events                ARRAY<STRUCT<timestamp:DATETIME(6), name:STRING, attributes:MAP<STRING, STRING>>>,
+    links                 ARRAY<STRUCT<trace_id:STRING, span_id:STRING, trace_state:STRING, attributes:MAP<STRING, STRING>>>,
+    status_message        STRING,
+    status_code           STRING,
+    resource_attributes   VARIANT,
+    scope_name            STRING,
     scope_version         STRING,
     INDEX idx_timestamp(timestamp) USING INVERTED,
     INDEX idx_service_instance_id(service_instance_id) USING INVERTED,
-    INDEX idx_trace_id(trace_id) USING INVERTED,        
-    INDEX idx_span_id(span_id) USING INVERTED,        
-    INDEX idx_trace_state(trace_state) USING INVERTED,        
-    INDEX idx_parent_span_id(parent_span_id) USING INVERTED,        
-    INDEX idx_span_name(span_name) USING INVERTED,        
-    INDEX idx_span_kind(span_kind) USING INVERTED,        
-    INDEX idx_end_time(end_time) USING INVERTED,        
-    INDEX idx_duration(duration) USING INVERTED,        
-    INDEX idx_span_attributes(span_attributes) USING INVERTED,        
-    INDEX idx_status_message(status_message) USING INVERTED,        
-    INDEX idx_status_code(status_code) USING INVERTED,        
-    INDEX idx_resource_attributes(resource_attributes) USING INVERTED,        
-    INDEX idx_scope_name(scope_name) USING INVERTED,        
-    INDEX idx_scope_version(scope_version) USING INVERTED        
-)        
-ENGINE = OLAP        
-DUPLICATE KEY(service_name, timestamp)        
-PARTITION BY RANGE(timestamp) ()        
+    INDEX idx_trace_id(trace_id) USING INVERTED,
+    INDEX idx_span_id(span_id) USING INVERTED,
+    INDEX idx_trace_state(trace_state) USING INVERTED,
+    INDEX idx_parent_span_id(parent_span_id) USING INVERTED,
+    INDEX idx_span_name(span_name) USING INVERTED,
+    INDEX idx_span_kind(span_kind) USING INVERTED,
+    INDEX idx_end_time(end_time) USING INVERTED,
+    INDEX idx_duration(duration) USING INVERTED,
+    INDEX idx_span_attributes(span_attributes) USING INVERTED,
+    INDEX idx_status_message(status_message) USING INVERTED,
+    INDEX idx_status_code(status_code) USING INVERTED,
+    INDEX idx_resource_attributes(resource_attributes) USING INVERTED,
+    INDEX idx_scope_name(scope_name) USING INVERTED,
+    INDEX idx_scope_version(scope_version) USING INVERTED
+)
+ENGINE = OLAP
+DUPLICATE KEY(service_name, timestamp)
+PARTITION BY RANGE(timestamp) ()
 DISTRIBUTED BY RANDOM BUCKETS 250
 PROPERTIES (
 "compression" = "zstd",
@@ -141,73 +147,88 @@ PROPERTIES (
 
 ## 2. Trace 采集
 
-Doris 提供开放通用的 Stream HTTP API，可以与 OpenTelemetry 等 Trace 采集系统打通。
+<!-- 知识类型: 操作步骤 -->
+<!-- 适用场景: 应用接入 / OpenTelemetry 对接 -->
 
-### OpenTelemetry 对接
+Doris 提供开放通用的 Stream HTTP API，可与 OpenTelemetry 等 Trace 采集系统打通。
 
-1. 应用侧接入 OpenTelemetry SDK
+### 2.1 整体链路
 
-这里我们使用一个 Spring Boot 示例应用接入 OpenTelemetry Java SDK，示例应用来自官方 [demo](https://docs.spring.io/spring-boot/tutorial/first-application/index.html)，对路径 "/" 返回简单的 "Hello World!" 字符串。
-下载 [OpenTelemetry Java Agent](https://github.com/open-telemetry/opentelemetry-java-instrumentation/releases)，使用 Java Agent 的优势在于无需对现有的应用做任何的修改。其他语言及其他接入方式详见 OpenTelemetry 官网：[Language APIs & SDKs](https://opentelemetry.io/docs/languages/) 或 [Zero-code Instrumentation](https://opentelemetry.io/docs/zero-code/)。
+应用 → OpenTelemetry SDK/Agent → OpenTelemetry Collector（含 Doris Exporter）→ Doris 表。
 
-2. 部署配置 OpenTelemetry Collector
+### 2.2 OpenTelemetry 对接步骤
 
-下载 [OpenTelemetry Collector](https://github.com/open-telemetry/opentelemetry-collector-releases/releases) 并解压。需要下载以 "otelcol-contrib" 为前缀的包，其中的 Doris Exporter 组件能够把 trace 数据导入到 Doris 中。
+#### 步骤 1：应用侧接入 OpenTelemetry SDK
 
-创建 `otel_demo.yaml` 配置文件如下，更多配置详见 Doris Exporter [文档](https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/exporter/dorisexporter)。
+本示例使用 Spring Boot 官方 [demo](https://docs.spring.io/spring-boot/tutorial/first-application/index.html) 接入 OpenTelemetry Java SDK，对路径 `/` 返回简单的 `Hello World!` 字符串。
+
+下载 [OpenTelemetry Java Agent](https://github.com/open-telemetry/opentelemetry-java-instrumentation/releases)，使用 Java Agent 的优势在于无需对现有应用做任何修改。
+
+其他语言及接入方式参考：
+
+- [OpenTelemetry Language APIs & SDKs](https://opentelemetry.io/docs/languages/)
+- [OpenTelemetry Zero-code Instrumentation](https://opentelemetry.io/docs/zero-code/)
+
+#### 步骤 2：部署并配置 OpenTelemetry Collector
+
+下载 [OpenTelemetry Collector](https://github.com/open-telemetry/opentelemetry-collector-releases/releases) 并解压。
+
+> 需要下载以 `otelcol-contrib` 为前缀的发行包，其中包含可将 Trace 数据导入 Doris 的 Doris Exporter 组件。
+
+创建 `otel_demo.yaml` 配置文件如下，更多配置参考 Doris Exporter [文档](https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/exporter/dorisexporter)：
 
 ```yaml
 receivers:
-  otlp: # otlp 协议，接收 OpenTelemetry Java Agent 发送的数据
-    protocols:
-      grpc:
-        endpoint: 0.0.0.0:4317
-      http:
-        endpoint: 0.0.0.0:4318
+    otlp: # otlp 协议，接收 OpenTelemetry Java Agent 发送的数据
+        protocols:
+            grpc:
+                endpoint: 0.0.0.0:4317
+            http:
+                endpoint: 0.0.0.0:4318
 
 processors:
-  batch:
-    send_batch_size: 100000 # 每个批次的数据条数，建议 batch 的数据量在 100M-1G 之间
-    timeout: 10s
+    batch:
+        send_batch_size: 100000 # 每个批次的数据条数，建议 batch 数据量在 100M-1G 之间
+        timeout: 10s
 
 exporters:
-  doris:
-    endpoint: http://localhost:8030 # FE HTTP 地址
-    database: doris_db_name
-    username: doris_username
-    password: doris_password
-    table:
-      traces: doris_table_name
-    create_schema: true # 是否自动创建 schema，如果设置为 false，则需要手动建表
-    mysql_endpoint: localhost:9030  # FE MySQL 地址
-    history_days: 10
-    create_history_days: 10
-    timezone: Asia/Shanghai
-    timeout: 60s # http stream load 客户端超时时间
-    log_response: true
-    sending_queue:
-      enabled: true
-      num_consumers: 20
-      queue_size: 1000
-    retry_on_failure:
-      enabled: true
-      initial_interval: 5s
-      max_interval: 30s
-    headers:
-      load_to_single_tablet: "true"
+    doris:
+        endpoint: http://localhost:8030 # FE HTTP 地址
+        database: doris_db_name
+        username: doris_username
+        password: doris_password
+        table:
+            traces: doris_table_name
+        create_schema: true # 是否自动创建 schema，设置为 false 时需要手动建表
+        mysql_endpoint: localhost:9030  # FE MySQL 地址
+        history_days: 10
+        create_history_days: 10
+        timezone: Asia/Shanghai
+        timeout: 60s # http stream load 客户端超时时间
+        log_response: true
+        sending_queue:
+            enabled: true
+            num_consumers: 20
+            queue_size: 1000
+        retry_on_failure:
+            enabled: true
+            initial_interval: 5s
+            max_interval: 30s
+        headers:
+            load_to_single_tablet: "true"
 ```
 
-3. 运行 OpenTelemetry Collector
+#### 步骤 3：运行 OpenTelemetry Collector
 
-  ```Bash
-  ./otelcol-contrib --config otel_demo.yaml
-  ```
+```bash
+./otelcol-contrib --config otel_demo.yaml
+```
 
-4. 启动 Spring Boot 示例应用
+#### 步骤 4：启动 Spring Boot 示例应用
 
-在启动应用之前只需要添加几个环境变量，无需修改任何代码。
+启动应用前只需添加几个环境变量，无需修改任何代码：
 
-```Bash
+```bash
 export JAVA_TOOL_OPTIONS="${JAVA_TOOL_OPTIONS} -javaagent:/your/path/to/opentelemetry-javaagent.jar" # OpenTelemetry Java Agent 的路径
 export OTEL_JAVAAGENT_LOGGING="none" # 禁用 otel log，防止干扰服务本身的日志
 export OTEL_SERVICE_NAME="myproject"
@@ -217,19 +238,21 @@ export OTEL_EXPORTER_OTLP_ENDPOINT="http://localhost:4317" # OpenTelemetry Colle
 java -jar myproject-0.0.1-SNAPSHOT.jar
 ```
 
-5. 访问 Spring Boot 示例应用产生 Trace 数据
+#### 步骤 5：访问示例应用并产生 Trace 数据
 
-`curl loalhost:8080` 会触发 `hello` 服务调用，OpenTelemetry Java Agent 会自动生成 Trace 数据，然后发送给 OpenTelemetry Collector，Collector 再通过配置的 Doris Exporter 将 Trace 数据写入 Doris 的表中（默认是 `otel.otel_traces`）。
+执行 `curl localhost:8080` 触发 `hello` 服务调用，OpenTelemetry Java Agent 会自动生成 Trace 数据并发送给 OpenTelemetry Collector，Collector 再通过配置的 Doris Exporter 将 Trace 数据写入 Doris 的表中（默认表名为 `otel.otel_traces`）。
 
 ## 3. Trace 查询
 
-Trace 查询通常使用可视化的查询界面，比如 Grafana。
+<!-- 知识类型: 操作步骤 -->
+<!-- 适用场景: Trace 检索 / 故障排查 -->
 
-- 通过时间段和服务名筛选，展示 Trace 概览，包括延迟分布图和最细的一些 Trace
+Trace 查询通常通过可视化界面（如 Grafana）完成，常见场景包括：
 
-  ![Trace 列表](/images/observability/trace-list.png)
+- 通过时间段和服务名筛选，展示 Trace 概览，包括延迟分布图与最新的若干条 Trace。
 
-- 点击链接可以查看 Trace detail
+    ![Trace 列表](/images/observability/trace-list.png)
 
-  ![Trace 查询](/images/observability/trace-detail.png)
+- 点击链接可查看 Trace 详情。
 
+    ![Trace 查询](/images/observability/trace-detail.png)

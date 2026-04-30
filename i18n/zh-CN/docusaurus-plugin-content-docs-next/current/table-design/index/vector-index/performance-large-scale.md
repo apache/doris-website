@@ -89,11 +89,11 @@ FE 与 BE 分离部署，所有测试均使用 [VectorDBBench](https://github.co
 
 - Performance768D10M 导入期间 CPU 使用率整体较为平稳。
 
-    <img src="/images/vector-search/Performance768D-CPU-Import.png" alt="Performance768D10M import CPU" width="900" height="435" />
+    ![Performance768D10M import CPU](/images/vector-search/Performance768D-CPU-Import.png)
 
 - Performance1536D5M 数据量较小、batch size 也更小，因此导入阶段 CPU 使用率波动更为频繁。
 
-    <img src="/images/vector-search/Performance1536D5M-CPU-Import.png" alt="Performance1536D5M import CPU" width="900" height="432" />
+    ![Performance1536D5M import CPU](/images/vector-search/Performance1536D5M-CPU-Import.png)
 
 ### 查询性能
 
@@ -126,7 +126,7 @@ FE 与 BE 分离部署，所有测试均使用 [VectorDBBench](https://github.co
 
 冷查询阶段需要将索引加载到内存，CPU 利用率相对较低，系统主要在等待 IO；进入热查询阶段后，CPU 利用率明显提升并接近 100%。
 
-<img src="/images/vector-search/Performance768D10M.png" alt="Performance768D10M query CPU" width="900" height="430" />
+![Performance768D10M query CPU](/images/vector-search/Performance768D10M.png)
 
 ## 分布式实测（3 × 16C64GB）
 
@@ -158,7 +158,7 @@ FE 与 BE 分离部署，所有测试均使用 [VectorDBBench](https://github.co
 
 **CPU 使用情况：** 索引构建期间 CPU 使用率整体稳定在约 50%，未长时间打满 CPU，仍保留了一定资源余量。
 
-<img src="/images/vector-search/Performance-3BE-Import.jpg" alt="Performance768D100M import CPU" width="900" height="444" />
+![Performance768D100M import CPU](/images/vector-search/Performance-3BE-Import.jpg)
 
 ### 查询性能
 
@@ -182,7 +182,7 @@ FE 与 BE 分离部署，所有测试均使用 [VectorDBBench](https://github.co
 
 查询阶段各节点 CPU 使用率保持在较高水平，说明查询负载较充分地利用了分布式计算资源。
 
-<img src="/images/vector-search/Performance3BE.png" alt="Performance768D100M query CPU" width="900" height="323" />
+![Performance768D100M query CPU](/images/vector-search/Performance3BE.png)
 
 ## 关键结论
 

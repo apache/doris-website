@@ -868,7 +868,7 @@
     "description": "The label for category HTTP API in sidebar docs"
   },
   "sidebar.docs.category.Observability with Doris": {
-    "message": "可观测性分析（基于 Doris）",
+    "message": "可观测性分析",
     "description": "The label for category Observability with Doris in sidebar docs"
   },
   "sidebar.docs.category.Ecosystem & Integrations": {
