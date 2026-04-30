@@ -30,7 +30,7 @@
 
 - 选择合适的[数据模型](../../../table-design/data-model/intro.mdx)（明细模型 / 主键模型 / 聚合模型）。
 - 设计[分区](../../../table-design/data-partitioning/dynamic-partitioning.md)与[分桶](../../../table-design/data-partitioning/data-bucketing.md)策略。
-- 参考[导入最佳实践](../load-best-practices.md)规划批次大小与并发度。
+- 参考[导入最佳实践](../load-best-practices/load-best-practices.md)规划批次大小与并发度。
 
 ## 数据类型映射
 
@@ -302,5 +302,5 @@ Doris 没有与 Snowflake `TIME` 完全对应的类型，因此在 Snowflake 端
 - [GCS 导入](./google-cloud-storage.md)
 - [Azure 导入](./azure-storage.md)
 - [TVF 导入](./amazon-s3.md#load-with-tvf)
-- [导入最佳实践](../load-best-practices.md)
+- [导入最佳实践](../load-best-practices/load-best-practices.md)
 - [导入配置参数](../../import/import-way/broker-load-manual.md#related-configurations)

@@ -110,11 +110,11 @@ DISTRIBUTED BY HASH(site_id) BUCKETS 10;
 Choose the right loading method and follow these best practices to avoid common performance issues:
 
 - **Don't use `INSERT INTO VALUES` for bulk data.** Use [Stream Load](../data-operate/import/import-way/stream-load-manual) or [Broker Load](../data-operate/import/import-way/broker-load-manual) instead. See [Loading Overview](../data-operate/import/load-manual).
-- **Batch writes on the client side.** High-frequency small imports cause version accumulation. If not feasible, use [Group Commit](../data-operate/import/group-commit-manual).
-- **Break large imports into smaller batches.** A failed long-running import must restart from scratch. Use [INSERT INTO SELECT with S3 TVF](../data-operate/import/streaming-job/streaming-job-tvf) for incremental import.
+- **Batch writes on the client side.** High-frequency small imports cause version accumulation. If not feasible, use [Group Commit](../data-operate/import/load-best-practices/group-commit-manual).
+- **Break large imports into smaller batches.** A failed long-running import must restart from scratch. Use [INSERT INTO SELECT with S3 TVF](../data-operate/import/import-way/streaming-job/continuous-load-overview) for incremental import.
 - **Enable `load_to_single_tablet`** for Duplicate Key tables with Random bucketing to reduce write amplification.
 
-See [Load Best Practices](../data-operate/import/load-best-practices).
+See [Load Best Practices](../data-operate/import/load-best-practices/load-best-practices).
 
 ## Query Tuning
 

@@ -161,8 +161,8 @@ EXPLAIN SELECT * FROM site_metrics WHERE dt = '2024-01-01';
 选择合适的导入方式并遵循以下最佳实践，可以有效避免常见的性能问题：
 
 - **批量数据不要用 `INSERT INTO VALUES`**。请使用 [Stream Load](../data-operate/import/import-way/stream-load-manual) 或 [Broker Load](../data-operate/import/import-way/broker-load-manual)。详见[导入概述](../data-operate/import/load-manual)。
-- **优先在客户端合并写入。**高频小批次导入导致版本堆积。如不可行，使用 [Group Commit](../data-operate/import/group-commit-manual)。
-- **将大型导入拆分为小批次。**长时间运行的导入失败后必须从头重试。使用 [INSERT INTO SELECT 配合 S3 TVF](../data-operate/import/streaming-job/streaming-job-tvf) 实现增量导入。
+- **优先在客户端合并写入。**高频小批次导入导致版本堆积。如不可行，使用 [Group Commit](../data-operate/import/load-best-practices/group-commit-manual)。
+- **将大型导入拆分为小批次。**长时间运行的导入失败后必须从头重试。使用 [INSERT INTO SELECT 配合 S3 TVF](../data-operate/import/import-way/streaming-job/continuous-load-overview) 实现增量导入。
 - **Random 分桶的 Duplicate Key 表启用 `load_to_single_tablet`**，减少写放大。
 
 **快速验证：**
@@ -175,7 +175,7 @@ SHOW LOAD WHERE label = 'your_label';
 SHOW TABLETS FROM your_table;
 ```
 
-详见[导入最佳实践](../data-operate/import/load-best-practices)。
+详见[导入最佳实践](../data-operate/import/load-best-practices/load-best-practices)。
 
 ## 查询调优
 

@@ -114,7 +114,7 @@ SET ( 'min_load_replica_num' = '2' );
 | 有效值 | 大于 0 |
 | 默认值 | `-1`（表示不开启全局最小写入副本数） |
 
-关于 FE 配置项的查看和修改，请参考 [FE 配置项文档](../../admin-manual/config/fe-config.md)。
+关于 FE 配置项的查看和修改，请参考 [FE 配置项文档](../../../admin-manual/config/fe-config.md)。
 
 ### 配置优先级
 
