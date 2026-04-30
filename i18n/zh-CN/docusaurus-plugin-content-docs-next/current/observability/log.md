@@ -196,7 +196,7 @@ Apache Doris 通过以下两种机制支持 Flexible Schema：
 
 <!-- 知识类型: 操作步骤 -->
 
-完成资源评估后，可以开始部署 Apache Doris 集群。推荐在物理机或虚拟机环境中部署，手动部署步骤可参考 [手动部署](./install/deploy-manually/integrated-storage-compute-deploy-manually)。
+完成资源评估后，可以开始部署 Apache Doris 集群。推荐在物理机或虚拟机环境中部署，手动部署步骤可参考 [手动部署](../install/deploy-manually/integrated-storage-compute-deploy-manually)。
 
 ### 3.3 优化 FE 和 BE 配置
 
@@ -218,7 +218,7 @@ Apache Doris 通过以下两种机制支持 Flexible Schema：
 | `autobucket_min_buckets = 10`                                                       | 将自动分桶的最小分桶数从 1 调大到 10，避免日志量增加时分桶不够                        |
 | `max_backend_heartbeat_failure_tolerance_count = 10`                                | 日志场景下 BE 服务器压力较大，可能短时间心跳超时，将容忍次数从 1 调大到 10            |
 
-更多参数信息可参考 [FE 配置项](./admin-manual/config/fe-config)。
+更多参数信息可参考 [FE 配置项](../admin-manual/config/fe-config)。
 
 #### 3.3.2 优化 BE 配置
 
@@ -245,7 +245,7 @@ Apache Doris 通过以下两种机制支持 Flexible Schema：
 | 其他       | `string_type_length_soft_limit_bytes = 10485760`                                                                                                                                                                                                          | 将 String 类型数据的长度限制调高至 10 MB                                                                                                                                            |
 | 其他       | `trash_file_expire_time_sec = 300`<br />`path_gc_check_interval_second = 900`<br />`path_scan_interval_second = 900`                                                                                                                                      | 调快垃圾文件的回收时间                                                                                                                                                              |
 
-更多参数信息可参考 [BE 配置项](./admin-manual/config/be-config)。
+更多参数信息可参考 [BE 配置项](../admin-manual/config/be-config)。
 
 ### 3.4 建表
 
@@ -258,7 +258,7 @@ Apache Doris 通过以下两种机制支持 Flexible Schema：
 
 **分区**：
 
-- 使用时间字段上的 [Range 分区](./table-design/data-partitioning/manual-partitioning.md#range-分区)（`PARTITION BY RANGE(ts)`），并开启 [动态分区](./table-design/data-partitioning/dynamic-partitioning)（`"dynamic_partition.enable" = "true"`），按天自动管理分区。
+- 使用时间字段上的 [Range 分区](../table-design/data-partitioning/manual-partitioning.md#range-分区)（`PARTITION BY RANGE(ts)`），并开启 [动态分区](../table-design/data-partitioning/dynamic-partitioning)（`"dynamic_partition.enable" = "true"`），按天自动管理分区。
 - 使用 Datetime 类型的时间字段作为 Key（`DUPLICATE KEY(ts)`），在查询最新 N 条日志时有数倍加速。
 
 **分桶**：
@@ -266,7 +266,7 @@ Apache Doris 通过以下两种机制支持 Flexible Schema：
 - 分桶数量大致为集群磁盘总数的 3 倍，每个桶压缩后数据量 5 GB 左右。
 - 使用 Random 策略（`DISTRIBUTED BY RANDOM BUCKETS 60`），配合写入时的 Single Tablet 导入，可提升批量（Batch）写入效率。
 
-更多分区分桶信息可参考 [数据划分](./table-design/data-partitioning/basic-concepts)。
+更多分区分桶信息可参考 [数据划分](../table-design/data-partitioning/basic-concepts)。
 
 #### 3.4.2 配置压缩参数
 
@@ -420,7 +420,7 @@ PROPERTIES (
     ./bin/logstash -f logstash_demo.conf
     ```
 
-更多配置说明可参考 [Logstash Doris Output Plugin](./connection-integration/data-integration/logstash)。
+更多配置说明可参考 [Logstash Doris Output Plugin](../connection-integration/data-integration/logstash)。
 
 #### 3.5.2 对接 Filebeat
 
@@ -495,7 +495,7 @@ PROPERTIES (
     ./filebeat-doris-2.1.1 -c filebeat_demo.yml
     ```
 
-更多配置说明可参考 [Beats Doris Output Plugin](./connection-integration/data-integration/beats)。
+更多配置说明可参考 [Beats Doris Output Plugin](../connection-integration/data-integration/beats)。
 
 #### 3.5.3 对接 Kafka
 
@@ -529,7 +529,7 @@ FROM KAFKA (
 SHOW ROUTINE LOAD;
 ```
 
-更多 Kafka 配置说明可参考 [Routine Load](./data-operate/import/import-way/routine-load-manual.md)。
+更多 Kafka 配置说明可参考 [Routine Load](../data-operate/import/import-way/routine-load-manual.md)。
 
 #### 3.5.4 使用自定义程序采集日志
 
