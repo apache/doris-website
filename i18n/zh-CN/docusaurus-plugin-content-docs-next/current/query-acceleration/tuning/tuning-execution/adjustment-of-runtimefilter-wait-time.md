@@ -1,21 +1,15 @@
 ---
 {
     "title": "RuntimeFilter 等待时间调整：解决 NOT_READY 与查询变慢",
+    "sidebar_label": "RuntimeFilter 调优",
     "language": "zh-CN",
     "description": "RuntimeFilter 等待超时未生效导致查询变慢？本文通过 Profile 定位 NOT_READY 状态，并给出 runtime_filter_wait_time_ms 调整方法。",
     "keywords": ["Doris RuntimeFilter", "runtime_filter_wait_time_ms", "RuntimeFilterState NOT_READY", "WaitForRuntimeFilter", "查询调优"]
 }
 ---
 
-# RuntimeFilter 等待时间调整：解决 NOT_READY 与查询变慢
-
 <!-- 知识类型：调优指南 -->
 <!-- 适用场景：因 RuntimeFilter 等待时间不合理（过短/过长）导致的查询性能问题 -->
-
-## 概述
-
-<!-- 知识类型：概念说明 -->
-<!-- 适用场景：理解 RuntimeFilter 与等待时间的作用 -->
 
 **RuntimeFilter** 是一种查询优化技术：在运行时根据 Join 右表生成过滤条件，下推到左表扫描阶段，从而减少 I/O 与计算量。
 
@@ -30,10 +24,10 @@
 
 在调整等待时间前，请确认：
 
-- [ ] 查询执行较慢，且包含 Join 操作
-- [ ] 已通过 `EXPLAIN` / `PROFILE` 获取执行计划与执行剖析
-- [ ] Profile 中存在 `WaitForRuntimeFilter` 字段
-- [ ] RuntimeFilter 状态为 `NOT_READY` 或 Join 构建耗时大于当前等待时间
+- 查询执行较慢，且包含 Join 操作
+- 已通过 `EXPLAIN` / `PROFILE` 获取执行计划与执行剖析
+- Profile 中存在 `WaitForRuntimeFilter` 字段
+- RuntimeFilter 状态为 `NOT_READY` 或 Join 构建耗时大于当前等待时间
 
 ## 关键参数
 
@@ -166,7 +160,7 @@ HASH_JOIN_OPERATOR (id=26 , nereids_id=37948):
 | `Ignored = true` | 过滤器选择性差，被自动忽略 | 检查 Join 选择性，无需强行启用 |
 | 扫描阶段长时间空等 | 等待时间过长，过滤器价值不高 | 适当调小 `runtime_filter_wait_time_ms` |
 
-## FAQ
+## 常见问题
 
 <!-- 知识类型：常见问题 -->
 <!-- 适用场景：排查 RuntimeFilter 相关疑问 -->

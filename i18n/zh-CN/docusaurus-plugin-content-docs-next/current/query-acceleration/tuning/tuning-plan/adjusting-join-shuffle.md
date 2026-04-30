@@ -10,16 +10,14 @@
 <!-- 知识类型：概念 + 操作 -->
 <!-- 适用场景：手动调整 Join 数据分发方式，优化查询性能 -->
 
-## 概述
-
 Distribute Hint 是 Doris 用于手动指定 Join 右表数据分发方式的提示语法。通过它可在特定场景下覆盖优化器的默认选择，从而优化 Join 性能。
 
 **调优前置 Checklist**：
 
--   已通过 `EXPLAIN SHAPE PLAN` 查看当前 Join 的分发方式
--   已确认默认计划存在性能瓶颈（如小表被 Shuffle、大表被 Broadcast）
--   了解两表的数据规模，可判断 Broadcast 与 Shuffle 的适用性
--   仅在专业调优场景使用 Hint，业务侧无需手工干预
+- 已通过 `EXPLAIN SHAPE PLAN` 查看当前 Join 的分发方式
+- 已确认默认计划存在性能瓶颈（如小表被 Shuffle、大表被 Broadcast）
+- 了解两表的数据规模，可判断 Broadcast 与 Shuffle 的适用性
+- 仅在专业调优场景使用 Hint，业务侧无需手工干预
 
 :::caution 注意
 当前 Doris 已经具备良好的开箱即用的能力，也就意味着在绝大多数场景下，Doris 会自适应的优化各种场景下的性能，无需用户来手工控制 Hint 来进行业务调优。本章介绍的内容主要面向专业调优人员，业务人员仅做简单了解即可。
@@ -118,7 +116,7 @@ EXPLAIN SHAPE PLAN SELECT COUNT(*) FROM t1 JOIN [broadcast] t2 ON t1.c1 = t2.c2;
 +----------------------------------------------------------------------------------+
 ```
 
-## FAQ 与故障排查
+## 常见问题
 
 <!-- 知识类型：FAQ / Troubleshooting -->
 <!-- 适用场景：Hint 未按预期生效或选择困难 -->

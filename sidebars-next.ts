@@ -420,6 +420,7 @@ const sidebars: SidebarsConfig = {
             type: 'category',
             label: 'Querying',
             collapsed: true,
+            link: {type: 'doc', id: 'query-data/querying-overview'},
             items: [
                 'query-data/mysql-compatibility',
                 'query-data/join',
@@ -439,6 +440,133 @@ const sidebars: SidebarsConfig = {
                 },
                 'query-data/complex-type',
                 'query-data/lateral-view',
+            ],
+        },
+        {
+            type: 'category',
+            label: 'Performance & Tuning',
+            collapsed: true,
+            link: {type: 'doc', id: 'query-acceleration/performance-tuning-intro'},
+            items: [
+                {
+                    type: 'category',
+                    label: 'Performance Tuning Overview',
+                    link: {type: 'doc', id: 'query-acceleration/performance-tuning-overview/tuning-overview'},
+                    items: [
+                        'query-acceleration/performance-tuning-overview/diagnostic-tools',
+                        'query-acceleration/performance-tuning-overview/analysis-tools',
+                        'query-acceleration/performance-tuning-overview/tuning-process',
+                    ],
+                },
+                {
+                    type: 'category',
+                    label: 'Query Performance',
+                    items: [
+                        {
+                            type: 'category',
+                            label: 'Schema & Index Optimization',
+                            link: {type: 'doc', id: 'query-acceleration/tuning/tuning-plan/schema-and-index-optimization'},
+                            items: [
+                                'query-acceleration/tuning/tuning-plan/optimizing-table-schema',
+                                'query-acceleration/tuning/tuning-plan/optimizing-table-index',
+                                'query-acceleration/tuning/tuning-plan/optimizing-table-scanning',
+                            ],
+                        },
+                        {
+                            type: 'category',
+                            label: 'Materialized View',
+                            link: {type: 'doc', id: 'query-acceleration/materialized-view/intro'},
+                            items: [
+                                'query-acceleration/materialized-view/overview',
+                                'query-acceleration/materialized-view/sync-materialized-view',
+                                'query-acceleration/tuning/tuning-plan/transparent-rewriting-with-sync-mv',
+                                {
+                                    type: 'category',
+                                    label: 'Async Materialized View',
+                                    link: {type: 'doc', id: 'query-acceleration/materialized-view/async-materialized-view/overview'},
+                                    items: [
+                                        'query-acceleration/materialized-view/async-materialized-view/functions-and-demands',
+                                        'query-acceleration/materialized-view/async-materialized-view/use-guide',
+                                        'query-acceleration/tuning/tuning-plan/transparent-rewriting-with-async-mv',
+                                        'query-acceleration/materialized-view/async-materialized-view/faq',
+                                    ],
+                                },
+                            ],
+                        },
+                        {
+                            type: 'category',
+                            label: 'Join Optimization',
+                            link: {type: 'doc', id: 'query-acceleration/join-optimization-intro'},
+                            items: [
+                                'query-acceleration/colocation-join',
+                                'query-acceleration/tuning/tuning-plan/adjusting-join-shuffle',
+                                'query-acceleration/tuning/tuning-plan/reordering-join-with-leading-hint',
+                            ],
+                        },
+                        {
+                            type: 'category',
+                            label: 'Caching',
+                            link: {type: 'doc', id: 'query-acceleration/caching-intro'},
+                            items: [
+                                'query-acceleration/sql-cache-manual',
+                                'query-acceleration/condition-cache',
+                            ],
+                        },
+                        {
+                            type: 'category',
+                            label: 'Execution Tuning',
+                            link: {type: 'doc', id: 'query-acceleration/tuning/tuning-execution/intro'},
+                            items: [
+                                'query-acceleration/tuning/tuning-execution/parallelism-tuning',
+                                'query-acceleration/tuning/tuning-execution/adjustment-of-runtimefilter-wait-time',
+                                'query-acceleration/tuning/tuning-execution/data-skew-handling',
+                                'query-acceleration/tuning/tuning-plan/controlling-hints-with-cbo-rule',
+                            ],
+                        },
+                        {
+                            type: 'category',
+                            label: 'High Concurrency & Point Queries',
+                            link: {type: 'doc', id: 'query-acceleration/high-concurrency-intro'},
+                            items: [
+                                'query-acceleration/high-concurrent-point-query',
+                                'query-acceleration/dictionary',
+                            ],
+                        },
+                        {
+                            type: 'category',
+                            label: 'Distinct Counts',
+                            link: {type: 'doc', id: 'query-acceleration/distinct-counts/intro'},
+                            items: [
+                                'query-acceleration/distinct-counts/bitmap-precise-deduplication',
+                                'query-acceleration/distinct-counts/hll-approximate-deduplication',
+                            ],
+                        },
+                        'query-acceleration/query-profile',
+                    ],
+                },
+                {
+                    type: 'category',
+                    label: 'Load Performance',
+                    items: [
+                        'query-acceleration/tuning/tuning-plan/dml-tuning-plan',
+                    ],
+                },
+                {
+                    type: 'category',
+                    label: 'Optimization Technology Principles',
+                    items: [
+                        'query-acceleration/optimization-technology-principle/query-optimizer',
+                        'query-acceleration/optimization-technology-principle/pipeline-execution-engine',
+                        'query-acceleration/optimization-technology-principle/runtime-filter',
+                        'query-acceleration/optimization-technology-principle/topn-optimization',
+                        'query-acceleration/optimization-technology-principle/statistics',
+                    ],
+                },
+                {
+                    type: 'category',
+                    label: 'Benchmarks',
+                    items: ['benchmark/ssb', 'benchmark/tpch', 'benchmark/tpcds'],
+                },
             ],
         },
         {
@@ -585,144 +713,6 @@ const sidebars: SidebarsConfig = {
                 'ai/ai-function-overview',
                 'ai/model-providers',
                 'ai/end-to-end-examples',
-            ],
-        },
-        {
-            type: 'category',
-            label: 'Performance & Tuning',
-            collapsed: true,
-            items: [
-                {
-                    type: 'category',
-                    label: 'Getting Started with Performance Tuning',
-                    items: [
-                        'query-acceleration/performance-tuning-overview/tuning-overview',
-                        'query-acceleration/performance-tuning-overview/diagnostic-tools',
-                        'query-acceleration/performance-tuning-overview/analysis-tools',
-                        'query-acceleration/performance-tuning-overview/tuning-process',
-                    ],
-                },
-                {
-                    type: 'category',
-                    label: 'Query Performance',
-                    items: [
-                        {
-                            type: 'category',
-                            label: 'Schema & Index Optimization',
-                            items: [
-                                'query-acceleration/tuning/tuning-plan/optimizing-table-schema',
-                                'query-acceleration/tuning/tuning-plan/optimizing-table-index',
-                                'query-acceleration/tuning/tuning-plan/optimizing-table-scanning',
-                            ],
-                        },
-                        {
-                            type: 'category',
-                            label: 'Materialized View',
-                            items: [
-                                'query-acceleration/materialized-view/overview',
-                                'query-acceleration/materialized-view/sync-materialized-view',
-                                'query-acceleration/tuning/tuning-plan/transparent-rewriting-with-sync-mv',
-                                {
-                                    type: 'category',
-                                    label: 'Async Materialized View',
-                                    items: [
-                                        'query-acceleration/materialized-view/async-materialized-view/overview',
-                                        'query-acceleration/materialized-view/async-materialized-view/functions-and-demands',
-                                        'query-acceleration/materialized-view/async-materialized-view/use-guide',
-                                        'query-acceleration/materialized-view/async-materialized-view/use-advice',
-                                        'query-acceleration/materialized-view/async-materialized-view/faq',
-                                        'query-acceleration/tuning/tuning-plan/transparent-rewriting-with-async-mv',
-                                    ],
-                                },
-                            ],
-                        },
-                        {
-                            type: 'category',
-                            label: 'Join Optimization',
-                            items: [
-                                'query-acceleration/colocation-join',
-                                'query-acceleration/tuning/tuning-plan/optimizing-join-with-colocate-group',
-                                'query-acceleration/tuning/tuning-plan/adjusting-join-shuffle',
-                                'query-acceleration/tuning/tuning-plan/reordering-join-with-leading-hint',
-                            ],
-                        },
-                        {
-                            type: 'category',
-                            label: 'Caching',
-                            items: [
-                                'query-acceleration/sql-cache-manual',
-                                'query-acceleration/condition-cache',
-                                'query-acceleration/tuning/tuning-plan/accelerating-queries-with-sql-cache',
-                            ],
-                        },
-                        {
-                            type: 'category',
-                            label: 'Execution Tuning',
-                            items: [
-                                'query-acceleration/tuning/tuning-execution/adjustment-of-runtimefilter-wait-time',
-                                'query-acceleration/tuning/tuning-execution/data-skew-handling',
-                                'query-acceleration/tuning/tuning-execution/parallelism-tuning',
-                                'query-acceleration/tuning/tuning-plan/controlling-hints-with-cbo-rule',
-                            ],
-                        },
-                        {
-                            type: 'category',
-                            label: 'High Concurrency & Point Queries',
-                            items: [
-                                'query-acceleration/high-concurrent-point-query',
-                                'query-acceleration/dictionary',
-                            ],
-                        },
-                        {
-                            type: 'category',
-                            label: 'Distinct Counts',
-                            items: [
-                                'query-acceleration/distinct-counts/bitmap-precise-deduplication',
-                                'query-acceleration/distinct-counts/hll-approximate-deduplication',
-                            ],
-                        },
-                        {
-                            type: 'category',
-                            label: 'Hints',
-                            items: [
-                                'query-acceleration/hints/hints-overview',
-                                'query-acceleration/hints/leading-hint',
-                                'query-acceleration/hints/distribute-hint',
-                            ],
-                        },
-                        {
-                            type: 'category',
-                            label: 'Query Profile & Parameters',
-                            items: [
-                                'query-acceleration/query-profile',
-                                'query-acceleration/tuning/tuning-parameters',
-                            ],
-                        },
-                    ],
-                },
-                {
-                    type: 'category',
-                    label: 'Load Performance',
-                    items: [
-                        'query-acceleration/tuning/tuning-plan/dml-tuning-plan',
-                    ],
-                },
-                {
-                    type: 'category',
-                    label: 'Optimization Technology Principles',
-                    items: [
-                        'query-acceleration/optimization-technology-principle/query-optimizer',
-                        'query-acceleration/optimization-technology-principle/pipeline-execution-engine',
-                        'query-acceleration/optimization-technology-principle/runtime-filter',
-                        'query-acceleration/optimization-technology-principle/topn-optimization',
-                        'query-acceleration/optimization-technology-principle/statistics',
-                    ],
-                },
-                {
-                    type: 'category',
-                    label: 'Benchmarks',
-                    items: ['benchmark/ssb', 'benchmark/tpch', 'benchmark/tpcds'],
-                },
             ],
         },
         {

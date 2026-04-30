@@ -37,7 +37,7 @@ After inspecting and tuning the business schema, the main task of tuning begins:
 
 - For single-table query and analysis scenarios, you can analyze the execution plan to check if [partition pruning](../tuning/tuning-plan/optimizing-table-scanning.md) is working properly and [use single-table materialized views for query acceleration](../tuning/tuning-plan/transparent-rewriting-with-sync-mv.md).
 - For complex multi-table analysis scenarios, you can analyze the Join Order to determine if it is reasonable and identify specific performance bottlenecks. You can also [use multi-table materialized views for transparent rewriting to accelerate queries](../tuning/tuning-plan/transparent-rewriting-with-async-mv.md). If unexpected situations occur, such as unreasonable Join Order, you can manually specify the Join Hint to bind the execution plan, such as [using the Leading hint to control Join Order](../tuning/tuning-plan/reordering-join-with-leading-hint.md), [using the Shuffle Hint to adjust the Join shuffle method](../tuning/tuning-plan/adjusting-join-shuffle.md), and [using Hints to control cost-based optimization rules](../tuning/tuning-plan/controlling-hints-with-cbo-rule.md), to achieve the goal of tuning the execution plan.
-- For specific scenarios, you can also leverage advanced features provided by Doris, such as [using SQL Cache to accelerate queries](../tuning/tuning-plan/accelerating-queries-with-sql-cache.md).
+- For specific scenarios, you can also leverage advanced features provided by Doris, such as [using SQL Cache to accelerate queries](../sql-cache-manual.md).
 
 For detailed tuning examples, please refer to the documentation on [Plan Tuning](../tuning/tuning-plan/optimizing-table-schema.md).
 

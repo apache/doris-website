@@ -1,6 +1,7 @@
 ---
 {
     "title": "Leading Hint 控制 Join 顺序：手工指定连接顺序优化查询",
+    "sidebar_label": "Leading Hint 控制 Join 顺序",
     "language": "zh-CN",
     "description": "如何用 Leading Hint 在 Doris 中手工指定 Join 顺序？本文给出左右调换、左深树、右深树、Bushy 树及与 Distribute Hint 混用的实操示例。",
     "keywords": ["Doris Leading Hint", "Join 顺序", "左深树", "右深树", "Bushy 树", "Distribute Hint", "Nereids Planner", "查询调优"]
@@ -10,19 +11,14 @@
 <!-- 知识类型：概念 + 操作 -->
 <!-- 适用场景：复杂多表 Join 调优、CBO 选择不理想时的人工干预 -->
 
-## 概述
-
-<!-- 知识类型：概念 -->
-<!-- 适用场景：理解 Leading Hint 的定位 -->
-
 **Leading Hint** 是一种在 SQL 中手工指定多表 Join 连接顺序的提示语法，用于在特定场景下优化复杂查询的执行计划。详细语法可参考 [leading hint](../../../query-acceleration/hints/leading-hint.md) 文档。
 
-### 适用读者 Checklist
+### 阅读须知
 
-- [ ] 已了解 Doris Nereids 优化器与 `EXPLAIN SHAPE PLAN` 输出
-- [ ] 当前查询为多表 Join，且优化器自动选择的顺序未达预期
-- [ ] 需要将 Join 形态控制为左深树 / 右深树 / Bushy 树
-- [ ] 需要同时控制 Join 顺序与分发方式（Shuffle / Broadcast）
+- 已了解 Doris Nereids 优化器与 `EXPLAIN SHAPE PLAN` 输出
+- 当前查询为多表 Join，且优化器自动选择的顺序未达预期
+- 需要将 Join 形态控制为左深树 / 右深树 / Bushy 树
+- 需要同时控制 Join 顺序与分发方式（Shuffle / Broadcast）
 
 :::caution 注意
 当前 Doris 已具备良好的开箱即用能力：在绝大多数场景下，优化器会自适应地优化各种场景下的性能，**无需用户手工使用 Hint 调优**。本章内容主要面向专业调优人员，业务人员了解即可。
@@ -288,7 +284,7 @@ explain shape plan
 - Doris 版本升级或业务数据变更后，应重新评估 Leading Hint 的效果，及时记录与调整。
 :::
 
-## FAQ / Troubleshooting
+## 常见问题
 
 <!-- 知识类型：故障排查 -->
 <!-- 适用场景：Hint 不生效或行为不符合预期 -->

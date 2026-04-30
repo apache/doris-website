@@ -1,6 +1,7 @@
 ---
 {
     "title": "异步物化视图透明改写：如何加速复杂查询",
+    "sidebar_label": "异步物化视图透明改写",
     "language": "zh-CN",
     "description": "如何使用 Doris 异步物化视图实现透明改写？本文介绍 SPJG 模式改写算法、操作示例与命中验证方法，帮助加速复杂连接与聚合查询。",
     "keywords": ["Doris 异步物化视图", "透明改写", "SPJG", "查询加速", "explain shape plan", "物化视图命中"]
@@ -10,16 +11,14 @@
 <!-- 知识类型：概念 + 操作指南 -->
 <!-- 适用场景：复杂 JOIN/聚合查询性能优化 -->
 
-## 一句话定义
-
 异步物化视图透明改写是指 Doris 自动分析查询 SQL 结构，将其改写为基于已有物化视图的等价查询，从而复用预计算结果以加速查询。
 
-## 阅读前 Checklist
+## 阅读须知
 
-- [ ] 已了解[异步物化视图](../../materialized-view/async-materialized-view/overview.md)的基本概念
-- [ ] 已具备 SQL 与 EXPLAIN 使用经验
-- [ ] 查询符合 SPJG（SELECT-PROJECT-JOIN-GROUP-BY）模式
-- [ ] 拥有创建物化视图与查询表的权限
+- 已了解[异步物化视图](../../materialized-view/async-materialized-view/overview.md)的基本概念
+- 已具备 SQL 与 EXPLAIN 使用经验
+- 查询符合 SPJG（SELECT-PROJECT-JOIN-GROUP-BY）模式
+- 拥有创建物化视图与查询表的权限
 
 ## 概述
 
@@ -225,7 +224,7 @@ mysql> explain shape plan SELECT l_shipdate, SUM(o_totalprice) AS total_price
 
 :::
 
-## FAQ 与 Troubleshooting
+## 常见问题
 
 <!-- 知识类型：常见问题 -->
 <!-- 适用场景：排查改写未命中、性能不如预期 -->

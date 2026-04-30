@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Doris 慢 SQL 性能分析工具：Explain 与 Profile 使用指南",
+    "title": "慢 SQL 分析工具：Explain 与 Profile",
     "language": "zh-CN",
     "description": "如何分析 Doris 慢 SQL 的性能瓶颈？本文介绍 Explain、Profile 与系统级工具的使用方法，帮助快速定位计划与执行层问题。",
     "keywords": ["Doris 性能分析", "Doris Explain", "Doris Profile", "慢 SQL 分析", "Merged Profile", "Execution Profile", "PipelineTask"]
@@ -10,19 +10,14 @@
 <!-- 知识类型：概念 + 工具使用指南 -->
 <!-- 适用场景：定位到慢 SQL 后，需进一步分析瓶颈在计划层、执行层还是系统层 -->
 
-## 概述
-
-<!-- 知识类型：概念 -->
-<!-- 适用场景：了解慢 SQL 性能分析的整体方法论 -->
-
 性能分析工具用于在已定位到慢 SQL 后，进一步确定性能瓶颈所在环节。上一节[诊断工具](diagnostic-tools.md)帮助业务和运维人员定位到具体的慢 SQL，本章节介绍如何分析这些慢 SQL 的性能瓶颈。
 
 **开篇 Checklist**：开始分析前，请确认你已具备以下条件：
 
-- [ ] 已通过诊断工具定位到具体的慢 SQL
-- [ ] 可访问 Doris FE 并具备执行 `EXPLAIN` 的权限
-- [ ] 可获取该 SQL 的 Profile（已开启 Profile 收集）
-- [ ] 可访问 BE 节点用于查看系统级性能指标（CPU/内存/IO/网络）
+- 已通过诊断工具定位到具体的慢 SQL
+- 可访问 Doris FE 并具备执行 `EXPLAIN` 的权限
+- 可获取该 SQL 的 Profile（已开启 Profile 收集）
+- 可访问 BE 节点用于查看系统级性能指标（CPU/内存/IO/网络）
 
 ### SQL 执行的两阶段与三类瓶颈
 
@@ -236,7 +231,7 @@ PipelineTask  (index=1):(ExecTime:  4.773ms)
 | 磁盘 IO  | iostat、sar           | 观察磁盘读写速率与等待时间     |
 | 网络     | sar、netstat          | 观察网络流量与连接状态         |
 
-## FAQ 与 Troubleshooting
+## 常见问题
 
 <!-- 知识类型：FAQ -->
 <!-- 适用场景：使用分析工具时遇到的常见问题 -->

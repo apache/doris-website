@@ -14,8 +14,6 @@ keywords:
 <!-- 知识类型: Feature 介绍 / 操作步骤 / 配置参数 -->
 <!-- 适用场景: 多表 Join 查询性能调优 -->
 
-## 一句话定义
-
 Colocation Join 是 Doris 提供的一种 Join 优化能力：通过将多张表按相同规则共置（Colocate）到相同的 BE 节点上，使分桶列上的 Join 操作可在本地完成，避免跨节点数据传输，从而加速查询。
 
 本文档主要介绍 Colocation Join 的原理、实现、使用方式和注意事项。
@@ -24,15 +22,17 @@ Colocation Join 是 Doris 提供的一种 Join 优化能力：通过将多张表
 该属性不会被 CCR 同步。如果该表是被 CCR 复制而来的（即 `PROPERTIES` 中包含 `is_being_synced = true`），那么该属性会在该表中被擦除。
 :::
 
-## 快速导航
+## 适用前提 Checklist
 
-- [名词解释](#名词解释)：Colocation Group 与 Colocation Group Schema 的定义
-- [原理](#原理)：数据如何按 BucketsSequence 共置分布
-- [使用方式](#使用方式)：建表、删表、查看、修改 Group
-- [副本均衡和修复](#colocation-副本均衡和修复)：Stable / Unstable 状态说明
-- [查询](#查询)：如何确认 Colocation Join 是否生效
-- [高级操作](#高级操作)：FE 配置项与 HTTP Restful API
-- [FAQ 与故障排查](#faq-与故障排查)
+<!-- 知识类型：前置检查 -->
+<!-- 适用场景：判断查询是否可受益于 Colocation Join -->
+
+在使用 Colocation Join 前，请先确认：
+
+-   两张及以上参与 Join 的表已加入同一个 Colocation Group。
+-   Join Key 与分桶列（Distribution Key）一致。
+-   表的副本数与分桶数相同，且数据分布稳定（`IsStable = true`）。
+-   查询中存在明显的大表 Join 大表导致的 Shuffle 性能瓶颈。
 
 ## 名词解释
 
@@ -44,6 +44,8 @@ Colocation Join 是 Doris 提供的一种 Join 优化能力：通过将多张表
 ## 原理
 
 <!-- 知识类型: 架构原理 -->
+
+![colocation-group](/images/next/query-acceleration/colocation-group.jpg)
 
 Colocation Join 功能将一组拥有相同 CGS 的 Table 组成一个 CG，并保证这些 Table 对应的数据分片会落在同一个 BE 节点上。这样，当 CG 内的表进行分桶列上的 Join 操作时，可直接进行本地数据 Join，减少数据在节点间的传输耗时。
 
@@ -413,6 +415,17 @@ DESC SELECT * FROM tbl1 INNER JOIN tbl2 ON (tbl1.k2 = tbl2.k2);
 
 HASH JOIN 节点会显示对应原因：`colocate: false, reason: group is not stable`，同时会有一个 EXCHANGE 节点生成。
 
+### Join 类型对比
+
+为帮助判断当前查询是否走到 Colocation Join，下表对比了 Doris 中常见的几种 Join 类型：
+
+| Join 类型               | 是否 Shuffle 数据 | 触发条件                                      |
+| :---------------------- | :---------------- | :-------------------------------------------- |
+| Colocate Join           | 否                | 表加入同一 Colocate Group 且 `IsStable=true`  |
+| Bucket Shuffle Join     | 部分（一侧）      | Join Key 与左表分桶列一致                     |
+| Shuffle Join            | 是（双侧）        | 不满足上述条件时的默认行为                    |
+| Broadcast Join          | 是（小表广播）    | 右表数据量较小                                |
+
 ## 高级操作
 
 <!-- 知识类型: 配置参数 / 运维操作 -->
@@ -497,13 +510,21 @@ Body:
 使用该命令，可能需要将 FE 的配置 `disable_colocate_relocate` 和 `disable_colocate_balance` 设为 true，即关闭系统自动的 Colocation 副本修复和均衡，否则可能在修改后被系统自动重置。
 :::
 
-## FAQ 与故障排查
+## 常见问题
 
 <!-- 知识类型: 故障排查 -->
 
 ### 查询计划中出现 `colocate: false, reason: group is not stable`
 
 说明 Group 当前处于 Unstable 状态，可能正在进行副本修复或均衡。此时 Join 会退化为普通 Join，待 Group 恢复 Stable 后即可重新使用 Colocation Join。可通过 `SHOW PROC '/colocation_group';` 查看 `IsStable` 字段。
+
+### 如何确认 Colocation Group 当前是否可用
+
+执行 `SHOW PROC "/colocation_group";`，查看 `IsStable` 字段：`true` 表示可用，Join 可走 Colocate 计划；`false` 表示暂不可用，Doris 正在均衡数据。
+
+### `IsStable=false` 会持续多久
+
+取决于数据迁移规模和集群负载，等待 Doris 完成 tablet 均衡后会自动恢复。如长期处于 `false`，可参考下文条目排查。
 
 ### 建表时报错：表无法加入指定 Group
 

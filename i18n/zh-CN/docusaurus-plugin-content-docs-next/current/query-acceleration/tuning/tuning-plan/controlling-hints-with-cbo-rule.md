@@ -1,6 +1,7 @@
 ---
 {
     "title": "使用 Hint 控制 CBO 规则进行代价改写",
+    "sidebar_label": "CBO 规则控制",
     "language": "zh-CN",
     "description": "如何在 Doris 中通过 USE_CBO_RULE Hint 显式启用 CBO 代价改写规则？本文介绍语法、可用规则及聚合下推等典型场景示例。",
     "keywords": ["Doris CBO Hint", "USE_CBO_RULE", "代价改写", "聚合下推", "查询优化器", "RBO 与 CBO"]
@@ -12,9 +13,9 @@
 
 ## 阅读前 Checklist
 
-- [ ] 你已了解 Doris 优化器的基本工作流程
-- [ ] 你需要在特定查询中启用某条 CBO 规则（如聚合下推）
-- [ ] 你的角色是 DBA 或专业调优人员，而非普通业务开发
+- 你已了解 Doris 优化器的基本工作流程
+- 你需要在特定查询中启用某条 CBO 规则（如聚合下推）
+- 你的角色是 DBA 或专业调优人员，而非普通业务开发
 
 :::caution 注意
 当前 Doris 已具备良好的开箱即用能力，绝大多数场景下会自适应地优化性能，无需手动使用 Hint 调优。本文内容主要面向**专业调优人员**，业务人员了解概念即可。
@@ -24,7 +25,7 @@
 
 <!-- 知识类型：概念 -->
 
-**一句话定义**：`USE_CBO_RULE` 是一种查询 Hint，用于在单条 SQL 中显式启用指定的 CBO 代价改写规则。
+`USE_CBO_RULE` 是一种查询 Hint，用于在单条 SQL 中显式启用指定的 CBO 代价改写规则。
 
 Doris 优化器在生成执行计划时会应用两类规则：
 
@@ -105,7 +106,7 @@ PhysicalResultSink
 
 可以看到，表 `a` 的扫描之上多了一层 `hashAgg[LOCAL]`，实现了 Join 前的提前聚合，从而降低 Join 输入规模、加速查询。
 
-## FAQ 与常见问题
+## 常见问题
 
 <!-- 知识类型：FAQ / Troubleshooting -->
 

@@ -12,15 +12,15 @@
 
 异步物化视图是一种兼具视图灵活性与物理表高性能的查询加速方案。它通过预先计算并存储查询结果，使后续查询能直接命中已物化的结果集，避免重复执行复杂 SQL 带来的开销。
 
-## 快速导览（Checklist）
+## 快速导览
 
 在开始使用异步物化视图前，建议先确认以下要点：
 
-- [ ] 业务是否需要查询加速、ETL 简化、湖仓外表加速或写入优化？
-- [ ] 查询是否符合 SPJG（SELECT-PROJECT-JOIN-GROUP-BY）模式？
-- [ ] 数据是否可以接受最终一致性（非实时同步）？
-- [ ] 基表所在的 Catalog 是否在受支持范围内（Internal/Hive/Iceberg/Paimon/Hudi/JDBC/ES）？
-- [ ] 是否需要分区增量刷新以降低刷新成本？
+- 业务是否需要查询加速、ETL 简化、湖仓外表加速或写入优化？
+- 查询是否符合 SPJG（SELECT-PROJECT-JOIN-GROUP-BY）模式？
+- 数据是否可以接受最终一致性（非实时同步）？
+- 基表所在的 Catalog 是否在受支持范围内（Internal/Hive/Iceberg/Paimon/Hudi/JDBC/ES）？
+- 是否需要分区增量刷新以降低刷新成本？
 
 ## 使用场景
 
@@ -245,7 +245,7 @@ SET materialized_view_rewrite_enable_contain_external_table = true;
 - **列数据类型**：物化视图的列数据类型由创建时指定的查询语句自动推导，不能修改，否则可能导致刷新任务失败。
 - **属性修改**：物化视图具有一些 Duplicate 表没有的属性（property），需通过物化视图的命令修改；其他公用属性则使用 `ALTER TABLE` 命令修改。
 
-## 常见问题（FAQ）
+## 常见问题
 
 <!-- 知识类型：问答 -->
 
@@ -272,6 +272,5 @@ SET materialized_view_rewrite_enable_contain_external_table = true;
 ## 更多参考
 
 - 创建、查询与维护异步物化视图：[创建、查询与维护异步物化视图](../async-materialized-view/functions-and-demands.md)
-- 最佳实践：[最佳实践](../async-materialized-view/use-guide.md)
-- 使用建议：[使用建议](../async-materialized-view/use-advice.md)
+- 使用指南：[使用指南](../async-materialized-view/use-guide.md)
 - 常见问题：[常见问题](../async-materialized-view/faq.md)
