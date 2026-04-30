@@ -134,6 +134,7 @@ const sidebars: SidebarsConfig = {
                         'connection-integration/data-integration/finebi',
                         'connection-integration/data-integration/flink-doris-connector',
                         'connection-integration/data-integration/fluentbit',
+                        'connection-integration/data-integration/hive-udf',
                         'connection-integration/data-integration/kettle',
                         'connection-integration/data-integration/kyuubi',
                         'connection-integration/data-integration/langfuse',
@@ -301,6 +302,7 @@ const sidebars: SidebarsConfig = {
                                 'data-operate/import/import-way/insert-into-manual',
                                 'data-operate/import/import-way/insert-into-values-manual',
                                 'data-operate/import/import-way/mysql-load-manual',
+                                'data-operate/import/import-way/spark-load',
                                 {
                                     type: 'category',
                                     label: 'Continuous Load',
@@ -572,13 +574,13 @@ const sidebars: SidebarsConfig = {
         {
             type: 'category',
             label: 'Lakehouse',
+            link: {type: 'doc', id: 'lakehouse/lakehouse-overview'},
             collapsed: true,
             items: [
-                'lakehouse/lakehouse-overview',
-                'lakehouse/catalog-overview',
                 {
                     type: 'category',
                     label: 'Data Catalogs',
+                    link: {type: 'doc', id: 'lakehouse/catalog-overview'},
                     items: [
                         'lakehouse/catalogs/hive-catalog',
                         {
@@ -692,27 +694,6 @@ const sidebars: SidebarsConfig = {
                         'lakehouse/best-practices/tpcds',
                     ],
                 },
-            ],
-        },
-        {
-            type: 'category',
-            label: 'Hybrid Search',
-            collapsed: true,
-            items: [
-                'hybrid-search/overview',
-                'hybrid-search/recipes',
-                'hybrid-search/rag',
-            ],
-        },
-        {
-            type: 'category',
-            label: 'AI',
-            collapsed: true,
-            items: [
-                'ai/ai-overview',
-                'ai/ai-function-overview',
-                'ai/model-providers',
-                'ai/end-to-end-examples',
             ],
         },
         {
@@ -1022,33 +1003,6 @@ const sidebars: SidebarsConfig = {
                                 'admin-manual/open-api/be-http/be-vlog',
                             ],
                         },
-                    ],
-                },
-            ],
-        },
-        {
-            type: 'category',
-            label: 'Observability with Doris',
-            collapsed: true,
-            items: [
-                'observability/overview',
-                'observability/log',
-                'observability/trace',
-                'observability/log-storage-analysis'
-            ],
-        },
-        {
-            type: 'category',
-            label: 'Ecosystem & Integrations',
-            collapsed: true,
-            items: [
-                {
-                    type: 'category',
-                    label: 'ETL & Workflow',
-                    items: [
-                        'ecosystem/hive-bitmap-udf',
-                        'ecosystem/hive-hll-udf',
-                        'ecosystem/spark-load',
                     ],
                 },
             ],
@@ -2625,6 +2579,25 @@ const sidebars: SidebarsConfig = {
                         },
                     ],
                 },
+            ],
+        },
+        {
+            type: 'category',
+            label: 'Doris for AI',
+            link: {type: 'doc', id: 'ai/ai-overview'},
+            collapsed: true,
+            items: [
+                'ai/ai-function-overview',
+            ],
+        },
+        {
+            type: 'category',
+            label: 'Observability with Doris',
+            link: {type: 'doc', id: 'observability/overview'},
+            collapsed: true,
+            items: [
+                'observability/log',
+                'observability/trace',
             ],
         },
     ],

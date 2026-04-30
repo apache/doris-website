@@ -272,8 +272,6 @@ env.fromSource(dorisSource, WatermarkStrategy.noWatermarks(), "doris source").pr
 env.execute("Doris Source Test");
 ```
 
-完整代码参考：[DorisSourceDataStream.java](https://github.com/apache/doris-flink-connector/blob/master/flink-doris-connector/src/test/java/org/apache/doris/flink/example/DorisSourceDataStream.java)。
-
 ### 场景二：写入 Doris 数据
 
 Flink 通过 Stream Load 写入 Doris，支持流式写入和攒批写入两种模式。
@@ -380,8 +378,6 @@ env.fromCollection(data).sinkTo(builder.build());
 env.execute("doris test");
 ```
 
-完整代码参考：[DorisSinkExample.java](https://github.com/apache/doris-flink-connector/blob/master/flink-doris-connector/src/test/java/org/apache/doris/flink/example/DorisSinkExample.java)。
-
 ##### RowData 格式
 
 `RowData` 是 Flink 内部格式，如果上游传入的是 RowData 格式，需要使用 `RowDataSerializer` 序列化数据。
@@ -449,8 +445,6 @@ source.sinkTo(builder.build());
 env.execute("doris test");
 ```
 
-完整代码参考：[DorisSinkExampleRowData.java](https://github.com/apache/doris-flink-connector/blob/master/flink-doris-connector/src/test/java/org/apache/doris/flink/example/DorisSinkExampleRowData.java)。
-
 ##### Debezium 格式
 
 对于上游是 Debezium 数据格式的数据（如 Flink CDC 或 Kafka 中 Debezium 格式数据），可使用 `JsonDebeziumSchemaSerializer` 序列化。
@@ -482,8 +476,6 @@ builder.setDorisReadOptions(DorisReadOptions.builder().build())
 env.fromSource(mySqlSource, WatermarkStrategy.noWatermarks(), "MySQL Source")
         .sinkTo(builder.build());
 ```
-
-完整代码参考：[CDCSchemaChangeExample.java](https://github.com/apache/doris-flink-connector/blob/master/flink-doris-connector/src/test/java/org/apache/doris/flink/example/CDCSchemaChangeExample.java)。
 
 ##### 多表写入格式
 
@@ -521,8 +513,6 @@ RecordWithMeta record = new RecordWithMeta("test", "student_1", "1,David,18");
 RecordWithMeta record1 = new RecordWithMeta("test", "student_2", "1,Jack,28");
 env.fromCollection(Arrays.asList(record, record1)).sinkTo(builder.build());
 ```
-
-完整代码参考：[DorisSinkMultiTableExample.java](https://github.com/apache/doris-flink-connector/blob/master/flink-doris-connector/src/test/java/org/apache/doris/flink/example/DorisSinkMultiTableExample.java)。
 
 ### 场景三：Lookup Join 维表关联
 
@@ -827,7 +817,7 @@ Flink Doris Connector 集成了 [Flink CDC](https://nightlies.apache.org/flink/f
 | Key                         | Default Value | Required | Comment                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
 | --------------------------- | ------------- | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | sink.label-prefix           | --            | Y        | Stream Load 导入使用的 label 前缀。2pc 场景下要求全局唯一，用来保证 Flink 的 EOS 语义。                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
-| sink.properties.*           | --            | N        | Stream Load 的导入参数。例如：`'sink.properties.column_separator' = ', '` 定义列分隔符；`'sink.properties.escape_delimiters' = 'true'` 表示特殊字符作为分隔符，`\x01` 会被转换为二进制的 `0x01`；JSON 格式导入：`'sink.properties.format' = 'json'`、`'sink.properties.read_json_by_line' = 'true'`，详细参数参考 [Stream Load](../../data-operate/import/import-way/stream-load-manual.md#导入配置参数)。Group Commit 模式：`'sink.properties.group_commit' = 'sync_mode'` 设置 group commit 为同步模式。Flink Connector 从 1.6.2 开始支持导入配置 group commit，详细使用与限制参考 [Group Commit](../../data-operate/import/group-commit-manual.md)。 |
+| sink.properties.*           | --            | N        | Stream Load 的导入参数。例如：`'sink.properties.column_separator' = ', '` 定义列分隔符；`'sink.properties.escape_delimiters' = 'true'` 表示特殊字符作为分隔符，`\x01` 会被转换为二进制的 `0x01`；JSON 格式导入：`'sink.properties.format' = 'json'`、`'sink.properties.read_json_by_line' = 'true'`，详细参数参考 [Stream Load](../../data-operate/import/import-way/stream-load-manual.md#导入配置参数)。Group Commit 模式：`'sink.properties.group_commit' = 'sync_mode'` 设置 group commit 为同步模式。Flink Connector 从 1.6.2 开始支持导入配置 group commit，详细使用与限制参考 [Group Commit](../../data-operate/import/load-best-practices/group-commit-manual.md)。 |
 | sink.enable-delete          | TRUE          | N        | 是否启用删除。此选项需要 Doris 表开启批量删除功能（Doris 0.15+ 版本默认开启），只支持 Unique 模型。                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
 | sink.enable-2pc             | TRUE          | N        | 是否开启两阶段提交（2pc），默认为 true，保证 Exactly-Once 语义。关于两阶段提交可参考 [Stream Load 2PC](../../data-operate/transaction.md#streamload-2pc)。                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
 | sink.buffer-size            | 1MB           | N        | 写数据缓存 buffer 大小，单位字节。不建议修改，默认配置即可                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
@@ -1107,7 +1097,7 @@ from KAFKA_SOURCE;
 
 同步 MySQL 等上游数据源时，上游增加或删除字段时需要在 Doris 中同步进行 Schema Change 操作。
 
-针对此场景，通常需要编写 DataStream API 的程序，并使用 DorisSink 提供的 `JsonDebeziumSchemaSerializer` 序列化即可自动完成 Schema Change，具体可参考 [CDCSchemaChangeExample.java](https://github.com/apache/doris-flink-connector/blob/master/flink-doris-connector/src/test/java/org/apache/doris/flink/example/CDCSchemaChangeExample.java)。
+针对此场景，通常需要编写 DataStream API 的程序，并使用 DorisSink 提供的 `JsonDebeziumSchemaSerializer` 序列化即可自动完成 Schema Change。
 
 在 Connector 提供的整库同步工具中，无需额外配置，会自动同步上游 DDL 并在 Doris 进行 Schema Change 操作。
 

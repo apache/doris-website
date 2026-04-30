@@ -28,7 +28,7 @@
 
 在执行迁移前，请关注以下要点：
 
-- **建模与分区策略**：根据 Redshift 源表结构选择合适的 Doris [数据模型](../../../table-design/data-model/intro.mdx)，并制定[分区](../../../table-design/data-partitioning/dynamic-partitioning.md)与[分桶](../../../table-design/data-partitioning/data-bucketing.md)策略。更多建表建议见[导入最佳实践](../load-best-practices.md)。
+- **建模与分区策略**：根据 Redshift 源表结构选择合适的 Doris [数据模型](../../../table-design/data-model/intro.mdx)，并制定[分区](../../../table-design/data-partitioning/dynamic-partitioning.md)与[分桶](../../../table-design/data-partitioning/data-bucketing.md)策略。更多建表建议见[导入最佳实践](../load-best-practices/load-best-practices.md)。
 - **类型转换**：Redshift 导出 `TIME` 类型时，需要先 `CAST` 成 `VARCHAR` 类型再导出。
 - **复杂类型限制**：含有复杂类型（Struct/Array/Map）的 Parquet/ORC 格式文件，目前必须使用 [TVF 导入](./amazon-s3.md#load-with-tvf)。
 

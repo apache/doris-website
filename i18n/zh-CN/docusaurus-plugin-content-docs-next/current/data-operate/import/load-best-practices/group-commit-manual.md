@@ -55,7 +55,7 @@ Group Commit 写入有三种模式，分别是：
 
     Doris 首先将数据写入 WAL（`Write Ahead Log`），然后导入立即返回。Doris 会根据负载和表的 `group_commit_interval` 属性异步提交数据，提交之后数据可见。为了防止 WAL 占用较大的磁盘空间，单次导入数据量较大时，会自动切换为 `sync_mode`。这适用于写入延迟敏感以及高频写入的场景。
 
-    WAL 的数量可以通过 FE HTTP 接口查看，具体可见[这里](../../admin-manual/open-api/fe-http/get-wal-size-action)，也可以在 BE 的 metrics 中搜索关键词 `wal` 查看。
+    WAL 的数量可以通过 FE HTTP 接口查看，具体可见[这里](../../../admin-manual/open-api/fe-http/get-wal-size-action)，也可以在 BE 的 metrics 中搜索关键词 `wal` 查看。
 
 ## 快速上手
 
@@ -281,7 +281,7 @@ set enable_prepared_stmt_audit_log=true;
 ```
 :::
 
-关于 **JDBC** 的更多用法，参考[使用 Insert 方式同步数据](./import-way/insert-into-manual.md)。
+关于 **JDBC** 的更多用法，参考[使用 Insert 方式同步数据](../import-way/insert-into-manual.md)。
 
 ### 使用 Golang 客户端攒批
 
@@ -459,7 +459,7 @@ curl --location-trusted -u {user}:{passwd} -T data.csv -H "group_commit:sync_mod
 # 返回的 Label 是 group_commit 开头的，是真正消费数据的导入关联的 label
 ```
 
-关于 Stream Load 使用的更多详细语法及最佳实践，请参阅 [Stream Load](./import-way/stream-load-manual)。
+关于 Stream Load 使用的更多详细语法及最佳实践，请参阅 [Stream Load](../import-way/stream-load-manual)。
 
 ## 自动提交条件
 
@@ -559,7 +559,7 @@ ALTER TABLE dt SET ("group_commit_data_bytes" = "134217728");
 
 **测试工具：**
 
-- [doris-streamloader](../../connection-integration/data-integration/doris-streamloader.md)
+- [doris-streamloader](../../../connection-integration/data-integration/doris-streamloader.md)
 
 **测试方法：**
 

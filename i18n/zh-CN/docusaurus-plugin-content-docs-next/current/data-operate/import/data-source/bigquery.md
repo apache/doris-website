@@ -27,7 +27,7 @@
 
 在开始迁移前，请关注以下事项以避免常见问题：
 
-- **表结构设计**：需要根据 BigQuery 的表结构选择 Doris 的[数据模型](../../../table-design/data-model/intro.mdx)，以及[分区](../../../table-design/data-partitioning/dynamic-partitioning.md)和[分桶](../../../table-design/data-partitioning/data-bucketing.md)的策略，更多创建表策略可参考[导入最佳实践](../load-best-practices.md)。
+- **表结构设计**：需要根据 BigQuery 的表结构选择 Doris 的[数据模型](../../../table-design/data-model/intro.mdx)，以及[分区](../../../table-design/data-partitioning/dynamic-partitioning.md)和[分桶](../../../table-design/data-partitioning/data-bucketing.md)的策略，更多创建表策略可参考[导入最佳实践](../load-best-practices/load-best-practices.md)。
 - **JSON 类型导出**：BigQuery 导出 JSON 类型时不支持 Parquet 格式，需要使用 JSON 格式导出。
 - **Time 类型导出**：BigQuery 导出 Time 类型时，需要 Cast 为 String 类型导出。
 - **复杂类型导入**：含有复杂类型（Struct/Array/Map）的 Parquet/ORC 格式文件导入，目前必须使用 [TVF 导入](./amazon-s3.md#load-with-tvf)。

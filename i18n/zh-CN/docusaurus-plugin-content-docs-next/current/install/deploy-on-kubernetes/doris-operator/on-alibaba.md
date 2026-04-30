@@ -70,7 +70,7 @@ echo never > /sys/kernel/mm/transparent_hugepage/enabled
 echo never > /sys/kernel/mm/transparent_hugepage/defrag
 ```
 
-详细说明请参考：[操作系统检查](../../install/preparation/os-checking.md)
+详细说明请参考：[操作系统检查](../../preparation/os-checking.md)
 
 ### 场景二：新建集群
 

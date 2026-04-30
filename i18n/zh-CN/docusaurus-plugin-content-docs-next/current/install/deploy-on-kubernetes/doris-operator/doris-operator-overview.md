@@ -72,7 +72,7 @@ Doris 集群的核心组件包括：
 - **运行时调试**：  
 
   容器化服务对于 Trouble Shooting 来说最大挑战之一是如何在运行时进行调试。Doris Operator 在追求可用性和易用性的同时，也为问题定位提供了更便利的条件。在 Doris 的基础镜像中，预置了多种用于问题定位的工具。当需要实时查看状态时，可以通过 kubectl 提供的 exec 命令进入容器，使用内置工具进行故障排查。
-  当服务因未知原因无法启动时，Doris Operator 提供了 Debug 运行模式。当一个 Pod 被设置为 Debug 启动模式时，容器将自动进入运行状态。这时可通过 `exec` 命令进入容器，手动启动服务并进行问题定位。详细请参考 [此文档](../../install/deploy-on-kubernetes/integrated-storage-compute/cluster-operation#服务-crash-情况下如何进入容器)
+  当服务因未知原因无法启动时，Doris Operator 提供了 Debug 运行模式。当一个 Pod 被设置为 Debug 启动模式时，容器将自动进入运行状态。这时可通过 `exec` 命令进入容器，手动启动服务并进行问题定位。详细请参考 [此文档](../integrated-storage-compute/cluster-operation#服务-crash-情况下如何进入容器)
 
 ## 兼容性  
 
@@ -99,11 +99,11 @@ Doris Operator 适用于以下场景：
 
 ### 前提条件
 
-部署前需要对宿主机系统进行检查参考 [操作系统检查](../../install/preparation/os-checking.md)
+部署前需要对宿主机系统进行检查参考 [操作系统检查](../../preparation/os-checking.md)
 
 ### 部署 Doris Operator
 
-详细安装文档可参考 Doris Operator 安装的 [存算一体版本](../../install/deploy-on-kubernetes/integrated-storage-compute/install-doris-operator.md) 或 [存算分离版本](../../install/deploy-on-kubernetes/separating-storage-compute/install-doris-cluster.md)
+详细安装文档可参考 Doris Operator 安装的 [存算一体版本](../integrated-storage-compute/install-doris-operator.md) 或 [存算分离版本](../separating-storage-compute/install-doris-cluster.md)
 
 ## 常见问题
 
@@ -113,7 +113,7 @@ Doris Operator 通过 CRD 自动化管理集群生命周期，包括创建、扩
 
 ### Q: 存算一体和存算分离版本如何选择？
 
-存算一体版本适用于中小规模集群，部署简单；存算分离版本适用于大规模、弹性扩展需求场景。具体可参考 [存算一体部署文档](../../install/deploy-on-kubernetes/integrated-storage-compute/install-doris-operator.md) 和 [存算分离部署文档](../../install/deploy-on-kubernetes/separating-storage-compute/install-doris-cluster.md)。
+存算一体版本适用于中小规模集群，部署简单；存算分离版本适用于大规模、弹性扩展需求场景。具体可参考 [存算一体部署文档](../integrated-storage-compute/install-doris-operator.md) 和 [存算分离部署文档](../separating-storage-compute/install-doris-cluster.md)。
 
 ### Q: Doris Operator 支持哪些 Kubernetes 版本？
 

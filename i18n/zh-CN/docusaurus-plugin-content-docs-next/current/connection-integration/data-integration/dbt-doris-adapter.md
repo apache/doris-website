@@ -120,7 +120,7 @@ dbt-doris 通过以下步骤保证 table 物化在数据更迭时的原子性：
 
 1. 执行 `CREATE TABLE this_table_temp AS {{ model sql }}`，先创建临时表。
 2. 若 `this_table` 不存在（首次创建），执行 `RENAME` 将临时表更名为最终表。
-3. 若 `this_table` 已存在，执行 `ALTER TABLE this_table REPLACE WITH TABLE this_table_temp PROPERTIES('swap' = 'False')`。该操作会交换表名并删除 `this_table_temp`，由 [Doris 内核事务机制](../sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-REPLACE) 保证原子性。
+3. 若 `this_table` 已存在，执行 `ALTER TABLE this_table REPLACE WITH TABLE this_table_temp PROPERTIES('swap' = 'False')`。该操作会交换表名并删除 `this_table_temp`，由 [Doris 内核事务机制](../../sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-REPLACE) 保证原子性。
 
 在 `dbt_project.yml` 中配置：
 

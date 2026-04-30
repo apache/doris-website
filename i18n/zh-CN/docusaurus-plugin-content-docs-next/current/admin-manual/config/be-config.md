@@ -1313,7 +1313,7 @@ load tablets from header failed, failed tablets size: xxx, path=xxx
 
 #### `group_commit_wal_path`
 
-* 描述：Group Commit 存放 WAL 文件的目录，请参考 [Group Commit](../../data-operate/import/group-commit-manual.md)
+* 描述：Group Commit 存放 WAL 文件的目录，请参考 [Group Commit](../../data-operate/import/load-best-practices/group-commit-manual.md)
 * 默认值：默认在用户配置的`storage_root_path`的各个目录下创建一个名为`wal`的目录。配置示例：
   ```
   group_commit_wal_path=/data1/storage/wal;/data2/storage/wal;/data3/storage/wal

@@ -48,7 +48,7 @@
 - 适合场景：大规模集群、需要声明式管理、混合云部署
 - 要求：Kubernetes 集群、Doris Operator
 
-详细步骤请参考：[Kubernetes 部署](./deploy-on-kubernetes/install-on-kubernetes)
+详细步骤请参考：[Kubernetes 部署](./deploy-on-kubernetes/intro)
 
 ### 云平台部署
 
@@ -57,7 +57,7 @@
 - 适合场景：云上业务、需要快速创建、环境隔离
 - 支持：阿里云 ECI、AWS EKS 等
 
-详细步骤请参考：[云平台部署](./deploy-on-cloud)
+详细步骤请参考：[云平台部署](./deploy-on-cloud/doris-on-aws)
 
 ---
 
