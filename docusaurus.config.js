@@ -201,7 +201,7 @@ const config = {
                 redirects: [
                     {
                         from: '/slack',
-                        to: 'https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-3b8tlr3le-Z~IrrVxkzqniFjhL17d1oQ'
+                        to: 'https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-3wvgezmm8-lh5XRaLg0~9AF44ojdIBfw'
                     }
                 ],
                 createRedirects(existingPath) {
