@@ -1,0 +1,53 @@
+// Home Next — global styles
+// Each section's detailed styles live alongside the section component.
+
+.home-next-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+}
+
+// Placeholder styles — remove section by section as real designs land
+.home-next-placeholder-label {
+    display: inline-block;
+    margin-bottom: 1rem;
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    background: #e0f2fe;
+    color: #0369a1;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+}
+
+.home-next-hero {
+    padding: 6rem 0 4rem;
+    background: #f8fafc;
+    text-align: center;
+
+    h1 {
+        font-size: 2.5rem;
+        font-weight: 700;
+        line-height: 1.2;
+        color: #111827;
+        margin-bottom: 1.25rem;
+    }
+
+    p {
+        font-size: 1.125rem;
+        color: #4b5563;
+    }
+}
+
+.home-next-stats,
+.home-next-features,
+.home-next-use-cases,
+.home-next-community,
+.home-next-get-started {
+    padding: 5rem 0;
+
+    &:nth-child(even) {
+        background: #f7fafc;
+    }
+}
