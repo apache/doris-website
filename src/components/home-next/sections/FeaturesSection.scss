@@ -776,6 +776,19 @@
     }
 }
 
+// Small-screen: drop the visual side and show text only.
+@media (max-width: 768px) {
+    .features-next {
+        &__card {
+            grid-template-rows: minmax(0, 1fr);
+        }
+
+        &__visual {
+            display: none;
+        }
+    }
+}
+
 @media (prefers-reduced-motion: reduce) {
     .features-next {
         &__card,

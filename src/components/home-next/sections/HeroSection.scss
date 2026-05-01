@@ -1248,3 +1248,10 @@
         }
     }
 }
+
+// Small-screen: hide the dashboard/report animation under the SQL card.
+@media (max-width: 768px) {
+    .hero-next .hn-report-carousel {
+        display: none;
+    }
+}

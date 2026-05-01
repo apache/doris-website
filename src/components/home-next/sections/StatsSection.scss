@@ -267,6 +267,60 @@
     }
 }
 
+// ── Static-grid mode (small screens) ──────────────────────────────────────
+// Chained selector keeps specificity ahead of the marquee media-query rules
+// further down this file.
+.stats-next.stats-next--compact {
+    --stats-next-grid-card-h: 64px;
+    --stats-next-grid-gap: 10px;
+
+    height: auto;
+    padding: 20px 16px 24px;
+    overflow: hidden;
+
+    &::before {
+        background-size: 18px 18px;
+        opacity: 0.7;
+    }
+
+    .stats-next__grid-viewport {
+        position: relative;
+        z-index: 3;
+        max-height: calc(var(--stats-next-grid-card-h) * 4 + var(--stats-next-grid-gap) * 3);
+        overflow-y: auto;
+        overscroll-behavior: contain;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .stats-next__grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: var(--stats-next-grid-gap);
+    }
+
+    .stats-next__grid-card {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: var(--stats-next-grid-card-h);
+        padding: 8px 12px;
+        border: 0;
+        border-radius: 8px;
+        background: #FAF6EE;
+        box-shadow:
+            0 1px 0 rgba(255, 255, 255, 0.4) inset,
+            0 4px 10px -6px rgba(0, 0, 0, 0.3);
+
+        img {
+            display: block;
+            max-width: 100%;
+            max-height: 38px;
+            object-fit: contain;
+            user-select: none;
+        }
+    }
+}
+
 @keyframes stats-next-logo-scroll {
     from { transform: translate3d(0, 0, 0); }
     to { transform: translate3d(-50%, 0, 0); }

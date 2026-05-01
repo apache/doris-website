@@ -326,13 +326,58 @@ function useFlowPaths(
     return paths;
 }
 
+function useIsCompactEcosystem(): boolean {
+    const [compact, setCompact] = useState(false);
+
+    useEffect(() => {
+        const query = window.matchMedia('(max-width: 768px)');
+        const update = () => setCompact(query.matches);
+
+        update();
+        query.addEventListener('change', update);
+        return () => query.removeEventListener('change', update);
+    }, []);
+
+    return compact;
+}
+
+function CompactEcosystem(): JSX.Element {
+    return (
+        <section
+            className="ecosystem-next ecosystem-next--compact"
+            aria-labelledby="ecosystem-next-title"
+        >
+            <div className="ecosystem-next__header">
+                <div className="ecosystem-next__header-left">
+                    <h2 className="ecosystem-next__headline" id="ecosystem-next-title">
+                        <span>At the heart of the</span>
+                        <span className="ecosystem-next__headline-accent">modern data stack.</span>
+                    </h2>
+                </div>
+            </div>
+            <div className="ecosystem-next__thumbnail">
+                <img
+                    src="/images/next/what-is-apache-doris/12-ecosystem-integration.jpg"
+                    alt="Apache Doris ecosystem: data integration, lake formats, BI tools, AI ecosystem and SDKs"
+                    loading="lazy"
+                />
+            </div>
+        </section>
+    );
+}
+
 export function EcosystemSection(): JSX.Element {
+    const compact = useIsCompactEcosystem();
     const cardRef = useRef<HTMLDivElement>(null);
     const panelRef = useRef<HTMLDivElement>(null);
     const dorisRef = useRef<HTMLDivElement>(null);
     const blockRefs = useRef<Record<string, HTMLElement | null>>({});
     const tilt = useGravityTilt(cardRef);
     const paths = useFlowPaths(panelRef, blockRefs, dorisRef);
+
+    if (compact) {
+        return <CompactEcosystem />;
+    }
 
     const cardStyle: CSSProperties = {
         transform: `rotateX(${tilt.rx.toFixed(3)}deg) rotateY(${tilt.ry.toFixed(3)}deg)`,

@@ -40,6 +40,8 @@ function SlackIcon(): JSX.Element {
     );
 }
 
+const GET_STARTED_HREF = '/docs-next/dev/getting-started/intro';
+
 // ─── SQL Typewriter ───────────────────────────────────────────────────────────
 
 type TokenClass = 'kw' | 'fn' | 'str' | 'num' | 'op' | 'cmt';
@@ -646,16 +648,16 @@ export function HeroSection(): JSX.Element {
                         </p>
 
                         <div className="hero-next__ctas">
-                            <a className="hero-next__btn hero-next__btn--yellow" href="/download">
+                            <a className="hero-next__btn hero-next__btn--yellow" href="https://doris.apache.org/download">
                                 <DownloadIcon />
                                 Download
                             </a>
-                            <a className="hero-next__btn hero-next__btn--primary" href="/docs/get-started/quick-start">
+                            <a className="hero-next__btn hero-next__btn--primary" href={GET_STARTED_HREF}>
                                 Get Started
                             </a>
                             <a
                                 className="hero-next__btn hero-next__btn--ghost"
-                                href="https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-2gmq5o30h-455W226d79plXqPnpRPWYA"
+                                href="https://doris.apache.org/slack"
                                 target="_blank"
                                 rel="noopener noreferrer"
                             >

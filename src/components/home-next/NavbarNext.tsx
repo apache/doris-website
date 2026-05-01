@@ -44,7 +44,7 @@ const NAV_ITEMS: NavItem[] = [
         label: 'Why Doris',
         items: [
             { label: 'Key Features', href: '#' },
-            { label: 'Doris vs. Others', href: '#' },
+            { label: 'Doris vs. Others', href: '/why-doris/compare' },
             { label: 'Benchmarks', href: '#' },
             { label: 'User Stories', href: '#' },
         ],
@@ -61,7 +61,7 @@ const NAV_ITEMS: NavItem[] = [
     {
         label: 'Docs',
         items: [
-            { label: 'dev', href: '#' },
+            { label: 'dev', href: '/docs-next/dev/getting-started/what-is-apache-doris' },
             { label: '4.x', href: '#' },
         ],
     },
@@ -175,9 +175,9 @@ export function NavbarNext(): JSX.Element {
                         <span className="navbar-next__star-divider" />
                         <GitHubIcon />
                     </a>
-                    <Link to="#" className="navbar-next__cta">
-                        Get Started
-                    </Link>
+                    <a href="https://doris.apache.org/download" className="navbar-next__cta">
+                        DOWNLOAD
+                    </a>
                 </div>
 
                 <button
@@ -242,9 +242,9 @@ export function NavbarNext(): JSX.Element {
                         <span className="navbar-next__star-divider" />
                         <GitHubIcon />
                     </a>
-                    <Link to="#" className="navbar-next__cta" onClick={() => setMobileOpen(false)}>
-                        Get Started
-                    </Link>
+                    <a href="https://doris.apache.org/download" className="navbar-next__cta" onClick={() => setMobileOpen(false)}>
+                        DOWNLOAD
+                    </a>
                 </div>
             </div>
         </nav>

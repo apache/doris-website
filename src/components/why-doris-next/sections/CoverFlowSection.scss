@@ -1,0 +1,416 @@
+// ─── Card 2: Apple-style Cover Flow carousel ─────────────────────────────────
+
+@use '../responsive' as r;
+
+.cmp-cf {
+    padding-bottom: 60px;
+
+    .cmp-next__card-sub {
+        max-width: none;
+        white-space: nowrap;
+
+        @include r.down('xl') {
+            white-space: normal;
+        }
+    }
+
+    &__viewport {
+        position: relative;
+    }
+
+    &__stage {
+        position: relative;
+        height: 380px;
+        perspective: 1800px;
+        margin-top: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    &__hover-zone {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        z-index: 20;
+        cursor: pointer;
+        background: transparent;
+    }
+
+    &__track {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        transform-style: preserve-3d;
+    }
+
+    &__item {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 540px;
+        height: 340px;
+        margin-left: -270px;
+        margin-top: -170px;
+        background: linear-gradient(180deg, var(--cn-green-darker) 0%, var(--cn-green-darkest) 100%);
+        border: 1px solid rgba(245, 239, 228, 0.12);
+        border-radius: 14px;
+        padding: 22px 30px 24px;
+        cursor: pointer;
+        transition:
+            transform 0.6s cubic-bezier(.2, .8, .2, 1),
+            opacity 0.5s,
+            box-shadow 0.5s;
+        transform-style: preserve-3d;
+        backface-visibility: hidden;
+        display: flex;
+        flex-direction: column;
+        box-shadow: 0 30px 60px -20px rgba(0, 0, 0, 0.6);
+
+        &--active {
+            z-index: 3;
+            box-shadow:
+                0 40px 80px -20px rgba(0, 0, 0, 0.7),
+                0 0 0 1px rgba(255, 210, 63, 0.4),
+                0 0 60px -15px rgba(255, 210, 63, 0.3);
+            border-color: rgba(255, 210, 63, 0.25);
+        }
+    }
+
+    &__corner {
+        position: absolute;
+        top: 14px;
+        right: 22px;
+        font-family: var(--cn-mono);
+        font-size: 10px;
+        letter-spacing: 0.16em;
+        color: rgba(255, 210, 63, 0.65);
+        text-transform: uppercase;
+    }
+
+    &__rank {
+        position: absolute;
+        top: 14px;
+        left: 24px;
+        font-family: var(--cn-mono);
+        font-size: 10px;
+        color: rgba(245, 239, 228, 0.4);
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+    }
+
+    &__logo {
+        margin: 22px 0 16px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        height: 48px;
+    }
+
+    &__logo-mark {
+        width: 48px;
+        height: 48px;
+        border-radius: 12px;
+        background: var(--cn-cream-light);
+        color: var(--cn-green-darker);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: var(--cn-mono);
+        font-weight: 800;
+        font-size: 22px;
+        flex-shrink: 0;
+        letter-spacing: -0.01em;
+    }
+
+    &__logo-name {
+        font-family: var(--cn-mono);
+        font-size: clamp(18px, 1rem + 0.5vw, 22px);
+        font-weight: 700;
+        color: var(--cn-cream-light);
+        letter-spacing: -0.005em;
+    }
+
+    &__logo-sub {
+        font-family: var(--cn-mono);
+        font-size: 11px;
+        color: rgba(245, 239, 228, 0.5);
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        margin-top: 3px;
+    }
+
+    &__quote {
+        position: relative;
+        font-family: var(--cn-sans);
+        font-size: var(--cn-fs-body);
+        line-height: 1.5;
+        color: rgba(245, 239, 228, 0.86);
+        margin: 0 0 14px;
+        padding-left: 16px;
+        border-left: 2px solid var(--cn-yellow);
+    }
+
+    &__benefits {
+        margin-top: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        border-top: 1px dashed rgba(245, 239, 228, 0.14);
+        padding-top: 12px;
+    }
+
+    &__benefit {
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        font-family: var(--cn-sans);
+        font-size: 13px;
+        line-height: 1.45;
+        color: rgba(245, 239, 228, 0.78);
+
+        strong {
+            color: var(--cn-cream-light);
+            font-weight: 600;
+        }
+    }
+
+    &__benefit-bullet {
+        flex-shrink: 0;
+        width: 14px;
+        height: 14px;
+        margin-top: 2px;
+        color: var(--cn-green-glow);
+    }
+
+    // ── Navigation ─────────────────────────────────────────────────────────
+
+    &__nav {
+        position: absolute;
+        bottom: -42px;
+        left: 0;
+        right: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 16px;
+        z-index: 5;
+    }
+
+    &__arrow {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        border: 1px solid rgba(245, 239, 228, 0.25);
+        background: rgba(0, 0, 0, 0.3);
+        color: var(--cn-cream-light);
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.15s;
+
+        @media (hover: hover) {
+            &:hover {
+                background: var(--cn-yellow);
+                color: var(--cn-ink);
+                border-color: var(--cn-yellow);
+            }
+        }
+
+        // Bigger touch target on touch devices.
+        @media (hover: none) and (pointer: coarse) {
+            width: 44px;
+            height: 44px;
+        }
+    }
+
+    &__dots {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+    }
+
+    &__dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        border: 0;
+        padding: 0;
+        background: rgba(245, 239, 228, 0.25);
+        cursor: pointer;
+        transition: all 0.2s;
+        // Visual size stays small but touchable area is enlarged on touch.
+        @media (hover: none) and (pointer: coarse) {
+            position: relative;
+            &::after {
+                content: '';
+                position: absolute;
+                inset: -12px;
+            }
+        }
+
+        &--on {
+            background: var(--cn-yellow);
+            width: 22px;
+            border-radius: 4px;
+        }
+    }
+}
+
+// ─── Mobile mode: drop perspective, switch to native snap-scroll ─────────────
+//
+// At ≤md (768px), we swap the 3D coverflow for a horizontal swipe carousel.
+// All inline transforms set by JS (transformFor) are overridden with
+// `!important` since CSS specificity vs. inline-style is the only lever
+// available here without forking the JSX into mobile/desktop variants.
+
+@include r.down('md') {
+    .cmp-cf {
+        // The nav switches to in-flow positioning on mobile (see below),
+        // so we no longer need the extra bottom padding that was reserving
+        // space for the absolutely-positioned nav.
+        padding-bottom: var(--cn-card-pad-y);
+
+        // ── Edge fade overlays ─────────────────────────────────────────────
+        // The viewport wraps the scroll-container so we can paint a gradient
+        // fade at each edge that hints at off-screen content. The overlays
+        // are pointer-events: none so they never block swipes. Each is faded
+        // to 0 opacity at the corresponding scroll boundary (controlled by
+        // `--at-start` / `--at-end` classes added by the component).
+        &__viewport {
+            position: relative;
+
+            &::before,
+            &::after {
+                content: '';
+                position: absolute;
+                top: 0;
+                bottom: 0;
+                width: clamp(28px, 8vw, 48px);
+                pointer-events: none;
+                z-index: 4;
+                transition: opacity 0.25s ease;
+            }
+
+            &::before {
+                left: 0;
+                background: linear-gradient(
+                    90deg,
+                    var(--cn-green-darker) 0%,
+                    rgba(5, 76, 57, 0.6) 50%,
+                    rgba(5, 76, 57, 0) 100%
+                );
+            }
+
+            &::after {
+                right: 0;
+                background: linear-gradient(
+                    270deg,
+                    var(--cn-green-darker) 0%,
+                    rgba(5, 76, 57, 0.6) 50%,
+                    rgba(5, 76, 57, 0) 100%
+                );
+            }
+
+            // Hide whichever fade points to a direction with no more content.
+            &--at-start::before { opacity: 0; }
+            &--at-end::after { opacity: 0; }
+        }
+
+        &__stage {
+            // Become the horizontal scroll container.
+            position: relative;
+            height: auto;
+            perspective: none;
+            overflow-x: auto;
+            overflow-y: hidden;
+            scroll-snap-type: x mandatory;
+            -webkit-overflow-scrolling: touch;
+            scroll-behavior: smooth;
+            display: block;
+            // Hide native scrollbar — dots/arrows are the affordance.
+            scrollbar-width: none;
+            &::-webkit-scrollbar { display: none; }
+        }
+
+        // Hover zones are pointer-only — they'd trap touch swipes.
+        &__hover-zone { display: none; }
+
+        &__track {
+            position: relative;
+            width: max-content;
+            height: auto;
+            display: flex;
+            gap: 16px;
+            transform-style: flat;
+            // Pad so the first/last card can center under scroll-snap.
+            // 180px ≈ half of the max card width (360). Falls back to a
+            // small value on narrow screens — that asymmetry is what gives
+            // the natural "next card peeking" effect on phones.
+            padding-inline: max(20px, 50% - 180px);
+            padding-block: 12px;
+        }
+
+        &__item {
+            // Override every layout/3D rule from desktop.
+            position: relative !important;
+            top: auto !important;
+            left: auto !important;
+            margin: 0 !important;
+            // Slightly narrower than the viewport so a sliver of the next
+            // card always peeks in — the strongest "swipe me" signal.
+            width: min(80vw, 360px);
+            height: auto;
+            min-height: 420px;
+            flex: 0 0 auto;
+            scroll-snap-align: center;
+            transform: none !important;
+            opacity: 1 !important;
+            z-index: auto !important;
+            pointer-events: auto !important;
+            transform-style: flat;
+            backface-visibility: visible;
+            // Re-enable smooth opacity/box-shadow without the heavy 3D transition.
+            transition: box-shadow 0.3s ease, border-color 0.3s ease;
+            padding: 22px 24px 24px;
+        }
+
+        // ── Nav: flow inline at the bottom of the card ─────────────────────
+        // The desktop nav is absolutely positioned at `bottom: -42px`, which
+        // is clipped by the section card's `overflow: hidden`. On mobile we
+        // reset to relative positioning so the dots/arrows sit visibly at
+        // the bottom of the card.
+        &__nav {
+            position: relative;
+            bottom: auto;
+            left: auto;
+            right: auto;
+            margin-top: 28px;
+            gap: 18px;
+        }
+
+        // ── Pagination dots: enlarged, circular, yellow glow on active ─────
+        &__dots {
+            gap: 14px;
+        }
+
+        &__dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: rgba(255, 210, 63, 0.28);
+
+            &--on {
+                width: 16px;
+                height: 16px;
+                background: var(--cn-yellow);
+                // Override the desktop pill-shape so mobile dots stay round.
+                border-radius: 50%;
+                box-shadow:
+                    0 0 0 5px rgba(255, 210, 63, 0.18),
+                    0 0 14px rgba(255, 210, 63, 0.5);
+            }
+        }
+    }
+}

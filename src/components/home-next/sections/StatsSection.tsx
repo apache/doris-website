@@ -199,6 +199,32 @@ function useCompactStats(): boolean {
     return compact;
 }
 
+function CompactStatsGrid(): JSX.Element {
+    return (
+        <section className="stats-next stats-next--compact" aria-label="Companies using Apache Doris">
+            <div className="stats-next__grid-viewport">
+                <div className="stats-next__grid">
+                    {USER_LOGOS.map(logo => (
+                        <article
+                            className="stats-next__grid-card"
+                            key={logo.id}
+                            aria-label={logo.name}
+                        >
+                            <img
+                                src={`/images/user-logo/${encodeURI(logo.file)}`}
+                                alt={logo.name}
+                                title={logo.name}
+                                loading="lazy"
+                                draggable={false}
+                            />
+                        </article>
+                    ))}
+                </div>
+            </div>
+        </section>
+    );
+}
+
 export function StatsSection(): JSX.Element {
     const [hoveredKey, setHoveredKey] = useState<string | null>(null);
     const compact = useCompactStats();
@@ -208,10 +234,14 @@ export function StatsSection(): JSX.Element {
         if (compact) setHoveredKey(null);
     }, [compact]);
 
+    if (compact) {
+        return <CompactStatsGrid />;
+    }
+
     return (
         <section className="stats-next" aria-label="Companies using Apache Doris">
             <div className="stats-next__viewport">
-                <div className={`stats-next__track${hoveredKey && !compact ? ' stats-next__track--expanded' : ''}`}>
+                <div className={`stats-next__track${hoveredKey ? ' stats-next__track--expanded' : ''}`}>
                     {logoLoop.map((logo, index) => {
                         const cardKey = `${logo.id}-${index}`;
                         const duplicate = index >= USER_LOGOS.length;
@@ -221,13 +251,11 @@ export function StatsSection(): JSX.Element {
                                 key={cardKey}
                                 logo={logo}
                                 duplicate={duplicate}
-                                expanded={!compact && hoveredKey === cardKey}
-                                onEnter={() => {
-                                    if (!compact) setHoveredKey(cardKey);
-                                }}
-                                onLeave={() => {
-                                    if (!compact) setHoveredKey(current => (current === cardKey ? null : current));
-                                }}
+                                expanded={hoveredKey === cardKey}
+                                onEnter={() => setHoveredKey(cardKey)}
+                                onLeave={() =>
+                                    setHoveredKey(current => (current === cardKey ? null : current))
+                                }
                             />
                         );
                     })}
