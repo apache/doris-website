@@ -256,7 +256,7 @@ errors.deadletterqueue.topic.replication.factor=1
 | `buffer.flush.time` | - | 120 | N | Buffer 刷新间隔，单位为秒，默认值为 120 秒。 |
 | `buffer.size.bytes` | - | 104857600(100MB) | N | 单次 Stream Load 写入的数据大小。 |
 | `enable.combine.flush` | `true`,<br />`false` | false | N | 是否将所有分区的数据合并写入。默认值为 `false`。开启后只能保证 `at_least_once` 语义。 |
-| `jmx` | - | true | N | 是否通过 JMX 获取 Connector 内部监控指标。请参考 [Doris-Connector-JMX](https://github.com/apache/doris-kafka-connector/blob/master/docs/zh-CN/Doris-Connector-JMX.md)。 |
+| `jmx` | - | true | N | 是否通过 JMX 获取 Connector 内部监控指标。请参考 [Doris-Connector-JMX](https://github.com/apache/doris-kafka-connector/blob/master/docs/en/Doris-Connector-JMX.md)。 |
 | `label.prefix` | - | `${name}` | N | Stream Load 导入数据时的 Label 前缀。默认值为 Connector 应用名称。 |
 | `auto.redirect` | - | true | N | 是否重定向 Stream Load 请求。开启后，Stream Load 会通过 FE 重定向到需要写入数据的 BE，并且不再显示获取 BE 信息。 |
 | `sink.properties.*` | - | `'sink.properties.format':'json'`,<br />`'sink.properties.read_json_by_line':'true'` | N | Stream Load 的导入参数。例如，通过 `'sink.properties.column_separator':','` 定义列分隔符。详细参数请参考 [Stream Load 手册](../../data-operate/import/import-way/stream-load-manual.md)。<br /><br />开启 Group Commit 时，例如开启 `sync_mode` 模式：`"sink.properties.group_commit":"sync_mode"`。Group Commit 可以配置 `off_mode`、`sync_mode`、`async_mode` 三种模式，具体使用请参考 [Group Commit](https://doris.apache.org/docs/data-operate/import/group-commit-manual/)。<br /><br />开启部分列更新时，例如开启更新指定 `col2` 的部分列：`"sink.properties.partial_columns":"true"`、`"sink.properties.columns":"col2"`。 |

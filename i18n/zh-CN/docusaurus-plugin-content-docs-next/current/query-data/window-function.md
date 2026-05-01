@@ -23,7 +23,7 @@
 
 分析函数，也称为窗口函数（Window Function），是一种在 SQL 查询中对数据集中的行进行复杂计算的函数。窗口函数的特点在于：它们不会减少查询结果的行数，而是为每一行附加一个新的计算结果。
 
-窗口函数适用于多种数据分析场景，例如计算滚动合计、排名、移动平均、同比环比等。具体的语法说明可参阅 [窗口函数概览](../../current/sql-manual/sql-functions/window-functions/overview.md)。
+窗口函数适用于多种数据分析场景，例如计算滚动合计、排名、移动平均、同比环比等。具体的语法说明可参阅 [窗口函数概览](../sql-manual/sql-functions/window-functions/overview.md)。
 
 ## 适用场景
 

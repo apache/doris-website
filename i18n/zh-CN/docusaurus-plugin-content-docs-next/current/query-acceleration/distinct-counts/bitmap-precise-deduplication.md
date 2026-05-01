@@ -142,7 +142,7 @@ mysql> select bitmap_union_count(uv) from test_bitmap;
 ```SQL
 mysql> SELECT COUNT(DISTINCT pv) FROM test_bitmap;
 +----------------------+
-| count(DISTINCT `uv`) |
+| count(DISTINCT `pv`) |
 +----------------------+
 |                    4 |
 +----------------------+

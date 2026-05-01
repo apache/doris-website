@@ -140,7 +140,7 @@ PROPERTIES (
 "dynamic_partition.prefix" = "p",
 "dynamic_partition.buckets" = "250",
 "dynamic_partition.replication_num" = "2", -- 存算分离不需要
-"replication_num" = "2" -- 存算分离不需要
+"replication_num" = "2", -- 存算分离不需要
 "storage_policy" = "log_policy_3day" -- 存算分离不需要
 );
 ```
