@@ -3,7 +3,6 @@ import './CommunitySection.scss';
 
 interface Channel {
     name: string;
-    description: string;
     href: string;
     icon: JSX.Element;
 }
@@ -11,7 +10,6 @@ interface Channel {
 const CHANNELS: Channel[] = [
     {
         name: 'GitHub Discussions',
-        description: 'Ask questions, share ideas, and follow technical decisions.',
         href: 'https://github.com/apache/doris/discussions',
         icon: (
             <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
@@ -21,7 +19,6 @@ const CHANNELS: Channel[] = [
     },
     {
         name: 'Slack',
-        description: 'Real-time chat with contributors and users worldwide.',
         href: 'https://doris.apache.org/slack',
         icon: (
             <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
@@ -31,7 +28,6 @@ const CHANNELS: Channel[] = [
     },
     {
         name: 'Dev Mailing List',
-        description: 'Follow major proposals, RFCs, and design discussions.',
         href: '/community/subscribe-mail-list',
         icon: (
             <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true">
@@ -42,7 +38,6 @@ const CHANNELS: Channel[] = [
     },
     {
         name: 'X (Twitter)',
-        description: 'Product updates, releases, and community highlights.',
         href: 'https://twitter.com/doris_apache',
         icon: (
             <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
@@ -52,7 +47,6 @@ const CHANNELS: Channel[] = [
     },
     {
         name: 'LinkedIn',
-        description: 'Professional updates, case studies, and events.',
         href: 'https://www.linkedin.com/company/doris-apache/',
         icon: (
             <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
@@ -63,7 +57,6 @@ const CHANNELS: Channel[] = [
     },
     {
         name: 'YouTube',
-        description: 'Talks, tutorials, and conference sessions.',
         href: 'https://www.youtube.com/hashtag/apachedoris',
         icon: (
             <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
@@ -80,17 +73,20 @@ export function CommunitySection(): JSX.Element {
                 <header className="community-next__header">
                     <span className="community-next__eyebrow">Community</span>
                     <h2 className="community-next__title">
-                        Connect with <span className="community-next__title-accent">5,000+ teams</span>
-                        <br />building on Apache Doris
+                        <span className="community-next__title-line">
+                            Connect with <span className="community-next__title-accent">5,000+ teams</span>
+                        </span>
+                        <span className="community-next__title-line">building on Apache Doris</span>
                     </h2>
                 </header>
 
                 <div className="community-next__grid">
                     {CHANNELS.map((ch, i) => (
                         <a key={i} className="community-next__card" href={ch.href} target="_blank" rel="noopener noreferrer">
-                            <div className="community-next__card-icon">{ch.icon}</div>
-                            <h3 className="community-next__card-name">{ch.name}</h3>
-                            <p className="community-next__card-desc">{ch.description}</p>
+                            <div className="community-next__card-main">
+                                <div className="community-next__card-icon">{ch.icon}</div>
+                                <h3 className="community-next__card-name">{ch.name}</h3>
+                            </div>
                             <span className="community-next__card-arrow" aria-hidden="true">→</span>
                         </a>
                     ))}

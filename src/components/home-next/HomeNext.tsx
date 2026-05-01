@@ -5,9 +5,7 @@ import { StatsSection } from './sections/StatsSection';
 import { FeaturesSection } from './sections/FeaturesSection';
 import { EcosystemSection } from './sections/EcosystemSection';
 import { DeploymentSection } from './sections/DeploymentSection';
-import { UseCasesSection } from './sections/UseCasesSection';
 import { CommunitySection } from './sections/CommunitySection';
-import { GetStartedSection } from './sections/GetStartedSection';
 import './HomeNext.scss';
 
 interface HomeNextProps {
@@ -25,9 +23,7 @@ export default function HomeNext({ onSwitchBack }: HomeNextProps): JSX.Element {
             <FeaturesSection />
             <EcosystemSection />
             <DeploymentSection />
-            <UseCasesSection />
             <CommunitySection />
-            <GetStartedSection />
         </LayoutNext>
     );
 }
