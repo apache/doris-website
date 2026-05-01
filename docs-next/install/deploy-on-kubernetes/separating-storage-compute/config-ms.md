@@ -74,7 +74,7 @@ Parameter description:
 
 - `${fdbEndpoint}`: the address used to access FoundationDB
 
-For physical machine deployments, to locate this address, see [Introduction to obtaining `fdb_cluster` for MetaService deployment](../../../compute-storage-decoupled/compilation-and-deployment.md#31-配置) in the storage-compute decoupled chapter.
+For physical machine deployments, to locate this address, see [Introduction to obtaining `fdb_cluster` for MetaService deployment](../../deploy-manually/separating-storage-compute-deploy-manually) in the storage-compute decoupled chapter.
 
 ## 2. Customize the image
 

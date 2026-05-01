@@ -151,7 +151,7 @@ For example, `ROWS BETWEEN 6 PRECEDING AND 6 FOLLOWING` defines a window for a c
 
 <!-- Applicable scenarios: Ranking / Bucketing / Top-N analysis -->
 
-Ranking functions sort or group rows within a partition. Note: **the query result is deterministic only when the specified ordering column has unique values**. If the ordering column contains duplicate values, the result may vary between executions. For more functions, see [Window Functions Overview](../../current/sql-manual/sql-functions/window-functions/overview.md).
+Ranking functions sort or group rows within a partition. Note: **the query result is deterministic only when the specified ordering column has unique values**. If the ordering column contains duplicate values, the result may vary between executions. For more functions, see [Window Functions Overview](../sql-manual/sql-functions/window-functions/overview.md).
 
 ### NTILE Function
 

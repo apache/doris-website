@@ -141,4 +141,4 @@ USE { [catalog_name.]database_name[@compute_group_name] | @compute_group_name }
 通过 `ALTER SYSTEM ADD BACKEND` 以及 `ALTER SYSTEM DECOMMISSION BACKEND` 添加或者删除 BE 实现 Compute Group 的扩缩容。
 
 
-详细操作参考[存算分离相关操作](../../compute-storage-decoupled/overview.md)
+详细操作参考[存算分离相关操作](../../install/choosing-deployment-mode)

@@ -90,7 +90,7 @@ In the process of integrating multiple data sources and achieving lakehouse tran
 
 ### Modern Deployment Architecture
 
-Since version 3.0, Doris supports a cloud-native [compute-storage separation architecture](../compute-storage-decoupled/overview.md). This architecture, with its low cost and high elasticity, effectively improves resource utilization and enables independent scaling of compute and storage.
+Since version 3.0, Doris supports a cloud-native [compute-storage separation architecture](../install/choosing-deployment-mode). This architecture, with its low cost and high elasticity, effectively improves resource utilization and enables independent scaling of compute and storage.
 
 ![compute-storage-decouple](/images/Lakehouse/compute-storage-decouple.png)
 

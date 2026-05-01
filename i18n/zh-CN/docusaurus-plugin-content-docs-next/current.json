@@ -591,9 +591,9 @@
     "message": "可观测性",
     "description": "Observability"
   },
-  "sidebar.docs.category.Compute-Storage Decoupled": {
-    "message": "存算分离",
-    "description": "Compute-Storage Decoupled"
+  "sidebar.docs.category.Compute-Storage Decoupled Guide": {
+    "message": "存算分离运维指南",
+    "description": "Compute-Storage Decoupled Guide"
   },
   "sidebar.docs.category.File Cache": {
     "message": "文件缓存",

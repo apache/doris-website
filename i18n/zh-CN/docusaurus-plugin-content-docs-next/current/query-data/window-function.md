@@ -151,7 +151,7 @@ FROM daily_sales;
 
 <!-- 适用场景: 排名 / 分桶 / Top-N 分析 -->
 
-排序函数用于在分区内对行进行排序或分组。需要注意：**只有当指定的排序列是唯一值列时，查询结果才是确定的**；如果排序列包含重复值，则每次的查询结果可能不同。更多相关函数可参阅 [窗口函数概览](../../current/sql-manual/sql-functions/window-functions/overview.md)。
+排序函数用于在分区内对行进行排序或分组。需要注意：**只有当指定的排序列是唯一值列时，查询结果才是确定的**；如果排序列包含重复值，则每次的查询结果可能不同。更多相关函数可参阅 [窗口函数概览](../sql-manual/sql-functions/window-functions/overview)。
 
 ### NTILE 函数
 
