@@ -1,77 +1,60 @@
 ---
 {
-    "title": "Seatunnel Doris Sink",
-    "language": "zh-CN",
+    "title": "SeaTunnel",
+    "language": "en",
     "toc_min_heading_level": 2,
     "toc_max_heading_level": 4,
-    "description": "SeaTunnel 是一个非常简单易用的超高性能分布式数据集成平台，支持海量数据的实时同步。每天稳定高效地同步数百亿数据"
+    "description": "Learn how to use the SeaTunnel Doris Sink to synchronize data into Apache Doris, and configure Connector-V2, Flink, Spark, and Stream Load parameters.",
+    "keywords": [
+        "SeaTunnel Doris Sink",
+        "SeaTunnel write to Doris",
+        "Doris Stream Load",
+        "Doris data synchronization",
+        "Connector-V2"
+    ]
 }
 ---
 
-SeaTunnel 是一个非常简单易用的超高性能分布式数据集成平台，支持海量数据的实时同步。每天稳定高效地同步数百亿数据
+<!-- Knowledge type: Procedure -->
+<!-- Applicable scenario: Data integration / SeaTunnel writes to Doris -->
 
-## Connector-V2
+SeaTunnel is an easy-to-use, ultra-high-performance distributed data integration platform that supports real-time synchronization of massive data and can stably and efficiently synchronize tens of billions of records every day.
 
-2.3.1 版本的 [Apache SeaTunnel Connector-V2](https://seatunnel.apache.org/docs/2.3.1/category/sink-v2) 支持了 Doris Sink，并且支持 exactly-once 的精准一次写入和 CDC 数据同步
+This document is intended for users who need to synchronize data from SeaTunnel into Doris. It introduces, by use case, how to choose a Doris Sink, how to configure its parameters, and how to use it.
 
-### 插件代码
+## How to Choose a Connector
 
-SeaTunnel Doris Sink [插件代码](https://github.com/apache/incubator-seatunnel/tree/dev/seatunnel-connectors-v2/connector-doris)
+| Use case | Recommended approach | Applicable version or engine | Description |
+| --- | --- | --- | --- |
+| Need exactly-once writes or CDC data synchronization | Connector-V2 Doris Sink | SeaTunnel 2.3.1 and above | Supports Doris Sink, exactly-once writes, and CDC data synchronization. |
+| Synchronize data into Doris through the Flink engine | Connector-V1 Flink Doris Sink | SeaTunnel 2.1.0, Flink engine | Suitable for SeaTunnel jobs that already run on a Flink engine. |
+| Synchronize data into Doris through the Spark engine | Connector-V1 Spark Sink Doris | SeaTunnel 2.1.0, Spark engine | Suitable for jobs that already run on a Spark engine, for example migrating data from Hive into Doris. |
 
-### 参数列表
+## Scenario 1: Use Connector-V2 to Write to Doris
 
-|        name        |  type  | required | default value |
-|--------------------|--------|----------|---------------|
-| fenodes            | string | yes      | -             |
-| username           | string | yes      | -             |
-| password           | string | yes      | -             |
-| table.identifier   | string | yes      | -             |
-| sink.label-prefix  | string | yes      | -             |
-| sink.enable-2pc    | bool   | no       | true          |
-| sink.enable-delete | bool   | no       | false         |
-| doris.config       | map    | yes      | -             |
+<!-- Knowledge type: Configuration parameters -->
+<!-- Applicable scenario: Real-time synchronization / exactly-once writes / CDC data synchronization -->
 
-`fenodes [string]`
+The SeaTunnel 2.3.1 [Apache SeaTunnel Connector-V2](https://seatunnel.apache.org/docs/2.3.1/category/sink-v2) supports Doris Sink, exactly-once writes, and CDC data synchronization.
 
-Doris 集群 FE 节点地址，格式为 `"fe_ip:fe_http_port,..."`
+For the plugin source code, see the [SeaTunnel Doris Sink plugin code](https://github.com/apache/seatunnel/tree/dev/seatunnel-connectors-v2/connector-doris).
 
-`username [string]`
+### Parameter Configuration
 
-Doris 用户名
+| Parameter | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `fenodes` | string | Yes | - | Doris cluster FE node addresses, in the format `fe_ip:fe_http_port,...`. |
+| `username` | string | Yes | - | Doris username. |
+| `password` | string | Yes | - | Password for the Doris user. |
+| `table.identifier` | string | Yes | - | Doris table name, in the format `DBName.TableName`. |
+| `sink.label-prefix` | string | Yes | - | Label prefix used by Stream Load. In a 2PC scenario, this prefix must be globally unique to guarantee SeaTunnel's EOS semantics. |
+| `sink.enable-2pc` | bool | No | `true` | Whether to enable two-phase commit (2PC). The default is `true`, which guarantees exactly-once semantics. For two-phase commit, see the [Stream Load manual](../../data-operate/import/import-way/stream-load-manual.md). |
+| `sink.enable-delete` | bool | No | `false` | Whether to enable deletes. This option requires the Doris table to have batch delete enabled. Doris 0.15+ enables this feature by default, and only the Unique table model is supported. For more information, see [Batch Delete](../../data-operate/delete/batch-delete-manual.md). |
+| `doris.config` | map | Yes | - | Stream Load `data_desc` parameters. For more parameters, see the [Stream Load manual](../../data-operate/import/import-way/stream-load-manual.md). |
 
-`password [string]`
+### Import Data in JSON Format
 
-Doris 用户密码
-
-`table.identifier [string]`
-
-Doris 表名称，格式为 DBName.TableName
-
-`sink.label-prefix [string]`
-
-Stream Load 导入使用的标签前缀。在 2pc 场景下，需要全局唯一性来保证 SeaTunnel 的 EOS 语义
-
-`sink.enable-2pc [bool]`
-
-是否启用两阶段提交 (2pc)，默认为 true，以确保 exact - once 语义。关于两阶段提交，请参考[这里](../data-operate/import/import-way/stream-load-manual)
-
-`sink.enable-delete [bool]`
-
-是否启用删除。该选项需要 Doris 表开启批量删除功能 (默认开启 0.15+ 版本)，且只支持 Unique 表模型。你可以在这个链接获得更多细节：
-
-[批量删除](../data-operate/delete/batch-delete-manual.md)
-
-`doris.config [map]`
-
-Stream Load `data_desc` 的参数，你可以在这个链接获得更多细节：
-
-[更多 Stream Load 参数](../data-operate/import/import-way/stream-load-manual)
-
-### 使用示例
-
-使用 JSON 格式导入数据
-
-```
+```text
 sink {
     Doris {
         fenodes = "doris_fe:8030"
@@ -81,17 +64,16 @@ sink {
         sink.enable-2pc = "true"
         sink.label-prefix = "test_json"
         doris.config = {
-            format="json"
-            read_json_by_line="true"
+            format = "json"
+            read_json_by_line = "true"
         }
     }
 }
-
 ```
 
-使用 CSV 格式导入数据
+### Import Data in CSV Format
 
-```
+```text
 sink {
     Doris {
         fenodes = "doris_fe:8030"
@@ -101,205 +83,134 @@ sink {
         sink.enable-2pc = "true"
         sink.label-prefix = "test_csv"
         doris.config = {
-          format = "csv"
-          column_separator = ","
-          line_delimiter = "\n"
+            format = "csv"
+            column_separator = ","
+            line_delimiter = "\n"
         }
     }
 }
 ```
 
-## Connector-V1
+## Scenario 2: Use Connector-V1 to Write to Doris
 
-2.1.0 的 Apache SeaTunnel 支持 Doris 的连接器，SeaTunnel 可以通过 Spark 引擎和 Flink 引擎同步数据至 Doris 中。
+<!-- Knowledge type: Configuration parameters -->
+<!-- Applicable scenario: SeaTunnel 2.1.0 / Flink engine / Spark engine -->
 
-### Flink Doris Sink 
+Apache SeaTunnel 2.1.0 supports the Doris connector, which can synchronize data into Doris through either the Flink engine or the Spark engine.
 
-**插件代码**
+### Use the Flink Engine to Write to Doris
 
-Seatunnel Flink Sink Doris [插件代码](https://github.com/apache/incubator-seatunnel)
+For the plugin source code, see the [SeaTunnel Flink Sink Doris plugin code](https://github.com/apache/seatunnel).
 
-**参数列表**
+#### Parameter Configuration
 
-| 配置项 | 类型 | 必填 | 默认值 | 支持引擎 |
-| --- | --- | --- | --- | --- |
-| fenodes | string | yes | - | Flink |
-| database | string | yes | - | Flink  |
-| table | string | yes | - | Flink  |
-| user	 | string | yes | - | Flink  |
-| password	 | string | yes | - | Flink  |
-| batch_size	 | int | no |  100 | Flink  |
-| interval	 | int | no |1000 | Flink |
-| max_retries	 | int | no | 1 | Flink|
-| doris.*	 | - | no | - | Flink  |
+| Parameter | Type | Required | Default | Supported engine | Description |
+| --- | --- | --- | --- | --- | --- |
+| `fenodes` | string | Yes | - | Flink | Doris FE HTTP address, for example `127.0.0.1:8030`. |
+| `database` | string | Yes | - | Flink | Name of the database to write to in Doris. |
+| `table` | string | Yes | - | Flink | Name of the table to write to in Doris. |
+| `user` | string | Yes | - | Flink | Doris access user. |
+| `password` | string | Yes | - | Flink | Password for the Doris access user. |
+| `batch_size` | int | No | `100` | Flink | Maximum number of rows written to Doris in a single batch. |
+| `interval` | int | No | `1000` | Flink | Flush interval, in milliseconds. After this interval elapses, an asynchronous thread writes the buffered data into Doris. Set to `0` to disable periodic writes. |
+| `max_retries` | int | No | `1` | Flink | Number of retries after a write to Doris fails. |
+| `doris.*` | string | No | - | Flink | Stream Load import parameters, for example `doris.column_separator = ','`. For more parameters, see the [Stream Load manual](../../data-operate/import/import-way/stream-load-manual.md). |
 
-`fenodes [string]`
+#### Example: Write Socket Data to Doris
 
-Doris Fe Http 访问地址，eg: 127.0.01:8030
-
-`database [string]`
-
-写入 Doris 的库名
-
-`table [string]`
-
-写入 Doris 的表名
-
-`user [string]`
-
-Doris 访问用户
-
-`password [string]`
-
-Doris 访问用户密码
-
-`batch_size [int]`
-
-单次写 Doris 的最大行数，默认值 100
-
-`interval [int]`
-
-flush 间隔时间 (毫秒)，超过该时间后异步线程将 缓存中数据写入 Doris。设置为 0 表示关闭定期写入。
-
-`max_retries [int]`
-
-写 Doris 失败之后的重试次数
-
-`doris.* [string]`
-
-Stream load 的导入参数。例如:'doris.column_separator' = ', '等
-
-[更多 Stream Load 参数配置](../data-operate/import/import-way/stream-load-manual)
-
-**Examples**
-
-Socket 数据写入 Doris
-```
+```text
 env {
-  execution.parallelism = 1
+    execution.parallelism = 1
 }
+
 source {
     SocketStream {
-      host = 127.0.0.1
-      port = 9999
-      result_table_name = "socket"
-      field_name = "info"
-    }
-}
-transform {
-}
-sink {
-  DorisSink {
-      fenodes = "127.0.0.1:8030"
-      user = root
-      password = 123456
-      database = test
-      table = test_tbl
-      batch_size = 5
-      max_retries = 1
-      interval = 5000
+        host = 127.0.0.1
+        port = 9999
+        result_table_name = "socket"
+        field_name = "info"
     }
 }
 
+transform {
+}
+
+sink {
+    DorisSink {
+        fenodes = "127.0.0.1:8030"
+        user = root
+        password = 123456
+        database = test
+        table = test_tbl
+        batch_size = 5
+        max_retries = 1
+        interval = 5000
+    }
+}
 ```
-**启动命令**
-```
+
+Start the job:
+
+```shell
 sh bin/start-seatunnel-flink.sh --config config/flink.streaming.conf
 ```
 
-### Spark Sink Doris
+### Use the Spark Engine to Write to Doris
 
-**插件代码**
+For the plugin source code, see the [SeaTunnel Spark Sink Doris plugin code](https://github.com/apache/seatunnel).
 
-Spark Sink Doris 的插件代码在[这里](https://github.com/apache/incubator-seatunnel)
+#### Parameter Configuration
 
-**参数列表**
+| Parameter | Type | Required | Default | Supported engine | Description |
+| --- | --- | --- | --- | --- | --- |
+| `fenodes` | string | Yes | - | Spark | Doris FE node address, for example `127.0.0.1:8030`. |
+| `database` | string | Yes | - | Spark | Name of the database to write to in Doris. |
+| `table` | string | Yes | - | Spark | Name of the table to write to in Doris. |
+| `user` | string | Yes | - | Spark | Doris access user. |
+| `password` | string | Yes | - | Spark | Password for the Doris access user. |
+| `batch_size` | int | Yes | `100` | Spark | Number of rows submitted per batch when Spark writes to Doris through Stream Load. |
+| `doris.*` | string | No | - | Spark | Stream Load HTTP parameters. Add the `doris.` prefix to any Stream Load parameter to use it, for example `doris.column_separator`. For more parameters, see the [Stream Load manual](../../data-operate/import/import-way/stream-load-manual.md). |
 
-| 参数名 | 参数类型 | 是否必要 | 默认值 | 引擎类型 |
-| --- | --- | --- | --- | --- |
-| fenodes | string | yes | - | Spark |
-| database | string | yes | - | Spark |
-| table	 | string | yes | - | Spark |
-| user	 | string | yes | - | Spark |
-| password	 | string | yes | - | Spark |
-| batch_size	 | int | yes | 100 | Spark |
-| doris.*	 | string | no | - | Spark |
+#### Example: Migrate Data from Hive to Doris
 
-`fenodes [string]`
-
-Doris Fe 节点地址:8030
-
-
-`database [string]`
-
-写入 Doris 的库名
-
-`table [string]`
-
-写入 Doris 的表名
-
-`user [string]`
-
-Doris 访问用户
-
-`password [string]`
-
-Doris 访问用户密码
-
-`batch_size [string]`
-
-Spark 通过 Stream Load 方式写入，每个批次提交条数
-
-`doris. [string]`
-
-Stream Load 方式写入的 Http 参数优化，在官网参数前加上'Doris.'前缀
-
-[更多 Stream Load 参数配置](../data-operate/import/import-way/stream-load-manual)
-
-**Examples**
-
-Hive 迁移数据至 Doris
-```
-env{
-  spark.app.name = "hive2doris-template"
+```text
+env {
+    spark.app.name = "hive2doris-template"
 }
 
 spark {
-  spark.sql.catalogImplementation = "hive"
+    spark.sql.catalogImplementation = "hive"
 }
 
 source {
-  hive {
-    preSql = "select * from tmp.test"
-    result_table_name = "test"
-  }
+    hive {
+        preSql = "select * from tmp.test"
+        result_table_name = "test"
+    }
 }
 
 transform {
 }
 
-
 sink {
+    Console {
+    }
 
-Console {
-
-  }
-
-Doris {
-   fenodes="xxxx:8030"
-   database="tmp"
-   table="test"
-   user="root"
-   password="root"
-   batch_size=1000
-   doris.column_separator="\t"
-   doris.columns="date_key,date_value,day_in_year,day_in_month"
-   }
+    Doris {
+        fenodes = "xxxx:8030"
+        database = "tmp"
+        table = "test"
+        user = "root"
+        password = "root"
+        batch_size = 1000
+        doris.column_separator = "\t"
+        doris.columns = "date_key,date_value,day_in_year,day_in_month"
+    }
 }
 ```
 
-**启动命令**
+Start the job:
 
-```
+```shell
 sh bin/start-waterdrop-spark.sh --master local[4] --deploy-mode client --config ./config/spark.conf
 ```

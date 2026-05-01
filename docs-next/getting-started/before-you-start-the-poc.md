@@ -1,63 +1,76 @@
 ---
 {
-    "title": "Before You Start the POC",
+    "title": "How to Complete an Apache Doris POC",
     "language": "en",
-    "description": "Apache Doris POC checklist: covers table design (data model, sort key, partitioning, bucketing), data loading best practices, query tuning, and data lake (Hive, Iceberg, Paimon) query optimization to help new users complete POC validation quickly.",
-    "sidebar_label": "Before You Start the POC"
+    "description": "Failing to create tables, slow queries, or data lake stalls during a POC? This article summarizes common questions and solutions for new users, covering four scenarios: table design, data ingestion, query tuning, and data lake queries.",
+    "sidebar_label": "Must-Read Before POC",
+    "tags": ["POC", "Table Design", "Query Tuning", "Data Lake", "New Users"]
 }
 ---
 
-This document highlights common issues that new users may encounter, with the goal of accelerating the POC process. The content is organized by the typical POC workflow:
+This document summarizes common questions from new users to accelerate the POC process. The content is organized following the typical POC workflow:
 
-1. **Table Design** — Choose the data model, sort key, partitioning, and bucketing strategy.
-2. **Data Loading** — Pick the right loading method and avoid common pitfalls.
-3. **Query Tuning** — Diagnose slow queries and optimize bucketing and index configuration.
-4. **Data Lake Queries** — Additional optimization tips for Lakehouse scenarios.
+1. **Table Design** - Choose the data model, sort key, partitioning, and bucketing strategy.
+2. **Data Ingestion** - Choose the right ingestion method and avoid common pitfalls.
+3. **Query Tuning** - Diagnose slow queries and optimize bucket and index configurations.
+4. **Data Lake Queries** - Additional optimization tips for Lakehouse scenarios.
+
+:::tip Quick Checklist
+Complete a basic check in 5 minutes:
+1. Does the table use the appropriate data model (Duplicate/Unique/Aggregate Key)?
+2. Is the bucket count an integer multiple of the BE count?
+3. Do time-based queries include the partition column?
+4. Is Data Cache enabled (for data lake query scenarios)?
+:::
 
 ## Table Design
 
-Creating a table in Doris involves four decisions that affect load and query performance: data model, sort key, partitioning, and bucketing.
+Creating a table in Doris involves four decisions that affect ingestion and query performance: data model, sort key, partitioning, and bucketing.
 
 ### Data Model
 
-Choose the model based on how your data is written:
+Choose the right model based on how data is written:
 
-| Data Characteristics | Recommended Model | Why |
+| Data Characteristic | Recommended Model | Reason |
 |---|---|---|
-| Append-only (logs, events, facts) | **Duplicate Key** (default) | Keeps all rows, best query performance |
-| Updated by primary key (CDC, upsert) | **Unique Key** | New rows replace old rows with the same key |
-| Pre-aggregated metrics (PV, UV, sums) | **Aggregate Key** | Rows are merged with SUM/MAX/MIN at write time |
+| Append-only (logs, events, fact tables) | **Duplicate Key** (default) | Keeps all rows; best query performance |
+| Updated by primary key (CDC, Upsert) | **Unique Key** | New rows replace old rows with the same key |
+| Pre-aggregated metrics (PV, UV, summaries) | **Aggregate Key** | Merges rows by SUM/MAX/MIN at write time |
 
-**Duplicate Key works for most scenarios.** See [Data Model Overview](../table-design/data-model/intro).
+**Duplicate Key fits most scenarios.** For details, see [Data Model Overview](../table-design/data-model/intro).
 
 ### Sort Key
 
-Doris builds a [prefix index](../table-design/index/prefix-index) on the first 36 bytes of key columns. Follow these principles when setting the sort key:
+Doris builds a [prefix index](../table-design/index/prefix-index) on the first 36 bytes of the sort key. When setting the sort key, follow these principles:
 
-- **Frequently filtered columns first**: Put the columns most commonly used in WHERE conditions at the front.
-- **Fixed-size types first**: Place INT, BIGINT, DATE, and other fixed-size types before VARCHAR, because the prefix index stops at the first VARCHAR column.
-- **Add inverted indexes**: For columns not covered by the prefix index, add [inverted indexes](../table-design/index/inverted-index/overview) to speed up filtering.
+- **Put high-frequency filter columns first**: place columns most often used in WHERE conditions at the front.
+- **Put fixed-length types first**: put fixed-length types such as INT, BIGINT, and DATE before VARCHAR, because the prefix index truncates immediately when it encounters a VARCHAR.
+- **Add inverted indexes as a complement**: for columns the prefix index does not cover, add an [inverted index](../table-design/index/inverted-index/overview) to speed up filtering.
 
 ### Partitioning
 
-If you have a time column, use `AUTO PARTITION BY RANGE(date_trunc(time_col, 'day'))` to enable [partition pruning](../table-design/data-partitioning/auto-partitioning). Doris skips irrelevant partitions automatically.
+If you have a time column, use `AUTO PARTITION BY RANGE(date_trunc(time_col, 'day'))` to enable [partition pruning](../table-design/data-partitioning/auto-partitioning). Doris automatically skips irrelevant partitions.
 
 ### Bucketing
 
-Default is **Random bucketing** (recommended for Duplicate Key tables). Use `DISTRIBUTED BY HASH(col)` if you frequently filter or join on a specific column. See [Data Bucketing](../table-design/data-partitioning/data-bucketing).
+The default is **Random bucketing** (recommended for Duplicate Key tables). If you frequently filter or JOIN on a specific column, use `DISTRIBUTED BY HASH(that_column)`. For details, see [Data Bucketing](../table-design/data-partitioning/data-bucketing).
 
-**How to choose bucket count:**
+**How to choose the bucket count:**
 
-| Principle | Details |
+| Principle | Description |
 |---|---|
-| Multiple of BE count | Ensures even data distribution. When BEs are added later, queries typically scan multiple partitions, so performance holds up |
-| As low as possible | Avoids producing small files |
-| Compressed data per bucket ≤ 20 GB | ≤ 10 GB for Unique Key tables. Check with `SHOW TABLETS FROM your_table` |
-| No more than 128 per partition | Consider adding more partitions first if you need more. In extreme cases the upper bound is 1024, but this is rarely needed in production |
+| Set as an integer multiple of the BE count | Ensures data is evenly distributed. When you scale out BEs later, queries usually involve multiple partitions, so performance is not affected |
+| As few as possible | Avoid creating small files |
+| Compressed data per bucket <= 20 GB | <= 10 GB for Unique Key tables. Check with `SHOW TABLETS FROM your_table` |
+| No more than 128 buckets per partition | If you need more, increase the number of partitions first. The extreme upper limit is 1024, but production environments rarely need it |
 
-### Example Templates
+### Table Creation Templates
 
 #### Log / Event Analytics
+
+**Use case:** Append-only scenarios such as logs, events, and sensor data.
+
+**Prerequisites:** No special requirements.
 
 ```sql
 CREATE TABLE app_logs
@@ -74,7 +87,21 @@ AUTO PARTITION BY RANGE(date_trunc(`log_time`, 'day'))
 DISTRIBUTED BY RANDOM BUCKETS 10;
 ```
 
-#### Real-Time Dashboard with Upsert (CDC)
+**Verification steps:**
+
+```sql
+-- 1. Verify that partitions are created automatically
+SHOW PARTITIONS FROM app_logs;
+
+-- 2. Verify that data is evenly distributed
+SHOW TABLETS FROM app_logs;
+```
+
+#### Real-Time Dashboards and Upsert (CDC)
+
+**Use case:** Scenarios that need primary-key updates, such as user profiles and order records.
+
+**Prerequisites:** A clearly defined primary key column.
 
 ```sql
 CREATE TABLE user_profiles
@@ -89,7 +116,21 @@ UNIQUE KEY(user_id)
 DISTRIBUTED BY HASH(user_id) BUCKETS 10;
 ```
 
-#### Metrics Aggregation
+**Verification steps:**
+
+```sql
+-- 1. Verify primary key uniqueness (only one latest row per user_id)
+SELECT user_id, count(*) as cnt FROM user_profiles GROUP BY user_id HAVING cnt > 1;
+
+-- 2. Verify data distribution
+SHOW TABLETS FROM user_profiles;
+```
+
+#### Metric Aggregation
+
+**Use case:** Scenarios that need pre-aggregation, such as traffic statistics and business reports.
+
+**Prerequisites:** Clearly defined aggregation dimension columns and metric columns.
 
 ```sql
 CREATE TABLE site_metrics
@@ -105,76 +146,198 @@ AUTO PARTITION BY RANGE(date_trunc(`dt`, 'day'))
 DISTRIBUTED BY HASH(site_id) BUCKETS 10;
 ```
 
-## Data Loading
+**Verification steps:**
 
-Choose the right loading method and follow these best practices to avoid common performance issues:
+```sql
+-- 1. Verify that aggregation works (metrics with the same dt+site_id are merged)
+SELECT dt, site_id, pv, uv FROM site_metrics ORDER BY dt DESC LIMIT 10;
 
-- **Don't use `INSERT INTO VALUES` for bulk data.** Use [Stream Load](../data-operate/import/import-way/stream-load-manual) or [Broker Load](../data-operate/import/import-way/broker-load-manual) instead. See [Loading Overview](../data-operate/import/load-manual).
-- **Batch writes on the client side.** High-frequency small imports cause version accumulation. If not feasible, use [Group Commit](../data-operate/import/load-best-practices/group-commit-manual).
-- **Break large imports into smaller batches.** A failed long-running import must restart from scratch. Use [INSERT INTO SELECT with S3 TVF](../data-operate/import/import-way/streaming-job/continuous-load-overview) for incremental import.
-- **Enable `load_to_single_tablet`** for Duplicate Key tables with Random bucketing to reduce write amplification.
+-- 2. Verify that partition pruning works
+EXPLAIN SELECT * FROM site_metrics WHERE dt = '2024-01-01';
+```
 
-See [Load Best Practices](../data-operate/import/load-best-practices/load-best-practices).
+## Data Ingestion
+
+Choose the right ingestion method and follow these best practices to avoid common performance issues:
+
+- **Do not use `INSERT INTO VALUES` for bulk data.** Use [Stream Load](../data-operate/import/import-way/stream-load-manual) or [Broker Load](../data-operate/import/import-way/broker-load-manual) instead. For details, see [Ingestion Overview](../data-operate/import/load-manual).
+- **Merge writes on the client side first.** High-frequency small-batch ingestion causes version pile-up. If client-side merging is not feasible, use [Group Commit](../data-operate/import/load-best-practices/group-commit-manual).
+- **Split large ingestions into smaller batches.** A long-running ingestion must restart from the beginning if it fails. Use [INSERT INTO SELECT with the S3 TVF](../data-operate/import/import-way/streaming-job/continuous-load-overview) for incremental ingestion.
+- **Enable `load_to_single_tablet` for Duplicate Key tables with Random bucketing** to reduce write amplification.
+
+**Quick verification:**
+
+```sql
+-- View ingestion task status
+SHOW LOAD WHERE label = 'your_label';
+
+-- Check version pile-up (a high Version Count indicates ingestion is too frequent)
+SHOW TABLETS FROM your_table;
+```
+
+For details, see [Ingestion Best Practices](../data-operate/import/load-best-practices/load-best-practices).
 
 ## Query Tuning
 
 ### Bucketing
 
-Bucket count directly affects query parallelism and scheduling overhead — strike a balance between the two:
+The bucket count directly affects query parallelism and scheduling overhead, so you need to strike a balance:
 
-- **Don't over-bucket.** Too many small tablets create scheduling overhead and can degrade query performance by up to 50%.
-- **Don't under-bucket.** Too few tablets limit CPU parallelism.
-- **Avoid data skew.** Check tablet sizes with `SHOW TABLETS`. Switch to Random bucketing or a higher-cardinality bucket column if sizes vary significantly.
+- **Do not use too many buckets.** Too many small tablets create scheduling overhead and can reduce query performance by up to 50%.
+- **Do not use too few buckets.** Too few tablets limit CPU parallelism.
+- **Avoid data skew.** Use `SHOW TABLETS` to check tablet sizes. When sizes differ significantly, switch to Random bucketing or pick a bucketing column with higher cardinality.
 
-See [Bucketing](#bucketing) for sizing guidelines.
+**Diagnostic command:**
+
+```sql
+-- Check tablet size distribution (used to detect data skew)
+SHOW TABLETS FROM your_table\G
+-- Review the tablet count and size to decide whether to adjust the bucket count
+```
+
+See [Bucketing](#bucketing) for guidance on choosing the bucket count.
 
 ### Indexes
 
-- **Put the right columns in the sort key.** Unlike systems such as PostgreSQL, Doris only indexes the first 36 bytes of key columns and stops at the first VARCHAR. Columns beyond this prefix won't benefit from the sort key. Add [inverted indexes](../table-design/index/inverted-index/overview) for those columns. See [Sort Key](#sort-key).
+- **Set the sort key correctly.** Unlike systems such as PostgreSQL, Doris only indexes the first 36 bytes of the sort key, and it truncates immediately when it encounters a VARCHAR. Columns beyond the prefix range cannot benefit from the sort key and need an [inverted index](../table-design/index/inverted-index/overview). See [Sort Key](#sort-key).
+
+**Verify that the sort key works:**
+
+```sql
+EXPLAIN SELECT * FROM your_table WHERE filter_column = 'xxx';
+-- Check whether the Sort Key index is used
+```
 
 ### Diagnostic Tools
 
-See [Query Profile](../query-acceleration/query-profile) to diagnose slow queries.
+To diagnose slow queries, use [Query Profile](../query-acceleration/query-profile).
+
+**Quick start:**
+
+```sql
+-- 1. Run the query and obtain the query_id
+SET enable_profile = true;
+SELECT ...;
+
+-- 2. View the Query Profile
+SHOW PROFILELIST;
+SHOW PROFILE WHERE query_id = 'xxx';
+```
 
 ## Data Lake Queries
 
-If your POC involves querying data in Hive, Iceberg, Paimon, or other data lakes through Doris (i.e., a Lakehouse scenario), the following points have the greatest impact on test results.
+If your POC involves querying data lake data such as Hive, Iceberg, or Paimon through Doris (Lakehouse scenarios), the following points have the largest impact on test results.
 
-### Ensure Partition Pruning is Effective
+### Make Sure Partition Pruning Works
 
-Lake tables often hold massive amounts of data. Always include partition columns in your WHERE conditions so that Doris only scans the necessary partitions. Use `EXPLAIN <SQL>` to check the `partition` field and verify that pruning is working:
+Data lake tables often hold massive amounts of data, so always include the partition column in the WHERE clause so that Doris scans only the necessary partitions. Run `EXPLAIN <SQL>` and check the `partition` field to confirm that pruning works:
 
 ```
 0:VPAIMON_SCAN_NODE(88)
-    partition=203/0          -- 203 partitions pruned, 0 actually scanned
+    partition=203/0          -- 203 partitions are pruned, 0 are actually scanned
 ```
 
-If the partition count is much higher than expected, check whether your WHERE conditions correctly match the partition columns.
+If the partition count is much larger than expected, check whether the WHERE clause correctly matches the partition column.
 
 ### Enable Data Cache
 
-Remote storage (HDFS/object storage) has significantly higher IO latency than local disks. Data Cache caches recently accessed remote data on BE local disks, **delivering near-internal-table query performance for repeated queries on the same dataset**.
+The IO latency of remote storage (HDFS / object storage) is several times higher than local disks. Data Cache caches recently accessed remote data on the BE local disk, so **repeated queries on the same data can achieve performance close to that of internal tables**.
 
-- Cache is disabled by default. See the [Data Cache](../lakehouse/data-cache) documentation to configure and enable it.
-- Since version 4.0.2, **cache warmup** is supported, allowing you to proactively load hot data before POC testing.
+- The cache is disabled by default. See the [Data Cache](../lakehouse/data-cache) documentation for configuration.
+- **Cache prewarming** is supported starting from version 4.0.2, allowing you to proactively load hot data before POC testing.
 
 :::tip
-During POC, run a query once to populate the cache, then use the latency of the second query as the benchmark. This more accurately reflects steady-state production performance.
+During a POC, run a query once to load the cache, then use the latency of the second query as the baseline. This more accurately reflects the steady-state performance of a production environment.
 :::
 
-### Address Small Files
+### Manage Small Files
 
-Data lake storage often contains a large number of small files. Small files get split into many splits, increasing FE memory pressure (potentially causing OOM) and raising query planning overhead.
+Data lake data often contains many small files. Small files are split into a large number of Splits, increasing FE memory pressure and even causing OOM, and raising query planning overhead.
 
-- **Fix at source (recommended):** Periodically compact small files on the Hive/Spark side, keeping each file above 128 MB.
-- **Doris-side safeguard:** Use `SET max_file_split_num = 50000;` (supported since 4.0.4) to limit the maximum number of splits per scan and prevent OOM.
+- **Manage from the source (recommended):** periodically merge small files on the Hive/Spark side, keeping each file above 128 MB.
+- **Doris-side fallback:** use `SET max_file_split_num = 50000;` (supported since 4.0.4) to limit the maximum number of Splits per scan and prevent OOM.
 
 ### Use Query Profile for Diagnosis
 
-The bottleneck of data lake queries is typically IO rather than computation. [Query Profile](../query-acceleration/query-profile) can help locate the root cause of slow queries. Focus on:
+The bottleneck of data lake queries is usually IO rather than computation. [Query Profile](../query-acceleration/query-profile) helps locate the root cause of slow queries. Focus on:
 
-- **Split count and data volume**: Determine if too much data is being scanned.
-- **MergeIO metrics**: If `MergedBytes` is much larger than `RequestBytes`, read amplification is severe. Reduce `merge_io_read_slice_size_bytes` (default 8 MB) to mitigate.
-- **Cache hit rate**: Confirm that Data Cache is working effectively.
+- **Split count and data volume**: determine whether too much data is being scanned.
+- **MergeIO metrics**: if `MergedBytes` is much larger than `RequestBytes`, read amplification is severe; reduce `merge_io_read_slice_size_bytes` (default 8 MB) to mitigate it.
+- **Cache hit ratio**: confirm that Data Cache is working effectively.
 
-For more optimization techniques, see [Data Lake Query Optimization](../lakehouse/best-practices/optimization).
+For more optimization techniques, see [Data Lake Query Tuning](../lakehouse/best-practices/optimization).
+
+## Common Errors and Solutions
+
+### Table creation fails with "Tablet count should be greater than 0"
+
+**Cause:** The bucket count is set to 0 or bucketing is not specified.
+
+**Solution:** Check whether the DDL contains `DISTRIBUTED BY HASH(xxx) BUCKETS n` and ensure that BUCKETS is followed by a positive integer.
+
+```sql
+-- Correct example
+DISTRIBUTED BY HASH(user_id) BUCKETS 10;
+```
+
+### Slow query, suspected the index is not used
+
+**Diagnosis steps:**
+
+1. Run `EXPLAIN SQL` to view the query plan and confirm whether the Sort Key index is used.
+2. Run `SHOW TABLETS FROM table_name` to check whether tablet sizes are even.
+3. View the Query Profile to locate the bottleneck.
+
+```sql
+-- Check whether the index is used (look at output_id for Sort Key columns)
+EXPLAIN SELECT * FROM table_name WHERE key_col = 'xxx';
+
+-- Check tablet size (to detect data skew)
+SHOW TABLETS FROM table_name;
+```
+
+### OOM on data lake queries
+
+**Cause:** Too many small files cause the Split count to explode.
+
+**Solution:**
+
+1. Merge small files on the data source side (each file > 128 MB).
+2. Limit the Split count on the Doris side:
+
+```sql
+SET max_file_split_num = 50000;
+```
+
+### Ingestion version pile-up causes slow queries
+
+**Cause:** Frequent small-batch ingestion creates too many versions.
+
+**Solution:**
+
+1. Merge ingestion batches and reduce ingestion frequency.
+2. Enable Group Commit:
+
+```sql
+SET group_commit_mode = 'async_mode';
+```
+
+## FAQ
+
+### Q: How long does a POC take?
+
+Basic functional verification (table creation, ingestion, simple queries) usually takes 1-2 days. Detailed performance tuning takes 3-5 days.
+
+### Q: How should I choose the bucket count when creating a table?
+
+Set it to an integer multiple of the BE node count first to ensure even data distribution. The compressed data per bucket should be <= 20 GB (<= 10 GB for Unique Key tables).
+
+### Q: What should I do if queries are slower than expected?
+
+1. Run `EXPLAIN` to check whether the index is used.
+2. Run `SHOW TABLETS` to check for data skew.
+3. View the Query Profile to locate the bottleneck.
+
+### Q: Should I enable Data Cache?
+
+If your workload involves data lake queries (Hive/Iceberg/Paimon), enable it. The first query automatically caches data, and repeated queries achieve performance close to internal tables.

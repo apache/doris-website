@@ -1,64 +1,85 @@
 ---
 {
     "title": "CloudDM",
-    "language": "zh-CN",
-    "description": "CloudDM 由 Clougence 研发，是一款为团队和个人用户而设计的跨平台数据库工具，帮助实现安全、高效、合规的数据库变更与管理。"
+    "language": "en",
+    "description": "Use CloudDM to connect to Apache Doris and manage Doris data sources, with support for data access, masking, visual editing, and database CI/CD."
 }
 ---
 
-## 介绍
+## Overview
 
-CloudDM 由 Clougence 研发，是一款为团队和个人用户而设计的跨平台数据库工具，帮助实现安全、高效、合规的数据库变更与管理。
+<!-- Knowledge type: Scenario description -->
+<!-- Applicable scenario: Use CloudDM to connect to and manage Apache Doris data sources -->
 
-CloudDM 针对 Apache Doris 的一些特性提供专项适配，并为 Apache Doris 提供数据访问、数据脱敏、可视化编辑、数据库CI/CD 能力。
+CloudDM, developed by Clougence, is a cross-platform database tool for teams and individual users. It helps users perform database changes and management securely, efficiently, and in compliance with regulations.
 
-## 前置条件
+In Apache Doris scenarios, CloudDM provides dedicated adaptations for Doris features, supporting data access, data masking, visual editing, and database CI/CD. After reading this article, you can complete the following tasks:
 
-已安装 CloudDM。可以访问 https://www.cdmgr.com/ 下载并安装 CloudDM。
+- Add a Doris data source in CloudDM.
+- Enable data management for a Doris instance and test the connection.
+- Use CloudDM to access and manage Doris data.
 
-## 添加数据源
+## Preparation
 
-:::info 备注
-当前验证使用 CloudDM 2.8.0.0 版本。
+<!-- Knowledge type: Prerequisites -->
+<!-- Applicable scenario: Check the CloudDM installation and verify the version before connecting to Doris -->
+
+| Item | Requirement |
+|-------|------|
+| CloudDM | CloudDM is installed. You can visit the [CloudDM official website](https://www.cdmgr.com/) to download and install it. |
+| Verified version | This article is verified with CloudDM 2.8.0.0. |
+
+## Connect to a Doris data source
+
+<!-- Knowledge type: Procedure -->
+<!-- Applicable scenario: Create a Doris data source connection in CloudDM -->
+
+### 1. Add a Doris data source
+
+1. Log in to CloudDM.
+2. In the navigation bar, click **Data Source Management** > **Add Data Source**.
+3. Select the Doris data source.
+
+![Add a data source](/images/next/connection-integration/data-integration/clouddm/clouddm1-en.png)
+
+### 2. Configure connection information
+
+On the add data source page, configure the following connection information:
+
+| Item | Description |
+|-------|------|
+| Client address | The FE query port of the Doris cluster machine, for example, `hostID:9030`. |
+| Account | The username used to log in to the Doris cluster, for example, `admin`. |
+| Password | The password of the user used to log in to the Doris cluster. |
+
+:::tip
+Doris is divided into `internal catalog` and `external catalog`, and CloudDM can manage both of them at the same time.
 :::
 
-1. 登录 CloudDM。
-2. 在导航栏点击 **数据源管理** > **新增数据源**。
-3. 选择 Doris 数据源。
+:::info Note
+To manage the Doris `external catalog` in the form of `catalog.db` databases, the Doris version must be 2.1.0 or later.
+:::
 
-   ![添加数据源](/images/clouddm1-cn.png)
+### 3. Enable data management and test the connection
 
-4. 在添加数据源页面中，配置以下连接信息：
-  - Client 地址：Doris 集群机器的 FE 查询端口，如 hostID:9030。
-  - 账号：用于登录 Doris 集群的用户名，如 admin。
-  - 密码：用于登录 Doris 集群的用户密码。
-    :::tip
-    Doris 分为 internal catalog 和 external catalog，CloudDM 可以同时管理它们。
-    :::
+At the top, click **Query Settings** > **Query Configuration** to enable data management for the Doris instance and test the connection.
 
-    :::info 备注
-    通过 catalog.db 的 Database 形式来管理连接 Doris 的 external catalog 需要 Doris 版本在 2.1.0 及以上。
-    :::
+![Enable the data source](/images/next/connection-integration/data-integration/clouddm/clouddm2-en.png)
 
-5. 在上方点击 **查询设置** > **查询配置**，为 Doris 实例启用数据管理，并测试连接。
+### 4. Access Doris data
 
-   ![启用数据源](/images/clouddm2-cn.png)
+After the database connection is established, you can see the connected data source in the database connection navigation on the left, and connect to and manage the database through CloudDM.
 
-6. 访问数据。   
-   数据库连接建立以后，可以在左侧的数据库连接导航看到已连接的数据源，并且可以通过 CloudDM 连接并管理数据库。
+![Establish the connection](/images/next/connection-integration/data-integration/clouddm/clouddm3-en.png)
 
-   ![建立连接](/images/clouddm3-cn.png)
+## Supported Doris management scenarios
 
-## 功能支持
+<!-- Knowledge type: Feature support -->
+<!-- Applicable scenario: Understand which Doris management capabilities CloudDM supports -->
 
-- 查询客户端
-  - 可视化管理 Doris 中的数据库对象
-  - 控制台编写 SQL 操作 Doris
-  - 查询结果导出
-- 团队化使用
-  - 语句级授权，粒度表级别
-  - 工单审批
-  - 数据库 CI/CD
-  - 敏感数据脱敏
-  - SQL 审核规则
+CloudDM supports the following two categories of Doris features:
 
+| Scenario | Supported capabilities |
+|---------|---------|
+| Query client | Visually manage database objects in Doris; write SQL in the console to operate Doris; export query results. |
+| Team usage | Statement-level authorization down to the table level; ticket approval; database CI/CD; sensitive data masking; SQL review rules. |

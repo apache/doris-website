@@ -1,140 +1,200 @@
 ---
 {
-    "title": "Recommendations on Alibaba Cloud",
+    "title": "Deploying Doris Cluster on Alibaba Cloud Container Service",
+    "sidebar_label": "Alibaba Cloud Container Service Deployment Recommendations",
     "language": "en",
-    "description": "Alibaba Cloud Container Service ACK is a managed containerized service after purchasing an ECS instance,"
+    "description": "Deployment guide for Doris on Alibaba Cloud ACK/ACS, including environment checks, configuration tuning, image registry setup, and common troubleshooting. Resolves issues such as BE nodes failing to start, swap not disabled, and huge page memory configuration."
 }
 ---
 
-## Alibaba ACK  
+## Overview of Alibaba Cloud Container Service
 
-Alibaba Cloud Container Service ACK is a managed containerized service after purchasing an ECS instance, so you can obtain full access control permissions to adjust related system parameters. Use the instance image: Alibaba Cloud Linux 3. The current system parameters fully meet the requirements for running Doris. Those that do not meet the requirements can also be corrected in the container through the K8s privileged mode to ensure stable operation.  
-**Alibaba Cloud ACK cluster, deployed using Doris Operator, most environmental requirements can be met by the ECS default configuration. If not met, Doris Operator can correct it by itself**. Users can also manually correct it, as follows:
+Alibaba Cloud provides two container services:
 
-### Already exists cluster
+| Service | Description | Use Case |
+|------|------|----------|
+| **ACK** (Container Service for Kubernetes) | A managed containerized service after purchasing ECS instances, providing full access control | Scenarios requiring control over the underlying ECS, or BE node deployment in privileged mode |
+| **ACS** (Container Service ACS) | A cloud computing service with K8s as the interface, billed on demand, with no need to manage the underlying ECS | Pure elastic compute capacity, pay-as-you-go |
 
-If the Container Service cluster has already been created, you can modify it by referring to this document: [Cluster Environment OS Checking](../../install/preparation/os-checking.md)      
-Focus on the BE startup parameter requirements:  
-1. Disable and close swap: `swapon --show` will not be output if it is not enabled
-2. Check the maximum number of open file handles in the system `ulimit -n`
-3. Check and modify the number of virtual memory areas `sysctl vm.max_map_count`
-4. Whether transparent huge pages are closed `cat /sys/kernel/mm/transparent_hugepage/enabled` contains never  
-   The default values of the corresponding parameters are as follows:  
+This document describes how to deploy a cluster using Doris Operator on each of these services.
 
-  ```shell
-  [root@iZj6c12a1czxk5oer9rbp8Z ~]# swapon --show
-  [root@iZj6c12a1czxk5oer9rbp8Z ~]# ulimit -n
-  65535
-  [root@iZj6c12a1czxk5oer9rbp8Z ~]# sysctl vm.max_map_count
-  vm.max_map_count = 262144
-  [root@iZj6c12a1czxk5oer9rbp8Z ~]# cat /sys/kernel/mm/transparent_hugepage/enabled
-  [always] madvise never
-  ```  
+## ACK Deployment
 
-### Create a new cluster  
+ACK is a managed containerized service after purchasing ECS instances, providing full access control for system parameter tuning. When using the Alibaba Cloud Linux 3 image, the current system parameters fully meet the requirements for running Doris. For other images, parameters can be corrected inside the container through K8s privileged mode.
 
-If the cluster has not been purchased and created, you can click "Create Cluster" in the Alibaba Cloud Container Service ACK console to purchase it. You can adjust the configuration as needed. The above parameters can be added to the system adjustment script in "Instance Pre-customized Data" in the "Node Pool Configuration" step of creating a cluster.
-After the cluster is started, restart the node to complete the configuration. The reference script is as follows:  
+**When deploying with ACK + Doris Operator, most ECS default configurations meet the requirements, and any unmet parameters are corrected by the Operator.**
+
+### Scenario 1: Existing Cluster
+
+If a container service cluster has already been created, follow these steps to check and correct the parameters:
+
+#### Step 1: Check Swap Status
+
+```bash
+swapon --show
+```
+
+**Expected result**: No output (swap is disabled). If output indicates swap is enabled, run `swapoff -a` and reboot.
+
+#### Step 2: Check Maximum File Handle Count
+
+```bash
+ulimit -n
+```
+
+**Expected result**: Not less than 65535. If lower than this value, add the following to `/etc/security/limits.conf`:
+
+```shell
+* soft nofile 1000000
+* hard nofile 1000000
+```
+
+#### Step 3: Check Virtual Memory Area Count
+
+```bash
+sysctl vm.max_map_count
+```
+
+**Expected result**: Not less than 262144. If modification is required, run `sysctl -w vm.max_map_count=2000000`.
+
+#### Step 4: Check Transparent Huge Pages
+
+```bash
+cat /sys/kernel/mm/transparent_hugepage/enabled
+```
+
+**Expected result**: Contains `[never]`. If the value is `[always]`, run:
+
+```bash
+echo never > /sys/kernel/mm/transparent_hugepage/enabled
+echo never > /sys/kernel/mm/transparent_hugepage/defrag
+```
+
+For details, see [Operating System Checks](../../preparation/os-checking.md).
+
+### Scenario 2: New Cluster
+
+To create a new cluster, click "Create Cluster" in the Alibaba Cloud Container Service ACK console. In the **Node Pool Configuration** step, add the following script under "Instance Pre-Custom Data":
 
 ```shell
 #!/bin/bash
 chmod +x /etc/rc.d/rc.local
+
+# Disable firewall
 echo "sudo systemctl stop firewalld.service" >> /etc/rc.d/rc.local
 echo "sudo systemctl disable firewalld.service" >> /etc/rc.d/rc.local
+
+# Set virtual memory area count
 echo "sysctl -w vm.max_map_count=2000000" >> /etc/rc.d/rc.local
+
+# Disable swap
 echo "swapoff -a" >> /etc/rc.d/rc.local
+
+# Set file handle limit
 current_limit=$(ulimit -n)
 desired_limit=1000000
 config_file="/etc/security/limits.conf"
- if [ "$current_limit" -ne "$desired_limit" ]; then
-    echo "* soft nofile 1000000" >> "$config_file"
-    echo "* hard nofile 1000000" >> "$config_file"
+if [ "$current_limit" -ne "$desired_limit" ]; then
+   echo "* soft nofile 1000000" >> "$config_file"
+   echo "* hard nofile 1000000" >> "$config_file"
 fi
 ```
 
-## Alibaba ACS
+Reboot the nodes after the cluster starts for the changes to take effect.
 
-The ACS service is a cloud computing service that uses K8s as the user interface to provide container computing resources, providing elastic computing resources that are billed on demand. Unlike the above ACK, you do not need to pay attention to the specific use of ECS.
-The following points should be noted when using ACS:
+## ACS Deployment
 
-### Image repository
+ACS is a cloud computing service with K8s as the interface, providing pay-as-you-go elastic compute capacity. There is no need to manage the underlying ECS, but BE node startup requires privileged mode to modify system parameters (such as `vm.max_map_count`).
 
-When using ACS, it is recommended to use the supporting Alibaba  [Container Registry](https://www.alibabacloud.com/en/product/container-registry)(ACR). The personal and enterprise versions are enabled on demand.
-
-After configuring the ACR and image transfer environment, you need to migrate the official image provided by Doris to the corresponding ACR.
-
-If you use a private ACR to enable authentication, you can refer to the following steps:
-
-1. You need to set a `secret` of type `docker-registry` in advance to configure the authentication information for accessing the image warehouse.  
-
-  ```shell
-  kubectl create secret docker-registry image-hub-secret --docker-server={your-server} --docker-username={your-username} --docker-password={your-pwd}
-  ```
-
-2. Configure the secret using the above steps on DCR:  
-
-  ```yaml
-  spec:
-    feSpec:
-      replicas: 1
-      image: crpi-4q6quaxa0ta96k7h-vpc.cn-hongkong.personal.cr.aliyuncs.com/selectdb-test/doris.fe-ubuntu:3.0.3
-      imagePullSecrets:
-      - name: image-hub-secret
-    beSpec:
-      replicas: 3
-      image: crpi-4q6quaxa0ta96k7h-vpc.cn-hongkong.personal.cr.aliyuncs.com/selectdb-test/doris.be-ubuntu:3.0.3
-      imagePullSecrets:
-      - name: image-hub-secret
-      systemInitialization:
-        initImage: crpi-4q6quaxa0ta96k7h-vpc.cn-hongkong.personal.cr.aliyuncs.com/selectdb-test/alpine:latest
-  ```
-
-### Be systemInitialization  
-
-Currently, Alibaba Cloud is gradually pushing the ability to enable privileged mode on fully managed ACS services (some regions may not be enabled yet, you can submit a work order to apply for the ability to be enabled).  
-The Doris BE node startup requires some special environment parameters, such as Modify the number of virtual memory areas `sysctl -w vm.max_map_count=2000000`  
-Setting this parameter inside the container requires modifying the host configuration, so regular K8s clusters need to enable privileged mode in the pod. Operator adds `InitContainer` to the BE pod through `systemInitialization` to perform such operations.
-
-:::tip Tip  
-**If the current cluster cannot use privileged mode, the BE node cannot be started**. You can choose ACK container service + host to deploy the cluster.
+:::tip Tip
+If the current cluster cannot use privileged mode, BE nodes cannot be started. Consider deploying with ACK + host machines instead.
 :::
 
-### Service
+### Step 1: Configure Image Registry
 
-Since the ACS service is a cloud computing service that uses K8s as the user interface to provide container computing resources, it provides computing resources. Its nodes are virtual computing resources, and users do not need to pay attention to them. They are charged according to the amount of resources used, and can be expanded infinitely. That is, there is no physical concept of conventional nodes:
+ACS recommends using the matching Alibaba Cloud image registry [Container Registry (ACR)](https://www.alibabacloud.com/en/product/container-registry), which is available in Personal Edition and Enterprise Edition.
 
-```shell  
-$ kubectl get nodes
-NAME                            STATUS   ROLES   AGE   VERSION
-virtual-kubelet-cn-hongkong-d   Ready    agent   27h   v1.31.1-aliyun.1
+After migrating the official Doris images to the Alibaba Cloud image registry, create a secret if private images are used:
+
+```bash
+kubectl create secret docker-registry image-hub-secret \
+  --docker-server={your-server} \
+  --docker-username={your-username} \
+  --docker-password={your-pwd}
 ```
 
-Therefore, when deploying the Doris cluster, serviceType disables the NodePort mode and allows the use of ClusterIP and LB modes.  
+### Step 2: Configure DCR to Use Private Images
 
-- ClusterIP mode:  
+Configure `imagePullSecrets` in the DorisCluster CR:
 
-  ClusterIP modethe default network mode of Operator. For specific usage and access methods, please refer to [this document](https://kubernetes.io/docs/concepts/services-networking/service/#type-clusterip)  
+```yaml
+spec:
+  feSpec:
+    replicas: 1
+    image: <your-acr-registry>/selectdb-test/doris.fe-ubuntu:3.0.3
+    imagePullSecrets:
+    - name: image-hub-secret
+  beSpec:
+    replicas: 3
+    image: <your-acr-registry>/selectdb-test/doris.be-ubuntu:3.0.3
+    imagePullSecrets:
+    - name: image-hub-secret
+    systemInitialization:
+      initImage: <your-acr-registry>/selectdb-test/alpine:latest
+```
 
-- Load balancing mode:  
+### Step 3: Configure Service
 
-  can be configured as follows:
+ACS does not have a conventional Node concept, so Service is restricted from using NodePort mode. The following modes are available:
 
-  - Configure LB access through the DCR service annotations provided by Operator. The steps are as follows:
-    1. A CLB or NLB instance has been created through the load balancing console, and the instance is in the same region as the ACK cluster. If you haven't created one yet, see [Create and manage a CLB instance](https://www.alibabacloud.com/help/en/slb/classic-load-balancer/user-guide/create-and-manage-a-clb-instance) and [Create and manage an NLB instance](https://www.alibabacloud.com/help/en/slb/network-load-balancer/user-guide/create-and-manage-an-nlb-instance)。
-    2. Through DCR configuration, the access annotations of the above LB are in the following format:
-      ```yaml
-        feSpec:
-          replicas: 3
-          image: crpi-4q6quaxa0ta96k7h-vpc.cn-hongkong.personal.cr.aliyuncs.com/selectdb-test/doris.fe-ubuntu:3.0.3
-          service:
-            type: LoadBalancer
-            annotations:
-              service.beta.kubernetes.io/alibaba-cloud-loadbalancer-address-type: "intranet"
-      ```  
+#### ClusterIP Mode (Default)
 
-  - Host the LB service through the ACS console and generate a statefulset service bound to the corresponding resource control of FE or BE  
-    The steps are as follows:
-    1. serviceType is ClusterIP (default policy)
-    2. You can create a load balancing service through the Alibaba Cloud console interface: Container Compute Service ACS -> Cluster List -> Cluster -> Service, and use the `Create` button.
-    3. Select the newly created LB in the interface for creating `service`, which will be bound to `service` and will also be deregistered when the `service` is deregistered. However, this `service` is not controlled by Doris Operator.
+The default network mode of the Operator. See the [Kubernetes Service documentation](https://kubernetes.io/docs/concepts/services-networking/service/#type-clusterip).
+
+#### Load Balancer Mode
+
+**Method 1: Configure annotations through DCR**
+
+```yaml
+feSpec:
+  replicas: 3
+  image: <your-image>
+  service:
+    type: LoadBalancer
+    annotations:
+      service.beta.kubernetes.io/alibaba-cloud-loadbalancer-address-type: "intranet"
+```
+
+**Method 2: Manage through the ACS console**
+
+1. Set serviceType to ClusterIP (default) in the DCR.
+2. In the ACS console: Container Compute Service ACS → Cluster List → Cluster → Services → Create.
+3. Select the newly created LB to bind. This Service is managed alongside Doris Operator but is not controlled by the Operator.
+
+---
+
+## FAQ
+
+### Q: What if BE nodes cannot start?
+
+Check the following:
+1. **Privileged mode is not enabled**: ACS requires privileged mode to modify `vm.max_map_count`. If it cannot be enabled, use ACK instead.
+2. **Image pull failure**: Check whether `imagePullSecrets` is configured correctly.
+3. **Insufficient virtual memory area count**: Run `sysctl vm.max_map_count` and ensure the value is not less than 262144.
+
+### Q: Is it normal for cluster nodes to appear as virtual-kubelet?
+
+Yes. ACS uses virtual nodes to schedule containers. Node names such as `virtual-kubelet-cn-hongkong-d` are normal behavior in ACS.
+
+### Q: What if privileged mode is not enabled in an Alibaba Cloud region?
+
+Submit a ticket to request that the ACS privileged mode capability be allowlisted.
+
+### Q: How to choose between ACK and ACS?
+
+| Scenario | Recommendation |
+|------|------|
+| Full control over the underlying ECS is required | ACK |
+| Pure elastic pay-as-you-go, no need to manage the underlying infrastructure | ACS |
+| BE nodes require privileged mode | ACK |
 

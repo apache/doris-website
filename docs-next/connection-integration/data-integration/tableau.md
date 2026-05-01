@@ -1,113 +1,161 @@
 ---
 {
-    "title": "Tableau | Bi",
-    "language": "zh-CN",
-    "description": "对于在 Tableau 上实现 Apache Doris 访问，Tableau 官方的 MySQL 连接器可以满足需求。 该连接器基于 MySQL JDBC Driver 实现访问数据。",
+    "title": "Tableau",
+    "language": "en",
+    "description": "Connect to Apache Doris through Tableau's official MySQL connector and the MySQL JDBC Driver to enable data source integration, visual analytics, and dashboard development.",
+    "keywords": [
+        "Tableau",
+        "Apache Doris",
+        "BI",
+        "Data Visualization",
+        "MySQL JDBC",
+        "Data Source Integration"
+    ],
     "sidebar_label": "Tableau"
 }
 ---
 
+<!-- Knowledge Type: Operational Steps -->
+<!-- Applicable Scenario: Connect to Apache Doris in Tableau for data visualization and dashboard development -->
+
 # Tableau
 
-对于在 Tableau 上实现 Apache Doris 访问，Tableau 官方的 MySQL 连接器可以满足需求。 该连接器基于 MySQL JDBC Driver 实现访问数据。
+[Tableau](https://www.tableau.com/) is a leading business intelligence (BI) and data visualization tool. Apache Doris is compatible with the MySQL protocol, so you can connect to it directly through Tableau's official **MySQL connector** (based on the MySQL JDBC Driver), without any dedicated plugin.
 
-通过 MySQL 连接器，Tableau 可以将 Apache Doris 数据库和表作为数据源进行集成。要启用此功能，请遵循下面的设置指南：
+This document targets the following typical scenarios:
 
-- 使用前所需的设置
-- 在 Tableau 中配置 Apache Doris 数据源
-- 在 Tableau 中构建可视化
-- 连接和使用技巧
+- You have an existing Apache Doris cluster and want to perform data exploration and report development in Tableau.
+- You need to use detail data or aggregated results from Doris as the data source for Tableau workbooks.
+- You want to publish analytical results from Doris through Tableau dashboards.
 
-## 安装 Tableau 和 JDBC 驱动
+After completing the steps in this document, you will be able to:
 
-1. 下载并安装 [Tableau desktop](https://www.tableau.com/products/desktop/download)。
-2. 获取 [MySQL JDBC](https://velodb-bi-connector-1316291683.cos.ap-hongkong.myqcloud.com/Tableau/latest/mysql-connector-j-8.3.0.jar) （版本为 8.3.0）。
-3. JDBC 驱动放置路径
-   - MacOS：JDBC 驱动 jar 包放置路径：`~/Library/Tableau/Drivers`
-   - Windows：假定 `tableau_path` 为 windows 操作系统中 tableau 的安装目录，一般默认为：`tableau_path = C:\Program Files\Tableau` 则，JDBC 驱动 jar 包放置路径：`%tableau_path%\Drivers\`
+1. Install and configure Tableau Desktop and the MySQL JDBC driver in your local environment.
+2. Create a data source connection from Tableau to Apache Doris.
+3. Build visual charts and dashboards in Tableau on top of Doris data sources.
 
-接下来，就可以在 Tableau 中配置一个 Doris 数据源并开始构建数据可视化！
+## Prerequisites
 
-## 在 Tableau 中配置 Doris 数据源
+Before you start, make sure the following requirements are met:
 
-现在您已安装并设置了 **JDBC 和 Connector** 驱动程序，让我们来看一下如何在 Tableau 中定义一个连接到 Doris 中 tpch 数据库的数据源。
+| Item              | Requirement                                                              |
+| ----------------- | ----------------------------------------------------------------- |
+| Apache Doris cluster | Accessible, with the FE MySQL protocol port (default `9030`) open                |
+| Database account        | Has read permission on the target database                                          |
+| Tableau Desktop   | Latest version installed ([download page](https://www.tableau.com/products/desktop/download)) |
+| MySQL JDBC Driver | Version 8.3.0 ([download link](https://velodb-bi-connector-1316291683.cos.ap-hongkong.myqcloud.com/Tableau/latest/mysql-connector-j-8.3.0.jar)) |
 
-1. 收集您的连接详细信息
+## Step 1: Install Tableau and the JDBC driver
 
-要通过 JDBC 连接到 Apache Doris，您需要以下信息：
+1. Download and install [Tableau Desktop](https://www.tableau.com/products/desktop/download).
+2. Download [MySQL JDBC Driver 8.3.0](https://velodb-bi-connector-1316291683.cos.ap-hongkong.myqcloud.com/Tableau/latest/mysql-connector-j-8.3.0.jar).
+3. Place the JDBC driver jar file in the directory designated by Tableau:
 
-| 参数                 | 含义                                                                 | 示例                       |
-| -------------------- | -------------------------------------------------------------------- | ------------------------- |
-| Server               | 数据库 host                                                           | 127.0.1.28                |
-| Port                 | 数据库 MySQL 端口                                                     | 9030                      |
-| Database             | 数据库名                                                               | tpch                      |
-| Username             | 用户名                                                                 | testuser                  |
-| Password             | 密码                                                                   |                          |
-| Init SQL Statement   | 初始化 SQL 语句                                                         | `select * from database.table` |
+    | Operating System | Driver Path                                                                  |
+    | -------- | ----------------------------------------------------------------------------- |
+    | macOS    | `~/Library/Tableau/Drivers`                                                   |
+    | Windows  | `%tableau_path%\Drivers\` (default `tableau_path = C:\Program Files\Tableau`) |
 
+4. Restart Tableau Desktop so that the driver takes effect.
 
-2. 启动 Tableau。（如果您已经在运行它，请重新启动。）
-3. 从左侧菜单中，点击 **To a Server** 部分下的 **More**。在可用连接器列表中搜索 **mysql **
+## Step 2: Configure the Apache Doris data source in Tableau
 
-![](/images/ecomsystem/tableau/QSrsbadm0oEiuHxyGv3clFhTnLh.png)
+After installing the driver, you can create a data source in Tableau that connects to Doris (the example uses the `tpch` database).
 
-4. 点击 **MySql **，将会弹出以下对话框：
+### 1. Prepare connection information
 
-![](/images/ecomsystem/tableau/DN47bCp5ZovHCmxH0DAc3fBonR3.png)
+The parameters required to connect to Apache Doris through JDBC are as follows:
 
-5. 按照对话框提示输入相应的连接信息。
-6. 在上述输入框完成后，即可点击 **Sign In** 按钮，您应该会看到一个新的 Tableau 工作簿：
-   ![](/images/ecomsystem/tableau/LJK9bPMptoAGjGxzoCtcY8Agnye.png)
+| Parameter               | Description                              | Example                              |
+| ------------------ | --------------------------------- | --------------------------------- |
+| Server             | Host address of the Doris FE               | `127.0.0.1`                       |
+| Port               | MySQL protocol port of the Doris FE        | `9030`                            |
+| Database           | Database name                          | `tpch`                            |
+| Username           | User name                            | `testuser`                        |
+| Password           | Password                              | (fill in based on your account)                   |
+| Init SQL Statement | Initialization SQL automatically executed after the connection is established    | `select * from database.table`    |
 
-接下来，就可以在 Tableau 中构建一些可视化了！
+### 2. Create the connection
 
-## 在 Tableau 中构建可视化
+1. Start Tableau Desktop. If it is already running, restart it to load the driver.
+2. In the left-hand menu, under **To a Server**, click **More**, then search for **MySQL** in the connector list:
 
-我们选择 TPC-H 数据作为数据源，Doris TPC-H 数据源构建方式参考[此文档](../../benchmark/tpch.md)
+    ![Search for the MySQL connector](/images/next/connection-integration/data-integration/tableau/QSrsbadm0oEiuHxyGv3clFhTnLh.png)
 
-现在我们在 Tableau 中配置了 Doris 数据源，让我们可视化数据
+3. Click **MySQL** to open the connection configuration dialog:
 
-1. 将 customer 表 和 orders 表拖到工作簿中。并在下方为他们选定表关联字段 Custkey
-   ![](/images/ecomsystem/tableau/ZJuBbDBc5o2Gnyxhn7icv30xnXw.png)
-2. 将 nation 表拖到工作簿中 并 与 customer 表 选定表关联字段 Nationkey
-   ![](/images/ecomsystem/tableau/GPXQbcNUnobHtLx5sIocMHAwn2d.png)
-3. 现在您已经将 customer 表、 orders 表 和 nation 表关联为数据源，因此您可以利用此关系处理有关数据的问题。选择工作簿底部的 `Sheet 1` 选项卡，进入工作台。
-   ![](/images/ecomsystem/tableau/FsHmbUOKIoFT5YxWmGecLArLnjd.png)
-4. 假设您想知道每年的用户量汇总。将 OrderDate 从 orders 拖动到 `Columns` 区域（水平字段），然后将 customer(count) 从 customer 拖到 `Rows`。Tableau 将生成以下折线图：
-   ![](/images/ecomsystem/tableau/I9SCbCFzoo7TgLx6BP1cHdtRnWc.png)
+    ![MySQL connection configuration dialog](/images/next/connection-integration/data-integration/tableau/DN47bCp5ZovHCmxH0DAc3fBonR3.png)
 
-一张简单的折线图就制作完成了，但该数据集是通过 tpch 脚本和默认规则自动生成的非实际数据，不具备参考性，旨在测试可用与否。
+4. Fill in the connection information you prepared in the previous step, following the prompts in the dialog.
+5. Click **Sign In**. After the connection succeeds, a new Tableau workbook opens:
 
-5. 假设您想知道按地域（国别）和 年份计算的平均订单金额（美元）：
-    - 点击 `New Worksheet` 选项卡创建新表
-    - 将 Name 从 nation 表拖入 `Rows`
-    - 将 OrderDate 从 orders 表 拖入 `Columns`
+    ![Tableau workbook](/images/next/connection-integration/data-integration/tableau/LJK9bPMptoAGjGxzoCtcY8Agnye.png)
 
-您应该会看到以下内容：
+## Step 3: Build visualizations in Tableau
 
-6. 注意：`Abc` 值只是填充值，因为您未将聚合逻辑定义到该图标，因此需要您拖动度量到表格上。将 Totalprice 从 orders 表拖到表格中间。请注意默认的计算是对 Totalprices 进行 SUM：
-   ![](/images/ecomsystem/tableau/Am9IbyUo4o30DixVi2ccoZvKn8b.png)
-7. 点击 `SUM` 并将 `Measure` 更改为 `Average`。
-   ![](/images/ecomsystem/tableau/AaFwbMOKTo86NaxU54mcVYs1nJd.png)
-8. 从同一下拉菜单中选择 `Format ` 将 `Numbers` 更改为 `Currency (Standard)`：
-   ![](/images/ecomsystem/tableau/ZmRDbjws9o5Ampx4YZYcS6Umnqf.png)
-9. 得到一张符合预期的表格：
-   ![](/images/ecomsystem/tableau/MNb0bjoB2ozn4kxfKx9cVj2hnhb.png)
+The following example uses the TPC-H dataset to demonstrate how to build visualizations on top of a Doris data source. For instructions on building TPC-H data, see the [TPC-H Benchmark documentation](../../lakehouse/best-practices/tpch.md).
 
-至此，已经成功将 Tableau 连接到 Apache Doris，并实现了数据分析和可视化看板制作。
+### 1. Join the data tables
 
-## 连接和使用技巧
+1. Drag the `customer` and `orders` tables into the workbook, and set the join field to `Custkey` in the panel below:
 
-**性能优化**
+    ![Join customer and orders](/images/next/connection-integration/data-integration/tableau/ZJuBbDBc5o2Gnyxhn7icv30xnXw.png)
 
-- 根据实际需求，合理创建 doris 库表，按时间分区分桶，可有效减少谓词过滤和大部分数据传输
-- 适当的数据预聚合，可以通过 Doris 侧创建物化视图的方式。
-- 设置合理的刷新计划，均衡刷新的计算资源消耗 和 看板数据时效性
+2. Drag the `nation` table into the workbook and set the join field with `customer` to `Nationkey`:
 
-**安全配置**
+    ![Join nation and customer](/images/next/connection-integration/data-integration/tableau/GPXQbcNUnobHtLx5sIocMHAwn2d.png)
 
-- 建议使用 VPC 私有连接，避免公网访问引入安全风险。
-- 配置 安全组 限制访问。
-- 启用 SSL/TLS 连接等访问方式。
-- 细化 Doris 用户账号角色和访问权限，避免过度下放权限。
+3. After joining the three tables, you have a data source ready for analysis. Click the `Sheet 1` tab at the bottom of the workbook to enter the worksheet:
 
+    ![Enter the worksheet](/images/next/connection-integration/data-integration/tableau/FsHmbUOKIoFT5YxWmGecLArLnjd.png)
+
+### 2. Scenario A: Annual customer count summary (line chart)
+
+Drag `OrderDate` (from `orders`) into `Columns`, and drag `customer(count)` (from `customer`) into `Rows`. Tableau then generates a line chart:
+
+![Annual customer count line chart](/images/next/connection-integration/data-integration/tableau/I9SCbCFzoo7TgLx6BP1cHdtRnWc.png)
+
+:::note
+The TPC-H dataset is generated by a script using default rules and is not real business data. The results are intended only for feature demonstration and connectivity verification.
+:::
+
+### 3. Scenario B: Average order amount by region and year
+
+1. Click `New Worksheet` to create a new sheet.
+2. Drag `Name` (from `nation`) into `Rows`.
+3. Drag `OrderDate` (from `orders`) into `Columns`.
+
+    At this point, the table shows `Abc` placeholder values because no aggregated measure has been specified.
+
+4. Drag `Totalprice` (from `orders`) into the center of the table. The default aggregation is `SUM`:
+
+    ![Default SUM aggregation](/images/next/connection-integration/data-integration/tableau/Am9IbyUo4o30DixVi2ccoZvKn8b.png)
+
+5. Click `SUM` and change `Measure` to `Average`:
+
+    ![Change to Average](/images/next/connection-integration/data-integration/tableau/AaFwbMOKTo86NaxU54mcVYs1nJd.png)
+
+6. In the same drop-down menu, choose `Format`, then set `Numbers` to `Currency (Standard)`:
+
+    ![Format as currency](/images/next/connection-integration/data-integration/tableau/ZmRDbjws9o5Ampx4YZYcS6Umnqf.png)
+
+7. The final report matches the expected output:
+
+    ![Final report](/images/next/connection-integration/data-integration/tableau/MNb0bjoB2ozn4kxfKx9cVj2hnhb.png)
+
+At this point, you have successfully connected Tableau to Apache Doris and built data analysis and visualization dashboards.
+
+## Best practices
+
+### Performance optimization
+
+- **Design table schemas carefully**: Design partitioning and bucketing for Doris tables based on query patterns to reduce the volume of scanned data and the cost of data transfer.
+- **Use materialized views**: For high-frequency aggregation queries, create materialized views in Doris to precompute aggregations and speed up Tableau dashboard responses.
+- **Set a reasonable refresh schedule**: Balance refresh frequency against compute resource consumption to keep dashboards timely while controlling cluster load.
+
+### Security configuration
+
+- **Network isolation**: Use VPC private connections instead of accessing Doris directly over the public network.
+- **Access control**: Restrict the source of access to Doris ports through security groups.
+- **Transport encryption**: Enable SSL/TLS encrypted connections.
+- **Principle of least privilege**: Configure Doris user roles and permissions in a fine-grained way to avoid over-authorization.

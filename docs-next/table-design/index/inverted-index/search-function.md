@@ -1,29 +1,29 @@
 ---
 {
-    "title": "SEARCH 函数",
-    "language": "zh-CN",
-    "description": "SEARCH 函数是 Apache Doris 4.0 提供的统一全文检索入口，通过简洁的 DSL 表达式描述查询条件，并基于倒排索引高效执行词项、短语、布尔、通配符与正则等多种检索。"
+    "title": "SEARCH Function",
+    "language": "en",
+    "description": "The SEARCH function is the unified full-text search entry point provided by Apache Doris 4.0. It describes query conditions through a concise DSL expression and efficiently executes term, phrase, boolean, wildcard, and regex searches based on the inverted index."
 }
 ---
 
-<!-- 知识类型: 函数参考 / 操作步骤 -->
-<!-- 适用场景: 全文检索 / 倒排索引查询 / DSL 表达式编写 -->
+<!-- Knowledge type: Function reference / Procedure -->
+<!-- Use cases: Full-text search / Inverted index query / DSL expression authoring -->
 
-`SEARCH` 函数是 Apache Doris 自 4.0 版本起提供的统一全文检索查询入口。它通过简洁的 DSL（领域特定语言）描述查询条件，并基于倒排索引高效执行。
+The `SEARCH` function is the unified full-text search query entry point provided by Apache Doris starting from version 4.0. It describes query conditions through a concise DSL (domain-specific language) and executes them efficiently based on the inverted index.
 
-`SEARCH` 是一个返回布尔值的谓词函数，可作为过滤条件出现在 `WHERE` 子句中。它接收 SEARCH DSL 字符串用于描述文本匹配规则，并将可匹配条件下推至倒排索引执行。
+`SEARCH` is a predicate function that returns a boolean value. It can appear as a filter condition in a `WHERE` clause. It accepts a SEARCH DSL string that describes text matching rules and pushes down matchable conditions to the inverted index for execution.
 
-**典型使用场景：**
+**Typical use cases:**
 
-- 在文本字段上执行词项、短语、布尔组合检索
-- 跨多列进行联合搜索
-- 使用通配符或正则表达式进行模式匹配
-- 对 VARIANT 子列进行结构化文本检索
-- 兼容 Lucene/Elasticsearch query_string 语法风格
+- Perform term, phrase, and boolean combination searches on text fields
+- Run combined searches across multiple columns
+- Use wildcards or regular expressions for pattern matching
+- Perform structured text searches on VARIANT subcolumns
+- Maintain compatibility with the Lucene/Elasticsearch query_string syntax style
 
-## 语法
+## Syntax
 
-### 基本调用形式
+### Basic Invocation Forms
 
 ```sql
 SEARCH('<search_expression>')
@@ -31,44 +31,44 @@ SEARCH('<search_expression>', '<default_field>')
 SEARCH('<search_expression>', '<default_field>', '<default_operator>')
 ```
 
-**参数说明：**
+**Parameter description:**
 
-| 参数 | 是否必填 | 说明 |
+| Parameter | Required | Description |
 | --- | --- | --- |
-| `<search_expression>` | 必填 | SEARCH DSL 查询表达式（字符串字面量） |
-| `<default_field>` | 可选 | 当 DSL 中的词项未显式指定字段时自动套用的列名 |
-| `<default_operator>` | 可选 | 多词项表达式默认布尔运算符，仅接受 `and` 或 `or`（不区分大小写），默认为 `or` |
+| `<search_expression>` | Required | The SEARCH DSL query expression (a string literal) |
+| `<default_field>` | Optional | The column name automatically applied when terms in the DSL do not explicitly specify a field |
+| `<default_operator>` | Optional | The default boolean operator for multi-term expressions. Only `and` or `or` is accepted (case insensitive). The default is `or` |
 
-**使用要点：**
+**Usage notes:**
 
-- **位置**：用于 `WHERE` 子句，作为谓词参与行过滤
-- **返回类型**：BOOLEAN（匹配为 TRUE）
+- **Position**: Used in a `WHERE` clause as a predicate participating in row filtering
+- **Return type**: BOOLEAN (TRUE on a match)
 
-提供 `default_field` 后，Doris 会把裸词项或函数自动扩展到该字段。例如：
+When `default_field` is provided, Doris automatically expands bare terms or functions to that field. For example:
 
-- `SEARCH('foo bar', 'tags', 'and')` 等价于 `SEARCH('tags:ALL(foo bar)')`
-- `SEARCH('foo bar', 'tags')` 会展开为 `tags:ANY(foo bar)`
+- `SEARCH('foo bar', 'tags', 'and')` is equivalent to `SEARCH('tags:ALL(foo bar)')`
+- `SEARCH('foo bar', 'tags')` expands to `tags:ANY(foo bar)`
 
-DSL 中显式出现的布尔操作优先级最高，会覆盖默认运算符。
+Boolean operations that appear explicitly in the DSL have the highest precedence and override the default operator.
 
-### Options 参数（JSON 格式）
+### Options Parameter (JSON Format)
 
-第二个参数也可以是 JSON 字符串，用于高级配置：
+The second parameter can also be a JSON string for advanced configuration:
 
 ```sql
 SEARCH('<search_expression>', '<options_json>')
 ```
 
-**支持的选项：**
+**Supported options:**
 
-| 选项 | 类型 | 说明 |
+| Option | Type | Description |
 | --- | --- | --- |
-| `default_field` | string | 未指定字段的词项使用的默认列名 |
-| `default_operator` | string | 多词项表达式的默认运算符（`and` 或 `or`） |
-| `mode` | string | `standard`（默认）或 `lucene` |
-| `minimum_should_match` | integer | SHOULD 子句最小匹配数（仅 Lucene 模式） |
+| `default_field` | string | The default column name used for terms without an explicitly specified field |
+| `default_operator` | string | The default operator for multi-term expressions (`and` or `or`) |
+| `mode` | string | `standard` (default) or `lucene` |
+| `minimum_should_match` | integer | The minimum number of SHOULD clause matches (Lucene mode only) |
 
-**示例：**
+**Example:**
 
 ```sql
 SELECT * FROM docs
@@ -76,27 +76,27 @@ WHERE SEARCH('apple banana',
              '{"default_field":"title","default_operator":"and","mode":"lucene"}');
 ```
 
-### NULL 与三值逻辑
+### NULL and Three-Valued Logic
 
-`SEARCH()` 遵循 SQL 三值逻辑：
+`SEARCH()` follows SQL three-valued logic:
 
-- 当所有参与匹配的列值均为 NULL 时，结果为 UNKNOWN（在 `WHERE` 中被过滤）
-- 与其他子表达式组合时，按布尔短路原则返回结果，例如：
+- When all column values participating in the match are NULL, the result is UNKNOWN (filtered out in `WHERE`)
+- When combined with other subexpressions, the result follows boolean short-circuit rules. For example:
     - `TRUE OR NULL = TRUE`
     - `FALSE OR NULL = NULL`
     - `NOT NULL = NULL`
 
-该行为与文本检索算子保持一致。
+This behavior is consistent with text search operators.
 
-## 按场景使用 SEARCH
+## Using SEARCH by Scenario
 
-### 场景一：单词项匹配
+### Scenario 1: Single-Term Match
 
-**适用场景：** 检索某一字段中包含特定词项的文档。
+**Use case:** Search for documents that contain a specific term in a field.
 
-- **语法：** `column:term`
-- **语义：** 在列的分词结果中匹配该词项；是否区分大小写取决于索引属性 `lower_case`
-- **索引建议：** 为该列创建带合适 `parser`/`analyzer` 的倒排索引
+- **Syntax:** `column:term`
+- **Semantics:** Match the term against the tokenized result of the column. Whether matching is case sensitive depends on the index property `lower_case`
+- **Index recommendation:** Create an inverted index on the column with an appropriate `parser`/`analyzer`
 
 ```sql
 SELECT id, title FROM search_test_basic WHERE SEARCH('title:Machine');
@@ -104,45 +104,45 @@ SELECT id, title FROM search_test_basic WHERE SEARCH('title:Python');
 SELECT id, title FROM search_test_basic WHERE SEARCH('category:Technology');
 ```
 
-### 场景二：多词项 OR 匹配（ANY）
+### Scenario 2: Multi-Term OR Match (ANY)
 
-**适用场景：** 命中候选词列表中的任意一个即视为匹配，例如标签匹配、关键词联合检索。
+**Use case:** A match occurs when any term in a candidate list is hit, for example tag matching or combined keyword searches.
 
-- **语法：** `column:ANY(term1 term2 ...)`
-- **语义：** 列的分词结果中包含列表里任意一个词项即可（OR 语义）；顺序无关，重复词忽略
-- **索引建议：** 为该列创建分词倒排索引（如 `english`/`chinese`/`unicode`）
+- **Syntax:** `column:ANY(term1 term2 ...)`
+- **Semantics:** The tokenized result of the column contains any term in the list (OR semantics). Order does not matter, and duplicate terms are ignored
+- **Index recommendation:** Create a tokenized inverted index on the column (such as `english`/`chinese`/`unicode`)
 
 ```sql
 SELECT id, title FROM search_test_basic WHERE SEARCH('tags:ANY(python javascript)');
 SELECT id, title FROM search_test_basic WHERE SEARCH('tags:ANY(machine learning tutorial)');
 
--- 边界：单值 ANY 等价于词项查询
+-- Edge case: a single-value ANY is equivalent to a term query
 SELECT id, title FROM search_test_basic WHERE SEARCH('tags:ANY(python)');
 ```
 
-### 场景三：多词项 AND 匹配（ALL）
+### Scenario 3: Multi-Term AND Match (ALL)
 
-**适用场景：** 必须同时命中多个词项，例如严格主题筛选。
+**Use case:** Multiple terms must all be hit, for example strict topic filtering.
 
-- **语法：** `column:ALL(term1 term2 ...)`
-- **语义：** 列的分词结果中同时包含列表里所有词项（AND 语义）；顺序无关，重复词忽略
-- **索引建议：** 为该列创建分词倒排索引（如 `english`/`chinese`/`unicode`）
+- **Syntax:** `column:ALL(term1 term2 ...)`
+- **Semantics:** The tokenized result of the column contains all terms in the list at the same time (AND semantics). Order does not matter, and duplicate terms are ignored
+- **Index recommendation:** Create a tokenized inverted index on the column (such as `english`/`chinese`/`unicode`)
 
 ```sql
 SELECT id, title FROM search_test_basic WHERE SEARCH('tags:ALL(machine learning)');
 SELECT id, title FROM search_test_basic WHERE SEARCH('tags:ALL(programming tutorial)');
 
--- 边界：单值 ALL 等价于词项查询
+-- Edge case: a single-value ALL is equivalent to a term query
 SELECT id, title FROM search_test_basic WHERE SEARCH('tags:ALL(python)');
 ```
 
-### 场景四：布尔组合查询
+### Scenario 4: Boolean Combination Query
 
-**适用场景：** 多个条件之间需要 AND/OR/NOT 组合，例如「必须包含 A 且不包含 B」。
+**Use case:** Multiple conditions need to be combined with AND/OR/NOT, for example "must contain A and not contain B".
 
-- **语法：** `(expr) AND/OR/NOT (expr)`
-- **语义：** 在 SEARCH 内用 `AND`、`OR`、`NOT` 组合子表达式
-- **索引建议：** 尽量将可匹配条件写入 SEARCH 内部以获得索引下推；其他 WHERE 条件作为过滤
+- **Syntax:** `(expr) AND/OR/NOT (expr)`
+- **Semantics:** Combine subexpressions inside SEARCH using `AND`, `OR`, and `NOT`
+- **Index recommendation:** Place matchable conditions inside SEARCH whenever possible to obtain index pushdown. Use other WHERE conditions for additional filtering
 
 ```sql
 SELECT id, title FROM search_test_basic
@@ -155,13 +155,13 @@ SELECT id, title FROM search_test_basic
 WHERE SEARCH('category:Technology AND NOT title:Machine');
 ```
 
-### 场景五：复杂嵌套表达式
+### Scenario 5: Complex Nested Expressions
 
-**适用场景：** 需要通过括号控制布尔优先级，构造多层嵌套的过滤条件。
+**Use case:** Use parentheses to control boolean precedence and construct multi-level nested filter conditions.
 
-- **语法：** 使用括号对表达式分组，例如 `(expr1 OR expr2) AND expr3`
-- **语义：** 通过括号控制布尔优先级，支持多层嵌套
-- **索引建议：** 同布尔组合查询
+- **Syntax:** Use parentheses to group expressions, such as `(expr1 OR expr2) AND expr3`
+- **Semantics:** Control boolean precedence with parentheses. Multi-level nesting is supported
+- **Index recommendation:** Same as boolean combination queries
 
 ```sql
 SELECT id, title FROM search_test_basic
@@ -171,65 +171,65 @@ SELECT id, title FROM search_test_basic
 WHERE SEARCH('tags:ANY(python javascript) AND (category:Technology OR category:Programming)');
 ```
 
-### 场景六：兼容 Lucene/Elasticsearch 语法
+### Scenario 6: Lucene/Elasticsearch Syntax Compatibility
 
-**适用场景：** 从 Elasticsearch 迁移、或希望按 Lucene query_string 语义书写表达式。
+**Use case:** Migrating from Elasticsearch, or wishing to write expressions following the Lucene query_string semantics.
 
-Lucene 模式模拟 Elasticsearch/Lucene 的 query_string 行为，布尔操作符作为左到右的修饰符工作，而非传统的布尔代数。
+Lucene mode emulates the query_string behavior of Elasticsearch/Lucene. Boolean operators work as left-to-right modifiers rather than traditional boolean algebra.
 
-**与标准模式的主要区别：**
+**Main differences from standard mode:**
 
-- AND/OR/NOT 是影响相邻词项的修饰符
-- 操作符优先级从左到右
-- 内部使用 MUST/SHOULD/MUST_NOT（类似 Lucene 的 Occur 枚举）
-- 纯 NOT 查询返回空结果（需要正向子句）
+- AND/OR/NOT are modifiers that affect adjacent terms
+- Operator precedence is left to right
+- MUST/SHOULD/MUST_NOT are used internally (similar to Lucene's Occur enum)
+- A pure NOT query returns an empty result (a positive clause is required)
 
-**启用 Lucene 模式：**
+**Enable Lucene mode:**
 
 ```sql
--- 基本 Lucene 模式
+-- Basic Lucene mode
 SELECT * FROM docs
 WHERE SEARCH('apple AND banana',
              '{"default_field":"title","mode":"lucene"}');
 
--- 使用 minimum_should_match
+-- Use minimum_should_match
 SELECT * FROM docs
 WHERE SEARCH('apple AND banana OR cherry',
              '{"default_field":"title","mode":"lucene","minimum_should_match":1}');
 ```
 
-**行为对比：**
+**Behavior comparison:**
 
-| 查询 | 标准模式 | Lucene 模式 |
+| Query | Standard mode | Lucene mode |
 | --- | --- | --- |
-| `a AND b` | a ∩ b | +a +b（都是 MUST） |
-| `a OR b` | a ∪ b | a b（都是 SHOULD，min=1） |
-| `NOT a` | ¬a | 空结果（无正向子句） |
-| `a AND NOT b` | a ∩ ¬b | +a -b（MUST a，MUST_NOT b） |
-| `a AND b OR c` | (a ∩ b) ∪ c | +a b c（只有 a 是 MUST） |
+| `a AND b` | a ∩ b | +a +b (both MUST) |
+| `a OR b` | a ∪ b | a b (both SHOULD, min=1) |
+| `NOT a` | ¬a | Empty result (no positive clause) |
+| `a AND NOT b` | a ∩ ¬b | +a -b (MUST a, MUST_NOT b) |
+| `a AND b OR c` | (a ∩ b) ∪ c | +a b c (only a is MUST) |
 
-> **注意：** 在 Lucene 模式中，`a AND b OR c` 从左到右解析：OR 操作符将 `b` 从 MUST 改为 SHOULD。使用 `minimum_should_match` 来要求 SHOULD 子句匹配。
+> **Note:** In Lucene mode, `a AND b OR c` is parsed from left to right: the OR operator changes `b` from MUST to SHOULD. Use `minimum_should_match` to require SHOULD clauses to match.
 
-### 场景七：短语查询
+### Scenario 7: Phrase Query
 
-**适用场景：** 检索连续且有序的词组，例如「machine learning」必须按顺序出现。
+**Use case:** Search for a contiguous and ordered phrase, for example requiring "machine learning" to appear in order.
 
-- **语法：** `column:"quoted phrase"`
-- **语义：** 根据列的分析器匹配连续且有序的词项，需使用双引号包裹完整短语
-- **索引建议：** 目标列必须使用带位置信息的分词倒排索引（配置 `parser`）
+- **Syntax:** `column:"quoted phrase"`
+- **Semantics:** Match contiguous and ordered terms according to the column's analyzer. The full phrase must be wrapped in double quotes
+- **Index recommendation:** The target column must use a tokenized inverted index that carries position information (configured with `parser`)
 
 ```sql
 SELECT id, title FROM search_test_basic
 WHERE SEARCH('content:"machine learning"');
 ```
 
-### 场景八：跨多列联合搜索
+### Scenario 8: Combined Search Across Multiple Columns
 
-**适用场景：** 一次查询覆盖多个字段，例如标题、标签、作者任一命中即返回。
+**Use case:** A single query covers multiple fields, for example returning rows that match the title, tags, or author.
 
-- **语法：** `column1:term OR column2:ANY(...) OR ...`
-- **语义：** 在单条表达式中跨多列匹配；每列按其索引/分词配置生效
-- **索引建议：** 为涉及到的每一列建立合适的倒排索引
+- **Syntax:** `column1:term OR column2:ANY(...) OR ...`
+- **Semantics:** Match across multiple columns within a single expression. Each column applies its own index/tokenizer configuration
+- **Index recommendation:** Build an appropriate inverted index on each column involved
 
 ```sql
 SELECT id, title FROM search_test_basic
@@ -239,43 +239,43 @@ SELECT id, title FROM search_test_basic
 WHERE SEARCH('tags:ALL(tutorial) AND category:Technology');
 ```
 
-### 场景九：通配符查询
+### Scenario 9: Wildcard Query
 
-**适用场景：** 前缀、后缀或包含匹配，例如检索所有以「Chris」开头的姓名。
+**Use case:** Prefix, suffix, or contains matching, for example searching for all names that start with "Chris".
 
-- **语法：** `column:prefix*`、`column:*mid*`、`column:?ingle`
-- **语义：** 使用 `*` 匹配任意长度字符串，`?` 匹配单个字符
-- **索引建议：** 适用于未分词索引，也可用于开启 `lower_case` 的分词索引以获得不区分大小写的匹配
+- **Syntax:** `column:prefix*`, `column:*mid*`, `column:?ingle`
+- **Semantics:** Use `*` to match a string of any length and `?` to match a single character
+- **Index recommendation:** Suitable for non-tokenized indexes. Can also be used on tokenized indexes with `lower_case` enabled to obtain case-insensitive matching
 
 ```sql
 SELECT id, title FROM search_test_basic
 WHERE SEARCH('firstname:Chris*');
 
--- 结合默认字段参数
+-- Combine with the default field parameter
 SELECT id, firstname FROM people
 WHERE SEARCH('Chris*', 'firstname');
 ```
 
-### 场景十：正则表达式查询
+### Scenario 10: Regular Expression Query
 
-**适用场景：** 使用 Lucene 风格正则进行复杂模式匹配。
+**Use case:** Use Lucene-style regular expressions for complex pattern matching.
 
-- **语法：** `column:/regex/`
-- **语义：** 使用 Lucene 风格正则表达式匹配，模式由斜杠包裹
-- **索引建议：** 仅支持未分词倒排索引
+- **Syntax:** `column:/regex/`
+- **Semantics:** Match using Lucene-style regular expressions, with the pattern wrapped in slashes
+- **Index recommendation:** Only non-tokenized inverted indexes are supported
 
 ```sql
 SELECT id, title FROM corpus
 WHERE SEARCH('title:/data.+science/');
 ```
 
-### 场景十一：严格等值匹配（EXACT）
+### Scenario 11: Strict Equality Match (EXACT)
 
-**适用场景：** 按列的完整原始值精确匹配，区分大小写，不进行分词。
+**Use case:** Exactly match the full original value of a column. Case sensitive, with no tokenization.
 
-- **语法：** `column:EXACT(text)`
-- **语义：** 按列的完整值进行精确匹配；区分大小写；不匹配部分词项
-- **索引建议：** 该列建议同时建立未分词倒排索引（不设置 `parser`），用于 EXACT 加速
+- **Syntax:** `column:EXACT(text)`
+- **Semantics:** Perform exact matching against the full column value. Case sensitive. Does not match partial terms
+- **Index recommendation:** Build a non-tokenized inverted index on the column as well (without setting `parser`) to accelerate EXACT
 
 ```sql
 SELECT id
@@ -283,13 +283,13 @@ FROM t
 WHERE SEARCH('content:EXACT(machine learning)');
 ```
 
-### 场景十二：VARIANT 子列查询
+### Scenario 12: VARIANT Subcolumn Query
 
-**适用场景：** 对半结构化 VARIANT 字段中的某个子路径进行检索。
+**Use case:** Search a specific subpath within a semi-structured VARIANT field.
 
-- **语法：** `variant_col.sub.path:term`
-- **语义：** 通过点号路径访问 VARIANT 子列进行匹配；匹配行为遵循该 VARIANT 列上索引/分析器的配置
-- **支持能力：** 布尔组合、`ANY`/`ALL`、嵌套路径；不存在的子列不返回匹配
+- **Syntax:** `variant_col.sub.path:term`
+- **Semantics:** Access a VARIANT subcolumn through a dotted path for matching. The matching behavior follows the index/analyzer configuration on the VARIANT column
+- **Supported capabilities:** Boolean combination, `ANY`/`ALL`, nested paths. Nonexistent subcolumns do not return matches
 
 ```sql
 SELECT id
@@ -297,14 +297,14 @@ FROM test_variant_search_subcolumn
 WHERE SEARCH('properties.message:alpha');
 ```
 
-## 完整示例
+## Complete Example
 
-下面通过一个综合示例演示如何为同一列建立分词与未分词两套索引，并组合使用 EXACT、ANY/ALL、短语与通配符。
+The following comprehensive example demonstrates how to build both tokenized and non-tokenized indexes on the same column, and how to combine EXACT, ANY/ALL, phrase, and wildcard queries.
 
-### 建表与基础索引
+### Create the Table and Base Indexes
 
 ```sql
--- 同时建立分词与未分词倒排索引
+-- Build both tokenized and non-tokenized inverted indexes
 CREATE TABLE t (
     id INT,
     content STRING,
@@ -313,54 +313,54 @@ CREATE TABLE t (
 );
 ```
 
-### EXACT 与分词查询对比
+### Comparing EXACT and Tokenized Queries
 
 ```sql
--- 严格等值匹配（使用未分词索引）
+-- Strict equality match (uses the non-tokenized index)
 SELECT id, content
 FROM t
 WHERE SEARCH('content:EXACT(machine learning)')
 ORDER BY id;
 
--- EXACT 不匹配部分词项
+-- EXACT does not match partial terms
 SELECT id, content
 FROM t
 WHERE SEARCH('content:EXACT(machine)')
 ORDER BY id;
 
--- ANY/ALL 使用分词索引
+-- ANY/ALL use the tokenized index
 SELECT id, content FROM t WHERE SEARCH('content:ANY(machine learning)') ORDER BY id;
 SELECT id, content FROM t WHERE SEARCH('content:ALL(machine learning)') ORDER BY id;
 
--- 对比 EXACT 与 ANY
+-- Compare EXACT and ANY
 SELECT id, content FROM t WHERE SEARCH('content:EXACT(deep learning)') ORDER BY id;
 SELECT id, content FROM t WHERE SEARCH('content:ANY(deep learning)') ORDER BY id;
 ```
 
-### 组合条件与简化写法
+### Combined Conditions and Simplified Forms
 
 ```sql
--- 组合条件
+-- Combined conditions
 SELECT id, content
 FROM t
 WHERE SEARCH('content:EXACT(machine learning) OR content:ANY(intelligence)')
 ORDER BY id;
 
--- 使用默认字段与默认运算符的简化写法
+-- Simplified form using a default field and default operator
 SELECT id, tags
 FROM tag_dataset
-WHERE SEARCH('deep learning', 'tags', 'and'); -- 自动展开为 tags:ALL(deep learning)
+WHERE SEARCH('deep learning', 'tags', 'and'); -- Automatically expands to tags:ALL(deep learning)
 
--- 同时使用短语与通配符
+-- Use a phrase and a wildcard together
 SELECT id, content FROM t
 WHERE SEARCH('content:"deep learning" OR content:AI*')
 ORDER BY id;
 ```
 
-### VARIANT 列检索示例
+### VARIANT Column Search Example
 
 ```sql
--- 带 VARIANT 列与倒排索引
+-- A VARIANT column with an inverted index
 CREATE TABLE test_variant_search_subcolumn (
     id BIGINT,
     properties VARIANT<PROPERTIES("variant_max_subcolumns_count"="0")>,
@@ -371,13 +371,13 @@ CREATE TABLE test_variant_search_subcolumn (
     )
 );
 
--- 单词查询
+-- Single-term query
 SELECT id
 FROM test_variant_search_subcolumn
 WHERE SEARCH('properties.message:alpha')
 ORDER BY id;
 
--- AND / ALL 查询
+-- AND / ALL queries
 SELECT id
 FROM test_variant_search_subcolumn
 WHERE SEARCH('properties.message:alpha AND properties.message:beta')
@@ -388,46 +388,46 @@ FROM test_variant_search_subcolumn
 WHERE SEARCH('properties.message:ALL(alpha beta)')
 ORDER BY id;
 
--- 不同子列 OR 查询
+-- OR query across different subcolumns
 SELECT id
 FROM test_variant_search_subcolumn
 WHERE SEARCH('properties.message:hello OR properties.category:beta')
 ORDER BY id;
 ```
 
-## 转义字符
+## Escape Characters
 
-使用反斜杠（`\`）转义 DSL 中的特殊字符：
+Use a backslash (`\`) to escape special characters in the DSL:
 
-| 转义 | 说明 | 示例 |
+| Escape | Description | Example |
 | --- | --- | --- |
-| `\ ` | 字面空格（连接词项） | `title:First\ Value` 匹配 "First Value" |
-| `\(` `\)` | 字面括号 | `title:hello\(world\)` 匹配 "hello(world)" |
-| `\:` | 字面冒号 | `title:key\:value` 匹配 "key:value" |
-| `\\` | 字面反斜杠 | `title:path\\to\\file` 匹配 "path\to\file" |
+| `\ ` | Literal space (joins terms) | `title:First\ Value` matches "First Value" |
+| `\(` `\)` | Literal parentheses | `title:hello\(world\)` matches "hello(world)" |
+| `\:` | Literal colon | `title:key\:value` matches "key:value" |
+| `\\` | Literal backslash | `title:path\\to\\file` matches "path\to\file" |
 
-**示例：**
+**Examples:**
 
 ```sql
--- 搜索包含空格的值作为单个词项
+-- Search for a value containing a space as a single term
 SELECT * FROM docs WHERE SEARCH('title:First\\ Value');
 
--- 搜索包含括号的值
+-- Search for a value containing parentheses
 SELECT * FROM docs WHERE SEARCH('title:hello\\(world\\)');
 
--- 搜索包含冒号的值
+-- Search for a value containing a colon
 SELECT * FROM docs WHERE SEARCH('title:key\\:value');
 ```
 
-> **注意：** 在 SQL 字符串中，反斜杠需要双重转义。使用 `\\` 在 SQL 中产生 DSL 中的单个 `\`。
+> **Note:** In a SQL string, backslashes need to be double-escaped. Using `\\` in SQL produces a single `\` in the DSL.
 
-## 当前限制
+## Current Limitations
 
-- 范围与列表子句（如 `field:[a TO b]`、`field:IN(...)`）仍会降级为普通词项匹配，建议使用常规 SQL 范围/`IN` 过滤。
+- Range and list clauses (such as `field:[a TO b]` and `field:IN(...)`) still fall back to ordinary term matching. Use regular SQL range or `IN` filters instead.
 
-可使用标准操作符或文本检索算子替代：
+You can use standard operators or text search operators as alternatives:
 
 ```sql
--- 通过 SQL 进行范围过滤
+-- Filter by range using SQL
 SELECT * FROM t WHERE created_at >= '2024-01-01';
 ```

@@ -665,7 +665,7 @@ show alter table materialized view from test_db;
 **解决方法**：如果发现 2.x 能命中但 3.0.0 不能命中，可关闭如下开关（默认开启）：
 
 ```sql
-SET enable_sync_mv_cost_based_rewrite = true;
+SET enable_sync_mv_cost_based_rewrite = false;
 ```
 
 ### Q3：同步物化视图与异步物化视图有何区别？

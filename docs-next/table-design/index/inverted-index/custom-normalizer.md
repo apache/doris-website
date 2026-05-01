@@ -1,64 +1,64 @@
 ---
 {
-    "title": "自定义标准化",
-    "language": "zh-CN",
-    "description": "Doris 倒排索引自定义标准化器（Normalizer）使用指南：将整段文本作为单个词项处理，支持大小写转换、重音符号归一化等关键字精确匹配场景。"
+    "title": "Custom Normalizer",
+    "language": "en",
+    "description": "Guide to custom normalizers for Doris inverted indexes: treat the entire text as a single token and support keyword exact-match scenarios such as case conversion and accent normalization."
 }
 ---
 
-<!-- 知识类型: 功能说明 + 操作步骤 -->
-<!-- 适用场景: 关键字精确匹配 / 不分词的标准化预处理 -->
+<!-- Knowledge type: Feature description + Procedure -->
+<!-- Applicable scenario: Keyword exact match / Standardization preprocessing without tokenization -->
 
-自定义标准化（Normalizer）用于对文本进行统一的预处理，**不切分文本**，而是将整段文本作为一个完整的词项（Token）处理。它通过组合字符过滤器（char_filter）和词元过滤器（token_filter），实现大小写转换、字符归一化等功能，常用于不需要分词但需要标准化的场景（如关键字搜索）。
+A custom Normalizer applies uniform preprocessing to text. It **does not split the text**; instead, it treats the entire text as a single complete token. By combining character filters (`char_filter`) and token filters (`token_filter`), it supports case conversion, character normalization, and similar functions. It is commonly used in scenarios that do not require tokenization but do require normalization, such as keyword search.
 
-**Normalizer 与 Analyzer 的区别**
+**Differences between Normalizer and Analyzer**
 
-| 对比项 | Normalizer（标准化器） | Analyzer（分词器） |
+| Comparison item | Normalizer | Analyzer |
 | --- | --- | --- |
-| 是否切分文本 | 否，整段文本作为单一 Token | 是，按规则切分为多个 Token |
-| 典型场景 | 关键字精确匹配（如商品编码、ID） | 全文检索（如文章正文） |
-| 常用过滤器 | lowercase、ascii_folding 等 | tokenizer + 多种 filter |
+| Whether the text is split | No, the entire text is a single token | Yes, the text is split into multiple tokens by rules |
+| Typical scenario | Keyword exact match (such as product codes, IDs) | Full-text search (such as article body) |
+| Common filters | lowercase, ascii_folding, etc. | tokenizer + various filters |
 
-## 适用场景
+## Applicable Scenarios
 
-- **关键字搜索**：商品编码、产品名、用户 ID 等无需分词但需统一格式的字段。
-- **大小写不敏感匹配**：将 `ProductA` 与 `producta` 视为相同值。
-- **重音/特殊字符归一化**：将 `Café` 归一化为 `cafe`，避免因符号差异导致漏匹配。
+- **Keyword search**: Fields such as product codes, product names, and user IDs that do not require tokenization but need a unified format.
+- **Case-insensitive matching**: Treat `ProductA` and `producta` as the same value.
+- **Accent and special character normalization**: Normalize `Café` to `cafe` to avoid missed matches caused by symbol differences.
 
-## 使用流程
+## Usage Workflow
 
-完整流程包含 3 个步骤：
+The complete workflow consists of three steps:
 
-1. （可选）创建自定义 `char_filter` 和 `token_filter`。
-2. 创建自定义 Normalizer，组合上述过滤器。
-3. 在建表语句中通过倒排索引属性引用该 Normalizer。
+1. (Optional) Create custom `char_filter` and `token_filter`.
+2. Create a custom Normalizer that combines the filters above.
+3. Reference the Normalizer in the table creation statement through the inverted index property.
 
-### 步骤 1：创建自定义过滤器（可选）
+### Step 1: Create custom filters (optional)
 
-如果内置过滤器无法满足需求，可先创建自定义过滤器。
+If the built-in filters cannot meet your requirements, you can create custom filters first.
 
-> `char_filter` 和 `token_filter` 的详细创建方式，请参考[自定义分词](./custom-analyzer.md)文档。
+> For details on creating `char_filter` and `token_filter`, see the [Custom Analyzer](./custom-analyzer.md) document.
 
-### 步骤 2：创建自定义 Normalizer
+### Step 2: Create a custom Normalizer
 
 ```sql
 CREATE INVERTED INDEX NORMALIZER IF NOT EXISTS x_normalizer
 PROPERTIES (
-    "char_filter" = "x_char_filter",          -- 可选，一个或多个字符过滤器
-    "token_filter" = "x_filter1, x_filter2"   -- 可选，一个或多个词元过滤器，按顺序执行
+    "char_filter" = "x_char_filter",          -- Optional, one or more character filters
+    "token_filter" = "x_filter1, x_filter2"   -- Optional, one or more token filters, executed in order
 );
 ```
 
-**参数说明**
+**Parameter description**
 
-| 参数 | 是否必填 | 说明 |
+| Parameter | Required | Description |
 | --- | --- | --- |
-| `char_filter` | 否 | 一个或多个字符过滤器名称，多个使用逗号分隔 |
-| `token_filter` | 否 | 一个或多个词元过滤器名称，按声明顺序依次执行 |
+| `char_filter` | No | Names of one or more character filters, separated by commas |
+| `token_filter` | No | Names of one or more token filters, executed in the declared order |
 
-### 步骤 3：在建表中引用 Normalizer
+### Step 3: Reference the Normalizer in the table creation statement
 
-在倒排索引属性中通过 `normalizer` 指定要使用的标准化器。
+In the inverted index properties, use `normalizer` to specify the normalizer to use.
 
 ```sql
 CREATE TABLE tbl (
@@ -69,33 +69,33 @@ CREATE TABLE tbl (
 ...
 ```
 
-:::caution 注意
-`normalizer` 与 `analyzer` 互斥，不能在同一个索引中同时指定。
+:::caution Note
+`normalizer` and `analyzer` are mutually exclusive and cannot be specified together in the same index.
 :::
 
-## 管理自定义 Normalizer
+## Managing Custom Normalizers
 
-| 操作 | SQL 语句 |
+| Operation | SQL statement |
 | --- | --- |
-| 查看 | `SHOW INVERTED INDEX NORMALIZER;` |
-| 删除 | `DROP INVERTED INDEX NORMALIZER IF EXISTS x_normalizer;` |
+| View | `SHOW INVERTED INDEX NORMALIZER;` |
+| Drop | `DROP INVERTED INDEX NORMALIZER IF EXISTS x_normalizer;` |
 
-## 完整示例：忽略大小写与重音符号
+## Complete Example: Ignore Case and Accent Marks
 
-**场景**：商品名称字段需要支持大小写不敏感、且忽略重音符号的精确匹配（如 `Café-Products` 与 `cafe-products` 视为相同）。
+**Scenario**: A product name field needs to support case-insensitive exact match that also ignores accent marks (for example, `Café-Products` and `cafe-products` are treated as the same value).
 
-**实现步骤**：
+**Implementation steps**:
 
-1. 创建自定义词元过滤器 `my_ascii_folding`（用于去除重音符号）。
-2. 创建 Normalizer `lowercase_ascii_normalizer`，组合内置 `lowercase` 和上一步的 `my_ascii_folding`。
-3. 创建表并在 `product_name` 字段上应用该 Normalizer。
-4. 通过 `tokenize` 函数验证标准化效果。
+1. Create a custom token filter `my_ascii_folding` (used to remove accent marks).
+2. Create a Normalizer `lowercase_ascii_normalizer` that combines the built-in `lowercase` filter with `my_ascii_folding` from the previous step.
+3. Create the table and apply the Normalizer to the `product_name` field.
+4. Verify the normalization result with the `tokenize` function.
 
-**SQL 示例**：
+**SQL example**:
 
 ```sql
--- 1. 创建自定义词元过滤器（如果需要特定参数）
---    此处创建一个 ascii_folding 过滤器
+-- 1. Create a custom token filter (when specific parameters are needed)
+--    Here, create an ascii_folding filter
 CREATE INVERTED INDEX TOKEN_FILTER IF NOT EXISTS my_ascii_folding
 PROPERTIES
 (
@@ -103,15 +103,15 @@ PROPERTIES
     "preserve_original" = "false"
 );
 
--- 2. 创建标准化器
---    组合使用 lowercase（内置）和 my_ascii_folding
+-- 2. Create the normalizer
+--    Combine lowercase (built-in) and my_ascii_folding
 CREATE INVERTED INDEX NORMALIZER IF NOT EXISTS lowercase_ascii_normalizer
 PROPERTIES
 (
     "token_filter" = "lowercase, my_ascii_folding"
 );
 
--- 3. 建表使用
+-- 3. Use the normalizer when creating a table
 CREATE TABLE product_table (
     `id` bigint NOT NULL,
     `product_name` text NULL,
@@ -123,11 +123,11 @@ PROPERTIES (
     "replication_allocation" = "tag.location.default: 1"
 );
 
--- 4. 验证测试
+-- 4. Verification test
 select tokenize('Café-Products', '"normalizer"="lowercase_ascii_normalizer"');
 ```
 
-**预期返回结果**：
+**Expected result**:
 
 ```json
 [
@@ -135,12 +135,12 @@ select tokenize('Café-Products', '"normalizer"="lowercase_ascii_normalizer"');
 ]
 ```
 
-可以看到，`Café-Products` 被整体作为一个 Token 处理（未切分），同时完成了小写转换和重音符号去除。
+As shown, `Café-Products` is processed as a single token (not split), and both lowercase conversion and accent removal are applied.
 
-## 使用限制
+## Limitations
 
-1. `char_filter` 和 `token_filter` 中引用的名称必须存在（内置或已创建）。
-2. 只有在没有任何表使用该 Normalizer 时，才能删除它。
-3. 只有在没有任何 Normalizer 引用某个 `char_filter` 或 `token_filter` 时，才能删除对应的 filter。
-4. 自定义标准化语法执行后，约 10 秒后会同步到 BE，之后导入数据将正常生效。
-5. `normalizer` 与 `analyzer` 不能在同一个倒排索引中同时指定。
+1. The names referenced in `char_filter` and `token_filter` must exist (either built-in or already created).
+2. A Normalizer can be dropped only when no table is using it.
+3. A `char_filter` or `token_filter` can be dropped only when no Normalizer references it.
+4. After a custom normalizer statement is executed, it takes about 10 seconds to synchronize to the BE. Data ingested after that takes effect normally.
+5. `normalizer` and `analyzer` cannot be specified together in the same inverted index.

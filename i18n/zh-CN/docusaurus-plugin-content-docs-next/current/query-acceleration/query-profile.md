@@ -553,7 +553,7 @@ MergedProfile:
            AGGREGATION_SINK_OPERATOR(nereids_id=438)(id=6):
              CommonCounters:
                 - ExecTime: avg 109.89us, max 118.582us, min 99.596us
-                - InputRows: sum 40, avg 20, max 22, min 18z
+                - InputRows: sum 40, avg 20, max 22, min 18
                 - WaitForDependency[AGGREGATION_SINK_OPERATOR_DEPENDENCY]Time: avg 0ns, max 0ns, min 0ns
              CustomCounters:
            EXCHANGE_OPERATOR(id=5):

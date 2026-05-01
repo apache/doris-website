@@ -1,31 +1,50 @@
 ---
 {
     "title": "Kyuubi",
-    "language": "zh-CN",
-    "description": "Apache Kyuubi 是一个分布式和多租户网关，用于在 Lakehouse 上提供 Serverless SQL，可连接包括 Spark、Flink、Hive、JDBC 等引擎，并对外提供 Thrift、Trino 等接口协议供灵活对接。"
+    "language": "en",
+    "description": "A complete configuration guide for integrating Apache Doris with Apache Kyuubi, covering JDBC Engine setup, MySQL driver installation, and query usage over the Thrift protocol."
 }
 ---
 
-## 介绍
+<!-- Knowledge type: Procedure -->
+<!-- Applicable scenario: Integrating Apache Kyuubi with Apache Doris as a JDBC data source -->
 
-[Apache Kyuubi](https://kyuubi.apache.org/) 是一个分布式和多租户网关，用于在 Lakehouse 上提供 Serverless
-SQL，可连接包括 Spark、Flink、Hive、JDBC 等引擎，并对外提供 Thrift、Trino 等接口协议供灵活对接。
-其中 Apache Kyuubi 实现了 JDBC Engine 并支持 Doris 方言，并可用于对接 Doris 作为数据源。
-Apache Kyuubi 可提供高可用、服务发现、租户隔离、统一认证、生命周期管理等一系列特性。
+[Apache Kyuubi](https://kyuubi.apache.org/) is a distributed and multi-tenant gateway that provides Serverless SQL on Lakehouse. It can connect to engines such as Spark, Flink, Hive, and JDBC, and exposes interface protocols such as Thrift and Trino so that downstream applications can integrate with it flexibly. Apache Kyuubi implements a JDBC Engine and supports the Doris dialect, which lets it serve as a unified access gateway for Doris and provide features such as high availability, service discovery, tenant isolation, unified authentication, and lifecycle management.
 
-## 下载 Apache Kyuubi
+## Use Cases
 
-## 配置方法
+- You need a unified access gateway for Doris that provides service discovery and high availability.
+- You need tenant isolation and unified authentication in a multi-tenant environment.
+- You need to access Doris over the Thrift protocol (compatible with HiveServer2).
+- You need to unify Doris with engines such as Spark, Flink, and Hive under a single Lakehouse gateway.
 
-### 下载 Apache Kyuubi
+## Environment Requirements
 
-从官网下载 Apache Kyuubi 1.6.0 或以上版本的安装包后解压。
+| Item                   | Requirement                                       |
+| ---------------------- | ------------------------------------------------- |
+| Apache Kyuubi version  | 1.6.0 or above                                    |
+| Doris access port      | FE MySQL protocol port (default `9030`)           |
+| Kyuubi listening port  | Thrift protocol port (default `10009`)            |
+| Required driver        | MySQL JDBC driver `mysql-connector-j-8.x.x.jar`   |
 
-Apache Kyuubi 下载地址： <https://kyuubi.apache.org/zh/releases.html>
+## Deployment Steps
 
-### 配置 Doris 作为 Kyuubi 数据源
+The overall procedure is as follows:
 
-- 修改配置文件 `$KYUUBI_HOME/conf/kyuubi-defaults.conf`
+1. Download and extract Apache Kyuubi.
+2. Configure Doris as a JDBC data source for Kyuubi.
+3. Add the MySQL JDBC driver.
+4. Start the Kyuubi service.
+
+### 1. Download Apache Kyuubi
+
+Download the Apache Kyuubi 1.6.0 or later installation package from the official website and extract it to your deployment directory.
+
+Download URL: <https://kyuubi.apache.org/releases.html>
+
+### 2. Configure Doris as a Kyuubi data source
+
+Modify the configuration file `$KYUUBI_HOME/conf/kyuubi-defaults.conf` and add the following content:
 
 ```properties
 kyuubi.engine.type=jdbc
@@ -36,39 +55,48 @@ kyuubi.engine.jdbc.connection.user=***
 kyuubi.engine.jdbc.connection.password=***
 ```
 
-| 配置项                                    | 说明                                            |
-|----------------------------------------|-----------------------------------------------|
-| kyuubi.engine.type                     | 引擎类型。请使用 jdbc                                  |
-| kyuubi.engine.jdbc.type                | JDBC 服务类型。这里请指定为 doris                         |
-| kyuubi.engine.jdbc.driver.class        | 连接 JDBC 服务使用的驱动类名。请使用 com.mysql.cj.jdbc.Driver |
-| kyuubi.engine.jdbc.connection.url      | JDBC 服务连接。这里请指定 Doris FE 上的 mysql server 连接地址 |
-| kyuubi.engine.jdbc.connection.user     | JDBC 服务用户名                                    |
-| kyuubi.engine.jdbc.connection.password | JDBC 服务密码                                     |
+Configuration item descriptions:
 
-- 其他相关配置参考 [Apache Kyuubi 配置说明](https://kyuubi.readthedocs.io/en/master/configuration/settings.html) 。
+| Configuration item                       | Description                                                                                  |
+| ---------------------------------------- | -------------------------------------------------------------------------------------------- |
+| `kyuubi.engine.type`                     | Engine type. Use `jdbc`.                                                                     |
+| `kyuubi.engine.jdbc.type`                | JDBC service type. Specify `doris` here.                                                     |
+| `kyuubi.engine.jdbc.driver.class`        | Driver class name used to connect to the JDBC service. Use `com.mysql.cj.jdbc.Driver`.       |
+| `kyuubi.engine.jdbc.connection.url`      | JDBC service connection URL. Specify the MySQL Server address on Doris FE here.              |
+| `kyuubi.engine.jdbc.connection.user`     | JDBC service username.                                                                       |
+| `kyuubi.engine.jdbc.connection.password` | JDBC service password.                                                                       |
 
-### 添加 MySQL 驱动
+For more related configurations, see the [Apache Kyuubi configuration reference](https://kyuubi.readthedocs.io/en/master/configuration/settings.html).
 
-添加 Mysql JDB C 驱动 `mysql-connector-j-8.X.X.jar` 到 `$KYUUBI_HOME/externals/engines/jdbc` 目录下。
+### 3. Add the MySQL driver
 
-### 启动 Kyuubi 服务
+Copy the MySQL JDBC driver `mysql-connector-j-8.x.x.jar` to the `$KYUUBI_HOME/externals/engines/jdbc` directory.
 
-`$KYUUBI_HOME/bin/kyuubi start`
-启动后，Kyuubi 默认监听 10009 端口提供 Thrift 协议。
+### 4. Start the Kyuubi service
 
-## 使用方法
-
-以下例子展示通过 Apache Kyuubi 的 beeline 工具经 Thrift 协议查询 Doris。
-
-### 建立连接
+Run the following command to start Kyuubi:
 
 ```shell
-$ $KYUUBI_HOME/bin/beeline -u "jdbc:hive2://xxxx:10009/"
+$KYUUBI_HOME/bin/kyuubi start
 ```
 
-### 执行查询
+After startup succeeds, Kyuubi listens on port `10009` by default and provides access over the Thrift protocol.
 
-执行查询语句 `select * from demo.expamle_tbl;` 并得到结果。
+## Usage Example
+
+The following example shows how to query Doris data over the Thrift protocol using the beeline tool that ships with Apache Kyuubi.
+
+### 1. Establish a connection
+
+Use beeline to connect to the Kyuubi service:
+
+```shell
+$KYUUBI_HOME/bin/beeline -u "jdbc:hive2://xxxx:10009/"
+```
+
+### 2. Execute a query
+
+Run the query `select * from demo.example_tbl;`. The expected output is as follows:
 
 ```shell
 0: jdbc:hive2://xxxx:10009/> select * from demo.example_tbl;
@@ -77,15 +105,15 @@ $ $KYUUBI_HOME/bin/beeline -u "jdbc:hive2://xxxx:10009/"
 select * from demo.example_tbl
 2023-03-07 09:29:14.786 INFO org.apache.kyuubi.operation.ExecuteStatement: Query[bdc59dd0-ceea-4c02-8c3a-23424323f5db] in FINISHED_STATE
 2023-03-07 09:29:14.787 INFO org.apache.kyuubi.operation.ExecuteStatement: Processing anonymous's query[bdc59dd0-ceea-4c02-8c3a-23424323f5db]: RUNNING_STATE -> FINISHED_STATE, time taken: 0.015 seconds
-+----------+-------------+-------+------+------+------------------------+-------+-----------------+-----------------+
-| user_id  |    date     | city  | age  | sex  |    last_visit_date     | cost  | max_dwell_time  | min_dwell_time  |
-+----------+-------------+-------+------+------+------------------------+-------+-----------------+-----------------+
-| 10000    | 2017-10-01  | 北京   | 20   | 0    | 2017-10-01 07:00:00.0  | 70    | 10              | 2               |
-| 10001    | 2017-10-01  | 北京   | 30   | 1    | 2017-10-01 17:05:45.0  | 4     | 22              | 22              |
-| 10002    | 2017-10-02  | 上海   | 20   | 1    | 2017-10-02 12:59:12.0  | 400   | 5               | 5               |
-| 10003    | 2017-10-02  | 广州   | 32   | 0    | 2017-10-02 11:20:00.0  | 60    | 11              | 11              |
-| 10004    | 2017-10-01  | 深圳   | 35   | 0    | 2017-10-01 10:00:15.0  | 200   | 3               | 3               |
-| 10004    | 2017-10-03  | 深圳   | 35   | 0    | 2017-10-03 10:20:22.0  | 22    | 6               | 6               |
-+----------+-------------+-------+------+------+------------------------+-------+-----------------+-----------------+
++----------+-------------+-----------+------+------+------------------------+-------+-----------------+-----------------+
+| user_id  |    date     |   city    | age  | sex  |    last_visit_date     | cost  | max_dwell_time  | min_dwell_time  |
++----------+-------------+-----------+------+------+------------------------+-------+-----------------+-----------------+
+| 10000    | 2017-10-01  | Beijing   | 20   | 0    | 2017-10-01 07:00:00.0  | 70    | 10              | 2               |
+| 10001    | 2017-10-01  | Beijing   | 30   | 1    | 2017-10-01 17:05:45.0  | 4     | 22              | 22              |
+| 10002    | 2017-10-02  | Shanghai  | 20   | 1    | 2017-10-02 12:59:12.0  | 400   | 5               | 5               |
+| 10003    | 2017-10-02  | Guangzhou | 32   | 0    | 2017-10-02 11:20:00.0  | 60    | 11              | 11              |
+| 10004    | 2017-10-01  | Shenzhen  | 35   | 0    | 2017-10-01 10:00:15.0  | 200   | 3               | 3               |
+| 10004    | 2017-10-03  | Shenzhen  | 35   | 0    | 2017-10-03 10:20:22.0  | 22    | 6               | 6               |
++----------+-------------+-----------+------+------+------------------------+-------+-----------------+-----------------+
 6 rows selected (0.068 seconds)
 ```

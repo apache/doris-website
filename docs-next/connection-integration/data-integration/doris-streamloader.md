@@ -1,162 +1,218 @@
 ---
 {
     "title": "Doris Streamloader",
-    "language": "zh-CN",
-    "description": "Doris Streamloader 是一款用于将数据导入 Doris 数据库的专用客户端工具。相比于直接使用 curl 的单并发导入，该工具可以提供多并发导入的功能，降低大数据量导入的耗时。拥有以下功能："
+    "language": "en",
+    "description": "Doris Streamloader is the official data ingestion client tool from Apache Doris. It supports multi-concurrency, multi-file imports, resumable transfers, and automatic retries, and is suited for batch loading large data volumes."
 }
 ---
 
-## 概述
-[Doris Streamloader](https://github.com/apache/doris-streamloader) 是一款用于将数据导入 Doris 数据库的专用客户端工具。相比于直接使用 `curl` 的单并发导入，该工具可以提供多并发导入的功能，降低大数据量导入的耗时。拥有以下功能：
+[Doris Streamloader](https://github.com/apache/doris-streamloader) is a dedicated client tool for ingesting data into the Apache Doris database. Compared with the single-concurrency import approach using `curl` directly, this tool provides multi-concurrency import capability and significantly reduces the time required for loading large data volumes.
 
-- 并发导入，实现 Stream Load 的多并发导入。可以通过 workers 值设置并发数。
-- 多文件导入，一次导入可以同时导入多个文件及目录，支持设置通配符以及会自动递归获取文件夹下的所有文件。
-- 断点续传，在导入过程中可能出现部分失败的情况，支持在失败点处进行继续传输。 
-- 自动重传，在导入出现失败的情况后，无需手动重传，工具会自动重传默认的次数，如果仍然不成功，打印出手动重传的命令。
+## Core Features
 
-## 获取与安装
+| Feature | Description |
+|---|---|
+| Concurrent import | Performs Stream Load with multiple concurrent workers. The concurrency level is set with the `workers` parameter |
+| Multi-file import | Imports multiple files and directories in a single task. Supports wildcard matching and automatically traverses all files under a directory recursively |
+| Resumable transfer | If a partial failure occurs during import, the tool can resume from the failure point |
+| Automatic retry | After an import failure, no manual retry is needed. The tool retries automatically up to the default number of times. If it still fails, it prints the manual retry command |
 
-源代码：https://github.com/apache/doris-streamloader
-二进制文件：https://doris.apache.org/zh-CN/download
+## Use Cases
+
+- Batch loading large data volumes (GB to TB scale) into Doris
+- Batch importing of multiple files and multiple directories
+- Scenarios sensitive to import latency that need multi-concurrency to improve throughput
+- Stable import workflows that require resumable transfers and automatic recovery from failures
+
+---
+
+## Download and Installation
+
+| Resource | Address |
+|---|---|
+| Source code | [https://github.com/apache/doris-streamloader](https://github.com/apache/doris-streamloader) |
+| Binary download | [https://doris.apache.org/download](https://doris.apache.org/download) |
 
 :::note
-获取结果即为可执行二进制。
+The download is an executable binary. No additional compilation or installation is required.
 :::
 
-## 使用方法
+---
+
+## Usage
+
+### Basic Command Format
 
 ```shell
-
-doris-streamloader --source_file={FILE_LIST} --url={FE_OR_BE_SERVER_URL}:{PORT} --header={STREAMLOAD_HEADER} --db={TARGET_DATABASE} --table={TARGET_TABLE}
-
+doris-streamloader \
+    --source_file={FILE_LIST} \
+    --url={FE_OR_BE_SERVER_URL}:{PORT} \
+    --header={STREAMLOAD_HEADER} \
+    --db={TARGET_DATABASE} \
+    --table={TARGET_TABLE}
 ```
 
+### Required Parameters
 
-**1. `FILE_LIST` 支持：**
+| Parameter | Meaning |
+|---|---|
+| `--source_file` | The list of data files to import. Supports a single file, a directory, wildcards, and a comma-separated list |
+| `--url` | The service address of Doris FE or BE, in the format `http://host:port` |
+| `--header` | The header parameters for Stream Load. Multiple parameters are separated by `?` |
+| `--db` | The name of the target database |
+| `--table` | The name of the target table |
 
-- 单个文件
+### Formats Supported by `source_file`
 
-    例如：导入单个文件 file.csv
+The `--source_file` parameter supports the following five formats. You can choose flexibly based on your scenario.
 
-    ```json
-    doris-streamloader --source_file="dir" --url="http://localhost:8330" --header="column_separator:|?columns:col1,col2" --db="testdb" --table="testtbl"
-    ```
+#### 1. A Single File
 
-- 单个目录
+For example, to import a single file `file.csv`:
 
-    例如：导入单个目录 dir
+```shell
+doris-streamloader --source_file="file.csv" --url="http://localhost:8330" --header="column_separator:|?columns:col1,col2" --db="testdb" --table="testtbl"
+```
 
-    ```json
-    doris-streamloader --source_file="dir" --url="http://localhost:8330" --header="column_separator:|?columns:col1,col2" --db="testdb" --table="testtbl"        
-    ```
+#### 2. A Single Directory
 
-- 带通配符的文件名（需要用引号包围）
+For example, to import the directory `dir`:
 
-    例如：导入 file0.csv, file1.csv, file2.csv
+```shell
+doris-streamloader --source_file="dir" --url="http://localhost:8330" --header="column_separator:|?columns:col1,col2" --db="testdb" --table="testtbl"
+```
 
-    ```json
-    doris-streamloader --source_file="file*" --url="http://localhost:8330" --header="column_separator:|?columns:col1,col2" --db="testdb" --table="testtbl"
-    ```
+#### 3. A File Name with Wildcards (Must Be Quoted)
 
-- 逗号分隔的文件名列表
+For example, to import `file0.csv`, `file1.csv`, and `file2.csv`:
 
-    例如：导入 file0.csv, file1.csv file2.csv
+```shell
+doris-streamloader --source_file="file*" --url="http://localhost:8330" --header="column_separator:|?columns:col1,col2" --db="testdb" --table="testtbl"
+```
 
-    ```json
-    doris-streamloader --source_file="file0.csv,file1.csv,file2.csv" --url="http://localhost:8330" --header="column_separator:|?columns:col1,col2" --db="testdb" --table="testtbl"
-    ```
+#### 4. A Comma-Separated List of File Names
 
-- 逗号分隔的目录列表
+For example, to import `file0.csv`, `file1.csv`, and `file2.csv`:
 
-  例如：导入 dir1, dir2,dir3
+```shell
+doris-streamloader --source_file="file0.csv,file1.csv,file2.csv" --url="http://localhost:8330" --header="column_separator:|?columns:col1,col2" --db="testdb" --table="testtbl"
+```
 
-   ```json
-  doris-streamloader --source_file="dir1,dir2,dir3" --url="http://localhost:8330" --header="column_separator:|?columns:col1,col2" --db="testdb" --table="testtbl" 
-   ```
+#### 5. A Comma-Separated List of Directories
 
-**2. `STREAMLOAD_HEADER` 支持 Stream Load 的所有参数，多个参数之间用  '?' 分隔。**
+For example, to import `dir1`, `dir2`, and `dir3`:
 
-用法举例：
+```shell
+doris-streamloader --source_file="dir1,dir2,dir3" --url="http://localhost:8330" --header="column_separator:|?columns:col1,col2" --db="testdb" --table="testtbl"
+```
+
+### Header Parameter
+
+`--header` supports all parameters of Stream Load. Multiple parameters are separated with `?`.
+
+Example:
 
 ```shell
 doris-streamloader --source_file="data.csv" --url="http://localhost:8330" --header="column_separator:|?columns:col1,col2" --db="testdb" --table="testtbl"
 ```
 
-上述参数均为必要参数，下面介绍可选参数：
+---
 
-| 参数名    | 含义             |  默认值  |  建议  |
+## Optional Parameters
+
+In addition to the required parameters above, the tool provides a series of optional parameters for fine-grained control of the import behavior. The table below groups them by function.
+
+### Authentication and Transport
+
+| Parameter | Meaning | Default | Recommendation |
 |---|---|---|---|
-| --u      | 数据库用户名      |  root    |      |
-| --p      | 数据库用户对应的密码   |  空字符串    |      |
-| --compress      | 导入数据是否在 HTTP 传输时压缩   |  false    |   保持默认，打开后压缩解压会分别增加工具和 Doris BE 的 CPU 压力，所以仅在数据源所在机器网络带宽瓶颈时打开   |
-|--timeout    | 向 Doris 发送 HTTP 请求的超时时间，单位：秒   |  60\*60\*10    | 保持默认   |
-| --batch      | 文件批量读取和发送的粒度，单位：行      |  4096    |  保持默认    |
-| --batch_byte      | 文件批量读取和发送的粒度，单位：byte      |  943718400 (900MB)    |  保持默认    |
-| --workers   | 导入的并发数   |  0    |   设置成 0 为自动模式，会根据导入数据的大小，磁盘的吞吐量，Stream Load 导入速度计算一个值。也可以手动设置，性能好的集群可以设置大点，最好不要超过 10。如果观察到导入内存过高（通过观察 Memtracker 或者 Exceed 日志）, 则可适当降低 worker 数量   |
-| --disk_throughput      | 磁盘的吞吐量，单位 MB/s   |  800    |  通常保持默认即可。该值参与 --workers 的自动推算过程。如果希望通过工具能计算出一个适当的 workers 数，可以根据实际磁盘吞吐设置。  |
-|--streamload_throughput | Stream Load 导入实际的吞吐大小，单位 MB/s | 100 | 通常保持默认即可。该值参与 --workers 的自动推算过程。默认值是通过每日性能测试环境给出的 Stream Load 吞吐量以及性能可预测性得出的。如果希望通过工具能计算出一个适当的 workers 数，可以设置实测的 Stream Load 的吞吐，即：(LoadBytes\*1000)/(LoadTimeMs\*1024\*1024) 计算出实际的吞吐量 |
-| --max_byte_per_task      | 每个导入任务数据量的最大大小，超过这个值剩下的数据会被拆分到一个新的导入任务中。  |  107374182400 (100G)    |  建议设置一个很大的值来减少导入的版本数。但如果遇到 body exceed max size 错误且不想调整 streaming_load_max_mb 参数（需重启 be），又或是遇到 -238 TOO MANY SEGMENT 错误，可以临时调小这个配置    |
-| --check_utf8 | <p>是否对导入数据的编码进行检查：</p>   <p> 1）false，那么不做检查直接将原始数据导入; 2）true，那么对数据中非 utf-8 编码的字符用 � 进行替代</p> | true |保持默认|
-|--debug |打印 Debug 日志 | false | 保持默认|
-|--auto_retry| 自动重传失败的 worker 序号和 task 序号的列表 | 空字符串 | 仅导入失败时重传使用，正常导入无需关心。失败时会提示具体参数内容，复制执行即可。例：如果 --auto_retry="1,1,2,1" 则表示：需要重传的 task 为：第一个 worker 的第一个 task，第二个 worker 的第一个 task。 |
-|--auto_retry_times | 自动重传的次数 | 3 | 保持默认，如果不想重传需要把这个值设置为 0 |
-|--auto_retry_interval | 自动重传的间隔 | 60 | 保持默认，如果 Doris 因宕机导致失败，建议根据实际 Doris 重启的时间间隔来设置该值 |
-|--log_filename | 日志存储的位置 | "" | 默认将日志打印到控制台上，如果要打印到日志文件中，可以设置存储日志文件的路径，如--log_filename = "/var/log" |
+| `--u` | Database user name | `root` | —— |
+| `--p` | Password for the database user | Empty string | —— |
+| `--compress` | Whether data is compressed during HTTP transport | `false` | Keep the default. Enabling compression adds CPU pressure on both the tool and Doris BE for compression and decompression. Enable it only when the network bandwidth on the data source machine is the bottleneck |
+| `--timeout` | Timeout for HTTP requests sent to Doris, in seconds | `60*60*10` | Keep the default |
 
+### Batch and Concurrency
 
+| Parameter | Meaning | Default | Recommendation |
+|---|---|---|---|
+| `--batch` | Granularity for batch reading and sending of files, in rows | `4096` | Keep the default |
+| `--batch_byte` | Granularity for batch reading and sending of files, in bytes | `943718400` (900 MB) | Keep the default |
+| `--workers` | Concurrency level for the import | `0` | When set to `0`, the tool runs in automatic mode and computes the value based on the size of the imported data, the disk throughput, and the Stream Load import speed. You can also set it manually. For high-performance clusters, you may increase it appropriately, but **preferably no more than 10**. If the import memory is too high (observed via Memtracker or Exceed logs), you can lower it appropriately |
+| `--disk_throughput` | Disk throughput, in MB/s | `800` | Usually keep the default. This value participates in the automatic calculation of `--workers`. If you want the tool to compute an appropriate `workers` count, you can set this based on the actual disk throughput |
+| `--streamload_throughput` | Actual Stream Load import throughput, in MB/s | `100` | Usually keep the default. This value participates in the automatic calculation of `--workers`. The default value is derived from a daily performance test environment. If you want the tool to compute an appropriate `workers` count, you can set this based on the measured throughput, using the formula: `(LoadBytes*1000) / (LoadTimeMs*1024*1024)` |
+| `--max_byte_per_task` | Upper limit on the data volume per import task. When exceeded, the data is split into a new task | `107374182400` (100 GB) | A larger value is recommended to reduce the number of import versions. However, if you encounter a `body exceed max size` error and do not want to adjust `streaming_load_max_mb` (which requires restarting the BE), or if you encounter `-238 TOO MANY SEGMENT`, you can lower it temporarily |
 
-## 结果说明
+### Data Validation and Logs
 
-无论成功与失败，都会显示最终的结果，结果参数说明：
+| Parameter | Meaning | Default | Recommendation |
+|---|---|---|---|
+| `--check_utf8` | Whether to check the encoding of the imported data: `false` skips the check and imports the raw data; `true` replaces non-UTF-8 characters with `�` | `true` | Keep the default |
+| `--debug` | Whether to print debug logs | `false` | Keep the default |
+| `--log_filename` | Where logs are stored | `""` | Logs are output to the console by default. To write logs to a file, specify a path, for example `--log_filename="/var/log"` |
 
+### Failure Retry
 
-|参数名 | 描述 |
+| Parameter | Meaning | Default | Recommendation |
+|---|---|---|---|
+| `--auto_retry` | The list of worker and task numbers to retry automatically | Empty string | Use this only when the import fails. You do not need to set it during normal imports. On failure, the specific parameter values are printed. Just copy and run them. For example, `--auto_retry="1,1,2,1"` means the first task of the first worker and the first task of the second worker need to be retried |
+| `--auto_retry_times` | Number of automatic retries | `3` | Keep the default. To disable retries, set it to `0` |
+| `--auto_retry_interval` | Interval between automatic retries, in seconds | `60` | Keep the default. If failures are caused by Doris being down, set this based on the actual restart time |
+
+---
+
+## Result
+
+Whether the import succeeds or fails, the tool prints a final result when it finishes.
+
+### Result Fields
+
+| Field | Description |
 |---|---|
-| Status |  导入成功（Success）与否（Failed）|
-| TotalRows | 想要导入文件中所有的行数 |
-| FailLoadRows | 想要导入文件中没有导入的行数 |
-| LoadedRows | 实际导入 Doris 的行数 |
-| FilteredRows | 实际导入过程中被 Doris 过滤的行数 |
-| UnselectedRows | 实际导入过程中被 Doris 忽略的行数 |
-| LoadBytes | 实际导入的 byte 大小 |
-| LoadTimeMs | 实际导入的时间 |
-| LoadFiles | 实际导入的文件列表|
+| `Status` | The import status. `Success` means success and `Failed` means failure |
+| `TotalRows` | The total number of rows in the files to be imported |
+| `FailLoadRows` | The number of rows that were intended to be imported but were not |
+| `LoadedRows` | The number of rows actually imported into Doris |
+| `FilteredRows` | The number of rows filtered out by Doris during import |
+| `UnselectedRows` | The number of rows ignored by Doris during import |
+| `LoadBytes` | The number of bytes actually imported |
+| `LoadTimeMs` | The actual import duration, in milliseconds |
+| `LoadFiles` | The list of files actually imported |
 
+### Success Example
 
+When the import succeeds, the output is as follows:
 
-具体例子如下：
+```Go
+Load Result: {
+        "Status": "Success",
+        "TotalRows": 120,
+        "FailLoadRows": 0,
+        "LoadedRows": 120,
+        "FilteredRows": 0,
+        "UnselectedRows": 0,
+        "LoadBytes": 40632,
+        "LoadTimeMs": 971,
+        "LoadFiles": [
+                "basic.csv",
+                "basic_data1.csv",
+                "basic_data2.csv",
+                "dir1/basic_data.csv",
+                "dir1/basic_data.csv.1",
+                "dir1/basic_data1.csv"
+        ]
+}
+```
 
-- 导入成功，成功信息如下： 
+### Failure Example
 
-  ```Go
-  Load Result: {
-          "Status": "Success",
-          "TotalRows": 120,
-          "FailLoadRows": 0,
-          "LoadedRows": 120,
-          "FilteredRows": 0,
-          "UnselectedRows": 0,
-          "LoadBytes": 40632,
-          "LoadTimeMs": 971,
-          "LoadFiles": [
-                  "basic.csv",
-                  "basic_data1.csv",
-                  "basic_data2.csv",
-                  "dir1/basic_data.csv",
-                  "dir1/basic_data.csv.1",
-                  "dir1/basic_data1.csv"
-          ]
-  }
-  ```
-  
-- 导入失败：如果导入过程中部分数据没有导入失败了，会给出重传信息，如：
-  
-  ```Go
-  load has some error, and auto retry failed, you can retry by : 
-  ./doris-streamloader --source_file /mnt/disk1/laihui/doris/tools/tpch-tools/bin/tpch-data/lineitem.tbl.1  --url="http://127.0.0.1:8239" --header="column_separator:|?columns: l_orderkey, l_partkey, l_suppkey, l_linenumber, l_quantity, l_extendedprice, l_discount, l_tax, l_returnflag,l_linestatus, l_shipdate,l_commitdate,l_receiptdate,l_shipinstruct,l_shipmode,l_comment,temp" --db="db" --table="lineitem1" -u root -p "" --compress=false --timeout=36000 --workers=3 --batch=4096 --batch_byte=943718400 --max_byte_per_task=1073741824 --check_utf8=true --report_duration=1 --auto_retry="2,1;1,1;0,1" --auto_retry_times=0 --auto_retry_interval=60
-  ```
-  
-只需复制运行该命令即可，`auto_retry` 说明可参考，并给出失败的结果信息：
+If part of the data fails to import, the tool first prints the retry command:
+
+```Go
+load has some error, and auto retry failed, you can retry by :
+./doris-streamloader --source_file /mnt/disk1/laihui/doris/tools/tpch-tools/bin/tpch-data/lineitem.tbl.1  --url="http://127.0.0.1:8239" --header="column_separator:|?columns: l_orderkey, l_partkey, l_suppkey, l_linenumber, l_quantity, l_extendedprice, l_discount, l_tax, l_returnflag,l_linestatus, l_shipdate,l_commitdate,l_receiptdate,l_shipinstruct,l_shipmode,l_comment,temp" --db="db" --table="lineitem1" -u root -p "" --compress=false --timeout=36000 --workers=3 --batch=4096 --batch_byte=943718400 --max_byte_per_task=1073741824 --check_utf8=true --report_duration=1 --auto_retry="2,1;1,1;0,1" --auto_retry_times=0 --auto_retry_interval=60
+```
+
+Copying and running this command performs the manual retry. The meaning of `auto_retry` is described in the parameter section above. The failure result is then printed:
 
 ```Go
 Load Result: {
@@ -172,45 +228,70 @@ Load Result: {
               "/mnt/disk1/laihui/doris/tools/tpch-tools/bin/tpch-data/lineitem.tbl.1"
       ]
 }
-
 ```
 
+---
 
-## 最佳实践
+## Best Practices
 
-### 1. 参数推荐
+### Recommended Parameters
 
-1. 必要参数，一定要配置： ```--source_file=FILE_LIST --url=FE_OR_BE_SERVER_URL_WITH_PORT --header=STREAMLOAD_HEADER --db=TARGET_DATABASE --table=TARGET_TABLE``` ，**如果需要导入多个文件时，推荐使用** `source_file` **方式。**
+1. **Required parameters**: The following parameters must be configured:
 
-2. `workers`，默认值为 CPU 核数，在 CPU 核数过多的场景（比如 96 核）会产生太多的并发，需要减少这个值，**推荐一般设置为 8 即可。**
+    ```text
+    --source_file=FILE_LIST
+    --url=FE_OR_BE_SERVER_URL_WITH_PORT
+    --header=STREAMLOAD_HEADER
+    --db=TARGET_DATABASE
+    --table=TARGET_TABLE
+    ```
 
-3. `max_byte_per_task`，可以设置一个很大的值来减少导入的 version 数。但如果遇到 `body exceed max size` 错误且不想调整 `streaming_load_max_mb` 参数（需重启 BE），又或是遇到 `-238 TOO MANY SEGMENT` 错误，可以临时调小这个配置，**一般使用默认即可。**
+    **To import multiple files, use the `source_file` approach.**
 
-4. 影响 version 数的两个参数：
-- `workers`：worker 数越多，版本号越多，并发越高，一般使用 8 即可。
-- `max_byte_per_task`：`max_byte_per_task` 越大，单个 version 数据量越大，version 数越少，但是这个值过大可能会遇到 `-238 TOO MANY SEGMENT `的问题。一般使用默认值即可。
+2. **`workers`**: The default value is the number of CPU cores. On machines with many cores (such as 96), this produces too much concurrency. Lower the value. **A common recommendation is `8`**.
 
+3. **`max_byte_per_task`**: A larger value reduces the number of import versions. However, if you encounter a `body exceed max size` error and do not want to adjust `streaming_load_max_mb` (which requires restarting the BE), or if you encounter the `-238 TOO MANY SEGMENT` error, you can lower this value temporarily. **The default usually works.**
 
+4. **Two key parameters that affect the number of versions**:
 
-### 2. 推荐命令
+    | Parameter | Effect | Recommendation |
+    |---|---|---|
+    | `workers` | More workers means more versions and higher concurrency | Usually use `8` |
+    | `max_byte_per_task` | A larger value means more data per version and fewer versions, but a value that is too large can trigger `-238 TOO MANY SEGMENT` | Usually use the default |
 
-设置必要参数以及设置 `workers=8` 即可。
+### Recommended Command
 
-```text
-./doris-streamloader --source_file="demo.csv,demoFile*.csv,demoDir" --url="http://127.0.0.1:8030" --header="column_separator:," --db="demo" --table="test_load" --u="root" --workers=8
+Setting the required parameters and `workers` to `8` is sufficient for most scenarios:
+
+```shell
+./doris-streamloader \
+    --source_file="demo.csv,demoFile*.csv,demoDir" \
+    --url="http://127.0.0.1:8030" \
+    --header="column_separator:," \
+    --db="demo" \
+    --table="test_load" \
+    --u="root" \
+    --workers=8
 ```
 
+---
 
-### 3. FAQ
+## FAQ
 
-- 在导入过程中，遇到了部分子任务失败的问题，当时没有断点续传的功能，导入失败后重新删表导入，如果遇到这个问题，工具会进行自动重传，如果重传失败会打印出重传命令，复制后可以手动重传。
-- 该工具的默认单个导入是 100G，超过了 BE 默认的 `streaming_load_max_mb` 阈值如果不希望重启 BE，可以减少 `max_byte_per_task` 这个参数的大小。
- 
-  查看 `streaming_load_max_mb` 大小的方法：
+### 1. What should I do if some subtasks fail during import?
 
-  
-  ```Go
-  -curl "http://127.0.0.1:8040/api/show_config"
-  ```
-  
-- 导入过程如果遇到 `-238 TOO MANY SEGMENT` 的问题，可以减少 `max_byte_per_task` 的大小。
+The tool retries automatically. If the retries still fail, it prints a manual retry command. Just copy and run it. There is no need to drop the table and reimport.
+
+### 2. What if a single import exceeds the BE default `streaming_load_max_mb` threshold?
+
+The tool's default upper limit per import is 100 GB, which may exceed the BE `streaming_load_max_mb` threshold. To avoid restarting the BE, lower the `--max_byte_per_task` parameter.
+
+To check the value of `streaming_load_max_mb`:
+
+```shell
+curl "http://127.0.0.1:8040/api/show_config"
+```
+
+### 3. What should I do when the `-238 TOO MANY SEGMENT` error occurs?
+
+Lowering the `--max_byte_per_task` parameter mitigates this issue.

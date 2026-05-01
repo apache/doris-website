@@ -2,20 +2,20 @@
 {
     "title": "Materialized View",
     "language": "en",
-    "description": "Navigate concepts, synchronous and asynchronous materialized views, transparent rewriting, and FAQs in Apache Doris."
+    "description": "Apache Doris materialized view chapter navigation: covers concepts, synchronous materialized views, asynchronous materialized views, transparent rewriting, and FAQs."
 }
 ---
 
 import GettingStartedCard from '@site/src/components/getting-started-card/getting-started-card';
 
-Materialized views in Apache Doris store pre-computed results to accelerate analytical queries, simplify ETL with nested modeling, and speed up lakehouse queries on external tables. Start with the concepts, then dive into synchronous or asynchronous materialized views based on your timeliness requirements.
+A materialized view is an entity that contains both computation logic and data. You can use it for query acceleration, lightweight ETL modeling, and lakehouse federated query acceleration. Start by understanding the concepts, then choose between synchronous and asynchronous materialized views based on your freshness requirements.
 
-## Concepts
+## Concept Introduction
 
 <div className="cards-grid">
 <GettingStartedCard
     title="Materialized View Overview"
-    description="Learn what materialized views are, when to use them, and how synchronous, asynchronous, single-table and multi-table variants compare."
+    description="Understand the applicable scenarios of materialized views and make selection decisions based on freshness, SQL pattern, and refresh method."
     link="overview"
 />
 </div>
@@ -24,14 +24,14 @@ Materialized views in Apache Doris store pre-computed results to accelerate anal
 
 <div className="cards-grid">
 <GettingStartedCard
-    title="Sync-Materialized View"
-    description="Use synchronous materialized views to keep aggregated or pre-sorted data in lockstep with the base table for real-time analytics."
+    title="Synchronous Materialized View"
+    description="Use synchronous materialized views to keep data strongly consistent with the base table, accelerating real-time aggregation and sorting scenarios."
     link="sync-materialized-view"
 />
 
 <GettingStartedCard
-    title="Transparent Rewriting with Sync MV"
-    description="See how the optimizer transparently rewrites queries onto sync materialized views, including supported patterns and limitations."
+    title="Transparent Rewriting with Synchronous Materialized View"
+    description="Learn how the optimizer transparently rewrites queries to synchronous materialized views, including supported patterns and limitations."
     link="../tuning/tuning-plan/transparent-rewriting-with-sync-mv"
 />
 </div>
@@ -40,32 +40,32 @@ Materialized views in Apache Doris store pre-computed results to accelerate anal
 
 <div className="cards-grid">
 <GettingStartedCard
-    title="Async Materialized View Overview"
-    description="Understand async materialized views: refresh modes, multi-table support, partition incremental refresh, and typical use cases."
+    title="Asynchronous Materialized View Overview"
+    description="Master the refresh modes, multi-table support, partition incremental refresh, and typical use cases of asynchronous materialized views."
     link="async-materialized-view/overview"
 />
 
 <GettingStartedCard
-    title="Creating & Maintaining"
-    description="Hands-on reference for creating async materialized views, querying them directly, and managing refreshes and partitions."
+    title="Creation and Maintenance"
+    description="Operations manual for creating asynchronous materialized views, querying them directly, managing refreshes, and maintaining partitions."
     link="async-materialized-view/functions-and-demands"
 />
 
 <GettingStartedCard
-    title="Use Guide"
-    description="Pick the right scenario, refresh strategy, and partitioning approach with concrete recommendations and best practices."
+    title="Usage Guide"
+    description="Best practices for scenario judgment, usage principles, refresh strategy selection, and build implementation."
     link="async-materialized-view/use-guide"
 />
 
 <GettingStartedCard
-    title="Transparent Rewriting with Async MV"
-    description="How the SPJG-based rewrite engine matches queries to async materialized views so existing SQL benefits without changes."
+    title="Transparent Rewriting with Asynchronous Materialized View"
+    description="How the SPJG-pattern-based rewriting algorithm transparently rewrites existing queries to asynchronous materialized views without modifying SQL."
     link="../tuning/tuning-plan/transparent-rewriting-with-async-mv"
 />
 
 <GettingStartedCard
-    title="Async MV FAQ"
-    description="Answers to common questions on partition refresh, base table versioning, and operational troubleshooting."
+    title="FAQ"
+    description="Answers to frequently asked questions about partition refresh, base table versions, and operational troubleshooting."
     link="async-materialized-view/faq"
 />
 </div>

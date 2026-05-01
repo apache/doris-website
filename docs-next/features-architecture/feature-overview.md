@@ -1,6 +1,6 @@
 ---
 {
-  "title": "Features Overview",
+  "title": "Feature Overview",
   "language": "en"
 }
 ---

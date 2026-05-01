@@ -213,9 +213,9 @@ FROM KAFKA(
 
 更详细的信息请参考 AWS 相关文档：
 
-- [如何通过互联网安全地访问 Amazon Managed Streaming for Apache Kafka (Amazon MSK) 集群](https://aws.amazon.com/cn/blogs/china/how-to-safely-access-amazon-managed-streaming-for-apache-kafka-amazon-msk-cluster-through-the-internet-i/)
+- [如何通过互联网安全地访问 Amazon Managed Streaming for Apache Kafka (Amazon MSK) 集群](https://docs.aws.amazon.com/msk/latest/developerguide/public-access.html)
 - [Access from within AWS but outside cluster's VPC](https://docs.aws.amazon.com/msk/latest/developerguide/aws-access.html)
-- [使用互联网网关为 VPC 启用互联网访问](https://docs.aws.amazon.com/zh_cn/vpc/latest/userguide/VPC_Internet_Gateway.html)
+- [使用互联网网关为 VPC 启用互联网访问](https://docs.aws.amazon.com/vpc/latest/userguide/VPC_Internet_Gateway.html)
 
 ## FAQ
 

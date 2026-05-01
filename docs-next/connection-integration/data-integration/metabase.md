@@ -1,232 +1,261 @@
 ---
 {
     "title": "Metabase",
-    "language": "zh-CN",
-    "description": "Metabase 是一个开源的商业智能工具，提供简洁易用的数据分析和可视化功能，支持丰富的数据源连接，并能够快速构建交互式仪表盘。"
+    "language": "en",
+    "description": "Connect to Doris in Metabase using the Apache Doris Driver, configure data sources, build visualization dashboards with SQL, and explore Catalogs, parameterized queries, and performance tuning recommendations.",
+    "keywords": [
+        "Metabase connect Doris",
+        "Apache Doris Metabase Driver",
+        "Doris visualization dashboard",
+        "Metabase Doris data source"
+    ]
 }
 ---
 
-Metabase 是一个开源的商业智能工具，提供简洁易用的数据分析和可视化功能，支持丰富的数据源连接，并能够快速构建交互式仪表盘。该工具主要特点是界面友好、易于上手、支持自助分析、可视化看板制作、数据钻取探索，还集成了一个 SQL 查询编辑器，可以进行 SQL 查询和数据导出等。
+{/* Knowledge type: Procedure */}
+{/* Applicable scenario: Connect to Apache Doris in Metabase and build visualization dashboards */}
 
-通过 Metabase Apache Doris Driver，可以让 Metabase 连接到 Apache Doris 数据库，实现对 Doris 内部数据和外部数据的查询和可视化处理。
+Metabase is an open source business intelligence tool that provides data analysis, data visualization, interactive dashboards, data drill-down, SQL query editing, and data export. With the Metabase Apache Doris Driver, Metabase can integrate Apache Doris databases and tables as data sources to query Doris internal data and external data, and to build visualization dashboards.
 
-通过这个驱动程序，Metabase 可以将 Apache Doris 数据库和表作为数据源进行集成。要启用此功能，请遵循下面的设置指南：
+This article starts from user scenarios and describes how to complete the following operations:
 
-- 安装和配置驱动程序
-- 在 Metabase 中配置 Apache Doris 数据源
-- 在 Metabase 中构建可视化
-- 连接和使用技巧
+| Scenario | User goal | Main operations |
+|----------|----------|----------|
+| Prepare the Metabase environment | Allow Metabase to recognize Apache Doris as a data source | Install Metabase, then download and install the Doris driver |
+| Configure the Doris data source | Connect to the Doris `tpch` database in Metabase | Fill in the FE node, Query Port, Catalog, database, username, and password |
+| Build visualization analytics | Analyze how order amounts of different shipping methods change over time | Create a Question, write SQL, configure a line chart, and save it to a dashboard |
+| Use advanced capabilities | Access external data sources and improve the query experience | Use Catalog, parameterized queries, partition pruning, materialized views, and caching |
 
-## 安装 Metabase 和 Doris 驱动程序
+## Prepare the Metabase environment
 
-### 前置要求
+### Prerequisites
 
-1. 下载并安装 Metabase 0.48.0 及以上版本。具体参见 [Metabase 安装文档](https://www.metabase.com/docs/latest/installation-and-operation/installing-metabase)
-2. 准备 Apache Doris 集群
+Before you start configuration, make sure the following environment is ready:
 
-### 安装 Doris 驱动程序
+| Item | Requirement |
+|------|------|
+| Metabase | Download and install Metabase 0.48.0 or later. For details, see the [Metabase installation documentation](https://www.metabase.com/docs/latest/installation-and-operation/installing-metabase) |
+| Apache Doris | Prepare an accessible Apache Doris cluster |
+| Doris driver | Download the latest [metabase-doris-driver](https://velodb-bi-connector-1316291683.cos.ap-hongkong.myqcloud.com/Metabase/latest/doris.metabase-driver.jar) |
 
-首先需要下载最新的 [metabase-doris-driver](https://velodb-bi-connector-1316291683.cos.ap-hongkong.myqcloud.com/Metabase/latest/doris.metabase-driver.jar)
+### Install the driver for a regular deployment
 
-然后进行驱动安装，安装方式视 metabase 部署方式而定：
+If Metabase is deployed in the regular way, install the Doris driver as follows:
 
-#### metabase 常规部署
+1. Download the Doris Driver.
 
-1. 下载 Driver
+2. Create the Metabase plugins directory (if it does not exist):
 
-2. 创建 Metabase 插件目录（如果不存在）：
+    ```bash
+    mkdir -p $path_metabase/plugins
+    ```
 
-```bash
-mkdir -p $path_metabase/plugins
-```
+3. Copy the JAR file to the plugins directory:
 
-3. 将 JAR 文件复制到插件目录：
+    ```bash
+    cp doris.metabase-driver.jar $path_metabase/plugins
+    ```
 
-```bash
-cp doris.metabase-driver.jar $path_metabase/plugins
-```
+4. Restart the Metabase service.
 
-4. 重启 Metabase 服务
+### Install the driver for a Docker deployment
 
-#### metabase docker 部署
+If Metabase is started with Docker, you are recommended to start it by mounting `doris.metabase-driver.jar`. The plugin path inside the Docker container is `/plugins/`.
 
-如果 metabase 使用的是 docker 启动，则建议通过挂载 `doris.metabase-driver.jar` 的方式启动，docker 容器内部的插件路径为 `/plugins/`
+1. Download the Doris Driver.
 
-1. 下载 Driver
+2. Start Metabase with a command similar to the following:
 
-2. 参考如下启动命令启动 Metabase：
+    ```bash
+    docker run -d -p 3000:3000 --name metabase -v $host_path/doris.metabase-driver.jar:/plugins/doris.metabase-driver.jar metabase/metabase
+    ```
 
-```bash
-docker run -d -p 3000:3000 --name metabase  -v $host_path/doris.metabase-driver.jar:/plugins/doris.metabase-driver.jar  metabase/metabase
-```
+## Configure the Doris data source
 
-## 在 Metabase 中配置 Doris 数据源
+{/* Knowledge type: Configuration parameters */}
+{/* Applicable scenario: Add an Apache Doris database connection on the Metabase admin page */}
 
-现在您已安装了 **Metabase** 和 **metabase-doris-driver**，让我们来看一下如何在 Metabase 中定义一个连接到 Doris 中 tpch 数据库的数据源。
+After installing Metabase and `metabase-doris-driver`, you can add a data source in Metabase that connects to the Doris `tpch` database.
 
-### 连接参数说明
+### Connection parameters
 
-连接 Apache Doris 时需要配置以下参数：
+The following parameters are required when connecting to Apache Doris:
 
-| 参数 | 含义 | 示例 |
+| Parameter | Meaning | Example |
 |------|------|------|
-| **Display Name** | 数据源显示名称 | Doris-TPCH |
-| **Host** | Doris FE 节点地址 | 127.0.0.1 |
-| **Port** | Doris Query Port（MySQL 协议端口） | 9030 |
-| **Catalog name** | Catalog 名（可选，默认为 internal） | internal |
-| **Database name** | 数据库名（必写） | tpch |
-| **Username** | 用户名 | root |
-| **Password** | 密码 | your_password |
+| **Display Name** | Display name of the data source | Doris-TPCH |
+| **Host** | Doris FE node address | 127.0.0.1 |
+| **Port** | Doris Query Port (MySQL protocol port) | 9030 |
+| **Catalog name** | Catalog name. Optional, defaults to `internal` | internal |
+| **Database name** | Database name. Required | tpch |
+| **Username** | Username | root |
+| **Password** | Password | your_password |
 
-**数据库名称格式说明：**
+Fill in the database name as follows:
 
-- **内表**：直接填写数据库名，如 `tpch`，系统会自动使用 `internal` catalog
-- **外表/数据湖**：填写 Catalog 配置，如仅链接内表，则无需关注此项。
+- **Querying internal tables**: Enter the database name directly, for example `tpch`. The system automatically uses the `internal` Catalog.
+- **Querying external tables or data lakes**: Fill in the Catalog configuration. If you only connect to internal tables, you do not need to consider this option.
 
-### 配置步骤
+### Configuration steps
 
-1. 启动 Metabase 并完成登录
+1. Start Metabase and complete the login.
 
-2. 点击右上角的齿轮图标，选择 **Admin Settings**（管理设置）
+2. Click the gear icon in the upper right corner and select **Admin Settings**.
 
-![Metabase 管理设置](/images/ecomsystem/metabase/metabase-01.png)
+![Metabase admin settings](/images/next/connection-integration/data-integration/metabase/metabase-01.png)
 
-3. 在左侧菜单中选择 **Databases**（数据库），点击右上角的 **Add database** 按钮
+3. In the left menu, select **Databases**, and click the **Add database** button in the upper right corner.
 
-![添加数据库](/images/ecomsystem/metabase/metabase-02.png)
+![Add database](/images/next/connection-integration/data-integration/metabase/metabase-02.png)
 
-4. 在 **Database type** 下拉框中选择 **Apache Doris**
+4. In the **Database type** dropdown, select **Apache Doris**.
 
-![选择 Apache Doris](/images/ecomsystem/metabase/metabase-03.png)
+![Select Apache Doris](/images/next/connection-integration/data-integration/metabase/metabase-03.png)
 
-5. 填写连接信息：
+5. Fill in the connection information:
 
-- **Display name**: Doris-TPCH
-- **Host**: 127.0.0.1
-- **Port**: 9030
-- **Database name**: tpch
-- **Username**: admin
-- **Password**: ******
+    | Parameter | Example value |
+    |------|--------|
+    | **Display name** | Doris-TPCH |
+    | **Host** | 127.0.0.1 |
+    | **Port** | 9030 |
+    | **Database name** | tpch |
+    | **Username** | admin |
+    | **Password** | ****** |
 
-![填写连接信息](/images/ecomsystem/metabase/metabase-04.png)
+![Fill in connection information](/images/next/connection-integration/data-integration/metabase/metabase-04.png)
 
-6. 点击 **Save** 保存配置
+6. Click **Save** to save the configuration.
 
-7. Metabase 会自动测试连接并同步数据库元数据。如果连接成功，会显示成功提示
+7. Metabase automatically tests the connection and synchronizes database metadata. If the connection succeeds, a success message is displayed.
 
-![连接成功](/images/ecomsystem/metabase/metabase-05.png)
+![Connection succeeded](/images/next/connection-integration/data-integration/metabase/metabase-05.png)
 
-至此，数据源配置完成！接下来就可以在 Metabase 中构建可视化了。
+After the data source configuration is complete, you can build visualizations in Metabase.
 
-## 在 Metabase 中构建可视化
+## Build a visualization dashboard
 
-我们选择 TPC-H 数据作为数据源，Doris TPC-H 数据源构建方式参考[此文档](../../benchmark/tpch)。
+{/* Knowledge type: Procedure */}
+{/* Applicable scenario: Use Doris TPC-H data to create a Question and a Dashboard in Metabase */}
 
-现在我们在 Metabase 中配置了 Doris 数据源，让我们可视化数据...
+This example uses TPC-H data as the data source. For how to build the Doris TPC-H data source, see the [Doris TPC-H benchmark documentation](../../lakehouse/best-practices/tpch.md).
 
-假设我们需要分析不同货运方式的订单金额随时间增长曲线，用以成本分析。
+Suppose you need to analyze how the order amounts of different shipping methods grow over time for cost analysis. You can complete the visualization configuration with the following workflow.
 
-### 创建问题（Question）
+### Create a Question
 
-1. 点击主页右上角的 **New +** 按钮，选择 **Question**
+1. Click the **New +** button in the upper right corner of the home page and select **Question**.
 
-![新建问题](/images/ecomsystem/metabase/metabase-06.png)
+![Create a new question](/images/next/connection-integration/data-integration/metabase/metabase-06.png)
 
-2. 选择数据源：
-    - **Database**: Doris TPCH
-    - **Table**: lineitem
+2. Select the data source:
 
-![选择数据表](/images/ecomsystem/metabase/metabase-07.png)
+    | Parameter | Example value |
+    |------|--------|
+    | **Database** | Doris TPCH |
+    | **Table** | lineitem |
 
-### 使用 SQL 构建自定义指标
+![Select a table](/images/next/connection-integration/data-integration/metabase/metabase-07.png)
 
-为了计算收入（Revenue），我们需要使用自定义 SQL 表达式：
+### Build a custom metric with SQL
 
-1. 点击右上角切换 **view sql**，然后点击 **convert this question to SQL** 编辑 SQL
+To compute the revenue, you need to use a custom SQL expression.
 
-![切换到 SQL 模式](/images/ecomsystem/metabase/metabase-08.png)
+1. Click **view sql** in the upper right corner to switch, then click **convert this question to SQL** to edit the SQL.
 
-2. 输入以下 SQL 查询：
+![Switch to SQL mode](/images/next/connection-integration/data-integration/metabase/metabase-08.png)
+
+2. Enter the following SQL query:
+
+    ```sql
+    SELECT
+      DATE_FORMAT(l_shipdate, '%Y-%m') AS ship_month,
+      l_shipmode,
+      SUM(l_extendedprice * (1 - l_discount)) AS revenue
+    FROM lineitem
+    WHERE l_shipdate >= '1995-01-01'
+      AND l_shipdate < '1997-01-01'
+    GROUP BY
+      DATE_FORMAT(l_shipdate, '%Y-%m'),
+      l_shipmode
+    ORDER BY ship_month, l_shipmode
+    ```
+
+3. Click the **Visualize** button in the lower right corner to view the results.
+
+![View results](/images/next/connection-integration/data-integration/metabase/metabase-09.png)
+
+### Configure the visualization chart
+
+1. By default, the result is shown as a table. Click the **Visualization** button in the lower left corner and select the **Line** chart type.
+
+![Select line chart](/images/next/connection-integration/data-integration/metabase/metabase-10.png)
+
+2. Configure the chart parameters as needed. Metabase generates the following configuration automatically:
+
+    | Configuration | Example value | Meaning |
+    |--------|--------|------|
+    | **X-axis** | ship_month | Shipping month |
+    | **Y-axis** | revenue | Revenue |
+    | **Series** | l_shipmode | Shipping method |
+
+3. Customize the chart style:
+
+    - Click the **Settings** icon to adjust colors, labels, legend position, and so on.
+    - On the **Display** tab, you can set axis titles, number formats, and so on.
+
+4. After the chart is configured, click **Save** in the upper right corner to save it.
+
+5. Enter the question name **my-tpch** and select the Collection to save it to.
+
+![Name the question](/images/next/connection-integration/data-integration/metabase/metabase-11.png)
+
+### Create a Dashboard
+
+1. Click **+ New** > **Dashboard** to create a new dashboard, and enter the dashboard name **my-tpch**.
+
+![Create a dashboard](/images/next/connection-integration/data-integration/metabase/metabase-12.png)
+
+2. Click **Add a chart** to add the saved Question to the dashboard.
+
+![Add a question](/images/next/connection-integration/data-integration/metabase/metabase-13.png)
+
+3. Adjust the chart position and size, and click **Save** in the upper right corner to save the dashboard.
+
+![Save the dashboard](/images/next/connection-integration/data-integration/metabase/metabase-14.png)
+
+You have now successfully connected Metabase to Apache Doris and completed data analysis and visualization dashboard creation.
+
+## Advanced scenarios
+
+{/* Knowledge type: Feature description */}
+{/* Applicable scenario: Access external data sources, create interactive dashboards, and optimize query performance */}
+
+### Use Catalog to access external data
+
+Doris supports the multi-Catalog feature, which can query external data sources and perform cross-data-source queries. When using Catalog in Metabase, you can choose either of the following options.
+
+1. Configure `Catalog` on the connection configuration page, and configure an external table database under that Catalog in `Database`. For example:
+
+    | Configuration | Example value | Description |
+    |--------|--------|------|
+    | `catalog` | `hive_catalog` | Access the Catalog named `hive_catalog` |
+    | `database` | `warehouse` | Access the `warehouse` database under the Catalog |
+
+![Configure Catalog](/images/next/connection-integration/data-integration/metabase/metabase-15.png)
+
+2. Specify the Catalog explicitly in the SQL query:
+
+    ```sql
+    SELECT * FROM hive.warehouse.orders LIMIT 100;
+    ```
+
+### Use parameterized queries
+
+Metabase supports using variables in SQL queries, which makes it easy to create interactive dashboards:
 
 ```sql
-SELECT 
-  DATE_FORMAT(l_shipdate, '%Y-%m') AS ship_month,
-  l_shipmode,
-  SUM(l_extendedprice * (1 - l_discount)) AS revenue
-FROM lineitem
-WHERE l_shipdate >= '1995-01-01' 
-  AND l_shipdate < '1997-01-01'
-GROUP BY 
-  DATE_FORMAT(l_shipdate, '%Y-%m'),
-  l_shipmode
-ORDER BY ship_month, l_shipmode
-```
-
-3. 点击右下角的 **Visualize** 按钮查看结果
-
-![查看结果](/images/ecomsystem/metabase/metabase-09.png)
-
-
-### 配置可视化图表
-
-1. 默认显示为表格。点击左下角的 **Visualization** 按钮，选择 **Line** 图表类型
-
-![选择折线图](/images/ecomsystem/metabase/metabase-10.png)
-
-2. 可按需配置图表参数（metabase 自动配置如下）：
-    - **X-axis**: ship_month（发货月份）
-    - **Y-axis**: revenue（收入）
-    - **Series**: l_shipmode（货运方式）
-
-3. 自定义图表样式：
-    - 点击 **Settings** 图标，可以调整颜色、标签、图例位置等
-    - 在 **Display** 标签页可以设置坐标轴标题、数值格式等
-
-4. 图表配置完成后，点击右上角的 **Save** 保存
-
-5. 输入问题名称：**my-tpch**，选择保存到的集合（Collection）
-
-![命名问题](/images/ecomsystem/metabase/metabase-11.png)
-
-### 创建仪表盘（Dashboard）
-
-1. 点击 **+ New** → **Dashboard** 创建新仪表盘，输入仪表盘名称：**my-tpch**
-
-![创建仪表盘](/images/ecomsystem/metabase/metabase-12.png)
-
-2. 点击 **Add a chart** 将已保存的 question 添加到仪表盘
-
-![添加问题](/images/ecomsystem/metabase/metabase-13.png)
-
-3. 调整图表位置和大小，点击右上角 **Save** 保存仪表盘
-
-![保存仪表盘](/images/ecomsystem/metabase/metabase-14.png)
-
-至此，已经成功将 Metabase 连接到 Apache Doris，并实现了数据分析和可视化看板制作！
-
-## 高级功能
-
-### 使用 Catalog 访问外部数据
-
-Doris 支持多 Catalog 功能，可以查询外部数据源 和 跨数据源的数据查询。在 Metabase 中使用时：
-
-1. 在 链接配置界面配置 `Catalog`， 在 `Database` 中配置 该 catalog 下的外表数据库，例如：  
-   `catalog: hive_catalog`, `database: warehouse` - 访问 名为 hive_catalog 中的 warehouse 数据库  
-
-![配置catalog](/images/ecomsystem/metabase/metabase-15.png)
-
-2. 或者在 SQL 查询中显式指定 Catalog：
-
-```sql
-SELECT * FROM hive.warehouse.orders LIMIT 100;
-```
-
-### 使用参数化查询
-
-Metabase 支持在 SQL 查询中使用变量，方便创建交互式仪表盘：
-
-```sql
-SELECT 
+SELECT
   l_shipmode,
   SUM(l_extendedprice * (1 - l_discount)) AS revenue
 FROM lineitem
@@ -235,35 +264,33 @@ WHERE l_shipdate BETWEEN {{start_date}} AND {{end_date}}
 GROUP BY l_shipmode
 ```
 
-保存后，在仪表盘中可以通过下拉框或日期选择器动态筛选数据。
+After saving, you can dynamically filter data on the dashboard with dropdowns or date pickers.
 
-### 性能优化建议
+### Performance tuning recommendations
 
-1. **使用分区裁剪**：在 WHERE 子句中添加分区列的过滤条件
-   ```sql
-   WHERE date >= '2024-01-01' AND date < '2024-02-01'
-   ```
+| Recommendation | Description |
+|------|------|
+| Use partition pruning | Add partition column filter conditions in the `WHERE` clause, for example `WHERE date >= '2024-01-01' AND date < '2024-02-01'` |
+| Leverage materialized views | For complex aggregation queries, create materialized views in Doris to accelerate the queries |
+| Control result set size | Use `LIMIT` to limit the number of returned rows and avoid loading too much data at once |
+| Use query caching | Metabase automatically caches query results. Setting a reasonable cache time can improve performance |
 
-2. **利用物化视图**：对于复杂的聚合查询，可以在 Doris 中创建物化视图加速查询
+### Connection and usage tips
 
-3. **控制结果集大小**：使用 LIMIT 限制返回行数，避免一次性加载过多数据
+| Scenario | Recommendation |
+|------|------|
+| Driver installation | Make sure `doris.metabase-driver.jar` is placed in the Metabase `plugins` directory and restart Metabase |
+| Time zone settings | If you encounter time zone issues, add `serverTimezone=Asia/Shanghai` to the JDBC connection string |
+| Partitioned table optimization | Create Doris partitioned tables properly, partitioning and bucketing by time, to effectively reduce the data scanned by queries |
+| Network connection | Use VPC private connections to avoid the security risks of public network access |
+| Permission control | Refine Doris user account roles and access permissions, and follow the principle of least privilege |
+| Metadata synchronization | When the table structure in Doris changes, click **Sync database schema now** on the Metabase admin page to synchronize manually |
+| Performance monitoring | For slow queries, use `SHOW QUERY PROFILE` in Doris to analyze performance bottlenecks |
 
-4. **查询缓存**：Metabase 会自动缓存查询结果，合理设置缓存时间可以提升性能
+### Abnormal data type display
 
-### 连接和使用技巧
+If the data type display in Metabase is abnormal, first confirm that you are using the latest version of the Doris Driver. For the Doris `largeint` type, you need to convert it explicitly in SQL:
 
-- **驱动安装**：确保将 `doris.metabase-driver.jar` 放在 Metabase 的 `plugins` 目录下，并重启 Metabase
-- **时区设置**：如果遇到时区问题，可以在 JDBC 连接字符串中添加 `serverTimezone=Asia/Shanghai`
-- **分区表优化**：合理创建 Doris 分区表，按时间分区分桶，可有效减少查询扫描的数据量
-- **网络连接**：建议使用 VPC 私有连接，避免公网访问引入安全风险
-- **权限控制**：细化 Doris 用户账号角色和访问权限，遵循最小权限原则
-- **元数据同步**：当 Doris 中的表结构发生变化时，在 Metabase 管理页面点击 "Sync database schema now" 手动同步
-- **性能监控**：对于慢查询，可以在 Doris 中使用 `SHOW QUERY PROFILE` 分析性能瓶颈
-
-### 数据类型显示异常
-
-- 确保使用最新版本的 Doris Driver
-- Doris largeint 类型需要在 SQL 中显式转换：
-  ```sql
-  SELECT CAST(large_int_col AS STRING) FROM table
-  ```
+```sql
+SELECT CAST(large_int_col AS STRING) FROM table
+```

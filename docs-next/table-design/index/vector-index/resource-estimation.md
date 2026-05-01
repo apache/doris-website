@@ -1,9 +1,17 @@
 ---
 {
-    "title": "ANN 资源评估指南",
-    "sidebar_label": "资源评估",
-    "language": "zh-CN",
-    "description": "本文介绍如何评估 Apache Doris 向量检索（ANN）在 HNSW/IVF 与不同量化方式下的内存和 CPU 资源需求。"
+    "title": "ANN Resource Estimation Guide",
+    "sidebar_label": "Resource Estimation",
+    "language": "en",
+    "description": "How to estimate the memory and CPU requirements for Apache Doris vector search (ANN). This article provides capacity planning methods for HNSW/IVF and different quantization modes.",
+    "keywords": [
+        "ANN resource estimation",
+        "vector search capacity planning",
+        "HNSW memory estimation",
+        "IVF memory estimation",
+        "vector quantization sq8 sq4 pq",
+        "Doris vector index CPU"
+    ]
 }
 ---
 
@@ -26,107 +34,157 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-ANN 业务通常先受内存和 CPU 约束，而不是磁盘容量。本文给出一套可落地的资源评估方法，用于上线前规划 Doris 向量检索集群规格。
+<!-- Knowledge type: Capacity planning / Resource estimation -->
+<!-- Applicable scenarios: Pre-launch capacity planning / Cluster sizing / Memory and CPU budget estimation -->
 
-通用评估顺序如下：
-1. 先估算索引内存。
-2. 再按目标查询性能估算 CPU。
-3. 最后预留查询执行和非向量列访问的安全水位。
+Vector search (ANN) workloads are usually constrained by memory and CPU first, not by disk capacity. This article provides a practical resource estimation method to help you plan the specifications of an Apache Doris vector search cluster before going live.
 
-## 为什么 ANN 需要单独做容量评估
+## Quick Navigation
 
-相比常规 OLAP 索引，ANN 有以下资源特征：
+- To understand **why ANN needs separate estimation**: see [ANN Resource Characteristics](#ann-resource-characteristics).
+- To **estimate memory directly**: see [HNSW Memory Estimation](#hnsw-memory-estimation) and [IVF Memory Estimation](#ivf-memory-estimation).
+- To **estimate CPU**: see [CPU Core Estimation](#cpu-core-estimation).
+- To learn about **production reservations**: see [Production Safety Margin](#production-safety-margin-do-not-design-against-100-memory).
+- To make an **index choice**: see [Scenario-based Recommendations](#scenario-based-recommendations).
 
-1. 构建阶段 CPU 使用率高。
-2. Segment 过大时，单个索引构建可能出现内存不足并失败。
-3. 查询阶段若要求高性能，通常需要将索引尽量常驻内存。
-4. 高 QPS 场景对 CPU 核心数有明显要求。
+## Estimation Overview
 
-Doris 支持 `sq8`、`sq4`、`pq` 量化来降低内存占用。量化的代价通常是：
-- 导入变慢（额外编码开销）；
-- 查询可能变慢（额外解码/重构开销）；
-- 召回率可能下降（有损编码）。
+The general estimation order is:
 
-## 评估步骤
+1. **Estimate index memory**: derive the resident index memory from data scale, index type, and quantization mode.
+2. **Estimate CPU cores**: match the CPU count to the memory ratio based on target QPS and latency.
+3. **Reserve a safety margin**: leave headroom for query execution, non-vector column access, and Compaction.
 
-先准备以下输入：
-- 向量维度 `D`
-- 总行数 `N`
-- 索引类型（`hnsw` / `ivf` / `ivf_on_disk`）
-- 量化方式（`flat` / `sq8` / `sq4` / `pq`）
-- `max_degree`（仅 HNSW）
-- 目标 QPS 与延迟
+## ANN Resource Characteristics
 
-按顺序评估：
-1. 索引内存
-2. CPU 核心
-3. 线上安全余量
+<!-- Knowledge type: Concept explanation -->
 
-## HNSW 内存估算
+Compared with regular OLAP indexes, ANN has the following resource usage characteristics:
 
-在默认 `max_degree=32` 时，可用经验公式：
+| Resource Dimension | Resource Characteristics |
+|----------|----------|
+| Build-stage CPU | High utilization. Heavy CPU pressure during ingestion. |
+| Build-stage memory | When a Segment is too large, building a single index may fail due to insufficient memory. |
+| Query-stage memory | High-performance queries usually require the index to stay resident in memory as much as possible. |
+| Query-stage CPU | High-QPS scenarios place a clear demand on the number of CPU cores. |
 
-`HNSW_FLAT_Bytes ~= 1.3 * D * 4 * N`
+Doris supports three quantization modes, `sq8`, `sq4`, and `pq`, to reduce memory usage. The trade-offs of quantization are usually:
 
-其中：
-- `D * 4 * N` 为原始 float32 向量内存；
-- `1.3` 表示 HNSW 图结构额外开销（约 0.3 倍）。
+- **Slower ingestion**: extra encoding overhead.
+- **Possibly slower queries**: extra decoding or reconstruction overhead.
+- **Possible recall drop**: lossy encoding introduces error.
 
-若提高 `max_degree`，图结构开销按比例放大：
+## Estimation Input Checklist
 
-`HNSW_factor ~= 1 + 0.3 * (max_degree / 32)`
+<!-- Knowledge type: Operational steps -->
 
-`HNSW_FLAT_Bytes ~= HNSW_factor * D * 4 * N`
+Before starting the estimation, prepare the following inputs:
 
-量化近似关系：
-- `sq8`：约为 `flat` 的 `1/4`
-- `sq4`：约为 `flat` 的 `1/8`
-- `pq`：内存通常接近 `sq4`（如 `pq_m=D/2, pq_nbits=8`）
+| Input | Description |
+|--------|------|
+| Vector dimension `D` | The float dimension of a single vector, for example `768`. |
+| Total rows `N` | The total number of vectors to be indexed. |
+| Index type | `hnsw` / `ivf` / `ivf_on_disk` |
+| Quantization mode | `flat` / `sq8` / `sq4` / `pq` |
+| `max_degree` | HNSW only. Controls the number of graph neighbors. Default `32`. |
+| Target QPS and latency | Used for CPU core estimation. |
 
-`ivf_on_disk` 复用了 IVF 的训练与查询参数模型（`nlist` / `ivf_nprobe`），但将倒排列表主体放在磁盘并通过缓存提供查询能力。做容量规划时，可先把上面的 IVF 估算视为“全量驻内存”的上界，再结合期望保留的热点数据规模单独规划 `ann_index_ivf_list_cache_limit`。
+## HNSW Memory Estimation
 
-### 速查表（`D=768`, `max_degree=32`）
+<!-- Knowledge type: Capacity planning formula -->
 
-| 行数 | FLAT | SQ8 | SQ4 | PQ (`m=384, nbits=8`) |
-|------|------|-----|-----|------------------------|
+### Empirical Formula Under Default Parameters
+
+With the default `max_degree=32`:
+
+```
+HNSW_FLAT_Bytes ~= 1.3 * D * 4 * N
+```
+
+Where:
+
+- `D * 4 * N` is the raw float32 vector memory.
+- `1.3` represents the extra overhead from the HNSW graph structure (about `0.3` times).
+
+### Adjustment When Tuning `max_degree`
+
+The larger `max_degree` is, the higher the graph structure overhead. Scale proportionally:
+
+```
+HNSW_factor   ~= 1 + 0.3 * (max_degree / 32)
+HNSW_FLAT_Bytes ~= HNSW_factor * D * 4 * N
+```
+
+### Approximate Memory Reduction From Quantization
+
+| Quantization Mode | Memory Ratio (Relative to FLAT) |
+|----------|------------------------|
+| `sq8` | About `1/4` |
+| `sq4` | About `1/8` |
+| `pq` | Usually close to `sq4` (for example, `pq_m=D/2, pq_nbits=8`) |
+
+### Notes on `ivf_on_disk`
+
+`ivf_on_disk` reuses the training and query parameter model of IVF (`nlist` / `ivf_nprobe`), but stores the inverted list body on disk and serves queries through a cache. For capacity planning, you can first treat the IVF estimation below as the upper bound of "fully resident in memory", and then plan `ann_index_ivf_list_cache_limit` separately based on the size of hot data you expect to keep resident.
+
+### Quick Reference (`D=768`, `max_degree=32`)
+
+| Rows | FLAT | SQ8 | SQ4 | PQ (`m=384, nbits=8`) |
+|------|------|------|------|--------------------------|
 | 1M | 4 GB | 1 GB | 0.5 GB | 0.5 GB |
 | 10M | 40 GB | 10 GB | 5 GB | 5 GB |
 | 100M | 400 GB | 100 GB | 50 GB | 50 GB |
 | 1B | 4000 GB | 1000 GB | 500 GB | 500 GB |
 | 10B | 40000 GB | 10000 GB | 5000 GB | 5000 GB |
 
-## IVF 内存估算
+## IVF Memory Estimation
 
-IVF 相比 HNSW 结构开销更低，可近似为：
+<!-- Knowledge type: Capacity planning formula -->
 
-`IVF_FLAT_Bytes ~= D * 4 * N`
+IVF has lower structural overhead than HNSW and can be approximated as:
 
-量化近似关系：
-- `sq8`：约为 `flat` 的 `1/4`
-- `sq4`：约为 `flat` 的 `1/8`
-- `pq`：通常接近 `sq4`
+```
+IVF_FLAT_Bytes ~= D * 4 * N
+```
 
-### 速查表（`D=768`）
+The memory reduction ratio for IVF under quantization is the same as for HNSW:
 
-| 行数 | FLAT | SQ8 | SQ4 | PQ (`m=384, nbits=8`) |
-|------|------|-----|-----|------------------------|
+| Quantization Mode | Memory Ratio (Relative to FLAT) |
+|----------|------------------------|
+| `sq8` | About `1/4` |
+| `sq4` | About `1/8` |
+| `pq` | Usually close to `sq4` |
+
+### Quick Reference (`D=768`)
+
+| Rows | FLAT | SQ8 | SQ4 | PQ (`m=384, nbits=8`) |
+|------|------|------|------|--------------------------|
 | 1M | 3 GB | 0.75 GB | 0.35 GB | 0.35 GB |
 | 10M | 30 GB | 7.5 GB | 3.5 GB | 3.5 GB |
 | 100M | 300 GB | 75 GB | 35 GB | 35 GB |
 | 1B | 3000 GB | 750 GB | 350 GB | 350 GB |
 | 10B | 30000 GB | 7500 GB | 3500 GB | 3500 GB |
 
-## CPU 核心估算
+## CPU Core Estimation
 
-高 QPS 场景可先用经验比例：
+<!-- Knowledge type: Capacity planning formula -->
 
-`16 核 : 64 GB`（约 `1 核 : 4 GB`）
+For high-QPS scenarios, you can start with the following empirical ratio:
 
-即使开启量化，CPU 需求也不一定按索引内存同比下降。实践上建议先按 **FLAT 等效负载** 估算 CPU，再通过压测逐步下调。
+```
+16 cores : 64 GB   (about 1 core : 4 GB)
+```
 
-## 实际 SQL 的安全余量（不要按 100% 内存设计）
+Note: even when quantization is enabled, CPU demand does not necessarily decrease at the same rate as index memory. In practice:
 
-上面的公式只覆盖 ANN 索引本身，不包含完整 SQL 执行开销。例如：
+1. First estimate CPU based on the **FLAT-equivalent workload**.
+2. Then gradually scale down to a reasonable level based on actual stress testing.
+
+## Production Safety Margin (Do Not Design Against 100% Memory)
+
+<!-- Knowledge type: Best practice -->
+
+The formulas above only cover the ANN index itself, not the full SQL execution overhead. For example:
 
 ```sql
 SELECT id, text, l2_distance_approximate(embedding, [...]) AS dist
@@ -135,21 +193,50 @@ ORDER BY dist
 LIMIT N;
 ```
 
-即使有 TopN 延迟物化，执行层仍需要额外内存处理非向量列与算子状态。线上建议：
+Even with TopN late materialization, the execution layer still needs additional memory to handle non-vector columns and operator state. In production, the recommendations are:
 
-- ANN 索引内存控制在机器总内存的约 `70%` 以内；
-- 其余内存用于查询执行、Compaction 和其他数据访问。
+- Keep ANN index memory within about **70%** of total machine memory.
+- Use the remaining memory for query execution, Compaction, and other data access.
 
-## 场景化选型建议
+## Scenario-based Recommendations
 
-1. 性能优先且内存预算充足：`HNSW + FLAT`。
-2. 内存受限：`HNSW/IVF + PQ`（通常比 `SQ8/SQ4` 更平衡）。
-3. PQ 参数可先用 `pq_m = D / 2` 作为起点，再按召回和延迟压测微调。
-4. 查询性能要求不高时，优先降低 CPU 配置；也可采用“导入期高 CPU、稳定期降配”的策略。
+<!-- Knowledge type: Architecture selection decision -->
+<!-- Applicable scenarios: Index type and quantization mode selection -->
 
-## 相关文档
+| Scenario | Recommended Plan | Description |
+|------|----------|------|
+| Performance-first with sufficient memory budget | `HNSW + FLAT` | Best recall and latency. |
+| Memory-constrained | `HNSW/IVF + PQ` | Usually more balanced than `SQ8/SQ4`. |
+| Initial PQ parameter | `pq_m = D / 2` | Fine-tune later based on recall and latency stress tests. |
+| Low query performance requirement | Lower CPU configuration first | You can also adopt a "high CPU during ingestion, downsized after stabilization" strategy. |
 
-- [向量搜索概述](./overview.md)
+## FAQ
+
+<!-- Knowledge type: Frequently asked questions -->
+
+**Q1: How much memory can be reduced after enabling quantization?**
+
+A: `sq8` is about `1/4` of FLAT, and `sq4` and `pq` (for example, `pq_m=D/2, pq_nbits=8`) are about `1/8`. The exact value is still affected by the HNSW graph structure overhead.
+
+**Q2: Can CPU be scaled down at the same ratio as the quantized memory?**
+
+A: Not recommended. Quantization mainly reduces memory usage, and CPU demand does not decrease proportionally. It is recommended to first estimate CPU based on the FLAT-equivalent workload, and then scale down based on stress tests.
+
+**Q3: How does memory change when `max_degree` is increased?**
+
+A: The HNSW graph structure overhead scales by `1 + 0.3 * (max_degree / 32)`. For example, when `max_degree=64`, the factor is about `1.6`.
+
+**Q4: How much memory should be planned for `ivf_on_disk`?**
+
+A: The upper bound is "IVF fully resident in memory". The actual resident size is determined by `ann_index_ivf_list_cache_limit` and can be evaluated separately based on the size of hot data.
+
+**Q5: Why should the design not target 100% memory?**
+
+A: In addition to the ANN index, the SQL execution layer (non-vector columns, operator state), Compaction, and other access also consume memory. It is recommended to reserve about 30% headroom and keep index memory within 70% of total memory.
+
+## Related Documents
+
+- [Vector Search Overview](./overview.md)
 - [HNSW](./hnsw.md)
 - [IVF](./ivf.md)
-- [ANN 索引管理](./index-management.md)
+- [ANN Index Management](./index-management.md)

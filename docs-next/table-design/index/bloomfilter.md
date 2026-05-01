@@ -1,69 +1,69 @@
 ---
 {
-    "title": "BloomFilter 索引",
-    "language": "zh-CN",
-    "description": "BloomFilter 索引是 Doris 中基于 BloomFilter 算法的跳数索引，用于加速等值查询（= 和 IN），通过跳过不满足条件的数据块减少 I/O 开销。"
+    "title": "BloomFilter Index",
+    "language": "en",
+    "description": "BloomFilter index is a skip index in Doris based on the BloomFilter algorithm. It accelerates equality queries (= and IN) by skipping data blocks that do not satisfy the conditions, reducing I/O overhead."
 }
 ---
 
-<!-- 知识类型: 功能介绍 + 使用指南 -->
-<!-- 适用场景: 高基数字段等值查询加速 -->
+<!-- Knowledge type: Feature introduction + Usage guide -->
+<!-- Applicable scenario: Accelerating equality queries on high-cardinality columns -->
 
-BloomFilter 索引是基于 BloomFilter 算法的一种**跳数索引**。它通过快速判断查询值是否可能存在于数据块中，跳过不满足等值查询条件的数据块，从而减少 I/O 开销，加速查询。
+The BloomFilter index is a **skip index** based on the BloomFilter algorithm. It quickly determines whether a query value may exist in a data block, skips data blocks that do not satisfy the equality query condition, and thereby reduces I/O overhead and accelerates queries.
 
-### BloomFilter 算法原理
+### BloomFilter Algorithm Principles
 
-BloomFilter 是 Bloom 在 1970 年提出的一种基于多哈希函数映射的快速查找算法。其核心特点如下：
+BloomFilter is a fast lookup algorithm based on multi-hash function mapping, proposed by Bloom in 1970. Its core characteristics are as follows:
 
--   **空间效率高**：使用一个超长的二进制位数组和一组哈希函数，即可表示一个集合。
--   **判断结果**：对某个元素是否存在于集合中的查询，BloomFilter 只会返回两种结果之一：
-    -   **可能存在**（存在 Hash 碰撞，可能是假阳性）
-    -   **一定不存在**（结果可信）
+-   **High space efficiency**: A set can be represented with a long binary bit array and a group of hash functions.
+-   **Query results**: For a query about whether an element exists in the set, BloomFilter returns only one of two results:
+    -   **Possibly exists** (a hash collision may occur, so this can be a false positive)
+    -   **Definitely does not exist** (the result is reliable)
 
-工作过程如下：
+The workflow is as follows:
 
 ![Bloomfilter Index](/images/next/table-design/bloomfilter.jpg)
 
-1.  二进制位数组初始全部为 0。
-2.  插入元素时，元素经过一系列哈希函数计算出多个偏移量，将位数组对应位置置为 1。
-3.  查询元素时，同样计算出偏移量；若任一位置为 0，则该元素一定不存在；若全部为 1，则可能存在。
+1.  The binary bit array is initialized to all zeros.
+2.  When inserting an element, the element is hashed by a series of hash functions to compute multiple offsets, and the corresponding positions in the bit array are set to 1.
+3.  When querying an element, the offsets are computed in the same way. If any of the corresponding positions is 0, the element definitely does not exist. If all positions are 1, the element possibly exists.
 
-下图展示了一个 m=18, k=3（m 是 Bit 数组大小，k 是 Hash 函数个数）的 BloomFilter 示例。集合中的 x、y、z 三个元素通过 3 个不同的哈希函数散列到位数组中。查询元素 w 时，由于至少有一个对应位为 0，因此 w 一定不在该集合中。
+The following figure shows a BloomFilter example with m=18 and k=3 (m is the size of the bit array, and k is the number of hash functions). The three elements x, y, and z in the set are hashed into the bit array by 3 different hash functions. When querying element w, since at least one of its corresponding bits is 0, w is definitely not in the set.
 
 ![Bloom_filter.svg](/images/Bloom_filter.svg.png)
 
-由于哈希碰撞的存在，BloomFilter 存在“假阳性”问题。因此，**基于 BloomFilter 的索引只能跳过一定不满足条件的数据，不能精确定位满足条件的数据**。
+Because hash collisions can occur, BloomFilter has a "false positive" issue. Therefore, **a BloomFilter-based index can only skip data that definitely does not satisfy the condition; it cannot precisely locate data that satisfies the condition**.
 
-### Doris 中的实现
+### Implementation in Doris
 
-Doris BloomFilter 索引以**数据块（page）**为单位构建，每个数据块对应一个 BloomFilter：
+The Doris BloomFilter index is built per **data block (page)**, with one BloomFilter for each data block:
 
--   **写入时**：对数据块中的每个值进行 Hash 计算，并存入对应数据块的 BloomFilter。
--   **查询时**：根据等值条件的值，判断每个数据块对应的 BloomFilter 是否包含该值。若不包含则跳过该数据块，达到减少 I/O、加速查询的目的。
+-   **On write**: Each value in the data block is hashed and stored in the BloomFilter of the corresponding data block.
+-   **On query**: Based on the value in the equality condition, Doris checks whether the BloomFilter of each data block contains the value. If it does not, that data block is skipped, which reduces I/O and accelerates the query.
 
-## 使用场景
+## Use Cases
 
-BloomFilter 索引能够加速等值查询（包括 `=` 和 `IN`），尤其适用于**高基数字段**（如 `userid` 等唯一 ID 字段）。
+The BloomFilter index can accelerate equality queries (including `=` and `IN`), and is especially suitable for **high-cardinality columns** (such as unique ID columns like `userid`).
 
-### 适用场景
+### Applicable Scenarios
 
-| 场景 | 说明 |
+| Scenario | Description |
 |------|------|
-| 等值查询 | `WHERE column = value` |
-| IN 查询 | `WHERE column IN (v1, v2, ...)` |
-| 高基数字段 | 取值种类多、重复率低的字段，如用户 ID、订单号 |
+| Equality query | `WHERE column = value` |
+| IN query | `WHERE column IN (v1, v2, ...)` |
+| High-cardinality column | A column with many distinct values and a low repetition rate, such as user ID or order number |
 
-### 使用限制
+### Limitations
 
--   **查询类型限制**：仅对 `=` 和 `IN` 查询有效，对 `!=`、`NOT IN`、`>`、`<` 等查询无效。
--   **数据类型限制**：不支持对 `Tinyint`、`Float`、`Double` 类型的列建立 BloomFilter 索引。
--   **基数限制**：对低基数字段加速效果有限。例如“性别”字段只有两种取值，几乎每个数据块都会包含所有值，BloomFilter 无法过滤数据，索引失去意义。
+-   **Query type limitation**: Only effective for `=` and `IN` queries. Not effective for queries such as `!=`, `NOT IN`, `>`, or `<`.
+-   **Data type limitation**: Building a BloomFilter index on columns of types `Tinyint`, `Float`, or `Double` is not supported.
+-   **Cardinality limitation**: The acceleration effect on low-cardinality columns is limited. For example, a "gender" column has only two values, so almost every data block contains all values. The BloomFilter cannot filter data, and the index becomes meaningless.
 
-## 管理索引
+## Managing Indexes
 
-### 建表时创建 BloomFilter 索引
+### Creating a BloomFilter Index When Creating a Table
 
-由于历史原因，BloomFilter 索引的定义语法与倒排索引等通用 `INDEX` 语法不同。BloomFilter 索引通过表的 `PROPERTIES` 属性 `bloom_filter_columns` 指定，可同时指定一个或多个字段：
+For historical reasons, the syntax for defining a BloomFilter index differs from the general `INDEX` syntax used for indexes such as inverted indexes. The BloomFilter index is specified through the table's `PROPERTIES` attribute `bloom_filter_columns`, and one or more columns can be specified at the same time:
 
 ```sql
 PROPERTIES (
@@ -71,59 +71,59 @@ PROPERTIES (
 );
 ```
 
-### 查看 BloomFilter 索引
+### Viewing a BloomFilter Index
 
-通过 `SHOW CREATE TABLE` 查看表上已创建的 BloomFilter 索引：
+Use `SHOW CREATE TABLE` to view the BloomFilter indexes that have been created on a table:
 
 ```sql
 SHOW CREATE TABLE table_name;
 ```
 
-### 修改 BloomFilter 索引
+### Modifying a BloomFilter Index
 
-通过 `ALTER TABLE` 修改表的 `bloom_filter_columns` 属性，新增或删除 BloomFilter 索引列。
+Use `ALTER TABLE` to modify the table's `bloom_filter_columns` property to add or remove BloomFilter index columns.
 
-**新增 column_name3 的 BloomFilter 索引**：
+**Add a BloomFilter index on column_name3**:
 
 ```sql
 ALTER TABLE table_name SET ("bloom_filter_columns" = "column_name1,column_name2,column_name3");
 ```
 
-**删除 column_name1 的 BloomFilter 索引**：
+**Remove the BloomFilter index on column_name1**:
 
 ```sql
 ALTER TABLE table_name SET ("bloom_filter_columns" = "column_name2,column_name3");
 ```
 
-## 使用索引
+## Using the Index
 
-BloomFilter 索引用于加速 `WHERE` 条件中的等值查询，**符合条件时自动生效**，无需特殊语法。
+The BloomFilter index is used to accelerate equality queries in `WHERE` conditions. **It takes effect automatically when the conditions are met**, with no special syntax required.
 
-### 通过 Query Profile 分析索引效果
+### Analyzing Index Effectiveness with Query Profile
 
-可以通过 Query Profile 中的以下指标，分析 BloomFilter 索引的加速效果：
+You can analyze the acceleration effect of the BloomFilter index using the following metrics in the Query Profile:
 
-| 指标 | 含义 |
+| Metric | Meaning |
 |------|------|
-| `RowsBloomFilterFiltered` | BloomFilter 索引过滤掉的行数，可与其他 Rows 指标对比，分析过滤效果 |
-| `BlockConditionsFilteredBloomFilterTime` | BloomFilter 索引过滤消耗的时间 |
+| `RowsBloomFilterFiltered` | The number of rows filtered out by the BloomFilter index. Compare it with other Rows metrics to analyze the filtering effect. |
+| `BlockConditionsFilteredBloomFilterTime` | The time consumed by BloomFilter index filtering. |
 
-## 使用示例
+## Usage Example
 
-下面通过一个示例展示如何在 Doris 中创建 BloomFilter 索引。
+The following example shows how to create a BloomFilter index in Doris.
 
-在建表语句的 `PROPERTIES` 中通过 `"bloom_filter_columns" = "k1,k2,k3"` 指定建立 BloomFilter 索引的列名。例如，下面的示例对 `saler_id` 和 `category_id` 两个字段创建 BloomFilter 索引：
+In the `PROPERTIES` of the CREATE TABLE statement, specify the column names on which to build BloomFilter indexes via `"bloom_filter_columns" = "k1,k2,k3"`. For example, the following example creates BloomFilter indexes on the `saler_id` and `category_id` columns:
 
 ```sql
 CREATE TABLE IF NOT EXISTS sale_detail_bloom (
-    sale_date date NOT NULL COMMENT "销售时间",
-    customer_id int NOT NULL COMMENT "客户编号",
-    saler_id int NOT NULL COMMENT "销售员",
-    sku_id int NOT NULL COMMENT "商品编号",
-    category_id int NOT NULL COMMENT "商品分类",
-    sale_count int NOT NULL COMMENT "销售数量",
-    sale_price DECIMAL(12,2) NOT NULL COMMENT "单价",
-    sale_amt DECIMAL(20,2) COMMENT "销售总金额"
+    sale_date date NOT NULL COMMENT "Sale time",
+    customer_id int NOT NULL COMMENT "Customer ID",
+    saler_id int NOT NULL COMMENT "Salesperson",
+    sku_id int NOT NULL COMMENT "Product ID",
+    category_id int NOT NULL COMMENT "Product category",
+    sale_count int NOT NULL COMMENT "Sales quantity",
+    sale_price DECIMAL(12,2) NOT NULL COMMENT "Unit price",
+    sale_amt DECIMAL(20,2) COMMENT "Total sales amount"
 )
 DUPLICATE KEY(sale_date, customer_id, saler_id, sku_id, category_id)
 DISTRIBUTED BY HASH(saler_id) BUCKETS 10

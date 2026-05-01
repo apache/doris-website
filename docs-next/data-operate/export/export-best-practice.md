@@ -1,100 +1,174 @@
 ---
 {
-    "title": "Best Practices | Export",
+    "title": "Data Export Best Practices",
     "language": "en",
-    "description": "This document mainly introduces how to determine whether resource utilization is reasonable during data export operations,",
-    "sidebar_label": "Best Practices"
+    "description": "How can you tell whether resource utilization for Doris data export is reasonable? This article explains concurrency tuning and speed evaluation methods for SELECT INTO OUTFILE and EXPORT.",
+    "sidebar_label": "Best Practices",
+    "keywords": [
+        "Doris data export",
+        "SELECT INTO OUTFILE",
+        "EXPORT command",
+        "parallel export",
+        "export performance tuning",
+        "enable_parallel_outfile",
+        "parallelism",
+        "data_consistency",
+        "async_task_consumer_thread_num",
+        "export bandwidth bottleneck"
+    ]
 }
 ---
 
-# Best Practices
+<!-- Knowledge type: Performance tuning / Configuration parameters -->
+<!-- Applicable scenarios: Export performance bottleneck analysis / Concurrency tuning / Bandwidth utilization evaluation -->
 
-This document mainly introduces how to determine whether resource utilization is reasonable during data export operations, and how to adjust resource utilization to achieve better data export efficiency.
+This article explains, for Doris data export, how to determine whether resource utilization is reasonable and how to achieve higher export efficiency by tuning parameters such as concurrency. It covers two common export methods:
 
-## SELECT INTO OUTFILE
+| Export Method          | Applicable Scenarios                                            | Concurrency Control                              |
+| ---------------------- | --------------------------------------------------------------- | ------------------------------------------------ |
+| `SELECT INTO OUTFILE`  | Exporting the result of a single SQL query, flexible and customizable | `enable_parallel_outfile` session variable       |
+| `EXPORT`               | Bulk export of large tables or partitions, automatically split into multiple Outfile tasks | `parallelism`, `data_consistency`, and others    |
 
-1. Enable parallel export
+## Tuning SELECT INTO OUTFILE
 
-    The number of rows returned by `SELECT INTO OUTFILE` represents the number of parallel Writers. The more Writers, the higher the export concurrency, but the number of output files will also increase. If you find there is only one Writer, you can try enabling the parallel export feature.
+<!-- Knowledge type: Operating procedure -->
 
-    `SET enable_parallel_outfile=true`
+`SELECT INTO OUTFILE` writes data out in parallel through Writers. The more Writers there are, the higher the export concurrency, but the more files are produced.
 
-    After enabling, the `SELECT INTO OUTFILE` operation generates the corresponding number of Writers based on the query's parallelism. The query parallelism is controlled by the session variable `parallel_pipeline_task_num`. By default, it's half of the number of CPU cores per BE.
+### 1. Enable Parallel Export
 
-    For example, in a cluster with 3 BE nodes, where each node has 8 CPU cores. When parallel export is enabled, it will generate (4*3=) 12 Writers.
+**Purpose**: Increase the concurrency of `SELECT INTO OUTFILE`.
 
-    Note that even if `enable_parallel_outfile` is enabled, not all queries can be exported in parallel. For example, if the query contains global sorting and aggregation semantics, it cannot be exported in parallel. For example:
+**How to judge**: The number of rows returned by `SELECT INTO OUTFILE` represents the number of parallel Writers. If only 1 row is returned (a single Writer), you can try enabling parallel export.
 
-    ```
-    SELECT * FROM table ORDER BY id;
+**Command**:
 
-    SELECT SUM(cost) FROM table;
-    ```
+```sql
+SET enable_parallel_outfile = true;
+```
 
-2. Determine export speed
+**Notes**:
 
-    Each row result returned by `SELECT INTO OUTFILE` contains the time (in seconds) and speed (in KB/s) of the corresponding Writer's output.
+- Once enabled, `SELECT INTO OUTFILE` generates a number of Writers that matches the parallelism of the query.
+- Query parallelism is controlled by the session variable `parallel_pipeline_task_num`, which defaults to half the CPU core count of a single BE.
+- Example: For a cluster with 3 BE nodes and 8 cores per node, enabling parallel export produces `4 × 3 = 12` Writers.
 
-    Adding up the speeds of multiple Writers on the same node gives you the write speed of a single node. You can compare this speed with disk bandwidth (e.g., when exporting to local) or network bandwidth (e.g., when exporting to object storage) to see if it has reached the bandwidth bottleneck.
+**Limitations**: The following queries cannot be exported in parallel, even with `enable_parallel_outfile` enabled:
 
-## Export
+- Queries that include global sorting, such as `SELECT * FROM table ORDER BY id;`
+- Queries with global aggregation semantics, such as `SELECT SUM(cost) FROM table;`
 
-1. Determine export execution status from the return results
+### 2. Evaluate Export Speed
 
-    The Export command essentially breaks down the task into multiple `SELECT INTO OUTFILE` clauses for execution.
+**Purpose**: Determine whether the export has reached the disk or network bandwidth bottleneck.
 
-    The results returned by the `SHOW EXPORT` command contain a JSON string, which is a two-dimensional array. The first dimension represents the number of concurrent threads in Export, with the number of concurrent threads representing how many Outfile statements were initiated concurrently. The second dimension represents the return results of a single Outfile statement. Example:
+**Steps**:
 
-    ```
+1. Look at the write time (in seconds) and speed (in KB/s) of each Writer in the rows returned by `SELECT INTO OUTFILE`.
+2. Sum the speeds of multiple Writers on the same node to obtain the write speed of that node.
+3. Compare this speed with the bottleneck bandwidth:
+    - Exporting to local: compare with disk bandwidth.
+    - Exporting to object storage: compare with network bandwidth.
+
+If the actual speed is close to the bottleneck bandwidth, resources are already fully utilized. Otherwise, you can continue to tune concurrency.
+
+## Tuning EXPORT
+
+<!-- Knowledge type: Operating procedure / Configuration parameters -->
+
+The `EXPORT` command essentially splits one export job into multiple `SELECT INTO OUTFILE` statements for execution. Understanding this splitting model is the prerequisite for tuning.
+
+### 1. Inspect Execution Through the Returned Result
+
+**Command**:
+
+```sql
+SHOW EXPORT;
+```
+
+The returned result contains a JSON string structured as a two-dimensional array:
+
+- **First dimension**: The number of concurrent Export threads, that is, the number of Outfile statements issued in parallel.
+- **Second dimension**: The return value of a single Outfile statement (the write details of multiple Writers).
+
+**Example**:
+
+```json
+[
     [
-        [
-            {
-                "fileNumber": "1",
-                "totalRows": "640321",
-                "fileSize": "350758307",
-                "url": "file:///127.0.0.1/mnt/disk2/ftw/tmp/export/exp_59fd917c43874adc-9b1c3e9cd6e655be_*",
-                "writeTime": "17.989",
-                "writeSpeed": "19041.66"
-            },
-            {...},
-            {...},
-            {...}
-        ],
-        [
-            {
-                "fileNumber": "1",
-                "totalRows": "646609",
-                "fileSize": "354228704",
-                "url": "file:///127.0.0.1/mnt/disk2/ftw/tmp/export/exp_c75b9d4b59bf4943-92eb94a7b97e46cb_*",
-                "writeTime": "17.249",
-                "writeSpeed": "20054.64"
-            },
-            {...},
-            {...},
-            {...}
-        ]
+        {
+            "fileNumber": "1",
+            "totalRows": "640321",
+            "fileSize": "350758307",
+            "url": "file:///127.0.0.1/mnt/disk2/ftw/tmp/export/exp_59fd917c43874adc-9b1c3e9cd6e655be_*",
+            "writeTime": "17.989",
+            "writeSpeed": "19041.66"
+        },
+        {...},
+        {...},
+        {...}
+    ],
+    [
+        {
+            "fileNumber": "1",
+            "totalRows": "646609",
+            "fileSize": "354228704",
+            "url": "file:///127.0.0.1/mnt/disk2/ftw/tmp/export/exp_c75b9d4b59bf4943-92eb94a7b97e46cb_*",
+            "writeTime": "17.249",
+            "writeSpeed": "20054.64"
+        },
+        {...},
+        {...},
+        {...}
     ]
-    ```
+]
+```
 
-    In the above example, 2 Outfile commands were initiated. Each command has 4 Writers writing concurrently.
+**Explanation**: The example above issued 2 Outfile commands, each with 4 Writers writing in parallel. You can control the number of concurrent Outfile commands, and therefore the overall concurrency, through the `parallelism` parameter in the Export command properties.
 
-    By adjusting the `parallelism` parameter in the Export command properties, you can control the number of concurrent Outfile operations, thereby controlling the concurrency level.
+### 2. Parameters That Affect Parallelism
 
-2. Parameters affecting parallelism
+<!-- Knowledge type: Configuration parameters -->
 
-    The parallelism of Export jobs depends on two parameters:
+The overall parallelism of an Export job is jointly determined by the following parameters:
 
-    - `parallelism`
+| Parameter                         | Scope         | Default     | Description                                                                                |
+| --------------------------------- | ------------- | ----------- | ------------------------------------------------------------------------------------------ |
+| `parallelism`                     | Export command | -          | Controls the maximum number of Outfile commands an Export job can be split into            |
+| `data_consistency`                | Export command | `partition`| Controls whether to further split Outfile commands within a partition                      |
+| `async_task_consumer_thread_num`  | FE config     | `64`        | Total number of Export Tasks the cluster can run concurrently, shared by all Export Tasks  |
 
-        Used to set the maximum number of Outfile commands to split into.
+#### parallelism
 
-    - `data_consistency`
+Controls the maximum number of Outfile commands a single Export job can be split into, that is, the upper limit of concurrency within the job.
 
-        Whether to split Outfile commands within partitions. This parameter defaults to `partition`, which means no further splitting within partitions. That is, the number of Outfile commands will only be less than or equal to the number of partitions involved. If set to `none`, a partition will be further split, which can improve concurrency, but if the partition is being written to, it may sacrifice export consistency (i.e., different Outfile commands for the same partition may export different versions of data from that partition).
+#### data_consistency
 
-        For details, please refer to [Export Command Manual](../../sql-manual/sql-statements/data-modification/load-and-export/EXPORT.md)
+Controls whether to further split Outfile commands within a partition:
 
-    - `async_task_consumer_thread_num`
+- `partition` (default): Does not split partitions further. The number of Outfile commands is less than or equal to the number of partitions involved.
+- `none`: Splits partitions further to increase concurrency. However, if data is being written to a partition, export consistency may be sacrificed (different Outfile commands on the same partition may export data of different versions).
 
-        This is an FE configuration parameter that indicates the number of Export Tasks that the current cluster can run concurrently. The default value is 64. An Export Job is split into multiple Export Tasks based on concurrency. All Export Tasks share this threshold. To increase the overall number of concurrent export tasks that the cluster can execute, increase this parameter and restart the FE node.
+For details, see the [EXPORT command manual](../../sql-manual/sql-statements/data-modification/load-and-export/EXPORT.md).
 
+#### async_task_consumer_thread_num
+
+An FE configuration parameter that represents the upper limit on the number of Export Tasks the current cluster can run concurrently. The default is `64`.
+
+- An Export Job is split into multiple Export Tasks based on its concurrency.
+- All Export Tasks share this threshold.
+- To increase the number of export tasks the cluster can run concurrently, increase this parameter and restart the FE nodes.
+
+## Tuning Workflow Reference
+
+<!-- Knowledge type: Operating procedure -->
+<!-- Applicable scenarios: Export performance bottleneck localization -->
+
+When export performance does not meet expectations, follow the order below to investigate:
+
+1. **Confirm concurrency**: Use the returned result (the row count of `SELECT INTO OUTFILE` or the JSON of `SHOW EXPORT`) to determine the actual number of concurrent Writers.
+2. **Evaluate bandwidth utilization**: Sum the Writer speeds on a single node, compare with disk or network bandwidth, and determine whether the bottleneck has been reached.
+3. **Adjust concurrency parameters**:
+    - `SELECT INTO OUTFILE`: Enable `enable_parallel_outfile` and, if necessary, adjust `parallel_pipeline_task_num`.
+    - `EXPORT`: Adjust `parallelism` and, if necessary, set `data_consistency` to `none`.
+4. **Adjust cluster-level thresholds**: If too many Export tasks are running concurrently in the cluster and are being throttled, increase the FE configuration `async_task_consumer_thread_num` and restart the FE.

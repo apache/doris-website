@@ -1,93 +1,93 @@
 ---
 {
-    "title": "倒排索引（文本搜索）",
-    "sidebar_label": "概述",
-    "language": "zh-CN",
-    "description": "Doris 文本搜索基于倒排索引，支持全文检索、短语匹配、正则匹配、自定义分词与 BM25 相关性打分，可与向量搜索结合用于 RAG 等混合检索场景。"
+    "title": "Inverted Index (Text Search)",
+    "sidebar_label": "Overview",
+    "language": "en",
+    "description": "Doris text search is based on inverted indexes and supports full-text search, phrase matching, regex matching, custom tokenization, and BM25 relevance scoring. It can be combined with vector search for hybrid retrieval scenarios such as RAG."
 }
 ---
 
-<!-- 知识类型: Feature 介绍 + 快速上手 -->
-<!-- 适用场景: 关键词检索 / 短语匹配 / RAG 混合检索 / 相关性排序 -->
+<!-- Knowledge type: Feature introduction + Quick start -->
+<!-- Applicable scenarios: Keyword search / Phrase matching / RAG hybrid retrieval / Relevance ranking -->
 
-文本搜索用于在数据集中检索包含特定词项或短语的文档，并根据相关性对结果进行排序。
+Text search retrieves documents that contain specific terms or phrases from a dataset and ranks the results by relevance.
 
-| 检索方式 | 优势 | 适用场景 |
+| Retrieval method | Strength | Applicable scenarios |
 |----------|------|----------|
-| 文本搜索 | “找准”——可控、可解释的精确匹配，确保关键词命中与过滤条件的确定性 | 关键词检索、短语匹配、布尔条件过滤 |
-| 向量搜索 | “找全”——利用语义相似性扩展召回范围 | 语义检索、近似匹配 |
+| Text search | "Find precisely": controllable, explainable exact matching that ensures deterministic keyword hits and filter conditions | Keyword search, phrase matching, boolean filtering |
+| Vector search | "Find broadly": uses semantic similarity to expand the recall range | Semantic search, approximate matching |
 
-在生成式 AI 应用中，尤其是检索增强生成（RAG）场景下，文本搜索与向量搜索相辅相成，两者协同：
+In generative AI applications, especially in retrieval-augmented generation (RAG) scenarios, text search and vector search complement each other:
 
-- 兼顾语义广度与词法精度
-- 既提升召回率，又保证结果的准确性与可解释性
-- 共同构建可靠的检索基础，为大模型提供更准确、更相关的上下文
+- Balance semantic breadth with lexical precision
+- Improve recall while ensuring accuracy and explainability of results
+- Together build a reliable retrieval foundation that provides more accurate and relevant context for large language models
 
-## Doris 文本搜索的演进
+## Evolution of text search in Doris
 
-从 2.0.0 版本开始，Doris 引入了倒排索引（Inverted Index）以支持高性能的全文搜索。随着检索场景的多样化与查询复杂度的提升，Doris 在后续版本中持续扩展文本搜索能力。
+Starting from version 2.0.0, Doris introduced the inverted index to support high-performance full-text search. As retrieval scenarios diversified and query complexity increased, Doris has continued to expand its text search capabilities in subsequent releases.
 
-| 阶段 | 版本 | 关键能力 |
+| Stage | Version | Key capabilities |
 |------|------|----------|
-| 基础阶段 | 2.0+ | 引入列级倒排索引；提供基础全文检索算子（`MATCH_ANY`、`MATCH_ALL`）和多语言分词器，支持在大规模数据集中进行高效的关键词检索 |
-| 功能扩展 | 2.x → 3.x | 完善算子体系，新增短语匹配（`MATCH_PHRASE`）、前缀搜索（`MATCH_PHRASE_PREFIX`）、正则匹配（`MATCH_REGEXP`）等高级算子；3.1 版本引入自定义分词能力 |
-| 能力增强 | 4.0+ | 引入 BM25 相关性打分与统一查询入口 `SEARCH` 函数，支持文本相关性排序与混合排序 |
+| Foundation stage | 2.0+ | Introduced column-level inverted indexes; provided basic full-text search operators (`MATCH_ANY`, `MATCH_ALL`) and multi-language tokenizers, supporting efficient keyword search on large-scale datasets |
+| Feature expansion | 2.x to 3.x | Enhanced the operator system, added advanced operators such as phrase matching (`MATCH_PHRASE`), prefix search (`MATCH_PHRASE_PREFIX`), and regex matching (`MATCH_REGEXP`); version 3.1 introduced custom tokenization |
+| Capability enhancement | 4.0+ | Introduced BM25 relevance scoring and the unified query entry point `SEARCH` function, supporting text relevance ranking and hybrid ranking |
 
-其中，4.0+ 版本的核心增强包括：
+The core enhancements in 4.0+ include:
 
-- **BM25 相关性打分**：通过 `score()` 函数根据文本相关性对结果进行排序，可与向量相似度分数结合，实现混合排序。
-- **SEARCH 函数**：提供统一的查询 DSL，支持跨列查询与布尔逻辑组合，简化复杂查询构建，同时进一步提升查询性能。
+- **BM25 relevance scoring**: The `score()` function ranks results by text relevance and can be combined with vector similarity scores to enable hybrid ranking.
+- **SEARCH function**: Provides a unified query DSL that supports cross-column queries and boolean logic combinations, simplifying the construction of complex queries while further improving query performance.
 
 ---
 
-## Doris 核心文本搜索特性
+## Core text search features in Doris
 
-### 1. 丰富的文本算子
+### 1. Rich text operators
 
-Doris 提供了一套覆盖多种检索模式的全文搜索算子，可满足从基础关键词匹配到复杂短语查询的不同需求。
+Doris provides a set of full-text search operators that cover multiple retrieval patterns, satisfying needs ranging from basic keyword matching to complex phrase queries.
 
-当前版本支持的主要算子：
+Main operators supported in the current version:
 
-| 算子 | 说明 | 典型场景 |
+| Operator | Description | Typical scenarios |
 |------|------|----------|
-| `MATCH_ANY` / `MATCH_ALL` | 任意词匹配（OR）与全词匹配（AND） | 通用关键词检索 |
-| `MATCH_PHRASE` | 精确短语匹配，支持自定义词距（slop）与顺序控制 | 邻近词语查询 |
-| `MATCH_PHRASE_PREFIX` | 短语前缀匹配 | 自动补全、增量搜索 |
-| `MATCH_REGEXP` | 基于正则表达式的匹配 | 模式化文本检索 |
+| `MATCH_ANY` / `MATCH_ALL` | Any-term match (OR) and all-term match (AND) | General keyword search |
+| `MATCH_PHRASE` | Exact phrase match, with support for custom slop and order control | Proximity word queries |
+| `MATCH_PHRASE_PREFIX` | Phrase prefix match | Auto-completion, incremental search |
+| `MATCH_REGEXP` | Matching based on regular expressions | Pattern-based text retrieval |
 
-这些算子可独立使用，也可通过 `SEARCH()` 函数组合构建复杂逻辑查询。例如：
+These operators can be used independently or combined through the `SEARCH()` function to build complex logical queries. For example:
 
 ```sql
--- 精确短语搜索
-SELECT * FROM docs WHERE content MATCH_PHRASE '倒排 索引';
+-- Exact phrase search
+SELECT * FROM docs WHERE content MATCH_PHRASE 'inverted index';
 
--- 前缀搜索
-SELECT * FROM docs WHERE content MATCH_PHRASE_PREFIX '数据 仓';
+-- Prefix search
+SELECT * FROM docs WHERE content MATCH_PHRASE_PREFIX 'data ware';
 ```
 
-[查看所有算子 →](./search-operators.md)
+[View all operators](./search-operators.md)
 
 ---
 
-### 2. 自定义分词（3.1+）
+### 2. Custom tokenization (3.1+)
 
-在文本搜索中，分词方式直接决定了检索精度与召回效果。从 3.1 版本起，Doris 支持**自定义分词器（Custom Analyzer）**，允许用户根据业务需求灵活定义分词流程。
+In text search, the tokenization method directly determines retrieval precision and recall. Starting from version 3.1, Doris supports **custom analyzers**, allowing you to flexibly define the tokenization pipeline based on business needs.
 
-自定义分词通过组合以下三类组件实现细粒度的文本控制：
+Custom tokenization achieves fine-grained text control by combining the following three types of components:
 
-- **字符过滤器（char_filter）**：在分词前进行符号替换、去除或标准化
-- **分词器（tokenizer）**：选择分词算法，支持 `standard`、`ngram`、`edge_ngram`、`keyword`、`icu` 等多种类型，用于处理不同语言和结构的文本
-- **词元过滤器（token_filter）**：如 `lowercase`、`word_delimiter`、`ascii_folding` 等，用于规范化和精炼分词结果
+- **Character filter (char_filter)**: Replaces, removes, or normalizes symbols before tokenization
+- **Tokenizer (tokenizer)**: Selects the tokenization algorithm. Supports types such as `standard`, `ngram`, `edge_ngram`, `keyword`, and `icu` for processing text in different languages and structures
+- **Token filter (token_filter)**: For example, `lowercase`, `word_delimiter`, and `ascii_folding`, used to normalize and refine tokenization results
 
 ```sql
--- 示例：定义自定义分词器
+-- Example: Define a custom analyzer
 CREATE INVERTED INDEX ANALYZER IF NOT EXISTS keyword_lowercase
 PROPERTIES (
     "tokenizer" = "keyword",
     "token_filter" = "asciifolding, lowercase"
 );
 
--- 在建表时使用自定义分词器
+-- Use the custom analyzer when creating a table
 CREATE TABLE docs (
     id BIGINT,
     content TEXT,
@@ -98,35 +98,35 @@ CREATE TABLE docs (
 );
 ```
 
-[了解自定义分词 →](./custom-analyzer.md)
+[Learn about custom tokenization](./custom-analyzer.md)
 
 ---
 
-### 3. BM25 相关性打分（4.0+）
+### 3. BM25 relevance scoring (4.0+)
 
-Doris 实现了 **BM25（Best Matching 25）** 算法用于文本相关性计算，为全文搜索提供排序与打分能力。
+Doris implements the **BM25 (Best Matching 25)** algorithm for text relevance computation, providing ranking and scoring capabilities for full-text search.
 
-BM25 的核心特性：
+Core characteristics of BM25:
 
-- 基于词频（TF）、逆文档频率（IDF）和文档长度的概率模型
-- 对长短文本均具良好鲁棒性
-- 可通过参数 `k1`、`b` 调整加权策略
+- A probabilistic model based on term frequency (TF), inverse document frequency (IDF), and document length
+- Robust for both short and long texts
+- Weighting strategy can be tuned through the `k1` and `b` parameters
 
 ```sql
 SELECT id, title, score() AS relevance
 FROM docs
-WHERE content MATCH_ANY '实时 OLAP 分析'
+WHERE content MATCH_ANY 'real-time OLAP analytics'
 ORDER BY relevance DESC
 LIMIT 10;
 ```
 
-[了解更多打分机制 →](./scoring.md)
+[Learn more about the scoring mechanism](./scoring.md)
 
 ---
 
-### 4. SEARCH 函数：统一查询入口（4.0+）
+### 4. SEARCH function: unified query entry point (4.0+)
 
-`SEARCH()` 函数提供统一的文本检索语法入口，支持多列搜索与布尔逻辑组合，使复杂查询表达更简洁：
+The `SEARCH()` function provides a unified syntax entry point for text retrieval, supporting multi-column search and boolean logic combinations, which makes complex queries more concise to express:
 
 ```sql
 SELECT id, title, score() AS relevance
@@ -136,13 +136,13 @@ ORDER BY relevance DESC
 LIMIT 20;
 ```
 
-[完整 SEARCH 函数指南 →](./search-function.md)
+[Complete SEARCH function guide](./search-function.md)
 
 ---
 
-## 快速开始
+## Quick start
 
-### 步骤 1：创建带倒排索引的表
+### Step 1: Create a table with inverted indexes
 
 ```sql
 CREATE TABLE docs (
@@ -152,7 +152,7 @@ CREATE TABLE docs (
     category STRING,
     tags ARRAY<STRING>,
     created_at DATETIME,
-    -- 文本搜索索引
+    -- Text search indexes
     INDEX idx_title(title) USING INVERTED PROPERTIES ("parser" = "chinese"),
     INDEX idx_content(content) USING INVERTED PROPERTIES ("parser" = "chinese", "support_phrase" = "true"),
     INDEX idx_category(category) USING INVERTED,
@@ -162,84 +162,84 @@ DUPLICATE KEY(id)
 DISTRIBUTED BY HASH(id) BUCKETS 10;
 ```
 
-### 步骤 2：运行文本查询
+### Step 2: Run text queries
 
 ```sql
--- 简单关键词搜索
+-- Simple keyword search
 SELECT * FROM docs WHERE content MATCH_ANY 'apache doris';
 
--- 短语搜索
-SELECT * FROM docs WHERE content MATCH_PHRASE '全文检索';
+-- Phrase search
+SELECT * FROM docs WHERE content MATCH_PHRASE 'full-text search';
 
--- 使用 SEARCH 进行布尔查询
+-- Boolean query with SEARCH
 SELECT * FROM docs
-WHERE SEARCH('title:apache AND (category:数据库 OR tags:ANY(sql nosql))');
+WHERE SEARCH('title:apache AND (category:database OR tags:ANY(sql nosql))');
 
--- 基于相关性的排序
+-- Relevance-based ranking
 SELECT id, title, score() AS relevance
 FROM docs
-WHERE content MATCH_ANY '实时 分析 OLAP'
+WHERE content MATCH_ANY 'real-time analytics OLAP'
 ORDER BY relevance DESC
 LIMIT 10;
 ```
 
-## 混合搜索：文本 + 向量
+## Hybrid search: text + vector
 
-在 RAG 应用中结合文本搜索和向量相似度，可以实现更全面的检索：
+In RAG applications, combining text search with vector similarity enables more comprehensive retrieval:
 
 ```sql
--- 混合检索：语义相似度 + 关键词过滤
+-- Hybrid retrieval: semantic similarity + keyword filtering
 SELECT id, title, score() AS text_relevance
 FROM docs
 WHERE
-    -- 向量过滤实现语义相似度
+    -- Vector filter for semantic similarity
     cosine_distance(embedding, [0.1, 0.2, ...]) < 0.3
-    -- 文本过滤实现关键词约束
-    AND SEARCH('title:搜索 AND content:引擎 AND category:技术')
+    -- Text filter for keyword constraints
+    AND SEARCH('title:search AND content:engine AND category:technology')
 ORDER BY text_relevance DESC
 LIMIT 10;
 ```
 
-## 管理倒排索引
+## Managing inverted indexes
 
-### 创建索引
+### Create an index
 
 ```sql
--- 在建表时创建
+-- Create at table creation time
 CREATE TABLE t (
     content STRING,
     INDEX idx(content) USING INVERTED PROPERTIES ("parser" = "chinese")
 );
 
--- 在现有表上创建
+-- Create on an existing table
 CREATE INDEX idx_content ON docs(content) USING INVERTED PROPERTIES ("parser" = "chinese");
 
--- 为现有数据构建索引
+-- Build the index for existing data
 BUILD INDEX idx_content ON docs;
 ```
 
-### 删除索引
+### Drop an index
 
 ```sql
 DROP INDEX idx_content ON docs;
 ```
 
-### 查看索引
+### View indexes
 
 ```sql
 SHOW CREATE TABLE docs;
 SHOW INDEX FROM docs;
 ```
 
-## 延伸阅读
+## Further reading
 
-### 核心文档
+### Core documentation
 
-- [文本搜索算子](./search-operators.md) — 完整算子参考和查询加速
-- [SEARCH 函数](./search-function.md) — 统一查询 DSL 语法和示例
-- [相关性打分](./scoring.md) — 相关性排序算法和用法
+- [Text search operators](./search-operators.md): Complete operator reference and query acceleration
+- [SEARCH function](./search-function.md): Unified query DSL syntax and examples
+- [Relevance scoring](./scoring.md): Relevance ranking algorithm and usage
 
-### 高级主题
+### Advanced topics
 
-- [自定义分析器](./custom-analyzer.md) — 构建特定领域的分词器和过滤器
-- [向量搜索](../vector-search/overview.md) — 使用嵌入向量进行语义相似度搜索
+- [Custom analyzer](./custom-analyzer.md): Build domain-specific tokenizers and filters
+- [Vector search](../vector-index/overview.md): Use embedding vectors for semantic similarity search

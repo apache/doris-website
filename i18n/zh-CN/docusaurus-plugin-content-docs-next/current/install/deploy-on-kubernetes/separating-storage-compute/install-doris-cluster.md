@@ -46,7 +46,7 @@
 
 | 部署方式 | 适用场景 | 后续操作 |
 |----------|----------|----------|
-| 机器直接部署（推荐） | 已有可用物理机 / 虚拟机 | 参考 [存算分离 - 部署前准备](../../../compute-storage-decoupled/before-deployment) 完成部署，确保部署机与 K8s 集群在同一局域网 |
+| 机器直接部署（推荐） | 已有可用物理机 / 虚拟机 | 参考 [存算分离 - 部署前准备](../../deploy-manually/separating-storage-compute-deploy-manually) 完成部署，确保部署机与 K8s 集群在同一局域网 |
 | Kubernetes 上部署 | 希望统一在 K8s 中管理 FDB | 直接执行下方"K8s 快速部署" |
 
 ### K8s 快速部署（最简通道）
@@ -278,7 +278,7 @@ CREATE STORAGE VAULT IF NOT EXISTS s3_vault
     );
 ```
 
-其他存储后端的创建方法以及各字段详细说明，请参考存算分离文档中的 [管理 Storage Vault](../../../compute-storage-decoupled/managing-storage-vault.md)。
+其他存储后端的创建方法以及各字段详细说明，请参考存算分离文档中的 [管理 Storage Vault](../../deploy-manually/separating-storage-compute-deploy-manually)。
 
 ### 4. 设置默认 Storage Vault
 

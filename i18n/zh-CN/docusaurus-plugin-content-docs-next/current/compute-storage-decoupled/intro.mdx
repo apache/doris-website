@@ -1,0 +1,71 @@
+---
+{
+    "title": "存算分离运维指南",
+    "language": "zh-CN",
+    "description": "Apache Doris 存算分离架构运维指南：涵盖计算组管理、Storage Vault 配置、文件缓存、读写分离与集群升级。"
+}
+---
+
+import GettingStartedCard from '@site/src/components/getting-started-card/getting-started-card';
+
+存算分离架构将计算节点与远端共享存储解耦，支持计算与存储的独立弹性扩缩容。本指南帮助您配置和运维存算分离集群。
+
+## 集群运维
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="计算组操作"
+    description="将一个或多个 BE 节点组成计算组（Compute Group），了解如何在存算分离模式下创建、扩缩容和管理计算组。"
+    link="managing-compute-cluster"
+/>
+
+<GettingStartedCard
+    title="管理 Storage Vault"
+    description="配置存算分离模式下使用的远端共享存储（Storage Vault），支持多 Vault 配置与按表指定存储位置。"
+    link="managing-storage-vault"
+/>
+
+<GettingStartedCard
+    title="数据回收"
+    description="了解 Doris 在存算分离架构下如何安全高效地回收已删除数据占用的存储空间，管理数据生命周期。"
+    link="recycler"
+/>
+
+<GettingStartedCard
+    title="升级"
+    description="使用滚动升级方式对存算分离模式下的 Doris 集群进行升级的分步操作指南，最大程度降低对上层业务的影响。"
+    link="upgrade"
+/>
+</div>
+
+## 文件缓存
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="文件缓存功能介绍"
+    description="利用本地磁盘缓存加速远端存储访问，涵盖多队列 LRU 策略、新计算组缓存预热功能与配置说明。"
+    link="file-cache/file-cache"
+/>
+
+<GettingStartedCard
+    title="文件缓存内部原理"
+    description="深入了解文件缓存实现机制：1 MB 对齐切片、预读机制与本地文件系统 Block 文件管理。"
+    link="file-cache/file-cache-internals"
+/>
+</div>
+
+## 读写分离
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="读写分离"
+    description="通过 File Cache 主动增量预热机制支持跨可用区高可用与读写分离架构，降低查询延迟并加快故障切换响应速度。"
+    link="rw/read-write-separation"
+/>
+
+<GettingStartedCard
+    title="读写分离场景下缓存优化最佳实践"
+    description="在多计算组读写分离部署下，通过优化缓存命中率来避免只读计算组频繁从远端对象存储拉取数据，提升查询性能。"
+    link="rw/file-cache-rw-compute-group-best-practice"
+/>
+</div>

@@ -1,92 +1,146 @@
 ---
 {
-    "title": "Common Table Expression",
+    "title": "Common Table Expressions (CTE)",
     "language": "en",
-    "description": "Common Table Expression (CTE) define a temporary result set that can be referenced multiple times within the scope of an SQL statement."
+    "description": "Apache Doris CTE (Common Table Expression) guide: define temporary result sets with the WITH clause, with support for nested and recursive CTEs, suitable for hierarchical traversal, graph traversal, and similar scenarios.",
+    "keywords": [
+        "Doris CTE",
+        "common table expression",
+        "WITH clause",
+        "recursive CTE",
+        "RECURSIVE",
+        "nested CTE",
+        "hierarchical query",
+        "tree-structured query",
+        "graph traversal",
+        "cte_max_recursion_depth"
+    ]
 }
 ---
 
-## Description
+<!-- Knowledge type: Capability definition + Syntax reference -->
+<!-- Applicable scenarios: Writing complex queries / Hierarchical and graph-structure traversal -->
 
-Common Table Expression (CTE) define a temporary result set that can be referenced multiple times within the scope of an SQL statement. CTEs are primarily used in SELECT statements.
+A Common Table Expression (CTE) is the capability in Apache Doris to define a temporary result set within a `SELECT` statement. After being declared once with a `WITH` clause, the CTE can be referenced multiple times in the same SQL. CTEs are commonly used to simplify complex queries, eliminate duplicated subqueries, and express self-referential logic such as hierarchical and graph traversal.
 
-To specify a CTE, use the `WITH` clause with one or more comma-separated clauses. Each clause provides a subquery that generates a result set and associates a name with the subquery. 
+## Applicable Scenarios
 
-Doris supports nested CTE. Within the statement that contains the `WITH` clause, you can reference each CTE name to access the corresponding CTE result set. CTE names can be referenced in other CTE, allowing you to define CTE based on other CTE.
+<!-- Knowledge type: Applicable scenarios -->
 
-Doris **DOES NOT** support recursive CTE. For more information, please read MySQL manual about [recursive CTE](https://dev.mysql.com/doc/refman/8.4/en/with.html#common-table-expressions-recursive)
+CTEs typically make SQL clearer and easier to maintain in the following situations:
 
-## Example
+- **The same subquery is referenced multiple times**: Name the subquery as a CTE to avoid writing it repeatedly in the main query.
+- **Deeply nested subqueries are hard to read**: Break the logic into multiple CTEs and name each step to improve readability.
+- **A computation builds on the result of a previous step**: With nested CTEs, a later CTE can directly reference the result of an earlier CTE.
+- **Hierarchical or tree-structured traversal**: For example, organizational hierarchies, category catalogs, or nested comment threads. Use a recursive CTE to expand all levels in one query.
+- **Graph reachability traversal**: For example, starting from a given node and following edges to find all reachable nodes.
 
-### Simple CTE
+## Basic Usage
 
-The following example defines CTE named cte1 and cte2 within the WITH clause and refers to them in the top-level SELECT below the WITH clause:
+### Syntax Overview
+
+Use the `WITH` clause to define one or more CTEs, separated by commas. Each CTE has a name and a subquery:
 
 ```sql
 WITH
-  cte1 AS (SELECT a, b FROM table1),
-  cte2 AS (SELECT c, d FROM table2)
+    cte_name1 AS (subquery1),
+    cte_name2 AS (subquery2)
+SELECT ... FROM cte_name1 JOIN cte_name2 ON ...;
+```
+
+In a statement that contains a `WITH` clause, you can reference each CTE name to access its corresponding temporary result set.
+
+### Simple CTE Example
+
+The following example defines `cte1` and `cte2` in the `WITH` clause and references both in the outer `SELECT`:
+
+```sql
+WITH
+    cte1 AS (SELECT a, b FROM table1),
+    cte2 AS (SELECT c, d FROM table2)
 SELECT b, d FROM cte1 JOIN cte2
 WHERE cte1.a = cte2.c;
 ```
 
 ### Nested CTE
 
+A CTE name can be referenced inside other CTEs, so you can define new CTEs based on previously defined ones:
+
 ```sql
 WITH
-  cte1 AS (SELECT a, b FROM table1),
-  cte2 AS (SELECT c, d FROM cte1)
+    cte1 AS (SELECT a, b FROM table1),
+    cte2 AS (SELECT c, d FROM cte1)
 SELECT b, d FROM cte1 JOIN cte2
 WHERE cte1.a = cte2.c;
 ```
 
-### Recursive CTE
+## Recursive CTE
 
-A recursive CTE (Common Table Expression with the `RECURSIVE` keyword) is used to express self-referential queries within a single SQL statement, and is commonly applied in scenarios such as tree/hierarchy traversal, graph traversal, and hierarchical aggregation. A recursive CTE consists of two parts:
+<!-- Knowledge type: Capability definition + Syntax reference -->
+<!-- Applicable scenarios: Tree/hierarchical traversal, graph traversal, hierarchical aggregation -->
 
-- **Anchor query**: The non-recursive part, executed once to generate the initial row set (seed).
-- **Recursive query**: Can reference the CTE itself and continue generating new rows based on the new rows produced in the previous iteration.
+A recursive CTE (a CTE with the `RECURSIVE` keyword) expresses self-referential queries within a single SQL statement. It is commonly used for tree and hierarchy traversal, graph traversal, and hierarchical aggregation.
 
-The anchor and recursive parts are typically connected by `UNION` or `UNION ALL`. Recursive execution continues until no new rows are generated or a system limit is reached.
-
-## Syntax
+### Syntax
 
 ```sql
 WITH [RECURSIVE] cte_name [(col1, col2, ...)] AS (
-  <anchor_query>     -- Non-recursive part (executed once)
-  UNION [ALL]
-  <recursive_query>  -- Recursive part that can reference cte_name
+    <anchor_query>     -- Non-recursive part (executed once)
+    UNION [ALL]
+    <recursive_query>  -- Recursive part that can reference cte_name
 )
 SELECT ... FROM cte_name;
 ```
 
-Key Points:
+Key points:
+
 - The `RECURSIVE` keyword allows the CTE definition to reference itself.
-- The number of columns and their data types output by the anchor and recursive members must be strictly consistent.
-- The `cte_name` can be referenced in the `recursive_query`, usually used in the form of a `JOIN`.
+- The anchor and recursive members must produce exactly the same number of columns and the same column types.
+- The `recursive_query` can reference `cte_name`, typically through a `JOIN`.
 
-## Execution Semantics (Iterative Model)
+### Composition
 
-Typical iterative execution flow:
-1. Execute the `anchor_query`, write the results to the output set (Output), and use them as the work set (WorkSet) for the first iteration.
-2. While the WorkSet is not empty:
-   - Use the WorkSet as input for the `recursive_query`, execute the `recursive_query`, and obtain `newRows`.
-   - If `UNION ALL` is used: Directly append `newRows` to the Output and set `newRows` as the WorkSet for the next iteration.
-   - If `UNION` (deduplication) is used: Compute the difference set between `newRows` and the existing Output (to remove duplicates), and only add the non-duplicate rows to the Output and the next iteration's WorkSet.
-3. Repeat step 2 until `newRows` is empty or a preset system upper limit is triggered (the Doris session variable `cte_max_recursion_depth` limits the recursion depth, with a default value of 100; exceeding this will throw an error).
+A recursive CTE consists of two parts, usually connected by `UNION` or `UNION ALL`:
 
-Termination occurs when no new rows are generated in the current iteration (or the system's maximum recursion depth limit is reached).
+| Component | Description |
+|---|---|
+| Anchor query | The non-recursive part, executed once to produce the initial set of rows (the seed). |
+| Recursive query | Can reference the CTE itself and produce new rows based on the rows generated in the previous round. |
 
-## UNION vs UNION ALL
+The recursion continues until no new rows are produced or a system limit is reached.
 
-- `UNION ALL`: Retains duplicates and has low execution overhead (no deduplication required). Suitable for scenarios where duplicates are allowed or controlled by business logic in the backend.
-- `UNION`: Implicitly performs deduplication, which adds sorting/hash-based deduplication overhead per iteration or globally—this cost is significant, especially with large data volumes.
+### Execution Semantics (Iterative Model)
 
-Recommendation: Prefer `UNION ALL` if the semantics allow it and duplicates can be post-processed at the application layer.
+<!-- Knowledge type: Execution principle -->
 
-## Common Use Cases and SQL Examples
+A typical execution flow for a recursive CTE is as follows:
 
-### 1) Simple Hierarchy Traversal
+1. Execute `anchor_query`, write the result into the output set (Output), and use it as the working set (WorkSet) for the first round.
+2. While WorkSet is not empty, repeat:
+    - Use WorkSet as input to `recursive_query`, execute `recursive_query`, and obtain `newRows`.
+    - With `UNION ALL`: append `newRows` directly to Output, and use `newRows` as the WorkSet for the next round.
+    - With `UNION` (deduplicated): compute the difference between `newRows` and the existing Output (deduplication), and add only previously unseen rows to Output and to the WorkSet for the next round.
+3. Repeat step 2 until `newRows` is empty or the system-defined recursion depth limit is reached.
+
+The session variable `cte_max_recursion_depth` controls the maximum recursion depth. The default value is 100, and exceeding it raises an error.
+
+### UNION vs UNION ALL
+
+<!-- Knowledge type: Selection comparison -->
+
+| Form | Semantics | Performance | Applicable scenarios |
+|---|---|---|---|
+| `UNION ALL` | Keeps duplicate rows | Low overhead (no deduplication) | When duplicates are allowed, or when duplicates are handled by the application layer |
+| `UNION` | Implicit deduplication | Adds sort or hash deduplication overhead in each round or globally, with significant cost on large data | When deduplication must be performed inside the database |
+
+Recommendation: If the semantics allow it and duplicates can be handled at the application layer, prefer `UNION ALL`.
+
+### Examples
+
+#### Simple Hierarchy Traversal
+
+Starting from the root node, recursively traverse the entire tree:
+
 ```sql
 CREATE TABLE tree
 (
@@ -110,14 +164,17 @@ UNION ALL
 SELECT * FROM search_tree ORDER BY id;
 ```
 
-### 2) Graph Traversal
+#### Graph Traversal
+
+Following the direction of edges, traverse all reachable paths in a graph:
+
 ```sql
 CREATE TABLE graph
 (
     c_from int,
     c_to int,
     label varchar(100)
-) DUPLICATE KEY (c_from) DISTRIBUTED BY HASH(c_from) BUCKETS 1 PROPERTIES 'replication_num' = '1';
+) DUPLICATE KEY (c_from) DISTRIBUTED BY HASH(c_from) BUCKETS 1 PROPERTIES ('replication_num' = '1');
 
 INSERT INTO graph VALUES (1, 2, '1 -> 2'), (1, 3, '1 -> 3'), (2, 3, '2 -> 3'), (1, 4, '1 -> 4'), (4, 5, '4 -> 5');
 
@@ -131,27 +188,32 @@ UNION ALL
 SELECT DISTINCT * FROM search_graph ORDER BY c_from, c_to;
 ```
 
-Note: Using `UNION` performs deduplication in each iteration, resulting in high overhead.
+Note: The example above uses `SELECT DISTINCT` at the end to deduplicate. Using `UNION` for deduplication inside the recursion would deduplicate in every round, which is more expensive.
 
-## Limitations of Recursive CTEs
+## Recursive CTE Limitations
 
-- The top-level operator of the internal query must be UNION(ALL).
-- Subqueries in the non-recursive part cannot reference the recursive CTE itself.
-- Subqueries in the recursive part can only reference the recursive CTE once.
-- If a subquery within the recursive part contains another nested subquery, the nested subquery cannot reference the recursive CTE.
-- The data types of the output columns of a recursive CTE are determined by the output of the non-recursive subquery. An error will be thrown if the data types of the recursive and non-recursive sides do not match—manual casting is required to ensure consistency between the two sides.
-- The session variable `cte_max_recursion_depth` limits the maximum number of recursions to prevent infinite loops (default value: 100).
+<!-- Knowledge type: Restrictions and constraints -->
 
-## Common Errors, Causes, and Solutions
+The following constraints apply when using a recursive CTE:
 
-### 1. Error: Mismatched number of columns or data types between anchor and recursive members
-- **Cause**: The number of columns or their data types in the `SELECT` clauses of the two parts are inconsistent.
-- **Solution**: Ensure the number, order, and data types of columns on both sides are consistent. Use `CAST` or explicit column names if necessary.
+- The top-level operator inside the CTE must be `UNION` or `UNION ALL`.
+- The non-recursive subquery cannot reference the recursive CTE itself.
+- The recursive subquery can reference the recursive CTE only once.
+- If the recursive subquery contains an inner subquery, that inner subquery cannot reference the recursive CTE.
+- The output column types of the recursive CTE are determined by the non-recursive side. If the recursive side and the non-recursive side have inconsistent types, an error is raised, and you must add an explicit `CAST` to align the data types on both sides.
+- The session variable `cte_max_recursion_depth` limits the maximum number of recursions to prevent infinite loops. The default value is 100.
 
-### 2. Error: Illegal self-reference in the anchor query
-- **Cause**: The anchor query is not allowed to reference the CTE itself.
-- **Solution**: Reference the CTE only in the recursive member; check the syntax/parse tree.
+## Common Errors and Troubleshooting
 
-### 3. Error: Infinite recursion / Exceeded maximum recursion depth
-- **Cause**: The recursion lacks a convergence condition or the convergence condition is incorrectly configured.
-- **Solution**: Add a `WHERE` filter, adjust the system's maximum recursion depth, or correct the query logic if infinite recursion is inherent to the logic.
+<!-- Knowledge type: Troubleshooting -->
+<!-- Applicable scenarios: Debugging when writing recursive CTEs -->
+
+| Symptom | Possible cause | Resolution |
+|---|---|---|
+| The number or types of columns in the anchor and recursive members do not match | The two `SELECT` lists differ in column count or column types | Make sure both sides have the same column count, order, and types. Use `CAST` or explicit column names if needed. |
+| The anchor references itself (illegal) | The anchor is not allowed to reference the CTE itself | Reference the CTE only in the recursive member. Check the syntax or parse tree. |
+| Infinite recursion / maximum recursion depth exceeded | The recursion has no termination condition, or the termination condition is incorrect | Add a `WHERE` filter, or adjust the system-wide maximum recursion depth. If the logic really is infinite, fix the query logic. |
+
+## References
+
+- [MySQL Recursive CTE Manual](https://dev.mysql.com/doc/refman/8.4/en/with.html#common-table-expressions-recursive): Standard definition and examples of recursive CTEs.

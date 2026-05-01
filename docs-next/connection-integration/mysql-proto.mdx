@@ -1,69 +1,69 @@
 ---
 {
-    "title": "通过 MySQL 协议连接",
-    "language": "zh-CN",
-    "description": "介绍 Apache Doris 兼容 MySQL 网络协议的能力，并提供 MySQL CLI 与 Java、Go、Rust、Python、C++ 等主流语言的连接示例。"
+    "title": "Connecting via MySQL Protocol",
+    "language": "en",
+    "description": "Introduces Apache Doris's compatibility with the MySQL network protocol, and provides connection examples for the MySQL CLI and mainstream languages such as Java, Go, Rust, Python, and C++."
 }
 ---
 
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
-Apache Doris 完整兼容 **MySQL 网络通信协议**。因此，所有遵循该协议的客户端工具、可视化工具，以及各主流编程语言的 MySQL 驱动 / 类库，都可以直接连接 Doris，**无需安装任何 Doris 专属驱动**。
+Apache Doris is fully compatible with the **MySQL network communication protocol**. As a result, all client tools, visualization tools, and MySQL drivers / libraries for mainstream programming languages that follow this protocol can connect to Doris directly, **without installing any Doris-specific driver**.
 
-> Doris FE 默认在 `9030` 端口提供 MySQL 协议服务，对应 `fe.conf` 中的 `query_port` 配置项。
+> Doris FE provides MySQL protocol service on port `9030` by default, which corresponds to the `query_port` configuration item in `fe.conf`.
 
-## 典型使用场景
+## Typical Use Cases
 
-根据使用目的，MySQL 协议连接可分为两类典型场景：
+Based on the purpose of use, MySQL protocol connections fall into two typical scenarios:
 
-| 场景 | 典型用途 | 推荐方式 |
+| Scenario | Typical Use | Recommended Approach |
 | --- | --- | --- |
-| 命令行 / 脚本访问 | 运维排查、临时查询、自动化脚本 | MySQL CLI |
-| 应用程序集成 | 后端服务、数据处理程序、ETL 任务 | 对应语言的 MySQL 驱动（Java / Go / Rust / Python / C++ 等） |
+| Command-line / Script Access | Operations troubleshooting, ad hoc queries, automation scripts | MySQL CLI |
+| Application Integration | Backend services, data processing programs, ETL jobs | MySQL drivers for the corresponding language (Java / Go / Rust / Python / C++, etc.) |
 
-## 连接前的准备
+## Preparation Before Connecting
 
-执行连接前，需要确认以下信息：
+Before establishing a connection, confirm the following information:
 
-| 信息 | 说明 | 示例 |
+| Item | Description | Example |
 | --- | --- | --- |
-| `FE_IP` | Doris FE 节点的 IP 地址或主机名 | `172.20.63.118` |
-| `FE_QUERY_PORT` | FE MySQL 协议服务端口，对应 `fe.conf` 中的 `query_port` | `9030` |
-| `USER` | 登录账户 | `root` |
-| `PASSWORD` | 登录密码（默认 `root` 账户密码为空） | - |
+| `FE_IP` | IP address or hostname of the Doris FE node | `172.20.63.118` |
+| `FE_QUERY_PORT` | FE MySQL protocol service port, corresponding to `query_port` in `fe.conf` | `9030` |
+| `USER` | Login account | `root` |
+| `PASSWORD` | Login password (the default `root` account has an empty password) | - |
 
-> 如需自定义端口，请同步修改 FE 节点上 `fe.conf` 的 `query_port` 配置项并重启 FE。
+> If you need to customize the port, modify the `query_port` configuration item in `fe.conf` on the FE node accordingly and restart FE.
 
-## 连接示例
+## Connection Examples
 
-下面针对不同的 MySQL 客户端 / 语言驱动，给出最小化连接示例。可通过 Tab 切换查看：
+The following provides minimal connection examples for different MySQL clients / language drivers. Switch between them using the tabs below:
 
 <Tabs groupId="mysql-client">
 
 <TabItem value="mysql-cli" label="MySQL CLI" default>
 
-适用于命令行运维、临时查询及脚本化调用等场景。
+Suitable for scenarios such as command-line operations, ad hoc queries, and scripted invocations.
 
-### 1. 下载并解压 MySQL 客户端
+### 1. Download and Extract the MySQL Client
 
-从 [MySQL 官网](https://dev.mysql.com/downloads/mysql/) 下载 MySQL 客户端。Doris 兼容 **MySQL 5.7 及以上**版本的客户端。
+Download the MySQL client from the [MySQL official website](https://dev.mysql.com/downloads/mysql/). Doris is compatible with **MySQL 5.7 and later** client versions.
 
-解压后，可在 `bin/` 目录下找到 `mysql` 命令行工具。
+After extracting, you can find the `mysql` command-line tool in the `bin/` directory.
 
-### 2. 连接 Doris
+### 2. Connect to Doris
 
-执行以下命令连接 Doris：
+Run the following command to connect to Doris:
 
 ```shell
 mysql -h FE_IP -P FE_QUERY_PORT -u USER -p
 ```
 
-回车后输入密码即可（`root` 账户默认无密码，直接回车）。
+After pressing Enter, type the password (the `root` account has no password by default, so just press Enter).
 
-### 3. 验证登录
+### 3. Verify Login
 
-登录成功后，将显示如下信息：
+Once login succeeds, you will see the following message:
 
 ```text
 Welcome to the MySQL monitor.  Commands end with ; or \g.
@@ -79,13 +79,13 @@ mysql>
 
 <TabItem value="java" label="Java">
 
-适用于 Java 应用程序集成 Doris 的场景。Doris 推荐使用 **MySQL JDBC Connector** 进行连接。
+Suitable for scenarios where Java applications integrate with Doris. Doris recommends using the **MySQL JDBC Connector** for the connection.
 
-### 1. 引入 JDBC 驱动
+### 1. Add the JDBC Driver
 
-在项目中引入 MySQL JDBC Connector 依赖（建议使用 MySQL 5.1.49 及以上版本）。
+Add the MySQL JDBC Connector dependency to your project (MySQL 5.1.49 or later is recommended).
 
-### 2. 编写连接代码
+### 2. Write the Connection Code
 
 ```java
 String user = "user_name";
@@ -114,21 +114,21 @@ try (Connection conn = DriverManager.getConnection(url, user, password);
 }
 ```
 
-### 3. 常用 JDBC URL 参数
+### 3. Common JDBC URL Parameters
 
-| 参数 | 含义 | 推荐值 / 示例 | 是否必需 |
+| Parameter | Meaning | Recommended Value / Example | Required |
 | --- | --- | --- | --- |
-| `useUnicode` | 是否使用 Unicode 字符集 | `true` | 否 |
-| `characterEncoding` | 字符编码 | `utf8` | 否 |
-| `useTimezone` | 是否启用时区转换 | `true` | 否 |
-| `serverTimezone` | 服务器时区 | `Asia/Shanghai` | 否 |
-| `useSSL` | 是否使用 SSL 连接 | `false` | 否 |
-| `allowPublicKeyRetrieval` | 是否允许从服务器获取公钥（MySQL 8 驱动通常需要） | `true` | 否 |
-| `sessionVariables` | 连接建立时初始化的会话变量 | `key1=val1,key2=val2` | 否 |
+| `useUnicode` | Whether to use the Unicode character set | `true` | No |
+| `characterEncoding` | Character encoding | `utf8` | No |
+| `useTimezone` | Whether to enable timezone conversion | `true` | No |
+| `serverTimezone` | Server timezone | `Asia/Shanghai` | No |
+| `useSSL` | Whether to use SSL for the connection | `false` | No |
+| `allowPublicKeyRetrieval` | Whether to allow retrieving the public key from the server (typically required by the MySQL 8 driver) | `true` | No |
+| `sessionVariables` | Session variables to initialize when the connection is established | `key1=val1,key2=val2` | No |
 
-### 4. 初始化会话变量（可选）
+### 4. Initialize Session Variables (Optional)
 
-如需在连接建立时初始化会话变量（Session Variables），可使用如下 URL 格式：
+If you need to initialize session variables when the connection is established, use the following URL format:
 
 ```text
 jdbc:mysql://FE_IP:FE_QUERY_PORT/demo?sessionVariables=key1=val1,key2=val2
@@ -138,32 +138,32 @@ jdbc:mysql://FE_IP:FE_QUERY_PORT/demo?sessionVariables=key1=val1,key2=val2
 
 <TabItem value="go" label="Go">
 
-:::info 待补充
-Go 语言通过 MySQL 驱动连接 Doris 的示例，将在后续版本中补充。
+:::info To be added
+An example of connecting to Doris from Go via the MySQL driver will be added in a later release.
 :::
 
 </TabItem>
 
 <TabItem value="rust" label="Rust">
 
-:::info 待补充
-Rust 语言通过 MySQL 驱动连接 Doris 的示例，将在后续版本中补充。
+:::info To be added
+An example of connecting to Doris from Rust via the MySQL driver will be added in a later release.
 :::
 
 </TabItem>
 
 <TabItem value="python" label="Python">
 
-:::info 待补充
-Python 通过 MySQL 驱动连接 Doris 的示例，将在后续版本中补充。
+:::info To be added
+An example of connecting to Doris from Python via the MySQL driver will be added in a later release.
 :::
 
 </TabItem>
 
 <TabItem value="cpp" label="C++">
 
-:::info 待补充
-C++ 通过 MySQL Connector 连接 Doris 的示例，将在后续版本中补充。
+:::info To be added
+An example of connecting to Doris from C++ via the MySQL Connector will be added in a later release.
 :::
 
 </TabItem>

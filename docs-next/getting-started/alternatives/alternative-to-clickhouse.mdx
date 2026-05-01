@@ -1,85 +1,78 @@
 ---
 {
-    "title": "Alternative to ClickHouse",
+    "title": "Apache Doris vs ClickHouse: Selection Guide and Performance Comparison",
     "language": "en",
-    "description": "Apache Doris offers 10x faster join queries, up to 70% lower costs via storage-compute separation, and 34x better real-time update performance compared to ClickHouse."
+    "description": "A detailed comparison of Apache Doris and ClickHouse across Join performance, real-time updates, concurrency, storage-compute separation, and more, with real-world cases and performance benchmarks.",
+    "keywords": ["Apache Doris vs ClickHouse", "ClickHouse alternative", "OLAP database comparison", "real-time analytics database", "storage-compute separation"],
+    "sidebar_label": "Apache Doris vs ClickHouse"
 }
 ---
+---
 
-Apache Doris and ClickHouse are both leading real-time analytical databases with columnar storage and fast query capabilities. Apache Doris offers significant advantages over ClickHouse in three critical areas: **10x faster join query performance** through its advanced MPP architecture with Cost-Based Optimizer, **lower infrastructure costs** via compute-storage separation that allows independent scaling of resources, and **superior real-time update performance** with its Merge-on-Write engine that maintains query speed during high-frequency data modifications.
-
-## Featured Migration Cases
-
-<div style={{ display:'flex', justifyContent:'space-between' }}>
-
-    <div style={{paddingTop:'2rem', paddingBottom:'2rem',paddingLeft:'2rem',paddingRight:'2.5rem', boxSizing:'border-box', borderWidth:'0.5px', borderRadius:'0.75px', borderColor:'#e5e7eb'}}>
-    
-        <div style={{ display:'flex', justifyContent:'space-between', flexDirection:'column' }}>
-            <div style={{marginBottom:'1.25rem'}}>
-                <img alt='tencent-music' loading="lazy" width="331" height="40" decoding="async" data-nimg="1" style={{color:'transparent'}} src="/images/comparisons/tencent-music.png" />
-            </div>
-            <div style={{marginBbottom:'1.25rem'}}>
-            “Tencent Music's data platform has migrated from ClickHouse to Apache Doris, improving data timeliness and reducing maintenance costs. Doris' flexible ingestion methods and robust consistency protocol ensure high availability and reliability.”
-            </div>
-            <div style={{marginBbottom:'1.25rem'}}>
-                <p><strong>Highlight:</strong></p>             
-                <ul>
-                    <li>Massive boost in multi-table join performance.</li>
-                    <li>Easy scaling and maintenance.</li>
-                    <li>Efficient data processing and real-time updates.</li>
-                </ul>
-            </div>
-        </div>
-    
-    </div>
-
-    <div style={{paddingTop:'2rem', paddingBottom:'2rem',paddingLeft:'2rem',paddingRight:'2.5rem', boxSizing:'border-box', borderWidth:'0.5px', borderRadius:'0.75px', borderColor:'#e5e7eb'}}>
-    
-        <div style={{ display:'flex', justifyContent:'space-between', flexDirection:'column' }}>
-            <div style={{marginBottom:'1.25rem'}}>
-                <img alt='tencent-music' loading="lazy" width="150" height="40" decoding="async" data-nimg="1" style={{color:'transparent'}} src="/images/comparisons/youzan.png" />
-            </div>
-            <div style={{marginBbottom:'1.25rem'}}>
-            “Apache Doris has faster query response times than ClickHouse in the vast majority of scenarios, especially in complex join scenarios, where its performance is significantly superior to that of ClickHouse.”
-            </div>
-            <div style={{marginBbottom:'1.25rem'}}>
-                <p><strong>Highlight:</strong></p>             
-                <ul>
-                    <li>Core business queries 2-3x.</li>
-                    <li>Complex join queries 2-10x.</li>
-                    <li>Can run all ClickHouse OOM queries.</li>
-                </ul>
-            </div>
-        </div>
-    
-    </div>
-
-     <div style={{paddingTop:'2rem', paddingBottom:'2rem',paddingLeft:'2rem',paddingRight:'2.5rem', boxSizing:'border-box', borderWidth:'0.5px', borderRadius:'0.75px', borderColor:'#e5e7eb'}}>
-    
-        <div style={{ display:'flex', justifyContent:'space-between', flexDirection:'column' }}>
-            <div style={{marginBottom:'1.25rem'}}>
-                <img alt='tencent-music' loading="lazy" width="120" height="40" decoding="async" data-nimg="1" style={{color:'transparent'}} src="/images/comparisons/kwai.png" />
-            </div>
-            <div style={{marginBbottom:'1.25rem'}}>
-            “By replacing ClickHouse with Doris, Kwai successfully upgraded to a lakehouse architecture, simplifying the data pipeline and eliminating the need for data import, as Doris can directly access data lake data.”
-            </div>
-            <div style={{marginBbottom:'1.25rem'}}>
-                <p><strong>Highlight:</strong></p>             
-                <ul>
-                    <li>Directly query of data lake data.</li>
-                    <li>Improved query performance.</li>
-                    <li>Flexible data governance with materialized views.</li>
-                </ul>
-            </div>
-        </div>
-    
-    </div>
-
-</div> 
+Apache Doris and ClickHouse are both leading real-time analytical databases worldwide, and both support columnar storage and high-speed queries. Apache Doris has significant advantages in three key areas: **2-10x faster Join queries** (powered by an advanced MPP architecture and a cost-based query optimizer), **up to 70% lower infrastructure cost through storage-compute separation** (compute and storage scale independently), and **superior real-time update performance** (the Merge-on-Write engine maintains stable query performance even under high-frequency data updates).
 
 
-## Apache Doris vs. ClickHouse
+## When to Choose Apache Doris
 
+| Scenario | Recommendation | Reason |
+|------|----------|------|
+| Complex multi-table Joins required | **Apache Doris** | The MPP architecture natively supports distributed Joins, while ClickHouse relies on wide-table modeling |
+| High-concurrency queries (100+ concurrent) | **Apache Doris** | Supports thousands of concurrent queries, while ClickHouse usually handles fewer than 100 |
+| High-frequency real-time updates + UPSERT | **Apache Doris** | The Merge-on-Write engine preserves query performance, while ClickHouse incurs heavy merge overhead |
+| Mainly single-table aggregation queries | Either works | Choose based on team familiarity |
+| ClickHouse already running stably | Stay with ClickHouse | Migration has costs; benefits need to be evaluated |
+
+
+## Featured Cases
+
+<div className="case-studies">
+
+<section>
+
+### Kuaishou
+
+![Kuaishou](/images/comparisons/kwai.png)
+
+> "After replacing ClickHouse with Apache Doris, Kuaishou successfully upgraded to a unified lakehouse architecture, achieving unified storage and a simplified data pipeline. With no need for data ingestion, Doris can directly access lakehouse data. Combined with Doris's materialized view rewriting and automatic materialization service, this delivers high-performance queries and flexible data governance."
+
+- Directly queries data lake data, shortening the data pipeline
+- Improved query performance, meeting query acceleration needs across multiple scenarios
+- Enables more flexible data governance through materialized views
+
+</section>
+
+<section>
+
+### Tencent Music
+
+![Tencent Music](/images/comparisons/tencent-music.png)
+
+> "After the content library data platform migrated its analytical engine from ClickHouse to Apache Doris, and progressed from initially introducing the data architecture semantic layer to its in-depth application, the platform effectively improved data timeliness, reduced operational costs, and resolved fragmented data management."
+
+- Strong multi-table query and federated query performance
+- Compatible with the MySQL protocol, reducing operational costs
+- Supports partial-column updates, accommodating multiple data update patterns
+
+</section>
+
+<section>
+
+### YouZan
+
+![Youzan](/images/comparisons/youzan.png)
+
+> "Apache Doris has faster query response times than ClickHouse in the vast majority of scenarios, especially in complex join scenarios, where its performance is significantly superior to that of ClickHouse."
+
+- Core business queries 2-3x
+- Complex join queries 2-10x
+- Can run all ClickHouse OOM queries
+
+</section>
+
+</div>
+
+
+## Core Differences
 
 <table border="1">
     <thead>
@@ -91,147 +84,133 @@ Apache Doris and ClickHouse are both leading real-time analytical databases with
     </thead>
     <tbody>
     <tr>
-        <td><strong>Architecture & SQL</strong></td>
+        <td><strong>System Architecture</strong></td>
         <td>
         <ul>
-            <li style={{fontSize:'14px'}}>Based on MPP architecture</li>
-            <li style={{fontSize:'14px'}}>Standard SQL support, MySQL-compatible</li>
+            <li style={{fontSize:'14px'}}>**MPP distributed architecture**</li>
+            <li style={{fontSize:'14px'}}>**MySQL-protocol compatible, standard SQL**</li>
+            <li style={{fontSize:'14px'}}>**CBO automatic optimization**</li>
         </ul>
         </td>
         <td>
         <ul>
-            <li style={{fontSize:'14px'}}>Uses Scatter-Gather architecture</li>
-            <li style={{fontSize:'14px'}}>SQL-like capabilities but with non-standard SQL</li>
+            <li style={{fontSize:'14px'}}>Scatter-Gather architecture</li>
+            <li style={{fontSize:'14px'}}>SQL-like syntax, non-standard</li>
+            <li style={{fontSize:'14px'}}>Requires manual tuning</li>
         </ul>
         </td>
     </tr>
-      <tr>
+    <tr>
         <td><strong>Join Query Performance</strong></td>
         <td>
         <ul>
-            <li style={{fontSize:'14px'}}><strong>2-10x faster joins</strong> with true distributed join execution across nodes</li>
-            <li style={{fontSize:'14px'}}>Advanced Cost-Based Optimizer (CBO) automatically selects optimal join strategies (broadcast, shuffle, colocate)</li>
-            <li style={{fontSize:'14px'}}>Colocate Join eliminates network shuffle for pre-partitioned tables</li>
-            <li style={{fontSize:'14px'}}>Runtime Filter pushdown reduces data scanning by up to 90%</li>
-            <li style={{fontSize:'14px'}}>Transparent query acceleration - queries on base tables are automatically rewritten to use materialized views</li>
-            <li style={{fontSize:'14px'}}>Handles complex TPC-DS queries that cause OOM in ClickHouse</li>
+            <li style={{fontSize:'14px'}}>**2-10x faster, with cross-node distributed execution**</li>
+            <li style={{fontSize:'14px'}}>**CBO automatically chooses Join strategy**</li>
+            <li style={{fontSize:'14px'}}>**Can run the full TPC-DS query suite**</li>
+            <li style={{fontSize:'14px'}}>**Efficient memory management, avoids OOM**</li>
         </ul>
         </td>
         <td>
         <ul>
-            <li style={{fontSize:'14px'}}>Limited join capability - relies on subqueries and denormalization</li>
-            <li style={{fontSize:'14px'}}>No Cost-Based Optimizer; requires manual query tuning</li>
-            <li style={{fontSize:'14px'}}>Scatter-Gather architecture not designed for distributed joins</li>
-            <li style={{fontSize:'14px'}}>~50% of TPC-DS queries fail due to unsupported correlated subqueries</li>
-            <li style={{fontSize:'14px'}}>No automatic query rewriting - must explicitly query materialized views; cannot accelerate queries on base tables</li>
-            <li style={{fontSize:'14px'}}>Frequent OOM errors on large multi-table queries</li>
+            <li style={{fontSize:'14px'}}>Relies on subqueries and wide-table modeling</li>
+            <li style={{fontSize:'14px'}}>No CBO, requires manual tuning</li>
+            <li style={{fontSize:'14px'}}>About 50% of TPC-DS queries fail</li>
+            <li style={{fontSize:'14px'}}>Frequent OOM on large queries</li>
         </ul>
         </td>
     </tr>
     <tr>
         <td><strong>Real-time Updates</strong></td>
-        <td><ul>
-            <li style={{fontSize:'14px'}}><strong>34x faster query performance</strong> than ClickHouse for real-time update workloads</li>
-            <li style={{fontSize:'14px'}}>Merge-on-Write (MoW) engine with delete bitmap ensures query performance remains constant regardless of update frequency</li>
-            <li style={{fontSize:'14px'}}>Strongly consistent primary key model - updates are immediately visible with no stale reads</li>
-            <li style={{fontSize:'14px'}}>Supports high-throughput UPSERT operations without query performance degradation</li>
-            <li style={{fontSize:'14px'}}>Partial column updates minimize write amplification</li>
-        </ul></td>
-        <td><ul>
-            <li style={{fontSize:'14px'}}>ReplacingMergeTree only supports eventual consistency - stale data visible until background merge</li>
-            <li style={{fontSize:'14px'}}>Using <code>FINAL</code> keyword for consistent reads causes 2-10x query slowdown</li>
-            <li style={{fontSize:'14px'}}>High update frequency leads to excessive merge overhead and query latency spikes</li>
-        </ul></td>
-    </tr>
-    <tr>
-        <td><strong>Transaction Support</strong></td>
-        <td><ul>
-            <li style={{fontSize:'14px'}}>Full ACID transaction support for data ingestion</li>
-            <li style={{fontSize:'14px'}}>Atomic batch imports - all data loads succeed or fail together</li>
-            <li style={{fontSize:'14px'}}>Two-phase commit ensures data consistency across distributed nodes</li>
-        </ul></td>
-        <td><ul>
-            <li style={{fontSize:'14px'}}>No transaction support</li>
-            <li style={{fontSize:'14px'}}>Partial data may be visible during failed imports</li>
-            <li style={{fontSize:'14px'}}>Requires application-level handling for data consistency</li>
-        </ul></td>
-    </tr>
-    <tr>
-        <td><strong>Query Concurrency</strong></td>
-        <td><ul>
-            <li style={{fontSize:'14px'}}><strong>10x higher concurrency</strong> - supports thousands of concurrent queries</li>
-            <li style={{fontSize:'14px'}}>Efficient memory management prevents OOM under high load</li>
-            <li style={{fontSize:'14px'}}>Query queue management with workload isolation</li>
-        </ul></td>
-        <td><ul>
-            <li style={{fontSize:'14px'}}>Limited concurrent query support (typically &lt;100)</li>
-            <li style={{fontSize:'14px'}}>Memory-intensive queries cause cluster instability</li>
-            <li style={{fontSize:'14px'}}>No built-in workload management</li>
-        </ul></td>
-    </tr>
-    <tr>
-        <td><strong>Data API</strong></td>
-        <td><ul><li style={{fontSize:'14px'}}>Offers high-throughput read APIs based on Arrow-flight, facilitating integration with other engines such as data science/AI tools</li></ul></td>
-        <td><ul><li style={{fontSize:'14px'}}>Only inefficient data reading via JDBC API</li></ul></td>
-    </tr>
-    <tr>
-        <td><strong>Building Open Lakehouse</strong></td>
-        <td><ul><li style={{fontSize:'14px'}}>Serves as a Lakehouse SQL engine, supporting queries on Hive, Hudi, Iceberg, and Parquet data lake formats</li></ul></td>
-        <td><ul><li style={{fontSize:'14px'}}>Limited Lakehouse integration capabilities</li></ul></td>
-    </tr>
-    <tr>
-        <td><strong>Operations & Maintenance</strong></td>
-        <td><ul><li style={{fontSize:'14px'}}>Supports automatic scaling in, scaling out, and replica balancing</li></ul></td>
-        <td><ul><li style={{fontSize:'14px'}}>Requires manual rebalancing during scaling operations</li></ul></td>
-    </tr>
-    <tr>
-        <td><strong>Performance</strong></td>
         <td>
         <ul>
-            <li style={{fontSize:'14px'}}>In wide table benchmarks (ClickBench), Doris ranked top 1 or top 2 in October 2022 and October 2024, outperforming ClickHouse</li>
-            <li style={{fontSize:'14px'}}>In large TPC-H and TPC-DS tests, Doris achieved leading performance</li>
+            <li style={{fontSize:'14px'}}>**Merge-on-Write**</li>
+            <li style={{fontSize:'14px'}}>**Strong consistency, updates visible immediately**</li>
+            <li style={{fontSize:'14px'}}>**High-throughput UPSERT without performance degradation**</li>
         </ul>
         </td>
         <td>
-          <ul>
-            <li style={{fontSize:'14px'}}>In terms of ClickBench performance, ClickHouse and Doris have been taking turns leading</li>
-            <li style={{fontSize:'14px'}}>Experiences many OOM (Out of Memory) queries in large TPC-H and TPC-DS tests</li>
+        <ul>
+            <li style={{fontSize:'14px'}}>ReplacingMergeTree, eventual consistency</li>
+            <li style={{fontSize:'14px'}}>Using `FINAL` causes 2-10x performance degradation</li>
+            <li style={{fontSize:'14px'}}>High-frequency updates lead to heavy merge overhead</li>
+        </ul>
+        </td>
+    </tr>
+    <tr>
+        <td><strong>Transaction Support</strong></td>
+        <td>
+        <ul>
+            <li style={{fontSize:'14px'}}>**Full ACID transactions**</li>
+            <li style={{fontSize:'14px'}}>**Atomic batch ingestion**</li>
+        </ul>
+        </td>
+        <td>
+        <ul>
+            <li style={{fontSize:'14px'}}>No transaction support</li>
+            <li style={{fontSize:'14px'}}>Partial data may become visible</li>
+        </ul>
+        </td>
+    </tr>
+    <tr>
+        <td><strong>Query Concurrency</strong></td>
+        <td>
+        <ul>
+            <li style={{fontSize:'14px'}}>**Thousands of concurrent queries, 10x or more**</li>
+            <li style={{fontSize:'14px'}}>**Efficient memory management**</li>
+        </ul>
+        </td>
+        <td>
+        <ul>
+            <li style={{fontSize:'14px'}}>Usually below 100 concurrent queries</li>
+            <li style={{fontSize:'14px'}}>Memory-intensive workloads cause cluster instability</li>
+        </ul>
+        </td>
+    </tr>
+    <tr>
+        <td><strong>Data API and Lakehouse</strong></td>
+        <td>
+        <ul>
+            <li style={{fontSize:'14px'}}>**Arrow-Flight high-throughput protocol**</li>
+            <li style={{fontSize:'14px'}}>**Supports Hive/Hudi/Iceberg/Parquet**</li>
+            <li style={{fontSize:'14px'}}>**Automatic scaling and multi-replica balancing**</li>
+        </ul>
+        </td>
+        <td>
+        <ul>
+            <li style={{fontSize:'14px'}}>JDBC only</li>
+            <li style={{fontSize:'14px'}}>Limited lakehouse integration</li>
+            <li style={{fontSize:'14px'}}>Scaling requires manual rebalancing</li>
         </ul>
         </td>
     </tr>
     <tr>
         <td><strong>Cost Efficiency (Storage-Compute Separation)</strong></td>
         <td>
-            <ul>
-                <li style={{fontSize:'14px'}}><strong>Up to 70% cost reduction</strong> by independently scaling compute and storage</li>
-                <li style={{fontSize:'14px'}}>Cold data stored on low-cost object storage (S3, HDFS, OSS) while hot data uses local SSD</li>
-                <li style={{fontSize:'14px'}}>Elastic compute scaling - add/remove nodes without data rebalancing</li>
-                <li style={{fontSize:'14px'}}>Multi-tier storage with automatic data temperature management</li>
-                <li style={{fontSize:'14px'}}>Pay only for the compute resources you need at any given time</li>
-                <li style={{fontSize:'14px'}}>Available as open-source feature since version 3.0</li>
-            </ul>
+        <ul>
+            <li style={{fontSize:'14px'}}>**Supported in open-source 3.0+**</li>
+            <li style={{fontSize:'14px'}}>**Elastic compute, no rebalancing on node add/remove**</li>
+            <li style={{fontSize:'14px'}}>**Up to 70% cost reduction**</li>
+        </ul>
         </td>
         <td>
-            <ul>
-                <li style={{fontSize:'14px'}}>Tightly coupled storage and compute - scaling requires both</li>
-                <li style={{fontSize:'14px'}}>Storage-compute separation only in proprietary ClickHouse Cloud</li>
-                <li style={{fontSize:'14px'}}>Scaling requires expensive data rebalancing across nodes</li>
-                <li style={{fontSize:'14px'}}>Must over-provision compute to handle peak loads</li>
-                <li style={{fontSize:'14px'}}>Higher total cost of ownership for variable workloads</li>
-            </ul>
+        <ul>
+            <li style={{fontSize:'14px'}}>Commercial Cloud edition only</li>
+            <li style={{fontSize:'14px'}}>Tightly coupled, scaling requires data rebalancing</li>
+            <li style={{fontSize:'14px'}}>Requires over-provisioning to handle peaks</li>
+        </ul>
         </td>
     </tr>
     <tr>
-        <td><strong>Open Source</strong></td>
+        <td><strong>Open-Source License</strong></td>
         <td>
-            <ul>
-                <li style={{fontSize:'14px'}}>Fully open source under the Apache Software Foundation; license and governance are community-driven and cannot be changed by any single entity.</li>
-            </ul>
+        <ul>
+            <li style={{fontSize:'14px'}}>Hosted by the Apache Foundation, maintained collaboratively by the community</li>
+        </ul>
         </td>
         <td>
-            <ul>
-                <li style={{fontSize:'14px'}}>Open source, but controlled by a commercial company.</li>
-            </ul>
+        <ul>
+            <li style={{fontSize:'14px'}}>Controlled by a commercial company</li>
+        </ul>
         </td>
     </tr>
     </tbody>
@@ -239,69 +218,74 @@ Apache Doris and ClickHouse are both leading real-time analytical databases with
 
 ## Performance Comparison
 
-### ClickBench Benchmark
+![Performance comparison](/images/next/doris-vs-clickhouse/benchmark.jpg)
 
-<div style={{ display:'flex', justifyContent:'space-between', flexDirection:'row', paddingTop:'0.5rem',paddingBottom:'0.5rem'}}>
-    <div style={{marginRight:'2rem'}}>
-        <p>ClickBench is a benchmarking tool created and maintained by the ClickHouse team to evaluate the performance of analytical databases.</p>
-        <p>It focuses on testing the performance of **large, flat tables rather than complex multi-table joins.** It uses real-world data from a major web analytics platform, covering typical scenarios such as clickstream analysis and structured logs.</p>
-        <p>The benchmark consists of a set of queries that test aggregation operations and single-table performance, without involving complex joins. This makes it especially useful for evaluating databases optimized for real-time analytics and large-scale data processing.</p>
-    </div>
-    <div>
-        <img alt="ClickBench  Benchmark" loading="lazy" width="1200" height="338" decoding="async" data-nimg="1" src="/images/comparisons/clickbench-ck.png" style={{color: 'transparent', marginTop:0}} />
-    </div>
-</div>
+### ClickBench
 
+ClickBench is a benchmark dedicated to evaluating analytical database performance, with its core validation focused on processing efficiency over massive wide tables.
 
-### SSB-Flat SF100 Benchmark
+**Test scenarios**: clickstream analysis, structured log processing, and other typical OLAP workloads.
 
-<div style={{ display:'flex', justifyContent:'space-between', flexDirection:'row', paddingTop:'0.5rem',paddingBottom:'0.5rem'}}>
-    <div style={{marginRight:'2rem'}}>
-        <p>SSB-Flat SF100 is a benchmark designed to test the performance of analytical databases in handling large, wide tables.</p>
-        <p>It is derived from the Star Schema Benchmark (SSB) but flattens the star schema into a single wide table to **focus on the performance of single-table queries.**</p>
-        <p>The SF100 indicates that the data scale is 100 times the base size, making it a significant test for evaluating query performance and system scalability.</p>
-    </div>
-    <div>
-        <img alt="ClickBench  Benchmark" loading="lazy" width="720" height="338" decoding="async" data-nimg="1" src="/images/comparisons/ssb-flat-sf100-benchmark-ck.png" style={{color: 'transparent', marginTop:0}} />
-    </div>
-</div>
+### TPC-H SF100
 
-### TPC-H SF100 Benchmark
+An industry-recognized standard for database performance testing, consisting of 22 complex SQL queries that simulate real-world enterprise scenarios.
+
+:::note Note
+ClickHouse failed to complete 7 queries during the test. The final total elapsed time reflects Doris completing all 22 queries, while ClickHouse only completed 15.
+:::
+
+### TPC-DS 1TB
+
+An authoritative performance benchmark for data warehouses and analytical databases, covering 99 complex queries that simulate real business scenarios such as online sales and store sales.
+
+:::note Note
+The TPC-DS benchmark uses a large number of correlated subqueries, which ClickHouse did not yet support at the time of testing (September 2024), causing about half of the queries to fail.
+:::
 
 
+## FAQ
 
-<div style={{ display:'flex', justifyContent:'space-between', flexDirection:'row', paddingTop:'0.5rem',paddingBottom:'0.5rem'}}>
-    <div style={{marginRight:'2rem'}}>
-        <p>The TPC-H benchmark with a scale factor of 100 (SF100) is a widely used standard for evaluating database performance. It includes a set of complex SQL queries designed to simulate real-world business intelligence workloads.</p>
-        <p>The SF100 indicates that the data size is 100 times the base size, making it a large-scale test to measure query performance and system scalability.</p>
-        <p>**Note: Since ClickHouse failed to execute 7 queries, the total execution time refers to the time taken by Doris to run all 22 queries, and by ClickHouse to run only 15 queries.**</p>
-    </div>
-    <div>
-        <img alt="ClickBench  Benchmark" loading="lazy" width="1050" height="338" decoding="async" data-nimg="1" src="/images/comparisons/tpch-sf100-ck.png" style={{color: 'transparent', marginTop:0}} />
-    </div>
-</div>
+### Q: What are the core differences between Doris and ClickHouse?
 
-### TPC-DS 1TB Benchmark
+Apache Doris is built on an MPP architecture and provides full distributed Join capabilities, whereas ClickHouse uses a Scatter-Gather architecture and relies on wide-table modeling for complex multi-table joins.
 
+- **Apache Doris**: Under the MPP architecture, complex queries can be executed in a distributed fashion across nodes, and the query optimizer automatically selects the best Join strategy.
+- **ClickHouse**: Under the Scatter-Gather architecture, data must be processed independently on each node and then aggregated, and cross-node distributed Joins cannot be executed natively.
 
+**Recommended scenarios**:
+- Frequent multi-table joins: choose Apache Doris
+- Mainly single-table aggregation queries: either works
 
-<div style={{ display:'flex', justifyContent:'space-between', flexDirection:'row', paddingTop:'0.5rem',paddingBottom:'0.5rem'}}>
-    <div style={{marginRight:'2rem'}}>
-        <p>TPC-DS 1TB is a widely recognized benchmark for evaluating the performance of data warehouses and analytical databases. It involves a dataset of approximately 1TB in size, containing around 6.35 billion records spread across 24 tables.</p>
-        <p>The benchmark includes 99 complex queries designed to test various aspects of database performance, such as joins, aggregations, and subqueries.</p>
-        <p>The TPC-DS schema is based on a snowflake schema, representing real-world scenarios like web, catalog, and store sales. The 1TB scale is considered a moderate size for data warehouses but is still challenging due to the complexity of the queries and the large number of records</p>
-        <p>**Note：TPC-DS makes heavy use of correlated subqueries which are at the time of testing (September 2024) not supported by ClickHouse. As a result, about 50% of benchmark queries will fail with errors.**</p>
-    </div>
-    <div>
-        <img alt="ClickBench  Benchmark" loading="lazy" width="1300" height="338" decoding="async" data-nimg="1" src="/images/comparisons/tpc-ds-1tb-ck.png" style={{color: 'transparent', marginTop:0}} />
-    </div>
-</div>
+### Q: Is Doris's Join performance really faster than ClickHouse's?
 
-## More Migration Stories
+Yes. Based on the standard TPC-H and TPC-DS benchmarks:
 
-- [Less components, higher performance: Apache Doris instead of ClickHouse, MySQL, Presto, and HBase](https://doris.apache.org/blog/less-components-higher-performance-apache-doris-instead-of-clickhouse-mysql-presto-and-hbase)
+| Benchmark | Apache Doris | ClickHouse |
+|----------|-------------|------------|
+| TPC-H SF100 | All 22 queries completed | 7 queries failed with OOM |
+| TPC-DS | All 99 queries completed | About 50% of queries failed due to lack of correlated subquery support |
 
+Doris's CBO query optimizer automatically chooses the best Join strategy (Broadcast/Shuffle/Colocate), while ClickHouse requires manual tuning.
 
-- [Migrating from ClickHouse to Apache Doris: What happened?](https://doris.apache.org/blog/migrating-from-clickhouse-to-apache-doris-what-happened)
+### Q: What should I watch out for when migrating from ClickHouse to Doris?
 
-- [ClickHouse & Kudu to Doris: 10X concurrency increased, 70% latency down](https://doris.apache.org/blog/linkedcare)
+1. **SQL syntax differences**: Doris is compatible with the MySQL protocol, while ClickHouse syntax needs adjustment.
+2. **Data modeling**: ClickHouse's wide-table modeling approach is not necessarily optimal in Doris.
+3. **Ingestion tools**: Data ingestion scripts need to be replaced; Doris provides multiple ingestion methods.
+4. **Recommendation**: First validate SQL compatibility on a small-scale scenario, then migrate gradually.
+
+### Q: How does Doris's storage-compute separation differ from ClickHouse Cloud?
+
+| Feature | Apache Doris | ClickHouse Cloud |
+|------|-------------|------------------|
+| Storage-compute separation | Supported in the open-source version (since 3.0) | Commercial edition only |
+| Scaling behavior | Elastic compute, no data rebalancing when nodes are added or removed | Scaling requires data rebalancing |
+| Cost model | Pay-as-you-go, only pay for actual compute resources | Pay per instance |
+
+### Q: Can Doris query the data lake?
+
+Yes. Apache Doris has built-in data lake query capabilities:
+
+- Directly queries formats such as **Hive, Hudi, Iceberg, and Parquet**
+- Achieves a unified lakehouse without data ingestion
+- Supports the Arrow-Flight protocol for integration with other engines (such as AI and data science tools)

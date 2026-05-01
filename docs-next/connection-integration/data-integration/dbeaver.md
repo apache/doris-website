@@ -1,109 +1,127 @@
 ---
 {
     "title": "DBeaver",
-    "language": "zh-CN",
-    "description": "DBeaver 是一款跨平台数据库工具，适用于开发人员、数据库管理员、分析师和所有处理数据的人。"
+    "language": "en",
+    "description": "Use DBeaver to connect to Apache Doris through the MySQL driver, visually manage internal catalog and external catalog, and run SQL queries."
 }
 ---
 
-## 介绍
+<!-- Knowledge type: Operation steps -->
+<!-- Applicable scenario: Use DBeaver to visually connect to and manage Apache Doris databases -->
 
-DBeaver 是一款跨平台数据库工具，适用于开发人员、数据库管理员、分析师和所有处理数据的人。
+DBeaver is a cross-platform database tool for developers, database administrators, analysts, and anyone who works with data.
 
-Apache Doris 高度兼容 MySQL 协议，可以使用 DBeaver 的 MySQL 驱动器连接 Apache Doris，并查询 internal catalog 和 external catalog 中的数据。
+Apache Doris is highly compatible with the MySQL protocol, so you can use the MySQL driver in DBeaver to connect to Apache Doris and query data in the internal catalog and external catalog.
 
-## 前置条件
+## Use cases
 
-已安装 Dbeaver
-可以访问 https://dbeaver.io 下载安装 DBeaver
+- Browse metadata such as databases, tables, and views in Apache Doris through a visual interface.
+- Use the SQL editor to run queries and analyze data.
+- Manage the internal catalog and multiple external catalogs in a single tool.
+- Monitor sessions and view runtime information such as system variables and user privileges.
 
-## 添加数据源
+## Prerequisites
 
-:::info 备注
-当前验证使用 DBeaver 24.0.0 版本
+- DBeaver is installed (version 24.0.0 or later is recommended). Download URL: [https://dbeaver.io](https://dbeaver.io)
+- An Apache Doris cluster is reachable, and you know the FE host address, query port, username, and password.
+- To connect to an external catalog using the `catalog.db` form, the Doris version must be 2.1.0 or later.
+
+## Procedure
+
+:::info Note
+The following steps are verified on DBeaver 24.0.0.
 :::
 
-1. 启动 DBeaver
-2. 在 DBeaver 窗口左上角单击加号 (**+**) 图标，或者在菜单栏选择 **Database > New Database Connection**，打开 **Connect to a database** 界面。
-   
-    ![添加连接 1](/images/dbeaver1.png)
+### Step 1: Create a new database connection
 
-    ![添加连接 2](/images/dbeaver2.png)
+1. Start DBeaver.
+2. In the upper-left corner of the window, click the plus (**+**) icon, or select **Database > New Database Connection** from the menu bar to open the **Connect to a database** dialog.
 
-3. 选择 MySQL 驱动器
+    ![Add connection 1](/images/next/connection-integration/data-integration/dbeaver/dbeaver1.png)
 
-    在 **Select your database** 窗口，选择 **MySQL** 。
+    ![Add connection 2](/images/next/connection-integration/data-integration/dbeaver/dbeaver2.png)
 
-    ![选择驱动](/images/dbeaver3.png)
+### Step 2: Select the MySQL driver
 
-4. 配置 Doris 连接 
+In the **Select your database** window, select **MySQL**.
 
-    在 **Connection Settings** 窗口的 **main** 标签页，配置以下连接信息：
+![Select driver](/images/next/connection-integration/data-integration/dbeaver/dbeaver3.png)
 
-  - Server Host：Doris 集群的 FE 主机 IP 地址。
-  - Port：Doris 集群的 FE 查询端口，如 9030。
-  - Database：Doris 集群中的目标数据库。
-  - Username：用于登录 Doris 集群的用户名，如 admin。
-  - Password：用于登录 Doris 集群的用户密码。
+### Step 3: Configure the Doris connection
 
-    :::tip
-    Database 可以用于区别 internal catalog 和 external catalog，如仅填写 Database 名称，则当前数据源默认连接 internal catalog，如填写格式为 catalog.db，则当前数据源默认连接 Database 中所填写的 catalog，DBeaver 中展示的库表也为所连接 catalog 中的库表，因此可以使用 DBeaver 的 MySQL 驱动器来创建多个 Doris 数据源来管理 Doris 中不同的 Catalog。
-    :::
+On the **Main** tab of the **Connection Settings** window, fill in the following connection information:
 
-    :::info 备注
-    通过 catalog.db 的 Database 形式来管理连接 Doris 的 external catalog 需要 Doris 版本在 2.1.0 及以上
-    :::
+| Field | Description | Example |
+|--------|------|------|
+| Server Host | The FE host IP address of the Doris cluster | `127.0.0.1` |
+| Port | The FE query port of the Doris cluster | `9030` |
+| Database | The target database in the Doris cluster | `example_db` or `hive.example_db` |
+| Username | The username used to log in to the Doris cluster | `admin` |
+| Password | The password used to log in to the Doris cluster | - |
 
-  - internal catalog
+:::tip How to use the Database field
+The Database field can be used to distinguish between the internal catalog and external catalogs:
 
-  ![连接 internal catalog](/images/dbeaver4.png)
+- Database name only: by default, the data source connects to the internal catalog.
+- The format `catalog.db`: the data source connects to the specified catalog by default, and the databases and tables shown in DBeaver are those in that catalog.
 
-  - external catalog
+Therefore, you can create multiple Doris data sources to manage different catalogs separately.
+:::
 
-  ![连接 external catalog](/images/dbeaver5.png)
+:::info Note
+Connecting to a Doris external catalog with the `catalog.db` form requires Doris version 2.1.0 or later.
+:::
 
-5. 测试数据源连接
+Connection examples:
 
-    在填写完连接信息后，单击左下角 Test Connection 验证数据库连接信息的准确性。DBeaver 返回如下对话框，确认配置连接信息。单击 OK 即确认配置连接信息无误。然后单击右下角 Finish 完成连接配置。
+- Connect to the internal catalog
 
-    ![测试连接](/images/dbeaver6.png)
+    ![Connect to internal catalog](/images/next/connection-integration/data-integration/dbeaver/dbeaver4.png)
 
-6. 连接数据库
+- Connect to an external catalog
 
-    数据库连接建立以后，可以在左侧的数据库连接导航看到已创建的数据源连接，并且可以通过 DBeaver 连接并管理数据库。
+    ![Connect to external catalog](/images/next/connection-integration/data-integration/dbeaver/dbeaver5.png)
 
-    ![建立连接](/images/dbeaver7.png)
+### Step 4: Test and save the connection
 
-## 功能支持
+1. After filling in the connection information, click **Test Connection** in the lower-left corner to verify that the information is correct.
+2. When DBeaver displays a confirmation dialog, click **OK** to confirm that the configuration is correct.
+3. Click **Finish** in the lower-right corner to complete the connection setup.
 
-- 完全支持
-  - 可视化查看类
-    - Databases
-      - Tables
-      - Views
-  - Users
-  - Administer
-      - Session Manager
-  - System Info
-      - Session Variables
-      - Global Variables
-      - Engines
-      - Charsets
-      - User Priviages
-      - Plugin
-  - 操作类
-      - SQL 编辑器
-      - SQL 控制台
-- 基本支持
+![Test connection](/images/next/connection-integration/data-integration/dbeaver/dbeaver6.png)
 
-    基本支持的部分意为可以点击查看不会报错，但由于存在协议兼容问题，可能存在显示不全
+### Step 5: Connect to and manage the database
 
-  - 可视化查看类
-    - 仪表盘
-    - Users/user/properties
-    - Session Status
-    - Global Status
-- 不支持
+After the database connection is established, you can see the new data source in the database connection navigator on the left, and connect to and manage it through DBeaver.
 
-    不支持部分意为使用 DBeaver 管理 Doris 进行某些可视化操作时可能会报错，或者某些可视化操作未经验证
-    如可视化创建库表、schema change、增删改数据等
+![Establish connection](/images/next/connection-integration/data-integration/dbeaver/dbeaver7.png)
+
+## Feature support
+
+DBeaver supports Apache Doris features as follows:
+
+### Fully supported
+
+| Category | Feature |
+|------|--------|
+| Visual viewing | Databases (Tables, Views), Users |
+| Administer | Session Manager |
+| System Info | Session Variables, Global Variables, Engines, Charsets, User Privileges, Plugin |
+| Operations | SQL editor, SQL console |
+
+### Basically supported
+
+You can click and view these items without errors, but due to protocol compatibility issues, some content may not be fully displayed:
+
+- Dashboard
+- Users / user / properties
+- Session Status
+- Global Status
+
+### Not supported
+
+When using DBeaver to manage Apache Doris, certain visual operations may report errors or have not been verified, for example:
+
+- Visually creating databases and tables
+- Schema Change
+- Visually inserting, deleting, or updating data

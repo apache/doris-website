@@ -1,88 +1,67 @@
 ---
 {
-    "title": "向量搜索",
-    "sidebar_label": "概述",
-    "language": "zh-CN",
-    "description": "Apache Doris ANN 向量索引使用指南：建表、查询、量化、过滤、性能调优与 Cosine 相似度实现方案。",
+    "title": "Vector Search",
+    "sidebar_label": "Overview",
+    "language": "en",
+    "description": "Apache Doris ANN vector index guide: table creation, queries, quantization, filtering, performance tuning, and Cosine similarity implementation.",
     "keywords": [
-        "向量搜索",
-        "ANN 索引",
-        "向量检索",
-        "近似最近邻",
+        "vector search",
+        "ANN index",
+        "vector retrieval",
+        "approximate nearest neighbor",
         "HNSW",
         "IVF",
-        "向量量化",
-        "RAG 检索",
-        "Cosine 相似度",
+        "vector quantization",
+        "RAG retrieval",
+        "Cosine similarity",
         "Faiss",
-        "Doris 向量数据库"
+        "Doris vector database"
     ]
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
+<!-- Knowledge type: capability overview + operation guide + configuration parameters -->
+<!-- Applicable scenarios: RAG retrieval / vector similarity search / multimodal retrieval / performance tuning -->
 
-  http://www.apache.org/licenses/LICENSE-2.0
+Since version 4.0, Apache Doris natively supports ANN (Approximate Nearest Neighbor) vector search. Built on Faiss with HNSW and IVF indexes, it delivers millisecond-level TopN and range retrieval over billions of vectors.
 
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
+## Applicable Scenarios
 
-<!-- 知识类型: 能力概述 + 操作指南 + 配置参数 -->
-<!-- 适用场景: RAG 检索 / 向量相似度搜索 / 多模态检索 / 性能调优 -->
+Vector search is the core capability behind RAG (Retrieval-Augmented Generation) and multimodal retrieval. Typical applications include:
 
-## 一句话定义
+- **RAG retrieval**: Retrieve the Top-K text snippets most relevant to a user query from a large knowledge base, and use them as the basis for LLM generation. This mitigates hallucination and knowledge-staleness issues.
+- **Multimodal retrieval**: Encode images, audio, video, and other data into vectors for semantic similarity queries. For example, in medical Q&A, retrieve case records and literature to assist diagnostic suggestions.
+- **Recommendation systems**: Use range search to retrieve "similar but not identical" candidate content, improving recommendation diversity.
+- **Anomaly detection**: Locate data points that deviate from normal patterns.
 
-Apache Doris 自 4.0 版本起原生支持 ANN（Approximate Nearest Neighbor，近似最近邻）向量搜索，基于 Faiss 实现 HNSW 与 IVF 索引，可在亿级向量数据上实现毫秒级 TopN 与范围检索。
+The essence of vector retrieval is: encode the query and documents into semantic vectors using the same scheme, then find the K vectors most similar to the query from a large vector collection.
 
-## 适用场景
+## Quick Navigation
 
-向量搜索是 RAG（Retrieval-Augmented Generation，检索增强生成）以及多模态检索的核心能力。其典型应用包括：
-
-- **RAG 检索**：从大规模知识库中检索与用户查询最相关的 Top-K 文本片段，作为大模型生成的依据，缓解模型幻觉与知识时效性问题。
-- **多模态检索**：将图片、语音、视频等数据编码为向量，用于语义相似度查询。例如医学问答中检索病例资料与文献，辅助生成诊断建议。
-- **推荐系统**：基于范围搜索获取“相似但不重复”的候选内容，提升推荐多样性。
-- **异常检测**：定位远离正常模式的数据点。
-
-向量检索的本质是：将查询与文档统一编码为语义向量后，从大规模向量集合中找出与查询最相似的 K 个向量。
-
-## 快速导航
-
-| 你想做什么 | 跳转章节 |
+| Scenario | Section |
 |------|----------|
-| 了解如何创建向量索引 | [近似最近邻搜索](#近似最近邻搜索) |
-| 实现 Cosine 余弦相似度检索 | [使用 Cosine 相似度](#使用-cosine-相似度) |
-| 基于距离阈值进行过滤 | [近似范围搜索](#近似范围搜索) |
-| 同时使用 TopN 与范围条件 | [组合搜索](#组合搜索) |
-| 在 ANN 检索前先用其他列过滤 | [带过滤条件的 ANN 搜索](#带过滤条件的-ann-搜索) |
-| 调节查询行为参数 | [查询参数](#查询参数) |
-| 节省内存与索引大小 | [向量量化](#向量量化) |
-| 提升 QPS 与降低延迟 | [性能调优](#性能调优) |
-| 使用 Python SDK 接入 | [Python SDK](#python-sdk) |
-| 了解使用限制 | [使用限制](#使用限制) |
+| Learn how to create a vector index | [Approximate Nearest Neighbor Search](#approximate-nearest-neighbor-search) |
+| Implement Cosine similarity retrieval | [Using Cosine Similarity](#using-cosine-similarity) |
+| Filter by distance threshold | [Approximate Range Search](#approximate-range-search) |
+| Combine TopN with range conditions | [Compound Search](#compound-search) |
+| Filter by other columns before ANN retrieval | [ANN Search with Filters](#ann-search-with-filters) |
+| Tune query behavior parameters | [Query Parameters](#query-parameters) |
+| Save memory and reduce index size | [Vector Quantization](#vector-quantization) |
+| Improve QPS and reduce latency | [Performance Tuning](#performance-tuning) |
+| Use the Python SDK | [Python SDK](#python-sdk) |
+| Learn about usage limitations | [Usage Limitations](#usage-limitations) |
 
 ---
 
-## 近似最近邻搜索
+## Approximate Nearest Neighbor Search
 
-<!-- 知识类型: 操作步骤 + 配置参数 -->
+<!-- Knowledge type: operation steps + configuration parameters -->
 
-Doris 不引入额外数据类型，向量以定长 `Array<Float>` 存储；针对距离检索提供基于 Faiss 的 ANN 索引类型。
+Doris does not introduce a new data type. Vectors are stored as fixed-length `Array<Float>`, and a Faiss-based ANN index type is provided for distance retrieval.
 
-### 建表示例
+### Table Creation Example
 
-以常见的 [SIFT](http://corpus-texmex.irisa.fr/) 数据集为例：
+Take the common [SIFT](http://corpus-texmex.irisa.fr/) dataset as an example:
 
 ```sql
 CREATE TABLE sift_1M (
@@ -102,30 +81,30 @@ PROPERTIES (
 );
 ```
 
-各核心参数含义：
+Meaning of each core parameter:
 
-- `index_type`：索引算法，可选 `hnsw`（[Hierarchical Navigable Small World 算法](https://en.wikipedia.org/wiki/Hierarchical_navigable_small_world)）、`ivf`（倒排文件索引）或 `ivf_on_disk`（倒排列表落盘并通过缓存提供查询能力的 IVF）。
-- `metric_type`：距离度量，`l2_distance` 表示使用 L2 距离作为距离函数。
-- `dim`：向量维度，`128` 表示该列每条向量长度为 128。
-- `quantizer`：编码方式，`flat` 表示按原始 float32 存储各维度。
+- `index_type`: The index algorithm. Options are `hnsw` ([Hierarchical Navigable Small World](https://en.wikipedia.org/wiki/Hierarchical_navigable_small_world)), `ivf` (Inverted File index), or `ivf_on_disk` (an IVF variant whose inverted lists are written to disk and served through a cache).
+- `metric_type`: The distance metric. `l2_distance` means using L2 distance as the distance function.
+- `dim`: The vector dimension. `128` means each vector in this column has length 128.
+- `quantizer`: The encoding scheme. `flat` means each dimension is stored as the original float32 value.
 
-### 完整索引参数
+### Full Index Parameters
 
-| 参数 | 是否必填 | 支持/可选值 | 默认值 | 说明 |
+| Parameter | Required | Supported / Optional Values | Default | Description |
 |------|----------|-------------|--------|------|
-| `index_type` | 是 | `hnsw`、`ivf`、`ivf_on_disk` | （无） | 指定所使用的 ANN 索引算法。当前支持 HNSW、内存 IVF 和 IVF On-Disk。 |
-| `metric_type` | 是 | `l2_distance`、`inner_product` | （无） | 指定向量相似度/距离度量方式。L2 为欧氏距离；`inner_product` 可用于余弦相似度场景，但需先对向量进行归一化。 |
-| `dim` | 是 | 正整数 (> 0) | （无） | 指定向量维度，后续导入的所有向量维度必须与此一致，否则报错。 |
-| `nlist` | 否 | 正整数 | `1024` | IVF 的倒排桶数量。在 `index_type=ivf` 或 `ivf_on_disk` 时生效；取值越大通常有助于召回率/速度权衡，但会增加构建开销。 |
-| `max_degree` | 否 | 正整数 | `32` | HNSW 图中单个节点的最大邻居数（M），影响索引内存与搜索性能。 |
-| `ef_construction` | 否 | 正整数 | `40` | HNSW 构建阶段的候选队列大小（efConstruction），越大构图质量越好，但构建更慢。 |
-| `quantizer` | 否 | `flat`、`sq8`、`sq4`、`pq` | `flat` | 向量编码/量化方式：`flat` 为原始存储；`sq8`/`sq4` 为标量量化（8/4 bit）；`pq` 为乘积量化。 |
-| `pq_m` | `quantizer=pq` 时必填 | 正整数 | （无） | 将原始高维向量分割成多少个子向量（`dim` 必须能被 `pq_m` 整除）。 |
-| `pq_nbits` | `quantizer=pq` 时必填 | 正整数 | （无） | 每个子向量量化的比特数，决定子空间码本大小（k = 2 ^ pq_nbits）。在 Faiss 中一般要求不大于 24。 |
+| `index_type` | Yes | `hnsw`, `ivf`, `ivf_on_disk` | (none) | Specifies the ANN index algorithm. Currently HNSW, in-memory IVF, and IVF On-Disk are supported. |
+| `metric_type` | Yes | `l2_distance`, `inner_product` | (none) | Specifies the vector similarity / distance metric. `l2_distance` is Euclidean distance. `inner_product` can be used for cosine similarity scenarios, but the vectors must be normalized first. |
+| `dim` | Yes | Positive integer (> 0) | (none) | Specifies the vector dimension. All vectors loaded later must have the same dimension, otherwise an error is reported. |
+| `nlist` | No | Positive integer | `1024` | Number of inverted buckets in IVF. Takes effect when `index_type=ivf` or `ivf_on_disk`. A larger value usually offers a better recall/speed trade-off but increases build cost. |
+| `max_degree` | No | Positive integer | `32` | Maximum number of neighbors per node in the HNSW graph (M). Affects index memory usage and search performance. |
+| `ef_construction` | No | Positive integer | `40` | Size of the candidate queue during HNSW construction (efConstruction). A larger value yields a higher-quality graph but slower build. |
+| `quantizer` | No | `flat`, `sq8`, `sq4`, `pq` | `flat` | Vector encoding / quantization scheme. `flat`: original storage. `sq8` / `sq4`: scalar quantization (8 / 4 bit). `pq`: product quantization. |
+| `pq_m` | Required when `quantizer=pq` | Positive integer | (none) | The number of sub-vectors the original high-dimensional vector is split into. `dim` must be divisible by `pq_m`. |
+| `pq_nbits` | Required when `quantizer=pq` | Positive integer | (none) | The number of bits used to quantize each sub-vector, which determines the codebook size of the subspace (k = 2 ^ pq_nbits). In Faiss this is generally required to be no greater than 24. |
 
-### 数据导入
+### Data Loading
 
-通过 S3 TVF 导入 SIFT 数据集：
+Load the SIFT dataset through the S3 TVF:
 
 ```sql
 INSERT INTO sift_1M
@@ -144,18 +123,18 @@ select count(*) from sift_1M
 +----------+
 ```
 
-### 查询示例
+### Query Example
 
-使用 `l2_distance_approximate` / `inner_product_approximate` 函数会触发 ANN 索引路径。
+Calling `l2_distance_approximate` / `inner_product_approximate` triggers the ANN index path.
 
-**调用规则：**
+**Calling rules:**
 
-- 函数名必须与索引的 `metric_type` 完全匹配：
-    - `metric_type=l2_distance` → 使用 `l2_distance_approximate`
-    - `metric_type=inner_product` → 使用 `inner_product_approximate`
-- 排序规则：
-    - L2 距离使用升序（`ORDER BY dist ASC`，越小越近）
-    - Inner Product 使用降序（`ORDER BY dist DESC`，越大越近）
+- The function name must exactly match the index `metric_type`:
+    - `metric_type=l2_distance` → use `l2_distance_approximate`
+    - `metric_type=inner_product` → use `inner_product_approximate`
+- Sort order:
+    - L2 distance uses ascending order (`ORDER BY dist ASC`, smaller is closer).
+    - Inner product uses descending order (`ORDER BY dist DESC`, larger is closer).
 
 ```sql
 SELECT id,
@@ -185,35 +164,35 @@ LIMIT 10;
 10 rows in set (0.02 sec)
 ```
 
-要与精确结果对比，可使用 `l2_distance` / `inner_product`（不带 `_approximate` 后缀）。在该示例中，精确搜索耗时约 290 毫秒；使用 ANN 索引后，查询延迟从约 290 毫秒降至约 20 毫秒。
+To compare with exact results, use `l2_distance` / `inner_product` (without the `_approximate` suffix). In this example, the exact search takes about 290 ms; with the ANN index, query latency drops from about 290 ms to about 20 ms.
 
 ```
 10 rows in set (0.29 sec)
 ```
 
-### 执行机制
+### Execution Mechanism
 
-ANN 索引以 segment 为粒度构建。在分布式表中：
+The ANN index is built at the segment granularity. In a distributed table:
 
-1. 每个 segment 返回其本地 TopN 结果。
-2. TopN 算子在 tablet 与 segment 之间合并结果，得到全局 TopN。
+1. Each segment returns its local TopN results.
+2. The TopN operator merges results across tablets and segments to produce the global TopN.
 
 ---
 
-## 使用 Cosine 相似度
+## Using Cosine Similarity
 
-<!-- 知识类型: 操作步骤 + 设计原理 -->
-<!-- 适用场景: 语义相似度检索 / 推荐召回 -->
+<!-- Knowledge type: operation steps + design rationale -->
+<!-- Applicable scenarios: semantic similarity retrieval / recommendation recall -->
 
-Doris 的 ANN 索引 `metric_type` 目前只支持 `l2_distance` 与 `inner_product`，**不直接支持 `cosine`**。当业务指标为余弦相似度时，可通过归一化将其等价转换为内积。
+The Doris ANN index `metric_type` currently supports only `l2_distance` and `inner_product`, and **does not directly support `cosine`**. When the business metric is cosine similarity, you can convert it equivalently to inner product through normalization.
 
-### 操作步骤
+### Steps
 
-1. **写入前**：对向量做 L2 归一化（归一化到单位长度）。
-2. **建索引时**：使用 `metric_type="inner_product"`。
-3. **查询时**：使用 `inner_product_approximate(...)`，并按 `ORDER BY ... DESC` 排序。
+1. **Before writing**: L2-normalize the vectors (normalize to unit length).
+2. **When creating the index**: Use `metric_type="inner_product"`.
+3. **When querying**: Use `inner_product_approximate(...)`, sorted by `ORDER BY ... DESC`.
 
-示例：
+Example:
 
 ```sql
 CREATE INDEX idx_emb_cosine ON your_table (embedding) USING ANN PROPERTIES (
@@ -223,28 +202,28 @@ CREATE INDEX idx_emb_cosine ON your_table (embedding) USING ANN PROPERTIES (
 );
 ```
 
-### 等价原理
+### Equivalence Rationale
 
-- Cosine 相似度公式：`cos(x, y) = (x · y) / (||x|| ||y||)`
-- 当向量已做 L2 归一化时（`||x|| = ||y|| = 1`）：`cos(x, y) = x · y`
+- Cosine similarity formula: `cos(x, y) = (x · y) / (||x|| ||y||)`
+- When the vectors are L2-normalized (`||x|| = ||y|| = 1`): `cos(x, y) = x · y`
 
-因此，在单位向量空间里，最大化 cosine 相似度等价于最大化 inner product。如果不做归一化，inner product 与 cosine 不再等价。
+Therefore, in unit-vector space, maximizing cosine similarity is equivalent to maximizing inner product. Without normalization, inner product and cosine are no longer equivalent.
 
 ---
 
-## 近似范围搜索
+## Approximate Range Search
 
-<!-- 知识类型: 操作步骤 -->
-<!-- 适用场景: 推荐多样性召回 / 异常检测 -->
+<!-- Knowledge type: operation steps -->
+<!-- Applicable scenarios: recommendation diversity recall / anomaly detection -->
 
-除 TopN 最近邻搜索外，向量检索还有一类常见查询：**基于距离阈值的范围搜索**。该查询不返回固定数量，而是找出所有与目标向量距离满足条件的数据点。
+Beyond TopN nearest-neighbor search, vector retrieval has another common query type: **range search based on a distance threshold**. Such a query does not return a fixed number of rows. Instead, it finds all data points whose distance to the target vector satisfies the condition.
 
-典型应用：
+Typical applications:
 
-- 推荐系统中获取“接近但不完全相同”的内容，增加多样性。
-- 异常检测中定位远离正常模式的数据点。
+- In recommendation systems, retrieve content that is "close but not identical" to increase diversity.
+- In anomaly detection, locate data points that deviate from normal patterns.
 
-示例：查找与目标向量 L2 距离大于 300 的数据数量：
+Example: count rows whose L2 distance to the target vector is greater than 300:
 
 ```sql
 SELECT count(*)
@@ -263,15 +242,15 @@ WHERE  l2_distance_approximate(
 1 row in set (0.19 sec)
 ```
 
-范围搜索同样通过 ANN 索引加速：系统先快速筛选候选向量集合，再计算精确的近似距离，从而显著降低开销。**目前支持的范围条件**：`>`、`>=`、`<`、`<=`。
+Range search is also accelerated by the ANN index: the system first quickly screens a candidate vector set, and then computes the precise approximate distance, significantly reducing overhead. **The currently supported range conditions are**: `>`, `>=`, `<`, `<=`.
 
 ---
 
-## 组合搜索
+## Compound Search
 
-<!-- 知识类型: 操作步骤 + 执行原理 -->
+<!-- Knowledge type: operation steps + execution rationale -->
 
-组合搜索（Compound Search）指在同一条 SQL 中同时进行 ANN TopN 与 Range 条件过滤，返回满足范围约束的 TopN。
+Compound search refers to performing both ANN TopN and range filtering in the same SQL statement, returning the TopN that satisfies the range constraint.
 
 ```sql
 SELECT id,
@@ -301,25 +280,25 @@ ORDER BY dist limit 10
 10 rows in set (0.12 sec)
 ```
 
-### 前过滤 vs 后过滤
+### Pre-filter vs Post-filter
 
-| 策略 | 含义 | 优点 | 缺点 |
+| Strategy | Meaning | Pros | Cons |
 |------|------|------|------|
-| 前过滤（Doris 采用） | 先做谓词过滤，再在剩余集合上取 TopN | 召回率高 | 速度相对较慢 |
-| 后过滤 | 先做 TopN，再过滤 | 速度快 | 可能显著降低召回 |
+| Pre-filter (used by Doris) | Apply the predicate first, then take the TopN over the remaining set | High recall | Relatively slow |
+| Post-filter | Take the TopN first, then filter | Fast | May significantly reduce recall |
 
-在 Doris 中，组合搜索的两个阶段均可通过索引加速。但在某些场景（如第一阶段 Range 过滤率极高）双阶段同时使用索引可能导致召回下降。Doris 会根据谓词过滤率与索引类型综合决策，**自适应**判断是否对两阶段均使用索引。
+In Doris, both stages of compound search can be accelerated by indexes. However, in some scenarios (for example, when the first-stage range filter is highly selective), using indexes for both stages may reduce recall. Doris **adaptively** decides whether to use indexes for both stages based on the predicate selectivity and the index type.
 
 ---
 
-## 带过滤条件的 ANN 搜索
+## ANN Search with Filters
 
-<!-- 知识类型: 操作步骤 -->
-<!-- 适用场景: 多条件混合检索 / 全文+向量联合查询 -->
+<!-- Knowledge type: operation steps -->
+<!-- Applicable scenarios: multi-condition hybrid retrieval / full-text + vector joint queries -->
 
-带过滤条件的 ANN 搜索指：在执行 ANN TopN 之前先应用其他谓词过滤，返回满足条件的 TopN。
+ANN search with filters means: apply other predicates before performing ANN TopN, and return the TopN that satisfies the conditions.
 
-下面用一个 8 维示例说明混合搜索流程：
+The following 8-dimensional example illustrates the hybrid search workflow:
 
 ```sql
 CREATE TABLE ann_with_fulltext (
@@ -340,14 +319,14 @@ INSERT INTO ann_with_fulltext VALUES
 (4, [0.05,0.06,0.07,0.08,0.09,0.1,0.2,0.3], 'politics update',40)
 ```
 
-假设用户输入查询向量 `[0.1,0.1,0.2,0.2,0.3,0.3,0.4,0.4]`，只在 `comment` 含 “music” 的文档中检索最相似的前 2 条：
+Given a user query vector `[0.1,0.1,0.2,0.2,0.3,0.3,0.4,0.4]`, retrieve the top 2 most similar documents only among those whose `comment` contains "music":
 
 ```sql
 SELECT id, comment,
        l2_distance_approximate(embedding, [0.1,0.1,0.2,0.2,0.3,0.3,0.4,0.4]) AS dist
 FROM ann_with_fulltext
-WHERE comment MATCH_ANY 'music'       -- 先用倒排索引过滤
-ORDER BY dist ASC                     -- 在过滤后的结果集上做 ANN TopN
+WHERE comment MATCH_ANY 'music'       -- Filter using the inverted index first
+ORDER BY dist ASC                     -- Then perform ANN TopN over the filtered result set
 LIMIT 2;
 
 +------+---------------------+----------+
@@ -359,41 +338,41 @@ LIMIT 2;
 2 rows in set (0.04 sec)
 ```
 
-:::tip 关键提示
-带过滤条件的 ANN 搜索若希望利用向量索引加速 TopN，**必须确保涉及的过滤列具备倒排等二级索引**。
+:::tip Key tip
+For ANN search with filters to leverage the vector index for TopN acceleration, **the filter columns involved must have a secondary index such as an inverted index**.
 :::
 
 ---
 
-## 查询参数
+## Query Parameters
 
-<!-- 知识类型: 配置参数 -->
+<!-- Knowledge type: configuration parameters -->
 
-除了在构建 HNSW 索引时可指定参数外，查询阶段也可通过会话变量调节行为：
+In addition to the parameters specified when building the HNSW index, the query stage can also adjust behavior through session variables:
 
-| 会话变量 | 默认值 | 说明 |
+| Session variable | Default | Description |
 |----------|--------|------|
-| `hnsw_ef_search` | `32` | HNSW 索引的 EF 搜索参数。控制搜索阶段 candidates 队列的最大长度，越大精度越高、耗时越高。 |
-| `hnsw_check_relative_distance` | `true` | 是否启用相对距离检查机制，以提升 HNSW 搜索的准确性。 |
-| `hnsw_bounded_queue` | `true` | 是否使用有界优先队列以优化 HNSW 的搜索性能。 |
+| `hnsw_ef_search` | `32` | The EF search parameter of the HNSW index. Controls the maximum length of the candidates queue during search. A larger value yields higher accuracy at the cost of higher latency. |
+| `hnsw_check_relative_distance` | `true` | Whether to enable the relative distance check mechanism to improve HNSW search accuracy. |
+| `hnsw_bounded_queue` | `true` | Whether to use a bounded priority queue to optimize HNSW search performance. |
 
 ---
 
-## 向量量化
+## Vector Quantization
 
-<!-- 知识类型: 优化策略 + 配置参数 -->
-<!-- 适用场景: 内存受限 / 超大规模向量集 -->
+<!-- Knowledge type: optimization strategy + configuration parameters -->
+<!-- Applicable scenarios: memory-constrained / very large vector sets -->
 
-采用 FLAT 编码时，HNSW 索引（原始向量 + 图结构）可能占用大量内存。HNSW 必须**全量驻留内存**才能工作，因此在超大规模数据集上易成瓶颈。
+With FLAT encoding, an HNSW index (original vectors plus the graph structure) can consume a large amount of memory. HNSW must be **fully resident in memory** to work, so it easily becomes a bottleneck on very large datasets.
 
-Doris 提供两类量化方案：
+Doris provides two categories of quantization schemes:
 
-| 量化方式 | 原理 | Doris 支持 |
+| Quantization | Principle | Doris Support |
 |----------|------|-----------|
-| 标量量化 SQ（Scalar Quantization） | 压缩 FLOAT32 单维数值，减少内存开销 | `sq8`（INT8）、`sq4`（INT4） |
-| 乘积量化 PQ（Product Quantization） | 分解高维向量并分别量化子向量 | `pq` |
+| Scalar Quantization (SQ) | Compresses each FLOAT32 dimension to reduce memory overhead | `sq8` (INT8), `sq4` (INT4) |
+| Product Quantization (PQ) | Decomposes a high-dimensional vector and quantizes each sub-vector separately | `pq` |
 
-### 标量量化（SQ）示例
+### Scalar Quantization (SQ) Example
 
 ```sql
 CREATE TABLE sift_1M (
@@ -403,7 +382,7 @@ CREATE TABLE sift_1M (
       "index_type"="hnsw",
       "metric_type"="l2_distance",
       "dim"="128",
-      "quantizer"="sq8"    -- 指定使用 INT8 进行量化
+      "quantizer"="sq8"    -- Use INT8 for quantization
   )
 ) ENGINE=OLAP
 DUPLICATE KEY(id) COMMENT "OLAP"
@@ -413,27 +392,27 @@ PROPERTIES (
 );
 ```
 
-在 768 维的 Cohere-MEDIUM-1M 与 Cohere-LARGE-10M 数据集测试中，SQ8 可将索引大小压缩至 FLAT 的约 1/3。
+In tests on the 768-dimensional Cohere-MEDIUM-1M and Cohere-LARGE-10M datasets, SQ8 compresses the index size to about 1/3 of FLAT.
 
-### 量化效果对比
+### Quantization Comparison
 
-| 数据集 | 向量维度 | 存储/索引方案 | 总磁盘占用 | 数据部分 | 索引部分 | 备注 |
+| Dataset | Vector Dimension | Storage / Index Scheme | Total Disk Usage | Data Part | Index Part | Notes |
 |--------|----------|---------------|------------|----------|----------|------|
-| Cohere-MEDIUM-1M | 768D | Doris (FLAT) | 5.647 GB (2.533 + 3.114) | 2.533 GB | 3.114 GB | 1M 向量，原始 + HNSW FLAT 索引 |
-| Cohere-MEDIUM-1M | 768D | Doris SQ INT8 | 3.501 GB (2.533 + 0.992) | 2.533 GB | 0.992 GB | INT8 对称量化 |
-| Cohere-MEDIUM-1M | 768D | Doris PQ (pq_m=384, pq_nbits=8) | 3.149 GB (2.535 + 0.614) | 2.535 GB | 0.614 GB | 乘积量化 |
-| Cohere-LARGE-10M | 768D | Doris (FLAT) | 56.472 GB (25.328 + 31.145) | 25.328 GB | 31.145 GB | 10M 向量 |
-| Cohere-LARGE-10M | 768D | Doris SQ INT8 | 35.016 GB (25.329 + 9.687) | 25.329 GB | 9.687 GB | INT8 量化，索引显著减小 |
+| Cohere-MEDIUM-1M | 768D | Doris (FLAT) | 5.647 GB (2.533 + 3.114) | 2.533 GB | 3.114 GB | 1M vectors, raw + HNSW FLAT index |
+| Cohere-MEDIUM-1M | 768D | Doris SQ INT8 | 3.501 GB (2.533 + 0.992) | 2.533 GB | 0.992 GB | INT8 symmetric quantization |
+| Cohere-MEDIUM-1M | 768D | Doris PQ (pq_m=384, pq_nbits=8) | 3.149 GB (2.535 + 0.614) | 2.535 GB | 0.614 GB | Product quantization |
+| Cohere-LARGE-10M | 768D | Doris (FLAT) | 56.472 GB (25.328 + 31.145) | 25.328 GB | 31.145 GB | 10M vectors |
+| Cohere-LARGE-10M | 768D | Doris SQ INT8 | 35.016 GB (25.329 + 9.687) | 25.329 GB | 9.687 GB | INT8 quantization, index significantly smaller |
 
-### 乘积量化（PQ）
+### Product Quantization (PQ)
 
-Doris 也支持乘积量化，但使用 PQ 时需要提供额外参数：
+Doris also supports product quantization, but using PQ requires extra parameters:
 
-- `pq_m`：表示将原始的高维向量分割成多少个子向量（向量维度 `dim` 必须能被 `pq_m` 整除）。
-- `pq_nbits`：表示每个子向量量化的比特数，决定子空间码本的大小，在 Faiss 中一般要求不大于 24。
+- `pq_m`: The number of sub-vectors the original high-dimensional vector is split into. The vector dimension `dim` must be divisible by `pq_m`.
+- `pq_nbits`: The number of bits used to quantize each sub-vector, which determines the codebook size of the subspace. In Faiss this is generally required to be no greater than 24.
 
-:::caution 注意
-PQ 量化在训练阶段对训练数据量有要求：至少需要与每一个聚类中心数量一样多，即**训练点个数 n >= 2 ^ pq_nbits**。
+:::caution Note
+PQ quantization has training-data requirements during the training phase: at least as many points as there are cluster centers. That is, **the number of training points n >= 2 ^ pq_nbits**.
 :::
 
 ```sql
@@ -444,9 +423,9 @@ CREATE TABLE sift_1M (
       "index_type"="hnsw",
       "metric_type"="l2_distance",
       "dim"="128",
-      "quantizer"="pq",    -- 指定使用 PQ 进行量化
-      "pq_m"="2",          -- 使用 PQ 时需要指定，表示将高维向量分割成 pq_m 个低维子向量
-      "pq_nbits"="2"       -- 使用 PQ 时需要指定，表示每个子空间码本的比特数
+      "quantizer"="pq",    -- Use PQ for quantization
+      "pq_m"="2",          -- Required when using PQ. Number of low-dim sub-vectors the high-dim vector is split into
+      "pq_nbits"="2"       -- Required when using PQ. Number of bits per subspace codebook
   )
 ) ENGINE=OLAP
 DUPLICATE KEY(id) COMMENT "OLAP"
@@ -456,70 +435,74 @@ PROPERTIES (
 );
 ```
 
-### 量化的代价
+### Cost of Quantization
 
-量化会带来额外构建开销：构建阶段需要大量距离计算，且每次计算需对量化值解码。以 128 维向量为例，随着行数增长构建时间上升，SQ 相比 FLAT 可能引入约 10 倍构建成本。
+Quantization introduces extra build overhead: the build phase requires many distance computations, and each computation must decode the quantized values. For 128-dimensional vectors, build time grows with the row count, and SQ may introduce roughly 10x build cost compared to FLAT.
 
 ![ANN-SQ-BUILD_COSTS](/images/ann-index-quantization-build-time.jpg)
 
 ---
 
-## 性能调优
+## Performance Tuning
 
-<!-- 知识类型: 性能调优 -->
-<!-- 适用场景: 高 QPS 低延迟需求 -->
+<!-- Knowledge type: performance tuning -->
+<!-- Applicable scenarios: high QPS, low latency requirements -->
 
-向量搜索是典型的二级索引点查场景。若对 QPS 与延迟要求较高，可参考以下建议。**经调优，在 FE 32C 64GB + BE 32C 64GB 机器上，Doris 可达到 3000+ QPS（数据集：Cohere-MEDIUM-1M）。**
+Vector search is a typical secondary-index point-query scenario. If you have high QPS and latency requirements, refer to the suggestions below. **After tuning, on FE 32C 64GB + BE 32C 64GB machines, Doris can reach 3000+ QPS (dataset: Cohere-MEDIUM-1M).**
 
-### 查询性能基准
+### Query Performance Benchmarks
 
-| 并发 | 方案 | QPS | 平均延迟 (s) | P99 延迟 (s) | CPU 使用率 | 召回率 |
+| Concurrency | Scheme | QPS | Avg Latency (s) | P99 Latency (s) | CPU Usage | Recall |
 |------|------|------|---------------|--------------|------------|--------|
 | 240 | Doris | 3340.4399 | 0.071368168 | 0.163399825 | 40% | 91.00% |
 | 240 | Doris SQ INT8 | 3188.6359 | 0.074728852 | 0.160370195 | 40% | 88.26% |
 | 240 | Doris SQ INT4 | 2818.2291 | 0.084663868 | 0.174826815 | 43% | 80.38% |
-| 240 | Doris 暴力计算 | 3.6787 | 25.554878826 | 29.363227973 | 100% | 100.00% |
+| 240 | Doris brute-force | 3.6787 | 25.554878826 | 29.363227973 | 100% | 100.00% |
 | 480 | Doris | 4155.7220 | 0.113387271 | 0.261086075 | 60% | 91.00% |
 | 480 | Doris SQ INT8 | 3833.1130 | 0.123040214 | 0.276912867 | 50% | 88.26% |
 | 480 | Doris SQ INT4 | 3431.0538 | 0.137636995 | 0.281631249 | 57% | 80.38% |
-| 480 | Doris 暴力计算 | 3.6787 | 25.554878826 | 29.363227973 | 100% | 100.00% |
+| 480 | Doris brute-force | 3.6787 | 25.554878826 | 29.363227973 | 100% | 100.00% |
 
-### 使用 Prepared Statement
+### Use Prepared Statements
 
-常见 embedding 模型输出通常为 768 维或更高。若将该向量作为字面量直接写入 SQL，**解析耗时可能超过实际执行时间**，因此建议使用 Prepared Statement。当前 Doris 不支持通过 mysql client 直接执行相关命令，需要通过 JDBC 调用。
+Common embedding-model outputs are typically 768 dimensions or higher. If you embed such a vector as a literal directly in SQL, **parsing time may exceed actual execution time**. Therefore, prepared statements are recommended. Currently Doris does not support running these commands directly through the mysql client, so JDBC is required.
 
-```
-1. 在 jdbc url 里面开启服务端 prepared statement
-url = jdbc:mysql://127.0.0.1:9030/demo?useServerPrepStmts=true
-2. 使用 prepared statement
-// use `?` for placement holders, readStatement should be reused
+1. Enable server-side prepared statements in the JDBC URL.
 
-PreparedStatement readStatement = conn.prepareStatement("SELECT id, l2_distance_approximate(embedding, cast (? as ARRAY<FLOAT>)) AS distance
-  FROM l2_distance_approximate
-  ORDER BY distance
-  LIMIT 10");
-  
-...
+    ```shell
+    url = jdbc:mysql://127.0.0.1:9030/demo?useServerPrepStmts=true
+    ```
 
-readStatement.setString("[0,11,77,24,3,0,0,0,28,70,125,8,0,0,0,0,44,35,50,45,9,0,0,0,4,0,4,56,18,0,3,9,16,17,59,10,10,8,57,57,100,105,125,41,1,0,6,92,8,14,73,125,29,7,0,5,0,0,8,124,66,6,3,1,63,5,0,1,49,32,17,35,125,21,0,3,2,12,6,109,21,0,0,35,74,125,14,23,0,0,6,50,25,70,64,7,59,18,7,16,22,5,0,1,125,23,1,0,7,30,14,32,4,0,2,2,59,125,19,4,0,0,2,1,6,53,33,2]");
+2. Use the prepared statement.
 
-ResultSet resultSet = readStatement.executeQuery();
-```
+    ```java
+    // use `?` for placement holders, readStatement should be reused
+    PreparedStatement readStatement = conn.prepareStatement("SELECT id, l2_distance_approximate(embedding, cast (? as ARRAY<FLOAT>)) AS distance
+        FROM l2_distance_approximate
+        ORDER BY distance
+        LIMIT 10");
+      
+    ...
+    
+    readStatement.setString("[0,11,77,24,3,0,0,0,28,70,125,8,0,0,0,0,44,35,50,45,9,0,0,0,4,0,4,56,18,0,3,9,16,17,59,10,10,8,57,57,100,105,125,41,1,0,6,92,8,14,73,125,29,7,0,5,0,0,8,124,66,6,3,1,63,5,0,1,49,32,17,35,125,21,0,3,2,12,6,109,21,0,0,35,74,125,14,23,0,0,6,50,25,70,64,7,59,18,7,16,22,5,0,1,125,23,1,0,7,30,14,32,4,0,2,2,59,125,19,4,0,0,2,1,6,53,33,2]");
+    
+    ResultSet resultSet = readStatement.executeQuery();
+    ```
 
-### 减少 segment 数量
+### Reduce the Number of Segments
 
-Doris 的 ANN 索引建立在 segment 上，segment 过多会引入额外开销。
+The Doris ANN index is built on segments. Too many segments introduce extra overhead.
 
-- **建议**：带 ANN 索引的表，每个 tablet 下 segment 数不应超过 5 个。
-- **方法**：调整 `be.conf` 中的 `write_buffer_size` 与 `vertical_compaction_max_segment_size`，增大单 segment 大小以减少数量；建议两者设置为 `10737418240`（10 GB）。
+- **Recommendation**: For tables with an ANN index, the number of segments per tablet should not exceed 5.
+- **How**: Adjust `write_buffer_size` and `vertical_compaction_max_segment_size` in `be.conf` to enlarge a single segment and reduce the count. Setting both to `10737418240` (10 GB) is recommended.
 
-### 减少 rowset 数量
+### Reduce the Number of Rowsets
 
-每次导入都会生成一个 rowset，过多 rowset 同样会增加调度开销。建议使用 **Stream Load** 或 **`INSERT INTO SELECT`** 做批量导入。
+Each load creates one rowset, and too many rowsets also increase scheduling overhead. Use **Stream Load** or **`INSERT INTO SELECT`** for batch loading.
 
-### ANN 索引常驻内存
+### Keep ANN Indexes Resident in Memory
 
-当前 ANN 索引算法基于内存。若查询到的 segment 索引未驻留内存，会触发磁盘 I/O。为性能考虑建议常驻：在 `be.conf` 中设置：
+The current ANN index algorithm is memory-based. If a queried segment's index is not resident in memory, it triggers disk I/O. For performance, keep it resident by setting in `be.conf`:
 
 ```
 enable_segment_cache_prune=false
@@ -527,7 +510,7 @@ enable_segment_cache_prune=false
 
 ### `parallel_pipeline_task_num = 1`
 
-ANN TopN 查询返回行数很少，无需高并行度，建议：
+ANN TopN queries return very few rows and do not need high parallelism. Use:
 
 ```sql
 SET parallel_pipeline_task_num = 1;
@@ -535,7 +518,7 @@ SET parallel_pipeline_task_num = 1;
 
 ### `enable_profile = false`
 
-若对延迟极其敏感，建议关闭 query profile：
+If latency is extremely sensitive, disable the query profile:
 
 ```sql
 SET enable_profile = false;
@@ -545,25 +528,25 @@ SET enable_profile = false;
 
 ## Python SDK
 
-<!-- 知识类型: 生态集成 -->
+<!-- Knowledge type: ecosystem integration -->
 
-在 AI 时代，Python 已成为数据处理与智能应用开发的主流语言。为了让开发者更方便地在 Python 环境中使用 Doris 的向量搜索能力，社区贡献了 Python SDK：
+In the AI era, Python has become the mainstream language for data processing and intelligent application development. To make it easier for developers to use Doris vector search in Python, the community contributed a Python SDK:
 
-- [doris_vector_search](https://github.com/uchenily/doris_vector_search)：针对向量距离检索做了性能优化，是目前性能较好的 Doris vector search Python SDK。
+- [doris_vector_search](https://github.com/uchenily/doris_vector_search): Optimized for vector distance retrieval. Currently the best-performing Doris vector-search Python SDK.
 
 ---
 
-## 使用限制
+## Usage Limitations
 
-<!-- 知识类型: 限制约束 + 故障排查 -->
+<!-- Knowledge type: limitations and constraints + troubleshooting -->
 
-使用 Doris 向量索引时，需要注意以下限制：
+When using the Doris vector index, note the following limitations:
 
-1. **数据类型限制**：ANN Index 对应的列必须是 `NOT NULLABLE` 的 `Array<Float>`。导入时需确保该列每个向量的长度均等于索引属性中指定的维度（`dim`），否则会报错。
+1. **Data type limitation**: The column on which an ANN Index is built must be a `NOT NULLABLE` `Array<Float>`. During data load, the length of every vector in this column must equal the dimension specified in the index property (`dim`), otherwise an error is reported.
 
-2. **表模型限制**：ANN Index 只能在 **DuplicateKey** 表模型上使用。
+2. **Table model limitation**: ANN Index can only be used on the **Duplicate Key** table model.
 
-3. **谓词列必须有二级索引**：Doris 使用前过滤语义（谓词计算在 AnnTopN 之前）。当 SQL 中的谓词涉及到的列**没有二级索引**时，为保证结果正确性，Doris 会回退到暴力计算。例如：
+3. **Predicate columns must have a secondary index**: Doris uses pre-filter semantics (predicates are evaluated before AnnTopN). When the columns referenced by predicates in the SQL **do not have a secondary index**, Doris falls back to brute-force computation to ensure correctness. For example:
 
     ```sql
     SELECT id, l2_distance_approximate(embedding, [xxx]) AS distance
@@ -572,56 +555,56 @@ SET enable_profile = false;
         ORDER BY distance limit 10;
     ```
 
-    虽然 `id` 是主键，但未在该列上构建倒排等可精确定位行号的二级索引，此类谓词在索引分析之后执行。为保证 ANN TopN 的前过滤语义，系统会回退为暴力计算。
+    Although `id` is the primary key, no secondary index (such as inverted) that can precisely locate row numbers has been built on this column. Such predicates are evaluated after index analysis. To preserve the pre-filter semantics of ANN TopN, the system falls back to brute-force computation.
 
-4. **距离函数与 metric 类型必须匹配**：如果 SQL 中指定的距离函数与 DDL 中索引的 `metric_type` 不匹配，那么 Doris 无法通过 ANN 索引进行 TopN 计算（即使你使用的是 `l2_distance_approximate` / `inner_product_approximate`）。
+4. **The distance function must match the metric type**: If the distance function used in the SQL does not match the `metric_type` of the index defined in the DDL, Doris cannot use the ANN index for TopN computation (even when you use `l2_distance_approximate` / `inner_product_approximate`).
 
-5. **inner_product 必须使用 DESC 排序**：如果 `metric_type` 是 `inner_product`，那么只有 `ORDER BY inner_product_approximate() DESC LIMIT N`（**`DESC` 不能省略**）才能通过 ANN 索引加速。
+5. **`inner_product` must use DESC sorting**: When `metric_type` is `inner_product`, only `ORDER BY inner_product_approximate() DESC LIMIT N` (**`DESC` cannot be omitted**) can be accelerated by the ANN index.
 
-6. **函数参数顺序**：`xxx_approximate()` 函数的第一个参数为 `ColumnArray`，第二个参数为 `CAST` 或 `ArrayLiteral` 时，才能触发索引分析；交换位置会回退暴力搜索。
+6. **Function argument order**: The `xxx_approximate()` function triggers index analysis only when the first argument is a `ColumnArray` and the second argument is a `CAST` or `ArrayLiteral`. Swapping the order causes a fallback to brute-force search.
 
 ---
 
 ## FAQ
 
-### Q1：Doris 的 ANN 索引支持哪些距离度量？
+### Q1: Which distance metrics does the Doris ANN index support?
 
-目前支持 `l2_distance`（欧氏距离）和 `inner_product`（内积）。如需 Cosine 相似度，请参考[使用 Cosine 相似度](#使用-cosine-相似度)章节。
+Currently `l2_distance` (Euclidean distance) and `inner_product` are supported. For cosine similarity, see the [Using Cosine Similarity](#using-cosine-similarity) section.
 
-### Q2：为什么我的 ANN 查询没有走索引？
+### Q2: Why does my ANN query not use the index?
 
-可能原因：
+Possible reasons:
 
-- 距离函数与 `metric_type` 不匹配。
-- 使用 `inner_product` 时未使用 `ORDER BY ... DESC`。
-- 函数参数顺序颠倒（`ColumnArray` 必须为第一个参数）。
-- 涉及的过滤列缺少倒排等二级索引，触发了暴力计算回退。
+- The distance function does not match the `metric_type`.
+- When using `inner_product`, `ORDER BY ... DESC` was not used.
+- Function argument order is reversed (`ColumnArray` must be the first argument).
+- The filter columns lack a secondary index such as an inverted index, triggering a brute-force fallback.
 
-### Q3：如何选择 HNSW、IVF、IVF On-Disk？
+### Q3: How do I choose between HNSW, IVF, and IVF On-Disk?
 
-| 索引 | 内存占用 | 查询性能 | 适用场景 |
+| Index | Memory Usage | Query Performance | Applicable Scenarios |
 |------|----------|----------|----------|
-| HNSW | 高（必须全量驻留内存） | 高 | 中小规模、低延迟要求高 |
-| IVF | 中 | 中 | 大规模数据 |
-| IVF On-Disk | 低（落盘 + 缓存） | 中 | 超大规模数据、内存受限 |
+| HNSW | High (must be fully resident in memory) | High | Small-to-medium scale, strong low-latency requirements |
+| IVF | Medium | Medium | Large-scale data |
+| IVF On-Disk | Low (on-disk + cache) | Medium | Very large-scale data, memory-constrained |
 
-### Q4：内存不够用怎么办？
+### Q4: What if I do not have enough memory?
 
-可以通过量化降低内存占用：
+Reduce memory usage through quantization:
 
-- 优先尝试 `sq8`（INT8 标量量化），通常可将索引压缩至原来的 1/3，召回率影响较小。
-- 内存非常紧张时可使用 `sq4` 或 `pq`，但召回率会有一定下降。
+- Try `sq8` (INT8 scalar quantization) first. It typically compresses the index to about 1/3 of the original size with limited recall impact.
+- When memory is very tight, use `sq4` or `pq`, but recall will drop somewhat.
 
-### Q5：如何在向量检索中结合关键字过滤？
+### Q5: How do I combine keyword filtering with vector retrieval?
 
-为过滤列建立倒排索引，再使用带 `WHERE` 子句的 ANN 查询。详见[带过滤条件的 ANN 搜索](#带过滤条件的-ann-搜索)。
+Build an inverted index on the filter columns, then use an ANN query with a `WHERE` clause. See [ANN Search with Filters](#ann-search-with-filters).
 
-### Q6：如何提升 QPS？
+### Q6: How do I improve QPS?
 
-参考[性能调优](#性能调优)章节，重点：
+See the [Performance Tuning](#performance-tuning) section. Key points:
 
-- 使用 Prepared Statement 避免 SQL 解析开销。
-- 减少 segment 与 rowset 数量。
-- 设置 ANN 索引常驻内存。
-- `parallel_pipeline_task_num = 1`。
-- 关闭 query profile。
+- Use prepared statements to avoid SQL parsing overhead.
+- Reduce the number of segments and rowsets.
+- Keep the ANN index resident in memory.
+- `parallel_pipeline_task_num = 1`.
+- Disable the query profile.

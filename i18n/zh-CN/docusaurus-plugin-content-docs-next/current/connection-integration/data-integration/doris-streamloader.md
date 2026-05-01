@@ -31,7 +31,7 @@
 | 资源 | 地址 |
 |---|---|
 | 源代码 | [https://github.com/apache/doris-streamloader](https://github.com/apache/doris-streamloader) |
-| 二进制下载 | [https://doris.apache.org/zh-CN/download](https://doris.apache.org/zh-CN/download) |
+| 二进制下载 | [https://doris.apache.org/download](https://doris.apache.org/download) |
 
 :::note
 下载结果即为可执行二进制文件，无需额外编译安装。

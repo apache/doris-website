@@ -107,6 +107,34 @@ const sidebars: SidebarsConfig = {
                     label: 'Deploying on Cloud',
                     items: ['install/deploy-on-cloud/doris-on-aws'],
                 },
+                {
+                    type: 'category',
+                    label: 'Compute-Storage Decoupled Guide',
+                    collapsed: true,
+                    link: {type: 'doc', id: 'compute-storage-decoupled/intro'},
+                    items: [
+                        'compute-storage-decoupled/managing-compute-cluster',
+                        'compute-storage-decoupled/managing-storage-vault',
+                        'compute-storage-decoupled/recycler',
+                        'compute-storage-decoupled/upgrade',
+                        {
+                            type: 'category',
+                            label: 'File Cache',
+                            items: [
+                                'compute-storage-decoupled/file-cache/file-cache',
+                                'compute-storage-decoupled/file-cache/file-cache-internals',
+                            ],
+                        },
+                        {
+                            type: 'category',
+                            label: 'Read/Write Separation',
+                            items: [
+                                'compute-storage-decoupled/rw/read-write-separation',
+                                'compute-storage-decoupled/rw/file-cache-rw-compute-group-best-practice',
+                            ],
+                        },
+                    ],
+                },
             ],
         },
         {
@@ -563,11 +591,6 @@ const sidebars: SidebarsConfig = {
                         'query-acceleration/optimization-technology-principle/topn-optimization',
                         'query-acceleration/optimization-technology-principle/statistics',
                     ],
-                },
-                {
-                    type: 'category',
-                    label: 'Benchmarks',
-                    items: ['benchmark/ssb', 'benchmark/tpch', 'benchmark/tpcds'],
                 },
             ],
         },

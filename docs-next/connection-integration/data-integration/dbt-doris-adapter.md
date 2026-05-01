@@ -1,133 +1,145 @@
 ---
 {
     "title": "DBT Doris Adapter",
-    "language": "zh-CN",
-    "description": "DBT(Data Build Tool) 是专注于做 ELT（提取、加载、转换）中的 T（Transform）—— “转换数据”环节的组件 dbt-doris adapter 是基于dbt-core 开发，依赖于mysql-connector-python驱动对 doris 进行数据转换。"
+    "language": "en",
+    "description": "Use the dbt-doris adapter to build ELT data transformation pipelines on Apache Doris, with support for view, table, and incremental materializations as well as advanced capabilities such as seed and catalog."
 }
 ---
 
-[DBT(Data Build Tool)](https://docs.getdbt.com/docs/introduction) 是专注于做 ELT（提取、加载、转换）中的 T（Transform）—— “转换数据”环节的组件
-`dbt-doris` adapter 是基于`dbt-core` 开发，依赖于`mysql-connector-python`驱动对 doris 进行数据转换。
+<!-- Knowledge type: Tool integration guide -->
+<!-- Use case: Use dbt on Doris for data transformation (the T step in ELT) -->
 
-代码仓库：https://github.com/apache/doris/tree/master/extension/dbt-doris
+[DBT (Data Build Tool)](https://docs.getdbt.com/docs/introduction) is the component that focuses on the T (Transform) step, the data transformation phase, in the ELT (Extract, Load, Transform) flow. The `dbt-doris` adapter is built on top of `dbt-core` and relies on the `mysql-connector-python` driver to perform data transformation on Doris.
 
-## 版本支持
+Code repository: https://github.com/apache/doris/tree/master/extension/dbt-doris
 
-| doris   | python      | dbt-core | dbt-doris |
-|---------|-------------|----------|----------|
-| >=1.2.5 | >=3.8,<=3.10| >=1.5.0  | <=0.3    |
-| >=1.2.5 | >=3.9       | >=1.8.0  | >=0.4    |
+## Version Compatibility
 
+Before choosing a dbt-doris version, verify the version compatibility between Doris, Python, and dbt-core:
 
-## dbt-doris adapter 使用
+| Doris    | Python        | dbt-core | dbt-doris |
+| -------- | ------------- | -------- | --------- |
+| >= 1.2.5 | >= 3.8, <=3.10 | >= 1.5.0 | <= 0.3    |
+| >= 1.2.5 | >= 3.9        | >= 1.8.0 | >= 0.4    |
 
-### dbt-doris adapter 安装
-使用 pip 安装：
+## Quick Start
+
+### Install the dbt-doris Adapter
+
+Install the adapter with pip:
+
 ```shell
 pip install dbt-doris
 ```
-安装行为会默认安装所有 dbt 运行的依赖，可以使用如下命令查看验证：
+
+The install command automatically pulls in all dependencies required to run dbt. After installation, verify it with the following command:
+
 ```shell
 dbt --version
 ```
-如果系统未识别 dbt 这个命令，可以创建一条软连接：
+
+If the system does not recognize the `dbt` command, create a symbolic link:
+
 ```shell
 ln -s /usr/local/python3/bin/dbt /usr/bin/dbt
 ```
 
-### dbt-doris adapter 初始化
+### Initialize a dbt Project
+
+Run the following command to enter the interactive initialization flow:
 
 ```shell
-dbt init 
+dbt init
+
 ```
-会出现询问式命令行，输入相应配置如下即可初始化一个 dbt 项目：
 
-| 名称       | 默认值  | 含义                                           |  
-|----------|------|----------------------------------------------|
-| project  |      | 项目名                                          | 
-| database |      | 输入对应编号选择适配器                                  | 
-| host     |      | doris 的 host                                 | 
-| port     | 9030 | doris 的 MySQL Protocol Port                  |
-| schema   |      | 在 dbt-doris 中，等同于 database，库名                |
-| username |      | doris 的 username                             |
-| password |      | doris 的 password                             |
-| threads  | 1    | dbt-doris 中并行度（设置与集群能力不匹配的并行度会增加 dbt 运行失败风险） |
+Enter the configuration items in the table below as prompted to complete project initialization:
 
+| Item     | Default | Description                                                                |
+| -------- | ---- | ----------------------------------------------------------------- |
+| project  | -    | Project name                                                              |
+| database | -    | Select the adapter (enter the corresponding number)                                                     |
+| host     | -    | Doris host                                                       |
+| port     | 9030 | Doris MySQL Protocol port                                          |
+| schema   | -    | In dbt-doris this is equivalent to database, that is, the database name                                        |
+| username | -    | Doris username                                                         |
+| password | -    | Doris password                                                          |
+| threads  | 1    | dbt-doris parallelism (setting it too high increases the risk of run failures; align it with your cluster capacity)                                |
 
-### dbt-doris adapter 运行
+### Run the dbt Project
 
-相关 dbt 运行文档，可参考[此处](https://docs.getdbt.com/docs/get-started/run-your-dbt-projects)。
-进入到刚刚创建的项目目录下面，执行默认的 dbt 模型：
+Enter the newly created project directory and execute the default dbt models:
+
 ```shell
-dbt run 
-```
-可以看到运行了两个 model：my_first_dbt_model 和 my_second_dbt_model
-
-他们分别是物化表 table 和视图 view。
-
-可以登陆 doris，查看 my_first_dbt_model 和 my_second_dbt_model 的数据结果及建表语句。
-
-### dbt-doris adapter 物化方式
-dbt-doris 的 物化方式（Materialization）支持以下三种：
-
-1. view
-
-2. table
-
-3. incremental
-
-**View**
-
-使用`view`作为物化模式，在 Models 每次运行时都会通过 create view as 语句重新构建为视图。(默认情况下，dbt 的物化方式为 view)
-``` 
-优点：没有存储额外的数据，源数据之上的视图将始终包含最新的记录。
-缺点：执行较大转换或嵌套在其他view之上的view查询速度很慢。
-建议：通常从模型的视图开始，只有当存在性能问题时才更改为另一个物化方式。view最适合不进行重大转换的模型，例如重命名，列变更。
+dbt run
 ```
 
-配置项：
+After a successful run, two example models are executed:
+
+- `my_first_dbt_model`: materialized as a table
+- `my_second_dbt_model`: materialized as a view
+
+You can log in to Doris to inspect the resulting data and the table creation statements. For more details on running dbt, see the [dbt official documentation](https://docs.getdbt.com/docs/get-started/run-your-dbt-projects).
+
+## Materialization
+
+<!-- Knowledge type: Architecture decision -->
+
+dbt-doris supports the following three materialization types:
+
+| Materialization | Use case                                                | Pros                       | Cons                              |
+| ----------- | --------------------------------------------------- | ------------------------ | ------------------------------- |
+| view        | Models that only perform lightweight transformations such as renaming or column changes                                 | No extra storage; always based on the latest source records              | Slow queries for large or nested scenarios                   |
+| table       | Models frequently queried by BI tools or downstream systems                                   | Fast queries                    | Long build time, extra storage, and no incremental support             |
+| incremental | Event-based scenarios, or models where dbt runs are too slow and need incremental syncing                          | Only new data is transformed, significantly reducing build time                 | More complex configuration; an advanced dbt usage that requires the scenario and components to be aligned         |
+
+> The default materialization is `view`. Start with view, and switch to another type only when performance issues arise.
+
+### View Materialization
+
+Each model run rebuilds the view through a `CREATE VIEW AS` statement.
+
+Configure it in `dbt_project.yml`:
+
 ```yaml
 models:
-  <resource-path>:
-    +materialized: view
+    <resource-path>:
+        +materialized: view
 ```
-或者在 model 文件里面写
+
+Or configure it in the model file:
+
 ```jinja
 {{ config(materialized = "view") }}
 ```
 
-**Table**
+### Table Materialization
 
-使用 `table` 物化模式时，您的模型在每次运行时都会通过 `create table as select` 语句重建为表。
-对于 dbt 的 tablet 物化，dbt-doris 采用以下步骤保证数据更迭时候的原子性：
+Each model run rebuilds the table through a `CREATE TABLE AS SELECT` statement.
 
-1. `create table this_table_temp as {{ model sql}}`，首先创建临时表。
+dbt-doris guarantees the atomicity of table materialization during data updates with the following steps:
 
-2. 判断 `this_table` 是否不存在，即是首次创建，执行`rename`，将临时表变更为最终表。
+1. Execute `CREATE TABLE this_table_temp AS {{ model sql }}` to create a temporary table first.
+2. If `this_table` does not exist (first-time creation), execute `RENAME` to rename the temporary table to the final table.
+3. If `this_table` already exists, execute `ALTER TABLE this_table REPLACE WITH TABLE this_table_temp PROPERTIES('swap' = 'False')`. This operation swaps the table names and drops `this_table_temp`. Atomicity is guaranteed by the [Doris kernel transaction mechanism](../../sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-REPLACE).
 
-3. 若已经存在，则 `alter table this_table REPLACE WITH TABLE this_table_temp PROPERTIES('swap' = 'False')`，此操作可以交换表名并且删除`this_table_temp`临时表，[此过程](../sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-REPLACE)通过 Doris 内核的事务机制保证本次操作原子性。
-``` 
-优点：table查询速度会比view快。
-缺点：table需要较长时间才能构建或重建，会额外存储数据，而且不能够做增量数据同步。
-建议：建议对 BI 工具查询的model或下游查询、转换等操作较慢的model使用table物化方式。
-```
-
-配置项：
+Configure it in `dbt_project.yml`:
 
 ```yaml
 models:
-  <resource-path>:
-    +materialized: table
-    +duplicate_key: [ <column-name>, ... ],
-    +replication_num: int,
-    +partition_by: [ <column-name>, ... ],
-    +partition_type: <engine-type>,
-    +partition_by_init: [<pertition-init>, ... ]
-    +distributed_by: [ <column-name>, ... ],
-    +buckets: int | 'auto',
-    +properties: {<key>:<value>,...}
+    <resource-path>:
+        +materialized: table
+        +duplicate_key: [ <column-name>, ... ],
+        +replication_num: int,
+        +partition_by: [ <column-name>, ... ],
+        +partition_type: <engine-type>,
+        +partition_by_init: [<pertition-init>, ... ]
+        +distributed_by: [ <column-name>, ... ],
+        +buckets: int | 'auto',
+        +properties: {<key>:<value>,...}
 ```
-或者在 model 文件里面写
+
+Or configure it in the model file:
 
 ```jinja
 {{ config(
@@ -145,55 +157,45 @@ models:
 ) }}
 ```
 
-上述配置项详情如下：
+Configuration item descriptions:
 
-| 配置项                 | 描述                                   | Required? |
-|---------------------|--------------------------------------|-----------|
-| `materialized`      | 该表的物化形式（对应创建表模型为明细模型（Duplicate））    | Required  |
-| `duplicate_key`     | 明细模型的排序列                             | Optional  |
-| `replication_num`   | 表副本数                                 | Optional  |
-| `partition_by`      | 表分区列                                 | Optional  |
-| `partition_type`    | 表分区类型，range 或 list .(default: `RANGE`) | Optional  |
-| `partition_by_init` | 初始化的表分区                              | Optional  |
-| `distributed_by`    | 表桶区列                                 | Optional  |
-| `buckets`           | 分桶数量                                 | Optional  |
-| `properties`        | 建表的其他配置                              | Optional  |
+| Item               | Description                                | Required    |
+| ----------------- | --------------------------------- | ------- |
+| `materialized`    | Materialization type (corresponds to the Doris Duplicate detail model)       | Required |
+| `duplicate_key`   | Sort columns of the Duplicate model                          | Optional |
+| `replication_num` | Number of table replicas                              | Optional |
+| `partition_by`    | Table partition columns                              | Optional |
+| `partition_type`  | Partition type, `range` or `list`, default `RANGE`     | Optional |
+| `partition_by_init` | Initial table partitions                          | Optional |
+| `distributed_by`  | Bucket columns                               | Optional |
+| `buckets`         | Number of buckets                              | Optional |
+| `properties`      | Other configurations for table creation                           | Optional |
 
+### Incremental Materialization
 
+Incremental materialization takes the result of the previous dbt run as the baseline and incrementally inserts or updates new records into the table. dbt-doris provides two incremental strategies (set via `incremental_strategy`):
 
+- `insert_overwrite`: depends on the unique model. The model must be specified as incremental at initialization, and incremental data is overwritten through aggregation columns.
+- `append`: depends on the duplicate model. Only appends incremental data without modifying historical data, and does not require a `unique_key`.
 
-**Incremental**
-
-以上次运行 dbt 的 incremental model 结果为基准，增量的将记录插入或更新到表中。
-doris 的增量实现有两种方式，此项设计两种增量（incremental_strategy 设置）的策略：
-
-* `insert_overwrite`：依赖于 unique 模型，如果有增量需求，在初始化该模型的数据时就指定物化为 incremental，通过指定聚合列进行聚合，实现增量数据的覆盖。
-
-* `append`：依赖于`duplicate`模型，仅仅对增量数据做追加，不涉及修改任何历史数据。因此不需要指定 unique_key。
-
-``` 
-优点：只需转换新记录，可显著减少构建时间。
-缺点：incremental模式需要额外的配置，是 dbt 的高级用法，需要复杂场景的支持和对应组件的适配。
-建议：增量模型最适合基于事件相关的场景或 dbt 运行变得太慢时使用增量模型
-```
-
-配置项：
+Configure it in `dbt_project.yml`:
 
 ```yaml
 models:
-  <resource-path>:
-    +materialized: incremental
-    +incremental_strategy: <strategy>
-    +unique_key: [ <column-name>, ... ],
-    +replication_num: int,
-    +partition_by: [ <column-name>, ... ],
-    +partition_type: <engine-type>,
-    +partition_by_init: [<pertition-init>, ... ]
-    +distributed_by: [ <column-name>, ... ],
-    +buckets: int | 'auto',
-    +properties: {<key>:<value>,...}
+    <resource-path>:
+        +materialized: incremental
+        +incremental_strategy: <strategy>
+        +unique_key: [ <column-name>, ... ],
+        +replication_num: int,
+        +partition_by: [ <column-name>, ... ],
+        +partition_type: <engine-type>,
+        +partition_by_init: [<pertition-init>, ... ]
+        +distributed_by: [ <column-name>, ... ],
+        +buckets: int | 'auto',
+        +properties: {<key>:<value>,...}
 ```
-或者在 model 文件里面写
+
+Or configure it in the model file:
 
 ```jinja
 {{ config(
@@ -212,56 +214,57 @@ models:
 }}
 ```
 
-上述配置项详情如下：
+Configuration item descriptions:
 
-| 配置项                        | 描述                                   | Required? |
-|----------------------------|--------------------------------------|-----------|
-| `materialized`             | 该表的物化形式                              | Required  |
-| `incremental_strategy`     | 增量策略                                 | Optional  |
-| `unique_key`               | unique 表的 key 列                         | Optional  |
-| `replication_num`          | 表副本数                                 | Optional  |
-| `partition_by`             | 表分区列                                 | Optional  |
-| `partition_type`           | 表分区类型，range 或 list .(default: `RANGE`) | Optional  |
-| `partition_by_init`        | 初始化的表分区                              | Optional  |
-| `distributed_by`           | 表桶区列                                 | Optional  |
-| `buckets`                  | 分桶数量                                 | Optional  |
-| `properties`               | 建表的其他配置                              | Optional  |
+| Item                    | Description                            | Required    |
+| ---------------------- | ----------------------------- | ------- |
+| `materialized`         | Materialization type                          | Required |
+| `incremental_strategy` | Incremental strategy                          | Optional |
+| `unique_key`           | Key columns of the unique table                  | Optional |
+| `replication_num`      | Number of table replicas                          | Optional |
+| `partition_by`         | Table partition columns                          | Optional |
+| `partition_type`       | Partition type, `range` or `list`, default `RANGE` | Optional |
+| `partition_by_init`    | Initial table partitions                       | Optional |
+| `distributed_by`       | Bucket columns                           | Optional |
+| `buckets`              | Number of buckets                          | Optional |
+| `properties`           | Other configurations for table creation                       | Optional |
 
-### dbt-doris adapter seed
+## Seed: Loading CSV Data
 
-[`seed`](https://docs.getdbt.com/docs/build/seeds) 是用于加载 csv 等数据文件时的功能模块，它是一种加载文件入库参与模型构建的一种方式，但有以下注意事项：
+[Seed](https://docs.getdbt.com/docs/build/seeds) is used to load data files such as CSV into the database to participate in model building. Note the following when using it:
 
-1. seed 不应用于加载原始数据（例如，从生产数据库导出大型 CSV 文件）。
+1. Seed should not be used to load raw data (for example, large CSV files exported from a production database).
+2. Seeds are version-controlled and are best suited for small files that contain business logic, such as country/region code lists or employee IDs.
+3. For large files, dbt seed has poor performance, so use methods such as Stream Load to load CSV into Doris instead.
 
-2. 由于 seed 是受版本控制的，因此它们最适合包含特定于业务的逻辑的文件，例如国家/地区代码列表或员工的用户 ID。
-
-3. 对于大文件，使用 dbt 的 seed 功能加载 CSV 的性能不佳。应该考虑使用 streamload 等方式将这些 CSV 加载到 doris 中。
-
-用户可以在 dbt project 的目录下面看到 seeds 的目录，在里面上传 csv 文件和 seed 配置文件并运行
+After placing the CSV files and the seed configuration files in the `seeds` directory of the dbt project, run:
 
 ```shell
- dbt seed --select seed_name
+dbt seed --select seed_name
 ```
 
-常见 seed 配置文件写法，支持对列类型的定义：
+A common seed configuration file example (which supports custom column types):
 
 ```yaml
 seeds:
-  seed_name: # 种子名称，在 seed 构建后，会作为表名
-    config: 
-      schema: demo_seed # 在 seed 构建后，会作为 database 的一部分
-      full_refresh: true
-      replication_num: 1
-      column_types:
-        id: bigint
-        phone: varchar(32)
-        ip: varchar(15)
-        name: varchar(20)
-        cost: DecimalV3(19,10)
+    seed_name: # Seed name; used as the table name after build
+        config:
+            schema: demo_seed # Used as part of the database after build
+            full_refresh: true
+            replication_num: 1
+            column_types:
+                id: bigint
+                phone: varchar(32)
+                ip: varchar(15)
+                name: varchar(20)
+                cost: DecimalV3(19,10)
 ```
-## 使用示例
 
-### 视图模型样例参考
+## Usage Examples
+
+<!-- Knowledge type: Operation steps -->
+
+### View Model Example
 
 ```sql
 {{ config(materialized='view') }}
@@ -277,7 +280,7 @@ group by u.user_id
 order by u.user_id
 ```
 
-### 表模型样例参考
+### Table Model Example
 
 ```sql
 {{ config(materialized='table') }}
@@ -293,13 +296,13 @@ group by u.user_id
 order by u.user_id
 ```
 
-### 增量模型样例参考 (duplicate 模式)
+### Incremental Model Example (duplicate Mode)
 
-建表为 duplicate 模式，无数据聚合，不需要指定 unique_key
+The duplicate mode does not aggregate data and does not require a `unique_key`:
 
 ```sql
 {{ config(
-    materialized='incremental', 
+    materialized='incremental',
     replication_num=1
 ) }}
 
@@ -312,14 +315,14 @@ with source_data as (
 select * from source_data
 ```
 
-### 增量模型样例参考 (unique 模式)
+### Incremental Model Example (unique Mode)
 
-建表为 unique 模式，数据聚合，必须指定 unique_key
+The unique mode aggregates data and must specify a `unique_key`:
 
 ```sql
 {{ config(
-materialized='incremental', 
-unique_key=['account_id','create_time']
+    materialized='incremental',
+    unique_key=['account_id','create_time']
 ) }}
 
 with source_data as (
@@ -331,11 +334,11 @@ with source_data as (
 select * from source_data
 ```
 
-### 增量模型全量刷新样例参考
+### Incremental Model Full Refresh Example
 
 ```sql
 {{ config(
-    materialized='incremental', 
+    materialized='incremental',
     full_refresh = true
 )}}
 
@@ -343,16 +346,16 @@ select * from
  {{ source('dbt_source', 'sell_user') }}
 ```
 
-### 设置分桶规则样例参考
+### Bucketing Rule Example
 
-此处 buckets 可以填 auto 或者正整数，分别代表自动分桶和设置固定分桶数
+`buckets` accepts `auto` or a positive integer, corresponding to automatic bucketing or a fixed bucket count, respectively:
 
 ```sql
 {{ config(
-    materialized='incremental', 
-    unique_key=['account_id',"create_time"], 
-    distributed_by=['account_id'], 
-    buckets='auto' 
+    materialized='incremental',
+    unique_key=['account_id',"create_time"],
+    distributed_by=['account_id'],
+    buckets='auto'
 ) }}
 
 with source_data as (
@@ -371,11 +374,11 @@ select
 {% endif %}
 ```
 
-### 设置副本数样例参考
+### Replica Count Example
 
 ```sql
 {{ config(
-    materialized='table', 
+    materialized='table',
     replication_num=1
 )}}
 
@@ -388,14 +391,14 @@ with source_data as (
 select * from source_data
 ```
 
-### 动态分区样例参考
+### Dynamic Partition Example
 
 ```sql
 {{ config(
-    materialized='incremental', 
+    materialized='incremental',
     partition_by = 'create_time',
-    partition_type = 'range', 
-    -- 这里的 properties 是 create table 语句中的 properties，这里面写了动态分区的相关配置
+    partition_type = 'range',
+    -- The properties here are the properties in the create table statement; the dynamic partition configurations are written below
     properties = {
         "dynamic_partition.time_unit":"DAY",
         "dynamic_partition.end":"8",
@@ -417,19 +420,21 @@ select
     from source_data
 
 {% if is_incremental() %}
-    where    
+    where
     create_time = DATE_SUB(CURDATE(), INTERVAL 1 DAY)
 {% endif %}
 ```
 
-### 常规分区样例参考
+### Regular Partition Example
+
+In the current Doris version, historical partitions must be manually specified through `partition_by_init`:
 
 ```sql
 {{ config(
-    materialized='incremental', 
+    materialized='incremental',
     partition_by = 'create_time',
-    partition_type = 'range',  
-    -- 这里的 partition_by_init 是指的 创建分区表的历史分区，当前 doris 版本的历史分区需要手动指定
+    partition_type = 'range',
+    -- partition_by_init is used to specify the historical partitions of the partitioned table
     partition_by_init = [
         "PARTITION `p20240601` VALUES [(\"2024-06-01\"),  (\"2024-06-02\"))",
         "PARTITION `p20240602` VALUES [(\"2024-06-02\"),  (\"2024-06-03\"))"
@@ -447,18 +452,20 @@ select
     from source_data
 
 {% if is_incremental() %}
-    where    
-    -- 如果提供了 my_date 变量，则使用该通路（通过 dbt run --vars '{"my_date": "\"2024-06-03\""}' 命令）如果没有提供 my_date 变量 (直接 dbt run )，则使用当前日期的前一天 , 这里的增量选择建议直接使用 doris 的 CURDATE() 函数，这个通路也是生产环境经常走的。 
-    create_time = {{ var('my_date' , 'DATE_SUB(CURDATE(), INTERVAL 1 DAY)') }} 
+    where
+    -- If the my_date variable is provided, this branch is taken (using the dbt run --vars '{"my_date": "\"2024-06-03\""}' command);
+    -- If the my_date variable is not provided (running dbt run directly), use the day before the current date.
+    -- Using the Doris CURDATE() function is recommended; this is also the common approach in production.
+    create_time = {{ var('my_date' , 'DATE_SUB(CURDATE(), INTERVAL 1 DAY)') }}
 
 {% endif %}
 ```
 
-### 批处理日期设置参数样例参考
+### Batch Date Parameter Example
 
 ```sql
 {{ config(
-    materialized='incremental', 
+    materialized='incremental',
     partition_by = 'create_time',
     partition_type = 'range',
     ...
@@ -475,45 +482,48 @@ select
     from source_data
 
 {% if is_incremental() %}
-    where    
-    -- 如果提供了 my_date 变量，则使用该通路（通过 dbt run --vars '{"my_date": "\"2024-06-03\""}' 命令）如果没有提供 my_date 变量 (直接 dbt run )，则使用当前日期的前一天 , 这里的增量选择建议直接使用 doris 的 CURDATE() 函数，这个通路也是生产环境经常走的。 
-    create_time = {{ var('my_date' , 'DATE_SUB(CURDATE(), INTERVAL 1 DAY)') }} 
+    where
+    -- If the my_date variable is provided, this branch is taken (using the dbt run --vars '{"my_date": "\"2024-06-03\""}' command);
+    -- If the my_date variable is not provided (running dbt run directly), use the day before the current date.
+    -- Using the Doris CURDATE() function is recommended; this is also the common approach in production.
+    create_time = {{ var('my_date' , 'DATE_SUB(CURDATE(), INTERVAL 1 DAY)') }}
 
 {% endif %}
 ```
 
-### 自定义表数据列类型及精度样例参考
+### Custom Column Type and Precision Example
 
-`schema.yaml` 文件对 `models` 中 `columns` 的 `data_type` 配置如下：
+In the `schema.yaml` file, you can configure the type of each `column` under `models` through `data_type`:
 
 ```yaml
 models:
-  - name: sell_user
-    description: "A dbt model named sell_user"
-    columns:
-      - name: user_id
-        data_type: BIGINT
-      - name: account_id
-        data_type: VARCHAR(12)
-      - name: status
-      - name: cost_sum
-        data_type: DECIMAL(38,9)
-      - name: update_time
-        data_type: DATETIME
-      - name: create_time
-        data_type: DATETIME
+    - name: sell_user
+      description: "A dbt model named sell_user"
+      columns:
+          - name: user_id
+            data_type: BIGINT
+          - name: account_id
+            data_type: VARCHAR(12)
+          - name: status
+          - name: cost_sum
+            data_type: DECIMAL(38,9)
+          - name: update_time
+            data_type: DATETIME
+          - name: create_time
+            data_type: DATETIME
 ```
 
-### 访问 catalog 样例参考
+### Catalog Access Example
 
-[Data Catalog](../lakehouse/catalog-overview.md) 是 Doris 数据湖功能中指向不同的数据源，其层级在 Database 之上。
-对其访问 推荐通过 dbt-doris 内置 Macros : `catalog_source`
+[Data Catalog](../../lakehouse/catalog-overview.md) is the capability in Doris data lake features that points to different data sources. Its hierarchy sits above Database.
+
+It is recommended to access Catalog through the built-in `catalog_source` macro of dbt-doris:
 
 ```sql
 {{ config(materialized='table', replication_num=1) }}
 
 select *
---  use macros 'catalog_source' not macros 'source'
+--  Use the macro 'catalog_source' instead of the macro 'source'
 --  catalog name is 'mysql_catalog'
 --  database name is 'dbt_source'
 --  table name is 'sell_user'

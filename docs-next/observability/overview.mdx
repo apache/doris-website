@@ -1,159 +1,191 @@
 ---
 {
-    "title": "Overview | Observability",
+    "title": "Building Unified Log/Trace/Metrics Analytics on Apache Doris",
+    "sidebar_label": "Observability Overview",
     "language": "en",
-    "description": "Observability refers to the ability to infer a system's internal state through its external output data. An observability platform collects, stores,",
-    "sidebar_label": "Overview"
+    "description": "An observability platform unifies the collection and analysis of Log/Trace/Metrics to support troubleshooting and performance optimization. Built on Apache Doris, it writes 5x faster than Elasticsearch and reduces costs by 50%-80%."
 }
 ---
 
-# Overview
+<!-- Knowledge type: Architecture selection decision -->
+<!-- Applicable scenario: Observability platform construction / Technology selection -->
 
-## What Is Observability?
+Observability is the ability to infer the internal state of a system from its external output data. An observability platform collects, stores, and visualizes three types of key data: **Logging, Tracing, and Metrics**. It helps teams gain a comprehensive understanding of how distributed systems are running, supports resource optimization, fault alerting, and root cause analysis, and ultimately improves system reliability and user experience.
 
-Observability refers to the ability to infer a system's internal state through its external output data. An observability platform collects, stores, and visualizes three core data: Logs, Traces, and Metrics. This helps teams gain a comprehensive understanding of the operational status of distributed systems, supports resource optimization, fault prediction, root cause analysis, improves system reliability, and enhances user experience.
+## Why Observability Is Becoming More Important
 
-## Why Observability Is Becoming Increasingly Important
+### Core Application Scenarios
 
-Observability platforms have several critical use cases that are vital for improving system stability, optimizing operations efficiency, and enabling business innovation.
+Observability platforms have become indispensable infrastructure for modern distributed systems, mainly covering the following five categories of scenarios:
 
-1. **Fault Diagnosis and Root Cause Analysis**: Real-time monitoring, anomaly detection, and tracing capabilities enable quick identification and analysis of faults. For example, in the financial industry, combining observability with transaction tracing and AI technologies can shorten recovery time and ensure business continuity. It also supports chaos engineering to simulate failure scenarios and validate system fault tolerance.
+| Scenario | Value | Typical Use Cases |
+| --- | --- | --- |
+| **Troubleshooting and root cause analysis** | Shortens fault recovery time and ensures business continuity | Real-time monitoring, anomaly detection, distributed tracing, chaos engineering |
+| **Performance optimization and resource planning** | Identifies performance bottlenecks and reduces cloud resource costs | Resource utilization analysis, load balancing, auto-scaling, capacity prediction |
+| **Business decision support** | Connects IT performance to business outcomes | User experience metric analysis, product feature optimization |
+| **Security and compliance monitoring** | Detects abnormal behavior and responds automatically | Zero-day attack detection, log auditing, compliance retention |
+| **Development and operations collaboration** | Assists canary release and code optimization | Traffic tagging, call chain analysis, release progress evaluation |
 
-2. **Performance Optimization and Resource Planning**: Analyzing system resource utilization and response times helps identify performance bottlenecks and dynamically adjust configurations (e.g., load balancing, auto-scaling). Historical data can be used to predict resource needs, optimize cloud resource allocation, and reduce costs.
+### Two Major Trends Driving the Upgrade of Observability
 
-3. **Business Decision Support**: Correlating IT performance data with business outcomes (such as user retention rates and transaction volumes) helps formulate business strategies. For instance, analyzing user experience metrics can guide product feature improvements.
-
-4. **Security and Compliance Monitoring**: Detects abnormal behaviors (e.g., zero-day attacks) and triggers automated responses to enhance system security. At the same time, log auditing ensures compliance with regulatory requirements.
-
-5. **DevOps Collaboration**: During canary releases, traffic tagging enables tracking of new version behavior. Combined with call chain analysis, it informs release progression and helps developers optimize code performance, reducing production incidents.
-
-**The growing importance of observability in recent years is mainly driven by two factors:**
-
-1. **Increasing Complexity of Business and IT Systems**: With the development of cloud computing and microservices, business systems are becoming increasingly complex. For example, a GenAI application request might involve dozens of services such as App, service gateway, authentication service, billing service, RAG engine, Agent engine, vector database, business database, distributed cache, message queue, and large model APIs. Traditional methods like checking server status via SSH and analyzing logs are no longer effective in such complex environments. Observability platforms unify Log, Trace, and Metric data collection and storage, providing centralized visualization and rapid issue investigation.
-
-2. **Higher Requirements for Business Reliability**: System failures have increasingly high impacts on user experience. Therefore, the efficiency of fault detection and recovery has become more critical. Observability provides full data visibility and panoramic analytics, allowing teams to quickly locate root causes, reduce downtime, and ensure service availability. Moreover, with global data analytics and forecasting, potential resource bottlenecks can be identified early, preventing failures before they occur.
+1. **Business and IT systems are growing more complex**: With the development of cloud computing and microservices, a request from a GenAI application may involve dozens of services such as the App, service gateway, authentication service, billing service, RAG engine, Agent engine, vector database, business database, distributed cache, message queue, and large model APIs. Logging into servers to inspect runtime status and analyze faults is no longer effective in such complex systems. An observability platform unifies the collection and storage of Log, Trace, and Metrics data and provides unified visualization analysis, which can effectively and quickly surface issues.
+2. **Business reliability requirements are getting higher**: System failures have an increasingly costly impact on user experience, and the requirements for fault localization and recovery efficiency have risen accordingly. Through cross-domain data integration and panoramic visualization, observability supports teams in quickly locating the root cause of issues and reducing business interruption time. Through global data analysis and prediction, it can identify resource bottlenecks in advance, allowing teams to handle them early and prevent failures.
 
 ## How to Choose an Observability Solution
 
-Observability data has several characteristics, and addressing the challenges of massive data storage and analysis is key to any observability solution.
+<!-- Knowledge type: Architecture selection decision -->
 
-1. **High Storage Volume and Cost Sensitivity**: Observability data, especially Logs and Traces, are typically enormous in volume and generated continuously. In medium-to-large enterprises, daily data generation often reaches terabytes or even petabytes. To meet business or regulatory requirements, data must often be stored for months or even years, leading to storage volumes reaching the PB or EB scale and resulting in significant storage costs. Over time, the value of this data diminishes, making cost efficiency increasingly important.
+### Key Characteristics of Observability Data
 
-2. **High Throughput Writes with Real-Time Requirements**: Handling daily ingestion of TB or PB-scale data offen requires write throughput ranging from 1–10 GB/s or millions to tens of millions of records per second. Simultaneously, due to the need for real-time troubleshooting and security investigations, platforms must support sub-second write latencies to ensure real-time data availability.
+How to address the storage and analysis challenges of massive data volumes is at the core of any observability solution. Observability data has the following five characteristics:
 
-3. **Real-Time Analysis and Full-Text Search Capabilities**: Logs and Traces contain large amounts of textual data. Quickly searching for keywords and phrases is essential. Traditional full-scan and string-matching approaches often fail to deliver real-time performance, especially at this scale—especially under high-throughput, low-latency ingestion conditions. Thus, building inverted indexes tailored for text becomes crucial for achieving sub-second query responsiveness.
+1. **Large data storage volume and cost-sensitive**: Log and Trace data are typically very large in scale and are produced continuously around the clock. The observability data generated by mid-size and large enterprises every day is on the TB or even PB level. To meet business requirements or comply with regulatory requirements, this data often needs to be stored for half a year or longer, with total storage frequently reaching the PB level and incurring high costs. As time passes, the value of this data also gradually declines, so observability platforms are particularly sensitive to storage costs.
+2. **High write throughput with real-time requirements**: Faced with new data on the order of TB or even PB per day, the platform must support write throughput of 1-10 GB/s and millions to tens of millions of records per second. At the same time, considering scenarios such as troubleshooting and security tracking that require strong timeliness, write latency must remain at the second level to ensure data freshness and availability.
+3. **Real-time analysis with full-text search**: Log and Trace data contain large amounts of text, and quickly searching for keywords and phrases is a core requirement. Because of the massive data scale, traditional full-scan and string-matching approaches cannot meet real-time response requirements. Building inverted indexes for text becomes the key to achieving second-level query response.
+4. **Dynamic schemas requiring frequent extension**: Log data has evolved from unstructured raw logs (free text) to semi-structured Logs and Traces predominantly in JSON. Data producers dynamically adjust internal JSON fields, and the schema is highly flexible. Traditional databases and data warehouses struggle to efficiently handle data with such flexible schemas. Data lakes provide storage flexibility but cannot meet processing performance and real-time requirements.
+5. **Need to integrate with diverse data sources and analysis tools**: The observability ecosystem includes many data collectors and visualization analysis tools. The storage and analysis engine needs to integrate with various ecosystem tools to satisfy diverse data and tool integration requirements.
 
-4. **Dynamic Data Schema and Frequent Expansion Needs**: Logs originally existed as unstructured free-text logs but evolved into semi-structured JSON formats. Producers frequently modify JSON fields, making schema flexibility essential. Traditional databases and data warehouses struggle to handle such dynamic schemas efficiently, while datalake systems offer storage flexibility but fall short in real-time analytical performance.
+### Four Key Dimensions for Selection Evaluation
 
-5. **Integration with Multiple Data Sources and Analysis Tools**: There are many observability ecosystem tools for data collection and visualization. The storage and analysis engine must integrate seamlessly with these diverse tools.
+Faced with multiple solutions such as Elasticsearch, ClickHouse, Doris, and cloud vendor log services, you can evaluate them along four dimensions: **performance, cost, openness, and ease of use**.
 
-Given options like Elasticsearch, ClickHouse, Doris, and logging services provided by Cloud vendors, how should one choose? Here are the key evaluation criteria:
+#### 1. Performance: Write Performance and Query Performance
 
-### 1. **Performance: Includes Write and Query Performance**
+Observability is often used in urgent scenarios such as troubleshooting, with high requirements for both query response speed and data freshness. On the one hand, query response must be fast, especially for the text in Log/Trace data, which requires real-time full-text search to support iterative exploratory analysis. On the other hand, the most recently produced data must be queryable, with second-level freshness as a requirement.
 
-Since observability is often used in urgent situations like troubleshooting, queries must respond quickly—especially for textual content in Logs and Traces, which require real-time full-text search to support iterative exploration. Additionally, users must be able to query near real-time data—queries limited to data from hours or minutes ago are insufficient; fresh data from the past few seconds is needed.
+| Solution | Write Performance | Full-Text Search | Aggregation Analysis |
+| --- | --- | --- | --- |
+| **Elasticsearch** | Write performance is relatively low under high throughput, with write rejections and high latency easily occurring during peak periods | Known for inverted index + full-text search, with second-level real-time search | Aggregation analysis performance is relatively low |
+| **Cloud vendor log service** | Meets performance via stacking resources | Meets performance requirements | Meets performance requirements |
+| **ClickHouse** | Columnar storage + vectorized engine, with high write performance | Several to tens of times slower than Elasticsearch and Doris, still in experimental status | High aggregation query performance |
+| **Doris** | Columnar storage + vectorized engine, with inverted indexes optimized for observability, **about 5x faster** than Elasticsearch | **About 2x faster** than Elasticsearch | **6-21x faster** than Elasticsearch |
 
-- **Elasticsearch** is known for inverted indexing and full-text search, offering sub-second retrieval. However, it struggles with high-throughput writes, often rejecting writes or experiencing high latency during peak loads. Its aggregation and statistical analysis performance is also relatively weak.
-- **Cloud Logging Services** provide sufficient performance through rich resources but come with higher costs.
-- **ClickHouse** delivers high write throughput and high aggregation query performance using columnar storage and vectorized execution. However, its full-text search performance lags behind Elasticsearch and Doris by multiples and remains experimental and unsuitable for production use.
-- **Doris**, leveraging columnar storage and vectorized execution, optimizes inverted indexing for observability scenarios. It offers better performance than Elasticsearch, with ~5x faster writes and ~2x faster queries. Aggregation performance is up to 6–21x better than Elasticsearch.
+#### 2. Cost: Storage Cost and Compute Cost
 
-### 2. **Cost: Includes Storage and Compute Costs**
+The observability data generated by mid-size and large enterprises every day can reach the TB or even PB level, with total storage often reaching the PB or even EB level. Compared with business data, observability data has a larger volume, lower value density, and value that gradually declines over time, so it is highly sensitive to both storage and compute costs.
 
-Observability data volumes are huge, especially Logs and Traces. Medium-to-large enterprises generate TBs or even PBs of data daily. Due to business or regulatory needs, data must be retained for months or years, pushing storage requirements into the PB or even EB range. Compared to business-critical data, observability data has lower value density, and its value decreases over time, making cost sensitivity critical. Additionally, processing massive volumes of data incurs substantial compute costs.
+| Solution | Compression Ratio | Storage / Compute Cost |
+| --- | --- | --- |
+| **Elasticsearch** | About 1.5:1 (row storage + inverted index + docvalue columnar storage) | High storage cost; JVM overhead + inverted index construction lead to high CPU usage |
+| **Doris** | **5:1 ~ 10:1**, with hot-cold tiering further reducing costs | **Saves 50%-80%** compared with Elasticsearch; single-replica writes, time-series compaction, and vectorized index construction lower write cost |
+| **ClickHouse** | Columnar storage with good compression | Low storage and write cost |
+| **Cloud vendor log service** | - | Equally high as Elasticsearch |
 
-- **Elasticsearch** suffers from high costs. Its storage model combines row-based raw data, inverted indexes, and docvalue columnar storage, with typical compression ratios around 1.5:1. High CPU overhead from JVM and index construction further increases compute costs.
-- **Doris** includes numerous optimizations for observability scenarios. Compared to Elasticsearch, it reduces total cost by 50–80%. These include simplified inverted indexing, columnar storage with ZSTD compression (5:1–10:1), cold-hot tiered storage, single-replica writes, time-series compaction to reduce write amplification, and vectorized index building.
-- **ClickHouse** uses columnar storage and vectorized engines, delivering lower storage and write costs.
-- **Cloud Logging Services** are expensive as Elasticsearch.
+#### 3. Openness: Open Source and Multi-Cloud Neutrality
 
-### 3. **Openness: Includes Open Source and Multi-Cloud Neutrality**
+Building an observability platform requires avoiding vendor lock-in. Pay attention to whether the solution is open source, whether it is offered across multiple clouds, and whether it supports an open ecosystem.
 
-When selecting an observability platform, consider openness, including whether it's open source and multi-cloud neutral.
+| Solution | Project Operator | Multi-Cloud Support | Ecosystem Openness |
+| --- | --- | --- | --- |
+| **Elasticsearch** | Elastic | Offered across multiple clouds | The ELK ecosystem is relatively isolated, and Kibana only supports Elasticsearch |
+| **Doris** | Apache Software Foundation | Mainstream cloud vendors offer SaaS | Supports OpenTelemetry, Grafana, ELK, and other open source ecosystems, remains neutral |
+| **ClickHouse** | ClickHouse Inc. | Offered across multiple clouds | Supports OpenTelemetry and Grafana; neutrality is affected after acquiring an observability commercial company |
+| **Cloud vendor log service** | Each cloud vendor | Bound to its own cloud | Not open source, with difficult cross-cloud migration |
 
-- **Elasticsearch** is an open-source project maintained by Elastic, available on multiple clouds. Its ELK ecosystem is self-contained and difficult to integrate with other ecosystems, eg. Kibana only supports Elasticsearch and is hard to extend.
-- **Doris** is an Apache Top-Level open-source project, supported by major global cloud providers. It integrates well with OpenTelemetry, Grafana, and ELK, maintaining openness and neutrality.
-- **ClickHouse** is an open-source project maintained by ClickHouse Inc., available across clouds. While it supports OpenTelemetry and Grafana, its acquisition of an observability company raises concerns about future neutrality.
-- **Cloud Logging Services** are tied to their respective clouds, not open source, and differ between vendors, limiting consistent experiences and migration flexibility.
+#### 4. Ease of Use: Maintainability and Convenience
 
+Because of the large data volume, observability platforms generally adopt a distributed architecture. The convenience of operations such as deployment, scaling, and upgrades, along with the developer-friendliness of the query interface, are all important considerations.
 
-### 4. **Ease of Use: Includes Manageability and Usability**
+| Solution | Interface and Operations |
+| --- | --- |
+| **Elasticsearch** | Kibana provides an easy-to-use interface and good maintainability; the DSL query language is complex with a high usage barrier |
+| **Doris** | Provides a Kibana-like interactive search and analysis interface, and integrates with native Kibana / Grafana interfaces; standard SQL compatible with MySQL; simple architecture, supports online upgrades and scaling, automatic load balancing, and provides a visual Cluster Manager |
+| **ClickHouse** | Custom dialect SQL; underlying concepts of local tables + distributed tables are exposed, scaling cannot be balanced automatically, and a self-built operations system is usually required |
+| **Cloud vendor log service** | SaaS service requires no self-maintenance and is convenient to use |
 
-Due to the volume of data, observability platforms usually adopt distributed architectures. Ease of deployment, scaling, upgrades, and other management tasks significantly affects scalability. The interface provided by the system determines developer efficiency and user experience.
+### Selection Conclusion
 
-- **Elasticsearch**'s Kibana web UI is very user-friendly and manageable. However, its DSL query language is complex and hard to learn, posing integration and development challenges.
-- **Doris** provides an interactive analysis interface similar to Kibana and integrates natively with Grafana and Kibana (comming soon). Its SQL is standard and MySQL-compatible, making it developer- and analyst-friendly. Doris has a simple architecture that’s easy to deploy and maintain, supports online scaling without service interruption, automatic load balancing, and includes a visual Cluster Manager.
-- **ClickHouse** provides SQL interfaces but uses its own syntax. Maintenance is challenging due to exposed concepts like local tables vs. distributed tables and lack of automatic rebalancing during scaling. Typically, developing a custom cluster management system is required.
-- **Cloud Logging Services** offer SaaS convenience—users don't manage infrastructure and enjoy ease of use.
+Based on the comparison above, **Doris has clear advantages across all four dimensions of performance, cost, openness, and ease of use**: it delivers high-performance writes and queries while keeping costs low, the SQL interface is simple and easy to use, the simple architecture is easy to maintain and extend, and it provides a consistent experience across multiple clouds. It is an ideal choice for building an observability platform.
 
+## Doris-Based Observability Solution
 
-Based on the above analysis, **Doris** achieves high-performance ingestion and queries while keeping costs low. Its SQL interface is easy to use, and its architecture is simple to maintain and scale. It also ensures consistent experiences across multiple clouds, making it an optimal choice for building an observability platform.
-
-## Observability Solution Based on Doris
+<!-- Knowledge type: Architecture selection decision -->
+<!-- Applicable scenario: Observability platform construction -->
 
 ### System Architecture
 
-Apache Doris is a modern data warehouse with an MPP distributed architecture, integrating vectorized execution engines, CBO optimizers, advanced indexing, and materialized views. It supports ultra-fast querying and analysis on large-scale real-time datasets, delivering an exceptional analytical experience. Through continuous technical innovation, Doris has achieved top rankings in authoritative benchmarks such as ClickBench (single table), TPC-H, and TPC-DS (multi tables).
+Doris is a modern data warehouse that adopts an MPP distributed architecture and combines advanced technologies such as a vectorized execution engine, a CBO optimizer, rich indexes, and materialized views to support extremely fast query analysis on large-scale real-time data. Doris has achieved globally leading and even first-place results in multiple authoritative analytical database performance benchmarks, including the single-table ClickBench, multi-table TPC-H, and TPC-DS.
 
-For observability scenarios, Doris introduces inverted indexing and ultra-fast full-text search capabilities, achieving optimized write performance and storage efficiency. This allows users to build high-performance, low-cost, and open observability platforms based on Doris.
+For the characteristics of observability scenarios, Doris adds inverted indexes and extremely fast full-text search capabilities, achieves the ultimate optimization of write performance and storage space, and enables users to build a high-performance, low-cost, and open observability platform on Doris.
 
 A Doris-based observability platform consists of three core components:
 
-- **Data Collection and Preprocessing**: Supports various observability data collection tools, including OpenTelemetry and ELK ecosystem tools like Logstash and Filebeat. Log, Trace, and Metric data are ingested into Doris via HTTP APIs.
-- **Data Storage and Analysis Engine**: Doris provides unified, high-performance, low-cost storage for observability data and exposes powerful search and analysis capabilities via SQL interfaces.
-- **Query Analysis and Visualization**: Integrates with popular observability visualization tools such as Grafana and Kibana (from the ELK stack), offering intuitive interfaces for searching, analyzing, alerting, and achieving real-time monitoring and rapid response.
+1. **Data collection and preprocessing**: Supports a variety of observability data collection tools, including the open OpenTelemetry ecosystem and Logstash and Filebeat from the ELK ecosystem, which write Log, Trace, and Metrics data to Doris through HTTP APIs.
+2. **Data storage and analysis engine**: Doris provides high-performance, low-cost unified storage for observability data and offers rich search and analysis capabilities through a SQL interface.
+3. **Query analysis and visualization**: Integrates with the most commonly used visualization analysis tools, including the widely used Grafana and Kibana from the ELK ecosystem, providing users with simple and easy-to-use search, analysis, and alerting interfaces for real-time monitoring and rapid response.
 
-![doris-observabiltiy-architecture](/images/observability/observability_architecture_doris.png)
+![doris-observability-architecture](/images/observability/observability_architecture_doris.png)
 
-### Key Features and Advantages
+### Core Advantages of the Solution
 
-#### **High Performance**
-- **High Throughput, Low Latency Writes**: Supports stable ingestion of PB-scale (10GB/s) Log, Trace, and Metric data daily with sub-second latency.
-- **High-Performance Inverted Index and Full-Text Search**: Supports inverted indexing and full-text search, delivering sub-second response times for common log keyword searches—3–10x faster than ClickHouse.
-- **High-Performance Aggregation Analysis**: Utilizing MPP distributed architecture and vectorized pipeline execution engines, Doris excels in trend analysis and alerting in observability scenarios, leading globally in ClickBench tests.
+#### High Performance
 
-#### **Low Cost**
-- **High Compression Ratio and Low-Cost Storage**: Supports PB-scale storage with compression ratios of 5:1 – 10:1 (including indexes), reducing storage costs by 50–80% compared to Elasticsearch. Cold data can be offloaded to S3/HDFS, cutting storage costs by another 50%.
-- **Low-Cost Writes**: Consumes 70% less CPU than Elasticsearch for the same write throughput.
+- **High-throughput, low-latency writes**: Supports continuous and stable writes of Log, Trace, and Metrics data at the PB level (10 GB/s) per day, with latency kept at the second level or even within 1s.
+- **High-performance inverted indexes and full-text search**: Common queries such as log keyword search respond at the second level, 3-10x faster than ClickHouse.
+- **High-performance aggregation analysis**: An MPP distributed architecture + vectorized Pipeline execution engine fully utilizes cluster distribution and CPU multithreading resources. ClickBench test performance is globally leading, suitable for common queries such as trend analysis and monitoring alerts.
 
-#### **Flexible Schema**  
-  - **Schema Changes at the Top Level**: Users can use Light Schema Change to add or drop columns or indexes (ADD/DROP COLUMN/INDEX), and schema modifications can be completed in seconds. When designing an observability platform, users only need to consider which fields and indexes are needed at the current stage.  
-  - **Internal Field Changes**: A semi-structured data type called VARIANT is specially designed for scalable JSON data. It can automatically identify field names and types within JSON, and further split frequently occurring fields into columnar storage, improving compression ratio and analytical performance. Compared to Elasticsearch’s Dynamic Mapping, VARIANT allows changes in the data type of a single field.
+#### Low Cost
 
-#### **User-Friendly**
-- **Standard SQL Interface**: Doris supports standard SQL and is compatible with MySQL protocols and syntax, making it accessible to engineers and analysts.
-- **Integration with Observability Ecosystems**: Compatible with OpenTelemetry and ELK ecosystems, supporting Grafana and Kibana (comming soon) visualization tools for seamless data collection and analysis.
-- **Easy Operations**: Supports online scaling, automatic load balancing, and visual management via Cluster Manager.
+- **High compression ratio and low-cost storage**: Supports PB-level massive storage with a compression ratio of 5:1 ~ 10:1 (including indexes), saving 50%-80% in storage cost compared with Elasticsearch. Supports storing cold data on S3/HDFS, further reducing storage cost by 50%.
+- **Low-cost writes**: For the same write traffic, CPU resource consumption is reduced by more than 70% compared with Elasticsearch.
 
-#### **Openness**
-- **Open Source**: Apache Doris is a top-level open-source project adopted by over 5000 companies worldwide, supporting OpenTelemetry, Grafana, and other observability ecosystems.
-- **Multi-Cloud Neutral**: Major cloud providers offer Doris SaaS services, ensuring consistent experiences across clouds.
+#### Flexible Schema
 
-### Demo & Screenshots
+- **Top-level field changes**: Initiate ADD/DROP COLUMN/INDEX operations through Light Schema Change to complete schema changes in seconds. During the planning stage, you only need to consider which fields currently need indexes.
+- **Internal field changes**: VARIANT, a semi-structured data type designed for extensible JSON data, can automatically recognize JSON field names and types and split frequently occurring fields into columnar storage to improve compression ratio and analysis performance. Compared with Elasticsearch's Dynamic Mapping, VARIANT allows field types to change.
 
-We demonstrate the Doris-based observability platform using a comprehensive [demo](https://github.com/apache/doris-opentelemetry-demo) from the OpenTelemetry community.
+#### Easy to Use
 
-The observed business system simulates an [e-commerce website] (https://opentelemetry.io/docs/demo/architecture/) composed of frontend, authentication, cart, payment, logistics, advertising, recommendation, risk control, and more than ten modules, reflecting a high level of system complexity, thus presenting significant challenges for observability data collection, storage, and analysis.
+- **Standard SQL interface**: Compatible with the MySQL protocol and syntax, allowing engineers and data analysts to use SQL queries directly.
+- **Embracing the observability ecosystem**: Covers the OpenTelemetry and ELK ecosystems and integrates with visualization tools such as Grafana and Kibana, facilitating data collection and visualization analysis.
+- **Convenient operations**: Supports online scaling without service interruption and automatic balancing. On-premises deployment provides a visual Cluster Manager and K8s Operator tool, while the cloud offers an out-of-the-box fully managed service.
 
-The Load Generator tool sends continuous requests to the entry service, generating vast volumes of observability data (Logs, Traces, Metrics). These data are collected using OpenTelemetry SDKs in various languages, sent to the OpenTelemetry Collector, preprocessed by Processors, and finally written into Doris via the OpenTelemetry Doris Exporter. Observability visualization tools such as Grafana connects to Doris through the MySQL interface, providing visualized query and analysis capabilities.
+#### Open
 
+- **Open source**: Doris is a top-level open source project of the Apache Software Foundation, adopted by more than 5,000 enterprises worldwide, and supports observability ecosystems such as OpenTelemetry and Grafana.
+- **Multi-cloud neutral**: Mainstream cloud vendors offer Doris SaaS, providing a consistent experience across multiple clouds.
 
-<a href="https://youtu.be/LrR4SNyAlg8">
-  <img src="/images/observability/otel_demo_doris.png" alt="Doris OpenTelemetry Demo" />
-</a>
+### Demo and Screenshots
 
-Grafana connects to Doris via MySQL datasource, offering unified visualization and analysis of Logs, Traces, and Metrics, including cross-analysis between Logs and Traces.
+<!-- Knowledge type: Operational steps -->
+<!-- Applicable scenario: Solution experience / Demonstration -->
+
+The following uses a comprehensive [Demo](https://github.com/apache/doris-opentelemetry-demo) from the OpenTelemetry community to showcase a Doris-based observability platform.
+
+#### The Observed System
+
+The observed business system is an [e-commerce website](https://opentelemetry.io/docs/demo/architecture/) used for demonstration. It consists of more than ten modules, including frontend interfaces, authentication, shopping cart, transactions, logistics, advertising, recommendations, and risk control. The overall system has high complexity, which poses significant challenges to the collection, storage, and analysis of observability data.
+
+#### Data Flow
+
+The Load Generator stress simulation program continuously sends requests to the entry service, generating a large amount of observability data (Log, Trace, Metrics) across the entire e-commerce system. The data flows as follows:
+
+1. Collected using OpenTelemetry multi-language SDKs
+2. Sent to the OpenTelemetry Collector
+3. Preprocessed by Processors in the Collector
+4. Written to Doris through the OpenTelemetry Doris Exporter
+5. Doris connects to upper-layer analysis tools (such as Grafana) through the MySQL interface to provide visual query and analysis capabilities
+
+[![Doris OpenTelemetry Demo](/images/observability/otel_demo_doris.png)](https://youtu.be/LrR4SNyAlg8)
+
+[Click to watch](https://youtu.be/LrR4SNyAlg8)
+
+#### Visualization
+
+Grafana connects to Doris through the MySQL Datasource, providing unified Log, Trace, and Metrics visualization analysis with linkage between Log and Trace.
 
 - **Log**
-	![log-visualization](/images/observability/log-visualization.png)
+
+    ![log-visualization](/images/observability/log-visualization.png)
 
 - **Trace**
-	![log-visualization](/images/observability/trace-visualization.png)
+
+    ![trace-visualization](/images/observability/trace-visualization.png)
 
 - **Metrics**
-	![metrics-visualization](/images/observability/metrics-visualization.png)
 
-While Grafana's log visualization and analysis capabilities are relatively basic compared to Kibana, third-party vendors have implemented Kibana-like Discover features. These will soon be integrated into Grafana's Doris datasource, enhancing unified observability visualization. Future enhancements will include Elasticsearch protocol compatibility, enabling native Kibana connections to Doris. For ELK users, replacing Elasticsearch with Doris maintains existing logging and visualization habits while significantly reducing costs and improving efficiency.
+    ![metrics-visualization](/images/observability/metrics-visualization.png)
 
-![studio-visualization](/images/observability/studio-discover.jpeg)
+Grafana's Log visualization and analysis capabilities are relatively simple compared with Kibana, so third-party vendors have implemented Kibana Discover-like search and analysis capabilities, which will also be integrated into the Grafana Doris Datasource in the future to provide a better unified Log/Trace/Metrics visualization analysis experience. In addition, by being compatible with the Elasticsearch query protocol, native Kibana will be able to connect directly to Doris in the future. For ELK users, replacing Elasticsearch with Doris can achieve cost reduction and efficiency gains without changing log collection and visualization analysis habits.
 
+![studio-visualization](/images/observability/studio-discover.png)

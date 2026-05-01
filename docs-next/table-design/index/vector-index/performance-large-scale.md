@@ -1,8 +1,18 @@
 ---
 {
-    "title": "大规模性能实测",
-    "language": "zh-CN",
-    "description": "总结 Doris ANN Index 在单机与分布式环境下的大规模导入与查询性能测试结果。"
+    "title": "Large-Scale Performance Benchmarks",
+    "language": "en",
+    "description": "Real-world load and query performance benchmarks for Doris vector indexes at the tens-of-millions and hundred-million data scales, covering both single-node and distributed deployments.",
+    "keywords": [
+        "Doris vector index performance",
+        "ANN Index benchmark",
+        "vector search QPS",
+        "HNSW performance",
+        "vector search benchmark",
+        "VectorDBBench",
+        "distributed vector search",
+        "large-scale vector data"
+    ]
 }
 ---
 
@@ -25,147 +35,212 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-本文总结了在单机和分布式两种部署下的大规模测试结果。测试的目的，是展示 Doris 在不同数据规模下的查询表现，以及在数据规模持续增长时，如何将向量查询能力从单机扩展到分布式部署。
+<!-- Knowledge type: Performance benchmark -->
+<!-- Applicable scenarios: Capacity planning / Sizing evaluation / Performance expectations -->
 
-## 测试矩阵
+This document presents real-world load and query performance benchmarks for the Doris ANN Index on medium-large and hundred-million-scale datasets. It helps you evaluate query performance at different data scales and understand how to scale smoothly from a single-node deployment to a distributed deployment.
 
-- 单机：FE / BE 分离部署，BE 使用 1 台 16C64GB 机器。
-- 分布式：3 台 BE，每台 16C64GB。
-- 测试数据集：
-  - Performance768D10M
-  - Performance1536D5M
-  - Performance768D100M
+## Quick Navigation
 
-## 单机实测（16C64GB）
+After reading this document, you can answer the following questions:
 
-单机结果给出了中大规模数据集上的 ANN 查询性能基线。
+- For tens of millions of vectors, can a single BE node handle online retrieval? What QPS and latency can you expect?
+- For hundreds of millions of vectors, when a single node runs out of memory, how can you continue to serve vector queries through a multi-BE deployment?
+- How does performance differ across vector dimensions (768/1536) and distance metrics (`inner_product`/`l2_distance`)?
+- How can you reproduce these test results?
 
-### 导入性能
+## Test Environment and Datasets
 
-| 项目 | Performance768D10M | Performance1536D5M |
-|------|---------------------|--------------------|
-| 向量维度 | 768 | 1536 |
-| metric_type | inner_product | inner_product |
-| 数据量 | 10M 行 | 5M 行 |
-| 导入 batch 参数 | `NUM_PER_BATCH=500000`<br/>`--stream-load-rows-per-batch 500000` | `NUM_PER_BATCH=250000`<br/>`--stream-load-rows-per-batch 250000` |
-| 导入耗时 | 76m41s | 41m |
-| `show data all` | 56.498 GB (25.354 GB + 31.145 GB) | 55.223 GB (25.346 GB + 29.878 GB) |
+### Deployment Topology
 
-Performance768D10M 导入过程中的 CPU 监控如下。可以看到，导入期间 CPU 使用率整体较为平稳。
+| Deployment Mode | BE Nodes | Per-Node Spec | Suitable Data Scale |
+|-----------------|----------|---------------|---------------------|
+| Single node     | 1        | 16C64GB       | Tens of millions    |
+| Distributed     | 3        | 16C64GB       | Hundreds of millions |
 
-<img src="/images/vector-search/Performance768D-CPU-Import.png" alt="Performance768D10M import CPU" width="900" height="435" />
+FE and BE are deployed separately. All tests use the [VectorDBBench](https://github.com/zilliztech/VectorDBBench) tool.
 
-Performance1536D5M 的数据量较小，导入时的 batch size 也更小，因此导入阶段的 CPU 使用率波动更为频繁。
+### Dataset Overview
 
-<img src="/images/vector-search/Performance1536D5M-CPU-Import.png" alt="Performance1536D5M import CPU" width="900" height="432" />
+| Dataset             | Data Volume | Vector Dimension | Distance Metric  | Deployment Topology |
+|---------------------|-------------|------------------|------------------|---------------------|
+| Performance768D10M  | 10M         | 768              | `inner_product`  | Single node         |
+| Performance1536D5M  | 5M          | 1536             | `inner_product`  | Single node         |
+| Performance768D100M | 100M        | 768              | `l2_distance`    | Distributed         |
 
-### 查询性能
+## Single-Node Benchmark (16C64GB)
 
-从两个单机 workload 的结果可以看到，Doris 在保持较高召回率的同时，能够达到数百 QPS，并维持较低查询延迟。
+The single-node results provide a baseline for ANN query performance on medium-large datasets.
 
-#### 汇总
+### Load Performance
 
-| 数据集 | BestQPS | Recall@100 |
-|--------|---------|------------|
-| Performance768D10M | 481.9356 | 0.9207 |
-| Performance1536D5M | 414.7342 | 0.9677 |
+The load metrics for the two datasets are as follows:
 
-#### Performance768D10M（`inner_product`, 10M 行）
+| Item              | Performance768D10M                                              | Performance1536D5M                                              |
+|-------------------|-----------------------------------------------------------------|-----------------------------------------------------------------|
+| Vector dimension  | 768                                                             | 1536                                                            |
+| `metric_type`     | `inner_product`                                                 | `inner_product`                                                 |
+| Data volume       | 10M rows                                                        | 5M rows                                                         |
+| Load batch params | `NUM_PER_BATCH=500000`<br/>`--stream-load-rows-per-batch 500000` | `NUM_PER_BATCH=250000`<br/>`--stream-load-rows-per-batch 250000` |
+| Load duration     | 76m41s                                                          | 41m                                                             |
+| `show data all`   | 56.498 GB (25.354 GB + 31.145 GB)                               | 55.223 GB (25.346 GB + 29.878 GB)                               |
 
-| 并发数 | QPS | P95 延迟 | P99 延迟 | 平均延迟 |
-|--------|-----|----------|----------|----------|
-| 10 | 116.2000 | 0.0932 | 0.0933 | 0.0861 |
-| 40 | 455.9485 | 0.1102 | 0.1225 | 0.0877 |
-| 80 | 481.9356 | 0.2331 | 0.2674 | 0.1658 |
+**CPU usage:**
 
-#### Performance1536D5M（`inner_product`, 5M 行）
+- During the Performance768D10M load, CPU utilization was relatively stable overall.
 
-| 并发数 | QPS | P95 延迟 | P99 延迟 | 平均延迟 |
-|--------|-----|----------|----------|----------|
-| 10 | 144.3221 | 0.0764 | 0.0800 | 0.0693 |
-| 40 | 401.9732 | 0.1271 | 0.1404 | 0.0994 |
-| 80 | 414.7342 | 0.2772 | 0.3222 | 0.1925 |
+    ![Performance768D10M import CPU](/images/vector-search/Performance768D-CPU-Import.png)
 
-在单机查询场景下，冷查询阶段需要将索引加载到内存，因此 CPU 利用率相对较低，系统主要在等待 IO 完成；进入热查询阶段后，CPU 利用率明显提升并接近 100%。
+- Performance1536D5M has a smaller data volume and a smaller batch size, so CPU utilization fluctuates more frequently during the load phase.
 
-<img src="/images/vector-search/Performance768D10M.png" alt="Performance768D10M query CPU" width="900" height="430" />
+    ![Performance1536D5M import CPU](/images/vector-search/Performance1536D5M-CPU-Import.png)
 
-## 分布式实测（3 × 16C64GB）
+### Query Performance
 
-分布式测试聚焦于更大规模的数据集，该数据规模已经超出单台 16C64GB 机器较为合适的内存承载范围。
+While maintaining a high recall rate, the single-node deployment can reach hundreds of QPS and keep query latency low.
 
-3BE 场景使用 `Performance768D100M` 数据集。由于单机内存上限为 64GB，采用向量量化压缩以降低内存开销。该测试的重点，是展示 Doris 在 100M 规模下如何通过多 BE 部署继续提供向量查询能力，而不是与单机小规模场景做一一对应的绝对数值比较。
+#### Summary Metrics
 
-### 导入性能
+| Dataset             | BestQPS  | Recall@100 |
+|---------------------|----------|------------|
+| Performance768D10M  | 481.9356 | 0.9207     |
+| Performance1536D5M  | 414.7342 | 0.9677     |
 
-| 项目 | 数值 |
-|------|------|
-| 数据集 | Performance768D100M |
-| 数据量 | 100M 行 |
-| 维度 | 768 |
-| batch 参数 | `NUM_PER_BATCH=500000`<br/>`--stream-load-rows-per-batch 500000` |
-| 索引参数 | `"dim"="768", "index_type"="hnsw", "metric_type"="l2_distance", "pq_m"="384", "pq_nbits"="8", "quantizer"="pq"` |
-| build index 用时 | 4h5min |
-| `show data all` | 198.809 GB (137.259 GB + 61.550 GB) |
+#### Performance768D10M Details (`inner_product`, 10M rows)
 
-build index 后的数据分布：
+| Concurrency | QPS      | P95 Latency | P99 Latency | Average Latency |
+|-------------|----------|-------------|-------------|-----------------|
+| 10          | 116.2000 | 0.0932      | 0.0933      | 0.0861          |
+| 40          | 455.9485 | 0.1102      | 0.1225      | 0.0877          |
+| 80          | 481.9356 | 0.2331      | 0.2674      | 0.1658          |
 
-- 3 个 bucket
-- 每个 bucket 34 个 rowset，每个 rowset 约 1.99 GB
-- 每个 rowset 6 个 segment
+#### Performance1536D5M Details (`inner_product`, 5M rows)
 
-build index 期间 CPU 使用率整体稳定在约 50%，说明构建过程未长时间打满 CPU，仍保留了一定资源余量。
+| Concurrency | QPS      | P95 Latency | P99 Latency | Average Latency |
+|-------------|----------|-------------|-------------|-----------------|
+| 10          | 144.3221 | 0.0764      | 0.0800      | 0.0693          |
+| 40          | 401.9732 | 0.1271      | 0.1404      | 0.0994          |
+| 80          | 414.7342 | 0.2772      | 0.3222      | 0.1925          |
 
-<img src="/images/vector-search/Performance-3BE-Import.jpg" alt="Performance768D100M import CPU" width="900" height="444" />
+#### CPU Monitoring
 
-### 查询性能
+During the cold query phase, the index needs to be loaded into memory, so CPU utilization is relatively low and the system mainly waits on IO. After entering the hot query phase, CPU utilization rises significantly and approaches 100%.
 
-#### 汇总
+![Performance768D10M query CPU](/images/vector-search/Performance768D10M.png)
 
-| 指标 | 数值 |
-|------|------|
-| BestQPS | 77.6247 |
-| Recall@100 | 0.9294 |
+## Distributed Benchmark (3 x 16C64GB)
 
-#### 明细（`l2_distance`, 100M 行）
+When the data scale exceeds the reasonable memory capacity of a single 16C64GB node, you can scale out horizontally with a multi-BE deployment. This section uses the `Performance768D100M` dataset (100M rows, 768 dimensions) to show that Doris can still provide online vector query capability at the 100M scale.
 
-| 并发数 | QPS | P95 延迟 | P99 延迟 | 平均延迟 |
-|--------|-----|----------|----------|----------|
-| 10 | 46.5836 | 0.2628 | 0.2791 | 0.2145 |
-| 20 | 75.3579 | 0.3251 | 0.3541 | 0.2651 |
-| 30 | 77.6247 | 0.5222 | 0.5766 | 0.3860 |
-| 40 | 76.6313 | 0.7089 | 0.7854 | 0.5212 |
+:::tip Tip
+This test does not constitute a one-to-one absolute numerical comparison with the small-scale single-node tests. It is more suitable for observing how performance scales with data size.
+:::
 
-下图为查询阶段的 CPU 监控，可以看到各节点 CPU 使用率保持在较高水平，说明查询负载较充分地利用了分布式计算资源。
+### Load and Index Build
 
-<img src="/images/vector-search/Performance3BE.png" alt="Performance768D100M query CPU" width="900" height="323" />
+Because the per-node memory cap is 64GB, this test uses vector quantization compression to reduce memory overhead.
 
-## 总结
+| Item              | Value |
+|-------------------|-------|
+| Dataset           | Performance768D100M |
+| Data volume       | 100M rows |
+| Vector dimension  | 768 |
+| Batch params      | `NUM_PER_BATCH=500000`<br/>`--stream-load-rows-per-batch 500000` |
+| Index params      | `"dim"="768", "index_type"="hnsw", "metric_type"="l2_distance", "pq_m"="384", "pq_nbits"="8", "quantizer"="pq"` |
+| Build index time  | 4h5min |
+| `show data all`   | 198.809 GB (137.259 GB + 61.550 GB) |
 
-- 在千万级向量数据规模下，Doris 在单机场景能够提供较强的 ANN 查询性能，达到数百 QPS，并保持较高召回率。
-- 在 100M 向量数据集上，Doris 可通过多 BE 部署继续提供在线向量查询能力。
-- 由于不同测试组采用了不同的数据规模、距离度量和索引参数，这些结果更适合用于观察规模扩展表现，而不适合做一一对应的绝对数值对比。
+**Data distribution after index build:**
 
-## 说明
+- 3 buckets in total
+- Each bucket contains 34 rowsets, each rowset is about 1.99 GB
+- Each rowset contains 6 segments
 
-- 两组测试的距离度量不同（`inner_product` 与 `l2_distance`），不建议直接横向对比绝对数值。
-- 单机 `Performance768D10M` 在并发 10 下的结果已剔除冷查询影响后进行修正。
+**CPU usage:** During the index build, CPU utilization stayed stable at around 50% overall. The CPU was not maxed out for an extended period, leaving some resource headroom.
 
-## 复现方式
+![Performance768D100M import CPU](/images/vector-search/Performance-3BE-Import.jpg)
 
-单机：
+### Query Performance
+
+#### Summary Metrics
+
+| Metric     | Value   |
+|------------|---------|
+| BestQPS    | 77.6247 |
+| Recall@100 | 0.9294  |
+
+#### Details (`l2_distance`, 100M rows)
+
+| Concurrency | QPS     | P95 Latency | P99 Latency | Average Latency |
+|-------------|---------|-------------|-------------|-----------------|
+| 10          | 46.5836 | 0.2628      | 0.2791      | 0.2145          |
+| 20          | 75.3579 | 0.3251      | 0.3541      | 0.2651          |
+| 30          | 77.6247 | 0.5222      | 0.5766      | 0.3860          |
+| 40          | 76.6313 | 0.7089      | 0.7854      | 0.5212          |
+
+#### CPU Monitoring
+
+During the query phase, CPU utilization on each node stays at a high level, indicating that the query workload makes good use of the distributed compute resources.
+
+![Performance768D100M query CPU](/images/vector-search/Performance3BE.png)
+
+## Key Conclusions
+
+- **Tens of millions on a single node:** At the tens-of-millions vector data scale, a Doris single-node deployment can deliver hundreds of QPS for ANN queries while maintaining a high recall rate (>=0.92).
+- **Hundreds of millions, distributed:** On the 100M vector dataset, a multi-BE deployment combined with vector quantization compression can continue to provide online vector query capability (BestQPS approximately 77, Recall@100 approximately 0.93).
+- **Horizontal scalability:** When the data scale exceeds the memory capacity of a single node, distributed deployment is a viable path to sustain online retrieval capability.
+
+## Test Notes
+
+When reading these results, keep the following in mind:
+
+- **Different distance metrics:** The single-node tests use `inner_product`, while the distributed test uses `l2_distance`. **Direct side-by-side comparison of absolute numbers is not recommended.**
+- **Different data scales and index parameters:** The data scales and index parameters (such as whether quantization is enabled) differ across test groups. The results are more suitable for observing how performance scales with data size.
+- **Cold-query correction:** For the single-node `Performance768D10M` test, the result at concurrency 10 has been corrected after removing the impact of cold queries.
+
+## How to Reproduce
+
+The tests are run with the [VectorDBBench](https://github.com/zilliztech/VectorDBBench) tool.
+
+### Single-Node Reproduction
 
 ```bash
+# Performance768D10M
 export NUM_PER_BATCH=500000
 vectordbbench doris ... --case-type Performance768D10M --stream-load-rows-per-batch 500000
 
+# Performance1536D5M
 export NUM_PER_BATCH=250000
 vectordbbench doris ... --case-type Performance1536D5M --stream-load-rows-per-batch 250000
 ```
 
-分布式 3BE：
+### Distributed 3BE Reproduction
 
 ```bash
 export NUM_PER_BATCH=500000
 vectordbbench doris ... --case-type Performance768D100M --stream-load-rows-per-batch 500000
 ```
+
+## FAQ
+
+**Q1: How many vectors can a single 16C64GB node hold at most?**
+
+This depends on the vector dimension, whether quantization is enabled, and the index parameters. In this document, 768-dimensional 10M rows (about 56 GB) runs stably on a single 16C64GB node. If the data scale grows further or the dimension is higher, enable vector quantization or use a multi-BE distributed deployment.
+
+**Q2: Why is the QPS of the distributed test lower than that of the single-node tests?**
+
+The two groups of tests differ in distance metric, data scale, and index parameters (the distributed test enables PQ quantization), so absolute numbers cannot be compared directly. The goal of the distributed test is to validate scalability at large data sizes, not to maximize QPS.
+
+**Q3: Why is quantization required on the 100M dataset?**
+
+The per-node memory cap is 64GB, and the raw size of 100M 768-dimensional vectors already exceeds this capacity. PQ quantization (`pq_m=384`, `pq_nbits=8`) significantly reduces memory consumption, making large-scale online retrieval feasible.
+
+**Q4: Does the load duration include index build time?**
+
+In the single-node tests, "load duration" is the overall write time. The index is built either during writing or in the background compaction phase. In the distributed test, `build index time` is listed separately so that the index build cost can be evaluated for large-scale scenarios.
+
+## Related Documents
+
+- [Vector Index Overview](./overview.md)
+- [HNSW Algorithm Principles](./hnsw.md)
+- [Index Management](./index-management.md)

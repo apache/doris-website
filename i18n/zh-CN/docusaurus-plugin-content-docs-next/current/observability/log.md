@@ -607,7 +607,7 @@ mysql -h fe_host -P fe_mysql_port -u your_username -Dyour_db_name
 
 一些第三方厂商提供了基于 Apache Doris 的可视化日志分析平台，包含类 Kibana Discover 的日志检索分析界面，提供直观、易用的探索式日志分析交互：
 
-![WebUI](/images/WebUI-CN.jpeg)
+![WebUI](/images/WebUI-EN.jpeg)
 
 - 支持全文检索和 SQL 两种模式
 - 支持时间框和直方图上选择查询日志的时间段

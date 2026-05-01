@@ -60,8 +60,6 @@ HLL 是近似算法，统计结果与精确值通常存在 1%~2% 的误差。对
 
 Hive Bitmap、HLL UDF 需要在 Hive / Spark 中使用，需先编译 Doris FE 模块得到 `hive-udf.jar`。
 
-**编译准备**：若已完成过 ldb 源码编译，可直接编译 FE；否则需手动安装 thrift，详见 [FE 开发环境搭建](https://doris.apache.org/zh-CN/community/developer-guide/fe-idea-dev/)。
-
 ```bash
 # 1. 克隆 Doris 源码
 git clone https://github.com/apache/doris.git

@@ -1,8 +1,257 @@
 ---
 {
-    "title": "表设计",
+    "title": "Apache Doris Table Design Guide",
     "language": "en",
-    "description": "Apache Doris 表设计完整指南：覆盖表模型、数据类型、分区分桶、索引、存储优化与 Schema 演进。"
+    "description": "A complete guide to Apache Doris table design: covers table models, data types, partitioning and bucketing, indexes, storage optimization, and schema evolution."
 }
 ---
 
+import GettingStartedCard from '@site/src/components/getting-started-card/getting-started-card';
+
+{/* Knowledge type: section navigation / concept entry point */}
+{/* Use cases: creating a new table / optimizing the structure of an existing table */}
+
+In Apache Doris, table design directly determines write performance, query efficiency, and storage cost. This chapter is organized around typical design scenarios to help you design a table from scratch or optimize the structure of an existing table.
+
+## Design Workflow
+
+Designing a Doris table typically involves the following steps:
+
+1. **Choose a table model**: decide how data is stored, deduplicated, and aggregated.
+2. **Define columns and data types**: choose appropriate types for your business fields.
+3. **Plan partitioning and bucketing**: distribute data evenly and enable pruning.
+4. **Add indexes**: accelerate point queries, range scans, or full-text search.
+5. **Optimize storage**: reduce cost through compression, hybrid row-column storage, or hot/cold tiering.
+6. **Evolve the schema**: adjust the schema or use auto-increment columns as the business changes.
+
+## Creating a Table
+
+Use the [CREATE TABLE](../sql-manual/sql-statements/table-and-view/table/CREATE-TABLE) statement to create a table in Doris. To derive a new table from an existing one, you can use:
+
+- [CREATE TABLE ... LIKE](../sql-manual/sql-statements/table-and-view/table/CREATE-TABLE): reuse the structure of an existing table.
+- [CREATE TABLE ... AS SELECT (CTAS)](../sql-manual/sql-statements/table-and-view/table/CREATE-TABLE): create a table based on the result of a query.
+
+### Table Name Rules
+
+Table names in Doris are case-sensitive by default and have a maximum length of 64 bytes. You can adjust this with the following configurations:
+
+| Configuration | Default | Description |
+| --- | --- | --- |
+| [lower_case_table_names](../admin-manual/config/fe-config.md) | Case-sensitive | Configured only when the cluster is first initialized; cannot be changed afterward |
+| [table_name_length_limit](../admin-manual/config/fe-config.md) | 64 bytes | Setting it too large is not recommended |
+
+### Key Table Properties
+
+When creating a table, you can specify common properties in PROPERTIES. See [CREATE TABLE](../sql-manual/sql-statements/table-and-view/table/CREATE-TABLE) for details:
+
+| Property | Purpose |
+| --- | --- |
+| `buckets` | Determines the granularity of data distribution within the table |
+| `storage_medium` | Controls the storage medium, such as HDD, SSD, or remote shared storage |
+| `replication_num` | Controls the number of data replicas for redundancy and reliability |
+| `storage_policy` | Configures the hot/cold data tiering migration policy |
+
+:::tip
+Table properties apply at the partition level. Modifying table properties only takes effect for partitions created in the future; existing partitions are not affected. See [ALTER TABLE PROPERTY](../sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-PROPERTY) and [ALTER TABLE DISTRIBUTION](../sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-DISTRIBUTION) for details. [Dynamic partitioning](data-partitioning/dynamic-partitioning.md) can set these properties separately.
+:::
+
+## Choosing a Table Model
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="Table Model Overview"
+    description="Compare the Duplicate, Aggregate, and Unique models, and choose the right data storage and deduplication approach for your scenario"
+    link="./data-model/intro"
+/>
+
+<GettingStartedCard
+    title="Duplicate Model"
+    description="Preserve raw detail data, suitable for logs, events, and other scenarios that do not require deduplication or aggregation"
+    link="./data-model/duplicate"
+/>
+
+<GettingStartedCard
+    title="Unique Model"
+    description="Deduplicate by primary key and support high-concurrency real-time updates, suitable for CDC, orders, and other scenarios where data is updated by primary key"
+    link="./data-model/unique"
+/>
+
+<GettingStartedCard
+    title="Aggregate Model"
+    description="Pre-aggregate data by dimensions to improve performance for reporting and multi-dimensional analysis queries"
+    link="./data-model/aggregate"
+/>
+
+<GettingStartedCard
+    title="Model Selection Tips"
+    description="Recommendations for table models and Key column design based on typical business scenarios"
+    link="./data-model/tips"
+/>
+</div>
+
+## Defining Columns and Data Types
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="Data Types"
+    description="Reference all data types supported by Doris, including numeric, string, date, and semi-structured types"
+    link="./data-type"
+/>
+</div>
+
+## Planning Partitioning and Bucketing
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="Data Distribution Concepts"
+    description="Understand how partitioning and bucketing map data to tablets to fully leverage the storage and compute capabilities of multiple nodes"
+    link="./data-partitioning/data-distribution"
+/>
+
+<GettingStartedCard
+    title="Basic Concepts"
+    description="Explanations of basic terms related to data distribution, including partition, bucket, tablet, and replica"
+    link="./data-partitioning/basic-concepts"
+/>
+
+<GettingStartedCard
+    title="Manual Partitioning"
+    description="Explicitly define partition ranges at table creation, suitable for scenarios with fixed partitions and a need for fine-grained control"
+    link="./data-partitioning/manual-partitioning"
+/>
+
+<GettingStartedCard
+    title="Dynamic Partitioning"
+    description="Automatically create and reclaim partitions along the time dimension to simplify the operations of time-series tables"
+    link="./data-partitioning/dynamic-partitioning"
+/>
+
+<GettingStartedCard
+    title="Auto Partitioning"
+    description="Automatically create partitions based on incoming data, eliminating the need to define partition ranges in advance"
+    link="./data-partitioning/auto-partitioning"
+/>
+
+<GettingStartedCard
+    title="Data Bucketing"
+    description="Choose appropriate bucketing columns and the number of buckets so that data is evenly distributed within partitions"
+    link="./data-partitioning/data-bucketing"
+/>
+
+<GettingStartedCard
+    title="Common Issues"
+    description="Common mistakes and troubleshooting methods in partitioning and bucketing design"
+    link="./data-partitioning/common-issues"
+/>
+</div>
+
+## Accelerating Queries: Indexes
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="Index Overview"
+    description="Compare the various index types supported by Doris and their applicable query scenarios"
+    link="./index/index-overview"
+/>
+
+<GettingStartedCard
+    title="Prefix Index"
+    description="A built-in index based on the sort key that accelerates equality and range queries"
+    link="./index/prefix-index"
+/>
+
+<GettingStartedCard
+    title="BloomFilter Index"
+    description="Accelerate equality queries on high-cardinality columns and reduce unnecessary data scans"
+    link="./index/bloomfilter"
+/>
+
+<GettingStartedCard
+    title="NGram BloomFilter Index"
+    description="Accelerate LIKE fuzzy match queries without introducing a full inverted index"
+    link="./index/ngram-bloomfilter-index"
+/>
+
+<GettingStartedCard
+    title="Inverted Index (Full-Text Search)"
+    description="Support tokenized full-text search and keyword and phrase matching, suitable for log and text analysis"
+    link="./index/inverted-index/overview"
+/>
+
+<GettingStartedCard
+    title="Vector Index"
+    description="Accelerate similarity search on high-dimensional vectors based on algorithms such as HNSW and IVF"
+    link="../ai/vector-search/hnsw"
+/>
+</div>
+
+## Optimizing Storage
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="Storage Format"
+    description="Learn about the design and advantages of the Doris columnar storage format V3"
+    link="./storage-format"
+/>
+
+<GettingStartedCard
+    title="Data Compression"
+    description="Choose an appropriate compression algorithm to balance storage cost and query performance"
+    link="./column-compression"
+/>
+
+<GettingStartedCard
+    title="Hybrid Row-Column Storage"
+    description="Add row storage on top of column storage to accelerate point queries on wide tables"
+    link="./row-store"
+/>
+
+<GettingStartedCard
+    title="Hot/Cold Data Tiering"
+    description="Move cold data down to SSD/HDD or remote storage such as S3 and HDFS to reduce storage cost"
+    link="./tiered-storage/overview"
+/>
+</div>
+
+## Evolving the Schema
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="Schema Change"
+    description="Add, drop, or modify columns and types with ALTER TABLE, and learn the difference between lightweight and heavyweight changes"
+    link="./schema-change"
+/>
+
+<GettingStartedCard
+    title="Auto-Increment Column"
+    description="Use an Auto Increment Column to generate unique numeric IDs automatically and simplify data writes"
+    link="./auto-increment"
+/>
+</div>
+
+## Special Tables and Best Practices
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="Temporary Tables"
+    description="Break complex SQL into multiple steps and stage intermediate results for easier debugging and reuse"
+    link="./temporary-table"
+/>
+
+<GettingStartedCard
+    title="Table Design Best Practices"
+    description="A summary of key design recommendations for table models, Key columns, partitioning and bucketing, indexes, and more"
+    link="./best-practice"
+/>
+</div>
+
+## Design Considerations
+
+{/* Knowledge type: considerations / design constraints */}
+
+| Design Item | Description | Impact |
+| --- | --- | --- |
+| Data model | **Cannot be modified** after the table is created; choose the right [data model](./data-model/intro.mdx) in advance | Determines subsequent write and query patterns |
+| Number of buckets | The number of buckets in already-created partitions cannot be modified, but can be adjusted via [partition replacement](../data-operate/delete/table-temp-partition.md); the number of buckets for future partitions in dynamic partitioning can be modified | Affects data balance and query parallelism |
+| Column changes | Adding or dropping VALUE columns is a lightweight operation (completes in seconds); adding or dropping KEY columns or modifying data types is a heavyweight operation | Avoid KEY column changes on large datasets when possible |
+| Storage policy | Use [hot/cold tiering](./tiered-storage/overview.md) to migrate cold data to HDD, S3, or HDFS | Significantly reduces storage cost |

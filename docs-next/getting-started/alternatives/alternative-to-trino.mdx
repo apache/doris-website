@@ -1,68 +1,84 @@
 ---
 {
-    "title": "Apache Doris vs Trino / Presto",
-    "language": "zh-CN",
-    "description": "Apache Doris and Trino/Presto are both popular data lakehouse query engines, but Doris outperforms Trino/Presto in terms of performance."
+    "title": "Apache Doris vs Trino/Presto: Selection Guide and Performance Comparison",
+    "sidebar_label": "Apache Doris vs Trino/Presto",
+    "language": "en",
+    "description": "Comparison between Apache Doris and Trino/Presto, covering performance benchmarks, architectural differences, and selection recommendations. Doris delivers up to 10x faster internal table queries and 2-3x faster lakehouse queries.",
+    "keywords": ["Apache Doris", "Trino", "Presto", "data lake", "lakehouse", "performance comparison", "selection guide"]
 }
 ---
 
-Apache Doris and Trino/Presto are both popular data lakehouse query engines, but Doris outperforms Trino/Presto in terms of performance. While Trino/Presto are primarily query engines, Doris can also function as a standalone data warehouse. This enables enterprises to unify their data warehouse and Lakehouse query engine into one with Doris, simplifying their data architecture
+Apache Doris and Trino/Presto are both mainstream lakehouse query engines, but Doris has a clear performance advantage. Trino/Presto focuses primarily on query acceleration, while Doris not only accelerates queries but also serves as a standalone data warehouse. Enterprises can use Doris to unify the data warehouse and lakehouse query engine, simplifying their data architecture.
 
-- **Unified**: Doris unifies data warehouse and Lakehouse query engine, simplifying the tech stack
+- **Unified**: Apache Doris unifies the data warehouse and the lakehouse query engine, effectively simplifying the enterprise technology stack.
 
-- **10x Query Performance**: Doris native table boosts query performance by up to 10x compared to Presto/Trino
+- **10x performance gains**: Compared with Presto/Trino, Doris delivers up to 10x faster internal table query performance.
 
-- **2-3x Faster**: Doris as a Lakehouse engine is 2-3x faster than Presto/Trino
-
-
-## Featured Migration Cases
-
-<div style={{ display:'flex', justifyContent:'space-between' }}>
-
-    <div style={{paddingTop:'2rem', paddingBottom:'2rem',paddingLeft:'2rem',paddingRight:'2.5rem', boxSizing:'border-box', borderWidth:'0.5px', borderRadius:'0.75px', borderColor:'#e5e7eb'}}>
-    
-        <div style={{ display:'flex', justifyContent:'space-between', flexDirection:'column' }}>
-            <div style={{marginBottom:'1.25rem'}}>
-                <img alt='tencent-music' loading="lazy" width="200" height="40" decoding="async" data-nimg="1" style={{color:'transparent'}} src="/images/comparisons/cisco.png" />
-            </div>
-            <div style={{marginBbottom:'1.25rem'}}>
-            “As the world-renowed internet giant, our early data platform used Trino, Pinot, Iceberg, and Kyuubi, but faced complexity, redundancy, and poor performance. By replacing them with Apache Doris, we unified its data lakehouse and query engine, **boosting performance and reducing costs by 30%.**”
-            </div>
-        </div>
-    
-    </div>
-
-    <div style={{paddingTop:'2rem', paddingBottom:'2rem',paddingLeft:'2rem',paddingRight:'2.5rem', boxSizing:'border-box', borderWidth:'0.5px', borderRadius:'0.75px', borderColor:'#e5e7eb'}}>
-    
-        <div style={{ display:'flex', justifyContent:'space-between', flexDirection:'column' }}>
-            <div style={{marginBottom:'1.25rem'}}>
-                <img alt='tencent-music' loading="lazy" width="200" height="40" decoding="async" data-nimg="1" style={{color:'transparent'}} src="/images/comparisons/netease-games.png" />
-            </div>
-            <div style={{marginBbottom:'1.25rem'}}>
-            “After switching from Presto to Doris, query performance significantly improved, **reducing query time from 20-40 seconds to 1-2 seconds.** By designing 2-3 materialized views based on common data dimensions, Doris can automatically match the optimal view for queries, further enhancing performance.”
-            </div>
-        </div>
-    
-    </div>
-
-     <div style={{paddingTop:'2rem', paddingBottom:'2rem',paddingLeft:'2rem',paddingRight:'2.5rem', boxSizing:'border-box', borderWidth:'0.5px', borderRadius:'0.75px', borderColor:'#e5e7eb'}}>
-    
-        <div style={{ display:'flex', justifyContent:'space-between', flexDirection:'column' }}>
-            <div style={{marginBottom:'1.25rem'}}>
-                <img alt='tencent-music' loading="lazy" width="150" height="40" decoding="async" data-nimg="1" style={{color:'transparent'}} src="/images/comparisons/zto.png" />
-            </div>
-            <div style={{marginBbottom:'1.25rem'}}>
-            “Using Trino and SparkSQL, query latency was at the minute level, and performance was low. **After switching to Doris, performance improved 2 times.** Doris also unified the tech stack, simplifying the management of real-time and interactive analytics tools.”
-            </div>            
-        </div>
-    
-    </div>
-
-</div> 
+- **2-3x execution efficiency**: As a lakehouse engine, Doris executes 2-3x faster than Presto/Trino.
 
 
-## Apache Doris vs. Trino / Presto
+## When to Choose Apache Doris
 
+| Scenario | Recommended Choice | Reason |
+|------|----------|------|
+| High-concurrency real-time analytics (QPS > 1000) | **Apache Doris** | Supports thousands of concurrent queries with excellent real-time analytics performance |
+| Unified data warehouse + lakehouse queries | **Apache Doris** | Integrated architecture that simplifies the technology stack |
+| Maximum internal table query performance | **Apache Doris** | Fully vectorized engine delivers up to 10x performance gains |
+| Transparent acceleration via automatic materialized views | **Apache Doris** | The query optimizer automatically matches the optimal materialized view |
+| Federated query capability only | **Trino/Presto** | Strong at querying across heterogeneous data sources |
+| Mature data warehouse already in place, no migration desired | **Trino/Presto** | No need to replace the existing architecture |
+
+
+## Featured Case Studies
+
+<div className="case-studies">
+
+<section>
+
+### Cisco
+
+![Cisco](/images/comparisons/cisco.png)
+
+> "In the early days, we built our data platform with multiple systems such as Trino, Pinot, Iceberg, and Kyuubi, which led to a complex architecture, duplicated data storage, difficult operations, low resource utilization, and poor data timeliness. By introducing Apache Doris to replace several technology stacks, we achieved a unified lakehouse, significantly improved query performance and system stability, and reduced resource costs by 30%."
+
+- Unified lakehouse architecture
+- Significantly improved query performance and system stability
+- 30% reduction in resource costs
+
+</section>
+
+<section>
+
+### NetEase Games
+
+![NetEase Games](/images/comparisons/netease-games.png)
+
+> "After migrating to Doris, overall query performance improved substantially. With Presto, multidimensional analysis queries previously took 20 to 40 seconds, while Doris reduced this to 1 to 2 seconds. In addition, a major advantage of Doris is its ability to automatically identify and match the optimal materialized view for queries, which further enhances performance for complex analytics."
+
+- Query time reduced from 20-40 seconds to 1-2 seconds
+- Automatic materialized view matching optimizes performance for complex analytics
+- Substantial improvement in multidimensional analytics performance
+
+</section>
+
+<section>
+
+### ZTO Express
+
+![ZTO Express](/images/comparisons/zto.png)
+
+> "With Trino and SparkSQL, query latency stayed at the minute level, presenting a clear performance bottleneck. After migrating to Apache Doris, overall query performance improved by more than 2x. The unified Doris architecture effectively addressed data silos and resource redundancy in our hybrid setup, and accelerated response times for real-time analytics and interactive ad hoc queries."
+
+- More than 2x improvement in query performance
+- Eliminated data silos and resource redundancy
+- Accelerated response for real-time analytics and ad hoc queries
+
+</section>
+
+</div>
+
+
+## Core Differences
 
 <table border="1">
     <thead>
@@ -74,15 +90,15 @@ Apache Doris and Trino/Presto are both popular data lakehouse query engines, but
     </thead>
     <tbody>
     <tr>
-        <td><strong>Architecture</strong></td>
+        <td><strong>System Architecture</strong></td>
         <td>
         <ul>
-            <li style={{fontSize:'14px'}}>**Unified Architecture:** Combines the capabilities of a data warehouse and a Lakehouse query engine</li>
+            <li style={{fontSize:'14px'}}>**Unified architecture:** Combines data warehouse and data lake query capabilities</li>
         </ul>
         </td>
         <td>
         <ul>
-            <li style={{fontSize:'14px'}}>**Federated Querying:** Excels in querying across multiple heterogeneous data sources without data movement, but lacks built-in storage</li>
+            <li style={{fontSize:'14px'}}>**Federated queries:** Strong at querying across heterogeneous data sources, but lacks a built-in storage layer</li>
         </ul>
         </td>
     </tr>
@@ -90,40 +106,40 @@ Apache Doris and Trino/Presto are both popular data lakehouse query engines, but
         <td><strong>Execution Engine</strong></td>
         <td>
          <ul>
-            <li style={{fontSize:'14px'}}>Fully vectorized execution engine implemented in C++, for high-performance data processing</li>
+            <li style={{fontSize:'14px'}}>**Fully vectorized execution engine implemented in C++, delivering high-performance data processing**</li>
         </ul>
         </td>
         <td>
         <ul>
-            <li style={{fontSize:'14px'}}>Implemented primarily in Java, with vectorization currently in development as part of the Hummingbird project</li>
+            <li style={{fontSize:'14px'}}>The vectorized engine is primarily implemented in Java and is currently under development as part of the Hummingbird project</li>
         </ul>
         </td>
     </tr>
     <tr>
-        <td><strong>Query Optimizer</strong></td>
+        <td><strong>Query Optimization</strong></td>
         <td>
         <ul>
-            <li style={{fontSize:'14px'}}>Advanced query optimizer with cost-based optimization for complex SQL operations like joins, aggregations, and sorting</li>
+            <li style={{fontSize:'14px'}}>**Provides a cost-based optimizer (CBO) that optimizes complex queries, including JOIN, aggregation analytics, and sorting**</li>
         </ul>
         </td>
         <td>
         <ul>
-            <li style={{fontSize:'14px'}}>Supports cost-based optimization but with less advanced statistics collection and manual full collection</li>
+            <li style={{fontSize:'14px'}}>Supports cost-based optimization, but the statistics collection mechanism is incomplete and requires manual full collection</li>
         </ul>
         </td>
     </tr>
     <tr>
-        <td><strong>Caching Mechanisms</strong></td>
+        <td><strong>Caching</strong></td>
         <td>
          <ul>
-            <li style={{fontSize:'14px'}}>**Metadata Caching:** In-memory metadata caching with TTL, auto-refresh, and incremental synchronization</li>
-            <li style={{fontSize:'14px'}}>**Data Caching:** Hot data caching on local SSDs for reduced network I/O</li>
-            <li style={{fontSize:'14px'}}>**Query Caching:** SQL Cache and Partition Cache for query result caching</li>
+            <li style={{fontSize:'14px'}}>**Metadata cache:** In-memory metadata cache with TTL, automatic refresh, and incremental synchronization</li>
+            <li style={{fontSize:'14px'}}>**Data cache:** Local SSD hot data cache reduces network I/O</li>
+            <li style={{fontSize:'14px'}}>**Query cache:** Supports SQL cache and partition cache</li>
         </ul>
         </td>
         <td>
         <ul>
-            <li style={{fontSize:'14px'}}>**Data Caching:** Relies on external caching solutions like Alluxio</li>
+            <li style={{fontSize:'14px'}}>**Data cache:** Relies on external caching solutions such as Alluxio</li>
         </ul>
         </td>
     </tr>
@@ -131,13 +147,13 @@ Apache Doris and Trino/Presto are both popular data lakehouse query engines, but
         <td><strong>Materialized Views</strong></td>
         <td>
         <ul>
-            <li style={{fontSize:'14px'}}>**Incremental Refresh:** Supports incremental refresh and multiple update strategies</li>
-            <li style={{fontSize:'14px'}}>**Transparent Acceleration:** Query optimizer automatically routes queries to the most suitable materialized views</li>
+            <li style={{fontSize:'14px'}}>**Incremental refresh:** Supports incremental refresh and multiple data refresh strategies</li>
+            <li style={{fontSize:'14px'}}>**Transparent query acceleration:** The query optimizer automatically identifies and matches the optimal materialized view for queries</li>
         </ul>
         </td>
         <td>
           <ul>
-            <li style={{fontSize:'14px'}}>**Manual Refresh:** Limited to manual, full refresh with less advanced features</li>
+            <li style={{fontSize:'14px'}}>**Manual refresh:** Only supports manual full refresh</li>
         </ul>
         </td>
     </tr>
@@ -145,14 +161,14 @@ Apache Doris and Trino/Presto are both popular data lakehouse query engines, but
         <td><strong>Use Cases</strong></td>
         <td>
         <ul>
-            <li style={{fontSize:'14px'}}>High-concurrency real-time analytics</li>
-            <li style={{fontSize:'14px'}}>Interactive analytics</li>
+            <li style={{fontSize:'14px'}}>**High-concurrency real-time analytics**</li>
+            <li style={{fontSize:'14px'}}>**Interactive analytics**</li>
         </ul>
         </td>
         <td>
           <ul>
-            <li style={{fontSize:'14px'}}>Only Interactive analytics</li>
-        </ul>
+            <li style={{fontSize:'14px'}}>Supports interactive analytics only</li>
+          </ul>
         </td>
     </tr>
     </tbody>
@@ -162,24 +178,36 @@ Apache Doris and Trino/Presto are both popular data lakehouse query engines, but
 
 ### TPC-DS 1TB Benchmark
 
+The TPC-DS 1TB benchmark uses a 1TB dataset with 24 tables and 6.35 billion records, evaluating data warehouse performance through 99 complex queries that cover correlated queries, aggregation, and nested subqueries. Built on a snowflake schema, the benchmark simulates a real-world e-commerce sales scenario, and the complexity of the queries makes processing 1TB of data a significant challenge.
 
-<div style={{ display:'flex', justifyContent:'space-between', flexDirection:'column', paddingTop:'0.5rem',paddingBottom:'0.5rem'}}>
-    <div style={{marginRight:'2rem'}}>
-        <p>The TPC-DS 1TB Benchmark evaluates data warehouse performance using a 1TB dataset with 6.35 billion records across 24 tables. It includes 99 complex queries to test joins, aggregations, and subqueries. Based on a snowflake schema, it simulates real-world sales scenarios. The 1TB scale is challenging due to query complexity.</p>
-        <p>The test environment consists of:</p>
-        <ul>
-            <li>1 FE/Coordinator node and 5 BE/Worker nodes.</li>
-            <li>Each node has 64 cores, 1.5TB of memory, and SSD storage.</li>
-            <li>HDFS is co-located on these nodes, and Hive tables are created.</li>
-        </ul>
-        <p>In this test, using the same dataset and equal computing service, the results shows that:</p>
-        <ul>
-            <li>**When data is imported into Doris' internal tables and queried using Doris, it achieves the shortest execution time.**</li>
-            <li>**When Doris and Trino are used separately to query data directly from Hive tables, Doris demonstrates superior query acceleration performance in the data lake.**</li>
-        </ul>
-    </div>
-    <div>
-        <img alt="TPC-DS 1TB  Benchmark" loading="lazy" width="400" height="338" decoding="async" data-nimg="1" src="/images/comparisons/tpc-ds-1tb-trino.png" style={{color: 'transparent', marginTop:0}} />
-    </div>
-</div>
+**Test environment:**
 
+- 1 FE/Coordinator node and 5 BE/Worker nodes
+- 64-core CPU, 1.5TB memory, and SSD storage per node
+- HDFS deployed on the compute nodes, with Hive tables created
+
+**Test results:**
+
+- When data is loaded into Doris internal tables and queried by Doris, overall query latency is the lowest.
+- When Doris and Trino each query external Hive tables, Doris delivers better query acceleration in data lake scenarios.
+
+![TPC-DS 1TB Benchmark](/images/next/doris-vs-trino/benchmark.jpg)
+
+
+## FAQ
+
+### Q: Can Doris and Trino coexist?
+
+In terms of functionality, Doris can replace Trino as long as the required data source types are supported. The actual decision depends on the migration plan and compatibility with existing workloads.
+
+### Q: How long does migration to Doris take?
+
+Doris provides a rich set of ETL tools and Hive-compatible APIs. Migration typically takes 2 to 4 weeks.
+
+### Q: Is Doris really 2-3x faster than Trino for lakehouse queries?
+
+Yes. According to the TPC-DS 1TB benchmark, Doris delivers better query acceleration than Trino in data lake scenarios when querying external Hive tables.
+
+### Q: How do I choose the right materialized view strategy?
+
+Doris supports multiple materialized view refresh strategies. Choose incremental refresh or full refresh based on data update frequency and query patterns. The query optimizer automatically matches the optimal materialized view.

@@ -1,33 +1,31 @@
 ---
 {
-    "title": "Schema & Index Optimization",
+    "title": "Schema and Index Optimization",
     "language": "en",
-    "description": "Optimize table schema, index design, and table scanning to unlock Apache Doris query performance."
+    "description": "Unlock Apache Doris query performance through table schema, index design, and scan optimization."
 }
 ---
 
 import GettingStartedCard from '@site/src/components/getting-started-card/getting-started-card';
 
-Well-designed schemas, the right indexes, and efficient scan patterns set the ceiling for query performance. Optimize each layer in turn.
-
-## Optimization Topics
+A well-designed table schema, the right index choices, and efficient scan strategies determine the upper bound of query performance. Optimize layer by layer in the following order.
 
 <div className="cards-grid">
 <GettingStartedCard
-    title="Optimizing Table Schema Design"
-    description="Choose table engines, partition and bucket columns, key columns, and field types to avoid skew and unlock parallelism."
+    title="Table Schema Design Optimization"
+    description="Choose the table model, partitioning and bucketing columns, Key columns, and field types to avoid data skew and fully use parallelism."
     link="optimizing-table-schema"
 />
 
 <GettingStartedCard
-    title="Optimizing Table Index Design"
-    description="Pick the right index type — prefix, BloomFilter, NGram BloomFilter, or inverted — and apply it where it pays off."
+    title="Table Index Design Optimization"
+    description="Pick the prefix index, BloomFilter, NGram BloomFilter, or inverted index based on query patterns, and apply them to the right columns."
     link="optimizing-table-index"
 />
 
 <GettingStartedCard
-    title="Optimizing Table Scanning"
-    description="Use partition pruning, prefix index push-down, and runtime filters to scan less data per query."
+    title="Table Scan Optimization"
+    description="Use partition pruning, prefix index pushdown, and Runtime Filter to scan less data on every query."
     link="optimizing-table-scanning"
 />
 </div>

@@ -1,131 +1,188 @@
 ---
 {
     "title": "QuickSight",
-    "language": "zh-CN",
-    "description": "QuickSight 可以通过官方 MySQL 数据源以 Directly query 或 Import 模式连接到 Apache Doris"
+    "language": "en",
+    "description": "Connect Apache Doris in Amazon QuickSight through the MySQL data source, configure a Directly query dataset, and build a visualization dashboard based on TPC-H data.",
+    "keywords": [
+        "QuickSight connect Doris",
+        "Amazon QuickSight Apache Doris",
+        "Doris visualization analysis",
+        "QuickSight Directly query"
+    ]
 }
 ---
 
-QuickSight 可以通过官方 MySQL 数据源以 Directly query 或 Import 模式连接到 Apache Doris
+<!-- Knowledge type: Operational steps -->
+<!-- Applicable scenarios: BI tool integration / Visualization analysis -->
 
-## 前提条件
+QuickSight can connect to Apache Doris through the official MySQL data source, and supports both **Directly query** and **Import** modes. This document is intended for users who want to analyze Doris data in QuickSight. It covers connection preparation, dataset creation, and the workflow for building a multi-table associated visualization dashboard based on TPC-H data.
 
-- Apache Doris  版本要求不低于 3.1.2
-- 网络连通性（VPC、安全组配置），需要结合 Doris 部署环境进行配置，以保证 AWS 服务器能访问到你的 Doris 集群。
-- 在连接到 Doris 的 MySQL client 上运行如下 SQL 来调整声明 MySQL 的兼容版本 ：
+## Applicable scenarios
 
-  ```sql
-  SET GLOBAL version = '8.3.99';
-  ```
-  校验结果：
-  ```sql
-  mysql> show variables like "version";
-  +---------------+--------+---------------+---------+
-  | Variable_name | Value  | Default_Value | Changed |
-  +---------------+--------+---------------+---------+
-  | version       | 8.3.99 | 5.7.99        | 1       |
-  +---------------+--------+---------------+---------+
-  1 row in set (0.01 sec)
-  ```
+| Use case | User goal | Outcome |
+| --- | --- | --- |
+| Connect to a Doris data source | Connect to Apache Doris in QuickSight through the official MySQL data source | QuickSight can access data in the Doris cluster |
+| Create an analysis dataset | Create a QuickSight Dataset based on a Doris table | The dataset can be used for subsequent analysis and visualization |
+| Build a multi-table associated dashboard | Use the TPC-H `customer`, `nation`, and `orders` tables for associated analysis | A dashboard that counts the number of orders by country and order status is generated |
 
-## 将 QuickSight 连接到 Apache Doris
+## Workflow
 
-首先，访问 [https://quicksight.aws.amazon.com](https://quicksight.aws.amazon.com/)，导航到数据集并点击“新建数据集”：
+| Stage | Goal | Description |
+| --- | --- | --- |
+| Step 1 | Complete connection preparation | Verify the Doris version, network connectivity, and MySQL compatibility version |
+| Step 2 | Create a QuickSight data source | Use the official QuickSight MySQL connector to connect to Apache Doris |
+| Step 3 | Create a Dataset | Select a Doris table and create a dataset using **Directly query** mode |
+| Step 4 | Build a visualization dashboard | Add multiple Datasets, configure table associations, and publish the analysis dashboard |
 
-![](/images/ecomsystem/quicksight/Cm8EbaeoIoYDeAxGDR8cuSFhns1.png)
+## Prerequisites
 
-![](/images/ecomsystem/quicksight/XngnbqKxhouZHIxgVYhcyta5n3f.png)
+Before starting the configuration, confirm that the following conditions are met:
 
-搜索 QuickSight 捆绑的官方 MySQL 连接器：
+| Requirement | Specification |
+| --- | --- |
+| Doris version | Apache Doris version 3.1.2 or later |
+| Network connectivity | Configure VPC and security groups according to the Doris deployment environment to ensure that the AWS server can access the Doris cluster |
+| MySQL compatibility version | Declare the MySQL compatibility version on the MySQL client connecting to Doris |
 
-![](/images/ecomsystem/quicksight/Pjf5bRheroLmtKxcZ2PcFYMkn7d.png)
+On the MySQL client connecting to Doris, run the following SQL to declare the MySQL compatibility version:
 
-指定您的连接详细信息。请注意，MySQL 接口端口默认为 9030，具体取决于您的 Fe `query_port` 配置可能会有所不同。
+```sql
+SET GLOBAL version = '8.3.99';
+```
 
-![](/images/ecomsystem/quicksight/DlJobTycDoqhDOxdUtCcqZCxnkc.png)
+Run the following SQL to verify the configuration:
 
-现在，您可以从列表中选择一个表：
+```sql
+mysql> show variables like "version";
++---------------+--------+---------------+---------+
+| Variable_name | Value  | Default_Value | Changed |
++---------------+--------+---------------+---------+
+| version       | 8.3.99 | 5.7.99        | 1       |
++---------------+--------+---------------+---------+
+1 row in set (0.01 sec)
+```
 
-![](/images/ecomsystem/quicksight/LAFXbSSnwop5C7xn3kPcEcBZnmc.png)
+## Connect QuickSight to Apache Doris
 
-这里推荐您选择 “Directly query” 模式：
+This section describes how to create a Doris data source in QuickSight and create a Dataset based on a Doris table.
 
-![](/images/ecomsystem/quicksight/RN4fbtJU5o89gQxePQKcOGRBnyh.png)
+### Step 1: Create a new QuickSight dataset
 
-此外，通过点击 “Edit/Preview data”，您应该能够看到内部结构的表结构或调整自定义 SQL ，并且可以在此处进行 数据集的调整：
+Go to the [QuickSight console](https://quicksight.aws.amazon.com/), open the datasets page, and click **New dataset**.
 
-![](/images/ecomsystem/quicksight/DoVOMbQTxBrRBpx3Bbgn2gcUXLd.png)
+![Open the QuickSight datasets page](/images/next/connection-integration/data-integration/quicksight/Cm8EbaeoIoYDeAxGDR8cuSFhns1.png)
 
-现在，您可以继续发布数据集并创建新的可视化！
+![Create a new QuickSight dataset](/images/next/connection-integration/data-integration/quicksight/XngnbqKxhouZHIxgVYhcyta5n3f.png)
 
-![](/images/ecomsystem/quicksight/MXgObQbdDoLBVTxBrRBcUpx3n2g.png)
+### Step 2: Select the MySQL connector
 
-## 在 QuickSight 中构建可视化
+Search for and select the official MySQL connector built into QuickSight.
 
-我们选择 TPC-H 数据作为数据源，Doris TPC-H 数据源构建方式参考[此文档](../../benchmark/tpch)
+![Select the QuickSight MySQL connector](/images/next/connection-integration/data-integration/quicksight/Pjf5bRheroLmtKxcZ2PcFYMkn7d.png)
 
-现在我们在 QuickSight 中配置了 Doris 数据源，让我们可视化数据...
+### Step 3: Fill in the Doris connection information
 
-由于Doris 在多表关联场景下的出色性能，我们选择一个设计多表关联的场景，假设我们需要知道各个国家不同状态的订单统计，接下来按照此需求进行看板构建
+Fill in the Doris connection information as required on the page. The MySQL interface port defaults to `9030`. The actual port is determined by the `query_port` configuration of the Doris FE.
 
-1. 使用上述步骤创建的 Data source 添加以下表作为 Dataset
+![Fill in the Doris connection information](/images/next/connection-integration/data-integration/quicksight/DlJobTycDoqhDOxdUtCcqZCxnkc.png)
 
-- customer
-- nation
-- orders
+### Step 4: Select the Doris table and query mode
 
-2. 点击 创建数据集
+Select the Doris table you want to analyze from the list.
 
-![](/images/ecomsystem/quicksight/LDeebS3RdoB6hPxcYkacV88VnMd.png)
+![Select the Doris table](/images/next/connection-integration/data-integration/quicksight/LAFXbSSnwop5C7xn3kPcEcBZnmc.png)
 
-3. 选用上述步骤创建的数据源
+Selecting **Directly query** mode is recommended.
 
-![](/images/ecomsystem/quicksight/LQlLb26gZoXOurxO3AJc0xCBnqd.png)
+![Select Directly query mode](/images/next/connection-integration/data-integration/quicksight/RN4fbtJU5o89gQxePQKcOGRBnyh.png)
 
-4. 选择需要的表
+After clicking **Edit/Preview data**, you can view the table schema, adjust custom SQL, and modify the Dataset here.
 
-![](/images/ecomsystem/quicksight/W7bDb42r4ovxr3xGDU0cRxmbnsf.png)
+![Preview and edit the QuickSight Dataset](/images/next/connection-integration/data-integration/quicksight/DoVOMbQTxBrRBpx3Bbgn2gcUXLd.png)
 
-选择 Directly query 模式
+### Step 5: Publish the Dataset and create a visualization
 
-![](/images/ecomsystem/quicksight/Nllyb7GkJo8ToCxXSuDc4gNgnvg.png)
+After the Dataset configuration is complete, you can publish the dataset and create a new visualization.
 
-点击 Visualize 创建数据源，按照此步骤为其他表也创建数据源
+![Publish the QuickSight Dataset](/images/next/connection-integration/data-integration/quicksight/MXgObQbdDoLBVTxBrRBcUpx3n2g.png)
 
-5. 进入仪表盘制作工作台，点击当前 Dataset 下拉框，选择 添加新的数据集
+## Build a visualization in QuickSight
 
-![](/images/ecomsystem/quicksight/D18HbY2PWoQvMOxlJTRcOfZenEh.png)
+This section uses TPC-H data as the data source to demonstrate how to build a visualization dashboard based on multi-table associations in QuickSight. For instructions on building the Doris TPC-H data source, see the [TPC-H benchmark documentation](../../lakehouse/best-practices/tpch.md).
 
-6. 将所有的数据集依次勾选，点击 Select，添加入该仪表盘
+The example goal is to count the number of orders for each country across different order statuses. Because Doris delivers good query performance for multi-table association scenarios, this document uses the `customer`, `nation`, and `orders` tables for associated analysis.
 
-![](/images/ecomsystem/quicksight/TzM6boK9No1wD0xBBeAcaJGcnDd.png)
+### Step 1: Create a Dataset based on a Doris table
 
-7. 完成后点击 nation 的操作界面 进入编辑数据集界面，我们接下来为数据集进行列关联
+1. Use the Data source created earlier to add the following tables as Datasets:
 
-![](/images/ecomsystem/quicksight/Y0GpbCY0oo6xeYxfufAcPAC6n1e.png)
+    - `customer`
+    - `nation`
+    - `orders`
 
-8. 如图点击 Add data 添加 数据源
+2. Click **Create dataset**.
 
-![](/images/ecomsystem/quicksight/ZNKgbdPivoM3y7xwr8kcZbWPn8c.png)
+    ![Create a QuickSight dataset](/images/next/connection-integration/data-integration/quicksight/LDeebS3RdoB6hPxcYkacV88VnMd.png)
 
-9. 将三张表添加进去后，进行关联键，关联关系如下：
-    - **customer** ：c_nationkey  --  **nation** : n_nationkey
-    - **customer** ：c_custkey  --  **orders** : o_custkey
+3. Select the data source created earlier.
 
-![](/images/ecomsystem/quicksight/HVNIbL0yDouA8axQmIocXFhFnmc.png)
+    ![Select the previously created data source](/images/next/connection-integration/data-integration/quicksight/LQlLb26gZoXOurxO3AJc0xCBnqd.png)
 
-10. 最终关联完成，点击右上角 Save & publish 发布
+4. Select the required table.
 
-![](/images/ecomsystem/quicksight/CD9pbqFIOouYFtxUrs9cMlyAnph.png)
+    ![Select the table to analyze](/images/next/connection-integration/data-integration/quicksight/W7bDb42r4ovxr3xGDU0cRxmbnsf.png)
 
-11. 回到刚刚添加三个数据源的 Analyses 界面，点击 n_name 出现按 国家名称的订单总数统计图
+5. Select **Directly query** mode.
 
-![](/images/ecomsystem/quicksight/D6Yrb7Igwo5520x3WBbcZ8T9n9f.png)
+    ![Select Directly query mode for the Dataset](/images/next/connection-integration/data-integration/quicksight/Nllyb7GkJo8ToCxXSuDc4gNgnvg.png)
 
-12. 点击 VALUE 选中 o_orderkey ， 点击 GROUP/COLOR 选中 o_orderstatus ，即可得到需求看板
+6. Click **Visualize** to create the data source, and follow the same steps to create data sources for the other tables.
 
-![](/images/ecomsystem/quicksight/Sl8nbfrszok2bexesfwcsNqbngc.png)
+### Step 2: Add multiple Datasets to the analysis
 
-13. 点击右上角 Publish 即可完成 看板发布
+1. Open the dashboard authoring workspace, click the current Dataset dropdown, and select **Add new dataset**.
 
-至此，已经成功将 QuickSight 连接到 Apache Doris，并实现了数据分析和可视化看板制作。
+    ![Add a new dataset to the analysis](/images/next/connection-integration/data-integration/quicksight/D18HbY2PWoQvMOxlJTRcOfZenEh.png)
+
+2. Select all the datasets you want to use, and click **Select** to add them to the current dashboard.
+
+    ![Select multiple Datasets](/images/next/connection-integration/data-integration/quicksight/TzM6boK9No1wD0xBBeAcaJGcnDd.png)
+
+### Step 3: Configure Dataset associations
+
+1. After adding the datasets, click the action entry for `nation` to open the dataset edit interface.
+
+    ![Open the nation dataset edit interface](/images/next/connection-integration/data-integration/quicksight/Y0GpbCY0oo6xeYxfufAcPAC6n1e.png)
+
+2. Click **Add data** to add a data source.
+
+    ![Add a data source to the Dataset](/images/next/connection-integration/data-integration/quicksight/ZNKgbdPivoM3y7xwr8kcZbWPn8c.png)
+
+3. After adding all three tables, configure the association keys. The associations are as follows:
+
+    | Left table | Left field | Right table | Right field |
+    | --- | --- | --- | --- |
+    | `customer` | `c_nationkey` | `nation` | `n_nationkey` |
+    | `customer` | `c_custkey` | `orders` | `o_custkey` |
+
+    ![Configure the associations among the three tables](/images/next/connection-integration/data-integration/quicksight/HVNIbL0yDouA8axQmIocXFhFnmc.png)
+
+4. After the associations are configured, click **Save & publish** in the upper-right corner to publish.
+
+    ![Publish the associated Dataset](/images/next/connection-integration/data-integration/quicksight/CD9pbqFIOouYFtxUrs9cMlyAnph.png)
+
+### Step 4: Configure charts and publish the dashboard
+
+1. Return to the **Analyses** interface where the three data sources have been added, and click `n_name` to generate a chart that counts the total number of orders by country name.
+
+    ![Count the total number of orders by country name](/images/next/connection-integration/data-integration/quicksight/D6Yrb7Igwo5520x3WBbcZ8T9n9f.png)
+
+2. Select `o_orderkey` in **VALUE** and `o_orderstatus` in **GROUP/COLOR** to obtain a dashboard that counts the number of orders by country and order status.
+
+    ![Count the number of orders by country and order status](/images/next/connection-integration/data-integration/quicksight/Sl8nbfrszok2bexesfwcsNqbngc.png)
+
+3. Click **Publish** in the upper-right corner to complete the dashboard publication.
+
+## Result
+
+You have now successfully connected QuickSight to Apache Doris and built data analysis and visualization dashboards.

@@ -11,7 +11,7 @@
 
 Kubernetes 上部署存算分离集群需要提前部署 FoundationDB 服务，推荐两种部署方式：
 
-- 在机器（包括物理机）上直接部署。机器直接部署 FoundationDB 请参考 Doris 存算分离官方文档[部署前准备部分](../../../compute-storage-decoupled/before-deployment)搭建 FoundationDB 集群。部署前请确保 FoundationDB 部署的机器和 Doris 所在的 Kubernetes 在同一个局域网内。
+- 在机器（包括物理机）上直接部署。机器直接部署 FoundationDB 请参考 Doris 存算分离官方文档[部署前准备部分](../../deploy-manually/separating-storage-compute-deploy-manually)搭建 FoundationDB 集群。部署前请确保 FoundationDB 部署的机器和 Doris 所在的 Kubernetes 在同一个局域网内。
 
 - 在 Kubernetes 上部署 FoundationDB。FoundationDB 官方提供 Kubernetes 上部署运维管理服务 [fdb-kubernetes-operator](https://github.com/FoundationDB/fdb-kubernetes-operator)。
 

@@ -1,9 +1,22 @@
 ---
 {
-    "title": "实用手册",
-    "sidebar_label": "实用手册",
-    "language": "zh-CN",
-    "description": "Apache Doris 向量索引实战手册，覆盖建表、建索引、导入、构建、查询调优和常见问题排查。"
+    "title": "Vector Index Practical Guide",
+    "sidebar_label": "Practical Guide",
+    "language": "en",
+    "description": "Apache Doris vector index (ANN) practical guide: an end-to-end operational guide covering table creation, index creation, data ingestion, querying, tuning, and troubleshooting.",
+    "keywords": [
+        "Doris vector index",
+        "ANN index",
+        "HNSW",
+        "IVF",
+        "vector retrieval",
+        "vector search",
+        "semantic search",
+        "RAG",
+        "cosine similarity",
+        "vector recall",
+        "BUILD INDEX"
+    ]
 }
 ---
 
@@ -26,97 +39,113 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-本文给出 Apache Doris 向量检索（ANN）的生产实践流程，覆盖从表设计到参数调优、问题排查的完整链路。
+<!-- Knowledge type: Operational guide / End-to-end workflow -->
+<!-- Applicable scenarios: Launching vector retrieval / Performance tuning / Troubleshooting -->
 
-## 1. 适用范围
+This document is intended for users who need to deploy vector retrieval (ANN) in Apache Doris. It provides a complete operational path from table design to query tuning and troubleshooting. If you are evaluating how to migrate semantic search, RAG, or recommendation recall to Doris, you can follow the steps in this document directly.
 
-Apache Doris 4.x 支持 ANN 向量索引，常见场景包括：
+## Quick Navigation
 
-- 语义搜索
-- RAG 检索
-- 推荐系统
-- 图像或多模态检索
-- 异常检测
+| What you want to do | Section |
+|---|---|
+| Confirm whether the Doris version and table model meet the requirements | [Prerequisites and Limitations](#prerequisites-and-limitations) |
+| Choose between HNSW and IVF index | [Applicable Scenarios and Index Selection](#applicable-scenarios-and-index-selection) |
+| Run the full table creation -> ingestion -> query workflow | [End-to-End Operational Workflow](#end-to-end-operational-workflow) |
+| Sort by cosine similarity | [Using Cosine Similarity](#using-cosine-similarity) |
+| Increase recall / reduce latency | [Query and Build Tuning](#query-and-build-tuning) |
+| Troubleshoot index not taking effect / low recall / ingestion failures | [Common Troubleshooting](#common-troubleshooting) |
 
-支持的索引类型：
+---
 
-- `hnsw`：高召回、在线查询性能好
-- `ivf`：构建更快、内存更省，适合大规模场景
+## Applicable Scenarios and Index Selection
 
-支持的近似距离函数：
+<!-- Knowledge type: Architectural selection decision -->
 
-- `l2_distance_approximate`（`ORDER BY ... ASC`）
-- `inner_product_approximate`（`ORDER BY ... DESC`）
+Starting from Apache Doris 4.x, ANN (Approximate Nearest Neighbor) vector indexes are supported. Common deployment scenarios include:
 
-Cosine 说明：
+- Semantic search
+- RAG retrieval augmentation
+- Recommendation system recall
+- Image or multimodal retrieval
+- Anomaly detection
 
-- ANN 索引不支持直接配置 `metric_type=\"cosine\"`。
-- 如果业务指标是 cosine，请先归一化向量，再使用 `inner_product`。
+### Index Type Comparison
 
-## 2. 前置条件与限制
+| Index type | Recall | Online query performance | Build speed | Memory usage | Applicable scenario |
+|---|---|---|---|---|---|
+| `hnsw` | High | Good | Slow | Higher | Online low-latency retrieval |
+| `ivf` | Medium | Better | Fast | More efficient | Large-scale datasets |
+| `ivf_on_disk` | Medium | Medium | Fast | Most efficient | Ultra-large scale, memory-constrained |
 
-使用 ANN 索引前请确认：
+### Supported Distance Functions
 
-1. Doris 版本：`>= 4.0.0`
-2. 表模型：ANN 仅支持 `DUPLICATE KEY`
-3. 向量列：必须为 `ARRAY<FLOAT> NOT NULL`
-4. 维度一致：导入向量维度必须与索引 `dim` 一致
+| Function | Sort direction | Description |
+|---|---|---|
+| `l2_distance_approximate` | `ORDER BY ... ASC` | Euclidean distance, smaller distance means more similar |
+| `inner_product_approximate` | `ORDER BY ... DESC` | Inner product, larger value means more similar |
 
-建表示例：
+> Cosine similarity cannot be configured directly via `metric_type="cosine"`. It must be implemented by normalizing the vectors and using inner product. For details, see [Using Cosine Similarity](#using-cosine-similarity).
+
+---
+
+## Prerequisites and Limitations
+
+<!-- Knowledge type: Environment requirements -->
+<!-- Applicable scenarios: Pre-deployment check -->
+
+Before using ANN indexes, confirm the following conditions:
+
+| Check item | Requirement |
+|---|---|
+| Doris version | `>= 4.0.0` |
+| Table model | Only `DUPLICATE KEY` is supported |
+| Vector column type | `ARRAY<FLOAT> NOT NULL` |
+| Dimension consistency | The dimension of ingested vectors must match the index `dim` |
+
+Minimal table creation example:
 
 ```sql
 CREATE TABLE document_vectors (
-  id BIGINT NOT NULL,
-  embedding ARRAY<FLOAT> NOT NULL
+    id BIGINT NOT NULL,
+    embedding ARRAY<FLOAT> NOT NULL
 )
 DUPLICATE KEY(id)
 DISTRIBUTED BY HASH(id) BUCKETS 8
 PROPERTIES ("replication_num" = "1");
 ```
 
-## 2.1 Doris ANN 中如何使用 Cosine 相似度
+---
 
-如果业务按 cosine 相似度排序，建议使用以下模式：
+## End-to-End Operational Workflow
 
-1. 数据写入前将向量做 L2 归一化（单位向量）。
-2. 建 ANN 索引时使用 `metric_type=\"inner_product\"`。
-3. 查询时使用 `inner_product_approximate(...)`，并按 `ORDER BY ... DESC` 排序。
+<!-- Knowledge type: Operational steps -->
+<!-- Applicable scenarios: First-time deployment of vector retrieval -->
 
-原理：
+The complete workflow consists of 4 steps: create table -> configure index -> ingest data -> build and monitor index.
 
-- `cos(x, y) = (x · y) / (||x|| ||y||)`
-- 归一化后 `||x|| = ||y|| = 1`，则 `cos(x, y) = x · y`
+### Step 1: Create the Vector Table
 
-因此在单位向量空间中，cosine 排序与 inner product 排序等价。
+There are two ways to create the table. Choose based on the data scale and ingestion mode:
 
-## 3. 端到端操作流程
+| Method | Pros | Cons | Recommended scenario |
+|---|---|---|---|
+| Define the ANN index directly when creating the table | Queryable as soon as data is written | Slower ingestion | Small scale, streaming ingestion |
+| Create the table and ingest data first, then `CREATE INDEX` + `BUILD INDEX` | Faster ingestion, controllable build timing | Requires an extra build step | Large-scale batch ingestion |
 
-### Step 1：创建向量表
-
-常用两种方式：
-
-1. 建表时直接定义 ANN 索引。
-   - 数据写入时同步建索引。
-   - 导入完成即可查询。
-   - 导入速度通常更慢。
-2. 先建表导入数据，再 `CREATE INDEX` + `BUILD INDEX`。
-   - 更适合批量导入。
-   - 对 compaction 和构建时机控制更灵活。
-
-示例（建表时定义索引）：
+Example of defining an ANN index directly when creating the table:
 
 ```sql
 CREATE TABLE document_vectors (
-  id BIGINT NOT NULL,
-  title VARCHAR(500),
-  content TEXT,
-  category VARCHAR(100),
-  embedding ARRAY<FLOAT> NOT NULL,
-  INDEX idx_embedding (embedding) USING ANN PROPERTIES (
-    "index_type" = "hnsw",
-    "metric_type" = "l2_distance",
-    "dim" = "768"
-  )
+    id BIGINT NOT NULL,
+    title VARCHAR(500),
+    content TEXT,
+    category VARCHAR(100),
+    embedding ARRAY<FLOAT> NOT NULL,
+    INDEX idx_embedding (embedding) USING ANN PROPERTIES (
+        "index_type" = "hnsw",
+        "metric_type" = "l2_distance",
+        "dim" = "768"
+    )
 )
 ENGINE = OLAP
 DUPLICATE KEY(id)
@@ -124,60 +153,73 @@ DISTRIBUTED BY HASH(id) BUCKETS 8
 PROPERTIES ("replication_num" = "1");
 ```
 
-### Step 2：配置向量索引
+### Step 2: Configure Vector Index Parameters
 
-通用参数：
+<!-- Knowledge type: Configuration parameters -->
 
-- `index_type`：`hnsw`、`ivf` 或 `ivf_on_disk`
-- `metric_type`：`l2_distance` 或 `inner_product`
-- `dim`：向量维度
-- `quantizer`：`flat`、`sq8`、`sq4`、`pq`（可选）
+Common parameters:
 
-HNSW 参数：
+| Parameter | Values | Description |
+|---|---|---|
+| `index_type` | `hnsw` / `ivf` / `ivf_on_disk` | Index type |
+| `metric_type` | `l2_distance` / `inner_product` | Distance metric |
+| `dim` | Integer | Vector dimension |
+| `quantizer` | `flat` / `sq8` / `sq4` / `pq` | Quantization method (optional) |
 
-- `max_degree`（默认 `32`）
-- `ef_construction`（默认 `40`）
+HNSW-specific parameters:
 
-IVF 参数：
+| Parameter | Default | Description |
+|---|---|---|
+| `max_degree` | `32` | Maximum number of neighbors per node |
+| `ef_construction` | `40` | Search width during build |
 
-- `nlist`（默认 `1024`，`ivf` 和 `ivf_on_disk` 都使用该参数）
+IVF-specific parameters (shared by `ivf` and `ivf_on_disk`):
 
-示例：
+| Parameter | Default | Description |
+|---|---|---|
+| `nlist` | `1024` | Number of cluster centroids |
+
+Example of creating the index after the table:
 
 ```sql
 CREATE INDEX idx_embedding ON document_vectors (embedding) USING ANN PROPERTIES (
-  "index_type" = "hnsw",
-  "metric_type" = "l2_distance",
-  "dim" = "768",
-  "max_degree" = "64",
-  "ef_construction" = "128"
+    "index_type" = "hnsw",
+    "metric_type" = "l2_distance",
+    "dim" = "768",
+    "max_degree" = "64",
+    "ef_construction" = "128"
 );
 ```
 
-### Step 3：导入数据
+### Step 3: Ingest Data
 
-批量场景建议顺序：
+Recommended order for batch ingestion:
 
-1. 建表（暂不构建索引）
-2. 批量导入（Stream Load / S3 TVF / SDK）
-3. 统一构建索引
+1. Create the table, **without building the index for now**
+2. Batch-write the data (Stream Load / S3 TVF / SDK)
+3. Build the index uniformly after the data ingestion is complete
 
-生产环境建议优先使用批量导入方式。
+In production environments, this batch mode is preferred. It can significantly reduce ingestion time.
 
-### Step 4：构建索引与监控
+### Step 4: Build the Index and Monitor
 
-如果索引是后建方式，需要手动执行：
+If the post-ingestion index creation method is used, you need to trigger it manually:
 
 ```sql
 BUILD INDEX idx_embedding ON document_vectors;
+
 SHOW BUILD INDEX WHERE TableName = "document_vectors";
 ```
 
-状态包括：`PENDING`、`RUNNING`、`FINISHED`、`CANCELLED`。
+Build states include: `PENDING`, `RUNNING`, `FINISHED`, `CANCELLED`.
 
-## 4. 查询模式
+---
 
-### TopN 近邻搜索
+## Query Patterns
+
+<!-- Knowledge type: Operational examples -->
+
+### TopN Nearest Neighbor Search
 
 ```sql
 SELECT id, title,
@@ -187,7 +229,7 @@ ORDER BY dist
 LIMIT 10;
 ```
 
-### 范围搜索
+### Range Search
 
 ```sql
 SELECT id, title
@@ -195,7 +237,7 @@ FROM document_vectors
 WHERE l2_distance_approximate(embedding, [0.1, 0.2, ...]) < 0.5;
 ```
 
-### 带过滤条件搜索
+### Hybrid Search with Filter Conditions
 
 ```sql
 SELECT id, title,
@@ -206,14 +248,41 @@ ORDER BY dist
 LIMIT 10;
 ```
 
-Doris 在混合过滤场景中采用 pre-filtering，有助于兼顾性能和召回。
+In hybrid filtering scenarios, Doris uses a **pre-filtering** strategy, which balances both performance and recall.
 
-## 5. 调优清单
+---
 
-### 查询参数
+## Using Cosine Similarity
 
-- HNSW：`hnsw_ef_search`（越大通常召回更高，延迟也更高）
-- IVF：`nprobe`（或 `ivf_nprobe`，视版本而定）
+<!-- Knowledge type: Operational steps -->
+<!-- Applicable scenarios: Business metric is cosine -->
+
+ANN indexes do not support configuring `metric_type="cosine"` directly. If your business needs to sort by cosine similarity, use the following pattern:
+
+1. Apply L2 normalization to vectors before ingestion (convert them to unit vectors)
+2. Use `metric_type="inner_product"` when creating the ANN index
+3. Use `inner_product_approximate(...)` in queries, and sort by `ORDER BY ... DESC`
+
+**Principle:**
+
+- `cos(x, y) = (x · y) / (||x|| · ||y||)`
+- After normalization, `||x|| = ||y|| = 1`, so `cos(x, y) = x · y`
+
+In a unit-vector space, cosine sorting is equivalent to inner product sorting.
+
+---
+
+## Query and Build Tuning
+
+<!-- Knowledge type: Performance tuning -->
+<!-- Applicable scenarios: Recall not meeting requirements / Latency too high -->
+
+### Query Parameters
+
+| Index type | Tuning parameter | Effect |
+|---|---|---|
+| HNSW | `hnsw_ef_search` | Larger value yields higher recall and higher latency |
+| IVF | `nprobe` or `ivf_nprobe` (depending on version) | Larger value yields higher recall |
 
 ```sql
 SET hnsw_ef_search = 100;
@@ -221,62 +290,103 @@ SET nprobe = 128;
 SET optimize_index_scan_parallelism = true;
 ```
 
-### 构建建议
+### Build Recommendations
 
-1. 大规模数据建议先 compaction 再做最终索引构建。
-2. 控制 segment 规模，避免过大影响召回。
-3. 在同一数据集上对多组参数做 A/B 压测。
+1. For large-scale data, run compaction first, then trigger the final index build
+2. Control the segment scale to avoid impacting recall when segments are too large
+3. Run A/B benchmarks on multiple parameter sets against the same dataset
 
-容量评估可先按 `dim * 4 bytes * row_count` 估算向量内存，再叠加 ANN 结构开销，并为非向量列和执行算子预留内存水位。  
-10M/100M 规模下单机与分布式的容量参考可见[大规模性能测试](./performance-large-scale.md)。
+### Capacity Estimation
 
-## 6. 索引管理
+- Rough vector memory formula: `dim * 4 bytes * row_count`
+- Add the overhead of the ANN index structure on top of this
+- Reserve a memory budget for non-vector columns and execution operators
 
-常用管理 SQL：
+For 10M / 100M scale capacity reference on single-node and distributed deployments, see [Large-Scale Performance Test](./performance-large-scale.md).
+
+---
+
+## Index Management
+
+<!-- Knowledge type: Operational commands -->
+
+Common management SQL:
 
 ```sql
+-- View the index list
 SHOW INDEX FROM document_vectors;
+
+-- View data scale
 SHOW DATA ALL FROM document_vectors;
+
+-- Drop the index
 ALTER TABLE document_vectors DROP INDEX idx_embedding;
 ```
 
-如需调整参数，建议删除旧索引后重建。
+To adjust index parameters, the recommended approach is to **drop the old index and rebuild it**.
 
-## 7. 常见问题排查
+---
 
-### 索引未生效
+## Common Troubleshooting
 
-检查：
+<!-- Knowledge type: Troubleshooting -->
+<!-- Applicable scenarios: Troubleshooting -->
 
-1. 是否存在索引：`SHOW INDEX`
-2. 是否构建完成：`SHOW BUILD INDEX`
-3. 是否使用了 `_approximate` 距离函数
+### Index Not Taking Effect
 
-### 召回率低
+Investigate in this order:
 
-排查方向：
+1. Whether the index exists: run `SHOW INDEX`
+2. Whether the index has finished building: run `SHOW BUILD INDEX`
+3. Whether the query uses a distance function with the `_approximate` suffix
 
-- HNSW 参数（`max_degree`、`ef_construction`、`hnsw_ef_search`）
-- IVF 探测参数（`nprobe`/`ivf_nprobe`）
-- Segment 大小及 compaction 后重建
+### Low Recall
 
-### 查询延迟高
+| Investigation direction | Recommendation |
+|---|---|
+| HNSW parameters | Increase `max_degree`, `ef_construction`, `hnsw_ef_search` |
+| IVF probe parameters | Increase `nprobe` / `ivf_nprobe` |
+| Segment scale | Rebuild the index after compaction |
 
-排查方向：
+### High Query Latency
 
-- 冷查询与热查询差异（索引加载）
-- `hnsw_ef_search` 是否过大
-- 并行扫描设置是否开启
-- BE 是否存在内存压力
+| Investigation direction | Recommendation |
+|---|---|
+| Cold query vs. hot query | Index loading time differs. You can warm up after service startup |
+| `hnsw_ef_search` too large | Reduce it appropriately to lower latency |
+| Parallel scan not enabled | Set `optimize_index_scan_parallelism = true` |
+| BE memory pressure | Check BE memory levels and GC behavior |
 
-### 导入失败
+### Ingestion Failure
 
-常见原因：
+| Common cause | Recommendation |
+|---|---|
+| Dimension mismatch | Check that the ingested vector dimension matches the index `dim` |
+| NULL appears in the vector column | Fill or filter out NULL on the business side |
+| Invalid vector array format | Validate the JSON / Stream Load payload format |
 
-- 维度不一致（`dim` 与实际向量）
-- 向量列出现 NULL
-- 向量数组格式非法
+---
 
-## 8. 混合检索建议
+## FAQ
 
-可在同一张表中同时建立 ANN 索引和倒排索引，结合文本过滤与向量排序实现混合检索，这也是 RAG 线上常见模式。
+<!-- Knowledge type: Frequently asked questions -->
+
+**Q1: Can ANN indexes be used on UNIQUE KEY or AGGREGATE KEY tables?**
+
+No. ANN indexes **only support the DUPLICATE KEY model**.
+
+**Q2: Can ANN indexes and inverted indexes be created at the same time?**
+
+Yes. You can create both an ANN index and an inverted index on the same table. Combining text filtering with vector sorting enables the **hybrid retrieval** pattern that is common in online RAG.
+
+**Q3: What if I need to use cosine similarity?**
+
+ANN does not support `metric_type="cosine"`. Normalize the vectors and use `inner_product`, and the effect is equivalent. For details, see [Using Cosine Similarity](#using-cosine-similarity).
+
+**Q4: What if BUILD INDEX is stuck in RUNNING?**
+
+Check the progress with `SHOW BUILD INDEX`. Building a large table itself takes a long time, so first confirm whether it is still building normally. If there is no progress for a long time, check the BE memory and disk status.
+
+**Q5: How do I adjust ANN index parameters?**
+
+ANN index parameters do not support in-place modification. The recommendation is to **DROP INDEX first, then CREATE INDEX with the new parameters**, and finally BUILD INDEX.

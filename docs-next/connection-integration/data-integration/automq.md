@@ -1,84 +1,131 @@
 ---
 {
-    "title": "AutoMQ Load",
-    "language": "zh-CN",
-    "description": "AutoMQ 是基于云重新设计的云原生 Kafka。通过将存储分离至对象存储，在保持和 Apache Kafka 100% 兼容的前提下，为用户提供高达 10 倍的成本优势以及百倍的弹性优势。通过其创新的共享存储架构，"
+    "title": "AutoMQ",
+    "language": "en",
+    "description": "Use Apache Doris Routine Load to consume JSON data from AutoMQ Kafka-compatible Topics for real-time data ingestion."
 }
 ---
 
-[AutoMQ](https://github.com/AutoMQ/automq) 是基于云重新设计的云原生 Kafka。通过将存储分离至对象存储，在保持和 Apache Kafka 100% 兼容的前提下，为用户提供高达 10 倍的成本优势以及百倍的弹性优势。通过其创新的共享存储架构，在保证高吞吐、低延迟的性能指标下实现了秒级分区迁移、流量自平衡、秒级自动弹性等能力。
+[AutoMQ](https://github.com/AutoMQ/automq) is a cloud-native Kafka redesigned for the cloud. By offloading storage to object storage, it remains 100% compatible with Apache Kafka while providing up to a 10x cost advantage and a 100x elasticity advantage. Its innovative shared-storage architecture delivers second-level partition migration, traffic self-balancing, and second-level auto-scaling, all while maintaining high throughput and low latency.
 
-![AutoMQ Storage Architecture](/images/automq/automq_storage_architecture.png)
+This document describes how to use Apache Doris Routine Load to consume JSON data from an AutoMQ Kafka-compatible Topic and continuously ingest it into a Doris table.
 
-## 环境准备
-### 准备 Apache Doris 和测试数据
+![AutoMQ Storage Architecture](/images/next/connection-integration/data-integration/automq-arch.jpg)
 
-确保当前已准备好可用的 Apache Doris 集群。为了便于演示，我们参考 [快速开始](../gettingStarted/quick-start) 文档在 Linux 上部署了一套测试用的 Apache Doris 环境。
-创建库和测试表：
-```
-create database automq_db;
+## Use Cases
+
+When business data has been written to AutoMQ and you want to continuously analyze this real-time data in Apache Doris, you can use Routine Load to consume data from an AutoMQ Topic. The example in this document uses a JSON Topic and a Doris test table to demonstrate the complete workflow, from preparing data to verifying the ingestion result.
+
+The overall workflow is as follows:
+
+1. Prepare the Apache Doris test database and test table.
+2. Prepare the AutoMQ cluster, the Kafka command-line tools, and the test Topic.
+3. Write JSON test data to the AutoMQ Topic.
+4. Create a Routine Load ingestion job in Doris.
+5. Query the Doris table to verify that the data has been ingested successfully.
+
+## Prerequisites
+
+Before you start, make sure the following environment is ready.
+
+| Item | Description |
+| --- | --- |
+| Apache Doris cluster | Make sure an Apache Doris cluster is available. For demonstration purposes, this document refers to the [Quick Start](../../getting-started/quick-start) document to deploy a test environment on Linux. |
+| AutoMQ cluster | Refer to the AutoMQ [official deployment document](https://docs.automq.com/automq/deployment/deploy-multi-nodes-cluster-on-linux) to deploy an available cluster, and make sure the network between AutoMQ and Apache Doris is connected. |
+| Kafka command-line tools | Download the latest TGZ package from [AutoMQ Releases](https://github.com/AutoMQ/automq/releases) and extract it. This document assumes the extracted directory is `$AUTOMQ_HOME`, and uses the tool commands under `$AUTOMQ_HOME/bin` to create the Topic and generate test data. |
+
+## Prepare the Doris Test Table
+
+Create a database and a test table in Doris. The subsequent examples are executed in `automq_db` by default.
+
+```sql
+CREATE DATABASE automq_db;
+USE automq_db;
+
 CREATE TABLE automq_db.users (
-                                 id bigint NOT NULL,
-                                 name string NOT NULL,
-                                 timestamp string NULL,
-                                 status string NULL
-
-) DISTRIBUTED BY hash (id) PROPERTIES ('replication_num' = '1');
+    id BIGINT NOT NULL,
+    name STRING NOT NULL,
+    timestamp STRING NULL,
+    status STRING NULL
+) DISTRIBUTED BY HASH(id) PROPERTIES ("replication_num" = "1");
 ```
-### 准备 Kafka 命令行工具
 
-从 [AutoMQ Releases](https://github.com/AutoMQ/automq) 下载最新的 TGZ 包并解压。假设解压目录为 $AUTOMQ_HOME，在本文中将会使用 $AUTOMQ_HOME/bin 下的工具命令来创建主题和生成测试数据。
+## Prepare the AutoMQ Topic and Test Data
 
-### 准备 AutoMQ 和测试数据
+This document uses the following example parameters. When running the commands, replace the example address with the actual AutoMQ Bootstrap Server address.
 
-参考 AutoMQ [官方部署文档](https://docs.automq.com/docs/automq-opensource/EvqhwAkpriAomHklOUzcUtybn7g)部署一套可用的集群，确保 AutoMQ 与 Apache Doris 之间保持网络连通。
-在 AutoMQ 中快速创建一个名为 example_topic 的主题，并向其中写入一条测试 JSON 数据，按照以下步骤操作。
+| Parameter | Example Value | Description |
+| --- | --- | --- |
+| AutoMQ Bootstrap Server | `127.0.0.1:9092` | The access address of the AutoMQ cluster. |
+| Topic | `example_topic` | The Topic used to store test JSON data. |
+| AutoMQ extracted directory | `$AUTOMQ_HOME` | The directory where the AutoMQ TGZ package is extracted. |
 
-**创建 Topic**
+### Create the Topic
 
-使用 Apache Kafka 命令行工具创建主题，需要确保当前拥有 Kafka 环境的访问权限并且 Kafka 服务正在运行。以下是创建主题的命令示例：
+Use the Apache Kafka command-line tool to create `example_topic`.
+
+```shell
+$AUTOMQ_HOME/bin/kafka-topics.sh \
+    --create \
+    --topic example_topic \
+    --bootstrap-server 127.0.0.1:9092 \
+    --partitions 1 \
+    --replication-factor 1
 ```
-$AUTOMQ_HOME/bin/kafka-topics.sh --create --topic exampleto_topic --bootstrap-server 127.0.0.1:9092  --partitions 1 --replication-factor 1
-```
-在执行命令时，需要将 topic 和 bootstarp-server 替换为实际使用的 AutoMQ Bootstarp Server 地址。
-创建完主题后，可以使用以下命令来验证主题是否已成功创建。
-```
-$AUTOMQ_HOME/bin/kafka-topics.sh --describe example_topic --bootstrap-server 127.0.0.1:9092
-```
-**生成测试数据**
 
-生成一条 JSON 格式的测试数据，和前文的表需要对应。
+After creation, use the following command to verify that the Topic was created successfully.
+
+```shell
+$AUTOMQ_HOME/bin/kafka-topics.sh \
+    --describe \
+    --topic example_topic \
+    --bootstrap-server 127.0.0.1:9092
 ```
+
+### Prepare the Test Data
+
+The test data uses JSON format. The fields must correspond to the Doris table and to the `jsonpaths` in the subsequent Routine Load.
+
+```json
 {
-  "id": 1,
-  "name": "测试用户",
-  "timestamp": "2023-11-10T12:00:00",
-  "status": "active"
+    "id": 1,
+    "name": "Test User",
+    "timestamp": "2023-11-10T12:00:00",
+    "status": "active"
 }
 ```
-**写入测试数据**
 
-通过 Kafka 的命令行工具或编程方式将测试数据写入到名为 example_topic 的主题中。下面是一个使用命令行工具的示例：
-```
-echo '{"id": 1, "name": "测试用户", "timestamp": "2023-11-10T12:00:00", "status": "active"}' | sh kafka-console-producer.sh --broker-list 127.0.0.1:9092 --topic example_topic
-```
-使用如下命令可以查看刚写入的 topic 数据：
-```
-sh $AUTOMQ_HOME/bin/kafka-console-consumer.sh --bootstrap-server 127.0.0.1:9092 --topic example_topic --from-beginning
-```
-> 注意：在执行命令时，需要将 topic 和 bootstarp-server 替换为实际使用的 AutoMQ Bootstarp Server 地址。
+### Write the Test Data
 
-## 创建 Routine Load 导入作业
+Write the test data to `example_topic` using the Kafka command-line tool or programmatically. The following example uses the command-line tool to write the data.
 
-在 Apache Doris 的命令行中创建一个接收 JSON 数据的 Routine Load 作业，用来持续导入 AutoMQ Kafka topic 中的数据。具体 Routine Load 的参数说明请参考 [Doris Routine Load](https://doris.apache.org/zh-CN/docs/data-operate/import/routine-load-manual)。
+```shell
+echo '{"id": 1, "name": "Test User", "timestamp": "2023-11-10T12:00:00", "status": "active"}' | $AUTOMQ_HOME/bin/kafka-console-producer.sh \
+    --bootstrap-server 127.0.0.1:9092 \
+    --topic example_topic
 ```
+
+Use the following command to view the Topic data that was just written.
+
+```shell
+$AUTOMQ_HOME/bin/kafka-console-consumer.sh \
+    --bootstrap-server 127.0.0.1:9092 \
+    --topic example_topic \
+    --from-beginning
+```
+
+## Create the Routine Load Ingestion Job
+
+In the Apache Doris command line, create a Routine Load job to continuously consume JSON data from the AutoMQ Topic. For detailed Routine Load parameter descriptions, refer to [Doris Routine Load](../../data-operate/import/import-way/routine-load-manual).
+
+```sql
 CREATE ROUTINE LOAD automq_example_load ON users
 COLUMNS(id, name, timestamp, status)
 PROPERTIES
 (
     "format" = "json",
     "jsonpaths" = "[\"$.id\",\"$.name\",\"$.timestamp\",\"$.status\"]"
- )
+)
 FROM KAFKA
 (
     "kafka_broker_list" = "127.0.0.1:9092",
@@ -86,23 +133,42 @@ FROM KAFKA
     "property.kafka_default_offsets" = "OFFSET_BEGINNING"
 );
 ```
-> 注意：在执行命令时，需要将 kafka_broker_list 替换为实际使用的 AutoMQ Bootstarp Server 地址。
 
-## 验证数据导入
+The key configurations are described as follows.
 
-首先，检查 Routine Load 导入作业的状态，确保任务正在运行中。
-```
-show routine load\G;
-```
-然后查询 Apache Doris 数据库中的相关表，可以看到数据已经被成功导入。
-```
-select * from users;
-+------+--------------+---------------------+--------+
-| id   | name         | timestamp           | status |
-+------+--------------+---------------------+--------+
-|    1 | 测试用户     | 2023-11-10T12:00:00 | active |
-|    2 | 测试用户     | 2023-11-10T12:00:00 | active |
-+------+--------------+---------------------+--------+
-2 rows in set (0.01 sec)
+| Configuration | Example Value | Description |
+| --- | --- | --- |
+| `format` | `json` | Specifies that the ingested data format is JSON. |
+| `jsonpaths` | `["$.id","$.name","$.timestamp","$.status"]` | Specifies the mapping between JSON fields and Doris table fields. |
+| `kafka_broker_list` | `127.0.0.1:9092` | The AutoMQ Bootstrap Server address. Replace with the actual address at runtime. |
+| `kafka_topic` | `example_topic` | The AutoMQ Topic that Routine Load needs to consume. |
+| `property.kafka_default_offsets` | `OFFSET_BEGINNING` | Consumes data from the beginning of the Topic. |
+
+## Verify Data Ingestion
+
+First, check the status of the Routine Load ingestion job to make sure the task is running.
+
+```sql
+SHOW ROUTINE LOAD\G;
 ```
 
+Then query the Doris table to confirm that the test data has been ingested.
+
+```sql
+SELECT * FROM users;
+```
+
+```text
++------+-----------+---------------------+--------+
+| id   | name      | timestamp           | status |
++------+-----------+---------------------+--------+
+|    1 | Test User | 2023-11-10T12:00:00 | active |
++------+-----------+---------------------+--------+
+1 row in set (0.01 sec)
+```
+
+## Notes
+
+- When running the example commands, replace `127.0.0.1:9092` with the actual AutoMQ Bootstrap Server address.
+- The fields of the test JSON data must match the Doris table fields and the Routine Load `jsonpaths` configuration.
+- Before creating the Routine Load job, make sure Doris can access the AutoMQ cluster.

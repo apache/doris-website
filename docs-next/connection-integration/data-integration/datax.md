@@ -1,183 +1,145 @@
 ---
 {
     "title": "DataX Doriswriter",
-    "language": "zh-CN",
-    "description": "DataX Doriswriter 插件，支持将 MySQL、Oracle、SqlServer 等多种数据源中的数据通过 Stream Load 的方式同步到 Doris 中。"
+    "language": "en",
+    "description": "Describes how to use DataX Doriswriter to synchronize data from sources such as MySQL, Oracle, and SQL Server to Apache Doris through Stream Load, including parameter configuration and import examples.",
+    "keywords": [
+        "DataX Doriswriter",
+        "DataX import to Doris",
+        "Stream Load",
+        "MySQL sync to Doris"
+    ]
 }
 ---
 
-# DataX doriswriter
+<!-- Knowledge type: Procedure -->
+<!-- Applicable scenario: Data integration / Offline batch synchronization -->
 
-[DataX](https://github.com/alibaba/DataX) Doriswriter 插件，支持将 MySQL、Oracle、SqlServer 等多种数据源中的数据通过 Stream Load 的方式同步到 Doris 中。
+The [DataX](https://github.com/alibaba/DataX) Doriswriter plugin synchronizes data from various sources such as MySQL, Oracle, and SQL Server to Doris through Stream Load.
 
-:::info 注意
-1. 需要配合 DataX 服务一起使用。
-2. DataX 支持多种数据源，可参考[这里](https://github.com/alibaba/DataX#support-data-channels)。
-:::
+If you already use DataX for offline data synchronization, or if you need to write data from a DataX-supported source into Doris, you can use Doriswriter as the Writer plugin for DataX. This document follows the user configuration path to describe how to obtain the plugin, configure parameters, run a job, and explain the considerations for JSON and CSV import formats.
 
+Using DataX Doriswriter mainly involves the following steps:
 
-## 使用
+1. Obtain the DataX installation package, or compile the Doriswriter plugin yourself.
+2. Configure the connection, batch, and Stream Load parameters that Doriswriter needs to write to Doris.
+3. Write a DataX job script and run the synchronization job.
+4. Adjust `loadProps` based on the data format to avoid delimiter conflicts.
 
-### 直接下载 DataX 安装包
+## Pre-flight check
 
-DataX 官方提供了安装包，已经包含了 DataX 可直接下载使用，可参考[这里](https://github.com/alibaba/DataX?tab=readme-ov-file#download-datax%E4%B8%8B%E8%BD%BD%E5%9C%B0%E5%9D%80)
+| Item | Description |
+| --- | --- |
+| DataX service | Doriswriter must be used together with the DataX service. |
+| Source support | DataX supports many data sources. For the supported list, see [DataX supported data channels](https://github.com/alibaba/DataX#support-data-channels). |
+| Doris import entry | Doriswriter writes to Doris through Stream Load. `loadUrl` must be configured with the `http_port` of an FE node. |
 
-### 自行编译 DorisWriter 插件
+## Obtain DataX and Doriswriter
 
-下载 DorisWriter 的插件[源码](https://github.com/apache/doris/tree/master/extension/DataX)
+### Download the DataX installation package directly
 
-1. 运行 `init-env.sh`
-2. 编译 doriswriter：
+DataX provides an installation package that you can use directly. For the download link, see [DataX installation package download](https://github.com/alibaba/DataX?tab=readme-ov-file#download-datax%E4%B8%8B%E8%BD%BD%E5%9C%B0%E5%9D%80).
 
-    > 单独编译 doriswriter 插件：
+### Compile the Doriswriter plugin yourself
 
-       `mvn clean install -pl plugin-rdbms-util,doriswriter -DskipTests`
+To compile the Doriswriter plugin yourself, first download the [Doriswriter plugin source code](https://github.com/apache/doris/tree/master/extension/DataX).
 
-    > 如需编译整个 DataX 项目可参考[这里](https://github.com/alibaba/DataX/blob/master/userGuid.md#quick-start)
+1. Run `init-env.sh`.
+2. Compile the `doriswriter` plugin separately:
 
-    > 编译错误
+    ```shell
+    mvn clean install -pl plugin-rdbms-util,doriswriter -DskipTests
+    ```
 
-       如遇到如下编译错误：
+To compile the entire DataX project, see [DataX Quick Start](https://github.com/alibaba/DataX/blob/master/userGuid.md#quick-start).
 
-       ```
-       Could not find artifact com.alibaba.datax:datax-all:pom:0.0.1-SNAPSHOT ...
-       ```
+#### Resolve the `datax-all` dependency error
 
-       可尝试以下方式解决：
+If the following error appears during compilation:
 
-        1. 下载 [alibaba-datax-maven-m2-20210928.tar.gz](https://doris-thirdparty-repo.bj.bcebos.com/thirdparty/alibaba-datax-maven-m2-20210928.tar.gz)
-        2. 解压后，将得到的 `alibaba/datax/` 目录，拷贝到所使用的 maven 对应的 `.m2/repository/com/alibaba/` 下，再次尝试编译。
-
-### Datax DorisWriter 参数介绍：
-
-* **jdbcUrl**
-
-    - 描述：Doris 的 JDBC 连接串，用户执行 preSql 或 postSQL。
-    - 必选：是
-    - 默认值：无
-* **loadUrl**
-
-  - 描述：作为 Stream Load 的连接目标。格式为 "ip:port"。其中 IP 是 FE 节点 IP，port 是 FE 节点的 http_port。可以填写多个，多个之间使用英文状态的逗号隔开：`,`，doriswriter 将以轮询的方式访问。
-  - 必选：是
-  - 默认值：无
-* **username**
-
-    - 描述：访问 Doris 数据库的用户名
-    - 必选：是
-    - 默认值：无
-* **password**
-  
-    - 描述：访问 Doris 数据库的密码
-    - 必选：否
-    - 默认值：空
-* **connection.selectedDatabase**
-    - 描述：需要写入的 Doris 数据库名称。
-    - 必选：是
-    - 默认值：无
-* **connection.table**
-  - 描述：需要写入的 Doris 表名称。
-    - 必选：是
-    - 默认值：无
-* **flushInterval**
-    - 描述：数据写入批次的时间间隔。如果这个时间间隔设置的太小会造成 Doris 写阻塞问题，错误代码 -235，同时如果你这个时间设置太小，`maxBatchRows` 和 `batchSize` 参数设置的有很大，那么很可能达不到你这设置的数据量大小，也会执行导入。
-    - 必选：否
-    - 默认值：30000（ms）
-* **column**
-    - 描述：目的表需要写入数据的字段，这些字段将作为生成的 Json 数据的字段名。字段之间用英文逗号分隔。例如："column": ["id","name","age"]。
-    - 必选：是
-    - 默认值：否
-* **preSql**
-
-  - 描述：写入数据到目的表前，会先执行这里的标准语句。
-  - 必选：否
-  - 默认值：无
-* **postSql**
-
-  - 描述：写入数据到目的表后，会执行这里的标准语句。
-  - 必选：否
-  - 默认值：无
-
-
-* **maxBatchRows**
-  - 描述：每批次导入数据的最大行数。和 **batchSize** 共同控制每批次的导入记录行数。每批次数据达到两个阈值之一，即开始导入这一批次的数据。
-  - 必选：否
-  - 默认值：500000
-  
-* **batchSize**
-  - 描述：每批次导入数据的最大数据量。和 **maxBatchRows** 共同控制每批次的导入数量。每批次数据达到两个阈值之一，即开始导入这一批次的数据。
-  - 必选：否
-  - 默认值：94371840
-  
-* **maxRetries**
-
-  - 描述：每批次导入数据失败后的重试次数。
-  - 必选：否
-  - 默认值：3
-
-
-* **labelPrefix**
-
-  - 描述：每批次导入任务的 label 前缀。最终的 label 将有 `labelPrefix + UUID` 组成全局唯一的 label，确保数据不会重复导入
-  - 必选：否
-  - 默认值：`datax_doris_writer_`
-
-* **loadProps**
-
-  - 描述：StreamLoad 的请求参数，详情参照 StreamLoad 介绍页面。[Stream load](../data-operate/import/import-way/stream-load-manual)
-
-    这里包括导入的数据格式：format 等，导入数据格式默认我们使用 csv，支持 JSON，具体可以参照下面类型转换部分，也可以参照上面 Stream load 官方信息
-
-  - 必选：否
-
-  - 默认值：无
-
-### 示例
-
-#### 1.Stream 读取数据后导入至 Doris
-
-该示例插件的使用说明请参阅 [这里](https://github.com/apache/doris/blob/master/extension/DataX/doriswriter/doc/doriswriter.md)
-
-#### 2.Mysql 读取数据后导入至 Doris
-
-1.Mysql 表结构
-
-```sql
-CREATE TABLE `t_test`(
- `id`bigint(30) NOT NULL,
- `order_code` varchar(30) DEFAULT NULL COMMENT '',
- `line_code` varchar(30) DEFAULT NULL COMMENT '',
- `remark` varchar(30) DEFAULT NULL COMMENT '',
- `unit_no` varchar(30) DEFAULT NULL COMMENT '',
- `unit_name` varchar(30) DEFAULT NULL COMMENT '',
- `price` decimal(12,2) DEFAULT NULL COMMENT '',
- PRIMARY KEY(`id`) USING BTREE
-)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ROW_FORMAT=DYNAMIC COMMENT='';
+```text
+Could not find artifact com.alibaba.datax:datax-all:pom:0.0.1-SNAPSHOT ...
 ```
 
-2.Doris 表结构
+Resolve it as follows:
+
+1. Download [alibaba-datax-maven-m2-20210928.tar.gz](https://doris-thirdparty-repo.bj.bcebos.com/thirdparty/alibaba-datax-maven-m2-20210928.tar.gz).
+2. After extraction, copy the resulting `alibaba/datax/` directory into the `.m2/repository/com/alibaba/` directory used by your local Maven, and then compile again.
+
+## Configure Doriswriter parameters
+
+<!-- Knowledge type: Configuration parameters -->
+<!-- Applicable scenario: DataX job configuration -->
+
+Doriswriter parameters control the Doris connection, target database and table, batch size, retry on failure, and Stream Load request properties.
+
+| Parameter | Required | Default | Description |
+| --- | --- | --- | --- |
+| `jdbcUrl` | Yes | None | The JDBC connection string for Doris, used to execute `preSql` or `postSql`. |
+| `loadUrl` | Yes | None | The Stream Load target, in the format `ip:port`, where `ip` is the FE node IP and `port` is the FE node `http_port`. You can specify multiple addresses separated by commas (`,`); doriswriter accesses them in round-robin fashion. |
+| `username` | Yes | None | The username for accessing the Doris database. |
+| `password` | No | Empty | The password for accessing the Doris database. |
+| `connection.selectedDatabase` | Yes | None | The name of the Doris database to write to. |
+| `connection.table` | Yes | None | The name of the Doris table to write to. |
+| `flushInterval` | No | `30000` ms | The time interval between data write batches. Setting this too small can cause Doris write blocking and return error code `-235`. If this value is too small, the import may be triggered before the row count or size threshold is reached, even when `maxBatchRows` and `batchSize` are set to large values. |
+| `column` | Yes | None | The fields in the target table to write data to. These field names are used as the field names of the generated JSON data. Separate fields with commas, for example `"column": ["id", "name", "age"]`. |
+| `preSql` | No | None | A standard SQL statement to run before writing data to the target table. |
+| `postSql` | No | None | A standard SQL statement to run after writing data to the target table. |
+| `maxBatchRows` | No | `500000` | The maximum number of rows per import batch. This parameter together with `batchSize` controls the size of each import batch; the import starts as soon as either threshold is reached. |
+| `batchSize` | No | `94371840` | The maximum data volume per import batch. This parameter together with `maxBatchRows` controls the size of each import batch; the import starts as soon as either threshold is reached. |
+| `maxRetries` | No | `3` | The number of retries after a batch import fails. |
+| `labelPrefix` | No | `datax_doris_writer_` | The label prefix for each import job. The final label is `labelPrefix + UUID`, which guarantees global uniqueness and avoids duplicate imports. |
+| `loadProps` | No | None | The Stream Load request parameters. You can configure the import data format, delimiters, and other properties. The default import format is CSV; JSON is also supported. For more parameters, see the [Stream Load documentation](../../data-operate/import/import-way/stream-load-manual.md). |
+
+## Usage examples
+
+### Scenario 1: Read data from a Stream and import it into Doris
+
+For instructions on using the plugin to read data from a Stream and import it into Doris, see the [Doriswriter official example](https://github.com/apache/doris/blob/master/extension/DataX/doriswriter/doc/doriswriter.md).
+
+### Scenario 2: Read data from MySQL and import it into Doris
+
+The following example shows how to use DataX to read data from MySQL and write it to Doris through Doriswriter.
+
+#### 1. Prepare the MySQL source table
+
+```sql
+CREATE TABLE `t_test` (
+    `id` bigint(30) NOT NULL,
+    `order_code` varchar(30) DEFAULT NULL COMMENT '',
+    `line_code` varchar(30) DEFAULT NULL COMMENT '',
+    `remark` varchar(30) DEFAULT NULL COMMENT '',
+    `unit_no` varchar(30) DEFAULT NULL COMMENT '',
+    `unit_name` varchar(30) DEFAULT NULL COMMENT '',
+    `price` decimal(12,2) DEFAULT NULL COMMENT '',
+    PRIMARY KEY (`id`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ROW_FORMAT=DYNAMIC COMMENT='';
+```
+
+#### 2. Prepare the Doris target table
 
 ```sql
 CREATE TABLE `ods_t_test` (
- `id` bigint(30) NOT NULL,
- `order_code` varchar(30) DEFAULT NULL COMMENT '',
- `line_code` varchar(30) DEFAULT NULL COMMENT '',
- `remark` varchar(30) DEFAULT NULL COMMENT '',
- `unit_no` varchar(30) DEFAULT NULL COMMENT '',
- `unit_name` varchar(30) DEFAULT NULL COMMENT '',
- `price` decimal(12,2) DEFAULT NULL COMMENT ''
+    `id` bigint(30) NOT NULL,
+    `order_code` varchar(30) DEFAULT NULL COMMENT '',
+    `line_code` varchar(30) DEFAULT NULL COMMENT '',
+    `remark` varchar(30) DEFAULT NULL COMMENT '',
+    `unit_no` varchar(30) DEFAULT NULL COMMENT '',
+    `unit_name` varchar(30) DEFAULT NULL COMMENT '',
+    `price` decimal(12,2) DEFAULT NULL COMMENT ''
 ) ENGINE=OLAP
 UNIQUE KEY(`id`, `order_code`)
 DISTRIBUTED BY HASH(`order_code`) BUCKETS 1
 PROPERTIES (
-"replication_allocation" = "tag.location.default: 3",
-"in_memory" = "false",
-"storage_format" = "V2"
+    "replication_allocation" = "tag.location.default: 3",
+    "in_memory" = "false",
+    "storage_format" = "V2"
 );
 ```
 
-3.创建 datax 脚本 
+#### 3. Create the DataX job script
 
-my_import.json
+Create `my_import.json`. In real use, replace the source database and table in `reader`, and the Doris target database and table, username, and password in `writer` with values that match your environment.
 
 ```json
 {
@@ -187,7 +149,7 @@ my_import.json
                 "reader": {
                     "name": "mysqlreader",
                     "parameter": {
-                        "column": ["id","order_code","line_code","remark","unit_no","unit_name","price"],
+                        "column": ["id", "order_code", "line_code", "remark", "unit_no", "unit_name", "price"],
                         "connection": [
                             {
                                 "jdbcUrl": ["jdbc:mysql://localhost:3306/demo"],
@@ -203,22 +165,22 @@ my_import.json
                     "name": "doriswriter",
                     "parameter": {
                         "loadUrl": ["127.0.0.1:8030"],
-                        "column": ["id","order_code","line_code","remark","unit_no","unit_name","price"],
+                        "column": ["id", "order_code", "line_code", "remark", "unit_no", "unit_name", "price"],
                         "username": "root",
                         "password": "xxxxxx",
                         "postSql": ["select count(1) from all_employees_info"],
                         "preSql": [],
-                        "flushInterval":30000,
+                        "flushInterval": 30000,
                         "connection": [
-                          {
-                            "jdbcUrl": "jdbc:mysql://127.0.0.1:9030/demo",
-                            "selectedDatabase": "demo",
-                            "table": ["all_employees_info"]
-                          }
+                            {
+                                "jdbcUrl": "jdbc:mysql://127.0.0.1:9030/demo",
+                                "selectedDatabase": "demo",
+                                "table": ["all_employees_info"]
+                            }
                         ],
                         "loadProps": {
                             "format": "json",
-                            "strip_outer_array":"true",
+                            "strip_outer_array": "true",
                             "line_delimiter": "\\x02"
                         }
                     }
@@ -234,41 +196,47 @@ my_import.json
 }
 ```
 
->备注：
->
->```json
->"loadProps": {
->   "format": "json",
->   "strip_outer_array":"true",
->   "line_delimiter": "\\x02"
->}
->```
->
->1. 这里我们使用了 JSON 格式导入数据
->2.  `line_delimiter` 默认是换行符，可能会和数据中的值冲突，我们可以使用一些特殊字符或者不可见字符，避免导入错误
->3. strip_outer_array：在一批导入数据中表示多行数据，Doris 在解析时会将数组展开，然后依次解析其中的每一个 Object 作为一行数据
->4. 更多 Stream load 参数请参照 [Stream load 文档](../data-operate/import/import-way/stream-load-manual)
->5. 如果是 CSV 格式我们可以这样使用
->
->```json
->"loadProps": {
->    "format": "csv",
->    "column_separator": "\\x01",
->    "line_delimiter": "\\x02"
->}
->```
->
->**CSV 格式要特别注意行列分隔符，避免和数据中的特殊字符冲突，这里建议使用隐藏字符，默认列分隔符是：`\t`，行分隔符：`\n`**
+#### 4. Configure the import data format
 
-4.执行 DataX 任务，具体参考 [DataX 官网](https://github.com/alibaba/DataX/blob/master/userGuid.md)
+The example above imports data in JSON format:
 
-```sql
+```json
+"loadProps": {
+    "format": "json",
+    "strip_outer_array": "true",
+    "line_delimiter": "\\x02"
+}
+```
+
+Notes for the JSON format:
+
+1. `line_delimiter` defaults to a newline character, which can conflict with values in your data. Use a special or invisible character to avoid import errors.
+2. `strip_outer_array` indicates that one batch of imported data contains multiple rows. When parsing, Doris expands the outer array and parses each Object inside it as a separate row.
+3. For more Stream Load parameters, see the [Stream Load documentation](../../data-operate/import/import-way/stream-load-manual.md).
+
+To use the CSV format, configure as follows:
+
+```json
+"loadProps": {
+    "format": "csv",
+    "column_separator": "\\x01",
+    "line_delimiter": "\\x02"
+}
+```
+
+For the CSV format, pay particular attention to the row and column delimiters to avoid conflicts with special characters in your data. Hidden characters are recommended. The default column separator is `\t`, and the default line delimiter is `\n`.
+
+#### 5. Run the DataX job
+
+Run the job with the following command. For more ways to run jobs, see the [DataX user guide](https://github.com/alibaba/DataX/blob/master/userGuid.md).
+
+```shell
 python bin/datax.py my_import.json
 ```
 
-执行之后我们可以看到下面的信息
+After it runs successfully, you should see logs similar to the following:
 
-```sql
+```text
 2022-11-16 14:28:54.012 [job-0] INFO  JobContainer - jobContainer starts to do prepare ...
 2022-11-16 14:28:54.012 [job-0] INFO  JobContainer - DataX Reader.Job [mysqlreader] do prepare work .
 2022-11-16 14:28:54.013 [job-0] INFO  JobContainer - DataX Writer.Job [doriswriter] do prepare work .
@@ -283,10 +251,10 @@ python bin/datax.py my_import.json
 2022-11-16 14:28:54.043 [taskGroup-0] INFO  Channel - Channel set byte_speed_limit to -1, No bps activated.
 2022-11-16 14:28:54.043 [taskGroup-0] INFO  Channel - Channel set record_speed_limit to -1, No tps activated.
 2022-11-16 14:28:54.049 [taskGroup-0] INFO  TaskGroupContainer - taskGroup[0] taskId[0] attemptCount[1] is started
-2022-11-16 14:28:54.052 [0-0-0-reader] INFO  CommonRdbmsReader$Task - Begin to read record by Sql: [select taskid,projectid,taskflowid,templateid,template_name,status_task from dwd_universal_tb_task 
+2022-11-16 14:28:54.052 [0-0-0-reader] INFO  CommonRdbmsReader$Task - Begin to read record by Sql: [select taskid,projectid,taskflowid,templateid,template_name,status_task from dwd_universal_tb_task
 ] jdbcUrl:[jdbc:mysql://localhost:3306/demo?yearIsDateType=false&zeroDateTimeBehavior=convertToNull&tinyInt1isBit=false&rewriteBatchedStatements=true].
 Wed Nov 16 14:28:54 GMT+08:00 2022 WARN: Establishing SSL connection without server's identity verification is not recommended. According to MySQL 5.5.45+, 5.6.26+ and 5.7.6+ requirements SSL connection must be established by default if explicit option isn't set. For compliance with existing applications not using SSL the verifyServerCertificate property is set to 'false'. You need either to explicitly disable SSL by setting useSSL=false, or set useSSL=true and provide truststore for server certificate verification.
-2022-11-16 14:28:54.071 [0-0-0-reader] INFO  CommonRdbmsReader$Task - Finished read record by Sql: [select taskid,projectid,taskflowid,templateid,template_name,status_task from dwd_universal_tb_task 
+2022-11-16 14:28:54.071 [0-0-0-reader] INFO  CommonRdbmsReader$Task - Finished read record by Sql: [select taskid,projectid,taskflowid,templateid,template_name,status_task from dwd_universal_tb_task
 ] jdbcUrl:[jdbc:mysql://localhost:3306/demo?yearIsDateType=false&zeroDateTimeBehavior=convertToNull&tinyInt1isBit=false&rewriteBatchedStatements=true].
 2022-11-16 14:28:54.104 [Thread-1] INFO  DorisStreamLoadObserver - Start to join batch data: rows[2] bytes[438] label[datax_doris_writer_c4e08cb9-c157-4689-932f-db34acc45b6f].
 2022-11-16 14:28:54.104 [Thread-1] INFO  DorisStreamLoadObserver - Executing stream load to: 'http://127.0.0.1:8030/api/demo/dwd_universal_tb_task/_stream_load', size: '441'
@@ -302,27 +270,47 @@ Wed Nov 16 14:29:04 GMT+08:00 2022 WARN: Establishing SSL connection without ser
 2022-11-16 14:29:04.204 [job-0] INFO  JobContainer - DataX Reader.Job [mysqlreader] do post work.
 2022-11-16 14:29:04.204 [job-0] INFO  JobContainer - DataX jobId [0] completed successfully.
 2022-11-16 14:29:04.204 [job-0] INFO  HookInvoker - No hook invoked, because base dir not exists or is a file: /data/datax/hook
-2022-11-16 14:29:04.205 [job-0] INFO  JobContainer - 
-         [total cpu info] => 
-                averageCpu                     | maxDeltaCpu                    | minDeltaCpu                    
+2022-11-16 14:29:04.205 [job-0] INFO  JobContainer -
+         [total cpu info] =>
+                averageCpu                     | maxDeltaCpu                    | minDeltaCpu
                 -1.00%                         | -1.00%                         | -1.00%
-                        
 
-         [total gc info] => 
-                 NAME                 | totalGCCount       | maxDeltaGCCount    | minDeltaGCCount    | totalGCTime        | maxDeltaGCTime     | minDeltaGCTime     
-                 PS MarkSweep         | 1                  | 1                  | 1                  | 0.017s             | 0.017s             | 0.017s             
-                 PS Scavenge          | 1                  | 1                  | 1                  | 0.007s             | 0.007s             | 0.007s             
+
+         [total gc info] =>
+                 NAME                 | totalGCCount       | maxDeltaGCCount    | minDeltaGCCount    | totalGCTime        | maxDeltaGCTime     | minDeltaGCTime
+                 PS MarkSweep         | 1                  | 1                  | 1                  | 0.017s             | 0.017s             | 0.017s
+                 PS Scavenge          | 1                  | 1                  | 1                  | 0.007s             | 0.007s
 
 2022-11-16 14:29:04.205 [job-0] INFO  JobContainer - PerfTrace not enable!
 2022-11-16 14:29:04.206 [job-0] INFO  StandAloneJobContainerCommunicator - Total 2 records, 214 bytes | Speed 21B/s, 0 records/s | Error 0 records, 0 bytes |  All Task WaitWriterTime 0.000s |  All Task WaitReaderTime 0.000s | Percentage 100.00%
-2022-11-16 14:29:04.206 [job-0] INFO  JobContainer - 
-任务启动时刻                    : 2022-11-16 14:28:53
-任务结束时刻                    : 2022-11-16 14:29:04
-任务总计耗时                    :                 10s
-任务平均流量                    :               21B/s
-记录写入速度                    :              0rec/s
-读出记录总数                    :                   2
-读写失败总数                    :                   0
-
+2022-11-16 14:29:04.206 [job-0] INFO  JobContainer -
+Job start time                  : 2022-11-16 14:28:53
+Job end time                    : 2022-11-16 14:29:04
+Total job duration              :                 10s
+Average job throughput          :               21B/s
+Record write speed              :              0rec/s
+Total records read              :                   2
+Total read/write failures       :                   0
 ```
 
+## Import considerations and best practices
+
+- Do not set `flushInterval` too small. If it is too small, Doris writes can block and return error code `-235`, and the import may also be triggered before reaching the `maxBatchRows` or `batchSize` threshold.
+- When using the CSV format, carefully check whether `column_separator` and `line_delimiter` conflict with values in your data. Use hidden characters to lower the chance of conflicts.
+- When using the JSON format with a batch that is an array, set `strip_outer_array = true` so that Doris parses each Object in the array as a row.
+- `labelPrefix` combines with a UUID to form a globally unique label, which prevents duplicate imports.
+- `loadUrl` can take multiple FE addresses separated by commas; doriswriter accesses them in round-robin fashion.
+
+## FAQ
+
+### Can DataX Doriswriter only synchronize MySQL data?
+
+No. DataX supports many data sources. The full example in this document uses MySQL, but other DataX-supported sources can also be written to Doris through Doriswriter.
+
+### Which port should `loadUrl` use?
+
+`loadUrl` uses the `http_port` of an FE node, in the format `ip:port`. If you specify multiple addresses, doriswriter accesses them in round-robin fashion.
+
+### Why pay attention to delimiters when importing in JSON or CSV format?
+
+`line_delimiter` or `column_separator` can conflict with characters in your data and cause import errors. Use special or invisible characters as delimiters to lower the chance of conflicts.

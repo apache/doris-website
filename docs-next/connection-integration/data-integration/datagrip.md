@@ -1,71 +1,87 @@
 ---
 {
     "title": "DataGrip",
-    "language": "zh-CN",
-    "description": "DataGrip 是 JetBrains 出品的适用于关系数据库和 NoSQL 数据库的强大跨平台数据库工具。"
+    "language": "en",
+    "description": "Learn how to connect to Apache Doris using DataGrip's MySQL data source, configure internal catalog and external catalog, and verify the connection."
 }
 ---
 
-## 介绍
+<!-- Knowledge type: Procedure -->
+<!-- Applicable scenario: Use DataGrip to connect to and query Apache Doris -->
 
-DataGrip 是 JetBrains 出品的适用于关系数据库和 NoSQL 数据库的强大跨平台数据库工具。
+## Applicable Scenario
 
-Apache Doris 高度兼容 MySQL 协议，可以使用 DataGrip 的 MySQL 数据源连接 Apache Doris，并查询 internal catalog 和 external catalog 中的数据。
+DataGrip is a powerful cross-platform database tool from JetBrains that supports both relational and NoSQL databases. Apache Doris is highly compatible with the MySQL protocol, so you can use DataGrip's MySQL data source to connect to Apache Doris and query data in both internal catalog and external catalog.
 
-## 前置条件
+After reading this article, you can do the following:
 
-已安装 DataGrip
-可以访问 www.jetbrains.com/datagrip/ 下载安装 DataGrip
+- Create a Doris connection using a MySQL data source.
+- Configure connection information for an internal catalog or an external catalog.
+- Verify the connection and view and manage databases in DataGrip.
 
-## 添加数据源
+## Prerequisites
 
-:::info 备注
-当前验证使用 DataGrip 2023.3.4 版本
+- DataGrip is installed. If it is not installed, visit the [DataGrip official website](https://www.jetbrains.com/datagrip/) to download and install it.
+- Doris cluster connection information is ready, including the FE host IP address, FE query port, target database, username, and password.
+
+:::info Version note
+The procedures in this article are verified on DataGrip 2023.3.4.
 :::
 
-1. 启动 DataGrip
-2. 在 DataGrip 窗口左上角单击加号 (**+**) 图标，选择 MySQL 数据源
+## Connect to Doris
 
-    ![添加数据源](/images/datagrip1.png)
+### 1. Add a MySQL data source
 
-3. 配置 Doris 连接
+Launch DataGrip, click the plus (**+**) icon in the upper-left corner of the DataGrip window, and select the MySQL data source.
 
-    在 Data Sources and Drivers 窗口的 General 标签页，配置以下连接信息：
+![Add data source](/images/datagrip1.png)
 
-  - Host：Doris 集群的 FE 主机 IP 地址。
-  - Port：Doris 集群的 FE 查询端口，如 9030。
-  - Database：Doris 集群中的目标数据库。
-  - User：用于登录 Doris 集群的用户名，如 admin。
-  - Password：用于登录 Doris 集群的用户密码。
+### 2. Configure the Doris connection
 
-    :::tip
-    Database 可以用于区别 internal catalog 和 external catalog，如仅填写 Database 名称，则当前数据源默认连接 internal catalog，如填写格式为 catalog.db，则当前数据源默认连接 Database 中所填写的 catalog，DataGrip 中展示的库表也为所连接 catalog 中的库表，以此可以使用 DataGrip 的 MySQL 数据源来创建多个 Doris 数据源来管理 Doris 中不同的 Catalog。
-    :::
+On the General tab in the Data Sources and Drivers window, configure the Doris connection information.
 
-    :::info 备注
-    通过 catalog.db 的 Database 形式来管理连接 Doris 的 external catalog 需要 Doris 版本在 2.1.0 及以上
-    :::
+| Configuration item | Description |
+| --- | --- |
+| Host | The FE host IP address of the Doris cluster. |
+| Port | The FE query port of the Doris cluster, such as `9030`. |
+| Database | The target database in the Doris cluster. You can also use the `catalog.db` format to specify a catalog. |
+| User | The username for logging in to the Doris cluster, such as `admin`. |
+| Password | The password for logging in to the Doris cluster. |
 
-  - internal catalog
+The Database field can be used to distinguish between internal catalog and external catalog. You can use DataGrip's MySQL data source to create multiple Doris data sources to manage different catalogs in Doris separately.
 
-    ![连接 internal catalog](/images/datagrip2.png)
+| How to fill in Database | Default connection |
+| --- | --- |
+| Fill in only the database name | Connects to the internal catalog by default. |
+| Fill in `catalog.db` | Connects to the catalog specified in Database by default. The databases and tables shown in DataGrip are also those in the connected catalog. |
 
-  - external catalog
+:::info Version note
+Managing Doris external catalog through the `catalog.db` Database format requires Doris version 2.1.0 or later.
+:::
 
-    ![连接 external catalog](/images/datagrip3.png)
+An example of an internal catalog connection is shown below:
 
-5. 测试数据源连接
+![Connect to internal catalog](/images/datagrip2.png)
 
-    在填写完连接信息后，单击左下角 Test Connection 验证数据库连接信息的准确性。DataGrip 返回如下对弹窗则测试连接成功。然后单击右下角 OK 完成连接配置。
+An example of an external catalog connection is shown below:
 
-   ![测试连接](/images/datagrip4.png)
+![Connect to external catalog](/images/datagrip3.png)
 
-6. 连接数据库
+### 3. Test the data source connection
 
-    数据库连接建立以后，可以在左侧的数据库连接导航看到已创建的数据源连接，并且可以通过 DataGrip 连接并管理数据库。
+After filling in the connection information, click Test Connection in the lower-left corner to verify the accuracy of the database connection information. When DataGrip returns the following dialog box, the test connection is successful. Then click OK in the lower-right corner to complete the connection configuration.
 
-   ![建立连接](/images/datagrip5.png)
+![Test connection](/images/datagrip4.png)
 
-## 功能支持
+### 4. Connect to and manage the database
 
-基本支持大部分可视化查看操作，以及 SQL 控制台编写 SQL 操作 Doris，不支持或未经验证各种创建库表、schema change、增删改数据操作。
+After the database connection is established, you can see the created data source connection in the database connection navigation on the left, and connect to and manage the database through DataGrip.
+
+![Establish connection](/images/datagrip5.png)
+
+## Feature Support Scope
+
+| Support status | Description |
+| --- | --- |
+| Basically supported | Most visual viewing operations, as well as operating Doris by writing SQL through the SQL console. |
+| Not supported or not verified | Operations such as creating databases and tables, schema change, and inserting, updating, or deleting data. |

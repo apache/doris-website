@@ -1,12 +1,23 @@
 ---
 {
-    "title": "ANN 索引管理",
-    "language": "zh-CN",
-    "description": "Apache Doris 中的近似最近邻 (ANN) 索引支持对高维数据进行高效的向量相似性搜索。从 Doris 4.x 开始，通用索引操作语法也支持了 ANN 索引。本文将介绍 ANN 索引相关操作的具体 SQL 语法，并提供详细的参数说明。"
+    "title": "ANN Index Management",
+    "language": "en",
+    "description": "A complete SQL operation guide for creating, building, viewing, and dropping the Apache Doris ANN vector index, including HNSW, IVF, and quantization parameter descriptions.",
+    "keywords": [
+        "ANN index",
+        "vector index management",
+        "HNSW",
+        "IVF",
+        "vector similarity search",
+        "Doris vector retrieval",
+        "BUILD INDEX",
+        "scalar quantization SQ",
+        "product quantization PQ"
+    ]
 }
 ---
 
-<!-- 
+<!--
 Licensed to the Apache Software Foundation (ASF) under one
 or more contributor license agreements.  See the NOTICE file
 distributed with this work for additional information
@@ -25,37 +36,59 @@ specific language governing permissions and limitations
 under the License.
 -->
 
+<!-- Knowledge type: Operation steps + Configuration parameters -->
+<!-- Applicable scenarios: Vector retrieval table creation / Index operations / Performance tuning -->
 
+# ANN Index Management
 
-# ANN 索引管理
+The Approximate Nearest Neighbor (ANN) index in Apache Doris is used to perform efficient vector similarity searches on high-dimensional vector columns. Starting from Doris 4.x, the general index operation syntax covers ANN indexes. This document focuses on the SQL operation syntax and parameter descriptions related to ANN indexes.
 
-## 概述
+## Quick Navigation
 
-Apache Doris 中的近似最近邻 (ANN) 索引支持对高维数据进行高效的向量相似性搜索。从 Doris 4.x 开始，通用索引操作语法也支持了 ANN 索引。本文将介绍 ANN 索引相关操作的具体 SQL 语法，并提供详细的参数说明。
+You can jump to the corresponding section based on your use case:
 
-ANN 索引建立在向量列上（`ARRAY<FLOAT> NOT NULL` 类型），支持两种度量类型包括 l2 distance(也叫欧式距离)和inner product(内积)。
+| Scenario                                              | Section                                            |
+| ----------------------------------------------------- | -------------------------------------------------- |
+| Create an index on a vector column for the first time | [Create an ANN Index](#create-an-ann-index)        |
+| Build an index offline on existing data               | [Build an ANN Index](#build-an-ann-index)          |
+| View existing indexes and their parameter settings    | [View an ANN Index](#view-an-ann-index)            |
+| Drop indexes that are no longer needed                | [Drop an ANN Index](#drop-an-ann-index)            |
+| Choose a specific algorithm such as HNSW, IVF, or a quantizer | [Index Parameters](#index-parameters)      |
 
-## 创建 ANN 索引
+## Prerequisites
 
-可以使用带有 `USING ANN` 的 `CREATE INDEX` 语句创建 ANN 索引。有两种主要方法：
+Before creating an ANN index, confirm the following:
 
-1. **在表创建期间定义索引**：索引在数据加载时同步构建。
+-   The data type of the vector column is `ARRAY<FLOAT> NOT NULL`.
+-   A suitable metric type has been chosen: `l2_distance` (Euclidean distance) or `inner_product`.
+-   An index algorithm (HNSW, IVF, or IVF On-Disk) has been chosen based on data scale and recall/performance requirements.
 
-### 语法
+## Create an ANN Index
+
+Doris provides two ways to create an ANN index. Choose one based on whether the data has already been loaded:
+
+| Method                                | Applicable scenario                                                  | When the index is built                |
+| ------------------------------------- | -------------------------------------------------------------------- | -------------------------------------- |
+| Define the index when creating the table | The table has not been created yet, or the index needs to be built continuously as data is written | Built synchronously during data load   |
+| Create and build the index separately | The table already exists with data, and the index needs to be added later | Built asynchronously via `BUILD INDEX` |
+
+### Method 1: Define the Index When Creating the Table
+
+Declare the ANN index directly with `INDEX ... USING ANN` after the column definitions in the `CREATE TABLE` statement. The index is built synchronously as data is loaded.
 
 ```sql
 CREATE TABLE [IF NOT EXISTS] <table_name> (
-  <columns_definition>
-  INDEX <index_name> (<vector_column) USING ANN PROPERTIES (
-    "<key>" = "<value>" [, ...]
-  )
+    <columns_definition>
+    INDEX <index_name> (<vector_column>) USING ANN PROPERTIES (
+        "<key>" = "<value>" [, ...]
+    )
 )
 ...
 ```
 
-2. **单独创建索引**：先定义索引，然后使用 `BUILD INDEX` 在现有数据上构建。
+### Method 2: Create the Index Separately
 
-### 语法
+For an existing table, use `CREATE INDEX` or `ALTER TABLE ADD INDEX` to add an ANN index, and then use [BUILD INDEX](#build-an-ann-index) to build it on the existing data.
 
 ```sql
 CREATE INDEX [IF NOT EXISTS] <index_name>
@@ -64,47 +97,67 @@ CREATE INDEX [IF NOT EXISTS] <index_name>
              PROPERTIES ("<key>" = "<value>" [, ...])
              [COMMENT '<index_comment>']
 
--- or
+-- Or
+
 ALTER TABLE <table_name> ADD INDEX <index_name>(<column_name>)
              USING ANN
-             [PROPERTIES("<key>" = "<value>" [, ...])]
+             [PROPERTIES ("<key>" = "<value>" [, ...])]
              [COMMENT '<index_comment>']
 ```
 
-### 通用属性
+## Index Parameters
 
-- `index_type`: ANN 索引的类型。支持的值："ivf"、"ivf_on_disk" 或 "hnsw"。
-- `metric_type`: 度量类型。支持的值："l2_distance"、"inner_product"。
-- `dim`: 向量列的维度。
-- `quantizer`: 量化器类型。支持的值：flat、sq4、sq8、pq。不指定时默认为 flat。
+The behavior of an ANN index is determined by the attributes in `PROPERTIES`, which fall into three categories: general attributes, index-algorithm-specific attributes, and quantizer-specific attributes.
 
-### 索引特定属性
+### General Attributes
 
-#### IVF / IVF On-Disk 索引属性
+The basic attributes that all ANN indexes need to configure:
 
-- `nlist`: 聚类数量（倒排列表）。默认：1024。`ivf` 和 `ivf_on_disk` 都需要该参数。更高的值改善召回率，但会增加构建时间和资源消耗。
+| Attribute     | Description                                                                  | Default |
+| ------------- | ---------------------------------------------------------------------------- | ------- |
+| `index_type`  | The ANN index type. Available values: `ivf`, `ivf_on_disk`, `hnsw`           | -       |
+| `metric_type` | The metric type. Available values: `l2_distance` (Euclidean distance), `inner_product` | - |
+| `dim`         | The dimension of the vector column                                           | -       |
+| `quantizer`   | The quantizer type. Available values: `flat`, `sq4`, `sq8`, `pq`             | `flat`  |
 
-#### HNSW 索引属性
+### Index-Algorithm-Specific Attributes
 
-- `max_degree`: 每个节点的连接最大数量。默认：32。影响召回率和查询性能。
-- `ef_construction`: 索引构建期间候选队列的大小。默认：40。更高的值改善图质量但增加构建时间。
+#### IVF / IVF On-Disk
 
-### 量化特定属性
+| Attribute | Description                                                                                                              | Default |
+| --------- | ------------------------------------------------------------------------------------------------------------------------ | ------- |
+| `nlist`   | The number of clusters (inverted lists). Required for both `ivf` and `ivf_on_disk`. A larger value yields higher recall but increases build time and resource consumption. | `1024`  |
 
-对于量化器属性：
+#### HNSW
 
-- `sq4`: 标量量化 (SQ)，使用 4 位整数替代 32 位浮点数来存储向量的每个维度值。
-- `sq8`: 标量量化 (SQ)，使用 8 位整数替代 32 位浮点数来存储向量的每个维度值。
-- `pq`: 乘积量化 (PQ)，properties中需要额外指定两个参数，`pq_m` 和 `pq_nbits`
+| Attribute         | Description                                                                  | Default |
+| ----------------- | ---------------------------------------------------------------------------- | ------- |
+| `max_degree`      | The maximum number of connections per node, which affects recall and query performance. | `32` |
+| `ef_construction` | The size of the candidate queue during index construction. A larger value yields a higher-quality graph but increases build time. | `40` |
 
-#### 乘积量化属性
+### Quantizer-Specific Attributes
 
-- `pq_m`: 指定使用的子向量数量（向量维度 dim 必须能被 pq_m 整除）。
-- `pq_nbits`: 用于表示每个子向量的比特数，在 faiss 中 pq_nbits 通常要求不超过 24。
+`quantizer` is used to compress vector storage. The differences between quantizers are as follows:
 
-### 示例
+| Quantizer | Meaning                                                                                          | Extra parameters             |
+| --------- | ------------------------------------------------------------------------------------------------ | ---------------------------- |
+| `flat`    | No quantization. Vectors are stored as the original 32-bit floating-point numbers.               | None                         |
+| `sq4`     | Scalar Quantization. Each dimension is stored as a 4-bit integer instead of a 32-bit float.      | None                         |
+| `sq8`     | Scalar Quantization. Each dimension is stored as an 8-bit integer instead of a 32-bit float.    | None                         |
+| `pq`      | Product Quantization. The vector is split into several sub-vectors, which are quantized separately. | `pq_m` and `pq_nbits` are required |
 
-#### 创建带有 ANN 索引的表
+#### Extra Parameters for Product Quantization (PQ)
+
+| Attribute  | Description                                                                              |
+| ---------- | ---------------------------------------------------------------------------------------- |
+| `pq_m`     | The number of sub-vectors. The vector dimension `dim` must be divisible by `pq_m`.       |
+| `pq_nbits` | The number of bits per sub-vector. In faiss, `pq_nbits` is typically required to be no greater than 24. |
+
+## Index Creation Examples
+
+The following SQL examples cover common combinations and can be used as templates.
+
+### Declare an HNSW Index When Creating the Table
 
 ```sql
 CREATE TABLE tbl_ann (
@@ -121,7 +174,7 @@ DISTRIBUTED BY HASH(id) BUCKETS 1
 PROPERTIES ("replication_num" = "1");
 ```
 
-#### IVF 索引
+### IVF Index
 
 ```sql
 CREATE INDEX ann_ivf_index ON tbl_ivf (`embedding`) USING ANN PROPERTIES(
@@ -132,7 +185,7 @@ CREATE INDEX ann_ivf_index ON tbl_ivf (`embedding`) USING ANN PROPERTIES(
 );
 ```
 
-#### HNSW 索引
+### HNSW Index
 
 ```sql
 CREATE INDEX ann_hnsw_index ON tbl_hnsw (`embedding`) USING ANN PROPERTIES(
@@ -144,7 +197,7 @@ CREATE INDEX ann_hnsw_index ON tbl_hnsw (`embedding`) USING ANN PROPERTIES(
 );
 ```
 
-#### HNSW + SQ
+### HNSW + SQ
 
 ```sql
 CREATE INDEX ann_hnsw_sq ON tbl_hnsw (`embedding`) USING ANN PROPERTIES(
@@ -157,7 +210,7 @@ CREATE INDEX ann_hnsw_sq ON tbl_hnsw (`embedding`) USING ANN PROPERTIES(
 );
 ```
 
-#### HNSW + PQ
+### HNSW + PQ
 
 ```sql
 CREATE INDEX ann_hnsw_pq ON tbl_hnsw (`embedding`) USING ANN PROPERTIES(
@@ -172,7 +225,7 @@ CREATE INDEX ann_hnsw_pq ON tbl_hnsw (`embedding`) USING ANN PROPERTIES(
 );
 ```
 
-#### IVF + SQ
+### IVF + SQ
 
 ```sql
 CREATE INDEX ann_ivf_sq ON tbl_ivf (`embedding`) USING ANN PROPERTIES(
@@ -184,7 +237,7 @@ CREATE INDEX ann_ivf_sq ON tbl_ivf (`embedding`) USING ANN PROPERTIES(
 );
 ```
 
-#### IVF + PQ
+### IVF + PQ
 
 ```sql
 CREATE INDEX ann_ivf_pq ON tbl_ivf (`embedding`) USING ANN PROPERTIES(
@@ -198,29 +251,29 @@ CREATE INDEX ann_ivf_pq ON tbl_ivf (`embedding`) USING ANN PROPERTIES(
 );
 ```
 
-## 构建 ANN 索引
+## Build an ANN Index
 
-对于单独创建的索引，使用 `BUILD INDEX` 在现有数据上构建索引。这个操作是异步的。
+For indexes that are created separately via `CREATE INDEX` or `ALTER TABLE ADD INDEX`, use `BUILD INDEX` to build them on existing data. This operation runs **asynchronously**.
 
-### 语法
+### Trigger a Build
 
 ```sql
 BUILD INDEX <index_name> ON <table_name> [PARTITION (<partition_name> [, ...])]
 ```
 
-### 监控构建进度
+### Monitor Build Progress
 
-使用 `SHOW BUILD INDEX` 检查索引构建的进度和状态。
+Use `SHOW BUILD INDEX` to view the progress and status of index build tasks:
 
 ```sql
--- 查看所有 BUILD INDEX 任务的进度 [对于特定数据库]
+-- View the progress of all BUILD INDEX tasks (a database can be specified)
 SHOW BUILD INDEX [FROM db_name];
 
--- 查看特定表的 BUILD INDEX 任务进度
+-- View the progress of BUILD INDEX tasks for a specific table
 SHOW BUILD INDEX WHERE TableName = "<table_name>";
 ```
 
-输出包括 `JobId`、`TableName`、`State`（例如 `FINISHED`、`RUNNING`）和 `Progress` 等列，例如：
+The output contains columns such as `JobId`, `TableName`, `State` (for example, `FINISHED` or `RUNNING`), and `Progress`. Example:
 
 ```sql
 mysql> show build index where TableName = "sift_1M";
@@ -232,42 +285,27 @@ mysql> show build index where TableName = "sift_1M";
 1 row in set (0.00 sec)
 ```
 
-### 取消索引构建
+### Cancel a Build
 
-要取消正在进行的索引构建：
+To cancel an index build task that is in progress:
 
 ```sql
 CANCEL BUILD INDEX ON <table_name> [(<job_id> [, ...])]
 ```
 
-## 删除 ANN 索引
+## View an ANN Index
 
-使用 `DROP INDEX` 删除 ANN 索引。
-
-### 语法
-
-```sql
-DROP INDEX [IF EXISTS] <index_name> ON [<db_name>.]<table_name>
-
--- or
-ALTER TABLE [<db_name>.]<table_name> DROP INDEX <index_name>
-```
-
-
-## 查看 ANN 索引
-
-使用 `SHOW INDEX` 或 `SHOW CREATE TABLE` 查看索引信息。
-
-### 语法
+You can view index information through `SHOW INDEX` or `SHOW CREATE TABLE`:
 
 ```sql
 SHOW INDEX[ES] FROM [<db_name>.]<table_name> [FROM <db_name>]
 
--- or
+-- Or
+
 SHOW CREATE TABLE [<db_name>.]<table_name>
 ```
 
-### 示例输出
+The output of `SHOW INDEX` includes columns such as `Table`, `Key_name`, `Index_type` (which is shown as `ANN` for ANN indexes), and `Properties` (which contains the full index configuration). Example:
 
 ```sql
 mysql> SHOW INDEX FROM sift_1M;
@@ -279,4 +317,14 @@ mysql> SHOW INDEX FROM sift_1M;
 1 row in set (0.01 sec)
 ```
 
-输出包括 `Table`、`Key_name`、`Index_type`（ANN 索引显示 `ANN`）和 `Properties`（包含索引配置）等列。
+## Drop an ANN Index
+
+Use `DROP INDEX` or `ALTER TABLE DROP INDEX` to drop an existing ANN index:
+
+```sql
+DROP INDEX [IF EXISTS] <index_name> ON [<db_name>.]<table_name>
+
+-- Or
+
+ALTER TABLE [<db_name>.]<table_name> DROP INDEX <index_name>
+```

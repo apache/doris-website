@@ -1,188 +1,240 @@
 ---
 {
     "title": "Power BI",
-    "language": "zh-CN",
-    "description": "Microsoft Power BI 可以从 Apache Doris 查询或加载数据到内存。"
+    "language": "en",
+    "description": "Learn how to connect Apache Doris in Power BI Desktop, configure DirectQuery or Import mode, and build visualization dashboards on top of Doris data.",
+    "keywords": [
+        "Power BI connect Doris",
+        "Apache Doris Power BI",
+        "Doris Power BI Connector",
+        "Power BI DirectQuery Doris",
+        "Power BI Import Doris"
+    ]
 }
 ---
 
-Microsoft Power BI 可以从 Apache Doris 查询或加载数据到内存。
+<!-- Knowledge type: Operation guide -->
+<!-- Applicable scenario: Use Power BI Desktop to connect to Apache Doris and build visualization dashboards -->
 
-您可以使用 Power BI Desktop，用于创建仪表板和可视化的 Windows 桌面应用程序。
+Microsoft Power BI can query data from Apache Doris and can also load data into memory. With Power BI Desktop, you can connect to an Apache Doris data source and create reports, dashboards, and visual analytics.
 
-本教程将指导您完成以下过程：
+Starting from the user workflow, this article describes how to complete the following operations:
 
-- 安装 mysql ODBC 驱动程序
-- 将 Doris Power BI 连接器安装到 Power BI Desktop
-- 从 Doris 查询数据以在 Power BI Desktop 中可视化
+| Use case | User goal | Main operations |
+|----------|-----------|-----------------|
+| Prepare the connection environment | Enable Power BI Desktop to connect to Doris | Install the MySQL ODBC driver and the Doris Power BI connector |
+| Connect to a Doris data source | Access an Apache Doris instance from Power BI Desktop | Fill in the Doris Data Source, Database, authentication information, and data connectivity mode |
+| Choose a query mode | Select a connection mode based on the data volume and the way you analyze data | Use DirectQuery to query Doris directly, or use Import to load a small amount of data into Power BI |
+| Build a visualization dashboard | Build an analytics report based on TPC-H data in Doris | Create table relationships, drag and drop fields, and generate and save a dashboard |
 
-## 前提条件
+## Prepare the connection environment
 
-### Power BI 安装
+<!-- Knowledge type: Pre-deployment check -->
+<!-- Applicable scenario: Install Power BI Desktop and prepare Doris connection information -->
 
-本教程假定您已经在 Windows 计算机上安装了 Microsoft Power BI Desktop。您可以在 [这里](https://www.microsoft.com/en-us/download/details.aspx?id=58494) 下载并安装 Power BI Desktop。
+### Install Power BI Desktop
 
-我们建议您更新到最新版本的 Power BI。
+This article assumes that you have already installed Microsoft Power BI Desktop on a Windows computer. If it is not installed, you can visit the [Power BI Desktop download page](https://www.microsoft.com/en-us/download/details.aspx?id=58494) to download and install it.
 
-### 连接信息
+It is recommended to update Power BI Desktop to the latest version.
 
-收集您的 Apache Doris 连接详细信息
+### Prepare Doris connection information
 
-您需要以下详细信息以连接到您的 Apache Doris 实例：
+Before connecting to Apache Doris, collect the following information:
 
-| 参数 | 含义 | 示例                           |
-| ---- | ---- |------------------------------|
-| **Doris Data Source** | 数据库连接串，host + port | 127.0.1.28:9030              |
-| **Database** | 数据库名 | test_db                      |
-| **Data Connectivity Mode** | 数据连接模式，包含 Import 和 DirectQuery |       DirectQuery                       |
-| **SQL Statement** | SQL 语句，必须包含 Database，仅适用于Import 模式 | select * from database.table |
-| **User Name** | 用户名 | admin                        |
-| **Password** | 密码 | xxxxxx                       |
+| Parameter | Meaning | Example |
+|-----------|---------|---------|
+| **Doris Data Source** | Database connection string in the format `host:port` | `127.0.1.28:9030` |
+| **Database** | Database name | `test_db` |
+| **Data Connectivity Mode** | Data connectivity mode, including `Import` and `DirectQuery` | `DirectQuery` |
+| **SQL Statement** | SQL statement, must include the database, only applicable in `Import` mode | `select * from database.table` |
+| **User Name** | User name | `admin` |
+| **Password** | Password | `xxxxxx` |
 
-## Power BI Desktop
+## Install the MySQL ODBC driver
 
-要开始在 Power BI Desktop 中查询数据，您需要完成以下步骤：
+<!-- Knowledge type: Operation steps -->
+<!-- Applicable scenario: Allow Power BI Desktop to connect to Doris through the MySQL ODBC driver -->
 
-1. 安装 Mysql ODBC 驱动程序
-2. 查找 Doris 连接器
-3. 连接到 Doris
-4. 查询和可视化数据
+To connect to Doris in Power BI Desktop, you need to install the MySQL ODBC driver first.
 
-### 安装 ODBC 驱动程序
+### Install the driver
 
-下载安装 [Mysql ODBC](https://downloads.mysql.com/archives/c-odbc/)，并配置 （版本为 5.3）。
+1. Download and install [MySQL ODBC](https://downloads.mysql.com/archives/c-odbc/).
 
-执行提供的 `.msi` 安装程序并按照向导进行操作。
+2. Select and configure version 5.3.
 
-![](/images/ecomsystem/powerbi/WYRLb9JmcoEHeuxr41Ec8yMQnff.png)
+3. Run the downloaded `.msi` installer and follow the installation wizard to complete the installation.
 
-![](/images/ecomsystem/powerbi/LYh9bi780o3DaCxwF3BcuPrknlh.png)
+![](/images/next/connection-integration/data-integration/powerbi/WYRLb9JmcoEHeuxr41Ec8yMQnff.png)
 
-![](/images/ecomsystem/powerbi/E1i7buBzHoquRCxT6VAc1FjCnNf.png)
+![](/images/next/connection-integration/data-integration/powerbi/LYh9bi780o3DaCxwF3BcuPrknlh.png)
 
-安装完成
+![](/images/next/connection-integration/data-integration/powerbi/E1i7buBzHoquRCxT6VAc1FjCnNf.png)
 
-![](/images/ecomsystem/powerbi/PURIbSCFhoara3xodBBc5xaNnjc.png)
+After the installation is complete, the following screen appears.
 
-#### 验证 ODBC 驱动程序
+![](/images/next/connection-integration/data-integration/powerbi/PURIbSCFhoara3xodBBc5xaNnjc.png)
 
-当驱动程序安装完成后，您可以通过以下方式验证安装是否成功：
+### Verify the driver
 
-在开始菜单中输入  'ODBC'  并选择 "ODBC 数据源 (64 位)"。
+After the driver is installed, you can verify the installation as follows:
 
-![](/images/ecomsystem/powerbi/QhVVbjalNoIwvdxd1u7cX3UAnEf.png)
+1. In the Windows Start menu, type `ODBC` and select **ODBC Data Sources (64-bit)**.
 
-验证 mysql 驱动程序是否列出。
+![](/images/next/connection-integration/data-integration/powerbi/QhVVbjalNoIwvdxd1u7cX3UAnEf.png)
 
-![](/images/ecomsystem/powerbi/OzVSbojxto9SpRxP3sLcnqHmnme.png)
+2. Confirm that the MySQL driver appears in the driver list.
 
-### 安装 Doris 连接器
+![](/images/next/connection-integration/data-integration/powerbi/OzVSbojxto9SpRxP3sLcnqHmnme.png)
 
-当前 Power BI 自定义 Connector  暂时关闭认证通道，因此 Doris 提供的 自定义 Connector 是属于未经认证的，对于未认证连接器，配置方式([https://learn.microsoft.com/en-us/power-bi/connect-data/desktop-connector-extensibility#custom-connectors](https://learn.microsoft.com/en-us/power-bi/connect-data/desktop-connector-extensibility#custom-connectors))如下：
+## Install the Doris Power BI connector
 
-1. 假定 `power_bi_path` 为 windows 操作系统中 Power BI Desktop 的目录，一般默认为：`power_bi_path = C:\Program Files\Power BI Desktop` 参考此处路径 `%power_bi_path%\Custom Connectors folder`，放置 [Doris.mez](https://velodb-bi-connector-1316291683.cos.ap-hongkong.myqcloud.com/PowerBI/latest/Doris.mez) 自定义连接器文件（如果路径不存在，按需手动创建）。
-2. 在 Power BI Desktop 中，选择 `File` > `Options and settings` > `Options` > `Security`，在 `Data Extensions` 下，勾选 `(Not Recommended) Allow any extension to load without validation or warning` 。可以屏蔽掉未认证连接器的限制。
+<!-- Knowledge type: Operation steps -->
+<!-- Applicable scenario: Load the Doris custom connector in Power BI Desktop -->
 
-首先，选择 `File`
+The Power BI custom connector certification channel is currently closed, so the custom connector provided by Doris is an uncertified connector. For uncertified connectors, refer to the [Power BI custom connector configuration documentation](https://learn.microsoft.com/en-us/power-bi/connect-data/desktop-connector-extensibility#custom-connectors) to complete the following configuration.
 
-![](/images/ecomsystem/powerbi/YeQDbcIoQoI5RtxU0mjcNXuJnrg.png)
+### Place the connector file
 
-然后，选择 ` Options and settings` > `Options`
+1. Assume that `power_bi_path` is the installation directory of Power BI Desktop on the Windows operating system. The default is usually:
 
-![](/images/ecomsystem/powerbi/LV6Tbdw54o5pqtxC2bCctM30nbe.png)
+    ```text
+    power_bi_path = C:\Program Files\Power BI Desktop
+    ```
 
-进入 `Options` 界面，`GLOBAL` >`Security`，在 `Data Extensions` 下，
+2. Place the [Doris.mez](https://velodb-bi-connector-1316291683.cos.ap-hongkong.myqcloud.com/PowerBI/latest/Doris.mez) custom connector file under the `%power_bi_path%\Custom Connectors folder` path.
 
-勾选 `(Not Recommended) Allow any extension to load without validation or warning` 选项 。
+3. If the path above does not exist, create it manually as needed.
 
-![](/images/ecomsystem/powerbi/Tg5cbS75HoBGIMxpcKScJ9WXnRg.png)
+### Allow loading uncertified connectors
 
-选择 `ok` ，然后重启 Power BI Desktop。
+1. In Power BI Desktop, select **File**.
 
-### 查找 Doris 连接器
+![](/images/next/connection-integration/data-integration/powerbi/YeQDbcIoQoI5RtxU0mjcNXuJnrg.png)
 
-1. 启动 Power BI Desktop
-2. 在 Power BI Desktop 打开界面点击新建报表。若已有本地报表可以选择打开已有报表
+2. Select **Options and settings** > **Options**.
 
-![](/images/ecomsystem/powerbi/FuXNb5hb2oOq7cxNpPEcR1dKnyg.png)
+![](/images/next/connection-integration/data-integration/powerbi/LV6Tbdw54o5pqtxC2bCctM30nbe.png)
 
-3. 点击获取数据，在弹出窗口中选择 Doris 数据库
+3. On the **Options** screen, select **GLOBAL** > **Security**. Under **Data Extensions**, check **(Not Recommended) Allow any extension to load without validation or warning** to lift the restriction on uncertified connectors.
 
-![](/images/ecomsystem/powerbi/G9UWbT1P6otb53xlgj4cljUInz1.png)
+![](/images/next/connection-integration/data-integration/powerbi/Tg5cbS75HoBGIMxpcKScJ9WXnRg.png)
 
-### 连接到 Doris
+4. Select **OK** and then restart Power BI Desktop.
 
-选择连接器，并输入 Doris 实例凭据：
+## Connect to Doris in Power BI Desktop
 
-- Doris Data Source（必填） - 您的实例域名/地址或者 host:port。
-- Database（必填） - 您的数据库名。
-- SQL statement - 预先执行的 sql 语句（仅在 ‘Import’ 模式下可用）
-- 数据连接模式 - DirectQuery/Import
+<!-- Knowledge type: Operation steps + Configuration parameters -->
+<!-- Applicable scenario: Select the Doris connector in Power BI Desktop and fill in connection information -->
 
-![](/images/ecomsystem/powerbi/KiM2bVPWhoYBg5xGQUQcJFNcntg.png)
+After installing the driver and connector, you can find the Doris connector in Power BI Desktop and create a Doris data source.
 
-**备注**
+### Find the Doris connector
 
-我们建议选择 DirectQuery 以直接查询 Doris。
+1. Launch Power BI Desktop.
 
-如果您有少量数据的用例，可以选择导入模式，整个数据将加载到 Power BI。
+2. On the Power BI Desktop start screen, click **New Report**. If you already have a local report, you can also choose to open an existing report.
 
-- 指定用户名和密码
+![](/images/next/connection-integration/data-integration/powerbi/FuXNb5hb2oOq7cxNpPEcR1dKnyg.png)
 
-![](/images/ecomsystem/powerbi/KZXxbDPTBo2O3FxqgZdcE9I6ndc.png)
+3. Click **Get Data** and select the Doris database in the pop-up window.
 
-### 查询和可视化数据
+![](/images/next/connection-integration/data-integration/powerbi/G9UWbT1P6otb53xlgj4cljUInz1.png)
 
-最后，您应该在导航器视图中看到数据库和表。选择所需的表并单击 "加载" 以从 Apache Doris 加载表结构和预览数据。
+### Fill in connection information
 
-![](/images/ecomsystem/powerbi/J7xObwqSYoTdTQx3hjgcAjQznS5.png)
+After selecting the Doris connector, enter the Doris instance credentials:
 
-导入完成后，您的 Doris 数据应在 Power BI 中如常访问，配置需要的统计罗盘 。
+| Parameter | Required | Description |
+|-----------|----------|-------------|
+| **Doris Data Source** | Required | Doris instance domain name, address, or `host:port` |
+| **Database** | Required | Doris database name |
+| **SQL statement** | Optional | SQL statement to execute beforehand, only available in `Import` mode |
+| **Data connectivity mode** | Required | Choose `DirectQuery` or `Import` |
 
-![](/images/ecomsystem/powerbi/JvIgbbyo2oWPlgxcb6Cct5ssnld.png)
+![](/images/next/connection-integration/data-integration/powerbi/KiM2bVPWhoYBg5xGQUQcJFNcntg.png)
 
-## 在 Power BI 中构建可视化
+Recommendations for choosing a connection mode:
 
-我们选择 TPC-H 数据作为数据源，Doris TPC-H 数据源构建方式参考[此文档](../../benchmark/tpch)
-现在我们在 Power BI 中配置了 Doris 数据源，让我们可视化数据...
+| Mode | Applicable scenario | Description |
+|------|---------------------|-------------|
+| **DirectQuery** | Recommended for querying Doris directly | Power BI does not load the full data set; instead, it sends queries directly to Doris |
+| **Import** | Suitable for small data scenarios | The entire data set is loaded into Power BI |
 
-假设我们需要知道在各个地区的订单营收统计，接下来按照此需求进行看板构建
+:::note
 
-1. 首先进行表模型关系的创建 ，点击 Model view
+It is recommended to choose `DirectQuery` to query Doris directly. If your use case involves only a small amount of data, you can choose `Import` mode.
 
-![](/images/ecomsystem/powerbi/V7PsbP3oKoJpLjxK5HdcPsnLnKf.png)
+:::
 
-2. 通过按需拖拽，将这四张表放置在同一屏幕下，然后进行关联字段的拖拽
+### Enter user name and password
 
-![](/images/ecomsystem/powerbi/FZL5b2kJcoifIaxI7Eocpak7nvf.png)
+Specify the Doris user name and password.
 
-![](/images/ecomsystem/powerbi/UxL2b1OV2or1LhxZjHsc0JG7ntb.png)
+![](/images/next/connection-integration/data-integration/powerbi/KZXxbDPTBo2O3FxqgZdcE9I6ndc.png)
 
-四张表关联关系如下：
+### Load the table schema and preview data
 
-- **customer** ：c_nationkey  --  **nation** : n_nationkey
-- **customer** ：c_custkey  --  **orders** : o_custkey
-- **nation** : n_regionkey  --  **region** : r_regionkey
+In the navigator view, you should be able to see databases and tables. Select the desired tables and click **Load** to load the table schema and preview data from Apache Doris.
 
-3. 关联后结果如下：
+![](/images/next/connection-integration/data-integration/powerbi/J7xObwqSYoTdTQx3hjgcAjQznS5.png)
 
-![](/images/ecomsystem/powerbi/LomhbQTPPoZr58xp8f3cxcTen8d.png)
+After the import is complete, Doris data is accessible in Power BI as expected. You can then configure the statistical dashboard you need.
 
-4. 返回 Report view 工作台，进行仪表盘构建。
-5. 将 orders 表中的 o_totalprice 拖拽到仪表盘
+![](/images/next/connection-integration/data-integration/powerbi/JvIgbbyo2oWPlgxcb6Cct5ssnld.png)
 
-![](/images/ecomsystem/powerbi/MB34bks6woK3mDx0eVccivKEngc.png)
+## Build a visualization dashboard in Power BI
 
-6. 将 region 表中的 r_name 拖拽到 X 列
+<!-- Knowledge type: Operation example -->
+<!-- Applicable scenario: Use Doris TPC-H data to create an order revenue statistics dashboard in Power BI -->
 
-![](/images/ecomsystem/powerbi/JxpJbihDHoHGwixjWQScNyxvn4e.png)
+This example uses TPC-H data as the data source. For how to build the Doris TPC-H data source, refer to the [Doris TPC-H Benchmark documentation](../../lakehouse/best-practices/tpch.md).
 
-7. 现在得到预期看板内容
+Suppose you need to count order revenue across regions. You can build the dashboard with the following process.
 
-![](/images/ecomsystem/powerbi/CfGWb6oaYoj4LyxpPIGcz3Binzb.png)
+### Create table model relationships
 
-8. 点击工作台左上角保存按钮，把创建好的统计罗盘保存至本地
+1. Click **Model view** to enter the table model relationship configuration screen.
 
-![](/images/ecomsystem/powerbi/WozGbmqAOoP2mqxq2NmcJRFyntc.png)
+![](/images/next/connection-integration/data-integration/powerbi/V7PsbP3oKoJpLjxK5HdcPsnLnKf.png)
 
-至此，已经成功将 Power BI 连接到 Apache Doris，并实现了数据分析和可视化看板制作。
+2. Drag the four tables `customer`, `nation`, `orders`, and `region` onto the same screen as needed, and then drag the related fields to connect them.
+
+![](/images/next/connection-integration/data-integration/powerbi/FZL5b2kJcoifIaxI7Eocpak7nvf.png)
+
+![](/images/next/connection-integration/data-integration/powerbi/UxL2b1OV2or1LhxZjHsc0JG7ntb.png)
+
+The relationships among the four tables are as follows:
+
+| Source table | Source field | Target table | Target field |
+|--------------|--------------|--------------|--------------|
+| `customer` | `c_nationkey` | `nation` | `n_nationkey` |
+| `customer` | `c_custkey` | `orders` | `o_custkey` |
+| `nation` | `n_regionkey` | `region` | `r_regionkey` |
+
+3. After the relationships are set up, the result is as follows.
+
+![](/images/next/connection-integration/data-integration/powerbi/LomhbQTPPoZr58xp8f3cxcTen8d.png)
+
+### Configure the order revenue dashboard
+
+1. Return to the **Report view** workspace and start building the dashboard.
+
+2. Drag `o_totalprice` from the `orders` table onto the dashboard.
+
+![](/images/next/connection-integration/data-integration/powerbi/MB34bks6woK3mDx0eVccivKEngc.png)
+
+3. Drag `r_name` from the `region` table to the X column.
+
+![](/images/next/connection-integration/data-integration/powerbi/JxpJbihDHoHGwixjWQScNyxvn4e.png)
+
+4. The expected dashboard content is now displayed.
+
+![](/images/next/connection-integration/data-integration/powerbi/CfGWb6oaYoj4LyxpPIGcz3Binzb.png)
+
+5. Click the save button in the upper-left corner of the workspace to save the created statistical dashboard locally.
+
+![](/images/next/connection-integration/data-integration/powerbi/WozGbmqAOoP2mqxq2NmcJRFyntc.png)
+
+At this point, you have successfully connected Power BI to Apache Doris and completed data analysis and visualization dashboard creation.

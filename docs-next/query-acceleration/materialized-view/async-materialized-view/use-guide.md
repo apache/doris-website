@@ -1,281 +1,278 @@
 ---
 {
-    "title": "异步物化视图使用指南",
-    "language": "zh-CN",
-    "description": "异步物化视图什么时候适合用？如何选择刷新策略？如何落地构建？本文给出场景判断、使用原则、刷新策略选择、构建实践与运维注意点。",
-    "keywords": ["异步物化视图", "使用建议", "最佳实践", "刷新策略", "分区物化视图", "透明改写", "数据分层建模", "Doris"],
-    "sidebar_label": "使用指南"
+    "title": "Async Materialized View Best Practices",
+    "language": "en",
+    "description": "When are async materialized views a good fit? How do you choose a refresh strategy? How do you implement them? This article covers scenario assessment, usage principles, refresh strategy selection, implementation practices, and operational considerations.",
+    "keywords": ["async materialized view", "usage recommendations", "best practices", "refresh strategy", "partitioned materialized view", "transparent rewrite", "data layered modeling", "Doris"]
 }
 ---
 
-<!-- 知识类型：使用指南 / 最佳实践 -->
-<!-- 适用场景：查询加速、ETL 数据建模、湖仓联邦查询、写入优化 -->
+<!-- Knowledge type: usage guide / best practices -->
+<!-- Applicable scenarios: query acceleration, ETL data modeling, lakehouse federated query, write optimization -->
 
-# 异步物化视图使用指南
+Async materialized views accelerate queries by precomputing and storing query results, but each refresh incurs some compute and IO overhead. This article walks through **scenario assessment, usage principles, refresh strategy selection, implementation practices, and operational considerations** in order, helping DBAs and developers build efficient async materialized views.
 
-异步物化视图通过预先计算并存储查询结果来加速查询，但每次刷新都会带来一定的计算与 IO 开销。本文从**场景判断 → 使用原则 → 刷新策略选择 → 落地实践 → 运维注意点**的顺序，帮助 DBA 与开发者构建高效的异步物化视图。
+For the refresh principles of materialized views, see [Refresh Principles](../overview.md).
 
-物化视图的刷新原理参考：[刷新原理](../overview.md)。
+## Quick Decision Checklist
 
-## 快速决策清单
+Before creating an async materialized view, evaluate against the following checklist:
 
-在创建异步物化视图前，请按以下清单评估：
+- Does the query include multi-table JOINs, complex aggregations, or window functions?
+- Is the base table data update frequency relatively low (avoid multiple updates per minute)?
+- Can the business tolerate minute-level or longer data latency (real-time data within 1 to 5 minutes is not required)?
+- Is the base table data large enough (much larger than a few hundred rows)?
+- Can common query SQL patterns be grouped, with no overlap between groups?
+- Is the base table a partitioned table, and can a partitioned materialized view be built?
+- Are there enough resources for periodic refresh?
+- Can you periodically check the usage status of materialized views and clean up unused ones in time?
 
-- [ ] 查询是否包含多表 JOIN、复杂聚合或窗口函数？
-- [ ] 基表数据更新频率是否较低（不建议每分钟多次更新）？
-- [ ] 业务能否容忍分钟级及以上的数据延迟（无需 1~5 分钟内的实时数据）？
-- [ ] 基表数据量是否足够大（远大于几百行）？
-- [ ] 是否能将常见查询 SQL 模式分组、组间无重合？
-- [ ] 基表是否为分区表，是否能构建分区物化视图？
-- [ ] 是否有足够资源用于周期性刷新？
-- [ ] 是否能定期检查物化视图使用状态，及时清理无用视图？
-
-如果以上问题大多数回答**是**，则适合使用异步物化视图。
+If most of the answers above are **yes**, then async materialized views are a good fit.
 
 ---
 
-## 一、使用场景判断
+## 1. Scenario Assessment
 
-<!-- 知识类型：场景判断 -->
+<!-- Knowledge type: scenario assessment -->
 
-下表汇总了**推荐**与**不推荐**使用异步物化视图的典型场景，便于快速对照。
+The table below summarizes typical scenarios where async materialized views are **recommended** or **not recommended**, for quick reference.
 
-### 场景速查表
+### Scenario Quick Reference
 
-| 类别 | 场景 | 关键特征 | 是否推荐 |
+| Category | Scenario | Key Characteristics | Recommended |
 |---|---|---|---|
-| 查询复杂度 | 复杂聚合查询 | 多表 JOIN、SUM/AVG/COUNT、窗口函数 | 推荐 |
-| 报表 | 一致性快照报表 | 固定时间点（如每日午夜）生成 | 推荐 |
-| 计算密集 | 计算密集型分析 | 复杂数学计算、数据转换、预测模型 | 推荐 |
-| 数仓建模 | 星型 / 雪花模式 | 事实表 + 多维度表 JOIN | 推荐 |
-| 湖仓 | 湖仓加速 | 数据湖查询受网络与对象存储吞吐限制 | 推荐 |
-| 数仓分层 | ETL 分层加工 | 基表为原始数据，需多层加工 | 推荐 |
-| 数据更新 | 基表频繁更新 | 每分钟多次更新 | 不推荐 |
-| 查询复杂度 | 简单查询 | 单表扫描或简单过滤 | 不推荐 |
-| 时效性 | 准实时（1~5 分钟内）数据 | 业务要求数据始终最新 | 不推荐 |
-| 数据规模 | 源表数据量很小 | 仅几百行 | 不推荐 |
+| Query complexity | Complex aggregation queries | Multi-table JOIN, SUM/AVG/COUNT, window functions | Yes |
+| Reports | Consistent snapshot reports | Generated at fixed time points (such as daily midnight) | Yes |
+| Compute-intensive | Compute-intensive analysis | Complex math, data transformation, prediction models | Yes |
+| Data warehouse modeling | Star / snowflake schema | Fact table + multiple dimension tables JOIN | Yes |
+| Lakehouse | Lakehouse acceleration | Data lake queries limited by network and object storage throughput | Yes |
+| Data warehouse layering | ETL layered processing | Base table is raw data and needs multi-layer processing | Yes |
+| Data updates | Frequently updated base table | Multiple updates per minute | No |
+| Query complexity | Simple queries | Single-table scan or simple filter | No |
+| Timeliness | Near real-time (within 1 to 5 minutes) data | Business requires data to always be the latest | No |
+| Data scale | Very small source table | Only a few hundred rows | No |
 
-### 推荐使用场景
+### Recommended Scenarios
 
-#### 复杂聚合查询
+#### Complex Aggregation Queries
 
-- **场景描述**：包含多表连接、复杂聚合函数（如 SUM、AVG、COUNT）或窗口函数的查询。
-- **优势**：避免每次执行时重新计算复杂逻辑。
+- **Description**: Queries with multi-table joins, complex aggregation functions (such as SUM, AVG, COUNT), or window functions.
+- **Benefit**: Avoids recomputing complex logic on each execution.
 
-#### 报表
+#### Reports
 
-- **场景描述**：需要按固定时间点（如每日午夜）生成一致性快照的报表。
-- **优势**：确保所有用户看到相同时间点的数据。
+- **Description**: Reports that need a consistent snapshot generated at a fixed time point (such as daily midnight).
+- **Benefit**: Ensures all users see data at the same point in time.
 
-#### 计算密集型分析
+#### Compute-Intensive Analysis
 
-- **场景描述**：包含复杂数学计算或数据转换的分析查询，如客户生命周期价值计算、预测分析模型。
-- **优势**：预先计算结果，减少运行时资源消耗。
+- **Description**: Analytical queries with complex math or data transformations, such as customer lifetime value calculations or predictive analytics models.
+- **Benefit**: Precomputes results, reducing runtime resource consumption.
 
-#### 数据仓库中的星型 / 雪花模式
+#### Star / Snowflake Schema in Data Warehouses
 
-- **场景描述**：事实表与多个维度表连接的场景，如销售事实表与产品、时间、地区等维度表的连接。
-- **优势**：预先物化连接结果，加速分析查询。
+- **Description**: Scenarios where a fact table joins multiple dimension tables, such as a sales fact table joining product, time, and region dimensions.
+- **Benefit**: Pre-materializes join results to accelerate analytical queries.
 
-#### 湖仓加速
+#### Lakehouse Acceleration
 
-- **场景描述**：查询数据湖可能由于网络延迟和对象存储的吞吐限制而变慢。
-- **优势**：利用 Doris 本地存储加速优势，加速数据湖分析。
+- **Description**: Queries against a data lake can be slow due to network latency and object storage throughput limits.
+- **Benefit**: Leverages Doris local storage acceleration to speed up data lake analytics.
 
-#### 数仓分层
+#### Data Warehouse Layering
 
-- **场景描述**：基表中包含大量原始数据，查询需要进行复杂的 ETL 操作。
-- **优势**：对数据建立多层异步物化视图实现数仓分层。
+- **Description**: The base table contains a large amount of raw data, and queries require complex ETL operations.
+- **Benefit**: Build multi-layer async materialized views over the data to implement data warehouse layering.
 
-### 不推荐使用场景
+### Scenarios Not Recommended
 
-#### 基表频繁更新
+#### Frequently Updated Base Tables
 
-- **场景描述**：源表数据变更非常频繁（如每分钟多次更新）。
-- **问题**：异步物化视图难以保持同步，刷新成本过高，需要考虑定期刷新。
+- **Description**: Source table data changes very frequently (such as multiple updates per minute).
+- **Issue**: Async materialized views are hard to keep in sync, and refresh costs are too high. Consider periodic refresh instead.
 
-#### 简单查询
+#### Simple Queries
 
-- **场景描述**：仅涉及单表扫描或简单过滤的查询。
-- **问题**：异步物化视图带来的收益无法抵消刷新成本。
+- **Description**: Queries that involve only a single-table scan or simple filtering.
+- **Issue**: The benefit of an async materialized view does not offset the refresh cost.
 
-#### 需要实时（1~5 分钟内）数据的场景
+#### Scenarios Requiring Real-Time Data (Within 1 to 5 Minutes)
 
-- **场景描述**：业务要求数据必须是最新版本。
-- **问题**：异步物化视图存在数据延迟。
+- **Description**: The business requires data to always be the latest version.
+- **Issue**: Async materialized views have data latency.
 
-#### 源表数据量很小
+#### Very Small Source Tables
 
-- **场景描述**：基表只有少量记录（如几百行）。
-- **问题**：异步物化视图优化效果不明显。
+- **Description**: The base table has only a small number of records (such as a few hundred rows).
+- **Issue**: The optimization benefit of an async materialized view is not significant.
 
 ---
 
-## 二、使用原则
+## 2. Usage Principles
 
-<!-- 知识类型：原则与约束 -->
+<!-- Knowledge type: principles and constraints -->
 
-### 2.1 何时使用异步物化视图
+### 2.1 When to Use Async Materialized Views
 
-| 维度 | 说明 |
+| Dimension | Description |
 | --- | --- |
-| 时效性 | 适用于对数据时效性要求不高的场景（如 T+1 数据），高时效性需求请使用同步物化视图 |
-| 加速效果与一致性 | 应将常见查询 SQL 模式分组，组间尽量无重合；分组越清晰，构建质量越高 |
-| 复用性 | 一个查询可使用多个物化视图，一个物化视图也可被多个查询使用 |
-| 综合权衡 | 综合考虑命中物化视图的响应时间（加速效果）、构建成本、数据一致性要求 |
+| Timeliness | Suitable for scenarios where data timeliness requirements are not high (such as T+1 data). For high timeliness requirements, use synchronous materialized views. |
+| Acceleration and consistency | Group common query SQL patterns with as little overlap between groups as possible. The clearer the grouping, the higher the build quality. |
+| Reusability | One query can use multiple materialized views, and one materialized view can be used by multiple queries. |
+| Trade-offs | Consider together the response time when hitting a materialized view (acceleration), build cost, and data consistency requirements. |
 
-### 2.2 物化视图定义与构建成本权衡
+### 2.2 Trade-off Between Materialized View Definition and Build Cost
 
-- **定义贴近原查询**：查询加速效果好，但通用性和复用性差，构建成本高。
-- **定义更通用**（如不带 WHERE 条件、聚合维度更多）：加速效果较低，但通用性和复用性好，构建成本低。
+- **Definition close to the original query**: Strong acceleration, but poor generality and reusability, with high build cost.
+- **More general definition** (such as without WHERE conditions or with more aggregation dimensions): Lower acceleration, but better generality and reusability, with lower build cost.
 
-:::caution 注意
+:::caution Note
 
-- **物化视图数量控制**：物化视图并非越多越好。构建和刷新需要资源，参与透明改写时 CBO 选择最优物化视图也需要时间。理论上，物化视图越多，透明改写时间越长。
-- **定期检查使用状态**：未使用的物化视图应及时删除。
-- **基表数据更新频率**：基表频繁更新会导致物化视图频繁失效，无法用于透明改写（仍可直查）。如需在此场景下使用透明改写，需允许查询数据存在一定时延，可设置 `grace_period`，详情参见 `grace_period` 适用介绍。
+- **Control the number of materialized views**: More materialized views are not always better. Building and refreshing them consumes resources, and the CBO also takes time to choose the optimal materialized view during transparent rewrite. In theory, the more materialized views, the longer the transparent rewrite time.
+- **Periodically review usage status**: Unused materialized views should be deleted in a timely manner.
+- **Base table update frequency**: Frequent updates to the base table cause materialized views to be invalidated frequently and unable to be used for transparent rewrite (direct queries are still possible). To use transparent rewrite in this scenario, you must allow some latency in queried data, which can be configured via `grace_period`. See the `grace_period` description for details.
 
 :::
 
 ---
 
-## 三、刷新方式选择
+## 3. Refresh Strategy Selection
 
-<!-- 知识类型：决策指南 -->
+<!-- Knowledge type: decision guide -->
 
-异步物化视图提供 **手动刷新**、**定时刷新**、**触发式刷新** 三种主要策略。合理选择刷新策略对于平衡数据新鲜度和系统性能至关重要。
+Async materialized views provide three main refresh strategies: **manual refresh**, **scheduled refresh**, and **trigger-based refresh**. Choosing an appropriate refresh strategy is critical for balancing data freshness and system performance.
 
-### 3.1 优先选择分区物化视图
+### 3.1 Prefer Partitioned Materialized Views
 
-当同时满足以下条件时，建议创建分区物化视图：
+When all of the following conditions are met, building a partitioned materialized view is recommended:
 
-1. 物化视图的基表数据量很大，且基表为分区表。
-2. 物化视图引用的非分区表不经常变化。
-3. 物化视图的定义 SQL 和分区字段满足分区推导要求（即符合分区增量更新要求）。详细要求参考：[CREATE-ASYNC-MATERIALIZED-VIEW](../../../sql-manual/sql-statements/table-and-view/async-materialized-view/CREATE-ASYNC-MATERIALIZED-VIEW#可选参数)。
-4. 物化视图分区数不多。分区过多会导致构建时间过长。
+1. The base table of the materialized view has a large amount of data and is a partitioned table.
+2. Non-partitioned tables referenced by the materialized view do not change frequently.
+3. The materialized view definition SQL and partition fields meet partition derivation requirements (that is, they meet the partition incremental update requirements). For detailed requirements, see [CREATE-ASYNC-MATERIALIZED-VIEW](../../../sql-manual/sql-statements/table-and-view/async-materialized-view/CREATE-ASYNC-MATERIALIZED-VIEW#可选参数).
+4. The materialized view does not have many partitions. Too many partitions cause excessively long build times.
 
-> 当物化视图的部分分区失效时，透明改写仍可使用有效分区 UNION ALL 基表来返回数据。
+> When some partitions of a materialized view are invalidated, transparent rewrite can still use the valid partitions UNION ALL with the base table to return data.
 
-如果不能构建分区物化视图，可考虑选择**全量刷新**的物化视图。
+If a partitioned materialized view cannot be built, consider using a materialized view with **full refresh**.
 
-### 3.2 三种刷新策略对比
+### 3.2 Comparison of the Three Refresh Strategies
 
-| 刷新策略 | 触发方式 | 数据新鲜度 | 自动化程度 | 主要风险 |
+| Refresh Strategy | Trigger Method | Data Freshness | Automation Level | Main Risk |
 |---|---|---|---|---|
-| 手动刷新 | 用户显式命令或外部调度 | 低，取决于调度 | 低 | 调度需自行管理 |
-| 定时刷新 | 按固定时间间隔（最小分钟级） | 中，确定性延迟 | 中 | 高频会持续占用资源 |
-| 触发式刷新 | 基表数据变更时自动触发 | 高 | 高 | 可能造成刷新风暴 |
+| Manual refresh | Explicit user command or external scheduling | Low, depends on scheduling | Low | Scheduling must be self-managed |
+| Scheduled refresh | At fixed time intervals (minimum minute level) | Medium, deterministic latency | Medium | High frequency continuously occupies resources |
+| Trigger-based refresh | Automatically triggered when base table data changes | High | High | May cause refresh storms |
 
-### 3.3 刷新策略详解
+### 3.3 Detailed Refresh Strategies
 
-#### 手动刷新
+#### Manual Refresh
 
-- **工作方式**：由用户通过显式命令或外部系统调度触发。
-- **适用场景**：
-    - 对数据实时性要求不高的报表系统
-    - 数据仓库中的历史数据分析
-    - 需要与特定业务流程同步刷新的场景
-    - 大规模数据刷新需要协调系统资源时
-- **优点**：完全控制刷新时机，可避开业务高峰期。
-- **缺点**：需要额外管理刷新调度，需要做好容错，避免外部循环不断地刷新。
+- **How it works**: Triggered by users via explicit commands or external system scheduling.
+- **Applicable scenarios**:
+    - Reporting systems with low real-time requirements
+    - Historical data analysis in data warehouses
+    - Scenarios that need to refresh in sync with specific business processes
+    - Large-scale data refreshes that need to coordinate system resources
+- **Pros**: Full control over refresh timing, can avoid business peak hours.
+- **Cons**: Requires extra refresh scheduling management and good fault tolerance to avoid external loops continuously triggering refreshes.
 
-#### 定时刷新
+#### Scheduled Refresh
 
-- **工作方式**：
-    - 按固定时间间隔自动刷新
-    - 最小时间单位为分钟级
-    - 可指定第一次运行任务的开始时间
-- **适用场景**：
-    - 周期性业务指标监控
-    - 阶梯式数据管道
-    - 时间敏感度分级的报表体系
-    - 有规律波动的源数据
-- **优点**：定时数据处理，确定性的数据延迟。
-- **缺点**：数据新鲜度局限，相关视图的刷新时序需要人工编排。
-- **配置约束**：不建议将所有物化视图设置为高频定时刷新以达到类实时的目的，这会导致：
-    - 系统资源持续被占用
-    - 刷新作业相互竞争资源
-    - 频繁增删 partition / tablet 等，对 BE 造成较大压力
+- **How it works**:
+    - Automatically refreshes at fixed time intervals
+    - Minimum time unit is at the minute level
+    - The start time of the first task run can be specified
+- **Applicable scenarios**:
+    - Periodic business metric monitoring
+    - Tiered data pipelines
+    - Reporting systems with tiered time sensitivity
+    - Source data with regular fluctuations
+- **Pros**: Scheduled data processing with deterministic data latency.
+- **Cons**: Limited data freshness, and the refresh sequence of related views must be manually coordinated.
+- **Configuration constraints**: Setting all materialized views to high-frequency scheduled refresh to approach real-time is not recommended, because it causes:
+    - Continuous occupation of system resources
+    - Refresh jobs competing with each other for resources
+    - Frequent addition and removal of partitions / tablets, which puts heavy pressure on BE
 
-#### 触发式刷新
+#### Trigger-Based Refresh
 
-- **工作方式**：当基表数据变更时自动触发刷新。
-- **适用场景**：
-    - 多层物化视图架构的上层视图
-    - 基表变更频率较低的场景
-- **优点**：数据新鲜度高，自动化程度高。
-- **缺点**：可能造成刷新风暴，难以预测系统负载。
-- **配置约束**：不建议对基础层物化视图使用触发式刷新，除非：
-    - 能明确知道基表刷新频率不高（如：几十分钟变更一次）
+- **How it works**: Automatically triggers a refresh when base table data changes.
+- **Applicable scenarios**:
+    - Upper-layer views in a multi-layer materialized view architecture
+    - Scenarios where base table change frequency is low
+- **Pros**: High data freshness, high automation.
+- **Cons**: May cause refresh storms, and system load is hard to predict.
+- **Configuration constraints**: Trigger-based refresh on base-layer materialized views is not recommended unless:
+    - You can confirm the base table refresh frequency is low (for example, changes every few tens of minutes)
 
-### 3.4 刷新策略组合建议
+### 3.4 Recommendations for Combining Refresh Strategies
 
-#### 按数仓分层
+#### By Data Warehouse Layer
 
-| 视图层级 | 推荐刷新策略 |
+| View Layer | Recommended Refresh Strategy |
 |---|---|
-| 基础层 | 定时刷新（如每小时） |
-| 中间层 | 定时刷新或触发式刷新 |
-| 展示层 | 触发式刷新或手动刷新 |
+| Base layer | Scheduled refresh (such as hourly) |
+| Middle layer | Scheduled refresh or trigger-based refresh |
+| Presentation layer | Trigger-based refresh or manual refresh |
 
-#### 按业务关键性
+#### By Business Criticality
 
-| 业务级别 | 推荐策略 |
+| Business Level | Recommended Strategy |
 |---|---|
-| 关键实时业务数据 | 不建议使用异步物化视图 |
-| 常规分析数据 | 定时刷新（每日 / 每小时） |
-| 历史 / 归档数据 | 手动刷新 |
+| Critical real-time business data | Async materialized views are not recommended |
+| Regular analytical data | Scheduled refresh (daily / hourly) |
+| Historical / archived data | Manual refresh |
 
-#### 按数据变更频率
+#### By Data Change Frequency
 
-| 变更频率 | 推荐策略 |
+| Change Frequency | Recommended Strategy |
 |---|---|
-| 高频变更 | 定时刷新（较长间隔）或手动刷新 |
-| 低频变更 | 触发式刷新或短间隔定时刷新 |
-| 批量变更 | 变更后手动刷新 |
+| High-frequency changes | Scheduled refresh (longer interval) or manual refresh |
+| Low-frequency changes | Trigger-based refresh or short-interval scheduled refresh |
+| Batch changes | Manual refresh after changes |
 
-### 3.5 刷新频率建议
+### 3.5 Refresh Frequency Recommendations
 
-以下为通用建议，实际还需根据系统资源、异步物化视图数量、其它业务资源占用等情况综合评估。
+The following are general recommendations. The actual choice should also be evaluated based on system resources, the number of async materialized views, and other business resource usage.
 
-| 实际刷新耗时 | 建议刷新频率 |
+| Actual Refresh Duration | Recommended Refresh Frequency |
 |---|---|
-| 小于 15 秒 | 大于等于 5 分钟 |
-| 小于 10 分钟 | 大于等于 1 小时 |
-| 小于 1 小时 | 大于等于 1 天 |
+| Less than 15 seconds | Greater than or equal to 5 minutes |
+| Less than 10 minutes | Greater than or equal to 1 hour |
+| Less than 1 hour | Greater than or equal to 1 day |
 
 ---
 
-## 四、分区物化视图实践
+## 4. Partitioned Materialized View Practice
 
-<!-- 适用场景：基表为大数据量分区表 -->
+<!-- Applicable scenarios: large partitioned base tables -->
 
-### 4.1 分区映射关系
+### 4.1 Partition Mapping Relationship
 
-物化视图的分区跟随基表分区映射创建，一般与基表分区为 1:1 或 1:n 关系。分区推导的详细要求请参考 [CREATE-ASYNC-MATERIALIZED-VIEW](../../../sql-manual/sql-statements/table-and-view/async-materialized-view/CREATE-ASYNC-MATERIALIZED-VIEW#可选参数) 和 [异步物化视图 FAQ Q12](../../../query-acceleration/materialized-view/async-materialized-view/faq#q12构建分区物化视图报错)。
+The partitions of a materialized view are created by mapping from base table partitions, generally with a 1:1 or 1:n relationship to the base table partitions. For detailed partition derivation requirements, see [CREATE-ASYNC-MATERIALIZED-VIEW](../../../sql-manual/sql-statements/table-and-view/async-materialized-view/CREATE-ASYNC-MATERIALIZED-VIEW#可选参数) and [Async Materialized View FAQ Q12](../../../query-acceleration/materialized-view/async-materialized-view/faq#q12构建分区物化视图报错).
 
-### 4.2 分区失效与刷新行为
+### 4.2 Partition Invalidation and Refresh Behavior
 
-| 触发情况 | 影响 | 应对方式 |
+| Trigger | Effect | Response |
 | --- | --- | --- |
-| 基表的分区数据变更（新增、删除等） | 物化视图对应分区失效；失效分区不能用于透明改写，但可直查；透明改写时失效分区会联合基表响应查询 | 通过 `SHOW PARTITIONS FROM mv_name` 查看分区状态 |
-| 引用的非分区表数据变更 | 触发物化视图所有分区失效，无法用于透明改写 | 执行 `REFRESH MATERIALIZED VIEW mv1 AUTO;` 刷新所有数据变化的分区 |
-| 引用的非分区表只新增、不修改数据 | 默认会使所有分区失效 | 创建时指定 `excluded_trigger_tables = '非分区表名1,非分区表名2'`，下次刷新时仅刷新分区表对应的失效分区 |
+| Base table partition data changes (insert, delete, etc.) | The corresponding materialized view partition is invalidated. Invalidated partitions cannot be used for transparent rewrite but can still be queried directly. During transparent rewrite, the invalidated partition responds to the query together with the base table | Use `SHOW PARTITIONS FROM mv_name` to view partition status |
+| Referenced non-partitioned table data changes | All partitions of the materialized view are invalidated, and it cannot be used for transparent rewrite | Run `REFRESH MATERIALIZED VIEW mv1 AUTO;` to refresh all partitions where data has changed |
+| Referenced non-partitioned tables only insert and never modify data | By default, all partitions are invalidated | At creation, specify `excluded_trigger_tables = 'non_partitioned_table_name1,non_partitioned_table_name2'`. The next refresh will only refresh the invalidated partitions corresponding to the partitioned table |
 
-> **设计建议**：将数据频繁变化的表放在分区物化视图引用的分区表，将不经常变化的维表放在非引用分区表的位置。
+> **Design recommendation**: Place tables with frequently changing data in the partitioned table referenced by the partitioned materialized view, and place dimension tables that change infrequently in non-referenced partitioned positions.
 
-### 4.3 分区粒度透明改写
+### 4.3 Partition-Granularity Transparent Rewrite
 
-分区物化视图的透明改写是**分区粒度**的：
+Transparent rewrite for a partitioned materialized view operates at **partition granularity**:
 
-- 即使物化视图部分分区失效，仍可用于透明改写。
-- 但如果只查询了一个分区，且该分区数据失效，则该物化视图无法用于此次透明改写。
+- Even if some partitions of the materialized view are invalidated, it can still be used for transparent rewrite.
+- However, if a query targets only one partition and that partition is invalidated, the materialized view cannot be used for this transparent rewrite.
 
-### 4.4 完整示例
+### 4.4 Complete Example
 
-**目的**：构建一个按"天"粒度的分区物化视图，加速按天聚合的查询。
+**Goal**: Build a daily-granularity partitioned materialized view to accelerate queries that aggregate by day.
 
-**步骤 1**：创建按天分区的基表 `lineitem`，并准备维表 `partsupp`。
+**Step 1**: Create the daily-partitioned base table `lineitem` and prepare the dimension table `partsupp`.
 
 ```sql
 CREATE TABLE IF NOT EXISTS lineitem (
@@ -328,7 +325,7 @@ INSERT INTO partsupp VALUES
 (6, 5, 10, 11.01, 'supply4');
 ```
 
-**步骤 2**：典型按天聚合的查询语句。
+**Step 2**: A typical query that aggregates by day.
 
 ```sql
 SELECT 
@@ -349,7 +346,7 @@ GROUP BY
   ps_partkey;
 ```
 
-**步骤 3**：构建按天分区的物化视图，分区粒度与基表保持一致，并按天聚合数据。
+**Step 3**: Build a daily-partitioned materialized view with the same partition granularity as the base table, aggregating data by day.
 
 ```sql
 CREATE MATERIALIZED VIEW rollup_partition_mv 
@@ -374,21 +371,21 @@ GROUP BY
   date_trunc(l_ordertime, 'day');
 ```
 
-### 4.5 只保留最近分区数据
+### 4.5 Retain Only the Most Recent Partition Data
 
-:::tip 提示
-该功能自 Apache Doris 2.1.1 版本起支持。
+:::tip Tip
+This feature is supported starting from Apache Doris 2.1.1.
 :::
 
-物化视图可以只保留最近若干个分区的数据，每次刷新时自动删除过期分区数据。通过设置以下属性实现：
+A materialized view can retain data only for the most recent few partitions and automatically delete expired partition data on each refresh. Configure this with the following properties:
 
-| 属性 | 说明 |
+| Property | Description |
 | --- | --- |
-| `partition_sync_limit` | 基表分区字段为时间时，配置同步基表的分区范围（与 `partition_sync_time_unit` 配合使用）。例如设置为 `3`、单位为 `DAY`，表示仅同步基表近 3 天的分区和数据 |
-| `partition_sync_time_unit` | 分区刷新的时间单位，支持 `DAY` / `MONTH` / `YEAR`，默认 `DAY` |
-| `partition_date_format` | 当基表分区字段为字符串时，使用 `partition_sync_limit` 能力时所需的日期格式 |
+| `partition_sync_limit` | When the base table partition field is a time type, configure the partition range to sync from the base table (used together with `partition_sync_time_unit`). For example, setting it to `3` with unit `DAY` means only the last 3 days of partitions and data are synced from the base table |
+| `partition_sync_time_unit` | The time unit for partition refresh. Supports `DAY` / `MONTH` / `YEAR`, defaults to `DAY` |
+| `partition_date_format` | When the base table partition field is a string, the date format required to use the `partition_sync_limit` capability |
 
-下例物化视图只保留最近 3 天的数据。如果近 3 天没有数据，直查该物化视图将不会返回数据。
+The materialized view below retains only the most recent 3 days of data. If there is no data in the last 3 days, querying the materialized view directly returns no data.
 
 ```sql
 CREATE MATERIALIZED VIEW latest_partition_mv 
@@ -420,54 +417,54 @@ GROUP BY
 
 ---
 
-## 五、如何使用物化视图加速查询
+## 5. How to Use Materialized Views to Accelerate Queries
 
-<!-- 知识类型：操作类指南 -->
+<!-- Knowledge type: operational guide -->
 
-### 5.1 总体思路
+### 5.1 General Approach
 
-使用物化视图加速查询，请按以下步骤操作：
+To use a materialized view to accelerate queries, follow these steps:
 
-1. 查看 profile 文件，找到查询中消耗时间最多的操作。瓶颈通常出现在：连接（Join）、聚合（Aggregate）、过滤（Filter）、表达式计算（Calculated Expressions）。
-2. 针对瓶颈算子构建相应的物化视图。例如 Join 占用大量计算资源、Aggregate 占用相对较小，应针对 Join 构建物化视图。
+1. View the profile file and find the most time-consuming operation in the query. The bottleneck is typically in: Join, Aggregate, Filter, or Calculated Expressions.
+2. Build a corresponding materialized view targeting the bottleneck operator. For example, if Join consumes a lot of compute resources while Aggregate consumes relatively little, build a materialized view targeting Join.
 
-### 5.2 针对四类操作的构建建议
+### 5.2 Build Recommendations for the Four Operation Types
 
-#### 5.2.1 针对 Join
+#### 5.2.1 For Join
 
-- 提取查询中使用的公共表连接模式构建物化视图，命中后可节省 Join 计算。
-- **去除查询中的 Filters**，可获得更通用的 Join 物化视图。
+- Extract common table join patterns used in queries to build a materialized view. Hits save the Join computation.
+- **Remove filters from the query** to obtain a more general Join materialized view.
 
-#### 5.2.2 针对 Aggregate
+#### 5.2.2 For Aggregate
 
-- 尽量使用**低基数字段**作为维度构建物化视图，使聚合后数据量尽量减少。
-- 物化视图聚合粒度需比查询更细（即物化视图聚合维度包含查询的聚合维度），物化视图的聚合函数也应包含查询的聚合函数。
+- Use **low-cardinality fields** as dimensions for the materialized view to minimize data size after aggregation.
+- The aggregation granularity of the materialized view should be finer than the query (that is, the materialized view aggregation dimensions include the query's aggregation dimensions), and the aggregation functions in the materialized view should also include those in the query.
 
-**基数评估示例**：
+**Cardinality assessment example**:
 
-- 表 `t1` 数据量 1,000,000 行，查询包含 `GROUP BY a, b, c`：
-    - 若 a、b、c 基数分别为 100、50、15，则聚合后约 75,000 行，**物化视图有效**。
-    - 若 a、b、c 存在相关性，聚合后数据量会进一步减少。
-    - 若 c 基数为 3,500，则聚合后约 17,000,000 行，比原表更大，**不适合构建物化视图**。
+- Table `t1` has 1,000,000 rows, and the query includes `GROUP BY a, b, c`:
+    - If the cardinalities of a, b, and c are 100, 50, and 15 respectively, the aggregated result is about 75,000 rows. **The materialized view is effective**.
+    - If a, b, and c are correlated, the post-aggregation data size shrinks further.
+    - If c has a cardinality of 3,500, the aggregated result is about 17,000,000 rows, larger than the original table. **A materialized view is not suitable**.
 
-#### 5.2.3 针对 Filter
+#### 5.2.3 For Filter
 
-- 若查询经常对相同字段进行过滤，可在物化视图中加入相应 Filter，减少物化视图数据量。
-- **物化视图的 Filter 应少于查询**，且查询的 Filter 包含物化视图的 Filter。
+- If queries frequently filter on the same fields, add corresponding filters to the materialized view to reduce its data size.
+- **The materialized view's filter should be less restrictive than the query's**, and the query's filter should include the materialized view's filter.
 
-例如查询为 `a > 10 AND b > 5`：
+For example, if the query is `a > 10 AND b > 5`:
 
-- 物化视图可以无 Filter；
-- 也可以是 `a > 5 AND b > 5`、`a > 5` 等数据范围更大的 Filter。
+- The materialized view can have no filter at all,
+- Or have a broader-range filter such as `a > 5 AND b > 5` or `a > 5`.
 
-#### 5.2.4 针对 Calculated Expressions
+#### 5.2.4 For Calculated Expressions
 
-- 对 `CASE WHEN`、字符串处理等高消耗表达式进行预计算，可显著提升查询性能。
-- 单个物化视图的列数量不宜过多，应根据查询 SQL 模式分组，分别构建对应的物化视图。
+- Precomputing high-cost expressions such as `CASE WHEN` or string processing can significantly improve query performance.
+- The number of columns in a single materialized view should not be too large. Group by query SQL pattern and build separate materialized views for each group.
 
-**聚合查询加速完整示例**：
+**Complete example for accelerating aggregation queries**:
 
-查询 1：
+Query 1:
 
 ```sql
 SELECT 
@@ -488,7 +485,7 @@ GROUP BY
   l_partkey;
 ```
 
-查询 2：
+Query 2:
 
 ```sql
 SELECT 
@@ -509,7 +506,7 @@ GROUP BY
   l_suppkey;
 ```
 
-针对上述查询，可构建一个更通用的聚合物化视图：将 `l_partkey` 和 `l_suppkey` 都作为聚合维度，并将 `o_orderdate` 作为过滤条件。注意：`o_orderdate` 不仅在物化视图条件补偿中使用，也需要包含在聚合维度中。这样查询 1 和查询 2 都可以命中该物化视图：
+For the queries above, build a more general aggregation materialized view: include both `l_partkey` and `l_suppkey` as aggregation dimensions, and use `o_orderdate` as a filter condition. Note: `o_orderdate` is used not only in materialized view condition compensation but must also be included in the aggregation dimensions. This way both Query 1 and Query 2 can hit the materialized view:
 
 ```sql
 CREATE MATERIALIZED VIEW common_agg_mv
@@ -538,21 +535,21 @@ GROUP BY
 
 ---
 
-## 六、典型使用场景
+## 6. Typical Use Cases
 
-<!-- 知识类型：场景示例 -->
+<!-- Knowledge type: scenario examples -->
 
-### 6.1 场景一：查询加速
+### 6.1 Scenario 1: Query Acceleration
 
-**适用场景**：BI 报表场景或其他对查询响应时间敏感的场景，要求秒级返回结果。多表 Join 后再聚合的查询会消耗大量计算资源，难以保证时效性。异步物化视图既支持直查，也支持透明改写——优化器会依据改写算法和代价模型自动选择最优物化视图。
+**Applicable scenarios**: BI reporting or other scenarios sensitive to query response time, requiring results in seconds. Multi-table Joins followed by aggregation consume significant compute resources, making timeliness hard to guarantee. Async materialized views support both direct queries and transparent rewrite. The optimizer automatically selects the optimal materialized view based on the rewrite algorithm and cost model.
 
-#### 用例 1：多表连接聚合查询加速
+#### Use Case 1: Multi-Table Join Aggregation Query Acceleration
 
-通过构建更通用的物化视图加速多表连接聚合查询。
+Build a more general materialized view to accelerate multi-table join aggregation queries.
 
-**目标**：以下三个查询，构建一个统一的物化视图同时满足。
+**Goal**: Build a single materialized view that satisfies all three of the queries below.
 
-查询 1：
+Query 1:
 
 ```sql
 SELECT 
@@ -567,7 +564,7 @@ WHERE
   AND o_orderdate >= DATE '2024-05-01';
 ```
 
-查询 2：
+Query 2:
 
 ```sql
 SELECT 
@@ -589,7 +586,7 @@ GROUP BY
   o_shippriority;
 ```
 
-查询 3：
+Query 3:
 
 ```sql
 SELECT 
@@ -602,7 +599,7 @@ FROM
   LEFT JOIN lineitem ON l_orderkey = o_orderkey;
 ```
 
-**构建方案 1**：通用 Join 物化视图。去除查询 1、2 的过滤条件，并预计算 `l_extendedprice * (1 - l_discount)`：
+**Build option 1**: A general Join materialized view. Remove the filter conditions of Query 1 and Query 2, and precompute `l_extendedprice * (1 - l_discount)`:
 
 ```sql
 CREATE MATERIALIZED VIEW common_join_mv
@@ -619,7 +616,7 @@ FROM
   LEFT JOIN lineitem ON l_orderkey = o_orderkey;
 ```
 
-**构建方案 2**：若上述物化视图无法满足查询 2 的加速性能要求，可额外构建聚合物化视图，去除对 `o_orderdate` 的过滤条件以保持通用性：
+**Build option 2**: If the materialized view above does not meet the acceleration performance requirement of Query 2, build an additional aggregation materialized view. Remove the filter on `o_orderdate` to keep it general:
 
 ```sql
 CREATE MATERIALIZED VIEW target_agg_mv
@@ -642,21 +639,21 @@ GROUP BY
   o_shippriority;
 ```
 
-#### 用例 2：日志查询加速
+#### Use Case 2: Log Query Acceleration
 
-**适用场景**：基表通常按小时分区，单表聚合查询，过滤条件多为时间和标识位。响应速度不达标时，可结合**异步物化视图与同步物化视图**联合使用。
+**Applicable scenarios**: The base table is typically partitioned by hour, and queries are single-table aggregations with filters mostly on time and identifier flags. When response speed is not satisfactory, **async and synchronous materialized views can be used together**.
 
-**步骤 1**：基表定义。
+**Step 1**: Base table definition.
 
 ```sql
 CREATE TABLE IF NOT EXISTS test (
-`app_name` VARCHAR(64) NULL COMMENT '标识', 
-`event_id` VARCHAR(128) NULL COMMENT '标识', 
-`decision` VARCHAR(32) NULL COMMENT '枚举值', 
-`time` DATETIME NULL COMMENT '查询时间', 
-`id` VARCHAR(35) NOT NULL COMMENT 'od', 
-`code` VARCHAR(64) NULL COMMENT '标识', 
-`event_type` VARCHAR(32) NULL COMMENT '事件类型' 
+`app_name` VARCHAR(64) NULL COMMENT 'identifier', 
+`event_id` VARCHAR(128) NULL COMMENT 'identifier', 
+`decision` VARCHAR(32) NULL COMMENT 'enum value', 
+`time` DATETIME NULL COMMENT 'query time', 
+`id` VARCHAR(35) NOT NULL COMMENT 'id', 
+`code` VARCHAR(64) NULL COMMENT 'identifier', 
+`event_type` VARCHAR(32) NULL COMMENT 'event type' 
 )
 DUPLICATE KEY(app_name, event_id)
 PARTITION BY RANGE(time)                                    
@@ -667,7 +664,7 @@ DISTRIBUTED BY HASH(event_id)
 BUCKETS 3;
 ```
 
-**步骤 2**：构建按分钟聚合的物化视图，达到一定的聚合效果。
+**Step 2**: Build a materialized view aggregated by minute to achieve a certain level of aggregation.
 
 ```sql
 CREATE MATERIALIZED VIEW sync_mv
@@ -697,7 +694,7 @@ GROUP BY
   cast(FLOOR(MINUTE(`time`) / 15) AS decimal(9, 0));
 ```
 
-**步骤 3**：典型查询语句。
+**Step 3**: A typical query.
 
 ```sql
 SELECT 
@@ -730,18 +727,18 @@ GROUP BY
   cast(FLOOR(MINUTE(`time`) / 15) AS decimal(9, 0));
 ```
 
-### 6.2 场景二：数据建模（ETL）
+### 6.2 Scenario 2: Data Modeling (ETL)
 
-**适用场景**：数据分析常需对多表进行连接和聚合，存在复杂且重复的查询，导致延迟高、资源消耗大。利用异步物化视图构建数据分层模型，可在已有物化视图基础上创建更高层级物化视图（2.1.3 起支持）。
+**Applicable scenarios**: Data analysis often requires joining and aggregating multiple tables, with complex and repeated queries leading to high latency and heavy resource consumption. Use async materialized views to build a layered data model. You can build higher-level materialized views on top of existing materialized views (supported from 2.1.3).
 
-**不同层级的触发方式选择**：
+**Choosing trigger methods for different layers**:
 
-- 第一层定时刷新 + 第二层触发刷新：第一层刷新完成后自动触发第二层刷新。
-- 每层均为定时刷新：第二层刷新时不考虑第一层是否与基表同步，仅将第一层数据加工同步到第二层。
+- First-layer scheduled refresh + second-layer trigger refresh: When the first layer finishes refreshing, the second layer is automatically triggered.
+- All layers use scheduled refresh: When the second layer refreshes, it does not consider whether the first layer is in sync with the base table, and only processes and syncs first-layer data to the second layer.
 
-下面以 TPC-H 数据集为例，分析每月各地区和国家的订单数量与利润。
+The following example uses the TPC-H dataset to analyze the order count and profit per region and country per month.
 
-**原始查询（未使用物化视图）**：
+**Original query (without materialized views)**:
 
 ```sql
 SELECT
@@ -757,7 +754,7 @@ JOIN region r ON n.n_regionkey = r.r_regionkey
 GROUP BY n_name, month;
 ```
 
-**步骤 1**：构建 DWD 层（明细数据）——订单明细宽表。
+**Step 1**: Build the DWD layer (detail data) - the order detail wide table.
 
 ```sql
 CREATE MATERIALIZED VIEW dwd_order_detail
@@ -786,7 +783,7 @@ JOIN region r ON n.n_regionkey = r.r_regionkey
 JOIN lineitem l ON o.o_orderkey = l.l_orderkey;
 ```
 
-**步骤 2**：构建 DWS 层（汇总数据）——每日订单汇总。
+**Step 2**: Build the DWS layer (summary data) - daily order summary.
 
 ```sql
 CREATE MATERIALIZED VIEW dws_daily_sales
@@ -806,7 +803,7 @@ nation_name,
 region_name;
 ```
 
-**步骤 3**：使用物化视图优化查询。
+**Step 3**: Use the materialized view to optimize the query.
 
 ```sql
 SELECT
@@ -818,33 +815,33 @@ FROM dws_daily_sales
 GROUP BY nation_name, month;
 ```
 
-### 6.3 场景三：湖仓一体联邦数据查询
+### 6.3 Scenario 3: Lakehouse Federated Data Query
 
-**适用场景**：现代化数据架构中，企业常采用湖仓一体设计以平衡存储成本与查询性能。该架构存在两大挑战：
+**Applicable scenarios**: Modern data architectures often adopt a lakehouse design to balance storage cost and query performance. This architecture has two main challenges:
 
-- **查询性能受限**：频繁查询数据湖时受网络延迟和第三方服务影响，导致查询延迟。
-- **数据分层建模复杂**：从数据湖到实时数仓的流转和转换通常需要复杂的 ETL，维护成本高。
+- **Limited query performance**: Frequent queries against the data lake are affected by network latency and third-party services, leading to query latency.
+- **Complex data layered modeling**: Moving and transforming data from the data lake to a real-time data warehouse usually requires complex ETL with high maintenance cost.
 
-**Doris 异步物化视图的应对**：
+**How Doris async materialized views address these issues**:
 
-- **透明改写加速查询**：将常用数据湖查询结果物化到 Doris 内部存储，通过透明改写提升查询性能。
-- **简化分层建模**：支持基于数据湖中的表创建物化视图，便捷实现数据湖到实时数仓的转换。
+- **Transparent rewrite to accelerate queries**: Materialize commonly used data lake query results into Doris internal storage, and use transparent rewrite to improve query performance.
+- **Simplified layered modeling**: Support creating materialized views on top of tables in the data lake, making it easy to convert from a data lake to a real-time data warehouse.
 
-下面以 Hive 为例说明。
+The example below uses Hive.
 
-**步骤 1**：基于 Hive 创建 Catalog（使用 TPC-H 数据集）。
+**Step 1**: Create a Catalog based on Hive (using the TPC-H dataset).
 
 ```sql
 CREATE CATALOG hive_catalog PROPERTIES (
-'type'='hms', -- hive meta store 地址
+'type'='hms', -- hive meta store address
 'hive.metastore.uris' = 'thrift://172.21.0.1:7004'
 );
 ```
 
-**步骤 2**：基于 Hive Catalog 创建物化视图。
+**Step 2**: Create a materialized view based on the Hive Catalog.
 
 ```sql
--- 物化视图只能在 internal 的 catalog 上创建，切换到内部 catalog
+-- Materialized views can only be created on the internal catalog. Switch to the internal catalog
 SWITCH internal;
 CREATE DATABASE hive_mv_db;
 USE hive_mv_db;
@@ -877,7 +874,7 @@ n_name,
 o_orderdate;
 ```
 
-**步骤 3**：运行查询，通过透明改写自动使用物化视图加速。
+**Step 3**: Run the query and accelerate it automatically via transparent rewrite using the materialized view.
 
 ```sql
 SELECT
@@ -906,25 +903,25 @@ ORDER BY
 revenue DESC;
 ```
 
-:::tip 提示
+:::tip Tip
 
-Doris 暂无法感知除 Hive 外其他外表的数据变更。当外表数据不一致时，使用物化视图可能出现数据不一致情况。
+Doris cannot currently detect data changes in external tables other than Hive. When external table data is inconsistent, using a materialized view may produce inconsistent data.
 
-**外表透明改写开关**（默认 `false`）：参与透明改写的物化视图是否允许包含外表。如可接受数据不一致或可通过定时刷新保证一致性，可开启：
+**External-table transparent rewrite switch** (default `false`): Whether materialized views participating in transparent rewrite are allowed to contain external tables. If you can accept data inconsistency or can ensure consistency through scheduled refresh, enable it:
 
 ```sql
 SET materialized_view_rewrite_enable_contain_external_table = true;
 ```
 
-**改写未被选择的排查**：若物化视图处于 `MaterializedViewRewriteSuccessButNotChose` 状态，说明改写成功但 plan 未被 CBO 选择，可能因外表统计信息不完整。
+**Troubleshooting when a rewrite is not chosen**: If the materialized view is in `MaterializedViewRewriteSuccessButNotChose` status, the rewrite succeeded but the plan was not chosen by the CBO. This may be due to incomplete external table statistics.
 
-启用从文件中获取行数：
+Enable getting row counts from files:
 
 ```sql
 SET enable_get_row_count_from_file_list = true;
 ```
 
-查看外表统计信息以确认是否已收集完整：
+View external table statistics to confirm whether they have been collected completely:
 
 ```sql
 SHOW TABLE STATS external_table_name;
@@ -932,13 +929,13 @@ SHOW TABLE STATS external_table_name;
 
 :::
 
-### 6.4 场景四：提升写入效率，减少资源竞争
+### 6.4 Scenario 4: Improve Write Efficiency and Reduce Resource Contention
 
-**适用场景**：高吞吐数据写入场景，需保证系统性能稳定与数据处理高效。通过异步物化视图灵活的刷新策略，可降低写入压力、避免资源争抢。
+**Applicable scenarios**: High-throughput data write scenarios that need stable system performance and efficient data processing. Through the flexible refresh strategies of async materialized views, you can reduce write pressure and avoid resource contention.
 
-基表数据变更时不会立即触发物化视图刷新，延迟刷新有利于降低资源压力，避免写入资源争抢。
+When base table data changes, the materialized view refresh is not triggered immediately. Delayed refresh helps reduce resource pressure and avoid contention with write operations.
 
-**示例**：定时刷新策略，每 2 小时刷新一次。当 `orders` 与 `lineitem` 导入数据时，不会立即触发物化视图刷新。
+**Example**: A scheduled refresh strategy that refreshes every 2 hours. When data is loaded into `orders` and `lineitem`, the materialized view refresh is not triggered immediately.
 
 ```sql
 CREATE MATERIALIZED VIEW common_schedule_join_mv
@@ -955,11 +952,11 @@ orders
 LEFT JOIN lineitem ON l_orderkey = o_orderkey;
 ```
 
-#### 透明改写提升导入效率
+#### Transparent Rewrite Improves Load Efficiency
 
-透明改写不仅能加速查询，也能改写导入 SQL，从而提升导入效率。从 **2.1.6 版本**开始，当物化视图与基表数据强一致时，可对 DML 操作（如 `INSERT INTO` 或 `INSERT OVERWRITE`）进行透明改写，对数据导入场景性能提升显著。
+Transparent rewrite not only accelerates queries but can also rewrite load SQL, thereby improving load efficiency. Starting from **version 2.1.6**, when a materialized view is strongly consistent with the base table, DML operations (such as `INSERT INTO` or `INSERT OVERWRITE`) can be transparently rewritten, providing significant performance gains in data load scenarios.
 
-**步骤 1**：创建 `INSERT INTO` 数据的目标表。
+**Step 1**: Create the target table for the `INSERT INTO` data.
 
 ```sql
 CREATE TABLE IF NOT EXISTS target_table  (
@@ -972,7 +969,7 @@ DUPLICATE KEY(orderdate, shippriority)
 DISTRIBUTED BY HASH(shippriority) BUCKETS 3;
 ```
 
-**步骤 2**：创建 `common_schedule_join_mv` 物化视图。
+**Step 2**: Create the `common_schedule_join_mv` materialized view.
 
 ```sql
 CREATE MATERIALIZED VIEW common_schedule_join_mv
@@ -989,7 +986,7 @@ orders
 LEFT JOIN lineitem ON l_orderkey = o_orderkey;
 ```
 
-**步骤 3**：未经改写的导入语句。
+**Step 3**: The load statement before rewrite.
 
 ```sql
 INSERT INTO target_table
@@ -1003,7 +1000,7 @@ orders
 LEFT JOIN lineitem ON l_orderkey = o_orderkey;
 ```
 
-**步骤 4**：经过透明改写后的等价语句。
+**Step 4**: The equivalent statement after transparent rewrite.
 
 ```sql
 INSERT INTO target_table
@@ -1011,11 +1008,11 @@ SELECT *
 FROM common_schedule_join_mv;
 ```
 
-:::caution 注意
+:::caution Note
 
-如果 DML 操作的是无法感知数据变更的外表，透明改写可能导致基表最新数据无法实时导入目标表。如可接受数据不一致或自行保证数据一致性，可打开如下开关。
+If the DML operates on an external table whose data changes cannot be detected, transparent rewrite may cause the latest data in the base table to not be loaded into the target table in real time. If you can accept data inconsistency or can ensure consistency yourself, you can enable the following switch.
 
-DML 时，当物化视图存在无法实时感知数据的外表时，是否开启基于结构信息的物化视图透明改写（默认关闭）：
+For DML, when the materialized view contains an external table whose data changes cannot be detected in real time, whether to enable structure-based transparent rewrite of the materialized view (disabled by default):
 
 ```sql
 SET enable_dml_materialized_view_rewrite_when_base_table_unawareness = true;
@@ -1025,36 +1022,36 @@ SET enable_dml_materialized_view_rewrite_when_base_table_unawareness = true;
 
 ---
 
-## 七、运维注意点
+## 7. Operational Considerations
 
-<!-- 知识类型：运维建议 -->
+<!-- Knowledge type: operational recommendations -->
 
-异步物化视图本质上是增强的 ETL 计算，需要持续维护。以下三点是日常运维的关键。
+Async materialized views are essentially enhanced ETL computations and require ongoing maintenance. The following three points are key to daily operations.
 
-1. **监控**：物化视图运行后要通过 [metrics](../../../admin-manual/maint-monitor/metrics.md) 及时监控系统运行情况。后续异步物化视图自身也会暴露更多的监控指标，目前可通过 [tasks](../../../sql-manual/sql-functions/table-valued-functions/tasks.md) 查看任务数量、执行状态、任务耗时等信息。
-2. **规划**：要规划物化视图的运行个数、运行频率以及集群的最大计算量。切记不要"只管建物化视图，不维护物化视图"——物化视图本质上是增强的 ETL 计算，和传统 ETL 一样需要维护。
-3. **资源隔离**：物化视图是数据计算任务，需要按需做好资源隔离。
+1. **Monitoring**: After a materialized view starts running, monitor system status via [metrics](../../../admin-manual/maint-monitor/metrics.md) in a timely manner. Async materialized views will expose more monitoring metrics in the future. Currently, you can use [tasks](../../../sql-manual/sql-functions/table-valued-functions/tasks.md) to view information such as the number of tasks, execution status, and task duration.
+2. **Planning**: Plan the number of materialized views, refresh frequency, and the maximum cluster compute capacity. Do not "just build materialized views without maintaining them." A materialized view is essentially an enhanced ETL computation and requires maintenance just like traditional ETL.
+3. **Resource isolation**: A materialized view is a data computation task, so apply resource isolation as needed.
 
 ---
 
 ## FAQ
 
-**Q1：异步物化视图能否完全替代实时查询？**
+**Q1: Can async materialized views completely replace real-time queries?**
 
-不能。异步物化视图存在数据延迟（取决于刷新策略），不适用于要求 1~5 分钟以内数据新鲜度的场景。高时效性场景请考虑同步物化视图。
+No. Async materialized views have data latency (depending on the refresh strategy) and are not suitable for scenarios that require data freshness within 1 to 5 minutes. For scenarios with high timeliness requirements, consider synchronous materialized views.
 
-**Q2：是否可以把所有物化视图都设置为高频定时刷新来逼近实时？**
+**Q2: Can I set all materialized views to high-frequency scheduled refresh to approach real-time?**
 
-不建议。这会导致系统资源持续被占用、刷新作业相互竞争、频繁增删 partition / tablet 对 BE 造成较大压力。
+Not recommended. Doing so causes continuous occupation of system resources, refresh jobs competing with each other, and frequent addition and removal of partitions / tablets, which puts heavy pressure on BE.
 
-**Q3：如何选择刷新策略？**
+**Q3: How do I choose a refresh strategy?**
 
-参考 [三种刷新策略对比](#32-三种刷新策略对比) 与 [刷新策略组合建议](#34-刷新策略组合建议)，按数仓分层、业务关键性或数据变更频率进行匹配。优先评估是否能构建[分区物化视图](#31-优先选择分区物化视图)。
+Refer to [Comparison of the Three Refresh Strategies](#32-comparison-of-the-three-refresh-strategies) and [Recommendations for Combining Refresh Strategies](#34-recommendations-for-combining-refresh-strategies), and match by data warehouse layer, business criticality, or data change frequency. First evaluate whether you can build a [partitioned materialized view](#31-prefer-partitioned-materialized-views).
 
-**Q4：物化视图建好后还需要维护吗？**
+**Q4: Do materialized views still need maintenance after they are built?**
 
-需要。物化视图本质上是增强的 ETL 计算，需要监控、规划与资源隔离，详见 [运维注意点](#七运维注意点)。
+Yes. A materialized view is essentially an enhanced ETL computation and requires monitoring, planning, and resource isolation. See [Operational Considerations](#7-operational-considerations) for details.
 
-**Q5：基表频繁更新还能用透明改写吗？**
+**Q5: Can I still use transparent rewrite when the base table is updated frequently?**
 
-基表频繁更新会导致物化视图频繁失效，无法用于透明改写（仍可直查）。如需在此场景下使用透明改写，需允许查询数据存在一定时延，可设置 `grace_period`。
+Frequent updates to the base table cause the materialized view to be invalidated frequently and unable to be used for transparent rewrite (direct queries are still possible). To use transparent rewrite in this scenario, you must allow some latency in queried data, which can be configured via `grace_period`.

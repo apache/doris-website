@@ -1,33 +1,68 @@
 ---
 {
-    "title": "LoongCollector (iLogtail) Doris Flusher",
-    "language": "zh-CN",
-    "description": "LoongCollector (iLogtail) 是一个开源高性能日志采集与处理框架，来源于阿里云，3.0版本之前的命名为：Logtail/iLogtail。支持自定义输出插件将数据写入存储系统，LoongCollector Doris Flusher 是输出到 Doris 的插件。"
+    "title": "LoongCollector",
+    "language": "en",
+    "description": "Use the LoongCollector Doris Flusher to write TEXT or JSON logs into Apache Doris in real time through Stream Load, with support for multi-line logs, failure retries, and concurrent ingestion.",
+    "keywords": [
+        "LoongCollector",
+        "iLogtail",
+        "Doris Flusher",
+        "Doris Stream Load",
+        "log collection",
+        "write logs to Doris"
+    ]
 }
 ---
 
-# LoongCollector (iLogtail) Doris Flusher 
+<!-- Knowledge type: Capability definition -->
+<!-- Applicable scenario: Use LoongCollector to write logs into Apache Doris in real time -->
 
-## 介绍
+[LoongCollector (iLogtail)](https://github.com/alibaba/loongcollector) is an open-source, high-performance log collection and processing framework originating from Alibaba Cloud. Before version 3.0, it was named Logtail/iLogtail. It supports writing data into storage systems through custom output plugins. The LoongCollector Doris Flusher is the output plugin for writing into Apache Doris, suitable for ingesting TEXT or JSON logs into Doris in real time for log search and analysis.
 
-[LoongCollector (iLogtail)](https://github.com/alibaba/loongcollector) 是一个开源高性能日志采集与处理框架，来源于阿里云，3.0版本之前的命名为：Logtail/iLogtail。支持自定义输出插件将数据写入存储系统，LoongCollector Doris Flusher 是输出到 Doris 的插件。
+The Doris Flusher calls the [Doris Stream Load](../../data-operate/import/import-way/stream-load-manual) HTTP interface to write data in real time, and provides the following capabilities:
 
-Doris Flusher 调用 Doris Stream Load HTTP 接口将数据实时写入 Doris，提供多线程并发，失败重试，自定义 Stream Load 格式和参数，输出写入速度等能力。
+- Multi-threaded concurrent writes.
+- Retries on Doris Stream Load request failures.
+- Customizable Stream Load formats and parameters.
+- Output of write speed statistics.
 
-使用 Doris Flusher 主要有三个步骤：
-1. 安装 LoongCollector
-2. 配置 Doris 输出地址和其他参数
-3. 启动 LoongCollector 将数据实时写入 Doris
+## Use Cases and Workflow
 
-## 安装
+<!-- Knowledge type: Architecture decision -->
+<!-- Applicable scenario: Choose a LoongCollector-based log collection method for writing into Doris -->
 
-### 从官网下载
+You can choose the corresponding example based on the log format:
+
+| User scenario | Applicable data | Recommended reading |
+| --- | --- | --- |
+| Collect Doris FE TEXT logs that contain `stacktrace` | TEXT logs, where one business log entry may span multiple lines | [Collect Doris FE TEXT logs](#collect-doris-fe-text-logs) |
+| Collect event logs with one JSON object per line | JSON line logs, where each line can be parsed directly into fields | [Collect JSON line logs](#collect-json-line-logs) |
+
+The full workflow for using the LoongCollector Doris Flusher is as follows:
+
+1. Install LoongCollector.
+2. Create the target database and table in Doris.
+3. Configure LoongCollector input, transformation, and Doris output parameters.
+4. Start LoongCollector and write logs into Doris in real time.
+
+## Install LoongCollector
+
+<!-- Knowledge type: Operation steps -->
+<!-- Applicable scenario: Prepare the LoongCollector runtime environment -->
+
+You can either download the precompiled installation package directly, or build LoongCollector from source.
+
+### Download from the official site
+
+Download the precompiled installation package:
 
 ```bash
 wget https://apache-doris-releases.oss-cn-beijing.aliyuncs.com/extension/loongcollector-linux-amd64.tar.gz
 ```
 
-### 从源码编译
+### Build from source
+
+Clone the LoongCollector repository and build it:
 
 ```shell
 # Clone the repository
@@ -40,39 +75,42 @@ make all
 cd output
 ```
 
-## 参数配置
+## Configure Doris Output Parameters
 
-LoongCollector Doris Flusher Plugin 的配置如下：
+<!-- Knowledge type: Configuration parameters -->
+<!-- Applicable scenario: Configure the LoongCollector Doris Flusher to write into Doris -->
 
-配置 | 说明
---- | ---
-`Addresses` | Stream Load HTTP 地址，格式是字符串数组，可以有一个或者多个元素，每个元素是 host:port。例如：["http://fe1:8030", "http://fe2:8030"]
-`Database` | 要写入的 Doris 库名
-`Table` | 要写入的 Doris 表名
-`Authentication.PlainText.Username` | Doris 用户名，该用户需要有 Doris 对应库表的导入权限
-`Authentication.PlainText.Password` | Doris 用户的密码
-`LoadProperties` | Doris Stream Load 的 header 参数，语法格式为 map，例如：`LoadProperties: {"format": "json", "read_json_by_line": "true"}`
-`LogProgressInterval` | 日志中输出速度的时间间隔，单位是秒，默认为 10，设置为 0 可以关闭这种日志
-`GroupCommit` | Group commit 模式，可选值为 "sync"、"async" 或 "off"，默认为 "off"
-`Concurrency` | 并发发送数据的 goroutine 数量，默认为 1（同步模式）
-`QueueCapacity` | 异步模式下任务队列容量，默认为 1024
-`Convert.Protocol` | 数据转换协议，默认为 custom_single
-`Convert.Encoding` | 数据转换编码，默认为 json
-`Convert.TagFieldsRename` | 从 tags 重命名一个或多个字段
-`Convert.ProtocolFieldsRename` | 重命名协议字段，协议字段选项只能是：contents、tags、time
+The LoongCollector Doris Flusher Plugin supports the following configuration items:
 
+| Configuration item | Description |
+| --- | --- |
+| `Addresses` | Stream Load HTTP addresses, in the form of a string array that can contain one or more elements. Each element has the format `host:port`, for example `["http://fe1:8030", "http://fe2:8030"]`. |
+| `Database` | The Doris database name to write into. |
+| `Table` | The Doris table name to write into. |
+| `Authentication.PlainText.Username` | The Doris username. This user must have import privileges on the corresponding Doris database and table. |
+| `Authentication.PlainText.Password` | The password of the Doris user. |
+| `LoadProperties` | Header parameters of Doris Stream Load. The syntax is a map, for example `LoadProperties: {"format": "json", "read_json_by_line": "true"}`. |
+| `LogProgressInterval` | The interval, in seconds, at which the write speed is logged. The default value is `10`; set it to `0` to disable this log. |
+| `GroupCommit` | The group commit mode. Allowed values are `sync`, `async`, or `off`. The default value is `off`. |
+| `Concurrency` | The number of goroutines that send data concurrently. The default value is `1` (synchronous mode). |
+| `QueueCapacity` | The task queue capacity in asynchronous mode. The default value is `1024`. |
+| `Convert.Protocol` | The data conversion protocol. The default value is `custom_single`. |
+| `Convert.Encoding` | The data conversion encoding. The default value is `json`. |
+| `Convert.TagFieldsRename` | Rename one or more fields from tags. |
+| `Convert.ProtocolFieldsRename` | Rename protocol fields. Allowed protocol field values are `contents`, `tags`, and `time`. |
 
-## 使用示例
+## Collect Doris FE TEXT Logs
 
-### TEXT 日志采集示例
+<!-- Knowledge type: Operation steps -->
+<!-- Applicable scenario: Collect multi-line Java TEXT logs and write them into Doris -->
 
-该示例以 Doris FE 的日志为例展示 TEXT 日志采集。
+This scenario uses Doris FE logs as an example to show how to collect TEXT logs. For multi-line exception logs that contain a `stacktrace`, you need to first merge the main log and the `stacktrace` into a single record, then parse the fields and write them into Doris.
 
-**1. 数据**
+### 1. Prepare a Log Sample
 
-FE 日志文件一般位于 Doris 安装目录下的 fe/log/fe.log 文件，是典型的 Java 程序日志，包括时间戳，日志级别，线程名，代码位置，日志内容等字段。不仅有正常的日志，还有带 stacktrace 的异常日志，stacktrace 是跨行的，日志采集存储需要把主日志和 stacktrace 组合成一条日志。
+FE log files are usually located at `fe/log/fe.log` under the Doris installation directory. FE logs are typical Java application logs and contain fields such as the timestamp, log level, thread name, code position, and log content. The logs include both normal entries and exception entries with a `stacktrace`. Because a `stacktrace` spans multiple lines, the main log and the `stacktrace` must be combined into a single log entry when collected and stored.
 
-```
+```text
 2024-07-08 21:18:01,432 INFO (Statistics Job Appender|61) [StatisticsJobAppender.runAfterCatalogReady():70] Stats table not available, skip
 2024-07-08 21:18:53,710 WARN (STATS_FETCH-0|208) [StmtExecutor.executeInternalQuery():3332] Failed to run internal SQL: OriginStatement{originStmt='SELECT * FROM __internal_schema.column_statistics WHERE part_id is NULL  ORDER BY update_time DESC LIMIT 500000', idx=0}
 org.apache.doris.common.UserException: errCode = 2, detailMessage = tablet 10031 has no queryable replicas. err: replica 10032's backend 10008 does not exist or not alive
@@ -80,63 +118,63 @@ org.apache.doris.common.UserException: errCode = 2, detailMessage = tablet 10031
         at org.apache.doris.planner.OlapScanNode.computeTabletInfo(OlapScanNode.java:1197) ~[doris-fe.jar:1.2-SNAPSHOT]
 ```
 
-**2. 建表**
+### 2. Create the Doris Table
 
-表结构包括日志的产生时间，采集时间，主机名，日志文件路径，日志类型，日志级别，线程名，代码位置，日志内容等字段。
+The target table contains fields such as the log generation time, collection time, hostname, log file path, log type, log level, thread name, code position, and log content.
 
-```
+```sql
 CREATE TABLE `doris_log` (
-  `log_time` datetime NULL COMMENT 'log content time',
-  `collect_time` datetime NULL COMMENT 'log agent collect time',
-  `host` text NULL COMMENT 'hostname or ip',
-  `path` text NULL COMMENT 'log file path',
-  `type` text NULL COMMENT 'log type',
-  `level` text NULL COMMENT 'log level',
-  `thread` text NULL COMMENT 'log thread',
-  `position` text NULL COMMENT 'log code position',
-  `message` text NULL COMMENT 'log message',
-  INDEX idx_host (`host`) USING INVERTED COMMENT '',
-  INDEX idx_path (`path`) USING INVERTED COMMENT '',
-  INDEX idx_type (`type`) USING INVERTED COMMENT '',
-  INDEX idx_level (`level`) USING INVERTED COMMENT '',
-  INDEX idx_thread (`thread`) USING INVERTED COMMENT '',
-  INDEX idx_position (`position`) USING INVERTED COMMENT '',
-  INDEX idx_message (`message`) USING INVERTED PROPERTIES("parser" = "unicode", "support_phrase" = "true") COMMENT ''
+    `log_time` datetime NULL COMMENT 'log content time',
+    `collect_time` datetime NULL COMMENT 'log agent collect time',
+    `host` text NULL COMMENT 'hostname or ip',
+    `path` text NULL COMMENT 'log file path',
+    `type` text NULL COMMENT 'log type',
+    `level` text NULL COMMENT 'log level',
+    `thread` text NULL COMMENT 'log thread',
+    `position` text NULL COMMENT 'log code position',
+    `message` text NULL COMMENT 'log message',
+    INDEX idx_host (`host`) USING INVERTED COMMENT '',
+    INDEX idx_path (`path`) USING INVERTED COMMENT '',
+    INDEX idx_type (`type`) USING INVERTED COMMENT '',
+    INDEX idx_level (`level`) USING INVERTED COMMENT '',
+    INDEX idx_thread (`thread`) USING INVERTED COMMENT '',
+    INDEX idx_position (`position`) USING INVERTED COMMENT '',
+    INDEX idx_message (`message`) USING INVERTED PROPERTIES("parser" = "unicode", "support_phrase" = "true") COMMENT ''
 ) ENGINE=OLAP
 DUPLICATE KEY(`log_time`)
 COMMENT 'OLAP'
 PARTITION BY RANGE(`log_time`) ()
 DISTRIBUTED BY RANDOM BUCKETS 10
 PROPERTIES (
-"replication_num" = "1",
-"dynamic_partition.enable" = "true",
-"dynamic_partition.time_unit" = "DAY",
-"dynamic_partition.start" = "-7",
-"dynamic_partition.end" = "1",
-"dynamic_partition.prefix" = "p",
-"dynamic_partition.buckets" = "10",
-"dynamic_partition.create_history_partition" = "true",
-"compaction_policy" = "time_series"
+    "replication_num" = "1",
+    "dynamic_partition.enable" = "true",
+    "dynamic_partition.time_unit" = "DAY",
+    "dynamic_partition.start" = "-7",
+    "dynamic_partition.end" = "1",
+    "dynamic_partition.prefix" = "p",
+    "dynamic_partition.buckets" = "10",
+    "dynamic_partition.create_history_partition" = "true",
+    "compaction_policy" = "time_series"
 );
 ```
 
-**3. LoongCollector 配置**
+### 3. Configure LoongCollector
 
-LoongCollector 配置文件主要由 3 部分组成：
-1. inputs 负责读取原始数据
-2. processors 负责做数据转换
-3. flushers 负责将数据输出
+A LoongCollector configuration file consists of three main parts:
 
-配置文件位置 `conf/continuous_pipeline_config/local/`
-创建配置文件 `loongcollector_doris_log.yaml `
+1. `inputs`: read raw data.
+2. `processors`: transform and parse log content.
+3. `flushers`: output data to Doris.
+
+Place the configuration file under the `conf/continuous_pipeline_config/local/` directory, for example by creating `loongcollector_doris_log.yaml`:
 
 ```yaml
 enable: true
 
 inputs:
-  # 1. inputs 负责读取原始数据
-  # file_log input 是一个 input plugin，可以配置读取的日志文件路径
-  # 通过 multiline 配置将非时间开头的行拼接到上一行后面，实现 stacktrace 和主日志合并的效果
+  # 1. inputs are responsible for reading raw data
+  # input_file is an input plugin where you can configure the log file path to read
+  # The multiline configuration appends lines that do not start with a timestamp to the previous line, so the stacktrace is merged with the main log
   - Type: input_file
     FilePaths:
       - /path/fe.log
@@ -145,8 +183,8 @@ inputs:
       StartPattern: '^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}'
 
 processors:
-  # 2. processors 部分负责数据转换
-  # processor_regex 是一个常用的数据转换插件，使用正则表达式提取字段
+  # 2. processors are responsible for data transformation
+  # processor_regex is a commonly used data transformation plugin that extracts fields with regular expressions
   - Type: processor_regex
     SourceKey: content
     Regex: '(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2},\d{3}) ([A-Z]+) \(([^\)]*)\) \[([^\]]*)\] (.*)'
@@ -156,16 +194,16 @@ processors:
       - thread
       - position
       - message
-  # 添加额外字段
+  # Add extra fields
   - Type: processor_add_fields
     Fields:
       type: fe.log
     IgnoreIfExist: false
 
 flushers:
-  # 3. flushers 部分负责数据输出
-  # flusher_doris 将数据输出到 Doris，使用的是 Stream Load HTTP 接口
-  # 通过 LoadProperties 参数指定了 Stream Load 的数据格式为 JSON
+  # 3. flushers are responsible for data output
+  # flusher_doris outputs data to Doris through the Stream Load HTTP interface
+  # The LoadProperties parameter sets the Stream Load data format to JSON
   - Type: flusher_doris
     Addresses:
       - "http://fe_ip:http_port"
@@ -191,34 +229,38 @@ flushers:
     LogProgressInterval: 10
 ```
 
+### 4. Start LoongCollector
 
-**4. 运行 LoongCollector**
+Start LoongCollector:
 
+```bash
+nohup ./loongcollector > stdout.log 2> stderr.log &
 ```
 
-nohup ./loongcollector > stdout.log 2> stderr.log &
+By default, the write speed is logged every 10 seconds, including the data volume since startup (in MB and ROWS), the overall speed (in MB/s and R/s), and the speed over the last 10 seconds. An example log line is:
 
-# 默认每隔 10s 会日志输出速度信息，包括自启动以来的数据量（MB 和 ROWS），总速度（MB/s 和 R/S），最近 10s 速度
+```text
 total 11 MB 18978 ROWS, total speed 0 MB/s 632 R/s, last 10 seconds speed 1 MB/s 1897 R/s
 ```
 
+## Collect JSON Line Logs
 
-### JSON 日志采集示例
+<!-- Knowledge type: Operation steps -->
+<!-- Applicable scenario: Collect single-line JSON event logs and write them into Doris -->
 
-该样例以 github events archive 的数据为例展示 JSON 日志采集。
+This scenario uses data from the GitHub Events Archive as an example to show how to collect event logs with one JSON object per line.
 
-**1. 数据**
+### 1. Prepare JSON Data
 
-github events archive 是 github 用户操作事件的归档数据，格式是 JSON，可以从 https://www.gharchive.org/ 下载，比如下载 2024 年 1 月 1 日 15 点的数据。
+The [GitHub Events Archive](https://www.gharchive.org/) is the archived data of GitHub user action events, in JSON format. You can download the data for 15:00 on January 1, 2024. The file path in the configuration example below should point to the decompressed JSON file:
 
-```
+```bash
 wget https://data.gharchive.org/2024-01-01-15.json.gz
-
 ```
 
-下面是一条数据样例，实际一条数据一行，这里为了方便展示进行了格式化。
+The actual data has one JSON object per line. The sample below is formatted for readability:
 
-```
+```json
 {
   "id": "37066529221",
   "type": "PushEvent",
@@ -249,69 +291,69 @@ wget https://data.gharchive.org/2024-01-01-15.json.gz
 }
 ```
 
+### 2. Create the Doris Table
 
-**2. Doris 建表**
+Create the target database and table to store GitHub event logs.
 
-```
+```sql
 CREATE DATABASE log_db;
 USE log_db;
 
 CREATE TABLE github_events
 (
-  `created_at` DATETIME,
-  `id` BIGINT,
-  `type` TEXT,
-  `public` BOOLEAN,
-  `actor` VARIANT,
-  `repo` VARIANT,
-  `payload` TEXT,
-  INDEX `idx_id` (`id`) USING INVERTED,
-  INDEX `idx_type` (`type`) USING INVERTED,
-  INDEX `idx_actor` (`actor`) USING INVERTED,
-  INDEX `idx_host` (`repo`) USING INVERTED,
-  INDEX `idx_payload` (`payload`) USING INVERTED PROPERTIES("parser" = "unicode", "support_phrase" = "true")
+    `created_at` DATETIME,
+    `id` BIGINT,
+    `type` TEXT,
+    `public` BOOLEAN,
+    `actor` VARIANT,
+    `repo` VARIANT,
+    `payload` TEXT,
+    INDEX `idx_id` (`id`) USING INVERTED,
+    INDEX `idx_type` (`type`) USING INVERTED,
+    INDEX `idx_actor` (`actor`) USING INVERTED,
+    INDEX `idx_host` (`repo`) USING INVERTED,
+    INDEX `idx_payload` (`payload`) USING INVERTED PROPERTIES("parser" = "unicode", "support_phrase" = "true")
 )
 ENGINE = OLAP
 DUPLICATE KEY(`created_at`)
 PARTITION BY RANGE(`created_at`) ()
 DISTRIBUTED BY RANDOM BUCKETS 10
 PROPERTIES (
-"replication_num" = "1",
-"inverted_index_storage_format"= "v2",
-"compaction_policy" = "time_series",
-"enable_single_replica_compaction" = "true",
-"dynamic_partition.enable" = "true",
-"dynamic_partition.create_history_partition" = "true",
-"dynamic_partition.time_unit" = "DAY",
-"dynamic_partition.start" = "-30",
-"dynamic_partition.end" = "1",
-"dynamic_partition.prefix" = "p",
-"dynamic_partition.buckets" = "10",
-"dynamic_partition.replication_num" = "1"
+    "replication_num" = "1",
+    "inverted_index_storage_format" = "v2",
+    "compaction_policy" = "time_series",
+    "enable_single_replica_compaction" = "true",
+    "dynamic_partition.enable" = "true",
+    "dynamic_partition.create_history_partition" = "true",
+    "dynamic_partition.time_unit" = "DAY",
+    "dynamic_partition.start" = "-30",
+    "dynamic_partition.end" = "1",
+    "dynamic_partition.prefix" = "p",
+    "dynamic_partition.buckets" = "10",
+    "dynamic_partition.replication_num" = "1"
 );
 ```
 
-**3. LoongCollector 配置**
+### 3. Configure LoongCollector
 
-这个配置文件和之前 TEXT 日志采集不同的有下面几点：
+The main differences between this configuration and the TEXT log collection example are as follows:
 
-1. input_file 使用 JSON 模式解析，LoongCollector 会将每一行文本当作 JSON 格式解析
-2. 没有用复杂的 processor plugin，因为 JSON 数据已经有结构化字段
+1. `input_file` uses JSON parsing mode, so LoongCollector parses each line of text as JSON.
+2. The JSON data already contains structured fields, so a complex processor plugin is not needed.
 
-配置文件位置 `conf/continuous_pipeline_config/local/`
-创建配置文件 `loongcollector_doris_log.yaml`
+Place the configuration file under the `conf/continuous_pipeline_config/local/` directory, for example by creating `loongcollector_doris_log.yaml`:
 
 ```yaml
 enable: true
 
 inputs:
-  # file_log input 读取 JSON 格式日志文件
+  # input_file reads JSON-format log files
   - Type: input_file
     FilePaths:
       - /path/2024-01-01-15.json
 
 processors:
-  # 解析 content，只展开第一层（actor, repo 保持为 JSON 字符串供 VARIANT 类型使用）
+  # Parse content and expand only the first level (actor and repo remain as JSON strings for the VARIANT type)
   - Type: processor_json
     SourceKey: content
     KeepSource: false
@@ -319,7 +361,7 @@ processors:
     ExpandConnector: ""
 
 flushers:
-  # flusher_doris 将数据输出到 Doris
+  # flusher_doris outputs data to Doris
   - Type: flusher_doris
     Addresses:
       - "http://fe_ip:http_port"
@@ -340,7 +382,7 @@ flushers:
     Concurrency: 3
 ```
 
-**4. 运行 LoongCollector**
+### 4. Start LoongCollector
 
 ```bash
 nohup ./loongcollector > stdout.log 2> stderr.log &

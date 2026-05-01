@@ -1,83 +1,83 @@
 ---
 {
-    "title": "自定义分词",
-    "language": "zh-CN",
-    "description": "Doris 自定义分词通过组合字符过滤器、分词器与词元过滤器，灵活控制文本切分策略，提升倒排索引的搜索相关性与精度。",
+    "title": "Custom Analyzer",
+    "language": "en",
+    "description": "Doris custom analyzers combine character filters, tokenizers, and token filters to flexibly control text segmentation strategies, improving the search relevance and precision of inverted indexes.",
     "keywords": [
-        "自定义分词",
         "custom analyzer",
-        "倒排索引分词器",
+        "custom analyzer",
+        "inverted index tokenizer",
         "tokenizer",
         "token_filter",
         "char_filter",
         "edge_ngram",
         "word_delimiter",
         "USING ANALYZER",
-        "多分词索引"
+        "multi-analyzer index"
     ]
 }
 ---
 
-<!-- 知识类型: 功能概述 + 配置参数 + 操作步骤 -->
-<!-- 适用场景: 倒排索引文本分词定制 / 多语言搜索 / 自动补全 / 精确匹配 -->
+<!-- Knowledge type: Feature overview + Configuration parameters + Operating procedures -->
+<!-- Applicable scenarios: Inverted index text tokenization customization / Multilingual search / Auto-completion / Exact match -->
 
-自定义分词（Custom Analyzer）通过组合 **字符过滤器（char_filter）**、**分词器（tokenizer）** 和 **词元过滤器（token_filter）**，让用户根据业务需求精细定义文本如何被切分成可搜索的词项。它突破了内置分词的局限，直接影响搜索结果的相关性与数据分析的准确性。
+A Custom Analyzer combines a **character filter (char_filter)**, a **tokenizer**, and a **token filter (token_filter)** so that you can precisely define how text is split into searchable terms based on business needs. It overcomes the limitations of built-in analyzers and directly affects search relevance and the accuracy of data analysis.
 
-![自定义分词示意图](/images/analyzer.png)
+![Custom analyzer diagram](/images/analyzer.png)
 
-### 适用场景
+### Applicable Scenarios
 
-| 场景 | 推荐组合 |
+| Scenario | Recommended Combination |
 | --- | --- |
-| 多语言混合文本搜索 | `icu` 分词器 + `icu_normalizer` 过滤器 |
-| 电话号码 / 编码前缀匹配 | `edge_ngram` 分词器 |
-| 复杂英文文本拆分（驼峰、连字符等） | `standard` 分词器 + `word_delimiter` 过滤器 |
-| 自动补全 / 输入提示 | `edge_ngram` 分词器 + `lowercase` 过滤器 |
-| 精确匹配（保留原词） | `keyword` 分词器 + `lowercase`/`asciifolding` 过滤器 |
+| Multilingual mixed-text search | `icu` tokenizer + `icu_normalizer` filter |
+| Phone number / code prefix matching | `edge_ngram` tokenizer |
+| Splitting complex English text (camel case, hyphens, etc.) | `standard` tokenizer + `word_delimiter` filter |
+| Auto-completion / input suggestions | `edge_ngram` tokenizer + `lowercase` filter |
+| Exact match (preserve original term) | `keyword` tokenizer + `lowercase` / `asciifolding` filter |
 
 ---
 
-## 核心组件
+## Core Components
 
-自定义分词由四类对象组成，按顺序作用于原始文本：
+A custom analyzer consists of four kinds of objects, applied to the original text in order:
 
 ```
-原始文本 ──► [char_filter] ──► [tokenizer] ──► [token_filter] ──► 词项
+Original text ──► [char_filter] ──► [tokenizer] ──► [token_filter] ──► Terms
 ```
 
-| 组件 | 作用 | 数量 |
+| Component | Purpose | Count |
 | --- | --- | --- |
-| `char_filter` | 分词前对字符进行预处理（如替换、标准化） | 0 ~ N |
-| `tokenizer` | 将文本切分成词项 | 1 |
-| `token_filter` | 对切分后的词项做加工（如小写、ASCII 折叠） | 0 ~ N |
-| `analyzer` | 将上述组件组装为完整的分词管道 | 1 |
+| `char_filter` | Pre-processes characters before tokenization (such as replacement and normalization) | 0 ~ N |
+| `tokenizer` | Splits text into terms | 1 |
+| `token_filter` | Processes the resulting terms (such as lowercasing or ASCII folding) | 0 ~ N |
+| `analyzer` | Assembles the components above into a complete tokenization pipeline | 1 |
 
 ---
 
-## 创建自定义分词
+## Creating a Custom Analyzer
 
-### 1. 字符过滤器（char_filter）
+### 1. Character Filter (char_filter)
 
 ```sql
 CREATE INVERTED INDEX CHAR_FILTER IF NOT EXISTS x_char_filter
 PROPERTIES (
     "type" = "char_replace"
-    -- 其他参数见下文
+    -- See below for other parameters
 );
 ```
 
-支持的字符过滤器类型：
+Supported character filter types:
 
-- **`char_replace`**：在分词前将指定字符替换为目标字符。
-    - `char_filter_pattern`：需要替换的字符列表
-    - `char_filter_replacement`：替换后的字符（默认空格）
+- **`char_replace`**: replaces specified characters with target characters before tokenization.
+    - `char_filter_pattern`: list of characters to replace
+    - `char_filter_replacement`: replacement character (default: space)
 
-- **`icu_normalizer`**：使用 ICU 标准化对文本进行预处理。
-    - `name`：标准化形式（默认 `nfkc_cf`）。可选：`nfc`、`nfkc`、`nfkc_cf`、`nfd`、`nfkd`
-    - `mode`：标准化模式（默认 `compose`）。可选：`compose`（组合）、`decompose`（分解）
-    - `unicode_set_filter`：指定需要标准化的字符集（如 `[a-z]`）
+- **`icu_normalizer`**: pre-processes text using ICU normalization.
+    - `name`: normalization form (default `nfkc_cf`). Options: `nfc`, `nfkc`, `nfkc_cf`, `nfd`, `nfkd`
+    - `mode`: normalization mode (default `compose`). Options: `compose`, `decompose`
+    - `unicode_set_filter`: specifies the character set to normalize (such as `[a-z]`)
 
-### 2. 分词器（tokenizer）
+### 2. Tokenizer
 
 ```sql
 CREATE INVERTED INDEX TOKENIZER IF NOT EXISTS x_tokenizer
@@ -86,27 +86,27 @@ PROPERTIES (
 );
 ```
 
-支持的分词器类型：
+Supported tokenizer types:
 
-| 类型 | 说明 | 主要参数 |
+| Type | Description | Main Parameters |
 | --- | --- | --- |
-| `standard` | 标准分词（遵循 Unicode 文本分割），适用于多数语言 | 无 |
-| `ngram` | 按 N 元组切分 | `min_ngram`、`max_ngram`、`token_chars` |
-| `edge_ngram` | 从词首起始位置生成 N 元组 | `min_ngram`、`max_ngram`、`token_chars` |
-| `keyword` | 整段文本作为一个词项输出，常与 token_filter 组合 | 无 |
-| `char_group` | 按给定字符切分 | `tokenize_on_chars` |
-| `basic` | 简单英文 / 数字 / 中文 / Unicode 分词 | `extra_chars` |
-| `icu` | ICU 国际化分词，支持多语言复杂脚本 | 无 |
+| `standard` | Standard tokenization (follows Unicode text segmentation), suitable for most languages | None |
+| `ngram` | Splits by N-grams | `min_ngram`, `max_ngram`, `token_chars` |
+| `edge_ngram` | Generates N-grams starting from the beginning of the word | `min_ngram`, `max_ngram`, `token_chars` |
+| `keyword` | Outputs the entire text as a single term, often combined with token_filter | None |
+| `char_group` | Splits by the given characters | `tokenize_on_chars` |
+| `basic` | Simple English / digit / Chinese / Unicode tokenization | `extra_chars` |
+| `icu` | ICU internationalized tokenization, supports complex scripts in multiple languages | None |
 
-参数说明：
+Parameter descriptions:
 
-- `min_ngram`：最小长度（默认 1）
-- `max_ngram`：最大长度（默认 2）
-- `token_chars`：保留字符类别（默认保留全部）。可选：`letter`、`digit`、`whitespace`、`punctuation`、`symbol`
-- `tokenize_on_chars`：字符列表或类别，类别支持 `whitespace`、`letter`、`digit`、`punctuation`、`symbol`、`cjk`
-- `extra_chars`：额外分割的 ASCII 字符（如 `[]().`）
+- `min_ngram`: minimum length (default 1)
+- `max_ngram`: maximum length (default 2)
+- `token_chars`: character categories to keep (default: keep all). Options: `letter`, `digit`, `whitespace`, `punctuation`, `symbol`
+- `tokenize_on_chars`: a character list or category. Categories support `whitespace`, `letter`, `digit`, `punctuation`, `symbol`, `cjk`
+- `extra_chars`: additional ASCII characters to split on (such as `[]().`)
 
-### 3. 词元过滤器（token_filter）
+### 3. Token Filter
 
 ```sql
 CREATE INVERTED INDEX TOKEN_FILTER IF NOT EXISTS x_token_filter
@@ -115,70 +115,70 @@ PROPERTIES (
 );
 ```
 
-支持的词元过滤器类型：
+Supported token filter types:
 
-| 类型 | 作用 |
+| Type | Purpose |
 | --- | --- |
-| `word_delimiter` | 在非字母数字字符处切分，并可执行标准化 |
-| `ascii_folding` | 将非 ASCII 字符映射为等效 ASCII |
-| `lowercase` | 将 token 文本转为小写 |
-| `icu_normalizer` | 使用 ICU 标准化对词元进行处理 |
+| `word_delimiter` | Splits at non-alphanumeric characters and can perform normalization |
+| `ascii_folding` | Maps non-ASCII characters to their ASCII equivalents |
+| `lowercase` | Converts token text to lowercase |
+| `icu_normalizer` | Processes tokens using ICU normalization |
 
-#### word_delimiter 详解
+#### word_delimiter Details
 
-默认行为：
+Default behavior:
 
-1. 使用非字母数字字符作为分隔符（例：`Super-Duper` → `Super`, `Duper`）
-2. 清除 token 首尾分隔符（例：`XL---42+'Autocoder'` → `XL`, `42`, `Autocoder`）
-3. 在大小写转换处切分（例：`PowerShot` → `Power`, `Shot`）
-4. 在字母与数字交界处切分（例：`XL500` → `XL`, `500`）
-5. 移除英文所有格 `'s`（例：`Neil's` → `Neil`）
+1. Uses non-alphanumeric characters as delimiters (for example: `Super-Duper` to `Super`, `Duper`)
+2. Removes leading and trailing delimiters from a token (for example: `XL---42+'Autocoder'` to `XL`, `42`, `Autocoder`)
+3. Splits at case transitions (for example: `PowerShot` to `Power`, `Shot`)
+4. Splits at the boundary between letters and digits (for example: `XL500` to `XL`, `500`)
+5. Removes the English possessive `'s` (for example: `Neil's` to `Neil`)
 
-可选参数：
+Optional parameters:
 
-| 参数 | 默认值 | 说明 |
+| Parameter | Default | Description |
 | --- | --- | --- |
-| `generate_number_parts` | `true` | 是否输出数字部分 |
-| `generate_word_parts` | `true` | 是否输出单词部分 |
-| `protected_words` | 无 | 受保护的词，不参与切分 |
-| `split_on_case_change` | `true` | 是否在大小写变化处切分 |
-| `split_on_numerics` | `true` | 是否在字母与数字交界处切分 |
-| `stem_english_possessive` | `true` | 是否移除英文所有格 `'s` |
-| `type_table` | 无 | 自定义字符类型映射表 |
+| `generate_number_parts` | `true` | Whether to output the numeric parts |
+| `generate_word_parts` | `true` | Whether to output the word parts |
+| `protected_words` | None | Protected words that are not split |
+| `split_on_case_change` | `true` | Whether to split at case changes |
+| `split_on_numerics` | `true` | Whether to split at the boundary between letters and digits |
+| `stem_english_possessive` | `true` | Whether to remove the English possessive `'s` |
+| `type_table` | None | Custom character type mapping table |
 
-`type_table` 支持映射类型：
+`type_table` supports the following mapping types:
 
-- `ALPHA`（字母）
-- `ALPHANUM`（字母数字）
-- `DIGIT`（数字）
-- `LOWER`（小写字母）
-- `SUBWORD_DELIM`（非字母数字分隔符）
-- `UPPER`（大写字母）
+- `ALPHA` (letter)
+- `ALPHANUM` (alphanumeric)
+- `DIGIT` (digit)
+- `LOWER` (lowercase letter)
+- `SUBWORD_DELIM` (non-alphanumeric delimiter)
+- `UPPER` (uppercase letter)
 
-示例：`["+ => ALPHA", "- => ALPHA"]` 可将 `+`、`-` 视为字母而不被切分。
+Example: `["+ => ALPHA", "- => ALPHA"]` treats `+` and `-` as letters so that they are not used as split points.
 
-#### icu_normalizer 参数
+#### icu_normalizer Parameters
 
-- `name`：标准化形式（默认 `nfkc_cf`）。可选：`nfc`、`nfkc`、`nfkc_cf`、`nfd`、`nfkd`
-- `unicode_set_filter`：指定需要标准化的字符集
+- `name`: normalization form (default `nfkc_cf`). Options: `nfc`, `nfkc`, `nfkc_cf`, `nfd`, `nfkd`
+- `unicode_set_filter`: specifies the character set to normalize
 
-### 4. 分析器（analyzer）
+### 4. Analyzer
 
-将上述组件组装成完整的分词管道：
+Assembles the components above into a complete tokenization pipeline:
 
 ```sql
 CREATE INVERTED INDEX ANALYZER IF NOT EXISTS x_analyzer
 PROPERTIES (
-    "tokenizer" = "x_tokenizer",            -- 单个分词器
-    "token_filter" = "x_filter1, x_filter2" -- 一个或多个 token_filter，按顺序执行
+    "tokenizer" = "x_tokenizer",            -- A single tokenizer
+    "token_filter" = "x_filter1, x_filter2" -- One or more token_filters, executed in order
 );
 ```
 
 ---
 
-## 在表中使用自定义分词
+## Using a Custom Analyzer in a Table
 
-通过索引 `PROPERTIES` 中的 `analyzer` 字段引用已创建的自定义分析器：
+Reference a created custom analyzer through the `analyzer` field in the index `PROPERTIES`:
 
 ```sql
 CREATE TABLE tbl (
@@ -189,27 +189,27 @@ CREATE TABLE tbl (
 table_properties;
 ```
 
-注意事项：
+Notes:
 
-1. 自定义分词在索引 `PROPERTIES` 中通过 `analyzer` 设置
-2. 与 `analyzer` 同时使用的 properties 仅有 `support_phrase`
+1. A custom analyzer is set in the index `PROPERTIES` through `analyzer`.
+2. The only property that can be used together with `analyzer` is `support_phrase`.
 
 ---
 
-## 一列多分词索引
+## Multiple Analyzer Indexes on a Single Column
 
-Doris 支持在同一列上创建多个使用不同分词器的倒排索引，使同一份数据可用不同分词策略检索。
+Doris supports creating multiple inverted indexes that use different tokenizers on the same column, so that the same data can be retrieved with different tokenization strategies.
 
-### 应用场景
+### Use Cases
 
-- **多语言支持**：在同一文本列上使用不同语言的分词器
-- **搜索精度与召回率平衡**：关键词分词器用于精确匹配，标准分词器用于模糊搜索
-- **自动补全**：edge_ngram 分词器用于前缀匹配，标准分词器用于常规搜索
+- **Multilingual support**: use tokenizers for different languages on the same text column.
+- **Balancing search precision and recall**: use a keyword tokenizer for exact matching and a standard tokenizer for fuzzy search.
+- **Auto-completion**: use an edge_ngram tokenizer for prefix matching and a standard tokenizer for regular search.
 
-### 创建多个索引
+### Creating Multiple Indexes
 
 ```sql
--- 1. 创建不同分词策略的分词器
+-- 1. Create tokenizers with different tokenization strategies
 CREATE INVERTED INDEX ANALYZER IF NOT EXISTS std_analyzer
 PROPERTIES ("tokenizer" = "standard", "token_filter" = "lowercase");
 
@@ -227,17 +227,17 @@ PROPERTIES (
 CREATE INVERTED INDEX ANALYZER IF NOT EXISTS ngram_analyzer
 PROPERTIES ("tokenizer" = "edge_ngram_tokenizer", "token_filter" = "lowercase");
 
--- 2. 在同一列上创建多个索引
+-- 2. Create multiple indexes on the same column
 CREATE TABLE articles (
     id INT,
     content TEXT,
-    -- 标准分词器用于分词搜索
+    -- Standard tokenizer for tokenized search
     INDEX idx_content_std (content) USING INVERTED
         PROPERTIES("analyzer" = "std_analyzer", "support_phrase" = "true"),
-    -- 关键词分词器用于精确匹配
+    -- Keyword tokenizer for exact matching
     INDEX idx_content_kw (content) USING INVERTED
         PROPERTIES("analyzer" = "kw_analyzer"),
-    -- edge n-gram 分词器用于自动补全
+    -- edge n-gram tokenizer for auto-completion
     INDEX idx_content_ngram (content) USING INVERTED
         PROPERTIES("analyzer" = "ngram_analyzer")
 ) ENGINE=OLAP
@@ -246,82 +246,82 @@ DISTRIBUTED BY HASH(id) BUCKETS 1
 PROPERTIES ("replication_allocation" = "tag.location.default: 1");
 ```
 
-### 查询时指定分词器
+### Specifying an Analyzer at Query Time
 
-使用 `USING ANALYZER` 子句指定使用哪个索引：
+Use the `USING ANALYZER` clause to specify which index to use:
 
 ```sql
--- 插入测试数据
+-- Insert test data
 INSERT INTO articles VALUES
     (1, 'hello world'),
     (2, 'hello'),
     (3, 'world'),
     (4, 'hello world test');
 
--- 分词搜索：匹配包含 'hello' 词项的行
--- 返回：1, 2, 4
+-- Tokenized search: matches rows containing the term 'hello'
+-- Returns: 1, 2, 4
 SELECT id FROM articles WHERE content MATCH 'hello' USING ANALYZER std_analyzer ORDER BY id;
 
--- 精确匹配：仅匹配精确的 'hello' 字符串
--- 返回：2
+-- Exact match: matches only the exact 'hello' string
+-- Returns: 2
 SELECT id FROM articles WHERE content MATCH 'hello' USING ANALYZER kw_analyzer ORDER BY id;
 
--- 使用 edge n-gram 进行前缀匹配
--- 返回：1, 2, 4（所有以 'hel' 开头的行）
+-- Use edge n-gram for prefix matching
+-- Returns: 1, 2, 4 (all rows starting with 'hel')
 SELECT id FROM articles WHERE content MATCH 'hel' USING ANALYZER ngram_analyzer ORDER BY id;
 ```
 
-也可直接使用内置分词器：
+You can also use built-in tokenizers directly:
 
 ```sql
 SELECT * FROM articles WHERE content MATCH 'hello' USING ANALYZER standard;
 SELECT * FROM articles WHERE content MATCH 'hello' USING ANALYZER none;
-SELECT * FROM articles WHERE content MATCH '你好' USING ANALYZER chinese;
+SELECT * FROM articles WHERE content MATCH 'Hello' USING ANALYZER chinese;
 ```
 
-### 为已有表添加索引
+### Adding an Index to an Existing Table
 
 ```sql
--- 添加使用不同分词器的新索引
+-- Add a new index that uses a different tokenizer
 ALTER TABLE articles ADD INDEX idx_content_chinese (content)
 USING INVERTED PROPERTIES("parser" = "chinese");
 
--- 等待 schema change 完成
+-- Wait for the schema change to complete
 SHOW ALTER TABLE COLUMN WHERE TableName='articles';
 ```
 
-### 构建索引
+### Building an Index
 
-添加索引后，需要为已有数据构建索引：
+After adding an index, you must build the index for existing data:
 
 ```sql
--- 构建指定索引（非云模式）
+-- Build a specific index (non-cloud mode)
 BUILD INDEX idx_content_chinese ON articles;
 
--- 构建所有索引（云模式）
+-- Build all indexes (cloud mode)
 BUILD INDEX ON articles;
 
--- 查看构建进度
+-- Check the build progress
 SHOW BUILD INDEX WHERE TableName='articles';
 ```
 
-### 关键说明
+### Key Notes
 
-1. **分词器身份识别**：两个具有相同 `tokenizer` 和 `token_filter` 配置的分词器被视为相同。不能在同一列上创建具有相同分词器身份的多个索引。
-2. **索引选择行为**：
-    - 使用 `USING ANALYZER` 时，如果指定分词器的索引存在且已构建，则使用该索引
-    - 如果索引未构建，查询会降级到非索引路径（结果正确，但性能较慢）
-    - 未使用 `USING ANALYZER` 时，可能使用任意可用的索引
-3. **性能考虑**：
-    - 每增加一个索引都会增加存储空间和写入开销
-    - 根据实际查询模式选择分词器
-    - 如果查询模式可预测，考虑使用较少的索引
+1. **Tokenizer identity**: two tokenizers with the same `tokenizer` and `token_filter` configuration are considered identical. You cannot create multiple indexes on the same column that share the same tokenizer identity.
+2. **Index selection behavior**:
+    - When `USING ANALYZER` is specified, the index for the specified tokenizer is used if it exists and has been built.
+    - If the index is not built, the query falls back to the non-index path (results are correct, but performance is slower).
+    - When `USING ANALYZER` is not specified, any available index may be used.
+3. **Performance considerations**:
+    - Each additional index increases storage space and write overhead.
+    - Choose tokenizers based on your actual query patterns.
+    - If your query patterns are predictable, consider using fewer indexes.
 
 ---
 
-## 管理与维护
+## Management and Maintenance
 
-### 查看
+### View
 
 ```sql
 SHOW INVERTED INDEX TOKENIZER;
@@ -329,7 +329,7 @@ SHOW INVERTED INDEX TOKEN_FILTER;
 SHOW INVERTED INDEX ANALYZER;
 ```
 
-### 删除
+### Delete
 
 ```sql
 DROP INVERTED INDEX TOKENIZER IF EXISTS x_tokenizer;
@@ -339,11 +339,11 @@ DROP INVERTED INDEX ANALYZER IF EXISTS x_analyzer;
 
 ---
 
-## 完整示例
+## Complete Examples
 
-### 示例 1：电话号码前缀匹配
+### Example 1: Phone Number Prefix Matching
 
-使用 `edge_ngram` 对电话号码生成所有前缀片段，便于实现「输入即搜」。
+Use `edge_ngram` to generate all prefix fragments of a phone number, enabling search-as-you-type.
 
 ```sql
 CREATE INVERTED INDEX TOKENIZER IF NOT EXISTS edge_ngram_phone_number_tokenizer
@@ -375,7 +375,7 @@ PROPERTIES (
 SELECT tokenize('13891972631', '"analyzer"="edge_ngram_phone_number"');
 ```
 
-返回结果：
+Result:
 
 ```json
 [
@@ -390,9 +390,9 @@ SELECT tokenize('13891972631', '"analyzer"="edge_ngram_phone_number"');
 ]
 ```
 
-### 示例 2：复杂英文文本精细分词
+### Example 2: Fine-Grained Tokenization for Complex English Text
 
-使用 `standard` 分词器配合 `word_delimiter` 实现更精细的分词，并叠加大小写归一化与 ASCII 折叠。
+Use the `standard` tokenizer together with `word_delimiter` for finer-grained tokenization, plus case normalization and ASCII folding.
 
 ```sql
 CREATE INVERTED INDEX TOKEN_FILTER IF NOT EXISTS word_splitter
@@ -424,7 +424,7 @@ PROPERTIES (
 SELECT tokenize('The server at IP 192.168.1.15 sent a confirmation to user_123@example.com, requiring a quickResponse before the deadline.', '"analyzer"="lowercase_delimited"');
 ```
 
-返回结果：
+Result:
 
 ```json
 [
@@ -453,9 +453,9 @@ SELECT tokenize('The server at IP 192.168.1.15 sent a confirmation to user_123@e
 ]
 ```
 
-### 示例 3：保留原词的精确匹配
+### Example 3: Exact Match with Original Term Preserved
 
-使用 `keyword` 分词器保留整段文本，再通过 `lowercase`、`asciifolding` 做归一化，常用于精确匹配大小写不敏感的字符串。
+Use the `keyword` tokenizer to keep the entire text intact, then apply `lowercase` and `asciifolding` for normalization. This is commonly used for case-insensitive exact matching of strings.
 
 ```sql
 CREATE INVERTED INDEX ANALYZER IF NOT EXISTS keyword_lowercase
@@ -479,7 +479,7 @@ PROPERTIES (
 SELECT tokenize('hÉllo World', '"analyzer"="keyword_lowercase"');
 ```
 
-返回结果：
+Result:
 
 ```json
 [
@@ -489,17 +489,19 @@ SELECT tokenize('hÉllo World', '"analyzer"="keyword_lowercase"');
 
 ---
 
-## 使用限制
+## Limitations
 
-1. `tokenizer` 和 `token_filter` 中的 `type` 与参数只能填写当前支持的分词器和词元过滤器，否则建表失败。
-2. 只有在没有任何表使用某个 `analyzer` 时，才能删除该 `analyzer`。
-3. 只有在没有任何 `analyzer` 使用某个 `tokenizer` 或 `token_filter` 时，才能删除它们。
-4. 自定义分词语法在执行 10 秒后同步到 BE，之后导入不会报错。
+1. The `type` and parameters in `tokenizer` and `token_filter` can only use currently supported tokenizers and token filters; otherwise, table creation fails.
+2. An `analyzer` can be dropped only when no table is using it.
+3. A `tokenizer` or `token_filter` can be dropped only when no `analyzer` is using it.
+4. Custom analyzer DDL is synchronized to the BE 10 seconds after execution; subsequent imports do not produce errors.
 
 ---
 
-## 注意事项
+## Notes
 
-1. 自定义分词 `analyzer` 嵌套多个组件可能导致分词性能降低。
-2. `select tokenize` 分词函数支持自定义分词，可用于调试切分效果。
-3. 预定义分词 `built_in_analyzer` 与自定义分词 `analyzer` 在同一索引上只能存在一个。
+1. Nesting multiple components in a custom `analyzer` may degrade tokenization performance.
+2. The `select tokenize` tokenization function supports custom analyzers and can be used to debug tokenization results.
+3. Only one of the predefined `built_in_analyzer` and a custom `analyzer` can exist on the same index.
+</content>
+</invoke>

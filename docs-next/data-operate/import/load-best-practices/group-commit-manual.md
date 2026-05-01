@@ -1,44 +1,66 @@
 ---
 {
-    "title": "High Concurrency LOAD Optimization(Group Commit)",
+    "title": "High-Concurrency Load Optimization (Group Commit)",
     "language": "en",
-    "description": "In high-frequency small batch write scenarios, traditional loading methods have the following issues:"
+    "description": "Doris Group Commit merges high-frequency, small-batch write transactions to reduce FE parsing and version-count pressure, improving the high-concurrency performance of INSERT and Stream Load.",
+    "keywords": [
+        "Group Commit",
+        "High-concurrency load",
+        "High-frequency small-batch writes",
+        "INSERT INTO optimization",
+        "Stream Load optimization",
+        "Doris load performance",
+        "PreparedStatement",
+        "WAL"
+    ]
 }
 ---
 
-In high-frequency small batch write scenarios, traditional loading methods have the following issues:
+<!-- Knowledge type: Feature capability + Operational steps + Configuration parameters -->
+<!-- Applicable scenarios: High-concurrency small-batch writes / Real-time load / Performance tuning -->
 
-- Each load creates an independent transaction, requiring FE to parse SQL and generate execution plans, affecting overall performance
-- Each load generates a new version, causing rapid version growth and increasing background compaction pressure
+In high-frequency, small-batch write scenarios, traditional load methods have the following problems:
 
-To solve these problems, Doris introduced the Group Commit mechanism. Group Commit is not a new loading method, but rather an optimization extension of existing loading methods, mainly targeting:
+- Each load creates an independent transaction, and each one has to go through SQL parsing and execution-plan generation on the FE, which hurts overall performance.
+- Each load generates a new version, causing the version count to grow rapidly and increasing the pressure of background Compaction.
 
-- `INSERT INTO tbl VALUES(...)` statements
+To solve these problems, Doris introduces the Group Commit mechanism. Group Commit is not a new load method; it is an optimized extension of existing load methods, and mainly targets:
+
+- The `INSERT INTO tbl VALUES(...)` statement
 - Stream Load
 
-By merging multiple small batch loads into one large transaction commit in the background, it significantly improves high-concurrency small batch write performance. Additionally, using Group Commit with PreparedStatement can achieve even higher performance improvements.
+By merging multiple small-batch loads into a single large transaction commit in the background, Group Commit significantly improves the performance of high-concurrency, small-batch writes. Combining Group Commit with PreparedStatement yields even higher performance gains.
+
+## Applicable Scenarios and Selection
+
+| Scenario | Recommended mode | Description |
+| --- | --- | --- |
+| High-concurrency writes that require immediate visibility | `sync_mode` | Multiple loads are merged into a single transaction and the call returns after commit. |
+| Latency-sensitive, high-frequency writes | `async_mode` | Data is first written to the WAL and the call returns immediately; the commit happens asynchronously in the background. |
+| Group Commit not needed | `off_mode` | Disables Group Commit and uses the regular load path. |
 
 ## Group Commit Modes
 
-Group Commit has three modes:
+Group Commit writes have three modes:
 
-* Off Mode (`off_mode`)
+- **Off mode (`off_mode`)**
 
-    Group Commit is disabled.
+    Disables Group Commit.
 
-* Synchronous Mode (`sync_mode`)
+- **Sync mode (`sync_mode`)**
 
-    Doris commits multiple loads in one transaction based on load and table's `group_commit_interval` property, returning after transaction commit. This is suitable for high-concurrency write scenarios requiring immediate data visibility after loading.
+    Doris merges multiple loads into a single transaction commit based on load and on the table's `group_commit_interval` property, and each load returns after the transaction commits. This mode fits high-concurrency write scenarios that require data to be visible immediately after the load completes.
 
-* Asynchronous Mode (`async_mode`)
+- **Async mode (`async_mode`)**
 
-    Doris first writes data to WAL (Write Ahead Log), then returns immediately. Doris asynchronously commits data based on load and table's `group_commit_interval` property, making data visible after commit. To prevent WAL from occupying too much disk space, it automatically switches to `sync_mode` for large single loads. This is suitable for write latency-sensitive and high-frequency write scenarios.
+    Doris first writes the data to the WAL (`Write Ahead Log`), and the load returns immediately. Doris then commits the data asynchronously based on load and on the table's `group_commit_interval` property, and the data becomes visible after the commit. To prevent the WAL from taking up too much disk space, when a single load brings in a large amount of data, Doris automatically switches to `sync_mode`. This mode fits latency-sensitive and high-frequency write scenarios.
 
-    WAL count can be viewed through FE http interface as shown [here](../../admin-manual/open-api/fe-http/get-wal-size-action), or by searching for `wal` keyword in BE metrics.
+    You can check the number of WAL files through the FE HTTP interface; see [here](../../../admin-manual/open-api/fe-http/get-wal-size-action) for details. You can also search for the keyword `wal` in the BE metrics.
 
-## How to Use Group Commit
+## Quick Start
 
-Assuming the table structure is:
+The following examples all use this table schema:
+
 ```sql
 CREATE TABLE `dt` (
     `id` int(11) NOT NULL,
@@ -55,12 +77,12 @@ PROPERTIES (
 ### Table Property Configuration
 
 :::info
-`group_commit_mode` table property is supported from **4.1.0**.
+The `group_commit_mode` table property is supported starting from version **4.1.0**.
 :::
 
-You can set the default Group Commit mode at the table level. When Stream Load does not set the `group_commit` HTTP Header, the mode from the table property will be used.
+You can set a default Group Commit mode at the table level. When a Stream Load does not set the `group_commit` HTTP Header, the mode in the table property is used.
 
-**Configure during table creation:**
+**1. Configure on table creation:**
 
 ```sql
 CREATE TABLE `dt` (
@@ -76,17 +98,17 @@ PROPERTIES (
 );
 ```
 
-**Modify table property:**
+**2. Modify the table property:**
 
 ```sql
-# Modify to synchronous mode
+# Change to sync mode
 ALTER TABLE dt SET ("group_commit_mode" = "sync_mode");
 
 # Disable Group Commit
 ALTER TABLE dt SET ("group_commit_mode" = "off_mode");
 ```
 
-**View table property:**
+**3. View the table property:**
 
 `SHOW CREATE TABLE` displays the `group_commit_mode` property (unless the value is `off_mode`):
 
@@ -109,39 +131,109 @@ PROPERTIES (
 1 row in set (0.00 sec)
 ```
 
-**Priority Description:**
+**4. Priority:**
 
-- For Stream Load: If the `group_commit` HTTP Header is set, the Header value takes priority; otherwise, the table property value is used
-- For INSERT INTO VALUES: Session variable `group_commit` has higher priority than table property
+| Load method | Priority (high to low) |
+| --- | --- |
+| Stream Load | `group_commit` HTTP Header > table property `group_commit_mode` |
+| INSERT INTO VALUES | session variable `group_commit` > table property `group_commit_mode` |
 
+## Usage
 
-### Using JDBC
+### INSERT INTO VALUES
 
-When users write using JDBC's `insert into values` method, to reduce SQL parsing and planning overhead, we support MySQL protocol's `PreparedStatement` feature on the FE side. When using `PreparedStatement`, SQL and its load plan are cached in session-level memory cache, and subsequent loads directly use the cached objects, reducing FE CPU pressure. Here's an example of using `PreparedStatement` in JDBC:
+Enable Group Commit by setting the session variable `group_commit`. The session variable takes priority over the table property.
 
-**1. Set JDBC URL and enable Prepared Statement on Server side**
+**Async mode:**
 
+```sql
+# Set the session variable to enable group commit (default is off_mode), using async mode
+mysql> set group_commit = async_mode;
+
+# The returned label starts with group_commit, which tells you that group commit is in use
+mysql> insert into dt values(1, 'Bob', 90), (2, 'Alice', 99);
+Query OK, 2 rows affected (0.05 sec)
+{'label':'group_commit_a145ce07f1c972fc-bd2c54597052a9ad', 'status':'PREPARE', 'txnId':'181508'}
+
+# This label and txn_id match the previous one, indicating that the inserts are batched into the same load task
+mysql> insert into dt(id, name) values(3, 'John');
+Query OK, 1 row affected (0.01 sec)
+{'label':'group_commit_a145ce07f1c972fc-bd2c54597052a9ad', 'status':'PREPARE', 'txnId':'181508'}
+
+# The data is not immediately queryable
+mysql> select * from dt;
+Empty set (0.01 sec)
+
+# After 10 seconds, the data is queryable. The data visibility delay is controlled by the table property group_commit_interval.
+mysql> select * from dt;
++------+-------+-------+
+| id   | name  | score |
++------+-------+-------+
+|    1 | Bob   |    90 |
+|    2 | Alice |    99 |
+|    3 | John  |  NULL |
++------+-------+-------+
+3 rows in set (0.02 sec)
 ```
+
+**Sync mode:**
+
+```sql
+# Set the session variable to enable group commit (default is off_mode), using sync mode
+mysql> set group_commit = sync_mode;
+
+# The returned label starts with group_commit, which tells you that group commit is in use. The load takes at least the value of the table property group_commit_interval.
+mysql> insert into dt values(4, 'Bob', 90), (5, 'Alice', 99);
+Query OK, 2 rows affected (10.06 sec)
+{'label':'group_commit_d84ab96c09b60587_ec455a33cb0e9e87', 'status':'PREPARE', 'txnId':'3007', 'query_id':'fc6b94085d704a94-a69bfc9a202e66e2'}
+
+# The data is queryable immediately
+mysql> select * from dt;
++------+-------+-------+
+| id   | name  | score |
++------+-------+-------+
+|    1 | Bob   |    90 |
+|    2 | Alice |    99 |
+|    3 | John  |  NULL |
+|    4 | Bob   |    90 |
+|    5 | Alice |    99 |
++------+-------+-------+
+5 rows in set (0.03 sec)
+```
+
+**Off mode:**
+
+```sql
+mysql> set group_commit = off_mode;
+```
+
+### Using JDBC (PreparedStatement)
+
+When you write data using JDBC `insert into values`, to reduce the overhead of SQL parsing and plan generation, Doris supports the MySQL protocol `PreparedStatement` feature on the FE side. With `PreparedStatement`, the SQL and its load plan are cached in a session-level memory cache, and subsequent loads use the cached object directly, which lowers FE CPU usage.
+
+**1. Set the JDBC URL and enable PreparedStatement on the server side:**
+
+```text
 url = jdbc:mysql://127.0.0.1:9030/db?useServerPrepStmts=true&useLocalSessionState=true&rewriteBatchedStatements=true&cachePrepStmts=true&prepStmtCacheSqlLimit=99999&prepStmtCacheSize=500
 ```
 
-**2. Configure `group_commit` session variable in one of two ways:**
+**2. Configure the `group_commit` session variable in one of two ways:**
 
-* Through JDBC url by adding `sessionVariables=group_commit=async_mode`
+- Set it via the JDBC URL by adding `sessionVariables=group_commit=async_mode`:
 
-```
-url = jdbc:mysql://127.0.0.1:9030/db?useServerPrepStmts=true&useLocalSessionState=true&rewriteBatchedStatements=true&cachePrepStmts=true&prepStmtCacheSqlLimit=99999&prepStmtCacheSize=500&sessionVariables=group_commit=async_mode,enable_nereids_planner=false
-```
+    ```text
+    url = jdbc:mysql://127.0.0.1:9030/db?useServerPrepStmts=true&useLocalSessionState=true&rewriteBatchedStatements=true&cachePrepStmts=true&prepStmtCacheSqlLimit=99999&prepStmtCacheSize=500&sessionVariables=group_commit=async_mode,enable_nereids_planner=false
+    ```
 
-* Through SQL execution
+- Set it by executing a SQL statement:
 
-```
-try (Statement statement = conn.createStatement()) {
-    statement.execute("SET group_commit = async_mode;");
-}
-```
+    ```java
+    try (Statement statement = conn.createStatement()) {
+        statement.execute("SET group_commit = async_mode;");
+    }
+    ```
 
-**3. Use `PreparedStatement`**
+**3. Use `PreparedStatement` for batch writes:**
 
 ```java
 private static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
@@ -180,18 +272,20 @@ private static void groupCommitInsertBatch() throws Exception {
 }
 ```
 
-Note: Since high-frequency insert into statements will print large amounts of audit logs affecting final performance, printing prepared statement audit logs is disabled by default. You can control whether to print prepared statement audit logs through session variable settings.
+:::tip
+Because high-frequency `INSERT INTO` statements print a large amount of audit log, which has some impact on final performance, audit logging for prepared statements is disabled by default. You can control whether to print audit log for prepared statements by setting a session variable.
 
 ```sql
-# Configure session variable to enable printing prepared statement audit log, default is false
+# Set the session variable to enable audit logging for prepared statements. The default value is false, which disables audit logging for prepared statements.
 set enable_prepared_stmt_audit_log=true;
 ```
+:::
 
-For more about **JDBC** usage, refer to [Using Insert Method to Synchronize Data](./import-way/insert-into-manual.md).
+For more details on JDBC usage, see [Synchronizing Data with INSERT](../import-way/insert-into-manual.md).
 
-### Using Golang for Group Commit
+### Batching with the Golang Client
 
-Since Golang has limited support for prepared statements, we can improve Group Commit performance through manual client-side batching. Here's a sample program:
+Golang has limited support for prepared statements, so you can batch on the client side manually to improve Group Commit performance. The following is an example program:
 
 ```Golang
 package main
@@ -294,90 +388,25 @@ func logInsertStatistics() {
 
 ```
 
-### INSERT INTO VALUES
-
-Enable Group Commit by setting the Session variable `group_commit`. Session variables have higher priority than table properties.
-
-* Asynchronous Mode
-
-```sql
-# Configure session variable to enable group commit (default is off_mode), enable asynchronous mode
-mysql> set group_commit = async_mode;
-
-# The returned label is prefixed with group_commit, indicating whether group commit is used
-mysql> insert into dt values(1, 'Bob', 90), (2, 'Alice', 99);
-Query OK, 2 rows affected (0.05 sec)
-{'label':'group_commit_a145ce07f1c972fc-bd2c54597052a9ad', 'status':'PREPARE', 'txnId':'181508'}
-
-# The label, txn_id, and previous one are the same, indicating that they are accumulated into the same import task
-mysql> insert into dt(id, name) values(3, 'John');
-Query OK, 1 row affected (0.01 sec)
-{'label':'group_commit_a145ce07f1c972fc-bd2c54597052a9ad', 'status':'PREPARE', 'txnId':'181508'}
-
-# Cannot query immediately
-mysql> select * from dt;
-Empty set (0.01 sec)
-
-# 10 seconds later, data can be queried, and data visibility delay can be controlled by table attribute group_commit_interval.
-mysql> select * from dt;
-+------+-------+-------+
-| id   | name  | score |
-+------+-------+-------+
-|    1 | Bob   |    90 |
-|    2 | Alice |    99 |
-|    3 | John  |  NULL |
-+------+-------+-------+
-3 rows in set (0.02 sec)
-```
-
-* Synchronous Mode
-
-```sql
-# Configure session variable to enable group commit (default is off_mode), enable synchronous mode
-mysql> set group_commit = sync_mode;
-
-# The returned label is prefixed with group_commit, indicating whether group commit is used, and import time is at least table attribute group_commit_interval.
-mysql> insert into dt values(4, 'Bob', 90), (5, 'Alice', 99);
-Query OK, 2 rows affected (10.06 sec)
-{'label':'group_commit_d84ab96c09b60587_ec455a33cb0e9e87', 'status':'PREPARE', 'txnId':'3007', 'query_id':'fc6b94085d704a94-a69bfc9a202e66e2'}
-
-# Data can be read immediately
-mysql> select * from dt;
-+------+-------+-------+
-| id   | name  | score |
-+------+-------+-------+
-|    1 | Bob   |    90 |
-|    2 | Alice |    99 |
-|    3 | John  |  NULL |
-|    4 | Bob   |    90 |
-|    5 | Alice |    99 |
-+------+-------+-------+
-5 rows in set (0.03 sec)
-```
-
-* Off Mode
-
-```sql
-mysql> set group_commit = off_mode;
-```
-
 ### Stream Load
 
-When importing via Stream Load, you can enable Group Commit by setting the `group_commit` parameter in the HTTP Header.
+When loading data through Stream Load, you can enable Group Commit by setting the `group_commit` parameter in the HTTP Header.
 
-**Note**: If the `group_commit` Header is not set but `group_commit_mode` is configured in the table property, the table property mode will be used automatically.
+:::note
+If the `group_commit` Header is not set and `group_commit_mode` is configured in the table properties, the mode in the table property is used automatically.
+:::
 
-Assuming `data.csv` contains:
+Assume the contents of `data.csv` are:
 
-```sql
+```text
 6,Amy,60
 7,Ross,98
 ```
 
-* Asynchronous Mode
+**Async mode:**
 
-```sql
-# Import with "group_commit:async_mode" configuration in header
+```shell
+# Add the "group_commit:async_mode" header during load
 
 curl --location-trusted -u {user}:{passwd} -T data.csv -H "group_commit:async_mode"  -H "column_separator:,"  http://{fe_host}:{http_port}/api/db/dt/_stream_load
 {
@@ -398,14 +427,14 @@ curl --location-trusted -u {user}:{passwd} -T data.csv -H "group_commit:async_mo
     "WriteDataTimeMs": 26
 }
 
-# The returned GroupCommit is true, indicating that the group commit process is entered
-# The returned Label is prefixed with group_commit, indicating the label associated with the import that truly consumes data
+# The returned GroupCommit is true, which means the load entered the group commit path
+# The returned Label starts with group_commit and is the label associated with the load that actually consumes the data
 ```
 
-* Synchronous Mode
+**Sync mode:**
 
-```sql
-# Import with "group_commit:sync_mode" configuration in header
+```shell
+# Add the "group_commit:sync_mode" header during load
 
 curl --location-trusted -u {user}:{passwd} -T data.csv -H "group_commit:sync_mode"  -H "column_separator:,"  http://{fe_host}:{http_port}/api/db/dt/_stream_load
 {
@@ -426,334 +455,358 @@ curl --location-trusted -u {user}:{passwd} -T data.csv -H "group_commit:sync_mod
     "WriteDataTimeMs": 10038
 }
 
-# The returned GroupCommit is true, indicating that the group commit process is entered
-# The returned Label is prefixed with group_commit, indicating the label associated with the import that truly consumes data
+# The returned GroupCommit is true, which means the load entered the group commit path
+# The returned Label starts with group_commit and is the label associated with the load that actually consumes the data
 ```
 
-About Stream Load usage, please refer to [Stream Load](./import-way/stream-load-manual).
+For more details on Stream Load syntax and best practices, see [Stream Load](../import-way/stream-load-manual).
 
+## Auto-Commit Conditions
 
-Data is automatically committed when either time interval (default 10 seconds) or data volume (default 64 MB) condition is met. These parameters should be used together and tuned based on actual scenarios.
+<!-- Knowledge type: Configuration parameters -->
 
-### Modifying Commit Interval
+Data is auto-committed when either the time interval (default 10 seconds) or the data size (default 64 MB) condition is met. These two parameters work together; tune them based on the actual scenario.
 
-Default commit interval is 10 seconds, users can adjust through table configuration:
+### Adjusting the Commit Interval
+
+The default commit interval is 10 seconds. You can adjust it by modifying the table configuration:
 
 ```sql
-# Modify commit interval to 2 seconds
+# Change the commit interval to 2 seconds
 ALTER TABLE dt SET ("group_commit_interval_ms" = "2000");
 ```
 
-**Parameter Adjustment Recommendations**:
-- Shorter intervals (e.g., 2 seconds):
-  - Pros: Lower data visibility latency, suitable for scenarios requiring high real-time performance
-  - Cons: More commits, faster version growth, higher background compaction pressure
+**Tuning suggestions:**
 
-- Longer intervals (e.g., 30 seconds):
-  - Pros: Larger commit batches, slower version growth, lower system overhead
-  - Cons: Higher data visibility latency
+| Example value | Pros | Cons |
+| --- | --- | --- |
+| Shorter interval (such as 2 seconds) | Lower data visibility delay, suitable for scenarios that require higher real-time visibility | More frequent commits, faster version-count growth, and higher background Compaction pressure |
+| Longer interval (such as 30 seconds) | Larger commit batches, slower version-count growth, lower system overhead | Higher data visibility delay |
 
-Recommend setting based on business tolerance for data visibility delay. If system pressure is high, consider increasing the interval.
+Set the value based on how much visibility delay your business can tolerate. If the system is under heavy load, you can increase the interval as appropriate.
 
-### Modifying Commit Data Volume
+### Adjusting the Commit Data Size
 
-Group Commit's default commit data volume is 64 MB, users can adjust through table configuration:
+The default commit data size for Group Commit is 64 MB. You can adjust it by modifying the table configuration:
 
 ```sql
-# Modify commit data volume to 128MB
+# Change the commit data size to 128MB
 ALTER TABLE dt SET ("group_commit_data_bytes" = "134217728");
 ```
 
-**Parameter Adjustment Recommendations**:
-- Smaller threshold (e.g., 32MB):
-  - Pros: Less memory usage, suitable for resource-constrained environments
-  - Cons: Smaller commit batches, potentially limited throughput
+**Tuning suggestions:**
 
-- Larger threshold (e.g., 256MB):
-  - Pros: Higher batch commit efficiency, greater system throughput
-  - Cons: Uses more memory
+| Example value | Pros | Cons |
+| --- | --- | --- |
+| Smaller threshold (such as 32 MB) | Lower memory footprint, suitable for resource-constrained environments | Smaller commit batches, throughput may be limited |
+| Larger threshold (such as 256 MB) | Higher batch-commit efficiency and higher system throughput | Higher memory footprint |
 
-Recommend balancing based on system memory resources and data reliability requirements. If memory is sufficient and higher throughput is desired, consider increasing to 128MB or more.
+Choose a value that balances memory resources against data reliability requirements. If memory is sufficient and you want higher throughput, you can increase the value to 128 MB or larger.
 
+## Related System Configuration
 
 ### BE Configuration
 
-1. `group_commit_wal_path`
+**`group_commit_wal_path`**
 
-   * Description: Directory for storing group commit WAL files
+- Description: The directory where Group Commit stores WAL files.
+- Default value: A directory named `wal` is created under each directory configured in `storage_root_path`. Configuration example:
 
-   * Default: Creates a `wal` directory under each configured `storage_root_path`. Configuration example:
-  
-   ```
-   group_commit_wal_path=/data1/storage/wal;/data2/storage/wal;/data3/storage/wal
-   ```
+    ```text
+    group_commit_wal_path=/data1/storage/wal;/data2/storage/wal;/data3/storage/wal
+    ```
 
-## Usage Limitations
+## Limitations
 
-* **Group Commit Limitations**
+### Group Commit Fallback Scenarios
 
-  * `INSERT INTO VALUES` statements degrade to non-Group Commit mode in these cases:
-    - Transaction writes (`Begin; INSERT INTO VALUES; COMMIT`)
-    - Specified Label (`INSERT INTO dt WITH LABEL {label} VALUES`)
-    - VALUES containing expressions (`INSERT INTO dt VALUES (1 + 100)`)
-    - Column update writes
-    - Table doesn't support lightweight mode changes
+| Load method | Conditions that fall back to non-Group Commit |
+| --- | --- |
+| `INSERT INTO VALUES` | Using transactional writes (`Begin; INSERT INTO VALUES; COMMIT`)<br/>Specifying a label (`INSERT INTO dt WITH LABEL {label} VALUES`)<br/>VALUES contains an expression (`INSERT INTO dt VALUES (1 + 100)`)<br/>Column-update writes<br/>Tables that do not support lightweight schema change |
+| `Stream Load` | Using two-phase commit<br/>Specifying a label (`-H "label:my_label"`)<br/>Column-update writes<br/>Tables that do not support lightweight schema change |
 
-  * `Stream Load` degrades to non-Group Commit mode in these cases:
-    - Using two-phase commit
-    - Specified Label (`-H "label:my_label"`)
-    - Column update writes
-    - Table doesn't support lightweight mode changes
+### Unique Model
 
-* **Unique Model**
-  - Group Commit doesn't guarantee commit order, recommend using Sequence column to ensure data consistency.
+- Group Commit does not guarantee commit order. Use a Sequence column to ensure data consistency.
 
-* **WAL Limitations**
-  - `async_mode` writes data to WAL, deletes after success, recovers through WAL on failure.
-  - WAL files are stored with a single replica on one BE, disk damage or accidental file deletion may cause data loss.
-  - When offlining BE nodes, use `DECOMMISSION` command to prevent data loss.
-  - `async_mode` switches to `sync_mode` in these cases:
-    - Load data volume too large (exceeds 80% of WAL single directory space)
-    - Unknown data volume chunked stream load
-    - Insufficient disk space
-  - During heavyweight Schema Change, Group Commit writes are rejected, client needs to retry.
+### WAL Limitations
+
+- `async_mode` writes data to the WAL, deletes it on success, and recovers from the WAL on failure.
+- WAL files are stored as a single replica. If the corresponding disk is damaged or the file is deleted accidentally, data may be lost.
+- When taking a BE node offline, use the `DECOMMISSION` command to prevent data loss.
+- `async_mode` automatically switches to `sync_mode` in the following cases:
+    - The single load contains too much data (more than 80% of the space of a single WAL directory)
+    - Chunked Stream Load with an unknown data size
+    - Insufficient available disk space
+- During a heavyweight Schema Change, Group Commit writes are rejected and the client needs to retry.
 
 ## Performance
 
-We have separately tested the write performance of group commit in high-concurrency scenarios with small data volumes using `Stream Load` and `JDBC` (in `async mode`).
+The write performance of `group commit` (using `async_mode`) under high-concurrency, small-data-volume scenarios was tested with `Stream Load` and `JDBC`.
 
-### Stream Load
+### Stream Load Log Scenario Test
 
-#### Environment
+**Machine configuration:**
 
-* 1 Front End (FE) server: Alibaba Cloud with 8-core CPU, 16GB RAM, and one 100GB ESSD PL1 SSD.
+- 1 FE: Alibaba Cloud, 8-core CPU, 16 GB memory, 1 x 100 GB ESSD PL1 cloud disk
+- 3 BEs: Alibaba Cloud, 16-core CPU, 64 GB memory, 1 x 1 TB ESSD PL1 cloud disk
+- 1 test client: Alibaba Cloud, 16-core CPU, 64 GB memory, 1 x 100 GB ESSD PL1 cloud disk
+- Test version: Doris-3.0.1
 
-* 3 Backend (BE) servers: Alibaba Cloud with 16-core CPU, 64GB RAM, and one 1TB ESSD PL1 SSD.
+**Dataset:**
 
-* 1 Test Client: Alibaba Cloud with 16-core CPU, 64GB RAM, and one 100GB ESSD PL1 SSD.
+- `httplogs` dataset, 31 GB and 247 million rows in total
 
-* The version for testing is Doris-3.0.1.
+**Test tool:**
 
-#### DataSet
+- [doris-streamloader](../../../connection-integration/data-integration/doris-streamloader.md)
 
-* `httplogs`, 31 GB, 247249096 (247 million) rows
+**Test method:**
 
-#### Test Tool
+- Compare `non-group_commit` mode and `group_commit` `async_mode`, with different per-concurrency data sizes and concurrency levels, loading `247249096` rows.
 
-* [doris-streamloader](../../ecosystem/doris-streamloader.md)
+**Test results:**
 
-#### Test Method
+| Load method | Per-concurrency data size | Concurrency | Time (seconds) | Load rate (rows/second) | Load throughput (MB/second) |
+| --- | --- | --- | --- | --- | --- |
+| `group_commit` | 10 KB | 10 | 2204 | 112,181 | 14.8 |
+| `group_commit` | 10 KB | 30 | 2176 | 113,625 | 15.0 |
+| `group_commit` | 100 KB | 10 | 283 | 873,671 | 115.1 |
+| `group_commit` | 100 KB | 30 | 244 | 1,013,315 | 133.5 |
+| `group_commit` | 500 KB | 10 | 125 | 1,977,992 | 260.6 |
+| `group_commit` | 500 KB | 30 | 122 | 2,026,631 | 267.1 |
+| `group_commit` | 1 MB | 10 | 119 | 2,077,723 | 273.8 |
+| `group_commit` | 1 MB | 30 | 119 | 2,077,723 | 273.8 |
+| `group_commit` | 10 MB | 10 | 118 | 2,095,331 | 276.1 |
+| `non-group_commit` | 1 MB | 10 | 1883 | 131,305 | 17.3 |
+| `non-group_commit` | 10 MB | 10 | 294 | 840,983 | 105.4 |
+| `non-group_commit` | 10 MB | 30 | 118 | 2,095,331 | 276.1 |
 
-* Testing with different data sizes per request and concurrency levels between `non group_commit` and `group_commit=async mode` modes.
+In the `group_commit` tests above, the BE CPU usage stays between 10% and 40%.
 
-#### Test Results
-
-| Load Way           | Single-concurrency Data Size | Concurrency | Cost Seconds | Rows / Seconds | MB / Seconds |
-|------------------|-------------|--------|-------------|--------------------|-------------------|
-| `group_commit` | 10 KB   | 10   | 2204      | 112,181   | 14.8 |
-| `group_commit` | 10 KB   | 30   | 2176      | 113,625   | 15.0 |
-| `group_commit` | 100 KB  | 10   | 283       | 873,671  | 115.1 |
-| `group_commit` | 100 KB  | 30   | 244       | 1,013,315  | 133.5 |
-| `group_commit` | 500 KB  | 10   | 125       | 1,977,992  | 260.6 |
-| `group_commit` | 500 KB  | 30   | 122       | 2,026,631  | 267.1 |
-| `group_commit` | 1 MB    | 10   | 119       | 2,077,723  | 273.8 |
-| `group_commit` | 1 MB    | 30   | 119       | 2,077,723  | 273.8 |
-| `group_commit` | 10 MB   | 10   | 118       | 2,095,331  | 276.1 |
-| `non group_commit` | 1 MB    | 10   | 1883  | 131,305 | 17.3|
-| `non group_commit` | 10 MB   | 10   | 294       | 840,983  | 105.4 |
-| `non group_commit` | 10 MB   | 30   | 118  | 2,095,331 | 276.1|
-
-In the above test, the CPU usage of BE fluctuates between 10-40%.
-
-The `group_commit` effectively enhances load performance while reducing the number of versions, thereby alleviating the pressure on compaction.
+The results show that `group_commit` mode effectively improves load performance for concurrent small-data-volume loads, while reducing the version count and lowering the pressure of background data merging.
 
 ### JDBC
 
-#### Environment
+**Machine configuration:**
 
-1 Front End (FE) server: Alibaba Cloud with an 8-core CPU, 16GB RAM, and one 100GB ESSD PL1 SSD.
+- 1 FE: Alibaba Cloud, 8-core CPU, 16 GB memory, 1 x 100 GB ESSD PL1 cloud disk
+- 1 BE: Alibaba Cloud, 16-core CPU, 64 GB memory, 1 x 500 GB ESSD PL1 cloud disk
+- 1 test client: Alibaba Cloud, 16-core CPU, 64 GB memory, 1 x 100 GB ESSD PL1 cloud disk
+- Test version: Doris-3.0.1
+- Audit logging for prepared statements is disabled to improve performance
 
-1 Backend (BE) server: Alibaba Cloud with a 16-core CPU, 64GB RAM, and one 500GB ESSD PL1 SSD.
+**Dataset:**
 
-1 Test Client: Alibaba Cloud with a 16-core CPU, 64GB RAM, and one 100GB ESSD PL1 SSD.
+- TPC-H sf10 `lineitem` table dataset, 30 files, about 22 GB and 180 million rows in total
 
-The testing version is Doris-2.1.5.
+**Test tool:**
 
-Disable the printing of prepared statement audit logs to enhance performance.
+- [DataX](https://github.com/alibaba/DataX)
 
-#### DataSet
+**Test method:**
 
-* The data of tpch sf10 `lineitem` table, 20 files, 14 GB, 120 million rows
+- Write data through `txtfilereader` to `mysqlwriter`, with different concurrency levels and rows per `INSERT`.
 
-#### Test Method
+**Test results:**
 
-* [DataX](https://github.com/alibaba/DataX)
+| Rows per insert | Concurrency | Load rate (rows/second) | Load throughput (MB/second) |
+| --- | --- | --- | --- |
+| 100 | 10 | 160,758 | 17.21 |
+| 100 | 20 | 210,476 | 22.19 |
+| 100 | 30 | 214,323 | 22.92 |
 
-#### Test Method
+In the tests above, the FE CPU usage stays around 60-70% and the BE CPU usage stays around 10-20%.
 
-* Use `txtfilereader` wtite data to `mysqlwriter`, config different concurrenncy and rows for per `INSERT` sql.
+### INSERT INTO Sync Mode, Small Batches
 
-#### Test Results
+**Machine configuration:**
 
-| Rows per insert | Concurrency | Rows / Second | MB / Second |
-|-------------------|--------|--------------------|--------------------|
-| 100 | 10  | 160,758    | 17.21 |
-| 100 | 20  | 210,476    | 22.19 |
-| 100 | 30  | 214,323    | 22.92 |
+- 1 FE: Alibaba Cloud, 16-core CPU, 64 GB memory, 1 x 500 GB ESSD PL1 cloud disk
+- 5 BEs: Alibaba Cloud, 16-core CPU, 64 GB memory, 1 x 1 TB ESSD PL1 cloud disk
+- 1 test client: Alibaba Cloud, 16-core CPU, 64 GB memory, 1 x 100 GB ESSD PL1 cloud disk
+- Test version: Doris-3.0.1
 
-In the above test, the CPU usage of BE fluctuates between 10-20%, FE fluctuates between 60-70%.
+**Dataset:**
 
+- TPC-H sf10 `lineitem` table dataset.
+- The CREATE TABLE statement is:
 
-### Insert into Sync Mode Small Batch Data
-
-**Machine Configuration**
-
-* 1 Front-End (FE): Alibaba Cloud, 16-core CPU, 64GB RAM, 1 x 500GB ESSD PL1 cloud disk
-* 5 Back-End (BE) nodes: Alibaba Cloud, 16-core CPU, 64GB RAM, 1 x 1TB ESSD PL1 cloud disk.
-* 1 Testing Client: Alibaba Cloud, 16-core CPU, 64GB RAM, 1 x 100GB ESSD PL1 cloud disk
-* Test version: Doris-2.1.5
-
-**Dataset**
-
-* The data of tpch sf10 `lineitem` table.
-
-* The create table statement is
-```sql
-CREATE TABLE IF NOT EXISTS lineitem (
-  L_ORDERKEY    INTEGER NOT NULL,
-  L_PARTKEY     INTEGER NOT NULL,
-  L_SUPPKEY     INTEGER NOT NULL,
-  L_LINENUMBER  INTEGER NOT NULL,
-  L_QUANTITY    DECIMAL(15,2) NOT NULL,
-  L_EXTENDEDPRICE  DECIMAL(15,2) NOT NULL,
-  L_DISCOUNT    DECIMAL(15,2) NOT NULL,
-  L_TAX         DECIMAL(15,2) NOT NULL,
-  L_RETURNFLAG  CHAR(1) NOT NULL,
-  L_LINESTATUS  CHAR(1) NOT NULL,
-  L_SHIPDATE    DATE NOT NULL,
-  L_COMMITDATE  DATE NOT NULL,
-  L_RECEIPTDATE DATE NOT NULL,
-  L_SHIPINSTRUCT CHAR(25) NOT NULL,
-  L_SHIPMODE     CHAR(10) NOT NULL,
-  L_COMMENT      VARCHAR(44) NOT NULL
-)
-DUPLICATE KEY(L_ORDERKEY, L_PARTKEY, L_SUPPKEY, L_LINENUMBER)
-DISTRIBUTED BY HASH(L_ORDERKEY) BUCKETS 32
-PROPERTIES (
-  "replication_num" = "3"
-);
-```
-
-**Testing Tool**
-
-* [Jmeter](https://jmeter.apache.org/)
-
-JMeter Parameter Settings as Shown in the Images
-
-![jmeter parameter settings](/images/group-commit/jmeter1.jpg)
-![jmeter parameter settings](/images/group-commit/jmeter2.jpg)
-
-1. Set the Init Statement Before Testing:
-
-    ```
-    set group_commit=async_mode;
-    set enable_nereids_planner=false;
+    ```sql
+    CREATE TABLE IF NOT EXISTS lineitem (
+      L_ORDERKEY    INTEGER NOT NULL,
+      L_PARTKEY     INTEGER NOT NULL,
+      L_SUPPKEY     INTEGER NOT NULL,
+      L_LINENUMBER  INTEGER NOT NULL,
+      L_QUANTITY    DECIMAL(15,2) NOT NULL,
+      L_EXTENDEDPRICE  DECIMAL(15,2) NOT NULL,
+      L_DISCOUNT    DECIMAL(15,2) NOT NULL,
+      L_TAX         DECIMAL(15,2) NOT NULL,
+      L_RETURNFLAG  CHAR(1) NOT NULL,
+      L_LINESTATUS  CHAR(1) NOT NULL,
+      L_SHIPDATE    DATE NOT NULL,
+      L_COMMITDATE  DATE NOT NULL,
+      L_RECEIPTDATE DATE NOT NULL,
+      L_SHIPINSTRUCT CHAR(25) NOT NULL,
+      L_SHIPMODE     CHAR(10) NOT NULL,
+      L_COMMENT      VARCHAR(44) NOT NULL
+    )
+    DUPLICATE KEY(L_ORDERKEY, L_PARTKEY, L_SUPPKEY, L_LINENUMBER)
+    DISTRIBUTED BY HASH(L_ORDERKEY) BUCKETS 32
+    PROPERTIES (
+      "replication_num" = "3"
+    );
     ```
 
-2. Enable JDBC Prepared Statement:
+**Test tool:**
 
-    Complete URL:
+- [Jmeter](https://jmeter.apache.org/)
 
+The Jmeter parameters to set are shown below:
+
+![jmeter1](/images/group-commit/jmeter1.jpg)
+![jmeter2](/images/group-commit/jmeter2.jpg)
+
+1. Set the init statements before the test: `set group_commit=async_mode` and `set enable_nereids_planner=false`.
+2. Enable JDBC PreparedStatement. The full URL is:
+
+    ```text
+    jdbc:mysql://127.0.0.1:9030?useServerPrepStmts=true&useLocalSessionState=true&rewriteBatchedStatements=true&cachePrepStmts=true&prepStmtCacheSqlLimit=99999&prepStmtCacheSize=50&sessionVariables=group_commit=async_mode,enable_nereids_planner=false`.
     ```
-    jdbc:mysql://127.0.0.1:9030?useServerPrepStmts=true&useLocalSessionState=true&rewriteBatchedStatements=true&cachePrepStmts=true&prepStmtCacheSqlLimit=99999&prepStmtCacheSize=50&sessionVariables=group_commit=async_mode,enable_nereids_planner=false.
-    ```
-    
-3. Set the Import Type to Prepared Update Statement.
 
-4. Set the Import Statement.
+3. Set the load type to prepared update statement.
+4. Set the load statement.
+5. Set the values to load each time. Make sure the values match the load value types one by one.
 
-5. Set the Values to Be Imported:
+**Test method:**
 
-    Ensure that the imported values match the data types one by one.
+- Write data to `Doris` through `Jmeter`. Each concurrency writes 1 row per `INSERT INTO`.
 
-**Testing Methodology**
+**Test results (units in rows/second):**
 
-* Use JMeter to write data into Doris. Each thread writes 1 row of data per execution using the insert into statement.
+The tests below cover 30, 100, and 500 concurrency.
 
-**Test Results**
-
-* Data unit: rows per second.
-
-* The following tests are divided into 30, 100, and 500 concurrency.
-
-    **Performance Test with 30 Concurrent Users in Sync Mode, 5 BEs, and 3 Replicas**
-    
-    | Group commit interval | 10ms | 20ms | 50ms | 100ms |
-    |-----------------------|---------------|---------------|---------------|---------------|
-    |enable_nereids_planner=true| 891.8      | 701.1      | 400.0     | 237.5    |
-    |enable_nereids_planner=false| 885.8      | 688.1      | 398.7      | 232.9     |
-    
-    **Performance Test with 100 Concurrent Users in Sync Mode, 5 BEs, and 3 Replicas**
-    
-    | Group commit interval | 10ms | 20ms | 50ms | 100ms |
-    |-----------------------|---------------|---------------|---------------|---------------|
-    |enable_nereids_planner=true| 2427.8     | 2068.9     | 1259.4     | 764.9  |
-    |enable_nereids_planner=false| 2320.4      | 1899.3    | 1206.2     |749.7|
-    
-    **Performance Test with 500 Concurrent Users in Sync Mode, 5 BEs, and 3 Replicas**
-    
-    | Group commit interval | 10ms | 20ms | 50ms | 100ms |
-    |-----------------------|---------------|---------------|---------------|---------------|
-    |enable_nereids_planner=true| 5567.5     | 5713.2      | 4681.0    | 3131.2   |
-    |enable_nereids_planner=false| 4471.6      | 5042.5     | 4932.2     | 3641.1 |
-
-### Insert into Sync Mode Large Batch Data
-
-**Machine Configuration**
-
-* 1 Front-End (FE): Alibaba Cloud, 16-core CPU, 64GB RAM, 1 x 500GB ESSD PL1 cloud disk
-
-* 5 Back-End (BE) nodes: Alibaba Cloud, 16-core CPU, 64GB RAM, 1 x 1TB ESSD PL1 cloud disk.
-
-* 1 Testing Client: Alibaba Cloud, 16-core CPU, 64GB RAM, 1 x 100GB ESSD PL1 cloud disk
-
-* Test version: Doris-3.0.1
-
-**Dataset**
-
-* Insert into statement for 1000 rows: `insert into tbl values(1,1)...` (1000 rows omitted)
-
-**Testing Tool**
-
-* [Jmeter](https://jmeter.apache.org/)
-
-**Testing Methodology**
-
-* Use JMeter to write data into Doris. Each thread writes 1000 row of data per execution using the insert into statement.
-
-**Test Results**
-
-* Data unit: rows per second.
-
-* The following tests are divided into 30, 100, and 500 concurrency.
-
-**Performance Test with 30 Concurrent Users in Sync Mode, 5 BEs, and 3 Replicas**
+**30 concurrency, sync mode, 5 BEs with 3 replicas:**
 
 | Group commit interval | 10ms | 20ms | 50ms | 100ms |
-|-----------------------|---------------|---------------|---------------|---------------|
-|enable_nereids_planner=true| 9.1K     | 11.1K     | 11.4K     | 11.1K     |
-|enable_nereids_planner=false| 157.8K      | 159.9K     | 154.1K     | 120.4K     |
+| --- | --- | --- | --- | --- |
+| `enable_nereids_planner=true` | 891.8 | 701.1 | 400.0 | 237.5 |
+| `enable_nereids_planner=false` | 885.8 | 688.1 | 398.7 | 232.9 |
 
-**Performance Test with 100 Concurrent Users in Sync Mode, 5 BEs, and 3 Replicas**
-
-| Group commit interval | 10ms | 20ms | 50ms | 100ms |
-|-----------------------|---------------|---------------|---------------|---------------|
-|enable_nereids_planner=true| 10.0K     |9.2K     | 8.9K      | 8.9K    |
-|enable_nereids_planner=false| 130.4k     | 131.0K     | 130.4K      | 124.1K     |
-
-**Performance Test with 500 Concurrent Users in Sync Mode, 5 BEs, and 3 Replicas**
+**100 concurrency, sync mode, 5 BEs with 3 replicas:**
 
 | Group commit interval | 10ms | 20ms | 50ms | 100ms |
-|-----------------------|---------------|---------------|---------------|---------------|
-|enable_nereids_planner=true| 2.5K      | 2.5K     | 2.3K      | 2.1K      |
-|enable_nereids_planner=false| 94.2K     | 95.1K    | 94.4K     | 94.8K     |
+| --- | --- | --- | --- | --- |
+| `enable_nereids_planner=true` | 2427.8 | 2068.9 | 1259.4 | 764.9 |
+| `enable_nereids_planner=false` | 2320.4 | 1899.3 | 1206.2 | 749.7 |
+
+**500 concurrency, sync mode, 5 BEs with 3 replicas:**
+
+| Group commit interval | 10ms | 20ms | 50ms | 100ms |
+| --- | --- | --- | --- | --- |
+| `enable_nereids_planner=true` | 5567.5 | 5713.2 | 4681.0 | 3131.2 |
+| `enable_nereids_planner=false` | 4471.6 | 5042.5 | 4932.2 | 3641.1 |
+
+### INSERT INTO Sync Mode, Large Batches
+
+**Machine configuration:**
+
+- 1 FE: Alibaba Cloud, 16-core CPU, 64 GB memory, 1 x 500 GB ESSD PL1 cloud disk
+- 5 BEs: Alibaba Cloud, 16-core CPU, 64 GB memory, 1 x 1 TB ESSD PL1 cloud disk. Note: the tests used 1, 3, and 5 BEs respectively.
+- 1 test client: Alibaba Cloud, 16-core CPU, 64 GB memory, 1 x 100 GB ESSD PL1 cloud disk
+- Test version: Doris-3.0.1
+
+**Dataset:**
+
+- TPC-H sf10 `lineitem` table dataset.
+- The CREATE TABLE statement is:
+
+    ```sql
+    CREATE TABLE IF NOT EXISTS lineitem (
+      L_ORDERKEY    INTEGER NOT NULL,
+      L_PARTKEY     INTEGER NOT NULL,
+      L_SUPPKEY     INTEGER NOT NULL,
+      L_LINENUMBER  INTEGER NOT NULL,
+      L_QUANTITY    DECIMAL(15,2) NOT NULL,
+      L_EXTENDEDPRICE  DECIMAL(15,2) NOT NULL,
+      L_DISCOUNT    DECIMAL(15,2) NOT NULL,
+      L_TAX         DECIMAL(15,2) NOT NULL,
+      L_RETURNFLAG  CHAR(1) NOT NULL,
+      L_LINESTATUS  CHAR(1) NOT NULL,
+      L_SHIPDATE    DATE NOT NULL,
+      L_COMMITDATE  DATE NOT NULL,
+      L_RECEIPTDATE DATE NOT NULL,
+      L_SHIPINSTRUCT CHAR(25) NOT NULL,
+      L_SHIPMODE     CHAR(10) NOT NULL,
+      L_COMMENT      VARCHAR(44) NOT NULL
+    )
+    DUPLICATE KEY(L_ORDERKEY, L_PARTKEY, L_SUPPKEY, L_LINENUMBER)
+    DISTRIBUTED BY HASH(L_ORDERKEY) BUCKETS 32
+    PROPERTIES (
+      "replication_num" = "3"
+    );
+    ```
+
+**Test tool:**
+
+- [Jmeter](https://jmeter.apache.org/)
+
+**Test method:**
+
+- Write data to `Doris` through `Jmeter`. Each concurrency writes 1000 rows per `INSERT INTO`.
+
+**Test results (units in rows/second):**
+
+The tests below cover 30, 100, and 500 concurrency.
+
+**30 concurrency, sync mode, 5 BEs with 3 replicas:**
+
+| Group commit interval | 10ms | 20ms | 50ms | 100ms |
+| --- | --- | --- | --- | --- |
+| `enable_nereids_planner=true` | 9.1K | 11.1K | 11.4K | 11.1K |
+| `enable_nereids_planner=false` | 157.8K | 159.9K | 154.1K | 120.4K |
+
+**100 concurrency, sync mode, 5 BEs with 3 replicas:**
+
+| Group commit interval | 10ms | 20ms | 50ms | 100ms |
+| --- | --- | --- | --- | --- |
+| `enable_nereids_planner=true` | 10.0K | 9.2K | 8.9K | 8.9K |
+| `enable_nereids_planner=false` | 130.4K | 131.0K | 130.4K | 124.1K |
+
+**500 concurrency, sync mode, 5 BEs with 3 replicas:**
+
+| Group commit interval | 10ms | 20ms | 50ms | 100ms |
+| --- | --- | --- | --- | --- |
+| `enable_nereids_planner=true` | 2.5K | 2.5K | 2.3K | 2.1K |
+| `enable_nereids_planner=false` | 94.2K | 95.1K | 94.4K | 94.8K |
+
+## FAQ
+
+<!-- Knowledge type: FAQ / Troubleshooting -->
+
+**Q1: How do I confirm whether my load uses Group Commit?**
+
+- INSERT INTO VALUES: the `label` in the returned result starts with `group_commit_`, and multiple loads may share the same `label` and `txnId`.
+- Stream Load: in the returned JSON, the `GroupCommit` field is `true` and the `Label` starts with `group_commit_`.
+
+**Q2: After enabling `async_mode`, how soon can the data be queried?**
+
+- Data visibility delay is determined jointly by the table properties `group_commit_interval_ms` (default 10 seconds) and `group_commit_data_bytes` (default 64 MB). The commit happens as soon as either condition is met.
+
+**Q3: When does `async_mode` automatically fall back to `sync_mode`?**
+
+- The single load contains more than 80% of the space of a single WAL directory.
+- Chunked Stream Load with an unknown data size.
+- Insufficient available disk space.
+
+**Q4: Why does my `INSERT INTO VALUES` not go through Group Commit?**
+
+- Check whether you are inside an explicit transaction, whether a label is specified, whether the VALUES contain an expression, whether it is a column-update write, or whether the table does not support lightweight schema change. For details, see [Group Commit Fallback Scenarios](#group-commit-fallback-scenarios).
+
+**Q5: Is there a risk of data loss when using `async_mode`?**
+
+- WAL files are stored as a single replica. If the corresponding disk is damaged or the file is deleted accidentally, data may be lost. When taking a BE node offline, always use the `DECOMMISSION` command to prevent data loss.
+
+**Q6: What should I watch out for when using Group Commit with the Unique model?**
+
+- Group Commit does not guarantee commit order. Use a Sequence column to ensure data consistency.

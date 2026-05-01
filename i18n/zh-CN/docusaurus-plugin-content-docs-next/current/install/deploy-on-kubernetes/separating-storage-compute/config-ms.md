@@ -74,7 +74,7 @@ spec:
 
 - `${fdbEndpoint}`：可访问 FoundationDB 的地址信息
 
-物理机部署情况下查找该地址，请参考存算分离章节 [MetaService 部署获取 `fdb_cluster` 介绍](../../../compute-storage-decoupled/compilation-and-deployment.md#31-配置)。
+物理机部署情况下查找该地址，请参考存算分离章节 [MetaService 部署获取 `fdb_cluster` 介绍](../../deploy-manually/separating-storage-compute-deploy-manually)
 
 ## 2. 自定义镜像
 

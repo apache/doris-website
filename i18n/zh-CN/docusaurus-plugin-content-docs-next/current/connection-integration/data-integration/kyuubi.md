@@ -40,7 +40,7 @@
 
 从官网下载 Apache Kyuubi 1.6.0 或以上版本的安装包，并解压至部署目录。
 
-下载地址：<https://kyuubi.apache.org/zh/releases.html>
+下载地址：<https://kyuubi.apache.org/releases.html>
 
 ### 2. 配置 Doris 作为 Kyuubi 数据源
 

@@ -10,24 +10,24 @@ import GettingStartedCard from '@site/src/components/getting-started-card/gettin
 
 # Data Update and Delete
 
-Apache Doris provides flexible mechanisms for updating and deleting data, along with transaction support to ensure that write operations are executed reliably and consistently.
+Apache Doris provides flexible mechanisms for updating and deleting data, and ensures the reliability and consistency of write operations through transaction capabilities.
 
 <div className="cards-grid">
 <GettingStartedCard
-    title="Updating Data"
-    description="Update existing rows via SQL UPDATE, partial column updates, and Unique Key model upserts"
+    title="Data Update"
+    description="Update existing data through SQL UPDATE, partial column updates, and Unique Key model Upsert"
     link="./update/update-overview"
 />
 
 <GettingStartedCard
-    title="Deleting Data"
-    description="Remove rows with DELETE, batch delete, TRUNCATE, atomic replace, and temporary partitions"
+    title="Data Delete"
+    description="Clean up data using DELETE, batch delete, TRUNCATE, atomic overwrite, and temporary partitions"
     link="./delete/delete-overview"
 />
 
 <GettingStartedCard
     title="Transaction"
-    description="Group multiple writes into an atomic unit with explicit and implicit transactions"
+    description="Use explicit and implicit transactions to combine multiple write operations into an atomic unit"
     link="./transaction"
 />
 </div>

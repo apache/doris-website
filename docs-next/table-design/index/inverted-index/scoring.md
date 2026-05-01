@@ -1,28 +1,28 @@
 ---
 {
-    "title": "相关性打分",
-    "language": "zh",
-    "description": "Doris 全文检索通过 BM25 算法为查询结果计算相关性得分，结合词频、逆文档频率与记录长度进行加权排序，帮助用户优先返回最相关内容。"
+    "title": "Relevance Scoring",
+    "language": "en",
+    "description": "Doris full-text search calculates a relevance score for query results using the BM25 algorithm, combining term frequency, inverse document frequency, and record length to rank results so that the most relevant content is returned first."
 }
 ---
 
-<!-- 知识类型: 功能特性 / 查询用法 -->
-<!-- 适用场景: 全文检索结果排序 / 搜索相关性优化 -->
+<!-- Knowledge type: Feature / Query usage -->
+<!-- Applicable scenarios: Full-text search result ranking / Search relevance optimization -->
 
-在执行全文检索类查询（如 `MATCH_ANY`、`MATCH_ALL`、`MATCH_PHRASE` 等）时，往往需要按"匹配程度"对结果进行排序，从而优先返回最相关的记录。Doris 提供了 **相关性打分（Relevance Scoring）** 能力：每一行都会根据查询条件计算一个数值化的得分，分数越高表示相关性越强。
+When you run full-text search queries (such as `MATCH_ANY`, `MATCH_ALL`, `MATCH_PHRASE`, and so on), you often need to sort results by "match degree" so that the most relevant records are returned first. Doris provides **Relevance Scoring**: each row is given a numeric score based on the query conditions, and a higher score indicates stronger relevance.
 
-当前 Doris 使用 **BM25（Best Matching 25）** 算法作为相关性打分的默认实现。
+Doris currently uses the **BM25 (Best Matching 25)** algorithm as the default implementation for relevance scoring.
 
-**典型使用场景：**
+**Typical use cases:**
 
-- 搜索引擎类应用：根据关键词返回最相关的文档列表
-- 日志分析：按相关性排序，快速定位与关键词最匹配的日志
-- 内容推荐：基于文本相似度筛选优先内容
-- 知识库检索：按问题相关度返回候选答案
+- Search engine applications: return the most relevant document list based on keywords
+- Log analysis: sort by relevance to quickly locate the logs that best match the keywords
+- Content recommendation: filter priority content based on text similarity
+- Knowledge base retrieval: return candidate answers ranked by question relevance
 
-## 快速上手
+## Quick Start
 
-以下示例展示了如何在查询中启用相关性打分并按得分排序：
+The following example shows how to enable relevance scoring in a query and sort by score:
 
 ```sql
 SELECT *,
@@ -33,7 +33,7 @@ ORDER BY relevance DESC
 LIMIT 10;
 ```
 
-执行后，Doris 会基于 BM25 算法计算每一行的得分，并返回前 10 条最相关的记录：
+After execution, Doris computes the score for each row using the BM25 algorithm and returns the top 10 most relevant records:
 
 ```text
 +------+-----------------------------------+---------+--------------+-----------+
@@ -46,22 +46,22 @@ LIMIT 10;
 +------+-----------------------------------+---------+--------------+-----------+
 ```
 
-## 启用条件
+## Activation Conditions
 
-要使打分计算生效，查询需同时满足以下三个条件：
+For score calculation to take effect, the query must meet all three of the following conditions:
 
-1. `SELECT` 子句中显式调用 `score()` 函数
-2. `WHERE` 子句中至少包含一个 `MATCH_*` 条件
-3. 查询为 Top-N 类型，且 `ORDER BY` 基于 `score()` 结果排序
+1. The `SELECT` clause explicitly calls the `score()` function.
+2. The `WHERE` clause contains at least one `MATCH_*` condition.
+3. The query is a Top-N query, and `ORDER BY` is based on the `score()` result.
 
-### 支持的索引类型
+### Supported Index Types
 
-| 索引类型         | 是否支持打分 | 说明                       |
-| ---------------- | ------------ | -------------------------- |
-| 分词型倒排索引   | 支持         | 可计算 BM25 相关性得分     |
-| 非分词型倒排索引 | 不支持       | 仅支持精确匹配，不计算打分 |
+| Index Type                       | Scoring Supported | Description                                                |
+| -------------------------------- | ----------------- | ---------------------------------------------------------- |
+| Tokenized inverted index         | Yes               | Can compute BM25 relevance scores                          |
+| Non-tokenized inverted index     | No                | Supports only exact match; does not compute scores         |
 
-### 支持的查询类型
+### Supported Query Types
 
 - `MATCH_ANY`
 - `MATCH_ALL`
@@ -69,74 +69,74 @@ LIMIT 10;
 - `MATCH_PHRASE_PREFIX`
 - `SEARCH`
 
-## BM25 算法说明
+## BM25 Algorithm
 
-BM25 是一种基于概率模型的文本相关性算法。它综合考虑 **词频（TF）**、**逆文档频率（IDF）** 与 **记录长度** 三个因子，对匹配结果进行加权计算。相比传统 TF-IDF 模型，BM25 具有更好的鲁棒性与可调性，能够有效平衡长文本与短文本之间的得分差异。
+BM25 is a text relevance algorithm based on a probabilistic model. It performs a weighted calculation on matching results by considering three factors together: **term frequency (TF)**, **inverse document frequency (IDF)**, and **record length**. Compared with the traditional TF-IDF model, BM25 offers better robustness and tunability, and effectively balances the score difference between long and short text.
 
-### 核心公式
+### Core Formula
 
 ```text
 score = IDF × (tf × (k1 + 1)) / (tf + k1 × (1 - b + b × |d| / avgdl))
 ```
 
-公式中各变量的含义：
+The variables in the formula are defined as follows:
 
-| 变量      | 含义                                   |
-| --------- | -------------------------------------- |
-| `tf`      | 查询词在当前行中的出现次数             |
-| `IDF`     | 逆文档频率，衡量词的稀有程度           |
-| `\|d\|`   | 当前行的长度（分词后的词元数）         |
-| `avgdl`   | 表中所有行的平均长度                   |
-| `k1`、`b` | 算法调节参数                           |
+| Variable    | Meaning                                              |
+| ----------- | ---------------------------------------------------- |
+| `tf`        | Number of occurrences of the query term in the current row |
+| `IDF`       | Inverse document frequency, which measures how rare the term is |
+| `\|d\|`     | Length of the current row (number of tokens after tokenization) |
+| `avgdl`     | Average length of all rows in the table              |
+| `k1`, `b`   | Algorithm tuning parameters                          |
 
-### 参数说明
+### Parameters
 
-| 参数    | 默认值 | 说明                       |
-| ------- | ------ | -------------------------- |
-| `k1`    | 1.2    | 控制词频对得分的影响程度   |
-| `b`     | 0.75   | 控制记录长度归一化的强度   |
-| `boost` | 1.0    | 查询级别的权重因子         |
+| Parameter | Default | Description                                            |
+| --------- | ------- | ------------------------------------------------------ |
+| `k1`      | 1.2     | Controls how much term frequency influences the score  |
+| `b`       | 0.75    | Controls the strength of record-length normalization   |
+| `boost`   | 1.0     | Query-level weight factor                              |
 
-### 辅助统计量
+### Auxiliary Statistics
 
 ```text
 IDF   = log(1 + (N - n + 0.5) / (n + 0.5))
 avgdl = total_terms / total_rows
 ```
 
-其中：
+Where:
 
-- `N`：表中总行数
-- `n`：包含该查询词的行数
+- `N`: total number of rows in the table
+- `n`: number of rows that contain the query term
 
-当查询包含多个词项时，**最终得分为各词项得分之和**。
+When a query contains multiple terms, **the final score is the sum of the scores of each term**.
 
-## 结果解读
+## Interpreting the Results
 
-理解打分结果有助于更准确地使用相关性排序：
+Understanding the scoring results helps you use relevance ranking more accurately:
 
-| 特征       | 说明                                                       |
-| ---------- | ---------------------------------------------------------- |
-| 得分范围   | 正数，无固定上限；通常仅比较相对大小，不关注绝对数值       |
-| 多词查询   | 包含多个词项时，总得分等于各词项得分之和                   |
-| 长度影响   | 在包含相同词项的前提下，较短的记录得分略高                 |
-| 无匹配词项 | 若查询词未在表中出现，对应得分为 0                         |
+| Characteristic | Description                                                                            |
+| -------------- | -------------------------------------------------------------------------------------- |
+| Score range    | Positive number with no fixed upper bound; usually only relative magnitude matters, not the absolute value |
+| Multi-term query | When multiple terms are involved, the total score equals the sum of the per-term scores |
+| Length effect  | Given the same matching terms, a shorter record receives a slightly higher score        |
+| No matching term | If the query term does not appear in the table, the corresponding score is 0          |
 
-## 常见问题
+## FAQ
 
-**Q1：为什么我的查询没有返回打分？**
+**Q1: Why does my query not return scores?**
 
-请依次确认：
+Check the following in order:
 
-1. `SELECT` 中是否调用了 `score()` 函数
-2. `WHERE` 中是否包含 `MATCH_*` 条件
-3. `ORDER BY` 是否基于 `score()` 排序
-4. 索引是否为分词型倒排索引
+1. Whether the `score()` function is called in `SELECT`.
+2. Whether the `WHERE` clause contains a `MATCH_*` condition.
+3. Whether `ORDER BY` is based on `score()`.
+4. Whether the index is a tokenized inverted index.
 
-**Q2：BM25 与 TF-IDF 有什么区别？**
+**Q2: What is the difference between BM25 and TF-IDF?**
 
-BM25 在 TF-IDF 的基础上引入了 **词频饱和** 与 **长度归一化** 两个改进，使长短文本间的得分更加均衡，鲁棒性更好。
+BM25 builds on TF-IDF by introducing two improvements: **term frequency saturation** and **length normalization**. These make the scores of long and short text more balanced and provide better robustness.
 
-**Q3：得分可以跨查询比较吗？**
+**Q3: Can scores be compared across queries?**
 
-不建议。BM25 得分依赖具体查询词及表中数据的分布，不同查询之间的绝对值不具备可比性，**仅在同一查询的结果集内比较相对大小**。
+This is not recommended. BM25 scores depend on the specific query terms and the data distribution in the table. Absolute values are not comparable between different queries. **Compare relative magnitudes only within the result set of the same query.**

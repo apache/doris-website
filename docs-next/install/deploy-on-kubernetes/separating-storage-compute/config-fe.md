@@ -1,57 +1,94 @@
 ---
 {
-    "title": "Config FE",
+    "title": "Configure FE",
     "language": "en",
-    "description": "FE is primarily responsible for query parsing, planning, and related tasks in decoupled storage and compute mode."
+    "description": "A detailed guide to configuring FE (FrontEnd) in a storage-compute separation cluster, including compute resources, the number of Followers, startup parameters, access modes (ClusterIP/NodePort/LoadBalancer), and persistent storage configuration.",
+    "keywords": ["Doris", "storage-compute separation", "Kubernetes", "FE", "FrontEnd", "Follower", "NodePort", "LoadBalancer", "persistent storage"]
 }
 ---
 
-FE is primarily responsible for query parsing, planning, and related tasks in decoupled storage and compute mode.
+## What you will learn in this chapter
 
-## Configuring Compute Resources
-In the deployment sample provided in the [Doris Operator repository](https://github.com/apache/doris-operator/blob/master/doc/examples/disaggregated/cluster/ddc-sample.yaml), the FE service has no resource restrictions by default. CPU and memory resources for the service can be configured using Kubernetes [requests and limits](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/). For example, to allocate 8 CPU cores and 8Gi of memory for FE, use the following configuration:
+- How to configure compute resources (CPU and memory) for the FE component
+- How to configure the number of FE Followers and their roles
+- How to customize FE startup parameters with a ConfigMap
+- How to choose the access mode for the FE service (ClusterIP/NodePort/LoadBalancer) based on your access scenario
+- How to configure persistent storage for FE to prevent metadata loss
+
+## Configuration overview
+
+In storage-compute separation mode, FE (Frontend) is mainly responsible for query parsing and planning. This chapter introduces FE configuration in the following order:
+
+| Configuration item | Problem it solves |
+| --- | --- |
+| Compute resource configuration | Explicitly allocates CPU and memory to FE |
+| Follower node count configuration | Plans the metadata management nodes in a distributed deployment |
+| Custom startup configuration | Overrides default startup parameters via a ConfigMap |
+| Access mode configuration | Exposes the FE service based on the access scenario (in-cluster, out-of-cluster, or cloud platform) |
+| Persistent storage configuration | Prevents metadata loss after FE restarts |
+
+## Configure compute resources
+
+In the [deployment example](https://github.com/apache/doris-operator/blob/master/doc/examples/disaggregated/cluster/ddc-sample.yaml) provided by the Doris-Operator repository, FE has no resource limits by default. For production environments, it is recommended to explicitly configure FE compute resources via Kubernetes [requests and limits](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/).
+
+The following example allocates 8c8Gi of compute resources to FE:
+
 ```yaml
 spec:
-  feSpec:
-    requests:
-      cpu: 8
-      memory: 8Gi
-    limits:
-      cpu: 8
-      memory: 8Gi
+    feSpec:
+        requests:
+            cpu: 8
+            memory: 8Gi
+        limits:
+            cpu: 8
+            memory: 8Gi
 ```
-Update the above configuration in the [DorisDisaggregatedCluster resource](./install-doris-cluster.md#step-3-deploy-the-compute-storage-decoupled-cluster) that you intend to deploy.
 
-## Configuring the Number of Follower Nodes
-In a Doris Frontend (FE) service, there are two types of roles: Follower and Observer. Follower nodes are responsible for SQL parsing, metadata management, and storage. Observer nodes primarily handle SQL parsing to offload query and write traffic from Followers. Doris uses the bdbje storage system for metadata management, which implements an algorithm similar to the Paxos protocol.
+Apply this configuration to the [`DorisDisaggregatedCluster` resource you want to deploy](./install-doris-cluster.md#configure-the-dorisdisaggregatedcluster-resource).
 
-In a distributed deployment, multiple Follower nodes must be configured to participate in metadata management within the distributed environment.
+## Configure the number of Follower nodes
 
-When deploying a compute-storage disaggregated Doris cluster using the `DorisDisaggregatedCluster` resource, the default number of Follower nodes is set to 1. You can configure the number of Followers using the following setting. The example below configures three Follower nodes:
+The FE service has two roles, with the following responsibilities:
+
+| Role | Responsibilities |
+| --- | --- |
+| Follower | Handles SQL parsing and manages and stores metadata |
+| Observer | Handles SQL parsing and shares the query and write load of Followers |
+
+Doris uses the bdbje storage system to manage metadata. The underlying implementation of bdbje is similar to a Paxos protocol algorithm. In a distributed deployment, multiple Follower nodes must be configured to participate in metadata management together.
+
+When you deploy a Doris storage-compute separation cluster with the `DorisDisaggregatedCluster` resource, the default number of Followers is 1. You can adjust the number of Follower nodes via the `electionNumber` field. The following example sets the number of Followers to 3:
+
 ```yaml
 spec:
-  feSpec:
-    electionNumber: 3
+    feSpec:
+        electionNumber: 3
 ```
-:::tip Note
-Once the disaggregated cluster is deployed, the `electionNumber` setting cannot be modified.
+
+:::tip Tip
+
+After a storage-compute separation cluster is deployed, `electionNumber` cannot be modified. Plan the number of Followers before deployment.
+
 :::
 
-## Custom Startup Configuration
-The Doris Operator mounts the FE startup configuration using a Kubernetes ConfigMap. Follow these steps to configure it:
+## Custom startup configuration
 
-1. Create a Custom ConfigMap Containing the FE Startup Configuration  
-   In the default deployment, each FE service starts with a default configuration file embedded in the image. You can override this by creating a custom ConfigMap. For example:
-    ```yaml
-    apiVersion: v1
-    kind: ConfigMap
-    metadata:
-      name: fe-configmap
-      namespace: default
-      labels:
+Doris Operator mounts the FE startup configuration through a Kubernetes ConfigMap. The configuration procedure is as follows:
+
+### Step 1: Write the FE startup ConfigMap
+
+Define a ConfigMap that contains the FE startup configuration, as shown below:
+
+```yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+    name: fe-configmap
+    namespace: default
+    labels:
         app.kubernetes.io/component: fe
-    data:
-      fe.conf: |
+data:
+    fe.conf: |
         CUR_DATE=`date +%Y%m%d-%H%M%S`
         # Log dir
         LOG_DIR = ${DORIS_HOME}/log
@@ -69,207 +106,300 @@ The Doris Operator mounts the FE startup configuration using a Kubernetes Config
         edit_log_port = 9010
         enable_fqdn_mode=true
         deploy_mode = cloud
-    ```
+```
 
-2. Deploy the ConfigMap  
-   Deploy the custom ConfigMap to the namespace where the DorisDisaggregatedCluster resource resides by executing:
-    ```shell
-    kubectl apply -n ${namespace} -f ${feConfigMapName}.yaml
-    ```
-   Here, `${namespace}` is the namespace of the `DorisDisaggregatedCluster` resource, and `${feConfigMapName}` is the filename of the ConfigMap.
+### Step 2: Deploy the ConfigMap to the target namespace
 
-3. Update the `DorisDisaggregatedCluster` Resource to Use the ConfigMap  
-   In the `DorisDisaggregatedCluster` resource, mount the ConfigMap using the `feSpec.configMaps` array, as shown below:
-    ```yaml
-    spec:
-      feSpec:
+Deploy the ConfigMap to the namespace where the `DorisDisaggregatedCluster` resides with the following command:
+
+```shell
+kubectl apply -n ${namespace} -f ${feConfigMapName}.yaml
+```
+
+Parameter description:
+
+- `${namespace}`: the namespace where the `DorisDisaggregatedCluster` resides
+- `${feConfigMapName}`: the name of the file that contains the configuration above
+
+### Step 3: Reference the ConfigMap in DorisDisaggregatedCluster
+
+Update the [`DorisDisaggregatedCluster` resource](./install-doris-cluster.md#configure-the-dorisdisaggregatedcluster-resource) and mount the ConfigMap through the `feSpec.configMaps` array, as shown below:
+
+```yaml
+spec:
+    feSpec:
         replicas: 2
         configMaps:
-        - name: fe-configmap
-    ```
-   In the `DorisDisaggregatedCluster` resource, the `configMaps` field is an array, with each element's `name` representing the name of the ConfigMap in the current namespace.
+            - name: fe-configmap
+```
 
 :::tip Tip
-1. In Kubernetes deployments, it is not necessary to include `meta_service_endpoint` or `cluster_id` in the startup configuration, as the Doris Operator will automatically add this information.
-2. When customizing the startup configuration, `enable_fqdn_mode` must be set to true.
-   :::
 
-## Access Configuration
-The Doris Operator uses Kubernetes Services to provide VIP and load balancing capabilities, supporting three exposure modes: `ClusterIP`, `NodePort`, and `LoadBalancer`.
+When customizing the startup configuration in a Kubernetes deployment, note the following two points:
 
-### ClusterIP Mode
-Kubernetes uses the [`ClusterIP service type`](https://kubernetes.io/docs/concepts/services-networking/service/#type-clusterip) by default. This mode provides an internal address within the Kubernetes cluster.
+1. **Do not** add the `meta_service_endpoint` or `cluster_id` configuration. Doris-Operator injects these values automatically.
+2. **You must** set `enable_fqdn_mode=true`.
 
-#### Step 1: Configure ClusterIP Mode
-By default, Doris is configured to use ClusterIP mode on Kubernetes; no additional configuration is required.
+:::
 
-#### Step 2: Obtain the Service Access Address
-After deploying the cluster, view the FE service by running:
-```yaml
+## Access configuration
+
+Doris-Operator uses Kubernetes Service to provide VIP and load balancing capabilities. Depending on the access scenario, you can choose one of the following three exposure modes:
+
+| Access mode | Applicable scenario | Description |
+| --- | --- | --- |
+| ClusterIP | Access only from within the Kubernetes cluster | The default mode, no extra configuration is required |
+| NodePort | Access from outside the Kubernetes cluster (commonly used in self-built clusters) | Exposes the service via the host port |
+| LoadBalancer | Access through a cloud load balancer in a cloud platform environment | The load balancer is provided by the cloud service provider |
+
+The following sections describe the configuration of each mode.
+
+### ClusterIP mode
+
+Kubernetes uses [ClusterIP mode](https://kubernetes.io/docs/concepts/services-networking/service/#type-clusterip) by default. This mode provides an internal address inside the Kubernetes cluster that can only be accessed from within the cluster.
+
+#### Step 1: Configure ClusterIP
+
+ClusterIP is the default access mode and **no additional changes** are required to use it.
+
+#### Step 2: Get the Service access address
+
+After the cluster is deployed, view the Services exposed by FE with the following command:
+
+```shell
 kubectl -n doris get svc
 ```
-A sample output is:
-```yaml
+
+A sample result is shown below:
+
+```shell
 NAME                              TYPE        CLUSTER-IP    EXTERNAL-IP   PORT(S)                               AGE
 doriscluster-sample-fe-internal   ClusterIP   None          <none>        9030/TCP                              14m
 doriscluster-sample-fe            ClusterIP   10.1.118.16   <none>        8030/TCP,9020/TCP,9030/TCP,9010/TCP   14m
 ```
-In the output above, the service with the suffix "internal" is used solely for internal communication (e.g., heartbeat, data exchange) and is not exposed externally. The service without the "internal" suffix is used for external access to the FE service.
 
-#### Step 3: Access Doris from Within a Container
-Create a Pod with the MySQL client in the current Kubernetes cluster by running:
-```yaml
+The result contains two kinds of Services:
+
+- With the `internal` suffix: used only for Doris internal communication (such as heartbeat and data exchange), and is not exposed externally
+- Without the `internal` suffix: used for external access to the FE service
+
+#### Step 3: Access Doris from inside a container
+
+Run the following command to create a Pod that contains a MySQL client in the current Kubernetes cluster:
+
+```shell
 kubectl run mysql-client --image=mysql:5.7 -it --rm --restart=Never --namespace=doris -- /bin/bash
 ```
-Within the Pod, connect to the Doris cluster by using the Service name that does not have the "internal" suffix:
-```yaml
+
+Inside the container, connect to the Doris cluster using the Service name without the `internal` suffix:
+
+```shell
 mysql -uroot -P9030 -hdoriscluster-sample-fe-service
 ```
-### NodePort Mode
-To access Doris from outside the Kubernetes cluster, you can use the [NodePort service type](https://kubernetes.io/docs/concepts/services-networking/service/#type-nodeport). NodePort mode supports two configuration methods: static host port assignment and dynamic host port assignment.
-- Dynamic Host Port Assignment:
-  If no explicit port mapping is provided, Kubernetes automatically assigns an unused host port (default range: 30000–32767) when the pod is created.
-- Static Host Port Assignment:
-  If a port mapping is explicitly specified and the host port is available and conflict-free, Kubernetes will allocate that port. For static assignment, you must plan the port mappings. Doris provides the following ports for external interactions:
 
-| Port Name  | Default Port | Description                                              |
-|------------|-------------|----------------------------------------------------------|
-| Query Port | 9030        | Used to access the Doris cluster via the MySQL protocol. |
-| HTTP Port  | 8030        | The HTTP server port on FE, used to view FE information. |
+### NodePort mode
+
+To access Doris from outside the Kubernetes cluster, use [NodePort mode](https://kubernetes.io/docs/concepts/services-networking/service/#type-nodeport). NodePort mode supports two ways to allocate ports:
+
+| Allocation method | Description |
+| --- | --- |
+| Dynamic host port allocation | When no port mapping is set explicitly, Kubernetes automatically assigns an unused host port (default range 30000-32767) |
+| Static host port allocation | The port mapping is specified explicitly. The port is fixed when the host port is not occupied and there is no conflict |
+
+Static allocation requires planning the port mapping. Doris provides the following ports for external interaction by default:
+
+**Table 1: FE service port descriptions**
+
+| Port name  | Default port | Port description                       |
+|---------- | ------- | -------------------------------------- |
+| Query Port | 9030    | Used to access the Doris cluster via the MySQL protocol |
+| HTTP Port  | 8030    | The HTTP Server port on FE, used to view FE information |
 
 #### Step 1: Configure FE NodePort
-- Dynamic Assignment Configuration:
+
+Choose one of the following configurations as needed:
+
+- **Dynamic port allocation**:
+
     ```yaml
     spec:
-      feSpec:
-        service:
-          type: NodePort
+        feSpec:
+            service:
+                type: NodePort
     ```
-- Static Assignment Configuration Example:
+
+- **Static port allocation**:
+
     ```yaml
     spec:
-      feSpec:
-        service:
-          type: NodePort
-          portMaps:
-          - nodePort: 31001
-            targetPort: 8030
-          - nodePort: 31002
-            targetPort: 9030
+        feSpec:
+            service:
+                type: NodePort
+                portMaps:
+                    - nodePort: 31001
+                      targetPort: 8030
+                    - nodePort: 31002
+                      targetPort: 9030
     ```
-#### Step 2: Obtain the Service
-After the cluster is deployed, run the following command to view the Service:
-```yaml
+
+#### Step 2: Get the Service
+
+After the cluster is deployed, view the `Service` with the following command:
+
+```shell
 kubectl get service
 ```
-A sample output is:
-```yaml
+
+The result is shown below:
+
+```shell
 NAME                              TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)                                                       AGE
 kubernetes                        ClusterIP   10.152.183.1     <none>        443/TCP                                                       169d
 doriscluster-sample-fe-internal   ClusterIP   None             <none>        9030/TCP                                                      2d
 doriscluster-sample-fe            NodePort    10.152.183.58    <none>        8030:31041/TCP,9020:30783/TCP,9030:31545/TCP,9010:31610/TCP   2d
 ```
-#### Step 3: Accessing Doris Using NodePort
-For example, if Doris' `Query Port` is mapped to host port 31545, first obtain the IP address of one node in the Kubernetes cluster by running:
-```yaml
-kubectl get nodes -o wide
-```
-A sample output is:
-```yaml
-NAME   STATUS   ROLES           AGE   VERSION   INTERNAL-IP     EXTERNAL-IP   OS-IMAGE          KERNEL-VERSION          CONTAINER-RUNTIME
-r60    Ready    control-plane   14d   v1.28.2   192.168.88.60   <none>        CentOS Stream 8   4.18.0-294.el8.x86_64   containerd://1.6.22
-r61    Ready    <none>          14d   v1.28.2   192.168.88.61   <none>        CentOS Stream 8   4.18.0-294.el8.x86_64   containerd://1.6.22
-r62    Ready    <none>          14d   v1.28.2   192.168.88.62   <none>        CentOS Stream 8   4.18.0-294.el8.x86_64   containerd://1.6.22
-r63    Ready    <none>          14d   v1.28.2   192.168.88.63   <none>        CentOS Stream 8   4.18.0-294.el8.x86_64   containerd://1.6.22
-```
-Using any of these node IPs (for example, 192.168.88.62), connect to the Doris cluster with:
-```yaml
-mysql -h 192.168.88.62 -P31545 -uroot
-```
 
-### LoadBalancer Mode
-The [LoadBalancer service](https://kubernetes.io/docs/concepts/services-networking/service/#loadbalancer) type is applicable in cloud-based Kubernetes environments and is provided by the cloud provider's load balancer.
+#### Step 3: Access Doris through NodePort
 
-#### Step 1: Configure LoadBalancer Mode
-Set the `feSpec.service` type to LoadBalancer, as shown:
+Take a MySQL connection as an example. Assume the Doris Query Port is mapped to host port 31545. The steps are as follows:
+
+1. Get the IP address of any node in the Kubernetes cluster:
+
+    ```shell
+    kubectl get nodes -owide
+    ```
+
+    Sample result:
+
+    ```shell
+    NAME   STATUS   ROLES           AGE   VERSION   INTERNAL-IP     EXTERNAL-IP   OS-IMAGE          KERNEL-VERSION          CONTAINER-RUNTIME
+    r60    Ready    control-plane   14d   v1.28.2   192.168.88.60   <none>        CentOS Stream 8   4.18.0-294.el8.x86_64   containerd://1.6.22
+    r61    Ready    <none>          14d   v1.28.2   192.168.88.61   <none>        CentOS Stream 8   4.18.0-294.el8.x86_64   containerd://1.6.22
+    r62    Ready    <none>          14d   v1.28.2   192.168.88.62   <none>        CentOS Stream 8   4.18.0-294.el8.x86_64   containerd://1.6.22
+    r63    Ready    <none>          14d   v1.28.2   192.168.88.63   <none>        CentOS Stream 8   4.18.0-294.el8.x86_64   containerd://1.6.22
+    ```
+
+2. Use the IP of any node (such as 192.168.88.62) and the mapped port to connect to the Doris cluster:
+
+    ```shell
+    mysql -h 192.168.88.62 -P 31545 -uroot
+    ```
+
+### LoadBalancer mode
+
+[LoadBalancer mode](https://kubernetes.io/docs/concepts/services-networking/service/#loadbalancer) is suitable for Kubernetes environments on cloud platforms, where the load balancer is provided by the cloud service provider.
+
+#### Step 1: Configure LoadBalancer mode
+
+Set the type to `LoadBalancer` in `feSpec.service`:
+
 ```yaml
 spec:
-  feSpec:
-    service:
-      type: LoadBalancer
-      annotations:
-        service.beta.kubernetes.io/load-balancer-type: "external"
+    feSpec:
+        service:
+            type: LoadBalancer
+            annotations:
+                service.beta.kubernetes.io/load-balancer-type: "external"
 ```
 
-#### Step 2: Obtain the Service
-After deploying the cluster, view the Service by running:
-```yaml
+#### Step 2: Get the Service
+
+After the cluster is deployed, view the `Service` with the following command:
+
+```shell
 kubectl get service
 ```
-A sample output is:
-```yaml
+
+Sample result:
+
+```shell
 NAME                              TYPE           CLUSTER-IP       EXTERNAL-IP                                                                     PORT(S)                                                       AGE
 kubernetes                        ClusterIP      10.152.183.1     <none>                                                                          443/TCP                                                       169d
 doriscluster-sample-fe-internal   ClusterIP      None             <none>                                                                          9030/TCP                                                      2d
 doriscluster-sample-fe            LoadBalancer   10.152.183.58    ac4828493dgrftb884g67wg4tb68gyut-1137856348.us-east-1.elb.amazonaws.com         8030:31041/TCP,9020:30783/TCP,9030:31545/TCP,9010:31610/TCP   2d
 ```
 
-#### Step 3: Accessing Doris Using LoadBalancer
-For example, if Doris' Query Port listens on port 9030, connect using:
-```yaml
-mysql -h ac4828493dgrftb884g67wg4tb68gyut-1137856348.us-east-1.elb.amazonaws.com -P9030 -uroot
+#### Step 3: Access through the LoadBalancer
+
+Take a MySQL connection as an example. Assume the Query Port listens on 9030. Connect to the Doris cluster with the following command:
+
+```shell
+mysql -h ac4828493dgrftb884g67wg4tb68gyut-1137856348.us-east-1.elb.amazonaws.com -P 9030 -uroot
 ```
 
-## Persistent Storage
-In the default deployment, the FE service uses Kubernetes [EmptyDir](https://kubernetes.io/docs/concepts/storage/volumes/#emptydir) as its metadata storage mode. Since EmptyDir is non-persistent, metadata will be lost after a service restart. To ensure that FE metadata is preserved after restarts, persistent storage must be configured.
+## Persistent storage
 
-### Automatically Generating Persistent Storage Using a Storage Template
-Configure persistent storage for logs and metadata using a storage template, as shown below:
-```yaml
-spec:
-  feSpec:
-    persistentVolumes:
-    - persistentVolumeClaimSpec:
-      # storageClassName: ${storageclass_name}
-        accessModes:
-          - ReadWriteOnce
-        resources:
-          requests:
-            storage: 200Gi
-```
-When deployed with the above configuration, the Doris Operator automatically mounts persistent storage for the log directory (default `/opt/apache-doris/fe/log`) and the metadata directory (default `/opt/apache-doris/fe/doris-meta`). If the log or metadata directory is explicitly specified in the [custom startup configuration](#custom-startup-configuration), the Doris Operator will parse and mount the persistent storage accordingly. Persistent storage is implemented using the [StorageClass mechanism](https://kubernetes.io/docs/concepts/storage/storage-classes/), which allows specifying the required StorageClass via the `storageClassName` field.
+In the [default deployment](https://github.com/apache/doris-operator/blob/master/doc/examples/disaggregated/cluster/ddc-sample.yaml), the FE service uses Kubernetes [EmptyDir](https://kubernetes.io/docs/concepts/storage/volumes/#emptydir) as the metadata storage mode. Because `EmptyDir` is a non-persistent storage mode, **metadata is lost after the service restarts**.
 
-### Custom Mount Point Configuration
-The Doris Operator supports customized storage configurations for mount points. The following example mounts 300Gi of storage for the log directory using a custom configuration and 200Gi for the metadata directory using the storage template:
+To ensure FE metadata is not lost after a restart, configure persistent storage for FE. Doris Operator provides the following three options. Choose one based on your needs:
+
+| Option | Applicable scenario |
+| --- | --- |
+| Auto-generate using a storage template | Logs and metadata use the same storage configuration, simplifying the setup |
+| Custom mount point configuration | Different directories require different storage specifications |
+| Do not persist logs | Logs are written only to standard output and do not need to be persisted |
+
+### Auto-generate using a storage template
+
+Configure unified persistence for logs and metadata through a storage template, as shown below:
+
 ```yaml
 spec:
-  feSpec:
-    persistentVolumes:
-    - mountPaths:
-      - /opt/apache-doris/fe/log
-      persistentVolumeClaimSpec:
-      # storageClassName: ${storageclass_name}
-        accessModes:
-          - ReadWriteOnce
-        resources:
-          requests:
-            storage: 300Gi
-    - persistentVolumeClaimSpec:
-      # storageClassName: ${storageclass_name}
-        accessModes:
-          - ReadWriteOnce
-        resources:
-          requests:
-            storage: 200Gi
+    feSpec:
+        persistentVolumes:
+            - persistentVolumeClaimSpec:
+                # storageClassName: ${storageclass_name}
+                accessModes:
+                    - ReadWriteOnce
+                resources:
+                    requests:
+                        storage: 200Gi
 ```
+
+After the cluster is deployed with this configuration, the following takes effect:
+
+- Doris Operator automatically mounts persistent storage for the log directory (default `/opt/apache-doris/fe/log`) and the metadata directory (default `/opt/apache-doris/fe/doris-meta`)
+- If the log or metadata directory is explicitly specified in the [custom startup configuration](#custom-startup-configuration), Doris Operator parses it automatically and mounts the storage accordingly
+- Persistent storage uses [StorageClass mode](https://kubernetes.io/docs/concepts/storage/storage-classes/). You can specify the desired StorageClass through `storageClassName`
+
+### Custom mount point configuration
+
+Doris Operator supports per-directory storage configuration. For example, mount a 300Gi disk for the log directory using a custom storage configuration, and mount a 200Gi disk for the metadata directory using the storage template:
+
+```yaml
+spec:
+    feSpec:
+        persistentVolumes:
+            - mountPaths:
+                - /opt/apache-doris/fe/log
+              persistentVolumeClaimSpec:
+                # storageClassName: ${storageclass_name}
+                accessModes:
+                    - ReadWriteOnce
+                resources:
+                    requests:
+                        storage: 300Gi
+            - persistentVolumeClaimSpec:
+                # storageClassName: ${storageclass_name}
+                accessModes:
+                    - ReadWriteOnce
+                resources:
+                    requests:
+                        storage: 200Gi
+```
+
 :::tip Tip
-If the `mountPaths` array is empty, it indicates that the current storage configuration is using the template configuration.
+
+If the `mountPaths` array is empty, the storage configuration is treated as a template configuration (that is, it applies to all directories that are not configured separately).
+
 :::
 
-### Disable Log Persistence
-If log persistence is not desired and logs should only be output to the standard output, configure as follows:
+### Do not persist logs
+
+If you do not want to persist logs and only want them written to standard output, use the following configuration:
+
 ```yaml
 spec:
-  feSpec:
-    logNotStore: true
+    feSpec:
+        logNotStore: true
 ```
