@@ -1,6 +1,6 @@
 ---
 title: Async Materialized View FAQ
-description: Quick reference for async materialized view FAQs: how to troubleshoot and resolve build errors, refresh exceptions, transparent rewrite misses, and unavailable states.
+description: "Quick reference for async materialized view FAQs: how to troubleshoot and resolve build errors, refresh exceptions, transparent rewrite misses, and unavailable states."
 keywords:
     - Async Materialized View FAQ
     - materialized view refresh failure
