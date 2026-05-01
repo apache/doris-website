@@ -62,7 +62,7 @@ It is recommended to use Random Bucketing in the following scenarios:
 
 * Random Bucketing cannot be pruned based on bucket keys and will scan all data in the hit partition, so it is not recommended for point query scenarios.
 
-* Only DUPLICATE tables can use Random partitioning. UNIQUE and AGGREGATE tables cannot use Random Bucketing.
+* Only DUPLICATE tables can use Random Bucketing. UNIQUE and AGGREGATE tables cannot use Random Bucketing.
 
 The following example shows how to create a table with Random Bucketing. For detailed syntax, please refer to the CREATE TABLE statement:
 
