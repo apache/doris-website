@@ -360,6 +360,108 @@ Is it possible to dynamically configure: true
 
 Is it a configuration item unique to the Master FE node: false
 
+### TSO (Timestamp Oracle)
+
+#### `enable_tso_feature`
+
+Default：false
+
+IsMutable：true
+
+Is it a configuration item unique to the Master FE node: true
+
+Whether to enable TSO (Timestamp Oracle) related features on FE. This is the global switch for TSO service availability and for table-level `enable_tso` usage, including recording rowset commit TSO and exposing it via system tables.
+
+#### `tso_service_update_interval_ms`
+
+Default：50（ms）
+
+IsMutable：false
+
+Is it a configuration item unique to the Master FE node: true
+
+The update interval of the TSO service in milliseconds. The daemon periodically checks clock drift/backward and renews the time window.
+
+#### `tso_max_update_retry_count`
+
+Default：3
+
+IsMutable：true
+
+Is it a configuration item unique to the Master FE node: true
+
+Maximum retry count when the TSO service updates the global timestamp (for example, when persisting a new window end).
+
+#### `tso_max_get_retry_count`
+
+Default：10
+
+IsMutable：true
+
+Is it a configuration item unique to the Master FE node: true
+
+Maximum retry count when generating a new TSO. If FE still cannot obtain a valid TSO after these retries, requests such as transaction commit may fail.
+
+#### `tso_service_window_duration_ms`
+
+Default：5000（ms）
+
+IsMutable：true
+
+Is it a configuration item unique to the Master FE node: true
+
+The duration of a leased TSO time window in milliseconds. The Master FE persists the leased future window end, not every issued TSO, so a larger window reduces persistence frequency while still preserving a safe upper bound for restart or master failover recovery.
+
+#### `tso_clock_backward_startup_threshold_ms`
+
+Default：1800000（ms）
+
+IsMutable：true
+
+Is it a configuration item unique to the Master FE node: true
+
+Maximum tolerated clock-backward threshold during TSO startup calibration. If the persisted TSO window end is ahead of current system time by more than this threshold, TSO initialization fails. This threshold only affects startup calibration and is not a runtime circuit breaker.
+
+#### `tso_time_offset_debug_mode`
+
+Default：0（ms）
+
+IsMutable：true
+
+Is it a configuration item unique to the Master FE node: false
+
+Time offset for the TSO service in milliseconds. For test/debug only.
+
+#### `enable_tso_persist_journal`
+
+Default：false
+
+IsMutable：true
+
+Is it a configuration item unique to the Master FE node: true
+
+Whether to persist the TSO window end into edit log. This is the persistence foundation for restarting or switching master without TSO rollback, because startup calibration must recover a historical upper bound before issuing new timestamps. Enabling this may emit new operation codes and may break rollback compatibility with older versions.
+
+#### `enable_tso_checkpoint_module`
+
+Default：false
+
+IsMutable：true
+
+Is it a configuration item unique to the Master FE node: true
+
+Whether to include TSO information as a checkpoint image module for faster recovery. This mainly affects checkpoint/image recovery speed and completeness; it does not change the runtime TSO allocation algorithm itself. Older versions may need to ignore unknown modules when reading newer images.
+
+#### `enable_tso_forward_when_counter_full`
+
+Default：true
+
+IsMutable：true
+
+Is it a configuration item unique to the Master FE node: true
+
+Whether to proactively advance TSO physical time by 1ms when the logical counter becomes high. Enabling this reduces the chance of logical-counter exhaustion when the wall clock does not move forward fast enough. This forward step is part of monotonicity protection and does not mean TSO is intended to be an exact wall clock. If disabled, TSO depends more strictly on actual clock progress, so clock stall or rollback is more likely to surface as TSO allocation failure and transaction errors.
+
 ### Service
 
 #### `query_port`

@@ -361,6 +361,108 @@ heartbeat_mgr 中处理心跳事件的线程数。
 
 是否为 Master FE 节点独有的配置项：false
 
+### TSO（Timestamp Oracle）
+
+#### `enable_tso_feature`
+
+默认值：false
+
+是否可以动态配置：true
+
+是否为 Master FE 节点独有配置项：true
+
+是否启用 FE 侧 TSO（全局时间戳）相关能力。这是 TSO 服务可用性以及表级 `enable_tso` 能力的全局开关，包括记录 Rowset 的提交 TSO 并在系统表中暴露相关字段。
+
+#### `tso_service_update_interval_ms`
+
+默认值：50（ms）
+
+是否可以动态配置：false
+
+是否为 Master FE 节点独有配置项：true
+
+TSO 服务的更新间隔（毫秒）。守护线程会周期性检查时钟漂移/回拨，并在需要时续租时间窗口。
+
+#### `tso_max_update_retry_count`
+
+默认值：3
+
+是否可以动态配置：true
+
+是否为 Master FE 节点独有配置项：true
+
+TSO 服务更新全局时间戳（例如持久化新的时间窗口右界）失败时的最大重试次数。
+
+#### `tso_max_get_retry_count`
+
+默认值：10
+
+是否可以动态配置：true
+
+是否为 Master FE 节点独有配置项：true
+
+获取/生成 TSO 失败时的最大重试次数。如果在这些重试之后 FE 仍无法拿到有效 TSO，请求（例如事务提交）可能失败。
+
+#### `tso_service_window_duration_ms`
+
+默认值：5000（ms）
+
+是否可以动态配置：true
+
+是否为 Master FE 节点独有配置项：true
+
+TSO 时间窗口时长（毫秒）。Master FE 持久化的是“已租约的未来窗口右界”，而不是每一次已经发出的 TSO，因此窗口越大，持久化频率越低，同时仍能在重启或切主恢复时提供一个安全的历史上界。
+
+#### `tso_clock_backward_startup_threshold_ms`
+
+默认值：1800000（ms）
+
+是否可以动态配置：true
+
+是否为 Master FE 节点独有配置项：true
+
+TSO 启动校准阶段允许的最大时钟回拨阈值。如果持久化的 TSO 窗口右界领先当前系统时间超过该阈值，TSO 初始化会失败。该阈值只影响启动校准阶段，不是运行期熔断阈值。
+
+#### `tso_time_offset_debug_mode`
+
+默认值：0（ms）
+
+是否可以动态配置：true
+
+是否为 Master FE 节点独有配置项：false
+
+TSO 服务时间偏移（毫秒），仅用于测试/调试。
+
+#### `enable_tso_persist_journal`
+
+默认值：false
+
+是否可以动态配置：true
+
+是否为 Master FE 节点独有配置项：true
+
+是否启用将 TSO 时间窗口右界写入 EditLog。这是重启或切主后避免 TSO 回退的持久化基础，因为启动校准必须先恢复出一个历史上界，再继续发放新的时间戳。开启后可能会产生新的操作码，回滚到旧版本可能不兼容。
+
+#### `enable_tso_checkpoint_module`
+
+默认值：false
+
+是否可以动态配置：true
+
+是否为 Master FE 节点独有配置项：true
+
+是否启用将 TSO 信息作为 checkpoint 镜像模块参与持久化。它主要影响 checkpoint/image 恢复路径的速度与完整性，不改变运行期发号算法本身。开启后镜像中包含新模块，旧版本读取新镜像可能需要忽略未知模块。
+
+#### `enable_tso_forward_when_counter_full`
+
+默认值：true
+
+是否可以动态配置：true
+
+是否为 Master FE 节点独有配置项：true
+
+当逻辑计数器占用较高时，是否主动将 TSO 的物理时间前推 1ms。开启后可以降低在物理时钟未及时前进时触发逻辑计数器耗尽的概率。这个前推动作属于单调性保护的一部分，并不意味着 TSO 旨在精确反映物理时钟。关闭后，TSO 会更依赖真实时钟推进，因此在时钟停滞或回拨场景下更容易表现为 TSO 分配失败和事务报错。
+
 ### 服务
 
 #### `query_port`
