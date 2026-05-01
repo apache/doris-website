@@ -65,21 +65,19 @@
         max-width: 1280px;
         margin: 0 auto;
         padding: 36px 56px 0;
-        // Stretch so the left column can grow to match the right column's
-        // height — needed for the bottom-aligned logos frame.
         align-items: stretch;
     }
 
     &__left {
-        padding-top: 4px;
-        // Grid items default to min-width: auto, which would let the
-        // max-content marquee track inside push this column past its
-        // 1fr track. Forcing 0 keeps the column aligned to its grid track.
         min-width: 0;
-        // Flex column lets the logos frame use margin-top: auto to pin
-        // itself to the bottom of the column.
         display: flex;
         flex-direction: column;
+        align-items: stretch;
+        justify-content: center;
+    }
+
+    &__intro {
+        width: 100%;
     }
 
     // ── Eyebrow ────────────────────────────────────────────────────────────
@@ -223,120 +221,6 @@
                 border-color: var(--hn-cream-light);
                 color: var(--hn-cream-light) !important;
             }
-        }
-    }
-
-    // ── Stats row ──────────────────────────────────────────────────────────
-
-    &__meta {
-        display: flex;
-        gap: 24px;
-        margin-top: 22px;
-        padding-top: 16px;
-        border-top: 1px dashed rgba(245, 239, 228, 0.18);
-        font-family: var(--hn-mono);
-        font-size: 10px;
-        letter-spacing: 0.06em;
-        text-transform: uppercase;
-        color: rgba(245, 239, 228, 0.55);
-        flex-wrap: wrap;
-    }
-
-    &__meta-item {
-        display: flex;
-        flex-direction: column;
-        gap: 3px;
-    }
-
-    &__meta-num {
-        display: block;
-        color: var(--hn-cream-light);
-        font-size: 15px;
-        letter-spacing: 0;
-        font-weight: 700;
-        text-transform: none;
-    }
-
-    // ── User logo marquee ──────────────────────────────────────────────────
-
-    // Frame wrapper: uses margin-top: auto inside the flex left column to
-    // push itself to the bottom so its bottom edge lines up with the right
-    // column's last card.
-    &__logos-frame {
-        // Push the frame to the bottom of the flex left column so its
-        // bottom edge lines up with the right column's last card. The
-        // right column is taller than the title/CTAs/meta stack above,
-        // so this auto resolves to a real positive gap.
-        margin-top: auto;
-        padding: 14px 18px 16px;
-        border: 1px solid rgba(245, 239, 228, 0.12);
-        border-radius: 10px;
-        background: rgba(0, 0, 0, 0.18);
-        box-shadow: 0 0 0 1px rgba(255, 210, 63, 0.04);
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-        // Critical: clip the inner max-content track horizontally.
-        min-width: 0;
-        overflow: hidden;
-    }
-
-    &__logos {
-        position: relative;
-        // Stay aligned with the frame even when the inner track is wider.
-        width: 100%;
-        max-width: 100%;
-        overflow: hidden;
-        // Soft fade on both edges so logos appear/disappear gracefully.
-        mask-image: linear-gradient(90deg, transparent 0, #000 6%, #000 94%, transparent 100%);
-        -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 6%, #000 94%, transparent 100%);
-
-        // Pause animation on hover so users can read / click a logo.
-        &:hover .hero-next__logos-track {
-            animation-play-state: paused;
-        }
-    }
-
-    &__logos-track {
-        display: flex;
-        gap: 36px;
-        align-items: center;
-        width: max-content;
-        animation: hero-next-logo-scroll 38s linear infinite;
-    }
-
-    &__user-logo {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        width: 96px;
-        height: 44px;
-        border-radius: 6px;
-        background: rgba(245, 239, 228, 0.92);
-        padding: 6px 10px;
-        transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
-        flex-shrink: 0;
-        cursor: pointer;
-        text-decoration: none !important;
-
-        img {
-            max-width: 100%;
-            max-height: 100%;
-            object-fit: contain;
-            user-select: none;
-            display: block;
-        }
-
-        &:hover {
-            transform: translateY(-2px);
-            background: var(--hn-cream-light);
-            box-shadow: 0 8px 18px rgba(0, 0, 0, 0.25);
-            text-decoration: none !important;
-        }
-
-        &--placeholder {
-            // Same look as a real link until hrefs get wired up.
-            cursor: default;
         }
     }
 
@@ -581,13 +465,6 @@
     50% { opacity: 0; }
 }
 
-// Track holds two copies of the logo list; sliding by exactly -50%
-// re-aligns the second copy with the start, producing a seamless loop.
-@keyframes hero-next-logo-scroll {
-    from { transform: translate3d(0, 0, 0); }
-    to   { transform: translate3d(-50%, 0, 0); }
-}
-
 // ─── Search Results ───────────────────────────────────────────────────────────
 
 .hn-search-results {
@@ -650,6 +527,7 @@
     }
 
     &__row {
+        position: relative;
         display: grid;
         grid-template-columns: 26px 1fr 160px 42px;
         gap: 10px;
@@ -658,7 +536,12 @@
         border-bottom: 1px solid rgba(245, 239, 228, 0.05);
         opacity: 0;
         transform: translateX(-6px);
-        transition: opacity 0.35s ease, transform 0.35s ease;
+        transition:
+            opacity 0.35s ease,
+            transform 0.35s ease,
+            background 0.18s ease,
+            border-color 0.18s ease,
+            box-shadow 0.18s ease;
 
         &:last-child {
             border-bottom: none;
@@ -667,6 +550,33 @@
         &--visible {
             opacity: 1;
             transform: translateX(0);
+
+            &:hover {
+                background: rgba(255, 210, 63, 0.10);
+                border-bottom-color: rgba(255, 210, 63, 0.22);
+                box-shadow:
+                    inset 3px 0 0 #FFD23F,
+                    0 10px 28px rgba(0, 0, 0, 0.18);
+                transform: translateX(3px);
+                z-index: 1;
+
+                .hn-search-results__rank,
+                .hn-search-results__score {
+                    color: #FFD23F;
+                }
+
+                .hn-search-results__title {
+                    color: #FFFFFF;
+                }
+
+                .hn-search-results__bar-track {
+                    background: rgba(245, 239, 228, 0.16);
+                }
+
+                .hn-search-results__bar-fill {
+                    box-shadow: 0 0 10px rgba(255, 210, 63, 0.28);
+                }
+            }
         }
     }
 
@@ -675,6 +585,7 @@
         color: rgba(245, 239, 228, 0.4);
         font-weight: 700;
         letter-spacing: 0.02em;
+        transition: color 0.18s ease;
     }
 
     &__info {
@@ -691,6 +602,7 @@
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
+        transition: color 0.18s ease;
     }
 
     &__meta {
@@ -723,12 +635,13 @@
         background: rgba(245, 239, 228, 0.07);
         border-radius: 2px;
         overflow: hidden;
+        transition: background 0.18s ease;
     }
 
     &__bar-fill {
         height: 100%;
         border-radius: 2px;
-        transition: width 0.9s cubic-bezier(0.2, 0.8, 0.2, 1);
+        transition: width 0.9s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.18s ease;
 
         &--text { background: #FFD23F; }
         &--vec  { background: #2DDFA8; }
@@ -741,5 +654,324 @@
         color: #FAF6EE;
         text-align: right;
         font-variant-numeric: tabular-nums;
+        transition: color 0.18s ease;
+    }
+}
+
+// ─── Report Carousel ─────────────────────────────────────────────────────────
+
+.hn-report-carousel {
+    position: relative;
+    min-height: 280px;
+
+    &__pane {
+        transition: opacity 0.5s ease;
+    }
+
+    &__pane--active {
+        opacity: 1;
+    }
+
+    &__pane--inactive {
+        position: absolute;
+        inset: 0;
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    &__dots {
+        position: absolute;
+        bottom: -22px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        z-index: 5;
+    }
+
+    &__dot {
+        width: 6px !important;
+        height: 6px !important;
+        border-radius: 50% !important;
+        background: rgba(255, 210, 63, 0.35);
+        transition: background 0.2s ease, width 0.3s ease, height 0.3s ease, transform 0.2s ease;
+        border: 0;
+        padding: 0;
+        margin: 0;
+        cursor: pointer;
+        appearance: none;
+        box-shadow: none;
+        font: inherit;
+        color: inherit;
+        line-height: 0;
+
+        &:hover {
+            background: rgba(255, 210, 63, 0.65);
+            transform: scale(1.15);
+        }
+
+        &:focus-visible {
+            outline: 2px solid #FFD23F;
+            outline-offset: 3px;
+        }
+
+        &--active {
+            background: #FFD23F;
+            width: 12px !important;
+            height: 12px !important;
+            border-radius: 50% !important;
+
+            &:hover {
+                background: #FFD23F;
+                transform: none;
+            }
+        }
+    }
+}
+
+// ─── Node Graph + Bars Report ────────────────────────────────────────────────
+
+.hn-node-bars {
+    display: grid;
+    grid-template-columns: 1.05fr 1fr;
+    gap: 12px;
+    background: #054C39;
+    border: 1px solid rgba(245, 239, 228, 0.1);
+    border-radius: 10px;
+    overflow: hidden;
+    padding: 14px;
+    box-shadow: 0 30px 60px -20px rgba(0, 0, 0, 0.45);
+
+    &__pane {
+        background: rgba(0, 0, 0, 0.18);
+        border-radius: 8px;
+        border: 1px solid rgba(245, 239, 228, 0.06);
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        min-width: 0;
+    }
+}
+
+.hn-node-graph {
+    height: 280px;
+    display: flex;
+    flex-direction: column;
+
+    &__head {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 14px;
+        border-bottom: 1px solid rgba(245, 239, 228, 0.06);
+        font-family: 'JetBrains Mono', 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+        font-size: 9.5px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+    }
+
+    &__head-label {
+        color: rgba(245, 239, 228, 0.55);
+        font-weight: 600;
+    }
+
+    &__canvas {
+        position: relative;
+        flex: 1;
+        perspective: 800px;
+        cursor: grab;
+        user-select: none;
+        touch-action: none;
+
+        &--dragging {
+            cursor: grabbing;
+        }
+    }
+
+    &__svg {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+
+        line {
+            transition: stroke 0.15s, stroke-width 0.15s, stroke-opacity 0.15s;
+        }
+    }
+
+    &__node {
+        position: absolute;
+        border: 0;
+        padding: 0;
+        margin: 0;
+        border-radius: 50%;
+        transform: translate(-50%, -50%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: box-shadow 0.2s ease, opacity 0.15s ease;
+        cursor: pointer;
+        appearance: none;
+        background-image: radial-gradient(circle at 30% 25%, rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0) 55%);
+
+        &:focus-visible {
+            outline: 2px solid #FFD23F;
+            outline-offset: 3px;
+        }
+
+        &--hovered {
+            z-index: 9999 !important;
+        }
+    }
+}
+
+.hn-bar-chart {
+    height: 280px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    padding: 10px 14px 12px;
+
+    &__head {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        font-family: 'JetBrains Mono', 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+        margin-bottom: 6px;
+    }
+
+    &__head-label {
+        font-size: 9.5px;
+        letter-spacing: 0.14em;
+        color: rgba(245, 239, 228, 0.55);
+        font-weight: 600;
+        text-transform: uppercase;
+    }
+
+    &__head-num {
+        display: flex;
+        gap: 8px;
+        align-items: baseline;
+    }
+
+    &__head-val {
+        font-size: 18px;
+        font-weight: 800;
+        color: #FAF6EE;
+    }
+
+    &__head-delta {
+        font-size: 10px;
+        color: #2DDFA8;
+        font-weight: 700;
+    }
+
+    &__grid {
+        position: absolute;
+        left: 14px;
+        right: 14px;
+        top: 38px;
+        bottom: 56px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        pointer-events: none;
+    }
+
+    &__grid-line {
+        height: 1px;
+        background: rgba(245, 239, 228, 0.06);
+    }
+
+    &__bars {
+        flex: 1;
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 6px;
+        align-items: end;
+        padding-top: 6px;
+        position: relative;
+        z-index: 1;
+    }
+
+    &__bar-col {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 6px;
+        height: 100%;
+    }
+
+    &__bar-track {
+        flex: 1;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+    }
+
+    &__bar-fill {
+        width: 100%;
+        background: linear-gradient(180deg, #FFD23F 0%, rgba(255, 210, 63, 0.65) 100%);
+        border-radius: 3px 3px 0 0;
+        transition: height 0.7s cubic-bezier(0.2, 0.8, 0.2, 1);
+        position: relative;
+
+        &--glow {
+            background: linear-gradient(180deg, #2DDFA8 0%, rgba(45, 223, 168, 0.7) 100%);
+            box-shadow: 0 0 12px rgba(45, 223, 168, 0.5);
+
+            .hn-bar-chart__bar-tip {
+                opacity: 1;
+                color: #FAF6EE;
+            }
+        }
+    }
+
+    &__bar-tip {
+        position: absolute;
+        top: -16px;
+        left: 50%;
+        transform: translateX(-50%);
+        font-family: 'JetBrains Mono', 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+        font-size: 9px;
+        color: rgba(245, 239, 228, 0.5);
+        opacity: 0;
+        transition: opacity 0.2s;
+        white-space: nowrap;
+    }
+
+    &__bar-label {
+        font-family: 'JetBrains Mono', 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+        font-size: 9px;
+        color: rgba(245, 239, 228, 0.45);
+        letter-spacing: 0.06em;
+    }
+
+    &__foot {
+        display: flex;
+        gap: 10px;
+        margin-top: 8px;
+        flex-wrap: wrap;
+    }
+
+    &__foot-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        font-family: 'JetBrains Mono', 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+        font-size: 9px;
+        color: rgba(245, 239, 228, 0.6);
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+
+        i {
+            width: 7px;
+            height: 7px;
+            border-radius: 2px;
+            flex-shrink: 0;
+        }
     }
 }

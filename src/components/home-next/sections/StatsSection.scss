@@ -2,46 +2,77 @@
     background: #054C39;
     border-top: 1px solid rgba(245, 239, 228, 0.08);
     border-bottom: 1px solid rgba(245, 239, 228, 0.08);
+    overflow: hidden;
 
-    &__inner {
+    &__marquee {
+        position: relative;
         max-width: 1280px;
         margin: 0 auto;
-        padding: 0 56px;
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
+        padding: 30px 56px;
+        overflow: hidden;
+        mask-image: linear-gradient(90deg, transparent 0, #000 7%, #000 93%, transparent 100%);
+        -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 7%, #000 93%, transparent 100%);
+
+        &:hover .stats-next__track {
+            animation-play-state: paused;
+        }
     }
 
-    &__item {
+    &__track {
         display: flex;
-        flex-direction: column;
-        gap: 4px;
-        padding: 28px 0;
-        border-right: 1px solid rgba(245, 239, 228, 0.08);
-
-        &:last-child {
-            border-right: none;
-        }
-
-        &:not(:first-child) {
-            padding-left: 48px;
-        }
+        width: max-content;
+        animation: stats-next-logo-scroll 36s linear infinite;
+        will-change: transform;
     }
 
-    &__num {
-        font-family: 'JetBrains Mono', 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
-        font-size: 32px;
-        font-weight: 700;
-        color: #FFD23F;
-        letter-spacing: -0.02em;
-        line-height: 1;
+    &__logo-set {
+        display: flex;
+        align-items: center;
+        gap: 34px;
+        padding-right: 34px;
     }
 
-    &__label {
-        font-family: 'JetBrains Mono', 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
-        font-size: 11px;
-        font-weight: 500;
-        letter-spacing: 0.12em;
-        text-transform: uppercase;
-        color: rgba(245, 239, 228, 0.6);
+    &__user-logo {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 124px;
+        height: 52px;
+        border-radius: 6px;
+        background: rgba(245, 239, 228, 0.92);
+        padding: 8px 14px;
+        flex-shrink: 0;
+        transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+        text-decoration: none !important;
+
+        img {
+            display: block;
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            user-select: none;
+        }
+
+        &:hover {
+            transform: translateY(-2px);
+            background: #FAF6EE;
+            box-shadow: 0 10px 24px rgba(0, 0, 0, 0.28);
+            text-decoration: none !important;
+        }
+
+        &--placeholder {
+            cursor: default;
+        }
+    }
+}
+
+@keyframes stats-next-logo-scroll {
+    from { transform: translate3d(0, 0, 0); }
+    to   { transform: translate3d(-50%, 0, 0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .stats-next__track {
+        animation-play-state: paused;
     }
 }

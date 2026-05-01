@@ -1,4 +1,4 @@
-import React, { JSX, useState, useEffect } from 'react';
+import React, { JSX, useState, useEffect, useRef } from 'react';
 import './HeroSection.scss';
 
 // ─── SVG atoms ───────────────────────────────────────────────────────────────
@@ -262,67 +262,339 @@ function SearchResults(): JSX.Element {
     );
 }
 
-// ─── User Logo Marquee ───────────────────────────────────────────────────────
+// ─── Node Graph + Bar Chart ─────────────────────────────────────────────────
 
-interface UserLogo {
-    name: string;
-    file: string;       // path under /images/user-logo (URL-encoded by encodeURI at render time)
-    href: string;       // empty string = no target yet
+type GraphNodeId = 'docs' | 'ai' | 'rag' | 'search' | 'vec' | 'embed';
+type Vector3 = [number, number, number];
+
+interface GraphNode {
+    id: GraphNodeId;
+    pos: Vector3;
+    r: number;
+    color: string;
 }
 
-const USER_LOGOS: UserLogo[] = [
-    { name: 'ByteDance',           file: 'Technology/ByteDance.jpg',                       href: '' },
-    { name: 'Xiaomi',              file: 'Technology/Xiaomi.jpg',                          href: '' },
-    { name: 'Baidu',               file: 'Technology/Baidu.jpg',                           href: '' },
-    { name: 'JD.com',              file: 'Technology/JD.com.jpg',                          href: '' },
-    { name: 'Tencent',             file: 'Technology/Tencent.jpg',                         href: '' },
-    { name: 'NIO',                 file: 'Telecom & Manufacturing/NIO.jpg',                href: '' },
-    { name: 'Lenovo',              file: 'Telecom & Manufacturing/Lenovo.jpg',             href: '' },
-    { name: 'Bank of China',       file: 'Finance/Bank of China.jpg',                      href: '' },
-    { name: 'Ping An',             file: 'Finance/Ping An Insurance Group.jpg',            href: '' },
-    { name: 'Meituan',             file: 'Media & Entertainment/Meituan.jpg',              href: '' },
-    { name: 'TikTok',              file: 'Media & Entertainment/TikTok.jpg',               href: '' },
-    { name: 'NetEase',             file: 'Media & Entertainment/NetEase.jpg',              href: '' },
+interface ProjectedPoint {
+    x: number;
+    y: number;
+    z: number;
+    scale: number;
+}
+
+interface ProjectedNode extends ProjectedPoint {
+    node: GraphNode;
+}
+
+interface DragState {
+    x: number;
+    y: number;
+    rx: number;
+    ry: number;
+}
+
+const NODES_3D: GraphNode[] = [
+    { id: 'docs',   pos: [ 0.00,  0.00,  0.00], r: 22, color: '#FAF6EE' },
+    { id: 'ai',     pos: [ 0.85,  0.55, -0.30], r: 18, color: '#2DDFA8' },
+    { id: 'rag',    pos: [-0.80,  0.50,  0.40], r: 16, color: '#FF8FA3' },
+    { id: 'search', pos: [ 0.55, -0.75,  0.55], r: 18, color: '#7DD3FF' },
+    { id: 'vec',    pos: [-0.65, -0.55, -0.55], r: 14, color: '#C7B5FF' },
+    { id: 'embed',  pos: [ 0.10,  0.85,  0.70], r: 14, color: '#FFD23F' },
 ];
 
-function UserLogoItem({ logo }: { logo: UserLogo }): JSX.Element {
-    const src = `/images/user-logo/${encodeURI(logo.file)}`;
-    const content = (
-        <img
-            src={src}
-            alt={logo.name}
-            title={logo.name}
-            loading="lazy"
-            draggable={false}
-        />
-    );
-    if (logo.href) {
-        return (
-            <a className="hero-next__user-logo" href={logo.href} aria-label={logo.name}>
-                {content}
-            </a>
-        );
-    }
-    // Render a button-like span when no link is wired up yet, so the slot still
-    // looks clickable but has no destination.
+const EDGES_3D: Array<[GraphNodeId, GraphNodeId]> = [
+    ['docs', 'ai'], ['docs', 'search'], ['docs', 'vec'], ['docs', 'rag'],
+    ['ai', 'rag'], ['ai', 'search'], ['ai', 'embed'],
+    ['rag', 'embed'],
+    ['search', 'vec'], ['search', 'embed'],
+];
+
+function projectPoint([x, y, z]: Vector3, rx: number, ry: number): ProjectedPoint {
+    const cy = Math.cos(ry);
+    const sy = Math.sin(ry);
+    const x1 = x * cy + z * sy;
+    const z1 = -x * sy + z * cy;
+    const cx = Math.cos(rx);
+    const sx = Math.sin(rx);
+    const y1 = y * cx - z1 * sx;
+    const z2 = y * sx + z1 * cx;
+    const fov = 2.4;
+    const perspective = fov / (fov - z2);
+    return { x: x1 * perspective, y: y1 * perspective, z: z2, scale: perspective };
+}
+
+function toGraphSvgPoint(point: Pick<ProjectedPoint, 'x' | 'y'>): { x: number; y: number } {
+    return { x: 50 + point.x * 32, y: 50 + point.y * 32 };
+}
+
+function NodeGraph(): JSX.Element {
+    const [hovered, setHovered] = useState<GraphNodeId | null>(null);
+    const [rotation, setRotation] = useState({ rx: -0.25, ry: 0.4 });
+    const [drag, setDrag] = useState<DragState | null>(null);
+    const containerRef = useRef<HTMLDivElement | null>(null);
+    const autoRotateRef = useRef(true);
+
+    useEffect(() => {
+        let raf = 0;
+        let last = performance.now();
+        const tick = (time: number) => {
+            const dt = (time - last) / 1000;
+            last = time;
+            if (autoRotateRef.current && !drag && hovered === null) {
+                setRotation(r => ({
+                    rx: r.rx + Math.sin(time * 0.0003) * 0.0008,
+                    ry: r.ry + dt * 0.18,
+                }));
+            }
+            raf = requestAnimationFrame(tick);
+        };
+        raf = requestAnimationFrame(tick);
+        return () => cancelAnimationFrame(raf);
+    }, [drag, hovered]);
+
+    const onPointerDown = (event: React.PointerEvent<HTMLDivElement>) => {
+        containerRef.current?.setPointerCapture(event.pointerId);
+        setDrag({ x: event.clientX, y: event.clientY, rx: rotation.rx, ry: rotation.ry });
+        autoRotateRef.current = false;
+    };
+
+    const onPointerMove = (event: React.PointerEvent<HTMLDivElement>) => {
+        if (!drag) return;
+        const dx = event.clientX - drag.x;
+        const dy = event.clientY - drag.y;
+        setRotation({
+            rx: Math.max(-1.2, Math.min(1.2, drag.rx + dy * 0.01)),
+            ry: drag.ry + dx * 0.012,
+        });
+    };
+
+    const onPointerEnd = (event: React.PointerEvent<HTMLDivElement>) => {
+        if (containerRef.current?.hasPointerCapture(event.pointerId)) {
+            containerRef.current.releasePointerCapture(event.pointerId);
+        }
+        setDrag(null);
+        window.setTimeout(() => {
+            autoRotateRef.current = true;
+        }, 1800);
+    };
+
+    const projected: ProjectedNode[] = NODES_3D.map(node => ({
+        node,
+        ...projectPoint(node.pos, rotation.rx, rotation.ry),
+    }));
+    const projectedById = new Map(projected.map(point => [point.node.id, point]));
+    const sortedNodes = [...projected].sort((a, b) => a.z - b.z);
+
     return (
-        <span className="hero-next__user-logo hero-next__user-logo--placeholder" role="link" aria-label={logo.name}>
-            {content}
-        </span>
+        <div className="hn-node-graph">
+            <div className="hn-node-graph__head">
+                <span className="hn-node-graph__head-label">KNOWLEDGE GRAPH</span>
+            </div>
+            <div
+                className={`hn-node-graph__canvas${drag ? ' hn-node-graph__canvas--dragging' : ''}`}
+                ref={containerRef}
+                onPointerDown={onPointerDown}
+                onPointerMove={onPointerMove}
+                onPointerUp={onPointerEnd}
+                onPointerCancel={onPointerEnd}
+            >
+                <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet" className="hn-node-graph__svg" aria-hidden="true">
+                    <defs>
+                        <radialGradient id="hn-node-graph-floor" cx="50%" cy="50%" r="50%">
+                            <stop offset="0%" stopColor="rgba(255,210,63,0.10)" />
+                            <stop offset="70%" stopColor="rgba(255,210,63,0)" />
+                        </radialGradient>
+                    </defs>
+                    <ellipse cx="50" cy="58" rx="36" ry="6" fill="url(#hn-node-graph-floor)" />
+                    {EDGES_3D.map(([a, b], i) => {
+                        const nodeA = projectedById.get(a);
+                        const nodeB = projectedById.get(b);
+                        if (!nodeA || !nodeB) return null;
+                        const pointA = toGraphSvgPoint(nodeA);
+                        const pointB = toGraphSvgPoint(nodeB);
+                        const active = hovered !== null && (hovered === a || hovered === b);
+                        const avgZ = (nodeA.z + nodeB.z) / 2;
+                        const opacity = active ? 0.95 : Math.max(0.08, 0.18 + (avgZ + 0.6) * 0.25);
+                        return (
+                            <line
+                                key={`${a}-${b}-${i}`}
+                                x1={pointA.x}
+                                y1={pointA.y}
+                                x2={pointB.x}
+                                y2={pointB.y}
+                                stroke={active ? '#FFD23F' : 'rgba(245,239,228,1)'}
+                                strokeOpacity={opacity}
+                                strokeWidth={active ? 0.45 : 0.22}
+                                vectorEffect="non-scaling-stroke"
+                            />
+                        );
+                    })}
+                </svg>
+                {sortedNodes.map(({ node, x, y, z, scale }) => {
+                    const isHovered = hovered === node.id;
+                    const svgPoint = toGraphSvgPoint({ x, y });
+                    const size = node.r * scale * (isHovered ? 1.35 : 1);
+                    const depthAlpha = 0.55 + Math.max(0, Math.min(1, (z + 1) / 2)) * 0.45;
+                    return (
+                        <button
+                            type="button"
+                            key={node.id}
+                            className={`hn-node-graph__node${isHovered ? ' hn-node-graph__node--hovered' : ''}`}
+                            aria-label={`${node.id} node`}
+                            style={{
+                                left: `${svgPoint.x}%`,
+                                top: `${svgPoint.y}%`,
+                                width: `${size}px`,
+                                height: `${size}px`,
+                                background: node.color,
+                                opacity: depthAlpha,
+                                zIndex: Math.round((z + 2) * 100),
+                                boxShadow: isHovered
+                                    ? '0 0 0 3px rgba(255,210,63,0.55), 0 8px 22px rgba(255,210,63,0.45)'
+                                    : `0 ${4 * scale}px ${10 * scale}px rgba(0,0,0,${0.35 * scale})`,
+                            }}
+                            onPointerEnter={() => {
+                                if (!drag) setHovered(node.id);
+                            }}
+                            onPointerLeave={() => {
+                                if (!drag) setHovered(null);
+                            }}
+                        />
+                    );
+                })}
+            </div>
+        </div>
     );
 }
 
-function UserLogoMarquee(): JSX.Element {
-    // Render the list twice back-to-back so the CSS translate animation can
-    // loop seamlessly (the second copy slides in as the first slides out).
+const BAR_DATA_SETS: number[][] = [
+    [62, 78, 45, 91, 70, 84, 58],
+    [80, 55, 92, 48, 76, 88, 65],
+    [70, 88, 62, 80, 54, 95, 72],
+    [55, 72, 88, 60, 82, 70, 92],
+];
+const BAR_LABELS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+
+function BarChart(): JSX.Element {
+    const [dataSetIndex, setDataSetIndex] = useState(0);
+    const [hoverIndex, setHoverIndex] = useState(-1);
+
+    useEffect(() => {
+        const id = window.setInterval(() => {
+            setDataSetIndex(i => (i + 1) % BAR_DATA_SETS.length);
+        }, 1800);
+        return () => window.clearInterval(id);
+    }, []);
+
+    const data = BAR_DATA_SETS[dataSetIndex];
+    const max = Math.max(...data);
+
     return (
-        <div className="hero-next__logos" aria-label="Companies using Apache Doris">
-            <div className="hero-next__logos-track">
-                {USER_LOGOS.map((logo, i) => (
-                    <UserLogoItem key={`a-${i}`} logo={logo} />
+        <div className="hn-bar-chart">
+            <div className="hn-bar-chart__head">
+                <span className="hn-bar-chart__head-label">QUERIES / DAY</span>
+                <span className="hn-bar-chart__head-num">
+                    <span className="hn-bar-chart__head-val">2.4M</span>
+                    <span className="hn-bar-chart__head-delta">▲ 12%</span>
+                </span>
+            </div>
+            <div className="hn-bar-chart__grid" aria-hidden="true">
+                {[0, 1, 2, 3].map(i => <div key={i} className="hn-bar-chart__grid-line" />)}
+            </div>
+            <div className="hn-bar-chart__bars">
+                {data.map((value, i) => (
+                    <div
+                        key={BAR_LABELS[i]}
+                        className="hn-bar-chart__bar-col"
+                        onMouseEnter={() => setHoverIndex(i)}
+                        onMouseLeave={() => setHoverIndex(-1)}
+                    >
+                        <div className="hn-bar-chart__bar-track">
+                            <div
+                                className={`hn-bar-chart__bar-fill${i === hoverIndex ? ' hn-bar-chart__bar-fill--glow' : ''}`}
+                                style={{ height: `${(value / max) * 100}%` }}
+                            >
+                                <span className="hn-bar-chart__bar-tip">{value}k</span>
+                            </div>
+                        </div>
+                        <span className="hn-bar-chart__bar-label">{BAR_LABELS[i]}</span>
+                    </div>
                 ))}
-                {USER_LOGOS.map((logo, i) => (
-                    <UserLogoItem key={`b-${i}`} logo={logo} />
+            </div>
+            <div className="hn-bar-chart__foot">
+                <span className="hn-bar-chart__foot-chip"><i style={{ background: '#FFD23F' }} />P50 18ms</span>
+                <span className="hn-bar-chart__foot-chip"><i style={{ background: '#2DDFA8' }} />P99 43ms</span>
+                <span className="hn-bar-chart__foot-chip"><i style={{ background: '#C7B5FF' }} />error 0.00%</span>
+            </div>
+        </div>
+    );
+}
+
+function NodeGraphAndBars(): JSX.Element {
+    return (
+        <div className="hn-node-bars">
+            <div className="hn-node-bars__pane"><NodeGraph /></div>
+            <div className="hn-node-bars__pane"><BarChart /></div>
+        </div>
+    );
+}
+
+const REPORT_SLIDES = [
+    { label: 'Show search results' },
+    { label: 'Show knowledge graph and query chart' },
+];
+
+function ReportCarousel(): JSX.Element {
+    const [activeIndex, setActiveIndex] = useState(0);
+    const [timerVersion, setTimerVersion] = useState(0);
+    const [isPaused, setIsPaused] = useState(false);
+
+    useEffect(() => {
+        if (isPaused) return undefined;
+        const id = window.setInterval(() => {
+            setActiveIndex(index => (index + 1) % REPORT_SLIDES.length);
+        }, 9000);
+        return () => window.clearInterval(id);
+    }, [isPaused, timerVersion]);
+
+    const selectSlide = (index: number) => {
+        setActiveIndex(index);
+        setTimerVersion(version => version + 1);
+    };
+
+    return (
+        <div
+            className="hn-report-carousel"
+            onMouseEnter={() => setIsPaused(true)}
+            onMouseLeave={() => setIsPaused(false)}
+        >
+            <div
+                id="hero-report-search"
+                role="tabpanel"
+                aria-hidden={activeIndex !== 0}
+                className={`hn-report-carousel__pane${activeIndex === 0 ? ' hn-report-carousel__pane--active' : ' hn-report-carousel__pane--inactive'}`}
+            >
+                <SearchResults />
+            </div>
+            <div
+                id="hero-report-graph"
+                role="tabpanel"
+                aria-hidden={activeIndex !== 1}
+                className={`hn-report-carousel__pane${activeIndex === 1 ? ' hn-report-carousel__pane--active' : ' hn-report-carousel__pane--inactive'}`}
+            >
+                <NodeGraphAndBars />
+            </div>
+            <div className="hn-report-carousel__dots" role="tablist" aria-label="Switch report animation">
+                {REPORT_SLIDES.map((slide, index) => (
+                    <button
+                        key={slide.label}
+                        type="button"
+                        role="tab"
+                        aria-label={slide.label}
+                        aria-selected={activeIndex === index}
+                        aria-controls={index === 0 ? 'hero-report-search' : 'hero-report-graph'}
+                        className={activeIndex === index ? 'hn-report-carousel__dot hn-report-carousel__dot--active' : 'hn-report-carousel__dot'}
+                        onClick={() => selectSlide(index)}
+                    />
                 ))}
             </div>
         </div>
@@ -352,63 +624,45 @@ export function HeroSection(): JSX.Element {
             <div className="hero-next__content">
                 {/* ── Left column ── */}
                 <div className="hero-next__left">
+                    <div className="hero-next__intro">
+                        <h1 className="hero-next__title">
+                            <span className="hero-next__title-line">Lightning</span>
+                            <span className="hero-next__title-line hero-next__title-fast">
+                                <span className="hero-next__title-accent">Fast</span>
+                                <LightningSvg size={56} />
+                            </span>
+                            <span className="hero-next__title-line">
+                                <span className="hero-next__title-accent">Analytics</span> and
+                            </span>
+                            <span className="hero-next__title-line">
+                                <span className="hero-next__title-accent">Search</span> Database
+                            </span>
+                        </h1>
 
-                    <h1 className="hero-next__title">
-                        <span className="hero-next__title-line">Lightning</span>
-                        <span className="hero-next__title-line hero-next__title-fast">
-                            <span className="hero-next__title-accent">Fast</span>
-                            <LightningSvg size={56} />
-                        </span>
-                        <span className="hero-next__title-line">
-                            <span className="hero-next__title-accent">Analytics</span> and
-                        </span>
-                        <span className="hero-next__title-line">
-                            <span className="hero-next__title-accent">Search</span> Database
-                        </span>
-                    </h1>
+                        <p className="hero-next__sub">
+                            Apache Doris is an open-source, real-time database for modern analytics
+                            and AI — built for both bare-metal shared-nothing and cloud-native
+                            disaggregated modes.
+                        </p>
 
-                    <p className="hero-next__sub">
-                        Apache Doris is an open-source, real-time database for modern analytics
-                        and AI — built for both bare-metal shared-nothing and cloud-native
-                        disaggregated modes.
-                    </p>
-
-                    <div className="hero-next__ctas">
-                        <a className="hero-next__btn hero-next__btn--yellow" href="/download">
-                            <DownloadIcon />
-                            Download
-                        </a>
-                        <a className="hero-next__btn hero-next__btn--primary" href="/docs/get-started/quick-start">
-                            Get Started
-                        </a>
-                        <a
-                            className="hero-next__btn hero-next__btn--ghost"
-                            href="https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-2gmq5o30h-455W226d79plXqPnpRPWYA"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                        >
-                            <SlackIcon />
-                            Join Slack
-                        </a>
-                    </div>
-
-                    <div className="hero-next__meta">
-                        <div className="hero-next__meta-item">
-                            <span className="hero-next__meta-num">600+</span>
-                            <span>Contributors</span>
+                        <div className="hero-next__ctas">
+                            <a className="hero-next__btn hero-next__btn--yellow" href="/download">
+                                <DownloadIcon />
+                                Download
+                            </a>
+                            <a className="hero-next__btn hero-next__btn--primary" href="/docs/get-started/quick-start">
+                                Get Started
+                            </a>
+                            <a
+                                className="hero-next__btn hero-next__btn--ghost"
+                                href="https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-2gmq5o30h-455W226d79plXqPnpRPWYA"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >
+                                <SlackIcon />
+                                Join Slack
+                            </a>
                         </div>
-                        <div className="hero-next__meta-item">
-                            <span className="hero-next__meta-num">5,000+</span>
-                            <span>Companies</span>
-                        </div>
-                        <div className="hero-next__meta-item">
-                            <span className="hero-next__meta-num">Apache 2.0</span>
-                            <span>License</span>
-                        </div>
-                    </div>
-
-                    <div className="hero-next__logos-frame">
-                        <UserLogoMarquee />
                     </div>
                 </div>
 
@@ -424,7 +678,7 @@ export function HeroSection(): JSX.Element {
                                 </span>
                             </div>
                         </div>
-                        <SearchResults />
+                        <ReportCarousel />
                     </div>
                 </div>
             </div>
