@@ -208,7 +208,7 @@ data:
 ```
 
 :::tip 提示
-存算分离集群 BE 服务的启动配置必须设置 `file_cache_path`，格式请参考[存算分离配置 `be.conf`](../../../compute-storage-decoupled/compilation-and-deployment.md#541-配置-beconf) 章节。
+存算分离集群 BE 服务的启动配置必须设置 `file_cache_path`，格式请参考[存算分离配置 `be.conf`](../../deploy-manually/separating-storage-compute-deploy-manually) 章节。
 :::
 
 ### 第 2 步：部署 ConfigMap

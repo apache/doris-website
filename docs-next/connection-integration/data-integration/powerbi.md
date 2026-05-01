@@ -189,7 +189,7 @@ After the import is complete, Doris data is accessible in Power BI as expected. 
 <!-- Knowledge type: Operation example -->
 <!-- Applicable scenario: Use Doris TPC-H data to create an order revenue statistics dashboard in Power BI -->
 
-This example uses TPC-H data as the data source. For how to build the Doris TPC-H data source, refer to the [Doris TPC-H Benchmark documentation](../../benchmark/tpch).
+This example uses TPC-H data as the data source. For how to build the Doris TPC-H data source, refer to the [Doris TPC-H Benchmark documentation](../../lakehouse/best-practices/tpch.md).
 
 Suppose you need to count order revenue across regions. You can build the dashboard with the following process.
 

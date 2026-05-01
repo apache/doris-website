@@ -108,7 +108,7 @@ After the Dataset configuration is complete, you can publish the dataset and cre
 
 ## Build a visualization in QuickSight
 
-This section uses TPC-H data as the data source to demonstrate how to build a visualization dashboard based on multi-table associations in QuickSight. For instructions on building the Doris TPC-H data source, see the [TPC-H benchmark documentation](../../benchmark/tpch).
+This section uses TPC-H data as the data source to demonstrate how to build a visualization dashboard based on multi-table associations in QuickSight. For instructions on building the Doris TPC-H data source, see the [TPC-H benchmark documentation](../../lakehouse/best-practices/tpch.md).
 
 The example goal is to count the number of orders for each country across different order statuses. Because Doris delivers good query performance for multi-table association scenarios, this document uses the `customer`, `nation`, and `orders` tables for associated analysis.
 

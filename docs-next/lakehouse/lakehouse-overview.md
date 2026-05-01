@@ -106,7 +106,7 @@ In addition, under the storage-computing coupled architecture, [elastic computin
 
 ### Openness
 
-Doris not only supports access to open lake table formats but also has good openness for its own stored data. Doris provides an open storage API and [implements a high-speed data link based on the Arrow Flight SQL protocol](../db-connect/arrow-flight-sql-connect.md), offering the speed advantages of Arrow Flight and the ease of use of JDBC/ODBC. Based on this interface, users can access data stored in Doris using Python/Java/Spark/Flink's ABDC clients.
+Doris not only supports access to open lake table formats but also has good openness for its own stored data. Doris provides an open storage API and [implements a high-speed data link based on the Arrow Flight SQL protocol](../connection-integration/arrow-flight-sql.md), offering the speed advantages of Arrow Flight and the ease of use of JDBC/ODBC. Based on this interface, users can access data stored in Doris using Python/Java/Spark/Flink's ABDC clients.
 
 Compared to open file formats, the open storage API abstracts the specific implementation of the underlying file format, allowing Doris to accelerate data access through advanced features in its storage format, such as rich indexing mechanisms. Additionally, upper-layer compute engines do not need to adapt to changes or new features in the underlying storage format, allowing all supported compute engines to simultaneously benefit from new features.
 

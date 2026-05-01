@@ -93,7 +93,7 @@ The parameters required to connect to Apache Doris through JDBC are as follows:
 
 ## Step 3: Build visualizations in Tableau
 
-The following example uses the TPC-H dataset to demonstrate how to build visualizations on top of a Doris data source. For instructions on building TPC-H data, see the [TPC-H Benchmark documentation](../../benchmark/tpch.md).
+The following example uses the TPC-H dataset to demonstrate how to build visualizations on top of a Doris data source. For instructions on building TPC-H data, see the [TPC-H Benchmark documentation](../../lakehouse/best-practices/tpch.md).
 
 ### 1. Join the data tables
 

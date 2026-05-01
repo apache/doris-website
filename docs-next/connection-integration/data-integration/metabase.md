@@ -138,7 +138,7 @@ After the data source configuration is complete, you can build visualizations in
 {/* Knowledge type: Procedure */}
 {/* Applicable scenario: Use Doris TPC-H data to create a Question and a Dashboard in Metabase */}
 
-This example uses TPC-H data as the data source. For how to build the Doris TPC-H data source, see the [Doris TPC-H benchmark documentation](../../benchmark/tpch).
+This example uses TPC-H data as the data source. For how to build the Doris TPC-H data source, see the [Doris TPC-H benchmark documentation](../../lakehouse/best-practices/tpch.md).
 
 Suppose you need to analyze how the order amounts of different shipping methods grow over time for cost analysis. You can complete the visualization configuration with the following workflow.
 

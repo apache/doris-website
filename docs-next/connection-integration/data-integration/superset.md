@@ -99,7 +99,7 @@ After the data source is configured, you can start building data visualizations.
 
 This article uses the TPC-H dataset as an example to demonstrate how to analyze the trend of order amounts over time across different shipping modes.
 
-> **Prerequisite**: The TPC-H dataset has been loaded into Apache Doris. Refer to the [TPC-H data construction guide](../../benchmark/tpch).
+> **Prerequisite**: The TPC-H dataset has been loaded into Apache Doris. Refer to the [TPC-H data construction guide](../../lakehouse/best-practices/tpch.md).
 
 ### 1. Create a Dataset
 

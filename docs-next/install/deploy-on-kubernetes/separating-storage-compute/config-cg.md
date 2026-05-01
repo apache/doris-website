@@ -208,7 +208,7 @@ data:
 ```
 
 :::tip Tip
-The startup configuration of the BE service in a storage-compute decoupled cluster must set `file_cache_path`. For the format, refer to the [Storage-Compute Decoupled `be.conf` configuration](../../../compute-storage-decoupled/compilation-and-deployment.md#541-配置-beconf) section.
+The startup configuration of the BE service in a storage-compute decoupled cluster must set `file_cache_path`. For the format, refer to the [Storage-Compute Decoupled `be.conf` configuration](../../deploy-manually/separating-storage-compute-deploy-manually) section.
 :::
 
 ### Step 2: Deploy the ConfigMap

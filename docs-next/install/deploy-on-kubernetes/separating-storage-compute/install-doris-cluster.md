@@ -46,7 +46,7 @@ A compute-storage decoupled cluster relies on FoundationDB (FDB) to store metada
 
 | Deployment Method | Applicable Scenario | Follow-up Action |
 |----------|----------|----------|
-| Direct deployment on machines (recommended) | Already have available physical machines / virtual machines | Refer to [Compute-Storage Decoupled - Pre-Deployment Preparation](../../../compute-storage-decoupled/before-deployment) to complete the deployment, ensuring that the deployment machines and the K8s cluster are in the same LAN |
+| Direct deployment on machines (recommended) | Already have available physical machines / virtual machines | Refer to [Compute-Storage Decoupled - Pre-Deployment Preparation](../../deploy-manually/separating-storage-compute-deploy-manually) to complete the deployment, ensuring that the deployment machines and the K8s cluster are in the same LAN |
 | Deploy on Kubernetes | Want to manage FDB uniformly within K8s | Directly execute the "K8s Quick Deployment" below |
 
 ### K8s Quick Deployment (Simplest Path)
@@ -278,7 +278,7 @@ CREATE STORAGE VAULT IF NOT EXISTS s3_vault
     );
 ```
 
-For the creation methods of other storage backends and the detailed description of each field, refer to [Managing Storage Vault](../../../compute-storage-decoupled/managing-storage-vault.md) in the compute-storage decoupled documentation.
+For the creation methods of other storage backends and the detailed description of each field, refer to [Managing Storage Vault](../../deploy-manually/separating-storage-compute-deploy-manually) in the compute-storage decoupled documentation.
 
 ### 4. Set the Default Storage Vault
 
