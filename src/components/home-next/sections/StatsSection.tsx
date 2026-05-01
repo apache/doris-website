@@ -1,4 +1,4 @@
-import React, { JSX, useState } from 'react';
+import React, { JSX, useEffect, useState } from 'react';
 import './StatsSection.scss';
 
 interface UserLogo {
@@ -184,14 +184,34 @@ function UserLogoCard({ logo, expanded, duplicate, onEnter, onLeave }: UserLogoC
     );
 }
 
+function useCompactStats(): boolean {
+    const [compact, setCompact] = useState(false);
+
+    useEffect(() => {
+        const query = window.matchMedia('(max-width: 768px), (hover: none)');
+        const update = () => setCompact(query.matches);
+
+        update();
+        query.addEventListener('change', update);
+        return () => query.removeEventListener('change', update);
+    }, []);
+
+    return compact;
+}
+
 export function StatsSection(): JSX.Element {
     const [hoveredKey, setHoveredKey] = useState<string | null>(null);
+    const compact = useCompactStats();
     const logoLoop = [...USER_LOGOS, ...USER_LOGOS];
+
+    useEffect(() => {
+        if (compact) setHoveredKey(null);
+    }, [compact]);
 
     return (
         <section className="stats-next" aria-label="Companies using Apache Doris">
             <div className="stats-next__viewport">
-                <div className={`stats-next__track${hoveredKey ? ' stats-next__track--expanded' : ''}`}>
+                <div className={`stats-next__track${hoveredKey && !compact ? ' stats-next__track--expanded' : ''}`}>
                     {logoLoop.map((logo, index) => {
                         const cardKey = `${logo.id}-${index}`;
                         const duplicate = index >= USER_LOGOS.length;
@@ -201,9 +221,13 @@ export function StatsSection(): JSX.Element {
                                 key={cardKey}
                                 logo={logo}
                                 duplicate={duplicate}
-                                expanded={hoveredKey === cardKey}
-                                onEnter={() => setHoveredKey(cardKey)}
-                                onLeave={() => setHoveredKey(current => (current === cardKey ? null : current))}
+                                expanded={!compact && hoveredKey === cardKey}
+                                onEnter={() => {
+                                    if (!compact) setHoveredKey(cardKey);
+                                }}
+                                onLeave={() => {
+                                    if (!compact) setHoveredKey(current => (current === cardKey ? null : current));
+                                }}
                             />
                         );
                     })}

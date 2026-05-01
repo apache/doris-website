@@ -132,6 +132,21 @@ function useContainerProgress(ref: React.RefObject<HTMLElement>): number {
     return progress;
 }
 
+function useIsNarrowViewport(): boolean {
+    const [isNarrowViewport, setIsNarrowViewport] = useState(false);
+
+    useEffect(() => {
+        const query = window.matchMedia('(max-width: 820px)');
+        const update = () => setIsNarrowViewport(query.matches);
+
+        update();
+        query.addEventListener('change', update);
+        return () => query.removeEventListener('change', update);
+    }, []);
+
+    return isNarrowViewport;
+}
+
 function getCardStyle(capability: Capability, idx: number, total: number, progress: number): CapabilityCardStyle {
     const transitions = Math.max(1, total - 1);
     const slice = 1 / transitions;
@@ -261,13 +276,14 @@ interface CapabilityCardProps {
     idx: number;
     total: number;
     progress: number;
+    isNarrowViewport: boolean;
 }
 
-function CapabilityCard({ capability, idx, total, progress }: CapabilityCardProps): JSX.Element {
+function CapabilityCard({ capability, idx, total, progress, isNarrowViewport }: CapabilityCardProps): JSX.Element {
     return (
         <article
             className={`features-next__card features-next__card--${capability.tone}`}
-            style={getCardStyle(capability, idx, total, progress)}
+            style={isNarrowViewport ? undefined : getCardStyle(capability, idx, total, progress)}
         >
             <div className="features-next__copy">
                 <div className="features-next__card-num">
@@ -300,6 +316,7 @@ function CapabilityCard({ capability, idx, total, progress }: CapabilityCardProp
 
 export function FeaturesSection(): JSX.Element {
     const containerRef = useRef<HTMLDivElement>(null);
+    const isNarrowViewport = useIsNarrowViewport();
     const progress = useContainerProgress(containerRef);
 
     return (
@@ -316,7 +333,7 @@ export function FeaturesSection(): JSX.Element {
             <div
                 className="features-next__stack-container"
                 ref={containerRef}
-                style={{ height: `${CAPABILITIES.length * 100}vh` }}
+                style={isNarrowViewport ? undefined : { height: `${CAPABILITIES.length * 100}vh` }}
             >
                 <div className="features-next__stage">
                     {CAPABILITIES.map((capability, i) => (
@@ -326,6 +343,7 @@ export function FeaturesSection(): JSX.Element {
                             idx={i}
                             total={CAPABILITIES.length}
                             progress={progress}
+                            isNarrowViewport={isNarrowViewport}
                         />
                     ))}
                     <div className="features-next__stage-progress" aria-hidden="true">

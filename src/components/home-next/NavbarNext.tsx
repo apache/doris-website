@@ -107,10 +107,36 @@ function GitHubIcon(): JSX.Element {
     );
 }
 
+function MenuIcon({ open }: { open: boolean }): JSX.Element {
+    return (
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+            {open ? (
+                <path d="M5 5l10 10M15 5L5 15" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+            ) : (
+                <path d="M4 6h12M4 10h12M4 14h12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+            )}
+        </svg>
+    );
+}
+
 export function NavbarNext(): JSX.Element {
     const stars = useGitHubStars(GITHUB_REPO, FALLBACK_STARS);
+    const [mobileOpen, setMobileOpen] = useState(false);
+    const [expandedMobileItem, setExpandedMobileItem] = useState(NAV_ITEMS[0]?.label ?? '');
+
+    useEffect(() => {
+        if (!mobileOpen) return undefined;
+
+        const onKeyDown = (event: KeyboardEvent) => {
+            if (event.key === 'Escape') setMobileOpen(false);
+        };
+
+        window.addEventListener('keydown', onKeyDown);
+        return () => window.removeEventListener('keydown', onKeyDown);
+    }, [mobileOpen]);
+
     return (
-        <nav className="navbar-next">
+        <nav className={`navbar-next${mobileOpen ? ' navbar-next--mobile-open' : ''}`}>
             <div className="navbar-next__inner">
                 <Link to="/" className="navbar-next__logo" aria-label="Apache Doris">
                     <img src="/images/logo-doris.svg" alt="Apache Doris" />
@@ -119,7 +145,7 @@ export function NavbarNext(): JSX.Element {
                 <div className="navbar-next__nav">
                     {NAV_ITEMS.map(item => (
                         <div key={item.label} className="navbar-next__item">
-                            <button className="navbar-next__trigger" type="button">
+                            <button className="navbar-next__trigger" type="button" aria-haspopup="true">
                                 {item.label}
                                 <ChevronDown />
                             </button>
@@ -150,6 +176,73 @@ export function NavbarNext(): JSX.Element {
                         <GitHubIcon />
                     </a>
                     <Link to="#" className="navbar-next__cta">
+                        Get Started
+                    </Link>
+                </div>
+
+                <button
+                    type="button"
+                    className="navbar-next__menu-button"
+                    aria-label={mobileOpen ? 'Close navigation menu' : 'Open navigation menu'}
+                    aria-expanded={mobileOpen}
+                    aria-controls="navbar-next-mobile-panel"
+                    onClick={() => setMobileOpen(open => !open)}
+                >
+                    <MenuIcon open={mobileOpen} />
+                </button>
+            </div>
+
+            <div id="navbar-next-mobile-panel" className="navbar-next__mobile-panel" hidden={!mobileOpen}>
+                <div className="navbar-next__mobile-sections">
+                    {NAV_ITEMS.map(item => {
+                        const expanded = expandedMobileItem === item.label;
+                        const sectionId = `navbar-next-mobile-${item.label.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`;
+
+                        return (
+                            <div className="navbar-next__mobile-section" key={item.label}>
+                                <button
+                                    type="button"
+                                    className="navbar-next__mobile-trigger"
+                                    aria-expanded={expanded}
+                                    aria-controls={sectionId}
+                                    onClick={() => setExpandedMobileItem(current => (current === item.label ? '' : item.label))}
+                                >
+                                    {item.label}
+                                    <ChevronDown />
+                                </button>
+                                <div id={sectionId} className="navbar-next__mobile-links" hidden={!expanded}>
+                                    {item.items.map(sub => (
+                                        <Link
+                                            key={sub.label}
+                                            to={sub.href}
+                                            className="navbar-next__mobile-link"
+                                            onClick={() => setMobileOpen(false)}
+                                        >
+                                            {sub.label}
+                                        </Link>
+                                    ))}
+                                </div>
+                            </div>
+                        );
+                    })}
+                </div>
+
+                <div className="navbar-next__mobile-actions">
+                    <a
+                        href={`https://github.com/${GITHUB_REPO}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="navbar-next__star-link"
+                        aria-label={`Star Apache Doris on GitHub (${stars} stars)`}
+                    >
+                        <StarIcon />
+                        <span>Star</span>
+                        <span className="navbar-next__star-divider" />
+                        <span className="navbar-next__star-count">{stars}</span>
+                        <span className="navbar-next__star-divider" />
+                        <GitHubIcon />
+                    </a>
+                    <Link to="#" className="navbar-next__cta" onClick={() => setMobileOpen(false)}>
                         Get Started
                     </Link>
                 </div>
