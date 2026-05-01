@@ -3,6 +3,7 @@ import { LayoutNext } from './LayoutNext';
 import { HeroSection } from './sections/HeroSection';
 import { StatsSection } from './sections/StatsSection';
 import { FeaturesSection } from './sections/FeaturesSection';
+import { DeploymentSection } from './sections/DeploymentSection';
 import { UseCasesSection } from './sections/UseCasesSection';
 import { CommunitySection } from './sections/CommunitySection';
 import { GetStartedSection } from './sections/GetStartedSection';
@@ -21,6 +22,7 @@ export default function HomeNext({ onSwitchBack }: HomeNextProps): JSX.Element {
             <HeroSection />
             <StatsSection />
             <FeaturesSection />
+            <DeploymentSection />
             <UseCasesSection />
             <CommunitySection />
             <GetStartedSection />
