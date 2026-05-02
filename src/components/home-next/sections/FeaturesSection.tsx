@@ -223,16 +223,15 @@ function PipelineVisual(): JSX.Element {
 }
 
 function LakehouseVisual(): JSX.Element {
-    const nodes = ['S3', 'Hive', 'Iceberg', 'Hudi', 'Paimon', 'MySQL'];
-
     return (
-        <div className="features-next__visual-content features-next__visual-content--lakehouse" aria-hidden="true">
-            <div className="features-next__lake-core">Doris</div>
-            {nodes.map((node, i) => (
-                <span key={node} className={`features-next__lake-node features-next__lake-node--${i + 1}`}>
-                    {node}
-                </span>
-            ))}
+        <div className="features-next__visual-content features-next__visual-content--realtime" aria-hidden="true">
+            <iframe
+                className="features-next__realtime-frame"
+                src="/home-next/lake-analytics.html"
+                title="Lakehouse Analytics animation"
+                loading="lazy"
+                tabIndex={-1}
+            />
         </div>
     );
 }

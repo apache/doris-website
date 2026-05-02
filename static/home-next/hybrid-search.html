@@ -19,7 +19,7 @@
     --green-node: #7ab648;
     --green-dim:  rgba(122, 182, 72, 0.25);
     --text-dim:   rgba(247, 240, 222, 0.8);
-    --mono: 'JetBrains Mono', 'Fira Mono', 'Courier New', monospace;
+    --mono: Inter, system-ui, -apple-system, "Segoe UI", sans-serif;
   }
 
   html, body {
@@ -526,19 +526,26 @@
     var DESIGN_H = 520;
     var canvas = document.querySelector('.canvas');
     var stage = document.getElementById('stage');
+    var resizeRaf = 0;
 
     function rescale() {
+      resizeRaf = 0;
       var cw = canvas.clientWidth;
       var ch = canvas.clientHeight;
       var scale = Math.min(cw / DESIGN_W, ch / DESIGN_H) * 1.2;
       stage.style.transform = 'translate(-50%, -50%) scale(' + scale + ')';
     }
 
+    function scheduleRescale() {
+      if (resizeRaf) return;
+      resizeRaf = requestAnimationFrame(rescale);
+    }
+
     rescale();
-    window.addEventListener('resize', rescale);
+    window.addEventListener('resize', scheduleRescale);
 
     if (typeof ResizeObserver !== 'undefined') {
-      new ResizeObserver(rescale).observe(document.documentElement);
+      new ResizeObserver(scheduleRescale).observe(document.documentElement);
     }
   })();
 </script>

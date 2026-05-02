@@ -8,7 +8,7 @@
   html, body {
     width: 100%; min-height: 100vh;
     background: transparent;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, system-ui, sans-serif;
+    font-family: Inter, system-ui, -apple-system, "Segoe UI", sans-serif;
   }
   body { display: flex; align-items: center; justify-content: center; padding: 0; }
   .canvas {
@@ -98,9 +98,9 @@
 
   <style>
     /* ========== Type ========== */
-    .card-text { fill: #0c3a25; font-weight: 600; font-family: -apple-system, "Segoe UI", Inter, sans-serif; }
+    .card-text { fill: #0c3a25; font-weight: 600; font-family: Inter, system-ui, -apple-system, "Segoe UI", sans-serif; }
     .doris-text { fill: #2a1f00; font-weight: 800; letter-spacing: 5px; }
-    .mono { font-family: -apple-system, "SF Mono", Menlo, Monaco, Consolas, monospace; }
+    .mono { font-family: Inter, system-ui, -apple-system, "Segoe UI", sans-serif; }
 
     /* ========== Doris pulse ========== */
     @keyframes dorisPulse {
@@ -523,16 +523,22 @@
     const latEl = document.getElementById('lat-value');
     const thrEl = document.getElementById('thr-value');
     const t0 = performance.now();
-    const fmt = (n) => n.toLocaleString('en-US');
+    const fmt = new Intl.NumberFormat('en-US');
+    const frameInterval = 80; // ~12.5fps is enough for text-only metrics.
+    let timerId = 0;
+    let running = false;
 
     function tick(now) {
+      if (!running) {
+        return;
+      }
       const t = ((now - t0) / 1000) % 10; // 0..10 (matches loop)
 
       // QPS: ramps from ~8k toward 10.5k around t=7s, then settles
       const ramp = 0.5 - 0.5 * Math.cos((t / 10) * Math.PI * 2);
       const qpsBase  = 8200 + 2300 * ramp;
       const qpsNoise = Math.sin(t * 7.3) * 110 + Math.sin(t * 13.1) * 55;
-      qpsEl.textContent = fmt(Math.round(qpsBase + qpsNoise));
+      qpsEl.textContent = fmt.format(Math.round(qpsBase + qpsNoise));
 
       // Latency: oscillates 0.28 - 0.65s
       const latBase = 0.46 + 0.16 * Math.sin(t * 1.2) + 0.05 * Math.sin(t * 4.4);
@@ -540,11 +546,32 @@
 
       // Load throughput: fluctuates around 10,000 MB/s (range ~8.5k - 11.8k)
       const thr = 10000 + 1200 * Math.sin(t * 1.5) + 350 * Math.sin(t * 4.9) + 120 * Math.sin(t * 11.7);
-      thrEl.textContent = fmt(Math.round(thr));
+      thrEl.textContent = fmt.format(Math.round(thr));
 
-      requestAnimationFrame(tick);
+      timerId = setTimeout(() => tick(performance.now()), frameInterval);
     }
-    requestAnimationFrame(tick);
+
+    function start() {
+      if (running) return;
+      running = true;
+      timerId = setTimeout(() => tick(performance.now()), frameInterval);
+    }
+
+    function stop() {
+      running = false;
+      clearTimeout(timerId);
+      timerId = 0;
+    }
+
+    document.addEventListener('visibilitychange', function () {
+      if (document.hidden) {
+        stop();
+        return;
+      }
+      start();
+    });
+
+    start();
   })();
 </script>
 </body>
