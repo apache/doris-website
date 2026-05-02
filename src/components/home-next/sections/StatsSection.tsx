@@ -122,15 +122,15 @@ const USER_LOGOS: UserLogo[] = [
     },
 ];
 
-interface UserLogoCardProps {
+interface LogoTileProps {
     logo: UserLogo;
-    expanded: boolean;
-    duplicate: boolean;
-    onEnter: () => void;
-    onLeave: () => void;
+    duplicate?: boolean;
+    expanded?: boolean;
+    onEnter?: () => void;
+    onLeave?: () => void;
 }
 
-function UserLogoCard({ logo, expanded, duplicate, onEnter, onLeave }: UserLogoCardProps): JSX.Element {
+function LogoTile({ logo, duplicate = false, expanded = false, onEnter, onLeave }: LogoTileProps): JSX.Element {
     const src = `/images/user-logo/${encodeURI(logo.file)}`;
 
     return (
@@ -158,12 +158,7 @@ function UserLogoCard({ logo, expanded, duplicate, onEnter, onLeave }: UserLogoC
             <div className="stats-next__card-content">
                 <div className="stats-next__card-head">
                     <span className="stats-next__card-mark">
-                        <img
-                            src={src}
-                            alt=""
-                            loading="lazy"
-                            draggable={false}
-                        />
+                        <img src={src} alt="" loading="lazy" draggable={false} />
                     </span>
                     <span className="stats-next__card-name">{logo.name}</span>
                     <span className="stats-next__card-tag">{logo.category}</span>
@@ -205,19 +200,7 @@ function CompactStatsGrid(): JSX.Element {
             <div className="stats-next__grid-viewport">
                 <div className="stats-next__grid">
                     {USER_LOGOS.map(logo => (
-                        <article
-                            className="stats-next__grid-card"
-                            key={logo.id}
-                            aria-label={logo.name}
-                        >
-                            <img
-                                src={`/images/user-logo/${encodeURI(logo.file)}`}
-                                alt={logo.name}
-                                title={logo.name}
-                                loading="lazy"
-                                draggable={false}
-                            />
-                        </article>
+                        <LogoTile key={logo.id} logo={logo} />
                     ))}
                 </div>
             </div>
@@ -247,7 +230,7 @@ export function StatsSection(): JSX.Element {
                         const duplicate = index >= USER_LOGOS.length;
 
                         return (
-                            <UserLogoCard
+                            <LogoTile
                                 key={cardKey}
                                 logo={logo}
                                 duplicate={duplicate}

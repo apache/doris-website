@@ -2,7 +2,7 @@ import React, { CSSProperties, JSX, useEffect, useRef, useState } from 'react';
 import './FeaturesSection.scss';
 
 type CapabilityTone = 'green' | 'cream' | 'ink';
-type CapabilityVisual = 'pipeline' | 'lakehouse' | 'search';
+type CapabilityVisual = 'pipeline' | 'lakehouse' | 'search' | 'realtime';
 
 interface CapabilityItem {
     term: string;
@@ -30,7 +30,7 @@ const CAPABILITIES: Capability[] = [
         title: 'Real-Time Analytics',
         subtitle: 'The fastest end-to-end engine from ingestion to insight.',
         tone: 'green',
-        visual: 'pipeline',
+        visual: 'realtime',
         illoTag: 'Streaming / CDC',
         rotation: -2.2,
         cta: {
@@ -260,10 +260,25 @@ function SearchVisual(): JSX.Element {
     );
 }
 
+function RealtimeAnalyticsVisual(): JSX.Element {
+    return (
+        <div className="features-next__visual-content features-next__visual-content--realtime" aria-hidden="true">
+            <iframe
+                className="features-next__realtime-frame"
+                src="/home-next/realtime-analytics.html"
+                title="Real-Time Analytics animation"
+                loading="lazy"
+                tabIndex={-1}
+            />
+        </div>
+    );
+}
+
 function CapabilityVisual({ capability }: { capability: Capability }): JSX.Element {
     return (
         <div className={`features-next__visual features-next__visual--${capability.tone}`}>
             <div className="features-next__visual-tag">{capability.illoTag}</div>
+            {capability.visual === 'realtime' && <RealtimeAnalyticsVisual />}
             {capability.visual === 'pipeline' && <PipelineVisual />}
             {capability.visual === 'lakehouse' && <LakehouseVisual />}
             {capability.visual === 'search' && <SearchVisual />}

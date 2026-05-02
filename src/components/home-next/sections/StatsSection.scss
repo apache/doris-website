@@ -1,11 +1,14 @@
 .stats-next {
-    --stats-next-expand-shift: 76px;
     --stats-next-bg: #057657;
     --stats-next-content-edge: max(56px, calc((100vw - 1280px) / 2 + 56px));
+    --stats-next-tile-width: 176px;
+    --stats-next-tile-height: 40px;
+    --stats-next-tile-radius: 16px;
+    --stats-next-expand-shift: 76px;
 
     position: relative;
-    height: 124px;
     width: 100%;
+    height: 80px;
     background: var(--stats-next-bg);
     border-top: 1px solid rgba(245, 239, 228, 0.08);
     border-bottom: 1px solid rgba(245, 239, 228, 0.08);
@@ -26,10 +29,11 @@
     &__viewport {
         position: absolute;
         right: var(--stats-next-content-edge);
-        bottom: 18px;
+        top: 50%;
         left: var(--stats-next-content-edge);
         z-index: 3;
-        height: 88px;
+        height: 44px;
+        transform: translateY(-50%);
         overflow: visible;
         clip-path: inset(-180px 0 -180px 0);
 
@@ -68,13 +72,13 @@
         z-index: 1;
     }
 
-    &__track--expanded &__card {
-        transform: translateX(calc(var(--stats-next-expand-shift) * -1));
-    }
-
     &:hover &__track,
     &:focus-within &__track {
         animation-play-state: paused;
+    }
+
+    &__track--expanded &__card {
+        transform: translateX(calc(var(--stats-next-expand-shift) * -1));
     }
 
     &__card {
@@ -84,16 +88,12 @@
         flex: 0 0 auto;
         align-items: center;
         justify-content: center;
-        width: 168px;
-        height: 72px;
-        padding: 0 18px;
+        width: var(--stats-next-tile-width);
+        height: var(--stats-next-tile-height);
         overflow: hidden;
-        border: 0;
-        border-radius: 10px;
-        background: #FAF6EE;
-        box-shadow:
-            0 1px 0 rgba(255, 255, 255, 0.4) inset,
-            0 6px 14px -8px rgba(0, 0, 0, 0.35);
+        border-radius: var(--stats-next-tile-radius);
+        background: #ffffff;
+        box-shadow: 0 12px 24px -20px rgba(0, 0, 0, 0.35);
         cursor: pointer;
         outline: none;
         transform: translateX(0);
@@ -142,12 +142,16 @@
         transition: opacity 0.25s ease;
         pointer-events: none;
 
+        transform: translateZ(0);
         img {
             display: block;
             max-width: 100%;
-            max-height: 42px;
+            max-height: 36px;
             object-fit: contain;
             user-select: none;
+            border-radius: inherit;
+            transform: scale(1.35);
+            transform-origin: center;
         }
     }
 
@@ -197,6 +201,7 @@
             max-height: 100%;
             object-fit: contain;
             user-select: none;
+            border-radius: inherit;
         }
     }
 
@@ -267,12 +272,12 @@
     }
 }
 
-// ── Static-grid mode (small screens) ──────────────────────────────────────
-// Chained selector keeps specificity ahead of the marquee media-query rules
-// further down this file.
-.stats-next.stats-next--compact {
+    .stats-next.stats-next--compact {
     --stats-next-grid-card-h: 64px;
     --stats-next-grid-gap: 10px;
+    --stats-next-tile-width: auto;
+    --stats-next-tile-height: var(--stats-next-grid-card-h);
+    --stats-next-tile-radius: 12px;
 
     height: auto;
     padding: 20px 16px 24px;
@@ -298,26 +303,17 @@
         gap: var(--stats-next-grid-gap);
     }
 
-    .stats-next__grid-card {
-        display: flex;
-        align-items: center;
-        justify-content: center;
+    .stats-next__card {
+        width: 100%;
         height: var(--stats-next-grid-card-h);
-        padding: 8px 12px;
-        border: 0;
-        border-radius: 8px;
-        background: #FAF6EE;
-        box-shadow:
-            0 1px 0 rgba(255, 255, 255, 0.4) inset,
-            0 4px 10px -6px rgba(0, 0, 0, 0.3);
+    }
 
-        img {
-            display: block;
-            max-width: 100%;
-            max-height: 38px;
-            object-fit: contain;
-            user-select: none;
-        }
+    .stats-next__card-logo img {
+        max-height: 72px;
+        object-fit: contain;
+        border-radius: inherit;
+        transform: scale(1.45);
+        transform-origin: center;
     }
 }
 
@@ -334,16 +330,19 @@
 
 @media (max-width: 768px) {
     .stats-next {
-        --stats-next-expand-shift: 60px;
         --stats-next-content-edge: 20px;
+        --stats-next-tile-width: 148px;
+        --stats-next-tile-height: 66px;
 
-        height: 114px;
+        height: 112px;
 
         &__viewport {
             bottom: 16px;
+            top: auto;
             right: 20px;
             left: 20px;
-            height: 82px;
+            height: 72px;
+            transform: none;
         }
 
         &__track {
@@ -396,28 +395,23 @@
 @media (max-width: 480px) {
     .stats-next {
         --stats-next-content-edge: 16px;
+        --stats-next-tile-width: 136px;
+        --stats-next-tile-height: 58px;
 
         height: 104px;
 
         &__viewport {
             right: 16px;
             left: 16px;
-            height: 74px;
+            height: 66px;
         }
 
         &__track {
             gap: 14px;
         }
+    }
 
-        &__card,
-        &__card--expanded {
-            width: 128px;
-            height: 58px;
-            padding: 0 12px;
-        }
-
-        &__card-logo img {
-            max-height: 36px;
-        }
+    .stats-next.stats-next--compact {
+        padding-inline: 12px;
     }
 }

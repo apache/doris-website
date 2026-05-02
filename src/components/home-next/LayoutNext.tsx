@@ -18,7 +18,7 @@ export function LayoutNext({ title, description, children }: LayoutNextProps): J
             <PageMetadata title={title} description={description} />
             <AnnouncementBar />
             <NavbarNext />
-            <main>{children}</main>
+            <main className="home-next-main">{children}</main>
             <Footer />
         </LayoutProvider>
     );

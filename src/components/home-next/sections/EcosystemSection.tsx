@@ -333,6 +333,68 @@ function useIsCompactEcosystem(): boolean {
     return compact;
 }
 
+function CompactTier({
+    label,
+    num,
+    groups,
+}: {
+    label: string;
+    num: string;
+    groups: EcosystemGroup[];
+}): JSX.Element {
+    return (
+        <div className="ecosystem-next__compact-tier">
+            <div className="ecosystem-next__compact-tier-label">
+                <span className="ecosystem-next__col-num">{num}</span>
+                {label}
+            </div>
+            <div className="ecosystem-next__compact-row">
+                {groups.map(group => (
+                    <div className="ecosystem-next__compact-block" key={group.id}>
+                        <span className="ecosystem-next__compact-block-title">{group.title}</span>
+                        <span className="ecosystem-next__compact-block-tag">{group.tag}</span>
+                    </div>
+                ))}
+            </div>
+        </div>
+    );
+}
+
+function CompactConnector(): JSX.Element {
+    const lanes = [16.6, 50, 83.4];
+    return (
+        <svg
+            className="ecosystem-next__compact-flow"
+            viewBox="0 0 100 40"
+            preserveAspectRatio="none"
+            aria-hidden="true"
+            focusable="false"
+        >
+            {lanes.map(x => (
+                <line
+                    key={`pipe-${x}`}
+                    x1={x}
+                    x2={x}
+                    y1={0}
+                    y2={40}
+                    className="ecosystem-next__compact-flow-pipe"
+                />
+            ))}
+            {lanes.map((x, i) => (
+                <line
+                    key={`stream-${x}`}
+                    x1={x}
+                    x2={x}
+                    y1={0}
+                    y2={40}
+                    className="ecosystem-next__compact-flow-stream"
+                    style={{ animationDelay: `${i * 0.2}s` }}
+                />
+            ))}
+        </svg>
+    );
+}
+
 function CompactEcosystem(): JSX.Element {
     return (
         <section
@@ -347,12 +409,19 @@ function CompactEcosystem(): JSX.Element {
                     </h2>
                 </div>
             </div>
-            <div className="ecosystem-next__thumbnail">
-                <img
-                    src="/images/next/what-is-apache-doris/12-ecosystem-integration.jpg"
-                    alt="Apache Doris ecosystem: data integration, lake formats, BI tools, AI ecosystem and SDKs"
-                    loading="lazy"
-                />
+            <div className="ecosystem-next__compact-card">
+                <CompactTier label="Upstream — Sources" num="01" groups={SOURCES} />
+                <CompactConnector />
+                <div className="ecosystem-next__compact-engine">
+                    <div className="ecosystem-next__doris">
+                        <div className="ecosystem-next__doris-core">
+                            <span className="ecosystem-next__doris-mark">D</span>
+                            <span className="ecosystem-next__doris-name">Apache Doris</span>
+                        </div>
+                    </div>
+                </div>
+                <CompactConnector />
+                <CompactTier label="Downstream — Consumers" num="03" groups={CONSUMERS} />
             </div>
         </section>
     );
