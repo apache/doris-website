@@ -1,6 +1,6 @@
 .ecosystem-next {
-    --ecosystem-doris-offset-y: -28px;
-    --ecosystem-engine-label-offset-y: -28px;
+    --ecosystem-doris-offset-y: 0px;
+    --ecosystem-engine-label-offset-y: 0px;
     --en-green: #11A679;
     --en-green-deep: #0B7A58;
     --en-green-dark: #06805F;
@@ -54,7 +54,8 @@
         font-size: 58px;
         font-weight: 800;
         line-height: 1.02;
-        letter-spacing: 0;
+        letter-spacing: -0.025em;
+        word-spacing: -0.1em;
 
         span {
             display: block;
@@ -120,18 +121,21 @@
         display: flex;
         flex-direction: column;
         gap: 14px;
+        justify-content: center;
     }
 
     &__col--center {
         align-items: center;
-        justify-content: center;
     }
 
     &__col-head {
+        position: absolute;
+        top: 0;
+        left: 0;
         display: flex;
         align-items: center;
         gap: 10px;
-        margin-bottom: 18px;
+        margin-bottom: 0;
         color: rgba(15, 26, 20, 0.48);
         font-family: var(--en-mono);
         font-size: 11px;
@@ -142,11 +146,14 @@
     }
 
     &__col-head--center {
-        align-self: center;
-        transform: translateY(var(--ecosystem-engine-label-offset-y));
+        left: 50%;
+        transform: translateX(-50%);
+        white-space: nowrap;
     }
 
     &__col-head--right {
+        left: auto;
+        right: 0;
         justify-content: flex-end;
         text-align: right;
     }
@@ -454,6 +461,7 @@
 
         &__col {
             gap: 12px;
+            justify-content: flex-start;
         }
 
         &__col--sources {
@@ -472,10 +480,15 @@
         &__col-head,
         &__col-head--right,
         &__col-head--center {
+            position: static;
+            left: auto;
+            right: auto;
             align-self: flex-start;
             justify-content: flex-start;
             text-align: left;
             margin-bottom: 8px;
+            transform: none;
+            white-space: normal;
         }
 
         &__flows {

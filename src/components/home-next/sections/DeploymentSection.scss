@@ -38,7 +38,8 @@
         font-weight: 800;
         font-size: 52px;
         line-height: 1.06;
-        letter-spacing: 0;
+        letter-spacing: -0.025em;
+        word-spacing: -0.1em;
         color: var(--dn-ink);
         margin: 0;
     }
@@ -111,7 +112,8 @@
         font-weight: 800;
         font-size: 38px;
         line-height: 0.98;
-        letter-spacing: 0;
+        letter-spacing: -0.02em;
+        word-spacing: -0.08em;
         margin: 0 0 24px;
         color: inherit;
     }

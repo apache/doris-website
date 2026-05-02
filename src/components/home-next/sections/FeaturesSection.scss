@@ -41,7 +41,8 @@
         font-weight: 800;
         font-size: 52px;
         line-height: 1.06;
-        letter-spacing: 0;
+        letter-spacing: -0.025em;
+        word-spacing: -0.1em;
         color: var(--fn-ink);
         margin: 0;
     }
@@ -138,7 +139,8 @@
         font-weight: 800;
         font-size: 44px;
         line-height: 1.02;
-        letter-spacing: 0;
+        letter-spacing: -0.02em;
+        word-spacing: -0.08em;
         margin: 0 0 14px;
         color: inherit;
     }
@@ -202,7 +204,7 @@
         font-family: var(--fn-sans);
         font-size: 16px;
         font-weight: 700;
-        letter-spacing: 0;
+        letter-spacing: -0.005em;
         margin-bottom: 2px;
         display: block;
     }

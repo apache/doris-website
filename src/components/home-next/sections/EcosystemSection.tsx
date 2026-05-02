@@ -100,8 +100,6 @@ const CONSUMERS: EcosystemGroup[] = [
     },
 ];
 
-const STRAIGHT_FLOW_IDS = new Set(['stream', 'ai']);
-
 function EcosystemBlock({ data, side, refMap }: EcosystemBlockProps): JSX.Element {
     return (
         <article
@@ -253,48 +251,42 @@ function useFlowPaths(
 
             const panelRect = panel.getBoundingClientRect();
             const dorisRect = doris.getBoundingClientRect();
-            const dorisX = dorisRect.left + dorisRect.width / 2 - panelRect.left;
-            const dorisY = dorisRect.top + dorisRect.height / 2 - panelRect.top;
-            const dorisRadius = dorisRect.width / 2 - 22;
-            const straightFlowYs = ['stream', 'ai']
-                .map(id => refMap.current[id])
-                .filter((el): el is HTMLElement => Boolean(el))
-                .map((el) => {
-                    const rect = el.getBoundingClientRect();
-                    return rect.top + rect.height / 2 - panelRect.top;
-                });
-            const straightFlowY = straightFlowYs.length
-                ? straightFlowYs.reduce((sum, y) => sum + y, 0) / straightFlowYs.length
-                : null;
+            const dorisTop = dorisRect.top - panelRect.top;
+            const dorisHeight = dorisRect.height;
+            const dorisLeftX = dorisRect.left - panelRect.left;
+            const dorisRightX = dorisRect.right - panelRect.left;
 
-            const nextPaths = Object.entries(refMap.current).reduce<FlowPath[]>((acc, [id, el]) => {
-                if (!el) return acc;
-
-                const blockRect = el.getBoundingClientRect();
+            interface BlockInfo {
+                id: string;
+                isLeft: boolean;
+                blockX: number;
+                blockY: number;
+            }
+            const leftBlocks: BlockInfo[] = [];
+            const rightBlocks: BlockInfo[] = [];
+            Object.entries(refMap.current).forEach(([id, el]) => {
+                if (!el) return;
+                const rect = el.getBoundingClientRect();
                 const isLeft = el.dataset.ecosystemSide === 'left';
-                const blockX = (isLeft ? blockRect.right : blockRect.left) - panelRect.left;
-                const blockY = blockRect.top + blockRect.height / 2 - panelRect.top;
-                const isStraightFlow = STRAIGHT_FLOW_IDS.has(id);
-                const shouldDrawStraight = isStraightFlow && straightFlowY !== null;
-                const pathY = isStraightFlow && straightFlowY !== null ? straightFlowY : blockY;
-                const angle = Math.atan2(pathY - dorisY, blockX - dorisX);
-                const dorisEdgeX = shouldDrawStraight
-                    ? dorisX + (isLeft ? -dorisRadius : dorisRadius)
-                    : dorisX + Math.cos(angle) * dorisRadius;
-                const dorisEdgeY = shouldDrawStraight
-                    ? pathY
-                    : dorisY + Math.sin(angle) * dorisRadius;
+                const blockX = (isLeft ? rect.right : rect.left) - panelRect.left;
+                const blockY = rect.top + rect.height / 2 - panelRect.top;
+                (isLeft ? leftBlocks : rightBlocks).push({ id, isLeft, blockX, blockY });
+            });
+            leftBlocks.sort((a, b) => a.blockY - b.blockY);
+            rightBlocks.sort((a, b) => a.blockY - b.blockY);
 
-                const fromX = isLeft ? blockX : dorisEdgeX;
-                const fromY = isLeft ? pathY : dorisEdgeY;
-                const toX = isLeft ? dorisEdgeX : blockX;
-                const toY = isLeft ? dorisEdgeY : pathY;
+            const buildSidePaths = (blocks: BlockInfo[]): FlowPath[] =>
+                blocks.map((block, index) => {
+                    const dorisEdgeX = block.isLeft ? dorisLeftX : dorisRightX;
+                    const dorisEdgeY = dorisTop + ((index + 1) / (blocks.length + 1)) * dorisHeight;
+                    const fromX = block.isLeft ? block.blockX : dorisEdgeX;
+                    const fromY = block.isLeft ? block.blockY : dorisEdgeY;
+                    const toX = block.isLeft ? dorisEdgeX : block.blockX;
+                    const toY = block.isLeft ? dorisEdgeY : block.blockY;
+                    return { id: block.id, d: createPipePath(fromX, fromY, toX, toY) };
+                });
 
-                acc.push({ id, d: createPipePath(fromX, fromY, toX, toY) });
-                return acc;
-            }, []);
-
-            setPaths(nextPaths);
+            setPaths([...buildSidePaths(leftBlocks), ...buildSidePaths(rightBlocks)]);
         }
 
         recompute();

@@ -73,7 +73,8 @@
         line-height: 1.08;
         color: var(--cn-cream);
         margin: 0;
-        letter-spacing: 0;
+        letter-spacing: -0.025em;
+        word-spacing: -0.1em;
     }
 
     &__title-accent {
@@ -166,7 +167,8 @@
         line-height: 1.2;
         color: var(--cn-cream);
         margin: 0;
-        letter-spacing: 0;
+        letter-spacing: -0.015em;
+        word-spacing: -0.06em;
         min-width: 0;
         overflow: hidden;
         text-overflow: ellipsis;
