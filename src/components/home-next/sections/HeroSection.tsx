@@ -680,7 +680,7 @@ export function HeroSection(): JSX.Element {
                                 </span>
                             </div>
                         </div>
-                        <ReportCarousel />
+                        {/* <ReportCarousel /> */}
                     </div>
                 </div>
             </div>

@@ -43,42 +43,40 @@ const NAV_ITEMS: NavItem[] = [
     {
         label: 'Why Doris',
         items: [
-            { label: 'Key Features', href: '#' },
+            { label: 'Key Features (coming soon)', href: '#' },
             { label: 'Doris vs. Others', href: '/why-doris/compare' },
-            { label: 'Benchmarks', href: '#' },
-            { label: 'User Stories', href: '#' },
+            { label: 'Benchmarks (coming soon)', href: '#' },
+            { label: 'User Stories (coming soon)', href: '#' },
         ],
     },
     {
         label: 'Use Cases',
         items: [
-            { label: 'Customer-Facing Analytics', href: '#' },
-            { label: 'Data Warehousing', href: '#' },
-            { label: 'Observability', href: '#' },
-            { label: 'Doris for AI', href: '#' },
+            { label: 'Customer-Facing Analytics (coming soon)', href: '#' },
+            { label: 'Data Warehousing (coming soon)', href: '#' },
+            { label: 'Observability (coming soon)', href: '#' },
+            { label: 'Doris for AI (coming soon)', href: '#' },
         ],
     },
     {
         label: 'Docs',
         items: [
             { label: 'dev', href: '/docs-next/dev/getting-started/what-is-apache-doris' },
-            { label: '4.x', href: '#' },
         ],
     },
     {
-        label: 'Blogs',
+        label: 'Resouces',
         items: [
-            { label: 'Release Notes', href: '#' },
-            { label: 'Engineering', href: '#' },
-            { label: 'User Stories', href: '#' },
-            { label: 'News and Events', href: '#' },
+            { label: 'Release Notes', href: '/releases/all-release' },
+            { label: 'Blogs', href: '/blog' },
+            { label: 'News and Events', href: '/events' },
         ],
     },
     {
         label: 'Community',
         items: [
-            { label: 'Join Slack', href: '#' },
             { label: 'Join GitHub Discussions', href: '#' },
+            { label: 'Developer', href: '/community/join-community' },
         ],
     },
 ];

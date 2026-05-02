@@ -229,6 +229,9 @@
     &__right {
         padding-top: 0;
         min-width: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
     }
 
     &__card-wrap {
