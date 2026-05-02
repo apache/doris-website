@@ -84,20 +84,22 @@ function DeploymentCard({ card }: { card: DeploymentCardItem }): JSX.Element {
 export function DeploymentSection(): JSX.Element {
     return (
         <section className="deployment-next">
-            <div className="deployment-next__header">
-                <div className="deployment-next__eyebrow">Deployment</div>
-                <h2 className="deployment-next__headline">
-                    <span className="deployment-next__headline-line">Choose Your Architecture</span>
-                    <span className="deployment-next__headline-line deployment-next__headline-line--accent">
-                        One Engine, Two Modes
-                    </span>
-                </h2>
-            </div>
+            <div className="home-next-container">
+                <div className="deployment-next__header">
+                    <div className="deployment-next__eyebrow">Deployment</div>
+                    <h2 className="deployment-next__headline">
+                        <span className="deployment-next__headline-line">Choose Your Architecture</span>
+                        <span className="deployment-next__headline-line deployment-next__headline-line--accent">
+                            One Engine, Two Modes
+                        </span>
+                    </h2>
+                </div>
 
-            <div className="deployment-next__grid">
-                {DEPLOYMENT_CARDS.map(card => (
-                    <DeploymentCard key={card.title.accent} card={card} />
-                ))}
+                <div className="deployment-next__grid">
+                    {DEPLOYMENT_CARDS.map(card => (
+                        <DeploymentCard key={card.title.accent} card={card} />
+                    ))}
+                </div>
             </div>
         </section>
     );

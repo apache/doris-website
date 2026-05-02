@@ -1,5 +1,4 @@
 import React, {
-    CSSProperties,
     JSX,
     MutableRefObject,
     RefObject,
@@ -236,8 +235,7 @@ function FlowLines({ paths }: { paths: FlowPath[] }): JSX.Element {
     );
 }
 
-function useGravityTilt(ref: RefObject<HTMLElement>): TiltState {
-    const [tilt, setTilt] = useState<TiltState>({ rx: 0, ry: 0 });
+function useGravityTilt(ref: RefObject<HTMLElement>): void {
     const current = useRef<TiltState>({ rx: 0, ry: 0 });
     const target = useRef<TiltState>({ rx: 0, ry: 0 });
     const frame = useRef<number | null>(null);
@@ -245,6 +243,10 @@ function useGravityTilt(ref: RefObject<HTMLElement>): TiltState {
     useEffect(() => {
         const el = ref.current;
         if (!el) return undefined;
+
+        const applyTransform = (state: TiltState) => {
+            el.style.transform = `rotateX(${state.rx.toFixed(3)}deg) rotateY(${state.ry.toFixed(3)}deg)`;
+        };
 
         function tick() {
             const next = {
@@ -256,7 +258,7 @@ function useGravityTilt(ref: RefObject<HTMLElement>): TiltState {
                 Math.abs(next.ry - target.current.ry) < 0.015;
 
             current.current = closeEnough ? target.current : next;
-            setTilt(current.current);
+            applyTransform(current.current);
 
             if (closeEnough) {
                 frame.current = null;
@@ -290,6 +292,7 @@ function useGravityTilt(ref: RefObject<HTMLElement>): TiltState {
             scheduleTick();
         }
 
+        applyTransform(current.current);
         el.addEventListener('mousemove', onMove);
         el.addEventListener('mouseleave', onLeave);
 
@@ -297,12 +300,12 @@ function useGravityTilt(ref: RefObject<HTMLElement>): TiltState {
             if (frame.current !== null) {
                 window.cancelAnimationFrame(frame.current);
             }
+            el.style.transform = '';
             el.removeEventListener('mousemove', onMove);
             el.removeEventListener('mouseleave', onLeave);
         };
     }, [ref]);
 
-    return tilt;
 }
 
 function createPipePath(fromX: number, fromY: number, toX: number, toY: number): string {
@@ -334,6 +337,7 @@ function useFlowPaths(
     dorisRef: RefObject<HTMLElement>,
 ): FlowPath[] {
     const [paths, setPaths] = useState<FlowPath[]>([]);
+    const lastPathsRef = useRef<FlowPath[]>([]);
 
     useEffect(() => {
         function recompute() {
@@ -378,7 +382,17 @@ function useFlowPaths(
                     return { id: block.id, d: createPipePath(fromX, fromY, toX, toY) };
                 });
 
-            setPaths([...buildSidePaths(leftBlocks), ...buildSidePaths(rightBlocks)]);
+            const nextPaths = [...buildSidePaths(leftBlocks), ...buildSidePaths(rightBlocks)];
+            const prevPaths = lastPathsRef.current;
+            const sameLength = prevPaths.length === nextPaths.length;
+            const sameContent =
+                sameLength &&
+                prevPaths.every((path, index) => path.id === nextPaths[index].id && path.d === nextPaths[index].d);
+
+            if (!sameContent) {
+                lastPathsRef.current = nextPaths;
+                setPaths(nextPaths);
+            }
         }
 
         recompute();
@@ -518,58 +532,56 @@ export function EcosystemSection(): JSX.Element {
     const panelRef = useRef<HTMLDivElement>(null);
     const dorisRef = useRef<HTMLDivElement>(null);
     const blockRefs = useRef<Record<string, HTMLElement | null>>({});
-    const tilt = useGravityTilt(cardRef);
+    useGravityTilt(cardRef);
     const paths = useFlowPaths(panelRef, blockRefs, dorisRef);
 
     if (compact) {
         return <CompactEcosystem />;
     }
 
-    const cardStyle: CSSProperties = {
-        transform: `rotateX(${tilt.rx.toFixed(3)}deg) rotateY(${tilt.ry.toFixed(3)}deg)`,
-    };
-
     return (
         <section className="ecosystem-next" aria-labelledby="ecosystem-next-title">
-            <EcosystemHeader showCoverage />
+            <div className="home-next-container">
+                <EcosystemHeader showCoverage />
 
-            <div className="ecosystem-next__stage">
-                <div className="ecosystem-next__card" ref={cardRef} style={cardStyle}>
-                    <div className="ecosystem-next__panel" ref={panelRef}>
-                        <FlowLines paths={paths} />
+                <div className="ecosystem-next__stage">
+                    <div className="ecosystem-next__card" ref={cardRef}>
+                        <div className="ecosystem-next__panel" ref={panelRef}>
+                            <FlowLines paths={paths} />
 
-                        <div className="ecosystem-next__grid">
-                            <div className="ecosystem-next__col ecosystem-next__col--sources">
-                                <div className="ecosystem-next__col-head">
-                                    <span className="ecosystem-next__col-num">01</span>
-                                    Upstream - Sources
+                            <div className="ecosystem-next__grid">
+                                <div className="ecosystem-next__col ecosystem-next__col--sources">
+                                    <div className="ecosystem-next__col-head">
+                                        <span className="ecosystem-next__col-num">01</span>
+                                        Upstream - Sources
+                                    </div>
+                                    {SOURCES.map(source => (
+                                        <EcosystemBlock key={source.id} data={source} side="left" refMap={blockRefs} />
+                                    ))}
                                 </div>
-                                {SOURCES.map(source => (
-                                    <EcosystemBlock key={source.id} data={source} side="left" refMap={blockRefs} />
-                                ))}
-                            </div>
 
-                            <div className="ecosystem-next__col ecosystem-next__col--center">
-                                <div className="ecosystem-next__col-head ecosystem-next__col-head--center">
-                                    <span className="ecosystem-next__col-num">02</span>
-                                    The Engine
-                                </div>
-                                <div className="ecosystem-next__doris" ref={dorisRef}>
-                                    <div className="ecosystem-next__doris-core">
-                                        <span className="ecosystem-next__doris-mark">D</span>
-                                        <span className="ecosystem-next__doris-name">Apache Doris</span>
+                                <div className="ecosystem-next__col ecosystem-next__col--center">
+                                    <div className="ecosystem-next__col-head ecosystem-next__col-head--center">
+                                        <span className="ecosystem-next__col-num">02</span>
+                                        The Engine
+                                    </div>
+                                    <div className="ecosystem-next__doris" ref={dorisRef}>
+                                        <div className="ecosystem-next__doris-core">
+                                            <span className="ecosystem-next__doris-mark">D</span>
+                                            <span className="ecosystem-next__doris-name">Apache Doris</span>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
 
-                            <div className="ecosystem-next__col ecosystem-next__col--consumers">
-                                <div className="ecosystem-next__col-head ecosystem-next__col-head--right">
-                                    <span className="ecosystem-next__col-num">03</span>
-                                    Downstream - Consumers
+                                <div className="ecosystem-next__col ecosystem-next__col--consumers">
+                                    <div className="ecosystem-next__col-head ecosystem-next__col-head--right">
+                                        <span className="ecosystem-next__col-num">03</span>
+                                        Downstream - Consumers
+                                    </div>
+                                    {CONSUMERS.map(consumer => (
+                                        <EcosystemBlock key={consumer.id} data={consumer} side="right" refMap={blockRefs} />
+                                    ))}
                                 </div>
-                                {CONSUMERS.map(consumer => (
-                                    <EcosystemBlock key={consumer.id} data={consumer} side="right" refMap={blockRefs} />
-                                ))}
                             </div>
                         </div>
                     </div>

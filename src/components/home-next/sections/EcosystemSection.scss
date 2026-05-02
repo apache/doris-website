@@ -34,17 +34,19 @@
     &__header {
         position: relative;
         z-index: 2;
-        max-width: 1240px;
-        margin: 0 auto 60px;
+        width: 100%;
+        margin: 0 0 60px;
         display: flex;
-        align-items: center;
+        align-items: flex-start;
         justify-content: space-between;
         gap: 40px;
         flex-wrap: wrap;
+        text-align: left;
     }
 
     &__header-left {
         max-width: 760px;
+        text-align: left;
     }
 
     &__eyebrow {
@@ -70,11 +72,12 @@
         margin: 0;
         color: var(--en-ink);
         font-family: var(--en-mono);
-        font-size: 58px;
+        font-size: 52px;
         font-weight: 800;
         line-height: 1.02;
         letter-spacing: -0.025em;
         word-spacing: -0.1em;
+        text-align: left;
 
         span {
             display: block;
@@ -99,7 +102,7 @@
 
     &__coverage-line {
         display: block;
-        font-size: 21px;
+        font-size: 18px;
         font-weight: 700;
         line-height: 1.12;
         letter-spacing: -0.02em;
@@ -107,7 +110,7 @@
 
     &__coverage-line--lead {
         color: var(--en-green-deep);
-        font-size: 30px;
+        font-size: 24px;
         font-weight: 800;
         line-height: 1.04;
         letter-spacing: -0.03em;
@@ -115,7 +118,7 @@
 
     &__coverage-line--subtle {
         color: rgba(15, 26, 20, 0.58);
-        font-size: 18px;
+        font-size: 15px;
         font-weight: 600;
         line-height: 1.28;
     }
@@ -123,8 +126,7 @@
     &__stage {
         position: relative;
         z-index: 2;
-        max-width: 1240px;
-        margin: 0 auto;
+        width: 100%;
         perspective: 1800px;
         perspective-origin: 50% 50%;
     }
@@ -589,7 +591,7 @@
 
 @media (max-width: 1180px) {
     .ecosystem-next {
-        padding: 104px 32px 128px;
+        padding: 104px 0 128px;
 
         &__headline {
             font-size: 48px;
@@ -605,11 +607,11 @@
         }
 
         &__coverage-line {
-            font-size: 19px;
+            font-size: 17px;
         }
 
         &__coverage-line--lead {
-            font-size: 26px;
+            font-size: 22px;
         }
 
         &__card {
@@ -632,7 +634,7 @@
         --ecosystem-doris-offset-y: 0;
         --ecosystem-engine-label-offset-y: 0;
 
-        padding: 80px 24px 96px;
+        padding: 80px 0 96px;
 
         &__header {
             margin-bottom: 40px;
@@ -721,7 +723,7 @@
 
 @media (max-width: 640px) {
     .ecosystem-next {
-        padding: 64px 20px 80px;
+        padding: 64px 0 80px;
 
         &__headline {
             font-size: 30px;

@@ -1,4 +1,4 @@
-import React, { JSX, useState, useEffect, useRef } from 'react';
+import React, { JSX, useState, useEffect, useMemo } from 'react';
 import './HeroSection.scss';
 
 // ─── SVG atoms ───────────────────────────────────────────────────────────────
@@ -89,8 +89,8 @@ interface TypewriterResult {
 }
 
 function useTypewriter(lines: SqlLine[], speed = 22, finalPause = 2400): TypewriterResult {
-    const flat = flattenLines(lines);
-    const totalChars = flat.reduce((s, l) => s + l.total, 0);
+    const flat = useMemo(() => flattenLines(lines), [lines]);
+    const totalChars = useMemo(() => flat.reduce((s, l) => s + l.total, 0), [flat]);
     const [tick, setTick] = useState(0);
 
     useEffect(() => {
@@ -189,23 +189,20 @@ const SEARCH_RESULTS: SearchResult[] = [
 ];
 
 function SearchResults(): JSX.Element {
-    const [revealed, setRevealed] = useState(0);
-    const [filled, setFilled] = useState(false);
+    const [step, setStep] = useState(0);
 
     useEffect(() => {
-        const timers: ReturnType<typeof setTimeout>[] = [];
-        function cycle() {
-            setRevealed(0);
-            setFilled(false);
-            for (let i = 1; i <= SEARCH_RESULTS.length; i++) {
-                timers.push(setTimeout(() => setRevealed(i), 180 * i));
-            }
-            timers.push(setTimeout(() => setFilled(true), 180 * (SEARCH_RESULTS.length + 1)));
-            timers.push(setTimeout(cycle, 6500));
-        }
-        cycle();
-        return () => timers.forEach(clearTimeout);
+        const holdSteps = 31;
+        const cycleLength = SEARCH_RESULTS.length + holdSteps;
+        const id = window.setInterval(() => {
+            setStep(current => (current >= cycleLength ? 0 : current + 1));
+        }, 180);
+
+        return () => window.clearInterval(id);
     }, []);
+
+    const revealed = Math.min(step, SEARCH_RESULTS.length);
+    const filled = step >= SEARCH_RESULTS.length;
 
     return (
         <div className="hn-search-results">

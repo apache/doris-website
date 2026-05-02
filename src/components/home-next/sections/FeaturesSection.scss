@@ -21,9 +21,10 @@
     font-family: var(--fn-sans);
 
     &__header {
-        max-width: 1360px;
-        margin: 0 auto;
-        padding: 84px 56px 16px;
+        width: 100%;
+        margin: 0;
+        padding: 84px 0 16px;
+        text-align: left;
     }
 
     &__eyebrow {
@@ -45,6 +46,7 @@
         word-spacing: -0.1em;
         color: var(--fn-ink);
         margin: 0;
+        text-align: left;
     }
 
     &__headline-line {
@@ -70,13 +72,15 @@
         align-items: center;
         justify-content: center;
         overflow: hidden;
+        padding: 0 20px;
+        box-sizing: border-box;
     }
 
     &__card {
         position: absolute;
         left: 50%;
         top: var(--fn-card-stage-y);
-        width: min(1180px, calc(100vw - 112px));
+        width: min(1180px, calc(100% - 40px));
         min-height: 540px;
         border-radius: 8px;
         overflow: hidden;
@@ -564,7 +568,6 @@
         }
 
         &__card {
-            width: calc(100vw - 64px);
             min-height: 560px;
         }
 
@@ -581,7 +584,7 @@
 @media (max-width: 820px) {
     .features-next {
         &__header {
-            padding: 64px 24px 28px;
+            padding: 64px 0 28px;
         }
 
         &__headline {
@@ -591,7 +594,7 @@
 
         &__stack-container {
             height: auto !important;
-            padding: 0 24px 72px;
+            padding: 0 0 72px;
         }
 
         &__stage {
@@ -600,6 +603,7 @@
             height: auto;
             max-width: 720px;
             margin: 0 auto;
+            padding: 0;
             display: grid;
             gap: 24px;
             align-items: stretch;
@@ -755,7 +759,7 @@
         }
 
         &__stack-container {
-            padding: 0 20px 64px;
+            padding: 0 0 64px;
         }
 
         &__card {

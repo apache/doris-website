@@ -14,16 +14,19 @@ function useGitHubStars(repo: string, fallback: string): string {
     const [stars, setStars] = useState(fallback);
     useEffect(() => {
         let cancelled = false;
-        fetch(`https://api.github.com/repos/${repo}`)
-            .then(r => (r.ok ? r.json() : null))
-            .then(data => {
-                if (!cancelled && data && typeof data.stargazers_count === 'number') {
-                    setStars(formatStars(data.stargazers_count));
-                }
-            })
-            .catch(() => { /* keep fallback on network/CORS/rate-limit errors */ });
+        const timer = window.setTimeout(() => {
+            fetch(`https://api.github.com/repos/${repo}`)
+                .then(r => (r.ok ? r.json() : null))
+                .then(data => {
+                    if (!cancelled && data && typeof data.stargazers_count === 'number') {
+                        setStars(formatStars(data.stargazers_count));
+                    }
+                })
+                .catch(() => { /* keep fallback on network/CORS/rate-limit errors */ });
+        }, 1200);
         return () => {
             cancelled = true;
+            window.clearTimeout(timer);
         };
     }, [repo]);
     return stars;

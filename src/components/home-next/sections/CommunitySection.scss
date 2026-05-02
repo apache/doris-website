@@ -50,9 +50,9 @@
     // ── Header ────────────────────────────────────────────────────────────────
 
     &__header {
-        max-width: 980px;
+        max-width: 1120px;
         margin: 0 auto 34px;
-        text-align: center;
+        text-align: left;
     }
 
     &__eyebrow {
@@ -68,9 +68,9 @@
 
     &__title {
         font-family: var(--cn-mono);
-        font-size: clamp(28px, 3.4vw, 46px);
+        font-size: clamp(40px, 4.4vw, 52px);
         font-weight: 800;
-        line-height: 1.08;
+        line-height: 1.06;
         color: var(--cn-cream);
         margin: 0;
         letter-spacing: -0.025em;

@@ -326,43 +326,45 @@ export function FeaturesSection(): JSX.Element {
 
     return (
         <section className="features-next">
-            <div className="features-next__header">
-                <div className="features-next__eyebrow">Core Capabilities</div>
-                <h2 className="features-next__headline">
-                    <span className="features-next__headline-line">Build For</span>
-                    <span className="features-next__headline-line features-next__headline-line--accent">
-                        Every Kind of Modern Analytics Workload
-                    </span>
-                </h2>
-            </div>
-            <div
-                className="features-next__stack-container"
-                ref={containerRef}
-                style={isNarrowViewport ? undefined : { height: `${CAPABILITIES.length * 100}vh` }}
-            >
-                <div className="features-next__stage">
-                    {CAPABILITIES.map((capability, i) => (
-                        <CapabilityCard
-                            key={capability.num}
-                            capability={capability}
-                            idx={i}
-                            total={CAPABILITIES.length}
-                            progress={progress}
-                            isNarrowViewport={isNarrowViewport}
-                        />
-                    ))}
-                    <div className="features-next__stage-progress" aria-hidden="true">
-                        {CAPABILITIES.map((capability, i) => {
-                            const transitions = Math.max(1, CAPABILITIES.length - 1);
-                            const isOn = progress >= i / transitions - 0.001;
+            <div className="home-next-container">
+                <div className="features-next__header">
+                    <div className="features-next__eyebrow">Core Capabilities</div>
+                    <h2 className="features-next__headline">
+                        <span className="features-next__headline-line">Build For</span>
+                        <span className="features-next__headline-line features-next__headline-line--accent">
+                            Every Kind of Modern Analytics Workload
+                        </span>
+                    </h2>
+                </div>
+                <div
+                    className="features-next__stack-container"
+                    ref={containerRef}
+                    style={isNarrowViewport ? undefined : { height: `${CAPABILITIES.length * 100}vh` }}
+                >
+                    <div className="features-next__stage">
+                        {CAPABILITIES.map((capability, i) => (
+                            <CapabilityCard
+                                key={capability.num}
+                                capability={capability}
+                                idx={i}
+                                total={CAPABILITIES.length}
+                                progress={progress}
+                                isNarrowViewport={isNarrowViewport}
+                            />
+                        ))}
+                        <div className="features-next__stage-progress" aria-hidden="true">
+                            {CAPABILITIES.map((capability, i) => {
+                                const transitions = Math.max(1, CAPABILITIES.length - 1);
+                                const isOn = progress >= i / transitions - 0.001;
 
-                            return (
-                                <span
-                                    key={capability.num}
-                                    className={isOn ? 'features-next__stage-dot features-next__stage-dot--on' : 'features-next__stage-dot'}
-                                />
-                            );
-                        })}
+                                return (
+                                    <span
+                                        key={capability.num}
+                                        className={isOn ? 'features-next__stage-dot features-next__stage-dot--on' : 'features-next__stage-dot'}
+                                    />
+                                );
+                            })}
+                        </div>
                     </div>
                 </div>
             </div>
