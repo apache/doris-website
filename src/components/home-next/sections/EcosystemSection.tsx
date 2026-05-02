@@ -13,8 +13,8 @@ type EcosystemSide = 'left' | 'right';
 
 interface EcosystemLogo {
     name: string;
-    mark: string;
-    className: string;
+    logoSrc?: string;
+    className?: string;
 }
 
 interface EcosystemGroup {
@@ -46,8 +46,16 @@ const SOURCES: EcosystemGroup[] = [
         title: 'Database',
         tag: 'OLTP / CDC',
         logos: [
-            { name: 'MySQL', mark: 'My', className: 'ecosystem-next__logo-mark--1' },
-            { name: 'Postgres', mark: 'Pg', className: 'ecosystem-next__logo-mark--2' },
+            {
+                name: 'MySQL',
+                logoSrc: '/images/ecomsystem-log/mysql.png',
+                className: 'ecosystem-next__logo--mysql',
+            },
+            {
+                name: 'PostgreSQL',
+                logoSrc: '/images/ecomsystem-log/postgresql.svg',
+                className: 'ecosystem-next__logo--postgresql',
+            },
         ],
     },
     {
@@ -55,7 +63,16 @@ const SOURCES: EcosystemGroup[] = [
         title: 'Datastream',
         tag: 'Pub/Sub',
         logos: [
-            { name: 'Kafka', mark: 'Kk', className: 'ecosystem-next__logo-mark--3' },
+            {
+                name: 'Kafka',
+                logoSrc: '/images/ecomsystem-log/kafka.svg',
+                className: 'ecosystem-next__logo--kafka',
+            },
+            {
+                name: 'Pulsar',
+                logoSrc: '/images/ecomsystem-log/pulsar.png',
+                className: 'ecosystem-next__logo--pulsar',
+            },
         ],
     },
     {
@@ -63,9 +80,21 @@ const SOURCES: EcosystemGroup[] = [
         title: 'Datalake',
         tag: 'Open Tables',
         logos: [
-            { name: 'Iceberg', mark: 'Ib', className: 'ecosystem-next__logo-mark--4' },
-            { name: 'Delta', mark: 'Dt', className: 'ecosystem-next__logo-mark--5' },
-            { name: 'Paimon', mark: 'Pm', className: 'ecosystem-next__logo-mark--6' },
+            {
+                name: 'Iceberg',
+                logoSrc: '/images/ecomsystem-log/iceberg.png',
+                className: 'ecosystem-next__logo--iceberg',
+            },
+            {
+                name: 'Delta Lake',
+                logoSrc: '/images/ecomsystem-log/delta-lake.svg',
+                className: 'ecosystem-next__logo--delta-lake',
+            },
+            {
+                name: 'Hudi',
+                logoSrc: '/images/ecomsystem-log/hudi.png',
+                className: 'ecosystem-next__logo--hudi',
+            },
         ],
     },
 ];
@@ -76,8 +105,16 @@ const CONSUMERS: EcosystemGroup[] = [
         title: 'BI & Visualization',
         tag: 'Dashboards',
         logos: [
-            { name: 'Superset', mark: 'Sp', className: 'ecosystem-next__logo-mark--7' },
-            { name: 'Metabase', mark: 'Mb', className: 'ecosystem-next__logo-mark--8' },
+            {
+                name: 'Superset',
+                logoSrc: '/images/ecomsystem-log/superset.webp',
+                className: 'ecosystem-next__logo--superset',
+            },
+            {
+                name: 'Metabase',
+                logoSrc: '/images/ecomsystem-log/metabase.svg',
+                className: 'ecosystem-next__logo--metabase',
+            },
         ],
     },
     {
@@ -85,8 +122,16 @@ const CONSUMERS: EcosystemGroup[] = [
         title: 'AI & Analytics',
         tag: 'LLM / Agents',
         logos: [
-            { name: 'AI Agents', mark: 'AI', className: 'ecosystem-next__logo-mark--9' },
-            { name: 'MCP', mark: 'Mc', className: 'ecosystem-next__logo-mark--1' },
+            {
+                name: 'AI Agents',
+                logoSrc: '/images/ecomsystem-log/ai-agent.svg',
+                className: 'ecosystem-next__logo--ai-agents',
+            },
+            {
+                name: 'MCP',
+                logoSrc: '/images/ecomsystem-log/mcp.png',
+                className: 'ecosystem-next__logo--mcp',
+            },
         ],
     },
     {
@@ -94,11 +139,45 @@ const CONSUMERS: EcosystemGroup[] = [
         title: 'Observability',
         tag: 'Monitoring',
         logos: [
-            { name: 'Grafana', mark: 'Gr', className: 'ecosystem-next__logo-mark--10' },
-            { name: 'Langfuse', mark: 'Lf', className: 'ecosystem-next__logo-mark--2' },
+            {
+                name: 'Grafana',
+                logoSrc: '/images/ecomsystem-log/grafana.png',
+                className: 'ecosystem-next__logo--grafana',
+            },
+            {
+                name: 'Langfuse',
+                logoSrc: '/images/ecomsystem-log/longfuse.png',
+                className: 'ecosystem-next__logo--langfuse',
+            },
         ],
     },
 ];
+
+function EcosystemHeader({ showCoverage = false }: { showCoverage?: boolean }): JSX.Element {
+    return (
+        <div className="ecosystem-next__header">
+            <div className="ecosystem-next__header-left">
+                <div className="ecosystem-next__eyebrow">Ecosystem</div>
+                <h2 className="ecosystem-next__headline" id="ecosystem-next-title">
+                    <span>At the Heart of the</span>
+                    <span className="ecosystem-next__headline-accent">Modern Data Stack.</span>
+                </h2>
+            </div>
+            {showCoverage ? (
+                <div className="ecosystem-next__header-right" aria-label="Connector coverage summary">
+                    <div className="ecosystem-next__coverage-text">
+                        <span className="ecosystem-next__coverage-line ecosystem-next__coverage-line--lead">
+                            50+ Connectors
+                        </span>
+                        <span className="ecosystem-next__coverage-line ecosystem-next__coverage-line--subtle">
+                            Databases, streaming, lakehouse, BI, AI, and observability.
+                        </span>
+                    </div>
+                </div>
+            ) : null}
+        </div>
+    );
+}
 
 function EcosystemBlock({ data, side, refMap }: EcosystemBlockProps): JSX.Element {
     return (
@@ -116,8 +195,21 @@ function EcosystemBlock({ data, side, refMap }: EcosystemBlockProps): JSX.Elemen
             </div>
             <div className="ecosystem-next__logos">
                 {data.logos.map(logo => (
-                    <div className="ecosystem-next__logo" key={logo.name}>
-                        <span className={`ecosystem-next__logo-mark ${logo.className}`}>{logo.mark}</span>
+                    <div
+                        className={`ecosystem-next__logo ${logo.className || ''}`}
+                        key={logo.name}
+                    >
+                        {logo.logoSrc ? (
+                            <span className="ecosystem-next__logo-mark">
+                                <img
+                                    className="ecosystem-next__logo-image"
+                                    src={logo.logoSrc}
+                                    alt=""
+                                    aria-hidden="true"
+                                    draggable={false}
+                                />
+                            </span>
+                        ) : null}
                         <span className="ecosystem-next__logo-name">{logo.name}</span>
                     </div>
                 ))}
@@ -401,14 +493,7 @@ function CompactEcosystem(): JSX.Element {
             className="ecosystem-next ecosystem-next--compact"
             aria-labelledby="ecosystem-next-title"
         >
-            <div className="ecosystem-next__header">
-                <div className="ecosystem-next__header-left">
-                    <h2 className="ecosystem-next__headline" id="ecosystem-next-title">
-                        <span>At the Heart of the</span>
-                        <span className="ecosystem-next__headline-accent">Modern Data Stack.</span>
-                    </h2>
-                </div>
-            </div>
+            <EcosystemHeader />
             <div className="ecosystem-next__compact-card">
                 <CompactTier label="Upstream — Sources" num="01" groups={SOURCES} />
                 <CompactConnector />
@@ -446,14 +531,7 @@ export function EcosystemSection(): JSX.Element {
 
     return (
         <section className="ecosystem-next" aria-labelledby="ecosystem-next-title">
-            <div className="ecosystem-next__header">
-                <div className="ecosystem-next__header-left">
-                    <h2 className="ecosystem-next__headline" id="ecosystem-next-title">
-                        <span>At the Heart of the</span>
-                        <span className="ecosystem-next__headline-accent">Modern Data Stack.</span>
-                    </h2>
-                </div>
-            </div>
+            <EcosystemHeader showCoverage />
 
             <div className="ecosystem-next__stage">
                 <div className="ecosystem-next__card" ref={cardRef} style={cardStyle}>

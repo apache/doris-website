@@ -1,7 +1,6 @@
 import React, { JSX } from 'react';
 import { LayoutNext } from './LayoutNext';
 import { HeroSection } from './sections/HeroSection';
-import { StatsSection } from './sections/StatsSection';
 import { FeaturesSection } from './sections/FeaturesSection';
 import { EcosystemSection } from './sections/EcosystemSection';
 import { DeploymentSection } from './sections/DeploymentSection';
@@ -19,7 +18,6 @@ export default function HomeNext({ onSwitchBack }: HomeNextProps): JSX.Element {
             description="Apache Doris is an open-source database based on MPP architecture, with easier use and higher performance. As a modern data warehouse, Apache Doris empowers your OLAP query and database analytics."
         >
             <HeroSection />
-            <StatsSection />
             <FeaturesSection />
             <EcosystemSection />
             <DeploymentSection />

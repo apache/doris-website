@@ -37,7 +37,7 @@
         max-width: 1240px;
         margin: 0 auto 60px;
         display: flex;
-        align-items: flex-end;
+        align-items: center;
         justify-content: space-between;
         gap: 40px;
         flex-wrap: wrap;
@@ -45,6 +45,25 @@
 
     &__header-left {
         max-width: 760px;
+    }
+
+    &__eyebrow {
+        margin-bottom: 28px;
+        color: var(--en-green-deep);
+        font-family: var(--en-mono);
+        font-size: 13px;
+        font-weight: 700;
+        letter-spacing: 0.18em;
+        line-height: 1.2;
+        text-transform: uppercase;
+    }
+
+    &__header-right {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        flex: 1 1 280px;
+        min-width: 280px;
     }
 
     &__headline {
@@ -64,6 +83,41 @@
 
     &__headline-accent {
         color: var(--en-green-deep);
+    }
+
+    &__coverage-text {
+        width: min(100%, 420px);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 6px;
+        padding: 6px 0;
+        color: var(--en-ink);
+        font-family: var(--en-mono);
+        text-align: left;
+    }
+
+    &__coverage-line {
+        display: block;
+        font-size: 21px;
+        font-weight: 700;
+        line-height: 1.12;
+        letter-spacing: -0.02em;
+    }
+
+    &__coverage-line--lead {
+        color: var(--en-green-deep);
+        font-size: 30px;
+        font-weight: 800;
+        line-height: 1.04;
+        letter-spacing: -0.03em;
+    }
+
+    &__coverage-line--subtle {
+        color: rgba(15, 26, 20, 0.58);
+        font-size: 18px;
+        font-weight: 600;
+        line-height: 1.28;
     }
 
     &__stage {
@@ -250,26 +304,70 @@
         white-space: nowrap;
     }
 
+    &__logo-mark {
+        width: 22px;
+        height: 22px;
+        flex: 0 0 22px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 4px;
+        background: rgba(255, 255, 255, 0.4);
+        overflow: hidden;
+    }
+
+    &__logo-image {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        object-position: center;
+    }
+
     &__logo-name {
         min-width: 0;
         overflow: hidden;
         text-overflow: ellipsis;
     }
 
-    &__logo-mark {
-        width: 18px;
-        height: 18px;
-        flex: 0 0 18px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border-radius: 4px;
-        background: var(--en-yellow);
-        color: var(--en-ink);
-        font-family: var(--en-mono);
-        font-size: 10px;
-        font-weight: 800;
-        letter-spacing: 0;
+    &__logo--mysql .ecosystem-next__logo-image {
+        padding: 2px;
+    }
+
+    &__logo--postgresql .ecosystem-next__logo-image {
+        padding: 2px;
+    }
+
+    &__logo--kafka .ecosystem-next__logo-image {
+        padding: 1px;
+    }
+
+    &__logo--pulsar .ecosystem-next__logo-image {
+        padding: 0;
+    }
+
+    &__logo--iceberg .ecosystem-next__logo-image {
+        padding: 1px;
+    }
+
+    &__logo--delta-lake .ecosystem-next__logo-image,
+    &__logo--hudi .ecosystem-next__logo-image {
+        padding: 1px;
+    }
+
+    &__logo--superset .ecosystem-next__logo-image {
+        padding: 1px;
+    }
+
+    &__logo--metabase .ecosystem-next__logo-image,
+    &__logo--grafana .ecosystem-next__logo-image,
+    &__logo--langfuse .ecosystem-next__logo-image {
+        padding: 0;
+    }
+
+    &__logo--ai-agents .ecosystem-next__logo-image,
+    &__logo--mcp .ecosystem-next__logo-image {
+        padding: 0;
     }
 
     &__doris {
@@ -497,6 +595,23 @@
             font-size: 48px;
         }
 
+        &__header-right {
+            min-width: 250px;
+        }
+
+        &__coverage-text {
+            width: min(100%, 360px);
+            gap: 5px;
+        }
+
+        &__coverage-line {
+            font-size: 19px;
+        }
+
+        &__coverage-line--lead {
+            font-size: 26px;
+        }
+
         &__card {
             padding: 36px;
         }
@@ -524,9 +639,22 @@
             align-items: flex-start;
         }
 
+        &__eyebrow {
+            margin-bottom: 16px;
+            font-size: 12px;
+        }
+
+        &__header-right {
+            display: none;
+        }
+
         &__headline {
             font-size: 36px;
             line-height: 1.08;
+        }
+
+        &__coverage-text {
+            display: none;
         }
 
         &__stage {

@@ -18,7 +18,7 @@
     font-family: var(--dn-sans);
 
     &__header {
-        max-width: 1360px;
+        width: min(1180px, calc(100vw - 112px));
         margin: 0 auto;
         padding-bottom: 56px;
     }
@@ -230,6 +230,10 @@
     .deployment-next {
         padding: 80px 32px 112px;
 
+        &__header {
+            width: calc(100vw - 64px);
+        }
+
         &__headline {
             font-size: 42px;
         }
@@ -307,6 +311,11 @@
 @media (max-width: 640px) {
     .deployment-next {
         padding: 64px 20px 80px;
+
+        &__header {
+            width: 100%;
+            padding-bottom: 36px;
+        }
 
         &__eyebrow {
             margin-bottom: 16px;
