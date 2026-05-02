@@ -67,7 +67,7 @@ const CAPABILITIES: Capability[] = [
         subtitle: 'First-Class Support for Multimodal Data',
         tone: 'ink',
         visual: 'search',
-        illoTag: 'Text / Vector / Filter',
+        illoTag: 'JSON / Text / Vector',
         rotation: -1.4,
         cta: {
             label: 'Explore hybrid search',

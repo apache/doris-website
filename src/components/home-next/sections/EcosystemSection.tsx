@@ -350,8 +350,8 @@ function CompactEcosystem(): JSX.Element {
             <div className="ecosystem-next__header">
                 <div className="ecosystem-next__header-left">
                     <h2 className="ecosystem-next__headline" id="ecosystem-next-title">
-                        <span>At the heart of the</span>
-                        <span className="ecosystem-next__headline-accent">modern data stack.</span>
+                        <span>At the Heart of the</span>
+                        <span className="ecosystem-next__headline-accent">Modern Data Stack.</span>
                     </h2>
                 </div>
             </div>
@@ -388,8 +388,8 @@ export function EcosystemSection(): JSX.Element {
             <div className="ecosystem-next__header">
                 <div className="ecosystem-next__header-left">
                     <h2 className="ecosystem-next__headline" id="ecosystem-next-title">
-                        <span>At the heart of the</span>
-                        <span className="ecosystem-next__headline-accent">modern data stack.</span>
+                        <span>At the Heart of the</span>
+                        <span className="ecosystem-next__headline-accent">Modern Data Stack.</span>
                     </h2>
                 </div>
             </div>
