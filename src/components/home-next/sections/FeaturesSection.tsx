@@ -238,24 +238,15 @@ function LakehouseVisual(): JSX.Element {
 }
 
 function SearchVisual(): JSX.Element {
-    const rows = [
-        ['BM25', '94'],
-        ['Vector', '96'],
-        ['Filter', '100'],
-    ];
-
     return (
-        <div className="features-next__visual-content features-next__visual-content--search" aria-hidden="true">
-            <div className="features-next__search-query">MATCH + COSINE_SIMILARITY</div>
-            <div className="features-next__search-stack">
-                {rows.map(([label, score]) => (
-                    <div className="features-next__search-row" key={label}>
-                        <span>{label}</span>
-                        <i style={{ width: `${Number(score)}%` }} />
-                        <strong>{score}</strong>
-                    </div>
-                ))}
-            </div>
+        <div className="features-next__visual-content features-next__visual-content--realtime" aria-hidden="true">
+            <iframe
+                className="features-next__realtime-frame"
+                src="/home-next/hybrid-search.html"
+                title="Hybrid Search animation"
+                loading="lazy"
+                tabIndex={-1}
+            />
         </div>
     );
 }
