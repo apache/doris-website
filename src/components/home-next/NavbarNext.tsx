@@ -71,7 +71,7 @@ const NAV_ITEMS: NavItem[] = [
         label: 'Resouces',
         items: [
             { label: 'Release Notes', href: '/releases/all-release' },
-            { label: 'Blogs', href: '/blog' },
+            { label: 'Blogs', href: '/blogs-next' },
             { label: 'News and Events', href: '/events' },
         ],
     },
