@@ -28,6 +28,7 @@
 #   build            Full production build (en + zh-CN)
 #   build-en         Production build (English only)
 #   build-docs-next  Start docs-next dev server (hot reload, current only)
+#   build-docs-next-all  Build docs-next only (en + zh-CN)
 #   serve            Serve a previous production build
 #   install          Install dependencies only
 #   clean            Clean build artifacts and caches
@@ -49,6 +50,7 @@
 #   ./local_dev.sh build                  # full build (slow)
 #   ./local_dev.sh build --versions "4.x" # build only 4.x version
 #   ./local_dev.sh build-docs-next        # start docs-next dev server (hot reload)
+#   ./local_dev.sh build-docs-next-all    # build docs-next only (en + zh-CN)
 #   ./local_dev.sh clean                  # clean caches
 ##############################################################
 
@@ -278,6 +280,27 @@ cmd_build_docs_next_only() {
     "${YARN_BIN}" docusaurus start --no-open --locale zh-CN --host "${host}" --port "${port}"
 }
 
+cmd_build_docs_next_all() {
+    validate_env
+    if [[ "${OPT_SKIP_INSTALL}" != "true" ]]; then
+        do_install
+    fi
+
+    apply_versions_env "current"
+    export NODE_OPTIONS="--max-old-space-size=${OPT_MAX_MEM}"
+
+    step "Building docs-next only (locales: en zh-CN)"
+    info "NODE_OPTIONS=--max-old-space-size=${OPT_MAX_MEM}"
+    info "This may take a few minutes..."
+    echo ""
+
+    cd "${PROJECT_ROOT}"
+    "${YARN_BIN}" docusaurus build --locale en --locale zh-CN
+
+    ok "Build completed! Output in: ${PROJECT_ROOT}/build/"
+    info "Run './local_dev.sh serve' to preview the build."
+}
+
 cmd_serve() {
     validate_env
 
@@ -372,6 +395,7 @@ case "${COMMAND}" in
     build-all)          cmd_build "en zh-CN" ;;
     build-en)          cmd_build "en" ;;
     build-docs-next)    cmd_build_docs_next_only ;;
+    build-docs-next-all) cmd_build_docs_next_all ;;
     serve)              cmd_serve ;;
     install)            cmd_install ;;
     clean)              cmd_clean ;;

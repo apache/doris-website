@@ -106,9 +106,6 @@ export default function CompareNext(): JSX.Element {
                 </div>
 
                 <header className="cmp-next__hero">
-                    <h2 className="cmp-next__hero-title">
-                        Doris vs. the Others
-                    </h2>
                     <TabSwitcher active={active} onChange={setActive} />
                 </header>
 

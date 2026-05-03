@@ -325,10 +325,9 @@
         gap: 14px;
         padding: 0 4px;
         // Body uses `gap: var(--cn-section-gap)` between flex children. The
-        // negative margin cancels that gap below the title so it visually
-        // attaches to the card directly beneath, while the gap above remains
-        // intact (separating each section block from the previous one).
-        margin-bottom: calc(var(--cn-section-gap) * -1 + 4px);
+        // negative margin still keeps the title tied to the section above,
+        // but leaves more breathing room before the card directly beneath.
+        margin-bottom: calc(var(--cn-section-gap) * -1 + 20px);
     }
 
     &__section-title-num {

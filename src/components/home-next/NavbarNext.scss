@@ -28,6 +28,17 @@
         gap: 48px;
     }
 
+    // Override the global Docusaurus navbar styles we inherit on docs-next.
+    &.navbar {
+        display: block;
+        height: 64px;
+        min-height: 64px;
+        padding: 0;
+        border-bottom: 1px solid rgba(245, 239, 228, 0.08);
+        background-color: var(--nb-green-dark);
+        box-shadow: none;
+    }
+
     // ── Logo ───────────────────────────────────────────────────────────────
 
 	    &__logo {
@@ -182,7 +193,43 @@
         margin-left: auto;
     }
 
-	    &__star-link {
+    &__locale-dropdown {
+        &.navbar__link {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.2rem;
+            min-width: 2.875rem;
+            height: 2.625rem;
+            margin-left: 0;
+            padding: 0 0.75rem;
+            border: 1px solid rgba(245, 239, 228, 0.22);
+            border-radius: 4px;
+            background: rgba(245, 239, 228, 0.06);
+            color: var(--nb-cream-light) !important;
+            text-decoration: none !important;
+            @include type.mono-text(12px, 700, 1.2, 0.02em);
+            transition: border-color 0.15s, background 0.15s, transform 0.15s;
+            white-space: nowrap;
+
+            &:hover {
+                border-color: rgba(245, 239, 228, 0.45);
+                background: rgba(245, 239, 228, 0.1);
+                transform: translateY(-1px);
+                text-decoration: none !important;
+            }
+        }
+
+        .navbar-next__locale-icon {
+            display: inline-block;
+            width: 1rem;
+            height: 1rem;
+            flex-shrink: 0;
+            color: var(--nb-cream-light);
+        }
+    }
+
+    &__star-link {
         display: inline-flex;
         align-items: center;
         gap: 8px;
@@ -204,6 +251,14 @@
             color: var(--nb-yellow);
             flex-shrink: 0;
         }
+    }
+
+    .navbar-next__star-link svg {
+        display: inline-block;
+    }
+
+    .navbar-next__logo img {
+        display: block;
     }
 
     &__star-divider {
@@ -390,10 +445,6 @@
             gap: 8px;
         }
 
-        &__actions &__star-link {
-            display: none;
-        }
-
         &__cta {
             padding: 0.45rem 0.8rem;
             font-size: 12px;
@@ -424,6 +475,7 @@
 
         &__mobile-actions {
             display: grid;
+            gap: 10px;
         }
     }
 }
