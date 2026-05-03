@@ -1,3 +1,5 @@
+@use '../../shared/typography' as type;
+
 .features-next {
     --fn-green: #11A679;
     --fn-green-deep: #0B7A58;
@@ -28,22 +30,13 @@
     }
 
     &__eyebrow {
-        font-family: var(--fn-mono);
-        font-size: 13px;
-        font-weight: 700;
-        letter-spacing: 0.18em;
+        @include type.eyebrow;
         color: var(--fn-green-deep);
-        text-transform: uppercase;
         margin-bottom: 28px;
     }
 
     &__headline {
-        font-family: var(--fn-mono);
-        font-weight: 800;
-        font-size: 52px;
-        line-height: 1.06;
-        letter-spacing: -0.025em;
-        word-spacing: -0.1em;
+        @include type.section-title;
         color: var(--fn-ink);
         margin: 0;
         text-align: left;
@@ -131,29 +124,18 @@
         position: absolute;
         top: 32px;
         left: 52px;
-        font-family: var(--fn-mono);
-        font-size: 12px;
-        font-weight: 700;
-        letter-spacing: 0.18em;
+        @include type.micro-label;
         opacity: 0.55;
     }
 
     &__card-title {
-        font-family: var(--fn-mono);
-        font-weight: 800;
-        font-size: 44px;
-        line-height: 1.02;
-        letter-spacing: -0.02em;
-        word-spacing: -0.08em;
+        @include type.card-title;
         margin: 0 0 14px;
         color: inherit;
     }
 
     &__card-subtitle {
-        font-family: var(--fn-sans);
-        font-size: 17px;
-        font-weight: 500;
-        line-height: 1.4;
+        @include type.body-copy-strong;
         opacity: 0.78;
         margin: 0 0 32px;
         max-width: 460px;
@@ -205,18 +187,13 @@
     }
 
     &__list-term {
-        font-family: var(--fn-sans);
-        font-size: 16px;
-        font-weight: 700;
-        letter-spacing: -0.005em;
+        @include type.body-copy-strong;
         margin-bottom: 2px;
         display: block;
     }
 
     &__list-desc {
-        font-family: var(--fn-sans);
-        font-size: 14px;
-        line-height: 1.5;
+        @include type.small-copy;
         opacity: 0.72;
         display: block;
     }
@@ -226,11 +203,7 @@
         display: inline-flex;
         align-items: center;
         gap: 8px;
-        font-family: var(--fn-mono);
-        font-size: 12px;
-        font-weight: 700;
-        letter-spacing: 0.14em;
-        text-transform: uppercase;
+        @include type.mono-text(12px, 700, 1.2, 0.14em, uppercase);
         color: inherit !important;
         text-decoration: none !important;
         width: fit-content;
@@ -294,11 +267,7 @@
         position: absolute;
         top: 24px;
         right: 24px;
-        font-family: var(--fn-mono);
-        font-size: 10.5px;
-        font-weight: 700;
-        letter-spacing: 0.18em;
-        text-transform: uppercase;
+        @include type.micro-label;
         padding: 6px 10px;
         background: var(--fn-yellow);
         color: var(--fn-ink);
@@ -362,11 +331,7 @@
         align-items: center;
         justify-content: center;
         border-radius: 6px;
-        font-family: var(--fn-mono);
-        font-size: 12px;
-        font-weight: 800;
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
+        @include type.mono-text(12px, 800, 1.2, 0.08em, uppercase);
     }
 
     &__pipeline-lane span {
@@ -488,10 +453,7 @@
         background: rgba(250, 246, 238, 0.1);
         border: 1px solid rgba(250, 246, 238, 0.18);
         color: var(--fn-yellow);
-        font-family: var(--fn-mono);
-        font-size: 12px;
-        font-weight: 800;
-        letter-spacing: 0.08em;
+        @include type.mono-text(12px, 800, 1.2, 0.08em, uppercase);
         text-align: center;
     }
 
@@ -510,11 +472,7 @@
         border-radius: 6px;
         background: rgba(250, 246, 238, 0.1);
         border: 1px solid rgba(250, 246, 238, 0.16);
-        font-family: var(--fn-mono);
-        font-size: 11px;
-        font-weight: 800;
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
+        @include type.mono-text(11px, 800, 1.2, 0.08em, uppercase);
 
         i {
             height: 8px;

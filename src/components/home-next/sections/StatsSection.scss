@@ -1,3 +1,5 @@
+@use '../../shared/typography' as type;
+
 .stats-next {
     --stats-next-bg: #057657;
     --stats-next-content-edge: max(56px, calc((100vw - 1280px) / 2 + 56px));
@@ -209,9 +211,7 @@
         min-width: 0;
         overflow: hidden;
         color: #0F1A14;
-        font-size: 16px;
-        font-weight: 700;
-        line-height: 1.2;
+        @include type.body-copy-strong;
         text-overflow: ellipsis;
         white-space: nowrap;
     }
@@ -221,8 +221,7 @@
         margin: 0;
         overflow: hidden;
         color: rgba(15, 26, 20, 0.78);
-        font-size: 14px;
-        line-height: 1.58;
+        @include type.small-copy;
     }
 
     &__card-tag {
@@ -234,12 +233,8 @@
         border-radius: 3px;
         background: rgba(11, 122, 88, 0.05);
         color: #0B7A58;
-        font-family: 'JetBrains Mono', 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
-        font-size: 9.5px;
-        letter-spacing: 0.14em;
-        line-height: 1.3;
+        @include type.micro-label;
         text-overflow: ellipsis;
-        text-transform: uppercase;
         white-space: nowrap;
     }
 
@@ -249,26 +244,21 @@
         gap: 10px;
         padding-top: 10px;
         border-top: 1px dashed rgba(15, 26, 20, 0.18);
-        font-family: 'JetBrains Mono', 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+        font-family: type.$font-mono;
     }
 
     &__card-meta-label {
         display: block;
         margin-bottom: 3px;
         color: rgba(15, 26, 20, 0.5);
-        font-size: 9px;
-        letter-spacing: 0.14em;
-        line-height: 1.2;
-        text-transform: uppercase;
+        @include type.micro-label;
     }
 
     &__card-meta-value {
         display: block;
         overflow: hidden;
         color: #0B7A58;
-        font-size: 13px;
-        font-weight: 700;
-        line-height: 1.25;
+        @include type.mono-text(13px, 700, 1.25, 0);
     }
 }
 

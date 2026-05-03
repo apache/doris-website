@@ -9,14 +9,29 @@ import './CompareNext.scss';
 interface Tab {
     id: string;
     name: string;
-    mark: string;
+    logoSrc: string;
     enabled: boolean;
 }
 
 const TABS: Tab[] = [
-    { id: 'clickhouse', name: 'ClickHouse', mark: 'C', enabled: true },
-    { id: 'elastic', name: 'Elasticsearch', mark: 'E', enabled: true },
-    { id: 'trino', name: 'Trino / Presto', mark: 'T', enabled: true },
+    {
+        id: 'clickhouse',
+        name: 'ClickHouse',
+        logoSrc: '/images/ecomsystem-log/clickhouse-small.svg',
+        enabled: true,
+    },
+    {
+        id: 'elastic',
+        name: 'Elasticsearch',
+        logoSrc: '/images/ecomsystem-log/es-small.svg',
+        enabled: true,
+    },
+    {
+        id: 'trino',
+        name: 'Trino / Presto',
+        logoSrc: '/images/ecomsystem-log/trino-small.png',
+        enabled: true,
+    },
 ];
 
 interface SectionTitleProps {
@@ -58,7 +73,14 @@ function TabSwitcher({ active, onChange }: TabSwitcherProps): JSX.Element {
                         className={classes}
                         onClick={() => tab.enabled && onChange(tab.id)}
                     >
-                        <span className="cmp-next__tab-mark">{tab.mark}</span>
+                        <span className="cmp-next__tab-mark" aria-hidden="true">
+                            <img
+                                className="cmp-next__tab-logo"
+                                src={tab.logoSrc}
+                                alt=""
+                                draggable={false}
+                            />
+                        </span>
                         <span className="cmp-next__tab-vs">vs</span>
                         <span className="cmp-next__tab-name">{tab.name}</span>
                         {!tab.enabled && <span className="cmp-next__tab-soon">SOON</span>}

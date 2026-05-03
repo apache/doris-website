@@ -1,13 +1,23 @@
 // ─── Card 2: Apple-style Cover Flow carousel ─────────────────────────────────
 
 @use '../responsive' as r;
+@use '../../shared/typography' as type;
 
 .cmp-cf {
     padding-bottom: 60px;
 
+    &.cmp-next__card {
+        background: var(--cn-green-dark);
+    }
+
+    .cmp-next__card-head {
+        margin-bottom: clamp(16px, 2vw, 24px);
+    }
+
     .cmp-next__card-sub {
         max-width: none;
         white-space: nowrap;
+        color: rgba(245, 239, 228, 0.7);
 
         @include r.down('xl') {
             white-space: normal;
@@ -81,22 +91,16 @@
         position: absolute;
         top: 14px;
         right: 22px;
-        font-family: var(--cn-mono);
-        font-size: 10px;
-        letter-spacing: 0.16em;
+        @include type.micro-label;
         color: rgba(255, 210, 63, 0.65);
-        text-transform: uppercase;
     }
 
     &__rank {
         position: absolute;
         top: 14px;
         left: 24px;
-        font-family: var(--cn-mono);
-        font-size: 10px;
+        @include type.micro-label;
         color: rgba(245, 239, 228, 0.4);
-        letter-spacing: 0.18em;
-        text-transform: uppercase;
     }
 
     &__logo {
@@ -116,35 +120,24 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        font-family: var(--cn-mono);
-        font-weight: 800;
-        font-size: 22px;
+        @include type.mono-text(22px, 800, 1, -0.01em);
         flex-shrink: 0;
-        letter-spacing: -0.01em;
     }
 
     &__logo-name {
-        font-family: var(--cn-mono);
-        font-size: clamp(18px, 1rem + 0.5vw, 22px);
-        font-weight: 700;
+        @include type.mono-text(clamp(18px, 1rem + 0.5vw, 22px), 700, 1.2, -0.005em);
         color: var(--cn-cream-light);
-        letter-spacing: -0.005em;
     }
 
     &__logo-sub {
-        font-family: var(--cn-mono);
-        font-size: 11px;
+        @include type.mono-text(11px, 700, 1.2, 0.08em, uppercase);
         color: rgba(245, 239, 228, 0.5);
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
         margin-top: 3px;
     }
 
     &__quote {
         position: relative;
-        font-family: var(--cn-sans);
-        font-size: var(--cn-fs-body);
-        line-height: 1.5;
+        @include type.body-copy;
         color: rgba(245, 239, 228, 0.86);
         margin: 0 0 14px;
         padding-left: 16px;
@@ -164,9 +157,7 @@
         display: flex;
         align-items: flex-start;
         gap: 10px;
-        font-family: var(--cn-sans);
-        font-size: 13px;
-        line-height: 1.45;
+        @include type.small-copy;
         color: rgba(245, 239, 228, 0.78);
 
         strong {

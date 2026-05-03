@@ -55,8 +55,8 @@ const NAV_ITEMS: NavItem[] = [
     {
         label: 'Use Cases',
         items: [
-            { label: 'Customer-Facing Analytics (coming soon)', href: '#' },
-            { label: 'Data Warehousing (coming soon)', href: '#' },
+            { label: 'Customer-Facing Analytics', href: '/use-cases/customer-facing-analytics' },
+            { label: 'Data Warehousing', href: '/use-cases/data-warehousing' },
             { label: 'Observability (coming soon)', href: '#' },
             { label: 'Doris for AI (coming soon)', href: '#' },
         ],

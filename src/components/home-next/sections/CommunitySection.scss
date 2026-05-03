@@ -1,3 +1,5 @@
+@use '../../shared/typography' as type;
+
 .community-next {
     --cn-green: #06805F;
     --cn-green-deep: #054C39;
@@ -57,24 +59,15 @@
 
     &__eyebrow {
         display: inline-block;
-        font-family: var(--cn-mono);
-        font-size: 10.5px;
-        font-weight: 700;
-        letter-spacing: 0.18em;
-        text-transform: uppercase;
+        @include type.micro-label;
         color: rgba(245, 239, 228, 0.64);
         margin-bottom: 12px;
     }
 
     &__title {
-        font-family: var(--cn-mono);
-        font-size: clamp(40px, 4.4vw, 52px);
-        font-weight: 800;
-        line-height: 1.06;
+        @include type.section-title;
         color: var(--cn-cream);
         margin: 0;
-        letter-spacing: -0.025em;
-        word-spacing: -0.1em;
     }
 
     &__title-accent {
@@ -161,14 +154,9 @@
     }
 
     &__card-name {
-        font-family: var(--cn-mono);
-        font-size: 13.5px;
-        font-weight: 700;
-        line-height: 1.2;
+        @include type.mono-text(13.5px, 700, 1.2, -0.015em);
         color: var(--cn-cream);
         margin: 0;
-        letter-spacing: -0.015em;
-        word-spacing: -0.06em;
         min-width: 0;
         overflow: hidden;
         text-overflow: ellipsis;

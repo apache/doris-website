@@ -1,6 +1,7 @@
 // ─── Design tokens (scoped to compare page) ──────────────────────────────────
 
 @use 'responsive' as r;
+@use '../shared/typography' as type;
 
 .cmp-next {
     --cn-green-dark: #06805F;
@@ -90,13 +91,7 @@
     }
 
     &__hero-title {
-        font-family: var(--cn-mono);
-        font-weight: 700;
-        text-transform: uppercase;
-        font-size: var(--cn-fs-hero);
-        line-height: 1;
-        letter-spacing: -0.035em;
-        word-spacing: -0.18em;
+        @include type.hero-title;
         color: var(--cn-ink);
         margin: 0 0 22px;
         white-space: nowrap;
@@ -146,10 +141,9 @@
         border: 0;
         background: transparent;
         cursor: pointer;
-        font-family: var(--cn-mono);
+        font-family: type.$font-mono;
         color: rgba(15, 26, 20, 0.6);
-        font-size: 13px;
-        letter-spacing: 0.04em;
+        @include type.mono-text(13px, 400, 1.2, 0.04em);
         display: flex;
         align-items: center;
         gap: 12px;
@@ -177,9 +171,11 @@
             .cmp-next__tab-vs {
                 color: rgba(245, 239, 228, 0.65);
             }
+
             .cmp-next__tab-mark {
-                background: var(--cn-yellow);
-                color: var(--cn-ink);
+                background: rgba(245, 239, 228, 0.16);
+                border-color: rgba(245, 239, 228, 0.24);
+                box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
             }
         }
 
@@ -216,15 +212,22 @@
         align-items: center;
         justify-content: center;
         border-radius: 5px;
-        background: rgba(6, 128, 95, 0.12);
-        font-size: 11px;
-        font-weight: 800;
-        color: var(--cn-green-dark);
+        background: rgba(255, 255, 255, 0.88);
+        border: 1px solid rgba(15, 26, 20, 0.08);
+        overflow: hidden;
+        flex: 0 0 auto;
+        transition: background 0.2s, border-color 0.2s, box-shadow 0.2s;
+    }
+
+    &__tab-logo {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        display: block;
     }
 
     &__tab-soon {
-        font-size: 9px;
-        letter-spacing: 0.18em;
+        @include type.micro-label;
         padding: 2px 6px;
         border: 1px solid rgba(15, 26, 20, 0.2);
         border-radius: 3px;
@@ -272,11 +275,7 @@
         display: flex;
         align-items: center;
         gap: 10px;
-        font-family: var(--cn-mono);
-        font-size: 11px;
-        font-weight: 600;
-        letter-spacing: 0.06em;
-        text-transform: uppercase;
+        @include type.mono-text(11px, 600, 1.2, 0.06em, uppercase);
         color: rgba(255, 210, 63, 0.85);
         margin-bottom: 14px;
     }
@@ -289,17 +288,12 @@
         justify-content: center;
         border: 1px solid rgba(255, 210, 63, 0.5);
         border-radius: 50%;
-        font-size: 10px;
+        @include type.micro-label;
         color: var(--cn-yellow);
     }
 
     &__card-title {
-        font-family: var(--cn-mono);
-        font-weight: 700;
-        text-transform: uppercase;
-        font-size: var(--cn-fs-h1);
-        line-height: 1.05;
-        letter-spacing: -0.012em;
+        @include type.section-title;
         color: var(--cn-cream-light);
         margin: 0;
         max-width: 700px;
@@ -315,9 +309,7 @@
     }
 
     &__card-sub {
-        font-family: var(--cn-sans);
-        font-size: clamp(14px, 0.875rem + 0.2vw, 15px);
-        line-height: 1.55;
+        @include type.body-copy-strong;
         color: rgba(245, 239, 228, 0.7);
         margin: 14px 0 0;
         max-width: 640px;
@@ -340,10 +332,7 @@
     }
 
     &__section-title-num {
-        font-family: var(--cn-mono);
-        font-size: 12px;
-        font-weight: 700;
-        letter-spacing: 0.16em;
+        @include type.mono-text(12px, 700, 1.2, 0.16em, uppercase);
         color: var(--cn-green-dark);
         padding: 4px 8px;
         border: 1px solid rgba(6, 128, 95, 0.32);
@@ -352,11 +341,7 @@
     }
 
     &__section-title-text {
-        font-family: var(--cn-mono);
-        font-size: clamp(14px, 0.85rem + 0.4vw, 18px);
-        font-weight: 700;
-        text-transform: uppercase;
-        letter-spacing: 0.04em;
+        @include type.mono-text(clamp(14px, 0.85rem + 0.4vw, 18px), 700, 1.2, 0.04em, uppercase);
         color: var(--cn-ink);
         flex-shrink: 0;
     }

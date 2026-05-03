@@ -1,8 +1,13 @@
 // ─── Card 3: Side-by-side comparison table ───────────────────────────────────
 
 @use '../responsive' as r;
+@use '../../shared/typography' as type;
 
 .cmp-tbl {
+    &.cmp-next__card {
+        background: var(--cn-green-dark);
+    }
+
     &__wrap {
         border: 1px solid rgba(245, 239, 228, 0.1);
         border-radius: 10px;
@@ -25,19 +30,13 @@
     }
 
     &__col-label {
-        font-family: var(--cn-mono);
-        font-size: 10.5px;
-        letter-spacing: 0.18em;
-        text-transform: uppercase;
+        @include type.micro-label;
         color: rgba(245, 239, 228, 0.5);
     }
 
     &__col-name {
-        font-family: var(--cn-mono);
-        font-size: clamp(15px, 0.85rem + 0.4vw, 18px);
-        font-weight: 700;
+        @include type.mono-text(clamp(15px, 0.85rem + 0.4vw, 18px), 700, 1.2, -0.005em);
         color: var(--cn-cream-light);
-        letter-spacing: -0.005em;
         display: flex;
         align-items: center;
         gap: 10px;
@@ -50,29 +49,24 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        font-weight: 800;
-        font-size: 14px;
+        background: rgba(255, 255, 255, 0.88);
+        border: 1px solid rgba(15, 26, 20, 0.08);
+        overflow: hidden;
+    }
 
-        &--doris {
-            background: var(--cn-green-glow);
-            color: var(--cn-ink);
-        }
-
-        &--ch {
-            background: rgba(245, 239, 228, 0.12);
-            color: var(--cn-cream-light);
-        }
+    &__col-logo {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        display: block;
     }
 
     &__col-badge {
-        font-family: var(--cn-mono);
-        font-size: 9px;
-        letter-spacing: 0.16em;
+        @include type.micro-label;
         padding: 3px 7px;
         background: var(--cn-yellow);
         color: var(--cn-ink);
         border-radius: 3px;
-        font-weight: 700;
     }
 
     &__row {
@@ -141,10 +135,7 @@
         display: none;
         align-items: center;
         gap: 8px;
-        font-family: var(--cn-mono);
-        font-size: 11px;
-        font-weight: 700;
-        letter-spacing: 0.04em;
+        @include type.mono-text(11px, 700, 1.2, 0.04em);
         margin-bottom: 10px;
         color: var(--cn-cream-light);
     }
@@ -156,34 +147,26 @@
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        font-weight: 800;
-        font-size: 11px;
+        background: rgba(255, 255, 255, 0.88);
+        border: 1px solid rgba(15, 26, 20, 0.08);
+        overflow: hidden;
+    }
 
-        .cmp-tbl__cell-tag--doris & {
-            background: var(--cn-green-glow);
-            color: var(--cn-ink);
-        }
-
-        .cmp-tbl__cell-tag--ch & {
-            background: rgba(245, 239, 228, 0.18);
-            color: var(--cn-cream-light);
-        }
+    &__cell-tag-logo {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        display: block;
     }
 
     &__label-num {
-        font-family: var(--cn-mono);
-        font-size: 10px;
-        letter-spacing: 0.16em;
+        @include type.micro-label;
         color: rgba(255, 210, 63, 0.7);
     }
 
     &__label-text {
-        font-family: var(--cn-mono);
-        font-size: clamp(13px, 0.8rem + 0.2vw, 15px);
-        font-weight: 700;
+        @include type.mono-text(clamp(13px, 0.8rem + 0.2vw, 15px), 700, 1.25, -0.005em);
         color: var(--cn-cream-light);
-        line-height: 1.25;
-        letter-spacing: -0.005em;
     }
 
     &__bullets {
@@ -195,8 +178,7 @@
         gap: 8px;
 
         li {
-            font-size: 13.5px;
-            line-height: 1.45;
+            @include type.small-copy;
             color: rgba(245, 239, 228, 0.78);
             padding-left: 18px;
             position: relative;

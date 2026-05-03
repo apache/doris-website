@@ -1,3 +1,5 @@
+@use '../../shared/typography' as type;
+
 .deployment-next {
     --dn-green: #11A679;
     --dn-green-deep: #0B7A58;
@@ -25,22 +27,13 @@
     }
 
     &__eyebrow {
-        font-family: var(--dn-mono);
-        font-size: 13px;
-        font-weight: 700;
-        letter-spacing: 0.18em;
+        @include type.eyebrow;
         color: var(--dn-green-deep);
-        text-transform: uppercase;
         margin-bottom: 28px;
     }
 
     &__headline {
-        font-family: var(--dn-mono);
-        font-weight: 800;
-        font-size: 52px;
-        line-height: 1.06;
-        letter-spacing: -0.025em;
-        word-spacing: -0.1em;
+        @include type.section-title;
         color: var(--dn-ink);
         margin: 0;
         text-align: left;
@@ -110,12 +103,7 @@
     }
 
     &__card-title {
-        font-family: var(--dn-mono);
-        font-weight: 800;
-        font-size: 38px;
-        line-height: 0.98;
-        letter-spacing: -0.02em;
-        word-spacing: -0.08em;
+        @include type.card-title;
         margin: 0 0 24px;
         color: inherit;
     }
@@ -129,10 +117,7 @@
     }
 
     &__card-subtitle {
-        font-family: var(--dn-sans);
-        font-size: 16px;
-        font-weight: 500;
-        line-height: 1.5;
+        @include type.body-copy-strong;
         opacity: 0.78;
         margin: 0;
         max-width: 420px;
@@ -149,12 +134,7 @@
         border-radius: 6px;
         background: var(--dn-yellow);
         color: var(--dn-ink) !important;
-        font-family: var(--dn-mono);
-        font-size: 16px;
-        font-weight: 800;
-        line-height: 1;
-        letter-spacing: 0.04em;
-        text-transform: none;
+        @include type.mono-text(16px, 800, 1, 0.04em);
         text-decoration: none !important;
         box-shadow: 0 14px 30px -18px rgba(15, 26, 20, 0.5);
         transition:

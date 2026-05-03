@@ -1,8 +1,13 @@
 // ─── Card 1: Why choose Doris (value props) ──────────────────────────────────
 
 @use '../responsive' as r;
+@use '../../shared/typography' as type;
 
 .cmp-why {
+    &.cmp-next__card {
+        background: var(--cn-green-dark);
+    }
+
     .cmp-next__card-sub {
         max-width: none;
         white-space: nowrap;
@@ -76,11 +81,7 @@
     }
 
     &__vp-stat {
-        font-family: var(--cn-mono);
-        font-size: clamp(38px, 2rem + 1.6vw, 52px);
-        font-weight: 800;
-        line-height: 1;
-        letter-spacing: -0.025em;
+        @include type.metric;
         color: var(--cn-yellow);
         margin-bottom: 4px;
         display: flex;
@@ -91,39 +92,30 @@
     }
 
     &__vp-stat-unit {
-        font-size: clamp(18px, 0.9rem + 0.6vw, 22px);
-        font-weight: 700;
+        @include type.mono-text(clamp(18px, 0.9rem + 0.6vw, 22px), 700, 1, 0);
         color: rgba(255, 210, 63, 0.85);
     }
 
     &__vp-stat-arrow {
-        font-size: clamp(18px, 0.9rem + 0.6vw, 22px);
+        @include type.mono-text(clamp(18px, 0.9rem + 0.6vw, 22px), 700, 1, 0);
         color: rgba(255, 210, 63, 0.7);
         margin-right: 4px;
     }
 
     &__vp-label {
-        font-family: var(--cn-mono);
-        font-size: 10.5px;
-        letter-spacing: 0.16em;
-        text-transform: uppercase;
+        @include type.micro-label;
         color: rgba(245, 239, 228, 0.5);
         margin-bottom: 18px;
     }
 
     &__vp-headline {
-        font-family: var(--cn-mono);
-        font-size: clamp(16px, 0.9rem + 0.5vw, 19px);
-        font-weight: 700;
-        line-height: 1.25;
+        @include type.mono-text(clamp(16px, 0.9rem + 0.5vw, 19px), 700, 1.25, -0.005em);
         color: var(--cn-cream-light);
         margin: 0 0 10px;
     }
 
     &__vp-text {
-        font-family: var(--cn-sans);
-        font-size: var(--cn-fs-body);
-        line-height: 1.55;
+        @include type.body-copy;
         color: rgba(245, 239, 228, 0.72);
         margin: 0;
     }

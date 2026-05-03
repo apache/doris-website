@@ -1,5 +1,7 @@
 // ─── Design tokens (scoped to hero) ──────────────────────────────────────────
 
+@use '../../shared/typography' as type;
+
 .hero-next {
     --hn-green-dark: #06805F;
     --hn-green-darker: #054C39;
@@ -86,11 +88,7 @@
         display: flex;
         align-items: center;
         gap: 12px;
-        font-family: var(--hn-mono);
-        font-size: 11.5px;
-        font-weight: 500;
-        letter-spacing: 0.14em;
-        text-transform: uppercase;
+        @include type.mono-text(11.5px, 500, 1.2, 0.14em, uppercase);
         color: rgba(245, 239, 228, 0.7);
         margin-bottom: 18px;
         flex-wrap: wrap;
@@ -118,15 +116,10 @@
 
     &__title {
         // override Docusaurus heading defaults
+        @include type.hero-title;
         font-family: var(--hn-mono) !important;
-        font-weight: 700 !important;
-        text-transform: uppercase;
-        letter-spacing: -0.025em;
-        word-spacing: -0.1em;
-        line-height: 0.92 !important;
         color: var(--hn-cream-light) !important;
         margin: 0 !important;
-        font-size: clamp(40px, 4.4vw, 62px);
         display: flex;
         flex-direction: column;
         gap: 2px;
@@ -150,13 +143,10 @@
     // ── Subtitle ───────────────────────────────────────────────────────────
 
     &__sub {
-        font-family: var(--hn-sans);
-        font-size: 15px;
-        line-height: 1.5;
+        @include type.body-copy;
         color: rgba(245, 239, 228, 0.82);
         margin: 18px 0 22px !important;
         max-width: 480px;
-        font-weight: 400;
     }
 
     // ── CTA buttons ────────────────────────────────────────────────────────
@@ -173,11 +163,7 @@
         align-items: center;
         gap: 0.55rem;
         padding: 0.75rem 1.25rem;
-        font-family: var(--hn-mono);
-        font-size: 12.5px;
-        font-weight: 600;
-        letter-spacing: 0.04em;
-        text-transform: uppercase;
+        @include type.mono-text(12.5px, 600, 1.2, 0.04em, uppercase);
         border-radius: 4px;
         border: 1.5px solid transparent;
         cursor: pointer;
@@ -355,10 +341,8 @@
         padding: 12px 16px;
         background: rgba(245, 239, 228, 0.04);
         border-bottom: 1px solid rgba(245, 239, 228, 0.08);
-        font-size: 11px;
+        @include type.micro-label;
         color: rgba(245, 239, 228, 0.5);
-        letter-spacing: 0.06em;
-        text-transform: uppercase;
     }
 
     &__dot {
@@ -383,14 +367,12 @@
         border-radius: 3px;
         background: rgba(17, 166, 121, 0.15);
         color: #2DDFA8;
-        font-size: 10px;
-        letter-spacing: 0.1em;
+        @include type.micro-label;
     }
 
     &__body {
         padding: 16px 20px;
-        font-size: 13px;
-        line-height: 1.6;
+        @include type.sans-text(13px, 400, 1.6);
         color: #D8DCD0;
         display: flex;
         flex-direction: column;
@@ -449,19 +431,14 @@
     }
 
     &__result-text {
-        font-family: 'JetBrains Mono', 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
-        font-size: 12px;
+        @include type.micro-label;
         color: rgba(245, 239, 228, 0.55);
-        letter-spacing: 0.06em;
-        text-transform: uppercase;
     }
 
     &__result-time {
         margin-left: auto;
-        font-family: 'JetBrains Mono', 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
-        font-size: 13px;
+        @include type.mono-text(13px, 700, 1.2, 0);
         color: #2DDFA8;
-        font-weight: 700;
     }
 }
 
@@ -491,20 +468,15 @@
     }
 
     &__head-label {
-        font-size: 10.5px;
-        letter-spacing: 0.18em;
+        @include type.micro-label;
         color: rgba(245, 239, 228, 0.5);
-        font-weight: 600;
-        text-transform: uppercase;
     }
 
     &__legend {
         display: flex;
         gap: 14px;
-        font-size: 10px;
+        @include type.micro-label;
         color: rgba(245, 239, 228, 0.65);
-        letter-spacing: 0.06em;
-        text-transform: uppercase;
     }
 
     &__legend-chip {

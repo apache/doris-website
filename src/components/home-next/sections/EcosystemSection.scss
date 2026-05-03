@@ -1,3 +1,5 @@
+@use '../../shared/typography' as type;
+
 .ecosystem-next {
     --ecosystem-doris-offset-y: 0px;
     --ecosystem-engine-label-offset-y: 0px;
@@ -52,12 +54,7 @@
     &__eyebrow {
         margin-bottom: 28px;
         color: var(--en-green-deep);
-        font-family: var(--en-mono);
-        font-size: 13px;
-        font-weight: 700;
-        letter-spacing: 0.18em;
-        line-height: 1.2;
-        text-transform: uppercase;
+        @include type.eyebrow;
     }
 
     &__header-right {
@@ -71,12 +68,7 @@
     &__headline {
         margin: 0;
         color: var(--en-ink);
-        font-family: var(--en-mono);
-        font-size: 52px;
-        font-weight: 800;
-        line-height: 1.02;
-        letter-spacing: -0.025em;
-        word-spacing: -0.1em;
+        @include type.section-title;
         text-align: left;
 
         span {
@@ -96,31 +88,23 @@
         gap: 6px;
         padding: 6px 0;
         color: var(--en-ink);
-        font-family: var(--en-mono);
+        font-family: type.$font-mono;
         text-align: left;
     }
 
     &__coverage-line {
         display: block;
-        font-size: 18px;
-        font-weight: 700;
-        line-height: 1.12;
-        letter-spacing: -0.02em;
+        @include type.mono-text(18px, 700, 1.12, -0.02em);
     }
 
     &__coverage-line--lead {
         color: var(--en-green-deep);
-        font-size: 24px;
-        font-weight: 800;
-        line-height: 1.04;
-        letter-spacing: -0.03em;
+        @include type.mono-text(24px, 800, 1.04, -0.03em);
     }
 
     &__coverage-line--subtle {
         color: rgba(15, 26, 20, 0.58);
-        font-size: 15px;
-        font-weight: 600;
-        line-height: 1.28;
+        @include type.mono-text(15px, 600, 1.28, 0);
     }
 
     &__stage {
@@ -193,12 +177,7 @@
         gap: 10px;
         margin-bottom: 0;
         color: rgba(15, 26, 20, 0.48);
-        font-family: var(--en-mono);
-        font-size: 11px;
-        font-weight: 700;
-        letter-spacing: 0.18em;
-        line-height: 1.25;
-        text-transform: uppercase;
+        @include type.mono-text(11px, 700, 1.25, 0.18em, uppercase);
     }
 
     &__col-head--center {
@@ -224,8 +203,7 @@
         border-radius: 4px;
         background: rgba(17, 166, 121, 0.12);
         color: var(--en-green-deep);
-        font-size: 10px;
-        letter-spacing: 0;
+        @include type.micro-label;
     }
 
     &__block {
@@ -262,23 +240,13 @@
 
     &__block-title {
         color: var(--en-ink);
-        font-family: var(--en-mono);
-        font-size: 11px;
-        font-weight: 800;
-        letter-spacing: 0.16em;
-        line-height: 1.2;
-        text-transform: uppercase;
+        @include type.mono-text(11px, 800, 1.2, 0.16em, uppercase);
     }
 
     &__block-tag {
         color: rgba(15, 26, 20, 0.42);
-        font-family: var(--en-mono);
-        font-size: 9px;
-        font-weight: 600;
-        letter-spacing: 0.12em;
-        line-height: 1.2;
+        @include type.mono-text(9px, 600, 1.2, 0.12em, uppercase);
         text-align: right;
-        text-transform: uppercase;
         white-space: nowrap;
     }
 
@@ -299,10 +267,7 @@
         border-radius: 8px;
         background: var(--en-node-soft);
         color: var(--en-ink);
-        font-family: var(--en-mono);
-        font-size: 11px;
-        font-weight: 650;
-        letter-spacing: 0;
+        @include type.mono-text(11px, 650, 1.2, 0);
         white-space: nowrap;
     }
 
@@ -416,21 +381,13 @@
         border-radius: 7px;
         background: var(--en-yellow);
         color: var(--en-ink);
-        font-family: var(--en-mono);
-        font-size: 20px;
-        font-weight: 800;
-        letter-spacing: 0;
+        @include type.mono-text(20px, 800, 1, 0);
     }
 
     &__doris-name {
         color: var(--en-cream-light);
-        font-family: var(--en-mono);
-        font-size: 12px;
-        font-weight: 800;
-        letter-spacing: 0.14em;
-        line-height: 1.2;
+        @include type.mono-text(12px, 800, 1.2, 0.14em, uppercase);
         text-align: center;
-        text-transform: uppercase;
     }
 
     &__flows {
@@ -501,12 +458,7 @@
         align-items: center;
         gap: 10px;
         color: rgba(15, 26, 20, 0.48);
-        font-family: var(--en-mono);
-        font-size: 10px;
-        font-weight: 700;
-        letter-spacing: 0.16em;
-        line-height: 1.25;
-        text-transform: uppercase;
+        @include type.mono-text(10px, 700, 1.25, 0.16em, uppercase);
     }
 
     .ecosystem-next__compact-row {
@@ -532,22 +484,12 @@
 
     .ecosystem-next__compact-block-title {
         color: var(--en-ink);
-        font-family: var(--en-mono);
-        font-size: 11px;
-        font-weight: 800;
-        letter-spacing: 0.1em;
-        line-height: 1.2;
-        text-transform: uppercase;
+        @include type.mono-text(11px, 800, 1.2, 0.1em, uppercase);
     }
 
     .ecosystem-next__compact-block-tag {
         color: rgba(15, 26, 20, 0.42);
-        font-family: var(--en-mono);
-        font-size: 8px;
-        font-weight: 600;
-        letter-spacing: 0.08em;
-        line-height: 1.2;
-        text-transform: uppercase;
+        @include type.mono-text(8px, 600, 1.2, 0.08em, uppercase);
     }
 
     .ecosystem-next__compact-flow {
