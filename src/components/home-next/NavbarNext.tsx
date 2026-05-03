@@ -176,9 +176,9 @@ export function NavbarNext(): JSX.Element {
                         <span className="navbar-next__star-divider" />
                         <GitHubIcon />
                     </a>
-                    <a href="https://doris.apache.org/download" className="navbar-next__cta">
+                    <Link to="/download-next" className="navbar-next__cta">
                         DOWNLOAD
-                    </a>
+                    </Link>
                 </div>
 
                 <button
@@ -243,9 +243,9 @@ export function NavbarNext(): JSX.Element {
                         <span className="navbar-next__star-divider" />
                         <GitHubIcon />
                     </a>
-                    <a href="https://doris.apache.org/download" className="navbar-next__cta" onClick={() => setMobileOpen(false)}>
+                    <Link to="/download-next" className="navbar-next__cta" onClick={() => setMobileOpen(false)}>
                         DOWNLOAD
-                    </a>
+                    </Link>
                 </div>
             </div>
         </nav>
