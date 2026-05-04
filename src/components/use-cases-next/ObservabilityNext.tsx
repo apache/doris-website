@@ -1,8 +1,8 @@
 import React, {
-    CSSProperties,
     JSX,
     KeyboardEvent,
     ReactNode,
+    TouchEvent,
     useCallback,
     useEffect,
     useRef,
@@ -61,32 +61,6 @@ function BoltIcon({ size = 24, color = '#FFD23F', className }: BoltIconProps): J
     );
 }
 
-type ShapeKind = 'diamond' | 'circle' | 'ring' | 'cross';
-
-interface ShapeProps {
-    kind: ShapeKind;
-    style?: CSSProperties;
-}
-
-function Shape({ kind, style }: ShapeProps): JSX.Element {
-    return <span className={`shape shape-${kind}`} style={style} aria-hidden="true" />;
-}
-
-interface ShapeSpec {
-    kind: ShapeKind;
-    style: CSSProperties;
-}
-
-function Shapes({ specs }: { specs: ShapeSpec[] }): JSX.Element {
-    return (
-        <>
-            {specs.map((s, i) => (
-                <Shape key={i} kind={s.kind} style={s.style} />
-            ))}
-        </>
-    );
-}
-
 interface CoverFlowItem {
     id: string;
     num: string;
@@ -102,44 +76,62 @@ interface CoverFlowProps {
     items: CoverFlowItem[];
     footerVariant?: 'scenarios' | 'powered';
     ariaLabel?: string;
-    hoverDelayMs?: number;
 }
 
-const HOVER_DELAY_DEFAULT = 60;
+const SWIPE_THRESHOLD = 40;
 
 function CoverFlow({
     items,
     footerVariant = 'scenarios',
     ariaLabel,
-    hoverDelayMs = HOVER_DELAY_DEFAULT,
 }: CoverFlowProps): JSX.Element {
     const [active, setActive] = useState(0);
     const total = items.length;
-    const hoverTimer = useRef<number | null>(null);
     const stageRef = useRef<HTMLDivElement | null>(null);
+    const touchStartX = useRef<number | null>(null);
+    const touchStartY = useRef<number | null>(null);
+    const touchIsHorizontal = useRef<boolean>(false);
 
     const go = useCallback(
         (i: number) => setActive(((i % total) + total) % total),
         [total]
     );
 
-    const onHoverEnter = (i: number) => {
-        if (hoverTimer.current) window.clearTimeout(hoverTimer.current);
-        hoverTimer.current = window.setTimeout(() => go(i), hoverDelayMs);
-    };
-    const onHoverLeave = () => {
-        if (hoverTimer.current) window.clearTimeout(hoverTimer.current);
-    };
-
-    useEffect(() => {
-        return () => {
-            if (hoverTimer.current) window.clearTimeout(hoverTimer.current);
-        };
-    }, []);
-
     const onKey = (e: KeyboardEvent<HTMLDivElement>) => {
         if (e.key === 'ArrowLeft') go(active - 1);
         if (e.key === 'ArrowRight') go(active + 1);
+    };
+
+    const onTouchStart = (e: TouchEvent<HTMLDivElement>) => {
+        const t = e.touches[0];
+        touchStartX.current = t.clientX;
+        touchStartY.current = t.clientY;
+        touchIsHorizontal.current = false;
+    };
+
+    const onTouchMove = (e: TouchEvent<HTMLDivElement>) => {
+        if (touchStartX.current === null || touchStartY.current === null) return;
+        const t = e.touches[0];
+        const dx = t.clientX - touchStartX.current;
+        const dy = t.clientY - touchStartY.current;
+        if (Math.abs(dx) > 10 && Math.abs(dx) > Math.abs(dy)) {
+            touchIsHorizontal.current = true;
+        }
+    };
+
+    const onTouchEnd = (e: TouchEvent<HTMLDivElement>) => {
+        if (touchStartX.current === null) {
+            return;
+        }
+        const t = e.changedTouches[0];
+        const dx = t.clientX - touchStartX.current;
+        if (touchIsHorizontal.current && Math.abs(dx) > SWIPE_THRESHOLD) {
+            if (dx < 0) go(active + 1);
+            else go(active - 1);
+        }
+        touchStartX.current = null;
+        touchStartY.current = null;
+        touchIsHorizontal.current = false;
     };
 
     const footerClass = footerVariant === 'powered' ? 'cap-powered' : 'cf-scenarios';
@@ -147,7 +139,14 @@ function CoverFlow({
         footerVariant === 'powered' ? 'cap-powered-label' : 'cf-scenarios-label';
 
     return (
-        <div className="cover-flow-wrap" onKeyDown={onKey} aria-label={ariaLabel}>
+        <div
+            className="cover-flow-wrap"
+            onKeyDown={onKey}
+            onTouchStart={onTouchStart}
+            onTouchMove={onTouchMove}
+            onTouchEnd={onTouchEnd}
+            aria-label={ariaLabel}
+        >
             <div className="cover-flow" ref={stageRef}>
                 {items.map((it, i) => {
                     const offset = i - active;
@@ -158,12 +157,7 @@ function CoverFlow({
                             data-offset={String(offset)}
                             aria-hidden={offset === 0 ? 'false' : 'true'}
                             tabIndex={offset === 0 ? 0 : -1}
-                            onMouseEnter={() => onHoverEnter(i)}
-                            onMouseLeave={onHoverLeave}
-                            onClick={() => {
-                                onHoverLeave();
-                                go(i);
-                            }}
+                            onClick={() => go(i)}
                         >
                             <div className="cf-num">{it.num}</div>
                             <h3 className="cf-title">{it.title}</h3>
@@ -266,12 +260,12 @@ const valueCards: ValueCard[] = [
             </>
         ),
         desc:
-            'Modern applications generate massive operational signals across services, infrastructure, databases, APIs and AI systems. Observability correlates logs with traces and metrics so teams identify the root cause of incidents before more users are impacted. In AI agent systems, a failed experience may come from an LLM timeout, a bad prompt, a failed tool call, an irrelevant retrieval or an unexpected agent loop — observability turns these complex execution paths into analyzable data.',
+            'Observability connects logs, traces, and metrics to help teams detect anomalies and find root causes before failures spread. For AI agents, it turns LLM timeouts, prompt failures, failed tool calls, and runaway loops into analyzable execution data.',
         scenariosLabel: 'Where it shows up',
         scenarios: [
             'Application performance monitoring',
             'Microservice troubleshooting',
-            'AI agent execution debugging',
+            'AI agent workflow debugging',
         ],
     },
     {
@@ -279,13 +273,13 @@ const valueCards: ValueCard[] = [
         num: '02 / User Experience & SLA',
         title: (
             <>
-                Protect the experience
+                PROTECT EVERY USER EXPERIENCE,
                 <br />
-                real users actually&nbsp;get.
+                FROM LATENCY TO ANSWER QUALITY.
             </>
         ),
         desc:
-            'Observability connects system signals to real user impact — latency, error rates, failed requests, degraded endpoints, customer-level effects. For AI applications, experience is also about whether the answer was correct, the agent completed the task, the response was grounded in the right context, and whether the workflow needed human escalation.',
+            'Modern observability connects system health to real user impact. For AI applications, that means tracking not only latency, errors, and degraded endpoints, but also answer accuracy, task completion, grounded responses, and human handoff.',
         scenariosLabel: 'Where it shows up',
         scenarios: [
             'Customer-facing analytics',
@@ -298,13 +292,13 @@ const valueCards: ValueCard[] = [
         num: '03 / Lower Cost at Scale',
         title: (
             <>
-                Keep observability
+                CONTROL OBSERVABILITY COSTS
                 <br />
-                affordable as data&nbsp;grows.
+                AS DATA GROWS.
             </>
         ),
         desc:
-            'Logs, traces, metrics and agent events grow extremely fast. Traditional observability stacks become expensive when everything is indexed, full traces are stored, and detailed logs are retained for long periods. A modern architecture balances performance and cost: hot data for fast troubleshooting, aggregated data for long-term trends, flexible storage for historical analysis.',
+            'Logs, traces, and agent events can grow faster than budgets. Keep recent data fast for troubleshooting, use aggregates for trends, and move historical data to lower-cost storage.',
         scenariosLabel: 'Where it shows up',
         scenarios: [
             'High-volume log analytics',
@@ -317,17 +311,17 @@ const valueCards: ValueCard[] = [
         num: '04 / Continuous AI Improvement',
         title: (
             <>
-                Make AI applications
+                MAKE AI APPLICATIONS
                 <br />
-                get better over&nbsp;time.
+                IMPROVE OVER TIME..
             </>
         ),
         desc:
-            'AI applications are probabilistic. A request can succeed technically but still produce a wrong, unhelpful, unsafe or ungrounded answer. AI agent observability lets teams analyze prompts, model responses, RAG context, tool calls, evaluation scores, token usage and user feedback — feeding back into prompt quality, model selection, retrieval accuracy, tool reliability and task completion.',
+            'AI applications can return valid responses that are still wrong, incomplete, or ungrounded. By observing prompts, responses, RAG context, tool calls, scores, and user feedback, teams can continuously improve prompt quality, retrieval accuracy, and task completion.',
         scenariosLabel: 'Where it shows up',
         scenarios: [
             'LLM application monitoring',
-            'RAG quality analysis',
+            'RAG quality evaluation',
             'AI agent evaluation and optimization',
         ],
     },
@@ -342,7 +336,7 @@ const valueCards: ValueCard[] = [
             </>
         ),
         desc:
-            'Observability is most valuable when it is wired to business impact, not only to system errors. Teams can understand which customers, tenants, workloads, models, endpoints or workflows are affected — and for AI agents, how failures translate into user journeys, conversion, support load, customer trust and revenue.',
+            'Observability becomes more valuable when every signal is tied to business impact. Teams can see which customers, tenants, and workflows are affected — and understand how AI agent failures impact conversion, support load, and revenue.',
         scenariosLabel: 'Where it shows up',
         scenarios: [
             'Tenant-level impact analysis',
@@ -400,35 +394,35 @@ const requirements: Requirement[] = [
         num: 'REQ · 01',
         title: 'Real-Time Ingestion of High-Volume Telemetry',
         desc:
-            'Logs, traces, metrics and AI agent events stream continuously from applications, Kubernetes, APIs, gateways, databases and AI systems. The platform must support high-throughput ingestion with low latency so signals — including LLM requests, prompts, agent step traces, tool calls, RAG retrieval events, token cost metrics, evaluation scores and user feedback — become queryable almost immediately.',
+            'Logs, traces, metrics and AI agent events stream continuously from applications, Kubernetes, APIs, gateways, databases and AI systems. The platform must ingest at high throughput and low latency so every signal (LLM requests, prompts, agent step traces, tool calls, RAG retrieval events, token cost metrics, evaluation scores and user feedback) becomes queryable almost immediately.',
     },
     {
         id: 'schema',
         num: 'REQ · 02',
         title: 'Flexible Schema for Logs, Traces & Agent Events',
         desc:
-            'Observability data is highly semi-structured. Logs, traces, agent events, tool outputs and model responses arrive as JSON with frequently changing fields. The platform must support dynamic fields, nested JSON, schema evolution, fast filtering on extracted fields, and analysis without heavy ETL — even more important for AI agents where each tool, model and framework emits a different event shape.',
+            'Observability data is highly semi-structured. Logs, traces, agent events, tool outputs and model responses arrive as JSON with frequently changing fields. The platform must handle dynamic fields, nested JSON, schema evolution and fast filtering on extracted fields, and let teams analyze data without heavy ETL. That matters even more for AI agents, where each tool, model and framework emits a different event shape.',
     },
     {
         id: 'search',
         num: 'REQ · 03',
         title: 'Fast Search Across Text-Heavy Signals',
         desc:
-            'Engineers search massive text — error messages, stack traces, log lines, request and trace IDs, prompt content, model responses, tool outputs, agent failure reasons. Traditional observability requires keyword search; AI agent observability further requires searching across prompts, responses and natural-language outputs at scale.',
+            'Engineers search massive text: error messages, stack traces, log lines, request and trace IDs, prompt content, model responses, tool outputs, agent failure reasons. Traditional observability needs keyword search; AI agent observability also needs to search across prompts, responses and natural-language outputs at scale.',
     },
     {
         id: 'analytics',
         num: 'REQ · 04',
         title: 'Interactive Analytics on Metrics, Cost & Quality',
         desc:
-            'Observability is not only search. Teams run interactive analytical queries over massive datasets — error rate by service, P99 latency by endpoint, cost by model, token usage by tenant, tool failure rate, prompt-version performance, RAG quality distribution, agent task completion, SLA/SLO trends. That requires a high-performance analytical engine, not just a log search system.',
+            'Observability is not only search. Teams run interactive analytical queries over massive datasets: error rate by service, P99 latency by endpoint, cost by model, token usage by tenant, tool failure rate, prompt-version performance, RAG quality distribution, agent task completion, SLA/SLO trends. That demands a high-performance analytical engine, not just a log search system.',
     },
     {
         id: 'hybrid',
         num: 'REQ · 05',
         title: 'Hybrid Search for AI Agent Observability',
         desc:
-            'AI agent observability introduces new query patterns beyond logs and metrics. Teams need to find not only exact matches, but semantically similar failures and behaviors — similar user questions, hallucinated answers, prompts that produced bad outputs, traces with similar failure shapes — combining structured filters, full-text search and vector search in one query.',
+            'AI agent observability introduces new query patterns beyond logs and metrics. Teams need to find not only exact matches, but semantically similar failures and behaviors (similar user questions, hallucinated answers, prompts that produced bad outputs, traces with similar failure shapes), combining structured filters, full-text search and vector search in one query.',
     },
 ];
 
@@ -444,7 +438,7 @@ const capabilities: Capability[] = [
             </>
         ),
         desc:
-            'Apache Doris supports real-time ingestion from Kafka through Routine Load — designed for continuous streaming with common observability formats like CSV and JSON — and provides built-in CDC and message-based ingestion to bring logs, metrics, traces, database changes and AI agent events into the warehouse with low latency.',
+            'Apache Doris ingests in real time from Kafka via Routine Load (CSV/JSON), plus built-in CDC and message-based ingestion for logs, metrics, traces and AI agent events at low latency.',
         poweredLabel: 'Powered by',
         poweredBy: [
             'Routine Load',
@@ -465,7 +459,7 @@ const capabilities: Capability[] = [
             </>
         ),
         desc:
-            'The VARIANT type is built for flexible analysis of JSON-like data, log-style workloads and dynamic event structures — so observability teams can ingest and analyze logs, traces, tool outputs, model responses and agent events without heavy upfront schema modeling.',
+            'VARIANT handles JSON-like data and dynamic event structures, so teams analyze logs, traces, tool outputs and agent events without heavy upfront schema modeling.',
         poweredLabel: 'Powered by',
         poweredBy: [
             'VARIANT data type',
@@ -486,7 +480,7 @@ const capabilities: Capability[] = [
             </>
         ),
         desc:
-            'Inverted indexes map terms to document IDs for quick search across large volumes of text-heavy observability data. BM25 relevance scoring ranks results across logs, prompts, responses, tool outputs and failure messages.',
+            'Inverted indexes accelerate search across large text-heavy data, with BM25 relevance scoring across logs, prompts, responses and tool outputs.',
         poweredLabel: 'Powered by',
         poweredBy: [
             'Inverted index',
@@ -507,7 +501,7 @@ const capabilities: Capability[] = [
             </>
         ),
         desc:
-            'OLAP-style analytical queries and materialized views accelerate repeated dashboard reads and pre-aggregated metrics — error rates, latency, token usage, model cost, tool failures, SLA trends, AI quality scores — through fast SQL-based analytics with transparent rewriting.',
+            'OLAP queries and materialized views accelerate dashboards and pre-aggregated metrics (error rates, latency, token usage, model cost, SLA trends) through fast SQL with transparent rewriting.',
         poweredLabel: 'Powered by',
         poweredBy: [
             'Columnar storage',
@@ -529,7 +523,7 @@ const capabilities: Capability[] = [
             </>
         ),
         desc:
-            'Doris 4.0 introduces vector indexing for similarity search alongside structured SQL. Secondary indexes such as inverted indexes accelerate filtered vector queries and TopN search — aligning with hybrid AI-agent observability patterns that combine structured filters, full-text search and semantic similarity.',
+            'Doris 4.0 adds vector indexing for similarity search alongside SQL. Inverted indexes accelerate filtered vector queries and TopN, combining structured filters, full-text and semantic similarity in a single query.',
         poweredLabel: 'Powered by',
         poweredBy: [
             'Vector index (HNSW)',
@@ -542,72 +536,33 @@ const capabilities: Capability[] = [
 ];
 
 function Hero(): JSX.Element {
-    const shapes: ShapeSpec[] = [
-        { kind: 'diamond', style: { top: 110, left: '38%' } },
-        { kind: 'ring', style: { bottom: 180, left: '18%' } },
-        { kind: 'cross', style: { top: 220, right: '14%' } },
-        { kind: 'circle', style: { bottom: 140, right: '28%' } },
-    ];
-
     return (
         <section className="hero" id="hero">
-            <div className="hero-bg" aria-hidden="true" />
-            <div className="hero-bg-grid" aria-hidden="true" />
             <div className="container">
                 <div className="hero-grid">
                     <div className="hero-left">
-                        <div className="eyebrow hero-eyebrow" data-reveal>
-                            <span className="eyebrow-line" />
-                            <span>Use Case</span>
-                            <span className="ver-pill">Observability</span>
-                        </div>
                         <h1 className="hero-title" data-reveal data-reveal-delay="1">
+                            <span className="accent">Real-Time</span>
+                            <span className="bolt-inline">
+                                <BoltIcon size="0.85em" />
+                            </span>{' '}
                             Observability
                             <br />
-                            for the AI
-                            <br />
-                            Agent Era,
-                            <br />
-                            Powered&nbsp;by
-                            <br />
-                            <span className="accent">
-                                Apache{' '}
-                                <span className="bolt-inline">
-                                    <BoltIcon size="0.85em" />
-                                </span>{' '}
-                                Doris
-                            </span>
+                            for the AI Agent&nbsp;Era
                         </h1>
                         <p className="hero-sub" data-reveal data-reveal-delay="2">
-                            As applications evolve from microservices to AI agents, observability is
-                            no longer limited to logs, metrics and traces. Teams need to understand
-                            every system event, user request, LLM call, RAG retrieval, tool
-                            execution and agent decision path in real time. Apache Doris provides a
-                            high-performance analytical foundation for storing, searching and
-                            analyzing massive observability data — so teams troubleshoot faster,
-                            control costs and continuously improve AI application quality.
+                            Apache Doris unifies logs, metrics, traces and AI agent events on a
+                            single high-performance analytical foundation, so teams troubleshoot
+                            faster, control costs and keep improving AI quality over time.
                         </p>
-                        <div className="hero-scroll-cue" data-reveal data-reveal-delay="3">
-                            <span>Scroll for the case</span>
-                            <span className="arrow" aria-hidden="true">
-                                ↓
-                            </span>
-                        </div>
                     </div>
-                    <div className="hero-right" aria-hidden="true" />
                 </div>
             </div>
-            <Shapes specs={shapes} />
         </section>
     );
 }
 
 function ValueSection(): JSX.Element {
-    const shapes: ShapeSpec[] = [
-        { kind: 'diamond', style: { top: 120, right: '12%' } },
-        { kind: 'ring', style: { bottom: 90, left: '8%' } },
-    ];
-
     const items: CoverFlowItem[] = valueCards.map(c => ({
         id: c.id,
         num: c.num,
@@ -618,21 +573,15 @@ function ValueSection(): JSX.Element {
 
     return (
         <section className="section section-value section-cream" id="value">
-            <div className="hero-bg-grid" aria-hidden="true" />
             <div className="container section-inner">
-                <div className="section-head" data-reveal>
-                    <div className="eyebrow">
-                        <span className="eyebrow-line" />
-                        <span>Section 02 · Business Value</span>
-                    </div>
-                    <h2 className="section-title">
-                        Why Observability matters
-                        <br />
-                        for modern&nbsp;teams.
+                <div className="section-head section-head-wide" data-reveal>
+                    <h2 className="section-title section-title-stacked">
+                        <span>Why Observability&nbsp;matters</span>
+                        <span>for modern&nbsp;teams.</span>
                     </h2>
                     <p className="section-sub">
-                        When observability is unified across logs, traces, metrics and AI agent
-                        events, five things shift at once — incident detection, user experience,
+                        When teams unify observability across logs, traces, metrics and AI agent
+                        events, five things shift at once: incident detection, user experience,
                         cost at scale, AI quality, and the link between system behavior and business
                         outcomes.
                     </p>
@@ -640,7 +589,6 @@ function ValueSection(): JSX.Element {
 
                 <CoverFlow items={items} footerVariant="scenarios" ariaLabel="Value cards" />
             </div>
-            <Shapes specs={shapes} />
         </section>
     );
 }
@@ -657,8 +605,8 @@ function CasesSection(): JSX.Element {
                     </div>
                     <h2 className="section-title">Already running in production.</h2>
                     <p className="section-sub">
-                        Three teams using Apache Doris as the analytical foundation for
-                        observability — at scale, on real-time operational data, across logs,
+                        Three teams run Apache Doris as the analytical foundation for
+                        observability: at scale, on real-time operational data, across logs,
                         metrics and events.
                     </p>
                 </div>
@@ -708,25 +656,22 @@ function TechSection(): JSX.Element {
     return (
         <section className="section section-tech section-cream" id="tech">
             <div className="container section-inner">
-                <div className="section-head" data-reveal>
+                <div className="section-head section-head-wide" data-reveal>
                     <div className="eyebrow">
                         <span className="eyebrow-line" />
                         <span>Section 04 · Requirements & Capabilities</span>
                     </div>
-                    <h2 className="section-title">
-                        What modern Observability demands
-                        <br />
-                        and how Apache Doris&nbsp;answers.
+                    <h2 className="section-title section-title-stacked">
+                        <span>What modern&nbsp;Observability&nbsp;demands</span>
+                        <span>and how Apache&nbsp;Doris&nbsp;answers.</span>
                     </h2>
                     <p className="section-sub">
-                        Five things a modern observability platform has to be good at — and the
+                        Five things a modern observability platform has to be good at, and the
                         specific Apache Doris capabilities that meet each one.
                     </p>
                 </div>
 
-                <div className="tech-layer-label">
-                    Top layer · Observability technical requirements
-                </div>
+                <h3 className="tech-layer-heading">Observability technical requirements</h3>
                 <div className={`req-grid${useSix ? ' req-grid-6' : ''}`} data-reveal>
                     {requirements.map(r => (
                         <div className="req-card" key={r.id}>
@@ -737,24 +682,47 @@ function TechSection(): JSX.Element {
                     ))}
                 </div>
 
-                <div className="tech-divider">
-                    <span className="tech-divider-line" />
-                    <span className="tech-divider-label">
-                        <BoltIcon size={14} />
-                        How Apache Doris answers
-                    </span>
-                    <span className="tech-divider-line" />
-                </div>
-
-                <div className="tech-layer-label">
-                    Bottom layer · Apache Doris technical capabilities
-                </div>
+                <h3 className="tech-layer-heading">Apache Doris capabilities</h3>
 
                 <CoverFlow
                     items={capabilityItems}
                     footerVariant="powered"
                     ariaLabel="Capability cards"
                 />
+            </div>
+        </section>
+    );
+}
+
+function CtaSection(): JSX.Element {
+    return (
+        <section className="section-cta" id="start">
+            <div className="cta-inner container">
+                <h2 className="cta-title" data-reveal data-reveal-delay="1">
+                    Build Observability for the AI Agent Era
+                    <br />
+                    with <span className="accent">Apache Doris.</span>
+                </h2>
+                <div className="cta-actions" data-reveal data-reveal-delay="2">
+                    <a className="btn btn-yellow" href="#">
+                        <svg
+                            width="14"
+                            height="14"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2.5"
+                            aria-hidden="true"
+                        >
+                            <path d="M12 4v12m0 0l-5-5m5 5l5-5M4 20h16" />
+                        </svg>
+                        Get Started with Apache Doris
+                    </a>
+                    <a className="btn btn-primary" href="#TODO">
+                        Try an Observability Demo
+                        <span aria-hidden="true">→</span>
+                    </a>
+                </div>
             </div>
         </section>
     );
@@ -772,6 +740,7 @@ export default function ObservabilityNext(): JSX.Element {
                 <ValueSection />
                 <CasesSection />
                 <TechSection />
+                <CtaSection />
             </div>
         </LayoutNext>
     );

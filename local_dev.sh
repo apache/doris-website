@@ -24,6 +24,10 @@
 #
 # Commands:
 #   start            Start dev server (English, default)
+#   start-landing    Start dev server with ONLY landing pages
+#                    (home-next, use-cases-next, etc.). Docs/blog/
+#                    community/releases/search are all disabled.
+#                    Drops peak memory from ~20GB to ~1-2GB.
 #   start-zh         Start dev server (Chinese)
 #   build            Full production build (en + zh-CN)
 #   build-en         Production build (English only)
@@ -202,6 +206,29 @@ cmd_start() {
     export NODE_OPTIONS="--max-old-space-size=${OPT_MAX_MEM}"
 
     step "Starting dev server (English) on ${host}:${port}"
+    info "Press Ctrl+C to stop"
+    echo ""
+
+    cd "${PROJECT_ROOT}"
+    "${YARN_BIN}" docusaurus start --no-open --host "${host}" --port "${port}"
+}
+
+cmd_start_landing() {
+    local port="${OPT_PORT}"
+    local host="${OPT_HOST}"
+
+    validate_env
+    if [[ "${OPT_SKIP_INSTALL}" != "true" ]]; then
+        do_install
+    fi
+
+    export LANDING_ONLY=true
+    export NODE_OPTIONS="--max-old-space-size=${OPT_MAX_MEM}"
+
+    step "Starting LANDING-ONLY dev server on ${host}:${port}"
+    info "Disabled: docs, blog, community, releases, docs-next, search."
+    info "Only landing pages (home-next, use-cases-next, etc.) render."
+    info "Cross-links to /docs/* etc. will 404 — that's expected."
     info "Press Ctrl+C to stop"
     echo ""
 
@@ -390,6 +417,7 @@ done
 # ─── Dispatch command ────────────────────────────────────────
 case "${COMMAND}" in
     start)              cmd_start ;;
+    start-landing)      cmd_start_landing ;;
     start-zh)           cmd_start_zh ;;
     build)              cmd_build "en" ;;
     build-all)          cmd_build "en zh-CN" ;;

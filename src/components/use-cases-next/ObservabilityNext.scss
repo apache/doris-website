@@ -156,6 +156,10 @@ $ob-ease-out-quint: cubic-bezier(0.2, 0.8, 0.2, 1);
         max-width: 760px;
         margin-bottom: 64px;
 
+        &.section-head-wide {
+            max-width: none;
+        }
+
         .eyebrow {
             margin-bottom: 22px;
         }
@@ -164,13 +168,21 @@ $ob-ease-out-quint: cubic-bezier(0.2, 0.8, 0.2, 1);
     .section-title {
         @include ob-display-mono;
         font-size: clamp(36px, 4.2vw, 56px);
+        letter-spacing: -0.035em;
+        word-spacing: -0.18em;
+        line-height: 0.95;
         color: var(--cream-light);
         margin: 0 0 22px;
+    }
+
+    .section-title-stacked span {
+        display: block;
     }
 
     .section-sub {
         font-size: 17px;
         line-height: 1.6;
+        word-spacing: -0.12em;
         color: rgba(245, 239, 228, 0.75);
         max-width: 620px;
         margin: 0;
@@ -178,7 +190,7 @@ $ob-ease-out-quint: cubic-bezier(0.2, 0.8, 0.2, 1);
 
     .section {
         position: relative;
-        padding: 130px 0;
+        padding: 72px 0;
         overflow: hidden;
     }
 
@@ -272,7 +284,7 @@ $ob-ease-out-quint: cubic-bezier(0.2, 0.8, 0.2, 1);
         position: relative;
         background: var(--doris-green-dark);
         overflow: hidden;
-        padding: 110px 0 140px;
+        padding: 72px 0 72px;
 
         &-bg {
             position: absolute;
@@ -295,17 +307,23 @@ $ob-ease-out-quint: cubic-bezier(0.2, 0.8, 0.2, 1);
             position: relative;
             z-index: 5;
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: 1fr;
             gap: 64px;
             align-items: start;
         }
 
         &-left {
-            padding-top: 8px;
+            position: relative;
+            z-index: 5;
+        }
+
+        &-title > span,
+        &-title {
+            white-space: nowrap;
         }
 
         &-eyebrow {
-            margin-bottom: 36px;
+            margin-bottom: 22px;
             display: inline-flex;
         }
 
@@ -313,11 +331,12 @@ $ob-ease-out-quint: cubic-bezier(0.2, 0.8, 0.2, 1);
             font-family: var(--mono);
             font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: -0.022em;
-            line-height: 0.93;
+            letter-spacing: -0.035em;
+            word-spacing: -0.18em;
+            line-height: 0.92;
             color: var(--cream-light);
             margin: 0;
-            font-size: clamp(54px, 7.3vw, 102px);
+            font-size: clamp(40px, 4.4vw, 62px);
 
             .bolt-inline {
                 display: inline-block;
@@ -328,16 +347,16 @@ $ob-ease-out-quint: cubic-bezier(0.2, 0.8, 0.2, 1);
 
         &-sub {
             font-family: var(--sans);
-            font-size: clamp(17px, 1.4vw, 21px);
-            line-height: 1.55;
+            font-size: 15px;
+            line-height: 1.5;
             color: rgba(245, 239, 228, 0.85);
-            margin: 36px 0 0;
+            margin: 18px 0 0;
             max-width: 540px;
             font-weight: 400;
         }
 
         &-scroll-cue {
-            margin-top: 56px;
+            margin-top: 36px;
             padding-top: 22px;
             border-top: 1px dashed rgba(245, 239, 228, 0.18);
             display: inline-flex;
@@ -357,20 +376,24 @@ $ob-ease-out-quint: cubic-bezier(0.2, 0.8, 0.2, 1);
         }
     }
 
+    .cover-flow-wrap {
+        touch-action: pan-y;
+    }
+
     .cover-flow {
         position: relative;
-        height: 460px;
         perspective: 1800px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        align-items: stretch;
+        justify-items: center;
         margin-top: 24px;
     }
 
     .cf-card {
-        position: absolute;
+        grid-column: 1;
+        grid-row: 1;
         width: 420px;
-        height: 420px;
         background: var(--ink);
         border: 1px solid rgba(245, 239, 228, 0.12);
         border-radius: 12px;
@@ -384,7 +407,7 @@ $ob-ease-out-quint: cubic-bezier(0.2, 0.8, 0.2, 1);
         display: flex;
         flex-direction: column;
         box-shadow: 0 30px 60px -20px rgba(0, 0, 0, 0.45);
-        user-select: none;
+        user-select: text;
         will-change: transform;
 
         &[data-offset='0'] {
@@ -427,6 +450,7 @@ $ob-ease-out-quint: cubic-bezier(0.2, 0.8, 0.2, 1);
 
     .cf-num {
         @include ob-mono-caps(11px, 0.2em);
+        word-spacing: -0.08em;
         color: var(--yellow);
         margin-bottom: 18px;
     }
@@ -437,6 +461,7 @@ $ob-ease-out-quint: cubic-bezier(0.2, 0.8, 0.2, 1);
         font-size: 26px;
         text-transform: uppercase;
         letter-spacing: -0.005em;
+        word-spacing: -0.18em;
         line-height: 1.05;
         color: var(--cream-light);
         margin: 0 0 18px;
@@ -445,6 +470,7 @@ $ob-ease-out-quint: cubic-bezier(0.2, 0.8, 0.2, 1);
     .cf-desc {
         font-size: 16px;
         line-height: 1.55;
+        word-spacing: -0.12em;
         color: rgba(245, 239, 228, 0.78);
         margin: 0 0 28px;
     }
@@ -456,6 +482,7 @@ $ob-ease-out-quint: cubic-bezier(0.2, 0.8, 0.2, 1);
 
         &-label {
             @include ob-mono-caps(10.5px, 0.18em);
+            word-spacing: -0.08em;
             color: rgba(245, 239, 228, 0.5);
             margin-bottom: 12px;
         }
@@ -472,6 +499,7 @@ $ob-ease-out-quint: cubic-bezier(0.2, 0.8, 0.2, 1);
         li {
             font-family: var(--sans);
             font-size: 14px;
+            word-spacing: -0.12em;
             color: var(--cream-light);
             padding-left: 18px;
             position: relative;
@@ -497,6 +525,7 @@ $ob-ease-out-quint: cubic-bezier(0.2, 0.8, 0.2, 1);
 
         &-label {
             @include ob-mono-caps(10.5px, 0.18em);
+            word-spacing: -0.08em;
             color: var(--yellow);
             margin-bottom: 14px;
         }
@@ -513,6 +542,7 @@ $ob-ease-out-quint: cubic-bezier(0.2, 0.8, 0.2, 1);
         li {
             font-family: var(--mono);
             font-size: 13px;
+            word-spacing: -0.1em;
             color: var(--cream-light);
             line-height: 1.45;
             padding-left: 18px;
@@ -610,15 +640,10 @@ $ob-ease-out-quint: cubic-bezier(0.2, 0.8, 0.2, 1);
         background: var(--doris-green-dark);
         border-top: 1px solid rgba(245, 239, 228, 0.06);
 
-        .cover-flow {
-            height: 480px;
-        }
-
         .cf-card {
             background: var(--doris-green-darkest);
             border-color: rgba(255, 210, 63, 0.18);
             width: 440px;
-            height: 440px;
         }
 
         .cf-num {
@@ -626,21 +651,19 @@ $ob-ease-out-quint: cubic-bezier(0.2, 0.8, 0.2, 1);
         }
     }
 
-    .tech-layer-label {
-        @include ob-mono-caps(11px, 0.22em);
-        color: rgba(255, 210, 63, 0.85);
-        margin-bottom: 22px;
-        display: inline-flex;
-        align-items: center;
-        gap: 12px;
+    .tech-layer-heading {
+        font-family: var(--mono);
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: -0.02em;
+        line-height: 1.05;
+        font-size: clamp(24px, 2.4vw, 32px);
+        color: var(--cream-light);
+        margin: 0 0 28px;
+    }
 
-        &::before {
-            content: '';
-            display: inline-block;
-            width: 24px;
-            height: 1.5px;
-            background: var(--yellow);
-        }
+    .req-grid + .tech-layer-heading {
+        margin-top: 80px;
     }
 
     .req-grid {
@@ -675,6 +698,7 @@ $ob-ease-out-quint: cubic-bezier(0.2, 0.8, 0.2, 1);
 
     .req-num {
         @include ob-mono-caps(10.5px, 0.22em);
+        word-spacing: -0.08em;
         color: var(--yellow);
         margin-bottom: 18px;
     }
@@ -686,6 +710,7 @@ $ob-ease-out-quint: cubic-bezier(0.2, 0.8, 0.2, 1);
         font-size: 16px;
         line-height: 1.15;
         letter-spacing: -0.005em;
+        word-spacing: -0.15em;
         color: var(--cream-light);
         margin: 0 0 14px;
         min-height: 38px;
@@ -694,36 +719,23 @@ $ob-ease-out-quint: cubic-bezier(0.2, 0.8, 0.2, 1);
     .req-desc {
         font-size: 13.5px;
         line-height: 1.55;
+        word-spacing: -0.12em;
         color: rgba(245, 239, 228, 0.72);
         margin: 0;
-    }
-
-    .tech-divider {
-        margin: 80px auto 64px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 18px;
-        max-width: 720px;
-
-        &-line {
-            flex: 1;
-            height: 1px;
-            background: rgba(245, 239, 228, 0.18);
-        }
-
-        &-label {
-            @include ob-mono-caps(10.5px, 0.22em);
-            color: rgba(245, 239, 228, 0.55);
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-        }
     }
 
     .section-cases {
         background: var(--doris-green-darkest);
         border-top: 1px solid rgba(245, 239, 228, 0.06);
+
+        .section-head {
+            max-width: none;
+            margin-bottom: 40px;
+        }
+
+        .section-title {
+            white-space: nowrap;
+        }
 
         .hero-bg-grid {
             position: absolute;
@@ -787,6 +799,7 @@ $ob-ease-out-quint: cubic-bezier(0.2, 0.8, 0.2, 1);
 
     .case-num {
         @include ob-mono-caps(11px, 0.2em);
+        word-spacing: -0.08em;
         color: var(--yellow);
         margin-bottom: 16px;
     }
@@ -798,6 +811,7 @@ $ob-ease-out-quint: cubic-bezier(0.2, 0.8, 0.2, 1);
         font-size: 22px;
         line-height: 1.12;
         letter-spacing: -0.008em;
+        word-spacing: -0.15em;
         color: var(--cream-light);
         margin: 0 0 24px;
         min-height: 75px;
@@ -808,6 +822,7 @@ $ob-ease-out-quint: cubic-bezier(0.2, 0.8, 0.2, 1);
         font-style: italic;
         font-size: 16px;
         line-height: 1.5;
+        word-spacing: -0.1em;
         color: var(--cream-light);
         margin: 0 0 24px;
         padding-left: 16px;
@@ -816,6 +831,7 @@ $ob-ease-out-quint: cubic-bezier(0.2, 0.8, 0.2, 1);
 
     .case-section {
         @include ob-mono-caps(10.5px, 0.16em);
+        word-spacing: -0.08em;
         color: rgba(245, 239, 228, 0.5);
         margin: 18px 0 8px;
     }
@@ -823,6 +839,7 @@ $ob-ease-out-quint: cubic-bezier(0.2, 0.8, 0.2, 1);
     .case-scenario {
         font-size: 14px;
         line-height: 1.5;
+        word-spacing: -0.12em;
         color: rgba(245, 239, 228, 0.82);
         margin: 0 0 22px;
     }
@@ -838,6 +855,7 @@ $ob-ease-out-quint: cubic-bezier(0.2, 0.8, 0.2, 1);
         li {
             font-family: var(--sans);
             font-size: 14px;
+            word-spacing: -0.12em;
             color: var(--cream-light);
             padding-left: 22px;
             position: relative;
@@ -862,6 +880,7 @@ $ob-ease-out-quint: cubic-bezier(0.2, 0.8, 0.2, 1);
         padding-top: 20px;
         border-top: 1px dashed rgba(245, 239, 228, 0.18);
         @include ob-mono-caps(12px, 0.12em);
+        word-spacing: -0.08em;
         color: var(--yellow);
         display: inline-flex;
         align-items: center;
@@ -869,9 +888,44 @@ $ob-ease-out-quint: cubic-bezier(0.2, 0.8, 0.2, 1);
         transition: gap 0.25s ease;
     }
 
+    .section-cta {
+        background: var(--doris-green-dark);
+        border-top: 1px solid rgba(245, 239, 228, 0.06);
+        text-align: center;
+        padding: 72px 0;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .cta-inner {
+        position: relative;
+        z-index: 5;
+    }
+
+    .cta-title {
+        font-family: var(--mono);
+        font-weight: 700;
+        text-transform: uppercase;
+        font-size: clamp(40px, 4.4vw, 62px);
+        line-height: 0.92;
+        letter-spacing: -0.035em;
+        word-spacing: -0.18em;
+        color: var(--cream-light);
+        margin: 0 auto 48px;
+        max-width: 1000px;
+    }
+
+    .cta-actions {
+        display: inline-flex;
+        gap: 14px;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
     // Cream-paper variant — overrides the default dark surface
     // while keeping accent (--yellow) consistent.
-    .section.section-cream {
+    .section.section-cream,
+    .section-cta.section-cream {
         background: var(--cream);
         border-top: 1px solid rgba(15, 26, 20, 0.08);
     }
@@ -896,14 +950,8 @@ $ob-ease-out-quint: cubic-bezier(0.2, 0.8, 0.2, 1);
             border-color: rgba(11, 122, 88, 0.4);
         }
 
-        .tech-layer-label {
-            color: var(--doris-green-deep);
-        }
-        .tech-divider-line {
-            background: rgba(15, 26, 20, 0.18);
-        }
-        .tech-divider-label {
-            color: rgba(15, 26, 20, 0.6);
+        .tech-layer-heading {
+            color: var(--ink);
         }
 
         .req-grid {
@@ -1024,7 +1072,6 @@ $ob-ease-out-quint: cubic-bezier(0.2, 0.8, 0.2, 1);
 
         .cf-card {
             width: 340px;
-            height: 420px;
             padding: 26px;
 
             &[data-offset='-1'] {
@@ -1043,7 +1090,6 @@ $ob-ease-out-quint: cubic-bezier(0.2, 0.8, 0.2, 1);
 
         .section-tech .cf-card {
             width: 360px;
-            height: 460px;
         }
     }
 
@@ -1051,10 +1097,35 @@ $ob-ease-out-quint: cubic-bezier(0.2, 0.8, 0.2, 1);
         --gutter: 22px;
 
         .hero {
-            padding: 70px 0 90px;
+            padding: 56px 0 52px;
+
+            &-title {
+                font-size: clamp(32px, 8.6vw, 46px);
+                line-height: 0.96;
+            }
+            &-sub {
+                font-size: 14px;
+                line-height: 1.55;
+                margin-top: 16px;
+            }
         }
-        .section {
-            padding: 84px 0;
+        .section,
+        .section-cta {
+            padding: 56px 0;
+        }
+
+        .cta-title {
+            font-size: clamp(32px, 8.6vw, 46px);
+            line-height: 0.96;
+        }
+
+        .section-cases .section-title {
+            white-space: normal;
+        }
+
+        .tech-layer-heading {
+            font-size: clamp(20px, 5.6vw, 26px);
+            margin-bottom: 20px;
         }
 
         .req-grid {
@@ -1074,7 +1145,6 @@ $ob-ease-out-quint: cubic-bezier(0.2, 0.8, 0.2, 1);
 
         .cf-card {
             width: 280px;
-            height: 460px;
             padding: 22px;
 
             &[data-offset='-1'],
@@ -1084,10 +1154,6 @@ $ob-ease-out-quint: cubic-bezier(0.2, 0.8, 0.2, 1);
                 opacity: 0;
                 pointer-events: none;
             }
-        }
-
-        .cover-flow {
-            height: 480px;
         }
     }
 }

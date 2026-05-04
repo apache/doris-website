@@ -368,7 +368,7 @@ $dw-ease-out-quint: cubic-bezier(0.2, 0.8, 0.2, 1);
         display: flex;
         flex-direction: column;
         box-shadow: 0 30px 60px -20px rgba(0, 0, 0, 0.45);
-        user-select: none;
+        user-select: text;
         will-change: transform;
 
         &[data-offset='0'] {
