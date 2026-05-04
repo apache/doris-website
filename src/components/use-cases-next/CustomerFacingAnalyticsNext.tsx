@@ -88,40 +88,21 @@ interface CoverFlowProps {
     items: CoverFlowItem[];
     footerVariant?: 'scenarios' | 'powered';
     ariaLabel?: string;
-    hoverDelayMs?: number;
 }
-
-const HOVER_DELAY_DEFAULT = 60;
 
 function CoverFlow({
     items,
     footerVariant = 'scenarios',
     ariaLabel,
-    hoverDelayMs = HOVER_DELAY_DEFAULT,
 }: CoverFlowProps): JSX.Element {
     const [active, setActive] = useState(0);
     const total = items.length;
-    const hoverTimer = useRef<number | null>(null);
     const stageRef = useRef<HTMLDivElement | null>(null);
 
     const go = useCallback(
         (i: number) => setActive(((i % total) + total) % total),
         [total]
     );
-
-    const onHoverEnter = (i: number) => {
-        if (hoverTimer.current) window.clearTimeout(hoverTimer.current);
-        hoverTimer.current = window.setTimeout(() => go(i), hoverDelayMs);
-    };
-    const onHoverLeave = () => {
-        if (hoverTimer.current) window.clearTimeout(hoverTimer.current);
-    };
-
-    useEffect(() => {
-        return () => {
-            if (hoverTimer.current) window.clearTimeout(hoverTimer.current);
-        };
-    }, []);
 
     const onKey = (e: KeyboardEvent<HTMLDivElement>) => {
         if (e.key === 'ArrowLeft') go(active - 1);
@@ -144,12 +125,7 @@ function CoverFlow({
                             data-offset={String(offset)}
                             aria-hidden={offset === 0 ? 'false' : 'true'}
                             tabIndex={offset === 0 ? 0 : -1}
-                            onMouseEnter={() => onHoverEnter(i)}
-                            onMouseLeave={onHoverLeave}
-                            onClick={() => {
-                                onHoverLeave();
-                                go(i);
-                            }}
+                            onClick={() => go(i)}
                         >
                             <div className="cf-num">{it.num}</div>
                             <h3 className="cf-title">{it.title}</h3>
@@ -490,23 +466,9 @@ const capabilities: Capability[] = [
     },
 ];
 
-const heroShapes: ShapeSpec[] = [
-    { kind: 'diamond', style: { top: 110, left: '38%' } },
-    { kind: 'ring', style: { bottom: 180, left: '18%' } },
-    { kind: 'cross', style: { top: 220, right: '14%' } },
-    { kind: 'circle', style: { bottom: 140, right: '28%' } },
-];
-
 const valueShapes: ShapeSpec[] = [
     { kind: 'diamond', style: { top: 120, right: '12%' } },
     { kind: 'ring', style: { bottom: 90, left: '8%' } },
-];
-
-const ctaShapes: ShapeSpec[] = [
-    { kind: 'diamond', style: { top: '18%', left: '14%' } },
-    { kind: 'ring', style: { top: '28%', right: '18%' } },
-    { kind: 'cross', style: { bottom: '22%', left: '22%' } },
-    { kind: 'circle', style: { bottom: '28%', right: '16%' } },
 ];
 
 function Hero(): JSX.Element {
@@ -515,43 +477,25 @@ function Hero(): JSX.Element {
             <div className="hero-bg" aria-hidden="true" />
             <div className="hero-bg-grid" aria-hidden="true" />
             <div className="container">
-                <div className="hero-grid">
-                    <div className="hero-left">
-                        <div className="eyebrow hero-eyebrow" data-reveal>
-                            <span className="eyebrow-line" />
-                            <span>Use Case</span>
-                            <span className="ver-pill">Customer-Facing Analytics</span>
-                        </div>
-                        <h1 className="hero-title" data-reveal data-reveal-delay="1">
-                            Customer-Facing
-                            <br />
-                            Analytics,
-                            <br />
-                            Powered&nbsp;by
-                            <br />
-                            <span className="accent">
-                                Real-Time{' '}
-                                <span className="bolt-inline">
-                                    <BoltIcon size="0.85em" />
-                                </span>{' '}
-                                Data
-                            </span>
-                        </h1>
-                        <p className="hero-sub" data-reveal data-reveal-delay="2">
-                            Deliver sub-second, interactive analytics experiences directly to your
-                            customers, at scale.
-                        </p>
-                        <div className="hero-scroll-cue" data-reveal data-reveal-delay="3">
-                            <span>Scroll for the case</span>
-                            <span className="arrow" aria-hidden="true">
-                                ↓
-                            </span>
-                        </div>
-                    </div>
-                    <div className="hero-right" aria-hidden="true" />
+                <div className="hero-left">
+                    <h1 className="hero-title" data-reveal data-reveal-delay="1">
+                        Customer-Facing Analytics,
+                        <br />
+                        Powered by{' '}
+                        <span className="accent">
+                            Real-Time
+                            <span className="bolt-inline">
+                                <BoltIcon size="0.85em" />
+                            </span>{' '}
+                            Data
+                        </span>
+                    </h1>
+                    <p className="hero-sub" data-reveal data-reveal-delay="2">
+                        Deliver sub-second, interactive analytics experiences directly to your
+                        customers, at scale.
+                    </p>
                 </div>
             </div>
-            <Shapes specs={heroShapes} />
         </section>
     );
 }
@@ -570,10 +514,6 @@ function ValueSection(): JSX.Element {
             <div className="hero-bg-grid" aria-hidden="true" />
             <div className="container section-inner">
                 <div className="section-head" data-reveal>
-                    <div className="eyebrow">
-                        <span className="eyebrow-line" />
-                        <span>Section 02 · Business Value</span>
-                    </div>
                     <h2 className="section-title">
                         Why real-time
                         <br />
@@ -599,10 +539,6 @@ function CasesSection(): JSX.Element {
             <div className="hero-bg-grid" aria-hidden="true" />
             <div className="container section-inner">
                 <div className="section-head" data-reveal>
-                    <div className="eyebrow">
-                        <span className="eyebrow-line" />
-                        <span>Section 03 · Customer Proof</span>
-                    </div>
                     <h2 className="section-title">Already shipping in production.</h2>
                     <p className="section-sub">
                         Three teams using Apache Doris to serve sub-second analytics directly to
@@ -654,10 +590,6 @@ function TechSection(): JSX.Element {
         <section className="section section-tech section-cream" id="tech">
             <div className="container section-inner">
                 <div className="section-head" data-reveal>
-                    <div className="eyebrow">
-                        <span className="eyebrow-line" />
-                        <span>Section 04 · Technical Deep Dive</span>
-                    </div>
                     <h2 className="section-title">
                         What it actually takes
                         <br />
@@ -670,27 +602,17 @@ function TechSection(): JSX.Element {
                     </p>
                 </div>
 
-                <div className="tech-layer-label">Top layer · Technical requirements</div>
+                <h3 className="tech-layer-heading">Technical requirements</h3>
                 <div className="req-grid" data-reveal>
                     {requirements.map(r => (
                         <div className="req-card" key={r.id}>
-                            <div className="req-num">{r.num}</div>
                             <h4 className="req-title">{r.title}</h4>
                             <p className="req-desc">{r.desc}</p>
                         </div>
                     ))}
                 </div>
 
-                <div className="tech-divider">
-                    <span className="tech-divider-line" />
-                    <span className="tech-divider-label">
-                        <BoltIcon size={14} />
-                        How Apache Doris answers
-                    </span>
-                    <span className="tech-divider-line" />
-                </div>
-
-                <div className="tech-layer-label">Bottom layer · Apache Doris capabilities</div>
+                <h3 className="tech-layer-heading">Apache Doris capabilities</h3>
 
                 <CoverFlow
                     items={capabilityItems}
@@ -710,14 +632,10 @@ function CTASection(): JSX.Element {
                 <BoltMonogramLarge />
             </div>
             <div className="cta-inner container">
-                <div className="eyebrow cta-eyebrow" data-reveal>
-                    <span className="eyebrow-line" />
-                    <span>Section 05 · Get Started</span>
-                </div>
                 <h2 className="cta-title" data-reveal data-reveal-delay="1">
-                    Build Customer-Facing
+                    Build Customer-Facing Analytics
                     <br />
-                    Analytics with <span className="accent">Apache Doris.</span>
+                    with <span className="accent">Apache Doris.</span>
                 </h2>
                 <div className="cta-actions" data-reveal data-reveal-delay="2">
                     <Link className="btn btn-yellow" to="/download">
@@ -732,18 +650,17 @@ function CTASection(): JSX.Element {
                         >
                             <path d="M12 4v12m0 0l-5-5m5 5l5-5M4 20h16" />
                         </svg>
-                        Get Started with Apache Doris
+                        Get Started
                     </Link>
                     <Link
                         className="btn btn-primary"
-                        to="/docs-next/dev/getting-started/what-is-apache-doris"
+                        to="#"
                     >
-                        Try a Customer-Facing Analytics Demo
+                        Try a Demo (Comming Soon)
                         <span aria-hidden="true">→</span>
                     </Link>
                 </div>
             </div>
-            <Shapes specs={ctaShapes} />
         </section>
     );
 }

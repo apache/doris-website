@@ -2,6 +2,7 @@
 
 $cfa-bp-md: 1100px;
 $cfa-bp-sm: 700px;
+$cfa-bp-xs: 480px;
 $cfa-ease-out-quint: cubic-bezier(0.2, 0.8, 0.2, 1);
 
 @mixin cfa-mono-caps($size: 12px, $tracking: 0.14em, $weight: 500) {
@@ -23,9 +24,10 @@ $cfa-ease-out-quint: cubic-bezier(0.2, 0.8, 0.2, 1);
 @mixin cfa-button-base {
     display: inline-flex;
     align-items: center;
-    gap: 0.6rem;
+    gap: 0.5rem;
     padding: 0.95rem 1.5rem;
-    @include cfa-mono-caps(14px, 0.04em, 600);
+    @include cfa-mono-caps(14px, 0, 600);
+    word-spacing: -0.12em;
     border-radius: 4px;
     border: 1.5px solid transparent;
     cursor: pointer;
@@ -165,6 +167,9 @@ $cfa-ease-out-quint: cubic-bezier(0.2, 0.8, 0.2, 1);
     .section-title {
         @include cfa-display-mono;
         font-size: clamp(36px, 4.2vw, 56px);
+        letter-spacing: -0.035em;
+        word-spacing: -0.18em;
+        line-height: 0.95;
         color: var(--cream-light);
         margin: 0 0 22px;
     }
@@ -273,7 +278,7 @@ $cfa-ease-out-quint: cubic-bezier(0.2, 0.8, 0.2, 1);
         position: relative;
         background: var(--doris-green-dark);
         overflow: hidden;
-        padding: 110px 0 140px;
+        padding: 72px 0 72px;
 
         &-bg {
             position: absolute;
@@ -300,33 +305,21 @@ $cfa-ease-out-quint: cubic-bezier(0.2, 0.8, 0.2, 1);
             -webkit-mask-image: linear-gradient(180deg, black, black 75%, transparent);
         }
 
-        &-grid {
+        &-left {
             position: relative;
             z-index: 5;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 64px;
-            align-items: start;
-        }
-
-        &-left {
-            padding-top: 8px;
-        }
-
-        &-eyebrow {
-            margin-bottom: 36px;
-            display: inline-flex;
         }
 
         &-title {
             font-family: var(--mono);
             font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: -0.022em;
-            line-height: 0.93;
+            letter-spacing: -0.035em;
+            word-spacing: -0.18em;
+            line-height: 0.92;
             color: var(--cream-light);
             margin: 0;
-            font-size: clamp(54px, 7.3vw, 102px);
+            font-size: clamp(40px, 4.4vw, 62px);
 
             .bolt-inline {
                 display: inline-block;
@@ -337,32 +330,12 @@ $cfa-ease-out-quint: cubic-bezier(0.2, 0.8, 0.2, 1);
 
         &-sub {
             font-family: var(--sans);
-            font-size: clamp(17px, 1.4vw, 21px);
-            line-height: 1.55;
+            font-size: 15px;
+            line-height: 1.5;
             color: rgba(245, 239, 228, 0.85);
-            margin: 36px 0 0;
+            margin: 18px 0 0;
             max-width: 540px;
             font-weight: 400;
-        }
-
-        &-scroll-cue {
-            margin-top: 56px;
-            padding-top: 22px;
-            border-top: 1px dashed rgba(245, 239, 228, 0.18);
-            display: inline-flex;
-            align-items: center;
-            gap: 14px;
-            @include cfa-mono-caps(11px, 0.18em);
-            color: rgba(245, 239, 228, 0.55);
-
-            .arrow {
-                display: inline-block;
-                transform: translateY(1px);
-            }
-        }
-
-        &-right {
-            min-height: 1px;
         }
     }
 
@@ -445,8 +418,9 @@ $cfa-ease-out-quint: cubic-bezier(0.2, 0.8, 0.2, 1);
         font-weight: 700;
         font-size: 26px;
         text-transform: uppercase;
-        letter-spacing: -0.005em;
-        line-height: 1.05;
+        letter-spacing: -0.03em;
+        word-spacing: -0.18em;
+        line-height: 1.0;
         color: var(--cream-light);
         margin: 0 0 18px;
     }
@@ -604,6 +578,11 @@ $cfa-ease-out-quint: cubic-bezier(0.2, 0.8, 0.2, 1);
     .section-value {
         background: var(--doris-green-darker);
         border-top: 1px solid rgba(245, 239, 228, 0.06);
+        padding: 80px 0;
+
+        .section-head {
+            margin-bottom: 40px;
+        }
 
         .hero-bg-grid {
             position: absolute;
@@ -624,6 +603,11 @@ $cfa-ease-out-quint: cubic-bezier(0.2, 0.8, 0.2, 1);
     .section-tech {
         background: var(--doris-green-dark);
         border-top: 1px solid rgba(245, 239, 228, 0.06);
+        padding: 80px 0;
+
+        .section-head {
+            margin-bottom: 40px;
+        }
 
         .cover-flow {
             height: 480px;
@@ -641,21 +625,19 @@ $cfa-ease-out-quint: cubic-bezier(0.2, 0.8, 0.2, 1);
         }
     }
 
-    .tech-layer-label {
-        @include cfa-mono-caps(11px, 0.22em);
-        color: rgba(255, 210, 63, 0.85);
-        margin-bottom: 22px;
-        display: inline-flex;
-        align-items: center;
-        gap: 12px;
+    .tech-layer-heading {
+        font-family: var(--mono);
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: -0.02em;
+        line-height: 1.05;
+        font-size: clamp(24px, 2.4vw, 32px);
+        color: var(--cream-light);
+        margin: 0 0 28px;
+    }
 
-        &::before {
-            content: '';
-            display: inline-block;
-            width: 24px;
-            height: 1.5px;
-            background: var(--yellow);
-        }
+    .req-grid + .tech-layer-heading {
+        margin-top: 80px;
     }
 
     .req-grid {
@@ -684,12 +666,6 @@ $cfa-ease-out-quint: cubic-bezier(0.2, 0.8, 0.2, 1);
         }
     }
 
-    .req-num {
-        @include cfa-mono-caps(10.5px, 0.22em);
-        color: var(--yellow);
-        margin-bottom: 18px;
-    }
-
     .req-title {
         font-family: var(--mono);
         font-weight: 700;
@@ -709,32 +685,19 @@ $cfa-ease-out-quint: cubic-bezier(0.2, 0.8, 0.2, 1);
         margin: 0;
     }
 
-    .tech-divider {
-        margin: 80px auto 64px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 18px;
-        max-width: 720px;
-
-        &-line {
-            flex: 1;
-            height: 1px;
-            background: rgba(245, 239, 228, 0.18);
-        }
-
-        &-label {
-            @include cfa-mono-caps(10.5px, 0.22em);
-            color: rgba(245, 239, 228, 0.55);
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-        }
-    }
-
     .section-cases {
         background: var(--doris-green-darkest);
         border-top: 1px solid rgba(245, 239, 228, 0.06);
+        padding: 80px 0;
+
+        .section-head {
+            max-width: none;
+            margin-bottom: 40px;
+        }
+
+        .section-title {
+            white-space: nowrap;
+        }
 
         .hero-bg-grid {
             position: absolute;
@@ -893,7 +856,7 @@ $cfa-ease-out-quint: cubic-bezier(0.2, 0.8, 0.2, 1);
         background: var(--doris-green-dark);
         border-top: 1px solid rgba(245, 239, 228, 0.06);
         text-align: center;
-        padding: 160px 0 180px;
+        padding: 80px 0;
         position: relative;
         overflow: hidden;
     }
@@ -922,18 +885,14 @@ $cfa-ease-out-quint: cubic-bezier(0.2, 0.8, 0.2, 1);
         z-index: 5;
     }
 
-    .cta-eyebrow {
-        margin-bottom: 28px;
-        justify-content: center;
-    }
-
     .cta-title {
         font-family: var(--mono);
         font-weight: 700;
         text-transform: uppercase;
         font-size: clamp(40px, 5.2vw, 76px);
-        line-height: 0.98;
-        letter-spacing: -0.02em;
+        line-height: 0.92;
+        letter-spacing: -0.035em;
+        word-spacing: -0.18em;
         color: var(--cream-light);
         margin: 0 auto 48px;
         max-width: 1000px;
@@ -975,14 +934,8 @@ $cfa-ease-out-quint: cubic-bezier(0.2, 0.8, 0.2, 1);
             border-color: rgba(11, 122, 88, 0.4);
         }
 
-        .tech-layer-label {
-            color: var(--doris-green-deep);
-        }
-        .tech-divider-line {
-            background: rgba(15, 26, 20, 0.18);
-        }
-        .tech-divider-label {
-            color: rgba(15, 26, 20, 0.6);
+        .tech-layer-heading {
+            color: var(--ink);
         }
 
         .req-grid {
@@ -1044,11 +997,22 @@ $cfa-ease-out-quint: cubic-bezier(0.2, 0.8, 0.2, 1);
     @media (max-width: $cfa-bp-md) {
         --gutter: 36px;
 
-        .hero-grid {
-            grid-template-columns: 1fr;
+        .section {
+            padding: 100px 0;
         }
-        .hero-right {
-            display: none;
+        .section-value,
+        .section-tech,
+        .section-cases,
+        .section-cta {
+            padding: 88px 0;
+        }
+
+        .section-head {
+            margin-bottom: 48px;
+        }
+
+        .req-grid + .tech-layer-heading {
+            margin-top: 60px;
         }
 
         .req-grid {
@@ -1068,6 +1032,10 @@ $cfa-ease-out-quint: cubic-bezier(0.2, 0.8, 0.2, 1);
 
         .cases-grid {
             grid-template-columns: 1fr;
+        }
+
+        .case-card {
+            padding: 32px 28px 24px;
         }
 
         .cf-card {
@@ -1098,17 +1066,61 @@ $cfa-ease-out-quint: cubic-bezier(0.2, 0.8, 0.2, 1);
     @media (max-width: $cfa-bp-sm) {
         --gutter: 22px;
 
-        .hero {
-            padding: 70px 0 90px;
+        .shape {
+            display: none;
         }
+
+        .hero {
+            padding: 56px 0 52px;
+
+            &-title {
+                font-size: clamp(32px, 8.6vw, 46px);
+                line-height: 0.96;
+            }
+            &-sub {
+                font-size: 14px;
+                line-height: 1.55;
+                margin-top: 16px;
+            }
+        }
+
         .section {
-            padding: 84px 0;
+            padding: 72px 0;
+        }
+        .section-value,
+        .section-tech,
+        .section-cases,
+        .section-cta {
+            padding: 64px 0;
+        }
+
+        .section-title {
+            font-size: clamp(28px, 7.8vw, 40px);
+            line-height: 1.0;
+        }
+
+        .section-sub {
+            font-size: 15px;
+        }
+
+        .section-head {
+            margin-bottom: 32px;
+        }
+
+        .tech-layer-heading {
+            font-size: clamp(20px, 5.6vw, 26px);
+            margin-bottom: 20px;
+        }
+
+        .req-grid + .tech-layer-heading {
+            margin-top: 48px;
         }
 
         .req-grid {
             grid-template-columns: 1fr;
         }
         .req-card {
+            padding: 22px 20px 24px;
             border-right: none;
             border-bottom: 1px solid rgba(245, 239, 228, 0.1);
 
@@ -1119,9 +1131,45 @@ $cfa-ease-out-quint: cubic-bezier(0.2, 0.8, 0.2, 1);
         .section-cream .req-card {
             border-bottom-color: rgba(15, 26, 20, 0.12);
         }
+        .req-title {
+            min-height: 0;
+            font-size: 15px;
+            margin-bottom: 10px;
+        }
+        .req-desc {
+            font-size: 13px;
+        }
+
+        .section-cases .section-title {
+            white-space: normal;
+        }
+
+        .case-card {
+            padding: 28px 24px 22px;
+        }
+        .case-title {
+            font-size: 19px;
+            min-height: 0;
+            margin-bottom: 18px;
+        }
+        .case-quote {
+            font-size: 15px;
+            margin-bottom: 20px;
+        }
+        .case-section {
+            margin: 14px 0 6px;
+        }
+        .case-metrics {
+            margin-bottom: 22px;
+        }
+
+        .cover-flow {
+            height: 480px;
+            margin-top: 8px;
+        }
 
         .cf-card {
-            width: 280px;
+            width: min(320px, calc(100vw - 64px));
             height: 460px;
             padding: 22px;
 
@@ -1133,9 +1181,123 @@ $cfa-ease-out-quint: cubic-bezier(0.2, 0.8, 0.2, 1);
                 pointer-events: none;
             }
         }
+        .section-tech .cf-card {
+            width: min(320px, calc(100vw - 64px));
+            height: 480px;
+        }
+
+        .cf-title {
+            font-size: 22px;
+            margin-bottom: 14px;
+        }
+        .cf-desc {
+            font-size: 15px;
+            line-height: 1.5;
+            margin-bottom: 22px;
+        }
+
+        .cf-nav {
+            margin-top: 36px;
+            gap: 16px;
+        }
+        .cf-btn {
+            width: 40px;
+            height: 40px;
+            font-size: 16px;
+        }
+
+        .cta-title {
+            font-size: clamp(34px, 9vw, 54px);
+            margin-bottom: 32px;
+        }
+        .cta-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            width: 100%;
+            max-width: 360px;
+            margin: 0 auto;
+        }
+        .cta-actions .btn {
+            justify-content: center;
+            min-height: 44px;
+            white-space: normal;
+            text-align: center;
+            width: 100%;
+        }
+        .cta-bg-bolt svg {
+            width: clamp(360px, 90vw, 560px);
+            height: clamp(360px, 90vw, 560px);
+        }
+    }
+
+    @media (max-width: $cfa-bp-xs) {
+        --gutter: 18px;
+
+        .hero {
+            padding: 48px 0 44px;
+
+            &-title {
+                font-size: clamp(28px, 9.4vw, 40px);
+                line-height: 0.98;
+            }
+            &-sub {
+                font-size: 13.5px;
+                max-width: none;
+            }
+        }
+
+        .section-title {
+            font-size: clamp(26px, 8.4vw, 34px);
+        }
+
+        .section-sub {
+            font-size: 14px;
+        }
+
+        .case-card {
+            padding: 24px 20px 20px;
+        }
+        .case-title {
+            font-size: 18px;
+            margin-bottom: 16px;
+        }
+        .case-quote {
+            font-size: 14px;
+            padding-left: 12px;
+        }
 
         .cover-flow {
+            height: 500px;
+        }
+        .cf-card {
+            width: calc(100vw - 44px);
             height: 480px;
+            padding: 20px;
+        }
+        .section-tech .cf-card {
+            width: calc(100vw - 44px);
+            height: 500px;
+        }
+        .cf-title {
+            font-size: 20px;
+        }
+        .cf-num {
+            font-size: 10.5px;
+            margin-bottom: 14px;
+        }
+        .cf-indicator {
+            min-width: 72px;
+            font-size: 11px;
+        }
+
+        .cta-title {
+            font-size: clamp(30px, 10vw, 44px);
+            margin-bottom: 28px;
+        }
+        .cta-bg-bolt svg {
+            width: clamp(320px, 95vw, 460px);
+            height: clamp(320px, 95vw, 460px);
         }
     }
 }
