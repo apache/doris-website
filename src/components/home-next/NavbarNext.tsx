@@ -63,7 +63,7 @@ function buildNavItems(docsHref: string): NavItem[] {
             items: [
                 { label: 'Customer-Facing Analytics', href: '/use-cases/customer-facing-analytics' },
                 { label: 'Data Warehousing', href: '/use-cases/data-warehousing' },
-                { label: 'Observability (coming soon)', href: '#' },
+                { label: 'Observability', href: '/use-cases/observability' },
                 { label: 'Doris for AI (coming soon)', href: '#' },
             ],
         },
