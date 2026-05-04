@@ -3,6 +3,7 @@ import React, {
     JSX,
     KeyboardEvent,
     ReactNode,
+    TouchEvent,
     useCallback,
     useEffect,
     useRef,
@@ -39,19 +40,6 @@ function BoltIcon({ size = 24, color = '#FFD23F', className }: BoltIconProps): J
     );
 }
 
-function BoltMonogramLarge({ color = '#FFD23F' }: { color?: string }): JSX.Element {
-    return (
-        <svg viewBox="0 0 600 600" width="700" height="700" aria-hidden="true">
-            <path
-                d="M340 60 L160 340 L290 340 L240 540 L440 240 L310 240 L370 60 Z"
-                fill={color}
-                stroke={color}
-                strokeWidth="2"
-            />
-        </svg>
-    );
-}
-
 type ShapeKind = 'diamond' | 'circle' | 'ring' | 'cross';
 
 interface ShapeSpec {
@@ -73,6 +61,11 @@ function Shapes({ specs }: { specs: ShapeSpec[] }): JSX.Element {
     );
 }
 
+interface FooterItem {
+    label: string;
+    href?: string;
+}
+
 interface CoverFlowItem {
     id: string;
     num: string;
@@ -80,7 +73,7 @@ interface CoverFlowItem {
     desc: string;
     footer: {
         label: string;
-        items: string[];
+        items: FooterItem[];
     };
 }
 
@@ -98,6 +91,8 @@ function CoverFlow({
     const [active, setActive] = useState(0);
     const total = items.length;
     const stageRef = useRef<HTMLDivElement | null>(null);
+    const touchStartX = useRef<number | null>(null);
+    const touchStartY = useRef<number | null>(null);
 
     const go = useCallback(
         (i: number) => setActive(((i % total) + total) % total),
@@ -109,12 +104,35 @@ function CoverFlow({
         if (e.key === 'ArrowRight') go(active + 1);
     };
 
+    const onTouchStart = (e: TouchEvent<HTMLDivElement>) => {
+        touchStartX.current = e.touches[0].clientX;
+        touchStartY.current = e.touches[0].clientY;
+    };
+
+    const onTouchEnd = (e: TouchEvent<HTMLDivElement>) => {
+        if (touchStartX.current === null || touchStartY.current === null) return;
+        const dx = e.changedTouches[0].clientX - touchStartX.current;
+        const dy = e.changedTouches[0].clientY - touchStartY.current;
+        touchStartX.current = null;
+        touchStartY.current = null;
+        if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 40) {
+            if (dx < 0) go(active + 1);
+            else go(active - 1);
+        }
+    };
+
     const footerClass = footerVariant === 'powered' ? 'cap-powered' : 'cf-scenarios';
     const footerLabelClass =
         footerVariant === 'powered' ? 'cap-powered-label' : 'cf-scenarios-label';
 
     return (
-        <div className="cover-flow-wrap" onKeyDown={onKey} aria-label={ariaLabel}>
+        <div
+            className="cover-flow-wrap"
+            onKeyDown={onKey}
+            onTouchStart={onTouchStart}
+            onTouchEnd={onTouchEnd}
+            aria-label={ariaLabel}
+        >
             <div className="cover-flow" ref={stageRef}>
                 {items.map((it, i) => {
                     const offset = i - active;
@@ -134,7 +152,13 @@ function CoverFlow({
                                 <div className={footerLabelClass}>{it.footer.label}</div>
                                 <ul>
                                     {it.footer.items.map(x => (
-                                        <li key={x}>{x}</li>
+                                        <li key={x.label}>
+                                            {x.href !== undefined ? (
+                                                <a href={x.href}>{x.label}</a>
+                                            ) : (
+                                                x.label
+                                            )}
+                                        </li>
                                     ))}
                                 </ul>
                             </div>
@@ -237,7 +261,7 @@ interface Capability {
     title: ReactNode;
     desc: string;
     poweredLabel: string;
-    poweredBy: string[];
+    poweredBy: FooterItem[];
 }
 
 const valueCards: ValueCard[] = [
@@ -403,9 +427,9 @@ const capabilities: Capability[] = [
         desc: 'Data becomes queryable seconds after ingestion. Dashboards reflect what happened a moment ago, not last night’s batch.',
         poweredLabel: 'Powered by',
         poweredBy: [
-            'Stream ingestion from Kafka and CDC',
-            'Incremental materialized view refresh',
-            'Real-time query visibility',
+            { label: 'Stream ingestion from Kafka and CDC', href: '#' },
+            { label: 'Incremental materialized view refresh', href: '#' },
+            { label: 'Real-time query visibility', href: '#' },
         ],
     },
     {
@@ -421,10 +445,10 @@ const capabilities: Capability[] = [
         desc: 'Consistent low-latency on large datasets, under concurrent load — not just a single-query benchmark number.',
         poweredLabel: 'Powered by',
         poweredBy: [
-            'MPP execution engine',
-            'Vectorized execution',
-            'Advanced query optimizer',
-            'Columnar storage and compression',
+            { label: 'MPP execution engine', href: '#' },
+            { label: 'Vectorized execution', href: '#' },
+            { label: 'Advanced query optimizer', href: '#' },
+            { label: 'Columnar storage and compression', href: '#' },
         ],
     },
     {
@@ -440,10 +464,10 @@ const capabilities: Capability[] = [
         desc: 'Serve many users, teams, or tenants from a single platform. Drop into product backends through standard SQL — no proprietary client.',
         poweredLabel: 'Powered by',
         poweredBy: [
-            'MySQL-compatible protocol',
-            'Resource isolation',
-            'High-concurrency scheduling',
-            'SQL-based application integration',
+            { label: 'MySQL-compatible protocol', href: '#' },
+            { label: 'Resource isolation', href: '#' },
+            { label: 'High-concurrency scheduling', href: '#' },
+            { label: 'SQL-based application integration', href: '#' },
         ],
     },
     {
@@ -459,9 +483,9 @@ const capabilities: Capability[] = [
         desc: 'Query open lakehouse formats directly. Combine real-time serving with existing data lake architectures — without copying data twice.',
         poweredLabel: 'Powered by',
         poweredBy: [
-            'Iceberg and lakehouse query capabilities',
-            'Zero-copy analytics',
-            'Unified access to operational and historical data',
+            { label: 'Iceberg and lakehouse query capabilities', href: '#' },
+            { label: 'Zero-copy analytics', href: '#' },
+            { label: 'Unified access to operational and historical data', href: '#' },
         ],
     },
 ];
@@ -506,7 +530,10 @@ function ValueSection(): JSX.Element {
         num: c.num,
         title: c.title,
         desc: c.desc,
-        footer: { label: c.scenariosLabel, items: c.scenarios },
+        footer: {
+            label: c.scenariosLabel,
+            items: c.scenarios.map(s => ({ label: s })),
+        },
     }));
 
     return (
@@ -627,10 +654,6 @@ function TechSection(): JSX.Element {
 function CTASection(): JSX.Element {
     return (
         <section className="section-cta" id="start">
-            <div className="cta-bg-grid" aria-hidden="true" />
-            <div className="cta-bg-bolt" aria-hidden="true">
-                <BoltMonogramLarge />
-            </div>
             <div className="cta-inner container">
                 <h2 className="cta-title" data-reveal data-reveal-delay="1">
                     Build Customer-Facing Analytics

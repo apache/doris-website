@@ -172,6 +172,7 @@ $cfa-ease-out-quint: cubic-bezier(0.2, 0.8, 0.2, 1);
         line-height: 0.95;
         color: var(--cream-light);
         margin: 0 0 22px;
+        overflow-wrap: anywhere;
     }
 
     .section-sub {
@@ -320,6 +321,7 @@ $cfa-ease-out-quint: cubic-bezier(0.2, 0.8, 0.2, 1);
             color: var(--cream-light);
             margin: 0;
             font-size: clamp(40px, 4.4vw, 62px);
+            overflow-wrap: anywhere;
 
             .bolt-inline {
                 display: inline-block;
@@ -339,20 +341,24 @@ $cfa-ease-out-quint: cubic-bezier(0.2, 0.8, 0.2, 1);
         }
     }
 
+    .cover-flow-wrap {
+        touch-action: pan-y;
+    }
+
     .cover-flow {
         position: relative;
-        height: 460px;
         perspective: 1800px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        align-items: stretch;
+        justify-items: center;
         margin-top: 24px;
     }
 
     .cf-card {
-        position: absolute;
+        grid-column: 1;
+        grid-row: 1;
         width: 420px;
-        height: 420px;
         background: var(--ink);
         border: 1px solid rgba(245, 239, 228, 0.12);
         border-radius: 12px;
@@ -423,6 +429,7 @@ $cfa-ease-out-quint: cubic-bezier(0.2, 0.8, 0.2, 1);
         line-height: 1.0;
         color: var(--cream-light);
         margin: 0 0 18px;
+        overflow-wrap: anywhere;
     }
 
     .cf-desc {
@@ -508,6 +515,37 @@ $cfa-ease-out-quint: cubic-bezier(0.2, 0.8, 0.2, 1);
                 top: -1px;
                 color: var(--yellow);
                 font-weight: 700;
+            }
+
+            a {
+                color: var(--yellow);
+                text-decoration: underline;
+                text-decoration-color: rgba(255, 210, 63, 0.55);
+                text-decoration-thickness: 1px;
+                text-underline-offset: 3px;
+                transition: color 0.2s ease, text-decoration-color 0.2s ease;
+
+                &:hover,
+                &:focus-visible {
+                    color: var(--yellow-bright);
+                    text-decoration-color: var(--yellow-bright);
+                    text-decoration-thickness: 2px;
+                }
+
+                &::after {
+                    content: '↗';
+                    display: inline-block;
+                    margin-left: 4px;
+                    font-size: 0.92em;
+                    color: rgba(255, 210, 63, 0.7);
+                    transition: transform 0.2s ease, color 0.2s ease;
+                }
+
+                &:hover::after,
+                &:focus-visible::after {
+                    color: var(--yellow-bright);
+                    transform: translate(1px, -1px);
+                }
             }
         }
     }
@@ -609,15 +647,10 @@ $cfa-ease-out-quint: cubic-bezier(0.2, 0.8, 0.2, 1);
             margin-bottom: 40px;
         }
 
-        .cover-flow {
-            height: 480px;
-        }
-
         .cf-card {
             background: var(--doris-green-darkest);
             border-color: rgba(255, 210, 63, 0.18);
             width: 440px;
-            height: 440px;
         }
 
         .cf-num {
@@ -861,25 +894,6 @@ $cfa-ease-out-quint: cubic-bezier(0.2, 0.8, 0.2, 1);
         overflow: hidden;
     }
 
-    .cta-bg-bolt {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        opacity: 0.06;
-        pointer-events: none;
-        z-index: 0;
-    }
-
-    .cta-bg-grid {
-        position: absolute;
-        inset: 0;
-        z-index: 0;
-        @include cfa-grid-bg(0.08);
-        mask-image: radial-gradient(ellipse at center, black 20%, transparent 70%);
-        -webkit-mask-image: radial-gradient(ellipse at center, black 20%, transparent 70%);
-    }
-
     .cta-inner {
         position: relative;
         z-index: 5;
@@ -889,13 +903,14 @@ $cfa-ease-out-quint: cubic-bezier(0.2, 0.8, 0.2, 1);
         font-family: var(--mono);
         font-weight: 700;
         text-transform: uppercase;
-        font-size: clamp(40px, 5.2vw, 76px);
+        font-size: clamp(40px, 4.4vw, 62px);
         line-height: 0.92;
         letter-spacing: -0.035em;
         word-spacing: -0.18em;
         color: var(--cream-light);
         margin: 0 auto 48px;
         max-width: 1000px;
+        overflow-wrap: anywhere;
     }
 
     .cta-actions {
@@ -1040,7 +1055,6 @@ $cfa-ease-out-quint: cubic-bezier(0.2, 0.8, 0.2, 1);
 
         .cf-card {
             width: 340px;
-            height: 420px;
             padding: 26px;
 
             &[data-offset='-1'] {
@@ -1059,7 +1073,6 @@ $cfa-ease-out-quint: cubic-bezier(0.2, 0.8, 0.2, 1);
 
         .section-tech .cf-card {
             width: 360px;
-            height: 460px;
         }
     }
 
@@ -1164,26 +1177,24 @@ $cfa-ease-out-quint: cubic-bezier(0.2, 0.8, 0.2, 1);
         }
 
         .cover-flow {
-            height: 480px;
             margin-top: 8px;
         }
 
         .cf-card {
             width: min(320px, calc(100vw - 64px));
-            height: 460px;
             padding: 22px;
 
             &[data-offset='-1'],
             &[data-offset='1'],
             &[data-offset='-2'],
             &[data-offset='2'] {
+                transform: translateX(0) translateZ(0);
                 opacity: 0;
                 pointer-events: none;
             }
         }
         .section-tech .cf-card {
             width: min(320px, calc(100vw - 64px));
-            height: 480px;
         }
 
         .cf-title {
@@ -1207,7 +1218,8 @@ $cfa-ease-out-quint: cubic-bezier(0.2, 0.8, 0.2, 1);
         }
 
         .cta-title {
-            font-size: clamp(34px, 9vw, 54px);
+            font-size: clamp(32px, 8.6vw, 46px);
+            line-height: 0.96;
             margin-bottom: 32px;
         }
         .cta-actions {
@@ -1224,10 +1236,6 @@ $cfa-ease-out-quint: cubic-bezier(0.2, 0.8, 0.2, 1);
             white-space: normal;
             text-align: center;
             width: 100%;
-        }
-        .cta-bg-bolt svg {
-            width: clamp(360px, 90vw, 560px);
-            height: clamp(360px, 90vw, 560px);
         }
     }
 
@@ -1267,17 +1275,12 @@ $cfa-ease-out-quint: cubic-bezier(0.2, 0.8, 0.2, 1);
             padding-left: 12px;
         }
 
-        .cover-flow {
-            height: 500px;
-        }
         .cf-card {
-            width: calc(100vw - 44px);
-            height: 480px;
+            width: calc(100vw - 36px);
             padding: 20px;
         }
         .section-tech .cf-card {
-            width: calc(100vw - 44px);
-            height: 500px;
+            width: calc(100vw - 36px);
         }
         .cf-title {
             font-size: 20px;
@@ -1292,12 +1295,9 @@ $cfa-ease-out-quint: cubic-bezier(0.2, 0.8, 0.2, 1);
         }
 
         .cta-title {
-            font-size: clamp(30px, 10vw, 44px);
+            font-size: clamp(28px, 9.4vw, 40px);
+            line-height: 0.98;
             margin-bottom: 28px;
-        }
-        .cta-bg-bolt svg {
-            width: clamp(320px, 95vw, 460px);
-            height: clamp(320px, 95vw, 460px);
         }
     }
 }
