@@ -1,0 +1,288 @@
+// ─── Card 3: Side-by-side comparison table ───────────────────────────────────
+
+@use '../responsive' as r;
+@use '../../shared/typography' as type;
+
+.cmp-tbl {
+    &.cmp-next__card {
+        background: var(--cn-green-dark);
+    }
+
+    &__wrap {
+        border: 1px solid rgba(245, 239, 228, 0.1);
+        border-radius: 10px;
+        overflow: hidden;
+        background: rgba(0, 0, 0, 0.18);
+    }
+
+    &__head {
+        display: grid;
+        grid-template-columns: 1.1fr 1.4fr 1.4fr;
+        background: rgba(0, 0, 0, 0.32);
+        border-bottom: 1px solid rgba(245, 239, 228, 0.1);
+    }
+
+    &__col {
+        padding: 22px 26px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    &__col-label {
+        @include type.micro-label;
+        color: rgba(245, 239, 228, 0.5);
+    }
+
+    &__col-name {
+        @include type.mono-text(clamp(15px, 0.85rem + 0.4vw, 18px), 700, 1.2, -0.005em);
+        color: var(--cn-cream-light);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    &__col-mark {
+        width: 30px;
+        height: 30px;
+        border-radius: 7px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(255, 255, 255, 0.88);
+        border: 1px solid rgba(15, 26, 20, 0.08);
+        overflow: hidden;
+    }
+
+    &__col-logo {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        display: block;
+    }
+
+    &__col-badge {
+        @include type.micro-label;
+        padding: 3px 7px;
+        background: var(--cn-yellow);
+        color: var(--cn-ink);
+        border-radius: 3px;
+    }
+
+    &__row {
+        display: grid;
+        grid-template-columns: 1.1fr 1.4fr 1.4fr;
+        border-bottom: 1px solid rgba(245, 239, 228, 0.06);
+        transition: background 0.2s;
+
+        &:last-child {
+            border-bottom: none;
+        }
+
+        @media (hover: hover) {
+            &:hover {
+                background: rgba(245, 239, 228, 0.02);
+            }
+        }
+    }
+
+    &__cell {
+        padding: 22px 26px;
+        font-family: var(--cn-sans);
+
+        &--label {
+            border-right: 1px solid rgba(245, 239, 228, 0.06);
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            background: rgba(0, 0, 0, 0.18);
+        }
+
+        &--doris {
+            background: linear-gradient(180deg, rgba(45, 223, 168, 0.06), rgba(45, 223, 168, 0));
+            border-right: 1px solid rgba(245, 239, 228, 0.06);
+            position: relative;
+
+            &::before {
+                content: '';
+                position: absolute;
+                left: 0;
+                top: 16px;
+                bottom: 16px;
+                width: 2px;
+                background: var(--cn-green-glow);
+            }
+
+            .cmp-tbl__bullets li {
+                color: var(--cn-cream-light);
+
+                &::before {
+                    background: var(--cn-green-glow);
+                }
+
+                strong {
+                    color: var(--cn-yellow);
+                    font-weight: 600;
+                }
+            }
+        }
+    }
+
+    // Inline column-tag inside data cells. Hidden on desktop (the global
+    // header carries the column names there); shown on mobile where the
+    // header is hidden.
+    &__cell-tag {
+        display: none;
+        align-items: center;
+        gap: 8px;
+        @include type.mono-text(11px, 700, 1.2, 0.04em);
+        margin-bottom: 10px;
+        color: var(--cn-cream-light);
+    }
+
+    &__cell-tag-mark {
+        width: 20px;
+        height: 20px;
+        border-radius: 5px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(255, 255, 255, 0.88);
+        border: 1px solid rgba(15, 26, 20, 0.08);
+        overflow: hidden;
+    }
+
+    &__cell-tag-logo {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        display: block;
+    }
+
+    &__label-num {
+        @include type.micro-label;
+        color: rgba(255, 210, 63, 0.7);
+    }
+
+    &__label-text {
+        @include type.mono-text(clamp(13px, 0.8rem + 0.2vw, 15px), 700, 1.25, -0.005em);
+        color: var(--cn-cream-light);
+    }
+
+    &__bullets {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+
+        li {
+            @include type.small-copy;
+            color: rgba(245, 239, 228, 0.78);
+            padding-left: 18px;
+            position: relative;
+
+            &::before {
+                content: '';
+                position: absolute;
+                left: 0;
+                top: 7px;
+                width: 8px;
+                height: 8px;
+                border-radius: 2px;
+                background: rgba(245, 239, 228, 0.2);
+            }
+        }
+    }
+}
+
+// ─── Mobile mode: per-row card with side-by-side Doris/CH ────────────────────
+//
+// At ≤md (768px), the global 3-col grid breaks down. We convert each row
+// into a self-contained card: the dimension label spans the top, and the
+// Doris/CH cells sit side-by-side below — preserving the comparison.
+//
+// The wrap loses its outer border so each row reads as its own card.
+
+@include r.down('md') {
+    .cmp-tbl {
+        &__wrap {
+            border: none;
+            background: transparent;
+            border-radius: 0;
+            overflow: visible;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        // Hide the global column header — its labels move into each cell.
+        &__head { display: none; }
+
+        &__row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-areas:
+                "label label"
+                "doris ch";
+            border: 1px solid rgba(245, 239, 228, 0.1);
+            border-radius: 10px;
+            background: rgba(0, 0, 0, 0.18);
+            overflow: hidden;
+
+            &:last-child { border-bottom: 1px solid rgba(245, 239, 228, 0.1); }
+        }
+
+        &__cell {
+            padding: 16px 18px;
+
+            &--label {
+                grid-area: label;
+                border-right: none;
+                border-bottom: 1px solid rgba(245, 239, 228, 0.06);
+                flex-direction: row;
+                align-items: center;
+                gap: 10px;
+                padding-block: 12px;
+            }
+
+            &--doris {
+                grid-area: doris;
+                border-right: 1px solid rgba(245, 239, 228, 0.06);
+                border-bottom: none;
+            }
+
+            &--ch {
+                grid-area: ch;
+            }
+        }
+
+        // Surface the inline column tags at the top of each data cell.
+        &__cell-tag { display: inline-flex; }
+    }
+}
+
+// ─── Very small screens: full stack ──────────────────────────────────────────
+//
+// At ≤xs (480px), two columns of bullets become illegible. Drop to a full
+// vertical stack: label / Doris / CH.
+
+@include r.down('xs') {
+    .cmp-tbl {
+        &__row {
+            grid-template-columns: 1fr;
+            grid-template-areas:
+                "label"
+                "doris"
+                "ch";
+        }
+
+        &__cell {
+            &--doris {
+                border-right: none;
+                border-bottom: 1px solid rgba(245, 239, 228, 0.06);
+            }
+        }
+    }
+}

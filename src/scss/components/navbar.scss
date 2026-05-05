@@ -159,6 +159,33 @@
         }
     }
 
+    &.docs {
+        .navbar-left {
+            .navbar-logo-wrapper {
+                .docs {
+                    svg {
+                        display: block;
+                    }
+                }
+            }
+        }
+
+        .docs-nav-version-locale {
+            .dropdown > .navbar__link {
+                display: flex;
+                align-items: center;
+                min-height: 2.25rem;
+                padding-top: 0;
+                padding-bottom: 0;
+                line-height: 1;
+            }
+
+            .icon-language {
+                display: inline-block;
+            }
+        }
+    }
+
     .navbar__items--right {
         .navbar__link {
             padding-top: 0;

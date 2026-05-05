@@ -1,0 +1,27 @@
+@use '../shared/typography' as type;
+
+.blogs-next {
+    padding-bottom: 48px;
+    scroll-margin-top: 80px;
+
+    .page-header {
+        margin-bottom: 10px;
+        padding-top: 40px;
+        padding-bottom: 12px;
+
+        .title {
+            @include type.section-title;
+            text-align: left;
+            margin: 0;
+        }
+
+        .subtitle {
+            text-align: left;
+        }
+    }
+
+    button:focus-visible {
+        outline: 2px solid var(--ifm-color-primary);
+        outline-offset: 3px;
+    }
+}

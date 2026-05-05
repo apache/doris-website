@@ -15,6 +15,19 @@ const ONLY_VERSIONS = process.env.DOCS_VERSIONS
     ? process.env.DOCS_VERSIONS.split(',').map(v => v.trim()).filter(Boolean)
     : null;
 
+// Landing-only dev mode: when working on src/components/home-next or
+// use-cases-next, no docs/blog/search routes need to load. Setting
+// LANDING_ONLY=true disables every heavy content plugin, which drops
+// `yarn start` peak memory from ~20GB to ~1-2GB. Individual SKIP_* env
+// vars allow finer-grained control.
+const LANDING_ONLY = process.env.LANDING_ONLY === 'true';
+const SKIP_DOCS = LANDING_ONLY || process.env.SKIP_DOCS === 'true';
+const SKIP_BLOG = LANDING_ONLY || process.env.SKIP_BLOG === 'true';
+const SKIP_COMMUNITY = LANDING_ONLY || process.env.SKIP_COMMUNITY === 'true';
+const SKIP_RELEASES = LANDING_ONLY || process.env.SKIP_RELEASES === 'true';
+const SKIP_DOCS_NEXT = LANDING_ONLY || process.env.SKIP_DOCS_NEXT === 'true';
+const SKIP_SEARCH = LANDING_ONLY || process.env.SKIP_SEARCH === 'true';
+
 const LINK_BEHAVIOR_VALUES = new Set(['ignore', 'log', 'warn', 'throw']);
 function getBrokenLinkBehavior(envName, fallback) {
     const value = process.env[envName];
@@ -130,7 +143,7 @@ const config = {
         'docusaurus-plugin-matomo',
         // Use custom blog plugin
         versionsPlugin,
-        [
+        SKIP_COMMUNITY ? null : [
             'content-docs',
             /** @type {import('@docusaurus/plugin-content-docs').Options} */
             ({
@@ -140,7 +153,7 @@ const config = {
                 sidebarPath: require.resolve('./sidebarsCommunity.json'),
             }),
         ],
-        [
+        SKIP_RELEASES ? null : [
             'content-docs',
             /** @type {import('@docusaurus/plugin-content-docs').Options} */
             ({
@@ -150,7 +163,7 @@ const config = {
                 sidebarPath: require.resolve('./sidebarsReleases.json'),
             }),
         ],
-        process.env.SKIP_DOCS_NEXT ? null : [
+        SKIP_DOCS_NEXT ? null : [
             'content-docs',
             /** @type {import('@docusaurus/plugin-content-docs').Options} */
             ({
@@ -248,7 +261,7 @@ const config = {
             'classic',
             /** @type {import('@docusaurus/preset-classic').Options} */
             ({
-                docs: {
+                docs: SKIP_DOCS ? false : {
                     ...(ONLY_VERSIONS && { onlyIncludeVersions: ONLY_VERSIONS }),
                     // When filtering versions, lastVersion must be in the
                     // included list. Fall back to the first included version.
@@ -275,7 +288,7 @@ const config = {
                         ]
                     ]
                 },
-                blog: {
+                blog: SKIP_BLOG ? false : {
                     blogTitle: 'Apache Doris - Blog | Latest news and events ',
                     blogDescription:
                         'Explore how Doris empower lakehouse, adhoc analysis, customer-facing analysis and various scenarios',
@@ -319,7 +332,7 @@ const config = {
             }),
         ],
     ],
-    themes: [
+    themes: SKIP_SEARCH ? [] : [
         [
             '@yang1666204/docusaurus-search-local',
             {

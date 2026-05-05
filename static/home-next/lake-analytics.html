@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Apache Doris Lakehouse Analytics</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html, body {
+    width: 100%;
+    height: 100%;
+  }
+
+  body {
+    background: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    min-width: 100vw;
+  }
+
+  /* Responsive square canvas */
+  .scene-wrapper {
+    width: min(90vw, 90vh, 600px);
+    aspect-ratio: 1 / 1;
+    position: relative;
+    flex-shrink: 0;
+  }
+
+  .scene {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+    border-radius: 20px;
+    contain: layout paint;
+  }
+
+  .scene svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+
+  .wave1,
+  .wave2,
+  .wave3,
+  .wave4,
+  .lock-shackle,
+  .lock-body,
+  .card-glow,
+  .card-glow-2,
+  .card-glow-3,
+  .card-glow-doris {
+    will-change: transform, opacity;
+  }
+
+  /* ── WAVES ── */
+  @keyframes waveMove1 { 0%{transform:translateX(0)} 100%{transform:translateX(-90px)} }
+  @keyframes waveMove2 { 0%{transform:translateX(0)} 100%{transform:translateX(70px)} }
+  @keyframes waveMove3 { 0%{transform:translateX(-20px)} 100%{transform:translateX(55px)} }
+  @keyframes waveMove4 { 0%{transform:translateX(15px)} 100%{transform:translateX(-65px)} }
+  .wave1 { animation: waveMove1 7s linear infinite; }
+  .wave2 { animation: waveMove2 9s linear infinite; }
+  .wave3 { animation: waveMove3 11s linear infinite; }
+  .wave4 { animation: waveMove4 8s linear infinite; }
+
+  /* ── CONNECTOR DOTS doris → top cards (green) ── */
+  @keyframes connFlow {
+    0%   { offset-distance:0%;  opacity:0 }
+    15%  { opacity:1 }
+    85%  { opacity:1 }
+    100% { offset-distance:100%; opacity:0 }
+  }
+  .cdot { r:3.2; fill:#2e7d5e; }
+  .cd1 { animation:connFlow 2.8s ease-in-out 0.0s infinite; }
+  .cd2 { animation:connFlow 2.8s ease-in-out 0.9s infinite; }
+  .cd3 { animation:connFlow 2.8s ease-in-out 1.8s infinite; }
+  .cd4 { animation:connFlow 2.8s ease-in-out 0.2s infinite; }
+  .cd5 { animation:connFlow 2.8s ease-in-out 1.1s infinite; }
+  .cd6 { animation:connFlow 2.8s ease-in-out 2.0s infinite; }
+  .cd7 { animation:connFlow 2.8s ease-in-out 0.4s infinite; }
+  .cd8 { animation:connFlow 2.8s ease-in-out 1.3s infinite; }
+  .cd9 { animation:connFlow 2.8s ease-in-out 2.2s infinite; }
+
+  /* ── BAR CHART ── */
+  @keyframes b1a { 0%,100%{transform:scaleY(0.45)} 50%{transform:scaleY(1)} }
+  @keyframes b2a { 0%,100%{transform:scaleY(0.75)} 50%{transform:scaleY(0.35)} }
+  @keyframes b3a { 0%,100%{transform:scaleY(0.55)} 50%{transform:scaleY(1)} }
+  @keyframes b4a { 0%,100%{transform:scaleY(1)}    50%{transform:scaleY(0.45)} }
+  @keyframes b5a { 0%,100%{transform:scaleY(0.35)} 50%{transform:scaleY(0.9)} }
+  .bar { rx:2.5; ry:2.5; fill:url(#barGrad); transform-origin:50% 100%; transform-box:fill-box; }
+  .b1 { animation:b1a 3s ease-in-out 0s   infinite; }
+  .b2 { animation:b2a 3s ease-in-out 0.4s infinite; }
+  .b3 { animation:b3a 3s ease-in-out 0.8s infinite; }
+  .b4 { animation:b4a 3s ease-in-out 1.2s infinite; }
+  .b5 { animation:b5a 3s ease-in-out 1.6s infinite; }
+
+  /* ── PIPELINE DOTS ── */
+  @keyframes pipeDot {
+    0%   { offset-distance:0%;  opacity:0 }
+    8%   { opacity:1 }
+    92%  { opacity:1 }
+    100% { offset-distance:100%; opacity:0 }
+  }
+  .pdot { r:3.5; fill:#2e7d5e; animation:pipeDot 2.8s linear infinite; }
+  .pd1 { animation-delay:0s; }
+  .pd2 { animation-delay:0.7s; }
+  .pd3 { animation-delay:1.4s; }
+  .pd4 { animation-delay:2.1s; }
+
+  /* ── LOCK ── */
+  @keyframes lockShackle {
+    0%,30%  { transform:translateY(0) rotate(0deg); }
+    42%,58% { transform:translateY(-10px) rotate(20deg); }
+    70%,100%{ transform:translateY(0) rotate(0deg); }
+  }
+  @keyframes lockFill {
+    0%,30%  { opacity:0.1; }
+    42%,58% { opacity:0.3; }
+    70%,100%{ opacity:0.1; }
+  }
+  .lock-shackle { animation:lockShackle 4.5s ease-in-out infinite; transform-origin:50% 68%; transform-box:fill-box; }
+  .lock-body    { animation:lockFill 4.5s ease-in-out infinite; }
+
+  /* ── GLOW RING ── */
+  @keyframes glowPulse { 0%{r:5; opacity:0.5} 100%{r:16; opacity:0} }
+  .gring  { fill:none; stroke:#2e7d5e; stroke-width:1.5; opacity:0; animation:glowPulse 2.8s ease-out infinite; }
+  .gring2 { animation-delay:1.4s; }
+
+  /* ── DASH MARCH connector lines ── */
+  @keyframes dashMarch { to { stroke-dashoffset: -20; } }
+  .conn-line {
+    fill: none;
+    stroke: #2e7d5e;
+    stroke-width: 1.5;
+    stroke-dasharray: 5 5;
+    stroke-opacity: 0.55;
+    animation: dashMarch 1.5s linear infinite;
+  }
+
+  /* ── CARD GLOW PULSE ── */
+  @keyframes cardGlow {
+    0%,100% { opacity: 0.3; }
+    50%     { opacity: 0.7; }
+  }
+  .card-glow { animation: cardGlow 4s ease-in-out infinite; }
+  .card-glow-2 { animation: cardGlow 4s ease-in-out 1.3s infinite; }
+  .card-glow-3 { animation: cardGlow 4s ease-in-out 2.6s infinite; }
+  .card-glow-doris { animation: cardGlow 5s ease-in-out 0.5s infinite; }
+</style>
+</head>
+<body>
+<div class="scene-wrapper">
+<div class="scene">
+<svg viewBox="0 0 520 520" xmlns="http://www.w3.org/2000/svg">
+<defs>
+  <linearGradient id="barGrad" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0%" stop-color="#2e7d5e"/>
+    <stop offset="100%" stop-color="#7dbfa2"/>
+  </linearGradient>
+  <linearGradient id="dorisCardGrad" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0%" stop-color="#f4f1e8"/>
+    <stop offset="100%" stop-color="#e8e4d4"/>
+  </linearGradient>
+  <linearGradient id="topCardGrad" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0%" stop-color="#f6f3ea"/>
+    <stop offset="100%" stop-color="#eae7d8"/>
+  </linearGradient>
+  <linearGradient id="pipeGrad" x1="0" y1="0" x2="1" y2="0">
+    <stop offset="0%" stop-color="#a8ccb8"/>
+    <stop offset="50%" stop-color="#cce8d8"/>
+    <stop offset="100%" stop-color="#a8ccb8"/>
+  </linearGradient>
+
+  <linearGradient id="lakeBgGrad" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0%" stop-color="#f3eddc"/>
+    <stop offset="48%" stop-color="#e9e1cf"/>
+    <stop offset="100%" stop-color="#d8d0c0"/>
+  </linearGradient>
+
+  <radialGradient id="lakeBgVignette" cx="0.5" cy="0.42" r="0.82">
+    <stop offset="0%" stop-color="#ffffff" stop-opacity="0"/>
+    <stop offset="72%" stop-color="#c7bcab" stop-opacity="1"/>
+    <stop offset="100%" stop-color="#8a7d68" stop-opacity="1"/>
+  </radialGradient>
+
+  <radialGradient id="lakeBgGlow" cx="0.5" cy="0.18" r="0.42">
+    <stop offset="0%" stop-color="#ffffff" stop-opacity="1"/>
+    <stop offset="65%" stop-color="#ffffff" stop-opacity="0"/>
+  </radialGradient>
+
+  <!-- card glow filters -->
+  <filter id="cardGlowFilter" x="-20%" y="-20%" width="140%" height="140%">
+    <feGaussianBlur stdDeviation="6" result="blur"/>
+    <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+  </filter>
+  <filter id="cardShadow" x="-15%" y="-15%" width="130%" height="140%">
+    <feGaussianBlur in="SourceAlpha" stdDeviation="6" result="blur"/>
+    <feOffset dx="0" dy="4" result="offset"/>
+    <feFlood flood-color="#2e7d5e" flood-opacity="0.18" result="color"/>
+    <feComposite in="color" in2="offset" operator="in" result="shadow"/>
+    <feMerge><feMergeNode in="shadow"/><feMergeNode in="SourceGraphic"/></feMerge>
+  </filter>
+  <filter id="dotGlow" x="-40%" y="-40%" width="180%" height="180%">
+    <feGaussianBlur stdDeviation="1.8" result="blur"/>
+    <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+  </filter>
+  <clipPath id="lakeClip"><rect x="14" y="350" width="492" height="100" rx="20"/></clipPath>
+</defs>
+
+<!-- background -->
+<rect width="520" height="520" fill="url(#lakeBgGrad)"/>
+<rect width="520" height="520" fill="url(#lakeBgGlow)"/>
+<rect width="520" height="520" fill="url(#lakeBgVignette)"/>
+
+<g transform="translate(0, 20)">
+<!-- ══════════ LAKE (blue) ══════════ -->
+<g clip-path="url(#lakeClip)">
+  <path class="wave1" d="M-20,370 Q25,359 65,370 Q105,381 145,370 Q185,359 225,370 Q265,381 305,370 Q345,359 385,370 Q425,381 465,370 Q505,359 545,370 Q585,381 625,370" fill="none" stroke="#5F9FF2" stroke-width="3.2" stroke-linecap="round" stroke-opacity="0.9"/>
+  <path class="wave2" d="M-20,384 Q28,374 68,384 Q108,394 148,384 Q188,374 228,384 Q268,394 308,384 Q348,374 388,384 Q428,394 468,384 Q508,374 548,384" fill="none" stroke="#73AFF7" stroke-width="2.6" stroke-linecap="round" stroke-opacity="0.78"/>
+  <path class="wave3" d="M-20,398 Q30,388 70,398 Q110,408 150,398 Q190,388 230,398 Q270,408 310,398 Q350,388 390,398 Q430,408 470,398 Q510,388 550,398" fill="none" stroke="#8BBEF9" stroke-width="2.2" stroke-linecap="round" stroke-opacity="0.68"/>
+  <path class="wave4" d="M-20,411 Q28,402 68,411 Q108,420 148,411 Q188,402 228,411 Q268,420 308,411 Q348,402 388,411 Q428,420 468,411" fill="none" stroke="#A8CDFB" stroke-width="2" stroke-linecap="round" stroke-opacity="0.6"/>
+</g>
+<text x="260" y="436" text-anchor="middle" font-family="Inter,system-ui,-apple-system,sans-serif" font-size="12" fill="#4a84d4" letter-spacing="3.2" font-weight="700" opacity="0.95">OPEN DATA LAKE</text>
+
+<!-- ══════════ APACHE DORIS CARD ══════════ -->
+<!-- glow halo -->
+<rect x="95" y="232" width="330" height="112" rx="18" fill="#2e7d5e" opacity="0.12" class="card-glow-doris" filter="url(#cardGlowFilter)"/>
+<!-- card body -->
+<rect x="100" y="236" width="320" height="108" rx="16" fill="url(#dorisCardGrad)" stroke="#2e7d5e" stroke-width="1.5" stroke-opacity="0.35" filter="url(#cardShadow)"/>
+<!-- title -->
+<text x="260" y="284" text-anchor="middle" font-family="Inter,system-ui,-apple-system,sans-serif" font-size="20" font-weight="700" fill="#1c5038" letter-spacing="-0.2">Apache Doris</text>
+<text x="260" y="302" text-anchor="middle" font-family="Inter,system-ui,-apple-system,sans-serif" font-size="10" fill="#4a9070" letter-spacing="1.8" font-weight="600">LAKEHOUSE ANALYTICS ENGINE</text>
+
+<!-- ══════════ CONNECTOR LINES doris → top cards ══════════ -->
+<path class="conn-line" d="M 195,236 C 174,218 158,200 150,180"/>
+<path class="conn-line" d="M 260,236 C 260,220 260,202 260,180"/>
+<path class="conn-line" d="M 325,236 C 346,218 362,200 370,180"/>
+
+<!-- connector dots -->
+<circle class="cdot cd1" filter="url(#dotGlow)" style="offset-path:path('M 195,236 C 174,218 158,200 150,180');"/>
+<circle class="cdot cd2" filter="url(#dotGlow)" style="offset-path:path('M 195,236 C 174,218 158,200 150,180');"/>
+<circle class="cdot cd3" filter="url(#dotGlow)" style="offset-path:path('M 195,236 C 174,218 158,200 150,180');"/>
+<circle class="cdot cd4" filter="url(#dotGlow)" style="offset-path:path('M 260,236 C 260,220 260,202 260,180');"/>
+<circle class="cdot cd5" filter="url(#dotGlow)" style="offset-path:path('M 260,236 C 260,220 260,202 260,180');"/>
+<circle class="cdot cd6" filter="url(#dotGlow)" style="offset-path:path('M 260,236 C 260,220 260,202 260,180');"/>
+<circle class="cdot cd7" filter="url(#dotGlow)" style="offset-path:path('M 325,236 C 346,218 362,200 370,180');"/>
+<circle class="cdot cd8" filter="url(#dotGlow)" style="offset-path:path('M 325,236 C 346,218 362,200 370,180');"/>
+<circle class="cdot cd9" filter="url(#dotGlow)" style="offset-path:path('M 325,236 C 346,218 362,200 370,180');"/>
+
+<!-- ══════════ TOP CARDS (with gaps) ══════════ -->
+<!-- card width: 146, gap: 14, start x: 18 -->
+<!-- Left x=18, Center x=178, Right x=338 -->
+
+<!-- ── LEFT: Real-Time BI ── -->
+<!-- glow halo -->
+<rect x="13" y="38" width="156" height="132" rx="16" fill="#2e7d5e" opacity="0.1" class="card-glow" filter="url(#cardGlowFilter)"/>
+<!-- card -->
+<rect x="18" y="42" width="146" height="128" rx="14" fill="url(#topCardGrad)" stroke="#2e7d5e" stroke-width="1" stroke-opacity="0.25" filter="url(#cardShadow)"/>
+<!-- bar chart — centered in card, well within bounds -->
+<g transform="translate(91, 128)">
+  <line x1="-52" y1="0" x2="52" y2="0" stroke="#2e7d5e" stroke-width="0.8" stroke-opacity="0.2"/>
+  <rect class="bar b1" x="-50" y="-44" width="14" height="44"/>
+  <rect class="bar b2" x="-29" y="-34" width="14" height="34"/>
+  <rect class="bar b3" x="-8"  y="-48" width="14" height="48"/>
+  <rect class="bar b4" x="13"  y="-38" width="14" height="38"/>
+  <rect class="bar b5" x="34"  y="-28" width="14" height="28"/>
+</g>
+<!-- ── CENTER: Data Interaction ── -->
+<rect x="173" y="38" width="156" height="132" rx="16" fill="#2e7d5e" opacity="0.1" class="card-glow-2" filter="url(#cardGlowFilter)"/>
+<rect x="178" y="42" width="146" height="128" rx="14" fill="url(#topCardGrad)" stroke="#2e7d5e" stroke-width="1" stroke-opacity="0.25" filter="url(#cardShadow)"/>
+<!-- pipeline — horizontally centered -->
+<rect x="196" y="99" width="110" height="14" rx="7" fill="url(#pipeGrad)" stroke="#4a9070" stroke-width="1.2" stroke-opacity="0.5"/>
+<circle cx="204" cy="106" r="8" fill="#beded0" stroke="#4a9070" stroke-width="1.2" stroke-opacity="0.5"/>
+<circle cx="204" cy="106" r="4.5" fill="#2e7d5e" opacity="0.8"/>
+<circle cx="298" cy="106" r="8" fill="#beded0" stroke="#4a9070" stroke-width="1.2" stroke-opacity="0.5"/>
+<circle cx="298" cy="106" r="4.5" fill="#2e7d5e" opacity="0.8"/>
+<!-- glow ring midpoint -->
+<circle cx="251" cy="106" r="5" class="gring"/>
+<circle cx="251" cy="106" r="5" class="gring gring2"/>
+<!-- flow dots -->
+<circle class="pdot pd1" style="offset-path:path('M 212,106 L 290,106');"/>
+<circle class="pdot pd2" style="offset-path:path('M 212,106 L 290,106');"/>
+<circle class="pdot pd3" style="offset-path:path('M 212,106 L 290,106');"/>
+<circle class="pdot pd4" style="offset-path:path('M 212,106 L 290,106');"/>
+
+<!-- ── RIGHT: Data Governance ── -->
+<rect x="333" y="38" width="156" height="132" rx="16" fill="#2e7d5e" opacity="0.1" class="card-glow-3" filter="url(#cardGlowFilter)"/>
+<rect x="338" y="42" width="146" height="128" rx="14" fill="url(#topCardGrad)" stroke="#2e7d5e" stroke-width="1" stroke-opacity="0.25" filter="url(#cardShadow)"/>
+<!-- lock icon — centered -->
+<g transform="translate(411, 106)">
+  <rect class="lock-body" x="-19" y="-2" width="38" height="28" rx="6" fill="#2e7d5e"/>
+  <rect x="-19" y="-2" width="38" height="28" rx="6" fill="none" stroke="#2e7d5e" stroke-width="2"/>
+  <circle cx="0" cy="10" r="5" fill="#2e7d5e" opacity="0.5"/>
+  <rect x="-2.5" y="10" width="5" height="7" rx="2" fill="#2e7d5e" opacity="0.5"/>
+  <path class="lock-shackle" d="M -12,0 L -12,-13 Q -12,-22 0,-22 Q 12,-22 12,-13 L 12,0" fill="none" stroke="#2e7d5e" stroke-width="3.5" stroke-linecap="round"/>
+</g>
+
+</g>
+</svg>
+</div>
+</div>
+</body>
+</html>
