@@ -42,6 +42,10 @@ export default function DownloadFormNext(): JSX.Element {
     const changeCPU = (val: string) => {
         setCPU(val);
         const nextDownloadInfo = cpus.find(item => item.value === val);
+        if (!nextDownloadInfo || typeof nextDownloadInfo.gz !== 'string') {
+            setDownloadInfo({});
+            return;
+        }
         const filename = nextDownloadInfo.gz.split(ORIGIN)[1];
         nextDownloadInfo.filename = filename;
         setDownloadInfo(nextDownloadInfo);
@@ -97,9 +101,19 @@ export default function DownloadFormNext(): JSX.Element {
 
     useEffect(() => {
         const currentVersion = DORIS_VERSIONS.find(doris_version => doris_version.value === version);
+        if (!currentVersion || !Array.isArray(currentVersion.children)) {
+            setCpus([]);
+            setCPU(CPUEnum.X64);
+            setDownloadInfo({});
+            return;
+        }
         setCpus(currentVersion.children);
         setCPU(CPUEnum.X64);
         const nextDownloadInfo: any = currentVersion.children.find(item => item.value === CPUEnum.X64);
+        if (!nextDownloadInfo || typeof nextDownloadInfo.gz !== 'string') {
+            setDownloadInfo({});
+            return;
+        }
         const filename = nextDownloadInfo.gz.split(ORIGIN)[1];
         nextDownloadInfo.filename = filename;
         setDownloadInfo(nextDownloadInfo);
@@ -385,7 +399,7 @@ export default function DownloadFormNext(): JSX.Element {
                         <ul className="mt-10 grid gap-x-6 gap-y-3 lg:grid-cols-3 lg:gap-y-0">
                             {RUN_ANYWHERE.map(item => (
                                 <div
-                                    onClick={() => window.open(item.link)}
+                                    onClick={() => window.open(item.link, '_blank', 'noopener,noreferrer')}
                                     key={item.title}
                                     className="run-anywhere-card relative bg-white flex cursor-pointer flex-col items-center justify-center overflow-hidden rounded-lg border-b-4 border-b-primary py-[2rem] px-4 lg:px-[1.5rem] shadow-[inset_0_0_0_1px_#11A679] hover:no-underline"
                                 >

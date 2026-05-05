@@ -51,7 +51,11 @@ export function LayoutNext({ title, description, onSwitchBack, children }: Layou
                                 return;
                             }
                             if (typeof window !== 'undefined') {
-                                window.localStorage.removeItem('doris-home-version');
+                                try {
+                                    window.localStorage.removeItem('doris-home-version');
+                                } catch {
+                                    // localStorage may be unavailable (private mode / disabled cookies)
+                                }
                                 window.location.assign('/');
                             }
                         }}

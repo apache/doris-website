@@ -10,6 +10,14 @@ const GITHUB_REPO = 'apache/doris';
 const FALLBACK_STARS = '-';
 const HOME_VERSION_KEY = 'doris-home-version';
 
+function safeSetLocalStorage(key: string, value: string): void {
+    try {
+        window.localStorage.setItem(key, value);
+    } catch {
+        // localStorage may be unavailable (Safari private mode, disabled cookies, quota errors)
+    }
+}
+
 function formatStars(n: number): string {
     if (n >= 1000) return `${(n / 1000).toFixed(1)}k`;
     return String(n);
@@ -175,7 +183,7 @@ export function NavbarNext(): JSX.Element {
                     className="navbar-next__logo"
                     aria-label="Apache Doris"
                     onClick={() => {
-                        window.localStorage.setItem(HOME_VERSION_KEY, 'next');
+                        safeSetLocalStorage(HOME_VERSION_KEY, 'next');
                     }}
                 >
                     <img src="/images/logo-doris.svg" alt="Apache Doris" />
