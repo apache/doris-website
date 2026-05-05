@@ -47,6 +47,7 @@ const GET_STARTED_HREF = '/docs-next/dev/getting-started/intro';
 type TokenClass = 'kw' | 'fn' | 'str' | 'num' | 'op' | 'cmt';
 type SqlToken = [TokenClass, string];
 type SqlLine = SqlToken[];
+type SqlRunState = 'typing' | 'ready' | 'executing' | 'done';
 
 const SQL_LINES: SqlLine[] = [
     [['kw', 'SELECT '], ['fn', 'title']],
@@ -55,7 +56,7 @@ const SQL_LINES: SqlLine[] = [
     [['op', '  '], ['kw', 'AND '], ['fn', 'MATCH'], ['op', '('], ['fn', 'content'], ['op', ', '], ['str', "'hybrid search'"], ['op', ')']],
     [['op', '  '], ['kw', 'AND '], ['fn', 'COSINE_SIMILARITY'], ['op', '('], ['fn', 'embedding'], ['op', ', '], ['num', '[0.12, ...]'], ['op', ') > '], ['num', '0.8']],
     [['kw', 'ORDER BY '], ['fn', 'publish_time'], ['kw', ' DESC']],
-    [['kw', 'LIMIT '], ['num', '5'], ['op', ';']],
+    [['kw', 'LIMIT '], ['num', '3'], ['op', ';']],
 ];
 
 interface FlatSeg {
@@ -88,16 +89,23 @@ interface TypewriterResult {
     activeLine: number;
 }
 
-function useTypewriter(lines: SqlLine[], speed = 11, finalPause = 2400): TypewriterResult {
+function useTypewriter(lines: SqlLine[], resetKey: number, speed = 11): TypewriterResult {
     const flat = useMemo(() => flattenLines(lines), [lines]);
     const totalChars = useMemo(() => flat.reduce((s, l) => s + l.total, 0), [flat]);
     const [tick, setTick] = useState(0);
 
     useEffect(() => {
-        const cycle = totalChars + Math.floor(finalPause / speed);
-        const id = setInterval(() => setTick(t => (t + 1) % cycle), speed);
-        return () => clearInterval(id);
-    }, [totalChars, speed, finalPause]);
+        setTick(0);
+        let current = 0;
+        const id = window.setInterval(() => {
+            current += 1;
+            setTick(current);
+            if (current >= totalChars) {
+                window.clearInterval(id);
+            }
+        }, speed);
+        return () => window.clearInterval(id);
+    }, [totalChars, speed, resetKey]);
 
     const typed = Math.min(tick, totalChars);
     const isDone = tick >= totalChars;
@@ -129,16 +137,62 @@ function useTypewriter(lines: SqlLine[], speed = 11, finalPause = 2400): Typewri
 
 // ─── SQL Card ────────────────────────────────────────────────────────────────
 
-function SqlCard(): JSX.Element {
-    const { rendered, isDone, activeLine } = useTypewriter(SQL_LINES);
+interface SqlCardProps {
+    rendered: Array<Array<{ cls: TokenClass; text: string }>>;
+    isDone: boolean;
+    activeLine: number;
+    runState: SqlRunState;
+    onRun: () => void;
+    onReset: () => void;
+}
+
+function SqlCard({ rendered, isDone, activeLine, runState, onRun, onReset }: SqlCardProps): JSX.Element {
+    const showStatus = runState === 'executing' || runState === 'done';
+
     return (
         <div className="hn-sql-card">
-            <div className="hn-sql-card__bar">
+            <div className={`hn-sql-card__bar hn-sql-card__bar--${runState}`}>
                 <span className="hn-sql-card__dot hn-sql-card__dot--r" />
                 <span className="hn-sql-card__dot hn-sql-card__dot--y" />
                 <span className="hn-sql-card__dot hn-sql-card__dot--g" />
-                <span className="hn-sql-card__title">~/queries/realtime.sql</span>
-                <span className="hn-sql-card__tag">DORIS</span>
+                <span className="hn-sql-card__title">~/realtime.sql</span>
+                <div className="hn-sql-card__bar-actions">
+                    {showStatus && (
+                        <div className="hn-sql-card__status">
+                            <LightningSvg size={14} />
+                            {runState === 'executing' && (
+                                <span className="hn-sql-card__result-text" role="status" aria-live="polite">
+                                    EXECUTING QUERY ...
+                                </span>
+                            )}
+                            {runState === 'done' && (
+                                <span className="hn-sql-card__result-time">0.043s</span>
+                            )}
+                        </div>
+                    )}
+                    {runState === 'done' ? (
+                        <button
+                            type="button"
+                            className="hn-sql-card__run hn-sql-card__run--reset"
+                            onClick={onReset}
+                            aria-label="Reset"
+                        >
+                            <span className="hn-sql-card__run-glyph" aria-hidden="true">↺</span>
+                            RESET
+                        </button>
+                    ) : (
+                        <button
+                            type="button"
+                            className={`hn-sql-card__run${runState === 'ready' ? ' hn-sql-card__run--pulse' : ''}`}
+                            onClick={onRun}
+                            disabled={runState !== 'ready'}
+                            aria-label="Run query"
+                        >
+                            <span className="hn-sql-card__run-glyph" aria-hidden="true">▶</span>
+                            RUN
+                        </button>
+                    )}
+                </div>
             </div>
             <div className="hn-sql-card__body">
                 {SQL_LINES.map((_, i) => (
@@ -157,15 +211,111 @@ function SqlCard(): JSX.Element {
                     </div>
                 ))}
             </div>
-            <div className="hn-sql-card__result">
-                <LightningSvg size={18} />
-                <span className="hn-sql-card__result-text">
-                    {isDone ? '5 docs · scanned 18.4M vectors' : 'Executing query…'}
-                </span>
-                <span className="hn-sql-card__result-time">
-                    {isDone ? '0.043s' : '—'}
-                </span>
+        </div>
+    );
+}
+
+// ─── Result Table ────────────────────────────────────────────────────────────
+
+interface QueryRow {
+    rank: number;
+    title: string;
+    date: string;
+    sim: number;
+}
+
+const QUERY_RESULTS: QueryRow[] = [
+    { rank: 1, title: 'A Practical Guide to Hybrid Search in Production', date: '2026-04-22', sim: 0.96 },
+    { rank: 2, title: 'Vector + BM25: Lessons from Re-ranking 1B Documents', date: '2026-04-15', sim: 0.93 },
+    { rank: 3, title: 'Why Apache Doris Beats Bolt-On Vector Stores', date: '2026-04-09', sim: 0.91 },
+];
+
+function ResultTable(): JSX.Element {
+    return (
+        <div className="hn-result-table">
+            <div className="hn-result-table__head">
+                <span className="hn-result-table__head-cell hn-result-table__head-cell--rank">#</span>
+                <span className="hn-result-table__head-cell">title</span>
+                <span className="hn-result-table__head-cell hn-result-table__head-cell--date">publish_time</span>
+                <span className="hn-result-table__head-cell hn-result-table__head-cell--num">cosine_sim</span>
             </div>
+            <div className="hn-result-table__body">
+                {QUERY_RESULTS.map((r, i) => (
+                    <div
+                        key={r.rank}
+                        className="hn-result-table__row"
+                        style={{ animationDelay: `${80 + i * 90}ms` }}
+                    >
+                        <span className="hn-result-table__cell hn-result-table__cell--rank">{r.rank}</span>
+                        <span className="hn-result-table__cell hn-result-table__cell--title">{r.title}</span>
+                        <span className="hn-result-table__cell hn-result-table__cell--date">{r.date}</span>
+                        <span className="hn-result-table__cell hn-result-table__cell--num">{r.sim.toFixed(3)}</span>
+                    </div>
+                ))}
+            </div>
+            <div className="hn-result-table__footer">
+                <LightningSvg size={13} color="#0F1A14" />
+                <span className="hn-result-table__footer-text">3 docs · scanned 18.4M vectors</span>
+            </div>
+        </div>
+    );
+}
+
+// ─── SQL Editor Panel ────────────────────────────────────────────────────────
+
+function SqlEditorPanel(): JSX.Element {
+    const [runState, setRunState] = useState<SqlRunState>('typing');
+    const [runKey, setRunKey] = useState(0);
+    const { rendered, isDone, activeLine } = useTypewriter(SQL_LINES, runKey);
+
+    useEffect(() => {
+        if (isDone && runState === 'typing') {
+            setRunState('ready');
+        }
+    }, [isDone, runState]);
+
+    useEffect(() => {
+        if (runState !== 'executing') return undefined;
+        const id = window.setTimeout(() => setRunState('done'), 43);
+        return () => window.clearTimeout(id);
+    }, [runState]);
+
+    const onRun = () => {
+        if (runState === 'ready') setRunState('executing');
+    };
+
+    const onReset = () => {
+        setRunState('typing');
+        setRunKey(k => k + 1);
+    };
+
+    const isResultVisible = runState === 'done';
+
+    return (
+        <div className="hero-next__card-wrap">
+            <div className="hero-next__sql-wrap">
+                <SqlCard
+                    rendered={rendered}
+                    isDone={isDone}
+                    activeLine={activeLine}
+                    runState={runState}
+                    onRun={onRun}
+                    onReset={onReset}
+                />
+                {isResultVisible && (
+                    <div className="hero-next__perf-pill">
+                        <LightningSvg size={14} color="#0F1A14" />
+                        <span>
+                            <strong>Structured, full-text, and vector</strong> search, all in one SQL.
+                        </span>
+                    </div>
+                )}
+            </div>
+            {isResultVisible && (
+                <div className="hero-next__result-wrap">
+                    <ResultTable />
+                </div>
+            )}
         </div>
     );
 }
@@ -667,18 +817,7 @@ export function HeroSection(): JSX.Element {
 
                 {/* ── Right column ── */}
                 <div className="hero-next__right">
-                    <div className="hero-next__card-wrap">
-                        <div className="hero-next__sql-wrap">
-                            <SqlCard />
-                            <div className="hero-next__perf-pill">
-                                <LightningSvg size={14} color="#0F1A14" />
-                                <span>
-                                    <strong>Structured, full-text, and vector</strong> search, all in one SQL.
-                                </span>
-                            </div>
-                        </div>
-                        {/* <ReportCarousel /> */}
-                    </div>
+                    <SqlEditorPanel />
                 </div>
             </div>
 

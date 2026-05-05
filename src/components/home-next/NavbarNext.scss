@@ -12,7 +12,7 @@
     --nb-mono: 'JetBrains Mono', 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
 
     position: sticky;
-    top: 0;
+    top: var(--home-next-banner-height, 0px);
     z-index: 100;
     width: 100%;
     background: var(--nb-green-dark);
