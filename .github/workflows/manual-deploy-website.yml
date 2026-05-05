@@ -42,7 +42,12 @@ jobs:
                   yarn cache clean
                   export NODE_OPTIONS=--max-old-space-size=8192
                   yarn
-                  PWA_SERVICE_WORKER_URL=https://doris.apache.org/sw.js yarn docusaurus build --locale en --locale zh-CN
+                  # Build each locale separately into its own out-dir to halve per-process peak memory and avoid OOM on the GitHub-hosted runner.
+                  PWA_SERVICE_WORKER_URL=https://doris.apache.org/sw.js yarn docusaurus build --locale en --out-dir build-en
+                  PWA_SERVICE_WORKER_URL=https://doris.apache.org/sw.js yarn docusaurus build --locale zh-CN --out-dir build-zh
+                  rm -rf ./build && mkdir ./build
+                  cp -a ./build-en/. ./build/
+                  cp -a ./build-zh/zh-CN/. ./build/zh-CN/
                   if [ ! -d "./ja-build" ]; then
                       echo "ja-build directory not found, aborting to avoid publishing incorrect ja content."
                       exit 1
