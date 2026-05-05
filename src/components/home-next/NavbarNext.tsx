@@ -3,7 +3,7 @@ import Link from '@docusaurus/Link';
 import { useLocation } from '@docusaurus/router';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import DropdownNavbarItem from '@theme/NavbarItem/DropdownNavbarItem';
-import { getLocalePrefix, isDocsNextPath, normalizePathname } from '@site/src/utils/locale';
+import { getLocalePrefix, isDocsNextPath, isReleasesPath, normalizePathname } from '@site/src/utils/locale';
 import './NavbarNext.scss';
 
 const GITHUB_REPO = 'apache/doris';
@@ -47,7 +47,7 @@ interface NavItem {
     items: DropdownItem[];
 }
 
-function buildNavItems(docsHref: string): NavItem[] {
+function buildNavItems(docsHref: string, releasesHref: string): NavItem[] {
     return [
         {
             label: 'Why Doris',
@@ -74,7 +74,7 @@ function buildNavItems(docsHref: string): NavItem[] {
         {
             label: 'Resouces',
             items: [
-                { label: 'Release Notes', href: '/releases/all-release' },
+                { label: 'Release Notes', href: releasesHref },
                 { label: 'Blogs', href: '/blogs-next' },
                 { label: 'News and Events', href: '/events' },
             ],
@@ -132,15 +132,19 @@ export function NavbarNext(): JSX.Element {
     const { pathname, search, hash } = useLocation();
     const stars = useGitHubStars(GITHUB_REPO, FALLBACK_STARS);
     const [mobileOpen, setMobileOpen] = useState(false);
-    const docsHref = `${getLocalePrefix(currentLocale, defaultLocale)}/docs-next/dev/getting-started/what-is-apache-doris`;
-    const navItems = buildNavItems(docsHref);
+    const localePrefix = getLocalePrefix(currentLocale, defaultLocale);
+    const docsHref = `${localePrefix}/docs-next/dev/getting-started/what-is-apache-doris`;
+    const releasesHref = `${localePrefix}/releases/all-release`;
+    const navItems = buildNavItems(docsHref, releasesHref);
     const [expandedMobileItem, setExpandedMobileItem] = useState(navItems[0]?.label ?? '');
     const isDocsNextPage = isDocsNextPath(pathname, [defaultLocale, 'zh-CN']);
+    const isReleasesPage = isReleasesPath(pathname, [defaultLocale, 'zh-CN']);
+    const showLocaleSwitcher = isDocsNextPage || isReleasesPage;
     const homeHref = `${getLocalePrefix(currentLocale, defaultLocale)}/`;
     const localeSwitchLabel = currentLocale === 'zh-CN' ? localeConfigs[defaultLocale]?.label ?? 'English' : '中文';
-    const currentDocsNextPath = normalizePathname(pathname, [defaultLocale, 'zh-CN']);
+    const currentLocalizedPath = normalizePathname(pathname, [defaultLocale, 'zh-CN']);
     const buildLocaleHref = (locale: string) =>
-        `${locale === defaultLocale ? '' : `/${locale}`}${currentDocsNextPath}${search}${hash}`;
+        `${locale === defaultLocale ? '' : `/${locale}`}${currentLocalizedPath}${search}${hash}`;
     const localeItems = [defaultLocale, 'zh-CN']
         .filter((locale, index, arr) => arr.indexOf(locale) === index)
         .map(locale => ({
@@ -196,7 +200,7 @@ export function NavbarNext(): JSX.Element {
                 </div>
 
                 <div className="navbar-next__actions">
-                    {isDocsNextPage && (
+                    {showLocaleSwitcher && (
                         <DropdownNavbarItem
                             mobile={false}
                             label={
@@ -290,7 +294,7 @@ export function NavbarNext(): JSX.Element {
                 </div>
 
                 <div className="navbar-next__mobile-actions">
-                    {isDocsNextPage && (
+                    {showLocaleSwitcher && (
                         <DropdownNavbarItem
                             mobile={false}
                             label={

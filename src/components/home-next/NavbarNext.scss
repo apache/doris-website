@@ -199,10 +199,10 @@
             align-items: center;
             justify-content: center;
             gap: 0.2rem;
-            min-width: 2.875rem;
-            height: 2.625rem;
+            box-sizing: border-box;
+            height: 32px;
             margin-left: 0;
-            padding: 0 0.75rem;
+            padding: 0 10px;
             border: 1px solid rgba(245, 239, 228, 0.22);
             border-radius: 4px;
             background: rgba(245, 239, 228, 0.06);
@@ -222,8 +222,8 @@
 
         .navbar-next__locale-icon {
             display: inline-block;
-            width: 1rem;
-            height: 1rem;
+            width: 14px;
+            height: 14px;
             flex-shrink: 0;
             color: var(--nb-cream-light);
         }
@@ -233,7 +233,9 @@
         display: inline-flex;
         align-items: center;
         gap: 8px;
-        padding: 6px 12px 6px 10px;
+        box-sizing: border-box;
+        height: 32px;
+        padding: 0 12px 0 10px;
         border: 1px solid rgba(245, 239, 228, 0.22);
         border-radius: 4px;
 	        @include type.mono-text(12px, 500, 1.2, 0.02em);

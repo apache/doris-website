@@ -60,9 +60,10 @@
     &__header-right {
         display: flex;
         justify-content: flex-end;
-        align-items: center;
+        align-items: flex-start;
         flex: 1 1 280px;
         min-width: 280px;
+        padding-top: calc(13px * 1.2 + 28px);
     }
 
     &__headline {
@@ -84,9 +85,9 @@
         width: min(100%, 420px);
         display: flex;
         flex-direction: column;
-        justify-content: center;
+        justify-content: flex-start;
         gap: 6px;
-        padding: 6px 0;
+        padding: 0;
         color: var(--en-ink);
         font-family: type.$font-mono;
         text-align: left;
