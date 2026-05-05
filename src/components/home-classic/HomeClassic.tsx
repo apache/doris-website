@@ -18,11 +18,7 @@ import { UserCaseCarousel } from '@site/src/components/user-case-carousel';
 import { NewsLetterSwiper } from '@site/src/components/newsletter-swiper';
 import { DEFAULT_VERSION } from '@site/src/constant/version';
 
-interface HomeClassicProps {
-    onTryNew: () => void;
-}
-
-export default function HomeClassic({ onTryNew }: HomeClassicProps): JSX.Element {
+export default function HomeClassic(): JSX.Element {
     const { siteConfig } = useDocusaurusContext();
     const { isPhone } = usePhone();
 

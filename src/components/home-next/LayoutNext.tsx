@@ -42,17 +42,22 @@ export function LayoutNext({ title, description, onSwitchBack, children }: Layou
                 <span className="home-next-preview-banner__text">
                     You're viewing the preview version of this page. For the full experience, please return to the
                     {' '}
-                    {onSwitchBack ? (
-                        <button
-                            type="button"
-                            className="home-next-preview-banner__link"
-                            onClick={onSwitchBack}
-                        >
-                            classic homepage
-                        </button>
-                    ) : (
-                        'classic homepage'
-                    )}
+                    <button
+                        type="button"
+                        className="home-next-preview-banner__link"
+                        onClick={() => {
+                            if (onSwitchBack) {
+                                onSwitchBack();
+                                return;
+                            }
+                            if (typeof window !== 'undefined') {
+                                window.localStorage.removeItem('doris-home-version');
+                                window.location.assign('/');
+                            }
+                        }}
+                    >
+                        classic homepage
+                    </button>
                     .
                 </span>
             </div>

@@ -36,7 +36,7 @@ export default function Home(): JSX.Element {
             {isNext ? (
                 <HomeNext onSwitchBack={() => handleToggle(false)} />
             ) : (
-                <HomeClassic onTryNew={() => handleToggle(true)} />
+                <HomeClassic />
             )}
             {transitioning && <HomeTransition onComplete={handleTransitionComplete} />}
             {/* Toggle button only renders client-side to avoid SSR hydration mismatch */}
