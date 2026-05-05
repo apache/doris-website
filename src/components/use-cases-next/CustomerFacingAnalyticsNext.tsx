@@ -667,13 +667,14 @@ function CTASection(): JSX.Element {
                         </svg>
                         Get Started
                     </Link>
-                    <Link
+                    <button
+                        type="button"
                         className="btn btn-primary"
-                        to="#"
+                        disabled
+                        aria-disabled="true"
                     >
-                        Try a Demo (Comming Soon)
-                        <span aria-hidden="true">→</span>
-                    </Link>
+                        Try a Demo (coming soon)
+                    </button>
                 </div>
             </div>
         </section>

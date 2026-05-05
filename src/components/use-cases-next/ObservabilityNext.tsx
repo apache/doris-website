@@ -8,6 +8,7 @@ import React, {
     useRef,
     useState,
 } from 'react';
+import Link from '@docusaurus/Link';
 import { LayoutNext } from '@site/src/components/home-next/LayoutNext';
 import './ObservabilityNext.scss';
 
@@ -698,7 +699,7 @@ function CtaSection(): JSX.Element {
                     with <span className="accent">Apache Doris.</span>
                 </h2>
                 <div className="cta-actions" data-reveal data-reveal-delay="2">
-                    <a className="btn btn-yellow" href="#">
+                    <Link className="btn btn-yellow" to="/download">
                         <svg
                             width="14"
                             height="14"
@@ -710,12 +711,16 @@ function CtaSection(): JSX.Element {
                         >
                             <path d="M12 4v12m0 0l-5-5m5 5l5-5M4 20h16" />
                         </svg>
-                        Get Started with Apache Doris
-                    </a>
-                    <a className="btn btn-primary" href="#TODO">
-                        Try an Observability Demo
-                        <span aria-hidden="true">→</span>
-                    </a>
+                        Get Started
+                    </Link>
+                    <button
+                        type="button"
+                        className="btn btn-primary"
+                        disabled
+                        aria-disabled="true"
+                    >
+                        Try a Demo (coming soon)
+                    </button>
                 </div>
             </div>
         </section>
