@@ -339,17 +339,18 @@ const valueCards: ValueCard[] = [
 
 const cases: CaseStudy[] = [
     {
-        id: 'millions',
+        id: 'jd',
         num: 'Case · 01',
-        title: 'Powering Real-Time Analytics for Millions of Users',
-        quote: 'We needed sub-second latency at high concurrency, and Doris made it possible.',
-        scenario: 'Customer-facing dashboards for large-scale user analytics.',
+        title: 'Real-Time OLAP for JD.com Search Box',
+        quote: 'Replacing Flink’s window computing with Doris improved development efficiency, adapted to dimension changes, and reduced computing resources.',
+        scenario:
+            'Real-time analytics for the JD.com search box: overall search traffic, online A/B test monitoring, and trending search word lists, all refined to SKU-level granularity for business analysts.',
         outcomes: [
-            'Sub-second query latency',
-            'High-concurrency access',
-            'Real-time data visibility',
+            'Processes a daily volume of 10 billion data rows',
+            'Achieves high throughput with 10,000 QPS and a minimum query latency of 150ms.',
+            'Enables real-time data ingestion by 1 million rows per second.',
         ],
-        href: '#',
+        href: 'https://www.velodb.io/blog/jd-com-s-exploration-practice-apache-doris',
     },
     {
         id: 'merchants',
