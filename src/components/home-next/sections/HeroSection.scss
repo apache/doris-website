@@ -243,6 +243,7 @@
         color: var(--hn-ink);
         font-family: var(--hn-mono);
         font-size: 11px;
+        font-weight: 700;
         padding: 8px 12px;
         border-radius: 4px;
         display: inline-flex;
@@ -1078,9 +1079,18 @@
             position: relative;
             right: auto;
             bottom: auto;
-            margin: 10px 0 0 auto;
+            margin: 10px 0 0;
             transform: none;
-            white-space: normal;
+            white-space: nowrap;
+            display: flex;
+            width: 100%;
+            max-width: none;
+            justify-content: center;
+            text-align: center;
+            box-sizing: border-box;
+            font-size: clamp(8px, 2.4vw, 11px);
+            letter-spacing: 0;
+            gap: 6px;
         }
     }
 

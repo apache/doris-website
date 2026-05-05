@@ -1188,7 +1188,6 @@ $cfa-ease-out-quint: cubic-bezier(0.2, 0.8, 0.2, 1);
             &[data-offset='1'],
             &[data-offset='-2'],
             &[data-offset='2'] {
-                transform: translateX(0) translateZ(0);
                 opacity: 0;
                 pointer-events: none;
             }

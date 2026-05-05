@@ -1,5 +1,6 @@
 $dw-bp-md: 1100px;
 $dw-bp-sm: 700px;
+$dw-bp-xs: 480px;
 
 $dw-ease-out-quint: cubic-bezier(0.2, 0.8, 0.2, 1);
 
@@ -1122,7 +1123,7 @@ $dw-ease-out-quint: cubic-bezier(0.2, 0.8, 0.2, 1);
         }
 
         .cf-card {
-            width: 280px;
+            width: min(320px, calc(100vw - 64px));
             padding: 22px;
 
             &[data-offset='-1'],
@@ -1132,6 +1133,19 @@ $dw-ease-out-quint: cubic-bezier(0.2, 0.8, 0.2, 1);
                 opacity: 0;
                 pointer-events: none;
             }
+        }
+        .section-tech .cf-card {
+            width: min(320px, calc(100vw - 64px));
+        }
+    }
+
+    @media (max-width: $dw-bp-xs) {
+        .cf-card {
+            width: calc(100vw - 36px);
+            padding: 20px;
+        }
+        .section-tech .cf-card {
+            width: calc(100vw - 36px);
         }
     }
 }

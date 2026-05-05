@@ -7,7 +7,7 @@ import { getLocalePrefix, isDocsNextPath, normalizePathname } from '@site/src/ut
 import './NavbarNext.scss';
 
 const GITHUB_REPO = 'apache/doris';
-const FALLBACK_STARS = '14.2k';
+const FALLBACK_STARS = '-';
 const HOME_VERSION_KEY = 'doris-home-version';
 
 function formatStars(n: number): string {
