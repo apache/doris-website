@@ -37,7 +37,7 @@
     font-feature-settings: "cv11", "ss01", "tnum";
   }
 
-  /* ── Stage 自适应缩放 ─────────────────────────── */
+  /* ── Stage responsive scaling ─────────────────────────── */
   .stage-wrap {
     position: fixed; left: 0; right: 0; top: 0; bottom: 0;
     display: flex; align-items: center; justify-content: center;
@@ -77,7 +77,7 @@
     z-index: 0;
   }
 
-  /* ── Scene 通用 ─────────────────────────── */
+  /* ── Scene common ─────────────────────────── */
   .scene {
     position: absolute; inset: 0;
     opacity: 0;
@@ -214,6 +214,7 @@
     display: flex;
     align-items: baseline;
     gap: 4px;
+    white-space: nowrap;
   }
   .metric-value .unit {
     font-size: 28px;
@@ -329,9 +330,7 @@
     background: var(--doris-accent-soft);
     padding: 4px 10px;
     border-radius: 999px;
-    opacity: 0;
   }
-  .pillar-tag.show { opacity: 1; transition: opacity 0.4s; }
 
   /* ── Scene 4 · Architecture ─────────────────────────── */
   .arch {
@@ -750,7 +749,7 @@
       <div class="hero-tagline" id="heroTagline">
         <span class="word">Fast</span><span class="dot"></span><span class="word">Simple</span><span class="dot"></span><span class="word">Unified</span>
       </div>
-      <div class="hero-sub" id="heroSub">An MPP-based high-performance real-time analytical database</div>
+      <div class="hero-sub" id="heroSub">Lightning Fast Analytics and Search Database</div>
     </div>
 
     <!-- ─── Scene 2 · Metrics ─────────────────────────── -->
@@ -961,7 +960,7 @@
         <h2 class="closer-mark"><span>Apache</span> <span class="accent">Doris</span></h2>
       </div>
       <div class="closer-foot-text">
-        <span class="accent">doris.apache.org</span>　·　Join the open community
+        <span class="accent">doris.apache.org</span> · Join the open community
       </div>
     </div>
 
@@ -995,7 +994,7 @@
 (function() {
   'use strict';
 
-  // ── Stage 自适应缩放 ────────────────────────────
+  // ── Stage responsive scaling ────────────────────────────
   const STAGE_W = 1920, STAGE_H = 1080;
   const isEmbedded = new URLSearchParams(window.location.search).get('embed') === '1';
   if (isEmbedded) document.documentElement.classList.add('embed');
@@ -1009,8 +1008,8 @@
   window.addEventListener('resize', resize);
   resize();
 
-  // ── Scene 时间轴 ────────────────────────────
-  // 6 scenes / 30s, FADE = 1s in + 1s out = 2s 过渡（每场切换固定 2 秒）
+  // ── Scene timeline ────────────────────────────
+  // 6 scenes / 30s, FADE = 1s in + 1s out = 2s transition (fixed 2s per scene change)
   const DURATION = 30;
   const SCENES = [
     { id: 's1', start:  0.0, end:  4.5, num: '01', name: 'INTRO' },
@@ -1032,7 +1031,7 @@
     return lerp(v0, v1, ease((t - a) / (b - a)));
   };
 
-  // ── 元素缓存 ────────────────────────────
+  // ── Element cache ────────────────────────────
   const sceneTagEl = document.getElementById('sceneTag');
   const ctrlFill = document.getElementById('ctrlFill');
   const ctrlKnob = document.getElementById('ctrlKnob');
@@ -1104,7 +1103,7 @@
     return Math.round(v).toString();
   }
 
-  // ── 场景渲染 ────────────────────────────
+  // ── Scene render ────────────────────────────
   function render(t) {
     SCENES.forEach(s => {
       const o = sceneOpacity(t, s);
@@ -1177,9 +1176,7 @@
       pillarEls.forEach((p, i) => {
         const y = interp(local - i * 0.15, [0.3, 1.2], [40, 0], expoOut);
         const o = interp(local - i * 0.15, [0.3, 1.1], [0, 1], expoOut);
-        let baseTransform = `translateY(${y}px)`;
-        if (p.classList.contains('focus')) baseTransform = `scale(1.04) ` + baseTransform;
-        p.style.transform = baseTransform;
+        p.style.transform = `translateY(${y}px)`;
         p.style.opacity = o;
 
         const items = p.querySelectorAll('.pillar-list li');
@@ -1187,18 +1184,6 @@
           if (local - i * 0.15 > 1.0 + j * 0.08) li.classList.add('show');
         });
       });
-
-      // 焦点切换：scene 3 长 7s，3.2s 后聚焦 AI 列
-      if (local >= 3.2) {
-        pillarEls[0].classList.add('dim');
-        pillarEls[1].classList.add('dim');
-        pillarEls[2].classList.add('focus');
-        pillarEls[2].querySelector('.pillar-tag').classList.add('show');
-      } else {
-        pillarEls[0].classList.remove('dim');
-        pillarEls[1].classList.remove('dim');
-        pillarEls[2].classList.remove('focus');
-      }
     }
 
     // ─── Scene 4 · Architecture (start = 17.0)
@@ -1257,7 +1242,7 @@
     if (lastTick === null) {
       lastTick = now;
       window.__ready = true;
-      // 关键修复：首帧渲染 current `time`，而不是 0。否则 __seek 后下一帧会被 reset 回 0
+      // Critical fix: render current `time` on the first frame, not 0. Otherwise the next frame after __seek gets reset back to 0.
       render(time);
       requestAnimationFrame(tick);
       return;
@@ -1302,7 +1287,7 @@
     setPlayingState(true);
   });
 
-  // 进度条点击/拖动 seek
+  // Progress bar click/drag seek
   let dragging = false;
   function seekFromEvent(e) {
     const rect = ctrlProgress.getBoundingClientRect();
@@ -1330,7 +1315,7 @@
     if (dragging) { dragging = false; ctrlProgress.classList.remove('dragging'); }
   });
 
-  // 键盘快捷键
+  // Keyboard shortcuts
   document.addEventListener('keydown', (e) => {
     if (e.code === 'Space') { e.preventDefault(); setPlayingState(!playing); }
     else if (e.code === 'ArrowLeft') { window.__seek(time - 1); }
@@ -1338,15 +1323,53 @@
     else if (e.code === 'KeyR') { window.__seek(0); setPlayingState(true); }
   });
 
+  // ── Auto-fit metric values so they never wrap or clip ────────────
+  function fitMetricValues() {
+    const BASE_VALUE = 72;
+    const BASE_UNIT = 28;
+    document.querySelectorAll('#metrics .metric-card').forEach(card => {
+      const el = card.querySelector('.metric-value');
+      if (!el) return;
+      const numEl = el.querySelector('.num[data-target]');
+      let savedText = null;
+      if (numEl) {
+        savedText = numEl.textContent;
+        const target = parseFloat(numEl.dataset.target);
+        numEl.textContent = formatNum(target, target);
+      }
+
+      el.style.fontSize = BASE_VALUE + 'px';
+      const unit = el.querySelector('.unit');
+      if (unit) unit.style.fontSize = BASE_UNIT + 'px';
+
+      const cs = getComputedStyle(card);
+      const padL = parseFloat(cs.paddingLeft);
+      const padR = parseFloat(cs.paddingRight);
+      const available = card.clientWidth - padL - padR;
+
+      let cur = BASE_VALUE;
+      let guard = 24;
+      while (el.scrollWidth > available && cur > 32 && guard-- > 0) {
+        cur -= 2;
+        el.style.fontSize = cur + 'px';
+        if (unit) unit.style.fontSize = (cur * BASE_UNIT / BASE_VALUE) + 'px';
+      }
+
+      if (numEl && savedText !== null) numEl.textContent = savedText;
+    });
+  }
+
   // ── Boot ────────────
   if (document.fonts && document.fonts.ready) {
     document.fonts.ready.then(() => {
+      fitMetricValues();
       render(0);
       setPlayingState(true);
       requestAnimationFrame(tick);
     });
   } else {
     setTimeout(() => {
+      fitMetricValues();
       render(0);
       setPlayingState(true);
       requestAnimationFrame(tick);

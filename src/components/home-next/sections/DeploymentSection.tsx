@@ -36,7 +36,7 @@ const DEPLOYMENT_CARDS: DeploymentCardItem[] = [
         },
         cta: {
             label: 'Deploy Now!',
-            href: '/docs/install/deploy-manually/integrated-storage-compute-deploy-manually',
+            href: '/docs-next/dev/install/intro',
         },
     },
     {
@@ -53,7 +53,7 @@ const DEPLOYMENT_CARDS: DeploymentCardItem[] = [
         },
         cta: {
             label: 'Deploy Now!',
-            href: '/docs/compute-storage-decoupled/overview',
+            href: '/docs-next/dev/install/intro',
         },
     },
 ];
