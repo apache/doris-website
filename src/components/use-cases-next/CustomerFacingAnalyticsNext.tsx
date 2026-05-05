@@ -277,7 +277,7 @@ const valueCards: ValueCard[] = [
                 No&nbsp;refresh.
             </>
         ),
-        desc: 'Data renders the moment a user lands. Interactions feel like a product, not a report — because there is no spinner between question and answer.',
+        desc: 'Dashboards load the moment users arrive. Every interaction feels like part of the product, not a report — with no spinner standing between a question and its answer.',
         scenariosLabel: 'Where it shows up',
         scenarios: ['SaaS product dashboards', 'Embedded analytics in applications'],
     },
@@ -291,12 +291,12 @@ const valueCards: ValueCard[] = [
                 keeps users coming&nbsp;back.
             </>
         ),
-        desc: 'Users interact more when the data is real-time and responsive. Analytics becomes part of the product loop instead of a screen people leave to find.',
+        desc: 'Users engage more when data feels live, responsive, and part of the product experience. Analytics becomes a reason to return, not a separate screen users have to leave the workflow to find.',
         scenariosLabel: 'Where it shows up',
         scenarios: [
-            'User behavior analytics',
-            'Product usage insights',
-            'Customer activity dashboards',
+            'In-product usage dashboards',
+            'Real-time behavior insights',
+            'Customer activity timelines',
         ],
     },
     {
@@ -309,12 +309,12 @@ const valueCards: ValueCard[] = [
                 a product&nbsp;capability.
             </>
         ),
-        desc: 'Turn the analytics layer from internal cost center to a feature you sell. Charge for it. Tier it. Build a product around it.',
+        desc: 'Turn customer-facing analytics into a revenue-generating product feature. Embed dashboards, reporting, and data products into your application, then package them into premium tiers your customers are willing to pay for.',
         scenariosLabel: 'Where it shows up',
         scenarios: [
-            'E-commerce merchant dashboards',
-            'Partner-facing reporting portals',
-            'Data-as-a-product platforms',
+            'Merchant analytics dashboards',
+            'Partner and customer reporting portals',
+            'Data products and premium analytics tiers',
         ],
     },
     {
@@ -324,14 +324,14 @@ const valueCards: ValueCard[] = [
             <>
                 Real-time signal,
                 <br />
-                real-time&nbsp;moves.
+                real-time&nbsp;DECISIONS.
             </>
         ),
-        desc: 'When the dashboard reflects what just happened, operators stop reacting to yesterday and start steering today.',
+        desc: 'When dashboards reflect what is happening now, teams can act before opportunities pass instead of reacting to yesterday’s data.',
         scenariosLabel: 'Where it shows up',
         scenarios: [
-            'Finance analytics platforms',
-            'Advertising analytics platforms',
+            'Financial analytics dashboards',
+            'Advertising performance platforms',
             'Marketing performance dashboards',
         ],
     },
@@ -342,7 +342,7 @@ const cases: CaseStudy[] = [
         id: 'millions',
         num: 'Case · 01',
         title: 'Powering Real-Time Analytics for Millions of Users',
-        quote: 'We needed sub-second latency at high concurrency — Doris made it possible.',
+        quote: 'We needed sub-second latency at high concurrency, and Doris made it possible.',
         scenario: 'Customer-facing dashboards for large-scale user analytics.',
         outcomes: [
             'Sub-second query latency',
@@ -355,9 +355,9 @@ const cases: CaseStudy[] = [
         id: 'merchants',
         num: 'Case · 02',
         title: 'Real-Time Merchant Analytics at Scale',
-        quote: 'Doris helps us deliver fresh business insights to merchants without waiting for offline reports.',
+        quote: 'Doris lets us deliver fresh business insights to merchants without waiting for offline reports.',
         scenario:
-            'E-commerce and platform merchant analytics — order analysis, conversion analysis, and user behavior analysis.',
+            'E-commerce and platform merchant analytics, covering order analysis, conversion analysis, and user behavior analysis.',
         outcomes: [
             'Real-time order insights',
             'Concurrent dashboard access',
@@ -369,7 +369,7 @@ const cases: CaseStudy[] = [
         id: 'high-frequency',
         num: 'Case · 03',
         title: 'Interactive Analytics for High-Frequency Business Data',
-        quote: 'Apache Doris enables interactive analytics on large-scale, high-frequency data with low latency.',
+        quote: 'Apache Doris gives us interactive analytics on large-scale, high-frequency data with low latency.',
         scenario: 'Finance, advertising, and marketing analytics platforms serving external users.',
         outcomes: [
             'Large-scale data analysis',
@@ -382,34 +382,28 @@ const cases: CaseStudy[] = [
 
 const requirements: Requirement[] = [
     {
-        id: 'concurrency',
-        num: 'REQ · 01',
-        title: 'High Concurrency',
-        desc: 'Thousands of users may query simultaneously. The serving engine must hold its latency under heavy concurrent load — not just on a benchmark.',
-    },
-    {
         id: 'latency',
+        num: 'REQ · 01',
+        title: 'End-to-End Low Latency',
+        desc: 'Customer-facing apps need both fresh data and fast responses. New events must become queryable within seconds, and analytical queries must return in sub-second time for dashboards, embedded analytics, and in-product workflows.'
+    },
+    {
+        id: 'concurrency',
         num: 'REQ · 02',
-        title: 'Low Latency',
-        desc: 'Customer-facing apps demand interactive response. Sub-second queries are non-negotiable for dashboards, embedded analytics, and product workflows.',
+        title: 'High Concurrency',
+        desc: 'Thousands of users may query data at the same time. The analytics engine must maintain low latency under heavy concurrent load, not just perform well in isolated benchmarks.'
     },
     {
-        id: 'real-time',
+        id: 'multi-tenancy',
         num: 'REQ · 03',
-        title: 'Real-Time Data',
-        desc: 'Users expect fresh data, not hours-old reports. The pipeline must reflect live operations and recent user activity within seconds.',
+        title: 'Multi-Tenancy & Resource Isolation',
+        desc: 'Customer-facing analytics often serves many tenants, users, or embedded applications from the same platform. The engine must isolate data, workloads, and resources so one tenant’s activity does not affect another tenant’s performance, security, or experience.',
     },
     {
-        id: 'multi-modal',
+        id: 'lakehouse',
         num: 'REQ · 04',
-        title: 'Multi-Modal Data',
-        desc: 'Modern apps mix structured rows, semi-structured JSON, logs, text, and vectors in one experience. The engine has to query all of it, together.',
-    },
-    {
-        id: 'embedded',
-        num: 'REQ · 05',
-        title: 'Embedded & Developer-Friendly',
-        desc: 'Analytics has to drop into product backends — through SQL, APIs, and standard protocols — without a special integration team.',
+        title: 'Lakehouse & Open Data Access',
+        desc: 'Data already lives in open lakehouse formats, object storage, and existing data lake architectures. The analytics engine must query it in place, combine it with real-time serving data, and deliver fresh insights without creating another data copy.'
     },
 ];
 
@@ -419,12 +413,12 @@ const capabilities: Capability[] = [
         num: 'CAP · 01',
         title: (
             <>
-                Real-Time
+                INGEST TO QUERY
                 <br />
-                Ingestion + Query
+                IN SECONDS
             </>
         ),
-        desc: 'Data becomes queryable seconds after ingestion. Dashboards reflect what happened a moment ago, not last night’s batch.',
+        desc: 'New data becomes queryable within seconds, while dashboards and in-product analytics stay fast and interactive. Users see the latest activity as it happens, not after the next batch cycle.',
         poweredLabel: 'Powered by',
         poweredBy: [
             { label: 'Stream ingestion from Kafka and CDC', href: '#' },
@@ -442,7 +436,7 @@ const capabilities: Capability[] = [
                 at High Concurrency
             </>
         ),
-        desc: 'Consistent low-latency on large datasets, under concurrent load — not just a single-query benchmark number.',
+        desc: 'Apache Doris sustains fast, predictable query response times as concurrent users and data volumes grow, not just in single-query benchmarks.',
         poweredLabel: 'Powered by',
         poweredBy: [
             { label: 'MPP execution engine', href: '#' },
@@ -458,16 +452,15 @@ const capabilities: Capability[] = [
             <>
                 Multi-Tenant &amp;
                 <br />
-                Embedded&nbsp;Friendly
+                RESOURCE ISOLATION
             </>
         ),
-        desc: 'Serve many users, teams, or tenants from a single platform. Drop into product backends through standard SQL — no proprietary client.',
+        desc: 'Serve many users, teams, or tenants from a single platform. Isolate workloads and control resource usage so heavy queries from one tenant do not impact others.',
         poweredLabel: 'Powered by',
         poweredBy: [
-            { label: 'MySQL-compatible protocol', href: '#' },
             { label: 'Resource isolation', href: '#' },
             { label: 'High-concurrency scheduling', href: '#' },
-            { label: 'SQL-based application integration', href: '#' },
+            { label: 'Query queueing', href: '#' },
         ],
     },
     {
@@ -475,12 +468,10 @@ const capabilities: Capability[] = [
         num: 'CAP · 04',
         title: (
             <>
-                Lakehouse
-                <br />
-                Integration
+                Lakehouse Integration
             </>
         ),
-        desc: 'Query open lakehouse formats directly. Combine real-time serving with existing data lake architectures — without copying data twice.',
+        desc: 'Query open lakehouse formats directly. Combine real-time serving with existing data lake architectures, without copying data twice.',
         poweredLabel: 'Powered by',
         poweredBy: [
             { label: 'Iceberg and lakehouse query capabilities', href: '#' },
@@ -515,8 +506,8 @@ function Hero(): JSX.Element {
                         </span>
                     </h1>
                     <p className="hero-sub" data-reveal data-reveal-delay="2">
-                        Deliver sub-second, interactive analytics experiences directly to your
-                        customers, at scale.
+                        Deliver sub-second, interactive analytics directly to your customers,
+                        at scale.
                     </p>
                 </div>
             </div>
@@ -548,8 +539,8 @@ function ValueSection(): JSX.Element {
                     </h2>
                     <p className="section-sub">
                         When analytics shifts from internal report to live product surface, four
-                        things happen — for the user, for engagement, for revenue, and for
-                        decisions.
+                        things change at once: the user experience, engagement, revenue, and the
+                        speed of decisions.
                     </p>
                 </div>
 
@@ -569,7 +560,7 @@ function CasesSection(): JSX.Element {
                     <h2 className="section-title">Already shipping in production.</h2>
                     <p className="section-sub">
                         Three teams using Apache Doris to serve sub-second analytics directly to
-                        their customers — at concurrency, on live data.
+                        their customers, at concurrency, on live data.
                     </p>
                 </div>
 
@@ -624,7 +615,7 @@ function TechSection(): JSX.Element {
                     </h2>
                     <p className="section-sub">
                         Customer-facing analytics is a different workload than internal BI.
-                        Here&rsquo;s what the serving engine has to get right — and how Apache Doris
+                        Here&rsquo;s what the serving engine has to get right, and how Apache Doris
                         answers each one.
                     </p>
                 </div>
@@ -693,7 +684,7 @@ export default function CustomerFacingAnalyticsNext(): JSX.Element {
     return (
         <LayoutNext
             title="Apache Doris | Customer-Facing Analytics"
-            description="Deliver sub-second, interactive customer-facing analytics with Apache Doris — high concurrency, real-time data, and embedded SQL."
+            description="Deliver sub-second, interactive customer-facing analytics with Apache Doris: high concurrency, real-time data, and embedded SQL."
         >
             <div className="cfa-page" data-screen-label="Customer-Facing Analytics">
                 <Hero />

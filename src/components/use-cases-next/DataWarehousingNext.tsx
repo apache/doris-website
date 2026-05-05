@@ -277,10 +277,10 @@ const valueCards: ValueCard[] = [
                 into a single source of&nbsp;truth.
             </>
         ),
-        desc: 'Order, user, payment, CRM, ERP, ad and log systems all answer the same question differently. Data Warehousing folds them into one consistent, trusted analytical asset — so every team works from the same numbers.',
+        desc: 'Data from orders, customers, payments, CRM, ERP, ads, and logs often tells different versions of the same story. A modern data warehouse brings these signals together into one trusted analytical layer, so every team can work from consistent metrics and make decisions with confidence.',
         scenariosLabel: 'Where it shows up',
         scenarios: [
-            'Executive Business Dashboard',
+            'Executive Business Dashboards',
             'Sales and Revenue Analytics',
             'Marketing ROI Analysis',
         ],
@@ -290,14 +290,14 @@ const valueCards: ValueCard[] = [
         num: '02 / Faster BI & Self-Service',
         title: (
             <>
-                Make BI analytics
+                Make BI
                 <br />
                 fast and&nbsp;interactive.
             </>
         ),
-        desc: 'Tableau, Power BI, Superset and Looker only feel good when the warehouse beneath them is fast. Sub-second SQL turns dimensional drill-downs and ad-hoc questions into a conversation, not a wait.',
+        desc: 'Tableau, Power BI, Superset, and Looker are only as responsive as the warehouse behind them. With sub-second SQL, dimensional drill-downs and ad-hoc questions become a conversation, not a wait.',
         scenariosLabel: 'Where it shows up',
-        scenarios: ['Self-Service BI', 'Ad-hoc Query', 'Interactive Dashboard'],
+        scenarios: ['Self-Service BI', 'Ad-hoc Query', 'Interactive Dashboards'],
     },
     {
         id: 'real-time',
@@ -309,11 +309,11 @@ const valueCards: ValueCard[] = [
                 to real-time&nbsp;decisions.
             </>
         ),
-        desc: 'Daily batches show yesterday. Real-time Data Warehousing ingests through CDC, Kafka, Flink and Stream Load so dashboards, alerts and operational reports always reflect the business as it is right now.',
+        desc: 'Batch reports show what happened yesterday. A real-time data warehouse continuously ingests fresh data from CDC streams, Kafka, and Flink, keeping dashboards, alerts, and operational reports aligned with what is happening now.',
         scenariosLabel: 'Where it shows up',
         scenarios: [
             'Real-Time Order Monitoring',
-            'Operational Dashboard',
+            'Operational Dashboards',
             'Risk and Anomaly Detection',
         ],
     },
@@ -327,12 +327,12 @@ const valueCards: ValueCard[] = [
                 without adding&nbsp;complexity.
             </>
         ),
-        desc: 'TB- and PB-scale data, hundreds of concurrent analysts, tight storage budgets — modern warehouses have to balance all of it. A simpler architecture means fewer moving parts and a lower TCO at the same workload.',
+        desc: 'As data grows from TBs to PBs and BI workloads become more concurrent, many warehouses add more systems, pipelines, and serving layers. Apache Doris keeps the architecture simple, so teams can support large-scale analytics with fewer moving parts and lower TCO.',
         scenariosLabel: 'Where it shows up',
         scenarios: [
             'Large-Scale Historical Analysis',
             'High-Concurrency BI Reporting',
-            'Cost-Efficient Data Platform Modernization',
+            'Warehouse Modernization with Lower TCO',
         ],
     },
 ];
@@ -342,7 +342,7 @@ const cases: CaseStudy[] = [
         id: 'xiaomi',
         num: 'Case · 01 · Xiaomi',
         title: 'Building a Unified Analytics Platform for Massive-Scale Data',
-        quote: 'Apache Doris helps us simplify our analytics architecture while delivering high-performance queries across large-scale business data.',
+        quote: 'Apache Doris simplifies our analytics architecture and delivers high-performance queries across large-scale business data.',
         outcomes: [
             'Unified analytics across massive business data',
             'Simplified multi-component analytics architecture',
@@ -354,7 +354,7 @@ const cases: CaseStudy[] = [
         id: 'tencent-music',
         num: 'Case · 02 · Tencent Music',
         title: 'Accelerating Real-Time Analytics for User Behavior and Business Insights',
-        quote: 'With Apache Doris, we are able to support real-time analytical workloads with faster query response and simpler data pipelines.',
+        quote: 'With Apache Doris, we support real-time analytical workloads with faster query response and simpler data pipelines.',
         outcomes: [
             'Real-time user behavior analytics',
             'Faster query response for business insights',
@@ -366,7 +366,7 @@ const cases: CaseStudy[] = [
         id: 'vivo',
         num: 'Case · 03 · Vivo',
         title: 'Powering High-Concurrency BI and Operational Analytics',
-        quote: 'Apache Doris enables our teams to run large-scale analytical queries with high concurrency and stable performance.',
+        quote: 'Apache Doris lets our teams run large-scale analytical queries with high concurrency and stable performance.',
         outcomes: [
             'High-concurrency BI workloads',
             'Unified analytics services for multiple business teams',
@@ -380,27 +380,27 @@ const requirements: Requirement[] = [
     {
         id: 'modeling',
         title: 'Modeling for Warehouse Workloads',
-        desc: 'Detail records, aggregated metrics, fact and dimension tables, wide tables, business-ready datasets — modeling unifies definitions, improves query performance, and makes data reusable across teams.',
+        desc: 'Modern data warehouses need to support detail records, fact and dimension tables, wide tables, aggregated metrics, and business-ready datasets. Strong modeling keeps definitions consistent, improves query performance, and makes trusted data reusable across teams.',
     },
     {
         id: 'freshness',
         title: 'Real-Time Data Freshness',
-        desc: 'Business teams want to monitor what is happening now. That means streaming ingestion, CDC, incremental updates and immediate query visibility — not yesterday’s batch.',
+        desc: 'Business teams need live visibility into what is happening now. That requires streaming ingestion, CDC, incremental updates, and fresh data that becomes queryable within seconds, not after yesterday’s batch.',
     },
     {
         id: 'incremental',
-        title: 'Incremental Computation and Batch Processing',
-        desc: 'Materialized views and incremental computation keep derived datasets fresh without recomputing from scratch, while heavy SQL jobs still need to be scheduled and executed reliably for end-of-day, backfill and historical workloads.',
+        title: 'Incremental Updates and Reliable Batch Processing',
+        desc: 'Modern warehouse workloads need both incremental refresh and large-scale batch execution. Materialized views and incremental computation keep aggregates, rollups, and reporting tables fresh without full recomputation, while reliable batch processing supports end-of-day jobs, backfills, and historical workloads.',
     },
     {
         id: 'lakehouse',
         title: 'Lakehouse & Open Architecture',
-        desc: 'Operational databases, event streams, SaaS systems and open lakehouse formats — Iceberg, Hudi, Delta Lake, Hive and object storage — all hold pieces of the business. Warehouses need to integrate these sources and read open formats in place, not copy everything into another silo.',
+        desc: 'Operational databases, event streams, SaaS applications, and open lakehouse tables all contain critical business data. Modern warehouses need to integrate these sources and query data in place across formats like Iceberg, Hudi, Delta Lake, and Hive, without copying everything into another silo.',
     },
     {
         id: 'governance',
-        title: 'Governance & Operational Simplicity',
-        desc: 'Once the warehouse is the shared analytics foundation, it needs access control, workload isolation, HA, auditability and operational simplicity — that’s what makes it safe for every team to depend on.',
+        title: 'Enterprise Governance and Operations',
+        desc: 'As the warehouse becomes the shared analytics foundation, it must be secure, reliable, auditable, and easy to operate. That requires fine-grained access control, workload isolation, high availability, audit logs, and simplified operations, so every team can safely depend on the same platform.'
     },
 ];
 
@@ -415,7 +415,7 @@ const capabilities: Capability[] = [
                 Data Modeling
             </>
         ),
-        desc: 'Multiple data models and physical design options cover detailed records, aggregated metrics, real-time updates and warehouse-style analytical tables in one engine.',
+        desc: 'Support detail records, aggregated metrics, real-time upserts, and analytical datasets in one engine. Doris combines flexible table models with partitioning and bucketing to improve data organization, query performance, and reuse.',
         poweredLabel: 'Powered by',
         poweredBy: [
             { label: 'Duplicate Key Model', href: '#' },
@@ -434,7 +434,7 @@ const capabilities: Capability[] = [
                 and&nbsp;Updates
             </>
         ),
-        desc: 'Apache Doris supports continuous, fresh ingestion so analytics moves off the batch cadence and onto a live one — without rewriting upstream pipelines.',
+        desc: 'Apache Doris continuously ingests streaming and CDC data, applies updates in real time, and makes fresh data queryable within seconds, so analytics can move beyond overnight batch pipelines.',
         poweredLabel: 'Powered by',
         poweredBy: [
             { label: 'Built-in MySQL/PostgreSQL CDC capabilities', href: '#' },
@@ -448,17 +448,17 @@ const capabilities: Capability[] = [
         num: 'CAP · 03',
         title: (
             <>
-                Incremental Computation
+                Incremental Refresh
                 <br />
                 and Batch&nbsp;Execution
             </>
         ),
-        desc: 'Incremental materialized views keep derived datasets fresh without full recomputation, and the engine can schedule and execute heavy SQL jobs reliably for backfill and historical workloads.',
+        desc: 'Incrementally refreshed materialized views keep derived datasets fresh without full recomputation, while Doris reliably executes large SQL jobs for backfills, end-of-day processing, and historical workloads.',
         poweredLabel: 'Powered by',
         poweredBy: [
-            { label: 'Incremental materialized views', href: '#' },
+            { label: 'Incremental Materialized Views', href: '#' },
             { label: 'Binlog, Table Stream, and Dynamic Table (Coming soon)', href: '#' },
-            { label: 'Spill to disk', href: '#' },
+            { label: 'Spill to Disk', href: '#' },
         ],
     },
     {
@@ -471,7 +471,7 @@ const capabilities: Capability[] = [
                 Compute Engine
             </>
         ),
-        desc: 'Doris reads, writes and manages open lakehouse data directly — full lifecycle support for Iceberg tables including query, write, update and compaction — and federates it with internal Doris tables in one access layer.',
+        desc: 'Query, write, and manage open lakehouse tables directly with Doris. Use one SQL layer to access Iceberg, Hudi, Delta Lake, JDBC sources, and internal Doris tables, with Iceberg lifecycle operations such as writes, updates, and compaction.',
         poweredLabel: 'Powered by',
         poweredBy: [
             { label: 'Multi-Catalog: Iceberg, Hudi, Delta Lake, JDBC, and more', href: '#' },
@@ -483,12 +483,12 @@ const capabilities: Capability[] = [
         num: 'CAP · 05',
         title: (
             <>
-                Enterprise-Ready
+                Enterprise-Grade
                 <br />
-                Management
+                GOVERNANCE
             </>
         ),
-        desc: 'Access control, workload management, HA and operational reliability — the things that make a shared, business-critical analytics platform safe to run.',
+        desc: 'Doris provides the governance and workload controls needed to run shared analytics safely across teams, with pluggable authentication, external catalog integration, and resource isolation built in.',
         poweredLabel: 'Powered by',
         poweredBy: [
             {
@@ -511,17 +511,18 @@ function Hero(): JSX.Element {
                     <h1 className="hero-title" data-reveal data-reveal-delay="1">
                         Modern Data Warehousing,
                         <br />
-                        Powered by{' '}
+                        Built for{' '}
                         <span className="accent">
-                            Apache Doris
+                            Real-Time
                             <span className="bolt-inline">
                                 <BoltIcon size="0.85em" />
                             </span>
                         </span>
+                        Insights
                     </h1>
                     <p className="hero-sub" data-reveal data-reveal-delay="2">
-                        Unify batch and real-time data, accelerate BI analytics, and deliver
-                        trusted business insights at scale with a high-performance, real-time
+                        Unify batch and streaming data, accelerate BI analytics, and deliver
+                        trusted business insights at scale on a high-performance, real-time
                         analytical database.
                     </p>
                 </div>
@@ -557,8 +558,8 @@ function ValueSection(): JSX.Element {
                         <span>changes the&nbsp;business.</span>
                     </h2>
                     <p className="section-sub">
-                        When the warehouse is unified, fast, real-time and elastic, four things
-                        shift at once — the trust of the data, the speed of analysis, the freshness
+                        When the warehouse is unified, fast, real-time, and elastic, four things
+                        shift at once: the trust of the data, the speed of analysis, the freshness
                         of decisions, and the cost of running it all.
                     </p>
                 </div>
@@ -578,8 +579,8 @@ function CasesSection(): JSX.Element {
                 <div className="section-head" data-reveal>
                     <h2 className="section-title">Already running in production.</h2>
                     <p className="section-sub">
-                        Three teams using Apache Doris as the analytical core of their data
-                        warehouse — at scale, with real concurrency, on live business data.
+                        Three teams run Apache Doris as the analytical core of their data
+                        warehouse: at scale, with real concurrency, on live business data.
                     </p>
                 </div>
 
@@ -632,7 +633,7 @@ function TechSection(): JSX.Element {
                         <span>and how Apache&nbsp;Doris&nbsp;answers.</span>
                     </h2>
                     <p className="section-sub">
-                        Five things a modern data warehouse has to be good at — and the specific
+                        Five things a modern data warehouse has to be good at, and the specific
                         Apache Doris capabilities that meet each one.
                     </p>
                 </div>

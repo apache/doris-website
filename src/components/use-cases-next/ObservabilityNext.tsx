@@ -392,37 +392,37 @@ const requirements: Requirement[] = [
     {
         id: 'ingest',
         num: 'REQ · 01',
-        title: 'Real-Time Ingestion of High-Volume Telemetry',
+        title: 'Ingest Every Signal in Real Time',
         desc:
-            'Logs, traces, metrics and AI agent events stream continuously from applications, Kubernetes, APIs, gateways, databases and AI systems. The platform must ingest at high throughput and low latency so every signal (LLM requests, prompts, agent step traces, tool calls, RAG retrieval events, token cost metrics, evaluation scores and user feedback) becomes queryable almost immediately.',
+            'Modern observability data streams from applications, Kubernetes, APIs, gateways, databases, and AI systems. Your platform needs to absorb high-volume logs, traces, metrics, and AI agent events with low latency, so every signal — from LLM requests and tool calls to RAG retrievals, token costs, evaluations, and user feedback — is ready to query in near real time.',
     },
     {
         id: 'schema',
         num: 'REQ · 02',
-        title: 'Flexible Schema for Logs, Traces & Agent Events',
+        title: 'Analyze Dynamic JSON Without Heavy ETL',
         desc:
-            'Observability data is highly semi-structured. Logs, traces, agent events, tool outputs and model responses arrive as JSON with frequently changing fields. The platform must handle dynamic fields, nested JSON, schema evolution and fast filtering on extracted fields, and let teams analyze data without heavy ETL. That matters even more for AI agents, where each tool, model and framework emits a different event shape.',
+            'Logs, traces, tool outputs, model responses, and agent events often arrive as nested JSON with constantly changing fields. The platform must handle schema evolution and make any new field immediately queryable, so teams can filter, investigate, and analyze new signals without rebuilding pipelines.'
     },
     {
         id: 'search',
         num: 'REQ · 03',
-        title: 'Fast Search Across Text-Heavy Signals',
+        title: 'Fast Full-Text Search Across Logs and Agent Signals',
         desc:
-            'Engineers search massive text: error messages, stack traces, log lines, request and trace IDs, prompt content, model responses, tool outputs, agent failure reasons. Traditional observability needs keyword search; AI agent observability also needs to search across prompts, responses and natural-language outputs at scale.',
+            'Observability data contains massive volumes of searchable text, from error messages, stack traces and log lines to prompts, model responses, tool outputs and agent failure reasons. Teams need fast keyword and full-text search so they can find failures, trace requests and investigate agent behavior at scale.',
     },
     {
         id: 'analytics',
         num: 'REQ · 04',
         title: 'Interactive Analytics on Metrics, Cost & Quality',
         desc:
-            'Observability is not only search. Teams run interactive analytical queries over massive datasets: error rate by service, P99 latency by endpoint, cost by model, token usage by tenant, tool failure rate, prompt-version performance, RAG quality distribution, agent task completion, SLA/SLO trends. That demands a high-performance analytical engine, not just a log search system.',
+            'Observability is not only search. Teams need to slice, aggregate, and drill into massive telemetry datasets to analyze reliability, cost, and AI quality — from P99 latency and SLA trends to token usage, model cost, RAG quality, and agent task completion. That requires a high-performance analytical engine alongside fast search.',
     },
     {
         id: 'hybrid',
         num: 'REQ · 05',
         title: 'Hybrid Search for AI Agent Observability',
         desc:
-            'AI agent observability introduces new query patterns beyond logs and metrics. Teams need to find not only exact matches, but semantically similar failures and behaviors (similar user questions, hallucinated answers, prompts that produced bad outputs, traces with similar failure shapes), combining structured filters, full-text search and vector search in one query.',
+            'AI agent observability requires more than keyword search over logs. Teams need to correlate structured metadata with full-text and semantic search across prompts, responses, tool calls and traces, so they can find exact matches, similar failures, hallucinated outputs and recurring agent behavior patterns in one query.',
     },
 ];
 
@@ -438,7 +438,7 @@ const capabilities: Capability[] = [
             </>
         ),
         desc:
-            'Apache Doris ingests in real time from Kafka via Routine Load (CSV/JSON), plus built-in CDC and message-based ingestion for logs, metrics, traces and AI agent events at low latency.',
+            'Apache Doris ingests high-volume telemetry from Kafka, CDC pipelines, and streaming APIs with low latency. Logs, metrics, traces, and AI agent events become queryable in near real time for fast debugging, monitoring, and cost analysis.',
         poweredLabel: 'Powered by',
         poweredBy: [
             'Routine Load',
@@ -459,7 +459,7 @@ const capabilities: Capability[] = [
             </>
         ),
         desc:
-            'VARIANT handles JSON-like data and dynamic event structures, so teams analyze logs, traces, tool outputs and agent events without heavy upfront schema modeling.',
+            'VARIANT lets teams query JSON and semi-structured observability data as it evolves, from logs and traces to tool outputs and agent events, without rebuilding schemas or ETL pipelines.',
         poweredLabel: 'Powered by',
         poweredBy: [
             'VARIANT data type',
@@ -474,13 +474,13 @@ const capabilities: Capability[] = [
         num: 'CAP · 03',
         title: (
             <>
-                Fast Text Search
+                Fast Full-Text Search
                 <br />
                 with Inverted Index &amp; BM25
             </>
         ),
         desc:
-            'Inverted indexes accelerate search across large text-heavy data, with BM25 relevance scoring across logs, prompts, responses and tool outputs.',
+            'Search massive volumes of logs, prompts, responses and tool outputs with inverted indexes, tokenized text search and BM25 relevance scoring, so teams can quickly find failures and understand agent behavior.',
         poweredLabel: 'Powered by',
         poweredBy: [
             'Inverted index',
@@ -495,13 +495,13 @@ const capabilities: Capability[] = [
         num: 'CAP · 04',
         title: (
             <>
-                Interactive OLAP
+                INTERACTIVE ANALYTICS
                 <br />
                 for Observability&nbsp;Dashboards
             </>
         ),
         desc:
-            'OLAP queries and materialized views accelerate dashboards and pre-aggregated metrics (error rates, latency, token usage, model cost, SLA trends) through fast SQL with transparent rewriting.',
+            'Doris accelerates dashboard analytics over observability metrics with a high-performance OLAP engine, materialized views, and transparent SQL query rewriting — from error rates and latency to token usage, model cost, and SLA trends.',
         poweredLabel: 'Powered by',
         poweredBy: [
             'Columnar storage',
@@ -523,7 +523,7 @@ const capabilities: Capability[] = [
             </>
         ),
         desc:
-            'Doris 4.0 adds vector indexing for similarity search alongside SQL. Inverted indexes accelerate filtered vector queries and TopN, combining structured filters, full-text and semantic similarity in a single query.',
+            'Doris 4.0 unifies structured filtering, full-text search and vector similarity search in SQL. Teams can search prompts, responses, tool outputs and traces by metadata, keywords and semantic similarity, all in one query.',
         poweredLabel: 'Powered by',
         poweredBy: [
             'Vector index (HNSW)',
@@ -599,10 +599,6 @@ function CasesSection(): JSX.Element {
             <div className="hero-bg-grid" aria-hidden="true" />
             <div className="container section-inner">
                 <div className="section-head" data-reveal>
-                    <div className="eyebrow">
-                        <span className="eyebrow-line" />
-                        <span>Section 03 · Customer Stories</span>
-                    </div>
                     <h2 className="section-title">Already running in production.</h2>
                     <p className="section-sub">
                         Three teams run Apache Doris as the analytical foundation for
@@ -657,10 +653,6 @@ function TechSection(): JSX.Element {
         <section className="section section-tech section-cream" id="tech">
             <div className="container section-inner">
                 <div className="section-head section-head-wide" data-reveal>
-                    <div className="eyebrow">
-                        <span className="eyebrow-line" />
-                        <span>Section 04 · Requirements & Capabilities</span>
-                    </div>
                     <h2 className="section-title section-title-stacked">
                         <span>What modern&nbsp;Observability&nbsp;demands</span>
                         <span>and how Apache&nbsp;Doris&nbsp;answers.</span>
@@ -675,7 +667,6 @@ function TechSection(): JSX.Element {
                 <div className={`req-grid${useSix ? ' req-grid-6' : ''}`} data-reveal>
                     {requirements.map(r => (
                         <div className="req-card" key={r.id}>
-                            <div className="req-num">{r.num}</div>
                             <h4 className="req-title">{r.title}</h4>
                             <p className="req-desc">{r.desc}</p>
                         </div>

@@ -675,7 +675,7 @@ $cfa-ease-out-quint: cubic-bezier(0.2, 0.8, 0.2, 1);
 
     .req-grid {
         display: grid;
-        grid-template-columns: repeat(5, 1fr);
+        grid-template-columns: repeat(4, 1fr);
         gap: 0;
         border: 1px solid rgba(245, 239, 228, 0.1);
         border-radius: 12px;
