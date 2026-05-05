@@ -20,13 +20,7 @@ name: docs-next build check
 
 on:
     pull_request:
-        paths:
-            - 'docs-next/**'
-            - 'sidebars-next.ts'
-            - 'next_versions.json'
-            - 'i18n/zh-CN/docusaurus-plugin-content-docs-next/**'
-            - 'docusaurus.config.js'
-            - '.github/workflows/docs-next-build.yml'
+        types: [opened, synchronize, reopened]
 
 concurrency:
     group: ${{ github.ref }} (docs-next build)
@@ -41,19 +35,38 @@ jobs:
               uses: actions/checkout@v4
               with:
                 ref: ${{ github.event.pull_request.head.sha }}
-                fetch-depth: 1
+                fetch-depth: 0
+
+            - name: Detect relevant changes
+              id: changes
+              run: |
+                set -e
+                BASE_SHA="${{ github.event.pull_request.base.sha }}"
+                HEAD_SHA="${{ github.event.pull_request.head.sha }}"
+                CHANGED=$(git diff --name-only "$BASE_SHA" "$HEAD_SHA")
+                echo "Changed files:"
+                echo "$CHANGED"
+                if echo "$CHANGED" | grep -E '^(docs-next/|sidebars-next\.ts$|next_versions\.json$|i18n/zh-CN/docusaurus-plugin-content-docs-next/|docusaurus\.config\.js$|\.github/workflows/docs-next-build\.yml$)' >/dev/null; then
+                    echo "relevant=true" >> "$GITHUB_OUTPUT"
+                else
+                    echo "relevant=false" >> "$GITHUB_OUTPUT"
+                    echo "No docs-next-related changes detected; skipping build."
+                fi
 
             - name: Use Node.js
+              if: steps.changes.outputs.relevant == 'true'
               uses: actions/setup-node@v4
               with:
                 node-version: 20
 
             - name: Install dependencies
+              if: steps.changes.outputs.relevant == 'true'
               run: |
                 npm install -g yarn
                 yarn install --frozen-lockfile || yarn install
 
             - name: Build (current only, EN + zh-CN)
+              if: steps.changes.outputs.relevant == 'true'
               env:
                 DOCS_VERSIONS: current
               run: |
@@ -61,6 +74,7 @@ jobs:
                 yarn docusaurus build --locale en --locale zh-CN
 
             - name: Verify docs-next artifacts
+              if: steps.changes.outputs.relevant == 'true'
               run: |
                 set -e
                 test -d build/docs-next/dev
