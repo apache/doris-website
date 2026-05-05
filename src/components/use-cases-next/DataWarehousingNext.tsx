@@ -339,40 +339,40 @@ const valueCards: ValueCard[] = [
 
 const cases: CaseStudy[] = [
     {
+        id: 'sf-technology',
+        num: 'Case 01 · SF Technology',
+        title: 'SF Express: Replacing Presto with Apache Doris for BI and Ad-hoc Analytics',
+        quote: 'Apache Doris cut our P95 query latency by nearly 70% and let us migrate 100% of ad-hoc and BI workloads off Presto, with far better stability and lower cost.',
+        outcomes: [
+            'P95 query latency reduced by ~70%, with sub-10s queries up from 72% to 88%',
+            '48% lower compute cost and 96% data cache hit rate on lakehouse queries',
+            '100% of ad-hoc and BI workloads migrated, with 97% SQL compatibility',
+        ],
+        href: 'https://www.velodb.io/blog/sf-technology-replaced-presto-apache-doris',
+    },
+    {
         id: 'xiaomi',
-        num: 'Case · 01 · Xiaomi',
-        title: 'Building a Unified Analytics Platform for Massive-Scale Data',
-        quote: 'Apache Doris simplifies our analytics architecture and delivers high-performance queries across large-scale business data.',
+        num: 'Case 02 · Xiaomi',
+        title: 'Xiaomi: A Unified Lakehouse with Apache Doris and Apache Paimon',
+        quote: 'Apache Doris and Apache Paimon let us consolidate fragmented engines and storage into one lakehouse, with 6× faster queries and 5× higher concurrency than Presto.',
         outcomes: [
-            'Unified analytics across massive business data',
-            'Simplified multi-component analytics architecture',
-            'Faster BI and interactive query performance',
+            'Query latency cut from 60s to 10s; aggregation from 40s to 8s',
+            '5× higher concurrent throughput vs. Presto, with 25–75% lower latency under load',
+            'One unified stack for hot Doris storage and cold Paimon data across user behavior, device, and operations analytics',
         ],
-        href: 'https://doris.apache.org/blog/',
+        href: 'https://www.velodb.io/blog/unified-lakehouse-apache-doris-apache-paimon-xiaomi',
     },
     {
-        id: 'tencent-music',
-        num: 'Case · 02 · Tencent Music',
-        title: 'Accelerating Real-Time Analytics for User Behavior and Business Insights',
-        quote: 'With Apache Doris, we support real-time analytical workloads with faster query response and simpler data pipelines.',
+        id: 'cainiao',
+        num: 'Case 03 · Cainiao',
+        title: 'Cainiao: A Real-Time Lakehouse for Global Logistics at Cainiao',
+        quote: 'Data updates can be completed within seconds, and queries can be responded to within hundreds of milliseconds.',
         outcomes: [
-            'Real-time user behavior analytics',
-            'Faster query response for business insights',
-            'Simplified real-time data pipelines',
+            '90% lower cost and 72% faster average response on the real-time data platform',
+            '1,000–2,000 QPS point queries (10–100ms) and 200–300 QPS sub-second multi-table joins',
+            '25+ Doris clusters and 10,000+ CPUs across 3 regions running with zero failures, powering inventory, package, and order tracking for 80M daily packages',
         ],
-        href: 'https://doris.apache.org/blog/',
-    },
-    {
-        id: 'vivo',
-        num: 'Case · 03 · Vivo',
-        title: 'Powering High-Concurrency BI and Operational Analytics',
-        quote: 'Apache Doris lets our teams run large-scale analytical queries with high concurrency and stable performance.',
-        outcomes: [
-            'High-concurrency BI workloads',
-            'Unified analytics services for multiple business teams',
-            'Stable performance on large-scale data',
-        ],
-        href: 'https://doris.apache.org/blog/',
+        href: 'https://www.velodb.io/blog/apache-doris-empowers-realtime-lakehouse-cainiao',
     },
 ];
 

@@ -349,42 +349,45 @@ const valueCards: ValueCard[] = [
 const cases: CaseStudy[] = [
     {
         id: 'logs',
-        num: 'Case · 01 · Log Analytics',
-        title: 'High-Volume Log Analytics at Scale',
+        num: 'Case 01 · PB-Scale Logging',
+        title: 'MiniMax: migrated from Grafana Loki to a PB-scale logging system on Apache Doris',
         quote:
-            'Apache Doris helps us analyze massive volumes of log data with high performance and low latency, enabling our teams to troubleshoot issues faster and support real-time operational analysis.',
+            'After migrating from Grafana Loki, Apache Doris now powers the logging system across all of MiniMax\'s business lines, serving PB-scale data with over 99.9% availability and second-level query latency on hundreds of millions of log entries.',
         outcomes: [
-            'Real-time log ingestion and analysis',
-            'Faster troubleshooting across large-scale systems',
-            'Reduced storage and query cost for observability workloads',
+            'PB-scale log storage with 99.9%+ availability across all business lines',
+            'Keyword and aggregation queries on 1 billion logs return within 2 seconds',
+            '10 GB/s write throughput with second-level ingestion latency',
+            '5:1 compression and tiered storage cut storage costs by 70%',
         ],
-        href: 'https://doris.apache.org/blog/',
+        href: 'https://www.velodb.io/blog/ai-unicorn-minimax-migrated-loki'
     },
     {
         id: 'monitoring',
-        num: 'Case · 02 · Real-Time Monitoring',
-        title: 'Real-Time Monitoring for Business-Critical Systems',
+        num: 'Case 02 · Logs & Time Series',
+        title: 'NetEase: replaced Elasticsearch and InfluxDB with Apache Doris for monitoring and time series analytics',
         quote:
-            'With Apache Doris, we can monitor key system and business metrics in real time, supporting interactive dashboards and rapid root cause analysis when incidents happen.',
+            'NetEase migrated its Eagle monitoring platform off Elasticsearch and its IM time series platform off InfluxDB, consolidating both workloads on Apache Doris for faster queries, lower storage costs, and a more flexible index design.',
         outcomes: [
-            'Real-time dashboard analytics',
-            'Low-latency multidimensional queries',
-            'Better SLA monitoring and incident response',
+            '11× faster query speed and 70% lower storage cost vs. Elasticsearch on monitoring logs',
+            '67% less storage and half the servers vs. InfluxDB on time series workloads',
+            '1 GB/s peak write throughput sustaining up to 1M TPS at peak',
+            'Flexible inverted indexes that can be added or dropped incrementally without rewriting tables',
         ],
-        href: 'https://doris.apache.org/blog/',
+        href: 'https://www.velodb.io/blog/apache-doris-log-series-analysis-net',
     },
     {
-        id: 'unified',
-        num: 'Case · 03 · Unified Telemetry',
-        title: 'Unified Analytics Across Logs, Metrics and Events',
+        id: 'tencent-music',
+        num: 'Case 03 · Elasticsearch Migration',
+        title: 'Tencent Music: replaced Elasticsearch with Apache Doris and cut costs by 80%',
         quote:
-            'Apache Doris allows us to bring different types of observability data together and analyze them through SQL, helping engineering and operations teams gain a unified view of system behavior.',
+            'The shift from Elasticsearch to Apache Doris has slashed storage costs by 80% while boosting write performance by 4×, with inverted indexes powering full-text search and aggregations in a single SQL query.',
         outcomes: [
-            'Unified analysis across logs, metrics and event data',
-            'SQL-based investigation and reporting',
-            'Scalable analytics for long-term observability data',
+            '80% lower overall operational cost vs. Elasticsearch',
+            '72% less storage footprint (697.7 GB → 195.4 GB on the same dataset)',
+            '4× faster write throughput, ingestion time cut from 10+ hours to under 3 hours',
+            'Alert frequency dropped from 20+ per day to single digits per month',
         ],
-        href: 'https://doris.apache.org/blog/',
+        href: 'https://www.velodb.io/blog/tencent-music-saved-migrating-elasticsearch',
     },
 ];
 

@@ -11,15 +11,6 @@ const sidebars: SidebarsConfig = {
                 'getting-started/what-is-apache-doris',
                 'getting-started/quick-start',
                 'getting-started/before-you-start-the-poc',
-                {
-                    type: 'category',
-                    label: 'Tech Alternatives',
-                    items: [
-                        'getting-started/alternatives/alternative-to-clickhouse',
-                        'getting-started/alternatives/alternative-to-elasticsearch',
-                        'getting-started/alternatives/alternative-to-trino',
-                    ],
-                },
             ],
         },
         {
