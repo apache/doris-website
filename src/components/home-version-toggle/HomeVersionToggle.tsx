@@ -13,7 +13,7 @@ export function HomeVersionToggle({ isV2, onToggle }: HomeVersionToggleProps): J
             onClick={onToggle}
             title={isV2 ? 'Switch back to classic homepage' : 'Try the new homepage design'}
         >
-            {isV2 ? '← Back to Classic' : '✨ Try New Design'}
+            {isV2 ? '← Back to Classic' : '✨ Explore the New Doris'}
         </button>
     );
 }

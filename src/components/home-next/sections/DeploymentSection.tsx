@@ -29,7 +29,7 @@ const DEPLOYMENT_CARDS: DeploymentCardItem[] = [
             second: 'Storage',
             accent: 'COUPLED',
         },
-        subtitle: 'A classic MPP architecture where compute and storage are co-located to maximize local I/O efficiency for low-latency analytics.',
+        subtitle: 'Classic MPP, with compute and storage co-located on each node for maximum local I/O and the lowest query latency.',
         image: {
             src: '/images/next/home-page/cs-coupled.jpg',
             alt: 'Apache Doris compute-storage coupled mode architecture diagram',
@@ -46,7 +46,7 @@ const DEPLOYMENT_CARDS: DeploymentCardItem[] = [
             second: 'Storage',
             accent: 'DECOUPLED',
         },
-        subtitle: 'A cloud-native architecture that separates stateless compute groups from shared object storage for elastic scaling and efficient resource use.',
+        subtitle: 'Cloud-native architecture with stateless compute groups over shared object storage. Scale compute on demand and isolate workloads from one another.',
         image: {
             src: '/images/next/home-page/cs-decoupled.jpg',
             alt: 'Apache Doris compute-storage decoupled mode architecture diagram',

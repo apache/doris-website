@@ -16,7 +16,7 @@ export default function HomeNext({ onSwitchBack }: HomeNextProps): JSX.Element {
     return (
         <LayoutNext
             title="Apache Doris: Open Source, Real-Time Analytics and Search Database for the AI Era"
-            description="Apache Doris is an open-source database based on MPP architecture, with easier use and higher performance. As a modern data warehouse, Apache Doris empowers your OLAP query and database analytics."
+            description="Apache Doris is an open-source, real-time analytics database built on MPP architecture. Run OLAP queries, lakehouse analytics, and hybrid search at petabyte scale on a single engine."
         >
             <HeroSection />
             <FeaturesSection />

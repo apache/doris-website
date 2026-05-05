@@ -88,7 +88,7 @@ interface TypewriterResult {
     activeLine: number;
 }
 
-function useTypewriter(lines: SqlLine[], speed = 22, finalPause = 2400): TypewriterResult {
+function useTypewriter(lines: SqlLine[], speed = 11, finalPause = 2400): TypewriterResult {
     const flat = useMemo(() => flattenLines(lines), [lines]);
     const totalChars = useMemo(() => flat.reduce((s, l) => s + l.total, 0), [flat]);
     const [tick, setTick] = useState(0);
@@ -640,12 +640,12 @@ export function HeroSection(): JSX.Element {
 
                         <p className="hero-next__sub">
                             Apache Doris is an open-source, real-time database for modern analytics
-                            and AI — built for both bare-metal shared-nothing and cloud-native
-                            disaggregated modes.
+                            and AI. Run it shared-nothing on bare metal, or disaggregated on
+                            cloud object storage.
                         </p>
 
                         <div className="hero-next__ctas">
-                            <a className="hero-next__btn hero-next__btn--yellow" href="https://doris.apache.org/download">
+                            <a className="hero-next__btn hero-next__btn--yellow" href="/download-next">
                                 <DownloadIcon />
                                 Download
                             </a>
@@ -673,7 +673,7 @@ export function HeroSection(): JSX.Element {
                             <div className="hero-next__perf-pill">
                                 <LightningSvg size={14} color="#0F1A14" />
                                 <span>
-                                    <strong>Structured + Full-text + Vector</strong> — all in one SQL.
+                                    <strong>Structured, full-text, and vector</strong> search, all in one SQL.
                                 </span>
                             </div>
                         </div>

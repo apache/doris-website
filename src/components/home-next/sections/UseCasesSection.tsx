@@ -19,22 +19,22 @@ interface UseCase {
 const USE_CASES: UseCase[] = [
     {
         title: 'Customer-Facing Analytics',
-        desc: 'Deliver sub-second, interactive analytics directly to your customers, at scale.',
+        desc: 'Ship sub-second, interactive analytics straight to your customers at scale.',
         href: '/use-cases/customer-facing-analytics',
     },
     {
         title: 'Data Warehousing',
-        desc: 'A unified, real-time data warehouse for analytics across all your business data.',
+        desc: 'One real-time warehouse for analytics across every business domain.',
         href: '/use-cases/data-warehousing',
     },
     {
         title: 'Observability',
-        desc: 'High-throughput log and metrics analytics for monitoring and incident response.',
+        desc: 'High-throughput log and metric analytics for monitoring and incident response.',
         href: '/use-cases/observability',
     },
     {
         title: 'Doris for AI',
-        desc: 'Vector, text, and JSON search unified with SQL — built for AI agents and RAG.',
+        desc: 'Vector, text, and JSON search unified in SQL, built for AI agents and RAG.',
         href: '/use-cases/ai',
     },
 ];

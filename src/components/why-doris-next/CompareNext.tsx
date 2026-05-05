@@ -98,7 +98,7 @@ export default function CompareNext(): JSX.Element {
     return (
         <LayoutNext
             title="Apache Doris vs. the Others — Selection Guide"
-            description="Pick the right real-time analytical database for your workload. Apache Doris head-to-head with ClickHouse, Elasticsearch, and Trino/Presto — across architecture, performance, and total cost."
+            description="Pick the right real-time analytical database for your workload. See how Apache Doris compares with ClickHouse, Elasticsearch, and Trino/Presto on architecture, performance, and total cost."
         >
             <div className="cmp-next">
                 <div className="cmp-next__bg" aria-hidden="true">

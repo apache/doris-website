@@ -40,6 +40,7 @@ function useGitHubStars(repo: string, fallback: string): string {
 interface DropdownItem {
     label: string;
     href: string;
+    external?: boolean;
 }
 
 interface NavItem {
@@ -82,8 +83,7 @@ function buildNavItems(docsHref: string, releasesHref: string): NavItem[] {
         {
             label: 'Community',
             items: [
-                { label: 'Join GitHub Discussions', href: '#' },
-                { label: 'Developer', href: '/community/join-community' },
+                { label: 'Join GitHub Discussions', href: 'https://github.com/apache/doris/discussions', external: true },
             ],
         },
     ];
@@ -190,7 +190,12 @@ export function NavbarNext(): JSX.Element {
                             </button>
                             <div className="navbar-next__dropdown">
                                 {item.items.map(sub => (
-                                    <Link key={sub.label} to={sub.href} className="navbar-next__dropdown-link">
+                                    <Link
+                                        key={sub.label}
+                                        to={sub.href}
+                                        className="navbar-next__dropdown-link"
+                                        {...(sub.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+                                    >
                                         {sub.label}
                                     </Link>
                                 ))}
@@ -283,6 +288,7 @@ export function NavbarNext(): JSX.Element {
                                             to={sub.href}
                                             className="navbar-next__mobile-link"
                                             onClick={() => setMobileOpen(false)}
+                                            {...(sub.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
                                         >
                                             {sub.label}
                                         </Link>

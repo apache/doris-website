@@ -17,7 +17,7 @@ const CLICKHOUSE: ComparisonContent = {
     competitorName: 'ClickHouse',
     competitorMark: 'C',
     whyChoose: {
-        sub: 'Doris and ClickHouse are both leading real-time analytical databases. Doris pulls ahead in the workloads modern data teams hit every day.',
+        sub: 'Doris and ClickHouse are both leading real-time analytical databases. Doris pulls ahead on the workloads modern data teams run every day.',
         valueProps: [
             {
                 stat: '2–10',
@@ -25,7 +25,7 @@ const CLICKHOUSE: ComparisonContent = {
                 arrow: '↑',
                 label: 'Faster Joins',
                 headline: 'Distributed multi-table joins, no wide-table workarounds.',
-                text: 'MPP architecture with a cost-based optimizer that picks Broadcast / Shuffle / Colocate automatically. Completes the full TPC-DS suite where ClickHouse fails ~50%.',
+                text: 'MPP architecture with a cost-based optimizer that automatically picks Broadcast, Shuffle, or Colocate joins. Doris completes the full TPC-DS suite; ClickHouse fails about 50% of the queries.',
             },
             {
                 stat: '70',
@@ -33,19 +33,19 @@ const CLICKHOUSE: ComparisonContent = {
                 arrow: '↓',
                 label: 'Lower Cost',
                 headline: 'Storage-compute separation, open-source.',
-                text: 'Elastic compute scales without rebalancing. Open-source 3.0+ — no commercial-cloud lock-in to get the cost model.',
+                text: 'Elastic compute scales without rebalancing. The cost model ships with open-source 3.0+, with no commercial-cloud lock-in.',
             },
             {
                 stat: '1000',
                 unit: '+',
                 label: 'Concurrent Queries',
-                headline: 'Real-time UPSERTs that don\'t kill query speed.',
-                text: 'Merge-on-Write keeps reads stable under high-frequency updates. Full ACID, MySQL-compatible, thousands of concurrent queries — not under 100.',
+                headline: 'Real-time UPSERTs without sacrificing query speed.',
+                text: 'Merge-on-Write keeps reads stable under high-frequency updates. Full ACID, MySQL-compatible, with thousands of concurrent queries instead of fewer than 100.',
             },
         ],
     },
     cases: {
-        sub: 'Real production migrations at internet-scale companies — the same SQL workload, dramatically different shape.',
+        sub: 'Real production migrations at internet-scale companies running the same SQL workloads, with very different outcomes.',
         items: [
             {
                 name: 'Kuaishou',
@@ -55,7 +55,7 @@ const CLICKHOUSE: ComparisonContent = {
                 color: '#FF6B35',
                 quote: 'After replacing ClickHouse with Apache Doris, Kuaishou successfully upgraded to a unified lakehouse architecture, achieving unified storage and a simplified data pipeline.',
                 benefits: [
-                    <><strong>Direct lakehouse queries</strong> — no ingestion, shorter pipeline</>,
+                    <><strong>Direct lakehouse queries</strong>: no ingestion, shorter pipeline</>,
                     <><strong>Materialized view rewriting</strong> for query acceleration across scenarios</>,
                     <>Flexible <strong>data governance</strong> via automatic materialization</>,
                 ],
@@ -69,7 +69,7 @@ const CLICKHOUSE: ComparisonContent = {
                 quote: 'After migrating the analytical engine from ClickHouse to Apache Doris, the platform effectively improved data timeliness, reduced operational costs, and resolved fragmented data management.',
                 benefits: [
                     <>Strong <strong>multi-table</strong> and <strong>federated query</strong> performance</>,
-                    <><strong>MySQL-protocol compatible</strong> — lower operational overhead</>,
+                    <><strong>MySQL-protocol compatible</strong>: lower operational overhead</>,
                     <><strong>Partial-column updates</strong> for diverse data update patterns</>,
                 ],
             },
@@ -144,7 +144,7 @@ const CLICKHOUSE: ComparisonContent = {
             {
                 label: 'Query Concurrency',
                 doris: [
-                    'Thousands of concurrent queries — 10×+',
+                    'Thousands of concurrent queries, 10×+',
                     'Efficient memory management',
                 ],
                 competitor: [
@@ -197,7 +197,7 @@ const ELASTIC: ComparisonContent = {
     competitorName: 'Elasticsearch',
     competitorMark: 'E',
     whyChoose: {
-        sub: 'Doris and Elasticsearch both serve observability, security, and real-time analytics. Doris pulls ahead on storage cost, write efficiency, and analytical depth — without a custom DSL.',
+        sub: 'Doris and Elasticsearch both serve observability, security, and real-time analytics. Doris pulls ahead on storage cost, write efficiency, and analytical depth, all without a custom DSL.',
         valueProps: [
             {
                 stat: '5–10',
@@ -205,7 +205,7 @@ const ELASTIC: ComparisonContent = {
                 arrow: '↑',
                 label: 'Compression Ratio',
                 headline: 'Far smaller storage footprint.',
-                text: '1:5–1:10 storage compression vs Elasticsearch\'s 1:1.5 — multiple times less disk for the same logs and metrics.',
+                text: 'Doris compresses logs and metrics at 1:5 to 1:10, versus Elasticsearch\'s 1:1.5. The same data fits on a fraction of the disk.',
             },
             {
                 stat: '<10',
@@ -213,7 +213,7 @@ const ELASTIC: ComparisonContent = {
                 arrow: '↓',
                 label: 'Write Overhead',
                 headline: 'High write throughput, low overhead.',
-                text: 'Indexing once across multiple replicas keeps overhead under 10%. Elasticsearch indexes per-replica and pays up to 3× per write under deduplication.',
+                text: 'Doris indexes once across multiple replicas, keeping overhead under 10%. Elasticsearch indexes each replica separately and pays up to 3× per write under deduplication.',
             },
             {
                 stat: '2–3',
@@ -221,12 +221,12 @@ const ELASTIC: ComparisonContent = {
                 arrow: '↑',
                 label: 'Faster Search',
                 headline: 'Full-text search and SQL, no DSL.',
-                text: '2–3× faster full-text search in production migrations, with multi-table joins, materialized views, and the open MySQL ecosystem on top.',
+                text: 'Production migrations report 2–3× faster full-text search, with multi-table joins, materialized views, and the open MySQL ecosystem on top.',
             },
         ],
     },
     cases: {
-        sub: 'Real Elasticsearch-to-Doris migrations across observability, financial security, and logistics — same workload, dramatically smaller bill.',
+        sub: 'Real Elasticsearch-to-Doris migrations across observability, financial security, and logistics. Same workload, dramatically smaller bill.',
         items: [
             {
                 name: 'True Watch',
@@ -301,12 +301,12 @@ const ELASTIC: ComparisonContent = {
             {
                 label: 'Real-time Ingestion',
                 doris: [
-                    'Index once across replicas — high throughput, low overhead',
+                    'Index once across replicas: high throughput, low overhead',
                     'Push and Pull (from Kafka) without external tools',
                     'Logstash and Beats compatible',
                 ],
                 competitor: [
-                    'Index per-replica — up to 3× write overhead',
+                    'Index per replica, up to 3× write overhead',
                     'Push only; Pull requires external tools like Logstash',
                     'Heavier ingestion pipeline overall',
                 ],
@@ -315,7 +315,7 @@ const ELASTIC: ComparisonContent = {
             {
                 label: 'Real-time Storage',
                 doris: [
-                    '1:5–1:10 compression ratio — multiple times less disk',
+                    '1:5–1:10 compression ratio: a fraction of the disk footprint',
                     'Primary key supports both Merge-on-Write and Merge-on-Read',
                     'Strongly consistent aggregations, coexist with raw data',
                     'Flexible Schema Change for evolving business needs',
@@ -333,7 +333,7 @@ const ELASTIC: ComparisonContent = {
                 doris: [
                     'Fast across point queries, aggregation, and analytics',
                     'Multi-table joins, materialized views, UDFs, lakehouse',
-                    'Standard SQL — easy to use',
+                    'Standard SQL, easy to use',
                     'Open MySQL ecosystem',
                 ],
                 competitor: [
@@ -368,7 +368,7 @@ const TRINO: ComparisonContent = {
     competitorName: 'Trino / Presto',
     competitorMark: 'T',
     whyChoose: {
-        sub: 'Doris and Trino/Presto are both mainstream lakehouse query engines. Doris unifies the data warehouse and the lakehouse query engine — same SQL, dramatically faster across both.',
+        sub: 'Doris and Trino/Presto are both mainstream lakehouse query engines. Doris unifies the data warehouse and the lakehouse query engine, running the same SQL dramatically faster across both.',
         valueProps: [
             {
                 stat: '10',
@@ -376,7 +376,7 @@ const TRINO: ComparisonContent = {
                 arrow: '↑',
                 label: 'Internal Tables',
                 headline: 'Fully vectorized C++ engine.',
-                text: 'Up to 10× faster internal-table query performance versus Presto/Trino. The fully vectorized engine, implemented in C++, runs the warehouse workload Trino has to defer to a downstream system.',
+                text: 'Doris runs internal-table queries up to 10× faster than Presto/Trino. The fully vectorized C++ engine handles the warehouse workloads that Trino has to defer to a downstream system.',
             },
             {
                 stat: '2–3',
@@ -384,19 +384,19 @@ const TRINO: ComparisonContent = {
                 arrow: '↑',
                 label: 'Faster Lakehouse',
                 headline: 'Better acceleration on external tables.',
-                text: '2–3× faster execution than Presto/Trino on lakehouse queries. Validated on the TPC-DS 1TB benchmark when both engines query the same external Hive tables.',
+                text: 'Doris executes lakehouse queries 2–3× faster than Presto/Trino, measured on the TPC-DS 1TB benchmark with both engines querying the same external Hive tables.',
             },
             {
                 stat: '1000',
                 unit: '+',
                 label: 'Concurrent QPS',
                 headline: 'Real-time analytics, not just interactive.',
-                text: 'Built for high-concurrency real-time analytics with thousands of concurrent queries — beyond the interactive-only sweet spot Trino is designed for.',
+                text: 'Built for high-concurrency real-time analytics with thousands of concurrent queries, well beyond the interactive-only workloads Trino targets.',
             },
         ],
     },
     cases: {
-        sub: 'Real Trino/Presto-to-Doris migrations across networking, gaming, and logistics — same SQL, simpler architecture, faster queries.',
+        sub: 'Real Trino/Presto-to-Doris migrations across networking, gaming, and logistics. Same SQL, simpler architecture, faster queries.',
         items: [
             {
                 name: 'Cisco',
@@ -445,7 +445,7 @@ const TRINO: ComparisonContent = {
             {
                 label: 'System Architecture',
                 doris: [
-                    'Unified architecture — data warehouse + lakehouse',
+                    'Unified architecture: data warehouse and lakehouse',
                     'Built-in storage layer',
                     'Single engine for the full analytics stack',
                 ],
