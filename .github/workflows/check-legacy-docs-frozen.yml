@@ -1,0 +1,68 @@
+name: Check Legacy Docs Frozen
+
+on:
+  pull_request:
+    # Include `labeled` / `unlabeled` so that adding or removing the
+    # `allow-legacy-docs` label re-runs this check automatically.
+    types: [opened, synchronize, reopened, labeled, unlabeled]
+
+jobs:
+  check-legacy-docs:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout PR
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Detect changes in legacy docs directories
+        env:
+          PR_LABELS: ${{ toJson(github.event.pull_request.labels.*.name) }}
+        run: |
+          set -e
+          BASE_SHA="${{ github.event.pull_request.base.sha }}"
+          HEAD_SHA="${{ github.event.pull_request.head.sha }}"
+
+          # All changes in this PR (added / modified / deleted / renamed)
+          CHANGED=$(git diff --name-only "$BASE_SHA" "$HEAD_SHA")
+
+          LEGACY=$(echo "$CHANGED" | grep -E '^(docs/|i18n/zh-CN/docusaurus-plugin-content-docs/current/)' || true)
+
+          if [ -n "$LEGACY" ]; then
+            # Bypass: maintainers can attach the `allow-legacy-docs` label to
+            # explicitly approve a legacy-docs change (e.g. a critical fix that
+            # must ship before the next-version cutover).
+            if echo "$PR_LABELS" | grep -q '"allow-legacy-docs"'; then
+              echo "::warning::Legacy doc changes detected, but the 'allow-legacy-docs' label is set — bypassing the check."
+              echo ""
+              echo "Legacy doc files changed in this PR (allowed by label):"
+              echo "$LEGACY" | sed 's/^/   - /'
+              exit 0
+            fi
+
+            echo "::error::Modifying legacy documentation directories is not allowed."
+            echo ""
+            echo "❌ The following legacy doc files were changed in this PR:"
+            echo "$LEGACY" | sed 's/^/   - /'
+            echo ""
+            echo "The following directories are frozen and must not be modified:"
+            echo "   - docs/"
+            echo "   - i18n/zh-CN/docusaurus-plugin-content-docs/current/"
+            echo ""
+            echo "Please move your changes to the corresponding next-version directory:"
+            echo "   English:  docs/<path>"
+            echo "         ->  docs-next/<path>"
+            echo "   中文:     i18n/zh-CN/docusaurus-plugin-content-docs/current/<path>"
+            echo "         ->  i18n/zh-CN/docusaurus-plugin-content-docs-next/current/<path>"
+            echo ""
+            echo "Note: a few top-level folders were renamed in the new structure, e.g."
+            echo "   gettingStarted  ->  getting-started"
+            echo "   ecosystem       ->  connection-integration  (structure also changed; please review)"
+            echo ""
+            echo "If a change to legacy docs is genuinely required (e.g. a critical fix that"
+            echo "must ship before the next-version cutover), please discuss with the maintainers,"
+            echo "and a maintainer can attach the 'allow-legacy-docs' label to bypass this check."
+            exit 1
+          fi
+
+          echo "✅ No changes in legacy docs directories."
