@@ -208,6 +208,7 @@ const config = {
                 showLastUpdateTime: false,
             }),
         ],
+        require.resolve('./plugins/key-features-glossary-index'),
         process.env.NODE_ENV === 'development' ? null : customDocusaurusPlugin,
         async function tailwindcssPlugin(context, options) {
             return {
