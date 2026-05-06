@@ -65,13 +65,14 @@ jobs:
                 npm install -g yarn
                 yarn install --frozen-lockfile || yarn install
 
-            - name: Build (docs-next only, EN + zh-CN)
+            - name: Build (docs-next + minimal legacy 4.x, EN + zh-CN)
               if: steps.changes.outputs.relevant == 'true'
               env:
-                # Skip the legacy docs plugin entirely — its dev/current build was
-                # moved to the docs-next plugin, so the old DOCS_VERSIONS=current
-                # filter no longer matches any version in the legacy plugin.
-                SKIP_DOCS: 'true'
+                # Keep the legacy docs plugin enabled (needed by docsVersionDropdown
+                # navbar items on /archive-docs, /community/..., etc.) but limit it
+                # to a single version to keep the smoke build fast. 'current' is no
+                # longer a valid legacy version — that build moved to docs-next.
+                DOCS_VERSIONS: '4.x'
               run: |
                 export NODE_OPTIONS=--max-old-space-size=8192
                 yarn docusaurus build --locale en --locale zh-CN
