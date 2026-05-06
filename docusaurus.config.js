@@ -220,6 +220,18 @@ const config = {
                 createRedirects(existingPath) {
                     const redirects = [];
 
+                    // Legacy /docs/dev/* (and zh-CN counterpart) was retired when the
+                    // Dev tree moved into the docs-next plugin. Redirect any old URL
+                    // whose path still has a 1:1 match under /docs-next/dev/. Paths
+                    // without a match fall through to NotFound, which renders a
+                    // dedicated guidance card pointing at the new Dev docs entry.
+                    if (existingPath.startsWith('/docs-next/dev/')) {
+                        redirects.push(existingPath.replace('/docs-next/dev/', '/docs/dev/'));
+                    }
+                    if (existingPath.startsWith('/zh-CN/docs-next/dev/')) {
+                        redirects.push(existingPath.replace('/zh-CN/docs-next/dev/', '/zh-CN/docs/dev/'));
+                    }
+
                     // Redirect old dev doc paths to the current default version.
                     // Placed in createRedirects (not static redirects) because the
                     // target version may not be built during incremental CI checks.
