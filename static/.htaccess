@@ -1,3 +1,18 @@
 <IfModule mod_headers.c>
     Header set Content-Security-Policy "script-src 'self' https://cdnd.selectdb.com widget.kapa.ai www.google.com https://hcaptcha.com https://*.hcaptcha.com https://www.gstatic.com 'unsafe-inline' 'unsafe-eval'; connect-src 'self' proxy.kapa.ai kapa-widget-proxy-la7dkmplpq-uc.a.run.app metrics.kapa.ai https://hcaptcha.com https://*.hcaptcha.com www.google.com; frame-src 'self' www.google.com https://hcaptcha.com https://*.hcaptcha.com; worker-src 'self' https://cdnd.selectdb.com blob:; style-src 'self' https://cdnd.selectdb.com 'unsafe-inline' https://hcaptcha.com https://*.hcaptcha.com; font-src 'self' https://cdnd.selectdb.com data:;"
 </IfModule>
+
+# Serve Docusaurus's built 404 page (which mounts src/theme/NotFound.js) for any
+# unknown URL, instead of httpd's default ErrorDocument. The browser keeps the
+# original path, so NotFound.js can detect legacy /docs/dev/* and show guidance.
+# For /zh-CN/* misses, rewrite to the zh-CN-locale 404 so the surrounding Layout
+# (header/footer/i18n context) renders in Chinese; the URL is preserved so the
+# React component still reads the original pathname for legacy detection.
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteCond %{REQUEST_URI} ^/zh-CN/
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^ /zh-CN/404.html [L]
+</IfModule>
+ErrorDocument 404 /404.html
