@@ -1,0 +1,32 @@
+.header {
+    background: #0b1020;
+    color: #e2e8f0;
+    padding: 3rem 1.5rem 2.5rem;
+}
+
+.headerInner {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.title {
+    font-size: 2rem;
+    margin: 0 0 0.5rem;
+    color: #f8fafc;
+}
+
+.subtitle {
+    margin: 0;
+    color: #94a3b8;
+
+    strong {
+        color: #f8fafc;
+        font-family: var(--ifm-font-family-monospace, monospace);
+    }
+}
+
+@media (max-width: 640px) {
+    .title {
+        font-size: 1.5rem;
+    }
+}
