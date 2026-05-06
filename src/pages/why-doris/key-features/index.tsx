@@ -1,13 +1,18 @@
-import React from 'react';
+import React, { JSX } from 'react';
 import Layout from '@theme/Layout';
+import { KeyFeaturesHero } from '@site/src/components/key-features/KeyFeaturesHero';
+import { FeatureCardGrid } from '@site/src/components/key-features/FeatureCardGrid';
+import { GlossaryCTABanner } from '@site/src/components/key-features/GlossaryCTABanner';
 
 export default function KeyFeaturesLanding(): JSX.Element {
     return (
-        <Layout title="Key Features">
-            <main style={{ padding: '4rem 2rem' }}>
-                <h1>Key Features (placeholder)</h1>
-                <p>If you can read this, the pages plugin won the route resolution.</p>
-            </main>
+        <Layout
+            title="Key Features"
+            description="Apache Doris's distinctive technical capabilities for engineers."
+        >
+            <KeyFeaturesHero />
+            <FeatureCardGrid />
+            <GlossaryCTABanner />
         </Layout>
     );
 }
