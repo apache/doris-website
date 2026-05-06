@@ -4,11 +4,12 @@ import { useLocation } from '@docusaurus/router';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import DropdownNavbarItem from '@theme/NavbarItem/DropdownNavbarItem';
 import { getLocalePrefix, isDocsNextPath, isReleasesPath, normalizePathname } from '@site/src/utils/locale';
+import { STAR_COUNT } from '@site/src/constant/github.data';
 import './NavbarNext.scss';
 
 const GITHUB_REPO = 'apache/doris';
-const FALLBACK_STARS = '-';
 const HOME_VERSION_KEY = 'doris-home-version';
+const STAR_DISPLAY = `${STAR_COUNT}k`;
 
 function safeSetLocalStorage(key: string, value: string): void {
     try {
@@ -16,33 +17,6 @@ function safeSetLocalStorage(key: string, value: string): void {
     } catch {
         // localStorage may be unavailable (Safari private mode, disabled cookies, quota errors)
     }
-}
-
-function formatStars(n: number): string {
-    if (n >= 1000) return `${(n / 1000).toFixed(1)}k`;
-    return String(n);
-}
-
-function useGitHubStars(repo: string, fallback: string): string {
-    const [stars, setStars] = useState(fallback);
-    useEffect(() => {
-        let cancelled = false;
-        const timer = window.setTimeout(() => {
-            fetch(`https://api.github.com/repos/${repo}`)
-                .then(r => (r.ok ? r.json() : null))
-                .then(data => {
-                    if (!cancelled && data && typeof data.stargazers_count === 'number') {
-                        setStars(formatStars(data.stargazers_count));
-                    }
-                })
-                .catch(() => { /* keep fallback on network/CORS/rate-limit errors */ });
-        }, 1200);
-        return () => {
-            cancelled = true;
-            window.clearTimeout(timer);
-        };
-    }, [repo]);
-    return stars;
 }
 
 interface DropdownItem {
@@ -138,7 +112,6 @@ export function NavbarNext(): JSX.Element {
         i18n: { currentLocale, defaultLocale, localeConfigs },
     } = useDocusaurusContext();
     const { pathname, search, hash } = useLocation();
-    const stars = useGitHubStars(GITHUB_REPO, FALLBACK_STARS);
     const [mobileOpen, setMobileOpen] = useState(false);
     const localePrefix = getLocalePrefix(currentLocale, defaultLocale);
     const docsHref = `${localePrefix}/docs-next/dev/getting-started/what-is-apache-doris`;
@@ -152,7 +125,7 @@ export function NavbarNext(): JSX.Element {
     const localeSwitchLabel = currentLocale === 'zh-CN' ? localeConfigs[defaultLocale]?.label ?? 'English' : '中文';
     const currentLocalizedPath = normalizePathname(pathname, [defaultLocale, 'zh-CN']);
     const buildLocaleHref = (locale: string) =>
-        `${locale === defaultLocale ? '' : `/${locale}`}${currentLocalizedPath}${search}${hash}`;
+        `pathname://${locale === defaultLocale ? '' : `/${locale}`}${currentLocalizedPath}${search}${hash}`;
     const localeItems = [defaultLocale, 'zh-CN']
         .filter((locale, index, arr) => arr.indexOf(locale) === index)
         .map(locale => ({
@@ -245,12 +218,12 @@ export function NavbarNext(): JSX.Element {
                         target="_blank"
                         rel="noopener noreferrer"
                         className="navbar-next__star-link"
-                        aria-label={`Star Apache Doris on GitHub (${stars} stars)`}
+                        aria-label={`Star Apache Doris on GitHub (${STAR_DISPLAY} stars)`}
                     >
                         <StarIcon />
                         <span>Star</span>
                         <span className="navbar-next__star-divider" />
-                        <span className="navbar-next__star-count">{stars}</span>
+                        <span className="navbar-next__star-count">{STAR_DISPLAY}</span>
                         <span className="navbar-next__star-divider" />
                         <GitHubIcon />
                     </a>
@@ -340,12 +313,12 @@ export function NavbarNext(): JSX.Element {
                         target="_blank"
                         rel="noopener noreferrer"
                         className="navbar-next__star-link"
-                        aria-label={`Star Apache Doris on GitHub (${stars} stars)`}
+                        aria-label={`Star Apache Doris on GitHub (${STAR_DISPLAY} stars)`}
                     >
                         <StarIcon />
                         <span>Star</span>
                         <span className="navbar-next__star-divider" />
-                        <span className="navbar-next__star-count">{stars}</span>
+                        <span className="navbar-next__star-count">{STAR_DISPLAY}</span>
                         <span className="navbar-next__star-divider" />
                         <GitHubIcon />
                     </a>
