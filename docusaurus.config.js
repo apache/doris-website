@@ -220,6 +220,23 @@ const config = {
                 },
             };
         },
+        function yamlLoaderPlugin() {
+            return {
+                name: 'yaml-loader',
+                configureWebpack() {
+                    return {
+                        module: {
+                            rules: [
+                                {
+                                    test: /\.ya?ml$/,
+                                    use: 'js-yaml-loader',
+                                },
+                            ],
+                        },
+                    };
+                },
+            };
+        },
         [
             '@docusaurus/plugin-client-redirects',
             {
