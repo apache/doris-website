@@ -262,6 +262,9 @@ const config = {
             /** @type {import('@docusaurus/preset-classic').Options} */
             ({
                 docs: SKIP_DOCS ? false : {
+                    // Dev (unversioned) build moved to the docs-next plugin; the legacy
+                    // docs/ tree only ships the snapshotted versions in versions.json.
+                    includeCurrentVersion: false,
                     ...(ONLY_VERSIONS && { onlyIncludeVersions: ONLY_VERSIONS }),
                     // When filtering versions, lastVersion must be in the
                     // included list. Fall back to the first included version.
