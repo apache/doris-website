@@ -195,6 +195,19 @@ const config = {
                 ],
             }),
         ],
+        [
+            'content-docs',
+            /** @type {import('@docusaurus/plugin-content-docs').Options} */
+            ({
+                id: 'key-features',
+                path: 'key-features-docs',
+                routeBasePath: 'why-doris/key-features',
+                sidebarPath: false,
+                editUrl: 'https://github.com/apache/doris-website/edit/master/',
+                showLastUpdateAuthor: false,
+                showLastUpdateTime: false,
+            }),
+        ],
         process.env.NODE_ENV === 'development' ? null : customDocusaurusPlugin,
         async function tailwindcssPlugin(context, options) {
             return {
