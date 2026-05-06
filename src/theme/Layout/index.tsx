@@ -17,6 +17,7 @@ import type { Props } from '@theme/Layout';
 import styles from './styles.module.css';
 import { useHistory } from '@docusaurus/router';
 import { NavbarNext } from '@site/src/components/home-next/NavbarNext';
+import { PreviewBanner } from '@site/src/components/home-next/PreviewBanner';
 import { isDocsNextPath, isReleasesPath, isEventsPath } from '@site/src/utils/locale';
 interface DataType {
     showSearchPageMobile: boolean;
@@ -89,6 +90,7 @@ export default function Layout(props: Props): JSX.Element {
 
                 <SkipToContent />
                 <AnnouncementBar />
+                {useNextNavbar && <PreviewBanner />}
                 {useNextNavbar ? <NavbarNext /> : <Navbar />}
                 {!useNextNavbar && showSearchPageMobile ? (
                     <div ref={searchPageDom}>
