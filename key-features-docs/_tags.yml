@@ -1,0 +1,24 @@
+groups:
+  functional-area:
+    label: "Functional area"
+    tags:
+      storage:                    { label: "Storage",              color: "#3b82f6" }
+      query-engine:               { label: "Query Engine",         color: "#8b5cf6" }
+      indexing:                   { label: "Indexing",             color: "#10b981" }
+      search:                     { label: "Search",               color: "#7c3aed" }
+      lakehouse:                  { label: "Lakehouse",            color: "#f59e0b" }
+      ai:                         { label: "AI",                   color: "#ec4899" }
+      observability:              { label: "Observability",        color: "#06b6d4" }
+      ingestion:                  { label: "Ingestion",            color: "#14b8a6" }
+      compute-storage-decoupling: { label: "Compute-Storage Sep.", color: "#6366f1" }
+      availability:               { label: "Availability",         color: "#84cc16" }
+      security:                   { label: "Security",             color: "#ef4444" }
+  concept-type:
+    label: "Concept type"
+    tags:
+      algorithm:              { label: "Algorithm",      color: "#0891b2" }
+      data-structure:         { label: "Data Structure", color: "#9333ea" }
+      file-format:            { label: "File Format",    color: "#f97316" }
+      protocol:               { label: "Protocol",       color: "#64748b" }
+      mechanism:              { label: "Mechanism",     color: "#0d9488" }
+      architecture-component: { label: "Architecture",   color: "#dc2626" }

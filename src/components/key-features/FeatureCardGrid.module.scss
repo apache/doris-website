@@ -1,0 +1,27 @@
+.gridSection {
+    padding: 4rem 1.5rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: 1.5rem;
+}
+
+.cell { grid-column: span 4; }
+.cellFeatured { grid-column: span 8; }
+
+.cell > a, .cellFeatured > a { height: 100%; }
+
+@media (max-width: 996px) {
+    .grid { grid-template-columns: repeat(6, 1fr); gap: 1rem; }
+    .cell, .cellFeatured { grid-column: span 6; }
+}
+
+@media (max-width: 640px) {
+    .gridSection { padding: 2.5rem 1rem; }
+    .grid { grid-template-columns: 1fr; }
+    .cell, .cellFeatured { grid-column: span 1; }
+}
