@@ -65,10 +65,13 @@ jobs:
                 npm install -g yarn
                 yarn install --frozen-lockfile || yarn install
 
-            - name: Build (current only, EN + zh-CN)
+            - name: Build (docs-next only, EN + zh-CN)
               if: steps.changes.outputs.relevant == 'true'
               env:
-                DOCS_VERSIONS: current
+                # Skip the legacy docs plugin entirely — its dev/current build was
+                # moved to the docs-next plugin, so the old DOCS_VERSIONS=current
+                # filter no longer matches any version in the legacy plugin.
+                SKIP_DOCS: 'true'
               run: |
                 export NODE_OPTIONS=--max-old-space-size=8192
                 yarn docusaurus build --locale en --locale zh-CN
