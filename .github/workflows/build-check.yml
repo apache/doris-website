@@ -196,6 +196,7 @@ jobs:
                   yarn cache clean
                   export NODE_OPTIONS=--max-old-space-size=8192
                   yarn
+                  yarn key-features:generate
 
                   echo "Building with DOCS_VERSIONS=${DOCS_VERSIONS:-all}"
                   PWA_SERVICE_WORKER_URL=https://doris.apache.org/sw.js yarn docusaurus build ${{ steps.detect.outputs.locale_args }}
