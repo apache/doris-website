@@ -75,6 +75,7 @@ jobs:
                 DOCS_VERSIONS: '4.x'
               run: |
                 export NODE_OPTIONS=--max-old-space-size=8192
+                yarn key-features:generate
                 yarn docusaurus build --locale en --locale zh-CN
 
             - name: Verify docs-next artifacts

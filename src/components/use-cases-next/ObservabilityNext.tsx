@@ -445,11 +445,11 @@ const capabilities: Capability[] = [
             'Apache Doris ingests high-volume telemetry from Kafka, CDC pipelines, and streaming APIs with low latency. Logs, metrics, traces, and AI agent events become queryable in near real time for fast debugging, monitoring, and cost analysis.',
         poweredLabel: 'Powered by',
         poweredBy: [
-            'Routine Load',
-            'Stream Load',
-            'Built-in MySQL / PostgreSQL CDC',
-            'Built-in Kafka subscription',
-            'Real-time data update',
+            'Stream Load via HTTP',
+            'Kafka/CDC Integration',
+            'Group Commit',
+            'Prepared Statement',
+            'Vertical',
         ],
     },
     {
@@ -467,10 +467,6 @@ const capabilities: Capability[] = [
         poweredLabel: 'Powered by',
         poweredBy: [
             'VARIANT data type',
-            'JSON analysis',
-            'Dynamic schema support',
-            'Nested field access',
-            'Auto-columnar storage for hot fields',
         ],
     },
     {
@@ -487,11 +483,9 @@ const capabilities: Capability[] = [
             'Search massive volumes of logs, prompts, responses and tool outputs with inverted indexes, tokenized text search and BM25 relevance scoring, so teams can quickly find failures and understand agent behavior.',
         poweredLabel: 'Powered by',
         poweredBy: [
-            'Inverted index',
-            'Full-text search',
-            'Tokenized text search',
-            'BM25 relevance scoring',
-            'Search over prompts and tool outputs',
+            'Inverted Index',
+            'Full-text Search',
+            'BM25',
         ],
     },
     {
@@ -508,12 +502,7 @@ const capabilities: Capability[] = [
             'Doris accelerates dashboard analytics over observability metrics with a high-performance OLAP engine, materialized views, and transparent SQL query rewriting — from error rates and latency to token usage, model cost, and SLA trends.',
         poweredLabel: 'Powered by',
         poweredBy: [
-            'Columnar storage',
-            'MPP query engine',
-            'Vectorized execution',
-            'Materialized views',
-            'Rollup / pre-aggregation',
-            'High-concurrency dashboard queries',
+            'Prepared Statement',
         ],
     },
     {
@@ -530,11 +519,9 @@ const capabilities: Capability[] = [
             'Doris 4.0 unifies structured filtering, full-text search and vector similarity search in SQL. Teams can search prompts, responses, tool outputs and traces by metadata, keywords and semantic similarity, all in one query.',
         poweredLabel: 'Powered by',
         poweredBy: [
-            'Vector index (HNSW)',
-            'Vector similarity search',
-            'Full-text search',
-            'Inverted index',
-            'Structured SQL filtering',
+            'Vector Index',
+            'Embedding',
+            'Reciprocal Rank Fusion',
         ],
     },
 ];
@@ -699,7 +686,7 @@ function CtaSection(): JSX.Element {
                     with <span className="accent">Apache Doris.</span>
                 </h2>
                 <div className="cta-actions" data-reveal data-reveal-delay="2">
-                    <Link className="btn btn-yellow" to="/download">
+                    <Link className="btn btn-yellow" to="/docs-next/dev/getting-started/quick-start">
                         <svg
                             width="14"
                             height="14"

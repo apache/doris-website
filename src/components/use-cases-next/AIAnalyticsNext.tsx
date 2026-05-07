@@ -486,13 +486,6 @@ const capabilities: Capability[] = [
         poweredLabel: 'Powered by',
         poweredBy: [
             'VARIANT data type',
-            'JSON analytics',
-            'Dynamic schema support',
-            'Nested field access',
-            'Flexible ingestion',
-            'Semi-structured analytics',
-            'Auto-columnar storage for hot fields',
-            'SQL exploration over dynamic data',
         ],
     },
     {
@@ -509,15 +502,12 @@ const capabilities: Capability[] = [
             'Apache Doris brings SQL filtering, full-text search, BM25 relevance scoring, and vector search into one analytical engine for RAG, enterprise search, AI copilots, agent memory, and AI observability. Teams can retrieve the right context from documents, logs, prompts, responses, feedback, and embeddings while applying business filters such as tenant, user, time range, permissions, model version, and workflow status.',
         poweredLabel: 'Powered by',
         poweredBy: [
-            'Inverted index',
-            'Tokenized full-text search',
-            'BM25 relevance scoring',
-            'Vector index (HNSW)',
-            'Vector similarity search',
-            'Structured SQL filters',
-            'JSON and metadata filters',
-            'Hybrid search in SQL',
-            'RAG-ready retrieval',
+            'Inverted Index',
+            'Full-text Search',
+            'BM25',
+            'Vector Index',
+            'Embedding',
+            'Reciprocal Rank Fusion',
         ],
     },
     {
@@ -535,15 +525,8 @@ const capabilities: Capability[] = [
         poweredLabel: 'Powered by',
         poweredBy: [
             'LLM SQL functions',
-            'Text summarization in SQL',
-            'Sentiment analysis in SQL',
-            'Classification and extraction',
-            'MCP server',
-            'SQL interface for agents and tools',
-            'API and connector integration',
-            'Agent framework integration',
-            'LLMOps and observability integration',
-            'Unified analytics for AI signals',
+            'MCP Server',
+            'Semantic Layer(Coming Soon)',
         ],
     },
 ];
@@ -750,7 +733,7 @@ function CtaSection(): JSX.Element {
                     with <span className="accent">Apache Doris.</span>
                 </h2>
                 <div className="cta-actions" data-reveal data-reveal-delay="2">
-                    <Link className="btn btn-yellow" to="/download">
+                    <Link className="btn btn-yellow" to="/docs-next/dev/getting-started/quick-start">
                         <svg
                             width="14"
                             height="14"
