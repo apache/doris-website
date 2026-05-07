@@ -188,7 +188,14 @@ function GlossarySection(): JSX.Element {
                             aria-hidden={visible ? 'false' : 'true'}
                         >
                             <Link className="kf-next__tile-link" to={entry.href}>
-                                <span className="kf-next__tile-main">
+                                {entry.badge === 'doc' && (
+                                    <span className="kf-next__tile-badge-row">
+                                        <span className="kf-next__tile-badge" aria-label="Formal documentation">
+                                            Doc
+                                        </span>
+                                    </span>
+                                )}
+                                <span className="kf-next__tile-top">
                                     <span className="kf-next__tile-name">{entry.title}</span>
                                 </span>
                                 <span className="kf-next__tile-meta">

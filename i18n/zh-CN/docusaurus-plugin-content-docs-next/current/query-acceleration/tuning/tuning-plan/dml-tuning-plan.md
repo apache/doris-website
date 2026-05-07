@@ -1,6 +1,7 @@
 ---
 {
     "title": "DML 计划调优：定位导入与查询性能瓶颈",
+    "sidebar_label": "DML 计划调优",
     "language": "zh-CN",
     "description": "如何对 Doris DML 计划进行调优？本文介绍如何区分导入与查询瓶颈，并提供导入与查询调优的最佳实践入口。",
     "keywords": ["Doris DML 调优", "导入性能瓶颈", "查询性能瓶颈", "DML 计划调优", "Doris 导入最佳实践"]

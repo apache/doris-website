@@ -1,6 +1,7 @@
 ---
 {
     "title": "DML Plan Tuning: Locating Load and Query Performance Bottlenecks",
+    "sidebar_label": "DML Plan Tuning",
     "language": "en",
     "description": "How to tune Doris DML plans? This article explains how to distinguish between load and query bottlenecks, and provides entry points to best practices for both load and query tuning.",
     "keywords": ["Doris DML tuning", "load performance bottleneck", "query performance bottleneck", "DML plan tuning", "Doris load best practices"]

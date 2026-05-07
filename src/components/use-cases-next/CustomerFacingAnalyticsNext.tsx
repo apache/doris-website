@@ -422,9 +422,13 @@ const capabilities: Capability[] = [
         desc: 'New data becomes queryable within seconds, while dashboards and in-product analytics stay fast and interactive. Users see the latest activity as it happens, not after the next batch cycle.',
         poweredLabel: 'Powered by',
         poweredBy: [
-            { label: 'Stream ingestion from Kafka and CDC', href: '#' },
-            { label: 'Incremental materialized view refresh', href: '#' },
-            { label: 'Real-time query visibility', href: '#' },
+            { label: 'Load Transaction', href: '#' },
+            { label: 'Data Compaction', href: '#' },
+            { label: 'Data Update/Delete', href: '#' },
+            { label: 'Preaggregation', href: '#' },
+            { label: 'Group Commit', href: '#' },
+            { label: 'Kafka/CDC Integration', href: '#' },
+            { label: 'Incremental Materialized View', href: '#' },
         ],
     },
     {
@@ -440,10 +444,13 @@ const capabilities: Capability[] = [
         desc: 'Apache Doris sustains fast, predictable query response times as concurrent users and data volumes grow, not just in single-query benchmarks.',
         poweredLabel: 'Powered by',
         poweredBy: [
-            { label: 'MPP execution engine', href: '#' },
-            { label: 'Vectorized execution', href: '#' },
-            { label: 'Advanced query optimizer', href: '#' },
-            { label: 'Columnar storage and compression', href: '#' },
+            { label: 'Data Pruning', href: '#' },
+            { label: 'High Concurrency Point Query', href: '#' },
+            { label: 'Vectorized Execution', href: '#' },
+            { label: 'Columnar Storage', href: '#' },
+            { label: 'Prepared Statement', href: '#' },
+            { label: 'Query Cache', href: '#' },
+            { label: 'Condition Cache', href: '#' },
         ],
     },
     {
@@ -459,9 +466,10 @@ const capabilities: Capability[] = [
         desc: 'Serve many users, teams, or tenants from a single platform. Isolate workloads and control resource usage so heavy queries from one tenant do not impact others.',
         poweredLabel: 'Powered by',
         poweredBy: [
-            { label: 'Resource isolation', href: '#' },
-            { label: 'High-concurrency scheduling', href: '#' },
-            { label: 'Query queueing', href: '#' },
+            { label: 'Workload Group', href: '#' },
+            { label: 'Resource Group', href: '#' },
+            { label: 'Compute Group', href: '#' },
+            { label: 'Pipleline Execution Engine', href: '#' },
         ],
     },
     {
@@ -475,9 +483,9 @@ const capabilities: Capability[] = [
         desc: 'Query open lakehouse formats directly. Combine real-time serving with existing data lake architectures, without copying data twice.',
         poweredLabel: 'Powered by',
         poweredBy: [
-            { label: 'Iceberg and lakehouse query capabilities', href: '#' },
-            { label: 'Zero-copy analytics', href: '#' },
-            { label: 'Unified access to operational and historical data', href: '#' },
+            { label: 'Parquet Reader Optzimation', href: '#' },
+            { label: 'Data Cache & Page Cache', href: '#' },
+            { label: 'Metadata Cache', href: '#' },
         ],
     },
 ];

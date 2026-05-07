@@ -22,6 +22,11 @@ function slugToRoute(slug, fallbackSlug) {
 }
 
 function resolveHref(frontMatter, docsRelativePath) {
+  const cardHref = frontMatter?.featureCard?.href;
+  if (typeof cardHref === 'string' && cardHref.trim()) {
+    return cardHref.trim();
+  }
+
   const fallbackSlug = `/${stripMarkdownExtension(docsRelativePath)}`;
   const routeSlug = slugToRoute(frontMatter.slug, fallbackSlug);
   return `${DOCS_ROUTE_BASE}${routeSlug}`;
@@ -58,6 +63,12 @@ function parseFeatureDoc(rootDir, absPath, index) {
   }
 
   const href = resolveHref(data, docsRelativePath);
+  const badge =
+    typeof featureCard.badge === 'string' && featureCard.badge.trim()
+      ? featureCard.badge.trim()
+      : typeof featureCard.href === 'string' && featureCard.href.trim()
+        ? 'doc'
+        : undefined;
   const id = stripMarkdownExtension(docsRelativePath).replace(/\//g, '-');
   return {
     id,
@@ -65,6 +76,7 @@ function parseFeatureDoc(rootDir, absPath, index) {
     description,
     tags: normalizeTags(featureCard.tags, sourcePath),
     href,
+    ...(badge ? { badge } : {}),
     sourcePath,
   };
 }
@@ -101,6 +113,7 @@ export type KeyFeatureCard = {
   description: string;
   tags: string[];
   href: string;
+  badge?: string;
 };
 
 export const keyFeatureCards: KeyFeatureCard[] = ${JSON.stringify(

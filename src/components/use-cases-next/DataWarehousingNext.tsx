@@ -419,9 +419,9 @@ const capabilities: Capability[] = [
         desc: 'Support detail records, aggregated metrics, real-time upserts, and analytical datasets in one engine. Doris combines flexible table models with partitioning and bucketing to improve data organization, query performance, and reuse.',
         poweredLabel: 'Powered by',
         poweredBy: [
-            { label: 'Duplicate Key Model', href: '#' },
-            { label: 'Aggregate Key Model', href: '#' },
-            { label: 'Unique Key Model', href: '#' },
+            { label: 'Data Model', href: '#' },
+            { label: 'Rollup', href: '#' },
+            { label: 'Analytic Functions', href: '#' },
             { label: 'Partitioning and Bucketing', href: '#' },
         ],
     },
@@ -438,10 +438,12 @@ const capabilities: Capability[] = [
         desc: 'Apache Doris continuously ingests streaming and CDC data, applies updates in real time, and makes fresh data queryable within seconds, so analytics can move beyond overnight batch pipelines.',
         poweredLabel: 'Powered by',
         poweredBy: [
-            { label: 'Built-in MySQL/PostgreSQL CDC capabilities', href: '#' },
-            { label: 'Built-in Kafka message subscription capabilities', href: '#' },
-            { label: 'High-concurrency, low-latency data ingestion', href: '#' },
-            { label: 'Real-time data update capabilities', href: '#' },
+            { label: 'Load Transaction', href: '#' },
+            { label: 'Data Compaction', href: '#' },
+            { label: 'Data Update/Delete', href: '#' },
+            { label: 'Preaggregation', href: '#' },
+            { label: 'Group Commit', href: '#' },
+            { label: 'Kafka/CDC Integration', href: '#' },
         ],
     },
     {
@@ -457,9 +459,10 @@ const capabilities: Capability[] = [
         desc: 'Incrementally refreshed materialized views keep derived datasets fresh without full recomputation, while Doris reliably executes large SQL jobs for backfills, end-of-day processing, and historical workloads.',
         poweredLabel: 'Powered by',
         poweredBy: [
-            { label: 'Incremental Materialized Views', href: '#' },
-            { label: 'Binlog, Table Stream, and Dynamic Table (Coming soon)', href: '#' },
+            { label: 'Batch Load', href: '#' },
+            { label: 'Incremental Materialized View', href: '#' },
             { label: 'Spill to Disk', href: '#' },
+            { label: 'Binlog/Table Stream (Coming Soon)', href: '#' },
         ],
     },
     {
@@ -475,8 +478,8 @@ const capabilities: Capability[] = [
         desc: 'Query, write, and manage open lakehouse tables directly with Doris. Use one SQL layer to access Iceberg, Hudi, Delta Lake, JDBC sources, and internal Doris tables, with Iceberg lifecycle operations such as writes, updates, and compaction.',
         poweredLabel: 'Powered by',
         poweredBy: [
-            { label: 'Multi-Catalog: Iceberg, Hudi, Delta Lake, JDBC, and more', href: '#' },
-            { label: 'Data and metadata cache layer', href: '#' },
+            { label: 'Multi Catalog', href: '#' },
+            { label: 'Managing Lake Table', href: '#' },
         ],
     },
     {
@@ -493,11 +496,11 @@ const capabilities: Capability[] = [
         poweredLabel: 'Powered by',
         poweredBy: [
             {
-                label: 'Pluggable authentication and authorization modules: LDAP, RBAC, OIDC, and more',
+                label: 'Pluggable authentication and authorization modules',
                 href: '#',
             },
             { label: 'Catalog integrations: Glue, Iceberg REST, and more', href: '#' },
-            { label: 'Workload Group for resource isolation', href: '#' },
+            { label: 'Data Lineage', href: '#' },
         ],
     },
 ];
