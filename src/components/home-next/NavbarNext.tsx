@@ -35,9 +35,9 @@ function buildNavItems(docsHref: string, releasesHref: string): NavItem[] {
         {
             label: 'Why Doris',
             items: [
-                { label: 'Key Features (coming soon)', href: '#' },
                 { label: 'Doris vs. Others', href: '/why-doris/compare' },
                 { label: 'Benchmarks (coming soon)', href: '#' },
+                { label: 'Key Features', href: '/why-doris/key-features' },
                 { label: 'User Stories (coming soon)', href: '#' },
             ],
         },
