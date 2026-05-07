@@ -4,6 +4,14 @@ import { LayoutNext } from '../home-next/LayoutNext';
 import { keyFeatureCards, type KeyFeatureCard } from '@site/src/generated/key-features';
 import './KeyFeaturesNext.scss';
 
+type CardSpan = 's' | 'm' | 'l' | 't';
+
+const CARD_SPANS: CardSpan[] = ['s', 'm', 'l', 't'];
+
+function randomSpan(): CardSpan {
+    return CARD_SPANS[Math.floor(Math.random() * CARD_SPANS.length)];
+}
+
 function useRevealObserver(): void {
     useEffect(() => {
         const items = document.querySelectorAll<HTMLElement>('[data-reveal]');
@@ -87,8 +95,17 @@ function KeyFeaturesHero(): JSX.Element {
 
 function GlossarySection(): JSX.Element {
     const [query, setQuery] = useState('');
+    const [spanById, setSpanById] = useState<Record<string, CardSpan>>({});
     const inputId = useId();
     const liveId = useId();
+
+    useEffect(() => {
+        const next: Record<string, CardSpan> = {};
+        keyFeatureCards.forEach((entry) => {
+            next[entry.id] = randomSpan();
+        });
+        setSpanById(next);
+    }, []);
 
     const filtered = useMemo(
         () =>
@@ -163,7 +180,7 @@ function GlossarySection(): JSX.Element {
                             className={[
                                 'kf-next__tile',
                                 themeFor(originalIdx),
-                                `span-${entry.span ?? 'm'}`,
+                                `span-${spanById[entry.id] ?? 'm'}`,
                                 visible ? '' : 'is-hidden',
                             ]
                                 .filter(Boolean)

@@ -14,7 +14,6 @@ const {
 const DOCS_DIR = 'docs-next/key-features';
 const DOCS_ROUTE_BASE = '/docs-next/dev';
 const OUTPUT_FILE = 'src/generated/key-features.ts';
-const VALID_SPANS = new Set(['s', 'm', 'l', 't']);
 
 function slugToRoute(slug, fallbackSlug) {
   const raw = typeof slug === 'string' && slug.trim() ? slug.trim() : fallbackSlug;
@@ -38,27 +37,6 @@ function normalizeTags(value, sourcePath) {
     }
     return tag.trim();
   });
-}
-
-function normalizeSpan(value) {
-  if (value === undefined || value === null || value === '') {
-    return 'm';
-  }
-  if (typeof value !== 'string' || !VALID_SPANS.has(value)) {
-    throw new Error(`Invalid featureCard.span value "${value}"`);
-  }
-  return value;
-}
-
-function normalizeOrder(value, fallback) {
-  if (value === undefined || value === null || value === '') {
-    return fallback;
-  }
-  const parsed = Number(value);
-  if (!Number.isFinite(parsed)) {
-    throw new Error(`Invalid featureCard.order value "${value}"`);
-  }
-  return parsed;
 }
 
 function parseFeatureDoc(rootDir, absPath, index) {
@@ -86,9 +64,7 @@ function parseFeatureDoc(rootDir, absPath, index) {
     title,
     description,
     tags: normalizeTags(featureCard.tags, sourcePath),
-    span: normalizeSpan(featureCard.span),
     href,
-    order: normalizeOrder(featureCard.order, (index + 1) * 10),
     sourcePath,
   };
 }
@@ -101,7 +77,7 @@ function generate({ rootDir = process.cwd(), output = OUTPUT_FILE } = {}) {
 
   const files = walkMarkdownFiles(rootDir, [DOCS_DIR]);
   const cards = files.map((absPath, index) => parseFeatureDoc(rootDir, absPath, index));
-  cards.sort((a, b) => a.order - b.order || a.title.localeCompare(b.title) || a.href.localeCompare(b.href));
+  cards.sort((a, b) => a.title.localeCompare(b.title) || a.href.localeCompare(b.href));
 
   const seenIds = new Set();
   const seenHref = new Set();
@@ -124,9 +100,7 @@ export type KeyFeatureCard = {
   title: string;
   description: string;
   tags: string[];
-  span: 's' | 'm' | 'l' | 't';
   href: string;
-  order: number;
 };
 
 export const keyFeatureCards: KeyFeatureCard[] = ${JSON.stringify(
