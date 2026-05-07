@@ -1,0 +1,23 @@
+---
+title: Cost-Based Optimizer
+description: Let Doris choose efficient plans using statistics and cost estimation.
+slug: /key-features/cbo
+featureCard:
+  tags:
+    - planner
+    - statistics
+  span: m
+  order: 110
+---
+
+The cost-based optimizer uses table statistics and plan costing to choose execution strategies. It helps Doris make more informed choices for complex SQL.
+
+## When to use
+
+Use it for queries that involve joins, filters, and aggregations where plan selection matters a lot.
+
+## Key points
+
+- Keep statistics current.
+- Query planning quality depends on available metadata.
+- Better plans usually come from better cardinality estimates.

@@ -1,0 +1,23 @@
+---
+title: Pipeline Execution
+description: Execute queries in pipelined tasks to improve parallelism and scheduling.
+slug: /key-features/pipeline-execution
+featureCard:
+  tags:
+    - parallel
+    - morsel
+  span: s
+  order: 120
+---
+
+Pipeline execution breaks query work into smaller scheduled units. This helps Doris improve concurrency and resource utilization on analytical workloads.
+
+## When to use
+
+Use it when you want better CPU utilization and more flexible scheduling for distributed query execution.
+
+## Key points
+
+- Smaller execution units improve scheduling options.
+- It pairs naturally with MPP execution.
+- Parallel scheduling is central to the model.

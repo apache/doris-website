@@ -1,0 +1,23 @@
+---
+title: Stream Load
+description: Load data into Doris over HTTP with a synchronous ingestion path.
+slug: /key-features/stream-load
+featureCard:
+  tags:
+    - ingest
+    - http
+  span: t
+  order: 80
+---
+
+Stream Load is the standard HTTP-based ingestion path for pushing data into Doris quickly. It is often the simplest choice for synchronous loading from applications or pipelines.
+
+## When to use
+
+Use Stream Load when you need direct, low-latency ingestion from files or streams and can manage the request/response flow yourself.
+
+## Key points
+
+- The client controls each load request.
+- Good for application-driven ingestion.
+- Works well when you want immediate load feedback.

@@ -1,123 +1,8 @@
 import React, { JSX, useEffect, useId, useMemo, useState } from 'react';
 import Link from '@docusaurus/Link';
 import { LayoutNext } from '../home-next/LayoutNext';
+import { keyFeatureCards, type KeyFeatureCard } from '@site/src/generated/key-features';
 import './KeyFeaturesNext.scss';
-
-interface GlossaryEntry {
-    id: string;
-    name: string;
-    tags?: string[];
-    href: string;
-    span?: 's' | 'm' | 'l' | 't';
-}
-
-const glossaryEntries: GlossaryEntry[] = [
-    {
-        id: 'real-time-analytics',
-        name: 'Real-time Analytics',
-        tags: ['streaming', 'low-latency'],
-        href: '/docs-next/dev/data-operate/import/import-way/stream-load-manual',
-        span: 'l',
-    },
-    {
-        id: 'lakehouse-analytics',
-        name: 'Lakehouse Analytics',
-        tags: ['iceberg', 'hudi', 'delta'],
-        href: '/docs-next/dev/lakehouse/lakehouse-overview',
-        span: 'm',
-    },
-    {
-        id: 'hybrid-search',
-        name: 'Hybrid Search',
-        tags: ['vector', 'bm25'],
-        href: '/docs-next/dev/table-design/index/inverted-index/overview',
-        span: 'm',
-    },
-    {
-        id: 'mpp-engine',
-        name: 'MPP Query Engine',
-        tags: ['parallel', 'scale-out'],
-        href: '/docs-next/dev/getting-started/what-is-apache-doris',
-        span: 's',
-    },
-    {
-        id: 'vectorized-execution',
-        name: 'Vectorized Execution',
-        tags: ['simd', 'cpu'],
-        href: '/docs-next/dev/getting-started/what-is-apache-doris',
-        span: 'm',
-    },
-    {
-        id: 'materialized-views',
-        name: 'Materialized Views',
-        tags: ['acceleration', 'rewrite'],
-        href: '/docs-next/dev/query-acceleration/materialized-view/overview',
-        span: 's',
-    },
-    {
-        id: 'inverted-index',
-        name: 'Inverted Index',
-        tags: ['text', 'search'],
-        href: '/docs-next/dev/table-design/index/inverted-index/overview',
-        span: 't',
-    },
-    {
-        id: 'stream-load',
-        name: 'Stream Load',
-        tags: ['ingest', 'http'],
-        href: '/docs-next/dev/data-operate/import/import-way/stream-load-manual',
-        span: 't',
-    },
-    {
-        id: 'routine-load',
-        name: 'Routine Load',
-        tags: ['kafka', 'streaming'],
-        href: '/docs-next/dev/data-operate/import/import-way/routine-load-manual',
-        span: 's',
-    },
-    {
-        id: 'compute-storage',
-        name: 'Compute-Storage Separation',
-        tags: ['cloud', 'elastic'],
-        href: '/docs-next/dev/lakehouse/catalog-overview',
-        span: 'l',
-    },
-    {
-        id: 'cbo',
-        name: 'Cost-Based Optimizer',
-        tags: ['planner', 'statistics'],
-        href: '/docs-next/dev/getting-started/what-is-apache-doris',
-        span: 'm',
-    },
-    {
-        id: 'pipeline-execution',
-        name: 'Pipeline Execution',
-        tags: ['parallel', 'morsel'],
-        href: '/docs-next/dev/getting-started/what-is-apache-doris',
-        span: 's',
-    },
-    {
-        id: 'workload-management',
-        name: 'Workload Management',
-        tags: ['isolation', 'qos'],
-        href: '/docs-next/dev/admin-manual/workload-management/workload-group',
-        span: 'm',
-    },
-    {
-        id: 'high-availability',
-        name: 'High Availability',
-        tags: ['fault-tolerance', 'replica'],
-        href: '/docs-next/dev/install/preparation/cluster-planning',
-        span: 't',
-    },
-    {
-        id: 'multi-catalog',
-        name: 'Multi-Catalog Federation',
-        tags: ['external', 'jdbc', 'hive'],
-        href: '/docs-next/dev/lakehouse/catalog-overview',
-        span: 'm',
-    },
-];
 
 function useRevealObserver(): void {
     useEffect(() => {
@@ -158,11 +43,12 @@ function BoltIcon({ size = 24, color = '#FFD23F' }: { size?: number | string; co
     );
 }
 
-function matches(entry: GlossaryEntry, query: string): boolean {
+function matches(entry: KeyFeatureCard, query: string): boolean {
     if (!query) return true;
     const needle = query.trim().toLowerCase();
     if (!needle) return true;
-    if (entry.name.toLowerCase().includes(needle)) return true;
+    if (entry.title.toLowerCase().includes(needle)) return true;
+    if (entry.description.toLowerCase().includes(needle)) return true;
     if (entry.tags?.some((tag) => tag.toLowerCase().includes(needle))) return true;
     return false;
 }
@@ -206,7 +92,7 @@ function GlossarySection(): JSX.Element {
 
     const filtered = useMemo(
         () =>
-            glossaryEntries.map((entry, index) => ({
+            keyFeatureCards.map((entry, index) => ({
                 entry,
                 originalIdx: index,
                 visible: matches(entry, query),
@@ -264,7 +150,7 @@ function GlossarySection(): JSX.Element {
                         <span className="kf-next__meta-count">
                             <strong>{String(visibleCount).padStart(2, '0')}</strong>
                             {' / '}
-                            {String(glossaryEntries.length).padStart(2, '0')}
+                            {String(keyFeatureCards.length).padStart(2, '0')}
                         </span>
                         <span className="kf-next__meta-label">features</span>
                     </div>
@@ -286,7 +172,7 @@ function GlossarySection(): JSX.Element {
                         >
                             <Link className="kf-next__tile-link" to={entry.href}>
                                 <span className="kf-next__tile-main">
-                                    <span className="kf-next__tile-name">{entry.name}</span>
+                                    <span className="kf-next__tile-name">{entry.title}</span>
                                 </span>
                                 <span className="kf-next__tile-meta">
                                     {entry.tags && entry.tags.length > 0 && (

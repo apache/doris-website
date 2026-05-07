@@ -1,0 +1,23 @@
+---
+title: MPP Query Engine
+description: Run distributed SQL with parallel execution across many compute nodes.
+slug: /key-features/mpp-engine
+featureCard:
+  tags:
+    - parallel
+    - scale-out
+  span: s
+  order: 40
+---
+
+The MPP query engine is the distributed execution layer behind Doris. It splits work across nodes so queries can scale with cluster size.
+
+## When to use
+
+Use it for large analytical queries that need distributed execution and predictable scaling as data volume grows.
+
+## Key points
+
+- Parallelism is a core part of the execution model.
+- Cluster sizing affects throughput and latency.
+- Query shape still matters, even with a distributed engine.

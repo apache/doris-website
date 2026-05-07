@@ -1,0 +1,23 @@
+---
+title: Routine Load
+description: Continuously ingest events from Kafka and other streaming sources.
+slug: /key-features/routine-load
+featureCard:
+  tags:
+    - kafka
+    - streaming
+  span: s
+  order: 90
+---
+
+Routine Load is Doris's continuous loading mechanism for streaming sources. It is designed for event pipelines that need ongoing ingestion instead of one-shot bulk loads.
+
+## When to use
+
+Use it when data arrives continuously from Kafka-style systems and you want Doris to keep consuming without manual job restarts.
+
+## Key points
+
+- Designed for long-running ingestion jobs.
+- Good for near-real-time pipelines.
+- Keep source and backpressure behavior in mind.

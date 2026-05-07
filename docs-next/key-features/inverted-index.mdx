@@ -1,0 +1,23 @@
+---
+title: Inverted Index
+description: Support text-oriented filtering and search-friendly access patterns.
+slug: /key-features/inverted-index
+featureCard:
+  tags:
+    - text
+    - search
+  span: t
+  order: 70
+---
+
+An inverted index helps Doris accelerate text-centric predicates and search-style filters. It is useful when queries often target string fields or token-based matching.
+
+## When to use
+
+Use this feature for search-heavy tables where filtering on textual content is common and scan-only execution is too expensive.
+
+## Key points
+
+- Index design should follow query patterns.
+- It is most useful when selective text filters are frequent.
+- Combine it with other table design choices for best results.
