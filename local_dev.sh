@@ -295,6 +295,10 @@ cmd_build_docs_next_only() {
         do_install
     fi
 
+    # Disable the legacy docs plugin: DOCS_VERSIONS=current is meant for
+    # docs-next, but the legacy docs plugin has no `current` version and
+    # would fail validation on lastVersion.
+    export SKIP_DOCS=true
     apply_versions_env "current"
     export NODE_OPTIONS="--max-old-space-size=${OPT_MAX_MEM}"
 
@@ -313,6 +317,9 @@ cmd_build_docs_next_all() {
         do_install
     fi
 
+    # Same rationale as cmd_build_docs_next_only: avoid feeding "current"
+    # into the legacy docs plugin's lastVersion validation.
+    export SKIP_DOCS=true
     apply_versions_env "current"
     export NODE_OPTIONS="--max-old-space-size=${OPT_MAX_MEM}"
 

@@ -356,15 +356,14 @@ const config = {
                 highlightSearchTermsOnTargetPage: true,
                 // indexPages: true,
                 indexDocs: true,
-                // 灰度期保持只索引旧版 docs, 不索引 docs-next
-                // 阶段 4 切换默认时改为:
-                // ['docs-next', 'zh-CN/docs-next', 'docs', 'zh-CN/docs', 'ja/docs']
-                docsRouteBasePath: ['docs', 'ja/docs', 'zh-CN/docs'],
+                docsRouteBasePath: ['docs-next', 'zh-CN/docs-next', 'docs', 'ja/docs', 'zh-CN/docs'],
                 indexBlog: false,
                 explicitSearchResultPath: true,
                 searchBarShortcut: true,
                 searchBarShortcutHint: true,
                 searchResultLimits: 100,
+                searchContextByPaths: ['docs-next', 'docs'],
+                useAllContextsWithNoSearchContext: true,
             },
         ],
     ],

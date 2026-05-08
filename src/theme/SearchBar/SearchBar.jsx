@@ -49,7 +49,7 @@ function getVersionUrl(baseUrl, pathname, locales, currentLocale, defaultLocale)
         versionUrl += '/';
     }
     const normalizedPathname = normalizePathname(pathname, locales);
-    if (normalizedPathname?.startsWith('/docs')) {
+    if (normalizedPathname === '/docs' || normalizedPathname?.startsWith('/docs/')) {
         const version = normalizedPathname.split('/')[2];
         if (VERSIONS.includes(version) && version !== DEFAULT_VERSION) {
             versionUrl += `docs/${version}/`;
