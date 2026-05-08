@@ -1,0 +1,73 @@
+// DocsSearchSection — strip placed below NavbarNext on docs-next pages,
+// holds the global SearchBar so it doesn't crowd the main navbar.
+
+.docs-next-search-section {
+    position: sticky;
+    top: calc(var(--home-next-banner-height, 0px) + 64px);
+    z-index: 99;
+    width: 100%;
+    background: #FAF6EE;
+    border-bottom: 1px solid rgba(15, 26, 20, 0.08);
+
+    &__inner {
+        max-width: 1280px;
+        margin: 0 auto;
+        padding: 12px 56px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    // Reset / restyle the SearchBar so it works as a standalone block
+    // instead of a navbar item. Note: this file is a plain SCSS (not a
+    // CSS module), so target the global class directly without :global().
+    .navbar__search {
+        width: 100%;
+        max-width: 1080px;
+        margin: 0;
+
+        input.navbar__search-input {
+            width: 100% !important;
+            height: 2.5rem !important;
+            border: 1px solid rgba(15, 26, 20, 0.12) !important;
+            background-color: #fff !important;
+            background-image: url('/images/search-icon.svg');
+            background-position: 0.75rem center;
+            background-repeat: no-repeat;
+            padding-left: 2.5rem !important;
+            border-radius: 8px;
+            color: #4c576c !important;
+            transition: border-color 0.15s, box-shadow 0.15s;
+
+            &:hover {
+                border-color: rgba(15, 26, 20, 0.24) !important;
+            }
+
+            &:focus {
+                border-color: #06805F !important;
+                box-shadow: 0 0 0 3px rgba(6, 128, 95, 0.12);
+                outline: none !important;
+            }
+        }
+    }
+}
+
+@media (max-width: 1180px) {
+    .docs-next-search-section__inner {
+        padding: 12px 32px;
+    }
+}
+
+@media (max-width: 1020px) {
+    .docs-next-search-section__inner {
+        padding: 10px 24px;
+    }
+}
+
+@media (max-width: 640px) {
+    .docs-next-search-section {
+        &__inner {
+            padding: 10px 20px;
+        }
+    }
+}
