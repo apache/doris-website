@@ -407,10 +407,10 @@
     padding: 0;
     margin: 0;
     display: grid;
-    grid-template-columns: repeat(12, 1fr);
-    grid-auto-rows: 96px;
+    grid-template-columns: repeat(4, 1fr);
+    grid-auto-rows: 132px;
     grid-auto-flow: dense;
-    gap: 8px;
+    gap: 10px;
 }
 
 .kf-next__tile {
@@ -421,8 +421,21 @@
         transform 0.25s cubic-bezier(.2, .8, .2, 1),
         box-shadow 0.25s cubic-bezier(.2, .8, .2, 1),
         opacity 0.2s ease;
-    grid-column: span 3;
-    grid-row: span 1;
+    min-height: 96px;
+    display: flex;
+}
+
+.kf-next__tile--wide {
+    grid-column: span 2;
+}
+
+.kf-next__tile--tall {
+    grid-row: span 2;
+}
+
+.kf-next__tile--big {
+    grid-column: span 2;
+    grid-row: span 2;
 }
 
 .kf-next__tile:hover {
@@ -435,47 +448,44 @@
     display: none;
 }
 
-.kf-next__tile.span-s {
-    grid-column: span 2;
-    grid-row: span 1;
-}
-
-.kf-next__tile.span-m {
-    grid-column: span 3;
-    grid-row: span 1;
-}
-
-.kf-next__tile.span-l {
-    grid-column: span 4;
-    grid-row: span 1;
-}
-
-.kf-next__tile.span-t {
-    grid-column: span 2;
-    grid-row: span 2;
-}
-
 .kf-next__tile-link {
     position: relative;
     display: grid;
-    grid-template-rows: auto minmax(0, 1fr) auto;
+    grid-template-rows: minmax(0, 1fr) auto;
     width: 100%;
-    height: 100%;
     padding: 16px 18px 14px;
     text-decoration: none;
     color: inherit;
     gap: 10px;
+    min-height: 100%;
+}
+
+.kf-next__tile--tall .kf-next__tile-link,
+.kf-next__tile--big .kf-next__tile-link {
+    padding: 22px 22px 18px;
+    gap: 14px;
 }
 
 .kf-next__tile-badge-row {
+    position: absolute;
+    top: 12px;
+    right: 14px;
+    z-index: 2;
     display: flex;
     justify-content: flex-end;
-    min-height: 22px;
+    pointer-events: none;
 }
 
 .kf-next__tile-top {
     min-width: 0;
-    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    overflow: hidden;
+}
+
+.kf-next__tile-link:has(.kf-next__tile-badge-row) .kf-next__tile-top {
+    padding-right: 44px;
 }
 
 .kf-next__tile-badge {
@@ -504,16 +514,42 @@
     font-family: var(--kf-mono);
     font-weight: 700;
     font-size: clamp(13px, 1.05vw, 16px);
-    line-height: 1.06;
+    line-height: 1.15;
     letter-spacing: -0.005em;
     word-spacing: -0.08em;
     text-transform: none;
     overflow-wrap: anywhere;
     hyphens: auto;
+}
+
+.kf-next__tile--wide .kf-next__tile-name {
+    font-size: clamp(15px, 1.25vw, 19px);
+}
+
+.kf-next__tile--tall .kf-next__tile-name {
+    font-size: clamp(15px, 1.3vw, 20px);
+}
+
+.kf-next__tile--big .kf-next__tile-name {
+    font-size: clamp(18px, 1.7vw, 26px);
+    line-height: 1.1;
+}
+
+.kf-next__tile-desc {
     display: -webkit-box;
-    -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
+    -webkit-line-clamp: 4;
     overflow: hidden;
+    font-size: clamp(11px, 0.85vw, 13px);
+    line-height: 1.5;
+    opacity: 0.78;
+    overflow-wrap: anywhere;
+}
+
+.kf-next__tile--big .kf-next__tile-desc {
+    -webkit-line-clamp: 7;
+    font-size: clamp(12px, 0.95vw, 14px);
+    opacity: 0.82;
 }
 
 .kf-next__tile-meta {
@@ -599,35 +635,14 @@
     color: var(--kf-ink);
 }
 
-.kf-next__tile.span-t .kf-next__tile-link::after {
-    content: none;
-}
-
 @media (max-width: 1100px) {
     .kf-next {
         --kf-gutter: 36px;
     }
 
     .kf-next__grid {
-        grid-template-columns: repeat(8, 1fr);
-        grid-auto-rows: 88px;
-    }
-
-    .kf-next__tile.span-s {
-        grid-column: span 2;
-    }
-
-    .kf-next__tile.span-m {
-        grid-column: span 3;
-    }
-
-    .kf-next__tile.span-l {
-        grid-column: span 4;
-    }
-
-    .kf-next__tile.span-t {
-        grid-column: span 2;
-        grid-row: span 2;
+        grid-template-columns: repeat(3, 1fr);
+        grid-auto-rows: 124px;
     }
 }
 
@@ -650,24 +665,17 @@
     }
 
     .kf-next__grid {
-        grid-template-columns: repeat(4, 1fr);
-        grid-auto-rows: 78px;
+        grid-template-columns: repeat(2, 1fr);
+        grid-auto-rows: 110px;
     }
 
-    .kf-next__tile.span-s,
-    .kf-next__tile.span-m {
+    .kf-next__tile--big {
         grid-column: span 2;
-        grid-row: span 1;
+        grid-row: span 2;
     }
 
-    .kf-next__tile.span-l {
-        grid-column: span 4;
-        grid-row: span 1;
-    }
-
-    .kf-next__tile.span-t {
-        grid-column: span 4;
-        grid-row: span 1;
+    .kf-next__tile--wide {
+        grid-column: span 2;
     }
 
     .kf-next__tile-link {
@@ -675,8 +683,13 @@
         gap: 8px;
     }
 
+    .kf-next__tile-link:has(.kf-next__tile-badge-row) .kf-next__tile-top {
+        padding-right: 38px;
+    }
+
     .kf-next__tile-badge-row {
-        min-height: 20px;
+        top: 10px;
+        right: 12px;
     }
 
     .kf-next__tile-badge {

@@ -4,14 +4,6 @@ import { LayoutNext } from '../home-next/LayoutNext';
 import { keyFeatureCards, type KeyFeatureCard } from '@site/src/generated/key-features';
 import './KeyFeaturesNext.scss';
 
-type CardSpan = 's' | 'm' | 'l' | 't';
-
-const CARD_SPANS: CardSpan[] = ['s', 'm', 'l', 't'];
-
-function randomSpan(): CardSpan {
-    return CARD_SPANS[Math.floor(Math.random() * CARD_SPANS.length)];
-}
-
 function useRevealObserver(): void {
     useEffect(() => {
         const items = document.querySelectorAll<HTMLElement>('[data-reveal]');
@@ -66,6 +58,20 @@ function themeFor(index: number): string {
     return themes[index % themes.length];
 }
 
+type TileSize = 'sm' | 'wide' | 'tall' | 'big';
+
+const SIZE_PATTERN: TileSize[] = [
+    'wide', 'sm', 'sm', 'tall',
+    'sm', 'big', 'sm', 'wide',
+    'sm', 'sm', 'tall', 'sm',
+    'wide', 'sm', 'sm', 'sm',
+    'tall', 'sm', 'wide', 'sm',
+];
+
+function sizeFor(index: number): TileSize {
+    return SIZE_PATTERN[index % SIZE_PATTERN.length];
+}
+
 function KeyFeaturesHero(): JSX.Element {
     return (
         <section className="kf-next__hero" id="hero">
@@ -95,17 +101,8 @@ function KeyFeaturesHero(): JSX.Element {
 
 function GlossarySection(): JSX.Element {
     const [query, setQuery] = useState('');
-    const [spanById, setSpanById] = useState<Record<string, CardSpan>>({});
     const inputId = useId();
     const liveId = useId();
-
-    useEffect(() => {
-        const next: Record<string, CardSpan> = {};
-        keyFeatureCards.forEach((entry) => {
-            next[entry.id] = randomSpan();
-        });
-        setSpanById(next);
-    }, []);
 
     const filtered = useMemo(
         () =>
@@ -174,43 +171,50 @@ function GlossarySection(): JSX.Element {
                 </div>
 
                 <ul className="kf-next__grid" data-reveal data-reveal-delay="1">
-                    {filtered.map(({ entry, originalIdx, visible }) => (
-                        <li
-                            key={entry.id}
-                            className={[
-                                'kf-next__tile',
-                                themeFor(originalIdx),
-                                `span-${spanById[entry.id] ?? 'm'}`,
-                                visible ? '' : 'is-hidden',
-                            ]
-                                .filter(Boolean)
-                                .join(' ')}
-                            aria-hidden={visible ? 'false' : 'true'}
-                        >
-                            <Link className="kf-next__tile-link" to={entry.href}>
-                                {entry.badge === 'doc' && (
-                                    <span className="kf-next__tile-badge-row">
-                                        <span className="kf-next__tile-badge" aria-label="Formal documentation">
-                                            Doc
-                                        </span>
-                                    </span>
-                                )}
-                                <span className="kf-next__tile-top">
-                                    <span className="kf-next__tile-name">{entry.title}</span>
-                                </span>
-                                <span className="kf-next__tile-meta">
-                                    {entry.tags && entry.tags.length > 0 && (
-                                        <span className="kf-next__tile-tags">
-                                            {entry.tags.slice(0, 2).join(' · ')}
+                    {filtered.map(({ entry, originalIdx, visible }) => {
+                        const size = sizeFor(originalIdx);
+                        const showDesc = size === 'tall' || size === 'big';
+                        return (
+                            <li
+                                key={entry.id}
+                                className={[
+                                    'kf-next__tile',
+                                    themeFor(originalIdx),
+                                    `kf-next__tile--${size}`,
+                                    visible ? '' : 'is-hidden',
+                                ]
+                                    .filter(Boolean)
+                                    .join(' ')}
+                                aria-hidden={visible ? 'false' : 'true'}
+                            >
+                                <Link className="kf-next__tile-link" to={entry.href}>
+                                    {entry.badge === 'doc' && (
+                                        <span className="kf-next__tile-badge-row">
+                                            <span className="kf-next__tile-badge" aria-label="Formal documentation">
+                                                Doc
+                                            </span>
                                         </span>
                                     )}
-                                    <span className="kf-next__tile-arrow" aria-hidden="true">
-                                        →
+                                    <span className="kf-next__tile-top">
+                                        <span className="kf-next__tile-name">{entry.title}</span>
+                                        {showDesc && entry.description && (
+                                            <span className="kf-next__tile-desc">{entry.description}</span>
+                                        )}
                                     </span>
-                                </span>
-                            </Link>
-                        </li>
-                    ))}
+                                    <span className="kf-next__tile-meta">
+                                        {entry.tags && entry.tags.length > 0 && (
+                                            <span className="kf-next__tile-tags">
+                                                {entry.tags.slice(0, 2).join(' · ')}
+                                            </span>
+                                        )}
+                                        <span className="kf-next__tile-arrow" aria-hidden="true">
+                                            →
+                                        </span>
+                                    </span>
+                                </Link>
+                            </li>
+                        );
+                    })}
                 </ul>
 
                 {visibleCount === 0 && (

@@ -172,14 +172,15 @@ export default function BlogsNext(): JSX.Element {
     const [currentPage, setCurrentPage] = useState(initialQuery.page);
 
     useEffect(() => {
-        if (initialQuery.category && initialQuery.category !== ALL_TEXT) {
-            return;
-        }
-
+        if (location.search) return;
         const storedTag = sessionStorage.getItem('tag');
-        if (storedTag) {
-            setActive(storedTag);
+        if (storedTag && storedTag !== ALL_TEXT) {
+            history.replace(
+                `${location.pathname}?currentPage=1&currentCategory=${encodeURIComponent(storedTag)}`,
+                location.state,
+            );
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     useEffect(() => {
@@ -189,13 +190,15 @@ export default function BlogsNext(): JSX.Element {
     }, [location.search]);
 
     useEffect(() => {
-        const nextSearch = `?currentPage=${currentPage}&currentCategory=${encodeURIComponent(active)}#blog`;
-        if (location.search !== nextSearch.replace('#blog', '')) {
-            history.push(`${location.pathname}${nextSearch}`, location.state);
-        }
-
         sessionStorage.setItem('tag', active);
-    }, [active, currentPage, history, location.pathname, location.search, location.state]);
+    }, [active]);
+
+    const handleSelectCategory = (label: string) => {
+        history.push(
+            `${location.pathname}?currentPage=1&currentCategory=${encodeURIComponent(label)}#blog`,
+            location.state,
+        );
+    };
 
     const currentCategory = blogCategories.find(item => item.label === active) ?? blogCategories[0];
     const currentCards = currentCategory.values.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
@@ -229,10 +232,7 @@ export default function BlogsNext(): JSX.Element {
                                         className={`block cursor-pointer whitespace-nowrap rounded-[2.5rem] px-4 py-2 text-sm shadow-[0px_1px_4px_0px_rgba(0,89,68,0.10)] hover:bg-primary hover:text-white lg:px-6 lg:py-3 lg:text-base ${
                                             active === item.label ? 'bg-primary text-white' : ''
                                         }`}
-                                        onClick={() => {
-                                            setActive(item.label);
-                                            setCurrentPage(1);
-                                        }}
+                                        onClick={() => handleSelectCategory(item.label)}
                                     >
                                         {item.label}
                                     </button>

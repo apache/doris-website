@@ -13,7 +13,10 @@
 
     position: sticky;
     top: var(--home-next-banner-height, 0px);
-    z-index: 100;
+    // Above .docs-next-search-section (z-index 200) so the navbar's hover
+    // dropdowns (which extend below the navbar bar) stay on top of the
+    // sticky docs search strip.
+    z-index: 300;
     width: 100%;
     background: var(--nb-green-dark);
     border-bottom: 1px solid rgba(245, 239, 228, 0.08);
