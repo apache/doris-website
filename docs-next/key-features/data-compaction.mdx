@@ -1,0 +1,103 @@
+---
+title: Data Compaction
+description: Background merging that keeps Doris fast under high-frequency loads, with policies tuned for general OLAP and append-only time-series workloads.
+slug: /key-features/data-compaction
+featureCard:
+  tags:
+    - storage
+    - performance
+---
+
+> **TL;DR** Every load into Doris produces a new immutable rowset. Compaction merges those rowsets in the background so queries don't have to walk through hundreds of versions. Two policies (`size_based` and `time_series`), plus vertical and segment compaction, let you tune the write-amplification vs. read-amplification trade-off per table.
+
+![Data Compaction hero illustration](/images/next/key-features/data-compaction.jpg)
+
+## Why it matters
+
+Doris stores data the way an LSM tree does: a write never updates a file in place. It lands as a brand-new rowset, and the rowset count on a tablet keeps climbing until something cleans up. Without compaction:
+
+- Once a tablet's version count exceeds `max_tablet_version_num` (default 500), loads fail with error -235. This is one of the most common production incidents on the Doris user list.
+- Every query has to merge all of a tablet's rowsets on the fly. Going from 5 rowsets to 50 turns a one-box lookup into a fifty-box one.
+- Deleted rows linger as tombstones, and small files cost more in metadata than the data they hold.
+
+Compaction is the background process that handles all three. Doris's policies exist because doing it well also means not burning so much CPU that ingestion slows down.
+
+## What it is
+
+Compaction is a tablet-local procedure that picks a window of rowsets, merges their rows, applies deletes, and writes a single replacement rowset. The Backend (BE) runs it on a thread pool, scoring tablets by how messy they are and grabbing the worst offenders first.
+
+**Key terms**
+
+- **`Rowset`**: the immutable file group produced by one load. Rowsets are versioned; queries merge across them at read time.
+- **`Cumulative compaction`**: the fast, frequent kind. Merges small recent rowsets above the cumulative point.
+- **`Base compaction`**: the slow, occasional kind. Merges everything below the cumulative point into the single base rowset.
+- **`Compaction score`**: roughly the number of merge paths a query would walk on this tablet. Higher score, higher priority.
+- **`Compaction policy`**: per-table choice of `size_based` (default) or `time_series`. Picks which rowsets to merge and when.
+- **`Vertical compaction`**: column-group merging for wide tables. Cuts memory use by ~10x compared with row-wise merging.
+
+## How it works
+
+1. **Score every tablet.** The BE keeps a running compaction score for each tablet based on how many rowsets sit above the cumulative point. Tablets with higher scores get scheduled first.
+2. **Pick the rowsets.** The active policy decides the window. `size_based` groups by power-of-two sizes; `time_series` waits until rowsets in a partition cross a goal size, file count, or age threshold, then takes them in one bite.
+3. **Merge and write.** The task reads rows from the inputs, drops duplicates, applies pending deletes, and writes the result to a new rowset. Wide tables go through vertical compaction, which handles columns in groups so memory stays bounded.
+4. **Promote to base.** When a cumulative output grows past `compaction_promotion_size_mbytes` (1 GB by default), it's eligible for base compaction the next round.
+5. **Replace and clean up.** The output rowset replaces its inputs in tablet metadata. Old files stick around for a grace window in case a query is still reading them, then get deleted.
+
+If you have multiple replicas, you can let one replica do the merge and have the others copy the result over the network (`enable_single_replica_compaction`). That cuts CPU usage roughly in proportion to the replica count.
+
+## Quick start
+
+```sql
+CREATE TABLE access_log (
+  ts DATETIME, user_id BIGINT, url VARCHAR(512)
+)
+DUPLICATE KEY(ts, user_id)
+PARTITION BY RANGE(ts) (
+  PARTITION p202605 VALUES LESS THAN ("2026-06-01")
+)
+DISTRIBUTED BY HASH(user_id) BUCKETS 4
+PROPERTIES (
+  "compaction_policy" = "time_series",
+  "time_series_compaction_goal_size_mbytes" = "1024",
+  "time_series_compaction_file_count_threshold" = "2000",
+  "time_series_compaction_time_threshold_seconds" = "3600"
+);
+
+ADMIN COMPACT TABLE access_log PARTITION (p202605) WHERE TYPE = "cumulative";
+```
+
+**Expected result**
+
+```
+Query OK, 0 rows affected
+```
+
+You've created a partitioned log table that uses the time-series policy: small rowsets get merged once they cross 1 GB total, hit 2000 files, or sit for an hour. The `ADMIN COMPACT` line forces a manual cumulative pass on the active partition, which is useful for benchmarks and post-load cleanup. Watch progress with `SELECT * FROM information_schema.doris_be_compaction_tasks WHERE TABLE_ID = ...`.
+
+## When to use it
+
+**Good fit**
+
+- Any table that takes frequent loads. The defaults already work; the question is just whether to switch policies.
+- Append-only logs and metrics. `time_series` reduces write amplification because each rowset participates in compaction once, not repeatedly across size tiers.
+- Wide tables (dozens of columns or more). Keep `enable_vertical_compaction = true` so big merges don't blow up memory.
+- Multi-replica clusters where compaction CPU is a bottleneck. Turn on `enable_single_replica_compaction`.
+
+**Not a good fit**
+
+- High-frequency single-row inserts as a way to "stress test compaction". You'll just create the version-pileup pain you're trying to study. Use [Group Commit](../data-operate/import/load-best-practices/group-commit-manual.md) on the load side instead.
+- Disabling auto-compaction in production to "save CPU". Tablets accumulate versions silently and then loads start failing with -235. Tune the thread counts (`max_cumu_compaction_threads`, `max_base_compaction_threads`) instead.
+- Mixing the `time_series` policy with workloads that update or delete rows by primary key. The policy assumes append-only behavior; for Unique Key tables with frequent updates, stick with `size_based`.
+- Treating compaction as a fix for bad bucketing. If a single tablet is hot enough to constantly trail in version count, the answer is more buckets, not more compaction threads.
+
+## Performance / numbers
+
+- **Vertical compaction**: ~1/10 the memory of row-wise compaction, and roughly 15% faster on wide tables. Source: [Doris compaction tuning docs](https://doris.apache.org/docs/3.x/admin-manual/trouble-shooting/compaction/).
+- **Compaction throughput**: around 300,000 rows/second per task with the default settings, holding cumulative score near 50 under continuous load. Source: [Understanding Data Compaction in 3 Minutes](https://doris.apache.org/blog/Understanding-Data-Compaction-in-3-Minutes/).
+
+## Further reading
+
+- [Compaction principles, types, and scheduling](../admin-manual/trouble-shooting/compaction-principles.md)
+- [Compaction tuning: vertical, segment, single-replica, time-series](../admin-manual/trouble-shooting/compaction.md)
+- [`ADMIN COMPACT TABLE` syntax reference](../sql-manual/sql-statements/table-and-view/data-and-status-management/COMPACT-TABLE.md)
+- [Understanding Data Compaction in 3 Minutes (blog)](https://doris.apache.org/blog/Understanding-Data-Compaction-in-3-Minutes/)

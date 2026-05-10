@@ -4,7 +4,9 @@
 .docs-next-search-section {
     position: sticky;
     top: calc(var(--home-next-banner-height, 0px) + 64px);
-    z-index: 99;
+    // Above the docs sidebar (.theme-doc-sidebar-container) which uses z-index 100,
+    // so the search dropdown is not covered by the left sidebar.
+    z-index: 200;
     width: 100%;
     background: #FAF6EE;
     border-bottom: 1px solid rgba(15, 26, 20, 0.08);
@@ -25,6 +27,15 @@
         width: 100%;
         max-width: 1080px;
         margin: 0;
+
+        // autocomplete.js wraps the input in a span.algolia-autocomplete with
+        // display: inline-block by default. Make it fill the search container
+        // so the dropdown (positioned relative to this wrapper) aligns with the
+        // input edges instead of collapsing to the input's intrinsic width.
+        .algolia-autocomplete {
+            display: block !important;
+            width: 100%;
+        }
 
         input.navbar__search-input {
             width: 100% !important;
