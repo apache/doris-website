@@ -15,7 +15,28 @@ const ONLY_VERSIONS = process.env.DOCS_VERSIONS
     ? process.env.DOCS_VERSIONS.split(',').map(v => v.trim()).filter(Boolean)
     : null;
 
-const lightCodeTheme = themes.dracula;
+// Landing-only dev mode: when working on src/components/home-next or
+// use-cases-next, no docs/blog/search routes need to load. Setting
+// LANDING_ONLY=true disables every heavy content plugin, which drops
+// `yarn start` peak memory from ~20GB to ~1-2GB. Individual SKIP_* env
+// vars allow finer-grained control.
+const LANDING_ONLY = process.env.LANDING_ONLY === 'true';
+const SKIP_DOCS = LANDING_ONLY || process.env.SKIP_DOCS === 'true';
+const SKIP_BLOG = LANDING_ONLY || process.env.SKIP_BLOG === 'true';
+const SKIP_COMMUNITY = LANDING_ONLY || process.env.SKIP_COMMUNITY === 'true';
+const SKIP_RELEASES = LANDING_ONLY || process.env.SKIP_RELEASES === 'true';
+const SKIP_DOCS_NEXT = LANDING_ONLY || process.env.SKIP_DOCS_NEXT === 'true';
+const SKIP_SEARCH = LANDING_ONLY || process.env.SKIP_SEARCH === 'true';
+
+const LINK_BEHAVIOR_VALUES = new Set(['ignore', 'log', 'warn', 'throw']);
+function getBrokenLinkBehavior(envName, fallback) {
+    const value = process.env[envName];
+    return LINK_BEHAVIOR_VALUES.has(value) ? value : fallback;
+}
+
+const DEFAULT_BROKEN_LINK_BEHAVIOR = 'warn';
+
+const lightCodeTheme = themes.oneLight;
 
 const logoImg = '/images/logo-doris.svg';
 
@@ -54,8 +75,8 @@ const config = {
     tagline: 'Apache Doris',
     url: 'https://doris.apache.org',
     baseUrl: '/',
-    onBrokenLinks: 'ignore',
-    onBrokenMarkdownLinks: 'ignore',
+    onBrokenLinks: getBrokenLinkBehavior('DORIS_DOCUSAURUS_BROKEN_LINKS', DEFAULT_BROKEN_LINK_BEHAVIOR),
+    onBrokenMarkdownLinks: getBrokenLinkBehavior('DORIS_DOCUSAURUS_BROKEN_MARKDOWN_LINKS', DEFAULT_BROKEN_LINK_BEHAVIOR),
     favicon: 'images/favicon.ico',
     organizationName: 'Apache',
     trailingSlash: false,
@@ -122,7 +143,7 @@ const config = {
         'docusaurus-plugin-matomo',
         // Use custom blog plugin
         versionsPlugin,
-        [
+        SKIP_COMMUNITY ? null : [
             'content-docs',
             /** @type {import('@docusaurus/plugin-content-docs').Options} */
             ({
@@ -132,7 +153,7 @@ const config = {
                 sidebarPath: require.resolve('./sidebarsCommunity.json'),
             }),
         ],
-        [
+        SKIP_RELEASES ? null : [
             'content-docs',
             /** @type {import('@docusaurus/plugin-content-docs').Options} */
             ({
@@ -140,6 +161,38 @@ const config = {
                 path: 'releasenotes',
                 routeBasePath: '/releases',
                 sidebarPath: require.resolve('./sidebarsReleases.json'),
+            }),
+        ],
+        SKIP_DOCS_NEXT ? null : [
+            'content-docs',
+            /** @type {import('@docusaurus/plugin-content-docs').Options} */
+            ({
+                id: 'next',
+                path: 'docs-next',
+                routeBasePath: 'docs-next',
+                sidebarPath: require.resolve('./sidebars-next.ts'),
+                includeCurrentVersion: true,
+                onlyIncludeVersions: ['current'],
+                lastVersion: 'current',
+                versions: {
+                    current: {
+                        label: 'Dev',
+                        path: 'dev',
+                        banner: 'none',
+                        badge: false,
+                    },
+                },
+                showLastUpdateAuthor: false,
+                showLastUpdateTime: false,
+                remarkPlugins: [markdownBoldPlugin, require('remark-math')],
+                rehypePlugins: [
+                    [
+                        require('rehype-katex'),
+                        {
+                            strict: process.env.CI === 'true' || process.env.GITHUB_ACTIONS === 'true' ? false : 'warn',
+                        }
+                    ]
+                ],
             }),
         ],
         process.env.NODE_ENV === 'development' ? null : customDocusaurusPlugin,
@@ -161,11 +214,23 @@ const config = {
                 redirects: [
                     {
                         from: '/slack',
-                        to: 'https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-3b8tlr3le-Z~IrrVxkzqniFjhL17d1oQ'
+                        to: 'https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-3wvgezmm8-lh5XRaLg0~9AF44ojdIBfw'
                     }
                 ],
                 createRedirects(existingPath) {
                     const redirects = [];
+
+                    // Legacy /docs/dev/* (and zh-CN counterpart) was retired when the
+                    // Dev tree moved into the docs-next plugin. Redirect any old URL
+                    // whose path still has a 1:1 match under /docs-next/dev/. Paths
+                    // without a match fall through to NotFound, which renders a
+                    // dedicated guidance card pointing at the new Dev docs entry.
+                    if (existingPath.startsWith('/docs-next/dev/')) {
+                        redirects.push(existingPath.replace('/docs-next/dev/', '/docs/dev/'));
+                    }
+                    if (existingPath.startsWith('/zh-CN/docs-next/dev/')) {
+                        redirects.push(existingPath.replace('/zh-CN/docs-next/dev/', '/zh-CN/docs/dev/'));
+                    }
 
                     // Redirect old dev doc paths to the current default version.
                     // Placed in createRedirects (not static redirects) because the
@@ -208,7 +273,10 @@ const config = {
             'classic',
             /** @type {import('@docusaurus/preset-classic').Options} */
             ({
-                docs: {
+                docs: SKIP_DOCS ? false : {
+                    // Dev (unversioned) build moved to the docs-next plugin; the legacy
+                    // docs/ tree only ships the snapshotted versions in versions.json.
+                    includeCurrentVersion: false,
                     ...(ONLY_VERSIONS && { onlyIncludeVersions: ONLY_VERSIONS }),
                     // When filtering versions, lastVersion must be in the
                     // included list. Fall back to the first included version.
@@ -235,7 +303,7 @@ const config = {
                         ]
                     ]
                 },
-                blog: {
+                blog: SKIP_BLOG ? false : {
                     blogTitle: 'Apache Doris - Blog | Latest news and events ',
                     blogDescription:
                         'Explore how Doris empower lakehouse, adhoc analysis, customer-facing analysis and various scenarios',
@@ -257,7 +325,12 @@ const config = {
                         const items = await defaultCreateSitemapItems(rest);
                         const filteredItems = items.filter(item => {
                             const pathname = new URL(item.url).pathname.replace(/\/+$/, '');
-                            return !['/search', '/ja/search', '/zh-CN/search'].includes(pathname);
+                            if (['/search', '/ja/search', '/zh-CN/search'].includes(pathname)) return false;
+                            // 灰度期 docs-next 不进 sitemap
+                            if (pathname.startsWith('/docs-next') || pathname.startsWith('/zh-CN/docs-next')) {
+                                return false;
+                            }
+                            return true;
                         });
                         for (let item of filteredItems) {
                             if (item.url.includes('docs')) {
@@ -274,7 +347,7 @@ const config = {
             }),
         ],
     ],
-    themes: [
+    themes: SKIP_SEARCH ? [] : [
         [
             '@yang1666204/docusaurus-search-local',
             {
@@ -283,12 +356,14 @@ const config = {
                 highlightSearchTermsOnTargetPage: true,
                 // indexPages: true,
                 indexDocs: true,
-                docsRouteBasePath: ['docs', 'ja/docs', 'zh-CN/docs'],
+                docsRouteBasePath: ['docs-next', 'zh-CN/docs-next', 'docs', 'ja/docs', 'zh-CN/docs'],
                 indexBlog: false,
                 explicitSearchResultPath: true,
                 searchBarShortcut: true,
                 searchBarShortcutHint: true,
                 searchResultLimits: 100,
+                searchContextByPaths: ['docs-next', 'docs'],
+                useAllContextsWithNoSearchContext: true,
             },
         ],
     ],

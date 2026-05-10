@@ -1,0 +1,33 @@
+---
+{
+    "title": "Deploy on Kubernetes",
+    "language": "en",
+    "description": "Deploy Apache Doris on Kubernetes with Doris Operator."
+}
+---
+
+import GettingStartedCard from '@site/src/components/getting-started-card/getting-started-card';
+
+# Deploy on Kubernetes
+
+On Kubernetes, Apache Doris is managed by Doris Operator. Choose the guide that matches the architecture you want to deploy.
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="Doris Operator"
+    description="Learn what Doris Operator can do and how to install it on Kubernetes services from different cloud providers"
+    link="../doris-operator/intro"
+/>
+
+<GettingStartedCard
+    title="Integrated Storage and Compute Deployment"
+    description="Deploy a Doris cluster on Kubernetes in integrated storage and compute mode"
+    link="integrated-storage-compute/intro"
+/>
+
+<GettingStartedCard
+    title="Storage-Compute Separation Deployment"
+    description="Deploy a Doris cluster on Kubernetes in storage-compute separation mode"
+    link="separating-storage-compute/install-doris-cluster"
+/>
+</div>

@@ -1,5 +1,6 @@
 import React, { useEffect, createContext, useState, useRef, JSX } from 'react';
 import { useLocation } from '@docusaurus/router';
+import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import clsx from 'clsx';
 import ErrorBoundary from '@docusaurus/ErrorBoundary';
 import { PageMetadata, SkipToContentFallbackId, ThemeClassNames } from '@docusaurus/theme-common';
@@ -15,6 +16,10 @@ import SearchBar from '@theme/SearchBar';
 import type { Props } from '@theme/Layout';
 import styles from './styles.module.css';
 import { useHistory } from '@docusaurus/router';
+import { NavbarNext } from '@site/src/components/home-next/NavbarNext';
+import { PreviewBanner } from '@site/src/components/home-next/PreviewBanner';
+import { DocsSearchSection } from '@site/src/components/home-next/DocsSearchSection';
+import { isDocsNextPath, isReleasesPath, isEventsPath } from '@site/src/utils/locale';
 interface DataType {
     showSearchPageMobile: boolean;
     setShowSearchPageMobile: React.Dispatch<React.SetStateAction<boolean>>;
@@ -35,6 +40,13 @@ export default function Layout(props: Props): JSX.Element {
     const [showSearchPageMobile, setShowSearchPageMobile] = useState(false);
     const searchPageDom = useRef<HTMLDivElement>(null);
     const { hash } = useLocation();
+    const {
+        i18n: { locales },
+    } = useDocusaurusContext();
+    const isDocsNextPage = isDocsNextPath(history.location.pathname, locales);
+    const isReleasesPage = isReleasesPath(history.location.pathname, locales);
+    const isEventsPage = isEventsPath(history.location.pathname, locales);
+    const useNextNavbar = isDocsNextPage || isReleasesPage || isEventsPage;
     useKeyboardNavigation();
 
     useEffect(() => {
@@ -48,7 +60,7 @@ export default function Layout(props: Props): JSX.Element {
     }, [history.location]);
 
     useEffect(() => {
-        if (showSearchPageMobile) {
+        if (showSearchPageMobile && !isDocsNextPage) {
             window.scroll(0, 0);
             document.body.style.overflow = 'hidden';
             searchPageDom.current.style.height = '100vh';
@@ -56,7 +68,7 @@ export default function Layout(props: Props): JSX.Element {
             window.scroll(0, 0);
             document.body.style.overflow = 'auto';
         }
-    }, [showSearchPageMobile]);
+    }, [showSearchPageMobile, isDocsNextPage]);
 
     useEffect(() => {
         if (hash) {
@@ -79,8 +91,10 @@ export default function Layout(props: Props): JSX.Element {
 
                 <SkipToContent />
                 <AnnouncementBar />
-                <Navbar />
-                {showSearchPageMobile ? (
+                {useNextNavbar && <PreviewBanner />}
+                {useNextNavbar ? <NavbarNext /> : <Navbar />}
+                {isDocsNextPage && <DocsSearchSection />}
+                {!useNextNavbar && showSearchPageMobile ? (
                     <div ref={searchPageDom}>
                         <NavbarSearch>
                             <SearchBar />

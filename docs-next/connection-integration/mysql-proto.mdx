@@ -1,0 +1,171 @@
+---
+{
+    "title": "Connecting via MySQL Protocol",
+    "language": "en",
+    "description": "Introduces Apache Doris's compatibility with the MySQL network protocol, and provides connection examples for the MySQL CLI and mainstream languages such as Java, Go, Rust, Python, and C++."
+}
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+Apache Doris is fully compatible with the **MySQL network communication protocol**. As a result, all client tools, visualization tools, and MySQL drivers / libraries for mainstream programming languages that follow this protocol can connect to Doris directly, **without installing any Doris-specific driver**.
+
+> Doris FE provides MySQL protocol service on port `9030` by default, which corresponds to the `query_port` configuration item in `fe.conf`.
+
+## Typical Use Cases
+
+Based on the purpose of use, MySQL protocol connections fall into two typical scenarios:
+
+| Scenario | Typical Use | Recommended Approach |
+| --- | --- | --- |
+| Command-line / Script Access | Operations troubleshooting, ad hoc queries, automation scripts | MySQL CLI |
+| Application Integration | Backend services, data processing programs, ETL jobs | MySQL drivers for the corresponding language (Java / Go / Rust / Python / C++, etc.) |
+
+## Preparation Before Connecting
+
+Before establishing a connection, confirm the following information:
+
+| Item | Description | Example |
+| --- | --- | --- |
+| `FE_IP` | IP address or hostname of the Doris FE node | `172.20.63.118` |
+| `FE_QUERY_PORT` | FE MySQL protocol service port, corresponding to `query_port` in `fe.conf` | `9030` |
+| `USER` | Login account | `root` |
+| `PASSWORD` | Login password (the default `root` account has an empty password) | - |
+
+> If you need to customize the port, modify the `query_port` configuration item in `fe.conf` on the FE node accordingly and restart FE.
+
+## Connection Examples
+
+The following provides minimal connection examples for different MySQL clients / language drivers. Switch between them using the tabs below:
+
+<Tabs groupId="mysql-client">
+
+<TabItem value="mysql-cli" label="MySQL CLI" default>
+
+Suitable for scenarios such as command-line operations, ad hoc queries, and scripted invocations.
+
+### 1. Download and Extract the MySQL Client
+
+Download the MySQL client from the [MySQL official website](https://dev.mysql.com/downloads/mysql/). Doris is compatible with **MySQL 5.7 and later** client versions.
+
+After extracting, you can find the `mysql` command-line tool in the `bin/` directory.
+
+### 2. Connect to Doris
+
+Run the following command to connect to Doris:
+
+```shell
+mysql -h FE_IP -P FE_QUERY_PORT -u USER -p
+```
+
+After pressing Enter, type the password (the `root` account has no password by default, so just press Enter).
+
+### 3. Verify Login
+
+Once login succeeds, you will see the following message:
+
+```text
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 236
+Server version: 5.7.99 Doris version doris-2.0.3-rc06-37d31a5
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql>
+```
+
+</TabItem>
+
+<TabItem value="java" label="Java">
+
+Suitable for scenarios where Java applications integrate with Doris. Doris recommends using the **MySQL JDBC Connector** for the connection.
+
+### 1. Add the JDBC Driver
+
+Add the MySQL JDBC Connector dependency to your project (MySQL 5.1.49 or later is recommended).
+
+### 2. Write the Connection Code
+
+```java
+String user = "user_name";
+String password = "user_password";
+String url = "jdbc:mysql://FE_IP:FE_QUERY_PORT/demo"
+        + "?useUnicode=true"
+        + "&characterEncoding=utf8"
+        + "&useTimezone=true"
+        + "&serverTimezone=Asia/Shanghai"
+        + "&useSSL=false"
+        + "&allowPublicKeyRetrieval=true";
+
+try (Connection conn = DriverManager.getConnection(url, user, password);
+     Statement stmt = conn.createStatement();
+     ResultSet rs = stmt.executeQuery("show databases")) {
+
+    ResultSetMetaData metaData = rs.getMetaData();
+    int columnCount = metaData.getColumnCount();
+    while (rs.next()) {
+        for (int i = 1; i <= columnCount; i++) {
+            System.out.println(rs.getObject(i));
+        }
+    }
+} catch (SQLException e) {
+    log.error("get JDBC connection exception.", e);
+}
+```
+
+### 3. Common JDBC URL Parameters
+
+| Parameter | Meaning | Recommended Value / Example | Required |
+| --- | --- | --- | --- |
+| `useUnicode` | Whether to use the Unicode character set | `true` | No |
+| `characterEncoding` | Character encoding | `utf8` | No |
+| `useTimezone` | Whether to enable timezone conversion | `true` | No |
+| `serverTimezone` | Server timezone | `Asia/Shanghai` | No |
+| `useSSL` | Whether to use SSL for the connection | `false` | No |
+| `allowPublicKeyRetrieval` | Whether to allow retrieving the public key from the server (typically required by the MySQL 8 driver) | `true` | No |
+| `sessionVariables` | Session variables to initialize when the connection is established | `key1=val1,key2=val2` | No |
+
+### 4. Initialize Session Variables (Optional)
+
+If you need to initialize session variables when the connection is established, use the following URL format:
+
+```text
+jdbc:mysql://FE_IP:FE_QUERY_PORT/demo?sessionVariables=key1=val1,key2=val2
+```
+
+</TabItem>
+
+<TabItem value="go" label="Go">
+
+:::info To be added
+An example of connecting to Doris from Go via the MySQL driver will be added in a later release.
+:::
+
+</TabItem>
+
+<TabItem value="rust" label="Rust">
+
+:::info To be added
+An example of connecting to Doris from Rust via the MySQL driver will be added in a later release.
+:::
+
+</TabItem>
+
+<TabItem value="python" label="Python">
+
+:::info To be added
+An example of connecting to Doris from Python via the MySQL driver will be added in a later release.
+:::
+
+</TabItem>
+
+<TabItem value="cpp" label="C++">
+
+:::info To be added
+An example of connecting to Doris from C++ via the MySQL Connector will be added in a later release.
+:::
+
+</TabItem>
+
+</Tabs>

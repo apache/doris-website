@@ -1,0 +1,44 @@
+.home-next-preview-banner {
+    position: sticky;
+    top: 0;
+    z-index: 110;
+    width: 100%;
+    background: #FFD23F;
+    color: #0F1A14;
+    text-align: center;
+    padding: 8px 16px;
+    font-family: 'JetBrains Mono', 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 1.4;
+    letter-spacing: 0.01em;
+    border-bottom: 1px solid rgba(15, 26, 20, 0.12);
+
+    &__text {
+        display: inline-block;
+        max-width: 1180px;
+    }
+
+    &__link {
+        background: none;
+        border: none;
+        padding: 0;
+        margin: 0;
+        font: inherit;
+        color: inherit;
+        text-decoration: underline;
+        text-underline-offset: 2px;
+        cursor: pointer;
+
+        &:hover {
+            text-decoration: none;
+        }
+    }
+}
+
+@media (max-width: 640px) {
+    .home-next-preview-banner {
+        font-size: 12px;
+        padding: 8px 12px;
+    }
+}

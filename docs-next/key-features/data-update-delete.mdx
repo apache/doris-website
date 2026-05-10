@@ -1,0 +1,107 @@
+---
+title: Data Update and Delete
+description: SQL UPDATE, predicate DELETE, partial-column upserts, and atomic partition swaps, all backed by Merge-on-Write on Unique Key tables.
+slug: /key-features/data-update-delete
+featureCard:
+  tags:
+    - update
+    - delete
+---
+
+> **TL;DR** Doris speaks SQL `UPDATE` and `DELETE` like a transactional database, plus partial-column upserts from streaming loads, predicate-based bulk deletes, and atomic partition swaps. On Unique Key tables, the Merge-on-Write engine keeps query latency low by marking deleted rows in a per-rowset bitmap at write time instead of merging versions at read time.
+
+![Data Update and Delete hero illustration](/images/next/key-features/data-update-delete.jpg)
+
+## Why it matters
+
+Most analytical engines were built around the idea that warehouses are append-only. Then CDC happened, and so did GDPR, and so did the boring fact that production data has bugs. If your warehouse can't fix a single bad row without rewriting a partition, every late-arriving correction turns into an ops ticket.
+
+- A Flink CDC job watches MySQL and needs every row update to land within seconds.
+- A user requests deletion under GDPR. You need it gone from the warehouse, not "gone after the next compaction."
+- One report shows the wrong number because a single row in a 10-billion-row fact table has a typo.
+
+Doris handles all three with first-class SQL: `UPDATE`, `DELETE FROM ... WHERE`, partial-column upserts from Stream Load, and `TRUNCATE` or atomic partition replace for bulk cleanup. None of them require the table to be small, and none rely on you to schedule a rewrite job afterward.
+
+## What it is
+
+Doris exposes four user-facing ways to change data after it lands: row-level `UPDATE` SQL on Unique Key tables, predicate-based `DELETE FROM ... WHERE` on any table, partial-column upserts driven by ingestion (the `partial_columns: true` Stream Load header or the matching session variable), and partition-level operations like `TRUNCATE PARTITION` and atomic temp-partition replacement. Underneath, the Unique Key model uses Merge-on-Write (MoW) so deletes and updates take effect at write time rather than at query time. MoW shipped in 1.2 and became the Unique Key default in 2.1.
+
+**Key terms**
+
+- **`Unique Key model`**: a table model where one row per primary key is kept. Required for `UPDATE` and for batch upserts.
+- **`Merge-on-Write (MoW)`**: at write time, Doris looks up each new key in the existing data, marks the old row in a delete bitmap, and writes the new row to a fresh rowset.
+- **`Delete bitmap`**: a per-rowset bitmap of row IDs that queries should skip, replacing per-key version merging at read time.
+- **`Partial column update`**: a write that only touches some columns. Doris reads the missing values from existing rows and writes a complete row back.
+- **`Sequence column`** (`function_column.sequence_col`): a user-chosen column that tells MoW which version of a key wins when out-of-order writes arrive.
+- **`__DORIS_DELETE_SIGN__`**: a hidden column you set to `1` to soft-delete a row through any load path.
+
+## How it works
+
+Take an `UPDATE` against a Unique Key MoW table:
+
+1. **Plan and read.** The FE parses the statement, resolves the WHERE predicate, and routes a read across BE replicas. For partial-column writes, BEs additionally fetch the missing column values for each affected key.
+2. **Look up keys.** Each BE consults the in-memory primary key index per rowset to find which rowset and row IDs the affected keys currently live in.
+3. **Mark old rows.** Every rowset that holds an affected key has the corresponding row IDs flipped on in its delete bitmap. The old rows stay on disk until compaction sweeps them up.
+4. **Write new rows.** New values, plus any unchanged columns Doris had to read for partial updates, land in a fresh rowset with the next version number.
+5. **Publish.** The transaction commits, the new version becomes visible, and queries from that point on filter through the merged delete bitmap. Old data is reclaimed at compaction.
+
+`DELETE FROM ... WHERE` follows the same flow without the write step. On Aggregate or Duplicate tables, Doris records the predicate in tablet metadata instead, and queries apply it at read time.
+
+## Quick start
+
+```sql
+CREATE TABLE orders (
+  order_id BIGINT,
+  status   VARCHAR(20),
+  amount   DECIMAL(10, 2),
+  updated  DATETIME
+)
+UNIQUE KEY(order_id)
+DISTRIBUTED BY HASH(order_id) BUCKETS 4
+PROPERTIES ("function_column.sequence_col" = "updated");
+
+INSERT INTO orders VALUES
+  (1, 'created', 99.50,  '2026-05-08 10:00:00'),
+  (2, 'created', 149.00, '2026-05-08 10:01:00');
+
+UPDATE orders SET status = 'shipped', updated = NOW() WHERE order_id = 1;
+DELETE FROM orders WHERE order_id = 2;
+```
+
+**Expected result**
+
+```
++----------+---------+--------+---------------------+
+| order_id | status  | amount | updated             |
++----------+---------+--------+---------------------+
+|        1 | shipped |  99.50 | 2026-05-08 11:42:31 |
++----------+---------+--------+---------------------+
+```
+
+Order 1 was rewritten in place; order 2 is gone. The `function_column.sequence_col` property protects the table from out-of-order writes: a CDC event with an older `updated` timestamp would lose to the row that's already there, even if it lands after the newer one.
+
+## When to use it
+
+**Good fit**
+
+- Flink and Spark CDC pipelines that upsert into a Unique Key table, with the source primary key as the Doris key.
+- Hot-column updates on wide tables (order status, last-seen timestamp, current balance) via partial-column Stream Load.
+- GDPR-style row-level deletes by user ID, including on append-only Duplicate tables.
+- Backfills that swap a corrected partition in atomically with `ALTER TABLE ... REPLACE PARTITION`.
+- Multi-stream wide-table assembly, where each upstream owns a column group and writes only its own columns.
+
+**Not a good fit**
+
+- `UPDATE` on Aggregate or Duplicate tables. The statement is rejected. Reload through ingestion (Aggregate uses `REPLACE_IF_NOT_NULL` to overwrite values), or switch the table model.
+- High-frequency single-row `UPDATE`s in a tight loop. Each statement is its own transaction and the commit overhead dominates. Batch updates through Stream Load with `partial_columns: true` instead, or use [Group Commit](../data-operate/import/load-best-practices/group-commit-manual.md).
+- Renaming a primary key. There is no key-rewrite path; soft-delete the old row via `__DORIS_DELETE_SIGN__` and insert a new one, ideally in the same load.
+- Predicate `DELETE` over many billions of rows that match. Each delete records a predicate or bitmap that compaction has to chew through; a partition replace or `INSERT OVERWRITE` is faster.
+- Aggregate-model `DELETE` on non-key columns. The predicate must filter on key columns only; the engine has no way to evaluate value-column conditions before aggregation.
+
+## Further reading
+
+- [Data update and delete overview](../data-operate/update-and-delete.mdx)
+- [Update overview: SQL UPDATE, partial column update, sequence column](../data-operate/update/update-overview.md)
+- [Partial column update](../data-operate/update/partial-column-update.md)
+- [Delete overview: predicate delete, batch delete, atomic replace](../data-operate/delete/delete-overview.md)
+- [Apache Doris 2.1.0: Merge-on-Write becomes the Unique Key default](https://doris.apache.org/blog/release-note-2.1.0/)

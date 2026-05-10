@@ -1,0 +1,31 @@
+---
+{
+    "title": "高并发点查",
+    "language": "zh-CN",
+    "description": "Apache Doris 高并发与点查章节导航：覆盖基于行存与短路径的主键点查优化，以及通过字典表加速维度表关联的内存键值查找。"
+}
+---
+
+import GettingStartedCard from '@site/src/components/getting-started-card/getting-started-card';
+
+Doris 在面向分析的列存基础上，针对高并发、低延迟的在线点查与键值查找场景提供了专门的优化路径：通过行存与短路径让 Unique 表上的主键点查具备高 QPS 与低延迟能力；通过字典表把维度关联从 JOIN 改写为内存键值查找。
+
+## 主键点查
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="高并发点查"
+    description="在 Unique 主键表上开启行存、短路径与 PreparedStatement，把主键点查的 QPS 与响应延迟优化到在线服务级别。"
+    link="high-concurrent-point-query"
+/>
+</div>
+
+## 键值查找
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="字典表加速"
+    description="将维度列预加载到内存，使用 dict_get 函数替代 LEFT OUTER JOIN，在频繁键值查找的场景下显著提升查询性能。"
+    link="dictionary"
+/>
+</div>

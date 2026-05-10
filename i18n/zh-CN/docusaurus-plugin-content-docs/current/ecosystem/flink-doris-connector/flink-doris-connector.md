@@ -1131,7 +1131,7 @@ from KAFKA_SOURCE;
 
 3. **errCode = 2, detailMessage = current running txns on db 10006 is 100, larger than limit 100**
 
-   这是因为同一个库并发导入超过了 100，可通过调整 fe.conf 的参数 `max_running_txn_num_per_db` 来解决，具体可参考 [max_running_txn_num_per_db](../../admin-manual/config/fe-config#max_running_txn_num_per_db)。
+   这是因为同一个库并发导入超过了 100，可通过调整 fe.conf 的参数 `max_running_txn_num_per_db` 来解决，具体可参考 [FE 配置项](../../admin-manual/config/fe-config)。
    同时，一个任务频繁修改 label 重启，也可能会导致这个错误。2pc 场景下 (Duplicate/Aggregate 模型)，每个任务的 label 需要唯一，并且从 checkpoint 重启时，flink 任务才会主动 abort 掉之前已经 precommit 成功，没有 commit 的 txn，频繁修改 label 重启，会导致大量 precommit 成功的 txn 无法被 abort，占用事务。在 Unique 模型下也可关闭 2pc，可以实现幂等写入。
 
 4. **tablet writer write failed, tablet_id=190958, txn_id=3505530, err=-235**
@@ -1149,3 +1149,12 @@ from KAFKA_SOURCE;
 7. **stream load error: HTTP/1.1 307 Temporary Redirect**
    
    Flink 会先向 FE 请求，收到 307 后会向重定向后的 BE 请求。当 FE 在 FullGC/压力大/网络延迟的时候，HttpClient 默认会在一定时间 (3 秒) 没有等到响应会发送数据，由于默认情况下请求体是 InputStream，当收到 307 响应时，数据无法重放，会直接报错。有三种方式可以解决：1.升级到 Connector25.1.0 以上，调长了默认时间；2.修改 auto-redirect=false，直接向 BE 发起请求（不适用部分云上场景）；3.主键模型可以开启攒批模式。
+
+8. **使用 Flink CDC 同步 Oracle 等数据库的大表时，出现 `I/O exception (java.net.SocketException) ... Broken pipe` 报错怎么办？**
+
+   该报错通常是单次 Stream Load 写入的数据量超过了 BE 端的限制导致的。可以从以下几个方面进行调整：
+   - 调大 BE 端 `be.conf` 中的 `streaming_load_max_mb` 参数（默认 10240，单位 MB），允许单次 Stream Load 写入更多数据，修改后需要重启 BE 生效。
+   - 开启攒批模式（`sink.enable.batch-mode=true`），由 Connector 内部按批次大小自动切分写入，避免单次写入数据量过大。
+   - 尝试调高 Oracle CDC 的并发度，在启动命令中增加 `--oracle-conf scan.incremental.snapshot.enabled=true`（实验性功能），开启后可以多并发读取 Oracle 全量数据。
+   
+   更多 Flink CDC 相关问题可以参考 [Flink CDC FAQ](https://nightlies.apache.org/flink/flink-cdc-docs-release-3.6/docs/faq/faq/)。

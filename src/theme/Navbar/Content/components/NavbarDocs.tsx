@@ -1,6 +1,7 @@
 import styles from '../styles.module.css';
-import React, { useState, useEffect, useContext } from 'react';
-import { useHistory, useLocation } from '@docusaurus/router';
+import React, { useContext } from 'react';
+import Link from '@docusaurus/Link';
+import { useLocation } from '@docusaurus/router';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import { useThemeConfig } from '@docusaurus/theme-common';
 import { useNavbarMobileSidebar } from '@docusaurus/theme-common/internal';
@@ -22,10 +23,19 @@ interface NavbarDocsProps {
     isEN: boolean;
 }
 
+function getDocsVersion(pathname: string, locales: string[]): string {
+    const normalizedPathname = normalizePathname(pathname, locales);
+    const pathSegments = normalizedPathname.split('/');
+    const section = pathSegments[1];
+    const secPath = pathSegments[2];
+    if (section === 'docs' && ['dev', '2.1', '2.0', '1.2'].includes(secPath)) {
+        return secPath;
+    }
+    return DEFAULT_VERSION;
+}
+
 export const NavbarDocsLeft = ({ isEN }: NavbarDocsProps) => {
-    const [currentVersion, setCurrentVersion] = useState(DEFAULT_VERSION);
     const location = useLocation();
-    const history = useHistory();
     const {
         i18n: { currentLocale, defaultLocale, locales },
     } = useDocusaurusContext();
@@ -42,31 +52,14 @@ export const NavbarDocsLeft = ({ isEN }: NavbarDocsProps) => {
     }
     const searchItem = getNavItem(leftDocItems, 'search');
     const leftDocItemsWithoutSearch = leftDocItems.filter((item) => item.type !== 'search');
-    useEffect(() => {
-        const normalizedPathname = normalizePathname(location.pathname, locales);
-        const pathSegments = normalizedPathname.split('/');
-        const section = pathSegments[1];
-        const secPath = pathSegments[2];
-        if (section === 'docs' && ['dev', '2.1', '2.0', '1.2'].includes(secPath)) {
-            setCurrentVersion(secPath);
-        } else {
-            setCurrentVersion(DEFAULT_VERSION);
-        }
-    }, [locales, typeof window !== 'undefined' && location.pathname]);
+    const currentVersion = getDocsVersion(location.pathname, locales);
+    const docsHomeHref = `${getLocalePrefix(currentLocale, defaultLocale)}/docs/${currentVersion}/gettingStarted/what-is-apache-doris`;
     return (
         <div className={`navbar-left `}>
             <div className="navbar-logo-wrapper flex items-center">
-                <div
-                    className="cursor-pointer docs"
-                    onClick={() => {
-                        const url = `${getLocalePrefix(currentLocale, defaultLocale)}/docs${
-                            currentVersion === '' ? '' : `/${currentVersion}`
-                        }/gettingStarted/what-is-apache-doris`;
-                        history.push(url);
-                    }}
-                >
+                <Link className="cursor-pointer docs" to={docsHomeHref}>
                     {isEN ? <DocsLogoNew /> : <DocsLogoZH />}
-                </div>
+                </Link>
             </div>
             <div className={`${styles.navbarLeftToc}`}>
                 <NavbarItems items={leftDocItemsWithoutSearch} isDocsPage={true} />

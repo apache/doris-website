@@ -86,18 +86,22 @@ jobs:
                 # Check each changed file and map to doc version
                 while IFS= read -r file; do
                     case "$file" in
-                        # English current (dev) docs
+                        # English legacy current dir — no longer compiled
+                        # (dev moved to docs-next plugin). PR #3610 forbids
+                        # modifying these files; if they change anyway, fall
+                        # through to a minimal default-version smoke build.
                         docs/*)
-                            VERSIONS="current,$VERSIONS"
+                            VERSIONS="4.x,$VERSIONS"
                             ;;
                         # English versioned docs
                         versioned_docs/version-*/*)
                             ver=$(echo "$file" | sed -n 's|versioned_docs/version-\([^/]*\)/.*|\1|p')
                             VERSIONS="${ver},$VERSIONS"
                             ;;
-                        # Chinese current docs
+                        # Chinese legacy current dir — no longer compiled
+                        # (see docs/* note above).
                         i18n/zh-CN/docusaurus-plugin-content-docs/current/*)
-                            VERSIONS="current,$VERSIONS"
+                            VERSIONS="4.x,$VERSIONS"
                             LOCALES="en,zh-CN"
                             ;;
                         # Chinese versioned docs
@@ -110,9 +114,11 @@ jobs:
                         i18n/zh-CN/docusaurus-plugin-content-docs-community/*|i18n/zh-CN/code.json)
                             LOCALES="en,zh-CN"
                             ;;
-                        # Sidebar for current (dev) version
+                        # Sidebar for legacy current — no longer compiled
+                        # (legacy plugin uses includeCurrentVersion: false).
+                        # Fall through to minimal default-version build.
                         sidebars.ts)
-                            VERSIONS="current,$VERSIONS"
+                            VERSIONS="4.x,$VERSIONS"
                             ;;
                         # Versioned sidebars: extract version from filename
                         # e.g. versioned_sidebars/version-4.x-sidebars.json → 4.x
@@ -129,6 +135,13 @@ jobs:
                         # Releases i18n docs
                         i18n/zh-CN/docusaurus-plugin-content-docs-releases/*)
                             LOCALES="en,zh-CN"
+                            ;;
+                        # Static image assets are copied verbatim to the
+                        # build output and don't affect page rendering, so
+                        # they should NOT trigger a full rebuild on their
+                        # own. Any doc change that references these images
+                        # will trigger its own version-scoped build above.
+                        static/images/*|static/images/**)
                             ;;
                         # Config, source code, or other structural changes
                         # require a full build to validate
@@ -151,9 +164,10 @@ jobs:
                     # No versioned doc changes (e.g., only blog, community, or scripts).
                     # Blog and community plugins are always compiled by Docusaurus
                     # regardless of DOCS_VERSIONS, so we just set the minimal docs
-                    # scope to keep the build fast.
-                    DOCS_VERSIONS="current"
-                    echo "No doc version changes detected, doing minimal build with 'current' only."
+                    # scope to keep the build fast. Use the default version since
+                    # the legacy plugin no longer ships an unversioned 'current'.
+                    DOCS_VERSIONS="4.x"
+                    echo "No doc version changes detected, doing minimal build with '4.x' only."
                     echo "(Blog and community plugins are always built regardless.)"
                 fi
 
@@ -182,7 +196,22 @@ jobs:
                   yarn cache clean
                   export NODE_OPTIONS=--max-old-space-size=8192
                   yarn
+                  yarn key-features:generate
 
                   echo "Building with DOCS_VERSIONS=${DOCS_VERSIONS:-all}"
                   PWA_SERVICE_WORKER_URL=https://doris.apache.org/sw.js yarn docusaurus build ${{ steps.detect.outputs.locale_args }}
                   rm -rf build
+
+            - name: Docs changed link gate
+              run: |
+                  yarn docs:links:changed --fail-on-errors --output website-quality-governance/generated/docs-links-report.json
+
+            - name: Docs governance report
+              if: always()
+              continue-on-error: true
+              run: |
+                  if [ ! -d node_modules ]; then
+                      npm install -g yarn
+                      yarn --frozen-lockfile || yarn
+                  fi
+                  yarn docs:lint:changed --output website-quality-governance/generated/docs-governance-report.json

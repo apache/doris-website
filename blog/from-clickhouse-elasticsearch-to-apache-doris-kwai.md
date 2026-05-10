@@ -3,7 +3,7 @@
     'summary': 'Kwai, a short-video platform with over 400 million daily active users, migrated its advertising analytics from ClickHouse and Elasticsearch to Apache Doris, achieving up to 90% latency reduction and 3x write throughput.'
     'description': 'Kwai, a short-video platform with over 400 million daily active users, migrated its advertising analytics from ClickHouse and Elasticsearch to Apache Doris, achieving up to 90% latency reduction and 3x write throughput.'
     'picked': "true"
-    'order': "2"    
+    'order': "4"    
     'date': '2026-3-20'
     'author': 'velodb.io · Simin Zhou'
     'externalLink': 'https://www.velodb.io/blog/from-clickhouse-elasticsearch-to-apache-doris-how-kwai-unified-trillion-scale-ad-analytics'

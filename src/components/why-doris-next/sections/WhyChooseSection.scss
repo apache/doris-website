@@ -1,0 +1,129 @@
+// ─── Card 1: Why choose Doris (value props) ──────────────────────────────────
+
+@use '../responsive' as r;
+@use '../../shared/typography' as type;
+
+.cmp-why {
+    &.cmp-next__card {
+        background: var(--cn-green-dark);
+    }
+
+    .cmp-next__card-sub {
+        max-width: none;
+        white-space: nowrap;
+
+        @include r.down('xl') {
+            white-space: normal;
+        }
+    }
+
+    &__grid {
+        display: grid;
+        // auto-fit reflows 3 → 2 → 1 column smoothly without breakpoints.
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        gap: var(--cn-space-4);
+        margin-bottom: var(--cn-space-5);
+    }
+
+    &__vp {
+        background: rgba(0, 0, 0, 0.22);
+        border: 1px solid rgba(245, 239, 228, 0.08);
+        border-radius: var(--cn-radius-md);
+        padding: clamp(20px, 2.4vw, 28px) clamp(18px, 2.2vw, 26px);
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        min-height: 240px;
+        transform: translateZ(0);
+        box-shadow: 0 8px 18px -14px rgba(0, 0, 0, 0.5);
+        transition:
+            transform 0.25s ease-in-out,
+            box-shadow 0.25s ease-in-out,
+            border-color 0.25s ease-in-out;
+        will-change: transform, box-shadow;
+
+        @include r.motion-safe {
+            animation: cmp-why-fade-up 0.55s ease backwards;
+
+            &:nth-child(1) { animation-delay: 0.05s; }
+            &:nth-child(2) { animation-delay: 0.18s; }
+            &:nth-child(3) { animation-delay: 0.31s; }
+        }
+
+        @media (hover: hover) {
+            &:hover {
+                transform: translateY(-6px) scale(1.025);
+                border-color: rgba(255, 210, 63, 0.32);
+                box-shadow:
+                    0 28px 56px -18px rgba(0, 0, 0, 0.6),
+                    0 0 0 1px rgba(255, 210, 63, 0.2),
+                    0 0 48px -12px rgba(255, 210, 63, 0.3);
+            }
+
+            &:hover .cmp-why__vp-rail {
+                transform: scaleY(1.04);
+                box-shadow: 0 0 18px rgba(255, 210, 63, 0.55);
+            }
+        }
+    }
+
+    &__vp-rail {
+        position: absolute;
+        top: 18px;
+        bottom: 18px;
+        left: 0;
+        width: 3px;
+        background: var(--cn-yellow);
+        border-radius: 0 2px 2px 0;
+        transform-origin: center;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    &__vp-stat {
+        @include type.metric;
+        color: var(--cn-yellow);
+        margin-bottom: 4px;
+        display: flex;
+        align-items: baseline;
+        gap: 2px;
+        white-space: nowrap;
+        flex-wrap: nowrap;
+    }
+
+    &__vp-stat-unit {
+        @include type.mono-text(clamp(18px, 0.9rem + 0.6vw, 22px), 700, 1, 0);
+        color: rgba(255, 210, 63, 0.85);
+    }
+
+    &__vp-stat-arrow {
+        @include type.mono-text(clamp(18px, 0.9rem + 0.6vw, 22px), 700, 1, 0);
+        color: rgba(255, 210, 63, 0.7);
+        margin-right: 4px;
+    }
+
+    &__vp-label {
+        @include type.micro-label;
+        color: rgba(245, 239, 228, 0.5);
+        margin-bottom: 18px;
+    }
+
+    &__vp-headline {
+        @include type.mono-text(clamp(16px, 0.9rem + 0.5vw, 19px), 700, 1.25, -0.005em);
+        color: var(--cn-cream-light);
+        margin: 0 0 10px;
+    }
+
+    &__vp-text {
+        @include type.body-copy;
+        color: rgba(245, 239, 228, 0.72);
+        margin: 0;
+    }
+}
+
+@keyframes cmp-why-fade-up {
+    from {
+        opacity: 0;
+        transform: translateY(14px);
+    }
+}

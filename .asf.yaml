@@ -50,6 +50,10 @@ github:
         strict: false
         contexts:
           - Build Check
+          - check-md-links
+          - check-file-sizes
+          - Build docs-next
+          - check-legacy-docs
   features:
     issues: true
 
