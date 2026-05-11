@@ -36,7 +36,7 @@ An incremental materialized view in Doris is a partitioned async materialized vi
 
 ## How it works
 
-1. **You declare the partition mapping.** `PARTITION BY (DATE_TRUNC(o_orderdate, 'MONTH'))` tells Doris to derive the MV's partitions from `orders.o_orderdate`. Internal tables and Hive tables both work; for Iceberg, Paimon, and Hudi, partitioned refresh shipped in 3.1.
+1. **You declare the partition mapping.** `PARTITION BY (DATE_TRUNC(o_orderdate, 'MONTH'))` tells Doris to derive the MV's partitions from `orders.o_orderdate`. Internal tables and Hive tables both work; Iceberg, Paimon, and Hudi gained partitioned refresh in 3.1, with Iceberg and Paimon also supporting automatic detection of base data changes — Hudi requires manual refresh.
 2. **Doris materializes a partition layout.** At create time, the FE walks the base partitions, applies the roll-up function, and emits matching MV partitions. New base partitions trigger new MV partitions on the next refresh.
 3. **Loads invalidate partitions, not the whole view.** A load that lands in `orders` partition `p_2026_05_08` only flags the MV partitions whose key set covers that day. Loads on referenced non-partitioned tables still invalidate everything by default; list those tables in `excluded_trigger_tables` if you know they only insert and never update.
 4. **The refresh job rebuilds invalid partitions only.** Each invalid partition becomes one `INSERT OVERWRITE`. The `refresh_partition_num` property controls how many partitions ride per statement (default 1), trading transactional granularity for throughput. A failure stops the task without rolling back partitions that already landed.
@@ -100,3 +100,6 @@ The earlier partitions kept their old `VisibleVersionTime` because nothing recom
 - [Async MV best practices: scenario assessment, refresh strategy, partitioned MV examples](../query-acceleration/materialized-view/async-materialized-view/use-guide.md)
 - [`CREATE ASYNC MATERIALIZED VIEW`: full syntax, partition derivation rules, table properties](../sql-manual/sql-statements/table-and-view/async-materialized-view/CREATE-ASYNC-MATERIALIZED-VIEW.md)
 - [Sync materialized view: real-time, single-table acceleration](../query-acceleration/materialized-view/sync-materialized-view.md)
+- [Preaggregation and Rollup](./preaggregation-and-rollup.mdx): the per-load Aggregate Key path and sync MV / ROLLUP companions to async MVs.
+- [Query Cache](./query-cache.mdx): another preaggregation path; precompute via MV or cache on first read.
+- [Data Lineage](./data-lineage.mdx): how the audit log's `chosen_m_views` column surfaces which MVs actually serve traffic.

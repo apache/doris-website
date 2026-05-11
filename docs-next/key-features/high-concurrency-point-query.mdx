@@ -95,7 +95,7 @@ The `SHORT-CIRCUIT` line is the one that matters. Without it, the same DDL plus 
 
 ## Performance and verification
 
-Doris reports that enabling server-side `PreparedStatement` on top of the short-circuit path delivers more than a 4x throughput improvement when FE CPU is the bottleneck. Numbers depend on row width, row cache hit rate, and how many FE Observers absorb traffic, so treat that as a planning floor, not a benchmark.
+Doris reports that enabling server-side `PreparedStatement` on top of the short-circuit path delivers more than a 4x throughput improvement when FE CPU is the bottleneck. This is the same 4x cited from the prepared-statement angle in the [Prepared Statement card](./prepared-statement.mdx) — one combined gain, not two stackable ones. Numbers depend on row width, row cache hit rate, and how many FE Observers absorb traffic, so treat that as a planning floor, not a benchmark.
 
 Two checks tell you the path is live:
 

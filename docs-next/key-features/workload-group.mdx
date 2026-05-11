@@ -100,4 +100,6 @@ FROM orders WHERE dt = CURRENT_DATE() GROUP BY region;
 - [Concurrency control and queueing](../admin-manual/workload-management/concurrency-control-and-queuing.md): how the per-FE queue behaves, the `bypass_workload_group` admin override, and queueing pitfalls under multiple FEs.
 - [Spill to disk](../admin-manual/workload-management/spill-disk.md): what happens when a group hits its `memory_low_watermark` and how slot-based memory policies work.
 - [`information_schema.workload_groups`](../admin-manual/system-tables/information_schema/workload_groups.md): the system table for live group state, used by the example above.
+- [Resource Group](./resource-group.mdx): physical BE-node isolation for stronger SLA boundaries.
+- [Compute Group](./compute-group.mdx): the compute-storage-decoupled equivalent that adds isolation without copying data.
 - [Multi-tenant workload isolation in Apache Doris](https://doris.apache.org/blog/multi-tenant-workload-isolation-in-apache-doris/): the original design blog with internal benchmarks for soft- and hard-limit CPU on a 16-core BE.

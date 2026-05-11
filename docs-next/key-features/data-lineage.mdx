@@ -103,4 +103,5 @@ The row holds catalog-qualified table names and any MV the optimizer rewrote int
 - [Async Materialized Views](../query-acceleration/materialized-view/async-materialized-view/overview.md): the rewrite engine whose decisions show up in `chosen_m_views` and whose base-table dependencies are tracked by `MTMVRelationManager`.
 - [Incremental Materialized View](./incremental-materialized-view.mdx): partition-level dependency tracking between MVs and base tables that complements column-level lineage on the write path.
 - [OpenLineage specification](https://openlineage.io/docs/spec/overview/): the open standard for column-level lineage events; a useful target schema for a `LineagePlugin` implementation.
+- [Managing Lake Tables](./managing-lake-table.mdx): writes against Iceberg, Paimon, and Hive produce lineage events too; this card covers the write paths involved.
 - [Apache Atlas overview](https://atlas.apache.org/): a common downstream sink that accepts OpenLineage today and renders the column-level graph.

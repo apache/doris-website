@@ -101,4 +101,7 @@ This path is used automatically whenever Doris reads Parquet, so the question is
 - [Data Pruning](./data-pruning.mdx): the broader story of how Doris skips reading data, of which the Parquet reader is one layer.
 - [Vectorized Execution](./vectorized-execution.mdx): the engine the reader decodes into, and why skipping the Arrow round trip matters.
 - [Data Cache](../lakehouse/data-cache.md): when to cache decoded Parquet pages locally so repeated scans skip the remote read entirely.
+- [Metadata Cache](./metadata-cache.mdx): the FE-side cache for schema, partition, and file lists that the Parquet reader's pruning depends on.
+- [Multi-Catalog](./multi-catalog.mdx): how Parquet tables on S3, HDFS, Hive, Iceberg, and Paimon plug into Doris in the first place.
+- [Catalog Integrations](./catalog-integrations.mdx): the per-source connector reference for the catalogs that hold Parquet files.
 - [Building the next-generation data lakehouse (Apache Doris blog)](https://doris.apache.org/blog/Building-the-Next-Generation-Data-Lakehouse-10X-Performance/): the original public writeup of the native Parquet reader.

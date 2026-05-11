@@ -105,3 +105,11 @@ The query reads only the `ts` and `country` columns. The reader skips pages whos
 - **Wide-table V3 footer**: a 7,000-column table with 10,000 segments saw segment-open time drop from 65s to 4s (16x faster) and open-time memory from 60 GB to under 1 GB (60x lower). Source: [Storage Format V3](../table-design/storage-format.md).
 - **ZSTD vs. the prior default** on a 25 GB / 110-million-line text-log dataset: nearly 10x compression ratio, 53% better than the previous default, and 30% faster end-to-end read+decompress. Source: [Apache Doris 1.1.0 release notes](https://doris.apache.org/blog/release-note-1.1.0/).
 
+## Further reading
+
+- [Storage Format V3](../table-design/storage-format.md): the wide-table footer optimization and per-column metadata externalization.
+- [Data Pruning](./data-pruning.mdx): how ZoneMap, BloomFilter, and the per-page indexes that live inside a segment turn into skip work at scan time.
+- [Vectorized Execution](./vectorized-execution.mdx): the engine the column reader hands its decoded batches to.
+- [VARIANT Data Type](./variant-data-type.mdx): how JSON paths get promoted into the same per-column encoded, paged, indexed subcolumns described here.
+- [Apache Doris 1.1.0 release notes](https://doris.apache.org/blog/release-note-1.1.0/): the original ZSTD compression benchmark and rollout notes.
+

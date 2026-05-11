@@ -100,7 +100,7 @@ instead of the raw SQL. That is the signal the cached plan is being reused. Pair
 
 ## Performance and verification
 
-Doris reports a [4x or better throughput improvement](https://doris.apache.org/docs/2.1/query-acceleration/high-concurrent-point-query/) from PreparedStatement on point-query workloads where FE CPU is the bottleneck. The full high-concurrency stack (Unique Key + Merge-on-Write + row store + row cache + short-circuit + PreparedStatement) reaches [30,000+ QPS per node](https://doris.apache.org/blog/How-We-Increased-Database-Query-Concurrency-by-20-Times/) on YCSB on a 16-core / 64GB machine, with average latency cut by 96% versus the un-optimized baseline. The PreparedStatement contribution is hard to isolate from the rest of the stack; treat 4x as the planning floor when the FE is your ceiling.
+Doris reports a [4x or better throughput improvement](https://doris.apache.org/docs/2.1/query-acceleration/high-concurrent-point-query/) from PreparedStatement on point-query workloads where FE CPU is the bottleneck. This is the same 4x cited from the short-circuit angle in the [High-Concurrency Point Query card](./high-concurrency-point-query.mdx) — one combined gain, not two stackable ones. The full high-concurrency stack (Unique Key + Merge-on-Write + row store + row cache + short-circuit + PreparedStatement) reaches [30,000+ QPS per node](https://doris.apache.org/blog/How-We-Increased-Database-Query-Concurrency-by-20-Times/) on YCSB on a 16-core / 64GB machine, with average latency cut by 96% versus the un-optimized baseline. The PreparedStatement contribution is hard to isolate from the rest of the stack; treat 4x as the planning floor when the FE is your ceiling.
 
 Two checks tell you the path is live:
 

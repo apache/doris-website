@@ -106,7 +106,7 @@ The `sequence_col` line is what protects you when a delayed CDC event arrives af
 - Per-event `INSERT INTO ... VALUES` from a microservice. That is not a Kafka problem and not a CDC problem; reach for [Group Commit](./group-commit.mdx) so the BE batches small writes server-side.
 - Routine Load on a topic with short Kafka retention. If retention is 24 h and the job stays paused for two days, the persisted offset falls behind the earliest available offset, and Kafka rejects the resume with "out of range". Raise retention, or run a connector that buffers.
 - Monitoring offset lag through the FE alone. The FE does not currently expose a lag metric ([open issue](https://github.com/apache/doris/issues/7113)). Scrape the Kafka-side consumer-lag exporter or watch BE-side rates.
-- Stream Load 2PC against Merge-on-Write Unique Key tables. The combination is rejected; for those tables, lean on `Label`-based dedup and the sequence column instead.
+- Stream Load 2PC against Merge-on-Write Unique Key tables **on cloud / storage-compute-separated deployments**: the BE rejects this combination, so the Flink Connector's exactly-once path falls back to `Label`-based dedup plus the sequence column there. On-prem clusters keep the full Stream Load 2PC path on MoW.
 
 ## Performance and numbers
 
@@ -119,3 +119,4 @@ From "How Flink's real-time writes to Apache Doris stay both fast and exactly-on
 - [Doris Kafka Connector for Avro, Protobuf, and Debezium](../connection-integration/data-integration/doris-kafka-connector.md)
 - [Load Transactions: the model behind 2PC](./load-transaction.mdx)
 - [Data Update and Delete: sequence column and Merge-on-Write](./data-update-delete.mdx)
+- [Binlog Table Stream](./binlog-table-stream.mdx): the change feed that runs the other direction, exposing Doris row changes to downstream consumers.

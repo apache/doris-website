@@ -103,4 +103,6 @@ The planner kept one partition out of two (date range) and one tablet out of six
 - [Index overview: skip indexes](../table-design/index/index-overview.md)
 - [BloomFilter index](../table-design/index/bloomfilter.md)
 - [NGram BloomFilter index](../table-design/index/ngram-bloomfilter-index.md)
+- [Partitioning and Bucketing](./partitioning-and-bucketing.mdx): the DDL choices that decide which partitions and tablets the planner can prune in the first place.
+- [Inverted Index](./inverted-index.mdx): the index-probe layer that turns text and high-cardinality equality predicates into posting-list lookups.
 - [Deep dive: Data Pruning in Apache Doris (blog)](https://doris.apache.org/blog/data-pruning-250908/)

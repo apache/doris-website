@@ -30,7 +30,7 @@ A few things tend to go wrong:
 
 **Key terms**
 
-- **AI resource**: a named connection to an embedding provider (`openai`, `local`, `voyageai`, `jina`, `gemini`, `qwen`, and others). Stores the endpoint, model name, API key, and optional dimensions.
+- **AI resource**: a named connection to an embedding provider. `EMBED()` ships dedicated adapters for `openai`, `gemini`, `voyageai`, `jina`, `qwen`, `minimax`, plus a `local` option for in-house model servers. Stores the endpoint, model name, API key, and optional dimensions.
 - **`EMBED([resource_name], input)`**: the SQL function. With one argument, Doris uses the session default; with two, the first names the resource explicitly.
 - **`default_ai_resource`**: a session variable that picks a resource for the rest of the session.
 - **Multimodal input**: a JSON value describing a file (URI, content type, optional S3 credentials). Doris presigns S3 URLs and forwards them to providers that support image, video, or audio embeddings.
@@ -90,7 +90,7 @@ The `INSERT` precomputes one vector per row. The `SELECT` embeds the query strin
 **Not a good fit**
 
 - Real-time queries that embed at the per-row level over millions of rows. Each row is one provider call, so the bill and the latency scale with row count. Precompute once, reuse forever.
-- Workloads that need a specific embedding model not on the supported provider list. The accepted providers are OpenAI, Local, Gemini, DeepSeek, Anthropic, MoonShot, QWen, MiniMax, Zhipu, Baichuan, VoyageAI, and Jina. Anything outside that set needs to expose an OpenAI-, Anthropic-, or Gemini-compatible API to plug in.
+- Workloads that need a specific embedding model not on the supported provider list. The providers with an embedding adapter are OpenAI, Gemini, VoyageAI, Jina, Qwen, and MiniMax, plus `local` for an in-house model server. Doris's broader AI resource list also accepts DeepSeek, MoonShot, Anthropic, Zhipu, and Baichuan, but those route through the [LLM SQL Functions](./llm-sql-functions.mdx) — chat / completion only, not `EMBED()`. Anything outside the embedding-adapter set needs to expose an OpenAI- or Gemini-compatible API to plug in.
 - Air-gapped clusters with no path to the provider. Use `provider_type = "local"` against an in-house model server, or precompute vectors in your own pipeline.
 - Columns where the embedding model's dimension does not match the ANN index. The ARRAY length is fixed by the model (or by `ai.dimensions` for models that allow truncation); the index is fixed at table creation. Mismatch fails at write time.
 
@@ -109,4 +109,7 @@ The `INSERT` precomputes one vector per row. The `SELECT` embeds the query strin
 - [AI Functions overview](../sql-manual/sql-functions/ai-functions/overview.md): every supported provider and the full property list for `CREATE RESOURCE`.
 - [Hybrid Search](./hybrid-search.mdx): how to combine `EMBED()` with a full-text predicate and an ANN index in one query.
 - [Vector index overview](../table-design/index/vector-index/overview.md): how to store embeddings under HNSW or IVF for ANN-scale lookups.
+- [Inverted Index](./inverted-index.mdx): the index used to pre-filter rows before vectors get ranked in a hybrid query.
+- [Reciprocal Rank Fusion](./reciprocal-rank-fusion.mdx): how to fuse BM25 and vector ranks once embeddings are in place.
+- [LLM SQL Functions](./llm-sql-functions.mdx): `EMBED()` shares its AI resource model with the `AI_*` family; this is the other half of the AI SQL surface.
 - [AI on Doris](../ai/ai-overview.md): the rest of the AI function family, including classification, generation, and cross-row aggregation.

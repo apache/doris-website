@@ -81,13 +81,16 @@ Both tables become readable at the same instant. If the second `INSERT` had fail
 
 - High-frequency, single-row inserts. Each transaction adds a commit round-trip and a tablet version, and small loads bottleneck on the commit stage. Use [Group Commit](https://doris.apache.org/docs/data-operate/import/group-commit-manual/) instead.
 - Atomicity across two databases. All tables in one transaction must live in the same database.
-- Stream Load 2PC against Merge-on-Write Unique Key tables. The combination is rejected.
+- Stream Load 2PC against Merge-on-Write Unique Key tables **in cloud / storage-compute-separated deployments**. The BE rejects this combination with `Status::NotSupported`; on-prem (shared-nothing) clusters allow it.
 - Long-horizon deduplication. Labels are evicted after roughly 3 days or 2,000 entries per database, whichever hits first; reusing one after that does not dedupe. Track long-lived idempotency keys in the application.
 - Reading your own writes inside the same transaction. Each statement runs against the snapshot taken at its start; a previous `INSERT` is not visible until after `COMMIT`.
 
 ## Further reading
 
+- [Stream Load](./stream-load.mdx): the synchronous HTTP load that hosts the 2PC variant.
+- [Group Commit](./group-commit.mdx): the right tool for high-frequency small inserts that don't need explicit `BEGIN ... COMMIT`.
+- [Kafka and CDC Integration](./kafka-cdc-integration.mdx): how Routine Load and Flink CDC build on this transaction model for exactly-once.
+- [Binlog Table Stream](./binlog-table-stream.mdx): the change feed produced once committed rows become visible.
 - [Transactions, isolation, and Label retention](https://doris.apache.org/docs/data-operate/transaction/)
 - [Stream Load 2PC walkthrough](https://doris.apache.org/docs/data-operate/import/import-way/stream-load-manual/)
 - [How Flink's real-time writes to Doris stay both fast and exactly-once](https://doris.apache.org/blog/Flink-realtime-write/)
-- [Group Commit, the right tool for high-frequency small inserts](https://doris.apache.org/docs/data-operate/import/group-commit-manual/)

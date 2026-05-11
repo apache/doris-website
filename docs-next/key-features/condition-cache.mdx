@@ -94,3 +94,5 @@ The first run scans every segment, evaluates the predicate, and writes one bit v
 - [Query Cache: pipeline-level partial aggregation cache](./query-cache.mdx)
 - [SQL Cache: result-level cache for byte-identical SQL](../query-acceleration/sql-cache-manual.md)
 - [Caching in Doris: choosing the right strategy](../query-acceleration/caching-intro.mdx)
+- [Data Cache & Page Cache](./data-cache-page-cache.mdx): the storage-tier caches that sit below Condition Cache for the bytes and decoded pages themselves.
+- [Metadata Cache](./metadata-cache.mdx): the external-catalog metadata cache that complements the data-side caches.

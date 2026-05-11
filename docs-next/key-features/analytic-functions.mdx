@@ -105,4 +105,5 @@ One pass, three windowed columns, no self-joins. The original five rows are pres
 - [Window Functions Overview: syntax, frame clauses, and the unique-ordering caveat](../sql-manual/sql-functions/window-functions/overview.md)
 - [`LAG`](../sql-manual/sql-functions/window-functions/lag.md), [`LEAD`](../sql-manual/sql-functions/window-functions/lead.md), [`ROW_NUMBER`](../sql-manual/sql-functions/window-functions/row-number.md), [`RANK`](../sql-manual/sql-functions/window-functions/rank.md), [`NTILE`](../sql-manual/sql-functions/window-functions/ntile.md): per-function reference pages
 - [Pipeline Execution Engine: how partitioned windows get parallelized across BEs](./pipeline-execution-engine.mdx)
+- [Vectorized Execution](./vectorized-execution.mdx): the engine that runs each window's batch through SIMD-accelerated operators.
 - [Async Materialized View: precompute window results that re-run every minute](../query-acceleration/materialized-view/async-materialized-view/overview.md)

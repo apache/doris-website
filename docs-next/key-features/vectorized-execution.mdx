@@ -100,4 +100,6 @@ The aggregation runs column-at-a-time over 8,192-row Blocks. On a wide-table sca
 - [Product concepts: Vectorized Execution Engine](../features-architecture/product-concepts.md)
 - [Pipeline execution engine](../query-acceleration/optimization-technology-principle/pipeline-execution-engine.md)
 - [System architecture overview](../features-architecture/system-architecture.md)
+- [Columnar Storage](./columnar-storage.mdx): the on-disk format whose pages and encodings feed directly into the vectorized columns.
+- [Parquet Reader Optimization](./parquet-reader-optimization.mdx): how external Parquet decoding lands straight in the vectorized engine without an Arrow round trip.
 - [Apache Doris 2.0 release notes (row-based engine removed)](https://doris.apache.org/blog/release-note-2.0.0/)

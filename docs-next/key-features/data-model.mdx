@@ -111,3 +111,6 @@ Identical column lists, but the storage engine treats writes very differently. I
 - [Aggregate Model: aggregation functions and `AGG_STATE` for custom merges](../table-design/data-model/aggregate.md)
 - [Table Model Best Practices: column ordering, type choice, `count(*)` tuning](../table-design/data-model/tips.md)
 - [Prefix Index and Sort Key: how key columns drive query pruning](../table-design/index/prefix-index.md)
+- [Data Update and Delete](./data-update-delete.mdx): SQL UPDATE, DELETE, partial-column upsert, and the Merge-on-Write internals that the Unique Key model unlocks.
+- [Preaggregation and Rollup](./preaggregation-and-rollup.mdx): the Aggregate Key model in depth, plus ROLLUP and sync materialized views.
+- [Partitioning and Bucketing](./partitioning-and-bucketing.mdx): how the same key columns drive partition pruning and tablet placement.

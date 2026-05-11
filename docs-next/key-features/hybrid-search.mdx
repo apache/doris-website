@@ -100,7 +100,12 @@ Hybrid search in Doris pays off when you already want joins or aggregations on t
 
 ## Further reading
 
-- [Vector index overview](https://doris.apache.org/docs/table-design/index/vector-index/overview/)
-- [Inverted index overview](https://doris.apache.org/docs/table-design/index/inverted-index/)
-- [Vector search practical guide](https://doris.apache.org/docs/table-design/index/vector-index/practical-guide/)
-- [AI on Doris](https://doris.apache.org/docs/ai/ai-overview/)
+- [Vector Index](./vector-index.mdx): the ANN index that powers the vector half of hybrid search.
+- [Full-text Search](./full-text-search.mdx): the inverted-index side, including tokenizers and the `MATCH_*` operator family.
+- [BM25 Relevance Scoring](./bm25.mdx): how `score()` ranks text matches; pair it with vector distance for the two-scorer pattern.
+- [Reciprocal Rank Fusion](./reciprocal-rank-fusion.mdx): the SQL pattern for combining BM25 and vector rankings when single-pass fusion is not enough.
+- [Embedding](./embedding.mdx): `EMBED()` produces the vectors the ANN index reads from.
+- [Vector index overview](../table-design/index/vector-index/overview.md): full reference for index properties and query patterns.
+- [Inverted index overview](../table-design/index/inverted-index/overview.md): tokenizers, MATCH operators, and analyzer choices.
+- [Vector search practical guide](../table-design/index/vector-index/practical-guide.md): end-to-end walkthrough from data prep to tuning.
+- [AI on Doris](../ai/ai-overview.md): how hybrid search fits with the rest of Doris's AI features.
