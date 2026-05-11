@@ -1,7 +1,18 @@
 ---
 title: Workload Group
 description: An in-process resource isolation mechanism that partitions CPU, memory, IO, and concurrency across query groups so heavy ETL never starves a BI dashboard.
+keywords:
+  - workload group
+  - CPU isolation
+  - memory isolation
+  - concurrency limit
+  - multi-tenant query
+  - Apache Doris resource management
 slug: /key-features/workload-group
+image: /images/next/key-features/workload-group.jpg
+last_update:
+  date: 2026-05-10
+  author: Apache Doris
 featureCard:
   tags:
     - resource-management
@@ -10,9 +21,8 @@ featureCard:
 
 > **TL;DR** Workload Group slices a single Doris cluster into named groups, each with its own CPU share, memory ceiling, query concurrency cap, and IO budget. Heavy ETL goes in one group, dashboards in another, ad-hoc analysts in a third. A runaway query in one group no longer takes the others down with it. Linux cgroups handle CPU isolation; the BE process handles memory, IO, and concurrency.
 
-![Workload Group hero illustration](/images/next/key-features/workload-group.jpg)
-
-## Why it matters
+![Apache Doris Workload Group: An in-process resource isolation mechanism that partitions CPU, memory, IO, and concurrency across query groups so heavy ETL never starves a BI dashboard.](/images/next/key-features/workload-group.jpg)
+## Why it matters {#why}
 
 A production Doris cluster almost never runs one workload. A typical day looks like this: a 2 a.m. ETL pipeline rewrites yesterday's partitions, a finance team reruns their daily report at 9 a.m., an executive dashboard polls the same `GROUP BY region` every fifteen seconds during business hours, and an analyst kicks off a `SELECT *` because they forgot the `WHERE` clause.
 
@@ -20,7 +30,7 @@ Without resource controls, those four workloads share one global pool. The ETL j
 
 Workload Group fixes this without adding hardware. You define one group per workload class, set the limits each group is allowed, and bind users to the right group. The cluster keeps running on the same set of BEs, but the BE schedulers, memory tracker, and cgroup controllers now divide capacity along the lines you drew.
 
-## What it is
+## What it is {#what}
 
 Workload Group is an in-process isolation feature: every BE process serves every group, but the BE knows which threads, scan slots, and memory belong to which group. CPU isolation routes BE worker threads into per-group cgroups. Memory isolation tracks per-group usage in the BE memory tracker and triggers spilling or query cancellation when a group exceeds its ceiling. Concurrency control sits at the FE: each group has a queue, and queries past the limit wait or fail fast.
 
@@ -32,7 +42,7 @@ Workload Group is an in-process isolation feature: every BE process serves every
 - **`read_bytes_per_second` / `remote_read_bytes_per_second`**: per-group IO throttles, applied per data directory on local tables and per BE for external sources.
 - **`normal` group**: the default group, auto-created on first start, used for any session that has not been bound elsewhere. You cannot drop it.
 
-## How it works
+## How it works {#how}
 
 1. **Resolve the group (FE).** The FE picks a group in this order: an explicit `/*+ SET_VAR(workload_group='...') */` hint, the session variable `workload_group`, the user property `default_workload_group`, then `normal`. The FE checks USAGE privilege on the chosen group.
 2. **Admit or queue (FE).** The group's queue checks how many queries are already running in this group on this FE. If under `max_concurrency`, the query gets a slot and proceeds. If over, it waits, capped by `max_queue_size` and timed out by `queue_timeout`. A full queue rejects fast.
@@ -40,7 +50,7 @@ Workload Group is an in-process isolation feature: every BE process serves every
 4. **Track memory per group (BE).** Every allocation is tagged with the group ID. When the group's tracker crosses `memory_low_watermark`, spillable operators start spilling to disk. When it crosses `memory_high_watermark`, the BE pauses queries in the group and may cancel the largest one to bring usage back below the line.
 5. **Throttle scans (BE).** Local and remote scan thread pools have per-group ceilings (`scan_thread_num`, `max_remote_scan_thread_num`), and `read_bytes_per_second` caps how much disk IO each group's scans can consume. This is the knob that keeps an unindexed full-table scan from saturating the SSDs.
 
-## Quick start
+## Quick start {#quick-start}
 
 ```sql
 -- One group for ETL, one for BI dashboards
@@ -76,28 +86,30 @@ FROM orders WHERE dt = CURRENT_DATE() GROUP BY region;
 
 `SHOW WORKLOAD GROUPS` (or `SELECT ... FROM information_schema.workload_groups`) reports live counts. The 12 queries waiting in `bi` are queued behind the 47 already running. The four ETL queries get a guaranteed 30% of CPU even when BI is busy, and they cannot push past 70%.
 
-## When to use it
+## When to use it {#when}
 
 **Good fit**
 
 - Mixed-workload clusters: ETL, scheduled reports, dashboards, and ad-hoc analysts on shared BEs.
 - Multi-tenant deployments where cost matters more than perfect isolation: one cluster, several teams, predictable behavior under load.
 - Throttling a known troublemaker. A team's `SELECT *` habit, a Kafka backfill that occasionally turns into a flood, anything with a tail you want to clip.
-- Pair it with [Compute Group](../admin-manual/workload-management/compute-group.md) in storage-compute decoupled mode. The compute group gives you a separate set of BEs; the workload group divides resources within it.
+- Pair it with [Compute Group](../admin-manual/workload-management/compute-group) in storage-compute decoupled mode. The compute group gives you a separate set of BEs; the workload group divides resources within it.
 
 **Not a good fit**
 
-- You need physical isolation: separate SLAs, separate security domains, or billable tenants. A BE crash or kernel OOM still hits every group in the same process. Use [Resource Group](../admin-manual/workload-management/resource-group.md) or a dedicated Compute Group instead.
+- You need physical isolation: separate SLAs, separate security domains, or billable tenants. A BE crash or kernel OOM still hits every group in the same process. Use [Resource Group](../admin-manual/workload-management/resource-group) or a dedicated Compute Group instead.
 - You expect cluster-wide concurrency to be a single number. With three FEs, `max_concurrency=10` allows up to 30 concurrent queries cluster-wide. Either size the per-FE cap accordingly, or front the cluster with a load balancer that pins users to one FE.
 - You run BEs in non-privileged Docker or Kubernetes containers. The BE process needs read and write access to the host's cgroup tree to enforce CPU limits. Without privileged mode (or the Doris Operator), CPU caps silently fail. Memory and concurrency still work, but you have lost the most useful knob.
 - You set memory overcommit on and let the sum of `max_memory_percent` reach 100%. There is no headroom left for the soft-limit overflow path, and the BE will cancel the largest in-group queries when it hits the global ceiling. Leave 10 to 20% room.
 - Your workloads are bursty and short-lived enough that a Snowflake-style auto-scaled warehouse would be cheaper than a fixed allocation. Workload Group divides a fixed pool; it does not provision new compute.
 
-## Further reading
+## Further reading {#further-reading}
 
-- [Workload Group reference](../admin-manual/workload-management/workload-group.md): full property table, cgroup setup steps, and migration notes for the 4.0 property rename.
-- [Workload management overview](../admin-manual/workload-management/workload-management-summary.md): how Workload Group, Resource Group, and Compute Group fit together, and when to pick which.
-- [Concurrency control and queueing](../admin-manual/workload-management/concurrency-control-and-queuing.md): how the per-FE queue behaves, the `bypass_workload_group` admin override, and queueing pitfalls under multiple FEs.
-- [Spill to disk](../admin-manual/workload-management/spill-disk.md): what happens when a group hits its `memory_low_watermark` and how slot-based memory policies work.
-- [`information_schema.workload_groups`](../admin-manual/system-tables/information_schema/workload_groups.md): the system table for live group state, used by the example above.
+- [Workload Group reference](../admin-manual/workload-management/workload-group): full property table, cgroup setup steps, and migration notes for the 4.0 property rename.
+- [Workload management overview](../admin-manual/workload-management/workload-management-summary): how Workload Group, Resource Group, and Compute Group fit together, and when to pick which.
+- [Concurrency control and queueing](../admin-manual/workload-management/concurrency-control-and-queuing): how the per-FE queue behaves, the `bypass_workload_group` admin override, and queueing pitfalls under multiple FEs.
+- [Spill to disk](../admin-manual/workload-management/spill-disk): what happens when a group hits its `memory_low_watermark` and how slot-based memory policies work.
+- [`information_schema.workload_groups`](../admin-manual/system-tables/information_schema/workload_groups): the system table for live group state, used by the example above.
+- [Resource Group](./resource-group): physical BE-node isolation for stronger SLA boundaries.
+- [Compute Group](./compute-group): the compute-storage-decoupled equivalent that adds isolation without copying data.
 - [Multi-tenant workload isolation in Apache Doris](https://doris.apache.org/blog/multi-tenant-workload-isolation-in-apache-doris/): the original design blog with internal benchmarks for soft- and hard-limit CPU on a 16-core BE.

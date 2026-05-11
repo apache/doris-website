@@ -1,18 +1,28 @@
 ---
 title: High-Concurrency Point Query
 description: A short-circuit query path that turns Unique Key tables into a low-latency KV store, sustaining tens of thousands of QPS on primary-key equality lookups.
+keywords:
+  - point query
+  - primary key lookup
+  - short-circuit query
+  - key-value store
+  - Unique Key
+  - Apache Doris high concurrency
 slug: /key-features/high-concurrency-point-query
+image: /images/next/key-features/high-concurrency-point-query.jpg
+last_update:
+  date: 2026-05-10
+  author: Apache Doris
 featureCard:
   tags:
     - query-acceleration
     - performance
 ---
 
-> **TL;DR** Doris is a columnar OLAP engine, but for primary-key equality lookups it switches lanes. Combine the Unique Key model with Merge-on-Write, row-format storage (`store_row_column`), the short-circuit query path, and a server-side `PreparedStatement`, and a `SELECT * FROM t WHERE pk = ?` query stops behaving like an OLAP query at all. One round-trip to the BE, one row back, no plan parsing, no fragment scheduling. That is how you serve a dashboard widget and a fact-table aggregation from the same database without standing up a second one.
+> **TL;DR** Doris is a columnar OLAP engine, but for primary-key equality lookups it switches lanes. Combine the [Unique Key model](./data-model) with Merge-on-Write, row-format storage (`store_row_column`), the short-circuit query path, and a server-side [`PreparedStatement`](./prepared-statement), and a `SELECT * FROM t WHERE pk = ?` query stops behaving like an OLAP query at all. One round-trip to the BE, one row back, no plan parsing, no fragment scheduling. That is how you serve a dashboard widget and a fact-table aggregation from the same database without standing up a second one.
 
-![High-Concurrency Point Query hero illustration](/images/next/key-features/high-concurrency-point-query.jpg)
-
-## Why it matters
+![Apache Doris High-Concurrency Point Query: A short-circuit query path that turns Unique Key tables into a low-latency KV store, sustaining tens of thousands of QPS on primary-key equality lookups.](/images/next/key-features/high-concurrency-point-query.jpg)
+## Why it matters {#why}
 
 Most analytics workloads have a long tail of "look up one row by ID" queries hiding inside them. A user-facing dashboard fetches the row for the customer who just clicked. A risk service reads a feature vector by entity ID on every API call. A recommendation backend pulls the latest profile per user. None of these are analytical, but the data lives next to the analytical data, and nobody wants to run a separate KV store just to serve them.
 
@@ -25,7 +35,7 @@ Default Doris is a poor fit for that traffic, and the reasons are structural:
 
 High-concurrency point query is Doris's answer to that traffic. It reshapes storage, planning, execution, and caching so a primary-key lookup costs one round trip and a few microseconds of FE CPU.
 
-## What it is
+## What it is {#what}
 
 High-concurrency point query is a four-layer optimization that activates automatically when the table and the query both fit a strict shape: a Unique Key table with Merge-on-Write and row-store enabled, queried with equality predicates that cover the full primary key. When the conditions hold, the planner takes the short-circuit path and the BE serves the row from a row-format column instead of stitching it from per-column files.
 
@@ -37,7 +47,7 @@ High-concurrency point query is a four-layer optimization that activates automat
 - **`PreparedStatement`**: server-side statement caching over the MySQL protocol. Doris caches the parsed statement, output expressions, and descriptor table per session, then reuses them across `EXECUTE` calls.
 - **`Row Cache`**: a separate LRU cache that holds whole rows. It survives the eviction pressure that the columnar Page Cache suffers under mixed analytical and point-query workloads.
 
-## How it works
+## How it works {#how}
 
 1. **Storage layout.** When you set `store_row_column=true` at table creation, the BE writes each row both into the columnar segments and into a row-encoded hidden column. From Doris 3.0 onward you can scope this to a subset with `row_store_columns="k1,v1,v2"` to limit the storage overhead.
 2. **Plan rewrite (FE).** The Nereids rule `LogicalResultSinkToShortCircuitPointQuery` checks the query shape: single Unique table, equality conjuncts on every key column, no joins or subqueries, no aggregations. If everything matches, it flips the `isShortCircuitQuery` flag in the `StatementContext`.
@@ -45,7 +55,7 @@ High-concurrency point query is a four-layer optimization that activates automat
 4. **Server-side `PreparedStatement` reuse.** With `useServerPrepStmts=true`, the FE caches the `ShortCircuitQueryContext` per session UUID. Subsequent `EXECUTE` calls skip parsing and planning entirely; only the parameter values change.
 5. **BE row lookup.** The `point_query_executor` locates the row by key, reads the row-format column, and returns the bytes. The optional Row Cache short-circuits even the segment read on a hit.
 
-## Quick start
+## Quick start {#quick-start}
 
 ```sql
 CREATE TABLE tbl_point_query (
@@ -76,7 +86,7 @@ EXPLAIN SELECT * FROM tbl_point_query WHERE k1 = 42;
 
 The `SHORT-CIRCUIT` line is the one that matters. Without it, the same DDL plus a query that cannot satisfy the conditions (a join, a missing key column, an inequality) falls back to the regular distributed plan. To collect the FE CPU savings on top, connect the client with `jdbc:mysql://host:9030/db?useServerPrepStmts=true&cachePrepStmts=true` and use `PreparedStatement` with `?` placeholders. Confirm in `fe.audit.log` that repeat queries log `Stmt=EXECUTE(...)` rather than the raw SQL.
 
-## When to use it
+## When to use it {#when}
 
 **Good fit**
 
@@ -87,15 +97,15 @@ The `SHORT-CIRCUIT` line is the one that matters. Without it, the same DDL plus 
 
 **Not a good fit**
 
-- Range queries (`k1 BETWEEN 1 AND 1000`). The short-circuit path requires equality on every key column. Run them through a normal scan and lean on [data pruning](./data-pruning.mdx).
+- Range queries (`k1 BETWEEN 1 AND 1000`). The short-circuit path requires equality on every key column. Run them through a normal scan and lean on [data pruning](./data-pruning).
 - Multi-row aggregations or joins. Even a `GROUP BY pk` disqualifies the rewrite. Run them as ordinary OLAP queries.
-- Lookups by a non-key column. Add a [secondary or inverted index](../table-design/index/index-overview.md), not row-store.
+- Lookups by a non-key column. Add a [secondary or inverted index](../table-design/index/index-overview), not row-store.
 - Tables you forgot to enable row-store on at create time. `store_row_column` is only settable in `CREATE TABLE`. If you need it on an existing table, recreate and reload.
 - Pure write-heavy workloads with rare reads. Row-format storage inflates space and write IO. If you barely read by key, skip it and live with column-only storage.
 
-## Performance and verification
+## Performance and verification {#performance}
 
-Doris reports that enabling server-side `PreparedStatement` on top of the short-circuit path delivers more than a 4x throughput improvement when FE CPU is the bottleneck. Numbers depend on row width, row cache hit rate, and how many FE Observers absorb traffic, so treat that as a planning floor, not a benchmark.
+Doris reports that enabling server-side `PreparedStatement` on top of the short-circuit path delivers more than a 4x throughput improvement when FE CPU is the bottleneck. This is the same 4x cited from the prepared-statement angle in the [Prepared Statement card](./prepared-statement) — one combined gain, not two stackable ones. Numbers depend on row width, row cache hit rate, and how many FE Observers absorb traffic, so treat that as a planning floor, not a benchmark.
 
 Two checks tell you the path is live:
 
@@ -104,9 +114,9 @@ Two checks tell you the path is live:
 
 If the FE CPU is still the ceiling, scale Observers and use JDBC load balancing (`jdbc:mysql:loadbalance://host1,host2,host3/db?useServerPrepStmts=true&cachePrepStmts=true`) to spread connections. On compute-storage decoupled deployments, also consider `SET GLOBAL enable_snapshot_point_query=false` and the BE flag `enable_file_cache_keep_base_compaction_output=1` so Base Compaction output stays in the file cache.
 
-## Further reading
+## Further reading {#further-reading}
 
-- [High-Concurrency Point Query (full guide)](../query-acceleration/high-concurrent-point-query.md)
-- [Row Store storage layout](../table-design/row-store.md)
-- [Index overview: secondary, bloom, inverted](../table-design/index/index-overview.md)
-- [Data pruning: making non-point queries fast](./data-pruning.mdx)
+- [High-Concurrency Point Query (full guide)](../query-acceleration/high-concurrent-point-query)
+- [Row Store storage layout](../table-design/row-store)
+- [Index overview: secondary, bloom, inverted](../table-design/index/index-overview)
+- [Data pruning: making non-point queries fast](./data-pruning)

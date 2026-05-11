@@ -1,0 +1,117 @@
+---
+title: Data Lineage
+description: Column-level lineage extracted from the Nereids plan and shipped to your governance tool through a pluggable SPI, plus table-level traces in the audit log.
+keywords:
+  - column-level lineage
+  - Nereids plan
+  - data governance
+  - audit log lineage
+  - lineage SPI
+  - Apache Doris observability
+slug: /key-features/data-lineage
+image: /images/next/key-features/data-lineage.jpg
+last_update:
+  date: 2026-05-10
+  author: Apache Doris
+featureCard:
+  tags:
+    - governance
+    - observability
+    - metadata
+---
+
+> **TL;DR** Doris extracts column-level lineage from the analyzed plan of every `INSERT`, `INSERT OVERWRITE`, and `CREATE TABLE AS SELECT`, including JOIN, FILTER, GROUP BY, WINDOW, and CASE WHEN dependencies. Events flow through a SPI to whichever lineage backend you ship: a custom emitter, an OpenLineage receiver, Apache Atlas, DataHub. For table-level lineage from ad-hoc queries, the `audit_log` system table records the source tables and chosen materialized views per query.
+
+![Apache Doris Data Lineage: Column-level lineage extracted from the Nereids plan and shipped to your governance tool through a pluggable SPI, plus table-level traces in the audit log.](/images/next/key-features/data-lineage.jpg)
+## Why it matters {#why}
+
+You change a column type on a base table, and four hours later a dashboard starts returning nulls. Or someone asks where the value in `tgt_region_revenue.revenue` actually comes from, and the honest answer is "somewhere in three years of `INSERT` statements." The dependencies are real and the SQL is in the system, but nobody has stitched it into a graph you can query. Writes that traverse [multi-catalog](./multi-catalog) federation or land into [incremental materialized views](./incremental-materialized-view) make the graph even larger.
+
+Writing your own SQL parser inside the governance tool is the wrong fix. The database already parsed the SQL. What you want is for it to hand you the dependencies it found, at column granularity, with the transformation that produced each output column attached. Then the lineage matches what ran, not a static reading of the DDL.
+
+Typical questions this answers:
+
+- If I drop `orders.o_discount`, which downstream tables and columns break?
+- Where did this number on the dashboard come from?
+- Which regulated tables did this user touch last week?
+
+## What it is {#what}
+
+Data Lineage in Doris is column-level lineage extraction built into the Nereids planner, plus a SPI that ships the extracted events to whichever governance backend you run. There is no built-in viewer. Doris is the producer; your existing tool (Atlas, DataHub, OpenMetadata, an internal service) is the consumer. For table-level lineage derived from query history, the `audit_log` table already records source tables and any matched materialized views per query, so you can build a coarse graph without writing a plugin at all.
+
+**Key terms**
+
+- **`LineageInfo`**: the in-memory event format. Per output column, it holds the direct lineage type (`IDENTITY`, `TRANSFORMATION`, `AGGREGATION`) and the source expression, plus dataset-level indirect lineage (`JOIN`, `FILTER`, `GROUP_BY`, `SORT`) and per-column indirect lineage (`WINDOW`, `CONDITIONAL`).
+- **`LineagePlugin`**: SPI you implement to receive `LineageInfo` events. Discovered via `ServiceLoader` on the classpath or as an external jar in `$plugin_dir/lineage/`.
+- **`activate_lineage_plugin`**: FE config naming the plugins that should receive events. Empty by default, so the planner does no lineage work until you enable a plugin.
+- **`audit_log.queried_tables_and_views`**: an `ARRAY<STRING>` column in `__internal_schema.audit_log` that lists the catalog-qualified tables touched by each query.
+- **`audit_log.chosen_m_views`**: companion column listing the materialized views the optimizer rewrote into.
+
+## How it works {#how}
+
+1. **Hook the planner.** Each write command (`INSERT INTO`, `INSERT OVERWRITE`, `CTAS`) registers an analyze-plan hook. The hook grabs the analyzed `LogicalPlan` before optimization, so column references still carry their source slots and lineage matches the SQL the user wrote.
+2. **Extract direct lineage.** `LineageInfoExtractor` walks the plan and resolves every output column back to its source expressions. A pure column reference becomes `IDENTITY`. A scalar expression becomes `TRANSFORMATION`. An aggregate function becomes `AGGREGATION`. CTE consumer slots get pre-resolved to producer slots so the chain does not stop at a `WITH` clause boundary.
+3. **Extract indirect lineage.** JOIN keys, filter predicates, and GROUP BY columns are recorded as dataset-level indirect lineage, since they affect every output. `WindowExpression` partition keys and `CaseWhen`/`If`/`Coalesce` branches are recorded per output column, so you can trace why a single value took the path it took.
+4. **Submit asynchronously.** A single worker thread drains a bounded queue (`lineage_event_queue_size`, default 50000) and dispatches each event to every active plugin in order. Plugin work happens off the query thread, so a slow downstream system slows the queue, not the query the user is waiting on.
+5. **Skip what does not matter.** `VALUES`-only inserts and writes targeting `__internal_schema` are filtered out before extraction. The optimizer does not pay for events nobody wants.
+
+For ad-hoc `SELECT` traffic that never lands in a write, the picture is simpler. The audit log already records the source tables and any matched materialized views per query, and you derive table-level lineage from there.
+
+## Quick start {#quick-start}
+
+```sql
+-- 1. Enable the audit plugin so query-level lineage is recorded.
+SET GLOBAL enable_audit_plugin = true;
+
+-- 2. Run a query that joins two base tables.
+SELECT n.n_name, SUM(o.o_totalprice)
+FROM orders o JOIN nation n ON o.o_custkey = n.n_nationkey
+GROUP BY n.n_name;
+
+-- 3. Read the lineage out of the audit log.
+SELECT time, queried_tables_and_views, chosen_m_views, stmt_id
+FROM   internal.__internal_schema.audit_log
+WHERE  user = CURRENT_USER() AND is_query = 1
+ORDER  BY time DESC LIMIT 5;
+```
+
+**Expected result**
+
+```
++---------------------+--------------------------------------------+----------------+
+| time                | queried_tables_and_views                   | chosen_m_views |
++---------------------+--------------------------------------------+----------------+
+| 2026-05-09 10:14:22 | ["internal.tpch.orders","internal.tpch.    | []             |
+|                     |  nation"]                                  |                |
++---------------------+--------------------------------------------+----------------+
+```
+
+The row holds catalog-qualified table names and any MV the optimizer rewrote into. That is enough to draw a table-level graph for ad-hoc queries. For column-level lineage on writes, implement `LineagePlugin`, drop the jar in `plugin_dir/lineage/`, and add the plugin name to `activate_lineage_plugin`. From then on, every `INSERT` and `CTAS` produces a `LineageInfo` event.
+
+## When to use it {#when}
+
+**Good fit**
+
+- Impact analysis on schema changes. "If I drop `orders.o_discount`, which downstream tables and columns break?" is exactly what the per-column source expressions answer.
+- Audit and compliance trails that need to show every read of a regulated table over a time window. The audit log gives you the table list per query, with user, time, and SQL.
+- Materialized view governance. Pair `chosen_m_views` from the audit log with [Async Materialized Views](./incremental-materialized-view) to see which MVs are actually serving traffic and which ones are dead weight.
+- Feeding an external metadata catalog (Apache Atlas, DataHub, OpenMetadata, an internal service) with column-level lineage from a `LineagePlugin` that emits OpenLineage events.
+- Cross-engine lineage where Doris is one of several producers writing into a shared catalog.
+
+**Not a good fit**
+
+- A built-in lineage browser. Doris emits events. The visualization is your governance tool's job. If you want a graph today and have no governance stack, deploy DataHub or Marquez and point a plugin at it.
+- Lineage for pure `SELECT` queries that never land in a write. The Nereids extractor only fires on `INSERT`, `INSERT OVERWRITE`, and `CTAS`. For read-only traffic, use the `queried_tables_and_views` array in the audit log to get table-level coverage.
+- Lineage across systems that never touch Doris. The plugin sees Doris-side queries. A Spark job that writes Parquet which Doris later reads needs Spark-side instrumentation (OpenLineage's Spark integration, for example), and the two streams meet in your catalog.
+- Source-of-truth metadata storage. Lineage events are emitted, not retained inside Doris. Persist them in your catalog of choice.
+- Operations on `__internal_schema` targets and `VALUES`-only inserts. These are filtered out by design and will not produce lineage events.
+
+## Further reading {#further-reading}
+
+- [audit_log system table](../admin-manual/system-tables/internal_schema/audit_log): full column reference, including the `queried_tables_and_views` and `chosen_m_views` arrays you query for table-level lineage.
+- [Audit Log plugin](../admin-manual/audit-plugin): how to enable `enable_audit_plugin`, configure batch interval and SQL length, and exclude internal users.
+- [Async Materialized Views](../query-acceleration/materialized-view/async-materialized-view/overview): the rewrite engine whose decisions show up in `chosen_m_views` and whose base-table dependencies are tracked by `MTMVRelationManager`.
+- [Incremental Materialized View](./incremental-materialized-view): partition-level dependency tracking between MVs and base tables that complements column-level lineage on the write path.
+- [OpenLineage specification](https://openlineage.io/docs/spec/overview/): the open standard for column-level lineage events; a useful target schema for a `LineagePlugin` implementation.
+- [Managing Lake Tables](./managing-lake-table): writes against Iceberg, Paimon, and Hive produce lineage events too; this card covers the write paths involved.
+- [Apache Atlas overview](https://atlas.apache.org/): a common downstream sink that accepts OpenLineage today and renders the column-level graph.
