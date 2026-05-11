@@ -1,0 +1,100 @@
+---
+title: Pluggable Authentication and Authorization
+description: Swap Doris's identity and policy backends without forking the FE. Pick LDAP, Kerberos, OIDC, or Ranger via config, layer chains for fallback.
+slug: /key-features/pluggable-auth
+featureCard:
+  tags:
+    - security
+    - authentication
+    - authorization
+---
+
+> **TL;DR** Doris splits identity (who you are) from policy (what you can do), and you can swap the backend for either side without forking the FE. The MySQL handshake hits an `Authenticator` chosen by `authentication_type`: built-in password, LDAP, or any plugin discovered through Java SPI. Authorization runs through a `CatalogAccessController` chosen by `access_controller_type`: the built-in RBAC engine, or Apache Ranger for centralized policy. Set the config, drop the plugin jar, restart, done.
+
+![Pluggable Authentication and Authorization hero illustration](/images/next/key-features/pluggable-auth.jpg)
+
+## Why it matters
+
+Most teams arrive at Doris with an IAM stack already in place. There is an LDAP directory, a Kerberos realm, an OIDC provider for SSO, and a Ranger or Sentry deployment that owns Hive permissions. A warehouse that ignores all of it forces the platform team to maintain a parallel user list, sync passwords by script, and explain to auditors why query history shows different identities than the rest of the lakehouse.
+
+Doris treats both authentication and authorization as plug-in points. Authentication backends discover themselves through Java SPI; so do authorization backends. Switching from local passwords to LDAP is one config line. Switching from built-in RBAC to Ranger is a different config line. The two decisions are independent: an OIDC plugin in front of Ranger is fine, and so is LDAP in front of built-in RBAC.
+
+- One IdP for the whole data platform instead of a separate Doris user list.
+- Centralized policy in Ranger that already governs Hive, HDFS, and Iceberg, with Doris hooked into the same service.
+- Custom auth (proprietary token formats, tenant-aware password verification) without patching FE source.
+
+## What it is
+
+Pluggable auth in Doris is two side-by-side extension points on the FE. The first is the `Authenticator` interface, called once per MySQL handshake to turn the credentials in the auth packet into a `UserIdentity`. The second is the `CatalogAccessController` interface, called on every query to check whether that identity can touch the catalog, database, table, or column. Both load through `java.util.ServiceLoader`, so a third party jar dropped on the classpath registers itself.
+
+**Key terms**
+
+- **`authentication_type`**: FE config that picks the primary authenticator. Built-in values are `default` (alias `password`) and `ldap`; any other string resolves as a plugin name.
+- **`authentication_chain`**: comma-separated list of fallback authenticators tried after the primary one rejects. Useful for keeping local break-glass users while LDAP or OIDC handles normal logins.
+- **`access_controller_type`**: FE config that picks the authorizer for the internal catalog. `default` keeps built-in RBAC; `ranger-doris` hands every check to the Ranger plugin.
+- **`AuthenticatorFactory` / `AccessControllerFactory`**: the SPI hooks listed in `META-INF/services`. Implement one to add a new backend.
+- **External catalog authorizer**: each external catalog (Hive, Iceberg) can pick its own controller, so a Hive catalog can defer to its existing Ranger Hive policies while the internal catalog uses Doris RBAC.
+
+## How it works
+
+1. **Pick the authenticator at startup.** `AuthenticatorManager` reads `authentication_type`, normalizes the value, and resolves it through `ServiceLoader<AuthenticatorFactory>`. Built-in factories (`DefaultAuthenticatorFactory`, `LdapAuthenticatorFactory`) ship in the FE jar; custom factories live in `fe/plugins/`. If no legacy factory matches, the manager falls back to `AuthenticationPluginAuthenticator`, which handles OIDC, OAuth2, and JWT.
+2. **Authenticate the connection.** When a client opens a MySQL connection, the chosen authenticator inspects the handshake. Native password compares the scrambled hash, LDAP binds against the directory, OIDC validates a JWT and pulls claims from it. Success returns a `UserIdentity`; failure returns a typed reason.
+3. **Try the chain on failure.** If `authentication_chain` is set, the manager runs the listed authenticators in order. A common pattern is `authentication_type = ldap` with `authentication_chain = default`, so admins keep local password access even when LDAP is unreachable.
+4. **Hand off to the authorizer.** Once the identity is bound to the session, every statement goes through `AccessControllerManager`. The internal catalog uses whatever `access_controller_type` selected. An external catalog uses whatever the catalog property `access_controller.class` selected, so a single cluster can mix Doris RBAC for the internal catalog with Ranger for a Hive catalog.
+5. **Evaluate row and column policies.** The same controller exposes hooks for column masking and row filtering. Built-in RBAC reads the policies stored by `CREATE ROW POLICY`. The Ranger controller calls `evalRowFilterPolicies` and `evalDataMaskPolicy` against the Ranger plugin, so the same Hive masking rules apply to a Doris query.
+
+## Quick start
+
+```properties
+# fe.conf: enable LDAP for everyone, keep local passwords as fallback
+authentication_type = ldap
+authentication_chain = default
+access_controller_type = ranger-doris
+```
+
+```sql
+-- Roles in Doris match LDAP group names; Ranger holds the actual grants
+CREATE ROLE doris_analyst;
+CREATE ROLE doris_etl;
+
+-- Local break-glass account that survives LDAP / Ranger outages
+CREATE USER 'breakglass'@'127.0.0.1' IDENTIFIED BY 'rotate-me';
+GRANT 'admin' TO 'breakglass'@'127.0.0.1';
+```
+
+**Expected result**
+
+```
+mysql> SELECT current_user(), user();
++---------------------+----------------------+
+| current_user()      | user()               |
++---------------------+----------------------+
+| jdoe@'%'            | jdoe@'10.0.4.21'     |
++---------------------+----------------------+
+```
+
+`jdoe` logged in with the LDAP password, picked up the `doris_analyst` role through LDAP group mapping, and any subsequent `SELECT` is checked against the Ranger policy bound to the `doris` service.
+
+## When to use it
+
+**Good fit**
+
+- Enterprises that already run an IdP (LDAP, AD, OIDC, Kerberos KDC) and want Doris to share it instead of maintaining a parallel user list.
+- Lakehouse deployments that already use Ranger for Hive, HDFS, or Iceberg, and want the same policies on Doris-managed tables. See [Ranger Authorization](../admin-manual/auth/authorization/ranger.md).
+- Multi-tenant SaaS where each tenant brings its own identity provider, behind a custom `AuthenticatorFactory`.
+- Teams that need cleartext or token-based handshakes (OIDC, JWT) for SSO from BI tools, with TLS enforced by Doris.
+
+**Not a good fit**
+
+- Air-gapped clusters with no reachable LDAP, KDC, or Ranger Admin. The plugin will keep retrying and queries pay the round-trip. Stick with built-in RBAC and local accounts.
+- Latency-critical short queries where the per-query Ranger policy lookup matters. Ranger caches policies locally and the hit path is cheap, but the first request after a policy refresh is not free.
+- Backends Doris does not yet ship a built-in factory for. Kerberos / GSSAPI authentication for the MySQL handshake itself is not in the box. The Ranger Admin server can sit behind Kerberos, but the FE-to-client leg needs an OIDC token or an LDAP bind. Write a custom `AuthenticatorFactory` if you need it.
+- Mixing Ranger and `GRANT` statements on the same internal catalog. Once `access_controller_type = ranger-doris` is on, built-in RBAC stops accepting changes. Pick one source of truth and run with it.
+
+## Further reading
+
+- [Authentication and Authorization overview](../admin-manual/auth/authentication-and-authorization.md): the full conceptual model, including User Identity, roles, and the priority rules that decide which user a connection lands on.
+- [Built-in Authentication](../admin-manual/auth/authentication/internal.md): password policies, expiration, lockout, and the `validate_password_policy` strength rules.
+- [LDAP Authentication](../admin-manual/auth/authentication/ldap.md): `ldap.conf` reference, group-to-role mapping, LDAPS setup, and the cleartext plugin steps for MySQL and JDBC clients.
+- [Ranger Authorization](../admin-manual/auth/authorization/ranger.md): installing the Doris Ranger plugin, policy examples for catalog/database/table/column, and the row-level filter and masking flows.
+- [Security Overview](../admin-manual/auth/security-overview.md): the wider picture, including audit logs, SSL transport, and UDF guidance.

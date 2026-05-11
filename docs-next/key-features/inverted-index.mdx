@@ -1,0 +1,108 @@
+---
+title: Inverted Index
+description: A general-purpose secondary index that turns equality, range, IN, IS NULL, and text predicates from full scans into posting-list lookups, on any column type.
+slug: /key-features/inverted-index
+featureCard:
+  tags:
+    - query-acceleration
+    - search
+---
+
+> **TL;DR** Doris's inverted index is a CLucene-backed secondary index that you declare on any column with `INDEX ... USING INVERTED`. It accelerates equality, range, `IN`, `IS NULL`, array membership, and full-text `MATCH_*` predicates by reading a posting list instead of scanning rows. Available since 2.0.
+
+![Inverted Index hero illustration](/images/next/key-features/inverted-index.jpg)
+
+## Why it matters
+
+OLAP queries spend most of their time on `WHERE`. A 2 TB events table with a predicate on `user_id`, a range on `request_time`, and a keyword search on `url` will, by default, decode every column for every row in every surviving segment. The usual workaround, a materialized view or a separate search cluster, doubles storage and operational cost.
+
+The cases that hurt:
+
+- Equality lookups on high-cardinality columns (`WHERE order_id = ?`) scan whole tablets because nothing rules out segments cheaply.
+- Range filters on numeric or datetime columns (`WHERE event_time BETWEEN ...`) are bounded only by ZoneMap min/max and still touch every page in range.
+- Keyword search on text columns has no answer in the base SQL engine. `LIKE '%term%'` falls back to a scan, and shipping the data to Elasticsearch means a second pipeline to keep in sync.
+
+The inverted index handles all three with the same DDL.
+
+## What it is
+
+The inverted index in Doris is a column-level secondary index that maps each value, or each tokenized term for text columns, to the set of row IDs that contain it. It is built on top of [CLucene](https://github.com/apache/doris-thirdparty/tree/clucene), a C++ port of Lucene, and is fully integrated with Doris's columnar storage and vectorized execution.
+
+You declare it in DDL with `INDEX <name>(<col>) USING INVERTED [PROPERTIES(...)]`. Supported column types include the integer family, `DECIMAL`, `DATE`, `DATETIME`, `IPV4`, `IPV6`, `CHAR`/`VARCHAR`/`STRING`, and `ARRAY<T>` of those. For text columns you can attach a `parser` to control tokenization.
+
+**Key terms**
+
+- **`Posting list`**: the row-ID set associated with a value or term. Predicate evaluation becomes a posting-list lookup plus a set operation (AND/OR/NOT).
+- **`Parser`**: the tokenizer used for text columns. Built-in choices: `none` (whole-string, default), `english`, `chinese`, `unicode`, `standard`, plus custom analyzers since 3.1.
+- **`MATCH operators`**: `MATCH_ANY` (any term), `MATCH_ALL` (all terms), `MATCH_PHRASE` (adjacent terms), `MATCH_PHRASE_PREFIX`, `MATCH_REGEXP`. They require an inverted index with a parser; ordinary `=` and `LIKE` do not.
+- **`.idx file`**: the on-disk index payload. One `.idx` file lives next to each segment file under the tablet directory, so the index is segment-bound and follows the rowset through compaction.
+
+## How it works
+
+1. **Build at write time.** When a rowset is flushed, the BE writes a CLucene-format index to a sibling `.idx` file. Each row in the segment maps 1:1 to a CLucene `DocID`, so the index never has to maintain a separate row-to-doc table.
+2. **Choose a path at query time.** For a predicate the planner pushes down, the BE consults the inverted index first: it tokenizes the literal with the same parser used at build time, walks the term dictionary, and reads the posting list.
+3. **Combine with set operations.** `AND`, `OR`, and `NOT` between predicates become intersections, unions, and complements over posting lists, all without touching column data.
+4. **Hand a row bitmap to the scanner.** The scanner reads only the surviving rows from the columnar store. ZoneMap, BloomFilter, and inverted index results compose: each one shrinks the work the next layer has to do.
+5. **Stay segment-local.** Because indexes live next to segments, compaction merges them with the data and remote storage tiering carries them along. There is no global index to rebuild.
+
+## Quick start
+
+```sql
+CREATE TABLE access_log (
+  ts        DATETIME    NOT NULL,
+  user_id   BIGINT      NOT NULL,
+  status    INT         NOT NULL,
+  url       STRING      NOT NULL,
+  INDEX idx_user(user_id)  USING INVERTED,
+  INDEX idx_status(status) USING INVERTED,
+  INDEX idx_url(url) USING INVERTED PROPERTIES("parser"="english")
+) DUPLICATE KEY(ts) DISTRIBUTED BY HASH(user_id) BUCKETS 4;
+
+INSERT INTO access_log VALUES
+  ('2026-05-01 10:00:00', 42, 200, '/api/orders/list'),
+  ('2026-05-01 10:01:00', 42, 500, '/api/orders/create'),
+  ('2026-05-01 10:02:00', 99, 200, '/api/users/profile');
+
+SELECT user_id, status, url FROM access_log
+WHERE user_id = 42 AND status >= 500 AND url MATCH_ANY 'orders';
+```
+
+**Expected result**
+
+```
++---------+--------+---------------------+
+| user_id | status | url                 |
++---------+--------+---------------------+
+|      42 |    500 | /api/orders/create  |
++---------+--------+---------------------+
+```
+
+Each predicate is served by an index probe. `user_id = 42` and `status >= 500` use the inverted index for equality and range. `url MATCH_ANY 'orders'` tokenizes the column with the `english` parser and looks up the posting list for `orders`. The scanner only reads the one row that survives the AND of the three posting lists.
+
+## When to use it
+
+**Good fit**
+
+- High-cardinality equality and `IN` on non-key columns: `order_id`, `trace_id`, `device_id`.
+- Range and `BETWEEN` filters on numeric or `DATETIME` columns where ZoneMap alone is too coarse.
+- `IS NULL` / `IS NOT NULL` on sparse columns; the index records nulls and probes them in O(1).
+- Keyword and phrase search on log, document, and content columns. See [Full-text search](./full-text-search.mdx) for the operator set and [BM25 scoring](./bm25.mdx) for relevance ranking.
+- Array-membership predicates: `array_contains(tags, 'x')` and `array_overlaps(tags, ['a','b'])`.
+
+**Not a good fit**
+
+- Leading-wildcard `LIKE '%abc%'`. The inverted index does not accelerate substring `LIKE`; reach for the [NGram BloomFilter index](../table-design/index/ngram-bloomfilter-index.md) instead.
+- The most frequent filter column on the table. Promote it to a Key column so the [prefix index](../table-design/index/prefix-index.md) handles it; the prefix index is denser and free.
+- Tiny tables (a few million rows) where a full scan finishes in milliseconds. The index pays for itself only when the data it skips dwarfs the cost of probing.
+- Columns where the predicate already matches most rows. Posting lists win when they are short; if 80% of rows survive, the scanner does the same work either way.
+- Storage-constrained tables: an inverted index on a wide text column can rival the column itself in size. If footprint matters more than text search, use a [BloomFilter index](../table-design/index/bloomfilter.md).
+
+## Further reading
+
+- [Inverted index user guide](../table-design/index/inverted-index/overview.md): full DDL syntax, parser options, and management commands.
+- [Search operators reference](../table-design/index/inverted-index/search-operators.md): every `MATCH_*` operator with examples.
+- [Index overview](../table-design/index/index-overview.md): how the inverted index compares with prefix, ZoneMap, BloomFilter, and NGram BloomFilter.
+- [Full-text search](./full-text-search.mdx): tokenizers, phrase queries, and the `SEARCH()` DSL built on top of this index.
+- [BM25 relevance scoring](./bm25.mdx): ranking matches with `score()`, available since 4.0.
+- [Hybrid search](./hybrid-search.mdx): combining inverted index with the ANN vector index in a single SQL query.
+- [How inverted index works in Apache Doris](https://www.velodb.io/blog/how-inverted-index-works-in-apache-doris): a deeper write-up on internals and benchmarks.
