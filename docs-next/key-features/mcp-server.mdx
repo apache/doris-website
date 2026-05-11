@@ -22,17 +22,16 @@ featureCard:
 
 > **TL;DR** The Doris MCP Server is a Python service that speaks the [Model Context Protocol](https://modelcontextprotocol.io/specification/2025-11-25) and exposes Doris as a set of tools an AI assistant can call. Point Claude Desktop, Cursor, or any MCP client at it, and the model can list tables, run SQL, fetch schemas, and read audit logs against a real cluster, without you writing a custom integration.
 
-![MCP Server hero illustration](/images/next/key-features/mcp-server.jpg)
+![Apache Doris MCP Server: A Model Context Protocol server for Apache Doris that lets Claude Desktop, Cursor, Cline, and other AI clients query a cluster through tool calls.](/images/next/key-features/mcp-server.jpg)
+## Why it matters {#why}
 
-## Why it matters
-
-Wiring a chat assistant to a database is the same project people repeat at every company. You stand up a small Python service. You wrap a few SQL helpers. You handle credentials, timeouts, result truncation, and read-only enforcement. You write client-specific glue for Claude Desktop, Cursor, and whatever shows up next month. The work is mostly boilerplate, but the bug surface is large: an over-eager `DELETE` from an LLM is a real outage.
+Wiring a chat assistant to a database is the same project people repeat at every company. You stand up a small Python service. You wrap a few SQL helpers. You handle credentials, timeouts, result truncation, and read-only enforcement. You write client-specific glue for Claude Desktop, Cursor, and whatever shows up next month. The work is mostly boilerplate, but the bug surface is large: an over-eager `DELETE` from an LLM is a real outage. The in-database AI surface, [LLM SQL functions](./llm-sql-functions) and [embeddings](./embedding), complements this card from the SQL side.
 
 [Anthropic released MCP](https://www.anthropic.com/news/model-context-protocol) in November 2024 to standardize that work. Servers expose tools with typed inputs and outputs; clients (Claude Desktop, Cursor, Cline, Continue, Zed, and others) speak the same protocol; the model decides when to call. Database vendors have followed: ClickHouse, Snowflake, MotherDuck, BigQuery, and Supabase all ship official servers.
 
 The Doris MCP Server is the equivalent for Apache Doris. It is a separate repo (`apache/doris-mcp-server`), it ships under Apache 2.0, and you launch it from any MCP client config in a few lines.
 
-## What it is
+## What it is {#what}
 
 The server is a Python 3.12 service built on FastAPI. It connects to Doris over the MySQL protocol, registers a fixed set of MCP tools, and serves them over `stdio`, Server-Sent Events, or the streamable HTTP transport. AI assistants treat each tool as a function call. The server logs every call, applies a SQL security filter, and returns JSON.
 
@@ -43,7 +42,7 @@ The server is a Python 3.12 service built on FastAPI. It connects to Doris over 
 - **Transport**: how the client and server talk. `stdio` runs the server as a subprocess (the default for Claude Desktop). SSE and Streamable HTTP are for remote deployments.
 - **SQL security filter**: a server-side guard, on by default, that blocks `DROP`, `DELETE`, `INSERT`, `UPDATE`, `ALTER`, and `CREATE`, and adds an automatic `LIMIT` to bare `SELECT` statements.
 
-## How it works
+## How it works {#how}
 
 1. **The client launches the server.** In `stdio` mode, Claude Desktop or Cursor spawns the server as a subprocess and communicates over stdin/stdout. In SSE or HTTP mode, you run the server long-lived and the client connects over the network.
 2. **The server connects to Doris.** It reads `DB_HOST`, `DB_PORT`, `DB_USER`, `DB_PASSWORD`, and `DB_DATABASE` from environment variables, then opens a MySQL-protocol connection on port 9030. No JDBC URL, no driver setup.
@@ -51,7 +50,7 @@ The server is a Python 3.12 service built on FastAPI. It connects to Doris over 
 4. **The server filters and runs the query.** `exec_query` parses the statement, rejects anything that mutates data when `ENABLE_SQL_SECURITY_CHECK=true`, and appends a `LIMIT` if the query has none. A 30-second timeout (configurable per call) caps runtime.
 5. **Results return as JSON.** The client renders them inline in the chat. Large result sets are truncated by `max_rows`, default 100, so a careless `SELECT *` does not blow up the model's context window.
 
-## Quick start
+## Quick start {#quick-start}
 
 ```json
 {
@@ -81,7 +80,7 @@ information_schema, mysql, ssb, tpch_100
 
 The assistant can now compose follow-up calls: `get_db_table_list('ssb')`, then `get_table_schema('lineorder', 'ssb')`, then a plain `exec_query` once it has the column names.
 
-## When to use it
+## When to use it {#when}
 
 **Good fit**
 
@@ -98,7 +97,7 @@ The assistant can now compose follow-up calls: `get_db_table_list('ssb')`, then 
 - Multi-tenant clusters with no row-level scoping. The server connects with one MySQL account; whatever that account can see, the model can see. Create a dedicated read-only user, restrict its database grants, and never reuse a power-user account.
 - Workloads that need fine-grained, programmable tool access. The eight tools cover schema and read paths well, but anything beyond that (custom workflows, batch jobs, NL2SQL with user-defined prompts) belongs in a custom integration that calls Doris directly.
 
-## Further reading
+## Further reading {#further-reading}
 
 - [AI on Doris](../ai/ai-overview): how the MCP server fits alongside `AI_*` SQL functions, embeddings, and vector search.
 - [LLM SQL Functions](./llm-sql-functions): the in-database side of the AI story, for batch enrichment of text columns.

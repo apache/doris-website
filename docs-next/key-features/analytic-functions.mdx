@@ -22,9 +22,8 @@ featureCard:
 
 > **TL;DR** Analytic functions (window functions) compute a value for every row of a result set without collapsing rows the way `GROUP BY` does. Doris supports the standard set, `ROW_NUMBER`, `RANK`, `DENSE_RANK`, `NTILE`, `LAG`, `LEAD`, `FIRST_VALUE`, `LAST_VALUE`, `NTH_VALUE`, `PERCENT_RANK`, `CUME_DIST`, plus every aggregate (`SUM`, `AVG`, `COUNT`, `MIN`, `MAX`) used with `OVER`. The Nereids optimizer also rewrites `WHERE row_num <= K` into a partition-aware Top-N below the window, so a "top 10 per category" query never sorts the whole partition.
 
-![Analytic Functions hero illustration](/images/next/key-features/analytic-functions.jpg)
-
-## Why it matters
+![Apache Doris Analytic Functions: SQL window functions in Doris rank, accumulate, lag, and average across rows; the planner pushes Top-N filters down into the window operator.](/images/next/key-features/analytic-functions.jpg)
+## Why it matters {#why}
 
 Three questions show up in almost every analytics workload, and `GROUP BY` answers none of them on its own.
 
@@ -34,7 +33,7 @@ Three questions show up in almost every analytics workload, and `GROUP BY` answe
 
 Analytic functions answer all three in one pass over the data, with no self-join and the original rows preserved.
 
-## What it is
+## What it is {#what}
 
 An analytic function is a SQL function that, for each input row, computes a value over a *window* of related rows defined by an `OVER` clause. The window can be the whole partition, a fixed range around the current row, or anything in between. The output has the same number of rows as the input.
 
@@ -50,7 +49,7 @@ function(args) OVER ( [PARTITION BY ...] [ORDER BY ...] [<frame>] )
 - **Window frame**: the slice of the partition the function reads for the current row. Doris supports `ROWS BETWEEN ... PRECEDING/FOLLOWING/CURRENT ROW/UNBOUNDED ...` and a restricted form of `RANGE`.
 - **PartitionTopN**: an internal operator the planner inserts when it can prove a `WHERE rank <= K` filter only needs the top K rows per partition. Source: `CreatePartitionTopNFromWindow.java`.
 
-## How it works
+## How it works {#how}
 
 1. **Plan.** The optimizer parses the `OVER` clause into a `WindowExpression`, normalizes the frame (`CheckAndStandardizeWindowFunctionAndFrame`), and groups window calls that share the same `PARTITION BY` plus `ORDER BY` into a single physical window operator. Calls that share a partition and order do not pay for an extra sort.
 2. **Shuffle by partition.** If `PARTITION BY` is present, the engine shuffles rows so all rows for the same partition land on the same backend. With no `PARTITION BY`, the whole window runs in a single pipeline (the parallelism upper bound).
@@ -58,7 +57,7 @@ function(args) OVER ( [PARTITION BY ...] [ORDER BY ...] [<frame>] )
 4. **Evaluate per row.** Doris walks each partition once, maintaining the window frame as it goes. Ranking functions emit one integer per row; aggregate functions over `ROWS UNBOUNDED PRECEDING` keep a running total; sliding-window aggregates add the new row and drop the row that fell off the back.
 5. **Push down filters and Top-N.** `CreatePartitionTopNFromWindow` turns `WHERE row_number() OVER (PARTITION BY a ORDER BY b) <= K` into a `PartitionTopN(K)` operator below the window, so each partition only carries the top K rows into the window operator. `PushDownFilterThroughWindow` lifts filters on `PARTITION BY` columns past the window, so Doris filters before sorting instead of after.
 
-## Quick start
+## Quick start {#quick-start}
 
 ```sql
 CREATE TABLE orders (
@@ -93,7 +92,7 @@ FROM orders;
 
 One pass, three windowed columns, no self-joins. The original five rows are preserved. `LAG(..., 1, 0)` returns `0` instead of `NULL` for the first row of each partition.
 
-## When to use it
+## When to use it {#when}
 
 **Good fit**
 
@@ -111,7 +110,7 @@ One pass, three windowed columns, no self-joins. The original five rows are pres
 - `ORDER BY` on a non-unique column when you care about deterministic output. `SUM(x) OVER (ORDER BY day)` can return different cumulative totals across runs when several rows share the same day. Add a tie-breaker; see [Window Functions Overview](../sql-manual/sql-functions/window-functions/overview).
 - Recomputing the same window result on every refresh. If the same `ROW_NUMBER()` query runs every minute against a slow-moving table, an [async materialized view](../query-acceleration/materialized-view/async-materialized-view/overview) with a partial refresh is cheaper than re-windowing each time.
 
-## Further reading
+## Further reading {#further-reading}
 
 - [Analytic Functions (Window Functions): full guide with worked examples](../query-data/window-function)
 - [Window Functions Overview: syntax, frame clauses, and the unique-ordering caveat](../sql-manual/sql-functions/window-functions/overview)

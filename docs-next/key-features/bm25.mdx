@@ -20,11 +20,10 @@ featureCard:
     - ranking
 ---
 
-> **TL;DR** Doris ranks full-text search hits with BM25, the same scoring algorithm Lucene and Elasticsearch use. Add `score()` to a SELECT, keep a `MATCH_*` predicate in the WHERE clause, and `ORDER BY` the score with a `LIMIT`. The planner pushes the top-K computation into the inverted index and returns the most relevant rows first.
+> **TL;DR** Doris ranks [full-text search](./full-text-search) hits with BM25, the same scoring algorithm Lucene and Elasticsearch use. Add `score()` to a SELECT, keep a `MATCH_*` predicate in the WHERE clause, and `ORDER BY` the score with a `LIMIT`. The planner pushes the top-K computation into the [inverted index](./inverted-index) and returns the most relevant rows first.
 
-![BM25 Relevance Scoring hero illustration](/images/next/key-features/bm25.jpg)
-
-## Why it matters
+![Apache Doris BM25 Relevance Scoring: ranks full-text search results by BM25 relevance, so SQL queries can sort matches the way a search engine would.](/images/next/key-features/bm25.jpg)
+## Why it matters {#why}
 
 Equality filters tell you which rows match. They don't tell you which rows are *good* matches. A query like `WHERE content MATCH_ANY 'apache doris real-time analytics'` over a million-row log table can easily return 50,000 hits, and the user only wants the best ten. Without a relevance score, the database has no good way to pick those ten:
 
@@ -34,7 +33,7 @@ Equality filters tell you which rows match. They don't tell you which rows are *
 
 BM25 closes that gap inside SQL. Doris gives each matching row a score based on how often the query terms appear in it, how rare those terms are across the table, and how long the row's text is. Sort by that score and you get search-engine-style ranking from a SELECT.
 
-## What it is
+## What it is {#what}
 
 BM25 (Best Matching 25) is a relevance ranking function in the TF-IDF family. It takes a query term and a document and returns a positive number: higher means more relevant. Three things drive the score. Rows that contain the term more often score higher. Rare terms count for more than common ones. And longer rows are normalized down so a 200-word row doesn't automatically beat a 20-word row that says the same thing.
 
@@ -47,7 +46,7 @@ Doris exposes BM25 through the `score()` SQL function. The inverted index alread
 - **IDF (inverse document frequency)**: a measure of how rare the term is across the table. Common words score low, rare words score high.
 - **`k1` and `b`**: BM25's tuning constants. Doris ships with `k1 = 1.2` and `b = 0.75`, the Lucene defaults. They are not currently exposed as session variables.
 
-## How it works
+## How it works {#how}
 
 1. **The inverted index records the statistics.** When data is loaded into a column with a tokenized inverted index (parsers like `english`, `standard`, or `chinese`), Doris stores the term dictionary, per-row term frequencies, and field lengths. The same statistics that power `MATCH_*` filtering also feed BM25.
 2. **The planner recognizes the scoring shape.** When a query has `score()` in the SELECT, a `MATCH_*` predicate in the WHERE, and an `ORDER BY score()` with a `LIMIT`, Nereids rewrites the plan to push top-K scoring into the storage layer. If you use `score()` outside that exact shape, Doris fails the query with `score() function requires WHERE clause with MATCH function, ORDER BY and LIMIT for optimization`. That constraint exists to keep you from accidentally scoring every row in a billion-row table.
@@ -55,7 +54,7 @@ Doris exposes BM25 through the `score()` SQL function. The inverted index alread
 4. **A heap keeps the top-K.** The BE keeps a bounded min-heap of size `LIMIT`, so it never has to hold the full match set in memory. That's the difference between scoring 50,000 rows and then sorting versus stream-scoring and keeping only the best ten.
 5. **Doris returns the ranked rows.** The FE merges the already-sorted top-K from each tablet and returns the result.
 
-## Quick start
+## Quick start {#quick-start}
 
 ```sql
 CREATE TABLE articles (
@@ -90,7 +89,7 @@ LIMIT 3;
 
 Row 1 wins because it matches all three query terms. Row 2 matches one rare term (`analytics`). Row 3 only matches `apache`, the most common term in this corpus, so it scores lowest. The absolute numbers don't mean anything on their own. What matters is the ordering inside this one result set.
 
-## When to use it
+## When to use it {#when}
 
 **Good fit**
 
@@ -107,7 +106,7 @@ Row 1 wins because it matches all three query terms. Row 2 matches one rare term
 - **Tuning `k1` and `b` per query.** Doris uses Lucene's defaults and does not currently expose these as runtime parameters. If your workload really needs custom tuning, file an issue rather than working around it with hand-rolled scoring.
 - **Pure vector ranking.** If the query is "find the 10 nearest embeddings, no keyword constraint at all", use an ANN distance function and skip BM25.
 
-## Further reading
+## Further reading {#further-reading}
 
 - [Inverted index: how Doris stores the data BM25 reads from](./inverted-index)
 - [Full-text search: tokenizers, MATCH operators, and the SEARCH function](./full-text-search)

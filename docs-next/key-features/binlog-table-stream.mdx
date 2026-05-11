@@ -24,15 +24,14 @@ featureCard:
 
 > **TL;DR** Table Stream is the upcoming public API for reading row-level changes (insert, update, delete) out of a Doris table, the way you read a MySQL binlog. The plumbing is already in the codebase: a row-format binlog, a `STREAM` object that pins offsets per partition, and consumption metadata. It is not GA yet. Today the same binlog powers [Cross-Cluster Replication](../admin-manual/data-admin/ccr/overview); for general CDC out of Doris, use the [Flink Doris Connector](../connection-integration/data-integration/flink-doris-connector). **Status: Coming Soon (Preview).**
 
-![Binlog / Table Stream hero illustration](/images/next/key-features/binlog-table-stream.jpg)
-
+![Apache Doris Binlog / Table Stream: A row-level change feed Doris tables will expose to downstream consumers, built on the binlog that powers Cross-Cluster Replication.](/images/next/key-features/binlog-table-stream.jpg)
 :::caution Status: Coming Soon
 The `STREAM` object, `binlog.format = ROW`, and the consumption metadata views described here are present in the Doris source tree but not yet released as a stable, user-facing API. Syntax and semantics may change before GA. Production CDC pipelines today should use [Kafka and CDC Integration](./kafka-cdc-integration) or [CCR](../admin-manual/data-admin/ccr/overview).
 :::
 
-## Why it matters
+## Why it matters {#why}
 
-Doris is good at ingesting change data. Getting change data back out is harder. If a downstream system (a Flink job, an audit trail, another Doris cluster, a search index) needs to react to every insert, update, and delete, the options today are awkward:
+Doris is good at [ingesting change data](./kafka-cdc-integration). Getting change data back out is harder. If a downstream system (a Flink job, an audit trail, another Doris cluster, a search index) needs to react to every insert, [update, and delete](./data-update-delete), the options today are awkward:
 
 - Re-read the table on a timer and diff. Cheap to write, expensive to run, never real-time.
 - Have producers double-write to Kafka and Doris. Two sinks, two failure modes.
@@ -40,7 +39,7 @@ Doris is good at ingesting change data. Getting change data back out is harder. 
 
 Binlog and Table Stream close that gap. The binlog records every committed change at the row level. The Table Stream is a named cursor over that log: a consumer attaches to a stream, reads the changes since its last offset, and acknowledges. Same idea as MySQL binlog, Snowflake Streams, or a Postgres logical replication slot, expressed as a first-class Doris object.
 
-## What it is
+## What it is {#what}
 
 Binlog is the per-table change log Doris already maintains for replication. It comes in two formats. `STATEMENT_AND_SNAPSHOT` is what CCR has shipped on for years: it records DDL plus snapshots, and the CCR Syncer applies them downstream. The new `ROW` format records every committed row delta, which is what a generic CDC consumer needs.
 
@@ -55,7 +54,7 @@ Table Stream is the consumer-facing object on top of the row-format binlog. A st
 - **Stream consume type**: `default`, `append_only`, or `min_delta`. Controls whether the stream emits full row deltas, inserts only, or the minimal change set.
 - **Stream lag**: visible version of the partition minus the stream's recorded offset. Surfaced as the `LAG` column.
 
-## How it works
+## How it works {#how}
 
 1. **Turn the binlog on.** `ALTER TABLE t SET ("binlog.enable" = "true", "binlog.format" = "ROW")`. The BE starts retaining row-level deltas alongside tablet data, governed by `binlog.ttl_seconds` and the size and history caps. CCR users may already have `binlog.enable = true` with the older `STATEMENT_AND_SNAPSHOT` format; Table Stream needs `ROW`.
 2. **Create a stream over the table.** `CREATE STREAM s ON t PROPERTIES ("type" = "default")`. The FE materializes a `STREAM` object, snaps the current visible version of every partition as the starting offset, and registers it under the database. `show_initial_rows = true` flips that so the first read returns the historical state.
@@ -63,7 +62,7 @@ Table Stream is the consumer-facing object on top of the row-format binlog. A st
 4. **Trim.** Once every active stream has moved past a binlog entry, and the entry is older than `binlog.ttl_seconds`, the BE garbage-collects it. A stream that falls behind retention is marked `IS_STALE = true` with a reason, the same way CCR reports a broken syncer.
 5. **Observe.** `information_schema.table_streams` lists every stream and its base table. `table_stream_consumption` reports `UNIT` (the partition), `CONSUMPTION_STATUS`, `LAG`, and `LAST_CONSUMPTION_TIME` per partition. That is the lag dashboard.
 
-## Quick start
+## Quick start {#quick-start}
 
 ```sql
 -- 1. Enable row-format binlog on the source table
@@ -95,7 +94,7 @@ WHERE STREAM_NAME = 'orders_cdc';
 
 `LAG = 0` means the consumer is caught up to the partition's visible version. As writes commit upstream, `LAG` grows; as the consumer reads, it shrinks. A non-`N/A` `STALE_REASON` means retention rolled past the offset and a re-snapshot is needed.
 
-## When to use it
+## When to use it {#when}
 
 **Good fit (once GA)**
 
@@ -112,7 +111,7 @@ WHERE STREAM_NAME = 'orders_cdc';
 - Storage-compute decoupled clusters. CCR explicitly does not support it yet; Table Stream's support model there is still in flight.
 - Reading external catalog tables (Hive, Iceberg). Table Stream is scoped to internal OLAP tables only.
 
-## Further reading
+## Further reading {#further-reading}
 
 - [Kafka and CDC Integration](./kafka-cdc-integration): the supported way to move change data into and around Doris today.
 - [Cross-Cluster Replication overview](../admin-manual/data-admin/ccr/overview): the existing binlog consumer, with the Syncer architecture and applicable scenarios.

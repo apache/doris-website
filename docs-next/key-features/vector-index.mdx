@@ -21,11 +21,10 @@ featureCard:
 
 > **TL;DR** Doris 4.0 added a native ANN index on `ARRAY<FLOAT>` columns. You declare it inline in `CREATE TABLE` (or with `CREATE INDEX ... USING ANN`), pick HNSW or IVF, pick L2 or inner product, and then call `l2_distance_approximate` or `inner_product_approximate` in `ORDER BY ... LIMIT k`. The planner does the rest. Built on Faiss, it pre-filters before the TopN, so `WHERE` predicates stay correct.
 
-![Vector Index hero illustration](/images/next/key-features/vector-index.jpg)
+![Apache Doris Vector Index: A native ANN index on ARRAY of FLOAT columns. Build it inside a Doris table and run millisecond TopN vector search next to your SQL analytics.](/images/next/key-features/vector-index.jpg)
+## Why it matters {#why}
 
-## Why it matters
-
-The default move when you need vector search is to bolt on a separate vector database. That works, but you pay for it twice. Once in dollars, and once in the operational tax of running two systems where the keyword filters live on one side and the embeddings live on the other.
+The default move when you need vector search is to bolt on a separate vector database. That works, but you pay for it twice. Once in dollars, and once in the operational tax of running two systems where the keyword filters live on one side and the [embeddings](./embedding) live on the other.
 
 - A separate cluster to size, monitor, and pay for, just to answer "find the closest 10 vectors."
 - Drift between the analytics table and the vector store, when a row gets updated in one and not the other.
@@ -33,7 +32,7 @@ The default move when you need vector search is to bolt on a separate vector dat
 
 Doris pulls the vector index into the same table as the rest of your data. One pipeline in, one SQL query out.
 
-## What it is
+## What it is {#what}
 
 Vector Index in Doris is an ANN (Approximate Nearest Neighbor) secondary index on a vector-typed column. There is no new column type: vectors are stored as `ARRAY<FLOAT>` of fixed dimension. The index sits next to the data, builds at segment granularity, and gets used whenever the planner sees an approximate distance function in `ORDER BY`.
 
@@ -45,7 +44,7 @@ Vector Index in Doris is an ANN (Approximate Nearest Neighbor) secondary index o
 - **IVF / IVF on-disk**: inverted-file algorithms for larger sets where memory is tight.
 - **`l2_distance_approximate` / `inner_product_approximate`**: the SQL functions that trigger the index. The non-`_approximate` versions exist too, but they fall through to a brute-force scan.
 
-## How it works
+## How it works {#how}
 
 1. **Build at load time.** When a segment is written, Doris hands the column to Faiss and builds the index file alongside the data. One index per segment, no separate build job.
 2. **Plan recognizes the pattern.** A query that reads `ORDER BY l2_distance_approximate(col, [...]) LIMIT k` is rewritten into an `AnnTopN` operator on the storage side. The literal vector is pushed down with the LIMIT.
@@ -53,7 +52,7 @@ Vector Index in Doris is an ANN (Approximate Nearest Neighbor) secondary index o
 4. **Per-segment local TopN, then merge.** Each segment returns its own k closest. The TopN operator merges across segments and tablets to produce the global k.
 5. **Tuneable at query time.** Session variables like `hnsw_ef_search` widen the candidate queue for higher recall, at the cost of latency. The defaults are conservative; nudge them when you have a recall target.
 
-## Quick start
+## Quick start {#quick-start}
 
 ```sql
 CREATE TABLE docs (
@@ -89,7 +88,7 @@ FROM docs ORDER BY dist LIMIT 3;
 
 The query against `id=1` is exact (distance 0). The ANN index ranks the two close neighbors first and the outlier last. The same query shape against the SIFT-1M dataset (1 million 128-dim vectors) runs in about 20 ms with the index, versus about 290 ms without; both numbers are from the [Vector Search overview](../table-design/index/vector-index/overview).
 
-## When to use it
+## When to use it {#when}
 
 **Good fit**
 
@@ -106,7 +105,7 @@ The query against `id=1` is exact (distance 0). The ANN index ranks the two clos
 - `score()` plus a distance function in the same `ORDER BY`. The TopN push-down accepts one ordering expression; if you need both BM25 and ANN scores fused, do the fusion above the SQL layer.
 - Cosine similarity called as `cosine_distance`. Doris has no cosine metric; normalize the vectors before insert and use `inner_product`. On unit-length vectors, cosine equals inner product.
 
-## Performance / numbers
+## Performance / numbers {#performance}
 
 The numbers below come from the project's published benchmark on Cohere-MEDIUM-1M (768-dim, 1M vectors, FE 32C 64GB + BE 32C 64GB).
 
@@ -118,7 +117,7 @@ The numbers below come from the project's published benchmark on Cohere-MEDIUM-1
 
 Source: [Vector index performance](../table-design/index/vector-index/performance). Treat these as a reference point, not as a guarantee for your workload. The same page reports that SQ8 quantization shrinks the index to about a third of FLAT, with the small recall hit you can see above.
 
-## Further reading
+## Further reading {#further-reading}
 
 - [Hybrid Search](./hybrid-search): how to combine the ANN index with the inverted index in one SQL statement.
 - [Vector Search overview](../table-design/index/vector-index/overview): full reference for index properties, query patterns, and limits.

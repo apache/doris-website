@@ -21,11 +21,10 @@ featureCard:
 
 > **TL;DR** Condition Cache stores the result of a `WHERE` clause on each segment as a compressed bit vector keyed by `(predicate digest, key range)`. The next query that uses the same filter on the same segment skips the granules the bit vector already says cannot match, even when the SELECT list, GROUP BY, or aggregation is different. Five dashboard panels that all share `WHERE region = 'ASIA' AND order_date >= '2023-01-01'` evaluate that filter once per segment and reuse it across every panel.
 
-![Condition Cache hero illustration](/images/next/key-features/condition-cache.jpg)
+![Apache Doris Condition Cache: A segment-level cache that stores filter evaluation results as bit vectors, so queries that share a WHERE clause reuse the predicate work.](/images/next/key-features/condition-cache.jpg)
+## Why it matters {#why}
 
-## Why it matters
-
-Most analytical workloads filter a lot more than they aggregate. A dashboard built on a single `orders` table will have ten panels that all share `WHERE region = ? AND order_date >= ?` and differ only in the SELECT list. An application backend reissues the same predicate every few seconds with a new aggregation. A T+1 report runs different aggregations against partitions that have not changed since last night.
+Most analytical workloads filter a lot more than they aggregate. A dashboard built on a single `orders` table will have ten panels that all share `WHERE region = ? AND order_date >= ?` and differ only in the SELECT list. An application backend reissues the same predicate every few seconds with a new aggregation. A T+1 report runs different aggregations against [partitions](./partitioning-and-bucketing) that have not changed since last night.
 
 The cluster pays the predicate evaluation cost on every one of those queries: read the column, decode it, run the comparison, build the row mask, then carry on with the rest of the plan.
 
@@ -33,7 +32,7 @@ SQL Cache helps when the SQL text is byte-identical and gives up the moment the 
 
 Condition Cache fits between them. It caches the predicate evaluation step at the segment level, separate from whatever the surrounding query does with the rows.
 
-## What it is
+## What it is {#what}
 
 Condition Cache is a BE-side cache of predicate evaluation results, stored per segment as a granule-level bit vector. When a scan starts on a segment, the BE computes a 64-bit digest from the predicate expression and the segment's key range, then probes the cache. On a hit, it skips every granule whose bit is `0` and only scans the granules whose bit is `1`. On a miss, it runs the predicate as usual and writes the resulting bit vector back to the cache.
 
@@ -47,7 +46,7 @@ The cache is independent of projections, aggregations, joins, and sort. Two quer
 - **Predicate digest**: a 64-bit hash of the conjunctive predicate plus the segment's key range. Semantically equivalent predicates produce the same digest.
 - **`condition_cache_limit`**: per-BE memory cap for the cache, in MB. Defaults to `1024`. Lives in `be.conf`.
 
-## How it works
+## How it works {#how}
 
 1. **Compile the digest (BE).** When a scan operator starts on a segment, it normalizes its conjunctive predicates and the segment's key range into a 64-bit digest. Different SELECT lists, GROUP BYs, and aggregations all produce the same digest because none of those affect the predicate.
 2. **Probe per segment.** The BE looks up `(digest, segment_id)` in a sharded LRU cache. If the segment carries a delete marker, or if a TopN runtime filter built the predicate at execution time, the BE skips the lookup and falls back to a normal scan.
@@ -55,7 +54,7 @@ The cache is independent of projections, aggregations, joins, and sort. Two quer
 4. **On miss.** The scan evaluates the predicate normally, builds the bit vector as it goes, and writes the result back keyed on `(digest, segment_id)`. Subsequent queries with the same digest land on a hit.
 5. **Invalidation by immutability.** Segments do not mutate. A new INSERT or compaction produces a new segment with a new ID, and the old cache entry ages out of the LRU on its own. Doris does not need an explicit invalidation step.
 
-## Quick start
+## Quick start {#quick-start}
 
 ```sql
 SET enable_condition_cache = true;
@@ -81,7 +80,7 @@ ConditionCacheFilteredRows:  18,400,219
 
 The first run scans every segment, evaluates the predicate, and writes one bit vector per segment. The second run shares the WHERE so the digest matches; every segment hits the cache, and the BE skips the granules already known to be empty for `region = 'ASIA' AND order_date >= '2023-01-01'`.
 
-## When to use it
+## When to use it {#when}
 
 **Good fit**
 
@@ -99,7 +98,7 @@ The first run scans every segment, evaluates the predicate, and writes one bit v
 - Ad-hoc queries with one-off WHERE clauses that no other query reuses. The cache fills with entries that get one read and then evict each other. Leaving it on does no harm, but expect the hit rate to stay low.
 - Lookups by primary key. Use [High-Concurrency Point Query](./high-concurrency-point-query) instead.
 
-## Further reading
+## Further reading {#further-reading}
 
 - [Condition Cache user guide](../query-acceleration/condition-cache)
 - [Query Cache: pipeline-level partial aggregation cache](./query-cache)

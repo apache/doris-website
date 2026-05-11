@@ -22,17 +22,16 @@ featureCard:
 
 > **TL;DR** Doris ships a family of `AI_*` SQL functions that send a row's column value to an external LLM and return the result inline. You configure the provider once as an AI `RESOURCE`, then write `AI_CLASSIFY(...)`, `AI_EXTRACT(...)`, or `AI_GENERATE(...)` anywhere a value is allowed. Snowflake's Cortex AISQL and Databricks' AI Functions cover the same ground; this is the Doris equivalent.
 
-![LLM SQL Functions hero illustration](/images/next/key-features/llm-sql-functions.jpg)
+![Apache Doris LLM SQL Functions: AI_* SQL functions in Doris send column values to an LLM and return the result inline, so classification, extraction, and summarization stay in SQL.](/images/next/key-features/llm-sql-functions.jpg)
+## Why it matters {#why}
 
-## Why it matters
-
-Plenty of analytics work on text columns is not analytics at all. Someone has to classify support tickets by topic, score reviews for sentiment, pull product names out of free-form complaints, summarize long call notes, or redact PII before exporting. The work is repetitive, the columns are already in the warehouse, and the only piece missing is a model.
+Plenty of analytics work on text columns is not analytics at all. Someone has to classify support tickets by topic, score reviews for sentiment, pull product names out of free-form complaints, summarize long call notes, or redact PII before exporting. The work is repetitive, the columns are already in the warehouse, and the only piece missing is a model. Doris already serves embeddings through [EMBED()](./embedding) and an [MCP server](./mcp-server) for AI clients, so this card rounds out the SQL-callable side.
 
 The usual workaround is a Python service. It pulls rows from Doris, calls OpenAI or Anthropic, parses the response, and writes the result back. That service drifts out of sync with the source table, owns its own retries, and lives outside the warehouse's permissions and observability.
 
 `AI_*` functions move that loop into SQL. The model is a registered resource. The call is a function. The result is a column you can persist with `INSERT`, filter on with `WHERE`, or compute on the fly. One language, one transaction boundary, one place to read the audit log.
 
-## What it is
+## What it is {#what}
 
 The `AI_*` family is a set of SQL-callable functions that wrap an HTTP call to an LLM provider. Each function passes the input columns through a fixed prompt template and returns a typed result, so the planner treats them like any other scalar function. Doris reaches the provider through an AI resource you create once with `CREATE RESOURCE ... TYPE='ai'`. Eleven scalar functions cover the most common tasks, and one aggregate, `AI_AGG`, rolls multiple rows into a single LLM-generated answer.
 
@@ -43,7 +42,7 @@ The `AI_*` family is a set of SQL-callable functions that wrap an HTTP call to a
 - **`AI_AGG`**: an aggregate function that joins all rows in a group, sends them to the LLM with a custom prompt, and returns one summary per group. The group equivalent of `AI_SUMMARIZE`.
 - **`default_ai_resource`**: a session variable that selects a resource for the rest of the session, so you can drop the explicit first argument.
 
-## How it works
+## How it works {#how}
 
 1. **Register the model.** `CREATE RESOURCE` validates the endpoint with a probe call (skipped for `provider_type = 'local'` or when `ai.validity_check = 'false'`), masks the API key in `SHOW RESOURCES` output, and persists the configuration in the FE's metadata.
 2. **Plan the call.** When the planner sees an `AI_*` function, it routes the work to the BE the same way it would for any scalar UDF. The function's first argument must be a literal resource name; the planner rejects an expression there at analysis time.
@@ -51,7 +50,7 @@ The `AI_*` family is a set of SQL-callable functions that wrap an HTTP call to a
 4. **Retry and time out.** The HTTP call honors `ai.max_retries` and `ai.retry_delay_second` from the resource. Each request inherits the time remaining in the session's `query_timeout`, so a slow provider does not extend the query past its budget.
 5. **Return a typed value.** Scalar functions return `STRING` (or `BOOLEAN` for `AI_FILTER`, `DOUBLE` for `AI_SIMILARITY`). You can store it, filter on it, or feed it to the next operator without leaving SQL.
 
-## Quick start
+## Quick start {#quick-start}
 
 ```sql
 CREATE RESOURCE "deepseek_chat" PROPERTIES (
@@ -85,7 +84,7 @@ FROM reviews;
 
 The query runs two LLM round trips, one per function, with both rows batched into each. The output columns are typed strings, so a downstream `GROUP BY topic` or a join works without parsing.
 
-## When to use it
+## When to use it {#when}
 
 **Good fit**
 
@@ -102,7 +101,7 @@ The query runs two LLM round trips, one per function, with both rows batched int
 - Anything that needs strict reproducibility. Provider responses are non-deterministic unless you pin `temperature = 0`, and even then minor model-side updates change outputs. Snapshot the result instead of recomputing it on each query.
 - Workloads that need a provider outside the supported list. Anything beyond the twelve `provider_type` values has to expose an OpenAI-, Anthropic-, or Gemini-compatible API, or run as a `local` endpoint.
 
-## Further reading
+## Further reading {#further-reading}
 
 - [AI on Doris](../ai/ai-overview): the full AI feature surface, including how `AI_*` functions, embeddings, vector search, and the MCP server fit together.
 - [AI Functions overview](../sql-manual/sql-functions/ai-functions/overview): every supported provider, the full property list for `CREATE RESOURCE`, and one-off examples per function.

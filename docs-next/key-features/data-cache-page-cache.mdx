@@ -22,11 +22,10 @@ featureCard:
 
 > **TL;DR** Doris caches storage at two layers. The Data Cache keeps bytes from S3 or HDFS on a BE's local disk so repeat scans skip the network. The Page Cache keeps decompressed column pages in memory so repeat scans also skip decompression and decoding. The first run after a deploy is slow; the next run is local-disk fast; the run after that is RAM-fast. `WARM UP` pre-populates both.
 
-![Data Cache and Page Cache hero illustration](/images/next/key-features/data-cache-page-cache.jpg)
+![Apache Doris Data Cache & Page Cache: Two caching layers for lakehouse reads: a local-disk cache for remote file bytes and an in-memory cache for decompressed column pages.](/images/next/key-features/data-cache-page-cache.jpg)
+## Why it matters {#why}
 
-## Why it matters
-
-A query against a Hive or Iceberg table on S3 pays for every byte three times: once to fetch it (HTTP round trip per ranged GET), once to decompress it (snappy, zstd, gzip), and once to decode it (RLE, dictionary, plain). The fetch is usually the worst offender. S3 GET tail latency runs 30 ms to 500 ms; a Parquet scan that issues thousands of ranged reads can spend most of its wall clock waiting for HTTP, before any CPU work starts.
+A query against a [Hive or Iceberg table](./multi-catalog) on S3 pays for every byte three times: once to fetch it (HTTP round trip per ranged GET), once to decompress it (snappy, zstd, gzip), and once to decode it (RLE, dictionary, plain). The fetch is usually the worst offender. S3 GET tail latency runs 30 ms to 500 ms; a [Parquet scan](./parquet-reader-optimization) that issues thousands of ranged reads can spend most of its wall clock waiting for HTTP, before any CPU work starts.
 
 A few common patterns make this hurt:
 
@@ -36,7 +35,7 @@ A few common patterns make this hurt:
 
 The two caches sit at different layers. A Data Cache hit removes the network. A Page Cache hit removes the network and the decompression, but only after some earlier read populated it.
 
-## What it is
+## What it is {#what}
 
 **Data Cache** is a per-BE local-disk cache for remote file bytes. When a Doris BE reads a Parquet or ORC file from a Hive, Iceberg, Hudi, or Paimon table, the bytes are pulled in 1 MB blocks and written to a configured local directory. Subsequent reads of the same offset hit the disk instead of S3.
 
@@ -50,7 +49,7 @@ The two caches sit at different layers. A Data Cache hit removes the network. A 
 - **`WARM UP`**: SQL syntax that pre-populates either cache by running a synthetic scan in the background.
 - **`Admission control`**: a policy that decides whether a given query is even allowed to write into the Data Cache, used to keep one-shot scans from polluting it.
 
-## How it works
+## How it works {#how}
 
 A scan flows through the caches in order, top to bottom.
 
@@ -62,7 +61,7 @@ A scan flows through the caches in order, top to bottom.
 
 `WARM UP` walks the same path on demand. It runs the scan, records hits and misses, and pre-fills both caches without returning rows.
 
-## Quick start
+## Quick start {#quick-start}
 
 ```sql
 -- One-time setup on each BE: configure a cache directory.
@@ -97,7 +96,7 @@ VFileScanNode
 
 The first run populated the Data Cache from S3. The second run answered the query without leaving the BE's local disk, and decompressed pages were served from RAM.
 
-## When to use it
+## When to use it {#when}
 
 **Good fit**
 
@@ -115,7 +114,7 @@ The first run populated the Data Cache from S3. The second run answered the quer
 - Mechanical disks. The Data Cache assumes local IO is meaningfully faster than the remote source. On HDDs, the local round trip can be slower than a parallel S3 GET. Use SSD or NVMe.
 - Sizing the Page Cache too aggressively. Beyond 30–40% of memory, you starve the query buffer pools and trigger spilling that costs more than the cache saves. The default `storage_page_cache_limit = 20%` is sane for most workloads.
 
-## Further reading
+## Further reading {#further-reading}
 
 - [Data Cache reference](../lakehouse/data-cache): the full surface, including `WARM UP SELECT`, per-query limits, and admission control.
 - [File Cache (compute-storage decoupled)](../compute-storage-decoupled/file-cache/file-cache): the same machinery applied to internal tablets in cloud mode.

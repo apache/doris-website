@@ -20,13 +20,12 @@ featureCard:
     - performance
 ---
 
-> **TL;DR** When Doris queries Hive, Iceberg, Hudi, or Paimon, most of the wall clock can be spent listing partitions, parsing manifests, and asking the Hive Metastore questions. Doris caches all of it: schemas, partition values, file listings, Iceberg manifest entries, Paimon snapshots. Caches are TTL-bounded, can refresh from Hive Metastore events for seconds-level lag, and can be invalidated explicitly with `REFRESH CATALOG`. Iceberg and Paimon get format-aware invalidation, so immutable manifests stay cached as long as they're still referenced.
+> **TL;DR** When Doris queries [Hive, Iceberg, Hudi, or Paimon](./multi-catalog), most of the wall clock can be spent listing partitions, parsing manifests, and asking the Hive Metastore questions. Doris caches all of it: schemas, partition values, file listings, Iceberg manifest entries, Paimon snapshots. Caches are TTL-bounded, can refresh from Hive Metastore events for seconds-level lag, and can be invalidated explicitly with `REFRESH CATALOG`. Iceberg and Paimon get format-aware invalidation, so immutable manifests stay cached as long as they're still referenced.
 
-![Metadata Cache hero illustration](/images/next/key-features/metadata-cache.jpg)
+![Apache Doris Metadata Cache: A multi-layer cache for external catalog metadata: table lists, schemas, partitions, file listings, and Iceberg manifests, keeping plans in ms.](/images/next/key-features/metadata-cache.jpg)
+## Why it matters {#why}
 
-## Why it matters
-
-Lakehouse query planning is dominated by metadata, not by data. A query against a partitioned Hive table needs to:
+Lakehouse query planning is dominated by metadata, not by data. A query against a [partitioned](./partitioning-and-bucketing) Hive table needs to:
 
 - Round-trip the Hive Metastore for the database list, table list, column schema, and partition list.
 - Issue an S3 or HDFS LIST against each surviving partition path to discover the data files.
@@ -41,7 +40,7 @@ A cold catalog with 10K partitions can spend longer in planning than in executio
 
 Metadata Cache absorbs all of these, with refresh paths that recover correctness whenever the source actually changes.
 
-## What it is
+## What it is {#what}
 
 Metadata Cache is an in-memory cache on the Doris FE for everything an external catalog can tell you, short of the file bytes themselves. Each backend (Hive, Iceberg, Hudi, Paimon, JDBC) has its own implementation of a shared framework, so the user-facing model is consistent: per-cache TTL, per-cache size limit, and a small set of refresh primitives.
 
@@ -53,7 +52,7 @@ Metadata Cache is an in-memory cache on the Doris FE for everything an external 
 - **`Manifest cache`**: parsed Iceberg manifest entries (lists of data and delete files for a manifest). Bounded by entry count, not TTL.
 - **`HMS event listener`**: a polling client that consumes Hive Metastore notification events and incrementally invalidates affected entries.
 
-## How it works
+## How it works {#how}
 
 A query traverses the cache before issuing any external RPC.
 
@@ -66,7 +65,7 @@ A query traverses the cache before issuing any external RPC.
 
 The common path serves metadata at memory latency. The recovery path catches up in seconds when the source moves.
 
-## Quick start
+## Quick start {#quick-start}
 
 ```sql
 -- Inspect cache state.
@@ -101,7 +100,7 @@ ALTER CATALOG hive_ctl SET PROPERTIES (
 
 After warmup, hit rates are above 99% on the schema and partition caches. Misses correspond to the first access of new tables or to entries that aged out.
 
-## When to use it
+## When to use it {#when}
 
 The Metadata Cache is on by default for every external catalog; the question is how to tune it.
 
@@ -119,7 +118,7 @@ The Metadata Cache is on by default for every external catalog; the question is 
 - Catalogs that contain millions of tables when memory is tight. Bumping `max_external_schema_cache_num` past your FE heap can cause OOMs. Right-size the limit and keep an eye on `catalog_meta_cache_statistics`.
 - Treating Iceberg like Hive. Aggressively running `REFRESH CATALOG` on Iceberg every minute throws away perfectly valid immutable manifest entries. Trust the snapshot model and let the cache do its job.
 
-## Further reading
+## Further reading {#further-reading}
 
 - [Metadata Cache reference](../lakehouse/meta-cache): module-by-module breakdown of TTLs, size limits, and refresh strategies.
 - [REFRESH statement](../sql-manual/sql-statements/catalog/REFRESH): the SQL surface for `REFRESH CATALOG`, `REFRESH DATABASE`, and `REFRESH TABLE`, plus the `invalid_cache` property.

@@ -18,13 +18,12 @@ featureCard:
     - performance
 ---
 
-> **TL;DR** Doris's classic compaction merges rowsets a row at a time, which means every column sits in memory at once. On a 200-column table that gets expensive fast. Vertical compaction splits the schema into small column groups, merges one group at a time, and reuses a sequence marker built from the key columns. It cuts compaction memory to roughly 1/10 and runs about 15% faster on wide tables. On by default since Doris 1.2.2.
+> **TL;DR** Doris's classic [compaction](./data-compaction) merges rowsets a row at a time, which means every column sits in memory at once. On a 200-column table that gets expensive fast. Vertical compaction splits the schema into small column groups, merges one group at a time, and reuses a sequence marker built from the key columns. It cuts compaction memory to roughly 1/10 and runs about 15% faster on wide tables. On by default since Doris 1.2.2.
 
-![Vertical Compaction hero illustration](/images/next/key-features/vertical-compaction.jpg)
+![Apache Doris Vertical Compaction: Column-group-based compaction that keeps memory bounded when Doris merges rowsets on wide tables.](/images/next/key-features/vertical-compaction.jpg)
+## Why it matters {#why}
 
-## Why it matters
-
-Compaction is the background job that merges a tablet's rowsets into fewer, bigger ones so queries don't have to walk across hundreds of versions. The classic algorithm reads one row from each input rowset, picks a winner, writes it out, and repeats. That works fine on a 5-column fact table. It falls over on a 200-column user table:
+Compaction is the background job that merges a tablet's rowsets into fewer, bigger ones so queries don't have to walk across hundreds of versions. The classic algorithm reads one row from each input rowset, picks a winner, writes it out, and repeats. That works fine on a 5-column fact table. It falls over on a 200-column user table — especially when those columns hold sprawling [VARIANT JSON payloads](./variant-data-type):
 
 - A merging block has to hold every column for every row in the batch. Memory scales with column count and with batch size at the same time.
 - The Backend (BE) runs many compaction tasks in parallel. Even a few wide-table tasks can push a node into OOM territory.
@@ -32,7 +31,7 @@ Compaction is the background job that merges a tablet's rowsets into fewer, bigg
 
 Vertical compaction is the fix. It changes the unit of merging from "one row across all columns" to "one column group at a time across all rows," and pays for that with one extra structure: a per-row sequence marker.
 
-## What it is
+## What it is {#what}
 
 Vertical compaction merges columns in groups rather than merging rows. The Backend splits the table schema into a key-column group plus several value-column groups (5 columns per group by default), merges the key group first to fix a global ordering, then merges each value group by replaying that ordering. The output rowset matches what row-wise compaction would produce; only the memory profile changes.
 
@@ -44,7 +43,7 @@ Vertical compaction merges columns in groups rather than merging rows. The Backe
 - **`Vertical merge iterator`**: the BE component that scans a single column group from all input rowsets and emits the merged column.
 - **`enable_vertical_compaction`**: BE config flag, `true` by default. Disabling it falls back to row-wise compaction.
 
-## How it works
+## How it works {#how}
 
 1. **Split the schema into groups.** The BE walks the tablet schema, puts the key columns into group 0, and chunks the remaining columns into groups of `vertical_compaction_num_columns_per_group` (default 5). When `enable_vertical_compact_variant_subcolumns` is on, the BE folds variant subcolumns into the same flow.
 2. **Merge the key group and record the order.** The Merger heap-sorts the key columns across all input rowsets. As each row leaves the heap, it writes one entry into the RowSourcesBuffer recording where the row came from. The output of this pass is a sorted key column plus a global RowSources tape.
@@ -54,7 +53,7 @@ Vertical compaction merges columns in groups rather than merging rows. The Backe
 
 One trade-off: vertical compaction reads each input rowset once per group instead of once total. On disk-bound clusters the IO cost goes up roughly by `(num_groups - 1)`. The memory savings usually win, which is why it's the default. On narrow tables (5 columns or fewer) the schema produces exactly one group anyway and the algorithm degenerates back to the row-wise path.
 
-## Quick start
+## Quick start {#quick-start}
 
 Vertical compaction is on by default. The example below shows the per-table override that controls how aggressively a wide table groups its columns:
 
@@ -87,7 +86,7 @@ SHOW CREATE TABLE user_profile;
 
 A group size of 3 trades a bit more IO for tighter memory use, which is what you want on tables with many large `STRING` or `JSONB` columns. Verify it took effect with `SHOW CREATE TABLE`. To roll the change back to defaults, drop the property with `ALTER TABLE`.
 
-## When to use it
+## When to use it {#when}
 
 **Good fit**
 
@@ -103,13 +102,13 @@ A group size of 3 trades a bit more IO for tighter memory use, which is what you
 - Disk-bound clusters where compaction IO already dominates. The extra read passes per group can amplify the bottleneck. Either widen the groups (raise `vertical_compaction_num_columns_per_group`) or fix the IO ceiling first.
 - Treating vertical compaction as a fix for too-frequent loads. Memory pressure during compaction is often a symptom of pile-up, not the root cause. See [Data Compaction](./data-compaction) and [Group Commit](../data-operate/import/load-best-practices/group-commit-manual) for the load-side levers.
 
-## Performance / numbers
+## Performance / numbers {#performance}
 
 - Memory: roughly 1/10 of row-wise compaction on wide tables. Source: [Doris compaction tuning docs](../admin-manual/trouble-shooting/compaction).
 - Throughput: about 15% faster end-to-end on the same wide-table benchmark. Source: same.
 - Available since: Doris 1.2.2; default `true` in current releases.
 
-## Further reading
+## Further reading {#further-reading}
 
 - [Data Compaction](./data-compaction): how cumulative, base, and time-series policies sit on top of vertical compaction.
 - [Compaction tuning: vertical, segment, single-replica, time-series](../admin-manual/trouble-shooting/compaction): operator-level knobs for every compaction variant.

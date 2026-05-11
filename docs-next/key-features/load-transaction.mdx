@@ -19,11 +19,13 @@ featureCard:
     - streaming
 ---
 
-> **TL;DR** Doris wraps every data load in a transaction. You can group several inserts under one `BEGIN ... COMMIT`, dedupe retries with a load `Label`, and drive a two-phase commit from headers in a Stream Load HTTP request. That last part is what lets Flink, Spark, and CDC pipelines write to Doris exactly once without keeping their own bookkeeping table.
+> **TL;DR** Doris wraps every data load in a transaction. You can group several inserts under one `BEGIN ... COMMIT`, dedupe retries with a load `Label`, and drive a two-phase commit from headers in a [Stream Load](./stream-load) HTTP request. That last part is what lets Flink, Spark, and [CDC pipelines](./kafka-cdc-integration) write to Doris exactly once without keeping their own bookkeeping table.
 
-## Why it matters
+![Apache Doris Load Transactions: Run multi-statement loads as one atomic unit, with label-based dedup and 2PC for exactly-once streaming sinks.](/images/next/key-features/load-transaction.jpg)
 
-Loading data into a warehouse goes wrong in predictable ways. A Flink job restarts mid-checkpoint and replays the last batch, doubling rows. A CDC pipeline updates a fact table but its companion dimension write fails, leaving the two out of sync until the next backfill. A retry script re-uploads the same file because it has no way to know the previous attempt actually landed. Each of these forces ugly bookkeeping in the application.
+## Why it matters {#why}
+
+Loading data into a warehouse goes wrong in predictable ways. A Flink job restarts mid-checkpoint and replays the last batch, doubling rows. A CDC pipeline [updates a fact table](./data-update-delete) but its companion dimension write fails, leaving the two out of sync until the next backfill. A retry script re-uploads the same file because it has no way to know the previous attempt actually landed. Each of these forces ugly bookkeeping in the application.
 
 - Replays from a stalled streaming job duplicate rows.
 - Multi-table writes that should move together can stop halfway.
@@ -31,7 +33,7 @@ Loading data into a warehouse goes wrong in predictable ways. A Flink job restar
 
 Doris solves all three on the server, so the load client can stay thin.
 
-## What it is
+## What it is {#what}
 
 Every write into Doris runs inside a transaction. That covers `INSERT INTO`, Stream Load, Routine Load, and Broker Load. Each one gets a unique Label and walks through a tracked set of lifecycle states managed by the FE. You can let Doris open and commit that transaction implicitly per load, take control with explicit `BEGIN`/`COMMIT`/`ROLLBACK`, or split the commit into two phases over HTTP for streaming sinks.
 
@@ -43,7 +45,7 @@ Every write into Doris runs inside a transaction. That covers `INSERT INTO`, Str
 - **`Stream Load 2PC`**: a Stream Load that stops at PRECOMMITTED until a follow-up HTTP call commits or aborts it.
 - **`Lifecycle states`**: `PREPARE` → `PRECOMMITTED` → `COMMITTED` → `VISIBLE` (or `ABORTED`). Rows are queryable only after `VISIBLE`.
 
-## How it works
+## How it works {#how}
 
 1. **Open.** A load opens a transaction in `PREPARE`. The FE assigns a `TxnId` and ties it to the user-supplied or generated Label. A second submission with the same Label short-circuits to the original transaction's result.
 2. **Write.** BEs receive the data, build segments, and report success. The transaction moves to `PRECOMMITTED` once all expected loads acknowledge.
@@ -53,7 +55,7 @@ Every write into Doris runs inside a transaction. That covers `INSERT INTO`, Str
 
 If anything fails along the way, or the client calls `ROLLBACK` (or `txn_operation: abort`), the transaction goes to `ABORTED` and the data is discarded.
 
-## Quick start
+## Quick start {#quick-start}
 
 ```sql
 CREATE TABLE orders (
@@ -79,7 +81,7 @@ Query OK, 2 rows affected
 
 Both tables become readable at the same instant. If the second `INSERT` had failed or the connection had dropped before `COMMIT`, neither table would carry the new rows.
 
-## When to use it
+## When to use it {#when}
 
 **Good fit**
 
@@ -96,7 +98,7 @@ Both tables become readable at the same instant. If the second `INSERT` had fail
 - Long-horizon deduplication. Labels are evicted after roughly 3 days or 2,000 entries per database, whichever hits first; reusing one after that does not dedupe. Track long-lived idempotency keys in the application.
 - Reading your own writes inside the same transaction. Each statement runs against the snapshot taken at its start; a previous `INSERT` is not visible until after `COMMIT`.
 
-## Further reading
+## Further reading {#further-reading}
 
 - [Stream Load](./stream-load): the synchronous HTTP load that hosts the 2PC variant.
 - [Group Commit](./group-commit): the right tool for high-frequency small inserts that don't need explicit `BEGIN ... COMMIT`.

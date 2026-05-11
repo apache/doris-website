@@ -19,13 +19,12 @@ featureCard:
     - query-acceleration
 ---
 
-> **TL;DR** When Doris queries Parquet files in an external catalog or through a TVF, it uses its own C++ vectorized reader instead of going through Java or Arrow. The reader prunes whole row groups and individual pages from the file's own statistics, evaluates predicates on dictionary IDs, reads filter columns before payload columns, and coalesces remote reads into fewer requests. Most queries finish without ever decoding the columns they don't need.
+> **TL;DR** When Doris queries Parquet files in an [external catalog](./multi-catalog) or through a TVF, it uses its own C++ [vectorized reader](./vectorized-execution) instead of going through Java or Arrow. The reader prunes whole row groups and individual pages from the file's own statistics, evaluates predicates on dictionary IDs, reads filter columns before payload columns, and coalesces remote reads into fewer requests. Most queries finish without ever decoding the columns they don't need.
 
-![Parquet Reader Optimization hero illustration](/images/next/key-features/parquet-reader-optimization.jpg)
+![Apache Doris Parquet Reader Optimization: A native C++ vectorized Parquet reader that prunes row groups and pages, decodes dictionaries directly, and reads payloads only after filters.](/images/next/key-features/parquet-reader-optimization.jpg)
+## Why it matters {#why}
 
-## Why it matters
-
-A Hive or Iceberg table on S3 is, in the end, a pile of Parquet files. Reading them is dominated by three costs: fetching bytes from object storage, decompressing and decoding pages, and converting values into the engine's runtime representation. A naive reader pays all three on every query.
+A Hive or Iceberg table on S3 is, in the end, a pile of Parquet files. Reading them is dominated by three costs: [fetching bytes from object storage](./data-cache-page-cache), decompressing and decoding pages, and converting values into the engine's runtime representation. A naive reader pays all three on every query.
 
 That cost shows up in shapes anyone who has tuned a lakehouse query has hit:
 
@@ -36,7 +35,7 @@ That cost shows up in shapes anyone who has tuned a lakehouse query has hit:
 
 Doris's reader is built to avoid each of these before any page leaves storage.
 
-## What it is
+## What it is {#what}
 
 Doris ships its own native C++ Parquet reader. Instead of going through a Java library or an Arrow round trip, it reads Parquet metadata, prunes at every available granularity (row group, page, dictionary, column), and decodes values directly into the same `Block` format the vectorized executor consumes.
 
@@ -47,7 +46,7 @@ Doris ships its own native C++ Parquet reader. Instead of going through a Java l
 - **`Lazy materialization`**: a two-pass read that decodes filter columns first, then fetches payload columns only for the rows that survived.
 - **`Dictionary filtering`**: evaluating a predicate against a column chunk's dictionary page once, then comparing rows against the resulting set of dictionary IDs.
 
-## How it works
+## How it works {#how}
 
 Each step shrinks what the next step has to look at.
 
@@ -59,7 +58,7 @@ Each step shrinks what the next step has to look at.
 
 The result: rows that survive to the executor have already been confirmed to match, and only the columns the query asked for were ever decoded.
 
-## Quick start
+## Quick start {#quick-start}
 
 ```sql
 SELECT region, count(*) AS orders, sum(amount) AS revenue
@@ -86,7 +85,7 @@ VFileScanNode
 
 The reader dropped 18 of 24 row groups on the date predicate, then dropped 210 pages inside the survivors using PageIndex on `status`. Lazy materialization skipped decoding `region` and `amount` for the 92.1% of rows that didn't match. Ninety-six column chunks were merged into 14 ranged GETs against S3.
 
-## When to use it
+## When to use it {#when}
 
 This path is used automatically whenever Doris reads Parquet, so the question is how to make sure it can do its job.
 
@@ -105,7 +104,7 @@ This path is used automatically whenever Doris reads Parquet, so the question is
 - Selective predicates inside deeply nested struct fields. Some optimizations (page index, dictionary filtering) are disabled for complex types; the reader walks the surviving rows in full. Flatten the access path or use top-level columns when possible.
 - DATETIME columns written as INT96 by older Hive writers. INT96 statistics are routinely corrupted, and the reader skips min/max pruning on them. If you control the writer, write INT64 timestamps. See the [Hive catalog notes](../lakehouse/catalogs/hive-catalog) on INT96.
 
-## Further reading
+## Further reading {#further-reading}
 
 - [Parquet file format reference](../lakehouse/file-formats/parquet): the user-facing knobs (`enable_parquet_lazy_mat`, `enable_parquet_page_index`, buffer-size BE configs) and version availability.
 - [Analyzing files on S3/HDFS](../lakehouse/file-analysis): how to query Parquet files directly with the `s3()` and `hdfs()` TVFs.

@@ -21,9 +21,8 @@ featureCard:
 
 > **TL;DR** Resource Group tags BE nodes into named pools, places table replicas across those pools, and binds each user to one or more pools. A query runs only on BEs in the user's pools and only reads replicas placed there. Because the pools are different BE processes, a crash or OOM in one group cannot take down another. The cost is storage: every pool that needs to read a table needs its own replica.
 
-![Resource Group hero illustration](/images/next/key-features/resource-group.jpg)
-
-## Why it matters
+![Apache Doris Resource Group: Physical, BE-node-level isolation that splits a Doris cluster into tagged sub-pools so an offline ETL group can never crash an online query group.](/images/next/key-features/resource-group.jpg)
+## Why it matters {#why}
 
 A real Doris cluster usually serves more than one workload, and the workloads do not trust each other. The 2 a.m. ETL job rewrites yesterday's partitions on the same BEs that an executive dashboard polls every fifteen seconds during the day. A finance batch reruns a heavy report at 9 a.m. while an analyst kicks off an unbounded `SELECT *`.
 
@@ -31,7 +30,7 @@ A real Doris cluster usually serves more than one workload, and the workloads do
 
 Resource Group fixes that without standing up a second cluster. You tag each BE with a label, you tell each table how many replicas belong to each tag, and you bind each user to the tags they are allowed to use. The cluster keeps one FE quorum, one schema catalog, one set of credentials, but the BEs are now divided into pools that share nothing at runtime.
 
-## What it is
+## What it is {#what}
 
 Resource Group is a placement-and-routing feature built on **resource tags**. Every BE belongs to exactly one location tag. Every replica of every table belongs to exactly one tag, decided at create time by `replication_allocation`. Every user has a set of tags they are allowed to use, decided by the `resource_tags.location` property. The query planner intersects them: it picks BEs in the user's tag set and reads only the replicas placed on those BEs.
 
@@ -42,7 +41,7 @@ Resource Group is a placement-and-routing feature built on **resource tags**. Ev
 - **`resource_tags.location`**: a user property listing the tags the user is allowed to access. Comma-separate to grant several. Empty means the default behavior described below.
 - **Default tag**: the built-in `default` tag. Every BE starts there, and it cannot be dropped. From 2.0.3 onward, ordinary users with no `resource_tags.location` set can only see `default`; `root` and `admin` can see everything.
 
-## How it works
+## How it works {#how}
 
 1. **Tag the BEs.** `ALTER SYSTEM MODIFY BACKEND "host:9050" SET ("tag.location" = "online")`. The FE writes the change to its edit log so the assignment survives restarts. `SHOW BACKENDS` reports the tag in its `Tag` column.
 2. **Allocate replicas across tags.** When a table is created with `replication_allocation = "tag.location.online:2, tag.location.offline:1"`, the FE checks that enough BEs carry each tag, then asks the tablet scheduler to place one replica per slot. A failed check reports "Failed to find enough host with tag(...)" and the DDL aborts. You can also set the property at the database level so new tables inherit it.
@@ -50,7 +49,7 @@ Resource Group is a placement-and-routing feature built on **resource tags**. Ev
 4. **Route the query.** When the user submits a query, the FE resolves their allowed tags into a working set of BEs and plans the query against only the replicas placed on those BEs. If the table has no replica on any of the user's allowed tags, the plan fails with "no queryable replicas".
 5. **Split loads in half.** A load job has a compute part (read the source, transform, distribute) and a write part (encode, compress, persist). The compute part respects the user's tag. The write part has to land on whichever BEs own the table's replicas, regardless of tag. So if a Stream Load is submitted by a user bound to `offline`, the compute side runs on offline BEs but the writes still touch every replica owner.
 
-## Quick start
+## Quick start {#quick-start}
 
 ```sql
 -- Tag two BEs into 'online', one into 'offline'
@@ -82,7 +81,7 @@ SET PROPERTY FOR 'etl_user' 'resource_tags.location' = 'offline';
 
 `SHOW BACKENDS` confirms the assignment. After `bi_user` reconnects, their queries plan against the two `online` replicas and never touch `be3`. `etl_user` runs on `be3` and reads the single `offline` replica. A BE crash on `be3` is invisible to `bi_user`.
 
-## When to use it
+## When to use it {#when}
 
 **Good fit**
 
@@ -99,7 +98,7 @@ SET PROPERTY FOR 'etl_user' 'resource_tags.location' = 'offline';
 - Heavy cross-pool ad-hoc analytics. The planner cannot stitch BEs from different tags into one query; missing replicas surface as "no queryable replicas" rather than a fallback.
 - Loads where you expect the writes to be isolated too. The write side always lands on the replica owners; only the compute side respects the tag.
 
-## Further reading
+## Further reading {#further-reading}
 
 - [Resource Group reference](../admin-manual/workload-management/resource-group): the full SQL surface, the validation rules, and the loading split in detail.
 - [Workload management overview](../admin-manual/workload-management/workload-management-summary): the side-by-side comparison of Resource Group, Workload Group, and Compute Group.

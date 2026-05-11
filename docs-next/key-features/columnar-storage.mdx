@@ -20,11 +20,10 @@ featureCard:
     - performance
 ---
 
-> **TL;DR** Every Doris OLAP table writes its data in column-oriented Segment files. Each column gets its own encoding (PLAIN, dictionary, RLE, bit-shuffle, frame-of-reference), each page is compressed independently (LZ4 by default, ZSTD optional), and per-page zone maps and bloom filters let queries skip pages without decoding them. The V3 footer added in 4.1 cuts segment-open latency on wide tables by 16x. There's nothing to enable; this is just how Doris stores data.
+> **TL;DR** Every Doris OLAP table writes its data in column-oriented Segment files. Each column gets its own encoding (PLAIN, dictionary, RLE, bit-shuffle, frame-of-reference), each page is compressed independently (LZ4 by default, ZSTD optional), and per-page zone maps and bloom filters let queries [skip pages](./data-pruning) without decoding them. The V3 footer added in 4.1 cuts segment-open latency on wide tables by 16x. There's nothing to enable; this is just how Doris [stores data](./data-model).
 
-![Columnar Storage hero illustration](/images/next/key-features/columnar-storage.jpg)
-
-## Why it matters
+![Apache Doris Columnar Storage: Doris's on-disk segment format. Per-column encoding and per-page compression shrink the table; per-page indexes let queries skip unread pages.](/images/next/key-features/columnar-storage.jpg)
+## Why it matters {#why}
 
 Three problems show up the moment you put analytics on a row-oriented store.
 
@@ -32,9 +31,9 @@ Three problems show up the moment you put analytics on a row-oriented store.
 - Compression is weak. Adjacent rows mix unrelated types, so dictionary, run-length, and delta codecs have nothing to chew on.
 - Skipping is hard. To know "this 64 KB block has no rows where `ts >= '2026-05-01'`," you need column-local statistics, and a row layout doesn't give you anywhere natural to keep them.
 
-A column-oriented layout fixes all three. Values from the same column sit together on disk, so the codec can pick a transform that fits the type. And the page indexes give the reader something to test predicates against before it decompresses anything.
+A column-oriented layout fixes all three. Values from the same column sit together on disk, so the codec can pick a transform that fits the type. And the page indexes give the reader something to test predicates against before it [decompresses anything](./vectorized-execution).
 
-## What it is
+## What it is {#what}
 
 Columnar storage in Doris is the on-disk segment file format that every OLAP table (Duplicate, Unique, Aggregate) shares. Each load produces one or more Segment files. Inside a segment, the writer handles each column on its own: it streams values into ~64 KB pages, encodes and compresses each page, and writes the skip indexes alongside. A footer at the end of the file points to everything.
 
@@ -46,7 +45,7 @@ Columnar storage in Doris is the on-disk segment file format that every OLAP tab
 - **`Page indexes`**: ordinal index, short key index, zone map (per-page min/max plus has-null), and bloom filter. All written into the segment alongside the data.
 - **`Footer`**: protobuf record at the end of the file describing every column, every encoding, every page pointer, and every index location. V3 (4.1+) externalizes column metadata so opening a wide segment doesn't have to read all of it.
 
-## How it works
+## How it works {#how}
 
 The lifecycle of one column on disk:
 
@@ -58,7 +57,7 @@ The lifecycle of one column on disk:
 
 The hierarchy above the segment is `Tablet → Rowset → Segment → Column → Page`. Compaction merges rowsets but never rewrites at a finer grain; the column-and-page layout below is what every query reads from.
 
-## Quick start
+## Quick start {#quick-start}
 
 ```sql
 CREATE TABLE access_log (
@@ -96,7 +95,7 @@ ORDER BY hits DESC;
 
 The query reads only the `ts` and `country` columns. The reader skips pages whose zone map says `max(ts) < 2026-05-01` before any decompression runs. ZSTD typically shrinks the table 5x to 10x, and the V3 footer keeps segment-open cost flat as the column count grows.
 
-## When to use it
+## When to use it {#when}
 
 **Good fit**
 
@@ -112,12 +111,12 @@ The query reads only the `ts` and `country` columns. The reader skips pages whos
 - Disabling encodings to "see the raw column." There is no raw mode. The codec is part of the file format, not a layer you peel off.
 - Treating columnar storage as a fix for narrow point lookups on a row-oriented schema. If every query is `WHERE id = ?` and returns one row, you want a different system or the row-store extension, not a different compression codec.
 
-## Performance / numbers
+## Performance / numbers {#performance}
 
 - **Wide-table V3 footer**: a 7,000-column table with 10,000 segments saw segment-open time drop from 65s to 4s (16x faster) and open-time memory from 60 GB to under 1 GB (60x lower). Source: [Storage Format V3](../table-design/storage-format).
 - **ZSTD vs. the prior default** on a 25 GB / 110-million-line text-log dataset: nearly 10x compression ratio, 53% better than the previous default, and 30% faster end-to-end read+decompress. Source: [Apache Doris 1.1.0 release notes](https://doris.apache.org/blog/release-note-1.1.0/).
 
-## Further reading
+## Further reading {#further-reading}
 
 - [Storage Format V3](../table-design/storage-format): the wide-table footer optimization and per-column metadata externalization.
 - [Data Pruning](./data-pruning): how ZoneMap, BloomFilter, and the per-page indexes that live inside a segment turn into skip work at scan time.

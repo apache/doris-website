@@ -21,9 +21,8 @@ featureCard:
 
 > **TL;DR** Pipeline is Doris's only execution engine since v3.0. Each query fragment is split into a DAG of pipelines; each pipeline starts at a source, ends at a sink, and runs as several PipelineTasks on a fixed-size thread pool whose width is bounded by the BE's CPU budget. Operators yield instead of blocking, dependencies coordinate the DAG, and Local Shuffle re-balances skewed data inside the BE. The volcano model and its one-thread-per-fragment-instance bill are gone.
 
-![Pipeline Execution Engine hero illustration](/images/next/key-features/pipeline-execution-engine.jpg)
-
-## Why it matters
+![Apache Doris Pipeline Execution Engine: A push-based, work-stealing scheduler that breaks each query into a DAG of operator pipelines and runs them on a fixed BE thread pool.](/images/next/key-features/pipeline-execution-engine.jpg)
+## Why it matters {#why}
 
 The volcano model that Doris used to ship gave every fragment instance its own OS thread. With a few concurrent queries this is fine. With a hundred it becomes a problem: thousands of threads stack up, most of them blocked on IO or on each other, and the BE eventually thrashes the kernel scheduler and runs out of memory before it runs out of work.
 
@@ -31,7 +30,7 @@ There are two more wounds the old engine left open. Wide-table aggregations and 
 
 Pipeline closes all three. The thread count is bounded, not query-count-bounded. Operators yield when they cannot make progress, freeing threads instead of holding them. And Local Shuffle redistributes skewed data inside the BE so the long pole is short.
 
-## What it is
+## What it is {#what}
 
 Pipeline is a push-based, async query execution model. The FE compiles the query into a Plan, splits it into PlanFragments (one per BE), and each BE breaks each fragment into a DAG of Pipelines. A Pipeline is a chain that begins with one SourceOperator (a scan or an exchange), ends with one SinkOperator (a network shuffle or a hash-table writer), and may have any number of operators in between. Pipelines that have to wait on each other are coordinated by Dependencies. Each Pipeline materializes into multiple PipelineTasks, one per parallelism slot, that run on a fixed BE-wide thread pool.
 
@@ -45,7 +44,7 @@ Pipeline is a push-based, async query execution model. The FE compiles the query
 - **Local Shuffle (Local Exchange)**: a Pipeline Breaker that re-shards data locally inside the BE using HASH or Round Robin, so a skewed scan does not turn into a skewed join.
 - **`parallel_pipeline_task_num`**: the session knob for per-fragment parallelism. Default `0` means half the CPU cores; usually best left alone.
 
-## How it works
+## How it works {#how}
 
 1. **FE plans, splits, ships.** The FE compiles the query, inserts `ExchangeNode` and `DataSink` for inter-BE shuffle, and sends each PlanFragment to a BE.
 2. **BE turns each fragment into a pipeline DAG.** Blocking operators (hash-table build, sort, aggregation) become a Sink that ends one pipeline plus a Source that starts the next one. Dependencies wire the DAG together; a Join's probe waits on its build's `set_ready`.
@@ -54,7 +53,7 @@ Pipeline is a push-based, async query execution model. The FE compiles the query
 5. **Local Shuffle when needed.** If the planner sees a join, aggregation, or window function over potentially skewed input, it inserts a Local Exchange. Upstream tasks push batches in, downstream tasks pull rebalanced batches out, smoothing `(1, 1, 7)` into `(3, 3, 3)` so every core finishes around the same time.
 6. **Parallel scan.** A ScanOperator dynamically spawns multiple Scanners under the hood. Each Scanner takes 1 to 2 million rows, decompresses and filters them in place, and pushes the result into a DataQueue that the ScanOperator drains, so a slow bucket does not stall the query.
 
-## Quick start
+## Quick start {#quick-start}
 
 The Pipeline engine is on by default in v3.0+; there is nothing to enable. The one knob you may ever need is `parallel_pipeline_task_num`.
 
@@ -88,7 +87,7 @@ EXPLAIN SELECT /*+ SET_VAR(parallel_pipeline_task_num=16) */
 
 The hint applies only to this query. `EXPLAIN` shows the pipeline IDs, the Local Exchange (if planned), and the operator chain. With profiling enabled, the runtime profile reports per-PipelineTask `ExecTime`, `YieldCounts`, and `MemoryReserveFailedTimes`, which are the levers you actually use to tune real workloads.
 
-## When to use it
+## When to use it {#when}
 
 **Good fit**
 
@@ -104,7 +103,7 @@ The hint applies only to this query. `EXPLAIN` shows the pipeline IDs, the Local
 - Confusing this engine with vectorized execution. They are different layers: vectorized execution decides what an operator does to a batch; Pipeline decides how those batches get scheduled across cores. See [Vectorized Execution](./vectorized-execution) for the other half.
 - Single-row primary-key lookups served at thousands of QPS. The cost of spinning up multiple PipelineTasks is not paid back at that point; use the [High-Concurrency Point Query](./high-concurrency-point-query) path, which sidesteps the heavy planner.
 
-## Further reading
+## Further reading {#further-reading}
 
 - [Pipeline Execution Engine reference](../query-acceleration/optimization-technology-principle/pipeline-execution-engine): full architecture, including Dependency rules, Local Shuffle planning, and the parallel-scan mechanism.
 - [Parallelism tuning](../query-acceleration/tuning/parallelism-tuning): when and how to set `parallel_pipeline_task_num` per scenario, with the safe defaults table.

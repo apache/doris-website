@@ -22,9 +22,8 @@ featureCard:
 
 > **TL;DR** Spill to Disk lets HashJoin, Aggregation, Sort, and CTE operators write intermediate state to local disk when a query is about to blow its memory budget. The query slows down, but it finishes. You turn it on with `set enable_spill = true` (per session) or at the [Workload Group](./workload-group) level, point BE at a spill directory, and read spill counters back from the query profile.
 
-![Spill to Disk hero illustration](/images/next/key-features/spill-to-disk.jpg)
-
-## Why it matters
+![Apache Doris Spill to Disk: Memory-heavy operators spill intermediate state to local disk when limits are hit, so big joins, aggregations, and sorts finish instead of OOM.](/images/next/key-features/spill-to-disk.jpg)
+## Why it matters {#why}
 
 Doris is an MPP engine. By default the join hash tables, the aggregation state, the sort buffer all live in BE memory. That is great for latency and bad the moment a query asks for more memory than the node, the query, or the workload group is allowed to use. The classic failure mode is a nightly ETL or an ad-hoc TPC-DS style query that touches a wide fact table, builds a multi-gigabyte hash table, then dies with `Memory limit exceeded`. The user retries, hits the same wall, and either tunes `exec_mem_limit` upward or gives up.
 
@@ -35,7 +34,7 @@ Doris is an MPP engine. By default the join hash tables, the aggregation state, 
 
 Spill to Disk turns those hard failures into slower, but successful, queries. The same node that used to OOM at 10x dataset size now finishes at 50x, paying disk IO instead of crashing.
 
-## What it is
+## What it is {#what}
 
 Spill to Disk is a runtime mechanism in the [Pipeline Execution Engine](./pipeline-execution-engine) that lets memory-intensive operators evict their intermediate state to local disk under memory pressure, then read it back to finish the query. It is operator-level, not query-level: only the operators that are actually large get spilled, and a query can keep running on a mix of in-memory and on-disk state.
 
@@ -47,7 +46,7 @@ Spill to Disk is a runtime mechanism in the [Pipeline Execution Engine](./pipeli
 - **`Force spill`**: a debug mode (`enable_force_spill`) that spills even when there is plenty of memory. Use it to validate query correctness on the spill path before you trust it in production.
 - **Spill storage path**: the local directories the BE uses for spill files, configured separately from the table storage path.
 
-## How it works
+## How it works {#how}
 
 1. **Reserve before allocate.** Each pipeline task estimates the memory it needs for the next block and asks the per-query and per-process memory tracker for a reservation. Cheap and accurate beats panic-cancelling later.
 2. **Detect pressure.** A reservation fails when the query, the workload group, or the BE process would cross its limit. The task gets paused instead of cancelled.
@@ -56,7 +55,7 @@ Spill to Disk is a runtime mechanism in the [Pipeline Execution Engine](./pipeli
 5. **Resume and finish.** Once enough memory is free, the task is unpaused. Probe-side rows are routed by the same partition function, so each partition joins or aggregates against its on-disk peers. The result is correct; the query just spent extra time on disk IO.
 6. **Account and clean up.** The profile records every spill counter (bytes written, files, IO wait, partition skew). Spill files live under `spill_storage_root_path` and are GC'd by a background task.
 
-## Quick start
+## Quick start {#quick-start}
 
 ```sql
 -- Enable spill for this session (or set it on a workload group).
@@ -78,7 +77,7 @@ FROM information_schema.backend_active_tasks;
 
 The query returns its top-100 rows. In the [query profile](../query-acceleration/query-profile), look for `Spilled: true` on the `PARTITIONED_HASH_JOIN_SINK_OPERATOR` or `AGGREGATION_SINK_OPERATOR`, plus `SpillWriteBlockBytes`, `SpillWriteFileBytes`, and `SpillWriteTime`. Audit logs add `SpillWriteBytesToLocalStorage` and `SpillReadBytesFromLocalStorage` for the same query. If those counters are zero, the query fit in memory and never spilled, which is the desired outcome.
 
-## When to use it
+## When to use it {#when}
 
 **Good fit**
 
@@ -95,7 +94,7 @@ The query returns its top-100 rows. In the [query profile](../query-acceleration
 - Clusters with no spare local disk and no SSD. Spinning disks combined with heavy spill will dominate query time and starve normal scans of IO bandwidth.
 - A workaround for runaway queries. Spill makes a 100GB hash table possible. It does not make a `SELECT *` from a billion rows free. Pair it with [Workload Group](./workload-group) caps and queueing.
 
-## Further reading
+## Further reading {#further-reading}
 
 - [Spill to Disk admin guide](../admin-manual/workload-management/spill-disk): full BE config, FE session variables, slot-based memory allocation, and the TPC-DS 10TB validation run.
 - [Workload Group](./workload-group): per-group memory ceilings and how the high watermark triggers spill before kill.

@@ -20,21 +20,20 @@ featureCard:
     - performance
 ---
 
-> **TL;DR** Every Doris table is split twice: a `PARTITION BY` clause carves the rows by a column value (usually a date), and a `DISTRIBUTED BY` clause shards each partition into N tablets. Partitions give the planner something coarse to drop and the operator something to archive; buckets give the cluster something parallel to scan and write. Pick the date column queries filter on for the partition key, pick a high-cardinality equality column for the bucket key, and let `BUCKETS AUTO` size the rest.
+> **TL;DR** Every Doris table is split twice: a `PARTITION BY` clause carves the rows by a column value (usually a date), and a `DISTRIBUTED BY` clause shards each partition into N tablets. Partitions give the planner something coarse to drop and the operator something to archive; buckets give the cluster something [parallel to scan and write](./pipeline-execution-engine). Pick the date column queries filter on for the partition key, pick a [high-cardinality equality column](./high-concurrency-point-query) for the bucket key, and let `BUCKETS AUTO` size the rest.
 
-![Partitioning and Bucketing hero illustration](/images/next/key-features/partitioning-and-bucketing.jpg)
-
-## Why it matters
+![Apache Doris Partitioning and Bucketing: Doris's two-level data sharding. Partitions split a table by column for pruning; buckets shard each partition into tablets for parallel reads.](/images/next/key-features/partitioning-and-bucketing.jpg)
+## Why it matters {#why}
 
 Once a table outgrows one machine, three problems show up.
 
 - A `WHERE date BETWEEN '2026-04-01' AND '2026-04-07'` query on a 365-day events table reads every row of every day until the planner is told it can skip the other 358.
 - A 4 TB table loaded into one tablet pins one BE to 100% CPU and leaves the other nine idle. The cluster has parallelism; the table does not expose it.
-- Dropping last quarter's data turns into a multi-hour `DELETE` job instead of a metadata change.
+- Dropping last quarter's data turns into a multi-hour [`DELETE` job](./data-update-delete) instead of a metadata change.
 
 Partitioning solves the first and third. Bucketing solves the second. Between them, they decide where each row lives and which BEs touch it at query time.
 
-## What it is
+## What it is {#what}
 
 Partitioning and bucketing form Doris's two-level physical layout. The `PARTITION BY` clause divides the table into disjoint subsets by a column value (Range or List), and `DISTRIBUTED BY` further shards each partition into a fixed number of tablets, the unit of replication and parallelism. A row first finds its partition by value, then its tablet by hash (or random assignment).
 
@@ -49,7 +48,7 @@ Partitioning and bucketing form Doris's two-level physical layout. The `PARTITIO
 - **`DISTRIBUTED BY RANDOM BUCKETS N`**: rows scattered across buckets without a key. Avoids skew, but no bucket pruning. Duplicate-Key tables only.
 - **`BUCKETS AUTO`**: the FE picks the bucket count from `estimate_partition_size`, BE count, and disk count. Set per partition.
 
-## How it works
+## How it works {#how}
 
 A row's path from `INSERT` to disk runs through both layers.
 
@@ -61,7 +60,7 @@ A row's path from `INSERT` to disk runs through both layers.
 
 The hierarchy on disk reads `Table → Partition → Tablet → Rowset → Segment`. Compaction and replication operate at the tablet level, so the partition and bucket numbers govern both query parallelism and operational cost. See [Data Pruning](./data-pruning) for the layered pruning chain that runs after the planner picks the surviving partitions and tablets.
 
-## Quick start
+## Quick start {#quick-start}
 
 ```sql
 CREATE TABLE orders (
@@ -94,7 +93,7 @@ WHERE order_date >= '2026-05-01' AND user_id = 200;
 
 Two months of data produced two partitions automatically. The planner kept one of those partitions on the date predicate, and one tablet out of sixteen on the `user_id` equality, so the query reads 1/32 of the table. Writes spread across all sixteen tablets, so a single load uses sixteen BE workers in parallel.
 
-## When to use it
+## When to use it {#when}
 
 **Good fit**
 
@@ -113,7 +112,7 @@ Two months of data produced two partitions automatically. The planner kept one o
 - Tiny tablets in the megabytes. Each tablet costs FE metadata and a compaction loop. Aim for 1 GB to 10 GB compressed per tablet (Unique-Key tables stay under 10 GB).
 - Random bucketing on Unique or Aggregate tables. Random distribution breaks merge correctness; only Duplicate tables accept it.
 
-## Further reading
+## Further reading {#further-reading}
 
 - [Basic Concepts: Partition + Bucket walkthrough with diagrams](../table-design/data-partitioning/basic-concepts)
 - [Manual Partitioning: Range, List, and the four Range forms](../table-design/data-partitioning/manual-partitioning)

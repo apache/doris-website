@@ -20,13 +20,12 @@ featureCard:
     - real-time-ingest
 ---
 
-> **TL;DR** Stream Load lets a client `curl` (or any HTTP library) push a file or a stream of bytes into a Doris table over a single PUT request. The FE redirects the request to a BE, the BE acts as the coordinator, parses CSV/JSON/Parquet/ORC, writes to the target tablets, and returns a JSON body that tells the caller whether the whole batch committed. One label dedupes retries, one transaction makes the batch atomic, and the response carries the row counts and per-phase timings.
+> **TL;DR** Stream Load lets a client `curl` (or any HTTP library) push a file or a stream of bytes into a Doris table over a single PUT request. The FE redirects the request to a BE, the BE acts as the coordinator, parses CSV/JSON/Parquet/ORC, writes to the target tablets, and returns a JSON body that tells the caller whether the whole batch committed. One label dedupes retries, one [transaction](./load-transaction) makes the batch atomic, and the response carries the row counts and per-phase timings.
 
-![Stream Load hero illustration](/images/next/key-features/stream-load.jpg)
+![Apache Doris Stream Load: Synchronous HTTP PUT ingest for CSV, JSON, Parquet, and ORC, with label-based deduplication and atomic per-batch commit.](/images/next/key-features/stream-load.jpg)
+## Why it matters {#why}
 
-## Why it matters
-
-A lot of real-time writes into a warehouse start out as a script that pushes a file. The script lives inside a Flink sink, a Kafka consumer, an `rsync` cron, or a microservice that just produced a few thousand events. Whoever wrote the script wants to send the bytes, get an answer on the same connection, and know that a retry is safe.
+A lot of real-time writes into a warehouse start out as a script that pushes a file. The script lives inside a Flink sink, a [Kafka consumer](./kafka-cdc-integration), an `rsync` cron, or a microservice that just produced a few thousand events. Whoever wrote the script wants to send the bytes, get an answer on the same connection, and know that a retry is safe.
 
 - A Flink job needs to flush its current checkpoint to Doris and learn whether the commit succeeded before it advances offsets.
 - An ETL script has a 200 MB CSV from yesterday's export and wants the rows visible before the morning report runs.
@@ -34,7 +33,7 @@ A lot of real-time writes into a warehouse start out as a script that pushes a f
 
 Stream Load covers that shape of write directly. One HTTP PUT, one label, one transaction, one synchronous response on the same socket.
 
-## What it is
+## What it is {#what}
 
 Stream Load is a synchronous HTTP load endpoint exposed by every Doris node. The client sends an HTTP PUT to either an FE or a BE; the FE redirects to a BE in round-robin order, and the chosen BE becomes the coordinator for that load. The coordinator parses the request body, distributes rows to the BEs that own each tablet, opens one transaction with the FE, commits when every BE acks, and returns a JSON body on the same socket. Doris has supported CSV since the beginning and now also accepts JSON, Parquet, ORC, and CSV-with-header variants.
 
@@ -46,7 +45,7 @@ Stream Load is a synchronous HTTP load endpoint exposed by every Doris node. The
 - **`Expect: 100-continue`**: required header. The client posts the headers first, lets the server check auth and start a transaction, then sends the body.
 - **`max_filter_ratio`**: the per-load tolerance for malformed rows. Defaults to 0, so one bad row fails the batch.
 
-## How it works
+## How it works {#how}
 
 1. **Client sends PUT to FE (or BE).** The headers carry the label, format, column mapping, filters, and timeouts. The body is the file or stream. `Expect: 100-continue` lets the server reject the request before the body is uploaded.
 2. **FE picks a coordinator BE and redirects.** The FE returns an HTTP 307 to a BE chosen in round-robin order. A client that already knows a healthy BE can skip this hop and PUT to the BE directly.
@@ -56,7 +55,7 @@ Stream Load is a synchronous HTTP load endpoint exposed by every Doris node. The
 
 The whole sequence is one HTTP request from the client's point of view. If the client retries with the same label after a successful commit, the FE rejects the retry with `Label Already Exists`; that is the at-most-once guarantee.
 
-## Quick start
+## Quick start {#quick-start}
 
 ```shell
 # Push a CSV directly to Doris over HTTP PUT.
@@ -86,7 +85,7 @@ curl --location-trusted -u root: \
 
 `Status: Success` means the batch committed and the rows are queryable. Resending the same `curl` returns `Status: Label Already Exists` and writes nothing, so a client that retries on a network blip will not double-load.
 
-## When to use it
+## When to use it {#when}
 
 **Good fit**
 
@@ -103,7 +102,7 @@ curl --location-trusted -u root: \
 - Stream Load 2PC against Merge-on-Write Unique Key tables **in cloud / storage-compute-separated deployments**. The BE rejects this combination with `Status::NotSupported`. On-prem (shared-nothing) clusters allow it, and the regression suite covers it.
 - Loads that need server-side recording out of the box. By default, Doris does not log Stream Load history; turn on `enable_stream_load_record` in `be.conf` if `SHOW STREAM LOAD` should return anything.
 
-## Further reading
+## Further reading {#further-reading}
 
 - [Stream Load HTTP reference: every header, the redirect rules, and the full response body](../data-operate/import/import-way/stream-load-manual)
 - [Group Commit: server-side merge for high-frequency Stream Loads that hit `-235`](./group-commit)

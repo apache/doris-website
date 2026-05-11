@@ -19,11 +19,10 @@ featureCard:
     - semi-structured
 ---
 
-> **TL;DR** `VARIANT` is a column type for JSON whose shape changes over time. On write, Doris parses each document, infers a type per JSON path, and persists hot paths as their own columnar subcolumns. Filters and aggregations on `v['user_id']` then read one column instead of parsing the whole document. The type was inspired by Snowflake and ClickHouse VARIANT, and went GA in Apache Doris 2.1.0 (March 2024).
+> **TL;DR** `VARIANT` is a column type for JSON whose shape changes over time. On write, Doris parses each document, infers a type per JSON path, and persists hot paths as their own [columnar subcolumns](./columnar-storage). Filters and aggregations on `v['user_id']` then read one column instead of parsing the whole document. The type was inspired by Snowflake and ClickHouse VARIANT, and went GA in Apache Doris 2.1.0 (March 2024).
 
-![VARIANT Data Type hero illustration](/images/next/key-features/variant-data-type.jpg)
-
-## Why it matters
+![Apache Doris VARIANT Data Type: A column type that ingests JSON without a fixed schema, then stores hot paths as native columnar subcolumns for column-store-speed analytics.](/images/next/key-features/variant-data-type.jpg)
+## Why it matters {#why}
 
 Storing JSON in an OLAP system has been a long compromise.
 
@@ -32,7 +31,7 @@ Storing JSON in an OLAP system has been a long compromise.
 
 `VARIANT` removes the choice. You declare one column, write JSON into it, and Doris quietly turns the hot paths into real columnar storage. Queries stay in SQL; on disk the table looks a lot like one you would have designed by hand.
 
-## What it is
+## What it is {#what}
 
 `VARIANT` is a semi-structured column type backed by Doris's `DataTypeVariant` and `ColumnVariant` (formerly `ColumnObject`, modeled on ClickHouse's design). It accepts any valid JSON value: scalars, one-dimensional arrays, and nested objects. As rows arrive, the writer builds a prefix tree of paths, infers a type per path, and writes each path as its own page-encoded, page-indexed column inside the segment. You query JSON; on disk you get one subcolumn per path.
 
@@ -44,7 +43,7 @@ Storing JSON in an OLAP system has been a long compromise.
 - **`Sparse column`**: a shared fallback column where long-tail paths land when the path count exceeds the subcolumn budget. One physical column, many logical paths.
 - **`Type promotion`**: the rule that decides what to do when the same path arrives as `INT` in one row and `STRING` in another. Compatible types widen (`TINYINT` to `BIGINT`); incompatible types fall back to `JSONB`.
 
-## How it works
+## How it works {#how}
 
 For one path, the lifecycle on disk:
 
@@ -56,7 +55,7 @@ For one path, the lifecycle on disk:
 
 Inverted index works on subpaths the same way. `INDEX idx_v(v) USING INVERTED PROPERTIES("parser" = "english")` makes every text subcolumn searchable, and a Schema Template lets you pin an index to one specific path.
 
-## Quick start
+## Quick start {#quick-start}
 
 ```sql
 CREATE TABLE github_events (
@@ -92,7 +91,7 @@ GROUP BY action;
 
 The filter reads one subcolumn, hits the inverted index, and never touches the `commits` array. Run `SET describe_extend_variant_column = true; DESC github_events;` to see the inferred subcolumns (`payload.action`, `payload.commits`, `payload.issue.number`, ...) as if you had declared them by hand.
 
-## When to use it
+## When to use it {#when}
 
 **Good fit**
 
@@ -109,12 +108,12 @@ The filter reads one subcolumn, hits the inverted index, and never touches the `
 - Fixed shapes you already know at design time. If every row has exactly `{a, b, c}` and the types never change, [`STRUCT`](../sql-manual/basic-element/sql-data-types/semi-structured/STRUCT) is a better contract: it forbids unexpected fields, where `VARIANT` silently absorbs them.
 - Very wide JSON (10k+ paths) without tuning. Default subcolumnization caps at 2048 paths. Beyond that, plan for sparse columns or DOC mode and read the [VARIANT Workload Guide](../sql-manual/basic-element/sql-data-types/semi-structured/variant-workload-guide) before loading production data.
 
-## Performance / numbers
+## Performance / numbers {#performance}
 
 - **ClickBench, 43 queries** on a 16-core / 64 GB EC2 instance: VARIANT used 12.7 GB versus 35.7 GB for JSON (~65% less), with hot-run queries about 8x faster than JSON and within ~10% of predefined static columns. Source: [Variant in Apache Doris 2.1.0](/blog/variant-in-apache-doris-2.1/).
 - **GuanceDB** migrating observability from Elasticsearch to Doris on VARIANT: machine cost down 70%, overall query speed ~2x, simple queries 4x+ faster. Source: same post.
 
-## Further reading
+## Further reading {#further-reading}
 
 - [VARIANT SQL reference: full syntax, type rules, indexes, configuration](../sql-manual/basic-element/sql-data-types/semi-structured/VARIANT)
 - [VARIANT Workload Guide: when to pick default, sparse, DOC mode, or Schema Template](../sql-manual/basic-element/sql-data-types/semi-structured/variant-workload-guide)

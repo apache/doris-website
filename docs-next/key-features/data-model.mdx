@@ -19,13 +19,12 @@ featureCard:
     - table-design
 ---
 
-> **TL;DR** Every Doris OLAP table picks one of three models when you create it: Duplicate Key keeps every row, Unique Key keeps the latest row per primary key, and Aggregate Key folds rows together by per-column functions like `SUM`. The `KEY(...)` clause names the columns Doris sorts on, and in Unique and Aggregate models those same columns also enforce uniqueness. The model is fixed at table creation, so the choice up front decides what writes, updates, and queries you can run for the life of the table.
+> **TL;DR** Every Doris OLAP table picks one of three models when you create it: Duplicate Key keeps every row, Unique Key keeps the latest row per primary key, and Aggregate Key folds rows together by [per-column functions like `SUM`](./preaggregation-and-rollup). The `KEY(...)` clause names the columns Doris sorts on, and in Unique and Aggregate models those same columns also enforce uniqueness. The model is fixed at table creation, so the choice up front decides what writes, updates, and queries you can run for the life of the table.
 
-![Data Model hero illustration](/images/next/key-features/data-model.jpg)
+![Apache Doris Data Model: Doris's three table models (Duplicate, Unique, Aggregate) decide how rows are stored, deduplicated, and sorted. Fixed at table creation.](/images/next/key-features/data-model.jpg)
+## Why it matters {#why}
 
-## Why it matters
-
-The first decision in any Doris schema is which table model to use, and it is the one decision you cannot reverse. `ALTER TABLE` can add columns, drop columns, repartition, and swap encodings. It cannot turn a Duplicate table into a Unique table. If you get the model wrong, the fix is `CREATE TABLE` and a full reload.
+The first decision in any Doris schema is which table model to use, and it is the one decision you cannot reverse. `ALTER TABLE` can add columns, drop columns, [repartition](./partitioning-and-bucketing), and swap encodings. It cannot turn a Duplicate table into a Unique table. If you get the model wrong, the fix is `CREATE TABLE` and a full reload.
 
 - A logs table created as Aggregate loses the raw rows and cannot answer detail queries.
 - An orders table created as Duplicate rejects `UPDATE`, so a CDC pipeline has nowhere to land row changes.
@@ -33,7 +32,7 @@ The first decision in any Doris schema is which table model to use, and it is th
 
 The model decides whether duplicate keys are allowed, what `UPDATE` and `DELETE` mean, and what the storage engine does with rows that share a key. Pick by what the data is (raw events, current state, or pre-aggregated facts), not by the shape of the dashboard you are building this week.
 
-## What it is
+## What it is {#what}
 
 A Doris table model is the contract the storage engine enforces on rows that share the same key columns. Doris ships three: `DUPLICATE KEY`, `UNIQUE KEY`, and `AGGREGATE KEY`. The FE catalog calls them `DUP_KEYS`, `UNIQUE_KEYS`, and `AGG_KEYS` (see `KeysType.java`). The clause sits right after the column list in `CREATE TABLE` and names the key columns:
 
@@ -52,7 +51,7 @@ A Doris table model is the contract the storage engine enforces on rows that sha
 - **Unique Key model**: one row per key. New writes overwrite older rows with the same key. Supports SQL `UPDATE`, `DELETE`, and partial-column upserts via Merge-on-Write.
 - **Aggregate Key model**: rows that share a key are merged using each value column's declared function. The merged row is what you read.
 
-## How it works
+## How it works {#how}
 
 Same DDL shape, three different per-row contracts.
 
@@ -64,7 +63,7 @@ Same DDL shape, three different per-row contracts.
 
 The model is written into tablet metadata and replicated across all replicas. There is no `ALTER TABLE ... CHANGE MODEL`. To change models you create a new table and reload.
 
-## Quick start
+## Quick start {#quick-start}
 
 ```sql
 -- Duplicate: keep every event, sort by (log_time, log_type)
@@ -96,7 +95,7 @@ SHOW CREATE TABLE ad_stats\G -- prints "AGGREGATE KEY(`dt`, `ad_id`)"
 
 Identical column lists, but the storage engine treats writes very differently. Insert the same row into `logs` twice and you get two rows. Do the same on `orders` and you get one. Insert two rows into `ad_stats` with matching `(dt, ad_id)` and the `clicks` column sums.
 
-## When to use it
+## When to use it {#when}
 
 **Good fit**
 
@@ -114,7 +113,7 @@ Identical column lists, but the storage engine treats writes very differently. I
 - Duplicate for tables that need `UPDATE`. The statement is rejected; reload through ingestion, or pick Unique.
 - Aggregate for tables that need `UPDATE` or `DELETE` on value columns. Aggregate's `DELETE` predicate is restricted to key columns because the engine has no way to evaluate value-column conditions before aggregation.
 
-## Further reading
+## Further reading {#further-reading}
 
 - [Table Model Overview: capability matrix and decision table](../table-design/data-model/intro)
 - [Duplicate Key Model: append-only storage and sort key tuning](../table-design/data-model/duplicate)
