@@ -1,7 +1,18 @@
 ---
 title: Vector Index
 description: A native ANN index on ARRAY<FLOAT> columns. Build it inside a Doris table and run millisecond TopN vector search next to your SQL analytics.
+keywords:
+  - vector index
+  - ANN index
+  - ARRAY FLOAT
+  - TopN search
+  - embedding search
+  - Apache Doris vector search
 slug: /key-features/vector-index
+image: /images/next/key-features/vector-index.jpg
+last_update:
+  date: 2026-05-10
+  author: Apache Doris
 featureCard:
   tags:
     - search
@@ -76,7 +87,7 @@ FROM docs ORDER BY dist LIMIT 3;
 +----+--------------------+
 ```
 
-The query against `id=1` is exact (distance 0). The ANN index ranks the two close neighbors first and the outlier last. The same query shape against the SIFT-1M dataset (1 million 128-dim vectors) runs in about 20 ms with the index, versus about 290 ms without; both numbers are from the [Vector Search overview](../table-design/index/vector-index/overview.md).
+The query against `id=1` is exact (distance 0). The ANN index ranks the two close neighbors first and the outlier last. The same query shape against the SIFT-1M dataset (1 million 128-dim vectors) runs in about 20 ms with the index, versus about 290 ms without; both numbers are from the [Vector Search overview](../table-design/index/vector-index/overview).
 
 ## When to use it
 
@@ -85,7 +96,7 @@ The query against `id=1` is exact (distance 0). The ANN index ranks the two clos
 - RAG retrieval where the same table also holds tenant id, document type, time, and other filter columns. You want the filter and the vector lookup in one query.
 - Recommendation recall and "find similar" features where embeddings live next to product or content metadata that already drives the rest of your dashboards.
 - Anomaly detection or "look for everything within distance X" workloads, served by approximate range search (`WHERE l2_distance_approximate(...) > 300`).
-- Hybrid search that mixes `MATCH_*` text predicates with vector ranking. The inverted index pre-filters; the ANN index ranks. See [Hybrid Search](./hybrid-search.mdx).
+- Hybrid search that mixes `MATCH_*` text predicates with vector ranking. The inverted index pre-filters; the ANN index ranks. See [Hybrid Search](./hybrid-search).
 
 **Not a good fit**
 
@@ -105,14 +116,14 @@ The numbers below come from the project's published benchmark on Cohere-MEDIUM-1
 | 240 | HNSW + SQ INT8 | 3,189 | 75 ms | 160 ms | 88.3% |
 | 240 | Brute force (no index) | 3.7 | 25.6 s | 29.4 s | 100% |
 
-Source: [Vector index performance](../table-design/index/vector-index/performance.md). Treat these as a reference point, not as a guarantee for your workload. The same page reports that SQ8 quantization shrinks the index to about a third of FLAT, with the small recall hit you can see above.
+Source: [Vector index performance](../table-design/index/vector-index/performance). Treat these as a reference point, not as a guarantee for your workload. The same page reports that SQ8 quantization shrinks the index to about a third of FLAT, with the small recall hit you can see above.
 
 ## Further reading
 
-- [Hybrid Search](./hybrid-search.mdx): how to combine the ANN index with the inverted index in one SQL statement.
-- [Vector Search overview](../table-design/index/vector-index/overview.md): full reference for index properties, query patterns, and limits.
-- [HNSW deep dive](../table-design/index/vector-index/hnsw.md): how `max_degree`, `ef_construction`, and `ef_search` trade recall against latency.
-- [IVF on-disk](../table-design/index/vector-index/ivf-on-disk.md): the option to use when the vector set no longer fits in BE memory.
-- [Practical guide](../table-design/index/vector-index/practical-guide.md): end-to-end walkthrough including data prep, loading, and tuning.
-- [Embedding](./embedding.mdx): the `EMBED()` SQL function that turns text and media into the `ARRAY<FLOAT>` vectors this index reads from.
-- [AI overview](../ai/ai-overview.md): how vector search fits with the rest of Doris's AI features.
+- [Hybrid Search](./hybrid-search): how to combine the ANN index with the inverted index in one SQL statement.
+- [Vector Search overview](../table-design/index/vector-index/overview): full reference for index properties, query patterns, and limits.
+- [HNSW deep dive](../table-design/index/vector-index/hnsw): how `max_degree`, `ef_construction`, and `ef_search` trade recall against latency.
+- [IVF on-disk](../table-design/index/vector-index/ivf-on-disk): the option to use when the vector set no longer fits in BE memory.
+- [Practical guide](../table-design/index/vector-index/practical-guide): end-to-end walkthrough including data prep, loading, and tuning.
+- [Embedding](./embedding): the `EMBED()` SQL function that turns text and media into the `ARRAY<FLOAT>` vectors this index reads from.
+- [AI overview](../ai/ai-overview): how vector search fits with the rest of Doris's AI features.

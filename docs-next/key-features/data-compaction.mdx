@@ -1,7 +1,18 @@
 ---
 title: Data Compaction
 description: Background merging that keeps Doris fast under high-frequency loads, with policies tuned for general OLAP and append-only time-series workloads.
+keywords:
+  - compaction
+  - cumulative compaction
+  - base compaction
+  - time-series compaction
+  - rowset merge
+  - Apache Doris storage maintenance
 slug: /key-features/data-compaction
+image: /images/next/key-features/data-compaction.jpg
+last_update:
+  date: 2026-05-10
+  author: Apache Doris
 featureCard:
   tags:
     - storage
@@ -85,7 +96,7 @@ You've created a partitioned log table that uses the time-series policy: small r
 
 **Not a good fit**
 
-- High-frequency single-row inserts as a way to "stress test compaction". You'll just create the version-pileup pain you're trying to study. Use [Group Commit](../data-operate/import/load-best-practices/group-commit-manual.md) on the load side instead.
+- High-frequency single-row inserts as a way to "stress test compaction". You'll just create the version-pileup pain you're trying to study. Use [Group Commit](../data-operate/import/load-best-practices/group-commit-manual) on the load side instead.
 - Disabling auto-compaction in production to "save CPU". Tablets accumulate versions silently and then loads start failing with -235. Tune the thread counts (`max_cumu_compaction_threads`, `max_base_compaction_threads`) instead.
 - Mixing the `time_series` policy with workloads that update or delete rows by primary key. The policy assumes append-only behavior; for Unique Key tables with frequent updates, stick with `size_based`.
 - Treating compaction as a fix for bad bucketing. If a single tablet is hot enough to constantly trail in version count, the answer is more buckets, not more compaction threads.
@@ -97,8 +108,8 @@ You've created a partitioned log table that uses the time-series policy: small r
 
 ## Further reading
 
-- [Vertical Compaction](./vertical-compaction.mdx): column-group merging that cuts compaction memory by about 10x and speeds up wide-table merges by roughly 15%.
-- [Compaction principles, types, and scheduling](../admin-manual/trouble-shooting/compaction-principles.md)
-- [Compaction tuning: vertical, segment, single-replica, time-series](../admin-manual/trouble-shooting/compaction.md)
-- [`ADMIN COMPACT TABLE` syntax reference](../sql-manual/sql-statements/table-and-view/data-and-status-management/COMPACT-TABLE.md)
+- [Vertical Compaction](./vertical-compaction): column-group merging that cuts compaction memory by about 10x and speeds up wide-table merges by roughly 15%.
+- [Compaction principles, types, and scheduling](../admin-manual/trouble-shooting/compaction-principles)
+- [Compaction tuning: vertical, segment, single-replica, time-series](../admin-manual/trouble-shooting/compaction)
+- [`ADMIN COMPACT TABLE` syntax reference](../sql-manual/sql-statements/table-and-view/data-and-status-management/COMPACT-TABLE)
 - [Understanding Data Compaction in 3 Minutes (blog)](https://doris.apache.org/blog/Understanding-Data-Compaction-in-3-Minutes/)

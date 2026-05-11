@@ -1,7 +1,19 @@
 ---
 title: Partitioning and Bucketing
-description: Doris's two-level data sharding. Partitions split a table by column ranges or lists for pruning and lifecycle; buckets shard each partition into tablets for parallel reads and writes.
+description: Doris's two-level data sharding. Partitions split a table by column for pruning; buckets shard each partition into tablets for parallel reads.
+keywords:
+  - partitioning
+  - bucketing
+  - tablet
+  - range partition
+  - list partition
+  - hash bucket
+  - Apache Doris table design
 slug: /key-features/partitioning-and-bucketing
+image: /images/next/key-features/partitioning-and-bucketing.jpg
+last_update:
+  date: 2026-05-10
+  author: Apache Doris
 featureCard:
   tags:
     - table-design
@@ -47,7 +59,7 @@ A row's path from `INSERT` to disk runs through both layers.
 4. **Prune at query time (FE).** `PruneOlapScanPartition` matches `WHERE` predicates against the partition tree; `PruneOlapScanTablet` extracts equality predicates on the bucket key and asks `HashDistributionPruner` which buckets they hash to. EXPLAIN shows the survivors as `partitions=1/365` and `tablets=1/32`.
 5. **Scan the survivors in parallel (BE).** Each surviving tablet is a parallel scan unit. The pipeline engine fans them out across BE cores, so a query that touches 16 tablets on 4 BEs runs 16-way parallel without any session tuning.
 
-The hierarchy on disk reads `Table → Partition → Tablet → Rowset → Segment`. Compaction and replication operate at the tablet level, so the partition and bucket numbers govern both query parallelism and operational cost. See [Data Pruning](./data-pruning.mdx) for the layered pruning chain that runs after the planner picks the surviving partitions and tablets.
+The hierarchy on disk reads `Table → Partition → Tablet → Rowset → Segment`. Compaction and replication operate at the tablet level, so the partition and bucket numbers govern both query parallelism and operational cost. See [Data Pruning](./data-pruning) for the layered pruning chain that runs after the planner picks the surviving partitions and tablets.
 
 ## Quick start
 
@@ -90,7 +102,7 @@ Two months of data produced two partitions automatically. The planner kept one o
 - High-concurrency point queries on `user_id`, `device_id`, or any other high-cardinality equality column. Hash bucket on that column and a single query touches one tablet.
 - Multi-tenant or per-region tables with a stable enumerated dimension. List partition by tenant, then offboard a tenant by dropping its partition.
 - Tables loaded incrementally where you cannot predict the value range. `AUTO PARTITION BY RANGE(date_trunc(...))` creates partitions on first write, so you skip the partition-management DDL entirely.
-- Wide-fanout joins between two large tables on the same key. Match the bucket key on both tables and enable [Colocate Join](../query-acceleration/colocation-join.md) to skip the shuffle.
+- Wide-fanout joins between two large tables on the same key. Match the bucket key on both tables and enable [Colocate Join](../query-acceleration/colocation-join) to skip the shuffle.
 
 **Not a good fit**
 
@@ -103,9 +115,9 @@ Two months of data produced two partitions automatically. The planner kept one o
 
 ## Further reading
 
-- [Basic Concepts: Partition + Bucket walkthrough with diagrams](../table-design/data-partitioning/basic-concepts.mdx)
-- [Manual Partitioning: Range, List, and the four Range forms](../table-design/data-partitioning/manual-partitioning.md)
-- [Auto Partitioning: on-demand partition creation at write time](../table-design/data-partitioning/auto-partitioning.md)
-- [Data Bucketing: choosing the method, the key, and the bucket count](../table-design/data-partitioning/data-bucketing.md)
-- [Data Pruning: the layered pruning chain that runs after partition and tablet selection](./data-pruning.mdx)
-- [`ALTER TABLE PARTITION` reference](../sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-PARTITION.md)
+- [Basic Concepts: Partition + Bucket walkthrough with diagrams](../table-design/data-partitioning/basic-concepts)
+- [Manual Partitioning: Range, List, and the four Range forms](../table-design/data-partitioning/manual-partitioning)
+- [Auto Partitioning: on-demand partition creation at write time](../table-design/data-partitioning/auto-partitioning)
+- [Data Bucketing: choosing the method, the key, and the bucket count](../table-design/data-partitioning/data-bucketing)
+- [Data Pruning: the layered pruning chain that runs after partition and tablet selection](./data-pruning)
+- [`ALTER TABLE PARTITION` reference](../sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-PARTITION)

@@ -1,7 +1,19 @@
 ---
 title: LLM SQL Functions
-description: Doris exposes a family of AI_* SQL functions that send column values to an LLM provider and return the result inline, so classification, extraction, and summarization stay inside SQL.
+description: AI_* SQL functions in Doris send column values to an LLM and return the result inline, so classification, extraction, and summarization stay in SQL.
+keywords:
+  - AI SQL functions
+  - LLM in SQL
+  - AI_CLASSIFY
+  - AI_EXTRACT
+  - AI_SUMMARIZE
+  - Apache Doris AI
+  - Snowflake Cortex alternative
 slug: /key-features/llm-sql-functions
+image: /images/next/key-features/llm-sql-functions.jpg
+last_update:
+  date: 2026-05-10
+  author: Apache Doris
 featureCard:
   tags:
     - ai
@@ -84,19 +96,19 @@ The query runs two LLM round trips, one per function, with both rows batched int
 
 **Not a good fit**
 
-- Calling `AI_*` per row on every dashboard refresh. Each row is one provider call, and the bill scales with row count and refresh rate. Materialize the result into a column, index it, and query the column. See [Incremental Materialized View](./incremental-materialized-view.mdx) for the precompute path.
+- Calling `AI_*` per row on every dashboard refresh. Each row is one provider call, and the bill scales with row count and refresh rate. Materialize the result into a column, index it, and query the column. See [Incremental Materialized View](./incremental-materialized-view) for the precompute path.
 - Interactive sub-second queries. LLM inference latency is hundreds of milliseconds at best, and rate limits make tail latency worse. Use `AI_*` for batch and ETL, not for queries that block a user clicking a button.
-- Retrieval problems where you need to find similar items. An embedding column plus a [vector index](./vector-index.mdx) and `cosine_distance` is faster, cheaper, and reproducible. See [Embedding](./embedding.mdx) for the SQL-native path.
+- Retrieval problems where you need to find similar items. An embedding column plus a [vector index](./vector-index) and `cosine_distance` is faster, cheaper, and reproducible. See [Embedding](./embedding) for the SQL-native path.
 - Anything that needs strict reproducibility. Provider responses are non-deterministic unless you pin `temperature = 0`, and even then minor model-side updates change outputs. Snapshot the result instead of recomputing it on each query.
 - Workloads that need a provider outside the supported list. Anything beyond the twelve `provider_type` values has to expose an OpenAI-, Anthropic-, or Gemini-compatible API, or run as a `local` endpoint.
 
 ## Further reading
 
-- [AI on Doris](../ai/ai-overview.md): the full AI feature surface, including how `AI_*` functions, embeddings, vector search, and the MCP server fit together.
-- [AI Functions overview](../sql-manual/sql-functions/ai-functions/overview.md): every supported provider, the full property list for `CREATE RESOURCE`, and one-off examples per function.
-- [Embedding](./embedding.mdx): `EMBED()` shares the same AI resource mechanism and is the right tool when the next step is vector search.
-- [Hybrid Search](./hybrid-search.mdx): how to pair LLM-generated columns with full-text and ANN predicates in the same query.
+- [AI on Doris](../ai/ai-overview): the full AI feature surface, including how `AI_*` functions, embeddings, vector search, and the MCP server fit together.
+- [AI Functions overview](../sql-manual/sql-functions/ai-functions/overview): every supported provider, the full property list for `CREATE RESOURCE`, and one-off examples per function.
+- [Embedding](./embedding): `EMBED()` shares the same AI resource mechanism and is the right tool when the next step is vector search.
+- [Hybrid Search](./hybrid-search): how to pair LLM-generated columns with full-text and ANN predicates in the same query.
 - [Snowflake Cortex AISQL reference](https://docs.snowflake.com/en/user-guide/snowflake-cortex/aisql): the closest analog for cross-warehouse comparison.
-- [MCP Server](./mcp-server.mdx): the other end of the AI surface, letting AI clients query Doris through Model Context Protocol tools.
-- [VARIANT Data Type](./variant-data-type.mdx): the natural home for JSON output produced by `AI_EXTRACT` and friends.
+- [MCP Server](./mcp-server): the other end of the AI surface, letting AI clients query Doris through Model Context Protocol tools.
+- [VARIANT Data Type](./variant-data-type): the natural home for JSON output produced by `AI_EXTRACT` and friends.
 - [Databricks AI Functions](https://docs.databricks.com/aws/en/large-language-models/ai-functions): another vendor's take on the same idea.

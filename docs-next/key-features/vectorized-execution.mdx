@@ -1,7 +1,17 @@
 ---
 title: Vectorized Execution
 description: Doris's column-batch SIMD execution engine, the substrate every operator runs on since v2.0 deleted the last row-based code path.
+keywords:
+  - vectorized execution
+  - columnar batch processing
+  - SIMD execution
+  - Apache Doris query engine
+  - block-based execution
 slug: /key-features/vectorized-execution
+image: /images/next/key-features/vectorized-execution.jpg
+last_update:
+  date: 2026-05-10
+  author: Apache Doris
 featureCard:
   tags:
     - query-acceleration
@@ -85,7 +95,7 @@ The aggregation runs column-at-a-time over 8,192-row Blocks. On a wide-table sca
 
 **Not a good fit**
 
-- Single-row primary-key lookups served at thousands of QPS. Per-Block setup cost works against you when the Block holds one row. Use the [High-Concurrency Point Query](./high-concurrency-point-query.mdx) path instead.
+- Single-row primary-key lookups served at thousands of QPS. Per-Block setup cost works against you when the Block holds one row. Use the [High-Concurrency Point Query](./high-concurrency-point-query) path instead.
 - Tuning `batch_size` for ad-hoc queries. The default of 4,096 was chosen for a reason, and changing it usually does nothing or makes things slightly worse. Reach for it only when profiling tells you the per-batch overhead is dominating, or when fragments are running out of memory.
 - Reading old advice that mentions `enable_vectorized_engine`. That session variable was demoted to a no-op in v1.2.1 and the underlying row-based code was deleted in v2.0. If a doc or blog post tells you to flip it, the doc is stale.
 - Confusing this feature with vector search. "Vectorized execution" is a query engine model. ANN-style vector search lives in a separate index family under `docs/ai/vector-search/`.
@@ -93,13 +103,13 @@ The aggregation runs column-at-a-time over 8,192-row Blocks. On a wide-table sca
 ## Performance
 
 - **3 to 5x faster than the prior version** when v1.1 made vectorized execution the default for all queries. Source: [Apache Doris 1.1.0 release notes](https://doris.apache.org/releases/v1.1/release-1.1.0/).
-- **5 to 10x improvement on wide-table aggregations**, attributed to the columnar memory layout combined with SIMD acceleration. Source: [Doris product concepts](../features-architecture/product-concepts.md).
+- **5 to 10x improvement on wide-table aggregations**, attributed to the columnar memory layout combined with SIMD acceleration. Source: [Doris product concepts](../features-architecture/product-concepts).
 
 ## Further reading
 
-- [Product concepts: Vectorized Execution Engine](../features-architecture/product-concepts.md)
-- [Pipeline execution engine](../query-acceleration/optimization-technology-principle/pipeline-execution-engine.md)
-- [System architecture overview](../features-architecture/system-architecture.md)
-- [Columnar Storage](./columnar-storage.mdx): the on-disk format whose pages and encodings feed directly into the vectorized columns.
-- [Parquet Reader Optimization](./parquet-reader-optimization.mdx): how external Parquet decoding lands straight in the vectorized engine without an Arrow round trip.
+- [Product concepts: Vectorized Execution Engine](../features-architecture/product-concepts)
+- [Pipeline execution engine](../query-acceleration/optimization-technology-principle/pipeline-execution-engine)
+- [System architecture overview](../features-architecture/system-architecture)
+- [Columnar Storage](./columnar-storage): the on-disk format whose pages and encodings feed directly into the vectorized columns.
+- [Parquet Reader Optimization](./parquet-reader-optimization): how external Parquet decoding lands straight in the vectorized engine without an Arrow round trip.
 - [Apache Doris 2.0 release notes (row-based engine removed)](https://doris.apache.org/blog/release-note-2.0.0/)

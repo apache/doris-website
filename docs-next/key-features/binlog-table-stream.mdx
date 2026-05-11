@@ -1,7 +1,20 @@
 ---
 title: Binlog / Table Stream
-description: A row-level change feed Doris tables will expose to downstream consumers, built on the same binlog that already powers Cross-Cluster Replication. Coming soon.
+description: A row-level change feed Doris tables will expose to downstream consumers, built on the binlog that powers Cross-Cluster Replication.
+keywords:
+  - binlog
+  - table stream
+  - row-level CDC
+  - change data capture
+  - Apache Doris CDC
+  - Cross-Cluster Replication
+  - STREAM object
 slug: /key-features/binlog-table-stream
+image: /images/next/key-features/binlog-table-stream.jpg
+last_update:
+  date: 2026-05-10
+  author: Apache Doris
+unlisted: true
 featureCard:
   tags:
     - cdc
@@ -9,12 +22,12 @@ featureCard:
     - coming-soon
 ---
 
-> **TL;DR** Table Stream is the upcoming public API for reading row-level changes (insert, update, delete) out of a Doris table, the way you read a MySQL binlog. The plumbing is already in the codebase: a row-format binlog, a `STREAM` object that pins offsets per partition, and consumption metadata. It is not GA yet. Today the same binlog powers [Cross-Cluster Replication](../admin-manual/data-admin/ccr/overview.md); for general CDC out of Doris, use the [Flink Doris Connector](../connection-integration/data-integration/flink-doris-connector.md). **Status: Coming Soon (Preview).**
+> **TL;DR** Table Stream is the upcoming public API for reading row-level changes (insert, update, delete) out of a Doris table, the way you read a MySQL binlog. The plumbing is already in the codebase: a row-format binlog, a `STREAM` object that pins offsets per partition, and consumption metadata. It is not GA yet. Today the same binlog powers [Cross-Cluster Replication](../admin-manual/data-admin/ccr/overview); for general CDC out of Doris, use the [Flink Doris Connector](../connection-integration/data-integration/flink-doris-connector). **Status: Coming Soon (Preview).**
 
 ![Binlog / Table Stream hero illustration](/images/next/key-features/binlog-table-stream.jpg)
 
 :::caution Status: Coming Soon
-The `STREAM` object, `binlog.format = ROW`, and the consumption metadata views described here are present in the Doris source tree but not yet released as a stable, user-facing API. Syntax and semantics may change before GA. Production CDC pipelines today should use [Kafka and CDC Integration](./kafka-cdc-integration.mdx) or [CCR](../admin-manual/data-admin/ccr/overview.md).
+The `STREAM` object, `binlog.format = ROW`, and the consumption metadata views described here are present in the Doris source tree but not yet released as a stable, user-facing API. Syntax and semantics may change before GA. Production CDC pipelines today should use [Kafka and CDC Integration](./kafka-cdc-integration) or [CCR](../admin-manual/data-admin/ccr/overview).
 :::
 
 ## Why it matters
@@ -93,16 +106,16 @@ WHERE STREAM_NAME = 'orders_cdc';
 
 **Not a good fit (especially today)**
 
-- Production CDC pipelines, right now. The `STREAM` object is in the source tree but not announced as GA. Use [Kafka and CDC Integration](./kafka-cdc-integration.mdx) instead.
-- Doris-to-Doris cross-cluster sync. [CCR](../admin-manual/data-admin/ccr/overview.md) ships today, handles DDL replay, and is the supported path. CCR uses `STATEMENT_AND_SNAPSHOT` binlog; Table Stream uses `ROW`.
+- Production CDC pipelines, right now. The `STREAM` object is in the source tree but not announced as GA. Use [Kafka and CDC Integration](./kafka-cdc-integration) instead.
+- Doris-to-Doris cross-cluster sync. [CCR](../admin-manual/data-admin/ccr/overview) ships today, handles DDL replay, and is the supported path. CCR uses `STATEMENT_AND_SNAPSHOT` binlog; Table Stream uses `ROW`.
 - Long-paused consumers on short binlog retention. If `LAG` outruns what `binlog.ttl_seconds` keeps, the stream goes stale and the consumer has to reseed.
 - Storage-compute decoupled clusters. CCR explicitly does not support it yet; Table Stream's support model there is still in flight.
 - Reading external catalog tables (Hive, Iceberg). Table Stream is scoped to internal OLAP tables only.
 
 ## Further reading
 
-- [Kafka and CDC Integration](./kafka-cdc-integration.mdx): the supported way to move change data into and around Doris today.
-- [Cross-Cluster Replication overview](../admin-manual/data-admin/ccr/overview.md): the existing binlog consumer, with the Syncer architecture and applicable scenarios.
-- [CCR feature matrix](../admin-manual/data-admin/ccr/feature.md): which DDL and DML operations the binlog already captures and replays, a preview of what a row-format stream will surface.
-- [CCR quickstart](../admin-manual/data-admin/ccr/quickstart.md): how `binlog.enable` and `enable_feature_binlog` get configured today.
-- [Data Update and Delete](./data-update-delete.mdx): how Unique Key Merge-on-Write tables represent the deletes and out-of-order updates a row stream will carry.
+- [Kafka and CDC Integration](./kafka-cdc-integration): the supported way to move change data into and around Doris today.
+- [Cross-Cluster Replication overview](../admin-manual/data-admin/ccr/overview): the existing binlog consumer, with the Syncer architecture and applicable scenarios.
+- [CCR feature matrix](../admin-manual/data-admin/ccr/feature): which DDL and DML operations the binlog already captures and replays, a preview of what a row-format stream will surface.
+- [CCR quickstart](../admin-manual/data-admin/ccr/quickstart): how `binlog.enable` and `enable_feature_binlog` get configured today.
+- [Data Update and Delete](./data-update-delete): how Unique Key Merge-on-Write tables represent the deletes and out-of-order updates a row stream will carry.

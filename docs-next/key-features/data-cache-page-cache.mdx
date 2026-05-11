@@ -1,7 +1,18 @@
 ---
 title: Data Cache & Page Cache
-description: "Two caching layers that absorb the cost of repeated lakehouse reads: a local-disk cache for remote file bytes and an in-memory cache for decompressed column pages."
+description: "Two caching layers for lakehouse reads: a local-disk cache for remote file bytes and an in-memory cache for decompressed column pages."
+keywords:
+  - data cache
+  - page cache
+  - lakehouse cache
+  - local disk cache
+  - decompressed page cache
+  - Apache Doris caching
 slug: /key-features/data-cache-page-cache
+image: /images/next/key-features/data-cache-page-cache.jpg
+last_update:
+  date: 2026-05-10
+  author: Apache Doris
 featureCard:
   tags:
     - lakehouse
@@ -106,9 +117,9 @@ The first run populated the Data Cache from S3. The second run answered the quer
 
 ## Further reading
 
-- [Data Cache reference](../lakehouse/data-cache.md): the full surface, including `WARM UP SELECT`, per-query limits, and admission control.
-- [File Cache (compute-storage decoupled)](../compute-storage-decoupled/file-cache/file-cache.md): the same machinery applied to internal tablets in cloud mode.
-- [Parquet Page Cache and other lakehouse tuning](../lakehouse/best-practices/optimization.md): the in-memory decompressed page cache for external Parquet files.
-- [Parquet Reader Optimization](./parquet-reader-optimization.mdx): the reader that decides which bytes to ask for in the first place. Caches and pruning compose.
-- [Query Cache](./query-cache.mdx) and [Condition Cache](./condition-cache.mdx): result-level and predicate-level caches that sit above the storage caches.
-- [WARM UP statement](../sql-manual/sql-statements/cluster-management/storage-management/WARM-UP.md): the SQL surface for pre-populating caches across compute groups.
+- [Data Cache reference](../lakehouse/data-cache): the full surface, including `WARM UP SELECT`, per-query limits, and admission control.
+- [File Cache (compute-storage decoupled)](../compute-storage-decoupled/file-cache/file-cache): the same machinery applied to internal tablets in cloud mode.
+- [Parquet Page Cache and other lakehouse tuning](../lakehouse/best-practices/optimization): the in-memory decompressed page cache for external Parquet files.
+- [Parquet Reader Optimization](./parquet-reader-optimization): the reader that decides which bytes to ask for in the first place. Caches and pruning compose.
+- [Query Cache](./query-cache) and [Condition Cache](./condition-cache): result-level and predicate-level caches that sit above the storage caches.
+- [WARM UP statement](../sql-manual/sql-statements/cluster-management/storage-management/WARM-UP): the SQL surface for pre-populating caches across compute groups.

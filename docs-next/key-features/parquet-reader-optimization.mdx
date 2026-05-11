@@ -1,7 +1,18 @@
 ---
 title: Parquet Reader Optimization
-description: A native C++ vectorized Parquet reader that prunes row groups and pages, decodes dictionaries directly, and reads payload columns only after filters resolve.
+description: A native C++ vectorized Parquet reader that prunes row groups and pages, decodes dictionaries directly, and reads payloads only after filters.
+keywords:
+  - Parquet reader
+  - row group pruning
+  - page pruning
+  - dictionary decode
+  - lazy materialization
+  - Apache Doris lakehouse
 slug: /key-features/parquet-reader-optimization
+image: /images/next/key-features/parquet-reader-optimization.jpg
+last_update:
+  date: 2026-05-10
+  author: Apache Doris
 featureCard:
   tags:
     - lakehouse
@@ -82,7 +93,7 @@ This path is used automatically whenever Doris reads Parquet, so the question is
 **Good fit**
 
 - Hive, Iceberg, Hudi, and Paimon catalogs whose data files are Parquet.
-- Direct file analysis through the [s3()](../lakehouse/file-analysis.md) and `hdfs()` TVFs.
+- Direct file analysis through the [s3()](../lakehouse/file-analysis) and `hdfs()` TVFs.
 - Selective queries on wide tables: predicate-heavy filters give lazy materialization the most to skip.
 - Equality and range predicates on columns that the writer recorded statistics for.
 - Dictionary-encoded string columns with point or `IN` predicates.
@@ -92,16 +103,16 @@ This path is used automatically whenever Doris reads Parquet, so the question is
 - Tables stored as thousands of tiny Parquet files. Each footer must be parsed and each chunk is at least one ranged read; per-file overhead dominates. Compact toward 128 MB to 1 GB files.
 - Files written without column statistics or PageIndex. The reader has nothing to prune on and falls back to full scans. Enable statistics in the writer (Spark 3.2+ and parquet-mr 1.11+ both write PageIndex).
 - Selective predicates inside deeply nested struct fields. Some optimizations (page index, dictionary filtering) are disabled for complex types; the reader walks the surviving rows in full. Flatten the access path or use top-level columns when possible.
-- DATETIME columns written as INT96 by older Hive writers. INT96 statistics are routinely corrupted, and the reader skips min/max pruning on them. If you control the writer, write INT64 timestamps. See the [Hive catalog notes](../lakehouse/catalogs/hive-catalog.mdx) on INT96.
+- DATETIME columns written as INT96 by older Hive writers. INT96 statistics are routinely corrupted, and the reader skips min/max pruning on them. If you control the writer, write INT64 timestamps. See the [Hive catalog notes](../lakehouse/catalogs/hive-catalog) on INT96.
 
 ## Further reading
 
-- [Parquet file format reference](../lakehouse/file-formats/parquet.md): the user-facing knobs (`enable_parquet_lazy_mat`, `enable_parquet_page_index`, buffer-size BE configs) and version availability.
-- [Analyzing files on S3/HDFS](../lakehouse/file-analysis.md): how to query Parquet files directly with the `s3()` and `hdfs()` TVFs.
-- [Data Pruning](./data-pruning.mdx): the broader story of how Doris skips reading data, of which the Parquet reader is one layer.
-- [Vectorized Execution](./vectorized-execution.mdx): the engine the reader decodes into, and why skipping the Arrow round trip matters.
-- [Data Cache](../lakehouse/data-cache.md): when to cache decoded Parquet pages locally so repeated scans skip the remote read entirely.
-- [Metadata Cache](./metadata-cache.mdx): the FE-side cache for schema, partition, and file lists that the Parquet reader's pruning depends on.
-- [Multi-Catalog](./multi-catalog.mdx): how Parquet tables on S3, HDFS, Hive, Iceberg, and Paimon plug into Doris in the first place.
-- [Catalog Integrations](./catalog-integrations.mdx): the per-source connector reference for the catalogs that hold Parquet files.
+- [Parquet file format reference](../lakehouse/file-formats/parquet): the user-facing knobs (`enable_parquet_lazy_mat`, `enable_parquet_page_index`, buffer-size BE configs) and version availability.
+- [Analyzing files on S3/HDFS](../lakehouse/file-analysis): how to query Parquet files directly with the `s3()` and `hdfs()` TVFs.
+- [Data Pruning](./data-pruning): the broader story of how Doris skips reading data, of which the Parquet reader is one layer.
+- [Vectorized Execution](./vectorized-execution): the engine the reader decodes into, and why skipping the Arrow round trip matters.
+- [Data Cache](../lakehouse/data-cache): when to cache decoded Parquet pages locally so repeated scans skip the remote read entirely.
+- [Metadata Cache](./metadata-cache): the FE-side cache for schema, partition, and file lists that the Parquet reader's pruning depends on.
+- [Multi-Catalog](./multi-catalog): how Parquet tables on S3, HDFS, Hive, Iceberg, and Paimon plug into Doris in the first place.
+- [Catalog Integrations](./catalog-integrations): the per-source connector reference for the catalogs that hold Parquet files.
 - [Building the next-generation data lakehouse (Apache Doris blog)](https://doris.apache.org/blog/Building-the-Next-Generation-Data-Lakehouse-10X-Performance/): the original public writeup of the native Parquet reader.

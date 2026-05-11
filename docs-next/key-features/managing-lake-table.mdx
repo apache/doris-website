@@ -1,7 +1,19 @@
 ---
 title: Managing Lake Tables
 description: Doris writes and manages Iceberg, Hive, and Paimon tables through SQL. CREATE, INSERT, UPDATE, DELETE, schema and partition evolution, branches, snapshots.
+keywords:
+  - lake table write
+  - Iceberg write
+  - Hive write
+  - Paimon write
+  - schema evolution
+  - Iceberg branch
+  - Apache Doris lakehouse
 slug: /key-features/managing-lake-table
+image: /images/next/key-features/managing-lake-table.jpg
+last_update:
+  date: 2026-05-10
+  author: Apache Doris
 featureCard:
   tags:
     - lakehouse
@@ -27,7 +39,7 @@ Doris does both sides. The same SQL that queries a Doris internal table can crea
 
 Managing Lake Tables is the write and lifecycle surface Doris exposes on top of an external catalog. After `CREATE CATALOG` connects Doris to HMS, Glue, REST, JDBC, S3 Tables, or DLF, the catalog becomes a writable namespace. Doris translates `CREATE TABLE`, `ALTER TABLE`, `INSERT`, `UPDATE`, `DELETE`, and `MERGE INTO` into the right manifest writes, snapshot commits, and metastore calls for each format.
 
-For the connection layer itself, see [Multi Catalog](./multi-catalog.mdx) and the [Lakehouse overview](../lakehouse/lakehouse-overview.md). This card is about what you do *after* the catalog is connected.
+For the connection layer itself, see [Multi Catalog](./multi-catalog) and the [Lakehouse overview](../lakehouse/lakehouse-overview). This card is about what you do *after* the catalog is connected.
 
 **Key terms**
 
@@ -82,7 +94,7 @@ The main branch keeps the production row, the dev branch carries an extra row, a
 
 **Good fit**
 
-- Federated ELT pipelines that read from JDBC or Kafka catalogs and land curated data into Iceberg or Hive without leaving Doris. See the [Lakehouse overview](../lakehouse/lakehouse-overview.md) for the write-back pattern.
+- Federated ELT pipelines that read from JDBC or Kafka catalogs and land curated data into Iceberg or Hive without leaving Doris. See the [Lakehouse overview](../lakehouse/lakehouse-overview) for the write-back pattern.
 - Team workflows that need git-style isolation on Iceberg: `ALTER TABLE ... CREATE BRANCH dev`, validate against the dev branch, then `EXECUTE fast_forward` to publish.
 - Time-travel reads and reproducible backfills with `FOR VERSION AS OF` or `FOR TIME AS OF` on Iceberg, Paimon, and Hudi.
 - Maintenance on a schedule: nightly `expire_snapshots`, hourly `rewrite_data_files` to compact small files from streaming jobs, periodic `rewrite_manifests` after big partition reshuffles.
@@ -90,7 +102,7 @@ The main branch keeps the production row, the dev branch carries an extra row, a
 
 **Not a good fit**
 
-- High-concurrency single-row OLTP-style updates. Lake commits are snapshot-based, so the per-statement overhead is too high. Use a Doris [Unique Key table](./data-update-delete.mdx) for that workload.
+- High-concurrency single-row OLTP-style updates. Lake commits are snapshot-based, so the per-statement overhead is too high. Use a Doris [Unique Key table](./data-update-delete) for that workload.
 - Real-time row-level upserts on Hive. Hive lacks delete files or merge-on-read. Use Iceberg V2 or V3, or Paimon primary-key tables, when CDC needs to land row by row.
 - Partition-targeted `INSERT INTO` on Hive. Doris writes to the partition based on column values, not on a `PARTITION (...)` clause; if you need explicit partition routing on Hive, use `INSERT OVERWRITE` or do the load through Spark.
 - Concurrent `INSERT OVERWRITE` on the same Hive partition from multiple writers. Hive has no atomic swap for partition data, so the result can be partial; serialize the writes or move that table to Iceberg.
@@ -98,9 +110,9 @@ The main branch keeps the production row, the dev branch carries an extra row, a
 
 ## Further reading
 
-- [Multi Catalog](./multi-catalog.mdx): how Doris federates external catalogs and routes queries across them.
-- [Iceberg catalog reference](../lakehouse/catalogs/iceberg-catalog.mdx): full DDL, DML, branch and tag, and table-action syntax with version notes.
-- [Hive catalog reference](../lakehouse/catalogs/hive-catalog.mdx): write semantics, transactional table support, concurrent-write rules.
-- [Paimon catalog reference](../lakehouse/catalogs/paimon-catalog.mdx): read, time travel, batch incremental, branch and tag, system tables.
-- [Lakehouse overview](../lakehouse/lakehouse-overview.md): where managed lake tables fit in the broader federated-analytics story.
-- [Data Update and Delete](./data-update-delete.mdx): the internal-table counterpart for high-frequency row-level changes.
+- [Multi Catalog](./multi-catalog): how Doris federates external catalogs and routes queries across them.
+- [Iceberg catalog reference](../lakehouse/catalogs/iceberg-catalog): full DDL, DML, branch and tag, and table-action syntax with version notes.
+- [Hive catalog reference](../lakehouse/catalogs/hive-catalog): write semantics, transactional table support, concurrent-write rules.
+- [Paimon catalog reference](../lakehouse/catalogs/paimon-catalog): read, time travel, batch incremental, branch and tag, system tables.
+- [Lakehouse overview](../lakehouse/lakehouse-overview): where managed lake tables fit in the broader federated-analytics story.
+- [Data Update and Delete](./data-update-delete): the internal-table counterpart for high-frequency row-level changes.

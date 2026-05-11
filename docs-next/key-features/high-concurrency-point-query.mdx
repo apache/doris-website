@@ -1,7 +1,18 @@
 ---
 title: High-Concurrency Point Query
 description: A short-circuit query path that turns Unique Key tables into a low-latency KV store, sustaining tens of thousands of QPS on primary-key equality lookups.
+keywords:
+  - point query
+  - primary key lookup
+  - short-circuit query
+  - key-value store
+  - Unique Key
+  - Apache Doris high concurrency
 slug: /key-features/high-concurrency-point-query
+image: /images/next/key-features/high-concurrency-point-query.jpg
+last_update:
+  date: 2026-05-10
+  author: Apache Doris
 featureCard:
   tags:
     - query-acceleration
@@ -87,15 +98,15 @@ The `SHORT-CIRCUIT` line is the one that matters. Without it, the same DDL plus 
 
 **Not a good fit**
 
-- Range queries (`k1 BETWEEN 1 AND 1000`). The short-circuit path requires equality on every key column. Run them through a normal scan and lean on [data pruning](./data-pruning.mdx).
+- Range queries (`k1 BETWEEN 1 AND 1000`). The short-circuit path requires equality on every key column. Run them through a normal scan and lean on [data pruning](./data-pruning).
 - Multi-row aggregations or joins. Even a `GROUP BY pk` disqualifies the rewrite. Run them as ordinary OLAP queries.
-- Lookups by a non-key column. Add a [secondary or inverted index](../table-design/index/index-overview.md), not row-store.
+- Lookups by a non-key column. Add a [secondary or inverted index](../table-design/index/index-overview), not row-store.
 - Tables you forgot to enable row-store on at create time. `store_row_column` is only settable in `CREATE TABLE`. If you need it on an existing table, recreate and reload.
 - Pure write-heavy workloads with rare reads. Row-format storage inflates space and write IO. If you barely read by key, skip it and live with column-only storage.
 
 ## Performance and verification
 
-Doris reports that enabling server-side `PreparedStatement` on top of the short-circuit path delivers more than a 4x throughput improvement when FE CPU is the bottleneck. This is the same 4x cited from the prepared-statement angle in the [Prepared Statement card](./prepared-statement.mdx) — one combined gain, not two stackable ones. Numbers depend on row width, row cache hit rate, and how many FE Observers absorb traffic, so treat that as a planning floor, not a benchmark.
+Doris reports that enabling server-side `PreparedStatement` on top of the short-circuit path delivers more than a 4x throughput improvement when FE CPU is the bottleneck. This is the same 4x cited from the prepared-statement angle in the [Prepared Statement card](./prepared-statement) — one combined gain, not two stackable ones. Numbers depend on row width, row cache hit rate, and how many FE Observers absorb traffic, so treat that as a planning floor, not a benchmark.
 
 Two checks tell you the path is live:
 
@@ -106,7 +117,7 @@ If the FE CPU is still the ceiling, scale Observers and use JDBC load balancing 
 
 ## Further reading
 
-- [High-Concurrency Point Query (full guide)](../query-acceleration/high-concurrent-point-query.md)
-- [Row Store storage layout](../table-design/row-store.md)
-- [Index overview: secondary, bloom, inverted](../table-design/index/index-overview.md)
-- [Data pruning: making non-point queries fast](./data-pruning.mdx)
+- [High-Concurrency Point Query (full guide)](../query-acceleration/high-concurrent-point-query)
+- [Row Store storage layout](../table-design/row-store)
+- [Index overview: secondary, bloom, inverted](../table-design/index/index-overview)
+- [Data pruning: making non-point queries fast](./data-pruning)

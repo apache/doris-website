@@ -1,7 +1,18 @@
 ---
 title: Data Lineage
 description: Column-level lineage extracted from the Nereids plan and shipped to your governance tool through a pluggable SPI, plus table-level traces in the audit log.
+keywords:
+  - column-level lineage
+  - Nereids plan
+  - data governance
+  - audit log lineage
+  - lineage SPI
+  - Apache Doris observability
 slug: /key-features/data-lineage
+image: /images/next/key-features/data-lineage.jpg
+last_update:
+  date: 2026-05-10
+  author: Apache Doris
 featureCard:
   tags:
     - governance
@@ -84,7 +95,7 @@ The row holds catalog-qualified table names and any MV the optimizer rewrote int
 
 - Impact analysis on schema changes. "If I drop `orders.o_discount`, which downstream tables and columns break?" is exactly what the per-column source expressions answer.
 - Audit and compliance trails that need to show every read of a regulated table over a time window. The audit log gives you the table list per query, with user, time, and SQL.
-- Materialized view governance. Pair `chosen_m_views` from the audit log with [Async Materialized Views](./incremental-materialized-view.mdx) to see which MVs are actually serving traffic and which ones are dead weight.
+- Materialized view governance. Pair `chosen_m_views` from the audit log with [Async Materialized Views](./incremental-materialized-view) to see which MVs are actually serving traffic and which ones are dead weight.
 - Feeding an external metadata catalog (Apache Atlas, DataHub, OpenMetadata, an internal service) with column-level lineage from a `LineagePlugin` that emits OpenLineage events.
 - Cross-engine lineage where Doris is one of several producers writing into a shared catalog.
 
@@ -98,10 +109,10 @@ The row holds catalog-qualified table names and any MV the optimizer rewrote int
 
 ## Further reading
 
-- [audit_log system table](../admin-manual/system-tables/internal_schema/audit_log.md): full column reference, including the `queried_tables_and_views` and `chosen_m_views` arrays you query for table-level lineage.
-- [Audit Log plugin](../admin-manual/audit-plugin.md): how to enable `enable_audit_plugin`, configure batch interval and SQL length, and exclude internal users.
-- [Async Materialized Views](../query-acceleration/materialized-view/async-materialized-view/overview.md): the rewrite engine whose decisions show up in `chosen_m_views` and whose base-table dependencies are tracked by `MTMVRelationManager`.
-- [Incremental Materialized View](./incremental-materialized-view.mdx): partition-level dependency tracking between MVs and base tables that complements column-level lineage on the write path.
+- [audit_log system table](../admin-manual/system-tables/internal_schema/audit_log): full column reference, including the `queried_tables_and_views` and `chosen_m_views` arrays you query for table-level lineage.
+- [Audit Log plugin](../admin-manual/audit-plugin): how to enable `enable_audit_plugin`, configure batch interval and SQL length, and exclude internal users.
+- [Async Materialized Views](../query-acceleration/materialized-view/async-materialized-view/overview): the rewrite engine whose decisions show up in `chosen_m_views` and whose base-table dependencies are tracked by `MTMVRelationManager`.
+- [Incremental Materialized View](./incremental-materialized-view): partition-level dependency tracking between MVs and base tables that complements column-level lineage on the write path.
 - [OpenLineage specification](https://openlineage.io/docs/spec/overview/): the open standard for column-level lineage events; a useful target schema for a `LineagePlugin` implementation.
-- [Managing Lake Tables](./managing-lake-table.mdx): writes against Iceberg, Paimon, and Hive produce lineage events too; this card covers the write paths involved.
+- [Managing Lake Tables](./managing-lake-table): writes against Iceberg, Paimon, and Hive produce lineage events too; this card covers the write paths involved.
 - [Apache Atlas overview](https://atlas.apache.org/): a common downstream sink that accepts OpenLineage today and renders the column-level graph.

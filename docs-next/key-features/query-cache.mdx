@@ -1,7 +1,17 @@
 ---
 title: Query Cache
-description: A pipeline-level cache that stores intermediate aggregation results at tablet granularity, so different queries that share tablets reuse work across executions.
+description: A pipeline-level cache that stores intermediate aggregation results at tablet granularity, so queries that share tablets reuse work.
+keywords:
+  - query cache
+  - tablet-level cache
+  - aggregation result cache
+  - pipeline cache
+  - Apache Doris query acceleration
 slug: /key-features/query-cache
+image: /images/next/key-features/query-cache.jpg
+last_update:
+  date: 2026-05-10
+  author: Apache Doris
 featureCard:
   tags:
     - query-acceleration
@@ -82,12 +92,12 @@ The first run misses every tablet and writes per-tablet partial aggregates. The 
 
 **Not a good fit**
 
-- Queries with `JOIN`, `ORDER BY`, `UNION`, or window functions in the cached subtree. Aggregate first and then join, or build an [async materialized view](../query-acceleration/materialized-view/async-materialized-view/overview.md) for the join shape.
-- External tables (Hive, Iceberg, Hudi, Paimon, JDBC). The cache keys on tablet ID and version, which external tables do not have. Use [SQL Cache](../query-acceleration/sql-cache-manual.md) instead.
-- Hot tables that take writes every few seconds. Each version bump invalidates the relevant tablet entry, so the hit rate stays low. If filter reuse is what you actually need, look at [Condition Cache](../query-acceleration/condition-cache.md).
+- Queries with `JOIN`, `ORDER BY`, `UNION`, or window functions in the cached subtree. Aggregate first and then join, or build an [async materialized view](../query-acceleration/materialized-view/async-materialized-view/overview) for the join shape.
+- External tables (Hive, Iceberg, Hudi, Paimon, JDBC). The cache keys on tablet ID and version, which external tables do not have. Use [SQL Cache](../query-acceleration/sql-cache-manual) instead.
+- Hot tables that take writes every few seconds. Each version bump invalidates the relevant tablet entry, so the hit rate stays low. If filter reuse is what you actually need, look at [Condition Cache](../query-acceleration/condition-cache).
 - Queries with `now()`, `rand()`, `uuid()`, or non-deterministic UDFs. The plan is treated as non-deterministic and the cache is disabled. Replace with day-bucketed expressions like `WHERE dt = date(now())`.
 - Multi-column `RANGE` or `LIST` partitioned tables with shifting filter ranges. The partition predicate is included in the digest verbatim, so different ranges produce different keys. Tablet-level reuse only kicks in for single-column `RANGE`.
-- Lookups by primary key. Query Cache is for aggregation. For `WHERE pk = ?` patterns, use [High-Concurrency Point Query](./high-concurrency-point-query.mdx) instead.
+- Lookups by primary key. Query Cache is for aggregation. For `WHERE pk = ?` patterns, use [High-Concurrency Point Query](./high-concurrency-point-query) instead.
 
 ## Configuration knobs
 
@@ -101,10 +111,10 @@ The first run misses every tablet and writes per-tablet partial aggregates. The 
 
 ## Further reading
 
-- [Query Cache user guide](../query-acceleration/query-cache.md)
-- [SQL Cache: result-level caching for any query](../query-acceleration/sql-cache-manual.md)
-- [Condition Cache: caches filter results on segments](../query-acceleration/condition-cache.md)
-- [Async materialized views: pre-aggregate complex pipelines](../query-acceleration/materialized-view/async-materialized-view/overview.md)
-- [Caching in Doris: choosing the right strategy](../query-acceleration/caching-intro.mdx)
-- [Data Cache & Page Cache](./data-cache-page-cache.mdx): the storage-tier caches that sit below Query Cache for repeated scans.
-- [Metadata Cache](./metadata-cache.mdx): the external-catalog metadata cache for federated lakehouse queries.
+- [Query Cache user guide](../query-acceleration/query-cache)
+- [SQL Cache: result-level caching for any query](../query-acceleration/sql-cache-manual)
+- [Condition Cache: caches filter results on segments](../query-acceleration/condition-cache)
+- [Async materialized views: pre-aggregate complex pipelines](../query-acceleration/materialized-view/async-materialized-view/overview)
+- [Caching in Doris: choosing the right strategy](../query-acceleration/caching-intro)
+- [Data Cache & Page Cache](./data-cache-page-cache): the storage-tier caches that sit below Query Cache for repeated scans.
+- [Metadata Cache](./metadata-cache): the external-catalog metadata cache for federated lakehouse queries.

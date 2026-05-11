@@ -1,7 +1,18 @@
 ---
 title: Workload Group
 description: An in-process resource isolation mechanism that partitions CPU, memory, IO, and concurrency across query groups so heavy ETL never starves a BI dashboard.
+keywords:
+  - workload group
+  - CPU isolation
+  - memory isolation
+  - concurrency limit
+  - multi-tenant query
+  - Apache Doris resource management
 slug: /key-features/workload-group
+image: /images/next/key-features/workload-group.jpg
+last_update:
+  date: 2026-05-10
+  author: Apache Doris
 featureCard:
   tags:
     - resource-management
@@ -83,11 +94,11 @@ FROM orders WHERE dt = CURRENT_DATE() GROUP BY region;
 - Mixed-workload clusters: ETL, scheduled reports, dashboards, and ad-hoc analysts on shared BEs.
 - Multi-tenant deployments where cost matters more than perfect isolation: one cluster, several teams, predictable behavior under load.
 - Throttling a known troublemaker. A team's `SELECT *` habit, a Kafka backfill that occasionally turns into a flood, anything with a tail you want to clip.
-- Pair it with [Compute Group](../admin-manual/workload-management/compute-group.md) in storage-compute decoupled mode. The compute group gives you a separate set of BEs; the workload group divides resources within it.
+- Pair it with [Compute Group](../admin-manual/workload-management/compute-group) in storage-compute decoupled mode. The compute group gives you a separate set of BEs; the workload group divides resources within it.
 
 **Not a good fit**
 
-- You need physical isolation: separate SLAs, separate security domains, or billable tenants. A BE crash or kernel OOM still hits every group in the same process. Use [Resource Group](../admin-manual/workload-management/resource-group.md) or a dedicated Compute Group instead.
+- You need physical isolation: separate SLAs, separate security domains, or billable tenants. A BE crash or kernel OOM still hits every group in the same process. Use [Resource Group](../admin-manual/workload-management/resource-group) or a dedicated Compute Group instead.
 - You expect cluster-wide concurrency to be a single number. With three FEs, `max_concurrency=10` allows up to 30 concurrent queries cluster-wide. Either size the per-FE cap accordingly, or front the cluster with a load balancer that pins users to one FE.
 - You run BEs in non-privileged Docker or Kubernetes containers. The BE process needs read and write access to the host's cgroup tree to enforce CPU limits. Without privileged mode (or the Doris Operator), CPU caps silently fail. Memory and concurrency still work, but you have lost the most useful knob.
 - You set memory overcommit on and let the sum of `max_memory_percent` reach 100%. There is no headroom left for the soft-limit overflow path, and the BE will cancel the largest in-group queries when it hits the global ceiling. Leave 10 to 20% room.
@@ -95,11 +106,11 @@ FROM orders WHERE dt = CURRENT_DATE() GROUP BY region;
 
 ## Further reading
 
-- [Workload Group reference](../admin-manual/workload-management/workload-group.md): full property table, cgroup setup steps, and migration notes for the 4.0 property rename.
-- [Workload management overview](../admin-manual/workload-management/workload-management-summary.md): how Workload Group, Resource Group, and Compute Group fit together, and when to pick which.
-- [Concurrency control and queueing](../admin-manual/workload-management/concurrency-control-and-queuing.md): how the per-FE queue behaves, the `bypass_workload_group` admin override, and queueing pitfalls under multiple FEs.
-- [Spill to disk](../admin-manual/workload-management/spill-disk.md): what happens when a group hits its `memory_low_watermark` and how slot-based memory policies work.
-- [`information_schema.workload_groups`](../admin-manual/system-tables/information_schema/workload_groups.md): the system table for live group state, used by the example above.
-- [Resource Group](./resource-group.mdx): physical BE-node isolation for stronger SLA boundaries.
-- [Compute Group](./compute-group.mdx): the compute-storage-decoupled equivalent that adds isolation without copying data.
+- [Workload Group reference](../admin-manual/workload-management/workload-group): full property table, cgroup setup steps, and migration notes for the 4.0 property rename.
+- [Workload management overview](../admin-manual/workload-management/workload-management-summary): how Workload Group, Resource Group, and Compute Group fit together, and when to pick which.
+- [Concurrency control and queueing](../admin-manual/workload-management/concurrency-control-and-queuing): how the per-FE queue behaves, the `bypass_workload_group` admin override, and queueing pitfalls under multiple FEs.
+- [Spill to disk](../admin-manual/workload-management/spill-disk): what happens when a group hits its `memory_low_watermark` and how slot-based memory policies work.
+- [`information_schema.workload_groups`](../admin-manual/system-tables/information_schema/workload_groups): the system table for live group state, used by the example above.
+- [Resource Group](./resource-group): physical BE-node isolation for stronger SLA boundaries.
+- [Compute Group](./compute-group): the compute-storage-decoupled equivalent that adds isolation without copying data.
 - [Multi-tenant workload isolation in Apache Doris](https://doris.apache.org/blog/multi-tenant-workload-isolation-in-apache-doris/): the original design blog with internal benchmarks for soft- and hard-limit CPU on a 16-core BE.

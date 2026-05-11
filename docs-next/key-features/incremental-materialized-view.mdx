@@ -1,7 +1,18 @@
 ---
 title: Incremental Materialized View
-description: Partitioned async materialized views in REFRESH AUTO mode rebuild only the partitions whose base data changed, so dashboards and lakehouse queries stay fresh without recomputing the whole result.
+description: Partitioned async materialized views in REFRESH AUTO mode rebuild only the partitions whose base data changed, so dashboards stay fresh.
+keywords:
+  - incremental materialized view
+  - REFRESH AUTO
+  - partitioned MV
+  - async materialized view
+  - Apache Doris MV
+  - partition refresh
 slug: /key-features/incremental-materialized-view
+image: /images/next/key-features/incremental-materialized-view.jpg
+last_update:
+  date: 2026-05-10
+  author: Apache Doris
 featureCard:
   tags:
     - materialized-view
@@ -88,7 +99,7 @@ The earlier partitions kept their old `VisibleVersionTime` because nothing recom
 
 **Not a good fit**
 
-- Real-time freshness in the seconds. Use a [sync materialized view](../query-acceleration/materialized-view/sync-materialized-view.md) instead; sync MVs are merged into the base table's write path.
+- Real-time freshness in the seconds. Use a [sync materialized view](../query-acceleration/materialized-view/sync-materialized-view) instead; sync MVs are merged into the base table's write path.
 - Tables that don't have a partition column. Without a partition mapping the MV degrades to a full refresh, and you get none of the incremental benefits.
 - MV definitions that can't be partition-derived. Doris rejects the `PARTITION BY` clause at create time when any of the eight derivation rules fails: aggregating the partition column (`min(o_orderdate)`), placing it on the NULL-generating side of an OUTER JOIN, dropping it from `GROUP BY` or a window's `PARTITION BY`, using a roll-up function other than `DATE_TRUNC`, and so on.
 - Hudi base tables. Doris cannot detect base data changes on Hudi today, so only manual refresh is meaningful, and the incremental decision can't be made automatically.
@@ -96,10 +107,10 @@ The earlier partitions kept their old `VisibleVersionTime` because nothing recom
 
 ## Further reading
 
-- [Async materialized view overview: refresh modes, transparent rewrite, lakehouse caveats](../query-acceleration/materialized-view/async-materialized-view/overview.md)
-- [Async MV best practices: scenario assessment, refresh strategy, partitioned MV examples](../query-acceleration/materialized-view/async-materialized-view/use-guide.md)
-- [`CREATE ASYNC MATERIALIZED VIEW`: full syntax, partition derivation rules, table properties](../sql-manual/sql-statements/table-and-view/async-materialized-view/CREATE-ASYNC-MATERIALIZED-VIEW.md)
-- [Sync materialized view: real-time, single-table acceleration](../query-acceleration/materialized-view/sync-materialized-view.md)
-- [Preaggregation and Rollup](./preaggregation-and-rollup.mdx): the per-load Aggregate Key path and sync MV / ROLLUP companions to async MVs.
-- [Query Cache](./query-cache.mdx): another preaggregation path; precompute via MV or cache on first read.
-- [Data Lineage](./data-lineage.mdx): how the audit log's `chosen_m_views` column surfaces which MVs actually serve traffic.
+- [Async materialized view overview: refresh modes, transparent rewrite, lakehouse caveats](../query-acceleration/materialized-view/async-materialized-view/overview)
+- [Async MV best practices: scenario assessment, refresh strategy, partitioned MV examples](../query-acceleration/materialized-view/async-materialized-view/use-guide)
+- [`CREATE ASYNC MATERIALIZED VIEW`: full syntax, partition derivation rules, table properties](../sql-manual/sql-statements/table-and-view/async-materialized-view/CREATE-ASYNC-MATERIALIZED-VIEW)
+- [Sync materialized view: real-time, single-table acceleration](../query-acceleration/materialized-view/sync-materialized-view)
+- [Preaggregation and Rollup](./preaggregation-and-rollup): the per-load Aggregate Key path and sync MV / ROLLUP companions to async MVs.
+- [Query Cache](./query-cache): another preaggregation path; precompute via MV or cache on first read.
+- [Data Lineage](./data-lineage): how the audit log's `chosen_m_views` column surfaces which MVs actually serve traffic.

@@ -1,7 +1,19 @@
 ---
 title: MCP Server
-description: A Model Context Protocol server for Apache Doris that lets Claude Desktop, Cursor, Cline, and other AI clients query a cluster, inspect schemas, and read audit logs through a standard tool-calling interface.
+description: A Model Context Protocol server for Apache Doris that lets Claude Desktop, Cursor, Cline, and other AI clients query a cluster through tool calls.
+keywords:
+  - MCP server
+  - Model Context Protocol
+  - Claude Desktop
+  - Cursor integration
+  - Cline
+  - Apache Doris AI tools
+  - tool calling
 slug: /key-features/mcp-server
+image: /images/next/key-features/mcp-server.jpg
+last_update:
+  date: 2026-05-10
+  author: Apache Doris
 featureCard:
   tags:
     - ai
@@ -88,8 +100,8 @@ The assistant can now compose follow-up calls: `get_db_table_list('ssb')`, then 
 
 ## Further reading
 
-- [AI on Doris](../ai/ai-overview.md): how the MCP server fits alongside `AI_*` SQL functions, embeddings, and vector search.
-- [LLM SQL Functions](./llm-sql-functions.mdx): the in-database side of the AI story, for batch enrichment of text columns.
+- [AI on Doris](../ai/ai-overview): how the MCP server fits alongside `AI_*` SQL functions, embeddings, and vector search.
+- [LLM SQL Functions](./llm-sql-functions): the in-database side of the AI story, for batch enrichment of text columns.
 - [Doris MCP Server repository](https://github.com/apache/doris-mcp-server): source, install instructions, and the full property list for each tool.
 - [Model Context Protocol specification](https://modelcontextprotocol.io/specification/2025-11-25): the protocol Doris speaks, including transport details and security guidance.
 - [Anthropic's MCP announcement](https://www.anthropic.com/news/model-context-protocol): the original problem statement and the design choices behind tools, resources, and prompts.

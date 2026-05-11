@@ -1,7 +1,19 @@
 ---
 title: Analytic Functions
-description: SQL window functions in Doris let you rank, accumulate, lag, and average across rows without self-joins, and the planner pushes Top-N filters down into the window operator.
+description: SQL window functions in Doris rank, accumulate, lag, and average across rows; the planner pushes Top-N filters down into the window operator.
+keywords:
+  - window functions
+  - SQL OVER clause
+  - rank function
+  - lag lead
+  - running total
+  - Top-N pushdown
+  - Apache Doris analytics
 slug: /key-features/analytic-functions
+image: /images/next/key-features/analytic-functions.jpg
+last_update:
+  date: 2026-05-10
+  author: Apache Doris
 featureCard:
   tags:
     - query-acceleration
@@ -96,14 +108,14 @@ One pass, three windowed columns, no self-joins. The original five rows are pres
 - A pure aggregation that collapses rows. `SELECT category, SUM(amount) FROM t GROUP BY category` does the same work without sorting and without keeping every row in memory. Reach for `GROUP BY` first, and only switch to `OVER` when you also need the unaggregated columns.
 - `RANGE` frames with numeric offsets, like `RANGE BETWEEN 5 PRECEDING AND CURRENT ROW`. Doris's `RANGE` frame is restricted to `UNBOUNDED` boundaries or `CURRENT ROW`; arbitrary `RANGE n PRECEDING/FOLLOWING` is not supported. Use `ROWS` if you need a numeric offset.
 - A window with no `PARTITION BY`. The whole result set lands on one pipeline, and that pipeline becomes the bottleneck on large inputs. Add a partition key whenever the workload allows it.
-- `ORDER BY` on a non-unique column when you care about deterministic output. `SUM(x) OVER (ORDER BY day)` can return different cumulative totals across runs when several rows share the same day. Add a tie-breaker; see [Window Functions Overview](../sql-manual/sql-functions/window-functions/overview.md).
-- Recomputing the same window result on every refresh. If the same `ROW_NUMBER()` query runs every minute against a slow-moving table, an [async materialized view](../query-acceleration/materialized-view/async-materialized-view/overview.md) with a partial refresh is cheaper than re-windowing each time.
+- `ORDER BY` on a non-unique column when you care about deterministic output. `SUM(x) OVER (ORDER BY day)` can return different cumulative totals across runs when several rows share the same day. Add a tie-breaker; see [Window Functions Overview](../sql-manual/sql-functions/window-functions/overview).
+- Recomputing the same window result on every refresh. If the same `ROW_NUMBER()` query runs every minute against a slow-moving table, an [async materialized view](../query-acceleration/materialized-view/async-materialized-view/overview) with a partial refresh is cheaper than re-windowing each time.
 
 ## Further reading
 
-- [Analytic Functions (Window Functions): full guide with worked examples](../query-data/window-function.md)
-- [Window Functions Overview: syntax, frame clauses, and the unique-ordering caveat](../sql-manual/sql-functions/window-functions/overview.md)
-- [`LAG`](../sql-manual/sql-functions/window-functions/lag.md), [`LEAD`](../sql-manual/sql-functions/window-functions/lead.md), [`ROW_NUMBER`](../sql-manual/sql-functions/window-functions/row-number.md), [`RANK`](../sql-manual/sql-functions/window-functions/rank.md), [`NTILE`](../sql-manual/sql-functions/window-functions/ntile.md): per-function reference pages
-- [Pipeline Execution Engine: how partitioned windows get parallelized across BEs](./pipeline-execution-engine.mdx)
-- [Vectorized Execution](./vectorized-execution.mdx): the engine that runs each window's batch through SIMD-accelerated operators.
-- [Async Materialized View: precompute window results that re-run every minute](../query-acceleration/materialized-view/async-materialized-view/overview.md)
+- [Analytic Functions (Window Functions): full guide with worked examples](../query-data/window-function)
+- [Window Functions Overview: syntax, frame clauses, and the unique-ordering caveat](../sql-manual/sql-functions/window-functions/overview)
+- [`LAG`](../sql-manual/sql-functions/window-functions/lag), [`LEAD`](../sql-manual/sql-functions/window-functions/lead), [`ROW_NUMBER`](../sql-manual/sql-functions/window-functions/row-number), [`RANK`](../sql-manual/sql-functions/window-functions/rank), [`NTILE`](../sql-manual/sql-functions/window-functions/ntile): per-function reference pages
+- [Pipeline Execution Engine: how partitioned windows get parallelized across BEs](./pipeline-execution-engine)
+- [Vectorized Execution](./vectorized-execution): the engine that runs each window's batch through SIMD-accelerated operators.
+- [Async Materialized View: precompute window results that re-run every minute](../query-acceleration/materialized-view/async-materialized-view/overview)

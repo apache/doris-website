@@ -1,7 +1,18 @@
 ---
 title: Pluggable Authentication and Authorization
 description: Swap Doris's identity and policy backends without forking the FE. Pick LDAP, Kerberos, OIDC, or Ranger via config, layer chains for fallback.
+keywords:
+  - LDAP authentication
+  - Kerberos auth
+  - OIDC
+  - Apache Ranger
+  - pluggable identity
+  - Apache Doris security
 slug: /key-features/pluggable-auth
+image: /images/next/key-features/pluggable-auth.jpg
+last_update:
+  date: 2026-05-10
+  author: Apache Doris
 featureCard:
   tags:
     - security
@@ -80,7 +91,7 @@ mysql> SELECT current_user(), user();
 **Good fit**
 
 - Enterprises that already run an IdP (LDAP, AD, OIDC, Kerberos KDC) and want Doris to share it instead of maintaining a parallel user list.
-- Lakehouse deployments that already use Ranger for Hive, HDFS, or Iceberg, and want the same policies on Doris-managed tables. See [Ranger Authorization](../admin-manual/auth/authorization/ranger.md).
+- Lakehouse deployments that already use Ranger for Hive, HDFS, or Iceberg, and want the same policies on Doris-managed tables. See [Ranger Authorization](../admin-manual/auth/authorization/ranger).
 - Multi-tenant SaaS where each tenant brings its own identity provider, behind a custom `AuthenticatorFactory`.
 - Teams that need cleartext or token-based handshakes (OIDC, JWT) for SSO from BI tools, with TLS enforced by Doris.
 
@@ -93,9 +104,9 @@ mysql> SELECT current_user(), user();
 
 ## Further reading
 
-- [Authentication and Authorization overview](../admin-manual/auth/authentication-and-authorization.md): the full conceptual model, including User Identity, roles, and the priority rules that decide which user a connection lands on.
-- [Built-in Authentication](../admin-manual/auth/authentication/internal.md): password policies, expiration, lockout, and the `validate_password_policy` strength rules.
-- [LDAP Authentication](../admin-manual/auth/authentication/ldap.md): `ldap.conf` reference, group-to-role mapping, LDAPS setup, and the cleartext plugin steps for MySQL and JDBC clients.
-- [Ranger Authorization](../admin-manual/auth/authorization/ranger.md): installing the Doris Ranger plugin, policy examples for catalog/database/table/column, and the row-level filter and masking flows.
-- [Security Overview](../admin-manual/auth/security-overview.md): the wider picture, including audit logs, SSL transport, and UDF guidance.
-- [Multi-Catalog](./multi-catalog.mdx): how Ranger-style authorization plugs into per-catalog access controllers for Hive, Iceberg, and other external sources.
+- [Authentication and Authorization overview](../admin-manual/auth/authentication-and-authorization): the full conceptual model, including User Identity, roles, and the priority rules that decide which user a connection lands on.
+- [Built-in Authentication](../admin-manual/auth/authentication/internal): password policies, expiration, lockout, and the `validate_password_policy` strength rules.
+- [LDAP Authentication](../admin-manual/auth/authentication/ldap): `ldap.conf` reference, group-to-role mapping, LDAPS setup, and the cleartext plugin steps for MySQL and JDBC clients.
+- [Ranger Authorization](../admin-manual/auth/authorization/ranger): installing the Doris Ranger plugin, policy examples for catalog/database/table/column, and the row-level filter and masking flows.
+- [Security Overview](../admin-manual/auth/security-overview): the wider picture, including audit logs, SSL transport, and UDF guidance.
+- [Multi-Catalog](./multi-catalog): how Ranger-style authorization plugs into per-catalog access controllers for Hive, Iceberg, and other external sources.

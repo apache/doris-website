@@ -1,7 +1,18 @@
 ---
 title: Metadata Cache
-description: "A multi-layer cache for external catalog metadata: table lists, schemas, partitions, file listings, and Iceberg manifests. Keeps lakehouse query planning in milliseconds."
+description: "A multi-layer cache for external catalog metadata: table lists, schemas, partitions, file listings, and Iceberg manifests, keeping plans in ms."
+keywords:
+  - metadata cache
+  - Iceberg manifest cache
+  - schema cache
+  - file listing cache
+  - Apache Doris lakehouse
+  - query planning
 slug: /key-features/metadata-cache
+image: /images/next/key-features/metadata-cache.jpg
+last_update:
+  date: 2026-05-10
+  author: Apache Doris
 featureCard:
   tags:
     - lakehouse
@@ -38,7 +49,7 @@ Metadata Cache is an in-memory cache on the Doris FE for everything an external 
 
 - **`Schema cache`**: column lists, types, and table identities. Keyed by table identifier and (for Iceberg/Paimon) schema ID.
 - **`Partition cache`**: the partition list of a Hive or Hudi table, including partition values and locations.
-- **`File cache (FE-side)`**: the file listing and basic file metadata for a partition path, populated by an S3/HDFS LIST. Distinct from the BE-side [Data Cache](./data-cache-page-cache.mdx).
+- **`File cache (FE-side)`**: the file listing and basic file metadata for a partition path, populated by an S3/HDFS LIST. Distinct from the BE-side [Data Cache](./data-cache-page-cache).
 - **`Manifest cache`**: parsed Iceberg manifest entries (lists of data and delete files for a manifest). Bounded by entry count, not TTL.
 - **`HMS event listener`**: a polling client that consumes Hive Metastore notification events and incrementally invalidates affected entries.
 
@@ -110,10 +121,10 @@ The Metadata Cache is on by default for every external catalog; the question is 
 
 ## Further reading
 
-- [Metadata Cache reference](../lakehouse/meta-cache.md): module-by-module breakdown of TTLs, size limits, and refresh strategies.
-- [REFRESH statement](../sql-manual/sql-statements/catalog/REFRESH.md): the SQL surface for `REFRESH CATALOG`, `REFRESH DATABASE`, and `REFRESH TABLE`, plus the `invalid_cache` property.
-- [Hive catalog](../lakehouse/catalogs/hive-catalog.mdx): per-cache `meta.cache.*` properties and the HMS event listener configuration (`enable_hms_events_incremental_sync`).
-- [Iceberg catalog](../lakehouse/catalogs/iceberg-catalog.mdx): manifest cache configuration and snapshot-aware invalidation.
-- [Data Cache & Page Cache](./data-cache-page-cache.mdx): the byte-level storage caches that sit beneath the metadata cache.
-- [Parquet Reader Optimization](./parquet-reader-optimization.mdx): once metadata says which files to read, this is what reads them efficiently.
+- [Metadata Cache reference](../lakehouse/meta-cache): module-by-module breakdown of TTLs, size limits, and refresh strategies.
+- [REFRESH statement](../sql-manual/sql-statements/catalog/REFRESH): the SQL surface for `REFRESH CATALOG`, `REFRESH DATABASE`, and `REFRESH TABLE`, plus the `invalid_cache` property.
+- [Hive catalog](../lakehouse/catalogs/hive-catalog): per-cache `meta.cache.*` properties and the HMS event listener configuration (`enable_hms_events_incremental_sync`).
+- [Iceberg catalog](../lakehouse/catalogs/iceberg-catalog): manifest cache configuration and snapshot-aware invalidation.
+- [Data Cache & Page Cache](./data-cache-page-cache): the byte-level storage caches that sit beneath the metadata cache.
+- [Parquet Reader Optimization](./parquet-reader-optimization): once metadata says which files to read, this is what reads them efficiently.
 - [Building the next-generation data lakehouse (Apache Doris blog)](https://doris.apache.org/blog/Building-the-Next-Generation-Data-Lakehouse-10X-Performance/): the architectural overview that introduces the Meta Cache and HMS event listener.

@@ -1,7 +1,18 @@
 ---
 title: Condition Cache
 description: A segment-level cache that stores filter evaluation results as bit vectors, so queries that share a WHERE clause reuse the predicate work.
+keywords:
+  - condition cache
+  - predicate cache
+  - bit vector cache
+  - filter reuse
+  - Apache Doris query acceleration
+  - WHERE clause cache
 slug: /key-features/condition-cache
+image: /images/next/key-features/condition-cache.jpg
+last_update:
+  date: 2026-05-10
+  author: Apache Doris
 featureCard:
   tags:
     - query-acceleration
@@ -81,18 +92,18 @@ The first run scans every segment, evaluates the predicate, and writes one bit v
 
 **Not a good fit**
 
-- Tables under heavy continuous write pressure. New segments mean new digests, and old cache entries age out of the LRU before they get reused. If you want shape-stable result reuse on aggregations, use [Query Cache](./query-cache.mdx) instead.
+- Tables under heavy continuous write pressure. New segments mean new digests, and old cache entries age out of the LRU before they get reused. If you want shape-stable result reuse on aggregations, use [Query Cache](./query-cache) instead.
 - Queries that hit segments with delete markers. The BE skips the cache to keep delete semantics correct, so workloads with frequent `DELETE` traffic rarely fire it.
 - Queries whose predicate is built by a TopN runtime filter at execution time. Not yet supported.
 - Low-selectivity filters that match most rows. You still pay for scanning the matched granules; the cache only saves work on granules already known to be empty.
 - Ad-hoc queries with one-off WHERE clauses that no other query reuses. The cache fills with entries that get one read and then evict each other. Leaving it on does no harm, but expect the hit rate to stay low.
-- Lookups by primary key. Use [High-Concurrency Point Query](./high-concurrency-point-query.mdx) instead.
+- Lookups by primary key. Use [High-Concurrency Point Query](./high-concurrency-point-query) instead.
 
 ## Further reading
 
-- [Condition Cache user guide](../query-acceleration/condition-cache.md)
-- [Query Cache: pipeline-level partial aggregation cache](./query-cache.mdx)
-- [SQL Cache: result-level cache for byte-identical SQL](../query-acceleration/sql-cache-manual.md)
-- [Caching in Doris: choosing the right strategy](../query-acceleration/caching-intro.mdx)
-- [Data Cache & Page Cache](./data-cache-page-cache.mdx): the storage-tier caches that sit below Condition Cache for the bytes and decoded pages themselves.
-- [Metadata Cache](./metadata-cache.mdx): the external-catalog metadata cache that complements the data-side caches.
+- [Condition Cache user guide](../query-acceleration/condition-cache)
+- [Query Cache: pipeline-level partial aggregation cache](./query-cache)
+- [SQL Cache: result-level cache for byte-identical SQL](../query-acceleration/sql-cache-manual)
+- [Caching in Doris: choosing the right strategy](../query-acceleration/caching-intro)
+- [Data Cache & Page Cache](./data-cache-page-cache): the storage-tier caches that sit below Condition Cache for the bytes and decoded pages themselves.
+- [Metadata Cache](./metadata-cache): the external-catalog metadata cache that complements the data-side caches.

@@ -1,7 +1,18 @@
 ---
 title: Pipeline Execution Engine
 description: A push-based, work-stealing scheduler that breaks each query into a DAG of operator pipelines and runs them on a fixed BE thread pool.
+keywords:
+  - pipeline execution
+  - push-based execution
+  - work stealing
+  - operator pipeline
+  - Apache Doris query engine
+  - thread pool
 slug: /key-features/pipeline-execution-engine
+image: /images/next/key-features/pipeline-execution-engine.jpg
+last_update:
+  date: 2026-05-10
+  author: Apache Doris
 featureCard:
   tags:
     - query-acceleration
@@ -90,14 +101,14 @@ The hint applies only to this query. `EXPLAIN` shows the pipeline IDs, the Local
 
 - Tuning `parallel_pipeline_task_num` on every ad-hoc query. The default is calibrated. Raise it only when profiling shows CPU is idle on a long-running fragment, and drop it to `1` for high-concurrency or trivial point queries instead.
 - Reading old advice that mentions enabling `enable_pipeline_engine` or `experimental_enable_pipeline_x_engine`. Those were experimental switches in the 2.x line; in 3.0+ they are no-ops because the volcano model has been deleted.
-- Confusing this engine with vectorized execution. They are different layers: vectorized execution decides what an operator does to a batch; Pipeline decides how those batches get scheduled across cores. See [Vectorized Execution](./vectorized-execution.mdx) for the other half.
-- Single-row primary-key lookups served at thousands of QPS. The cost of spinning up multiple PipelineTasks is not paid back at that point; use the [High-Concurrency Point Query](./high-concurrency-point-query.mdx) path, which sidesteps the heavy planner.
+- Confusing this engine with vectorized execution. They are different layers: vectorized execution decides what an operator does to a batch; Pipeline decides how those batches get scheduled across cores. See [Vectorized Execution](./vectorized-execution) for the other half.
+- Single-row primary-key lookups served at thousands of QPS. The cost of spinning up multiple PipelineTasks is not paid back at that point; use the [High-Concurrency Point Query](./high-concurrency-point-query) path, which sidesteps the heavy planner.
 
 ## Further reading
 
-- [Pipeline Execution Engine reference](../query-acceleration/optimization-technology-principle/pipeline-execution-engine.md): full architecture, including Dependency rules, Local Shuffle planning, and the parallel-scan mechanism.
-- [Parallelism tuning](../query-acceleration/tuning/parallelism-tuning.md): when and how to set `parallel_pipeline_task_num` per scenario, with the safe defaults table.
-- [Data skew handling](../query-acceleration/tuning/tuning-execution/data-skew-handling.md): the pragmatic counterpart to Local Shuffle for queries the planner could not auto-fix.
-- [Vectorized Execution](./vectorized-execution.mdx): the operator layer Pipeline schedules. Often confused with Pipeline; the two are orthogonal.
-- [Workload Group](./workload-group.mdx): the layer that binds pipeline threads to per-group cgroups for CPU and concurrency limits.
+- [Pipeline Execution Engine reference](../query-acceleration/optimization-technology-principle/pipeline-execution-engine): full architecture, including Dependency rules, Local Shuffle planning, and the parallel-scan mechanism.
+- [Parallelism tuning](../query-acceleration/tuning/parallelism-tuning): when and how to set `parallel_pipeline_task_num` per scenario, with the safe defaults table.
+- [Data skew handling](../query-acceleration/tuning/tuning-execution/data-skew-handling): the pragmatic counterpart to Local Shuffle for queries the planner could not auto-fix.
+- [Vectorized Execution](./vectorized-execution): the operator layer Pipeline schedules. Often confused with Pipeline; the two are orthogonal.
+- [Workload Group](./workload-group): the layer that binds pipeline threads to per-group cgroups for CPU and concurrency limits.
 - [Evolution of the Apache Doris execution engine](/blog/evolution-of-the-apache-doris-execution-engine/): the design history of how Doris went from volcano to Pipeline to PipelineX.

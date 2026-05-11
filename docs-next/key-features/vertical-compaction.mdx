@@ -1,7 +1,17 @@
 ---
 title: Vertical Compaction
 description: Column-group-based compaction that keeps memory bounded when Doris merges rowsets on wide tables.
+keywords:
+  - vertical compaction
+  - column-group compaction
+  - wide table compaction
+  - memory-bounded compaction
+  - Apache Doris storage
 slug: /key-features/vertical-compaction
+image: /images/next/key-features/vertical-compaction.jpg
+last_update:
+  date: 2026-05-10
+  author: Apache Doris
 featureCard:
   tags:
     - storage
@@ -91,18 +101,18 @@ A group size of 3 trades a bit more IO for tighter memory use, which is what you
 - Narrow tables (one to five columns). The schema produces a single column group and you pay the row-source bookkeeping for no benefit. Harmless, but pointless.
 - Tablets with a sequence-map column. The current implementation skips vertical compaction in that case (see `_tablet->tablet_schema()->has_seq_map()` in `compaction.cpp`); merges fall back to the row-wise path automatically.
 - Disk-bound clusters where compaction IO already dominates. The extra read passes per group can amplify the bottleneck. Either widen the groups (raise `vertical_compaction_num_columns_per_group`) or fix the IO ceiling first.
-- Treating vertical compaction as a fix for too-frequent loads. Memory pressure during compaction is often a symptom of pile-up, not the root cause. See [Data Compaction](./data-compaction.mdx) and [Group Commit](../data-operate/import/load-best-practices/group-commit-manual.md) for the load-side levers.
+- Treating vertical compaction as a fix for too-frequent loads. Memory pressure during compaction is often a symptom of pile-up, not the root cause. See [Data Compaction](./data-compaction) and [Group Commit](../data-operate/import/load-best-practices/group-commit-manual) for the load-side levers.
 
 ## Performance / numbers
 
-- Memory: roughly 1/10 of row-wise compaction on wide tables. Source: [Doris compaction tuning docs](../admin-manual/trouble-shooting/compaction.md).
+- Memory: roughly 1/10 of row-wise compaction on wide tables. Source: [Doris compaction tuning docs](../admin-manual/trouble-shooting/compaction).
 - Throughput: about 15% faster end-to-end on the same wide-table benchmark. Source: same.
 - Available since: Doris 1.2.2; default `true` in current releases.
 
 ## Further reading
 
-- [Data Compaction](./data-compaction.mdx): how cumulative, base, and time-series policies sit on top of vertical compaction.
-- [Compaction tuning: vertical, segment, single-replica, time-series](../admin-manual/trouble-shooting/compaction.md): operator-level knobs for every compaction variant.
-- [Compaction principles, types, and scheduling](../admin-manual/trouble-shooting/compaction-principles.md): the scoring and scheduling logic that picks which tablets to compact next.
-- [BE config reference](../admin-manual/config/be-config.md): every `vertical_compaction_*` flag with its default and unit.
+- [Data Compaction](./data-compaction): how cumulative, base, and time-series policies sit on top of vertical compaction.
+- [Compaction tuning: vertical, segment, single-replica, time-series](../admin-manual/trouble-shooting/compaction): operator-level knobs for every compaction variant.
+- [Compaction principles, types, and scheduling](../admin-manual/trouble-shooting/compaction-principles): the scoring and scheduling logic that picks which tablets to compact next.
+- [BE config reference](../admin-manual/config/be-config): every `vertical_compaction_*` flag with its default and unit.
 - [Understanding Data Compaction in 3 Minutes (blog)](/blog/Understanding-Data-Compaction-in-3-Minutes/): the original write-up that introduces vertical compaction with diagrams.

@@ -1,7 +1,18 @@
 ---
 title: Reciprocal Rank Fusion
 description: A SQL pattern for combining BM25 and vector ranking in Doris using ROW_NUMBER and the standard 1/(k+rank) formula, with no built-in RRF function required.
+keywords:
+  - reciprocal rank fusion
+  - RRF
+  - hybrid ranking
+  - BM25 plus vector
+  - ROW_NUMBER
+  - Apache Doris hybrid search
 slug: /key-features/reciprocal-rank-fusion
+image: /images/next/key-features/reciprocal-rank-fusion.jpg
+last_update:
+  date: 2026-05-10
+  author: Apache Doris
 featureCard:
   tags:
     - search
@@ -98,7 +109,7 @@ Document `1` ranks first in both lists, so its fused score is `1/61 + 1/61 ≈ 0
 - Single-retriever workloads. If you are only running BM25 or only running ANN, sort by the native score and skip the join. RRF on one list is just a monotonic transform of the rank.
 - Very small candidate pools (top 5 or top 10 per side). RRF rewards documents that show up in both lists, which only happens if both lists are deep enough. Pull at least 50 per retriever.
 - Workloads that need calibrated probabilities (for thresholding, abstention, or downstream cost models). RRF scores are not probabilities and have no absolute meaning across queries. Use a learned ranker if you need calibration.
-- Hot-path queries where the extra subqueries and join hurt latency. A pre-filter pattern (`MATCH_ANY` + `ORDER BY l2_distance_approximate`) returns a single ranked list in one pass and is what [Hybrid Search](./hybrid-search.mdx) uses by default.
+- Hot-path queries where the extra subqueries and join hurt latency. A pre-filter pattern (`MATCH_ANY` + `ORDER BY l2_distance_approximate`) returns a single ranked list in one pass and is what [Hybrid Search](./hybrid-search) uses by default.
 
 ## Tuning `k`
 
@@ -106,9 +117,9 @@ Lowering `k` (toward 20) widens the gap between rank 1 and rank 5, which helps w
 
 ## Further reading
 
-- [Hybrid Search](./hybrid-search.mdx): Doris's default single-pass pattern for combining inverted-index filtering with ANN ranking, and the alternative this card compares against.
-- [Relevance Scoring (BM25)](../table-design/index/inverted-index/scoring.md): how `score()` is computed and when it activates, which is the input to one half of the fusion.
-- [Inverted Index Overview](../table-design/index/inverted-index/overview.md): index types, tokenizers, and the `MATCH_*` operators that drive the BM25 subquery.
-- [Vector Index Overview](../table-design/index/vector-index/overview.md): HNSW and IVF backends, distance functions, and constraints on the ANN subquery.
-- [ROW_NUMBER](../sql-manual/sql-functions/window-functions/row-number.md): the window function that turns each ranked subquery into integer ranks.
+- [Hybrid Search](./hybrid-search): Doris's default single-pass pattern for combining inverted-index filtering with ANN ranking, and the alternative this card compares against.
+- [Relevance Scoring (BM25)](../table-design/index/inverted-index/scoring): how `score()` is computed and when it activates, which is the input to one half of the fusion.
+- [Inverted Index Overview](../table-design/index/inverted-index/overview): index types, tokenizers, and the `MATCH_*` operators that drive the BM25 subquery.
+- [Vector Index Overview](../table-design/index/vector-index/overview): HNSW and IVF backends, distance functions, and constraints on the ANN subquery.
+- [ROW_NUMBER](../sql-manual/sql-functions/window-functions/row-number): the window function that turns each ranked subquery into integer ranks.
 - [Cormack, Clarke, Buettcher (2009): Reciprocal Rank Fusion outperforms Condorcet and individual rank learning methods](https://plg.uwaterloo.ca/~gvcormac/cormacksigir09-rrf.pdf): the original paper and the source of the `k = 60` recommendation.

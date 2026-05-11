@@ -1,7 +1,19 @@
 ---
 title: Inverted Index
-description: A general-purpose secondary index that turns equality, range, IN, IS NULL, and text predicates from full scans into posting-list lookups, on any column type.
+description: A secondary index that turns equality, range, IN, IS NULL, and text predicates from full scans into posting-list lookups, on any column type.
+keywords:
+  - inverted index
+  - secondary index
+  - CLucene
+  - MATCH_ANY
+  - posting list
+  - Apache Doris search
+  - filter pushdown
 slug: /key-features/inverted-index
+image: /images/next/key-features/inverted-index.jpg
+last_update:
+  date: 2026-05-10
+  author: Apache Doris
 featureCard:
   tags:
     - query-acceleration
@@ -86,23 +98,23 @@ Each predicate is served by an index probe. `user_id = 42` and `status >= 500` u
 - High-cardinality equality and `IN` on non-key columns: `order_id`, `trace_id`, `device_id`.
 - Range and `BETWEEN` filters on numeric or `DATETIME` columns where ZoneMap alone is too coarse.
 - `IS NULL` / `IS NOT NULL` on sparse columns; the index records nulls and probes them in O(1).
-- Keyword and phrase search on log, document, and content columns. See [Full-text search](./full-text-search.mdx) for the operator set and [BM25 scoring](./bm25.mdx) for relevance ranking.
+- Keyword and phrase search on log, document, and content columns. See [Full-text search](./full-text-search) for the operator set and [BM25 scoring](./bm25) for relevance ranking.
 - Array-membership predicates: `array_contains(tags, 'x')` and `array_overlaps(tags, ['a','b'])`.
 
 **Not a good fit**
 
-- Leading-wildcard `LIKE '%abc%'`. The inverted index does not accelerate substring `LIKE`; reach for the [NGram BloomFilter index](../table-design/index/ngram-bloomfilter-index.md) instead.
-- The most frequent filter column on the table. Promote it to a Key column so the [prefix index](../table-design/index/prefix-index.md) handles it; the prefix index is denser and free.
+- Leading-wildcard `LIKE '%abc%'`. The inverted index does not accelerate substring `LIKE`; reach for the [NGram BloomFilter index](../table-design/index/ngram-bloomfilter-index) instead.
+- The most frequent filter column on the table. Promote it to a Key column so the [prefix index](../table-design/index/prefix-index) handles it; the prefix index is denser and free.
 - Tiny tables (a few million rows) where a full scan finishes in milliseconds. The index pays for itself only when the data it skips dwarfs the cost of probing.
 - Columns where the predicate already matches most rows. Posting lists win when they are short; if 80% of rows survive, the scanner does the same work either way.
-- Storage-constrained tables: an inverted index on a wide text column can rival the column itself in size. If footprint matters more than text search, use a [BloomFilter index](../table-design/index/bloomfilter.md).
+- Storage-constrained tables: an inverted index on a wide text column can rival the column itself in size. If footprint matters more than text search, use a [BloomFilter index](../table-design/index/bloomfilter).
 
 ## Further reading
 
-- [Inverted index user guide](../table-design/index/inverted-index/overview.md): full DDL syntax, parser options, and management commands.
-- [Search operators reference](../table-design/index/inverted-index/search-operators.md): every `MATCH_*` operator with examples.
-- [Index overview](../table-design/index/index-overview.md): how the inverted index compares with prefix, ZoneMap, BloomFilter, and NGram BloomFilter.
-- [Full-text search](./full-text-search.mdx): tokenizers, phrase queries, and the `SEARCH()` DSL built on top of this index.
-- [BM25 relevance scoring](./bm25.mdx): ranking matches with `score()`, available since 4.0.
-- [Hybrid search](./hybrid-search.mdx): combining inverted index with the ANN vector index in a single SQL query.
+- [Inverted index user guide](../table-design/index/inverted-index/overview): full DDL syntax, parser options, and management commands.
+- [Search operators reference](../table-design/index/inverted-index/search-operators): every `MATCH_*` operator with examples.
+- [Index overview](../table-design/index/index-overview): how the inverted index compares with prefix, ZoneMap, BloomFilter, and NGram BloomFilter.
+- [Full-text search](./full-text-search): tokenizers, phrase queries, and the `SEARCH()` DSL built on top of this index.
+- [BM25 relevance scoring](./bm25): ranking matches with `score()`, available since 4.0.
+- [Hybrid search](./hybrid-search): combining inverted index with the ANN vector index in a single SQL query.
 - [How inverted index works in Apache Doris](https://www.velodb.io/blog/how-inverted-index-works-in-apache-doris): a deeper write-up on internals and benchmarks.

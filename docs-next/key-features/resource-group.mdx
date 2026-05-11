@@ -1,7 +1,18 @@
 ---
 title: Resource Group
 description: Physical, BE-node-level isolation that splits a Doris cluster into tagged sub-pools so an offline ETL group can never crash an online query group.
+keywords:
+  - resource group
+  - BE tagging
+  - node-level isolation
+  - physical isolation
+  - multi-tenant
+  - Apache Doris workload
 slug: /key-features/resource-group
+image: /images/next/key-features/resource-group.jpg
+last_update:
+  date: 2026-05-10
+  author: Apache Doris
 featureCard:
   tags:
     - resource-management
@@ -16,7 +27,7 @@ featureCard:
 
 A real Doris cluster usually serves more than one workload, and the workloads do not trust each other. The 2 a.m. ETL job rewrites yesterday's partitions on the same BEs that an executive dashboard polls every fifteen seconds during the day. A finance batch reruns a heavy report at 9 a.m. while an analyst kicks off an unbounded `SELECT *`.
 
-[Workload Group](./workload-group.mdx) handles a lot of this in-process: cgroups for CPU, a per-group memory tracker, a per-group queue. It is cheap and flexible. What it cannot do is survive a BE crash. If the kernel OOM-kills a BE, every group on that BE goes with it. If the BE segfaults inside a query, the dashboard and the ETL job both reconnect. For workloads that need to be insulated from each other at the process layer, in-process tools are not enough.
+[Workload Group](./workload-group) handles a lot of this in-process: cgroups for CPU, a per-group memory tracker, a per-group queue. It is cheap and flexible. What it cannot do is survive a BE crash. If the kernel OOM-kills a BE, every group on that BE goes with it. If the BE segfaults inside a query, the dashboard and the ETL job both reconnect. For workloads that need to be insulated from each other at the process layer, in-process tools are not enough.
 
 Resource Group fixes that without standing up a second cluster. You tag each BE with a label, you tell each table how many replicas belong to each tag, and you bind each user to the tags they are allowed to use. The cluster keeps one FE quorum, one schema catalog, one set of credentials, but the BEs are now divided into pools that share nothing at runtime.
 
@@ -78,20 +89,20 @@ SET PROPERTY FOR 'etl_user' 'resource_tags.location' = 'offline';
 - Read/write separation on one cluster: an offline pool for ETL, an online pool for dashboards, a single shared dataset with one replica per pool.
 - Multi-tenant clusters where one tenant's BE crash or OOM must not page the others.
 - Cases where you want to consolidate several physical clusters into one without giving up workload-level fault isolation.
-- Pair Workload Group inside each pool to subdivide CPU and memory at the per-query level. See [Workload Group](./workload-group.mdx).
+- Pair Workload Group inside each pool to subdivide CPU and memory at the per-query level. See [Workload Group](./workload-group).
 
 **Not a good fit**
 
-- You only need soft CPU and memory limits and you can accept that a BE crash takes everything down. Use [Workload Group](./workload-group.mdx) on its own. It also supports cross-group queries, which Resource Group cannot.
+- You only need soft CPU and memory limits and you can accept that a BE crash takes everything down. Use [Workload Group](./workload-group) on its own. It also supports cross-group queries, which Resource Group cannot.
 - Storage cost is your tightest budget. Every pool that reads a table needs its own replica. Five pools means five replicas of every shared table; the storage bill scales linearly with the number of groups.
-- You run the storage-compute decoupled (cloud) deployment. There the equivalent is [Compute Group](./compute-group.mdx), which gives you the same node-level isolation without multiplying replicas, because storage is shared.
+- You run the storage-compute decoupled (cloud) deployment. There the equivalent is [Compute Group](./compute-group), which gives you the same node-level isolation without multiplying replicas, because storage is shared.
 - Heavy cross-pool ad-hoc analytics. The planner cannot stitch BEs from different tags into one query; missing replicas surface as "no queryable replicas" rather than a fallback.
 - Loads where you expect the writes to be isolated too. The write side always lands on the replica owners; only the compute side respects the tag.
 
 ## Further reading
 
-- [Resource Group reference](../admin-manual/workload-management/resource-group.md): the full SQL surface, the validation rules, and the loading split in detail.
-- [Workload management overview](../admin-manual/workload-management/workload-management-summary.md): the side-by-side comparison of Resource Group, Workload Group, and Compute Group.
-- [Workload Group](./workload-group.mdx): the in-process isolation feature you usually pair with this one.
-- [Compute Group](../admin-manual/workload-management/compute-group.md): the storage-compute decoupled equivalent that does not multiply storage.
+- [Resource Group reference](../admin-manual/workload-management/resource-group): the full SQL surface, the validation rules, and the loading split in detail.
+- [Workload management overview](../admin-manual/workload-management/workload-management-summary): the side-by-side comparison of Resource Group, Workload Group, and Compute Group.
+- [Workload Group](./workload-group): the in-process isolation feature you usually pair with this one.
+- [Compute Group](../admin-manual/workload-management/compute-group): the storage-compute decoupled equivalent that does not multiply storage.
 - [Multi-tenant workload isolation in Apache Doris](/blog/multi-tenant-workload-isolation-in-apache-doris/): the design post covering the whole isolation landscape, including how Resource Group complements Workload Group.

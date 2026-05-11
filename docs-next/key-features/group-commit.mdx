@@ -1,7 +1,18 @@
 ---
 title: Group Commit
 description: Merge many small INSERTs and Stream Loads server-side into one transaction, with sync and async modes for the latency vs throughput tradeoff.
+keywords:
+  - group commit
+  - high-frequency insert
+  - small batch ingestion
+  - sync mode
+  - async mode
+  - Apache Doris write throughput
 slug: /key-features/group-commit
+image: /images/next/key-features/group-commit.jpg
+last_update:
+  date: 2026-05-10
+  author: Apache Doris
 featureCard:
   tags:
     - load
@@ -80,7 +91,7 @@ Both inserts return the same `label` and `txnId`, which is how you know they mer
 
 **Not a good fit**
 
-- Loads that need to be exactly one transaction with their callers' bookkeeping. Group Commit silently falls back when you use explicit `BEGIN ... COMMIT`. For transactional sinks reach for [Load Transactions](./load-transaction.mdx) directly.
+- Loads that need to be exactly one transaction with their callers' bookkeeping. Group Commit silently falls back when you use explicit `BEGIN ... COMMIT`. For transactional sinks reach for [Load Transactions](./load-transaction) directly.
 - Stream Load 2PC and writes that specify their own Label. Both bypass Group Commit; if you need exactly-once over checkpoints, stay with Stream Load 2PC.
 - Partial-column updates. Group Commit does not support `partial_columns: true` and falls back to the normal load path.
 - Unique Key tables that need strict commit-order semantics. Group Commit does not preserve order across merged loads; declare a `function_column.sequence_col` so the freshest version wins by user-supplied timestamp.
@@ -98,9 +109,9 @@ Source: [Apache Doris 2.1.0 release notes](https://doris.apache.org/blog/release
 
 ## Further reading
 
-- [High-concurrency load optimization (Group Commit)](../data-operate/import/load-best-practices/group-commit-manual.md)
-- [Stream Load HTTP header reference](../data-operate/import/import-way/stream-load-manual.md)
-- [INSERT INTO load](../data-operate/import/import-way/insert-into-manual.md)
-- [Load Transactions: when you need explicit `BEGIN ... COMMIT` or 2PC](./load-transaction.mdx)
-- [Stream Load](./stream-load.mdx): the synchronous HTTP load path that Group Commit batches on the server side.
+- [High-concurrency load optimization (Group Commit)](../data-operate/import/load-best-practices/group-commit-manual)
+- [Stream Load HTTP header reference](../data-operate/import/import-way/stream-load-manual)
+- [INSERT INTO load](../data-operate/import/import-way/insert-into-manual)
+- [Load Transactions: when you need explicit `BEGIN ... COMMIT` or 2PC](./load-transaction)
+- [Stream Load](./stream-load): the synchronous HTTP load path that Group Commit batches on the server side.
 - [Apache Doris 2.1.0: Group Commit benchmarks](https://doris.apache.org/blog/release-note-2.1.0/)

@@ -1,7 +1,19 @@
 ---
 title: Columnar Storage
-description: Doris's on-disk segment file format. Per-column encoding and per-page compression shrink the table, and per-page indexes let queries skip pages they don't need.
+description: Doris's on-disk segment format. Per-column encoding and per-page compression shrink the table; per-page indexes let queries skip unread pages.
+keywords:
+  - columnar storage
+  - segment file
+  - page compression
+  - ZoneMap
+  - column encoding
+  - Apache Doris storage format
+  - page index
 slug: /key-features/columnar-storage
+image: /images/next/key-features/columnar-storage.jpg
+last_update:
+  date: 2026-05-10
+  author: Apache Doris
 featureCard:
   tags:
     - storage
@@ -42,7 +54,7 @@ The lifecycle of one column on disk:
 2. **Page and compress.** Encoded values stream into pages of about 64 KB each. Each page goes through LZ4F by default, or ZSTD / Snappy / Zlib if the table sets `compression`. Compression is skipped if the saving falls below 10%.
 3. **Index.** As pages are written, the segment also writes an ordinal index (binary search by row number), a zone map per page (min, max, has-null), and a bloom filter for any column listed in `bloom_filter_columns`. The short key index summarizes the prefix of the table's sort key.
 4. **Footer.** The writer appends a `SegmentFooterPB` describing every column, every page pointer, and every index. V3 splits this in two: a slim footer plus a `column_meta_entries` region loaded only for columns the query actually touches.
-5. **Read.** A scan opens the footer, narrows down by ordinal / short key / zone map / bloom, decompresses only the surviving pages, decodes them, and hands columnar batches straight to the [vectorized engine](./vectorized-execution.mdx).
+5. **Read.** A scan opens the footer, narrows down by ordinal / short key / zone map / bloom, decompresses only the surviving pages, decodes them, and hands columnar batches straight to the [vectorized engine](./vectorized-execution).
 
 The hierarchy above the segment is `Tablet → Rowset → Segment → Column → Page`. Compaction merges rowsets but never rewrites at a finer grain; the column-and-page layout below is what every query reads from.
 
@@ -95,21 +107,21 @@ The query reads only the `ts` and `country` columns. The reader skips pages whos
 
 **Not a good fit**
 
-- `SELECT *` lookups by primary key at thousands of QPS. Each column is a separate read, so a wide-row point query pays N times the I/O. Reach for the [High-Concurrency Point Query](./high-concurrency-point-query.mdx) path, which adds a row-cached column with `"store_row_column" = "true"` on top of a Unique-Key Merge-on-Write table.
+- `SELECT *` lookups by primary key at thousands of QPS. Each column is a separate read, so a wide-row point query pays N times the I/O. Reach for the [High-Concurrency Point Query](./high-concurrency-point-query) path, which adds a row-cached column with `"store_row_column" = "true"` on top of a Unique-Key Merge-on-Write table.
 - Tweaking `compression` or `storage_page_size` without a profile. The defaults (LZ4F, 64 KB) fit most workloads. Move to ZSTD only when storage cost matters more than CPU; shrink the page size only when small columns are wasting decompression work.
 - Disabling encodings to "see the raw column." There is no raw mode. The codec is part of the file format, not a layer you peel off.
 - Treating columnar storage as a fix for narrow point lookups on a row-oriented schema. If every query is `WHERE id = ?` and returns one row, you want a different system or the row-store extension, not a different compression codec.
 
 ## Performance / numbers
 
-- **Wide-table V3 footer**: a 7,000-column table with 10,000 segments saw segment-open time drop from 65s to 4s (16x faster) and open-time memory from 60 GB to under 1 GB (60x lower). Source: [Storage Format V3](../table-design/storage-format.md).
+- **Wide-table V3 footer**: a 7,000-column table with 10,000 segments saw segment-open time drop from 65s to 4s (16x faster) and open-time memory from 60 GB to under 1 GB (60x lower). Source: [Storage Format V3](../table-design/storage-format).
 - **ZSTD vs. the prior default** on a 25 GB / 110-million-line text-log dataset: nearly 10x compression ratio, 53% better than the previous default, and 30% faster end-to-end read+decompress. Source: [Apache Doris 1.1.0 release notes](https://doris.apache.org/blog/release-note-1.1.0/).
 
 ## Further reading
 
-- [Storage Format V3](../table-design/storage-format.md): the wide-table footer optimization and per-column metadata externalization.
-- [Data Pruning](./data-pruning.mdx): how ZoneMap, BloomFilter, and the per-page indexes that live inside a segment turn into skip work at scan time.
-- [Vectorized Execution](./vectorized-execution.mdx): the engine the column reader hands its decoded batches to.
-- [VARIANT Data Type](./variant-data-type.mdx): how JSON paths get promoted into the same per-column encoded, paged, indexed subcolumns described here.
+- [Storage Format V3](../table-design/storage-format): the wide-table footer optimization and per-column metadata externalization.
+- [Data Pruning](./data-pruning): how ZoneMap, BloomFilter, and the per-page indexes that live inside a segment turn into skip work at scan time.
+- [Vectorized Execution](./vectorized-execution): the engine the column reader hands its decoded batches to.
+- [VARIANT Data Type](./variant-data-type): how JSON paths get promoted into the same per-column encoded, paged, indexed subcolumns described here.
 - [Apache Doris 1.1.0 release notes](https://doris.apache.org/blog/release-note-1.1.0/): the original ZSTD compression benchmark and rollout notes.
 

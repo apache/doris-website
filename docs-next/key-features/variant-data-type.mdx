@@ -1,7 +1,18 @@
 ---
 title: VARIANT Data Type
-description: A column type that ingests JSON without a fixed schema, then stores hot paths as native columnar subcolumns so analytics on JSON paths run at column-store speed.
+description: A column type that ingests JSON without a fixed schema, then stores hot paths as native columnar subcolumns for column-store-speed analytics.
+keywords:
+  - VARIANT type
+  - JSON column
+  - schema-less ingest
+  - subcolumn extraction
+  - Apache Doris semi-structured
+  - JSON analytics
 slug: /key-features/variant-data-type
+image: /images/next/key-features/variant-data-type.jpg
+last_update:
+  date: 2026-05-10
+  author: Apache Doris
 featureCard:
   tags:
     - data-types
@@ -95,8 +106,8 @@ The filter reads one subcolumn, hits the inverted index, and never touches the `
 - Tables with a stable, well-understood schema. Plain typed columns are simpler to reason about, simpler to index, and they cannot accidentally promote to `JSONB`. Reach for `VARIANT` only when the schema actually changes.
 - Primary keys, sort keys, or join keys. `VARIANT` cannot serve as either, and `CAST(v['id'] AS BIGINT)` as a join condition gives up most of the planner's options. If `id` is the join key, declare it as a static `BIGINT`.
 - Whole-document searches like `WHERE v LIKE '%doris%'`. The inverted index lives on subpaths, not the whole column. Keep the original JSON in a parallel `STRING` column and index that, or enable DOC mode for fast `SELECT v`.
-- Fixed shapes you already know at design time. If every row has exactly `{a, b, c}` and the types never change, [`STRUCT`](../sql-manual/basic-element/sql-data-types/semi-structured/STRUCT.md) is a better contract: it forbids unexpected fields, where `VARIANT` silently absorbs them.
-- Very wide JSON (10k+ paths) without tuning. Default subcolumnization caps at 2048 paths. Beyond that, plan for sparse columns or DOC mode and read the [VARIANT Workload Guide](../sql-manual/basic-element/sql-data-types/semi-structured/variant-workload-guide.md) before loading production data.
+- Fixed shapes you already know at design time. If every row has exactly `{a, b, c}` and the types never change, [`STRUCT`](../sql-manual/basic-element/sql-data-types/semi-structured/STRUCT) is a better contract: it forbids unexpected fields, where `VARIANT` silently absorbs them.
+- Very wide JSON (10k+ paths) without tuning. Default subcolumnization caps at 2048 paths. Beyond that, plan for sparse columns or DOC mode and read the [VARIANT Workload Guide](../sql-manual/basic-element/sql-data-types/semi-structured/variant-workload-guide) before loading production data.
 
 ## Performance / numbers
 
@@ -105,10 +116,10 @@ The filter reads one subcolumn, hits the inverted index, and never touches the `
 
 ## Further reading
 
-- [VARIANT SQL reference: full syntax, type rules, indexes, configuration](../sql-manual/basic-element/sql-data-types/semi-structured/VARIANT.md)
-- [VARIANT Workload Guide: when to pick default, sparse, DOC mode, or Schema Template](../sql-manual/basic-element/sql-data-types/semi-structured/variant-workload-guide.md)
-- [Importing VARIANT data: Stream Load, Routine Load, and Broker Load examples](../data-operate/import/complex-types/variant.md)
-- [Columnar Storage feature card: how subcolumns are encoded, paged, and indexed under the hood](./columnar-storage.mdx)
-- [Inverted Index overview: the index VARIANT uses for text-in-JSON search](../table-design/index/inverted-index/overview.md)
-- [LLM SQL Functions](./llm-sql-functions.mdx): the `AI_*` family whose JSON output (from `AI_EXTRACT`, `AI_CLASSIFY`, and so on) is a natural fit for a VARIANT column.
+- [VARIANT SQL reference: full syntax, type rules, indexes, configuration](../sql-manual/basic-element/sql-data-types/semi-structured/VARIANT)
+- [VARIANT Workload Guide: when to pick default, sparse, DOC mode, or Schema Template](../sql-manual/basic-element/sql-data-types/semi-structured/variant-workload-guide)
+- [Importing VARIANT data: Stream Load, Routine Load, and Broker Load examples](../data-operate/import/complex-types/variant)
+- [Columnar Storage feature card: how subcolumns are encoded, paged, and indexed under the hood](./columnar-storage)
+- [Inverted Index overview: the index VARIANT uses for text-in-JSON search](../table-design/index/inverted-index/overview)
+- [LLM SQL Functions](./llm-sql-functions): the `AI_*` family whose JSON output (from `AI_EXTRACT`, `AI_CLASSIFY`, and so on) is a natural fit for a VARIANT column.
 - [Apache Doris blog: Variant in Apache Doris 2.1.0, the original announcement and benchmarks](/blog/variant-in-apache-doris-2.1/)

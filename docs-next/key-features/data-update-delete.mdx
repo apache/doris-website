@@ -1,7 +1,18 @@
 ---
 title: Data Update and Delete
 description: SQL UPDATE, predicate DELETE, partial-column upserts, and atomic partition swaps, all backed by Merge-on-Write on Unique Key tables.
+keywords:
+  - SQL UPDATE
+  - predicate DELETE
+  - partial column update
+  - Merge-on-Write
+  - Unique Key table
+  - Apache Doris upsert
 slug: /key-features/data-update-delete
+image: /images/next/key-features/data-update-delete.jpg
+last_update:
+  date: 2026-05-10
+  author: Apache Doris
 featureCard:
   tags:
     - update
@@ -93,18 +104,18 @@ Order 1 was rewritten in place; order 2 is gone. The `function_column.sequence_c
 **Not a good fit**
 
 - `UPDATE` on Aggregate or Duplicate tables. The statement is rejected. Reload through ingestion (Aggregate uses `REPLACE_IF_NOT_NULL` to overwrite values), or switch the table model.
-- High-frequency single-row `UPDATE`s in a tight loop. Each statement is its own transaction and the commit overhead dominates. Batch updates through Stream Load with `partial_columns: true` instead, or use [Group Commit](../data-operate/import/load-best-practices/group-commit-manual.md).
+- High-frequency single-row `UPDATE`s in a tight loop. Each statement is its own transaction and the commit overhead dominates. Batch updates through Stream Load with `partial_columns: true` instead, or use [Group Commit](../data-operate/import/load-best-practices/group-commit-manual).
 - Renaming a primary key. There is no key-rewrite path; soft-delete the old row via `__DORIS_DELETE_SIGN__` and insert a new one, ideally in the same load.
 - Predicate `DELETE` over many billions of rows that match. Each delete records a predicate or bitmap that compaction has to chew through; a partition replace or `INSERT OVERWRITE` is faster.
 - Aggregate-model `DELETE` on non-key columns. The predicate must filter on key columns only; the engine has no way to evaluate value-column conditions before aggregation.
 
 ## Further reading
 
-- [Data update and delete overview](../data-operate/update-and-delete.mdx)
-- [Update overview: SQL UPDATE, partial column update, sequence column](../data-operate/update/update-overview.md)
-- [Partial column update](../data-operate/update/partial-column-update.md)
-- [Delete overview: predicate delete, batch delete, atomic replace](../data-operate/delete/delete-overview.md)
-- [Data Model](./data-model.mdx): why Unique Key is the table model that powers UPDATE/DELETE, and where Duplicate and Aggregate fit.
-- [High-Concurrency Point Query](./high-concurrency-point-query.mdx): the short-circuit path that Unique Key Merge-on-Write tables unlock for KV-style reads.
-- [Binlog Table Stream](./binlog-table-stream.mdx): how committed row-level changes are exposed to downstream consumers.
+- [Data update and delete overview](../data-operate/update-and-delete)
+- [Update overview: SQL UPDATE, partial column update, sequence column](../data-operate/update/update-overview)
+- [Partial column update](../data-operate/update/partial-column-update)
+- [Delete overview: predicate delete, batch delete, atomic replace](../data-operate/delete/delete-overview)
+- [Data Model](./data-model): why Unique Key is the table model that powers UPDATE/DELETE, and where Duplicate and Aggregate fit.
+- [High-Concurrency Point Query](./high-concurrency-point-query): the short-circuit path that Unique Key Merge-on-Write tables unlock for KV-style reads.
+- [Binlog Table Stream](./binlog-table-stream): how committed row-level changes are exposed to downstream consumers.
 - [Apache Doris 2.1.0: Merge-on-Write becomes the Unique Key default](https://doris.apache.org/blog/release-note-2.1.0/)

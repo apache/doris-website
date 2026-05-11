@@ -1,7 +1,18 @@
 ---
 title: Multi Catalog
 description: One Doris cluster federates queries across its internal warehouse and external systems (Hive, Iceberg, JDBC, ES, and more) via three-part names.
+keywords:
+  - multi catalog
+  - federated query
+  - external catalog
+  - three-part name
+  - Hive Iceberg JDBC
+  - Apache Doris federation
 slug: /key-features/multi-catalog
+image: /images/next/key-features/multi-catalog.jpg
+last_update:
+  date: 2026-05-10
+  author: Apache Doris
 featureCard:
   tags:
     - lakehouse
@@ -38,7 +49,7 @@ Multi Catalog is a federation layer at the top of Doris's metadata stack. Doris 
 ## How it works
 
 1. **Register a catalog.** `CREATE CATALOG <name> PROPERTIES ("type" = "<type>", ...)` records the connection details on the FE. The properties are persisted in the FE edit log; nothing else moves. Doris does not copy schemas or data.
-2. **Discover lazily.** The first time a session touches the catalog, the connector lists its databases and tables, fetches schemas, and populates the metadata cache. See [Metadata Cache](./metadata-cache.mdx) for what gets cached and for how long.
+2. **Discover lazily.** The first time a session touches the catalog, the connector lists its databases and tables, fetches schemas, and populates the metadata cache. See [Metadata Cache](./metadata-cache) for what gets cached and for how long.
 3. **Resolve three-part names.** Every table reference is parsed as `catalog.db.table`. Unqualified names use the session's current catalog and database. `SWITCH`, `USE`, and the user property `default_init_catalog` control where unqualified names land.
 4. **Plan one query.** The optimizer pulls statistics from each catalog's connector, picks join order and predicate pushdown, and produces a single distributed plan. The plan can mix scans against `internal` Doris tablets, Iceberg manifests, MySQL JDBC fetches, and ES queries inside the same fragment graph.
 5. **Stay current.** TTLs and source-side events (Hive Metastore events, Iceberg snapshot pointers, Paimon snapshot reloads) keep the cache aligned with the source. `REFRESH CATALOG`, `REFRESH DATABASE`, and `REFRESH TABLE` cover the rest.
@@ -97,15 +108,15 @@ WHERE f.dt = CURRENT_DATE() GROUP BY 1, 3;
 - Treating an external catalog as a write-heavy OLTP target. Write-back exists for Hive, Iceberg, and JDBC catalogs, but throughput is bound by the source and is not on par with writes into `internal` Doris tables. Land hot writes in `internal` and write back in batches.
 - Transactional updates against external sources. Doris does not offer cross-catalog transactions, and most external catalogs do not support row-level updates the way Doris does. Use the source's own DML for that.
 - Cross-catalog DDL. `CREATE TABLE ... AS SELECT` works across catalogs as a copy, but creating the *same* table in two catalogs is your responsibility, not Doris's.
-- Stitching two compute pools across a single query. Federation is about data sources, not compute. For compute isolation see [Compute Group](./compute-group.mdx).
-- Hand-tuning every connector here. For source-specific configuration (AWS Glue, Iceberg REST, individual JDBC dialects, S3-compatible storages, Kerberos, IAM), see the dedicated [Catalog Integrations](./catalog-integrations.mdx) card and the per-catalog reference docs.
+- Stitching two compute pools across a single query. Federation is about data sources, not compute. For compute isolation see [Compute Group](./compute-group).
+- Hand-tuning every connector here. For source-specific configuration (AWS Glue, Iceberg REST, individual JDBC dialects, S3-compatible storages, Kerberos, IAM), see the dedicated [Catalog Integrations](./catalog-integrations) card and the per-catalog reference docs.
 
 ## Further reading
 
-- [Catalog Integrations](./catalog-integrations.mdx): the per-source connector reference (Glue, Iceberg REST, JDBC dialects, object storages, auth modes).
-- [Managing Lake Tables](./managing-lake-table.mdx): write-back, schema evolution, and DML against Hive, Iceberg, and Paimon tables exposed via Multi Catalog.
-- [Metadata Cache](./metadata-cache.mdx): how the FE caches external schemas, partitions, and file listings, and how it stays fresh.
-- [Data Catalog Overview](../lakehouse/catalog-overview.md): the user guide for `CREATE`, `SWITCH`, `REFRESH`, and the case-sensitivity properties shared by every catalog.
-- [Lakehouse Overview](../lakehouse/lakehouse-overview.md): where Multi Catalog sits in Doris's lakehouse story.
-- [CREATE CATALOG reference](../sql-manual/sql-statements/catalog/CREATE-CATALOG.md): the full DDL syntax, supported types, and property reference.
-- [SWITCH CATALOG reference](../sql-manual/sql-statements/session/context/SWITCH-CATALOG.md): session-level switching semantics.
+- [Catalog Integrations](./catalog-integrations): the per-source connector reference (Glue, Iceberg REST, JDBC dialects, object storages, auth modes).
+- [Managing Lake Tables](./managing-lake-table): write-back, schema evolution, and DML against Hive, Iceberg, and Paimon tables exposed via Multi Catalog.
+- [Metadata Cache](./metadata-cache): how the FE caches external schemas, partitions, and file listings, and how it stays fresh.
+- [Data Catalog Overview](../lakehouse/catalog-overview): the user guide for `CREATE`, `SWITCH`, `REFRESH`, and the case-sensitivity properties shared by every catalog.
+- [Lakehouse Overview](../lakehouse/lakehouse-overview): where Multi Catalog sits in Doris's lakehouse story.
+- [CREATE CATALOG reference](../sql-manual/sql-statements/catalog/CREATE-CATALOG): the full DDL syntax, supported types, and property reference.
+- [SWITCH CATALOG reference](../sql-manual/sql-statements/session/context/SWITCH-CATALOG): session-level switching semantics.

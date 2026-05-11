@@ -1,7 +1,18 @@
 ---
 title: Data Pruning
-description: Layered "skip-the-data-you-don't-need" mechanisms across partitions, tablets, segments, and pages, so a query reads as little of the table as physically possible.
+description: Layered skip-the-data mechanisms across partitions, tablets, segments, and pages, so a query reads as little of the table as possible.
+keywords:
+  - partition pruning
+  - ZoneMap pruning
+  - page index pruning
+  - tablet pruning
+  - predicate pushdown
+  - Apache Doris query optimization
 slug: /key-features/data-pruning
+image: /images/next/key-features/data-pruning.jpg
+last_update:
+  date: 2026-05-10
+  author: Apache Doris
 featureCard:
   tags:
     - query-acceleration
@@ -95,14 +106,14 @@ The planner kept one partition out of two (date range) and one tablet out of six
 - BloomFilter on range predicates. Bloom answers "is X in the set?", not "is X less than Y." Range filters fall back to ZoneMap.
 - Bucketing on a column you don't filter on. You'll pay for hash distribution at write time and gain no read-side pruning. Pick a bucket key that matches your most selective equality predicate.
 - One giant catch-all partition. Nothing for the planner to drop, and tablet/segment pruning has to compensate alone. Partition by the column queries actually filter on, usually time.
-- Treating BloomFilter as a substitute for full-text search. For phrase or token search use the [inverted index](../table-design/index/inverted-index/overview.md); BloomFilter only handles equality.
+- Treating BloomFilter as a substitute for full-text search. For phrase or token search use the [inverted index](../table-design/index/inverted-index/overview); BloomFilter only handles equality.
 
 ## Further reading
 
-- [Partition pruning optimization](../query-acceleration/tuning/tuning-plan/optimizing-table-scanning.md)
-- [Index overview: skip indexes](../table-design/index/index-overview.md)
-- [BloomFilter index](../table-design/index/bloomfilter.md)
-- [NGram BloomFilter index](../table-design/index/ngram-bloomfilter-index.md)
-- [Partitioning and Bucketing](./partitioning-and-bucketing.mdx): the DDL choices that decide which partitions and tablets the planner can prune in the first place.
-- [Inverted Index](./inverted-index.mdx): the index-probe layer that turns text and high-cardinality equality predicates into posting-list lookups.
+- [Partition pruning optimization](../query-acceleration/tuning/tuning-plan/optimizing-table-scanning)
+- [Index overview: skip indexes](../table-design/index/index-overview)
+- [BloomFilter index](../table-design/index/bloomfilter)
+- [NGram BloomFilter index](../table-design/index/ngram-bloomfilter-index)
+- [Partitioning and Bucketing](./partitioning-and-bucketing): the DDL choices that decide which partitions and tablets the planner can prune in the first place.
+- [Inverted Index](./inverted-index): the index-probe layer that turns text and high-cardinality equality predicates into posting-list lookups.
 - [Deep dive: Data Pruning in Apache Doris (blog)](https://doris.apache.org/blog/data-pruning-250908/)

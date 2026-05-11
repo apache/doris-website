@@ -1,7 +1,18 @@
 ---
 title: Load Transactions
 description: Run multi-statement loads as one atomic unit, with label-based dedup and 2PC for exactly-once streaming sinks.
+keywords:
+  - load transaction
+  - 2PC commit
+  - exactly-once load
+  - atomic load
+  - label dedup
+  - Apache Doris streaming sink
 slug: /key-features/load-transaction
+image: /images/next/key-features/load-transaction.jpg
+last_update:
+  date: 2026-05-10
+  author: Apache Doris
 featureCard:
   tags:
     - load
@@ -87,10 +98,10 @@ Both tables become readable at the same instant. If the second `INSERT` had fail
 
 ## Further reading
 
-- [Stream Load](./stream-load.mdx): the synchronous HTTP load that hosts the 2PC variant.
-- [Group Commit](./group-commit.mdx): the right tool for high-frequency small inserts that don't need explicit `BEGIN ... COMMIT`.
-- [Kafka and CDC Integration](./kafka-cdc-integration.mdx): how Routine Load and Flink CDC build on this transaction model for exactly-once.
-- [Binlog Table Stream](./binlog-table-stream.mdx): the change feed produced once committed rows become visible.
+- [Stream Load](./stream-load): the synchronous HTTP load that hosts the 2PC variant.
+- [Group Commit](./group-commit): the right tool for high-frequency small inserts that don't need explicit `BEGIN ... COMMIT`.
+- [Kafka and CDC Integration](./kafka-cdc-integration): how Routine Load and Flink CDC build on this transaction model for exactly-once.
+- [Binlog Table Stream](./binlog-table-stream): the change feed produced once committed rows become visible.
 - [Transactions, isolation, and Label retention](https://doris.apache.org/docs/data-operate/transaction/)
 - [Stream Load 2PC walkthrough](https://doris.apache.org/docs/data-operate/import/import-way/stream-load-manual/)
 - [How Flink's real-time writes to Doris stay both fast and exactly-once](https://doris.apache.org/blog/Flink-realtime-write/)

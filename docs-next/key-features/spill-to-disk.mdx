@@ -1,7 +1,18 @@
 ---
 title: Spill to Disk
-description: Memory-heavy operators write intermediate state to local disk when limits are hit, so big joins, aggregations, and sorts finish instead of failing with OOM.
+description: Memory-heavy operators spill intermediate state to local disk when limits are hit, so big joins, aggregations, and sorts finish instead of OOM.
+keywords:
+  - spill to disk
+  - out-of-memory recovery
+  - operator spill
+  - hash join spill
+  - aggregation spill
+  - Apache Doris reliability
 slug: /key-features/spill-to-disk
+image: /images/next/key-features/spill-to-disk.jpg
+last_update:
+  date: 2026-05-10
+  author: Apache Doris
 featureCard:
   tags:
     - query-engine
@@ -9,7 +20,7 @@ featureCard:
     - reliability
 ---
 
-> **TL;DR** Spill to Disk lets HashJoin, Aggregation, Sort, and CTE operators write intermediate state to local disk when a query is about to blow its memory budget. The query slows down, but it finishes. You turn it on with `set enable_spill = true` (per session) or at the [Workload Group](./workload-group.mdx) level, point BE at a spill directory, and read spill counters back from the query profile.
+> **TL;DR** Spill to Disk lets HashJoin, Aggregation, Sort, and CTE operators write intermediate state to local disk when a query is about to blow its memory budget. The query slows down, but it finishes. You turn it on with `set enable_spill = true` (per session) or at the [Workload Group](./workload-group) level, point BE at a spill directory, and read spill counters back from the query profile.
 
 ![Spill to Disk hero illustration](/images/next/key-features/spill-to-disk.jpg)
 
@@ -26,7 +37,7 @@ Spill to Disk turns those hard failures into slower, but successful, queries. Th
 
 ## What it is
 
-Spill to Disk is a runtime mechanism in the [Pipeline Execution Engine](./pipeline-execution-engine.mdx) that lets memory-intensive operators evict their intermediate state to local disk under memory pressure, then read it back to finish the query. It is operator-level, not query-level: only the operators that are actually large get spilled, and a query can keep running on a mix of in-memory and on-disk state.
+Spill to Disk is a runtime mechanism in the [Pipeline Execution Engine](./pipeline-execution-engine) that lets memory-intensive operators evict their intermediate state to local disk under memory pressure, then read it back to finish the query. It is operator-level, not query-level: only the operators that are actually large get spilled, and a query can keep running on a mix of in-memory and on-disk state.
 
 **Key terms**
 
@@ -65,7 +76,7 @@ FROM information_schema.backend_active_tasks;
 
 **Expected result**
 
-The query returns its top-100 rows. In the [query profile](../query-acceleration/query-profile.md), look for `Spilled: true` on the `PARTITIONED_HASH_JOIN_SINK_OPERATOR` or `AGGREGATION_SINK_OPERATOR`, plus `SpillWriteBlockBytes`, `SpillWriteFileBytes`, and `SpillWriteTime`. Audit logs add `SpillWriteBytesToLocalStorage` and `SpillReadBytesFromLocalStorage` for the same query. If those counters are zero, the query fit in memory and never spilled, which is the desired outcome.
+The query returns its top-100 rows. In the [query profile](../query-acceleration/query-profile), look for `Spilled: true` on the `PARTITIONED_HASH_JOIN_SINK_OPERATOR` or `AGGREGATION_SINK_OPERATOR`, plus `SpillWriteBlockBytes`, `SpillWriteFileBytes`, and `SpillWriteTime`. Audit logs add `SpillWriteBytesToLocalStorage` and `SpillReadBytesFromLocalStorage` for the same query. If those counters are zero, the query fit in memory and never spilled, which is the desired outcome.
 
 ## When to use it
 
@@ -74,7 +85,7 @@ The query returns its top-100 rows. In the [query profile](../query-acceleration
 - Heavy ETL on tables much larger than per-node memory: aggregations and joins that have to finish overnight no matter how skewed the data is.
 - TPC-DS, multi-table materialized view refresh, and other batch jobs that stack several large hash joins in one plan.
 - Queries that occasionally see a memory spike on a wide partition. You trade latency for surviving the spike.
-- Multi-tenant clusters where you cap each [Workload Group](./workload-group.mdx) tightly and want overshoots to spill instead of being killed.
+- Multi-tenant clusters where you cap each [Workload Group](./workload-group) tightly and want overshoots to spill instead of being killed.
 
 **Not a good fit**
 
@@ -82,12 +93,12 @@ The query returns its top-100 rows. In the [query profile](../query-acceleration
 - Workloads where a memory bump is cheaper than the disk IO. If your query is 10% over budget, raising `exec_mem_limit` or `max_memory_percent` finishes it faster than spilling does.
 - Streaming aggregation. The streaming agg path does not spill, by design. Switch to non-streaming agg or accept the memory cost.
 - Clusters with no spare local disk and no SSD. Spinning disks combined with heavy spill will dominate query time and starve normal scans of IO bandwidth.
-- A workaround for runaway queries. Spill makes a 100GB hash table possible. It does not make a `SELECT *` from a billion rows free. Pair it with [Workload Group](./workload-group.mdx) caps and queueing.
+- A workaround for runaway queries. Spill makes a 100GB hash table possible. It does not make a `SELECT *` from a billion rows free. Pair it with [Workload Group](./workload-group) caps and queueing.
 
 ## Further reading
 
-- [Spill to Disk admin guide](../admin-manual/workload-management/spill-disk.md): full BE config, FE session variables, slot-based memory allocation, and the TPC-DS 10TB validation run.
-- [Workload Group](./workload-group.mdx): per-group memory ceilings and how the high watermark triggers spill before kill.
-- [Pipeline Execution Engine](./pipeline-execution-engine.mdx): the runtime that owns the reserve-before-allocate accounting and the revocable-memory bookkeeping.
-- [Query profile](../query-acceleration/query-profile.md): how to read the per-operator `Spill*` counters that confirm spill happened.
-- [`backend_active_tasks` system table](../admin-manual/system-tables/information_schema/workload_groups.md): live per-query spill bytes for monitoring and alerting.
+- [Spill to Disk admin guide](../admin-manual/workload-management/spill-disk): full BE config, FE session variables, slot-based memory allocation, and the TPC-DS 10TB validation run.
+- [Workload Group](./workload-group): per-group memory ceilings and how the high watermark triggers spill before kill.
+- [Pipeline Execution Engine](./pipeline-execution-engine): the runtime that owns the reserve-before-allocate accounting and the revocable-memory bookkeeping.
+- [Query profile](../query-acceleration/query-profile): how to read the per-operator `Spill*` counters that confirm spill happened.
+- [`backend_active_tasks` system table](../admin-manual/system-tables/information_schema/workload_groups): live per-query spill bytes for monitoring and alerting.

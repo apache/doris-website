@@ -1,7 +1,18 @@
 ---
 title: Preaggregation and Rollup
 description: Aggregate Key tables fold rows together at load time, and ROLLUPs add precomputed alternate indexes the planner picks transparently.
+keywords:
+  - preaggregation
+  - rollup table
+  - Aggregate Key
+  - transparent rewrite
+  - Apache Doris materialized index
+  - SUM rollup
 slug: /key-features/preaggregation-and-rollup
+image: /images/next/key-features/preaggregation-and-rollup.jpg
+last_update:
+  date: 2026-05-10
+  author: Apache Doris
 featureCard:
   tags:
     - storage
@@ -83,14 +94,14 @@ The rollup drops `user_id`, so the planner picks it for any aggregate query that
 **Not a good fit**
 
 - Tables where you also need raw per-row lookups. Aggregate Key has already merged the raw rows. Use the Duplicate Key model instead, with an async materialized view if you also want preaggregated views.
-- Joins across tables. Both `ROLLUP` and sync MV are single-table only. Use [async materialized views](../query-acceleration/materialized-view/async-materialized-view/overview.md) when you need multi-table rewrites or partitioned refresh.
+- Joins across tables. Both `ROLLUP` and sync MV are single-table only. Use [async materialized views](../query-acceleration/materialized-view/async-materialized-view/overview) when you need multi-table rewrites or partitioned refresh.
 - Frequent point updates by primary key. Use the Unique Key model with merge-on-write.
 - Greenfield design that reaches for `ALTER TABLE ADD ROLLUP`. Write `CREATE MATERIALIZED VIEW` instead. The grammars differ but the runtime is shared, and the MV path is where new features land.
 
 ## Further reading
 
-- [Data Model](./data-model.mdx): why Aggregate Key is one of three table models and where Duplicate Key and Unique Key fit.
-- [Aggregate Model: data layout, merge rules, and tuning](../table-design/data-model/aggregate.md)
-- [Sync Materialized View: the modern replacement for `ADD ROLLUP`](../query-acceleration/materialized-view/sync-materialized-view.md)
-- [Async Materialized View: multi-table preaggregation with refresh modes](../query-acceleration/materialized-view/async-materialized-view/overview.md)
-- [`ALTER TABLE ROLLUP` syntax reference](../sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-ROLLUP.md)
+- [Data Model](./data-model): why Aggregate Key is one of three table models and where Duplicate Key and Unique Key fit.
+- [Aggregate Model: data layout, merge rules, and tuning](../table-design/data-model/aggregate)
+- [Sync Materialized View: the modern replacement for `ADD ROLLUP`](../query-acceleration/materialized-view/sync-materialized-view)
+- [Async Materialized View: multi-table preaggregation with refresh modes](../query-acceleration/materialized-view/async-materialized-view/overview)
+- [`ALTER TABLE ROLLUP` syntax reference](../sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-ROLLUP)

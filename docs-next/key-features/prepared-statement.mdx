@@ -1,7 +1,18 @@
 ---
 title: Prepared Statement
 description: Server-side prepared statement support over the MySQL protocol that caches parsed plans per session, cutting FE CPU on repeated queries.
+keywords:
+  - prepared statement
+  - MySQL protocol
+  - plan cache
+  - server-side prepare
+  - Apache Doris BI
+  - parameterized query
 slug: /key-features/prepared-statement
+image: /images/next/key-features/prepared-statement.jpg
+last_update:
+  date: 2026-05-10
+  author: Apache Doris
 featureCard:
   tags:
     - query-acceleration
@@ -86,7 +97,7 @@ instead of the raw SQL. That is the signal the cached plan is being reused. Pair
 **Good fit**
 
 - High-QPS point queries on Unique Key tables, where parse cost dominates.
-- Batch INSERTs over [Group Commit](./group-commit.mdx), where a loader fires the same `INSERT INTO t VALUES (?, ?, ?)` thousands of times per second.
+- Batch INSERTs over [Group Commit](./group-commit), where a loader fires the same `INSERT INTO t VALUES (?, ?, ?)` thousands of times per second.
 - Any query the same client repeats at meaningful rates: feature lookups, status checks, allow-listing, online-service reads.
 - Workloads where you would rather not stand up a separate KV store next to Doris.
 
@@ -96,11 +107,11 @@ instead of the raw SQL. That is the signal the cached plan is being reused. Pair
 - Drivers without clean server-side prepared-statement support. The Rust `sqlx` driver, for example, has [reported](https://github.com/launchbadge/sqlx/issues/3335) issues with Doris's implementation. Use a MySQL Connector that talks the binary protocol cleanly.
 - Connections that set `useServerPrepStmts=true` without `cachePrepStmts=true`. Every call re-issues `COM_STMT_PREPARE`, which is slower than the default client-side mode.
 - Statements with non-deterministic functions (`NOW()`, `RAND()`). The BE refuses to reuse the cached short-circuit context, so you only save parse cost.
-- Range and aggregate queries, if you are hoping for the short-circuit speedup. PreparedStatement still saves parse cost, but the BE runs a normal distributed plan. For those workloads, lean on [data pruning](./data-pruning.mdx) instead.
+- Range and aggregate queries, if you are hoping for the short-circuit speedup. PreparedStatement still saves parse cost, but the BE runs a normal distributed plan. For those workloads, lean on [data pruning](./data-pruning) instead.
 
 ## Performance and verification
 
-Doris reports a [4x or better throughput improvement](https://doris.apache.org/docs/2.1/query-acceleration/high-concurrent-point-query/) from PreparedStatement on point-query workloads where FE CPU is the bottleneck. This is the same 4x cited from the short-circuit angle in the [High-Concurrency Point Query card](./high-concurrency-point-query.mdx) — one combined gain, not two stackable ones. The full high-concurrency stack (Unique Key + Merge-on-Write + row store + row cache + short-circuit + PreparedStatement) reaches [30,000+ QPS per node](https://doris.apache.org/blog/How-We-Increased-Database-Query-Concurrency-by-20-Times/) on YCSB on a 16-core / 64GB machine, with average latency cut by 96% versus the un-optimized baseline. The PreparedStatement contribution is hard to isolate from the rest of the stack; treat 4x as the planning floor when the FE is your ceiling.
+Doris reports a [4x or better throughput improvement](https://doris.apache.org/docs/2.1/query-acceleration/high-concurrent-point-query/) from PreparedStatement on point-query workloads where FE CPU is the bottleneck. This is the same 4x cited from the short-circuit angle in the [High-Concurrency Point Query card](./high-concurrency-point-query) — one combined gain, not two stackable ones. The full high-concurrency stack (Unique Key + Merge-on-Write + row store + row cache + short-circuit + PreparedStatement) reaches [30,000+ QPS per node](https://doris.apache.org/blog/How-We-Increased-Database-Query-Concurrency-by-20-Times/) on YCSB on a 16-core / 64GB machine, with average latency cut by 96% versus the un-optimized baseline. The PreparedStatement contribution is hard to isolate from the rest of the stack; treat 4x as the planning floor when the FE is your ceiling.
 
 Two checks tell you the path is live:
 
@@ -111,7 +122,7 @@ If FE CPU is still the ceiling, scale Observers and use JDBC load balancing: `jd
 
 ## Further reading
 
-- [High-concurrency point query (full guide)](../query-acceleration/high-concurrent-point-query.md)
-- [High-Concurrency Point Query feature card](./high-concurrency-point-query.mdx)
-- [Group Commit for high-throughput INSERTs](./group-commit.mdx)
-- [Data pruning for non-point queries](./data-pruning.mdx)
+- [High-concurrency point query (full guide)](../query-acceleration/high-concurrent-point-query)
+- [High-Concurrency Point Query feature card](./high-concurrency-point-query)
+- [Group Commit for high-throughput INSERTs](./group-commit)
+- [Data pruning for non-point queries](./data-pruning)

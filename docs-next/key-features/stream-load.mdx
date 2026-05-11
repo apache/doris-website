@@ -1,7 +1,19 @@
 ---
 title: Stream Load
 description: Synchronous HTTP PUT ingest for CSV, JSON, Parquet, and ORC, with label-based deduplication and atomic per-batch commit.
+keywords:
+  - Stream Load
+  - HTTP ingest
+  - CSV ingest
+  - JSON ingest
+  - Parquet load
+  - atomic load
+  - Apache Doris real-time ingest
 slug: /key-features/stream-load
+image: /images/next/key-features/stream-load.jpg
+last_update:
+  date: 2026-05-10
+  author: Apache Doris
 featureCard:
   tags:
     - data-loading
@@ -85,17 +97,17 @@ curl --location-trusted -u root: \
 
 **Not a good fit**
 
-- Tens of thousands of tiny PUTs per second from many clients. Each load opens its own transaction and produces its own rowset, which overwhelms the FE planner and triggers `-235 Too many segments` on the BE. Use [Group Commit](./group-commit.mdx) so the BE merges small writes into one transaction, or move to [Routine Load](../data-operate/import/import-way/routine-load-manual.md) for Kafka.
-- Single files much larger than 10 GB. Stream Load runs as one synchronous request; if the connection drops you start over. Split the file or use [Batch Load](./batch-load.mdx), which runs server-side and survives the client.
-- Continuous tailing of a Kafka topic. Stream Load knows nothing about offsets. Use [Routine Load](../data-operate/import/import-way/routine-load-manual.md), which manages offsets, restart, and pause for you.
+- Tens of thousands of tiny PUTs per second from many clients. Each load opens its own transaction and produces its own rowset, which overwhelms the FE planner and triggers `-235 Too many segments` on the BE. Use [Group Commit](./group-commit) so the BE merges small writes into one transaction, or move to [Routine Load](../data-operate/import/import-way/routine-load-manual) for Kafka.
+- Single files much larger than 10 GB. Stream Load runs as one synchronous request; if the connection drops you start over. Split the file or use [Batch Load](./batch-load), which runs server-side and survives the client.
+- Continuous tailing of a Kafka topic. Stream Load knows nothing about offsets. Use [Routine Load](../data-operate/import/import-way/routine-load-manual), which manages offsets, restart, and pause for you.
 - Stream Load 2PC against Merge-on-Write Unique Key tables **in cloud / storage-compute-separated deployments**. The BE rejects this combination with `Status::NotSupported`. On-prem (shared-nothing) clusters allow it, and the regression suite covers it.
 - Loads that need server-side recording out of the box. By default, Doris does not log Stream Load history; turn on `enable_stream_load_record` in `be.conf` if `SHOW STREAM LOAD` should return anything.
 
 ## Further reading
 
-- [Stream Load HTTP reference: every header, the redirect rules, and the full response body](../data-operate/import/import-way/stream-load-manual.md)
-- [Group Commit: server-side merge for high-frequency Stream Loads that hit `-235`](./group-commit.mdx)
-- [Batch Load: asynchronous bulk ingest for large files from S3 and HDFS](./batch-load.mdx)
-- [Load transactions and Stream Load 2PC: when checkpoints need exactly-once across two systems](./load-transaction.mdx)
-- [Routine Load: managed Kafka consumer with offset and pause control](../data-operate/import/import-way/routine-load-manual.md)
-- [Doris Streamloader: a multi-concurrency client wrapper around the Stream Load API](../connection-integration/data-integration/doris-streamloader.md)
+- [Stream Load HTTP reference: every header, the redirect rules, and the full response body](../data-operate/import/import-way/stream-load-manual)
+- [Group Commit: server-side merge for high-frequency Stream Loads that hit `-235`](./group-commit)
+- [Batch Load: asynchronous bulk ingest for large files from S3 and HDFS](./batch-load)
+- [Load transactions and Stream Load 2PC: when checkpoints need exactly-once across two systems](./load-transaction)
+- [Routine Load: managed Kafka consumer with offset and pause control](../data-operate/import/import-way/routine-load-manual)
+- [Doris Streamloader: a multi-concurrency client wrapper around the Stream Load API](../connection-integration/data-integration/doris-streamloader)

@@ -1,7 +1,19 @@
 ---
 title: BM25 Relevance Scoring
 description: Apache Doris ranks full-text search results by BM25 relevance, so SQL queries can sort matches the way a search engine would.
+keywords:
+  - BM25
+  - relevance scoring
+  - full-text ranking
+  - search ranking
+  - Apache Doris search
+  - inverted index
+  - score function
 slug: /key-features/bm25
+image: /images/next/key-features/bm25.jpg
+last_update:
+  date: 2026-05-10
+  author: Apache Doris
 featureCard:
   tags:
     - search
@@ -91,15 +103,15 @@ Row 1 wins because it matches all three query terms. Row 2 matches one rare term
 
 - **Exact-equality lookups.** A non-tokenized inverted index does not compute scores. Use `=` or `IN` and skip `score()` entirely.
 - **Aggregations over scored results.** Doris rejects `score()` inside `GROUP BY`, inside aggregate functions, and in any plan without `ORDER BY score() LIMIT`. If you need analytics on relevance, materialize the top-K first and aggregate over that result set.
-- **Comparing scores across queries.** BM25 is corpus- and query-dependent. A score of 3.0 from one query and 3.0 from another mean different things. Use a rank-based fusion such as RRF instead. See [Reciprocal Rank Fusion](./reciprocal-rank-fusion.mdx).
+- **Comparing scores across queries.** BM25 is corpus- and query-dependent. A score of 3.0 from one query and 3.0 from another mean different things. Use a rank-based fusion such as RRF instead. See [Reciprocal Rank Fusion](./reciprocal-rank-fusion).
 - **Tuning `k1` and `b` per query.** Doris uses Lucene's defaults and does not currently expose these as runtime parameters. If your workload really needs custom tuning, file an issue rather than working around it with hand-rolled scoring.
 - **Pure vector ranking.** If the query is "find the 10 nearest embeddings, no keyword constraint at all", use an ANN distance function and skip BM25.
 
 ## Further reading
 
-- [Inverted index: how Doris stores the data BM25 reads from](./inverted-index.mdx)
-- [Full-text search: tokenizers, MATCH operators, and the SEARCH function](./full-text-search.mdx)
-- [Hybrid search: combining BM25 with vector similarity in one query](./hybrid-search.mdx)
-- [Reciprocal Rank Fusion: a query-independent way to fuse BM25 and vector rankings](./reciprocal-rank-fusion.mdx)
-- [Relevance scoring reference: full BM25 formula, parameters, and FAQ](../table-design/index/inverted-index/scoring.md)
-- [Inverted index overview: index types, parsers, and supported queries](../table-design/index/inverted-index/overview.md)
+- [Inverted index: how Doris stores the data BM25 reads from](./inverted-index)
+- [Full-text search: tokenizers, MATCH operators, and the SEARCH function](./full-text-search)
+- [Hybrid search: combining BM25 with vector similarity in one query](./hybrid-search)
+- [Reciprocal Rank Fusion: a query-independent way to fuse BM25 and vector rankings](./reciprocal-rank-fusion)
+- [Relevance scoring reference: full BM25 formula, parameters, and FAQ](../table-design/index/inverted-index/scoring)
+- [Inverted index overview: index types, parsers, and supported queries](../table-design/index/inverted-index/overview)

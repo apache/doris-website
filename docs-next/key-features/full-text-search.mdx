@@ -1,7 +1,19 @@
 ---
 title: Full-text Search
 description: Apache Doris runs full-text queries directly in SQL, with tokenizer-aware operators that go far beyond LIKE substring matching.
+keywords:
+  - full-text search
+  - MATCH_ANY
+  - MATCH_ALL
+  - MATCH_PHRASE
+  - tokenizer
+  - Apache Doris search
+  - inverted index
 slug: /key-features/full-text-search
+image: /images/next/key-features/full-text-search.jpg
+last_update:
+  date: 2026-05-10
+  author: Apache Doris
 featureCard:
   tags:
     - search
@@ -100,11 +112,11 @@ When several inverted indexes with different analyzers exist on one column, appe
 - E-commerce and catalog search where the same row has a price, a category, and a description.
 - Mixed CJK / Latin content; the `chinese`, `unicode`, and `icu` parsers handle both in one column.
 - Search-as-you-type, where `MATCH_PHRASE_PREFIX` returns completions without a separate auto-complete service.
-- RAG pipelines that pair text matches with embedding similarity. See [Hybrid Search](./hybrid-search.mdx) for combining `MATCH_*` with vector distance in one SQL.
+- RAG pipelines that pair text matches with embedding similarity. See [Hybrid Search](./hybrid-search) for combining `MATCH_*` with vector distance in one SQL.
 
 **Not a good fit**
 
-- Substring search inside a single token (find every row where the column contains "ear" inside "year"). Tokenization deletes that view of the data. Use `LIKE`, an [N-Gram BloomFilter index](../table-design/index/ngram-bloomfilter-index.md), or a non-tokenized inverted index.
+- Substring search inside a single token (find every row where the column contains "ear" inside "year"). Tokenization deletes that view of the data. Use `LIKE`, an [N-Gram BloomFilter index](../table-design/index/ngram-bloomfilter-index), or a non-tokenized inverted index.
 - Fuzzy / edit-distance matching ("did you mean..."). Doris does not ship a built-in fuzzy operator today. Pre-process at write time with a phonetic or n-gram analyzer, or fuzz the query in your application.
 - Result highlighting (returning the matched span with markup). Doris computes scores but does not emit highlight fragments today. Render highlights in the application from the matched terms.
 - Cross-field relevance ranking like Elasticsearch's `dis_max`. `score()` is per-predicate. Use `SEARCH('title:foo OR body:foo')` and tune at the application layer if you need richer scoring strategies.
@@ -125,10 +137,10 @@ Changing the analyzer means rebuilding the index with `BUILD INDEX`.
 
 ## Further reading
 
-- [Inverted Index](./inverted-index.mdx): the index structure that powers these operators, including storage layout, build and compaction behavior.
-- [BM25 Relevance Scoring](./bm25.mdx): how `score()` is computed, when it activates, and how to tune `k1` and `b`.
-- [Hybrid Search](./hybrid-search.mdx): combining `MATCH_*` and vector ANN distance in one SQL, with pre-filter / fallback semantics.
-- [Search Operators reference](../table-design/index/inverted-index/search-operators.md): the full operator catalog with slop syntax, prefix rules, and `USING ANALYZER`.
-- [Custom Analyzer guide](../table-design/index/inverted-index/custom-analyzer.md): char filters, tokenizers, and token filters in detail.
-- [SEARCH Function](../table-design/index/inverted-index/search-function.md): a single-string DSL that combines multiple operators across columns.
-- [Reciprocal Rank Fusion](./reciprocal-rank-fusion.mdx): the SQL pattern for fusing BM25 ranks with vector ranks when one scorer isn't enough.
+- [Inverted Index](./inverted-index): the index structure that powers these operators, including storage layout, build and compaction behavior.
+- [BM25 Relevance Scoring](./bm25): how `score()` is computed, when it activates, and how to tune `k1` and `b`.
+- [Hybrid Search](./hybrid-search): combining `MATCH_*` and vector ANN distance in one SQL, with pre-filter / fallback semantics.
+- [Search Operators reference](../table-design/index/inverted-index/search-operators): the full operator catalog with slop syntax, prefix rules, and `USING ANALYZER`.
+- [Custom Analyzer guide](../table-design/index/inverted-index/custom-analyzer): char filters, tokenizers, and token filters in detail.
+- [SEARCH Function](../table-design/index/inverted-index/search-function): a single-string DSL that combines multiple operators across columns.
+- [Reciprocal Rank Fusion](./reciprocal-rank-fusion): the SQL pattern for fusing BM25 ranks with vector ranks when one scorer isn't enough.

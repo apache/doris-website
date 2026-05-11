@@ -1,7 +1,19 @@
 ---
 title: Batch Load
-description: Asynchronous bulk ingestion from S3, HDFS, and external catalogs into Doris using LOAD LABEL or INSERT INTO SELECT, with label-based dedup and SHOW LOAD tracking.
+description: Asynchronous bulk ingestion from S3, HDFS, and external catalogs into Doris via LOAD LABEL or INSERT INTO SELECT, with label-based dedup.
+keywords:
+  - batch load
+  - LOAD LABEL
+  - INSERT INTO SELECT
+  - S3 ingestion
+  - HDFS ingestion
+  - bulk ingestion
+  - Apache Doris ETL
 slug: /key-features/batch-load
+image: /images/next/key-features/batch-load.jpg
+last_update:
+  date: 2026-05-10
+  author: Apache Doris
 featureCard:
   tags:
     - data-loading
@@ -81,26 +93,26 @@ PROPERTIES ("timeout" = "3600", "max_filter_ratio" = "0.01");
 **Good fit**
 
 - Periodic ingestion of large CSV, JSON, Parquet, or ORC files from S3, HDFS, OSS, COS, OBS, or any S3-compatible storage.
-- One-off migrations from Hive, Iceberg, Snowflake, or BigQuery: combine [Catalog](../lakehouse/lakehouse-overview.md) with `INSERT INTO ... SELECT` for source-side projection and pushdown.
+- One-off migrations from Hive, Iceberg, Snowflake, or BigQuery: combine [Catalog](../lakehouse/lakehouse-overview) with `INSERT INTO ... SELECT` for source-side projection and pushdown.
 - Backfills measured in tens of GB to hundreds of GB per job, where the client cannot stay connected for hours.
 - Loads that need server-side `WHERE` filtering, column transformations via `SET`, or partition fields extracted from the file path with `COLUMNS FROM PATH AS`.
 - Hive-partitioned directories matched with wildcards (`*`, `?`, `{1..10}`) inside one statement.
 
 **Not a good fit**
 
-- Continuous Kafka ingestion. Use [Routine Load](./kafka-cdc-integration.mdx) so the FE owns the consumer and offsets.
-- Per-event JDBC writes from a microservice. The commit overhead per job is wasted on tiny payloads. Reach for [Group Commit](./group-commit.mdx) instead.
-- Loads from local files on the client machine. Broker Load reads from remote storage only; `Stream Load` or [Doris Streamloader](../connection-integration/data-integration/doris-streamloader.md) is the right tool.
+- Continuous Kafka ingestion. Use [Routine Load](./kafka-cdc-integration) so the FE owns the consumer and offsets.
+- Per-event JDBC writes from a microservice. The commit overhead per job is wasted on tiny payloads. Reach for [Group Commit](./group-commit) instead.
+- Loads from local files on the client machine. Broker Load reads from remote storage only; `Stream Load` or [Doris Streamloader](../connection-integration/data-integration/doris-streamloader) is the right tool.
 - Single jobs over a few TB. The default 4-hour timeout becomes a footgun, retries are expensive, and a partial failure replays the whole batch. Split the input by date or directory and submit several jobs.
-- Continuous incremental file pickup from S3. A nightly Broker Load works; per-minute polling does not. Use [Streaming Job continuous load](../data-operate/import/import-way/streaming-job/continuous-load-s3.md) so the FE tracks which files have been ingested.
+- Continuous incremental file pickup from S3. A nightly Broker Load works; per-minute polling does not. Use [Streaming Job continuous load](../data-operate/import/import-way/streaming-job/continuous-load-s3) so the FE tracks which files have been ingested.
 
 ## Further reading
 
-- [Stream Load](./stream-load.mdx): the synchronous HTTP load path for smaller, real-time batches.
-- [Group Commit](./group-commit.mdx): server-side merging for the high-frequency small-batch end of the spectrum.
-- [Broker Load reference](../data-operate/import/import-way/broker-load-manual.md): full SQL surface, Kerberos and HDFS HA configuration, scenario-by-scenario examples.
-- [INSERT INTO Select](../data-operate/import/import-way/insert-into-manual.md): the synchronous variant, including TVF and Catalog flows.
-- [Load overview decision table](../data-operate/import/load-manual.md): which method fits which scenario across real-time, streaming, and batch.
-- [Catalog and TVF entry point](../lakehouse/file-analysis.md): how `S3()`, `HDFS()`, and friends expose files as queryable tables.
-- [Load Transactions](./load-transaction.mdx): the label, lifecycle states, and atomic commit model that batch loads share with the rest of Doris.
-- [BROKER LOAD SQL reference](../sql-manual/sql-statements/data-modification/load-and-export/BROKER-LOAD.md): the canonical statement grammar and every option.
+- [Stream Load](./stream-load): the synchronous HTTP load path for smaller, real-time batches.
+- [Group Commit](./group-commit): server-side merging for the high-frequency small-batch end of the spectrum.
+- [Broker Load reference](../data-operate/import/import-way/broker-load-manual): full SQL surface, Kerberos and HDFS HA configuration, scenario-by-scenario examples.
+- [INSERT INTO Select](../data-operate/import/import-way/insert-into-manual): the synchronous variant, including TVF and Catalog flows.
+- [Load overview decision table](../data-operate/import/load-manual): which method fits which scenario across real-time, streaming, and batch.
+- [Catalog and TVF entry point](../lakehouse/file-analysis): how `S3()`, `HDFS()`, and friends expose files as queryable tables.
+- [Load Transactions](./load-transaction): the label, lifecycle states, and atomic commit model that batch loads share with the rest of Doris.
+- [BROKER LOAD SQL reference](../sql-manual/sql-statements/data-modification/load-and-export/BROKER-LOAD): the canonical statement grammar and every option.
