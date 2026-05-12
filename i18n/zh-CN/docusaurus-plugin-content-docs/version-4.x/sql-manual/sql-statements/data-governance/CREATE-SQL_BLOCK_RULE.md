@@ -51,6 +51,7 @@ PROPERTIES (
 > - partition_num: 一个表将扫描的最大 partition 数量
 > - tablet_num: 一个表将扫描的最大 tablet 数量
 > - cardinality: 一个表将扫描的数据行数
+> - require_partition_filter：查询分区内表或 Hive 表时是否必须包含有效的分区过滤条件。设置为 `true` 后，如果查询支持的分区表但没有在分区列上添加过滤条件，则会被阻止执行。默认值为 `false`。该属性在 Doris 4.0 系列中从 4.0.6 起支持，在 Doris 4.1 系列中从 4.1.2 起支持。目前仅对内表和 Hive 表生效。
 >
 > **开关类**
 >
@@ -123,6 +124,30 @@ PROPERTIES (
 
     ```sql
     SET PROPERTY FOR 'jack' 'sql_block_rules' = 'test_rule4';
+    ```
+
+5. 创建要求分区内表和 Hive 表查询必须包含分区过滤条件的规则
+
+    ```sql
+    CREATE SQL_BLOCK_RULE test_rule5
+    PROPERTIES(
+        "require_partition_filter"="true",
+        "global"="true",
+        "enable"="true"
+    );
+    ```
+
+    开启规则后，未包含分区列过滤条件的受支持分区表查询会被阻止：
+
+    ```sql
+    SELECT * FROM partitioned_table;
+    ERROR 1105 (HY000): errCode = 2, detailMessage = sql hits sql block rule: test_rule5, missing partition filter
+    ```
+
+    包含有效分区过滤条件的查询可以继续执行：
+
+    ```sql
+    SELECT * FROM partitioned_table WHERE dt = '2024-01-01';
     ```
 
 ## 其它
