@@ -1,0 +1,126 @@
+---
+title: Catalog Integrations
+description: Connect Doris to Glue, Iceberg REST, HMS, S3 Tables, Polaris, Unity, DLF, and more, so one engine speaks every lakehouse catalog dialect.
+keywords:
+  - external catalog
+  - Iceberg REST
+  - Glue catalog
+  - Hive Metastore
+  - Unity Catalog
+  - Polaris
+  - S3 Tables
+  - lakehouse
+slug: /key-features/catalog-integrations
+image: /images/next/key-features/catalog-integrations.jpg
+last_update:
+  date: 2026-05-10
+  author: Apache Doris
+featureCard:
+  tags:
+    - lakehouse
+    - iceberg
+    - catalog
+---
+
+> **TL;DR** Doris talks to most of the catalog services your lake already uses. Hive Metastore, AWS Glue, the Iceberg REST spec (Tabular, Polaris, Lakekeeper, Snowflake Open Catalog, Gravitino, Unity), AWS S3 Tables, Aliyun DLF, file-based Hadoop, and a JDBC backend all sit behind one `CREATE CATALOG` statement. Pick the right `iceberg.catalog.type` (or `hive.metastore.type`), supply credentials and a warehouse, and the same SQL works against every one of them.
+
+![Apache Doris Catalog Integrations: Connect Doris to Glue, Iceberg REST, HMS, S3 Tables, Polaris, Unity, DLF, and more, so one engine speaks every lakehouse catalog dialect.](/images/next/key-features/catalog-integrations.jpg)
+## Why it matters {#why}
+
+Catalog choice is rarely up to the analytics engine. The metastore comes from somewhere else: a Hadoop cluster that picked Hive Metastore years ago, an AWS account that standardized on Glue, a platform team that just rolled out Polaris, a Databricks workspace that lives in Unity. If your query engine only speaks one of those, you either build a translation layer or limit the lake to whatever the engine supports.
+
+Doris takes the opposite stance: stay plural about the catalog, keep the SQL flat. You type `CREATE CATALOG`, pick a type, and get `SHOW DATABASES`, `SELECT`, joins, writes, and time travel against the same Iceberg or Hive table no matter where the metadata lives. Pair it with [multi-catalog](./multi-catalog) federation and a unified [metadata cache](./metadata-cache), and you can also [manage lake tables](./managing-lake-table) end to end.
+
+- One engine for many metastores. No per-catalog query layer to operate.
+- New catalog services arrive as another backend type. Iceberg REST, S3 Tables, Polaris, and Unity all reuse the same connection scaffolding.
+- Migrating off a legacy metastore is a `CREATE CATALOG` away, not a re-platform.
+
+## What it is {#what}
+
+A catalog integration is a backend driver that maps Doris's external-catalog interface to a specific metadata service. For Iceberg tables the type is selected with `iceberg.catalog.type`; for Hive-style tables the choice flows through `type = 'hms'` plus `hive.metastore.type`. Storage credentials (S3, OSS, COS, HDFS) are layered on top of whichever catalog you pick.
+
+The shipped backends today:
+
+- **Hive Metastore (`hms`)**: the long-standing Thrift service, with simple or Kerberos auth, used for Hive, Iceberg, and Paimon tables.
+- **AWS Glue (`glue`)**: AWS's managed Hive-compatible catalog. Reachable as a Hive backend (`hive.metastore.type=glue`), as a native Iceberg Glue client (`iceberg.catalog.type=glue`), or via Glue's Iceberg REST endpoint when you sit in front of an S3 Table Bucket.
+- **Iceberg REST (`rest`)**: the open Iceberg REST Catalog spec. The same backend covers Tabular-style services, Apache Polaris, Lakekeeper, Snowflake Open Catalog, Apache Gravitino, and Databricks Unity's Iceberg REST endpoint.
+- **AWS S3 Tables (`s3tables`)**: AWS's managed Iceberg catalog tied to a Table Bucket; also reachable through Glue's REST endpoint with SigV4 signing.
+- **Aliyun DLF (`dlf`)**: Data Lake Formation 1.0 over its HMS-compatible interface for Iceberg and Hive; DLF 2.5+ via REST for Paimon.
+- **Hadoop file system (`hadoop`)**: file-based Iceberg metadata, no metastore daemon, useful for self-contained warehouses.
+- **JDBC catalog (`jdbc`)**: Iceberg metadata stored in a SQL database (Postgres, MySQL), useful when you need a transactional metastore without running a service.
+- **Unity Catalog**: reached through the Iceberg REST backend, with OAuth2 and vended credentials.
+
+**Key terms**
+
+- **`type`**: the catalog family. `iceberg`, `hms`, `paimon`, `hudi`, `jdbc`, and similar.
+- **`iceberg.catalog.type`**: the metastore driver inside the Iceberg family. One of `hms`, `rest`, `glue`, `dlf`, `jdbc`, `hadoop`, `s3tables`.
+- **`hive.metastore.type`**: the equivalent switch for Hive-style catalogs. `hms` (default) or `glue` or `dlf`.
+- **Vended credentials**: a Doris feature that asks the REST catalog for short-lived storage credentials per table, so you do not hand-roll AKs in the catalog properties.
+- **Warehouse**: the storage root the catalog writes new tables under. Required for `hadoop`, optional for most others.
+
+## How it works {#how}
+
+1. **Pick a backend.** Doris's `IcebergExternalCatalogFactory` switches on `iceberg.catalog.type` and instantiates one of `IcebergHMSExternalCatalog`, `IcebergGlueExternalCatalog`, `IcebergRestExternalCatalog`, `IcebergDLFExternalCatalog`, `IcebergJdbcExternalCatalog`, `IcebergHadoopExternalCatalog`, or `IcebergS3TablesExternalCatalog`. Hive-family catalogs route the same way through the `hms` driver and `hive.metastore.type`.
+2. **Resolve metadata.** The chosen backend handles `SHOW DATABASES`, schema fetches, snapshot lookups, and partition listing through its native protocol (Thrift for HMS, AWS SDK for Glue, HTTP for REST).
+3. **Resolve storage.** Whatever credentials you pass (`s3.access_key`, `oss.endpoint`, vended creds from a REST catalog) flow into a unified storage layer the BEs use to read Parquet, ORC, or Avro files.
+4. **Cache for speed.** Schemas, table objects, manifests, and views are cached per catalog under `meta.cache.iceberg.*` keys. See [Metadata Cache](./metadata-cache) for the eviction model.
+5. **Plan and execute.** From there it is the same MPP pipeline as a Doris-internal query, reusing the same data cache, materialized view rewrite, and vectorized execution.
+
+## Quick start {#quick-start}
+
+```sql
+-- Connect to an Iceberg REST catalog (Polaris, Lakekeeper, Tabular,
+-- Snowflake Open Catalog, Unity, or any spec-compatible service).
+CREATE CATALOG iceberg_rest PROPERTIES (
+  'type' = 'iceberg',
+  'iceberg.catalog.type' = 'rest',
+  'iceberg.rest.uri' = 'https://catalog.example.com/api/catalog',
+  'warehouse' = 'analytics',
+  'iceberg.rest.security.type' = 'oauth2',
+  'iceberg.rest.oauth2.credential' = 'client_id:client_secret',
+  'iceberg.rest.vended-credentials-enabled' = 'true',
+  's3.endpoint' = 'https://s3.us-west-2.amazonaws.com',
+  's3.region' = 'us-west-2'
+);
+
+SWITCH iceberg_rest;
+SELECT region, SUM(amount) FROM sales.orders WHERE dt = '2026-05-01' GROUP BY region;
+```
+
+**Expected result**
+
+```
++--------+-----------+
+| region | sum       |
++--------+-----------+
+| us     | 184320.50 |
+| eu     |  91200.00 |
++--------+-----------+
+```
+
+`SHOW CATALOGS` lists `iceberg_rest` next to `internal`. The same query shape works after you swap the PROPERTIES block for a Glue, HMS, or S3 Tables backend; only the connection block changes.
+
+## When to use it {#when}
+
+**Good fit**
+
+- An existing lake that already runs on Hive Metastore, Glue, DLF, or an Iceberg REST service, and you want Doris to read and write it without moving data.
+- Cross-region or cross-vendor work, for example reading a Glue catalog in one account and joining against a Polaris catalog in another. See [Multi Catalog](./multi-catalog) for the federation story.
+- Migrations between catalog services. Bind both old and new as separate catalogs, run them side by side, and switch when ready.
+- Cloud-native deployments that need vended credentials so the engine never sees long-lived storage keys.
+- File-based or single-tenant Iceberg lakes where running a metastore daemon is overkill: the `hadoop` backend reads metadata straight off the file system.
+
+**Not a good fit**
+
+- Operational metadata stores like Confluent Schema Registry. They describe wire formats, not tables.
+- Treating Doris as the system of record for a lake's metadata. Writes go back to the bound catalog, but Doris is not the catalog itself; for pure Doris-managed tables, use the `internal` catalog.
+- Reading raw files when there is no catalog at all. Use [Table Value Functions](../lakehouse/file-analysis) (`s3()`, `hdfs()`, `local()`) instead of standing up an empty catalog.
+
+## Further reading {#further-reading}
+
+- [Multi Catalog](./multi-catalog): the federation layer that lets you join across the catalogs you connected here.
+- [Managing Lake Table](./managing-lake-table): the write, schema-evolution, and lifecycle story for Iceberg and Hive tables once a catalog is bound.
+- [Iceberg Catalog](../lakehouse/catalogs/iceberg-catalog): per-property reference, version matrix, and the feature support table for each backend.
+- [AWS Glue](../lakehouse/metastores/aws-glue), [Iceberg REST Catalog](../lakehouse/metastores/iceberg-rest), [Hive Metastore](../lakehouse/metastores/hive-metastore), [Aliyun DLF](../lakehouse/metastores/aliyun-dlf): full per-backend connection guides with examples.
+- [Catalog Overview](../lakehouse/catalog-overview): common properties (`include_database_list`, case sensitivity, refresh) that apply across every backend.
+- [Metadata Cache](./metadata-cache): the cache model that keeps repeat queries fast without losing freshness.

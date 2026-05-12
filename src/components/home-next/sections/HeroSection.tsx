@@ -93,9 +93,14 @@ function useTypewriter(lines: SqlLine[], resetKey: number, speed = 11): Typewrit
     const flat = useMemo(() => flattenLines(lines), [lines]);
     const totalChars = useMemo(() => flat.reduce((s, l) => s + l.total, 0), [flat]);
     const [tick, setTick] = useState(0);
+    const [trackedResetKey, setTrackedResetKey] = useState(resetKey);
+
+    if (trackedResetKey !== resetKey) {
+        setTrackedResetKey(resetKey);
+        setTick(0);
+    }
 
     useEffect(() => {
-        setTick(0);
         let current = 0;
         const id = window.setInterval(() => {
             current += 1;

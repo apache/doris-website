@@ -1,7 +1,18 @@
 ---
 title: Kafka and CDC Integration
 description: Pull Kafka topics straight into Doris with Routine Load, or stream MySQL/Postgres CDC through Flink with exactly-once via Stream Load 2PC.
+keywords:
+  - Kafka Routine Load
+  - Flink CDC
+  - MySQL CDC
+  - exactly-once
+  - Stream Load 2PC
+  - Apache Doris streaming
 slug: /key-features/kafka-cdc-integration
+image: /images/next/key-features/kafka-cdc-integration.jpg
+last_update:
+  date: 2026-05-10
+  author: Apache Doris
 featureCard:
   tags:
     - load
@@ -9,13 +20,12 @@ featureCard:
     - cdc
 ---
 
-> **TL;DR** Doris ingests Kafka topics and CDC change streams natively. Use **Routine Load** when you want a Kafka consumer that lives inside the FE and needs no external service. Use the **Flink Doris Connector** with Flink CDC when you want whole-database MySQL/Postgres/Oracle sync with exactly-once via Stream Load 2PC. Use the **Doris Kafka Connector** when Kafka Connect is already running and your payloads are Avro, Protobuf, or Debezium. All three paths land in the same Unique Key Merge-on-Write tables, so out-of-order events and deletes work the same way regardless of which path you pick.
+> **TL;DR** Doris ingests Kafka topics and CDC change streams natively. Use **Routine Load** when you want a Kafka consumer that lives inside the FE and needs no external service. Use the **Flink Doris Connector** with Flink CDC when you want whole-database MySQL/Postgres/Oracle sync with exactly-once via [Stream Load](./stream-load) 2PC. Use the **Doris Kafka Connector** when Kafka Connect is already running and your payloads are Avro, Protobuf, or Debezium. All three paths land in the same Unique Key Merge-on-Write tables, so out-of-order events and [deletes](./data-update-delete) work the same way regardless of which path you pick.
 
-![Kafka and CDC Integration hero illustration](/images/next/key-features/kafka-cdc-integration.jpg)
+![Apache Doris Kafka and CDC Integration: Pull Kafka topics straight into Doris with Routine Load, or stream MySQL/Postgres CDC through Flink with exactly-once via Stream Load 2PC.](/images/next/key-features/kafka-cdc-integration.jpg)
+## Why it matters {#why}
 
-## Why it matters
-
-Most warehouses make you bolt on streaming ingest. You stand up a Kafka consumer, re-implement offset bookkeeping, retry, schema mapping, and deletes, and hope the consumer dies cleanly when the warehouse falls over. Or you run Flink in front and pay for an extra cluster. Or you give up on "real-time" and ship five-minute batches.
+Most warehouses make you bolt on streaming ingest. You stand up a Kafka consumer, re-implement offset bookkeeping, retry, schema mapping, and deletes, and hope the consumer dies cleanly when the warehouse falls over. Or you run Flink in front and pay for an extra cluster. Or you give up on "real-time" and ship five-minute batches via [bulk load](./batch-load).
 
 - A CDC pipeline replays its last batch after a checkpoint failure and doubles every row it had buffered.
 - An out-of-order update on a Unique Key table loses to the older version because nothing told the engine which write is fresher.
@@ -23,7 +33,7 @@ Most warehouses make you bolt on streaming ingest. You stand up a Kafka consumer
 
 Doris pushes most of this into the engine, so the path from a Kafka topic or a MySQL binlog to a queryable row is short and the failure modes are ones you can name.
 
-## What it is
+## What it is {#what}
 
 Doris ships four ingestion paths for streaming and CDC traffic. They share the same backbone: transactional loads identified by a `Label`, Unique Key Merge-on-Write tables for upserts and deletes, and a sequence column that pins the winning version when events arrive out of order. They differ in who runs the consumer.
 
@@ -35,7 +45,7 @@ Doris ships four ingestion paths for streaming and CDC traffic. They share the s
 - **`Doris Kafka Connector`**: a Kafka Connect sink plugin. Inherits Kafka Connect's converter ecosystem, so Avro, Protobuf, and Debezium payloads work without a custom serializer.
 - **`function_column.sequence_col`**: a per-table property on Unique Key MOW tables that selects the column whose value decides which version of a row wins. The safety net for out-of-order CDC.
 
-## How it works
+## How it works {#how}
 
 The two paths most teams pick share the same lifecycle once data hits the FE.
 
@@ -45,7 +55,7 @@ The two paths most teams pick share the same lifecycle once data hits the FE.
 4. **Publish makes rows visible.** A background daemon ships `PublishVersion` to every replica. When the transaction reaches `VISIBLE`, the new rows are queryable. Tablets in the same transaction never tear.
 5. **Errors pause the job, not the data.** If a Routine Load batch breaches `max_error_number` (default 0), the job moves to `PAUSED` and keeps the last error URL on the FE. Resume after fixing the source data; offsets stay where they were.
 
-## Quick start
+## Quick start {#quick-start}
 
 ```sql
 CREATE TABLE events (
@@ -91,7 +101,7 @@ PROPERTIES ("function_column.sequence_col" = "updated");
 
 The `sequence_col` line is what protects you when a delayed CDC event arrives after a fresher one: the older `updated` loses, the newer wins, and the result is the same regardless of arrival order.
 
-## When to use it
+## When to use it {#when}
 
 **Good fit**
 
@@ -103,19 +113,20 @@ The `sequence_col` line is what protects you when a delayed CDC event arrives af
 **Not a good fit**
 
 - Avro from Kafka through Routine Load. Routine Load reads CSV and JSON only. Either convert upstream or use the Doris Kafka Connector with the appropriate converter.
-- Per-event `INSERT INTO ... VALUES` from a microservice. That is not a Kafka problem and not a CDC problem; reach for [Group Commit](./group-commit.mdx) so the BE batches small writes server-side.
+- Per-event `INSERT INTO ... VALUES` from a microservice. That is not a Kafka problem and not a CDC problem; reach for [Group Commit](./group-commit) so the BE batches small writes server-side.
 - Routine Load on a topic with short Kafka retention. If retention is 24 h and the job stays paused for two days, the persisted offset falls behind the earliest available offset, and Kafka rejects the resume with "out of range". Raise retention, or run a connector that buffers.
 - Monitoring offset lag through the FE alone. The FE does not currently expose a lag metric ([open issue](https://github.com/apache/doris/issues/7113)). Scrape the Kafka-side consumer-lag exporter or watch BE-side rates.
-- Stream Load 2PC against Merge-on-Write Unique Key tables. The combination is rejected; for those tables, lean on `Label`-based dedup and the sequence column instead.
+- Stream Load 2PC against Merge-on-Write Unique Key tables **on cloud / storage-compute-separated deployments**: the BE rejects this combination, so the Flink Connector's exactly-once path falls back to `Label`-based dedup plus the sequence column there. On-prem clusters keep the full Stream Load 2PC path on MoW.
 
-## Performance and numbers
+## Performance and numbers {#performance}
 
 From "How Flink's real-time writes to Apache Doris stay both fast and exactly-once" (July 2022 release blog): under 30 concurrent Stream Loads, end-to-end latency stayed below one second; 20 Flink tasks sustained an upstream rate near 100,000 events per second; CPU on the BE dropped about 25% versus the previous load path under high concurrency. Source: [Apache Doris blog](https://doris.apache.org/blog/Flink-realtime-write/).
 
-## Further reading
+## Further reading {#further-reading}
 
-- [Routine Load reference](../data-operate/import/import-way/routine-load-manual.md)
-- [Flink Doris Connector and Flink CDC](../connection-integration/data-integration/flink-doris-connector.md)
-- [Doris Kafka Connector for Avro, Protobuf, and Debezium](../connection-integration/data-integration/doris-kafka-connector.md)
-- [Load Transactions: the model behind 2PC](./load-transaction.mdx)
-- [Data Update and Delete: sequence column and Merge-on-Write](./data-update-delete.mdx)
+- [Routine Load reference](../data-operate/import/import-way/routine-load-manual)
+- [Flink Doris Connector and Flink CDC](../connection-integration/data-integration/flink-doris-connector)
+- [Doris Kafka Connector for Avro, Protobuf, and Debezium](../connection-integration/data-integration/doris-kafka-connector)
+- [Load Transactions: the model behind 2PC](./load-transaction)
+- [Data Update and Delete: sequence column and Merge-on-Write](./data-update-delete)
+- [Binlog Table Stream](./binlog-table-stream): the change feed that runs the other direction, exposing Doris row changes to downstream consumers.

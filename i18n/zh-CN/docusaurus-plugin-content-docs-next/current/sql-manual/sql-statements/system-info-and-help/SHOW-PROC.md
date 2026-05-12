@@ -70,8 +70,8 @@ mysql> show proc "/";
 8. cluster_health : 通过 <code>SHOW PROC '/cluster_health/tablet_health'</code>; 命令可以查看整个集群的副本状态。
 9. colocation_group :   该命令可以查看集群内已存在的 Group 信息，具体可以查看 [Colocation Join](../../../query-acceleration/colocation-join) 章节
 10. current_backend_instances：显示当前正在执行作业的 be 节点列表
-11. current_queries  : 查看正在执行的查询列表，当前正在运行的 SQL 语句。                          
-12. current_query_stmts : 返回当前正在执行的 query。
+11. current_queries  : 查看正在执行的查询列表，包含运行时统计信息和任务进度（扫描/CPU/内存/Shuffle/溢写/缓存等指标）。自 4.1.1 起，该视图与 `current_query_stmts` 共享相同的增强统计信息。                          
+12. current_query_stmts : 返回当前正在执行的 query，与 `current_queries` 共享相同的统计视图，提供任务级别的进度和资源指标。
 13. dbs：主要用于查看 Doris 集群中各个数据库以及其中的表的元数据信息。这些信息包括表结构、分区、物化视图、数据分片和副本等等。通过这个目录和其子目录，可以清楚的展示集群中的表元数据情况，以及定位一些如数据倾斜、副本故障等问题
 14. diagnose : 报告和诊断集群中的常见管控问题，主要包括副本均衡和迁移、事务异常等
 15. frontends：显示集群中所有的 FE 节点信息，包括 IP 地址、角色、状态、是否是 master 等，等同于 [SHOW FRONTENDS](../cluster-management/instance-management/SHOW-FRONTENDS)

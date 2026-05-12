@@ -1,0 +1,120 @@
+---
+title: Analytic Functions
+description: SQL window functions in Doris rank, accumulate, lag, and average across rows; the planner pushes Top-N filters down into the window operator.
+keywords:
+  - window functions
+  - SQL OVER clause
+  - rank function
+  - lag lead
+  - running total
+  - Top-N pushdown
+  - Apache Doris analytics
+slug: /key-features/analytic-functions
+image: /images/next/key-features/analytic-functions.jpg
+last_update:
+  date: 2026-05-10
+  author: Apache Doris
+featureCard:
+  tags:
+    - query-acceleration
+    - performance
+---
+
+> **TL;DR** Analytic functions (window functions) compute a value for every row of a result set without collapsing rows the way `GROUP BY` does. Doris supports the standard set, `ROW_NUMBER`, `RANK`, `DENSE_RANK`, `NTILE`, `LAG`, `LEAD`, `FIRST_VALUE`, `LAST_VALUE`, `NTH_VALUE`, `PERCENT_RANK`, `CUME_DIST`, plus every aggregate (`SUM`, `AVG`, `COUNT`, `MIN`, `MAX`) used with `OVER`. The Nereids optimizer also rewrites `WHERE row_num <= K` into a partition-aware Top-N below the window, so a "top 10 per category" query never sorts the whole partition.
+
+![Apache Doris Analytic Functions: SQL window functions in Doris rank, accumulate, lag, and average across rows; the planner pushes Top-N filters down into the window operator.](/images/next/key-features/analytic-functions.jpg)
+## Why it matters {#why}
+
+Three questions show up in almost every analytics workload, and `GROUP BY` answers none of them on its own.
+
+- "Number every order per customer in time order, then keep the first 10." A self-join on `(customer_id, order_date)` works but reads the table twice.
+- "What was the running total of sales by day, and the 7-day moving average?" `GROUP BY` collapses the rows you still want to see.
+- "How does each row compare to the previous row?" Year-over-year, period-over-period, gap-between-events, this is the lag/lead pattern, and writing it without window functions means a self-join with an offset predicate that the planner cannot optimize.
+
+Analytic functions answer all three in one pass over the data, with no self-join and the original rows preserved.
+
+## What it is {#what}
+
+An analytic function is a SQL function that, for each input row, computes a value over a *window* of related rows defined by an `OVER` clause. The window can be the whole partition, a fixed range around the current row, or anything in between. The output has the same number of rows as the input.
+
+```
+function(args) OVER ( [PARTITION BY ...] [ORDER BY ...] [<frame>] )
+```
+
+**Key terms**
+
+- **`OVER` clause**: tells Doris this call is a window function rather than a regular aggregate. Required.
+- **`PARTITION BY`**: splits the input into independent groups. Each partition is computed on its own. Different from table partitions, this is a runtime concept.
+- **`ORDER BY` (inside `OVER`)**: orders rows within each partition. `LAG`, `LEAD`, `ROW_NUMBER`, `RANK`, and any frame with `PRECEDING`/`FOLLOWING` need it.
+- **Window frame**: the slice of the partition the function reads for the current row. Doris supports `ROWS BETWEEN ... PRECEDING/FOLLOWING/CURRENT ROW/UNBOUNDED ...` and a restricted form of `RANGE`.
+- **PartitionTopN**: an internal operator the planner inserts when it can prove a `WHERE rank <= K` filter only needs the top K rows per partition. Source: `CreatePartitionTopNFromWindow.java`.
+
+## How it works {#how}
+
+1. **Plan.** The optimizer parses the `OVER` clause into a `WindowExpression`, normalizes the frame (`CheckAndStandardizeWindowFunctionAndFrame`), and groups window calls that share the same `PARTITION BY` plus `ORDER BY` into a single physical window operator. Calls that share a partition and order do not pay for an extra sort.
+2. **Shuffle by partition.** If `PARTITION BY` is present, the engine shuffles rows so all rows for the same partition land on the same backend. With no `PARTITION BY`, the whole window runs in a single pipeline (the parallelism upper bound).
+3. **Sort within partition.** Each backend sorts its partitions by the `ORDER BY` columns. Ties produce a non-deterministic row order unless the `ORDER BY` is unique, which is why the docs warn that `SUM() OVER (ORDER BY date_col)` can return different results on tied dates.
+4. **Evaluate per row.** Doris walks each partition once, maintaining the window frame as it goes. Ranking functions emit one integer per row; aggregate functions over `ROWS UNBOUNDED PRECEDING` keep a running total; sliding-window aggregates add the new row and drop the row that fell off the back.
+5. **Push down filters and Top-N.** `CreatePartitionTopNFromWindow` turns `WHERE row_number() OVER (PARTITION BY a ORDER BY b) <= K` into a `PartitionTopN(K)` operator below the window, so each partition only carries the top K rows into the window operator. `PushDownFilterThroughWindow` lifts filters on `PARTITION BY` columns past the window, so Doris filters before sorting instead of after.
+
+## Quick start {#quick-start}
+
+```sql
+CREATE TABLE orders (
+  customer_id INT, order_date DATE, amount DECIMAL(10,2)
+) DISTRIBUTED BY HASH(customer_id) BUCKETS 4
+PROPERTIES ("replication_num" = "1");
+
+INSERT INTO orders VALUES
+  (1,'2026-04-30',50),(1,'2026-05-01',80),(1,'2026-05-02',30),
+  (2,'2026-04-30',20),(2,'2026-05-01',90);
+
+SELECT customer_id, order_date, amount,
+       ROW_NUMBER() OVER (PARTITION BY customer_id ORDER BY order_date) AS seq,
+       SUM(amount)  OVER (PARTITION BY customer_id ORDER BY order_date) AS running_total,
+       LAG(amount,1,0) OVER (PARTITION BY customer_id ORDER BY order_date) AS prev_amount
+FROM orders;
+```
+
+**Expected result**
+
+```
++-------------+------------+--------+-----+---------------+-------------+
+| customer_id | order_date | amount | seq | running_total | prev_amount |
++-------------+------------+--------+-----+---------------+-------------+
+|           1 | 2026-04-30 |     50 |   1 |            50 |           0 |
+|           1 | 2026-05-01 |     80 |   2 |           130 |          50 |
+|           1 | 2026-05-02 |     30 |   3 |           160 |          80 |
+|           2 | 2026-04-30 |     20 |   1 |            20 |           0 |
+|           2 | 2026-05-01 |     90 |   2 |           110 |          20 |
++-------------+------------+--------+-----+---------------+-------------+
+```
+
+One pass, three windowed columns, no self-joins. The original five rows are preserved. `LAG(..., 1, 0)` returns `0` instead of `NULL` for the first row of each partition.
+
+## When to use it {#when}
+
+**Good fit**
+
+- Top-N per group: "top 10 orders per customer," "best-selling product per region." Add a `WHERE rn <= 10` filter and Doris pushes a partition Top-N below the window.
+- Running totals, moving averages, and centered moving averages with `ROWS BETWEEN n PRECEDING AND m FOLLOWING`.
+- Year-over-year, day-over-day, and gap-between-events analysis with `LAG` and `LEAD`. One pass over the table replaces a self-join.
+- Bucketing for percentile or quartile reports with `NTILE`.
+- Reporting queries that mix per-row values with whole-partition totals, for example `amount / SUM(amount) OVER (PARTITION BY region) AS share_of_region`.
+
+**Not a good fit**
+
+- A pure aggregation that collapses rows. `SELECT category, SUM(amount) FROM t GROUP BY category` does the same work without sorting and without keeping every row in memory. Reach for `GROUP BY` first, and only switch to `OVER` when you also need the unaggregated columns.
+- `RANGE` frames with numeric offsets, like `RANGE BETWEEN 5 PRECEDING AND CURRENT ROW`. Doris's `RANGE` frame is restricted to `UNBOUNDED` boundaries or `CURRENT ROW`; arbitrary `RANGE n PRECEDING/FOLLOWING` is not supported. Use `ROWS` if you need a numeric offset.
+- A window with no `PARTITION BY`. The whole result set lands on one pipeline, and that pipeline becomes the bottleneck on large inputs. Add a partition key whenever the workload allows it.
+- `ORDER BY` on a non-unique column when you care about deterministic output. `SUM(x) OVER (ORDER BY day)` can return different cumulative totals across runs when several rows share the same day. Add a tie-breaker; see [Window Functions Overview](../sql-manual/sql-functions/window-functions/overview).
+- Recomputing the same window result on every refresh. If the same `ROW_NUMBER()` query runs every minute against a slow-moving table, an [async materialized view](../query-acceleration/materialized-view/async-materialized-view/overview) with a partial refresh is cheaper than re-windowing each time.
+
+## Further reading {#further-reading}
+
+- [Analytic Functions (Window Functions): full guide with worked examples](../query-data/window-function)
+- [Window Functions Overview: syntax, frame clauses, and the unique-ordering caveat](../sql-manual/sql-functions/window-functions/overview)
+- [`LAG`](../sql-manual/sql-functions/window-functions/lag), [`LEAD`](../sql-manual/sql-functions/window-functions/lead), [`ROW_NUMBER`](../sql-manual/sql-functions/window-functions/row-number), [`RANK`](../sql-manual/sql-functions/window-functions/rank), [`NTILE`](../sql-manual/sql-functions/window-functions/ntile): per-function reference pages
+- [Pipeline Execution Engine: how partitioned windows get parallelized across BEs](./pipeline-execution-engine)
+- [Vectorized Execution](./vectorized-execution): the engine that runs each window's batch through SIMD-accelerated operators.
+- [Async Materialized View: precompute window results that re-run every minute](../query-acceleration/materialized-view/async-materialized-view/overview)

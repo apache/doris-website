@@ -7,6 +7,16 @@
 
 # Flink Doris Connector Release Notes
 
+## 26.1.1
+
+### Bug 修复
+
+- 修复启用压缩时，批量 Sink 长时间运行可能卡住的问题 [#653](https://github.com/apache/doris-flink-connector/pull/653)
+
+### 致谢
+
+@addu390
+
 ## 26.1.0
 
 ### 功能与改进

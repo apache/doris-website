@@ -7,6 +7,16 @@
 
 # Flink Doris Connector Release Notes
 
+## 26.1.1
+
+### Bug Fixes
+
+- Fix batch sink potentially freezing during prolonged operation when compression is enabled [#653](https://github.com/apache/doris-flink-connector/pull/653)
+
+### Credits
+
+@addu390
+
 ## 26.1.0
 
 ### Features & Improvements
