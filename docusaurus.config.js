@@ -326,6 +326,10 @@ const config = {
                         const filteredItems = items.filter(item => {
                             const pathname = new URL(item.url).pathname.replace(/\/+$/, '');
                             if (['/search', '/ja/search', '/zh-CN/search'].includes(pathname)) return false;
+                            // Exclude docs-next during graceful rollout (kept in sync with
+                            // static/robots.txt and .github/workflows/docs-next-build.yml).
+                            if (pathname === '/docs-next' || pathname.startsWith('/docs-next/')) return false;
+                            if (pathname === '/zh-CN/docs-next' || pathname.startsWith('/zh-CN/docs-next/')) return false;
                             return true;
                         });
                         for (let item of filteredItems) {
