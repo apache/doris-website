@@ -326,10 +326,6 @@ const config = {
                         const filteredItems = items.filter(item => {
                             const pathname = new URL(item.url).pathname.replace(/\/+$/, '');
                             if (['/search', '/ja/search', '/zh-CN/search'].includes(pathname)) return false;
-                            // 灰度期 docs-next 不进 sitemap
-                            if (pathname.startsWith('/docs-next') || pathname.startsWith('/zh-CN/docs-next')) {
-                                return false;
-                            }
                             return true;
                         });
                         for (let item of filteredItems) {
