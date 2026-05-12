@@ -1029,6 +1029,7 @@ const sidebars: SidebarsConfig = {
                                 'admin-manual/open-api/be-http/reset-rpc-channel',
                                 'admin-manual/open-api/be-http/compaction-status',
                                 'admin-manual/open-api/be-http/compaction-run',
+                                'admin-manual/open-api/be-http/compaction-score',
                                 'admin-manual/open-api/be-http/meta',
                                 'admin-manual/open-api/be-http/snapshot',
                                 'admin-manual/open-api/be-http/check-tablet-segment',
