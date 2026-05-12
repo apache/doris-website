@@ -12,7 +12,7 @@
 
 ## 所属数据库和表
 
-`information_schema.routine_load_job`
+`information_schema.routine_load_jobs`
 
 ## 表信息
 
@@ -45,7 +45,7 @@
 
 ```sql
 SELECT DB_NAME, JOB_NAME
-FROM information_schema.routine_load_job
+FROM information_schema.routine_load_jobs
 WHERE IS_ABNORMAL_PAUSE = TRUE
    OR (
         STATE = 'RUNNING'

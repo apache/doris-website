@@ -11,7 +11,7 @@ routine load ジョブの情報を表示するために使用されます。
 
 ## データベースとテーブル
 
-`information_schema.routine_load_job`
+`information_schema.routine_load_jobs`
 
 ## テーブル情報
 
@@ -44,7 +44,7 @@ routine load ジョブの情報を表示するために使用されます。
 
 ```sql
 SELECT DB_NAME, JOB_NAME
-FROM information_schema.routine_load_job
+FROM information_schema.routine_load_jobs
 WHERE IS_ABNORMAL_PAUSE = TRUE
    OR (
         STATE = 'RUNNING'

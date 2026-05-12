@@ -12,7 +12,7 @@ Used to view information about routine load jobs.
 
 ## Database and Table
 
-`information_schema.routine_load_job`
+`information_schema.routine_load_jobs`
 
 ## Table Information
 
@@ -45,7 +45,7 @@ If a job is abnormally paused, has failed tasks, or is in the `RUNNING` state bu
 
 ```sql
 SELECT DB_NAME, JOB_NAME
-FROM information_schema.routine_load_job
+FROM information_schema.routine_load_jobs
 WHERE IS_ABNORMAL_PAUSE = TRUE
    OR (
         STATE = 'RUNNING'
