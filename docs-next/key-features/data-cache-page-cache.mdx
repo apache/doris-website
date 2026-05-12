@@ -126,3 +126,4 @@ Use the Apache Doris Data Cache and Page Cache for repeat queries on hot lakehou
 - [Parquet Reader Optimization](./parquet-reader-optimization): the reader that decides which bytes to ask for in the first place. Caches and pruning compose.
 - [Query Cache](./query-cache) and [Condition Cache](./condition-cache): result-level and predicate-level caches that sit above the storage caches.
 - [WARM UP statement](../sql-manual/sql-statements/cluster-management/storage-management/WARM-UP): the SQL surface for pre-populating caches across compute groups.
+- [Iceberg](./iceberg): a primary consumer of the page cache — Iceberg scans read remote Parquet over S3-style object storage.

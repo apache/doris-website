@@ -126,3 +126,4 @@ Pick the Apache Doris data model by what the data is (raw events, current state,
 - [Data Update and Delete](./data-update-delete): SQL UPDATE, DELETE, partial-column upsert, and the Merge-on-Write internals that the Unique Key model unlocks.
 - [Preaggregation and Rollup](./preaggregation-and-rollup): the Aggregate Key model in depth, plus ROLLUP and sync materialized views.
 - [Partitioning and Bucketing](./partitioning-and-bucketing): how the same key columns drive partition pruning and tablet placement.
+- [Unique Key](./unique-key): the primary key (one-row-per-key) variant alongside Duplicate and Aggregate — pick this when sources do upserts.

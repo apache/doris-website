@@ -116,3 +116,4 @@ Apache Doris vectorized execution is the only execution mode since v2.0, so the 
 - [Columnar Storage](./columnar-storage): the on-disk format whose pages and encodings feed directly into the vectorized columns.
 - [Parquet Reader Optimization](./parquet-reader-optimization): how external Parquet decoding lands straight in the vectorized engine without an Arrow round trip.
 - [Apache Doris 2.0 release notes (row-based engine removed)](https://doris.apache.org/blog/release-note-2.0.0/)
+- [MPP Architecture](./mpp): the layer that schedules vectorized operators across BEs, not just within one.

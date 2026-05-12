@@ -117,3 +117,4 @@ Use Apache Doris incremental materialized views for append-mostly fact tables pa
 - [Preaggregation and Rollup](./preaggregation-and-rollup): the per-load Aggregate Key path and sync MV / ROLLUP companions to async MVs.
 - [Query Cache](./query-cache): another preaggregation path; precompute via MV or cache on first read.
 - [Data Lineage](./data-lineage): how the audit log's `chosen_m_views` column surfaces which MVs actually serve traffic.
+- [Iceberg](./iceberg): a common base-table source for incremental MVs — snapshot diffs make change capture cheap.

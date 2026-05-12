@@ -115,3 +115,4 @@ The Apache Doris pipeline execution engine runs every query on v3.0+ by default,
 - [Vectorized Execution](./vectorized-execution): the operator layer Pipeline schedules. Often confused with Pipeline; the two are orthogonal.
 - [Workload Group](./workload-group): the layer that binds pipeline threads to per-group cgroups for CPU and concurrency limits.
 - [Evolution of the Apache Doris execution engine](/blog/evolution-of-the-apache-doris-execution-engine/): the design history of how Doris went from volcano to Pipeline to PipelineX.
+- [MPP Architecture](./mpp): the cross-BE coordinator above the Pipeline Engine — splits one SQL into a fragment DAG and assigns each fragment to BEs.

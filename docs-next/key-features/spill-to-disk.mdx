@@ -105,3 +105,4 @@ Use Apache Doris Spill to Disk for heavy ETL, batch analytics, and multi-tenant 
 - [Pipeline Execution Engine](./pipeline-execution-engine): the runtime that owns the reserve-before-allocate accounting and the revocable-memory bookkeeping.
 - [Query profile](../query-acceleration/query-profile): how to read the per-operator `Spill*` counters that confirm spill happened.
 - [`backend_active_tasks` system table](../admin-manual/system-tables/information_schema/workload_groups): live per-query spill bytes for monitoring and alerting.
+- [MPP Architecture](./mpp): the distributed execution layer that allocates `exec_mem_limit` per BE, the budget spill-to-disk respects.

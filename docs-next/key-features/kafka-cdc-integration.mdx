@@ -132,3 +132,5 @@ From "How Flink's real-time writes to Apache Doris stay both fast and exactly-on
 - [Load Transactions: the model behind 2PC](./load-transaction)
 - [Data Update and Delete: sequence column and Merge-on-Write](./data-update-delete)
 - [Binlog Table Stream](./binlog-table-stream): the change feed that runs the other direction, exposing Doris row changes to downstream consumers.
+- [Iceberg](./iceberg): a common destination for curated CDC pipelines — write-back via SQL keeps other engines' readers in sync.
+- [Unique Key](./unique-key): the table model CDC sinks land into — pair with a sequence column on the source LSN/commit timestamp.

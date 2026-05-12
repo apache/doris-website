@@ -110,3 +110,4 @@ Turn the Apache Doris Condition Cache on for read-heavy workloads where many que
 - [Caching in Doris: choosing the right strategy](../query-acceleration/caching-intro)
 - [Data Cache & Page Cache](./data-cache-page-cache): the storage-tier caches that sit below Condition Cache for the bytes and decoded pages themselves.
 - [Metadata Cache](./metadata-cache): the external-catalog metadata cache that complements the data-side caches.
+- [MPP Architecture](./mpp): the execution model whose plan the condition cache hooks into to skip already-evaluated predicates.

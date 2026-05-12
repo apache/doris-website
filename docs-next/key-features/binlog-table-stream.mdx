@@ -122,3 +122,5 @@ Once GA, use the Apache Doris binlog and table stream when a downstream system n
 - [CCR feature matrix](../admin-manual/data-admin/ccr/feature): which DDL and DML operations the binlog already captures and replays, a preview of what a row-format stream will surface.
 - [CCR quickstart](../admin-manual/data-admin/ccr/quickstart): how `binlog.enable` and `enable_feature_binlog` get configured today.
 - [Data Update and Delete](./data-update-delete): how Unique Key Merge-on-Write tables represent the deletes and out-of-order updates a row stream will carry.
+- [Iceberg](./iceberg): an external destination for replicated tables — land CDC into Iceberg via SQL without leaving Doris.
+- [Unique Key](./unique-key): the upstream table model that captures one-row-per-key state cleanly for downstream binlog consumers.

@@ -118,3 +118,4 @@ Apache Doris data pruning is always on — the question is which layers your DDL
 - [Partitioning and Bucketing](./partitioning-and-bucketing): the DDL choices that decide which partitions and tablets the planner can prune in the first place.
 - [Inverted Index](./inverted-index): the index-probe layer that turns text and high-cardinality equality predicates into posting-list lookups.
 - [Deep dive: Data Pruning in Apache Doris (blog)](https://doris.apache.org/blog/data-pruning-250908/)
+- [MPP Architecture](./mpp): where pruning runs — partition/bucket prune happens in the Nereids planner before fragments ship.

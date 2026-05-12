@@ -122,3 +122,5 @@ Apache Doris partitioning fits time-series and enumerated-dimension tables that 
 - [Data Bucketing: choosing the method, the key, and the bucket count](../table-design/data-partitioning/data-bucketing)
 - [Data Pruning: the layered pruning chain that runs after partition and tablet selection](./data-pruning)
 - [`ALTER TABLE PARTITION` reference](../sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-PARTITION)
+- [MPP Architecture](./mpp): Bucket Shuffle and Colocate Join read the bucket layout you choose here to avoid network shuffles.
+- [Unique Key](./unique-key): the table model where partition columns must be a subset of the unique key — otherwise dedup breaks.
