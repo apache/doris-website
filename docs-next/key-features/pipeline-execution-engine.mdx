@@ -19,20 +19,20 @@ featureCard:
     - performance
 ---
 
-> **TL;DR** Pipeline is Doris's only execution engine since v3.0. Each query fragment is split into a DAG of pipelines; each pipeline starts at a source, ends at a sink, and runs as several PipelineTasks on a fixed-size thread pool whose width is bounded by the BE's CPU budget. Operators yield instead of blocking, dependencies coordinate the DAG, and Local Shuffle re-balances skewed data inside the BE. The volcano model and its one-thread-per-fragment-instance bill are gone.
+> **TL;DR** The Apache Doris pipeline execution engine has been the only execution engine since v3.0, replacing the legacy volcano model. Each query fragment is split into a DAG of pipelines that start at a source, end at a sink, and run as PipelineTasks on a fixed-size BE thread pool bounded by the BE's CPU budget. Operators yield instead of blocking, dependencies coordinate the DAG, and Local Shuffle re-balances skewed data inside the BE.
 
 ![Apache Doris Pipeline Execution Engine: A push-based, work-stealing scheduler that breaks each query into a DAG of operator pipelines and runs them on a fixed BE thread pool.](/images/next/key-features/pipeline-execution-engine.jpg)
-## Why it matters {#why}
+## Why use the pipeline execution engine in Apache Doris? {#why}
 
-The volcano model that Doris used to ship gave every fragment instance its own OS thread. With a few concurrent queries this is fine. With a hundred it becomes a problem: thousands of threads stack up, most of them blocked on IO or on each other, and the BE eventually thrashes the kernel scheduler and runs out of memory before it runs out of work.
+The Apache Doris pipeline execution engine fixes three problems that the legacy volcano model could not: unbounded thread counts under concurrency, idle cores on skewed joins and aggregations, and per-fragment-instance tuning that was a guessing game. The volcano model that Apache Doris used to ship gave every fragment instance its own OS thread. With a few concurrent queries this is fine. With a hundred it becomes a problem: thousands of threads stack up, most of them blocked on IO or on each other, and the BE eventually thrashes the kernel scheduler and runs out of memory before it runs out of work.
 
 There are two more wounds the old engine left open. Wide-table aggregations and joins on skewed data underused the cores: when one bucket holds 7 rows and the others hold 1, the 7-row task is the long pole and the rest of the cluster sits idle waiting for it. And tuning concurrency at the fragment-instance level was a guessing game with too many knobs.
 
 Pipeline closes all three. The thread count is bounded, not query-count-bounded. Operators yield when they cannot make progress, freeing threads instead of holding them. And Local Shuffle redistributes skewed data inside the BE so the long pole is short.
 
-## What it is {#what}
+## What is the Apache Doris pipeline execution engine? {#what}
 
-Pipeline is a push-based, async query execution model. The FE compiles the query into a Plan, splits it into PlanFragments (one per BE), and each BE breaks each fragment into a DAG of Pipelines. A Pipeline is a chain that begins with one SourceOperator (a scan or an exchange), ends with one SinkOperator (a network shuffle or a hash-table writer), and may have any number of operators in between. Pipelines that have to wait on each other are coordinated by Dependencies. Each Pipeline materializes into multiple PipelineTasks, one per parallelism slot, that run on a fixed BE-wide thread pool.
+The Apache Doris pipeline execution engine is a push-based, async query execution model that turns each PlanFragment into a DAG of pipelines scheduled on a bounded BE thread pool. The FE compiles the query into a Plan, splits it into PlanFragments (one per BE), and each BE breaks each fragment into a DAG of Pipelines. A Pipeline is a chain that begins with one SourceOperator (a scan or an exchange), ends with one SinkOperator (a network shuffle or a hash-table writer), and may have any number of operators in between. Pipelines that have to wait on each other are coordinated by Dependencies. Each Pipeline materializes into multiple PipelineTasks, one per parallelism slot, that run on a fixed BE-wide thread pool.
 
 **Key terms**
 
@@ -44,7 +44,9 @@ Pipeline is a push-based, async query execution model. The FE compiles the query
 - **Local Shuffle (Local Exchange)**: a Pipeline Breaker that re-shards data locally inside the BE using HASH or Round Robin, so a skewed scan does not turn into a skewed join.
 - **`parallel_pipeline_task_num`**: the session knob for per-fragment parallelism. Default `0` means half the CPU cores; usually best left alone.
 
-## How it works {#how}
+## How does the Apache Doris pipeline execution engine work? {#how}
+
+The Apache Doris pipeline execution engine works in six stages: the FE plans and ships fragments, each BE turns a fragment into a pipeline DAG, PipelineTasks are spawned, they run on a bounded thread pool, Local Shuffle rebalances skewed data, and parallel scan keeps slow buckets from stalling the query.
 
 1. **FE plans, splits, ships.** The FE compiles the query, inserts `ExchangeNode` and `DataSink` for inter-BE shuffle, and sends each PlanFragment to a BE.
 2. **BE turns each fragment into a pipeline DAG.** Blocking operators (hash-table build, sort, aggregation) become a Sink that ends one pipeline plus a Source that starts the next one. Dependencies wire the DAG together; a Join's probe waits on its build's `set_ready`.
@@ -87,11 +89,13 @@ EXPLAIN SELECT /*+ SET_VAR(parallel_pipeline_task_num=16) */
 
 The hint applies only to this query. `EXPLAIN` shows the pipeline IDs, the Local Exchange (if planned), and the operator chain. With profiling enabled, the runtime profile reports per-PipelineTask `ExecTime`, `YieldCounts`, and `MemoryReserveFailedTimes`, which are the levers you actually use to tune real workloads.
 
-## When to use it {#when}
+## When should you use the Apache Doris pipeline execution engine? {#when}
+
+The Apache Doris pipeline execution engine runs every query on v3.0+ by default, so the practical question is when to tune it rather than whether to use it. Use the default for mixed concurrent workloads, join-heavy or skewed queries, and long-running scans; only override `parallel_pipeline_task_num` when profiling shows a real bottleneck.
 
 **Good fit**
 
-- Every Doris workload on v3.0+. There is no other engine.
+- Every Apache Doris workload on v3.0+. There is no other engine.
 - Mixed concurrent workloads on a shared BE: the bounded thread pool keeps queries from stepping on each other.
 - Join-heavy or aggregation-heavy queries on skewed input: Local Shuffle smooths the imbalance instead of letting the long pole drag the wall clock.
 - Long-running scans on uneven buckets: parallel scan keeps the slow bucket from stalling the rest.

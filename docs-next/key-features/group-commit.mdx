@@ -19,12 +19,12 @@ featureCard:
     - ingest
 ---
 
-> **TL;DR** Group Commit lets Doris batch many small `INSERT VALUES` statements or [Stream Loads](./stream-load) into one server-side [transaction](./load-transaction), so high-frequency clients stop drowning the FE in parse and plan work and the BE in tiny rowsets. Pick `sync_mode` if the load should wait for visibility, `async_mode` if it should return as soon as the row is durable in the write-ahead log. The same workload that hits `-235` backpressure errors goes to six figures of rows per second.
+> **TL;DR** Apache Doris Group Commit batches many small `INSERT VALUES` statements or [Stream Loads](./stream-load) into one server-side [transaction](./load-transaction), so high-frequency clients stop drowning the FE in parse and plan work and the BE in tiny rowsets. Pick `sync_mode` if the load should wait for visibility, `async_mode` if it should return as soon as the row is durable in the write-ahead log. Group Commit lifts the same workload from `-235` backpressure errors to over 100,000 rows per second on a single BE.
 
 ![Apache Doris Group Commit: Merge many small INSERTs and Stream Loads server-side into one transaction, with sync and async modes for the latency vs throughput tradeoff.](/images/next/key-features/group-commit.jpg)
-## Why it matters {#why}
+## Why use group commit in Apache Doris? {#why}
 
-Per-row `INSERT INTO ... VALUES` and tiny-batch Stream Loads are how a lot of real systems write to Doris. A microservice calls `INSERT` over JDBC every time a user clicks something. A [Kafka consumer](./kafka-cdc-integration) flushes whatever it has every few hundred milliseconds. An IoT collector pushes each event the moment it arrives. None of those clients can batch larger because the events don't exist yet. And without batching, every load opens its own transaction, takes its own trip through the FE planner, and produces a new tablet version. That is the one combination Doris's storage engine is unhappy with.
+Apache Doris Group Commit eliminates the per-write overhead that high-frequency clients impose on the FE planner and BE storage engine. Per-row `INSERT INTO ... VALUES` and tiny-batch Stream Loads are how a lot of real systems write to Doris. A microservice calls `INSERT` over JDBC every time a user clicks something. A [Kafka consumer](./kafka-cdc-integration) flushes whatever it has every few hundred milliseconds. An IoT collector pushes each event the moment it arrives. None of those clients can batch larger because the events don't exist yet. And without batching, every load opens its own transaction, takes its own trip through the FE planner, and produces a new tablet version. That is the one combination Doris's storage engine is unhappy with.
 
 - High-frequency `INSERT VALUES` saturates the FE's parser and plan cache before it saturates the BE's CPU.
 - Small Stream Loads from streaming pipelines pile up tablet versions until background compaction can't keep up. The classic symptom is the `-235` "too many segments" error.
@@ -32,9 +32,9 @@ Per-row `INSERT INTO ... VALUES` and tiny-batch Stream Loads are how a lot of re
 
 Group Commit folds many of those small writes into one transaction, on the server, without the client knowing or caring.
 
-## What it is {#what}
+## What is Apache Doris group commit? {#what}
 
-Group Commit is a server-side buffer for small writes. The BE collects rows from many concurrent loads and commits them as one transaction every few seconds, or when the buffer fills. It layers on top of `INSERT INTO ... VALUES`, Stream Load, and JDBC prepared statements without changing their public API. You turn it on with one knob: a session variable for INSERT, an HTTP header for Stream Load, or a table property as the default. The mode you pick decides how the load returns.
+Apache Doris Group Commit is a server-side buffer for small writes. The BE collects rows from many concurrent loads and commits them as one transaction every few seconds, or when the buffer fills. Group Commit layers on top of `INSERT INTO ... VALUES`, Stream Load, and JDBC prepared statements without changing their public API. You turn it on with one knob: a session variable for INSERT, an HTTP header for Stream Load, or a table property as the default. The mode you pick decides how the load returns.
 
 **Key terms**
 
@@ -44,7 +44,9 @@ Group Commit is a server-side buffer for small writes. The BE collects rows from
 - **`WAL`**: per-BE write-ahead log used by `async_mode`. Single-replica, lives on the receiving BE.
 - **`group_commit_interval_ms`** and **`group_commit_data_bytes`**: per-table flush triggers. Defaults: 10s and 128 MB.
 
-## How it works {#how}
+## How does Apache Doris group commit work? {#how}
+
+Apache Doris Group Commit funnels concurrent small loads into one shared BE queue per table, flushes the queue on a timer or size threshold, and commits the merged batch as a single FE transaction.
 
 1. **Open or join a queue.** A request lands on a BE. Instead of starting a fresh transaction, the BE drops the rows into a `LoadBlockQueue` keyed by table and the current open group-commit transaction.
 2. **(Async only) write to the WAL.** In `async_mode`, the rows are also persisted to the local WAL so the request can return as soon as they are durable. In `sync_mode`, this step is skipped.
@@ -79,7 +81,9 @@ Query OK, 1 row affected (0.01 sec)
 
 Both inserts return the same `label` and `txnId`, which is how you know they merged. The rows are not visible until the BE flushes (here, one second later, because the table set `group_commit_interval_ms` to `1000`). For Stream Load, swap the session variable for a header: `-H "group_commit:async_mode"`.
 
-## When to use it {#when}
+## When should you use Apache Doris group commit? {#when}
+
+Use Apache Doris Group Commit when many concurrent clients write small batches and you cannot batch larger on the client side.
 
 **Good fit**
 

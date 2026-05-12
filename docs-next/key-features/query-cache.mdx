@@ -18,12 +18,12 @@ featureCard:
     - caching
 ---
 
-> **TL;DR** Query Cache is Doris's [pipeline-engine](./pipeline-execution-engine) cache for aggregation queries on internal OLAP tables. It stores partial aggregation results at tablet granularity, keyed by a digest of the plan plus the tablet ID and version. Two queries that share a tablet share the cache for that tablet, even when their date ranges only partly overlap. The dashboard that re-runs `SELECT region, SUM(revenue) FROM orders WHERE dt = '...' GROUP BY region` every fifteen seconds stops re-scanning the same tablets every refresh.
+> **TL;DR** The Apache Doris Query Cache is a [pipeline-engine](./pipeline-execution-engine) cache for aggregation queries on internal OLAP tables. The Query Cache stores partial aggregation results at tablet granularity, keyed by a digest of the plan plus the tablet ID and version. Two queries that share a tablet share the cache for that tablet, even when their date ranges only partly overlap — so a dashboard that polls the same `GROUP BY` every 15 seconds stops re-scanning the same tablets every refresh.
 
 ![Apache Doris Query Cache: A pipeline-level cache that stores intermediate aggregation results at tablet granularity, so queries that share tablets reuse work.](/images/next/key-features/query-cache.jpg)
-## Why it matters {#why}
+## Why use the Apache Doris Query Cache? {#why}
 
-Most BI traffic is repetitive aggregation. A dashboard tile re-runs the same `SUM/COUNT/AVG` every refresh. A T+1 report aggregates last night's [partition](./partitioning-and-bucketing) once, then re-aggregates it every time someone opens the page today. A trader's panel polls the same `GROUP BY symbol` every five seconds against an order book that only changes a few tablets per minute.
+The Apache Doris Query Cache eliminates the redundant tablet-level work that BI dashboards generate when the same aggregation runs against overlapping partitions every few seconds. Most BI traffic is repetitive aggregation. A dashboard tile re-runs the same `SUM/COUNT/AVG` every refresh. A T+1 report aggregates last night's [partition](./partitioning-and-bucketing) once, then re-aggregates it every time someone opens the page today. A trader's panel polls the same `GROUP BY symbol` every five seconds against an order book that only changes a few tablets per minute.
 
 The same tablet contributes the same partial aggregate again and again, and the cluster pays the full scan and aggregation cost every time.
 
@@ -31,9 +31,9 @@ SQL Cache helps when the SQL text is byte-identical, but it gives up as soon as 
 
 Query Cache works at a smaller grain than either of those: the contribution of one tablet to one aggregation. That is the level at which dashboard refreshes actually overlap, where filter ranges slide a day forward and only one or two partitions are new per refresh.
 
-## What it is {#what}
+## What is the Apache Doris Query Cache? {#what}
 
-Query Cache is a pipeline-engine optimization that activates when a fragment matches the shape `AggregationNode -> OlapScanNode`, or `AggregationNode -> AggregationNode -> OlapScanNode` for two-stage aggregation. Filter and project nodes are allowed in between. Joins, sorts, unions, window functions, and exchange nodes are not. When a fragment qualifies, the BE checks the cache before scanning. On a hit, the scan range is skipped and the cached blocks are emitted directly. On a miss, the result is computed normally and written back, one entry per tablet.
+The Apache Doris Query Cache is a pipeline-engine optimization that activates when a fragment matches the shape `AggregationNode -> OlapScanNode`, or `AggregationNode -> AggregationNode -> OlapScanNode` for two-stage aggregation. Filter and project nodes are allowed in between. Joins, sorts, unions, window functions, and exchange nodes are not. When a fragment qualifies, the BE checks the cache before scanning. On a hit, the scan range is skipped and the cached blocks are emitted directly. On a miss, the result is computed normally and written back, one entry per tablet.
 
 **Key terms**
 
@@ -43,7 +43,9 @@ Query Cache is a pipeline-engine optimization that activates when a fragment mat
 - **`Tablet range`**: derived from partition predicates. Included in the cache key so two queries can reuse the cache for partitions they have in common.
 - **`LRU-K (K=2)`**: admission policy. A new entry has to be touched at least twice before it earns a slot, so a one-off ad-hoc query cannot evict the entries that the dashboards depend on.
 
-## How it works {#how}
+## How does the Apache Doris Query Cache work? {#how}
+
+The Apache Doris Query Cache works by detecting the agg-over-scan pattern in the FE, building a per-tablet cache key from the plan digest plus the tablet ID and version, and probing the cache before each BE scans. The five-step flow below covers plan check, key construction, probe, hit, and miss.
 
 1. **Plan check (FE).** Nereids walks each fragment looking for the agg-over-scan pattern. Joins, sorts, runtime-filter targets, external table scans, and non-deterministic expressions disqualify the fragment.
 2. **Build the cache key (FE).** For single-column RANGE partitioned tables, the planner extracts partition predicates and computes the intersection of the predicate range with each scanned partition. The plan digest covers the rest of the query. The per-tablet key is `(digest, tablet_id, tablet_range)`.
@@ -80,7 +82,9 @@ CacheSourceOperator
 
 The first run misses every tablet and writes per-tablet partial aggregates. The second run hits the cache for the four overlapping days (`2024-01-05` through `2024-01-07`) and only scans the new days (`2024-01-08` through `2024-01-11`). To confirm a hit, look at `CacheSourceOperator` in the profile: a per-tablet `HitCache: true` means that tablet was served from memory.
 
-## When to use it {#when}
+## When should you use the Apache Doris Query Cache? {#when}
+
+Use the Apache Doris Query Cache for BI dashboards, T+1 reports, and rolling-window aggregations on internal single-column `RANGE` partitioned tables. Avoid it for JOIN/ORDER/UNION/window queries, external lakehouse tables (use SQL Cache instead), high-write hot tables, and primary-key lookups.
 
 **Good fit**
 

@@ -21,23 +21,23 @@ featureCard:
     - upsert
 ---
 
-> **TL;DR** Unique Key is Doris's primary key table model: one row per primary key, SQL `UPDATE` and `DELETE` like a transactional database, and partial-column upserts straight from [Stream Load](./stream-load.mdx). Since 2.1 it runs on Merge-on-Write by default, so duplicates are resolved at write time and queries skip version merging at read time.
+> **TL;DR** The Apache Doris Unique Key model is the primary key table model — one row per primary key, with SQL `UPDATE` and `DELETE` like a transactional database. Partial-column upserts go straight from [Stream Load](./stream-load.mdx) into the table. Since version 2.1 the Unique Key model runs on Merge-on-Write by default, so duplicates are resolved at write time and queries skip version merging at read time.
 
 ![Unique Key hero illustration](/images/next/key-features/unique-key.jpg)
 
-## Why it matters {#why}
+## Why use the Apache Doris Unique Key model? {#why}
 
-Most analytical engines treat tables as append-only. Then CDC happens. A MySQL row gets updated, a user requests deletion under GDPR, a late event needs to overwrite an older one. With an append-only table model you can record those changes, but you cannot make the warehouse forget the old version without rewriting the whole partition.
+The Apache Doris Unique Key model gives an OLAP engine real primary-key semantics: one row per key, immediate uniqueness on write, and SQL `UPDATE`/`DELETE` that work without partition rewrites. Most analytical engines treat tables as append-only. Then CDC happens. A MySQL row gets updated, a user requests deletion under GDPR, a late event needs to overwrite an older one. With an append-only table model you can record those changes, but you cannot make the warehouse forget the old version without rewriting the whole partition.
 
 - A Flink CDC job watches MySQL and needs every primary-key update to land in seconds.
 - An order status table flips through `created`, `paid`, `shipped`, `delivered`, and queries should only see the latest state.
 - A user profile table feeds real-time joins, and the join should never see yesterday's email address.
 
-Unique Key is the table model for this. A new write with an existing key replaces the old row, `UPDATE` and `DELETE` work as SQL, and analytical queries still run at columnar speed. ClickHouse's `ReplacingMergeTree` is the closest analog in other OLAP engines, but it does not give you immediate uniqueness: duplicate rows stay visible until a background merge runs, and even after that the engine only guarantees eventual deduplication. A query right after the write can still see the old version, and `SELECT ... FINAL` is the workaround that forces dedup at read time, at a real cost. Unique Key skips that compromise. The new row replaces the old one at write time, and the next query sees one row per key.
+The Unique Key model is the table model for this. A new write with an existing key replaces the old row, `UPDATE` and `DELETE` work as SQL, and analytical queries still run at columnar speed. ClickHouse's `ReplacingMergeTree` is the closest analog in other OLAP engines, but it does not give you immediate uniqueness: duplicate rows stay visible until a background merge runs, and even after that the engine only guarantees eventual deduplication. A query right after the write can still see the old version, and `SELECT ... FINAL` is the workaround that forces dedup at read time, at a real cost. Unique Key skips that compromise. The new row replaces the old one at write time, and the next query sees one row per key.
 
-## What it is {#what}
+## What is the Apache Doris Unique Key model? {#what}
 
-A Unique Key table keeps one row per primary key. The `UNIQUE KEY(...)` clause in `CREATE TABLE` names the key columns; everything else is a value column. Two rows with the same key cannot coexist. A new write with an existing key replaces the row.
+The Apache Doris Unique Key model is a table model that keeps exactly one row per primary key, enforced at write time by the Merge-on-Write engine. The `UNIQUE KEY(...)` clause in `CREATE TABLE` names the key columns; everything else is a value column. Two rows with the same key cannot coexist. A new write with an existing key replaces the row.
 
 ```sql
 ... UNIQUE KEY(order_id) ...
@@ -54,10 +54,12 @@ The FE catalog records this as `KeysType.UNIQUE_KEYS`, the contract the storage 
 - **Merge-on-Read (MoR)**: the older backend. Writes append; reads merge multiple versions per key on the fly. Still selectable via `enable_unique_key_merge_on_write = false`.
 - **Delete bitmap**: a Roaring bitmap keyed by `(rowset_id, segment_id, version)` listing row IDs that queries should skip. The MoW artifact that replaces read-time merging.
 - **Sequence column** (`function_column.sequence_col`): a value column that decides which write wins when two updates carry the same key. Out-of-order CDC events use this to keep the newer state.
-- **Partial column update**: an upsert that writes only some columns. Doris reads the rest from the existing row and writes a complete row back.
+- **Partial column update**: an upsert that writes only some columns. Apache Doris reads the rest from the existing row and writes a complete row back.
 - **`__DORIS_DELETE_SIGN__`**: a hidden tinyint column. Set it to `1` through any load path to soft-delete the row.
 
-## How it works {#how}
+## How does the Apache Doris Unique Key model work? {#how}
+
+The Apache Doris Unique Key model runs each upsert in five stages: buffer the batch, look up keys in the per-segment primary-key index, flip delete-bitmap bits on old rows, resolve order with the sequence column, and publish the new rowset.
 
 Take an upsert against a Unique Key MoW table.
 
@@ -100,7 +102,9 @@ INSERT INTO orders VALUES
 
 Three inserts, one row. The second `INSERT` overwrote the first because the keys matched. The third tried to overwrite again, but its `updated` value was older than the current sequence, so MoW kept the existing row. Drop the `function_column.sequence_col` property and the third row would have won purely on load order, which is what you do not want for CDC.
 
-## When to use it {#when}
+## When should you use the Apache Doris Unique Key model? {#when}
+
+The Apache Doris Unique Key model fits CDC sinks, real-time dimension and lookup tables, frequently changing order/user/balance tables, KV-style point lookups paired with `store_row_column`, GDPR row-level deletes, and wide-table assembly from multiple upstreams. It is not a fit for append-only event streams, tight single-row update loops, random or very wide primary keys, or `count(*)`-heavy workloads on the older Merge-on-Read backend.
 
 **Good fit**
 

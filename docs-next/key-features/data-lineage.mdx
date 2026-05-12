@@ -20,12 +20,12 @@ featureCard:
     - metadata
 ---
 
-> **TL;DR** Doris extracts column-level lineage from the analyzed plan of every `INSERT`, `INSERT OVERWRITE`, and `CREATE TABLE AS SELECT`, including JOIN, FILTER, GROUP BY, WINDOW, and CASE WHEN dependencies. Events flow through a SPI to whichever lineage backend you ship: a custom emitter, an OpenLineage receiver, Apache Atlas, DataHub. For table-level lineage from ad-hoc queries, the `audit_log` system table records the source tables and chosen materialized views per query.
+> **TL;DR** Apache Doris extracts column-level lineage from the analyzed Nereids plan of every `INSERT`, `INSERT OVERWRITE`, and `CREATE TABLE AS SELECT`, including JOIN, FILTER, GROUP BY, WINDOW, and CASE WHEN dependencies. Events flow through a SPI to whichever lineage backend you ship: a custom emitter, an OpenLineage receiver, Apache Atlas, or DataHub. For table-level lineage from ad-hoc queries, the `audit_log` system table records the source tables and chosen materialized views per query.
 
 ![Apache Doris Data Lineage: Column-level lineage extracted from the Nereids plan and shipped to your governance tool through a pluggable SPI, plus table-level traces in the audit log.](/images/next/key-features/data-lineage.jpg)
-## Why it matters {#why}
+## Why use Apache Doris data lineage? {#why}
 
-You change a column type on a base table, and four hours later a dashboard starts returning nulls. Or someone asks where the value in `tgt_region_revenue.revenue` actually comes from, and the honest answer is "somewhere in three years of `INSERT` statements." The dependencies are real and the SQL is in the system, but nobody has stitched it into a graph you can query. Writes that traverse [multi-catalog](./multi-catalog) federation or land into [incremental materialized views](./incremental-materialized-view) make the graph even larger.
+Apache Doris data lineage hands you the column-level dependencies the planner already computed, so impact analysis and audit questions can be answered without writing a SQL parser inside your governance tool. You change a column type on a base table, and four hours later a dashboard starts returning nulls. Or someone asks where the value in `tgt_region_revenue.revenue` actually comes from, and the honest answer is "somewhere in three years of `INSERT` statements." The dependencies are real and the SQL is in the system, but nobody has stitched it into a graph you can query. Writes that traverse [multi-catalog](./multi-catalog) federation or land into [incremental materialized views](./incremental-materialized-view) make the graph even larger.
 
 Writing your own SQL parser inside the governance tool is the wrong fix. The database already parsed the SQL. What you want is for it to hand you the dependencies it found, at column granularity, with the transformation that produced each output column attached. Then the lineage matches what ran, not a static reading of the DDL.
 
@@ -35,9 +35,9 @@ Typical questions this answers:
 - Where did this number on the dashboard come from?
 - Which regulated tables did this user touch last week?
 
-## What it is {#what}
+## What is Apache Doris data lineage? {#what}
 
-Data Lineage in Doris is column-level lineage extraction built into the Nereids planner, plus a SPI that ships the extracted events to whichever governance backend you run. There is no built-in viewer. Doris is the producer; your existing tool (Atlas, DataHub, OpenMetadata, an internal service) is the consumer. For table-level lineage derived from query history, the `audit_log` table already records source tables and any matched materialized views per query, so you can build a coarse graph without writing a plugin at all.
+Apache Doris data lineage is column-level lineage extraction built into the Nereids planner, plus a SPI that ships the extracted events to whichever governance backend you run. There is no built-in viewer. Apache Doris is the producer; your existing tool (Atlas, DataHub, OpenMetadata, an internal service) is the consumer. For table-level lineage derived from query history, the `audit_log` table already records source tables and any matched materialized views per query, so you can build a coarse graph without writing a plugin at all.
 
 **Key terms**
 
@@ -47,7 +47,9 @@ Data Lineage in Doris is column-level lineage extraction built into the Nereids 
 - **`audit_log.queried_tables_and_views`**: an `ARRAY<STRING>` column in `__internal_schema.audit_log` that lists the catalog-qualified tables touched by each query.
 - **`audit_log.chosen_m_views`**: companion column listing the materialized views the optimizer rewrote into.
 
-## How it works {#how}
+## How does Apache Doris data lineage work? {#how}
+
+Apache Doris hooks the Nereids planner before optimization, walks the analyzed plan to resolve each output column back to its sources, records the JOIN/FILTER/GROUP BY/WINDOW/CASE WHEN dependencies, and ships the event off the query thread to every registered `LineagePlugin`.
 
 1. **Hook the planner.** Each write command (`INSERT INTO`, `INSERT OVERWRITE`, `CTAS`) registers an analyze-plan hook. The hook grabs the analyzed `LogicalPlan` before optimization, so column references still carry their source slots and lineage matches the SQL the user wrote.
 2. **Extract direct lineage.** `LineageInfoExtractor` walks the plan and resolves every output column back to its source expressions. A pure column reference becomes `IDENTITY`. A scalar expression becomes `TRANSFORMATION`. An aggregate function becomes `AGGREGATION`. CTE consumer slots get pre-resolved to producer slots so the chain does not stop at a `WITH` clause boundary.
@@ -88,7 +90,9 @@ ORDER  BY time DESC LIMIT 5;
 
 The row holds catalog-qualified table names and any MV the optimizer rewrote into. That is enough to draw a table-level graph for ad-hoc queries. For column-level lineage on writes, implement `LineagePlugin`, drop the jar in `plugin_dir/lineage/`, and add the plugin name to `activate_lineage_plugin`. From then on, every `INSERT` and `CTAS` produces a `LineageInfo` event.
 
-## When to use it {#when}
+## When should you use Apache Doris data lineage? {#when}
+
+Apache Doris data lineage fits impact analysis, compliance trails, MV governance, and feeding external catalogs (Atlas, DataHub, OpenMetadata) with column-level events; it is not a built-in lineage browser and does not cover pure `SELECT` traffic at column granularity.
 
 **Good fit**
 

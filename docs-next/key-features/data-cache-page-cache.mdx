@@ -20,12 +20,12 @@ featureCard:
     - performance
 ---
 
-> **TL;DR** Doris caches storage at two layers. The Data Cache keeps bytes from S3 or HDFS on a BE's local disk so repeat scans skip the network. The Page Cache keeps decompressed column pages in memory so repeat scans also skip decompression and decoding. The first run after a deploy is slow; the next run is local-disk fast; the run after that is RAM-fast. `WARM UP` pre-populates both.
+> **TL;DR** Apache Doris caches lakehouse storage at two layers. The Data Cache keeps bytes from S3 or HDFS on a BE's local disk (1 MB blocks) so repeat scans skip the network. The Page Cache keeps decompressed column pages in memory so repeat scans also skip decompression and decoding. `WARM UP` pre-populates both, turning a cold deploy into a local-disk-fast second run and a RAM-fast third run.
 
 ![Apache Doris Data Cache & Page Cache: Two caching layers for lakehouse reads: a local-disk cache for remote file bytes and an in-memory cache for decompressed column pages.](/images/next/key-features/data-cache-page-cache.jpg)
-## Why it matters {#why}
+## Why use the data cache and page cache in Apache Doris? {#why}
 
-A query against a [Hive or Iceberg table](./multi-catalog) on S3 pays for every byte three times: once to fetch it (HTTP round trip per ranged GET), once to decompress it (snappy, zstd, gzip), and once to decode it (RLE, dictionary, plain). The fetch is usually the worst offender. S3 GET tail latency runs 30 ms to 500 ms; a [Parquet scan](./parquet-reader-optimization) that issues thousands of ranged reads can spend most of its wall clock waiting for HTTP, before any CPU work starts.
+The Apache Doris Data Cache and Page Cache cut lakehouse query latency by removing repeated network fetches and repeated decompression on hot data. A query against a [Hive or Iceberg table](./multi-catalog) on S3 pays for every byte three times: once to fetch it (HTTP round trip per ranged GET), once to decompress it (snappy, zstd, gzip), and once to decode it (RLE, dictionary, plain). The fetch is usually the worst offender. S3 GET tail latency runs 30 ms to 500 ms; a [Parquet scan](./parquet-reader-optimization) that issues thousands of ranged reads can spend most of its wall clock waiting for HTTP, before any CPU work starts.
 
 A few common patterns make this hurt:
 
@@ -35,9 +35,11 @@ A few common patterns make this hurt:
 
 The two caches sit at different layers. A Data Cache hit removes the network. A Page Cache hit removes the network and the decompression, but only after some earlier read populated it.
 
-## What it is {#what}
+## What are the Apache Doris Data Cache and Page Cache? {#what}
 
-**Data Cache** is a per-BE local-disk cache for remote file bytes. When a Doris BE reads a Parquet or ORC file from a Hive, Iceberg, Hudi, or Paimon table, the bytes are pulled in 1 MB blocks and written to a configured local directory. Subsequent reads of the same offset hit the disk instead of S3.
+The Apache Doris Data Cache and Page Cache are two complementary storage caches: a per-BE local-disk cache for remote file bytes and an in-memory cache for column pages.
+
+**Data Cache** is a per-BE local-disk cache for remote file bytes. When an Apache Doris BE reads a Parquet or ORC file from a Hive, Iceberg, Hudi, or Paimon table, the bytes are pulled in 1 MB blocks and written to a configured local directory. Subsequent reads of the same offset hit the disk instead of S3.
 
 **Page Cache** is an in-memory cache for column pages. There are two flavors. The **Storage Page Cache** caches decompressed pages from internal Doris segments. The **Parquet Page Cache** (4.1+) does the same for external Parquet files, and is smart about whether to keep the page compressed or decompressed depending on its compression ratio.
 
@@ -49,9 +51,9 @@ The two caches sit at different layers. A Data Cache hit removes the network. A 
 - **`WARM UP`**: SQL syntax that pre-populates either cache by running a synthetic scan in the background.
 - **`Admission control`**: a policy that decides whether a given query is even allowed to write into the Data Cache, used to keep one-shot scans from polluting it.
 
-## How it works {#how}
+## How do the Apache Doris Data Cache and Page Cache work? {#how}
 
-A scan flows through the caches in order, top to bottom.
+Apache Doris funnels every lakehouse scan through the Page Cache first, then the Data Cache, and only falls back to S3/HDFS on a miss. A scan flows through the caches in order, top to bottom.
 
 1. **Page Cache lookup (memory).** Before issuing any IO, the reader checks whether the column page it needs is already in the Page Cache, keyed by file path, file size, and offset. A hit returns ready-to-decode (or already-decoded) bytes; the reader skips both IO and decompression.
 2. **Data Cache lookup (local disk).** On a Page Cache miss, the file reader checks the Data Cache for the 1 MB block covering the requested byte range. A hit reads from local NVMe at GB/s; the reader still has to decompress and decode, but the network is bypassed.
@@ -96,7 +98,9 @@ VFileScanNode
 
 The first run populated the Data Cache from S3. The second run answered the query without leaving the BE's local disk, and decompressed pages were served from RAM.
 
-## When to use it {#when}
+## When should you use the Apache Doris Data Cache and Page Cache? {#when}
+
+Use the Apache Doris Data Cache and Page Cache for repeat queries on hot lakehouse partitions, high-concurrency dashboards, and compute-group elasticity. Skip them when working sets exceed the cache, on one-shot ETL, or on mechanical disks where local IO is no faster than the remote source.
 
 **Good fit**
 

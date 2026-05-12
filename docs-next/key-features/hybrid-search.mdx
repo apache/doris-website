@@ -19,36 +19,38 @@ featureCard:
     - ai
 ---
 
-> **TL;DR** Doris lets you combine [full-text matching](./full-text-search) and vector similarity in one SQL query, on one table. You declare an [inverted index](./inverted-index) and an [ANN index](./vector-index) on the columns you'd normally split between Elasticsearch and a vector database, then mix `MATCH_ANY` with `l2_distance_approximate` in the same `WHERE` clause.
+> **TL;DR** Apache Doris hybrid search combines [full-text matching](./full-text-search) and vector similarity in one SQL query on one table. The table carries both an [inverted index](./inverted-index) and an [ANN index](./vector-index) on the columns you would normally split between Elasticsearch and a vector database. A single `WHERE` clause mixes `MATCH_ANY` with `l2_distance_approximate` to filter and rank in one shot.
 
 ![Apache Doris Hybrid Search: combines full-text matching and vector similarity in one SQL query on one table, with no separate search cluster to run.](/images/next/key-features/hybrid-search.jpg)
 
-## Why it matters {#why}
+## Why use hybrid search in Apache Doris? {#why}
 
-Search workloads rarely pick just one retrieval mode. A user searching "lightweight running shoes for trail" wants exact matches on "running" and "trail", but also semantic matches against listings that talk about "off-road" or "rugged terrain". The typical fix, splitting work across two systems, comes with the typical costs:
+Apache Doris hybrid search collapses two retrieval modes into one SQL query so you do not run a separate search cluster next to your warehouse. Search workloads rarely pick just one retrieval mode. A user searching "lightweight running shoes for trail" wants exact matches on "running" and "trail", but also semantic matches against listings that talk about "off-road" or "rugged terrain". The typical fix, splitting work across two systems, comes with the typical costs:
 
 - Two ingest pipelines that have to stay in sync, or recall drifts.
 - Two query languages, glued together by hand-written fusion logic.
 - Two clusters to size, monitor, and pay for.
 
-Doris collapses that into one table and one SQL statement, served by the same MPP engine that runs the rest of your queries.
+Apache Doris collapses that into one table and one SQL statement, served by the same MPP engine that runs the rest of your queries.
 
-## What it is {#what}
+## What is Apache Doris hybrid search? {#what}
 
-Hybrid search in Doris is a query pattern, not a separate engine. A single table can carry both an **inverted index** (which powers `MATCH_*` operators and BM25 scoring via `score()`) and an **ANN index** (which powers approximate vector distance functions like `l2_distance_approximate` and `inner_product_approximate`). The Doris planner reads from both indexes in one query and returns one ranked result set.
+Apache Doris hybrid search is a query pattern, not a separate engine. A single table can carry both an **inverted index** (which powers `MATCH_*` operators and BM25 scoring via `score()`) and an **ANN index** (which powers approximate vector distance functions like `l2_distance_approximate` and `inner_product_approximate`). The Apache Doris planner reads from both indexes in one query and returns one ranked result set.
 
 **Key terms**
 
 - **Inverted index**: a full-text index on a `STRING` column. Tokenizers include `english`, `standard`, and Chinese.
 - **ANN index**: an approximate-nearest-neighbor index on an `ARRAY<FLOAT>` column. Backends are HNSW, IVF, and IVF on-disk.
-- **Pre-filter**: Doris's default strategy. Apply scalar and text predicates first, then take TopN by vector distance over the rows that survive.
+- **Pre-filter**: the Apache Doris default strategy. Apply scalar and text predicates first, then take TopN by vector distance over the rows that survive.
 
-## How it works {#how}
+## How does Apache Doris hybrid search work? {#how}
+
+Apache Doris hybrid search builds both indexes at load time, then runs them in a single MPP plan that filters with the inverted index and ranks with the ANN index.
 
 1. **Index build at load time.** When you ingest data, the inverted index tokenizes each text column; the ANN index builds an HNSW graph or IVF codebook over each vector. Both live alongside the base table, in the same storage tier.
 2. **Plan in one shot.** When a query mixes `MATCH_*` operators and a vector distance function, the planner routes the text predicate to the inverted index and the distance function to the ANN index. There is no second query, no client-side join.
-3. **Filter, then rank.** Doris pre-filters with the inverted index first, then runs ANN TopN over the surviving row set. This is the inverse of the common "ANN first, filter after" pattern, and it keeps recall high when filters are selective.
-4. **Adaptive fallback.** If the filter is so selective that ANN traversal would skip too many candidates, Doris falls back to brute-force vector scoring on the filtered set. The same SQL keeps working; only the execution path changes.
+3. **Filter, then rank.** Apache Doris pre-filters with the inverted index first, then runs ANN TopN over the surviving row set. This is the inverse of the common "ANN first, filter after" pattern, and it keeps recall high when filters are selective.
+4. **Adaptive fallback.** If the filter is so selective that ANN traversal would skip too many candidates, Apache Doris falls back to brute-force vector scoring on the filtered set. The same SQL keeps working; only the execution path changes.
 5. **Return.** One sorted, limited result set. No external fusion service, no application-side ranking glue.
 
 ## Quick start {#quick-start}
@@ -84,7 +86,9 @@ LIMIT 2;
 
 `MATCH_ANY 'music'` shrinks the candidate set to rows whose `body` contains "music"; the ANN index then ranks those rows by distance to the query vector and returns the closest two.
 
-## When to use it {#when}
+## When should you use Apache Doris hybrid search? {#when}
+
+Use Apache Doris hybrid search when you need keyword filtering and vector similarity over the same data, in one SQL query, without running a separate vector database.
 
 **Good fit**
 

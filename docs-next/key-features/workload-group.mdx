@@ -19,20 +19,20 @@ featureCard:
     - multi-tenancy
 ---
 
-> **TL;DR** Workload Group slices a single Doris cluster into named groups, each with its own CPU share, memory ceiling, query concurrency cap, and IO budget. Heavy ETL goes in one group, dashboards in another, ad-hoc analysts in a third. A runaway query in one group no longer takes the others down with it. Linux cgroups handle CPU isolation; the BE process handles memory, IO, and concurrency.
+> **TL;DR** Apache Doris Workload Group slices a single cluster into named groups, each with its own CPU share, memory ceiling, query concurrency cap, and IO budget. Heavy ETL goes in one group, dashboards in another, ad-hoc analysts in a third. A runaway query in one group no longer takes the others down with it. Linux cgroups handle CPU isolation; the BE process handles memory, IO, and concurrency.
 
 ![Apache Doris Workload Group: An in-process resource isolation mechanism that partitions CPU, memory, IO, and concurrency across query groups so heavy ETL never starves a BI dashboard.](/images/next/key-features/workload-group.jpg)
-## Why it matters {#why}
+## Why use workload group in Apache Doris? {#why}
 
-A production Doris cluster almost never runs one workload. A typical day looks like this: a 2 a.m. ETL pipeline rewrites yesterday's partitions, a finance team reruns their daily report at 9 a.m., an executive dashboard polls the same `GROUP BY region` every fifteen seconds during business hours, and an analyst kicks off a `SELECT *` because they forgot the `WHERE` clause.
+Apache Doris workload group prevents mixed workloads from starving each other on a shared cluster. A production Doris cluster almost never runs one workload. A typical day looks like this: a 2 a.m. ETL pipeline rewrites yesterday's partitions, a finance team reruns their daily report at 9 a.m., an executive dashboard polls the same `GROUP BY region` every fifteen seconds during business hours, and an analyst kicks off a `SELECT *` because they forgot the `WHERE` clause.
 
 Without resource controls, those four workloads share one global pool. The ETL job runs on the same threads that serve the dashboard. A bad ad-hoc query fills the BE's memory and triggers a kill on the report. Concurrency is unbounded, so a sudden spike of dashboard refreshes piles up against the ETL load and degrades everyone.
 
 Workload Group fixes this without adding hardware. You define one group per workload class, set the limits each group is allowed, and bind users to the right group. The cluster keeps running on the same set of BEs, but the BE schedulers, memory tracker, and cgroup controllers now divide capacity along the lines you drew.
 
-## What it is {#what}
+## What is the Apache Doris workload group? {#what}
 
-Workload Group is an in-process isolation feature: every BE process serves every group, but the BE knows which threads, scan slots, and memory belong to which group. CPU isolation routes BE worker threads into per-group cgroups. Memory isolation tracks per-group usage in the BE memory tracker and triggers spilling or query cancellation when a group exceeds its ceiling. Concurrency control sits at the FE: each group has a queue, and queries past the limit wait or fail fast.
+Apache Doris workload group is an in-process isolation feature: every BE process serves every group, but the BE knows which threads, scan slots, and memory belong to which group. CPU isolation routes BE worker threads into per-group cgroups. Memory isolation tracks per-group usage in the BE memory tracker and triggers spilling or query cancellation when a group exceeds its ceiling. Concurrency control sits at the FE: each group has a queue, and queries past the limit wait or fail fast.
 
 **Key terms**
 
@@ -42,7 +42,9 @@ Workload Group is an in-process isolation feature: every BE process serves every
 - **`read_bytes_per_second` / `remote_read_bytes_per_second`**: per-group IO throttles, applied per data directory on local tables and per BE for external sources.
 - **`normal` group**: the default group, auto-created on first start, used for any session that has not been bound elsewhere. You cannot drop it.
 
-## How it works {#how}
+## How does the Apache Doris workload group work? {#how}
+
+The Apache Doris workload group resolves the target group at the FE, admits or queues the query, then enforces CPU, memory, and IO limits at the BE.
 
 1. **Resolve the group (FE).** The FE picks a group in this order: an explicit `/*+ SET_VAR(workload_group='...') */` hint, the session variable `workload_group`, the user property `default_workload_group`, then `normal`. The FE checks USAGE privilege on the chosen group.
 2. **Admit or queue (FE).** The group's queue checks how many queries are already running in this group on this FE. If under `max_concurrency`, the query gets a slot and proceeds. If over, it waits, capped by `max_queue_size` and timed out by `queue_timeout`. A full queue rejects fast.
@@ -86,7 +88,9 @@ FROM orders WHERE dt = CURRENT_DATE() GROUP BY region;
 
 `SHOW WORKLOAD GROUPS` (or `SELECT ... FROM information_schema.workload_groups`) reports live counts. The 12 queries waiting in `bi` are queued behind the 47 already running. The four ETL queries get a guaranteed 30% of CPU even when BI is busy, and they cannot push past 70%.
 
-## When to use it {#when}
+## When should you use the Apache Doris workload group? {#when}
+
+Use the Apache Doris workload group when a single cluster runs more than one workload class and you need predictable behavior under load without buying more hardware.
 
 **Good fit**
 

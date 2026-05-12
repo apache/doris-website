@@ -19,20 +19,20 @@ featureCard:
     - storage-compute-decoupled
 ---
 
-> **TL;DR** Compute Group is the storage-compute decoupled equivalent of [Resource Group](./resource-group). You split BE nodes into named groups, grant users access, and bind each session to a group; only those BEs serve the query. Because storage is shared (S3, OSS, COS, HDFS), adding a group costs you compute, not a replica. A BE failure inside a group still does not affect the others, and decommissioning a whole group leaves the data untouched.
+> **TL;DR** Apache Doris Compute Group is the storage-compute decoupled equivalent of [Resource Group](./resource-group). You split BE nodes into named groups, grant users access, and bind each session to a group; only those BEs serve the query. Because storage is shared (S3, OSS, COS, HDFS), adding a group costs you compute, not a replica. A BE failure inside one group does not affect the others, and decommissioning a whole group leaves the data untouched.
 
 ![Apache Doris Compute Group: Storage-compute decoupled isolation that splits stateless BE pools sharing one object store, so you add a query group without copying data.](/images/next/key-features/compute-group.jpg)
-## Why it matters {#why}
+## Why use Apache Doris compute groups? {#why}
 
-[Resource Group](./resource-group) buys you BE-level isolation in compute-storage integrated mode, but the bill arrives as storage. Five groups that all need to read the same table means five replicas of that table. Two new tenants means rebuilding replica allocation. Spinning up a temporary pool for tomorrow's batch run means moving data around first.
+Apache Doris compute groups give you BE-level workload isolation without multiplying storage, because every group reads from the same shared object store. [Resource Group](./resource-group) buys you BE-level isolation in compute-storage integrated mode, but the bill arrives as storage. Five groups that all need to read the same table means five replicas of that table. Two new tenants means rebuilding replica allocation. Spinning up a temporary pool for tomorrow's batch run means moving data around first.
 
 In a storage-compute decoupled deployment, the BE is stateless. It caches hot tablets locally for speed, but the source of truth lives in shared object storage. So adding another set of BEs costs you compute and a cold cache, nothing else. There is one logical copy of the data, regardless of how many compute groups read from it.
 
 Compute Group is the feature that turns that into workload isolation. You divide BEs into groups the way you would with Resource Group, but the storage budget stops scaling with the number of groups. Spin up an ETL pool for a load window, run BI on a different pool that never feels the load, decommission a group at midnight. The data does not move.
 
-## What it is {#what}
+## What is an Apache Doris compute group? {#what}
 
-Compute Group is a node-level isolation feature in Doris's storage-compute decoupled (cloud) mode. Each BE belongs to exactly one compute group, identified by a name. The same object-storage manifest backs every group, so adding a group means adding compute and a cache that needs warming, not adding a replica. Workload Group then sits inside a compute group, partitioning CPU and memory across the queries running there.
+An Apache Doris compute group is a node-level isolation primitive in storage-compute decoupled (cloud) mode. Each BE belongs to exactly one compute group, identified by a name. The same object-storage manifest backs every group, so adding a group means adding compute and a cache that needs warming, not adding a replica. Workload Group then sits inside a compute group, partitioning CPU and memory across the queries running there.
 
 **Key terms**
 
@@ -42,7 +42,9 @@ Compute Group is a node-level isolation feature in Doris's storage-compute decou
 - **`USAGE_PRIV ON COMPUTE GROUP`**: the access privilege. Granted with `GRANT USAGE_PRIV ON COMPUTE GROUP <name> TO <user>`. Without it, the user cannot select the group.
 - **File cache**: the local on-BE cache of hot tablet blocks. A new group starts cold and pays an object-storage round-trip on every miss until it warms up.
 
-## How it works {#how}
+## How does an Apache Doris compute group work? {#how}
+
+An Apache Doris compute group tags each BE at registration, grants `USAGE_PRIV` to specific users, binds sessions to a group either by default property or by `USE @<group>`, and restricts query fragment placement to that group's BEs while shared object storage backs every group.
 
 1. **Tag BEs at registration.** `ALTER SYSTEM ADD BACKEND 'host:9050' PROPERTIES ("tag.compute_group_name" = "etl")` adds a backend into the `etl` group. Omitting the property lands the BE in `default_compute_group`. The MetaService persists the assignment, and `SHOW COMPUTE GROUPS` reports the membership.
 2. **Grant access.** A regular user has no compute groups by default. `GRANT USAGE_PRIV ON COMPUTE GROUP etl TO 'etl_user'` is what lets them target the group at all. Admin users see every group.
@@ -85,7 +87,9 @@ SELECT region, SUM(amount) FROM orders WHERE dt = CURRENT_DATE() GROUP BY region
 
 `SHOW COMPUTE GROUPS` confirms the layout. The aggregation runs only on `be2` and `be3`. ETL and BI share the same `orders` data on object storage, but they share no BEs and no local cache. Decommission `be1` and the etl group is empty; the data is untouched.
 
-## When to use it {#when}
+## When should you use an Apache Doris compute group? {#when}
+
+Apache Doris compute groups fit storage-compute decoupled clusters that need workload isolation, read/write separation, or elastic peak/off-peak compute, but not integrated deployments or cross-group queries.
 
 **Good fit**
 

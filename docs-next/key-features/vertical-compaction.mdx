@@ -18,12 +18,12 @@ featureCard:
     - performance
 ---
 
-> **TL;DR** Doris's classic [compaction](./data-compaction) merges rowsets a row at a time, which means every column sits in memory at once. On a 200-column table that gets expensive fast. Vertical compaction splits the schema into small column groups, merges one group at a time, and reuses a sequence marker built from the key columns. It cuts compaction memory to roughly 1/10 and runs about 15% faster on wide tables. On by default since Doris 1.2.2.
+> **TL;DR** Apache Doris vertical compaction splits a wide table's schema into small column groups and merges one group at a time, instead of holding every column in memory like the classic row-wise [compaction](./data-compaction). The algorithm cuts compaction memory to roughly 1/10 and runs about 15% faster on wide tables, using a per-row sequence marker built from the key columns to keep the output identical. Vertical compaction has been enabled by default since Apache Doris 1.2.2.
 
 ![Apache Doris Vertical Compaction: Column-group-based compaction that keeps memory bounded when Doris merges rowsets on wide tables.](/images/next/key-features/vertical-compaction.jpg)
-## Why it matters {#why}
+## Why use vertical compaction in Apache Doris? {#why}
 
-Compaction is the background job that merges a tablet's rowsets into fewer, bigger ones so queries don't have to walk across hundreds of versions. The classic algorithm reads one row from each input rowset, picks a winner, writes it out, and repeats. That works fine on a 5-column fact table. It falls over on a 200-column user table — especially when those columns hold sprawling [VARIANT JSON payloads](./variant-data-type):
+Vertical compaction keeps Apache Doris compaction memory bounded on wide tables, where row-wise merging would otherwise pull every column into memory at once and OOM the BE. Compaction itself is the background job that merges a tablet's rowsets into fewer, bigger ones so queries don't have to walk across hundreds of versions. The classic algorithm reads one row from each input rowset, picks a winner, writes it out, and repeats. That works fine on a 5-column fact table. It falls over on a 200-column user table — especially when those columns hold sprawling [VARIANT JSON payloads](./variant-data-type):
 
 - A merging block has to hold every column for every row in the batch. Memory scales with column count and with batch size at the same time.
 - The Backend (BE) runs many compaction tasks in parallel. Even a few wide-table tasks can push a node into OOM territory.
@@ -31,9 +31,9 @@ Compaction is the background job that merges a tablet's rowsets into fewer, bigg
 
 Vertical compaction is the fix. It changes the unit of merging from "one row across all columns" to "one column group at a time across all rows," and pays for that with one extra structure: a per-row sequence marker.
 
-## What it is {#what}
+## What is Apache Doris vertical compaction? {#what}
 
-Vertical compaction merges columns in groups rather than merging rows. The Backend splits the table schema into a key-column group plus several value-column groups (5 columns per group by default), merges the key group first to fix a global ordering, then merges each value group by replaying that ordering. The output rowset matches what row-wise compaction would produce; only the memory profile changes.
+Apache Doris vertical compaction is a compaction algorithm that merges columns in groups rather than merging rows. The Backend splits the table schema into a key-column group plus several value-column groups (5 columns per group by default), merges the key group first to fix a global ordering, then merges each value group by replaying that ordering. The output rowset matches what row-wise compaction would produce; only the memory profile changes.
 
 **Key terms**
 
@@ -43,7 +43,9 @@ Vertical compaction merges columns in groups rather than merging rows. The Backe
 - **`Vertical merge iterator`**: the BE component that scans a single column group from all input rowsets and emits the merged column.
 - **`enable_vertical_compaction`**: BE config flag, `true` by default. Disabling it falls back to row-wise compaction.
 
-## How it works {#how}
+## How does Apache Doris vertical compaction work? {#how}
+
+Apache Doris vertical compaction works by splitting the schema into column groups, merging the key group first to fix the row order, then replaying that order for every value group so non-group columns never sit in memory. The five-step flow below covers split, merge, replay, stitch, and spill.
 
 1. **Split the schema into groups.** The BE walks the tablet schema, puts the key columns into group 0, and chunks the remaining columns into groups of `vertical_compaction_num_columns_per_group` (default 5). When `enable_vertical_compact_variant_subcolumns` is on, the BE folds variant subcolumns into the same flow.
 2. **Merge the key group and record the order.** The Merger heap-sorts the key columns across all input rowsets. As each row leaves the heap, it writes one entry into the RowSourcesBuffer recording where the row came from. The output of this pass is a sorted key column plus a global RowSources tape.
@@ -86,7 +88,9 @@ SHOW CREATE TABLE user_profile;
 
 A group size of 3 trades a bit more IO for tighter memory use, which is what you want on tables with many large `STRING` or `JSONB` columns. Verify it took effect with `SHOW CREATE TABLE`. To roll the change back to defaults, drop the property with `ALTER TABLE`.
 
-## When to use it {#when}
+## When should you use Apache Doris vertical compaction? {#when}
+
+Use Apache Doris vertical compaction on wide schemas, on tablets that OOM under row-wise compaction, and on tables with sparse VARIANT subcolumns. Skip the tuning on narrow tables and on disk-bound clusters where extra read passes hurt more than the memory savings help.
 
 **Good fit**
 

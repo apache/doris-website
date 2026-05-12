@@ -19,37 +19,39 @@ featureCard:
     - performance
 ---
 
-> **TL;DR** Doris is a columnar OLAP engine, but for primary-key equality lookups it switches lanes. Combine the [Unique Key model](./data-model) with Merge-on-Write, row-format storage (`store_row_column`), the short-circuit query path, and a server-side [`PreparedStatement`](./prepared-statement), and a `SELECT * FROM t WHERE pk = ?` query stops behaving like an OLAP query at all. One round-trip to the BE, one row back, no plan parsing, no fragment scheduling. That is how you serve a dashboard widget and a fact-table aggregation from the same database without standing up a second one.
+> **TL;DR** Apache Doris is a columnar OLAP engine, but for primary-key equality lookups it switches lanes. Combine the [Unique Key model](./data-model) with Merge-on-Write, row-format storage (`store_row_column`), the short-circuit query path, and a server-side [`PreparedStatement`](./prepared-statement), and a `SELECT * FROM t WHERE pk = ?` query stops behaving like an OLAP query at all. One round-trip to the BE, one row back, no plan parsing, no fragment scheduling. That is how the same database serves a dashboard widget and a fact-table aggregation without standing up a second one.
 
 ![Apache Doris High-Concurrency Point Query: A short-circuit query path that turns Unique Key tables into a low-latency KV store, sustaining tens of thousands of QPS on primary-key equality lookups.](/images/next/key-features/high-concurrency-point-query.jpg)
-## Why it matters {#why}
+## Why use high-concurrency point query in Apache Doris? {#why}
 
-Most analytics workloads have a long tail of "look up one row by ID" queries hiding inside them. A user-facing dashboard fetches the row for the customer who just clicked. A risk service reads a feature vector by entity ID on every API call. A recommendation backend pulls the latest profile per user. None of these are analytical, but the data lives next to the analytical data, and nobody wants to run a separate KV store just to serve them.
+The Apache Doris high-concurrency point query path exists for the long tail of "look up one row by ID" queries that hide inside most analytics workloads. A user-facing dashboard fetches the row for the customer who just clicked. A risk service reads a feature vector by entity ID on every API call. A recommendation backend pulls the latest profile per user. None of these are analytical, but the data lives next to the analytical data, and nobody wants to run a separate KV store just to serve them.
 
-Default Doris is a poor fit for that traffic, and the reasons are structural:
+Default Apache Doris is a poor fit for that traffic, and the reasons are structural:
 
 - Columnar storage reads many small column files to reconstruct one row, amplifying random IO on wide tables.
 - The Frontend planner runs the same parse, analyze, optimize, and fragment pipeline whether the query reads one row or one billion. At thousands of QPS the FE CPU saturates before the BE notices.
 - Every query opens its own coordinator, allocates fragments, and ships RPCs. That is overhead a `WHERE id = 42` cannot afford.
 - Page Cache is column-oriented, and large analytical scans evict it constantly, so point queries miss cache exactly when they need it.
 
-High-concurrency point query is Doris's answer to that traffic. It reshapes storage, planning, execution, and caching so a primary-key lookup costs one round trip and a few microseconds of FE CPU.
+The Apache Doris high-concurrency point query is the answer to that traffic. It reshapes storage, planning, execution, and caching so a primary-key lookup costs one round trip and a few microseconds of FE CPU.
 
-## What it is {#what}
+## What is the Apache Doris high-concurrency point query? {#what}
 
-High-concurrency point query is a four-layer optimization that activates automatically when the table and the query both fit a strict shape: a Unique Key table with Merge-on-Write and row-store enabled, queried with equality predicates that cover the full primary key. When the conditions hold, the planner takes the short-circuit path and the BE serves the row from a row-format column instead of stitching it from per-column files.
+The Apache Doris high-concurrency point query is a four-layer optimization that activates automatically when the table and the query both fit a strict shape: a Unique Key table with Merge-on-Write and row-store enabled, queried with equality predicates that cover the full primary key. When the conditions hold, the planner takes the short-circuit path and the BE serves the row from a row-format column instead of stitching it from per-column files.
 
 **Key terms**
 
-- **`Unique Key model`**: a Doris table model where rows are addressed by a primary key. With `enable_unique_key_merge_on_write=true`, the latest version of each row is materialized at write time, so reads do not merge versions on the fly.
+- **`Unique Key model`**: an Apache Doris table model where rows are addressed by a primary key. With `enable_unique_key_merge_on_write=true`, the latest version of each row is materialized at write time, so reads do not merge versions on the fly.
 - **`store_row_column`**: a table property that adds a hidden column holding each row in a row-encoded blob, so the BE reads one column instead of N to return a whole row.
 - **`SHORT-CIRCUIT`**: a marker in `EXPLAIN` output that appears once the planner has skipped the normal distributed plan and routed the query through a single-tablet, single-RPC path.
-- **`PreparedStatement`**: server-side statement caching over the MySQL protocol. Doris caches the parsed statement, output expressions, and descriptor table per session, then reuses them across `EXECUTE` calls.
+- **`PreparedStatement`**: server-side statement caching over the MySQL protocol. Apache Doris caches the parsed statement, output expressions, and descriptor table per session, then reuses them across `EXECUTE` calls.
 - **`Row Cache`**: a separate LRU cache that holds whole rows. It survives the eviction pressure that the columnar Page Cache suffers under mixed analytical and point-query workloads.
 
-## How it works {#how}
+## How does the Apache Doris high-concurrency point query work? {#how}
 
-1. **Storage layout.** When you set `store_row_column=true` at table creation, the BE writes each row both into the columnar segments and into a row-encoded hidden column. From Doris 3.0 onward you can scope this to a subset with `row_store_columns="k1,v1,v2"` to limit the storage overhead.
+The Apache Doris high-concurrency point query path threads five layers together: storage layout, FE plan rewrite, short-circuit dispatch, server-side `PreparedStatement` reuse, and a BE row lookup with optional Row Cache.
+
+1. **Storage layout.** When you set `store_row_column=true` at table creation, the BE writes each row both into the columnar segments and into a row-encoded hidden column. From Apache Doris 3.0 onward you can scope this to a subset with `row_store_columns="k1,v1,v2"` to limit the storage overhead.
 2. **Plan rewrite (FE).** The Nereids rule `LogicalResultSinkToShortCircuitPointQuery` checks the query shape: single Unique table, equality conjuncts on every key column, no joins or subqueries, no aggregations. If everything matches, it flips the `isShortCircuitQuery` flag in the `StatementContext`.
 3. **Short-circuit dispatch.** Instead of building fragments and shipping them, the FE resolves the bucket through `PartitionPruneV2ForShortCircuitPlan`, picks the one tablet that can hold the key, and sends a single RPC to the BE that owns it.
 4. **Server-side `PreparedStatement` reuse.** With `useServerPrepStmts=true`, the FE caches the `ShortCircuitQueryContext` per session UUID. Subsequent `EXECUTE` calls skip parsing and planning entirely; only the parameter values change.
@@ -86,7 +88,9 @@ EXPLAIN SELECT * FROM tbl_point_query WHERE k1 = 42;
 
 The `SHORT-CIRCUIT` line is the one that matters. Without it, the same DDL plus a query that cannot satisfy the conditions (a join, a missing key column, an inequality) falls back to the regular distributed plan. To collect the FE CPU savings on top, connect the client with `jdbc:mysql://host:9030/db?useServerPrepStmts=true&cachePrepStmts=true` and use `PreparedStatement` with `?` placeholders. Confirm in `fe.audit.log` that repeat queries log `Stmt=EXECUTE(...)` rather than the raw SQL.
 
-## When to use it {#when}
+## When should you use the Apache Doris high-concurrency point query? {#when}
+
+The Apache Doris high-concurrency point query fits any online service that reads a row by primary key per request, especially when the data already lives in a Unique Key table alongside the analytical workload.
 
 **Good fit**
 
@@ -105,7 +109,7 @@ The `SHORT-CIRCUIT` line is the one that matters. Without it, the same DDL plus 
 
 ## Performance and verification {#performance}
 
-Doris reports that enabling server-side `PreparedStatement` on top of the short-circuit path delivers more than a 4x throughput improvement when FE CPU is the bottleneck. This is the same 4x cited from the prepared-statement angle in the [Prepared Statement card](./prepared-statement) — one combined gain, not two stackable ones. Numbers depend on row width, row cache hit rate, and how many FE Observers absorb traffic, so treat that as a planning floor, not a benchmark.
+Apache Doris reports that enabling server-side `PreparedStatement` on top of the short-circuit path delivers more than a 4x throughput improvement when FE CPU is the bottleneck. This is the same 4x cited from the prepared-statement angle in the [Prepared Statement card](./prepared-statement) — one combined gain, not two stackable ones. Numbers depend on row width, row cache hit rate, and how many FE Observers absorb traffic, so treat that as a planning floor, not a benchmark.
 
 Two checks tell you the path is live:
 

@@ -19,23 +19,23 @@ featureCard:
     - streaming
 ---
 
-> **TL;DR** Doris wraps every data load in a transaction. You can group several inserts under one `BEGIN ... COMMIT`, dedupe retries with a load `Label`, and drive a two-phase commit from headers in a [Stream Load](./stream-load) HTTP request. That last part is what lets Flink, Spark, and [CDC pipelines](./kafka-cdc-integration) write to Doris exactly once without keeping their own bookkeeping table.
+> **TL;DR** Apache Doris wraps every data load in a transaction. You can group several inserts under one `BEGIN ... COMMIT`, dedupe retries with a load `Label`, and drive a two-phase commit from headers in a [Stream Load](./stream-load) HTTP request. That last part is what lets Flink, Spark, and [CDC pipelines](./kafka-cdc-integration) write to Doris exactly once without keeping their own bookkeeping table.
 
 ![Apache Doris Load Transactions: Run multi-statement loads as one atomic unit, with label-based dedup and 2PC for exactly-once streaming sinks.](/images/next/key-features/load-transaction.jpg)
 
-## Why it matters {#why}
+## Why use load transactions in Apache Doris? {#why}
 
-Loading data into a warehouse goes wrong in predictable ways. A Flink job restarts mid-checkpoint and replays the last batch, doubling rows. A CDC pipeline [updates a fact table](./data-update-delete) but its companion dimension write fails, leaving the two out of sync until the next backfill. A retry script re-uploads the same file because it has no way to know the previous attempt actually landed. Each of these forces ugly bookkeeping in the application.
+Apache Doris load transactions push duplicate-row and partial-write problems off the application and into the warehouse, so a Flink replay, a half-completed multi-table write, or a re-uploaded file all behave correctly. Loading data into a warehouse goes wrong in predictable ways. A Flink job restarts mid-checkpoint and replays the last batch, doubling rows. A CDC pipeline [updates a fact table](./data-update-delete) but its companion dimension write fails, leaving the two out of sync until the next backfill. A retry script re-uploads the same file because it has no way to know the previous attempt actually landed. Each of these forces ugly bookkeeping in the application.
 
 - Replays from a stalled streaming job duplicate rows.
 - Multi-table writes that should move together can stop halfway.
 - Resubmissions of the same file land twice unless you track them yourself.
 
-Doris solves all three on the server, so the load client can stay thin.
+Apache Doris solves all three on the server, so the load client can stay thin.
 
-## What it is {#what}
+## What are Apache Doris load transactions? {#what}
 
-Every write into Doris runs inside a transaction. That covers `INSERT INTO`, Stream Load, Routine Load, and Broker Load. Each one gets a unique Label and walks through a tracked set of lifecycle states managed by the FE. You can let Doris open and commit that transaction implicitly per load, take control with explicit `BEGIN`/`COMMIT`/`ROLLBACK`, or split the commit into two phases over HTTP for streaming sinks.
+Apache Doris load transactions are the atomic write unit underneath every ingestion path. Every write into Doris runs inside a transaction. That covers `INSERT INTO`, Stream Load, Routine Load, and Broker Load. Each one gets a unique Label and walks through a tracked set of lifecycle states managed by the FE. You can let Apache Doris open and commit that transaction implicitly per load, take control with explicit `BEGIN`/`COMMIT`/`ROLLBACK`, or split the commit into two phases over HTTP for streaming sinks.
 
 **Key terms**
 
@@ -45,7 +45,9 @@ Every write into Doris runs inside a transaction. That covers `INSERT INTO`, Str
 - **`Stream Load 2PC`**: a Stream Load that stops at PRECOMMITTED until a follow-up HTTP call commits or aborts it.
 - **`Lifecycle states`**: `PREPARE` → `PRECOMMITTED` → `COMMITTED` → `VISIBLE` (or `ABORTED`). Rows are queryable only after `VISIBLE`.
 
-## How it works {#how}
+## How do Apache Doris load transactions work? {#how}
+
+Apache Doris load transactions walk every write through five FE-managed states (`PREPARE` → `PRECOMMITTED` → `COMMITTED` → `VISIBLE`, or `ABORTED` on failure), with a `Label` that deduplicates retries and a final replica-level publish that makes rows queryable at one instant.
 
 1. **Open.** A load opens a transaction in `PREPARE`. The FE assigns a `TxnId` and ties it to the user-supplied or generated Label. A second submission with the same Label short-circuits to the original transaction's result.
 2. **Write.** BEs receive the data, build segments, and report success. The transaction moves to `PRECOMMITTED` once all expected loads acknowledge.
@@ -81,7 +83,9 @@ Query OK, 2 rows affected
 
 Both tables become readable at the same instant. If the second `INSERT` had failed or the connection had dropped before `COMMIT`, neither table would carry the new rows.
 
-## When to use it {#when}
+## When should you use Apache Doris load transactions? {#when}
+
+Reach for Apache Doris load transactions when several inserts must move together, when a streaming sink needs exactly-once semantics, or when retried loads must dedupe on a Label rather than in the application.
 
 **Good fit**
 
