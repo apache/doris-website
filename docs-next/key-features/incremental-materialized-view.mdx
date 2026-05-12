@@ -19,22 +19,22 @@ featureCard:
     - performance
 ---
 
-> **TL;DR** Mark an async materialized view with [`PARTITION BY`](./partitioning-and-bucketing) and `REFRESH AUTO` and Doris tracks staleness per partition. Today's load only touches today's base partition, so the next refresh re-runs the aggregation for that one day and leaves the rest of the view alone. Queries that span fresh and stale days still hit the view: the optimizer reads valid partitions from the MV and `UNION ALL`s the stale ones from the base table.
+> **TL;DR** An Apache Doris incremental materialized view is a partitioned async MTMV with [`PARTITION BY`](./partitioning-and-bucketing) and `REFRESH AUTO`. Apache Doris tracks staleness per partition, so today's load triggers a refresh of only today's view partition while the other 29 days stay untouched. Queries that span fresh and stale days still hit the view: the optimizer reads valid partitions from the MV and `UNION ALL`s the stale ones from the base table.
 
 ![Apache Doris Incremental Materialized View: Partitioned async materialized views in REFRESH AUTO mode rebuild only the partitions whose base data changed, so dashboards stay fresh.](/images/next/key-features/incremental-materialized-view.jpg)
-## Why it matters {#why}
+## Why use incremental materialized views in Apache Doris? {#why}
 
-You have a fact table partitioned by day and a materialized view that aggregates it for tomorrow's dashboard. Today's load only writes into today's partition, but a naive refresh recomputes the whole view anyway. It re-aggregates 29 days that did not change, runs for an hour, and finishes after the dashboard is already stale.
+Apache Doris incremental materialized views keep partitioned dashboards fresh by recomputing only the partitions whose base data changed, instead of re-aggregating the whole view on every load. You have a fact table partitioned by day and a materialized view that aggregates it for tomorrow's dashboard. Today's load only writes into today's partition, but a naive refresh recomputes the whole view anyway. The refresh re-aggregates 29 days that did not change, runs for an hour, and finishes after the dashboard is already stale.
 
 - A 30-day partitioned fact table where each load only touches the latest day. A full refresh re-aggregates 29 days that did not change.
 - BI dashboards that fall behind the load schedule because the MV refresh window is longer than the load interval.
 - Hive- or Iceberg-backed [lakehouse tables](./managing-lake-table) where rereading every partition through object storage is slow and expensive.
 
-`REFRESH AUTO` on a partitioned async MV cuts that down to what actually changed. Doris tracks staleness per partition, runs `INSERT OVERWRITE` only on the partitions whose base data moved, and leaves the rest of the view exactly as it was.
+`REFRESH AUTO` on a partitioned async MV cuts that down to what actually changed. Apache Doris tracks staleness per partition, runs `INSERT OVERWRITE` only on the partitions whose base data moved, and leaves the rest of the view exactly as it was.
 
-## What it is {#what}
+## What is an Apache Doris incremental materialized view? {#what}
 
-An incremental materialized view in Doris is a partitioned async materialized view (an MTMV) created with `REFRESH AUTO`. Doris derives the view's partitions from one base table you point at in `PARTITION BY`, with an optional `DATE_TRUNC` that rolls daily base partitions up to monthly view partitions. When a base partition's data changes, only the view partition mapped to it is flagged invalid. The next refresh runs `INSERT OVERWRITE` for the invalid partitions, one statement at a time.
+An Apache Doris incremental materialized view is a partitioned async materialized view (an MTMV) created with `REFRESH AUTO`. Apache Doris derives the view's partitions from one base table you point at in `PARTITION BY`, with an optional `DATE_TRUNC` that rolls daily base partitions up to monthly view partitions. When a base partition's data changes, only the view partition mapped to it is flagged invalid. The next refresh runs `INSERT OVERWRITE` for the invalid partitions, one statement at a time.
 
 **Key terms**
 
@@ -44,10 +44,12 @@ An incremental materialized view in Doris is a partitioned async materialized vi
 - **`Partition invalidation`**: the per-partition stale flag set when base data backing that partition changes. Visible via `SHOW PARTITIONS FROM <mv>`.
 - **`Partition-granularity transparent rewrite`**: the rewriter can read valid MV partitions and `UNION ALL` the rest from the base table, so a single stale partition no longer disqualifies the whole MV.
 
-## How it works {#how}
+## How does an Apache Doris incremental materialized view work? {#how}
 
-1. **You declare the partition mapping.** `PARTITION BY (DATE_TRUNC(o_orderdate, 'MONTH'))` tells Doris to derive the MV's partitions from `orders.o_orderdate`. Internal tables and Hive tables both work; Iceberg, Paimon, and Hudi gained partitioned refresh in 3.1, with Iceberg and Paimon also supporting automatic detection of base data changes — Hudi requires manual refresh.
-2. **Doris materializes a partition layout.** At create time, the FE walks the base partitions, applies the roll-up function, and emits matching MV partitions. New base partitions trigger new MV partitions on the next refresh.
+An Apache Doris incremental materialized view works by mapping each MV partition back to a base partition at create time, flagging only the affected MV partitions when a load lands, and rebuilding just those partitions through `INSERT OVERWRITE` on the next refresh. The five-step flow below covers declaration, materialization, invalidation, refresh, and partition-granularity rewrite.
+
+1. **You declare the partition mapping.** `PARTITION BY (DATE_TRUNC(o_orderdate, 'MONTH'))` tells Apache Doris to derive the MV's partitions from `orders.o_orderdate`. Internal tables and Hive tables both work; Iceberg, Paimon, and Hudi gained partitioned refresh in 3.1, with Iceberg and Paimon also supporting automatic detection of base data changes — Hudi requires manual refresh.
+2. **Apache Doris materializes a partition layout.** At create time, the FE walks the base partitions, applies the roll-up function, and emits matching MV partitions. New base partitions trigger new MV partitions on the next refresh.
 3. **Loads invalidate partitions, not the whole view.** A load that lands in `orders` partition `p_2026_05_08` only flags the MV partitions whose key set covers that day. Loads on referenced non-partitioned tables still invalidate everything by default; list those tables in `excluded_trigger_tables` if you know they only insert and never update.
 4. **The refresh job rebuilds invalid partitions only.** Each invalid partition becomes one `INSERT OVERWRITE`. The `refresh_partition_num` property controls how many partitions ride per statement (default 1), trading transactional granularity for throughput. A failure stops the task without rolling back partitions that already landed.
 5. **The optimizer rewrites at partition granularity.** A query that touches both fresh and stale days reads the fresh days from the MV and the stale day from the base table through `UNION ALL`. Set `grace_period` if you want the rewriter to accept partitions that are stale by less than N seconds.
@@ -87,7 +89,9 @@ After loading new rows into the `2026-05-08` base partition only, `SHOW PARTITIO
 
 The earlier partitions kept their old `VisibleVersionTime` because nothing recomputed them. Only `p_20260508` rebuilt, in one `INSERT OVERWRITE` statement against one day's data.
 
-## When to use it {#when}
+## When should you use an Apache Doris incremental materialized view? {#when}
+
+Use Apache Doris incremental materialized views for append-mostly fact tables partitioned by day or hour, multi-layer DWD/DWS/ADS modeling, and Hive/Iceberg/Paimon lakehouse tables you want to materialize locally. Skip them for sub-second freshness (use a sync MV), unpartitioned base tables, and Hudi tables where Apache Doris cannot detect base data changes automatically.
 
 **Good fit**
 
@@ -100,9 +104,9 @@ The earlier partitions kept their old `VisibleVersionTime` because nothing recom
 
 - Real-time freshness in the seconds. Use a [sync materialized view](../query-acceleration/materialized-view/sync-materialized-view) instead; sync MVs are merged into the base table's write path.
 - Tables that don't have a partition column. Without a partition mapping the MV degrades to a full refresh, and you get none of the incremental benefits.
-- MV definitions that can't be partition-derived. Doris rejects the `PARTITION BY` clause at create time when any of the eight derivation rules fails: aggregating the partition column (`min(o_orderdate)`), placing it on the NULL-generating side of an OUTER JOIN, dropping it from `GROUP BY` or a window's `PARTITION BY`, using a roll-up function other than `DATE_TRUNC`, and so on.
-- Hudi base tables. Doris cannot detect base data changes on Hudi today, so only manual refresh is meaningful, and the incremental decision can't be made automatically.
-- Tables you also write to from Spark or Flink without going through Doris. The metadata cache won't see those writes, so the MV will think it's still in sync. Force a refresh manually after each external write, or pick a different acceleration path.
+- MV definitions that can't be partition-derived. Apache Doris rejects the `PARTITION BY` clause at create time when any of the eight derivation rules fails: aggregating the partition column (`min(o_orderdate)`), placing it on the NULL-generating side of an OUTER JOIN, dropping it from `GROUP BY` or a window's `PARTITION BY`, using a roll-up function other than `DATE_TRUNC`, and so on.
+- Hudi base tables. Apache Doris cannot detect base data changes on Hudi today, so only manual refresh is meaningful, and the incremental decision can't be made automatically.
+- Tables you also write to from Spark or Flink without going through Apache Doris. The metadata cache won't see those writes, so the MV will think it's still in sync. Force a refresh manually after each external write, or pick a different acceleration path.
 
 ## Further reading {#further-reading}
 
@@ -113,3 +117,4 @@ The earlier partitions kept their old `VisibleVersionTime` because nothing recom
 - [Preaggregation and Rollup](./preaggregation-and-rollup): the per-load Aggregate Key path and sync MV / ROLLUP companions to async MVs.
 - [Query Cache](./query-cache): another preaggregation path; precompute via MV or cache on first read.
 - [Data Lineage](./data-lineage): how the audit log's `chosen_m_views` column surfaces which MVs actually serve traffic.
+- [Iceberg](./iceberg): a common base-table source for incremental MVs — snapshot diffs make change capture cheap.

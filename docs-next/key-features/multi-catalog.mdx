@@ -20,37 +20,39 @@ featureCard:
     - external-catalog
 ---
 
-> **TL;DR** Multi Catalog turns one Doris cluster into a federation. You register external systems (Hive, Iceberg, Hudi, Paimon, Delta Lake, MySQL, PostgreSQL, Oracle, Elasticsearch, BigQuery, MaxCompute, and more) as named catalogs, address every table as `<catalog>.<db>.<table>`, and join across them in a single SQL statement. The internal warehouse is just another catalog called `internal`. No copy job, no second query engine, one permission model.
+> **TL;DR** Apache Doris Multi Catalog turns one cluster into a federation that registers external systems (Hive, Iceberg, Hudi, Paimon, Delta Lake, MySQL, PostgreSQL, Oracle, Elasticsearch, BigQuery, MaxCompute, and more) as named catalogs. Every table is addressed as `<catalog>.<db>.<table>` and joined across catalogs in a single SQL statement. The internal warehouse is just another catalog called `internal`, so one permission model covers all sources with no copy job and no second query engine.
 
 ![Apache Doris Multi Catalog: One Doris cluster federates queries across its internal warehouse and external systems (Hive, Iceberg, JDBC, ES, and more) via three-part names.](/images/next/key-features/multi-catalog.jpg)
-## Why it matters {#why}
+## Why use Apache Doris Multi Catalog? {#why}
 
-Most analytics teams already run more than one storage system. Fact tables sit in Hive or Iceberg on object storage. Dimensions and operational state live in MySQL or PostgreSQL. Text-heavy workloads land in Elasticsearch. The warehouse holds the curated marts. Asking a question that crosses two of these usually means a copy job, a CDC pipeline, or a second query engine bolted on the side. Each of those costs you freshness or money, often both. Plugging in a new system through [catalog integrations](./catalog-integrations) keeps the [metadata cache](./metadata-cache) warm and lets you [manage lake tables](./managing-lake-table) without leaving SQL.
+Apache Doris Multi Catalog removes the copy job, CDC pipeline, or second query engine that teams usually stand up to query across more than one storage system. Most analytics teams already run more than one storage system. Fact tables sit in Hive or Iceberg on object storage. Dimensions and operational state live in MySQL or PostgreSQL. Text-heavy workloads land in Elasticsearch. The warehouse holds the curated marts. Asking a question that crosses two of these usually costs you freshness or money, often both. Plugging in a new system through [catalog integrations](./catalog-integrations) keeps the [metadata cache](./metadata-cache) warm and lets you [manage lake tables](./managing-lake-table) without leaving SQL.
 
-Multi Catalog removes the wrapper. Doris connects to each system once, learns its catalog of databases and tables, and exposes them under a name you choose. From then on, the table lives at `<catalog>.<db>.<table>` and behaves like any other table in your queries.
+Apache Doris connects to each system once, learns its catalog of databases and tables, and exposes them under a name you choose. From then on, the table lives at `<catalog>.<db>.<table>` and behaves like any other table in your queries.
 
 - Joining a fact table on Iceberg with a dimension table on MySQL is one SELECT, not a pipeline.
 - The warehouse and the lake share one SQL surface, one user, one privilege model.
 - Adding a new source means a `CREATE CATALOG`, not a deploy.
 
-## What it is {#what}
+## What is the Apache Doris Multi Catalog? {#what}
 
-Multi Catalog is a federation layer at the top of Doris's metadata stack. Doris organizes everything in a three-level namespace: catalog, database, table. The built-in catalog `internal` holds Doris's own tables. Every other catalog is an external catalog backed by a connector that knows how to talk to one kind of source. The connector handles metadata discovery, type mapping, partition pruning, and read (and increasingly write) operations. The query optimizer plans across all of them at once, so a join between an Iceberg table and a Doris table runs through the same MPP engine as a join between two Doris tables.
+The Apache Doris Multi Catalog is a federation layer at the top of the metadata stack that organizes everything in a three-level namespace: catalog, database, table. The built-in catalog `internal` holds Apache Doris's own tables. Every other catalog is an external catalog backed by a connector that knows how to talk to one kind of source. The connector handles metadata discovery, type mapping, partition pruning, and read (and increasingly write) operations. The query optimizer plans across all of them at once, so a join between an Iceberg table and an Apache Doris table runs through the same MPP engine as a join between two internal tables.
 
 **Key terms**
 
-- **`internal`**: the built-in catalog that holds Doris's native tables. Cannot be created, renamed, or dropped.
-- **External catalog**: any catalog created with `CREATE CATALOG ... PROPERTIES ("type" = "...")`. Doris ships connectors for `hms` (Hive and Hive-compatible metastores), `iceberg`, `hudi`, `paimon`, `jdbc`, `es`, `max_compute`, `bigquery`, `kafka`, `trino-connector`, and more.
+- **`internal`**: the built-in catalog that holds Apache Doris's native tables. Cannot be created, renamed, or dropped.
+- **External catalog**: any catalog created with `CREATE CATALOG ... PROPERTIES ("type" = "...")`. Apache Doris ships connectors for `hms` (Hive and Hive-compatible metastores), `iceberg`, `hudi`, `paimon`, `jdbc`, `es`, `max_compute`, `bigquery`, `kafka`, `trino-connector`, and more.
 - **Three-part name**: `catalog.db.table`. Always resolves the same way, whether referenced inside a single catalog session or across catalogs.
 - **`SWITCH` and `USE`**: `SWITCH iceberg_ctl` flips the session's current catalog (similar to `USE` for databases). `USE iceberg_ctl.iceberg_db` switches catalog and database in one statement.
 - **Metadata cache**: the FE-side cache that holds schemas, partition lists, and file listings for external catalogs so planning stays fast. Refreshed by TTL, by source-side events, or by `REFRESH CATALOG`.
 
-## How it works {#how}
+## How does the Apache Doris Multi Catalog work? {#how}
 
-1. **Register a catalog.** `CREATE CATALOG <name> PROPERTIES ("type" = "<type>", ...)` records the connection details on the FE. The properties are persisted in the FE edit log; nothing else moves. Doris does not copy schemas or data.
+The Apache Doris Multi Catalog records each external source as a named connector on the FE, then resolves every table reference as a three-part name that the optimizer plans across in one MPP query.
+
+1. **Register a catalog.** `CREATE CATALOG <name> PROPERTIES ("type" = "<type>", ...)` records the connection details on the FE. The properties are persisted in the FE edit log; nothing else moves. Apache Doris does not copy schemas or data.
 2. **Discover lazily.** The first time a session touches the catalog, the connector lists its databases and tables, fetches schemas, and populates the metadata cache. See [Metadata Cache](./metadata-cache) for what gets cached and for how long.
 3. **Resolve three-part names.** Every table reference is parsed as `catalog.db.table`. Unqualified names use the session's current catalog and database. `SWITCH`, `USE`, and the user property `default_init_catalog` control where unqualified names land.
-4. **Plan one query.** The optimizer pulls statistics from each catalog's connector, picks join order and predicate pushdown, and produces a single distributed plan. The plan can mix scans against `internal` Doris tablets, Iceberg manifests, MySQL JDBC fetches, and ES queries inside the same fragment graph.
+4. **Plan one query.** The optimizer pulls statistics from each catalog's connector, picks join order and predicate pushdown, and produces a single distributed plan. The plan can mix scans against `internal` Apache Doris tablets, Iceberg manifests, MySQL JDBC fetches, and ES queries inside the same fragment graph.
 5. **Stay current.** TTLs and source-side events (Hive Metastore events, Iceberg snapshot pointers, Paimon snapshot reloads) keep the cache aligned with the source. `REFRESH CATALOG`, `REFRESH DATABASE`, and `REFRESH TABLE` cover the rest.
 
 ## Quick start {#quick-start}
@@ -92,21 +94,23 @@ WHERE f.dt = CURRENT_DATE() GROUP BY 1, 3;
 
 `SHOW CATALOGS` lists `internal`, `hive_ctl`, and `mysql_ctl`. The query plans and runs as one MPP job; no staging table needed.
 
-## When to use it {#when}
+## When should you use the Apache Doris Multi Catalog? {#when}
+
+Use the Apache Doris Multi Catalog whenever a query needs to touch the warehouse and one or more external sources without an intermediate ETL stage.
 
 **Good fit**
 
-- Federated analytics across a lake (Hive, Iceberg, Hudi, Paimon, Delta Lake) and the Doris warehouse, without ETL into Doris first.
+- Federated analytics across a lake (Hive, Iceberg, Hudi, Paimon, Delta Lake) and the Apache Doris warehouse, without ETL into Apache Doris first.
 - Joining warehouse facts with operational dimensions in MySQL, PostgreSQL, Oracle, SQL Server, or other JDBC sources.
 - Pulling text matches from Elasticsearch into a SQL pipeline alongside structured filters.
 - Migrations and dual-running. Point Doris at the existing Hive or external warehouse, query through Doris, and move workloads over piece by piece.
-- ZeroETL data integration. `INSERT INTO internal.x SELECT ... FROM hive_ctl.y` ingests into Doris without a separate loader.
+- ZeroETL data integration. `INSERT INTO internal.x SELECT ... FROM hive_ctl.y` ingests into Apache Doris without a separate loader.
 
 **Not a good fit**
 
-- Treating an external catalog as a write-heavy OLTP target. Write-back exists for Hive, Iceberg, and JDBC catalogs, but throughput is bound by the source and is not on par with writes into `internal` Doris tables. Land hot writes in `internal` and write back in batches.
-- Transactional updates against external sources. Doris does not offer cross-catalog transactions, and most external catalogs do not support row-level updates the way Doris does. Use the source's own DML for that.
-- Cross-catalog DDL. `CREATE TABLE ... AS SELECT` works across catalogs as a copy, but creating the *same* table in two catalogs is your responsibility, not Doris's.
+- Treating an external catalog as a write-heavy OLTP target. Write-back exists for Hive, Iceberg, and JDBC catalogs, but throughput is bound by the source and is not on par with writes into `internal` Apache Doris tables. Land hot writes in `internal` and write back in batches.
+- Transactional updates against external sources. Apache Doris does not offer cross-catalog transactions, and most external catalogs do not support row-level updates the way the internal catalog does. Use the source's own DML for that.
+- Cross-catalog DDL. `CREATE TABLE ... AS SELECT` works across catalogs as a copy, but creating the *same* table in two catalogs is your responsibility, not Apache Doris's.
 - Stitching two compute pools across a single query. Federation is about data sources, not compute. For compute isolation see [Compute Group](./compute-group).
 - Hand-tuning every connector here. For source-specific configuration (AWS Glue, Iceberg REST, individual JDBC dialects, S3-compatible storages, Kerberos, IAM), see the dedicated [Catalog Integrations](./catalog-integrations) card and the per-catalog reference docs.
 
@@ -119,3 +123,4 @@ WHERE f.dt = CURRENT_DATE() GROUP BY 1, 3;
 - [Lakehouse Overview](../lakehouse/lakehouse-overview): where Multi Catalog sits in Doris's lakehouse story.
 - [CREATE CATALOG reference](../sql-manual/sql-statements/catalog/CREATE-CATALOG): the full DDL syntax, supported types, and property reference.
 - [SWITCH CATALOG reference](../sql-manual/sql-statements/session/context/SWITCH-CATALOG): session-level switching semantics.
+- [Iceberg](./iceberg): the deepest first-class connector in Doris's federated catalog stack — full read and write engine, not just a reader.

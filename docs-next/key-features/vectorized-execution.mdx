@@ -18,12 +18,12 @@ featureCard:
     - performance
 ---
 
-> **TL;DR** Every Doris query runs on the vectorized engine. Operators move data in `Block`s of up to 4,096 column-oriented rows, the inner loops are tight enough for the compiler and hand-written intrinsics to use SIMD, and the row-based engine was deleted entirely in v2.0. There is nothing to enable. The only knob most users will ever touch is `batch_size`.
+> **TL;DR** Every Apache Doris query runs on the vectorized engine. Operators move data in `Block`s of up to 4,096 column-oriented rows, and the inner loops are tight enough for the compiler and hand-written intrinsics to use SIMD. The row-based engine was deleted entirely in v2.0, so there is nothing to enable; the only knob most users will ever touch is `batch_size`.
 
 ![Apache Doris Vectorized Execution: Doris's column-batch SIMD execution engine, the substrate every operator runs on since v2.0 deleted the last row-based code path.](/images/next/key-features/vectorized-execution.jpg)
-## Why it matters {#why}
+## Why use vectorized execution in Apache Doris? {#why}
 
-A classic Volcano-style executor calls `next()` once per row, walking through a tree of virtual function dispatches to produce a single tuple. On a modern CPU, the actual arithmetic is a rounding error on top of the dispatch, branch mispredictions, and cache misses. Aggregating a billion rows row-by-row turns a fast machine into a slow one.
+Apache Doris vectorized execution replaces per-row virtual dispatch with column-batch inner loops so the CPU spends its time on arithmetic instead of indirection. A classic Volcano-style executor calls `next()` once per row, walking through a tree of virtual function dispatches to produce a single tuple. On a modern CPU, the actual arithmetic is a rounding error on top of the dispatch, branch mispredictions, and cache misses. Aggregating a billion rows row-by-row turns a fast machine into a slow one.
 
 - One virtual call per row, per operator, multiplies into millions of indirect jumps the branch predictor cannot help with.
 - Random row layout in memory keeps the CPU's L1/L2 caches mostly empty of useful data.
@@ -31,9 +31,9 @@ A classic Volcano-style executor calls `next()` once per row, walking through a 
 
 Vectorized execution flips the inner loop. An operator receives a batch of column values, runs a straight loop over that batch, and the hot path ends up looking like the kind of code AVX2 was built for.
 
-## What it is {#what}
+## What is Apache Doris vectorized execution? {#what}
 
-Vectorized execution in Doris is a column-batch query engine: every operator's `get_block()` consumes one `Block` and produces another, where a `Block` is a small set of columnar arrays describing 1 to `batch_size` rows. SIMD intrinsics accelerate the parts that benefit most: filter selection, decimal arithmetic, string comparison, JSON parsing. The model traces back to MonetDB/X100 and Vectorwise. ClickHouse, StarRocks, and DuckDB use the same design.
+Apache Doris vectorized execution is a column-batch query engine: every operator's `get_block()` consumes one `Block` and produces another, where a `Block` is a small set of columnar arrays describing 1 to `batch_size` rows. SIMD intrinsics accelerate the parts that benefit most: filter selection, decimal arithmetic, string comparison, JSON parsing. The model traces back to MonetDB/X100 and Vectorwise. ClickHouse, StarRocks, and DuckDB use the same design.
 
 **Key terms**
 
@@ -42,7 +42,9 @@ Vectorized execution in Doris is a column-batch query engine: every operator's `
 - **`batch_size`**: maximum rows in a Block. Default 4,096, configurable per session. Larger batches amortize per-call overhead; smaller ones reduce memory footprint and tail latency.
 - **SIMD path**: hand-written code in `be/src/util/simd/` plus compiler-auto-vectorized loops, dispatched at runtime to AVX2 on x86 or NEON on ARM.
 
-## How it works {#how}
+## How does Apache Doris vectorized execution work? {#how}
+
+Apache Doris vectorized execution chains operators that pass columnar `Block`s of up to 4,096 rows, runs straight column-at-a-time loops with SIMD where it pays off, and lets the Pipeline scheduler interleave those batches across cores.
 
 1. **Plan to operator chain.** The optimizer produces a plan, the FE rewrites it as a pipeline of operators, and each operator implements `get_block(state, block, eos)`.
 2. **Pull a batch.** A scan operator reads up to `batch_size` rows from a tablet's columnar storage, fills a Block in place, and returns it. Rows never get materialized into structs.
@@ -84,7 +86,9 @@ LIMIT 10;
 
 The aggregation runs column-at-a-time over 8,192-row Blocks. On a wide-table scan with millions of matching rows, the larger batch trades a bit more BE memory for fewer scheduling round-trips, which usually wins on long scans and loses on tiny point queries.
 
-## When to use it {#when}
+## When should you use Apache Doris vectorized execution? {#when}
+
+Apache Doris vectorized execution is the only execution mode since v2.0, so the real question is when to tune `batch_size` or rely on a different query path entirely.
 
 **Good fit**
 
@@ -112,3 +116,4 @@ The aggregation runs column-at-a-time over 8,192-row Blocks. On a wide-table sca
 - [Columnar Storage](./columnar-storage): the on-disk format whose pages and encodings feed directly into the vectorized columns.
 - [Parquet Reader Optimization](./parquet-reader-optimization): how external Parquet decoding lands straight in the vectorized engine without an Arrow round trip.
 - [Apache Doris 2.0 release notes (row-based engine removed)](https://doris.apache.org/blog/release-note-2.0.0/)
+- [MPP Architecture](./mpp): the layer that schedules vectorized operators across BEs, not just within one.

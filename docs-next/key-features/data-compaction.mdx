@@ -19,22 +19,22 @@ featureCard:
     - performance
 ---
 
-> **TL;DR** Every load into Doris produces a new immutable rowset. Compaction merges those rowsets in the background so queries don't have to walk through hundreds of versions. Two policies (`size_based` and `time_series`), plus [vertical](./vertical-compaction) and segment compaction, let you tune the write-amplification vs. read-amplification trade-off per table.
+> **TL;DR** Every load into Apache Doris produces a new immutable rowset. Apache Doris compaction merges those rowsets in the background so queries don't have to walk through hundreds of versions. Two policies (`size_based` and `time_series`), plus [vertical](./vertical-compaction) and segment compaction, let you tune the write-amplification vs. read-amplification trade-off per table.
 
 ![Apache Doris Data Compaction: Background merging that keeps Doris fast under high-frequency loads, with policies tuned for general OLAP and append-only time-series workloads.](/images/next/key-features/data-compaction.jpg)
-## Why it matters {#why}
+## Why use Apache Doris compaction? {#why}
 
-Doris stores data the way an LSM tree does: a write never updates a file in place. It lands as a brand-new rowset, and the rowset count on a tablet keeps climbing until something cleans up. High-frequency ingest paths like [Stream Load](./stream-load) and [Group Commit](./group-commit) make that climb especially fast. Without compaction:
+Apache Doris compaction keeps queries fast under high-frequency loads by merging the immutable rowsets each write produces, before the version pile-up turns into the dreaded `-235` ingest failure. Apache Doris stores data the way an LSM tree does: a write never updates a file in place. It lands as a brand-new rowset, and the rowset count on a tablet keeps climbing until something cleans up. High-frequency ingest paths like [Stream Load](./stream-load) and [Group Commit](./group-commit) make that climb especially fast. Without compaction:
 
 - Once a tablet's version count exceeds `max_tablet_version_num` (default 500), loads fail with error -235. This is one of the most common production incidents on the Doris user list.
 - Every query has to merge all of a tablet's rowsets on the fly. Going from 5 rowsets to 50 turns a one-box lookup into a fifty-box one.
 - Deleted rows linger as tombstones, and small files cost more in metadata than the data they hold.
 
-Compaction is the background process that handles all three. Doris's policies exist because doing it well also means not burning so much CPU that ingestion slows down.
+Apache Doris compaction is the background process that handles all three. The shipped policies exist because doing it well also means not burning so much CPU that ingestion slows down.
 
-## What it is {#what}
+## What is Apache Doris compaction? {#what}
 
-Compaction is a tablet-local procedure that picks a window of rowsets, merges their rows, applies deletes, and writes a single replacement rowset. The Backend (BE) runs it on a thread pool, scoring tablets by how messy they are and grabbing the worst offenders first.
+Apache Doris compaction is a tablet-local procedure that picks a window of rowsets, merges their rows, applies deletes, and writes a single replacement rowset. The Backend (BE) runs it on a thread pool, scoring tablets by how messy they are and grabbing the worst offenders first.
 
 **Key terms**
 
@@ -45,7 +45,9 @@ Compaction is a tablet-local procedure that picks a window of rowsets, merges th
 - **`Compaction policy`**: per-table choice of `size_based` (default) or `time_series`. Picks which rowsets to merge and when.
 - **`Vertical compaction`**: column-group merging for wide tables. Cuts memory use by ~10x compared with row-wise merging.
 
-## How it works {#how}
+## How does Apache Doris compaction work? {#how}
+
+Apache Doris compaction scores every tablet by version pressure, picks rowsets per the active policy, and merges them on a BE thread pool while the original files stay readable for in-flight queries.
 
 1. **Score every tablet.** The BE keeps a running compaction score for each tablet based on how many rowsets sit above the cumulative point. Tablets with higher scores get scheduled first.
 2. **Pick the rowsets.** The active policy decides the window. `size_based` groups by power-of-two sizes; `time_series` waits until rowsets in a partition cross a goal size, file count, or age threshold, then takes them in one bite.
@@ -84,7 +86,9 @@ Query OK, 0 rows affected
 
 You've created a partitioned log table that uses the time-series policy: small rowsets get merged once they cross 1 GB total, hit 2000 files, or sit for an hour. The `ADMIN COMPACT` line forces a manual cumulative pass on the active partition, which is useful for benchmarks and post-load cleanup. Watch progress with `SELECT * FROM information_schema.doris_be_compaction_tasks WHERE TABLE_ID = ...`.
 
-## When to use it {#when}
+## When should you use Apache Doris compaction? {#when}
+
+Apache Doris compaction runs on every table by default; the real choice is which policy to set and when to override the defaults.
 
 **Good fit**
 
@@ -112,3 +116,4 @@ You've created a partitioned log table that uses the time-series policy: small r
 - [Compaction tuning: vertical, segment, single-replica, time-series](../admin-manual/trouble-shooting/compaction)
 - [`ADMIN COMPACT TABLE` syntax reference](../sql-manual/sql-statements/table-and-view/data-and-status-management/COMPACT-TABLE)
 - [Understanding Data Compaction in 3 Minutes (blog)](https://doris.apache.org/blog/Understanding-Data-Compaction-in-3-Minutes/)
+- [Unique Key](./unique-key): the table model where compaction reclaims rows marked in the per-rowset delete bitmap.

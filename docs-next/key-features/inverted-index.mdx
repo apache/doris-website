@@ -20,12 +20,12 @@ featureCard:
     - search
 ---
 
-> **TL;DR** Doris's inverted index is a CLucene-backed secondary index that you declare on any column with `INDEX ... USING INVERTED`. It accelerates equality, range, `IN`, `IS NULL`, array membership, and [full-text `MATCH_*`](./full-text-search) predicates by reading a posting list instead of scanning rows. Available since 2.0.
+> **TL;DR** The Apache Doris inverted index is a CLucene-backed secondary index declared on any column with `INDEX ... USING INVERTED`. The index accelerates equality, range, `IN`, `IS NULL`, array membership, and [full-text `MATCH_*`](./full-text-search) predicates by reading a posting list instead of scanning rows. Available since Apache Doris 2.0.
 
 ![Apache Doris Inverted Index: A secondary index that turns equality, range, IN, IS NULL, and text predicates from full scans into posting-list lookups, on any column type.](/images/next/key-features/inverted-index.jpg)
-## Why it matters {#why}
+## Why use the inverted index in Apache Doris? {#why}
 
-OLAP queries spend most of their time on `WHERE`. A 2 TB events table with a predicate on `user_id`, a range on `request_time`, and a keyword search on `url` will, by default, decode every column for every row in every surviving segment. The usual workaround, an [incremental materialized view](./incremental-materialized-view) or a separate search cluster, doubles storage and operational cost.
+The Apache Doris inverted index turns the dominant cost of OLAP queries, evaluating `WHERE` predicates, from a full scan into a posting-list lookup. A 2 TB events table with a predicate on `user_id`, a range on `request_time`, and a keyword search on `url` would otherwise decode every column for every row in every surviving segment. The usual workaround, an [incremental materialized view](./incremental-materialized-view) or a separate search cluster, doubles storage and operational cost.
 
 The cases that hurt:
 
@@ -33,13 +33,13 @@ The cases that hurt:
 - Range filters on numeric or datetime columns (`WHERE event_time BETWEEN ...`) are bounded only by ZoneMap min/max and still touch every page in range.
 - Keyword search on text columns has no answer in the base SQL engine. `LIKE '%term%'` falls back to a scan, and shipping the data to Elasticsearch means a second pipeline to keep in sync.
 
-The inverted index handles all three with the same DDL.
+The Apache Doris inverted index handles all three with the same DDL.
 
-## What it is {#what}
+## What is the Apache Doris inverted index? {#what}
 
-The inverted index in Doris is a column-level secondary index that maps each value, or each tokenized term for text columns, to the set of row IDs that contain it. It is built on top of [CLucene](https://github.com/apache/doris-thirdparty/tree/clucene), a C++ port of Lucene, and is fully integrated with Doris's columnar storage and vectorized execution.
+The Apache Doris inverted index is a column-level secondary index that maps each value, or each tokenized term for text columns, to the set of row IDs that contain it. It is built on top of [CLucene](https://github.com/apache/doris-thirdparty/tree/clucene), a C++ port of Lucene, and is fully integrated with Apache Doris columnar storage and vectorized execution.
 
-You declare it in DDL with `INDEX <name>(<col>) USING INVERTED [PROPERTIES(...)]`. Supported column types include the integer family, `DECIMAL`, `DATE`, `DATETIME`, `IPV4`, `IPV6`, `CHAR`/`VARCHAR`/`STRING`, and `ARRAY<T>` of those. For text columns you can attach a `parser` to control tokenization.
+An inverted index is declared in DDL with `INDEX <name>(<col>) USING INVERTED [PROPERTIES(...)]`. Supported column types include the integer family, `DECIMAL`, `DATE`, `DATETIME`, `IPV4`, `IPV6`, `CHAR`/`VARCHAR`/`STRING`, and `ARRAY<T>` of those. For text columns you can attach a `parser` to control tokenization.
 
 **Key terms**
 
@@ -48,7 +48,9 @@ You declare it in DDL with `INDEX <name>(<col>) USING INVERTED [PROPERTIES(...)]
 - **`MATCH operators`**: `MATCH_ANY` (any term), `MATCH_ALL` (all terms), `MATCH_PHRASE` (adjacent terms), `MATCH_PHRASE_PREFIX`, `MATCH_REGEXP`. They require an inverted index with a parser; ordinary `=` and `LIKE` do not.
 - **`.idx file`**: the on-disk index payload. One `.idx` file lives next to each segment file under the tablet directory, so the index is segment-bound and follows the rowset through compaction.
 
-## How it works {#how}
+## How does the Apache Doris inverted index work? {#how}
+
+The Apache Doris inverted index follows a build-once, probe-many flow that keeps the index co-located with the segment it indexes.
 
 1. **Build at write time.** When a rowset is flushed, the BE writes a CLucene-format index to a sibling `.idx` file. Each row in the segment maps 1:1 to a CLucene `DocID`, so the index never has to maintain a separate row-to-doc table.
 2. **Choose a path at query time.** For a predicate the planner pushes down, the BE consults the inverted index first: it tokenizes the literal with the same parser used at build time, walks the term dictionary, and reads the posting list.
@@ -90,7 +92,9 @@ WHERE user_id = 42 AND status >= 500 AND url MATCH_ANY 'orders';
 
 Each predicate is served by an index probe. `user_id = 42` and `status >= 500` use the inverted index for equality and range. `url MATCH_ANY 'orders'` tokenizes the column with the `english` parser and looks up the posting list for `orders`. The scanner only reads the one row that survives the AND of the three posting lists.
 
-## When to use it {#when}
+## When should you use the Apache Doris inverted index? {#when}
+
+The Apache Doris inverted index pays off on high-cardinality predicates, text and array search, and any column where ZoneMap pruning is too coarse.
 
 **Good fit**
 

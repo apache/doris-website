@@ -20,23 +20,23 @@ featureCard:
     - reliability
 ---
 
-> **TL;DR** Spill to Disk lets HashJoin, Aggregation, Sort, and CTE operators write intermediate state to local disk when a query is about to blow its memory budget. The query slows down, but it finishes. You turn it on with `set enable_spill = true` (per session) or at the [Workload Group](./workload-group) level, point BE at a spill directory, and read spill counters back from the query profile.
+> **TL;DR** Apache Doris Spill to Disk lets HashJoin, Aggregation, Sort, and CTE operators write intermediate state to local disk when a query is about to exceed its memory budget. The query slows down but finishes instead of OOM-ing. Enable it with `set enable_spill = true` per session or at the [Workload Group](./workload-group) level, point BE at a spill directory, and read spill counters back from the query profile.
 
 ![Apache Doris Spill to Disk: Memory-heavy operators spill intermediate state to local disk when limits are hit, so big joins, aggregations, and sorts finish instead of OOM.](/images/next/key-features/spill-to-disk.jpg)
-## Why it matters {#why}
+## Why use spill to disk in Apache Doris? {#why}
 
-Doris is an MPP engine. By default the join hash tables, the aggregation state, the sort buffer all live in BE memory. That is great for latency and bad the moment a query asks for more memory than the node, the query, or the workload group is allowed to use. The classic failure mode is a nightly ETL or an ad-hoc TPC-DS style query that touches a wide fact table, builds a multi-gigabyte hash table, then dies with `Memory limit exceeded`. The user retries, hits the same wall, and either tunes `exec_mem_limit` upward or gives up.
+Spill to Disk turns out-of-memory failures in Apache Doris into slower but successful queries. Apache Doris is an MPP engine: by default the join hash tables, the aggregation state, and the sort buffer all live in BE memory. That is great for latency and bad the moment a query asks for more memory than the node, the query, or the workload group is allowed to use. The classic failure mode is a nightly ETL or an ad-hoc TPC-DS style query that touches a wide fact table, builds a multi-gigabyte hash table, then dies with `Memory limit exceeded`. The user retries, hits the same wall, and either tunes `exec_mem_limit` upward or gives up.
 
 - A single oversized HashJoin or Aggregation kills the whole query.
 - ETL on tables much larger than RAM is fragile or simply impossible.
 - Bumping `exec_mem_limit` per query starves everyone else.
 - Concurrent heavy queries push the BE close to the global memory ceiling and trigger emergency cancellations.
 
-Spill to Disk turns those hard failures into slower, but successful, queries. The same node that used to OOM at 10x dataset size now finishes at 50x, paying disk IO instead of crashing.
+Apache Doris Spill to Disk turns those hard failures into slower, but successful, queries. The same node that used to OOM at 10x dataset size now finishes at 50x, paying disk IO instead of crashing.
 
-## What it is {#what}
+## What is Apache Doris Spill to Disk? {#what}
 
-Spill to Disk is a runtime mechanism in the [Pipeline Execution Engine](./pipeline-execution-engine) that lets memory-intensive operators evict their intermediate state to local disk under memory pressure, then read it back to finish the query. It is operator-level, not query-level: only the operators that are actually large get spilled, and a query can keep running on a mix of in-memory and on-disk state.
+Apache Doris Spill to Disk is a runtime mechanism in the [Pipeline Execution Engine](./pipeline-execution-engine) that lets memory-intensive operators evict their intermediate state to local disk under memory pressure, then read it back to finish the query. The mechanism is operator-level, not query-level: only the operators that are actually large get spilled, and a query can keep running on a mix of in-memory and on-disk state.
 
 **Key terms**
 
@@ -46,7 +46,9 @@ Spill to Disk is a runtime mechanism in the [Pipeline Execution Engine](./pipeli
 - **`Force spill`**: a debug mode (`enable_force_spill`) that spills even when there is plenty of memory. Use it to validate query correctness on the spill path before you trust it in production.
 - **Spill storage path**: the local directories the BE uses for spill files, configured separately from the table storage path.
 
-## How it works {#how}
+## How does Apache Doris Spill to Disk work? {#how}
+
+Apache Doris Spill to Disk works by reserving memory before allocation, detecting pressure, picking the operator with the most revocable memory, partitioning its state to disk, then resuming the query once memory frees up. The six-step flow below covers the full lifecycle.
 
 1. **Reserve before allocate.** Each pipeline task estimates the memory it needs for the next block and asks the per-query and per-process memory tracker for a reservation. Cheap and accurate beats panic-cancelling later.
 2. **Detect pressure.** A reservation fails when the query, the workload group, or the BE process would cross its limit. The task gets paused instead of cancelled.
@@ -77,7 +79,9 @@ FROM information_schema.backend_active_tasks;
 
 The query returns its top-100 rows. In the [query profile](../query-acceleration/query-profile), look for `Spilled: true` on the `PARTITIONED_HASH_JOIN_SINK_OPERATOR` or `AGGREGATION_SINK_OPERATOR`, plus `SpillWriteBlockBytes`, `SpillWriteFileBytes`, and `SpillWriteTime`. Audit logs add `SpillWriteBytesToLocalStorage` and `SpillReadBytesFromLocalStorage` for the same query. If those counters are zero, the query fit in memory and never spilled, which is the desired outcome.
 
-## When to use it {#when}
+## When should you use Apache Doris Spill to Disk? {#when}
+
+Use Apache Doris Spill to Disk for heavy ETL, batch analytics, and multi-tenant workloads where finishing the query matters more than latency. Skip it for sub-second serving paths and runaway queries.
 
 **Good fit**
 
@@ -101,3 +105,4 @@ The query returns its top-100 rows. In the [query profile](../query-acceleration
 - [Pipeline Execution Engine](./pipeline-execution-engine): the runtime that owns the reserve-before-allocate accounting and the revocable-memory bookkeeping.
 - [Query profile](../query-acceleration/query-profile): how to read the per-operator `Spill*` counters that confirm spill happened.
 - [`backend_active_tasks` system table](../admin-manual/system-tables/information_schema/workload_groups): live per-query spill bytes for monitoring and alerting.
+- [MPP Architecture](./mpp): the distributed execution layer that allocates `exec_mem_limit` per BE, the budget spill-to-disk respects.

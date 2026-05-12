@@ -19,22 +19,22 @@ featureCard:
     - caching
 ---
 
-> **TL;DR** Condition Cache stores the result of a `WHERE` clause on each segment as a compressed bit vector keyed by `(predicate digest, key range)`. The next query that uses the same filter on the same segment skips the granules the bit vector already says cannot match, even when the SELECT list, GROUP BY, or aggregation is different. Five dashboard panels that all share `WHERE region = 'ASIA' AND order_date >= '2023-01-01'` evaluate that filter once per segment and reuse it across every panel.
+> **TL;DR** Apache Doris Condition Cache stores the result of a `WHERE` clause on each segment as a compressed bit vector keyed by `(predicate digest, key range)`. The next query that uses the same filter on the same segment skips the granules the bit vector already says cannot match, even when the SELECT list, GROUP BY, or aggregation is different. Five dashboard panels that all share `WHERE region = 'ASIA' AND order_date >= '2023-01-01'` evaluate that filter once per segment and reuse it across every panel.
 
 ![Apache Doris Condition Cache: A segment-level cache that stores filter evaluation results as bit vectors, so queries that share a WHERE clause reuse the predicate work.](/images/next/key-features/condition-cache.jpg)
-## Why it matters {#why}
+## Why use the Apache Doris Condition Cache? {#why}
 
-Most analytical workloads filter a lot more than they aggregate. A dashboard built on a single `orders` table will have ten panels that all share `WHERE region = ? AND order_date >= ?` and differ only in the SELECT list. An application backend reissues the same predicate every few seconds with a new aggregation. A T+1 report runs different aggregations against [partitions](./partitioning-and-bucketing) that have not changed since last night.
+The Apache Doris Condition Cache reuses predicate evaluation across queries that share a `WHERE` clause but differ in everything else, plugging the gap between SQL Cache and Query Cache. Most analytical workloads filter a lot more than they aggregate. A dashboard built on a single `orders` table will have ten panels that all share `WHERE region = ? AND order_date >= ?` and differ only in the SELECT list. An application backend reissues the same predicate every few seconds with a new aggregation. A T+1 report runs different aggregations against [partitions](./partitioning-and-bucketing) that have not changed since last night.
 
 The cluster pays the predicate evaluation cost on every one of those queries: read the column, decode it, run the comparison, build the row mask, then carry on with the rest of the plan.
 
 SQL Cache helps when the SQL text is byte-identical and gives up the moment the SELECT list shifts. Query Cache helps for aggregation queries that share whole tablets. Neither helps the case where the WHERE is shared but the SELECT list is not.
 
-Condition Cache fits between them. It caches the predicate evaluation step at the segment level, separate from whatever the surrounding query does with the rows.
+The Apache Doris Condition Cache fits between them, caching the predicate evaluation step at the segment level, separate from whatever the surrounding query does with the rows.
 
-## What it is {#what}
+## What is the Apache Doris Condition Cache? {#what}
 
-Condition Cache is a BE-side cache of predicate evaluation results, stored per segment as a granule-level bit vector. When a scan starts on a segment, the BE computes a 64-bit digest from the predicate expression and the segment's key range, then probes the cache. On a hit, it skips every granule whose bit is `0` and only scans the granules whose bit is `1`. On a miss, it runs the predicate as usual and writes the resulting bit vector back to the cache.
+The Apache Doris Condition Cache is a BE-side cache of predicate evaluation results, stored per segment as a granule-level bit vector. When a scan starts on a segment, the BE computes a 64-bit digest from the predicate expression and the segment's key range, then probes the cache. On a hit, it skips every granule whose bit is `0` and only scans the granules whose bit is `1`. On a miss, it runs the predicate as usual and writes the resulting bit vector back to the cache.
 
 The cache is independent of projections, aggregations, joins, and sort. Two queries with identical WHERE clauses share entries even when one runs `SELECT *` and the other runs `SELECT COUNT(DISTINCT customer_id)`.
 
@@ -46,13 +46,15 @@ The cache is independent of projections, aggregations, joins, and sort. Two quer
 - **Predicate digest**: a 64-bit hash of the conjunctive predicate plus the segment's key range. Semantically equivalent predicates produce the same digest.
 - **`condition_cache_limit`**: per-BE memory cap for the cache, in MB. Defaults to `1024`. Lives in `be.conf`.
 
-## How it works {#how}
+## How does the Apache Doris Condition Cache work? {#how}
+
+The Apache Doris Condition Cache hashes each conjunctive predicate plus the segment's key range into a 64-bit digest, looks the digest up in a per-BE LRU, and skips every granule whose stored bit is `0`.
 
 1. **Compile the digest (BE).** When a scan operator starts on a segment, it normalizes its conjunctive predicates and the segment's key range into a 64-bit digest. Different SELECT lists, GROUP BYs, and aggregations all produce the same digest because none of those affect the predicate.
 2. **Probe per segment.** The BE looks up `(digest, segment_id)` in a sharded LRU cache. If the segment carries a delete marker, or if a TopN runtime filter built the predicate at execution time, the BE skips the lookup and falls back to a normal scan.
 3. **On hit.** The scan reads the bit vector, skips every granule whose bit is `0`, and only decodes the columns for the granules whose bit is `1`. A row-level filter pass on those granules confirms the matches.
 4. **On miss.** The scan evaluates the predicate normally, builds the bit vector as it goes, and writes the result back keyed on `(digest, segment_id)`. Subsequent queries with the same digest land on a hit.
-5. **Invalidation by immutability.** Segments do not mutate. A new INSERT or compaction produces a new segment with a new ID, and the old cache entry ages out of the LRU on its own. Doris does not need an explicit invalidation step.
+5. **Invalidation by immutability.** Segments do not mutate. A new INSERT or compaction produces a new segment with a new ID, and the old cache entry ages out of the LRU on its own. Apache Doris does not need an explicit invalidation step.
 
 ## Quick start {#quick-start}
 
@@ -80,7 +82,9 @@ ConditionCacheFilteredRows:  18,400,219
 
 The first run scans every segment, evaluates the predicate, and writes one bit vector per segment. The second run shares the WHERE so the digest matches; every segment hits the cache, and the BE skips the granules already known to be empty for `region = 'ASIA' AND order_date >= '2023-01-01'`.
 
-## When to use it {#when}
+## When should you use the Apache Doris Condition Cache? {#when}
+
+Turn the Apache Doris Condition Cache on for read-heavy workloads where many queries reuse the same `WHERE` clause and the table is not under continuous write pressure.
 
 **Good fit**
 
@@ -106,3 +110,4 @@ The first run scans every segment, evaluates the predicate, and writes one bit v
 - [Caching in Doris: choosing the right strategy](../query-acceleration/caching-intro)
 - [Data Cache & Page Cache](./data-cache-page-cache): the storage-tier caches that sit below Condition Cache for the bytes and decoded pages themselves.
 - [Metadata Cache](./metadata-cache): the external-catalog metadata cache that complements the data-side caches.
+- [MPP Architecture](./mpp): the execution model whose plan the condition cache hooks into to skip already-evaluated predicates.

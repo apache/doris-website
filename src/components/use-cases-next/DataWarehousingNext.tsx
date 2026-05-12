@@ -423,6 +423,7 @@ const capabilities: Capability[] = [
             { label: 'Rollup', href: '#' },
             { label: 'Analytic Functions', href: '#' },
             { label: 'Partitioning and Bucketing', href: '#' },
+            { label: 'Unique Key', href: '/key-features/unique-key' },
         ],
     },
     {
@@ -480,6 +481,7 @@ const capabilities: Capability[] = [
         poweredBy: [
             { label: 'Multi Catalog', href: '#' },
             { label: 'Managing Lake Table', href: '#' },
+            { label: 'Iceberg', href: '/key-features/iceberg' },
         ],
     },
     {

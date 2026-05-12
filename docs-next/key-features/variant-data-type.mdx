@@ -19,21 +19,21 @@ featureCard:
     - semi-structured
 ---
 
-> **TL;DR** `VARIANT` is a column type for JSON whose shape changes over time. On write, Doris parses each document, infers a type per JSON path, and persists hot paths as their own [columnar subcolumns](./columnar-storage). Filters and aggregations on `v['user_id']` then read one column instead of parsing the whole document. The type was inspired by Snowflake and ClickHouse VARIANT, and went GA in Apache Doris 2.1.0 (March 2024).
+> **TL;DR** Apache Doris `VARIANT` is a column type for JSON whose shape changes over time. On write, Apache Doris parses each document, infers a type per JSON path, and persists hot paths as their own [columnar subcolumns](./columnar-storage), defaulting to 2048 subcolumns per VARIANT column. Filters and aggregations on `v['user_id']` then read one column instead of parsing the whole document. VARIANT went GA in Apache Doris 2.1.0 (March 2024), inspired by Snowflake and ClickHouse.
 
 ![Apache Doris VARIANT Data Type: A column type that ingests JSON without a fixed schema, then stores hot paths as native columnar subcolumns for column-store-speed analytics.](/images/next/key-features/variant-data-type.jpg)
-## Why it matters {#why}
+## Why use the VARIANT data type in Apache Doris? {#why}
 
-Storing JSON in an OLAP system has been a long compromise.
+The Apache Doris VARIANT data type ends the old trade-off between flexible JSON storage and column-store query speed. Storing JSON in an OLAP system has been a long compromise.
 
 - A `STRING` or `JSONB` column keeps you flexible, but every query that touches a path parses the whole document. `WHERE payload['action'] = 'opened'` over a billion rows reads every byte of every payload, even if `action` is one short field in a fat document.
 - Static columns are fast, but only if the schema is stable. When producers add fields next sprint, you are back to `ALTER TABLE` migrations or a JSON sidecar column.
 
-`VARIANT` removes the choice. You declare one column, write JSON into it, and Doris quietly turns the hot paths into real columnar storage. Queries stay in SQL; on disk the table looks a lot like one you would have designed by hand.
+Apache Doris VARIANT removes the choice. You declare one column, write JSON into it, and Apache Doris quietly turns the hot paths into real columnar storage. Queries stay in SQL; on disk the table looks a lot like one you would have designed by hand.
 
-## What it is {#what}
+## What is the Apache Doris VARIANT data type? {#what}
 
-`VARIANT` is a semi-structured column type backed by Doris's `DataTypeVariant` and `ColumnVariant` (formerly `ColumnObject`, modeled on ClickHouse's design). It accepts any valid JSON value: scalars, one-dimensional arrays, and nested objects. As rows arrive, the writer builds a prefix tree of paths, infers a type per path, and writes each path as its own page-encoded, page-indexed column inside the segment. You query JSON; on disk you get one subcolumn per path.
+The Apache Doris VARIANT data type is a semi-structured column type backed by `DataTypeVariant` and `ColumnVariant` (formerly `ColumnObject`, modeled on ClickHouse's design). VARIANT accepts any valid JSON value: scalars, one-dimensional arrays, and nested objects. As rows arrive, the writer builds a prefix tree of paths, infers a type per path, and writes each path as its own page-encoded, page-indexed column inside the segment. You query JSON; on disk you get one subcolumn per path.
 
 **Key terms**
 
@@ -43,9 +43,9 @@ Storing JSON in an OLAP system has been a long compromise.
 - **`Sparse column`**: a shared fallback column where long-tail paths land when the path count exceeds the subcolumn budget. One physical column, many logical paths.
 - **`Type promotion`**: the rule that decides what to do when the same path arrives as `INT` in one row and `STRING` in another. Compatible types widen (`TINYINT` to `BIGINT`); incompatible types fall back to `JSONB`.
 
-## How it works {#how}
+## How does the Apache Doris VARIANT data type work? {#how}
 
-For one path, the lifecycle on disk:
+Apache Doris VARIANT works by parsing each JSON document at write time, inferring a type per JSON path, and persisting frequent paths as independent columnar subcolumns while long-tail paths land in a shared sparse column. For one path, the lifecycle on disk:
 
 1. **Parse and infer.** As JSON enters the memtable, the writer adds every leaf path to a prefix tree and picks the narrowest type that fits the values: `BIGINT`, `DOUBLE`, `STRING`, one-dimensional `ARRAY<T>`, or a nested `VARIANT`.
 2. **Promote or fall back.** If a new value conflicts with the current type, Doris widens where it can (`TINYINT` plus `DOUBLE` becomes `DOUBLE`). If nothing widens, the path falls back to `JSONB` and queries lose pushdown on that path until the schema is corrected.
@@ -91,7 +91,9 @@ GROUP BY action;
 
 The filter reads one subcolumn, hits the inverted index, and never touches the `commits` array. Run `SET describe_extend_variant_column = true; DESC github_events;` to see the inferred subcolumns (`payload.action`, `payload.commits`, `payload.issue.number`, ...) as if you had declared them by hand.
 
-## When to use it {#when}
+## When should you use the Apache Doris VARIANT data type? {#when}
+
+Use Apache Doris VARIANT when the JSON schema evolves but most queries hit a handful of familiar paths. Stick to static columns or `STRUCT` when the shape is fixed, and avoid VARIANT for primary, sort, or join keys.
 
 **Good fit**
 

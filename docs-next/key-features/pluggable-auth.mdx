@@ -20,22 +20,22 @@ featureCard:
     - authorization
 ---
 
-> **TL;DR** Doris splits identity (who you are) from policy (what you can do), and you can swap the backend for either side without forking the FE. The MySQL handshake hits an `Authenticator` chosen by `authentication_type`: built-in password, LDAP, or any plugin discovered through Java SPI. Authorization runs through a `CatalogAccessController` chosen by `access_controller_type`: the built-in RBAC engine, or Apache Ranger for centralized policy. Set the config, drop the plugin jar, restart, done.
+> **TL;DR** Apache Doris splits identity (who you are) from policy (what you can do), and you can swap the backend for either side without forking the FE. The MySQL handshake hits an `Authenticator` chosen by `authentication_type`: built-in password, LDAP, or any plugin discovered through Java SPI. Authorization runs through a `CatalogAccessController` chosen by `access_controller_type`: the built-in RBAC engine, or Apache Ranger for centralized policy. Set the config, drop the plugin jar, restart, done.
 
 ![Apache Doris Pluggable Authentication and Authorization: Swap Doris's identity and policy backends without forking the FE. Pick LDAP, Kerberos, OIDC, or Ranger via config, layer chains for fallback.](/images/next/key-features/pluggable-auth.jpg)
-## Why it matters {#why}
+## Why use pluggable authentication and authorization in Apache Doris? {#why}
 
-Most teams arrive at Doris with an IAM stack already in place. There is an LDAP directory, a Kerberos realm, an OIDC provider for SSO, and a Ranger or Sentry deployment that owns Hive permissions. A warehouse that ignores all of it forces the platform team to maintain a parallel user list, sync passwords by script, and explain to auditors why query history shows different identities than the rest of the lakehouse. Pair the same identity with [multi-catalog](./multi-catalog) federation and [data lineage](./data-lineage), and audit trails line up across the lake.
+Apache Doris pluggable authentication and authorization let an existing IAM stack (LDAP, Kerberos, OIDC, Ranger) own identity and policy for the warehouse, so the platform team does not maintain a parallel user list. Most teams arrive at Doris with an IAM stack already in place. There is an LDAP directory, a Kerberos realm, an OIDC provider for SSO, and a Ranger or Sentry deployment that owns Hive permissions. A warehouse that ignores all of it forces the platform team to maintain a parallel user list, sync passwords by script, and explain to auditors why query history shows different identities than the rest of the lakehouse. Pair the same identity with [multi-catalog](./multi-catalog) federation and [data lineage](./data-lineage), and audit trails line up across the lake.
 
-Doris treats both authentication and authorization as plug-in points. Authentication backends discover themselves through Java SPI; so do authorization backends. Switching from local passwords to LDAP is one config line. Switching from built-in RBAC to Ranger is a different config line. The two decisions are independent: an OIDC plugin in front of Ranger is fine, and so is LDAP in front of built-in RBAC.
+Apache Doris treats both authentication and authorization as plug-in points. Authentication backends discover themselves through Java SPI; so do authorization backends. Switching from local passwords to LDAP is one config line. Switching from built-in RBAC to Ranger is a different config line. The two decisions are independent: an OIDC plugin in front of Ranger is fine, and so is LDAP in front of built-in RBAC.
 
 - One IdP for the whole data platform instead of a separate Doris user list.
 - Centralized policy in Ranger that already governs Hive, HDFS, and Iceberg, with Doris hooked into the same service.
 - Custom auth (proprietary token formats, tenant-aware password verification) without patching FE source.
 
-## What it is {#what}
+## What is Apache Doris pluggable authentication and authorization? {#what}
 
-Pluggable auth in Doris is two side-by-side extension points on the FE. The first is the `Authenticator` interface, called once per MySQL handshake to turn the credentials in the auth packet into a `UserIdentity`. The second is the `CatalogAccessController` interface, called on every query to check whether that identity can touch the catalog, database, table, or column. Both load through `java.util.ServiceLoader`, so a third party jar dropped on the classpath registers itself.
+Apache Doris pluggable authentication and authorization is two side-by-side extension points on the FE. The first is the `Authenticator` interface, called once per MySQL handshake to turn the credentials in the auth packet into a `UserIdentity`. The second is the `CatalogAccessController` interface, called on every query to check whether that identity can touch the catalog, database, table, or column. Both load through `java.util.ServiceLoader`, so a third party jar dropped on the classpath registers itself.
 
 **Key terms**
 
@@ -45,7 +45,9 @@ Pluggable auth in Doris is two side-by-side extension points on the FE. The firs
 - **`AuthenticatorFactory` / `AccessControllerFactory`**: the SPI hooks listed in `META-INF/services`. Implement one to add a new backend.
 - **External catalog authorizer**: each external catalog (Hive, Iceberg) can pick its own controller, so a Hive catalog can defer to its existing Ranger Hive policies while the internal catalog uses Doris RBAC.
 
-## How it works {#how}
+## How does Apache Doris pluggable authentication and authorization work? {#how}
+
+Apache Doris pluggable authentication and authorization runs two independent SPI chains: an `Authenticator` resolves the MySQL handshake into a `UserIdentity`, then a per-catalog `CatalogAccessController` evaluates every statement, including row filters and column masks.
 
 1. **Pick the authenticator at startup.** `AuthenticatorManager` reads `authentication_type`, normalizes the value, and resolves it through `ServiceLoader<AuthenticatorFactory>`. Built-in factories (`DefaultAuthenticatorFactory`, `LdapAuthenticatorFactory`) ship in the FE jar; custom factories live in `fe/plugins/`. If no legacy factory matches, the manager falls back to `AuthenticationPluginAuthenticator`, which handles OIDC, OAuth2, and JWT.
 2. **Authenticate the connection.** When a client opens a MySQL connection, the chosen authenticator inspects the handshake. Native password compares the scrambled hash, LDAP binds against the directory, OIDC validates a JWT and pulls claims from it. Success returns a `UserIdentity`; failure returns a typed reason.
@@ -85,7 +87,9 @@ mysql> SELECT current_user(), user();
 
 `jdoe` logged in with the LDAP password, picked up the `doris_analyst` role through LDAP group mapping, and any subsequent `SELECT` is checked against the Ranger policy bound to the `doris` service.
 
-## When to use it {#when}
+## When should you use Apache Doris pluggable authentication and authorization? {#when}
+
+Use Apache Doris pluggable authentication and authorization when an existing IdP or policy service should own warehouse identity, and the FE just consumes credentials and policy decisions.
 
 **Good fit**
 

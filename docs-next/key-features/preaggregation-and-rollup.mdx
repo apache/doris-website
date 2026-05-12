@@ -19,12 +19,12 @@ featureCard:
     - performance
 ---
 
-> **TL;DR** Doris's [Aggregate Key model](./data-model) merges rows that share a key while you load them, using per-column functions like `SUM`, `MAX`, `REPLACE`, and `BITMAP_UNION`. A `ROLLUP` does the same thing for query shapes the base table can't serve well: you keep an extra materialized index with fewer columns or a different sort order, and the planner picks it for you. You read precomputed numbers instead of grouping raw rows on every query.
+> **TL;DR** Apache Doris preaggregation merges rows that share a key at load time using the [Aggregate Key model](./data-model) and per-column functions like `SUM`, `MAX`, `REPLACE`, and `BITMAP_UNION`. A `ROLLUP` is a second materialized index — with fewer columns or a different sort order — that the planner transparently picks for queries the base table cannot serve well. Queries read precomputed numbers instead of grouping raw rows on every request.
 
 ![Apache Doris Preaggregation and Rollup: Aggregate Key tables fold rows together at load time, and ROLLUPs add precomputed alternate indexes the planner picks transparently.](/images/next/key-features/preaggregation-and-rollup.jpg)
-## Why it matters {#why}
+## Why use preaggregation and rollup in Apache Doris? {#why}
 
-A typical fact table is wide and granular: per-event ad clicks, per-request API logs, per-second device readings. The same dashboard then asks for daily totals, top-N users, or distinct viewers across a month. Without preaggregation, every query rescans millions of rows and re-runs the same `GROUP BY` you ran yesterday.
+Apache Doris preaggregation and rollup move repeated `GROUP BY` work from query time to load time, so dashboards read precomputed totals instead of rescanning the raw fact table on every refresh. A typical fact table is wide and granular: per-event ad clicks, per-request API logs, per-second device readings. The same dashboard then asks for daily totals, top-N users, or distinct viewers across a month. Without preaggregation, every query rescans millions of rows and re-runs the same `GROUP BY` you ran yesterday.
 
 - Repeated work. Every dashboard refresh redoes the same aggregation over the same raw data.
 - Wide scans. A coarse query reads every value column on the base table even when it only needs two.
@@ -32,9 +32,9 @@ A typical fact table is wide and granular: per-event ad clicks, per-request API 
 
 Preaggregation moves the cost from query time to load time. A `ROLLUP` adds a second precomputed view for the queries the base table doesn't fit by itself; for cross-table or partition-mapped rewrites, reach for an [incremental materialized view](./incremental-materialized-view).
 
-## What it is {#what}
+## What is Apache Doris preaggregation and rollup? {#what}
 
-The Aggregate Key model is a table type. You declare which columns are keys and stamp each value column with an aggregation function. Doris then merges rows that share a key both at load and during compaction, so the table never stores duplicates that have a defined merge rule.
+Apache Doris preaggregation is the Aggregate Key table model that merges rows sharing a key using per-column aggregation functions, and a rollup is an extra materialized index over that table that the planner picks transparently. The Aggregate Key model is a table type. You declare which columns are keys and stamp each value column with an aggregation function. Apache Doris then merges rows that share a key both at load and during compaction, so the table never stores duplicates that have a defined merge rule.
 
 A `ROLLUP` is a second materialized index over the same base table. It holds a column subset, possibly in a different sort order, with the same per-column functions applied. The query planner scores all available indexes for an incoming query and reads from whichever one matches best.
 
@@ -46,13 +46,15 @@ A `ROLLUP` is a second materialized index over the same base table. It holds a c
 - **Rollup index**: an extra materialized layout the planner can read from instead of the base index.
 - **Sync materialized view**: the `CREATE MATERIALIZED VIEW` syntax that supersedes `ALTER TABLE ADD ROLLUP`. Same machinery, richer expressions, recommended for new designs.
 
-## How it works {#how}
+## How does Apache Doris preaggregation and rollup work? {#how}
 
-1. **Define the aggregation contract.** In `CREATE TABLE`, the `AGGREGATE KEY(...)` clause names the key columns. Every other column gets a function: `clicks BIGINT SUM`, `last_seen DATETIME REPLACE`, `unique_users BITMAP BITMAP_UNION`. Doris uses these functions to merge any two rows that share the keys.
+Apache Doris preaggregation works in five stages: declaring the aggregation contract in DDL, merging rows on load and compaction, adding rollups for skewed query shapes, picking the best index per query, and preferring sync materialized views for new code.
+
+1. **Define the aggregation contract.** In `CREATE TABLE`, the `AGGREGATE KEY(...)` clause names the key columns. Every other column gets a function: `clicks BIGINT SUM`, `last_seen DATETIME REPLACE`, `unique_users BITMAP BITMAP_UNION`. Apache Doris uses these functions to merge any two rows that share the keys.
 2. **Merge on load.** When data arrives, Backend nodes fold incoming rows against existing rows that share the keys, then write a new immutable rowset. Background compaction merges those rowsets later using the same rules. Queries see the merged view, not the raw inputs.
-3. **Add a rollup for skew query patterns.** `ALTER TABLE ad_events ADD ROLLUP rollup_ad (dt, ad_id, clicks, cost)` creates a second materialized index sorted by `(dt, ad_id)`. Doris rebuilds it as an asynchronous schema change, then keeps it in sync on every subsequent load inside the same transaction as the base write.
+3. **Add a rollup for skew query patterns.** `ALTER TABLE ad_events ADD ROLLUP rollup_ad (dt, ad_id, clicks, cost)` creates a second materialized index sorted by `(dt, ad_id)`. Apache Doris rebuilds it as an asynchronous schema change, then keeps it in sync on every subsequent load inside the same transaction as the base write.
 4. **Pick an index per query.** The Nereids optimizer scores every index against the query's predicates and group keys. It prefers indexes where the predicate columns sit at the prefix and where fewer columns need scanning. The chosen index shows up in `EXPLAIN` and in the BE profile.
-5. **Use sync MV for new code.** `CREATE MATERIALIZED VIEW` covers everything `ADD ROLLUP` does plus expressions like `bitmap_union(to_bitmap(user_id))`. The Doris source comment is blunt: *"In function level, the mv completely covers the rollup in the future."* Existing rollups keep working.
+5. **Use sync MV for new code.** `CREATE MATERIALIZED VIEW` covers everything `ADD ROLLUP` does plus expressions like `bitmap_union(to_bitmap(user_id))`. The Apache Doris source comment is blunt: *"In function level, the mv completely covers the rollup in the future."* Existing rollups keep working.
 
 ## Quick start {#quick-start}
 
@@ -82,7 +84,9 @@ PREAGGREGATION: ON
 
 The rollup drops `user_id`, so the planner picks it for any aggregate query that groups only by `(dt, ad_id)`. Inserting the same `(dt, ad_id, user_id)` twice produces one row with summed `clicks` and `cost`, and the rollup ends up with one row per `(dt, ad_id)`.
 
-## When to use it {#when}
+## When should you use Apache Doris preaggregation and rollup? {#when}
+
+Apache Doris preaggregation fits append-mostly fact tables with stable aggregation patterns, distinct-count and quantile rollups via `BITMAP_UNION` and `HLL_UNION`, and dashboards that run the same `GROUP BY` thousands of times a day. It is not a fit for raw per-row lookups, multi-table joins, or frequent point updates by primary key.
 
 **Good fit**
 
