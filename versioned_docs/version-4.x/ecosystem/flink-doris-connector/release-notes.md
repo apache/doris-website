@@ -21,7 +21,7 @@
 
 ### Features & Improvements
 
-- Enable gz compression by default for StreamLoad [#648](https://github.com/apache/doris-flink-connector/pull/648)
+- Enable gz compression by default for StreamLoad [#648](https://github.com/apache/doris-flink-connector/pull/648). Compression can be disabled by setting `'sink.properties.compress_type' = ''`.
 
 ### Credits
 
