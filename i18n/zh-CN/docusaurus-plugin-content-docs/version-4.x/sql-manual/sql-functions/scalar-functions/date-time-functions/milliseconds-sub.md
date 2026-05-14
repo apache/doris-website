@@ -20,7 +20,7 @@ MILLISECONDS_SUB(`<datetime>`, `<delta>`)
 
 | 参数 | 说明 |
 | ---- | ---- |
-| `<datetime>` | 输入的日期时间值，类型为 DATETIME ，具体 datetime 格式请查看 [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion)  |
+| `<datetime>` | 输入的日期时间值，类型为 DATETIME ，具体 datetime 格式请查看 [datetime 的转换](../../../basic-element/sql-data-types/conversion/datetime-conversion)  |
 | `<delta>` | 要减去的毫秒数，类型为 BIGINT，1 秒 = 1,000 毫秒 = 1,000,000 微秒 |
 
 ## 返回值

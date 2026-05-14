@@ -7,7 +7,7 @@
 ---
 
 分析函数，也称为窗口函数，是一种在 SQL 查询中对数据集中的行进行复杂计算的函数。窗口函数的特点在于，它们不会减少查询结果的行数，而是为每一行增加一个新的计算结果。窗口函数适用于多种分析场景，如计算滚动合计、排名以及移动平均等。
-具体的语法介绍可以[参阅](../../current/sql-manual/sql-functions/window-functions/overview.md)
+具体的语法介绍可以[参阅](../sql-manual/sql-functions/window-functions/overview.md)
 
 下面是一个使用窗口函数计算每个商店的前后三天的销售移动平均值的例子：
 
@@ -100,7 +100,7 @@ FROM
 
 ## 排序函数
 
-排序函数中，只有当指定的排序列是唯一值列时，查询结果才是确定的；如果排序列包含重复值，则每次的查询结果可能不同。更多相关函数可以[参阅](../../current/sql-manual/sql-functions/window-functions/overview.md)
+排序函数中，只有当指定的排序列是唯一值列时，查询结果才是确定的；如果排序列包含重复值，则每次的查询结果可能不同。更多相关函数可以[参阅](../sql-manual/sql-functions/window-functions/overview.md)
 
 ### NTILE 函数
 

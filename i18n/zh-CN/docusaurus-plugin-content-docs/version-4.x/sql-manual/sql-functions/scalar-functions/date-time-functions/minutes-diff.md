@@ -20,8 +20,8 @@ MINUTES_DIFF(`<date_or_time_expr1>`, `<date_or_time_expr2>`)
 
 | 参数 | 说明 |
 | ---- | ---- |
-| ``<date_or_time_expr1>`` | 结束时间，类型可以是 DATE、DATETIME ，具体 datetime/date 请查看 [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion), [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
-| ``<date_or_time_expr1>`` | 开始时间，类型可以是 DATE、DATETIME ，具体 datetime/date 请查看 [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion), [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
+| ``<date_or_time_expr1>`` | 结束时间，类型可以是 DATE、DATETIME ，具体 datetime/date 请查看 [datetime 的转换](../../../basic-element/sql-data-types/conversion/datetime-conversion), [date 的转换](../../../basic-element/sql-data-types/conversion/date-conversion) |
+| ``<date_or_time_expr1>`` | 开始时间，类型可以是 DATE、DATETIME ，具体 datetime/date 请查看 [datetime 的转换](../../../basic-element/sql-data-types/conversion/datetime-conversion), [date 的转换](../../../basic-element/sql-data-types/conversion/date-conversion) |
 
 ## 返回值
 

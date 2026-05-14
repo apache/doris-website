@@ -20,7 +20,7 @@ MILLISECOND_TIMESTAMP(`<datetime>`)
 
 | 参数           | 说明                                      |
 |--------------|-----------------------------------------|
-| `<datetime>` | 表示要转换为 Unix 时间戳的日期时间，支持输入 datetime 类型,具体 datetime 格式请查看 [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) |
+| `<datetime>` | 表示要转换为 Unix 时间戳的日期时间，支持输入 datetime 类型,具体 datetime 格式请查看 [datetime 的转换](../../../basic-element/sql-data-types/conversion/datetime-conversion) |
 
 ## 返回值
 

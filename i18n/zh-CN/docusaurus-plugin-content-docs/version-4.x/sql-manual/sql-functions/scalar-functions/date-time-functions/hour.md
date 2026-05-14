@@ -25,7 +25,7 @@ HOUR(`<date_or_time_expr>`)
 
 | 参数 | 说明 |
 | -- | -- |
-| `<date_or_time_expr>` | 参数是合法的日期表达式，支持输入 datetime/date/time 类型,date 类型会转换为对应日期的一天起始时间 00:00:00 ,具体 datetime/date/time 格式请查看  [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion) 和 [time的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/time-conversion) |
+| `<date_or_time_expr>` | 参数是合法的日期表达式，支持输入 datetime/date/time 类型,date 类型会转换为对应日期的一天起始时间 00:00:00 ,具体 datetime/date/time 格式请查看  [datetime 的转换](../../../basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../basic-element/sql-data-types/conversion/date-conversion) 和 [time的转换](../../../basic-element/sql-data-types/conversion/time-conversion) |
 
 ## 返回值
 
