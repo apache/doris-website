@@ -89,6 +89,7 @@ const sidebars: SidebarsConfig = {
                                 'install/deploy-on-kubernetes/separating-storage-compute/config-fe',
                                 'install/deploy-on-kubernetes/separating-storage-compute/config-cg',
                                 'install/deploy-on-kubernetes/separating-storage-compute/config-cluster',
+                                'install/deploy-on-kubernetes/separating-storage-compute/install-prometheus-and-grafana',
                             ],
                         },
                     ],

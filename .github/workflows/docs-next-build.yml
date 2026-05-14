@@ -53,6 +53,36 @@ jobs:
                     echo "No docs-next-related changes detected; skipping build."
                 fi
 
+            - name: Enforce docs-next mirror for legacy 4.x doc changes
+              run: |
+                set -e
+                BASE_SHA="${{ github.event.pull_request.base.sha }}"
+                HEAD_SHA="${{ github.event.pull_request.head.sha }}"
+                CHANGED=$(git diff --name-only "$BASE_SHA" "$HEAD_SHA")
+
+                LEGACY_EN=$(echo "$CHANGED" | grep -E '^versioned_docs/version-4\.x/' || true)
+                LEGACY_ZH=$(echo "$CHANGED" | grep -E '^i18n/zh-CN/docusaurus-plugin-content-docs/version-4\.x/' || true)
+                NEXT_EN=$(echo "$CHANGED" | grep -E '^docs-next/' || true)
+                NEXT_ZH=$(echo "$CHANGED" | grep -E '^i18n/zh-CN/docusaurus-plugin-content-docs-next/current/' || true)
+
+                FAIL=0
+                if [ -n "$LEGACY_EN" ] && [ -z "$NEXT_EN" ]; then
+                    echo "::error::Changes detected under versioned_docs/version-4.x/ but no corresponding changes under docs-next/. Please mirror the edits into docs-next/."
+                    echo "Legacy EN files changed:"
+                    echo "$LEGACY_EN"
+                    FAIL=1
+                fi
+                if [ -n "$LEGACY_ZH" ] && [ -z "$NEXT_ZH" ]; then
+                    echo "::error::Changes detected under i18n/zh-CN/docusaurus-plugin-content-docs/version-4.x/ but no corresponding changes under i18n/zh-CN/docusaurus-plugin-content-docs-next/current/. Please mirror the edits."
+                    echo "Legacy zh-CN files changed:"
+                    echo "$LEGACY_ZH"
+                    FAIL=1
+                fi
+                if [ "$FAIL" -ne 0 ]; then
+                    exit 1
+                fi
+                echo "✅ Legacy 4.x / docs-next mirroring check passed"
+
             - name: Use Node.js
               if: steps.changes.outputs.relevant == 'true'
               uses: actions/setup-node@v4
