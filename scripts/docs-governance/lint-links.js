@@ -325,19 +325,29 @@ function buildInboundMarkdownIndex(fileCache) {
   return index;
 }
 
+// Sidebar refs use version-agnostic doc IDs (Docusaurus resolves them per
+// version via the sidebar file's own version). Key the index by version|docId
+// so deleting `docs/foo.md` (current) does not flag versioned sidebars that
+// legitimately reference their own `versioned_docs/version-X.x/foo.md` copy.
 function buildInboundSidebarIndex(rootDir, manifest) {
+  const sidebarVersion = new Map();
+  for (const entry of manifest.entries) {
+    if (entry.sidebar_source && !sidebarVersion.has(entry.sidebar_source)) {
+      sidebarVersion.set(entry.sidebar_source, entry.version);
+    }
+  }
   const index = new Map();
-  const sidebars = new Set(manifest.entries.map((entry) => entry.sidebar_source).filter(Boolean));
-  for (const sidebarSource of sidebars) {
+  for (const [sidebarSource, version] of sidebarVersion) {
     const loaded = loadSidebarRefs(rootDir, sidebarSource);
     if (loaded.missing) {
       continue;
     }
     for (const docId of loaded.refs) {
-      let bucket = index.get(docId);
+      const key = `${version}|${docId}`;
+      let bucket = index.get(key);
       if (!bucket) {
         bucket = [];
-        index.set(docId, bucket);
+        index.set(key, bucket);
       }
       bucket.push({ path: sidebarSource, line: 1 });
     }
@@ -354,6 +364,14 @@ function oldPathToDocId(oldPath) {
     .replace(/^i18n\/zh-CN\/docusaurus-plugin-content-docs-community\/current\//, 'community:');
 }
 
+function oldPathToVersion(oldPath) {
+  const versioned = oldPath.match(
+    /^(?:versioned_docs|i18n\/zh-CN\/docusaurus-plugin-content-docs)\/version-([^/]+)\//,
+  );
+  if (versioned) return versioned[1];
+  return 'current';
+}
+
 function lintMovedOrDeletedLinks(rootDir, manifest, changedRecords, fileCache) {
   const records = recordOldPaths(changedRecords || []);
   if (records.length === 0) {
@@ -365,10 +383,17 @@ function lintMovedOrDeletedLinks(rootDir, manifest, changedRecords, fileCache) {
   const findings = [];
 
   for (const record of records) {
-    const rule = record.status === 'R' ? 'link-moved-file-inbound-reference' : 'link-deleted-file-inbound-reference';
+    const isDelete = record.status === 'D' || !record.path || record.path === record.oldPath;
+    const rule = isDelete ? 'link-deleted-file-inbound-reference' : 'link-moved-file-inbound-reference';
     const markdownRefs = markdownIndex.get(record.oldPath) || [];
-    const sidebarRefs = sidebarIndex.get(oldPathToDocId(record.oldPath)) || [];
-    const inboundMessage = `Inbound link still points to changed path ${record.oldPath}; review and update target ${record.path || ''}.`.trim();
+    const sidebarKey = `${oldPathToVersion(record.oldPath)}|${oldPathToDocId(record.oldPath)}`;
+    const sidebarRefs = sidebarIndex.get(sidebarKey) || [];
+    const inboundMessage = isDelete
+      ? `Inbound reference points to deleted path ${record.oldPath}; remove this reference.`
+      : `Inbound reference points to old path ${record.oldPath}; update to new path ${record.path}.`;
+    const redirectMessage = isDelete
+      ? `Markdown path ${record.oldPath} was deleted; review redirects and inbound references before merging.`
+      : `Markdown path changed from ${record.oldPath} to ${record.path}; review redirects and inbound links before merging.`;
     const relatedPaths = [record.oldPath, record.path].filter(Boolean);
 
     for (const ref of markdownRefs) {
@@ -383,7 +408,7 @@ function lintMovedOrDeletedLinks(rootDir, manifest, changedRecords, fileCache) {
         'link-path-change-redirect-review',
         record.path || record.oldPath,
         1,
-        `Markdown path changed from ${record.oldPath}; review redirects and inbound links before merging.`,
+        redirectMessage,
         undefined,
         relatedPaths,
       ),
