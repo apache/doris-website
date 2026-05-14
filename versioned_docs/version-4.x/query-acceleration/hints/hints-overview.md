@@ -18,6 +18,7 @@ Doris currently supports several types of hints, including leading hint, ordered
 - [Leading Hint](leading-hint.md)：Specifies the join order according to the order provided in the leading hint.
 - [Ordered Hint](leading-hint.md)：A specific type of leading hint that specifies the join order as the original text sequence.
 - [Distribute Hint](distribute-hint.md)：Specifies the data distribution method for joins as either shuffle or broadcast.
+- [Skew Hint](skew-hint.md)：Used to provide skewed information about data distribution, guiding the optimizer to adjust the plan.
 
 ## Hint Example
 Imagine a table with a large amount of data. In certain specific cases, you may know that the join order of the tables can affect query performance. In such situations, the Leading Hint allows you to specify the table join order you want the optimizer to follow.
