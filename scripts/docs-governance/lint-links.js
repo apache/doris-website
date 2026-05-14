@@ -71,7 +71,7 @@ function slugifyHeading(text) {
     .trim()
     .toLowerCase()
     .replace(/<[^>]+>/g, '')
-    .replace(/[^\p{L}\p{N}\s-]/gu, '')
+    .replace(/[^\p{L}\p{N}\s_-]/gu, '')
     .replace(/\s+/g, '-');
 }
 
