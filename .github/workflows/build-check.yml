@@ -86,23 +86,10 @@ jobs:
                 # Check each changed file and map to doc version
                 while IFS= read -r file; do
                     case "$file" in
-                        # English legacy current dir — no longer compiled
-                        # (dev moved to docs-next plugin). PR #3610 forbids
-                        # modifying these files; if they change anyway, fall
-                        # through to a minimal default-version smoke build.
-                        docs/*)
-                            VERSIONS="4.x,$VERSIONS"
-                            ;;
                         # English versioned docs
                         versioned_docs/version-*/*)
                             ver=$(echo "$file" | sed -n 's|versioned_docs/version-\([^/]*\)/.*|\1|p')
                             VERSIONS="${ver},$VERSIONS"
-                            ;;
-                        # Chinese legacy current dir — no longer compiled
-                        # (see docs/* note above).
-                        i18n/zh-CN/docusaurus-plugin-content-docs/current/*)
-                            VERSIONS="4.x,$VERSIONS"
-                            LOCALES="en,zh-CN"
                             ;;
                         # Chinese versioned docs
                         i18n/zh-CN/docusaurus-plugin-content-docs/version-*/*)
@@ -113,12 +100,6 @@ jobs:
                         # Chinese community docs
                         i18n/zh-CN/docusaurus-plugin-content-docs-community/*|i18n/zh-CN/code.json)
                             LOCALES="en,zh-CN"
-                            ;;
-                        # Sidebar for legacy current — no longer compiled
-                        # (legacy plugin uses includeCurrentVersion: false).
-                        # Fall through to minimal default-version build.
-                        sidebars.ts)
-                            VERSIONS="4.x,$VERSIONS"
                             ;;
                         # Versioned sidebars: extract version from filename
                         # e.g. versioned_sidebars/version-4.x-sidebars.json → 4.x

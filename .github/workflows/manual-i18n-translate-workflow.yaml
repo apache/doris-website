@@ -6,7 +6,7 @@ on:
       source_dir:
         description: "Directory containing English docs to translate"
         required: true
-        default: "docs"
+        default: "docs-next"
       target_dir:
         description: "Target i18n root directory for Japanese docs"
         required: true
