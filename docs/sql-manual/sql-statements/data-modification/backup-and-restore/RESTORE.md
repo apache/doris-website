@@ -57,6 +57,13 @@ Restoration operation attributes, the format is `<key>` = `<value>`，currently 
 - "reserve_privilege" = "true": Whether to restore privileges. Use with `RESTORE GLOBAL`.
 - "reserve_catalog" = "true": Whether to restore catalogs. Use with `RESTORE GLOBAL`.
 - "reserve_workload_group" = "true": Whether to restore workload groups. Use with `RESTORE GLOBAL`.
+- "storage_medium": Controls the storage medium for restored table. Default is "same_with_upstream" which preserves the source table's storage medium setting.
+  - "same_with_upstream": Use the same storage medium as the backup source table (default)
+  - "hdd": Force use HDD storage
+  - "ssd": Force use SSD storage
+- "medium_allocation_mode": Controls how to handle storage medium allocation when the specified medium is unavailable. Default is "strict".
+  - "strict": Strictly use the specified storage medium. Restore will fail if the medium is unavailable (except in single-medium environments)
+  - "adaptive": Prefer the specified medium, but automatically fallback to available medium if unavailable
 
 ## Optional Parameters
 
@@ -157,5 +164,33 @@ PROPERTIES
     "backup_timestamp"="2018-05-04-18-12-18",
     "reserve_privilege" = "true",
     "reserve_workload_group" = "true"
+);
+```
+
+6. Restore table backup_tbl from snapshot_4, using SSD storage with strict mode (restore will fail if SSD is unavailable):
+
+```sql
+RESTORE SNAPSHOT example_db1.`snapshot_4`
+FROM `example_repo`
+ON ( `backup_tbl` )
+PROPERTIES
+(
+    "backup_timestamp"="2018-05-04-19-20-30",
+    "storage_medium"="ssd",
+    "medium_allocation_mode"="strict"
+);
+```
+
+7. Restore table backup_tbl from snapshot_5, preserving the original storage medium with adaptive mode (automatically switches to available medium if the original is unavailable):
+
+```sql
+RESTORE SNAPSHOT example_db1.`snapshot_5`
+FROM `example_repo`
+ON ( `backup_tbl` )
+PROPERTIES
+(
+    "backup_timestamp"="2018-05-04-20-30-40",
+    "storage_medium"="same_with_upstream",
+    "medium_allocation_mode"="adaptive"
 );
 ```
