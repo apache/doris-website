@@ -113,10 +113,57 @@ function isGovernedMarkdownPath(filePath) {
   return isMarkdownFile(normalized) && GOVERNED_MARKDOWN_PREFIXES.some((prefix) => normalized.startsWith(prefix));
 }
 
-function buildIndexes(rootDir, manifest) {
+function progressEnabled() {
+  return process.env.DOCS_LINT_PROGRESS !== '0';
+}
+
+// Progress logger writes to stderr so JSON results on stdout / --output stay clean.
+function createProgressLogger(enabled) {
+  const start = Date.now();
+  return (stage, info) => {
+    if (!enabled) return;
+    const elapsed = ((Date.now() - start) / 1000).toFixed(1);
+    const details = info && Object.keys(info).length
+      ? ' ' + Object.entries(info).map(([key, value]) => `${key}=${value}`).join(' ')
+      : '';
+    process.stderr.write(`[docs-lint-links] +${elapsed}s ${stage}${details}\n`);
+  };
+}
+
+function relativePathCandidates(pathname) {
+  const candidates = [pathname];
+  if (!path.extname(pathname)) {
+    candidates.push(`${pathname}.md`, `${pathname}.mdx`, `${pathname}/index.md`, `${pathname}/index.mdx`);
+  }
+  return candidates;
+}
+
+// Read every governed Markdown file exactly once. Downstream stages share this
+// cache so we never re-read or re-tokenize the same file across sub-lints.
+function collectFileCache(rootDir, manifest) {
+  const cache = [];
+  for (const entry of manifest.entries) {
+    const absPath = path.join(rootDir, entry.source_path);
+    if (!fs.existsSync(absPath)) {
+      continue;
+    }
+    const raw = fs.readFileSync(absPath, 'utf8');
+    cache.push({ entry, raw, links: extractMarkdownLinks(raw) });
+  }
+  return cache;
+}
+
+function buildIndexes(rootDir, manifest, fileCache) {
   const bySource = new Map();
   const byRoute = new Map();
   const anchorsBySource = new Map();
+  const rawBySource = new Map();
+
+  if (fileCache) {
+    for (const item of fileCache) {
+      rawBySource.set(item.entry.source_path, item.raw);
+    }
+  }
 
   for (const entry of manifest.entries) {
     bySource.set(entry.source_path, entry);
@@ -125,9 +172,15 @@ function buildIndexes(rootDir, manifest) {
         byRoute.set(route.replace(/\/+$/, ''), entry);
       }
     }
-    const absPath = path.join(rootDir, entry.source_path);
-    if (fs.existsSync(absPath)) {
-      anchorsBySource.set(entry.source_path, extractHeadingAnchors(fs.readFileSync(absPath, 'utf8')));
+    let raw = rawBySource.get(entry.source_path);
+    if (raw === undefined) {
+      const absPath = path.join(rootDir, entry.source_path);
+      if (fs.existsSync(absPath)) {
+        raw = fs.readFileSync(absPath, 'utf8');
+      }
+    }
+    if (raw !== undefined) {
+      anchorsBySource.set(entry.source_path, extractHeadingAnchors(raw));
     }
   }
 
@@ -137,11 +190,9 @@ function buildIndexes(rootDir, manifest) {
 function candidateFiles(rootDir, sourcePath, pathname) {
   const sourceDir = path.dirname(sourcePath);
   const normalized = normalizePath(path.normalize(path.join(sourceDir, pathname)));
-  const candidates = [normalized];
-  if (!path.extname(normalized)) {
-    candidates.push(`${normalized}.md`, `${normalized}.mdx`, `${normalized}/index.md`, `${normalized}/index.mdx`);
-  }
-  return candidates.filter((candidate) => !candidate.startsWith('../') && fs.existsSync(path.join(rootDir, candidate)));
+  return relativePathCandidates(normalized).filter(
+    (candidate) => !candidate.startsWith('../') && fs.existsSync(path.join(rootDir, candidate)),
+  );
 }
 
 function resolveInternalTarget(rootDir, sourcePath, rawTarget, indexes) {
@@ -175,21 +226,12 @@ function resolveInternalTarget(rootDir, sourcePath, rawTarget, indexes) {
   return { kind: 'missing-file', pathname, hash };
 }
 
-function scanMarkdownFiles(rootDir, manifest) {
-  return manifest.entries
-    .filter((entry) => fs.existsSync(path.join(rootDir, entry.source_path)))
-    .map((entry) => ({
-      entry,
-      raw: fs.readFileSync(path.join(rootDir, entry.source_path), 'utf8'),
-    }));
-}
-
-function lintCurrentLinks(rootDir, manifest) {
+function lintCurrentLinks(rootDir, manifest, fileCache) {
   const findings = [];
-  const indexes = buildIndexes(rootDir, manifest);
+  const indexes = buildIndexes(rootDir, manifest, fileCache);
 
-  for (const { entry, raw } of scanMarkdownFiles(rootDir, manifest)) {
-    for (const link of extractMarkdownLinks(raw)) {
+  for (const { entry, links } of fileCache) {
+    for (const link of links) {
       const resolved = resolveInternalTarget(rootDir, entry.source_path, link.target, indexes);
       if (resolved.kind === 'skip') {
         continue;
@@ -253,73 +295,87 @@ function recordOldPaths(records) {
     .filter((record) => isGovernedMarkdownPath(record.oldPath));
 }
 
-function targetMatchesOldPath(sourcePath, target, oldPath) {
-  if (isExternal(target) || isSkippable(target)) {
-    return false;
-  }
-  const { pathname } = splitTarget(target);
-  if (!pathname || pathname.startsWith('/')) {
-    return false;
-  }
-  const sourceDir = path.dirname(sourcePath);
-  const resolved = normalizePath(path.normalize(path.join(sourceDir, pathname)));
-  const candidates = [resolved];
-  if (!path.extname(resolved)) {
-    candidates.push(`${resolved}.md`, `${resolved}.mdx`, `${resolved}/index.md`, `${resolved}/index.mdx`);
-  }
-  return candidates.includes(oldPath);
-}
-
-function findInboundMarkdownReferences(rootDir, manifest, oldPath) {
-  const refs = [];
-  for (const { entry, raw } of scanMarkdownFiles(rootDir, manifest)) {
-    for (const link of extractMarkdownLinks(raw)) {
-      if (targetMatchesOldPath(entry.source_path, link.target, oldPath)) {
-        refs.push({ path: entry.source_path, line: link.line, owner: entry.owner });
+// Walk every (file, link) pair once and bucket refs by every old-path candidate
+// the link could resolve to. Lookups per deleted/renamed record then collapse
+// from O(M) re-scans to O(1).
+function buildInboundMarkdownIndex(fileCache) {
+  const index = new Map();
+  for (const { entry, links } of fileCache) {
+    const sourceDir = path.dirname(entry.source_path);
+    for (const link of links) {
+      if (isExternal(link.target) || isSkippable(link.target)) {
+        continue;
+      }
+      const { pathname } = splitTarget(link.target);
+      if (!pathname || pathname.startsWith('/')) {
+        continue;
+      }
+      const resolved = normalizePath(path.normalize(path.join(sourceDir, pathname)));
+      const ref = { path: entry.source_path, line: link.line, owner: entry.owner };
+      for (const candidate of relativePathCandidates(resolved)) {
+        let bucket = index.get(candidate);
+        if (!bucket) {
+          bucket = [];
+          index.set(candidate, bucket);
+        }
+        bucket.push(ref);
       }
     }
   }
-  return refs;
+  return index;
 }
 
-function findInboundSidebarReferences(rootDir, manifest, oldPath) {
-  const oldDocId = stripMarkdownExtension(oldPath)
+function buildInboundSidebarIndex(rootDir, manifest) {
+  const index = new Map();
+  const sidebars = new Set(manifest.entries.map((entry) => entry.sidebar_source).filter(Boolean));
+  for (const sidebarSource of sidebars) {
+    const loaded = loadSidebarRefs(rootDir, sidebarSource);
+    if (loaded.missing) {
+      continue;
+    }
+    for (const docId of loaded.refs) {
+      let bucket = index.get(docId);
+      if (!bucket) {
+        bucket = [];
+        index.set(docId, bucket);
+      }
+      bucket.push({ path: sidebarSource, line: 1 });
+    }
+  }
+  return index;
+}
+
+function oldPathToDocId(oldPath) {
+  return stripMarkdownExtension(oldPath)
     .replace(/^docs\//, '')
     .replace(/^versioned_docs\/version-[^/]+\//, '')
     .replace(/^i18n\/zh-CN\/docusaurus-plugin-content-docs\/(?:current|version-[^/]+)\//, '')
     .replace(/^community\//, 'community:')
     .replace(/^i18n\/zh-CN\/docusaurus-plugin-content-docs-community\/current\//, 'community:');
-  const sidebars = new Set(manifest.entries.map((entry) => entry.sidebar_source).filter(Boolean));
-  const refs = [];
-  for (const sidebarSource of sidebars) {
-    const loaded = loadSidebarRefs(rootDir, sidebarSource);
-    if (!loaded.missing && loaded.refs.has(oldDocId)) {
-      refs.push({ path: sidebarSource, line: 1 });
-    }
-  }
-  return refs;
 }
 
-function lintMovedOrDeletedLinks(rootDir, manifest, changedRecords) {
+function lintMovedOrDeletedLinks(rootDir, manifest, changedRecords, fileCache) {
+  const records = recordOldPaths(changedRecords || []);
+  if (records.length === 0) {
+    return [];
+  }
+
+  const markdownIndex = buildInboundMarkdownIndex(fileCache);
+  const sidebarIndex = buildInboundSidebarIndex(rootDir, manifest);
   const findings = [];
-  for (const record of recordOldPaths(changedRecords || [])) {
+
+  for (const record of records) {
     const rule = record.status === 'R' ? 'link-moved-file-inbound-reference' : 'link-deleted-file-inbound-reference';
-    const refs = [
-      ...findInboundMarkdownReferences(rootDir, manifest, record.oldPath),
-      ...findInboundSidebarReferences(rootDir, manifest, record.oldPath),
-    ];
-    for (const ref of refs) {
-      findings.push(
-        makeFinding(
-          'error',
-          rule,
-          ref.path,
-          ref.line,
-          `Inbound link still points to changed path ${record.oldPath}; review and update target ${record.path || ''}.`.trim(),
-          ref.owner,
-          [record.oldPath, record.path].filter(Boolean),
-        ),
-      );
+    const markdownRefs = markdownIndex.get(record.oldPath) || [];
+    const sidebarRefs = sidebarIndex.get(oldPathToDocId(record.oldPath)) || [];
+    const inboundMessage = `Inbound link still points to changed path ${record.oldPath}; review and update target ${record.path || ''}.`.trim();
+    const relatedPaths = [record.oldPath, record.path].filter(Boolean);
+
+    for (const ref of markdownRefs) {
+      findings.push(makeFinding('error', rule, ref.path, ref.line, inboundMessage, ref.owner, relatedPaths));
+    }
+    for (const ref of sidebarRefs) {
+      findings.push(makeFinding('error', rule, ref.path, ref.line, inboundMessage, undefined, relatedPaths));
     }
     findings.push(
       makeFinding(
@@ -329,7 +385,7 @@ function lintMovedOrDeletedLinks(rootDir, manifest, changedRecords) {
         1,
         `Markdown path changed from ${record.oldPath}; review redirects and inbound links before merging.`,
         undefined,
-        [record.oldPath, record.path].filter(Boolean),
+        relatedPaths,
       ),
     );
   }
@@ -395,11 +451,29 @@ function lintLinks(options = {}) {
   const manifest = options.manifest || buildManifest({ rootDir });
   const changedFiles = options.changedFiles || [];
   const changedRecords = options.changedRecords || [];
-  return [
-    ...lintCurrentLinks(rootDir, manifest),
-    ...lintMovedOrDeletedLinks(rootDir, manifest, changedRecords),
-    ...lintSlugChanges(rootDir, changedFiles),
-  ];
+  const progress = options.progress || createProgressLogger(progressEnabled());
+
+  progress('lintLinks start', {
+    entries: manifest.entries.length,
+    changedFiles: changedFiles.length,
+    changedRecords: changedRecords.length,
+  });
+
+  const fileCache = collectFileCache(rootDir, manifest);
+  progress('file cache built', { files: fileCache.length });
+
+  const currentFindings = lintCurrentLinks(rootDir, manifest, fileCache);
+  progress('lintCurrentLinks done', { findings: currentFindings.length });
+
+  const movedFindings = lintMovedOrDeletedLinks(rootDir, manifest, changedRecords, fileCache);
+  progress('lintMovedOrDeletedLinks done', { findings: movedFindings.length });
+
+  const slugFindings = lintSlugChanges(rootDir, changedFiles);
+  progress('lintSlugChanges done', { findings: slugFindings.length });
+
+  const all = [...currentFindings, ...movedFindings, ...slugFindings];
+  progress('lintLinks total', { findings: all.length });
+  return all;
 }
 
 function filterLinkFindings(findings, changedFiles) {
@@ -425,22 +499,40 @@ function hasLinkErrors(findings) {
 function runCli() {
   const args = parseArgs(process.argv.slice(2));
   const rootDir = args.root ? path.resolve(args.root) : process.cwd();
+  const progress = createProgressLogger(progressEnabled());
+
+  progress('CLI start', { mode: args.changed ? 'changed' : args.files ? 'files' : 'full' });
   const changedFiles = args.changed ? getChangedFiles(rootDir) : args.files ? args.files.split(',') : null;
   const changedRecords = args.changed ? getChangedRecords(rootDir) : [];
+  if (args.changed || args.files) {
+    progress('changed inputs resolved', {
+      changedFiles: (changedFiles || []).length,
+      changedRecords: changedRecords.length,
+    });
+  }
+
   const manifest = buildManifest({ rootDir });
-  const findings = filterLinkFindings(
-    lintLinks({ rootDir, manifest, changedFiles: changedFiles || [], changedRecords }),
-    changedFiles,
-  );
+  progress('manifest built', { entries: manifest.entries.length });
+
+  const rawFindings = lintLinks({ rootDir, manifest, changedFiles: changedFiles || [], changedRecords, progress });
+  const findings = filterLinkFindings(rawFindings, changedFiles);
+  if (changedFiles) {
+    progress('filtered to changed scope', { kept: findings.length, dropped: rawFindings.length - findings.length });
+  }
+
   const output = JSON.stringify({ schema_version: 1, findings }, null, 2);
   if (args.output) {
     const outputPath = path.resolve(rootDir, args.output);
     ensureDirForFile(outputPath);
     fs.writeFileSync(outputPath, `${output}\n`, 'utf8');
+    progress('output written', { path: args.output, bytes: output.length });
   } else {
     process.stdout.write(`${output}\n`);
   }
-  if (args['fail-on-errors'] && hasLinkErrors(findings)) {
+
+  const hasErrors = hasLinkErrors(findings);
+  progress('CLI done', { findings: findings.length, errors: hasErrors });
+  if (args['fail-on-errors'] && hasErrors) {
     process.exitCode = 1;
   }
 }
