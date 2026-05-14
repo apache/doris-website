@@ -48,19 +48,6 @@ function parseFrontMatter(absPath) {
 function getContentInfo(relativePath, rules) {
   const currentRoute = rules.currentRouteVersion;
 
-  if (relativePath.startsWith('docs/')) {
-    const docRelative = relativePath.slice('docs/'.length);
-    return {
-      contentRoot: 'docs',
-      plugin: 'main_docs',
-      locale: 'en',
-      version: 'current',
-      docRelative,
-      routeBase: `/docs/${currentRoute}`,
-      sidebarSource: 'sidebars.ts',
-    };
-  }
-
   let match = relativePath.match(/^versioned_docs\/version-([^/]+)\/(.+)$/);
   if (match) {
     const version = match[1];
@@ -72,19 +59,6 @@ function getContentInfo(relativePath, rules) {
       docRelative: match[2],
       routeBase: `/docs/${version}`,
       sidebarSource: `versioned_sidebars/version-${version}-sidebars.json`,
-    };
-  }
-
-  if (relativePath.startsWith('i18n/zh-CN/docusaurus-plugin-content-docs/current/')) {
-    const docRelative = relativePath.slice('i18n/zh-CN/docusaurus-plugin-content-docs/current/'.length);
-    return {
-      contentRoot: 'zh_current_docs',
-      plugin: 'main_docs',
-      locale: 'zh-CN',
-      version: 'current',
-      docRelative,
-      routeBase: `/zh-CN/docs/${currentRoute}`,
-      sidebarSource: 'sidebars.ts',
     };
   }
 

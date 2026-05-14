@@ -11,9 +11,9 @@ const {
   parseArgs,
 } = require('./lib');
 
-const STRONG_SYNC_VERSIONS = new Set(['current', '4.x']);
+const STRONG_SYNC_VERSIONS = new Set(['4.x']);
 const CANDIDATE_VERSION = '3.x';
-const SUPPORTED_SYNC_VERSIONS = new Set(['current', '4.x', CANDIDATE_VERSION]);
+const SUPPORTED_SYNC_VERSIONS = new Set(['4.x', CANDIDATE_VERSION]);
 const SUPPORTED_SYNC_LOCALES = new Set(['en', 'zh-CN', 'ja']);
 
 function makeFinding(entry, severity, rule, message, relatedPaths = []) {
