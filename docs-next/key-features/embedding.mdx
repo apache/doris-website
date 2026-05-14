@@ -20,12 +20,12 @@ featureCard:
     - search
 ---
 
-> **TL;DR** Doris ships a built-in `EMBED()` SQL function that sends text (or an image, video, audio file) to an external embedding model and returns an `ARRAY<FLOAT>` you can store in a column or feed straight into a [distance function](./vector-index). You configure the model once as an AI `RESOURCE`, then write `EMBED('your text')` anywhere a value is allowed. No UDFs, no client-side glue, no second service to operate.
+> **TL;DR** Apache Doris ships a built-in `EMBED()` SQL function that sends text (or an image, video, audio file) to an external embedding model and returns an `ARRAY<FLOAT>` ready for a column or a [distance function](./vector-index). The model is configured once as an AI `RESOURCE`, then `EMBED('your text')` works anywhere a value is allowed. No UDFs, no client-side glue, no second service to operate.
 
 ![Apache Doris Embedding: Doris turns text and media into vectors with EMBED(), a SQL function that calls an external model and returns ARRAY of FLOAT for vector search.](/images/next/key-features/embedding.jpg)
-## Why it matters {#why}
+## Why use the EMBED function in Apache Doris? {#why}
 
-Vector search needs vectors, and vectors come from an embedding model. The usual setup looks like this: an application server pulls rows out of the database, sends them to OpenAI or a local model, gets vectors back, and writes them to a vector table. At query time the same round trip happens for the search string. You end up maintaining a small ETL service whose only job is to call an HTTP API and stash the result somewhere.
+The Apache Doris `EMBED()` function collapses the usual application-side embedding pipeline into one SQL call, so vectors are generated, stored, and queried inside the database without a separate ETL service. Vector search needs vectors, and vectors come from an embedding model. The usual setup looks like this: an application server pulls rows out of the database, sends them to OpenAI or a local model, gets vectors back, and writes them to a vector table. At query time the same round trip happens for the search string. You end up maintaining a small ETL service whose only job is to call an HTTP API and stash the result somewhere.
 
 A few things tend to go wrong:
 
@@ -33,25 +33,27 @@ A few things tend to go wrong:
 - Backfills are jobs in their own right, often slower and more expensive than the original ingest.
 - Two teams own one logical step. The data team owns the rows, the application team owns the vectors, and nobody owns the gap.
 
-`EMBED()` pulls the whole loop back into SQL. The model is a Doris resource, the call is a function, and the result is a column you can persist with `INSERT` or compute on the fly.
+`EMBED()` pulls the whole loop back into SQL. The model is an Apache Doris resource, the call is a function, and the result is a column you can persist with `INSERT` or compute on the fly.
 
-## What it is {#what}
+## What is the Apache Doris EMBED function? {#what}
 
-`EMBED()` is an [AI function](../sql-manual/sql-functions/ai-functions/overview) that takes a piece of text (or a multimodal file reference) and asks an external embedding provider for a vector. The return type is `ARRAY<FLOAT>`. Doris reaches the provider through an AI resource you set up once with `CREATE RESOURCE`. The same function call works at load time, so you can persist embeddings into a column, and at query time, so you can embed the user's search string on the fly without leaving SQL.
+The Apache Doris `EMBED()` function is a built-in [AI function](../sql-manual/sql-functions/ai-functions/overview) that takes text or a multimodal file reference, asks an external embedding provider for a vector, and returns an `ARRAY<FLOAT>`. Apache Doris reaches the provider through an AI resource you set up once with `CREATE RESOURCE`. The same function call works at load time, so you can persist embeddings into a column, and at query time, so you can embed the user's search string on the fly without leaving SQL.
 
 **Key terms**
 
 - **AI resource**: a named connection to an embedding provider. `EMBED()` ships dedicated adapters for `openai`, `gemini`, `voyageai`, `jina`, `qwen`, `minimax`, plus a `local` option for in-house model servers. Stores the endpoint, model name, API key, and optional dimensions.
-- **`EMBED([resource_name], input)`**: the SQL function. With one argument, Doris uses the session default; with two, the first names the resource explicitly.
+- **`EMBED([resource_name], input)`**: the SQL function. With one argument, Apache Doris uses the session default; with two, the first names the resource explicitly.
 - **`default_ai_resource`**: a session variable that picks a resource for the rest of the session.
-- **Multimodal input**: a JSON value describing a file (URI, content type, optional S3 credentials). Doris presigns S3 URLs and forwards them to providers that support image, video, or audio embeddings.
+- **Multimodal input**: a JSON value describing a file (URI, content type, optional S3 credentials). Apache Doris presigns S3 URLs and forwards them to providers that support image, video, or audio embeddings.
 
-## How it works {#how}
+## How does the Apache Doris EMBED function work? {#how}
 
-1. **Register the model.** `CREATE RESOURCE` stores the provider type, endpoint, model name, and credentials. Doris validates the resource with a probe call to the provider, except when `provider_type = "local"`, where the check is skipped.
+The Apache Doris `EMBED()` function works in five stages: register the AI resource, plan the call on the FE, batch rows on the BE, retry on failures, and return one `ARRAY<FLOAT>` per row.
+
+1. **Register the model.** `CREATE RESOURCE` stores the provider type, endpoint, model name, and credentials. Apache Doris validates the resource with a probe call to the provider, except when `provider_type = "local"`, where the check is skipped.
 2. **Plan the call.** When the planner sees `EMBED()`, it sends the work to the BE. The function processes the input column row by row, but it does not call the provider row by row.
 3. **Batch on the BE.** The BE accumulates rows into a batch, capped by `embed_max_batch_size` (default 5 inputs) and by `ai_context_window_size` (default 128 KB of accumulated text). Each batch becomes one HTTP request, which keeps round trips and per-minute rate limits in check.
-4. **Retry and fail loudly.** The provider call honors `ai.max_retries` and `ai.retry_delay_second` from the resource. If the API returns the wrong number of vectors, Doris fails the query rather than risk misaligning rows with vectors.
+4. **Retry and fail loudly.** The provider call honors `ai.max_retries` and `ai.retry_delay_second` from the resource. If the API returns the wrong number of vectors, Apache Doris fails the query rather than risk misaligning rows with vectors.
 5. **Return a column.** Every row gets its own `ARRAY<FLOAT>`. You can store it, feed it to `cosine_distance`, or load it into an ANN index for vector search.
 
 ## Quick start {#quick-start}
@@ -89,11 +91,13 @@ FROM notes ORDER BY d ASC LIMIT 1;
 
 The `INSERT` precomputes one vector per row. The `SELECT` embeds the query string once at runtime, then ranks rows by cosine distance. Two API calls in total, both hidden inside SQL.
 
-## When to use it {#when}
+## When should you use the Apache Doris EMBED function? {#when}
+
+The Apache Doris `EMBED()` function fits RAG and semantic search over corpora that already live in Apache Doris, backfills that keep the work inside SQL, hybrid pipelines that pair vectors with keyword filters, and multimodal embeddings whose source files live in S3. It is not a fit for per-row embedding over millions of rows on the hot path, models outside the supported provider list, or air-gapped clusters with no path to the provider.
 
 **Good fit**
 
-- RAG and semantic search where the corpus already lives in Doris and you want one system to handle ingestion, embedding, and retrieval.
+- RAG and semantic search where the corpus already lives in Apache Doris and you want one system to handle ingestion, embedding, and retrieval.
 - Backfills over existing tables: `UPDATE t SET vec = EMBED(body) WHERE vec IS NULL` keeps the work inside the database.
 - Hybrid pipelines that pair `EMBED()` with an ANN index for storage and a `MATCH_*` predicate for keyword filtering. See [Hybrid Search](./hybrid-search).
 - Multimodal embeddings (image, video, audio) where the file lives in S3 and you would rather not write a download-then-upload script.
@@ -101,7 +105,7 @@ The `INSERT` precomputes one vector per row. The `SELECT` embeds the query strin
 **Not a good fit**
 
 - Real-time queries that embed at the per-row level over millions of rows. Each row is one provider call, so the bill and the latency scale with row count. Precompute once, reuse forever.
-- Workloads that need a specific embedding model not on the supported provider list. The providers with an embedding adapter are OpenAI, Gemini, VoyageAI, Jina, Qwen, and MiniMax, plus `local` for an in-house model server. Doris's broader AI resource list also accepts DeepSeek, MoonShot, Anthropic, Zhipu, and Baichuan, but those route through the [LLM SQL Functions](./llm-sql-functions) — chat / completion only, not `EMBED()`. Anything outside the embedding-adapter set needs to expose an OpenAI- or Gemini-compatible API to plug in.
+- Workloads that need a specific embedding model not on the supported provider list. The providers with an embedding adapter are OpenAI, Gemini, VoyageAI, Jina, Qwen, and MiniMax, plus `local` for an in-house model server. Apache Doris's broader AI resource list also accepts DeepSeek, MoonShot, Anthropic, Zhipu, and Baichuan, but those route through the [LLM SQL Functions](./llm-sql-functions) — chat / completion only, not `EMBED()`. Anything outside the embedding-adapter set needs to expose an OpenAI- or Gemini-compatible API to plug in.
 - Air-gapped clusters with no path to the provider. Use `provider_type = "local"` against an in-house model server, or precompute vectors in your own pipeline.
 - Columns where the embedding model's dimension does not match the ANN index. The ARRAY length is fixed by the model (or by `ai.dimensions` for models that allow truncation); the index is fixed at table creation. Mismatch fails at write time.
 

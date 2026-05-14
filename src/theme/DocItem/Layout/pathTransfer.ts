@@ -1,4 +1,7 @@
 const transformPathWithoutZhCN = (pathname: string): string => {
+    if (pathname.startsWith('/docs-next/')) {
+        return `/docs-next${pathname.replace('/docs-next/dev', '')}.md`;
+    }
     if(pathname.startsWith('/docs')){
         const pathWithoutDocs = pathname.replace('/docs', '');
         if(pathname.includes('/4.x')){
@@ -32,6 +35,9 @@ const stripLocalePrefix = (pathname: string): string => {
 };
 
 const transformPathWithZhCN = (pathname: string): string => {
+    if (pathname.startsWith('/zh-CN/docs-next/')) {
+        return `/i18n/zh-CN/docusaurus-plugin-content-docs-next/current${pathname.replace('/zh-CN/docs-next/dev', '')}.md`;
+    }
     if (pathname.startsWith('/zh-CN/docs')) {
         if(pathname.includes('/4.x')){
             return `/i18n/zh-CN/docusaurus-plugin-content-docs/version-4.x${pathname.replace('/zh-CN/docs/4.x', '')}.md`;

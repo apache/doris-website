@@ -429,6 +429,7 @@ const capabilities: Capability[] = [
             { label: 'Group Commit', href: '/docs-next/dev/key-features/group-commit' },
             { label: 'Kafka/CDC Integration', href: '/docs-next/dev/key-features/kafka-cdc-integration' },
             { label: 'Incremental Materialized View', href: '/docs-next/dev/key-features/incremental-materialized-view' },
+            { label: 'Unique Key', href: '/key-features/unique-key' },
         ],
     },
     {
@@ -486,6 +487,7 @@ const capabilities: Capability[] = [
             { label: 'Parquet Reader Optimization', href: '/docs-next/dev/key-features/parquet-reader-optimization' },
             { label: 'Data Cache & Page Cache', href: '/docs-next/dev/key-features/data-cache-page-cache' },
             { label: 'Metadata Cache', href: '/docs-next/dev/key-features/metadata-cache' },
+            { label: 'Iceberg', href: '/key-features/iceberg' },
         ],
     },
 ];

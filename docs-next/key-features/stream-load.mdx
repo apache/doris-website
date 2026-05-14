@@ -20,22 +20,22 @@ featureCard:
     - real-time-ingest
 ---
 
-> **TL;DR** Stream Load lets a client `curl` (or any HTTP library) push a file or a stream of bytes into a Doris table over a single PUT request. The FE redirects the request to a BE, the BE acts as the coordinator, parses CSV/JSON/Parquet/ORC, writes to the target tablets, and returns a JSON body that tells the caller whether the whole batch committed. One label dedupes retries, one [transaction](./load-transaction) makes the batch atomic, and the response carries the row counts and per-phase timings.
+> **TL;DR** Apache Doris Stream Load lets a client `curl` (or any HTTP library) push a file or a stream of bytes into a table over a single HTTP PUT request. The FE redirects the request to a BE, the chosen BE acts as the coordinator, parses CSV/JSON/Parquet/ORC, writes to the target tablets, and returns a JSON body that tells the caller whether the whole batch committed. One label dedupes retries, one [transaction](./load-transaction) makes the batch atomic, and the JSON response carries the row counts and per-phase timings.
 
 ![Apache Doris Stream Load: Synchronous HTTP PUT ingest for CSV, JSON, Parquet, and ORC, with label-based deduplication and atomic per-batch commit.](/images/next/key-features/stream-load.jpg)
-## Why it matters {#why}
+## Why use Apache Doris Stream Load? {#why}
 
-A lot of real-time writes into a warehouse start out as a script that pushes a file. The script lives inside a Flink sink, a [Kafka consumer](./kafka-cdc-integration), an `rsync` cron, or a microservice that just produced a few thousand events. Whoever wrote the script wants to send the bytes, get an answer on the same connection, and know that a retry is safe.
+Apache Doris Stream Load is the path for clients that already speak HTTP and want a synchronous answer per batch, with a label-keyed retry guarantee and no extra transaction manager. A lot of real-time writes into a warehouse start out as a script that pushes a file. The script lives inside a Flink sink, a [Kafka consumer](./kafka-cdc-integration), an `rsync` cron, or a microservice that just produced a few thousand events. Whoever wrote the script wants to send the bytes, get an answer on the same connection, and know that a retry is safe.
 
-- A Flink job needs to flush its current checkpoint to Doris and learn whether the commit succeeded before it advances offsets.
+- A Flink job needs to flush its current checkpoint to Apache Doris and learn whether the commit succeeded before it advances offsets.
 - An ETL script has a 200 MB CSV from yesterday's export and wants the rows visible before the morning report runs.
 - A side service emits a JSON batch every few seconds and needs at-most-once semantics without bringing in a transaction manager.
 
-Stream Load covers that shape of write directly. One HTTP PUT, one label, one transaction, one synchronous response on the same socket.
+Apache Doris Stream Load covers that shape of write directly. One HTTP PUT, one label, one transaction, one synchronous response on the same socket.
 
-## What it is {#what}
+## What is Apache Doris Stream Load? {#what}
 
-Stream Load is a synchronous HTTP load endpoint exposed by every Doris node. The client sends an HTTP PUT to either an FE or a BE; the FE redirects to a BE in round-robin order, and the chosen BE becomes the coordinator for that load. The coordinator parses the request body, distributes rows to the BEs that own each tablet, opens one transaction with the FE, commits when every BE acks, and returns a JSON body on the same socket. Doris has supported CSV since the beginning and now also accepts JSON, Parquet, ORC, and CSV-with-header variants.
+Apache Doris Stream Load is a synchronous HTTP load endpoint exposed by every node in the cluster. The client sends an HTTP PUT to either an FE or a BE; the FE redirects to a BE in round-robin order, and the chosen BE becomes the coordinator for that load. The coordinator parses the request body, distributes rows to the BEs that own each tablet, opens one transaction with the FE, commits when every BE acks, and returns a JSON body on the same socket. Apache Doris has supported CSV since the beginning and now also accepts JSON, Parquet, ORC, and CSV-with-header variants.
 
 **Key terms**
 
@@ -45,7 +45,9 @@ Stream Load is a synchronous HTTP load endpoint exposed by every Doris node. The
 - **`Expect: 100-continue`**: required header. The client posts the headers first, lets the server check auth and start a transaction, then sends the body.
 - **`max_filter_ratio`**: the per-load tolerance for malformed rows. Defaults to 0, so one bad row fails the batch.
 
-## How it works {#how}
+## How does Apache Doris Stream Load work? {#how}
+
+Apache Doris Stream Load runs the entire load as one HTTP request: the FE redirects to a coordinator BE, the BE parses the body, opens a transaction, distributes rows to tablet owners, and answers on the same socket.
 
 1. **Client sends PUT to FE (or BE).** The headers carry the label, format, column mapping, filters, and timeouts. The body is the file or stream. `Expect: 100-continue` lets the server reject the request before the body is uploaded.
 2. **FE picks a coordinator BE and redirects.** The FE returns an HTTP 307 to a BE chosen in round-robin order. A client that already knows a healthy BE can skip this hop and PUT to the BE directly.
@@ -85,7 +87,9 @@ curl --location-trusted -u root: \
 
 `Status: Success` means the batch committed and the rows are queryable. Resending the same `curl` returns `Status: Label Already Exists` and writes nothing, so a client that retries on a network blip will not double-load.
 
-## When to use it {#when}
+## When should you use Apache Doris Stream Load? {#when}
+
+Use Apache Doris Stream Load when one HTTP PUT per batch, with a label-keyed retry guarantee and a synchronous JSON response, is exactly the contract the client wants.
 
 **Good fit**
 
@@ -97,10 +101,10 @@ curl --location-trusted -u root: \
 **Not a good fit**
 
 - Tens of thousands of tiny PUTs per second from many clients. Each load opens its own transaction and produces its own rowset, which overwhelms the FE planner and triggers `-235 Too many segments` on the BE. Use [Group Commit](./group-commit) so the BE merges small writes into one transaction, or move to [Routine Load](../data-operate/import/import-way/routine-load-manual) for Kafka.
-- Single files much larger than 10 GB. Stream Load runs as one synchronous request; if the connection drops you start over. Split the file or use [Batch Load](./batch-load), which runs server-side and survives the client.
+- Single files much larger than 10 GB. Apache Doris Stream Load runs as one synchronous request; if the connection drops you start over. Split the file or use [Batch Load](./batch-load), which runs server-side and survives the client.
 - Continuous tailing of a Kafka topic. Stream Load knows nothing about offsets. Use [Routine Load](../data-operate/import/import-way/routine-load-manual), which manages offsets, restart, and pause for you.
 - Stream Load 2PC against Merge-on-Write Unique Key tables **in cloud / storage-compute-separated deployments**. The BE rejects this combination with `Status::NotSupported`. On-prem (shared-nothing) clusters allow it, and the regression suite covers it.
-- Loads that need server-side recording out of the box. By default, Doris does not log Stream Load history; turn on `enable_stream_load_record` in `be.conf` if `SHOW STREAM LOAD` should return anything.
+- Loads that need server-side recording out of the box. By default, Apache Doris does not log Stream Load history; turn on `enable_stream_load_record` in `be.conf` if `SHOW STREAM LOAD` should return anything.
 
 ## Further reading {#further-reading}
 
@@ -110,3 +114,4 @@ curl --location-trusted -u root: \
 - [Load transactions and Stream Load 2PC: when checkpoints need exactly-once across two systems](./load-transaction)
 - [Routine Load: managed Kafka consumer with offset and pause control](../data-operate/import/import-way/routine-load-manual)
 - [Doris Streamloader: a multi-concurrency client wrapper around the Stream Load API](../connection-integration/data-integration/doris-streamloader)
+- [Unique Key](./unique-key): the primary destination for partial-column upserts (`partial_columns: true`) from CDC pipelines.

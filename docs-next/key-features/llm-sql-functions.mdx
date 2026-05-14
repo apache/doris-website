@@ -20,20 +20,20 @@ featureCard:
     - analytics
 ---
 
-> **TL;DR** Doris ships a family of `AI_*` SQL functions that send a row's column value to an external LLM and return the result inline. You configure the provider once as an AI `RESOURCE`, then write `AI_CLASSIFY(...)`, `AI_EXTRACT(...)`, or `AI_GENERATE(...)` anywhere a value is allowed. Snowflake's Cortex AISQL and Databricks' AI Functions cover the same ground; this is the Doris equivalent.
+> **TL;DR** Apache Doris ships a family of `AI_*` SQL functions that send a row's column value to an external LLM and return the result inline. You configure the provider once as an AI `RESOURCE`, then write `AI_CLASSIFY(...)`, `AI_EXTRACT(...)`, or `AI_GENERATE(...)` anywhere a value is allowed. Snowflake's Cortex AISQL and Databricks' AI Functions cover the same ground; the Apache Doris `AI_*` family is the open-source equivalent.
 
 ![Apache Doris LLM SQL Functions: AI_* SQL functions in Doris send column values to an LLM and return the result inline, so classification, extraction, and summarization stay in SQL.](/images/next/key-features/llm-sql-functions.jpg)
-## Why it matters {#why}
+## Why use AI_* SQL functions in Apache Doris? {#why}
 
-Plenty of analytics work on text columns is not analytics at all. Someone has to classify support tickets by topic, score reviews for sentiment, pull product names out of free-form complaints, summarize long call notes, or redact PII before exporting. The work is repetitive, the columns are already in the warehouse, and the only piece missing is a model. Doris already serves embeddings through [EMBED()](./embedding) and an [MCP server](./mcp-server) for AI clients, so this card rounds out the SQL-callable side.
+Apache Doris `AI_*` SQL functions remove the need for an external Python service when text columns require classification, extraction, summarization, or PII redaction. Plenty of analytics work on text columns is not analytics at all. Someone has to classify support tickets by topic, score reviews for sentiment, pull product names out of free-form complaints, summarize long call notes, or redact PII before exporting. The work is repetitive, the columns are already in the warehouse, and the only piece missing is a model. Apache Doris already serves embeddings through [EMBED()](./embedding) and an [MCP server](./mcp-server) for AI clients, so this card rounds out the SQL-callable side.
 
 The usual workaround is a Python service. It pulls rows from Doris, calls OpenAI or Anthropic, parses the response, and writes the result back. That service drifts out of sync with the source table, owns its own retries, and lives outside the warehouse's permissions and observability.
 
 `AI_*` functions move that loop into SQL. The model is a registered resource. The call is a function. The result is a column you can persist with `INSERT`, filter on with `WHERE`, or compute on the fly. One language, one transaction boundary, one place to read the audit log.
 
-## What it is {#what}
+## What are the Apache Doris AI_* SQL functions? {#what}
 
-The `AI_*` family is a set of SQL-callable functions that wrap an HTTP call to an LLM provider. Each function passes the input columns through a fixed prompt template and returns a typed result, so the planner treats them like any other scalar function. Doris reaches the provider through an AI resource you create once with `CREATE RESOURCE ... TYPE='ai'`. Eleven scalar functions cover the most common tasks, and one aggregate, `AI_AGG`, rolls multiple rows into a single LLM-generated answer.
+The Apache Doris `AI_*` family is a set of SQL-callable functions that wrap an HTTP call to an LLM provider. Each function passes the input columns through a fixed prompt template and returns a typed result, so the planner treats them like any other scalar function. Apache Doris reaches the provider through an AI resource you create once with `CREATE RESOURCE ... TYPE='ai'`. Eleven scalar functions cover the most common tasks, and one aggregate, `AI_AGG`, rolls multiple rows into a single LLM-generated answer.
 
 **Key terms**
 
@@ -42,7 +42,9 @@ The `AI_*` family is a set of SQL-callable functions that wrap an HTTP call to a
 - **`AI_AGG`**: an aggregate function that joins all rows in a group, sends them to the LLM with a custom prompt, and returns one summary per group. The group equivalent of `AI_SUMMARIZE`.
 - **`default_ai_resource`**: a session variable that selects a resource for the rest of the session, so you can drop the explicit first argument.
 
-## How it works {#how}
+## How do the Apache Doris AI_* SQL functions work? {#how}
+
+The Apache Doris `AI_*` SQL functions run as scalar UDFs on the BE: the planner routes each call, the BE batches rows, and one HTTP request per batch reaches the provider before returning a typed value to SQL.
 
 1. **Register the model.** `CREATE RESOURCE` validates the endpoint with a probe call (skipped for `provider_type = 'local'` or when `ai.validity_check = 'false'`), masks the API key in `SHOW RESOURCES` output, and persists the configuration in the FE's metadata.
 2. **Plan the call.** When the planner sees an `AI_*` function, it routes the work to the BE the same way it would for any scalar UDF. The function's first argument must be a literal resource name; the planner rejects an expression there at analysis time.
@@ -84,7 +86,9 @@ FROM reviews;
 
 The query runs two LLM round trips, one per function, with both rows batched into each. The output columns are typed strings, so a downstream `GROUP BY topic` or a join works without parsing.
 
-## When to use it {#when}
+## When should you use the Apache Doris AI_* SQL functions? {#when}
+
+The Apache Doris `AI_*` functions fit batch enrichment, ETL backfills, and cross-row roll-ups, but not interactive sub-second queries or workloads that demand strict reproducibility.
 
 **Good fit**
 

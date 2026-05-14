@@ -19,12 +19,12 @@ featureCard:
     - query-acceleration
 ---
 
-> **TL;DR** When Doris queries Parquet files in an [external catalog](./multi-catalog) or through a TVF, it uses its own C++ [vectorized reader](./vectorized-execution) instead of going through Java or Arrow. The reader prunes whole row groups and individual pages from the file's own statistics, evaluates predicates on dictionary IDs, reads filter columns before payload columns, and coalesces remote reads into fewer requests. Most queries finish without ever decoding the columns they don't need.
+> **TL;DR** Apache Doris ships a native C++ [vectorized Parquet reader](./vectorized-execution) for [external catalogs](./multi-catalog) and TVFs, avoiding any Java or Arrow round trip. The reader prunes whole row groups and individual pages from the file's own statistics, evaluates predicates on dictionary IDs, and reads filter columns before payload columns. Remote reads are coalesced into fewer requests, so most queries finish without ever decoding the columns they don't need.
 
 ![Apache Doris Parquet Reader Optimization: A native C++ vectorized Parquet reader that prunes row groups and pages, decodes dictionaries directly, and reads payloads only after filters.](/images/next/key-features/parquet-reader-optimization.jpg)
-## Why it matters {#why}
+## Why use the Parquet reader in Apache Doris? {#why}
 
-A Hive or Iceberg table on S3 is, in the end, a pile of Parquet files. Reading them is dominated by three costs: [fetching bytes from object storage](./data-cache-page-cache), decompressing and decoding pages, and converting values into the engine's runtime representation. A naive reader pays all three on every query.
+The Apache Doris native Parquet reader exists to cut the three dominant lakehouse scan costs: [fetching bytes from object storage](./data-cache-page-cache), decompressing and decoding pages, and converting values into the engine's runtime representation. A Hive or Iceberg table on S3 is, in the end, a pile of Parquet files, and a naive reader pays all three costs on every query.
 
 That cost shows up in shapes anyone who has tuned a lakehouse query has hit:
 
@@ -33,11 +33,11 @@ That cost shows up in shapes anyone who has tuned a lakehouse query has hit:
 - A `SELECT *` over a wide event table on S3 issues hundreds of small HTTP GETs per file, one per column chunk.
 - A predicate like `country = 'JP'` decompresses and decodes UTF-8 across millions of rows, even though the column is dictionary-encoded and the answer could be one integer comparison per row.
 
-Doris's reader is built to avoid each of these before any page leaves storage.
+The Apache Doris Parquet reader is built to avoid each of these before any page leaves storage.
 
-## What it is {#what}
+## What is the Apache Doris Parquet reader? {#what}
 
-Doris ships its own native C++ Parquet reader. Instead of going through a Java library or an Arrow round trip, it reads Parquet metadata, prunes at every available granularity (row group, page, dictionary, column), and decodes values directly into the same `Block` format the vectorized executor consumes.
+The Apache Doris Parquet reader is a native C++ component that reads Parquet metadata, prunes at every available granularity (row group, page, dictionary, column), and decodes values directly into the same `Block` format the vectorized executor consumes. There is no Java library or Arrow round trip in the path.
 
 **Key terms**
 
@@ -46,9 +46,9 @@ Doris ships its own native C++ Parquet reader. Instead of going through a Java l
 - **`Lazy materialization`**: a two-pass read that decodes filter columns first, then fetches payload columns only for the rows that survived.
 - **`Dictionary filtering`**: evaluating a predicate against a column chunk's dictionary page once, then comparing rows against the resulting set of dictionary IDs.
 
-## How it works {#how}
+## How does the Apache Doris Parquet reader work? {#how}
 
-Each step shrinks what the next step has to look at.
+The Apache Doris Parquet reader runs a five-stage pipeline where each step shrinks what the next step has to look at.
 
 1. **Row-group pruning.** When the file is opened, the reader walks each row group's column statistics and drops the whole group if the predicate cannot match its min/max range. The same step probes the Parquet bloom filter when the file has one. Both checks run on metadata only, before any column page is fetched. Controlled by `enable_parquet_filter_by_min_max` and `enable_parquet_filter_by_bloom_filter`.
 2. **Page pruning via PageIndex.** For each surviving row group, the reader parses ColumnIndex and OffsetIndex to drop individual pages whose min/max cannot match. OffsetIndex gives the byte range of each surviving page, so the reader skips straight to the next one without scanning the rejected bytes. Toggle with the BE config `enable_parquet_page_index`.
@@ -85,9 +85,9 @@ VFileScanNode
 
 The reader dropped 18 of 24 row groups on the date predicate, then dropped 210 pages inside the survivors using PageIndex on `status`. Lazy materialization skipped decoding `region` and `amount` for the 92.1% of rows that didn't match. Ninety-six column chunks were merged into 14 ranged GETs against S3.
 
-## When to use it {#when}
+## When should you use the Apache Doris Parquet reader? {#when}
 
-This path is used automatically whenever Doris reads Parquet, so the question is how to make sure it can do its job.
+The Apache Doris Parquet reader is used automatically whenever a query reads Parquet, so the question is how to make sure it can do its job.
 
 **Good fit**
 
@@ -115,3 +115,4 @@ This path is used automatically whenever Doris reads Parquet, so the question is
 - [Multi-Catalog](./multi-catalog): how Parquet tables on S3, HDFS, Hive, Iceberg, and Paimon plug into Doris in the first place.
 - [Catalog Integrations](./catalog-integrations): the per-source connector reference for the catalogs that hold Parquet files.
 - [Building the next-generation data lakehouse (Apache Doris blog)](https://doris.apache.org/blog/Building-the-Next-Generation-Data-Lakehouse-10X-Performance/): the original public writeup of the native Parquet reader.
+- [Iceberg](./iceberg): the lakehouse table format whose Parquet scans this optimization accelerates most directly.
