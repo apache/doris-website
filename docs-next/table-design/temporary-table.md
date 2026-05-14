@@ -1,10 +1,15 @@
 ---
 {
-    "title": "Temporary Table",
+    "title": "Temporary Table (Experimental)",
     "language": "en",
     "description": "A Doris temporary table is a session-scoped materialized internal table used to break down complex SQL queries and store intermediate computation results. It is automatically dropped when the session ends, with no manual cleanup required."
 }
 ---
+
+:::note
+
+The temporary table is an experimental feature. It is not recommended for use in a production environment.
+:::
 
 <!-- Knowledge type: Feature -->
 <!-- Applicable scenarios: Complex SQL decomposition / Intermediate result staging / Data debugging -->
