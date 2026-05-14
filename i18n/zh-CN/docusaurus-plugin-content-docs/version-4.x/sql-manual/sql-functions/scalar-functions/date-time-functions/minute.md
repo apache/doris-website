@@ -22,7 +22,7 @@ MINUTE(`<date_or_time_expr>`)
 
 | 参数 | 说明 |
 | ---- | ---- |
-| ``<date_or_time_expr>`` | 输入的日期时间值，类型可以是 DATE、DATETIME,TIME，具体 datetime/date/time 请查看 [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion), [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion),[time 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/time-conversion) |
+| ``<date_or_time_expr>`` | 输入的日期时间值，类型可以是 DATE、DATETIME,TIME，具体 datetime/date/time 请查看 [datetime 的转换](../../../basic-element/sql-data-types/conversion/datetime-conversion), [date 的转换](../../../basic-element/sql-data-types/conversion/date-conversion),[time 的转换](../../../basic-element/sql-data-types/conversion/time-conversion) |
 
 ## 返回值
 

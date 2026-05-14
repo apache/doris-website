@@ -20,7 +20,7 @@ SECOND(<date_or_time_expr>)
 
 | 参数           | 说明                                 |
 |--------------|------------------------------------|
-| `<date_or_time_expr>` | 输入的日期时间值，类型可以是 DATE、DATETIME、或 TIME ，具体 datetime/date/time 请查看 [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion), [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion),[time 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/time-conversion) |
+| `<date_or_time_expr>` | 输入的日期时间值，类型可以是 DATE、DATETIME、或 TIME ，具体 datetime/date/time 请查看 [datetime 的转换](../../../basic-element/sql-data-types/conversion/datetime-conversion), [date 的转换](../../../basic-element/sql-data-types/conversion/date-conversion),[time 的转换](../../../basic-element/sql-data-types/conversion/time-conversion) |
 
 ## 返回值
 返回类型为 INT，表示输入日期时间中的秒数部分：

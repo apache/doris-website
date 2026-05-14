@@ -22,7 +22,7 @@ STR_TO_DATE(<datetime_str>, <format>)
 
 | 参数               | 说明                                                           |
 |------------------|--------------------------------------------------------------|
-| `<datetime_str>` | 必填，输入的日期时间字符串，表示要转换的日期或时间。输入支持的格式可以查看 [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion), [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion)                                    |
+| `<datetime_str>` | 必填，输入的日期时间字符串，表示要转换的日期或时间。输入支持的格式可以查看 [datetime 的转换](../../../basic-element/sql-data-types/conversion/datetime-conversion), [date 的转换](../../../basic-element/sql-data-types/conversion/date-conversion)                                    |
 | `<format>`       | 必填，指定的日期时间格式字符串，如 `%Y-%m-%d %H:%i:%s` 等，具体格式参数详见[DATE_FORMAT](./date-format#参数)文档 |
 
 除此之外，`<format>` 额外支持以下若干代用格式，并按照正规 format 格式解读：

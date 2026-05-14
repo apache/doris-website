@@ -11,7 +11,7 @@
 TIMESTAMP 将 符合 datetime 格式的字符串转换为 DATETIME 类型
 如果存在第二个时间类型的参数，则计算两参数相加的结果，然后以DATETIME类型的格式返回。
 
-具体 datetime 格式请查看 [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion).
+具体 datetime 格式请查看 [datetime 的转换](../../../basic-element/sql-data-types/conversion/datetime-conversion).
 
 该函数与 mysql 中的 [timestamp 函数](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_timestamp) 行为相同。
 
