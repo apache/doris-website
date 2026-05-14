@@ -1,10 +1,15 @@
 ---
 {
-    "title": "Temporary Table",
+    "title": "Temporary Table (Experimental)",
     "language": "en",
     "description": "When performing complex data processing tasks, breaking down large SQL queries into multiple steps and temporarily saving the results of each step as "
 }
 ---
+
+:::note
+
+The temporary table is an experimental feature. It is not recommended for use in a production environment.
+:::
 
 When performing complex data processing tasks, breaking down large SQL queries into multiple steps and temporarily saving the results of each step as physical tables is an effective strategy. This method can significantly reduce the complexity of SQL queries and enhance data debuggability. However, it is important to note that these physical tables must be manually cleaned up after they have served their purpose. If non-physical temporary tables are preferred, Doris currently only supports defining them via the `WITH` clause.
 
