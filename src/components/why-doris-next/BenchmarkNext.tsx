@@ -498,8 +498,9 @@ function Comparison(): JSX.Element {
                 <div className="b-cmp-head" data-reveal>
                     <h2 className="b-cmp-title">Direct head-to-head, query by query.</h2>
                     <p className="b-cmp-sub">
-                        Click any benchmark to expand the per-query breakdown. We show the run as
-                        it happened, including queries where another engine timed out or failed.
+                        All three benchmarks lean hard on joins and complex analytical SQL.
+                        That&rsquo;s the work Doris is built for. Click any benchmark to expand
+                        the per-query breakdown.
                     </p>
                 </div>
 
