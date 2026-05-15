@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useRef, useState, useCallback } from 'react';
 import clsx from 'clsx';
 import { useLocation } from '@docusaurus/router';
 import { useDocsSidebar } from '@docusaurus/plugin-content-docs/client';
@@ -20,6 +20,7 @@ export default function MobileSidebarDrawer(): JSX.Element | null {
     const isZH = currentLocale === 'zh-CN';
     const [open, setOpen] = useState(false);
     const [localeOpen, setLocaleOpen] = useState(false);
+    const localeContainerRef = useRef<HTMLDivElement>(null);
 
     const close = useCallback(() => setOpen(false), []);
 
@@ -45,7 +46,12 @@ export default function MobileSidebarDrawer(): JSX.Element | null {
 
     useEffect(() => {
         if (!localeOpen) return undefined;
-        const onDocClick = () => setLocaleOpen(false);
+        const onDocClick = (e: MouseEvent) => {
+            const container = localeContainerRef.current;
+            if (container && !container.contains(e.target as Node)) {
+                setLocaleOpen(false);
+            }
+        };
         document.addEventListener('mousedown', onDocClick);
         return () => document.removeEventListener('mousedown', onDocClick);
     }, [localeOpen]);
@@ -59,8 +65,8 @@ export default function MobileSidebarDrawer(): JSX.Element | null {
                     <SearchBar />
                 </div>
                 <div
+                    ref={localeContainerRef}
                     className={clsx(styles.toolbarLocale, localeOpen && styles.toolbarLocaleOpen)}
-                    onMouseDown={e => e.stopPropagation()}
                 >
                     <button
                         type="button"
@@ -87,10 +93,10 @@ export default function MobileSidebarDrawer(): JSX.Element | null {
                     </button>
                     <ul className={styles.localeMenu} role="menu">
                         {locales.map(locale => {
-                            const baseTo = `pathname://${alternatePageUtils.createUrl({
+                            const baseTo = alternatePageUtils.createUrl({
                                 locale,
                                 fullyQualified: false,
-                            })}`;
+                            });
                             const to = `${baseTo}${search}${hash}`;
                             return (
                                 <li key={locale} role="none">
