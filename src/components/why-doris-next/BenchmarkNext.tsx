@@ -10,13 +10,14 @@ import React, {
 import Link from '@docusaurus/Link';
 import { LayoutNext } from '../home-next/LayoutNext';
 import benchmarkData from '@site/src/constant/benchmark.data.json';
+import agentlogBenchmarkData from '@site/src/constant/agentlog-benchmark.data.json';
 import './BenchmarkNext.scss';
 
 /* ──────────────────────────────────────────────────────────────────────────
  * Types
  * ────────────────────────────────────────────────────────────────────────── */
 
-type ProductId = 'doris' | 'clickhouse' | 'redshift' | 'snowflake' | 'trino';
+type ProductId = string;
 
 interface Product {
     id: ProductId;
@@ -54,26 +55,37 @@ interface BenchmarkDataset {
  * ────────────────────────────────────────────────────────────────────────── */
 
 const DATA = benchmarkData as unknown as BenchmarkDataset;
+const AGENTLOG_DATA = agentlogBenchmarkData as unknown as BenchmarkDataset;
 
 const TAB_DESCRIPTIONS: Record<string, string> = {
     internal:
-        'Each engine reads and writes data in its own native format, so Doris and its peers run on their own storage layers.',
+        'Each engine reads and writes data in its own native format.',
     iceberg:
-        'Every engine queries the same Apache Iceberg dataset, so storage is held constant and only the engine changes.',
+        'Every engine reads the same Apache Iceberg dataset, so only the engine changes.',
+    s100m: 'Official leaderboard size. Around 100M rows.',
+    s10m:  'Full validation pass that still fits on a single machine. Around 10M rows.',
+    s1m:   'Quick smoke-test size. Around 1M rows.',
 };
 
 const BENCH_DESC: Record<string, string> = {
     ssb:   'A star-schema benchmark with 13 queries, heavy on wide joins and aggregations.',
     tpch:  'The classic decision-support benchmark: 22 ad-hoc queries against a normalized schema.',
-    tpcds: 'The most demanding decision-support benchmark: 99 queries that exercise the full surface of an analytical engine.',
+    tpcds: 'The hardest decision-support benchmark: 99 queries that cover most of what an analytical engine has to do.',
+    retrieval: 'Observation lookup, trace replay, generation-to-tool chain expansion, and incident keyword / phrase retrieval over large text bodies.',
+    analytics: 'Trace-level failure and cost summaries, model and observation-type rollups, tool usage distributions, and operational diagnostics.',
+    semi:      'Filtering and aggregation over evolving payload fields: release rings, customer tiers, retrieval strategies, and nested provider / tool diagnostics.',
 };
 
-const PRODUCT_COLORS: Record<ProductId, string> = {
+const PRODUCT_COLORS: Record<string, string> = {
     doris:      'var(--bn-green-deep)',
     clickhouse: '#3D4A55',
     redshift:   '#A4633A',
     snowflake:  '#3C6CAA',
     trino:      'var(--bn-coral)',
+    elastic:    '#00BFB3',
+    opensearch: '#005EB8',
+    postgres:   '#BA3F66',
+    duckdb:     '#FCB232',
 };
 
 /* ──────────────────────────────────────────────────────────────────────────
@@ -116,35 +128,10 @@ function Hero(): JSX.Element {
                     <span className="b-accent">Apache Doris</span> really is.
                 </h1>
                 <p className="b-hero-sub" data-reveal data-reveal-delay="1">
-                    Side-by-side query results: Doris versus ClickHouse, Redshift, Snowflake, and
-                    Trino on{' '}
-                    <a
-                        className="b-hero-link"
-                        href="https://www.cs.umb.edu/~poneil/StarSchemaB.PDF"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                    >
-                        Star Schema Benchmark
-                    </a>
-                    ,{' '}
-                    <a
-                        className="b-hero-link"
-                        href="https://www.tpc.org/tpch/"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                    >
-                        TPC-H
-                    </a>
-                    , and{' '}
-                    <a
-                        className="b-hero-link"
-                        href="https://www.tpc.org/tpcds/"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                    >
-                        TPC-DS
-                    </a>
-                    .
+                    Two workloads people actually run on Apache Doris: classic SQL
+                    analytics, and AI-agent observability logs. Both compared against
+                    the engines you&rsquo;d realistically consider. Scripts and raw
+                    timings are public.
                 </p>
             </div>
         </section>
@@ -158,7 +145,6 @@ function Hero(): JSX.Element {
 function SummaryBar({ product, max }: { product: Product; max: number }): JSX.Element {
     const [w, setW] = useState(0);
     const ref = useRef<HTMLDivElement | null>(null);
-    const partial = product.queriesCompleted < product.queriesTotal;
     const targetW = max > 0 ? (product.totalRuntime / max) * 100 : 0;
 
     useEffect(() => {
@@ -187,14 +173,6 @@ function SummaryBar({ product, max }: { product: Product; max: number }): JSX.El
         <div ref={ref} className={`b-bar ${product.id === 'doris' ? 'is-doris' : ''}`}>
             <div className="b-bar-label">
                 <span title={product.name}>{product.name}</span>
-                {partial ? (
-                    <span
-                        className="b-bar-partial"
-                        title={`completed ${product.queriesCompleted} of ${product.queriesTotal} queries`}
-                    >
-                        [1]
-                    </span>
-                ) : null}
             </div>
             <div className="b-bar-track">
                 <div className="b-bar-fill" style={{ width: `${w}%` }} />
@@ -229,9 +207,6 @@ function SummaryCard({
     const max = useMemo(
         () => Math.max(...sortedProducts.map(p => p.totalRuntime || 0)),
         [sortedProducts]
-    );
-    const hasPartial = sortedProducts.some(
-        p => p.queriesCompleted < p.queriesTotal
     );
 
     useEffect(() => {
@@ -293,12 +268,6 @@ function SummaryCard({
                     <SummaryBar key={p.id} product={p} max={max} />
                 ))}
             </div>
-            {hasPartial ? (
-                <div className="b-card-note">
-                    [1] ClickHouse couldn&rsquo;t finish some queries without rewriting the SQL.
-                    The number above counts only the queries that did finish.
-                </div>
-            ) : null}
             <div className="b-card-desc">{BENCH_DESC[bench.id] || ''}</div>
             <div className="b-card-tip">
                 {active ? <>Hide per-query breakdown ↑</> : <>See per-query breakdown ↓</>}
@@ -350,7 +319,30 @@ function DetailStrip({ bench }: { bench: Benchmark }): JSX.Element {
         return m;
     }, [sortedProducts, bench.queries]);
 
-    const { niceMax, ticks: yticks } = useMemo(() => niceAxis(dataMax), [dataMax]);
+    // When a few engines run orders of magnitude slower than the rest, a linear
+    // axis flattens the fast tier into invisibility. Cap the axis at ~10× the
+    // median observation; bars that exceed the cap are rendered at chart height
+    // with a "broken top" marker and their real value is in the hover tooltip.
+    const cappedMax = useMemo(() => {
+        const vals: number[] = [];
+        sortedProducts.forEach(p => {
+            bench.queries.forEach(q => {
+                const v = p.perQuery[q];
+                if (v != null) vals.push(v);
+            });
+        });
+        if (vals.length < 4) return dataMax;
+        const sorted = [...vals].sort((a, b) => a - b);
+        const median = sorted[Math.floor(sorted.length / 2)] ?? 0;
+        const max = sorted[sorted.length - 1];
+        if (median <= 0) return dataMax;
+        const capValue = median * 10;
+        if (max <= capValue * 1.2) return dataMax;
+        return capValue;
+    }, [sortedProducts, bench.queries, dataMax]);
+
+    const { niceMax, ticks: yticks } = useMemo(() => niceAxis(cappedMax), [cappedMax]);
+    const isCapped = cappedMax < dataMax;
 
     const [animated, setAnimated] = useState(false);
     useEffect(() => {
@@ -364,6 +356,35 @@ function DetailStrip({ bench }: { bench: Benchmark }): JSX.Element {
     const clusterPad = 8;
     const clusterW =
         sortedProducts.length * barW + (sortedProducts.length - 1) * barGap + clusterPad * 2;
+
+    const tipRef = useRef<HTMLDivElement | null>(null);
+    const placeTip = (clientX: number, clientY: number) => {
+        const el = tipRef.current;
+        if (!el) return;
+        // Keep tip within viewport: flip to the left of the cursor if it would
+        // overflow the right edge.
+        const offset = 14;
+        const w = el.offsetWidth;
+        const vw = window.innerWidth;
+        const left = clientX + offset + w > vw ? clientX - offset - w : clientX + offset;
+        el.style.left = `${left}px`;
+        el.style.top = `${clientY + offset}px`;
+    };
+    const showTip = (e: React.MouseEvent, content: string) => {
+        const el = tipRef.current;
+        if (!el) return;
+        el.textContent = content;
+        el.style.opacity = '1';
+        placeTip(e.clientX, e.clientY);
+    };
+    const moveTip = (e: React.MouseEvent) => {
+        placeTip(e.clientX, e.clientY);
+    };
+    const hideTip = () => {
+        const el = tipRef.current;
+        if (!el) return;
+        el.style.opacity = '0';
+    };
 
     return (
         <div className="b-detail">
@@ -411,26 +432,35 @@ function DetailStrip({ bench }: { bench: Benchmark }): JSX.Element {
                                     {sortedProducts.map((p, pi) => {
                                         const v = p.perQuery[q];
                                         const failed = v == null;
-                                        const h = failed ? 18 : Math.max(2, ((v as number) / niceMax) * 230);
+                                        const overCap = !failed && (v as number) > niceMax;
+                                        const h = failed
+                                            ? 18
+                                            : overCap
+                                                ? 230
+                                                : Math.max(2, ((v as number) / niceMax) * 230);
                                         const color = PRODUCT_COLORS[p.id] || 'rgba(245,239,228,0.4)';
                                         const style: CSSProperties = {
                                             width: barW,
                                             height: animated ? (failed ? 18 : h) : 0,
-                                            background: failed ? undefined : color,
+                                            // Use backgroundColor (not the `background` shorthand) so the
+                                            // `.is-over-cap` gradient overlay in SCSS isn't wiped out.
+                                            backgroundColor: failed ? undefined : color,
                                             transitionDelay: `${Math.min(qi * 12 + pi * 30, 1100)}ms`,
                                         };
+                                        const tipText = `${p.name} · ${q} · ${
+                                            failed ? 'failed' : `${(v as number).toFixed(2)}s`
+                                        }`;
                                         return (
                                             <span
                                                 key={p.id}
                                                 className={`b-cluster-bar ${p.id === 'doris' ? 'is-doris' : ''} ${
                                                     failed ? 'is-failed' : ''
-                                                }`}
+                                                } ${overCap ? 'is-over-cap' : ''}`}
                                                 style={style}
-                                            >
-                                                <span className="b-cluster-bar-tip">
-                                                    {p.name} · {q} · {failed ? 'failed' : `${(v as number).toFixed(2)}s`}
-                                                </span>
-                                            </span>
+                                                onMouseEnter={e => showTip(e, tipText)}
+                                                onMouseMove={moveTip}
+                                                onMouseLeave={hideTip}
+                                            />
                                         );
                                     })}
                                 </div>
@@ -467,9 +497,15 @@ function DetailStrip({ bench }: { bench: Benchmark }): JSX.Element {
                 </ul>
             </div>
             <div className="b-detail-foot">
-                Hover any bar for its exact runtime. Hatched bars are queries that didn&rsquo;t
-                finish within the time limit.
+                Hover any bar for its exact runtime. Hatched bars timed out.
+                {isCapped ? (
+                    <>
+                        {' '}Bars with a broken top run past the visible scale; hover for
+                        the real number.
+                    </>
+                ) : null}
             </div>
+            <div ref={tipRef} className="b-floating-tip" aria-hidden="true" />
         </div>
     );
 }
@@ -478,11 +514,18 @@ function DetailStrip({ bench }: { bench: Benchmark }): JSX.Element {
  * Comparison section
  * ────────────────────────────────────────────────────────────────────────── */
 
-function Comparison(): JSX.Element {
-    const [activeTab, setActiveTab] = useState<string>(DATA.tabs[0].id);
+interface ComparisonProps {
+    dataset: BenchmarkDataset;
+    title: string;
+    subtitle: React.ReactNode;
+    reportHref?: string;
+}
+
+function Comparison({ dataset, title, subtitle, reportHref }: ComparisonProps): JSX.Element {
+    const [activeTab, setActiveTab] = useState<string>(dataset.tabs[0].id);
     const [expanded, setExpanded] = useState<string | null>(null);
 
-    const tab = DATA.tabs.find(t => t.id === activeTab) ?? DATA.tabs[0];
+    const tab = dataset.tabs.find(t => t.id === activeTab) ?? dataset.tabs[0];
     const expandedBench = tab.benchmarks.find(b => b.id === expanded);
     const colsClass = `is-cols-${tab.benchmarks.length}`;
 
@@ -496,16 +539,31 @@ function Comparison(): JSX.Element {
             <div className="b-cmp-bggrid" aria-hidden="true" />
             <div className="b-container">
                 <div className="b-cmp-head" data-reveal>
-                    <h2 className="b-cmp-title">Direct head-to-head, query by query.</h2>
-                    <p className="b-cmp-sub">
-                        All three benchmarks lean hard on joins and complex analytical SQL.
-                        That&rsquo;s the work Doris is built for. Click any benchmark to expand
-                        the per-query breakdown.
-                    </p>
+                    <h2 className="b-cmp-title">{title}</h2>
+                    <p className="b-cmp-sub">{subtitle}</p>
+                    {reportHref ? (
+                        <a
+                            className="b-btn b-btn-report"
+                            href={reportHref}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
+                            See Report ↗
+                        </a>
+                    ) : (
+                        <button
+                            type="button"
+                            className="b-btn b-btn-report"
+                            disabled
+                            aria-disabled="true"
+                        >
+                            See Report (Coming Soon)
+                        </button>
+                    )}
                 </div>
 
                 <div className="b-tabs" role="tablist" data-reveal>
-                    {DATA.tabs.map(t => (
+                    {dataset.tabs.map(t => (
                         <button
                             key={t.id}
                             role="tab"
@@ -779,14 +837,6 @@ function CTA(): JSX.Element {
                         </svg>
                         Get Started
                     </Link>
-                    <button
-                        type="button"
-                        className="b-btn b-btn-primary"
-                        disabled
-                        aria-disabled="true"
-                    >
-                        See Report (Coming Soon)
-                    </button>
                 </div>
             </div>
         </section>
@@ -801,12 +851,60 @@ export default function BenchmarkNext(): JSX.Element {
     useRevealObserver();
     return (
         <LayoutNext
-            title="Apache Doris Benchmarks: SSB, TPC-H, TPC-DS"
-            description="Direct query-performance comparisons of Apache Doris against ClickHouse, Redshift, Snowflake, and Trino across SSB, TPC-H, and TPC-DS at scale factor 1000."
+            title="Apache Doris Benchmarks: SQL Analytics and Agent Observability"
+            description="Apache Doris benchmark results against ClickHouse, Redshift, Snowflake, Trino, Elasticsearch, OpenSearch, PostgreSQL, and DuckDB on structured analytics (SSB, TPC-H, TPC-DS) and AI-agent observability workloads."
         >
             <div className="bench-next">
                 <Hero />
-                <Comparison />
+                <Comparison
+                    dataset={DATA}
+                    title="Structured analytics, query by query."
+                    subtitle={
+                        <>
+                            Doris versus ClickHouse, Redshift, Snowflake, and Trino on{' '}
+                            <a
+                                href="https://www.cs.umb.edu/~poneil/StarSchemaB.PDF"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >
+                                Star Schema Benchmark
+                            </a>
+                            ,{' '}
+                            <a
+                                href="https://www.tpc.org/tpch/"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >
+                                TPC-H
+                            </a>
+                            , and{' '}
+                            <a
+                                href="https://www.tpc.org/tpcds/"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >
+                                TPC-DS
+                            </a>
+                            . All three lean heavily on joins and analytical SQL, which
+                            is what Doris was built for. Click any benchmark to see
+                            per-query times.
+                        </>
+                    }
+                />
+                <Comparison
+                    dataset={AGENTLOG_DATA}
+                    title="Agent observability, query by query."
+                    reportHref="https://www.velodb.io/blog/agentlogsbench-apache-doris-in-ai-observability"
+                    subtitle={
+                        <>
+                            AI-agent observability logs: trace replay, incident phrase
+                            retrieval, and rollups over evolving payload fields. Doris
+                            against ClickHouse, Elasticsearch, OpenSearch, PostgreSQL,
+                            and DuckDB on the same data. Click any workload to see
+                            per-query times.
+                        </>
+                    }
+                />
                 {/* <ReproSection /> hidden for now; revisit later */}
                 <CTA />
             </div>
