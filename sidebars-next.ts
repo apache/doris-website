@@ -695,6 +695,7 @@ const sidebars: SidebarsConfig = {
                         'lakehouse/storages/tencent-cos',
                         'lakehouse/storages/huawei-obs',
                         'lakehouse/storages/baidu-bos',
+                        'lakehouse/storages/seaweedfs',
                         'lakehouse/storages/minio',
                         'lakehouse/storages/juicefs',
                         'lakehouse/storages/ozone',
