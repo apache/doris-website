@@ -110,6 +110,24 @@
         &:hover { background: var(--bn-paper); }
     }
 
+    // "See Report" CTA that sits in `.b-cmp-head` (cream background section).
+    // Deep-green fill so it reads against cream, with a disabled state that
+    // keeps the green visible (the default `.b-btn:disabled:hover` would fade
+    // it into the cream background).
+    .b-btn-report {
+        margin-top: 28px;
+        background: var(--bn-green-deep);
+        color: var(--bn-cream-light);
+        border-color: var(--bn-green-deep);
+
+        &:hover { background: var(--bn-green-darker); }
+
+        &:disabled:hover,
+        &[aria-disabled='true']:hover {
+            background: var(--bn-green-deep);
+        }
+    }
+
     .b-btn:disabled,
     .b-btn[aria-disabled='true'] {
         cursor: not-allowed;
@@ -299,6 +317,20 @@
         color: rgba(15, 26, 20, 0.70);
         max-width: 620px;
         margin: 0;
+
+        a {
+            color: var(--bn-ink);
+            text-decoration: none;
+            border-bottom: 1px solid rgba(11, 122, 88, 0.45);
+            padding-bottom: 1px;
+            transition: color 0.15s ease, border-color 0.15s ease;
+
+            &:hover {
+                color: var(--bn-green-deep);
+                border-bottom-color: var(--bn-green-deep);
+                text-decoration: none;
+            }
+        }
     }
 
 
@@ -524,15 +556,6 @@
         }
     }
 
-    .b-bar-partial {
-        display: inline-block;
-        font-family: var(--bn-mono);
-        font-size: 10.5px;
-        font-weight: 700;
-        letter-spacing: 0.02em;
-        vertical-align: 1px;
-    }
-
     .b-bar-track {
         height: 10px;
         background: rgba(15, 26, 20, 0.08);
@@ -569,18 +592,6 @@
         line-height: 1.55;
         color: rgba(15, 26, 20, 0.72);
     }
-
-    .b-card-note {
-        margin-top: auto;
-        margin-bottom: 12px;
-        font-family: var(--bn-sans);
-        font-size: 12px;
-        line-height: 1.5;
-        font-style: italic;
-        color: rgba(15, 26, 20, 0.55);
-    }
-
-    .b-card-note + .b-card-desc { margin-top: 0; }
 
     .b-card-tip {
         margin-top: 16px;
@@ -784,26 +795,44 @@
                 rgba(255, 92, 57, 0.40) 3px 6px
             );
             min-height: 0;
+        }
 
-            .b-cluster-bar-tip { color: var(--bn-coral); }
+        // Bars whose value exceeds the visible Y-axis cap. Rendered at full
+        // chart height with two horizontal "gap" strips near the top — a
+        // "broken bar" convention that signals "this bar runs off-scale; hover
+        // for the real number." Painted with `background-image` strips in the
+        // surrounding section's color, layered over the bar's own
+        // background-color.
+        &.is-over-cap {
+            border-radius: 0;
+            background-image: linear-gradient(
+                to top,
+                transparent 0,
+                transparent calc(100% - 16px),
+                var(--bn-cream-light) calc(100% - 16px),
+                var(--bn-cream-light) calc(100% - 13px),
+                transparent calc(100% - 13px),
+                transparent calc(100% - 8px),
+                var(--bn-cream-light) calc(100% - 8px),
+                var(--bn-cream-light) calc(100% - 5px),
+                transparent calc(100% - 5px),
+                transparent 100%
+            );
         }
 
         &:hover {
             filter: brightness(1.06);
             z-index: 20;
-
-            .b-cluster-bar-tip {
-                opacity: 1;
-                transform: translate(-50%, -110%);
-            }
         }
     }
 
-    .b-cluster-bar-tip {
-        position: absolute;
-        left: 50%;
+    // Single floating tooltip rendered at the DetailStrip level. Its position
+    // is set imperatively via a ref on every mousemove, so it tracks the
+    // cursor instead of being anchored above the bar.
+    .b-floating-tip {
+        position: fixed;
+        left: 0;
         top: 0;
-        transform: translate(-50%, -100%);
         background: var(--bn-ink);
         color: var(--bn-cream-light);
         font-family: var(--bn-mono);
@@ -813,9 +842,10 @@
         white-space: nowrap;
         pointer-events: none;
         opacity: 0;
-        transition: opacity 0.15s, transform 0.15s;
+        transition: opacity 0.12s ease;
         border: 1px solid rgba(15, 26, 20, 0.40);
-        z-index: 10;
+        box-shadow: 0 8px 24px -10px rgba(15, 26, 20, 0.55);
+        z-index: 100;
     }
 
     .b-cluster-label {
@@ -1285,6 +1315,5 @@
         }
         .b-bar-label { letter-spacing: 0; }
         .b-card-desc { font-size: 12.5px; padding-top: 12px; }
-        .b-card-note { font-size: 11.5px; }
     }
 }
