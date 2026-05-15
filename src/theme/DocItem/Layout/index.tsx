@@ -16,6 +16,7 @@ import DocBreadcrumbs from '@theme/DocBreadcrumbs';
 import ContentVisibility from '@theme/ContentVisibility';
 import type { Props } from '@theme/DocItem/Layout';
 import { DocsEdit } from '../../../components/Icons/docs-edit';
+import MobileSidebarDrawer from './MobileSidebarDrawer';
 
 import styles from './styles.module.css';
 
@@ -68,6 +69,7 @@ export default function DocItemLayout({ children }: Props): JSX.Element {
                 <DocVersionBanner />
                 <div className={styles.docItemContainer}>
                     <article>
+                        <MobileSidebarDrawer />
                         <DocBreadcrumbs />
                         {/* <DocVersionBadge /> */}
                         {docTOC.mobile}

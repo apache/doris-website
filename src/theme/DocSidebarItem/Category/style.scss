@@ -64,15 +64,6 @@
         margin: 0;
     }
 
-    .title_level_1__index {
-        font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
-        font-size: 12px;
-        font-weight: 400;
-        color: #B0B3BC;
-        letter-spacing: 0;
-        flex-shrink: 0;
-    }
-
     .title_level_1__label {
         font-weight: 600;
         color: #0D0D12;
@@ -81,9 +72,6 @@
     @media (max-width: 996px) {
         .title_level_1{
             font-size: 1.125rem !important;
-        }
-        .title_level_1__index {
-            font-size: 0.875rem;
         }
     }
 

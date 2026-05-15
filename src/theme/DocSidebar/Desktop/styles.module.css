@@ -35,3 +35,53 @@
 .sidebarLogo {
   display: none;
 }
+
+.sidebarHeader {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem 0.5rem;
+  border-bottom: 1px solid #edf2fa;
+}
+
+.sidebarSearch {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.sidebarSearch :global(.navbar__search) {
+  margin-left: 0 !important;
+  width: 100%;
+}
+
+.sidebarSearch :global(.navbar__search-input) {
+  width: 100% !important;
+  height: 2.25rem !important;
+}
+
+.sidebarLocale {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+}
+
+.sidebarLocale :global(.navbar__item.dropdown) {
+  padding: 0 !important;
+}
+
+.sidebarLocale :global(.navbar__link) {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.4rem 0.55rem;
+  border: 1px solid #dfe5f0;
+  border-radius: 4px;
+  line-height: 1;
+}
+
+.sidebarLocale :global(.navbar__link):hover {
+  border-color: #8592a6;
+}
+
+.sidebarLocale :global(.navbar__link)::after {
+  display: none;
+}

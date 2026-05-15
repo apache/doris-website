@@ -46,11 +46,7 @@ export const NavbarDocsLeft = ({ isEN }: NavbarDocsProps) => {
             : currentLocale === 'ja' && themeConfig.docNavbarJA
               ? themeConfig.docNavbarJA.items
               : themeConfig.docNavbarEN.items;
-    let [leftDocItems] = splitNavbarItems(docItems);
-    if(location.pathname.includes(ARCHIVE_PATH)){
-        leftDocItems = leftDocItems.filter((item)=>item.type !== 'search')
-    }
-    const searchItem = getNavItem(leftDocItems, 'search');
+    const [leftDocItems] = splitNavbarItems(docItems);
     const leftDocItemsWithoutSearch = leftDocItems.filter((item) => item.type !== 'search');
     const currentVersion = getDocsVersion(location.pathname, locales);
     const docsHomeHref = `${getLocalePrefix(currentLocale, defaultLocale)}/docs/${currentVersion}/gettingStarted/what-is-apache-doris`;
@@ -63,18 +59,6 @@ export const NavbarDocsLeft = ({ isEN }: NavbarDocsProps) => {
             </div>
             <div className={`${styles.navbarLeftToc}`}>
                 <NavbarItems items={leftDocItemsWithoutSearch} isDocsPage={true} />
-                {searchItem && (
-                    <div className="docs-search-container">
-                        <NavbarItems items={[searchItem]} isDocsPage={true} />
-                        <button
-                            className="navbar-ask-ai-btn rounded-full flex items-center gap-x-2 px-4 py-[5px] border border-primary bg-[#F0FFF7] text-[1rem]/[1.625rem] font-medium text-[#1D1D1D]"
-                            id="navbar-ask-ai-btn"
-                        >
-                            <StarGreenIcon />
-                            Ask AI
-                        </button>
-                    </div>
-                )}
             </div>
         </div>
     );
@@ -92,6 +76,7 @@ export const NavbarDocsRight = ({ isEN }: NavbarDocsProps) => {
               ? themeConfig.docNavbarJA.items
               : themeConfig.docNavbarEN.items;
     const [, rightDocItems] = splitNavbarItems(docItems);
+    const rightDocItemsWithoutLocale = rightDocItems.filter(item => item.type !== 'localeDropdown');
     const { showSearchPageMobile, setShowSearchPageMobile } = useContext(DataContext);
 
     const mobileSidebar = useNavbarMobileSidebar();
@@ -108,7 +93,7 @@ export const NavbarDocsRight = ({ isEN }: NavbarDocsProps) => {
                             <SearchIcon />
                         </span>
                     ) : null}
-                    <NavbarItems items={[...rightDocItems]} />
+                    <NavbarItems items={[...rightDocItemsWithoutLocale]} />
                 </>
             )}
         </>
@@ -129,9 +114,6 @@ export const NavbarDocsBottom = ({ isEN }: NavbarDocsProps) => {
     const [, rightDocItems] = splitNavbarItems(docItems);
     return (
         <div className="docs-nav-version-locale">
-            {/* getNavItem? */}
-
-            <LocaleDropdownNavbarItem mobile={false} {...(getNavItem(rightDocItems, 'localeDropdown') as any)} />
             <DocsVersionDropdownNavbarItem
                 mobile={false}
                 docsPluginId="default"

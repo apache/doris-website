@@ -165,7 +165,6 @@ export default function DocSidebarItemCategory({
             >
                 {level === 1 && isDocsPage ? (
                     <p className={clsx('title_level_1')}>
-                        <span className="title_level_1__index">{String(index + 1).padStart(2, '0')}</span>
                         <span className="title_level_1__label">{label}</span>
                     </p>
                 ) : (
