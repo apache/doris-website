@@ -4,6 +4,12 @@ const sidebars: SidebarsConfig = {
     docs: [
         {
             type: 'category',
+            label: 'Get Started',
+            collapsible: false,
+            collapsed: false,
+            items: [
+        {
+            type: 'category',
             label: 'Getting Started',
             link: {type: 'doc', id: 'getting-started/intro'},
             collapsed: true,
@@ -175,6 +181,14 @@ const sidebars: SidebarsConfig = {
                 },
             ],
         },
+            ],
+        },
+        {
+            type: 'category',
+            label: 'Use Doris',
+            collapsible: false,
+            collapsed: false,
+            items: [
         {
             type: 'category',
             label: 'Table Design',
@@ -712,6 +726,41 @@ const sidebars: SidebarsConfig = {
                 },
             ],
         },
+            ],
+        },
+        {
+            type: 'category',
+            label: 'Solutions',
+            collapsible: false,
+            collapsed: false,
+            items: [
+                {
+                    type: 'category',
+                    label: 'Doris for AI',
+                    link: {type: 'doc', id: 'ai/ai-overview'},
+                    collapsed: true,
+                    items: [
+                        'ai/ai-function-overview',
+                    ],
+                },
+                {
+                    type: 'category',
+                    label: 'Observability with Doris',
+                    link: {type: 'doc', id: 'observability/overview'},
+                    collapsed: true,
+                    items: [
+                        'observability/log',
+                        'observability/trace',
+                    ],
+                },
+            ],
+        },
+        {
+            type: 'category',
+            label: 'Operate & Maintain',
+            collapsible: false,
+            collapsed: false,
+            items: [
         {
             type: 'category',
             label: 'Administration',
@@ -2598,23 +2647,6 @@ const sidebars: SidebarsConfig = {
                 },
             ],
         },
-        {
-            type: 'category',
-            label: 'Doris for AI',
-            link: {type: 'doc', id: 'ai/ai-overview'},
-            collapsed: true,
-            items: [
-                'ai/ai-function-overview',
-            ],
-        },
-        {
-            type: 'category',
-            label: 'Observability with Doris',
-            link: {type: 'doc', id: 'observability/overview'},
-            collapsed: true,
-            items: [
-                'observability/log',
-                'observability/trace',
             ],
         },
     ],

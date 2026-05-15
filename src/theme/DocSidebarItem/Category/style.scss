@@ -13,12 +13,32 @@
             // color: #4c576c;
             // font-size: 14px;
             font-weight: 400;
+            border-radius: 4px;
             &:hover {
-                background-color: #F7FFFB !important;
+                background-color: #F2F4F7 !important;
             }
             &:after {
                 right: 0;
                 background: url('../../../../static/images/chevron-down.svg') no-repeat center;
+            }
+        }
+    }
+
+    /* Top-level (section group) collapsible items in section 01..04 */
+    .menu__list_level_2 > .menu__list-item > .menu__list-item-collapsible {
+        position: relative;
+        > .menu__link--sublist {
+            font-size: var(--global-font-size-medium, 14px);
+            font-weight: 400;
+            color: #1F1F26 !important;
+        }
+        /* Active state for a category whose descendant is the current page */
+        > .menu__link--sublist.menu__link--active {
+            font-weight: 400 !important;
+            color: var(--ifm-color-primary) !important;
+            background-color: transparent !important;
+            &:hover {
+                background-color: #F2F4F7 !important;
             }
         }
     }
@@ -30,24 +50,40 @@
     }
 
     .title_level_1 {
-        color: #00000a;
-        text-align: center;
-        font-size: 14px;
+        color: #0D0D12;
+        font-size: 15px;
         font-style: normal;
         font-weight: 600;
         line-height: 20px;
-        letter-spacing: 0.56px;
-        text-transform: capitalize;
+        letter-spacing: 0.4px;
         display: flex;
-        padding: 0px 10px 12px 10px;
-        align-items: center;
-        gap: 4px;
+        padding: 20px 10px 12px 10px;
+        align-items: baseline;
+        gap: 8px;
         align-self: stretch;
+        margin: 0;
+    }
+
+    .title_level_1__index {
+        font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+        font-size: 12px;
+        font-weight: 400;
+        color: #B0B3BC;
+        letter-spacing: 0;
+        flex-shrink: 0;
+    }
+
+    .title_level_1__label {
+        font-weight: 600;
+        color: #0D0D12;
     }
 
     @media (max-width: 996px) {
         .title_level_1{
             font-size: 1.125rem !important;
+        }
+        .title_level_1__index {
+            font-size: 0.875rem;
         }
     }
 
@@ -64,8 +100,10 @@
 
     .divider {
         width: calc(100% - 0.625rem);
-        border: 0.5px solid #DFE5F0;
-        margin: 1rem 0 1rem 0;
+        height: 1px;
+        border: 0;
+        background-color: #E5E8EE;
+        margin: 20px 0 4px 0;
         position: relative;
         left: 0.625rem;
     }
