@@ -59,6 +59,23 @@
   height: 2.25rem !important;
 }
 
+/* Anchor the autocomplete dropdown to the input's left edge instead of the
+ * navbar-default `left: -20%` rule that pulls the 560px-wide panel off the
+ * left side of the viewport when the search bar lives in the sidebar.
+ * The dropdown element is whatever autocomplete.js generates (a span/div),
+ * so match by class substring. */
+.sidebarSearch :global(.navbar__search) [class*="dropdownMenu"] {
+  left: 0 !important;
+  right: auto !important;
+}
+
+/* The Docusaurus sidebar container ships with `clip-path: inset(0)` (for the
+ * collapse animation), which also clips our 560px search dropdown to the
+ * 300px sidebar width. Disable it so the dropdown can overflow the sidebar. */
+:global(.theme-doc-sidebar-container) {
+  clip-path: none !important;
+}
+
 .sidebarLocale {
   flex: 0 0 auto;
   display: flex;
