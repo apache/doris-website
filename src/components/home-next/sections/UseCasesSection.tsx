@@ -46,8 +46,7 @@ export function UseCasesSection(): JSX.Element {
                 <div className="use-cases-next__header">
                     <div className="use-cases-next__eyebrow">Use Cases</div>
                     <h2 className="use-cases-next__headline" id="use-cases-next-title">
-                        <span>One Engine,</span>
-                        <span className="use-cases-next__headline-accent">Built for the Workloads That Matter.</span>
+                        <span>Where Doris Goes To Work</span>
                     </h2>
                 </div>
 

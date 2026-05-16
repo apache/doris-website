@@ -330,10 +330,7 @@ export function FeaturesSection(): JSX.Element {
                 <div className="features-next__header">
                     <div className="features-next__eyebrow">Core Capabilities</div>
                     <h2 className="features-next__headline">
-                        <span className="features-next__headline-line">Build For</span>
-                        <span className="features-next__headline-line features-next__headline-line--accent">
-                            Every Kind of Modern Analytics Workload
-                        </span>
+                        <span className="features-next__headline-line">Three Pillars. One Engine</span>
                     </h2>
                 </div>
                 <div
