@@ -1,8 +1,16 @@
 ---
-{
-    "title": "在 MacOS 平台上编译",
-    "language": "zh-CN"
-}
+title: macOS 平台编译 Apache Doris
+language: zh-CN
+description: 在 macOS（Intel / Apple Silicon）平台编译 Apache Doris 与本地调试准备。
+keywords:
+    - macOS 编译
+    - Apple Silicon
+    - Intel Mac
+    - Apache Doris
+    - 源码编译
+    - Homebrew
+    - Thrift
+    - JDK 17
 ---
 
 <!--
@@ -24,74 +32,86 @@ specific language governing permissions and limitations
 under the License.
 -->
 
+<!-- 知识类型: 操作步骤 -->
+<!-- 适用场景: 本地开发 / macOS 调试 -->
 
-本文介绍如何在 macOS 平台上编译源码。
+# 在 macOS 平台上编译
+
+本文介绍如何在 macOS（Intel 与 Apple Silicon）平台上完成 Apache Doris 的依赖安装、源码编译、运行与本地调试准备。
 
 :::tip
-目前还不支持存算分离模式编译部署
+目前还不支持在 macOS 上进行存算分离模式的编译部署。
 :::
 
-## 环境要求
+## 1. 环境要求
 
--   macOS 12 (Monterey) 及以上（***Intel 和 Apple Silicon 均支持***）
+- macOS 12 (Monterey) 及以上（Intel 与 Apple Silicon 均支持）
+- [Homebrew](https://brew.sh/)
+- JDK 8 或 JDK 17（Doris 目前仅支持这两个版本）
 
--   [Homebrew](https://brew.sh/)
+## 2. 安装依赖
 
-## 源码编译
-
-**1.  使用 [Homebrew](https://brew.sh/) 安装依赖**
+使用 Homebrew 安装基础依赖：
 
 ```Shell
 brew install automake autoconf libtool pkg-config texinfo coreutils gnu-getopt \
-python@3 cmake ninja ccache bison byacc gettext wget pcre maven llvm@20 openjdk@11 npm
+python@3 cmake ninja ccache bison byacc gettext wget pcre maven llvm@20 openjdk@17 npm
 ```
 
-在 MacOS 上，由于 brew 没有提供 JDK8 的安装包，所以在这里使用了 JDK11。也可以自己手动下载安装 JDK8。
+> macOS 上 arm64 版本的 brew 默认没有 JDK 8，因此推荐使用 `openjdk@17`。如需 JDK 8，可手动安装 [Zulu JDK 8](https://www.azul.com/downloads/?version=java-8-lts&os=macos&package=jdk#zulu)；Maven 也可从 [Maven 官网](https://maven.apache.org/download.cgi) 单独下载并配置环境变量。
 
-**2.  编译源码**
+部分依赖在 Apple Silicon 上还需要手动配置环境变量：
 
 ```Shell
-bash build.sh
+export PATH="/opt/homebrew/opt/llvm/bin:$PATH"
+export PATH="/opt/homebrew/opt/bison/bin:$PATH"
+export PATH="/opt/homebrew/opt/texinfo/bin:$PATH"
+ln -s -f /opt/homebrew/bin/python3 /opt/homebrew/bin/python
 ```
 
-Doris 源码编译时首先会下载三方库源码进行编译，为了节省编译时间，可以下载社区提供的三方库的预编译版本。参见下面的使用**预编译三方库**提速构建过程。
-
-## 启动
-
-**1. 调大 file descriptors limit**
+## 3. 拉取源码并设置 DORIS_HOME
 
 ```Shell
-# 通过 ulimit 命令调大 file descriptors limit 限制大小
-ulimit -n 65536
-# 查看是否生效
-$ ulimit -n
+cd ~
+mkdir DorisDev && cd DorisDev
+git clone https://github.com/apache/doris.git
 
-# 将该配置写到到启动脚本中，以便下次打开终端会话时不需要再次设置
-# 如果是 bash，执行下面语句
-echo 'ulimit -n 65536' >>~/.bashrc
-# 如果是 zsh，执行下面语句
-echo 'ulimit -n 65536' >>~/.zshrc
+export DORIS_HOME=~/DorisDev/doris
+export PATH=$DORIS_HOME/bin:$PATH
 ```
 
-**2.  启动 BE**
+## 4. （可选）单独安装 Thrift
+
+只在仅调试 FE 时才需要单独安装 Thrift；同时调试 BE 和 FE 时，BE 的三方库已包含 Thrift。
 
 ```Shell
-cd output/be/bin
-./start_be.sh --daemon
+brew install thrift@0.16.0
+
+mkdir -p ./thirdparty/installed/bin
+
+# Apple Silicon
+ln -s /opt/homebrew/Cellar/thrift@0.16.0/0.16.0/bin/thrift ./thirdparty/installed/bin/thrift
+
+# Intel
+ln -s /usr/local/Cellar/thrift@0.16.0/0.16.0/bin/thrift ./thirdparty/installed/bin/thrift
 ```
 
-**3.  启动 FE**
+如果 `brew install thrift@0.16.0` 报找不到版本的错误，按以下方式处理：
 
 ```Shell
-cd output/fe/bin
-./start_fe.sh --daemon
+brew tap homebrew/core --force
+brew tap-new $USER/local-tap
+brew extract --version='0.16.0' thrift $USER/local-tap
+brew install thrift@0.16.0
 ```
 
-## 使用预编译三方库进行提速
+参考：<https://gist.github.com/tonydeng/02e571f273d6cce4230dc8d5f394493c>
 
-可以在 [Apache Doris Third Party Prebuilt](https://github.com/apache/doris-thirdparty/releases/tag/automation) 页面直接下载预编译好的第三方库，省去编译第三方库的过程，参考下面的命令。
+## 5. 使用预编译三方库加速（推荐）
 
-```shell
+可以直接下载社区提供的预编译三方库，省去编译第三方库的过程：
+
+```Shell
 cd thirdparty
 rm -rf installed
 
@@ -103,11 +123,76 @@ curl -L https://github.com/apache/doris-thirdparty/releases/download/automation/
 curl -L https://github.com/apache/doris-thirdparty/releases/download/automation/doris-thirdparty-prebuilt-darwin-arm64.tar.xz \
     -o - | tar -Jxf -
 
-# 保证 protoc 和 thrift 能够正常运行
+# 验证 protoc 与 thrift 可正常运行
 cd installed/bin
-
 ./protoc --version
 ./thrift --version
 ```
 
-运行`protoc`和`thrift`的时候可能会遇到**无法打开，因为无法验证开发者**的问题，可以到前往`安全性与隐私`。点按`通用`面板中的`仍要打开`按钮，以确认打算打开该二进制。参考 https://support.apple.com/zh-cn/HT202491。
+> 运行 `protoc` 和 `thrift` 时如果遇到 **无法打开，因为无法验证开发者** 的提示，前往 `安全性与隐私 → 通用`，点击 `仍要打开` 即可。参考：<https://support.apple.com/zh-cn/HT202491>
+
+也可以从 [Apache Doris Third Party Prebuilt](https://github.com/apache/doris-thirdparty/releases/tag/automation) 页面下载三方库源码 [doris-thirdparty-source.tgz](https://github.com/apache/doris-thirdparty/releases/download/automation/doris-thirdparty-source.tgz) 自行编译。
+
+## 6. 调整文件句柄数限制
+
+```Shell
+ulimit -n 65536
+
+# 写入启动脚本，下次打开终端自动生效
+# bash
+echo 'ulimit -n 65536' >>~/.bashrc
+# zsh
+echo 'ulimit -n 65536' >>~/.zshrc
+```
+
+## 7. 编译
+
+```Shell
+cd $DORIS_HOME
+bash build.sh
+```
+
+## 8. 启动 BE / FE
+
+```Shell
+cd output/be/bin && ./start_be.sh --daemon
+cd output/fe/bin && ./start_fe.sh --daemon
+```
+
+## 9. 配置本地调试环境
+
+```Shell
+# 将编译产物 copy 出来作为运行目录
+cp -r output ../doris-run
+```
+
+之后修改 FE / BE 的 `conf` 中：
+
+1. IP 与目录配置
+2. BE 中额外配置 `min_file_descriptor_number = 10000`
+
+接下来按 IDE 配置调试：
+
+- [FE 开发环境搭建 - IntelliJ IDEA](../developer-guide/fe-idea-dev)
+- [BE 开发环境搭建 - CLion](../developer-guide/be-clion-dev)（参见「方式二：macOS 本地开发」）
+
+## 常见问题
+
+### Node.js 版本过高导致编译失败
+
+错误信息：
+
+```
+opensslErrorStack: ['error:03000086:digital envelope routines::initialization error']
+library: 'digital envelope routines'
+reason: 'unsupported'
+code: 'ERR_OSSL_EVP_UNSUPPORTED'
+```
+
+解决方法：
+
+```Shell
+export NODE_OPTIONS=--openssl-legacy-provider
+```
+
+参考：<https://stackoverflow.com/questions/74726224/opensslerrorstack-error03000086digital-envelope-routinesinitialization-e>

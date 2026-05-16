@@ -1,12 +1,19 @@
 ---
-{
-    "title": "Doris BE Storage Layer Benchmark Tool",
-    "language": "en"
-}
-
+title: BE Storage Layer Benchmark Tool
+language: en
+description: Apache Doris BE storage layer benchmark tool for segment read/write and performance testing.
+keywords:
+    - Apache Doris
+    - BE storage layer
+    - Benchmark
+    - Segment
+    - Page
+    - Dictionary encoding
+    - google benchmark
+    - CustomBenchmark
 ---
 
-<!-- 
+<!--
 Licensed to the Apache Software Foundation (ASF) under one
 or more contributor license agreements.  See the NOTICE file
 distributed with this work for additional information
@@ -25,85 +32,121 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# Doris BE Storage Layer Benchmark Tool
+# BE Storage Layer Benchmark Tool
 
-## usage
+<!-- Knowledge type: Tool usage -->
+<!-- Applicable scenarios: Performance tuning / Storage layer benchmarking -->
 
-It can be used to test the performance of some parts of the BE storage layer (for example, segment, page). According to the input data, the designated object is constructed, and the google benchmark is used for performance testing. 
+## Purpose
+
+`benchmark_tool` tests the performance of the Apache Doris BE storage layer (such as `segment` and `page`). It constructs the specified objects from input data and runs performance tests through [google benchmark](https://github.com/google/benchmark).
 
 ## Compilation
 
-1. To ensure that the environment has been able to successfully compile the Doris ontology, you can refer to [Installation and deployment](/docs/install/source-install/compilation-general).
+1. Make sure you have an environment that can compile Doris itself. See [Compilation and Deployment](/docs/install/source-install/compilation-general) for reference.
+2. Run `run-be-ut.sh` in the Doris repository.
+3. The compiled executable is located at `./be/ut_build_ASAN/test/tools/benchmark_tool`.
 
-2. Execute`run-be-ut.sh`
+## Usage
 
-3. The compiled executable file is located in `./be/ut_build_ASAN/test/tools/benchmark_tool`
+### Common Parameters
 
-## operator
+| Parameter | Meaning | Default |
+|------|------|--------|
+| `--operation` | Test type. See the scenarios below for details. | None (required) |
+| `--column_type` | Column types of the segment table schema. Supports `int`, `char`, `varchar`, `string`. | `int,varchar` |
+| `--rows_number` | Number of data rows. | `10000` |
+| `--iterations` | Number of test iterations. `0` lets benchmark choose automatically. | `10` |
+| `--input_file` | Path of the data file when importing data from a file. | None |
 
-#### Use randomly generated data set for segment read test 
+Type length conventions:
 
-The data set will be used to write a `segment` file first, and then the time-consuming scan of the entire `segment` will be counted. 
+| Type | Length |
+|------|------|
+| `char` | `8` |
+| `varchar` | Maximum value |
+| `string` | Maximum value |
 
-> ./benchmark_tool --operation=SegmentScan --column_type=int,varchar --rows_number=10000 --iterations=0
+Random dataset generation rules:
 
-The `column_type` here can set the schema, the column type of the `segment` layer currently supports `int, char, varchar, string`, the length of the `char` type is `8`, and both `varchar` and `string` types have length restrictions Is the maximum value. The default value is `int,varchar`. 
+| Type | Rule |
+|------|------|
+| `int` | Random within `[1, 1000000]` |
+| `char` | Random length within `[1, 8]`, character set is uppercase and lowercase English letters |
+| `varchar` | Random length within `[1, 128]`, character set is uppercase and lowercase English letters |
+| `string` | Random length within `[1, 100000]`, character set is uppercase and lowercase English letters |
 
-The data set is generated according to the following rules. 
->int: Random in [1,1000000]. 
+### Test Scenarios at a Glance
 
-The data character set of string type is uppercase and lowercase English letters, and the length varies according to the type. 
-> char: Length random in [1,8].
-> varchar: Length random in [1,128]. 
-> string: Length random in [1,100000].
+| Scenario | Command |
+|------|------|
+| Segment read test with a random dataset | `./benchmark_tool --operation=SegmentScan --column_type=int,varchar --rows_number=10000 --iterations=0` |
+| Segment write test with a random dataset | `./benchmark_tool --operation=SegmentWrite` |
+| Segment read test with a dataset imported from a file | `./benchmark_tool --operation=SegmentScanByFile --input_file=./sample.dat` |
+| Segment write test with a dataset imported from a file | `./benchmark_tool --operation=SegmentWriteByFile --input_file=./sample.dat` |
+| Page dictionary encoding test with a random dataset | `./benchmark_tool --operation=BinaryDictPageEncode --rows_number=10000 --iterations=0` |
+| Page dictionary decoding test with a random dataset | `./benchmark_tool --operation=BinaryDictPageDecode` |
 
-`rows_number` indicates the number of rows of data, the default value is `10000`. 
+### Segment Read Test with a Randomly Generated Dataset
 
-`iterations` indicates the number of iterations, the benchmark will repeat the test, and then calculate the average time. If `iterations` is `0`, it means that the number of iterations is automatically selected by the benchmark. The default value is `10`. 
+First writes a `segment` file using the dataset, then measures the time to scan the entire `segment`.
 
-#### Use randomly generated data set for segment write test 
-
-Perform time-consuming statistics on the process of adding data sets to segments and writing them to disk. 
-
-> ./benchmark_tool --operation=SegmentWrite
-
-#### Use the data set imported from the file for segment read test 
-
-> ./benchmark_tool --operation=SegmentScanByFile --input_file=./sample.dat
-
-The `input_file` here is the imported data set file. 
-The first row of the data set file defines the schema, and each row corresponds to a row of data, and each data is separated by `,`. 
-
-Example: 
+```bash
+./benchmark_tool --operation=SegmentScan --column_type=int,varchar --rows_number=10000 --iterations=0
 ```
+
+### Segment Write Test with a Randomly Generated Dataset
+
+Measures the time of the process that adds the dataset to a `segment` and writes it to disk.
+
+```bash
+./benchmark_tool --operation=SegmentWrite
+```
+
+### Segment Read Test with a Dataset Imported from a File
+
+```bash
+./benchmark_tool --operation=SegmentScanByFile --input_file=./sample.dat
+```
+
+`input_file` is the imported dataset file. The first line of the file defines the table schema, and each subsequent line corresponds to one row of data with columns separated by `,`:
+
+```text
 int,char,varchar
 123,hello,world
 321,good,bye
 ```
 
-The type support is also `int`, `char`, `varchar`, `string`. Note that the data length of the `char` type cannot exceed 8. 
+The supported types are also `int`, `char`, `varchar`, and `string`. Note that data of the `char` type cannot exceed a length of `8`.
 
-#### Use the data set imported from the file for segment write test 
+### Segment Write Test with a Dataset Imported from a File
 
-> ./benchmark_tool --operation=SegmentWriteByFile --input_file=./sample.dat
+```bash
+./benchmark_tool --operation=SegmentWriteByFile --input_file=./sample.dat
+```
 
-#### Use randomly generated data set for page dictionary encoding test 
+### Page Dictionary Encoding Test with a Randomly Generated Dataset
 
-> ./benchmark_tool --operation=BinaryDictPageEncode --rows_number=10000 --iterations=0
+```bash
+./benchmark_tool --operation=BinaryDictPageEncode --rows_number=10000 --iterations=0
+```
 
-Randomly generate varchar with a length between [1,8], and perform time-consuming statistics on encoding. 
+Randomly generates `varchar` values with lengths in `[1, 8]` and measures the encoding time.
 
-#### Use randomly generated data set for page dictionary decoding test 
+### Page Dictionary Decoding Test with a Randomly Generated Dataset
 
-> ./benchmark_tool --operation=BinaryDictPageDecode
+```bash
+./benchmark_tool --operation=BinaryDictPageDecode
+```
 
-Randomly generate varchar with a length between [1,8] and encode, and perform time-consuming statistics on decoding. 
+Randomly generates `varchar` values with lengths in `[1, 8]`, encodes them, and measures the decoding time.
 
-## Custom test
+## Custom Tests
 
-Here, users are supported to use their own functions for performance testing, which can be implemented in `/be/test/tools/benchmark_tool.cpp`. 
+You can run performance tests with your own functions. The implementation is in `/be/test/tools/benchmark_tool.cpp`.
 
-For example: 
+### 1. Write the Test Function
+
 ```cpp
 void custom_run_plus() {
     int p = 100000;
@@ -122,18 +165,23 @@ void custom_run_mod() {
     }
 }
 ```
-You can join the test by registering `CustomBenchmark`. 
+
+### 2. Register CustomBenchmark
+
 ```cpp
 benchmarks.emplace_back(
                     new doris::CustomBenchmark("custom_run_plus", 0,
-                    	custom_init, custom_run_plus));
+                        custom_init, custom_run_plus));
 benchmarks.emplace_back(
                     new doris::CustomBenchmark("custom_run_mod", 0,
-                    	custom_init, custom_run_mod));
+                        custom_init, custom_run_mod));
 ```
-The `custom_init` here is the initialization step of each round of testing (not counted as time-consuming). If the user has an object that needs to be initialized, it can be implemented by a derived class of `CustomBenchmark`. 
-After running, the results are as follows: 
-```
+
+Here, `init` is the initialization step for each round of testing (not counted in the elapsed time). If you need to initialize objects, implement it through a derived class of `CustomBenchmark`.
+
+### 3. Example Run Output
+
+```text
 2021-08-30T10:29:35+08:00
 Running ./benchmark_tool
 Run on (96 X 3100.75 MHz CPU s)
@@ -149,3 +197,13 @@ Benchmark                Time             CPU   Iterations
 custom_run_plus      0.812 ms        0.812 ms          861
 custom_run_mod        1.30 ms         1.30 ms          539
 ```
+
+## FAQ
+
+**Q: Cannot find the `benchmark_tool` executable?**
+
+Run `run-be-ut.sh` first to fully build the BE unit tests. The executable is output to `./be/ut_build_ASAN/test/tools/benchmark_tool`.
+
+**Q: The custom test result does not match expectations?**
+
+Make sure `custom_init` does not contain the logic of the function under test, and that the body of each `custom_run_*` function is large enough to avoid being eliminated by the optimizer.

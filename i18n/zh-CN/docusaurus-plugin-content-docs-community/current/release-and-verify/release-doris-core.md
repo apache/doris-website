@@ -1,11 +1,18 @@
 ---
-{
-    "title": "发布 Doris 主代码",
-    "language": "zh-CN"
-}
+title: 发布 Apache Doris Core
+language: zh-CN
+description: Apache Doris Core 发版完整流程：分支准备、Tag、签名、SVN 上传、Dev 与 IPMC 投票。
+keywords:
+    - Apache Doris Core 发版
+    - Doris Release 流程
+    - Apache 投票
+    - SVN dist
+    - GPG 签名
+    - Release Candidate rc01
+    - Release Manager
 ---
 
-<!-- 
+<!--
 Licensed to the Apache Software Foundation (ASF) under one
 or more contributor license agreements.  See the NOTICE file
 distributed with this work for additional information
@@ -24,57 +31,63 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# 发布 Doris Core
+# 发布 Apache Doris Core
 
-Doris Core 指发布 https://github.com/apache/doris 中的内容。
+<!-- 知识类型: 操作步骤 -->
+<!-- 适用场景: 版本发布 / Apache 投票流程 -->
+
+Doris Core 指 [https://github.com/apache/doris](https://github.com/apache/doris) 中的代码内容。本文介绍 Release Manager 从分支准备、验证、打包签名到社区投票的完整发版流程。
 
 ## 准备发布
 
-首先，请参阅 [发版准备](./release-prepare.md) 文档进行发版准备。
+首先，请参阅 [发版准备](./release-prepare) 文档完成签名、SVN、Maven 等环境的准备。
 
-### 准备分支
+### 1. 准备分支
 
-发布前需要先新建一个分支。例如：
+发布前需新建一个发布分支，例如：
 
+```bash
+git checkout -b branch-0.9
 ```
-$ git checkout -b branch-0.9
-```
 
-这个分支要进行比较充分的测试，使得功能可用，bug收敛，重要bug都得到修复。
-这个过程需要等待社区，看看是否有必要的patch需要在这个版本合入，如果有，需要把它 cherry-pick 到发布分支。
+分支创建后，需要进行充分测试，让功能可用、Bug 收敛、重要 Bug 都得到修复。在此过程中需要关注社区，看是否有必要的 Patch 需要 cherry-pick 到发布分支。
 
-### 清理issue
+### 2. 清理 Issue
 
-将属于这个版本的所有 issue 都过一遍，关闭已经完成的，如果没法完成的，推迟到更晚的版本。
+将属于该版本的所有 Issue 过一遍：
 
-### 合并必要的Patch
+- 已完成的关闭；
+- 无法在本版本完成的，推迟到更晚的版本。
 
-在发布等待过程中，可能会有比较重要的Patch合入，如果社区有人说要有重要的Bug需要合入，那么 Release Manager 需要评估并将重要的Patch合入到发布分支中。
+### 3. 合并必要的 Patch
+
+在发布等待过程中，可能会有重要 Patch 合入。如果社区提出有重要 Bug 需要合入，Release Manager 需评估后将相应 Patch 合并到发布分支。
 
 ## 验证分支
 
-### 稳定性测试
+### 1. 稳定性测试
 
-将打好的分支交给 QA 同学进行稳定性测试。如果在测试过程中，出现需要修复的问题，则如果在测试过程中，出现需要修复的问题，待修复好后，需要将修复问题的 PR 合入到待发版本的分支中。
+将打好的分支交给 QA 团队进行稳定性测试。如果测试过程中出现需要修复的问题，待修复完成后将修复 PR 合入到待发版本的分支中。
 
-待整个分支稳定后，才能准备发版本。
+待整个分支稳定后，才能准备正式发版。
 
-### 编译验证
+### 2. 编译验证
 
 请参阅编译文档进行编译，以确保源码编译正确性。
 
-### 准备 Release Notes
+### 3. 准备 Release Notes
 
-## 社区发布投票流程
+整理本次发布的主要功能、Bug 修复和兼容性变更，准备 Release Notes（通常以 GitHub Issue 的形式发布）。
 
-### 打 tag
+## 社区投票流程
 
-当上述分支已经比较稳定后，就可以在此分支上打 tag。
-记得在创建 tag 时，修改 `gensrc/script/gen_build_version.sh` 中的 `build_version` 变量。如 `build_version="0.10.0-release"`
+### 1. 打 Tag
 
-例如：
+当分支已经比较稳定后，就可以在该分支上打 Tag。
 
-```
+打 Tag 前，需修改 `gensrc/script/gen_build_version.sh` 中的 `build_version` 变量，例如 `build_version="0.10.0-release"`。
+
+```bash
 $ git checkout branch-0.9
 $ git tag -a 0.9.0-rc01 -m "0.9.0 release candidate 01"
 $ git push origin 0.9.0-rc01
@@ -87,11 +100,15 @@ To git@github.com:apache/doris.git
 $ git tag
 ```
 
-### 打包、签名上传
+### 2. 打包、签名与上传
 
-如下步骤，也需要通过 SecureCRT 等终端直接登录用户账户，不能通过 su - user 或者 ssh 转，否则密码输入 box 会显示不出来而报错。
+:::caution 注意
+以下步骤需要通过 SecureCRT 等终端直接登录用户账户，不能通过 `su - user` 或 `ssh` 转跳，否则密码输入框会显示不出来而报错。
+:::
 
-```
+打包源码、生成 GPG 签名和 SHA512 校验文件：
+
+```bash
 $ git checkout 0.9.0-rc01
 
 $ git archive --format=tar 0.9.0-rc01 --prefix=apache-doris-0.9.0-incubating-src/ | gzip > apache-doris-0.9.0-incubating-src.tar.gz
@@ -105,15 +122,21 @@ $ sha512sum apache-doris-0.9.0-incubating-src.tar.gz > apache-doris-0.9.0-incuba
 $ sha512sum --check apache-doris-0.9.0-incubating-src.tar.gz.sha512
 ```
 
-然后将打包的内容上传到svn仓库中，首先下载 svn 库：
+| 文件 | 用途 |
+| --- | --- |
+| `*-src.tar.gz` | 源码包 |
+| `*-src.tar.gz.asc` | GPG 签名文件 |
+| `*-src.tar.gz.sha512` | SHA512 校验文件 |
 
-```
+下载 Dev SVN 仓库：
+
+```bash
 svn co https://dist.apache.org/repos/dist/dev/doris/
 ```
 
-将之前得到的全部文件组织成以下svn路径
+将三个文件组织成以下 SVN 目录结构：
 
-```
+```text
 ./doris/
 |-- 0.9.0-rc01
 |   |-- apache-doris-0.9.0-incubating-src.tar.gz
@@ -122,18 +145,22 @@ svn co https://dist.apache.org/repos/dist/dev/doris/
 `-- KEYS
 ```
 
-上传这些文件
+提交到 SVN：
 
-```
+```bash
 svn add 0.9.0-rc01
 svn commit -m "Add 0.9.0-rc1"
 ```
 
-### 发邮件到社区 dev@doris.apache.org 进行投票
+### 3. 发起 Dev 邮件组投票
 
-[VOTE] Release Apache Doris 0.9.0-incubating-rc01
+在 `dev@doris.apache.org` 发起投票，标题为：
 
-```
+> [VOTE] Release Apache Doris 0.9.0-incubating-rc01
+
+正文模板：
+
+```text
 Hi all,
 
 Please review and vote on Apache Doris 0.9.0-incubating-rc01 release.
@@ -170,7 +197,7 @@ Best Regards,
 xxx
 
 ----
-DISCLAIMER: 
+DISCLAIMER:
 Apache Doris (incubating) is an effort undergoing incubation at The
 Apache Software Foundation (ASF), sponsored by the Apache Incubator PMC.
 
@@ -185,11 +212,15 @@ of the completeness or stability of the code, it does indicate
 that the project has yet to be fully endorsed by the ASF.
 ```
 
-### 投票通过后，发 Result 邮件
+### 4. 发送 Dev 投票 Result 邮件
 
-[Result][VOTE] Release Apache Doris 0.9.0-incubating-rc01
+投票通过后，发送结果邮件。标题为：
 
-```
+> [Result][VOTE] Release Apache Doris 0.9.0-incubating-rc01
+
+正文模板：
+
+```text
 Thanks to everyone, and this vote is now closed.
 
 It has passed with 4 +1 (binding) votes and no 0 or -1 votes.
@@ -202,16 +233,21 @@ Binding:
 
 Best Regards,
 xxx
-
 ```
 
-### 发邮件到 general@incubator.apache.org 进行投票
+### 5. 发起 IPMC 投票
 
-**如非孵化器项目，请跳过**
+:::tip 提示
+如非孵化器项目，请跳过本节及下一节。
+:::
 
-[VOTE] Release Apache Doris 0.9.0-incubating-rc01
+向 `general@incubator.apache.org` 发起 IPMC 投票，标题为：
 
-```
+> [VOTE] Release Apache Doris 0.9.0-incubating-rc01
+
+正文模板：
+
+```text
 Hi all,
 
 Please review and vote on Apache Doris 0.9.0-incubating-rc01 release.
@@ -272,7 +308,7 @@ Best Regards,
 xxx
 
 ----
-DISCLAIMER: 
+DISCLAIMER:
 Apache Doris (incubating) is an effort undergoing incubation at The
 Apache Software Foundation (ASF), sponsored by the Apache Incubator PMC.
 
@@ -287,18 +323,25 @@ of the completeness or stability of the code, it does indicate
 that the project has yet to be fully endorsed by the ASF.
 ```
 
-邮件的 thread 连接可以在这里找到：
+邮件 thread 链接可在以下地址查询：
 
-`https://lists.apache.org/list.html?dev@doris.apache.org`
-
-### 发 Result 邮件到 general@incubator.apache.org
-
-**如非孵化器项目，请跳过**
-
-[RESULT][VOTE] Release Apache Doris 0.9.0-incubating-rc01
-
-
+```text
+https://lists.apache.org/list.html?dev@doris.apache.org
 ```
+
+### 6. 发送 IPMC 投票 Result 邮件
+
+:::tip 提示
+如非孵化器项目，请跳过本节。
+:::
+
+向 `general@incubator.apache.org` 发送结果邮件，标题为：
+
+> [RESULT][VOTE] Release Apache Doris 0.9.0-incubating-rc01
+
+正文模板：
+
+```text
 Hi,
 
 Thanks to everyone, and the vote for releasing Apache Doris 0.9.0-incubating-rc01 is now closed.
@@ -320,4 +363,18 @@ xxx
 
 ## 完成发布
 
-请参阅 [完成发布](./release-complete.md) 文档完成所有发布流程。
+请参阅 [完成发布](./release-complete) 文档完成所有发布流程。
+
+## FAQ / Troubleshooting
+
+**Q：`gpg --verify` 报 `gpg: Can't check signature: No public key`？**
+
+本地缺少对应公钥，执行 `gpg --keyserver https://keyserver.ubuntu.com/ --recv-keys <KEY_ID>` 拉取公钥后重试。
+
+**Q：`svn commit` 报 `Authentication failed`？**
+
+检查环境变量 `$ASF_USERNAME` 与 `$ASF_PASSWORD` 是否正确设置；密码为 Apache LDAP 密码。
+
+**Q：投票时间不足 72 小时可以提前关闭吗？**
+
+不可以。Apache 政策要求 Release 投票至少开放 72 小时，必须等待时间到达。

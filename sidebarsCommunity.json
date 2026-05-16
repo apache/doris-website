@@ -1,101 +1,136 @@
 {
     "community": [
-        "join-community",
-        "subscribe-mail-list",
-        "feedback",
-        "doris-future",
+        {
+            "type": "category",
+            "label": "About the Community",
+            "collapsed": false,
+            "items": [
+                "join-community",
+                "subscribe-mail-list",
+                "feedback",
+                "security",
+                "team"
+            ]
+        },
         {
             "type": "category",
             "label": "How to Contribute",
             "items": [
                 "how-to-contribute/contribute-to-doris",
                 "how-to-contribute/contributor-guide",
-                "how-to-contribute/how-to-be-a-committer",
-                "how-to-contribute/commit-format-specification",
-                "how-to-contribute/docs-format-specification",
+                "doris-future",
                 "how-to-contribute/pull-request",
-                "how-to-contribute/contribute-doc",
-                "how-to-contribute/how-to-share-blogs",
-                "how-to-contribute/trino-connector-developer-guide",
-                "how-to-contribute/jdbc-catalog-developer-guide"
+                {
+                    "type": "category",
+                    "label": "Documentation Contribution",
+                    "items": [
+                        "how-to-contribute/contribute-doc",
+                        "how-to-contribute/docs-format-specification"
+                    ]
+                },
+                "how-to-contribute/how-to-share-blogs"
             ]
         },
-        "release-versioning",
         {
             "type": "category",
-            "label": "Release Process & Verification",
+            "label": "Development & Debugging",
             "items": [
+                {
+                    "type": "category",
+                    "label": "Source Code Compilation",
+                    "items": [
+                        "source-install/compilation-with-docker",
+                        "source-install/compilation-with-ldb-toolchain",
+                        "source-install/compilation-linux",
+                        "source-install/compilation-arm",
+                        "source-install/compilation-mac",
+                        "source-install/compilation-win"
+                    ]
+                },
+                {
+                    "type": "category",
+                    "label": "IDE Setup",
+                    "items": [
+                        "developer-guide/fe-idea-dev",
+                        "developer-guide/fe-vscode-dev",
+                        "developer-guide/be-clion-dev",
+                        "developer-guide/be-vscode-dev",
+                        "developer-guide/be-multi-directory",
+                        "developer-guide/docker-dev"
+                    ]
+                },
+                {
+                    "type": "category",
+                    "label": "Code Style",
+                    "items": [
+                        "developer-guide/java-format-code",
+                        "developer-guide/cpp-format-code",
+                        "developer-guide/cpp-diagnostic-code"
+                    ]
+                },
+                {
+                    "type": "category",
+                    "label": "Debugging & Profiling",
+                    "items": [
+                        "developer-guide/debug-tool",
+                        "developer-guide/arthas",
+                        "developer-guide/fe-profiler",
+                        "developer-guide/pipeline-tracing",
+                        "developer-guide/benchmark-tool"
+                    ]
+                },
+                {
+                    "type": "category",
+                    "label": "Testing",
+                    "items": [
+                        "developer-guide/regression-testing"
+                    ]
+                },
+                {
+                    "type": "category",
+                    "label": "Data Source Extension",
+                    "items": [
+                        "developer-guide/data-source-extension/jdbc-catalog-developer-guide",
+                        "developer-guide/data-source-extension/trino-connector-developer-guide"
+                    ]
+                },
+                {
+                    "type": "category",
+                    "label": "Data Format Reference",
+                    "items": [
+                        "developer-guide/bitmap-hll-file-format"
+                    ]
+                }
+            ]
+        },
+        {
+            "type": "category",
+            "label": "Release",
+            "items": [
+                "release-and-verify/release-versioning",
                 "release-and-verify/release-prepare",
                 "release-and-verify/release-doris-core",
                 "release-and-verify/release-doris-connectors",
                 "release-and-verify/release-doris-shade",
                 "release-and-verify/release-doris-sdk",
+                "release-and-verify/release-doris-manager",
                 "release-and-verify/release-complete",
                 "release-and-verify/release-verify"
             ]
         },
         {
             "type": "category",
-            "label": "Source Code Compilation",
-            "items": [
-                "source-install/compilation-with-docker",
-                "source-install/compilation-with-ldb-toolchain",
-                "source-install/compilation-linux",
-                "source-install/compilation-arm",
-                "source-install/compilation-win",
-                "source-install/compilation-mac"
-            ]
-        },
-        "security",
-        {
-            "type": "category",
             "label": "Design Documents",
+            "collapsed": true,
             "items": [
-                "design/doris_storage_optimization",
                 "design/grouping_sets_design",
-                "design/metadata-design",
-                "design/spark_load"
+                "design/metadata-design"
             ]
         },
-        {
-            "type": "category",
-            "label": "Developer Guide",
-            "items": [
-                "developer-guide/debug-tool",
-                "developer-guide/docker-dev",
-                "developer-guide/benchmark-tool",
-                "developer-guide/pipeline-tracing",
-                "developer-guide/fe-eclipse-dev",
-                "developer-guide/fe-profiler",
-                "developer-guide/arthas",
-                "developer-guide/fe-idea-dev",
-                "developer-guide/fe-vscode-dev",
-                "developer-guide/be-multi-directory",
-                "developer-guide/be-vscode-dev",
-                "developer-guide/be-clion-dev",
-                {
-                    "type": "category",
-                    "label": "Mac Local Dev",
-                    "items": [
-                        "developer-guide/mac-dev/dev-prepare",
-                        "developer-guide/mac-dev/be-clion-dev",
-                        "developer-guide/mac-dev/fe-idea-dev"
-                    ]
-                },
-                "developer-guide/java-format-code",
-                "developer-guide/cpp-format-code",
-                "developer-guide/cpp-diagnostic-code",
-                "developer-guide/bitmap-hll-file-format",
-                "developer-guide/github-checks",
-                "developer-guide/regression-testing"
-            ]
-        },
-        "team",
         {
             "type": "link",
             "href": "https://cwiki.apache.org/confluence/display/DORIS/Doris+Improvement+Proposals",
             "label": "Improvement Proposals"
-        },
-        "thanks"
+        }
     ]
 }

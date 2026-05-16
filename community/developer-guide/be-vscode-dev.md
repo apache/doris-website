@@ -1,11 +1,18 @@
 ---
-{
-    "title": "BE development and debugging environment under Linux",
-    "language": "en"
-}
+title: BE Development Environment Setup - Visual Studio Code (VSCode)
+language: en
+description: "Set up the Apache Doris BE development environment with VSCode: compilation, GDB/LLDB debugging, and core dump analysis."
+keywords:
+    - VSCode
+    - Apache Doris BE
+    - BE development environment
+    - GDB debugging
+    - LLDB debugging
+    - core dump
+    - doris_be
 ---
 
-<!-- 
+<!--
 Licensed to the Apache Software Foundation (ASF) under one
 or more contributor license agreements.  See the NOTICE file
 distributed with this work for additional information
@@ -24,95 +31,100 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# Apache Doris Be development and debugging
+# Setting Up a BE Development and Debugging Environment with VSCode
 
-## initial preparation work
+This document describes how to compile, start, and debug Apache Doris BE using VSCode on Ubuntu 20.04, covering three debugging methods: GDB, LLDB, and core dump.
 
-**This tutorial was conducted under Ubuntu 20.04**
+> The BE binary is named `doris_be`. In older versions it was named `palo_be`.
 
-**The name of the BE binary that appears in this doc is `doris_be`, which was `palo_be` in previous versions.**
+<!-- Knowledge type: Procedure -->
+<!-- Applicable scenario: IDE configuration / Debugging setup -->
 
-1. Download the doris source code
+## 1. Prerequisites
 
-   URL：[apache/doris: Apache Doris (github.com)](https://github.com/apache/doris)
+1. Download the Doris source code: [apache/doris on GitHub](https://github.com/apache/doris)
 
-2. Install GCC 8.3.1+, Oracle JDK 1.8+, Python 2.7+, confirm that the gcc, java, python commands point to the correct version, and set the JAVA_HOME environment variable
+2. Install the base toolchain: GCC 8.3.1+, Oracle JDK 1.8+, Python 2.7+. Verify that `gcc`, `java`, and `python` point to the correct versions, and set the `JAVA_HOME` environment variable.
 
-3. Install other dependent packages
+3. Install other dependencies:
 
-```
-sudo apt install build-essential openjdk-8-jdk maven cmake byacc flex automake libtool-bin bison binutils-dev libiberty-dev zip unzip libncurses5-dev curl git ninja-build python brotli
-sudo add-apt-repository ppa:ubuntu-toolchain-r/ppa
-sudo apt update
-sudo apt install gcc-10 g++-10 
-sudo apt-get install autoconf automake libtool autopoint
-```
+    ```bash
+    sudo apt install build-essential openjdk-8-jdk maven cmake byacc flex automake libtool-bin bison binutils-dev libiberty-dev zip unzip libncurses5-dev curl git ninja-build python brotli
+    sudo add-apt-repository ppa:ubuntu-toolchain-r/ppa
+    sudo apt update
+    sudo apt install gcc-10 g++-10
+    sudo apt-get install autoconf automake libtool autopoint
+    ```
 
-4. install : openssl libssl-dev
-```
-sudo apt install -y openssl libssl-dev
-```
+4. Install OpenSSL:
 
-## Compile
+    ```bash
+    sudo apt install -y openssl libssl-dev
+    ```
 
-The following steps are carried out in the /home/workspace directory
+## 2. Compilation
 
-1. download source
+The following steps are performed under the `/home/workspace` directory.
 
-```
+### 2.1 Download the Source Code
+
+```bash
 git clone https://github.com/apache/doris.git
 cd doris
-git submodule update --init --recursive 
+git submodule update --init --recursive
 ```
 
-2. Compile third-party dependency packages
+### 2.2 Compile Third-Party Dependencies
 
-```
- cd /home/workspace/doris/thirdparty
- ./build-thirdparty.sh
+```bash
+cd /home/workspace/doris/thirdparty
+./build-thirdparty.sh
 ```
 
-3. Compile doris product code
+### 2.3 Compile Doris
 
-```
+```bash
 cd /home/workspace/doris
 ./build.sh
 ```
 
-Note: This compilation has the following instructions:
+`build.sh` supports the following combinations:
 
-```shell
-./build.sh  #Compile be and fe at the same time
-./build.sh  --be #Only compile be
-./build.sh  --fe #Only compilefe
-./build.sh  --fe --be --clean#Delete and compile be fe at the same time
-./build.sh  --fe  --clean#Delete and compile fe
-./build.sh  --be  --clean#Delete and compile be
-./build.sh  --be --fe  --clean#Delete and compile be fe at the same time
+| Command                             | Description                |
+| ----------------------------------- | -------------------------- |
+| `./build.sh`                        | Compile both BE and FE     |
+| `./build.sh --be`                   | Compile BE only            |
+| `./build.sh --fe`                   | Compile FE only            |
+| `./build.sh --fe --be`              | Compile both BE and FE     |
+| `./build.sh --fe --be --clean`      | Clean, then compile both BE and FE |
+| `./build.sh --fe --clean`           | Clean, then compile FE     |
+| `./build.sh --be --clean`           | Clean, then compile BE     |
+
+Build artifacts are output to the `/home/workspace/doris/output/` directory. For problems, refer to the [Doris official documentation](http://doris.apache.org).
+
+:::tip Private Maven Repository
+When compiling FE, if you need to specify a private Maven repository, use the `USER_SETTINGS_MVN_REPO` environment variable to point to the `settings.xml` path:
+
+```bash
+export USER_SETTINGS_MVN_REPO="/xxx/xxx/settings.xml"
+```
+:::
+
+## 3. Deployment and Debugging (GDB)
+
+### 3.1 Grant Execute Permission to the BE Binary
+
+```bash
+chmod +x /home/workspace/doris/output/be/lib/doris_be
 ```
 
-If nothing happens, the compilation should be successful, and the final deployment file will be output to the /home/workspace/doris/output/ directory. If you still encounter other problems, you can refer to the doris installation document http://doris.apache.org.
+`/home/workspace/doris/output/be/lib/doris_be` is the BE executable.
 
-Note: If you want to specify the private maven repository address separately when compiling fe, you can set the environment variable USER_SETTINGS_MVN_REPO to specify the file path to settings.xml.
-Example:
-```
-  export USER_SETTINGS_MVN_REPO="/xxx/xxx/settings.xml"
-```
-## Deployment and debugging(GDB)
+### 3.2 Create the Data Storage Directory
 
-1. Authorize be compilation result files
+Check `/home/workspace/doris/output/be/conf/be.conf`:
 
-```
-chmod  /home/workspace/doris/output/be/lib/doris_be
-```
-
-Note: /home/workspace/doris/output/be/lib/doris_be is the executable file of be.
-
-2. Create a data storage directory
-
-By viewing /home/workspace/doris/output/be/conf/be.conf
-
-```
+```bash
 # INFO, WARNING, ERROR, FATAL
 sys_log_level = INFO
 be_port = 9060
@@ -122,35 +134,34 @@ heartbeat_service_port = 9050
 brpc_port = 8060
 arrow_flight_sql_port = -1
 
-# Note that there should be at most one ip that matches this list.
-# If no ip matches this rule, it will choose one randomly.
+# Note that there should at most one ip match this list.
+# If no ip match this rule, will choose one randomly.
 # use CIDR format, e.g. 10.10.10.0/
 # Default value is empty.
 priority_networks = 192.168.59.0/24 # data root path, separate by ';'
-storage_root_path = /soft/be/storage 
-# sys_log_dir = ${PALO_HOME}/log
-# sys_log_roll_mode = SIZE-MB-
-# sys_log_roll_num =
-# sys_log_verbose_modules =
-# log_buffer_level = -
-# palo_cgroups 
+storage_root_path = /soft/be/storage
 ```
 
-Need to create this folder, this is where the be data is stored
+Create the data directory based on `storage_root_path`:
 
-```
+```bash
 mkdir -p /soft/be/storage
 ```
 
-3. Open vscode, and open the directory where the be source code is located. In this case, open the directory as **/home/workspace/doris/**，For details on how to operate vscode, refer to the online tutorial
+### 3.3 Open the Source Code and Install the Debugging Extension
 
-4. Install the vscode ms c++ debugging plug-in, the plug-in identified by the red box in the figure below
+1. Open the BE source code directory with VSCode (in this example, `/home/workspace/doris/`).
+2. Install the VSCode **C/C++** (ms-vscode.cpptools) debugging extension.
 
-![](/images/image-20210618104042192.png)
+    ![](/images/image-20210618104004956.png)
 
-5. Create a launch.json file, the content of the file is as follows:
+### 3.4 Create launch.json
 
-```
+<!-- Knowledge type: Configuration parameters -->
+
+Create a Launch-mode configuration in `.vscode/launch.json`:
+
+```json
 {
     "version": "0.2.0",
     "configurations": [
@@ -162,11 +173,12 @@ mkdir -p /soft/be/storage
             "args": [],
             "stopAtEntry": false,
             "cwd": "/home/workspace/doris/",
-            "environment": [{"name":"PALO_HOME","value":"/home/workspace/doris/output/be/"},
-                            {"name":"UDF_RUNTIME_DIR","value":"/home/workspace/doris/output/be/lib/udf-runtime"},
-                            {"name":"LOG_DIR","value":"/home/workspace/doris/output/be/log"},
-                            {"name":"PID_DIR","value":"/home/workspace/doris/output/be/bin"}
-                           ],
+            "environment": [
+                {"name": "DORIS_HOME", "value": "/home/workspace/doris/output/be/"},
+                {"name": "UDF_RUNTIME_DIR", "value": "/home/workspace/doris/output/be/lib/udf-runtime"},
+                {"name": "LOG_DIR", "value": "/home/workspace/doris/output/be/log"},
+                {"name": "PID_DIR", "value": "/home/workspace/doris/output/be/bin"}
+            ],
             "externalConsole": true,
             "MIMode": "gdb",
             "miDebuggerPath": "/path/to/gdb",
@@ -182,26 +194,35 @@ mkdir -p /soft/be/storage
 }
 ```
 
-Among them, environment defines several environment variables DORIS_HOME UDF_RUNTIME_DIR LOG_DIR PID_DIR, which are the environment variables needed when doris_be is running. If it is not set, the startup will fail
+`environment` defines the environment variables required by `doris_be` at runtime. Startup fails if they are not set:
 
-MiDebuggerPath specifies the path of the debugger (such as gdb). If miDebuggerPath is not specified, it will search for gdb path in the PATH variable of the os. The gdb version that comes with the system can be too low, you may need to manually specify the new version of gdb path.
+| Environment variable | Purpose                    |
+| -------------------- | -------------------------- |
+| `DORIS_HOME`         | BE runtime root directory  |
+| `UDF_RUNTIME_DIR`    | UDF runtime directory      |
+| `LOG_DIR`            | Log directory              |
+| `PID_DIR`            | PID file directory         |
 
-**Note: If you want attach (additional process) debugging, the configuration code is as follows:**
+`miDebuggerPath` specifies the debugger path (for example, `gdb`). If it is not specified, the system `PATH` is searched. The GDB version shipped with the system may be too old, so you may need to specify the path to a newer version manually.
 
-```
+### 3.5 Attach-Mode Debugging
+
+To attach to a running BE process, use the following configuration:
+
+```json
 {
     "version": "0.2.0",
     "configurations": [
-      	{
-          "name": "(gdb) Launch",
-          "type": "cppdbg",
-          "request": "attach",
-          "program": "/home/workspace/doris/output/lib/doris_be",
-          "processId":,
-          "MIMode": "gdb",
-          "miDebuggerPath": "/path/to/gdb",
-          "internalConsoleOptions":"openOnSessionStart",
-          "setupCommands": [
+        {
+            "name": "(gdb) Launch",
+            "type": "cppdbg",
+            "request": "attach",
+            "program": "/home/workspace/doris/output/lib/doris_be",
+            "processId": "${command:pickProcess}",
+            "MIMode": "gdb",
+            "miDebuggerPath": "/path/to/gdb",
+            "internalConsoleOptions": "openOnSessionStart",
+            "setupCommands": [
                 {
                     "description": "Enable pretty-printing for gdb",
                     "text": "-enable-pretty-printing",
@@ -213,24 +234,25 @@ MiDebuggerPath specifies the path of the debugger (such as gdb). If miDebuggerPa
 }
 ```
 
-In the configuration **"request": "attach", "processId": PID**, these two configurations are the key points: set the debug mode of gdb to attach and attach the processId of the process, otherwise it will fail. The command below can directly extract the `pid` of doris' BE:
+Key points:
 
-```
-lsof -i | grep -m 1 doris_be | awk "{print $2}"
-```
+- `"request": "attach"`: sets the debugging mode to attach.
+- `"processId"`: the PID of the process to attach to. It can be a specific number, `"${command:pickProcess}"` (select manually at startup), or extracted with the following command:
 
-Or write **"processId": "${command:pickProcess}"** to specify the pid when starting attach.
+    ```bash
+    lsof -i | grep -m 1 doris_be | awk "{print $2}"
+    ```
 
-As shown in the figure:
+    ![](/images/image-20210618095240216.png)
 
-![](/images/image-20210618095240216.png)
+    In the image above, `15200` is the current BE process ID.
 
-Among them, 15200 is the process id of the currently running be.
+### 3.6 Complete launch.json Example
 
-An example of a complete launch.json is as follows:
+The following is a complete configuration that includes both **Launch** and **Attach** modes:
 
-```
- {
+```json
+{
     "version": "0.2.0",
     "configurations": [
         {
@@ -258,22 +280,10 @@ An example of a complete launch.json is as follows:
             "stopAtEntry": false,
             "cwd": "/home/workspace/doris/output/be",
             "environment": [
-                {
-                    "name": "DORIS_HOME",
-                    "value": "/home/workspace/doris/output/be"
-                },
-                {
-                    "name": "UDF_RUNTIME_DIR",
-                    "value": "/home/workspace/doris/output/be/lib/udf-runtime"
-                },
-                {
-                    "name": "LOG_DIR",
-                    "value": "/home/workspace/doris/output/be/log"
-                },
-                {
-                    "name": "PID_DIR",
-                    "value": "/home/workspace/doris/output/be/bin"
-                }
+                {"name": "DORIS_HOME", "value": "/home/workspace/doris/output/be"},
+                {"name": "UDF_RUNTIME_DIR", "value": "/home/workspace/doris/output/be/lib/udf-runtime"},
+                {"name": "LOG_DIR", "value": "/home/workspace/doris/output/be/log"},
+                {"name": "PID_DIR", "value": "/home/workspace/doris/output/be/bin"}
             ],
             "externalConsole": false,
             "MIMode": "gdb",
@@ -290,52 +300,78 @@ An example of a complete launch.json is as follows:
 }
 ```
 
-6. Click to debug
+### 3.7 Start Debugging
 
-   You can start your debugging journey with the rest,
+Click the VSCode debug button to begin debugging Doris BE.
 
 ![](/images/image-20210618091006146.png)
 
-## Debugging(LLDB)
+## 4. Debugging (LLDB)
 
-lldb's attach mode is faster than gdb，and the usage is similar to gdb. we should install plugin `CodeLLDB`, then add config to launch:
+LLDB attaches faster than GDB and is used in a similar way. The VSCode extension to install is `CodeLLDB`, then add the following configuration to launch.json:
+
 ```json
 {
     "name": "CodeLLDB attach",
     "type": "lldb",
     "request": "attach",
     "program": "${workspaceFolder}/output/be/lib/doris_be",
-    "pid":"${command:pickMyProcess}"
+    "pid": "${command:pickMyProcess}"
 }
 ```
 
-It should be noted that this method requires the system `glibc` version to be `2.18+`. you can refer [Get VSCode CodeLLDB plugin work on CentOS 7](https://gist.github.com/JaySon-Huang/63dcc6c011feb5bd6deb1ef0cf1a9b96) to make plugin work.
+:::caution glibc Version Requirement
+This method requires the system `glibc` version to be `2.18+`. If this is not satisfied, refer to [How to make CodeLLDB work on CentOS7](https://gist.github.com/JaySon-Huang/63dcc6c011feb5bd6deb1ef0cf1a9b96) to install a newer glibc and link it to the extension.
+:::
 
-## Debugging core dump files
+## 5. Debugging Core Dump Files
 
-Sometimes we need to debug the core files generated by a crash, which can also be done in vscode, by adding the corresponding configuration item
+To debug a core file produced by a BE crash, add the following to the corresponding configuration entry:
+
 ```json
-    "coreDumpPath": "/PATH/TO/CORE/DUMP/FILE"
-```
-and you're done.
-
-## Common debugging techniques
-
-### Function execution paths
-
-When you are not familiar with the details of BE execution, you can trace function calls and find out the call chain using relevant tools such as `perf`. `perf` can be used in [Debug Tool](./debug-tool.md). At this point we can execute the sql statement to be traced on a larger table and then increase the sampling frequency (e.g., `perf -F 999`). Observe the results to get a rough idea of the critical path of sql execution at BE.
-
-### Debugging CRTP objects
-
-BE code uses a lot of CRTP (singular recursive template pattern) in the base types in order to improve the efficiency of operation, which makes it impossible for the debugger to debug objects according to the derived types. In this case we can use GDB to solve this problem in this way:
-
-Suppose we need to debug an object ``col`` of type ``IColumn`` and do not know its actual type, then we can:
-
-```powershell
-set print object on # Output the object as a derived type
-p *col.t # Use col.t in this case to get the exact type of col
-p col.t->size() # You can use it according to the derived type, e.g. ColumnString we can call size()
-......
+"coreDumpPath": "/PATH/TO/CORE/DUMP/FILE"
 ```
 
-Note: it is the pointer `COW::t` that has the effect of polymorphism and not the `IColumn` class object, so we need to replace all uses of `col` with `col.t` in the GDB to actually get the derived type object.
+## 6. Common Debugging Tips
+
+### 6.1 Function Execution Path
+
+When you are not familiar with the BE execution details, use tools such as `perf` to trace function calls and identify the call chain. For `perf` usage, see [Debugging Tools](./debug-tool).
+
+Run the SQL you want to trace on a large table, then increase the sampling frequency (for example, `perf -F 999`). Observing the results gives a rough picture of the critical path of the SQL on BE.
+
+### 6.2 Debugging CRTP Objects
+
+To improve runtime efficiency, the BE code heavily uses CRTP (Curiously Recurring Template Pattern) in base types, which prevents the debugger from inspecting an object as its derived type. You can work around this in GDB as follows:
+
+Suppose you need to debug an object `col` of type `IColumn` but do not know its actual type:
+
+```bash
+set print object on   # Print objects by derived type
+p *col.t              # Use col.t to get the concrete type of col
+p col.t->size()       # Use it as the derived type, for example, ColumnString supports size()
+```
+
+:::caution
+The polymorphic effect applies to the pointer `COW::t`, not the `IColumn` class object. You must replace every use of `col` with `col.t` in GDB to actually obtain the derived-type object.
+:::
+
+## 7. Frequently Asked Questions (FAQ)
+
+<!-- Knowledge type: Troubleshooting -->
+
+### Q1: BE Exits Immediately After Startup
+
+Environment variables are not set, or paths do not exist. Verify that `DORIS_HOME`, `LOG_DIR`, `PID_DIR`, and `UDF_RUNTIME_DIR` are all set and that the corresponding directories have been created.
+
+### Q2: GDB Reports a Version Too Low or an Unsupported Feature
+
+The GDB version shipped with the system is outdated. Install a newer GDB manually and specify it in `miDebuggerPath`.
+
+### Q3: CodeLLDB Fails to Load
+
+The system `glibc` version is lower than `2.18`. Refer to the link in section 4 to resolve this.
+
+### Q4: Maven Fails to Reach the External Network When Compiling FE
+
+Set the `USER_SETTINGS_MVN_REPO` environment variable to point to the `settings.xml` of a private Maven repository. See the tip in section 2.3.

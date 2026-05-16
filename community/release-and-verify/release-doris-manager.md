@@ -1,15 +1,15 @@
 ---
-title: 发布 Doris Manager
-language: zh-CN
-description: Apache Doris Manager 发版流程：分支管理、Tag、打包签名、SVN 上传、社区与 IPMC 投票。
+title: Release Doris Manager
+language: en
+description: "Apache Doris Manager release process: branch management, tagging, packaging and signing, SVN upload, community vote, and IPMC vote."
 keywords:
     - Apache Doris
     - Doris Manager
-    - 发版流程
-    - 社区投票
-    - IPMC 投票
-    - GPG 签名
-    - SVN 上传
+    - Release Process
+    - Community Vote
+    - IPMC Vote
+    - GPG Signing
+    - SVN Upload
 ---
 
 <!-- 
@@ -31,75 +31,75 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# 发布 Doris Manager
+# Release Doris Manager
 
-<!-- 知识类型: 操作步骤 -->
-<!-- 适用场景: Apache 发版流程 / Doris Manager 发布 -->
+<!-- Knowledge type: Operational steps -->
+<!-- Applicable scenario: Apache release process / Doris Manager release -->
 
-Doris Manager 代码库独立于 Doris 主代码库，地址为 [apache/doris-manager](https://github.com/apache/doris-manager)。本文介绍 Doris Manager 的完整发版流程。
+The Doris Manager codebase is maintained separately from the main Doris codebase, at [apache/doris-manager](https://github.com/apache/doris-manager). This document describes the complete release process for Doris Manager.
 
-## 发版流程概览
+## Release Process Overview
 
-| 阶段 | 步骤 | 目的 |
+| Stage | Step | Purpose |
 |------|------|------|
-| 准备 | 1. 发版准备 | 完成 GPG 密钥、SVN 权限等准备 |
-| 准备 | 2. 准备分支 | 新建发版分支，确保功能稳定 |
-| 准备 | 3. 清理 Issues | 关闭已完成项，推迟未完成项 |
-| 准备 | 4. 合入必要 Patch | 评估并合入重要 Patch |
-| 验证 | 5. 验证分支 | 稳定性测试与编译验证 |
-| 投票 | 6. 打 Tag、打包、签名上传 | 生成 RC 包并上传 SVN |
-| 投票 | 7. dev@doris 投票 | 社区投票 |
-| 投票 | 8. IPMC 投票 | 孵化器 PMC 投票 |
-| 收尾 | 9. 完成发布 | 归档、发布、Announce |
+| Preparation | 1. Release preparation | Complete GPG keys, SVN access, and other prerequisites |
+| Preparation | 2. Prepare the branch | Create the release branch and ensure feature stability |
+| Preparation | 3. Clean up issues | Close completed items and defer unfinished items |
+| Preparation | 4. Merge required patches | Evaluate and merge important patches |
+| Verification | 5. Verify the branch | Stability testing and build verification |
+| Vote | 6. Tag, package, sign, and upload | Produce the RC package and upload it to SVN |
+| Vote | 7. dev@doris vote | Community vote |
+| Vote | 8. IPMC vote | Incubator PMC vote |
+| Wrap-up | 9. Complete the release | Archive, publish, and announce |
 
-## 1. 准备发布
+## 1. Prepare for Release
 
-请参阅 [发版准备](./release-prepare) 文档完成发版前置工作。
+See the [Release preparation](./release-prepare) document to complete the pre-release work.
 
-## 2. 准备分支
+## 2. Prepare the Branch
 
-发布前需要先新建一个分支：
+Before releasing, create a new branch:
 
 ```shell
 git checkout -b branch-1.0.0
 ```
 
-新建分支后需要进行充分测试，确保：
+After creating the branch, run thorough tests to confirm that:
 
-- 功能可用。
-- Bug 收敛。
-- 重要 Bug 都得到修复。
+- Features work as expected.
+- Bugs are converging.
+- All important bugs have been fixed.
 
-测试期间需要等待社区反馈，确认是否有必要 Patch 需要合入。如果有，需要将其 cherry-pick 到发布分支。
+During testing, wait for community feedback to determine whether any required patches need to be merged. If so, cherry-pick them into the release branch.
 
-## 3. 清理 Issues
+## 3. Clean Up Issues
 
-逐一过一遍属于该版本的所有 Issue：
+Go through every issue that belongs to this release:
 
-- 关闭已经完成的 Issue。
-- 无法完成的 Issue 推迟到更晚的版本。
+- Close issues that have been completed.
+- Defer issues that cannot be completed to a later release.
 
-## 4. 合并必要的 Patch
+## 4. Merge Required Patches
 
-在发布等待过程中，可能会有重要的 Patch 需要合入。如果社区反馈有重要 Bug 需要合入，Release Manager 需要评估并将重要 Patch 合入到发布分支。
+While waiting for the release, important patches may need to be merged. If the community reports an important bug that needs to be included, the Release Manager evaluates the fix and merges the patch into the release branch.
 
-## 5. 验证分支
+## 5. Verify the Branch
 
-### 5.1 稳定性测试
+### 5.1 Stability Testing
 
-将打好的分支交给 QA 同学进行稳定性测试。如果在测试过程中出现需要修复的问题，待修复完成后，需要将修复问题的 PR 合入到发布分支。
+Hand the prepared branch to QA for stability testing. If issues that need fixing surface during testing, merge the fix PRs into the release branch once they are ready.
 
-待整个分支稳定后才能准备发版。
+Only proceed to the release after the entire branch is stable.
 
-### 5.2 编译验证
+### 5.2 Build Verification
 
-请参阅编译文档进行编译，以确保源码编译正确。
+Refer to the build documentation and build from source to confirm that the source code compiles correctly.
 
-## 6. 社区发布投票流程
+## 6. Community Release Vote Process
 
-### 6.1 打 Tag
+### 6.1 Create the Tag
 
-当上述分支已经比较稳定后，在该分支上打 tag。例如：
+Once the branch is stable, create a tag on it. For example:
 
 ```shell
 git checkout branch-1.0.0
@@ -107,7 +107,7 @@ git tag -a 1.0.0-rc01 -m "doris manager 1.0.0 release candidate 01"
 git push origin 1.0.0-rc01
 ```
 
-预期输出：
+Expected output:
 
 ```text
 Counting objects: 1, done.
@@ -117,13 +117,13 @@ To git@github.com:apache/doris-manager.git
  * [new tag]         1.0.0-rc01 -> 1.0.0-rc01
 ```
 
-通过 `git tag` 命令可查看本地 tag 列表。
+Run `git tag` to list local tags.
 
-### 6.2 打包、签名上传
+### 6.2 Package, Sign, and Upload
 
-下面的步骤需要通过 SecureCRT 等终端直接登录用户账号，**不能通过 `su - user` 或 `ssh` 跳转**，否则密码输入框可能无法显示并报错。
+The following steps require logging in to the user account directly through a terminal such as SecureCRT. **Do not switch in via `su - user` or `ssh`**, or the password prompt may fail to display and the command will error out.
 
-#### 6.2.1 打包并签名
+#### 6.2.1 Package and Sign
 
 ```shell
 git archive --format=tar 1.0.0-rc01 --prefix=apache-doris-incubating-manager-src-1.0.0-rc01/ | gzip > apache-doris-incubating-manager-src-1.0.0-rc01.tar.gz
@@ -137,15 +137,15 @@ sha512sum apache-doris-incubating-manager-src-1.0.0-rc01.tar.gz > apache-doris-i
 sha512sum --check apache-doris-incubating-manager-src-1.0.0-rc01.tar.gz.sha512
 ```
 
-#### 6.2.2 上传到 SVN
+#### 6.2.2 Upload to SVN
 
-下载 SVN 库：
+Check out the SVN repository:
 
 ```shell
 svn co https://dist.apache.org/repos/dist/dev/doris/
 ```
 
-将之前得到的全部文件组织成以下 SVN 路径：
+Organize the files produced above into the following SVN path:
 
 ```text
 ./doris/
@@ -156,22 +156,22 @@ svn co https://dist.apache.org/repos/dist/dev/doris/
 │       └── apache-doris-incubating-manager-src-1.0.0-rc01.tar.gz.sha512
 ```
 
-上传这些文件：
+Upload these files:
 
 ```shell
 svn add 1.0.0-rc01
 svn commit -m "Add doris manager 1.0.0-rc01"
 ```
 
-### 6.3 发邮件到社区 dev@doris.apache.org 进行投票
+### 6.3 Send a Vote Email to dev@doris.apache.org
 
-邮件标题：
+Email subject:
 
 ```text
 [VOTE] Release Apache Doris Manager 1.0.0-incubating-rc01
 ```
 
-邮件正文模板：
+Email body template:
 
 ```text
 Hi All,
@@ -206,7 +206,7 @@ Please vote accordingly:
 [1] vote thread in dev@doris
 
 
-Brs，
+Brs,
 xxxx
 ------------------
 DISCLAIMER: 
@@ -224,15 +224,15 @@ of the completeness or stability of the code, it does indicate
 that the project has yet to be fully endorsed by the ASF.
 ```
 
-### 6.4 投票通过后，发 Result 邮件
+### 6.4 After the Vote Passes, Send a Result Email
 
-邮件标题：
+Email subject:
 
 ```text
 [Result][VOTE] Release Apache Doris Manager 1.0.0-incubating-rc01
 ```
 
-邮件正文模板：
+Email body template:
 
 ```text
 Thanks to everyone, and this vote is now closed.
@@ -249,11 +249,11 @@ Best Regards,
 xxx
 ```
 
-## 7. IPMC 投票
+## 7. IPMC Vote
 
-dev 邮件组通过后，再发送邮件到 `general@incubator.apache.org` 邮件组进行 IPMC 投票。
+After the dev mailing list vote passes, send an email to the `general@incubator.apache.org` mailing list to start the IPMC vote.
 
-邮件正文模板：
+Email body template:
 
 ```text
 Hi all,
@@ -320,21 +320,21 @@ of the completeness or stability of the code, it does indicate
 that the project has yet to be fully endorsed by the ASF.
 ```
 
-邮件的 thread 链接可在以下地址查询：
+Look up the email thread link at:
 
 ```text
 https://lists.apache.org/list.html?dev@doris.apache.org
 ```
 
-### 7.1 发 Result 邮件到 general@incubator.apache.org
+### 7.1 Send the Result Email to general@incubator.apache.org
 
-邮件标题：
+Email subject:
 
 ```text
 [RESULT][VOTE] Release Apache Doris Manager 1.0.0-incubating-rc01
 ```
 
-邮件正文模板：
+Email body template:
 
 ```text
 Hi,
@@ -356,23 +356,23 @@ Best Regards,
 xxx
 ```
 
-## 8. 完成发布
+## 8. Complete the Release
 
-请参阅 [完成发布](./release-complete) 文档完成所有发布流程。
+See the [Complete the release](./release-complete) document to finish all release steps.
 
 ## FAQ
 
-### Q1：打包、签名步骤为什么不能用 `ssh` 或 `su - user`？
+### Q1: Why can the packaging and signing step not be done through `ssh` or `su - user`?
 
-通过 `ssh` 或 `su -` 切换进入的终端无法正确显示 GPG 密码输入框，会导致签名命令报错。需通过 SecureCRT 等终端直接登录目标用户账号。
+A terminal entered through `ssh` or `su -` cannot correctly display the GPG password prompt, which causes the signing command to fail. Log in to the target user account directly through a terminal such as SecureCRT.
 
-### Q2：`gpg --verify` 报错 `gpg verify failed` 或 `BAD signature`
+### Q2: `gpg --verify` reports `gpg verify failed` or `BAD signature`
 
-可能原因：
+Possible causes:
 
-- 公钥未导入：先执行 `gpg --import KEYS`。
-- 签名文件与源码包不匹配：确认 `.asc` 与 `.tar.gz` 来自同一构建过程。
+- The public key has not been imported: run `gpg --import KEYS` first.
+- The signature file does not match the source package: confirm that the `.asc` and the `.tar.gz` come from the same build.
 
-### Q3：`sha512sum --check` 报 `shasum mismatch`
+### Q3: `sha512sum --check` reports `shasum mismatch`
 
-源码包在传输过程中可能损坏或被覆盖。重新下载源码包，或重新生成 `.sha512` 校验文件后再次校验。
+The source package may have been corrupted or overwritten during transfer. Download the source package again, or regenerate the `.sha512` checksum file and re-verify.

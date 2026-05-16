@@ -1,12 +1,16 @@
 ---
-{
-    "title": "Docs Contribution",
-    "language": "en"
-}
-
+title: Documentation Contribution Guide
+language: en
+description: "How to contribute documentation to Apache Doris: repository structure, version management, sidebar configuration, and PR submission workflow."
+keywords:
+    - Apache Doris
+    - documentation contribution
+    - doris-website
+    - sidebar configuration
+    - multi-version documentation
 ---
 
-<!-- 
+<!--
 Licensed to the Apache Software Foundation (ASF) under one
 or more contributor license agreements.  See the NOTICE file
 distributed with this work for additional information
@@ -25,20 +29,27 @@ specific language governing permissions and limitations
 under the License.
 -->
 
+<!-- Knowledge type: Procedure -->
+<!-- Applicable scenario: Documentation contribution / submitting documentation modification PRs -->
 
-This document contribution guide primarily explains how to modify and contribute to the Doris's documents.
+This article describes how to contribute documentation to Apache Doris, including the directory structure of the website repository, where to modify documentation for each version, how to configure the sidebar and Chinese translation files, and the writing conventions for the command help manual.
 
-Please note that whether it is for historical versions or the latest version of the docs, all modifications should be submitted as pull requests on the [apache/doris-website](https://github.com/apache/doris-website) repository.
+Whether you are working on historical versions or the latest version of the documentation, all changes are submitted as PRs to the [apache/doris-website](https://github.com/apache/doris-website) repository.
 
-For how to submit pull requests, please refer to
+:::tip
 
-- [How to Contribute](https://doris.apache.org/zh-CN/community/how-to-contribute/)
+For the PR submission workflow, you can also refer to:
 
-- [Code Submission Guide](https://doris.apache.org/zh-CN/community/how-to-contribute/pull-request)
+- [Contribute to Doris](./contribute-to-doris)
+- [Pull Request Guide](./pull-request)
 
-## Doris Website Directory Structure
+:::
 
-```Plain
+## Doris Website Repository Structure
+
+The following is the main directory tree of the [apache/doris-website](https://github.com/apache/doris-website) repository. Before contributing documentation, use it to locate the position you need to modify.
+
+```plain
 .
 ├── blog
 │   ├── 1.1 Release.md
@@ -50,8 +61,6 @@ For how to submit pull requests, please refer to
 │   └── xiaomi.md
 ├── community
 │   ├── design
-│   │   ├── spark_load.md
-│   │   ├── doris_storage_optimization.md
 │   │   ├── grouping_sets_design.md
 │   │   └── metadata-design.md
 │   ├── ......
@@ -97,50 +106,11 @@ For how to submit pull requests, please refer to
 │       └── redirect.js
 ├── versioned_docs
 │   ├── version-1.2
-│   │   ├── admin-manual
-│   │   ├── advanced
-│   │   ├── benchmark
-│   │   ├── data-operate
-│   │   ├── data-table
-│   │   ├── ecosystem
-│   │   ├── faq
-│   │   ├── get-starting
-│   │   ├── install
-│   │   ├── lakehouse
-│   │   ├── query-acceleration
-│   │   ├── releasenotes
-│   │   └── sql-manual
-│   └── version-2.0
-│       ├── admin-manual
-│       ├── benchmark
-│       ├── data-operate
-│       ├── db-connect
-│       ├── ecosystem
-│       ├── faq
-│       ├── get-starting
-│       ├── install
-│       ├── lakehouse
-│       ├── query
-│       ├── releasenotes
-│       ├── sql-manual
-│       └── table-design
-└── version-2.1
-│       ├── admin-manual
-│       ├── advanced
-│       ├── benchmark
-│       ├── data-operate
-│       ├── data-table
-│       ├── ecosystem
-│       ├── faq
-│       ├── get-starting
-│       ├── install
-│       ├── lakehouse
-│       ├── query-acceleration
-│       ├── releasenotes
-│       └── sql-manual
+│   ├── version-2.0
+│   └── version-2.1
 ├── versioned_sidebars
 │   ├── version-1.2-sidebars.json
-│   └── version-2.0-sidebars.json
+│   ├── version-2.0-sidebars.json
 │   └── version-2.1-sidebars.json
 ├── babel.config.js
 ├── build.sh
@@ -150,63 +120,83 @@ For how to submit pull requests, please refer to
 ├── README.md
 ├── sidebars.json
 ├── sidebarsCommunity.json
-├── tree.out
 ├── tsconfig.json
-├── versions.json
+└── versions.json
 ```
 
-The following describes the directory structure of the Doris Website site so that users can easily find the corresponding directory and submit changes.
+The following table summarizes the purpose of each directory to help you quickly locate where to make changes.
 
-### 01 Blog Directory
+| Directory | Content | Scope |
+| --- | --- | --- |
+| `blog/` | Blog article Markdown files | Shared across all versions |
+| `community/` | English community documentation | Shared across all versions |
+| `docs/` | English latest version (Dev / Master) documentation | Current main branch |
+| `versioned_docs/version-X.X/` | English historical version documentation | 1.2 / 2.0 / 2.1, etc. |
+| `i18n/zh-CN/docusaurus-plugin-content-docs/current/` | Chinese latest version documentation | Current main branch |
+| `i18n/zh-CN/docusaurus-plugin-content-docs/version-X.X/` | Chinese historical version documentation | 1.2 / 2.0 / 2.1, etc. |
+| `i18n/zh-CN/docusaurus-plugin-content-docs-community/` | Chinese community documentation | Shared across all versions |
+| `sidebars.json` | Sidebar for the latest version of the documentation | Shared between Chinese and English |
+| `versioned_sidebars/version-X.X-sidebars.json` | Sidebar for historical version documentation | Shared between Chinese and English |
+| `sidebarsCommunity.json` | Sidebar for community documentation | Shared across all versions |
+| `static/images/` | Documentation image resources | Shared across all versions |
 
-The blog directory is located at `/blog`. All Blog Markdown should be placed in that directory. 
+## Blog Directory
 
-If you would like to share your technical insights, welcome to directly submitting a Blog PR or contacting dev@doris.apache.org.
+The blog directory is located at `/blog` under the root directory. All blog Markdown files are placed in this directory.
 
-### 02 Docs Directory
+If you want to contribute to the blog or share your technical insights, you are welcome to contact us at `dev@doris.apache.org` or submit a blog PR directly.
 
-Here is the list of files if you need to submit docs changes:
+## Documentation Directory
 
-1. **Markdown Files:** When you want to modify existing content or add new documents, you need to place them to the respective folders and both update Master branch and Version docs (2.1/2.0/1.2) .
-2. **Sidebar Files:** These files control the directory structures. When adding new files or new directory, you should also update relative path in sidebar files that ensure the new document is displayed correctly in directory.  Currently, Master branch and other versions have separate sidebar files, including `sidebar.json, version-2.0-sidebars.json, and version-2.1-sidebars.json`.
+<!-- Knowledge type: Procedure -->
 
-Please make sure to update all the necessary files accordingly when modifying existing document content, adding new documents, or adding new directory sections.
+When modifying documentation, depending on the type of change, you need to modify different files at the same time:
 
-The following are the detailed steps for explaining how and where modify the docs: 
+1. **Modifying existing documentation content**: You need to update both the latest documentation version on the Master branch and the corresponding version branches (such as 2.1, 2.0, 1.2, or multiple versions).
+2. **Adding new documentation**: In addition to uploading the new Markdown file, you also need to add the new documentation link path in the sidebar file.
+3. **Adding a new documentation category**: In addition to adjusting the directory structure, you also need to add the Chinese translation for the new category.
 
-**Updating Latest Version (Master Branch)**
+The file types that need to be modified are as follows:
 
-**1. Update content**
+| File type | Purpose | Example |
+| --- | --- | --- |
+| Markdown file | Documentation body content | `docs/admin-manual/xxx.md` |
+| Sidebar file | Controls the directory structure | `sidebars.json` / `version-2.1-sidebars.json` |
+| Translation file | Controls how categories are displayed in the Chinese documentation | `current.json` / `version-2.1.json` |
 
-This version is modified in the `/docs` directory
+:::caution Note
 
-```Plain
+All documentation must include both Chinese and English versions. Otherwise, the directory structure becomes inconsistent and the Chinese documentation may fail to display. This rule applies to all blog, documentation, and community content.
+
+:::
+
+### Dev Version: Latest Master Branch Documentation
+
+**1. Where to modify content**
+
+- English documentation: under `docs/` at the root directory
+- Chinese documentation: under `i18n/zh-CN/docusaurus-plugin-content-docs/current/`
+
+```plain
 .
 ├── docs
 │   ├── admin-manual
 │   ├── ......
-```
-
-**2. Update sidebar**
-
-The docs directory structure of the latest version is edited by `sidebar.json`.
-
-```Plain
-.
-├── docs
-│   ├── admin-manua
-│   ├── ......
 ├── i18n
-├── src
-├── static
-├── versioned_docs
-├── versioned_sidebars
-├── sidebars.json
+│   └── zh-CN
+│       ├── docusaurus-plugin-content-docs
+│       │   ├── current
+│       │   │    ├── admin-manual
+│       │   │    ├── ......
 ```
 
-Whether add new docs to existing directory or new directory, you need to update the relative path of the added docs in `sidebar.json`.
+**2. Documentation directory structure**
 
-```JSON
+For the Dev version, both Chinese and English documentation are controlled by `sidebars.json` in the root directory.
+
+Example of `sidebars.json`:
+
+```json
 {
     "docs": [
             {
@@ -236,94 +226,168 @@ Whether add new docs to existing directory or new directory, you need to update 
  }
 ```
 
-**Updating Version 2.1/2.0/1.2**
+**3. Chinese translation for categories**
 
-**1. Update content**
+The Chinese translation file for Dev version categories is located at `i18n/zh-CN/docusaurus-plugin-content-docs/current.json`.
 
-- 2.1 version is modified in the `/versioned_docs/version-2.1` directory
+Taking the category "Getting Started" as an example:
 
-- 2.0 version is modified in the `/versioned_docs / version-2.0`directory
+- `sidebar.docs.category.Getting Started` corresponds to the `label` hierarchy in `sidebars.json`.
+- The format is: `sidebar` + `.` + `docs` + `.` + `[type]` + `[label]`.
 
-- 1.2 version is modified in the `/versioned_docs / version-1.2` directory
+```json
+{
+      "version.label": {
+        "message": "dev",
+        "description": "The label for version current"
+      },
+      "sidebar.docs.category.Getting Started": {
+        "message": "快速开始",
+        "description": "The label for category Getting Started in sidebar docs"
+      },
+      ......
+}
+```
 
-```Plain
+The corresponding `sidebars.json` snippet:
+
+```json
+{
+    "docs": [
+            {
+                "type": "category",
+                "label": "Getting Started",
+                "items": [
+                    "get-starting/quick-start",
+                    "get-starting/what-is-apache-doris"
+                ]
+            },
+            ......
+         }
+     ]
+ }
+```
+
+### 2.1 / 2.0 / 1.2 Historical Versions
+
+**1. Where to modify content**
+
+| Version | English documentation location | Chinese documentation location |
+| --- | --- | --- |
+| 2.1 | `/versioned_docs/version-2.1` | `i18n/zh-CN/docusaurus-plugin-content-docs/version-2.1` |
+| 2.0 | `/versioned_docs/version-2.0` | `i18n/zh-CN/docusaurus-plugin-content-docs/version-2.0` |
+| 1.2 | `/versioned_docs/version-1.2` | `i18n/zh-CN/docusaurus-plugin-content-docs/version-1.2` |
+
+```plain
 .
 ├── blog
 ├── community
 ├── docs
 ├── i18n
+│   └── zh-CN
+│       ├── docusaurus-plugin-content-docs
+│       │   ├── current
+│       │   ├── version-1.2
+│       │   ├── version-2.0
+│       │   ├── version-2.1
 ├── versioned_docs
 │   ├── version-1.2
 │   ├── version-2.0
 │   ├── version-2.1
 ```
 
-**2. Update sidbar**
+**2. Documentation directory structure**
 
-The docs directory structure of the version docs is edited by `version-X.X-sidebar.json`.
+For each version, both Chinese and English documentation are controlled by `version-X.X-sidebars.json` under the root directory `versioned_sidebars/`.
 
-```Plain
+```plain
 .
-├── blog
-├── community
-├── docs
-├── i18n
-├── versioned_docs
 ├── versioned_sidebars
 │   ├── version-1.2-sidebars.json
-│   └── version-2.0-sidebars.json
+│   ├── version-2.0-sidebars.json
 │   └── version-2.1-sidebars.json
 ```
 
-### 03 Community Docs Directory
+The sidebar hierarchy for each version is modified in essentially the same way as for the Dev version, so no example is given here.
 
-If you want to modify the community docs, please go to `community/` directory. 
+**3. Chinese translation for categories**
 
-- For modifying the existing docs, please go to `community/` directory. 
+The Chinese translation files for the categories of each version are located at `i18n/zh-CN/docusaurus-plugin-content-docs/version-X.X.json`.
 
-- For updating community docs directory, please modify the `sidebarsCommunity.json` to include appropriate relative path for the new document. 
-
-```Markdown
-.
-├── blog
-├── community
-│   ├── design
-│   │   ├── spark_load.md
-│   │   ├── doris_storage_optimization.md
-│   │   ├── grouping_sets_design.md
-│   │   └── metadata-design.md
-│   ├── ......
-│   ......
-├── sidebarsCommunity.json
+```plain
+├── i18n
+│   └── zh-CN
+│       ├── docusaurus-plugin-content-docs
+│       │   ├── version-1.2.json
+│       │   ├── version-2.0.json
+│       │   ├── version-2.1.json
 ```
 
-### 04 Images Directory
+The `label` translation for the Chinese documentation of each version is essentially the same as for the Dev version, so no example is given here.
 
-All images are located at `/static/images`.
+## Community Documentation Directory
 
-You can display images in simple syntax: ` ![Alt text for images description](co-locate file structure or link) `
+The community documentation is currently a single shared version that does not distinguish between releases.
 
-If the image file name consists of multiple English words, they should be separated by hyphens "-".
+| Item | Location |
+| --- | --- |
+| English documentation | `community/` |
+| Chinese documentation | `i18n/zh-CN/docusaurus-plugin-content-docs-community/` |
+| Directory structure | `sidebarsCommunity.json` |
+| Chinese translation | `i18n/zh-CN/docusaurus-plugin-content-docs-community/current.json` |
 
-## How to write SQL manual
+Example of the Chinese translation file:
 
-SQL Manual Docs refer to the documentation under the `/sql-manual` of Master branch and version docs. 
+```json
+{
+    "version.label": {
+        "message": "Next",
+        "description": "The label for version current"
+    },
+    "sidebar.community.category.How to Contribute": {
+        "message": "贡献指南",
+        "description": "The label for category How to Contribute in sidebar community"
+    },
+    "sidebar.community.category.Release Process & Verification": {
+        "message": "版本发布与校验",
+        "description": "The label for category Release Process & Verification in sidebar community"
+    },
+    "sidebar.community.category.Design Documents": {
+        "message": "设计文档",
+        "description": "The label for category Design Documents in sidebar community"
+    },
+    "sidebar.community.category.Developer Guide": {
+        "message": "开发者手册",
+        "description": "The label for category Developer Guide in sidebar community"
+    }
+}
+```
 
-These documents are used in two places:
+## Image Directory
 
-1. Official website document.
+1. All images are placed under the `static/images/` directory.
+2. The image reference path format is `![text description](/images/image-name.image-format)`.
+    - Text description: customize based on the image content. It is recommended to keep the description close to the title content where the image appears.
+    - Image name: when the file name consists of multiple English words, separate the words with a hyphen `-`.
 
-2. The output of the HELP command.
+## How to Write the Command Help Manual
 
-In order to support HELP command output, these documents need to be written in strict accordance with the following format, otherwise they will fail the admission check.
+<!-- Knowledge type: Rules and conventions -->
 
-An example of the `SHOW ALTER` command is as follows:
+The command help manual refers to the documentation under `/sql-manual` in the Master branch and each version of the documentation. These documents are used in two places:
 
-```Plain
+1. Display on the official website documentation.
+2. Output of the `HELP` command.
+
+To support `HELP` command output, the documentation must follow the format below strictly. Otherwise, it cannot pass the admission check.
+
+Taking the `SHOW ALTER` command as an example:
+
+```markdown
 ---
 {
     "title": "SHOW-ALTER",
-    "language": "en"
+    "language": "zh-CN"
 }
 ---
 
@@ -352,13 +416,13 @@ under the License.
 
 SHOW ALTER
 
-### Description
+## Description
 
-Describe the command sytax
+(Describes the command syntax.)
 
-### Example
+## Example
 
-Support command examples
+(Provides command examples.)
 
 ### Keywords
 
@@ -366,9 +430,16 @@ SHOW, ALTER
 
 ### Best Practice
 
-（optional）
+(Best practices, if any.)
 ```
 
-:::info Note
-The above headings are in English, and pay attention to the level of the headings.
+:::caution Note
+
+Whether for Chinese or English documentation, the headings above must be in English, and the heading levels must be observed.
+
 :::
+
+## Related Documents
+
+- [Documentation Format Specification](./docs-format-specification)
+- [How to Share Blogs](./how-to-share-blogs)

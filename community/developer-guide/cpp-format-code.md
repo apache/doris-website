@@ -1,11 +1,18 @@
 ---
-{
-    "title": "C++ Format Code",
-    "language": "en"
-}
+title: C++ Code Formatting Specification
+language: en
+description: "Apache Doris C++ code formatting: clang-format tool configuration and usage from the command line and IDE."
+keywords:
+    - Apache Doris
+    - C++ code formatting
+    - clang-format
+    - LDB toolchain
+    - Clion
+    - VS Code
+    - BE development
 ---
 
-<!-- 
+<!--
 Licensed to the Apache Software Foundation (ASF) under one
 or more contributor license agreements.  See the NOTICE file
 distributed with this work for additional information
@@ -24,74 +31,88 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# C++ code formatting
+# C++ Code Formatting Specification
 
-Doris uses clang-format for code formatting, and provides a package script in the build-support directory:
+<!-- Knowledge type: Code specification -->
+<!-- Applicable scenario: BE development / Pull Request submission -->
 
-* `clang-format.sh`.
+Apache Doris uses `clang-format` to format C++ code, and provides wrapper scripts under the `build-support` directory so that developers can unify the format before submitting code.
 
-    Format the C/C++ code in the `be/src` and `be/test` directories.
+## Wrapper Scripts
 
-* `check-format.sh`.
+| Script | Purpose |
+|------|------|
+| `build-support/clang-format.sh` | Formats C/C++ code under `be/src` and `be/test` |
+| `build-support/check-format.sh` | Checks the code format of `be/src` and `be/test` and prints the diff without modifying any files |
 
-    Check the C/C++ code format in the `be/src` and `be/test` directories, and output diff, but the content of the file will not be modified.
+## Code Style Customization
 
-## Code style customization
+- The Apache Doris code style is based on Google Style with minor customizations. The configuration file `.clang-format` is located at the Doris root directory.
+- `.clang-format` is compatible with `clang-format-16.0.0` and later.
+- The `.clang-format-ignore` file lists code that should not be formatted, typically third-party libraries that should keep their original style.
 
-The code style of Doris is slightly modified on the basis of Google Style and is customized as a `.clang-format` file located in the root directory of Doris.
+## Environment Setup
 
-Currently, the `.clang-format` configuration file is adapted to versions above clang-format-16.0.0.
+You need to install `clang-format`, or use a `clang-format` plugin provided by your IDE/editor. Doris currently uses `clang-format 16` for code formatting (different versions of `clang-format` may produce different results).
 
-The code that you do not want to be formatted is recorded in the `.clang-format-ignore` file. These codes usually come from third-party code bases, and it is recommended to keep the original code style.
+### Install clang-format
 
-## Environmental preparation
+| System | Recommended approach |
+|------|---------|
+| Linux | Use the [LDB toolchain](/docs/install/source-install/compilation-with-ldb-toolchain) (which already includes the matching version), or build/install the binary yourself |
+| macOS | `brew install clang-format@16` |
 
-You need to download and install clang-format, or you can use the clang-format plug-in provided by IDE or Editor, as described below.
+LDB toolchain notes: the latest version (>= v0.18) already includes a prebuilt `clang-format 16.0.0` binary. For downloads, see [ldb_toolchain_gen Releases](https://github.com/amosbird/ldb_toolchain_gen/releases).
 
-### Download and install clang-format
+### Use an IDE Plugin
 
-The current doris uses clang-format 16 for code formatting (different versions of clang-format may produce different code formats).
+| IDE | Plugin | Notes |
+|-----|------|---------|
+| CLion | `ClangFormat` (search and download under `File -> Setting -> Plugins`) | Make sure the `clang-format` version is 16 |
+| VS Code | `Clang-Format` extension | You need to manually specify the path to the `clang-format` executable |
 
+## Usage
 
+### Run from the Command Line
 
-Linux: You can use the LDB toolchain directly, which already comes with a corresponding version of clang-format. Or install or compile the binary by yourself in other ways.
+1. Enter the Doris root directory:
 
-Mac: `brew install clang-format@16`
+    ```bash
+    cd ${DORIS_HOME}
+    ```
 
-LDB toolchain:
+2. Run the formatting script:
 
-If you are using [LDB toolchain](/docs/install/source-install/compilation-with-ldb-toolchain),
-the latest version (>= v0.18) of [LDB toolchain](https://github.com/amosbird/ldb_toolchain_gen/releases) has already included clang-format with 16.0.0 version.
+    ```bash
+    build-support/clang-format.sh
+    ```
 
-### clang-format plugin
+> Note: the `clang-format.sh` script requires Python 3 to be installed on the machine.
 
-Clion IDE can use the plug-in "ClangFormat", search and download in `File->Setting->Plugins`. However, you need to confirm whether the clang-format version is 16.
+### Use clang-format in CLion
 
-## How to use
+After installing the `ClangFormat` plugin, click `Reformat Code` to format the current file.
 
-### Command line operation
+### Use clang-format in VS Code
 
-cd to the root directory of Doris, and then execute the following command:
+1. Install the `Clang-Format` extension.
+2. Open the VS Code settings page, search for `clang_format`, and fill in the following configuration:
 
-`build-support/clang-format.sh`
+    ```json
+    {
+        "clang_format_path": "$clang-format path$",
+        "clang_format_style": "file"
+    }
+    ```
 
-> Note: The `clang-format.sh` script requires python 3 to be installed on your machine
+3. Right-click and select `Format Document` to format the file.
 
-### Use clang-format in IDE or Editor
+## FAQ
 
-#### Clion
+**Q: Will different `clang-format` versions cause inconsistent formatting?**
 
-If Clion uses a plug-in, just click `Reformat Code`.
+Yes. Use the `clang-format 16` series strictly, otherwise the format may not match what the project expects and CI may fail.
 
-#### VS Code
+**Q: Will third-party code also be formatted?**
 
-VS Code needs to install the extension Clang-Format, but you need to provide the location of the clang-format execution program.
-
-Open the VS Code configuration page, directly search for "clang_format", and fill in
-
-```
-"clang_format_path": "$clang-format path$",
-"clang_format_style": "file"
-```
-
-Then, right-click on `Format Document`.
+No. Directories listed in `.clang-format-ignore` are skipped, so that third-party dependencies keep their original code style.

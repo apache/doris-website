@@ -1,11 +1,18 @@
 ---
-{
-"title": "Release Doris Shade",
-"language": "en"
-}
+title: Release Apache Doris Shade
+language: en
+description: "Apache Doris Shade release process: Maven release prepare/perform, SVN upload, and community vote."
+keywords:
+    - Apache Doris Shade release
+    - Maven release prepare
+    - Maven release perform
+    - Apache vote
+    - Maven Staging
+    - SVN dist
+    - Release Manager
 ---
 
-<!-- 
+<!--
 Licensed to the Apache Software Foundation (ASF) under one
 or more contributor license agreements.  See the NOTICE file
 distributed with this work for additional information
@@ -24,125 +31,148 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# Release Doris Shade
+# Release Apache Doris Shade
 
-Its code base is independent of the main Doris code base, located at:
+<!-- Knowledge type: Procedure -->
+<!-- Applicable scenario: Version release / Apache vote process -->
 
-- https://github.com/apache/doris-shade
+The Doris Shade repository is independent of the main Doris repository and lives at:
 
-## Preparing for release
+- [https://github.com/apache/doris-Shade](https://github.com/apache/doris-Shade)
 
-First, please refer to the [release preparation](./release-prepare.md) document to prepare for the release.
+This document uses the release of Doris Shade v1.0.0 as an example to describe the complete process for Shade-style components, covering the Maven release plugin, SVN preparation, and the community vote.
 
-## Releasing to Maven
+## Prepare for Release
 
-Let's take the release of Doris Shade v1.0.0 as an example.
+First, refer to the [Release Preparation](./release-prepare) document to set up the signing, SVN, and Maven environments.
 
-### 1. Prepare the branch
+## Release to Maven
 
-Create a branch in the code base: 1.0.0-release, and checkout to this branch.
+### 1. Prepare the Branch
 
-### 2. Release to Maven staging
+In the repository, create the `1.0.0-release` branch and check it out.
 
-Execute the following command to start generating release tags:
+### 2. Release to Maven Staging
+
+Run the Maven release plugin to generate the release tag:
 
 ```shell
 mvn release:clean
 mvn release:prepare -DpushChanges=false
 ```
 
-Among them, `-DpushChanges=false` means that during the execution process, the newly generated branches and tags will not be pushed to the code base.
+`-DpushChanges=false` means that the newly generated branch and tag are **not** automatically pushed to the repository during execution.
 
-After executing the `release:prepare` command, the following three pieces of information will be requested:
+During execution, `release:prepare` prompts for three pieces of information:
 
-1. Version information of Doris Shade: We can use the default, you can directly press Enter or enter the version you want. The version format is `{shade.version}`, such as `1.0.0`.
-2. Release tag of Doris Shade: The release process will generate a tag locally. We can use the default tag name, such as `1.0.0`.
-3. The version number of the next version of Doris Shade: this version number is only used when generating local branches, and has no practical significance. We can fill in one according to the rules. For example, the current version to be released is: `1.0.0`, then fill in `1.0.1-SNAPSHOT` for the next version number.
+| Prompt | Recommended value | Example |
+| --- | --- | --- |
+| Doris Shade version | Use the default, in the format `{shade.version}` | `1.0.0` |
+| Release tag name | Use the default tag name | `1.0.0` |
+| Next version | Used for the local branch, no practical meaning | `1.0.1-SNAPSHOT` |
 
-`mvn release:prepare` may ask for a GPG passphrase. If there is `gpg: no valid OpenPGP data found` error, you can execute `export GPG_TTY=$(tty)` and try again.
+You may be prompted for the GPG passphrase during execution. If you see `gpg: no valid OpenPGP data found`, run `export GPG_TTY=$(tty)` first and retry.
 
-After `mvn release:prepare` is executed successfully, a tag and a branch will be generated locally. And the current branch will add two commits. The first commit corresponds to the newly generated tag, and the second is the next version of the branch. It can be viewed through `git log`.
+After `mvn release:prepare` finishes successfully, a tag and a branch are generated locally, and two new commits are added to the current branch:
 
-After the local tag is confirmed to be correct, the tag needs to be pushed to the code base:
+1. The first commit corresponds to the newly generated tag.
+2. The second commit corresponds to the branch for the next version.
 
-`git push upstream --tags`
+You can verify this with `git log`.
 
-Where upstream points to the `apache/doris-shade` codebase.
+After confirming that the local tag is correct, push the tag to the repository:
 
-Finally, execute perform:
-
+```bash
+git push upstream --tags
 ```
+
+Here, `upstream` points to the `apache/doris-shade` repository.
+
+Finally, run release:perform:
+
+```bash
 mvn release:perform
 ```
 
-After successful execution, you can find the newly released version in [https://repository.apache.org/#stagingRepositories](https://repository.apache.org/#stagingRepositories):
+After successful execution, you can see the released version at [https://repository.apache.org/#stagingRepositories](https://repository.apache.org/#stagingRepositories):
 
 ![](/images/staging-repositories.png)
 
-**Note that the `.asc` signature file needs to be included. **
+:::caution Note
+Confirm that the artifacts include the `.asc` signature file.
+:::
 
-If the operation is wrong. It is necessary to delete the local tag, the tag in the code base, and the two newly generated commits locally. And drop staging. Then perform the above steps again.
+If something went wrong, you need to:
 
-After checking, click the `close` button in the figure to complete the staging release.
+1. Delete the local tag.
+2. Delete the tag in the repository.
+3. Delete the two newly generated local commits.
+4. Drop the staging repository.
+5. Repeat the steps above.
 
-### 3. Prepare svn
+After verifying everything is correct, click the `close` button to complete the Staging release.
 
-Check out the svn repository:
+### 3. Prepare SVN
 
-```
+Check out the Dev SVN repository:
+
+```bash
 svn co https://dist.apache.org/repos/dist/dev/doris/
 ```
 
-Package tag source code, and generate signature file and sha256 verification file. Here we take `1.0.0` as an example. Other tag operations are the same
+Package the tag source code and generate the signature file and SHA512 checksum file (the following uses `1.0.0` as an example):
 
-```
+```bash
 git archive --format=tar 1.14_2.12-1.0.0 --prefix=apache-doris-shade-1.0.0-src/ | gzip > apache-doris-shade-1.0.0-src.tar.gz
-gpg -u xxx@apache.org --armor --output apache-doris-shade-1.0.0-src.tar.gz.asc --detach-sign apache-doris-shade-1.0.0-src.tar. gz
+gpg -u xxx@apache.org --armor --output apache-doris-shade-1.0.0-src.tar.gz.asc  --detach-sign apache-doris-shade-1.0.0-src.tar.gz
 sha512sum apache-doris-shade-1.14_2.12-1.0.0-src.tar.gz > apache-doris-shade-1.0.0-src.tar.gz.sha512
+```
 
-Mac:
+On macOS, use:
+
+```bash
 shasum -a 512 apache-doris-shade-1.0.0-src.tar.gz > apache-doris-shade-1.0.0-src.tar.gz.sha512
 ```
 
 You end up with three files:
 
-```
-apache-doris-shade-1.0.0-src.tar.gz
-apache-doris-shade-1.0.0-src.tar.gz.asc
-apache-doris-shade-1.0.0-src.tar.gz.sha512
-```
+| File | Purpose |
+| --- | --- |
+| `apache-doris-shade-1.0.0-src.tar.gz` | Source package |
+| `apache-doris-shade-1.0.0-src.tar.gz.asc` | GPG signature file |
+| `apache-doris-shade-1.0.0-src.tar.gz.sha512` | SHA512 checksum file |
 
-Move these three files to the svn directory:
+Move the three files to the SVN directory:
 
-```
+```text
 doris/doris-shade/1.0.0/
 ```
 
-The final svn directory structure is similar to:
+Example of the full SVN directory structure:
 
-```
+```text
 ├── 1.2.3-rc01
-│ ├── apache-doris-1.2.3-src.tar.gz
-│ ├── apache-doris-1.2.3-src.tar.gz.asc
-│ ├── apache-doris-1.2.3-src.tar.gz.sha512
+│   ├── apache-doris-1.2.3-src.tar.gz
+│   ├── apache-doris-1.2.3-src.tar.gz.asc
+│   ├── apache-doris-1.2.3-src.tar.gz.sha512
 ...
 ├── KEYS
 ├── doris-shade
-│ └── 1.0.0
-│ ├── apache-doris-shade-1.0.0-src.tar.gz
-│ ├── apache-doris-shade-1.0.0-src.tar.gz.asc
-│ └── apache-doris-shade-1.0.0-src.tar.gz.sha512
+│   └── 1.0.0
+│       ├── apache-doris-shade-1.0.0-src.tar.gz
+│       ├── apache-doris-shade-1.0.0-src.tar.gz.asc
+│       └── apache-doris-shade-1.0.0-src.tar.gz.sha512
 ```
 
-Among them, 1.2.3-rc01 is the directory of Doris main code, and `doris-shade/1.0.0` is the content of this release.
+Here, `1.2.3-rc01` is the directory for the main Doris release, and `doris-shade/1.0.0` contains the content of this release.
 
-Note, for the preparation of the KEYS file, please refer to the introduction in [Release Preparation](./release-prepare.md).
+> For how to prepare the KEYS file, see the related section in [Release Preparation](./release-prepare).
 
-### 4. Voting
+### 4. Vote
 
-Initiate a vote in the dev@doris mail group, the template is as follows:
+Start a vote on the `dev@doris.apache.org` mailing list. The template is as follows:
 
-```
+```text
 Hi all,
 
 This is a call for the vote to release Apache Doris-Shade 1.0.0
@@ -161,7 +191,7 @@ https://dist.apache.org/repos/dist/dev/doris/doris-shade/
 KEYS file is available here:
 https://downloads.apache.org/doris/KEYS
 
-To verify and build, you can refer to the following link:
+To verify and build, you can refer to following link:
 https://doris.apache.org/community/release-and-verify/release-verify
 
 The vote will be open for at least 72 hours.
@@ -171,22 +201,39 @@ The vote will be open for at least 72 hours.
 [ ] -1 Do not release this package because ...
 ```
 
-## Completing the release
+## Complete the Release
 
-Please refer to the [Complete Release](./release-complete.md) document to complete the entire release process.
+Refer to the [Complete the Release](./release-complete) document to finish the entire release process.
 
-## APPENDIX: Releasing TO SNAPSHOT
+## Appendix: Release to SNAPSHOT
 
-Snapshot is not an Apache Release version, it is only used for preview before release. After being discussed and approved by the PMC, the Snapshot version can be released
+<!-- Knowledge type: Procedure -->
+<!-- Applicable scenario: Pre-release preview -->
 
-Change to the doris shade directory
+A Snapshot is not an Apache Release version. It is only used for preview before the release. A Snapshot version can only be released after PMC discussion and approval.
 
-```
+Switch to the doris-shade directory:
+
+```bash
 mvn deploy
 ```
 
-Afterwards you can see the snapshot version here:
+After that, you can view the snapshot version at the following address:
 
-```
+```text
 https://repository.apache.org/content/repositories/snapshots/org/apache/doris/doris-shade/
 ```
+
+## FAQ / Troubleshooting
+
+**Q: `mvn release:prepare` reports `gpg: no valid OpenPGP data found`?**
+
+The terminal cannot receive the GPG passphrase. Run `export GPG_TTY=$(tty)` and retry.
+
+**Q: How do I fully roll back after `mvn release:perform` fails?**
+
+Run the following steps in order: delete the local tag (`git tag -d <tag>`), delete the remote tag (`git push upstream :refs/tags/<tag>`), roll back the two local commits (`git reset --hard HEAD~2`), drop the corresponding repository on Apache Staging, and then run `mvn release:clean` and `mvn release:prepare` again.
+
+**Q: What is the difference between the Maven release plugin and manually tagging plus `mvn deploy`?**
+
+`release:prepare/perform` automatically handles version changes, tag creation, and artifact upload, which suits projects with a simple pom such as Shade. The manual approach is more flexible for multi-artifact scenarios, such as Spark Connector across Spark versions.
