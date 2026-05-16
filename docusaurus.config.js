@@ -362,7 +362,7 @@ const config = {
                 searchBarShortcutHint: true,
                 searchResultLimits: 100,
                 searchContextByPaths: ['docs-next', 'docs'],
-                useAllContextsWithNoSearchContext: true,
+                useAllContextsWithNoSearchContext: false,
             },
         ],
     ],
