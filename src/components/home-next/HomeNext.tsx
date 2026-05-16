@@ -20,8 +20,8 @@ export default function HomeNext({ onSwitchBack }: HomeNextProps): JSX.Element {
             onSwitchBack={onSwitchBack}
         >
             <HeroSection />
-            <FeaturesSection />
             <UseCasesSection />
+            <FeaturesSection />
             <EcosystemSection />
             <DeploymentSection />
             <CommunitySection />
