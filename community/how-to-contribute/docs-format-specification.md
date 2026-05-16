@@ -299,7 +299,7 @@ This is a caution
 When inserting an image, follow these rules:
 
 - Use descriptive text for image names, such as `Broadcast Join Principle`
-- **Add alt text** when inserting an image. The recommended syntax is `![Alt text description](image URL)`
+- **Add alt text** when inserting an image. The recommended syntax is `![Alt text description](https://example.com/your-image.png)`
 - To center an image, use:
 
     ```markdown
