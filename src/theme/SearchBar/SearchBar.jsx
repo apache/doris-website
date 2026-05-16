@@ -109,6 +109,10 @@ export default function SearchBar({ handleSearchBarToggle }) {
     const [inputChanged, setInputChanged] = useState(false);
     const [inputValue, setInputValue] = useState('');
     const search = useRef(null);
+    // Bumped on every loadIndex call so a stale call (whose async fetches
+    // finished after a newer call started) can abort before wrapping the
+    // input with a second autocomplete instance — see #3655 race.
+    const loadToken = useRef(0);
     const prevSearchContext = useRef('');
     const [searchContext, setSearchContext] = useState('');
     useEffect(() => {
@@ -145,13 +149,19 @@ export default function SearchBar({ handleSearchBarToggle }) {
                 // Do not load the index (again) if its already loaded or in the process of being loaded.
                 return;
             }
+            const myToken = ++loadToken.current;
             indexStateMap.current.set(searchContext, 'loading');
             search.current?.autocomplete.destroy();
+            search.current = null;
             setLoading(true);
             const [autoComplete] = await Promise.all([
                 fetchAutoCompleteJS(),
                 fetchIndexesByWorker(versionUrl, searchContext),
             ]);
+            if (myToken !== loadToken.current) {
+                // Superseded by a newer loadIndex; don't mount a second autocomplete on the same input.
+                return;
+            }
             const searchFooterLinkElement = ({ query, isEmpty }) => {
                 const a = document.createElement('a');
                 const params = new URLSearchParams();
