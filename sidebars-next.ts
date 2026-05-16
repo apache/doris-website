@@ -623,6 +623,7 @@ const sidebars: SidebarsConfig = {
                                 'lakehouse/best-practices/doris-gravitino',
                                 'lakehouse/best-practices/doris-onelake',
                                 'lakehouse/best-practices/doris-unity-catalog',
+                                'lakehouse/best-practices/doris-snowflake-catalog',
                                 'lakehouse/best-practices/doris-lakekeeper',
                                 'lakehouse/best-practices/doris-seaweedfs',
                                 'lakehouse/best-practices/doris-nessie',
@@ -720,6 +721,7 @@ const sidebars: SidebarsConfig = {
                     label: 'Lakehouse Best Practices',
                     items: [
                         'lakehouse/best-practices/optimization',
+                        'lakehouse/best-practices/doris-snowflake-catalog',
                         'lakehouse/best-practices/kerberos',
                         'lakehouse/best-practices/tpch',
                         'lakehouse/best-practices/tpcds',
