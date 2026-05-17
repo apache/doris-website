@@ -19,24 +19,3 @@ export function isDocsPath(pathname: string, locales: string[]): boolean {
     const normalizedPathname = normalizePathname(pathname, locales);
     return normalizedPathname === '/docs' || normalizedPathname.startsWith('/docs/');
 }
-
-export function isDevDocsPath(pathname: string, locales: string[]): boolean {
-    const normalizedPathname = normalizePathname(pathname, locales);
-    return normalizedPathname === '/docs/dev' || normalizedPathname.startsWith('/docs/dev/');
-}
-
-export function isReleasesPath(pathname: string, locales: string[]): boolean {
-    const normalizedPathname = normalizePathname(pathname, locales);
-    return normalizedPathname === '/releases' || normalizedPathname.startsWith('/releases/');
-}
-
-export function isEventsPath(pathname: string, locales: string[]): boolean {
-    const normalizedPathname = normalizePathname(pathname, locales);
-    return normalizedPathname === '/events' || normalizedPathname.startsWith('/events/');
-}
-
-export function isCommunityPath(pathname: string, locales: string[]): boolean {
-    const normalizedPathname = normalizePathname(pathname, locales);
-    return normalizedPathname === '/community' || normalizedPathname.startsWith('/community/')
-        || normalizedPathname === '/releases' || normalizedPathname.startsWith('/releases/');
-}

@@ -1,5 +1,5 @@
-import React, { useEffect, createContext, useState, JSX } from 'react';
-import { useLocation } from '@docusaurus/router';
+import React, { useEffect, JSX } from 'react';
+import { useHistory, useLocation } from '@docusaurus/router';
 import clsx from 'clsx';
 import ErrorBoundary from '@docusaurus/ErrorBoundary';
 import { PageMetadata, SkipToContentFallbackId, ThemeClassNames } from '@docusaurus/theme-common';
@@ -10,27 +10,17 @@ import LayoutProvider from '@theme/Layout/Provider';
 import ErrorPageContent from '@theme/ErrorPageContent';
 import type { Props } from '@theme/Layout';
 import styles from './styles.module.css';
-import { useHistory } from '@docusaurus/router';
 import { NavbarNext } from '@site/src/components/home-next/NavbarNext';
-
-interface DataType {
-    showSearchPageMobile: boolean;
-    setShowSearchPageMobile: React.Dispatch<React.SetStateAction<boolean>>;
-}
-
-export const DataContext = createContext<DataType>(null);
 
 export default function Layout(props: Props): JSX.Element {
     const {
         children,
         noFooter,
         wrapperClassName,
-        // Not really layout-related, but kept for convenience/retro-compatibility
         title,
         description,
     } = props;
     const history = useHistory();
-    const [showSearchPageMobile, setShowSearchPageMobile] = useState(false);
     const { hash } = useLocation();
     useKeyboardNavigation();
 
@@ -64,22 +54,20 @@ export default function Layout(props: Props): JSX.Element {
     }, [hash]);
 
     return (
-        <DataContext.Provider value={{ showSearchPageMobile, setShowSearchPageMobile }}>
-            <LayoutProvider>
-                <PageMetadata title={title} description={description} />
+        <LayoutProvider>
+            <PageMetadata title={title} description={description} />
 
-                <SkipToContent />
-                <NavbarNext />
+            <SkipToContent />
+            <NavbarNext />
 
-                <div
-                    id={SkipToContentFallbackId}
-                    className={clsx(ThemeClassNames.wrapper.main, styles.mainWrapper, wrapperClassName)}
-                >
-                    <ErrorBoundary fallback={params => <ErrorPageContent {...params} />}>{children}</ErrorBoundary>
-                </div>
+            <div
+                id={SkipToContentFallbackId}
+                className={clsx(ThemeClassNames.wrapper.main, styles.mainWrapper, wrapperClassName)}
+            >
+                <ErrorBoundary fallback={params => <ErrorPageContent {...params} />}>{children}</ErrorBoundary>
+            </div>
 
-                {!noFooter && <Footer />}
-            </LayoutProvider>
-        </DataContext.Provider>
+            {!noFooter && <Footer />}
+        </LayoutProvider>
     );
 }
