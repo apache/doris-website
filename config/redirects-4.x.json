@@ -208,14 +208,6 @@
     "to": "/zh-CN/docs/4.x/getting-started/what-is-apache-doris"
   },
   {
-    "from": "/docs/4.x/data-operate/import/load-best-practices",
-    "to": "/docs/4.x/getting-started/what-is-apache-doris"
-  },
-  {
-    "from": "/zh-CN/docs/4.x/data-operate/import/load-best-practices",
-    "to": "/zh-CN/docs/4.x/getting-started/what-is-apache-doris"
-  },
-  {
     "from": "/docs/4.x/data-operate/import/load-high-availability",
     "to": "/docs/4.x/getting-started/what-is-apache-doris"
   },
