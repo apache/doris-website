@@ -86,6 +86,15 @@ jobs:
                 # Check each changed file and map to doc version
                 while IFS= read -r file; do
                     case "$file" in
+                        # English Dev source (current/unreleased version)
+                        docs/*)
+                            VERSIONS="current,$VERSIONS"
+                            ;;
+                        # Chinese Dev source (current/unreleased version)
+                        i18n/zh-CN/docusaurus-plugin-content-docs/current/*)
+                            VERSIONS="current,$VERSIONS"
+                            LOCALES="en,zh-CN"
+                            ;;
                         # English versioned docs
                         versioned_docs/version-*/*)
                             ver=$(echo "$file" | sed -n 's|versioned_docs/version-\([^/]*\)/.*|\1|p')
@@ -94,6 +103,12 @@ jobs:
                         # Chinese versioned docs
                         i18n/zh-CN/docusaurus-plugin-content-docs/version-*/*)
                             ver=$(echo "$file" | sed -n 's|i18n/zh-CN/docusaurus-plugin-content-docs/version-\([^/]*\)/.*|\1|p')
+                            VERSIONS="${ver},$VERSIONS"
+                            LOCALES="en,zh-CN"
+                            ;;
+                        # Per-version label translations (e.g. version-4.x.json)
+                        i18n/zh-CN/docusaurus-plugin-content-docs/version-*.json)
+                            ver=$(echo "$file" | sed -n 's|i18n/zh-CN/docusaurus-plugin-content-docs/version-\([^.]*\)\.json|\1|p')
                             VERSIONS="${ver},$VERSIONS"
                             LOCALES="en,zh-CN"
                             ;;
@@ -106,6 +121,15 @@ jobs:
                         versioned_sidebars/version-*-sidebars.json)
                             ver=$(echo "$file" | sed -n 's|versioned_sidebars/version-\(.*\)-sidebars\.json|\1|p')
                             VERSIONS="${ver},$VERSIONS"
+                            ;;
+                        # Current-version (Dev) sidebar
+                        sidebars.ts)
+                            VERSIONS="current,$VERSIONS"
+                            ;;
+                        # versions.json controls which versions are built; any change
+                        # warrants a full multi-version build.
+                        versions.json)
+                            NEED_FULL_BUILD="true"
                             ;;
                         # Blog and community are independent plugins, not
                         # controlled by DOCS_VERSIONS. They are always built
@@ -145,8 +169,7 @@ jobs:
                     # No versioned doc changes (e.g., only blog, community, or scripts).
                     # Blog and community plugins are always compiled by Docusaurus
                     # regardless of DOCS_VERSIONS, so we just set the minimal docs
-                    # scope to keep the build fast. Use the default version since
-                    # the legacy plugin no longer ships an unversioned 'current'.
+                    # scope to keep the build fast.
                     DOCS_VERSIONS="4.x"
                     echo "No doc version changes detected, doing minimal build with '4.x' only."
                     echo "(Blog and community plugins are always built regardless.)"
