@@ -3,7 +3,13 @@ import clsx from 'clsx';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import Link from '@docusaurus/Link';
 import Translate from '@docusaurus/Translate';
-import { useActivePlugin, useDocVersionSuggestions, type GlobalVersion } from '@docusaurus/plugin-content-docs/client';
+import {
+    useActivePlugin,
+    useActiveDocContext,
+    useDocVersionSuggestions,
+    useVersions,
+    type GlobalVersion,
+} from '@docusaurus/plugin-content-docs/client';
 import { ThemeClassNames } from '@docusaurus/theme-common';
 import { useDocsPreferredVersion, useDocsVersion } from '@docusaurus/plugin-content-docs/client';
 import type { Props } from '@theme/DocVersionBanner';
@@ -59,53 +65,46 @@ function BannerLabel(props: BannerLabelComponentProps) {
     return <BannerLabelComponent {...props} />;
 }
 
-function LatestVersionSuggestionLabel({
-    versionLabel,
-    to,
-    realLatestVersion,
+function VersionsSuggestionLabel({
+    v4xTo,
+    v3xTo,
+    v21To,
     onClick,
 }: {
-    to: string;
+    v4xTo: string;
+    v3xTo: string;
+    v21To: string;
     onClick: () => void;
-    realLatestVersion: {
-        label: string;
-        to: string;
-    };
-    versionLabel: string;
 }) {
     return (
         <Translate
             id="theme.docs.versions.latestVersionSuggestionLabel"
             description="The label used to tell the user to check the latest version"
             values={{
-                latestVersionLink: (
+                v4xLink: (
                     <b>
-                        <Link to={realLatestVersion.to} onClick={onClick}>
-                            <Translate
-                                id="theme.docs.versions.latestVersionLinkLabel"
-                                description="The label used for the latest version suggestion link label"
-                            >
-                                Version 3.x
-                            </Translate>
+                        <Link to={v4xTo} onClick={onClick}>
+                            4.x
                         </Link>
                     </b>
                 ),
-                recommondVersionLink: (
+                v3xLink: (
                     <b>
-                        <Link to={to} onClick={onClick}>
-                            <Translate
-                                id="theme.docs.versions.recommondVersionLinkLabel"
-                                description="The label used for the recommended version suggestion link label"
-                            >
-                                Version 2.1
-                            </Translate>
+                        <Link to={v3xTo} onClick={onClick}>
+                            3.x
+                        </Link>
+                    </b>
+                ),
+                v21Link: (
+                    <b>
+                        <Link to={v21To} onClick={onClick}>
+                            2.1
                         </Link>
                     </b>
                 ),
             }}
         >
-            {/* 'For up-to-date documentation, see the {latestVersionLink} ({versionLabel}).' */}
-            {'For usage, please refer to the official documentation of  {recommondVersionLink} or {latestVersionLink}.'}
+            {'For usage, please refer to the official documentation of Version {v4xLink}/{v3xLink}/{v21Link}'}
         </Translate>
     );
 }
@@ -124,12 +123,20 @@ function DocVersionBannerEnabled({
     const getVersionMainDoc = (version: GlobalVersion) => version.docs.find(doc => doc.id === version.mainDocId)!;
 
     const { savePreferredVersionName } = useDocsPreferredVersion(pluginId);
+    const { latestVersionSuggestion } = useDocVersionSuggestions(pluginId);
+    const { alternateDocVersions } = useActiveDocContext(pluginId);
+    const versions = useVersions(pluginId);
 
-    const { latestDocSuggestion, latestVersionSuggestion } = useDocVersionSuggestions(pluginId);
+    const resolveDocPath = (versionName: string): string => {
+        const alt = alternateDocVersions[versionName];
+        if (alt) return alt.path;
+        const version = versions.find(v => v.name === versionName);
+        return version ? getVersionMainDoc(version).path : '/';
+    };
 
-    // Try to link to same doc in latest version (not always possible), falling
-    // back to main doc of latest version
-    const latestVersionSuggestedDoc = latestDocSuggestion ?? getVersionMainDoc(latestVersionSuggestion);
+    const v4xTo = resolveDocPath('4.x');
+    const v3xTo = resolveDocPath('3.x');
+    const v21To = resolveDocPath('2.1');
 
     return (
         <div
@@ -140,13 +147,10 @@ function DocVersionBannerEnabled({
                 <BannerLabel siteTitle={siteTitle} versionMetadata={versionMetadata} />
             </div>
             <div className="margin-top--md">
-                <LatestVersionSuggestionLabel
-                    versionLabel={latestVersionSuggestion.label}
-                    to={latestVersionSuggestedDoc.path}
-                    realLatestVersion={{
-                        label: '3.x',
-                        to: '/docs/3.x/gettingStarted/what-is-apache-doris',
-                    }}
+                <VersionsSuggestionLabel
+                    v4xTo={v4xTo}
+                    v3xTo={v3xTo}
+                    v21To={v21To}
                     onClick={() => savePreferredVersionName(latestVersionSuggestion.name)}
                 />
             </div>
@@ -156,8 +160,19 @@ function DocVersionBannerEnabled({
 
 export default function DocVersionBanner({ className }: Props): React.ReactElement | null {
     const versionMetadata = useDocsVersion();
-    if (versionMetadata.banner) {
-        return <DocVersionBannerEnabled className={className} versionMetadata={versionMetadata} />;
+    const activePlugin = useActivePlugin();
+    const activeDocContext = useActiveDocContext(activePlugin?.pluginId);
+
+    if (!versionMetadata.banner) {
+        return null;
     }
-    return null;
+
+    // Hide the banner on docs under `docs/key-features/` — their doc ids
+    // start with `key-features/` (Docusaurus derives the id from the file
+    // path relative to the docs root).
+    if (activeDocContext.activeDoc?.id.startsWith('key-features/')) {
+        return null;
+    }
+
+    return <DocVersionBannerEnabled className={className} versionMetadata={versionMetadata} />;
 }

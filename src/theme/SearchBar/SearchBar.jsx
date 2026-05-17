@@ -118,19 +118,30 @@ export default function SearchBar({ handleSearchBarToggle }) {
             return;
         }
         let nextSearchContext = '';
-        if (location.pathname.startsWith(versionUrl)) {
-            const uri = location.pathname.substring(versionUrl.length);
-            let matchedPath;
-            for (const _path of searchContextByPaths) {
-                const path = typeof _path === 'string' ? _path : _path.path;
-                if (uri === path || uri.startsWith(`${path}/`)) {
-                    matchedPath = path;
-                    break;
-                }
+        // searchContextByPaths is expressed relative to the docs root
+        // (e.g. ['docs']), so we must strip both the locale prefix and the
+        // /docs/<version>/ version segment before matching. Subtracting
+        // versionUrl from the raw pathname is not enough: for a non-default
+        // version page the leftover starts with the doc slug (e.g.
+        // 'data-operate/...') and never matches 'docs', leaving searchContext
+        // empty and fetching the no-context index (which is empty when
+        // useAllContextsWithNoSearchContext is false).
+        const normalized = normalizePathname(location.pathname, locales);
+        const parts = normalized.replace(/^\//, '').split('/').filter(Boolean);
+        if (parts[0] === 'docs' && parts.length > 1 && VERSIONS.includes(parts[1])) {
+            parts.splice(1, 1);
+        }
+        const uri = parts.join('/');
+        let matchedPath;
+        for (const _path of searchContextByPaths) {
+            const path = typeof _path === 'string' ? _path : _path.path;
+            if (uri === path || uri.startsWith(`${path}/`)) {
+                matchedPath = path;
+                break;
             }
-            if (matchedPath) {
-                nextSearchContext = matchedPath;
-            }
+        }
+        if (matchedPath) {
+            nextSearchContext = matchedPath;
         }
         if (prevSearchContext.current !== nextSearchContext) {
             // Reset index state map once search context is changed.
@@ -138,7 +149,7 @@ export default function SearchBar({ handleSearchBarToggle }) {
             prevSearchContext.current = nextSearchContext;
         }
         setSearchContext(nextSearchContext);
-    }, [location.pathname, versionUrl]);
+    }, [location.pathname, locales]);
     const hidden = !!hideSearchBarWithNoSearchContext && Array.isArray(searchContextByPaths) && searchContext === '';
 
     const loadIndex = useCallback(
