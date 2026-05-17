@@ -99,7 +99,7 @@ notMatchedClause ::=
 ## 权限控制
 
 
-执行此 SQL 命令的[用户](../../../../admin-manual/auth/authentication-and-authorization.md)必须至少具有以下[权限](../../../../admin-manual/auth/authentication-and-authorization.md)：
+执行此 SQL 命令的[用户](../../../../admin-manual/auth/security-overview)必须至少具有以下[权限](../../../../admin-manual/auth/authorization/internal)：
 
 | 权限  | 对象            | 说明                                             |
 | :---------------- | :------------ | :- |
