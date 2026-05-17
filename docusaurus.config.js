@@ -260,16 +260,27 @@ const config = {
                         redirects.push(...REDIRECT_INDEX[normalized]);
                     }
 
-                    // 3.x version-prefix variants (legacy URLs sometimes use /docs/3.0/
-                    // or omit the version entirely). The gettingStarted/what-is-new
-                    // variant predates the rename to what-is-apache-doris.
-                    if (existingPath.includes('/gettingStarted/what-is-apache-doris') || existingPath.startsWith('/docs/3.x/')) {
+                    // Legacy `/gettingStarted/what-is-new` slug → renamed to
+                    // `/gettingStarted/what-is-apache-doris`. Register the old
+                    // path as a redirect for any existing version that has the
+                    // new slug.
+                    if (existingPath.includes('/gettingStarted/what-is-apache-doris')) {
                         redirects.push(
                             existingPath.replace(
                                 '/gettingStarted/what-is-apache-doris',
                                 '/gettingStarted/what-is-new',
                             ),
-                            existingPath.replace('/docs/3.x/', '/docs/'), existingPath.replace('/docs/3.x/', '/docs/3.0/')
+                        );
+                    }
+
+                    // 3.x version-prefix variants: legacy URLs sometimes used
+                    // /docs/3.0/ (the dot release) or omitted the version
+                    // segment entirely. Map both shapes onto the canonical
+                    // /docs/3.x/ path.
+                    if (existingPath.startsWith('/docs/3.x/')) {
+                        redirects.push(
+                            existingPath.replace('/docs/3.x/', '/docs/'),
+                            existingPath.replace('/docs/3.x/', '/docs/3.0/'),
                         );
                     }
 
