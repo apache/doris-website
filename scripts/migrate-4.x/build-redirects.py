@@ -46,7 +46,8 @@ PREFIX_FALLBACKS = [
     ("gettingStarted/alternatives/", "/why-doris/compare"),
     ("db-connect/",                  "/docs/4.x/connection-integration/mysql-proto"),
     ("benchmark/",                   "/why-doris/benchmarks"),
-    ("ecosystem/",                   "/ecosystem/cluster-management"),
+    # ecosystem/ has no replacement landing — the /ecosystem/ tree was
+    # decommissioned. Slugs fall through to DEFAULT_FALLBACK (docs home).
 ]
 
 

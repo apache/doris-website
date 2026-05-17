@@ -345,307 +345,307 @@
   },
   {
     "from": "/docs/4.x/ecosystem/automq-load",
-    "to": "/ecosystem/cluster-management"
+    "to": "/docs/4.x/getting-started/what-is-apache-doris"
   },
   {
     "from": "/zh-CN/docs/4.x/ecosystem/automq-load",
-    "to": "/zh-CN/ecosystem/cluster-management"
+    "to": "/zh-CN/docs/4.x/getting-started/what-is-apache-doris"
   },
   {
     "from": "/docs/4.x/ecosystem/bi/apache-superset",
-    "to": "/ecosystem/cluster-management"
+    "to": "/docs/4.x/getting-started/what-is-apache-doris"
   },
   {
     "from": "/zh-CN/docs/4.x/ecosystem/bi/apache-superset",
-    "to": "/zh-CN/ecosystem/cluster-management"
+    "to": "/zh-CN/docs/4.x/getting-started/what-is-apache-doris"
   },
   {
     "from": "/docs/4.x/ecosystem/bi/clouddm",
-    "to": "/ecosystem/cluster-management"
+    "to": "/docs/4.x/getting-started/what-is-apache-doris"
   },
   {
     "from": "/zh-CN/docs/4.x/ecosystem/bi/clouddm",
-    "to": "/zh-CN/ecosystem/cluster-management"
+    "to": "/zh-CN/docs/4.x/getting-started/what-is-apache-doris"
   },
   {
     "from": "/docs/4.x/ecosystem/bi/datagrip",
-    "to": "/ecosystem/cluster-management"
+    "to": "/docs/4.x/getting-started/what-is-apache-doris"
   },
   {
     "from": "/zh-CN/docs/4.x/ecosystem/bi/datagrip",
-    "to": "/zh-CN/ecosystem/cluster-management"
+    "to": "/zh-CN/docs/4.x/getting-started/what-is-apache-doris"
   },
   {
     "from": "/docs/4.x/ecosystem/bi/dbeaver",
-    "to": "/ecosystem/cluster-management"
+    "to": "/docs/4.x/getting-started/what-is-apache-doris"
   },
   {
     "from": "/zh-CN/docs/4.x/ecosystem/bi/dbeaver",
-    "to": "/zh-CN/ecosystem/cluster-management"
+    "to": "/zh-CN/docs/4.x/getting-started/what-is-apache-doris"
   },
   {
     "from": "/docs/4.x/ecosystem/bi/finebi",
-    "to": "/ecosystem/cluster-management"
+    "to": "/docs/4.x/getting-started/what-is-apache-doris"
   },
   {
     "from": "/zh-CN/docs/4.x/ecosystem/bi/finebi",
-    "to": "/zh-CN/ecosystem/cluster-management"
+    "to": "/zh-CN/docs/4.x/getting-started/what-is-apache-doris"
   },
   {
     "from": "/docs/4.x/ecosystem/bi/metabase",
-    "to": "/ecosystem/cluster-management"
+    "to": "/docs/4.x/getting-started/what-is-apache-doris"
   },
   {
     "from": "/zh-CN/docs/4.x/ecosystem/bi/metabase",
-    "to": "/zh-CN/ecosystem/cluster-management"
+    "to": "/zh-CN/docs/4.x/getting-started/what-is-apache-doris"
   },
   {
     "from": "/docs/4.x/ecosystem/bi/powerbi",
-    "to": "/ecosystem/cluster-management"
+    "to": "/docs/4.x/getting-started/what-is-apache-doris"
   },
   {
     "from": "/zh-CN/docs/4.x/ecosystem/bi/powerbi",
-    "to": "/zh-CN/ecosystem/cluster-management"
+    "to": "/zh-CN/docs/4.x/getting-started/what-is-apache-doris"
   },
   {
     "from": "/docs/4.x/ecosystem/bi/quickbi",
-    "to": "/ecosystem/cluster-management"
+    "to": "/docs/4.x/getting-started/what-is-apache-doris"
   },
   {
     "from": "/zh-CN/docs/4.x/ecosystem/bi/quickbi",
-    "to": "/zh-CN/ecosystem/cluster-management"
+    "to": "/zh-CN/docs/4.x/getting-started/what-is-apache-doris"
   },
   {
     "from": "/docs/4.x/ecosystem/bi/quicksight",
-    "to": "/ecosystem/cluster-management"
+    "to": "/docs/4.x/getting-started/what-is-apache-doris"
   },
   {
     "from": "/zh-CN/docs/4.x/ecosystem/bi/quicksight",
-    "to": "/zh-CN/ecosystem/cluster-management"
+    "to": "/zh-CN/docs/4.x/getting-started/what-is-apache-doris"
   },
   {
     "from": "/docs/4.x/ecosystem/bi/smartbi",
-    "to": "/ecosystem/cluster-management"
+    "to": "/docs/4.x/getting-started/what-is-apache-doris"
   },
   {
     "from": "/zh-CN/docs/4.x/ecosystem/bi/smartbi",
-    "to": "/zh-CN/ecosystem/cluster-management"
+    "to": "/zh-CN/docs/4.x/getting-started/what-is-apache-doris"
   },
   {
     "from": "/docs/4.x/ecosystem/bi/tableau",
-    "to": "/ecosystem/cluster-management"
+    "to": "/docs/4.x/getting-started/what-is-apache-doris"
   },
   {
     "from": "/zh-CN/docs/4.x/ecosystem/bi/tableau",
-    "to": "/zh-CN/ecosystem/cluster-management"
+    "to": "/zh-CN/docs/4.x/getting-started/what-is-apache-doris"
   },
   {
     "from": "/docs/4.x/ecosystem/cloudcanal",
-    "to": "/ecosystem/cluster-management"
+    "to": "/docs/4.x/getting-started/what-is-apache-doris"
   },
   {
     "from": "/zh-CN/docs/4.x/ecosystem/cloudcanal",
-    "to": "/zh-CN/ecosystem/cluster-management"
+    "to": "/zh-CN/docs/4.x/getting-started/what-is-apache-doris"
   },
   {
     "from": "/docs/4.x/ecosystem/datax",
-    "to": "/ecosystem/cluster-management"
+    "to": "/docs/4.x/getting-started/what-is-apache-doris"
   },
   {
     "from": "/zh-CN/docs/4.x/ecosystem/datax",
-    "to": "/zh-CN/ecosystem/cluster-management"
+    "to": "/zh-CN/docs/4.x/getting-started/what-is-apache-doris"
   },
   {
     "from": "/docs/4.x/ecosystem/dbt-doris-adapter",
-    "to": "/ecosystem/cluster-management"
+    "to": "/docs/4.x/getting-started/what-is-apache-doris"
   },
   {
     "from": "/zh-CN/docs/4.x/ecosystem/dbt-doris-adapter",
-    "to": "/zh-CN/ecosystem/cluster-management"
+    "to": "/zh-CN/docs/4.x/getting-started/what-is-apache-doris"
   },
   {
     "from": "/docs/4.x/ecosystem/doris-kafka-connector/doris-kafka-connector",
-    "to": "/ecosystem/cluster-management"
+    "to": "/docs/4.x/getting-started/what-is-apache-doris"
   },
   {
     "from": "/zh-CN/docs/4.x/ecosystem/doris-kafka-connector/doris-kafka-connector",
-    "to": "/zh-CN/ecosystem/cluster-management"
+    "to": "/zh-CN/docs/4.x/getting-started/what-is-apache-doris"
   },
   {
     "from": "/docs/4.x/ecosystem/doris-kafka-connector/release-notes",
-    "to": "/ecosystem/cluster-management"
+    "to": "/docs/4.x/getting-started/what-is-apache-doris"
   },
   {
     "from": "/zh-CN/docs/4.x/ecosystem/doris-kafka-connector/release-notes",
-    "to": "/zh-CN/ecosystem/cluster-management"
+    "to": "/zh-CN/docs/4.x/getting-started/what-is-apache-doris"
   },
   {
     "from": "/docs/4.x/ecosystem/doris-operator/doris-operator-overview",
-    "to": "/ecosystem/cluster-management"
+    "to": "/docs/4.x/getting-started/what-is-apache-doris"
   },
   {
     "from": "/zh-CN/docs/4.x/ecosystem/doris-operator/doris-operator-overview",
-    "to": "/zh-CN/ecosystem/cluster-management"
+    "to": "/zh-CN/docs/4.x/getting-started/what-is-apache-doris"
   },
   {
     "from": "/docs/4.x/ecosystem/doris-operator/on-alibaba",
-    "to": "/ecosystem/cluster-management"
+    "to": "/docs/4.x/getting-started/what-is-apache-doris"
   },
   {
     "from": "/zh-CN/docs/4.x/ecosystem/doris-operator/on-alibaba",
-    "to": "/zh-CN/ecosystem/cluster-management"
+    "to": "/zh-CN/docs/4.x/getting-started/what-is-apache-doris"
   },
   {
     "from": "/docs/4.x/ecosystem/doris-operator/on-aws",
-    "to": "/ecosystem/cluster-management"
+    "to": "/docs/4.x/getting-started/what-is-apache-doris"
   },
   {
     "from": "/zh-CN/docs/4.x/ecosystem/doris-operator/on-aws",
-    "to": "/zh-CN/ecosystem/cluster-management"
+    "to": "/zh-CN/docs/4.x/getting-started/what-is-apache-doris"
   },
   {
     "from": "/docs/4.x/ecosystem/doris-streamloader",
-    "to": "/ecosystem/cluster-management"
+    "to": "/docs/4.x/getting-started/what-is-apache-doris"
   },
   {
     "from": "/zh-CN/docs/4.x/ecosystem/doris-streamloader",
-    "to": "/zh-CN/ecosystem/cluster-management"
+    "to": "/zh-CN/docs/4.x/getting-started/what-is-apache-doris"
   },
   {
     "from": "/docs/4.x/ecosystem/flink-doris-connector/flink-doris-connector",
-    "to": "/ecosystem/cluster-management"
+    "to": "/docs/4.x/getting-started/what-is-apache-doris"
   },
   {
     "from": "/zh-CN/docs/4.x/ecosystem/flink-doris-connector/flink-doris-connector",
-    "to": "/zh-CN/ecosystem/cluster-management"
+    "to": "/zh-CN/docs/4.x/getting-started/what-is-apache-doris"
   },
   {
     "from": "/docs/4.x/ecosystem/flink-doris-connector/release-notes",
-    "to": "/ecosystem/cluster-management"
+    "to": "/docs/4.x/getting-started/what-is-apache-doris"
   },
   {
     "from": "/zh-CN/docs/4.x/ecosystem/flink-doris-connector/release-notes",
-    "to": "/zh-CN/ecosystem/cluster-management"
+    "to": "/zh-CN/docs/4.x/getting-started/what-is-apache-doris"
   },
   {
     "from": "/docs/4.x/ecosystem/hive-bitmap-udf",
-    "to": "/ecosystem/cluster-management"
+    "to": "/docs/4.x/getting-started/what-is-apache-doris"
   },
   {
     "from": "/zh-CN/docs/4.x/ecosystem/hive-bitmap-udf",
-    "to": "/zh-CN/ecosystem/cluster-management"
+    "to": "/zh-CN/docs/4.x/getting-started/what-is-apache-doris"
   },
   {
     "from": "/docs/4.x/ecosystem/hive-hll-udf",
-    "to": "/ecosystem/cluster-management"
+    "to": "/docs/4.x/getting-started/what-is-apache-doris"
   },
   {
     "from": "/zh-CN/docs/4.x/ecosystem/hive-hll-udf",
-    "to": "/zh-CN/ecosystem/cluster-management"
+    "to": "/zh-CN/docs/4.x/getting-started/what-is-apache-doris"
   },
   {
     "from": "/docs/4.x/ecosystem/kettle",
-    "to": "/ecosystem/cluster-management"
+    "to": "/docs/4.x/getting-started/what-is-apache-doris"
   },
   {
     "from": "/zh-CN/docs/4.x/ecosystem/kettle",
-    "to": "/zh-CN/ecosystem/cluster-management"
+    "to": "/zh-CN/docs/4.x/getting-started/what-is-apache-doris"
   },
   {
     "from": "/docs/4.x/ecosystem/kyuubi",
-    "to": "/ecosystem/cluster-management"
+    "to": "/docs/4.x/getting-started/what-is-apache-doris"
   },
   {
     "from": "/zh-CN/docs/4.x/ecosystem/kyuubi",
-    "to": "/zh-CN/ecosystem/cluster-management"
+    "to": "/zh-CN/docs/4.x/getting-started/what-is-apache-doris"
   },
   {
     "from": "/docs/4.x/ecosystem/observability/beats",
-    "to": "/ecosystem/cluster-management"
+    "to": "/docs/4.x/getting-started/what-is-apache-doris"
   },
   {
     "from": "/zh-CN/docs/4.x/ecosystem/observability/beats",
-    "to": "/zh-CN/ecosystem/cluster-management"
+    "to": "/zh-CN/docs/4.x/getting-started/what-is-apache-doris"
   },
   {
     "from": "/docs/4.x/ecosystem/observability/fluentbit",
-    "to": "/ecosystem/cluster-management"
+    "to": "/docs/4.x/getting-started/what-is-apache-doris"
   },
   {
     "from": "/zh-CN/docs/4.x/ecosystem/observability/fluentbit",
-    "to": "/zh-CN/ecosystem/cluster-management"
+    "to": "/zh-CN/docs/4.x/getting-started/what-is-apache-doris"
   },
   {
     "from": "/docs/4.x/ecosystem/observability/langfuse",
-    "to": "/ecosystem/cluster-management"
+    "to": "/docs/4.x/getting-started/what-is-apache-doris"
   },
   {
     "from": "/zh-CN/docs/4.x/ecosystem/observability/langfuse",
-    "to": "/zh-CN/ecosystem/cluster-management"
+    "to": "/zh-CN/docs/4.x/getting-started/what-is-apache-doris"
   },
   {
     "from": "/docs/4.x/ecosystem/observability/logstash",
-    "to": "/ecosystem/cluster-management"
+    "to": "/docs/4.x/getting-started/what-is-apache-doris"
   },
   {
     "from": "/zh-CN/docs/4.x/ecosystem/observability/logstash",
-    "to": "/zh-CN/ecosystem/cluster-management"
+    "to": "/zh-CN/docs/4.x/getting-started/what-is-apache-doris"
   },
   {
     "from": "/docs/4.x/ecosystem/observability/loongcollector",
-    "to": "/ecosystem/cluster-management"
+    "to": "/docs/4.x/getting-started/what-is-apache-doris"
   },
   {
     "from": "/zh-CN/docs/4.x/ecosystem/observability/loongcollector",
-    "to": "/zh-CN/ecosystem/cluster-management"
+    "to": "/zh-CN/docs/4.x/getting-started/what-is-apache-doris"
   },
   {
     "from": "/docs/4.x/ecosystem/observability/opentelemetry",
-    "to": "/ecosystem/cluster-management"
+    "to": "/docs/4.x/getting-started/what-is-apache-doris"
   },
   {
     "from": "/zh-CN/docs/4.x/ecosystem/observability/opentelemetry",
-    "to": "/zh-CN/ecosystem/cluster-management"
+    "to": "/zh-CN/docs/4.x/getting-started/what-is-apache-doris"
   },
   {
     "from": "/docs/4.x/ecosystem/observability/vector",
-    "to": "/ecosystem/cluster-management"
+    "to": "/docs/4.x/getting-started/what-is-apache-doris"
   },
   {
     "from": "/zh-CN/docs/4.x/ecosystem/observability/vector",
-    "to": "/zh-CN/ecosystem/cluster-management"
+    "to": "/zh-CN/docs/4.x/getting-started/what-is-apache-doris"
   },
   {
     "from": "/docs/4.x/ecosystem/seatunnel",
-    "to": "/ecosystem/cluster-management"
+    "to": "/docs/4.x/getting-started/what-is-apache-doris"
   },
   {
     "from": "/zh-CN/docs/4.x/ecosystem/seatunnel",
-    "to": "/zh-CN/ecosystem/cluster-management"
+    "to": "/zh-CN/docs/4.x/getting-started/what-is-apache-doris"
   },
   {
     "from": "/docs/4.x/ecosystem/spark-doris-connector/release-notes",
-    "to": "/ecosystem/cluster-management"
+    "to": "/docs/4.x/getting-started/what-is-apache-doris"
   },
   {
     "from": "/zh-CN/docs/4.x/ecosystem/spark-doris-connector/release-notes",
-    "to": "/zh-CN/ecosystem/cluster-management"
+    "to": "/zh-CN/docs/4.x/getting-started/what-is-apache-doris"
   },
   {
     "from": "/docs/4.x/ecosystem/spark-doris-connector/spark-doris-connector",
-    "to": "/ecosystem/cluster-management"
+    "to": "/docs/4.x/getting-started/what-is-apache-doris"
   },
   {
     "from": "/zh-CN/docs/4.x/ecosystem/spark-doris-connector/spark-doris-connector",
-    "to": "/zh-CN/ecosystem/cluster-management"
+    "to": "/zh-CN/docs/4.x/getting-started/what-is-apache-doris"
   },
   {
     "from": "/docs/4.x/ecosystem/spark-load",
-    "to": "/ecosystem/cluster-management"
+    "to": "/docs/4.x/getting-started/what-is-apache-doris"
   },
   {
     "from": "/zh-CN/docs/4.x/ecosystem/spark-load",
-    "to": "/zh-CN/ecosystem/cluster-management"
+    "to": "/zh-CN/docs/4.x/getting-started/what-is-apache-doris"
   },
   {
     "from": "/docs/4.x/gettingStarted/alternatives/alternative-to-clickhouse",

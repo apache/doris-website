@@ -1,4 +1,4 @@
-import React, { useEffect, createContext, useState, useRef, JSX } from 'react';
+import React, { useEffect, createContext, useState, JSX } from 'react';
 import { useLocation } from '@docusaurus/router';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import clsx from 'clsx';
@@ -7,12 +7,9 @@ import { PageMetadata, SkipToContentFallbackId, ThemeClassNames } from '@docusau
 import { useKeyboardNavigation } from '@docusaurus/theme-common/internal';
 import SkipToContent from '@theme/SkipToContent';
 import AnnouncementBar from '@theme/AnnouncementBar';
-import Navbar from '@theme/Navbar';
 import Footer from '@theme/Footer';
 import LayoutProvider from '@theme/Layout/Provider';
 import ErrorPageContent from '@theme/ErrorPageContent';
-import NavbarSearch from '../Navbar/Search';
-import SearchBar from '@theme/SearchBar';
 import type { Props } from '@theme/Layout';
 import styles from './styles.module.css';
 import { useHistory } from '@docusaurus/router';
@@ -37,16 +34,18 @@ export default function Layout(props: Props): JSX.Element {
     } = props;
     const history = useHistory();
     const [showSearchPageMobile, setShowSearchPageMobile] = useState(false);
-    const searchPageDom = useRef<HTMLDivElement>(null);
     const { hash } = useLocation();
     const {
         i18n: { locales },
     } = useDocusaurusContext();
+    // PreviewBanner ("you're viewing the preview — return to classic") is the
+    // soft-launch affordance. It still renders on the pages that have always
+    // shown it; PR3 removes it together with HomeClassic.
     const isDevDocsPage = isDevDocsPath(history.location.pathname, locales);
     const isReleasesPage = isReleasesPath(history.location.pathname, locales);
     const isEventsPage = isEventsPath(history.location.pathname, locales);
     const isCommunityPage = isCommunityPath(history.location.pathname, locales);
-    const useNextNavbar = isDevDocsPage || isReleasesPage || isEventsPage || isCommunityPage;
+    const showPreviewBanner = isDevDocsPage || isReleasesPage || isEventsPage || isCommunityPage;
     useKeyboardNavigation();
 
     useEffect(() => {
@@ -60,15 +59,9 @@ export default function Layout(props: Props): JSX.Element {
     }, [history.location]);
 
     useEffect(() => {
-        if (showSearchPageMobile && !isDevDocsPage) {
-            window.scroll(0, 0);
-            document.body.style.overflow = 'hidden';
-            searchPageDom.current.style.height = '100vh';
-        } else {
-            window.scroll(0, 0);
-            document.body.style.overflow = 'auto';
-        }
-    }, [showSearchPageMobile, isDevDocsPage]);
+        window.scroll(0, 0);
+        document.body.style.overflow = 'auto';
+    }, [history.location]);
 
     useEffect(() => {
         if (hash) {
@@ -91,15 +84,8 @@ export default function Layout(props: Props): JSX.Element {
 
                 <SkipToContent />
                 <AnnouncementBar />
-                {useNextNavbar && <PreviewBanner />}
-                {useNextNavbar ? <NavbarNext /> : <Navbar />}
-                {!useNextNavbar && showSearchPageMobile ? (
-                    <div ref={searchPageDom}>
-                        <NavbarSearch>
-                            <SearchBar />
-                        </NavbarSearch>
-                    </div>
-                ) : null}
+                {showPreviewBanner && <PreviewBanner />}
+                <NavbarNext />
 
                 <div
                     id={SkipToContentFallbackId}

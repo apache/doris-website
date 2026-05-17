@@ -12,7 +12,7 @@ import {
     VersionEnum,
 } from '@site/src/constant/download.data';
 import Link from '@docusaurus/Link';
-import '@site/src/pages/download/index.scss';
+import './download-page.scss';
 import LinkWithArrow from '@site/src/components/link-arrow';
 import PageColumn from '@site/src/components/PageColumn';
 import clsx from 'clsx';
@@ -361,7 +361,7 @@ export default function DownloadFormNext(): JSX.Element {
                                 </ul>
                             </div>
                             <div>
-                                <LinkWithArrow to="/docs/ecosystem/datax" text="More Tools" />
+                                <LinkWithArrow to="/docs/4.x/connection-integration/data-integration/intro" text="More Tools" />
                             </div>
                             <div className="all-download-note">
                                 Note: For detailed upgrade precautions, please refer to the{' '}
