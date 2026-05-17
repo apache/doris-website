@@ -59,14 +59,14 @@ function buildNavItems(
         {
             label: 'Docs',
             items: [
-                { label: '4.x', href: stableDocsHref },
                 { label: 'Dev', href: devDocsHref },
+                { label: '4.x', href: stableDocsHref },
                 { label: '3.x', href: v3xDocsHref },
                 { label: '2.1', href: v21DocsHref },
             ],
         },
         {
-            label: 'Resouces',
+            label: 'Resources',
             items: [
                 { label: 'Release Notes', href: releasesHref },
                 { label: 'Blogs', href: '/blog' },

@@ -143,3 +143,16 @@ body {
     height: 100%;
     border: 0;
 }
+
+/**
+ * Kapa Ask AI modal must overlay the sticky NavbarNext (which sits at
+ * z-index 300). Kapa's Mantine modal defaults to a lower stacking value
+ * so without this override the dialog gets clipped behind the navbar.
+ */
+[data-kapa-widget-container],
+.mantine-Modal-root,
+.mantine-Modal-inner,
+.mantine-Overlay-root,
+.mantine-Modal-overlay {
+    z-index: 9999 !important;
+}
