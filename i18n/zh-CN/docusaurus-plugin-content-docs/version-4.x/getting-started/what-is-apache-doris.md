@@ -152,10 +152,4 @@ Apache Doris 与主流数据生态深度集成。
 
 ## 社区与贡献
 
-Apache Doris 起源于百度广告报表业务（Palo 项目），2017 年开源，2018 年捐赠 Apache 基金会孵化，**2022 年 6 月正式成为 Apache 顶级项目**。
-
-- **贡献者规模**：700+ 贡献者，120+ 月活贡献者。
-- **用户覆盖**：全球 10000+ 企业用户。
-- **云厂商支持**：AWS、Azure、GCP、阿里云、腾讯云、华为云、火山云等。
-
 欢迎加入社区建设：https://doris.apache.org/community/join-community
