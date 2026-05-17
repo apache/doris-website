@@ -28,11 +28,11 @@ function buildRedirectIndex() {
     add('/zh-CN/docs/4.x/getting-started/what-is-apache-doris', '/zh-CN/docs');
 
     // Decommissioned standalone pages whose content moved into the
-    // homepage/why-doris/download-next flows.
+    // homepage/why-doris/download flows.
     add('/why-doris/users', '/users');
     add('/zh-CN/why-doris/users', '/zh-CN/users');
-    add('/download-next', '/download');
-    add('/zh-CN/download-next', '/zh-CN/download');
+    add('/download', '/download-next');
+    add('/zh-CN/download', '/zh-CN/download-next');
 
     // /ecosystem/* was retired; its closest spiritual home is the Dev tree's
     // Data Integration intro, which catalogs the same connector/tool families
@@ -457,18 +457,6 @@ const config = {
                                 label: 'Blog',
                                 href: '/blog',
                             },
-                            {
-                                label: 'Ecosystem',
-                                href: '/ecosystem/cluster-management',
-                            },
-                            {
-                                label: 'Users',
-                                href: '/users',
-                            },
-                            {
-                                label: 'Discussions',
-                                href: 'https://github.com/apache/doris/discussions',
-                            },
                         ],
                     },
                     {
@@ -488,7 +476,7 @@ const config = {
                             },
                             {
                                 label: 'Roadmap',
-                                href: 'https://github.com/apache/doris/issues/30669',
+                                href: 'https://github.com/apache/doris/issues/60036',
                             },
                             {
                                 label: 'Improvement proposal',
