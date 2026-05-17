@@ -1,7 +1,10 @@
 import React from 'react';
 import clsx from 'clsx';
 import { ThemeClassNames } from '@docusaurus/theme-common';
-import { useSidebarBreadcrumbs } from '@docusaurus/plugin-content-docs/client';
+import {
+    useSidebarBreadcrumbs,
+    useActivePluginAndVersion,
+} from '@docusaurus/plugin-content-docs/client';
 import { useHomePageRoute } from '@docusaurus/theme-common/internal';
 import Link from '@docusaurus/Link';
 import { translate } from '@docusaurus/Translate';
@@ -66,12 +69,15 @@ function BreadcrumbsItem({
 export default function DocBreadcrumbs(): JSX.Element | null {
     const breadcrumbs = useSidebarBreadcrumbs();
     const homePageRoute = useHomePageRoute();
+    const activePluginAndVersion = useActivePluginAndVersion();
     if (!breadcrumbs) {
         return null;
     }
     // Drop the top-level sidebar section group (e.g. "Get Started"),
     // since it's a visual grouping and has no destination page.
     const visibleBreadcrumbs = breadcrumbs.length > 1 ? breadcrumbs.slice(1) : breadcrumbs;
+    const activeVersion = activePluginAndVersion?.activeVersion;
+    const versionMainDocPath = activeVersion?.docs.find(doc => doc.id === activeVersion.mainDocId)?.path;
     return (
         <nav
             className={clsx(ThemeClassNames.docs.docBreadcrumbs, styles.breadcrumbsContainer)}
@@ -83,6 +89,17 @@ export default function DocBreadcrumbs(): JSX.Element | null {
         >
             <ul className="breadcrumbs" itemScope itemType="https://schema.org/BreadcrumbList">
                 {homePageRoute && <HomeBreadcrumbItem />}
+                {activeVersion && (
+                    <li className="breadcrumbs__item">
+                        {versionMainDocPath ? (
+                            <Link className="breadcrumbs__link" href={versionMainDocPath}>
+                                {activeVersion.label}
+                            </Link>
+                        ) : (
+                            <span className="breadcrumbs__link">{activeVersion.label}</span>
+                        )}
+                    </li>
+                )}
                 {visibleBreadcrumbs.map((item, idx) => {
                     const isLast = idx === visibleBreadcrumbs.length - 1;
                     const href =
