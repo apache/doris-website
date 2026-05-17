@@ -43,7 +43,7 @@ under the License.
 
 ## Compilation
 
-1. Make sure you have an environment that can compile Doris itself. See [Compilation and Deployment](/docs/install/source-install/compilation-general) for reference.
+1. Make sure you have an environment that can compile Doris itself. See [Compilation and Deployment](/community/source-install/compilation-with-docker) for reference.
 2. Run `run-be-ut.sh` in the Doris repository.
 3. The compiled executable is located at `./be/ut_build_ASAN/test/tools/benchmark_tool`.
 

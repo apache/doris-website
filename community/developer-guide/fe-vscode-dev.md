@@ -94,8 +94,8 @@ Example:
 
 For the full compilation procedure, refer to:
 
-- [Compile with LDB Toolchain](/docs/install/source-install/compilation-with-ldb-toolchain)
-- [Compile with Docker Development Image](/docs/install/source-install/compilation)
+- [Compile with LDB Toolchain](/community/source-install/compilation-with-ldb-toolchain)
+- [Compile with Docker Development Image](/community/source-install/compilation-with-docker)
 
 ## 5. Configure Remote Debugging
 

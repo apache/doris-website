@@ -94,8 +94,8 @@ under the License.
 
 完整编译过程可参考：
 
-- [使用 LDB Toolchain 编译](/docs/install/source-install/compilation-with-ldb-toolchain)
-- [使用 Docker 开发镜像编译](/docs/install/source-install/compilation)
+- [使用 LDB Toolchain 编译](/community/source-install/compilation-with-ldb-toolchain)
+- [使用 Docker 开发镜像编译](/community/source-install/compilation-with-docker)
 
 ## 5. 配置远程调试
 

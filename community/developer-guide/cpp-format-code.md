@@ -59,7 +59,7 @@ You need to install `clang-format`, or use a `clang-format` plugin provided by y
 
 | System | Recommended approach |
 |------|---------|
-| Linux | Use the [LDB toolchain](/docs/install/source-install/compilation-with-ldb-toolchain) (which already includes the matching version), or build/install the binary yourself |
+| Linux | Use the [LDB toolchain](/community/source-install/compilation-with-ldb-toolchain) (which already includes the matching version), or build/install the binary yourself |
 | macOS | `brew install clang-format@16` |
 
 LDB toolchain notes: the latest version (>= v0.18) already includes a prebuilt `clang-format 16.0.0` binary. For downloads, see [ldb_toolchain_gen Releases](https://github.com/amosbird/ldb_toolchain_gen/releases).

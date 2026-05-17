@@ -36,7 +36,7 @@ under the License.
 <!-- Knowledge type: Code conventions -->
 <!-- Applicable scenarios: BE development / Code quality checks -->
 
-Apache Doris supports static analysis of C++ code with [Clangd](https://clangd.llvm.org/) and [Clang-Tidy](https://clang.llvm.org/extra/clang-tidy/). Both are bundled in the [LDB-toolchain](/docs/install/source-install/compilation-with-ldb-toolchain), and you can also install or build them yourself.
+Apache Doris supports static analysis of C++ code with [Clangd](https://clangd.llvm.org/) and [Clang-Tidy](https://clang.llvm.org/extra/clang-tidy/). Both are bundled in the [LDB-toolchain](/community/source-install/compilation-with-ldb-toolchain), and you can also install or build them yourself.
 
 ## Tool Comparison
 

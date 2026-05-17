@@ -43,7 +43,7 @@ under the License.
 
 ## 编译
 
-1. 确保已具备编译 Doris 本体的环境，可参考 [编译与部署](/docs/install/source-install/compilation-general)。
+1. 确保已具备编译 Doris 本体的环境，可参考 [编译与部署](/community/source-install/compilation-with-docker)。
 2. 执行 Doris 仓库下的 `run-be-ut.sh`。
 3. 编译输出的可执行文件位于 `./be/ut_build_ASAN/test/tools/benchmark_tool`。
 

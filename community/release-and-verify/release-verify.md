@@ -120,9 +120,9 @@ If `invalid` is 0, the check passes.
 
 Refer to the compilation documentation for each component:
 
-- Doris core compilation: see the [compilation documentation](/docs/install/source-install/compilation).
-- Flink Doris Connector compilation: see the [compilation documentation](/docs/ecosystem/flink-doris-connector).
-- Spark Doris Connector compilation: see the [compilation documentation](/docs/ecosystem/spark-doris-connector).
+- Doris core compilation: see the [compilation documentation](/community/source-install/compilation-with-docker).
+- Flink Doris Connector compilation: see the [Flink Doris Connector documentation](/docs-next/dev/connection-integration/data-integration/flink-doris-connector).
+- Spark Doris Connector compilation: see the [Spark Doris Connector documentation](/docs-next/dev/connection-integration/data-integration/spark-doris-connector).
 
 ## 5. Voting
 

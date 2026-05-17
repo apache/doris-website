@@ -59,7 +59,7 @@ Apache Doris 使用 `clang-format` 进行 C++ 代码格式化，并在 `build-su
 
 | 系统 | 推荐方式 |
 |------|---------|
-| Linux | 使用 [LDB toolchain](/docs/install/source-install/compilation-with-ldb-toolchain)（已附带对应版本），或自行编译/安装二进制 |
+| Linux | 使用 [LDB toolchain](/community/source-install/compilation-with-ldb-toolchain)（已附带对应版本），或自行编译/安装二进制 |
 | macOS | `brew install clang-format@16` |
 
 LDB toolchain 说明：最新版本（>= v0.18）已包含预编译的 `clang-format 16.0.0` 二进制文件，下载地址参见 [ldb_toolchain_gen Releases](https://github.com/amosbird/ldb_toolchain_gen/releases)。

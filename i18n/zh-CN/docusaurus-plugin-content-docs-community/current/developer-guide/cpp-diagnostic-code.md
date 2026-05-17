@@ -36,7 +36,7 @@ under the License.
 <!-- 知识类型: 代码规范 -->
 <!-- 适用场景: BE 开发 / 代码质量检查 -->
 
-Apache Doris 支持使用 [Clangd](https://clangd.llvm.org/) 和 [Clang-Tidy](https://clang.llvm.org/extra/clang-tidy/) 对 C++ 代码进行静态分析。两者均已内置在 [LDB-toolchain](/docs/install/source-install/compilation-with-ldb-toolchain) 中，开发者也可自行安装或编译。
+Apache Doris 支持使用 [Clangd](https://clangd.llvm.org/) 和 [Clang-Tidy](https://clang.llvm.org/extra/clang-tidy/) 对 C++ 代码进行静态分析。两者均已内置在 [LDB-toolchain](/community/source-install/compilation-with-ldb-toolchain) 中，开发者也可自行安装或编译。
 
 ## 工具对比
 
