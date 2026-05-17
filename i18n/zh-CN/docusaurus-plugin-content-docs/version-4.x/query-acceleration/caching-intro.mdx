@@ -1,0 +1,37 @@
+---
+{
+    "title": "缓存",
+    "language": "zh-CN",
+    "description": "Apache Doris 缓存加速章节导航：覆盖 SQL Cache 结果缓存、Condition Cache 条件缓存，以及面向外表查询的文件数据缓存。"
+}
+---
+
+import GettingStartedCard from '@site/src/components/getting-started-card/getting-started-card';
+
+Apache Doris 提供多层缓存来加速查询：结果级缓存复用相同 SQL 的查询结果，Segment 级缓存复用过滤条件的计算结果，文件级缓存把远端湖仓数据下沉到本地磁盘。请按照负载特征选择合适的缓存方式。
+
+## 结果与过滤缓存
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="SQL Cache"
+    description="基于 SQL 文本和表/分区版本缓存完整查询结果，适用于 T+1 或低频更新场景，命中后可跳过整个计算过程。"
+    link="sql-cache-manual"
+/>
+
+<GettingStartedCard
+    title="Condition Cache"
+    description="缓存过滤条件在 Segment 上的结果，重复查询相同条件时可直接复用，避免冗余扫描与过滤计算。"
+    link="condition-cache"
+/>
+</div>
+
+## 外表文件缓存
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="数据缓存"
+    description="将 HDFS 与对象存储的文件缓存到本地磁盘，加速 Hive、Iceberg、Hudi、Paimon 等外表查询，支持缓存预热、配额与准入控制。"
+    link="../lakehouse/data-cache"
+/>
+</div>

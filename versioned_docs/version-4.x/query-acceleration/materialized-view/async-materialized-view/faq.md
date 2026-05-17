@@ -1,80 +1,126 @@
 ---
-{
-    "title": "FAQ",
-    "language": "en",
-    "description": "Doris internally calculates the partition correspondence between the materialized view and the base tables and records the version of the base table "
-}
+title: Async Materialized View FAQ
+description: "Quick reference for async materialized view FAQs: how to troubleshoot and resolve build errors, refresh exceptions, transparent rewrite misses, and unavailable states."
+keywords:
+    - Async Materialized View FAQ
+    - materialized view refresh failure
+    - transparent rewrite miss
+    - partition materialized view error
+    - Unable to find a suitable base table for partitioning
+    - MaterializedViewRewriteFail
+    - grace_period
+    - excluded_trigger_tables
 ---
+
+<!-- Knowledge type: Troubleshooting / FAQ -->
+<!-- Applicable scenarios: Diagnosing issues during async materialized view build, refresh, and query rewrite -->
+
+This document collects high-frequency questions and troubleshooting approaches encountered when using Async Materialized Views. One-sentence definition: an **async materialized view** is a pre-computed result set that refreshes from base table data on demand or on schedule, and can be used to transparently rewrite queries for acceleration.
+
+## Quick Navigation
+
+<!-- Knowledge type: Index -->
+<!-- Applicable scenarios: Quickly locating issues and the corresponding sections -->
+
+Issues are grouped into two categories by user stage, plus an appendix of cause references:
+
+| Scenario category | Issues covered | Keywords |
+| --- | --- | --- |
+| [Build and refresh](#build-and-refresh) | Creation errors, refresh strategies, schema change, resource consumption | `BUILD`, `REFRESH`, `workload_group` |
+| [Query and transparent rewrite](#query-and-transparent-rewrite) | Whether a hit occurred, why it did not, unavailable states | `explain`, `MaterializedViewRewrite`, `grace_period` |
+| [Appendix](#appendix) | Transparent rewrite failure cause table, partition build failure cause table | Summary reference tables |
+
+Quick lookup checklist for common problems:
+
+- When creating a partition materialized view fails with `Unable to find a suitable base table for partitioning`, jump to [Q12](#q12-error-when-building-a-partition-materialized-view) and [Appendix 2](#appendix-2-async-materialized-view-partition-build-failure-causes).
+- When the create statement reports `Syntax error`, jump to [Q13](#q13-syntax-error-when-creating-a-materialized-view).
+- When the refresh succeeds but the materialized view has no data, jump to [Q14](#q14-the-materialized-view-still-has-no-data-after-a-successful-refresh).
+- When a partition materialized view performs a full refresh every time, jump to [Q15](#q15-why-does-a-partition-materialized-view-do-a-full-refresh-every-time).
+- When transparent rewrite is not hit, jump to [Query and Transparent Rewrite Q1/Q2](#q1-how-to-confirm-whether-a-query-hits-the-materialized-view) and [Appendix 1](#appendix-1-transparent-rewrite-failure-summary-information).
 
 ## Build and Refresh
 
-### Q1: How does Doris determine which partitions need to be refreshed for a materialized view?
+<!-- Knowledge type: Troubleshooting -->
+<!-- Applicable scenarios: Issues during materialized view creation, refresh, and modification -->
 
-Doris internally calculates the partition correspondence between the materialized view and the base tables and records the version of the base table partitions used by the materialized view after the last successful refresh. For example, if materialized view, mv1 is created from base tables t1 and t2 and is partitioned based on t1.
+### Q1: How does the materialized view determine which partitions need to be refreshed? {#q12构建分区物化视图报错}
+Doris internally computes the partition mapping between the materialized view and the base tables, and records the base table partition versions used at the last successful refresh. On the next refresh, Doris compares the current versions to determine whether a partition needs to be refreshed.
 
-Assuming partition p202003 of mv1 corresponds to partitions p20200301 and p20200302 of base table t1, after refreshing p202003, Doris will record partitions p20200301 and p20200302, along with the current version of table t2.
+**Example**: Materialized view `mv1` is created from base tables `t1` and `t2`, and is partitioned based on `t1`. Suppose partition `p202003` of `mv1` corresponds to partitions `p20200301` and `p20200302` of `t1`:
 
-During the next refresh, Doris checks if the versions of p20200301, p20200302, and t2 have changed. If any of them have changed, it indicates that p202003 needs to be refreshed.
+- After refreshing `p202003`, the current versions of `p20200301`, `p20200302`, and table `t2` are recorded.
+- On the next refresh, if the version of `p20200301`, `p20200302`, or `t2` has changed, `p202003` needs to be refreshed.
 
-Alternatively, if changes to t2 can be accepted without triggering a refresh of mv1, the `excluded_trigger_tables` property of the materialized view can be used to configure this.
+**Business exclusion**: If, from a business perspective, changes in `t2` should not trigger a refresh of `mv1`, you can configure this through the materialized view property `excluded_trigger_tables`.
 
-### Q2: What can be done if a materialized view consumes too many resources, impacting other business operations?
+### Q2: What if the materialized view consumes too many resources and affects other workloads?
 
-You can control the resources allocated to materialized view refresh tasks by specifying a [workload_group](../../../admin-manual/workload-management/workload-group) through the materialized view's properties.
+You can specify a [workload_group](../../../admin-manual/workload-management/workload-group.md) through a materialized view property to control the resource usage of the materialized view refresh task.
 
-It's important to note that if the memory allocation is too small and the refresh of a single partition requires more memory, the task may fail. This trade-off should be carefully considered based on business requirements.
+**Caveats**: If the memory setting is too small while a single partition refresh requires more memory, the task will fail to refresh. Balance these settings based on your business needs.
 
 ### Q3: Can a new materialized view be created based on an existing materialized view?
 
-Yes, this is supported starting from Doris 2.1.3. However, each materialized view employs its own refresh logic when updating data. For example, if mv2 is based on mv1, which in turn is based on t1, the synchronization between mv1 and t1 will not be considered during the refresh of mv2.
+Yes, this is supported starting from Doris 2.1.3.
 
-### Q4: Which external tables are supported by Doris?
+**Note**: The refresh logic of each materialized view is independent. For example, if `mv2` is created based on `mv1`, and `mv1` is created based on `t1`, refreshing `mv2` does not consider whether the data between `mv1` and `t1` is in sync.
 
-All external tables supported by Doris can be used to create materialized views. However, only Hive currently supports partition refreshes, with support for other types planned in the future.
+### Q4: Which external tables does Doris support for materialized views?
 
-### Q5: The materialized view displays the same data as Hive, but in reality, they are inconsistent.
+All external tables supported by Doris can be used to create materialized views. However, currently **only Hive supports partition refresh**. Other types will be supported in subsequent releases.
 
-A materialized view guarantees consistency only with the results obtained through the Catalog. Since the Catalog contains metadata and data caching, to ensure that the materialized view and Hive data remain consistent, you may need to refresh the Catalog using methods such as `REFRESH CATALOG` to synchronize the Catalog data with Hive.
+### Q5: The materialized view appears consistent with Hive data, but is actually inconsistent
 
-### Q6: Does materialized view support schema change?
+The materialized view can only guarantee that its data is consistent with the result queried through the Catalog.
 
-No, schema changes are not supported because the column attributes of a materialized view are derived from the SQL definition of the materialized view itself. Explicit custom modifications are not allowed.
+Because the Catalog contains some metadata and data caches, to keep the materialized view consistent with the data in Hive, you need to use methods such as `Refresh Catalog` to ensure that the data in the Catalog is consistent with the data in Hive.
 
-### Q7: Can the base tables used by materialized views undergo schema changes?
+### Q6: Does the materialized view support Schema Change?
 
-Yes, schema changes are allowed. However, after the change, the status of the materialized views that use this base table will change from NORMAL to SCHEMA_CHANGE, at which point the materialized view cannot be used for transparent rewriting but direct queries to the materialized view will not be affected. If the next refreshing task of the materialized view is successful, its status will change back to NORMAL.
+Modification is not supported. The column attributes of a materialized view are inferred from its defining SQL, and explicit custom modification is not currently supported.
 
-### Q8: Can tables with the primary key model be used to create materialized views?
+### Q7: Are Schema Changes allowed on the base tables used by a materialized view?
 
-There are no restrictions on the data model of the base tables for materialized views. However, the materialized view itself can only be of the detailed model.
+Yes, but the following state changes occur after the modification:
 
-### Q9: Can indexes be created on materialized views?
+- The state of any materialized view that uses this base table changes from `NORMAL` to `SCHEMA_CHANGE`.
+- While in the `SCHEMA_CHANGE` state, the materialized view cannot be used for transparent rewrite, but querying the materialized view directly is still possible.
+- If the next refresh task of the materialized view succeeds, the state changes from `SCHEMA_CHANGE` back to `NORMAL`.
+
+### Q8: Can a table with the Unique Key model be used to create a materialized view?
+
+Yes. The materialized view has no requirement on the data model of the base table, but **the materialized view itself can only use the Duplicate Key model**.
+
+### Q9: Can indexes still be created on a materialized view?
 
 Yes.
 
-### Q10: Does the materialized view lock tables during refresh?
+### Q10: Does refreshing a materialized view lock the table?
 
-Table locking occurs for a brief period during the refresh but does not continuously occupy table locks (almost equivalent to the locking time during data import).
+The refresh process locks the table only during a very brief stage, but does not hold the table lock continuously (the lock duration is roughly equivalent to the lock duration when loading data).
 
-### Q11: Is the materialized view suitable for near-real-time scenarios?
+### Q11: Are materialized views suitable for near-real-time scenarios?
 
-Not particularly. The minimum unit for refreshing materialized views is the partition, which can consume significant resources for large data volumes and lacks real-time capabilities. Consider using synchronous materialized views or other methods instead.
+Not really. The minimum unit of materialized view refresh is a partition, which consumes considerable resources when the data volume is large, and the freshness is not sufficient. Synchronous materialized views or other approaches are recommended instead.
 
-### Q12: Error encountered when building a partitioned materialized view
+### Q12: Error when building a partition materialized view
 
-Error Message:
+**Error message**:
 
-```sql
+```text
 Unable to find a suitable base table for partitioning
 ```
 
-This error typically indicates that the SQL definition of the materialized view and the choice of partitioning fields do not allow incremental partition updates, resulting in an error during the creation of the partitioned materialized view.
+**Cause analysis**:
 
-- For incremental partition updates, the materialized view's SQL definition and partitioning field selection must meet specific requirements. See [Materialized View Refresh Modes](../../../sql-manual/sql-statements/table-and-view/async-materialized-view/CREATE-ASYNC-MATERIALIZED-VIEW#optional-parameters) for details.
+This is usually caused by the materialized view's SQL definition and the choice of partition column making incremental partition updates impossible, which leads to an error when creating the partition materialized view:
 
-- The latest code can indicate the reason for partition build failure, with error summaries and descriptions provided in Appendix 2.
+- For the materialized view to perform incremental partition updates, the corresponding requirements must be met. For details, see [Materialized view refresh modes](../../../sql-manual/sql-statements/table-and-view/async-materialized-view/CREATE-ASYNC-MATERIALIZED-VIEW.md#可选参数).
+- The latest version can report the specific reason for partition build failure. For a summary of causes and explanations, see [Appendix 2](#appendix-2-async-materialized-view-partition-build-failure-causes).
 
-Example:
+**Example**:
+
+The two base tables below are `orders` (partitioned) and `lineitem` (not partitioned):
 
 ```sql
 CREATE TABLE IF NOT EXISTS orders (
@@ -90,7 +136,7 @@ CREATE TABLE IF NOT EXISTS orders (
 ) DUPLICATE KEY(o_orderkey, o_custkey) PARTITION BY RANGE(o_orderdate) (
   FROM 
     ('2024-05-01') TO ('2024-06-30') INTERVAL 1 DAY
-) DISTRIBUTED BY HASH(o_orderkey) BUCKETS 3 PROPERTIES ("replication_num" = "1");
+) DISTRIBUTED BY HASH(o_orderkey) BUCKETS 3;
 
 
 CREATE TABLE IF NOT EXISTS lineitem (
@@ -113,19 +159,18 @@ CREATE TABLE IF NOT EXISTS lineitem (
 ) DUPLICATE KEY(
   l_orderkey, l_partkey, l_suppkey, 
   l_linenumber
-) DISTRIBUTED BY HASH(l_orderkey) BUCKETS 3 PROPERTIES ("replication_num" = "1");
+) DISTRIBUTED BY HASH(l_orderkey) BUCKETS 3;
 ```
 
-The materialized view definition below allows for incremental partition updates if `orders.o_orderdate` is chosen as the partitioning field for the materialized view. Conversely, using `lineitem.l_shipdate` would not enable incremental updates.
-
-Reason:
-
-1. `lineitem.l_shipdate` is not a partitioning column of the base table, and `lineitem` does not have a partitioning column defined.
-
-2. `lineitem.l_shipdate` is the column that generates `null` values during the `outer join` operation.
+The materialized view is defined as follows. If `orders.o_orderdate` is chosen as the partition column, incremental partition updates are supported; conversely, using `lineitem.l_shipdate` cannot achieve incremental updates.
 
 ```sql
-CREATE MATERIALIZED VIEW mv_1 BUILD IMMEDIATE REFRESH AUTO ON MANUAL partition by(o_orderdate) DISTRIBUTED BY RANDOM BUCKETS 2 PROPERTIES ('replication_num' = '1') AS 
+CREATE MATERIALIZED VIEW mv_1 
+       BUILD IMMEDIATE 
+       REFRESH AUTO ON MANUAL 
+       partition by(o_orderdate) 
+       DISTRIBUTED BY RANDOM BUCKETS 2
+       AS 
 SELECT 
   l_linestatus, 
   sum(
@@ -145,116 +190,129 @@ GROUP BY
   o_shippriority;
 ```
 
-### Q13: Error encountered when creating a materialized view
+**Why `lineitem.l_shipdate` cannot be chosen as the partition column**:
 
-Error Message:
+1. `lineitem.l_shipdate` is not a partition column of the base table; in fact, the `lineitem` table has no partition column configured.
+2. `lineitem.l_shipdate` is a column on the side that produces `null` values in the `outer join` operation.
 
-```sql
+### Q13: Syntax error when creating a materialized view
+
+**Error message**:
+
+```text
 ERROR 1105 (HY000): errCode = 2, detailMessage = Syntax error in line 1:
 BUILD IMMEDIATE REFRESH AUTO ON MANUAL
 ```
 
-Reasons may be:
+**Possible causes**:
 
-1. The statement for creating an asynchronous materialized view is only supported by the new optimizer. Ensure you are using the new optimizer:
+1. Async materialized view statements are only supported under the new optimizer. Make sure the new optimizer is in use:
 
     ```sql
     SET enable_nereids_planner = true;
     ```
 
-2. There may be a typographical error in the refresh keywords or a syntax error in the SQL definition of the materialized view. Check the SQL definition and creation statement for the materialized view for correctness.
+2. The statement that builds the materialized view contains **misspelled keywords** or the **defining SQL has syntax issues**. Check whether the materialized view definition SQL and the create statement are correct.
 
-### Q14: After the materialized view is refreshed successfully, there is still no data
+### Q14: The materialized view still has no data after a successful refresh
 
-The materialized view determines whether the data needs to be updated based on its ability to retrieve version information from the base table or base table partitions.
+When the materialized view determines whether data needs to be updated, it depends on being able to obtain version information for the base table or its partitions.
 
-When encountering data lakes that currently do not support retrieving version information, such as JDBC Catalog, the refresh process will assume that the materialized view does not need to be updated. Therefore, when creating or refreshing a materialized view, you should specify complete instead of auto.
+For data lakes that currently do not support obtaining version information (for example, JDBC Catalog), the refresh treats the materialized view as not requiring an update. **Therefore, when creating or refreshing such materialized views, specify `complete` instead of `auto`**.
 
-For the progress of materialized view support for data lakes, please refer to[Data Lake Support Status.](./overview.md)
+For the progress of materialized view support for data lakes, refer to [Data lake support](./overview.md).
 
+### Q15: Why does a partition materialized view do a full refresh every time?
 
-### Q15: Why is my partitioned materialized view always fully refreshed?
-The incremental refresh of a materialized view's partitions depends on version information from the base table partitions. If data in the base table partitions changes since the last refresh, the materialized view will refresh those corresponding partitions.
-If your partitioned materialized view is being fully refreshed, the possible reasons are:
+Incremental partition refresh of the materialized view depends on the version information of the base table partitions. If the base table partition data corresponding to a materialized view partition has changed since the last refresh, only that partition is refreshed.
 
-Changes occurred in non-partition-tracked tables referenced in the materialized view's definition SQL, making it impossible to determine which partitions need updating, thus forcing a full refresh.
-For example:
-This materialized view tracks the o_orderdate partition of the orders table, but if data in lineitem or partsupp changes, the system cannot determine which partitions need updating, resulting in a full refresh.
+**Possible cause**:
+
+The data of a **non-partition-tracking table** in the materialized view's defining SQL has changed, making it impossible to determine which partitions need to be updated during refresh, so only a full refresh is possible.
+
+**Example**:
+
+This materialized view tracks the `o_orderdate` partition of the `orders` table. However, when `lineitem` or `partsupp` data changes, the materialized view cannot determine which partitions need to be updated and can only do a full refresh.
 
 ```sql
-
 CREATE MATERIALIZED VIEW partition_mv
-BUILD IMMEDIATE
-REFRESH AUTO
-ON SCHEDULE EVERY 1 DAY STARTS '2024-12-01 20:30:00'
+BUILD IMMEDIATE 
+REFRESH AUTO 
+ON SCHEDULE EVERY 1 DAY STARTS '2024-12-01 20:30:00' 
 PARTITION BY (DATE_TRUNC(o_orderdate, 'MONTH'))
-DISTRIBUTED BY HASH (l_orderkey) BUCKETS 2
-PROPERTIES
-("replication_num" = "3")
-AS
-SELECT
-o_orderdate,
-l_orderkey,
-l_partkey
-FROM
-orders
-LEFT JOIN lineitem ON l_orderkey = o_orderkey
-LEFT JOIN partsupp ON ps_partkey = l_partkey
+DISTRIBUTED BY HASH (l_orderkey) BUCKETS 2 
+PROPERTIES 
+("replication_num" = "3") 
+AS 
+SELECT 
+o_orderdate, 
+l_orderkey, 
+l_partkey 
+FROM 
+orders 
+LEFT JOIN lineitem ON l_orderkey = o_orderkey 
+LEFT JOIN partsupp ON ps_partkey = l_partkey 
 and l_suppkey = ps_suppkey;
 ```
 
-You can check which base tables the materialized view tracks by running
+**Troubleshooting steps**:
+
+- **Goal**: View the base tables and partition columns tracked by the materialized view.
+- **Command**:
+
+    ```sql
+    SELECT * 
+    FROM mv_infos('database'='db_name')
+    WHERE Name = 'partition_mv' \G 
+    ```
+
+- **Explanation**: In the result, `MvPartitionInfo.partitionType` being `FOLLOW_BASE_TABLE` indicates that the materialized view partition follows the base table partition; `relatedCol` being `o_orderdate` indicates partitioning based on this column.
+
+    ```text
+                    Id: 1752809156450
+                  Name: partition_mv
+               JobName: inner_mtmv_1752809156450
+                 State: NORMAL
+    SchemaChangeDetail: 
+          RefreshState: SUCCESS
+           RefreshInfo: BUILD IMMEDIATE REFRESH AUTO ON SCHEDULE EVERY 1 DAY STARTS "2025-12-01 20:30:00"
+              QuerySql: SELECT
+                        `internal`.`doc_db`.`orders`.`o_orderdate`,
+                        `internal`.`doc_db`.`lineitem`.`l_orderkey`,
+                        `internal`.`doc_db`.`lineitem`.`l_partkey`
+                        FROM
+                        `internal`.`doc_db`.`orders`
+                        LEFT JOIN `internal`.`doc_db`.`lineitem` ON `internal`.`doc_db`.`lineitem`.`l_orderkey` = `internal`.`doc_db`.`orders`.`o_orderkey`
+                        LEFT JOIN `internal`.`doc_db`.`partsupp` ON `internal`.`doc_db`.`partsupp`.`ps_partkey` = `internal`.`doc_db`.`lineitem`.`l_partkey`
+                        and `internal`.`doc_db`.`lineitem`.`l_suppkey` = `internal`.`doc_db`.`partsupp`.`ps_suppkey`
+       MvPartitionInfo: MTMVPartitionInfo{partitionType=EXPR, relatedTable=orders, relatedCol='o_orderdate', partitionCol='o_orderdate'}
+    SyncWithBaseTables: 1
+    ```
+
+**Solution**:
+
+If changes to the `lineitem` or `partsupp` table data have no impact on the materialized view, you can set the `excluded_trigger_tables` property to exclude full refreshes triggered by changes in these tables:
 
 ```sql
-SELECT *
-FROM mv_infos('database'='db_name')
-WHERE Name = 'partition_mv' \G
-```
-The returned result shows partitionType=FOLLOW_BASE_TABLE in MvPartitionInfo, indicating the materialized view partitions follow the base table partitions.
-relatedCol shows o_orderdate, meaning the materialized view partitions are based on the o_orderdate column.
-
-```text
-Id: 1752809156450
-Name: partition_mv
-JobName: inner_mtmv_1752809156450
-State: NORMAL
-SchemaChangeDetail:
-RefreshState: SUCCESS
-RefreshInfo: BUILD IMMEDIATE REFRESH AUTO ON SCHEDULE EVERY 1 DAY STARTS "2025-12-01 20:30:00"
-QuerySql: SELECT
-`internal`.`doc_db`.`orders`.`o_orderdate`,
-`internal`.`doc_db`.`lineitem`.`l_orderkey`,
-`internal`.`doc_db`.`lineitem`.`l_partkey`
-FROM
-`internal`.`doc_db`.`orders`
-LEFT JOIN `internal`.`doc_db`.`lineitem` ON `internal`.`doc_db`.`lineitem`.`l_orderkey` = `internal`.`doc_db`.`orders`.`o_orderkey`
-LEFT JOIN `internal`.`doc_db`.`partsupp` ON `internal`.`doc_db`.`partsupp`.`ps_partkey` = `internal`.`doc_db`.`lineitem`.`l_partkey`
-and `internal`.`doc_db`.`lineitem`.`l_suppkey` = `internal`.`doc_db`.`partsupp`.`ps_suppkey`
-MvPartitionInfo: MTMVPartitionInfo{partitionType=EXPR, relatedTable=orders, relatedCol='o_orderdate', partitionCol='o_orderdate'}
-SyncWithBaseTables: 1
+ALTER MATERIALIZED VIEW partition_mv set("excluded_trigger_tables"="lineitem,partsupp");
 ```
 
-Solution:
+## Query and Transparent Rewrite
 
-If changes in lineitem or partsupp tables don't affect your materialized view,
-you can exclude these tables from triggering full refreshes by setting the `excluded_trigger_tables` property:
-`ALTER MATERIALIZED VIEW partition_mv set("excluded_trigger_tables"="lineitem,partsupp");`
+<!-- Knowledge type: Troubleshooting -->
+<!-- Applicable scenarios: Diagnosing materialized view hit rate and transparent rewrite failures -->
 
+### Q1: How to confirm whether a query hits the materialized view
 
-## Queries and Transparent Rewriting
+You can use `explain query_sql` to view the summary of the materialized view hit status.
 
-### Q1: How to confirm if a Materialized View hits, and how to find the reasons for Non-Hits?
-
-You can use `explain query_sql` to view a summary of materialized view hits.
-
-For example, consider the following materialized view:
+**Example materialized view**:
 
 ```sql
 CREATE MATERIALIZED VIEW mv11
 BUILD IMMEDIATE REFRESH AUTO ON MANUAL
 partition by(l_shipdate)
 DISTRIBUTED BY HASH(l_orderkey) BUCKETS 10
-PROPERTIES ('replication_num' = '1') 
 AS
 SELECT l_shipdate, l_orderkey, O_ORDERDATE, count(*)
 FROM lineitem  
@@ -262,7 +320,7 @@ LEFT OUTER JOIN orders on l_orderkey = o_orderkey
 GROUP BY l_shipdate, l_orderkey, O_ORDERDATE;
 ```
 
-The query can be:
+**Run explain**:
 
 ```sql
 explain
@@ -272,19 +330,21 @@ LEFT OUTER JOIN orders on l_orderkey = o_orderkey
 GROUP BY l_shipdate, l_orderkey, O_ORDERDATE;
 ```
 
-- The materialized view hit information is at the end of the plan.
+**Interpreting the result**:
 
-- **MaterializedViewRewriteSuccessAndChose:** Indicates that transparent rewriting was successful, and lists the names of the materialized views chosen by the Cost-Based Optimizer (CBO).
+The materialized view hit information is in the last part of the plan. The key fields have the following meanings:
 
-- **MaterializedViewRewriteSuccessButNotChose:** Indicates that transparent rewriting was successful, but lists the names of materialized views that were not chosen by the CBO. Not choosing them means the execution plan will not use these materialized views.
+| Field | Meaning |
+| --- | --- |
+| `MaterializedViewRewriteSuccessAndChose` | List of materialized view names where transparent rewrite succeeded and the CBO ultimately chose to use them |
+| `MaterializedViewRewriteSuccessButNotChose` | List of materialized view names where transparent rewrite succeeded, but the CBO did not choose them (the execution plan does not use them) |
+| `MaterializedViewRewriteFail` | Lists materialized views for which transparent rewrite failed, along with a summary of the reasons |
 
-- **MaterializedViewRewriteFail:** Lists the failures and summaries of the reasons for transparent rewriting failures.
+If no `MaterializedView` related information appears at the end of `explain`, the materialized view is in an unavailable state and therefore cannot participate in transparent rewrite (for situations that cause a materialized view to be unavailable, refer to Usage and Practice - View Materialized View Status).
 
-- If there is no `MaterializedView` information at the end of the `explain` output, it means the materialized view is in an unusable state and therefore cannot participate in transparent rewriting. (For details on when a materialized view becomes unusable, refer to the "Usage and Practice - Viewing Materialized View Status" section.)
+**Example output**:
 
-Here's an example output:
-
-```sql
+```text
 | MaterializedView                                                                   |
 | MaterializedViewRewriteSuccessAndChose:                                            |
 | internal#regression_test_nereids_rules_p0_mv#mv11,                                 |
@@ -295,30 +355,27 @@ Here's an example output:
 +------------------------------------------------------------------------------------+
 ```
 
-### Q2: What Are the Reasons for a Materialized View Not Hitting?
+### Q2: What are the reasons for a materialized view not being hit?
 
-First, to confirm if a materialized view hits, execute the following SQL (refer to [Queries and Transparent Rewriting - Q1](#q1-how-does-doris-determine-which-partitions-need-to-be-refreshed-for-a-materialized-view) for details):
+First confirm whether a hit occurred, following [Q1](#q1-how-to-confirm-whether-a-query-hits-the-materialized-view):
 
-```Plain
+```sql
 explain
 your_query_sql;
 ```
 
-If there is no hit, the following reasons may apply:
+**Possible reasons for a miss**:
 
-- In Doris versions before 2.1.3, the transparent rewriting feature for materialized views is disabled by default. You need to enable the corresponding switch to achieve transparent rewriting. For specific switch values, refer to async-materialized view-related switches.
+1. In versions before Doris 2.1.3, the transparent rewrite feature for materialized views is disabled by default. The corresponding switch must be turned on for transparent rewrite to take effect. For the specific switches, refer to the async materialized view related switches.
+2. The materialized view may be in an unavailable state. To view the build status of a materialized view, refer to View Materialized View Status.
+3. If a hit still does not occur after the previous two checks, the materialized view's defining SQL and the query SQL may be outside the current scope of transparent rewrite capabilities. For details, refer to [Materialized View Transparent Rewrite Capabilities](../../../query-acceleration/materialized-view/async-materialized-view/functions-and-demands.md#透明改写能力).
+4. For detailed summary information and explanations of failed hits, see [Appendix 1](#appendix-1-transparent-rewrite-failure-summary-information).
 
-- The materialized view may be in an unusable state, preventing transparent rewriting from hitting it. To view the build status of the materialized view, refer to the section on viewing materialized view status.
+The two examples below illustrate common transparent rewrite failure scenarios.
 
-- If, after checking the first two steps, the materialized view still does not hit, it may be because SQL defines the materialized view and the query SQL is outside the current rewriting capabilities of the materialized view. Refer to the [Materialized View Transparent Rewriting Capabilities](../../../query-acceleration/materialized-view/async-materialized-view/functions-and-demands#transparent-rewriting-capability) for details.
+#### Case 1: Inconsistent join order causes rewrite failure
 
-- For detailed information and explanations on failed hits, refer to [Appendix 1](#reference).
-
-Here's an example of a failed transparent rewriting for a materialized view:
-
-**Case 1:**
-
-Materialized view creation SQL:
+**Create the materialized view**:
 
 ```sql
 CREATE MATERIALIZED VIEW mv11
@@ -333,7 +390,7 @@ LEFT OUTER JOIN orders on l_orderkey = o_orderkey
 GROUP BY l_shipdate, l_orderkey, O_ORDERDATE;
 ```
 
-Query execution:
+**Run the query**:
 
 ```sql
 explain
@@ -343,9 +400,9 @@ LEFT OUTER JOIN lineitem on l_orderkey = o_orderkey
 GROUP BY l_shipdate, l_linestatus, O_ORDERDATE;
 ```
 
-`Explain` output:
+**Explain output**:
 
-```sql
+```text
 | MaterializedView                                                                                          |
 | MaterializedViewRewriteSuccessAndChose:                                                                   |
 |                                                                                                           |
@@ -356,25 +413,23 @@ GROUP BY l_shipdate, l_linestatus, O_ORDERDATE;
 |   FailSummary: View struct info is invalid, The graph logic between query and view is not consistent      |
 ```
 
-In the output, `MaterializedViewRewriteFail` shows a failure summary, where `The graph logic between query and view is not consistent` indicates that the join logic between the query and the materialized view is not the same, meaning the join type or tables joined differ.
+`MaterializedViewRewriteFail` contains the failure summary `The graph logic between query and view is not consistent`, which indicates that the join logic of the query and the materialized view are inconsistent (the join types or the joined tables differ). In this example, the join order of the tables in the query and the materialized view is inconsistent, so this error is reported. For complete summary explanations, see [Appendix 1](#appendix-1-transparent-rewrite-failure-summary-information).
 
-In the above example, the table join order in the query and materialized view is inconsistent, hence the error. Refer to Appendix 1 for summaries and explanations of transparent rewriting failures.
+#### Case 2: Dimensions not covered by the materialized view
 
-**Case 2:**
-
-Query execution:
+**Run the query**:
 
 ```sql
 explain
 SELECT l_shipdate, l_linestatus, O_ORDERDATE, count(*)
-FROM lineitem  
+FROM lineitem
 LEFT OUTER JOIN orders on l_orderkey = o_orderkey
 GROUP BY l_shipdate, l_linestatus, O_ORDERDATE;
 ```
 
-`Explain` output:
+**Explain output**:
 
-```sql
+```text
 | MaterializedView                                                                                                          |
 | MaterializedViewRewriteSuccessAndChose:                                                                                   |
 |                                                                                                                           |
@@ -385,110 +440,109 @@ GROUP BY l_shipdate, l_linestatus, O_ORDERDATE;
 |   FailSummary: View struct info is invalid, View dimensions doesn't not cover the query dimensions                        |
 ```
 
-The failure summary `View dimensions doesn't cover the query dimensions` indicates that the `GROUP BY` fields in the query cannot be obtained from the `GROUP BY` fields of the materialized view, hence the error.
+The failure summary `View dimensions doesn't not cover the query dimensions` indicates that the `group by` columns in the query cannot be obtained from the `group by` columns of the materialized view, so this error is reported.
 
-### Q3: What Situations Can Lead to a Materialized View's State Changing and Becoming Unusable?
+### Q3: What situations cause a materialized view's state to change and become unavailable?
 
-By "unusable," we mean that the materialized view cannot be used for transparent rewriting, though it can still be queried directly.
+"Unavailable" means **the materialized view cannot be used for transparent rewrite**, but the materialized view itself can still be queried directly.
 
-- For full materialized views, changes to the underlying table data or Schema Change can render the materialized view unusable.
+| Materialized view type | Event that triggers unavailability | Scope of impact |
+| --- | --- | --- |
+| Full materialized view | Base table data change / base table schema change | The entire materialized view is unavailable |
+| Partition materialized view | Base table data change | The corresponding partition is unavailable |
+| Partition materialized view | Base table schema change | The entire materialized view is unavailable |
 
-- For partitioned materialized views, changes to the underlying table data can render the corresponding partitions unusable, while Schema Change of the underlying table can render the entire materialized view unusable.
+Currently, a refresh failure also makes the materialized view unavailable. This will be optimized in the future: even if the refresh fails, the existing materialized view will still be usable for transparent rewrite.
 
-Currently, failed refreshes of materialized views can also make them unusable. However, optimizations are planned to allow even failed materialized views to be used for transparent rewriting.
+### Q4: Direct query on the materialized view returns no data
 
-### Q4: What If Direct Queries to a Materialized View Return No Data?
+Possible causes:
 
-It's possible that the materialized view is still being built or that the building has failed.
+- The materialized view is being built.
+- The materialized view build has failed.
 
-You can check the status of the materialized view to confirm this. Refer to the section on viewing materialized view status for specific methods.
+You can confirm by querying the materialized view status. For details, refer to View Materialized View Status.
 
-### Q5: When the Data in the Base Table Used by a Materialized View Changes, but the Materialized View Has Not Yet Been Refreshed, What Is the Behavior of Transparent Rewriting?
+### Q5: When base table data changes but the materialized view has not been refreshed, what is the transparent rewrite behavior?
 
-There is a certain delay between the data in async-materialized views and the underlying tables.
+The data of an async materialized view has a certain delay relative to the base tables. The transparent rewrite behavior depends on the base table type and the `grace_period` threshold.
 
-**1. For internal tables and external tables that can perceive data changes (like Hive): When the underlying table data changes, whether the materialized view is usable depends on the** **`grace_period`** **threshold.**
+**1. Internal tables and external tables that can detect data changes (such as Hive)**:
 
-`grace_period` is the time period that allows for data inconsistency between the materialized view and the underlying table. For example:
+`grace_period` is the maximum time period during which the materialized view is allowed to be inconsistent with the base table data:
 
-- If `grace_period` is set to 0, it means the materialized view must be consistent with the underlying table data for it to be used for transparent rewriting. For external tables (except Hive), since they cannot perceive data changes, materialized views that use them can still be used for transparent rewriting (but the data may be inconsistent).
+| `grace_period` setting | Rewrite behavior |
+| --- | --- |
+| `0` | Requires the materialized view and base table data to be fully consistent before it can be used for transparent rewrite; for external tables that cannot detect data changes (other than Hive), the materialized view can be used for transparent rewrite regardless of whether the data is up to date (the data may be inconsistent) |
+| `10` (seconds) | Allows the materialized view and base table data to have a delay of at most 10 seconds. While the delay is within 10 seconds, the materialized view can still be used for transparent rewrite |
 
-- If `grace_period` is set to 10 seconds, it allows for up to 10 seconds of delay between the materialized view data and the underlying table data. If the delay is within 10 seconds, the materialized view can still be used for transparent rewriting.
+**2. Partition materialized view, when some partitions are invalid**:
 
-**2. For partitioned materialized views, if some partitions become invalid, there are two scenarios:**
+- If the query does not use data from invalid partitions: the materialized view is still available.
+- If the query uses data from invalid partitions and the data freshness is within `grace_period`: the materialized view is still available.
+- If the data freshness exceeds `grace_period`: the query can be served by combining the original tables with the materialized view. This requires enabling the union rewrite switch `enable_materialized_view_union_rewrite` (this switch is enabled by default starting from version 2.1.5).
 
-- If the query does not use data from invalid partitions, the materialized view is still usable.
+## Appendix
 
-- If the query uses data from invalid partitions, and the data delay is within the `grace_period`, the materialized view is still usable. If the delay exceeds the `grace_period`, the query can be responded to by unioning the original table and the materialized view. This requires enabling the `enable_materialized_view_union_rewrite` switch, which is on by default from version 2.1.5.
+### Appendix 1: Transparent rewrite failure summary information
 
-## Reference
+<!-- Knowledge type: Reference table -->
+<!-- Applicable scenarios: Locating the cause of transparent rewrite failure based on the FailSummary in explain output -->
 
-### 1 Materialized View-Related Configuration
+| Summary information | Explanation |
+| --- | --- |
+| View struct info is invalid | The structural information of the materialized view is invalid. The currently supported rewrite SQL patterns are: query is a join and the materialized view is also a join; query is an agg and the materialized view does not need to have a join. During transparent rewrite, this issue is shown in most cases, because each transparent rewrite rule handles a particular SQL pattern, and a rule that does not match the requirements reports this error when hit. It is generally not the main reason for transparent rewrite failure |
+| Materialized view rule exec fail | The transparent rewrite rule threw an exception during execution. Use `Explain memo plan query_sql` to view the specific exception stack |
+| Match mode is invalid | The number of tables in the query and the materialized view is inconsistent; rewrite is not supported for now |
+| Query to view table mapping is null | Failed to generate the table mapping between the query and the materialized view |
+| queryToViewTableMappings are over the limit and be intercepted | The query has too many self-joined tables, causing the transparent rewrite search space to expand too much, so transparent rewrite is stopped |
+| Query to view slot mapping is null | Failed to generate the slot mapping between the query tables and the materialized view tables |
+| The graph logic between query and view is not consistent | The join types of the query and the materialized view are different, or the joined tables differ |
+| Predicate compensate fail | Usually the query condition range is outside the materialized view range. For example, the query is `a > 10` but the materialized view is `a > 15` |
+| Rewrite compensate predicate by view fail | Predicate compensation failed. Usually, the query has more conditions than the materialized view that need to be compensated, but the columns used in the conditions do not appear in the select clause of the materialized view |
+| Calc invalid partitions fail | The partition materialized view failed when calculating whether the partitions used by the query are valid |
+| mv can not offer any partition for query | The query only uses invalid partitions of the materialized view. Use `show partitions from mv_name` to check whether the `SyncWithBaseTables` field of the partitions is true. If it is false, manually refresh the corresponding partition; if a certain delay between the materialized view and query data is acceptable, set the `grace_period` property of the materialized view (in seconds) |
+| Add filter to base table fail when union rewrite | The query used invalid partitions of the materialized view, and the attempt to union all the materialized view with the original table failed |
+| RewrittenPlan output logical properties is different with target group | The rewrite finished, but the output of the materialized view is inconsistent with the original query |
+| Rewrite expressions by view in join fail | During join rewrite, fields or expressions used in the query are not in the materialized view |
+| Rewrite expressions by view in scan fail | During single-table rewrite, fields or expressions used in the query are not in the materialized view |
+| Split view to top plan and agg fail, view doesn't not contain aggregate | When rewriting an aggregation, the materialized view does not contain an aggregation |
+| Split query to top plan and agg fail | When rewriting an aggregation, the query does not contain an aggregation |
+| rewritten expression contains aggregate functions when group equals aggregate rewrite | When the `group by` clauses of the query and the materialized view are equal, the rewritten expression contains aggregate functions |
+| Can not rewrite expression when no roll up | When the `group by` clauses of the query and the materialized view are equal, expression rewrite failed |
+| Query function roll up fail | During aggregation rewrite, the aggregate function rollup failed |
+| View dimensions do not cover the query dimensions | The `group by` clause of the query uses some dimensions that do not appear in the `group by` clause of the materialized view |
+| View dimensions don't not cover the query dimensions in bottom agg | The `group by` clause of the query uses some dimensions that do not appear in the `group by` clause of the materialized view |
+| View dimensions do not cover the query group set dimensions | The `group sets` of the query uses some dimensions that do not appear in the `group by` clause of the materialized view |
+| The only one of query or view is scalar aggregate and can not rewrite expression meanwhile | The query has a `group by`, but the materialized view does not |
+| Both query and view have group sets, or query doesn't have but view has, not supported | Both the query and the materialized view have `group sets`, or the query has no `group sets` but the materialized view does. Transparent rewrite is not supported in this case |
 
-| Configuration                                                | Description                                                  |
-| ------------------------------------------------------------ | ------------------------------------------------------------ |
-| SET enable_nereids_planner = true;                           | Enables the new optimizer required for materialized view rewriting. |
-| SET enable_materialized_view_rewrite = true;                 | Enables or disables query rewriting. Default: Enabled.       |
-| SET materialized_view_rewrite_enable_contain_external_table = true; | Allows materialized views containing external tables to participate in rewriting. Default: Disabled. |
-| SET materialized_view_rewrite_success_candidate_num = 3;     | Maximum number of successful rewrite candidates considered by CBO. Default: 3. |
-| SET enable_materialized_view_union_rewrite = true;           | Allows UNION ALL between base tables and materialized views when data is insufficient. Default: Enabled. |
-| SET enable_materialized_view_nest_rewrite = true;            | Enables nested materialized view rewriting. Default: Disabled. |
-| SET materialized_view_relation_mapping_max_count = 8;        | Maximum number of relation mappings during rewriting. Default: 8. |
+### Appendix 2: Async materialized view partition build failure causes
 
-### 2 Summary and Description of Transparent Rewriting Failures
+<!-- Knowledge type: Reference table -->
+<!-- Applicable scenarios: Locating causes when an error is reported while creating a partition materialized view -->
 
-| Summary                                                      | Description                                                 |
-| ------------------------------------------------------------ | ----------------------------------------------------------- |
-| View struct info is invalid                                  | The structure information of the materialized view is invalid. Currently supported SQL patterns for rewriting include joins in both queries and materialized views, and aggregations in queries with or without joins in materialized views. This error is often displayed during transparent rewriting, as each rewriting rule is responsible for a specific SQL pattern. If a rule is hit that does not match the required pattern, this error will occur, but it is generally not the primary cause of rewriting failure. |
-| Materialized view rule exec fail                             | Typically indicates an exception during the execution of the transparent rewriting rule. To investigate, use EXPLAIN memo plan query_sql to view the specific exception stack. |
-| Match mode is invalid                                        | The number of tables in the query does not match the number of tables in the materialized view, and rewriting is not supported. |
-| Query to view table mapping is null                          | Failed to generate the mapping between the query and materialized view tables. |
-| queryToViewTableMappings are over the limit and be intercepted | Too many self-joined tables in the query led to excessive expansion of the rewriting space, stopping transparent rewriting. |
-| Query to view slot mapping is null                           | Failed to map slots between the query and materialized view tables. |
-| The graph logic between query and view is not consistent     | The join types or joined tables between the query and materialized view are different. |
-| Predicate compensate fail                                    | Typically occurs when the query's condition range exceeds that of the materialized view, e.g., query is a > 10 but materialized view is a > 15. |
-| Rewrite compensate predicate by view fail                    | Predicate compensation failed, usually because the query has additional conditions that need compensation, but the columns used in those conditions do not appear in the SELECT clause of the materialized view. |
-| Calc invalid partitions fail                                 | For partitioned materialized views, attempts to calculate whether partitions used by the query are valid failed. |
-| mv can not offer any partition for query                     | Query only uses invalid partitions of materialized view (data changed since last refresh). Check partition validity via show partitions from mv_name (SyncWithBaseTables=false indicates need for refresh). Set grace_period (in seconds) to allow data latency. |
-| Add filter to base table fail when union rewrite             | The query used invalid partitions of the materialized view, and attempting to union all the materialized view and base table failed. |
-| RewrittenPlan output logical properties is different with target group | After rewriting, the output logical properties of the materialized view do not match those of the original query. |
-| Rewrite expressions by view in join fail                     | In join rewriting, fields or expressions used in the query are not present in the materialized view. |
-| Rewrite expressions by view in scan fail                     | In single-table rewriting, fields or expressions used in the query are not present in the materialized view. |
-| Split view to top plan and agg fail, view doesn't not contain aggregate | During aggregation rewriting, the materialized view does not contain an aggregate function. |
-| Split query to top plan and agg fail                         | During aggregation rewriting, the query does not contain an aggregate function. |
-| rewritten expression contains aggregate functions when group equals aggregate rewrite | When the query and materialized view have the same GROUP BY, the rewritten expression contains aggregate functions. |
-| Can not rewrite expression when no roll up                   | When the query and materialized view have the same GROUP BY, expression rewriting fails. |
-| Query function roll up fail                                  | During aggregation rewriting, the aggregation function roll-up fails. |
-| View dimensions do not cover the query dimensions            | The GROUP BY in the query uses dimensions not present in the GROUP BY of the materialized view. |
-| View dimensions don't not cover the query dimensions in bottom agg | Similar to above, but specific to bottom-level aggregations. |
-| View dimensions do not cover the query group set dimensions  | The GROUP SETS in the query use dimensions not present in the GROUP BY of the materialized view. |
-| The only one of query or view is scalar aggregate and can not rewrite expression meanwhile | The query has a GROUP BY but the materialized view does not. |
-| Both query and view have group sets, or query doesn't have but view has, not supported | Unsupported transparent rewriting scenario involving GROUP SETS in both the query and materialized view, or only in the materialized view. |
+The refresh principle of a partition materialized view is incremental partition update:
 
-### 3 Reasons of Async-Materialized View Partition Building Failures
+1. **Step 1**: Compute whether the partition column of the materialized view can be mapped to the partitions of the base table.
+2. **Step 2**: Compute the specific mapping relationship, that is, whether the partition is 1:1 or 1:n.
 
-The refresh mechanism for partitioned materialized views relies on incremental partition updates:
-
-- First, calculate whether the partition columns of the materialized view can be mapped to those of the base table.
-
-- Second, determine the specific mapping relationship, whether it is 1:1 or 1:n.
-
-| Abstract                                                     | Description                                                  |
-| ------------------------------------------------------------ | ------------------------------------------------------------ |
-| Partition column cannot be found in the SQL SELECT column    | The column used after PARTITION BY in the materialized view definition must appear in the SELECT clause of the SQL defining the materialized view. |
-| Cannot find a valid partition track column, because %s       | Unable to locate a suitable partition column; the specific reason follows "because". |
-| Partition track does not support mark join                   | The column referenced by the partition field of the materialized view is a partition column of the input table in a mark join, which is currently not supported. |
-| Partition column is in an unsupported join null generation side | The referenced column of the partition field in the materialized view is on the null-generating side of a join, such as the right side of a LEFT JOIN. |
-| Relation should be LogicalCatalogRelation                    | The scan type of the partition base table referenced by the materialized view should be LogicalCatalogRelation; other types are currently not supported. |
-| Self join does not support partition update                  | For SQL queries involving self-joins, constructing a materialized view is currently not supported. |
-| Partition track already has a related base table column      | The partition column referenced by the materialized view currently only supports referencing the partition column of a single base table. |
-| Relation base table is not MTMVRelatedTableIf                | The partition base table referenced by the materialized view does not inherit from MTMVRelatedTableIf, which indicates whether a table can be partitioned. |
-| The related base table is not a partition table              | The base table used by the materialized view is not a partition table. |
-| The related base table partition column doesn't contain the MV partition | The column referenced after PARTITION BY in the materialized view does not exist in the partition base table. |
-| Group BY sets are empty, does not contain the target partition | The SQL defining the materialized view uses aggregation, but the GROUP BY clause is empty. |
-| Window partition sets do not contain the target partition    | Window functions are used, but the partition column referenced by the materialized view is not in the PARTITION BY clause. |
-| Unsupported plan operation in track partition                | The SQL defining the materialized view uses unsupported operations, such as ORDER BY. |
-| Context partition column should be a slot from column        | Window functions are used, and in the PARTITION BY clause, the partition column referenced by the materialized view is not a simple column but an expression. |
-| Partition expressions use more than one slot reference       | The partition column after GROUP BY or PARTITION BY is an expression containing multiple columns, rather than a simple column. For example, GROUP BY partition_col + other_col. |
-| Column to check using invalid implicit expression            | The partition column of the materialized view can only be used in date_trunc, and the expression using the partition column can only be date_trunc, etc. |
-| Partition column time unit level should be greater than SQL SELECT column | In the materialized view, the time unit granularity in date_trunc after PARTITION BY is smaller than the time unit granularity appearing after SELECT in the SQL defining the materialized view. For example, the materialized view uses `PARTITION BY(date_trunc(col, 'day'))`, but the SQL defining the materialized view has `date_trunc(col, 'month')` after SELECT. |
+| Summary information | Explanation |
+| --- | --- |
+| partition column can not be found in the SQL select column | The column used after `partition by` in the materialized view definition must appear in the select clause of the materialized view's defining SQL |
+| can't not find valid partition track column, because %s | No suitable partition column was found. The specific reason follows `because` |
+| partition track doesn't support mark join | The column referenced by the materialized view partition column is the partition column of the input table of a mark join, which is not supported |
+| partition column is in un supported join null generate side | The column referenced by the materialized view partition column is on the null-generating side of a join, for example, the right side of a left join |
+| relation should be LogicalCatalogRelation | The scan type of the partition base table referenced by the materialized view should be `LogicalCatalogRelation`; other types are not supported |
+| self join doesn't support partition update | A self-join SQL is not yet supported for building materialized views |
+| partition track already has a related base table column | The partition column referenced by the materialized view currently only supports referencing the partition column of one base table |
+| relation base table is not MTMVRelatedTableIf | The partition base table referenced by the materialized view does not inherit `MTMVRelatedTableIf`, the interface that indicates whether a table is partitionable |
+| The related base table is not partition table | The base table used by the materialized view is not a partitioned table |
+| The related base table partition column doesn't contain the mv partition | The column referenced after `partition by` in the materialized view does not exist in the partition base table |
+| group by sets is empty, doesn't contain the target partition | The materialized view's defining SQL uses aggregation, but `group by` is empty |
+| window partition sets don't contain the target partition | A window function is used, but the partition column referenced by the materialized view is not in the `partition by` clause |
+| Unsupported plan operate in track partition | The materialized view's defining SQL uses unsupported operations, such as `order by` |
+| context partition column should be slot from column | A window function is used, and the materialized view's referenced partition column in the `partition by` clause is not a plain column but an expression |
+| partition expressions use more than one slot reference | The partition column after `group by` or `partition by` is an expression containing multiple columns rather than a plain column. For example, `group by partition_col + other_col` |
+| column to check using invalid implicit expression | The materialized view partition column can only use `date_trunc`. Expressions on the partition column are restricted to `date_trunc` and similar |
+| partition column time unit level should be greater than SQL select column | The time granularity of `date_trunc` after `partition by` in the materialized view is smaller than the time granularity that appears after the select clause in the materialized view's defining SQL. For example, the materialized view uses `partition by(date_trunc(col, 'day'))`, but the materialized view's defining SQL contains `date_trunc(col, 'month')` after select |

@@ -2,7 +2,7 @@
 {
     "title": "ARRAY_APPLY",
     "language": "en",
-    "description": "<version since=\"1.2.3\">"
+    "description": "Filters array elements using a specified binary operator and returns a new array containing elements that satisfy the condition."
 }
 ---
 

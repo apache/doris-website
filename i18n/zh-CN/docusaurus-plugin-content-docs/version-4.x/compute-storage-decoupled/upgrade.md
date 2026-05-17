@@ -1,230 +1,279 @@
 ---
 {
-    "title": "升级",
+    "title": "存算分离集群升级指南（滚动升级）",
+    "sidebar_label": "滚动升级指南",
     "language": "zh-CN",
-    "description": "本指南提供了使用存储计算解耦（即，存算分离）架构升级 Doris 的分步说明。升级请使用本章节中推荐的步骤进行集群升级，Doris 集群升级可使用滚动升级的方式进行升级，无需集群节点全部停机升级，极大程度上降低对上层应用的影响。"
+    "description": "介绍如何对 Doris 存算分离集群进行滚动升级，涵盖 MetaService、Recycler、BE、FE 的升级顺序与操作步骤。",
+    "keywords": ["Doris 升级", "存算分离升级", "滚动升级", "MetaService 升级", "BE 升级", "FE 升级"]
 }
 ---
 
-## 概述
+<!-- 知识类型: 操作步骤 -->
+<!-- 适用场景: 集群升级 / 版本迁移 -->
 
-本指南提供了使用存储计算解耦（即，存算分离）架构升级 Doris 的分步说明。升级请使用本章节中推荐的步骤进行集群升级，Doris 集群升级可使用**滚动升级**的方式进行升级，无需集群节点全部停机升级，极大程度上降低对上层应用的影响。
+Doris 存算分离集群支持**滚动升级**，无需全量停机，可最大程度降低对上层应用的影响。本文介绍存算分离模式下的完整升级流程，包括升级前置检查、各组件升级步骤及常见问题解答。
 
-## Doris 版本说明
+若需升级存算一体模式的集群，请参考[集群升级](../admin-manual/cluster-management/upgrade)。
 
-Doris 使用三位数的版本号格式，可以使用如下 SQL 进行查看版本：
+## 版本说明
+
+<!-- 知识类型: 配置参数 -->
+
+Doris 使用三位数版本号（如 `3.0.3`），可通过以下 SQL 查看当前版本：
 
 ```sql
 MySQL [(none)]> select @@version_comment;
-+--------------------------------------------------------+
-| @@version_comment                                      |
-+--------------------------------------------------------+
-| Doris version doris-3.0.3-rc03-43f06a5e26 (Cloud Mode) |
-+--------------------------------------------------------+
++----------------------------------------------------------+
+| @@version_comment                                        |
++----------------------------------------------------------+
+| Doris version doris-3.0.3-rc03-43f06a5e26 (Cloud Mode)  |
++----------------------------------------------------------+
 ```
 
-> 其中`3.0.3`的第一个数字表示大版本号，第二个数字表示中版本号，第三个数字表示小版本号，在某些情况下，版本号会变成 4 位，如`2.0.2.1`，此时的最后一位数字表示这是一个紧急修复 bug 的版本，这通常意味着这个小版本有一些重大的 bug。
->
-> Doris 从`3.0.0`版本开始支持存算分离模式部署，当以这种模式部署后，版本号后面会有 Cloud Mode 后缀，以存算一体模式启动的话，则没有这个后缀。
+版本号说明如下：
 
-Doris 以存算分离模式部署之后，不支持切换成存算一体模式。同样的，存算一体模式的 Doris 也不支持切换成存算分离模式。
+| 位置 | 含义 | 示例 |
+|------|------|------|
+| 第一位 | 大版本号 | `3` |
+| 第二位 | 中版本号 | `0` |
+| 第三位 | 小版本号 | `3` |
+| 第四位（可选）| 紧急 Bug 修复版本，表示该小版本存在重大缺陷 | `2.0.2.1` |
 
-Doris 原则上支持从低版本升级到高版本，以及小版本降级，对于中版本或大版本，则不支持降级。
+版本后缀 `Cloud Mode` 表示以存算分离模式启动；存算一体模式启动时无此后缀。
+
+**模式切换限制：** 存算分离模式与存算一体模式之间**不支持相互切换**。
+
+**版本降级限制：** 支持低版本升级到高版本，以及小版本降级；**中版本和大版本不支持降级**。
+
+## 升级前置条件
+
+<!-- 知识类型: 操作步骤 -->
+<!-- 适用场景: 部署前检查 / 环境验收 -->
+
+升级前，请确认以下所有条件均已满足：
+
+1. **确认部署模式**：确保当前集群以存算分离模式运行（版本号带有 `Cloud Mode` 后缀）。
+2. **配置导数重试**：确保导数任务具备重试机制，防止升级期间节点重启导致任务失败。
+3. **检查组件状态**：检查 MetaService、Recycler、FE、BE 各组件均运行正常、无异常日志。
+4. **备份 FE 元数据**：备份 Master FE 的元数据目录（默认为 FE 目录下的 `doris-meta`）。若该目录为空，请在 `conf/fe.conf` 中查找 `meta_dir` 配置项确认实际路径。
+5. **下载安装包**：从 [Doris 官方网站](https://doris.apache.org/download) 下载目标版本安装包，并校验 SHA-512 摘要，确保包的完整性。
+
+## 升级流程概览
+
+<!-- 知识类型: 操作步骤 -->
+
+按以下顺序依次升级各组件：
+
+1. 升级 MetaService
+2. 升级 Recycler（仅限单独部署时）
+3. 升级 BE
+4. 升级 FE
+    1. 先升级 Observer 角色的 FE
+    2. 再升级其他非 Master 角色的 FE
+    3. 最后升级 Master 角色的 FE
 
 ## 升级步骤
 
-### 升级说明
+<!-- 知识类型: 操作步骤 -->
+<!-- 适用场景: 集群升级 / 版本迁移 -->
 
-1. 确保你的 Doris 是以存算分离模式启动的，如果你不清楚当前的 Doris 是什么部署方式，可以参考[上一小节](#doris-版本说明)的说明。
-   对于存算一体模式的 Doris，升级步骤可参考[集群升级](../admin-manual/cluster-management/upgrade)。
-2. 确保你的 Doris 导数任务具备重试机制，以避免升级过程中，因节点重启而导致的导数任务失败。
-3. 在升级之前，我们建议你检查一下各个 Doris 组件（MetaService、Recycler、Frontend、Backend）的状态正常并且无异常日志，以免升级过程中受到影响。
+### 第一步：升级 MetaService
 
-### 升级流程概览
+本步骤对每个 MetaService 实例执行以下操作。涉及环境变量说明：
 
-1. 元数据备份
-2. 升级 MetaService
-3. 升级 Recycler（如有）
-4. 升级 BE
-5. 升级 FE
-   1. 先升级 Observer 角色的 FE
-   2. 再升级其他非 Master 角色的 FE
-   3. 最后升级 Master 角色的 FE
+| 变量 | 含义 |
+|------|------|
+| `${MS_HOME}` | MetaService 的工作目录 |
+| `${MS_PACKAGE_DIR}` | 新版 MetaService 安装包所在目录 |
 
-### 升级前置工作
+**1. 停止当前 MetaService**
 
-1. 备份 Master FE 的元数据目录，元数据目录通常是 FE 目录下 doris-meta 目录，如果此目录为空，那么可能是修改了目录的位置，你可以到 FE 的配置文件（conf/fe.conf）中搜索`meta_dir`配置项。
-2. 从 Doris 官方网站[下载](/download)安装包，建议校验 SHA-512 码，保证下载到到安装包与 Doris 官方提供的是一致的。
-
-### 升级流程
-
-#### 1. 升级 MetaService
-
-假设以下环境变量：
-- `${MS_HOME}`：MetaService 的工作目录。
-- `${MS_PACKAGE_DIR}`：包含新 MetaService 包的目录。
-
-按照以下步骤升级每个 MetaService 实例。
-
-1.1. 停止当前 MetaService：
 ```shell
 cd ${MS_HOME}
 sh bin/stop.sh
 ```
 
-1.2. 备份现有 MetaService 二进制文件：
+**2. 备份现有二进制文件**
+
 ```shell
 mv ${MS_HOME}/bin bin_backup_$(date +%Y%m%d_%H%M%S)
 mv ${MS_HOME}/lib lib_backup_$(date +%Y%m%d_%H%M%S)
 ```
 
-1.3. 部署新包：
+**3. 部署新版安装包**
+
 ```shell
 cp ${MS_PACKAGE_DIR}/bin ${MS_HOME}/bin
 cp ${MS_PACKAGE_DIR}/lib ${MS_HOME}/lib
 ```
 
-1.4. 启动新的 MetaService：
+**4. 启动新版 MetaService**
+
 ```shell
 sh ${MS_HOME}/bin/start.sh --daemon
 ```
 
-1.5. 检查新 MetaService 的状态：
+**5. 验证升级结果**
 
-确保新 MetaService 正在运行，并且在 `${MS_HOME}/log/doris_cloud.out` 中有新的版本号。
+确认 MetaService 进程正常运行，并在 `${MS_HOME}/log/doris_cloud.out` 日志中看到新版本号。
 
-#### 2. 升级 Recycler（如有）
+---
+
+### 第二步：升级 Recycler（如有）
 
 :::caution
-如果你没有单独部署 Recycler 组件，那么可以跳过这一步。
+若未单独部署 Recycler 组件，可跳过本步骤。
 :::
 
-假设以下环境变量：
-- `${RECYCLER_HOME}`：Recycler 的工作目录
-- `${MS_PACKAGE_DIR}`：包含新 MetaService 包的目录，MetaService 和 Recycler 使用相同的包。
+本步骤对每个 Recycler 实例执行以下操作。MetaService 与 Recycler 使用相同的安装包。涉及环境变量说明：
 
-按照以下步骤升级每个 Recycler 实例。
+| 变量 | 含义 |
+|------|------|
+| `${RECYCLER_HOME}` | Recycler 的工作目录 |
+| `${MS_PACKAGE_DIR}` | 新版安装包所在目录（与 MetaService 共用） |
 
-2.1. 停止当前 Recycler：
+**1. 停止当前 Recycler**
+
 ```shell
 cd ${RECYCLER_HOME}
 sh bin/stop.sh
 ```
 
-2.2. 备份现有 Recycler 二进制文件：
+**2. 备份现有二进制文件**
+
 ```shell
 mv ${RECYCLER_HOME}/bin bin_backup_$(date +%Y%m%d_%H%M%S)
 mv ${RECYCLER_HOME}/lib lib_backup_$(date +%Y%m%d_%H%M%S)
 ```
 
-2.3. 部署新包：
+**3. 部署新版安装包**
+
 ```shell
-cp ${RECYCLER_PACKAGE_DIR}/bin ${RECYCLER_HOME}/bin
-cp ${RECYCLER_PACKAGE_DIR}/lib ${RECYCLER_HOME}/lib
+cp ${MS_PACKAGE_DIR}/bin ${RECYCLER_HOME}/bin
+cp ${MS_PACKAGE_DIR}/lib ${RECYCLER_HOME}/lib
 ```
 
-2.4. 启动新的 Recycler：
+**4. 启动新版 Recycler**
+
 ```shell
 sh ${RECYCLER_HOME}/bin/start.sh --recycler --daemon
 ```
 
-2.5. 检查新 Recycler 的状态：
+**5. 验证升级结果**
 
-确保新 Recycler 正在运行，并且在 `${RECYCLER_HOME}/log/doris_cloud.out` 中有新的版本号。
+确认 Recycler 进程正常运行，并在 `${RECYCLER_HOME}/log/doris_cloud.out` 日志中看到新版本号。
 
-#### 3. 升级 BE
+---
 
-验证所有 MetaService 和 Recycler（如果单独安装）实例已升级。
+### 第三步：升级 BE
 
-假设以下环境变量：
-- `${BE_HOME}`：BE 的工作目录。
-- `${BE_PACKAGE_DIR}`：包含新 BE 包的目录。
+:::tip
+升级 BE 前，请先确认所有 MetaService 和 Recycler（如有）实例均已升级完成。
+:::
 
-按照以下步骤升级每个 BE 实例。
+本步骤对每个 BE 实例执行以下操作。涉及环境变量说明：
 
-3.1. 停止当前 BE：
+| 变量 | 含义 |
+|------|------|
+| `${BE_HOME}` | BE 的工作目录 |
+| `${BE_PACKAGE_DIR}` | 新版 BE 安装包所在目录 |
+
+**1. 停止当前 BE**
+
 ```shell
 cd ${BE_HOME}
 sh bin/stop_be.sh
 ```
 
-3.2. 备份现有 BE 二进制文件：
+**2. 备份现有二进制文件**
+
 ```shell
 mv ${BE_HOME}/bin bin_backup_$(date +%Y%m%d_%H%M%S)
 mv ${BE_HOME}/lib lib_backup_$(date +%Y%m%d_%H%M%S)
 ```
 
-3.3. 部署新包：
+**3. 部署新版安装包**
+
 ```shell
 cp ${BE_PACKAGE_DIR}/bin ${BE_HOME}/bin
 cp ${BE_PACKAGE_DIR}/lib ${BE_HOME}/lib
 ```
 
-3.4. 启动新的 BE：
+**4. 启动新版 BE**
+
 ```shell
 sh ${BE_HOME}/bin/start_be.sh --daemon
 ```
 
-3.5. 检查新 BE 的状态：
+**5. 验证升级结果**
 
-确认新的 BE 是否正在运行，并且使用新版本正常运行。可以使用以下 SQL 获取状态和版本。
+执行以下 SQL 确认 BE 版本和运行状态：
 
 ```sql
 show backends;
 ```
 
-#### 4. 升级 FE
+---
 
-验证所有 BE 实例已升级。
+### 第四步：升级 FE
 
-假设以下环境变量：
-- `${FE_HOME}`：FE 的工作目录。
-- `${FE_PACKAGE_DIR}`：包含新 FE 包的目录。
+:::tip
+升级 FE 前，请先确认所有 BE 实例均已升级完成。
+:::
 
-按以下顺序升级 Frontend（FE）实例：
-1. 观察者 FE 节点
-2. 非主 FE 节点
-3. 主 FE 节点
+FE 节点必须按以下顺序逐一升级：**Observer → 非 Master → Master**。
 
-按照以下步骤升级每个 Frontend（FE）节点。
+本步骤对每个 FE 实例执行以下操作。涉及环境变量说明：
 
-4.1. 停止当前 FE：
+| 变量 | 含义 |
+|------|------|
+| `${FE_HOME}` | FE 的工作目录 |
+| `${FE_PACKAGE_DIR}` | 新版 FE 安装包所在目录 |
+
+**1. 停止当前 FE**
+
 ```shell
 cd ${FE_HOME}
 sh bin/stop_fe.sh
 ```
 
-4.2. 备份现有 FE 二进制文件：
+**2. 备份现有二进制文件**
+
 ```shell
 mv ${FE_HOME}/bin bin_backup_$(date +%Y%m%d_%H%M%S)
 mv ${FE_HOME}/lib lib_backup_$(date +%Y%m%d_%H%M%S)
 ```
 
-4.3. 部署新包：
+**3. 部署新版安装包**
+
 ```shell
 cp ${FE_PACKAGE_DIR}/bin ${FE_HOME}/bin
 cp ${FE_PACKAGE_DIR}/lib ${FE_HOME}/lib
 ```
 
-4.4. 启动新的 FE：
+**4. 启动新版 FE**
+
 ```shell
 sh ${FE_HOME}/bin/start_fe.sh --daemon
 ```
 
-4.5. 检查新 FE 的状态：
+**5. 验证升级结果**
 
-确认新的 FE 是否正在运行，并且使用新版本正常运行。可以使用以下 SQL 获取状态和版本。
+执行以下 SQL 确认 FE 版本和运行状态：
 
 ```sql
 show frontends;
 ```
 
-## FAQ
+## 常见问题
 
-1. 存算一体模式的 Doris 的升级前需要关闭副本均衡功能，存算分离模式下的集群需要吗？
+<!-- 知识类型: 操作步骤 -->
+<!-- 适用场景: 故障排查 -->
 
-不需要。因为存算分离模式下，Doris 的数据存放在 HDFS 或 S3 服务上，因此不存在副本均衡的需求。
+**Q1：存算一体模式升级前需要关闭副本均衡功能，存算分离模式也需要吗？**
 
-2. 有了独立的 MetaService 提供元数据服务，为什么 FE 还需要备份元数据？
+不需要。存算分离模式下，Doris 数据存储在 HDFS 或对象存储（S3）上，不存在副本均衡需求，因此无需执行该操作。
 
-因为目前 MetaService 保存了一部分元数据，FE 也保存了一部分元数据，为了稳妥起见，我们建议备份 FE 的元数据。
+**Q2：既然有独立的 MetaService 提供元数据服务，为什么 FE 仍需备份元数据？**
+
+目前元数据由 MetaService 和 FE 共同保存，各自负责不同部分。为保障升级安全，建议在升级前同时备份 FE 的元数据目录。

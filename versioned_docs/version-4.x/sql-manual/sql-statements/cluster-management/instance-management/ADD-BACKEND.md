@@ -88,4 +88,4 @@ The user executing this SQL must have at least the following permissions:
    * `11.10.20.12:8010`: The public endpoint for external user access through load balancer
    * `10.10.10.9:8020`: The private endpoint for VPC internal or Kubernetes cross-cluster access
 
-   This configuration is useful in cloud environments or Kubernetes clusters where BE nodes need to be accessible from different network contexts. For more details, see [Stream Load in Complex Network Environments](../../../../data-operate/import/load-internals/stream-load-in-complex-network.md).
+   This configuration is useful in cloud environments or Kubernetes clusters where BE nodes need to be accessible from different network contexts. For more details, see [Stream Load in Complex Network Environments](../../../../data-operate/import/load-best-practices/stream-load-in-complex-network.md).

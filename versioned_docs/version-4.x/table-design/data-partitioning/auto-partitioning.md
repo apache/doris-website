@@ -1,26 +1,45 @@
 ---
 {
-    "title": "Auto Partition",
+    "title": "Auto Partitioning",
     "language": "en",
-    "description": "The Auto Partition feature supports automatic detection of whether the corresponding partition exists during the data import process."
+    "description": "Doris auto partitioning (AUTO PARTITION) creates RANGE or LIST partitions automatically based on partition column values during data ingestion, solving the problem of being unable to predefine partitions for discrete data or massive partition counts."
 }
 ---
 
-## Application scenario
+<!-- Knowledge type: Feature / Procedure -->
+<!-- Use cases: Partitioned table design / Large-scale partition management / Data lifecycle management -->
 
-The Auto Partition feature supports automatic detection of whether the corresponding partition exists during the data import process. If it does not exist, the partition will be created automatically and imported normally.
+Auto partitioning (AUTO PARTITION) is the ability of Doris to create partitions automatically during data ingestion based on the values of the partition column. It addresses the following problems:
 
-The auto partition function mainly solves the problem that the user expects to partition the table based on a certain column, but the data distribution of the column is scattered or unpredictable, so it is difficult to accurately create the required partitions when building or adjusting the structure of the table, or the number of partitions is so large that it is too cumbersome to create them manually.
+- The partition column has scattered, hard-to-predict data, so the required partitions cannot be enumerated accurately at table creation time.
+- The number of partitions is too large to create manually.
+- The partition column is unrelated to system time, so dynamic partitioning cannot cover the case.
 
-Take the time type partition column as an example, in dynamic partitioning, we support the automatic creation of new partitions to accommodate real-time data at specific time periods. For real-time user behavior logs and other scenarios, this feature basically meets the requirements. However, in more complex scenarios, such as dealing with non-real-time data, the partition column is independent of the current system time and contains a large number of discrete values. At this time, to improve efficiency we want to partition the data based on this column, but the data may actually involve the partition can not be grasped in advance, or the expected number of required partitions is too large. In this case, dynamic partitioning or manually created partitions cannot meet our needs, while Auto Partition covers such needs.
+Doris supports two types of auto partitioning:
 
-Suppose the table DDL is as follows:
+| Type | Partitioning method | Partition function | Supported partition column types |
+| --- | --- | --- | --- |
+| AUTO **RANGE** PARTITION | Auto partition by range | `date_trunc` | `DATE`, `DATETIME` |
+| AUTO **LIST** PARTITION | Auto partition by enumerated value | Function calls not supported | `BOOLEAN`, `TINYINT`, `SMALLINT`, `INT`, `BIGINT`, `LARGEINT`, `DATE`, `DATETIME`, `CHAR`, `VARCHAR` |
+
+## Use Cases
+
+Take a time-typed partition column as an example:
+
+- With dynamic partitioning, Doris can automatically create new partitions on a fixed time cycle to hold real-time data. For scenarios such as real-time user-behavior logs, this feature generally meets the need.
+- In more complex scenarios, however (for example, processing non-real-time data), the partition column has nothing to do with the current system time and contains many discrete values. You still want to partition by this column, but the involved partitions cannot be known in advance, or the number of required partitions is too large.
+
+In these cases, neither dynamic partitioning nor manual partitioning meets the need, and auto partitioning covers such scenarios well.
+
+### Example Scenario: Trade History Table
+
+Suppose the business has a trade history table partitioned by trade date. With manual partitioning, the DDL is typically as follows:
 
 ```sql
 CREATE TABLE `DAILY_TRADE_VALUE`
 (
-    `TRADE_DATE`              datev2 NOT NULL COMMENT 'TRADE_DATE',
-    `TRADE_ID`                varchar(40) NOT NULL COMMENT 'TRADE_ID',
+    `TRADE_DATE`              datev2 NOT NULL COMMENT 'Trade date',
+    `TRADE_ID`                varchar(40) NOT NULL COMMENT 'Trade ID',
     ......
 )
 UNIQUE KEY(`TRADE_DATE`, `TRADE_ID`)
@@ -55,137 +74,19 @@ PROPERTIES (
 );
 ```
 
-The table stores a large amount of business history data, partitioned based on the date the transaction occurred. As you can see when building the table, we need to manually create the partitions in advance. If the data range of the partitioned columns changes, for example, 2022 is added to the above table, we need to create a partition by [ALTER-TABLE-PARTITION](../../sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-PARTITION) to make changes to the table partition. If such partitions need to be changed, or subdivided at a finer level of granularity, it is very tedious to modify them. At this point we can rewrite the table DDL using Auto Partition.
+This approach has the following problems:
 
-## Syntax
+1. All partitions must be listed manually at table creation time.
+2. When the value range of the partition column changes (for example, when 2022 data is added), partitions must be modified through [ALTER-TABLE-PARTITION](../../sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-PARTITION), which is cumbersome.
+3. If you need to change partitions or use a finer granularity, the cost of modification is high.
 
-When creating a table, use the following syntax to populate the `partitions_definition` section in the [CREATE-TABLE](../../sql-manual/sql-statements/table-and-view/table/CREATE-TABLE) statement.
-
-1. AUTO RANGE PARTITION:
-
-    ```sql
-      [AUTO] PARTITION BY RANGE(<partition_expr>)
-      <origin_partitions_definition>
-    ```
-
-    where
-
-    ```sql
-      partition_expr ::= date_trunc ( <partition_column>, '<interval>' )
-    ```
-
-2. AUTO LIST PARTITION:
-
-    ```sql
-        AUTO PARTITION BY LIST(`partition_col1` [, `partition_col2`, ...])
-        <origin_partitions_definition>
-    ```
-
-### Sample
-
-1. AUTO RANGE PARTITION
-
-    ```sql
-      CREATE TABLE `date_table` (
-          `TIME_STAMP` datev2 NOT NULL
-      ) ENGINE=OLAP
-      DUPLICATE KEY(`TIME_STAMP`)
-      AUTO PARTITION BY RANGE (date_trunc(`TIME_STAMP`, 'month'))
-      (
-      )
-      DISTRIBUTED BY HASH(`TIME_STAMP`) BUCKETS 10
-      PROPERTIES (
-      "replication_allocation" = "tag.location.default: 1"
-      );
-    ```
-
-    In AUTO RANGE PARTITION, the `AUTO` keyword can be omitted, and it still conveys the meaning of automatic partitioning.
-
-2. AUTO LIST PARTITION
-
-    ```sql
-      CREATE TABLE `str_table` (
-          `str` varchar not null
-      ) ENGINE=OLAP
-      DUPLICATE KEY(`str`)
-      AUTO PARTITION BY LIST (`str`)
-      ()
-      DISTRIBUTED BY HASH(`str`) BUCKETS 10
-      PROPERTIES (
-      "replication_allocation" = "tag.location.default: 1"
-      );
-    ```
-
-    List Auto Partition supports multiple partition columns, which are written in the same way as normal List Partition: ```AUTO PARTITION BY LIST (`col1`, `col2`, ...)```
-
-### Constraints
-
-- In auto List Partition, the partition name length **must not exceed 50 characters**. This length is derived from the concatenation and escape of contents of partition columns on corresponding data rows, so the actual allowed length may be shorter.
-- In auto Range Partition, the partition function only supports `date_trunc`, and the partition column supports only `DATE` or `DATETIME` types.
-- In auto List Partition, function calls are not supported, and the partition column supports `BOOLEAN`, `TINYINT`, `SMALLINT`, `INT`, `BIGINT`, `LARGEINT`, `DATE`, `DATETIME`, `CHAR`, `VARCHAR` data types, with partition values being enumeration values.
-- In auto List Partition, for every existing value in the partition column that does not correspond to a partition, a new independent partition will be created.
-
-### NULL value partition
-
-When the session variable `allow_partition_column_nullable` is enabled:
-
-- For Auto List Partition, the corresponding NULL value partition will be created automatically:
-
-    ```sql
-      create table auto_null_list(
-        k0 varchar null
-      )
-      auto partition by list (k0)
-      (
-      )
-      DISTRIBUTED BY HASH(`k0`) BUCKETS 1
-      properties("replication_num" = "1");
-
-      insert into auto_null_list values (null);
-
-      select * from auto_null_list;
-      +------+
-      | k0   |
-      +------+
-      | NULL |
-      +------+
-
-      select * from auto_null_list partition(pX);
-      +------+
-      | k0   |
-      +------+
-      | NULL |
-      +------+
-    ```
-
-- For Auto Range Partition, **null columns are not supported to be partition columns**.
-
-    ```sql
-      CREATE TABLE `range_table_nullable` (
-        `k1` INT,
-        `k2` DATETIMEV2(3),
-        `k3` DATETIMEV2(6)
-      ) ENGINE=OLAP
-      DUPLICATE KEY(`k1`)
-      AUTO PARTITION BY RANGE (date_trunc(`k2`, 'day'))
-      ()
-      DISTRIBUTED BY HASH(`k1`) BUCKETS 16
-      PROPERTIES (
-      "replication_allocation" = "tag.location.default: 1"
-      );
-
-    ERROR 1105 (HY000): errCode = 2, detailMessage = AUTO RANGE PARTITION doesn't support NULL column
-    ```
-
-## Example
-
-When using Auto Partition, the example in the Application scenarios section can be rewritten as:
+Rewritten with AUTO PARTITION, the DDL can be simplified to:
 
 ```sql
 CREATE TABLE `DAILY_TRADE_VALUE`
 (
-    `TRADE_DATE`              datev2 NOT NULL COMMENT '交易日期',
-    `TRADE_ID`                varchar(40) NOT NULL COMMENT '交易编号',
+    `TRADE_DATE`              datev2 NOT NULL,
+    `TRADE_ID`                varchar(40) NOT NULL,
     ......
 )
 UNIQUE KEY(`TRADE_DATE`, `TRADE_ID`)
@@ -198,14 +99,14 @@ PROPERTIES (
 );
 ```
 
-Take the example of a table with only two columns, at which point the new table has no default partitions:
+The newly created table has no default partitions:
 
 ```sql
 show partitions from `DAILY_TRADE_VALUE`;
 Empty set (0.12 sec)
 ```
 
-After inserting data and checking again, it is found that the table has created the corresponding partitions:
+After data is inserted, the corresponding partitions are created automatically:
 
 ```sql
 insert into `DAILY_TRADE_VALUE` values ('2012-12-13', 1), ('2008-02-03', 2), ('2014-11-11', 3);
@@ -220,30 +121,151 @@ show partitions from `DAILY_TRADE_VALUE`;
 +-------------+-----------------+----------------+---------------------+--------+--------------+--------------------------------------------------------------------------------+-----------------+---------+----------------+---------------+---------------------+---------------------+--------------------------+----------+------------+-------------------------+-----------+
 ```
 
-It can be concluded that the partitions created by Auto Partition share the same functionality as partitions created by manual partitioning.
+Partitions created by auto partitioning are functionally identical to partitions created manually.
 
-## Conjunct with Dynamic Partition
+## Syntax
 
-Doris supports both Auto and Dynamic Partition. In this case, both functions are in effect:
+Use the following syntax in the `partitions_definition` part of [CREATE-TABLE](../../sql-manual/sql-statements/table-and-view/table/CREATE-TABLE).
 
-1. Auto Partition will automatically create partitions on demand during data import;
-2. Dynamic Partition will automatically create, recycle and dump partitions.
+### AUTO RANGE PARTITION
 
-There is no conflict between the two syntaxes, just set the corresponding clauses/attributes at the same time. Please note that it is uncertain whether the partition in current period is created by Auto Partition or Dynamic Partition. Different creation methods will lead to different naming formats for the partitions.
+```sql
+[AUTO] PARTITION BY RANGE(<partition_expr>)
+<origin_partitions_definition>
+```
+
+Where:
+
+```sql
+partition_expr ::= date_trunc(<partition_column>, '<interval>')
+```
+
+:::tip
+In AUTO RANGE PARTITION, the `AUTO` keyword can be omitted; the meaning of auto partitioning is preserved.
+:::
+
+Example:
+
+```sql
+CREATE TABLE `date_table` (
+    `TIME_STAMP` datev2 NOT NULL
+) ENGINE=OLAP
+DUPLICATE KEY(`TIME_STAMP`)
+AUTO PARTITION BY RANGE (date_trunc(`TIME_STAMP`, 'month'))
+(
+)
+DISTRIBUTED BY HASH(`TIME_STAMP`) BUCKETS 10
+PROPERTIES (
+    "replication_allocation" = "tag.location.default: 1"
+);
+```
+
+### AUTO LIST PARTITION
+
+```sql
+AUTO PARTITION BY LIST(`partition_col1` [, `partition_col2`, ...])
+<origin_partitions_definition>
+```
+
+LIST auto partitioning supports multi-column partitioning, with the same syntax as a regular LIST partition: `AUTO PARTITION BY LIST(`col1`, `col2`, ...)`. For each value of the partition column that does not yet have a corresponding partition, an independent new partition is created.
+
+Example:
+
+```sql
+CREATE TABLE `str_table` (
+    `str` varchar not null
+) ENGINE=OLAP
+DUPLICATE KEY(`str`)
+AUTO PARTITION BY LIST (`str`)
+()
+DISTRIBUTED BY HASH(`str`) BUCKETS 10
+PROPERTIES (
+    "replication_allocation" = "tag.location.default: 1"
+);
+```
+
+### Constraint Comparison
+
+| Constraint | AUTO RANGE PARTITION | AUTO LIST PARTITION |
+| --- | --- | --- |
+| Supported partition functions | `date_trunc` only | Function calls not supported |
+| Supported partition column types | `DATE`, `DATETIME` | `BOOLEAN`, `TINYINT`, `SMALLINT`, `INT`, `BIGINT`, `LARGEINT`, `DATE`, `DATETIME`, `CHAR`, `VARCHAR` |
+| Multi-column partitioning supported | No | Yes |
+| Partition name length limit | - | Must not exceed 50 (derived from concatenation and escaping of partition column content; the actual allowed length may be shorter) |
+| Partition value rule | Divided by the time range truncated by `date_trunc` | Each new enumerated value with no existing partition creates an independent new partition |
+
+## NULL Value Partitioning
+
+After enabling the session variable `allow_partition_column_nullable`, the two auto partitioning types differ in their support for NULLABLE columns:
+
+| Auto partitioning type | NULLABLE partition column supported |
+| --- | --- |
+| AUTO LIST PARTITION | Supported. Writing NULL creates a NULL partition normally. |
+| AUTO RANGE PARTITION | Not supported |
+
+### AUTO LIST PARTITION: NULLABLE Column Supported
+
+```sql
+create table auto_null_list(
+    k0 varchar null
+)
+auto partition by list (k0)
+(
+)
+DISTRIBUTED BY HASH(`k0`) BUCKETS 1
+properties("replication_num" = "1");
+
+insert into auto_null_list values (null);
+
+select * from auto_null_list;
++------+
+| k0   |
++------+
+| NULL |
++------+
+
+select * from auto_null_list partition(pX);
++------+
+| k0   |
++------+
+| NULL |
++------+
+```
+
+### AUTO RANGE PARTITION: NULLABLE Column Not Supported
+
+```sql
+CREATE TABLE `range_table_nullable` (
+    `k1` INT,
+    `k2` DATETIMEV2(3),
+    `k3` DATETIMEV2(6)
+) ENGINE=OLAP
+DUPLICATE KEY(`k1`)
+AUTO PARTITION BY RANGE (date_trunc(`k2`, 'day'))
+()
+DISTRIBUTED BY HASH(`k1`) BUCKETS 16
+PROPERTIES (
+    "replication_allocation" = "tag.location.default: 1"
+);
+
+ERROR 1105 (HY000): errCode = 2, detailMessage = AUTO RANGE PARTITION doesn't support NULL column
+```
 
 ## Lifecycle Management
 
 :::info
-Doris supports the simultaneous use of automatic partitioning and dynamic partitioning for lifecycle management, but it is now not recommended.
+Doris supports using auto partitioning together with dynamic partitioning to implement lifecycle management, but this combination is no longer recommended.
 :::
 
-In the AUTO RANGE PARTITION table, the property `partition.retention_count` is supported, which accepts a positive integer value as a parameter (denoted as `N`), indicating that **only the top `N` historical partitions with the largest partition values** are retained among all historical partitions. All current and future partitions are retained. Specifically:
+AUTO RANGE PARTITION tables support managing the lifecycle of historical partitions through the `partition.retention_count` property. This property accepts a positive integer `N`, meaning **only the `N` historical partitions with the largest partition values are retained**; current and future partitions are all retained.
 
-- Since RANGE partitions are always non-overlapping, `partition A's value > partition B's value` is equivalent to `partition A's lower bound value > partition B's upper bound value` which is equivalent to `partition A's upper bound value > partition B's upper bound value`.
-- Historical partitions refer to **partitions whose upper bound is <= current time**.
-- Current and future partitions refer to **partitions whose lower bound is >= current time**.
+### Concept Definitions
 
-For example:
+- **Historical partition**: A partition whose upper bound is less than or equal to the current time.
+- **Current and future partition**: A partition whose lower bound is greater than or equal to the current time.
+- **Partition value comparison**: Because RANGE partitions never overlap, "the value of partition A is greater than that of partition B" is equivalent to "the lower bound of partition A is greater than the upper bound of partition B", which is also equivalent to "the upper bound of partition A is greater than the upper bound of partition B".
+
+### Example
 
 ```sql
 create table auto_recycle(
@@ -256,32 +278,37 @@ properties(
 );
 ```
 
-This represents keeping only the top 3 partitions with the largest date values in the history. Assuming the current date is `2025-10-21`, and inserting data for each day from `2025-10-16` to `2025-10-23`, after one recycling, as shown in the figure, the remaining partitions are as follows:
+This configuration means that only the 3 historical partitions with the largest date values are retained. Suppose the current date is `2025-10-21` and data is inserted for each day from `2025-10-16` to `2025-10-23`. After one round of recycling, 6 partitions remain, as shown below:
 
 ![Recycle](/images/blogs/auto-partition-lifetime1.png)
 
+The remaining partition list:
+
 - p20251018000000
 - p20251019000000
-- p20251020000000 (This partition and above: Only keep three historical partitions)
-- p20251021000000 (This partition and below: The current and future partitions are not affected)
+- p20251020000000 (this partition and above: only three historical partitions are retained)
+- p20251021000000 (this partition and below: current and future partitions are unaffected)
 - p20251022000000
 - p20251023000000
 
-## Conjunct with Auto Bucket
+## Used Together with Auto Bucketing
 
-Only AUTO RANGE PARTITION can be used together with the [Auto Bucket](./data-bucketing.md#auto-setting-bucket-number) feature. When using this feature, Doris assumes that the data import is incremental in time order, and each import only involves one partition. In other words, this usage is only recommended for tables that are incrementally imported batch by batch.
+Only AUTO RANGE PARTITION can be used together with the [auto bucketing](./data-bucketing.md#auto-set-bucket-number) feature.
 
-:::warning Note!
-If the data import method does not conform to the above pattern, and both auto partitioning and auto bucketing are used at the same time, there is a possibility that the number of buckets in the new partition is extremely unreasonable, which may greatly affect query performance.
+When using this combination, Doris assumes that data is loaded into the table incrementally in time order, and that each load involves only one partition. Therefore, **this combination is recommended only for tables loaded incrementally in batches**.
+
+:::warning Note
+If the data load pattern does not follow the above paradigm and both auto partitioning and auto bucketing are used, the bucket number of new partitions may be highly unreasonable, which can significantly affect query performance.
 :::
 
 ## Partition Management
 
-:::tip
-Since 2.1.6, Doris supports the `partitions` table function and the `auto_partition_name` function, which can be used to easily find and manage partitions for data.
-:::
+After enabling auto partitioning, you can locate partitions precisely with the following two tools:
 
-When Auto Partition is enabled, partition names can be mapped to partitions using the `auto_partition_name` function.The `partitions` table function generates detailed partition information from partition names. Let's take the `DAILY_TRADE_VALUE` table as an example to see its current partition after we insert data:
+- The `auto_partition_name` function: Maps a partition column value to a partition name.
+- The `partitions` table function: Retrieves partition details by partition name.
+
+Continuing with the `DAILY_TRADE_VALUE` table, after data is inserted, query the partition that a specific record belongs to:
 
 ```sql
 select * from partitions("catalog"="internal","database"="optest","table"="DAILY_TRADE_VALUE") where PartitionName = auto_partition_name('range', 'year', '2008-02-03');
@@ -292,16 +319,21 @@ select * from partitions("catalog"="internal","database"="optest","table"="DAILY
 +-------------+-----------------+----------------+---------------------+--------+--------------+--------------------------------------------------------------------------------+-----------------+---------+----------------+---------------+---------------------+---------------------+--------------------------+-----------+------------+-------------------------+-----------+--------------------+--------------+
 ```
 
-In this way the IDs and values of each partition can be precisely filtered for subsequent partition-specific operations (e.g. `insert overwrite partition`).
+This approach lets you precisely select the ID and value of each partition for follow-up partition-specific operations (for example, `insert overwrite partition`).
 
-For a detailed grammar description, see: [auto_partition_name](../../sql-manual/sql-functions/scalar-functions/string-functions/auto-partition-name)，[partitions](../../sql-manual/sql-functions/table-valued-functions/partitions)。
+Detailed syntax:
 
-## Key points
+- [auto_partition_name function reference](../../sql-manual/sql-functions/scalar-functions/string-functions/auto-partition-name)
+- [partitions table function reference](../../sql-manual/sql-functions/table-valued-functions/partitions)
 
-- Similar to regular partitioned tables, auto List Partition supports multi-column partitioning with no syntax differences.
-- If partitions are created during data insertion or import processes, and the entire import process is not completed (fails or is canceled), the created partitions will not be automatically deleted.
-- Tables using Auto Partition only differ in the method of partition creation, switching from manual to automatic. The original usage of the table and its created partitions remains the same as non-Auto Partition tables or partitions.
-- To prevent the accidental creation of too many partitions, Apache Doris controls the maximum number of partitions an Auto Partition table can accommodate through the `max_auto_partition_num setting` in the FE configuration. This value can be adjusted if needed.
-- When importing data into a table with Auto Partition enabled, the coordinator sends data with a polling interval different from regular tables. Refer to `olap_table_sink_send_interval_auto_partition_factor`  in [BE Configuration](../../admin-manual/config/be-config) for details. This setting does not have an impact after `enable_memtable_on_sink_node` is enabled.
-- When use [insert-overwrite](../../sql-manual/sql-statements/data-modification/DML/INSERT-OVERWRITE) to load data into Auto Partition table, the behaviour is detailed in the INSERT OVERWRITE documentation.
-- If metadata operations are involved when importing and creating partitions, the import process may fail.
+## Notes
+
+| Note | Description |
+| --- | --- |
+| Multi-column partitioning support | AUTO LIST PARTITION supports multi-column partitioning, with the same syntax as a regular LIST partition. |
+| Partitions from failed loads are not cleaned up automatically | If partitions are created during a data insert or load but the entire load does not complete (fails or is canceled), the created partitions are not deleted automatically. |
+| Same usage as regular partitions | For a table that uses AUTO PARTITION, only the way partitions are created changes from manual to automatic. All other usage of the table and its partitions is the same as for non-AUTO PARTITION tables. |
+| Maximum partition count limit | The maximum number of partitions per table is controlled by `max_auto_partition_num` in [FE configuration](../../admin-manual/config/fe-config). Adjust this as needed to avoid accidentally creating too many partitions. |
+| Data send polling interval | When loading data into an AUTO PARTITION table, the polling interval at which the Coordinator sends data differs from that of regular tables. It is controlled by `olap_table_sink_send_interval_auto_partition_factor` in [BE configuration](../../admin-manual/config/be-config). After enabling sink-node memtable (`enable_memtable_on_sink_node = true`), this variable does not take effect. |
+| INSERT OVERWRITE behavior | For the specific behavior of an AUTO PARTITION table when using [insert-overwrite](../../sql-manual/sql-statements/data-modification/DML/INSERT-OVERWRITE) to insert data, see the INSERT OVERWRITE documentation. |
+| Metadata conflicts may cause load failures | When a load creates partitions, if the table is undergoing other metadata operations (such as Schema Change or Rebalance), the load may fail. |

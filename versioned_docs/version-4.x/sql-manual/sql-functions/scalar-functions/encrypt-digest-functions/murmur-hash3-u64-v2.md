@@ -12,10 +12,6 @@ Computes an unsigned 64-bit MurmurHash3 hash value, returned as LARGEINT type. T
 
 This function reuses the implementation of `MURMUR_HASH3_64_V2` and masks the result to unsigned 64-bit range (0 to 2^64-1), which is consistent with the [standard library](https://mmh3.readthedocs.io/en/latest/api.html#mmh3.hash64) implementation when interpreted as unsigned.
 
-:::note
-This function is supported since 4.1.0.
-:::
-
 ## Syntax
 
 ```sql

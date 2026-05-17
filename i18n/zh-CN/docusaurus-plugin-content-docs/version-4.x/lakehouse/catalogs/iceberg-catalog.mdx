@@ -2,7 +2,7 @@
 {
     "title": "Iceberg Catalog",
     "language": "zh-CN",
-    "description": "Apache Doris Iceberg Catalog 完整指南：支持 HMS、Glue、REST、JDBC 等多种元数据服务，实现数据湖查询加速、数据读写、分区管理、Schema 变更等功能，提供 HDFS、S3、OSS 等存储系统集成方案。"
+    "description": "Apache Doris Iceberg Catalog 完整指南：支持 HMS、Glue、REST 等多种元数据服务，实现数据湖查询加速、数据读写、分区管理、Schema 变更等功能，提供 HDFS、S3、OSS 等存储系统集成方案。"
 }
 ---
 
@@ -54,8 +54,6 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
   * `glue`：使用 AWS Glue 作为元数据服务。
 
   * `dlf`：使用阿里云 DLF 作为元数据服务。
-
-  * `jdbc`：使用 Iceberg JDBC Catalog 作为元数据服务。
 
   * `s3tables`：使用 AWS S3 Tables Catalog 访问 [S3 Table Bucket](https://aws.amazon.com/s3/features/tables/)。
 
@@ -1057,7 +1055,6 @@ Iceberg 的元数据层级关系是 Catalog -> Namespace -> Table。其中 Names
             CREATE CATALOG iceberg_jdbc_postgresql PROPERTIES (
                 'type' = 'iceberg',
                 'iceberg.catalog.type' = 'jdbc',
-                'iceberg.jdbc.catalog_name' = 'iceberg_jdbc_postgresql',
                 'iceberg.jdbc.uri' = 'jdbc:postgresql://127.0.0.1:5432/iceberg_db',
                 'iceberg.jdbc.user' = 'iceberg_user',
                 'iceberg.jdbc.password' = 'password',
@@ -1079,7 +1076,6 @@ Iceberg 的元数据层级关系是 Catalog -> Namespace -> Table。其中 Names
             CREATE CATALOG iceberg_jdbc_mysql PROPERTIES (
                 'type' = 'iceberg',
                 'iceberg.catalog.type' = 'jdbc',
-                'iceberg.jdbc.catalog_name' = 'iceberg_jdbc_mysql',
                 'iceberg.jdbc.uri' = 'jdbc:mysql://127.0.0.1:3306/iceberg_db',
                 'iceberg.jdbc.user' = 'iceberg_user',
                 'iceberg.jdbc.password' = 'password',
@@ -1101,7 +1097,6 @@ Iceberg 的元数据层级关系是 Catalog -> Namespace -> Table。其中 Names
             CREATE CATALOG iceberg_jdbc_sqlite PROPERTIES (
                 'type' = 'iceberg',
                 'iceberg.catalog.type' = 'jdbc',
-                'iceberg.jdbc.catalog_name' = 'iceberg_jdbc_sqlite',
                 'iceberg.jdbc.uri' = 'jdbc:sqlite:/tmp/iceberg_catalog.db',
                 'iceberg.jdbc.init-catalog-tables' = 'true',
                 'iceberg.jdbc.schema-version' = 'V1',

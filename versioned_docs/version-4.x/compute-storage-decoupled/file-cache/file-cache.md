@@ -1,370 +1,400 @@
 ---
 {
-    "title": "File Cache",
+    "title": "File Cache Configuration and Usage Guide (Compute-Storage Decoupled)",
+    "sidebar_label": "File Cache Configuration",
     "language": "en",
-    "description": "In a decoupled architecture, data is stored in remote storage."
+    "description": "Covers file cache configuration, quota management, cache warmup and eviction, hit-rate monitoring, and TTL policies for Doris in compute-storage decoupled mode to improve query performance and reduce object storage costs.",
+    "keywords": ["Doris file cache", "compute-storage decoupled cache", "file cache", "cache warmup", "cache quota", "TTL cache", "LRU", "cache hit rate", "object storage acceleration"]
 }
 ---
 
-In a decoupled architecture, data is stored in remote storage. The Doris database accelerates data access by utilizing a cache on local disks and employs an advanced multi-queue LRU (Least Recently Used) strategy to efficiently manage cache space. This strategy particularly optimizes the access paths for indexes and metadata, aiming to maximize the caching of frequently accessed user data. For multi-compute group (Compute Group) scenarios, Doris also provides a cache warming feature to quickly load specific data (such as tables or partitions) into the cache when a new compute group is established, thereby enhancing query performance.
+<!-- Knowledge type: Architecture and design decisions -->
+<!-- Applicable scenarios: Compute-storage decoupled deployment / Query performance optimization / Object storage cost optimization -->
 
-## Role of Cache
+In compute-storage decoupled mode, data is stored in remote object storage (such as S3 or HDFS). Doris uses the local disks of BE nodes as a file cache layer and manages cache space efficiently with a multi-queue LRU (Least Recently Used) strategy. The access paths for indexes and metadata are specially optimized to maximize the cache hit rate for hot data.
 
-In a decoupled architecture, data is typically stored in remote storage systems, such as object storage S3, HDFS, etc. In this scenario, the Doris database can leverage local disk space as a cache to store some data locally, thereby reducing the frequency of access to remote storage,improving data access efficiency, and lowering operating costs.
+For multi-compute-group scenarios, Doris provides a **cache warmup** feature that proactively pulls data for specified tables or partitions into a new compute group when it starts, quickly establishing a local cache and improving first-query performance.
 
-Remote storage (such as object storage) usually has higher access latency and may be subject to constraints of QPS (queries per second) and bandwidth limits. For example, QPS limits on object storage can cause bottlenecks during high-concurrency queries, while network bandwidth limits can affect data transfer speeds. By using local file caching, Doris can store hot data on local disks, thereby significantly reducing query latency and enhancing query performance.
+## The Role of File Cache
 
-On the other hand, object storage services typically charge based on the number of requests and the amount of data transferred. Frequent access and large volumes of data downloads can increase query costs. Through caching mechanisms, the number of accesses and the amount of data transferred to object storage can be reduced, thereby lowering costs.
+<!-- Knowledge type: Architecture and design decisions -->
 
-Doris's file cache typically caches the following two types of files in a decoupled architecture:
+In compute-storage decoupled mode, accessing remote storage typically introduces the following two categories of problems:
 
-- Segment data files: The basic unit of data storage in Doris's internal tables. Caching these files can accelerate data read operations and enhance query performance.
+| Problem | Description |
+|---|---|
+| High access latency | Object storage latency is much higher than local disk latency, and this is especially noticeable under high concurrency |
+| QPS / bandwidth limits | Object storage usually has QPS ceilings and bandwidth constraints, which become bottlenecks under high-concurrency queries |
+| Pay-per-use costs | Object storage is billed by request count and data transfer volume, so frequent access increases operational costs |
 
-- Inverted index files: Used to accelerate filtering operations in queries.By caching these files, data that meets query conditions can be located more quickly, further improving query efficiency and supporting complex query scenarios.
+By caching hot data on local disks, Doris can significantly reduce query latency while reducing direct requests to object storage, thereby lowering costs.
+
+### Cached File Types
+
+Doris file cache primarily caches the following two types of files:
+
+- **Segment data files**: The basic storage unit for Doris internal table data. Caching these files accelerates data reads and improves query performance.
+- **Inverted index files**: Used to accelerate filter operations in queries. Caching these files allows faster location of data that satisfies conditions and supports complex query scenarios.
 
 ## Cache Configuration
 
-Doris provides a range of configuration options to help users manage file caching flexibly. These configuration options include enabling/disabling caching, setting cache paths and sizes, configuring cache block sizes,enabling/disabling automatic cleanup,and pre-eviction mechanisms, among others. The detailed configuration instructions are as follows:
+<!-- Knowledge type: Configuration parameters -->
+<!-- Applicable scenarios: Pre-deployment configuration for compute-storage decoupled mode / BE parameter tuning -->
 
-1. Enabling File Cache
+Doris controls file cache behavior through the following parameters in the BE configuration file.
+
+### Enabling File Cache
+
+| Parameter | Default | Description |
+|---|---|---|
+| `enable_file_cache` | `false` | Whether to enable the file cache feature. Set to `true` in compute-storage decoupled mode. |
+
+### Configuring Cache Paths and Size
 
 ```plaintext
-enable_file_cache Default: "false"
+file_cache_path  Default: the storage directory under the BE deployment path
 ```
 
-Parameter Description: This configuration item controls whether the file cache function is enabled. If set to`true`, file caching is enabled; if set to`false`, file caching is disabled.
+This parameter is a JSON array. Each element specifies a cache path and its attributes. The supported fields are:
 
-2. Configuring File Cache Paths and Sizes
+| Field | Description |
+|---|---|
+| `path` | Path where cache files are stored |
+| `total_size` | Total cache size for this path (in bytes) |
+| `ttl_percent` | Percentage of space allocated to the TTL queue |
+| `normal_percent` | Percentage of space allocated to the Normal queue |
+| `disposable_percent` | Percentage of space allocated to the Disposable queue |
+| `index_percent` | Percentage of space allocated to the Index queue |
+| `storage` | Cache storage type: `disk` (default) or `memory` |
 
-```plaintext
-file_cache_path Default: storage directory under the BE deployment path
-```
+**Configuration examples:**
 
-Parameter Description: This configuration item specifies the path and size of the file cache. The format is a JSON array, with each element being a JSON object containing the following fields:
-
-- `path`: The path where cache files are stored.
-- `total_size`: The total size of the cache under this path (in bytes).
-- `ttl_percent`: The proportion of the TTL queue(as a percentage).
-- `normal_percent`: The proportion of the Normal queue(as a percentage).
-- `disposable_percent`: The proportion of the Disposable queue (as a percentage).
-- `index_percent`: The proportion of the Index queue (as a percentage).
-- `storage`: The type of cache storage,which can be`disk`or`memory`. The default value is`disk`.
-
-Example:
 - Single-path configuration:
 
-```json
-[{"path":"/path/to/file_cache","total_size":21474836480}]
-```
+    ```json
+    [{"path":"/path/to/file_cache","total_size":21474836480}]
+    ```
 
 - Multi-path configuration:
 
-```json
-[{"path":"/path/to/file_cache","total_size":21474836480},{"path":"/path/to/file_cache2","total_size":21474836480}]
-```
+    ```json
+    [{"path":"/path/to/file_cache","total_size":21474836480},{"path":"/path/to/file_cache2","total_size":21474836480}]
+    ```
 
 - Memory storage configuration:
 
-```json
-[{"path": "xxx", "total_size":53687091200, "storage": "memory"}]
-```
+    ```json
+    [{"path": "xxx", "total_size":53687091200, "storage": "memory"}]
+    ```
 
-3. Automatic Cache Cleanup
+### Automatic Cache Clearing
 
-```plaintext
-clear_file_cache Default: "false"
-```
+| Parameter | Default | Description |
+|---|---|---|
+| `clear_file_cache` | `false` | Whether to automatically clear cached data when BE restarts. When set to `true`, the cache is cleared on every restart. |
 
-Parameter Description: This configuration item controls whether to automatically clear cached data when BE restarts. If set to`true`, the cache will be automatically cleared each time BE restarts; if set to`false`, the cache will not be automatically cleared.
+### Proactive Eviction
 
-4. Pre-eviction Mechanism
+Proactive eviction actively frees space when cache utilization reaches a threshold, preventing passive eviction from being triggered during queries and causing performance jitter.
 
-```plaintext
-enable_evict_file_cache_in_advance Default: "true"
-```
+| Parameter | Default | Description |
+|---|---|---|
+| `enable_evict_file_cache_in_advance` | `true` | Whether to enable proactive eviction |
+| `file_cache_enter_need_evict_cache_in_advance_percent` | `88` | Utilization threshold (%) at which proactive eviction is triggered. Proactive eviction begins when used cache space or inode count reaches this percentage |
+| `file_cache_exit_need_evict_cache_in_advance_percent` | `85` | Utilization threshold (%) at which proactive eviction stops. Eviction stops when used cache space drops to this percentage |
 
-- Parameter Description: This configuration item controls whether the pre-eviction mechanism is enabled. If set to`true`, when the cache space reaches a certain threshold, the system will proactively perform pre-eviction to free up space for future queries; if set to`false`, pre-eviction will not be performed.
+## Cache Quota
 
-```plaintext
-file_cache_enter_need_evict_cache_in_advance_percent Default: "88"
-```
+<!-- Knowledge type: Configuration parameters -->
+<!-- Applicable scenarios: Multi-user shared cache / Preventing large-query cache thrashing -->
 
-- Parameter Description: This configuration item sets the threshold percentage for triggering pre-eviction. When the cache space/inode count reaches this percentage, the system begins pre-eviction.
+> This feature is supported starting from version 4.0.3.
 
-```plaintext
-file_cache_exit_need_evict_cache_in_advance_percent Default: "85"
-```
+The **Cache Query Limit** feature allows you to limit the proportion of the file cache that a single query can fill. In scenarios where multiple users or complex queries share cache resources, a single large query may occupy too much cache and evict hot data belonging to other queries. Setting a query quota ensures fair use of resources and prevents cache thrashing.
 
-- Parameter Description: This configuration item sets the threshold percentage for stopping pre-eviction. When the cache space drops to this percentage,the system stops pre-eviction.
-
-## Cache Query Limit
-
-> This feature is supported since version 4.0.3.
-
-The Cache Query Limit feature allows users to limit the percentage of file cache that a single query can use. In scenarios where multiple users or complex queries share cache resources, a single large query might occupy too much cache space, causing other queries' hot data to be evicted. By setting a query limit, you can ensure fair resource usage and prevent cache thrashing.
-
-The cache space occupied by a query refers to the total size of data populated into the cache due to cache misses. If the total size populated by the query reaches the quota limit, subsequent data populated by the query will replace the previously populated data based on the LRU algorithm.
+The cache space occupied by a query refers to the total size of data that the query fills into the cache due to cache misses. If the total fill reaches the quota ceiling, subsequent data written by the query replaces data that the same query wrote earlier, based on the LRU algorithm.
 
 ### Configuration
 
-This feature involves configuration on BE and FE, as well as session variable settings.
+This feature involves three levels of configuration: BE configuration, FE configuration, and session variables.
 
-**1. BE Configuration**
+**BE Configuration**
 
-- `enable_file_cache_query_limit`:
-  - Type: Boolean
-  - Default: `false`
-  - Description: The master switch for the file cache query limit feature on the BE side. Only when enabled will the BE process the query limit parameters passed from the FE.
+| Parameter | Type | Default | Description |
+|---|---|---|---|
+| `enable_file_cache_query_limit` | Boolean | `false` | Master switch for the cache query limit on the BE side. The BE processes the query limit parameter passed from FE only when this is enabled |
 
-**2. FE Configuration**
+**FE Configuration**
 
-- `file_cache_query_limit_max_percent`:
-  - Type: Integer
-  - Default: `100`
-  - Description: The max query limit constraint used to validate the upper limit of session variables. It ensures that the query limit set by users does not exceed this value.
+| Parameter | Type | Default | Description |
+|---|---|---|---|
+| `file_cache_query_limit_max_percent` | Integer | `100` | Maximum constraint value for the query quota, used to validate the upper bound of the session variable |
 
-**3. Session Variables**
+**Session Variables**
 
-- `file_cache_query_limit_percent`:
-  - Type: Integer (1-100)
-  - Description: The file cache query limit percentage. It sets the maximum percentage of cache a query can use. This value is constrained by `file_cache_query_limit_max_percent`. It is recommended that the calculated cache quota is not less than 256MB. If it is lower than this value, the BE will print a warning in the log.
+| Variable | Type | Description |
+|---|---|---|
+| `file_cache_query_limit_percent` | Integer (1-100) | Maximum percentage of cache that a single query may use. The upper bound is governed by `file_cache_query_limit_max_percent`. The calculated cache quota should not be lower than 256 MB; if it is, BE outputs a warning in the log |
 
-**Usage Example**
+### Usage Example
 
 ```sql
--- Set session variable to limit a query to use at most 50% of the cache
+-- Limit a single query to using at most 50% of the cache
 SET file_cache_query_limit_percent = 50;
 
--- Execute query
+-- Execute the query
 SELECT * FROM large_table;
 ```
 
-**Note:**
-1. The value must be within the range [0, `file_cache_query_limit_max_percent`].
+> **Note:** The value must be within the range `[0, file_cache_query_limit_max_percent]`.
 
-## Cache Warm Up
+## Cache Warmup
 
-Doris provides a cache warming feature that allows users to actively pull data from remote storage into the local cache. This feature supports the following three modes:
+<!-- Knowledge type: Operational steps -->
+<!-- Applicable scenarios: New compute group going online / Fast loading of hot data -->
 
+Doris provides a cache warmup feature that allows you to proactively pull data from remote storage into the local cache. The following three warmup modes are supported:
 
-- **Inter-Compute Group Warming**: Warm the cache data of Compute Group A to Compute Group B. Doris periodically collects hotspot information of tables/partitions accessed in each compute group over a period and selectively warms certain tables/partitions based on this information.
-- **Table Data Warming**: Specify to warm the data of Table A to the new compute group.
-- **Partition Data Warming**: Specify to warm the data of partition `p1` of Table A to the new compute group.
+| Mode | Description |
+|---|---|
+| Cross-compute-group warmup | Warms up the hot-data cache from compute group A into compute group B. Doris periodically collects table/partition access hot spots for each compute group and selectively warms up based on this information |
+| Table data warmup | Pulls the full data of a specified table into the target compute group |
+| Partition data warmup | Pulls data for a specific partition of a specified table into the target compute group |
 
-For specific usage, please refer to the[WARM-UP SQL documentation](#).
+For detailed usage, see the [WARM-UP SQL documentation](#).
 
+## Cache Clearing
 
-## Cache Cleanup
+<!-- Knowledge type: Operational steps -->
+<!-- Applicable scenarios: Insufficient cache space / Test environment reset / Troubleshooting -->
 
-Doris provides both synchronous and asynchronous cleanup methods:
+Doris provides both synchronous and asynchronous cache clearing methods:
 
-- Synchronous Cleanup:The command is`curl 'http://BE_IP:WEB_PORT/api/file_cache?op=clear&sync=true'`. When the command returns, it indicates that the cleanup is complete.When Doris needs to clear the cache immediately, it will synchronously delete the cache files in the local file system directory and clean up the management metadata in memory. This method can quickly free up space but may have a certain impact on the efficiency of ongoing queries and even system stability. It is usually used for quick testing.
-- Asynchronous Cleanup: The command is`curl 'http://BE_IP:WEB_PORT/api/file_cache?op=clear&sync=false'`. The command returns immediately,and the cleanup steps are executed asynchronously. During asynchronous cleanup, Doris traverses the management metadata in memory and deletes the corresponding cache files one by one. If it finds that some cache files are being used by queries, Doris will delay the deletion of these files until they are no longer in use. This method can reduce the impact on ongoing queries but usually takes longer to completely clean up the cache compared to synchronous cleanup.
+| Method | Command | Description |
+|---|---|---|
+| Synchronous clearing | `curl 'http://BE_IP:WEB_PORT/api/file_cache?op=clear&sync=true'` | The command returns only after clearing is complete. Doris synchronously deletes cache files from the local filesystem and clears in-memory metadata, which frees space quickly but may affect queries that are currently executing. Typically used for rapid testing |
+| Asynchronous clearing | `curl 'http://BE_IP:WEB_PORT/api/file_cache?op=clear&sync=false'` | The command returns immediately; the clearing steps execute asynchronously, and you can observe cache space shrinking gradually. Doris traverses in-memory metadata and deletes cache files one by one, deferring deletion for files that are currently in use. This has less impact on executing queries but takes longer to complete fully |
 
-## Cache Observation
+## Cache Monitoring
+
+<!-- Knowledge type: Operational steps -->
+<!-- Applicable scenarios: Cache hit rate analysis / Troubleshooting / Performance tuning -->
 
 ### Hotspot Information
 
-Doris collects cache hotspot information for each compute group every 10 minutes and stores it in an internal system table. You can view this hotspot information using query statements. Users can better plan their cache usage based on this information.
+Doris collects cache hotspot information for each compute group every 10 minutes and writes it to the internal system table `__internal_schema.cloud_cache_hotspot`. You can analyze hot data with the following queries to guide cache planning.
 
 :::info Note
-Before version 3.0.4, the `SHOW CACHE HOTSPOT` statement could be used to query cache hotspot information statistics. Starting from version 3.0.4, the `SHOW CACHE HOTSPOT` statement is no longer supported for querying cache hotspot information statistics. Please directly query the system table `__internal_schema.cloud_cache_hotspot`.
+Before version 3.0.4, you could use the `SHOW CACHE HOTSPOT` statement to query cache hotspot information. Starting from version 3.0.4, that statement is no longer supported. Query the system table `__internal_schema.cloud_cache_hotspot` directly instead.
 :::
 
-Users typically focus on cache usage information at two levels: compute groups and database tables. The following provides some commonly used query statements and examples.
-
-#### Viewing the Most Frequently Accessed Tables Across All Compute Groups
+#### View the Most Frequently Accessed Tables Across All Compute Groups
 
 ```sql
 -- Equivalent to SHOW CACHE HOTSPOT "/" before version 3.0.4
 WITH t1 AS (
-  SELECT
-    cluster_id,
-    cluster_name,
-    table_id,
-    table_name,
-    insert_day,
-    SUM(query_per_day) AS query_per_day_total,
-    SUM(query_per_week) AS query_per_week_total
-  FROM __internal_schema.cloud_cache_hotspot
-  GROUP BY cluster_id, cluster_name, table_id, table_name, insert_day
+    SELECT
+        cluster_id,
+        cluster_name,
+        table_id,
+        table_name,
+        insert_day,
+        SUM(query_per_day) AS query_per_day_total,
+        SUM(query_per_week) AS query_per_week_total
+    FROM __internal_schema.cloud_cache_hotspot
+    GROUP BY cluster_id, cluster_name, table_id, table_name, insert_day
 )
 SELECT
-  cluster_id AS ComputeGroupId,
-  cluster_name AS ComputeGroupName,
-  table_id AS TableId,
-  table_name AS TableName
+    cluster_id AS ComputeGroupId,
+    cluster_name AS ComputeGroupName,
+    table_id AS TableId,
+    table_name AS TableName
 FROM (
-  SELECT
-    ROW_NUMBER() OVER (
-      PARTITION BY cluster_id
-      ORDER BY insert_day DESC, query_per_day_total DESC, query_per_week_total DESC
-    ) AS dr2,
-    *
-  FROM t1
+    SELECT
+        ROW_NUMBER() OVER (
+            PARTITION BY cluster_id
+            ORDER BY insert_day DESC, query_per_day_total DESC, query_per_week_total DESC
+        ) AS dr2,
+        *
+    FROM t1
 ) t2
 WHERE dr2 = 1;
 ```
 
-#### Viewing the Most Frequently Accessed Tables Under a Specific Compute Group
+#### View the Most Frequently Accessed Tables in a Specific Compute Group
 
-Viewing the most frequently accessed tables under compute group `compute_group_name0`.
-
-Note: Replace the condition `cluster_name = "compute_group_name0"` with the actual compute group name.
+Replace `cluster_name = "compute_group_name0"` with the actual compute group name.
 
 ```sql
 -- Equivalent to SHOW CACHE HOTSPOT '/compute_group_name0' before version 3.0.4
 WITH t1 AS (
-  SELECT
-    cluster_id,
-    cluster_name,
-    table_id,
-    table_name,
-    insert_day,
-    SUM(query_per_day) AS query_per_day_total,
-    SUM(query_per_week) AS query_per_week_total
-  FROM __internal_schema.cloud_cache_hotspot
-  WHERE cluster_name = "compute_group_name0" -- Replace with the actual compute group name, e.g., "default_compute_group"
-  GROUP BY cluster_id, cluster_name, table_id, table_name, insert_day
+    SELECT
+        cluster_id,
+        cluster_name,
+        table_id,
+        table_name,
+        insert_day,
+        SUM(query_per_day) AS query_per_day_total,
+        SUM(query_per_week) AS query_per_week_total
+    FROM __internal_schema.cloud_cache_hotspot
+    WHERE cluster_name = "compute_group_name0" -- Replace with the actual compute group name, e.g. "default_compute_group"
+    GROUP BY cluster_id, cluster_name, table_id, table_name, insert_day
 )
 SELECT
-  cluster_id AS ComputeGroupId,
-  cluster_name AS ComputeGroupName,
-  table_id AS TableId,
-  table_name AS TableName
+    cluster_id AS ComputeGroupId,
+    cluster_name AS ComputeGroupName,
+    table_id AS TableId,
+    table_name AS TableName
 FROM (
-  SELECT
-    ROW_NUMBER() OVER (
-      PARTITION BY cluster_id
-      ORDER BY insert_day DESC, query_per_day_total DESC, query_per_week_total DESC
-    ) AS dr2,
-    *
-  FROM t1
+    SELECT
+        ROW_NUMBER() OVER (
+            PARTITION BY cluster_id
+            ORDER BY insert_day DESC, query_per_day_total DESC, query_per_week_total DESC
+        ) AS dr2,
+        *
+    FROM t1
 ) t2
 WHERE dr2 = 1;
 ```
 
-#### Viewing the Most Frequently Accessed Partitions for a Specific Compute Group and Table
+### Cache Space and Hit Rate Metrics
 
-Viewing the most frequently accessed partitions for table `regression_test_cloud_load_copy_into_tpch_sf1_p1.customer` under compute group `compute_group_name0`.
+<!-- Knowledge type: Configuration parameters -->
 
-Note: Replace the conditions `cluster_name = "compute_group_name0"` and `table_name = "regression_test_cloud_load_copy_into_tpch_sf1_p1.customer"` with the actual compute group name and database table name.
+Use the following endpoint to retrieve cache statistics for a BE node (`brpc_port` defaults to 8060):
 
-```sql
--- Equivalent to SHOW CACHE HOTSPOT '/compute_group_name0/regression_test_cloud_load_copy_into_tpch_sf1_p1.customer' before version 3.0.4
-SELECT
-  partition_id AS PartitionId,
-  partition_name AS PartitionName
-FROM __internal_schema.cloud_cache_hotspot
-WHERE
-  cluster_name = "compute_group_name0" -- Replace with the actual compute group name, e.g., "default_compute_group"
-  AND table_name = "regression_test_cloud_load_copy_into_tpch_sf1_p1.customer" -- Replace with the actual database table name, e.g., "db1.t1"
-GROUP BY
-  cluster_id,
-  cluster_name,
-  table_id,
-  table_name,
-  partition_id,
-  partition_name;
+```bash
+curl {be_ip}:{brpc_port}/vars
 ```
 
-### Cache Space and Hit Rate
+The returned metric names are prefixed with the disk path. For example, the prefix `_mnt_disk1_gavinchou_debug_doris_cloud_be0_storage_file_cache_` corresponds to the path `/mnt/disk1/gavinchou/debug/doris-cloud/be0_storage_file_cache/`. After stripping the path prefix, the meaning of each metric is as follows (all sizes are in bytes):
 
-Doris BE nodes can obtain cache statistics by using `curl {be_ip}:{brpc_port}/vars` (where brpc_port defaults to 8060), and the names of the metrics start with the disk path.
+| Metric name (excluding path prefix) | Description |
+|---|---|
+| `file_cache_cache_size` | Current total size of the file cache |
+| `file_cache_disposable_queue_cache_size` | Current size of the Disposable queue |
+| `file_cache_disposable_queue_element_count` | Current number of elements in the Disposable queue |
+| `file_cache_disposable_queue_evict_size` | Cumulative amount of data evicted from the Disposable queue since startup |
+| `file_cache_index_queue_cache_size` | Current size of the Index queue |
+| `file_cache_index_queue_element_count` | Current number of elements in the Index queue |
+| `file_cache_index_queue_evict_size` | Cumulative amount of data evicted from the Index queue since startup |
+| `file_cache_normal_queue_cache_size` | Current size of the Normal queue |
+| `file_cache_normal_queue_element_count` | Current number of elements in the Normal queue |
+| `file_cache_normal_queue_evict_size` | Cumulative amount of data evicted from the Normal queue since startup |
+| `file_cache_total_evict_size` | Cumulative amount of data evicted from the entire file cache since startup |
+| `file_cache_ttl_cache_evict_size` | Cumulative amount of data evicted from the TTL queue since startup |
+| `file_cache_ttl_cache_lru_queue_element_count` | Current number of elements in the TTL queue |
+| `file_cache_ttl_cache_size` | Current size of the TTL queue |
+| `file_cache_evict_by_heat_[A]_to_[B]` | Amount of type-A cache data evicted to make room for type-B cache data (eviction based on expiration time) |
+| `file_cache_evict_by_size_[A]_to_[B]` | Amount of type-A cache data evicted to make room for type-B cache data (eviction based on space) |
+| `file_cache_evict_by_self_lru_[A]` | Amount of type-A cache data that the type-A queue evicted from itself to write new data (LRU-based eviction) |
 
-In the above example, the metric prefix for File Cache is the path, for example, the prefix "_mnt_disk1_gavinchou_debug_doris_cloud_be0_storage_file_cache_" indicates "/mnt/disk1/gavinchou/debug/doris-cloud/be0_storage_file_cache/"
-The part after the prefix is the statistical metric, for example, "file_cache_cache_size" indicates that the current size of the File Cache at this path is 26111 bytes.
+### SQL Profile Cache Metrics
 
-The following table lists the meanings of all metrics (all size units are in bytes):
+Cache-related metrics in the SQL Profile are located under the `SegmentIterator` node:
 
-| Metric Name (excluding path prefix)          | Meaning                                                      |
-| -------------------------------------------- | ------------------------------------------------------------ |
-| file_cache_cache_size                        | Current total size of the File Cache                         |
-| file_cache_disposable_queue_cache_size       | Current size of the disposable queue                         |
-| file_cache_disposable_queue_element_count    | Current number of elements in the disposable queue           |
-| file_cache_disposable_queue_evict_size       | Total amount of data evicted from the disposable queue since startup |
-| file_cache_index_queue_cache_size            | Current size of the index queue                              |
-| file_cache_index_queue_element_count         | Current number of elements in the index queue                |
-| file_cache_index_queue_evict_size            | Total amount of data evicted from the index queue since startup |
-| file_cache_normal_queue_cache_size           | Current size of the normal queue                             |
-| file_cache_normal_queue_element_count        | Current number of elements in the normal queue               |
-| file_cache_normal_queue_evict_size           | Total amount of data evicted from the normal queue since startup |
-| file_cache_total_evict_size                  | Total amount of data evicted from the entire File Cache since startup |
-| file_cache_ttl_cache_evict_size              | Total amount of data evicted from the TTL queue since startup |
-| file_cache_ttl_cache_lru_queue_element_count | Current number of elements in the TTL queue                  |
-| file_cache_ttl_cache_size                    | Current size of the TTL queue                                |
-| file_cache_evict_by_heat\_[A]\_to\_[B]       | Data from cache type A evicted due to cache type B (time-based expiration) |
-| file_cache_evict_by_size\_[A]\_to\_[B]       | Data from cache type A evicted due to cache type B (space-based expiration) |
-| file_cache_evict_by_self_lru\_[A]            | Data from cache type A evicted by its own LRU policy for new data |
+| Metric name | Description |
+|---|---|
+| `BytesScannedFromCache` | Amount of data read from the file cache |
+| `BytesScannedFromRemote` | Amount of data read from remote storage |
+| `BytesWriteIntoCache` | Amount of data written into the file cache |
+| `LocalIOUseTimer` | Time spent reading from the file cache |
+| `NumLocalIOTotal` | Number of reads from the file cache |
+| `NumRemoteIOTotal` | Number of reads from remote storage |
+| `NumSkipCacheIOTotal` | Number of reads from remote storage that were not written into the file cache |
+| `RemoteIOUseTimer` | Time spent reading from remote storage |
+| `WriteCacheIOUseTimer` | Time spent writing into the file cache |
 
-### SQL Profile
+You can view the complete query performance report through [Query Performance Analysis](../../query-acceleration/performance-tuning-overview/analysis-tools#doris-profile).
 
-Cache-related metrics in the SQL profile are found under SegmentIterator, including:
+## TTL Cache Policy
 
-| Metric Name            | Meaning                                                      |
-| ---------------------- | ------------------------------------------------------------ |
-| BytesScannedFromCache  | Amount of data read from the File Cache                      |
-| BytesScannedFromRemote | Amount of data read from remote storage                      |
-| BytesWriteIntoCache    | Amount of data written into the File Cache                   |
-| LocalIOUseTimer        | Time taken to read from the File Cache                       |
-| NumLocalIOTotal        | Number of times the File Cache was read                      |
-| NumRemoteIOTotal       | Number of times remote storage was read                      |
-| NumSkipCacheIOTotal    | Number of times data read from remote storage did not enter the File Cache |
-| RemoteIOUseTimer       | Time taken to read from remote storage                       |
-| WriteCacheIOUseTimer   | Time taken to write to the File Cache                        |
+<!-- Knowledge type: Operational steps -->
+<!-- Applicable scenarios: Keeping hot tables resident in cache / Preventing large queries from evicting hot data -->
 
-You can view query performance analysis through [Query Performance Analysis](../../query-acceleration/performance-tuning-overview/analysis-tools#doris-profile).
+The TTL (Time-To-Live) cache policy allows you to set a cache retention duration for data belonging to specific tables. This ensures that small hot tables or recently ingested data remain in the cache long enough to avoid being replaced by the LRU eviction logic triggered by large queries.
 
+### Setting TTL at Table Creation
 
+Set `file_cache_ttl_seconds` (in seconds) in the `PROPERTIES` clause of `CREATE TABLE`:
 
-## TTL Usage
-
-When creating a table, set the corresponding PROPERTY to use the TTL strategy for caching that table's data.
-
-- `file_cache_ttl_seconds`: The expected time for newly imported data to remain in the cache, in seconds.
-
-```shell
+```sql
 CREATE TABLE IF NOT EXISTS customer (
-  C_CUSTKEY     INTEGER NOT NULL,
-  C_NAME        VARCHAR(25) NOT NULL,
-  C_ADDRESS     VARCHAR(40) NOT NULL,
-  C_NATIONKEY   INTEGER NOT NULL,
-  C_PHONE       CHAR(15) NOT NULL,
-  C_ACCTBAL     DECIMAL(15,2)   NOT NULL,
-  C_MKTSEGMENT  CHAR(10) NOT NULL,
-  C_COMMENT     VARCHAR(117) NOT NULL
+    C_CUSTKEY     INTEGER NOT NULL,
+    C_NAME        VARCHAR(25) NOT NULL,
+    C_ADDRESS     VARCHAR(40) NOT NULL,
+    C_NATIONKEY   INTEGER NOT NULL,
+    C_PHONE       CHAR(15) NOT NULL,
+    C_ACCTBAL     DECIMAL(15,2) NOT NULL,
+    C_MKTSEGMENT  CHAR(10) NOT NULL,
+    C_COMMENT     VARCHAR(117) NOT NULL
 )
 DUPLICATE KEY(C_CUSTKEY, C_NAME)
 DISTRIBUTED BY HASH(C_CUSTKEY) BUCKETS 32
-PROPERTIES(
-    "file_cache_ttl_seconds"="300"
-)
+PROPERTIES (
+    "file_cache_ttl_seconds" = "300"
+);
 ```
 
-In the above table, all newly imported data will be retained in the cache for 300 seconds. The system currently supports modifying the TTL time of the table, and users can extend or shorten the TTL time based on actual needs.
+All newly ingested data for the table above is retained in the cache for 300 seconds.
 
-```SQL
-ALTER TABLE customer set ("file_cache_ttl_seconds"="3000");
+### Modifying the TTL Setting for a Table
+
+```sql
+ALTER TABLE customer SET ("file_cache_ttl_seconds" = "3000");
 ```
 
 :::info Note
-
-The modified TTL value will not take effect immediately and will have a certain delay.
-
-If no TTL is set when creating the table, users can also modify the table's TTL attribute by executing the ALTER statement.
+The updated TTL value does not take effect immediately; there is a short delay. If TTL was not set at table creation time, you can add it later with an `ALTER TABLE` statement.
 :::
 
+## Practical Example
 
-## Practical Case
+<!-- Knowledge type: Operational steps -->
+<!-- Applicable scenarios: Mixed large-and-small table scenarios / TTL policy tuning -->
 
-A user has a series of data tables with a total data volume exceeding 3TB, while the available cache capacity is only 1.2TB. Among them, there are two tables with high access frequency: one is a dimension table of size 200MB (`dimension_table`), and the other is a fact table of size 100GB (`fact_table`), which has new data imported daily and requires T+1 query operations. Additionally, other large tables have low access frequency.
+**Scenario description:**
 
-Under the LRU caching strategy, if large table data is queried, it may replace the small table data that needs to remain in the cache, causing performance fluctuations. To solve this problem, the user adopts a TTL caching strategy, setting the TTL times for the two tables to 1 year and 1 day, respectively.
+A user has a collection of data tables with a total data size exceeding 3 TB, but available cache capacity is only 1.2 TB. Among these tables, two are accessed frequently:
 
-```shell
-ALTER TABLE dimension_table set ("file_cache_ttl_seconds"="31536000");
+| Table | Size | Access pattern |
+|---|---|---|
+| `dimension_table` | 200 MB | Accessed frequently; data changes infrequently |
+| `fact_table` | 100 GB | New data is ingested daily and must be queryable on a T+1 basis |
 
-ALTER TABLE fact_table set ("file_cache_ttl_seconds"="86400");
+Other large tables are accessed infrequently.
+
+**Problem:** Under the default LRU policy, queries against large tables may evict `dimension_table` data from the cache, causing query performance for the dimension table to fluctuate.
+
+**Solution:** Set TTL for both frequently accessed tables to guarantee that their data is retained in the cache for a sufficient duration.
+
+```sql
+-- Dimension table: small data volume, infrequent changes; set a 1-year TTL to keep it resident in the cache
+ALTER TABLE dimension_table SET ("file_cache_ttl_seconds" = "31536000");
+
+-- Fact table: full load ingested daily; set a 1-day TTL aligned with the ingestion cycle
+ALTER TABLE fact_table SET ("file_cache_ttl_seconds" = "86400");
 ```
 
-For the dimension table, due to its smaller size and less variability, the user sets a TTL time of 1 year to ensure that its data can be accessed quickly within a year; for the fact table, the user needs to perform a table backup daily and then conduct a full import, so the TTL time is set to 1 day.
+## FAQ
+
+<!-- Knowledge type: Troubleshooting -->
+<!-- Applicable scenarios: Low cache hit rate / Cache configuration troubleshooting -->
+
+**Q: The cache hit rate is low and queries are still slow. How do I troubleshoot this?**
+
+1. Use `curl {be_ip}:{brpc_port}/vars` to check the `evict_size` metrics for each queue and determine whether frequent eviction is occurring.
+2. Check the ratio of `BytesScannedFromRemote` to `BytesScannedFromCache` in the SQL Profile to confirm the actual hit rate.
+3. If large queries are frequently evicting hot data, consider enabling the **Cache Query Limit** feature (`enable_file_cache_query_limit`) or configuring a **TTL policy** for hot tables.
+
+**Q: Cache data is lost after BE restarts.**
+
+Check whether `clear_file_cache` is set to `true`. If you do not want the cache cleared on restart, set it to `false` (the default value).
+
+**Q: The first query after a new compute group comes online is very slow.**
+
+Use the **cache warmup** feature to proactively pull hot table or partition data from remote storage into the local cache of the new compute group before queries arrive. For detailed usage, see the [WARM-UP SQL documentation](#).
+
+**Q: How do I tell whether the current cache space is full?**
+
+Compare the `file_cache_cache_size` metric against the `total_size` configured in `file_cache_path`. If it is approaching the limit, check whether capacity needs to be expanded or whether the allocation percentages for each queue need adjustment.

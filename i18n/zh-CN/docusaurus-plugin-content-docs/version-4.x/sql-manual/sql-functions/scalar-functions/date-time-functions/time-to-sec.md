@@ -21,7 +21,7 @@ TIME_TO_SEC(<date_or_time_expr>)
 
 | 参数       | 说明                                                          |
 |----------|-------------------------------------------------------------|
-| `<date_or_time_expr>` | 必填，支持 TIME 或 DATETIME。如果输入为 DATETIME 类型，函数会提取时间部分进行计算。具体 datetime/time 请查看 [datetime 的转换](../../../basic-element/sql-data-types/conversion/datetime-conversion)， [time 的转换](../../../basic-element/sql-data-types/conversion/time-conversion)|
+| `<date_or_time_expr>` | 必填，支持 TIME 或 DATETIME。如果输入为 DATETIME 类型，函数会提取时间部分进行计算。具体 datetime/time 请查看 [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion)， [time 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/time-conversion)|
 
 ## 返回值
 返回类型为 INT，表示输入时间值对应的总秒数，计算逻辑为：小时×3600 + 分钟×60 + 秒。

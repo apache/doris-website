@@ -1,0 +1,71 @@
+---
+{
+    "title": "物化视图",
+    "language": "zh-CN",
+    "description": "Apache Doris 物化视图章节导航：覆盖概念、同步物化视图、异步物化视图、透明改写与常见问题。"
+}
+---
+
+import GettingStartedCard from '@site/src/components/getting-started-card/getting-started-card';
+
+物化视图是既包含计算逻辑、也包含数据的实体，可用于查询加速、轻量化 ETL 建模以及湖仓联邦查询加速。建议先理解概念，再根据时效性需求选择同步或异步物化视图。
+
+## 概念入门
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="物化视图概览"
+    description="理解物化视图的适用场景，并按时效性、SQL 模式与刷新方式做出选型决策。"
+    link="overview"
+/>
+</div>
+
+## 同步物化视图
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="同步物化视图"
+    description="使用同步物化视图保持与基表强一致的数据，加速实时聚合与排序场景。"
+    link="sync-materialized-view"
+/>
+
+<GettingStartedCard
+    title="同步物化视图透明改写"
+    description="了解优化器如何把查询透明改写到同步物化视图，包括支持的模式与限制。"
+    link="../tuning/tuning-plan/transparent-rewriting-with-sync-mv"
+/>
+</div>
+
+## 异步物化视图
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="异步物化视图概览"
+    description="掌握异步物化视图的刷新模式、多表支持、分区增量刷新与典型使用场景。"
+    link="async-materialized-view/overview"
+/>
+
+<GettingStartedCard
+    title="创建与维护"
+    description="异步物化视图的创建、直接查询、刷新管理与分区维护操作手册。"
+    link="async-materialized-view/functions-and-demands"
+/>
+
+<GettingStartedCard
+    title="使用指南"
+    description="给出场景判断、使用原则、刷新策略选择与构建落地的最佳实践。"
+    link="async-materialized-view/use-guide"
+/>
+
+<GettingStartedCard
+    title="异步物化视图透明改写"
+    description="基于 SPJG 模式的改写算法如何把已有查询透明改写到异步物化视图，无需修改 SQL。"
+    link="../tuning/tuning-plan/transparent-rewriting-with-async-mv"
+/>
+
+<GettingStartedCard
+    title="常见问题"
+    description="围绕分区刷新、基表版本与运维排障的高频问题解答。"
+    link="async-materialized-view/faq"
+/>
+</div>

@@ -40,7 +40,7 @@ function SlackIcon(): JSX.Element {
     );
 }
 
-const GET_STARTED_HREF = '/docs-next/dev/getting-started/intro';
+const GET_STARTED_HREF = '/docs/dev/getting-started/intro';
 
 // ─── SQL Typewriter ───────────────────────────────────────────────────────────
 

@@ -422,14 +422,14 @@ const capabilities: Capability[] = [
         desc: 'New data becomes queryable within seconds, while dashboards and in-product analytics stay fast and interactive. Users see the latest activity as it happens, not after the next batch cycle.',
         poweredLabel: 'Powered by',
         poweredBy: [
-            { label: 'Load Transaction', href: '/docs-next/dev/key-features/load-transaction' },
-            { label: 'Data Compaction', href: '/docs-next/dev/key-features/data-compaction' },
-            { label: 'Data Update/Delete', href: '/docs-next/dev/key-features/data-update-delete' },
-            { label: 'Preaggregation', href: '/docs-next/dev/key-features/preaggregation-and-rollup' },
-            { label: 'Group Commit', href: '/docs-next/dev/key-features/group-commit' },
-            { label: 'Kafka/CDC Integration', href: '/docs-next/dev/key-features/kafka-cdc-integration' },
-            { label: 'Incremental Materialized View', href: '/docs-next/dev/key-features/incremental-materialized-view' },
-            { label: 'Unique Key', href: '/key-features/unique-key' },
+            { label: 'Load Transaction', href: '/docs/dev/key-features/load-transaction' },
+            { label: 'Data Compaction', href: '/docs/dev/key-features/data-compaction' },
+            { label: 'Data Update/Delete', href: '/docs/dev/key-features/data-update-delete' },
+            { label: 'Preaggregation', href: '/docs/dev/key-features/preaggregation-and-rollup' },
+            { label: 'Group Commit', href: '/docs/dev/key-features/group-commit' },
+            { label: 'Kafka/CDC Integration', href: '/docs/dev/key-features/kafka-cdc-integration' },
+            { label: 'Incremental Materialized View', href: '/docs/dev/key-features/incremental-materialized-view' },
+            { label: 'Unique Key', href: '/docs/dev/key-features/unique-key' },
         ],
     },
     {
@@ -445,13 +445,13 @@ const capabilities: Capability[] = [
         desc: 'Apache Doris sustains fast, predictable query response times as concurrent users and data volumes grow, not just in single-query benchmarks.',
         poweredLabel: 'Powered by',
         poweredBy: [
-            { label: 'Data Pruning', href: '/docs-next/dev/key-features/data-pruning' },
-            { label: 'High Concurrency Point Query', href: '/docs-next/dev/key-features/high-concurrency-point-query' },
-            { label: 'Vectorized Execution', href: '/docs-next/dev/key-features/vectorized-execution' },
-            { label: 'Columnar Storage', href: '/docs-next/dev/key-features/columnar-storage' },
-            { label: 'Prepared Statement', href: '/docs-next/dev/key-features/prepared-statement' },
-            { label: 'Query Cache', href: '/docs-next/dev/key-features/query-cache' },
-            { label: 'Condition Cache', href: '/docs-next/dev/key-features/condition-cache' },
+            { label: 'Data Pruning', href: '/docs/dev/key-features/data-pruning' },
+            { label: 'High Concurrency Point Query', href: '/docs/dev/key-features/high-concurrency-point-query' },
+            { label: 'Vectorized Execution', href: '/docs/dev/key-features/vectorized-execution' },
+            { label: 'Columnar Storage', href: '/docs/dev/key-features/columnar-storage' },
+            { label: 'Prepared Statement', href: '/docs/dev/key-features/prepared-statement' },
+            { label: 'Query Cache', href: '/docs/dev/key-features/query-cache' },
+            { label: 'Condition Cache', href: '/docs/dev/key-features/condition-cache' },
         ],
     },
     {
@@ -467,10 +467,10 @@ const capabilities: Capability[] = [
         desc: 'Serve many users, teams, or tenants from a single platform. Isolate workloads and control resource usage so heavy queries from one tenant do not impact others.',
         poweredLabel: 'Powered by',
         poweredBy: [
-            { label: 'Workload Group', href: '/docs-next/dev/key-features/workload-group' },
-            { label: 'Resource Group', href: '/docs-next/dev/key-features/resource-group' },
-            { label: 'Compute Group', href: '/docs-next/dev/key-features/compute-group' },
-            { label: 'Pipeline Execution Engine', href: '/docs-next/dev/key-features/pipeline-execution-engine' },
+            { label: 'Workload Group', href: '/docs/dev/key-features/workload-group' },
+            { label: 'Resource Group', href: '/docs/dev/key-features/resource-group' },
+            { label: 'Compute Group', href: '/docs/dev/key-features/compute-group' },
+            { label: 'Pipeline Execution Engine', href: '/docs/dev/key-features/pipeline-execution-engine' },
         ],
     },
     {
@@ -484,10 +484,10 @@ const capabilities: Capability[] = [
         desc: 'Query open lakehouse formats directly. Combine real-time serving with existing data lake architectures, without copying data twice.',
         poweredLabel: 'Powered by',
         poweredBy: [
-            { label: 'Parquet Reader Optimization', href: '/docs-next/dev/key-features/parquet-reader-optimization' },
-            { label: 'Data Cache & Page Cache', href: '/docs-next/dev/key-features/data-cache-page-cache' },
-            { label: 'Metadata Cache', href: '/docs-next/dev/key-features/metadata-cache' },
-            { label: 'Iceberg', href: '/key-features/iceberg' },
+            { label: 'Parquet Reader Optimization', href: '/docs/dev/key-features/parquet-reader-optimization' },
+            { label: 'Data Cache & Page Cache', href: '/docs/dev/key-features/data-cache-page-cache' },
+            { label: 'Metadata Cache', href: '/docs/dev/key-features/metadata-cache' },
+            { label: 'Iceberg', href: '/docs/dev/key-features/iceberg' },
         ],
     },
 ];
@@ -663,7 +663,7 @@ function CTASection(): JSX.Element {
                     with <span className="accent">Apache Doris.</span>
                 </h2>
                 <div className="cta-actions" data-reveal data-reveal-delay="2">
-                    <Link className="btn btn-yellow" to="/docs-next/dev/getting-started/quick-start">
+                    <Link className="btn btn-yellow" to="/docs/dev/getting-started/quick-start">
                         <svg
                             width="14"
                             height="14"

@@ -17,12 +17,12 @@
 }
 
 /*
- * In the dedicated docs-next search strip, the input fills the full width of
+ * In the dedicated Dev docs search strip, the input fills the full width of
  * the section, so the navbar-style hardcoded `left: -20%; width: 560px` rule
  * pulls the dropdown off to the left of the input. Anchor it to the input
  * instead and let it inherit the input's full width.
  */
-:global(.docs-next-search-section) .searchBar .dropdownMenu {
+:global(.docs-search-section) .searchBar .dropdownMenu {
     left: 0 !important;
     right: 0 !important;
     width: 100% !important;

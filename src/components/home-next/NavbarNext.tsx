@@ -3,19 +3,11 @@ import Link from '@docusaurus/Link';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import { getLocalePrefix } from '@site/src/utils/locale';
 import { STAR_COUNT } from '@site/src/constant/github.data';
+import { StarGreenIcon } from '@site/src/components/Icons/star-green-icon';
 import './NavbarNext.scss';
 
 const GITHUB_REPO = 'apache/doris';
-const HOME_VERSION_KEY = 'doris-home-version';
 const STAR_DISPLAY = `${STAR_COUNT}k`;
-
-function safeSetLocalStorage(key: string, value: string): void {
-    try {
-        window.localStorage.setItem(key, value);
-    } catch {
-        // localStorage may be unavailable (Safari private mode, disabled cookies, quota errors)
-    }
-}
 
 interface DropdownItem {
     label: string;
@@ -28,7 +20,14 @@ interface NavItem {
     items: DropdownItem[];
 }
 
-function buildNavItems(docsHref: string, releasesHref: string, joinCommunityHref: string): NavItem[] {
+function buildNavItems(
+    devDocsHref: string,
+    stableDocsHref: string,
+    v3xDocsHref: string,
+    v21DocsHref: string,
+    releasesHref: string,
+    joinCommunityHref: string,
+): NavItem[] {
     return [
         {
             label: 'Why Doris',
@@ -50,13 +49,18 @@ function buildNavItems(docsHref: string, releasesHref: string, joinCommunityHref
         },
         {
             label: 'Docs',
-            items: [{ label: 'dev', href: docsHref }],
+            items: [
+                { label: 'Dev', href: devDocsHref },
+                { label: '4.x', href: stableDocsHref },
+                { label: '3.x', href: v3xDocsHref },
+                { label: '2.1', href: v21DocsHref },
+            ],
         },
         {
-            label: 'Resouces',
+            label: 'Resources',
             items: [
                 { label: 'Release Notes', href: releasesHref },
-                { label: 'Blogs', href: '/blogs-next' },
+                { label: 'Blogs', href: '/blog' },
                 { label: 'News and Events', href: '/events' },
             ],
         },
@@ -112,10 +116,14 @@ export function NavbarNext(): JSX.Element {
     } = useDocusaurusContext();
     const [mobileOpen, setMobileOpen] = useState(false);
     const localePrefix = getLocalePrefix(currentLocale, defaultLocale);
-    const docsHref = `${localePrefix}/docs-next/dev/getting-started/what-is-apache-doris`;
+    const devDocsHref = `${localePrefix}/docs/dev/getting-started/what-is-apache-doris`;
+    const stableDocsHref = `${localePrefix}/docs/4.x/getting-started/what-is-apache-doris`;
+    // 3.x and 2.1 use the legacy slug structure (gettingStarted/ with camelCase).
+    const v3xDocsHref = `${localePrefix}/docs/3.x/gettingStarted/what-is-apache-doris`;
+    const v21DocsHref = `${localePrefix}/docs/2.1/gettingStarted/what-is-apache-doris`;
     const releasesHref = `${localePrefix}/releases/all-release`;
     const joinCommunityHref = `${localePrefix}/community/join-community`;
-    const navItems = buildNavItems(docsHref, releasesHref, joinCommunityHref);
+    const navItems = buildNavItems(devDocsHref, stableDocsHref, v3xDocsHref, v21DocsHref, releasesHref, joinCommunityHref);
     const [expandedMobileItem, setExpandedMobileItem] = useState(navItems[0]?.label ?? '');
     const homeHref = `${getLocalePrefix(currentLocale, defaultLocale)}/`;
 
@@ -133,14 +141,7 @@ export function NavbarNext(): JSX.Element {
     return (
         <nav className={`navbar navbar--fixed-top navbar-next${mobileOpen ? ' navbar-next--mobile-open' : ''}`}>
             <div className="navbar-next__inner">
-                <Link
-                    to={homeHref}
-                    className="navbar-next__logo"
-                    aria-label="Apache Doris"
-                    onClick={() => {
-                        safeSetLocalStorage(HOME_VERSION_KEY, 'next');
-                    }}
-                >
+                <Link to={homeHref} className="navbar-next__logo" aria-label="Apache Doris">
                     <img src="/images/logo-doris.svg" alt="Apache Doris" />
                 </Link>
 
@@ -168,6 +169,15 @@ export function NavbarNext(): JSX.Element {
                 </div>
 
                 <div className="navbar-next__actions">
+                    <button
+                        type="button"
+                        id="navbar-ask-ai-btn"
+                        className="navbar-next__ask-ai"
+                        aria-label="Ask AI"
+                    >
+                        <StarGreenIcon />
+                        <span>Ask AI</span>
+                    </button>
                     <a
                         href={`https://github.com/${GITHUB_REPO}`}
                         target="_blank"

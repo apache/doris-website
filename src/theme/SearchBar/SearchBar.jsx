@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState, useContext } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import clsx from 'clsx';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import useIsBrowser from '@docusaurus/useIsBrowser';
@@ -28,7 +28,6 @@ import { searchResultLimits } from "../../utils/proxiedGeneratedConstants";
 import useIsDocPage from '@site/src/hooks/use-is-doc';
 import { debounce } from '@site/src/utils/debounce';
 import { getLocalePrefix, normalizePathname } from '@site/src/utils/locale';
-import { DataContext } from '../Layout';
 
 async function fetchAutoCompleteJS() {
     const autoCompleteModule = await import('@easyops-cn/autocomplete.js');
@@ -63,7 +62,6 @@ export default function SearchBar({ handleSearchBarToggle }) {
     const isBrowser = useIsBrowser();
     const [curVersion, setCurVersion] = useState(DEFAULT_VERSION);
     const location = useLocation();
-    const { setShowSearchPageMobile } = useContext(DataContext);
     const {
         siteConfig: { baseUrl },
         i18n: { currentLocale, defaultLocale, locales },
@@ -219,7 +217,6 @@ export default function SearchBar({ handleSearchBarToggle }) {
                 a.href = url;
                 a.textContent = linkText;
                 a.addEventListener('click', e => {
-                    setShowSearchPageMobile(false);
                     if (!e.ctrlKey && !e.metaKey) {
                         e.preventDefault();
                         search.current?.autocomplete.close();
@@ -407,7 +404,6 @@ export default function SearchBar({ handleSearchBarToggle }) {
                 if (suggestionsContainer) {
                     suggestionsContainer.addEventListener('click', () => {
                         setInputValue('');
-                        setShowSearchPageMobile(false);
                     });
                 }
             }

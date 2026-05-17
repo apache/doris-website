@@ -431,7 +431,7 @@ Since Doris version 1.2, admin and root user can view all queries. Ordinary user
 
 ### Description
 
-Same as `show proc "/current_query_stmts"`, return current running queries.
+Return current running queries with runtime statistics. This endpoint shares the same statistics view as `SHOW PROC "/current_queries"` and `SHOW PROC "/current_query_stmts"`, providing task-level progress and resource metrics (scan/cpu/memory/shuffle/spill/cache). Version 4.1.1+.
     
 ### Path parameters
 
@@ -445,17 +445,67 @@ Same as `show proc "/current_query_stmts"`, return current running queries.
 
 ```json
 {
-	"msg": "success",
-	"code": 0,
-	"data": {
-		"columnNames": ["Frontend", "QueryId", "ConnectionId", "Database", "User", "ExecTime", "SqlHash", "Statement"],
-		"rows": [
-			["172.19.0.3", "108e47ab438a4560-ab1651d16c036491", "2", "", "root", "6074", "1a35f62f4b14b9d7961b057b77c3102f", "select sleep(60)"],
-			["172.19.0.11", "3606cad4e34b49c6-867bf6862cacc645", "3", "", "root", "9306", "1a35f62f4b14b9d7961b057b77c3102f", "select sleep(60)"]
-		]
-	},
-	"count": 0
+    "msg": "success",
+    "code": 0,
+    "data": {
+        "columnNames": [
+            "Frontend", "QueryId", "ConnectionId", "Catalog", "Database",
+            "User", "ExecTime", "SqlHash", "Statement",
+            "ScanRows", "ScanBytes", "ProcessRows", "CpuMs",
+            "MaxPeakMemoryBytes", "CurrentUsedMemoryBytes", "WorkloadGroupId",
+            "ShuffleSendBytes", "ShuffleSendRows",
+            "ScanBytesFromLocalStorage", "ScanBytesFromRemoteStorage",
+            "SpillWriteBytesToLocalStorage", "SpillReadBytesFromLocalStorage",
+            "BytesWriteIntoCache",
+            "TotalTasks", "FinishedTasks", "Progress"
+        ],
+        "rows": [
+            [
+                "172.19.0.3", "108e47ab438a4560-ab1651d16c036491", "2", "internal",
+                "testdb", "root", "6074",
+                "1a35f62f4b14b9d7961b057b77c3102f", "select sleep(60)",
+                "0", "0.00", "0", "0",
+                "0.00", "0.00", "0",
+                "0.00", "0",
+                "0.00", "0.00",
+                "0.00", "0.00",
+                "0.00",
+                "1", "1", "100%"
+            ]
+        ]
+    },
+    "count": 0
 }
+```
+
+| Column | Description |
+| ------ | ----------- |
+| Frontend | The FE node handling the query |
+| QueryId | Unique query identifier |
+| ConnectionId | MySQL connection ID |
+| Catalog | Catalog name |
+| Database | Schema/Database name |
+| User | User who submitted the query |
+| ExecTime | Execution time in milliseconds |
+| SqlHash | MD5 hash of the SQL statement |
+| Statement | SQL statement text |
+| ScanRows | Total rows scanned from storage |
+| ScanBytes | Total bytes scanned from storage |
+| ProcessRows | Rows processed through the execution pipeline |
+| CpuMs | CPU time consumed in milliseconds |
+| MaxPeakMemoryBytes | Maximum memory peak during execution |
+| CurrentUsedMemoryBytes | Current memory used by the query |
+| WorkloadGroupId | ID of the workload group |
+| ShuffleSendBytes | Total bytes sent via shuffle |
+| ShuffleSendRows | Total rows sent via shuffle |
+| ScanBytesFromLocalStorage | Bytes scanned from local storage |
+| ScanBytesFromRemoteStorage | Bytes scanned from remote storage (e.g., HDFS, S3) |
+| SpillWriteBytesToLocalStorage | Bytes spilled to local disk |
+| SpillReadBytesFromLocalStorage | Bytes read back from local spill disk |
+| BytesWriteIntoCache | Bytes written into cache |
+| TotalTasks | Total number of pipeline tasks for this query |
+| FinishedTasks | Number of completed pipeline tasks |
+| Progress | Computed query progress (FinishedTasks / TotalTasks) |
 ```
 
 ## Cancel query
@@ -509,6 +559,7 @@ Retrieve the statistics of a currently running query by Trace ID. You can call t
         "scanRows": 1234567,
         "scanBytes": 987654321,
         "returnedRows": 12345,
+        "processRows": 2345678,
         "cpuMs": 15600,
         "maxPeakMemoryBytes": 536870912,
         "currentUsedMemoryBytes": 268435456,
@@ -517,7 +568,11 @@ Retrieve the statistics of a currently running query by Trace ID. You can call t
         "scanBytesFromLocalStorage": 734003200,
         "scanBytesFromRemoteStorage": 253651121,
         "spillWriteBytesToLocalStorage": 0,
-        "spillReadBytesFromLocalStorage": 0
+        "spillReadBytesFromLocalStorage": 0,
+        "bytesWriteIntoCache": 0,
+        "totalTasksNum": 74,
+        "finishedTasksNum": 51,
+        "progress": "68%"
     },
     "count": 0
 }

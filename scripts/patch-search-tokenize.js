@@ -138,9 +138,9 @@ function patchBuildIndexContent(content) {
   return content.replace(needle, replacement);
 }
 
-// On non-default-locale routes (e.g. /zh-CN/docs-next/..., /ja/docs/...) the
+// On non-default-locale routes (e.g. /zh-CN/docs/..., /ja/docs/...) the
 // plugin strips only `baseUrl` before matching `searchContextByPaths`, so the
-// remaining URI keeps the locale prefix and never matches `docs-next` / `docs`.
+// remaining URI keeps the locale prefix and never matches `docs`.
 // Combined with `useAllContextsWithNoSearchContext: true`, this collapses the
 // search back to the root index (which contains every version, including the
 // retired v4.x). These two patches strip the non-default locale prefix in both
@@ -168,7 +168,7 @@ function patchSearchBarContent(content) {
     "        if (location.pathname.startsWith(versionUrl)) {\n" +
     "            const uri = location.pathname.substring(versionUrl.length);\n" +
     "            // PATCH(locale-aware-context): strip non-default locale prefix so\n" +
-    "            // /zh-CN/docs-next/... and /ja/docs/... match the configured contexts.\n" +
+    "            // /zh-CN/docs/... and /ja/docs/... match the configured contexts.\n" +
     "            const __localePrefix = currentLocale + \"/\";\n" +
     "            const __ctxUri = uri.startsWith(__localePrefix) ? uri.substring(__localePrefix.length) : uri;\n" +
     "            let matchedPath;\n" +
@@ -200,7 +200,7 @@ function patchPostBuildFactoryContent(content) {
     "                if (searchContextByPaths) {\n" +
     "                    const { baseUrl } = buildData;\n" +
     "                    // PATCH(locale-aware-context): strip non-default locale prefix so\n" +
-    "                    // /zh-CN/docs-next/... and /ja/docs/... get assigned to the\n" +
+    "                    // /zh-CN/docs/... and /ja/docs/... get assigned to the\n" +
     "                    // configured contexts instead of falling into the root bucket.\n" +
     "                    const __i18n = buildData.i18n;\n" +
     "                    const __localePrefix = __i18n && __i18n.currentLocale && __i18n.currentLocale !== __i18n.defaultLocale\n" +

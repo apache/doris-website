@@ -2,199 +2,240 @@
 {
     "title": "Routine Load",
     "language": "en",
-    "description": "Apache Doris Routine Load real-time data import guide: supports continuous consumption of CSV/JSON data from Kafka, provides Exactly-Once semantics to guarantee no data loss or duplication, includes job creation, status monitoring, error handling, and SSL/Kerberos security authentication configuration."
+    "description": "Apache Doris Routine Load continuously consumes data from Kafka: CSV/JSON formats, Exactly-Once semantics, SSL/Kerberos authentication, job lifecycle management, and troubleshooting.",
+    "keywords": [
+        "Routine Load",
+        "Kafka real-time import",
+        "Doris streaming import",
+        "continuous import",
+        "Exactly-Once",
+        "Kafka SSL",
+        "Kafka Kerberos",
+        "Kafka SASL",
+        "SASL_PLAINTEXT",
+        "SASL_SSL",
+        "JSON import",
+        "CSV import",
+        "dynamic table import",
+        "single stream multi-table",
+        "flexible partial column update",
+        "UPDATE_FLEXIBLE_COLUMNS",
+        "PAUSED",
+        "Routine Load PAUSED",
+        "out of range",
+        "kafka_broker_version_fallback",
+        "property.broker.version.fallback",
+        "desired_concurrent_number",
+        "max_filter_ratio",
+        "ErrorLogUrls",
+        "ALTER ROUTINE LOAD",
+        "PAUSE ROUTINE LOAD",
+        "RESUME ROUTINE LOAD",
+        "STOP ROUTINE LOAD"
+    ]
 }
 ---
 
-Doris can continuously consume data from Kafka Topics through Routine Load. After submitting a Routine Load job, Doris will keep the import job running, continuously generating import tasks to consume messages from specified Topics in the Kafka cluster.
+<!-- Knowledge type: Procedures + Configuration parameters + Examples + FAQ -->
+<!-- Applicable scenarios: Continuously consume data from Kafka into Doris / Real-time data ingestion / CDC streaming sync -->
 
-Routine Load is a streaming import job that supports Exactly-Once semantics, ensuring no data loss or duplication.
+Routine Load is a **streaming import** job provided by Apache Doris that continuously consumes data from a Kafka topic and writes it to a Doris table. After you submit a Routine Load job, Doris keeps the import job running continuously, generates import tasks in real time to consume messages from the specified topic in the Kafka cluster, and provides **Exactly-Once** semantics to ensure that data is neither lost nor duplicated.
+
+## Quick Navigation
+
+For different needs, jump directly to the corresponding section:
+
+| My need | Section |
+| ------- | ------- |
+| Run a minimal example right away | [Quick Start](#quick-start) |
+| Understand the principles, state machine, and auto-recovery mechanism | [Basic Principles](#basic-principles) |
+| Look up all configurable parameters (FE/BE/job/Kafka) | [Reference Manual](#reference-manual) |
+| Find examples by scenario (fault tolerance, filtering, JSON, Kerberos, etc.) | [Import Examples](#import-examples) |
+| Job enters `PAUSED`, reports `out of range`, or has SSL errors | [Frequently Asked Questions (FAQ)](#frequently-asked-questions-faq) |
 
 ## Use Cases
 
-### Supported Data Sources
+<!-- Knowledge type: Scenario description -->
 
-Routine Load supports consuming data from Kafka clusters.
+Routine Load is suitable for the following scenarios:
 
-### Supported Data File Formats
+- Continuously synchronize real-time data from a Kafka topic into Doris.
+- Need **Exactly-Once** semantics to avoid data loss or duplication.
+- Need to perform column mapping, filtering, derived column computation, and other transformations on the imported data.
+- Need to dynamically distribute data from a single Kafka topic into multiple Doris tables (single stream, multiple tables).
 
-Routine Load supports CSV and JSON format data.
+### Supported Data Sources and Formats
 
-When importing CSV format, you need to clearly distinguish between null values and empty strings:
+Routine Load only supports consuming data from a **Kafka cluster**, and supports the following two message formats:
 
-- Null values need to be represented by `\n`. The data `a,\n,b` indicates that the middle column is a null value.
+| Format | Description |
+| ---- | ---- |
+| CSV  | Each message is a single line, and the line ending **does not include** a newline character. |
+| JSON | A single JSON object, or a JSON array containing multiple objects. |
 
-- Empty strings ('') are directly left empty. The data `a,,b` indicates that the middle column is an empty string.
+When importing CSV format, distinguish clearly between null values and empty strings:
 
-### Usage Limitations
+- A null value is represented by `\n`. For example, `a,\n,b` indicates that the middle column is a null value.
+- An empty string sets the data to empty directly. For example, `a,,b` indicates that the middle column is an empty string (`''`).
 
-When using Routine Load to consume data from Kafka, there are the following limitations:
+### Limitations
 
-- Supported message formats are CSV and JSON text formats. Each CSV message is one line, and the line **does not include** a line break at the end.
+When using Routine Load to consume data from Kafka, the following limitations apply:
 
-- By default, Kafka version 0.10.0.0 (inclusive) and above are supported. To use versions below Kafka 0.10.0.0 (0.9.0, 0.8.2, 0.8.1, 0.8.0), you need to modify the BE configuration by setting the value of `kafka_broker_version_fallback` to the compatible older version, or directly set the value of `property.broker.version.fallback` when creating Routine Load to the compatible older version. The cost of using older versions is that some new features of Routine Load may not be available, such as setting Kafka partition offsets based on time.
+| Limitation | Description |
+| ------ | ---- |
+| Message format | Only CSV and JSON text formats are supported. Each CSV message is a single line, and the line ending **does not include** a newline character. |
+| Kafka version | Kafka 0.10.0.0 and above is supported by default. To use a Kafka version below 0.10.0.0 (0.9.0, 0.8.2, 0.8.1, 0.8.0), modify the BE configuration `kafka_broker_version_fallback` to the older version you want to be compatible with, or directly set `property.broker.version.fallback` when creating the job. The cost of using an older version is that some new features of Routine Load may be unavailable, such as setting Kafka partition offsets by time. |
 
 ## Basic Principles
 
-Routine Load continuously consumes data from Kafka Topics and writes it into Doris.
+Routine Load continuously consumes data from a Kafka topic and writes it to Doris. In Doris, after you create a Routine Load job, a long-running import job is generated, which contains several import tasks:
 
-In Doris, after creating a Routine Load job, a persistent import job is generated, including several import tasks:
+- **Load Job**: A Routine Load Job is a long-running import job that continuously consumes data from the data source.
+- **Load Task**: A load job is split into several load tasks for actual consumption. Each task is an independent transaction.
 
-- Import Job (Load Job): A Routine Load Job is a persistent import job that continuously consumes data from the data source.
-
-- Import Task (Load Task): An import job is divided into several import tasks for actual consumption. Each task is an independent transaction.
-
-The specific process of Routine Load import is shown in the following diagram:
+The detailed flow of Routine Load is shown in the following figure:
 
 ![Routine Load](/images/routine-load.png)
 
-1. Client submits a request to FE to create a Routine Load job. FE generates a persistent import job (Routine Load Job) through the Routine Load Manager.
+The overall flow is as follows:
 
-2. FE splits the Routine Load Job into several Routine Load Tasks through the Job Scheduler, which are scheduled by the Task Scheduler and dispatched to BE nodes.
+1. The client submits a request to the FE to create a Routine Load job. The FE generates a long-running import job (Routine Load Job) through the Routine Load Manager.
+2. The FE splits the Routine Load Job into several Routine Load Tasks through the Job Scheduler. The Task Scheduler then dispatches them to BE nodes.
+3. On the BE, after a Routine Load Task finishes importing, it commits the transaction to the FE and updates the metadata of the job.
+4. After a Routine Load Task is committed, new tasks are generated, or timed-out tasks are retried.
+5. The newly generated Routine Load Tasks are scheduled by the Task Scheduler in a continuous loop.
 
-3. On the BE, after a Routine Load Task completes import, it submits the transaction to FE and updates the Job metadata.
+### Auto-Recovery Mechanism
 
-4. After a Routine Load Task is submitted, new Tasks are generated or timed-out Tasks are retried.
+<!-- Knowledge type: State machine / Operations rules -->
 
-5. The newly generated Routine Load Tasks continue to be scheduled by the Task Scheduler in a continuous cycle.
+To ensure high availability of jobs, Routine Load introduces an auto-recovery mechanism. When a job is paused unexpectedly, the Routine Load Scheduler thread tries to recover the job automatically. For unexpected Kafka-side outages or other unworkable situations, the auto-recovery mechanism ensures that, once Kafka recovers, the import job can continue running normally without manual intervention.
 
-### Automatic Recovery
+The following table lists which cases are recovered automatically and which require manual intervention:
 
-To ensure high availability of jobs, an automatic recovery mechanism is introduced. In the case of unexpected pauses, the Routine Load Scheduler thread will attempt to automatically recover the job. For unexpected Kafka failures or other non-working situations, the automatic recovery mechanism can ensure that after Kafka recovers, the import job can continue to run normally without manual intervention.
-
-Cases that will not automatically recover:
-
-- User manually executes the `PAUSE ROUTINE LOAD` command.
-
-- Data quality issues exist.
-
-- Cases that cannot automatically recover, such as database tables being deleted.
-
-Except for the above three cases, other paused jobs will attempt automatic recovery.
+| Cause of pause | Auto-recovery | Recommended action |
+| -------------- | ------------ | -------- |
+| Kafka broker temporarily unreachable, network jitter | Yes | The Scheduler retries automatically at the `period_of_auto_resume_min` interval. |
+| User manually runs `PAUSE ROUTINE LOAD` | No | Manually run `RESUME ROUTINE LOAD`. |
+| Data quality issue (exceeds `max_filter_ratio` or `max_error_number`) | No | Investigate `ErrorLogUrls`, adjust the data or parameters, then `RESUME`. |
+| Unrecoverable metadata exceptions, such as the database or table being dropped | No | Recreate the table or rebuild the job. |
 
 ## Quick Start
 
-### Create Import Job
+<!-- Knowledge type: Procedures -->
 
-In Doris, you can create a persistent Routine Load import task using the CREATE ROUTINE LOAD command. For detailed syntax, refer to [CREATE ROUTINE LOAD](../../../sql-manual/sql-statements/data-modification/load-and-export/CREATE-ROUTINE-LOAD). Routine Load can consume CSV and JSON data.
+This section walks through a minimal runnable example, demonstrating how to create a Routine Load job from Kafka, and the basic operations to view, pause, resume, modify, and stop the job.
 
-**Import CSV Data**
+### Create an Import Job
 
-1. Sample import data
+You can create a long-running Routine Load import task with the [CREATE ROUTINE LOAD](../../../sql-manual/sql-statements/data-modification/load-and-export/CREATE-ROUTINE-LOAD) command. Routine Load can consume CSV and JSON data.
 
-In Kafka, there is the following sample data:
+#### Import CSV Data
 
-```sql
-kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic test-routine-load-csv --from-beginning
-1,Emily,25
-2,Benjamin,35
-3,Olivia,28
-4,Alexander,60
-5,Ava,17
-6,William,69
-7,Sophia,32
-8,James,64
-9,Emma,37
-10,Liam,64
-```
+1. Prepare a Kafka data sample:
 
-2. Create the table to be imported
+    ```bash
+    kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic test-routine-load-csv --from-beginning
+    1,Emily,25
+    2,Benjamin,35
+    3,Olivia,28
+    4,Alexander,60
+    5,Ava,17
+    6,William,69
+    7,Sophia,32
+    8,James,64
+    9,Emma,37
+    10,Liam,64
+    ```
 
-In Doris, create the table to be imported with the following syntax:
+2. Create the target table for import:
 
-```sql
-CREATE TABLE testdb.test_routineload_tbl(
-    user_id            BIGINT       NOT NULL COMMENT "user id",
-    name               VARCHAR(20)           COMMENT "name",
-    age                INT                   COMMENT "age"
-)
-DUPLICATE KEY(user_id)
-DISTRIBUTED BY HASH(user_id) BUCKETS 10;
-```
+    ```sql
+    CREATE TABLE testdb.test_routineload_tbl(
+        user_id            BIGINT       NOT NULL COMMENT "user id",
+        name               VARCHAR(20)           COMMENT "name",
+        age                INT                   COMMENT "age"
+    )
+    DUPLICATE KEY(user_id)
+    DISTRIBUTED BY HASH(user_id) BUCKETS 10;
+    ```
 
-3. Create Routine Load import job
+3. Create the Routine Load import job:
 
-In Doris, use the CREATE ROUTINE LOAD command to create an import job:
+    ```sql
+    CREATE ROUTINE LOAD testdb.example_routine_load_csv ON test_routineload_tbl
+    COLUMNS TERMINATED BY ",",
+    COLUMNS(user_id, name, age)
+    FROM KAFKA(
+        "kafka_broker_list" = "192.168.88.62:9092",
+        "kafka_topic" = "test-routine-load-csv",
+        "property.kafka_default_offsets" = "OFFSET_BEGINNING"
+    );
+    ```
 
-```sql
-CREATE ROUTINE LOAD testdb.example_routine_load_csv ON test_routineload_tbl
-COLUMNS TERMINATED BY ",",
-COLUMNS(user_id, name, age)
-FROM KAFKA(
-    "kafka_broker_list" = "192.168.88.62:9092",
-    "kafka_topic" = "test-routine-load-csv",
-    "property.kafka_default_offsets" = "OFFSET_BEGINNING"
-);
-```
+#### Import JSON Data
 
-**Import JSON Data**
+1. Prepare a Kafka data sample:
 
-1. Sample import data
+    ```bash
+    kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic test-routine-load-json --from-beginning
+    {"user_id":1,"name":"Emily","age":25}
+    {"user_id":2,"name":"Benjamin","age":35}
+    {"user_id":3,"name":"Olivia","age":28}
+    {"user_id":4,"name":"Alexander","age":60}
+    {"user_id":5,"name":"Ava","age":17}
+    {"user_id":6,"name":"William","age":69}
+    {"user_id":7,"name":"Sophia","age":32}
+    {"user_id":8,"name":"James","age":64}
+    {"user_id":9,"name":"Emma","age":37}
+    {"user_id":10,"name":"Liam","age":64}
+    ```
 
-In Kafka, there is the following sample data:
+2. Create the target table for import:
 
-```sql
-kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic test-routine-load-json --from-beginning
-{"user_id":1,"name":"Emily","age":25}
-{"user_id":2,"name":"Benjamin","age":35}
-{"user_id":3,"name":"Olivia","age":28}
-{"user_id":4,"name":"Alexander","age":60}
-{"user_id":5,"name":"Ava","age":17}
-{"user_id":6,"name":"William","age":69}
-{"user_id":7,"name":"Sophia","age":32}
-{"user_id":8,"name":"James","age":64}
-{"user_id":9,"name":"Emma","age":37}
-{"user_id":10,"name":"Liam","age":64}
-```
+    ```sql
+    CREATE TABLE testdb.test_routineload_tbl(
+        user_id            BIGINT       NOT NULL COMMENT "user id",
+        name               VARCHAR(20)           COMMENT "name",
+        age                INT                   COMMENT "age"
+    )
+    DUPLICATE KEY(user_id)
+    DISTRIBUTED BY HASH(user_id) BUCKETS 10;
+    ```
 
-2. Create the table to be imported
+3. Create the Routine Load import job:
 
-In Doris, create the table to be imported with the following syntax:
+    ```sql
+    CREATE ROUTINE LOAD testdb.example_routine_load_json ON test_routineload_tbl
+    COLUMNS(user_id,name,age)
+    PROPERTIES(
+        "format"="json",
+        "jsonpaths"="[\"$.user_id\",\"$.name\",\"$.age\"]"
+    )
+    FROM KAFKA(
+        "kafka_broker_list" = "192.168.88.62:9092",
+        "kafka_topic" = "test-routine-load-json",
+        "property.kafka_default_offsets" = "OFFSET_BEGINNING"
+    );
+    ```
 
-```sql
-CREATE TABLE testdb.test_routineload_tbl(
-    user_id            BIGINT       NOT NULL COMMENT "user id",
-    name               VARCHAR(20)           COMMENT "name",
-    age                INT                   COMMENT "age"
-)
-DUPLICATE KEY(user_id)
-DISTRIBUTED BY HASH(user_id) BUCKETS 10;
-```
-
-3. Create Routine Load import job
-
-In Doris, use the CREATE ROUTINE LOAD command to create an import job:
-
-```sql
-CREATE ROUTINE LOAD testdb.example_routine_load_json ON test_routineload_tbl
-COLUMNS(user_id,name,age)
-PROPERTIES(
-    "format"="json",
-    "jsonpaths"="[\"$.user_id\",\"$.name\",\"$.age\"]"
-)
-FROM KAFKA(
-    "kafka_broker_list" = "192.168.88.62:9092",
-    "kafka_topic" = "test-routine-load-json",
-    "property.kafka_default_offsets" = "OFFSET_BEGINNING"
-);
-```
 :::info Note
-If you need to import JSON objects from the root node of a JSON file, jsonpaths needs to be specified as `$.`, for example: `PROPERTIES("jsonpaths"="$.")`.
+To import the JSON object at the root of the JSON file, set `jsonpaths` to `$.`, for example: `PROPERTIES("jsonpaths"="$.")`.
 :::
 
 ### View Import Status
 
-In Doris, the import job status and import task status of Routine Load:
+The status of Routine Load has two dimensions:
 
-- Import Job: Mainly used to view the target table of the import task, number of subtasks, import delay status, import configuration, and import results.
+- **Load job**: View information about the load job target table, the number of subtasks, the import latency status, the import configuration, and the import results.
+- **Load task**: View the status of import subtasks, the consumption progress, and the BE node to which the task is dispatched.
 
-- Import Task: Mainly used to view the status of import subtasks, consumption progress, and dispatched BE nodes.
+#### View the Load Job
 
-**01 View Running Import Jobs**
+Use the [SHOW ROUTINE LOAD](../../../sql-manual/sql-statements/data-modification/load-and-export/SHOW-ROUTINE-LOAD) command to view the load job. This command describes the basic state of the current job, such as the import target table, the import latency status, the import configuration, and any error information.
 
-You can view import job status using the [SHOW ROUTINE LOAD](../../../sql-manual/sql-statements/data-modification/load-and-export/SHOW-ROUTINE-LOAD) command. SHOW ROUTINE LOAD describes the basic status of the current job, such as the import target table, import delay status, import configuration information, and import error information.
-
-For example, you can view the job status of testdb.example_routine_load_csv with the following command:
+The following command shows the job status of `testdb.example_routine_load_csv`:
 
 ```sql
 mysql> SHOW ROUTINE LOAD FOR testdb.example_routine_load\G
@@ -224,11 +265,11 @@ ReasonOfStateChanged:
 1 row in set (0.00 sec)
 ```
 
-**02 View Running Import Tasks**
+#### View the Load Subtasks
 
-You can view import subtask status using the [SHOW ROUTINE LOAD TASK](../../../sql-manual/sql-statements/data-modification/load-and-export/SHOW-ROUTINE-LOAD-TASK) command. SHOW ROUTINE LOAD TASK describes the subtask information under the current job, such as subtask status, dispatched BE id, etc.
+Use the [SHOW ROUTINE LOAD TASK](../../../sql-manual/sql-statements/data-modification/load-and-export/SHOW-ROUTINE-LOAD-TASK) command to view the import subtasks. This command describes the subtask information under the current job, such as the subtask status and the BE id to which the task is dispatched.
 
-For example, you can view the task status of testdb.example_routine_load_csv with the following command:
+The following command shows the subtask information of `testdb.example_routine_load_csv`:
 
 ```sql
 mysql> SHOW ROUTINE LOAD TASK WHERE jobname = 'example_routine_load_csv';
@@ -243,31 +284,27 @@ mysql> SHOW ROUTINE LOAD TASK WHERE jobname = 'example_routine_load_csv';
 +-----------------------------------+-------+-----------+-------+---------------------+---------------------+---------+-------+----------------------+
 ```
 
-### Pause Import Job
+### Pause an Import Job
 
-You can pause an import job using the [PAUSE ROUTINE LOAD](../../../sql-manual/sql-statements/data-modification/load-and-export/PAUSE-ROUTINE-LOAD) command. After pausing the import job, it enters the PAUSED state, but the import job is not terminated and can be restarted using the RESUME ROUTINE LOAD command.
-
-For example, you can pause the testdb.example_routine_load_csv import job with the following command:
+You can pause an import job with the [PAUSE ROUTINE LOAD](../../../sql-manual/sql-statements/data-modification/load-and-export/PAUSE-ROUTINE-LOAD) command. After being paused, the job enters the `PAUSED` state, but the job is not terminated. You can restart it with the `RESUME ROUTINE LOAD` command.
 
 ```sql
 PAUSE ROUTINE LOAD FOR testdb.example_routine_load_csv;
 ```
 
-### Resume Import Job
+### Resume an Import Job
 
-You can resume an import job using the [RESUME ROUTINE LOAD](../../../sql-manual/sql-statements/data-modification/load-and-export/RESUME-ROUTINE-LOAD) command.
-
-For example, you can resume the testdb.example_routine_load_csv import job with the following command:
+You can resume an import job in the `PAUSED` state with the [RESUME ROUTINE LOAD](../../../sql-manual/sql-statements/data-modification/load-and-export/RESUME-ROUTINE-LOAD) command.
 
 ```sql
 RESUME ROUTINE LOAD FOR testdb.example_routine_load_csv;
 ```
 
-### Modify Import Job
+### Modify an Import Job
 
-You can modify a created import job using the [ALTER ROUTINE LOAD](../../../sql-manual/sql-statements/data-modification/load-and-export/ALTER-ROUTINE-LOAD) command. Before modifying the import job, you need to pause it using PAUSE ROUTINE LOAD, and after modification, resume it using RESUME ROUTINE LOAD.
+You can modify a created import job with the [ALTER ROUTINE LOAD](../../../sql-manual/sql-statements/data-modification/load-and-export/ALTER-ROUTINE-LOAD) command. Before modifying, first pause the job with `PAUSE ROUTINE LOAD`. After the modification is complete, resume it with `RESUME ROUTINE LOAD`.
 
-For example, you can modify the desired import task concurrency parameter desired_concurrent_number and modify Kafka Topic information with the following command:
+For example, to modify the desired concurrency parameter `desired_concurrent_number` and the Kafka topic information:
 
 ```sql
 ALTER ROUTINE LOAD FOR testdb.example_routine_load_csv
@@ -280,33 +317,34 @@ FROM KAFKA(
 );
 ```
 
-### Cancel Import Job
+### Cancel an Import Job
 
-You can stop and delete a Routine Load import job using the [STOP ROUTINE LOAD](../../../sql-manual/sql-statements/data-modification/load-and-export/STOP-ROUTINE-LOAD) command. Deleted import jobs cannot be recovered and cannot be viewed through the SHOW ROUTINE LOAD command.
-
-You can stop and delete the import job testdb.example_routine_load_csv with the following command:
+You can stop and delete a Routine Load import job with the [STOP ROUTINE LOAD](../../../sql-manual/sql-statements/data-modification/load-and-export/STOP-ROUTINE-LOAD) command. **A deleted import job cannot be recovered**, and cannot be viewed via the `SHOW ROUTINE LOAD` command.
 
 ```sql
 STOP ROUTINE LOAD FOR testdb.example_routine_load_csv;
 ```
 
-### Bind Compute Group
-
-In storage-compute separation mode, the Compute Group selection logic for Routine Load is as follows in order of priority:
+### Bind a Compute Group {#kafka-安全认证}
+In **storage-compute separation mode**, the Compute Group selection logic for Routine Load follows this priority order:
 
 1. Select the Compute Group specified by the `use db@cluster` statement.
-2. Select the Compute Group specified by the user attribute `default_compute_group`.
-3. Select one from the Compute Groups that the current user has permission to access.
+2. Select the Compute Group specified by the user property `default_compute_group`.
+3. Select one Compute Group from those the current user has permission to access.
 
-In storage-compute integration mode, select the Compute Group specified in the user attribute `resource_tags.location`. If not specified in the user attribute, use the Compute Group named `default`.
+In **storage-compute integrated mode**, the Compute Group specified by the user property `resource_tags.location` is selected. If no Compute Group is specified in user properties, the Compute Group named `default` is used.
 
-Note that the Compute Group for a Routine Load job can only be specified at creation time. Once a Routine Load job is created, its bound Compute Group cannot be modified.
+:::caution Note
+The Compute Group of a Routine Load job **can only be specified at creation time**. After the job is created, the bound Compute Group cannot be changed.
+:::
 
 ## Reference Manual
 
-### Import Commands
+<!-- Knowledge type: Configuration parameters + Syntax reference -->
 
-The syntax for creating a Routine Load persistent import job is as follows:
+### Import Command Syntax
+
+The syntax for creating a long-running Routine Load import job is as follows:
 
 ```sql
 CREATE ROUTINE LOAD [<db_name>.]<job_name> [ON <tbl_name>]
@@ -317,61 +355,62 @@ FROM KAFKA [data_source_properties]
 [COMMENT "<comment>"]
 ```
 
-Module descriptions for creating import jobs:
+The modules are described as follows:
 
-| Module                   | Description                                                         |
+| Module                  | Description                                                  |
 | ---------------------- | ------------------------------------------------------------ |
-| db_name                | Specifies the database for creating the import task.                                   |
-| job_name               | Specifies the name of the import task to be created. The same database cannot have tasks with the same name. |
-| tbl_name               | Specifies the name of the table to be imported. This is optional. If not specified, dynamic table mode is used, where Kafka data needs to contain table name information. |
-| merge_type             | Data merge type. Default is APPEND. <p>merge_type has three options:</p> <p>- APPEND: Append import mode;</p> <p>- MERGE: Merge import mode;</p> <p>- DELETE: All imported data is to be deleted.</p> |
-| load_properties        | Import description module, including the following components:<p>- column_separator clause</p> <p>- columns_mapping clause</p> <p>- preceding_filter clause</p> <p>- where_predicates clause</p> <p>- partitions clause</p> <p>- delete_on clause</p> <p>- order_by clause</p> |
-| job_properties         | Used to specify general import parameters for Routine Load.                       |
-| data_source_properties | Used to describe Kafka data source properties.                                  |
-| comment                | Used to describe remarks for the import job.                                 |
+| db_name                | Specifies the database in which to create the import task.   |
+| job_name               | Specifies the name of the import task to be created. Tasks with the same name cannot exist within the same database. |
+| tbl_name               | Specifies the name of the table to import data into. This is optional. If not specified, the dynamic table approach is used, which requires the data in Kafka to include the table name. |
+| merge_type             | The data merge type. The default value is APPEND.<p>There are three options:</p><p>- APPEND: append import.</p><p>- MERGE: merge import.</p><p>- DELETE: all the imported data is to be deleted.</p> |
+| load_properties        | The import description module, which includes the following components:<p>- column_separator clause</p><p>- columns_mapping clause</p><p>- preceding_filter clause</p><p>- where_predicates clause</p><p>- partitions clause</p><p>- delete_on clause</p><p>- order_by clause</p> |
+| job_properties         | Specifies the common import parameters of Routine Load.      |
+| data_source_properties | Describes the properties of the Kafka data source.           |
+| comment                | Describes the comment for the import job.                    |
 
 ### Import Parameter Description
 
-**01 FE Configuration Parameters**
+#### FE Configuration Parameters
 
-| Parameter Name                          | Default Value | Dynamic Configuration | FE Master Exclusive Configuration | Parameter Description                                                                                     |
-|-----------------------------------|--------|----------|---------------------|----------------------------------------------------------------------------------------------|
-| max_routine_load_task_concurrent_num | 256    | Yes       | Yes                  | Limits the maximum number of concurrent Routine Load import job subtasks. It's recommended to maintain the default value. Setting it too large may lead to too many concurrent tasks, occupying cluster resources. |
-| max_routine_load_task_num_per_be  | 1024   | Yes       | Yes                  | Maximum number of concurrent Routine Load tasks limited per BE. `max_routine_load_task_num_per_be` should be less than `routine_load_thread_pool_size`. |
-| max_routine_load_job_num           | 100    | Yes       | Yes                  | Limits the maximum number of Routine Load jobs, including NEED_SCHEDULED, RUNNING, PAUSE.                        |
-| max_tolerable_backend_down_num     | 0      | Yes       | Yes                  | As long as one BE is down, Routine Load cannot automatically recover. Under certain conditions, Doris can reschedule PAUSED tasks to RUNNING state. A value of 0 for this parameter means rescheduling is only allowed when all BE nodes are alive. |
-| period_of_auto_resume_min          | 5 (minutes) | Yes       | Yes                  | The period for automatic recovery of Routine Load.                                                               |
+| Parameter | Default | Dynamic | FE Master only | Description |
+| -------- | ------ | -------- | ------------------ | -------- |
+| max_routine_load_task_concurrent_num | 256 | Yes | Yes | Limits the maximum subtask concurrency of a Routine Load import job. Keeping the default is recommended. Setting it too large may cause too many concurrent tasks and consume cluster resources. |
+| max_routine_load_task_num_per_be | 1024 | Yes | Yes | The maximum number of concurrent Routine Load tasks per BE. `max_routine_load_task_num_per_be` should be smaller than `routine_load_thread_pool_size`. |
+| max_routine_load_job_num | 100 | Yes | Yes | Limits the maximum number of Routine Load jobs, including those in the NEED_SCHEDULED, RUNNING, and PAUSE states. |
+| max_tolerable_backend_down_num | 0 | Yes | Yes | If even one BE is down, Routine Load cannot recover automatically. When certain conditions are met, Doris can re-schedule a PAUSED task and switch it to the RUNNING state. A value of 0 means re-scheduling is allowed only when all BE nodes are alive. |
+| period_of_auto_resume_min | 5 (minutes) | Yes | Yes | The interval at which Routine Load auto-recovery occurs. |
 
-**02 BE Configuration Parameters**
+#### BE Configuration Parameters
 
+| Parameter | Default | Dynamic | Description |
+| -------- | ------ | -------- | ---- |
+| max_consumer_num_per_group | 3 | Yes | The maximum number of consumers a single subtask can spawn for consumption. |
 
-| Parameter Name                     | Default Value | Dynamic Configuration | Description                                                                                                             |
-|------------------------------|--------|----------|------------------------------------------------------------------------------------------------------------------|
-| max_consumer_num_per_group   | 3      | Yes       | Maximum number of consumers a subtask can generate for consumption. |
+#### Import Configuration Parameters
 
-**03 Import Configuration Parameters**
+When creating a Routine Load job, you can specify import configuration parameters for different modules with the `CREATE ROUTINE LOAD` command.
 
-When creating a Routine Load job, you can specify different import configuration parameters for different modules through the CREATE ROUTINE LOAD command.
+##### tbl_name Clause
 
-**tbl_name Clause**
+Specifies the name of the table to import. This is optional.
 
-Specifies the name of the table to be imported. This is optional.
+If not specified, the **dynamic table** approach is used, which requires the data in Kafka to include the table name. Currently, the dynamic table name is only supported by extracting it from the Kafka Value, and the data must follow this format. For JSON: `table_name|{"col1": "val1", "col2": "val2"}`, where `tbl_name` is the table name and `|` is the separator between the table name and the table data. CSV-formatted data is similar, for example: `table_name|val1,val2,val3`.
 
-If not specified, dynamic table mode is used, where Kafka data needs to contain table name information. Currently, dynamic table names can only be obtained from Kafka's Value, and must conform to this format: in JSON format: `table_name|{"col1": "val1", "col2": "val2"}`, where `tbl_name` is the table name, with `|` as the separator between table name and table data. CSV format data is similar, for example: `table_name|val1,val2,val3`. Note that the `table_name` here must match the table name in Doris, otherwise import will fail. Note that dynamic tables do not support the column_mapping configuration introduced later.
+:::caution Note
+The `table_name` here must match the table name in Doris exactly, otherwise the import will fail. Dynamic tables do not support `column_mapping`.
+:::
 
-**merge_type Clause**
+##### merge_type Clause
 
-You can specify the data merge type through the merge_type module. merge_type has three options:
+You can specify the data merge type with the `merge_type` module. There are three options:
 
-- APPEND: Append import mode
+- **APPEND**: append import.
+- **MERGE**: merge import. Only applicable to the Unique Key model. Must be used with the `[DELETE ON]` module to mark the Delete Flag column.
+- **DELETE**: all the imported data is to be deleted.
 
-- MERGE: Merge import mode. Only applicable to Unique Key model. Needs to be used with the [DELETE ON] module to mark the Delete Flag column
+##### load_properties Clause
 
-- DELETE: All imported data is to be deleted
-
-**load_properties Clause**
-
-You can describe import data properties through the load_properties module. The specific syntax is as follows:
+You can describe the properties of the imported data with the `load_properties` module. The syntax is as follows:
 
 ```sql
 [COLUMNS TERMINATED BY <column_separator>,]
@@ -382,79 +421,79 @@ You can describe import data properties through the load_properties module. The 
 [ORDER BY <order_by_column1>[, <order_by_column2>, <order_by_column3>, ...]]
 ```
 
-Specific module corresponding parameters are as follows:
+The corresponding parameters of each module are as follows:
 
-| Sub-module                | Parameter                                                         | Description                                                         |
-| --------------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| COLUMNS TERMINATED BY | <column_separator>                                           | Used to specify the column separator. Default is `\t`. For example, to specify comma as the separator, use the following command: `COLUMN TERMINATED BY ","`<br/>For null value handling, note the following:<p>- Null values need to be represented by `\n`. The data `a,\n,b` indicates that the middle column is a null value</p> <p>- Empty strings ('') are directly left empty. The data `a,,b` indicates that the middle column is an empty string</p> |
-| COLUMNS               | <column_name>                                                | Used to specify corresponding column names. For example, to specify import columns `(k1, k2, k3)`, use the following command: `COLUMNS(k1, k2, k3)`<br/>The COLUMNS clause can be omitted in the following cases:<p>- Columns in CSV correspond one-to-one with columns in the table</p> <p>- Key columns in JSON have the same names as columns in the table</p> |   
-| &nbsp;&nbsp;               | <column_mapping>      | During import, column mapping can be used for column filtering and transformation. For example, if the target column needs to be derived from a certain column of the data source during import, and target column k4 is calculated from column k3 using the formula k3+1, use the following command: `COLUMNS(k1, k2, k3, k4 = k3 + 1)`<br/>For details, refer to [Data Transformation](../../import/load-data-convert) |                                                              |
-| WHERE                 | <where_expr>                                                 | Specifying where_expr allows filtering of imported data sources based on conditions. For example, to only import data where age > 30, use the following command: `WHERE age > 30` |
-| PARTITION             | <partition_name>                                             | Specifies which partitions in the target table to import. If not specified, it will automatically import to the corresponding partition. For example, to import to partitions p1 and p2 of the target table, use the following command: `PARTITION(p1, p2)` |
-| DELETE ON             | <delete_expr>                                                | In MERGE import mode, use delete_expr to mark which columns need to be deleted. For example, to delete columns where age > 30 during MERGE, use the following command: `DELETE ON age > 30` |
-| ORDER BY              | <order_by_column>                                            | Only effective for Unique Key model. Used to specify the Sequence Column in imported data to ensure data order. For example, when importing a Unique Key table, to specify the Sequence Column as create_time, use the following command: `ORDER BY create_time`<br/>For a description of the Sequence Column in the Unique Key model, refer to the documentation [Data Update/Sequence Column](../../../data-operate/update/update-of-unique-model) |
+| Sub-module            | Parameter          | Description                                                  |
+| --------------------- | ------------------ | ------------------------------------------------------------ |
+| COLUMNS TERMINATED BY | `<column_separator>` | Specifies the column separator. The default is `\t`. For example, to specify a comma as the separator: `COLUMN TERMINATED BY ","`. Notes on null handling:<p>- A null value is represented by `\n`. `a,\n,b` indicates that the middle column is a null value.</p><p>- An empty string sets the data to empty directly. `a,,b` indicates that the middle column is an empty string (`''`).</p> |
+| COLUMNS               | `<column_name>`    | Specifies the corresponding column name. For example, to specify the import columns `(k1, k2, k3)`: `COLUMNS(k1, k2, k3)`. The COLUMNS clause can be omitted in the following cases:<p>- The columns in the CSV correspond to the columns in the table one to one.</p><p>- The keys in the JSON have the same names as the columns in the table.</p> |
+| &nbsp;                | `<column_mapping>` | During import, you can filter and transform columns through column mapping. For example, the target column k4 is computed from the k3 column with the formula k3+1: `COLUMNS(k1, k2, k3, k4 = k3 + 1)`. For details, see [Data Transformation](../../import/load-data-convert). |
+| WHERE                 | `<where_expr>`     | Filters the imported data source by condition. For example, to import only data with age > 30: `WHERE age > 30`. |
+| PARTITION             | `<partition_name>` | Specifies which partitions in the target table to import into. If not specified, the data is automatically imported into the corresponding partitions. For example, to import into partitions p1 and p2: `PARTITION(p1, p2)`. |
+| DELETE ON             | `<delete_expr>`    | In MERGE import mode, use `delete_expr` to mark which columns need to be deleted. For example, to delete columns where age > 30 during MERGE: `DELETE ON age > 30`. |
+| ORDER BY              | `<order_by_column>` | Only effective for the Unique Key model. Specifies the Sequence Column in the imported data to ensure data ordering. For example, to specify `create_time` as the Sequence Column: `ORDER BY create_time`. For details, see [Data Update / Sequence Column](../../../data-operate/update/update-of-unique-model). |
 
-**job_properties Clause**
+##### job_properties Clause
 
-When creating a Routine Load import job, you can specify the job_properties clause to specify properties of the import job. The syntax is as follows:
+When creating a Routine Load import job, you can specify the properties of the import job with the `job_properties` clause. The syntax is as follows:
 
 ```sql
 PROPERTIES ("<key1>" = "<value1>"[, "<key2>" = "<value2>" ...])
 ```
 
-Specific parameter options for the job_properties clause are as follows:
+The specific parameter options of the `job_properties` clause are as follows:
 
-| Parameter                      | Description                                                         |
-| ------------------------- | ------------------------------------------------------------ |
-| desired_concurrent_number | <p>Default value: 256 </p> <p>Parameter description: The desired concurrency for a single import subtask (load task), modifying the number of desired import subtasks the Routine Load import job is split into. During import, the desired subtask concurrency may not equal the actual concurrency. The actual concurrency is comprehensively considered based on cluster node count, load, and data source conditions, using the following formula to calculate the actual number of import subtasks:</p> <p>`min(topic_partition_num, desired_concurrent_number, max_routine_load_task_concurrent_num)`, where:</p> <p>- topic_partition_num represents the number of partitions in the Kafka Topic</p> <p>- desired_concurrent_number represents the set parameter size</p> <p>- max_routine_load_task_concurrent_num is the parameter in FE that sets the maximum task concurrency for Routine Load</p> |
-| max_batch_interval        | Maximum run time for each subtask, in seconds, must be greater than 0, default is 60(s). max_batch_interval/max_batch_rows/max_batch_size together form the subtask execution threshold. When any parameter reaches the threshold, the import subtask ends and a new import subtask is generated. |
-| max_batch_rows            | Maximum number of rows each subtask reads. Must be greater than or equal to 200000. Default is 20000000. max_batch_interval/max_batch_rows/max_batch_size together form the subtask execution threshold. When any parameter reaches the threshold, the import subtask ends and a new import subtask is generated. |
-| max_batch_size            | Maximum bytes each subtask reads. Unit is bytes, range is 100MB to 1GB. Default is 1G. max_batch_interval/max_batch_rows/max_batch_size together form the subtask execution threshold. When any parameter reaches the threshold, the import subtask ends and a new import subtask is generated. |
-| max_error_number          | Maximum allowed error rows within the sampling window. Must be greater than or equal to 0. Default is 0, meaning no error rows are allowed. The sampling window is `max_batch_rows * 10`. If the number of error rows in the sampling window is greater than `max_error_number`, the routine job will be paused, requiring manual intervention to check data quality issues through the `ErrorLogUrls` in the [SHOW ROUTINE LOAD](../../../sql-manual/sql-statements/data-modification/load-and-export/SHOW-ROUTINE-LOAD) command. Rows filtered by where conditions are not counted as error rows. |
-| strict_mode               | Whether to enable strict mode, default is off. Strict mode means strict filtering of column type conversions during the import process. If enabled, non-null raw data whose column type conversion results in NULL will be filtered.<p>Strict mode filtering strategy:</p> <p>- For derived columns (generated by function conversion), Strict Mode has no effect</p> <p>- When column types need conversion, incorrectly typed data will be filtered out, viewable in the `ErrorLogUrls` in [SHOW ROUTINE LOAD](../../../sql-manual/sql-statements/data-modification/load-and-export/SHOW-ROUTINE-LOAD) for data filtered due to type errors</p> <p>- For imported columns containing range restrictions, if raw data can pass type conversion normally but cannot pass range restrictions, strict mode has no effect on it. For example: if the type is decimal(1,0), raw data is 10, it can pass type conversion but is not within the declared range. This data is not affected by strict mode. For details, refer to [Strict Mode](../../../data-operate/import/handling-messy-data#strict-mode).</p> |
-| timezone                  | Specifies the timezone used for the import job. Default uses the Session's timezone parameter. This parameter affects all timezone-related function results involved in import. |
-| format                    | Specifies the import data format, default is CSV, supports JSON format.               |
-| jsonpaths                 | When the import data format is JSON, you can specify fields to extract from JSON data through jsonpaths. For example, specify jsonpaths for import with the following command: `"jsonpaths" = "[\"$.userid\",\"$.username\",\"$.age\",\"$.city\"]"` |
-| json_root                 | When the import data format is JSON, you can specify the root node of JSON data through json_root. Doris will extract elements from the root node for parsing. Default is empty. For example, specify the JSON root node for import with the following command: `"json_root" = "$.RECORDS"` |
-| strip_outer_array         | When the import data format is json, strip_outer_array being true means JSON data is presented as an array, with each element in the data treated as one row. Default value is false. Typically, JSON data in Kafka may be in array form, i.e., containing outer square brackets `[]`. In this case, you can specify `"strip_outer_array" = "true"` to consume data in the Topic in array mode. For example, the following data will be parsed into two rows: `[{"user_id":1,"name":"Emily","age":25},{"user_id":2,"name":"Benjamin","age":35}]` |
-| send_batch_parallelism    | Used to set the parallelism for sending batch data. If the parallelism value exceeds `max_send_batch_parallelism_per_job` in the BE configuration, the BE serving as coordinator will use the value of `max_send_batch_parallelism_per_job`. |
-| load_to_single_tablet     | Supports importing data to only one tablet of the corresponding partition per task. Default value is false. This parameter is only allowed when importing data to olap tables with random bucketing. |
-| partial_columns           | Specifies whether to enable partial column update. Default value is false. This parameter is only allowed when the table model is Unique and uses Merge on Write. Multi-table streaming does not support this parameter. For details, refer to [Partial Column Update](../../../data-operate/update/partial-column-update.md) |
-| unique_key_update_mode    | Specifies the update mode for Unique Key tables. Optional values: <ul><li>`UPSERT` (default): Standard full-row insert or update operation.</li><li>`UPDATE_FIXED_COLUMNS`: Partial column update, all rows update the same columns. Equivalent to `partial_columns=true`.</li><li>`UPDATE_FLEXIBLE_COLUMNS`: Flexible partial column update, each row can update different columns. Requires JSON format and table must have `enable_unique_key_skip_bitmap_column=true`. Cannot be used with `jsonpaths`, `fuzzy_parse`, `COLUMNS` clause, or `WHERE` clause.</li></ul>For details, refer to [Partial Column Update](../../../data-operate/update/partial-column-update#flexible-partial-column-update) |
-| partial_update_new_key_behavior | Handling method for newly inserted rows when performing partial column updates on Unique Merge on Write tables. Two types: `APPEND`, `ERROR`.<br/>- `APPEND`: Allow insertion of new row data<br/>- `ERROR`: Import fails and reports an error when inserting new rows |
-| max_filter_ratio          | Maximum allowed filtering rate within the sampling window. Must be between greater than or equal to 0 and less than or equal to 1. Default value is 1.0, meaning any error rows can be tolerated. The sampling window is `max_batch_rows * 10`. If the error rows/total rows in the sampling window is greater than `max_filter_ratio`, the routine job will be paused, requiring manual intervention to check data quality issues. Rows filtered by where conditions are not counted as error rows. |
-| enclose                   | Specifies the enclosing character. When CSV data fields contain row or column separators, a single-byte character can be specified as an enclosing character for protection. For example, if the column separator is "," and the enclosing character is "'", for data "a,'b,c'", "b,c" will be parsed as one field. |
-| escape                    | Specifies the escape character. Used to escape characters in fields that are the same as the enclosing character. For example, if data is "a,'b,'c'", the enclosing character is "'", hoping "b,'c to be parsed as one field, you need to specify a single-byte escape character, such as "\", and modify the data to "a,'b,\'c'". |
+| Parameter | Description |
+| ---- | ---- |
+| desired_concurrent_number | <p>Default value: 256</p><p>The desired concurrency for a single load task. During import, the desired subtask concurrency may not equal the actual concurrency. The actual concurrency is calculated as:</p><p>`min(topic_partition_num, desired_concurrent_number, max_routine_load_task_concurrent_num)`, where:</p><p>- `topic_partition_num`: the number of partitions of the Kafka topic.</p><p>- `desired_concurrent_number`: the value of this parameter.</p><p>- `max_routine_load_task_concurrent_num`: the maximum task parallelism for Routine Load set in the FE.</p> |
+| max_batch_interval | The maximum running time of each subtask, in seconds. Must be greater than 0. The default value is 60. `max_batch_interval`, `max_batch_rows`, and `max_batch_size` together form the subtask execution threshold. When any one of them is reached, the import subtask ends and a new subtask is generated. |
+| max_batch_rows | The maximum number of rows each subtask can read. Must be greater than or equal to 200000. The default is 20000000. `max_batch_interval`, `max_batch_rows`, and `max_batch_size` together form the subtask execution threshold. When any one of them is reached, the import subtask ends and a new subtask is generated. |
+| max_batch_size | The maximum number of bytes each subtask can read. The unit is bytes, the range is 100 MB to 1 GB, and the default is 1 GB. `max_batch_interval`, `max_batch_rows`, and `max_batch_size` together form the subtask execution threshold. When any one of them is reached, the import subtask ends and a new subtask is generated. |
+| max_error_number | The maximum number of error rows allowed within the sampling window. Must be greater than or equal to 0. The default is 0 (no error rows are allowed). The sampling window is `max_batch_rows * 10`. If the number of error rows in the sampling window exceeds `max_error_number`, the routine load job is paused. Manual intervention is required to check data quality issues. The data quality issues can be checked through the `ErrorLogUrls` field in the [SHOW ROUTINE LOAD](../../../sql-manual/sql-statements/data-modification/load-and-export/SHOW-ROUTINE-LOAD) command. Rows filtered out by the where condition are not counted as error rows. |
+| strict_mode | Whether to enable strict mode. Disabled by default. Strict mode means strict filtering of column type conversions during import. When enabled, if a non-null original data value becomes NULL after a column type conversion, it is filtered out.<p>Filtering policy:</p><p>- Strict Mode does not affect derived columns (those generated by function transformation).</p><p>- When a column type needs conversion, data of the wrong type is filtered out. You can view it in `ErrorLogUrls` of [SHOW ROUTINE LOAD](../../../sql-manual/sql-statements/data-modification/load-and-export/SHOW-ROUTINE-LOAD).</p><p>- For an imported column type that has range restrictions, if the original data passes type conversion but cannot pass the range restriction, strict mode does not affect it. For example, if the type is `decimal(1,0)` and the original data is 10, the data passes type conversion but is not in the declared range of the column. For details, see [Strict Mode](../../../data-operate/import/handling-messy-data#strict-mode).</p> |
+| timezone | Specifies the timezone used by the import job. The default is the session's timezone parameter. This parameter affects the results of all timezone-related functions involved in the import. |
+| format | Specifies the format of the import data. The default is CSV. JSON format is supported. |
+| jsonpaths | When the import data format is JSON, you can use `jsonpaths` to specify the fields to extract from the JSON data. For example: `"jsonpaths" = "[\"$.userid\",\"$.username\",\"$.age\",\"$.city\"]"` |
+| json_root | When the import data format is JSON, you can use `json_root` to specify the root node of the JSON data. Doris extracts and parses elements from the root node specified by `json_root`. The default is empty. For example: `"json_root" = "$.RECORDS"` |
+| strip_outer_array | When the import data format is JSON, `strip_outer_array` set to true means the JSON data is presented as an array, and each element in the data is treated as a row. The default is false. JSON data in Kafka is often presented as an array, that is, the outermost layer is wrapped with brackets `[]`. In this case, you can specify `"strip_outer_array" = "true"`. For example, the following data is parsed into two rows: `[{"user_id":1,"name":"Emily","age":25},{"user_id":2,"name":"Benjamin","age":35}]` |
+| send_batch_parallelism | Sets the parallelism for sending batch data. If the parallelism value exceeds the BE configuration `max_send_batch_parallelism_per_job`, the BE acting as the coordinator uses the value of `max_send_batch_parallelism_per_job`. |
+| load_to_single_tablet | Supports importing data from a task into only one tablet of the corresponding partition. The default is false. This parameter can only be set when importing data into an OLAP table with random bucketing. |
+| partial_columns | Specifies whether to enable partial column update. The default is false. This parameter can only be set when the table model is Unique and uses Merge on Write. Single-stream multi-table imports do not support this parameter. For details, see [Partial Column Update](../../../data-operate/update/partial-column-update.md). |
+| unique_key_update_mode | Specifies the update mode of a Unique Key table. Options:<ul><li>`UPSERT` (default): standard whole-row insert or update.</li><li>`UPDATE_FIXED_COLUMNS`: partial column update where all rows update the same columns. Equivalent to `partial_columns=true`.</li><li>`UPDATE_FLEXIBLE_COLUMNS`: flexible partial column update where each row can update different columns. Requires JSON format and the table must have `enable_unique_key_skip_bitmap_column=true`. Cannot be used together with `jsonpaths`, `fuzzy_parse`, the `COLUMNS` clause, or the `WHERE` clause.</li></ul>For details, see [Partial Column Update](../../../data-operate/update/partial-column-update#flexible-partial-column-update). |
+| partial_update_new_key_behavior | The handling of newly inserted rows when performing partial column updates on a Unique Merge on Write table. Two types: `APPEND` and `ERROR`.<br/>- `APPEND`: allow inserting new rows.<br/>- `ERROR`: when inserting a new row, the import fails and an error is reported. |
+| max_filter_ratio | The maximum filter ratio allowed within the sampling window. Must be greater than or equal to 0 and less than or equal to 1. The default value is 1.0, which means any error rows are tolerated. The sampling window is `max_batch_rows * 10`. If the number of error rows / total rows in the sampling window exceeds `max_filter_ratio`, the routine load job is paused. Manual intervention is required to check data quality issues. Rows filtered out by the where condition are not counted as error rows. |
+| enclose | Specifies the enclosing character. When CSV data fields contain row separators or column separators, you can specify a single-byte character as the enclosing character to prevent unintended truncation. For example, if the column separator is `,` and the enclosing character is `'`, then for the data `a,'b,c'`, `b,c` is parsed as a single field. |
+| escape | Specifies the escape character. Used to escape characters in a field that are the same as the enclosing character. For example, for the data `a,'b,'c'` with the enclosing character `'`, to parse `b,'c` as a single field, you must specify a single-byte escape character (such as `\`) and modify the data to `a,'b,\'c'`. |
 
-**04 data_source_properties Clause**
+#### data_source_properties Clause
 
-When creating a Routine Load import job, you can specify the data_source_properties clause to specify properties of the Kafka data source. The syntax is as follows:
+When creating a Routine Load import job, you can specify the properties of the Kafka data source with the `data_source_properties` clause. The syntax is as follows:
 
 ```sql
 FROM KAFKA ("<key1>" = "<value1>"[, "<key2>" = "<value2>" ...])
 ```
 
-Specific parameter options for the data_source_properties clause are as follows:
+The specific parameter options of the `data_source_properties` clause are as follows:
 
-| Parameter              | Description                                                         |
-| ----------------- | ------------------------------------------------------------ |
-| kafka_broker_list | Specifies Kafka broker connection information. Format is `<kafka_broker_ip>:<kafka port>`. Multiple brokers are separated by commas. For example, in a Kafka Broker, the default port number is 9092. You can specify Broker List with the following command: `"kafka_broker_list" = "<broker1_ip>:9092,<broker2_ip>:9092"` |
-| kafka_topic       | Specifies the Kafka topic to subscribe to. One import job can only consume one Kafka Topic. |
-| kafka_partitions  | Specifies which Kafka Partitions to subscribe to. If not specified, all partitions are consumed by default. |
-| kafka_offsets     | Starting consumption point (offset) in the Kafka Partition to be consumed. If time is specified, consumption starts from the nearest offset greater than or equal to that time. Offset can specify a specific offset greater than or equal to 0, or use the following formats:<p>- OFFSET_BEGINNING: Subscribe from the position where data exists.</p> <p>- OFFSET_END: Subscribe from the end.</p> <p>- Time format, such as: "2021-05-22 11:00:00"</p> <p>If not specified, it defaults to subscribing to all partitions under the topic starting from `OFFSET_END`.</p> <p>Multiple starting consumption points can be specified, separated by commas, such as: `"kafka_offsets" = "101,0,OFFSET_BEGINNING,OFFSET_END"` or `"kafka_offsets" = "2021-05-22 11:00:00,2021-05-22 11:00:00"`</p> <p>Note that time format and OFFSET format cannot be mixed.</p> |
-| property          | Specifies custom kafka parameters. Functionally equivalent to the "--property" parameter in kafka shell. When the parameter Value is a file, you need to add the keyword "FILE:" before the Value. For creating files, refer to the [CREATE FILE](../../../sql-manual/sql-statements/security/CREATE-FILE) command documentation. For more supported custom parameters, refer to the client configuration items in librdkafka's official [CONFIGURATION](https://github.com/confluentinc/librdkafka/blob/master/CONFIGURATION.md) documentation. For example: `"property.client.id" = "12345"`, `"property.group.id" = "group_id_0"`, `"property.ssl.ca.location" = "FILE:ca.pem"`. |
+| Parameter | Description |
+| ---- | ---- |
+| kafka_broker_list | Specifies the Kafka broker connection information. The format is `<kafka_broker_ip>:<kafka port>`. Multiple brokers are separated by commas. For example: `"kafka_broker_list" = "<broker1_ip>:9092,<broker2_ip>:9092"` |
+| kafka_topic | Specifies the Kafka topic to subscribe to. A single import job can only consume one Kafka topic. |
+| kafka_partitions | Specifies the Kafka partitions to subscribe to. If not specified, all partitions are consumed by default. |
+| kafka_offsets | The starting consumption offset of the Kafka partition to consume. If a time is specified, consumption starts from the most recent offset whose time is greater than or equal to the specified time. The offset can be a specific offset value greater than or equal to 0, or one of the following formats:<p>- `OFFSET_BEGINNING`: subscribe from the position where data is available.</p><p>- `OFFSET_END`: subscribe from the end.</p><p>- A time format, for example: `"2021-05-22 11:00:00"`.</p><p>If not specified, all partitions of the topic are subscribed to from `OFFSET_END` by default. Multiple starting consumption offsets can be specified, separated by commas, for example: `"kafka_offsets" = "101,0,OFFSET_BEGINNING,OFFSET_END"` or `"kafka_offsets" = "2021-05-22 11:00:00,2021-05-22 11:00:00"`.</p><p>Note: the time format cannot be mixed with the OFFSET format.</p> |
+| property | Specifies custom Kafka parameters, equivalent to the `--property` parameter of the kafka shell. When the value of a parameter is a file, prefix the value with the keyword `FILE:`. To create a file, see the [CREATE FILE](../../../sql-manual/sql-statements/security/CREATE-FILE) command. For more supported custom parameters, see the client-side configurations in the official librdkafka [CONFIGURATION](https://github.com/confluentinc/librdkafka/blob/master/CONFIGURATION.md) document. For example: `"property.client.id" = "12345"`, `"property.group.id" = "group_id_0"`, `"property.ssl.ca.location" = "FILE:ca.pem"`. |
 
-By configuring the kafka property parameters in data_source_properties, you can configure secure access options. Currently, Doris supports multiple Kafka security protocols, such as plaintext (default), SSL, PLAIN, Kerberos, etc.
+By configuring the kafka property parameters in `data_source_properties`, you can configure secure access options. Doris currently supports several Kafka security protocols, such as plaintext (default), SSL, PLAIN, and Kerberos.
 
 ### Import Status
 
-The import job status can be viewed through the SHOW ROUTINE LOAD command. The specific syntax is as follows:
+You can view the status of the import job with the `SHOW ROUTINE LOAD` command:
 
 ```sql
 SHOW [ALL] ROUTINE LOAD [FOR jobName];
 ```
 
-For example, SHOW ROUTINE LOAD returns the following result set example:
+Example result:
 
 ```sql
 mysql> SHOW ROUTINE LOAD FOR testdb.example_routine_load\G
@@ -484,36 +523,71 @@ ReasonOfStateChanged:
 1 row in set (0.00 sec)
 ```
 
-Specific display result descriptions are as follows:
+The result columns are described as follows:
 
-| Result Column               | Column Description                                                       |
+| Result column        | Description                                                  |
 | -------------------- | ------------------------------------------------------------ |
-| Id                   | Job ID. Automatically generated by Doris.                                 |
-| Name                 | Job name.                                                   |
-| CreateTime           | Job creation time.                                               |
-| PauseTime            | Most recent job pause time.                                       |
-| EndTime              | Job end time.                                               |
-| DbName               | Corresponding database name                                               |
-| TableName            | Corresponding table name. In multi-table cases, since it's a dynamic table, the specific table name is not displayed; it shows multi-table. |
-| IsMultiTbl           | Whether it's multi-table.                                                 |
-| State                | Job running status. There are 5 states:<p>- NEED_SCHEDULE: Job waiting to be scheduled. After CREATE ROUTINE LOAD or RESUME ROUTINE LOAD, the job first enters the NEED_SCHEDULE state;</p> <p>- RUNNING: Job is running;</p> <p>- PAUSED: Job is paused, can be resumed through RESUME ROUTINE LOAD;</p> <p>- STOPPED: Job has ended and cannot be restarted;</p> <p>- CANCELLED: Job has been cancelled.</p> |
-| DataSourceType       | Data source type: KAFKA.                                          |
-| CurrentTaskNum       | Current number of subtasks.                                             |
-| JobProperties        | Job configuration details.                                               |
-| DataSourceProperties | Data source configuration details.                                             |
-| CustomProperties     | Custom configuration.                                                 |
-| Statistic            | Job running status statistics.                                       |
-| Progress             | Job running progress. For Kafka data sources, displays the currently consumed offset for each partition. For example, `{"0":"2"}` means the consumption progress for Kafka partition 0 is 2. |
-| Lag                  | Job delay status. For Kafka data sources, displays the consumption lag for each partition. For example, `{"0":10}` means the consumption lag for Kafka partition 0 is 10. |
-| ReasonOfStateChanged | Reason for job status change                                           |
-| ErrorLogUrls         | Viewing address for filtered poor-quality data                           |
-| OtherMsg             | Other error messages                                                 |
+| Id                   | The job ID, automatically generated by Doris.                |
+| Name                 | The job name.                                                |
+| CreateTime           | The job creation time.                                       |
+| PauseTime            | The most recent job pause time.                              |
+| EndTime              | The job end time.                                            |
+| DbName               | The corresponding database name.                             |
+| TableName            | The corresponding table name. For multi-table jobs (dynamic tables), the specific table name is not displayed; `multi-table` is displayed instead. |
+| IsMultiTable         | Whether the job is multi-table (single stream, multiple tables). |
+| State                | The job running state. There are 5 states. See [Job State Machine](#job-state-machine) below. |
+| DataSourceType       | The data source type: KAFKA.                                 |
+| CurrentTaskNum       | The current number of subtasks.                              |
+| JobProperties        | Job configuration details.                                   |
+| DataSourceProperties | Data source configuration details.                           |
+| CustomProperties     | Custom configuration.                                        |
+| Statistic            | Statistics on the job running state.                         |
+| Progress             | The job running progress. For Kafka data sources, displays the currently consumed offset for each partition. For example, `{"0":"2"}` means the consumption progress of Kafka partition 0 is 2. |
+| Lag                  | The job latency status. For Kafka data sources, displays the consumption lag for each partition. For example, `{"0":10}` means the consumption lag of Kafka partition 0 is 10. |
+| ReasonOfStateChanged | The reason for the job state change.                         |
+| ErrorLogUrls         | The URL where you can view the filtered low-quality data.    |
+| OtherMsg             | Other error information.                                     |
+
+### Job State Machine
+
+<!-- Knowledge type: State machine -->
+
+A Routine Load job has 5 states. The transitions between states are as follows:
+
+| State | Meaning | Trigger | Possible next state |
+| ---- | ---- | -------- | -------------- |
+| `NEED_SCHEDULE` | The job is waiting to be scheduled. | Initial state after `CREATE ROUTINE LOAD` or `RESUME ROUTINE LOAD`. | `RUNNING` |
+| `RUNNING` | The job is running and continuously consuming Kafka. | Entered after successful scheduling. | `PAUSED` / `STOPPED` |
+| `PAUSED` | The job is paused but not terminated. | Manual `PAUSE ROUTINE LOAD`, or automatically paused on exception. | `NEED_SCHEDULE` (manual `RESUME` or auto-recovery) / `CANCELLED` |
+| `STOPPED` | The job has been stopped and **cannot be restarted**. | `STOP ROUTINE LOAD`. | Terminal state. |
+| `CANCELLED` | The job has been canceled. | Database or table dropped, or other exceptions. | Terminal state. |
 
 ## Import Examples
 
-### Set Maximum Import Error Tolerance Rate
+<!-- Knowledge type: Procedures + Examples -->
 
-1. Sample import data
+The following table lists, by use case, all the typical examples in this section for quick navigation:
+
+| Category | Scenario | Applicable problem |
+| ---- | ---- | -------- |
+| Data quality and filtering | [Set Maximum Import Fault Tolerance](#set-maximum-import-fault-tolerance) | Unstable data quality with dirty data that needs to be tolerated. |
+| Data quality and filtering | [Set Import Filter Conditions](#set-import-filter-conditions) | Import only data that meets the conditions. |
+| Data quality and filtering | [Strict Mode Import](#strict-mode-import) | Strictly filter type conversion errors. |
+| Consumption control | [Consume Data from a Specified Offset](#consume-data-from-a-specified-offset) | Need precise control of the Kafka offset. |
+| Consumption control | [Specify the group.id and client.id of the Consumer Group](#specify-the-groupid-and-clientid-of-the-consumer-group) | Need a custom Kafka consumer identity. |
+| Data write control | [Import Data into a Specified Partition](#import-data-into-a-specified-partition) | Write only into specified partitions of the target table. |
+| Data write control | [Set the Import Timezone](#set-the-import-timezone) | Handle time fields across timezones. |
+| Data write control | [Set merge_type](#set-merge_type) | Delete or merge writes on a Unique Key table. |
+| Data transformation | [Column Mapping and Derived Column Computation in Import](#column-mapping-and-derived-column-computation-in-import) | Compute fields during import. |
+| Data transformation | [Import Data with Enclosing Characters](#import-data-with-enclosing-characters) | CSV fields contain separators. |
+| Complex format | [JSON Format Import](#json-format-import) | Kafka data is in JSON format. |
+| Complex format | [Import Complex Types](#import-complex-types) | Handle types such as Array, Map, Bitmap, and HLL. |
+| Security and multi-table | [Kafka Security Authentication](#kafka-security-authentication) | SSL/Kerberos/PLAIN and other authentication scenarios. |
+| Security and multi-table | [Single-Stream Multi-Table Import](#single-stream-multi-table-import) | Write data from one topic into multiple Doris tables. |
+
+### Set Maximum Import Fault Tolerance
+
+1. Sample import data:
 
     ```sql
     1,Benjamin,18
@@ -521,7 +595,7 @@ Specific display result descriptions are as follows:
     3,Alexander,dirty_data
     ```
 
-2. Table structure
+2. Table schema:
 
     ```sql
     CREATE TABLE demo.routine_test01 (
@@ -533,7 +607,7 @@ Specific display result descriptions are as follows:
     DISTRIBUTED BY HASH(`id`) BUCKETS 1;
     ```
 
-3. Import command
+3. Import command:
 
     ```sql
     CREATE ROUTINE LOAD demo.kafka_job01 ON routine_test01
@@ -549,10 +623,10 @@ Specific display result descriptions are as follows:
                 "kafka_broker_list" = "10.16.10.6:9092",
                 "kafka_topic" = "routineLoad01",
                 "property.kafka_default_offsets" = "OFFSET_BEGINNING"
-            );  
+            );
     ```
 
-4. Import result
+4. Import result:
 
     ```sql
     mysql> select * from routine_test01;
@@ -565,9 +639,9 @@ Specific display result descriptions are as follows:
     2 rows in set (0.01 sec)
     ```
 
-### Consume Data from Specified Consumption Point
+### Consume Data from a Specified Offset
 
-1. Sample import data
+1. Sample import data:
 
     ```sql
     1,Benjamin,18
@@ -578,7 +652,7 @@ Specific display result descriptions are as follows:
     6,Charlotte,28
     ```
 
-2. Table structure
+2. Table schema:
 
     ```sql
     CREATE TABLE demo.routine_test02 (
@@ -590,7 +664,7 @@ Specific display result descriptions are as follows:
     DISTRIBUTED BY HASH(`id`) BUCKETS 1;
     ```
 
-3. Import command
+3. Import command:
 
     ```sql
     CREATE ROUTINE LOAD demo.kafka_job02 ON routine_test02
@@ -604,7 +678,7 @@ Specific display result descriptions are as follows:
             );
     ```
 
-4. Import result
+4. Import result:
 
     ```sql
     mysql> select * from routine_test02;
@@ -618,9 +692,9 @@ Specific display result descriptions are as follows:
     3 rows in set (0.01 sec)
     ```
 
-### Specify Consumer Group's group.id and client.id
+### Specify the group.id and client.id of the Consumer Group
 
-1. Sample import data
+1. Sample import data:
 
     ```sql
     1,Benjamin,18
@@ -628,7 +702,7 @@ Specific display result descriptions are as follows:
     3,Alexander,22
     ```
 
-2. Table structure
+2. Table schema:
 
     ```sql
     CREATE TABLE demo.routine_test03 (
@@ -640,7 +714,7 @@ Specific display result descriptions are as follows:
     DISTRIBUTED BY HASH(`id`) BUCKETS 1;
     ```
 
-3. Import command
+3. Import command:
 
     ```sql
     CREATE ROUTINE LOAD demo.kafka_job03 ON routine_test03
@@ -652,10 +726,10 @@ Specific display result descriptions are as follows:
                 "property.group.id" = "kafka_job03",
                 "property.client.id" = "kafka_client_03",
                 "property.kafka_default_offsets" = "OFFSET_BEGINNING"
-            );  
+            );
     ```
 
-4. Import result
+4. Import result:
 
     ```sql
     mysql> select * from routine_test03;
@@ -671,7 +745,7 @@ Specific display result descriptions are as follows:
 
 ### Set Import Filter Conditions
 
-1. Sample import data
+1. Sample import data:
 
     ```sql
     1,Benjamin,18
@@ -682,7 +756,7 @@ Specific display result descriptions are as follows:
     6,Charlotte,28
     ```
 
-2. Table structure
+2. Table schema:
 
     ```sql
     CREATE TABLE demo.routine_test04 (
@@ -694,7 +768,7 @@ Specific display result descriptions are as follows:
     DISTRIBUTED BY HASH(`id`) BUCKETS 1;
     ```
 
-3. Import command
+3. Import command:
 
     ```sql
     CREATE ROUTINE LOAD demo.kafka_job04 ON routine_test04
@@ -705,10 +779,10 @@ Specific display result descriptions are as follows:
                 "kafka_broker_list" = "10.16.10.6:9092",
                 "kafka_topic" = "routineLoad04",
                 "property.kafka_default_offsets" = "OFFSET_BEGINNING"
-            );  
+            );
     ```
 
-4. Import result
+4. Import result:
 
     ```sql
     mysql> select * from routine_test04;
@@ -722,9 +796,9 @@ Specific display result descriptions are as follows:
     3 rows in set (0.01 sec)
     ```
 
-### Import Specified Partition Data
+### Import Data into a Specified Partition
 
-1. Sample import data
+1. Sample import data:
 
     ```sql
     1,Benjamin,18,2024-02-04 10:00:00
@@ -732,7 +806,7 @@ Specific display result descriptions are as follows:
     3,Alexander,22,2024-02-06 12:00:00
     ```
 
-2. Table structure
+2. Table schema:
 
     ```sql
     CREATE TABLE demo.routine_test05 (
@@ -749,7 +823,7 @@ Specific display result descriptions are as follows:
     DISTRIBUTED BY HASH(`id`) BUCKETS 1;
     ```
 
-3. Import command
+3. Import command:
 
     ```sql
     CREATE ROUTINE LOAD demo.kafka_job05 ON routine_test05
@@ -763,7 +837,7 @@ Specific display result descriptions are as follows:
             );
     ```
 
-4. Import result
+4. Import result:
 
     ```sql
     mysql> select * from routine_test05;
@@ -775,9 +849,9 @@ Specific display result descriptions are as follows:
     1 rows in set (0.01 sec)
     ```
 
-### Set Import Timezone
+### Set the Import Timezone
 
-1. Sample import data
+1. Sample import data:
 
     ```sql
     1,Benjamin,18,2024-02-04 10:00:00
@@ -785,7 +859,7 @@ Specific display result descriptions are as follows:
     3,Alexander,22,2024-02-06 12:00:00
     ```
 
-2. Table structure
+2. Table schema:
 
     ```sql
     CREATE TABLE demo.routine_test06 (
@@ -798,7 +872,7 @@ Specific display result descriptions are as follows:
     DISTRIBUTED BY HASH(id) BUCKETS 1;
     ```
 
-3. Import command
+3. Import command:
 
     ```sql
     CREATE ROUTINE LOAD demo.kafka_job06 ON routine_test06
@@ -812,10 +886,10 @@ Specific display result descriptions are as follows:
                 "kafka_broker_list" = "10.16.10.6:9092",
                 "kafka_topic" = "routineLoad06",
                 "property.kafka_default_offsets" = "OFFSET_BEGINNING"
-            );  
+            );
     ```
 
-4. Import result
+4. Import result:
 
     ```sql
     mysql> select * from routine_test06;
@@ -831,16 +905,16 @@ Specific display result descriptions are as follows:
 
 ### Set merge_type
 
-**Specify merge_type for Delete Operation**
+#### Specify merge_type to Perform Delete
 
-1. Sample import data
+1. Sample import data:
 
     ```sql
     3,Alexander,22
     5,William,26
     ```
 
-    Data in table before import:
+    The data in the table before the import:
 
     ```sql
     mysql> SELECT * FROM routine_test07;
@@ -856,7 +930,7 @@ Specific display result descriptions are as follows:
     +------+----------------+------+
     ```
 
-2. Table structure
+2. Table schema:
 
     ```sql
     CREATE TABLE demo.routine_test07 (
@@ -868,7 +942,7 @@ Specific display result descriptions are as follows:
     DISTRIBUTED BY HASH(id) BUCKETS 1;
     ```
 
-3. Import command
+3. Import command:
 
     ```sql
     CREATE ROUTINE LOAD demo.kafka_job07 ON routine_test07
@@ -879,10 +953,10 @@ Specific display result descriptions are as follows:
                 "kafka_broker_list" = "10.16.10.6:9092",
                 "kafka_topic" = "routineLoad07",
                 "property.kafka_default_offsets" = "OFFSET_BEGINNING"
-            );  
+            );
     ```
 
-4. Import result
+4. Import result:
 
     ```sql
     mysql> SELECT * FROM routine_test07;
@@ -896,9 +970,9 @@ Specific display result descriptions are as follows:
     +------+----------------+------+
     ```
 
-**Specify merge_type for Merge Operation**
+#### Specify merge_type to Perform Merge
 
-1. Sample import data
+1. Sample import data:
 
     ```sql
     1,xiaoxiaoli,28
@@ -909,7 +983,7 @@ Specific display result descriptions are as follows:
     6,dadaliu,38
     ```
 
-    Data in table before import:
+    The data in the table before the import:
 
     ```sql
     mysql> SELECT * FROM routine_test08;
@@ -926,7 +1000,7 @@ Specific display result descriptions are as follows:
     6 rows in set (0.01 sec)
     ```
 
-2. Table structure
+2. Table schema:
 
     ```sql
     CREATE TABLE demo.routine_test08 (
@@ -938,7 +1012,7 @@ Specific display result descriptions are as follows:
     DISTRIBUTED BY HASH(id) BUCKETS 1;
     ```
 
-3. Import command
+3. Import command:
 
     ```sql
     CREATE ROUTINE LOAD demo.kafka_job08 ON routine_test08
@@ -950,10 +1024,10 @@ Specific display result descriptions are as follows:
                 "kafka_broker_list" = "10.16.10.6:9092",
                 "kafka_topic" = "routineLoad08",
                 "property.kafka_default_offsets" = "OFFSET_BEGINNING"
-            );   
+            );
     ```
 
-4. Import result
+4. Import result:
 
     ```sql
     mysql> SELECT * FROM routine_test08;
@@ -969,9 +1043,9 @@ Specific display result descriptions are as follows:
     5 rows in set (0.00 sec)
     ```
 
-**Specify Sequence Column for Merge During Import**
+#### Specify the Sequence Column for Merge Imports
 
-1. Sample import data
+1. Sample import data:
 
     ```sql
     1,xiaoxiaoli,28
@@ -982,7 +1056,7 @@ Specific display result descriptions are as follows:
     6,dadaliu,38
     ```
 
-    Data in table before import:
+    The data in the table before the import:
 
     ```sql
     mysql> SELECT * FROM routine_test09;
@@ -999,7 +1073,7 @@ Specific display result descriptions are as follows:
     6 rows in set (0.01 sec)
     ```
 
-2. Table structure
+2. Table schema:
 
     ```sql
     CREATE TABLE demo.routine_test08 (
@@ -1014,11 +1088,11 @@ Specific display result descriptions are as follows:
     );
     ```
 
-3. Import command
+3. Import command:
 
     ```sql
     CREATE ROUTINE LOAD demo.kafka_job09 ON routine_test09
-            WITH MERGE 
+            WITH MERGE
             COLUMNS TERMINATED BY ",",
             COLUMNS(id, name, age),
             DELETE ON id = 2,
@@ -1033,10 +1107,10 @@ Specific display result descriptions are as follows:
                 "kafka_broker_list" = "10.16.10.6:9092",
                 "kafka_topic" = "routineLoad09",
                 "property.kafka_default_offsets" = "OFFSET_BEGINNING"
-            );   
+            );
     ```
 
-4. Import result
+4. Import result:
 
     ```sql
     mysql> SELECT * FROM routine_test09;
@@ -1052,9 +1126,9 @@ Specific display result descriptions are as follows:
     5 rows in set (0.00 sec)
     ```
 
-### Complete Column Mapping and Derived Column Calculation During Import
+### Column Mapping and Derived Column Computation in Import
 
-1. Sample import data
+1. Sample import data:
 
     ```sql
     1,Benjamin,18
@@ -1062,7 +1136,7 @@ Specific display result descriptions are as follows:
     3,Alexander,22
     ```
 
-2. Table structure
+2. Table schema:
 
     ```sql
     CREATE TABLE demo.routine_test10 (
@@ -1075,7 +1149,7 @@ Specific display result descriptions are as follows:
     DISTRIBUTED BY HASH(`id`) BUCKETS 1;
     ```
 
-3. Import command
+3. Import command:
 
     ```sql
     CREATE ROUTINE LOAD demo.kafka_job10 ON routine_test10
@@ -1086,10 +1160,10 @@ Specific display result descriptions are as follows:
                 "kafka_broker_list" = "10.16.10.6:9092",
                 "kafka_topic" = "routineLoad10",
                 "property.kafka_default_offsets" = "OFFSET_BEGINNING"
-            );  
+            );
     ```
 
-4. Import result
+4. Import result:
 
     ```sql
     mysql> SELECT * FROM routine_test10;
@@ -1105,7 +1179,7 @@ Specific display result descriptions are as follows:
 
 ### Import Data with Enclosing Characters
 
-1. Sample import data
+1. Sample import data:
 
     ```sql
     1,"Benjamin",18
@@ -1113,7 +1187,7 @@ Specific display result descriptions are as follows:
     3,"Alexander",22
     ```
 
-2. Table structure
+2. Table schema:
 
     ```sql
     CREATE TABLE demo.routine_test11 (
@@ -1126,7 +1200,7 @@ Specific display result descriptions are as follows:
     DISTRIBUTED BY HASH(`id`) BUCKETS 1;
     ```
 
-3. Import command
+3. Import command:
 
     ```sql
     CREATE ROUTINE LOAD demo.kafka_job11 ON routine_test11
@@ -1144,7 +1218,7 @@ Specific display result descriptions are as follows:
             );
     ```
 
-4. Import result
+4. Import result:
 
     ```sql
     mysql> SELECT * FROM routine_test11;
@@ -1160,9 +1234,9 @@ Specific display result descriptions are as follows:
 
 ### JSON Format Import
 
-**Import JSON Format Data in Simple Mode**
+#### Import JSON Data in Simple Mode
 
-1. Sample import data
+1. Sample import data:
 
     ```sql
     { "id" : 1, "name" : "Benjamin", "age":18 }
@@ -1170,7 +1244,7 @@ Specific display result descriptions are as follows:
     { "id" : 3, "name" : "Alexander", "age":22 }
     ```
 
-2. Table structure
+2. Table schema:
 
     ```sql
     CREATE TABLE demo.routine_test12 (
@@ -1182,7 +1256,7 @@ Specific display result descriptions are as follows:
     DISTRIBUTED BY HASH(`id`) BUCKETS 1;
     ```
 
-3. Import command
+3. Import command:
 
     ```sql
     CREATE ROUTINE LOAD demo.kafka_job12 ON routine_test12
@@ -1195,10 +1269,10 @@ Specific display result descriptions are as follows:
                 "kafka_broker_list" = "10.16.10.6:9092",
                 "kafka_topic" = "routineLoad12",
                 "property.kafka_default_offsets" = "OFFSET_BEGINNING"
-            );  
+            );
     ```
 
-4. Import result
+4. Import result:
 
     ```sql
     mysql> select * from routine_test12;
@@ -1212,9 +1286,9 @@ Specific display result descriptions are as follows:
     3 rows in set (0.02 sec)
     ```
 
-**Import Complex JSON Format Data in Matching Mode**
+#### Import Complex JSON Data in Match Mode
 
-1. Sample import data
+1. Sample import data:
 
     ```sql
     { "name" : "Benjamin", "id" : 1, "num":180 , "age":18 }
@@ -1222,7 +1296,7 @@ Specific display result descriptions are as follows:
     { "name" : "Alexander", "id" : 3, "num":220 , "age":22 }
     ```
 
-2. Table structure
+2. Table schema:
 
     ```sql
     CREATE TABLE demo.routine_test13 (
@@ -1235,7 +1309,7 @@ Specific display result descriptions are as follows:
     DISTRIBUTED BY HASH(`id`) BUCKETS 1;
     ```
 
-3. Import command
+3. Import command:
 
     ```sql
     CREATE ROUTINE LOAD demo.kafka_job13 ON routine_test13
@@ -1250,10 +1324,10 @@ Specific display result descriptions are as follows:
                 "kafka_broker_list" = "10.16.10.6:9092",
                 "kafka_topic" = "routineLoad13",
                 "property.kafka_default_offsets" = "OFFSET_BEGINNING"
-            );  
+            );
     ```
 
-4. Import result
+4. Import result:
 
     ```sql
     mysql> select * from routine_test13;
@@ -1267,9 +1341,8 @@ Specific display result descriptions are as follows:
     3 rows in set (0.01 sec)
     ```
 
-**Specify JSON Root Node to Import Data**
-
-1. Sample import data
+#### Import Data with a Specified JSON Root Node {#Example-of-importing-Json-format-data}
+1. Sample import data:
 
     ```sql
     {"id": 1231, "source" :{ "id" : 1, "name" : "Benjamin", "age":18 }}
@@ -1277,7 +1350,7 @@ Specific display result descriptions are as follows:
     {"id": 1233, "source" :{ "id" : 3, "name" : "Alexander", "age":22 }}
     ```
 
-2. Table structure
+2. Table schema:
 
     ```sql
     CREATE TABLE demo.routine_test14 (
@@ -1289,7 +1362,7 @@ Specific display result descriptions are as follows:
     DISTRIBUTED BY HASH(`id`) BUCKETS 1;
     ```
 
-3. Import command
+3. Import command:
 
     ```sql
     CREATE ROUTINE LOAD demo.kafka_job14 ON routine_test14
@@ -1303,10 +1376,10 @@ Specific display result descriptions are as follows:
                 "kafka_broker_list" = "10.16.10.6:9092",
                 "kafka_topic" = "routineLoad14",
                 "property.kafka_default_offsets" = "OFFSET_BEGINNING"
-            );  
+            );
     ```
 
-4. Import result
+4. Import result:
 
     ```sql
     mysql> select * from routine_test14;
@@ -1320,9 +1393,9 @@ Specific display result descriptions are as follows:
     3 rows in set (0.01 sec)
     ```
 
-**Complete Column Mapping and Derived Column Calculation During Import**
+#### Column Mapping and Derived Column Computation in Import (JSON)
 
-1. Sample import data
+1. Sample import data:
 
     ```sql
     { "id" : 1, "name" : "Benjamin", "age":18 }
@@ -1330,7 +1403,7 @@ Specific display result descriptions are as follows:
     { "id" : 3, "name" : "Alexander", "age":22 }
     ```
 
-2. Table structure
+2. Table schema:
 
     ```sql
     CREATE TABLE demo.routine_test15 (
@@ -1343,7 +1416,7 @@ Specific display result descriptions are as follows:
     DISTRIBUTED BY HASH(`id`) BUCKETS 1;
     ```
 
-3. Import command
+3. Import command:
 
     ```sql
     CREATE ROUTINE LOAD demo.kafka_job15 ON routine_test15
@@ -1357,10 +1430,10 @@ Specific display result descriptions are as follows:
                 "kafka_broker_list" = "10.16.10.6:9092",
                 "kafka_topic" = "routineLoad15",
                 "property.kafka_default_offsets" = "OFFSET_BEGINNING"
-            );  
+            );
     ```
 
-4. Import result
+4. Import result:
 
     ```sql
     mysql> select * from routine_test15;
@@ -1374,9 +1447,9 @@ Specific display result descriptions are as follows:
     3 rows in set (0.01 sec)
     ```
 
-**Flexible Partial Column Update**
+#### Flexible Partial Column Update
 
-This example demonstrates how to use flexible partial column update, where each row can update different columns. This is very useful in CDC scenarios where change records may contain different fields.
+This example demonstrates how to use flexible partial column update, where each row can update different columns. This is very useful in **CDC scenarios**, because change records may contain different fields.
 
 1. Sample import data (each JSON record updates different columns):
 
@@ -1388,16 +1461,16 @@ This example demonstrates how to use flexible partial column update, where each 
     {"id": 4, "__DORIS_DELETE_SIGN__": 1}
     ```
 
-2. Create table (must enable Merge-on-Write and skip bitmap column):
+2. Create the table (Merge-on-Write and the skip bitmap column must be enabled):
 
     ```sql
     CREATE TABLE demo.routine_test_flexible (
         id           INT            NOT NULL  COMMENT "id",
-        name         VARCHAR(30)              COMMENT "Name",
-        age          INT                      COMMENT "Age",
-        city         VARCHAR(50)              COMMENT "City",
-        balance      DECIMAL(10,2)            COMMENT "Balance",
-        last_active  DATETIME                 COMMENT "Last Active Time"
+        name         VARCHAR(30)              COMMENT "name",
+        age          INT                      COMMENT "age",
+        city         VARCHAR(50)              COMMENT "city",
+        balance      DECIMAL(10,2)            COMMENT "balance",
+        last_active  DATETIME                 COMMENT "last active time"
     )
     UNIQUE KEY(`id`)
     DISTRIBUTED BY HASH(`id`) BUCKETS 1
@@ -1449,13 +1522,15 @@ This example demonstrates how to use flexible partial column update, where each 
     3 rows in set (0.01 sec)
     ```
 
-    Note: The row with `id=4` was deleted due to `__DORIS_DELETE_SIGN__`, and each row only updated the columns contained in its corresponding JSON record.
+    :::info Note
+    The row with `id=4` is deleted because of `__DORIS_DELETE_SIGN__`. Each row only updates the columns included in its corresponding JSON record.
+    :::
 
 ### Import Complex Types
 
-**Import Array Data Type**
+#### Import Array Data Type
 
-1. Sample import data
+1. Sample import data:
 
     ```sql
     { "id" : 1, "name" : "Benjamin", "age":18, "array":[1,2,3,4,5]}
@@ -1463,7 +1538,7 @@ This example demonstrates how to use flexible partial column update, where each 
     { "id" : 3, "name" : "Alexander", "age":22, "array":[11,12,13,14,15]}
     ```
 
-2. Table structure
+2. Table schema:
 
     ```sql
     CREATE TABLE demo.routine_test16
@@ -1477,7 +1552,7 @@ This example demonstrates how to use flexible partial column update, where each 
     DISTRIBUTED BY HASH(`id`) BUCKETS 1;
     ```
 
-3. Import command
+3. Import command:
 
     ```sql
     CREATE ROUTINE LOAD demo.kafka_job16 ON routine_test16
@@ -1490,10 +1565,10 @@ This example demonstrates how to use flexible partial column update, where each 
                 "kafka_broker_list" = "10.16.10.6:9092",
                 "kafka_topic" = "routineLoad16",
                 "property.kafka_default_offsets" = "OFFSET_BEGINNING"
-            );  
+            );
     ```
 
-4. Import result
+4. Import result:
 
     ```sql
     mysql> select * from routine_test16;
@@ -1507,9 +1582,9 @@ This example demonstrates how to use flexible partial column update, where each 
     3 rows in set (0.00 sec)
     ```
 
-**Import Map Data Type**
+#### Import Map Data Type
 
-1. Sample import data
+1. Sample import data:
 
     ```sql
     { "id" : 1, "name" : "Benjamin", "age":18, "map":{"a": 100, "b": 200}}
@@ -1517,7 +1592,7 @@ This example demonstrates how to use flexible partial column update, where each 
     { "id" : 3, "name" : "Alexander", "age":22, "map":{"e": 500, "f": 600}}
     ```
 
-2. Table structure
+2. Table schema:
 
     ```sql
     CREATE TABLE demo.routine_test17 (
@@ -1530,7 +1605,7 @@ This example demonstrates how to use flexible partial column update, where each 
     DISTRIBUTED BY HASH(`id`) BUCKETS 1;
     ```
 
-3. Import command
+3. Import command:
 
     ```sql
     CREATE ROUTINE LOAD demo.kafka_job17 ON routine_test17
@@ -1543,10 +1618,10 @@ This example demonstrates how to use flexible partial column update, where each 
                 "kafka_broker_list" = "10.16.10.6:9092",
                 "kafka_topic" = "routineLoad17",
                 "property.kafka_default_offsets" = "OFFSET_BEGINNING"
-            );  
+            );
     ```
 
-4. Import result
+4. Import result:
 
     ```sql
     mysql> select * from routine_test17;
@@ -1560,9 +1635,9 @@ This example demonstrates how to use flexible partial column update, where each 
     3 rows in set (0.01 sec)
     ```
 
-**Import Bitmap Data Type**
+#### Import Bitmap Data Type
 
-1. Sample import data
+1. Sample import data:
 
     ```sql
     { "id" : 1, "name" : "Benjamin", "age":18, "bitmap_id":243}
@@ -1570,7 +1645,7 @@ This example demonstrates how to use flexible partial column update, where each 
     { "id" : 3, "name" : "Alexander", "age":22, "bitmap_id":8573}
     ```
 
-2. Table structure
+2. Table schema:
 
     ```sql
     CREATE TABLE demo.routine_test18 (
@@ -1584,7 +1659,7 @@ This example demonstrates how to use flexible partial column update, where each 
     DISTRIBUTED BY HASH(`id`) BUCKETS 1;
     ```
 
-3. Import command
+3. Import command:
 
     ```sql
     CREATE ROUTINE LOAD demo.kafka_job18 ON routine_test18
@@ -1601,13 +1676,13 @@ This example demonstrates how to use flexible partial column update, where each 
             );
     ```
 
-4. Import result
+4. Import result:
 
     ```sql
     mysql> select id, BITMAP_UNION_COUNT(pv) over(order by id) uv from(
         ->    select id, BITMAP_UNION(device_id) as pv
-        ->    from routine_test18 
-        -> group by id 
+        ->    from routine_test18
+        -> group by id
         -> ) final;
     +------+------+
     | id   | uv   |
@@ -1619,9 +1694,9 @@ This example demonstrates how to use flexible partial column update, where each 
     3 rows in set (0.00 sec)
     ```
 
-**Import HLL Data Type**
+#### Import HLL Data Type
 
-1. Sample import data
+1. Sample import data:
 
     ```sql
     2022-05-05,10001,Test01,Beijing,windows
@@ -1634,7 +1709,7 @@ This example demonstrates how to use flexible partial column update, where each 
     2022-05-06,10004,Test01,Shaanxi,windows
     ```
 
-2. Table structure
+2. Table schema:
 
     ```sql
     create table demo.routine_test19 (
@@ -1649,7 +1724,7 @@ This example demonstrates how to use flexible partial column update, where each 
     distributed by hash(id) buckets 10;
     ```
 
-3. Import command
+3. Import command:
 
     ```sql
     CREATE ROUTINE LOAD demo.kafka_job19 ON routine_test19
@@ -1660,24 +1735,24 @@ This example demonstrates how to use flexible partial column update, where each 
                 "kafka_broker_list" = "10.16.10.6:9092",
                 "kafka_topic" = "routineLoad19",
                 "property.kafka_default_offsets" = "OFFSET_BEGINNING"
-            );  
+            );
     ```
 
-4. Import result
+4. Import result:
 
     ```sql
     mysql> select * from routine_test19;
     +------------+-------+----------+----------+---------+------+
     | dt         | id    | name     | province | os      | pv   |
     +------------+-------+----------+----------+---------+------+
-    | 2022-05-05 | 10001 | Test01   | Beijing  | windows | NULL |
-    | 2022-05-06 | 10001 | Test01   | Shanghai | windows | NULL |
-    | 2022-05-05 | 10002 | Test01   | Beijing  | linux   | NULL |
-    | 2022-05-06 | 10002 | Test01   | Shanghai | linux   | NULL |
-    | 2022-05-05 | 10004 | Test01   | Hebei    | windows | NULL |
-    | 2022-05-06 | 10004 | Test01   | Shaanxi  | windows | NULL |
-    | 2022-05-05 | 10003 | Test01   | Beijing  | macos   | NULL |
-    | 2022-05-06 | 10003 | Test01   | Jiangsu  | macos   | NULL |
+    | 2022-05-05 | 10001 | Test01   | Beijing     | windows | NULL |
+    | 2022-05-06 | 10001 | Test01   | Shanghai    | windows | NULL |
+    | 2022-05-05 | 10002 | Test01   | Beijing     | linux   | NULL |
+    | 2022-05-06 | 10002 | Test01   | Shanghai    | linux   | NULL |
+    | 2022-05-05 | 10004 | Test01   | Heibei      | windows | NULL |
+    | 2022-05-06 | 10004 | Test01   | Shanxi      | windows | NULL |
+    | 2022-05-05 | 10003 | Test01   | Beijing     | macos   | NULL |
+    | 2022-05-06 | 10003 | Test01   | Jiangsu     | macos   | NULL |
     +------------+-------+----------+----------+---------+------+
     8 rows in set (0.01 sec)
 
@@ -1692,11 +1767,13 @@ This example demonstrates how to use flexible partial column update, where each 
 
 ### Kafka Security Authentication
 
-**Import Data from SSL-Authenticated Kafka**
+Doris supports the following Kafka security protocol access methods. Import examples and parameter descriptions are given below.
 
-Sample import command:
+#### Import Kafka Data with SSL Authentication
 
-```SQL
+Example import command:
+
+```sql
 CREATE ROUTINE LOAD demo.kafka_job20 ON routine_test20
         PROPERTIES
         (
@@ -1711,24 +1788,24 @@ CREATE ROUTINE LOAD demo.kafka_job20 ON routine_test20
             "property.ssl.certificate.location" = "FILE:client.pem",
             "property.ssl.key.location" = "FILE:client.key",
             "property.ssl.key.password" = "ssl_passwd"
-        );  
+        );
 ```
 
-Parameter description:
+Parameter descriptions:
 
-| Parameter                              | Description                                                         |
+| Parameter                         | Description                                                  |
 | --------------------------------- | ------------------------------------------------------------ |
-| property.security.protocol        | Security protocol used, such as SSL in the above example                     |
-| property.ssl.ca.location          | Location of CA (Certificate Authority) certificate                        |
-| property.ssl.certificate.location | (Required only if Kafka server has client authentication enabled) Location of Client's public key |
-| property.ssl.key.location         | (Required only if Kafka server has client authentication enabled) Location of Client's private key |
-| property.ssl.key.password         | (Required only if Kafka server has client authentication enabled) Password for Client's private key |
+| property.security.protocol        | The security protocol used. SSL is used in the example above. |
+| property.ssl.ca.location          | The location of the CA (Certificate Authority) certificate.  |
+| property.ssl.certificate.location | (Required only when client authentication is enabled on the Kafka server) The location of the client's public key. |
+| property.ssl.key.location         | (Required only when client authentication is enabled on the Kafka server) The location of the client's private key. |
+| property.ssl.key.password         | (Required only when client authentication is enabled on the Kafka server) The password of the client's private key. |
 
-**Import Data from Kerberos-Authenticated Kafka**
+#### Import Kafka Data with Kerberos Authentication
 
-Sample import command:
+Example import command:
 
-```SQL
+```sql
 CREATE ROUTINE LOAD demo.kafka_job21 ON routine_test21
         PROPERTIES
         (
@@ -1742,25 +1819,27 @@ CREATE ROUTINE LOAD demo.kafka_job21 ON routine_test21
             "property.sasl.kerberos.service.name" = "kafka",
             "property.sasl.kerberos.keytab"="/opt/third/kafka/kerberos/kafka_client.keytab",
             "property.sasl.kerberos.principal" = "clients/stream.dt.local@EXAMPLE.COM"
-        );  
+        );
 ```
 
-Parameter description:
+Parameter descriptions:
 
-| Parameter                                | Description                                                |
+| Parameter                           | Description                                         |
 | ----------------------------------- | --------------------------------------------------- |
-| property.security.protocol          | Security protocol used, such as SASL_PLAINTEXT in the above example |
-| property.sasl.kerberos.service.name | Specifies broker service name, default is Kafka              |
-| property.sasl.kerberos.keytab       | Location of keytab file                                   |
-| property.sasl.kerberos.principal    | Specifies kerberos principal                             |
+| property.security.protocol          | The security protocol used. SASL_PLAINTEXT is used in the example above. |
+| property.sasl.kerberos.service.name | Specifies the broker service name. The default is Kafka. |
+| property.sasl.kerberos.keytab       | The location of the keytab file.                    |
+| property.sasl.kerberos.principal    | Specifies the kerberos principal.                   |
 
-> It's recommended to set `rdnbs=true` in `krb5.conf`. Otherwise, you may encounter an error: `Server kafka/15.5.4.68@EXAMPLE.COM not found in Kerberos database`
+:::tip Tip
+It is recommended to set `rdnbs=true` in `krb5.conf`. Otherwise, the following error may occur: `Server kafka/15.5.4.68@EXAMPLE.COM not found in Kerberos database`
+:::
 
-**Import from PLAIN-Authenticated Kafka Cluster**
+#### Import a Kafka Cluster with PLAIN Authentication
 
-Sample import command:
+Example import command:
 
-```SQL
+```sql
 CREATE ROUTINE LOAD demo.kafka_job22 ON routine_test22
         PROPERTIES
         (
@@ -1774,23 +1853,48 @@ CREATE ROUTINE LOAD demo.kafka_job22 ON routine_test22
             "property.sasl.mechanism"="PLAIN",
             "property.sasl.username"="admin",
             "property.sasl.password"="admin"
-        );  
+        );
 ```
 
-Parameter description:
+Parameter descriptions:
 
-| Parameter                       | Description                                                |
+| Parameter                  | Description                                         |
 | -------------------------- | --------------------------------------------------- |
-| property.security.protocol | Security protocol used, such as SASL_PLAINTEXT in the above example |
-| property.sasl.mechanism    | Specifies SASL authentication mechanism as PLAIN                          |
-| property.sasl.username     | SASL username                                       |
-| property.sasl.password     | SASL password                                         |
+| property.security.protocol | The security protocol used. SASL_PLAINTEXT is used in the example above. |
+| property.sasl.mechanism    | Specifies the SASL authentication mechanism as PLAIN. |
+| property.sasl.username     | The SASL username.                                  |
+| property.sasl.password     | The SASL password.                                  |
 
-### Multi-Table Import from Single Stream
+#### Connect to a Kafka Service with Encrypted Authentication (StreamNative Example)
 
-Create a Kafka routine dynamic multi-table import task named test1 for example_db. Specify column separator and group.id and client.id, automatically consume all partitions by default, and start subscribing from the position where data exists (OFFSET_BEGINNING).
+Taking access to the StreamNative messaging service as an example:
 
-Here we assume we need to import data from Kafka into both tbl1 and tbl2 tables in example_db. We create a routine import task named test1 that imports data from the Kafka Topic named `my_topic` into both tbl1 and tbl2 simultaneously. This allows one routine import task to import Kafka data into two tables.
+```sql
+CREATE ROUTINE LOAD example_db.test1 ON example_tbl
+COLUMNS(user_id, name, age)
+FROM KAFKA (
+    "kafka_broker_list" = "pc-xxxx.aws-mec1-test-xwiqv.aws.snio.cloud:9093",
+    "kafka_topic" = "my_topic",
+    "property.security.protocol" = "SASL_SSL",
+    "property.sasl.mechanism" = "PLAIN",
+    "property.sasl.username" = "user",
+    "property.sasl.password" = "token:eyJhbxxx",
+    "property.group.id" = "my_group_id_1",
+    "property.client.id" = "my_client_id_1",
+    "property.enable.ssl.certificate.verification" = "false"
+);
+```
+
+:::caution Note
+- If a trusted CA certificate path is not configured on the BE side, set `"property.enable.ssl.certificate.verification" = "false"` to skip server certificate verification.
+- Otherwise, configure the trusted CA certificate path: `"property.ssl.ca.location" = "/path/to/ca-cert.pem"`.
+:::
+
+### Single-Stream Multi-Table Import
+
+Create a Kafka routine dynamic multi-table import task named `test1` for `example_db`. Specify `group.id` and `client.id`, automatically consume all partitions by default, and subscribe from the position where data is available (`OFFSET_BEGINNING`).
+
+Suppose you need to import data from Kafka into the `tbl1` and `tbl2` tables in `example_db`. You can create a routine load task named `test1` to import the data of the Kafka topic `my_topic` into both `tbl1` and `tbl2`:
 
 ```sql
 CREATE ROUTINE LOAD example_db.test1
@@ -1802,11 +1906,15 @@ FROM KAFKA
 );
 ```
 
-At this point, the data in Kafka needs to contain table name information. Currently, dynamic table names can only be obtained from Kafka's Value, and must conform to this format: in JSON format: `table_name|{"col1": "val1", "col2": "val2"}`, where `tbl_name` is the table name, with `|` as the separator between table name and table data. CSV format data is similar, for example: `table_name|val1,val2,val3`. Note that the `table_name` here must match the table name in Doris, otherwise import will fail. Note that dynamic tables do not support the column_mapping configuration introduced later.
+In this case, the data in Kafka must include the table name. Currently, the dynamic table name is only supported by extracting it from the Kafka Value, and the data must follow this format. For JSON: `table_name|{"col1": "val1", "col2": "val2"}`, where `tbl_name` is the table name and `|` is the separator between the table name and the table data. CSV-formatted data is similar, for example: `table_name|val1,val2,val3`.
+
+:::caution Note
+The `table_name` here must match the table name in Doris exactly, otherwise the import will fail. Dynamic tables do not support `column_mapping`.
+:::
 
 ### Strict Mode Import
 
-Create a Kafka routine import task named test1 for example_tbl in example_db. The import task is in strict mode.
+Create a Kafka routine load task named `test1` for `example_tbl` in `example_db`, with strict mode enabled:
 
 ```sql
 CREATE ROUTINE LOAD example_db.test1 ON example_tbl
@@ -1824,30 +1932,62 @@ FROM KAFKA
 );
 ```
 
-## Connect to Encrypted and Authenticated Kafka Service
+## Frequently Asked Questions (FAQ)
 
-Here we use accessing StreamNative messaging service as an example:
+<!-- Knowledge type: FAQ / Troubleshooting -->
+<!-- Applicable scenarios: Troubleshooting / Error diagnosis -->
 
+### What should I do if a Routine Load job automatically enters the PAUSED state?
+
+This is usually caused by data quality issues or Kafka-side exceptions:
+
+1. Run `SHOW ROUTINE LOAD FOR <job_name>` to view `ReasonOfStateChanged` and `ErrorLogUrls`.
+2. For dirty data, increase `max_filter_ratio` and `max_error_number` as appropriate.
+3. For Kafka exceptions, after confirming that the broker and topic are reachable, run `RESUME ROUTINE LOAD` to recover.
+
+### How to handle the `Offset out of range` or `out of range` error?
+
+This usually means the recorded offset has already been cleared from Kafka (purged due to retention):
+
+1. Pause the job: `PAUSE ROUTINE LOAD FOR <job_name>`.
+2. Use `ALTER ROUTINE LOAD` to reset `kafka_offsets` to a valid position (such as `OFFSET_BEGINNING` or a specific offset).
+3. Run `RESUME ROUTINE LOAD` to recover the job.
+
+### `Server kafka/xxx@EXAMPLE.COM not found in Kerberos database`?
+
+In Kerberos authentication scenarios, set `rdnbs=true` in `krb5.conf`.
+
+### `Server certificate verification failed` or other SSL errors?
+
+If a trusted CA certificate is not configured on the BE side, set `"property.enable.ssl.certificate.verification" = "false"`, or explicitly specify `"property.ssl.ca.location" = "/path/to/ca-cert.pem"`.
+
+### The desired concurrency (`desired_concurrent_number`) does not take effect?
+
+The actual concurrency is determined by the minimum of the following three:
+
+```text
+min(topic_partition_num, desired_concurrent_number, max_routine_load_task_concurrent_num)
 ```
-CREATE ROUTINE LOAD example_db.test1 ON example_tbl
-COLUMNS(user_id, name, age) 
-FROM KAFKA (
-    "kafka_broker_list" = "pc-xxxx.aws-mec1-test-xwiqv.aws.snio.cloud:9093",
-    "kafka_topic" = "my_topic",
-    "property.security.protocol" = "SASL_SSL",
-    "property.sasl.mechanism" = "PLAIN",
-    "property.sasl.username" = "user",
-    "property.sasl.password" = "token:eyJhbxxx",
-    "property.group.id" = "my_group_id_1",
-    "property.client.id" = "my_client_id_1",
-    "property.enable.ssl.certificate.verification" = "false"
-);
-```
 
-Note: If the trusted CA certificate path is not configured on the BE side, you need to set `"property.enable.ssl.certificate.verification" = "false"` to not verify whether the server certificate is trusted.
+Check the number of partitions of the Kafka topic and the FE configuration `max_routine_load_task_concurrent_num`.
 
-Otherwise, you need to configure the trusted CA certificate path: `"property.ssl.ca.location" = "/path/to/ca-cert.pem"`.
+### How to use an older Kafka version (< 0.10.0.0)?
+
+Set `kafka_broker_version_fallback` in the BE configuration, or specify the compatible version with `property.broker.version.fallback` when creating the job.
+
+### How to specify the target table for single-stream multi-table import?
+
+The Kafka message Value must contain the table name in the form `table_name|<data>`, and the table name must strictly match the table name in Doris. Dynamic tables do not support `column_mapping`.
+
+### How to view the dirty data that failed to import?
+
+Run `SHOW ROUTINE LOAD FOR <job_name>` and check the `ErrorLogUrls` field in the result. Visit that URL through a browser or `wget` to obtain a sample of the filtered error data and the cause of the error.
+
+### Must I pause a Routine Load job before modifying it?
+
+Yes. The `ALTER ROUTINE LOAD` command requires the job to be in the `PAUSED` state. The modification flow is: `PAUSE ROUTINE LOAD` -> `ALTER ROUTINE LOAD` -> `RESUME ROUTINE LOAD`.
 
 ## More Help
 
-Refer to the SQL manual [Routine Load](../../../sql-manual/sql-statements/data-modification/load-and-export/CREATE-ROUTINE-LOAD). You can also enter `HELP ROUTINE LOAD` in the client command line to get more help information.
+- SQL manual reference: [CREATE ROUTINE LOAD](../../../sql-manual/sql-statements/data-modification/load-and-export/CREATE-ROUTINE-LOAD)
+- At the client command line, run `HELP ROUTINE LOAD` for more help information.

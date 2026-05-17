@@ -36,7 +36,7 @@ const DEPLOYMENT_CARDS: DeploymentCardItem[] = [
         },
         cta: {
             label: 'Deploy Now!',
-            href: '/docs-next/dev/install/intro',
+            href: '/docs/dev/install/intro',
         },
     },
     {
@@ -53,7 +53,7 @@ const DEPLOYMENT_CARDS: DeploymentCardItem[] = [
         },
         cta: {
             label: 'Deploy Now!',
-            href: '/docs-next/dev/install/intro',
+            href: '/docs/dev/install/intro',
         },
     },
 ];

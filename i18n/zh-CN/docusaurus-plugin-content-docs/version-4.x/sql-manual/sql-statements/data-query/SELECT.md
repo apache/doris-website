@@ -63,7 +63,7 @@ SELECT
 
 12. `[TABLET tids] TABLESAMPLE n [ROWS | PERCENT] [REPEATABLE seek]`: 在 FROM 子句中限制表的读取行数，根据指定的行数或百分比从表中伪随机的选择数个 Tablet，REPEATABLE 指定种子数可使选择的样本再次返回，此外也可手动指定 TableID，注意这只能用于 OLAP 表。
 
-13. `hint_statement`: 在 selectlist 前面使用 hint 表示可以通过 hint 去影响优化器的行为以期得到想要的执行计划，详情可参考[joinHint 使用文档](https://doris.apache.org/zh-CN/docs/2.0/query/join-optimization/join-hint)。
+13. `hint_statement`: 在 selectlist 前面使用 hint 表示可以通过 hint 去影响优化器的行为以期得到想要的执行计划，详情可参考[joinHint 使用文档](../../../query-acceleration/hints/distribute-hint.md)
     
 **语法约束：**
 

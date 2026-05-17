@@ -11,10 +11,6 @@
 
 该函数与 MySQL 中的 [DEFAULT 函数](https://dev.mysql.com/doc/refman/8.4/en/miscellaneous-functions.html#function_default) 行为一致
 
-:::note
-该函数从4.0.4起开始支持
-:::
-
 ## 语法
 
 ```sql
@@ -139,7 +135,7 @@ LIMIT 1;
 3. 非常量默认值(`CURRENT_TIMESTAMP`, `CURRENT_DATE`)举例：
 ```sql
 CREATE TABLE test_default_time(
-    tm DATETIME(5) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+	tm DATETIME(5) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     dt DATE DEFAULT CURRENT_DATE
 ) PROPERTIES( 'replication_num' = '1' );
 

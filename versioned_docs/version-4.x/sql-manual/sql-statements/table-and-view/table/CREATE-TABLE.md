@@ -211,11 +211,11 @@ CREATE TABLE <new_table_name> LIKE <existing_table_name>
 
 **<key_type>**
 
-> The data model of the table. Optional values are DUPLICATE (detail model), UNIQUE (primary key model), AGGREGATE (aggregation model). For details on data models, see the [Data Model](../../../../table-design/data-model/overview.md) section.
+> The data model of the table. Optional values are DUPLICATE (detail model), UNIQUE (primary key model), AGGREGATE (aggregation model). For details on data models, see the [Data Model](../../../../table-design/data-model/intro.mdx) section.
 
 **<key_cols>**
 
-> The key columns of the table. In Doris, Key columns must be the first K columns of the table. Data in a single tablet will be kept in order by these columns. For restrictions on Keys and how to choose Key columns, see the various subsections in the [Data Model](../../../../table-design/data-model/overview.md) section.
+> The key columns of the table. In Doris, Key columns must be the first K columns of the table. Data in a single tablet will be kept in order by these columns. For restrictions on Keys and how to choose Key columns, see the various subsections in the [Data Model](../../../../table-design/data-model/intro.mdx) section.
 
 **<cluster_cols>**
 
@@ -231,8 +231,7 @@ CREATE TABLE <new_table_name> LIKE <existing_table_name>
 
 > Bucketing columns and bucket counts. Detail model bucket columns can be any columns, aggregation model and primary key model bucket columns must be consistent with key columns. Bucket count is any positive integer. For details on bucketing, see the [Manual Bucketing](../../../../table-design/data-partitioning/data-bucketing#manual-setting-bucket-count) and [Automatic Bucketing](../../../../table-design/data-partitioning/data-bucketing#automatic-setting-bucket-count) sections.
 
-### Column Default Value Related Parameters
-
+### Column Default Value Related Parameters {#Column-Default-Value-Related-Parameters}
 **[ GENERATED ALWAYS ] AS (<col_generate_expression>)**
 
 > Generated column. Uses the columns before the current column to generate data for the current column through the expression `<col_generate_expression>`. A generated column is a special type of database table column whose value is calculated from the values of other columns, rather than being directly inserted or updated by the user. This feature supports pre-calculating the results of expressions and storing them in the database, suitable for scenarios that require frequent querying or complex calculations.

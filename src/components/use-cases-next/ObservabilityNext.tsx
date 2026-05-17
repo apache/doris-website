@@ -62,6 +62,11 @@ function BoltIcon({ size = 24, color = '#FFD23F', className }: BoltIconProps): J
     );
 }
 
+interface FooterItem {
+    label: string;
+    href?: string;
+}
+
 interface CoverFlowItem {
     id: string;
     num: string;
@@ -69,7 +74,7 @@ interface CoverFlowItem {
     desc: string;
     footer: {
         label: string;
-        items: string[];
+        items: FooterItem[];
     };
 }
 
@@ -167,7 +172,18 @@ function CoverFlow({
                                 <div className={footerLabelClass}>{it.footer.label}</div>
                                 <ul>
                                     {it.footer.items.map(x => (
-                                        <li key={x}>{x}</li>
+                                        <li key={x.label}>
+                                            {x.href !== undefined ? (
+                                                <a
+                                                    href={x.href}
+                                                    onClick={e => e.stopPropagation()}
+                                                >
+                                                    {x.label}
+                                                </a>
+                                            ) : (
+                                                x.label
+                                            )}
+                                        </li>
                                     ))}
                                 </ul>
                             </div>
@@ -246,7 +262,7 @@ interface Capability {
     title: ReactNode;
     desc: string;
     poweredLabel: string;
-    poweredBy: string[];
+    poweredBy: FooterItem[];
 }
 
 const valueCards: ValueCard[] = [
@@ -445,11 +461,11 @@ const capabilities: Capability[] = [
             'Apache Doris ingests high-volume telemetry from Kafka, CDC pipelines, and streaming APIs with low latency. Logs, metrics, traces, and AI agent events become queryable in near real time for fast debugging, monitoring, and cost analysis.',
         poweredLabel: 'Powered by',
         poweredBy: [
-            'Stream Load via HTTP',
-            'Kafka/CDC Integration',
-            'Group Commit',
-            'Prepared Statement',
-            'Vertical',
+            { label: 'Stream Load via HTTP', href: '/docs/dev/key-features/stream-load' },
+            { label: 'Kafka/CDC Integration', href: '/docs/dev/key-features/kafka-cdc-integration' },
+            { label: 'Group Commit', href: '/docs/dev/key-features/group-commit' },
+            { label: 'Prepared Statement', href: '/docs/dev/key-features/prepared-statement' },
+            { label: 'Vertical Compaction', href: '/docs/dev/key-features/vertical-compaction' },
         ],
     },
     {
@@ -466,7 +482,7 @@ const capabilities: Capability[] = [
             'VARIANT lets teams query JSON and semi-structured observability data as it evolves, from logs and traces to tool outputs and agent events, without rebuilding schemas or ETL pipelines.',
         poweredLabel: 'Powered by',
         poweredBy: [
-            'VARIANT data type',
+            { label: 'VARIANT data type', href: '/docs/dev/key-features/variant-data-type' },
         ],
     },
     {
@@ -483,9 +499,9 @@ const capabilities: Capability[] = [
             'Search massive volumes of logs, prompts, responses and tool outputs with inverted indexes, tokenized text search and BM25 relevance scoring, so teams can quickly find failures and understand agent behavior.',
         poweredLabel: 'Powered by',
         poweredBy: [
-            'Inverted Index',
-            'Full-text Search',
-            'BM25',
+            { label: 'Inverted Index', href: '/docs/dev/key-features/inverted-index' },
+            { label: 'Full-text Search', href: '/docs/dev/key-features/full-text-search' },
+            { label: 'BM25', href: '/docs/dev/key-features/bm25' },
         ],
     },
     {
@@ -502,7 +518,7 @@ const capabilities: Capability[] = [
             'Doris accelerates dashboard analytics over observability metrics with a high-performance OLAP engine, materialized views, and transparent SQL query rewriting — from error rates and latency to token usage, model cost, and SLA trends.',
         poweredLabel: 'Powered by',
         poweredBy: [
-            'Prepared Statement',
+            { label: 'Prepared Statement', href: '/docs/dev/key-features/prepared-statement' },
         ],
     },
     {
@@ -519,9 +535,10 @@ const capabilities: Capability[] = [
             'Doris 4.0 unifies structured filtering, full-text search and vector similarity search in SQL. Teams can search prompts, responses, tool outputs and traces by metadata, keywords and semantic similarity, all in one query.',
         poweredLabel: 'Powered by',
         poweredBy: [
-            'Vector Index',
-            'Embedding',
-            'Reciprocal Rank Fusion',
+            { label: 'Hybrid Search', href: '/docs/dev/key-features/hybrid-search' },
+            { label: 'Vector Index', href: '/docs/dev/key-features/vector-index' },
+            { label: 'Embedding', href: '/docs/dev/key-features/embedding' },
+            { label: 'Reciprocal Rank Fusion', href: '/docs/dev/key-features/reciprocal-rank-fusion' },
         ],
     },
 ];
@@ -559,7 +576,10 @@ function ValueSection(): JSX.Element {
         num: c.num,
         title: c.title,
         desc: c.desc,
-        footer: { label: c.scenariosLabel, items: c.scenarios },
+        footer: {
+            label: c.scenariosLabel,
+            items: c.scenarios.map(s => ({ label: s })),
+        },
     }));
 
     return (
@@ -686,7 +706,7 @@ function CtaSection(): JSX.Element {
                     with <span className="accent">Apache Doris.</span>
                 </h2>
                 <div className="cta-actions" data-reveal data-reveal-delay="2">
-                    <Link className="btn btn-yellow" to="/docs-next/dev/getting-started/quick-start">
+                    <Link className="btn btn-yellow" to="/docs/dev/getting-started/quick-start">
                         <svg
                             width="14"
                             height="14"

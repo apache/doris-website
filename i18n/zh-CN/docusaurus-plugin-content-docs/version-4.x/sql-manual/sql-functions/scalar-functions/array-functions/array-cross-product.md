@@ -123,4 +123,3 @@ function cross_product requires arrays of size 3
 SELECT CROSS_PRODUCT([1, 2], [3, 4]);
 function cross_product requires arrays of size 3
 ```
-

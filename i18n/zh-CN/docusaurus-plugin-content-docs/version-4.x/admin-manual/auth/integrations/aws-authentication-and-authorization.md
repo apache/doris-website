@@ -223,8 +223,7 @@ PROPERTIES
 
 您可以在不同业务逻辑里指定不同的 IAM User 的 `access_key` 和 `secret_key`，从而实现外部数据的访问控制。
 
-### Assumed Role 认证鉴权
-
+### Assumed Role 认证鉴权 {#assumed-role-authentication}
 Assumed Role 支持通过担任 AWS IAM Role 来实现对外部数据源的访问认证和鉴权 (详细的介绍请参见 AWS 官网文档 [代入角色](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_manage-assume.html))，下图列出了 Assumed Role 所需要配置的简要流程：
 
 ![](/images/integrations/assumed_role_flow.png)

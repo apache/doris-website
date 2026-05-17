@@ -29,7 +29,7 @@ SECOND_CEIL(<datetime>[, <period>][, <origin_datetime>])
 
 | 参数                  | 说明                                                       |
 |---------------------|----------------------------------------------------------|
-| `<datetime>`        | 必填，输入的日期时间值，支持输入 date/datetime/timestamptz 类型，具体格式请查看 timestamptz的转换, [datetime 的转换](../../../basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../basic-element/sql-data-types/conversion/date-conversion)                            |
+| `<datetime>`        | 必填，输入的日期时间值，支持输入 date/datetime/timestamptz 类型，具体格式请查看 [timestamptz的转换](../../../../sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion), [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion)                            |
 | `<period>`          | 可选，表示每个周期由多少秒组成，支持正整数类型（INT）。默认为 1 秒。                   |
 | `<origin_datetime>` | 可选，对齐的时间起点，支持输入 datetime 类型和符合日期时间格式的字符串。如果未指定，默认为 0001-01-01T00:00:00。 |
 
@@ -107,6 +107,10 @@ SELECT SECOND_CEIL('2025-01-23', 30) AS result;
 | 2025-01-23 00:00:00 |
 +---------------------+
 
+--- 计算结果超出最大日期时间范围，返回错误
+SELECT SECOND_CEIL('9999-12-31 23:59:59', 2) AS result;
+ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.3)[E-218]Operation second_ceil of 9999-12-31 23:59:59, 2 out of range
+
 -- TimeStampTz类型样例, SET time_zone = '+08:00'
 -- 将变量值转换为 local_time(2026-01-01 02:59:59)后再做 SECOND_CEIL 操作
 SELECT SECOND_CEIL('2025-12-31 23:59:59+05:00');
@@ -123,10 +127,6 @@ SELECT SECOND_CEIL('2025-12-31 23:59:59+05:00', '2025-12-15 00:00:00.123');
 +---------------------------------------------------------------------+
 | 2026-01-01 02:59:59.123                                             |
 +---------------------------------------------------------------------+
-
---- 计算结果超出最大日期时间范围，返回错误
-SELECT SECOND_CEIL('9999-12-31 23:59:59', 2) AS result;
-ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.3)[E-218]Operation second_ceil of 9999-12-31 23:59:59, 2 out of range
 
 --- 周期为非正数，返回错误
 mysql> SELECT SECOND_CEIL('2025-01-23 12:34:56', -3) AS result;

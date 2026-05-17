@@ -20,7 +20,7 @@ MICROSECOND_TIMESTAMP(`<datetime>`)
 
 | 参数           | 说明                                      |
 |--------------|-----------------------------------------|
-| `<datetime>` | 表示要转换为 Unix 时间戳的日期时间，支持输入 datetime 类型,具体 datetime 格式请查看 [datetime 的转换](../../../basic-element/sql-data-types/conversion/datetime-conversion) |
+| `<datetime>` | 表示要转换为 Unix 时间戳的日期时间，支持输入 datetime 类型,具体 datetime 格式请查看 [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) |
 
 ## 返回值
 返回 BIGINT 类型的整数，表示输入日期时间对应的 Unix 微秒时间戳（输入时间转换到当前时区下的总微秒数）。

@@ -10,10 +10,6 @@
 
 Returns the number of non-null `(y, x)` pairs in a group, where `x` is the independent variable and `y` is the dependent variable. If there are no valid non-null pairs, the function returns `0`.
 
-:::info
-This function is supported since Apache Doris version 4.1.1.
-:::
-
 ## Syntax
 
 ```sql

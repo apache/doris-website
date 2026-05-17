@@ -2,123 +2,158 @@
 {
     "title": "AI Overview",
     "language": "en",
-    "description": "As AI technologies continue to advance at an unprecedented pace, data infrastructure has become the cornerstone of modern AI applications."
+    "description": "Apache Doris AI capabilities overview: text search, vector search, AI functions, and MCP, covering RAG, semantic search, Agent analytics, and more.",
+    "keywords": [
+        "Apache Doris AI",
+        "vector search",
+        "text search",
+        "AI functions",
+        "MCP Server",
+        "RAG",
+        "semantic search",
+        "Lakehouse for AI",
+        "Agent Facing Analytics",
+        "AI Observability"
+    ]
 }
 ---
 
-<!-- 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
+<!-- Knowledge type: Capability definition / Architecture decision -->
+<!-- Applicable scenarios: Technology selection / AI data stack planning -->
 
-  http://www.apache.org/licenses/LICENSE-2.0
+Apache Doris is a high-performance, real-time analytical database that deeply integrates text search, vector search, AI functions, and MCP-based intelligent interaction. It builds a complete AI data stack covering data storage, retrieval, and analytics, providing unified data infrastructure for AI applications.
 
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
+The following table lists common AI scenarios and the corresponding capabilities that Doris provides, helping you quickly identify the right solution.
 
-
-As AI technologies continue to advance at an unprecedented pace, data infrastructure has become the cornerstone of modern AI applications. Apache Doris, a high-performance real-time analytical database, provides native integration of full-text search, vector search, AI functions, and MCP-based intelligent interaction. Together, these capabilities form a comprehensive AI data stack that spans storage, retrieval, and analysis.
-
-- [full-text search](text-search/overview.md)
-- [vector search](vector-search/overview.md)
-- [AI functions](ai-function-overview.md)
-- [Doris MCP Server](https://github.com/apache/doris-mcp-server)
-
-Doris delivers a unified, high-performance, and cost-efficient solution for a wide range of AI-driven workloads, including hybrid search and analytics, agent facing data analysis, semantic search, RAG application development, and observability for large-scale AI systems.
+| What you want to do | Scenario | Core capabilities |
+|------|------|------|
+| Let AI Agents query business data in real time | [Agent Facing Analytics](#agent-facing-analytics) | MPP architecture, millisecond-level queries, MCP Server |
+| Run keyword search, vector search, and aggregation on the same data | [Hybrid search and analytics](#hybrid-search-and-analytics-processing) | Inverted index + vector index + SQL |
+| Accelerate AI training data preparation and feature engineering | [Lakehouse for AI](#lakehouse-for-ai) | Lakehouse architecture, open table formats, fast SQL |
+| Build enterprise knowledge bases and intelligent customer service | [RAG applications](#ragretrieval-augmented-generation) | High-concurrency vector retrieval, hybrid search |
+| Monitor model training and inference services | [AI Observability](#ai-observability) | High-throughput ingestion, inverted index, low storage cost |
+| Make search understand user intent | [Semantic search](#semantic-search) | HNSW/IVF, quantization, multimodal extensions |
 
 ## Agent Facing Analytics
 
-With the rise of AI Agent technology, an increasing number of analytical decisions will be completed automatically by AI, requiring data platforms to deliver ultimate real-time performance and high concurrency capabilities. Unlike traditional "manual analysis," Agent Facing Analytics demands data queries and decision-making to be completed at millisecond scale, supporting concurrent access from massive numbers of Agents. Typical scenarios include real-time fraud detection, intelligent advertising placement, and personalized recommendations.
+<!-- Knowledge type: Capability definition -->
+<!-- Applicable scenarios: AI Agent real-time decision-making -->
 
-Doris demonstrates outstanding advantages in these agent-facing analytical scenarios with its high-performance MPP architecture:
+As AI Agent technology gains traction, more analytical decisions are made automatically by AI, which requires the data platform to deliver extreme real-time performance and high concurrency. Unlike traditional "human analytics," Agent Facing Analytics needs to complete data queries and decisions within milliseconds and support concurrent access from massive numbers of Agents. Typical scenarios include real-time fraud detection, intelligent ad delivery, and personalized recommendations.
 
-- **Real-Time Ingestion & Update**: ensuring Agent decisions are based on the latest data, ~ 1s minimum data latency
+Powered by a high-performance MPP architecture, Doris offers the following advantages for Agent-facing analytics scenarios:
 
-- **Blazing-Fast Analytics**: Average query latency < 100ms, meeting real-time decision requirements for Agents
-- **High-Concurrent Queries**: Supports 10,000+ QPS, easily handling massive Agent concurrent queries
-- **Native Agent integration**: Seamlessly integrates with AI Agents through MCP Server, simplifying development and integration workflows
+| Capability | Metric | Value |
+|------|------|------|
+| Data latency | Sub-second | Real-time ingestion and updates ensure that Agent decisions are based on the freshest data |
+| Query response | Average < 100 ms | Meets the real-time decision needs of Agents |
+| Concurrency | 10,000+ QPS | Easily handles concurrent queries from massive numbers of Agents |
+| Integration | Native MCP Server | Seamlessly integrates with AI Agents and simplifies development |
 
 ## Hybrid Search and Analytics Processing
 
-![img](/images/vector-search/image-5.png)
+<!-- Knowledge type: Capability definition / Architecture decision -->
+<!-- Applicable scenarios: Hybrid search and multi-dimensional analytics -->
 
-Semi-structured and unstructured data are becoming first-class citizens in data analytics. Customer reviews, chat logs, production logs, vehicle signals, and other data have been deeply integrated into business decision-making processes. Traditional structured analytics solutions need to incorporate full-text retrieval and vector search capabilities, supporting semantic search while enabling multidimensional analysis and aggregation statistics on the same platform. Examples include:
+![Hybrid Search and Analytics Processing architecture diagram](/images/vector-search/image-5.png)
 
-- **Customer insights**: Combining review text retrieval with user behavior analysis to precisely identify customer needs and satisfaction trends
-- **Smart manufacturing**: Integrating production log full-text search, equipment image recognition, and IoT metric analysis to achieve fault prediction and quality optimization
-- **Internet of Vehicles**: Synthesizing vehicle signal data analysis, user feedback text mining, and driving behavior vector retrieval to enhance smart cockpit experiences
+Semi-structured and unstructured data is becoming a first-class citizen in data analytics. Customer reviews, chat logs, production logs, and vehicle telemetry signals are now deeply integrated into business decision-making. Traditional structured analytics solutions need to combine full-text search with vector search capabilities, supporting both semantic search and multi-dimensional analytics with aggregation on a single platform. Typical scenarios include:
 
-Building AI applications for the above scenarios based on Doris's high-performance real-time analytics, text indexing, and vector indexing capabilities offers multiple advantages:
+- **Customer insights**: Combine review text retrieval with user behavior analysis to precisely identify customer needs and satisfaction trends.
+- **Smart manufacturing**: Combine full-text search of production logs, equipment image recognition, and IoT metric analysis to enable failure prediction and quality optimization.
+- **Connected vehicles**: Combine vehicle telemetry analysis, user feedback text mining, and driving behavior vector retrieval to improve the smart cockpit experience.
 
-- **Unified architecture**: Processes structured analytics, full-text retrieval, and vector search on a single platform, eliminating data migration and heterogeneous system integration
-- **Hybrid query performance**: Single SQL executes vector similarity search, keyword filtering, and aggregation analysis simultaneously with excellent query performance
-- **Flexible schema support**: VARIANT type natively supports dynamic JSON structures, Light Schema Change enables second-level field and index modifications
-- **Full-stack optimization**: End-to-end optimization from inverted indexes and vector indexes to MPP execution engine, balancing retrieval accuracy and analytical efficiency
+Advantages of building hybrid search and analytics applications on Doris:
+
+- **Unified architecture**: Handle structured analytics, full-text search, and vector search on a single platform without data migration or heterogeneous system integration.
+- **Hybrid query performance**: Run vector similarity search, keyword filtering, and aggregation in a single SQL statement with excellent query performance.
+- **Flexible schema support**: The VARIANT type natively supports dynamic JSON structures, and Light Schema Change enables field and index changes within seconds.
+- **Full-stack optimization**: End-to-end optimization from inverted index and vector index to the MPP execution engine balances retrieval accuracy with analytical efficiency.
 
 ## Lakehouse for AI
 
-AI model and application development requires preparing training sets, performing feature engineering, and evaluating data quality from massive datasets. Traditional architectures often require frequent data migration between data lakes and analytical engines. The Lakehouse architecture deeply integrates the open storage of data lakes with real-time analytical engines, supporting the entire workflow of data preparation, feature engineering, and model evaluation on a unified platform, eliminating data silos and accelerating AI development iterations.
+<!-- Knowledge type: Architecture decision -->
+<!-- Applicable scenarios: AI training data preparation / Feature engineering -->
 
-- **Lakehouse unified architecture**: Builds an open lakehouse based on open table formats (such as Iceberg/Paimon) and Catalogs, uniformly managing analytical data and AI data
-- **Real-Time Analytics Engine**: Doris serves as a real-time analytical engine, supporting interactive queries and lightweight ETL, providing the fastest SQL computing capabilities for data preparation and feature engineering
-- **Seamless data flow**: Directly reads and writes to data lakes without data movement, unified management at the storage layer and flexible acceleration at the compute layer
+Developing AI models and applications requires preparing training sets, performing feature engineering, and evaluating data quality from massive datasets. Traditional architectures often require frequent data migration between data lakes and analytical engines. The Lakehouse architecture deeply integrates the open storage of data lakes with real-time analytical engines, supporting the full workflow of data preparation, feature engineering, and model evaluation on a unified platform. This eliminates data silos and accelerates AI development iteration.
 
-Lakehouse architecture based on Doris accelerates the entire AI workflow:
+**Architectural characteristics**:
 
-- **Large-scale data preparation**: Leveraging Doris's efficient data processing capabilities to filter, sample, and cleanse data from PB-scale data lakes, rapidly building high-quality training datasets
-- **Real-time feature engineering**: Utilizing Doris's real-time analytics capabilities to perform online feature extraction, transformation, and aggregation computing, providing real-time feature services for model training and inference
-- **Quality evaluation**: Conducting multidimensional rapid analysis on test sets and production data, continuously monitoring model performance and data drift
+- **Lakehouse integration**: Build an open lakehouse based on open lake table formats (such as Iceberg and Paimon) and Catalogs to uniformly manage analytical data and AI data.
+- **Fast SQL engine**: Doris serves as a real-time analytical engine that supports interactive queries and lightweight ETL, providing efficient SQL computing for data preparation and feature engineering.
+- **Seamless data flow**: Read from and write to data lakes directly without data movement. The storage layer is uniformly managed while the compute layer offers flexible acceleration.
 
-## RAG (Retrieval-Augmented Generation)
+**Acceleration across the AI workflow**:
 
-RAG retrieves relevant information from external knowledge bases to provide context for large models, effectively addressing model hallucination and knowledge currency issues. The vector engine is a core component of RAG systems, requiring rapid recall of the most relevant document fragments from massive knowledge bases while supporting high-concurrency user query requests to ensure application responsiveness.
+- **Large-scale data preparation**: Efficiently filter, sample, and clean data from PB-scale data lakes to quickly build high-quality training datasets.
+- **Real-time feature engineering**: Perform online feature extraction, transformation, and aggregation to provide real-time feature services for model training and inference.
+- **Quality evaluation**: Conduct multi-dimensional rapid analysis on test sets and production data to continuously monitor model performance and data drift.
 
-- **Enterprise knowledge**: Building intelligent Q&A systems based on internal documents and manuals, enabling employees to quickly obtain accurate answers through natural language
-- **Intelligent customer service assistant**: Combining product knowledge bases and historical cases to provide precise response suggestions for customer service personnel or chatbots
-- **Intelligent document assistant**: Rapidly locating relevant content in large-scale document collections to assist research, writing, and decision-making processes
+## RAG (Retrieval-Augmented Generation) {#ragretrieval-augmented-generation}
+<!-- Knowledge type: Capability definition -->
+<!-- Applicable scenarios: Enterprise knowledge base / Intelligent Q&A -->
 
-Building RAG applications based on Doris offers the following advantages in these scenarios:
+RAG retrieves relevant information from external knowledge bases to provide context for large language models, effectively addressing model hallucination and the timeliness of knowledge. The vector engine is the core component of a RAG system. It needs to quickly recall the most relevant document fragments from a massive knowledge base while supporting high-concurrency user query requests to ensure a responsive application experience.
 
-- **High concurrency performance**: Distributed architecture supports high-concurrency vector retrieval, easily handling large-scale concurrent user access
-- **Hybrid retrieval capability**: Single SQL executes vector similarity search and keyword filtering simultaneously, balancing semantic recall and exact matching
-- **Elastic scaling**: Query performance scales linearly with cluster expansion, seamlessly transitioning from millions to tens of billions of vectors
-- **Unified solution**: Uniformly manages vector data, original documents, and business data, simplifying the data architecture for RAG applications
+**Typical applications**:
+
+- **Enterprise knowledge base**: Build an intelligent Q&A system based on internal documents and manuals so employees can quickly obtain accurate answers in natural language.
+- **Intelligent customer service assistant**: Combine product knowledge bases with historical cases to provide precise reply suggestions for customer service agents or chatbots.
+- **Intelligent document assistant**: Quickly locate relevant content within large document collections to support research, writing, and decision-making.
+
+**Advantages of building RAG on Doris**:
+
+- **High-concurrency performance**: A distributed architecture supports high-concurrency vector retrieval and easily handles large-scale concurrent user access.
+- **Hybrid search capability**: Run vector similarity search and keyword filtering in a single SQL statement, balancing semantic recall with exact matching.
+- **Elastic scaling**: Retrieval performance scales linearly as the cluster grows, transitioning smoothly from millions to tens of billions of vectors.
+- **Unified solution**: Manage vector data, raw documents, and business data uniformly to simplify the data architecture of RAG applications.
 
 ## AI Observability
 
-AI model training iterations and application operations generate massive amounts of logs, metrics, and tracing data. To precisely locate issues and continuously optimize performance, observability systems have become a critical component of AI infrastructure. As business scale expands, observability platforms face multiple challenges including high-throughput writes of PB-scale data, millisecond-level retrieval response, and cost control. Typical use cases include:
+<!-- Knowledge type: Capability definition -->
+<!-- Applicable scenarios: Model training monitoring / Inference service tracing / AI application log analysis -->
 
-- **Model training monitoring**: Real-time tracking of training metrics and resource consumption, rapidly identifying training anomalies and performance bottlenecks
-- **Inference service tracing**: Recording the complete trace of each inference request, analyzing latency sources and error patterns
-- **AI** **application log analysis**: Full-text retrieval and aggregation analysis of massive application logs, supporting troubleshooting and behavioral insights
+AI model training iterations and application runtime generate massive volumes of logs, metrics, and trace data. To precisely locate issues and continuously optimize performance, observability systems have become a critical part of AI infrastructure. As business scale expands, observability platforms face the combined challenges of high-throughput ingestion of PB-scale data, millisecond-level retrieval response, and cost control.
 
-Building AI Observability with Doris offers the following advantages:
+**Typical use cases**:
 
-- **Ultimate performance**: Supports sustained writes of PB/day (10GB/s), inverted indexes accelerate log retrieval with second-level response
-- **Cost optimization**: Compression ratios of 5:1 to 10:1, storage cost savings of 50%-80%, supports low-cost storage for cold data
-- **Flexible schema**: Light Schema Change enables second-level field modifications, VARIANT type natively supports dynamic JSON structures
-- **Ecosystem-friendly**: Compatible with OpenTelemetry and ELK ecosystems, supports integration with Grafana/Kibana visualization tools
+- **Model training monitoring**: Track training metrics and resource consumption in real time to quickly identify training anomalies and performance bottlenecks.
+- **Inference service tracing**: Record the full call chain of every inference request to analyze latency sources and error patterns.
+- **AI application log analysis**: Perform full-text search and aggregation on massive application logs to support troubleshooting and behavior insights.
+
+**Advantages of building AI Observability on Doris**:
+
+| Dimension | Capability metrics |
+|------|------|
+| Ingestion performance | Supports PB/day (10 GB/s) sustained ingestion, with inverted indexes accelerating log retrieval and second-level response |
+| Storage cost | Compression ratio of 5:1 to 10:1, saving 50%-80% in storage costs, with low-cost storage for cold data |
+| Schema flexibility | Light Schema Change enables field changes within seconds, and the VARIANT type natively supports dynamic JSON |
+| Ecosystem compatibility | Compatible with OpenTelemetry and the ELK ecosystem, integrating with visualization tools such as Grafana and Kibana |
 
 ## Semantic Search
 
-Semantic search captures the deep meaning of text through vectorization techniques. Even when query terms differ from document wording, semantically relevant content can still be retrieved. This is crucial for scenarios such as cross-language retrieval, synonym recognition, and intent understanding, significantly improving search recall rates and user experience. Typical use cases include:
+<!-- Knowledge type: Capability definition -->
+<!-- Applicable scenarios: Semantic search / Cross-language retrieval / Content recommendation -->
 
-- **Enterprise document retrieval**: Employees describe issues in natural language, and the system understands intent to recall semantically relevant policies, procedures, and knowledge from massive documents
-- **E-commerce product search**: Users input "breathable shoes suitable for summer," and the system understands the need to recall relevant products rather than merely matching keywords
-- **Content recommendation**: Intelligent recommendations based on semantic similarity of articles and videos, discovering content of potential interest with different wording
+Semantic search uses vectorization to capture the deep meaning of text, recalling semantically related content even when the query terms differ from the wording used in the documents. This is critical for cross-language retrieval, synonym recognition, intent understanding, and similar scenarios, and significantly improves search recall and user experience.
 
-Building semantic search applications based on Doris offers the following advantages:
+**Typical use cases**:
 
-- **High-performance vector retrieval**: Supports HNSW and IVF algorithms, sub-second response for hundred-million-scale vectors, easily handling large-scale semantic search requirements
-- **Enhanced hybrid retrieval**: Single SQL integrates semantic search and keyword filtering, ensuring necessary vocabulary hits while recalling semantically relevant content
-- **Multimodal extension**: Supports not only text semantic search but can also extend to semantic retrieval of multimodal content such as images and audio
-- **Flexible quantization optimization**: Through SQ/PQ quantization techniques, significantly reduces storage and computing costs while maintaining retrieval accuracy
+- **Enterprise document retrieval**: Employees describe questions in natural language, and the system understands the intent and recalls semantically relevant policies, processes, and knowledge from massive document repositories.
+- **E-commerce product search**: A user enters "breathable shoes suitable for summer," and the system understands the need and recalls relevant products instead of matching only on keywords.
+- **Content recommendation platforms**: Make intelligent recommendations based on the semantic similarity of articles and videos, surfacing content that the user may be interested in but that uses different wording.
+
+**Advantages of building semantic search on Doris**:
+
+- **High-performance vector retrieval**: Supports HNSW and IVF algorithms with sub-second response on hundred-million-scale vectors, easily handling large-scale semantic search needs.
+- **Hybrid search enhancement**: A single SQL statement combines semantic search with keyword filtering to recall semantically related content while ensuring required keywords are matched.
+- **Multimodal extension**: Supports semantic search not only for text but also for multimodal content such as images and audio.
+- **Flexible quantization optimization**: SQ/PQ quantization techniques significantly reduce storage and computing costs while preserving retrieval accuracy.
+
+## Related documents
+
+- [Text search overview](../table-design/index/inverted-index/overview.md)
+- [Vector search overview](../table-design/index/vector-index/overview.md)
+- [AI functions overview](ai-function-overview.md)
+- [Doris MCP Server (GitHub)](https://github.com/apache/doris-mcp-server)
+

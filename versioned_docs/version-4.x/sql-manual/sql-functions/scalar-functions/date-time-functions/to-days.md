@@ -7,7 +7,7 @@
 ---
 
 ## Description
-A date calculation function that converts a date to a numeric value representing days, calculating the total number of days from the base date (`0000-00-00`) to the specified date
+A date calculation function that converts a date to a numeric value representing days, calculating the total number of days from the base date (`0000-00-00`) to the specified date.
 
 This function behaves consistently with the [to_days function](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_to-days) in MySQL.
 

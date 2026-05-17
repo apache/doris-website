@@ -1,33 +1,31 @@
 ---
 {
-    "title": "PREVIOUS_DAY",
+    "title": "NEXT_DAY",
     "language": "cn",
-    "description": "PREVIOUS_DAY 函数用于返回指定日期之前第一个匹配目标星期几的日期，例如 PREVIOUS_DAY('2020-01-31', 'MONDAY') 表示 2020-01-31 前的第一个周一。该函数支持处理 DATE、DATETIME 类型，忽略输入中的时间部分（仅基于日期部分计算）。"
+    "description": "NEXTDAY 函数用于返回指定日期之后第一个匹配目标星期几的日期，例如 NEXTDAY('2020-01-31', 'MONDAY') 表示 2020-01-31 之后的第一个周一。该函数支持处理 DATE、DATETIME 类型，忽略输入中的时间部分（仅基于日期部分计算）。"
 }
 ---
 
 ## 描述
 
-PREVIOUS_DAY 函数用于返回指定日期之前第一个匹配目标星期几的日期，例如 PREVIOUS_DAY('2020-01-31', 'MONDAY') 表示 2020-01-31 前的第一个周一。该函数支持处理 DATE、DATETIME、TIMESTAMPTZ 类型，忽略输入中的时间部分（仅基于日期部分计算）。
-
-:::note
-该函数从4.0.4起开始支持
-:::
+NEXT_DAY 函数用于返回指定日期之前第一个匹配目标星期几的日期，例如 NEXT_DAY('2020-01-31', 'MONDAY') 表示 2020-01-31 前的第一个周一。该函数支持处理 DATE、DATETIME、TIMESTAMPTZ 类型，忽略输入中的时间部分（仅基于日期部分计算）。
 
 ## 语法
 
 ```sql
-PREVIOUS_DAY(`<date_or_time_expr>`, `<day_of_week>`)
+NEXT_DAY(`<date_or_time_expr>`, `<day_of_week>`)
 ```
 
 ## 参数
 
-| 参数                  | 描述                                                                                                                                                                                                                                                                                                                                                                                  |
-| --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `<date_or_time_expr>` | 支持输入 date/datetime 类型,具体格式请查看 timestamptz的转换，[datetime 的转换](../../../basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../basic-element/sql-data-types/conversion/date-conversion)。 |
-| `<day_of_week>`       | 用于标识星期几的字符串表达式，为字符串类型。                                                                                                                                                                                                                                                                                                                                          |
+| 参数              | 描述                                                         |
+|-------------------|--------------------------------------------------------------|
+| ``<date_or_time_expr>`` | 支持输入 date/datetime 类型,具体格式请查看 [timestamptz的转换](../../../../sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion)，[datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion)。                                 |
+| ``<day_of_week>``   | 用于标识星期几的字符串表达式，为字符串类型。                               |
 
-`<day_of_week>` 必须是以下值之一（不区分大小写）：
+
+
+``<day_of_week>`` 必须是以下值之一（不区分大小写）：
 - 'SU', 'SUN', 'SUNDAY'
 - 'MO', 'MON', 'MONDAY'
 - 'TU', 'TUE', 'TUESDAY'
@@ -100,4 +98,4 @@ SELECT PREVIOUS_DAY('0000-01-01 12:00:00', 'SUNDAY') AS result;
 +------------+
 | 0000-01-01 |
 +------------+
-```
+``` 

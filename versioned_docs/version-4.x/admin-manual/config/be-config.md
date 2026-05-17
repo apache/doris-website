@@ -144,8 +144,7 @@ There are two ways to configure BE configuration items:
 * Description: Whether https is supported. If so, configure `ssl_certificate_path` and `ssl_private_key_path` in be.conf.
 * Default value: false
 
-#### `priority_networks`
-
+#### `priority_networks` {#priority_networks}
 * Description: Declare a selection strategy for those servers with many IPs. Note that at most one ip should match this list. This is a semicolon-separated list in CIDR notation, such as 10.10.10.0/24. If there is no IP matching this rule, one will be randomly selected
 * Default value: blank
 
@@ -637,7 +636,6 @@ BaseCompaction:546859:
 
 #### `update_replica_infos_interval_seconds`
 
-* Type: int32
 * Description: Minimal interval (s) to update peer replica infos
 * Default value: 60 (s)
 
@@ -658,7 +656,6 @@ BaseCompaction:546859:
 * Type: int32
 * Description: The time interval in seconds between triggers for cold data compaction. A shorter interval means compaction on cold data will be considered more frequently, potentially leading to faster cleanup but higher resource consumption.
 * Default value: 1800 (seconds)
-
 
 ### Load
 
@@ -856,7 +853,7 @@ BaseCompaction:546859:
 #### `webserver_num_workers`
 
 * Description: Webserver default number of worker threads
-* Default value: 128
+* Default value: 48
 
 #### `send_batch_thread_pool_thread_num`
 

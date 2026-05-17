@@ -25,7 +25,7 @@ TIMESTAMPADD(<unit>, <interval>, <date_or_time_expr>)
 | -- |-------------------------------------------------------------------|
 | `<unit>` | 时间单位，指定要添加的时间单位，常见的值有 SECOND, MINUTE, HOUR, DAY, WEEK, MONTH, QUARTER, YEAR |
 |`<interval>`| 要添加的时间间隔，通常是一个整数，可以是正数或负数，表示添加或减去的时间长度                            |
-| `<date_or_time_expr>` | 合法的目标日期，支持输入 date/datetime 类型具体 datetime 和 date 格式请查看 [datetime 的转换](../../../basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../basic-element/sql-data-types/conversion/date-conversion)                                            |
+| `<date_or_time_expr>` | 合法的目标日期，支持输入 date/datetime 类型具体 datetime 和 date 格式请查看 [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion)                                            |
 
 ## 返回值
 

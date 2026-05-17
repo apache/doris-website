@@ -20,7 +20,7 @@ TO_DATE(`<datetime_value>`)
 ## 参数
 | 参数               | 描述                 |
 |------------------|--------------------|
-| `<datetime_value>` | DATETIME 类型日期时间，支持 DATETIME ，datetime 格式请查看 [datetime 的转换](../../../basic-element/sql-data-types/conversion/datetime-conversion)    |
+| `<datetime_value>` | DATETIME 类型日期时间，支持 DATETIME ，datetime 格式请查看 [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion)    |
 
 ## 返回值
 

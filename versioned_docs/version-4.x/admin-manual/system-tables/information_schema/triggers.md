@@ -8,36 +8,36 @@
 
 ## Overview
 
-Stores all table information.
+The `triggers` table provides information about triggers.
+Currently, Apache Doris supports this table for MySQL compatibility, but does not support user-defined triggers. This table is always empty.
 
 ## Database
 
-
 `information_schema`
-
 
 ## Table Information
 
-| Column Name     | Type          | Description                                                  |
-| --------------- | ------------- | ------------------------------------------------------------ |
-| TABLE_CATALOG   | varchar(512)  | The Catalog to which the table belongs                       |
-| TABLE_SCHEMA    | varchar(64)   | The Database to which the table belongs                      |
-| TABLE_NAME      | varchar(64)   | The name of the table                                        |
-| TABLE_TYPE      | varchar(64)   | The type of the table, including: SYSTEM VIEW, VIEW, BASE TABLE |
-| ENGINE          | varchar(64)   | The storage engine type of the table                         |
-| VERSION         | bigint        | Invalid value                                                |
-| ROW_FORMAT      | varchar(10)   | Invalid value                                                |
-| TABLE_ROWS      | bigint        | Estimated number of rows in the table                        |
-| AVG_ROW_LENGTH  | bigint        | Average row size of the table                                |
-| DATA_LENGTH     | bigint        | Estimated size of the table                                  |
-| MAX_DATA_LENGTH | bigint        | Invalid value                                                |
-| INDEX_LENGTH    | bigint        | Invalid value                                                |
-| DATA_FREE       | bigint        | Invalid value                                                |
-| AUTO_INCREMENT  | bigint        | Invalid value                                                |
-| CREATE_TIME     | datetime      | The time when the table was created                          |
-| UPDATE_TIME     | datetime      | The time when the table data was last updated                |
-| CHECK_TIME      | datetime      | Invalid value                                                |
-| TABLE_COLLATION | varchar(32)   | Fixed value: utf-8                                           |
-| CHECKSUM        | bigint        | Invalid value                                                |
-| CREATE_OPTIONS  | varchar(255)  | Invalid value                                                |
-| TABLE_COMMENT   | varchar(2048) | Comments on the table                                        |
+| Column Name | Type | Description |
+|---|---|---|
+| TRIGGER_CATALOG | varchar(512) | The name of the catalog to which the trigger belongs. Always 'def'. |
+| TRIGGER_SCHEMA | varchar(64) | The name of the schema (database) to which the trigger belongs. |
+| TRIGGER_NAME | varchar(64) | The name of the trigger. |
+| EVENT_MANIPULATION | varchar(6) | The trigger event (INSERT, UPDATE, DELETE). |
+| EVENT_OBJECT_CATALOG | varchar(512) | The catalog name of the table with which the trigger is associated. Always 'def'. |
+| EVENT_OBJECT_SCHEMA | varchar(64) | The schema (database) name of the table with which the trigger is associated. |
+| EVENT_OBJECT_TABLE | varchar(64) | The name of the table with which the trigger is associated. |
+| ACTION_ORDER | bigint | The ordinal definition order of the trigger. |
+| ACTION_CONDITION | varchar(512) | null |
+| ACTION_STATEMENT | varchar(512) | The trigger body. |
+| ACTION_ORIENTATION | varchar(9) | Always 'ROW'. |
+| ACTION_TIMING | varchar(6) | Trigger timing (BEFORE, AFTER). |
+| ACTION_REFERENCE_OLD_TABLE | varchar(64) | null |
+| ACTION_REFERENCE_NEW_TABLE | varchar(64) | null |
+| ACTION_REFERENCE_OLD_ROW | varchar(3) | Always 'OLD'. |
+| ACTION_REFERENCE_NEW_ROW | varchar(3) | Always 'NEW'. |
+| CREATED | datetime | The time when the trigger was created. |
+| SQL_MODE | varchar(8192) | The SQL mode in effect when the trigger was created. |
+| DEFINER | varchar(77) | The account that created the trigger. |
+| CHARACTER_SET_CLIENT | varchar(32) | The session value of the character_set_client system variable when the trigger was created. |
+| COLLATION_CONNECTION | varchar(32) | The session value of the collation_connection system variable when the trigger was created. |
+| DATABASE_COLLATION | varchar(32) | The collation of the database with which the trigger is associated. |
