@@ -152,10 +152,4 @@ Apache Doris integrates deeply with mainstream data ecosystems.
 
 ## Community and Contribution
 
-Apache Doris originated from Baidu's advertising reporting business (the Palo project). It was open-sourced in 2017, donated to the Apache Software Foundation for incubation in 2018, and **officially became an Apache Top-Level Project in June 2022**.
-
-- **Contributor scale**: 700+ contributors, with 120+ monthly active contributors.
-- **User coverage**: 10,000+ enterprise users worldwide.
-- **Cloud vendor support**: AWS, Azure, GCP, Alibaba Cloud, Tencent Cloud, Huawei Cloud, Volcano Engine, and more.
-
 You are welcome to join the community: https://doris.apache.org/community/join-community
