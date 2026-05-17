@@ -157,8 +157,7 @@ p20210522：["2021-05-22", "2021-05-23") storage_medium=SSD storage_cooldown_tim
 p20210523：["2021-05-23", "2021-05-24") storage_medium=SSD storage_cooldown_time=2021-05-25 00:00:00
 ```
 
-## 常见问题（FAQ）
-
+## 常见问题（FAQ） {#常见问题-faq}
 <!-- 知识类型: FAQ -->
 
 ### Q1：`hot_partition_num` 不生效怎么办？
@@ -177,8 +176,7 @@ p20210523：["2021-05-23", "2021-05-24") storage_medium=SSD storage_cooldown_tim
 
 SSD/HDD 层级存储用于本地不同磁盘介质间的数据流动，适合中短期冷热分离。若需将历史数据归档到对象存储（S3/HDFS 等），请参考冷热数据分层存储相关文档。
 
-## 故障排查（Troubleshooting）
-
+## 故障排查（Troubleshooting） {#故障排查-troubleshooting}
 <!-- 知识类型: 故障排查 -->
 <!-- 适用场景: 建表失败 / 分区创建失败 -->
 

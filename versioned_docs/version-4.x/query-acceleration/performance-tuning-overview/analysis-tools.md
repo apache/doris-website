@@ -77,8 +77,7 @@ By analyzing the Explain output, you can quickly locate the following common pla
 
 For cases of plan-layer tuning using Doris Explain, see the [Plan Tuning](../tuning/tuning-plan/optimizing-table-schema.md) chapter.
 
-## Doris Profile: Analyzing Execution-Layer Bottlenecks
-
+## Doris Profile: Analyzing Execution-Layer Bottlenecks {#doris-profile}
 <!-- Knowledge type: tool usage -->
 <!-- Applicable scenario: The plan has no obvious issues, but the SQL executes slowly, and the runtime time consumption of each operator needs to be examined -->
 

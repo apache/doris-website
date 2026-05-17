@@ -296,8 +296,7 @@ Through the Multi-Catalog feature, Doris supports connecting to mainstream data 
 
 For details on Multi-Catalog, see the lakehouse documentation. The following example uses a Hive external table to illustrate the import flow.
 
-### Step 1: Create a Hive Catalog
-
+### Step 1: Create a Hive Catalog {#load-configuration-parameters}
 ```sql
 CREATE CATALOG hive PROPERTIES (
     'type'='hms',

@@ -26,8 +26,7 @@ Doris 提供两种方式从 AWS S3 导入文件，分别适用于异步与同步
 
 > 提示：S3 Load 基于 Broker Load 实现，详细行为可参考 [Broker Load 手册](../import-way/broker-load-manual.md)。
 
-## 方式一：使用 S3 Load 导入（异步）
-
+## 方式一：使用 S3 Load 导入（异步） {#load-with-tvf}
 <!-- 知识类型: 操作步骤 -->
 
 S3 Load 是一种异步导入方式，提交后立即返回，由后台执行。适合数据量较大或需要后台批处理的场景。

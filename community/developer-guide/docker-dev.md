@@ -40,7 +40,7 @@ This article describes how to use Docker to build a Doris development image, com
 ## Related Detailed Documents
 
 - [Compile with the Docker Development Image](/community/source-install/compilation-with-docker)
-- [Deployment](/docs-next/dev/install/deploy-manually/integrated-storage-compute-deploy-manually)
+- [Deployment](/docs/dev/install/deploy-manually/integrated-storage-compute-deploy-manually)
 - [VSCode BE Development and Debugging](./be-vscode-dev)
 
 ## 1. Environment Preparation

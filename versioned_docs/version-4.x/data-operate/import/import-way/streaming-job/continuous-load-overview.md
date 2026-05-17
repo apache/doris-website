@@ -46,8 +46,7 @@ Continuous load supports the following data sources and sync modes:
 | PostgreSQL  | 14, 15, 16, 17     | [PostgreSQL Table-Level Sync](./continuous-load-postgresql-table.md) | [PostgreSQL Database-Level Sync](./continuous-load-postgresql-database.md) | [Amazon RDS PostgreSQL](./prerequisites/amazon-rds-postgresql.md) · [Amazon Aurora PostgreSQL](./prerequisites/amazon-aurora-postgresql.md) |
 | S3          | -                  | [S3 Continuous Load](./continuous-load-s3.md)                     | -                                                                       | -                                                                                                                                         |
 
-## How to Choose a Sync Method
-
+## How to Choose a Sync Method {#general-parameters}
 <!-- Knowledge type: Architecture selection decision -->
 
 Table-level sync and database-level sync are two continuous load methods with **completely different underlying mechanisms**, not a difference in "number of tables." **Database-level sync also supports syncing only a single table through `include_tables`**, so the choice should be based on capability requirements.

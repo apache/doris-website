@@ -559,8 +559,7 @@ LEFT JOIN dim_city FOR SYSTEM_TIME AS OF a.process_time AS c
 ON a.city = c.city
 ```
 
-### 场景四：整库 CDC 同步
-
+### 场景四：整库 CDC 同步 {#整库同步}
 Flink Doris Connector 集成了 [Flink CDC](https://nightlies.apache.org/flink/flink-cdc-docs-release-3.2/docs/connectors/flink-sources/overview/)，可便捷地将 MySQL 等关系型数据库同步到 Doris，支持自动建表、Schema Change 等。目前支持的数据库包括：MySQL、Oracle、PostgreSQL、SQLServer、MongoDB、DB2。
 
 :::info 注意

@@ -28,8 +28,7 @@ A traditional `UPDATE` statement usually has to read the full row first and then
 | Unique Key (Merge-on-Write) | Fill in the full row at write time | Medium (affected by IO) | High | Real-time updates, scenarios sensitive to query performance |
 | Aggregate Key (`REPLACE_IF_NOT_NULL`) | Aggregate at query time | High (comparable to a normal load) | Lower (aggregate queries are 5 to 10 times slower than MoW) | Scenarios sensitive to write throughput where lower query performance is acceptable |
 
-## Column Update on the Unique Key Model
-
+## Column Update on the Unique Key Model {#column-update-for-the-unique-model}
 <!-- Knowledge type: Operating procedure -->
 
 During a load on the Unique Key Model, Doris can directly insert or update partial column data without first reading the full row, which significantly improves update efficiency.
@@ -62,8 +61,7 @@ Assume Doris contains an order table `order_tbl`, where the order ID is the Key 
 
 When the user clicks pay, the order status of order ID `1` needs to change to `Pending shipment` without affecting the order amount field.
 
-### Partial Column Updates Through Loading
-
+### Partial Column Updates Through Loading {#flexible-partial-column-update}
 #### Stream Load / Broker Load / Routine Load
 
 Prepare the following CSV file:
@@ -423,8 +421,7 @@ mysql> select * from user_profile;
 +----+-------+------+----------+---------+---------------------+
 ```
 
-## Column Update on the Aggregate Key Model
-
+## Column Update on the Aggregate Key Model {#column-update-on-the-primary-key-model}
 <!-- Knowledge type: Operating procedure -->
 <!-- Use cases: Sensitive to write throughput, lower query performance is acceptable -->
 

@@ -89,8 +89,7 @@ Developing AI models and applications requires preparing training sets, performi
 - **Real-time feature engineering**: Perform online feature extraction, transformation, and aggregation to provide real-time feature services for model training and inference.
 - **Quality evaluation**: Conduct multi-dimensional rapid analysis on test sets and production data to continuously monitor model performance and data drift.
 
-## RAG (Retrieval-Augmented Generation)
-
+## RAG (Retrieval-Augmented Generation) {#ragretrieval-augmented-generation}
 <!-- Knowledge type: Capability definition -->
 <!-- Applicable scenarios: Enterprise knowledge base / Intelligent Q&A -->
 

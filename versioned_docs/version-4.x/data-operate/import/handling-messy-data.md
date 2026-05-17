@@ -35,8 +35,7 @@ To handle such exceptions, Doris provides two core import control parameters:
 
 > By combining these two parameters, you can flexibly trade off between "strictly guaranteeing data quality" and "tolerating a small amount of dirty data".
 
-## Strict Mode (strict_mode)
-
+## Strict Mode (strict_mode) {#strict-mode}
 <!-- Knowledge type: Configuration parameter description -->
 
 The main function of strict mode (`strict_mode`) is to filter out data rows whose **column type conversion fails** during the import process.

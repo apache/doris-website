@@ -50,8 +50,7 @@ Doris cleans up Labels based on time and count. By default, eviction is triggere
 
 A Label is typically set in the format `business logic + time`, such as `my_business1_20220330_125000`. This Label is generally used to indicate: a batch of data produced by the business `my_business1` at `2022-03-30 12:50:00`. With this kind of Label scheme, the business can query the load task status by Label to clearly determine whether the data for that batch and time has already been loaded successfully. If it has not, the same Label can be used to retry the load.
 
-#### StreamLoad 2PC
-
+#### StreamLoad 2PC {#stream-load}
 [StreamLoad 2PC](#stream-load) is mainly used to support EOS semantics when Flink writes to Doris.
 
 ## Explicit Transaction Operations
@@ -384,8 +383,7 @@ mysql> SELECT * FROM dt3;
 * In compute-storage decoupled mode, transactional writes do not support Merge-on-Write tables. Otherwise the error `Transaction load is not supported for merge on write unique keys table in cloud mode` will be raised.
 
 
-## Stream Load 2PC
-
+## Stream Load 2PC {#streamload-2pc}
 **1. Set `two_phase_commit:true` in the HTTP Header to enable two-phase commit.**
 
 ```shell

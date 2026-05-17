@@ -125,8 +125,7 @@ doris-operator-6b97df65c4-xwvw8   1/1     Running   0          19s
 
 A `STATUS` of `Running` indicates that the Operator is ready.
 
-## Step 3: Deploy the Compute-Storage Decoupled Cluster
-
+## Step 3: Deploy the Compute-Storage Decoupled Cluster {#3-配置-dorisdisaggregatedcluster-资源}
 **Input**: Deployment example `ddc-sample.yaml` + FoundationDB access information
 **Action**: Download the example, modify key fields as needed, and deploy the cluster
 **Output**: A running Doris compute-storage decoupled cluster
@@ -290,8 +289,7 @@ Where `${vaultName}` is the name of the Vault you want to use (such as `s3_vault
 
 At this point, the cluster is ready to accept writes. The next step is to complete the end-to-end verification through SQL.
 
-## Step 5: Connect to the Cluster and Verify End-to-End
-
+## Step 5: Connect to the Cluster and Verify End-to-End {#configure-the-dorisdisaggregatedcluster-resource}
 **Input**: The MySQL connection established in Step 4
 **Action**: Run verification SQL to confirm that the cluster is ready and can read and write normally
 **Output**: An available cluster that has passed end-to-end verification

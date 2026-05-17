@@ -77,8 +77,7 @@ Doris 提供多种粒度的 Explain，用于不同的分析场景：
 
 使用 Doris Explain 进行计划层调优的案例，详见[计划调优](../tuning/tuning-plan/optimizing-table-schema.md)章节。
 
-## Doris Profile：分析执行层瓶颈
-
+## Doris Profile：分析执行层瓶颈 {#doris-profile}
 <!-- 知识类型：工具使用 -->
 <!-- 适用场景：计划无明显问题，但 SQL 执行慢，需查看运行时各 operator 耗时 -->
 

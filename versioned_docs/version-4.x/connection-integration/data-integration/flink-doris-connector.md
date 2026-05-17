@@ -98,8 +98,7 @@ When writing data, Flink Doris Connector batches data in Flink memory and then b
 
 This section walks through a complete example, from deploying a Flink cluster to using FlinkSQL to read and write Doris data.
 
-### 1. Deploy a Flink Cluster
-
+### 1. Deploy a Flink Cluster {#usage}
 Take a Standalone cluster as an example:
 
 1. Download the [Flink 1.18.1](https://archive.apache.org/dist/flink/flink-1.18.1/flink-1.18.1-bin-scala_2.12.tgz) installation package.
@@ -1044,8 +1043,7 @@ WITH (
 )
 ```
 
-### Updating Key Columns with Flink CDC
-
+### Updating Key Columns with Flink CDC {#use-flink-cdc-to-update-key-column}
 In business databases, an ID is typically used as the primary key of a table. For example, the Student table uses the ID (id) as its primary key. As the business evolves, however, the ID corresponding to a piece of data may change. In this scenario, using Flink CDC + Doris Connector to synchronize data automatically updates the data in the Doris primary key column.
 
 **Principle**
