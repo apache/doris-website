@@ -192,7 +192,7 @@ export function NavbarNext(): JSX.Element {
                         <span className="navbar-next__star-divider" />
                         <GitHubIcon />
                     </a>
-                    <Link to="/download-next" className="navbar-next__cta">
+                    <Link to="/download" className="navbar-next__cta">
                         DOWNLOAD
                     </Link>
                 </div>
@@ -260,7 +260,7 @@ export function NavbarNext(): JSX.Element {
                         <span className="navbar-next__star-divider" />
                         <GitHubIcon />
                     </a>
-                    <Link to="/download-next" className="navbar-next__cta" onClick={() => setMobileOpen(false)}>
+                    <Link to="/download" className="navbar-next__cta" onClick={() => setMobileOpen(false)}>
                         DOWNLOAD
                     </Link>
                 </div>

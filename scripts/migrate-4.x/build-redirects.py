@@ -46,12 +46,62 @@ PREFIX_RENAMES = [
     ("gettingStarted/", "getting-started/"),
 ]
 
+# Per-slug overrides applied before the prefix-rename / fallback pass.
+# Each entry maps an *old* slug to a specific *new* slug (resolved against
+# the en tree; the zh side reuses the same path via to_zh()). Use this when
+# a slug moved to a non-obvious new location that the prefix heuristics
+# can't infer — e.g. /ecosystem/* docs that were reorganized into
+# /connection-integration/data-integration/ or /install/deploy-on-kubernetes/.
+EXPLICIT_SLUG_MAP = {
+    # /ecosystem/* → /connection-integration/data-integration/*
+    "ecosystem/automq-load":                                "connection-integration/data-integration/automq",
+    "ecosystem/bi/apache-superset":                         "connection-integration/data-integration/superset",
+    "ecosystem/bi/clouddm":                                 "connection-integration/data-integration/clouddm",
+    "ecosystem/bi/datagrip":                                "connection-integration/data-integration/datagrip",
+    "ecosystem/bi/dbeaver":                                 "connection-integration/data-integration/dbeaver",
+    "ecosystem/bi/finebi":                                  "connection-integration/data-integration/finebi",
+    "ecosystem/bi/metabase":                                "connection-integration/data-integration/metabase",
+    "ecosystem/bi/powerbi":                                 "connection-integration/data-integration/powerbi",
+    "ecosystem/bi/quickbi":                                 "connection-integration/data-integration/quickbi",
+    "ecosystem/bi/quicksight":                              "connection-integration/data-integration/quicksight",
+    "ecosystem/bi/smartbi":                                 "connection-integration/data-integration/smartbi",
+    "ecosystem/bi/tableau":                                 "connection-integration/data-integration/tableau",
+    "ecosystem/cloudcanal":                                 "connection-integration/data-integration/cloudcanal",
+    "ecosystem/datax":                                      "connection-integration/data-integration/datax",
+    "ecosystem/dbt-doris-adapter":                          "connection-integration/data-integration/dbt-doris-adapter",
+    "ecosystem/doris-kafka-connector/doris-kafka-connector": "connection-integration/data-integration/doris-kafka-connector",
+    "ecosystem/doris-kafka-connector/release-notes":        "connection-integration/data-integration/doris-kafka-connector",
+    "ecosystem/doris-streamloader":                         "connection-integration/data-integration/doris-streamloader",
+    "ecosystem/flink-doris-connector/flink-doris-connector": "connection-integration/data-integration/flink-doris-connector",
+    "ecosystem/flink-doris-connector/release-notes":        "connection-integration/data-integration/flink-doris-connector",
+    "ecosystem/hive-bitmap-udf":                            "connection-integration/data-integration/hive-udf",
+    "ecosystem/hive-hll-udf":                               "connection-integration/data-integration/hive-udf",
+    "ecosystem/kettle":                                     "connection-integration/data-integration/kettle",
+    "ecosystem/kyuubi":                                     "connection-integration/data-integration/kyuubi",
+    "ecosystem/observability/beats":                        "connection-integration/data-integration/beats",
+    "ecosystem/observability/fluentbit":                    "connection-integration/data-integration/fluentbit",
+    "ecosystem/observability/langfuse":                     "connection-integration/data-integration/langfuse",
+    "ecosystem/observability/logstash":                     "connection-integration/data-integration/logstash",
+    "ecosystem/observability/loongcollector":               "connection-integration/data-integration/loongcollector",
+    "ecosystem/observability/opentelemetry":                "connection-integration/data-integration/opentelemetry",
+    "ecosystem/observability/vector":                       "connection-integration/data-integration/vector",
+    "ecosystem/seatunnel":                                  "connection-integration/data-integration/seatunnel",
+    "ecosystem/spark-doris-connector/release-notes":        "connection-integration/data-integration/spark-doris-connector",
+    "ecosystem/spark-doris-connector/spark-doris-connector": "connection-integration/data-integration/spark-doris-connector",
+    # /ecosystem/doris-operator/* → /install/deploy-on-kubernetes/doris-operator/*
+    "ecosystem/doris-operator/doris-operator-overview":     "install/deploy-on-kubernetes/doris-operator/doris-operator-overview",
+    "ecosystem/doris-operator/on-alibaba":                  "install/deploy-on-kubernetes/doris-operator/on-alibaba",
+    "ecosystem/doris-operator/on-aws":                      "install/deploy-on-kubernetes/doris-operator/on-aws",
+    # ecosystem/spark-load has no direct new home; falls through to DEFAULT_FALLBACK.
+}
+
 PREFIX_FALLBACKS = [
     ("gettingStarted/alternatives/", "/why-doris/compare"),
     ("db-connect/",                  "/docs/4.x/connection-integration/mysql-proto"),
     ("benchmark/",                   "/why-doris/benchmarks"),
-    # ecosystem/ has no replacement landing — the /ecosystem/ tree was
-    # decommissioned. Slugs fall through to DEFAULT_FALLBACK (docs home).
+    # /ecosystem/* has been pulled apart by EXPLICIT_SLUG_MAP above; any
+    # leftover ecosystem/* slug not covered there falls through to
+    # DEFAULT_FALLBACK (docs home).
 ]
 
 
@@ -62,11 +112,18 @@ def to_zh(target: str) -> str:
 
 
 def resolve(slug: str, new_set: set[str]) -> str:
+    # 1. Explicit per-slug overrides take precedence.
+    if slug in EXPLICIT_SLUG_MAP:
+        target = EXPLICIT_SLUG_MAP[slug]
+        if target in new_set:
+            return f"/docs/4.x/{target}"
+    # 2. Prefix renames (gettingStarted/ → getting-started/).
     for old_prefix, new_prefix in PREFIX_RENAMES:
         if slug.startswith(old_prefix):
             candidate = new_prefix + slug[len(old_prefix):]
             if candidate in new_set:
                 return f"/docs/4.x/{candidate}"
+    # 3. Whole-subtree fallbacks.
     for prefix, target in PREFIX_FALLBACKS:
         if slug.startswith(prefix):
             return target

@@ -897,7 +897,7 @@ export function HeroSection(): JSX.Element {
                         </p>
 
                         <div className="hero-next__ctas">
-                            <a className="hero-next__btn hero-next__btn--yellow" href="/download-next">
+                            <a className="hero-next__btn hero-next__btn--yellow" href="/download">
                                 <DownloadIcon />
                                 Download
                             </a>

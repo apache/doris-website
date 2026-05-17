@@ -337,299 +337,299 @@
   },
   {
     "from": "/docs/4.x/ecosystem/automq-load",
-    "to": "/docs/4.x/getting-started/what-is-apache-doris"
+    "to": "/docs/4.x/connection-integration/data-integration/automq"
   },
   {
     "from": "/zh-CN/docs/4.x/ecosystem/automq-load",
-    "to": "/zh-CN/docs/4.x/getting-started/what-is-apache-doris"
+    "to": "/zh-CN/docs/4.x/connection-integration/data-integration/automq"
   },
   {
     "from": "/docs/4.x/ecosystem/bi/apache-superset",
-    "to": "/docs/4.x/getting-started/what-is-apache-doris"
+    "to": "/docs/4.x/connection-integration/data-integration/superset"
   },
   {
     "from": "/zh-CN/docs/4.x/ecosystem/bi/apache-superset",
-    "to": "/zh-CN/docs/4.x/getting-started/what-is-apache-doris"
+    "to": "/zh-CN/docs/4.x/connection-integration/data-integration/superset"
   },
   {
     "from": "/docs/4.x/ecosystem/bi/clouddm",
-    "to": "/docs/4.x/getting-started/what-is-apache-doris"
+    "to": "/docs/4.x/connection-integration/data-integration/clouddm"
   },
   {
     "from": "/zh-CN/docs/4.x/ecosystem/bi/clouddm",
-    "to": "/zh-CN/docs/4.x/getting-started/what-is-apache-doris"
+    "to": "/zh-CN/docs/4.x/connection-integration/data-integration/clouddm"
   },
   {
     "from": "/docs/4.x/ecosystem/bi/datagrip",
-    "to": "/docs/4.x/getting-started/what-is-apache-doris"
+    "to": "/docs/4.x/connection-integration/data-integration/datagrip"
   },
   {
     "from": "/zh-CN/docs/4.x/ecosystem/bi/datagrip",
-    "to": "/zh-CN/docs/4.x/getting-started/what-is-apache-doris"
+    "to": "/zh-CN/docs/4.x/connection-integration/data-integration/datagrip"
   },
   {
     "from": "/docs/4.x/ecosystem/bi/dbeaver",
-    "to": "/docs/4.x/getting-started/what-is-apache-doris"
+    "to": "/docs/4.x/connection-integration/data-integration/dbeaver"
   },
   {
     "from": "/zh-CN/docs/4.x/ecosystem/bi/dbeaver",
-    "to": "/zh-CN/docs/4.x/getting-started/what-is-apache-doris"
+    "to": "/zh-CN/docs/4.x/connection-integration/data-integration/dbeaver"
   },
   {
     "from": "/docs/4.x/ecosystem/bi/finebi",
-    "to": "/docs/4.x/getting-started/what-is-apache-doris"
+    "to": "/docs/4.x/connection-integration/data-integration/finebi"
   },
   {
     "from": "/zh-CN/docs/4.x/ecosystem/bi/finebi",
-    "to": "/zh-CN/docs/4.x/getting-started/what-is-apache-doris"
+    "to": "/zh-CN/docs/4.x/connection-integration/data-integration/finebi"
   },
   {
     "from": "/docs/4.x/ecosystem/bi/metabase",
-    "to": "/docs/4.x/getting-started/what-is-apache-doris"
+    "to": "/docs/4.x/connection-integration/data-integration/metabase"
   },
   {
     "from": "/zh-CN/docs/4.x/ecosystem/bi/metabase",
-    "to": "/zh-CN/docs/4.x/getting-started/what-is-apache-doris"
+    "to": "/zh-CN/docs/4.x/connection-integration/data-integration/metabase"
   },
   {
     "from": "/docs/4.x/ecosystem/bi/powerbi",
-    "to": "/docs/4.x/getting-started/what-is-apache-doris"
+    "to": "/docs/4.x/connection-integration/data-integration/powerbi"
   },
   {
     "from": "/zh-CN/docs/4.x/ecosystem/bi/powerbi",
-    "to": "/zh-CN/docs/4.x/getting-started/what-is-apache-doris"
+    "to": "/zh-CN/docs/4.x/connection-integration/data-integration/powerbi"
   },
   {
     "from": "/docs/4.x/ecosystem/bi/quickbi",
-    "to": "/docs/4.x/getting-started/what-is-apache-doris"
+    "to": "/docs/4.x/connection-integration/data-integration/quickbi"
   },
   {
     "from": "/zh-CN/docs/4.x/ecosystem/bi/quickbi",
-    "to": "/zh-CN/docs/4.x/getting-started/what-is-apache-doris"
+    "to": "/zh-CN/docs/4.x/connection-integration/data-integration/quickbi"
   },
   {
     "from": "/docs/4.x/ecosystem/bi/quicksight",
-    "to": "/docs/4.x/getting-started/what-is-apache-doris"
+    "to": "/docs/4.x/connection-integration/data-integration/quicksight"
   },
   {
     "from": "/zh-CN/docs/4.x/ecosystem/bi/quicksight",
-    "to": "/zh-CN/docs/4.x/getting-started/what-is-apache-doris"
+    "to": "/zh-CN/docs/4.x/connection-integration/data-integration/quicksight"
   },
   {
     "from": "/docs/4.x/ecosystem/bi/smartbi",
-    "to": "/docs/4.x/getting-started/what-is-apache-doris"
+    "to": "/docs/4.x/connection-integration/data-integration/smartbi"
   },
   {
     "from": "/zh-CN/docs/4.x/ecosystem/bi/smartbi",
-    "to": "/zh-CN/docs/4.x/getting-started/what-is-apache-doris"
+    "to": "/zh-CN/docs/4.x/connection-integration/data-integration/smartbi"
   },
   {
     "from": "/docs/4.x/ecosystem/bi/tableau",
-    "to": "/docs/4.x/getting-started/what-is-apache-doris"
+    "to": "/docs/4.x/connection-integration/data-integration/tableau"
   },
   {
     "from": "/zh-CN/docs/4.x/ecosystem/bi/tableau",
-    "to": "/zh-CN/docs/4.x/getting-started/what-is-apache-doris"
+    "to": "/zh-CN/docs/4.x/connection-integration/data-integration/tableau"
   },
   {
     "from": "/docs/4.x/ecosystem/cloudcanal",
-    "to": "/docs/4.x/getting-started/what-is-apache-doris"
+    "to": "/docs/4.x/connection-integration/data-integration/cloudcanal"
   },
   {
     "from": "/zh-CN/docs/4.x/ecosystem/cloudcanal",
-    "to": "/zh-CN/docs/4.x/getting-started/what-is-apache-doris"
+    "to": "/zh-CN/docs/4.x/connection-integration/data-integration/cloudcanal"
   },
   {
     "from": "/docs/4.x/ecosystem/datax",
-    "to": "/docs/4.x/getting-started/what-is-apache-doris"
+    "to": "/docs/4.x/connection-integration/data-integration/datax"
   },
   {
     "from": "/zh-CN/docs/4.x/ecosystem/datax",
-    "to": "/zh-CN/docs/4.x/getting-started/what-is-apache-doris"
+    "to": "/zh-CN/docs/4.x/connection-integration/data-integration/datax"
   },
   {
     "from": "/docs/4.x/ecosystem/dbt-doris-adapter",
-    "to": "/docs/4.x/getting-started/what-is-apache-doris"
+    "to": "/docs/4.x/connection-integration/data-integration/dbt-doris-adapter"
   },
   {
     "from": "/zh-CN/docs/4.x/ecosystem/dbt-doris-adapter",
-    "to": "/zh-CN/docs/4.x/getting-started/what-is-apache-doris"
+    "to": "/zh-CN/docs/4.x/connection-integration/data-integration/dbt-doris-adapter"
   },
   {
     "from": "/docs/4.x/ecosystem/doris-kafka-connector/doris-kafka-connector",
-    "to": "/docs/4.x/getting-started/what-is-apache-doris"
+    "to": "/docs/4.x/connection-integration/data-integration/doris-kafka-connector"
   },
   {
     "from": "/zh-CN/docs/4.x/ecosystem/doris-kafka-connector/doris-kafka-connector",
-    "to": "/zh-CN/docs/4.x/getting-started/what-is-apache-doris"
+    "to": "/zh-CN/docs/4.x/connection-integration/data-integration/doris-kafka-connector"
   },
   {
     "from": "/docs/4.x/ecosystem/doris-kafka-connector/release-notes",
-    "to": "/docs/4.x/getting-started/what-is-apache-doris"
+    "to": "/docs/4.x/connection-integration/data-integration/doris-kafka-connector"
   },
   {
     "from": "/zh-CN/docs/4.x/ecosystem/doris-kafka-connector/release-notes",
-    "to": "/zh-CN/docs/4.x/getting-started/what-is-apache-doris"
+    "to": "/zh-CN/docs/4.x/connection-integration/data-integration/doris-kafka-connector"
   },
   {
     "from": "/docs/4.x/ecosystem/doris-operator/doris-operator-overview",
-    "to": "/docs/4.x/getting-started/what-is-apache-doris"
+    "to": "/docs/4.x/install/deploy-on-kubernetes/doris-operator/doris-operator-overview"
   },
   {
     "from": "/zh-CN/docs/4.x/ecosystem/doris-operator/doris-operator-overview",
-    "to": "/zh-CN/docs/4.x/getting-started/what-is-apache-doris"
+    "to": "/zh-CN/docs/4.x/install/deploy-on-kubernetes/doris-operator/doris-operator-overview"
   },
   {
     "from": "/docs/4.x/ecosystem/doris-operator/on-alibaba",
-    "to": "/docs/4.x/getting-started/what-is-apache-doris"
+    "to": "/docs/4.x/install/deploy-on-kubernetes/doris-operator/on-alibaba"
   },
   {
     "from": "/zh-CN/docs/4.x/ecosystem/doris-operator/on-alibaba",
-    "to": "/zh-CN/docs/4.x/getting-started/what-is-apache-doris"
+    "to": "/zh-CN/docs/4.x/install/deploy-on-kubernetes/doris-operator/on-alibaba"
   },
   {
     "from": "/docs/4.x/ecosystem/doris-operator/on-aws",
-    "to": "/docs/4.x/getting-started/what-is-apache-doris"
+    "to": "/docs/4.x/install/deploy-on-kubernetes/doris-operator/on-aws"
   },
   {
     "from": "/zh-CN/docs/4.x/ecosystem/doris-operator/on-aws",
-    "to": "/zh-CN/docs/4.x/getting-started/what-is-apache-doris"
+    "to": "/zh-CN/docs/4.x/install/deploy-on-kubernetes/doris-operator/on-aws"
   },
   {
     "from": "/docs/4.x/ecosystem/doris-streamloader",
-    "to": "/docs/4.x/getting-started/what-is-apache-doris"
+    "to": "/docs/4.x/connection-integration/data-integration/doris-streamloader"
   },
   {
     "from": "/zh-CN/docs/4.x/ecosystem/doris-streamloader",
-    "to": "/zh-CN/docs/4.x/getting-started/what-is-apache-doris"
+    "to": "/zh-CN/docs/4.x/connection-integration/data-integration/doris-streamloader"
   },
   {
     "from": "/docs/4.x/ecosystem/flink-doris-connector/flink-doris-connector",
-    "to": "/docs/4.x/getting-started/what-is-apache-doris"
+    "to": "/docs/4.x/connection-integration/data-integration/flink-doris-connector"
   },
   {
     "from": "/zh-CN/docs/4.x/ecosystem/flink-doris-connector/flink-doris-connector",
-    "to": "/zh-CN/docs/4.x/getting-started/what-is-apache-doris"
+    "to": "/zh-CN/docs/4.x/connection-integration/data-integration/flink-doris-connector"
   },
   {
     "from": "/docs/4.x/ecosystem/flink-doris-connector/release-notes",
-    "to": "/docs/4.x/getting-started/what-is-apache-doris"
+    "to": "/docs/4.x/connection-integration/data-integration/flink-doris-connector"
   },
   {
     "from": "/zh-CN/docs/4.x/ecosystem/flink-doris-connector/release-notes",
-    "to": "/zh-CN/docs/4.x/getting-started/what-is-apache-doris"
+    "to": "/zh-CN/docs/4.x/connection-integration/data-integration/flink-doris-connector"
   },
   {
     "from": "/docs/4.x/ecosystem/hive-bitmap-udf",
-    "to": "/docs/4.x/getting-started/what-is-apache-doris"
+    "to": "/docs/4.x/connection-integration/data-integration/hive-udf"
   },
   {
     "from": "/zh-CN/docs/4.x/ecosystem/hive-bitmap-udf",
-    "to": "/zh-CN/docs/4.x/getting-started/what-is-apache-doris"
+    "to": "/zh-CN/docs/4.x/connection-integration/data-integration/hive-udf"
   },
   {
     "from": "/docs/4.x/ecosystem/hive-hll-udf",
-    "to": "/docs/4.x/getting-started/what-is-apache-doris"
+    "to": "/docs/4.x/connection-integration/data-integration/hive-udf"
   },
   {
     "from": "/zh-CN/docs/4.x/ecosystem/hive-hll-udf",
-    "to": "/zh-CN/docs/4.x/getting-started/what-is-apache-doris"
+    "to": "/zh-CN/docs/4.x/connection-integration/data-integration/hive-udf"
   },
   {
     "from": "/docs/4.x/ecosystem/kettle",
-    "to": "/docs/4.x/getting-started/what-is-apache-doris"
+    "to": "/docs/4.x/connection-integration/data-integration/kettle"
   },
   {
     "from": "/zh-CN/docs/4.x/ecosystem/kettle",
-    "to": "/zh-CN/docs/4.x/getting-started/what-is-apache-doris"
+    "to": "/zh-CN/docs/4.x/connection-integration/data-integration/kettle"
   },
   {
     "from": "/docs/4.x/ecosystem/kyuubi",
-    "to": "/docs/4.x/getting-started/what-is-apache-doris"
+    "to": "/docs/4.x/connection-integration/data-integration/kyuubi"
   },
   {
     "from": "/zh-CN/docs/4.x/ecosystem/kyuubi",
-    "to": "/zh-CN/docs/4.x/getting-started/what-is-apache-doris"
+    "to": "/zh-CN/docs/4.x/connection-integration/data-integration/kyuubi"
   },
   {
     "from": "/docs/4.x/ecosystem/observability/beats",
-    "to": "/docs/4.x/getting-started/what-is-apache-doris"
+    "to": "/docs/4.x/connection-integration/data-integration/beats"
   },
   {
     "from": "/zh-CN/docs/4.x/ecosystem/observability/beats",
-    "to": "/zh-CN/docs/4.x/getting-started/what-is-apache-doris"
+    "to": "/zh-CN/docs/4.x/connection-integration/data-integration/beats"
   },
   {
     "from": "/docs/4.x/ecosystem/observability/fluentbit",
-    "to": "/docs/4.x/getting-started/what-is-apache-doris"
+    "to": "/docs/4.x/connection-integration/data-integration/fluentbit"
   },
   {
     "from": "/zh-CN/docs/4.x/ecosystem/observability/fluentbit",
-    "to": "/zh-CN/docs/4.x/getting-started/what-is-apache-doris"
+    "to": "/zh-CN/docs/4.x/connection-integration/data-integration/fluentbit"
   },
   {
     "from": "/docs/4.x/ecosystem/observability/langfuse",
-    "to": "/docs/4.x/getting-started/what-is-apache-doris"
+    "to": "/docs/4.x/connection-integration/data-integration/langfuse"
   },
   {
     "from": "/zh-CN/docs/4.x/ecosystem/observability/langfuse",
-    "to": "/zh-CN/docs/4.x/getting-started/what-is-apache-doris"
+    "to": "/zh-CN/docs/4.x/connection-integration/data-integration/langfuse"
   },
   {
     "from": "/docs/4.x/ecosystem/observability/logstash",
-    "to": "/docs/4.x/getting-started/what-is-apache-doris"
+    "to": "/docs/4.x/connection-integration/data-integration/logstash"
   },
   {
     "from": "/zh-CN/docs/4.x/ecosystem/observability/logstash",
-    "to": "/zh-CN/docs/4.x/getting-started/what-is-apache-doris"
+    "to": "/zh-CN/docs/4.x/connection-integration/data-integration/logstash"
   },
   {
     "from": "/docs/4.x/ecosystem/observability/loongcollector",
-    "to": "/docs/4.x/getting-started/what-is-apache-doris"
+    "to": "/docs/4.x/connection-integration/data-integration/loongcollector"
   },
   {
     "from": "/zh-CN/docs/4.x/ecosystem/observability/loongcollector",
-    "to": "/zh-CN/docs/4.x/getting-started/what-is-apache-doris"
+    "to": "/zh-CN/docs/4.x/connection-integration/data-integration/loongcollector"
   },
   {
     "from": "/docs/4.x/ecosystem/observability/opentelemetry",
-    "to": "/docs/4.x/getting-started/what-is-apache-doris"
+    "to": "/docs/4.x/connection-integration/data-integration/opentelemetry"
   },
   {
     "from": "/zh-CN/docs/4.x/ecosystem/observability/opentelemetry",
-    "to": "/zh-CN/docs/4.x/getting-started/what-is-apache-doris"
+    "to": "/zh-CN/docs/4.x/connection-integration/data-integration/opentelemetry"
   },
   {
     "from": "/docs/4.x/ecosystem/observability/vector",
-    "to": "/docs/4.x/getting-started/what-is-apache-doris"
+    "to": "/docs/4.x/connection-integration/data-integration/vector"
   },
   {
     "from": "/zh-CN/docs/4.x/ecosystem/observability/vector",
-    "to": "/zh-CN/docs/4.x/getting-started/what-is-apache-doris"
+    "to": "/zh-CN/docs/4.x/connection-integration/data-integration/vector"
   },
   {
     "from": "/docs/4.x/ecosystem/seatunnel",
-    "to": "/docs/4.x/getting-started/what-is-apache-doris"
+    "to": "/docs/4.x/connection-integration/data-integration/seatunnel"
   },
   {
     "from": "/zh-CN/docs/4.x/ecosystem/seatunnel",
-    "to": "/zh-CN/docs/4.x/getting-started/what-is-apache-doris"
+    "to": "/zh-CN/docs/4.x/connection-integration/data-integration/seatunnel"
   },
   {
     "from": "/docs/4.x/ecosystem/spark-doris-connector/release-notes",
-    "to": "/docs/4.x/getting-started/what-is-apache-doris"
+    "to": "/docs/4.x/connection-integration/data-integration/spark-doris-connector"
   },
   {
     "from": "/zh-CN/docs/4.x/ecosystem/spark-doris-connector/release-notes",
-    "to": "/zh-CN/docs/4.x/getting-started/what-is-apache-doris"
+    "to": "/zh-CN/docs/4.x/connection-integration/data-integration/spark-doris-connector"
   },
   {
     "from": "/docs/4.x/ecosystem/spark-doris-connector/spark-doris-connector",
-    "to": "/docs/4.x/getting-started/what-is-apache-doris"
+    "to": "/docs/4.x/connection-integration/data-integration/spark-doris-connector"
   },
   {
     "from": "/zh-CN/docs/4.x/ecosystem/spark-doris-connector/spark-doris-connector",
-    "to": "/zh-CN/docs/4.x/getting-started/what-is-apache-doris"
+    "to": "/zh-CN/docs/4.x/connection-integration/data-integration/spark-doris-connector"
   },
   {
     "from": "/docs/4.x/ecosystem/spark-load",

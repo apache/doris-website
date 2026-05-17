@@ -156,3 +156,22 @@ body {
 .mantine-Modal-overlay {
     z-index: 9999 !important;
 }
+
+/**
+ * Push the Kapa Ask AI modal down from the top of the viewport so it
+ * doesn't sit flush against the 64px sticky NavbarNext. Kapa renders its
+ * modal flush against whichever container it sits below, so we both
+ * override Mantine's yOffset variable on the inner wrapper and add a
+ * margin-top on the modal panel itself — whichever Kapa is using, the
+ * gap shows up.
+ */
+.mantine-Modal-inner,
+[class*="Modal-inner"] {
+    --mantine-modal-y-offset: 24px !important;
+    padding-top: 24px !important;
+}
+
+.mantine-Modal-content,
+[class*="Modal-content"] {
+    margin-top: 24px !important;
+}
