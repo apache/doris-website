@@ -93,7 +93,7 @@
 
 ## 步骤三：在 Tableau 中构建可视化
 
-下面以 TPC-H 数据集为例，演示如何基于 Doris 数据源构建可视化。TPC-H 数据的构建方式可参考 [TPC-H Benchmark 文档](../../benchmark/tpch.md)。
+下面以 TPC-H 数据集为例，演示如何基于 Doris 数据源构建可视化。TPC-H 数据的构建方式可参考 [TPC-H Benchmark 文档](../../lakehouse/best-practices/tpch.md)。
 
 ### 1. 关联数据表
 

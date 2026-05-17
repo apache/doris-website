@@ -108,7 +108,7 @@ mysql> show variables like "version";
 
 ## 在 QuickSight 中构建可视化
 
-本节以 TPC-H 数据作为数据源，演示如何在 QuickSight 中构建基于多表关联的可视化看板。Doris TPC-H 数据源的构建方式请参考 [TPC-H 基准测试文档](../../benchmark/tpch)。
+本节以 TPC-H 数据作为数据源，演示如何在 QuickSight 中构建基于多表关联的可视化看板。Doris TPC-H 数据源的构建方式请参考 [TPC-H 基准测试文档](../../lakehouse/best-practices/tpch.md)。
 
 示例目标是统计各个国家在不同订单状态下的订单数量。由于 Doris 在多表关联场景下具有较好的查询性能，本文使用 `customer`、`nation` 和 `orders` 三张表进行关联分析。
 

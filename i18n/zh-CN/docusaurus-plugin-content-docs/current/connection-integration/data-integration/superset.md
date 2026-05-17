@@ -99,7 +99,7 @@ doris://<用户名>:<密码>@<主机地址>:<端口>/<Catalog>.<数据库名>
 
 本文以 TPC-H 数据集为例，演示如何分析不同货运方式的订单金额随时间变化曲线。
 
-> **前提条件**：已在 Apache Doris 中加载 TPC-H 数据集，参考 [TPC-H 数据构建文档](../../benchmark/tpch)。
+> **前提条件**：已在 Apache Doris 中加载 TPC-H 数据集，参考 [TPC-H 数据构建文档](../../lakehouse/best-practices/tpch.md)。
 
 ### 1. 创建 Dataset
 
