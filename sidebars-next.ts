@@ -27,8 +27,6 @@ const sidebars: SidebarsConfig = {
             items: [
                 'features-architecture/system-architecture',
                 'features-architecture/product-concepts',
-                'features-architecture/feature-overview',
-                'features-architecture/versioning',
             ],
         },
         {
