@@ -822,7 +822,7 @@ function CTA(): JSX.Element {
                 <div className="b-cta-actions" data-reveal data-reveal-delay="2">
                     <Link
                         className="b-btn b-btn-yellow"
-                        to="/docs-next/dev/getting-started/quick-start"
+                        to="/docs/dev/getting-started/quick-start"
                     >
                         <svg
                             width="14"

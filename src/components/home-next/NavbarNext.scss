@@ -13,7 +13,7 @@
 
     position: sticky;
     top: var(--home-next-banner-height, 0px);
-    // Above .docs-next-search-section (z-index 200) so the navbar's hover
+    // Above .docs-search-section (z-index 200) so the navbar's hover
     // dropdowns (which extend below the navbar bar) stay on top of the
     // sticky docs search strip.
     z-index: 300;
@@ -31,7 +31,7 @@
         gap: 48px;
     }
 
-    // Override the global Docusaurus navbar styles we inherit on docs-next.
+    // Override the global Docusaurus navbar styles we inherit on Dev docs.
     &.navbar {
         display: block;
         height: 64px;

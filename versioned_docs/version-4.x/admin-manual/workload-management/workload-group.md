@@ -273,6 +273,7 @@ Query OK, 0 rows affected (0.01 sec)
 
 More details can be found in[DROP-WORKLOAD-GROUP](../../sql-manual/sql-statements/cluster-management/compute-management/DROP-WORKLOAD-GROUP)
 
+
 ## Testing
 ### Memory hard limit
 Adhoc-type queries typically have unpredictable SQL inputs and uncertain memory usage, which poses the risk of a few queries consuming a large amount of memory.
@@ -417,6 +418,7 @@ The dataset is clickbench, and the test SQL is q29.
     ```sql
     alter workload group g2 properties('max_cpu_percent'='10%');
     ```
+
 3. Re-run the load test for queries, and you can see that the current process can only use 9 to 10 cores, which is about 10% of the total cores.
 
    ![use workload group cpu](/images/workload-management/use_wg_cpu_2.png)

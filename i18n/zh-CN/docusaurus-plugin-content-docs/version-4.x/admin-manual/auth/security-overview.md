@@ -2,7 +2,7 @@
 {
     "title": "安全概览",
     "language": "zh-CN",
-    "description": "Doris 提供以下机制管理数据安全："
+    "description": "Apache Doris企业级安全架构详解：支持用户名/LDAP双重认证、基于角色的访问控制(RBAC)和Ranger集中化权限管理，提供数据加密脱敏、SSL传输加密、行级列级细粒度访问控制。内置审计日志、Java-UDF安全审查机制，全面保障大数据平台的身份认证、权限管控、数据保护和操作可追溯性。"
 }
 ---
 

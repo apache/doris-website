@@ -1,7 +1,7 @@
-// DocsSearchSection — strip placed below NavbarNext on docs-next pages,
+// DocsSearchSection — strip placed below NavbarNext on Dev docs pages,
 // holds the global SearchBar so it doesn't crowd the main navbar.
 
-.docs-next-search-section {
+.docs-search-section {
     position: sticky;
     top: calc(var(--home-next-banner-height, 0px) + 64px);
     // Above the docs sidebar (.theme-doc-sidebar-container) which uses z-index 100,
@@ -64,19 +64,19 @@
 }
 
 @media (max-width: 1180px) {
-    .docs-next-search-section__inner {
+    .docs-search-section__inner {
         padding: 12px 32px;
     }
 }
 
 @media (max-width: 1020px) {
-    .docs-next-search-section__inner {
+    .docs-search-section__inner {
         padding: 10px 24px;
     }
 }
 
 @media (max-width: 640px) {
-    .docs-next-search-section {
+    .docs-search-section {
         &__inner {
             padding: 10px 20px;
         }

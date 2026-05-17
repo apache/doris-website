@@ -163,7 +163,7 @@ SELECT TOKENIZE("Hello World", '"built_in_analyzer"="standard", "support_phrase"
 ## Related Functions
 
 - [MATCH](../../../../sql-manual/basic-element/operators/conditional-operators/full-text-search-operators): Full-text search using inverted indexes
-- [SEARCH](../../../../ai/text-search/search-function): Advanced search with DSL support
+- [SEARCH](../../../../table-design/index/inverted-index/search-function.md): Advanced search with DSL support
 
 ## Keywords
 

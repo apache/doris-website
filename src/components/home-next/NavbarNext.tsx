@@ -28,7 +28,7 @@ interface NavItem {
     items: DropdownItem[];
 }
 
-function buildNavItems(docsHref: string, releasesHref: string, joinCommunityHref: string): NavItem[] {
+function buildNavItems(devDocsHref: string, stableDocsHref: string, releasesHref: string, joinCommunityHref: string): NavItem[] {
     return [
         {
             label: 'Why Doris',
@@ -50,7 +50,10 @@ function buildNavItems(docsHref: string, releasesHref: string, joinCommunityHref
         },
         {
             label: 'Docs',
-            items: [{ label: 'dev', href: docsHref }],
+            items: [
+                { label: '4.x', href: stableDocsHref },
+                { label: 'Dev', href: devDocsHref },
+            ],
         },
         {
             label: 'Resouces',
@@ -112,10 +115,11 @@ export function NavbarNext(): JSX.Element {
     } = useDocusaurusContext();
     const [mobileOpen, setMobileOpen] = useState(false);
     const localePrefix = getLocalePrefix(currentLocale, defaultLocale);
-    const docsHref = `${localePrefix}/docs-next/dev/getting-started/what-is-apache-doris`;
+    const devDocsHref = `${localePrefix}/docs/dev/getting-started/what-is-apache-doris`;
+    const stableDocsHref = `${localePrefix}/docs/4.x/getting-started/what-is-apache-doris`;
     const releasesHref = `${localePrefix}/releases/all-release`;
     const joinCommunityHref = `${localePrefix}/community/join-community`;
-    const navItems = buildNavItems(docsHref, releasesHref, joinCommunityHref);
+    const navItems = buildNavItems(devDocsHref, stableDocsHref, releasesHref, joinCommunityHref);
     const [expandedMobileItem, setExpandedMobileItem] = useState(navItems[0]?.label ?? '');
     const homeHref = `${getLocalePrefix(currentLocale, defaultLocale)}/`;
 

@@ -22,7 +22,7 @@ CONVERT_TZ(<date_or_time_expr>, <from_tz>, <to_tz>)
 
 | 参数 | 说明 |
 | -- | -- | 
-| `<date_or_time_expr>` | 需要被转换的值，为 datetime 或者 date 类型，具体 datetime 和 date 格式请查看 [datetime 的转换](../../../basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../basic-element/sql-data-types/conversion/date-conversion)) |
+| `<date_or_time_expr>` | 需要被转换的值，为 datetime 或者 date 类型，具体 datetime 和 date 格式请查看 [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion)) |
 | `<from_tz>` | dt 的原始时区，该参数为 `varchar` 类型 |
 | `<to_tz>` | 需要转换的时区，该参数为 `varchar` 类型|
 

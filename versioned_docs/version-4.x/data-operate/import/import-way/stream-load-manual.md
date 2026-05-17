@@ -2,226 +2,243 @@
 {
     "title": "Stream Load",
     "language": "en",
-    "description": "Stream Load supports importing local files or data streams into Doris through the HTTP protocol."
+    "description": "Stream Load synchronously imports local files or data streams into Doris over HTTP, supports CSV/JSON/Parquet/ORC formats, and guarantees atomic loads.",
+    "keywords": [
+        "Stream Load",
+        "Doris data import",
+        "HTTP import",
+        "CSV import",
+        "JSON import",
+        "synchronous import",
+        "Doris Streamloader",
+        "curl import",
+        "atomic import"
+    ]
 }
 ---
 
-Stream Load supports importing local files or data streams into Doris through the HTTP protocol. 
+<!-- Knowledge type: Operation guide + Configuration parameter reference -->
+<!-- Applicable scenario: Data import / Local file import / Streaming data write -->
 
-Stream Load is a synchronous import method that returns the import result after the import is executed, allowing you to determine the success of the import through the request response. Generally, users can use Stream Load to import files under 10GB. If the file is too large, it is recommended to split the file and then use Stream Load for importing. Stream Load can ensure the atomicity of a batch of import tasks, meaning that either all of them succeed or all of them fail.
+Stream Load supports importing local files or data streams into Doris over HTTP. Stream Load is a synchronous import method: it returns the import result after execution, so you can determine whether the import succeeded from the response. In general, you can use Stream Load to import files smaller than 10 GB. For larger files, split them first and then import each part with Stream Load. Stream Load guarantees the atomicity of a batch of import tasks: either all rows are imported successfully, or none are.
 
 :::tip
 
-In comparison to single-threaded load using `curl`, Doris Streamloader is a client tool designed for loading data into Apache Doris. It reduces the ingestion latency of large datasets by its concurrent loading capabilities. It comes with the following features:
+Compared with single-concurrency imports that use `curl` directly, the dedicated import tool Doris Streamloader is recommended. It is a dedicated client tool for importing data into Doris that provides **multi-concurrency import** capabilities and reduces the time required for large data volume imports. See the [Doris Streamloader documentation](../../../connection-integration/data-integration/doris-streamloader) for usage and practical details.
 
-- **Parallel loading**: multi-threaded load for the Stream Load method. You can set the parallelism level using the `workers` parameter.
-- **Multi-file load:** simultaneously loading of multiple files and directories with one shot. It supports recursive file fetching and allows you to specify file names with wildcard characters.
-- **Path traversal support:** supports path traversal when the source files are in directories
-- **Resilience and continuity:** in case of partial load failures, it can resume data loading from the point of failure.
-- **Automatic retry mechanism:** in case of loading failures, it can automatically retry a default number of times. If the loading remains unsuccessful, it will print the command for manual retry.
-
-See [Doris Streamloader](../../../ecosystem/doris-streamloader) for detailed instructions and best practices.
 :::
 
-## User guide
+## Use cases
 
-Stream Load supports importing CSV, JSON, Parquet, and ORC format data from local or remote sources via HTTP.
+Stream Load is suitable for the following typical scenarios:
 
-- Null values: Use `\N` to represent null. For example, `a,\N,b` indicates the middle column is null.
-- Empty string: An empty string is represented when there are no characters between two delimiters. For example, in `a,,b`, there are no characters between the two commas, indicating that the middle column value is an empty string.
+- Importing local or remote CSV, JSON, Parquet, or ORC files into Doris.
+- Continuously writing data through programs (Java, Go, Python, and so on) over HTTP streams.
+- Cases that require atomicity of a single import job (all rows succeed or all fail).
+- Single files that are typically smaller than 10 GB. For larger files, split them before importing or use Doris Streamloader.
 
-### Basic principles
+When importing CSV files, distinguish clearly between null values and empty strings:
 
-When using Stream Load, it is necessary to initiate an import job through the HTTP protocol to the FE (Frontend) node. The FE will redirect the request to a BE (Backend) node in a round-robin manner to achieve load balancing. It is also possible to send HTTP requests directly to a specific BE node. In Stream Load, Doris selects one node to serve as the Coordinator node. The Coordinator node is responsible for receiving data and distributing it to other nodes.
+- Null value (null): represented by `\N`. For example, `a,\N,b` means the middle column is null.
+- Empty string: when there are no characters between two delimiters, the value is an empty string. For example, in `a,,b`, there are no characters between the two commas, so the middle column is an empty string.
 
-The following figure shows the main flow of Stream Load, omitting some import details.
+## Basic principles
 
-![Stream load Basic principles](/images/stream-load.png)
+<!-- Knowledge type: Architecture principles -->
 
-1. The client submits a Stream Load imports job request to the FE (Frontend).
-2. The FE selects a BE (Backend) as the Coordinator node in a round-robin manner, which is responsible for scheduling the import job, and then returns an HTTP redirect to the client.
-3. The client connects to the Coordinator BE node and submits the import request.
-4. The Coordinator BE distributes the data to the appropriate BE nodes and returns the import result to the client once the import is complete.
-5. Alternatively, the client can directly specify a BE node as the Coordinator and distribute the import job directly.
+When using Stream Load, an import job is initiated to an FE node over HTTP. The FE redirects the request in a round-robin manner to a BE node for load balancing. You can also send the HTTP request directly to a specific BE node. In Stream Load, Doris designates one node as the Coordinator. The Coordinator node is responsible for receiving data and distributing it to other nodes.
+
+The following diagram shows the main flow of Stream Load:
+
+![Stream Load basic principles](/images/stream-load.png)
+
+The execution flow is as follows:
+
+1. The Client submits a Stream Load import job request to the FE.
+2. The FE chooses a BE in round-robin order as the Coordinator node responsible for scheduling the import job, and returns an HTTP redirect to the Client.
+3. The Client connects to the Coordinator BE node and submits the import request.
+4. The Coordinator BE distributes data to the corresponding BE nodes. After the import completes, it returns the import result to the Client.
+5. The Client can also designate a BE node directly as the Coordinator and have it distribute the import job.
 
 ## Quick start
 
-Stream Load import data through the HTTP protocol. The following example uses the curl tool to demonstrate submitting an import job through Stream Load.
+<!-- Knowledge type: Operational steps -->
 
+Stream Load is submitted and transferred over HTTP. The following examples use the curl tool to demonstrate how to submit an import job through Stream Load.
 
+### Prerequisites
 
-### Prerequisite check
+Stream Load requires INSERT privilege on the target table. If the user does not have INSERT privilege, grant it with the [GRANT](../../../sql-manual/sql-statements/account-management/GRANT-TO) command.
 
-Stream Load requires `INSERT` privileges on the target table. If there are no `INSERT` privileges, it can be granted to the user through the [GRANT](../../../sql-manual/sql-statements/account-management/GRANT-TO) command.
+### Create an import job
 
-### Create load job
+#### Import CSV data
 
-#### Loading CSV 
+1. Create the import data
 
-1. Creating loading data
+    Create a CSV file `streamload_example.csv` with the following content:
 
-   Create a CSV file named `streamload_example.csv`. The specific content is as follows
+    ```sql
+    1,Emily,25
+    2,Benjamin,35
+    3,Olivia,28
+    4,Alexander,60
+    5,Ava,17
+    6,William,69
+    7,Sophia,32
+    8,James,64
+    9,Emma,37
+    10,Liam,64
+    ```
 
-```sql
-1,Emily,25
-2,Benjamin,35
-3,Olivia,28
-4,Alexander,60
-5,Ava,17
-6,William,69
-7,Sophia,32
-8,James,64
-9,Emma,37
-10,Liam,64
-```
+2. Create the target Doris table
 
-2. Creating a table for loading
+    Create the table to be imported in Doris with the following statement:
 
-   Create the table that will be imported into, using the specific syntax as follows:
+    ```sql
+    CREATE TABLE testdb.test_streamload(
+        user_id            BIGINT       NOT NULL COMMENT "user id",
+        name               VARCHAR(20)           COMMENT "name",
+        age                INT                   COMMENT "age"
+    )
+    DUPLICATE KEY(user_id)
+    DISTRIBUTED BY HASH(user_id) BUCKETS 10;
+    ```
 
-```sql
-CREATE TABLE testdb.test_streamload(
-    user_id            BIGINT       NOT NULL COMMENT "User ID",
-    name               VARCHAR(20)           COMMENT "User name",
-    age                INT                   COMMENT "User age"
-)
-DUPLICATE KEY(user_id)
-DISTRIBUTED BY HASH(user_id) BUCKETS 10;
-```
+3. Start the import job
 
-3. Enable the load job
+    You can submit a Stream Load import job with the `curl` command.
 
-   The Stream Load job can be submitted using the `curl` command.
+    ```shell
+    curl --location-trusted -u <doris_user>:<doris_password> \
+        -H "Expect:100-continue" \
+        -H "column_separator:," \
+        -H "columns:user_id,name,age" \
+        -T streamload_example.csv \
+        -XPUT http://<fe_ip>:<fe_http_port>/api/testdb/test_streamload/_stream_load
+    ```
 
-```shell
-curl --location-trusted -u <doris_user>:<doris_password> \
-    -H "Expect:100-continue" \
-    -H "column_separator:," \
-    -H "columns:user_id,name,age" \
-    -T streamload_example.csv \
-    -XPUT http://<fe_ip>:<fe_http_port>/api/testdb/test_streamload/_stream_load
-```
+    Stream Load is a synchronous import method, and the import result is returned to the user directly.
 
-​	Stream Load is a synchronous method, where the result is directly returned to the user.
+    ```sql
+    {
+        "TxnId": 3,
+        "Label": "123",
+        "Comment": "",
+        "TwoPhaseCommit": "false",
+        "Status": "Success",
+        "Message": "OK",
+        "NumberTotalRows": 10,
+        "NumberLoadedRows": 10,
+        "NumberFilteredRows": 0,
+        "NumberUnselectedRows": 0,
+        "LoadBytes": 118,
+        "LoadTimeMs": 173,
+        "BeginTxnTimeMs": 1,
+        "StreamLoadPutTimeMs": 70,
+        "ReadDataTimeMs": 2,
+        "WriteDataTimeMs": 48,
+        "CommitAndPublishTimeMs": 52
+    }
+    ```
 
-```sql
-{
-    "TxnId": 3,
-    "Label": "123",
-    "Comment": "",
-    "TwoPhaseCommit": "false",
-    "Status": "Success",
-    "Message": "OK",
-    "NumberTotalRows": 10,
-    "NumberLoadedRows": 10,
-    "NumberFilteredRows": 0,
-    "NumberUnselectedRows": 0,
-    "LoadBytes": 118,
-    "LoadTimeMs": 173,
-    "BeginTxnTimeMs": 1,
-    "StreamLoadPutTimeMs": 70,
-    "ReadDataTimeMs": 2,
-    "WriteDataTimeMs": 48,
-    "CommitAndPublishTimeMs": 52
-}
-```
+4. View the imported data
 
-4. View data
+    ```sql
+    mysql> select count(*) from testdb.test_streamload;
+    +----------+
+    | count(*) |
+    +----------+
+    |       10 |
+    +----------+
+    ```
 
-```sql
-mysql> select count(*) from testdb.test_streamload;
-+----------+
-| count(*) |
-+----------+
-|       10 |
-+----------+
-```
+#### Import JSON data
 
-#### Loading JSON 
+1. Create the import data
 
-1. Creating loading data
+    Create a JSON file `streamload_example.json` with the following content:
 
-Create a JSON file named `streamload_example.json` . The specific content is as follows
+    ```sql
+    [
+    {"userid":1,"username":"Emily","userage":25},
+    {"userid":2,"username":"Benjamin","userage":35},
+    {"userid":3,"username":"Olivia","userage":28},
+    {"userid":4,"username":"Alexander","userage":60},
+    {"userid":5,"username":"Ava","userage":17},
+    {"userid":6,"username":"William","userage":69},
+    {"userid":7,"username":"Sophia","userage":32},
+    {"userid":8,"username":"James","userage":64},
+    {"userid":9,"username":"Emma","userage":37},
+    {"userid":10,"username":"Liam","userage":64}
+    ]
+    ```
 
-```sql
-[
-{"userid":1,"username":"Emily","userage":25},
-{"userid":2,"username":"Benjamin","userage":35},
-{"userid":3,"username":"Olivia","userage":28},
-{"userid":4,"username":"Alexander","userage":60},
-{"userid":5,"username":"Ava","userage":17},
-{"userid":6,"username":"William","userage":69},
-{"userid":7,"username":"Sophia","userage":32},
-{"userid":8,"username":"James","userage":64},
-{"userid":9,"username":"Emma","userage":37},
-{"userid":10,"username":"Liam","userage":64}
-]
-```
+2. Create the target Doris table
 
-2. Creating a table for loading
+    Create the table to be imported in Doris with the following statement:
 
-   Create the table that will be imported into, using the specific syntax as follows:
+    ```sql
+    CREATE TABLE testdb.test_streamload(
+        user_id            BIGINT       NOT NULL COMMENT "user id",
+        name               VARCHAR(20)           COMMENT "name",
+        age                INT                   COMMENT "age"
+    )
+    DUPLICATE KEY(user_id)
+    DISTRIBUTED BY HASH(user_id) BUCKETS 10;
+    ```
 
-```sql
-CREATE TABLE testdb.test_streamload(
-    user_id            BIGINT       NOT NULL COMMENT "User ID",
-    name               VARCHAR(20)           COMMENT "User name",
-    age                INT                   COMMENT "User age"
-)
-DUPLICATE KEY(user_id)
-DISTRIBUTED BY HASH(user_id) BUCKETS 10;
-```
+3. Start the import job
 
-3. Enabling the load job
+    You can submit a Stream Load import job with the `curl` command.
 
-   The Stream Load job can be submitted using the `curl` command.
+    ```shell
+    curl --location-trusted -u <doris_user>:<doris_password> \
+        -H "label:124" \
+        -H "Expect:100-continue" \
+        -H "format:json" -H "strip_outer_array:true" \
+        -H "jsonpaths:[\"$.userid\", \"$.username\", \"$.userage\"]" \
+        -H "columns:user_id,name,age" \
+        -T streamload_example.json \
+        -XPUT http://<fe_ip>:<fe_http_port>/api/testdb/test_streamload/_stream_load
+    ```
 
-```shell
-curl --location-trusted -u <doris_user>:<doris_password> \
-    -H "label:124" \
-    -H "Expect:100-continue" \
-    -H "format:json" -H "strip_outer_array:true" \
-    -H "jsonpaths:[\"$.userid\", \"$.username\", \"$.userage\"]" \
-    -H "columns:user_id,name,age" \
-    -T streamload_example.json \
-    -XPUT http://<fe_ip>:<fe_http_port>/api/testdb/test_streamload/_stream_load
-```
-:::info Note
+    :::info Note
 
-If the JSON file is not a JSON array but each line is a JSON object, add the headers `-H "strip_outer_array:false"` and `-H "read_json_by_line:true"`.
+    If the JSON file content is not a JSON array but one JSON object per line, add the headers `-H "strip_outer_array:false"` and `-H "read_json_by_line:true"`.
+    To import the JSON object at the root node of the JSON file, set `jsonpaths` to `$.`, for example: `-H "jsonpaths:[\"$.\"]"`.
 
-If you need to load the JSON object at the root node of a JSON file, the jsonpaths should be specified as $., e.g., `-H "jsonpaths:[\"$.\"]`"
-:::
+    :::
 
-​	Stream Load is a synchronous method, where the result is directly returned to the user.
+    Stream Load is a synchronous import method, and the import result is returned to the user directly.
 
-```sql
-{
-    "TxnId": 7,
-    "Label": "125",
-    "Comment": "",
-    "TwoPhaseCommit": "false",
-    "Status": "Success",
-    "Message": "OK",
-    "NumberTotalRows": 10,
-    "NumberLoadedRows": 10,
-    "NumberFilteredRows": 0,
-    "NumberUnselectedRows": 0,
-    "LoadBytes": 471,
-    "LoadTimeMs": 52,
-    "BeginTxnTimeMs": 0,
-    "StreamLoadPutTimeMs": 11,
-    "ReadDataTimeMs": 0,
-    "WriteDataTimeMs": 23,
-    "CommitAndPublishTimeMs": 16
-}
-```
+    ```sql
+    {
+        "TxnId": 7,
+        "Label": "125",
+        "Comment": "",
+        "TwoPhaseCommit": "false",
+        "Status": "Success",
+        "Message": "OK",
+        "NumberTotalRows": 10,
+        "NumberLoadedRows": 10,
+        "NumberFilteredRows": 0,
+        "NumberUnselectedRows": 0,
+        "LoadBytes": 471,
+        "LoadTimeMs": 52,
+        "BeginTxnTimeMs": 0,
+        "StreamLoadPutTimeMs": 11,
+        "ReadDataTimeMs": 0,
+        "WriteDataTimeMs": 23,
+        "CommitAndPublishTimeMs": 16
+    }
+    ```
 
-### View load job
+### View import jobs
 
-By default, Stream Load synchronously returns results to the client, so the system does not record Stream Load historical jobs. If recording is required, add the configuration `enable_stream_load_record=true` in `be.conf`. Refer to the [BE configuration options](../../../admin-manual/config/be-config) for specific details.
+By default, Stream Load returns synchronously to the Client, so the system does not record Stream Load history jobs. To enable recording, add the configuration `enable_stream_load_record=true` in `be.conf`. For details, see [BE configuration](../../../admin-manual/config/be-config).
 
-After configuring, you can use the `show stream load` command to view completed Stream Load jobs.
+After this is configured, you can view completed Stream Load tasks with the `show stream load` command.
 
 ```sql
 mysql> show stream load from testdb;
@@ -233,43 +250,53 @@ mysql> show stream load from testdb;
 1 row in set (0.00 sec)
 ```
 
-### Choosing Compute Group
-Users can specify a particular Compute Group for Stream Load to run on.
+### Cancel an import job
 
-Under the storage-computation separation mode, Compute Groups can be specified in the following ways:
-1. Specify via an HTTP Header parameter.
-```
--H "cloud_cluster:cluster1"
-```
+Users cannot manually cancel a Stream Load. Stream Load is automatically canceled by the system when it times out or encounters an import error.
 
-Starting from Doris 4.0.0, you can use `compute_group` as an alternative
-```
--H "compute_group:cluster1"
-```
+### Bind a Compute Group
 
-2. Specify Compute Group in the user properties bound to Stream Load. If both user properties and the HTTP header specify a Compute Group, the Compute Group specified in the Header takes precedence.
-```
-set property for user1 'default_compute_group'='cluster1';
-```
+You can specify the Compute Group on which Stream Load runs.
 
-3. If neither user properties nor the HTTP Header specify a Compute Group, a Compute Group that the user bound to Stream Load has permission to access will be selected.
-   If the user does not have permission to access any Compute Group, the Load will fail.
+**Storage-compute separation mode**
 
-Under the integrated storage-computation mode, specifying a Compute Group is only supported through the user properties bound to Stream Load. 
-If not specified in the user properties, the Compute Group named ```default``` will be selected.
-```
+In storage-compute separation mode, you can specify the Compute Group as follows:
+
+1. Specify it through an HTTP Header parameter.
+
+    ```text
+    -H "cloud_cluster:cluster1"
+    ```
+
+    Starting from Doris 4.0.0, you can also use the `compute_group` parameter:
+
+    ```text
+    -H "compute_group:cluster1"
+    ```
+
+2. Specify the Compute Group in the user properties bound to the Stream Load. If both the user property and the HTTP Header specify a Compute Group, the one specified in the Header takes precedence.
+
+    ```text
+    set property for user1 'default_compute_group'='cluster1';
+    ```
+
+3. If neither the user properties nor the HTTP Header specifies a Compute Group, one is selected from the Compute Groups that the user bound to the Stream Load has access to. If the user has no accessible Compute Group, the import fails.
+
+**Storage-compute integrated mode**
+
+In storage-compute integrated mode, only the user properties bound to the Stream Load can be used to specify the Compute Group. If no Compute Group is specified in the user properties, the Compute Group named `default` is selected.
+
+```text
 set property for user1 'resource_tags.location'='group_1';
 ```
 
-### Cancel load job
+## Reference
 
-Users cannot manually cancel a Stream Load operation. A Stream Load job will be automatically canceled by the system if it encounters a timeout (set to 0) or an import error.
+<!-- Knowledge type: Configuration parameter reference -->
 
-## Reference manual
+### Import command
 
-### Command
-
-The syntax for Stream Load is as follows:
+The Stream Load import syntax is as follows:
 
 ```shell
 curl --location-trusted -u <doris_user>:<doris_password> \
@@ -278,72 +305,76 @@ curl --location-trusted -u <doris_user>:<doris_password> \
   -XPUT http://fe_host:http_port/api/{db}/{table}/_stream_load
 ```
 
-Stream Load operation supports both HTTP chunked and non-chunked import methods. For non-chunked imports, it is necessary to have a Content-Length header to indicate the length of the uploaded content, which ensures data integrity.
+Stream Load supports both HTTP chunked import and HTTP non-chunked import. For non-chunked imports, `Content-Length` must be specified to indicate the length of the uploaded content, which guarantees the integrity of the data.
 
-### Load configuration parameters
+### Import configuration parameters
 
 #### FE configuration
 
-1. `stream_load_default_timeout_second`
+**1. stream_load_default_timeout_second**
 
-   - Default Value: 259200 (s)
+| Item                       | Description                         |
+| -------------------------- | ----------------------------------- |
+| Default value              | 259200 (s)                          |
+| Dynamic configuration      | Yes                                 |
+| FE Master-only configuration | Yes                               |
 
-   - Dynamic Configuration: Yes
-   - FE Master-only Configuration: Yes
-
-Parameter Description: The default timeout for Stream Load. The load job will be canceled by the system if it is not completed within the set timeout (in seconds). If the source file cannot be imported within the specified time, the user can set an individual timeout in the Stream Load request. Alternatively, adjust the `stream_load_default_timeout_second` parameter on the FE to set the global default timeout.
+Description: The default timeout for Stream Load. The timeout for an import task (in seconds). If the import task does not complete within the configured `timeout`, the system cancels it and the task becomes CANCELLED. If the source file cannot be imported within the specified time, you can set a separate timeout in the Stream Load request, or adjust the FE parameter `stream_load_default_timeout_second` to set the global default timeout.
 
 #### BE configuration
 
-1. `streaming_load_max_mb`
+**1. streaming_load_max_mb**
 
-   - Default value: 10240 (MB)
-   - Dynamic configuration: Yes
-   - Parameter description: The maximum import size for Stream Load. If the user's original file exceeds this value, the `streaming_load_max_mb` parameter on the BE needs to be adjusted.
+| Item                  | Description    |
+| --------------------- | -------------- |
+| Default value         | 10240 (MB)     |
+| Dynamic configuration | Yes            |
 
-2. Header parameters
+Description: The maximum import size for Stream Load. If the user's source file exceeds this value, adjust the BE parameter `streaming_load_max_mb`.
 
-   Load parameters can be passed through the HTTP Header section. See below for specific parameter descriptions.
+#### Header parameters
 
-| Parameters                   | Parameters description                                       |
-| ---------------------------- | ------------------------------------------------------------ |
-| label                        | Used to specify a label for this Doris import. Data with the same label cannot be imported multiple times. If no label is specified, Doris will automatically generate one. Users can avoid duplicate imports of the same data by specifying a label. Doris retains import job labels for three days by default, but this duration can be adjusted using `label_keep_max_second`. For example, to specify the label for this import as 123, use the command `-H "label:123"`. The use of labels prevents users from importing the same data repeatedly. It is strongly recommended that users use the same label for the same batch of data. This ensures that duplicate requests for the same batch of data are only accepted once, guaranteeing At-Most-Once semantics. When the status of an import job corresponding to a label is CANCELLED, that label can be used again. |
-| column_separator             | Used to specify the column separator in the import file, which defaults to `\t`. If the separator is an invisible character, it needs to be prefixed with `\x` and represented in hexadecimal format. Multiple characters can be combined as a column separator. For example, to specify the separator as `\x01` for a Hive file, use the command `-H "column_separator:\x01"`. |
-| line_delimiter               | Used to specify the line delimiter in the import file, which defaults to `\n`. Multiple characters can be combined as a line delimiter. For example, to specify the line delimiter as `\n`, use the command `-H "line_delimiter:\n"`. |
-| columns                      | Used to specify the correspondence between columns in the import file and columns in the table. If the columns in the source file exactly match the content of the table, this field does not need to be specified. If the schema of the source file does not match the table, this field is required for data transformation. There are two formats: direct column correspondence to fields in the import file, and derived columns represented by expressions. Refer to [Data Transformation](../../../data-operate/import/load-data-convert) for detailed examples. |
-| where                        | Used to filter out unnecessary data. If users need to exclude certain data, they can achieve this by setting this option. For example, to import only data where the k1 column is equal to 20180601, specify `-H "where: k1 = 20180601"` during the import. |
-| max_filter_ratio             | Used to specify the maximum tolerable ratio of filterable (irregular or otherwise problematic) data, which defaults to zero tolerance. The value range is 0 to 1. If the error rate of the imported data exceeds this value, the import will fail. Irregular data does not include rows filtered out by the where condition. For example, to maximize the import of all correct data (100% tolerance), specify the command `-H "max_filter_ratio:1"`. |
-| partitions                   | Used to specify the partitions involved in this import. If users can determine the corresponding partitions for the data, it is recommended to specify this option. Data that does not meet these partition criteria will be filtered out. For example, to specify importing into partitions p1 and p2, use the command `-H "partitions: p1, p2"`. |
-| timeout                      | Used to specify the timeout for the import in seconds. The default is 600 seconds, and the configurable range is from 1 second to 259200 seconds. For example, to specify an import timeout of 1200 seconds, use the command `-H "timeout:1200"`. |
-| strict_mode                  | Used to specify whether to enable strict mode for this import, which is disabled by default. For example, to enable strict mode, use the command `-H "strict_mode:true"`. |
-| timezone                     | Used to specify the timezone to be used for this import, which defaults to the current cluster time zone. This parameter affects the results of all timezone-related functions involved in the import. For example, to specify the import timezone as Africa/Abidjan, use the command `-H "timezone:Africa/Abidjan"`. |
-| exec_mem_limit               | The memory limit for the import, which defaults to 2GB. The unit is bytes. |
-| format                       | Used to specify the format of the imported data, which defaults to CSV. Currently supported formats include: CSV, JSON, arrow, csv_with_names (supports filtering the first row of the csv file), csv_with_names_and_types (supports filtering the first two rows of the csv file), Parquet, and ORC. For example, to specify the imported data format as JSON, use the command `-H "format:json"`. |
-| jsonpaths                    | There are two ways to import JSON data format: Simple Mode and Matching Mode.  If no jsonpaths are specified, it is the simple mode that requires the JSON data to be of the object type.Matching mode used when the JSON data is relatively complex and requires matching the corresponding values through the jsonpaths parameter.In simple mode, the keys in JSON are required to correspond one-to-one with the column names in the table. For example, in the JSON data `{"k1":1, "k2":2, "k3":"hello"}`, k1, k2, and k3 correspond to the columns in the table respectively. |
-| strip_outer_array            | When `strip_outer_array` is set to true, it indicates that the JSON data starts with an array object and flattens the objects within the array. The default value is false. When the outermost layer of the JSON data is represented by `[]`, which denotes an array, `strip_outer_array` should be set to true. For example, with the following data, setting `strip_outer_array` to true will result in two rows of data being generated when imported into Doris: `[{"k1": 1, "v1": 2}, {"k1": 3, "v1": 4}]`. |
-| json_root                    | `json_root` is a valid jsonpath string that specifies the root node of a JSON document, with a default value of "". |
-| merge_type                   | The merge type of data. Three types are supported:<br/>- APPEND (default): Indicates that all data in this batch will be appended to existing data<br/>- DELETE: Indicates deletion of all rows with Keys matching this batch of data<br/>- MERGE: Must be used in conjunction with DELETE conditions. Data meeting DELETE conditions will be processed according to DELETE semantics, while the rest will be processed according to APPEND semantics<br/>For example, to specify merge mode as MERGE: `-H "merge_type: MERGE" -H "delete: flag=1"` |
-| delete                       | It is only meaningful under MERGE, representing the deletion conditions for data. |
-| function_column.sequence_col | It is suitable only for the UNIQUE KEYS model. Within the same Key column, it ensures that the Value column is replaced according to the specified source_sequence column. The source_sequence can either be a column from the data source or an existing column in the table structure. |
-| fuzzy_parse                  | It is a boolean type. If set to true, the JSON will be parsed with the first row as the schema. Enabling this option can improve the efficiency of JSON imports, but it requires that the order of the keys in all JSON objects be consistent with the first line. The default is false and it is only used for JSON format. |
-| num_as_string                | It is a boolean type. When set to true, indicates that numeric types will be converted to strings during JSON parsing to ensure no loss of precision during the import process. |
-| read_json_by_line            | It is a boolean type. When set to true, indicates support for reading one JSON object per line, defaulting to false. |
-| send_batch_parallelism       | Sets the parallelism for the parallelism for sending batch-processed data. If the parallelism value exceeds the `max_send_batch_parallelism_per_job` configured in BE, the coordinating BE will use the `max_send_batch_parallelism_per_job value`. |
-| hidden_columns               | Used to specify hidden columns in the imported data, which takes effect when the Header does not include Columns. Multiple hidden columns are separated by commas. The system will use the user-specified data for import. In the following example, the last column of data in the imported data is `__DORIS_SEQUENCE_COL__`. `hidden_columns: __DORIS_DELETE_SIGN__,__DORIS_SEQUENCE_COL__`. |
-| load_to_single_tablet        | It is a boolean type. When set to true, indicates support for importing data only to a single Tablet corresponding to the partition, defaulting to false. This parameter is only allowed when importing to an OLAP table with random bucketing. |
-| compress_type                | Currently, only compression of CSV files is supported. Compression formats include gz, lzo, bz2, lz4, lzop, and deflate. |
-| trim_double_quotes           | It is a boolean type. When set to true, indicates trimming of the outermost double quotes for each field in the CSV file, defaulting to false. |
-| skip_lines                   | It is an integer type. Used to specify the number of lines to skip at the beginning of the CSV file, defaulting to 0. When the `format` is set to `csv_with_names` or `csv_with_names_and_types`, this parameter will become invalid. |
-| comment                      | It is a String type, with an empty string as the default value. Used to add additional information to the task. |
-| enclose                      | Specify the enclosure character. When a CSV data field contains a row delimiter or column delimiter, to prevent unexpected truncation, you can specify a single-byte character as the enclosure for protection. For example, if the column delimiter is "," and the enclosure is "'", the data "a,'b,c'" will have "b,c" parsed as a single field. Note: When the enclosure is set to a double quote ("), make sure to set `trim_double_quotes` to true. |
-| escape                       | Specify the escape character. It is used to escape characters that are the same as the enclosure character within a field. For example, if the data is "a,'b,'c'", and the enclosure is "'", and you want "b,'c" to be parsed as a single field, you need to specify a single-byte escape character, such as "", and modify the data to "a,'b','c'". |
-| memtable_on_sink_node        | Whether to enable MemTable on DataSink node when loading data, default is false. |
-|unique_key_update_mode        | The update modes on Unique tables, currently are only effective for Merge-On-Write Unique tables. Supporting three types: `UPSERT`, `UPDATE_FIXED_COLUMNS`, and `UPDATE_FLEXIBLE_COLUMNS`. `UPSERT`: Indicates that data is loaded with upsert semantics; `UPDATE_FIXED_COLUMNS`: Indicates that data is loaded through partial updates; `UPDATE_FLEXIBLE_COLUMNS`: Indicates that data is loaded through flexible partial updates.|
-| partial_update_new_key_behavior | When performing partial column updates or flexible column updates on Unique tables, this parameter controls how new rows are handled. There are two types: `APPEND` and `ERROR`.<br/>- `APPEND`: Allows inserting new row data<br/>- `ERROR`: Fails and reports an error when inserting new rows |
+Import parameters can be passed through the HTTP Header. The parameters are described as follows:
 
-### Load return value
+| Tag                             | Parameter description                                        |
+| ------------------------------- | ------------------------------------------------------------ |
+| label                           | Specifies the label for this import. Data with the same label cannot be imported more than once. If no label is specified, Doris generates one automatically. By specifying a label, you avoid duplicate imports of the same data. By default, Doris keeps import job labels for three days; you can adjust the retention period with `label_keep_max_second`. For example, to specify the label `123` for this import, use the command `-H "label:123"`. Using labels prevents duplicate imports of the same data. It is strongly recommended that the same batch of data uses the same label so that duplicate requests for the same batch are accepted only once, ensuring At-Most-Once semantics. When the import job for a label is in CANCELLED state, the label can be used again. |
+| column_separator                | Specifies the column separator in the import file. The default is `\t`. For invisible characters, use `\x` as a prefix and represent the separator in hexadecimal. A combination of multiple characters can also be used as the column separator. For example, the Hive file separator `\x01` is specified with the command `-H "column_separator:\x01"`. |
+| line_delimiter                  | Specifies the line delimiter in the import file. The default is `\n`. A combination of multiple characters can also be used as the line delimiter. For example, to specify `\n` as the line delimiter, use the command `-H "line_delimiter:\n"`. |
+| columns                         | Specifies the mapping between the columns in the import file and the columns in the table. If the columns in the source file correspond exactly to the columns in the table, this field does not need to be specified. If the source file does not correspond to the table schema, this field is needed for some data conversion. There are two forms of column: directly corresponding to the field in the import file, using the field name directly; or representing a derived column, with the syntax `column_name = expression`. For detailed examples, see [Data conversion during import](../../../data-operate/import/load-data-convert). |
+| where                           | Used to extract part of the data. If you want to filter out unneeded data, use this option. For example, to import only data where column k1 equals 20180601, specify `-H "where: k1 = 20180601"` during import. |
+| max_filter_ratio                | The maximum tolerable ratio of data that can be filtered out (for example, due to data not being well-formed). The default is zero tolerance. The value range is 0 to 1. If the import error rate exceeds this value, the import fails. Rows that are filtered out by the `where` condition are not counted as malformed data. For example, to maximize the import of all correct data (100% tolerance), specify the command `-H "max_filter_ratio:1"`. |
+| partitions                      | Specifies the partitions involved in this import. If you can determine the partitions to which the data corresponds, it is recommended to specify this option. Data that does not satisfy these partitions is filtered out. For example, to import to partitions p1 and p2, specify the command `-H "partitions: p1, p2"`. |
+| timeout                         | Specifies the import timeout in seconds. The default is 600 seconds. The valid range is 1 second to 259200 seconds. For example, to set the import timeout to 1200 s, specify the command `-H "timeout:1200"`. |
+| strict_mode                     | Specifies whether to enable strict mode for this import. It is disabled by default. For example, to enable strict mode, specify the command `-H "strict_mode:true"`. |
+| timezone                        | Specifies the time zone used for this import. The default is the current time zone of the cluster. This parameter affects the results of all time-zone-related functions involved in the import. For example, to set the import time zone to Africa/Abidjan, specify the command `-H "timezone:Africa/Abidjan"`. |
+| exec_mem_limit                  | The import memory limit. The default is 2 GB. The unit is bytes.    |
+| format                          | Specifies the data format for this import. The default is CSV. The following formats are currently supported: CSV, JSON, arrow, csv_with_names (supports filtering out the first row of the CSV file), csv_with_names_and_types (supports filtering out the first two rows of the CSV file), Parquet, and ORC. For example, to specify the import data format as JSON, use the command `-H "format:json"`. |
+| jsonpaths                       | There are two ways to import JSON data: simple mode, used when `jsonpaths` is not specified, which requires the JSON data to be of object type; and matching mode, used when JSON data is relatively complex and the corresponding values must be matched through the `jsonpaths` parameter. In simple mode, the keys in the JSON must correspond one-to-one with the column names in the table. For example, the JSON data `{"k1":1, "k2":2, "k3":"hello"}` requires k1, k2, and k3 to correspond to columns in the table. |
+| strip_outer_array               | When `strip_outer_array` is set to true, the JSON data starts with an array object and the array is flattened. The default is false. When the outermost layer of the JSON data is an array represented by `[]`, set `strip_outer_array` to true. For example, with the data `[{"k1" : 1, "v1" : 2},{"k1" : 3, "v1" : 4}]`, after `strip_outer_array` is set to true, two rows are generated when imported into Doris. |
+| json_root                       | `json_root` is a valid `jsonpath` string that specifies the root node of the JSON document. The default value is "". |
+| merge_type                      | The merge type for the data. Three types are supported:<br/>- APPEND (default): all data in this batch is appended to the existing data.<br/>- DELETE: deletes all rows whose keys match those in this batch.<br/>- MERGE: must be used together with a `delete` condition. Data that matches the `delete` condition is processed with DELETE semantics, and the rest is processed with APPEND semantics.<br/>For example, to specify MERGE mode: `-H "merge_type: MERGE" -H "delete: flag=1"`. |
+| delete                          | Only meaningful with MERGE; specifies the deletion condition for the data. |
+| function_column.sequence_col    | Applies only to the UNIQUE KEYS model. Within the same key columns, ensures that the value column is REPLACE'd in the order of the `source_sequence` column. `source_sequence` can be a column in the data source or a column in the table schema. |
+| fuzzy_parse                     | Boolean. When set to true, JSON is parsed using the first row as the schema. Enabling this option can improve the efficiency of JSON imports, but it requires that the order of the keys in all JSON objects is the same as that in the first row. The default is false. Used only for the JSON format. |
+| num_as_string                   | Boolean. When set to true, numeric types are converted to strings when parsing JSON data, ensuring that the import is performed without precision loss. |
+| read_json_by_line               | Boolean. When set to true, supports reading one JSON object per line. The default value is false. |
+| send_batch_parallelism          | Integer. Sets the parallelism for sending batch data. If the value of the parallelism exceeds the BE configuration `max_send_batch_parallelism_per_job`, the BE acting as the coordinator uses the value of `max_send_batch_parallelism_per_job`. |
+| hidden_columns                  | Specifies the hidden columns included in the import data. Effective when `Columns` is not included in the Header. Multiple hidden columns are separated by commas. The system imports the data using the data specified by the user. In the example below, the last column in the import data is `__DORIS_SEQUENCE_COL__`. `hidden_columns: __DORIS_DELETE_SIGN__,__DORIS_SEQUENCE_COL__` |
+| load_to_single_tablet           | Boolean. When set to true, supports loading the data of a single task into only one tablet of the corresponding partition. The default value is false. This parameter can be set only when loading data into an OLAP table with random bucketing. |
+| compress_type                   | Specifies the compression format of the file. Currently, only CSV file compression is supported. The supported compression formats are gz, lzo, bz2, lz4, lzop, and deflate. |
+| trim_double_quotes              | Boolean. The default value is false. When set to true, trims the outermost double quotes of every field in the CSV file. |
+| skip_lines                      | Integer. The default value is 0. Skips the first several lines of the CSV file. This parameter is invalid when `format` is set to `csv_with_names` or `csv_with_names_and_types`. |
+| comment                         | String. The default value is empty. Adds extra information to the task. |
+| enclose                         | Specifies the enclosing character. When the CSV data fields contain line or column separators, you can specify a single-byte character as the enclosing character to prevent unintended truncation. For example, with the column separator `,` and the enclosing character `'`, given the data `"a,'b,c'"`, then `b,c` is parsed as one field. Note: when `enclose` is set to `"`, `trim_double_quotes` must be set to true. |
+| escape                          | Specifies the escape character. Used to escape characters in fields that are the same as the enclosing character. For example, with the data `"a,'b,'c'"` and the enclosing character `'`, to parse `b,'c` as one field, specify a single-byte escape character such as `\\` and modify the data to `"a,'b,\\'c'"`. |
+| memtable_on_sink_node           | Whether to enable MemTable forward when importing data. The default is false. |
+| unique_key_update_mode          | The update mode on a Unique table. Currently effective only for Merge-On-Write Unique tables. Three types are supported: `UPSERT`, `UPDATE_FIXED_COLUMNS`, and `UPDATE_FLEXIBLE_COLUMNS`. `UPSERT`: imports data with upsert semantics. `UPDATE_FIXED_COLUMNS`: imports data using [partial column update](../../../data-operate/update/partial-column-update.md#column-update-on-the-primary-key-model). `UPDATE_FLEXIBLE_COLUMNS`: imports data using [flexible partial column update](../../../data-operate/update/partial-column-update.md#flexible-partial-column-update). |
+| partial_update_new_key_behavior | The way newly inserted rows are handled when performing partial column updates or flexible column updates on a Unique table. Two types are available: `APPEND` and `ERROR`.<br/>- `APPEND`: allows new rows to be inserted.<br/>- `ERROR`: import fails and reports an error when inserting a new row. |
 
-Stream Load is a synchronous import method, and the load result is directly provided to the user through the creation of an load return value, as shown below:
+### Import return value
+
+Stream Load is a synchronous import method, and the import result is returned to the user through the response of the import request, as shown below:
 
 ```sql
 {
@@ -367,59 +398,62 @@ Stream Load is a synchronous import method, and the load result is directly prov
 }
 ```
 
-The return result parameters are explained in the following table:
+The return result parameters are described in the following table:
 
-| Parameters             | Parameters description                                       |
+| Parameter name         | Description                                                  |
 | ---------------------- | ------------------------------------------------------------ |
-| TxnId                  | Import transaction ID                                        |
-| Label                  | Label of load job，specified via `-H "label:<label_id>"`.    |
-| Status                 | Final load Status. **Success**:  The load job was successful.**Publish Timeout**: The load job has been completed, but there may be a delay in data visibility. **Label Already Exists**: The label is duplicated, requiring a new label. **Fail**: The load job failed. |
-| ExistingJobStatus      | The status of the load job corresponding to the already existing label. This field is only displayed when the Status is **Label Already Exists**. Users can use this status to know the status of the import job corresponding to the existing label. **RUNNING** means the job is still executing, and **FINISHED** means the job was successful. |
-| Message                | Error information related to the load job.                   |
-| NumberTotalRows        | The total number of rows processed during the load job.      |
-| NumberLoadedRows       | The number of rows that were successfully loaded.            |
-| NumberFilteredRows     | The number of rows that did not meet the data quality standards. |
-| NumberUnselectedRows   | The number of rows that were filtered out based on the WHERE condition. |
-| LoadBytes              | The amount of data in bytes.                                 |
-| LoadTimeMs             | The time taken for the load job to complete, measured in milliseconds. |
-| BeginTxnTimeMs         | The time taken to request the initiation of a transaction from the Frontend node (FE), measured in milliseconds. |
-| StreamLoadPutTimeMs    | The time taken to request the execution plan for the load job data from the FE, measured in milliseconds. |
-| ReadDataTimeMs         | The time spent reading the data during the load job, measured in milliseconds. |
-| WriteDataTimeMs        | The time taken to perform the data writing operations during the load job, measured in milliseconds. |
-| CommitAndPublishTimeMs | The time taken to request the commit and publish the transaction from the FE, measured in milliseconds. |
-| ErrorURL               | If there are data quality issues, users can access this URL to view the specific rows with errors. |
+| TxnId                  | The ID of the import transaction.                            |
+| Label                  | The label of the import job, specified by `-H "label:<label_id>"`. |
+| Status                 | The final status of the import:<br/>- Success: the import succeeded.<br/>- Publish Timeout: the import is complete, but the data may be visible with delay; no retry is needed.<br/>- Label Already Exists: the label is duplicated; a new label is needed.<br/>- Fail: the import failed. |
+| ExistingJobStatus      | The status of the existing import job corresponding to the label. This field is shown only when `Status` is `Label Already Exists`. With this status, you can find the status of the import job for the existing label. `RUNNING` means the job is still running; `FINISHED` means the job succeeded. |
+| Message                | The import error message.                                    |
+| NumberTotalRows        | The total number of rows processed by the import.            |
+| NumberLoadedRows       | The number of rows successfully imported.                    |
+| NumberFilteredRows     | The number of rows that did not pass data quality checks.    |
+| NumberUnselectedRows   | The number of rows filtered out by the `where` condition.    |
+| LoadBytes              | The number of bytes imported.                                |
+| LoadTimeMs             | The import completion time, in milliseconds.                 |
+| BeginTxnTimeMs         | The time spent requesting the FE to start a transaction, in milliseconds. |
+| StreamLoadPutTimeMs    | The time spent requesting the FE to obtain the import data execution plan, in milliseconds. |
+| ReadDataTimeMs         | The time spent reading data, in milliseconds.                |
+| WriteDataTimeMs        | The time spent performing the data write, in milliseconds.   |
+| CommitAndPublishTimeMs | The time spent requesting the FE to commit and publish the transaction, in milliseconds. |
+| ErrorURL               | If there are data quality issues, view the specific error rows by visiting this URL. |
 
-Users can access the ErrorURL to review data that failed to import due to issues with data quality. By executing the command `curl "<ErrorURL>"`, users can directly retrieve information about the erroneous data.
+You can use `ErrorURL` to view import data that failed because of poor data quality. Use the command `curl "<ErrorURL>"` to view the error data information directly.
 
-## Load example
+## Import examples
 
-### Setting load timeout and maximum size
+<!-- Knowledge type: Operation examples -->
+<!-- Applicable scenario: Multi-scenario import practices -->
 
-The timeout for a load job is measured in seconds. If the load job is not completed within the specified timeout period, it will be cancelled by the system and marked as `CANCELLED`. You can adjust the timeout for a Stream Load job by specifying the `timeout` parameter or adding the `stream_load_default_timeout_second` parameter in the fe.conf file.
+### Set the import timeout and maximum import size
 
-Before initiating the load, you need to calculate the timeout based on the file size. For example, for a 100GB file with an estimated load performance of 50MB/s:
+The import task timeout (in seconds). If the import task does not complete within the configured `timeout`, the system cancels it and the task becomes CANCELLED. You can adjust the Stream Load import timeout by specifying the `timeout` parameter or by adding the parameter `stream_load_default_timeout_second` in `fe.conf`.
 
+Before importing, calculate the import timeout based on the file size. For example, for a 100 GB file, with an estimated import speed of 50 MB/s:
+
+```sql
+Import time ~= 100GB / 50MB/s ~= 2048s
 ```
-Load time ≈ 100GB / 50MB/s ≈ 2048s
-```
 
-You can use the following command to specify a timeout of 3000 seconds for creating a Stream Load job:
+The following command creates a Stream Load import task with `timeout` set to 3000 s:
 
-```Shell
+```shell
 curl --location-trusted -u <doris_user>:<doris_password> \
     -H "Expect:100-continue" \
-    -H "timeout:3000"
+    -H "timeout:3000" \
     -H "column_separator:," \
     -H "columns:user_id,name,age" \
     -T streamload_example.csv \
     -XPUT http://<fe_ip>:<fe_http_port>/api/testdb/test_streamload/_stream_load
 ```
 
-### Setting maximum error tolerance rate 
+### Set the maximum tolerated error ratio
 
-Load job can tolerate a certain amount of data with formatting errors. The tolerance rate is configured using the `max_filter_ratio` parameter. By default, it is set to 0, meaning that if there is even a single erroneous data row, the entire load job will fail. If users wish to ignore some problematic data rows, they can set this parameter to a value between 0 and 1. Doris will automatically skip rows with incorrect data formats. For more information on calculating the tolerance rate, please refer to the [Data Transformation](../../../data-operate/import/load-data-convert) documentation.
+Doris import tasks can tolerate a portion of malformed data. The tolerance ratio is set by `max_filter_ratio`. The default is 0, which means that if a single row of incorrect data exists, the entire import task fails. If you want to ignore some problematic data rows, set this parameter to a value between 0 and 1, and Doris automatically skips rows whose data format is incorrect. For details on how the tolerance ratio is calculated, see the [Data conversion](../../../data-operate/import/load-data-convert) documentation.
 
-You can use the following command to specify a `max_filter_ratio` tolerance of 0.4 for creating a Stream Load job:
+The following command creates a Stream Load import task with `max_filter_ratio` set to 0.4:
 
 ```shell
 curl --location-trusted -u <doris_user>:<doris_password> \
@@ -431,11 +465,11 @@ curl --location-trusted -u <doris_user>:<doris_password> \
     -XPUT http://<fe_ip>:<fe_http_port>/api/testdb/test_streamload/_stream_load
 ```
 
-### Setting load filtering conditions
+### Set import filter conditions
 
-During the load job, you can use the WHERE parameter to apply conditional filtering to the imported data. The filtered data will not be included in the calculation of the filter ratio and will not affect the setting of `max_filter_ratio`. After the load job is complete, you can view the number of filtered rows by checking `num_rows_unselected`.
+During the import, you can use the `WHERE` parameter to filter the imported data conditionally. Filtered-out data is not counted in the filter ratio calculation and does not affect the `max_filter_ratio` setting. After the import is complete, you can find the number of filtered rows in `num_rows_unselected`.
 
-You can use the following command to specify WHERE filtering conditions for creating a Stream Load job:
+The following command creates a Stream Load import task with a `WHERE` filter condition:
 
 ```sql
 curl --location-trusted -u <doris_user>:<doris_password> \
@@ -447,9 +481,9 @@ curl --location-trusted -u <doris_user>:<doris_password> \
     -XPUT http://<fe_ip>:<fe_http_port>/api/testdb/test_streamload/_stream_load
 ```
 
-### Loading data into specific partitions
+### Import data into specified partitions
 
-Loading data from local files into partitions p1 and p2 of the table, allowing a 20% error rate.
+Import data from a local file into partitions p1 and p2 of the table, allowing a 20% error rate.
 
 ```shell
 curl --location-trusted -u <doris_user>:<doris_password> \
@@ -458,32 +492,32 @@ curl --location-trusted -u <doris_user>:<doris_password> \
     -H "max_filter_ratio:0.2" \
     -H "column_separator:," \
     -H "columns:user_id,name,age" \
-    -H "partitions: p1, p2" \ 
+    -H "partitions: p1, p2" \
     -T streamload_example.csv \
     -XPUT http://<fe_ip>:<fe_http_port>/api/testdb/test_streamload/_stream_load
 ```
 
-### Loading data into specific timezone
+### Specify the import time zone
 
-Since Doris currently does not have a built-in time zone time type, all `DATETIME` related types only represent absolute time points, do not contain time zone information, and will not change due to changes in the Doris system time zone. Therefore, for the import of data with time zones, our unified processing method is to convert it into data in a specific target time zone. In the Doris system, it is the time zone represented by the session variable `time_zone`.
+The `DATETIME`-related types represent only absolute points in time and do not contain time-zone information; they do not change with the Doris system time zone. Therefore, time-zone-aware data is handled in a unified way during import: it is converted to data in a specified target time zone. In the Doris system, the time zone is the one represented by the session variable `time_zone`.
 
-In the import, our target time zone is specified through the parameter `timezone`. This variable will replace the session variable `time_zone` when time zone conversion occurs and time zone sensitive functions are calculated. Therefore, if there are no special circumstances, the `timezone` should be set in the import transaction to be consistent with the `time_zone` of the current Doris cluster. This means that all time data with a time zone will be converted to this time zone.
+In imports, the target time zone is specified by the `timezone` parameter. This variable replaces the session variable `time_zone` when time-zone conversions occur and when time-zone-sensitive functions are evaluated. Therefore, unless there are special circumstances, the `timezone` setting in the import transaction should match the current Doris cluster's `time_zone`. This means all time data with time zones is converted to that time zone.
 
-For example, the Doris system time zone is "+08:00", and the time column in the imported data contains two pieces of data, namely "2012-01-01 01:00:00+00:00" and "2015-12-12 12 :12:12-08:00", then after we specify the time zone of the imported transaction through `-H "timezone: +08:00"` when importing, both pieces of data will be converted to the time zone to obtain the result." 2012-01-01 09:00:00" and "2015-12-13 04:12:12".
+For example, if the Doris system time zone is `+08:00` and the time column in the import data contains two rows, `2012-01-01 01:00:00+00:00` and `2015-12-12 12:12:12-08:00`, then specifying `-H "timezone: +08:00"` for the import transaction converts both rows to that time zone, producing `2012-01-01 09:00:00` and `2015-12-13 04:12:12`.
 
-For more information on time zone interpretation, please refer to the document [Time Zone](../../../admin-manual/cluster-management/time-zone).
+For more information about time zones, see the [Time zone](../../../admin-manual/cluster-management/time-zone) documentation.
 
-### Streamingly import
+### Import using streaming
 
-Stream Load is based on the HTTP protocol for importing, which supports using programming languages such as Java, Go, or Python for streaming import. This is why it is named Stream Load.
+Stream Load is based on the HTTP protocol, so it supports programs such as Java, Go, and Python writing data to it as a stream. This is why it is named Stream Load.
 
-The following example demonstrates this usage through a bash command pipeline. The imported data is generated streamingly by the program rather than from a local file.
+The following uses a `bash` pipeline command to demonstrate this usage; the imported data is generated by a program rather than from a local file.
 
 ```shell
 seq 1 10 | awk '{OFS="\t"}{print $1, $1 * 10}' | curl --location-trusted -u root -T - http://host:port/api/testDb/testTbl/_stream_load
 ```
 
-### Set CSV first row filtering 
+### Skip the first line of a CSV during import
 
 File data:
 
@@ -493,15 +527,15 @@ File data:
  2,flink,10
 ```
 
-Filtering  the first row during load by specifying ` format=csv_with_names`
+Skip the first line during import by specifying `format=csv_with_names`:
 
 ```Plain
 curl --location-trusted -u root -T test.csv  -H "label:1" -H "format:csv_with_names" -H "column_separator:," http://host:port/api/testDb/testTbl/_stream_load
 ```
 
-### Specifying merge_type for DELETE operations
+### Use merge_type to perform a Delete operation
 
-In Stream Load, there are three import types: APPEND, DELETE, and MERGE. These can be adjusted by specifying the parameter `merge_type`. If you want to specify that all data with the same key as the imported data should be deleted, you can use the following command:
+There are three import types in Stream Load: APPEND, DELETE, and MERGE. They can be adjusted by specifying the `merge_type` parameter. To delete all rows whose keys match the import data, use the following command:
 
 ```shell
 curl --location-trusted -u <doris_user>:<doris_password> \
@@ -513,7 +547,7 @@ curl --location-trusted -u <doris_user>:<doris_password> \
     -XPUT http://<fe_ip>:<fe_http_port>/api/testdb/test_streamload/_stream_load
 ```
 
-Before loading:
+If the data in the table before the import is:
 
 ```sql
 +--------+----------+----------+------+
@@ -525,13 +559,13 @@ Before loading:
 +--------+----------+----------+------+
 ```
 
-The imported data is:
+The import data is:
 
 ```sql
 3,2,tom,0
 ```
 
-After importing, the original table data will be deleted, resulting in the following result:
+After the import, the matching row is deleted from the table, and the result set becomes:
 
 ```sql
 +--------+----------+----------+------+
@@ -542,9 +576,9 @@ After importing, the original table data will be deleted, resulting in the follo
 +--------+----------+----------+------+
 ```
 
-### Specifying merge_type for MERGE operation
+### Use merge_type to perform a Merge operation
 
-By specifying `merge_type` as MERGE, the imported data can be merged into the table. The MERGE semantics need to be used in combination with the DELETE condition, which means that data satisfying the DELETE condition is processed according to the DELETE semantics, and the rest is added to the table according to the APPEND semantics. The following operation represents deleting the row with `siteid` of 1, and adding the rest of the data to the table:
+Setting `merge_type` to MERGE merges the imported data into the table. MERGE semantics must be used together with a `DELETE` condition. Rows that match the `DELETE` condition are processed with DELETE semantics, and the rest are appended to the table with APPEND semantics. For example, the following operation deletes the row whose `siteid` is 1, and adds the rest of the data to the table:
 
 ```shell
 curl --location-trusted -u <doris_user>:<doris_password> \
@@ -557,7 +591,7 @@ curl --location-trusted -u <doris_user>:<doris_password> \
     -XPUT http://<fe_ip>:<fe_http_port>/api/testdb/test_streamload/_stream_load
 ```
 
-Before loading:
+If the data before the import is:
 
 ```sql
 +--------+----------+----------+------+
@@ -569,7 +603,7 @@ Before loading:
 +--------+----------+----------+------+
 ```
 
-The imported data is:
+The import data is:
 
 ```sql
 2,1,grace,2
@@ -577,7 +611,7 @@ The imported data is:
 1,1,jim,2
 ```
 
-After loading, the row with `siteid = 1` will be deleted according to the condition, and the rows with `siteid` of 2 and 3 will be added to the table:
+After the import, the row with `siteid = 1` is deleted, and the rows with `siteid` 2 and 3 are added to the table:
 
 ```sql
 +--------+----------+----------+------+
@@ -590,9 +624,9 @@ After loading, the row with `siteid = 1` will be deleted according to the condit
 +--------+----------+----------+------+
 ```
 
-### Specifying sequence column for merge 
+### Specify the Sequence column for Merge during import
 
-When a table with a Unique Key has a Sequence column, the value of the Sequence column serves as the basis for the replacement order in the REPLACE aggregation function under the same Key column. A larger value can replace a smaller one. When marking deletions based on `DORIS_DELETE_SIGN` for such a table, it is necessary to ensure that the Key is the same and that the Sequence column value is greater than or equal to the current value. By specifying the `function_column.sequence_col` parameter, deletion operations can be performed in combination with `merge_type: DELETE`.
+When a Sequence column is set on a Unique Key table, within the same key columns the Sequence column value is used as the basis for the order in which the REPLACE aggregation function performs replacement; a larger value can replace a smaller value. When marking deletions on this kind of table based on `DORIS_DELETE_SIGN`, you must ensure the same key and that the Sequence column value is greater than or equal to the current value. By specifying the `function_column.sequence_col` parameter together with `merge_type: DELETE`, you can perform a delete operation:
 
 ```sql
 curl --location-trusted -u <doris_user>:<doris_password> \
@@ -600,18 +634,18 @@ curl --location-trusted -u <doris_user>:<doris_password> \
     -H "merge_type: DELETE" \
     -H "function_column.sequence_col: age" \
     -H "column_separator:," \
-    -H "columns: name, gender, age" 
+    -H "columns: name, gender, age" \
     -T streamload_example.csv \
     -XPUT http://<fe_ip>:<fe_http_port>/api/testdb/test_streamload/_stream_load
 ```
 
-Given the following table schema:
+Suppose the table has the following structure:
 
 ```sql
-SET show_hidden_columns=true;
+mysql> SET show_hidden_columns=true;
 Query OK, 0 rows affected (0.00 sec)
 
-DESC table1;
+mysql> DESC table1;
 +------------------------+--------------+------+-------+---------+---------+
 | Field                  | Type         | Null | Key   | Default | Extra   |
 +------------------------+--------------+------+-------+---------+---------+
@@ -624,7 +658,7 @@ DESC table1;
 4 rows in set (0.00 sec)
 ```
 
-The original table data is:
+Suppose the data in the original table is:
 
 ```sql
 +-------+--------+------+
@@ -636,15 +670,15 @@ The original table data is:
 +-------+--------+------+
 ```
 
-1. Sequence parameter takes Eeffect, loading sequence column value is larger than or equal to the existing data in the table.
+**1. Sequence parameter takes effect: the imported Sequence column is greater than or equal to the existing value in the table**
 
-   loading data as:
+The import data is:
 
 ```sql
 li,male,10
 ```
 
-Since `function_column.sequence_col` is specified as `age`, and the `age` value is larger than or equal to the existing column in the table, the original table data is deleted. The table data becomes:
+Because `function_column.sequence_col: age` is specified and `age` is greater than or equal to the existing column value in the table, the original row is deleted, and the data in the table becomes:
 
 ```sql
 +-------+--------+------+
@@ -655,15 +689,15 @@ Since `function_column.sequence_col` is specified as `age`, and the `age` value 
 +-------+--------+------+
 ```
 
-2. Sequence parameter do not take effect, loading sequence column value is less than or equal to the existing data in the table:
+**2. Sequence parameter does not take effect: the imported Sequence column is less than or equal to the existing value in the table**
 
-   loading data as:
+The import data is:
 
 ```sql
 li,male,9
 ```
 
-Since `function_column.sequence_col` is specified as `age`, but the `age` value is less than the existing column in the table, the delete operation does not take effect. The table data remains unchanged, and the row with the primary key of `li` is still visible:
+Because `function_column.sequence_col: age` is specified but `age` is less than the existing column value in the table, the DELETE operation does not take effect; the data in the table remains unchanged, and the row with primary key `li` is still visible:
 
 ```sql
 +-------+--------+------+
@@ -675,19 +709,19 @@ Since `function_column.sequence_col` is specified as `age`, but the `age` value 
 +-------+--------+------+
 ```
 
-It is not deleted because that, at the underlying dependency level, it first checks for rows with the same key. It displays the row data with the larger sequence column value. Then, it checks the `DORIS_DELETE_SIGN` value for that row. If it is 1, it is not displayed externally. If it is 0, it is still read and displayed.
+The row is not deleted because, at the underlying dependency level, the system first checks rows with the same key, externally exposes the row with the larger Sequence column value, and then checks whether the `DORIS_DELETE_SIGN` value of that row is 1. If it is 1, it is hidden externally; if it is 0, it is still readable.
 
-### Loading data with enclosing characters
+### Import data containing enclosing characters
 
-When the data in a CSV file contains delimiters or separators, single-byte characters can be specified as enclosing characters to protect the data from being truncated.
+When CSV data contains separators or column separators, you can specify a single-byte character as the enclosing character to prevent truncation.
 
-For example, in the following data where a comma is used as the separator but also exists within a field:
+In the following data, the column contains the separator `,`:
 
 ```sql
-zhangsan,30,'Shanghai, HuangPu District, Dagu Road'
+Zhang San,30,'Shanghai City, Huangpu District, Dagu Road'
 ```
 
-By specifying an enclosing character such as a single quotation mark ', the entire `Shanghai, HuangPu District, Dagu Road` can be treated as a single field.
+By specifying the enclosing character `'`, "Shanghai City, Huangpu District, Dagu Road" can be specified as a single field:
 
 ```sql
 curl --location-trusted -u <doris_user>:<doris_password> \
@@ -699,13 +733,13 @@ curl --location-trusted -u <doris_user>:<doris_password> \
     -XPUT http://<fe_ip>:<fe_http_port>/api/testdb/test_streamload/_stream_load
 ```
 
-If the enclosing character also appears within a field, such as wanting to treat `Shanghai City, Huangpu District, \'Dagu Road` as a single field, it is necessary to first perform string escaping within the column:
+If the enclosing character also appears in the field, for example, to treat "Shanghai City, Huangpu District, 'Dagu Road" as one field, escape the character in the column first:
 
-```
-Zhang San,30,'Shanghai, Huangpu District, \'Dagu Road'
+```sql
+Zhang San,30,'Shanghai City, Huangpu District, \'Dagu Road'
 ```
 
-An escape character, which is a single-byte character, can be specified using the escape parameter. In the example, the backslash `\` is used as the escape character.
+The `escape` parameter can be used to specify a single-byte escape character, such as `\` in the example below:
 
 ```sql
 curl --location-trusted -u <doris_user>:<doris_password> \
@@ -718,47 +752,51 @@ curl --location-trusted -u <doris_user>:<doris_password> \
     -XPUT http://<fe_ip>:<fe_http_port>/api/testdb/test_streamload/_stream_load
 ```
 
-### Loading fields containing default CURRENT_TIMESTAMP type
+### Import data into a table with DEFAULT CURRENT_TIMESTAMP fields
 
-Here's an example of loading data into a table that contains a field with the DEFAULT CURRENT_TIMESTAMP type:
+The following example imports data into a table whose fields contain `DEFAULT CURRENT_TIMESTAMP`.
 
 Table schema:
 
 ```sql
-`id` bigint(30) NOT NULL,
-`order_code` varchar(30) DEFAULT NULL COMMENT '',
-`create_time` datetimev2(3) DEFAULT CURRENT_TIMESTAMP
+CREATE TABLE testDb.testTbl (
+    `id` BIGINT(30) NOT NULL,
+    `order_code` VARCHAR(30) DEFAULT NULL COMMENT '',
+    `create_time` DATETIMEv2(3) DEFAULT CURRENT_TIMESTAMP
+)
+DUPLICATE KEY(id)
+DISTRIBUTED BY HASH(id) BUCKETS 10;
 ```
 
-JSON data type:
+JSON data format:
 
 ```Plain
 {"id":1,"order_Code":"avc"}
 ```
 
-Command:
+Import command:
 
 ```shell
 curl --location-trusted -u root -T test.json -H "label:1" -H "format:json" -H 'columns: id, order_code, create_time=CURRENT_TIMESTAMP()' http://host:port/api/testDb/testTbl/_stream_load
 ```
 
-### Simple mode for loading JSON format data
+### Import JSON data in simple mode
 
-When the JSON fields correspond one-to-one with the column names in the table, you can import JSON data format into the table by specifying the parameters "strip_outer_array:true" and "format:json".
+When the JSON fields correspond one-to-one with the column names in the table, you can import JSON data into the table by specifying `"strip_outer_array:true"` and `"format:json"`.
 
-For example, if the table is defined as follows:
+For example, the table is defined as:
 
 ```sql
 CREATE TABLE testdb.test_streamload(
-    user_id            BIGINT       NOT NULL COMMENT "User ID",
-    name               VARCHAR(20)           COMMENT "User name",
-    age                INT                   COMMENT "User age"
+    user_id            BIGINT       NOT NULL COMMENT "user id",
+    name               VARCHAR(20)           COMMENT "name",
+    age                INT                   COMMENT "age"
 )
 DUPLICATE KEY(user_id)
 DISTRIBUTED BY HASH(user_id) BUCKETS 10;
 ```
 
-And the data field names correspond one-to-one with the column names in the table:
+The field names in the import data correspond one-to-one with the field names in the table:
 
 ```sql
 [
@@ -775,7 +813,7 @@ And the data field names correspond one-to-one with the column names in the tabl
 ]
 ```
 
-You can use the following command to load JSON data into the table:
+You can import the JSON data into the table with the following command:
 
 ```sql
 curl --location-trusted -u <doris_user>:<doris_password> \
@@ -786,9 +824,9 @@ curl --location-trusted -u <doris_user>:<doris_password> \
     -XPUT http://<fe_ip>:<fe_http_port>/api/testdb/test_streamload/_stream_load
 ```
 
-### Matching mode for loading complex JSON format data
+### Import complex JSON data in matching mode
 
-When the JSON data is more complex and cannot correspond one-to-one with the column names in the table, or there are extra columns, you can use the jsonpaths parameter to complete the column name mapping and perform data matching import. For example, with the following data:
+When JSON data is complex and cannot correspond one-to-one with the column names in the table, or when there are extra columns, you can specify the `jsonpaths` parameter to perform column name mapping for matching imports. For example, given the following data:
 
 ```sql
 [
@@ -805,7 +843,7 @@ When the JSON data is more complex and cannot correspond one-to-one with the col
 ]
 ```
 
-You can specify the jsonpaths parameter to match the specified columns:
+By specifying the `jsonpaths` parameter, you can match the specified columns:
 
 ```sql
 curl --location-trusted -u <doris_user>:<doris_password> \
@@ -818,11 +856,11 @@ curl --location-trusted -u <doris_user>:<doris_password> \
     -XPUT http://<fe_ip>:<fe_http_port>/api/testdb/test_streamload/_stream_load
 ```
 
-### Specifying JSON root node for data load
+### Specify the JSON root node for import
 
-If the JSON data contains nested JSON fields, you need to specify the root node of the imported JSON. The default value is "".
+If the JSON data contains nested JSON fields, you must specify the root node of the JSON to import. The default value is "".
 
-For example, with the following data, if you want to import the data in the comment column into the table:
+For the following data, the goal is to import the data inside the `comment` column into the table:
 
 ```sql
 [
@@ -839,7 +877,7 @@ For example, with the following data, if you want to import the data in the comm
     ]
 ```
 
-First, you need to specify the root node as comment using the json_root parameter, and then complete the column name mapping according to the jsonpaths parameter.
+First, use the `json_root` parameter to set the root node to `comment`, and then use the `jsonpaths` parameter to complete the column name mapping:
 
 ```sql
 curl --location-trusted -u <doris_user>:<doris_password> \
@@ -853,9 +891,9 @@ curl --location-trusted -u <doris_user>:<doris_password> \
     -XPUT http://<fe_ip>:<fe_http_port>/api/testdb/test_streamload/_stream_load
 ```
 
-### Loading array data type
+### Import Array data type
 
-For example, if the following data contains an array type:
+The following data contains an array type:
 
 ```sql
 1|Emily|[1,2,3,4]
@@ -870,19 +908,19 @@ For example, if the following data contains an array type:
 10|Liam|[89,87,96,12]
 ```
 
-Load data into the following table structure:
+Import the data into the following table schema:
 
 ```sql
 CREATE TABLE testdb.test_streamload(
     typ_id     BIGINT          NOT NULL COMMENT "ID",
-    name       VARCHAR(20)     NULL     COMMENT "Name",
-    arr        ARRAY<int(10)>  NULL     COMMENT "Array"
+    name       VARCHAR(20)     NULL     COMMENT "name",
+    arr        ARRAY<int(10)>  NULL     COMMENT "array"
 )
 DUPLICATE KEY(typ_id)
 DISTRIBUTED BY HASH(typ_id) BUCKETS 10;
 ```
 
-You can directly load the ARRAY type from a text file into the table using a Stream Load job.
+With a Stream Load task, you can import the ARRAY type from a text file directly into the table:
 
 ```sql
 curl --location-trusted -u <doris_user>:<doris_password> \
@@ -893,9 +931,9 @@ curl --location-trusted -u <doris_user>:<doris_password> \
     -XPUT http://<fe_ip>:<fe_http_port>/api/testdb/test_streamload/_stream_load
 ```
 
-### Loading map data type
+### Import Map data type
 
-When the imported data contains a map type, as in the following example:
+When the import data contains a Map type, as in the following example:
 
 ```sql
 [
@@ -912,18 +950,18 @@ When the imported data contains a map type, as in the following example:
 ]
 ```
 
-Load data into the following table structure:
+Import the data into the following table schema:
 
 ```sql
 CREATE TABLE testdb.test_streamload(
     user_id            BIGINT       NOT NULL COMMENT "ID",
-    namemap            Map<STRING, INT>  NULL     COMMENT "Name"
+    namemap            Map<STRING, INT>  NULL     COMMENT "namemap"
 )
 DUPLICATE KEY(user_id)
 DISTRIBUTED BY HASH(user_id) BUCKETS 10;
 ```
 
-You can directly load the map type from a text file into the table using a Stream Load task.
+With a Stream Load task, you can import the Map type from a text file directly into the table:
 
 ```sql
 curl --location-trusted -u <doris_user>:<doris_password> \
@@ -934,11 +972,11 @@ curl --location-trusted -u <doris_user>:<doris_password> \
     -XPUT http://<fe_ip>:<fe_http_port>/api/testdb/test_streamload/_stream_load
 ```
 
-### Loading bitmap data type
+### Import Bitmap data type
 
-During the import process, when encountering Bitmap type data, you can use to_bitmap to convert the data into Bitmap, or use the bitmap_empty function to fill the Bitmap.
+During import, when Bitmap-type data is encountered, you can use `to_bitmap` to convert the data into Bitmap, or use the `bitmap_empty` function to populate a Bitmap.
 
-For example, with the following data:
+For example, the import data is:
 
 ```sql
 1|koga|17723
@@ -953,7 +991,7 @@ For example, with the following data:
 10|buag|97997
 ```
 
-Load data into the following table containing the Bitmap type:
+Import the data into the following table that contains a Bitmap type:
 
 ```sql
 CREATE TABLE testdb.test_streamload(
@@ -965,7 +1003,7 @@ AGGREGATE KEY(typ_id,hou)
 DISTRIBUTED BY HASH(typ_id,hou) BUCKETS 10;
 ```
 
-And use to_bitmap to convert the data into the Bitmap type.
+You can use `to_bitmap` to convert the data into the Bitmap type:
 
 ```sql
 curl --location-trusted -u <doris_user>:<doris_password> \
@@ -975,9 +1013,9 @@ curl --location-trusted -u <doris_user>:<doris_password> \
     -XPUT http://<fe_ip>:<fe_http_port>/api/testdb/test_streamload/_stream_load
 ```
 
-### Loading HyperLogLog data type
+### Import HLL data type
 
-You can use the hll_hash function to convert data into the hll type, as in the following example:
+You can use the `hll_hash` function to convert data into the HLL type. Given the following data:
 
 ```sql
 1001|koga
@@ -992,7 +1030,7 @@ You can use the hll_hash function to convert data into the hll type, as in the f
 1010|buag
 ```
 
-Load data into the following table:
+Import it into the following table:
 
 ```sql
 CREATE TABLE testdb.test_streamload(
@@ -1004,7 +1042,7 @@ AGGREGATE KEY(typ_id,typ_name)
 DISTRIBUTED BY HASH(typ_id) BUCKETS 10;
 ```
 
-And use the hll_hash command for import.
+Import using the `hll_hash` function:
 
 ```sql
 curl --location-trusted -u <doris_user>:<doris_password> \
@@ -1016,14 +1054,68 @@ curl --location-trusted -u <doris_user>:<doris_password> \
 
 ### Column mapping, derived columns, and filtering
 
-Doris supports a very rich set of column transformations and filtering operations in load statements. Supports most built-in functions. For how to use this feature correctly, please refer to the [Data Transformation](../../../data-operate/import/load-data-convert) documentation.
+Doris supports rich column transformation and filtering operations in import statements, and supports most built-in functions. For details on how to use this feature, see the [Data conversion](../../../data-operate/import/load-data-convert) documentation.
 
-### Enable strict mode import
+### Enable strict mode for import
 
-The strict_mode attribute is used to set whether the import task runs in strict mode. This attribute affects the results of column mapping, transformation, and filtering. For specific instructions on strict mode, please refer to the [Handling Messy Data](../../../data-operate/import/handling-messy-data) documentation.
+The `strict_mode` property is used to set whether the import task runs in strict mode. This property affects the results of column mapping, transformation, and filtering. For more about strict mode, see the [Strict mode](../handling-messy-data#strict-mode) documentation.
 
-### Perform partial column updates/flexible partial update during import
+### Perform partial column update or flexible partial column update during import
 
-For how to express partial column updates during import, please refer to the [Partial Column Update](../../../data-operate/update/partial-column-update) documentation.
+For how to express partial column updates during import, see the [Column update](../../../data-operate/update/partial-column-update.md) documentation.
 
+## FAQ
 
+<!-- Knowledge type: Troubleshooting -->
+<!-- Applicable scenario: Troubleshooting / FAQ -->
+
+### Does Stream Load support manual cancellation?
+
+No. Stream Load is automatically canceled by the system when it times out or encounters an import error; users cannot manually cancel a running Stream Load job.
+
+### Is there a size limit for a single Stream Load file?
+
+It is recommended that a single import file be no larger than 10 GB. For larger files, split the file before importing. You can also adjust the BE configuration parameter `streaming_load_max_mb` to raise the single import limit, or use [Doris Streamloader](../../../connection-integration/data-integration/doris-streamloader) for multi-concurrency imports to improve performance.
+
+### How do I query historical Stream Load jobs?
+
+By default, the system does not record Stream Load history jobs. Set `enable_stream_load_record=true` in `be.conf`, restart, and then use `show stream load from <db>` to view the history.
+
+### How do I handle the "Label Already Exists" error?
+
+This error indicates that the same label has already been used. You can determine the status of the existing job through the `ExistingJobStatus` field in the response:
+
+- `RUNNING`: the job is still running; wait for it to complete.
+- `FINISHED`: the job has completed successfully; no retry is needed.
+- If it is CANCELLED, the same label can be used to start a new import.
+
+It is recommended that the same batch of data always uses the same label, to ensure At-Most-Once semantics and avoid duplicate imports.
+
+### What if an import fails because of data format errors?
+
+You can locate and handle the issue as follows:
+
+1. View the specific error rows through the `ErrorURL` field in the response: `curl "<ErrorURL>"`.
+2. Increase `max_filter_ratio` (range 0 to 1) appropriately to tolerate some malformed data.
+3. Check whether null values (`\N`) and empty strings (no characters between two delimiters) in the CSV are used correctly.
+4. Check whether the column separator, line delimiter, enclosing character (`enclose`), and escape character (`escape`) configurations match the actual content of the file.
+
+### How do I handle import timeouts (CANCELLED)?
+
+Estimate a reasonable timeout based on the data volume:
+
+```text
+Import time ~= File size / Estimated import speed (for example, 50MB/s)
+```
+
+You can adjust the timeout in two ways:
+
+- For a single import: use the Header parameter `-H "timeout:3000"`.
+- Globally: adjust the FE parameter `stream_load_default_timeout_second`.
+
+### How do I distinguish null values from empty strings in CSV?
+
+| Type          | Representation                            | Example  | Meaning of the middle column |
+| ------------- | ----------------------------------------- | -------- | ---------------------------- |
+| Null value    | Use `\N`                                  | `a,\N,b` | Middle column is null        |
+| Empty string  | No characters between two delimiters      | `a,,b`   | Middle column is an empty string |

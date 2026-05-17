@@ -13,7 +13,7 @@
 该函数需配合 [`LATERAL VIEW`](../../../query-data/lateral-view.md) 使用。
 
 :::note
-该函数自4.1.0开始支持
+该函数自4.1.0起支持
 :::
 
 ## 语法
@@ -90,7 +90,6 @@ FROM (SELECT 1) dummy
 LATERAL VIEW json_each(NULL) t AS k, v;
 -- Empty set
 ```
-
 空对象：返回 0 行
 
 ```sql

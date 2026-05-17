@@ -22,7 +22,7 @@ TIMEDIFF(<date_or_time_expr1>, <date_or_time_expr2>)
 
 | 参数              | 说明                          |
 |-------------------|-------------------------------|
-| `<date_or_time_expr1>`      | 结束的时间或日期时间值,支持输入 date/datetime 类型,具体 datetime 和 date 格式请查看 [datetime 的转换](../../../basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../basic-element/sql-data-types/conversion/date-conversion)        |
+| `<date_or_time_expr1>`      | 结束的时间或日期时间值,支持输入 date/datetime 类型,具体 datetime 和 date 格式请查看 [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion)        |
 | `<date_or_time_expr2>`    | 开始的时间或日期时间值,支持输入 date/datetime 类型        |
 
 ## 返回值

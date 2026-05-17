@@ -23,7 +23,7 @@ MONTHS_BETWEEN(`<date_or_time_expr1>`, `<date_or_time_expr2>` [, `<round_type>`]
 
 | 参数         | 说明                                                |
 |-------------------|------------------------------------------------------------|
-| ``<date_or_time_expr1>``   | 结束日期，支持输入 date/datetime 类型,具体 datetime 和 date 格式请查看 [datetime 的转换](../../../basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../basic-element/sql-data-types/conversion/date-conversion)。     |
+| ``<date_or_time_expr1>``   | 结束日期，支持输入 date/datetime 类型,具体 datetime 和 date 格式请查看 [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion)。     |
 | ``<date_or_time_expr2>`` | 开始日期，支持输入 date/datetime 类型和符合日期时间格式的字符串. |
 | ``<round_type>`` | 是否将结果四舍五入到第八位小数。支持 `true` 或 `false`。默认为 `true`。 |
 

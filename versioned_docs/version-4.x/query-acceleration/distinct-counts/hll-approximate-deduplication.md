@@ -2,103 +2,130 @@
 {
     "title": "HLL Approximate Deduplication",
     "language": "en",
-    "description": "In real-world business scenarios, as the volume of business data grows, the pressure of deduplication also increases."
+    "description": "How to use HLL (HyperLogLog) for approximate deduplication in Doris? With 1%-2% error, O(mloglogn) space complexity, suitable for large-scale UV / cardinality statistics.",
+    "keywords": [
+        "HLL",
+        "HyperLogLog",
+        "approximate deduplication",
+        "cardinality statistics",
+        "UV statistics",
+        "HLL_UNION_AGG",
+        "HLL_HASH"
+    ]
 }
 ---
 
-# HLL Approximate Deduplication
+<!-- Knowledge type: Capability definition / Operational steps -->
+<!-- Applicable scenarios: Large-scale data deduplication / UV statistics / Cardinality estimation -->
+
+HLL (HyperLogLog) is an approximate deduplication solution based on a probabilistic algorithm. Within a 1%-2% error range, it computes the cardinality (Distinct Count) of massive datasets with very low space and time overhead.
 
 ## Use Cases
 
-In real-world business scenarios, as the volume of business data grows, the pressure of deduplication also increases. When the data reaches a certain scale, the cost of precise deduplication becomes increasingly high. **HLL** (HyperLogLog) stands out for its excellent space complexity of O(m⋅log⁡log⁡n) time complexity of O(n), and a controlled error rate of 1%–2%, depending on the dataset size and the hash function used.
+<!-- Knowledge type: Architecture selection decision -->
 
-When acceptable to the business, using approximate algorithms for fast deduplication is an effective way to reduce computational pressure.
+As business data volumes keep growing, the computation and storage costs of exact deduplication rise sharply. Once data reaches a certain scale, exact deduplication is no longer economical.
 
-------
+The HLL algorithm has the following characteristics:
 
-## What is HyperLogLog
+| Dimension        | Behavior                                              |
+| :--------------- | :---------------------------------------------------- |
+| Space complexity | O(mloglogn)                                           |
+| Time complexity  | O(n)                                                  |
+| Error range      | About 1%-2% (depends on the dataset and hash function) |
 
-HyperLogLog (HLL) is an enhanced version of the LogLog algorithm. It is used for approximate distinct counting and is mathematically based on **Bernoulli trials**.
+When the business can tolerate the error, using HLL for approximate deduplication is an effective way to reduce computational pressure and accelerate queries.
 
-### Explanation:
+- Who it suits: scenarios with huge data volumes, tolerance for 1%-2% error, and a need to balance query performance and storage cost.
+- How to use it: when creating a table, set the column type to `HLL` and the aggregation function to `HLL_UNION`; during data loading, generate HLL values with `HLL_HASH()`; at query time, aggregate with `HLL_UNION_AGG()`.
+- Common uses: UV statistics, user deduplication, unique device count estimation.
 
-Imagine flipping a coin with heads and tails. Each flip has a 50% probability of landing on either side. Keep flipping the coin until it shows heads, and record the number of flips as one trial.
+## What Is HyperLogLog
 
-For multiple Bernoulli trials:
+<!-- Knowledge type: Principle explanation -->
 
-- Let n be the number of heads obtained after n trials.
-- Let k be the number of flips required in each trial. For example, if it took 12 flips to get heads in a trial, k_max would be 12 for this set of trials.
+HyperLogLog is an upgraded version of the LogLog algorithm. It provides imprecise cardinality (distinct count) estimation, and its mathematical foundation is the **Bernoulli trial**.
 
-Bernoulli trials yield the following conclusions:
+### An Intuitive Explanation of the Bernoulli Trial
 
-1. In n trials, no trial will require more than k_max flips.
-2. At least one trial will require exactly k_max flips.
+- Assume a coin has two sides, and a single toss has a 50% probability of landing on either side.
+- Keep tossing the coin until heads appears, and record this as one complete trial.
+- Repeat for n trials, meaning heads has appeared n times. Let k denote the number of tosses in each trial, and let k_i denote the i-th trial.
+- Across the n trials, there must be a maximum number of tosses, denoted as k_max (for example, in one trial it took 12 tosses for heads to appear).
 
-By applying maximum likelihood estimation, it can be derived that:
+### Conclusions Derived
 
-n = 2 ^ k_max
+- The number of tosses in each of the n Bernoulli trials is no greater than k_max.
+- At least one of the n Bernoulli trials has a toss count equal to k_max.
 
-Thus, by recording only k_max, the total number of unique items (cardinality) can be estimated.
+Combined with maximum likelihood estimation, the relationship between n and k_max can be estimated as: **n = 2 ^ k_max**.
 
-------
+In other words, **as long as you record k_max, you can estimate the total number of records, that is, the cardinality**. This is the core idea of the HLL algorithm.
 
-## Use HLL for Approximate Deduplication
+## Using HLL for Approximate Deduplication
 
-### Creating a Table
+<!-- Knowledge type: Operational steps -->
+<!-- Applicable scenarios: Create table -> Load data -> Query -->
 
-1. When using HLL for deduplication:
-   - The target column type must be set to `HLL`.
-   - The aggregation function must be set to `HLL_UNION`.
-2. HLL-type columns cannot be used as key columns.
-3. Users do not need to specify the length or default value. The system internally manages the length based on data aggregation levels.
+### Step 1: Create the table
 
-Example table creation:
+**Goal**: Create an aggregate table that supports HLL deduplication.
 
-```sql
-CREATE TABLE test_hll(
-        dt DATE,
-        id INT,
-        name CHAR(10),
-        province CHAR(10),
-        os CHAR(10),
-        uv HLL HLL_UNION
+**Constraints**:
+
+1. The target column type must be set to `HLL`, and the aggregation function must be set to `HLL_UNION`.
+2. An HLL-type column cannot be used as a Key column.
+3. You do not need to specify the length or default value. The length of an HLL column is internally controlled by the system based on the degree of data aggregation.
+
+**Example**:
+
+```SQL
+create table test_hll(
+        dt date,
+        id int,
+        name char(10),
+        province char(10),
+        os char(10),
+        uv hll hll_union
 )
-AGGREGATE KEY (dt, id, name, province, os)
-DISTRIBUTED BY HASH(id) BUCKETS 10
+Aggregate KEY (dt,id,name,province,os)
+distributed by hash(id) buckets 10
 PROPERTIES(
         "replication_num" = "1",
         "in_memory"="false"
 );
 ```
 
-------
+### Step 2: Load data
 
-### Importing Data
+**Goal**: Convert raw detail data to an HLL column with `HLL_HASH()` and write it into the table.
 
-Here is sample data (`test_hll.csv`) that can be imported using Stream Load:
+**Sample data** (`test_hll.csv`):
 
-```csv
-2022-05-05,10001,Test 01,Beijing,windows 
-2022-05-05,10002,Test 01,Beijing,linux 
-2022-05-05,10003,Test 01,Beijing,macos 
-2022-05-05,10004,Test 01,Hebei,windows 
-2022-05-06,10001,Test 01,Shanghai,windows 
-2022-05-06,10002,Test 01,Shanghai,linux 
-2022-05-06,10003,Test 01,Jiangsu,macos 
-2022-05-06,10004,Test 01,Shaanxi,windows
+```SQL
+2022-05-05,10001,test01,Beijing,windows 
+2022-05-05,10002,test01,Beijing,linux 
+2022-05-05,10003,test01,Beijing,macos 
+2022-05-05,10004,test01,Hebei,windows 
+2022-05-06,10001,test01,Shanghai,windows 
+2022-05-06,10002,test01,Shanghai,linux 
+2022-05-06,10003,test01,Jiangsu,macos 
+2022-05-06,10004,test01,Shaanxi,windows
 ```
 
-**Stream Load Command**:
+#### Stream Load command
 
-```bash
+```SQL
 curl --location-trusted -u root: -H "label:label_test_hll_load" \
     -H "column_separator:," \
-    -H "columns:dt,id,name,province,os, uv=hll_hash(id)" -T test_hll.csv http://fe_IP:8030/api/demo/test_hll/_stream_load
+    -H "columns:dt,id,name,province,os,uv=hll_hash(id)" -T test_hll.csv http://fe_IP:8030/api/demo/test_hll/_stream_load
 ```
 
-**Result**:
+#### Sample load result
 
-```json
+```SQL
+# curl --location-trusted -u root: -H "label:label_test_hll_load"     -H "column_separator:,"     -H "columns:dt,id,name,province,os, pv=hll_hash(id)" -T test_hll.csv http://127.0.0.1:8030/api/demo/test_hll/_stream_load
+
 {
     "TxnId": 693,
     "Label": "label_test_hll_load",
@@ -119,51 +146,56 @@ curl --location-trusted -u root: -H "label:label_test_hll_load" \
 }
 ```
 
-------
+### Step 3: Query data
 
-## Querying Data
+**Goal**: Get approximate deduplication results through HLL aggregation functions.
 
-HLL columns cannot return raw values directly. Instead, HLL aggregate functions must be used for queries.
+> Note: HLL columns do not allow direct querying of raw values. You can only query them through HLL aggregation functions.
 
-**Total UV Calculation**:
+#### Total UV
 
-```sql
-SELECT HLL_UNION_AGG(uv) FROM test_hll;
+```SQL
+mysql> select HLL_UNION_AGG(uv) from test_hll;
 +---------------------+
 | hll_union_agg(`uv`) |
 +---------------------+
 |                   4 |
 +---------------------+
+1 row in set (0.00 sec)
 ```
 
-Equivalent to:
+Equivalent form:
 
-```sql
-SELECT COUNT(DISTINCT id) FROM test_hll;
+```SQL
+mysql> SELECT COUNT(DISTINCT uv) FROM test_hll;
 +----------------------+
-| count(DISTINCT `id`) |
+| count(DISTINCT `uv`) |
 +----------------------+
 |                    4 |
 +----------------------+
+1 row in set (0.01 sec)
 ```
 
-**Daily UV Calculation**:
+#### UV per day
 
-```sql
-SELECT dt, HLL_UNION_AGG(uv) FROM test_hll GROUP BY dt;
-+------------+---------------------+
-| dt         | hll_union_agg       |
-+------------+---------------------+
-| 2022-05-05 |                   4 |
-| 2022-05-06 |                   4 |
-+------------+---------------------+
+```SQL
+mysql> select HLL_UNION_AGG(uv) from test_hll group by dt;
++---------------------+
+| hll_union_agg(`uv`) |
++---------------------+
+|                   4 |
+|                   4 |
++---------------------+
+2 rows in set (0.01 sec)
 ```
-
-------
 
 ## Related Functions
 
-- **HLL_UNION_AGG(hll)**: An aggregate function to estimate the cardinality of all data meeting the conditions.
-- **HLL_CARDINALITY(hll)**: A function to calculate the cardinality of a single HLL column.
-- **HLL_HASH(column_name)**: Generates an HLL column type, used during insert or data import (as shown above).
-- **HLL_EMPTY()**: Generates an empty HLL column for default values during `INSERT` or data import.
+<!-- Knowledge type: Configuration parameters / Function list -->
+
+| Function                   | Purpose                                                                                  |
+| :------------------------- | :--------------------------------------------------------------------------------------- |
+| `HLL_UNION_AGG(hll)`       | Aggregation function used to compute the cardinality estimate of all matching data       |
+| `HLL_CARDINALITY(hll)`     | Computes the cardinality estimate of a single HLL column value                           |
+| `HLL_HASH(column_name)`    | Generates an HLL column type, used during Insert or data loading (loading usage above)   |
+| `HLL_EMPTY()`              | Generates an empty HLL column, used to fill default values during `insert` or data loading |

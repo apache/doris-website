@@ -733,7 +733,7 @@ function CtaSection(): JSX.Element {
                     with <span className="accent">Apache Doris.</span>
                 </h2>
                 <div className="cta-actions" data-reveal data-reveal-delay="2">
-                    <Link className="btn btn-yellow" to="/docs-next/dev/getting-started/quick-start">
+                    <Link className="btn btn-yellow" to="/docs/dev/getting-started/quick-start">
                         <svg
                             width="14"
                             height="14"

@@ -2,7 +2,8 @@
 {
     "title": "集群运维",
     "language": "zh-CN",
-    "description": "在 K8s 环境中服务因为一些预期之外的事情会进入 CrashLoopBackOff 状态，通过 kubectl get pod --namespace ${namespace} 命令可以查看指定 namespace 下的 pod 状态和 podname。"
+    "description": "Doris 集群运维指南：服务扩缩容、滚动升级、CrashLoopBackOff 处理、Debug 模式启动、元数据恢复等 Kubernetes 环境集群管理操作。",
+    "keywords": ["Doris 集群运维", "扩缩容", "滚动升级", "CrashLoopBackOff", "Debug 模式", "元数据恢复", "K8s", "Kubernetes"]
 }
 ---
 

@@ -13,11 +13,11 @@
 
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteCond %{REQUEST_FILENAME} !-d
-    RewriteRule ^docs/dev(/.*)?$ /docs-next/dev/getting-started/what-is-apache-doris [R=301,L]
+    RewriteRule ^docs/dev(/.+)$ /docs/dev/getting-started/what-is-apache-doris [R=301,L]
 
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteCond %{REQUEST_FILENAME} !-d
-    RewriteRule ^zh-CN/docs/dev(/.*)?$ /zh-CN/docs-next/dev/getting-started/what-is-apache-doris [R=301,L]
+    RewriteRule ^zh-CN/docs/dev(/.+)$ /zh-CN/docs/dev/getting-started/what-is-apache-doris [R=301,L]
 
     # Other zh-CN misses — render the zh-CN-locale 404 so the chrome/i18n
     # context (header/footer) is Chinese. URL is preserved.

@@ -11,10 +11,6 @@ Returns the default value of a specific column in a table. If the column has no 
 
 This function behaves the same as MySQL's DEFAULT function.
 
-:::note
-The function started supporting from 4.0.4.
-:::
-
 ## Syntax
 
 ```sql
@@ -139,7 +135,7 @@ LIMIT 1;
 3. Non-constant defaults (`CURRENT_TIMESTAMP`, `CURRENT_DATE`) example:
 ```sql
 CREATE TABLE test_default_time(
-    tm DATETIME(5) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+	tm DATETIME(5) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     dt DATE DEFAULT CURRENT_DATE
 ) PROPERTIES( 'replication_num' = '1' );
 

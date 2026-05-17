@@ -15,7 +15,7 @@ Two modes are supported:
 - **TVF Mode**: Uses `DO INSERT INTO ... SELECT FROM TVF()` syntax to continuously write TVF data into a specified single Doris table. Supports [S3 TVF](../../sql-functions/table-valued-functions/s3.md) and [CDC Stream TVF](../../sql-functions/table-valued-functions/cdc-stream.md).
 - **Multi-table CDC Mode**: Uses `FROM <sourceType> TO DATABASE` syntax to continuously synchronize full and incremental data from multiple upstream database tables into Doris, automatically creating downstream tables on first sync.
 
-For detailed usage, see [Continuous Load](../../../data-operate/import/streaming-job/continuous-load-overview.md).
+For detailed usage, see [Continuous Load](../../../data-operate/import/import-way/streaming-job/continuous-load-overview.md).
 
 ## Syntax
 

@@ -1,0 +1,271 @@
+---
+{
+    "title": "5-Minute Quick Start",
+    "language": "en",
+    "sidebar_label": "Quick Start with Apache Doris",
+    "description": "Quickly deploy Apache Doris locally with Docker or binaries to set up a cluster and run your first SQL query."
+}
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+**After completing this tutorial, you will be able to:**
+
+- Start a complete Doris cluster within 5 minutes using Docker
+- Connect to the cluster with a MySQL client and verify node status
+- Create a database and table, and run your first data query
+
+:::tip Choose your deployment method
+
+- **Want a quick experience?** Use Docker deployment, ready in 5 minutes.
+- **Want a full understanding of production deployment?** Use the local full deployment, including FE/BE separation configuration.
+
+:::
+
+## Quick deployment with Docker
+
+Starting from the latest version, you can use Docker for quick deployment.
+
+### Step 1 (1/3): Download the startup script
+
+<a target="_blank" download rel="noopener noreferrer" href="/files/start-doris.sh">Download the script</a>, then run the following command to grant execute permission:
+
+```shell
+chmod 755 start-doris.sh
+```
+
+### Step 2 (2/3): Start the cluster
+
+Run the script to start the cluster (the default version is 4.0.1):
+
+```shell
+bash start-doris.sh
+```
+
+To specify a version, use the `-v` parameter:
+
+```shell
+bash start-doris.sh -v 4.1.0
+```
+
+### Step 3 (3/3): Verify cluster status
+
+Connect to the cluster with a MySQL client and check the FE and BE status:
+
+```sql
+-- Purpose: verify that the FE node has joined the cluster
+-- Expected: both Join and Alive columns are true
+mysql -uroot -P9030 -h127.0.0.1 -e 'SELECT `host`, `join`, `alive` FROM frontends()'
+```
+
+```sql
+-- Purpose: verify that the BE node is heartbeating normally
+-- Expected: the Alive column is 1
+mysql -uroot -P9030 -h127.0.0.1 -e 'SELECT `host`, `alive` FROM backends()'
+```
+
+**Output explanation:** `Alive=true` (FE) or `Alive=1` (BE) indicates that the node is running normally.
+
+---
+
+## Local full deployment
+
+:::info Environment requirements
+
+- **Operating system:** mainstream AMD/ARM Linux environments such as Ubuntu
+- **Java environment:** JDK 17+
+- **User permissions:** create a dedicated Doris user; do not use root
+
+:::
+
+### Step 1 (1/4): Download the binary package
+
+Download the binary package for your system from the Apache Doris [download page](https://doris.apache.org/download), and extract it to a directory of your choice.
+
+### Step 2 (2/4): Configure the system environment
+
+**Increase the maximum number of file handles** (to avoid errors caused by too many open files):
+
+```bash
+vi /etc/security/limits.conf
+* soft nofile 1000000
+* hard nofile 1000000
+```
+
+**Increase the virtual memory area limit:**
+
+```bash
+cat >> /etc/sysctl.conf << EOF
+vm.max_map_count = 2000000
+EOF
+sysctl -p
+```
+
+### Step 3 (3/4): Deploy the FE
+
+1. **Configure the FE:** edit `apache-doris/fe/conf/fe.conf`
+
+   ```properties
+   # Specify the Java environment
+   JAVA_HOME=/home/doris/jdk
+
+   # Specify the FE listening IP (adjust based on the actual network segment)
+   priority_networks=127.0.0.1/32
+   ```
+
+2. **Start the FE:**
+
+   ```bash
+   apache-doris/fe/bin/start_fe.sh --daemon
+   ```
+
+3. **Verify the FE status:**
+
+   ```sql
+   -- Purpose: confirm that the FE has started and joined the cluster
+   -- Expected: Join=true, Alive=true, IsMaster=true
+   mysql -uroot -P9030 -h127.0.0.1 -e "show frontends;"
+   ```
+
+### Step 4 (4/4): Deploy the BE
+
+1. **Configure the BE:** edit `apache-doris/be/conf/be.conf`
+
+   ```properties
+   # Specify the BE listening IP (must be in the same network segment as the FE's priority_networks)
+   priority_networks=127.0.0.1/32
+   ```
+
+2. **Start the BE:**
+
+   ```bash
+   apache-doris/be/bin/start_be.sh --daemon
+   ```
+
+3. **Register the BE with the cluster:**
+
+   ```sql
+   -- Purpose: add the BE node to the cluster
+   ALTER SYSTEM ADD BACKEND "127.0.0.1:9050";
+   ```
+
+4. **Verify the BE status:**
+
+   ```sql
+   -- Purpose: confirm that the BE is registered and heartbeating normally
+   -- Expected: Alive=true
+   mysql -uroot -P9030 -h127.0.0.1 -e "show backends;"
+   ```
+
+---
+
+## Run your first query
+
+Whether you used Docker or a local deployment, once the cluster is up you can follow the steps below to try out Doris SQL features.
+
+### Connect to the cluster
+
+```sql
+mysql -uroot -P9030 -h127.0.0.1
+```
+
+### Create a database and table
+
+```sql
+-- Purpose: create a demo database and table
+create database demo;
+use demo;
+
+create table mytable
+(
+    k1 TINYINT,
+    k2 DECIMAL(10, 2) DEFAULT "10.05",
+    k3 CHAR(10) COMMENT "string column",
+    k4 INT NOT NULL DEFAULT "1" COMMENT "int column"
+)
+COMMENT "my first table"
+DISTRIBUTED BY HASH(k1) BUCKETS 1
+PROPERTIES ("replication_num" = "1");
+```
+
+### Load test data
+
+```sql
+-- Purpose: insert a few rows of test data
+insert into mytable values
+(1, 0.14, 'a1', 20),
+(2, 1.04, 'b2', 21),
+(3, 3.14, 'c3', 22),
+(4, 4.35, 'd4', 23);
+```
+
+### Run a query
+
+```sql
+-- Purpose: verify that the data was loaded successfully
+-- Expected: 4 rows are returned
+select * from demo.mytable;
+```
+
+**Sample output:**
+
+```
++------+------+------+------+
+| k1   | k2   | k3   | k4   |
++------+------+------+------+
+|    1 | 0.14 | a1   |   20 |
+|    2 | 1.04 | b2   |   21 |
+|    3 | 3.14 | c3   |   22 |
+|    4 | 4.35 | d4   |   23 |
++------+------+------+------+
+```
+
+---
+
+## FAQ
+
+### Q: Is Docker deployment suitable for production?
+
+No. Docker deployment is intended only for local development and testing; data is lost when the container is destroyed. For production, use the local full deployment or a multi-node deployment.
+
+### Q: How do I install Docker on Mac?
+
+Download and install [Docker Desktop](https://www.docker.com/products/docker-desktop/).
+
+### Q: After installing Docker Desktop on Mac, I see "Docker environment not detected". What should I do?
+
+Create a symbolic link:
+
+```shell
+sudo ln -s /Applications/Docker.app/Contents/Resources/bin/docker /usr/local/bin/docker
+```
+
+### Q: Docker on Mac reports "error getting credentials". What should I do?
+
+As a temporary workaround, remove the `credsStore` field from `~/.docker/config.json`. Note: this stores credentials in plain text and is for local development only.
+
+### Q: A BE node still shows "Dead" after being added. What should I check?
+
+Check whether the BE's `priority_networks` is in the same network segment as the FE, and confirm that the BE ports (9050/9060/8040/8060) are not blocked by a firewall.
+
+### Q: How do I confirm that the cluster is healthy overall?
+
+Run `SHOW FRONTENDS;` and `SHOW BACKENDS;`, and ensure that the `Alive` column is `true` for every node.
+
+---
+
+## Next steps
+
+- [Data modeling guide]: learn about Doris data models and partitioning strategies (NEXT-TODO)
+- [Getting started with SQL operations]: learn data loading, querying, and updates (NEXT-TODO)
+- [Cluster management]: master production-grade cluster operations (NEXT-TODO)
+
+:::caution Warning (applies to local deployment only)
+
+The following content is **for local development and testing only**. **Do not use it in production**:
+
+1. **Data is easily lost:** Docker deployments lose data when the container is destroyed; single-replica instances have no data redundancy.
+2. **Single-replica configuration:** the table creation statements in the examples all use a single replica. In production, use multi-replica storage to ensure data reliability.
+
+:::

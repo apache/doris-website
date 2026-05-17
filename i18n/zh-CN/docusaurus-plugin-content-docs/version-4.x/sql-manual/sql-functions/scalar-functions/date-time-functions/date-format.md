@@ -22,7 +22,7 @@ DATE_FORMAT(<date_or_time_expr>, <format>)
 
 | 参数 | 说明 |
 | -- | -- |
-| `<date_or_time_expr>` | 合法的日期值，支持为 datetime 或者 date 类型，具体 datetime 和 date 格式请查看 [datetime 的转换](../../../basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../basic-element/sql-data-types/conversion/date-conversion))|
+| `<date_or_time_expr>` | 合法的日期值，支持为 datetime 或者 date 类型，具体 datetime 和 date 格式请查看 [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion))|
 | `<format>` | 规定日期/时间的输出格式，为 `varchar` 类型 |
 
 支持的 format 格式：

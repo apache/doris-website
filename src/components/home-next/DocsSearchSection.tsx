@@ -19,8 +19,8 @@ export function DocsSearchSection(): JSX.Element {
     }, []);
 
     return (
-        <div className="docs-next-search-section" ref={containerRef}>
-            <div className="docs-next-search-section__inner">
+        <div className="docs-search-section" ref={containerRef}>
+            <div className="docs-search-section__inner">
                 <SearchBar />
             </div>
         </div>

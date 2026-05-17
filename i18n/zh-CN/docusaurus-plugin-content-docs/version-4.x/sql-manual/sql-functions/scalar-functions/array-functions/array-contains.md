@@ -2,7 +2,7 @@
 {
     "title": "ARRAY_CONTAINS",
     "language": "zh-CN",
-    "description": "<version since=\"1.2.0\">"
+    "description": "检查数组中是否包含指定的值。如果找到则返回 true，否则返回 false。如果数组为 NULL，则返回 NULL。"
 }
 ---
 

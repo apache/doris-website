@@ -2,7 +2,7 @@
 {
     "title": "Workload Analysis Diagnosis",
     "language": "en",
-    "description": "The workload analysis for clusters is primarily divided into two stages:"
+    "description": "Guide to workload analysis and diagnosis in Doris, covering runtime analysis for resource bottlenecks and historical data analysis through audit logs to optimize cluster performance."
 }
 ---
 

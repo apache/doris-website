@@ -22,7 +22,7 @@ NEXT_DAY(`<date_or_time_expr>`, `<day_of_week>`)
 
 | 参数              | 描述                                                         |
 |-------------------|--------------------------------------------------------------|
-| ``<date_or_time_expr>`` | 支持输入 date/datetime 类型,具体 datetime 和 date 格式请查看 [datetime 的转换](../../../basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../basic-element/sql-data-types/conversion/date-conversion)。                                 |
+| ``<date_or_time_expr>`` | 支持输入 date/datetime 类型,具体 datetime 和 date 格式请查看 [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion)。                                 |
 | ``<day_of_week>``   | 用于标识星期几的字符串表达式，为字符串类型。                               |
 
 

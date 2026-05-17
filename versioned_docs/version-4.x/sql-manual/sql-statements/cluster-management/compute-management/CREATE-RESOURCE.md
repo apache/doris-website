@@ -191,7 +191,7 @@ Spark related parameters are as follows:
 
 **6. Create HMS resource**
 
-   HMS resource is used to create [hms catalog](../../../../lakehouse/catalogs/hive-catalog.md)
+   HMS resource is used to create [hms catalog](../../../../lakehouse/catalogs/hive-catalog.mdx)
    ```sql
    CREATE RESOURCE hms_resource PROPERTIES (
       'type'='hms',

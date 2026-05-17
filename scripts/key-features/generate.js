@@ -11,8 +11,8 @@ const {
   walkMarkdownFiles,
 } = require('../docs-governance/lib');
 
-const DOCS_DIR = 'docs-next/key-features';
-const DOCS_ROUTE_BASE = '/docs-next/dev';
+const DOCS_DIR = 'docs/key-features';
+const DOCS_ROUTE_BASE = '/docs/dev';
 const OUTPUT_FILE = 'src/generated/key-features.ts';
 
 function slugToRoute(slug, fallbackSlug) {
@@ -50,7 +50,7 @@ function parseFeatureDoc(rootDir, absPath, index) {
   const data = parsed.data || {};
   const featureCard = data.featureCard || {};
   const relativePath = normalizePath(path.relative(rootDir, absPath));
-  const docsRelativePath = normalizePath(path.relative(path.join(rootDir, 'docs-next'), absPath));
+  const docsRelativePath = normalizePath(path.relative(path.join(rootDir, 'docs'), absPath));
   const sourcePath = relativePath;
   const title = typeof data.title === 'string' ? data.title.trim() : '';
   const description = typeof data.description === 'string' ? data.description.trim() : '';

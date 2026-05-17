@@ -2,7 +2,7 @@
 {
     "title": "ARRAY_POSITION",
     "language": "en",
-    
+    "description": "Finds the position index (starting from 1) of the first occurrence of a specified element in the array."
 }
 ---
 

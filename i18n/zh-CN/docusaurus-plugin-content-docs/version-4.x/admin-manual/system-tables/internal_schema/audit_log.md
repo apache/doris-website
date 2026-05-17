@@ -33,10 +33,10 @@
 | scan_bytes        				| bigint       | 扫描的数据量。                           |
 | scan_rows         				| bigint       | 扫描行数                               |
 | return_rows       				| bigint       | 返回的行数                             |
-| shuffleSendRows             | bigint  | 语句执行过程中，节点间传输的行数。3.0 版本开始支持。|
-| shuffleSendBytes            | bigint    | 语句执行过程中，节点间传输的数据量。3.0 版本开始支持。 |
-| scanBytesFromLocalStorage   | bigint    | 从本地磁盘读取的数据量。3.0 版本开始支持。 |
-| scanBytesFromRemoteStorage  | bigint    | 从远端存储读取的数据量。3.0 版本开始支持。 |
+| shuffle_send_rows             | bigint  | 语句执行过程中，节点间传输的行数。3.0 版本开始支持。|
+| shuffle_send_bytes            | bigint    | 语句执行过程中，节点间传输的数据量。3.0 版本开始支持。 |
+| scan_bytes_from_local_storage   | bigint    | 从本地磁盘读取的数据量。3.0 版本开始支持。 |
+| scan_bytes_from_remote_storage  | bigint    | 从远端存储读取的数据量。3.0 版本开始支持。 |
 | stmt_id           				| bigint       | 语句 ID                                |
 | stmt_type                   | string    | 语句类型。3.0 版本开始支持。 |
 | is_query          				| tinyint      | 是否是查询                             |

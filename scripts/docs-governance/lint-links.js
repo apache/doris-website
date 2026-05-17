@@ -232,17 +232,17 @@ function candidateFiles(rootDir, sourcePath, pathname) {
   );
 }
 
-function resolveDocsNextTarget(rootDir, pathname) {
-  const enPrefix = '/docs-next/dev/';
-  const zhPrefix = '/zh-CN/docs-next/dev/';
+function resolveDevDocsTarget(rootDir, pathname) {
+  const enPrefix = '/docs/dev/';
+  const zhPrefix = '/zh-CN/docs/dev/';
   let rel;
   let base;
   if (pathname.startsWith(enPrefix)) {
     rel = pathname.slice(enPrefix.length);
-    base = 'docs-next';
+    base = 'docs';
   } else if (pathname.startsWith(zhPrefix)) {
     rel = pathname.slice(zhPrefix.length);
-    base = 'i18n/zh-CN/docusaurus-plugin-content-docs-next/current';
+    base = 'i18n/zh-CN/docusaurus-plugin-content-docs/current';
   } else {
     return null;
   }
@@ -285,14 +285,13 @@ function resolveInternalTarget(rootDir, sourcePath, rawTarget, indexes) {
     if (entry) {
       return { kind: 'route', sourcePath: entry.source_path, hash };
     }
-    // The docs-next ("Dev") plugin is intentionally excluded from the
-    // governance manifest while its IA is still in flux, but links FROM
-    // governed docs INTO docs-next should still be allowed. Accept any
-    // /docs-next/dev/... (and /zh-CN/docs-next/dev/...) target whose file
-    // exists on disk.
-    const docsNextFile = resolveDocsNextTarget(rootDir, pathname);
-    if (docsNextFile) {
-      return { kind: 'docs-next', sourcePath: docsNextFile, hash };
+    // The Dev tree is intentionally excluded from the governance manifest
+    // while its IA is still in flux, but links FROM governed docs INTO the
+    // Dev tree should still be allowed. Accept any /docs/dev/... (and the
+    // /zh-CN/docs/dev/... counterpart) target whose file exists on disk.
+    const devDocsFile = resolveDevDocsTarget(rootDir, pathname);
+    if (devDocsFile) {
+      return { kind: 'dev-docs', sourcePath: devDocsFile, hash };
     }
     return { kind: 'missing-route', pathname, hash };
   }

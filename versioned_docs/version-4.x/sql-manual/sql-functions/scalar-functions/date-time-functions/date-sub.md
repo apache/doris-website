@@ -27,7 +27,7 @@ DATE_SUB(<date_or_time_part>, INTERVAL <expr> <time_unit>)
 
 | Parameter | Description |
 | -- | -- |
-| `<date_or_time_part>` | A valid date value, supporting datetime or date type. For specificformats, please refer to [timestamptz conversion](../../../basic-element/sql-data-types/conversion/time-conversion), [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
+| `<date_or_time_part>` | A valid date value, supporting datetime or date type. For specificformats, please refer to [timestamptz conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion), [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
 | `<expr>` | The time interval to be subtracted, for independent units (such as `YEAR`) are of `INT` type; for compound units (such as `YEAR_MONTH`) are of `STRING` type, and accept all non-numeric characters as separators. Therefore, for example, `INTERVAL 6/4 HOUR_MINUTE` will be recognized as 6 hours 4 minutes by Doris, rather than 1 hour 30 minutes (6/4 == 1.5). For compound units, if the input interval value is too short, the value of the larger unit will be set to 0. The sign of this value is determined solely by whether the first non-numeric character is `-`. |
 | `<time_unit>` | Enumerated values: YEAR, QUARTER, MONTH, WEEK, DAY, HOUR, MINUTE, SECOND, YEAR_MONTH, DAY_HOUR, DAY_MINUTE, DAY_SECOND, DAY_MICROSECOND, HOUR_MINUTE, HOUR_SECOND, HOUR_MICROSECOND, MINUTE_SECOND, MINUTE_MICROSECOND, SECOND_MICROSECOND |
 
@@ -53,10 +53,6 @@ DATE_SUB(<date_or_time_part>, INTERVAL <expr> <time_unit>)
 | MINUTE_SECOND      | 'MINUTES:SECONDS'                         |
 | MINUTE_MICROSECOND | 'MINUTES:SECONDS.MICROSECONDS'            |
 | SECOND_MICROSECOND | 'SECONDS.MICROSECONDS'                    |
-
-:::note
-Composite units except `MINUTE`, `SECOND`, `DAY_SECOND`, `DAY_HOUR`, `MINUTE_SECOND`, and `SECOND_MICROSECOND` are supported from version 4.0.4.
-:::
 
 ## Return Value
 

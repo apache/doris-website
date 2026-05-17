@@ -18,7 +18,7 @@ import styles from './styles.module.css';
 import { useHistory } from '@docusaurus/router';
 import { NavbarNext } from '@site/src/components/home-next/NavbarNext';
 import { PreviewBanner } from '@site/src/components/home-next/PreviewBanner';
-import { isDocsNextPath, isReleasesPath, isEventsPath, isCommunityPath } from '@site/src/utils/locale';
+import { isDevDocsPath, isReleasesPath, isEventsPath, isCommunityPath } from '@site/src/utils/locale';
 interface DataType {
     showSearchPageMobile: boolean;
     setShowSearchPageMobile: React.Dispatch<React.SetStateAction<boolean>>;
@@ -42,11 +42,11 @@ export default function Layout(props: Props): JSX.Element {
     const {
         i18n: { locales },
     } = useDocusaurusContext();
-    const isDocsNextPage = isDocsNextPath(history.location.pathname, locales);
+    const isDevDocsPage = isDevDocsPath(history.location.pathname, locales);
     const isReleasesPage = isReleasesPath(history.location.pathname, locales);
     const isEventsPage = isEventsPath(history.location.pathname, locales);
     const isCommunityPage = isCommunityPath(history.location.pathname, locales);
-    const useNextNavbar = isDocsNextPage || isReleasesPage || isEventsPage || isCommunityPage;
+    const useNextNavbar = isDevDocsPage || isReleasesPage || isEventsPage || isCommunityPage;
     useKeyboardNavigation();
 
     useEffect(() => {
@@ -60,7 +60,7 @@ export default function Layout(props: Props): JSX.Element {
     }, [history.location]);
 
     useEffect(() => {
-        if (showSearchPageMobile && !isDocsNextPage) {
+        if (showSearchPageMobile && !isDevDocsPage) {
             window.scroll(0, 0);
             document.body.style.overflow = 'hidden';
             searchPageDom.current.style.height = '100vh';
@@ -68,7 +68,7 @@ export default function Layout(props: Props): JSX.Element {
             window.scroll(0, 0);
             document.body.style.overflow = 'auto';
         }
-    }, [showSearchPageMobile, isDocsNextPage]);
+    }, [showSearchPageMobile, isDevDocsPage]);
 
     useEffect(() => {
         if (hash) {

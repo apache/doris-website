@@ -20,9 +20,9 @@ export function isDocsPath(pathname: string, locales: string[]): boolean {
     return normalizedPathname === '/docs' || normalizedPathname.startsWith('/docs/');
 }
 
-export function isDocsNextPath(pathname: string, locales: string[]): boolean {
+export function isDevDocsPath(pathname: string, locales: string[]): boolean {
     const normalizedPathname = normalizePathname(pathname, locales);
-    return normalizedPathname === '/docs-next' || normalizedPathname.startsWith('/docs-next/');
+    return normalizedPathname === '/docs/dev' || normalizedPathname.startsWith('/docs/dev/');
 }
 
 export function isReleasesPath(pathname: string, locales: string[]): boolean {

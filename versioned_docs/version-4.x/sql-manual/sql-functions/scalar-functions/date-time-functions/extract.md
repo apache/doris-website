@@ -12,10 +12,6 @@ The `EXTRACT` function is used to extract specific time components from date or 
 
 This function behaves consistently with the [extract function](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_extract) in MySQL. 
 
-:::note
-Extraction of compound units, such as `YEAR_MONTH`, is supported since version 4.0.4.
-:::
-
 ## Syntax
 
 `EXTRACT(<unit> FROM <date_or_time_expr>)`

@@ -22,7 +22,7 @@ MICROSECOND(`<datetime>`)
 
 | 参数 | 说明 |
 | ---- | ---- |
-| `<datetime>` | 输入的日期时间值，类型为 DATETIME , datetime格式请查看 [datetime 的转换](../../../basic-element/sql-data-types/conversion/datetime-conversion)，精度需要大于 0 |
+| `<datetime>` | 输入的日期时间值，类型为 DATETIME , datetime格式请查看 [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion)，精度需要大于 0 |
 
 ## 返回值
 

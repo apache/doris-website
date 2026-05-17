@@ -22,7 +22,7 @@ ST_ANGLE( <point1>, <point2>, <point3>)
 |----------|--------------------------|
 | `<point1>` | The first endpoint of the first line, of type `GeoPoint`             |
 | `<point2>` | The second endpoint of the first line and the first endpoint of the second line, of type `GeoPoint` |
-| `<point3>` | The second endpoint of the second line, of type  `GeoPint` |
+| `<point3>` | The second endpoint of the second line, of type  `GeoPoint` |
 
 ## Retuen Value
 

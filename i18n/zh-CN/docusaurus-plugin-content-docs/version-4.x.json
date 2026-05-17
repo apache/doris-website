@@ -1,14 +1,14 @@
 {
   "version.label": {
     "message": "4.x",
-    "description": "The label for version current"
+    "description": "The label for version 4.x"
   },
   "sidebar.docs.category.Getting Started": {
     "message": "快速开始",
     "description": "The label for category Getting Started in sidebar docs"
   },
   "sidebar.docs.category.Tech Alternatives": {
-    "message": "技术对比",
+    "message": "选型与对比",
     "description": "The label for category Getting Started in sidebar docs"
   },
   "sidebar.docs.category.Guides": {
@@ -47,9 +47,21 @@
     "message": "部署前准备",
     "description": "The label for category Installation Preparation in sidebar docs"
   },
+  "sidebar.docs.category.Preparation": {
+    "message": "部署前准备",
+    "description": "The label for category Installation Preparation in sidebar docs"
+  },
   "sidebar.docs.category.Cluster Deployment Manually": {
     "message": "手动部署集群",
     "description": "The label for category Cluster Deployment Manually in sidebar docs"
+  },
+  "sidebar.docs.category.Deploy Manually": {
+    "message": "手动部署集群",
+    "description": "The label for category Deploy Manually in sidebar docs"
+  },
+  "sidebar.docs.category.Deploying Manually": {
+    "message": "手动部署集群",
+    "description": "The label for category Deploy Manually in sidebar docs"
   },
   "sidebar.docs.category.Deploying on Cloud": {
     "message": "云上部署集群",
@@ -107,13 +119,13 @@
     "message": "文件格式",
     "description": "The label for category File Formats in sidebar docs"
   },
-  "sidebar.docs.category.Complex Data Types": {
-    "message": "复杂数据类型",
-    "description": "The label for category Complex Data Types in sidebar docs"
+  "sidebar.docs.category.Complex Data Types Import": {
+    "message": "复杂数据类型导入",
+    "description": "The label for category Complex Data Types Import in sidebar docs"
   },
-  "sidebar.docs.category.Load Internals": {
-    "message": "导入原理",
-    "description": "The label for category Load Internals in sidebar docs"
+  "sidebar.docs.category.Load Best Practices": {
+    "message": "导入最佳实践",
+    "description": "The label for category Load Best Practices in sidebar docs"
   },
   "sidebar.docs.category.Continuous Load": {
     "message": "持续导入",
@@ -200,7 +212,7 @@
     "description": "The label for category Ecosystem in sidebar docs"
   },
   "sidebar.docs.category.Doris Operator": {
-    "message": "Doris Operator",
+    "message": "部署前准备",
     "description": "The label for category Doris Operator in sidebar docs"
   },
   "sidebar.docs.category.Managing Cluster": {
@@ -579,9 +591,9 @@
     "message": "可观测性",
     "description": "Observability"
   },
-  "sidebar.docs.category.Compute-Storage Decoupled": {
-    "message": "存算分离",
-    "description": "Compute-Storage Decoupled"
+  "sidebar.docs.category.Compute-Storage Decoupled Guide": {
+    "message": "存算分离运维指南",
+    "description": "Compute-Storage Decoupled Guide"
   },
   "sidebar.docs.category.File Cache": {
     "message": "文件缓存",
@@ -632,7 +644,7 @@
     "description": "The label for category Binary Data Type in sidebar docs"
   },
   "sidebar.docs.category.Caching": {
-    "message": "查询缓存",
+    "message": "缓存",
     "description": "The label for category Caching in sidebar docs"
   },
   "sidebar.docs.category.Distinct Counts": {
@@ -651,9 +663,9 @@
     "message": "Flink Doris Connector",
     "description": "The label for category Flink Doris Connector in sidebar docs"
   },
-  "sidebar.docs.category.Getting Started with Performance Tuning": {
-    "message": "性能调优入门",
-    "description": "The label for category Getting Started with Performance Tuning in sidebar docs"
+  "sidebar.docs.category.Performance Tuning Overview": {
+    "message": "性能调优概述",
+    "description": "The label for category Performance Tuning Overview in sidebar docs"
   },
   "sidebar.docs.category.High Concurrency & Point Queries": {
     "message": "高并发与点查",
@@ -742,5 +754,161 @@
   "sidebar.docs.category.Variant Functions": {
     "message": "VARIANT 函数",
     "description": "The label for category Variant Functions in sidebar docs"
+  },
+  "sidebar.docs.category.Features & Architecture": {
+    "message": "功能与架构",
+    "description": "The label for category Features & Architecture in sidebar docs"
+  },
+  "sidebar.docs.category.Architecture & Concepts": {
+    "message": "架构与概念",
+    "description": "The label for category Architecture & Concepts in sidebar docs"
+  },
+  "sidebar.docs.category.Installation & Deployment": {
+    "message": "安装与部署",
+    "description": "The label for category Installation & Deployment in sidebar docs"
+  },
+  "sidebar.docs.category.Connection & Integration": {
+    "message": "连接与集成",
+    "description": "The label for category Connection & Integration in sidebar docs"
+  },
+  "sidebar.docs.category.Data Integration": {
+    "message": "数据集成",
+    "description": "The label for category Data Integration in sidebar docs"
+  },
+  "sidebar.docs.category.Table Design": {
+    "message": "表设计",
+    "description": "The label for category Table Design in sidebar docs"
+  },
+  "sidebar.docs.category.Table Models": {
+    "message": "表模型",
+    "description": "The label for category Table Models in sidebar docs"
+  },
+  "sidebar.docs.category.Partitioning & Bucketing": {
+    "message": "分区与分桶",
+    "description": "The label for category Partitioning & Bucketing in sidebar docs"
+  },
+  "sidebar.docs.category.Indexes": {
+    "message": "索引",
+    "description": "The label for category Indexes in sidebar docs"
+  },
+  "sidebar.docs.category.Inverted Index (Fulltext)": {
+    "message": "倒排索引（全文检索）",
+    "description": "The label for category Inverted Index (Fulltext) in sidebar docs"
+  },
+  "sidebar.docs.category.Vector Index": {
+    "message": "向量索引",
+    "description": "The label for category Vector Index in sidebar docs"
+  },
+  "sidebar.docs.category.Storage Layout": {
+    "message": "存储布局优化",
+    "description": "The label for category Storage Layout in sidebar docs"
+  },
+  "sidebar.docs.category.Schema Evolution": {
+    "message": "Schema 演进",
+    "description": "The label for category Schema Evolution in sidebar docs"
+  },
+  "sidebar.docs.category.Special Tables": {
+    "message": "特殊表",
+    "description": "The label for category Special Tables in sidebar docs"
+  },
+  "sidebar.docs.category.Data Operations": {
+    "message": "数据操作",
+    "description": "The label for category Data Operations in sidebar docs"
+  },
+  "sidebar.docs.category.Querying": {
+    "message": "数据查询",
+    "description": "The label for category Querying in sidebar docs"
+  },
+  "sidebar.docs.category.Lakehouse": {
+    "message": "湖仓一体",
+    "description": "The label for category Lakehouse in sidebar docs"
+  },
+  "sidebar.docs.category.Hybrid Search": {
+    "message": "混合检索",
+    "description": "The label for category Hybrid Search in sidebar docs"
+  },
+  "sidebar.docs.category.Full-Text Search": {
+    "message": "全文检索",
+    "description": "The label for category Full-Text Search in sidebar docs"
+  },
+  "sidebar.docs.category.Performance & Tuning": {
+    "message": "性能与调优",
+    "description": "The label for category Performance & Tuning in sidebar docs"
+  },
+  "sidebar.docs.category.Benchmarks": {
+    "message": "性能基准",
+    "description": "The label for category Benchmarks in sidebar docs"
+  },
+  "sidebar.docs.category.Administration": {
+    "message": "系统管理",
+    "description": "The label for category Administration in sidebar docs"
+  },
+  "sidebar.docs.category.Workload Management": {
+    "message": "负载管理",
+    "description": "The label for category Workload Management in sidebar docs"
+  },
+  "sidebar.docs.category.Disaster Recovery": {
+    "message": "容灾管理",
+    "description": "The label for category Disaster Recovery in sidebar docs"
+  },
+  "sidebar.docs.category.Security & Authentication": {
+    "message": "安全与认证",
+    "description": "The label for category Security & Authentication in sidebar docs"
+  },
+  "sidebar.docs.category.Monitoring & Alerting": {
+    "message": "监控告警",
+    "description": "The label for category Monitoring & Alerting in sidebar docs"
+  },
+  "sidebar.docs.category.Configuration": {
+    "message": "配置管理",
+    "description": "The label for category Configuration in sidebar docs"
+  },
+  "sidebar.docs.category.HTTP API": {
+    "message": "HTTP API",
+    "description": "The label for category HTTP API in sidebar docs"
+  },
+  "sidebar.docs.category.Observability with Doris": {
+    "message": "可观测性分析",
+    "description": "The label for category Observability with Doris in sidebar docs"
+  },
+  "sidebar.docs.category.Ecosystem & Integrations": {
+    "message": "生态与集成",
+    "description": "The label for category Ecosystem & Integrations in sidebar docs"
+  },
+  "sidebar.docs.category.Connectors": {
+    "message": "连接器",
+    "description": "The label for category Connectors in sidebar docs"
+  },
+  "sidebar.docs.category.Doris Monitoring": {
+    "message": "Doris 监控集成",
+    "description": "The label for category Doris Monitoring in sidebar docs"
+  },
+  "sidebar.docs.category.ETL & Workflow": {
+    "message": "ETL 与工作流",
+    "description": "The label for category ETL & Workflow in sidebar docs"
+  },
+  "sidebar.docs.category.Troubleshooting & FAQ": {
+    "message": "故障诊断与 FAQ",
+    "description": "The label for category Troubleshooting & FAQ in sidebar docs"
+  },
+  "sidebar.docs.category.Troubleshooting": {
+    "message": "故障诊断",
+    "description": "The label for category Troubleshooting in sidebar docs"
+  },
+  "sidebar.docs.category.Memory Management": {
+    "message": "内存管理",
+    "description": "The label for category Memory Management in sidebar docs"
+  },
+  "sidebar.docs.category.Memory Analysis": {
+    "message": "内存分析",
+    "description": "The label for category Memory Analysis in sidebar docs"
+  },
+  "sidebar.docs.category.Memory Feature": {
+    "message": "内存特性",
+    "description": "The label for category Memory Feature in sidebar docs"
+  },
+  "sidebar.docs.category.Release Notes": {
+    "message": "版本说明",
+    "description": "The label for category Release Notes in sidebar docs"
   }
 }

@@ -1,0 +1,37 @@
+---
+{
+    "title": "Join 优化",
+    "language": "zh-CN",
+    "description": "Apache Doris Join 优化章节导航：覆盖 Colocation Join、Distribute Hint 调整 Shuffle 方式以及 Leading Hint 控制 Join 顺序。"
+}
+---
+
+import GettingStartedCard from '@site/src/components/getting-started-card/getting-started-card';
+
+Apache Doris 在大多数 Join 查询场景下具备良好的开箱即用能力，但在性能要求严苛的场景，你仍可以通过表的 Colocation 编排和 Hint 引导优化器。建议先使用 Colocation Join 消除分桶等值 Join 的网络 Shuffle，再在优化器选择不理想时，结合 Distribute Hint 与 Leading Hint 微调 Shuffle 方式和 Join 顺序。
+
+## Colocation
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="Colocation Join"
+    description="将相关表的数据按相同分桶规则放置在同一 BE 节点，使分桶列等值 Join 直接在本地完成，彻底消除跨节点数据传输。"
+    link="colocation-join"
+/>
+</div>
+
+## Hint 调优
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="使用 Hint 调整 Join Shuffle 方式"
+    description="使用 [shuffle] 和 [broadcast] Distribute Hint 覆盖优化器对 Join 右表的数据分发选择，针对特定场景手动调优。"
+    link="tuning/tuning-plan/adjusting-join-shuffle"
+/>
+
+<GettingStartedCard
+    title="Leading Hint 控制 Join 顺序"
+    description="当 CBO 选择的 Join 顺序不理想时，使用 Leading Hint 手工指定多表 Join 顺序，支持左深树、右深树、Bushy 树等多种形态。"
+    link="tuning/tuning-plan/reordering-join-with-leading-hint"
+/>
+</div>
