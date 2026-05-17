@@ -419,11 +419,11 @@ const capabilities: Capability[] = [
         desc: 'Support detail records, aggregated metrics, real-time upserts, and analytical datasets in one engine. Doris combines flexible table models with partitioning and bucketing to improve data organization, query performance, and reuse.',
         poweredLabel: 'Powered by',
         poweredBy: [
-            { label: 'Data Model', href: '#' },
-            { label: 'Rollup', href: '#' },
-            { label: 'Analytic Functions', href: '#' },
-            { label: 'Partitioning and Bucketing', href: '#' },
-            { label: 'Unique Key', href: '/key-features/unique-key' },
+            { label: 'Data Model', href: '/docs/dev/key-features/data-model' },
+            { label: 'Rollup', href: '/docs/dev/key-features/preaggregation-and-rollup' },
+            { label: 'Analytic Functions', href: '/docs/dev/key-features/analytic-functions' },
+            { label: 'Partitioning and Bucketing', href: '/docs/dev/key-features/partitioning-and-bucketing' },
+            { label: 'Unique Key', href: '/docs/dev/key-features/unique-key' },
         ],
     },
     {
@@ -439,12 +439,12 @@ const capabilities: Capability[] = [
         desc: 'Apache Doris continuously ingests streaming and CDC data, applies updates in real time, and makes fresh data queryable within seconds, so analytics can move beyond overnight batch pipelines.',
         poweredLabel: 'Powered by',
         poweredBy: [
-            { label: 'Load Transaction', href: '#' },
-            { label: 'Data Compaction', href: '#' },
-            { label: 'Data Update/Delete', href: '#' },
-            { label: 'Preaggregation', href: '#' },
-            { label: 'Group Commit', href: '#' },
-            { label: 'Kafka/CDC Integration', href: '#' },
+            { label: 'Load Transaction', href: '/docs/dev/key-features/load-transaction' },
+            { label: 'Data Compaction', href: '/docs/dev/key-features/data-compaction' },
+            { label: 'Data Update/Delete', href: '/docs/dev/key-features/data-update-delete' },
+            { label: 'Preaggregation', href: '/docs/dev/key-features/preaggregation-and-rollup' },
+            { label: 'Group Commit', href: '/docs/dev/key-features/group-commit' },
+            { label: 'Kafka/CDC Integration', href: '/docs/dev/key-features/kafka-cdc-integration' },
         ],
     },
     {
@@ -460,10 +460,10 @@ const capabilities: Capability[] = [
         desc: 'Incrementally refreshed materialized views keep derived datasets fresh without full recomputation, while Doris reliably executes large SQL jobs for backfills, end-of-day processing, and historical workloads.',
         poweredLabel: 'Powered by',
         poweredBy: [
-            { label: 'Batch Load', href: '#' },
-            { label: 'Incremental Materialized View', href: '#' },
-            { label: 'Spill to Disk', href: '#' },
-            { label: 'Binlog/Table Stream (Coming Soon)', href: '#' },
+            { label: 'Batch Load', href: '/docs/dev/key-features/batch-load' },
+            { label: 'Incremental Materialized View', href: '/docs/dev/key-features/incremental-materialized-view' },
+            { label: 'Spill to Disk', href: '/docs/dev/key-features/spill-to-disk' },
+            { label: 'Binlog/Table Stream (Coming Soon)', href: '/docs/dev/key-features/binlog-table-stream' },
         ],
     },
     {
@@ -479,9 +479,9 @@ const capabilities: Capability[] = [
         desc: 'Query, write, and manage open lakehouse tables directly with Doris. Use one SQL layer to access Iceberg, Hudi, Delta Lake, JDBC sources, and internal Doris tables, with Iceberg lifecycle operations such as writes, updates, and compaction.',
         poweredLabel: 'Powered by',
         poweredBy: [
-            { label: 'Multi Catalog', href: '#' },
-            { label: 'Managing Lake Table', href: '#' },
-            { label: 'Iceberg', href: '/key-features/iceberg' },
+            { label: 'Multi Catalog', href: '/docs/dev/key-features/multi-catalog' },
+            { label: 'Managing Lake Table', href: '/docs/dev/key-features/managing-lake-table' },
+            { label: 'Iceberg', href: '/docs/dev/key-features/iceberg' },
         ],
     },
     {
@@ -499,10 +499,10 @@ const capabilities: Capability[] = [
         poweredBy: [
             {
                 label: 'Pluggable authentication and authorization modules',
-                href: '#',
+                href: '/docs/dev/key-features/pluggable-auth',
             },
-            { label: 'Catalog integrations: Glue, Iceberg REST, and more', href: '#' },
-            { label: 'Data Lineage', href: '#' },
+            { label: 'Catalog integrations: Glue, Iceberg REST, and more', href: '/docs/dev/key-features/catalog-integrations' },
+            { label: 'Data Lineage', href: '/docs/dev/key-features/data-lineage' },
         ],
     },
 ];
