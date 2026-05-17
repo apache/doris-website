@@ -1,8 +1,15 @@
 ---
-{
-"title": "使用 Docker 开发镜像编译（推荐）",
-"language": "zh-CN"
-}
+title: 使用 Docker 镜像编译 Apache Doris
+language: zh-CN
+description: 使用官方 Docker 镜像编译 Apache Doris 源码，无需手动配置 thirdparty 与 toolchain。
+keywords:
+    - Docker 编译
+    - Apache Doris
+    - 源码编译
+    - build-env
+    - AVX2
+    - JDK 8
+    - JDK 17
 ---
 
 <!--
@@ -24,66 +31,77 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-本文介绍如何使用 Doris 官方提供的编译镜像来编译 Doris，由于此镜像由官方维护，且会随编译依赖及时更新，所以推荐用户使用这种方式编译
+<!-- 知识类型: 操作步骤 -->
+<!-- 适用场景: 首次编译 / 环境验收 -->
+
+本文介绍如何使用 Apache Doris 官方编译镜像编译 Doris 源码。该镜像由社区维护并随依赖及时更新，免去手动安装 toolchain 与三方库的过程，是**最推荐**的编译方式。
 
 :::tip
-目前还不支持存算分离模式编译部署
+目前 Docker 镜像方式还不支持存算分离模式的编译部署。
 :::
 
-## 安装 Docker
+## 适用人群与优缺点
 
-比如在 CentOS 下，执行命令安装 Docker
+| 维度 | 说明 |
+| ---- | ---- |
+| 适用人群 | 希望快速搭建编译环境、不想手动配置依赖的开发者 |
+| 优点 | 镜像已预装 thirdparty、toolchain、JDK，开箱即用 |
+| 缺点 | 需要本地有可用的 Docker 环境，镜像体积较大（约 3.3 GB） |
 
-```shell
+如果机器上没有 Docker 环境，可改用 [LDB Toolchain 编译](./compilation-with-ldb-toolchain)。
+
+## 1. 安装 Docker
+
+在 CentOS 上可直接通过包管理器安装：
+
+```bash
 yum install docker
 ```
 
-或参考 [Docker 官方安装文档](https://docs.docker.com/engine/install/)进行安装
+其他发行版请参考 [Docker 官方安装文档](https://docs.docker.com/engine/install/)。
 
-## 下载 Doris 构建镜像
+## 2. 选择并下载构建镜像
 
-不同的 Doris 版本，需要下载不同的构建镜像。其中 apache/doris:build-env-ldb-toolchain-latest 用于编译最新主干版本代码，会随主干版本不断更新。
+<!-- 知识类型: 配置参数 -->
 
-| 镜像版本                                            | Doris 版本 |
-| --------------------------------------------------- | ---------- |
-| apache/doris:build-env-for-2.0                      | 2.0.x      |
-| apache/doris:build-env-for-2.0-no-avx2              | 2.0.x      |
-| apache/doris:build-env-for-2.1                      | 2.1.x      |
-| apache/doris:build-env-for-2.1-no-avx2              | 2.1.x      |
-| apache/doris:build-env-for-3.0                      | 3.0.x      |
-| apache/doris:build-env-for-3.0-no-avx2              | 3.0.x      |
-| apache/doris:build-env-for-3.1                      | 3.1.x      |
-| apache/doris:build-env-for-3.1-no-avx2              | 3.1.x      |
-| apache/doris:build-env-ldb-toolchain-latest         | master     |
-| apache/doris:build-env-ldb-toolchain-no-avx2-latest | master     |
+不同 Doris 版本对应不同的构建镜像。`apache/doris:build-env-ldb-toolchain-latest` 用于编译 master 主干代码，会随主干持续更新。
 
-下面就以编译 Doris 2.0 版本作为介绍，下载并检查 Docker 镜像
+| 镜像 Tag | 适用 Doris 版本 | 备注 |
+| -------- | --------------- | ---- |
+| `apache/doris:build-env-for-2.0` | 2.0.x | 支持 AVX2 指令集 |
+| `apache/doris:build-env-for-2.0-no-avx2` | 2.0.x | 兼容不支持 AVX2 的 CPU |
+| `apache/doris:build-env-for-2.1` | 2.1.x | 支持 AVX2 指令集 |
+| `apache/doris:build-env-for-2.1-no-avx2` | 2.1.x | 兼容不支持 AVX2 的 CPU |
+| `apache/doris:build-env-for-3.0` | 3.0.x | 支持 AVX2 指令集 |
+| `apache/doris:build-env-for-3.0-no-avx2` | 3.0.x | 兼容不支持 AVX2 的 CPU |
+| `apache/doris:build-env-for-3.1` | 3.1.x | 支持 AVX2 指令集 |
+| `apache/doris:build-env-for-3.1-no-avx2` | 3.1.x | 兼容不支持 AVX2 的 CPU |
+| `apache/doris:build-env-ldb-toolchain-latest` | master | 跟随主干更新 |
+| `apache/doris:build-env-ldb-toolchain-no-avx2-latest` | master | 兼容不支持 AVX2 的 CPU |
 
-```shell
-# 可以选择 docker.io/apache/doris:build-env-for-2.0
-$ docker pull apache/doris:build-env-for-2.0
+以编译 Doris 2.0 为例，下载并检查镜像：
 
-# 检查镜像下载完成
-$ docker images
-REPOSITORY      TAG                  IMAGE ID        CREATED       SIZE
-apache/doris    build-env-for-2.0    f29cf1979dba    3 days ago    3.3GB
+```bash
+# 也可以使用 docker.io/apache/doris:build-env-for-2.0
+docker pull apache/doris:build-env-for-2.0
+
+# 确认镜像下载成功
+docker images
+# REPOSITORY      TAG                  IMAGE ID        CREATED       SIZE
+# apache/doris    build-env-for-2.0    f29cf1979dba    3 days ago    3.3GB
 ```
 
-**注意事项：**
+### 镜像选择注意事项
 
--   针对不同的 Doris 版本，需要下载对应的镜像版本。镜像版本号与 Doris 版本号统一，比如可以使用 apache/doris:build-env-for-2.0 来编译 2.0 版本。
+- 镜像 Tag 与 Doris 版本一一对应，请按目标分支选择，避免跨版本编译。
+- `no-avx2` 镜像中的第三方库可运行在不支持 AVX2 的 CPU 上，需配合 `USE_AVX2=0` 选项编译。
+- 镜像变更历史可参考 [thirdparty CHANGELOG](https://github.com/apache/doris/blob/master/thirdparty/CHANGELOG.md)。
+- 最新的 `apache/doris:build-env-ldb-toolchain-latest`（目前仅支持 x86_64 架构）同时包含 JDK 8 与 JDK 17：2.1（含）之前版本请使用 JDK 8，3.0（含）之后版本或 master 分支请使用 JDK 17。
+- ARM64 架构下使用 Docker 编译时，需先下载支持 ARM64 的 Linux 基础镜像（如 `apache/doris:base-latest`，对应 Ubuntu 22.04.5 LTS），再参考 [Linux 直接编译](./compilation-linux) 和 [ARM 平台编译](./compilation-arm) 文档安装依赖后编译。
 
--   `apache/doris:build-env-ldb-toolchain-latest` 用于编译最新主干版本代码，会随主干版本不断更新。可以查看 `docker/README.md` 中的更新时间。
+容器内可通过环境变量切换 JDK：
 
--   名称中带有 no-AVX2 字样的镜像中的第三方库，可以运行在不支持 AVX2 指令的 CPU 上。可以配合 USE_AVX2=0 选项，编译 Doris。 
-
--   编译镜像变更信息可参考 [ChangeLog](https://github.com/apache/doris/blob/master/thirdparty/CHANGELOG.md)。
-
--   最新版本的 `apache/doris:build-env-ldb-toolchain-latest` 镜像（目前仅支持x64架构）中同时包含 JDK 8 和 JDK 17。2.1（含）之前的版本，请使用 JDK 8。3.0（含）之后的版本或 master 分支，请使用 JDK 17。
-
--   若要在ARM64架构下使用docker编译，则需要下载支持ARM64的Linux镜像（可选`apache/doris:base-latest`，对应版本为Ubuntu 22.04.5 LTS），再参考Linux和ARM平台编译文档下载和安装所需的依赖包后进行编译。
-
-```shell
+```bash
 # 切换到 JDK 8
 export JAVA_HOME=/usr/lib/jvm/java-1.8.0
 export PATH=$JAVA_HOME/bin/:$PATH
@@ -93,68 +111,101 @@ export JAVA_HOME=/usr/lib/jvm/jdk-17.0.2/
 export PATH=$JAVA_HOME/bin/:$PATH
 ```
 
-## 编译 Doris
+## 3. 编译 Doris
 
-### 01 下载 Doris 源码
+<!-- 知识类型: 操作步骤 -->
 
-登录到宿主机，通过 git clone 获取 Doris 2.0 分支上的最新代码。
+### 3.1 下载 Doris 源码
 
-```Plain
-$ git clone -b branch-2.0 https://github.com/apache/doris.git
+在宿主机上获取目标分支代码（以 branch-2.0 为例）：
+
+```bash
+git clone -b branch-2.0 https://github.com/apache/doris.git
 ```
 
-下载后，源代码路径，假设放到了 doris-branch-2.0 这个目录下。
+假设源码目录为 `~/doris-branch-2.0`。
 
-### 02 运行构建镜像
+### 3.2 启动构建容器
 
-```Plain
-# 提前在 host 主机构建 maven 的 .m2 目录，以便将下载的 Java 库可以多次在 Docker 复用
-mkdir ~/.m2 
+```bash
+# 提前在宿主机准备 maven 的 .m2 目录，便于多次构建复用 Java 依赖
+mkdir ~/.m2
 
-# 运行构建镜像
-docker run -it --network=host --name mydocker -v ~/.m2:/root/.m2 -v ~/doris-branch-2.0:/root/doris-branch-2.0/ apache/doris:build-env-for-2.0  
+# 挂载源码与 .m2 目录，启动构建镜像
+docker run -it --network=host \
+    --name mydocker \
+    -v ~/.m2:/root/.m2 \
+    -v ~/doris-branch-2.0:/root/doris-branch-2.0/ \
+    apache/doris:build-env-for-2.0
 
-# 执行成功后，应该自动进入到 Docker 里了
+# 命令执行成功后将自动进入容器
 ```
 
-**注意：**
+`docker run` 关键参数说明：
 
--   建议以挂载本地 Doris 源码目录的方式运行镜像，这样编译的产出二进制文件会存储在宿主机中，不会因为镜像退出而消失。
+| 参数 | 作用 |
+| ---- | ---- |
+| `-v` | 将宿主机目录挂载到容器，用于持久化源码与依赖 |
+| `--name` | 指定容器名称，便于后续管理 |
+| `--network` | 容器网络模式。`host` 表示与宿主机共享网络栈，无需端口映射 |
 
--   建议同时将镜像中 maven 的 `.m2` 目录挂载到宿主机目录，以防止每次启动镜像编译时，重复下载 maven 的依赖库。
+建议：
 
--   运行镜像编译时需要下载其它文件，可以采用 host 模式启动镜像。host 模式不需要加 -p 进行端口映射，和宿主机共享网络 IP 和端口。
+- 始终挂载 Doris 源码目录，保证编译产物保留在宿主机，容器退出后不丢失。
+- 挂载 `.m2` 目录，避免每次启动容器都重新下载 Maven 依赖。
+- 容器内下载三方库需要访问外网，推荐使用 `--network=host` 模式。
 
--   Docker run 部分参数说明如下：
+### 3.3 执行构建
 
-|              参数                 | 注释                                                         |
-| -------------------- | ------------------------------------------------------------ |
-| -v        | 给容器挂载存储卷，挂载到容器的某个目录                       |
-| --name    | 指定容器名字，后续可以通过名字进行容器管理                   |
-| --network &nbsp;&nbsp;&nbsp;&nbsp   | 容器网络设置：bridge 使用 docker daemon 指定的网桥，host 容器使用主机的网络，container:NAME_or_ID 使用其他容器的网路，共享 IP 和 PORT 等网络资源，none 容器使用自己的网络（类似--net=bridge），但是不进行配置 |
+容器内进入源码目录后运行：
 
-### 03 执行构建
+```bash
+# 默认编译支持 AVX2 的产物
+sh build.sh
 
-```Plain
-# 默认编译出支持 AVX2 的
-$ sh build.sh
+# CPU 不支持 AVX2 时需附加 USE_AVX2=0
+USE_AVX2=0 sh build.sh
 
-# 如不支持 AVX2 需要加USE_AVX2=0
-$ USE_AVX2=0 sh build.sh
-
-# 如需编译 Debug 版本的 BE，增加 BUILD_TYPE=Debug
-$ BUILD_TYPE=Debug sh build.sh
+# 编译 Debug 版本 BE
+BUILD_TYPE=Debug sh build.sh
 ```
+
+编译完成后，产物位于源码目录下的 `output/`。
 
 :::tip
-**如何查看机器是否支持 AVX2？**
+**如何检查机器是否支持 AVX2 指令集？**
 
-$ cat /proc/cpuinfo | grep avx2
+```bash
+cat /proc/cpuinfo | grep avx2
+```
+
+输出非空即代表支持 AVX2。
 :::
 
+## 4. 自行构建开发镜像
 
-编译完成后，产出文件在 `output/` 目录中。
+如需自定义基础镜像（例如更换基础发行版、增加调试工具），请参考源码中的 `docker/README.md`。
 
-## 自行编译开发环境镜像
+## FAQ
 
-可以自己创建一个 Doris 开发环境镜像，具体可参阅 `docker/README.md` 文件。
+### Q1: 镜像版本和 Doris 版本不匹配会怎样？
+
+镜像中的 thirdparty 与 toolchain 与 Doris 源码强耦合。跨版本组合很可能在编译阶段抛出 `undefined reference`、`incompatible library` 等链接错误，请严格按表格选择。
+
+### Q2: 编译时报 `AVX2 not supported`？
+
+宿主机或目标运行机 CPU 不支持 AVX2 指令集。改用带 `no-avx2` 后缀的镜像，并在 build 时设置 `USE_AVX2=0`。
+
+### Q3: `docker pull` 拉取镜像太慢？
+
+可配置 Docker 镜像加速器，或使用 `docker.io/apache/doris:...` 完整路径。
+
+### Q4: 容器内 Java 库下载失败？
+
+确认容器启动时使用了 `--network=host`，并将 `~/.m2` 目录挂载到容器，避免代理或网络隔离导致 Maven 中央仓库不可达。
+
+## 相关文档
+
+- [使用 LDB Toolchain 编译](./compilation-with-ldb-toolchain)
+- [Linux 平台直接编译](./compilation-linux)
+- [ARM 平台编译](./compilation-arm)

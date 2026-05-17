@@ -3,6 +3,7 @@
 const fs = require('fs');
 const path = require('path');
 const matter = require('gray-matter');
+const GithubSlugger = require('github-slugger');
 const { execSync } = require('child_process');
 const { buildManifest } = require('./manifest');
 const {
@@ -66,24 +67,60 @@ function extractMarkdownLinks(raw) {
   return links;
 }
 
-function slugifyHeading(text) {
-  return text
-    .trim()
-    .toLowerCase()
-    .replace(/<[^>]+>/g, '')
-    .replace(/[^\p{L}\p{N}\s_-]/gu, '')
-    .replace(/\s+/g, '-');
+// Mask only fenced code blocks (``` / ~~~) and keep inline code intact, so
+// inline code inside a heading (e.g. `` ## Auto-Generating `.out` Files ``)
+// is fed to the slugger verbatim — matching how Docusaurus renders the slug.
+// The earlier maskCode() blanks out inline code, which made the slug drop
+// the inline-code content entirely (e.g. produced `auto-generating-files`
+// instead of `auto-generating-out-files`).
+function maskFencedBlocks(raw) {
+  const lines = raw.split('\n');
+  const out = [];
+  let openLen = 0;
+  let openChar = '';
+  for (const line of lines) {
+    if (openLen === 0) {
+      const m = line.match(/^ {0,3}(`{3,}|~{3,})/);
+      if (m) {
+        openLen = m[1].length;
+        openChar = m[1][0];
+        out.push('');
+        continue;
+      }
+      out.push(line);
+    } else {
+      const closeRe = openChar === '`'
+        ? new RegExp(`^ {0,3}\`{${openLen},}\\s*$`)
+        : new RegExp(`^ {0,3}~{${openLen},}\\s*$`);
+      if (closeRe.test(line)) {
+        openLen = 0;
+      }
+      out.push('');
+    }
+  }
+  return out.join('\n');
 }
 
+// Use github-slugger (the same library Docusaurus uses) so headings like
+// `## Serialization / Deserialization Entry Points` produce the same anchor
+// the rendered page exposes. The previous hand-rolled slugifier collapsed
+// adjacent whitespace into a single dash, which mismatched anchors that
+// straddle a removed punctuation character.
 function extractHeadingAnchors(raw) {
   const parsed = matter(raw);
   const anchors = new Set();
-  const content = maskCode(parsed.content || raw);
+  const content = maskFencedBlocks(parsed.content || raw);
+  const slugger = new GithubSlugger();
   const headingRe = /^(#{1,6})\s+(.+?)\s*$/gm;
   let match;
   while ((match = headingRe.exec(content))) {
     const explicit = match[2].match(/\{#([^}]+)}/);
-    anchors.add(explicit ? explicit[1] : slugifyHeading(match[2].replace(/\s*\{#[^}]+}\s*$/, '')));
+    if (explicit) {
+      anchors.add(explicit[1]);
+    } else {
+      const headingText = match[2].replace(/\s*\{#[^}]+}\s*$/, '');
+      anchors.add(slugger.slug(headingText));
+    }
   }
   return anchors;
 }
@@ -195,6 +232,36 @@ function candidateFiles(rootDir, sourcePath, pathname) {
   );
 }
 
+function resolveDocsNextTarget(rootDir, pathname) {
+  const enPrefix = '/docs-next/dev/';
+  const zhPrefix = '/zh-CN/docs-next/dev/';
+  let rel;
+  let base;
+  if (pathname.startsWith(enPrefix)) {
+    rel = pathname.slice(enPrefix.length);
+    base = 'docs-next';
+  } else if (pathname.startsWith(zhPrefix)) {
+    rel = pathname.slice(zhPrefix.length);
+    base = 'i18n/zh-CN/docusaurus-plugin-content-docs-next/current';
+  } else {
+    return null;
+  }
+  const stripped = rel.replace(/\/+$/, '');
+  const candidates = [
+    `${base}/${stripped}.md`,
+    `${base}/${stripped}.mdx`,
+    `${base}/${stripped}/index.md`,
+    `${base}/${stripped}/index.mdx`,
+    `${base}/${stripped}`,
+  ];
+  for (const candidate of candidates) {
+    if (fs.existsSync(path.join(rootDir, candidate))) {
+      return normalizePath(candidate);
+    }
+  }
+  return null;
+}
+
 function resolveInternalTarget(rootDir, sourcePath, rawTarget, indexes) {
   const target = rawTarget.trim().replace(/^<|>$/g, '');
   if (isSkippable(target)) {
@@ -215,7 +282,19 @@ function resolveInternalTarget(rootDir, sourcePath, rawTarget, indexes) {
       return { kind: 'asset', sourcePath: staticCandidate, hash };
     }
     const entry = indexes.byRoute.get(pathname.replace(/\/+$/, ''));
-    return entry ? { kind: 'route', sourcePath: entry.source_path, hash } : { kind: 'missing-route', pathname, hash };
+    if (entry) {
+      return { kind: 'route', sourcePath: entry.source_path, hash };
+    }
+    // The docs-next ("Dev") plugin is intentionally excluded from the
+    // governance manifest while its IA is still in flux, but links FROM
+    // governed docs INTO docs-next should still be allowed. Accept any
+    // /docs-next/dev/... (and /zh-CN/docs-next/dev/...) target whose file
+    // exists on disk.
+    const docsNextFile = resolveDocsNextTarget(rootDir, pathname);
+    if (docsNextFile) {
+      return { kind: 'docs-next', sourcePath: docsNextFile, hash };
+    }
+    return { kind: 'missing-route', pathname, hash };
   }
 
   const files = candidateFiles(rootDir, sourcePath, pathname);

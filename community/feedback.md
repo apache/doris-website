@@ -1,8 +1,15 @@
 ---
-{
-    "title": "Feedback",
-    "language": "en"
-}
+title: Report Issues to Apache Doris
+language: en
+description: "Official channels for reporting bugs or sending suggestions to Apache Doris: mailing list and GitHub Issue, with writing tips for high-quality issue reports."
+keywords:
+    - Apache Doris issue feedback
+    - Doris bug report
+    - Doris GitHub Issue
+    - dev@doris.apache.org
+    - Doris mailing list feedback
+    - Submit Issue
+    - Reproduction steps
 ---
 
 <!--
@@ -24,25 +31,47 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# Feedback
+# Issue Feedback
 
-## Feedback Tips
+<!-- Knowledge type: Procedure -->
+<!-- Applicable scenarios: Bug report / Feature suggestion / Usage question -->
 
-- Describe the problem in detail, providing important details (logs, critical errors, investigations/analyses that have been performed)
-- Minimize the problem, analyze the problem by yourself - narrow the scope of the problem, easy to answer / troubleshoot
-- Give the minimization specific reproduction steps
-- focus on the problem itself, as unrelated to the business/scenario as possible (if necessary, provide as clear and unambiguous context as possible)
+If you discover a bug, a performance issue, or want to suggest a feature while using Apache Doris, you can report it to the community through the mailing list or GitHub Issue. This page explains the two official feedback channels and the key information a high-quality report should include.
 
-## Feedback Method
+## Feedback Channel Reference
 
-If you find any problems or suggestions while using Doris, you can provide feedback in the following ways:
+Choose a channel based on the issue type:
 
-1. Mailing List
+| Channel | Applicable Scenario | Entry Point |
+|------|----------|------|
+| Mailing list | Usage questions, design discussions, community topics | Send an email to `dev@doris.apache.org` (subscription required first) |
+| GitHub Issue | Reproducible bugs, specific feature suggestions, documentation issues | <https://github.com/apache/doris/issues/new/choose> |
+| Security vulnerability | Security issues (do not disclose publicly) | See [Security Vulnerability Disclosure](security) |
 
-   You can send an email with any subject and content to `dev-subscribe@doris.apache.org`, and then follow the instructions to subscribe to this mailing list.
+## Feedback Methods
 
-   After that, you can send an email to `dev@doris.apache.org` to describe the problem or suggestion.
+### Method 1: Mailing List
 
-2. Github
+1. Send an email with any subject and content to `dev-subscribe@doris.apache.org`, and follow the instructions to complete the subscription (see [Subscribe to the Mailing List](subscribe-mail-list) for details).
+2. After the subscription is confirmed, send an email to `dev@doris.apache.org` describing the issue or suggestion.
 
-   Submit a [Github Issue](https://github.com/apache/doris/issues/new/choose)
+### Method 2: GitHub Issue
+
+Visit the [New Issue page](https://github.com/apache/doris/issues/new/choose), and submit a Bug Report or Feature Request using the template.
+
+## Key Points for High-Quality Feedback
+
+<!-- Knowledge type: Writing guide -->
+
+To help the community locate the issue quickly, include the following information in your report:
+
+- **Describe the issue in detail**: Provide logs, key error messages, and the troubleshooting and analysis you have already performed.
+- **Minimize the issue**: Narrow the scope, and strip away business context that is unrelated to the issue.
+- **Provide reproduction steps**: Attach the minimum SQL, configuration, or script that reproduces the issue.
+- **Focus on the issue itself**: Decouple from the business or scenario as much as possible. If scenario information must be retained, provide clear and explicit context.
+
+## Related Links
+
+- [Subscribe to the Mailing List](subscribe-mail-list): Complete the dev mailing list subscription in 5 steps.
+- [Security Vulnerability Disclosure](security): Report security issues through the ASF process.
+- [Join the Community](join-community): Other channels including Slack, Twitter, and LinkedIn.

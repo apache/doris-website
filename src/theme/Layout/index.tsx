@@ -18,7 +18,7 @@ import styles from './styles.module.css';
 import { useHistory } from '@docusaurus/router';
 import { NavbarNext } from '@site/src/components/home-next/NavbarNext';
 import { PreviewBanner } from '@site/src/components/home-next/PreviewBanner';
-import { isDocsNextPath, isReleasesPath, isEventsPath } from '@site/src/utils/locale';
+import { isDocsNextPath, isReleasesPath, isEventsPath, isCommunityPath } from '@site/src/utils/locale';
 interface DataType {
     showSearchPageMobile: boolean;
     setShowSearchPageMobile: React.Dispatch<React.SetStateAction<boolean>>;
@@ -45,7 +45,8 @@ export default function Layout(props: Props): JSX.Element {
     const isDocsNextPage = isDocsNextPath(history.location.pathname, locales);
     const isReleasesPage = isReleasesPath(history.location.pathname, locales);
     const isEventsPage = isEventsPath(history.location.pathname, locales);
-    const useNextNavbar = isDocsNextPage || isReleasesPage || isEventsPage;
+    const isCommunityPage = isCommunityPath(history.location.pathname, locales);
+    const useNextNavbar = isDocsNextPage || isReleasesPage || isEventsPage || isCommunityPage;
     useKeyboardNavigation();
 
     useEffect(() => {

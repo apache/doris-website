@@ -1,8 +1,14 @@
 ---
-{
-    "title": "Doris Future Project",
-    "language": "en"
-}
+title: Developer Growth Program
+language: en
+description: Apache Doris growth program for new developers, with mentors guiding first-time contributions through `doris-future` tagged tasks.
+keywords:
+    - Apache Doris
+    - Developer Growth Program
+    - doris-future
+    - First-time contribution
+    - Mentorship
+    - First contribution
 ---
 
 <!--
@@ -24,18 +30,36 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# Doris future project
+<!-- Knowledge type: Program introduction -->
+<!-- Applicable scenario: New developers making their first code contribution to Doris -->
 
 ## Introduction
 
-The doris future project is a growth plan for novice developers, aiming to allow more developers to quickly get started with doris. The community warmly welcomes all interested developers to join.
+Doris Future Plan is a growth program offered by the Apache Doris community for new developers. Its goal is to help more developers get started with Doris kernel development quickly. The community welcomes developers interested in OLAP, database kernels, and distributed systems.
 
-## Way of participation
+## How to Participate
 
-Novice developers can filter tasks with `doris-future` tag on the [Github Issue](https://github.com/apache/doris/issues) interface of the doris community. Each task has required skills. For example, c++ or java, as well as difficulty distinctions, new developers can comment below the tasks they are interested in and communicate with the instructor about the task details, and the developer community with difficult machine resources will also provide development machines.
+<!-- Knowledge type: Procedure -->
 
-If you have any difficulty or encounter a problem, you can send an email to `dev@doris.apache.org` to describe the difficulty or problem, and we will try our best to help you solve it.
+New developers can join through the following steps:
+
+1. Open the [GitHub Issue](https://github.com/apache/doris/issues) page of the Doris community.
+2. Filter tasks labeled with `doris-future`. Each task is annotated with:
+    - Required skills (such as C++ or Java).
+    - Difficulty level.
+3. Comment on the task you are interested in, and discuss task details with the assigned mentor.
+4. If you lack machine resources locally, the community can provide development machines to help.
+
+If you run into any difficulty during participation, send an email to `dev@doris.apache.org` describing the problem, and the community will do its best to help.
 
 ## Mentorship
 
-Each task will have a tutor to follow up and guide the details of the task. The tutor can provide the following help: 1. Explain the goal that the task needs to achieve, the basic principle of the task and the implementation details; 2. The specific implementation ideas and related knowledge required for the task; 3. Review Code, optimize the actual code structure, and improve the level of engineering code.
+<!-- Knowledge type: Rules and conventions -->
+
+Every `doris-future` task is assigned a mentor for follow-up. The support a mentor provides includes:
+
+| Support item | Description |
+|--------|------|
+| Task walkthrough | Explains the goal, background, and implementation details of the task |
+| Guidance on approach | Provides concrete implementation ideas and related knowledge points |
+| Code review | Reviews code and offers improvement suggestions to raise engineering quality |

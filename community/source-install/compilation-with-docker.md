@@ -1,8 +1,15 @@
 ---
-{
-    "title": "Compiling with Docker (Recommended)",
-    "language": "en"
-}
+title: Compiling Apache Doris with Docker Images
+language: en
+description: Compile Apache Doris source code with the official Docker image, with no need to manually configure thirdparty or toolchain.
+keywords:
+    - Docker compilation
+    - Apache Doris
+    - source compilation
+    - build-env
+    - AVX2
+    - JDK 8
+    - JDK 17
 ---
 
 <!--
@@ -18,71 +25,83 @@ with the License.  You may obtain a copy of the License at
 
 Unless required by applicable law or agreed to in writing,
 software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+"AS IS" BASIS, WITHOUT WARRANTIES OF ANY
 KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
 
+<!-- Knowledge type: Procedure -->
+<!-- Applicable scenario: First-time compilation / Environment validation -->
 
-
-This guide is about how to compile Doris using the official compilation image provided. As this image is maintained by the Apache Doris team and is regularly updated with the necessary dependencies, it is the recommended way of compilation for users.
+This document describes how to compile Doris source code using the official Apache Doris build image. The image is maintained by the community and updated promptly with dependencies, removing the need to manually install the toolchain and third-party libraries. It is the **most recommended** compilation method.
 
 :::tip
-
-Currently, this is not supported in the compute-storage decoupled mode.
-
+The Docker image method does not yet support compilation and deployment in storage-compute separation mode.
 :::
 
-## Install Docker
+## Target Audience, Pros, and Cons
 
-In CentOS, execute the following command: 
+| Dimension | Description |
+| ---- | ---- |
+| Target audience | Developers who want to set up a build environment quickly without manually configuring dependencies |
+| Pros | The image comes preinstalled with thirdparty, toolchain, and JDK, ready to use out of the box |
+| Cons | Requires a working Docker environment on the local machine; the image is relatively large (about 3.3 GB) |
 
-```shell
+If Docker is not available on the machine, use [LDB Toolchain compilation](./compilation-with-ldb-toolchain) instead.
+
+## 1. Install Docker
+
+On CentOS, install directly through the package manager:
+
+```bash
 yum install docker
 ```
 
-Or refer to the [official Docker installation doc](https://docs.docker.com/engine/install/).
+For other distributions, refer to the [official Docker installation guide](https://docs.docker.com/engine/install/).
 
-## Download build image
+## 2. Choose and Download the Build Image
 
-For different versions of Doris, you need to download different build images. The "apache/doris:build-env-ldb-toolchain-latest" image is used for compiling the latest master code, and it is regularly updated to align with the master.
+<!-- Knowledge type: Configuration parameters -->
 
-| Image Version                                       | Doris Version |
-| --------------------------------------------------- | ------------- |
-| apache/doris:build-env-for-2.0                      | 2.0.x      |
-| apache/doris:build-env-for-2.0-no-avx2              | 2.0.x      |
-| apache/doris:build-env-for-2.1                      | 2.1.x      |
-| apache/doris:build-env-for-2.1-no-avx2              | 2.1.x      |
-| apache/doris:build-env-for-3.0                      | 3.0.x      |
-| apache/doris:build-env-for-3.0-no-avx2              | 3.0.x      |
-| apache/doris:build-env-for-3.1                      | 3.1.x      |
-| apache/doris:build-env-for-3.1-no-avx2              | 3.1.x      |
-| apache/doris:build-env-ldb-toolchain-latest         | master     |
-| apache/doris:build-env-ldb-toolchain-no-avx2-latest | master     |
+Different Doris versions correspond to different build images. `apache/doris:build-env-ldb-toolchain-latest` is used to compile master branch code and is updated continuously along with the trunk.
 
-Take Doris 2.0 as an example, download and check the correponding Docker image.
+| Image Tag | Applicable Doris version | Notes |
+| -------- | --------------- | ---- |
+| `apache/doris:build-env-for-2.0` | 2.0.x | Supports the AVX2 instruction set |
+| `apache/doris:build-env-for-2.0-no-avx2` | 2.0.x | Compatible with CPUs that do not support AVX2 |
+| `apache/doris:build-env-for-2.1` | 2.1.x | Supports the AVX2 instruction set |
+| `apache/doris:build-env-for-2.1-no-avx2` | 2.1.x | Compatible with CPUs that do not support AVX2 |
+| `apache/doris:build-env-for-3.0` | 3.0.x | Supports the AVX2 instruction set |
+| `apache/doris:build-env-for-3.0-no-avx2` | 3.0.x | Compatible with CPUs that do not support AVX2 |
+| `apache/doris:build-env-for-3.1` | 3.1.x | Supports the AVX2 instruction set |
+| `apache/doris:build-env-for-3.1-no-avx2` | 3.1.x | Compatible with CPUs that do not support AVX2 |
+| `apache/doris:build-env-ldb-toolchain-latest` | master | Tracks the trunk |
+| `apache/doris:build-env-ldb-toolchain-no-avx2-latest` | master | Compatible with CPUs that do not support AVX2 |
 
-```shell
-# Choose docker.io/apache/doris:build-env-for-2.0
-$ docker pull apache/doris:build-env-for-2.0
+Taking compilation of Doris 2.0 as an example, download and check the image:
 
-# Check if it is downloaded
-$ docker images
-REPOSITORY      TAG                  IMAGE ID        CREATED       SIZE
-apache/doris    build-env-for-2.0    f29cf1979dba    3 days ago    3.3GB
+```bash
+# You can also use docker.io/apache/doris:build-env-for-2.0
+docker pull apache/doris:build-env-for-2.0
+
+# Confirm that the image has been downloaded successfully
+docker images
+# REPOSITORY      TAG                  IMAGE ID        CREATED       SIZE
+# apache/doris    build-env-for-2.0    f29cf1979dba    3 days ago    3.3GB
 ```
 
-**Note:** 
+### Notes on Image Selection
 
-- Download the right image version for the Doris version that you're working with. The image version number is aligned with the Doris version number. For example, you should use "apache/doris:build-env-for-2.0" to compile Doris 2.0.
-- `apache/doris:build-env-ldb-toolchain-latest` (Currently, only for x64 architecture) is used for compiling the latest master code and is updated along with the master. You can check the update time in the `docker/README.md` file.
-- To perform Docker compilation on an ARM64 architecture, you need to download a Linux image that supports ARM64 (e.g., apache/doris:base-latest, which corresponds to Ubuntu 22.04.5 LTS). Then, refer to the compilation documentation for Linux and ARM platforms to download and install the required dependency packages before proceeding with the build.
-- Images with "no-avx2" in their names contain third-party libraries that can run on CPUs that do not support AVX2 instructions. Using these images, you can compile Doris with the "USE_AVX2=0".
-- For information about changes in the compilation image, please see [ChangeLog](https://github.com/apache/doris/blob/master/thirdparty/CHANGELOG.md).
-- The Docker compilation image includes both JDK 8 and JDK 17. You can check the default JDK version by running `java -version`, and switch between versions using the following commands. For versions earlier than 2.1 (inclusive), please use JDK 8. For versions later than 3.0 (inclusive) or the master branch, please use JDK 17.
+- Image tags map one-to-one to Doris versions. Select the image that matches the target branch and avoid cross-version compilation.
+- The third-party libraries in `no-avx2` images can run on CPUs that do not support AVX2. They must be compiled together with the `USE_AVX2=0` option.
+- For the image change history, refer to the [thirdparty CHANGELOG](https://github.com/apache/doris/blob/master/thirdparty/CHANGELOG.md).
+- The latest `apache/doris:build-env-ldb-toolchain-latest` (currently only supports the x86_64 architecture) includes both JDK 8 and JDK 17. Use JDK 8 for versions 2.1 and earlier, and use JDK 17 for versions 3.0 and later or the master branch.
+- When compiling with Docker on the ARM64 architecture, first download an ARM64-compatible Linux base image (such as `apache/doris:base-latest`, which corresponds to Ubuntu 22.04.5 LTS), and then refer to the [Linux direct compilation](./compilation-linux) and [ARM platform compilation](./compilation-arm) documents to install dependencies and compile.
 
-```shell
+Inside the container, switch the JDK through environment variables:
+
+```bash
 # Switch to JDK 8
 export JAVA_HOME=/usr/lib/jvm/java-1.8.0
 export PATH=$JAVA_HOME/bin/:$PATH
@@ -92,64 +111,101 @@ export JAVA_HOME=/usr/lib/jvm/jdk-17.0.2/
 export PATH=$JAVA_HOME/bin/:$PATH
 ```
 
-## Compile Doris
+## 3. Compile Doris
 
-### 1. Download Doris source code
+<!-- Knowledge type: Procedure -->
 
-Log in to the host machine and obtain the latest code from the Doris 2.0 branch via git clone.
+### 3.1 Download the Doris Source Code
 
-```Plain
-$ git clone -b branch-2.0 https://github.com/apache/doris.git
+On the host machine, fetch the code for the target branch (using branch-2.0 as an example):
+
+```bash
+git clone -b branch-2.0 https://github.com/apache/doris.git
 ```
 
-After downloading, assume that the source code path is in the "doris-branch-2.0" directory.
+Assume the source directory is `~/doris-branch-2.0`.
 
-### 2. Run build image
+### 3.2 Start the Build Container
 
-```Plain
-# Pre-build a Maven .m2 directory on the host machine to reuse the downloaded Java libraries in Docker.
-mkdir ~/.m2 
+```bash
+# Prepare the maven .m2 directory on the host in advance so that Java dependencies can be reused across multiple builds
+mkdir ~/.m2
 
-# Run the build image
-docker run -it --network=host --name mydocker -v ~/.m2:/root/.m2 -v ~/doris-branch-2.0:/root/doris-branch-2.0/ apache/doris:build-env-for-2.0  
+# Mount the source code and the .m2 directory, then start the build image
+docker run -it --network=host \
+    --name mydocker \
+    -v ~/.m2:/root/.m2 \
+    -v ~/doris-branch-2.0:/root/doris-branch-2.0/ \
+    apache/doris:build-env-for-2.0
 
-# After successful execution, it should be in the Docker.
+# After the command runs successfully, it enters the container automatically
 ```
 
-**Note:**
+Explanation of the key `docker run` parameters:
 
-- It is recommended to run the image by mounting the local Doris source code directory. This way, the compiled binary files will be stored on the host machine and will not be lost when the container exits.
-- It is also recommended to mount the `.m2` directory of Maven in the image to a directory on the host machine. This prevents repeated downloads of Maven dependencies each time the image is started for compilation.
-- When running the image for compilation, if there is a need to download additional files, it is suggested to use the host mode. The host mode does not require the use of `-p` for port mapping and allows sharing the network IP and ports with the host machine.
-- Below are explanations for some of the parameters used in the `docker run` command:
+| Parameter | Purpose |
+| ---- | ---- |
+| `-v` | Mounts a host directory into the container, used to persist source code and dependencies |
+| `--name` | Specifies the container name for easier management later |
+| `--network` | Sets the container network mode. `host` shares the network stack with the host and requires no port mapping |
 
-| Parameter | Description                                                  |
-| --------- | ------------------------------------------------------------ |
-| -v        | Mount a storage volume to a specific directory within a container. |
-| --name    | Specify a name for the container to use the assigned name in future container management. |
-| --network | Container network settings: "bridge" uses the Docker daemon's specified bridge network, "host" allows the container to use the host's network, "container:NAME_or_ID" uses the network of another container by sharing IP and port resources, "none" enables the container to use its own network (similar to --net=bridge) without any additional configuration. |
+Recommendations:
 
-### 3. Execute the build
+- Always mount the Doris source directory so that the build artifacts remain on the host and are not lost when the container exits.
+- Mount the `.m2` directory to avoid re-downloading Maven dependencies every time the container starts.
+- Downloading third-party libraries inside the container requires internet access. The `--network=host` mode is recommended.
 
-```Plain
-# By default, it builds the AVX2 version.
-$ sh build.sh
+### 3.3 Run the Build
 
-# If you need the no AVX2 version, add USE_AVX2=0.
-$ USE_AVX2=0 sh build.sh
+After entering the source directory inside the container, run:
 
-# To compile a debug version of BE, add BUILD_TYPE=Debug.
-$ BUILD_TYPE=Debug sh build.sh
+```bash
+# By default, compile artifacts that support AVX2
+sh build.sh
+
+# When the CPU does not support AVX2, append USE_AVX2=0
+USE_AVX2=0 sh build.sh
+
+# Compile the Debug version of BE
+BUILD_TYPE=Debug sh build.sh
 ```
+
+When the build finishes, the artifacts are located under `output/` in the source directory.
 
 :::tip
-**To check if the machine supports AVX2:**
+**How do you check whether the machine supports the AVX2 instruction set?**
 
-$ cat /proc/cpuinfo | grep avx2
+```bash
+cat /proc/cpuinfo | grep avx2
+```
+
+Non-empty output means AVX2 is supported.
 :::
 
-After compilation, the output file is in the `output/` directory.
+## 4. Build Your Own Development Image
 
-## Build your own development environment image
+To customize the base image (for example, to switch to a different base distribution or add debugging tools), refer to `docker/README.md` in the source code.
 
-You can create a Doris development environment image by referring to the `docker/README.md` file.
+## FAQ
+
+### Q1: What happens if the image version does not match the Doris version?
+
+The thirdparty libraries and toolchain in the image are tightly coupled with the Doris source code. Cross-version combinations are very likely to throw linker errors such as `undefined reference` or `incompatible library` during compilation. Select strictly according to the table.
+
+### Q2: The build reports `AVX2 not supported`?
+
+The CPU on the host or the target runtime machine does not support the AVX2 instruction set. Switch to an image with the `no-avx2` suffix and set `USE_AVX2=0` at build time.
+
+### Q3: `docker pull` is too slow to pull the image?
+
+Configure a Docker image mirror accelerator, or use the full path `docker.io/apache/doris:...`.
+
+### Q4: Java library downloads fail inside the container?
+
+Verify that the container is started with `--network=host`, and that the `~/.m2` directory is mounted into the container, so that a proxy or network isolation does not make the Maven central repository unreachable.
+
+## Related Documents
+
+- [Compile with LDB Toolchain](./compilation-with-ldb-toolchain)
+- [Direct Compilation on Linux](./compilation-linux)
+- [Compilation on ARM Platforms](./compilation-arm)

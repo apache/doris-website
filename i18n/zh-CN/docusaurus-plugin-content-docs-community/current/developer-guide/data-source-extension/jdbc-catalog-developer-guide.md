@@ -1,11 +1,20 @@
 ---
-{
-    "title": "JDBC Catalog 开发指南",
-    "language": "zh-CN"
-}
+title: JDBC Catalog 数据源扩展开发指南
+language: zh-CN
+description: 如何为 Apache Doris JDBC Catalog 新增数据源：FE 层实现、BE 层映射与回归测试用例。
+keywords:
+    - Apache Doris JDBC Catalog
+    - 数据源扩展
+    - JdbcClient
+    - JdbcExecutor
+    - 元数据映射
+    - jdbcTypeToDoris
+    - getColumnValue
+    - 谓词下推
+    - 函数下推
 ---
 
-<!-- 
+<!--
 Licensed to the Apache Software Foundation (ASF) under one
 or more contributor license agreements.  See the NOTICE file
 distributed with this work for additional information
@@ -24,67 +33,99 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## 1. 概述
+<!-- 知识类型: 扩展开发 -->
+<!-- 适用场景: 数据源扩展 / 内核开发 -->
 
-Apache Doris 的 JdbcCatalog 通过 JDBC 协议为 Doris 提供对外部数据库的访问能力。
+# JDBC Catalog 数据源扩展开发指南
 
-本文档详细介绍如何为 JdbcCatalog 新增一个数据源类型的支持，以新增 **NewDB** 数据源为例。
+本文面向需要为 Apache Doris JDBC Catalog 新增一种数据源的内核开发者，介绍 FE 层与 BE 层各自要修改的类、关键方法签名以及回归测试规范。下文以新增数据源 **NewDB** 为例。
 
-该文档适用于 3.0 以后的版本。
+> 适用版本：Apache Doris 3.0 及以后。
 
-## 2. 架构概览
-### 2.1 整体架构
+## 内容导览
 
-JdbcCatalog 采用 Frontend (FE) 和 Backend (BE) 分离的架构：
+- [1. 整体架构](#1-整体架构)：FE / BE 各自职责与核心组件
+- [2. 开发步骤总览](#2-开发步骤总览)：六个步骤一览表
+- [3. Step 1 - 更新 Thrift 定义](#3-step-1---更新-thrift-定义)
+- [4. Step 2 - 在 FE 定义核心元数据](#4-step-2---在-fe-定义核心元数据)
+- [5. Step 3 - 实现 FE 元数据客户端 JdbcClient](#5-step-3---实现-fe-元数据客户端-jdbcclient)
+- [6. Step 4 - 适配 FE 查询计划 JdbcScanNode](#6-step-4---适配-fe-查询计划-jdbcscannode)
+- [7. Step 5 - 实现 BE 数据执行器 JdbcExecutor](#7-step-5---实现-be-数据执行器-jdbcexecutor)
+- [8. Step 6 - 添加回归测试](#8-step-6---添加回归测试)
+- [9. 开发注意事项](#9-开发注意事项)：类型映射、错误处理、谓词与函数下推
+- [10. 部署配置](#10-部署配置)：驱动放置与 `CREATE CATALOG` 示例
 
-* Frontend (FE): 负责元数据管理、SQL 解析、查询规划和优化。
-* Backend (BE): 负责数据扫描、类型转换和执行。
+---
 
-### 2.2 核心组件
+## 1. 整体架构
 
-#### Frontend 核心组件
+<!-- 知识类型: 架构选型决策 -->
 
-* `JdbcResource`: 定义 JDBC 连接资源和参数。
-* `JdbcExternalCatalog`: 管理整个 Catalog，创建和管理 JdbcClient。
-* `JdbcExternalDatabase`: 管理数据库级别的元数据。
-* `JdbcExternalTable`: 管理表级别的元数据和 Schema。
-* `JdbcClient`: 抽象基类，处理元数据操作（获取数据库列表、表列表、列信息等）。
-* `JdbcScanNode`: 查询计划中的扫描节点，负责生成查询 SQL。
-* `JdbcTableSink`: 写入计划中的 Sink 节点。
+JdbcCatalog 采用 Frontend (FE) 与 Backend (BE) 分离的架构：
 
-#### Backend 核心组件
+| 层 | 职责 |
+|----|------|
+| Frontend (FE) | 元数据管理、SQL 解析、查询规划与优化 |
+| Backend (BE)  | 数据扫描、类型转换与执行 |
 
-* `vjdbc_connector.cpp`: C++ 连接器，通过 JNI 调用 Java 执行器。**（开发者无需修改此文件）**
-* `BaseJdbcExecutor`: Java 执行器抽象基类，处理数据读写操作。
-* `JdbcExecutorFactory`: 工厂类，根据数据源类型创建对应的执行器。
+### FE 核心组件
 
-## 3. 新增数据源开发步骤
+| 组件 | 作用 |
+|------|------|
+| `JdbcResource` | 定义 JDBC 连接资源和参数 |
+| `JdbcExternalCatalog` | 管理整个 Catalog，创建和管理 `JdbcClient` |
+| `JdbcExternalDatabase` | 管理数据库级别的元数据 |
+| `JdbcExternalTable` | 管理表级别的元数据和 Schema |
+| `JdbcClient` | 抽象基类，处理元数据操作（数据库列表、表列表、列信息等） |
+| `JdbcScanNode` | 查询计划中的扫描节点，负责生成查询 SQL |
+| `JdbcTableSink` | 写入计划中的 Sink 节点 |
 
-### Step 1: 更新 Thrift 定义
+### BE 核心组件
 
-1. 修改 Thrift 文件
+| 组件 | 作用 |
+|------|------|
+| `vjdbc_connector.cpp` | C++ 连接器，通过 JNI 调用 Java 执行器。**开发者无需修改此文件** |
+| `BaseJdbcExecutor` | Java 执行器抽象基类，处理数据读写操作 |
+| `JdbcExecutorFactory` | 工厂类，根据数据源类型创建对应的执行器 |
 
-    在 `gensrc/thrift//Types.thrift` 文件中，为 `TOdbcTableType` 枚举添加新类型：
+---
 
-2. 生成代码
+## 2. 开发步骤总览
 
-    在 Doris 根目录下执行脚本，使新的枚举值在 Java 和 C++ 代码中生效：
+<!-- 知识类型: 操作步骤 -->
 
-### Step 2: 在 Frontend 定义核心元数据
+| 步骤 | 目标 | 涉及文件 |
+|------|------|----------|
+| Step 1 | 注册新数据源类型 | `gensrc/thrift/Types.thrift` |
+| Step 2 | 在 FE 端识别 URL 与类型 | `JdbcResource.java`、`JdbcTable.java` |
+| Step 3 | 实现元数据客户端 | `JdbcNewDBClient.java`、`JdbcClient.java`（工厂注册） |
+| Step 4 | 适配查询计划 | `JdbcScanNode.java` |
+| Step 5 | 实现 BE 端数据执行器 | `NewDBJdbcExecutor.java`、`JdbcExecutorFactory.java` |
+| Step 6 | 添加回归测试 | `regression-test/suites/external_table_p0/jdbc/...` |
 
-1. 修改 `JdbcResource.java`
+---
 
-    添加 NewDB 的 URL 前缀和类型名称的常量，并在 `parseDbType` 方法中加入识别逻辑。
+## 3. Step 1 - 更新 Thrift 定义
 
-2. 修改 `JdbcTable.java`
+1. **修改 Thrift 文件**：在 `gensrc/thrift/Types.thrift` 文件中，为 `TOdbcTableType` 枚举添加新类型。
 
-    将 NewDB 类型字符串映射到 Thrift 枚举，并定义其 SQL 标识符的引用方式。
+2. **生成代码**：在 Doris 根目录下执行脚本，让新的枚举值在 Java 和 C++ 代码中生效。
 
-### Step 3：实现 Frontend 的元数据客户端 (JdbcClient)
+---
 
-#### 元数据交互核心逻辑
+## 4. Step 2 - 在 FE 定义核心元数据
 
-这一步是与外部数据源进行元数据交互的核心。您需要在 `doris/fe/fe-core/src/main/java/org/apache/doris/datasource/jdbc/client/` 目录下创建 `JdbcNewDBClient.java` 文件，并重写以下关键方法：
+1. **修改 `JdbcResource.java`**：添加 NewDB 的 URL 前缀和类型名称的常量，并在 `parseDbType` 方法中加入识别逻辑。
+
+2. **修改 `JdbcTable.java`**：将 NewDB 类型字符串映射到 Thrift 枚举，并定义其 SQL 标识符的引用方式（如标识符引号风格）。
+
+---
+
+## 5. Step 3 - 实现 FE 元数据客户端 JdbcClient
+
+### 5.1 元数据交互核心逻辑
+
+这一步是与外部数据源进行元数据交互的核心。需要在 `doris/fe/fe-core/src/main/java/org/apache/doris/datasource/jdbc/client/` 目录下创建 `JdbcNewDBClient.java`，并重写下列关键方法：
 
 ```java
 // doris/fe/fe-core/src/main/java/org/apache/doris/datasource/jdbc/client/JdbcNewDBClient.java
@@ -97,7 +138,7 @@ public class JdbcNewDBClient extends JdbcClient {
 
     /**
      * [必须重写] 获取数据库（或 Schema）列表。
-     * 
+     *
      * @return 数据库名称列表。
      * @purpose 这是 `SHOW DATABASES` 命令的底层实现。
      * @implementation
@@ -113,7 +154,7 @@ public class JdbcNewDBClient extends JdbcClient {
 
     /**
      * 这是 `SHOW TABLES` 命令的底层实现。
-     * 
+     *
      * @param remoteDbName 数据库名。
      * @return 表名列表。
      */
@@ -125,7 +166,7 @@ public class JdbcNewDBClient extends JdbcClient {
 
     /**
      * [必须重写] 获取表的元数据。
-     * 
+     *
      * @purpose 供 getTablesNameList() 和 isTableExist() 等方法调用，
      *          通过 `DatabaseMetaData.getTables()` 执行元数据查找。
      * @implementation
@@ -143,7 +184,7 @@ public class JdbcNewDBClient extends JdbcClient {
 
     /**
      * [必须重写] **核心方法** - 定义从 NewDB 类型到 Doris 类型的映射。
-     * 
+     *
      * @param fieldSchema 包含了从 JDBC Driver 获取到的列信息，如类型名 (getDataTypeName)、
      *                    精度 (getColumnSize)、标度 (getDecimalDigits) 等。
      * @return 对应的 Doris `Type`。
@@ -162,7 +203,7 @@ public class JdbcNewDBClient extends JdbcClient {
         //     default: return Type.UNSUPPORTED;
         // }
     }
-    
+
     /**
      * [建议重写] 定义需要从 `getDatabaseNameList` 结果中过滤掉的系统库。
      */
@@ -201,13 +242,15 @@ public class JdbcNewDBClient extends JdbcClient {
 }
 ```
 
-#### 在工厂类中注册 `JdbcNewDBClient`
+### 5.2 在工厂类中注册 `JdbcNewDBClient`
 
-修改 `doris/fe/fe-core/src/main/java/org/apache/doris/datasource/jdbc/client/JdbcClient.java`：
+修改 `doris/fe/fe-core/src/main/java/org/apache/doris/datasource/jdbc/client/JdbcClient.java`，在工厂方法中根据 `TOdbcTableType` 返回 `JdbcNewDBClient` 实例。
 
-### Step 4：适配 Frontend 的查询计划 (JdbcScanNode)
+---
 
-在 `getJdbcQueryStr()` 方法中，为 NewDB 添加特定的 `LIMIT` 子句生成逻辑。
+## 6. Step 4 - 适配 FE 查询计划 JdbcScanNode
+
+在 `JdbcScanNode.getJdbcQueryStr()` 方法中，为 NewDB 添加特定的 `LIMIT` 子句生成逻辑。下例展示 MSSQL（`TOP n`）、标准 `LIMIT` 与 `FETCH FIRST n ROWS ONLY` 三种典型分支：
 
 ```java
 // doris/fe/fe-core/src/main/java/org/apache/doris/datasource/jdbc/source/JdbcScanNode.java
@@ -240,11 +283,13 @@ private String getJdbcQueryStr() {
 }
 ```
 
-### Step 5：实现 Backend 的数据执行器 (JdbcExecutor)
+---
 
-#### 数据读取核心逻辑
+## 7. Step 5 - 实现 BE 数据执行器 JdbcExecutor
 
-这一步是在 BE 端通过 JNI 实际执行 JDBC 数据读写的核心。您需要在 `doris/fe/be-java-extensions/jdbc-scanner/src/main/java/org/apache/doris/jdbc/` 目录下创建 `NewDBJdbcExecutor.java` 文件，并重写以下关键方法：
+### 7.1 数据读取核心逻辑
+
+这一步是在 BE 端通过 JNI 实际执行 JDBC 数据读写的核心。需要在 `doris/fe/be-java-extensions/jdbc-scanner/src/main/java/org/apache/doris/jdbc/` 目录下创建 `NewDBJdbcExecutor.java`，并重写下列关键方法：
 
 ```java
 // doris/fe/be-java-extensions/jdbc-scanner/src/main/java/org/apache/doris/jdbc/NewDBJdbcExecutor.java
@@ -265,7 +310,7 @@ public class NewDBJdbcExecutor extends BaseJdbcExecutor {
      * 2. 对于大多数标准类型，最佳实践是调用 `outputTable.getColumn(i).newObjectContainerArray(batchSizeNum)`。
      *    这将根据 Doris 的目标类型创建一个类型安全的数组容器（如 Integer[], BigDecimal[], Long[] 等）。
      * 3. 对于需要特殊处理的类型（例如，一个由 JDBC Driver 返回二进制对象，但我们只想按 String 处理的类型），
-     *    可以分配一个更通用的容器，如`Object[]`。
+     *    可以分配一个更通用的容器，如 `Object[]`。
      */
     @Override
     protected void initializeBlock(int columnCount, String[] replaceStringList, int batchSizeNum,
@@ -281,7 +326,7 @@ public class NewDBJdbcExecutor extends BaseJdbcExecutor {
 
     /**
      * [必须重写] **核心方法** - 从 JDBC ResultSet 中获取单列数据。
-     * 
+     *
      * @param columnIndex 列的索引（从 0 开始）。
      * @param type Doris 端期望的列类型。
      * @return 从 ResultSet 中获取并转换好的 Java 对象。
@@ -302,14 +347,14 @@ public class NewDBJdbcExecutor extends BaseJdbcExecutor {
                  return resultSet.getObject(columnIndex + 1);
         }
     }
-    
+
     /**
      * [必须重写] 为特定类型提供输出转换器。
-     * 
+     *
      * @purpose 对 `getColumnValue` 获取到的值进行最终处理，然后再传递给 C++ 层。
      *          常用于需要特定格式化的场景。
      * @implementation
-     *   一个常见的例子是 `java.sql.Time` 类型。为了保留其微秒精度，`getColumnValue` 
+     *   一个常见的例子是 `java.sql.Time` 类型。为了保留其微秒精度，`getColumnValue`
      *   获取 `Time` 对象，而转换器则负责将其格式化为 Doris 需要的 `HH:mm:ss.SSSSSS` 字符串。
      *   另一个例子是将 `byte[]` 类型转换为十六进制显示的字符串。
      */
@@ -329,7 +374,7 @@ public class NewDBJdbcExecutor extends BaseJdbcExecutor {
 
     /**
      * [可选重写] 初始化 PreparedStatement。
-     * 
+     *
      * @purpose 如果需要对某些写入读取的 size 和方式优化
      * @implementation
      * 1. 必须为读操作（READ）和写操作（WRITE）分别处理。
@@ -345,10 +390,10 @@ public class NewDBJdbcExecutor extends BaseJdbcExecutor {
         //     preparedStatement = conn.prepareStatement(sql);
         // }
     }
-    
+
     /**
      * [可选重写] 在查询取消时中断 JDBC 连接。
-     * 
+     *
      * @purpose 如果某数据源的 Driver 有特殊的中断方式，需要在此重写
      * @implementation 调用 `connection.abort()` 或 Driver 提供的其他中断方法。
      */
@@ -359,7 +404,7 @@ public class NewDBJdbcExecutor extends BaseJdbcExecutor {
 
     /**
      * [按需重写] 为 Hikari 连接池设置验证查询，默认为 SELECT 1，如果数据源有特殊的语法，需重写
-     * 
+     *
      * @purpose 确保从池中获取的连接是有效的。
      */
     @Override
@@ -369,7 +414,7 @@ public class NewDBJdbcExecutor extends BaseJdbcExecutor {
 
     /**
      * [可选重写] 设置 JDBC Driver 特定的系统属性。
-     * 
+     *
      * @purpose 有些 Driver 需要通过 `System.setProperty()` 来开启或关闭某些功能。
      */
     @Override
@@ -379,85 +424,97 @@ public class NewDBJdbcExecutor extends BaseJdbcExecutor {
 }
 ```
 
+### 7.2 在工厂类中注册 `NewDBJdbcExecutor`
 
+修改 `doris/fe/be-java-extensions/jdbc-scanner/src/main/java/org/apache/doris/jdbc/JdbcExecutorFactory.java`，在工厂方法中根据数据源类型返回 `NewDBJdbcExecutor` 实例。
 
-#### 在工厂类中注册 `NewDBJdbcExecutor`
+---
 
-修改 `doris/fe/be-java-extensions/jdbc-scanner/src/main/java/org/apache/doris/jdbc/JdbcExecutorFactory.java`：
-
-### Step 6：添加回归测试
+## 8. Step 6 - 添加回归测试
 
 参考 `doris/regression-test/suites/external_table_p0/jdbc/type_test/select/test_mysql_all_types_select.groovy` 创建一个简单的测试用例。
 
-* 创建 `test_newdb_select.groovy`
+创建 `test_newdb_select.groovy`：
 
-  ```groovy
-  suite("test_newdb_select", "p0,external,newdb") {
-      String enabled = context.config.otherConfigs.get("enableJdbcTest")
-      if (enabled != null && enabled.equalsIgnoreCase("true")) {
-          // 1. 定义 NewDB 的连接信息
-          def newdb_port = context.config.otherConfigs.get("newdb_port")
-          def driver_url = "http://your_repo/newdb-driver.jar"
+```groovy
+suite("test_newdb_select", "p0,external,newdb") {
+    String enabled = context.config.otherConfigs.get("enableJdbcTest")
+    if (enabled != null && enabled.equalsIgnoreCase("true")) {
+        // 1. 定义 NewDB 的连接信息
+        def newdb_port = context.config.otherConfigs.get("newdb_port")
+        def driver_url = "http://your_repo/newdb-driver.jar"
 
-          // 2. 创建 Catalog
-          sql """create catalog newdb_catalog properties(
-              "type"="jdbc",
-              "user"="root",
-              "password"="123456",
-              "jdbc_url" = "jdbc:newdb://\${context.config.otherConfigs.get("externalEnvIp")}:\${newdb_port}/your_db",
-              "driver_url" = "\${driver_url}",
-              "driver_class" = "com.newdb.jdbc.Driver"
-          );"""
+        // 2. 创建 Catalog
+        sql """create catalog newdb_catalog properties(
+            "type"="jdbc",
+            "user"="root",
+            "password"="123456",
+            "jdbc_url" = "jdbc:newdb://\${context.config.otherConfigs.get("externalEnvIp")}:\${newdb_port}/your_db",
+            "driver_url" = "\${driver_url}",
+            "driver_class" = "com.newdb.jdbc.Driver"
+        );"""
 
-          // 3. 执行测试
-          sql """use newdb_catalog.your_db"""
-          qt_select """select * from your_table order by 1 limit 10;"""
+        // 3. 执行测试
+        sql """use newdb_catalog.your_db"""
+        qt_select """select * from your_table order by 1 limit 10;"""
 
-          // 4. 清理环境
-          sql """drop catalog newdb_catalog"""
-      }
-  }
-  ```
+        // 4. 清理环境
+        sql """drop catalog newdb_catalog"""
+    }
+}
+```
 
-## 4. 开发注意事项
+---
 
-### 4.1 数据类型映射
+## 9. 开发注意事项
 
-在 `jdbcTypeToDoris` 方法中，需要仔细处理：
+### 9.1 数据类型映射
 
-* 精度映射：`DECIMAL` 类型需要正确映射精度和标度。
-* 时间类型：注意时区和精度处理。
-* 特殊类型：如一些二进制类的特殊类型
+<!-- 知识类型: 配置参数 -->
 
-### 4.2 特定数据源数据读取
+在 `jdbcTypeToDoris` 方法中需要仔细处理：
 
-在 `BaseJdbcExecutor` 的子类中，重点关注：
+| 类别 | 关注点 |
+|------|--------|
+| 精度映射 | `DECIMAL` 类型需要正确映射精度（precision）和标度（scale） |
+| 时间类型 | 注意时区和精度处理 |
+| 特殊类型 | 例如一些二进制类的特殊类型 |
 
-* `getColumnValue`: 获取数据的方式
-* `getOutputConverter`: 数据转换函数
+### 9.2 特定数据源数据读取
 
-### 4.3 错误处理
+在 `BaseJdbcExecutor` 的子类中，重点关注两个方法：
 
-* SQL 异常转换：将数据源特定异常转换为 `JdbcClientException`。
-* 驱动兼容性：处理不同驱动版本的兼容问题。
+| 方法 | 作用 |
+|------|------|
+| `getColumnValue` | 从 JDBC ResultSet 获取数据的方式 |
+| `getOutputConverter` | 数据转换函数，在数据交给 C++ 层之前做最终格式化 |
 
-### 4.4 谓词与函数下推 (可选优化)
+### 9.3 错误处理
 
-为提升查询性能，Doris 会尽可能将 `WHERE` 条件和部分函数下推到外部数据源执行。
+- **SQL 异常转换**：将数据源特定异常转换为 `JdbcClientException`。
+- **驱动兼容性**：处理不同驱动版本的兼容问题。
 
-* 谓词下推：大部分场景下，Doris 会自动处理。但对于特殊语法（如特殊日期函数），可能需要在 `JdbcScanNode.java` 的 `conjunctExprToString()` 方法中进行适配。
-* 函数下推：可以在 `JdbcFunctionPushDownRule.java` 中定义 NewDB 支持下推的函数列表和函数名替换规则，以获得更好的性能。
+### 9.4 谓词与函数下推（可选优化）
 
-## 5. 部署配置
+为提升查询性能，Doris 会尽可能将 `WHERE` 条件和部分函数下推到外部数据源执行：
 
-### 5.1 驱动部署
+- **谓词下推**：大部分场景下 Doris 会自动处理。但对于特殊语法（如特殊日期函数），可能需要在 `JdbcScanNode.java` 的 `conjunctExprToString()` 方法中进行适配。
+- **函数下推**：可以在 `JdbcFunctionPushDownRule.java` 中定义 NewDB 支持下推的函数列表和函数名替换规则，以获得更好的性能。
+
+---
+
+## 10. 部署配置
+
+<!-- 知识类型: 操作步骤 -->
+
+### 10.1 驱动部署
 
 ```bash
 # 将 NewDB JDBC 驱动放到指定目录
 cp newdb-jdbc-driver.jar $DORIS_HOME/plugins/jdbc_drivers/
 ```
 
-### 5.2 创建 Catalog
+### 10.2 创建 Catalog
 
 ```sql
 CREATE CATALOG newdb_catalog PROPERTIES (
@@ -473,4 +530,30 @@ CREATE CATALOG newdb_catalog PROPERTIES (
 USE newdb_catalog.database_name;
 SELECT * FROM table_name LIMIT 10;
 ```
+
+---
+
+## FAQ 与常见错误
+
+<!-- 知识类型: 故障排查 -->
+
+**Q: `SHOW DATABASES` 没有返回业务库，只看到系统库？**
+
+A: 检查 `getFilterInternalDatabases()` 与 `filterDatabaseNames()` 的过滤名单是否合理；同时确认 `getDatabaseNameList()` 调用的是 `getCatalogs()` 还是 `getSchemas()`，需要和数据源的 metadata 语义一致。
+
+**Q: 类型映射缺失导致出现 `Type.UNSUPPORTED`？**
+
+A: 在 `jdbcTypeToDoris` 中补充对应分支；对 `DECIMAL` 这类复合类型，记得读 `fieldSchema.getColumnSize()` 与 `getDecimalDigits()`。
+
+**Q: 查询时偶发 OOM？**
+
+A: 在 `initializeStatement` 中通过 `stmt.setFetchSize()` 控制单次拉取行数；MySQL 可以使用 `Integer.MIN_VALUE` 开启流式读取。
+
+**Q: 取消查询时连接没有及时释放？**
+
+A: 重写 `abortReadConnection`，调用 `connection.abort()` 或驱动提供的中断方法。
+
+**Q: 创建 Catalog 时报 `Test query failed`？**
+
+A: 重写 `getTestQuery()`，返回数据源支持的最简查询（例如 Oracle 使用 `SELECT 1 FROM DUAL`）。
 

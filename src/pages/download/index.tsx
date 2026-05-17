@@ -270,7 +270,7 @@ export default function Download() {
                         <div className="all-download-note" style={{ textAlign: 'center', marginTop: '24px' }}>
                             Note: For Apache Doris version specifics, please refer to the{' '}
                             <Link
-                                to="https://doris.apache.org/community/release-versioning"
+                                to="https://doris.apache.org/community/release-and-verify/release-versioning"
                                 style={{
                                     color: 'var(--ifm-color-primary)',
                                     cursor: 'pointer',
