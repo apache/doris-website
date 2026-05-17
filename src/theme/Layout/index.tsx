@@ -1,6 +1,5 @@
 import React, { useEffect, createContext, useState, JSX } from 'react';
 import { useLocation } from '@docusaurus/router';
-import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import clsx from 'clsx';
 import ErrorBoundary from '@docusaurus/ErrorBoundary';
 import { PageMetadata, SkipToContentFallbackId, ThemeClassNames } from '@docusaurus/theme-common';
@@ -13,8 +12,7 @@ import type { Props } from '@theme/Layout';
 import styles from './styles.module.css';
 import { useHistory } from '@docusaurus/router';
 import { NavbarNext } from '@site/src/components/home-next/NavbarNext';
-import { PreviewBanner } from '@site/src/components/home-next/PreviewBanner';
-import { isDevDocsPath, isReleasesPath, isEventsPath, isCommunityPath } from '@site/src/utils/locale';
+
 interface DataType {
     showSearchPageMobile: boolean;
     setShowSearchPageMobile: React.Dispatch<React.SetStateAction<boolean>>;
@@ -34,17 +32,6 @@ export default function Layout(props: Props): JSX.Element {
     const history = useHistory();
     const [showSearchPageMobile, setShowSearchPageMobile] = useState(false);
     const { hash } = useLocation();
-    const {
-        i18n: { locales },
-    } = useDocusaurusContext();
-    // PreviewBanner ("you're viewing the preview — return to classic") is the
-    // soft-launch affordance. It still renders on the pages that have always
-    // shown it; PR3 removes it together with HomeClassic.
-    const isDevDocsPage = isDevDocsPath(history.location.pathname, locales);
-    const isReleasesPage = isReleasesPath(history.location.pathname, locales);
-    const isEventsPage = isEventsPath(history.location.pathname, locales);
-    const isCommunityPage = isCommunityPath(history.location.pathname, locales);
-    const showPreviewBanner = isDevDocsPage || isReleasesPage || isEventsPage || isCommunityPage;
     useKeyboardNavigation();
 
     useEffect(() => {
@@ -82,7 +69,6 @@ export default function Layout(props: Props): JSX.Element {
                 <PageMetadata title={title} description={description} />
 
                 <SkipToContent />
-                {showPreviewBanner && <PreviewBanner />}
                 <NavbarNext />
 
                 <div

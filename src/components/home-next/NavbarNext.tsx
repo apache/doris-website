@@ -7,16 +7,7 @@ import { StarGreenIcon } from '@site/src/components/Icons/star-green-icon';
 import './NavbarNext.scss';
 
 const GITHUB_REPO = 'apache/doris';
-const HOME_VERSION_KEY = 'doris-home-version';
 const STAR_DISPLAY = `${STAR_COUNT}k`;
-
-function safeSetLocalStorage(key: string, value: string): void {
-    try {
-        window.localStorage.setItem(key, value);
-    } catch {
-        // localStorage may be unavailable (Safari private mode, disabled cookies, quota errors)
-    }
-}
 
 interface DropdownItem {
     label: string;
@@ -150,14 +141,7 @@ export function NavbarNext(): JSX.Element {
     return (
         <nav className={`navbar navbar--fixed-top navbar-next${mobileOpen ? ' navbar-next--mobile-open' : ''}`}>
             <div className="navbar-next__inner">
-                <Link
-                    to={homeHref}
-                    className="navbar-next__logo"
-                    aria-label="Apache Doris"
-                    onClick={() => {
-                        safeSetLocalStorage(HOME_VERSION_KEY, 'next');
-                    }}
-                >
+                <Link to={homeHref} className="navbar-next__logo" aria-label="Apache Doris">
                     <img src="/images/logo-doris.svg" alt="Apache Doris" />
                 </Link>
 
