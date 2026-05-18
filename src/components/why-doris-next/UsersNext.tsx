@@ -25,10 +25,18 @@ function useRevealObserver(): void {
                     }
                 });
             },
-            { threshold: 0.12, rootMargin: '0px 0px -8% 0px' }
+            { threshold: 0, rootMargin: '0px 0px -8% 0px' }
         );
 
-        items.forEach((item) => observer.observe(item));
+        const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
+        items.forEach((item) => {
+            const rect = item.getBoundingClientRect();
+            if (rect.top < viewportHeight) {
+                item.classList.add('is-visible');
+            } else {
+                observer.observe(item);
+            }
+        });
         return () => observer.disconnect();
     }, []);
 }
