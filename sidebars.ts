@@ -770,6 +770,7 @@ const sidebars: SidebarsConfig = {
                 {
                     type: 'category',
                     label: 'Cluster Management',
+                    link: {type: 'doc', id: 'admin-manual/cluster-management/intro'},
                     items: [
                         'admin-manual/cluster-management/upgrade',
                         'admin-manual/cluster-management/elastic-expansion',
@@ -793,8 +794,8 @@ const sidebars: SidebarsConfig = {
                 {
                     type: 'category',
                     label: 'Security & Authentication',
+                    link: {type: 'doc', id: 'admin-manual/auth/security-overview'},
                     items: [
-                        'admin-manual/auth/security-overview',
                         {
                             type: 'category',
                             label: 'Authentication',
