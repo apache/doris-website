@@ -192,7 +192,8 @@ val df = spark.read.format("doris")
 df.show()
 ```
 
-## 场景二：批量写入 Doris 数据 {#批量写入}
+## 场景二：批量写入 Doris 数据
+
 <!-- 知识类型: 操作步骤 -->
 <!-- 适用场景: Spark 批量写入 Doris 数据 -->
 

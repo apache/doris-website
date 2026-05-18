@@ -1,20 +1,28 @@
 ---
 {
-    "title": "Monitor Running Queries",
+    "title": "Monitor Running Query Progress and Resource Usage in Real Time",
     "language": "en",
-    "description": "View currently running queries and their runtime statistics including task progress and resource metrics."
+    "description": "Learn how to view the execution progress and resource metrics (CPU, memory, shuffle, spill, and more) of running queries in Apache Doris in real time, using either SQL commands or the REST API.",
+    "keywords": ["query monitoring", "running queries", "query progress", "query resources", "SHOW PROC", "current_queries", "Trace ID", "workload management"],
+    "sidebar_label": "Query Progress Monitoring"
 }
 ---
 
-Doris provides multiple ways to view currently running queries and their runtime statistics, including task-level progress and resource metrics such as scan/cpu/memory/shuffle/spill/cache counters.
+<!-- Knowledge type: Concept introduction + Operational steps -->
 
-## SHOW PROC
+Apache Doris provides two ways to view running queries and their resource consumption in real time: **SQL commands** (`SHOW PROC`) and the **REST API**. Both methods return task-level execution progress along with key metrics such as scan volume, CPU, memory, shuffle, spill, and cache.
 
-You can use the `SHOW PROC` command to view the list of currently executing queries along with their runtime statistics.
+## View Running Queries via SQL Commands
+
+<!-- Knowledge type: Operational steps -->
+
+Use the `SHOW PROC` command to list all currently executing queries together with their real-time statistics.
 
 ```sql
 SHOW PROC "/current_queries";
 ```
+
+`SHOW PROC "/current_query_stmts"` returns the same statistics view. Starting with Doris 4.1.1, the two commands share a unified enhanced statistics format.
 
 ### Example Output
 
@@ -76,49 +84,59 @@ SpillReadBytesFromLocalStorage: 0.00
                       Progress: 47%
 ```
 
-The `SHOW PROC "/current_query_stmts"` command also returns the same statistics view.
+### Field Descriptions
 
-**Since Doris 4.1.1**, both `current_queries` and `current_query_stmts` share the same enriched statistics view, providing runtime metrics and task progress in a unified format.
+<!-- Knowledge type: Reference table -->
 
-### Column Descriptions
-
-| Column | Description |
-| ------ | ----------- |
+| Field | Description |
+|---|---|
 | QueryId | Unique identifier of the query |
 | ConnectionId | MySQL connection ID |
-| Catalog | Catalog name (e.g., `internal`, `hive_test`) |
-| Database | Database/Schema name |
+| Catalog | Name of the catalog the query belongs to, such as `internal` or `hive_test` |
+| Database | Database or schema name |
 | User | User who submitted the query |
-| ExecTime | Execution duration in milliseconds |
-| SqlHash | MD5 hash of the SQL statement |
-| Statement | SQL statement text (truncated for display) |
-| ScanRows | Total rows scanned from storage |
-| ScanBytes | Total bytes scanned from storage |
-| ProcessRows | Rows processed through the execution pipeline. This reflects the actual data volume passing through operators and can be used to observe query throughput |
-| CpuMs | CPU time consumed in milliseconds |
-| MaxPeakMemoryBytes | Maximum memory peak reached during query execution |
-| CurrentUsedMemoryBytes | Current memory being used by the query |
-| WorkloadGroupId | ID of the workload group this query belongs to |
-| ShuffleSendBytes | Total bytes sent via data shuffle between nodes |
-| ShuffleSendRows | Total rows sent via data shuffle between nodes |
-| ScanBytesFromLocalStorage | Bytes scanned from local disk storage |
-| ScanBytesFromRemoteStorage | Bytes scanned from remote storage (e.g., HDFS, S3) |
-| SpillWriteBytesToLocalStorage | Bytes spilled (written) to local disk due to memory pressure |
-| SpillReadBytesFromLocalStorage | Bytes read back from spilled data on local disk |
-| BytesWriteIntoCache | Bytes written into data cache |
-| TotalTasks | Total number of pipeline tasks for this query |
+| ExecTime | Elapsed execution time, in milliseconds |
+| SqlHash | MD5 hash of the SQL statement, useful for identifying identical queries |
+| Statement | Text of the SQL statement (truncated when too long) |
+| ScanRows | Total number of rows scanned from the storage layer |
+| ScanBytes | Total number of bytes scanned from the storage layer |
+| ProcessRows | Number of rows processed by the execution pipeline, reflecting actual operator throughput |
+| CpuMs | CPU time consumed, in milliseconds |
+| MaxPeakMemoryBytes | Peak memory used during query execution |
+| CurrentUsedMemoryBytes | Memory currently held by the query |
+| WorkloadGroupId | ID of the workload group the query belongs to |
+| ShuffleSendBytes | Total bytes sent during inter-node data shuffle |
+| ShuffleSendRows | Total rows sent during inter-node data shuffle |
+| ScanBytesFromLocalStorage | Bytes scanned from local disks |
+| ScanBytesFromRemoteStorage | Bytes scanned from remote storage (for example, HDFS or S3) |
+| SpillWriteBytesToLocalStorage | Bytes spilled to local disks due to memory pressure |
+| SpillReadBytesFromLocalStorage | Bytes read back from spilled data on local disks |
+| BytesWriteIntoCache | Bytes written into the data cache |
+| TotalTasks | Total number of pipeline tasks in the query |
 | FinishedTasks | Number of pipeline tasks that have completed |
-| Progress | Query execution progress percentage, computed as `FinishedTasks / TotalTasks` |
+| Progress | Query execution progress as a percentage, calculated as `FinishedTasks / TotalTasks` |
 
-## REST API
+## View Running Queries via the REST API
 
-You can also retrieve current running queries and their runtime statistics through the HTTP REST API:
+<!-- Knowledge type: Operational steps -->
+
+**Purpose**: Retrieve real-time statistics of running queries programmatically.
+
+**Command**:
 
 ```bash
 curl http://<fe_ip>:<fe_http_port>/rest/v2/manager/query/current_queries
 ```
 
-This endpoint returns data in JSON format with the same set of columns.
+**Description**: This endpoint returns the same column data as `SHOW PROC` in JSON format, and the field meanings are identical.
+
+### Query Parameters
+
+| Parameter | Type | Description |
+|---|---|---|
+| is_all_node | Boolean (optional) | When set to `true`, returns running queries on all FE nodes. Defaults to `true`. |
+
+### Example Response
 
 ```json
 {
@@ -155,26 +173,28 @@ This endpoint returns data in JSON format with the same set of columns.
 }
 ```
 
-### Query Parameters
+## Track Real-Time Progress of a Single Query via Trace ID
 
-- `is_all_node`: Optional. Return current running queries from all FE nodes if set to `true`. Default is `true`.
+<!-- Knowledge type: Operational steps -->
 
-## Real-Time Progress via Trace ID
+To continuously track the execution progress of a specific query, assign it a Trace ID and then poll the statistics endpoint from a separate session to obtain its real-time status.
 
-For real-time query progress monitoring, you can set a Trace ID before executing a query and subsequently poll the statistics endpoint:
+**Step 1: Set a Trace ID before executing the query**
 
 ```sql
 SET session_context="trace_id:my_trace_id";
 SELECT ...;
 ```
 
-Then query the statistics from another session:
+**Step 2: Poll the statistics in another session**
 
 ```bash
 curl http://<fe_ip>:<fe_http_port>/rest/v2/manager/query/statistics/my_trace_id
 ```
 
-Response includes task progress and resource usage:
+**Description**: Call this endpoint periodically to obtain the latest query progress until the query completes.
+
+### Example Response
 
 ```json
 {
@@ -202,5 +222,3 @@ Response includes task progress and resource usage:
     "count": 0
 }
 ```
-
-You can periodically call this endpoint to track query progress in real time.

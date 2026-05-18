@@ -43,7 +43,8 @@ Quick lookup checklist for common problems:
 <!-- Knowledge type: Troubleshooting -->
 <!-- Applicable scenarios: Issues during materialized view creation, refresh, and modification -->
 
-### Q1: How does the materialized view determine which partitions need to be refreshed? {#q12构建分区物化视图报错}
+### Q1: How does the materialized view determine which partitions need to be refreshed?
+
 Doris internally computes the partition mapping between the materialized view and the base tables, and records the base table partition versions used at the last successful refresh. On the next refresh, Doris compares the current versions to determine whether a partition needs to be refreshed.
 
 **Example**: Materialized view `mv1` is created from base tables `t1` and `t2`, and is partitioned based on `t1`. Suppose partition `p202003` of `mv1` corresponds to partitions `p20200301` and `p20200302` of `t1`:

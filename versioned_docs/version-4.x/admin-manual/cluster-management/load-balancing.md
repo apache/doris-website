@@ -1,18 +1,52 @@
 ---
 {
-    "title": "Load Balancing",
+    "title": "FE Load Balancing",
     "language": "en",
-    "description": "Users connect to Doris through FE's query port (queryport, default 9030) using the MySQL protocol. When deploying multiple FE nodes,"
+    "description": "Load balancing options for multi-FE Doris deployments: JDBC, Nginx, HAProxy, ProxySQL, plus client IP forwarding via Proxy Protocol.",
+    "keywords": [
+        "Doris load balancing",
+        "FE high availability",
+        "MySQL protocol proxy",
+        "JDBC loadbalance",
+        "Nginx TCP reverse proxy",
+        "HAProxy",
+        "ProxySQL",
+        "Proxy Protocol",
+        "client IP forwarding",
+        "query_port 9030",
+        "Doris multi-FE access",
+        "MySQL load balancing"
+    ]
 }
 ---
 
-Users connect to Doris through FE's query port (`query_port`, default 9030) using the MySQL protocol. When deploying multiple FE nodes, users can deploy a load balancing layer on top of multiple FEs to achieve high availability for Doris queries.
+<!-- Knowledge type: Architecture decision / Operational procedure -->
+<!-- Applicable scenario: Multi-FE high availability access / Client IP forwarding -->
 
-This document introduces various load balancing solutions suitable for Doris and explains how to implement client IP passthrough using the Proxy Protocol.
+Users connect to Doris over the MySQL protocol through the FE query port (`query_port`, default `9030`). When multiple FE nodes are deployed, you can place a load balancing layer in front of the FEs to provide high availability and connection distribution for the Doris query entry point.
 
-## Load Balancing
+This document describes four load balancing options for Doris and explains how to forward the real client IP through the proxy layer using Proxy Protocol.
 
-This article uses the following three FE nodes as examples for demonstrating the steps:
+## Applicable Scenarios
+
+| Scenario | Recommended option | Description |
+|------|----------|------|
+| Applications connect to Doris directly through JDBC, with no dedicated proxy to operate | JDBC URL | Client-side load balancing, no extra component required |
+| Existing Nginx infrastructure, TCP-layer reverse proxy required | Nginx | General-purpose TCP reverse proxy, simple configuration |
+| High-performance TCP proxy with health checks required | HAProxy | Dedicated TCP/HTTP load balancer with a rich set of health-check strategies |
+| MySQL protocol-aware proxy required (connection management, read/write splitting, etc.) | ProxySQL | Database proxy designed for the MySQL protocol |
+| Need to preserve the real client IP behind the load balancer | Proxy Protocol | Used together with Nginx or HAProxy |
+
+## Prerequisites
+
+- At least 2 FE nodes are deployed, and each FE process is listening on `query_port` (default `9030`).
+- Network connectivity exists between the proxy server and all FE nodes.
+- A port for the proxy service has been planned (this document uses `6030` as an example).
+- If Proxy Protocol is required, the Doris version must support Proxy Protocol V1 (available since version 2.1.1).
+
+## Example Cluster Topology
+
+This document uses the following three FE nodes for demonstration:
 
 ```text
 192.168.1.101:9030
@@ -20,40 +54,48 @@ This article uses the following three FE nodes as examples for demonstrating the
 192.168.1.103:9030
 ```
 
-Proxy server node:
+The node where the proxy server runs:
 
 ```text
 192.168.1.100
 ```
 
-### 01 JDBC URL
+## Load Balancing Options
 
-Use the built-in load balancing configuration in JDBC URL.
+### Option 1: JDBC URL
+
+<!-- Knowledge type: Configuration parameter -->
+<!-- Applicable scenario: Application-side load balancing -->
+
+Use the load balancing capability built into the JDBC URL. MySQL Connector/J performs connection distribution and failover across FE nodes on the client side.
 
 ```text
 jdbc:mysql:loadbalance://192.168.1.101:9030,192.168.1.102:9030,192.168.1.103:9030/test_db
 ```
 
-For details, please refer to [MySQL Official Documentation](https://dev.mysql.com/doc/connector-j/en/connector-j-usagenotes-j2ee-concepts-managing-load-balanced-connections.html)
+For detailed configuration, see the [MySQL official documentation](https://dev.mysql.com/doc/connector-j/en/connector-j-usagenotes-j2ee-concepts-managing-load-balanced-connections.html).
 
-### 02 Nginx
+### Option 2: Nginx
 
-Use [Nginx](https://nginx.org/) TCP reverse proxy to implement Doris load balancing.
+<!-- Knowledge type: Operational procedure -->
+<!-- Applicable scenario: General-purpose TCP reverse proxy -->
+
+Use the TCP reverse proxy capability of [Nginx](https://nginx.org/) (the `stream` module) to load-balance Doris.
 
 #### Install Nginx
 
-Please refer to [Nginx](https://nginx.org/en/docs/install.html) official website to install Nginx correctly. Here we demonstrate the Nginx compilation and installation steps using Ubuntu system with Nginx 1.18.0 version as an example.
+See the [Nginx official installation documentation](https://nginx.org/en/docs/install.html) to complete the installation. The following example shows how to compile and install Nginx 1.18.0 on Ubuntu:
 
-1. Install compilation dependencies
+1. Install build dependencies:
 
     ```shell
     sudo apt-get install build-essential
-    sudo apt-get install libpcre3 libpcre3-dev 
+    sudo apt-get install libpcre3 libpcre3-dev
     sudo apt-get install zlib1g-dev
     sudo apt-get install openssl libssl-dev
     ```
 
-2. Install Nginx
+2. Download and compile Nginx:
 
     ```shell
     sudo wget http://nginx.org/download/nginx-1.18.0.tar.gz
@@ -63,40 +105,57 @@ Please refer to [Nginx](https://nginx.org/en/docs/install.html) official website
     sudo make && make install
     ```
 
-#### Configure Reverse Proxy
+    :::tip
 
-Create a new configuration file:
+    Make sure to include `--with-stream` at compile time; otherwise Nginx does not support TCP reverse proxy.
 
-```shell
-vim /usr/local/nginx/conf/default.conf
-```
+    :::
 
-Content as follows:
+#### Configure the Reverse Proxy
 
-```text
-events {
-worker_connections 1024;
-}
-stream {
-  upstream mysqld {
-      hash $remote_addr consistent;
-      server 192.168.1.101:9030 weight=1 max_fails=2 fail_timeout=60s;
-      server 192.168.1.102:9030 weight=1 max_fails=2 fail_timeout=60s;
-      server 192.168.1.103:9030 weight=1 max_fails=2 fail_timeout=60s;
-  }
-  server {
-   # Proxy port
-      listen 6030;
-      proxy_connect_timeout 300s;
-      proxy_timeout 300s;
-      proxy_pass mysqld;
-  }
-}
-```
+1. Create a new configuration file:
+
+    ```shell
+    vim /usr/local/nginx/conf/default.conf
+    ```
+
+2. Write the following content:
+
+    ```text
+    events {
+    worker_connections 1024;
+    }
+    stream {
+      upstream mysqld {
+          hash $remote_addr consistent;
+          server 192.168.1.101:9030 weight=1 max_fails=2 fail_timeout=60s;
+          server 192.168.1.102:9030 weight=1 max_fails=2 fail_timeout=60s;
+          server 192.168.1.103:9030 weight=1 max_fails=2 fail_timeout=60s;
+      }
+      server {
+       # Proxy port
+          listen 6030;
+          proxy_connect_timeout 300s;
+          proxy_timeout 300s;
+          proxy_pass mysqld;
+      }
+    }
+    ```
+
+    Key configuration items:
+
+    | Item | Description |
+    |--------|------|
+    | `stream` | TCP reverse proxy context; requires the Nginx stream module |
+    | `upstream mysqld` | Backend FE node pool. `hash $remote_addr consistent` performs consistent hashing by client IP |
+    | `weight` | Node weight; higher weight receives more connections |
+    | `max_fails` / `fail_timeout` | Health check parameters. If failures within `fail_timeout` exceed `max_fails`, the node is marked unavailable |
+    | `listen 6030` | Listening port of the proxy service |
+    | `proxy_connect_timeout` / `proxy_timeout` | Connection and session timeouts |
 
 #### Start Nginx
 
-Start with specified configuration file:
+Start with the specified configuration file:
 
 ```shell
 cd /usr/local/nginx
@@ -105,7 +164,7 @@ cd /usr/local/nginx
 
 #### Verify
 
-Connect using the proxy port:
+Connect through the proxy port:
 
 ```shell
 mysql -uroot -P6030 -h192.168.1.100
@@ -121,78 +180,85 @@ mysql> show databases;
 2 rows in set (0.00 sec)
 ```
 
-### 03 HAProxy
+### Option 3: HAProxy
 
-[HAProxy](https://www.haproxy.org/) is a high-performance TCP/HTTP load balancer written in C language.
+<!-- Knowledge type: Operational procedure -->
+<!-- Applicable scenario: High-performance TCP load balancing -->
+
+[HAProxy](https://www.haproxy.org/) is a high-performance TCP/HTTP load balancer written in C.
 
 #### Install HAProxy
 
-1. Download HAProxy
+1. Download HAProxy (download address: <https://src.fedoraproject.org/repo/pkgs/haproxy/>).
 
-   Download link: https://src.fedoraproject.org/repo/pkgs/haproxy/
+2. Extract:
 
-2. Extract
+    ```shell
+    tar -zxvf haproxy-2.6.15.tar.gz -C /opt/
+    mv haproxy-2.6.15 haproxy
+    cd haproxy
+    ```
 
-   ```shell
-   tar -zxvf haproxy-2.6.15.tar.gz -C /opt/
-   mv haproxy-2.6.15 haproxy
-   cd haproxy
-   ```
+3. Compile and install:
 
-3. Compile
-
-   ```shell
-   yum install gcc gcc-c++ -y
-   make TARGET=linux-glibc PREFIX=/usr/local/haproxy
-   make install PREFIX=/usr/local/haproxy
-   ```
+    ```shell
+    yum install gcc gcc-c++ -y
+    make TARGET=linux-glibc PREFIX=/usr/local/haproxy
+    make install PREFIX=/usr/local/haproxy
+    ```
 
 #### Configure HAProxy
 
-1. Configure haproxy.conf file
+1. Configure syslog logging rules.
 
-    Open configuration file:
+    Open the configuration file:
 
     ```shell
     vim /etc/rsyslog.d/haproxy.conf
     ```
 
-    Content as follows:
+    Content:
 
     ```text
-    $ModLoad imudp 
+    $ModLoad imudp
     $UDPServerRun 514
     local0.* /usr/local/haproxy/logs/haproxy.log
     &~
     ```
 
-2. Enable remote logging
+2. Enable remote logging:
 
     ```shell
     vim /etc/sysconfig/rsyslog
     ```
 
-    Add content:
+    Add the following content:
 
     ```text
     SYSLOGD_OPTIONS="-c 2 -r -m 0"
     ```
 
-    Parameter description:
+    Parameter descriptions:
 
-    - `-c 2`: Use compatibility mode, default is `-c 5`.
-    - `-r`: Enable remote logging.
-    - `-m 0`: Mark timestamps. In minutes, when 0, indicates this feature is disabled.
+    | Parameter | Description |
+    |------|------|
+    | `-c 2` | Use compatibility mode; the default is `-c 5` |
+    | `-r` | Enable remote logging |
+    | `-m 0` | Time-stamp mark in minutes; `0` disables this feature |
 
-    Apply changes:
+    Apply the changes:
 
-    `systemctl restart rsyslog`
+    ```shell
+    systemctl restart rsyslog
+    ```
 
-3. Edit load balancing file
+3. Edit the load balancing configuration file:
 
     ```shell
     vim /usr/local/haproxy/haproxy.cfg
     ```
+
+    Content:
 
     ```text
     global
@@ -230,43 +296,64 @@ mysql> show databases;
         server fe-3 192.168.1.103:9030 weight 1 check inter 3000 rise 2 fall 3
     ```
 
+    Key configuration items:
+
+    | Item | Description |
+    |--------|------|
+    | `frontend agent-front` | Frontend entry point, bound to port `6030`, using TCP mode |
+    | `backend forward-fe` | Backend FE node pool, using the round-robin (`roundrobin`) algorithm |
+    | `check inter 3000 rise 2 fall 3` | Run a health check every `3000ms`; `2` consecutive successes mark the node up, `3` consecutive failures mark it down |
+
 #### Start HAProxy
 
-1. Start service
+1. Start the service:
 
-    `/opt/haproxy/haproxy -f /usr/local/haproxy/haproxy.cfg`
+    ```shell
+    /opt/haproxy/haproxy -f /usr/local/haproxy/haproxy.cfg
+    ```
 
-2. Check service status
+2. Check the service status:
 
-    `netstat -lnatp | grep -i haproxy`
+    ```shell
+    netstat -lnatp | grep -i haproxy
+    ```
 
 #### Verify
 
-`mysql -h 192.168.1.100 -uroot -P6030 -p`
+```shell
+mysql -h 192.168.1.100 -uroot -P6030 -p
+```
 
-### 04 ProxySQL
+### Option 4: ProxySQL
 
-[ProxySQL](https://proxysql.com/) is an open-source MySQL database proxy software written in C language. It can implement connection management, read-write splitting, load balancing, failover, and other functions. It has advantages such as high performance, configurability, and dynamic management, and is commonly used in Web services, big data platforms, cloud databases, and other scenarios.
+<!-- Knowledge type: Operational procedure -->
+<!-- Applicable scenario: MySQL protocol-aware proxy -->
+
+[ProxySQL](https://proxysql.com/) is an open-source MySQL database proxy written in C. It provides connection management, read/write splitting, load balancing, and failover, with high performance, configurability, and dynamic management. It is commonly used in web services, big data platforms, and cloud database scenarios.
 
 #### Install ProxySQL
 
-Please refer to the [official documentation](https://proxysql.com/documentation/installing-proxysql/) to install ProxySQL correctly.
+See the [ProxySQL official documentation](https://proxysql.com/documentation/installing-proxysql/) to complete the installation.
 
 #### Configure ProxySQL
 
-ProxySQL includes configuration file `/etc/proxysql.cnf` and configuration database file `/var/lib/proxysql/proxysql.db`.
+ProxySQL ships with a configuration file `/etc/proxysql.cnf` and a configuration database file `/var/lib/proxysql/proxysql.db`.
 
-Special attention should be paid that if there is a "proxysql.db" file in the `/var/lib/proxysql` directory, the ProxySQL service only reads and parses `proxysql.cnf` during the first startup, and subsequent startups will no longer read it.
+:::caution
 
-To make `proxysql.cnf` configuration take effect after restart, you need to delete `/var/lib/proxysql/proxysql.db` before restarting the service, which is equivalent to initialization startup and will generate a new `proxysql.db` file, and the original configuration rules will be cleared.
+If `proxysql.db` exists under `/var/lib/proxysql`, the ProxySQL service reads and parses `proxysql.cnf` only on the first startup; subsequent startups do not read it.
 
-Here is the main content of the configuration file `proxysql.cnf`:
+To make changes in `proxysql.cnf` take effect after a restart, you must first delete `/var/lib/proxysql/proxysql.db` and then restart the service. This is equivalent to an initialization startup: a new `proxysql.db` is generated and the original configuration rules are cleared.
+
+:::
+
+The main content of `proxysql.cnf` is shown below:
 
 ```text
-datadir="/var/lib/proxysql"         #Data directory
+datadir="/var/lib/proxysql"         # Data directory
 admin_variables=
 {
-    admin_credentials="admin:admin"  # Admin database username and password.
+    admin_credentials="admin:admin"  # Admin databse username and password.
     mysql_ifaces="0.0.0.0:6032"    # Admin database port, used for connecting admin database of ProxySQL
 }
 mysql_variables=
@@ -312,11 +399,15 @@ mysql_replication_hostgroups=
 )
 ```
 
-#### Connect to ProxySQL Admin Database
+#### Connect to the ProxySQL Admin Database
+
+Connect to ProxySQL through the admin port (`6032`):
 
 ```shell
 mysql -uadmin -padmin -P6032 -hdoris01
 ```
+
+View the built-in databases and tables:
 
 ```sql
 ProxySQL > show databases;
@@ -360,112 +451,120 @@ ProxySQL > show tables;
 20 rows in set (0.000 sec)
 ```
 
-#### Configure Backend Doris FE in ProxySQL
+#### Configure the Backend Doris FE
 
-Use INSERT statements to add the FE nodes and ports that need to be proxied to the `mysql_servers` table.
+Use `INSERT` statements to add the FE nodes and ports to be proxied into the `mysql_servers` table.
 
-Where: `hostgroup_id` of `10` indicates write group, `20` indicates read group. We don't need read-write splitting here, so it can be set arbitrarily.
+:::note
 
-```shell
-mysql -uadmin -padmin -P6032 -h127.0.0.1
-```
+`hostgroup_id` set to `10` represents a write group, and `20` represents a read group. Read/write splitting is not required here, so the value can be set arbitrarily.
 
-```sql
-ProxySQL > insert into mysql_servers(hostgroup_id,hostname,port) values(10,'192.168.0.101',9030);
-Query OK, 1 row affected (0.000 sec)
-  
-ProxySQL > insert into mysql_servers(hostgroup_id,hostname,port) values(10,'192.168.0.102',9030);
-Query OK, 1 row affected (0.000 sec)
-  
-ProxySQL > insert into mysql_servers(hostgroup_id,hostname,port) values(10,'192.168.0.103',9030);
-Query OK, 1 row affected (0.000 sec)
-```
+:::
 
-Check results:
+1. Connect to the admin port:
 
-```sql
-ProxySQL > select hostgroup_id,hostname,port,status,weight from mysql_servers;
-+--------------+---------------+------+--------+--------+
-| hostgroup_id | hostname      | port | status | weight |
-+--------------+---------------+------+--------+--------+
-| 10           | 192.168.0.101 | 9030 | ONLINE | 1      |
-| 20           | 192.168.0.102 | 9030 | ONLINE | 1      |
-| 20           | 192.168.0.103 | 9030 | ONLINE | 1      |
-+--------------+---------------+------+--------+--------+
-3 rows in set (0.000 sec)
-```
+    ```shell
+    mysql -uadmin -padmin -P6032 -h127.0.0.1
+    ```
 
-If you encounter an error during insertion:
+2. Insert the FE nodes:
 
-```text
-ERROR 1045 (#2800): UNIQUE constraint failed: mysql_servers.hostgroup_id, mysql_servers.hostname, mysql_servers.port
-```
+    ```sql
+    ProxySQL > insert into mysql_servers(hostgroup_id,hostname,port) values(10,'192.168.0.101',9030);
+    Query OK, 1 row affected (0.000 sec)
 
-This indicates that other configurations may have been defined previously. You can empty this table or delete the configuration for the corresponding host:
+    ProxySQL > insert into mysql_servers(hostgroup_id,hostname,port) values(10,'192.168.0.102',9030);
+    Query OK, 1 row affected (0.000 sec)
 
-```sql
-ProxySQL > select * from mysql_servers;
-ProxySQL > delete from mysql_servers;
-Query OK, 6 rows affected (0.000 sec)
-```
-  
-Save information:
+    ProxySQL > insert into mysql_servers(hostgroup_id,hostname,port) values(10,'192.168.0.103',9030);
+    Query OK, 1 row affected (0.000 sec)
+    ```
 
-```sql
-ProxySQL > load mysql servers to runtime;
-Query OK, 0 rows affected (0.006 sec)
-  
-ProxySQL > save mysql servers to disk;
-Query OK, 0 rows affected (0.348 sec)
-```
+3. Check the inserted rows:
+
+    ```sql
+    ProxySQL > select hostgroup_id,hostname,port,status,weight from mysql_servers;
+    +--------------+---------------+------+--------+--------+
+    | hostgroup_id | hostname      | port | status | weight |
+    +--------------+---------------+------+--------+--------+
+    | 10           | 192.168.0.101 | 9030 | ONLINE | 1      |
+    | 20           | 192.168.0.102 | 9030 | ONLINE | 1      |
+    | 20           | 192.168.0.103 | 9030 | ONLINE | 1      |
+    +--------------+---------------+------+--------+--------+
+    3 rows in set (0.000 sec)
+    ```
+
+4. If you hit a unique-constraint error on insert:
+
+    ```text
+    ERROR 1045 (#2800): UNIQUE constraint failed: mysql_servers.hostgroup_id, mysql_servers.hostname, mysql_servers.port
+    ```
+
+    The same configuration has been defined before. You can clear the table or delete the existing entry for that host:
+
+    ```sql
+    ProxySQL > select * from mysql_servers;
+    ProxySQL > delete from mysql_servers;
+    Query OK, 6 rows affected (0.000 sec)
+    ```
+
+5. Save the configuration to runtime and disk:
+
+    ```sql
+    ProxySQL > load mysql servers to runtime;
+    Query OK, 0 rows affected (0.006 sec)
+
+    ProxySQL > save mysql servers to disk;
+    Query OK, 0 rows affected (0.348 sec)
+    ```
 
 #### Configure Monitoring for Doris FE Nodes
 
-After adding Doris FE nodes, these backend nodes need to be monitored.
+After adding the Doris FE nodes, you also need to monitor these backend nodes.
 
-First, create a user for monitoring in Doris:
+1. Create a monitoring user in Doris:
 
-```shell
-mysql -uroot -P9030 -h192.168.0.101
-```
+    ```shell
+    mysql -uroot -P9030 -h192.168.0.101
+    ```
 
-```sql
-Doris > create user monitor@'192.168.0.100' identified by 'P@ssword1!';
-Query OK, 0 rows affected (0.03 sec)
+    ```sql
+    Doris > create user monitor@'192.168.0.100' identified by 'P@ssword1!';
+    Query OK, 0 rows affected (0.03 sec)
 
-Doris > grant ADMIN_PRIV on *.* to monitor@'192.168.0.100';
-Query OK, 0 rows affected (0.02 sec)
-```
+    Doris > grant ADMIN_PRIV on *.* to monitor@'192.168.0.100';
+    Query OK, 0 rows affected (0.02 sec)
+    ```
 
-Then go back to the mysql-proxy proxy layer node to configure monitoring
+2. Go back to the ProxySQL proxy node and configure monitoring:
 
-```shell
-mysql -uadmin -padmin -P6032 -h127.0.0.1
-```
+    ```shell
+    mysql -uadmin -padmin -P6032 -h127.0.0.1
+    ```
 
-```sql
-ProxySQL > set mysql-monitor_username='monitor';
-Query OK, 1 row affected (0.000 sec)
- 
-ProxySQL > set mysql-monitor_password='P@ssword1!';
-Query OK, 1 row affected (0.000 sec)
-```
+    ```sql
+    ProxySQL > set mysql-monitor_username='monitor';
+    Query OK, 1 row affected (0.000 sec)
 
-Save configuration and exit:
+    ProxySQL > set mysql-monitor_password='P@ssword1!';
+    Query OK, 1 row affected (0.000 sec)
+    ```
 
-```sql
-ProxySQL > load mysql servers to runtime;
-Query OK, 0 rows affected (0.006 sec)
-  
-ProxySQL > save mysql servers to disk;
-Query OK, 0 rows affected (0.348 sec)
-```
+3. Save the configuration:
 
-Verification monitoring results.
+    ```sql
+    ProxySQL > load mysql servers to runtime;
+    Query OK, 0 rows affected (0.006 sec)
 
-The metrics of the ProxySQL monitoring module are all saved in the `monitor.log` table.
+    ProxySQL > save mysql servers to disk;
+    Query OK, 0 rows affected (0.348 sec)
+    ```
 
-Connection monitoring:
+#### Verify Monitoring Results
+
+ProxySQL monitoring metrics are stored in the `monitor` database.
+
+View the connection monitoring log:
 
 ```sql
 ProxySQL > select * from mysql_server_connect_log;
@@ -487,7 +586,7 @@ ProxySQL > select * from mysql_server_connect_log;
 20 rows in set (0.000 sec)
 ```
 
-Heartbeat monitoring:
+View the heartbeat monitoring log:
 
 ```sql
 ProxySQL > select * from mysql_server_ping_log;
@@ -503,17 +602,20 @@ ProxySQL > select * from mysql_server_ping_log;
 110 rows in set (0.001 sec)
 ```
 
-## Client IP Passthrough
+## Client IP Forwarding (Proxy Protocol)
 
-In most cases, when connecting to the backend Doris service through a proxy service, client IP information will be lost, and the Doris server can only obtain the IP address information of the proxy server.
+<!-- Knowledge type: Configuration parameter / Operational procedure -->
+<!-- Applicable scenario: Allow lists / Audit / Access control -->
 
-Starting from version 2.1.1, Doris supports the [Proxy Protocol](https://www.haproxy.org/download/1.8/doc/proxy-protocol.txt) protocol. Using this protocol, client IP passthrough can be implemented, so that after going through load balancing, Doris can still obtain the client's real IP to implement whitelist and other permission controls.
+In most cases, when a client connects to backend Doris through a proxy service, the client IP information is lost, and the Doris server can only obtain the IP address of the proxy server.
 
-Below we introduce how to enable Proxy Protocol in Nginx and Haproxy respectively.
+Starting from version 2.1.1, Doris supports the [Proxy Protocol](https://www.haproxy.org/download/1.8/doc/proxy-protocol.txt). With this protocol, Doris can still obtain the real client IP after load balancing, which enables client-IP-based access control such as allow lists and auditing.
 
-### Enable Proxy Protocol Support in Doris
+The following sections describe how to enable Proxy Protocol in Doris, Nginx, and HAProxy.
 
-Add to `fe.conf` in FE:
+### Enable Proxy Protocol in Doris
+
+Add the following to FE `fe.conf`:
 
 ```text
 enable_proxy_protocol = true
@@ -521,17 +623,15 @@ enable_proxy_protocol = true
 
 :::note
 
-1. Only supports Proxy Protocol V1.
-
-2. Only supports and affects MySQL protocol ports, does not support or affect HTTP, ADBC, and other protocol ports.
-
-3. Before Doris 3.1 version, after enabling, you must use the Proxy Protocol protocol to connect, otherwise the connection will fail. Starting from version 3.1, after enabling Proxy Protocol, you can still connect using the standard MySQL connection protocol.
+1. Only Proxy Protocol V1 is supported.
+2. The feature applies only to the MySQL protocol port; it does not support and does not affect other protocol ports such as HTTP and ADBC.
+3. Before Doris 3.1, once enabled, all connections must use Proxy Protocol, otherwise the connection fails. Starting from version 3.1, after Proxy Protocol is enabled, standard MySQL connection protocol can still be used.
 
 :::
 
-### 01 Nginx
+### Enable Proxy Protocol in Nginx
 
-Add `proxy_protocol on;` to the `server` section in the configuration file:
+Add `proxy_protocol on;` to the `server` section of the configuration file:
 
 ```text
 events {
@@ -556,9 +656,9 @@ stream {
 }
 ```
 
-### 02 HAProxy
+### Enable Proxy Protocol in HAProxy
 
-Add `send-proxy` parameter to the `backend` section in `haproxy.cfg`:
+In the `backend` section of `haproxy.cfg`, add the `send-proxy` parameter to each `server` line:
 
 ```text
 backend forward-fe
@@ -569,27 +669,56 @@ backend forward-fe
     server fe-3 192.168.1.103:9030 weight 1 check inter 3000 rise 2 fall 3 send-proxy
 ```
 
-### Verify IP Passthrough Success
+### Verify IP Forwarding
 
-Connect to Doris through proxy:
+1. Connect to Doris through the proxy:
 
-```sql
-mysql -uroot -P6030 -h192.168.1.100
-```
+    ```sql
+    mysql -uroot -P6030 -h192.168.1.100
+    ```
 
-Verify
+2. Run `show processlist` and check the `Host` column:
 
-```sql
-mysql> show processlist;
-+------------------+------+------+-------------------+---------------------+----------+------+---------+------+-------+-----------------------------------+------------------+
-| CurrentConnected | Id   | User | Host              | LoginTime           | Catalog  | Db   | Command | Time | State | QueryId                           | Info             |
-+------------------+------+------+-------------------+---------------------+----------+------+---------+------+-------+-----------------------------------+------------------+
-| Yes              |    1 | root | 192.168.1.101:34390 | 2024-03-17 16:32:22 | internal |      | Query   |    0 | OK    | 82edc460d93f4e28-8bbed058a068e259 | show processlist |
-+------------------+------+------+-------------------+---------------------+----------+------+---------+------+-------+-----------------------------------+------------------+
-1 row in set (0.00 sec)
-```
+    ```sql
+    mysql> show processlist;
+    +------------------+------+------+-------------------+---------------------+----------+------+---------+------+-------+-----------------------------------+------------------+
+    | CurrentConnected | Id   | User | Host              | LoginTime           | Catalog  | Db   | Command | Time | State | QueryId                           | Info             |
+    +------------------+------+------+-------------------+---------------------+----------+------+---------+------+-------+-----------------------------------+------------------+
+    | Yes              |    1 | root | 192.168.1.101:34390 | 2024-03-17 16:32:22 | internal |      | Query   |    0 | OK    | 82edc460d93f4e28-8bbed058a068e259 | show processlist |
+    +------------------+------+------+-------------------+---------------------+----------+------+---------+------+-------+-----------------------------------+------------------+
+    1 row in set (0.00 sec)
+    ```
 
-If you see the real client IP in the `Host` column, the verification is successful. Otherwise, you can only see the IP address of the proxy service.
+3. If the `Host` column shows the real client IP, verification has succeeded; otherwise only the proxy service IP is visible.
 
-At the same time, the real client IP will also be recorded in fe.audit.log.
+    The real client IP is also recorded in `fe.audit.log`.
 
+## FAQ
+
+### Q: Connecting through the proxy port reports `Connection refused`?
+
+The proxy service is not started, or the listening port does not match the configuration. Check that the proxy process is running, and use `netstat -lnatp` to confirm the listening port.
+
+### Q: Connections succeed but occasionally time out?
+
+A backend FE node is unhealthy, or the proxy timeout is set too short. Check the `proxy_timeout` / `timeout server` configuration, and use the health check log to confirm the status of backend nodes.
+
+### Q: Nginx fails to start with `unknown directive "stream"`?
+
+The stream module was not enabled at compile time. Recompile Nginx with the `--with-stream` option.
+
+### Q: ProxySQL changes to `proxysql.cnf` do not take effect after restart?
+
+`proxysql.db` already exists, and the configuration file is read only on the first startup. Delete `/var/lib/proxysql/proxysql.db` and then restart the service.
+
+### Q: Inserting into `mysql_servers` in ProxySQL reports `UNIQUE constraint failed`?
+
+A record with the same `hostgroup_id` + `hostname` + `port` already exists in the table. Clear the table, or delete the existing record before inserting.
+
+### Q: Clients fail to connect after enabling Proxy Protocol (versions before 3.1)?
+
+The Doris version requires every connection to use Proxy Protocol, and standard MySQL clients are not compatible. Upgrade to version 3.1 or later, or always connect through a proxy that supports Proxy Protocol.
+
+### Q: `show processlist` still shows the proxy IP?
+
+Doris does not have `enable_proxy_protocol` enabled, or the proxy side is not configured with `proxy_protocol on` / `send-proxy`. Check the FE configuration and the Proxy Protocol switch on the proxy side.

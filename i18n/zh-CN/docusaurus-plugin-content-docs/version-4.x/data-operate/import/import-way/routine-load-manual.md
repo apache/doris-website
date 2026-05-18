@@ -131,7 +131,8 @@ Routine Load 的导入具体流程如下图所示：
 
 可以通过 [CREATE ROUTINE LOAD](../../../sql-manual/sql-statements/data-modification/load-and-export/CREATE-ROUTINE-LOAD) 命令创建常驻 Routine Load 导入任务。Routine Load 可以消费 CSV 和 JSON 数据。
 
-#### 导入 CSV 数据 {#导入Json格式数据使用示例}
+#### 导入 CSV 数据
+
 1. 准备 Kafka 数据样本：
 
     ```bash

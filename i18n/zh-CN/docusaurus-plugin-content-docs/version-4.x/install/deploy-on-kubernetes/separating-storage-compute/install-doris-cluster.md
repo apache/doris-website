@@ -85,7 +85,8 @@ kubectl get fdb
 单副本模式仅适合开发测试。生产环境推荐使用两副本模式，并且 Kubernetes 集群至少需要三台宿主机。其他部署形态（两副本、生产部署、私有仓库镜像、FQDN 模式等）请参考 [部署 FoundationDB](install-fdb.md)。
 :::
 
-## 第 2 步：部署 Doris Operator {#配置-dorisdisaggregatedcluster-资源}
+## 第 2 步：部署 Doris Operator
+
 **输入**：Kubernetes 集群访问权限
 **操作**：下发 CRD 资源定义，部署 Operator 及 RBAC 规则
 **输出**：Doris Operator 运行在 `doris` namespace 中

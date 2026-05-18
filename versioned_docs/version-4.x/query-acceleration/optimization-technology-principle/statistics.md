@@ -213,7 +213,8 @@ If `row_count` shows `-1`, it means the row count could not be obtained or the t
 <!-- Knowledge type: Operation guide -->
 <!-- Applicable scenarios: View, terminate, and delete statistics jobs and statistics results -->
 
-### Viewing Statistics Jobs {#viewing-statistics}
+### Viewing Statistics Jobs
+
 **Purpose**: View submitted asynchronous statistics collection jobs (synchronous jobs do not retain history).
 
 **Command**:

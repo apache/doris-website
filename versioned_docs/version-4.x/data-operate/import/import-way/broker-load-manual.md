@@ -193,7 +193,8 @@ For example, to cancel the import job with label `broker_load_2022_04_01` in the
 CANCEL LOAD FROM demo WHERE LABEL = "broker_load_2022_04_01";
 ```
 
-### Bind a Compute Group {#load-configuration-parameters}
+### Bind a Compute Group
+
 <!-- Knowledge type: Configuration parameters -->
 
 In **storage-compute decoupled mode**, the priority for Broker Load to select a compute group is:
@@ -313,7 +314,8 @@ The following configurations are system-level configurations of Broker Load that
 
 The following typical scenarios show common usage of Broker Load.
 
-### Scenario 1: Import a TXT File from HDFS {#related-configurations}
+### Scenario 1: Import a TXT File from HDFS
+
 ```sql
 LOAD LABEL demo.label_20220402
 (

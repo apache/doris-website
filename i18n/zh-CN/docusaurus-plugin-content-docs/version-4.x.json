@@ -1,7 +1,7 @@
 {
   "version.label": {
-    "message": "4.x",
-    "description": "The label for version 4.x"
+    "message": "dev",
+    "description": "The label for version current"
   },
   "sidebar.docs.category.Getting Started": {
     "message": "快速开始",

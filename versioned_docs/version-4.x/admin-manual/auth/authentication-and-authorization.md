@@ -126,7 +126,8 @@ Please refer to [LDAP-based Authentication Scheme](./authentication/ldap.md).
 - View row policy: [SHOW ROW POLICY]
 - Create row policy: [CREATE ROW POLICY]
 
-### Types of Permissions {#permission-types}
+### Types of Permissions
+
 Doris currently supports the following permissions:
 
 1. `Node_priv`

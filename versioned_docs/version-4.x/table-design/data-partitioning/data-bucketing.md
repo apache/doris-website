@@ -78,7 +78,8 @@ DISTRIBUTED BY HASH(region) BUCKETS 8;
 
 In the example, `DISTRIBUTED BY HASH(region)` specifies the use of Hash bucketing and selects the `region` column as the bucket key. `BUCKETS 8` specifies the creation of 8 buckets.
 
-### 2. Random Bucketing {#random-bucketing}
+### 2. Random Bucketing
+
 Random bucketing randomly distributes data across the buckets within each partition, without relying on the Hash value of any field. This approach ensures that data is evenly spread out and avoids data skew caused by an inappropriate choice of bucket key.
 
 When data is loaded, each batch in a single load job is randomly written to a Tablet, which guarantees an even data distribution. For example, in the figure below, 8 batches of data are randomly assigned to 3 buckets under the `p250102` partition.
@@ -162,7 +163,8 @@ Once the number of buckets for a Partition is specified, it cannot be changed. W
 
 Starting from version 2.0, Doris supports automatically setting the number of buckets in a partition based on machine resources and cluster information. You can choose between manual and automatic methods according to how precise the business requires the estimation to be.
 
-### 1. Manually Set the Number of Buckets {#automatic-setting-bucket-count}
+### 1. Manually Set the Number of Buckets
+
 Specify the number of buckets through the `DISTRIBUTED` clause:
 
 ```sql
@@ -206,7 +208,8 @@ You can check the data size of a table with the `SHOW DATA` command. The result 
 
 :::
 
-### 2. Automatically Set the Number of Buckets {#auto-set-bucket-number}
+### 2. Automatically Set the Number of Buckets
+
 The automatic bucket inference feature predicts future partition sizes based on the partition sizes over a recent period and determines the number of buckets accordingly.
 
 ```sql

@@ -1,23 +1,30 @@
 ---
 {
-    "title": "监控正在运行的查询",
+    "title": "实时监控正在运行的查询进度与资源消耗",
     "language": "zh-CN",
-    "description": "查看当前正在运行的查询及其运行时统计信息，包括任务进度和资源指标。",
+    "description": "介绍如何在 Apache Doris 中实时查看运行中查询的执行进度、CPU/内存/Shuffle/溢写等资源指标，支持 SQL 命令和 REST API 两种方式。",
+    "keywords": ["查询监控", "运行中查询", "查询进度", "查询资源", "SHOW PROC", "current_queries", "Trace ID", "工作负载管理"],
     "sidebar_label": "查询进度监控"
 }
 ---
 
-Doris 提供了多种方式来查看当前正在运行的查询及其运行时统计信息，包括任务级别的进度和资源指标（如扫描/CPU/内存/Shuffle/溢写/缓存等计数器）。
+<!-- 知识类型: 概念介绍 + 操作步骤 -->
 
-## SHOW PROC
+Apache Doris 提供两种方式实时查看正在运行的查询及其资源消耗：**SQL 命令**（`SHOW PROC`）和 **REST API**。两种方式均可获取任务级别的执行进度，以及扫描量、CPU、内存、Shuffle、溢写、缓存等关键指标。
 
-你可以使用 `SHOW PROC` 命令查看当前正在执行的查询列表及其运行时统计信息。
+## 通过 SQL 命令查看运行中查询
+
+<!-- 知识类型: 操作步骤 -->
+
+使用 `SHOW PROC` 命令可列出当前所有正在执行的查询及其实时统计信息。
 
 ```sql
 SHOW PROC "/current_queries";
 ```
 
-### 示例输出
+`SHOW PROC "/current_query_stmts"` 返回相同的统计视图。自 Doris 4.1.1 起，两个命令共享统一的增强统计格式。
+
+### 输出示例
 
 ```
 *************************** 1. row ***************************
@@ -77,49 +84,59 @@ SpillReadBytesFromLocalStorage: 0.00
                       Progress: 47%
 ```
 
-`SHOW PROC "/current_query_stmts"` 命令也返回相同的统计视图。
+### 字段说明
 
-**自 Doris 4.1.1 起**，`current_queries` 和 `current_query_stmts` 共享相同增强的统计视图，以统一的格式提供运行时指标和任务进度。
+<!-- 知识类型: 参考表格 -->
 
-### 列说明
-
-| 列名 | 描述 |
-| ------ | ----------- |
+| 字段名 | 说明 |
+|---|---|
 | QueryId | 查询的唯一标识符 |
 | ConnectionId | MySQL 连接 ID |
-| Catalog | Catalog 名称（如 `internal`、`hive_test`） |
+| Catalog | 所属 Catalog 名称，如 `internal`、`hive_test` |
 | Database | 数据库/模式名称 |
-| User | 提交查询的用户 |
-| ExecTime | 执行时长，单位毫秒 |
-| SqlHash | SQL 语句的 MD5 哈希值 |
-| Statement | SQL 语句文本（显示时可能被截断） |
+| User | 提交该查询的用户 |
+| ExecTime | 已执行时长，单位：毫秒 |
+| SqlHash | SQL 语句的 MD5 哈希值，可用于识别相同查询 |
+| Statement | SQL 语句文本（过长时会被截断显示） |
 | ScanRows | 从存储层扫描的总行数 |
 | ScanBytes | 从存储层扫描的总字节数 |
-| ProcessRows | 经执行管道处理的行数。反映经过算子的实际数据量，可用于观察查询吞吐量 |
-| CpuMs | CPU 耗时，单位毫秒 |
-| MaxPeakMemoryBytes | 查询执行期间达到的内存峰值 |
-| CurrentUsedMemoryBytes | 查询当前正在使用的内存 |
+| ProcessRows | 经执行管道（Pipeline）处理的行数，反映算子实际吞吐量 |
+| CpuMs | CPU 耗时，单位：毫秒 |
+| MaxPeakMemoryBytes | 查询执行期间的内存峰值 |
+| CurrentUsedMemoryBytes | 查询当前正在占用的内存 |
 | WorkloadGroupId | 该查询所属的工作负载组 ID |
 | ShuffleSendBytes | 节点间数据 Shuffle 发送的总字节数 |
 | ShuffleSendRows | 节点间数据 Shuffle 发送的总行数 |
-| ScanBytesFromLocalStorage | 从本地磁盘存储扫描的字节数 |
+| ScanBytesFromLocalStorage | 从本地磁盘扫描的字节数 |
 | ScanBytesFromRemoteStorage | 从远程存储（如 HDFS、S3）扫描的字节数 |
 | SpillWriteBytesToLocalStorage | 因内存压力溢写到本地磁盘的字节数 |
 | SpillReadBytesFromLocalStorage | 从本地磁盘溢写数据读回的字节数 |
 | BytesWriteIntoCache | 写入数据缓存的字节数 |
 | TotalTasks | 该查询的 Pipeline 任务总数 |
 | FinishedTasks | 已完成的 Pipeline 任务数 |
-| Progress | 查询执行进度百分比，计算公式为 `FinishedTasks / TotalTasks` |
+| Progress | 查询执行进度百分比，计算方式为 `FinishedTasks / TotalTasks` |
 
-## REST API
+## 通过 REST API 查看运行中查询
 
-你也可以通过 HTTP REST API 获取当前正在运行的查询及其运行时统计信息：
+<!-- 知识类型: 操作步骤 -->
+
+**目的**：以编程方式获取运行中查询的实时统计信息。
+
+**命令**：
 
 ```bash
 curl http://<fe_ip>:<fe_http_port>/rest/v2/manager/query/current_queries
 ```
 
-该接口以 JSON 格式返回相同的列数据。
+**说明**：该接口以 JSON 格式返回与 `SHOW PROC` 相同的列数据，字段含义一致。
+
+### 查询参数
+
+| 参数 | 类型 | 说明 |
+|---|---|---|
+| is_all_node | 布尔值（可选） | 设为 `true` 时返回所有 FE 节点上的运行中查询，默认为 `true` |
+
+### 响应示例
 
 ```json
 {
@@ -156,26 +173,28 @@ curl http://<fe_ip>:<fe_http_port>/rest/v2/manager/query/current_queries
 }
 ```
 
-### 查询参数
+## 通过 Trace ID 追踪单个查询的实时进度
 
-- `is_all_node`：可选。若为 `true` 则返回所有 FE 节点上当前正在运行的查询。默认为 `true`。
+<!-- 知识类型: 操作步骤 -->
 
-## 通过 Trace ID 实时追踪进度
+当需要持续追踪某个特定查询的执行进度时，可以为其设置 Trace ID，再通过独立会话轮询统计接口获取实时状态。
 
-如需实时监控查询进度，可以在执行查询前设置 Trace ID，随后轮询统计信息接口：
+**第一步：在执行查询前设置 Trace ID**
 
 ```sql
 SET session_context="trace_id:my_trace_id";
 SELECT ...;
 ```
 
-然后通过另一个会话查询统计信息：
+**第二步：在另一个会话中轮询统计信息**
 
 ```bash
 curl http://<fe_ip>:<fe_http_port>/rest/v2/manager/query/statistics/my_trace_id
 ```
 
-返回结果包含任务进度和资源使用情况：
+**说明**：可定期调用该接口以获取查询最新进度，直到查询完成。
+
+### 响应示例
 
 ```json
 {
@@ -203,5 +222,3 @@ curl http://<fe_ip>:<fe_http_port>/rest/v2/manager/query/statistics/my_trace_id
     "count": 0
 }
 ```
-
-你可以定期调用此接口以实时追踪查询的进度。

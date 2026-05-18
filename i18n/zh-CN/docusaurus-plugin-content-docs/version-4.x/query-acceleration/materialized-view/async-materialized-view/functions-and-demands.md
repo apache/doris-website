@@ -655,7 +655,8 @@ ON l_orderkey = o_orderkey
 WHERE l_linenumber > 2 AND o_orderdate = '2023-10-19';
 ```
 
-#### 2.2.2 JOIN 改写 {#透明改写能力}
+#### 2.2.2 JOIN 改写
+
 **适用场景**：查询和物化使用的表相同，可在物化视图和查询的 JOIN 输入或 JOIN 外层写 `WHERE`，优化器对此模式的查询会尝试透明改写。
 
 **支持的 JOIN 类型**：

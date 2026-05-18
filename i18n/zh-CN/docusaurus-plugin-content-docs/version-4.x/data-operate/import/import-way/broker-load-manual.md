@@ -280,7 +280,8 @@ PROPERTIES (
 );
 ```
 
-#### fe.conf 系统级配置 {#related-configurations}
+#### fe.conf 系统级配置
+
 下面几个配置属于 Broker Load 的系统级别配置，作用于所有 Broker Load 导入任务。主要通过修改 `fe.conf` 来调整。
 
 | 配置项 | 类型 | 默认值 | 说明 |
