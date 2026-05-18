@@ -20,7 +20,10 @@ let hasBrokenLinks = false;
 
 // Get the modified or newly added .md/.mdx files in the commit
 function getModifiedMarkdownFiles(commit) {
-  const output = execSync(`git show --name-status ${commit}`, { encoding: "utf-8" });
+  const output = execSync(
+    `git show --name-status --diff-filter=AM ${commit} -- '*.md' '*.mdx'`,
+    { encoding: "utf-8", maxBuffer: 100 * 1024 * 1024 }
+  );
   const lines = output.split("\n");
   console.log('lines',lines);
 
