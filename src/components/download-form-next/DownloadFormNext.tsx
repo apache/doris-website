@@ -299,16 +299,14 @@ export default function DownloadFormNext(): JSX.Element {
                                 </div>
                                 {releaseFlag && (
                                     <div>
-                                        <LinkWithArrow to={releaseNote} text="Release note" />
+                                        <LinkWithArrow to="/releases/all-release" text="Release note" />
                                     </div>
                                 )}
                                 <p className="download-next__split-note">
                                     Note: For detailed upgrade precautions, please refer to the{' '}
-                                    <Link to="/docs/install/deploy-manually/storage-compute-coupled-deploy-manually">
-                                        deployment
-                                    </Link>{' '}
-                                    manual and cluster{' '}
-                                    <Link to="/docs/admin-manual/cluster-management/upgrade">upgrade</Link> manual.
+                                    <Link to="/docs/dev/install/intro">deployment</Link> manual and cluster{' '}
+                                    <Link to="/docs/dev/admin-manual/cluster-management/upgrade">upgrade</Link>{' '}
+                                    manual.
                                 </p>
                             </div>
                             <div className="download-next__split-card">
@@ -355,14 +353,6 @@ export default function DownloadFormNext(): JSX.Element {
                                         text="More Tools"
                                     />
                                 </div>
-                                <p className="download-next__split-note">
-                                    Note: For detailed upgrade precautions, please refer to the{' '}
-                                    <Link to="/docs/install/deploy-manually/storage-compute-coupled-deploy-manually">
-                                        deployment
-                                    </Link>{' '}
-                                    manual and cluster{' '}
-                                    <Link to="/docs/admin-manual/cluster-management/upgrade">upgrade</Link> manual.
-                                </p>
                             </div>
                             <div className="download-next__split-card">
                                 <DownloadFormTools data={TOOL_VERSIONS} />
