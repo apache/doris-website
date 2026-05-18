@@ -37,7 +37,7 @@ export default function Layout(props: Props): JSX.Element {
     useEffect(() => {
         window.scroll(0, 0);
         document.body.style.overflow = 'auto';
-    }, [history.location]);
+    }, [history.location.pathname]);
 
     useEffect(() => {
         if (hash) {
