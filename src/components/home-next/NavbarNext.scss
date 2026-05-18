@@ -354,7 +354,7 @@
 
     &__mobile-panel {
         position: absolute;
-        top: 64px;
+        top: 100%;
         left: 0;
         right: 0;
         z-index: 99;
@@ -462,6 +462,15 @@
         &--mobile-open &__mobile-panel {
             display: block;
         }
+
+        // With nav hidden, push Ask AI + actions to the right together.
+        &__ask-ai {
+            margin-left: auto;
+        }
+
+        &__actions {
+            margin-left: 0;
+        }
     }
 }
 
@@ -502,12 +511,67 @@
     }
 }
 
-@media (max-width: 390px) {
+// On narrow phones (≤480px): row 1 = Logo (left) + Star + Download + ☰ (right, as a group),
+// row 2 = Ask AI full-width centered.
+// Only minimal padding trimming — no font-size or height overrides.
+@media (max-width: 480px) {
     .navbar-next {
-        &__actions {
-            display: none;
+        &.navbar {
+            height: auto;
+            min-height: 64px;
         }
 
+        &__inner {
+            flex-wrap: wrap;
+            height: auto;
+            padding: 0 10px;
+            column-gap: 5px;
+            row-gap: 0;
+            align-items: center;
+        }
+
+        // Logo link spans the full row-1 height; image slightly smaller to reclaim space.
+        &__logo {
+            height: 64px;
+        }
+
+        &__logo img {
+            height: 24px;
+        }
+
+        // Trim star-link horizontal padding (only change needed to make everything fit).
+        &__star-link {
+            padding: 0 8px 0 6px;
+        }
+
+        // Push Star + Download + ☰ together to the right as one group.
+        &__actions {
+            margin-left: auto;
+        }
+
+        // Hamburger follows actions naturally — no extra margin needed.
+        &__menu-button {
+            margin-left: 0;
+        }
+
+        // Ask AI: full-width second row, icon + text centered both axes.
+        &__ask-ai {
+            order: 10;
+            flex: 0 0 100%;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 38px;
+            margin-left: 0;
+            margin-bottom: 10px;
+            padding: 0 12px;
+        }
+    }
+}
+
+@media (max-width: 390px) {
+    .navbar-next {
         &__mobile-actions {
             display: grid;
             gap: 10px;
