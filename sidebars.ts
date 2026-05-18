@@ -838,11 +838,12 @@ const sidebars: SidebarsConfig = {
                 {
                     type: 'category',
                     label: 'Workload Management',
+                    link: {type: 'doc', id: 'admin-manual/workload-management/workload-management-summary'},
                     items: [
-                        'admin-manual/workload-management/workload-management-summary',
                         {
                             type: 'category',
                             label: 'Resource Isolation',
+                            link: {type: 'doc', id: 'admin-manual/workload-management/resource-isolation-intro'},
                             items: [
                                 'admin-manual/workload-management/resource-group',
                                 'admin-manual/workload-management/compute-group',
@@ -862,11 +863,12 @@ const sidebars: SidebarsConfig = {
                 {
                     type: 'category',
                     label: 'Disaster Recovery',
+                    link: {type: 'doc', id: 'admin-manual/data-admin/overview'},
                     items: [
-                        'admin-manual/data-admin/overview',
                         {
                             type: 'category',
                             label: 'Backup & Restore',
+                            link: {type: 'doc', id: 'admin-manual/data-admin/backup-restore/overview'},
                             items: [
                                 'admin-manual/data-admin/backup-restore/backup',
                                 'admin-manual/data-admin/backup-restore/restore',
@@ -875,8 +877,8 @@ const sidebars: SidebarsConfig = {
                         {
                             type: 'category',
                             label: 'Cross Cluster Replication',
+                            link: {type: 'doc', id: 'admin-manual/data-admin/ccr/overview'},
                             items: [
-                                'admin-manual/data-admin/ccr/overview',
                                 'admin-manual/data-admin/ccr/quickstart',
                                 'admin-manual/data-admin/ccr/manual',
                                 'admin-manual/data-admin/ccr/feature',
@@ -890,8 +892,8 @@ const sidebars: SidebarsConfig = {
                 {
                     type: 'category',
                     label: 'Monitoring & Alerting',
+                    link: {type: 'doc', id: 'admin-manual/maint-monitor/monitor-alert'},
                     items: [
-                        'admin-manual/maint-monitor/monitor-alert',
                         'admin-manual/maint-monitor/metrics',
                         'admin-manual/maint-monitor/disk-capacity',
                     ],
@@ -899,13 +901,14 @@ const sidebars: SidebarsConfig = {
                 {
                     type: 'category',
                     label: 'Log Management',
+                    link: {type: 'doc', id: 'admin-manual/log-management/intro'},
                     items: ['admin-manual/log-management/fe-log', 'admin-manual/log-management/be-log'],
                 },
                 {
                     type: 'category',
                     label: 'System Tables',
+                    link: {type: 'doc', id: 'admin-manual/system-tables/overview'},
                     items: [
-                        'admin-manual/system-tables/overview',
                         {
                             type: 'category',
                             label: 'information_schema',
