@@ -1,4 +1,4 @@
-import React, { CSSProperties, JSX, useEffect, useRef, useState } from 'react';
+import React, { CSSProperties, JSX, useEffect, useMemo, useRef, useState } from 'react';
 import './FeaturesSection.scss';
 
 type CapabilityTone = 'green' | 'cream' | 'ink';
@@ -81,10 +81,6 @@ const CAPABILITIES: Capability[] = [
     },
 ];
 
-interface CapabilityCardStyle extends CSSProperties {
-    zIndex: number;
-}
-
 function clamp(value: number, min: number, max: number): number {
     return Math.max(min, Math.min(max, value));
 }
@@ -93,61 +89,12 @@ function easeOut(value: number): number {
     return 1 - Math.pow(1 - value, 2.5);
 }
 
-function useContainerProgress(ref: React.RefObject<HTMLElement>): number {
-    const [progress, setProgress] = useState(0);
-
-    useEffect(() => {
-        const el = ref.current;
-        if (!el) return undefined;
-
-        let frame = 0;
-
-        function update() {
-            window.cancelAnimationFrame(frame);
-            frame = window.requestAnimationFrame(() => {
-                const rect = el.getBoundingClientRect();
-                const viewportHeight = window.innerHeight;
-                const scrollable = rect.height - viewportHeight;
-
-                if (scrollable <= 0) {
-                    setProgress(rect.top <= 0 ? 1 : 0);
-                    return;
-                }
-
-                setProgress(clamp(-rect.top / scrollable, 0, 1));
-            });
-        }
-
-        update();
-        window.addEventListener('scroll', update, { passive: true });
-        window.addEventListener('resize', update);
-
-        return () => {
-            window.cancelAnimationFrame(frame);
-            window.removeEventListener('scroll', update);
-            window.removeEventListener('resize', update);
-        };
-    }, [ref]);
-
-    return progress;
+interface CardTransform {
+    transform: string;
+    opacity: number;
 }
 
-function useIsNarrowViewport(): boolean {
-    const [isNarrowViewport, setIsNarrowViewport] = useState(false);
-
-    useEffect(() => {
-        const query = window.matchMedia('(max-width: 820px)');
-        const update = () => setIsNarrowViewport(query.matches);
-
-        update();
-        query.addEventListener('change', update);
-        return () => query.removeEventListener('change', update);
-    }, []);
-
-    return isNarrowViewport;
-}
-
-function getCardStyle(capability: Capability, idx: number, total: number, progress: number): CapabilityCardStyle {
+function computeCardTransform(capability: Capability, idx: number, total: number, progress: number): CardTransform {
     const transitions = Math.max(1, total - 1);
     const slice = 1 / transitions;
     const activeAt = idx * slice;
@@ -184,10 +131,33 @@ function getCardStyle(capability: Capability, idx: number, total: number, progre
     }
 
     return {
-        transform: `translate(-50%, -50%) translateY(${translateY}px) scale(${scale}) rotate(${rotation}deg)`,
+        transform: `translate3d(-50%, -50%, 0) translateY(${translateY}px) scale(${scale}) rotate(${rotation}deg)`,
         opacity,
-        zIndex: 10 + idx,
     };
+}
+
+const INITIAL_CARD_TRANSFORMS = CAPABILITIES.map((cap, i) =>
+    computeCardTransform(cap, i, CAPABILITIES.length, 0),
+);
+
+const INITIAL_DOT_ON = CAPABILITIES.map((_, i) => {
+    const transitions = Math.max(1, CAPABILITIES.length - 1);
+    return 0 >= i / transitions - 0.001;
+});
+
+function useIsNarrowViewport(): boolean {
+    const [isNarrowViewport, setIsNarrowViewport] = useState(false);
+
+    useEffect(() => {
+        const query = window.matchMedia('(max-width: 820px)');
+        const update = () => setIsNarrowViewport(query.matches);
+
+        update();
+        query.addEventListener('change', update);
+        return () => query.removeEventListener('change', update);
+    }, []);
+
+    return isNarrowViewport;
 }
 
 function ArrowIcon(): JSX.Element {
@@ -280,15 +250,24 @@ interface CapabilityCardProps {
     capability: Capability;
     idx: number;
     total: number;
-    progress: number;
+    cardRef: (el: HTMLElement | null) => void;
     isNarrowViewport: boolean;
 }
 
-function CapabilityCard({ capability, idx, total, progress, isNarrowViewport }: CapabilityCardProps): JSX.Element {
+function CapabilityCard({ capability, idx, total, cardRef, isNarrowViewport }: CapabilityCardProps): JSX.Element {
+    const initialStyle: CSSProperties | undefined = isNarrowViewport
+        ? undefined
+        : {
+              zIndex: 10 + idx,
+              transform: INITIAL_CARD_TRANSFORMS[idx].transform,
+              opacity: INITIAL_CARD_TRANSFORMS[idx].opacity,
+          };
+
     return (
         <article
+            ref={cardRef}
             className={`features-next__card features-next__card--${capability.tone}`}
-            style={isNarrowViewport ? undefined : getCardStyle(capability, idx, total, progress)}
+            style={initialStyle}
         >
             <div className="features-next__copy">
                 <div className="features-next__card-num">
@@ -321,8 +300,90 @@ function CapabilityCard({ capability, idx, total, progress, isNarrowViewport }: 
 
 export function FeaturesSection(): JSX.Element {
     const containerRef = useRef<HTMLDivElement>(null);
+    const cardRefs = useRef<(HTMLElement | null)[]>([]);
+    const dotRefs = useRef<(HTMLSpanElement | null)[]>([]);
     const isNarrowViewport = useIsNarrowViewport();
-    const progress = useContainerProgress(containerRef);
+
+    const cardRefSetters = useMemo(
+        () =>
+            CAPABILITIES.map((_, idx) => (el: HTMLElement | null) => {
+                cardRefs.current[idx] = el;
+            }),
+        [],
+    );
+    const dotRefSetters = useMemo(
+        () =>
+            CAPABILITIES.map((_, idx) => (el: HTMLSpanElement | null) => {
+                dotRefs.current[idx] = el;
+            }),
+        [],
+    );
+
+    useEffect(() => {
+        if (isNarrowViewport) {
+            cardRefs.current.forEach(el => {
+                if (!el) return;
+                el.style.transform = '';
+                el.style.opacity = '';
+            });
+            dotRefs.current.forEach(el => {
+                el?.classList.remove('features-next__stage-dot--on');
+            });
+            return undefined;
+        }
+
+        const containerEl = containerRef.current;
+        if (!containerEl) return undefined;
+
+        let frame = 0;
+        let lastProgress = -1;
+
+        function update() {
+            window.cancelAnimationFrame(frame);
+            frame = window.requestAnimationFrame(() => {
+                const rect = containerEl.getBoundingClientRect();
+                const viewportHeight = window.innerHeight;
+                const scrollable = rect.height - viewportHeight;
+
+                let progress: number;
+                if (scrollable <= 0) {
+                    progress = rect.top <= 0 ? 1 : 0;
+                } else {
+                    progress = clamp(-rect.top / scrollable, 0, 1);
+                }
+
+                if (Math.abs(progress - lastProgress) < 0.0005) return;
+                lastProgress = progress;
+
+                const total = CAPABILITIES.length;
+                for (let i = 0; i < cardRefs.current.length; i++) {
+                    const cardEl = cardRefs.current[i];
+                    if (!cardEl) continue;
+                    const { transform, opacity } = computeCardTransform(CAPABILITIES[i], i, total, progress);
+                    cardEl.style.transform = transform;
+                    cardEl.style.opacity = String(opacity);
+                }
+
+                const transitions = Math.max(1, total - 1);
+                for (let i = 0; i < dotRefs.current.length; i++) {
+                    const dotEl = dotRefs.current[i];
+                    if (!dotEl) continue;
+                    const isOn = progress >= i / transitions - 0.001;
+                    dotEl.classList.toggle('features-next__stage-dot--on', isOn);
+                }
+            });
+        }
+
+        update();
+        window.addEventListener('scroll', update, { passive: true });
+        window.addEventListener('resize', update);
+
+        return () => {
+            window.cancelAnimationFrame(frame);
+            window.removeEventListener('scroll', update);
+            window.removeEventListener('resize', update);
+        };
+    }, [isNarrowViewport]);
 
     return (
         <section className="features-next">
@@ -345,22 +406,22 @@ export function FeaturesSection(): JSX.Element {
                                 capability={capability}
                                 idx={i}
                                 total={CAPABILITIES.length}
-                                progress={progress}
+                                cardRef={cardRefSetters[i]}
                                 isNarrowViewport={isNarrowViewport}
                             />
                         ))}
                         <div className="features-next__stage-progress" aria-hidden="true">
-                            {CAPABILITIES.map((capability, i) => {
-                                const transitions = Math.max(1, CAPABILITIES.length - 1);
-                                const isOn = progress >= i / transitions - 0.001;
-
-                                return (
-                                    <span
-                                        key={capability.num}
-                                        className={isOn ? 'features-next__stage-dot features-next__stage-dot--on' : 'features-next__stage-dot'}
-                                    />
-                                );
-                            })}
+                            {CAPABILITIES.map((capability, i) => (
+                                <span
+                                    key={capability.num}
+                                    ref={dotRefSetters[i]}
+                                    className={
+                                        INITIAL_DOT_ON[i]
+                                            ? 'features-next__stage-dot features-next__stage-dot--on'
+                                            : 'features-next__stage-dot'
+                                    }
+                                />
+                            ))}
                         </div>
                     </div>
                 </div>
