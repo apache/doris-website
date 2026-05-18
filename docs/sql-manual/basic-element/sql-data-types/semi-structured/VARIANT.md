@@ -578,3 +578,5 @@ ClickBench (43 queries):
    - No. They are equivalent.
 2. Why doesn’t my query/index work?
    - Check whether you CAST paths to the correct types; whether the type was promoted to JSONB due to conflicts; or whether you mistakenly expect an index on the whole VARIANT instead of on subpaths.
+3. Why does DECIMAL lose precision when written into a VARIANT column?
+   - When writing to a VARIANT column, the subcolumn type is not inferred as DECIMAL — numeric values are stored as DOUBLE, which can drop trailing decimals. Even declaring the subpath as DECIMAL via the Schema Template (e.g. `pm25 VARIANT<'xxx': DECIMAL(6, 2)>`) does not fully guarantee precision, because the value is first parsed as DOUBLE and then converted to DECIMAL on the write path.
