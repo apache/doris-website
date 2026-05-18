@@ -145,33 +145,13 @@ body {
 }
 
 /**
- * Kapa Ask AI modal must overlay the sticky NavbarNext (which sits at
- * z-index 300). Kapa's Mantine modal defaults to a lower stacking value
- * so without this override the dialog gets clipped behind the navbar.
+ * Lift Kapa's shadow-host above the sticky NavbarNext (z-index 300). The
+ * Mantine modal/overlay live inside the shadow root and inherit stacking
+ * from this host, so raising the host is enough.
  */
-[data-kapa-widget-container],
-.mantine-Modal-root,
-.mantine-Modal-inner,
-.mantine-Overlay-root,
-.mantine-Modal-overlay {
+#kapa-widget-container {
     z-index: 9999 !important;
 }
 
-/**
- * Push the Kapa Ask AI modal down from the top of the viewport so it
- * doesn't sit flush against the 64px sticky NavbarNext. Kapa renders its
- * modal flush against whichever container it sits below, so we both
- * override Mantine's yOffset variable on the inner wrapper and add a
- * margin-top on the modal panel itself — whichever Kapa is using, the
- * gap shows up.
- */
-.mantine-Modal-inner,
-[class*="Modal-inner"] {
-    --mantine-modal-y-offset: 24px !important;
-    padding-top: 24px !important;
-}
-
-.mantine-Modal-content,
-[class*="Modal-content"] {
-    margin-top: 24px !important;
-}
+// Centering the Kapa modal itself is done by injecting CSS into its shadow
+// root from static/js/custom-script.js, since light-DOM rules can't pierce it.

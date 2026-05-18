@@ -462,15 +462,6 @@
         &--mobile-open &__mobile-panel {
             display: block;
         }
-
-        // With nav hidden, push Ask AI + actions to the right together.
-        &__ask-ai {
-            margin-left: auto;
-        }
-
-        &__actions {
-            margin-left: 0;
-        }
     }
 }
 
@@ -542,11 +533,18 @@
         // Trim star-link horizontal padding (only change needed to make everything fit).
         &__star-link {
             padding: 0 8px 0 6px;
+            // Right-anchor the Star+Download+☰ group. Since `__actions` collapses
+            // to `display: contents` below, Star is the first member of the
+            // right-side group and inherits the auto-margin job from __actions.
+            margin-left: auto;
         }
 
-        // Push Star + Download + ☰ together to the right as one group.
+        // Collapse `__actions` so its children (Ask Me, Star, Download) become
+        // flex children of `__inner` directly. This lets Ask Me wrap to its own
+        // full-width second row via `flex: 0 0 100%; order: 10` below — which
+        // is impossible while it's nested inside a non-wrapping flex container.
         &__actions {
-            margin-left: auto;
+            display: contents;
         }
 
         // Hamburger follows actions naturally — no extra margin needed.
@@ -554,7 +552,7 @@
             margin-left: 0;
         }
 
-        // Ask AI: full-width second row, icon + text centered both axes.
+        // Ask Me: full-width second row, icon + text centered both axes.
         &__ask-ai {
             order: 10;
             flex: 0 0 100%;
