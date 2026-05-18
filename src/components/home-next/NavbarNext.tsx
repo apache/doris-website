@@ -168,17 +168,16 @@ export function NavbarNext(): JSX.Element {
                     ))}
                 </div>
 
-                <button
-                    type="button"
-                    id="navbar-ask-ai-btn"
-                    className="navbar-next__ask-ai"
-                    aria-label="Ask AI"
-                >
-                    <StarGreenIcon />
-                    <span>Ask AI</span>
-                </button>
-
                 <div className="navbar-next__actions">
+                    <button
+                        type="button"
+                        id="navbar-ask-ai-btn"
+                        className="navbar-next__ask-ai"
+                        aria-label="Ask Me"
+                    >
+                        <StarGreenIcon />
+                        <span>Ask Me</span>
+                    </button>
                     <a
                         href={`https://github.com/${GITHUB_REPO}`}
                         target="_blank"

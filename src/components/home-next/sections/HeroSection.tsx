@@ -1,4 +1,5 @@
 import React, { JSX, useState, useEffect, useMemo, useRef } from 'react';
+import { StarGreenIcon } from '@site/src/components/Icons/star-green-icon';
 import './HeroSection.scss';
 
 // ─── SVG atoms ───────────────────────────────────────────────────────────────
@@ -20,14 +21,6 @@ function LightningSvg({ size = 24, color = '#FFD23F' }: { size?: number; color?:
                 strokeWidth="0.5"
                 strokeLinejoin="round"
             />
-        </svg>
-    );
-}
-
-function DownloadIcon(): JSX.Element {
-    return (
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" aria-hidden="true">
-            <path d="M12 4v12m0 0l-5-5m5 5l5-5M4 20h16" />
         </svg>
     );
 }
@@ -897,13 +890,23 @@ export function HeroSection(): JSX.Element {
                         </p>
 
                         <div className="hero-next__ctas">
-                            <a className="hero-next__btn hero-next__btn--yellow" href="/download">
-                                <DownloadIcon />
-                                Download
-                            </a>
-                            <a className="hero-next__btn hero-next__btn--primary" href={GET_STARTED_HREF}>
+                            <a className="hero-next__btn hero-next__btn--yellow" href={GET_STARTED_HREF}>
                                 Get Started
                             </a>
+                            <button
+                                type="button"
+                                className="hero-next__btn hero-next__btn--primary"
+                                onClick={() => {
+                                    // Reuse the Kapa modal trigger bound to the
+                                    // navbar Ask Me button via docusaurus.config.js
+                                    // (data-modal-override-open-selector).
+                                    document.getElementById('navbar-ask-ai-btn')?.click();
+                                }}
+                                aria-label="Ask Me"
+                            >
+                                <StarGreenIcon />
+                                Ask Me
+                            </button>
                             <a
                                 className="hero-next__btn hero-next__btn--ghost"
                                 href="https://doris.apache.org/slack"
