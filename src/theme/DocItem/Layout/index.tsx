@@ -69,8 +69,10 @@ export default function DocItemLayout({ children }: Props): JSX.Element {
                 <DocVersionBanner />
                 <div className={styles.docItemContainer}>
                     <article>
-                        <MobileSidebarDrawer />
-                        <DocBreadcrumbs />
+                        <div className={styles.mobileStickyHeader}>
+                            <MobileSidebarDrawer />
+                            <DocBreadcrumbs />
+                        </div>
                         {/* <DocVersionBadge /> */}
                         {docTOC.mobile}
                         <DocItemContent>{children}</DocItemContent>

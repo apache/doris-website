@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
+import { createPortal } from 'react-dom';
 import clsx from 'clsx';
 import { useLocation } from '@docusaurus/router';
 import { useDocsSidebar } from '@docusaurus/plugin-content-docs/client';
@@ -57,6 +58,59 @@ export default function MobileSidebarDrawer(): JSX.Element | null {
     }, [localeOpen]);
 
     if (!sidebar) return null;
+
+    const drawer = (
+        <div className={clsx(open && styles.open)} aria-hidden={!open}>
+            <div
+                className={styles.backdrop}
+                onClick={close}
+                role="presentation"
+            />
+            <aside
+                className={styles.drawer}
+                aria-label={isZH ? '文档目录' : 'Docs sidebar'}
+            >
+                <div className={styles.header}>
+                    <span>{isZH ? '目录' : 'Menu'}</span>
+                    <button
+                        type="button"
+                        className={styles.close}
+                        onClick={close}
+                        aria-label={isZH ? '关闭目录' : 'Close docs sidebar'}
+                    >
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+                            <path
+                                d="M5 5l10 10M15 5L5 15"
+                                stroke="currentColor"
+                                strokeWidth="1.6"
+                                strokeLinecap="round"
+                            />
+                        </svg>
+                    </button>
+                </div>
+                <nav
+                    className={styles.body}
+                    aria-label={isZH ? '文档目录导航' : 'Docs sidebar navigation'}
+                >
+                    <ul className={clsx(ThemeClassNames.docs.docSidebarMenu, 'menu__list', styles.menu)}>
+                        <DocSidebarItems
+                            items={sidebar.items}
+                            activePath={pathname}
+                            onItemClick={(item) => {
+                                if (item.type === 'link') {
+                                    close();
+                                }
+                                if (item.type === 'category' && item.href) {
+                                    close();
+                                }
+                            }}
+                            level={1}
+                        />
+                    </ul>
+                </nav>
+            </aside>
+        </div>
+    );
 
     return (
         <>
@@ -129,56 +183,7 @@ export default function MobileSidebarDrawer(): JSX.Element | null {
                 </button>
             </div>
 
-            <div className={clsx(open && styles.open)} aria-hidden={!open}>
-                <div
-                    className={styles.backdrop}
-                    onClick={close}
-                    role="presentation"
-                />
-                <aside
-                    className={styles.drawer}
-                    aria-label={isZH ? '文档目录' : 'Docs sidebar'}
-                >
-                    <div className={styles.header}>
-                        <span>{isZH ? '目录' : 'Menu'}</span>
-                        <button
-                            type="button"
-                            className={styles.close}
-                            onClick={close}
-                            aria-label={isZH ? '关闭目录' : 'Close docs sidebar'}
-                        >
-                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
-                                <path
-                                    d="M5 5l10 10M15 5L5 15"
-                                    stroke="currentColor"
-                                    strokeWidth="1.6"
-                                    strokeLinecap="round"
-                                />
-                            </svg>
-                        </button>
-                    </div>
-                    <nav
-                        className={styles.body}
-                        aria-label={isZH ? '文档目录导航' : 'Docs sidebar navigation'}
-                    >
-                        <ul className={clsx(ThemeClassNames.docs.docSidebarMenu, 'menu__list', styles.menu)}>
-                            <DocSidebarItems
-                                items={sidebar.items}
-                                activePath={pathname}
-                                onItemClick={(item) => {
-                                    if (item.type === 'link') {
-                                        close();
-                                    }
-                                    if (item.type === 'category' && item.href) {
-                                        close();
-                                    }
-                                }}
-                                level={1}
-                            />
-                        </ul>
-                    </nav>
-                </aside>
-            </div>
+            {typeof document !== 'undefined' && createPortal(drawer, document.body)}
         </>
     );
 }

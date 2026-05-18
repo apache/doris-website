@@ -144,9 +144,9 @@ const CONSUMERS: EcosystemGroup[] = [
                 className: 'ecosystem-next__logo--grafana',
             },
             {
-                name: 'Langfuse',
-                logoSrc: '/images/ecomsystem-log/longfuse.png',
-                className: 'ecosystem-next__logo--langfuse',
+                name: 'Litefuse',
+                logoSrc: '/images/ecomsystem-log/litefuse.png',
+                className: 'ecosystem-next__logo--litefuse',
             },
         ],
     },
