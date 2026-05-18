@@ -127,7 +127,8 @@ mysql> select * from test_s3load;
 10 rows in set (0.04 sec)
 ```
 
-## Method 2: Load with TVF (synchronous) {#load-with-tvf}
+## Method 2: Load with TVF (synchronous)
+
 <!-- Knowledge type: Procedure -->
 
 TVF (Table Value Function) treats a file on S3 as a table. You can query it directly with `SELECT` and write the result synchronously into a Doris table by combining it with `INSERT INTO`. It is suitable for scenarios that require high result visibility with moderate data volumes.

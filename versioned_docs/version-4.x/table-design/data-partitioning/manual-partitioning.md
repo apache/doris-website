@@ -21,7 +21,8 @@ Before using manual partitioning, you need to understand the general rules for p
 -   When a table is created without partitioning, the system automatically generates a single partition with the same name as the table that covers the full value range. This partition is invisible to users and cannot be modified or deleted.
 -   You cannot create partitions whose ranges overlap.
 
-## Range partitioning {#range-分区}
+## Range partitioning
+
 Range partitioning divides data into different partitions based on the value range of the partition column. The partition column is typically a time column, which makes it easy to manage old and new data.
 
 **Supported column types:** `DATE`, `DATETIME`, `TIMESTAMPTZ`, `TINYINT`, `SMALLINT`, `INT`, `BIGINT`, `LARGEINT`.

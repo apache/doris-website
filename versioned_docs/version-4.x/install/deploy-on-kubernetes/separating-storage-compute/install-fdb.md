@@ -15,7 +15,8 @@ Deploying a compute-storage decoupled cluster on Kubernetes requires that a Foun
 
 - Deploy FoundationDB on Kubernetes. FoundationDB officially provides [fdb-kubernetes-operator](https://github.com/FoundationDB/fdb-kubernetes-operator) for deploying and managing FoundationDB on Kubernetes.
 
-## Deploy FoundationDB on Kubernetes {#获取包含-foundationdb-访问信息的-configmap}
+## Deploy FoundationDB on Kubernetes
+
 Deploying FoundationDB on Kubernetes consists of 4 steps:
 
 1. Deploy the FoundationDB resource definitions.
@@ -147,7 +148,8 @@ NAME           GENERATION   RECONCILED   AVAILABLE   FULLREPLICATION   VERSION  
 test-cluster   1            1            true        true              7.1.26    13m
 ```
 
-## Get the ConfigMap that contains FoundationDB access information {#get-the-configmap-containing-foundationdb-access-information}
+## Get the ConfigMap that contains FoundationDB access information
+
 When FoundationDB is deployed with [fdb-kubernetes-operator](https://github.com/FoundationDB/fdb-kubernetes-operator), a specific ConfigMap that contains the FoundationDB access information is generated in the deployment namespace. The name of this ConfigMap is the resource name of the deployed FoundationDB plus "-config". Use the following command to view the ConfigMap:
 
 ```shell

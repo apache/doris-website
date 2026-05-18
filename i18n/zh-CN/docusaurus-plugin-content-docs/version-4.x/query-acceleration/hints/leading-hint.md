@@ -564,7 +564,8 @@ mysql> explain shape plan select /*+ ORDERED LEADING(t1 t2 t3) */ t1.c1 from t2 
 | 灵活性       | 高，可指定任意形状的 Join 树              | 低，仅按文本序                                |
 | 同时使用时   | 被放入 `UnUsed`                           | 优先生效                                      |
 
-## 常见问题（FAQ） {#常见问题-faq}
+## 常见问题（FAQ）
+
 <!-- 知识类型: 故障排查 -->
 <!-- 适用场景: Hint 不生效 / 报错排查 -->
 

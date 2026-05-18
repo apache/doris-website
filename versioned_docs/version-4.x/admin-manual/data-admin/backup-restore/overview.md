@@ -2,69 +2,64 @@
 {
     "title": "Backup and Restore Overview",
     "language": "en",
-    "description": "Doris provides support for backup and restore operations. These features allow users to back up data from databases, tables,"
+    "description": "Doris backup and restore lets you save databases, tables, or partitions as snapshots to remote storage such as S3 or HDFS, and restore them on demand to any Doris cluster.",
+    "keywords": [
+        "Doris backup and restore",
+        "database backup",
+        "snapshot",
+        "Repository",
+        "data migration",
+        "disaster recovery",
+        "BACKUP SNAPSHOT",
+        "RESTORE"
+    ]
 }
 ---
 
-## Introduction
+<!-- Knowledge type: Feature overview -->
+<!-- Applicable scenarios: Disaster recovery / Accidental deletion recovery / Cross-cluster migration / Test data preparation -->
 
-Doris provides support for backup and restore operations. These features allow users to back up data from databases, tables, or partitions to remote storage systems and restore it when needed.
+Doris supports backup and restore operations on databases, tables, or partitions. You can save data as snapshots to remote storage (S3, Azure, GCP, OSS, HDFS, and so on), and restore it to any Doris cluster when needed.
 
-## Requirements
+## Applicable Scenarios
 
-- **Administrator Privileges**: Only users with **ADMIN** privileges can perform backup and restore operations.
+| Scenario | Description | Recommended Operation |
+| --- | --- | --- |
+| Accidental data deletion recovery | A table or partition is deleted by mistake and must be restored to a specific point in time | [Restore a specific table or partition](./restore) |
+| Periodic disaster-recovery backup | Back up an entire database periodically to guard against cluster failures or hardware damage | [Back up the entire database](./backup) |
+| Cross-cluster data migration | Migrate data from a source cluster to a target cluster | [Backup](./backup) then [Restore](./restore) |
+| Test environment data preparation | Restore certain production tables or partitions to a test cluster | [Back up specific tables](./backup) then [Restore](./restore) |
+| Near-incremental backup | Back up only new or changed partitions to approximate an incremental backup | [Back up specific partitions](./backup) |
 
-## Key Concepts
+## Core Concepts
 
-**Snapshot**:
-   A snapshot is a time-point capture of data in a database, table, or partition. When creating a snapshot, a snapshot label must be specified, and a timestamp is generated upon completion, which can identify a snapshot through the Repository, snapshot label, and timestamp.
+<!-- Knowledge type: Concept definition -->
 
-**Repository**:
-   The remote storage location where backup files are stored. Supported remote storage includes S3, Azure, GCP, OSS, COS, MinIO, HDFS, and other S3-compatible object storage.
+| Concept | Definition |
+| --- | --- |
+| Snapshot | A point-in-time capture of the data in a database, table, or partition. You must specify a snapshot label when creating it, and a timestamp is generated upon completion. A snapshot is uniquely identified by its Repository, label, and timestamp. |
+| Repository | The remote location where backup files are stored. Supported targets include S3, Azure, GCP, OSS, COS, MinIO, HDFS, and other S3-compatible storage. |
+| Backup operation | Creates a snapshot of the target object, uploads the snapshot files to a Repository, and stores the related metadata. |
+| Restore operation | Downloads a snapshot from a Repository and restores it to the target Doris cluster. |
 
-**Backup Operation**:
-   The backup operation involves creating a snapshot of a database, table, or partition, uploading the snapshot file to a remote Repository, and storing metadata related to the backup.
+## Prerequisites
 
-**Restore Operation**:
-   The restore operation involves retrieving a backup from the remote Repository and restoring it to the Doris cluster.
-
-## Key Features
-
-1. **Backup Data**:
-   Doris allows you to back up data from tables, partitions, or entire databases by creating snapshots. Data is backed up in file format and stored in HDFS, S3, or other S3-compatible remote storage systems.
-
-2. **Restore Data**:
-   You can restore backup data from the remote Repository to any Doris cluster. This includes full database restoration, full table restoration, and partition-level restoration, allowing for flexible data recovery.
-
-3. **Snapshot Management**:
-   Data is backed up in the form of snapshots. These snapshots are uploaded to remote storage systems and can be restored when needed. The restoration process involves downloading the snapshot file and mapping it to local metadata to make it effective.
-
-4. **Data Migration**:
-   In addition to backup and restore, this feature also supports data migration between different Doris clusters. You can back up data to a remote storage system and restore it to another Doris cluster, facilitating cluster migration scenarios.
-
-5. **Replication Control**:
-   When restoring data, you can specify the number of replicas for the restored data to ensure redundancy and fault tolerance.
+- **Privileges**: The executing account must have the **ADMIN** privilege.
+- **Deployment mode**: Only the integrated storage-compute mode is supported. The **storage-compute separation mode does not support** backup and restore.
 
 ## Limitations
 
-1. **Decoupling of Storage and Computing**:
-   The storage-computing separation model does not support backup and restore.
+| Limitation | Description |
+| --- | --- |
+| Storage-compute separation not supported | Backup and restore are unavailable in the deployment mode where storage and compute are decoupled. |
+| Asynchronous materialized views (MTMV) not supported | Asynchronous materialized views are not included in backups and must be rebuilt manually after restore. |
+| Tables with storage policies not supported | Tables that use a [storage policy](../../../table-design/tiered-storage/remote-storage) do not support backup and restore. |
+| Only full backup is supported | Incremental backup is not currently supported. You can back up specific partitions to approximate the effect of incremental backup. |
+| `colocate_with` attribute is not retained | You must reconfigure the `colocate_with` attribute of colocated tables after restore. |
+| Dynamic partitioning must be enabled manually | After restore, enable the dynamic partition attribute manually with `ALTER TABLE`. |
+| Single-task concurrency | Only one backup or restore task can run at a time within the same database. |
 
-2. **Asynchronous Materialized Views (MTMV) Not Supported**:
-   Backup or restore of **asynchronous materialized views (MTMV)** is not supported. These views are not considered in backup and restore operations.
+## Operation Guides
 
-3. **Tables with Storage Policies Not Supported**:
-   Tables that use [**storage policies**](../../../table-design/tiered-storage/remote-storage) **do not support** backup and restore operations.
-
-4. **Incremental Backup**:
-   Currently, Doris only supports full backups. Incremental backups (only storing data changed since the last backup) are not supported; you can back up specific partitions to achieve incremental backup.
-
-5. **colocate_with Attribute**:
-   During backup or restore operations, Doris does not retain the `colocate_with` attribute of the table. This may need to be reconfigured for colocated tables after restoration.
-
-6. **Dynamic Partition Support**:
-   After restoring a table, you need to manually enable this attribute using the `ALTER TABLE` command.
-
-7. **Single Concurrency**:
-   Only one backup or restore task can run simultaneously under a single database.
-
+- [Backup](./backup): Create a Repository and perform a full backup of a database, table, or partition.
+- [Restore](./restore): Restore a database, table, or partition from a Repository snapshot to the target cluster.

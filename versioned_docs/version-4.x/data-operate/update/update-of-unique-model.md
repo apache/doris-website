@@ -36,7 +36,8 @@ Supported load methods include:
 
 > A full-row update is identical to loading a new record. For detailed usage, see the [Data loading](../import/import-way/stream-load-manual.md) documentation.
 
-## Partial column update {#flexible-partial-column-updates}
+## Partial column update
+
 <!-- Knowledge type: Capability definition -->
 
 When only some fields need to be updated, you can use the partial column update capability of the Unique model to avoid assembling the full record. For detailed information (including usage examples, flexible partial column updates, and handling of new rows), see the [Column update](./partial-column-update.md#column-update-for-the-unique-model) document.

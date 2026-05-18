@@ -770,94 +770,47 @@ const sidebars: SidebarsConfig = {
                 {
                     type: 'category',
                     label: 'Cluster Management',
+                    link: {type: 'doc', id: 'admin-manual/cluster-management/intro'},
                     items: [
                         'admin-manual/cluster-management/upgrade',
                         'admin-manual/cluster-management/elastic-expansion',
                         'admin-manual/cluster-management/load-balancing',
-                        'admin-manual/cluster-management/time-zone',
                         'admin-manual/cluster-management/fqdn',
+                        'admin-manual/maint-monitor/automatic-service-start',
+                        'admin-manual/maint-monitor/tablet-repair-and-balance',
                     ],
                 },
                 {
                     type: 'category',
-                    label: 'Workload Management',
+                    label: 'Configuration',
                     items: [
-                        'admin-manual/workload-management/workload-management-summary',
-                        {
-                            type: 'category',
-                            label: 'Resource Isolation',
-                            items: [
-                                'admin-manual/workload-management/resource-group',
-                                'admin-manual/workload-management/compute-group',
-                                'admin-manual/workload-management/workload-group',
-                                'admin-manual/workload-management/workload-group-bind-compute-group',
-                            ],
-                        },
-                        'admin-manual/workload-management/analysis-diagnosis',
-                        'admin-manual/workload-management/concurrency-control-and-queuing',
-                        'admin-manual/workload-management/spill-disk',
-                        'admin-manual/workload-management/sql-blocking',
-                        'admin-manual/workload-management/query-progress-monitor',
-                        'admin-manual/workload-management/kill-query',
-                        'admin-manual/workload-management/job-scheduler',
-                    ],
-                },
-                {
-                    type: 'category',
-                    label: 'Disaster Recovery',
-                    items: [
-                        'admin-manual/data-admin/overview',
-                        {
-                            type: 'category',
-                            label: 'Backup & Restore',
-                            items: [
-                                'admin-manual/data-admin/backup-restore/overview',
-                                'admin-manual/data-admin/backup-restore/backup',
-                                'admin-manual/data-admin/backup-restore/restore',
-                            ],
-                        },
-                        {
-                            type: 'category',
-                            label: 'Cross Cluster Replication',
-                            items: [
-                                'admin-manual/data-admin/ccr/overview',
-                                'admin-manual/data-admin/ccr/quickstart',
-                                'admin-manual/data-admin/ccr/manual',
-                                'admin-manual/data-admin/ccr/feature',
-                                'admin-manual/data-admin/ccr/config',
-                                'admin-manual/data-admin/ccr/performance',
-                            ],
-                        },
-                        'admin-manual/data-admin/recyclebin',
+                        'admin-manual/config/config-dir',
+                        'admin-manual/config/fe-config',
+                        'admin-manual/config/be-config',
+                        'admin-manual/config/user-property',
+                        'admin-manual/cluster-management/time-zone',
                     ],
                 },
                 {
                     type: 'category',
                     label: 'Security & Authentication',
+                    link: {type: 'doc', id: 'admin-manual/auth/security-overview'},
                     items: [
-                        'admin-manual/auth/security-overview',
                         {
                             type: 'category',
-                            label: 'Authentication and Authorization',
+                            label: 'Authentication',
                             items: [
-                                'admin-manual/auth/authentication-and-authorization',
-                                {
-                                    type: 'category',
-                                    label: 'Authentication',
-                                    items: [
-                                        'admin-manual/auth/authentication/internal',
-                                        'admin-manual/auth/authentication/ldap',
-                                    ],
-                                },
-                                {
-                                    type: 'category',
-                                    label: 'Authorization',
-                                    items: [
-                                        'admin-manual/auth/authorization/internal',
-                                        'admin-manual/auth/authorization/ranger',
-                                        'admin-manual/auth/authorization/data',
-                                    ],
-                                },
+                                'admin-manual/auth/authentication/internal',
+                                'admin-manual/auth/authentication/ldap',
+                            ],
+                        },
+                        {
+                            type: 'category',
+                            label: 'Authorization',
+                            items: [
+                                'admin-manual/auth/authorization/internal',
+                                'admin-manual/auth/authorization/ranger',
+                                'admin-manual/auth/authorization/data',
                             ],
                         },
                         'admin-manual/audit-plugin',
@@ -885,35 +838,78 @@ const sidebars: SidebarsConfig = {
                 },
                 {
                     type: 'category',
+                    label: 'Workload Management',
+                    link: {type: 'doc', id: 'admin-manual/workload-management/workload-management-summary'},
+                    items: [
+                        {
+                            type: 'category',
+                            label: 'Resource Isolation',
+                            link: {type: 'doc', id: 'admin-manual/workload-management/resource-isolation-intro'},
+                            items: [
+                                'admin-manual/workload-management/resource-group',
+                                'admin-manual/workload-management/compute-group',
+                                'admin-manual/workload-management/workload-group',
+                                'admin-manual/workload-management/workload-group-bind-compute-group',
+                            ],
+                        },
+                        'admin-manual/workload-management/concurrency-control-and-queuing',
+                        'admin-manual/workload-management/spill-disk',
+                        'admin-manual/workload-management/sql-blocking',
+                        'admin-manual/workload-management/kill-query',
+                        'admin-manual/workload-management/query-progress-monitor',
+                        'admin-manual/workload-management/analysis-diagnosis',
+                        'admin-manual/workload-management/job-scheduler',
+                    ],
+                },
+                {
+                    type: 'category',
+                    label: 'Disaster Recovery',
+                    link: {type: 'doc', id: 'admin-manual/data-admin/overview'},
+                    items: [
+                        {
+                            type: 'category',
+                            label: 'Backup & Restore',
+                            link: {type: 'doc', id: 'admin-manual/data-admin/backup-restore/overview'},
+                            items: [
+                                'admin-manual/data-admin/backup-restore/backup',
+                                'admin-manual/data-admin/backup-restore/restore',
+                            ],
+                        },
+                        {
+                            type: 'category',
+                            label: 'Cross Cluster Replication',
+                            link: {type: 'doc', id: 'admin-manual/data-admin/ccr/overview'},
+                            items: [
+                                'admin-manual/data-admin/ccr/quickstart',
+                                'admin-manual/data-admin/ccr/manual',
+                                'admin-manual/data-admin/ccr/feature',
+                                'admin-manual/data-admin/ccr/config',
+                                'admin-manual/data-admin/ccr/performance',
+                            ],
+                        },
+                        'admin-manual/data-admin/recyclebin',
+                    ],
+                },
+                {
+                    type: 'category',
                     label: 'Monitoring & Alerting',
+                    link: {type: 'doc', id: 'admin-manual/maint-monitor/monitor-alert'},
                     items: [
                         'admin-manual/maint-monitor/metrics',
-                        'admin-manual/maint-monitor/monitor-alert',
                         'admin-manual/maint-monitor/disk-capacity',
-                        'admin-manual/maint-monitor/tablet-repair-and-balance',
-                        'admin-manual/maint-monitor/automatic-service-start',
                     ],
                 },
                 {
                     type: 'category',
                     label: 'Log Management',
+                    link: {type: 'doc', id: 'admin-manual/log-management/intro'},
                     items: ['admin-manual/log-management/fe-log', 'admin-manual/log-management/be-log'],
                 },
                 {
                     type: 'category',
-                    label: 'Configuration',
-                    items: [
-                        'admin-manual/config/config-dir',
-                        'admin-manual/config/fe-config',
-                        'admin-manual/config/be-config',
-                        'admin-manual/config/user-property',
-                    ],
-                },
-                {
-                    type: 'category',
                     label: 'System Tables',
+                    link: {type: 'doc', id: 'admin-manual/system-tables/overview'},
                     items: [
-                        'admin-manual/system-tables/overview',
                         {
                             type: 'category',
                             label: 'information_schema',

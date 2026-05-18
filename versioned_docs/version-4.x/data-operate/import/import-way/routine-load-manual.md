@@ -325,7 +325,8 @@ You can stop and delete a Routine Load import job with the [STOP ROUTINE LOAD](.
 STOP ROUTINE LOAD FOR testdb.example_routine_load_csv;
 ```
 
-### Bind a Compute Group {#kafka-安全认证}
+### Bind a Compute Group
+
 In **storage-compute separation mode**, the Compute Group selection logic for Routine Load follows this priority order:
 
 1. Select the Compute Group specified by the `use db@cluster` statement.
@@ -1341,7 +1342,8 @@ The following table lists, by use case, all the typical examples in this section
     3 rows in set (0.01 sec)
     ```
 
-#### Import Data with a Specified JSON Root Node {#Example-of-importing-Json-format-data}
+#### Import Data with a Specified JSON Root Node
+
 1. Sample import data:
 
     ```sql

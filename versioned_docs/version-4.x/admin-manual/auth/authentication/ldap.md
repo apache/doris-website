@@ -2,191 +2,280 @@
 {
     "title": "LDAP",
     "language": "en",
-    "description": "Detailed guide on Apache Doris federated authentication: unified identity verification and group authorization through LDAP/LDAPS integration, covering configuration steps, login methods, permission mapping rules, and common troubleshooting."
+    "description": "Configure unified authentication and group authorization for Apache Doris by integrating LDAP/LDAPS, including login methods, privilege mapping, and common issues.",
+    "keywords": [
+        "Doris LDAP",
+        "Doris LDAPS",
+        "LDAP authentication",
+        "LDAP group authorization",
+        "unified authentication",
+        "ldap.conf configuration",
+        "MysqlClearPasswordPlugin",
+        "ldap_admin_password",
+        "ldap_use_ssl",
+        "SSLHandshakeException",
+        "PKIX path building failed",
+        "cleartext password plugin",
+        "cleartext plugin"
+    ]
 }
 ---
 
-Doris supports integration with third-party LDAP services, providing two core functionalities:
+Apache Doris supports integration with third-party LDAP services, so the existing enterprise account system can be reused directly as the identity and privilege source for Doris, avoiding duplicate maintenance of users and passwords. LDAP integration provides two core capabilities:
 
-- **Authentication**: Use LDAP passwords instead of Doris passwords for identity verification.
-- **Group Authorization**: Map LDAP `groups` to Doris `roles` for unified permission management.
+- **Authentication login**: Use the LDAP password instead of the Doris password for identity authentication.
+- **Group authorization**: Map LDAP `group` to Doris `role` to achieve unified privilege management.
+
+<!-- Knowledge type: Architecture decision -->
+<!-- Applicable scenario: Integrating enterprise unified identity / centralized privilege management -->
+
+## Applicable Scenarios
+
+| Scenario | Description |
+| --- | --- |
+| Enterprise unified identity authentication | An LDAP/AD account system already exists, and you want Doris users to reuse it directly without creating accounts again in Doris |
+| Centralized privilege management | Manage role members through LDAP groups; adjust LDAP group members to batch-adjust Doris privileges |
+| Temporary access | Users that exist only in LDAP can log in to Doris as temporary users based on LDAP group privileges |
+| Encrypted channel | Encryption is required for the connection between Doris FE and the LDAP server (LDAPS) |
+
+## Prerequisites
+
+- An accessible LDAP/AD service has been deployed, and the following information is available:
+    - The `host` and port of the LDAP service (`389` for cleartext, `636` for LDAPS)
+    - The administrator account `dn` and password
+    - The `basedn` for users and groups
+    - The user filter (`ldap_user_filter`)
+- You have read/write access to the FE configuration files of the Doris cluster and can restart FE.
+- You have a `root` or `admin` account for setting the LDAP administrator password.
+- Enabling LDAPS requires Doris version **4.0.5** or higher.
 
 ## LDAP Basic Concepts
 
-In LDAP, data is organized in a tree structure. Here's an example of a typical LDAP directory tree:
+In LDAP, data is organized in a tree structure. The following is a typical LDAP directory tree example:
 
 ```text
 - dc=example,dc=com
- - ou = ou1
-   - cn = group1
-   - cn = user1
- - ou = ou2
-   - cn = group2
-     - cn = user2
- - cn = user3
+    - ou = ou1
+        - cn = group1
+        - cn = user1
+    - ou = ou2
+        - cn = group2
+            - cn = user2
+    - cn = user3
 ```
 
-### Terminology
+### Term Explanations
 
 | Term | Full Name | Description |
 | --- | --- | --- |
-| `dc` | Domain Component | Organization's domain name, serving as the root node of the tree |
-| `dn` | Distinguished Name | Unique name. For example, user1's `dn` is `cn=user1,ou=ou1,dc=example,dc=com`, user2's `dn` is `cn=user2,cn=group2,ou=ou2,dc=example,dc=com` |
-| `rdn` | Relative Distinguished Name | Part of the `dn`. user1's four `rdns` are `cn=user1`, `ou=ou1`, `dc=example`, and `dc=com` |
-| `ou` | Organization Unit | Sub-organization. `users` can be placed in `ou` or directly under the example.com domain |
+| `dc` | Domain Component | The domain name of the organization, used as the root node of the tree |
+| `dn` | Distinguished Name | Unique name. For example, the `dn` of user1 is `cn=user1,ou=ou1,dc=example,dc=com`, and the `dn` of user2 is `cn=user2,cn=group2,ou=ou2,dc=example,dc=com` |
+| `rdn` | Relative Distinguished Name | A part of the `dn`. The four `rdn` of user1 are `cn=user1`, `ou=ou1`, `dc=example`, and `dc=com` |
+| `ou` | Organization Unit | A suborganization. A `user` can be placed inside an `ou` or directly under the example.com domain |
 | `cn` | Common Name | Name |
-| `group` | - | Group, corresponding to Doris roles |
-| `user` | - | User, equivalent to Doris users |
-| `objectClass` | - | Data type. Used to distinguish whether a node is a `group` or `user`. `group` requires `cn` and `member` (list of `users`) attributes, `user` requires `cn`, `password`, `uid`, etc. |
+| `group` | - | Group, corresponding to a Doris role |
+| `user` | - | User, equivalent to a Doris user |
+| `objectClass` | - | The data type. Used to distinguish whether a node is a `group` or a `user`. A `group` requires `cn` and `member` (the `user` list) attributes; a `user` requires `cn`, `password`, `uid`, and other attributes |
 
-## Quick Start
+## Integration Process Overview
 
-### Step 1: Configure Doris
+<!-- Knowledge type: Operation steps -->
+<!-- Applicable scenario: First-time LDAP integration -->
 
-1. Set the authentication method in `fe/conf/fe.conf`: `authentication_type=ldap`.
-2. Configure LDAP service connection information in `fe/conf/ldap.conf`:
+1. **Configure Doris FE**: Switch the authentication method in `fe.conf` and fill in the LDAP service connection information in `ldap.conf`.
+2. **Set the LDAP administrator password**: After logging in to Doris, write `ldap_admin_password` through SQL.
+3. **Configure the client**: Enable the cleartext password plugin in the MySQL Client or JDBC Client to send the LDAP password.
+4. **(Optional) Enable LDAPS**: Encrypt the channel between FE and LDAP.
+5. **(Optional) Configure group authorization**: Create `role` in Doris with the same name as the LDAP groups and grant privileges.
 
-    ```
-    ldap_authentication_enabled = true
-    ldap_host = ladp-host
-    ldap_port = 389
-    ldap_admin_name = uid=admin,o=emr
-    ldap_user_basedn = ou=people,o=emr
-    ldap_user_filter = (&(uid={login}))
-    ldap_group_basedn = ou=group,o=emr
-    ```
+## Step 1: Configure Doris FE
 
-    > To enable LDAPS (encrypted connection to the LDAP server), see the [LDAPS (Encrypted Connection)](#ldaps-encrypted-connection) section below.
+<!-- Knowledge type: Configuration parameters -->
+<!-- Applicable scenario: LDAP integration configuration on the FE side -->
 
-3. After starting `fe`, log in to Doris with `root` or `admin` account and set the LDAP admin password:
+### 1.1 Switch the Authentication Method
 
-    ```sql
-    set ldap_admin_password = password('<ldap_admin_password>');
-    ```
+Set the authentication method in `fe/conf/fe.conf`:
 
-### Step 2: Client Connection
+```text
+authentication_type=ldap
+```
 
-LDAP authentication requires clients to send passwords in plaintext, so cleartext authentication plugins must be enabled.
+### 1.2 Configure LDAP Connection Information
 
-**MySQL Client**
+Fill in the LDAP service connection information in `fe/conf/ldap.conf`:
 
-You can enable the cleartext authentication plugin using either method:
+```text
+ldap_authentication_enabled = true
+ldap_host = ladp-host
+ldap_port = 389
+ldap_admin_name = uid=admin,o=emr
+ldap_user_basedn = ou=people,o=emr
+ldap_user_filter = (&(uid={login}))
+ldap_group_basedn = ou=group,o=emr
+```
 
-- **Method 1**: Set environment variable (permanent)
+The configuration items are explained below:
+
+| Configuration item | Description |
+| --- | --- |
+| `ldap_authentication_enabled` | Whether to enable LDAP authentication. Must be `true` |
+| `ldap_host` | LDAP server address |
+| `ldap_port` | LDAP service port. Default is `389` for cleartext LDAP and `636` for LDAPS |
+| `ldap_admin_name` | The `dn` of the LDAP administrator. Doris uses this account to query user and group information |
+| `ldap_user_basedn` | The base `dn` for user search |
+| `ldap_user_filter` | User match filter. `{login}` is replaced with the login user name |
+| `ldap_group_basedn` | The base `dn` for group search, used for group authorization |
+
+:::tip
+To enable LDAPS (encrypted connection to the LDAP server), see the [LDAPS (Encrypted Connection)](#ldaps-encrypted-connection) section below.
+:::
+
+### 1.3 Set the LDAP Administrator Password
+
+After starting FE, log in to Doris with the `root` or `admin` account and write the LDAP administrator password:
+
+```sql
+set ldap_admin_password = password('<ldap_admin_password>');
+```
+
+This password is the password of the account corresponding to `ldap_admin_name`. Doris uses it to query the LDAP service.
+
+## Step 2: Client Connection
+
+<!-- Knowledge type: Operation steps -->
+<!-- Applicable scenario: Enabling the cleartext password plugin on the client -->
+
+LDAP authentication requires the client to send the password in cleartext, so the cleartext authentication plugin must be enabled.
+
+### 2.1 MySQL Client
+
+You can enable the cleartext authentication plugin by either of the following methods:
+
+- **Method 1**: Set an environment variable (persistent)
 
     ```shell
     echo "export LIBMYSQL_ENABLE_CLEARTEXT_PLUGIN=1" >> ~/.bash_profile && source ~/.bash_profile
     ```
 
-- **Method 2**: Add parameter when logging in (one-time)
+- **Method 2**: Add a parameter at login time (one-time)
 
     ```shell
     mysql -hDORIS_HOST -PDORIS_PORT -u user -p --enable-cleartext-plugin
     ```
 
-**JDBC Client**
+### 2.2 JDBC Client
 
-1. Doris SSL Not Enabled
+JDBC requires the cleartext password plugin to be used on top of SSL by default. Whether SSL is enabled determines how the JDBC URL is written:
 
-    When Doris SSL is not enabled, you need to create a custom authentication plugin to bypass SSL restrictions when using JDBC connections:
+#### Scenario A: SSL is Not Enabled in Doris
 
-    1. Create a custom plugin class that extends `MysqlClearPasswordPlugin` and overrides the `requiresConfidentiality()` method:
+A custom authentication plugin is required to bypass the SSL restriction:
 
-        ```java
-        public class MysqlClearPasswordPluginWithoutSSL extends MysqlClearPasswordPlugin {
-          @Override
-          public boolean requiresConfidentiality() {
+1. Create a custom plugin class that extends `MysqlClearPasswordPlugin` and overrides the `requiresConfidentiality()` method:
+
+    ```java
+    public class MysqlClearPasswordPluginWithoutSSL extends MysqlClearPasswordPlugin {
+        @Override
+        public boolean requiresConfidentiality() {
             return false;
-          }
         }
-        ```
-
-    2. Configure the custom plugin in the JDBC connection URL (replace `xxx` with your actual package name):
-
-        ```sql
-        jdbcUrl = "jdbc:mysql://localhost:9030/mydatabase?authenticationPlugins=xxx.xxx.xxx.MysqlClearPasswordPluginWithoutSSL&defaultAuthenticationPlugin=xxx.xxx.xxx.MysqlClearPasswordPluginWithoutSSL&disabledAuthenticationPlugins=com.mysql.jdbc.authentication.MysqlClearPasswordPlugin";
-        ```
-
-        Description of the three required properties:
-
-        | Property | Description |
-        | --- | --- |
-        | `authenticationPlugins` | Register the custom cleartext authentication plugin |
-        | `defaultAuthenticationPlugin` | Set the custom plugin as the default authentication plugin |
-        | `disabledAuthenticationPlugins` | Disable the original cleartext authentication plugin (which mandates SSL) |
-
-    > You can refer to the examples in [this code repository](https://github.com/morningman/doris-debug-tools/tree/main/jdbc-test). Or execute `build-auth-plugin.sh` to directly generate the plugin JAR file, then place it in the client's specified location.
-
-2. Doris SSL Enabled
-
-    When Doris SSL is enabled (`enable_ssl=true` added in `fe.conf`):
-
-    ```sql
-    jdbcUrl = "jdbc:mysql://localhost:9030/mydatabase?useSSL=true&sslMode=REQUIRED
+    }
     ```
 
-## Authentication
+2. Configure the custom plugin in the JDBC connection URL (replace `xxx` with the actual package name):
 
-LDAP authentication means password verification through LDAP service to supplement Doris's native authentication mechanism. Password verification priority is as follows:
+    ```sql
+    jdbcUrl = "jdbc:mysql://localhost:9030/mydatabase?authenticationPlugins=xxx.xxx.xxx.MysqlClearPasswordPluginWithoutSSL&defaultAuthenticationPlugin=xxx.xxx.xxx.MysqlClearPasswordPluginWithoutSSL&disabledAuthenticationPlugins=com.mysql.jdbc.authentication.MysqlClearPasswordPlugin";
+    ```
 
-1. Doris first uses LDAP to verify user passwords.
-2. If the user doesn't exist in LDAP, it falls back to Doris local password verification.
-3. If the LDAP password is correct but there's no corresponding account in Doris, a temporary user is created for login.
+    The three properties to configure are explained below:
+
+    | Property | Description |
+    | --- | --- |
+    | `authenticationPlugins` | Registers the custom cleartext authentication plugin |
+    | `defaultAuthenticationPlugin` | Sets the custom plugin as the default authentication plugin |
+    | `disabledAuthenticationPlugins` | Disables the original cleartext authentication plugin (which forces SSL) |
+
+:::tip
+You can refer to the related examples in [this code repository](https://github.com/morningman/doris-debug-tools/tree/main/jdbc-test). Running `build-auth-plugin.sh` directly generates the plugin jar described above, which can then be placed in the designated location on the client.
+:::
+
+#### Scenario B: SSL is Enabled in Doris
+
+After adding `enable_ssl=true` in `fe.conf`, the JDBC URL can use the MySQL native cleartext password plugin directly:
+
+```sql
+jdbcUrl = "jdbc:mysql://localhost:9030/mydatabase?useSSL=true&sslMode=REQUIRED
+```
+
+## Authentication Login
+
+<!-- Knowledge type: Behavior description -->
+<!-- Applicable scenario: Understanding user authentication priority -->
+
+LDAP authentication login means using the LDAP service for password verification, supplementing the authentication mechanism of Doris itself. The priority of password verification is as follows:
+
+1. Doris first uses LDAP to verify the user password.
+2. If the user does not exist in LDAP, it falls back to Doris local password verification.
+3. If the LDAP password is correct but there is no corresponding account in Doris, a temporary user is created for login.
 
 ### Login Behavior Overview
 
-After enabling LDAP, login behaviors under different user states are as follows:
+After LDAP is enabled, the login behavior under different user states is as follows:
 
-| LDAP User | Doris User | Password Used | Login Result | Login Identity |
-| --------- | ---------- | ------------- | ------------ | -------------- |
+| LDAP user | Doris user | Password used | Login result | Login identity |
+| --------- | ---------- | -------------- | ------------ | -------------- |
 | Exists | Exists | LDAP password | Success | Doris user |
-| Exists | Exists | Doris password | Failed | - |
-| Not exists | Exists | Doris password | Success | Doris user |
-| Exists | Not exists | LDAP password | Success | LDAP temporary user |
+| Exists | Exists | Doris password | Failure | - |
+| Does not exist | Exists | Doris password | Success | Doris user |
+| Exists | Does not exist | LDAP password | Success | LDAP temporary user |
 
-> **About Temporary Users:**
->
-> - Temporary accounts are only valid for the current connection and are automatically destroyed when disconnected.
-> - Doris doesn't create persistent user metadata for temporary users.
-> - Temporary user permissions are determined by LDAP group authorization (see "Group Authorization" section below).
-> - If temporary users have no corresponding group permissions, they default to `select_priv` on `information_schema`.
+:::info About temporary users
+
+- The temporary account is valid only for the current connection and is automatically destroyed after the connection is closed.
+- Doris does not create persistent user metadata for a temporary user.
+- The privileges of a temporary user are determined by LDAP group authorization (see the "Group Authorization" section below).
+- If the temporary user has no corresponding group privileges, it has the `select_priv` privilege on `information_schema` by default.
+
+:::
 
 ### Login Examples
 
-The following examples assume LDAP authentication is enabled, configured with `ldap_user_filter = (&(uid={login}))`, and the client has set `LIBMYSQL_ENABLE_CLEARTEXT_PLUGIN=1`.
+The following examples assume that LDAP authentication is enabled, `ldap_user_filter = (&(uid={login}))` is configured, and the client has `LIBMYSQL_ENABLE_CLEARTEXT_PLUGIN=1` set.
 
-**Scenario 1: Account exists in both Doris and LDAP**
+**Scenario 1: The account exists in both Doris and LDAP**
 
 - Doris account: `jack@'172.10.1.10'`, password: `123456`
 - LDAP user attributes: `uid: jack`, password: `abcdef`
 
-Login with LDAP password, success:
+Log in with the LDAP password, succeeds:
 
 ```sql
 mysql -hDoris_HOST -PDoris_PORT -ujack -p abcdef
 ```
 
-Login with Doris password, failed (after enabling LDAP, LDAP users must use LDAP passwords):
+Log in with the Doris password, fails (after LDAP is enabled, LDAP users must use the LDAP password):
 
 ```sql
 mysql -hDoris_HOST -PDoris_PORT -ujack -p 123456
 ```
 
-**Scenario 2: User exists only in LDAP**
+**Scenario 2: The user exists only in LDAP**
 
 - LDAP user attributes: `uid: jack`, password: `abcdef`
 
-Login with LDAP password, Doris automatically creates temporary user `jack@'%'` and logs in. Temporary user has basic permission `DatabasePrivs`: `Select_priv`, automatically destroyed after disconnection:
+Log in with the LDAP password. Doris automatically creates the temporary user `jack@'%'` and logs in. The temporary user has the basic privilege `DatabasePrivs`: `Select_priv`, and is automatically destroyed after the connection is closed:
 
 ```sql
 mysql -hDoris_HOST -PDoris_PORT -ujack -p abcdef
 ```
 
-**Scenario 3: Account exists only in Doris**
+**Scenario 3: The account exists only in Doris**
 
 - Doris account: `jack@'172.10.1.10'`, password: `123456`
 
-User doesn't exist in LDAP, falls back to Doris local authentication, login succeeds with Doris password:
+The user does not exist in LDAP, so it falls back to Doris local authentication. Login with the Doris password succeeds:
 
 ```sql
 mysql -hDoris_HOST -PDoris_PORT -ujack -p 123456
@@ -194,29 +283,34 @@ mysql -hDoris_HOST -PDoris_PORT -ujack -p 123456
 
 ## Group Authorization
 
-LDAP group authorization maps LDAP `groups` to Doris `roles` to achieve centralized permission management. The core mechanism is:
+<!-- Knowledge type: Behavior description -->
+<!-- Applicable scenario: Mapping LDAP groups to Doris roles -->
 
-- If an LDAP user's `dn` appears in the `member` attribute of an LDAP group node, Doris considers the user belongs to that group.
-- When users log in, Doris automatically grants them the `role` permissions corresponding to their LDAP groups.
-- After users log out, Doris automatically revokes these `role` permissions.
+LDAP group authorization maps LDAP `group` to Doris `role`, providing centralized privilege management. The core mechanism is as follows:
 
-> **Prerequisite:** Before using LDAP group authorization, you need to create `roles` in Doris with the same names as LDAP `groups` and grant permissions to these `roles`.
+- If the `dn` of an LDAP user appears in the `member` attribute of an LDAP group node, Doris considers the user to belong to that group.
+- When the user logs in, Doris automatically grants the user the `role` privileges corresponding to the LDAP groups it belongs to.
+- After the user logs out, Doris automatically revokes these `role` privileges.
 
-### Permission Merging Rules
+:::caution Prerequisites
+Before using LDAP group authorization, you must first create a `role` in Doris with the same name as the LDAP `group`, and grant privileges to the `role`.
+:::
 
-The final permissions of a logged-in user depend on their status in both LDAP and Doris:
+### Privilege Merge Rules
 
-| LDAP User | Doris User | Final Permissions |
-| --------- | ---------- | ----------------- |
-| Exists | Exists | LDAP group permissions + Doris user permissions |
-| Not exists | Exists | Doris user permissions |
-| Exists | Not exists | LDAP group permissions |
+The final privileges of the logged-in user depend on its state in LDAP and Doris:
+
+| LDAP user | Doris user | Final privileges |
+| --------- | ---------- | ---------------- |
+| Exists | Exists | LDAP group privileges + Doris user privileges |
+| Does not exist | Exists | Doris user privileges |
+| Exists | Does not exist | LDAP group privileges |
 
 ### Group Name Mapping Rules
 
-Doris extracts the first `Rdn` of the LDAP group `dn` as the group name and maps it to a `role` with the same name in Doris.
+Doris extracts the first `Rdn` of the LDAP group `dn` as the group name and maps it to the `role` with the same name in Doris.
 
-For example, if user `dn` is `uid=jack,ou=aidp,dc=domain,dc=com`, and the group information is:
+For example, if the user `dn` is `uid=jack,ou=aidp,dc=domain,dc=com` and the group information is as follows:
 
 ```text
 dn: cn=doris_rd,ou=group,dc=domain,dc=com  
@@ -224,103 +318,113 @@ objectClass: groupOfNames
 member: uid=jack,ou=aidp,dc=domain,dc=com  
 ```
 
-The first `Rdn` of this group `dn` is `cn=doris_rd`, so the group name is `doris_rd`, corresponding to the `role` `doris_rd` in Doris.
+The first `Rdn` of the group `dn` is `cn=doris_rd`, so the group name is `doris_rd`, which corresponds to the `role` `doris_rd` in Doris.
 
 ### Group Authorization Example
 
-If user jack belongs to LDAP groups `doris_rd`, `doris_qa`, `doris_pm`, and Doris has `roles` with the same names: `doris_rd`, `doris_qa`, `doris_pm`. After jack logs in, in addition to the original permissions of their Doris account, they will also receive the permissions of these three `roles`.
+Suppose user jack belongs to the LDAP groups `doris_rd`, `doris_qa`, and `doris_pm`, and Doris has `role` with the same names: `doris_rd`, `doris_qa`, and `doris_pm`. After jack logs in, in addition to the existing privileges of its Doris account, it also gains the privileges of these three `role`.
 
-> **Note:**
->
-> - Which `group` a `user` belongs to is independent of the LDAP tree's organizational structure. `user2` in the example above doesn't necessarily belong to `group2`.
-> - To make `user2` belong to `group2`, you need to explicitly add `user2` to the `member` attribute of `group2`.
+:::note Note
+
+- Which `group` a `user` belongs to is independent of the organizational structure of the LDAP tree. In the example above, `user2` does not necessarily belong to `group2`.
+- To make `user2` belong to `group2`, you must explicitly add `user2` to the `member` attribute of `group2`.
+
+:::
 
 ## LDAPS (Encrypted Connection)
+
+<!-- Knowledge type: Configuration parameters -->
+<!-- Applicable scenario: Encrypting the channel between FE and the LDAP server -->
 
 :::info Supported since version 4.0.5
 :::
 
-By default, Doris communicates with the LDAP server over plain LDAP (unencrypted). Starting from version 4.0.5, Doris supports LDAPS (LDAP over SSL/TLS) to encrypt the connection between Doris FE and the LDAP server.
+By default, Doris communicates with the LDAP server through the cleartext LDAP protocol. Starting from version 4.0.5, Doris supports LDAPS (LDAP over SSL/TLS) to encrypt the connection between Doris FE and the LDAP server.
 
-### Enabling LDAPS
+### Enable LDAPS
 
-To enable LDAPS, add the following configuration to `fe/conf/ldap.conf`:
+In `fe/conf/ldap.conf`, update the port to the LDAPS port (typically `636`) and enable SSL:
 
-```
-ldap_use_ssl = true
-```
-
-When `ldap_use_ssl` is set to `true`, Doris uses the `ldaps://` protocol to connect to the LDAP server. You should also update the port to the standard LDAPS port (typically `636`):
-
-```
+```text
 ldap_host = ldap-host
 ldap_port = 636
 ldap_use_ssl = true
 ```
 
-### Configuring Certificate Trust
+When `ldap_use_ssl` is set to `true`, Doris connects to the LDAP server using the `ldaps://` protocol.
 
-When using LDAPS, the LDAP server's SSL certificate must be trusted by the Doris FE JVM. If your LDAP server uses a certificate signed by a well-known public CA, no additional configuration is needed.
+### Configure Certificate Trust
 
-If using a custom or self-signed Certificate Authority (CA), you must import the CA certificate into a Java trustStore and configure the JVM to use it. Add the following parameters to `JAVA_OPTS` in `fe/conf/fe.conf`:
+When using LDAPS, the SSL certificate of the LDAP server must be trusted by the JVM of Doris FE:
 
-```
-# Example for JDK 17
+- If the certificate used by the LDAP server is issued by a well-known public CA, no additional configuration is required.
+- If a custom or self-signed CA is used, the CA certificate must be imported into the Java trustStore, and the JVM must be configured to use this trustStore.
+
+Add the trustStore parameters to `JAVA_OPTS` in `fe/conf/fe.conf`. Example:
+
+```text
+# JDK 17 example
 JAVA_OPTS_FOR_JDK_17 = "-Djavax.net.ssl.trustStore=/path/to/your/cacerts -Djavax.net.ssl.trustStorePassword=changeit ..."
 ```
 
-> **Steps to import a self-signed CA certificate:**
->
-> 1. Obtain the CA certificate file (e.g., `ca.crt`).
-> 2. Import it into a Java trustStore using `keytool`:
->
->     ```shell
->     keytool -importcert -alias ldap-ca -keystore /path/to/your/cacerts -file /path/to/ca.crt -storepass changeit -noprompt
->     ```
->
-> 3. Configure the trustStore path in `JAVA_OPTS` as shown above.
-> 4. Restart the Doris FE for the changes to take effect.
+The complete steps for importing a self-signed CA certificate:
+
+1. Obtain the CA certificate file (for example, `ca.crt`).
+2. Use `keytool` to import it into the Java trustStore:
+
+    ```shell
+    keytool -importcert -alias ldap-ca -keystore /path/to/your/cacerts -file /path/to/ca.crt -storepass changeit -noprompt
+    ```
+
+3. Configure the trustStore path in `JAVA_OPTS` as described above.
+4. Restart Doris FE for the configuration to take effect.
 
 ## Cache Management
 
-To avoid frequent access to LDAP services, Doris caches LDAP information in memory.
+<!-- Knowledge type: Configuration parameters -->
+<!-- Applicable scenario: Forcing a refresh after LDAP information changes -->
 
-| Configuration | Description | Default Value |
+To avoid frequent access to the LDAP service, Doris caches LDAP information in memory.
+
+| Configuration item | Description | Default value |
 | --- | --- | --- |
-| `ldap_user_cache_timeout_s` | Cache time for LDAP user information (seconds) | 43200 (12 hours) |
+| `ldap_user_cache_timeout_s` | Cache duration of LDAP user information (in seconds) | 43200 (12 hours) |
 
-In the following scenarios, you may need to manually refresh the cache to make changes take effect immediately:
+In the following scenarios, you may need to manually refresh the cache so that the changes take effect immediately:
 
-- Modified user or group information in the LDAP service.
-- Modified the `Role` permissions corresponding to LDAP user groups in Doris.
+- User or group information in the LDAP service has been modified.
+- The `Role` privileges corresponding to LDAP user groups in Doris have been modified.
 
-You can refresh the cache with the `refresh ldap` statement. See [REFRESH-LDAP](../../../sql-manual/sql-statements/account-management/REFRESH-LDAP) for details.
+You can refresh the cache with the `refresh ldap` statement. For details, see [REFRESH-LDAP](../../../sql-manual/sql-statements/account-management/REFRESH-LDAP).
 
 ## Known Limitations
 
-- Doris's LDAP functionality only supports cleartext password verification for the client-to-FE segment, meaning that when users log in, passwords are transmitted in plaintext between `client` and `fe`. SSL/TLS encryption between the client and Doris FE must be configured separately (see [Client Connection](#step-2-client-connection)).
-- For the FE-to-LDAP segment, the connection is unencrypted by default (`ldap_use_ssl = false`). To encrypt this segment, set `ldap_use_ssl = true` to use LDAPS (see [LDAPS (Encrypted Connection)](#ldaps-encrypted-connection)).
+- The LDAP feature of Doris supports only cleartext password verification on the channel from the client to FE, that is, when the user logs in, the password is transmitted in cleartext between the `client` and `fe`. SSL/TLS encryption between the client and Doris FE must be configured separately (see [Client Connection](#step-2-client-connection)).
+- The channel from FE to the LDAP server uses cleartext transmission by default (`ldap_use_ssl = false`). To encrypt this channel, set `ldap_use_ssl = true` to enable LDAPS (see [LDAPS (Encrypted Connection)](#ldaps-encrypted-connection)).
 
-## FAQ
+## Frequently Asked Questions
 
-**Q: How to check which roles an LDAP user has in Doris?**
+<!-- Knowledge type: Troubleshooting -->
+<!-- Applicable scenario: Login failure / missing roles / LDAPS handshake failure -->
 
-After logging into Doris with an LDAP user, execute `show grants;` to view all roles of the current user. `ldapDefaultRole` is the default role that every LDAP user has.
+### Q: How do I view which roles an LDAP user has in Doris?
 
-**Q: An LDAP user has fewer roles in Doris than expected, how to troubleshoot?**
+After logging in to Doris with an LDAP user, run `show grants;` to view all roles of the current user. Among them, `ldapDefaultRole` is the default role that every LDAP user has.
 
-Check the following items step by step:
+### Q: An LDAP user has fewer roles in Doris than expected. How do I troubleshoot?
 
-1. Execute `show roles;` to confirm whether the expected roles exist in Doris. If not, create them with `CREATE ROLE role_name;`.
+Check the following items one by one:
+
+1. Run `show roles;` to confirm whether the expected role exists in Doris. If it does not exist, create it with `CREATE ROLE role_name;`.
 2. Check whether the expected `group` is located under the organizational structure corresponding to `ldap_group_basedn`.
 3. Check whether the expected `group` contains the `member` attribute.
-4. Check whether the `member` attribute of the expected `group` contains the current user's `dn`.
+4. Check whether the `member` attribute of the expected `group` contains the `dn` of the current user.
 
-**Q: LDAPS connection fails, how to troubleshoot?**
+### Q: LDAPS connection fails. How do I troubleshoot?
 
-Check the following items step by step:
+Check the following items one by one:
 
 1. Confirm that `ldap_use_ssl = true` is set in `fe/conf/ldap.conf`.
 2. Confirm that `ldap_port` is set to the correct LDAPS port (typically `636`).
-3. Verify that the LDAP server's SSL certificate is trusted by the JVM. Check the `fe.log` for SSL handshake errors such as `SSLHandshakeException` or `PKIX path building failed`.
-4. If using a self-signed CA, ensure the CA certificate has been imported into the trustStore and the trustStore path is correctly configured in `JAVA_OPTS`.
+3. Check whether the SSL certificate of the LDAP server is trusted by the JVM. Check `fe.log` for SSL handshake errors such as `SSLHandshakeException` or `PKIX path building failed`.
+4. If a self-signed CA is used, confirm that the CA certificate has been imported into the trustStore and that the trustStore path in `JAVA_OPTS` is configured correctly.

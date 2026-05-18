@@ -248,7 +248,8 @@ ALTER TABLE create_table_partition MODIFY PARTITION (*) SET("storage_policy" = "
 
 具体配置请参考 [Data Cache](../../lakehouse/data-cache) 文档。
 
-## 常见问题（FAQ） {#常见问题-faq}
+## 常见问题（FAQ）
+
 <!-- 知识类型: Troubleshooting -->
 
 ### Q1：创建 S3 Resource 报错 `host must not be null` 怎么办？

@@ -9,7 +9,8 @@
 
 # Overview
 
-## Numeric Types {#aggregate-types}
+## Numeric Types
+
 Doris supports the following numeric data types:
 
 ### BOOLEAN
@@ -44,7 +45,8 @@ The precise fixed-point type [DECIMAL](../sql-data-types/numeric/DECIMAL.md), us
 
 
 
-## Date Types {#numeric-types}
+## Date Types
+
 Date types include DATE, TIME, DATETIME and TIMESTAMPTZ. DATE type only stores the date accurate to the day, DATETIME type stores the date and time, which can be accurate to microseconds. TIME type only stores the time, and **does not support the construction of the table storage for the time being, can only be used in the query process**. TIMESTAMPTZ is a time zone-aware date-time type that stores values in UTC and automatically converts them based on the session time zone during queries.
 
 Do calculation for datetime types or converting them to numeric types, please use functions like [TIME_TO_SEC](../../sql-functions/scalar-functions/date-time-functions/time-to-sec), [DATE_DIFF](../../sql-functions/scalar-functions/date-time-functions/datediff), [UNIX_TIMESTAMP](../../sql-functions/scalar-functions/date-time-functions/unix-timestamp) . The result of directly converting them as numeric types as not guaranteed.

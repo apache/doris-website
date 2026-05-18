@@ -19,6 +19,36 @@
         color: var(--ifm-color-primary) !important;
         background-color: transparent !important;
     }
+    .dropdown__link--disabled,
+    .dropdown__link--disabled:hover {
+        color: #9aa3b2 !important;
+        cursor: not-allowed !important;
+        background-color: transparent !important;
+    }
+}
+
+.locale-dropdown__label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    width: 100%;
+}
+
+.locale-dropdown__label-text {
+    flex: 0 0 auto;
+}
+
+.locale-dropdown__coming-soon-badge {
+    display: inline-block;
+    padding: 1px 6px;
+    font-size: 10px;
+    line-height: 1.4;
+    font-weight: 500;
+    color: #6b7280;
+    background-color: #f1f3f5;
+    border: 1px solid #e2e6eb;
+    border-radius: 9999px;
+    white-space: nowrap;
 }
 
 .locale-box {
