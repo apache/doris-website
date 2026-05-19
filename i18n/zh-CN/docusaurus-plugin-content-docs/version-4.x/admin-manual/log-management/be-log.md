@@ -163,7 +163,7 @@ RuntimeLogger I20240624 00:36:46.326643 1460958 olap_server.cpp:424] try to star
 
 | 前缀 | 对应日志 |
 | --- | --- |
-| `RuntimeLogger` | 对应 `be.log` 中的日志 |
+| `RuntimeLogger` | 对应 `be.INFO` 中的日志 |
 
 > 后续版本将增加对 `jni.log` 的前缀支持。
 
