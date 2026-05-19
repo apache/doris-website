@@ -99,13 +99,13 @@
     "message": "倒排索引",
     "description": "The label for category Inverted Index in sidebar docs"
   },
-  "sidebar.docs.category.Loading Data": {
+  "sidebar.docs.category.Data Loading": {
     "message": "数据导入",
-    "description": "The label for category Loading Data in sidebar docs"
+    "description": "The label for category Data Loading in sidebar docs"
   },
-  "sidebar.docs.category.Data Update and Delete": {
+  "sidebar.docs.category.Data Update & Delete": {
     "message": "数据更新与删除",
-    "description": "The label for category Data Update and Delete in sidebar docs"
+    "description": "The label for category Data Update & Delete in sidebar docs"
   },
   "sidebar.docs.category.Data Source": {
     "message": "数据源",
@@ -143,9 +143,9 @@
     "message": "数据删除",
     "description": "The label for category Delete in sidebar docs"
   },
-  "sidebar.docs.category.Exporting Data": {
+  "sidebar.docs.category.Data Export": {
     "message": "数据导出",
-    "description": "The label for category Export in sidebar docs"
+    "description": "The label for category Data Export in sidebar docs"
   },
   "sidebar.releasenotes.category.Previous Release": {
     "message": "历史版本",
@@ -810,10 +810,6 @@
   "sidebar.docs.category.Special Tables": {
     "message": "特殊表",
     "description": "The label for category Special Tables in sidebar docs"
-  },
-  "sidebar.docs.category.Data Operations": {
-    "message": "数据操作",
-    "description": "The label for category Data Operations in sidebar docs"
   },
   "sidebar.docs.category.Querying": {
     "message": "数据查询",
