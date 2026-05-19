@@ -42,7 +42,7 @@ None
 	"code": 0,
 	"data": {
 		"create_partition": ["ALTER TABLE `tbl1` ADD PARTITION ..."],
-		"create_table": ["CREATE TABLE `tbl1` ...],
+		"create_table": ["CREATE TABLE `tbl1` ..."],
 		"create_rollup": ["ALTER TABLE `tbl1` ADD ROLLUP ..."]
 	},
 	"count": 0
@@ -54,7 +54,7 @@ None
 1. Get the DDL statement of the specified table
 
     ```
-    GET GET /api/_get_ddl?db=db1&table=tbl1
+    GET /api/_get_ddl?db=db1&table=tbl1
     
     Response
     {
