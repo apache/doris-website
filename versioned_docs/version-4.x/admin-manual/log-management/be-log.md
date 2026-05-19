@@ -163,7 +163,7 @@ Meaning of each prefix:
 
 | Prefix | Corresponding log |
 | --- | --- |
-| `RuntimeLogger` | Logs from `be.log` |
+| `RuntimeLogger` | Logs from `be.INFO` |
 
 > Support for `jni.log` prefixes will be added in a future release.
 
