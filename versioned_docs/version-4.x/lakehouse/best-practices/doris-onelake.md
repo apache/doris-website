@@ -280,4 +280,4 @@ Through this guide, we’ve demonstrated how to seamlessly integrate **Apache Do
 
 Whether for **real-time business monitoring**, **cross-system data comparison**, or **complex multidimensional analytics**, this architecture empowers enterprises with both performance and flexibility. As data lake technologies continue to evolve, the integration of Doris and OneLake will serve as a solid data foundation for enterprise digital transformation.
 
-Next, you can follow the configuration steps outlined in this article to build your own analytical environment - and and explore even more advanced analytics scenarios tailored to your business needs.
+Next, you can follow the configuration steps outlined in this article to build your own analytical environment - and explore even more advanced analytics scenarios tailored to your business needs.
