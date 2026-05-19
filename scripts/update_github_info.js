@@ -11,16 +11,17 @@ function formatStar(star) {
 }
 
 async function getGithubStar() {
-    try {
-        const res = await fetch('https://api.github.com/repos/apache/doris');
-        const data = await res.json();
-        if (data && data.stargazers_count) {
-            const starStr = (+parseFloat(formatStar(data.stargazers_count)).toFixed(1)).toString();
-            return starStr;
-        }
-    } catch (err) {
-        console.error(err);
+    const headers = { Accept: 'application/vnd.github+json' };
+    if (process.env.GITHUB_TOKEN) {
+        headers.Authorization = `Bearer ${process.env.GITHUB_TOKEN}`;
     }
+    const res = await fetch('https://api.github.com/repos/apache/doris', { headers });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok || !data || !data.stargazers_count) {
+        console.error('Failed to fetch star count from GitHub API:', res.status, data);
+        process.exit(1);
+    }
+    return (+parseFloat(formatStar(data.stargazers_count)).toFixed(1)).toString();
 }
 
 function updateGithubData(newStar) {
@@ -32,14 +33,12 @@ function updateGithubData(newStar) {
 
 async function main() {
     const star = await getGithubStar();
-    if (star) {
-        try {
-            updateGithubData(star);
-            console.log('successful,stars:', star);
-        } catch (err) {
-            console.error(err);
-        }
-    }
+    updateGithubData(star);
+    console.log('successful,stars:', star);
 }
 
-main();
+main().catch((err) => {
+    console.error(err);
+    process.exit(1);
+});
+

@@ -33,6 +33,8 @@ jobs:
                   node-version: 20
 
             - name: Build
+              env:
+                  GITHUB_TOKEN: ${{ github.token }}
               run: |
                   npm install -g yarn
                   yarn cache clean
