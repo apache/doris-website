@@ -32,7 +32,7 @@ You can see some metadata-related indicators counted by Bvar on the web page `ht
 - `doris_pk/index_reader_bytes`: the cumulative number of bytes occupied by the Primary Key Index Reader. This is not a real-time statistical value and is expected to be fixed.
 - `doris_pk/index_reader_pages`: Same as above, the cumulative value of the statistics.
 - `doris_pk/index_reader_cached_pages`: Same as above, the cumulative value of the statistics.
-- `doris_pk/index_reader_pagindex_reader_pk_pageses`: Same as above, cumulative value of statistics.
+- `doris_pk/index_reader_pk_pages`: Same as above, cumulative value of statistics.
 - `doris_primary_key_index_memory_bytes`: Same as above, cumulative value of statistics.
 ```
 

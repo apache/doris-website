@@ -32,7 +32,7 @@ Web 页面 `http://{be_host}:{brpc_port}/vars` 可以看到 Bvar 统计的一些
 - `doris_pk/index_reader_bytes`：累计的 Primary Key Index Reader 占用内存的字节数，这不是实时的统计值，期待被修复。
 - `doris_pk/index_reader_pages`：同上，统计的累计值。
 - `doris_pk/index_reader_cached_pages`：同上，统计的累计值。
-- `doris_pk/index_reader_pagindex_reader_pk_pageses`：同上，统计的累计值。
+- `doris_pk/index_reader_pk_pages`：同上，统计的累计值。
 - `doris_primary_key_index_memory_bytes`：同上，统计的累计值。
 ```
 

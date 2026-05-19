@@ -60,8 +60,8 @@ Doris 内存管理分为三个层级：**进程级别 → Workload Group 级别 
 |------|------|
 | `max_memory_percent` | 该 Workload Group 最多可占用进程内存的百分比；超过后触发落盘或 Kill Query |
 | `min_memory_percent` | 该 Workload Group 保证可用的最低内存百分比；内存不足时系统按此分配，确保其他组有足够内存 |
-| `memory_low_watermark` | 内存使用率低水位线，默认 80% |
-| `memory_high_watermark` | 内存使用率高水位线，默认 95%；超过此值时 reserve memory 失败，触发落盘 |
+| `memory_low_watermark` | 内存使用率低水位线，默认 50% |
+| `memory_high_watermark` | 内存使用率高水位线，默认 80%；超过此值时 reserve memory 失败，触发落盘 |
 
 约束：所有 Workload Group 的 `min_memory_percent` 之和不能超过 100%，且单个组的 `min_memory_percent` 不能大于 `max_memory_percent`。
 

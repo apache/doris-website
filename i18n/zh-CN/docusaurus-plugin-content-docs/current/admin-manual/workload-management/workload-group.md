@@ -687,16 +687,13 @@ DESC FUNCTION s3 (
 <!-- 知识类型: 配置参数 -->
 <!-- 适用场景: 故障排查 / 性能调优 -->
 
-### Q: 配置了 CPU 硬限但未生效**
-
+### Q: 配置了 CPU 硬限但未生效
 1. **环境初始化失败**：检查 CGroup V1 路径下 `/sys/fs/cgroup/cpu/doris/query/1/tasks` 文件是否包含对应 Workload Group 的线程号（可用 `top -H -b -n 1 -p pid` 获取），以及 `cpu.cfs_quota_us` 文件的值是否为 -1（为 -1 表示硬限未生效）。
 2. **BE 进程 CPU 超过配置值**：Workload Group 管理的是查询线程和导入 memtable 下刷线程，BE 内的其他组件（如 Compaction）同样消耗 CPU，因此进程 CPU 使用通常高于 Workload Group 配置值。可创建测试 Workload Group，通过 `information_schema.workload_group_resource_usage` 查看 Workload Group 自身的 CPU 使用率（2.1.6 版本起支持）。
 3. **配置了 `cpu_resource_limit` 参数**：执行 `SHOW PROPERTY FOR jack LIKE 'cpu_resource_limit'` 和 `SHOW VARIABLES LIKE 'cpu_resource_limit'` 确认是否设置了该参数（默认值 -1 表示未设置）。配置该参数后，查询走独立线程池，不受 Workload Group 管理。迁移建议：分批次将用户的 `num_scanner_threads` 设为 1，指定 Workload Group，再将 `cpu_resource_limit` 改为 -1，观察稳定后继续迁移。
 
-### Q: 默认 Workload Group 个数限制为 15 个**
-
+### Q: 默认 Workload Group 个数限制为 15 个
 Workload Group 是对单机资源的划分，分组过多会导致每个分组可用资源过少。如果业务确实需要更多分组，可以考虑将集群划分为多组不同的 BE，为每组 BE 创建不同的 Workload Group；也可以修改 FE 配置 `workload_group_max_num` 临时绕开此限制。
 
-### Q: 配置较多 Workload Group 后报错 "Resource temporarily unavailable"**
-
+### Q: 配置较多 Workload Group 后报错 "Resource temporarily unavailable"
 每个 Workload Group 都是一组独立的线程池，创建过多时 BE 进程尝试启动的线程数可能超过操作系统允许的上限。解决方案：修改操作系统配置，允许 BE 进程创建更多线程。
