@@ -14,14 +14,29 @@
 // Center the Kapa Ask Me modal vertically. Kapa renders inside a Shadow DOM
 // on `#kapa-widget-container`, so light-DOM CSS can't reach it. We inject a
 // <style> into the shadow root and re-inject if Kapa rebuilds it.
+//
+// The modal must (a) size to its content when small, (b) cap at viewport
+// minus margin when content is tall, and (c) scroll inside the body — not
+// inside `.mantine-Modal-inner`, which clips the top under `align-items:
+// center` once content exceeds the viewport.
 (function centerKapaModal() {
     var STYLE_ID = 'doris-kapa-center-modal';
     var CSS_TEXT =
         '.mantine-Modal-inner{' +
         'align-items:center !important;' +
-        'padding-top:0 !important;' +
-        'padding-bottom:0 !important;' +
+        'padding-top:2rem !important;' +
+        'padding-bottom:2rem !important;' +
         '--modal-y-offset:0 !important;' +
+        '}' +
+        '.mantine-Modal-content{' +
+        'max-height:calc(100vh - 4rem) !important;' +
+        'display:flex !important;' +
+        'flex-direction:column !important;' +
+        '}' +
+        '.mantine-Modal-body{' +
+        'flex:1 1 auto !important;' +
+        'min-height:0 !important;' +
+        'overflow-y:auto !important;' +
         '}';
 
     function inject() {
