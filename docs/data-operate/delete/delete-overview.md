@@ -8,7 +8,6 @@ keywords:
     - TRUNCATE TABLE
     - partition deletion
     - delete sign
-    - delete sign
     - batch delete
     - temporary partition replacement
     - atomic overwrite

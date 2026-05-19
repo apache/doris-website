@@ -25,13 +25,13 @@ CREATE CATALOG mysql_catalog properties(
 
 -- Load via INSERT
 INSERT INTO internal.doris_db.tbl1
-SELECT * FROM iceberg_catalog.iceberg_db.table1;
+SELECT * FROM mysql_catalog.mysql_db.table1;
 
 -- Load via CTAS
 CREATE TABLE internal.doris_db.tbl1
 PROPERTIES('replication_num' = '1')
 AS
-SELECT * FROM iceberg_catalog.iceberg_db.table1;
+SELECT * FROM mysql_catalog.mysql_db.table1;
 ```
 詳細については、[カタログ Data Load](../../../lakehouse/catalog-overview.md#data-import)を参照してください。
 

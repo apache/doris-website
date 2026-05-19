@@ -46,7 +46,7 @@ CREATE TABLE sales_data (
     amount        DECIMAL(10,2),
     country       VARCHAR(48)
 )
-DISTSTYLE AUTO
+DISTSTYLE AUTO;
 
 INSERT INTO sales_data VALUES
 (1, 'Alice', '2025-04-08', 99.99, 'USA'),

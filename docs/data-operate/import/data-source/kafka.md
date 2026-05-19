@@ -161,23 +161,23 @@ FROM KAFKA(
 
 ```SQL
 mysql> select * from test_multi_table_load1;
-+------+----------------+------+
-| id   | name           | age  |
-+------+----------------+------+
-|  1   | Emily          | 25   |
-+------+----------------+------+
++---------+----------------+------+
+| user_id | name           | age  |
++---------+----------------+------+
+|  1      | Emily          | 25   |
++---------+----------------+------+
 
 mysql> select * from test_multi_table_load2;
-+------+----------------+------+
-| id   | name           | age  |
-+------+----------------+------+
-|  2   | Benjamin       | 35   |
-+------+----------------+------+
++---------+----------------+------+
+| user_id | name           | age  |
++---------+----------------+------+
+|  2      | Benjamin       | 35   |
++---------+----------------+------+
 ```
 
 ### Configuring Security Authentication
 
-If the Kafka cluster has SSL, SASL, or other security authentication enabled, refer to [Kafka Security Authentication](../import-way/routine-load-manual.md#kafka-安全认证) to configure the corresponding authentication parameters.
+If the Kafka cluster has SSL, SASL, or other security authentication enabled, refer to [Kafka Security Authentication](../import-way/routine-load-manual.md#kafka-security-authentication) to configure the corresponding authentication parameters.
 
 ## Approach 2: Use Doris Kafka Connector to Consume Kafka Data
 
@@ -472,6 +472,6 @@ In the Doris Kafka Connector configuration, set `converter.mode=debezium_ingesti
 - [CREATE ROUTINE LOAD syntax reference](../../../sql-manual/sql-statements/data-modification/load-and-export/CREATE-ROUTINE-LOAD)
 - [Routine Load operation manual](../import-way/routine-load-manual.md)
 - [Doris Kafka Connector documentation](../../../connection-integration/data-integration/doris-kafka-connector.md)
-- [Kafka security authentication configuration](../import-way/routine-load-manual.md#kafka-安全认证)
+- [Kafka security authentication configuration](../import-way/routine-load-manual.md#kafka-security-authentication)
 - [Kafka Connect Distributed Workers](https://docs.confluent.io/platform/current/connect/index.html#distributed-workers)
 - [Debezium connector for MySQL](https://debezium.io/documentation/reference/stable/connectors/mysql.html)

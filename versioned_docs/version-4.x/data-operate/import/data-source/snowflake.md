@@ -155,7 +155,7 @@ After the export completes, S3 generates a corresponding subdirectory for each p
 
 S3 Load is an **asynchronous data import method**: after execution, Doris actively pulls data from the data source. It supports object storage compatible with the S3 protocol, including [AWS S3](./amazon-s3.md), [GCS](./google-cloud-storage.md), and [Azure](./azure-storage.md).
 
-S3 Load is suitable for scenarios with **large data volumes that require background asynchronous processing**. For synchronous processing of small batches of data, you can use [TVF Load](./amazon-s3.md#load-with-tvf).
+S3 Load is suitable for scenarios with **large data volumes that require background asynchronous processing**. For synchronous processing of small batches of data, you can use [TVF Load](./amazon-s3.md#method-2-load-with-tvf-synchronous).
 
 :::caution Note
 For **Parquet / ORC files containing complex types (Struct / Array / Map)**, you must currently use TVF Load.
@@ -279,7 +279,7 @@ This error is a data quality error. Common causes include: field length exceedin
 
 ### Q2: How do I import Parquet files containing complex types?
 
-For Parquet / ORC files containing complex types such as Struct / Array / Map, **S3 Load is not currently supported**. You must use [TVF Load](./amazon-s3.md#load-with-tvf).
+For Parquet / ORC files containing complex types such as Struct / Array / Map, **S3 Load is not currently supported**. You must use [TVF Load](./amazon-s3.md#method-2-load-with-tvf-synchronous).
 
 ### Q3: Why does the Snowflake TIME type need to be converted to String?
 
@@ -301,6 +301,6 @@ Doris does not have a type that fully corresponds to Snowflake's `TIME`. Therefo
 - [S3 Load](./amazon-s3.md)
 - [GCS Load](./google-cloud-storage.md)
 - [Azure Load](./azure-storage.md)
-- [TVF Load](./amazon-s3.md#load-with-tvf)
+- [TVF Load](./amazon-s3.md#method-2-load-with-tvf-synchronous)
 - [Load Best Practices](../load-best-practices/load-best-practices.md)
 - [Import Configuration Parameters](../../import/import-way/broker-load-manual.md#related-configurations)

@@ -30,7 +30,7 @@
 
 - **建模与分区策略**：根据 Redshift 源表结构选择合适的 Doris [数据模型](../../../table-design/data-model/intro.mdx)，并制定[分区](../../../table-design/data-partitioning/dynamic-partitioning.md)与[分桶](../../../table-design/data-partitioning/data-bucketing.md)策略。更多建表建议见[导入最佳实践](../load-best-practices/load-best-practices.md)。
 - **类型转换**：Redshift 导出 `TIME` 类型时，需要先 `CAST` 成 `VARCHAR` 类型再导出。
-- **复杂类型限制**：含有复杂类型（Struct/Array/Map）的 Parquet/ORC 格式文件，目前必须使用 [TVF 导入](./amazon-s3.md#load-with-tvf)。
+- **复杂类型限制**：含有复杂类型（Struct/Array/Map）的 Parquet/ORC 格式文件，目前必须使用 [TVF 导入](./amazon-s3.md#method-2-load-with-tvf-synchronous)。
 
 ## 数据类型映射
 
@@ -75,7 +75,7 @@ CREATE TABLE sales_data (
     amount        DECIMAL(10,2),
     country       VARCHAR(48)
 )
-DISTSTYLE AUTO
+DISTSTYLE AUTO;
 
 INSERT INTO sales_data VALUES
 (1, 'Alice', '2025-04-08', 99.99, 'USA'),
@@ -150,8 +150,8 @@ PARTITION BY (order_date) INCLUDE
 | 场景                                 | 推荐方式                                       |
 | ------------------------------------ | ---------------------------------------------- |
 | 数据量大、可后台异步处理             | S3 Load                                        |
-| 需要同步处理的数据导入               | [TVF 导入](./amazon-s3.md#load-with-tvf)       |
-| 含复杂类型（Struct/Array/Map）文件   | 必须使用 [TVF 导入](./amazon-s3.md#load-with-tvf) |
+| 需要同步处理的数据导入               | [TVF 导入](./amazon-s3.md#method-2-load-with-tvf-synchronous)       |
+| 含复杂类型（Struct/Array/Map）文件   | 必须使用 [TVF 导入](./amazon-s3.md#method-2-load-with-tvf-synchronous) |
 
 #### 3.1 导入单个分区数据
 
@@ -263,7 +263,7 @@ Doris 不支持 `TIME` 类型，因此 Redshift 在导出 `TIME/TIMEZ` 类型时
 
 **Q2：含有 Struct/Array/Map 等复杂类型的 Parquet/ORC 文件可以用 S3 Load 吗？**
 
-不可以。当前必须使用 [TVF 导入](./amazon-s3.md#load-with-tvf) 处理含复杂类型的文件。
+不可以。当前必须使用 [TVF 导入](./amazon-s3.md#method-2-load-with-tvf-synchronous) 处理含复杂类型的文件。
 
 **Q3：S3 Load 是同步还是异步导入？如何查询执行结果？**
 

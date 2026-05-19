@@ -30,7 +30,7 @@ Before starting the migration, pay attention to the following items to avoid com
 - **Table schema design**: Choose the appropriate Doris [data model](../../../table-design/data-model/intro.mdx), as well as [partitioning](../../../table-design/data-partitioning/dynamic-partitioning.md) and [bucketing](../../../table-design/data-partitioning/data-bucketing.md) strategies based on the BigQuery table schema. For more table creation strategies, see [Load best practices](../load-best-practices/load-best-practices.md).
 - **JSON type export**: BigQuery does not support exporting JSON types in Parquet format. Use JSON format for the export instead.
 - **Time type export**: When BigQuery exports a Time type, cast it to String before exporting.
-- **Complex type import**: For Parquet/ORC files containing complex types (Struct/Array/Map), you must currently use [TVF Load](./amazon-s3.md#load-with-tvf).
+- **Complex type import**: For Parquet/ORC files containing complex types (Struct/Array/Map), you must currently use [TVF Load](./amazon-s3.md#method-2-load-with-tvf-synchronous).
 
 ## Data type mapping
 
@@ -69,7 +69,7 @@ CREATE OR REPLACE TABLE test.sales_data (
     amount        NUMERIC(10,2),
     country       STRING
 )
-PARTITION BY  order_date
+PARTITION BY  order_date;
 
 
 INSERT INTO test.sales_data (order_id, customer_name, order_date, amount, country) VALUES
@@ -133,7 +133,7 @@ The command above exports `sales_data` to GCS. Each partition produces one or mo
 
 The import uses S3 Load. **S3 Load is an asynchronous data import method. After the job is submitted, Doris actively pulls data from the data source.** The data source supports object storage compatible with the S3 protocol, including [AWS S3](./amazon-s3.md), [GCS](./google-cloud-storage.md), and [Azure](./azure-storage.md).
 
-This method is suitable for scenarios with large data volumes that need asynchronous background processing. For data imports that need synchronous processing, see [TVF Load](./amazon-s3.md#load-with-tvf).
+This method is suitable for scenarios with large data volumes that need asynchronous background processing. For data imports that need synchronous processing, see [TVF Load](./amazon-s3.md#method-2-load-with-tvf-synchronous).
 
 > **Note**: For Parquet/ORC files containing complex types (Struct/Array/Map), you must currently use TVF Load.
 
@@ -260,7 +260,7 @@ This error indicates that the data does not meet quality requirements. Handle it
 
 **Q4: Can Parquet/ORC files containing Struct/Array/Map be imported with S3 Load?**
 
-No. Files with these complex types must currently be imported with [TVF Load](./amazon-s3.md#load-with-tvf).
+No. Files with these complex types must currently be imported with [TVF Load](./amazon-s3.md#method-2-load-with-tvf-synchronous).
 
 **Q5: How can I avoid the retry cost caused by single-job failures when migrating large volumes of historical data?**
 

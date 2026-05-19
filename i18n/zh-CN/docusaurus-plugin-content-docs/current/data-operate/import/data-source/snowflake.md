@@ -155,7 +155,7 @@ HEADER=TRUE;
 
 S3 Load 是一种**异步的数据导入方式**：执行后 Doris 会主动从数据源拉取数据。它支持兼容 S3 协议的对象存储，包括 [AWS S3](./amazon-s3.md)、[GCS](./google-cloud-storage.md)、[Azure](./azure-storage.md) 等。
 
-S3 Load 适用于**数据量大、需要后台异步处理**的场景。如需同步处理小批量数据，可使用 [TVF 导入](./amazon-s3.md#load-with-tvf)。
+S3 Load 适用于**数据量大、需要后台异步处理**的场景。如需同步处理小批量数据，可使用 [TVF 导入](./amazon-s3.md#method-2-load-with-tvf-synchronous)。
 
 :::caution 注意
 对于含有**复杂类型（Struct / Array / Map）的 Parquet / ORC 格式文件**，目前必须使用 TVF 导入。
@@ -279,7 +279,7 @@ Reason: column_name[country], the length of input is too long than schema. first
 
 ### Q2：含有复杂类型的 Parquet 文件如何导入？
 
-对于含有 Struct / Array / Map 等复杂类型的 Parquet / ORC 文件，**S3 Load 暂不支持**，必须使用 [TVF 导入](./amazon-s3.md#load-with-tvf)。
+对于含有 Struct / Array / Map 等复杂类型的 Parquet / ORC 文件，**S3 Load 暂不支持**，必须使用 [TVF 导入](./amazon-s3.md#method-2-load-with-tvf-synchronous)。
 
 ### Q3：Snowflake 的 TIME 类型为什么要转换成 String？
 
@@ -301,6 +301,6 @@ Doris 没有与 Snowflake `TIME` 完全对应的类型，因此在 Snowflake 端
 - [S3 导入](./amazon-s3.md)
 - [GCS 导入](./google-cloud-storage.md)
 - [Azure 导入](./azure-storage.md)
-- [TVF 导入](./amazon-s3.md#load-with-tvf)
+- [TVF 导入](./amazon-s3.md#method-2-load-with-tvf-synchronous)
 - [导入最佳实践](../load-best-practices/load-best-practices.md)
 - [导入配置参数](../../import/import-way/broker-load-manual.md#related-configurations)

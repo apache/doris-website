@@ -201,7 +201,7 @@ output.doris:
 doris stream load response:
 {
     "TxnId": 45464,
-    "Label": "logstash_log_db_doris_log_20240708_223532_539_6c20a0d1-dcab-4b8e-9bc0-76b46a929bd1",
+    "Label": "beats_log_db_doris_log_20240708_223532_539_6c20a0d1-dcab-4b8e-9bc0-76b46a929bd1",
     "Comment": "",
     "TwoPhaseCommit": "false",
     "Status": "Success",
