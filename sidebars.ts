@@ -956,7 +956,7 @@ const sidebars: SidebarsConfig = {
                             type: 'category',
                             label: 'mysql',
                             items: [
-                                'admin-manual/system-tables/mysql/props_priv',
+                                'admin-manual/system-tables/mysql/procs_priv',
                                 'admin-manual/system-tables/mysql/user',
                             ],
                         },

@@ -687,16 +687,13 @@ DESC FUNCTION s3 (
 <!-- Knowledge type: Configuration parameters -->
 <!-- Applicable scenarios: Troubleshooting / Performance tuning -->
 
-### Q: The CPU hard limit is configured but does not take effect**
-
+### Q: The CPU hard limit is configured but does not take effect
 1. **Environment initialization failure**: Check whether the `/sys/fs/cgroup/cpu/doris/query/1/tasks` file under the CGroup V1 path contains the thread IDs of the corresponding Workload Group (use `top -H -b -n 1 -p pid` to obtain them), and whether the value of `cpu.cfs_quota_us` is -1 (a value of -1 means the hard limit is not in effect).
 2. **The BE process CPU exceeds the configured value**: Workload Group manages query threads and the memtable flush threads for ingestion. Other components inside BE (such as Compaction) also consume CPU, so process CPU usage is usually higher than the Workload Group configured value. You can create a test Workload Group and check the Workload Group's own CPU usage through `information_schema.workload_group_resource_usage` (supported from version 2.1.6).
 3. **The `cpu_resource_limit` parameter is configured**: Run `SHOW PROPERTY FOR jack LIKE 'cpu_resource_limit'` and `SHOW VARIABLES LIKE 'cpu_resource_limit'` to confirm whether this parameter is set (the default value -1 indicates not set). When this parameter is configured, queries use an independent thread pool and are not managed by Workload Group. Migration recommendation: in batches, set the user's `num_scanner_threads` to 1, specify a Workload Group, then change `cpu_resource_limit` to -1, observe until stable, and continue migration.
 
-### Q: The default Workload Group count is limited to 15**
-
+### Q: The default Workload Group count is limited to 15
 Workload Group divides single-machine resources. Too many groups result in too few resources per group. If your business genuinely needs more groups, consider splitting the cluster into multiple BE sets and creating different Workload Groups for each set; you can also modify the FE configuration `workload_group_max_num` to temporarily bypass this limit.
 
-### Q: After configuring many Workload Groups, the error "Resource temporarily unavailable" appears**
-
+### Q: After configuring many Workload Groups, the error "Resource temporarily unavailable" appears
 Each Workload Group is an independent set of thread pools. When too many are created, the number of threads the BE process tries to start may exceed the upper limit allowed by the operating system. Solution: modify the operating system configuration to allow the BE process to create more threads.

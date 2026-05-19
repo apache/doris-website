@@ -112,12 +112,10 @@ REVOKE USAGE_PRIV ON COMPUTE GROUP {compute_group_name} FROM {user};
 
 ### 常见问题
 
-#### Q: 执行数据读写时报错**
-
+#### Q: 执行数据读写时报错
 当前用户未配置默认 Compute Group。执行 `use @cluster` 指定当前会话的 Compute Group，或使用 `SET PROPERTY` 设置默认值。
 
-#### Q: 已设置默认 Compute Group，但读写仍报错**
-
+#### Q: 已设置默认 Compute Group，但读写仍报错
 之前指定的 Compute Group 已被删除。执行 `use @cluster` 重新指定，或用 `SET PROPERTY` 更新默认设置。
 
 ## 默认 Compute Group 自动选择机制

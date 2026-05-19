@@ -120,18 +120,14 @@ SET bypass_workload_group = true;
 
 <!-- 知识类型: 故障排查 -->
 
-### Q: 新查询立即报错，未进入排队**
-
+### Q: 新查询立即报错，未进入排队
 `queue_timeout = 0` 或 `max_queue_size = 0` 导致查询无法排队。调整 `max_queue_size` > 0 且 `queue_timeout` > 0。
 
-### Q: 队列满后查询被拒绝**
-
+### Q: 队列满后查询被拒绝
 `max_queue_size` 配置过小。增大 `max_queue_size`，或提高 `max_concurrency`。
 
-### Q: 多 FE 集群并发限制不符合预期**
-
+### Q: 多 FE 集群并发限制不符合预期
 排队参数按单 FE 粒度生效。将 `max_concurrency` 设为目标值除以 FE 数量。
 
-### Q: 管理员操作也被排队阻塞**
-
+### Q: 管理员操作也被排队阻塞
 未开启 bypass 变量。执行 `SET bypass_workload_group = true`。

@@ -120,18 +120,14 @@ SET bypass_workload_group = true;
 
 <!-- Knowledge type: Troubleshooting -->
 
-### Q: A new query fails immediately and does not enter the queue**
-
+### Q: A new query fails immediately and does not enter the queue
 `queue_timeout = 0` or `max_queue_size = 0` prevents queries from being queued. Set `max_queue_size` > 0 and `queue_timeout` > 0.
 
-### Q: Queries are rejected after the queue is full**
-
+### Q: Queries are rejected after the queue is full
 `max_queue_size` is set too small. Increase `max_queue_size` or raise `max_concurrency`.
 
-### Q: The concurrency limit in a multi-FE cluster does not match expectations**
-
+### Q: The concurrency limit in a multi-FE cluster does not match expectations
 Queuing parameters take effect at the single-FE granularity. Set `max_concurrency` to the target value divided by the number of FEs.
 
-### Q: Administrator operations are also blocked by the queue**
-
+### Q: Administrator operations are also blocked by the queue
 The bypass variable is not enabled. Run `SET bypass_workload_group = true`.

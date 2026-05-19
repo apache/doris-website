@@ -112,12 +112,10 @@ The value of the `default_compute_group` field in the returned result is the cur
 
 ### FAQ
 
-#### Q: An error occurs when performing data reads or writes**
-
+#### Q: An error occurs when performing data reads or writes
 The current user has not configured a default Compute Group. Execute `use @cluster` to specify the Compute Group for the current session, or use `SET PROPERTY` to set a default value.
 
-#### Q: A default Compute Group has been set, but reads and writes still report errors**
-
+#### Q: A default Compute Group has been set, but reads and writes still report errors
 The previously specified Compute Group has been deleted. Execute `use @cluster` to specify it again, or use `SET PROPERTY` to update the default setting.
 
 ## Automatic Selection of the Default Compute Group
