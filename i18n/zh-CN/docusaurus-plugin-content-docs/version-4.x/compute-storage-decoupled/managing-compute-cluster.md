@@ -221,7 +221,7 @@ Cloud Rebalance 是 Doris 存算分离架构下的负载均衡机制。当计算
 通过 FE 配置文件（`fe.conf`）设置全局默认值：
 
 ```
-cloud_default_rebalance_type = "async_warmup"
+cloud_warm_up_for_rebalance_type = "async_warmup"
 ```
 
 ##### 计算组级别配置
@@ -264,7 +264,7 @@ ALTER SYSTEM RENAME COMPUTE GROUP <old_name> <new_name>;
 
 - **查看**：
     ```sql
-    ADMIN SHOW FRONTEND CONFIG LIKE "cloud_default_rebalance_type";
+    ADMIN SHOW FRONTEND CONFIG LIKE "cloud_warm_up_for_rebalance_type";
     ```
 - **修改**（修改后无需重启 FE 即可生效）：
     ```sql
