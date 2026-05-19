@@ -262,7 +262,7 @@ SELECT * FROM information_schema.workload_groups WHERE name = 'g1';
 ### 修改 Workload Group
 
 ```sql
-ALTER WORKLOAD GROUP g1 PROPERTIES('min_cpu_percent' = '2048');
+ALTER WORKLOAD GROUP g1 PROPERTIES('cpu_share' = '2048');
 
 SELECT cpu_share FROM information_schema.workload_groups WHERE name = 'g1';
 +-----------+
