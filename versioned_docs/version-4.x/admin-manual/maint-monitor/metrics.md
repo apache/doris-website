@@ -146,10 +146,10 @@ curl http://be_host:webserver_port/metrics?type=json
 |  | {name="schema-change-pool"} | Num | Thread pool used by the Master FE to schedule schema change jobs |  |  |
 |  | {name="thrift-server-pool"} | Num | Worker thread pool of the FE-side ThriftServer. Corresponds to `rpc_port` in fe.conf and is used to interact with BEs |  |  |
 | `doris_fe_txn_counter` |  | Num | Cumulative count of load transactions in each state | Observe the execution status of load transactions | P0 |
-|  | {type="begin"} | Num | Number of committed transactions |  |  |
+|  | {type="begin"} | Num | Number of begun transactions |  |  |
 |  | {type="failed"} | Num | Number of failed transactions |  |  |
 |  | {type="reject"} | Num | Number of rejected transactions (for example, when the current number of running transactions exceeds the threshold, new transactions are rejected) |  |  |
-|  | {type="succes"} | Num | Number of successful transactions |  |  |
+|  | {type="success"} | Num | Number of successful transactions |  |  |
 | `doris_fe_txn_status` |  | Num | Number of load transactions currently in each state. For example, {type="committed"} indicates the number of transactions in the committed state | Observe the number of load transactions in each state to determine whether there is a backlog | P0 |
 | `doris_fe_query_instance_num` |  | Num | Number of fragment instances currently being requested by a specific user. For example, {user="test_u"} indicates the number of instances currently being requested by user test_u | Use this value to observe whether a specific user is consuming too many query resources | P0 |
 | `doris_fe_query_instance_begin` |  | Num | Number of fragment instances for which a specific user has started requests. For example, {user="test_u"} indicates the number of instances for which user test_u has started requests | Use this value to observe whether a specific user has submitted too many queries | P0 |
