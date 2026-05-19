@@ -13,14 +13,12 @@
     --fn-yellow: #FFD23F;
     --fn-coral: #FF5C39;
     --fn-ink: #0F1A14;
-    --fn-mono: 'JetBrains Mono', 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
-    --fn-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     --fn-card-stage-y: 38%;
 
     position: relative;
     background: var(--fn-cream);
     color: var(--fn-ink);
-    font-family: var(--fn-sans);
+    font-family: var(--font-family-base);
 
     &__header {
         width: 100%;
@@ -378,7 +376,7 @@
         justify-content: center;
         background: var(--fn-green-deep);
         color: var(--fn-cream-light);
-        font-family: var(--fn-mono);
+        font-family: var(--font-mono);
         font-size: 18px;
         font-weight: 800;
         box-shadow:
@@ -399,7 +397,7 @@
         color: var(--fn-green-darker);
         border: 1px solid rgba(6, 70, 50, 0.08);
         box-shadow: 0 12px 30px rgba(6, 70, 50, 0.12);
-        font-family: var(--fn-mono);
+        font-family: var(--font-mono);
         font-size: 11px;
         font-weight: 800;
         letter-spacing: 0.08em;

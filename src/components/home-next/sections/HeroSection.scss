@@ -11,8 +11,6 @@
     --hn-yellow-bright: #FFE066;
     --hn-coral: #FF5C39;
     --hn-ink: #0F1A14;
-    --hn-mono: 'JetBrains Mono', 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
-    --hn-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
 
 // ─── Hero wrapper ─────────────────────────────────────────────────────────────
@@ -22,7 +20,7 @@
     overflow: hidden;
     background: var(--hn-green-dark);
     color: var(--hn-cream-light);
-    font-family: var(--hn-sans);
+    font-family: var(--font-family-base);
     padding-bottom: 2.5rem;
 
     // ── Background layers ──────────────────────────────────────────────────
@@ -117,7 +115,7 @@
     &__title {
         // override Docusaurus heading defaults
         @include type.hero-title;
-        font-family: var(--hn-mono) !important;
+        font-family: var(--font-mono) !important;
         color: var(--hn-cream-light) !important;
         margin: 0 !important;
         display: flex;
@@ -309,7 +307,7 @@
 
         background: var(--hn-yellow);
         color: var(--hn-ink);
-        font-family: var(--hn-mono);
+        font-family: var(--font-mono);
         font-size: 11px;
         font-weight: 700;
         padding: 8px 12px;
@@ -400,7 +398,7 @@
     border-radius: 10px;
     border: 1px solid rgba(245, 239, 228, 0.1);
     overflow: hidden;
-    font-family: 'JetBrains Mono', 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-family: var(--font-mono);
     box-shadow:
         0 30px 60px -20px rgba(0, 0, 0, 0.5),
         0 0 0 1px rgba(255, 210, 63, 0.05);
@@ -544,7 +542,7 @@
         color: var(--hn-ink);
         border: 0;
         border-radius: 4px;
-        font-family: var(--hn-mono);
+        font-family: var(--font-mono);
         font-size: 10.5px;
         font-weight: 800;
         letter-spacing: 0.12em;
@@ -634,7 +632,7 @@
     border: 1px solid rgba(15, 26, 20, 0.08);
     border-radius: 10px;
     overflow: hidden;
-    font-family: var(--hn-mono);
+    font-family: var(--font-mono);
     box-shadow:
         0 24px 48px -22px rgba(0, 0, 0, 0.45),
         0 0 0 1px rgba(15, 26, 20, 0.04);
@@ -711,7 +709,7 @@
         }
 
         &--title {
-            font-family: var(--hn-sans);
+            font-family: var(--font-family-base);
             font-size: 12.5px;
             color: var(--hn-ink);
             font-weight: 600;
@@ -771,7 +769,7 @@
     box-shadow:
         0 30px 60px -20px rgba(0, 0, 0, 0.45),
         0 0 0 1px rgba(255, 210, 63, 0.04);
-    font-family: 'JetBrains Mono', 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-family: var(--font-mono);
 
     &__head {
         display: flex;
@@ -884,7 +882,7 @@
     }
 
     &__title {
-        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        font-family: var(--font-family-base);
         font-size: 12.5px;
         font-weight: 600;
         color: #FAF6EE;
@@ -1056,7 +1054,7 @@
         align-items: center;
         padding: 10px 14px;
         border-bottom: 1px solid rgba(245, 239, 228, 0.06);
-        font-family: 'JetBrains Mono', 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+        font-family: var(--font-mono);
         font-size: 9.5px;
         letter-spacing: 0.14em;
         text-transform: uppercase;
@@ -1129,7 +1127,7 @@
         display: flex;
         justify-content: space-between;
         align-items: baseline;
-        font-family: 'JetBrains Mono', 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+        font-family: var(--font-mono);
         margin-bottom: 6px;
     }
 
@@ -1226,7 +1224,7 @@
         top: -16px;
         left: 50%;
         transform: translateX(-50%);
-        font-family: 'JetBrains Mono', 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+        font-family: var(--font-mono);
         font-size: 9px;
         color: rgba(245, 239, 228, 0.5);
         opacity: 0;
@@ -1235,7 +1233,7 @@
     }
 
     &__bar-label {
-        font-family: 'JetBrains Mono', 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+        font-family: var(--font-mono);
         font-size: 9px;
         color: rgba(245, 239, 228, 0.45);
         letter-spacing: 0.06em;
@@ -1252,7 +1250,7 @@
         display: inline-flex;
         align-items: center;
         gap: 5px;
-        font-family: 'JetBrains Mono', 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+        font-family: var(--font-mono);
         font-size: 9px;
         color: rgba(245, 239, 228, 0.6);
         letter-spacing: 0.04em;

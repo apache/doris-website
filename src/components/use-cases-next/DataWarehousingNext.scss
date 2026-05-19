@@ -5,7 +5,7 @@ $dw-bp-xs: 480px;
 $dw-ease-out-quint: cubic-bezier(0.2, 0.8, 0.2, 1);
 
 @mixin dw-mono-caps($size: 12px, $tracking: 0.14em, $weight: 500) {
-    font-family: var(--mono);
+    font-family: var(--font-mono);
     font-size: $size;
     font-weight: $weight;
     letter-spacing: $tracking;
@@ -13,7 +13,7 @@ $dw-ease-out-quint: cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 @mixin dw-display-mono($weight: 700) {
-    font-family: var(--mono);
+    font-family: var(--font-mono);
     font-weight: $weight;
     text-transform: uppercase;
     letter-spacing: -0.018em;
@@ -64,13 +64,10 @@ $dw-ease-out-quint: cubic-bezier(0.2, 0.8, 0.2, 1);
     --ink: #0f1a14;
     --ink-soft: #1b2a22;
 
-    --mono: 'JetBrains Mono', 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
-    --sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-
     --container: 1320px;
     --gutter: 56px;
 
-    font-family: var(--sans);
+    font-family: var(--font-family-base);
     background: var(--doris-green-dark);
     color: var(--cream-light);
     -webkit-font-smoothing: antialiased;
@@ -310,7 +307,7 @@ $dw-ease-out-quint: cubic-bezier(0.2, 0.8, 0.2, 1);
         }
 
         &-title {
-            font-family: var(--mono);
+            font-family: var(--font-mono);
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: -0.035em;
@@ -328,7 +325,7 @@ $dw-ease-out-quint: cubic-bezier(0.2, 0.8, 0.2, 1);
         }
 
         &-sub {
-            font-family: var(--sans);
+            font-family: var(--font-family-base);
             font-size: 15px;
             line-height: 1.5;
             color: rgba(245, 239, 228, 0.85);
@@ -418,7 +415,7 @@ $dw-ease-out-quint: cubic-bezier(0.2, 0.8, 0.2, 1);
     }
 
     .cf-title {
-        font-family: var(--mono);
+        font-family: var(--font-mono);
         font-weight: 700;
         font-size: 26px;
         text-transform: uppercase;
@@ -459,7 +456,7 @@ $dw-ease-out-quint: cubic-bezier(0.2, 0.8, 0.2, 1);
         }
 
         li {
-            font-family: var(--sans);
+            font-family: var(--font-family-base);
             font-size: 14px;
             word-spacing: -0.12em;
             color: var(--cream-light);
@@ -502,7 +499,7 @@ $dw-ease-out-quint: cubic-bezier(0.2, 0.8, 0.2, 1);
         }
 
         li {
-            font-family: var(--mono);
+            font-family: var(--font-mono);
             font-size: 13px;
             word-spacing: -0.1em;
             color: var(--cream-light);
@@ -567,7 +564,7 @@ $dw-ease-out-quint: cubic-bezier(0.2, 0.8, 0.2, 1);
         background: transparent;
         border: 1px solid rgba(245, 239, 228, 0.3);
         color: var(--cream-light);
-        font-family: var(--mono);
+        font-family: var(--font-mono);
         font-size: 18px;
         cursor: pointer;
         display: inline-flex;
@@ -645,7 +642,7 @@ $dw-ease-out-quint: cubic-bezier(0.2, 0.8, 0.2, 1);
     }
 
     .tech-layer-heading {
-        font-family: var(--mono);
+        font-family: var(--font-mono);
         font-weight: 700;
         text-transform: uppercase;
         letter-spacing: -0.02em;
@@ -690,7 +687,7 @@ $dw-ease-out-quint: cubic-bezier(0.2, 0.8, 0.2, 1);
     }
 
     .req-title {
-        font-family: var(--mono);
+        font-family: var(--font-mono);
         font-weight: 700;
         text-transform: uppercase;
         font-size: 16px;
@@ -791,7 +788,7 @@ $dw-ease-out-quint: cubic-bezier(0.2, 0.8, 0.2, 1);
     }
 
     .case-title {
-        font-family: var(--mono);
+        font-family: var(--font-mono);
         font-weight: 700;
         text-transform: uppercase;
         font-size: 22px;
@@ -804,7 +801,7 @@ $dw-ease-out-quint: cubic-bezier(0.2, 0.8, 0.2, 1);
     }
 
     .case-quote {
-        font-family: var(--sans);
+        font-family: var(--font-family-base);
         font-style: italic;
         font-size: 16px;
         line-height: 1.5;
@@ -839,7 +836,7 @@ $dw-ease-out-quint: cubic-bezier(0.2, 0.8, 0.2, 1);
         gap: 8px;
 
         li {
-            font-family: var(--sans);
+            font-family: var(--font-family-base);
             font-size: 14px;
             word-spacing: -0.12em;
             color: var(--cream-light);
@@ -889,7 +886,7 @@ $dw-ease-out-quint: cubic-bezier(0.2, 0.8, 0.2, 1);
     }
 
     .cta-title {
-        font-family: var(--mono);
+        font-family: var(--font-mono);
         font-weight: 700;
         text-transform: uppercase;
         font-size: clamp(40px, 4.4vw, 62px);
