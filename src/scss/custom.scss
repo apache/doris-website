@@ -22,12 +22,32 @@
 
 @font-face {
     font-family: 'Inter';
-    src: url('/fonts/Inter-VariableFont_opsz,wght.ttf');
+    src: url('/fonts/Inter-VariableFont_opsz,wght.ttf') format('truetype-variations');
+    font-weight: 100 900;
+    font-display: swap;
 }
 
 @font-face {
-    font-family: 'Noto Sans';
-    src: url('/fonts/NotoSansSC-VariableFont_wght.ttf');
+    font-family: 'Noto Sans SC';
+    src: url('/fonts/NotoSansSC-VariableFont_wght.ttf') format('truetype-variations');
+    font-weight: 100 900;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'JetBrains Mono';
+    src: url('/fonts/JetBrainsMono-VariableFont_wght.ttf') format('truetype-variations');
+    font-weight: 100 800;
+    font-display: swap;
+}
+
+:root {
+    --font-sans-en: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+    --font-sans-zh: 'Noto Sans SC', 'Inter', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif;
+    --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    --font-family-base: var(--font-sans-en);
+    --ifm-font-family-base: var(--font-sans-en);
+    --ifm-font-family-monospace: var(--font-mono);
 }
 
 @layer utilities {
@@ -49,18 +69,16 @@
 }
 
 html[lang='zh-Hans-CN'] {
-    --font-family-base: 'Noto Sans';
-    font-family: 'Noto Sans', 'Source Sans Pro', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    --font-family-base: var(--font-sans-zh);
+    --ifm-font-family-base: var(--font-sans-zh);
+    font-family: var(--font-family-base);
 }
 
 html[lang='en-US'] {
-    --font-family-base: 'Inter';
-    font-family: 'Inter', 'Source Sans Pro', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    --font-family-base: var(--font-sans-en);
+    --ifm-font-family-base: var(--font-sans-en);
+    font-family: var(--font-family-base);
 }
-
-// :root {
-//     --font-family-base: 'SF Pro Display', 'SF Pro Icons', 'Helvetica Neue', Helvetica, Arial, sans-serif;
-// }
 .markdown :where(p, h1, h2, h3, h4, h5, h6, li, blockquote) {
     font-family: var(--font-family-base);
     color: #1f1f26;

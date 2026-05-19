@@ -4,8 +4,11 @@
 // component styling. The goal is to make the type system consistent across
 // the new homepage family.
 
-$font-mono: 'JetBrains Mono', 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
-$font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+// Sourced from the global CSS variables defined in src/scss/custom.scss.
+// Use $font-mono / $font-sans in SCSS contexts only; runtime styles should
+// reference var(--font-mono) / var(--font-family-base) directly.
+$font-mono: var(--font-mono);
+$font-sans: var(--font-family-base);
 
 $display-xl: clamp(40px, 4.4vw, 62px);
 $display-lg: clamp(40px, 4.4vw, 52px);

@@ -23,16 +23,13 @@
     --bn-ink:      #0F1A14;
     --bn-ink-soft: #1B2A22;
 
-    --bn-mono: 'JetBrains Mono', 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
-    --bn-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-
     --bn-container: 1320px;
     --bn-gutter:    56px;
 
     position: relative;
     background: var(--bn-green-dark);
     color: var(--bn-cream-light);
-    font-family: var(--bn-sans);
+    font-family: var(--font-family-base);
     overflow-x: hidden;
 
     * { box-sizing: border-box; }
@@ -54,7 +51,7 @@
         display: inline-flex;
         align-items: center;
         gap: 12px;
-        font-family: var(--bn-mono);
+        font-family: var(--font-mono);
         font-size: 12px;
         font-weight: 500;
         letter-spacing: 0.14em;
@@ -76,7 +73,7 @@
         align-items: center;
         gap: 0.6rem;
         padding: 0.95rem 1.5rem;
-        font-family: var(--bn-mono);
+        font-family: var(--font-mono);
         font-size: 14px;
         font-weight: 600;
         letter-spacing: 0.04em;
@@ -225,7 +222,7 @@
         .b-hero-inner { position: relative; z-index: 5; }
 
         .b-hero-title {
-            font-family: var(--bn-mono);
+            font-family: var(--font-mono);
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: -0.035em;
@@ -239,7 +236,7 @@
         }
 
         .b-hero-sub {
-            font-family: var(--bn-sans);
+            font-family: var(--font-family-base);
             font-size: 15px;
             line-height: 1.5;
             word-spacing: -0.12em;
@@ -299,7 +296,7 @@
     }
 
     .b-cmp-title {
-        font-family: var(--bn-mono);
+        font-family: var(--font-mono);
         font-weight: 700;
         text-transform: uppercase;
         font-size: clamp(36px, 4.2vw, 56px);
@@ -345,7 +342,7 @@
     }
 
     .b-tab {
-        font-family: var(--bn-mono);
+        font-family: var(--font-mono);
         font-size: 12.5px;
         letter-spacing: 0.12em;
         text-transform: uppercase;
@@ -392,7 +389,7 @@
         padding: 12px 14px;
         background: var(--bn-ink);
         color: rgba(245, 239, 228, 0.92);
-        font-family: var(--bn-sans);
+        font-family: var(--font-family-base);
         font-size: 12.5px;
         font-weight: 400;
         letter-spacing: 0;
@@ -486,7 +483,7 @@
     }
 
     .b-card-title {
-        font-family: var(--bn-mono);
+        font-family: var(--font-mono);
         font-weight: 700;
         text-transform: uppercase;
         font-size: 22px;
@@ -497,7 +494,7 @@
     }
 
     .b-card-tag {
-        font-family: var(--bn-mono);
+        font-family: var(--font-mono);
         font-size: 10.5px;
         letter-spacing: 0.16em;
         text-transform: uppercase;
@@ -506,7 +503,7 @@
     }
 
     .b-card-metric {
-        font-family: var(--bn-mono);
+        font-family: var(--font-mono);
         font-size: 11px;
         letter-spacing: 0.18em;
         text-transform: uppercase;
@@ -525,7 +522,7 @@
         grid-template-columns: 120px 1fr 88px;
         gap: 14px;
         align-items: center;
-        font-family: var(--bn-mono);
+        font-family: var(--font-mono);
         font-size: 12.5px;
 
         &.is-doris {
@@ -587,7 +584,7 @@
         margin-top: auto;
         padding: 14px 0 0;
         border-top: 1px dashed rgba(15, 26, 20, 0.20);
-        font-family: var(--bn-sans);
+        font-family: var(--font-family-base);
         font-size: 13.5px;
         line-height: 1.55;
         color: rgba(15, 26, 20, 0.72);
@@ -595,7 +592,7 @@
 
     .b-card-tip {
         margin-top: 16px;
-        font-family: var(--bn-mono);
+        font-family: var(--font-mono);
         font-size: 12px;
         font-weight: 700;
         letter-spacing: 0.14em;
@@ -652,7 +649,7 @@
     }
 
     .b-detail-title {
-        font-family: var(--bn-mono);
+        font-family: var(--font-mono);
         font-weight: 700;
         text-transform: uppercase;
         font-size: 22px;
@@ -666,7 +663,7 @@
         flex-wrap: wrap;
 
         .b-detail-title-sub {
-            font-family: var(--bn-mono);
+            font-family: var(--font-mono);
             font-size: 11px;
             letter-spacing: 0.18em;
             text-transform: uppercase;
@@ -678,7 +675,7 @@
     .b-detail-legend {
         display: flex;
         gap: 18px;
-        font-family: var(--bn-mono);
+        font-family: var(--font-mono);
         font-size: 11px;
         letter-spacing: 0.12em;
         text-transform: uppercase;
@@ -741,7 +738,7 @@
         flex-direction: column;
         justify-content: space-between;
         align-items: flex-end;
-        font-family: var(--bn-mono);
+        font-family: var(--font-mono);
         font-size: 10px;
         color: rgba(15, 26, 20, 0.55);
         letter-spacing: 0.06em;
@@ -835,7 +832,7 @@
         top: 0;
         background: var(--bn-ink);
         color: var(--bn-cream-light);
-        font-family: var(--bn-mono);
+        font-family: var(--font-mono);
         font-size: 11px;
         padding: 5px 9px;
         border-radius: 4px;
@@ -850,7 +847,7 @@
 
     .b-cluster-label {
         margin-top: 6px;
-        font-family: var(--bn-mono);
+        font-family: var(--font-mono);
         font-size: 10px;
         letter-spacing: 0.02em;
         color: rgba(15, 26, 20, 0.58);
@@ -865,7 +862,7 @@
 
     .b-detail-env {
         margin-top: 18px;
-        font-family: var(--bn-mono);
+        font-family: var(--font-mono);
         font-size: 12px;
         letter-spacing: 0.02em;
         line-height: 1.6;
@@ -899,7 +896,7 @@
 
     .b-detail-foot {
         margin-top: 14px;
-        font-family: var(--bn-mono);
+        font-family: var(--font-mono);
         font-size: 11.5px;
         color: rgba(15, 26, 20, 0.58);
     }
@@ -946,7 +943,7 @@
     }
 
     .b-method-link {
-        font-family: var(--bn-mono);
+        font-family: var(--font-mono);
         font-size: 12px;
         font-weight: 600;
         letter-spacing: 0.12em;
@@ -977,7 +974,7 @@
     }
 
     .b-method-label {
-        font-family: var(--bn-mono);
+        font-family: var(--font-mono);
         font-size: 11px;
         font-weight: 700;
         letter-spacing: 0.18em;
@@ -986,14 +983,14 @@
     }
 
     .b-method-body {
-        font-family: var(--bn-sans);
+        font-family: var(--font-family-base);
         font-size: 13.5px;
         line-height: 1.55;
         color: rgba(245, 239, 228, 0.82);
     }
 
     .b-repro-title {
-        font-family: var(--bn-mono);
+        font-family: var(--font-mono);
         font-weight: 700;
         text-transform: uppercase;
         font-size: clamp(36px, 4.2vw, 56px);
@@ -1058,7 +1055,7 @@
     }
 
     .b-step-num {
-        font-family: var(--bn-mono);
+        font-family: var(--font-mono);
         font-weight: 700;
         font-size: 24px;
         color: rgba(245, 239, 228, 0.55);
@@ -1067,7 +1064,7 @@
     }
 
     .b-step-title {
-        font-family: var(--bn-mono);
+        font-family: var(--font-mono);
         font-weight: 700;
         text-transform: uppercase;
         font-size: 14px;
@@ -1077,7 +1074,7 @@
     }
 
     .b-step-body {
-        font-family: var(--bn-sans);
+        font-family: var(--font-family-base);
         font-size: 14px;
         line-height: 1.55;
         color: rgba(245, 239, 228, 0.72);
@@ -1100,7 +1097,7 @@
         pre[class*='language-'] {
             margin: 0;
             padding: 28px 28px;
-            font-family: var(--bn-mono);
+            font-family: var(--font-mono);
             font-size: 13.5px;
             line-height: 1.75;
             color: var(--bn-cream-light);
@@ -1127,7 +1124,7 @@
         padding: 14px 18px;
         background: #050706;
         border-bottom: 1px solid rgba(245, 239, 228, 0.08);
-        font-family: var(--bn-mono);
+        font-family: var(--font-mono);
         font-size: 11px;
         letter-spacing: 0.14em;
         text-transform: uppercase;
@@ -1198,7 +1195,7 @@
     }
 
     .b-cta-title {
-        font-family: var(--bn-mono);
+        font-family: var(--font-mono);
         font-weight: 700;
         text-transform: uppercase;
         font-size: clamp(36px, 4.2vw, 56px);
