@@ -276,7 +276,7 @@ ldd /path/to/libmyodbc8w.so |grep libssl.so
 ```
 If the output contains ``libssl.so.10``, there may be problems using it, if it contains ``libssl.so.1.1``, it is compatible with doris 1.0
 
-### Q15. After upgrading to version 1.2, the BE NoClassDefFoundError issue failed to start
+### Q14. After upgrading to version 1.2, the BE NoClassDefFoundError issue failed to start
 Java UDF dependency error
 If the upgrade support starts be, the following Java `NoClassDefFoundError` error occurs
 ```
@@ -285,7 +285,7 @@ Caused by: java.lang.ClassNotFoundException: org.apache.doris.udf.JniUtil
 ```
 You need to download the Java UDF function dependency package of `apache-doris-java-udf-jar-with-dependencies-1.2.0` from the official website, put it in the lib directory under the BE installation directory, and then restart BE
 
-### Q16. After upgrading to version 1.2, BE startup shows Failed to initialize JNI
+### Q15. After upgrading to version 1.2, BE startup shows Failed to initialize JNI
 
 If the following `Failed to initialize JNI` error occurs when starting BE after upgrading 
 ```
@@ -293,7 +293,7 @@ Failed to initialize JNI: Failed to find the library libjvm.so.
 ```
 You need to set the `JAVA_HOME` environment variable, or set `JAVA_HOME` variable in be.conf and restart the BE node.
 
-### Q17. Docker: backend fails to start
+### Q16. Docker: backend fails to start
 This may be due to the CPU not supporting AVX2, check the backend logs with `docker logs -f be`.
 If the CPU does not support AVX2, the `apache/doris:1.2.2-be-x86_64-noavx2` image must be used,
 instead of `apache/doris:1.2.2-be-x86_64`.
