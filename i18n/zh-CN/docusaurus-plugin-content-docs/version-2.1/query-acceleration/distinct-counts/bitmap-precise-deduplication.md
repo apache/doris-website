@@ -126,9 +126,9 @@ mysql> select bitmap_union_count(uv) from test_bitmap;
    等价于：
 
 ```SQL
-mysql> SELECT COUNT(DISTINCT pv) FROM test_bitmap;
+mysql> SELECT COUNT(DISTINCT id) FROM test_bitmap;
 +----------------------+
-| count(DISTINCT `uv`) |
+| count(DISTINCT `id`) |
 +----------------------+
 |                    4 |
 +----------------------+
