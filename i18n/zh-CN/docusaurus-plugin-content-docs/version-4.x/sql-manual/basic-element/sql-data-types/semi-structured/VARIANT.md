@@ -578,3 +578,5 @@ DESCRIBE ${table_name} PARTITION ($partition_name);
    - 没有区别，两者等价。
 2. 为什么我的查询/索引没有生效？
    - 请检查是否对路径做了正确的 CAST、是否因为类型冲突被提升为 JSONB、或是否误以为给 VARIANT“整体”建的索引可用于子列。
+3. 为什么 DECIMAL 写入 VARIANT 列时出现小数位/精度丢失？
+   - 写入 VARIANT 列时，在推断子列类型时不会推断为 DECIMAL，数值会以 DOUBLE 存储，因而可能丢失末位小数。即使通过 Schema Template 将子路径显式声明为 DECIMAL（例如 `pm25 VARIANT<'xxx': DECIMAL(6, 2)>`），写入路径也会先解析为 DOUBLE 再转换为 DECIMAL，仍不能完全保证精度。如果在 JSON 中将该字段写成字符串形式（例如 `'{"num": "12.345"}'`），并配合 Schema Template 声明为对应的 DECIMAL（例如 `DECIMAL(9, 3)`），写入时会直接由字符串解析为 DECIMAL，可以保证精度。
