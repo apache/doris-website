@@ -37,7 +37,7 @@ prometheus 监控采集接口
     doris_be__max_network_send_bytes_rate LONG 16232
     doris_be_process_thread_num LONG 1120
     doris_be_process_fd_num_used LONG 336
-    ，，，
+    ...
 
     ```
 ## 示例
