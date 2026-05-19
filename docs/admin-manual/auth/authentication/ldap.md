@@ -10,6 +10,7 @@
         "LDAP group authorization",
         "unified authentication",
         "ldap.conf configuration",
+        "ldap_default_roles",
         "MysqlClearPasswordPlugin",
         "ldap_admin_password",
         "ldap_use_ssl",
@@ -25,6 +26,7 @@ Apache Doris supports integration with third-party LDAP services, so the existin
 
 - **Authentication login**: Use the LDAP password instead of the Doris password for identity authentication.
 - **Group authorization**: Map LDAP `group` to Doris `role` to achieve unified privilege management.
+- **Default role authorization**: Grant configured Doris roles to every LDAP-authenticated user without putting all users into one LDAP group.
 
 <!-- Knowledge type: Architecture decision -->
 <!-- Applicable scenario: Integrating enterprise unified identity / centralized privilege management -->
@@ -35,6 +37,7 @@ Apache Doris supports integration with third-party LDAP services, so the existin
 | --- | --- |
 | Enterprise unified identity authentication | An LDAP/AD account system already exists, and you want Doris users to reuse it directly without creating accounts again in Doris |
 | Centralized privilege management | Manage role members through LDAP groups; adjust LDAP group members to batch-adjust Doris privileges |
+| Baseline privileges for LDAP users | Grant the same Doris roles to all LDAP-authenticated users through configuration, while still keeping LDAP group authorization |
 | Temporary access | Users that exist only in LDAP can log in to Doris as temporary users based on LDAP group privileges |
 | Encrypted channel | Encryption is required for the connection between Doris FE and the LDAP server (LDAPS) |
 
@@ -87,6 +90,7 @@ In LDAP, data is organized in a tree structure. The following is a typical LDAP 
 3. **Configure the client**: Enable the cleartext password plugin in the MySQL Client or JDBC Client to send the LDAP password.
 4. **(Optional) Enable LDAPS**: Encrypt the channel between FE and LDAP.
 5. **(Optional) Configure group authorization**: Create `role` in Doris with the same name as the LDAP groups and grant privileges.
+6. **(Optional) Configure default roles**: Grant baseline Doris roles to all LDAP-authenticated users through `ldap_default_roles`.
 
 ## Step 1: Configure Doris FE
 
@@ -113,6 +117,7 @@ ldap_admin_name = uid=admin,o=emr
 ldap_user_basedn = ou=people,o=emr
 ldap_user_filter = (&(uid={login}))
 ldap_group_basedn = ou=group,o=emr
+ldap_default_roles = ldap_readonly,ldap_query_user
 ```
 
 The configuration items are explained below:
@@ -126,6 +131,7 @@ The configuration items are explained below:
 | `ldap_user_basedn` | The base `dn` for user search |
 | `ldap_user_filter` | User match filter. `{login}` is replaced with the login user name |
 | `ldap_group_basedn` | The base `dn` for group search, used for group authorization |
+| `ldap_default_roles` | Optional. Comma-separated Doris roles granted to every LDAP-authenticated user. These roles are added in addition to LDAP group roles |
 
 :::tip
 To enable LDAPS (encrypted connection to the LDAP server), see the [LDAPS (Encrypted Connection)](#ldaps-encrypted-connection) section below.
@@ -235,8 +241,8 @@ After LDAP is enabled, the login behavior under different user states is as foll
 
 - The temporary account is valid only for the current connection and is automatically destroyed after the connection is closed.
 - Doris does not create persistent user metadata for a temporary user.
-- The privileges of a temporary user are determined by LDAP group authorization (see the "Group Authorization" section below).
-- If the temporary user has no corresponding group privileges, it has the `select_priv` privilege on `information_schema` by default.
+- The privileges of a temporary user are determined by LDAP group authorization and `ldap_default_roles` (see the "Group Authorization" and "Default Roles for LDAP Users" sections below).
+- If the temporary user has no corresponding group privileges or configured default roles, it has the `select_priv` privilege on `information_schema` by default.
 
 :::
 
@@ -265,7 +271,7 @@ mysql -hDoris_HOST -PDoris_PORT -ujack -p 123456
 
 - LDAP user attributes: `uid: jack`, password: `abcdef`
 
-Log in with the LDAP password. Doris automatically creates the temporary user `jack@'%'` and logs in. The temporary user has the basic privilege `DatabasePrivs`: `Select_priv`, and is automatically destroyed after the connection is closed:
+Log in with the LDAP password. Doris automatically creates the temporary user `jack@'%'` and logs in. The temporary user receives LDAP group roles and configured default roles if they are available. If no matching roles are available, it has the basic privilege `DatabasePrivs`: `Select_priv`, and is automatically destroyed after the connection is closed:
 
 ```sql
 mysql -hDoris_HOST -PDoris_PORT -ujack -p abcdef
@@ -290,6 +296,7 @@ LDAP group authorization maps LDAP `group` to Doris `role`, providing centralize
 
 - If the `dn` of an LDAP user appears in the `member` attribute of an LDAP group node, Doris considers the user to belong to that group.
 - When the user logs in, Doris automatically grants the user the `role` privileges corresponding to the LDAP groups it belongs to.
+- If `ldap_default_roles` is configured, Doris also grants those default roles to the user.
 - After the user logs out, Doris automatically revokes these `role` privileges.
 
 :::caution Prerequisites
@@ -302,9 +309,9 @@ The final privileges of the logged-in user depend on its state in LDAP and Doris
 
 | LDAP user | Doris user | Final privileges |
 | --------- | ---------- | ---------------- |
-| Exists | Exists | LDAP group privileges + Doris user privileges |
+| Exists | Exists | LDAP group privileges + configured default roles + Doris user privileges |
 | Does not exist | Exists | Doris user privileges |
-| Exists | Does not exist | LDAP group privileges |
+| Exists | Does not exist | LDAP group privileges + configured default roles |
 
 ### Group Name Mapping Rules
 
@@ -330,6 +337,50 @@ Suppose user jack belongs to the LDAP groups `doris_rd`, `doris_qa`, and `doris_
 - To make `user2` belong to `group2`, you must explicitly add `user2` to the `member` attribute of `group2`.
 
 :::
+
+## Default Roles for LDAP Users
+
+<!-- Knowledge type: Configuration parameters -->
+<!-- Applicable scenario: Granting baseline Doris privileges to all LDAP-authenticated users -->
+
+`ldap_default_roles` is used to grant baseline Doris roles to every LDAP-authenticated user. It is useful when all LDAP users should have the same basic privileges, but maintaining a dedicated LDAP group that contains all LDAP users is impractical.
+
+`ldap_default_roles` does not replace LDAP group authorization. When an LDAP user logs in, Doris merges all of the following privileges:
+
+- Doris roles mapped from the user's LDAP groups.
+- Doris roles configured in `ldap_default_roles`.
+- Existing privileges of the Doris user, if the same account also exists in Doris.
+- The built-in `ldapDefaultRole`, which provides `select_priv` on `information_schema`.
+
+:::caution Prerequisites
+Roles listed in `ldap_default_roles` must already exist in Doris. If a configured role does not exist, Doris ignores that role and logs a warning.
+:::
+
+### Configure Default Roles
+
+Create the roles and grant privileges to them:
+
+```sql
+CREATE ROLE ldap_readonly;
+CREATE ROLE ldap_query_user;
+
+GRANT SELECT_PRIV ON internal.example_db.* TO ROLE 'ldap_readonly';
+GRANT SELECT_PRIV ON internal.example_db.example_table TO ROLE 'ldap_query_user';
+```
+
+Configure the roles in `fe/conf/ldap.conf`:
+
+```text
+ldap_default_roles = ldap_readonly,ldap_query_user
+```
+
+You can also update the value online:
+
+```sql
+ADMIN SET FRONTEND CONFIG ("ldap_default_roles" = "ldap_readonly,ldap_query_user");
+```
+
+After `ldap_default_roles` is updated online, Doris refreshes the LDAP user cache automatically so later LDAP logins can use the new default roles.
 
 ## LDAPS (Encrypted Connection)
 
@@ -395,6 +446,8 @@ In the following scenarios, you may need to manually refresh the cache so that t
 - User or group information in the LDAP service has been modified.
 - The `Role` privileges corresponding to LDAP user groups in Doris have been modified.
 
+Online updates to `ldap_default_roles` refresh the LDAP user cache automatically. You do not need to run `refresh ldap` only for this configuration change.
+
 You can refresh the cache with the `refresh ldap` statement. For details, see [REFRESH-LDAP](../../../sql-manual/sql-statements/account-management/REFRESH-LDAP).
 
 ## Known Limitations
@@ -411,6 +464,8 @@ You can refresh the cache with the `refresh ldap` statement. For details, see [R
 
 After logging in to Doris with an LDAP user, run `show grants;` to view all roles of the current user. Among them, `ldapDefaultRole` is the default role that every LDAP user has.
 
+`ldapDefaultRole` is a built-in temporary role that provides `select_priv` on `information_schema`. It is different from roles configured in `ldap_default_roles`.
+
 ### Q: An LDAP user has fewer roles in Doris than expected. How do I troubleshoot?
 
 Check the following items one by one:
@@ -419,6 +474,7 @@ Check the following items one by one:
 2. Check whether the expected `group` is located under the organizational structure corresponding to `ldap_group_basedn`.
 3. Check whether the expected `group` contains the `member` attribute.
 4. Check whether the `member` attribute of the expected `group` contains the `dn` of the current user.
+5. If the missing role is configured in `ldap_default_roles`, check whether the role name is spelled correctly and whether the role exists in Doris.
 
 ### Q: LDAPS connection fails. How do I troubleshoot?
 
