@@ -209,8 +209,6 @@ Meta Service itself provides both metadata management and data recycling functio
 
 :::
 
-:::
-
 1. Create a new working directory (for example, `recycler`) and copy the contents of the `ms` directory into it:
 
    ```shell
