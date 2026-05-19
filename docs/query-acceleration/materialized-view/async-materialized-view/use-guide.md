@@ -148,7 +148,7 @@ When all of the following conditions are met, building a partitioned materialize
 
 1. The base table of the materialized view has a large amount of data and is a partitioned table.
 2. Non-partitioned tables referenced by the materialized view do not change frequently.
-3. The materialized view definition SQL and partition fields meet partition derivation requirements (that is, they meet the partition incremental update requirements). For detailed requirements, see [CREATE-ASYNC-MATERIALIZED-VIEW](../../../sql-manual/sql-statements/table-and-view/async-materialized-view/CREATE-ASYNC-MATERIALIZED-VIEW#可选参数).
+3. The materialized view definition SQL and partition fields meet partition derivation requirements (that is, they meet the partition incremental update requirements). For detailed requirements, see [CREATE-ASYNC-MATERIALIZED-VIEW](../../../sql-manual/sql-statements/table-and-view/async-materialized-view/CREATE-ASYNC-MATERIALIZED-VIEW#optional-parameters).
 4. The materialized view does not have many partitions. Too many partitions cause excessively long build times.
 
 > When some partitions of a materialized view are invalidated, transparent rewrite can still use the valid partitions UNION ALL with the base table to return data.
@@ -249,7 +249,7 @@ The following are general recommendations. The actual choice should also be eval
 
 ### 4.1 Partition Mapping Relationship
 
-The partitions of a materialized view are created by mapping from base table partitions, generally with a 1:1 or 1:n relationship to the base table partitions. For detailed partition derivation requirements, see [CREATE-ASYNC-MATERIALIZED-VIEW](../../../sql-manual/sql-statements/table-and-view/async-materialized-view/CREATE-ASYNC-MATERIALIZED-VIEW#可选参数) and [Async Materialized View FAQ Q12](../../../query-acceleration/materialized-view/async-materialized-view/faq#q12构建分区物化视图报错).
+The partitions of a materialized view are created by mapping from base table partitions, generally with a 1:1 or 1:n relationship to the base table partitions. For detailed partition derivation requirements, see [CREATE-ASYNC-MATERIALIZED-VIEW](../../../sql-manual/sql-statements/table-and-view/async-materialized-view/CREATE-ASYNC-MATERIALIZED-VIEW#optional-parameters) and [Async Materialized View FAQ Q12](../../../query-acceleration/materialized-view/async-materialized-view/faq#q12-error-when-building-a-partition-materialized-view).
 
 ### 4.2 Partition Invalidation and Refresh Behavior
 
@@ -306,7 +306,7 @@ INSERT INTO lineitem VALUES
 (1, 2, 3, 4, '2024-05-01 01:45:05', 5.5, 6.5, 0.1, 8.5, 'o', 'k', '2024-05-01', '2024-05-01', '2024-05-01', 'a', 'b', 'yyyyyyyyy'),    
 (1, 2, 3, 4, '2024-05-15 02:35:05', 5.5, 6.5, 0.15, 8.5, 'o', 'k', '2024-05-15', '2024-05-15', '2024-05-15', 'a', 'b', 'yyyyyyyyy'),     
 (2, 2, 3, 5, '2024-05-25 08:30:06', 5.5, 6.5, 0.2, 8.5, 'o', 'k', '2024-05-25', '2024-05-25', '2024-05-25', 'a', 'b', 'yyyyyyyyy'),     
-(3, 4, 3, 6, '2024-06-02 09:25:07', 5.5, 6.5, 0.3, 8.5, 'o', 'k', '2024-06-02', '2024-06-02', '2024-06-02', 'a', 'b', 'yyyyyyyyy'),
+(3, 4, 3, 6, '2024-06-02 09:25:07', 5.5, 6.5, 0.3, 8.5, 'o', 'k', '2024-06-02', '2024-06-02', '2024-06-02', 'a', 'b', 'yyyyyyyyy');
 
 CREATE TABLE IF NOT EXISTS partsupp (
     ps_partkey INTEGER NOT NULL, 
@@ -554,7 +554,7 @@ Query 1:
 ```sql
 SELECT 
   l_linestatus, 
-  l_extendedprice * (1 - l_discount)
+  l_extendedprice * (1 - l_discount),
   o_shippriority 
 FROM 
   orders 

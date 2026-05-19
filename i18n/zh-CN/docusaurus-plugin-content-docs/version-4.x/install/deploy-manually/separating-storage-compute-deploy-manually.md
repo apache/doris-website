@@ -302,7 +302,7 @@ ALTER SYSTEM ADD FOLLOWER "host:port";
       - 示例： [{"path":"/path/to/file_cache"，"total_size":21474836480}，{"path":"/path/to/file_cache2"，"total_size":21474836480}]
       - 默认： [{"path":"${DORIS_HOME}/file_cache"}]
 
-3. 启动 BE 进程
+2. 启动 BE 进程
 
    使用以下命令启动 Backend：
 
@@ -310,12 +310,12 @@ ALTER SYSTEM ADD FOLLOWER "host:port";
    bin/start_be.sh --daemon
    ```
 
-4. 将 BE 添加到集群：
+3. 将 BE 添加到集群：
 
    使用 MySQL 客户端连接到任意 FE 节点：
 
    ```sql
-   ALTER SYSTEM ADD BACKEND "<ip>:<heartbeat_service_port>" [PROTERTIES propertires];
+   ALTER SYSTEM ADD BACKEND "<ip>:<heartbeat_service_port>" [PROPERTIES properties];
    ```
 
    将 `<ip>` 替换为新 Backend 的 IP 地址，将 `<heartbeat_service_port>` 替换为其配置的心跳服务端口（默认为 9050）。
@@ -324,7 +324,7 @@ ALTER SYSTEM ADD FOLLOWER "host:port";
 
    更详细的用法请参考 [ADD BACKEND](../../sql-manual/sql-statements/cluster-management/instance-management/ADD-BACKEND) 和 [REMOVE BACKEND](../../sql-manual/sql-statements/cluster-management/instance-management/DROP-BACKEND)。
 
-5. 验证 BE 状态
+4. 验证 BE 状态
 
    检查 Backend 日志文件（`be.log`）以确保它已成功启动并加入集群。
 

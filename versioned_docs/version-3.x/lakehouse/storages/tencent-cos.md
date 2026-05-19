@@ -25,7 +25,7 @@ This document describes the parameters required to access Tencent Cloud COS, whi
 | cos.secret_key                 | s3.secret_key            | COS secret key, used together with access key for authentication |               | Yes      |
 | cos.region                     | s3.region                | COS region, specifies the region of Tencent Cloud COS       |               | No       |
 | cos.connection.maximum         | s3.connection.maximum    | S3 maximum connections, specifies the maximum number of connections to COS service | 50            | No       |
-| cos.connection.request.timeout | s3.connection.timeout    | S3 request timeout in milliseconds, specifies the request timeout when connecting to COS service | 3000          | No       |
+| cos.connection.request.timeout | s3.connection.request.timeout | S3 request timeout in milliseconds, specifies the request timeout when connecting to COS service | 3000          | No       |
 | cos.connection.timeout         | s3.connection.timeout    | S3 connection timeout in milliseconds, specifies the timeout when establishing connection to COS service | 1000          | No       |
 
 > Before version 3.1, use legacy name

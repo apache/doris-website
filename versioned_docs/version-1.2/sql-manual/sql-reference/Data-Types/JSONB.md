@@ -73,7 +73,7 @@ PROPERTIES("replication_num" = "1");
 25	[123, abc]
 ```
 
-- due to the 28% of rows is invalid，stream load with default configuration will fail with error message "too many filtered rows"
+- due to the 28% of rows are invalid，stream load with default configuration will fail with error message "too many filtered rows"
 
 ```
 curl --location-trusted -u root: -T test_jsonb.csv http://127.0.0.1:8840/api/testdb/test_jsonb/_stream_load

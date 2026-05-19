@@ -133,9 +133,9 @@ data:
     # Advanced configurations
     # log_roll_size_mb = 1024
     # INFO, WARN, ERROR, FATAL
-    syg_level = INFO
+    sys_log_level = INFO
     # NORMAL, BRIEF, ASYNC
-    syg_mode = ASYNC
+    sys_log_mode = ASYNC
     # audit_log_dir = $LOG_DIR
     # audit_log_modules = slow_query, query
     # audit_log_roll_num = 10

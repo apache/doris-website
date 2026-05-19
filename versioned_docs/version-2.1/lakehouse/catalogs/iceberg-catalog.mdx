@@ -33,7 +33,7 @@ Users can access Iceberg tables using Hive Metastore as metadata through the Hiv
 CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
     'type' = 'iceberg',
     'iceberg.catalog.type' = '<iceberg_catalog_type>',
-    'warehouse' = '<warehouse>' --optional
+    'warehouse' = '<warehouse>', --optional
     {MetaStoreProperties},
     {StorageProperties},
     {IcebergProperties},
@@ -231,7 +231,7 @@ Support for Nested Namespace needs to be explicitly enabled. For details, please
                 'hive.metastore.client.principal' = 'hive/presto-master.docker.cluster@LABS.TERADATA.COM',
                 'hive.metastore.client.keytab' = '/keytabs/hive-presto-master.keytab',
                 'hive.metastore.service.principal' = 'hive/hadoop-master@LABS.TERADATA.COM',
-                'hive.metastore.sasl.enabled ' = 'true',
+                'hive.metastore.sasl.enabled' = 'true',
                 'hive.metastore.authentication.type' = 'kerberos',
                 'hadoop.security.auth_to_local' = 'RULE:[2:\$1@\$0](.*@LABS.TERADATA.COM)s/@.*//
                 RULE:[2:\$1@\$0](.*@OTHERLABS.TERADATA.COM)s/@.*//
@@ -294,7 +294,7 @@ Support for Nested Namespace needs to be explicitly enabled. For details, please
                 'hive.metastore.client.keytab' = '/keytabs/presto-server.keytab',
                 'hive.metastore.authentication.type' = 'kerberos',
                 'hive.metastore.service.principal' = 'hive/hadoop-master@LABS.TERADATA.COM',
-                'hive.metastore.sasl.enabled ' = 'true',
+                'hive.metastore.sasl.enabled' = 'true',
                 'hadoop.security.auth_to_local' = 'RULE:[2:\$1@\$0](.*@LABS.TERADATA.COM)s/@.*//
                 RULE:[2:\$1@\$0](.*@OTHERLABS.TERADATA.COM)s/@.*//
                 RULE:[2:\$1@\$0](.*@OTHERREALM.COM)s/@.*//
@@ -330,7 +330,7 @@ Support for Nested Namespace needs to be explicitly enabled. For details, please
                 'hive.metastore.service.principal' = 'hive/hadoop-master@LABS.TERADATA.COM',
                 'hive.metastore.sasl.enabled' = 'true',
                 'hive.metastore.client.principal' = 'hive/presto-master.docker.cluster@LABS.TERADATA.COM',
-                'hive.metastore.client.keytab' = '/keytabs/keytabs/hive-presto-master.keytab',
+                'hive.metastore.client.keytab' = '/keytabs/hive-presto-master.keytab',
                 'hadoop.security.auth_to_local' = 'RULE:[2:$1@$0](.*@LABS.TERADATA.COM)s/@.*//
                 RULE:[2:$1@$0](.*@OTHERLABS.TERADATA.COM)s/@.*//
                 RULE:[2:$1@$0](.*@OTHERREALM.COM)s/@.*//
@@ -447,7 +447,7 @@ Support for Nested Namespace needs to be explicitly enabled. For details, please
                 'warehouse' = 'hdfs://127.0.0.1:8520/iceberg-hms-hdfs-warehouse',
                 'hive.metastore.uris' = 'thrift://127.0.0.1:9583',
                 'hive.metastore.kerberos.principal' = 'hive/hadoop-master@LABS.TERADATA.COM',
-                'hive.metastore.sasl.enabled ' = 'true',
+                'hive.metastore.sasl.enabled' = 'true',
                 'hive.metastore.authentication.type' = 'kerberos',
                 'hadoop.security.auth_to_local' = 'RULE:[2:\$1@\$0](.*@LABS.TERADATA.COM)s/@.*//
                 RULE:[2:\$1@\$0](.*@OTHERLABS.TERADATA.COM)s/@.*//

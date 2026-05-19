@@ -194,7 +194,7 @@ kubectl run mysql-client --image=mysql:5.7 -it --rm --restart=Never --namespace=
 Inside the container, connect to the Doris cluster using the Service name without the `internal` suffix:
 
 ```shell
-mysql -uroot -P9030 -hdoriscluster-sample-fe-service
+mysql -uroot -P9030 -hdoriscluster-sample-fe
 ```
 
 ### NodePort mode

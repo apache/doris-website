@@ -443,5 +443,3 @@ WHERE rn = 1;
 - **Prefer `ASOF INNER JOIN` when unmatched rows are not needed.** This avoids producing NULL rows and simplifies downstream processing.
 - **Deduplicate the right table when deterministic results are required.** If the right table contains multiple rows with the same grouping key and matching column value, ASOF JOIN may return any one of them.
 - **Use expressions for time-offset matching.** For example, `MATCH_CONDITION(l.ts >= r.ts + INTERVAL 1 HOUR)` requires a gap of at least 1 hour.
-</content>
-</invoke>

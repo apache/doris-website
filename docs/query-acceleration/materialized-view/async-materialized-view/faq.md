@@ -116,7 +116,7 @@ Unable to find a suitable base table for partitioning
 
 This is usually caused by the materialized view's SQL definition and the choice of partition column making incremental partition updates impossible, which leads to an error when creating the partition materialized view:
 
-- For the materialized view to perform incremental partition updates, the corresponding requirements must be met. For details, see [Materialized view refresh modes](../../../sql-manual/sql-statements/table-and-view/async-materialized-view/CREATE-ASYNC-MATERIALIZED-VIEW.md#可选参数).
+- For the materialized view to perform incremental partition updates, the corresponding requirements must be met. For details, see [Materialized view refresh modes](../../../sql-manual/sql-statements/table-and-view/async-materialized-view/CREATE-ASYNC-MATERIALIZED-VIEW.md#optional-parameters).
 - The latest version can report the specific reason for partition build failure. For a summary of causes and explanations, see [Appendix 2](#appendix-2-async-materialized-view-partition-build-failure-causes).
 
 **Example**:
@@ -369,7 +369,7 @@ your_query_sql;
 
 1. In versions before Doris 2.1.3, the transparent rewrite feature for materialized views is disabled by default. The corresponding switch must be turned on for transparent rewrite to take effect. For the specific switches, refer to the async materialized view related switches.
 2. The materialized view may be in an unavailable state. To view the build status of a materialized view, refer to View Materialized View Status.
-3. If a hit still does not occur after the previous two checks, the materialized view's defining SQL and the query SQL may be outside the current scope of transparent rewrite capabilities. For details, refer to [Materialized View Transparent Rewrite Capabilities](../../../query-acceleration/materialized-view/async-materialized-view/functions-and-demands.md#透明改写能力).
+3. If a hit still does not occur after the previous two checks, the materialized view's defining SQL and the query SQL may be outside the current scope of transparent rewrite capabilities. For details, refer to [Materialized View Transparent Rewrite Capabilities](../../../query-acceleration/materialized-view/async-materialized-view/functions-and-demands.md#22-transparent-query-rewrite).
 4. For detailed summary information and explanations of failed hits, see [Appendix 1](#appendix-1-transparent-rewrite-failure-summary-information).
 
 The two examples below illustrate common transparent rewrite failure scenarios.

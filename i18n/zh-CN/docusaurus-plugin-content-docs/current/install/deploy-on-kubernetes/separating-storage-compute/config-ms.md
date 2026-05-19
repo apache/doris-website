@@ -57,7 +57,7 @@ spec:
 - `${foundationdbConfigMapName}`：ConfigMap 的名称
 - `${namespace}`：FoundationDB 部署所在的命名空间
 
-查找 `fdb-kubernetes-operator` 生成的 ConfigMap，请参考部署 FoundationDB 章节的 [获取包含 FoundationDB 访问信息的 ConfigMap](install-fdb.md#获取包含-foundationdb-访问信息的-configmap)。
+查找 `fdb-kubernetes-operator` 生成的 ConfigMap，请参考部署 FoundationDB 章节的 [获取包含 FoundationDB 访问信息的 ConfigMap](install-fdb.md#get-the-configmap-that-contains-foundationdb-access-information)。
 
 ### 方式二：直接配置访问地址
 

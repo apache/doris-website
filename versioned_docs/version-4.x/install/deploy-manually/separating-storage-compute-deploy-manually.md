@@ -302,7 +302,7 @@ To add Backend nodes to the cluster, perform the following steps for each Backen
       - Example: [{"path":"/path/to/file_cache","total_size":21474836480},{"path":"/path/to/file_cache2","total_size":21474836480}]
       - Default: [{"path":"${DORIS_HOME}/file_cache"}]
 
-3. Start the BE Process
+2. Start the BE Process
 
    Use the following command to start the Backend:
 
@@ -310,12 +310,12 @@ To add Backend nodes to the cluster, perform the following steps for each Backen
    bin/start_be.sh --daemon
    ```
 
-4. Add the BE to the Cluster
+3. Add the BE to the Cluster
 
    Use a MySQL client to connect to any FE node:
 
    ```sql
-   ALTER SYSTEM ADD BACKEND "<ip>:<heartbeat_service_port>" [PROTERTIES propertires];
+   ALTER SYSTEM ADD BACKEND "<ip>:<heartbeat_service_port>" [PROPERTIES properties];
    ```
 
    Replace `<ip>` with the IP address of the new Backend, and `<heartbeat_service_port>` with the configured heartbeat service port (the default is 9050).
@@ -324,7 +324,7 @@ To add Backend nodes to the cluster, perform the following steps for each Backen
 
    For more detailed usage, see [ADD BACKEND](../../sql-manual/sql-statements/cluster-management/instance-management/ADD-BACKEND) and [REMOVE BACKEND](../../sql-manual/sql-statements/cluster-management/instance-management/DROP-BACKEND).
 
-5. Verify the BE Status
+4. Verify the BE Status
 
    Check the Backend log file (`be.log`) to make sure it has started successfully and joined the cluster.
 

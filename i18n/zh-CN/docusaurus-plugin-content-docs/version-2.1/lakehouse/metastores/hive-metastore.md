@@ -124,7 +124,7 @@ Kerberos 详细配置参考 Kerberos 认证。
        'type' = 'hms',
        'hive.metastore.uris' = 'thrift://127.0.0.1:9583',
        'hive.metastore.client.principal'='hive/presto-master.docker.cluster@LABS.TERADATA.COM',
-       'hive.metastore.client.keytab' = '/mnt/keytabs/keytabs/hive-presto-master.keytab',
+       'hive.metastore.client.keytab' = '/mnt/keytabs/hive-presto-master.keytab',
        'hive.metastore.service.principal' = 'hive/hadoop-master@LABS.TERADATA.COM',
        'hive.metastore.authentication.type'='kerberos',
        'hadoop.security.auth_to_local' = 'RULE:[2:\$1@\$0](.*@LABS.TERADATA.COM)s/@.*//
@@ -170,7 +170,7 @@ Kerberos 详细配置参考 Kerberos 认证。
 	    'hive.metastore.uris' = 'thrift://127.0.0.1:9583',
 	    'warehouse' = 'oss://doris/iceberg_warehouse/',
 	    'hive.metastore.client.principal'='hive/presto-master.docker.cluster@LABS.TERADATA.COM',
-	    'hive.metastore.client.keytab' = '/mnt/keytabs/keytabs/hive-presto-master.keytab',
+	    'hive.metastore.client.keytab' = '/mnt/keytabs/hive-presto-master.keytab',
 	    'hive.metastore.service.principal' = 'hive/hadoop-master@LABS.TERADATA.COM',
 	    'hive.metastore.authentication.type'='kerberos',
 	    'hadoop.security.auth_to_local' = 'RULE:[2:\$1@\$0](.*@LABS.TERADATA.COM)s/@.*//
@@ -216,7 +216,7 @@ Kerberos 详细配置参考 Kerberos 认证。
 	    'hive.metastore.uris' = 'thrift://127.0.0.1:9583',
 	    'warehouse' = 's3://doris/iceberg_warehouse/',
 	    'hive.metastore.client.principal'='hive/presto-master.docker.cluster@LABS.TERADATA.COM',
-	    'hive.metastore.client.keytab' = '/mnt/keytabs/keytabs/hive-presto-master.keytab',
+	    'hive.metastore.client.keytab' = '/mnt/keytabs/hive-presto-master.keytab',
 	    'hive.metastore.service.principal' = 'hive/hadoop-master@LABS.TERADATA.COM',
 	    'hive.metastore.authentication.type'='kerberos',
 	    'hadoop.security.auth_to_local' = 'RULE:[2:\$1@\$0](.*@LABS.TERADATA.COM)s/@.*//

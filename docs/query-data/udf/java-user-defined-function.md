@@ -427,7 +427,7 @@ Like UDF, UDTF requires you to implement the `evaluate` method, but the return v
 2. Register the Java UDTF in Doris. Registration creates two UDTFs at the same time: the version with the `_outer` suffix appended to the function name handles the case where the result has zero rows specially. For details, see the [OUTER combinator](../../sql-manual/sql-functions/table-functions/explode-numbers). For more syntax, see [CREATE FUNCTION](../../sql-manual/sql-statements/function/CREATE-FUNCTION).
 
     ```sql
-    CREATE TABLES FUNCTION java-utdf(string, string) RETURNS array<string> PROPERTIES (
+    CREATE TABLES FUNCTION java_utdf(string, string) RETURNS array<string> PROPERTIES (
         "file"="file:///pathTo/java-udtf.jar",
         "symbol"="org.apache.doris.udf.demo.UDTFStringTest",
         "always_nullable"="true",

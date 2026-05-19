@@ -719,7 +719,7 @@ http://127.0.0.1:8030/api/doc_tpcds/store_sales/_stream_load
 curl --location-trusted \
 -u "root:" \
 -H "column_separator:|" \
--H "ca_address_sk, ca_address_id, ca_street_number, ca_street_name, ca_street_type, ca_suite_number, ca_city, ca_county, ca_state, ca_zip, ca_country, ca_gmt_offset, ca_location_type" \
+-H "columns: ca_address_sk, ca_address_id, ca_street_number, ca_street_name, ca_street_type, ca_suite_number, ca_city, ca_county, ca_state, ca_zip, ca_country, ca_gmt_offset, ca_location_type" \
 -T "doc_ddl_dir/customer_address_1_10.dat" \
 http://127.0.0.1:8030/api/doc_tpcds/customer_address/_stream_load
 ```

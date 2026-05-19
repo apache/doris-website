@@ -208,7 +208,7 @@ By using `desc` to view the execution plan, you can see that Doris converts `@in
 
 ## FAQ
 
-1. Query blocked when using Java SKD to read incremental data through JNI
+1. Query blocked when using Java SDK to read incremental data through JNI
 
     Please add `-Djol.skipHotspotSAAttach=true` to `JAVA_OPTS_FOR_JDK_17` or `JAVA_OPTS` in `be.conf`.
 
