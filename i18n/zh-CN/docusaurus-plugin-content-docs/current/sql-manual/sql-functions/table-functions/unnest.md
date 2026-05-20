@@ -109,7 +109,7 @@ ORDER BY i.id, t.ord;
 输出（示例）：
 ```sql
 +------+-------------+------+
-| id   | tag         | ord  |
+| id   | ord         | tag  |
 +------+-------------+------+
 |    1 | Electronics |    0 |
 |    1 | High-End    |    2 |

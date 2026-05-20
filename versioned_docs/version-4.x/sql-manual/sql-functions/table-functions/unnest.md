@@ -1,7 +1,7 @@
 ---
 {
     "title": "UNNEST",
-    "language": "en"
+    "language": "en-US"
 }
 ---
 
@@ -109,7 +109,7 @@ ORDER BY i.id, t.ord;
 Output (example):
 ```sql
 +------+-------------+------+
-| id   | tag         | ord  |
+| id   | ord         | tag  |
 +------+-------------+------+
 |    1 | Electronics |    0 |
 |    1 | High-End    |    2 |
