@@ -17,8 +17,6 @@ URL_ENCODE(  <str>  )
 ```
 
 ## Required Parameters
-
-## Required Parameters
 | Parameters | Description |
 |------|------|
 | `<str>` | String to be encoded |
@@ -34,7 +32,7 @@ UTF-8 encoding completes the URL encoding of the provided text
 select  URL_ENCODE('Doris Q&A');
 ```
 
-```sql
+```text
 +-------------------------+
 | url_encode('Doris Q&A') |
 +-------------------------+
