@@ -6,8 +6,6 @@
 }
 ---
 
-## ipv4_string_to_num
-
 ## Description
 Takes a string containing an IPv4 address in A.B.C.D format (dot-separated decimal numbers). Returns the numeric value of the corresponding IPv4 address in network byte order (big endian).
 

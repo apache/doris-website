@@ -8,7 +8,7 @@
 
 ## Description
 
-Computes a singed 64-bit MurmurHash3 hash value. The unsigned version refer to [murmur_hash3_u64_v2](./murmur-hash3-u64-v2.md)
+Computes a signed 64-bit MurmurHash3 hash value. The unsigned version refer to [murmur_hash3_u64_v2](./murmur-hash3-u64-v2.md)
 
 The difference from `MURMUR_HASH3_64` is: this version reuses the 128-bit processing function of MurmurHash3, outputting only the first 64-bit hash value, which is consistent with the [standard library](https://mmh3.readthedocs.io/en/latest/api.html#mmh3.hash64) implementation.
 

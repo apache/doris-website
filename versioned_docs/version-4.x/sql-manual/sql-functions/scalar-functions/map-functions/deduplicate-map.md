@@ -13,7 +13,7 @@ By default, Doris deduplicates generated Maps (such as when importing data).
 However, Maps obtained in certain special scenarios may not be deduplicated, such as data read from external tables or Maps converted from strings.
 This function can be used to deduplicate Map types.
 
-## Syntaxntax
+## Syntax
 
 ```sql
 DEDUPLICATE_MAP(<map>)

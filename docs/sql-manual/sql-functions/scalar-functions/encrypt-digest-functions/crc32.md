@@ -6,11 +6,11 @@
 }
 ---
 
-### Description
+## Description
 
 Use CRC32 to compute the result.
 
-### Syntax
+## Syntax
 ```sql
 CRC32( <str> )
 ```
