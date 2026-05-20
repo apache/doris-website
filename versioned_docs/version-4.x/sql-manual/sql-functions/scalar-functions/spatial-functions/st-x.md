@@ -10,7 +10,7 @@
 
 When the point is a valid POINT type, returns the corresponding X coordinate value.
 
-## Sytax
+## Syntax
 
 ```sql
 ST_X( <point>)
@@ -22,7 +22,7 @@ ST_X( <point>)
 |------|----------|
 | `<point>` | The geometric object from which to extract the X coordinate. It must be a valid POINT type (2D point), where the X (longitude) range is [-180, 180] and the Y (latitude) range is [-90, 90].|
 
-## Retuen value
+## Return Value
 
 The X value in the geometric coordinates, of type double-precision floating-point number (Double).
 

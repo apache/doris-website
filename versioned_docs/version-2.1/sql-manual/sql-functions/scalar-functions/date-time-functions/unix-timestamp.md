@@ -18,7 +18,7 @@ For the format specification, refer to the format description of the date_format
 
 This function is affected by the time zone.
 
-## Sytax
+## Syntax
 
 ```sql
 UNIX_TIMESTAMP([DATETIME date[, STRING fmt]])

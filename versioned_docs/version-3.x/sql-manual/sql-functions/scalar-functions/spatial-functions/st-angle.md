@@ -10,7 +10,7 @@
  
 Input three points. The first line is the straight line connecting point1 (first endpoint) and point2 (second endpoint). The second line is the straight line connecting point2 (first endpoint) and point3 (second endpoint). These two lines intersect at point2. The function returns the angle from the first line to the second line in the clockwise direction. For each endpoint coordinate, the x value (longitude) must be in the range [-180, 180], and the y value (latitude) must be in the range [-90, 90].
 
-## Sytax
+## Syntax
 
 ```sql
 ST_ANGLE( <point1>, <point2>, <point3>)
@@ -24,7 +24,7 @@ ST_ANGLE( <point1>, <point2>, <point3>)
 | `<point2>` | The second endpoint of the first line and the first endpoint of the second line, of type `GeoPoint` |
 | `<point3>` | The second endpoint of the second line, of type  `GeoPint` |
 
-## Retuen Value
+## Return Value
 
 Returns the angle between the two lines in radians, as a double-precision floating-point number, with a range of [0, 2π). The angle is measured clockwise from the first line to the second line.
 

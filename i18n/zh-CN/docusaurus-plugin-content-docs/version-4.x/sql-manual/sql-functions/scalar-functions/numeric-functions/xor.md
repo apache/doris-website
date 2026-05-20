@@ -1,6 +1,6 @@
 ---
 {
-    "title": "XOR | Numeric Functions",
+    "title": "XOR",
     "language": "zh-CN",
     "description": "Return the XOR value of two numbers.",
     "sidebar_label": "XOR"

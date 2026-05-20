@@ -2,13 +2,13 @@
 {
     "title": "LOG2",
     "language": "en",
-    "description": "Returns the natural logarithm of x to base 2."
+    "description": "Returns the logarithm of x to base 2."
 }
 ---
 
 ## Description
 
-Returns the natural logarithm of `x` to base `2`.
+Returns the logarithm of `x` to base `2`.
 
 ## Syntax
 
