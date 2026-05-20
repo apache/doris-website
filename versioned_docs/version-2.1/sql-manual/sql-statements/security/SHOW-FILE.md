@@ -26,7 +26,7 @@ SHOW FILE { [ FROM | IN ] <database_name>}
 
 | Column      | Description                     |
 |:------------|:--------------------------------|
-| `FileId`    | Globally unique file identifier |
+| `Id`        | Globally unique file identifier |
 | `DbName`    | Name of the owning database     |
 | `Catalog`   | User-defined classification     |
 | `FileName`  | Name of the file                |

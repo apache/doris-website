@@ -10,7 +10,7 @@
 
 This statement is used to view the status of the currently existing broker processes.
 
-## Syntax：
+## Syntax
 
 ```sql
 SHOW BROKER;

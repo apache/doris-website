@@ -31,7 +31,7 @@ Users executing this SQL command must have at least the following privileges:
 
 | Privilege  | Object | Notes                                        |
 | :--------- | :----- | :------------------------------------------- |
-| Any_PRIV | Session  | Any privilege can show variables |
+| N/A      | Session  | No specific privilege is required to show variables |
 
 
 ## Return Value
