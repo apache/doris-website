@@ -13,7 +13,7 @@
 
 `GET /rest/v2/manager/query/query_info`
 
-`GET /rest/v2/manager/query/trace/{trace_id}`
+`GET /rest/v2/manager/query/trace_id/{trace_id}`
 
 `GET /rest/v2/manager/query/sql/{query_id}`
 
@@ -506,7 +506,6 @@ Return current running queries with runtime statistics. This endpoint shares the
 | TotalTasks | Total number of pipeline tasks for this query |
 | FinishedTasks | Number of completed pipeline tasks |
 | Progress | Computed query progress (FinishedTasks / TotalTasks) |
-```
 
 ## Cancel query
 
