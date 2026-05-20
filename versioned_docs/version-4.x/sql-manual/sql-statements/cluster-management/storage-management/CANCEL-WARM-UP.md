@@ -44,7 +44,7 @@ Its result is:
 Then terminate it through `CANCEL WARM UP`:
 
 ```C++
-CANCEL WARM UP WHERE id = 90290165739458;
+CANCEL WARM UP JOB WHERE id = 90290165739458;
 ```
 
 If the following content is returned, it indicates that the warm-up job corresponding to the specified id does not exist:

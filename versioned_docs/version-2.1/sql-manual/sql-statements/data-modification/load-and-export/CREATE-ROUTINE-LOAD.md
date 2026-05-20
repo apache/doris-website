@@ -10,7 +10,7 @@
 
 The Routine Load feature allows users to submit a resident import task that continuously reads data from a specified data source and imports it into Doris.
 
-Currently, it only supports importing CSV or Json format data from Kafka through unauthenticated or SSL authentication methods. [Example of importing Json format data](../../../../data-operate/import/import-way/routine-load-manual.md#Example-of-importing-Json-format-data)
+Currently, it only supports importing CSV or Json format data from Kafka through unauthenticated or SSL authentication methods. [Example of importing Json format data](../../../../data-operate/import/import-way/routine-load-manual.md#load-example)
 
 ## Syntax
 

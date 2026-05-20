@@ -40,7 +40,7 @@ SHOW LOAD
 
 **4. STATE = { " PENDING " | " ETL " | " LOADING " | " FINISHED " | " CANCELLED " }**
 
-> Specifying `PENDING` means matching jobs with the `LOAD = "PENDING"` status. The same applies to other status keywords.
+> Specifying `PENDING` means matching jobs with the `STATE = "PENDING"` status. The same applies to other status keywords.
 
 **5. `<col_name>`**
 

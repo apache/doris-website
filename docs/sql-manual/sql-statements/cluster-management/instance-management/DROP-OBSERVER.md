@@ -36,7 +36,7 @@ The user executing this SQL command must have at least the following permissions
 
 ## Usage Notes
 
-1. After deleting the OBSERVER node, use[`SHOW FRONTENDS`](./SHOW-FRONTENDS.md)command to verify that they were successfully deleted.
+1. After deleting the OBSERVER node, use the [`SHOW FRONTENDS`](./SHOW-FRONTENDS.md) command to verify that they were successfully deleted.
 
 ## Examples
 
