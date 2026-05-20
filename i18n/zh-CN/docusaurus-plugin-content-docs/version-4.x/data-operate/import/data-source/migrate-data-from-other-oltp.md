@@ -62,13 +62,13 @@ CREATE CATALOG mysql_catalog properties(
 
 -- 通过 INSERT INTO 导入已存在的表
 INSERT INTO internal.doris_db.tbl1
-SELECT * FROM iceberg_catalog.iceberg_db.table1;
+SELECT * FROM mysql_catalog.mysql_db.table1;
 
 -- 通过 CTAS 一步建表并导入
 CREATE TABLE internal.doris_db.tbl1
 PROPERTIES('replication_num' = '1')
 AS
-SELECT * FROM iceberg_catalog.iceberg_db.table1;
+SELECT * FROM mysql_catalog.mysql_db.table1;
 ```
 
 更多细节参见 [Catalog 数据导入](../../../lakehouse/catalog-overview.md#数据导入)。
@@ -87,14 +87,14 @@ SELECT * FROM iceberg_catalog.iceberg_db.table1;
 CREATE TABLE student_source (
     id INT,
     name STRING,
-    age INT
+    age INT,
   PRIMARY KEY (id) NOT ENFORCED
 ) WITH (
   'connector' = 'jdbc',
   'url' = 'jdbc:mysql://localhost:3306/mydatabase',
   'table-name' = 'students',
   'username' = 'username',
-  'password' = 'password',
+  'password' = 'password'
 );
 
 CREATE TABLE student_sink (

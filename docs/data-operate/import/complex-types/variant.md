@@ -294,7 +294,7 @@ The table creation statements are essentially the same. The only difference is t
 
 | Format | Key Header |
 | --- | --- |
-| CSV | `-H "column_separator:,"` |
+| CSV | `-H "column_separator:|"` |
 | JSON | `-H "format:json"` |
 
 ### Q5: How do you confirm whether a Stream Load succeeded?

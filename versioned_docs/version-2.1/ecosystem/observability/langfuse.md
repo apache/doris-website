@@ -29,7 +29,7 @@ The Langfuse on Doris solution uses a microservices architecture with the follow
 | Langfuse Worker | 3030      | Async task processing for data processing and analytics tasks                                                               |
 | PostgreSQL      | 5432      | Transactional data storage for user configuration and metadata                                                               |
 | Redis           | 6379      | Cache layer and message queue for improved system response performance                                                                |
-| MinIO           | 9090      | Object storage service for raw events and multi-modal attachments                                                              |
+| MinIO           | 9000      | Object storage service for raw events and multi-modal attachments                                                              |
 | Doris Fe        | 9030 8030 | Doris Frontend, part of the Doris architecture, responsible for receiving user requests, query parsing and planning, metadata management, and node management                      |
 | Doris Be        | 8040 8050 | Doris Backends, part of the Doris architecture, responsible for data storage and query plan execution. Data is split into shards and stored with multiple replicas in BE nodes. |
 

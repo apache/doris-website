@@ -30,7 +30,7 @@ Before performing the migration, pay attention to the following points:
 
 - **Modeling and partitioning strategy**: Choose an appropriate Doris [data model](../../../table-design/data-model/intro.mdx) based on the Redshift source table schema, and define a [partitioning](../../../table-design/data-partitioning/dynamic-partitioning.md) and [bucketing](../../../table-design/data-partitioning/data-bucketing.md) strategy. For more table design recommendations, see [Load Best Practices](../load-best-practices/load-best-practices.md).
 - **Type conversion**: When Redshift exports the `TIME` type, you must first `CAST` it to `VARCHAR` before exporting.
-- **Complex type limitations**: Parquet/ORC files that contain complex types (Struct/Array/Map) currently must be loaded with [TVF Load](./amazon-s3.md#load-with-tvf).
+- **Complex type limitations**: Parquet/ORC files that contain complex types (Struct/Array/Map) currently must be loaded with [TVF Load](./amazon-s3.md#method-2-load-with-tvf-synchronous).
 
 ## Data Type Mapping
 
@@ -75,7 +75,7 @@ CREATE TABLE sales_data (
     amount        DECIMAL(10,2),
     country       VARCHAR(48)
 )
-DISTSTYLE AUTO
+DISTSTYLE AUTO;
 
 INSERT INTO sales_data VALUES
 (1, 'Alice', '2025-04-08', 99.99, 'USA'),
@@ -150,8 +150,8 @@ Comparison of applicable scenarios:
 | Scenario                                          | Recommended method                              |
 | ------------------------------------------------- | ----------------------------------------------- |
 | Large data volume, can be processed asynchronously | S3 Load                                         |
-| Synchronous data load is required                 | [TVF Load](./amazon-s3.md#load-with-tvf)        |
-| Files contain complex types (Struct/Array/Map)    | [TVF Load](./amazon-s3.md#load-with-tvf) is required |
+| Synchronous data load is required                 | [TVF Load](./amazon-s3.md#method-2-load-with-tvf-synchronous)        |
+| Files contain complex types (Struct/Array/Map)    | [TVF Load](./amazon-s3.md#method-2-load-with-tvf-synchronous) is required |
 
 #### 3.1 Load a Single Partition
 
@@ -263,7 +263,7 @@ Doris does not support the `TIME` type. When Redshift exports the `TIME/TIMEZ` t
 
 **Q2: Can S3 Load be used for Parquet/ORC files that contain complex types such as Struct/Array/Map?**
 
-No. Currently, you must use [TVF Load](./amazon-s3.md#load-with-tvf) for files that contain complex types.
+No. Currently, you must use [TVF Load](./amazon-s3.md#method-2-load-with-tvf-synchronous) for files that contain complex types.
 
 **Q3: Is S3 Load synchronous or asynchronous? How can the result be queried?**
 

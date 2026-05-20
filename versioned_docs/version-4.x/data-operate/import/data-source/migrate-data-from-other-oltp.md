@@ -62,16 +62,16 @@ CREATE CATALOG mysql_catalog properties(
 
 -- Load into an existing table with INSERT INTO
 INSERT INTO internal.doris_db.tbl1
-SELECT * FROM iceberg_catalog.iceberg_db.table1;
+SELECT * FROM mysql_catalog.mysql_db.table1;
 
 -- Create the table and load data in one step with CTAS
 CREATE TABLE internal.doris_db.tbl1
 PROPERTIES('replication_num' = '1')
 AS
-SELECT * FROM iceberg_catalog.iceberg_db.table1;
+SELECT * FROM mysql_catalog.mysql_db.table1;
 ```
 
-For more details, see [Catalog Data Import](../../../lakehouse/catalog-overview.md#数据导入).
+For more details, see [Catalog Data Import](../../../lakehouse/catalog-overview.md#data-ingestion).
 
 ---
 
@@ -87,14 +87,14 @@ This option suits offline data movement in the Flink stack. The following Flink 
 CREATE TABLE student_source (
     id INT,
     name STRING,
-    age INT
+    age INT,
   PRIMARY KEY (id) NOT ENFORCED
 ) WITH (
   'connector' = 'jdbc',
   'url' = 'jdbc:mysql://localhost:3306/mydatabase',
   'table-name' = 'students',
   'username' = 'username',
-  'password' = 'password',
+  'password' = 'password'
 );
 
 CREATE TABLE student_sink (
@@ -185,7 +185,7 @@ For whole-database or multi-table synchronization from a TP database, the Flink 
     --table-conf replication_num=1
 ```
 
-For more details, see [Whole-Database Synchronization](../../../connection-integration/data-integration/flink-doris-connector.md#整库同步).
+For more details, see [Whole-Database Synchronization](../../../connection-integration/data-integration/flink-doris-connector.md#case-4-full-database-cdc-synchronization).
 
 ---
 
@@ -213,7 +213,7 @@ val jdbcDF = spark.read
 Related documents:
 
 - [JDBC To Other Databases](https://spark.apache.org/docs/latest/sql-data-sources-jdbc.html)
-- [Spark Doris Connector Batch Write](../../../connection-integration/data-integration/spark-doris-connector.md#批量写入)
+- [Spark Doris Connector Batch Write](../../../connection-integration/data-integration/spark-doris-connector.md#scenario-2-batch-write-doris-data)
 
 ---
 

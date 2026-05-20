@@ -46,7 +46,7 @@ CREATE OR REPLACE TABLE test.sales_data (
     amount        NUMERIC(10,2),
     country       STRING
 )
-PARTITION BY  order_date
+PARTITION BY  order_date;
 
 
 INSERT INTO test.sales_data (order_id, customer_name, order_date, amount, country) VALUES

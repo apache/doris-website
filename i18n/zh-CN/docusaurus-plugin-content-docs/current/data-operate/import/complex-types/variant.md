@@ -294,7 +294,7 @@ SET describe_extend_variant_column = true;
 
 | 格式 | 关键 Header |
 | --- | --- |
-| CSV | `-H "column_separator:,"` |
+| CSV | `-H "column_separator:|"` |
 | JSON | `-H "format:json"` |
 
 ### Q5：如何确认 Stream Load 是否导入成功？
