@@ -1,5 +1,9 @@
 ---
-title: LEVENSHTEIN
+{
+    "title": "LEVENSHTEIN",
+    "language": "en",
+    "description": "The LEVENSHTEIN function returns the Levenshtein edit distance between two strings."
+}
 ---
 
 ## Description

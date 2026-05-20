@@ -2,7 +2,7 @@
 {
     "title": "REPLACE_EMPTY",
     "language": "en",
-    "description": "The REPLACEEMPTY function is used to replace a part of characters in a string with other characters. Unlike the REPLACE function,"
+    "description": "The REPLACE_EMPTY function is used to replace a part of characters in a string with other characters. Unlike the REPLACE function,"
 }
 ---
 

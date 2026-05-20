@@ -2,7 +2,7 @@
 {
     "title": "LENGTH",
     "language": "en",
-    "description": "The LENGTH function returns the byte length of a string (in bytes). This function calculates the number of bytes a string occupies in UTF-8 encoding,"
+    "description": "The LENGTH function returns the byte length of a string (in bytes). This function calculates the number of bytes a string occupies in UTF-8 encoding, not the number of characters."
 }
 ---
 
