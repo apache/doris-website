@@ -109,7 +109,7 @@ User-defined variables are a mechanism for temporarily storing data within a ses
     | allow_partition_column_nullable                            | true                                  | true                                  | 0       |
     | analyze_timeout                                           | 43200                                 | 43200                                 | 0       |
     | version                                                      | 5.7.99                                | 5.7.99                                | 0       |
-    | version_comment                                                | Doris version doris0.0.0--de61c5823 | Doris version doris-0.0--de61c5823 | 0       |
+    | version_comment                                                | Doris version doris-0.0.0--de61c58223 | Doris version doris-0.0.0--de61c58223 | 0       |
     | wait_full_block_schedule_times                                 | 2                                     | 2                                     | 0       |
     | wait_timeout                                               | 28800                                 | 28800                                 | 0       |
     | workload_group                                                 |                                       |                                       | 0       |
