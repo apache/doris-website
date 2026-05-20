@@ -13,7 +13,7 @@
 ## Syntax
 
 ```sql
-TO_QUANTILE_STATE(<raw_data> <compression>)
+TO_QUANTILE_STATE(<raw_data>, <compression>)
 ```
 
 ## Parameters

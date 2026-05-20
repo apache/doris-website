@@ -15,7 +15,7 @@ Returns 0 if there are no common points on the boundaries, or if there is an int
 
 This function is used to distinguish between "boundary-only contact" and "internal intersection" scenarios, such as shared edges of adjacent polygons (boundary-only contact) or tangent points between a line and a polygon (boundary-only contact).
 
-## Sytax
+## Syntax
 
 ```sql
 ST_TOUCHES( <shape1>, <shape2>)
@@ -39,7 +39,7 @@ ST_TOUCHES has the following edge cases:
 - If the input geometric shape is invalid, returns NULL.
 - If the input is an empty geometric object (e.g., POINT EMPTY), returns NULL.
 - If one shape is completely contained within another (with internal intersection), returns 0 even if their boundaries are in contact.
-- When a point is in contact with the boundary of a shape (a point has no interior), returns 1 (the "boundary" of a point is itself, which coincides with the shape's boundary with no internal intersection).。
+- When a point is in contact with the boundary of a shape (a point has no interior), returns 1 (the "boundary" of a point is itself, which coincides with the shape's boundary with no internal intersection).
 
 ## Example
 

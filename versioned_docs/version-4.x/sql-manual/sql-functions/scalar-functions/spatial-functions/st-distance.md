@@ -43,11 +43,11 @@ Returns the shortest spherical distance between the boundaries of the two geomet
 SELECT ST_DISTANCE(ST_GeometryFromText('POINT(0 0)'), ST_GeometryFromText('POINT(1 0)'));
 ```
 ```text
-+---------------------------------------------+
-| ST_Distance(ST_Point(0, 0), ST_Point(1, 0)) |
-+---------------------------------------------+
-|                           111195.1011774839 |
-+---------------------------------------------+
++------------------------------------------------------------------------------------+
+| ST_DISTANCE(ST_GeometryFromText('POINT(0 0)'), ST_GeometryFromText('POINT(1 0)')) |
++------------------------------------------------------------------------------------+
+|                                                                  111195.1011774839 |
++------------------------------------------------------------------------------------+
 ```
 
 **Distance Between a Point and a Line**

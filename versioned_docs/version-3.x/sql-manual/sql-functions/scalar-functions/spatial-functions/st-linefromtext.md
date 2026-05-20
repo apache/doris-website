@@ -14,7 +14,7 @@ Converts a WKT (Well Known Text) string into an in-memory representation of a Li
 
 - ST_LINESTRINGFROMTEXT
 
-## Sytax
+## Syntax
 
 ```sql
 ST_LINEFROMTEXT( <wkt>)
@@ -24,8 +24,8 @@ ST_LINEFROMTEXT( <wkt>)
 
 | Parameters  | Description         |
 |-----|------------|
-| `<wkt>` | A WKT string conforming to the LINE type, formatted as:
-"LINE (x1 y1, x2 y2)"
+| `<wkt>` | A WKT string conforming to the LINESTRING type, formatted as:
+"LINESTRING (x1 y1, x2 y2)"
 Where (x1 y1), (x2 y2) are the vertex coordinates of the line segment. Coordinate values are numeric (integers or decimals). |
 
 ## Return value
@@ -71,16 +71,15 @@ mysql> SELECT ST_LineFromText("LINESTRING (1 1, 2 2");
 +-----------------------------------------+
 ```
 
-Invalid WKT (too many vertices)
+LineString with multiple vertices
 
 ```sql
-mysql> SELECT ST_LineFromText("LINESTRING (1 1,2 2,3 3)");
-+---------------------------------------------------------------------------------+
-| ST_LineFromText("LINESTRING (1 1,2 2,3 3)")                                     |
-+---------------------------------------------------------------------------------+
-|     ��_<���?'���Xޑ?݉+
-                       ߑ?�����?(Qjm�ۡ?'���Xޡ?�3|ʏ��?lW<�`ª?��H�˪?       |
-+---------------------------------------------------------------------------------+
+mysql> SELECT ST_AsText(ST_LineFromText('LINESTRING (1 1, 2 2)'));
++-----------------------------------------------------+
+| ST_AsText(ST_LineFromText('LINESTRING (1 1, 2 2)')) |
++-----------------------------------------------------+
+| LINESTRING (1 1, 2 2)                               |
++-----------------------------------------------------+
 ```
 
 Input NULL
