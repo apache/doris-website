@@ -20,7 +20,7 @@ CROSS_PRODUCT(<array1>, <array2>)
 | Parameter | Description |
 | -- |--|
 | `<array1>` | The first vector, the subtype of the input array supports: TINYINT, SMALLINT, INT, BIGINT, LARGEINT, FLOAT, DOUBLE, the number of elements must be consistent with array2. Neither the array itself nor any of its elements can be NULL.|
-| `<array1>` | The second vector, the subtype of the input array supports: TINYINT, SMALLINT, INT, BIGINT, LARGEINT, FLOAT, DOUBLE, the number of elements must be consistent with array1. Neither the array itself nor any of its elements can be NULL.|
+| `<array2>` | The second vector, the subtype of the input array supports: TINYINT, SMALLINT, INT, BIGINT, LARGEINT, FLOAT, DOUBLE, the number of elements must be consistent with array1. Neither the array itself nor any of its elements can be NULL.|
 
 ## Return Value
 
