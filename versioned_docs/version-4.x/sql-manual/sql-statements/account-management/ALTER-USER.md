@@ -21,7 +21,7 @@ password_policy:
     1. PASSWORD_HISTORY { <n> | DEFAULT }
     2. PASSWORD_EXPIRE { DEFAULT | NEVER | INTERVAL <n> { DAY | HOUR | SECOND }}
     3. FAILED_LOGIN_ATTEMPTS <n>
-    4. PASSWORD_LOCK_TIME { UNBOUNDED ｜ <n> { DAY | HOUR | SECOND }}
+    4. PASSWORD_LOCK_TIME { UNBOUNDED | <n> { DAY | HOUR | SECOND }}
     5. ACCOUNT_UNLOCK
 ```
 
@@ -55,7 +55,7 @@ password_policy:
 >
 > When the current user logs in, if the user logs in with the wrong password for n times, the account will be locked.For example, `FAILED_LOGIN_ATTEMPTS 3` means that if you log in wrongly for 3 times, the account will be locked.
 >   
-> `PASSWORD_LOCK_TIME { UNBOUNDED ｜ <n> { DAY | HOUR | SECOND }}`
+> `PASSWORD_LOCK_TIME { UNBOUNDED | <n> { DAY | HOUR | SECOND }}`
 >
 > When the account is locked, the lock time is set. For example, `PASSWORD_LOCK_TIME 1 DAY` means that the account will be locked for one day.
 >
@@ -77,7 +77,7 @@ The user executing this SQL command must have at least the following privileges:
 
 ## Usage Notes
 
-1. This command give over supports modifying user roles from versions 2.0. Please use [GRANT](./GRANT-TO.md) and [REVOKE](./REVOKE-FROM.md) for related operations
+1. Starting from version 2.0, this command no longer supports modifying user roles. Please use [GRANT](./GRANT-TO.md) and [REVOKE](./REVOKE-FROM.md) for related operations.
 
 2. In an ALTER USER command, only one of the following account attributes can be modified at the same time:
 - Change password

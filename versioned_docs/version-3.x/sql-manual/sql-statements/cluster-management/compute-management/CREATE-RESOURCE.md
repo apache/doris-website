@@ -23,7 +23,7 @@ PROPERTIES (
 
 ## Parameters
 
-1.`<type>`
+1.`<property>`
 
 `<property>` format as `<key>` = `<value>`, and the specific available values for `<key>` are as follows:
 

@@ -27,7 +27,7 @@ PROPERTIES (
 
 1.`<property>`
 
-`<property>` format is `<key>` = `<value>`，`<key>`'s specific optional values can be referred to [workload group](../../../../admin-manual/workload-management/workload-group.md).
+`<property>` format is `<key>` = `<value>`, and `<key>`'s specific optional values can be referred to [workload group](../../../../admin-manual/workload-management/workload-group.md).
 
 
 ## Examples

@@ -22,7 +22,7 @@ password_policy:
     1. PASSWORD_HISTORY { <n> | DEFAULT }
     2. PASSWORD_EXPIRE { DEFAULT | NEVER | INTERVAL <n> { DAY | HOUR | SECOND }}
     3. FAILED_LOGIN_ATTEMPTS <n>
-    4. PASSWORD_LOCK_TIME { UNBOUNDED ｜ <n> { DAY | HOUR | SECOND }}
+    4. PASSWORD_LOCK_TIME { UNBOUNDED | <n> { DAY | HOUR | SECOND }}
 ```
 
 ## 必选参数
@@ -60,7 +60,7 @@ password_policy:
 > 
 > 设置当前用户登录时，如果使用错误的密码登录 n 次后，账户将被锁定。如 `FAILED_LOGIN_ATTEMPTS 3 PASSWORD_LOCK_TIME 1 DAY` 表示如果 3 次错误登录，则账户会被锁定。
 >  
-> `PASSWORD_LOCK_TIME { UNBOUNDED ｜ <n> { DAY | HOUR | SECOND }}`
+> `PASSWORD_LOCK_TIME { UNBOUNDED | <n> { DAY | HOUR | SECOND }}`
 >
 > 设置如果账户被锁定，将设置锁定时间。如 `PASSWORD_LOCK_TIME 1 DAY` 表示账户会被锁定一天。
 
