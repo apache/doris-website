@@ -18,11 +18,11 @@ Doris 通过 Streaming Job 将 MySQL 的全量与增量数据持续同步到 Dor
 
 - **使用 Flink Doris Connector 导入 MySQL 数据**
 
-可以通过 Flink Doris Connector 配合 Flink MySQL CDC 实现实时同步，适用于需要在 Flink 中对数据进行额外流式处理的场景。Connector 同时提供一键整库同步工具，更多信息请参考 [Flink Doris Connector](../../../ecosystem/flink-doris-connector/flink-doris-connector.md)。
+可以通过 Flink Doris Connector 配合 Flink MySQL CDC 实现实时同步，适用于需要在 Flink 中对数据进行额外流式处理的场景。Connector 同时提供一键整库同步工具，更多信息请参考 [Flink Doris Connector](../../../connection-integration/data-integration/flink-doris-connector.md)。
 
 - **使用第三方工具导入 MySQL 数据**
 
-[DataX](../../../ecosystem/datax)、[SeaTunnel](../../../ecosystem/seatunnel)、[CloudCanal](../../../ecosystem/cloudcanal) 等数据集成工具同样支持将 MySQL 数据同步到 Doris。
+[DataX](../../../connection-integration/data-integration/datax.md)、[SeaTunnel](../../../connection-integration/data-integration/seatunnel.md)、[CloudCanal](../../../connection-integration/data-integration/cloudcanal.md) 等数据集成工具同样支持将 MySQL 数据同步到 Doris。
 
 在大多数场景下，可以直接使用 JDBC Catalog 进行一次性的数据迁移；当需要持续同步全量+增量数据时，推荐使用 Streaming Job。
 
@@ -102,8 +102,8 @@ SELECT * FROM doris_db.students;
 
 Streaming Job 通过集成 Flink CDC 持续读取 MySQL 的 Binlog 并写入 Doris，支持以下两种模式：
 
-- [MySQL CDC 自动建表同步](../streaming-job/continuous-load-mysql-database.md)：首次同步时由 Doris 自动建表（通过 `include_tables` 可控制同步一张、多张或全部表），提供 at-least-once 语义。
-- [MySQL CDC SQL 映射同步](../streaming-job/continuous-load-mysql-table.md)：目标表需预先在 Doris 中创建，支持灵活的列映射和数据转换，提供 exactly-once 语义。
+- [MySQL CDC 自动建表同步](../import-way/streaming-job/continuous-load-mysql-database.md)：首次同步时由 Doris 自动建表（通过 `include_tables` 可控制同步一张、多张或全部表），提供 at-least-once 语义。
+- [MySQL CDC SQL 映射同步](../import-way/streaming-job/continuous-load-mysql-table.md)：目标表需预先在 Doris 中创建，支持灵活的列映射和数据转换，提供 exactly-once 语义。
 
 ### 使用限制
 
@@ -115,9 +115,9 @@ Streaming Job 通过集成 Flink CDC 持续读取 MySQL 的 Binlog 并写入 Dor
 
 提交 Streaming Job 之前，需要在 MySQL 端开启 Binlog 并授予用户相应的 REPLICATION 权限。不同部署环境的具体配置步骤请参考：
 
-- [Amazon RDS MySQL 配置指南](../streaming-job/prerequisites/amazon-rds-mysql.md)
-- [Amazon Aurora MySQL 配置指南](../streaming-job/prerequisites/amazon-aurora-mysql.md)
-- 各模式的注意事项与权限要求详见 [持续导入概览](../streaming-job/continuous-load-overview.md)
+- [Amazon RDS MySQL 配置指南](../import-way/streaming-job/prerequisites/amazon-rds-mysql.md)
+- [Amazon Aurora MySQL 配置指南](../import-way/streaming-job/prerequisites/amazon-aurora-mysql.md)
+- 各模式的注意事项与权限要求详见 [持续导入概览](../import-way/streaming-job/continuous-load-overview.md)
 
 ### 操作示例：自动建表同步
 
@@ -178,7 +178,7 @@ SHOW TABLES FROM doris_db;
 SELECT * FROM doris_db.students;
 ```
 
-更多通用操作和完整参数说明，请参考 [MySQL CDC 自动建表同步](../streaming-job/continuous-load-mysql-database.md)。
+更多通用操作和完整参数说明，请参考 [MySQL CDC 自动建表同步](../import-way/streaming-job/continuous-load-mysql-database.md)。
 
 ### 操作示例：SQL 映射同步
 
@@ -245,4 +245,4 @@ SELECT * FROM jobs("type"="insert") WHERE ExecuteType = "STREAMING";
 SELECT * FROM doris_db.students;
 ```
 
-更多通用操作（暂停、恢复、删除、查看 Task 等）以及完整参数说明，请参考 [MySQL CDC SQL 映射同步](../streaming-job/continuous-load-mysql-table.md)。
+更多通用操作（暂停、恢复、删除、查看 Task 等）以及完整参数说明，请参考 [MySQL CDC SQL 映射同步](../import-way/streaming-job/continuous-load-mysql-table.md)。

@@ -18,11 +18,11 @@ Doris uses Streaming Job to continuously sync full and incremental data from Pos
 
 - **Loading PostgreSQL data via Flink Doris Connector**
 
-Use Flink Doris Connector together with Flink Postgres CDC for real-time synchronization. This is suitable for scenarios that require additional Flink stream processing logic. The connector also provides a one-click full-database synchronization tool. For details, see [Flink Doris Connector](../../../ecosystem/flink-doris-connector/flink-doris-connector.md).
+Use Flink Doris Connector together with Flink Postgres CDC for real-time synchronization. This is suitable for scenarios that require additional Flink stream processing logic. The connector also provides a one-click full-database synchronization tool. For details, see [Flink Doris Connector](../../../connection-integration/data-integration/flink-doris-connector.md).
 
 - **Loading PostgreSQL data via third-party tools**
 
-Data integration tools such as [DataX](../../../ecosystem/datax), [SeaTunnel](../../../ecosystem/seatunnel), and [CloudCanal](../../../ecosystem/cloudcanal) also support syncing data from PostgreSQL to Doris.
+Data integration tools such as [DataX](../../../connection-integration/data-integration/datax.md), [SeaTunnel](../../../connection-integration/data-integration/seatunnel.md), and [CloudCanal](../../../connection-integration/data-integration/cloudcanal.md) also support syncing data from PostgreSQL to Doris.
 
 In most cases, you can use JDBC Catalog directly for one-time data migration. When continuous full + incremental synchronization is required, Streaming Job is recommended.
 
@@ -102,8 +102,8 @@ SELECT * FROM doris_db.students;
 
 Streaming Job continuously reads PostgreSQL WAL via Flink CDC and writes it to Doris. Two modes are supported:
 
-- [PostgreSQL CDC with Auto Table Creation](../streaming-job/continuous-load-postgresql-database.md): Doris creates downstream tables automatically on first sync (use `include_tables` to sync one, several, or all tables). Provides at-least-once semantics.
-- [PostgreSQL CDC with SQL Mapping](../streaming-job/continuous-load-postgresql-table.md): target table must be pre-created in Doris. Supports flexible column mapping, data transformation, and exactly-once semantics.
+- [PostgreSQL CDC with Auto Table Creation](../import-way/streaming-job/continuous-load-postgresql-database.md): Doris creates downstream tables automatically on first sync (use `include_tables` to sync one, several, or all tables). Provides at-least-once semantics.
+- [PostgreSQL CDC with SQL Mapping](../import-way/streaming-job/continuous-load-postgresql-table.md): target table must be pre-created in Doris. Supports flexible column mapping, data transformation, and exactly-once semantics.
 
 ### Limitations
 
@@ -115,9 +115,9 @@ Streaming Job continuously reads PostgreSQL WAL via Flink CDC and writes it to D
 
 Before submitting a Streaming Job, logical replication (`wal_level=logical`) must be enabled on the PostgreSQL side and the user must be granted the corresponding REPLICATION privileges. For environment-specific setup steps, see:
 
-- [Amazon RDS PostgreSQL Setup Guide](../streaming-job/prerequisites/amazon-rds-postgresql.md)
-- [Amazon Aurora PostgreSQL Setup Guide](../streaming-job/prerequisites/amazon-aurora-postgresql.md)
-- See [Continuous Load Overview](../streaming-job/continuous-load-overview.md) for notes and required permissions of each mode.
+- [Amazon RDS PostgreSQL Setup Guide](../import-way/streaming-job/prerequisites/amazon-rds-postgresql.md)
+- [Amazon Aurora PostgreSQL Setup Guide](../import-way/streaming-job/prerequisites/amazon-aurora-postgresql.md)
+- See [Continuous Load Overview](../import-way/streaming-job/continuous-load-overview.md) for notes and required permissions of each mode.
 
 ### Operation Example: Auto Table Creation Sync
 
@@ -179,7 +179,7 @@ SHOW TABLES FROM doris_db;
 SELECT * FROM doris_db.students;
 ```
 
-For more common operations and full parameter reference, see [PostgreSQL CDC with Auto Table Creation](../streaming-job/continuous-load-postgresql-database.md).
+For more common operations and full parameter reference, see [PostgreSQL CDC with Auto Table Creation](../import-way/streaming-job/continuous-load-postgresql-database.md).
 
 ### Operation Example: SQL Mapping Sync
 
@@ -247,4 +247,4 @@ SELECT * FROM jobs("type"="insert") WHERE ExecuteType = "STREAMING";
 SELECT * FROM doris_db.students;
 ```
 
-For more common operations (pause, resume, delete, check task, etc.) and full parameter reference, see [PostgreSQL CDC with SQL Mapping](../streaming-job/continuous-load-postgresql-table.md).
+For more common operations (pause, resume, delete, check task, etc.) and full parameter reference, see [PostgreSQL CDC with SQL Mapping](../import-way/streaming-job/continuous-load-postgresql-table.md).
