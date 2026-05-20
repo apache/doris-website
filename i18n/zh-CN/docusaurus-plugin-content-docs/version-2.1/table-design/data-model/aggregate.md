@@ -86,7 +86,7 @@ INSERT INTO example_tbl_agg VALUES
 -- check the rows of table
 SELECT * FROM example_tbl_agg;
 +---------+------------+------+---------------------+------+----------------+
-| user_id | load_date  | city | last_visit_date     | cost | max_dwell_time |
+| user_id | load_date  | city | last_visit_dt       | cost | max_dwell       |
 +---------+------------+------+---------------------+------+----------------+
 | 102     | 2024-10-30 | BJ   | 2024-10-29 00:00:00 |   20 |             20 |
 | 102     | 2024-11-01 | BJ   | 2024-10-30 00:00:00 |   10 |             30 |
@@ -161,16 +161,16 @@ select sum(v1), group_concat_merge(v2) from aggstate where k1 != 2;
 查询结果如下：
 
 ```sql
-mysql> select sum_merge(k2) , group_concat_merge(k3)from aggstate;
+mysql> select sum_merge(v1) , group_concat_merge(v2)from aggstate;
 +---------------+------------------------+
-| sum_merge(k2) | group_concat_merge(k3) |
+| sum_merge(v1) | group_concat_merge(v2) |
 +---------------+------------------------+
 |            20 | c,b,a,d,c,b,a,d        |
 +---------------+------------------------+
 
-mysql> select sum_merge(k2) , group_concat_merge(k3)from aggstate where k1 != 2;
+mysql> select sum_merge(v1) , group_concat_merge(v2)from aggstate where k1 != 2;
 +---------------+------------------------+
-| sum_merge(k2) | group_concat_merge(k3) |
+| sum_merge(v1) | group_concat_merge(v2) |
 +---------------+------------------------+
 |            16 | c,b,a,d,c,b,a          |
 +---------------+------------------------+
