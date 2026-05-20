@@ -1,12 +1,12 @@
 ---
 {
-    "title": "MySQL 表级同步",
+    "title": "MySQL CDC SQL 映射同步",
     "language": "zh-CN",
-    "sidebar_label": "表级同步",
-    "description": "如何将 MySQL 单表数据持续同步到 Doris？通过 Job + CDC Stream TVF 实现表级实时同步，支持列映射与数据转换。",
+    "sidebar_label": "SQL 映射同步",
+    "description": "如何将 MySQL 单表数据持续同步到 Doris？通过 Job + CDC Stream TVF 实现 SQL 映射同步，支持列映射与数据转换。",
     "keywords": [
         "MySQL 同步 Doris",
-        "表级 CDC",
+        "SQL 映射同步",
         "CDC Stream TVF",
         "Streaming Job",
         "Binlog 增量同步",
@@ -20,9 +20,9 @@
 <!-- 知识类型: 操作步骤 / 配置参数 -->
 <!-- 适用场景: MySQL 单表实时同步到 Doris，需要列映射或数据转换 -->
 
-表级同步通过 Job + [CDC Stream TVF](../../../../sql-manual/sql-functions/table-valued-functions/cdc-stream.md) 实现，目标是一张**已存在**的 Doris 表（`INSERT INTO tbl SELECT * FROM cdc_stream(...)`）。借助 Doris SQL 的表达能力，可以在同步链路中进行列映射、过滤和数据转换，并保证 exactly-once 语义。适用于对数据需要做加工的实时同步场景。
+SQL 映射同步通过 Job + [CDC Stream TVF](../../../../sql-manual/sql-functions/table-valued-functions/cdc-stream.md) 实现，目标是一张**已存在**的 Doris 表（`INSERT INTO tbl SELECT * FROM cdc_stream(...)`）。借助 Doris SQL 的表达能力，可以在同步链路中进行列映射、过滤和数据转换，并保证 exactly-once 语义。适用于对数据需要做加工的实时同步场景。
 
-通过集成 [Flink CDC](https://github.com/apache/flink-cdc) 的读取能力，Doris 从 MySQL 读取变更日志（Binlog），完成源表到目标表的**全量 + 增量**同步。若希望 Doris 自动创建下游表、按库为单位同步一组表，请参考 [MySQL 库级同步](./continuous-load-mysql-database.md)。
+通过集成 [Flink CDC](https://github.com/apache/flink-cdc) 的读取能力，Doris 从 MySQL 读取变更日志（Binlog），完成源表到目标表的**全量 + 增量**同步。若希望 Doris 自动创建下游表、按库为单位同步一组表，请参考 [MySQL CDC 自动建表同步](./continuous-load-mysql-database.md)。
 
 ### 适用场景
 
@@ -106,10 +106,10 @@ CDC Stream TVF 支持的 MySQL 数据源参数如下：
 
 ## FAQ
 
-**Q1：表级同步与库级同步的区别？**
+**Q1：SQL 映射同步与自动建表同步的区别？**
 
-- 表级同步：目标 Doris 表需**预先创建**，支持列映射和数据转换，适合精细化加工场景。
-- 库级同步：Doris **自动创建**下游表，按库为单位整体同步，详见 [MySQL 库级同步](./continuous-load-mysql-database.md)。
+- SQL 映射同步：目标 Doris 表需**预先创建**，支持列映射和数据转换，适合精细化加工场景。
+- 自动建表同步：Doris **自动创建**下游表，按库为单位整体同步，详见 [MySQL CDC 自动建表同步](./continuous-load-mysql-database.md)。
 
 **Q2：是否支持非主键表作为目标表？**
 
@@ -129,7 +129,7 @@ CDC Stream TVF 支持的 MySQL 数据源参数如下：
 ## 相关文档
 
 - [持续导入概览](./continuous-load-overview.md)
-- [MySQL 库级同步](./continuous-load-mysql-database.md)
+- [MySQL CDC 自动建表同步](./continuous-load-mysql-database.md)
 - [CDC Stream TVF](../../../../sql-manual/sql-functions/table-valued-functions/cdc-stream.md)
 - [CREATE STREAMING JOB](../../../../sql-manual/sql-statements/job/CREATE-STREAMING-JOB.md)
 - [Insert Into Select](../../../../data-operate/import/import-way/insert-into-manual.md)

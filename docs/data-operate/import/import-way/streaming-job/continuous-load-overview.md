@@ -3,15 +3,15 @@
     "title": "Continuous Load Overview",
     "language": "en",
     "sidebar_label": "Overview",
-    "description": "Learn about Doris Streaming Job continuous load: supported data sources, table-level vs database-level sync selection, job state machine, and common operations.",
+    "description": "Learn about Doris Streaming Job continuous load: supported data sources, SQL Mapping vs Auto Table Creation selection, job state machine, and common operations.",
     "keywords": [
         "Doris continuous load",
         "Streaming Job",
         "MySQL real-time sync",
         "PostgreSQL real-time sync",
         "S3 continuous load",
-        "table-level sync",
-        "database-level sync",
+        "SQL Mapping Sync",
+        "Auto Table Creation Sync",
         "exactly-once",
         "at-least-once",
         "autoResume"
@@ -31,7 +31,7 @@ This feature is supported starting from version 4.1.0.
 This document helps you answer the following questions:
 
 - Which data sources and sync modes does continuous load support?
-- How do you choose between table-level sync and database-level sync?
+- How do you choose between SQL Mapping Sync and Auto Table Creation Sync?
 - How do job states transition, and how does automatic recovery work?
 - How do you view, pause, resume, and delete load jobs in daily operations?
 - What are the common FE and Job configuration parameters?
@@ -40,21 +40,21 @@ This document helps you answer the following questions:
 
 Continuous load supports the following data sources and sync modes:
 
-| Data Source | Supported Versions | Table-Level Sync                                                  | Database-Level Sync                                                     | Configuration Guide                                                                                                                       |
+| Data Source | Supported Versions | SQL Mapping Sync                                                  | Auto Table Creation Sync                                                | Configuration Guide                                                                                                                       |
 | :---------- | :----------------- | :---------------------------------------------------------------- | :---------------------------------------------------------------------- | :---------------------------------------------------------------------------------------------------------------------------------------- |
-| MySQL       | 5.6, 5.7, 8.0.x    | [MySQL Table-Level Sync](./continuous-load-mysql-table.md)        | [MySQL Database-Level Sync](./continuous-load-mysql-database.md)        | [Amazon RDS MySQL](./prerequisites/amazon-rds-mysql.md) · [Amazon Aurora MySQL](./prerequisites/amazon-aurora-mysql.md)                   |
-| PostgreSQL  | 14, 15, 16, 17     | [PostgreSQL Table-Level Sync](./continuous-load-postgresql-table.md) | [PostgreSQL Database-Level Sync](./continuous-load-postgresql-database.md) | [Amazon RDS PostgreSQL](./prerequisites/amazon-rds-postgresql.md) · [Amazon Aurora PostgreSQL](./prerequisites/amazon-aurora-postgresql.md) |
+| MySQL       | 5.6, 5.7, 8.0.x    | [MySQL CDC with SQL Mapping](./continuous-load-mysql-table.md)    | [MySQL CDC with Auto Table Creation](./continuous-load-mysql-database.md) | [Amazon RDS MySQL](./prerequisites/amazon-rds-mysql.md) · [Amazon Aurora MySQL](./prerequisites/amazon-aurora-mysql.md)                   |
+| PostgreSQL  | 14, 15, 16, 17     | [PostgreSQL CDC with SQL Mapping](./continuous-load-postgresql-table.md) | [PostgreSQL CDC with Auto Table Creation](./continuous-load-postgresql-database.md) | [Amazon RDS PostgreSQL](./prerequisites/amazon-rds-postgresql.md) · [Amazon Aurora PostgreSQL](./prerequisites/amazon-aurora-postgresql.md) |
 | S3          | -                  | [S3 Continuous Load](./continuous-load-s3.md)                     | -                                                                       | -                                                                                                                                         |
 
 ## How to Choose a Sync Method
 
 <!-- Knowledge type: Architecture selection decision -->
 
-Table-level sync and database-level sync are two continuous load methods with **completely different underlying mechanisms**, not a difference in "number of tables." **Database-level sync also supports syncing only a single table through `include_tables`**, so the choice should be based on capability requirements.
+SQL Mapping Sync and Auto Table Creation Sync are two continuous load methods with **completely different underlying mechanisms**, not a difference in "number of tables." **Auto Table Creation Sync also supports syncing only a single table through `include_tables`**, so the choice should be based on capability requirements.
 
 ### Capability Comparison
 
-| Capability         | Table-Level Sync                                                | Database-Level Sync                                |
+| Capability         | SQL Mapping Sync                                                | Auto Table Creation Sync                           |
 | :----------------- | :-------------------------------------------------------------- | :------------------------------------------------- |
 | Underlying mechanism | Job + TVF (`INSERT INTO tbl SELECT * FROM tvf()`)             | Job + native whole-database DDL (`FROM src TO DATABASE db`) |
 | Target level       | An existing Doris table                                         | A Doris database container                         |
@@ -67,15 +67,15 @@ Table-level sync and database-level sync are two continuous load methods with **
 
 ### Selection Recommendations
 
-- **You need to apply SQL processing to the data, or you have strict requirements for exactly-once semantics** -> choose **table-level sync**
-- **You want Doris to create tables automatically and sync a group of tables with one configuration** -> choose **database-level sync**
-- **The data source is S3 object storage** -> only table-level sync is supported (using the S3 TVF)
+- **You need to apply SQL processing to the data, or you have strict requirements for exactly-once semantics** -> choose **SQL Mapping Sync**
+- **You want Doris to create tables automatically and sync a group of tables with one configuration** -> choose **Auto Table Creation Sync**
+- **The data source is S3 object storage** -> only SQL Mapping Sync is supported (using the S3 TVF)
 
 ## Job State Transitions
 
 <!-- Knowledge type: Runtime mechanism -->
 
-A Streaming Job transitions between the following states during execution. **Table-level sync and database-level sync follow the same state machine**:
+A Streaming Job transitions between the following states during execution. **SQL Mapping Sync and Auto Table Creation Sync follow the same state machine**:
 
 ![job-state-flow](/images/next/data-operate/streaming-job/job-state-flow.jpg)
 

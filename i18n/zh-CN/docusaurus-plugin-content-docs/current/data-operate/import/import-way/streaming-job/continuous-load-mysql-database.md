@@ -1,11 +1,11 @@
 ---
 {
-    "title": "MySQL 库级同步",
+    "title": "MySQL CDC 自动建表同步",
     "language": "zh-CN",
-    "sidebar_label": "库级同步",
-    "description": "通过 Streaming Job 以库为单位将 MySQL 全量与增量数据持续同步到 Doris，首次同步自动建表。",
+    "sidebar_label": "自动建表同步",
+    "description": "通过 Streaming Job 将 MySQL 全量与增量数据持续同步到 Doris，首次同步自动建表。",
     "keywords": [
-        "MySQL 库级同步",
+        "MySQL 自动建表同步",
         "MySQL 整库同步",
         "Doris Streaming Job",
         "Flink CDC",
@@ -20,9 +20,9 @@
 <!-- 知识类型: 操作步骤 + 配置参数 -->
 <!-- 适用场景: MySQL 整库镜像同步到 Doris -->
 
-库级同步通过原生 `FROM MYSQL (...) TO DATABASE (...)` DDL 实现，**以库为同步单位，目标是一个 Doris database 容器**。可以通过 `include_tables` 控制同步一张、多张或全部表，首次同步时 Doris 会自动创建下游主键表，并保持主键与上游一致。适用于不需要对数据做 SQL 加工、希望下游表结构自动跟随上游的镜像复制场景。
+自动建表同步通过原生 `FROM MYSQL (...) TO DATABASE (...)` DDL 实现，**目标是一个 Doris database 容器，由 Doris 自动创建下游表**。可以通过 `include_tables` 控制同步一张、多张或全部表，首次同步时 Doris 会自动创建下游主键表，并保持主键与上游一致。适用于不需要对数据做 SQL 加工、希望下游表结构自动跟随上游的镜像复制场景。
 
-通过集成 [Flink CDC](https://github.com/apache/flink-cdc) 能力，Doris 从 MySQL 读取变更日志，将一组表的全量 + 增量数据通过 Stream Load 持续写入 Doris。若需要在同步过程中做列映射、过滤或数据转换，请参考 [MySQL 表级同步](./continuous-load-mysql-table.md)。
+通过集成 [Flink CDC](https://github.com/apache/flink-cdc) 能力，Doris 从 MySQL 读取变更日志，将一组表的全量 + 增量数据通过 Stream Load 持续写入 Doris。若需要在同步过程中做列映射、过滤或数据转换，请参考 [MySQL CDC SQL 映射同步](./continuous-load-mysql-table.md)。
 
 ### 适用场景
 
@@ -39,11 +39,11 @@
 | 表类型           | 仅支持主键表（Unique Key）同步                        |
 | 权限要求         | 需要 Load 权限；下游表不存在时还需 Create 权限        |
 | 自动建表行为     | 若目标表已存在则跳过创建，可按需自定义表结构          |
-| 数据加工         | 不支持列映射、过滤、转换；如需请改用表级同步          |
+| 数据加工         | 不支持列映射、过滤、转换；如需请改用 SQL 映射同步     |
 
 ## 前置准备
 
-在创建库级同步作业前，请确认以下事项：
+在创建自动建表同步作业前，请确认以下事项：
 
 1. 已部署 Doris 集群，并具备 Load 权限（自动建表场景还需 Create 权限）。
 2. 已上传与 MySQL 版本兼容的 JDBC 驱动 jar 包，并可通过文件名、本地绝对路径或 HTTP 地址引用，详见 [JDBC Catalog 概述](../../../../lakehouse/catalogs/jdbc-catalog-overview.md)。
@@ -154,7 +154,7 @@ MySQL 源端 (`FROM MYSQL`) 支持的参数如下：
 
 <!-- 知识类型: 语法参考 -->
 
-创建库级同步作业语法如下：
+创建自动建表同步作业语法如下：
 
 ```sql
 CREATE JOB <job_name>
@@ -195,9 +195,9 @@ TO DATABASE <target_db> (
 
 <!-- 知识类型: FAQ -->
 
-**Q1：库级同步是否支持非主键表？**
+**Q1：自动建表同步是否支持非主键表？**
 
-不支持。当前库级同步只支持主键表（Unique Key），首次同步时 Doris 会按上游主键自动创建下游主键表。
+不支持。当前自动建表同步只支持主键表（Unique Key），首次同步时 Doris 会按上游主键自动创建下游主键表。
 
 **Q2：目标表已存在，会被覆盖吗？**
 
@@ -207,10 +207,10 @@ TO DATABASE <target_db> (
 
 将参数 `offset` 设置为 `latest`，作业将跳过全量阶段，直接从最新 binlog 位点开始消费。
 
-**Q4：库级同步与表级同步如何选择？**
+**Q4：自动建表同步与 SQL 映射同步如何选择？**
 
-- 需要镜像复制、自动建表、保持表结构与上游一致：使用库级同步。
-- 需要列映射、过滤或数据转换：使用 [MySQL 表级同步](./continuous-load-mysql-table.md)。
+- 需要镜像复制、自动建表、保持表结构与上游一致：使用自动建表同步。
+- 需要列映射、过滤或数据转换：使用 [MySQL CDC SQL 映射同步](./continuous-load-mysql-table.md)。
 
 **Q5：单 BE 部署时建表失败怎么办？**
 
@@ -231,7 +231,7 @@ TO DATABASE <target_db> (
 ## 相关文档
 
 - [持续导入概览](./continuous-load-overview.md)
-- [MySQL 表级同步](./continuous-load-mysql-table.md)
+- [MySQL CDC SQL 映射同步](./continuous-load-mysql-table.md)
 - [CREATE STREAMING JOB](../../../../sql-manual/sql-statements/job/CREATE-STREAMING-JOB.md)
 - [JDBC Catalog 概述](../../../../lakehouse/catalogs/jdbc-catalog-overview.md)
 - [Flink CDC](https://github.com/apache/flink-cdc)

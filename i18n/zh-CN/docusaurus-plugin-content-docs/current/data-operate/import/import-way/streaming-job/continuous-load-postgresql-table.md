@@ -1,8 +1,8 @@
 ---
 {
-    "title": "PostgreSQL 表级同步",
+    "title": "PostgreSQL CDC SQL 映射同步",
     "language": "zh-CN",
-    "sidebar_label": "表级同步",
+    "sidebar_label": "SQL 映射同步",
     "description": "使用 Doris Job + CDC Stream TVF 将 PostgreSQL 表持续同步到 Doris，支持列映射、数据转换与 exactly-once 语义。",
     "keywords": [
         "PostgreSQL CDC",
@@ -12,17 +12,17 @@
         "Flink CDC",
         "exactly-once",
         "Streaming Job",
-        "表级同步"
+        "SQL 映射同步"
     ]
 }
 ---
 
 <!-- 知识类型: 操作步骤 -->
-<!-- 适用场景: PostgreSQL 实时数据同步 / 表级 CDC 接入 -->
+<!-- 适用场景: PostgreSQL 实时数据同步 / 单表 SQL 映射 CDC 接入 -->
 
-表级同步通过 Job + [CDC Stream TVF](../../../../sql-manual/sql-functions/table-valued-functions/cdc-stream.md) 实现，目标是一张已存在的 Doris 表（`INSERT INTO tbl SELECT * FROM cdc_stream(...)`），借助 Doris SQL 的表达能力支持列映射、过滤和数据转换，保证 exactly-once 语义。适用于对数据需要做加工的实时同步场景。
+SQL 映射同步通过 Job + [CDC Stream TVF](../../../../sql-manual/sql-functions/table-valued-functions/cdc-stream.md) 实现，目标是一张已存在的 Doris 表（`INSERT INTO tbl SELECT * FROM cdc_stream(...)`），借助 Doris SQL 的表达能力支持列映射、过滤和数据转换，保证 exactly-once 语义。适用于对数据需要做加工的实时同步场景。
 
-通过集成 [Flink CDC](https://github.com/apache/flink-cdc) 的读取能力，Doris 从 PostgreSQL 读取变更日志（WAL），实现源表到目标表的全量 + 增量同步。若希望 Doris 自动创建下游表、按库为单位同步一组表，请参考 [PostgreSQL 库级同步](./continuous-load-postgresql-database.md)。
+通过集成 [Flink CDC](https://github.com/apache/flink-cdc) 的读取能力，Doris 从 PostgreSQL 读取变更日志（WAL），实现源表到目标表的全量 + 增量同步。若希望 Doris 自动创建下游表、按库为单位同步一组表，请参考 [PostgreSQL CDC 自动建表同步](./continuous-load-postgresql-database.md)。
 
 ### 适用场景
 

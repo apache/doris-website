@@ -1,13 +1,13 @@
 ---
 {
-    "title": "PostgreSQL Database-Level Sync",
+    "title": "PostgreSQL CDC with Auto Table Creation",
     "language": "en",
-    "sidebar_label": "Database-Level Sync",
+    "sidebar_label": "Auto Table Creation Sync",
     "description": "Use a Streaming Job to continuously sync full and incremental data from an entire PostgreSQL database to Doris, with automatic table creation on first sync.",
     "keywords": [
         "PostgreSQL sync",
         "PostgreSQL CDC",
-        "database-level sync",
+        "Auto Table Creation Sync",
         "whole-database sync",
         "Streaming Job",
         "Flink CDC",
@@ -22,9 +22,9 @@
 <!-- Knowledge type: Operating procedure -->
 <!-- Applicable scenario: Continuously sync an entire PostgreSQL database to Doris -->
 
-Database-level sync is implemented through the native `FROM POSTGRES (...) TO DATABASE (...)` DDL. **It uses a database as the unit of synchronization, and the target is a Doris database container.** You can use `include_tables` to control whether one table, multiple tables, or all tables are synced. On the first sync, Doris automatically creates the downstream primary-key tables and keeps their primary keys consistent with the upstream. This approach is suitable for mirror-replication scenarios where no SQL processing of the data is needed and the downstream table schemas should follow the upstream automatically.
+Auto Table Creation Sync is implemented through the native `FROM POSTGRES (...) TO DATABASE (...)` DDL. **The target is a Doris database container, and Doris auto-creates the downstream tables.** You can use `include_tables` to control whether one table, multiple tables, or all tables are synced. On the first sync, Doris automatically creates the downstream primary-key tables and keeps their primary keys consistent with the upstream. This approach is suitable for mirror-replication scenarios where no SQL processing of the data is needed and the downstream table schemas should follow the upstream automatically.
 
-By integrating [Flink CDC](https://github.com/apache/flink-cdc) capabilities, Doris reads change logs from PostgreSQL and continuously writes the full + incremental data of a group of tables into Doris through Stream Load. If you need to perform column mapping, filtering, or data transformation during synchronization, see [PostgreSQL Table-Level Sync](./continuous-load-postgresql-table.md).
+By integrating [Flink CDC](https://github.com/apache/flink-cdc) capabilities, Doris reads change logs from PostgreSQL and continuously writes the full + incremental data of a group of tables into Doris through Stream Load. If you need to perform column mapping, filtering, or data transformation during synchronization, see [PostgreSQL CDC with SQL Mapping](./continuous-load-postgresql-table.md).
 
 ### Use Cases
 
@@ -44,7 +44,7 @@ By integrating [Flink CDC](https://github.com/apache/flink-cdc) capabilities, Do
 
 <!-- Knowledge type: Operating procedure -->
 
-Follow the steps below to create and check the status of a PostgreSQL database-level sync job.
+Follow the steps below to create and check the status of a PostgreSQL Auto Table Creation Sync job.
 
 ### Step 1: Create a Load Job
 
@@ -115,7 +115,7 @@ Target-side parameters control the properties of automatically created tables an
 
 ### Load Command Syntax
 
-The syntax for creating a database-level sync job is as follows:
+The syntax for creating an Auto Table Creation Sync job is as follows:
 
 ```sql
 CREATE JOB <job_name>
@@ -144,10 +144,10 @@ The modules are described below:
 
 <!-- Knowledge type: Frequently asked questions -->
 
-**Q1: How to choose between database-level sync and table-level sync?**
+**Q1: How to choose between Auto Table Creation Sync and SQL Mapping Sync?**
 
--   When you need mirror replication, automatic table creation, and no column pruning or transformation, use database-level sync.
--   When you need to perform column mapping, filtering, or data transformation in the sync pipeline, use [PostgreSQL Table-Level Sync](./continuous-load-postgresql-table.md).
+-   When you need mirror replication, automatic table creation, and no column pruning or transformation, use Auto Table Creation Sync.
+-   When you need to perform column mapping, filtering, or data transformation in the sync pipeline, use [PostgreSQL CDC with SQL Mapping](./continuous-load-postgresql-table.md).
 
 **Q2: Are non-primary-key tables supported?**
 
@@ -167,7 +167,7 @@ Set `offset` to `latest`. The job will only consume the latest incremental chang
 
 ## Related Docs
 
--   [PostgreSQL Table-Level Sync](./continuous-load-postgresql-table.md)
+-   [PostgreSQL CDC with SQL Mapping](./continuous-load-postgresql-table.md)
 -   [Continuous Load Overview](./continuous-load-overview.md)
 -   [CREATE STREAMING JOB](../../../../sql-manual/sql-statements/job/CREATE-STREAMING-JOB.md)
 -   [JDBC Catalog Overview](../../../../lakehouse/catalogs/jdbc-catalog-overview.md)

@@ -1,11 +1,11 @@
 ---
 {
-    "title": "MySQL Database-Level Sync",
+    "title": "MySQL CDC with Auto Table Creation",
     "language": "en",
-    "sidebar_label": "Database-Level Sync",
+    "sidebar_label": "Auto Table Creation Sync",
     "description": "Use a Streaming Job to continuously sync full and incremental data from a MySQL database to Doris, with tables created automatically on first sync.",
     "keywords": [
-        "MySQL database-level sync",
+        "MySQL Auto Table Creation Sync",
         "MySQL whole-database sync",
         "Doris Streaming Job",
         "Flink CDC",
@@ -20,9 +20,9 @@
 <!-- Knowledge type: Procedure + Configuration parameters -->
 <!-- Applicable scenario: Mirror sync of a whole MySQL database to Doris -->
 
-Database-level sync is implemented through the native `FROM MYSQL (...) TO DATABASE (...)` DDL. **Sync happens at the database level, and the target is a Doris database container.** You can use `include_tables` to control whether to sync one table, several tables, or all tables. On the first sync, Doris automatically creates downstream primary key tables and keeps the primary keys consistent with the upstream. This is suitable for mirror replication scenarios where no SQL processing is required and the downstream table schema should follow the upstream automatically.
+Auto Table Creation Sync is implemented through the native `FROM MYSQL (...) TO DATABASE (...)` DDL. **The target is a Doris database container, and Doris auto-creates the downstream tables.** You can use `include_tables` to control whether to sync one table, several tables, or all tables. On the first sync, Doris automatically creates downstream primary key tables and keeps the primary keys consistent with the upstream. This is suitable for mirror replication scenarios where no SQL processing is required and the downstream table schema should follow the upstream automatically.
 
-By integrating [Flink CDC](https://github.com/apache/flink-cdc) capabilities, Doris reads change logs from MySQL and continuously writes the full and incremental data of a group of tables into Doris through Stream Load. If you need to perform column mapping, filtering, or data transformation during sync, refer to [MySQL Table-Level Sync](./continuous-load-mysql-table.md).
+By integrating [Flink CDC](https://github.com/apache/flink-cdc) capabilities, Doris reads change logs from MySQL and continuously writes the full and incremental data of a group of tables into Doris through Stream Load. If you need to perform column mapping, filtering, or data transformation during sync, refer to [MySQL CDC with SQL Mapping](./continuous-load-mysql-table.md).
 
 ### Applicable Scenarios
 
@@ -39,11 +39,11 @@ By integrating [Flink CDC](https://github.com/apache/flink-cdc) capabilities, Do
 | Table type            | Only primary key tables (Unique Key) are supported for sync          |
 | Permission            | Load permission is required; Create permission is also required when the downstream table does not exist |
 | Auto table creation   | Creation is skipped if the target table already exists; you can customize the table schema as needed |
-| Data processing       | Column mapping, filtering, and transformation are not supported; use table-level sync if needed |
+| Data processing       | Column mapping, filtering, and transformation are not supported; use SQL Mapping Sync if needed |
 
 ## Prerequisites
 
-Before creating a database-level sync job, confirm the following:
+Before creating an Auto Table Creation Sync job, confirm the following:
 
 1. A Doris cluster is deployed, and you have Load permission (Create permission is also required for auto table creation scenarios).
 2. A JDBC driver jar that is compatible with the MySQL version has been uploaded and can be referenced by file name, local absolute path, or HTTP address. See [JDBC Catalog Overview](../../../../lakehouse/catalogs/jdbc-catalog-overview.md) for details.
@@ -154,7 +154,7 @@ The MySQL source side (`FROM MYSQL`) supports the following parameters:
 
 <!-- Knowledge type: Syntax reference -->
 
-The syntax for creating a database-level sync job is as follows:
+The syntax for creating an Auto Table Creation Sync job is as follows:
 
 ```sql
 CREATE JOB <job_name>
@@ -195,9 +195,9 @@ Description of each module:
 
 <!-- Knowledge type: FAQ -->
 
-**Q1: Does database-level sync support non-primary-key tables?**
+**Q1: Does Auto Table Creation Sync support non-primary-key tables?**
 
-No. Currently, database-level sync only supports primary key tables (Unique Key). On the first sync, Doris automatically creates downstream primary key tables based on the upstream primary keys.
+No. Currently, Auto Table Creation Sync only supports primary key tables (Unique Key). On the first sync, Doris automatically creates downstream primary key tables based on the upstream primary keys.
 
 **Q2: If the target table already exists, will it be overwritten?**
 
@@ -207,10 +207,10 @@ No. During the auto table creation phase, creation is skipped if the target tabl
 
 Set the `offset` parameter to `latest`. The job will skip the full-sync phase and start consuming directly from the latest binlog position.
 
-**Q4: How do I choose between database-level sync and table-level sync?**
+**Q4: How do I choose between Auto Table Creation Sync and SQL Mapping Sync?**
 
-- For mirror replication, auto table creation, and keeping the table schema consistent with the upstream: use database-level sync.
-- For column mapping, filtering, or data transformation: use [MySQL Table-Level Sync](./continuous-load-mysql-table.md).
+- For mirror replication, auto table creation, and keeping the table schema consistent with the upstream: use Auto Table Creation Sync.
+- For column mapping, filtering, or data transformation: use [MySQL CDC with SQL Mapping](./continuous-load-mysql-table.md).
 
 **Q5: What should I do if table creation fails in a single-BE deployment?**
 
@@ -231,7 +231,7 @@ Explicitly specify a replica count of 1 in `TO DATABASE`: `"table.create.propert
 ## Related Documents
 
 - [Continuous Load Overview](./continuous-load-overview.md)
-- [MySQL Table-Level Sync](./continuous-load-mysql-table.md)
+- [MySQL CDC with SQL Mapping](./continuous-load-mysql-table.md)
 - [CREATE STREAMING JOB](../../../../sql-manual/sql-statements/job/CREATE-STREAMING-JOB.md)
 - [JDBC Catalog Overview](../../../../lakehouse/catalogs/jdbc-catalog-overview.md)
 - [Flink CDC](https://github.com/apache/flink-cdc)

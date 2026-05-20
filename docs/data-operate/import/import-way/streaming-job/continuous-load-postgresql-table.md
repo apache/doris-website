@@ -1,8 +1,8 @@
 ---
 {
-    "title": "PostgreSQL Table-Level Sync",
+    "title": "PostgreSQL CDC with SQL Mapping",
     "language": "en",
-    "sidebar_label": "Table-Level Sync",
+    "sidebar_label": "SQL Mapping Sync",
     "description": "Use Doris Job + CDC Stream TVF to continuously sync a PostgreSQL table to Doris, with column mapping, data transformation, and exactly-once semantics.",
     "keywords": [
         "PostgreSQL CDC",
@@ -12,17 +12,17 @@
         "Flink CDC",
         "exactly-once",
         "Streaming Job",
-        "Table-Level Sync"
+        "SQL Mapping Sync"
     ]
 }
 ---
 
 <!-- Knowledge type: Procedure -->
-<!-- Applicable scenario: PostgreSQL real-time data sync / table-level CDC ingestion -->
+<!-- Applicable scenario: PostgreSQL real-time data sync / single-table CDC ingestion with SQL mapping -->
 
-Table-level sync is implemented through Job + [CDC Stream TVF](../../../../sql-manual/sql-functions/table-valued-functions/cdc-stream.md). The target is an existing Doris table (`INSERT INTO tbl SELECT * FROM cdc_stream(...)`). Doris SQL provides the expressiveness to support column mapping, filtering, and data transformation, while guaranteeing exactly-once semantics. This approach is suitable for real-time sync scenarios where data needs to be processed before writing.
+SQL Mapping Sync is implemented through Job + [CDC Stream TVF](../../../../sql-manual/sql-functions/table-valued-functions/cdc-stream.md). The target is an existing Doris table (`INSERT INTO tbl SELECT * FROM cdc_stream(...)`). Doris SQL provides the expressiveness to support column mapping, filtering, and data transformation, while guaranteeing exactly-once semantics. This approach is suitable for real-time sync scenarios where data needs to be processed before writing.
 
-By integrating the read capability of [Flink CDC](https://github.com/apache/flink-cdc), Doris reads change logs (WAL) from PostgreSQL to perform full + incremental sync from the source table to the target table. If you want Doris to automatically create downstream tables and sync a group of tables on a per-database basis, see [PostgreSQL Database-Level Sync](./continuous-load-postgresql-database.md).
+By integrating the read capability of [Flink CDC](https://github.com/apache/flink-cdc), Doris reads change logs (WAL) from PostgreSQL to perform full + incremental sync from the source table to the target table. If you want Doris to automatically create downstream tables and sync a group of tables on a per-database basis, see [PostgreSQL CDC with Auto Table Creation](./continuous-load-postgresql-database.md).
 
 ### Use Cases
 
