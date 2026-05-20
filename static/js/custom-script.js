@@ -31,10 +31,16 @@
         'padding-bottom:2rem !important;' +
         '--modal-y-offset:0 !important;' +
         '}' +
+        // Do NOT add `display:flex !important` here — Kapa already sets
+        // `display:flex; flex-direction:column` inline via Mantine's `sx`
+        // prop, and overriding with `!important` would also override the
+        // `display:none` Mantine's transition writes inline when the modal
+        // is keep-mounted and closed (which happens after the first
+        // question). That kept the modal visible after onClose fired,
+        // making X / Esc / overlay-click all silently fail on the second
+        // attempt.
         '.mantine-Modal-content{' +
         'max-height:calc(100vh - 80px - 2rem) !important;' +
-        'display:flex !important;' +
-        'flex-direction:column !important;' +
         '}' +
         '.mantine-Modal-body{' +
         'flex:1 1 auto !important;' +
