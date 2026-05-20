@@ -38,7 +38,7 @@ Currently, Doris has good out-of-the-box capabilities. This means that in most s
 For the following query:
 
 ```sql
-mysql> explain shape plan select from t1 join t2 on t1.c1 = t2.c2;
+mysql> explain shape plan select * from t1 join t2 on t1.c1 = t2.c2;
 +------------------------------------------------------------------------------+
 | _Explain_ String(Nereids Planner)                                              |
 +------------------------------------------------------------------------------+

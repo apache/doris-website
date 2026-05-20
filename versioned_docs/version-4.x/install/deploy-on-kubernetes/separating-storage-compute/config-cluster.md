@@ -18,7 +18,7 @@
 
 ### Why management credentials need to be configured
 
-Managing Doris nodes requires connecting to a live FE node over the MySQL protocol with a username and password. Doris implements an [RBAC-like privilege management mechanism](../../../admin-manual/auth/authentication-and-authorization), and node management requires the user to have the [Node_priv](../../../admin-manual/auth/authentication-and-authorization#权限类型) privilege.
+Managing Doris nodes requires connecting to a live FE node over the MySQL protocol with a username and password. Doris implements an [RBAC-like privilege management mechanism](../../../admin-manual/auth/authentication-and-authorization), and node management requires the user to have the [Node_priv](../../../admin-manual/auth/authentication-and-authorization#types-of-permissions) privilege.
 
 By default, Doris Operator uses the root user with all privileges and no password to deploy and manage the cluster configured by the DorisDisaggregatedCluster resource. After a password is added to the root user, you must explicitly configure a username and password with the Node_priv privilege in the DorisDisaggregatedCluster resource so that Doris Operator can perform automated management operations on the cluster.
 
@@ -234,7 +234,7 @@ After deployment, set the root password. Doris Operator will switch to using the
 
 ## Scenario 3: Set the root user password after the cluster is deployed
 
-If the root user's password is not set after a Doris cluster is deployed, you need to configure a user with the [Node_priv](../../../admin-manual/auth/authentication-and-authorization#权限类型) privilege so that Doris Operator can manage cluster nodes automatically. It is recommended not to use the root user. Refer to the [Creating users and granting privileges chapter](../../../sql-manual/sql-statements/account-management/CREATE-USER) to create a new user and grant the Node_priv privilege. After creating the user, configure the new management user and password through environment variables or a Secret, and configure them in the DorisDisaggregatedCluster resource.
+If the root user's password is not set after a Doris cluster is deployed, you need to configure a user with the [Node_priv](../../../admin-manual/auth/authentication-and-authorization#types-of-permissions) privilege so that Doris Operator can manage cluster nodes automatically. It is recommended not to use the root user. Refer to the [Creating users and granting privileges chapter](../../../sql-manual/sql-statements/account-management/CREATE-USER) to create a new user and grant the Node_priv privilege. After creating the user, configure the new management user and password through environment variables or a Secret, and configure them in the DorisDisaggregatedCluster resource.
 
 Configuration workflow overview:
 

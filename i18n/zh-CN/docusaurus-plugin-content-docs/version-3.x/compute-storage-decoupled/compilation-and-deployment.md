@@ -235,7 +235,7 @@ ALTER SYSTEM ADD FOLLOWER "host:port";
    使用 MySQL 客户端连接到任意 Frontend，并执行：
 
    ```sql
-   ALTER SYSTEM ADD BACKEND "<ip>:<heartbeat_service_port>" [PROTERTIES propertires];
+   ALTER SYSTEM ADD BACKEND "<ip>:<heartbeat_service_port>" [PROPERTIES properties];
    ```
 
    将 `<ip>` 替换为新 Backend 的 IP 地址，将 `<heartbeat_service_port>` 替换为其配置的心跳服务端口（默认为 9050）。

@@ -27,7 +27,7 @@ AGG_STATEは[state](../../../../sql-manual/sql-functions/combinators/state)
   create table a_table(
       k1 int null,
       k2 agg_state<max_by(int not null,int)> generic,
-      k3 agg_state<group_concat(string) generic
+      k3 agg_state<group_concat(string)> generic
   )
   aggregate key (k1)
   distributed BY hash(k1) buckets 3

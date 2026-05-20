@@ -69,10 +69,10 @@ This article uses Docker Compose for deployment, with the following components a
 3. After starting, you can use the following script to log in to Spark command line or Doris command line:
 
 	```
-	-- Doris
+	-- Spark
 	sudo ./login-spark.sh
 	
-	-- Spark
+	-- Doris
 	sudo ./login-doris.sh
 	```
 

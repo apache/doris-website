@@ -245,7 +245,7 @@ select array(null) < array(-1), array(null) > array(-1);
   -- Create table
   CREATE TABLE IF NOT EXISTS array_table (
       id INT,
-      array_struct ARRAY<STRUCT<id: INT, name: STRING>>,
+      array_struct ARRAY<STRUCT<id: INT, name: STRING>>
   ) ENGINE=OLAP
   DUPLICATE KEY(id)
   DISTRIBUTED BY HASH(id) BUCKETS 1

@@ -93,7 +93,7 @@ Doris JSONB supports all standard JSON types. The main difference is that Doris 
   - Input Only: When inputting data into a JSONB column, STRING type can be implicitly converted to JSONB (provided the string content is valid JSON text). Other Doris types cannot be implicitly converted to JSONB.
 
 
-## JSON 的分组支持
+## GROUP BY and DISTINCT support for JSON
 
 ### Example 1: GROUP BY on JSON columns
 ```sql
@@ -479,7 +479,7 @@ PROPERTIES("replication_num" = "1");
 25	[123, abc]
 ```
 
-- due to the 28% of rows is invalid, stream load with default configuration will fail with error message "too many filtered rows"
+- due to the 28% of rows are invalid, stream load with default configuration will fail with error message "too many filtered rows"
 
 ```
 curl --location-trusted -u root: -T test_json.csv http://127.0.0.1:8840/api/testdb/test_json/_stream_load

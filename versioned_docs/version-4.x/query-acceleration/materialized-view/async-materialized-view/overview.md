@@ -241,7 +241,7 @@ There is no restriction on the base table model used in the SQL definition of an
 The underlying implementation of the materialized view itself relies on an OLAP table of the Duplicate model and can in theory support all core features of the Duplicate model. However, to ensure that the materialized view can stably and efficiently execute data refresh tasks, a series of necessary restrictions are placed on its functionality:
 
 - **Partition operations**: The partitions of a materialized view are automatically created and maintained based on its base tables. Users cannot perform partition operations on a materialized view.
-- **Drop and rename**: Because there are associated jobs (JOB) behind a materialized view, the `DELETE TABLE` or `RENAME TABLE` commands cannot be used to operate on a materialized view. Use the materialized view's own commands to perform the corresponding operations.
+- **Drop and rename**: Because there are associated jobs (JOB) behind a materialized view, the `DROP TABLE` or `RENAME TABLE` commands cannot be used to operate on a materialized view. Use the materialized view's own commands to perform the corresponding operations.
 - **Column data types**: The column data types of a materialized view are automatically derived from the query statement specified at creation time and cannot be modified, otherwise the refresh task may fail.
 - **Property modification**: A materialized view has some properties that a Duplicate table does not have. These must be modified through the materialized view's commands. Other common properties are modified using the `ALTER TABLE` command.
 

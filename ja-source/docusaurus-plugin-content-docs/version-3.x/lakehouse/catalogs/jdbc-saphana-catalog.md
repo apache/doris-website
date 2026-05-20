@@ -49,7 +49,7 @@ SAP HANAをマッピングする際、DorisのDatabaseは、SAP HANAの指定さ
 | ------------------ | --------------------------------- | ------------------------------------------------------------ |
 | boolean            | boolean                           |                                                              |
 | tinyint            | tinyint                           |                                                              |
-| smalling           | smalling                          |                                                              |
+| smallint           | smallint                          |                                                              |
 | integer            | int                               |                                                              |
 | bigint             | bigint                            |                                                              |
 | smalldecimal(P, S) | decimal(P, S) or double or string | 精度が指定されていない場合、double型が使用されます。精度がDorisでサポートされる最大精度を超える場合、string型が使用されます。 |
