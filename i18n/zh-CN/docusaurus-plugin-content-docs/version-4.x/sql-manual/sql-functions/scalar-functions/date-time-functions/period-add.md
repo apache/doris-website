@@ -20,7 +20,7 @@
 ## 语法
 
 ```sql
-PERIOD_ADD(`<period>`, `month`)
+PERIOD_ADD(`<period>`, `<month>`)
 ```
 
 ## 参数

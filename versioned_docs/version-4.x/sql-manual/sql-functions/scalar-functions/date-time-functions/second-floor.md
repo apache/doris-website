@@ -30,7 +30,7 @@ SECOND_FLOOR(<datetime>[, <period>][, <origin_datetime>])
 
 | Parameter | Description |
 | --------- | ----------- |
-| `<datetime>` | Required. The input datetime value. Supports input of date/datetime/timestamptz types. For specific formats please see [timestamptz的转换](../../../../sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion), [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion). |
+| `<datetime>` | Required. The input datetime value. Supports input of date/datetime/timestamptz types. For specific formats please see [timestamptz conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion), [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion). |
 | `<period>` | Optional. Indicates how many seconds make up each period. Supports positive integer type (INT). Default is 1 second. |
 | `<origin_datetime>` | Optional. The alignment starting point. Supports input of datetime type and strings that conform to datetime formats. If not specified, defaults to 0001-01-01T00:00:00. |
 
