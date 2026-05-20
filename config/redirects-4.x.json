@@ -176,22 +176,6 @@
     "to": "/zh-CN/docs/4.x/getting-started/what-is-apache-doris"
   },
   {
-    "from": "/docs/4.x/data-operate/import/data-source/mysql",
-    "to": "/docs/4.x/getting-started/what-is-apache-doris"
-  },
-  {
-    "from": "/zh-CN/docs/4.x/data-operate/import/data-source/mysql",
-    "to": "/zh-CN/docs/4.x/getting-started/what-is-apache-doris"
-  },
-  {
-    "from": "/docs/4.x/data-operate/import/data-source/postgresql",
-    "to": "/docs/4.x/getting-started/what-is-apache-doris"
-  },
-  {
-    "from": "/zh-CN/docs/4.x/data-operate/import/data-source/postgresql",
-    "to": "/zh-CN/docs/4.x/getting-started/what-is-apache-doris"
-  },
-  {
     "from": "/docs/4.x/data-operate/import/group-commit-manual",
     "to": "/docs/4.x/getting-started/what-is-apache-doris"
   },
