@@ -71,7 +71,7 @@ select bitmap_count(bitmap_union(bitmap_hash(`word`))) from `words`;
 
 
 ```sql
-select bitmap_to_string(bitmap_hash(NULL));
+select bitmap_to_string(bitmap_hash(NULL)) AS res;
 ```
 
 结果如下：

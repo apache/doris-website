@@ -41,7 +41,7 @@ Sort the `values` array according to the order of a `keys` array.
 
 - Higher-order: compute `keys` via `lambda`, then sort.
   - `ARRAY_SORTBY(x -> x + 1, [3,1,2])` -> `[1,2,3]` (with `keys` `[4,2,3]`)
-  - `ARRAY_SORTBY(x -> x*2 <= 2, [1,2,3])` -> `[1,2,3]` (with `keys` `[true,false,false]`)
+  - `ARRAY_SORTBY(x -> x*2 <= 2, [1,2,3])` -> `[2,3,1]` (with `keys` `[true,false,false]`)
 
 - When `keys` or `values` is `NULL`, return `values` unchanged.
   - `array_sortby([10,20,30], NULL)` -> `[10, 20, 30]`

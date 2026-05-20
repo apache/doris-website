@@ -29,7 +29,6 @@ Randomly shuffle the order of elements in an array.
 - If the input `arr` is `NULL`, returns `NULL`.
 - Providing a `seed` yields reproducible results; omitting it may yield different results per execution.
 - `ARRAY_SHUFFLE` has an alias `SHUFFLE`; they are equivalent.
-- 
 
 ## Examples
 
