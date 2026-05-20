@@ -20,10 +20,6 @@ Statement Execution Action is used to execute a statement and return the result.
     
 ## Path parameters
 
-* `<ns_name>`
-
-    Specify the namespace. Currently only supports `default_cluster`.
-
 * `<db_name>`
 
     Specify the database name. This database will be regarded as the default database of the current session. If the table name in SQL does not qualify the database name, this database will be used.
@@ -40,11 +36,11 @@ None
 }
 ```
 
-* The `stmt` field is the specific SQL statement to be executed.
+* sql 字段为具体的 SQL
 
 ### Response
 
-* Return result set
+* 返回结果集
 
     ```
     {

@@ -56,7 +56,7 @@ POST /api/<namespace>/<db>/<tbl>/upload
         "uuid": "b87824a4-f6fd-42c9-b9f1-c6d68c5964c2",
         "originFileName": "data.txt",
         "fileSize": 102400,
-        "absPath": "/path/to/file/data.txt",
+        "absPath": "/path/to/file/data.txt"
         "maxColNum" : 5
 	},
 	"count": 1

@@ -17,7 +17,7 @@ Used to display some metadata information
     
 ## Path parameters
 
-None
+无
 
 ## Query parameters
 

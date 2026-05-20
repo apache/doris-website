@@ -13,19 +13,19 @@
 
 ## Description
 
-Obtain cluster statistics such as the number of databases and tables.
+获取集群统计信息、库表数量等。
     
 ## Path parameters
 
-None
+无
 
 ## Query parameters
 
-None
+无
 
 ## Request body
 
-None
+无
 
 ## Response
 
