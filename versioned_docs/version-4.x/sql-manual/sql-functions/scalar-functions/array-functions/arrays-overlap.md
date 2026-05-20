@@ -2,13 +2,13 @@
 {
     "title": "ARRAYS_OVERLAP",
     "language": "en",
-    "description": "ARRAYSOVERLAP is used to ◊ whether two arrays have at least one common element. Returns true if they do, otherwise returns false."
+    "description": "ARRAYSOVERLAP is used to determine whether two arrays have at least one common element. Returns true if they do, otherwise returns false."
 }
 ---
 
 ## Function
 
-`ARRAYS_OVERLAP` is used to ◊ whether two arrays have at least one common element. Returns `true` if they do, otherwise returns `false`.
+`ARRAYS_OVERLAP` is used to determine whether two arrays have at least one common element. Returns `true` if they do, otherwise returns `false`.
 
 ## Syntax
 
