@@ -13,7 +13,7 @@ The `DROP USER` statement is used to delete a user.
 ## Syntax 
 
 ```sql
-  DROP USER '<user_identity>'
+  DROP USER <user_identity>
 ```
 
 ## Required Parameters

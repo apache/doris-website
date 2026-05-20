@@ -35,7 +35,7 @@ EXPLODE_MAP(<map>)
     ```
 1. Regular parameters
     ```sql
-    select  * from example lateral view explode_map_outer(map("k", "v", "k2", 123, null, null)) t2 as c;
+    select  * from example lateral view explode_map(map("k", "v", "k2", 123, null, null)) t2 as c;
     ```
     ```text
     +------+-----------------------------+
@@ -48,7 +48,7 @@ EXPLODE_MAP(<map>)
     ```
 2. Expand key-value pairs into separate columns
     ```sql
-    select  * from example lateral view explode_map_outer(map("k", "v", "k2", 123, null, null)) t2 as k, v;
+    select  * from example lateral view explode_map(map("k", "v", "k2", 123, null, null)) t2 as k, v;
     ```
     ```text
     +------+------+------+

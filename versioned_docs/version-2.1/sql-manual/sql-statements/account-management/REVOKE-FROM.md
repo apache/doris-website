@@ -92,7 +92,7 @@ Users executing this SQL command must have at least the following privileges:
 
 | Privilege | Object | Notes                |
 | :---------------- | :------------- | :---------------------------- |
-| GRANT_PRIV        | User or Role   | Only users or roles with the GRANT_PRIV privilege can perform the GRANT operation. |
+| GRANT_PRIV        | User or Role   | Only users or roles with the GRANT_PRIV privilege can perform the REVOKE operation. |
 
 ## Examples
 
