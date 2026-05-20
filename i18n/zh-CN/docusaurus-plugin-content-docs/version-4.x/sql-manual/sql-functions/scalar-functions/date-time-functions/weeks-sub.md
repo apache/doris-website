@@ -19,7 +19,7 @@ WEEKS_SUB(`<date_or_time_expr>`, `<week_period>`)
 ## 参数
 | 参数          | 描述                                                                |
 |---------------|-------------------------------------------------------------------|
-| `<date_or_time_expr>`  | 输入的日期时间值，支持输入 date/datetime/timestamptz 类型，具体格式请查看 [timestamptz的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion)，[datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion)                                       |
+| `<date_or_time_expr>`  | 输入的日期时间值，支持输入 date/datetime/timestamptz 类型，具体格式请查看 [timestamptz的转换](../../../../sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion)，[datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion)                                       |
 | `week_period` | INT 类型整数，表示要减少的周数（正数表示减少，负数表示增加）。                                     |
 
 ## 返回值

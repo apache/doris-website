@@ -35,7 +35,7 @@ WEEK_FLOOR(`<date_or_time_expr>`, `<period>`, `<origin>`)
 
 | 参数 | 说明 |
 | ---- | ---- |
-| `<date_or_time_expr>` | 要向下舍入的日期时间值，支持输入 date/datetime/timestamptz 类型，具体格式请查看 [timestamptz的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion), [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion)|
+| `<date_or_time_expr>` | 要向下舍入的日期时间值，支持输入 date/datetime/timestamptz 类型，具体格式请查看 [timestamptz的转换](../../../../sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion), [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
 | `<period>` | 周间隔值，类型为 INT，表示每个间隔的周数 |
 | `<origin>` | 间隔的起始点，支持输入 date/datetime 类型；默认为 0000-01-01 00:00:00 |
 
@@ -45,6 +45,7 @@ WEEK_FLOOR(`<date_or_time_expr>`, `<period>`, `<origin>`)
 
 - 若输入为 TIMESTAMPTZ 类型，则会先将其转换为 local_time(如：`2025-12-31 23:59:59+05:00` 在会话变量为`+08:00`的情况下代表的local_time为`2026-01-01 02:59:59`),再进行 FLOOR 计算操作。
 - 若输入的时间值(`<date_or_time_expr>` 和`<period>`)同时包含 TIMESTAMPTZ 和 DATETIME 类型，则输出 DATETIME 类型。结果的时间部分将被设置为 00:00:00。
+
 - 若 `<period>` 为非正数（≤0），函数返回错误；
 - 若任一参数为 NULL，返回 NULL；
 - 若 `<datetime>` 恰好是某间隔的起始点（基于 `<period>` 和 `<origin>`），则返回该起始点；

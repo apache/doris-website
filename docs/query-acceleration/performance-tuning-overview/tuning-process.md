@@ -1,58 +1,136 @@
 ---
 {
-    "title": "Tuning Process",
+    "title": "Performance Tuning Process Guide",
     "language": "en",
-    "description": "Performance tuning is a systematic process that requires a comprehensive methodology and implementation framework for systematic diagnosis and "
+    "description": "How do you systematically tune slow queries in Doris? This article presents a four-step tuning process: slow SQL identification, schema tuning, plan tuning, and execution tuning, covering both tools and scenarios.",
+    "keywords": ["Doris performance tuning", "slow query identification", "schema tuning", "execution plan tuning", "Profile analysis", "tuning process"]
 }
 ---
 
-## Overview
+<!-- Knowledge type: process methodology -->
+<!-- Applicable scenarios: slow query tuning, performance bottleneck identification, systematic performance optimization -->
 
-Performance tuning is a systematic process that requires a comprehensive methodology and implementation framework for systematic diagnosis and optimization. With the strong support of [diagnostic tools](diagnostic-tools.md) and [analysis tools](analysis-tools.md), the Doris system can efficiently diagnose, analyze, locate, and resolve performance issues. The complete four-step process for tuning is as follows:
+Performance tuning in Doris is a systematic effort that requires methodological guidance. Doris provides [diagnostic tools](diagnostic-tools.md) and [analysis tools](analysis-tools.md) to support systematic diagnosis, enabling efficient identification, analysis, and resolution of performance issues.
 
-![Tuning process](/images/query-tuning-steps.jpg)
+**Pre-tuning self-check checklist:**
 
-## Step 1: Use Performance Diagnostic Tools to Identify Slow Queries
+- You have confirmed the presence of slow SQL or performance degradation.
+- You have access to FE node logs or Doris Manager.
+- You are familiar with the schema design and query patterns of the business tables.
+- You understand basic analysis tools such as `EXPLAIN` and `Profile`.
 
-For business systems running on Doris, use the aforementioned [performance diagnostic tools](diagnostic-tools.md) to identify slow SQL queries.
+The complete four-step tuning process is as follows:
 
-- If Doris Manager is installed, it is recommended to use the Manager's log page for convenient visual identification of slow queries.
-- If Manager is not installed, you can directly check the `fe.audit.log` file on the FE node or the audit_log system table to obtain a list of slow SQL queries and prioritize them for tuning.
+![Performance tuning process](/images/query-tuning-steps.jpg)
 
-## Step 2: Schema Design and Tuning
+| Step | Phase | Core Goal | Main Tools |
+| --- | --- | --- | --- |
+| Step 1 | Slow query identification | Identify the SQL statements that need tuning | Doris Manager, `fe.audit.log`, `audit_log` table |
+| Step 2 | Schema tuning | Eliminate design-level bottlenecks | Partitioning and bucketing, indexes, Colocate Group |
+| Step 3 | Plan tuning | Optimize the execution plan | `EXPLAIN`, materialized views, Hint |
+| Step 4 | Execution tuning | Optimize runtime performance | `Profile`, Runtime Filter, parallelism parameters |
 
-After identifying specific slow SQL queries, the first priority is to inspect and tune the business schema design to eliminate performance issues caused by unreasonable schema design.
+## Step 1: Slow query identification
 
-Schema design tuning can be divided into three aspects:
+<!-- Knowledge type: operational guide -->
+<!-- Applicable scenarios: identifying slow SQL that needs tuning -->
 
-- [Table-level Schema Design Tuning](../tuning/tuning-plan/optimizing-table-schema.md), such as adjusting the number of partitions and buckets, and field optimization;
-- [Index Design and Tuning](../tuning/tuning-plan/optimizing-table-index.md)
-- The use of specific optimization techniques, such as [Optimizing Join with Colocate Group](../tuning/tuning-plan/optimizing-join-with-colocate-group.md). The main goal is to eliminate performance issues caused by unreasonable schema design or failure to fully leverage Doris's existing optimization capabilities.
+**Goal**: Filter out the slow SQL statements in the business system that need tuning.
 
-For detailed tuning examples, please refer to the documentation on [Plan Tuning](../tuning/tuning-plan/optimizing-table-schema.md).
+**Approach**:
 
-## Step 3: Plan Tuning
+| Scenario | Recommended Approach | Description |
+| --- | --- | --- |
+| Doris Manager is deployed | Use the Manager log page | Visual interface that makes filtering and sorting easier |
+| Doris Manager is not deployed | Query the `fe.audit.log` on the FE nodes or the `audit_log` system table | After obtaining the slow SQL list, prioritize and tune the statements in order |
 
-After inspecting and tuning the business schema, the main task of tuning begins: plan tuning and execution tuning. As mentioned above, at this stage, the primary task is to make full use of the various levels of Explain tools provided by Doris to systematically analyze the execution plans of slow SQL queries and identify key optimization points for targeted optimization.
+For more information on tool usage, see [Diagnostic tools](diagnostic-tools.md).
 
-- For single-table query and analysis scenarios, you can analyze the execution plan to check if [partition pruning](../tuning/tuning-plan/optimizing-table-scanning.md) is working properly and [use single-table materialized views for query acceleration](../tuning/tuning-plan/transparent-rewriting-with-sync-mv.md).
-- For complex multi-table analysis scenarios, you can analyze the Join Order to determine if it is reasonable and identify specific performance bottlenecks. You can also [use multi-table materialized views for transparent rewriting to accelerate queries](../tuning/tuning-plan/transparent-rewriting-with-async-mv.md). If unexpected situations occur, such as unreasonable Join Order, you can manually specify the Join Hint to bind the execution plan, such as [using the Leading hint to control Join Order](../tuning/tuning-plan/reordering-join-with-leading-hint.md), [using the Shuffle Hint to adjust the Join shuffle method](../tuning/tuning-plan/adjusting-join-shuffle.md), and [using Hints to control cost-based optimization rules](../tuning/tuning-plan/controlling-hints-with-cbo-rule.md), to achieve the goal of tuning the execution plan.
-- For specific scenarios, you can also leverage advanced features provided by Doris, such as [using SQL Cache to accelerate queries](../tuning/tuning-plan/accelerating-queries-with-sql-cache.md).
+## Step 2: Schema design and tuning
 
-For detailed tuning examples, please refer to the documentation on [Plan Tuning](../tuning/tuning-plan/optimizing-table-schema.md).
+<!-- Knowledge type: tuning method -->
+<!-- Applicable scenarios: performance issues caused by unreasonable table structure or index design -->
 
-## Step 4: Execution Tuning
+After identifying the slow SQL, first check the business schema design to rule out performance issues caused at the design level. Schema tuning covers three areas:
 
-In the execution tuning stage, you need to validate the effectiveness of plan tuning based on the actual execution of SQL queries. Additionally, within the framework of the existing plan, continue to analyze bottlenecks on the execution side, identify which execution stages are slow, or other common issues such as suboptimal parallelism.
+| Tuning Direction | Main Content | Reference Documentation |
+| --- | --- | --- |
+| Table-level schema tuning | Number of partitions and buckets, field types | [Optimize table schema](../tuning/tuning-plan/optimizing-table-schema.md) |
+| Index design tuning | Prefix index, Bloom filter, inverted index, and so on | [Optimize table index](../tuning/tuning-plan/optimizing-table-index.md) |
+| Specific optimization techniques | Colocate Group, and so on | [Use Colocate Group to optimize Join](../colocation-join.md) |
 
-Taking multi-table analysis queries as an example, you can analyze the Profile to check if the planned Join order is reasonable, if Runtime Filters are effective, and if the parallelism meets expectations. Furthermore, the Profile can provide feedback on machine load, such as slow I/O or unexpected network transmission performance. When confirming and diagnosing such issues, system-level tools are needed to assist in diagnosis and tuning.
+For detailed cases, see [Plan tuning](../tuning/tuning-plan/optimizing-table-schema.md).
 
-For detailed tuning examples, please refer to the documentation on [Execution Tuning](../tuning/tuning-execution/adjustment-of-runtimefilter-wait-time.md).
+## Step 3: Plan tuning
 
-:::tip
-When analyzing specific performance issues, it is recommended to first check the plan and then tune the execution. Start by using the Explain tool to confirm the execution plan, and then use the Profile tool to locate and tune execution performance. Reversing the order may lead to inefficiencies and hinder the rapid identification of performance issues.
+<!-- Knowledge type: tuning method -->
+<!-- Applicable scenarios: performance bottlenecks caused by unreasonable execution plans -->
+
+After completing the schema check, you enter the main tuning phase. This phase makes full use of the `EXPLAIN` tool at each level of Doris to systematically analyze the execution plan of the slow SQL and locate the key optimization points.
+
+**Tuning techniques by scenario:**
+
+-   **Single-table query/analysis scenarios**
+    -   Analyze the execution plan and confirm whether [partition pruning](../tuning/tuning-plan/optimizing-table-scanning.md) takes effect.
+    -   [Use single-table materialized views to accelerate queries](../tuning/tuning-plan/transparent-rewriting-with-sync-mv.md).
+
+-   **Complex multi-table analysis scenarios**
+    -   Analyze whether the Join Order is reasonable and locate performance bottlenecks.
+    -   [Use multi-table materialized views for transparent rewriting](../tuning/tuning-plan/transparent-rewriting-with-async-mv.md) to accelerate queries.
+    -   Manually bind the execution plan via Hint:
+        -   [Use Leading Hint to control the Join Order](../tuning/tuning-plan/reordering-join-with-leading-hint.md)
+        -   [Use Shuffle Hint to adjust the Join shuffle method](../tuning/tuning-plan/adjusting-join-shuffle.md)
+        -   [Use Hint to control cost-based rewriting behavior](../tuning/tuning-plan/controlling-hints-with-cbo-rule.md)
+
+-   **Specific acceleration scenarios**
+    -   [Use SQL Cache to accelerate queries](../sql-cache-manual.md)
+
+For detailed cases, see [Plan tuning](../tuning/tuning-plan/optimizing-table-schema.md).
+
+## Step 4: Execution tuning
+
+<!-- Knowledge type: tuning method -->
+<!-- Applicable scenarios: the execution plan is reasonable but runtime performance does not meet expectations -->
+
+In the execution tuning phase, you need to verify the effect of plan tuning based on the actual runtime behavior of the SQL, and continue to analyze execution-side bottlenecks, such as time distribution across execution stages or insufficient parallelism.
+
+**Taking a multi-table analytical query as an example, you can check the following with Profile:**
+
+-   Whether the Join order chosen by the planner is reasonable.
+-   Whether Runtime Filter takes effect.
+-   Whether the parallelism meets expectations.
+-   Machine load (such as slow IO or network transmission performance not meeting expectations).
+
+For machine-load issues, you need to use system-level tools to assist with diagnosis. For detailed cases, see [Execution tuning](../tuning/tuning-execution/adjustment-of-runtimefilter-wait-time.md).
+
+:::tip Tip
+When analyzing a specific performance issue, **the recommended order is to check the plan first and tune the execution second**. First use `EXPLAIN` to confirm the execution plan, and then use `Profile` to locate execution performance issues. Reversing the order may lead to inefficiency and make it harder to quickly identify the problem.
 :::
+
+## FAQ
+
+<!-- Knowledge type: FAQ -->
+<!-- Applicable scenarios: common questions during the tuning process -->
+
+**Q1: Should you do schema tuning or plan tuning first?**
+
+Schema tuning should be done first. Unreasonable schema design (such as incorrect partitioning/bucketing fields or missing necessary indexes) prevents the execution plan itself from being optimized. Resolving schema issues first avoids repeatedly tuning on top of a flawed foundation.
+
+**Q2: What is the difference between `EXPLAIN` and `Profile`?**
+
+| Tool | Output | Phase of Use |
+| --- | --- | --- |
+| `EXPLAIN` | Static execution plan (does not actually run) | Plan tuning |
+| `Profile` | Runtime time and resource metrics from actual execution | Execution tuning |
+
+**Q3: What should you do when the Join Order is not reasonable?**
+
+Examine the `EXPLAIN` output and use [Leading Hint](../tuning/tuning-plan/reordering-join-with-leading-hint.md) to manually specify the Join order.
+
+**Q4: How do you handle issues such as slow IO or slow network?**
+
+`Profile` can reflect machine load, but root-cause identification requires combining operating-system-level tools (such as `iostat`, `sar`, and `netstat`) to investigate hardware or network bottlenecks.
 
 ## Summary
 
-Query tuning is a systematic process, and Doris provides users with tools across various dimensions to facilitate the diagnosis, identification, analysis, and resolution of performance issues at different levels. By familiarizing themselves with these diagnostic and analysis tools and adopting reasonable tuning methods, business personnel and DBAs can quickly and effectively address performance bottlenecks, better unleash Doris's powerful performance advantages, and better adapt to business scenarios for business enablement.
+Doris provides multi-dimensional tuning tools that support full-chain diagnosis from slow query identification, schema design, and execution plans to runtime performance. Business users and DBAs are encouraged to follow the four-step process of "identification -> schema -> plan -> execution" for systematic tuning, so as to fully unleash the performance advantages of Doris.

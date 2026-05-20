@@ -17,9 +17,8 @@
 |属性名称 | 描述 | 默认值 | 是否必须 |
 | --- | --- | --- | --- | 
 | iceberg.jdbc.uri | 指定 JDBC 连接地址 | - | 是 |
-| iceberg.jdbc.catalog_name | 指定 Iceberg JDBC 元数据表中的 `catalog_name` 隔离键，该值可以与 Doris 本地 Catalog 名不同 | - | 是 |
-| iceberg.jdbc.user | JDBC 连接用户名 | - | 否 |
-| iceberg.jdbc.password | JDBC 连接密码 | - | 否 |
+| iceberg.jdbc.user | JDBC 连接用户名 | - | 是 |
+| iceberg.jdbc.password | JDBC 连接密码 | - | 是 |
 | warehouse | 指定 iceberg warehouse | - | 是 |
 | iceberg.jdbc.init-catalog-tables | 是否在首次使用时自动初始化 Catalog 相关的表结构 | `true` | 否 |
 | iceberg.jdbc.schema-version | JDBC Catalog 使用的 Schema 版本，支持 `V0` 和 `V1` | `V0` | 否 |
@@ -32,10 +31,6 @@
 > 1. Iceberg JDBC Catalog 支持多种关系型数据库作为后端存储，包括 PostgreSQL、MySQL、SQLite 等。
 >
 > 2. 需要确保 JDBC 驱动 JAR 包可访问。可以通过 `iceberg.jdbc.driver_url` 指定驱动位置。
->
-> 3. `iceberg.jdbc.catalog_name` 必须与写入端使用的 Iceberg JDBC catalog 名一致，例如读取 Spark 写入的元数据时通常为 `spark_catalog`。
->
-> 4. 如果指定了 `iceberg.jdbc.driver_url`，也必须同时指定 `iceberg.jdbc.driver_class`。
 
 ## 示例配置
 
@@ -47,7 +42,6 @@
 CREATE CATALOG iceberg_jdbc_postgresql PROPERTIES (
     'type' = 'iceberg',
     'iceberg.catalog.type' = 'jdbc',
-    'iceberg.jdbc.catalog_name' = 'iceberg_jdbc_postgresql',
     'iceberg.jdbc.uri' = 'jdbc:postgresql://127.0.0.1:5432/iceberg_db',
     'iceberg.jdbc.user' = 'iceberg_user',
     'iceberg.jdbc.password' = 'password',
@@ -71,14 +65,13 @@ CREATE CATALOG iceberg_jdbc_postgresql PROPERTIES (
 CREATE CATALOG iceberg_jdbc_mysql PROPERTIES (
     'type' = 'iceberg',
     'iceberg.catalog.type' = 'jdbc',
-    'iceberg.jdbc.catalog_name' = 'iceberg_jdbc_mysql',
     'iceberg.jdbc.uri' = 'jdbc:mysql://127.0.0.1:3306/iceberg_db',
     'iceberg.jdbc.user' = 'iceberg_user',
     'iceberg.jdbc.password' = 'password',
     'iceberg.jdbc.init-catalog-tables' = 'true',
     'iceberg.jdbc.schema-version' = 'V1',
     'iceberg.jdbc.driver_class' = 'com.mysql.cj.jdbc.Driver',
-    'iceberg.jdbc.driver_url' = '<jdbc_driver_jar>',
+    'iceberg.jdbc.driver_url' = '<jdbc_driver_jar>'
     'warehouse' = 's3://bucket/warehouse',
     's3.access_key' = '<ak>',
     's3.secret_key' = '<sk>',
@@ -95,12 +88,11 @@ CREATE CATALOG iceberg_jdbc_mysql PROPERTIES (
 CREATE CATALOG iceberg_jdbc_sqlite PROPERTIES (
     'type' = 'iceberg',
     'iceberg.catalog.type' = 'jdbc',
-    'iceberg.jdbc.catalog_name' = 'iceberg_jdbc_sqlite',
     'iceberg.jdbc.uri' = 'jdbc:sqlite:/tmp/iceberg_catalog.db',
     'iceberg.jdbc.init-catalog-tables' = 'true',
     'iceberg.jdbc.schema-version' = 'V1',
     'iceberg.jdbc.driver_class' = 'org.sqlite.JDBC',
-    'iceberg.jdbc.driver_url' = '<jdbc_driver_jar>',
+    'iceberg.jdbc.driver_url' = '<jdbc_driver_jar>'
     'warehouse' = 's3://bucket/warehouse',
     's3.access_key' = '<ak>',
     's3.secret_key' = '<sk>',

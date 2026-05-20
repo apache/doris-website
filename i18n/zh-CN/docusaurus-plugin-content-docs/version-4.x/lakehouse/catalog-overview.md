@@ -359,4 +359,4 @@ DROP CATALOG [IF EXISTS] iceberg_catalog;
 
 ## 权限管理
 
-外部数据目录中库表的权限管理和内表一致。具体可参阅 [认证和鉴权](../admin-manual/auth/authentication-and-authorization.md) 文档。
+外部数据目录中库表的权限管理和内表一致。具体可参阅 [安全概览](../admin-manual/auth/security-overview) 文档。

@@ -23,7 +23,7 @@ DATE_TRUNC(<time_unit>, <datetime>)
 
 | 参数 | 说明 |
 | -- | -- |
-| `<date_or_time_part>` | 合法的日期表达式，支持输入 date/datetime/timestamptz 类型，具体格式请查看 [timestamptz的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion), [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
+| `<date_or_time_part>` | 合法的日期表达式，支持输入 date/datetime/timestamptz 类型，具体格式请查看 [timestamptz的转换](../../../../sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion), [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
 | `<time_unit>` | 希望截断的时间间隔，可选的值如下：[`second`,`minute`,`hour`,`day`,`week`,`month`,`quarter`,`year`] |
 
 ## 返回值

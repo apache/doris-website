@@ -1,45 +1,84 @@
 ---
-{
-    "title": "Colocation Join",
-    "language": "en",
-    "description": "Colocation Join provides local optimization for some Join queries to reduce data transmission time between nodes and accelerating query execution."
-}
+title: Colocation Join
+language: en
+description: Colocation Join reduces inter-node data transfer through local Join, accelerating equi-Join queries on bucket columns. This document introduces its principles and usage.
+keywords:
+    - Colocation Join
+    - Doris Join optimization
+    - Local Join
+    - Colocation Group
+    - Bucket Join
+    - Data locality
 ---
 
-# Colocation Join
+<!-- Knowledge type: Feature introduction / Operation steps / Configuration parameters -->
+<!-- Applicable scenario: Performance tuning of multi-table Join queries -->
 
-Colocation Join provides local optimization for some Join queries to reduce data transmission time between nodes and accelerating query execution.
+Colocation Join is a Join optimization capability provided by Doris. By colocating multiple tables on the same BE nodes according to identical rules, Join operations on bucket columns can be completed locally, avoiding cross-node data transfer and accelerating queries.
 
-Note: This property will not be synchronized by CCR. If this table is copied by CCR, that is, PROPERTIES contains `is_being_synced = true`, this property will be erased in this table.
+This document describes the principles, implementation, usage, and considerations of Colocation Join.
 
-## Noun Interpretation
+:::caution Note
+This property is not synchronized by CCR. If the table is replicated by CCR (that is, `PROPERTIES` contains `is_being_synced = true`), this property is erased on that table.
+:::
 
-* FE: Frontend, the front-end node of Doris. Responsible for metadata management and request access.
-* BE: Backend, Doris's back-end node. Responsible for query execution and data storage.
-* Colocation Group (CG): A CG contains one or more tables. Tables within the same group have the same Colocation Group Schema and the same data fragmentation distribution.
-* Colocation Group Schema (CGS): Used to describe tables in a CG and general schema information related to Colocation. Including bucket column type, bucket number and copy number.
+## Applicability Checklist
 
-## Principle
+<!-- Knowledge type: Prerequisite check -->
+<!-- Applicable scenario: Determine whether a query can benefit from Colocation Join -->
 
-The Colocation Join function is to make a CG of a set of tables with the same CGS. Ensure that the corresponding data fragments of these tables will fall on the same BE node. When tables in CG perform Join operations on bucket columns, local data Join can be directly performed to reduce data transmission time between nodes.
+Before using Colocation Join, confirm the following:
 
-The data of a table will eventually fall into a barrel according to the barrel column value Hash and the number of barrels modeled. Assuming that the number of buckets in a table is 8, there are eight buckets `[0, 1, 2, 3, 4, 5, 6, 7] `Buckets'. We call such a sequence a `Buckets Sequence`. Each Bucket has one or more Tablets. When a table is a single partitioned table, there is only one Tablet in a Bucket. If it is a multi-partition table, there will be more than one.
+-   Two or more tables participating in the Join have been added to the same Colocation Group.
+-   The Join Key is consistent with the bucket column (Distribution Key).
+-   The replica count and bucket count of the tables are the same, and data distribution is stable (`IsStable = true`).
+-   The query has an obvious Shuffle performance bottleneck caused by Join between large tables.
 
-In order for a table to have the same data distribution, the table in the same CG must ensure the following attributes are the same:
+## Terminology
 
-1. Bucket column and number of buckets
+| Term | Abbreviation | Description |
+| --- | --- | --- |
+| Colocation Group | CG | A CG contains one or more tables. Tables within the same Group share the same Colocation Group Schema and the same data shard distribution. |
+| Colocation Group Schema | CGS | Describes the common Schema information related to Colocation for tables in a CG, including bucket column types, bucket count, and replica count. |
 
-  Bucket column, that is, the column specified in `DISTRIBUTED BY HASH (col1, col2,...)` in the table building statement. Bucket columns determine which column values are used to Hash data from a table into different Tablets. Tables in the same CG must ensure that the type and number of barrel columns are identical, and the number of barrels is identical, so that the data fragmentation of multiple tables can be controlled one by one.
+## Principles
 
-2. Number of copies
+<!-- Knowledge type: Architecture principles -->
 
-  The number of copies of all partitions of all tables in the same CG must be the same. If inconsistent, there may be a copy of a Tablet, and there is no corresponding copy of other table fragments on the same BE.
+![colocation-group](/images/next/query-acceleration/colocation-group.jpg)
 
-Tables in the same CG do not require consistency in the number, scope, and type of partition columns.
+The Colocation Join feature groups a set of tables sharing the same CGS into a CG and ensures that the corresponding data shards of these tables are placed on the same BE nodes. As a result, when tables in the CG perform Join operations on bucket columns, local data Join can be performed directly, reducing data transfer time between nodes.
 
-After fixing the number of bucket columns and buckets, the tables in the same CG will have the same Buckets Sequence. The number of replicas determines the number of replicas of Tablets in each bucket, which BE they are stored on. Suppose that Buckets Sequence is `[0, 1, 2, 3, 4, 5, 6, 7] `, and that BE nodes have `[A, B, C, D] `4. A possible distribution of data is as follows:
+### Buckets and BucketsSequence
 
-```
+The data of a table is ultimately placed into a bucket by hashing the bucket column values and taking the modulo with the number of buckets. Suppose a table has 8 buckets, then there are 8 buckets in total: `[0, 1, 2, 3, 4, 5, 6, 7]`. This sequence is called a `BucketsSequence`. Each bucket contains one or more data shards (Tablets):
+
+- For a single-partition table, a bucket contains only one Tablet.
+- For a multi-partition table, a bucket contains multiple Tablets.
+
+### Constraints for Tables in the Same CG
+
+To ensure that tables share the same data distribution, tables in the same CG must have the following properties identical:
+
+1. **Bucket columns and bucket count**
+
+    The bucket columns are the columns specified in `DISTRIBUTED BY HASH(col1, col2, ...)` in the create-table statement. Bucket columns determine which column values are used to hash and divide a table's data into different Tablets. Tables in the same CG must have exactly the same bucket column types and counts, and the same number of buckets, so that the data shards of multiple tables can be distributed in a one-to-one correspondence.
+
+2. **Replica count**
+
+    The replica counts of all partitions of all tables in the same CG must be consistent. If they are inconsistent, a replica of some Tablet may not have a corresponding shard replica of another table on the same BE.
+
+:::tip Note
+Tables in the same CG do not require the same partition count, partition ranges, or partition column types.
+:::
+
+### Data Distribution Illustration
+
+After the bucket columns and bucket count are fixed, tables in the same CG share the same BucketsSequence. The replica count determines on which BEs the multiple replicas of the Tablet within each bucket are stored.
+
+Assume the BucketsSequence is `[0, 1, 2, 3, 4, 5, 6, 7]` and there are 4 BE nodes `[A, B, C, D]`. A possible data distribution is as follows:
+
+```text
 +---+ +---+ +---+ +---+ +---+ +---+ +---+ +---+
 | 0 | | 1 | | 2 | | 3 | | 4 | | 5 | | 6 | | 7 |
 +---+ +---+ +---+ +---+ +---+ +---+ +---+ +---+
@@ -51,56 +90,73 @@ After fixing the number of bucket columns and buckets, the tables in the same CG
 +---+ +---+ +---+ +---+ +---+ +---+ +---+ +---+
 ```
 
-The data of all tables in CG will be uniformly distributed according to the above rules, which ensures that the data with the same barrel column value are on the same BE node, and local data Join can be carried out.
+The data of all tables in the CG is uniformly distributed according to the rule above. This ensures that data with the same bucket column values resides on the same BE node, allowing local data Join.
 
 ## Usage
 
-### Establishment of tables
+<!-- Knowledge type: Operation steps -->
 
-When creating a table, you can specify the attribute `"colocate_with"="group_name"` in `PROPERTIES`, which means that the table is a Colocation Join table and belongs to a specified Colocation Group.
+### Specify Colocation Group at Table Creation
 
-Examples:
+**Purpose**: Add a newly created table to a specified Colocation Group.
 
-```
+**Command**: Specify `"colocate_with" = "group_name"` in `PROPERTIES`.
+
+**Example**:
+
+```sql
 CREATE TABLE tbl (k1 int, v1 int sum)
 DISTRIBUTED BY HASH(k1)
 BUCKETS 8
 PROPERTIES(
-  "colocate_with" = "group1"
+    "colocate_with" = "group1"
 );
 ```
 
-If the specified group does not exist, Doris automatically creates a group that contains only the current table. If the Group already exists, Doris checks whether the current table satisfies the Colocation Group Schema. If satisfied, the table is created and added to the Group. At the same time, tables create fragments and replicas based on existing data distribution rules in Groups.
-Group belongs to a database, and its name is unique in a database. Internal storage is the full name of Group `dbId_groupName`, but users only perceive groupName.
+**Description**:
 
+- If the specified Group does not exist, Doris automatically creates a Group containing only the current table.
+- If the Group already exists, Doris checks whether the current table satisfies the Colocation Group Schema. If it does, the table is created and added to the Group. The table also creates shards and replicas according to the data distribution rules of the existing Group.
+- A Group belongs to a Database, and the Group name is unique within a Database. In internal storage, the full name of a Group is `dbId_groupName`, but users only see `groupName`.
 
+### Create a Cross-Database Global Group
 
-In version 2.0, Doris supports cross-Database Group. When creating a table, you need to use the keyword `__global__` as a prefix of the Group name. like:
+:::tip Tip
+In version 2.0, Doris supports cross-Database Groups.
+:::
 
-```
+**Purpose**: Implement cross-Database Colocate Join.
+
+**Command**: Use the keyword `__global__` as the prefix of the Group name when creating the table.
+
+**Example**:
+
+```sql
 CREATE TABLE tbl (k1 int, v1 int sum)
 DISTRIBUTED BY HASH(k1)
 BUCKETS 8
 PROPERTIES(
-     "colocate_with" = "__global__group1"
+    "colocate_with" = "__global__group1"
 );
 ```
 
-The Group prefixed with `__global__` no longer belongs to a Database, and its name is also globally unique.
+**Description**: A Group with the `__global__` prefix no longer belongs to a Database, and its name is globally unique. By creating a Global Group, you can implement cross-Database Colocate Join.
 
-Cross-Database Colocate Join can be realized by creating a Global Group.
+### Drop Table
 
+When the last table in a Group is completely deleted, the Group is also automatically deleted.
 
+:::info Note
+Complete deletion means deletion from the recycle bin. Typically, after a table is dropped using the `DROP TABLE` command, it remains in the recycle bin for one day by default before being deleted.
+:::
 
-### Delete table
+### View Groups
 
-When the last table in Group is deleted completely (deleting completely means deleting from the recycle bin). Usually, when a table is deleted by the `DROP TABLE` command, it will be deleted after the default one-day stay in the recycle bin, and the group will be deleted automatically.
+**Purpose**: View information about existing Colocation Groups in the cluster and their data distribution.
 
-### View Group
+**1. View all Groups in the cluster**
 
-The following command allows you to view the existing Group information in the cluster.
-
-```
+```sql
 SHOW PROC '/colocation_group';
 
 +-------------+--------------+--------------+------------+----------------+----------+----------+
@@ -110,17 +166,21 @@ SHOW PROC '/colocation_group';
 +-------------+--------------+--------------+------------+----------------+----------+----------+
 ```
 
-* GroupId: The unique identity of a group's entire cluster, with DB ID in the first half and group ID in the second half.
-* GroupName: The full name of Group.
-* TabletIds: The group contains a list of Tables'ID.
-* Buckets Num: Number of barrels.
-* Replication Num: Number of copies.
-* DistCols: Distribution columns, 
-* IsStable: Is the group stable (for the definition of stability, see section `Collocation replica balancing and repair').
+Field descriptions:
 
-You can further view the data distribution of a group by following commands:
+| Field | Description |
+| --- | --- |
+| GroupId | The cluster-wide unique identifier of the Group. The first half is the db id, and the second half is the group id. |
+| GroupName | The full name of the Group. |
+| TableIds | The list of table ids contained in the Group. |
+| BucketsNum | Bucket count. |
+| ReplicationNum | Replica count. |
+| DistCols | Distribution columns, that is, the bucket column types. |
+| IsStable | Whether the Group is stable (for the definition of stable, see the [Colocation Replica Balancing and Repair](#colocation-replica-balancing-and-repair) section). |
 
-```
+**2. View the data distribution of a specific Group**
+
+```sql
 SHOW PROC '/colocation_group/10005.10008';
 
 +-------------+---------------------+
@@ -137,55 +197,90 @@ SHOW PROC '/colocation_group/10005.10008';
 +-------------+---------------------+
 ```
 
-* BucketIndex: Subscript to the bucket sequence.
-* Backend Ids: A list of BE node IDs where data fragments are located in buckets.
+Field descriptions:
 
-> The above commands require ADMIN privileges. Normal user view is not supported at this time.
+| Field | Description |
+| --- | --- |
+| BucketIndex | The index of the bucket sequence. |
+| BackendIds | The list of BE node ids where the data shards of the bucket reside. |
 
-### Modify Colocate Group
+:::info Note
+The commands above require ADMIN privilege and are not available to regular users.
+:::
 
-You can modify the Colocation Group property of a table that has been created. Examples:
+### Modify the Colocate Group Property of a Table
 
-`ALTER TABLE tbl SET ("colocate_with" = "group2");`
+**Purpose**: Add an existing table to, migrate it within, or remove it from a Colocation Group.
 
-* If the table has not previously specified a Group, the command checks the Schema and adds the table to the Group (if the Group does not exist, it will be created).
-* If other groups are specified before the table, the command first removes the table from the original group and adds a new group (if the group does not exist, it will be created).
+**1. Set or migrate Group**
 
-You can also delete the Colocation attribute of a table by following commands:
+```sql
+ALTER TABLE tbl SET ("colocate_with" = "group2");
+```
 
-`ALTER TABLE tbl SET ("colocate_with" = "");`
+Behavior:
 
-### Other related operations
+- If the table did not previously belong to any Group, this command checks the Schema and adds the table to the Group (the Group is created if it does not exist).
+- If the table previously belonged to another Group, this command first removes the table from the original Group and then adds it to the new Group (the Group is created if it does not exist).
 
-When an ADD PARTITION is added to a table with a Colocation attribute and the number of copies is modified, Doris checks whether the modification violates the Colocation Group Schema and rejects it if it does.
+**2. Remove the Colocation property**
 
-## Colocation Duplicate Balancing and Repair
+```sql
+ALTER TABLE tbl SET ("colocate_with" = "");
+```
 
-Copy distribution of Colocation tables needs to follow the distribution specified in Group, so it is different from common fragmentation in replica repair and balancing.
+### Other Related Operations
 
-Group itself has a Stable attribute, when Stable is true, which indicates that all fragments of the table in the current Group are not changing, and the Colocation feature can be used normally. When Stable is false, it indicates that some tables in Group are being repaired or migrated. At this time, Colocation Join of related tables will degenerate into ordinary Join.
+When adding partitions (`ADD PARTITION`) or modifying the replica count of a table with the Colocation property, Doris checks whether the modification violates the Colocation Group Schema. If so, the modification is rejected.
+
+## Colocation Replica Balancing and Repair
+
+<!-- Knowledge type: Architecture principles / Operations description -->
+
+The replica distribution of a Colocation table must follow the distribution specified in the Group, so replica repair and balancing differ from those of regular shards.
+
+### Stable State of a Group
+
+A Group itself has a Stable property:
+
+| State | Meaning | Impact on Queries |
+| --- | --- | --- |
+| Stable (true) | All shards of the tables in the Group are not currently changing. | The Colocation feature works normally. |
+| Unstable (false) | Some shards of tables in the Group are being repaired or migrated. | Colocation Join for the relevant tables degrades to regular Join. |
 
 ### Replica Repair
 
-Copies can only be stored on specified BE nodes. So when a BE is unavailable (downtime, Decommission, etc.), a new BE is needed to replace it. Doris will first look for the BE with the lowest load to replace it. After replacement, all data fragments on the old BE in the Bucket will be repaired. During the migration process, Group is marked Unstable.
+Replicas can only be stored on the specified BE nodes. So when a BE becomes unavailable (such as crash or Decommission), a new BE must be found as a replacement. Doris prefers the BE with the lowest load as the replacement. After replacement, all data shards in the bucket on the old BE need to be repaired. During the migration, the Group is marked as Unstable.
 
 ### Replica Balancing
 
-Doris will try to distribute the fragments of the Collocation table evenly across all BE nodes. For the replica balancing of common tables, the granularity is single replica, that is to say, it is enough to find BE nodes with lower load for each replica alone. The equilibrium of the Colocation table is at the Bucket level, where all replicas within a Bucket migrate together. We adopt a simple equalization algorithm, which distributes Buckets Sequence evenly on all BEs, regardless of the actual size of the replicas, but only according to the number of replicas. Specific algorithms can be referred to the code annotations in `ColocateTableBalancer.java`.
+Doris attempts to evenly distribute the shards of Colocation tables across all BE nodes. The differences between the two types of balancing are as follows:
 
-> Note 1: Current Colocation replica balancing and repair algorithms may not work well for heterogeneously deployed Doris clusters. The so-called heterogeneous deployment, that is, the BE node's disk capacity, number, disk type (SSD and HDD) is inconsistent. In the case of heterogeneous deployment, small BE nodes and large BE nodes may store the same number of replicas.
->
-> Note 2: When a group is in an Unstable state, the Join of the table in it will degenerate into a normal Join. At this time, the query performance of the cluster may be greatly reduced. If you do not want the system to balance automatically, you can set the FE configuration item `disable_colocate_balance` to prohibit automatic balancing. Then open it at the right time. (See Section `Advanced Operations` for details)
+| Type | Balancing Granularity | Description |
+| --- | --- | --- |
+| Regular table | Single replica | A BE with lower load is found individually for each replica. |
+| Colocation table | Bucket | All replicas in a bucket are migrated together. |
 
-## Query
+A simple balancing algorithm is used: without considering the actual size of replicas, only the replica count is used to evenly distribute the BucketsSequence across all BEs. For the specific algorithm, see the code comments in `ColocateTableBalancer.java`.
 
-The Colocation table is queried in the same way as ordinary tables, and users do not need to perceive Colocation attributes. If the Group in which the Colocation table is located is in an Unstable state, it will automatically degenerate to a normal Join.
+:::caution Note
+- **Note 1**: The current Colocation replica balancing and repair algorithm may not work well for heterogeneously deployed Doris clusters. Heterogeneous deployment means that the BE nodes have inconsistent disk capacities, counts, or disk types (SSD and HDD). In heterogeneous deployments, small-capacity BE nodes and large-capacity BE nodes may end up storing the same number of replicas.
+- **Note 2**: When a Group is in the Unstable state, Joins involving its tables degrade to regular Joins. This may significantly reduce the cluster's query performance. If you do not want the system to balance automatically, you can set the FE configuration `disable_colocate_balance` to disable automatic balancing, and turn it back on at an appropriate time (for details, see the [Advanced Operations](#advanced-operations) section).
+:::
 
-Examples are given to illustrate:
+## Querying
 
-Table 1:
+<!-- Knowledge type: Usage description -->
 
-```
+Querying Colocation tables is the same as querying regular tables, and users do not need to be aware of the Colocation property. If the Group of a Colocation table is in the Unstable state, the query automatically degrades to a regular Join.
+
+The following example shows how to confirm whether Colocation Join takes effect.
+
+### Example Tables
+
+**Table 1**:
+
+```sql
 CREATE TABLE `tbl1` (
     `k1` date NOT NULL COMMENT "",
     `k2` int(11) NOT NULL COMMENT "",
@@ -203,9 +298,9 @@ PROPERTIES (
 );
 ```
 
-Table 2:
+**Table 2**:
 
-```
+```sql
 CREATE TABLE `tbl2` (
     `k1` datetime NOT NULL COMMENT "",
     `k2` int(11) NOT NULL COMMENT "",
@@ -218,9 +313,9 @@ PROPERTIES (
 );
 ```
 
-View the query plan:
+### View the Query Plan
 
-```
+```sql
 DESC SELECT * FROM tbl1 INNER JOIN tbl2 ON (tbl1.k2 = tbl2.k2);
 
 +----------------------------------------------------+
@@ -263,11 +358,11 @@ DESC SELECT * FROM tbl1 INNER JOIN tbl2 ON (tbl1.k2 = tbl2.k2);
 +----------------------------------------------------+
 ```
 
-If Colocation Join works, the Hash Join Node will show `colocate: true`.
+If Colocation Join takes effect, the Hash Join node displays `colocate: true`.
 
-If not, the query plan is as follows:
+If it does not take effect, the query plan is as follows:
 
-```
+```sql
 +----------------------------------------------------+
 | Explain String                                     |
 +----------------------------------------------------+
@@ -296,7 +391,6 @@ If not, the query plan is as follows:
 |      cardinality=-1                                |
 |      avgRowSize=0.0                                |
 |      numNodes=0                                    |
-|      tuple ids: 0                                  |
 |                                                    |
 | PLAN FRAGMENT 1                                    |
 |  OUTPUT EXPRS:                                     |
@@ -319,90 +413,143 @@ If not, the query plan is as follows:
 +----------------------------------------------------+
 ```
 
-The HASH JOIN node displays the corresponding reason: `colocate: false, reason: group is not stable`. At the same time, an EXCHANGE node will be generated.
+The HASH JOIN node displays the corresponding reason: `colocate: false, reason: group is not stable`, and an EXCHANGE node is generated.
 
+### Comparison of Join Types
+
+To help determine whether a query uses Colocation Join, the following table compares the common Join types in Doris:
+
+| Join Type               | Shuffle Data?       | Trigger Condition                                              |
+| :---------------------- | :------------------ | :------------------------------------------------------------- |
+| Colocate Join           | No                  | Tables join the same Colocate Group and `IsStable=true`.       |
+| Bucket Shuffle Join     | Partial (one side)  | The Join Key is consistent with the bucket column of the left table. |
+| Shuffle Join            | Yes (both sides)    | The default behavior when none of the above conditions hold.   |
+| Broadcast Join          | Yes (small table)   | The right table is small.                                      |
 
 ## Advanced Operations
 
-### FE Configuration Item
+<!-- Knowledge type: Configuration parameters / Operations -->
 
-* disable\_colocate\_relocate
+### FE Configuration Items
 
-Whether to close Doris's automatic Colocation replica repair. The default is false, i.e. not closed. This parameter only affects the replica repair of the Colocation table, but does not affect the normal table.
+| Configuration | Default | Description |
+| --- | --- | --- |
+| `disable_colocate_relocate` | false | Whether to disable Doris's automatic Colocation replica repair. The default is false (not disabled). This parameter affects only Colocation table replica repair, not regular tables. |
+| `disable_colocate_balance` | false | Whether to disable Doris's automatic Colocation replica balancing. The default is false (not disabled). This parameter affects only Colocation table replica balancing, not regular tables. |
+| `disable_colocate_join` | See description | Whether to disable the Colocation Join feature. In versions 0.10 and earlier, the default is true (disabled). In a later version, the default will be false (enabled). |
+| `use_new_tablet_scheduler` | See description | In versions 0.10 and earlier, the new replica scheduling logic is incompatible with the Colocation Join feature. So in versions 0.10 and earlier, if `disable_colocate_join = false`, you need to set `use_new_tablet_scheduler = false` to disable the new replica scheduler. In later versions, `use_new_tablet_scheduler` is always true. |
 
-* disable\_colocate\_balance
+:::tip Tip
+The parameters `disable_colocate_relocate` and `disable_colocate_balance` above can be modified dynamically. For details, see `HELP SHOW CONFIG;` and `HELP SET CONFIG;`.
+:::
 
-Whether to turn off automatic Colocation replica balancing for Doris. The default is false, i.e. not closed. This parameter only affects the replica balance of the Collocation table, but does not affect the common table.
+### HTTP Restful API
 
-User can set these configurations at runtime. See `HELP ADMIN SHOW CONFIG;` and `HELP ADMIN SET CONFIG;`.
+Doris provides several HTTP Restful APIs related to Colocation Join for viewing and modifying Colocation Groups.
 
-* disable\_colocate\_join
+These APIs are implemented on the FE side and are accessed via `fe_host:fe_http_port`. They require ADMIN privilege.
 
-Whether to turn off the Colocation Join function or not. In 0.10 and previous versions, the default is true, that is, closed. In a later version, it will default to false, that is, open.
+#### 1. View All Colocation Information of the Cluster
 
-* use\_new\_tablet\_scheduler
+```text
+GET /api/colocate
 
-In 0.10 and previous versions, the new replica scheduling logic is incompatible with the Colocation Join function, so in 0.10 and previous versions, if `disable_colocate_join = false`, you need to set `use_new_tablet_scheduler = false`, that is, close the new replica scheduler. In later versions, `use_new_tablet_scheduler` will be equal to true.
+Returns the internal Colocation information in JSON format.
 
-### HTTP RESTful API
-
-Doris provides several HTTP RESTful APIs related to Colocation Join for viewing and modifying Colocation Group.
-
-The API is implemented on the FE side and accessed using `fe_host: fe_http_port`. ADMIN privileges are required.
-
-1. View all Colocation information for the cluster
-
-    ```
-    GET /api/colocate
-    
-    Return the internal Colocation info in JSON format:
-    
-    {
-        "msg": "success",
-      "code": 0,
-      "data": {
+{
+    "msg": "success",
+    "code": 0,
+    "data": {
         "infos": [
-          ["10003.12002", "10003_group1", "10037, 10043", "1", "1", "int(11)", "true"]
+            ["10003.12002", "10003_group1", "10037, 10043", "1", "1", "int(11)", "true"]
         ],
         "unstableGroupIds": [],
         "allGroupIds": [{
-          "dbId": 10003,
-          "grpId": 12002
+            "dbId": 10003,
+            "grpId": 12002
         }]
-      },
-      "count": 0 
-    }
-    ```
-2. Mark Group as Stable or Unstable
+    },
+    "count": 0
+}
+```
 
-  * Mark as Stable
+#### 2. Mark a Group as Stable or Unstable
 
-        ```
-        DELETE /api/colocate/group_stable?db_id=10005&group_id=10008
-        
-        Returns: 200
-        ```
+- **Mark as Stable**
 
-  * Mark as Unstable
+    ```text
+    DELETE /api/colocate/group_stable?db_id=10005&group_id=10008
 
-        ```
-        POST /api/colocate/group_stable?db_id=10005&group_id=10008
-        
-        Returns: 200
-        ```
-
-3. Setting Data Distribution for Group
-
-  The interface can force the bucket sequence distribution of a group.
-
-    ```
-    POST /api/colocate/bucketseq?db_id=10005&group_id=10008
-    
-    Body:
-    [[10004,10002],[10003,10002],[10002,10004],[10003,10002],[10002,10004],[10003,10002],[10003,10004],[10003,10004],[10003,10004],[10002,10004]]
-    
     Returns: 200
     ```
-  Body is a Buckets Sequence represented by a nested array and the ID of the BE where the fragments are distributed in each Bucket.
 
-  Note that using this command, you may need to set the FE configuration `disable_colocate_relocate` and `disable_colocate_balance` to true. "This will prevent the system from automatically repairing or balancing Colocation replicas. Otherwise, it may be automatically reset by the system after modification.
+- **Mark as Unstable**
+
+    ```text
+    POST /api/colocate/group_stable?db_id=10005&group_id=10008
+
+    Returns: 200
+    ```
+
+#### 3. Set the Data Distribution of a Group
+
+This endpoint can forcibly set the data distribution of a Group.
+
+```text
+POST /api/colocate/bucketseq?db_id=10005&group_id=10008
+
+Body:
+[[10004,10002],[10003,10002],[10002,10004],[10003,10002],[10002,10004],[10003,10002],[10003,10004],[10003,10004],[10003,10004],[10002,10004]]
+
+Returns 200
+```
+
+The Body is a nested array representing the BucketsSequence and the BE ids where the shards in each Bucket are distributed.
+
+:::caution Note
+When using this command, you may need to set the FE configurations `disable_colocate_relocate` and `disable_colocate_balance` to true, that is, disable the system's automatic Colocation replica repair and balancing. Otherwise, the modification may be automatically reset by the system.
+:::
+
+## FAQ
+
+<!-- Knowledge type: Troubleshooting -->
+
+### `colocate: false, reason: group is not stable` Appears in the Query Plan
+
+This indicates that the Group is currently in the Unstable state, possibly because replica repair or balancing is in progress. The Join degrades to a regular Join in this case. Once the Group returns to Stable, Colocation Join can be used again. You can check the `IsStable` field via `SHOW PROC '/colocation_group';`.
+
+### How to Confirm Whether a Colocation Group Is Currently Available
+
+Run `SHOW PROC "/colocation_group";` and check the `IsStable` field. `true` means available and the Join can use the Colocate plan; `false` means temporarily unavailable while Doris is balancing data.
+
+### How Long Does `IsStable=false` Last
+
+It depends on the scale of data migration and the cluster load. The state recovers automatically once Doris finishes tablet balancing. If it remains `false` for a long time, refer to the items below for troubleshooting.
+
+### Error When Creating a Table: The Table Cannot Join the Specified Group
+
+Check whether the following conditions are all met:
+
+- The bucket column types and counts are exactly the same as those of the existing tables in the Group.
+- The number of buckets is the same.
+- The replica counts of all partitions are the same.
+
+Any inconsistency prevents the table from joining the Group.
+
+### A Group Stays in the Unstable State for a Long Time
+
+Possible causes include:
+
+- BE crashes or Decommission in the cluster, with replica repair still in progress.
+- Heterogeneous cluster deployment makes balancing hard to converge.
+- Automatic balancing is not disabled and continuously triggers migrations.
+
+You can temporarily disable automatic balancing by setting `disable_colocate_balance = true`, and re-enable it after the cluster stabilizes.
+
+### Can Two Tables in Different Databases Perform Colocation Join
+
+Yes. In version 2.0 and later, you can create tables using a Global Group name with the `__global__` prefix.
+
+### Is the Colocation Property Preserved After CCR Replication
+
+No. This property is not synchronized by CCR, and the Colocation property of the table on the target cluster is erased (when `PROPERTIES` contains `is_being_synced = true`).

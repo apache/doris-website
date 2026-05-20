@@ -11,8 +11,6 @@
     --hn-yellow-bright: #FFE066;
     --hn-coral: #FF5C39;
     --hn-ink: #0F1A14;
-    --hn-mono: 'JetBrains Mono', 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
-    --hn-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
 
 // ─── Hero wrapper ─────────────────────────────────────────────────────────────
@@ -22,7 +20,7 @@
     overflow: hidden;
     background: var(--hn-green-dark);
     color: var(--hn-cream-light);
-    font-family: var(--hn-sans);
+    font-family: var(--font-family-base);
     padding-bottom: 2.5rem;
 
     // ── Background layers ──────────────────────────────────────────────────
@@ -117,16 +115,18 @@
     &__title {
         // override Docusaurus heading defaults
         @include type.hero-title;
-        font-family: var(--hn-mono) !important;
+        font-family: var(--font-mono) !important;
         color: var(--hn-cream-light) !important;
         margin: 0 !important;
         display: flex;
         flex-direction: column;
         gap: 2px;
+        position: relative;
     }
 
     &__title-line {
         display: block;
+        position: relative;
     }
 
     &__title-fast {
@@ -138,6 +138,67 @@
 
     &__title-accent {
         color: var(--hn-yellow);
+    }
+
+    // Mascot is anchored inside the "Analytics and" line span:
+    // `bottom: 100%` places the IMG's bottom edge at that line's top, then
+    // `translateY` pushes the IMG back down so the *hand blob* lands on the
+    // letter caps. Arms (thin) start higher and aren't the visual anchor —
+    // the wide round hands are.
+    //
+    // PNG geometry measured from doris-mascot.png (1344x768):
+    //   • thin arms        y=441–510  (above hands, not aligned)
+    //   • hand blob top    y=510      → 33.6% from image bottom
+    //   • hand blob center y≈520      → 32.3% from image bottom
+    //   • hand blob bottom y=548      → 28.6% from image bottom
+    //   • bottom 28.5% (y=548–767)    transparent
+    //
+    // translateY(33%) ≈ "hand top aligned with text line top, hand draping
+    // ~5% of mascot height into the letter caps".
+    &__title-line--mascot-host {
+        position: relative;
+    }
+
+    // Wrapper carries the absolute positioning that used to live on the IMG;
+    // it also acts as the positioning context for the pupil overlays so we
+    // can place them at percentage-of-image coordinates.
+    &__mascot-wrap {
+        display: block;
+        position: absolute;
+        bottom: 100%;
+        // Shift the mascot row left from the line's right edge so all three
+        // characters land over the text. The leftmost (purple) mascot should
+        // line up roughly with the "C" in "ANALYTICS".
+        right: 20%;
+        transform: translateY(34%);
+        width: 45%;
+        max-width: 320px;
+        min-width: 220px;
+        z-index: 2;
+        pointer-events: none;
+        user-select: none;
+        filter: drop-shadow(0 14px 22px rgba(0, 0, 0, 0.28));
+    }
+
+    &__mascot {
+        display: block;
+        width: 100%;
+        height: auto;
+    }
+
+    // Pupils are positioned at eye-white centers via inline `left`/`top` and
+    // `translate(-50%, -50%)`. JS adds an extra `translate(...)` to point
+    // each pupil at the cursor, constrained inside its eye white. Pupil
+    // diameter is 50% of eye-white diameter, leaving 50% of room to move.
+    &__mascot-pupil {
+        position: absolute;
+        width: 1.7%;
+        aspect-ratio: 1;
+        background: var(--hn-ink);
+        border-radius: 50%;
+        transform: translate(-50%, -50%);
+        transition: transform 0.08s ease-out;
+        will-change: transform;
     }
 
     // ── Subtitle ───────────────────────────────────────────────────────────
@@ -246,7 +307,7 @@
 
         background: var(--hn-yellow);
         color: var(--hn-ink);
-        font-family: var(--hn-mono);
+        font-family: var(--font-mono);
         font-size: 11px;
         font-weight: 700;
         padding: 8px 12px;
@@ -337,7 +398,7 @@
     border-radius: 10px;
     border: 1px solid rgba(245, 239, 228, 0.1);
     overflow: hidden;
-    font-family: 'JetBrains Mono', 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-family: var(--font-mono);
     box-shadow:
         0 30px 60px -20px rgba(0, 0, 0, 0.5),
         0 0 0 1px rgba(255, 210, 63, 0.05);
@@ -481,7 +542,7 @@
         color: var(--hn-ink);
         border: 0;
         border-radius: 4px;
-        font-family: var(--hn-mono);
+        font-family: var(--font-mono);
         font-size: 10.5px;
         font-weight: 800;
         letter-spacing: 0.12em;
@@ -571,7 +632,7 @@
     border: 1px solid rgba(15, 26, 20, 0.08);
     border-radius: 10px;
     overflow: hidden;
-    font-family: var(--hn-mono);
+    font-family: var(--font-mono);
     box-shadow:
         0 24px 48px -22px rgba(0, 0, 0, 0.45),
         0 0 0 1px rgba(15, 26, 20, 0.04);
@@ -648,7 +709,7 @@
         }
 
         &--title {
-            font-family: var(--hn-sans);
+            font-family: var(--font-family-base);
             font-size: 12.5px;
             color: var(--hn-ink);
             font-weight: 600;
@@ -708,7 +769,7 @@
     box-shadow:
         0 30px 60px -20px rgba(0, 0, 0, 0.45),
         0 0 0 1px rgba(255, 210, 63, 0.04);
-    font-family: 'JetBrains Mono', 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-family: var(--font-mono);
 
     &__head {
         display: flex;
@@ -821,7 +882,7 @@
     }
 
     &__title {
-        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        font-family: var(--font-family-base);
         font-size: 12.5px;
         font-weight: 600;
         color: #FAF6EE;
@@ -993,7 +1054,7 @@
         align-items: center;
         padding: 10px 14px;
         border-bottom: 1px solid rgba(245, 239, 228, 0.06);
-        font-family: 'JetBrains Mono', 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+        font-family: var(--font-mono);
         font-size: 9.5px;
         letter-spacing: 0.14em;
         text-transform: uppercase;
@@ -1066,7 +1127,7 @@
         display: flex;
         justify-content: space-between;
         align-items: baseline;
-        font-family: 'JetBrains Mono', 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+        font-family: var(--font-mono);
         margin-bottom: 6px;
     }
 
@@ -1163,7 +1224,7 @@
         top: -16px;
         left: 50%;
         transform: translateX(-50%);
-        font-family: 'JetBrains Mono', 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+        font-family: var(--font-mono);
         font-size: 9px;
         color: rgba(245, 239, 228, 0.5);
         opacity: 0;
@@ -1172,7 +1233,7 @@
     }
 
     &__bar-label {
-        font-family: 'JetBrains Mono', 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+        font-family: var(--font-mono);
         font-size: 9px;
         color: rgba(245, 239, 228, 0.45);
         letter-spacing: 0.06em;
@@ -1189,7 +1250,7 @@
         display: inline-flex;
         align-items: center;
         gap: 5px;
-        font-family: 'JetBrains Mono', 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+        font-family: var(--font-mono);
         font-size: 9px;
         color: rgba(245, 239, 228, 0.6);
         letter-spacing: 0.04em;
@@ -1214,6 +1275,13 @@
 
         &__title {
             font-size: clamp(38px, 4.8vw, 54px);
+        }
+
+        // Mascot only shows on a full-width desktop viewport. Once the
+        // hero starts compressing, the precise right-percentage anchoring
+        // becomes unreliable, so we hide it.
+        &__mascot-wrap {
+            display: none;
         }
     }
 

@@ -144,9 +144,9 @@ const CONSUMERS: EcosystemGroup[] = [
                 className: 'ecosystem-next__logo--grafana',
             },
             {
-                name: 'Langfuse',
-                logoSrc: '/images/ecomsystem-log/longfuse.png',
-                className: 'ecosystem-next__logo--langfuse',
+                name: 'Litefuse',
+                logoSrc: '/images/ecomsystem-log/litefuse.png',
+                className: 'ecosystem-next__logo--litefuse',
             },
         ],
     },
@@ -514,8 +514,12 @@ function CompactEcosystem(): JSX.Element {
                 <div className="ecosystem-next__compact-engine">
                     <div className="ecosystem-next__doris">
                         <div className="ecosystem-next__doris-core">
-                            <span className="ecosystem-next__doris-mark">D</span>
-                            <span className="ecosystem-next__doris-name">Apache Doris</span>
+                            <img
+                                className="ecosystem-next__doris-logo"
+                                src="/images/logo-doris.svg"
+                                alt="Apache Doris"
+                                draggable={false}
+                            />
                         </div>
                     </div>
                 </div>
@@ -567,8 +571,12 @@ export function EcosystemSection(): JSX.Element {
                                     </div>
                                     <div className="ecosystem-next__doris" ref={dorisRef}>
                                         <div className="ecosystem-next__doris-core">
-                                            <span className="ecosystem-next__doris-mark">D</span>
-                                            <span className="ecosystem-next__doris-name">Apache Doris</span>
+                                            <img
+                                                className="ecosystem-next__doris-logo"
+                                                src="/images/logo-doris.svg"
+                                                alt="Apache Doris"
+                                                draggable={false}
+                                            />
                                         </div>
                                     </div>
                                 </div>

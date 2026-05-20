@@ -10,10 +10,6 @@
 
 Returns the average of the dependent variable `y` over non-null `(y, x)` pairs in a group, where `x` is the independent variable and `y` is the dependent variable.
 
-:::info
-This function is supported since Apache Doris version 4.1.1.
-:::
-
 ## Syntax
 
 ```sql

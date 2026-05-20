@@ -163,7 +163,7 @@ SELECT TOKENIZE("Hello World", '"built_in_analyzer"="standard", "support_phrase"
 ## 相关函数
 
 - [MATCH](../../../../sql-manual/basic-element/operators/conditional-operators/full-text-search-operators): 使用倒排索引进行全文搜索
-- [SEARCH](../../../../ai/text-search/search-function): 支持DSL的高级搜索
+- [SEARCH](../../../../table-design/index/inverted-index/search-function): 支持DSL的高级搜索
 
 ## 关键字
 

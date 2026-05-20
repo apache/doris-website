@@ -1,88 +1,130 @@
 ---
 {
-    "title": "Basic concepts",
+    "title": "Basic Concepts",
     "language": "en",
-    "description": "This document explains basic concepts of table creation and data partitioning in Apache Doris, including rows and columns, partition and bucket design, example CREATE TABLE syntax, and advanced features like auto partitioning and auto bucketing."
+    "description": "A progressive introduction to Doris partitioning and bucketing: from core concepts and the first CREATE TABLE example to auto/dynamic partitioning, auto-bucketing, Colocate, and other advanced capabilities, along with design recommendations and operational guidance for partitions and buckets."
 }
 ---
 
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
-This document mainly introduces table creation and data partitioning in Doris, as well as potential problems and solutions encountered during table creation operations.
+{/* Knowledge type: Concept introduction / Procedure */}
+{/* Applicable scenarios: Table design / Data organization and management */}
 
-## Row & Column
+This document introduces the partitioning (Partition) and bucketing (Bucket) mechanisms of Doris, helping you design table structures reasonably to improve query performance and data management efficiency. New users are recommended to read the sections in order: Sections 1-3 cover core concepts and the first CREATE TABLE example, Sections 4-6 cover advanced features and design recommendations, and Section 7 covers the methods for viewing and modifying partitions needed for daily operations.
 
-In Doris, data is logically described in the form of tables.
+## 1. Overview
 
-A table consists of rows and columns:
+Doris uses a two-tier data partitioning approach of **Partition + Bucket** to organize the data of a table in an orderly manner across the nodes of the cluster:
 
-- Row: Represents a single line of user data;
+- **Partition**: horizontally divides the table into smaller subsets by column values (such as time or region), making it easier to perform query pruning and data lifecycle management.
+- **Bucket**: further evenly distributes data within each partition into multiple data shards (Tablets), fully utilizing the parallelism of the cluster.
 
-- Column: Used to describe different fields in a row of data;
+![doris-data-partitioning](/images/next/table-design/data-partitioning.jpg)
 
-- Columns can be divided into two types: Key and Value. From a business perspective, Key and Value can correspond to dimension columns and metric columns respectively. The key columns in Apache Doris are those specified in the table creation statement, which are the columns following the keywords  `unique key`, `aggregate key`, or `duplicate key`. The remaining columns are value columns. From the perspective of the aggregation model, rows with the same Key columns will be aggregated into a single row. The aggregation method for value columns is specified by the user during table creation. For more information on aggregation models, refer to the Doris [Data Model](../../table-design/data-model/overview).
+The data flow can be summarized as:
 
-## Partition & Bucket
+```
+Table ──► Partition ──► Bucket ──► Tablet (data shard, stored on BE nodes)
+```
 
-Doris uses a two-level partitioning and bucketing method to organize and manage data.
+A reasonable partitioning and bucketing design brings the following benefits at the same time: **faster queries** (partition pruning, parallel scanning), **more flexible management** (archiving/cleanup by time), and **more even writes** (avoiding hotspots).
 
-### Partition
+## 2. Core Concepts
 
-Partition refers to dividing the table into smaller, more manageable, non-overlapping subsets based on specific column values in the table. Each subset of data is called a partition. Each row of data belongs to exactly one specific partition. Partitions can be seen as the smallest logical management unit.
+### 2.1 Table Structure: Rows and Columns
 
-Currently, Doris supports two types of partitioning: Range and List. If no partition is specified during table creation, Doris will generate a default partition containing all the data in the table, which is transparent to the user.
+In Doris, data is logically described in the form of tables. A table consists of rows (Row) and columns (Column):
 
-Partitioning based on data distribution and query patterns offers several benefits:
+| Concept | Description                       |
+| ------- | --------------------------------- |
+| Row     | A row of user data                |
+| Column  | Describes different fields in a row of data |
 
-- **Improved Query Performance**: Partitioning allows the system to prune irrelevant partitions based on the query conditions, reducing the amount of data scanned and significantly improving query efficiency. This is especially beneficial when handling large datasets, as the partition strategy can greatly reduce I/O overhead.
+Columns can be further divided into two categories:
 
-- **Flexible Management**: Partitioning allows data to be split based on logic such as time or geography, facilitating data archiving, cleaning, and backup. For example, partitioning by time can effectively manage historical and newly added data, supporting efficient time-based data maintenance strategies.
+| Column Type | Business Mapping | Description                                                                                                |
+| ----------- | ---------------- | ---------------------------------------------------------------------------------------------------------- |
+| Key column   | Dimension column | Columns specified after the `unique key`, `aggregate key`, or `duplicate key` keyword in the CREATE TABLE statement |
+| Value column | Metric column    | Columns other than the Key columns; the aggregation method is specified at table creation time            |
 
-### Bucket
+In the Aggregate model, rows with identical Key columns are aggregated into one row, and the aggregation method for Value columns is specified by the user at table creation time. For more information about the Aggregate model, see [Doris Data Model](../../table-design/data-model/intro.mdx).
 
-Bucketing refers to further dividing the data within a partition into smaller, non-overlapping units according to some rule. Each row of data belongs to exactly one specific bucket. Unlike partitioning, which divides data based on specific column values, bucketing attempts to evenly distribute the data across predefined buckets, thereby reducing data skew. Bucketing improves query performance by ensuring even data distribution and enhancing data locality.
+### 2.2 Partition
 
-Currently, Doris supports two types of bucketing: Hash and Random.
+A partition divides data into smaller, mutually disjoint subsets based on the values of specific columns in the table. Each row of data belongs to exactly one specific partition, and the partition is the smallest logical management unit.
 
-A bucket corresponds to a data shard (Tablet) at the physical level, and data shards are physically stored independently. They are the smallest physical storage units for operations like data movement and replication.
+Doris supports two **partition types**:
 
-Proper bucketing offers several advantages:
+- **Range partition**: divides by numeric or time range, commonly used for time-series data.
+- **List partition**: divides by sets of enumerated values, commonly used to split by discrete dimensions such as region or category.
 
-- **Even Data Distribution**: Bucketing evenly distributes data across buckets, reducing the risk of data concentration or skew, and preventing resource overload on specific nodes or storage devices.
+If no partition is specified at table creation time, Doris generates a default partition that is transparent to the user, containing all the data in the table.
 
-- **Reduced Hotspots**: By distributing data evenly, bucketing helps to reduce the risk of overloading specific nodes or partitions, preventing hotspots, and improving system stability and processing capability.
+A reasonable partition design brings the following benefits:
 
-- **Improved Concurrency Performance**: Bucketing enhances the performance of concurrent queries, especially when multiple query requests need to access different data within the same partition. The granularity of bucketing allows the system to efficiently process multiple requests in parallel, thereby improving throughput.
+- **Improved query performance**: through partition pruning, the system can filter out irrelevant partitions based on query conditions, reducing the amount of data scanned and significantly lowering the I/O burden, which is especially suitable for large-scale datasets.
+- **Management flexibility**: data can be split along logical dimensions such as time or region, making archiving, cleanup, and backup easier. For example, partitioning by time enables efficient management of historical and incremental data, supporting time-based data maintenance strategies.
 
-## Example of creating a table
+### 2.3 Bucket
 
-`CREATE TABLE` in Apache Doris is a synchronous command which returns the result once the SQL is executed. Successful returns indicate successful table creation. For more information, refer to [CREATE-TABLE](../../sql-manual/sql-statements/table-and-view/table/CREATE-TABLE) or input  the `HELP CREATE TABLE` command.
+Bucketing further divides the data within a partition into smaller, mutually disjoint data units according to certain rules. Each row of data belongs to exactly one specific bucket.
 
-The following code sample introduces how to create tables in Apache Doris by RANGE partitioning and Hash buckets.
+Unlike partitions that divide by ranges of column values, the goal of bucketing is to **evenly distribute** data across predefined buckets, thereby reducing data skew and improving query execution performance through better data locality.
+
+Doris supports two **bucketing methods**:
+
+- **Hash bucketing**: computes the `crc32` hash of the bucketing column values and takes the modulo with the number of buckets to evenly distribute the data.
+- **Random bucketing**: randomly assigns data to buckets. When using Random bucketing, you can combine the `load_to_single_tablet` parameter to optimize fast writes for small-scale data.
+
+A reasonable bucketing design brings the following benefits:
+
+- **Even data distribution**: reduces the risk of data concentration or skew, and avoids overloading some nodes or storage devices.
+- **Reduced hotspots**: prevents some nodes or partitions from being overloaded, improving system stability and processing capability.
+- **Improved concurrent performance**: when multiple query requests need to access different data within the same partition, bucketing allows the system to process multiple requests in parallel effectively, thereby improving throughput.
+
+### 2.4 Tablet and Node Architecture
+
+A bucket physically corresponds to a **Tablet (data shard)**. The Tablet is the smallest unit of data management in Doris, and is also the basic physical unit for operations such as data movement and replication.
+
+A Doris cluster consists of two types of nodes:
+
+- **FE node (Frontend)**: manages cluster metadata (such as table and tablet information), and is responsible for SQL parsing and execution planning.
+- **BE node (Backend)**: stores Tablet data and is responsible for executing computation tasks. The results from BEs are aggregated and returned to the user by the FE.
+
+When data is written and queried, partitions and buckets work together as follows:
+
+- **Data writing**: data rows are first assigned to the corresponding partition according to the partitioning strategy, and then mapped to a specific Tablet within the partition according to the bucketing strategy.
+- **Query execution**: the FE optimizer prunes irrelevant partitions and buckets based on query conditions, minimizing the scan range. When JOIN or aggregation queries are involved, cross-node Shuffle may occur. A reasonable partitioning and bucketing design (combined with [Colocate](#52-colocate) when necessary) can significantly reduce Shuffle costs.
+
+## 3. The First CREATE TABLE Example
+
+Creating a table in Doris is a synchronous command. The result is returned upon completion of the SQL statement, and successful return indicates the table is created. For the complete CREATE TABLE syntax, see [CREATE TABLE](../../sql-manual/sql-statements/table-and-view/table/CREATE-TABLE), or use `HELP CREATE TABLE` for more help information.
+
+The following is a minimal CREATE TABLE example using Range partitioning + Hash bucketing:
 
 ```sql
 -- Range Partition
-CREATE TABLE IF NOT EXISTS example_range_tbl
+CREATE TABLE example_range_tbl
 (
     `user_id` LARGEINT NOT NULL COMMENT "User ID",
-    `date` DATE NOT NULL COMMENT "Date when the data are imported",
-    `timestamp` DATETIME NOT NULL COMMENT "Timestamp when the data are imported",
-    `city` VARCHAR(20) COMMENT "User location city",
+    `date` DATE NOT NULL COMMENT "Data ingestion date",
+    `timestamp` DATETIME NOT NULL COMMENT "Data ingestion timestamp",
+    `city` VARCHAR(20) COMMENT "User's city",
     `age` SMALLINT COMMENT "User age",
     `sex` TINYINT COMMENT "User gender",
-    `last_visit_date` DATETIME REPLACE DEFAULT "1970-01-01 00:00:00" COMMENT "User last visit time",
-    `cost` BIGINT SUM DEFAULT "0" COMMENT "Total user consumption",
+    `last_visit_date` DATETIME REPLACE DEFAULT "1970-01-01 00:00:00" COMMENT "User's last visit time",
+    `cost` BIGINT SUM DEFAULT "0" COMMENT "Total user spending",
     `max_dwell_time` INT MAX DEFAULT "0" COMMENT "Maximum user dwell time",
-    `min_dwell_time` INT MIN DEFAULT "99999" COMMENT "Minimum user dwell time"   
+    `min_dwell_time` INT MIN DEFAULT "99999" COMMENT "Minimum user dwell time"
 )
-ENGINE=OLAP
-AGGREGATE KEY(`user_id`, `date`, `timestamp`, `city`, `age`, `sex`)
 PARTITION BY RANGE(`date`)
 (
-    PARTITION `p201701` VALUES [("2017-01-01"),  ("2017-02-01")),
-    PARTITION `p201702` VALUES [("2017-02-01"), ("2017-03-01")),
-    PARTITION `p201703` VALUES [("2017-03-01"), ("2017-04-01"))
+    PARTITION `p201701` VALUES LESS THAN ("2017-02-01"),
+    PARTITION `p201702` VALUES LESS THAN ("2017-03-01"),
+    PARTITION `p201703` VALUES LESS THAN ("2017-04-01"),
+    PARTITION `p2018` VALUES [("2018-01-01"), ("2019-01-01"))
 )
 DISTRIBUTED BY HASH(`user_id`) BUCKETS 16
 PROPERTIES
@@ -91,41 +133,43 @@ PROPERTIES
 );
 ```
 
-Here use Aggregate Key Model as an example. In Aggregate Key Model, all columns that are specified with an aggregation type (SUM, REPLACE, MAX, or MIN) are Value columns. The rest are the Key columns.
+**Understanding the write and query process with this example**:
 
-For more information about what fields can be set in the `PROPERTIES` section of  `CREATE TABLE`, refer to [CREATE-TABLE](../../sql-manual/sql-statements/table-and-view/table/CREATE-TABLE.md).
+- During writes, each row of data first falls into the corresponding Range partition by `date` (for example, `2017-02-15` falls into `p201702`), and is then mapped to one of the 16 Tablets under that partition by the hash value of `user_id`.
+- For a query with `WHERE date = '2017-02-15'`, the optimizer scans only the `p201702` partition. If `user_id = 123` is also added, only one Tablet is hit.
 
-The default type of `ENGINE` is `OLAP`. Only OLAP is responsible for data management and storage by Apache Doris itself. Other engine types, such as MySQL, Broker and ES, are essentially just mappings to tables in other external databases or systems, allowing Apache Doris to read this data. However, Apache Doris itself does not create, manage, or store any tables or data for engine types except OLAP.
+## 4. Advanced: Partition Modes
 
-`IF NOT EXISTS`  indicates that if the table has not been created before, it will be created. Note that this only checks if the table name exists and does not check if the schema of the new table is the same as the schema of an existing table. Therefore, if there is a table with the same name but a different schema, this command will also return successfully, but it does not mean that a new table with a new schema has been created.
+Besides manually declaring partitions at table creation time, Doris also supports automatic partition creation based on time scheduling (Dynamic Partition) and on-demand partition creation based on incoming data (Auto Partition). The three modes are compared as follows:
 
-### Advanced Features and Examples 
+| Partition Mode | When Partitions Are Created             | Applicable Scenarios                                       |
+| -------------- | --------------------------------------- | ---------------------------------------------------------- |
+| Manual partition | Explicitly declared at table creation, or added via `ALTER` | Stable partition set, requiring fine-grained control       |
+| Dynamic partition | Automatically created/recycled by the system based on time scheduling rules | Time-series data, where you want to automatically maintain rolling partitions for the past N days/weeks/months |
+| Auto partition  | Created on demand when data is written | Partition values are unpredictable (such as multi-tenant or sparse time), where pre-creation should be avoided |
 
-Doris supports advanced data partitioning methods, including Dynamic Partition, Auto Partition, and Auto Bucket, which enable more flexible data management. The following are examples of implementations:
+The following shows CREATE TABLE examples for common combinations:
 
 <Tabs>
-<TabItem value="Auto Partition" label="Auto Partition" default>
-<div>
+<TabItem value="auto-partition" label="Auto Partition" default>
 
-[Auto Partition](./auto-partitioning) supports automatic creation of corresponding partitions according to user-defined rules during data import, which is more convenient. Rewrite the above example with Auto Range Partition as follows:
+[Auto Partition](./auto-partitioning) supports automatically creating corresponding partitions according to user-defined rules during data ingestion, making it more convenient to use. The basic example rewritten as Auto Range partition:
 
 ```sql
-CREATE TABLE IF NOT EXISTS example_range_tbl
+CREATE TABLE example_range_tbl
 (
     `user_id` LARGEINT NOT NULL COMMENT "User ID",
-    `date` DATE NOT NULL COMMENT "Date when the data are imported",
-    `timestamp` DATETIME NOT NULL COMMENT "Timestamp when the data are imported",
-    `city` VARCHAR(20) COMMENT "User location city",
+    `date` DATE NOT NULL COMMENT "Data ingestion date",
+    `timestamp` DATETIME NOT NULL COMMENT "Data ingestion timestamp",
+    `city` VARCHAR(20) COMMENT "User's city",
     `age` SMALLINT COMMENT "User age",
     `sex` TINYINT COMMENT "User gender",
-    `last_visit_date` DATETIME REPLACE DEFAULT "1970-01-01 00:00:00" COMMENT "User last visit time",
-    `cost` BIGINT SUM DEFAULT "0" COMMENT "Total user consumption",
+    `last_visit_date` DATETIME REPLACE DEFAULT "1970-01-01 00:00:00" COMMENT "User's last visit time",
+    `cost` BIGINT SUM DEFAULT "0" COMMENT "Total user spending",
     `max_dwell_time` INT MAX DEFAULT "0" COMMENT "Maximum user dwell time",
-    `min_dwell_time` INT MIN DEFAULT "99999" COMMENT "Minimum user dwell time"   
+    `min_dwell_time` INT MIN DEFAULT "99999" COMMENT "Minimum user dwell time"
 )
-ENGINE=OLAP
-AGGREGATE KEY(`user_id`, `date`, `timestamp`, `city`, `age`, `sex`)
-AUTO PARTITION BY RANGE(date_trunc(`date`, 'month')) --- Using months as partition granularity
+AUTO PARTITION BY RANGE(date_trunc(`date`, 'month')) --- Use month as the partition granularity
 ()
 DISTRIBUTED BY HASH(`user_id`) BUCKETS 16
 PROPERTIES
@@ -134,32 +178,28 @@ PROPERTIES
 );
 ```
 
-As above, when the data is imported, Doris will automatically create the corresponding partitions as `date` with a granularity of month level. `2018-12-01` and `2018-12-31` will fall into the same partition, while `2018-11-12` will fall into the leading partition. Auto Partition also supports List partition, please check Auto Partition's documentation for more usage.
+With this CREATE TABLE statement, when data is loaded, Doris automatically creates corresponding partitions for the `date` column at the month level. For example, `2018-12-01` and `2018-12-31` fall into the same partition, while `2018-11-12` falls into another partition. Auto Partition also supports List partitioning. For more usage, see the Auto Partition documentation.
 
-</div>
 </TabItem>
 
-<TabItem value="Dynamic Partition" label="Dynamic Partition">
-<div>
+<TabItem value="dynamic-partition" label="Dynamic Partition">
 
-[Dynamic Partition](./dynamic-partitioning) is an automatic partition creation and recovery management method based on the real time, rewrite the above example with dynamic partitioning as follows:
+[Dynamic Partition](./dynamic-partitioning) is a management approach that automatically creates and recycles partitions based on real time. The basic example rewritten as Dynamic Partition:
 
 ```sql
-CREATE TABLE IF NOT EXISTS example_range_tbl
+CREATE TABLE example_range_tbl
 (
     `user_id` LARGEINT NOT NULL COMMENT "User ID",
-    `date` DATE NOT NULL COMMENT "Date when the data are imported",
-    `timestamp` DATETIME NOT NULL COMMENT "Timestamp when the data are imported",
-    `city` VARCHAR(20) COMMENT "User location city",
+    `date` DATE NOT NULL COMMENT "Data ingestion date",
+    `timestamp` DATETIME NOT NULL COMMENT "Data ingestion timestamp",
+    `city` VARCHAR(20) COMMENT "User's city",
     `age` SMALLINT COMMENT "User age",
     `sex` TINYINT COMMENT "User gender",
-    `last_visit_date` DATETIME REPLACE DEFAULT "1970-01-01 00:00:00" COMMENT "User last visit time",
-    `cost` BIGINT SUM DEFAULT "0" COMMENT "Total user consumption",
+    `last_visit_date` DATETIME REPLACE DEFAULT "1970-01-01 00:00:00" COMMENT "User's last visit time",
+    `cost` BIGINT SUM DEFAULT "0" COMMENT "Total user spending",
     `max_dwell_time` INT MAX DEFAULT "0" COMMENT "Maximum user dwell time",
-    `min_dwell_time` INT MIN DEFAULT "99999" COMMENT "Minimum user dwell time"   
+    `min_dwell_time` INT MIN DEFAULT "99999" COMMENT "Minimum user dwell time"
 )
-ENGINE=OLAP
-AGGREGATE KEY(`user_id`, `date`, `timestamp`, `city`, `age`, `sex`)
 PARTITION BY RANGE(`date`)
 ()
 DISTRIBUTED BY HASH(`user_id`) BUCKETS 16
@@ -168,80 +208,76 @@ PROPERTIES
     "replication_num" = "1",
     "dynamic_partition.enable" = "true",
     "dynamic_partition.time_unit" = "WEEK", --- Partition granularity is week
-    "dynamic_partition.start" = "-2", --- Retain two weeks forward
-    "dynamic_partition.end" = "2", --- Two weeks after creation in advance
+    "dynamic_partition.start" = "-2", --- Retain the past two weeks
+    "dynamic_partition.end" = "2", --- Pre-create the next two weeks
     "dynamic_partition.prefix" = "p",
     "dynamic_partition.buckets" = "8"
 );
 ```
 
-Dynamic partition supports tiered storage, customised copy number and other features, see the dynamic partition documentation for details.
+Dynamic Partition supports tiered storage, custom replica counts, and more. See the Dynamic Partition documentation for details.
 
-</div>
 </TabItem>
 
-<TabItem value="Auto&Dynamic Partition" label="Auto&Dynamic Partition">
-<div>
+<TabItem value="auto-and-dynamic-partition" label="Auto Partition + Dynamic Partition">
 
-Auto Partition and Dynamic Partition each have their own advantages, and combining the two enables flexible on-demand partition creation and automatic reclamation:
+Auto Partition and Dynamic Partition each have their own advantages. Combining the two enables flexible on-demand creation and automatic recycling of partitions:
 
 ```sql
-CREATE TABLE IF NOT EXISTS example_range_tbl
+CREATE TABLE example_range_tbl
 (
     `user_id` LARGEINT NOT NULL COMMENT "User ID",
-    `date` DATE NOT NULL COMMENT "Date when the data are imported",
-    `timestamp` DATETIME NOT NULL COMMENT "Timestamp when the data are imported",
-    `city` VARCHAR(20) COMMENT "User location city",
+    `date` DATE NOT NULL COMMENT "Data ingestion date",
+    `timestamp` DATETIME NOT NULL COMMENT "Data ingestion timestamp",
+    `city` VARCHAR(20) COMMENT "User's city",
     `age` SMALLINT COMMENT "User age",
     `sex` TINYINT COMMENT "User gender",
-    `last_visit_date` DATETIME REPLACE DEFAULT "1970-01-01 00:00:00" COMMENT "User last visit time",
-    `cost` BIGINT SUM DEFAULT "0" COMMENT "Total user consumption",
+    `last_visit_date` DATETIME REPLACE DEFAULT "1970-01-01 00:00:00" COMMENT "User's last visit time",
+    `cost` BIGINT SUM DEFAULT "0" COMMENT "Total user spending",
     `max_dwell_time` INT MAX DEFAULT "0" COMMENT "Maximum user dwell time",
-    `min_dwell_time` INT MIN DEFAULT "99999" COMMENT "Minimum user dwell time"   
+    `min_dwell_time` INT MIN DEFAULT "99999" COMMENT "Minimum user dwell time"
 )
-ENGINE=OLAP
-AGGREGATE KEY(`user_id`, `date`, `timestamp`, `city`, `age`, `sex`)
-AUTO PARTITION BY RANGE(date_trunc(`date`, 'month')) --- Using months as partition granularity
+AUTO PARTITION BY RANGE(date_trunc(`date`, 'month')) --- Use month as the partition granularity
 ()
 DISTRIBUTED BY HASH(`user_id`) BUCKETS 16
 PROPERTIES
 (
     "replication_num" = "1",
     "dynamic_partition.enable" = "true",
-    "dynamic_partition.time_unit" = "month", --- Both must have the same granularity
-    "dynamic_partition.start" = "-2", --- Dynamic Partition automatically cleans up partitions that are more than two weeks old
-    "dynamic_partition.end" = "0", --- Dynamic Partition does not create future partitions. it is left entirely to Auto Partition.
+    "dynamic_partition.time_unit" = "month", --- The two granularities must be the same
+    "dynamic_partition.start" = "-2", --- Dynamic Partition automatically cleans up historical partitions older than two weeks
+    "dynamic_partition.end" = "0", --- Dynamic Partition does not create future partitions; this is fully delegated to Auto Partition
     "dynamic_partition.prefix" = "p",
     "dynamic_partition.buckets" = "8"
 );
 ```
 
-For detailed suggestions on this feature, see [Auto Partition Conjunct with Dynamic Partition](./auto-partitioning#conjunct-with-dynamic-partition).
+For details about this feature, see [Using Auto Partition with Dynamic Partition](./auto-partitioning#using-with-dynamic-partition).
 
-</div>
 </TabItem>
 
-<TabItem value="Auto Bucket" label="Auto Bucket">
-<div>
+</Tabs>
 
-When the user is not sure of a reasonable number of buckets, Auto Bucket for Doris to complete the estimation, and the user only needs to provide the estimated amount of table data:
+## 5. Advanced: Bucketing
+
+### 5.1 Auto Bucketing
+
+When you are not sure about a reasonable number of buckets, you can use Auto Bucketing to let Doris perform the estimation. You only need to provide the estimated table data size:
 
 ```sql
 CREATE TABLE IF NOT EXISTS example_range_tbl
 (
     `user_id` LARGEINT NOT NULL COMMENT "User ID",
-    `date` DATE NOT NULL COMMENT "Date when the data are imported",
-    `timestamp` DATETIME NOT NULL COMMENT "Timestamp when the data are imported",
-    `city` VARCHAR(20) COMMENT "User location city",
+    `date` DATE NOT NULL COMMENT "Data ingestion date",
+    `timestamp` DATETIME NOT NULL COMMENT "Data ingestion timestamp",
+    `city` VARCHAR(20) COMMENT "User's city",
     `age` SMALLINT COMMENT "User age",
     `sex` TINYINT COMMENT "User gender",
-    `last_visit_date` DATETIME REPLACE DEFAULT "1970-01-01 00:00:00" COMMENT "User last visit time",
-    `cost` BIGINT SUM DEFAULT "0" COMMENT "Total user consumption",
+    `last_visit_date` DATETIME REPLACE DEFAULT "1970-01-01 00:00:00" COMMENT "User's last visit time",
+    `cost` BIGINT SUM DEFAULT "0" COMMENT "Total user spending",
     `max_dwell_time` INT MAX DEFAULT "0" COMMENT "Maximum user dwell time",
-    `min_dwell_time` INT MIN DEFAULT "99999" COMMENT "Minimum user dwell time"   
+    `min_dwell_time` INT MIN DEFAULT "99999" COMMENT "Minimum user dwell time"
 )
-ENGINE=OLAP
-AGGREGATE KEY(`user_id`, `date`, `timestamp`, `city`, `age`, `sex`)
 PARTITION BY RANGE(`date`)
 (
     PARTITION `p201701` VALUES LESS THAN ("2017-02-01"),
@@ -253,20 +289,44 @@ DISTRIBUTED BY HASH(`user_id`) BUCKETS AUTO
 PROPERTIES
 (
     "replication_num" = "1",
-    "estimate_partition_size" = "2G" --- User estimate of the amount of data a partition will have, defaults to 10G if not provided 
+    "estimate_partition_size" = "2G" --- Estimated data volume for one partition; defaults to 10G if not provided
 );
 ```
 
-Note that this approach does not apply to cases where the amount of table data is particularly large. 
+Note that this approach is not suitable for scenarios with extremely large table data volumes.
 
-</div>
-</TabItem>
+### 5.2 Colocate
 
-</Tabs>
+For multiple large tables that frequently perform JOIN or aggregation queries, you can enable the **Colocate** strategy to place data with the same bucketing column values on the same physical node, avoiding cross-node Shuffle and significantly improving query performance. For detailed usage, see the Colocate Join documentation.
 
-## View partitions
+## 6. Design Recommendations
 
-View the partiton information of a table by running the `show create table` command.
+A reasonable partitioning and bucketing design needs to balance query performance, data management, and system stability. The following are some general guidelines:
+
+### 6.1 Design Goals
+
+1. **Even data distribution**: choose high-cardinality columns as bucketing columns to avoid data skew that overloads some nodes.
+2. **Optimized query performance**: partition pruning can greatly reduce the amount of data scanned; a reasonable number of buckets improves computation parallelism; use Colocate when necessary to reduce Shuffle costs.
+3. **Flexible data management**: partitioning by time facilitates cold/hot tiering (HDD/SSD), and storage space can be reclaimed by deleting historical partitions.
+
+### 6.2 Empirical Values and Limits
+
+- **Metadata scale**: the metadata of each Tablet is stored in both FE and BE, so the scale needs to be controlled reasonably:
+  - For every 10 million Tablets, FE needs at least about 100 GB of memory.
+  - The number of Tablets carried by a single BE should be less than 20,000.
+- **Write throughput**:
+  - The number of buckets per partition is recommended to be < 128. Too many buckets significantly affect write performance.
+  - Each write should be concentrated on a small number of partitions to avoid generating too many small files from scattered writes.
+- **Partition/bucketing column selection**:
+  - For partition columns, prefer time or low-cardinality enumerations.
+  - For bucketing columns, choose high-cardinality columns (such as `user_id`) to ensure even distribution.
+  - The data volume of a single Tablet is recommended to be between 1-10 GB.
+
+## 7. Viewing and Modifying Partitions
+
+### 7.1 View the CREATE TABLE Statement via SHOW CREATE TABLE
+
+`SHOW CREATE TABLE` lets you view the complete CREATE TABLE statement of a table, including the partition information:
 
 ```sql
 > show create table  example_range_tbl 
@@ -275,18 +335,16 @@ View the partiton information of a table by running the `show create table` comm
 +-------------------+---------------------------------------------------------------------------------------------------------+                                                                                                            
 | example_range_tbl | CREATE TABLE `example_range_tbl` (                                                                      |                                                                                                            
 |                   |   `user_id` largeint(40) NOT NULL COMMENT 'User ID',                                                     |                                                                                                            
-|                   |   `date` date NOT NULL COMMENT 'Date when the data are imported',                                                      |                                                                                                            
-|                   |   `timestamp` datetime NOT NULL COMMENT 'Timestamp when the data are imported',                                             |                                                                                                            
-|                   |   `city` varchar(20) NULL COMMENT 'User location city',                                                       |                                                                                                            
+|                   |   `date` date NOT NULL COMMENT 'Data ingestion date',                                                      |                                                                                                            
+|                   |   `timestamp` datetime NOT NULL COMMENT 'Data ingestion timestamp',                                             |                                                                                                            
+|                   |   `city` varchar(20) NULL COMMENT 'User city',                                                       |                                                                                                            
 |                   |   `age` smallint(6) NULL COMMENT 'User age',                                                            |                                                                                                            
 |                   |   `sex` tinyint(4) NULL COMMENT 'User gender',                                                             |                                                                                                            
 |                   |   `last_visit_date` datetime REPLACE NULL DEFAULT "1970-01-01 00:00:00" COMMENT 'User last visit time', |                                                                                                            
-|                   |   `cost` bigint(20) SUM NULL DEFAULT "0" COMMENT 'Total user consumption',                                          |                                                                                                            
+|                   |   `cost` bigint(20) SUM NULL DEFAULT "0" COMMENT 'Total user spending',                                          |                                                                                                            
 |                   |   `max_dwell_time` int(11) MAX NULL DEFAULT "0" COMMENT 'Maximum user dwell time',                             |                                                                                                            
 |                   |   `min_dwell_time` int(11) MIN NULL DEFAULT "99999" COMMENT 'Minimum user dwell time'                          |                                                                                                            
-|                   | ) ENGINE=OLAP                                                                                           |                                                                                                            
-|                   | AGGREGATE KEY(`user_id`, `date`, `timestamp`, `city`, `age`, `sex`)                                     |                                                                                                            
-|                   | COMMENT 'OLAP'                                                                                          |                                                                                                            
+|                   | )                                                                                                       |                                                                                                            
 |                   | PARTITION BY RANGE(`date`)                                                                              |                                                                                                            
 |                   | (PARTITION p201701 VALUES [('0000-01-01'), ('2017-02-01')),                                             |                                                                                                            
 |                   | PARTITION p201702 VALUES [('2017-02-01'), ('2017-03-01')),                                              |                                                                                                            
@@ -303,7 +361,9 @@ View the partiton information of a table by running the `show create table` comm
 +-------------------+---------------------------------------------------------------------------------------------------------+   
 ```
 
-Or run the `show partitions from your_table` command.
+### 7.2 View the Partition List via SHOW PARTITIONS
+
+`SHOW PARTITIONS FROM <table_name>` lets you view the partition list and detailed information of a table:
 
 ```sql
 > show partitions from example_range_tbl
@@ -323,22 +383,25 @@ Or run the `show partitions from your_table` command.
 +---------------------+---------------------+--------------------------+----------+------------+-------------------------+-----------+                  
 ```
 
-## Alter partitions
+### 7.3 Modify Partitions
 
-You can add a new partition by running the  `alter table add partition ` command.
+`ALTER TABLE ADD PARTITION` lets you add new partitions to a table:
 
 ```sql
-ALTER TABLE example_range_tbl ADD PARTITION p201704 VALUES LESS THAN("2020-05-01") DISTRIBUTED BY HASH(`user_id`) BUCKETS 5;
+ALTER TABLE example_range_tbl ADD  PARTITION p201704 VALUES LESS THAN("2020-05-01") DISTRIBUTED BY HASH(`user_id`) BUCKETS 5;
 ```
 
-For more information about how to alter partitions, refer to [ALTER-TABLE-PARTITION](../../sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-PARTITION.md).
+For more partition modification operations, see the SQL manual [ALTER-TABLE-PARTITION](../../sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-PARTITION).
 
-## Partition Retrieval
+### 7.4 Partition Lookup
 
-The `partitions` table function and the `information_schema.partitions` system table record partition information for the cluster. The partition information can be extracted from the corresponding table for use when automatically managing partitions:
+The `partitions` table function and the `information_schema.partitions` system table record the partition information of the cluster. When managing partitions automatically, you can use them to extract partition information.
+
+#### Find the Partition That a Given Value Belongs To
+
+Find the partition corresponding to a value in an Auto Partition table:
 
 ```sql
---- Find the partition with the corresponding value in the Auto Partition table.
 mysql> select * from partitions("catalog"="internal", "database"="optest", "table"="DAILY_TRADE_VALUE") where PartitionName = auto_partition_name('range', 'year', '2008-02-03');
 +-------------+-----------------+----------------+---------------------+--------+--------------+--------------------------------------------------------------------------------+-----------------+---------+----------------+---------------+---------------------+---------------------+--------------------------+-----------+------------+-------------------------+-----------+--------------------+--------------+
 | PartitionId | PartitionName   | VisibleVersion | VisibleVersionTime  | State  | PartitionKey | Range                                                                          | DistributionKey | Buckets | ReplicationNum | StorageMedium | CooldownTime        | RemoteStoragePolicy | LastConsistencyCheckTime | DataSize  | IsInMemory | ReplicaAllocation       | IsMutable | SyncWithBaseTables | UnsyncTables |
@@ -346,7 +409,11 @@ mysql> select * from partitions("catalog"="internal", "database"="optest", "tabl
 |      127095 | p20080101000000 |              2 | 2024-11-14 17:29:02 | NORMAL | TRADE_DATE   | [types: [DATEV2]; keys: [2008-01-01]; ..types: [DATEV2]; keys: [2009-01-01]; ) | TRADE_DATE      |      10 |              1 | HDD           | 9999-12-31 23:59:59 |                     | \N                       | 985.000 B |          0 | tag.location.default: 1 |         1 |                  1 | \N           |
 +-------------+-----------------+----------------+---------------------+--------+--------------+--------------------------------------------------------------------------------+-----------------+---------+----------------+---------------+---------------------+---------------------+--------------------------+-----------+------------+-------------------------+-----------+--------------------+--------------+
 1 row in set (0.30 sec)
+```
 
+Find the corresponding partition in a List partition table:
+
+```sql
 mysql> select * from information_schema.partitions where TABLE_SCHEMA='optest' and TABLE_NAME='list_table1' and PARTITION_NAME=auto_partition_name('list', null);
 +---------------+--------------+-------------+----------------+-------------------+----------------------------+-------------------------------+------------------+---------------------+----------------------+-------------------------+-----------------------+------------+----------------+-------------+-----------------+--------------+-----------+-------------+---------------------+---------------------+----------+-------------------+-----------+-----------------+
 | TABLE_CATALOG | TABLE_SCHEMA | TABLE_NAME  | PARTITION_NAME | SUBPARTITION_NAME | PARTITION_ORDINAL_POSITION | SUBPARTITION_ORDINAL_POSITION | PARTITION_METHOD | SUBPARTITION_METHOD | PARTITION_EXPRESSION | SUBPARTITION_EXPRESSION | PARTITION_DESCRIPTION | TABLE_ROWS | AVG_ROW_LENGTH | DATA_LENGTH | MAX_DATA_LENGTH | INDEX_LENGTH | DATA_FREE | CREATE_TIME | UPDATE_TIME         | CHECK_TIME          | CHECKSUM | PARTITION_COMMENT | NODEGROUP | TABLESPACE_NAME |
@@ -354,8 +421,11 @@ mysql> select * from information_schema.partitions where TABLE_SCHEMA='optest' a
 | internal      | optest       | list_table1 | pX             | NULL              |                          0 |                             0 | LIST             | NULL                | str                  | NULL                    | (NULL)                |          1 |           1266 |        1266 |               0 |            0 |         0 |           0 | 2024-11-14 19:58:45 | 0000-00-00 00:00:00 |        0 |                   |           |                 |
 +---------------+--------------+-------------+----------------+-------------------+----------------------------+-------------------------------+------------------+---------------------+----------------------+-------------------------+-----------------------+------------+----------------+-------------+-----------------+--------------+-----------+-------------+---------------------+---------------------+----------+-------------------+-----------+-----------------+
 1 row in set (0.24 sec)
+```
 
---- Find the partition that corresponds to the starting point
+#### Find Partitions with a Given Starting Point
+
+```sql
 mysql> select * from information_schema.partitions where TABLE_NAME='DAILY_TRADE_VALUE' and PARTITION_DESCRIPTION like "[('2012-01-01'),%";
 +---------------+--------------+-------------------+-----------------+-------------------+----------------------------+-------------------------------+------------------+---------------------+----------------------+-------------------------+----------------------------------+------------+----------------+-------------+-----------------+--------------+-----------+-------------+---------------------+---------------------+----------+-------------------+-----------+-----------------+
 | TABLE_CATALOG | TABLE_SCHEMA | TABLE_NAME        | PARTITION_NAME  | SUBPARTITION_NAME | PARTITION_ORDINAL_POSITION | SUBPARTITION_ORDINAL_POSITION | PARTITION_METHOD | SUBPARTITION_METHOD | PARTITION_EXPRESSION | SUBPARTITION_EXPRESSION | PARTITION_DESCRIPTION            | TABLE_ROWS | AVG_ROW_LENGTH | DATA_LENGTH | MAX_DATA_LENGTH | INDEX_LENGTH | DATA_FREE | CREATE_TIME | UPDATE_TIME         | CHECK_TIME          | CHECKSUM | PARTITION_COMMENT | NODEGROUP | TABLESPACE_NAME |
@@ -364,3 +434,13 @@ mysql> select * from information_schema.partitions where TABLE_NAME='DAILY_TRADE
 +---------------+--------------+-------------------+-----------------+-------------------+----------------------------+-------------------------------+------------------+---------------------+----------------------+-------------------------+----------------------------------+------------+----------------+-------------+-----------------+--------------+-----------+-------------+---------------------+---------------------+----------+-------------------+-----------+-----------------+
 1 row in set (0.65 sec)
 ```
+
+## 8. Further Reading
+
+- [Manual Partitioning](./manual-partitioning)
+- [Dynamic Partitioning](./dynamic-partitioning)
+- [Auto Partitioning](./auto-partitioning)
+- [Data Bucketing](./data-bucketing)
+- [Common Issues](./common-issues)
+- [CREATE TABLE Syntax](../../sql-manual/sql-statements/table-and-view/table/CREATE-TABLE)
+- [ALTER TABLE PARTITION](../../sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-PARTITION)

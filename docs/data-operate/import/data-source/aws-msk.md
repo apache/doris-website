@@ -2,37 +2,74 @@
 {
     "title": "AWS MSK",
     "language": "en",
-    "description": "Doris provides Routine Load to import data from AWS MSK"
+    "description": "Import data from AWS MSK into Doris in real time using Routine Load. Supports IAM authentication, AK/SK, Assume Role, and other credential methods.",
+    "keywords": [
+        "AWS MSK",
+        "Routine Load",
+        "Kafka import",
+        "IAM authentication",
+        "Assume Role",
+        "Doris data import",
+        "SASL_SSL",
+        "OAUTHBEARER"
+    ]
 }
 ---
 
-Amazon Managed Streaming for Apache Kafka (AWS MSK) is a fully managed Apache Kafka service provided by AWS. Similar to consuming from Kafka directly, Doris supports real-time data import from AWS MSK through Routine Load with IAM-based authentication. CSV and JSON formats are supported, with Exactly-Once semantics to ensure no data loss and no duplication. For more information, see [Routine Load](../import-way/routine-load-manual.md).
+<!-- Knowledge type: Operation guide + Configuration parameters -->
+<!-- Applicable scenarios: Import data from AWS MSK into Doris / IAM authentication configuration / Public network access troubleshooting -->
+
+Amazon Managed Streaming for Apache Kafka (AWS MSK) is a fully managed Apache Kafka service provided by AWS. Doris supports importing data from AWS MSK in real time through Routine Load, providing the IAM authentication mechanism for AWS MSK. It supports CSV and JSON formats and offers Exactly-Once semantics, ensuring that data is neither lost nor duplicated. For more information, refer to Routine Load.
+
+## Prerequisites
+
+<!-- Knowledge type: Pre-deployment checks -->
+
+Before using Routine Load to import data from AWS MSK, confirm that the following conditions are met:
+
+1. The AWS MSK cluster has been created and IAM authentication is enabled.
+2. Appropriate AWS IAM permissions have been configured to allow access to the MSK cluster.
+3. The Doris cluster can access the Bootstrap Servers of AWS MSK.
 
 ## Authentication Parameters
 
+<!-- Knowledge type: Configuration parameters -->
+
+The following table lists the authentication-related parameters that need to be configured when importing data from AWS MSK:
+
 | Parameter | Description | Example |
 | :--- | :--- | :--- |
-| aws.region | AWS Region | "us-east-1" |
-| aws.access_key | AWS Access Key ID | \ |
-| aws.secret_key | AWS Secret Access Key | \ |
-| aws.role_arn | Role used for cross-account access | "arn:aws:iam::123456789012:role/MyRole" |
-| aws.profile_name | AWS profile name configured in `~/.aws/credentials` | \ |
-| aws.credentials_provider | Standard AWS SDK credentials provider, supporting multiple provider types | "INSTANCEPROFILE" |
-| aws.external_id | A "caller context identifier" for AssumeRole | \ |
-| property.security.protocol | Due to IAM authentication requirements, this must be `SASL_SSL` | "SASL_SSL" |
-| property.sasl.mechanism | Due to librdkafka constraints, this must be `OAUTHBEARER` | "OAUTHBEARER" |
+| `aws.region` | AWS Region | `"us-east-1"` |
+| `aws.access_key` | AWS Access Key ID | - |
+| `aws.secret_key` | AWS Secret Access Key | - |
+| `aws.role_arn` | Role used for cross-account access credentials | `"arn:aws:iam::123456789012:role/MyRole"` |
+| `aws.profile_name` | AWS Profile name configured in `~/.aws/credentials` | - |
+| `aws.credentials_provider` | Standard credentials provider of the AWS SDK. Supports various provider types | `"INSTANCE_PROFILE"` |
+| `aws.external_id` | Used as the "calling context identifier" for AssumeRole | - |
+| `property.security.protocol` | Due to IAM authentication restrictions, this is fixed to `SASL_SSL` | `"SASL_SSL"` |
+| `property.sasl.mechanism` | Due to librdkafka library restrictions, this is fixed to `OAUTHBEARER` | `"OAUTHBEARER"` |
 
-## Usage Restrictions
+### Available values for `aws.credentials_provider`
 
-1. The AWS MSK cluster is created and IAM authentication is enabled.
-2. Proper AWS IAM permissions are configured to allow access to the MSK cluster.
-3. The Doris cluster can access the AWS MSK bootstrap servers.
+| Value | Description |
+| :--- | :--- |
+| `DEFAULT` | Use the default provider chain |
+| `ENV` | Read credentials from environment variables |
+| `INSTANCE_PROFILE` | Use EC2 Instance Profile credentials |
 
-## Authentication Configuration
+## Authentication Configuration Examples
 
-Doris supports the following IAM authentication modes:
+<!-- Knowledge type: Operation steps -->
 
-### 1. Use Access Key and Secret Key (AK/SK) directly
+Doris supports the following methods for IAM authentication. Choose one according to your actual deployment scenario:
+
+| Authentication method | Applicable scenario |
+| :--- | :--- |
+| Use AK/SK directly | You already have a long-term valid Access Key/Secret Key |
+| IAM Role (Assume Role) | Cross-account access, or when temporary credentials are preferred |
+| Specify the credential source through `aws.credentials_provider` | When you do not want to explicitly fill in AK/SK, for example with EC2 Instance Profile |
+
+### Method 1: Use Access Key and Secret Key (AK/SK) directly
 
 ```sql
 CREATE ROUTINE LOAD IAM_Test ON t
@@ -52,11 +89,11 @@ FROM KAFKA(
 );
 ```
 
-### 2. IAM Role (Assume Role) mode
+### Method 2: IAM Role (Assume Role) mode
 
-When `aws.role_arn` is configured, `aws.credentials_provider` specifies which source credential provider is used for the STS AssumeRole call.
+When `aws.role_arn` is configured, `aws.credentials_provider` is used to specify the source credential provider used by the STS AssumeRole call.
 
-**Example 1: Use EC2 Instance Profile as STS source credentials**
+#### Example 2.1: EC2 Instance Profile as the STS source credential
 
 ```sql
 CREATE ROUTINE LOAD IAM_Test ON t
@@ -76,7 +113,7 @@ FROM KAFKA(
 );
 ```
 
-**Example 2: Use AK/SK from environment variables as STS source credentials**
+#### Example 2.2: Read AK/SK from environment variables as the STS source credential
 
 ```sql
 CREATE ROUTINE LOAD IAM_Test ON t
@@ -96,7 +133,7 @@ FROM KAFKA(
 );
 ```
 
-**Example 3: Use the default provider chain as STS source credentials**
+#### Example 2.3: Use the default provider chain as the STS source credential
 
 ```sql
 CREATE ROUTINE LOAD IAM_Test ON t
@@ -116,9 +153,9 @@ FROM KAFKA(
 );
 ```
 
-### 3. Specify credential source through aws.credentials_provider
+### Method 3: Specify the credential source through `aws.credentials_provider`
 
-This mode applies when AK/SK is not explicitly provided, such as using EC2 Instance Profile.
+This is suitable for scenarios where AK/SK is not explicitly provided, such as EC2 Instance Profile.
 
 ```sql
 CREATE ROUTINE LOAD IAM_Test ON t
@@ -137,34 +174,69 @@ FROM KAFKA(
 );
 ```
 
-Available `aws.credentials_provider` values:
+## Credential Resolution Rules
 
-| Parameter | Description |
-| :--- | :--- |
-| DEFAULT | Use the default provider chain |
-| ENV | Read credentials from environment variables |
-| INSTANCE_PROFILE | Use EC2 Instance Profile credentials |
+<!-- Knowledge type: Configuration priority -->
 
-### Precedence Rules When Configuring Multiple Options
+When multiple credential parameters are configured at the same time, they take effect in the following order of priority:
 
-1. If both `aws.access_key` and `aws.secret_key` are configured, AK/SK is used first.
-2. If AK/SK is not configured but `aws.role_arn` is configured, IAM Role is used. In this case, `aws.credentials_provider` is used to choose the STS source credentials.
-3. If neither AK/SK nor `aws.role_arn` is configured, `aws.credentials_provider` directly determines which provider the AWS client uses.
+1. When both `aws.access_key` and `aws.secret_key` are configured, **AK/SK is used first**.
+2. When AK/SK is not configured but `aws.role_arn` is configured, **the IAM Role is used**. In this case, `aws.credentials_provider` is used to select the STS source credential.
+3. When neither AK/SK nor `aws.role_arn` is configured, **`aws.credentials_provider` directly determines the provider used by the AWS client**.
 
-## Public Internet Access
+## Public Network Access Troubleshooting
 
-For users who need to access AWS MSK over the public internet, if AWS authentication issues occur during data import, troubleshoot step by step using the guidance below.
+<!-- Knowledge type: Troubleshooting -->
+<!-- Applicable scenarios: Authentication failure when accessing AWS MSK from the public network -->
 
-1. Ensure public access is enabled for the MSK cluster.
-In the AWS MSK console, select your cluster and check **Properties** > **Networking settings** > **Edit public access settings**. Ensure public access is enabled.
-2. Ensure the subnet is public.
-The subnet associated with the cluster must be public. In the AWS VPC console, make sure the subnet route table includes a `0.0.0.0/0 -> igw-xxxx` entry.
-3. Use the correct public bootstrap endpoints.
-In the AWS MSK console, select the cluster and click **View client information**. Ensure `kafka_broker_list` in your Routine Load job uses **public endpoints** instead of private endpoints.
-4. Ensure security group inbound/outbound rules are correct.
-Check the MSK security group inbound rules and verify that **port 9198** is properly opened to the required source IP ranges (when communicating with brokers through IAM access control, port 9198 must be publicly reachable).
+For users who want to access AWS MSK from a public network environment, if AWS authentication issues occur during data import, troubleshoot using the following steps:
 
-For more details, see AWS documentation:
-- [How to safely access an Amazon Managed Streaming for Apache Kafka (Amazon MSK) cluster over the internet](https://aws.amazon.com/cn/blogs/china/how-to-safely-access-amazon-managed-streaming-for-apache-kafka-amazon-msk-cluster-through-the-internet-i/)
+### Step 1: Ensure that the MSK cluster has public access enabled
+
+In the AWS MSK console, select the cluster you want to access, and check **Networking settings** under **Properties** by going to **Edit public access**. Make sure that the public access option is turned on.
+
+### Step 2: Ensure that the subnet is public
+
+The subnet associated with the cluster must be public. In the AWS VPC console, ensure that the route table entries of the subnet contain the `0.0.0.0/0 : igw-xxxx` entry.
+
+### Step 3: Use the correct Bootstrap public endpoint
+
+In the AWS MSK console, select the cluster you want to access, click **View client information**, and ensure that the `kafka_broker_list` property used when creating the Routine Load is filled in with the **public endpoint** rather than the **private endpoint**.
+
+### Step 4: Ensure that the security group is configured with correct inbound and outbound rules
+
+Check the **inbound rules** of the security group configured for MSK to see whether an appropriate source IP is configured for **port 9198**.
+
+> Note: If you communicate with the broker through IAM access control, you need to expose access through port 9198.
+
+### Reference Documents
+
+For more detailed information, refer to the related AWS documents:
+
+- [How to safely access Amazon Managed Streaming for Apache Kafka (Amazon MSK) clusters through the internet](https://docs.aws.amazon.com/msk/latest/developerguide/public-access.html)
 - [Access from within AWS but outside cluster's VPC](https://docs.aws.amazon.com/msk/latest/developerguide/aws-access.html)
-- [Enable internet access for your VPC using an internet gateway](https://docs.aws.amazon.com/vpc/latest/userguide/VPC_Internet_Gateway.html)
+- [Enable internet access for a VPC using an internet gateway](https://docs.aws.amazon.com/vpc/latest/userguide/VPC_Internet_Gateway.html)
+
+## FAQ
+
+<!-- Knowledge type: Frequently asked questions -->
+
+### Q1: Why must `property.security.protocol` and `property.sasl.mechanism` be fixed values?
+
+Due to the AWS MSK IAM authentication mechanism and the limitations of the underlying librdkafka library, these two parameters must be fixed to `SASL_SSL` and `OAUTHBEARER` respectively. Otherwise, the IAM authentication handshake cannot be completed successfully.
+
+### Q2: When AK/SK and `aws.role_arn` are configured at the same time, which credential is used?
+
+AK/SK is used first. For details, see [Credential Resolution Rules](#credential-resolution-rules).
+
+### Q3: Authentication always fails when accessing MSK from the public network. How should this be troubleshot?
+
+Follow the four steps in [Public Network Access Troubleshooting](#public-network-access-troubleshooting) and check each item: whether public access is enabled, whether the subnet is public, whether the Bootstrap endpoint uses the public endpoint, and whether the security group allows port 9198.
+
+### Q4: When running Doris on EC2, how can AK/SK configuration be avoided?
+
+You can bind an IAM Role with MSK access permissions to the EC2 instance, and then set `aws.credentials_provider` to `INSTANCE_PROFILE`. Refer to [Method 3](#method-3-specify-the-credential-source-through-awscredentials_provider).
+
+### Q5: Does Doris guarantee no data loss or duplication when importing data from MSK through Routine Load?
+
+Yes. Routine Load provides Exactly-Once semantics, ensuring that data is neither lost nor duplicated.

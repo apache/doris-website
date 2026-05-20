@@ -1,11 +1,17 @@
 ---
-{
-    "title": "Contribute to Doris",
-    "language": "en"
-}
+title: Contributing to Apache Doris
+language: en
+description: How to contribute code, documentation, and bug fixes to Apache Doris. An overview for getting started with community contributions.
+keywords:
+    - Apache Doris
+    - contribute code
+    - contribute documentation
+    - submit PR
+    - bug fix
+    - community participation
 ---
 
-<!-- 
+<!--
 Licensed to the Apache Software Foundation (ASF) under one
 or more contributor license agreements.  See the NOTICE file
 distributed with this work for additional information
@@ -24,69 +30,78 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# Contribute to Doris
+<!-- Knowledge type: Overview -->
+<!-- Applicable scenario: First-time learning how to contribute to Apache Doris -->
 
-Thank you very much for your interest in the Doris project. We welcome your suggestions, comments (including criticisms) and contributions to the Doris project.
+Thank you for your interest in the Apache Doris project. The community welcomes participation in any form, including suggestions, opinions (including criticism), comments, and contributions of code and documentation.
 
-Your suggestions, comments and contributions on Doris can be made directly through GitHub's [Issues](https://github.com/apache/doris/issues/new/choose).
+There are many ways to participate in the Doris project: code implementation, test writing, process and tooling improvements, documentation refinement, and more. Every contribution is recognized, and the community will add you to the contributor list. Once your contributions reach a certain level, you also have the opportunity to become an Apache Committer, receive an Apache email address, and be listed in the [Apache Committer list](http://people.apache.org/committer-index.html).
 
-There are many ways to participate in and contribute to Doris projects: code implementation, test writing, process tool improvement, document improvement, and so on. Any contribution will be welcomed and you will be added to the list of contributors. Further, with sufficient contributions, you will have the opportunity to become a Committer of Apache with Apache mailbox and be included in the list of [Apache Committers](http://people.apache.org/committer-index.html).
+For any questions, you can reach the community through the following channels: WeChat, Slack, and the mailing list. The community will respond promptly.
 
-Any questions, you can contact us to get timely answers, including Wechat, Gitter (GitHub instant messaging tool), e-mail and so on.
+## Getting Started
 
-## Initial contact
+<!-- Knowledge type: Steps -->
 
-For the first time in Doris community, you can:
+When you first arrive at the Doris community, you can establish contact in the following ways:
 
-* Follow [Doris Github](https://github.com/apache/doris)
+1. Follow the Doris [GitHub repository](https://github.com/apache/doris).
+2. Subscribe to the [mailing list](../subscribe-mail-list) to keep up with development activity.
+3. Join the Doris WeChat group (add WeChat ID `morningman-cmy` with the note "Join Doris Group").
+4. Join the Doris [Slack](https://doris.apache.org/slack) channel.
 
-* Subscribe to our [mailing list](../subscribe-mail-list.md);
+Through these channels, you can stay up to date with Doris development and share your views on topics you care about.
 
-* Join Doris Wechat Group (add WeChat-ID: morningman-cmy, note: join Doris Group) and ask questions at any time.
+## Doris Code and Documentation
 
-* Enter Doris's [Slack](https://doris.apache.org/slack)
+<!-- Knowledge type: Project structure -->
 
-Learn the development trends of Doris project in time and give your opinions on the topics you are concerned about.
+As shown in the [GitHub](https://github.com/apache/doris) repository, the Apache Doris core codebase mainly consists of the Frontend (FE), Backend (BE), and Broker (for reading external storage such as HDFS). The documentation includes the official website, the GitHub Wiki, and the runtime online help manual. Details for each component are as follows:
 
-## Doris's code and documentation
-
-As you can see from [GitHub](https://github.com/apache/doris), Apache Doris (incubating) code base mainly consists of three parts: Frontend (FE), Backend (BE) and Broker (to support file reading on external storage systems such as HDFS). Documents are mainly the wiki on Doris website and GitHub, as well as the online help manual when running Doris. Details of these components can be found in the following table:
-
-| Component Name | Component Description | Related Language|
-|--------|----------------------------|----------|
-| [Frontend daemon (FE)](https://github.com/apache/doris) | consists of a query coordinator and a metadata manager | Java|
-| [Backend daemon (BE)](https://github.com/apache/doris) | Responsible for storing data and executing query fragments | C++|
-| [Broker](https://github.com/apache/doris) | Read HDFS data to Doris | Java|
-| [Website](https://github.com/apache/doris-website) | Doris Website | Markdown |
+| Component | Description | Language |
+|---------|---------|---------|
+| [Frontend daemon (FE)](https://github.com/apache/doris) | Consists of the query coordinator and the metadata manager | Java |
+| [Backend daemon (BE)](https://github.com/apache/doris) | Handles data storage and query fragment execution | C++ |
+| [Broker](https://github.com/apache/doris) | Reads HDFS data into Doris | Java |
+| [Website](https://github.com/apache/doris-website) | The official Doris website | Markdown |
 | [Manager](https://github.com/apache/doris-manager) | Doris Manager | Java |
-| [Flink-Connector](https://github.com/apache/doris-flink-connector) | Doris Flink Connector | Java |
-| [Spark-Connector](https://github.com/apache/doris-spark-connector) | Doris Spark Connector | Java |
-| Doris Runtime Help Document | Online Help Manual at Doris Runtime | Markdown|
+| [Flink Connector](https://github.com/apache/doris-flink-connector) | Doris Flink Connector | Java |
+| [Spark Connector](https://github.com/apache/doris-spark-connector) | Doris Spark Connector | Java |
+| Doris runtime Help documentation | The online help manual available when running Doris | Markdown |
 
-## Improving documentation
+## Improving Documentation
 
-Documentation is the most important way for you to understand Apache Doris, and it's where we need help most!
+Documentation is the main entry point for learning about Apache Doris, and it is one of the areas where the community most needs help.
 
-Browsing the document, you can deepen your understanding of Doris,and can also help you understand Doris's function and technical details. If you find that the document has problems, please contact us anytime;
+Reading the documentation deepens your understanding of Doris and covers features and technical details. If you find any problems in the documentation, please contact the community.
 
-If you are interested in improving the quality of documents, whether it is revising the address of a page, correcting a link, and writing a better introductory document, we are very welcome!
+If you would like to improve documentation quality (including correcting page addresses, fixing links, and writing better introductory documents), the community very much welcomes your contributions.
 
-Most of our documents are written in markdown format, and you can modify and submit document changes directly through [apache/doris-website](https://github.com/apache/doris-website) . 
+Most Doris documentation is written in Markdown, and you can submit changes directly in the [apache/doris-website](https://github.com/apache/doris-website) repository. Related guides:
 
-If you are committing a document change, you can refer to the [Docs Contribute](https://doris.apache.org/community/how-to-contribute/contribute-doc)
+- To submit documentation changes, see the [Documentation Contribution Guide](https://doris.apache.org/zh-CN/community/how-to-contribute/contribute-doc).
+- To submit code changes, see the [Code Submission Guide](https://doris.apache.org/zh-CN/community/how-to-contribute/pull-request).
 
-If you submit code changes, you can refer to [Pull Request](https://doris.apache.org/community/how-to-contribute/pull-request).
+## Reporting Bugs or Issues
 
-## If a Bug or problem is found
+<!-- Applicable scenario: Reporting bugs / fixing issues -->
 
-If a Bug or problem is found, you can directly raise a new Issue through GitHub's [Issues](https://github.com/apache/doris/issues/new/choose), and we will have someone deal with it regularly.
+If you find a bug or issue, there are two ways to handle it:
 
-You can also fix it yourself by reading the analysis code (of course, it's better to talk to us before that, maybe someone has fixed the same problem) and submit a [Pull Request](./pull-request.md).
+1. **Report the issue**: submit a new issue through GitHub [Issues](https://github.com/apache/doris/issues/new/choose). Community members will address it on a regular basis.
+2. **Fix it yourself**: read and analyze the source code to fix it yourself, then submit a [Pull Request](./pull-request).
 
-## Modify the code and submit PR (Pull Request)
+> Tip: Before you start fixing, it is recommended to talk to the community first to confirm whether someone is already working on the same issue.
 
-You can download the code, compile and install it, deploy and run it for a try (refer to the [compilation document](https://doris.apache.org/docs/install/source-install/compilation-with-docker/)) to see if it works as you expected. If you have problems, you can contact us directly, ask questions or fix them by reading and analyzing the source code.
+## Modifying Code and Submitting a PR
 
-Whether it's fixing Bugs or adding Features, we're all very welcome. If you want to submit code to Doris, you need to create a new branch for your submitted code from the fork code library on GitHub to your project space, add the source project upstream, and submit PR.
+<!-- Knowledge type: Steps -->
 
-About how to submit a PR refer to [Pull Request](./pull-request.md).
+The basic workflow for contributing code:
+
+1. Download the code, compile it, and deploy and run it to verify that the behavior matches expectations (see the [Compilation Documentation](https://doris.apache.org/zh-CN/docs/install/source-install/compilation-with-docker/) for reference).
+2. Fork the `apache/doris` repository to your own account on GitHub.
+3. Create a separate branch for your changes, and add the original repository as `upstream`.
+4. Submit a PR. For detailed steps, see the [Pull Request Guide](./pull-request).
+
+Whether you are fixing a bug or adding a new feature, the community very much welcomes your contributions.

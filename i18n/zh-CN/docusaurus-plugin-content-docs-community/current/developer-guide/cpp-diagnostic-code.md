@@ -1,11 +1,18 @@
 ---
-{
-    "title": "C++ 代码分析",
-    "language": "zh-CN"
-}
+title: C++ 代码静态分析
+language: zh-CN
+description: Apache Doris C++ 代码静态分析：Clang-Tidy 与 Clangd 配置（含 VSCode 集成）。
+keywords:
+    - Apache Doris
+    - C++ 静态分析
+    - Clang-Tidy
+    - Clangd
+    - VSCode
+    - LDB toolchain
+    - compile_commands.json
 ---
 
-<!-- 
+<!--
 Licensed to the Apache Software Foundation (ASF) under one
 or more contributor license agreements.  See the NOTICE file
 distributed with this work for additional information
@@ -24,31 +31,70 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# C++ 代码分析
+# C++ 代码静态分析
 
-Doris支持使用[Clangd](https://clangd.llvm.org/)和[Clang-Tidy](https://clang.llvm.org/extra/clang-tidy/)进行代码静态分析。Clangd和Clang-Tidy在 [LDB-toolchain](/docs/install/source-install/compilation-with-ldb-toolchain)
-中已经内置，另外也可以自己安装或者编译。
+<!-- 知识类型: 代码规范 -->
+<!-- 适用场景: BE 开发 / 代码质量检查 -->
 
-### Clang-Tidy
-Clang-Tidy中可以做一些代码分析的配置,配置文件`.clang-tidy`在Doris根目录下。
+Apache Doris 支持使用 [Clangd](https://clangd.llvm.org/) 和 [Clang-Tidy](https://clang.llvm.org/extra/clang-tidy/) 对 C++ 代码进行静态分析。两者均已内置在 [LDB-toolchain](/community/source-install/compilation-with-ldb-toolchain) 中，开发者也可自行安装或编译。
 
-### 在VSCODE中配置Clangd
+## 工具对比
 
-首先需要安装clangd插件，然后在`settings.json`中编辑或者直接在首选项中更改插件配置。相比于vscode-cpptools，clangd可以为vscode提供更强大和准确的代码转跳，并且集成了clang-tidy的分析和快速修复功能。
-在使用之前，先编译一次`be(RELEASE)`和`be-ut(ASAN)`，以生成对应的`compile_commands.json`文件。
+| 工具 | 作用 | 配置文件 |
+|------|------|---------|
+| Clangd | 提供代码跳转、补全、悬停提示等 IDE 能力 | 通过 `clangd.arguments` 传入 |
+| Clang-Tidy | 静态分析与代码质量检查（可由 Clangd 调用） | Doris 根目录下的 `.clang-tidy` |
+
+相比 `vscode-cpptools`，Clangd 能提供更精准的代码跳转能力，并集成 Clang-Tidy 的诊断与快速修复功能。
+
+## Clang-Tidy 配置
+
+Clang-Tidy 的检查规则集中在 Doris 根目录下的 `.clang-tidy` 文件中。可通过修改该文件来开启/关闭特定的检查项。
+
+## 在 VSCode 中配置 Clangd
+
+<!-- 知识类型: 工具使用 -->
+
+### 操作步骤
+
+1. 安装 `clangd` 插件。
+2. 在使用前先编译一次 `be(RELEASE)` 和 `be-ut(ASAN)`，以生成对应的 `compile_commands.json` 文件。
+3. 在 `settings.json` 中编辑或直接在首选项中更改插件配置。
+
+### 配置示例
 
 ```json
-    "clangd.path": "ldb_toolchain/bin/clangd", //clangd的路径
+{
+    "clangd.path": "ldb_toolchain/bin/clangd",
     "clangd.arguments": [
         "--background-index",
-        "--clang-tidy", //开启clang-tidy
+        "--clang-tidy",
         "--compile-commands-dir=doris/be/build_Release/",
         "--completion-style=detailed",
-        "-j=5", //clangd分析文件的并行数
+        "-j=5",
         "--all-scopes-completion",
         "--pch-storage=memory",
         "--pretty",
-        "--query-driver=ldb_toolchain/bin/*" //编译器路径
+        "--query-driver=ldb_toolchain/bin/*"
     ],
     "clangd.trace": "output/clangd-server.log"
+}
 ```
+
+### 关键参数说明
+
+| 参数 | 说明 |
+|------|------|
+| `clangd.path` | Clangd 可执行文件的路径 |
+| `--background-index` | 后台索引整个项目，加速符号查找 |
+| `--clang-tidy` | 开启 Clang-Tidy 静态检查 |
+| `--compile-commands-dir` | 指定 `compile_commands.json` 所在目录 |
+| `--completion-style=detailed` | 补全时展示详细信息 |
+| `-j=5` | Clangd 分析文件的并行数 |
+| `--query-driver` | 编译器路径，用于解析系统头文件 |
+
+## FAQ
+
+**Q：`clangd` 报找不到头文件或符号该如何排查？**
+
+请确认已经先编译一次 BE 生成 `compile_commands.json`，并将 `--compile-commands-dir` 指向正确目录。

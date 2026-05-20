@@ -1,131 +1,152 @@
 ---
 {
-    "title": "Query Circuit Breaker",
+    "title": "Query Circuit Breaking: SQL Block Rule and Workload Policy Configuration Guide",
+    "sidebar_label": "Query Circuit Breaking",
     "language": "en",
-    "description": "Apache Doris query circuit breaker mechanism, supporting SQL Block Rule (planning-time blocking) and Workload Policy (runtime circuit breaking) strategies to automatically terminate abnormal queries by limiting scan rows, partitions, execution time, memory, and more to ensure cluster stability."
+    "description": "Learn how to use SQL Block Rule and Workload Policy to block full table scans, limit query resource consumption, and prevent abnormal large queries from overwhelming the cluster.",
+    "keywords": ["query circuit breaking", "SQL Block Rule", "Workload Policy", "full table scan limit", "large query governance", "cluster stability"]
 }
 ---
 
-Query circuit breaking is a protective mechanism used to prevent long-running or resource-consuming queries from having a negative impact on the system. When a query exceeds predefined resource or time limits, the circuit breaker mechanism automatically terminates the query to avoid adverse effects on system performance, resource usage, and other queries. This mechanism ensures the stability of the cluster in a multi-user environment, preventing a single query from exhausting system resources or slowing down responses, thereby improving overall availability and efficiency.
+<!-- Knowledge type: concept + procedure -->
 
-Doris provides two circuit breaker strategies that operate at different stages of the query lifecycle:
+Query circuit breaking is a protection mechanism that prevents long-running or resource-intensive queries from affecting cluster stability. When a query exceeds preset resource or time limits, the circuit breaker automatically terminates it, preventing a single query from exhausting system resources or slowing down other workloads.
 
-| Dimension | SQL Block Rule (Planning-time) | Workload Policy (Runtime) |
-|-----------|-------------------------------|--------------------------|
-| Effective Stage | Planning phase, blocked before execution | Execution phase, circuit broken during runtime |
-| Judgment Basis | Estimated scan volume, SQL pattern matching | Real-time metrics such as execution time, memory usage, and scan volume |
-| Accuracy | Based on cost estimation, may have false positives | Based on real-time monitoring, more accurate |
-| Use Cases | Block known dangerous SQL patterns and full table scans | Circuit break unexpectedly large queries during execution |
-| Applicable Statements | Any statement (DDL, DML) | select, insert into select, stream load, routine load |
+Doris provides two circuit breaking strategies that act at different stages of the query lifecycle:
+
+| Dimension | SQL Block Rule (planning-time breaking) | Workload Policy (runtime breaking) |
+|---------|--------------------------|---------------------------|
+| Effective stage | Query planning stage, intercepted before execution | Query execution stage, broken during runtime |
+| Decision basis | Estimated scan volume, SQL pattern matching | Real-time metrics such as actual execution time, memory usage, scan volume |
+| Accuracy | Based on cost estimation, may produce false positives | Based on real-time monitoring, more accurate |
+| Use case | Block known dangerous SQL patterns and full table scans | Break runtime queries that exceed expectations |
+| Supported statements | Any statement (DDL, DML) | select, insert into select, stream load, routine load |
 
 ## SQL Block Rule
 
-SQL Block Rule is used to block statements that match specific patterns during the query planning phase. It is typically configured by database administrators (DBAs) to enhance cluster stability.
+<!-- Knowledge type: concept -->
 
-Each rule is defined by the following properties that control its behavior and scope:
+SQL Block Rule intercepts statements matching specific patterns at the **planning stage**, preventing them from entering the execution stage. It is usually configured by DBAs to prevent known risky operations such as full table scans and dangerous function calls.
 
-| Property | Description | Values |
-|----------|-------------|--------|
-| `sql` | Regular expression to match query statements | Java regex string |
-| `sqlHash` | Hash value to match query statements | SQL hash value string |
+### Rule Properties
+
+Each rule is defined by the following properties that determine its behavior and scope:
+
+| Property | Description | Value |
+|------|------|------|
+| `sql` | Regular expression that matches the query statement | Java regular expression string |
+| `sqlHash` | Hash value that matches the query statement | SQL hash value string |
 | `cardinality` | Maximum number of rows allowed to scan | Positive integer |
 | `partition_num` | Maximum number of partitions allowed to scan | Positive integer |
-| `tablet_num` | Maximum number of buckets allowed to scan | Positive integer |
-| `require_partition_filter` | Whether partitioned internal table and Hive table queries must include an effective partition filter. Supported in Doris 4.0.6 and later in the 4.0 series, and in Doris 4.1.2 and later in the 4.1 series. | `"true"` or `"false"` |
-| `global` | Whether the rule is global | `"true"` (applies to all users) or `"false"` (applies only to bound users) |
-| `enable` | Whether the rule is enabled | `"true"` or `"false"` |
+| `tablet_num` | Maximum number of tablets allowed to scan | Positive integer |
+| `global` | Whether the rule is global | `"true"` (global) / `"false"` (only applies to bound users) |
+| `enable` | Whether the rule is enabled | `"true"` / `"false"` |
 
 ### Use Cases and Examples
 
-#### Case 1: Limiting Scan Row Count
+<!-- Knowledge type: procedure -->
 
-In daily use, blind full table scan operations often occur, such as `SELECT * FROM t`. Scanning data significantly consumes BE's IO and CPU resources, posing a substantial challenge to cluster stability. You can set an upper limit on the number of rows scanned by a single query on a single table to prevent such operations:
+#### Scenario 1: Limit the Number of Scanned Rows
+
+**Problem**: Full table scan operations such as `SELECT * FROM t` consume large amounts of BE IO and CPU resources.
+
+**Solution**: Set an upper limit on the number of rows scanned from a single table. Queries that exceed the threshold are blocked.
 
 ```sql
 CREATE SQL_BLOCK_RULE rule_card 
 PROPERTIES
 (
-   "cardinality" = "1000",
-   "global" = "true",
-   "enable" = "true"
+    "cardinality" = "1000",
+    "global" = "true",
+    "enable" = "true"
 );
 ```
 
-When a single table scan exceeds 1000 rows, the query execution will be blocked.
+When a single-table scan exceeds 1000 rows, the query is rejected.
 
-#### Case 2: Limiting Scan Partition Count
+#### Scenario 2: Limit the Number of Scanned Partitions
 
-Scanning too many partitions can significantly increase BE's CPU consumption. Additionally, if the query targets an external table, it may incur significant network overhead and metadata retrieval overhead. This is often caused by forgetting to write filtering conditions on partition columns or writing them incorrectly. You can set a partition count limit to avoid such issues:
+**Problem**: Scanning too many partitions significantly increases BE CPU consumption. When querying external tables, it also adds extra network overhead and metadata fetching overhead, usually caused by missing or incorrectly written partition filter conditions.
+
+**Solution**: Set the maximum number of partitions that a single query can scan.
 
 ```sql
 CREATE SQL_BLOCK_RULE rule_part_num 
 PROPERTIES
 (
-   "partition_num" = "30",
-   "global" = "true",
-   "enable" = "true"
+    "partition_num" = "30",
+    "global" = "true",
+    "enable" = "true"
 );
 ```
 
-When the number of partitions scanned for a single table exceeds 30, the query execution will be blocked.
+When a single-table scan exceeds 30 partitions, the query is rejected.
 
-#### Case 3: Limiting Scan Bucket Count
+#### Scenario 3: Limit the Number of Scanned Tablets
 
-Scanning too many buckets can also significantly increase BE's CPU consumption. You can set a bucket count limit to avoid such issues:
+**Problem**: Scanning too many tablets also significantly increases BE CPU consumption.
+
+**Solution**: Set the maximum number of tablets that a single query can scan.
 
 ```sql
-CREATE SQL_BLOCK_RULE rule_teblet_num 
+CREATE SQL_BLOCK_RULE rule_tablet_num 
 PROPERTIES
 (
-   "tablet_num" = "200",
-   "global" = "true",
-   "enable" = "true"
+    "tablet_num" = "200",
+    "global" = "true",
+    "enable" = "true"
 );
 ```
 
-When the number of buckets scanned in a single table exceeds 200, the query execution will be blocked.
+When a single-table scan exceeds 200 tablets, the query is rejected.
 
-#### Case 4: Blocking Specific SQL Patterns
+#### Scenario 4: Block Specific SQL Patterns
 
-Certain query patterns may cause high computational complexity, long planning time, and other issues. You can block these queries using regular expression matching.
+**Problem**: Certain query patterns (such as calling specific functions or performing dangerous operations) may cause excessive computational complexity or long planning time.
 
-**Example 1: Blocking a specific function**
+**Solution**: Block such queries by matching with regular expressions.
 
-For example, to block the `abs` function:
+**Example 1: Block the use of a specific function**
+
+The following rule blocks all queries that contain the `abs` function:
 
 ```sql
 CREATE SQL_BLOCK_RULE rule_abs
 PROPERTIES(
-  "sql"="(?i)abs\\s*\\(.+\\)",
-  "global"="true",
-  "enable"="true"
+    "sql"="(?i)abs\\s*\\(.+\\)",
+    "global"="true",
+    "enable"="true"
 );
 ```
 
-In the above regular expression:
+Regex explanation:
 
-- `(?i)` indicates case-insensitive matching
-- `abs` is the target function to be blocked
-- `\\s*` signifies that any amount of whitespace is allowed between `abs` and the left parenthesis
-- `\\(.+\\)` matches the function parameters
+- `(?i)`: case-insensitive matching
+- `abs`: target function name
+- `\\s*`: allows any whitespace between the function name and the left parenthesis
+- `\\(.+\\)`: matches the function arguments
 
-**Example 2: Blocking other dangerous operations**
+**Example 2: Block dangerous operations**
 
-Similarly, you can use the same method to block `set global` to prevent unintended variable changes, or block `truncate table` to prevent unintended data deletions.
+Similarly, you can use regular expressions to block `set global` (to prevent unintended variable modification) or `truncate table` (to prevent unintended data deletion).
 
-#### Case 5: Setting Rules for Specific Users
+> Regular expressions follow Java conventions. See the [Pattern documentation](https://docs.oracle.com/javase/8/docs/api/java/util/regex/Pattern.html) for details.
 
-By default, block rules apply globally (`"global" = "true"`). To apply a rule only to specific users, you can create a user-level block rule:
+#### Scenario 5: Set Rules for Specific Users
 
-1. Set `"global"` to `"false"` when creating the rule:
+**Problem**: Default rules apply globally, but in some cases the restriction should only apply to specific users.
+
+**Solution**: Create a non-global rule and bind it to the target user.
+
+1. Set `global` to `"false"` when creating the rule:
 
     ```sql
     CREATE SQL_BLOCK_RULE rule_001
     PROPERTIES (
-      "sql"="select * from t",
-      "global" = "false",
-      "enable" = "true"
-    )
+        "sql"="select \\* from t",
+        "global" = "false",
+        "enable" = "true"
+    );
     ```
 
 2. Bind the rule to the target user:
@@ -134,62 +155,58 @@ By default, block rules apply globally (`"global" = "true"`). To apply a rule on
     SET PROPERTY FOR 'root' 'SQL_block_rules' = 'rule_001';
     ```
 
-3. Verify the rule is effective:
+3. Verify that the rule is in effect:
 
     ```sql
     MySQL root@127.0.0.1:test> select * from t;
     (1105, 'errCode = 2, detailMessage = errCode = 2, detailMessage = SQL match regex SQL block rule: rule_001')
     ```
 
-- To add multiple rules for a user, list all rule names in the rule list, separated by commas.
-- To remove all rules for a user, set the rule list to an empty string: `SET PROPERTY FOR 'root' 'SQL_block_rules' = '';`
+**Managing multiple rules**:
 
-#### Case 6: Requiring Partition Filters
+- To bind multiple rules to a user: separate all rule names in the rule list with commas, for example `'rule_001,rule_002'`.
+- To remove all rules from a user: set the rule list to an empty string, for example `SET PROPERTY FOR 'root' 'SQL_block_rules' = '';`.
 
-For partitioned internal tables and Hive tables, missing partition-column filters can cause full partition scans. You can require queries on these partitioned tables to include an effective partition filter:
+### Notes
 
-```sql
-CREATE SQL_BLOCK_RULE rule_require_partition_filter
-PROPERTIES
-(
-   "require_partition_filter" = "true",
-   "global" = "true",
-   "enable" = "true"
-);
-```
-
-After the rule is enabled, a query such as `SELECT * FROM partitioned_table` will be blocked. Queries with partition predicates, such as `SELECT * FROM partitioned_table WHERE dt = '2024-01-01'`, can continue to run.
-
-To modify or delete block rules, refer to the SQL manual for block rules.
-
-### Important Notes
-
-- The calculation of scan row count, partition count, and bucket count is performed during the planning phase. Only partition and bucket pruning are considered, and other filtering conditions are not taken into account (i.e., the worst-case scenario is estimated). Therefore, queries with actual scan volumes below the set values may also be blocked.
-- Regular expression matching is a computationally intensive operation. Too many or overly complex regex rules can put significant pressure on FE's CPU. Use them cautiously and avoid complex regular expressions unless necessary.
-- To temporarily disable a rule, set its `"enable"` property to `"false"`.
-- Regular expressions in block rules use Java's regular expression syntax. For the complete reference, see https://docs.oracle.com/javase/8/docs/api/java/util/regex/Pattern.html
+- **Estimation method**: The number of scanned rows, partitions, and tablets is estimated at the planning stage based on the worst case (only partition pruning and tablet pruning are considered; other filter conditions are not). Queries whose actual scan volume is less than the configured value may also be blocked.
+- **Performance impact**: Regex matching is a compute-intensive operation. Too many or overly complex regex rules put significant pressure on FE CPU, so add them carefully.
+- **Temporarily disable a rule**: Change the `"enable"` property of the rule to `"false"` to disable it temporarily without deleting the rule.
 
 ## Workload Policy
 
-SQL Block Rule performs circuit breaking during the planning phase, but since cost estimation during planning may be inaccurate (especially for complex queries), it can lead to rules not being effective or false positives. Workload Policy addresses this limitation by monitoring real-time metrics during query execution and circuit breaking queries whose runtime state does not meet expectations, preventing unexpectedly large queries from consuming excessive resources and affecting cluster stability.
+<!-- Knowledge type: concept -->
 
-Workload Policy has been supported since Doris version 2.1. The support status for each load type is as follows:
+Workload Policy monitors real-time metrics during query **runtime** and applies actions such as circuit breaking or variable adjustment to queries that exceed expectations. Compared with the static planning-time estimation of SQL Block Rule, Workload Policy bases its decisions on actual runtime data and is more accurate.
 
-| Load Type          | Supported |
-|--------------------|-----------|
-| select             | Yes       |
-| insert into select | Yes       |
-| insert into values | No        |
-| stream load        | Yes       |
-| routine load       | Yes       |
-| backup             | No        |
-| compaction         | No        |
+Workload Policy is supported starting from Doris 2.1. The support status for each workload type is as follows:
+
+| Workload type | Supported |
+|---------|---------|
+| select | Yes |
+| insert into select | Yes |
+| insert into values | No |
+| stream load | Yes |
+| routine load | Yes |
+| backup | No |
+| compaction | No |
 
 ### Creation and Configuration
 
-Use the `CREATE WORKLOAD POLICY` command to create a policy. Creating a Workload Policy requires `admin_priv` privileges.
+<!-- Knowledge type: procedure -->
 
-The following example creates a policy named test_cancel_policy that cancels queries running longer than 1000 ms:
+Use the `CREATE WORKLOAD POLICY` command to create a policy. The `admin_priv` privilege is required.
+
+**Basic syntax**:
+
+```sql
+CREATE WORKLOAD POLICY <policy_name>
+CONDITIONS(<condition_expr>)
+ACTIONS(<action_expr>) 
+PROPERTIES('<key>'='<value>');
+```
+
+The following example creates a policy that cancels queries running longer than 1000 ms:
 
 ```sql
 CREATE WORKLOAD POLICY test_cancel_policy
@@ -198,53 +215,53 @@ ACTIONS(cancel_query)
 PROPERTIES('enabled'='true'); 
 ```
 
-When creating a Workload Policy, three components must be specified:
+#### Trigger Conditions
 
-#### Conditions
+Conditions specify when the policy is triggered. Multiple conditions are separated by commas (`,`), which means an "AND" relationship.
 
-Conditions represent the policy trigger conditions. Multiple Conditions are separated by commas `,` to represent an "AND" relationship.
-
-| Condition             | Description                                                                                          |
-|-----------------------|------------------------------------------------------------------------------------------------------|
-| username              | The username carried by the query; only triggers the set_session_variable Action in FE               |
-| be_scan_rows          | Number of rows scanned by a SQL in a single BE process; cumulative value when executed concurrently   |
-| be_scan_bytes         | Number of bytes scanned by a SQL in a single BE process; cumulative value when executed concurrently, in bytes |
-| query_time            | Runtime of a SQL in a single BE process, in milliseconds                                             |
-| query_be_memory_bytes | Memory usage of a SQL in a single BE process; cumulative value when executed concurrently, in bytes   |
+| Condition | Description |
+|-----------|------|
+| `username` | The username carried by the query. Only triggers the `set_session_variable` Action on the FE |
+| `be_scan_rows` | The number of rows scanned by a SQL within a single BE process. Cumulative value under concurrent execution |
+| `be_scan_bytes` | The number of bytes scanned by a SQL within a single BE process. Cumulative value under concurrent execution (unit: bytes) |
+| `query_time` | The execution time of a SQL on a single BE process (unit: milliseconds) |
+| `query_be_memory_bytes` | The memory used by a SQL within a single BE process. Cumulative value under concurrent execution (unit: bytes) |
 
 #### Actions
 
-Actions represent the action taken when the condition is triggered. Currently, a Policy can only define one Action (except for set_session_variable).
+Actions specify what to do when the conditions are triggered. Currently, a Policy can define only one Action (except for `set_session_variable`).
 
-| Action               | Description                                                                                                     |
-|----------------------|-----------------------------------------------------------------------------------------------------------------|
-| cancel_query         | Cancel the query                                                                                                 |
-| set_session_variable | Triggers a set session variable statement. A single Policy can have multiple set_session_variable options; currently only triggered in FE by the username Condition |
+| Action | Description |
+|--------|------|
+| `cancel_query` | Cancel the query |
+| `set_session_variable` | Execute a set session variable statement. The same Policy can include multiple of these options. Currently, this is only triggered on the FE by the `username` Condition |
 
-#### Properties
+#### Policy Properties
 
-| Property       | Description                                                                                                         |
-|----------------|---------------------------------------------------------------------------------------------------------------------|
-| enabled        | Whether the policy is enabled; values are true or false, default is true                                             |
-| priority       | Priority, an integer from 0 to 100, default is 0. Higher values mean higher priority; when a query matches multiple Policies, only the one with the highest priority takes effect |
-| workload_group | The name of the bound Workload Group; when specified, the Policy only applies to queries from that Workload Group. Default is empty, meaning it applies to all queries |
+| Property | Description | Default |
+|----------|------|--------|
+| `enabled` | Whether the policy is enabled. Value is `true` or `false` | `true` |
+| `priority` | Priority, in the range 0 to 100. A larger value means higher priority. When multiple Policies match, only the one with the highest priority takes effect | `0` |
+| `workload_group` | The name of the bound Workload Group. When specified, the Policy applies only to queries in that Workload Group. When empty, it applies to all queries | Empty (global) |
 
 #### Binding to a Workload Group
 
-By default, Workload Policies apply to all supported queries. To specify that a Policy only targets a specific Workload Group, bind it through the `workload_group` property:
+To restrict a policy to a specific Workload Group, bind it through the `workload_group` property:
 
 ```sql
 CREATE WORKLOAD POLICY test_cancel_big_query
 CONDITIONS(query_time > 1000)
 ACTIONS(cancel_query) 
-PROPERTIES('workload_group'='normal')
+PROPERTIES('workload_group'='normal');
 ```
 
-### Usage Examples
+### Examples
 
-#### Example 1: Circuit Breaking Timeout Queries
+<!-- Knowledge type: procedure -->
 
-Below is an audit log of a successful run of ckbench's q29, showing that this SQL took 4.5s to complete:
+#### Example 1: Break Long-Running Queries
+
+The following audit log shows that a SQL normally takes 4.5 seconds to execute:
 
 ```sql
 MySQL [hits]> SELECT REGEXP_REPLACE(Referer, '^https?://(?:www\\.)?([^/]+)/.*$', '\\1') AS k, AVG(length(Referer)) AS l, COUNT(*) AS c, MIN(Referer) FROM hits WHERE Referer <> '' GROUP BY k HAVING COUNT(*) > 100000 ORDER BY l DESC LIMIT 25;
@@ -266,27 +283,27 @@ MySQL [hits]> SELECT REGEXP_REPLACE(Referer, '^https?://(?:www\\.)?([^/]+)/.*$',
 11 rows in set (4.50 sec)
 ```
 
-Create a Policy that cancels queries running longer than 3 seconds:
+Create a policy that cancels any query running longer than 3 seconds:
 
 ```sql
 CREATE WORKLOAD POLICY test_cancel_3s_query
 CONDITIONS(query_time > 3000)
-ACTIONS(cancel_query) 
+ACTIONS(cancel_query); 
 ```
 
-Upon re-executing the SQL, you can see the query is circuit broken:
+Run the same SQL again, and the query is broken:
 
 ```sql
 MySQL [hits]> SELECT REGEXP_REPLACE(Referer, '^https?://(?:www\\.)?([^/]+)/.*$', '\\1') AS k, AVG(length(Referer)) AS l, COUNT(*) AS c, MIN(Referer) FROM hits WHERE Referer <> '' GROUP BY k HAVING COUNT(*) > 100000 ORDER BY l DESC LIMIT 25;
 ERROR 1105 (HY000): errCode = 2, detailMessage = (127.0.0.1)[CANCELLED]query cancelled by workload policy,id:12345
 ```
 
-#### Example 2: Modifying User Session Variables
+#### Example 2: Automatically Adjust User Session Variables
 
-Workload Policy can automatically modify session variables for specific users, for example, adjusting concurrency parameters:
+Workload Policy can automatically modify session variables for a specific user, for example, lowering concurrency to reduce resource consumption:
 
 ```sql
--- Log in to admin account and check concurrency parameters
+-- Check the current concurrency parameter for the admin user
 MySQL [(none)]> show variables like '%parallel_fragment_exec_instance_num%';
 +-------------------------------------+-------+---------------+---------+
 | Variable_name                       | Value | Default_Value | Changed |
@@ -295,12 +312,12 @@ MySQL [(none)]> show variables like '%parallel_fragment_exec_instance_num%';
 +-------------------------------------+-------+---------------+---------+
 1 row in set (0.00 sec)
 
--- Create a Policy to modify the concurrency parameters of the admin account
+-- Create a policy: set the concurrency parameter for the admin user to 1
 CREATE WORKLOAD POLICY test_set_var_policy
 CONDITIONS(username='admin')
-ACTIONS(set_session_variable 'parallel_fragment_exec_instance_num=1') 
+ACTIONS(set_session_variable 'parallel_fragment_exec_instance_num=1');
 
--- After some time, check the admin account's parameters again
+-- Check again later, the parameter has taken effect
 MySQL [(none)]> show variables like '%parallel_fragment_exec_instance_num%';
 +-------------------------------------+-------+---------------+---------+
 | Variable_name                       | Value | Default_Value | Changed |
@@ -310,9 +327,9 @@ MySQL [(none)]> show variables like '%parallel_fragment_exec_instance_num%';
 1 row in set (0.01 sec)
 ```
 
-### Important Notes
+### Notes
 
-- The Conditions and Actions of the same Policy must belong to the same side (FE or BE). For example, set_session_variable and cancel_query cannot be configured within the same Policy; Condition be_scan_rows and Condition username also cannot be configured within the same Policy.
-- Policies are executed by asynchronous threads at fixed time intervals (currently 500 ms), so there is a certain latency in policy enforcement. Queries with very short run times may bypass the policy check.
-- A single query may match multiple Policies, but only the Policy with the highest priority will take effect.
-- Modifications to Actions and Conditions are currently not supported; they can only be modified by deleting and recreating them.
+- **FE/BE side isolation**: The Condition and Action of the same Policy must belong to the same side (FE or BE). For example, `set_session_variable` (FE side) and `cancel_query` (BE side) cannot be configured in the same Policy. The same applies to `username` (FE side) and `be_scan_rows` (BE side).
+- **Asynchronous execution latency**: Policies are checked by an asynchronous thread every 500 ms, so policy enforcement has some lag. Queries that run for a very short time may complete before the check is triggered and bypass the policy.
+- **Priority mechanism**: A query may match multiple Policies, but only the one with the highest priority (largest `priority` value) takes effect.
+- **Modification limit**: Currently, directly modifying the Action and Condition of an existing Policy is not supported. Delete the Policy and recreate it.

@@ -11,9 +11,7 @@ owners:
   - name: sql-functions
     owner: "@zclllyybb"
     paths:
-      - "docs/sql-manual/sql-functions/**"
       - "versioned_docs/version-*/sql-manual/sql-functions/**"
-      - "i18n/zh-CN/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/**"
       - "i18n/zh-CN/docusaurus-plugin-content-docs/version-*/sql-manual/sql-functions/**"
     doc_types:
       - sql_function
@@ -21,64 +19,47 @@ owners:
   - name: sql-statements
     owner: "@apache/doris-sql-reviewers"
     paths:
-      - "docs/sql-manual/sql-statements/**"
       - "versioned_docs/version-*/sql-manual/sql-statements/**"
-      - "i18n/zh-CN/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/**"
       - "i18n/zh-CN/docusaurus-plugin-content-docs/version-*/sql-manual/sql-statements/**"
 
   - name: install-and-deploy
     owner: "@apache/doris-website-maintainers"
     paths:
-      - "docs/install/**"
       - "versioned_docs/version-*/install/**"
-      - "i18n/zh-CN/docusaurus-plugin-content-docs/current/install/**"
       - "i18n/zh-CN/docusaurus-plugin-content-docs/version-*/install/**"
 
   - name: lakehouse-and-ecosystem
     owner: "@apache/doris-website-maintainers"
     paths:
-      - "docs/lakehouse/**"
-      - "docs/ecosystem/**"
       - "versioned_docs/version-*/lakehouse/**"
       - "versioned_docs/version-*/ecosystem/**"
-      - "i18n/zh-CN/docusaurus-plugin-content-docs/current/lakehouse/**"
-      - "i18n/zh-CN/docusaurus-plugin-content-docs/current/ecosystem/**"
       - "i18n/zh-CN/docusaurus-plugin-content-docs/version-*/lakehouse/**"
       - "i18n/zh-CN/docusaurus-plugin-content-docs/version-*/ecosystem/**"
 
   - name: data-operate
     owner: "@apache/doris-website-maintainers"
     paths:
-      - "docs/data-operate/**"
       - "versioned_docs/version-*/data-operate/**"
-      - "i18n/zh-CN/docusaurus-plugin-content-docs/current/data-operate/**"
       - "i18n/zh-CN/docusaurus-plugin-content-docs/version-*/data-operate/**"
 
   - name: admin-and-observability
     owner: "@apache/doris-website-maintainers"
     paths:
-      - "docs/admin-manual/**"
-      - "docs/observability/**"
       - "versioned_docs/version-*/admin-manual/**"
       - "versioned_docs/version-*/observability/**"
-      - "i18n/zh-CN/docusaurus-plugin-content-docs/current/admin-manual/**"
-      - "i18n/zh-CN/docusaurus-plugin-content-docs/current/observability/**"
       - "i18n/zh-CN/docusaurus-plugin-content-docs/version-*/admin-manual/**"
       - "i18n/zh-CN/docusaurus-plugin-content-docs/version-*/observability/**"
 
   - name: ai-docs
     owner: "@apache/doris-website-maintainers"
     paths:
-      - "docs/ai/**"
       - "versioned_docs/version-*/ai/**"
-      - "i18n/zh-CN/docusaurus-plugin-content-docs/current/ai/**"
       - "i18n/zh-CN/docusaurus-plugin-content-docs/version-*/ai/**"
 
   - name: website-framework
     owner: "@apache/doris-website-maintainers"
     paths:
       - "docusaurus.config.js"
-      - "sidebars.ts"
       - "sidebarsCommunity.json"
       - "sidebarsReleases.json"
       - "versioned_sidebars/**"

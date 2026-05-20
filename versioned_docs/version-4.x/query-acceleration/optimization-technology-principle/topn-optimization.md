@@ -1,85 +1,132 @@
 ---
 {
-    "title": "TOPN Query Optimization",
+    "title": "TOPN Query Optimization: ORDER BY LIMIT Acceleration Principles and Configuration",
     "language": "en",
-    "description": "TOPN queries refer to queries that involve ORDER BY LIMIT operations, which are common in log retrieval and other detailed query scenarios."
+    "description": "How does Doris accelerate ORDER BY LIMIT queries? This article explains TOPN optimization principles, applicable limitations, session parameters, and execution plan inspection methods.",
+    "keywords": ["Doris TOPN optimization", "ORDER BY LIMIT acceleration", "topn_opt_limit_threshold", "two-phase read", "RuntimePredicate", "Zonemap filtering"]
 }
 ---
 
-TOPN queries refer to queries that involve ORDER BY LIMIT operations, which are common in log retrieval and other detailed query scenarios. Doris automatically optimizes this type of query.
+<!-- Knowledge type: concept + configuration + troubleshooting -->
+<!-- Applicable scenarios: log search, detail query, sorted pagination -->
+
+## One-Sentence Definition
+
+TOPN query optimization is Doris's automatic acceleration capability for `ORDER BY ... LIMIT n` queries. It significantly reduces scan and sort overhead through dynamic filtering, range pruning, and lazy materialization.
+
+## Pre-Reading Checklist
+
+- [ ] My SQL has the form `SELECT ... FROM t WHERE ... ORDER BY c1, c2 ... LIMIT n`
+- [ ] The table type is a Duplicate table or a Unique MOW table (not MOR)
+- [ ] `n` is small (less than `topn_opt_limit_threshold`, default 1024)
+- [ ] You want to verify whether the optimization is in effect via EXPLAIN and Profile
+
+## Typical SQL Pattern
+
+TOPN queries are common in detail-query scenarios such as log search. Doris automatically recognizes and optimizes them:
 
 ```sql
-SELECT * FROM tablex WHERE xxx ORDER BY c1,c2 ... LIMIT n
+SELECT * FROM tablex WHERE xxx ORDER BY c1, c2 ... LIMIT n
 ```
 
-## Advantages of TOPN
+<!-- Knowledge type: principle -->
+<!-- Applicable scenarios: understanding how Doris internally accelerates ORDER BY LIMIT -->
 
-1. During execution, dynamic range filters are built for the sorting columns (e.g., c1 >= 1000), which automatically apply the preceding conditions when reading data, leveraging zonemap indexes to filter out some rows or even entire files.
+## Three Optimization Points
 
-2. If the sorting fields c1, c2 are exactly the prefix of the table key, further optimization is applied. When reading data, only the header or tail of the data files is read, reducing the amount of data read to just the n rows needed.
+| No. | Optimization | Principle | Key Benefit |
+| :--- | :--- | :--- | :--- |
+| Optimization 1 | Dynamic range filtering (RuntimePredicate) | During sorting, dynamically build range conditions on the sort columns (such as `c1 >= 10000`) and push them down to the scan | Use the Zonemap index to filter out large amounts of data, even entire files |
+| Optimization 2 | Key-prefix short-circuit read | When the sort fields `c1, c2` are exactly a prefix of the table key, only read the first or last n rows of the data file | Significantly reduces disk reads |
+| Optimization 3 | Two-phase lazy materialization | The first phase reads only the sort columns to complete sorting and obtain row numbers; the second phase reads the other columns | Significantly reduces the number of columns that need to be read and sorted |
 
-3. SELECT * deferred materialization, during the data reading and sorting process, only the sorting columns are read, not the other columns. After obtaining the row numbers that meet the conditions, the entire data of those n rows needed is read, significantly reducing the amount of data read and sorted.
+<!-- Knowledge type: limitation -->
+<!-- Applicable scenarios: determining whether the current query can benefit from TOPN optimization -->
 
-## Limitations
+## Applicable Limitations
 
-1. It only applies to DUP and MOW tables, not to MOR and AGG tables.
+1. **Table type limitation**: Only Duplicate tables and Unique MOW tables are supported. Using this optimization on a Unique MOR table may produce incorrect results.
+2. **n value limitation**: When `n` is too large, the memory consumption of the optimization rises significantly. The optimization is not enabled when `n` exceeds the session variable `topn_opt_limit_threshold`.
 
-2. Due to the high memory consumption on very large `n`, it will not take effect if n is greater than `topn_opt_limit_threshold`.
+<!-- Knowledge type: configuration -->
+<!-- Applicable scenarios: tuning or disabling TOPN optimization -->
 
-## Configuration and Query Analysis
+## Configuration Parameters
 
-The following two parameters are session variables that can be set for a specific SQL or globally.
+The following three parameters are all session variables. You can set them for a single SQL statement or globally.
 
-1. `topn_opt_limit_threshold`: This session variable determines whether TOPN optimization is applied. It defaults to 1024, and setting it to 0 disables the optimization.
+| Parameter | Default | Effect | Tuning Suggestion |
+| :--- | :--- | :--- | :--- |
+| `topn_opt_limit_threshold` | 1024 | TOPN optimization is enabled only when LIMIT n is less than this value | Set to `0` to disable the entire TOPN optimization |
+| `enable_two_phase_read_opt` | true | Whether to enable Optimization 3 (two-phase lazy materialization) | Set to `false` to disable Optimization 3 alone |
+| `topn_filter_ratio` | 0.5 | Ratio threshold of LIMIT n to total table data | When the LIMIT count exceeds half of the table data, the filter is no longer generated |
 
-2. `enable_two_phase_read_optimization`: This session variable determines whether to enable this optimization. It defaults to true, and setting it to false disables the optimization.
+<!-- Knowledge type: operation -->
+<!-- Applicable scenarios: verifying whether TOPN optimization is enabled -->
 
-3. `topn_filter_ratio`, the ratio between LIMIT n and the total data in the table, the default value is 0.5, which means that if the number of LIMIT is more than half of the data in the table, no filter will be generated.
+## Check Whether TOPN Optimization Is Enabled
 
-### Checking if TOPN Query Optimization is Enabled
+**Purpose**: Use the execution plan to determine which optimization points are enabled for the current SQL.
 
-To confirm if TOPN query optimization is enabled for a particular SQL, you can use the `EXPLAIN` statement to get the query plan. An example is as follows:
-
-- `TOPN OPT` indicates that optimization point 1 is applied.
-
-- `VOlapScanNode` with `SORT LIMIT` indicates optimization point 2 is applied.
-
-- `OPT TWO PHASE` indicates optimization point 3 is applied.
+**Command**:
 
 ```sql
-   1:VTOP-N(137)
-   |   order by: @timestamp18 DESC
-   |   TOPN OPT
-   |   OPT TWO PHASE
-   |   offset: 0
-   |   limit: 10
-   |   distribute expr lists: applicationName5
-   |  
-   0:VOlapScanNode(106)
-      TABLE: log_db.log_core_all_no_index(log_core_all_no_index), PREAGGREGATION: ON
-      SORT INFO:
-           @timestamp18
-      SORT LIMIT: 10
-      TOPN OPT:1
-      PREDICATES: ZYCFC-TRACE-ID4 like '%flowId-1720055220933%'
-      partitions=1/8 (p20240704), tablets=250/250, tabletList=1727094,1727096,1727098 ...
-      cardinality=345472780, avgRowSize=0.0, numNodes=1
-      pushAggOp=NONE
+EXPLAIN <your_sql>;
 ```
 
-### Checking the Effectiveness of TOPN Query Optimization During Execution
+**Description**: Look for the following markers in the Query Plan:
 
-First, set `topn_opt_limit_threshold` to 0 to disable TOPN query optimization and compare the execution time of the SQL with and without optimization enabled.
+- `TOPN OPT`: **Optimization 1** (dynamic range filtering) is enabled
+- `SORT LIMIT` under `VOlapScanNode`: **Optimization 2** (key-prefix short-circuit read) is enabled
+- `OPT TWO PHASE`: **Optimization 3** (two-phase lazy materialization) is enabled
 
-After enabling TOPN query optimization, search for `RuntimePredicate` in the query profile and focus on the following metrics:
+**Example**:
 
-- `RowsZonemapRuntimePredicateFiltered`: The number of rows filtered out, the higher the better.
+```sql
+  1:VTOP-N(137)
+  |  order by: @timestamp18 DESC
+  |  TOPN OPT
+  |  OPT TWO PHASE
+  |  offset: 0
+  |  limit: 10
+  |  distribute expr lists: applicationName5
+  |
+  0:VOlapScanNode(106)
+     TABLE: log_db.log_core_all_no_index(log_core_all_no_index), PREAGGREGATION: ON
+     SORT INFO:
+          @timestamp18
+     SORT LIMIT: 10
+     TOPN OPT:1
+     PREDICATES: ZYCFC-TRACE-ID4 like '%flowId-1720055220933%'
+     partitions=1/8 (p20240704), tablets=250/250, tabletList=1727094,1727096,1727098 ...
+     cardinality=345472780, avgRowSize=0.0, numNodes=1
+     pushAggOp=NONE
+```
 
-- `NumSegmentFiltered`: The number of data files filtered out, the higher the better.
+<!-- Knowledge type: operation -->
+<!-- Applicable scenarios: evaluating the actual benefit of TOPN optimization -->
 
-- `BlockConditionsFilteredZonemapRuntimePredicateTime`: The time taken to filter data, the lower the better.
+## Check the Execution Effect of TOPN Optimization
 
-Before version 2.0.3, the `RuntimePredicate` metrics were not separated out, and the `Zonemap` metrics can be used as a rough guide.
+**Purpose**: Confirm the actual filtering effect of TOPN optimization by comparing execution time and Profile metrics.
+
+**Steps**:
+
+1. Set `topn_opt_limit_threshold` to `0` to disable the optimization, and record the execution time.
+2. Restore the default value to enable the optimization, record the execution time, and compare.
+3. Search for `RuntimePredicate` in the Query Profile and pay attention to the key metrics in the table below.
+
+**Key Metrics**:
+
+| Metric | Meaning | Expected Trend |
+| :--- | :--- | :--- |
+| `RowsZonemapRuntimePredicateFiltered` | Number of rows filtered out by RuntimePredicate | The larger, the better |
+| `NumSegmentFiltered` | Number of data files (Segments) filtered out | The larger, the better |
+| `BlockConditionsFilteredZonemapRuntimePredicateTime` | Time taken by RuntimePredicate to filter data | The smaller, the better |
+
+> Note: In versions before 2.0.3, the metrics for `RuntimePredicate` are not yet tracked separately. You can roughly observe them through the general Zonemap metrics.
+
+**Profile Example**:
 
 ```sql
     SegmentIterator:
@@ -138,3 +185,36 @@ Before version 2.0.3, the `RuntimePredicate` metrics were not separated out, and
           -  UncompressedBytesRead:  137.99  MB
           -  VectorPredEvalTime:  0ns
 ```
+
+<!-- Knowledge type: FAQ -->
+<!-- Applicable scenarios: common questions and troubleshooting -->
+
+## Frequently Asked Questions (FAQ / Troubleshooting)
+
+**Q1: `TOPN OPT` is not present in EXPLAIN. What might be the reasons?**
+
+- LIMIT n is greater than `topn_opt_limit_threshold` (default 1024).
+- The ratio of LIMIT n to the total number of rows in the table exceeds `topn_filter_ratio` (default 0.5).
+- The table is a Unique MOR table, which cannot use this optimization.
+
+**Q2: The SQL becomes slower after the optimization is enabled. Why?**
+
+- Check whether `n` is too large, causing increased memory overhead. You can lower `topn_opt_limit_threshold` appropriately.
+- Confirm the filtering effect via `RowsZonemapRuntimePredicateFiltered` in the Profile. If the filtered row count is 0, the optimization brings no benefit.
+
+**Q3: How can I disable only Optimization 3 (two-phase read) while keeping Optimizations 1 and 2?**
+
+Set `enable_two_phase_read_opt = false`.
+
+**Q4: An ORDER BY LIMIT query on a MOR table returns incorrect results. Why?**
+
+Confirm that TOPN optimization is not enabled on the MOR table. For MOR tables, use the MOW model or avoid triggering this optimization path.
+
+## Quick Reference for Related Parameters
+
+| Desired Effect | Setting |
+| :--- | :--- |
+| Completely disable TOPN optimization | `SET topn_opt_limit_threshold = 0;` |
+| Disable only two-phase lazy materialization | `SET enable_two_phase_read_opt = false;` |
+| Relax the LIMIT upper bound to cover more queries | Increase `topn_opt_limit_threshold` appropriately |
+| Adjust the ratio threshold for generating the filter | Modify `topn_filter_ratio` |

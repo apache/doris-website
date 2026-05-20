@@ -31,27 +31,15 @@ versions:
     - "4.x"
     - "3.x"
     - "2.1"
-    - current
   archived:
     - "2.0"
     - "1.2"
   default_version: "4.x"
-  current_route_version: dev
   blocking_scope:
     active_versions: true
     archived_versions: false
-  version_labels:
-    current: Dev
 
 content_roots:
-  docs:
-    plugin: main_docs
-    locale: en
-    version: current
-    source_root: docs
-    route_base: "/docs/dev"
-    sidebar: sidebars.ts
-    blocking_scope: true
   versioned_docs:
     plugin: main_docs
     locale: en
@@ -60,14 +48,6 @@ content_roots:
     route_base_pattern: "/docs/{version}"
     sidebar_pattern: "versioned_sidebars/version-{version}-sidebars.json"
     blocking_scope: active_versions_only
-  zh_current_docs:
-    plugin: main_docs
-    locale: zh-CN
-    version: current
-    source_root: i18n/zh-CN/docusaurus-plugin-content-docs/current
-    route_base: "/zh-CN/docs/dev"
-    sidebar: sidebars.ts
-    blocking_scope: true
   zh_versioned_docs:
     plugin: main_docs
     locale: zh-CN
@@ -164,9 +144,6 @@ doc_id:
     - "Prefix plugin name for non-main-docs content, for example community:join-community."
     - "Do not include locale or version in doc_id."
   examples:
-    - source_path: "docs/gettingStarted/what-is-apache-doris.md"
-      doc_id: "gettingStarted/what-is-apache-doris"
-      sync_group_id: "main_docs:gettingStarted/what-is-apache-doris"
     - source_path: "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/string-functions/concat.md"
       doc_id: "sql-manual/sql-functions/scalar-functions/string-functions/concat"
       sync_group_id: "main_docs:sql-manual/sql-functions/scalar-functions/string-functions/concat"
@@ -176,7 +153,6 @@ doc_id:
 
 route_path:
   rules:
-    - "current English docs route to /docs/dev/{doc_id} unless front matter slug overrides the final segment."
     - "default version 4.x route remains /docs/4.x/{doc_id}."
     - "localized routes prefix locale, for example /zh-CN/docs/4.x/{doc_id}."
     - "community, releases, and blog use their configured routeBasePath."
@@ -186,9 +162,8 @@ doc_type_detection:
   ordered_rules:
     - doc_type: sql_function
       path_patterns:
-        - "^docs/sql-manual/sql-functions/"
         - "^versioned_docs/version-[^/]+/sql-manual/sql-functions/"
-        - "^i18n/zh-CN/docusaurus-plugin-content-docs/(current|version-[^/]+)/sql-manual/sql-functions/"
+        - "^i18n/zh-CN/docusaurus-plugin-content-docs/version-[^/]+/sql-manual/sql-functions/"
       required_sections:
         en:
           - Description
@@ -205,9 +180,8 @@ doc_type_detection:
       rollout_level: blocking_after_week_5
     - doc_type: sql_statement
       path_patterns:
-        - "^docs/sql-manual/sql-statements/"
         - "^versioned_docs/version-[^/]+/sql-manual/sql-statements/"
-        - "^i18n/zh-CN/docusaurus-plugin-content-docs/(current|version-[^/]+)/sql-manual/sql-statements/"
+        - "^i18n/zh-CN/docusaurus-plugin-content-docs/version-[^/]+/sql-manual/sql-statements/"
       rollout_level: warning
     - doc_type: release_notes
       path_patterns:
@@ -225,9 +199,8 @@ doc_type_detection:
       rollout_level: warning
     - doc_type: feature_doc
       path_patterns:
-        - "^docs/(install|lakehouse|data-operate|table-design|admin-manual|query-data|query-acceleration|compute-storage-decoupled|ai|ecosystem|db-connect)/"
         - "^versioned_docs/version-[^/]+/(install|lakehouse|data-operate|table-design|admin-manual|query-data|query-acceleration|compute-storage-decoupled|ai|ecosystem|db-connect)/"
-        - "^i18n/zh-CN/docusaurus-plugin-content-docs/(current|version-[^/]+)/(install|lakehouse|data-operate|table-design|admin-manual|query-data|query-acceleration|compute-storage-decoupled|ai|ecosystem|db-connect)/"
+        - "^i18n/zh-CN/docusaurus-plugin-content-docs/version-[^/]+/(install|lakehouse|data-operate|table-design|admin-manual|query-data|query-acceleration|compute-storage-decoupled|ai|ecosystem|db-connect)/"
       expected_sections:
         - overview
         - quick_start_or_basic_usage
@@ -249,20 +222,10 @@ sync_policy:
     report_only_locales:
       - ja
   version_rules:
-    - when: "source version is current"
-      required_counterparts:
-        - locale: zh-CN
-          version: current
-      recommended_counterparts:
-        - locale: en
-          version: "4.x"
     - when: "source version is 4.x"
       required_counterparts:
         - locale: zh-CN
           version: "4.x"
-      recommended_counterparts:
-        - locale: en
-          version: current
     - when: "source version is 3.x"
       required_counterparts:
         - locale: zh-CN
@@ -294,7 +257,6 @@ severity:
 
 seo_policy:
   indexable_roots:
-    - docs
     - versioned_docs
     - i18n/zh-CN/docusaurus-plugin-content-docs
     - community

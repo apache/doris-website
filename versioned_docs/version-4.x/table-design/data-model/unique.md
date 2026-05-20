@@ -1,48 +1,67 @@
 ---
 {
-    "title": "Unique Key Table",
+    "title": "Unique Key Model",
     "language": "en",
-    "description": "When data updates are required, use the Unique Key Table."
+    "description": "The Doris Unique Key Model guarantees the uniqueness of Key columns and supports UPSERT and deduplication. It fits data update scenarios such as high-frequency updates, dimension synchronization, and profile tagging."
 }
 ---
 
-When data updates are required, use the **Unique Key Table**. It guarantees the uniqueness of the Key columns so that new data overwrites existing records with matching keys, ensuring that only the most up-to-date records are maintained. This table is ideal for update scenarios, enabling unique-key-level updates during data insertion.
-The Unique Key Table has the following characteristics:
+The Unique Key Model is designed for business scenarios that require data updates. This model guarantees the uniqueness of Key columns: when data is inserted or updated, new data overwrites old data with the same Key, ensuring that records always reflect the latest version.
 
-* **Unique Key UPSERT**: During insertion, records with duplicate keys are updated, while new keys are inserted.
+<!-- Knowledge type: Data model -->
+<!-- Applicable scenarios: Data update / High-frequency writes / Primary key deduplication -->
 
-* **Automatic Deduplication**: The table ensures key uniqueness and automatically deduplicates data based on the unique key.
+## Applicable Scenarios
 
-* **Optimized for High-frequency Updates**: It efficiently handles high-frequency updates while balancing update and query performance.
+The Unique Key Model is mainly suitable for the following three categories of business scenarios:
 
-## Use Cases
+1. **High-frequency data updates**: Real-time synchronization of dimension tables from upstream OLTP databases, which requires efficient UPSERT operations.
+2. **Efficient data deduplication**: In ad delivery, customer relationship management (CRM), and similar systems, deduplication is performed efficiently based on user IDs.
+3. **Partial column updates**: For profile tagging scenarios where dynamic tags change frequently, or for order consumption scenarios where the transaction status changes, the partial column update capability of the Unique Key Model can be used.
 
-* **High-frequency Data Updates**: In upstream OLTP databases, where dimension tables are frequently updated, the Unique Key Table can efficiently synchronize the upstream updated records and perform efficient UPSERT operations.
+## Core Features
 
-* **Efficient Data Deduplication**: In scenarios such as advertising campaigns or customer relationship management systems, where deduplication is required based on user IDs, the Unique Key Table ensures efficient deduplication.
+The Unique Key Model provides the following core features:
 
-* **Partial Columns Updates**: In scenarios such as in user profiling where dynamic tags change frequently, or in order consumption scenarios where the transaction status needs to be updated. The Unique Key Table's partial column update capability allows for changes to specific columns.
+| Feature | Description |
+| --- | --- |
+| UPSERT based on primary key | Records with duplicate primary keys are updated; records whose primary keys do not exist are inserted |
+| Deduplication based on primary key | Key columns are unique, and data is deduplicated by the primary key columns |
+| High-frequency data updates | Supports high-frequency update scenarios while balancing update performance and query performance |
 
-## Implementation Methods
+## How It Works
 
-In Doris, the Unique Key Table has two implementation methods:
+The Doris Unique Key Model provides two implementations, compared as follows:
 
-* **Merge-on-write**: Starting from version 1.2, the default implementation of the Unique Key Table in Doris is the merge-on-write mode. In this mode, data is immediately merged for the same Key upon writing, ensuring that the data storage state after each write is the final merged result of the unique key, and only the latest result is stored. Merge-on-write provides a good balance between query and write performance, avoiding the need to merge multiple versions of data during queries and ensuring predicate pushdown to the storage layer. The merge-on-write table is recommended for most scenarios.
+| Implementation | Default since version | Merge timing | Query performance | Predicate pushdown | Applicable scenarios |
+| --- | --- | --- | --- | --- | --- |
+| Merge-on-write | Default since 1.2 | Merged immediately at write time | High | Supported | Most scenarios, balancing query and write performance |
+| Merge-on-read | Default before 1.2 | Merged at query or compaction time | Lower | Not supported | Write-heavy, read-light scenarios |
 
-* **Merge-on-read**: Prior to version 1.2, Doris's Unique Key Table defaulted to merge-on-read mode. In this mode, data is not merged upon writing but is appended incrementally, retaining multiple versions within Doris. During queries or Compaction, data is merged by the same Key version. Merge-on-read is suitable for write-heavy and read-light scenarios, but during queries, multiple versions must be merged, and predicates cannot be pushed down, which may affect query speed.
+- **Merge-on-write**: Records with the same Key are merged immediately at write time, ensuring that the storage always holds the latest data. This mode balances query and write performance, avoids merging data across multiple versions, and supports predicate pushdown to the storage layer. **This mode is recommended for most scenarios.**
+- **Merge-on-read**: Data is not merged at write time but is appended incrementally, with multiple versions retained inside Doris. At query or compaction time, versions with the same Key are merged. This mode suits write-heavy, read-light scenarios, but queries must merge multiple versions and predicates cannot be pushed down, which may affect query speed.
 
-In Doris, there are two types of update semantics for the Unique Key Table:
+## Update Semantics
 
-* **Full Row Upsert**: The default update semantic for the Unique Key Table is **full row UPSERT**, i.e., UPDATE OR INSERT. If the Key of the row exists, it will be updated; if it does not exist, new data will be inserted. In the full row UPSERT semantic, even if the user inserts data into specific columns using `INSERT INTO`, Doris will fill in the missing columns with NULL values or default values during the planner stage.
+The Doris Unique Key Model supports two update semantics:
 
-* **Partial Column Upsert**: If users want to update specific fields, they need to use the merge-on-write implementation and enable partial column updates support via specific parameters. Please refer to the documentation on [Partial Column Updates](../../data-operate/update/update-of-unique-model).
+| Update semantics | Description | Implementation requirement |
+| --- | --- | --- |
+| Whole-row update | The default UPSERT semantics of the Unique Key Model: if the Key exists, the entire row is updated; otherwise, a new row is inserted | Supported by default |
+| Partial column update | Only the specified columns are updated, and the original values of unspecified columns are kept | Must use merge-on-write and be enabled through a parameter |
 
-## Merge-on-write
+Notes:
 
-### Creating a Merge-on-write Table
+- Under whole-row `UPSERT` semantics, even if `INSERT INTO` specifies only some columns, Doris fills the unspecified columns with NULL or default values in the planner.
+- For how to use partial column updates, see [Partial Column Update](../../data-operate/update/update-of-unique-model).
 
-To create a Unique Key table, use the `UNIQUE KEY` keyword. Enable merge-on-write mode by setting the `enable_unique_key_merge_on_write` attribute (default since Doris 2.1):
+## Table Creation Examples
 
+Use the `UNIQUE KEY` keyword to define a Unique Key table at table creation time, and use the `enable_unique_key_merge_on_write` property to control the implementation.
+
+### Merge-on-write
+
+Since Doris 2.1, merge-on-write is enabled by default:
 
 ```sql
 CREATE TABLE IF NOT EXISTS example_tbl_unique
@@ -60,11 +79,9 @@ PROPERTIES (
 );
 ```
 
-## Merge-on-read
+### Merge-on-read
 
-### Creating a Merge-on-read Table
-
-When creating a table, the `UNIQUE KEY` keyword can be used to specify a Unique Key table. The merge-on-read mode can be enabled by explicitly disabling the `enable_unique_key_merge_on_write` attribute. Before Doris version 2.1, the merge-on-read mode was enabled by default:
+Before Doris 2.1, merge-on-read was enabled by default. Starting from 2.1, you must explicitly disable the `enable_unique_key_merge_on_write` property to use it:
 
 ```sql
 CREATE TABLE IF NOT EXISTS example_tbl_unique
@@ -84,26 +101,26 @@ PROPERTIES (
 
 ## Data Insertion and Storage
 
-In a Unique Key table, the Key columns serve both for sorting and deduplication. New insertions overwrite existing records with matching keys.
+In a Unique Key table, the Key columns are used not only for sorting but also for deduplication. When data is inserted, records with the same Key are overwritten.
 
 ![unique-key-model-insert](/images/table-desigin/unique-key-model-insert.png)
 
-As shown in the example, there were 4 rows of data in the original table. After inserting 2 new rows, the newly inserted rows are updated based on the unique key:
+In the following example, the original table has 4 rows. After inserting 2 rows, the new data updates the table based on the primary key:
 
 ```sql
--- insert into raw data
+-- Insert original data
 INSERT INTO example_tbl_unique VALUES
 (101, 'Tom', 'BJ', 26, 1),
 (102, 'Jason', 'BJ', 27, 1),
 (103, 'Juice', 'SH', 20, 2),
 (104, 'Olivia', 'SZ', 22, 2);
 
--- insert into data to update by key
+-- Update based on Key
 INSERT INTO example_tbl_unique VALUES
 (101, 'Tom', 'BJ', 27, 1),
 (102, 'Jason', 'SH', 28, 1);
 
--- check updated data
+-- Query the updated data
 SELECT * FROM example_tbl_unique;
 +---------+----------+------+------+------+
 | user_id | username | city | age  | sex  |
@@ -117,10 +134,9 @@ SELECT * FROM example_tbl_unique;
 
 ## Notes
 
-* The implementation mode for Unique Key tables is fixed at creation and cannot be changed via schema alterations.
+When using the Unique Key Model, note the following limitations:
 
-* Under full row UPSERT semantics, if specific columns are omitted during insertion, Doris fills them with NULL or default values during planning.
-
-* For partial column upsert, enable merge-on-write mode with the appropriate parameters. Refer to [Partial Column Updates](../../data-operate/update/update-of-unique-model) for guidance.
-
-* When using a Unique table, the partition key must be included in the Key columns to ensure data uniqueness.
+1. **The implementation cannot be changed**: The implementation of a Unique table (merge-on-write / merge-on-read) can only be specified at table creation time and cannot be modified through schema change.
+2. **Whole-row UPSERT fills in default values**: Under whole-row `UPSERT` semantics, even if `INSERT INTO` specifies only some columns, Doris fills the unspecified columns with NULL or default values in the planner.
+3. **Partial column updates require merge-on-write**: To update only some columns, you must use the merge-on-write implementation and enable partial column update support through a specific parameter. For details, see [Partial Column Update](../../data-operate/update/update-of-unique-model).
+4. **Partition keys must be a subset of Key columns**: To guarantee data uniqueness, partition keys must be a subset of the Key columns.

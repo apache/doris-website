@@ -22,7 +22,7 @@ MONTHS_ADD(`<date_or_time_expr>`, `<nums>`)
 
 | Parameter | Description |
 | --------- | ----------- |
-| `<date_or_time_expr>` | The input datetime value. Supports date/datetime/timestamptz types. For specific formats, please refer to [timestamptz conversion](../../../../../../docs/sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion.md), [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion). |
+| `<date_or_time_expr>` | The input datetime value. Supports date/datetime/timestamptz types. For specific formats, please refer to [timestamptz conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion), [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion). |
 | `<nums>` | The number of months to add or subtract, of type INT. Negative numbers indicate subtracting nums months from the datetime, positive numbers indicate adding nums months. |
 
 ## Return Value
@@ -77,14 +77,6 @@ SELECT MONTHS_ADD('2023-07-13 22:28:18.456789', 3) AS result;
 | 2023-10-13 22:28:18.456789 |
 +----------------------------+
 
--- Returns NULL when input is NULL
-SELECT MONTHS_ADD(NULL, 5), MONTHS_ADD('2023-07-13', NULL) AS result;
-+----------------------+--------+
-| months_add(NULL, 5)  | result |
-+----------------------+--------+
-| NULL                 | NULL   |
-+----------------------+--------+
-
 -- Example of TimeStampTz type, SET time_zone = '+08:00'
 SELECT MONTHS_ADD('2025-10-10 11:22:33.123+07:00', 1);
 +------------------------------------------------+
@@ -92,6 +84,14 @@ SELECT MONTHS_ADD('2025-10-10 11:22:33.123+07:00', 1);
 +------------------------------------------------+
 | 2025-11-10 12:22:33.123+08:00                  |
 +------------------------------------------------+
+
+-- Returns NULL when input is NULL
+SELECT MONTHS_ADD(NULL, 5), MONTHS_ADD('2023-07-13', NULL) AS result;
++----------------------+--------+
+| months_add(NULL, 5)  | result |
++----------------------+--------+
+| NULL                 | NULL   |
++----------------------+--------+
 
 -- Calculation result exceeds date range
 SELECT MONTHS_ADD('9999-12-31', 1) AS result;

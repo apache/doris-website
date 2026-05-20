@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState, useContext } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import clsx from 'clsx';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import useIsBrowser from '@docusaurus/useIsBrowser';
@@ -28,7 +28,6 @@ import { searchResultLimits } from "../../utils/proxiedGeneratedConstants";
 import useIsDocPage from '@site/src/hooks/use-is-doc';
 import { debounce } from '@site/src/utils/debounce';
 import { getLocalePrefix, normalizePathname } from '@site/src/utils/locale';
-import { DataContext } from '../Layout';
 
 async function fetchAutoCompleteJS() {
     const autoCompleteModule = await import('@easyops-cn/autocomplete.js');
@@ -63,7 +62,6 @@ export default function SearchBar({ handleSearchBarToggle }) {
     const isBrowser = useIsBrowser();
     const [curVersion, setCurVersion] = useState(DEFAULT_VERSION);
     const location = useLocation();
-    const { setShowSearchPageMobile } = useContext(DataContext);
     const {
         siteConfig: { baseUrl },
         i18n: { currentLocale, defaultLocale, locales },
@@ -109,6 +107,10 @@ export default function SearchBar({ handleSearchBarToggle }) {
     const [inputChanged, setInputChanged] = useState(false);
     const [inputValue, setInputValue] = useState('');
     const search = useRef(null);
+    // Bumped on every loadIndex call so a stale call (whose async fetches
+    // finished after a newer call started) can abort before wrapping the
+    // input with a second autocomplete instance — see #3655 race.
+    const loadToken = useRef(0);
     const prevSearchContext = useRef('');
     const [searchContext, setSearchContext] = useState('');
     useEffect(() => {
@@ -116,19 +118,30 @@ export default function SearchBar({ handleSearchBarToggle }) {
             return;
         }
         let nextSearchContext = '';
-        if (location.pathname.startsWith(versionUrl)) {
-            const uri = location.pathname.substring(versionUrl.length);
-            let matchedPath;
-            for (const _path of searchContextByPaths) {
-                const path = typeof _path === 'string' ? _path : _path.path;
-                if (uri === path || uri.startsWith(`${path}/`)) {
-                    matchedPath = path;
-                    break;
-                }
+        // searchContextByPaths is expressed relative to the docs root
+        // (e.g. ['docs']), so we must strip both the locale prefix and the
+        // /docs/<version>/ version segment before matching. Subtracting
+        // versionUrl from the raw pathname is not enough: for a non-default
+        // version page the leftover starts with the doc slug (e.g.
+        // 'data-operate/...') and never matches 'docs', leaving searchContext
+        // empty and fetching the no-context index (which is empty when
+        // useAllContextsWithNoSearchContext is false).
+        const normalized = normalizePathname(location.pathname, locales);
+        const parts = normalized.replace(/^\//, '').split('/').filter(Boolean);
+        if (parts[0] === 'docs' && parts.length > 1 && VERSIONS.includes(parts[1])) {
+            parts.splice(1, 1);
+        }
+        const uri = parts.join('/');
+        let matchedPath;
+        for (const _path of searchContextByPaths) {
+            const path = typeof _path === 'string' ? _path : _path.path;
+            if (uri === path || uri.startsWith(`${path}/`)) {
+                matchedPath = path;
+                break;
             }
-            if (matchedPath) {
-                nextSearchContext = matchedPath;
-            }
+        }
+        if (matchedPath) {
+            nextSearchContext = matchedPath;
         }
         if (prevSearchContext.current !== nextSearchContext) {
             // Reset index state map once search context is changed.
@@ -136,7 +149,7 @@ export default function SearchBar({ handleSearchBarToggle }) {
             prevSearchContext.current = nextSearchContext;
         }
         setSearchContext(nextSearchContext);
-    }, [location.pathname, versionUrl]);
+    }, [location.pathname, locales]);
     const hidden = !!hideSearchBarWithNoSearchContext && Array.isArray(searchContextByPaths) && searchContext === '';
 
     const loadIndex = useCallback(
@@ -145,13 +158,19 @@ export default function SearchBar({ handleSearchBarToggle }) {
                 // Do not load the index (again) if its already loaded or in the process of being loaded.
                 return;
             }
+            const myToken = ++loadToken.current;
             indexStateMap.current.set(searchContext, 'loading');
             search.current?.autocomplete.destroy();
+            search.current = null;
             setLoading(true);
             const [autoComplete] = await Promise.all([
                 fetchAutoCompleteJS(),
                 fetchIndexesByWorker(versionUrl, searchContext),
             ]);
+            if (myToken !== loadToken.current) {
+                // Superseded by a newer loadIndex; don't mount a second autocomplete on the same input.
+                return;
+            }
             const searchFooterLinkElement = ({ query, isEmpty }) => {
                 const a = document.createElement('a');
                 const params = new URLSearchParams();
@@ -209,7 +228,6 @@ export default function SearchBar({ handleSearchBarToggle }) {
                 a.href = url;
                 a.textContent = linkText;
                 a.addEventListener('click', e => {
-                    setShowSearchPageMobile(false);
                     if (!e.ctrlKey && !e.metaKey) {
                         e.preventDefault();
                         search.current?.autocomplete.close();
@@ -397,7 +415,6 @@ export default function SearchBar({ handleSearchBarToggle }) {
                 if (suggestionsContainer) {
                     suggestionsContainer.addEventListener('click', () => {
                         setInputValue('');
-                        setShowSearchPageMobile(false);
                     });
                 }
             }

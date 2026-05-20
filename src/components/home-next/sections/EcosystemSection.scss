@@ -18,8 +18,6 @@
     --en-yellow: #FFD23F;
     --en-yellow-bright: #FFE066;
     --en-ink: #0F1A14;
-    --en-mono: 'JetBrains Mono', 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
-    --en-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 
     position: relative;
     padding: 120px 56px 148px;
@@ -27,7 +25,7 @@
     isolation: isolate;
     background: var(--en-cream);
     color: var(--en-ink);
-    font-family: var(--en-sans);
+    font-family: var(--font-family-base);
 
     &::before {
         content: none;
@@ -329,7 +327,7 @@
 
     &__logo--metabase .ecosystem-next__logo-image,
     &__logo--grafana .ecosystem-next__logo-image,
-    &__logo--langfuse .ecosystem-next__logo-image {
+    &__logo--litefuse .ecosystem-next__logo-image {
         padding: 0;
     }
 
@@ -373,22 +371,13 @@
             0 0 34px -16px rgba(45, 223, 168, 0.8);
     }
 
-    &__doris-mark {
-        width: 36px;
+    &__doris-logo {
+        width: auto;
         height: 36px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border-radius: 7px;
-        background: var(--en-yellow);
-        color: var(--en-ink);
-        @include type.mono-text(20px, 800, 1, 0);
-    }
-
-    &__doris-name {
-        color: var(--en-cream-light);
-        @include type.mono-text(12px, 800, 1.2, 0.14em, uppercase);
-        text-align: center;
+        max-width: 78%;
+        filter: brightness(0) invert(1);
+        user-select: none;
+        pointer-events: none;
     }
 
     &__flows {
@@ -724,8 +713,8 @@
             height: 124px;
         }
 
-        &__doris-name {
-            font-size: 10px;
+        &__doris-logo {
+            height: 28px;
         }
     }
 }

@@ -1,0 +1,762 @@
+[
+  {
+    "from": "/docs/4.x/admin-manual/auth/authentication/federation",
+    "to": "/docs/4.x/getting-started/what-is-apache-doris"
+  },
+  {
+    "from": "/zh-CN/docs/4.x/admin-manual/auth/authentication/federation",
+    "to": "/zh-CN/docs/4.x/getting-started/what-is-apache-doris"
+  },
+  {
+    "from": "/docs/4.x/ai/text-search/custom-analyzer",
+    "to": "/docs/4.x/getting-started/what-is-apache-doris"
+  },
+  {
+    "from": "/zh-CN/docs/4.x/ai/text-search/custom-analyzer",
+    "to": "/zh-CN/docs/4.x/getting-started/what-is-apache-doris"
+  },
+  {
+    "from": "/docs/4.x/ai/text-search/overview",
+    "to": "/docs/4.x/getting-started/what-is-apache-doris"
+  },
+  {
+    "from": "/zh-CN/docs/4.x/ai/text-search/overview",
+    "to": "/zh-CN/docs/4.x/getting-started/what-is-apache-doris"
+  },
+  {
+    "from": "/docs/4.x/ai/text-search/scoring",
+    "to": "/docs/4.x/getting-started/what-is-apache-doris"
+  },
+  {
+    "from": "/zh-CN/docs/4.x/ai/text-search/scoring",
+    "to": "/zh-CN/docs/4.x/getting-started/what-is-apache-doris"
+  },
+  {
+    "from": "/docs/4.x/ai/text-search/search-function",
+    "to": "/docs/4.x/getting-started/what-is-apache-doris"
+  },
+  {
+    "from": "/zh-CN/docs/4.x/ai/text-search/search-function",
+    "to": "/zh-CN/docs/4.x/getting-started/what-is-apache-doris"
+  },
+  {
+    "from": "/docs/4.x/ai/text-search/search-operators",
+    "to": "/docs/4.x/getting-started/what-is-apache-doris"
+  },
+  {
+    "from": "/zh-CN/docs/4.x/ai/text-search/search-operators",
+    "to": "/zh-CN/docs/4.x/getting-started/what-is-apache-doris"
+  },
+  {
+    "from": "/docs/4.x/ai/vector-search/behind-index",
+    "to": "/docs/4.x/getting-started/what-is-apache-doris"
+  },
+  {
+    "from": "/zh-CN/docs/4.x/ai/vector-search/behind-index",
+    "to": "/zh-CN/docs/4.x/getting-started/what-is-apache-doris"
+  },
+  {
+    "from": "/docs/4.x/ai/vector-search/hnsw",
+    "to": "/docs/4.x/getting-started/what-is-apache-doris"
+  },
+  {
+    "from": "/zh-CN/docs/4.x/ai/vector-search/hnsw",
+    "to": "/zh-CN/docs/4.x/getting-started/what-is-apache-doris"
+  },
+  {
+    "from": "/docs/4.x/ai/vector-search/index-management",
+    "to": "/docs/4.x/getting-started/what-is-apache-doris"
+  },
+  {
+    "from": "/zh-CN/docs/4.x/ai/vector-search/index-management",
+    "to": "/zh-CN/docs/4.x/getting-started/what-is-apache-doris"
+  },
+  {
+    "from": "/docs/4.x/ai/vector-search/ivf",
+    "to": "/docs/4.x/getting-started/what-is-apache-doris"
+  },
+  {
+    "from": "/zh-CN/docs/4.x/ai/vector-search/ivf",
+    "to": "/zh-CN/docs/4.x/getting-started/what-is-apache-doris"
+  },
+  {
+    "from": "/docs/4.x/ai/vector-search/overview",
+    "to": "/docs/4.x/getting-started/what-is-apache-doris"
+  },
+  {
+    "from": "/zh-CN/docs/4.x/ai/vector-search/overview",
+    "to": "/zh-CN/docs/4.x/getting-started/what-is-apache-doris"
+  },
+  {
+    "from": "/docs/4.x/ai/vector-search/performance",
+    "to": "/docs/4.x/getting-started/what-is-apache-doris"
+  },
+  {
+    "from": "/zh-CN/docs/4.x/ai/vector-search/performance",
+    "to": "/zh-CN/docs/4.x/getting-started/what-is-apache-doris"
+  },
+  {
+    "from": "/docs/4.x/ai/vector-search/performance-large-scale",
+    "to": "/docs/4.x/getting-started/what-is-apache-doris"
+  },
+  {
+    "from": "/zh-CN/docs/4.x/ai/vector-search/performance-large-scale",
+    "to": "/zh-CN/docs/4.x/getting-started/what-is-apache-doris"
+  },
+  {
+    "from": "/docs/4.x/ai/vector-search/practical-guide",
+    "to": "/docs/4.x/getting-started/what-is-apache-doris"
+  },
+  {
+    "from": "/zh-CN/docs/4.x/ai/vector-search/practical-guide",
+    "to": "/zh-CN/docs/4.x/getting-started/what-is-apache-doris"
+  },
+  {
+    "from": "/docs/4.x/ai/vector-search/quantization-survey",
+    "to": "/docs/4.x/getting-started/what-is-apache-doris"
+  },
+  {
+    "from": "/zh-CN/docs/4.x/ai/vector-search/quantization-survey",
+    "to": "/zh-CN/docs/4.x/getting-started/what-is-apache-doris"
+  },
+  {
+    "from": "/docs/4.x/ai/vector-search/resource-estimation",
+    "to": "/docs/4.x/getting-started/what-is-apache-doris"
+  },
+  {
+    "from": "/zh-CN/docs/4.x/ai/vector-search/resource-estimation",
+    "to": "/zh-CN/docs/4.x/getting-started/what-is-apache-doris"
+  },
+  {
+    "from": "/docs/4.x/benchmark/ssb",
+    "to": "/why-doris/benchmarks"
+  },
+  {
+    "from": "/zh-CN/docs/4.x/benchmark/ssb",
+    "to": "/zh-CN/why-doris/benchmarks"
+  },
+  {
+    "from": "/docs/4.x/benchmark/tpcds",
+    "to": "/why-doris/benchmarks"
+  },
+  {
+    "from": "/zh-CN/docs/4.x/benchmark/tpcds",
+    "to": "/zh-CN/why-doris/benchmarks"
+  },
+  {
+    "from": "/docs/4.x/benchmark/tpch",
+    "to": "/why-doris/benchmarks"
+  },
+  {
+    "from": "/zh-CN/docs/4.x/benchmark/tpch",
+    "to": "/zh-CN/why-doris/benchmarks"
+  },
+  {
+    "from": "/docs/4.x/compute-storage-decoupled/before-deployment",
+    "to": "/docs/4.x/getting-started/what-is-apache-doris"
+  },
+  {
+    "from": "/zh-CN/docs/4.x/compute-storage-decoupled/before-deployment",
+    "to": "/zh-CN/docs/4.x/getting-started/what-is-apache-doris"
+  },
+  {
+    "from": "/docs/4.x/compute-storage-decoupled/compilation-and-deployment",
+    "to": "/docs/4.x/getting-started/what-is-apache-doris"
+  },
+  {
+    "from": "/zh-CN/docs/4.x/compute-storage-decoupled/compilation-and-deployment",
+    "to": "/zh-CN/docs/4.x/getting-started/what-is-apache-doris"
+  },
+  {
+    "from": "/docs/4.x/compute-storage-decoupled/overview",
+    "to": "/docs/4.x/getting-started/what-is-apache-doris"
+  },
+  {
+    "from": "/zh-CN/docs/4.x/compute-storage-decoupled/overview",
+    "to": "/zh-CN/docs/4.x/getting-started/what-is-apache-doris"
+  },
+  {
+    "from": "/docs/4.x/data-operate/import/data-source/mysql",
+    "to": "/docs/4.x/getting-started/what-is-apache-doris"
+  },
+  {
+    "from": "/zh-CN/docs/4.x/data-operate/import/data-source/mysql",
+    "to": "/zh-CN/docs/4.x/getting-started/what-is-apache-doris"
+  },
+  {
+    "from": "/docs/4.x/data-operate/import/data-source/postgresql",
+    "to": "/docs/4.x/getting-started/what-is-apache-doris"
+  },
+  {
+    "from": "/zh-CN/docs/4.x/data-operate/import/data-source/postgresql",
+    "to": "/zh-CN/docs/4.x/getting-started/what-is-apache-doris"
+  },
+  {
+    "from": "/docs/4.x/data-operate/import/group-commit-manual",
+    "to": "/docs/4.x/getting-started/what-is-apache-doris"
+  },
+  {
+    "from": "/zh-CN/docs/4.x/data-operate/import/group-commit-manual",
+    "to": "/zh-CN/docs/4.x/getting-started/what-is-apache-doris"
+  },
+  {
+    "from": "/docs/4.x/data-operate/import/import-way/log-storage-analysis",
+    "to": "/docs/4.x/getting-started/what-is-apache-doris"
+  },
+  {
+    "from": "/zh-CN/docs/4.x/data-operate/import/import-way/log-storage-analysis",
+    "to": "/zh-CN/docs/4.x/getting-started/what-is-apache-doris"
+  },
+  {
+    "from": "/docs/4.x/data-operate/import/load-high-availability",
+    "to": "/docs/4.x/getting-started/what-is-apache-doris"
+  },
+  {
+    "from": "/zh-CN/docs/4.x/data-operate/import/load-high-availability",
+    "to": "/zh-CN/docs/4.x/getting-started/what-is-apache-doris"
+  },
+  {
+    "from": "/docs/4.x/data-operate/import/load-internals/load-internals",
+    "to": "/docs/4.x/getting-started/what-is-apache-doris"
+  },
+  {
+    "from": "/zh-CN/docs/4.x/data-operate/import/load-internals/load-internals",
+    "to": "/zh-CN/docs/4.x/getting-started/what-is-apache-doris"
+  },
+  {
+    "from": "/docs/4.x/data-operate/import/load-internals/routine-load-internals",
+    "to": "/docs/4.x/getting-started/what-is-apache-doris"
+  },
+  {
+    "from": "/zh-CN/docs/4.x/data-operate/import/load-internals/routine-load-internals",
+    "to": "/zh-CN/docs/4.x/getting-started/what-is-apache-doris"
+  },
+  {
+    "from": "/docs/4.x/data-operate/import/load-internals/stream-load-in-complex-network",
+    "to": "/docs/4.x/getting-started/what-is-apache-doris"
+  },
+  {
+    "from": "/zh-CN/docs/4.x/data-operate/import/load-internals/stream-load-in-complex-network",
+    "to": "/zh-CN/docs/4.x/getting-started/what-is-apache-doris"
+  },
+  {
+    "from": "/docs/4.x/data-operate/import/streaming-job/continuous-load-mysql-database",
+    "to": "/docs/4.x/getting-started/what-is-apache-doris"
+  },
+  {
+    "from": "/zh-CN/docs/4.x/data-operate/import/streaming-job/continuous-load-mysql-database",
+    "to": "/zh-CN/docs/4.x/getting-started/what-is-apache-doris"
+  },
+  {
+    "from": "/docs/4.x/data-operate/import/streaming-job/continuous-load-mysql-table",
+    "to": "/docs/4.x/getting-started/what-is-apache-doris"
+  },
+  {
+    "from": "/zh-CN/docs/4.x/data-operate/import/streaming-job/continuous-load-mysql-table",
+    "to": "/zh-CN/docs/4.x/getting-started/what-is-apache-doris"
+  },
+  {
+    "from": "/docs/4.x/data-operate/import/streaming-job/continuous-load-overview",
+    "to": "/docs/4.x/getting-started/what-is-apache-doris"
+  },
+  {
+    "from": "/zh-CN/docs/4.x/data-operate/import/streaming-job/continuous-load-overview",
+    "to": "/zh-CN/docs/4.x/getting-started/what-is-apache-doris"
+  },
+  {
+    "from": "/docs/4.x/data-operate/import/streaming-job/continuous-load-postgresql-database",
+    "to": "/docs/4.x/getting-started/what-is-apache-doris"
+  },
+  {
+    "from": "/zh-CN/docs/4.x/data-operate/import/streaming-job/continuous-load-postgresql-database",
+    "to": "/zh-CN/docs/4.x/getting-started/what-is-apache-doris"
+  },
+  {
+    "from": "/docs/4.x/data-operate/import/streaming-job/continuous-load-postgresql-table",
+    "to": "/docs/4.x/getting-started/what-is-apache-doris"
+  },
+  {
+    "from": "/zh-CN/docs/4.x/data-operate/import/streaming-job/continuous-load-postgresql-table",
+    "to": "/zh-CN/docs/4.x/getting-started/what-is-apache-doris"
+  },
+  {
+    "from": "/docs/4.x/data-operate/import/streaming-job/continuous-load-s3",
+    "to": "/docs/4.x/getting-started/what-is-apache-doris"
+  },
+  {
+    "from": "/zh-CN/docs/4.x/data-operate/import/streaming-job/continuous-load-s3",
+    "to": "/zh-CN/docs/4.x/getting-started/what-is-apache-doris"
+  },
+  {
+    "from": "/docs/4.x/data-operate/import/streaming-job/prerequisites/amazon-aurora-mysql",
+    "to": "/docs/4.x/getting-started/what-is-apache-doris"
+  },
+  {
+    "from": "/zh-CN/docs/4.x/data-operate/import/streaming-job/prerequisites/amazon-aurora-mysql",
+    "to": "/zh-CN/docs/4.x/getting-started/what-is-apache-doris"
+  },
+  {
+    "from": "/docs/4.x/data-operate/import/streaming-job/prerequisites/amazon-aurora-postgresql",
+    "to": "/docs/4.x/getting-started/what-is-apache-doris"
+  },
+  {
+    "from": "/zh-CN/docs/4.x/data-operate/import/streaming-job/prerequisites/amazon-aurora-postgresql",
+    "to": "/zh-CN/docs/4.x/getting-started/what-is-apache-doris"
+  },
+  {
+    "from": "/docs/4.x/data-operate/import/streaming-job/prerequisites/amazon-rds-mysql",
+    "to": "/docs/4.x/getting-started/what-is-apache-doris"
+  },
+  {
+    "from": "/zh-CN/docs/4.x/data-operate/import/streaming-job/prerequisites/amazon-rds-mysql",
+    "to": "/zh-CN/docs/4.x/getting-started/what-is-apache-doris"
+  },
+  {
+    "from": "/docs/4.x/data-operate/import/streaming-job/prerequisites/amazon-rds-postgresql",
+    "to": "/docs/4.x/getting-started/what-is-apache-doris"
+  },
+  {
+    "from": "/zh-CN/docs/4.x/data-operate/import/streaming-job/prerequisites/amazon-rds-postgresql",
+    "to": "/zh-CN/docs/4.x/getting-started/what-is-apache-doris"
+  },
+  {
+    "from": "/docs/4.x/db-connect/arrow-flight-sql-connect",
+    "to": "/docs/4.x/connection-integration/mysql-proto"
+  },
+  {
+    "from": "/zh-CN/docs/4.x/db-connect/arrow-flight-sql-connect",
+    "to": "/zh-CN/docs/4.x/connection-integration/mysql-proto"
+  },
+  {
+    "from": "/docs/4.x/db-connect/database-connect",
+    "to": "/docs/4.x/connection-integration/mysql-proto"
+  },
+  {
+    "from": "/zh-CN/docs/4.x/db-connect/database-connect",
+    "to": "/zh-CN/docs/4.x/connection-integration/mysql-proto"
+  },
+  {
+    "from": "/docs/4.x/ecosystem/automq-load",
+    "to": "/docs/4.x/connection-integration/data-integration/automq"
+  },
+  {
+    "from": "/zh-CN/docs/4.x/ecosystem/automq-load",
+    "to": "/zh-CN/docs/4.x/connection-integration/data-integration/automq"
+  },
+  {
+    "from": "/docs/4.x/ecosystem/bi/apache-superset",
+    "to": "/docs/4.x/connection-integration/data-integration/superset"
+  },
+  {
+    "from": "/zh-CN/docs/4.x/ecosystem/bi/apache-superset",
+    "to": "/zh-CN/docs/4.x/connection-integration/data-integration/superset"
+  },
+  {
+    "from": "/docs/4.x/ecosystem/bi/clouddm",
+    "to": "/docs/4.x/connection-integration/data-integration/clouddm"
+  },
+  {
+    "from": "/zh-CN/docs/4.x/ecosystem/bi/clouddm",
+    "to": "/zh-CN/docs/4.x/connection-integration/data-integration/clouddm"
+  },
+  {
+    "from": "/docs/4.x/ecosystem/bi/datagrip",
+    "to": "/docs/4.x/connection-integration/data-integration/datagrip"
+  },
+  {
+    "from": "/zh-CN/docs/4.x/ecosystem/bi/datagrip",
+    "to": "/zh-CN/docs/4.x/connection-integration/data-integration/datagrip"
+  },
+  {
+    "from": "/docs/4.x/ecosystem/bi/dbeaver",
+    "to": "/docs/4.x/connection-integration/data-integration/dbeaver"
+  },
+  {
+    "from": "/zh-CN/docs/4.x/ecosystem/bi/dbeaver",
+    "to": "/zh-CN/docs/4.x/connection-integration/data-integration/dbeaver"
+  },
+  {
+    "from": "/docs/4.x/ecosystem/bi/finebi",
+    "to": "/docs/4.x/connection-integration/data-integration/finebi"
+  },
+  {
+    "from": "/zh-CN/docs/4.x/ecosystem/bi/finebi",
+    "to": "/zh-CN/docs/4.x/connection-integration/data-integration/finebi"
+  },
+  {
+    "from": "/docs/4.x/ecosystem/bi/metabase",
+    "to": "/docs/4.x/connection-integration/data-integration/metabase"
+  },
+  {
+    "from": "/zh-CN/docs/4.x/ecosystem/bi/metabase",
+    "to": "/zh-CN/docs/4.x/connection-integration/data-integration/metabase"
+  },
+  {
+    "from": "/docs/4.x/ecosystem/bi/powerbi",
+    "to": "/docs/4.x/connection-integration/data-integration/powerbi"
+  },
+  {
+    "from": "/zh-CN/docs/4.x/ecosystem/bi/powerbi",
+    "to": "/zh-CN/docs/4.x/connection-integration/data-integration/powerbi"
+  },
+  {
+    "from": "/docs/4.x/ecosystem/bi/quickbi",
+    "to": "/docs/4.x/connection-integration/data-integration/quickbi"
+  },
+  {
+    "from": "/zh-CN/docs/4.x/ecosystem/bi/quickbi",
+    "to": "/zh-CN/docs/4.x/connection-integration/data-integration/quickbi"
+  },
+  {
+    "from": "/docs/4.x/ecosystem/bi/quicksight",
+    "to": "/docs/4.x/connection-integration/data-integration/quicksight"
+  },
+  {
+    "from": "/zh-CN/docs/4.x/ecosystem/bi/quicksight",
+    "to": "/zh-CN/docs/4.x/connection-integration/data-integration/quicksight"
+  },
+  {
+    "from": "/docs/4.x/ecosystem/bi/smartbi",
+    "to": "/docs/4.x/connection-integration/data-integration/smartbi"
+  },
+  {
+    "from": "/zh-CN/docs/4.x/ecosystem/bi/smartbi",
+    "to": "/zh-CN/docs/4.x/connection-integration/data-integration/smartbi"
+  },
+  {
+    "from": "/docs/4.x/ecosystem/bi/tableau",
+    "to": "/docs/4.x/connection-integration/data-integration/tableau"
+  },
+  {
+    "from": "/zh-CN/docs/4.x/ecosystem/bi/tableau",
+    "to": "/zh-CN/docs/4.x/connection-integration/data-integration/tableau"
+  },
+  {
+    "from": "/docs/4.x/ecosystem/cloudcanal",
+    "to": "/docs/4.x/connection-integration/data-integration/cloudcanal"
+  },
+  {
+    "from": "/zh-CN/docs/4.x/ecosystem/cloudcanal",
+    "to": "/zh-CN/docs/4.x/connection-integration/data-integration/cloudcanal"
+  },
+  {
+    "from": "/docs/4.x/ecosystem/datax",
+    "to": "/docs/4.x/connection-integration/data-integration/datax"
+  },
+  {
+    "from": "/zh-CN/docs/4.x/ecosystem/datax",
+    "to": "/zh-CN/docs/4.x/connection-integration/data-integration/datax"
+  },
+  {
+    "from": "/docs/4.x/ecosystem/dbt-doris-adapter",
+    "to": "/docs/4.x/connection-integration/data-integration/dbt-doris-adapter"
+  },
+  {
+    "from": "/zh-CN/docs/4.x/ecosystem/dbt-doris-adapter",
+    "to": "/zh-CN/docs/4.x/connection-integration/data-integration/dbt-doris-adapter"
+  },
+  {
+    "from": "/docs/4.x/ecosystem/doris-kafka-connector/doris-kafka-connector",
+    "to": "/docs/4.x/connection-integration/data-integration/doris-kafka-connector"
+  },
+  {
+    "from": "/zh-CN/docs/4.x/ecosystem/doris-kafka-connector/doris-kafka-connector",
+    "to": "/zh-CN/docs/4.x/connection-integration/data-integration/doris-kafka-connector"
+  },
+  {
+    "from": "/docs/4.x/ecosystem/doris-kafka-connector/release-notes",
+    "to": "/docs/4.x/connection-integration/data-integration/doris-kafka-connector"
+  },
+  {
+    "from": "/zh-CN/docs/4.x/ecosystem/doris-kafka-connector/release-notes",
+    "to": "/zh-CN/docs/4.x/connection-integration/data-integration/doris-kafka-connector"
+  },
+  {
+    "from": "/docs/4.x/ecosystem/doris-operator/doris-operator-overview",
+    "to": "/docs/4.x/install/deploy-on-kubernetes/doris-operator/doris-operator-overview"
+  },
+  {
+    "from": "/zh-CN/docs/4.x/ecosystem/doris-operator/doris-operator-overview",
+    "to": "/zh-CN/docs/4.x/install/deploy-on-kubernetes/doris-operator/doris-operator-overview"
+  },
+  {
+    "from": "/docs/4.x/ecosystem/doris-operator/on-alibaba",
+    "to": "/docs/4.x/install/deploy-on-kubernetes/doris-operator/on-alibaba"
+  },
+  {
+    "from": "/zh-CN/docs/4.x/ecosystem/doris-operator/on-alibaba",
+    "to": "/zh-CN/docs/4.x/install/deploy-on-kubernetes/doris-operator/on-alibaba"
+  },
+  {
+    "from": "/docs/4.x/ecosystem/doris-operator/on-aws",
+    "to": "/docs/4.x/install/deploy-on-kubernetes/doris-operator/on-aws"
+  },
+  {
+    "from": "/zh-CN/docs/4.x/ecosystem/doris-operator/on-aws",
+    "to": "/zh-CN/docs/4.x/install/deploy-on-kubernetes/doris-operator/on-aws"
+  },
+  {
+    "from": "/docs/4.x/ecosystem/doris-streamloader",
+    "to": "/docs/4.x/connection-integration/data-integration/doris-streamloader"
+  },
+  {
+    "from": "/zh-CN/docs/4.x/ecosystem/doris-streamloader",
+    "to": "/zh-CN/docs/4.x/connection-integration/data-integration/doris-streamloader"
+  },
+  {
+    "from": "/docs/4.x/ecosystem/flink-doris-connector/flink-doris-connector",
+    "to": "/docs/4.x/connection-integration/data-integration/flink-doris-connector"
+  },
+  {
+    "from": "/zh-CN/docs/4.x/ecosystem/flink-doris-connector/flink-doris-connector",
+    "to": "/zh-CN/docs/4.x/connection-integration/data-integration/flink-doris-connector"
+  },
+  {
+    "from": "/docs/4.x/ecosystem/flink-doris-connector/release-notes",
+    "to": "/docs/4.x/connection-integration/data-integration/flink-doris-connector"
+  },
+  {
+    "from": "/zh-CN/docs/4.x/ecosystem/flink-doris-connector/release-notes",
+    "to": "/zh-CN/docs/4.x/connection-integration/data-integration/flink-doris-connector"
+  },
+  {
+    "from": "/docs/4.x/ecosystem/hive-bitmap-udf",
+    "to": "/docs/4.x/connection-integration/data-integration/hive-udf"
+  },
+  {
+    "from": "/zh-CN/docs/4.x/ecosystem/hive-bitmap-udf",
+    "to": "/zh-CN/docs/4.x/connection-integration/data-integration/hive-udf"
+  },
+  {
+    "from": "/docs/4.x/ecosystem/hive-hll-udf",
+    "to": "/docs/4.x/connection-integration/data-integration/hive-udf"
+  },
+  {
+    "from": "/zh-CN/docs/4.x/ecosystem/hive-hll-udf",
+    "to": "/zh-CN/docs/4.x/connection-integration/data-integration/hive-udf"
+  },
+  {
+    "from": "/docs/4.x/ecosystem/kettle",
+    "to": "/docs/4.x/connection-integration/data-integration/kettle"
+  },
+  {
+    "from": "/zh-CN/docs/4.x/ecosystem/kettle",
+    "to": "/zh-CN/docs/4.x/connection-integration/data-integration/kettle"
+  },
+  {
+    "from": "/docs/4.x/ecosystem/kyuubi",
+    "to": "/docs/4.x/connection-integration/data-integration/kyuubi"
+  },
+  {
+    "from": "/zh-CN/docs/4.x/ecosystem/kyuubi",
+    "to": "/zh-CN/docs/4.x/connection-integration/data-integration/kyuubi"
+  },
+  {
+    "from": "/docs/4.x/ecosystem/observability/beats",
+    "to": "/docs/4.x/connection-integration/data-integration/beats"
+  },
+  {
+    "from": "/zh-CN/docs/4.x/ecosystem/observability/beats",
+    "to": "/zh-CN/docs/4.x/connection-integration/data-integration/beats"
+  },
+  {
+    "from": "/docs/4.x/ecosystem/observability/fluentbit",
+    "to": "/docs/4.x/connection-integration/data-integration/fluentbit"
+  },
+  {
+    "from": "/zh-CN/docs/4.x/ecosystem/observability/fluentbit",
+    "to": "/zh-CN/docs/4.x/connection-integration/data-integration/fluentbit"
+  },
+  {
+    "from": "/docs/4.x/ecosystem/observability/langfuse",
+    "to": "/docs/4.x/connection-integration/data-integration/langfuse"
+  },
+  {
+    "from": "/zh-CN/docs/4.x/ecosystem/observability/langfuse",
+    "to": "/zh-CN/docs/4.x/connection-integration/data-integration/langfuse"
+  },
+  {
+    "from": "/docs/4.x/ecosystem/observability/logstash",
+    "to": "/docs/4.x/connection-integration/data-integration/logstash"
+  },
+  {
+    "from": "/zh-CN/docs/4.x/ecosystem/observability/logstash",
+    "to": "/zh-CN/docs/4.x/connection-integration/data-integration/logstash"
+  },
+  {
+    "from": "/docs/4.x/ecosystem/observability/loongcollector",
+    "to": "/docs/4.x/connection-integration/data-integration/loongcollector"
+  },
+  {
+    "from": "/zh-CN/docs/4.x/ecosystem/observability/loongcollector",
+    "to": "/zh-CN/docs/4.x/connection-integration/data-integration/loongcollector"
+  },
+  {
+    "from": "/docs/4.x/ecosystem/observability/opentelemetry",
+    "to": "/docs/4.x/connection-integration/data-integration/opentelemetry"
+  },
+  {
+    "from": "/zh-CN/docs/4.x/ecosystem/observability/opentelemetry",
+    "to": "/zh-CN/docs/4.x/connection-integration/data-integration/opentelemetry"
+  },
+  {
+    "from": "/docs/4.x/ecosystem/observability/vector",
+    "to": "/docs/4.x/connection-integration/data-integration/vector"
+  },
+  {
+    "from": "/zh-CN/docs/4.x/ecosystem/observability/vector",
+    "to": "/zh-CN/docs/4.x/connection-integration/data-integration/vector"
+  },
+  {
+    "from": "/docs/4.x/ecosystem/seatunnel",
+    "to": "/docs/4.x/connection-integration/data-integration/seatunnel"
+  },
+  {
+    "from": "/zh-CN/docs/4.x/ecosystem/seatunnel",
+    "to": "/zh-CN/docs/4.x/connection-integration/data-integration/seatunnel"
+  },
+  {
+    "from": "/docs/4.x/ecosystem/spark-doris-connector/release-notes",
+    "to": "/docs/4.x/connection-integration/data-integration/spark-doris-connector"
+  },
+  {
+    "from": "/zh-CN/docs/4.x/ecosystem/spark-doris-connector/release-notes",
+    "to": "/zh-CN/docs/4.x/connection-integration/data-integration/spark-doris-connector"
+  },
+  {
+    "from": "/docs/4.x/ecosystem/spark-doris-connector/spark-doris-connector",
+    "to": "/docs/4.x/connection-integration/data-integration/spark-doris-connector"
+  },
+  {
+    "from": "/zh-CN/docs/4.x/ecosystem/spark-doris-connector/spark-doris-connector",
+    "to": "/zh-CN/docs/4.x/connection-integration/data-integration/spark-doris-connector"
+  },
+  {
+    "from": "/docs/4.x/ecosystem/spark-load",
+    "to": "/docs/4.x/getting-started/what-is-apache-doris"
+  },
+  {
+    "from": "/zh-CN/docs/4.x/ecosystem/spark-load",
+    "to": "/zh-CN/docs/4.x/getting-started/what-is-apache-doris"
+  },
+  {
+    "from": "/docs/4.x/gettingStarted/alternatives/alternative-to-clickhouse",
+    "to": "/why-doris/compare"
+  },
+  {
+    "from": "/zh-CN/docs/4.x/gettingStarted/alternatives/alternative-to-clickhouse",
+    "to": "/zh-CN/why-doris/compare"
+  },
+  {
+    "from": "/docs/4.x/gettingStarted/alternatives/alternative-to-elasticsearch",
+    "to": "/why-doris/compare"
+  },
+  {
+    "from": "/zh-CN/docs/4.x/gettingStarted/alternatives/alternative-to-elasticsearch",
+    "to": "/zh-CN/why-doris/compare"
+  },
+  {
+    "from": "/docs/4.x/gettingStarted/alternatives/alternative-to-trino",
+    "to": "/why-doris/compare"
+  },
+  {
+    "from": "/zh-CN/docs/4.x/gettingStarted/alternatives/alternative-to-trino",
+    "to": "/zh-CN/why-doris/compare"
+  },
+  {
+    "from": "/docs/4.x/gettingStarted/before-you-start-the-poc",
+    "to": "/docs/4.x/getting-started/before-you-start-the-poc"
+  },
+  {
+    "from": "/zh-CN/docs/4.x/gettingStarted/before-you-start-the-poc",
+    "to": "/zh-CN/docs/4.x/getting-started/before-you-start-the-poc"
+  },
+  {
+    "from": "/docs/4.x/gettingStarted/quick-start",
+    "to": "/docs/4.x/getting-started/quick-start"
+  },
+  {
+    "from": "/zh-CN/docs/4.x/gettingStarted/quick-start",
+    "to": "/zh-CN/docs/4.x/getting-started/quick-start"
+  },
+  {
+    "from": "/docs/4.x/gettingStarted/what-is-apache-doris",
+    "to": "/docs/4.x/getting-started/what-is-apache-doris"
+  },
+  {
+    "from": "/zh-CN/docs/4.x/gettingStarted/what-is-apache-doris",
+    "to": "/zh-CN/docs/4.x/getting-started/what-is-apache-doris"
+  },
+  {
+    "from": "/docs/4.x/query-acceleration/hints/hints-overview",
+    "to": "/docs/4.x/getting-started/what-is-apache-doris"
+  },
+  {
+    "from": "/zh-CN/docs/4.x/query-acceleration/hints/hints-overview",
+    "to": "/zh-CN/docs/4.x/getting-started/what-is-apache-doris"
+  },
+  {
+    "from": "/docs/4.x/query-acceleration/materialized-view/async-materialized-view/use-advice",
+    "to": "/docs/4.x/getting-started/what-is-apache-doris"
+  },
+  {
+    "from": "/zh-CN/docs/4.x/query-acceleration/materialized-view/async-materialized-view/use-advice",
+    "to": "/zh-CN/docs/4.x/getting-started/what-is-apache-doris"
+  },
+  {
+    "from": "/docs/4.x/query-acceleration/tuning/tuning-parameters",
+    "to": "/docs/4.x/getting-started/what-is-apache-doris"
+  },
+  {
+    "from": "/zh-CN/docs/4.x/query-acceleration/tuning/tuning-parameters",
+    "to": "/zh-CN/docs/4.x/getting-started/what-is-apache-doris"
+  },
+  {
+    "from": "/docs/4.x/query-acceleration/tuning/tuning-plan/accelerating-queries-with-sql-cache",
+    "to": "/docs/4.x/getting-started/what-is-apache-doris"
+  },
+  {
+    "from": "/zh-CN/docs/4.x/query-acceleration/tuning/tuning-plan/accelerating-queries-with-sql-cache",
+    "to": "/zh-CN/docs/4.x/getting-started/what-is-apache-doris"
+  },
+  {
+    "from": "/docs/4.x/query-acceleration/tuning/tuning-plan/optimizing-join-with-colocate-group",
+    "to": "/docs/4.x/getting-started/what-is-apache-doris"
+  },
+  {
+    "from": "/zh-CN/docs/4.x/query-acceleration/tuning/tuning-plan/optimizing-join-with-colocate-group",
+    "to": "/zh-CN/docs/4.x/getting-started/what-is-apache-doris"
+  },
+  {
+    "from": "/docs/4.x/sql-manual/sql-functions/scalar-functions/json-functions/json-object-flatten",
+    "to": "/docs/4.x/getting-started/what-is-apache-doris"
+  },
+  {
+    "from": "/zh-CN/docs/4.x/sql-manual/sql-functions/scalar-functions/json-functions/json-object-flatten",
+    "to": "/zh-CN/docs/4.x/getting-started/what-is-apache-doris"
+  },
+  {
+    "from": "/docs/4.x/table-design/best-practice",
+    "to": "/docs/4.x/getting-started/what-is-apache-doris"
+  },
+  {
+    "from": "/zh-CN/docs/4.x/table-design/best-practice",
+    "to": "/zh-CN/docs/4.x/getting-started/what-is-apache-doris"
+  },
+  {
+    "from": "/docs/4.x/table-design/data-model/overview",
+    "to": "/docs/4.x/getting-started/what-is-apache-doris"
+  },
+  {
+    "from": "/zh-CN/docs/4.x/table-design/data-model/overview",
+    "to": "/zh-CN/docs/4.x/getting-started/what-is-apache-doris"
+  },
+  {
+    "from": "/docs/4.x/table-design/data-partitioning/data-distribution",
+    "to": "/docs/4.x/getting-started/what-is-apache-doris"
+  },
+  {
+    "from": "/zh-CN/docs/4.x/table-design/data-partitioning/data-distribution",
+    "to": "/zh-CN/docs/4.x/getting-started/what-is-apache-doris"
+  }
+]

@@ -28,7 +28,7 @@ BE 进程启动后，会先读取 `be.conf` 中的配置项，之后再读取 `b
 
 2. 通过命令行查看
 
-   可以在 MySQL 客户端中，通过以下命令查看 BE 的配置项，具体语法参照[SHOW-CONFIG](../../sql-manual/sql-statements/cluster-management/instance-management/SHOW-CONFIG)：
+   可以在 MySQL 客户端中，通过以下命令查看 BE 的配置项，具体语法参照[SHOW-CONFIG](../../sql-manual/sql-statements/cluster-management/instance-management/SHOW-FRONTEND-CONFIG)：
 
     `SHOW BACKEND CONFIG;`
 
@@ -1313,7 +1313,7 @@ load tablets from header failed, failed tablets size: xxx, path=xxx
 
 #### `group_commit_wal_path`
 
-* 描述：Group Commit 存放 WAL 文件的目录，请参考 [Group Commit](../../data-operate/import/group-commit-manual.md)
+* 描述：Group Commit 存放 WAL 文件的目录，请参考 [Group Commit](../../data-operate/import/load-best-practices/group-commit-manual.md)
 * 默认值：默认在用户配置的`storage_root_path`的各个目录下创建一个名为`wal`的目录。配置示例：
   ```
   group_commit_wal_path=/data1/storage/wal;/data2/storage/wal;/data3/storage/wal

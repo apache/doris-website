@@ -18,20 +18,12 @@ if (!commitHash) {
 const linkRegex = /\[.*?\]\((.*?)\)/g;
 let hasBrokenLinks = false;
 
-// docs-next is the graceful-rollout sibling tree; broken-link checks are
-// skipped here while the new IA is still in flux. See
-// website-quality-governance/docs-next-implementation-plan.md.
-function isDocsNextPath(filePath) {
-  const normalized = filePath.replace(/\\/g, "/").replace(/^\.\//, "");
-  return (
-    normalized.startsWith("docs-next/") ||
-    normalized.includes("/docusaurus-plugin-content-docs-next/")
-  );
-}
-
 // Get the modified or newly added .md/.mdx files in the commit
 function getModifiedMarkdownFiles(commit) {
-  const output = execSync(`git show --name-status ${commit}`, { encoding: "utf-8" });
+  const output = execSync(
+    `git show --name-status --diff-filter=AM ${commit} -- '*.md' '*.mdx'`,
+    { encoding: "utf-8", maxBuffer: 100 * 1024 * 1024 }
+  );
   const lines = output.split("\n");
   console.log('lines',lines);
 
@@ -42,10 +34,6 @@ function getModifiedMarkdownFiles(commit) {
     if (parts.length === 2) {
       const [status, filePath] = parts;
       if ((status === "A" || status === "M") && (filePath.endsWith(".md") || filePath.endsWith(".mdx"))) {
-        if (isDocsNextPath(filePath)) {
-          console.log(`⏭  Skipping docs-next file: ${filePath}`);
-          continue;
-        }
         files.push(filePath);
       }
     }
@@ -64,14 +52,46 @@ function isLocalLink(link) {
          !/.*@.*\..*/.test(link);
 }
 
-// function removeCodeBlocks(content) {
-//   return content.replace(/```[\s\S]*?```/g, ""); // remove ```...``` 
-// }
-
+// Strip Markdown code regions so the link scanner ignores their contents.
+//
+// The previous implementation used `/```[\s\S]*?```/g` followed by `` /`[^`]*`/g ``,
+// which mishandles docs whose inline code itself contains triple backticks
+// (e.g. a table cell that reads "` ```shell `"). In that case the global
+// triple-backtick regex paired ``` across rows and across real fenced blocks,
+// shifting the open/close boundaries and leaving real code regions visible
+// to the link scanner — which then reported their contents as broken links.
+//
+// Correct rules (a subset of CommonMark sufficient for our docs):
+//   1. A fenced code block opens with 3+ backticks at the start of a line
+//      (up to 3 leading spaces). It closes with another run of >= that many
+//      backticks at the start of a line. Anything else (e.g. ``` inside a
+//      table cell) is NOT a fence.
+//   2. An inline code span opens with N backticks and closes with the next
+//      run of EXACTLY N backticks. The content may contain shorter runs.
 function removeCodeBlocks(content) {
-  let result = content.replace(/```[\s\S]*?```/g, ""); 
-  result = result.replace(/`[^`]*`/g, ""); 
+  const lines = content.split("\n");
+  const stripped = [];
+  let openFenceLen = 0;
+  for (const line of lines) {
+    if (openFenceLen === 0) {
+      const m = line.match(/^ {0,3}(`{3,})/);
+      if (m) {
+        openFenceLen = m[1].length;
+        stripped.push("");
+        continue;
+      }
+      stripped.push(line);
+    } else {
+      const m = line.match(/^ {0,3}(`{3,})\s*$/);
+      if (m && m[1].length >= openFenceLen) {
+        openFenceLen = 0;
+      }
+      stripped.push("");
+    }
+  }
 
+  let result = stripped.join("\n");
+  result = result.replace(/(`+)(?:(?!\1)[\s\S])*?\1/g, "");
   return result;
 }
 

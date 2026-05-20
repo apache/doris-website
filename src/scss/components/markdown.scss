@@ -257,6 +257,10 @@
     }
     .tabs-container .tabs {
         position: relative;
+        // Isolate the active tab's z-index (999, set above so the active
+        // tab sits on top of .tabs::before) from the rest of the page so
+        // it can't climb above the sticky docs search bar.
+        isolation: isolate;
         padding-left: 0 !important;
     }
     .tabs-container .tabs::before {

@@ -1,6 +1,5 @@
 import Translate, { translate } from '@docusaurus/Translate';
 import React, { useEffect, useState } from 'react';
-import PageHeader from '@site/src/components/PageHeader';
 import DownloadFormAllRelease from '@site/src/components/download-form/download-form-all-release';
 import DownloadFormTools from '@site/src/components/download-form/download-form-tools';
 import {
@@ -8,13 +7,11 @@ import {
     DORIS_VERSIONS,
     DownloadTypeEnum,
     ORIGIN,
-    RUN_ANYWHERE,
     VersionEnum,
 } from '@site/src/constant/download.data';
 import Link from '@docusaurus/Link';
-import '@site/src/pages/download/index.scss';
+import './download-page.scss';
 import LinkWithArrow from '@site/src/components/link-arrow';
-import PageColumn from '@site/src/components/PageColumn';
 import clsx from 'clsx';
 import { ALL_VERSIONS, TOOL_VERSIONS } from '@site/src/constant/download.data';
 import * as semver from 'semver';
@@ -131,288 +128,283 @@ export default function DownloadFormNext(): JSX.Element {
                     'Download and explore precompiled binaries of different verisons. Apache Doris connects any device, at any scale, anywhere.',
             })}
         >
-            <div className="download">
-                <PageHeader className="lg:pt-[5rem] g-white" title="Quick Download & Easy Deployment" />
-                <section className="quick-download">
-                    <PageColumn align="center">
-                        <div className="download-box">
-                            <div className="download-type">
-                                <label>
+            <div className="download-next">
+                {/* ── Hero ─────────────────────────────────────────────────────── */}
+                <section className="download-next__hero">
+                    <div className="download-next__hero-bg-glow" aria-hidden="true" />
+                    <div className="download-next__hero-bg-grid" aria-hidden="true" />
+                    <div className="download-next__hero-inner">
+                        <h1 className="download-next__title">
+                            <span className="download-next__title-line">Quick Download</span>
+                            <span className="download-next__title-line">
+                                & <span className="download-next__title-accent">Easy Deployment</span>
+                            </span>
+                        </h1>
+                        <p className="download-next__sub">
+                            Download verified binaries or source tarballs of every Apache Doris release, and deploy
+                            anywhere — bare metal, Kubernetes, or cloud.
+                        </p>
+                    </div>
+                </section>
+
+                {/* ── Quick download card ─────────────────────────────────────── */}
+                <section className="download-next__quick">
+                    <div className="download-next__quick-inner">
+                        <div className="download-next__quick-card">
+                            <div className="download-next__quick-row">
+                                <label className="download-next__quick-label">
                                     <Translate id="download.version" description="Binary Version">
                                         Version
                                     </Translate>
                                 </label>
-                                <div className="tabs-radio">
+                                <div className="download-next__seg">
                                     {BINARY_VERSION.map(item => (
-                                        <div
-                                            className={clsx('radio', {
-                                                checked: version === item.value,
+                                        <button
+                                            type="button"
+                                            className={clsx('download-next__seg-item', {
+                                                'is-checked': version === item.value,
                                             })}
                                             key={item.value}
                                             onClick={() => changeVersion(item.value)}
                                         >
                                             {item.label}
-                                        </div>
+                                        </button>
                                     ))}
                                 </div>
                             </div>
-                            <div className="download-type">
-                                <label>
+
+                            <div className="download-next__quick-row">
+                                <label className="download-next__quick-label">
                                     <Translate id="download.cpu.model" description="Architecture">
                                         Architecture
                                     </Translate>
                                 </label>
-                                <div className="tabs-radio">
+                                <div className="download-next__seg">
                                     {cpus.map(item => (
-                                        <div
-                                            className={clsx('radio', {
-                                                checked: cpu === item.value,
+                                        <button
+                                            type="button"
+                                            className={clsx('download-next__seg-item', {
+                                                'is-checked': cpu === item.value,
                                             })}
                                             key={item.value}
                                             onClick={() => changeCPU(item.value)}
                                         >
                                             {item.label}
-                                        </div>
+                                        </button>
                                     ))}
                                 </div>
                             </div>
-                            <div className="download-type">
-                                <label>
+
+                            <div className="download-next__quick-row">
+                                <label className="download-next__quick-label">
                                     <Translate id="download.download.link" description="Download">
                                         Tarball
                                     </Translate>
                                 </label>
-                                <div className="tabs-radio">
-                                    <div
-                                        onClick={() => {
-                                            setDownloadType(DownloadTypeEnum.Binary);
-                                        }}
-                                        className={clsx('radio', {
-                                            checked: downloadType === DownloadTypeEnum.Binary,
+                                <div className="download-next__seg">
+                                    <button
+                                        type="button"
+                                        onClick={() => setDownloadType(DownloadTypeEnum.Binary)}
+                                        className={clsx('download-next__seg-item', {
+                                            'is-checked': downloadType === DownloadTypeEnum.Binary,
                                         })}
                                     >
-                                        <span>Binary</span>
-                                    </div>
-
-                                    <div
-                                        onClick={() => {
-                                            setDownloadType(DownloadTypeEnum.Source);
-                                        }}
-                                        className={clsx('radio', {
-                                            checked: downloadType === DownloadTypeEnum.Source,
+                                        Binary
+                                    </button>
+                                    <button
+                                        type="button"
+                                        onClick={() => setDownloadType(DownloadTypeEnum.Source)}
+                                        className={clsx('download-next__seg-item', {
+                                            'is-checked': downloadType === DownloadTypeEnum.Source,
                                         })}
                                     >
-                                        <span>Source</span>
-                                    </div>
+                                        Source
+                                    </button>
                                 </div>
                             </div>
 
-                            <div className="download-type way">
-                                <label></label>
-                                <div className={clsx('download-way all-in-one show')}>
-                                    {downloadInfo && (
-                                        <div className="tabs-radio">
-                                            <div className="radio">
-                                                {downloadType === DownloadTypeEnum.Binary ? (
-                                                    <div className="inner" key={downloadInfo.filename}>
-                                                        <Link to={downloadInfo.gz}>{downloadInfo.filename}</Link>
-                                                        <span> ( </span>
-                                                        <Link to={downloadInfo.asc}>ASC</Link>,{' '}
-                                                        <Link to={downloadInfo.sha512}>SHA-512</Link>
-                                                        <span> )</span>
-                                                    </div>
-                                                ) : (
-                                                    <div className="inner" key={downloadInfo.filename}>
-                                                        <Link
-                                                            to={`${downloadInfo.source}apache-doris-${downloadInfo.version}-src.tar.gz`}
-                                                        >{`apache-doris-${downloadInfo.version}-src.tar.gz`}</Link>
-                                                        <span> ( </span>
-                                                        <Link
-                                                            to={`${downloadInfo.source}apache-doris-${downloadInfo.version}-src.tar.gz.asc`}
-                                                        >
-                                                            ASC
-                                                        </Link>
-                                                        ,{' '}
-                                                        <Link
-                                                            to={`${downloadInfo.source}apache-doris-${downloadInfo.version}-src.tar.gz.sha512`}
-                                                        >
-                                                            SHA-512
-                                                        </Link>
-                                                        <span> )</span>
-                                                    </div>
-                                                )}
-                                            </div>
-                                        </div>
-                                    )}
-                                </div>
-                            </div>
-                            <div className="all-download-note" style={{ textAlign: 'center', marginTop: '24px' }}>
-                                Note: For Apache Doris version specifics, please refer to the{' '}
-                                <Link
-                                    to="https://doris.apache.org/community/release-versioning"
-                                    style={{
-                                        color: 'var(--ifm-color-primary)',
-                                        cursor: 'pointer',
-                                        textDecoration: 'underline',
-                                    }}
-                                >
-                                    release versioning.
-                                </Link>
-                            </div>
-                        </div>
-                    </PageColumn>
-                </section>
-                <PageColumn
-                    title={
-                        <span
-                            className="font-normal"
-                            style={{ display: 'block', lineHeight: '64px', marginTop: 40, fontSize: 40 }}
-                        >
-                            Doris All Releases
-                        </span>
-                    }
-                >
-                    <div className="all-download">
-                        <div className="all-download-intro">
-                            <div className="all-download-intro-text">
-                                <div>
-                                    Doris is released as source code tarballs with corresponding binary tarballs for
-                                    convenience. The downloads should be verified for tampering using ASC or SHA-512.
-                                </div>
-                                <div className="mt-[32px]">
-                                    For more information on the latest release, please refer to the Docs.
-                                </div>
-                                <div className="mt-[32px]">
-                                    Kindly note that older releases (v1.2, v1.1, v0.x) are provided for archival
-                                    purposes only, and are no longer supported.
-                                </div>
-                            </div>
-                            {releaseFlag && (
-                                <div>
-                                    <LinkWithArrow to={releaseNote} text="Release note" />
+                            {downloadInfo && (downloadInfo.filename || downloadInfo.version) && (
+                                <div className="download-next__quick-row download-next__quick-row--file">
+                                    <label className="download-next__quick-label" />
+                                    <div className="download-next__file">
+                                        {downloadType === DownloadTypeEnum.Binary ? (
+                                            <>
+                                                <Link className="download-next__file-name" to={downloadInfo.gz}>
+                                                    {downloadInfo.filename}
+                                                </Link>
+                                                <span className="download-next__file-meta">
+                                                    (
+                                                    <Link to={downloadInfo.asc}>ASC</Link>
+                                                    {', '}
+                                                    <Link to={downloadInfo.sha512}>SHA-512</Link>
+                                                    )
+                                                </span>
+                                            </>
+                                        ) : (
+                                            <>
+                                                <Link
+                                                    className="download-next__file-name"
+                                                    to={`${downloadInfo.source}apache-doris-${downloadInfo.version}-src.tar.gz`}
+                                                >
+                                                    {`apache-doris-${downloadInfo.version}-src.tar.gz`}
+                                                </Link>
+                                                <span className="download-next__file-meta">
+                                                    (
+                                                    <Link
+                                                        to={`${downloadInfo.source}apache-doris-${downloadInfo.version}-src.tar.gz.asc`}
+                                                    >
+                                                        ASC
+                                                    </Link>
+                                                    {', '}
+                                                    <Link
+                                                        to={`${downloadInfo.source}apache-doris-${downloadInfo.version}-src.tar.gz.sha512`}
+                                                    >
+                                                        SHA-512
+                                                    </Link>
+                                                    )
+                                                </span>
+                                            </>
+                                        )}
+                                    </div>
                                 </div>
                             )}
-                            <div className="all-download-note">
-                                Note: For detailed upgrade precautions, please refer to the{' '}
-                                <Link
-                                    to="/docs/install/deploy-manually/storage-compute-coupled-deploy-manually"
-                                    style={{
-                                        color: 'var(--ifm-color-primary)',
-                                        cursor: 'pointer',
-                                    }}
-                                >
-                                    deployment
-                                </Link>{' '}
-                                manual and cluster{' '}
-                                <Link
-                                    style={{
-                                        color: 'var(--ifm-color-primary)',
-                                        cursor: 'pointer',
-                                    }}
-                                    to="/docs/admin-manual/cluster-management/upgrade"
-                                >
-                                    upgrade
-                                </Link>{' '}
-                                manual.
-                            </div>
-                        </div>
-                        <div className="all-download-card">
-                            <DownloadFormAllRelease
-                                versions={ALL_VERSIONS}
-                                onValuesChange={(values: any) => onValuesChange(values)}
-                            />
+
+                            <p className="download-next__quick-note">
+                                Note: For Apache Doris version specifics, please refer to the{' '}
+                                <Link to="https://doris.apache.org/community/release-and-verify/release-versioning">
+                                    release versioning.
+                                </Link>
+                            </p>
                         </div>
                     </div>
-                </PageColumn>
-                <a id="doris-ecosystem" className="scroll-mt-20"></a>
-                <PageColumn
-                    title={
-                        <span
-                            className="font-normal"
-                            style={{ display: 'block', lineHeight: '64px', marginTop: 40, fontSize: 40 }}
-                        >
-                            Doris Ecosystem
-                        </span>
-                    }
-                >
-                    <div className="all-download">
-                        <div className="all-download-intro">
-                            <div className="all-download-intro-text">
-                                <div>Streamline integration and data loading with Doris tools</div>
+                </section>
+
+                {/* ── All releases ────────────────────────────────────────────── */}
+                <section className="download-next__section">
+                    <div className="download-next__section-inner">
+                        <h2 className="download-next__section-title">Doris All Releases</h2>
+                        <div className="download-next__split">
+                            <div className="download-next__split-intro">
+                                <div className="download-next__split-text">
+                                    <p>
+                                        Doris is released as source code tarballs with corresponding binary tarballs
+                                        for convenience. The downloads should be verified for tampering using ASC or
+                                        SHA-512.
+                                    </p>
+                                    <p>For more information on the latest release, please refer to the Docs.</p>
+                                    <p>
+                                        Kindly note that older releases (v1.2, v1.1, v0.x) are provided for archival
+                                        purposes only, and are no longer supported.
+                                    </p>
+                                </div>
+                                {releaseFlag && (
+                                    <div>
+                                        <LinkWithArrow to="/releases/all-release" text="Release note" />
+                                    </div>
+                                )}
+                                <p className="download-next__split-note">
+                                    Note: For detailed upgrade precautions, please refer to the{' '}
+                                    <Link to="/docs/dev/install/intro">deployment</Link> manual and cluster{' '}
+                                    <Link to="/docs/dev/admin-manual/cluster-management/upgrade">upgrade</Link>{' '}
+                                    manual.
+                                </p>
                             </div>
-                            <div className="flex">
-                                <ul>
-                                    <li className="mt-2 flex items-center space-x-2">
+                            <div className="download-next__split-card">
+                                <DownloadFormAllRelease
+                                    versions={ALL_VERSIONS}
+                                    onValuesChange={(values: any) => onValuesChange(values)}
+                                />
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                {/* ── Ecosystem tools ─────────────────────────────────────────── */}
+                <a id="doris-ecosystem" className="scroll-mt-20"></a>
+                <section className="download-next__section">
+                    <div className="download-next__section-inner">
+                        <h2 className="download-next__section-title">Doris Ecosystem</h2>
+                        <div className="download-next__split">
+                            <div className="download-next__split-intro">
+                                <div className="download-next__split-text">
+                                    <p>Streamline integration and data loading with Doris tools.</p>
+                                </div>
+                                <ul className="download-next__tool-list">
+                                    <li>
                                         <CheckedIcon />
-                                        <div className="text-[#4C576C]  text-base">Kafka Doris Connector</div>
+                                        <span>Kafka Doris Connector</span>
                                     </li>
-                                    <li className="mt-2 flex items-center space-x-2">
+                                    <li>
                                         <CheckedIcon />
-                                        <div className="text-[#4C576C]  text-base">Flink Doris Connector</div>
+                                        <span>Flink Doris Connector</span>
                                     </li>
-                                    <li className="mt-2 flex items-center space-x-2">
+                                    <li>
                                         <CheckedIcon />
-                                        <div className="text-[#4C576C]  text-base">Spark Doris Connector</div>
+                                        <span>Spark Doris Connector</span>
                                     </li>
-                                    <li className="mt-2 flex items-center space-x-2">
+                                    <li>
                                         <CheckedIcon />
-                                        <div className="text-[#4C576C]  text-base">Doris Streamloader</div>
+                                        <span>Doris Streamloader</span>
                                     </li>
                                 </ul>
-                            </div>
-                            <div>
-                                <LinkWithArrow to="/docs/ecosystem/datax" text="More Tools" />
-                            </div>
-                            <div className="all-download-note">
-                                Note: For detailed upgrade precautions, please refer to the{' '}
-                                <Link
-                                    to="/docs/install/deploy-manually/storage-compute-coupled-deploy-manually"
-                                    style={{
-                                        color: 'var(--ifm-color-primary)',
-                                        cursor: 'pointer',
-                                    }}
-                                >
-                                    deployment
-                                </Link>{' '}
-                                manual and cluster{' '}
-                                <Link
-                                    style={{
-                                        color: 'var(--ifm-color-primary)',
-                                        cursor: 'pointer',
-                                    }}
-                                    to="/docs/admin-manual/cluster-management/upgrade"
-                                >
-                                    upgrade
-                                </Link>{' '}
-                                manual.
-                            </div>
-                        </div>
-                        <div className="all-download-card">
-                            <DownloadFormTools data={TOOL_VERSIONS} />
-                        </div>
-                    </div>
-                </PageColumn>
-                <a id="runAnywhere" className="scroll-mt-20"></a>
-                <div className="run-anywhere bg-[#F7FAFC] pt-[5.5rem] pb-[7.5rem] mt-[80px]">
-                    <div className="container mx-auto">
-                        <h3 className="text-center text-[#1D1D1D] text-[2.5rem] font-medium">Run anywhere</h3>
-                        <ul className="mt-10 grid gap-x-6 gap-y-3 lg:grid-cols-3 lg:gap-y-0">
-                            {RUN_ANYWHERE.map(item => (
-                                <div
-                                    onClick={() => window.open(item.link, '_blank', 'noopener,noreferrer')}
-                                    key={item.title}
-                                    className="run-anywhere-card relative bg-white flex cursor-pointer flex-col items-center justify-center overflow-hidden rounded-lg border-b-4 border-b-primary py-[2rem] px-4 lg:px-[1.5rem] shadow-[inset_0_0_0_1px_#11A679] hover:no-underline"
-                                >
-                                    <div className="text-2xl text-[#1D1D1D]">{item.title}</div>
-                                    <div className="mt-4 text-base text-center text-[#4C576C]">{item.description}</div>
-                                    <div className="flex items-center mt-4 text-primary">
-                                        <LinkWithArrow to={item.link} text="Learn more" />
-                                    </div>
+                                <div>
+                                    <LinkWithArrow
+                                        to="/docs/4.x/connection-integration/data-integration/intro"
+                                        text="More Tools"
+                                    />
                                 </div>
-                            ))}
-                        </ul>
+                            </div>
+                            <div className="download-next__split-card">
+                                <DownloadFormTools data={TOOL_VERSIONS} />
+                            </div>
+                        </div>
                     </div>
-                </div>
+                </section>
+
+                {/* ── Run anywhere ────────────────────────────────────────────── */}
+                <a id="runAnywhere" className="scroll-mt-20"></a>
+                <section className="download-next__run">
+                    <div className="download-next__run-inner">
+                        <Link
+                            to="/docs/dev/install/intro"
+                            className="download-next__run-card download-next__run-card--single"
+                        >
+                            <div className="download-next__run-card-body">
+                                <h2 className="download-next__run-card-title">Run anywhere</h2>
+                                <p className="download-next__run-card-desc">
+                                    Deploy Doris in your environment of choice — from bare metal to Kubernetes to the
+                                    cloud.
+                                </p>
+                                <span className="download-next__run-card-cta">
+                                    Explore deployment options
+                                    <svg
+                                        aria-hidden="true"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        width="14"
+                                        height="12"
+                                        viewBox="0 0 16 14"
+                                        fill="none"
+                                    >
+                                        <path
+                                            d="M9.37549 12.3542L14.8755 6.85419L9.37549 1.35419"
+                                            stroke="currentColor"
+                                            strokeWidth="1.65"
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                        />
+                                        <path
+                                            d="M1.12549 6.85419L14.8755 6.85419"
+                                            stroke="currentColor"
+                                            strokeWidth="1.65"
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                        />
+                                    </svg>
+                                </span>
+                            </div>
+                        </Link>
+                    </div>
+                </section>
             </div>
         </LayoutNext>
     );

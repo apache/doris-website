@@ -1,11 +1,18 @@
 ---
-{
-    "title": "How to Become Contributor",
-    "language": "en"
-}
+title: Contributor Growth Path
+language: en
+description: "Apache Doris contributor growth path: standards for moving from Contributor to Committer / PMC, plus Code Review and PR rules."
+keywords:
+    - Apache Doris
+    - Contributor
+    - Committer
+    - PMC
+    - Code Review
+    - Pull Request rules
+    - Community roles
 ---
 
-<!-- 
+<!--
 Licensed to the Apache Software Foundation (ASF) under one
 or more contributor license agreements.  See the NOTICE file
 distributed with this work for additional information
@@ -24,63 +31,120 @@ specific language governing permissions and limitations
 under the License.
 -->
 
+# Contributor Growth Path
 
-## New Contributor Guidelines
+<!-- Knowledge type: Rules and conventions -->
+<!-- Applicable scenario: Understanding community roles / Code Review / PR merge rules -->
 
-### Subscribe to the public mailing lists
+This document describes the role structure in the Apache Doris community, and the path for growing from Contributor into Committer and PMC.
 
-If you haven’t yet, subscribe to {dev,commits}@doris.apache.org mailing lists.
-Commits mailing list is especially important because all of Github Issue, Pull Request and build notifications are sent there.
+## Community Roles
 
-## Code Review Guidelines
+In Apache projects, developers fall into three roles:
 
-1. Always maintain a high standard of review so that the quality of the entire product can be better guaranteed.
+| Role | Definition | How It Is Granted |
+|------|------------|-------------------|
+| **Contributor** | Once code is officially merged into the repository, the developer automatically becomes a Contributor to that project | Submit code and have it merged |
+| **Committer** | Has merge permission on the code repository | Nominated and elected by a vote of the PMC (Project Management Committee) |
+| **PMC Member** | A member of the Project Management Committee, with voting rights on major project decisions such as releases | Nominated and elected by a vote of the PMC |
 
-2. Changes to the architecture or the user interface need to be fully discussed by the community. This can be either in a mail group or in a GitHub issue. 
+Different roles carry different rights and responsibilities, but promotion does not have strict quantitative criteria. What matters more is sustained investment in the community and the influence built there.
 
-3. Test coverage. The added logic needs to be covered by a corresponding test. When the old code for which there is no test is changed, this requirement can be appropriately relaxed.
+## Contributor Newcomer Guide
 
-4. Documentation. Newly added features must be documented, otherwise such code is not allowed.
+### Subscribe to the Public Mailing Lists
 
-5. Readability of the code. If reviewers are not very clear about the logic of the code, then you can ask the contributor to explain the logic. And writing sufficient comments in the code to explain the logic is encouraged.
+<!-- Knowledge type: Procedure -->
 
-6. Try to give a clear conclusion at the end of your comments, "approve" or "change request". If it's a minor issue, you can just leave a comment.
+Subscribe to the `dev@doris.apache.org` and `commits@doris.apache.org` mailing lists by sending an email to `dev-subscribe@doris.apache.org` and `commits-subscribe@doris.apache.org` respectively.
 
-7. Recommend to submit a "+1 Comment" rather than a "+1 Approve" to indicate that it looks good to me but I am not sure whether this part of the function is correct. It needs someone else's approve.
+The `commits` mailing list is especially important, because all GitHub Issue and PR activity is automatically forwarded to it.
 
-8. Respect each other and learn from each other. Maintain a polite tone when commenting, try to give reasons for the suggestions.
+For detailed subscription steps, see [Subscribe to Mailing Lists](../subscribe-mail-list).
 
-## Pull Request Guidelines
+## Code Review Guide
 
-1. During a PR, there are three types of roles. Contributor: the PR submitter; Reviewer: the person who needs to make code-level review on the PR; and Moderator: the person responsible for coordinating the entire PR process. For example, the moderator should assign reviewers, push the author to make changes according to the comments, set different tags for the PR, and merge the PR etc. For a specific PR, a person may act in different roles, such as when a contributor submitted one PR, he may himself be both the contributor and the moderator of that PR.
+<!-- Knowledge type: Rules and conventions -->
+<!-- Applicable scenario: Performing Code Review -->
 
-2. Contributors can assign a PR to itself as a moderator. After assigning it to themselves, the other contributor will know that this PR has been in charge.
+1. Always hold reviews to a high standard. This is how the overall quality of the product is maintained.
 
-3. The contributor is encouraged to act as a moderator for its own PR.
+2. Changes to user-facing interfaces or to the overall architecture need to be fully discussed in the community. You can start the discussion on the mailing list or on an Issue. Changes to user-facing interfaces include adding new SQL functions, adding new HTTP endpoints, or adding new features. This keeps the product consistent.
 
-4. The reviewer needs to perform a code-level review, refer Code Review Guidelines
+3. **Test coverage**: New logic must be covered by corresponding tests. For existing legacy code where adding tests is difficult, use your judgment.
 
-5. Once a reviewer has commented on a PR, they need to keep following up on subsequent changes to that PR.
+4. **Documentation**: New features must come with documentation, otherwise they cannot be merged. English documentation is required, and Chinese documentation is recommended in addition.
 
-6. A PR must get at least a +1 approved from committer who is not the author.
+5. **Code readability**: If a Reviewer finds the code logic unclear, the Reviewer can ask the Contributor to explain it and to add sufficient comments in the code.
 
-7. After the first +1 to the PR, wait at least one working day before merging. The main purpose is to wait for the rest of the community to come to review.
+6. Try to give a clear conclusion at the end of your comment: approval, or change request. For minor issues, leaving a comment alone is fine.
 
-8. For architecture or user interface changes, a PR needs to get at least 3 +1's to merge.
+7. If you have already looked at the code and think it is fine, but want others to confirm as well, you can leave a `+1 Comment`.
 
-9. Regression cases should pass before merging.
+8. Respect each other and learn from each other. Keep a polite tone in your comments, and give reasons when you make suggestions.
 
-10. Moderator needs to make sure all comments are resolved before merging.
+## Pull Request Guide
 
-11. Select "squash and merge" to merge.
+<!-- Knowledge type: Rules and conventions -->
+<!-- Applicable scenario: Submitting a PR / driving a PR to merge -->
 
-12. When there is a disagreement about a modification, try to discuss the resolution. If the discussion doesn't work out, it can be resolved by a vote in dev@doris.apache.org by the majority rules.
+### The Three Roles in a PR
 
-13. Adding External libraries
+Merging a PR involves three roles:
 
-Extra care should be taken when introducing external libraries. When adding a new library, the following factors should be considered:
-- What functionality does the new external library provide? Can the existing libraries provide this functionality (perhaps with some effort)?
-- Is the external library maintained by an active contributor community?
-- What are the licensing terms of the new library?
-- Are you adding the library to a core module? This will affect other parts of the Doris codebase. For example, in Java, if the new library introduces a large number of transitive dependencies, we may encounter unexpected class conflicts, which are difficult to discover through testing because they depend on the order in which libraries are loaded at runtime.
+| Role | Responsibility |
+|------|----------------|
+| **Contributor** | The author who submits the PR |
+| **Reviewer** | The person who leaves code-level comments on the PR |
+| **Moderator** | The coordinator for merging the PR. Responsible for setting relevant labels on the PR, driving Reviewers to comment, driving the author to make changes, and merging the PR |
 
+In a specific PR, one person may play several roles. For example, a PR submitted by a Contributor makes that person both the Contributor and the Moderator of the PR.
+
+### PR Merge Rules
+
+| Rule | Requirement |
+|------|-------------|
+| Minimum `+1` count for a normal PR | At least 1 `+1` from **a Committer other than the author** |
+| Minimum `+1` count for interface-level or architectural changes | At least **3 `+1`s** |
+| Waiting time after the first `+1` | **At least one working day**, to give other community members time to review |
+| Regression tests | **Must all pass** |
+| Comment replies | The Moderator must confirm that all comments have been replied to |
+| Merge method | Always use **"Squash and merge"** |
+
+### Key Points for PR Collaboration
+
+1. A Contributor can assign a PR to themselves to act as the Moderator for the whole PR, taking on the work of driving it forward. After self-assignment, other Contributors know that the PR has someone responsible for it.
+
+2. **Contributors are encouraged to act as the Moderator of their own PRs.**
+
+3. Reviewers need to perform code-level reviews. Refer to the Code Review Guide above.
+
+4. Once a Reviewer has commented on a PR, the Reviewer needs to continue following up on subsequent changes to that PR. It is not acceptable to leave a comment and then ignore the Contributor's follow-up replies.
+
+5. When different Reviewers disagree about a change, try to resolve it through discussion. If discussion cannot resolve it, send an email to `dev@doris.apache.org` to call a vote, and follow the rule that the minority defers to the majority.
+
+### Admission Check for New External Dependencies
+
+<!-- Knowledge type: Rules and conventions -->
+
+**Be especially careful when adding new external dependencies.** Before introducing a new library, the following questions must be answered:
+
+- What functionality does the new external library provide? Can existing libraries provide this functionality (possibly with some effort)?
+- Is the external library maintained by an active community of contributors?
+- What are the license terms of the new library?
+- Will the library be added to a base module? This affects other parts of the Doris codebase. Take Java as an example: if the new library introduces many transitive dependencies, you may run into unexpected class-conflict issues that are hard to catch in testing, because they depend on the order in which libraries are loaded at runtime.
+
+## From Contributor to Committer / PMC
+
+<!-- Knowledge type: Rules and conventions -->
+<!-- Applicable scenario: Promotion to Committer / PMC -->
+
+There are no strict quantitative criteria for becoming a Committer or PMC Member. The PMC weighs a contributor's performance across the following areas:
+
+- **Code contributions**: Continuously submit high-quality PRs and participate in the development of core modules.
+- **Code Review**: Actively review other people's PRs and help improve the code quality of the community.
+- **Community participation**: Answer user questions on the mailing list, Issues, and Slack, and take part in design discussions.
+- **Documentation and evangelism**: Write documentation and blog posts, and share Doris at conferences.
+- **Influence**: Independently drive the evolution of important features or modules.
+
+For detailed promotion criteria, refer to the Apache Doris official Wiki: [Guidance for committer promotion](https://cwiki.apache.org/confluence/display/DORIS/Guidance+for+committer+promotion).

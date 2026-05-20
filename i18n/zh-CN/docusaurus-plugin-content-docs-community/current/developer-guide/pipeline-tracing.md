@@ -1,11 +1,17 @@
 ---
-{
-    "title": "Pipeline Tracing",
-    "language": "zh-CN"
-}
+title: Pipeline Tracing
+language: zh-CN
+description: Apache Doris Pipeline Tracing：记录调度轨迹并通过 Perfetto 可视化。
+keywords:
+    - Apache Doris
+    - Pipeline Tracing
+    - Pipeline 执行引擎
+    - Perfetto
+    - 调度分析
+    - BE 性能调优
 ---
 
-<!-- 
+<!--
 Licensed to the Apache Software Foundation (ASF) under one
 or more contributor license agreements.  See the NOTICE file
 distributed with this work for additional information
@@ -24,56 +30,82 @@ specific language governing permissions and limitations
 under the License.
 -->
 
+# Pipeline Tracing
 
+<!-- 知识类型: 工具使用 -->
+<!-- 适用场景: 性能调优 / 调度分析 -->
 
-在 Pipeline 执行引擎中，我们会将每个 Instance 的执行计划树拆分成多个小的 Pipeline Task，并在我们自定义的 Pipeline 调度器调度下执行。因此，在拥有大量 Pipeline Task 的执行环境下，这些 Task 如何在线程和 CPU 核间进行调度，是执行性能的一个重要影响因素。我们开发了一个专门的工具用来观察特定查询或时间段上的调度过程，我们将这个工具称为 "Pipeline Tracing"。
+## 介绍
+
+在 Apache Doris 的 Pipeline 执行引擎中，每个 Instance 的执行计划树会被拆分为多个 Pipeline Task，并由自定义的 Pipeline 调度器进行调度执行。当 Pipeline Task 数量较多时，这些 Task 如何在线程与 CPU 核间调度，是影响执行性能的重要因素。
+
+Pipeline Tracing 工具用于观察特定查询或时间段内的调度过程，便于性能分析与瓶颈定位。
 
 ## 使用步骤
 
-### 1. 记录数据
+### 1. 记录调度数据
 
-首先我们需要对 Pipeline 调度过程进行记录。是否以及如何记录调度过程，可以通过 HTTP 接口设置。这些设置关联到特定 BE：
+通过 HTTP 接口控制 BE 是否以及如何记录调度过程，相关设置仅作用于目标 BE。
 
-1. 关闭 Pipeline Tracing 记录
+| 操作目的 | HTTP 命令 |
+|---------|----------|
+| 关闭 Pipeline Tracing 记录 | `curl -X POST http://{be_host}:{http_port}/api/pipeline/tracing?type=disable` |
+| 为每个 Query 产生一条记录 | `curl -X POST http://{be_host}:{http_port}/api/pipeline/tracing?type=perquery` |
+| 生成固定时间段内的 Tracing 记录 | `curl -X POST http://{be_host}:{http_port}/api/pipeline/tracing?type=periodic` |
+| 设置周期时长（单位：秒） | `curl -X POST http://{be_host}:{http_port}/api/pipeline/tracing?dump_interval=60` |
+
+命令示例：
 
 ```shell
+# 关闭 Pipeline Tracing 记录
 curl -X POST http://{be_host}:{http_port}/api/pipeline/tracing?type=disable
-```
 
-2. 为每个 Query 产生一条记录
-
-```shell
+# 为每个 Query 产生一条记录
 curl -X POST http://{be_host}:{http_port}/api/pipeline/tracing?type=perquery
-```
 
-3. 生成固定时间段内的 Tracing 记录
-
-```shell
+# 生成固定时间段内的 Tracing 记录
 curl -X POST http://{be_host}:{http_port}/api/pipeline/tracing?type=periodic
-```
 
-设置时间周期（单位为秒）：
-```shell
+# 设置 60 秒的周期时长
 curl -X POST http://{be_host}:{http_port}/api/pipeline/tracing?dump_interval=60
 ```
 
-### 2. 格式转换
+### 2. 转换数据格式
 
-记录的数据将会生成到对应 BE 的 `log/tracing` 目录下。接下来需要对数据进行格式转换，生成符合可视化工具所需格式的文件。这里我们提供了一个转换工具直接对 BE 生成的 tracing 记录进行转换，可以直接执行：
+记录的数据会写入对应 BE 的 `log/tracing` 目录。使用 `doris/tools/pipeline-tracing/` 中的转换脚本，将原始数据转换为 Perfetto 可加载的 JSON 格式：
 
 ```shell
 cd doris/tools/pipeline-tracing/
 python3 origin-to-show.py -s <SOURCE_FILE> -d <DEST>.json
 ```
 
-生成可以展示的 json 文件。更详细的使用说明，可以参考该目录下的 `README.md` 文件。
+参数说明：
 
-### 3. 可视化结果
+| 参数 | 含义 |
+|------|------|
+| `-s <SOURCE_FILE>` | BE 生成的原始 Tracing 文件路径 |
+| `-d <DEST>.json` | 输出的可视化 JSON 文件路径 |
 
-Pipeline Tracing 的可视化使用 [Perfetto](https://ui.perfetto.dev/)。生成对应格式的文件后，在其页面上选择 "Open trace file" 打开该文件，即可查看结果：
+更详细的使用方法可参考该目录下的 `README.md` 文件。
 
-![](/images/tracing1.png)
+### 3. 在 Perfetto 中可视化
 
-该工具的功能非常强大，例如可以方便查看同一个 Task 在各个核间的调度情况。
+1. 打开 [Perfetto](https://ui.perfetto.dev/)。
+2. 点击 `Open trace file`，选择上一步生成的 JSON 文件。
+3. 即可查看调度结果：
 
-![](/images/tracing2.png)
+    ![](/images/tracing1.png)
+
+    Perfetto 支持查看同一个 Task 在各 CPU 核间的调度情况：
+
+    ![](/images/tracing2.png)
+
+## FAQ
+
+**Q：Tracing 文件在哪里？**
+
+在对应 BE 的 `log/tracing` 目录下，文件名包含时间戳与 Query 信息。
+
+**Q：开启 Pipeline Tracing 是否会影响性能？**
+
+会有一定开销。建议仅在调度排查阶段开启，排查完毕后使用 `type=disable` 关闭。

@@ -9,11 +9,10 @@
     --nb-cream-light: #FAF6EE;
     --nb-yellow: #FFD23F;
     --nb-ink: #0F1A14;
-    --nb-mono: 'JetBrains Mono', 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
 
     position: sticky;
     top: var(--home-next-banner-height, 0px);
-    // Above .docs-next-search-section (z-index 200) so the navbar's hover
+    // Above .docs-search-section (z-index 200) so the navbar's hover
     // dropdowns (which extend below the navbar bar) stay on top of the
     // sticky docs search strip.
     z-index: 300;
@@ -31,7 +30,7 @@
         gap: 48px;
     }
 
-    // Override the global Docusaurus navbar styles we inherit on docs-next.
+    // Override the global Docusaurus navbar styles we inherit on Dev docs.
     &.navbar {
         display: block;
         height: 64px;
@@ -232,6 +231,36 @@
         }
     }
 
+    &__ask-ai {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        box-sizing: border-box;
+        height: 32px;
+        padding: 0 12px;
+        border: 1px solid rgba(17, 166, 121, 0.55);
+        border-radius: 4px;
+        background: rgba(17, 166, 121, 0.18);
+        color: var(--nb-cream-light);
+        cursor: pointer;
+        @include type.mono-text(12px, 600, 1.2, 0.02em);
+        transition: border-color 0.15s, background 0.15s, transform 0.15s;
+        white-space: nowrap;
+
+        svg { flex-shrink: 0; }
+
+        &:hover {
+            border-color: rgba(17, 166, 121, 0.85);
+            background: rgba(17, 166, 121, 0.28);
+            transform: translateY(-1px);
+        }
+
+        &:focus-visible {
+            outline: 2px solid rgba(17, 166, 121, 0.85);
+            outline-offset: 2px;
+        }
+    }
+
     &__star-link {
         display: inline-flex;
         align-items: center;
@@ -324,7 +353,7 @@
 
     &__mobile-panel {
         position: absolute;
-        top: 64px;
+        top: 100%;
         left: 0;
         right: 0;
         z-index: 99;
@@ -472,12 +501,74 @@
     }
 }
 
-@media (max-width: 390px) {
+// On narrow phones (≤480px): row 1 = Logo (left) + Star + Download + ☰ (right, as a group),
+// row 2 = Ask AI full-width centered.
+// Only minimal padding trimming — no font-size or height overrides.
+@media (max-width: 480px) {
     .navbar-next {
-        &__actions {
-            display: none;
+        &.navbar {
+            height: auto;
+            min-height: 64px;
         }
 
+        &__inner {
+            flex-wrap: wrap;
+            height: auto;
+            padding: 0 10px;
+            column-gap: 5px;
+            row-gap: 0;
+            align-items: center;
+        }
+
+        // Logo link spans the full row-1 height; image slightly smaller to reclaim space.
+        &__logo {
+            height: 64px;
+        }
+
+        &__logo img {
+            height: 24px;
+        }
+
+        // Trim star-link horizontal padding (only change needed to make everything fit).
+        &__star-link {
+            padding: 0 8px 0 6px;
+            // Right-anchor the Star+Download+☰ group. Since `__actions` collapses
+            // to `display: contents` below, Star is the first member of the
+            // right-side group and inherits the auto-margin job from __actions.
+            margin-left: auto;
+        }
+
+        // Collapse `__actions` so its children (Ask Me, Star, Download) become
+        // flex children of `__inner` directly. This lets Ask Me wrap to its own
+        // full-width second row via `flex: 0 0 100%; order: 10` below — which
+        // is impossible while it's nested inside a non-wrapping flex container.
+        &__actions {
+            display: contents;
+        }
+
+        // Hamburger follows actions naturally — no extra margin needed.
+        &__menu-button {
+            margin-left: 0;
+        }
+
+        // Ask Me: full-width second row, icon + text centered both axes.
+        &__ask-ai {
+            order: 10;
+            flex: 0 0 100%;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 38px;
+            margin-left: 0;
+            margin-bottom: 10px;
+            padding: 0 12px;
+        }
+    }
+}
+
+@media (max-width: 390px) {
+    .navbar-next {
         &__mobile-actions {
             display: grid;
             gap: 10px;

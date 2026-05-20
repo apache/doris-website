@@ -274,7 +274,7 @@ please refer to the project documentation.**
 
 - Documentation: [Kerberos Connectivity Tool](https://github.com/CalvinKirs/Pulse/tree/main/kerberos-tools)
 - Release package: [Kerberos Connectivity Tool v1.0.0](https://github.com/CalvinKirs/Pulse/releases/tag/v1.0.0)
-## FAQ
+## FAQ 
 1. javax.security.sasl.SaslException: No common protection layer between client and server
    - Cause: The client's `hadoop.rpc.protection` differs from the HDFS cluster setting.
    - Fix: Align `hadoop.rpc.protection` between the client and HDFS server.
@@ -327,24 +327,24 @@ udp_preference_limit = 1
       - Restart BE & FE after changing `/etc/krb5.conf`.
 
 10. Request is a replay
-- Cause: KDC thinks the auth request is duplicated. Typical reasons: clock skew across nodes or multiple services sharing the same principal.
-- Fix:
-   - Enable NTP on all nodes to keep time in sync.
-   - Use unique principals per service instance, such as `service/_HOST@REALM`, to avoid sharing.
+   - Cause: KDC thinks the auth request is duplicated. Typical reasons: clock skew across nodes or multiple services sharing the same principal.
+   - Fix:
+      - Enable NTP on all nodes to keep time in sync.
+      - Use unique principals per service instance, such as `service/_HOST@REALM`, to avoid sharing.
 
 11. Client not found in Kerberos database
-- Cause: The client principal does not exist in the Kerberos database.
-- Fix: Create the principal in the KDC.
+   - Cause: The client principal does not exist in the Kerberos database.
+   - Fix: Create the principal in the KDC.
 
 12. Message stream modified (41)
-- Cause: Known issue for certain OS (e.g., CentOS 7) with Kerberos/Java combinations.
-- Fix: Apply vendor patches or security updates.
+   - Cause: Known issue for certain OS (e.g., CentOS 7) with Kerberos/Java combinations.
+   - Fix: Apply vendor patches or security updates.
 
 13. Pre-authentication information was invalid (24)
-- Causes:
-   - Invalid pre-auth data.
-   - Clock skew between client and KDC.
-   - JDK cipher configuration mismatches the KDC.
-- Fix:
-   - Sync time across all nodes.
-   - Align cipher configurations.
+   - Causes:
+      - Invalid pre-auth data.
+      - Clock skew between client and KDC.
+      - JDK cipher configuration mismatches the KDC.
+   - Fix:
+      - Sync time across all nodes.
+      - Align cipher configurations.

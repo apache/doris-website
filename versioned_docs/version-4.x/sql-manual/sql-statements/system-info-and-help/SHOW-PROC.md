@@ -70,8 +70,8 @@ illustrate:
 8. cluster_health: Run <code>SHOW PROC '/cluster_health/tablet_health';</code> statement to view the replica status of the entire cluster.
 9. colocation_group : This command can view the existing Group information in the cluster. For details, please refer to the [Colocation Join](../../../query-acceleration/colocation-join) chapter
 10. current_backend_instances : Displays a list of be nodes that are currently executing jobs
-11. current_queries : View the list of queries being executed, the SQL statement currently running.
-12. current_query_stmts: Returns the currently executing query.
+11. current_queries : View the list of queries being executed with runtime statistics, including task progress and resource metrics (scan/cpu/memory/shuffle/spill/cache). Since 4.1.1, this presents the same enriched view as `current_query_stmts`.
+12. current_query_stmts: Returns the currently executing query with the same statistics view as `current_queries`, providing task-level progress and resource metrics.
 13. dbs: Mainly used to view the metadata information of each database and the tables in the Doris cluster. This information includes table structure, partitions, materialized views, data shards and replicas, and more. Through this directory and its subdirectories, you can clearly display the table metadata in the cluster, and locate some problems such as data skew, replica failure, etc.
 14. diagnose: Report and diagnose common management and control issues in the cluster, including replica balance and migration, transaction exceptions, etc.
 15. frontends: Display all FE node information in the cluster, including IP address, role, status, whether it is a master, etc., equivalent to [SHOW FRONTENDS](../cluster-management/instance-management/SHOW-FRONTENDS)

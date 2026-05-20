@@ -1,58 +1,79 @@
 ---
 {
-    "title": "Concurrency Control and Queuing",
+    "title": "Concurrency Control and Queuing: Prevent OOM and System Hang Under High Concurrency",
+    "sidebar_label": "Concurrency Control and Queuing",
     "language": "en",
-    "description": "Explains how to configure concurrency control and queuing in Doris through workload groups to manage query resources and prevent system overload."
+    "description": "Configure the concurrency limit and queuing policy of a Doris workload group to prevent OOM or system hang under high concurrency.",
+    "keywords": ["concurrency control", "queuing", "workload group", "max_concurrency", "max_queue_size", "queue_timeout", "high concurrency", "OOM", "resource management", "query throttling"]
 }
 ---
 
-Concurrency control and queuing is a resource management mechanism. When multiple queries simultaneously request resources and reach the system's concurrency limit, Doris will manage the queries based on predefined strategies and restrictions, ensuring the system can still operate smoothly under high load and avoid issues like OOM (Out of Memory) or system freezes.
+<!-- Knowledge type: Procedure -->
+<!-- Applicable scenarios: High-concurrency query throttling / OOM prevention / System resource management -->
 
-Doris's concurrency control and queuing mechanism is primarily implemented through workload groups. A workload group defines the resource usage limits for queries, including maximum concurrency, queue length, and timeout parameters. By properly configuring these parameters, the goal of resource management can be achieved.
+Concurrency Control and Queuing is a core mechanism in Doris workload management. When the number of concurrently running queries exceeds the system limit, Doris places the excess queries into a waiting queue instead of rejecting them outright or letting them overwhelm the system. This prevents problems such as OOM and system hangs.
 
-## Basic usage
+This mechanism is implemented through the **workload group**. Each workload group can independently set the maximum concurrency, the queue length, and the queue timeout.
 
-```
-create workload group if not exists queue_group
-properties (
+## Configure Concurrency Control and Queuing
+
+<!-- Knowledge type: Procedure -->
+
+**Purpose**: Create or modify a workload group to limit the number of concurrent queries and enable queuing.
+
+**Command**:
+
+```sql
+CREATE WORKLOAD GROUP IF NOT EXISTS queue_group
+PROPERTIES (
     "max_concurrency" = "10",
     "max_queue_size" = "20",
     "queue_timeout" = "3000"
 );
 ```
 
-**Parameter description**
+**Parameter description**:
 
+| Parameter | Type | Default | Range | Description |
+|---|---|---|---|---|
+| `max_concurrency` | integer | 2147483647 | [0, 2147483647] | Maximum query concurrency. The default value is the maximum integer, which means concurrency is unlimited. When the number of running queries reaches this limit, new queries enter the queuing logic. |
+| `max_queue_size` | integer | 0 | [0, 2147483647] | Length of the waiting queue. When the queue is full, new queries are rejected directly. The default value is 0, which means no queuing. |
+| `queue_timeout` | integer | 0 | [0, 2147483647] | Maximum time a query can wait in the queue, in milliseconds. After the timeout, a failure is returned to the client directly. The default value is 0, which means a failure is returned immediately after entering the queue. |
 
-| Property        | Data type | Default value | Value range     | Description                                                                                                                                                                                                                                                               |
-|-----------------|-----------|---------------|-----------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| max_concurrency | Integer   | 2147483647    | [0, 2147483647] | Optional, the maximum number of concurrent queries. The default value is the maximum integer value, meaning there is no limit on concurrency. When the number of running queries reaches the maximum concurrency, new queries will enter the queuing process.             |
-| max_queue_size  | Integer   | 0             | [0, 2147483647] | Optional, the length of the query queue. When the queue is full, new queries will be rejected. The default value is 0, meaning no queuing.                                                                                                                                |
-| queue_timeout   | Integer   | 0             | [0, 2147483647] | Optional, the maximum wait time for a query in the queue, in milliseconds. If the query exceeds this time in the queue, an exception will be thrown to the client. The default value is 0, meaning no queuing, and queries will immediately fail upon entering the queue. |
+**Example explanation**:
 
+The configuration above has the following meaning in a single-FE scenario:
 
-If there is currently 1 FE in the cluster, the meaning of this configuration is as follows: The maximum number of concurrent queries in the cluster is limited to 10. When the maximum concurrency is reached, new queries will enter the queue, with the queue length limited to 20. The maximum wait time for a query in the queue is 3 seconds, and queries that exceed 3 seconds in the queue will return a failure directly to the client.
+- The cluster runs at most 10 queries concurrently.
+- When concurrency is full, new queries enter the queue, which has a maximum length of 20.
+- A query in the queue waits at most 3 seconds (3000 milliseconds), and a timeout returns a failure.
 
-:::tip
-The current queuing design does not take into account the number of FEs. The queuing parameters only take effect at the single FE level. For example:
+:::tip Notes for multi-FE scenarios
+Queuing parameters take effect at the **single-FE granularity** and do not factor in the total number of FEs in the cluster. For example:
 
-In a Doris cluster, if a workload group is configured with max_concurrency = 1,
-If there is 1 FE in the cluster, the workload group will allow only one SQL query to run at a time in the cluster;
-If there are 3 FEs in the cluster, the maximum number of SQL queries in the cluster could be 3.
+- With `max_concurrency = 1` and 1 FE in the cluster, at most 1 SQL runs at the same time.
+- With `max_concurrency = 1` and 3 FEs in the cluster, at most 3 SQLs run at the same time (1 per FE).
+
+In a multi-FE cluster, set `max_concurrency` to the desired cluster-level concurrency divided by the number of FEs.
 :::
 
-## Check the queue status
+## View the Current Queuing Status
 
-**Syntax**
+<!-- Knowledge type: Configuration parameters -->
+<!-- Applicable scenarios: Monitor queuing / Diagnose concurrency issues -->
 
+**Purpose**: View the current number of running queries and queued queries for each workload group.
+
+**Command**:
+
+```sql
+SHOW WORKLOAD GROUPS;
 ```
-show workload groups
-```
 
-**Example**
+**Example output**:
 
-```
-mysql [(none)]>show workload groups\G;
+```text
+mysql [(none)]> SHOW WORKLOAD GROUPS\G;
 *************************** 1. row ***************************
                           Id: 1
                         Name: normal
@@ -75,12 +96,38 @@ remote_read_bytes_per_second: -1
            waiting_query_num: 0
 ```
 
-```running_query_num```Represents the number of queries currently running, ```waiting_query_num```Represents the number of queries in the queue.
+Key fields:
 
-## Bypass the queuing
+- `running_query_num`: The number of queries currently running.
+- `waiting_query_num`: The number of queries currently waiting in the queue.
 
-In some operational scenarios, the administrator account needs to bypass the queuing logic to execute SQL for system management tasks. This can be done by setting session variables to bypass the queuing:
+## Bypass the Queuing Limit (Administrator Operation)
 
+<!-- Knowledge type: Procedure -->
+<!-- Applicable scenarios: Operations / Emergency administration -->
+
+**Purpose**: In operations scenarios, the administrator account needs to skip the queuing logic and execute management SQL directly.
+
+**Command**:
+
+```sql
+SET bypass_workload_group = true;
 ```
-set bypass_workload_group = true;
-```
+
+**Description**: This setting is a session-level variable and only takes effect in the current session. Enable it temporarily only during operations, and disable it or re-establish the connection after the operation is complete.
+
+## FAQ
+
+<!-- Knowledge type: Troubleshooting -->
+
+### Q: A new query fails immediately and does not enter the queue
+`queue_timeout = 0` or `max_queue_size = 0` prevents queries from being queued. Set `max_queue_size` > 0 and `queue_timeout` > 0.
+
+### Q: Queries are rejected after the queue is full
+`max_queue_size` is set too small. Increase `max_queue_size` or raise `max_concurrency`.
+
+### Q: The concurrency limit in a multi-FE cluster does not match expectations
+Queuing parameters take effect at the single-FE granularity. Set `max_concurrency` to the target value divided by the number of FEs.
+
+### Q: Administrator operations are also blocked by the queue
+The bypass variable is not enabled. Run `SET bypass_workload_group = true`.

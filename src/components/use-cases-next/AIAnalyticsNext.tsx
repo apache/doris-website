@@ -62,6 +62,11 @@ function BoltIcon({ size = 24, color = '#FFD23F', className }: BoltIconProps): J
     );
 }
 
+interface FooterItem {
+    label: string;
+    href?: string;
+}
+
 interface CoverFlowItem {
     id: string;
     num: string;
@@ -69,7 +74,7 @@ interface CoverFlowItem {
     desc: string;
     footer: {
         label: string;
-        items: string[];
+        items: FooterItem[];
     };
     customFooter?: ReactNode;
 }
@@ -169,7 +174,18 @@ function CoverFlow({
                                     <div className={footerLabelClass}>{it.footer.label}</div>
                                     <ul>
                                         {it.footer.items.map(x => (
-                                            <li key={x}>{x}</li>
+                                            <li key={x.label}>
+                                                {x.href !== undefined ? (
+                                                    <a
+                                                        href={x.href}
+                                                        onClick={e => e.stopPropagation()}
+                                                    >
+                                                        {x.label}
+                                                    </a>
+                                                ) : (
+                                                    x.label
+                                                )}
+                                            </li>
                                         ))}
                                     </ul>
                                 </div>
@@ -249,7 +265,7 @@ interface Capability {
     title: ReactNode;
     desc: string;
     poweredLabel: string;
-    poweredBy: string[];
+    poweredBy: FooterItem[];
 }
 
 const valueCards: ValueCard[] = [
@@ -454,7 +470,9 @@ const capabilities: Capability[] = [
         desc:
             'AI applications and customer-facing analytics share the same hard requirement: ingest events in seconds, serve queries in sub-second time, under high concurrency. Apache Doris meets both with streaming and CDC ingestion, real-time query visibility, and an MPP execution engine — so AI agents and user-facing dashboards can run on one analytical foundation instead of two.',
         poweredLabel: 'Powered by',
-        poweredBy: [],
+        poweredBy: [
+            { label: 'MPP', href: '/docs/dev/key-features/mpp' },
+        ],
     },
     {
         id: 'cap-ai-obs',
@@ -485,7 +503,7 @@ const capabilities: Capability[] = [
             'Apache Doris lets teams ingest and analyze evolving JSON-like data without rigid upfront schema design. With the VARIANT type, Doris supports dynamic event structures, nested fields, and AI application metadata, so teams can query agent events, tool outputs, model responses, RAG metadata, user feedback, and observability signals directly in SQL.',
         poweredLabel: 'Powered by',
         poweredBy: [
-            'VARIANT data type',
+            { label: 'VARIANT data type', href: '/docs/dev/key-features/variant-data-type' },
         ],
     },
     {
@@ -502,12 +520,13 @@ const capabilities: Capability[] = [
             'Apache Doris brings SQL filtering, full-text search, BM25 relevance scoring, and vector search into one analytical engine for RAG, enterprise search, AI copilots, agent memory, and AI observability. Teams can retrieve the right context from documents, logs, prompts, responses, feedback, and embeddings while applying business filters such as tenant, user, time range, permissions, model version, and workflow status.',
         poweredLabel: 'Powered by',
         poweredBy: [
-            'Inverted Index',
-            'Full-text Search',
-            'BM25',
-            'Vector Index',
-            'Embedding',
-            'Reciprocal Rank Fusion',
+            { label: 'Hybrid Search', href: '/docs/dev/key-features/hybrid-search' },
+            { label: 'Inverted Index', href: '/docs/dev/key-features/inverted-index' },
+            { label: 'Full-text Search', href: '/docs/dev/key-features/full-text-search' },
+            { label: 'BM25', href: '/docs/dev/key-features/bm25' },
+            { label: 'Vector Index', href: '/docs/dev/key-features/vector-index' },
+            { label: 'Embedding', href: '/docs/dev/key-features/embedding' },
+            { label: 'Reciprocal Rank Fusion', href: '/docs/dev/key-features/reciprocal-rank-fusion' },
         ],
     },
     {
@@ -524,9 +543,9 @@ const capabilities: Capability[] = [
             'Doris brings LLM-powered processing and AI ecosystem integration into analytical workflows. Teams can use SQL to query enterprise data, process AI-generated signals, and expose analytics to agents, copilots, RAG systems, and LLMOps tools. LLM SQL functions enable summarization, sentiment analysis, classification, and extraction, while MCP, APIs, and connectors make Doris accessible across AI workflows.',
         poweredLabel: 'Powered by',
         poweredBy: [
-            'LLM SQL functions',
-            'MCP Server',
-            'Semantic Layer(Coming Soon)',
+            { label: 'LLM SQL functions', href: '/docs/dev/key-features/llm-sql-functions' },
+            { label: 'MCP Server', href: '/docs/dev/key-features/mcp-server' },
+            { label: 'Semantic Layer(Coming Soon)' },
         ],
     },
 ];
@@ -564,7 +583,10 @@ function ValueSection(): JSX.Element {
         num: c.num,
         title: c.title,
         desc: c.desc,
-        footer: { label: c.scenariosLabel, items: c.scenarios },
+        footer: {
+            label: c.scenariosLabel,
+            items: c.scenarios.map(s => ({ label: s })),
+        },
     }));
 
     return (
@@ -733,7 +755,7 @@ function CtaSection(): JSX.Element {
                     with <span className="accent">Apache Doris.</span>
                 </h2>
                 <div className="cta-actions" data-reveal data-reveal-delay="2">
-                    <Link className="btn btn-yellow" to="/docs-next/dev/getting-started/quick-start">
+                    <Link className="btn btn-yellow" to="/docs/dev/getting-started/quick-start">
                         <svg
                             width="14"
                             height="14"

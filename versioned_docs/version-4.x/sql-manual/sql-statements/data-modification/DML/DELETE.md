@@ -51,10 +51,6 @@ DELETE FROM table_name
 + ORDER BY column: Specifies the order in which rows are deleted. Typically used together with LIMIT to control which rows are affected.
 + LIMIT [offset,] count: Limits the number of rows to be deleted. When used with ORDER BY, deletes the first `count` rows after sorting. If `offset` is specified, skips the first `offset` rows before deleting. If used without ORDER BY, the set of affected rows is non-deterministic.
 
-:::tip
-ORDER BY and LIMIT in DELETE statements are supported since version 4.1.0.
-:::
-
 #### Note
 
 1. Only conditions on the key column can be specified when using AGGREGATE (UNIQUE) model.

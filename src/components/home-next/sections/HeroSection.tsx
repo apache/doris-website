@@ -1,4 +1,5 @@
-import React, { JSX, useState, useEffect, useMemo } from 'react';
+import React, { JSX, useState, useEffect, useMemo, useRef } from 'react';
+import { StarGreenIcon } from '@site/src/components/Icons/star-green-icon';
 import './HeroSection.scss';
 
 // ─── SVG atoms ───────────────────────────────────────────────────────────────
@@ -24,14 +25,6 @@ function LightningSvg({ size = 24, color = '#FFD23F' }: { size?: number; color?:
     );
 }
 
-function DownloadIcon(): JSX.Element {
-    return (
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" aria-hidden="true">
-            <path d="M12 4v12m0 0l-5-5m5 5l5-5M4 20h16" />
-        </svg>
-    );
-}
-
 function SlackIcon(): JSX.Element {
     return (
         <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
@@ -40,7 +33,7 @@ function SlackIcon(): JSX.Element {
     );
 }
 
-const GET_STARTED_HREF = '/docs-next/dev/getting-started/intro';
+const GET_STARTED_HREF = '/docs/dev/getting-started/intro';
 
 // ─── SQL Typewriter ───────────────────────────────────────────────────────────
 
@@ -755,6 +748,102 @@ function ReportCarousel(): JSX.Element {
     );
 }
 
+// ─── Mascot + mouse-tracking eyes ────────────────────────────────────────────
+
+// Measured from doris-mascot.png (1344x768) — six eye-white centers, sorted
+// left-to-right. Each radius is ~1.7% of image width.
+const MASCOT_EYES: Array<{ cx: number; cy: number }> = [
+    { cx: 22.96, cy: 54.01 },
+    { cx: 28.59, cy: 54.01 },
+    { cx: 51.01, cy: 51.27 },
+    { cx: 56.39, cy: 51.95 },
+    { cx: 74.99, cy: 58.71 },
+    { cx: 80.30, cy: 59.91 },
+];
+const MASCOT_EYE_RADIUS_PCT = 1.7;
+const MASCOT_PUPIL_RADIUS_RATIO = 0.5;
+
+function MascotWithEyes(): JSX.Element {
+    const wrapRef = useRef<HTMLSpanElement>(null);
+    const pupilRefs = useRef<Array<HTMLSpanElement | null>>([]);
+    const lastMouseRef = useRef<{ x: number; y: number } | null>(null);
+
+    useEffect(() => {
+        if (typeof window === 'undefined') return undefined;
+
+        const update = (mouseX: number, mouseY: number) => {
+            const wrap = wrapRef.current;
+            if (!wrap) return;
+            const rect = wrap.getBoundingClientRect();
+            if (rect.width === 0 || rect.height === 0) return;
+            const eyeR = (MASCOT_EYE_RADIUS_PCT / 100) * rect.width;
+            const pupilR = eyeR * MASCOT_PUPIL_RADIUS_RATIO;
+            const maxOffset = eyeR - pupilR;
+
+            MASCOT_EYES.forEach((eye, i) => {
+                const pupil = pupilRefs.current[i];
+                if (!pupil) return;
+                const ex = rect.left + (eye.cx / 100) * rect.width;
+                const ey = rect.top + (eye.cy / 100) * rect.height;
+                const dx = mouseX - ex;
+                const dy = mouseY - ey;
+                const dist = Math.hypot(dx, dy);
+                // Soft follow: pupil ramps to its max offset as the cursor
+                // gets ~80 px away — close cursors don't pin the pupil to
+                // the edge of the eye white.
+                const scale = Math.min(dist / 80, 1);
+                const ox = dist > 0 ? (dx / dist) * maxOffset * scale : 0;
+                const oy = dist > 0 ? (dy / dist) * maxOffset * scale : 0;
+                pupil.style.transform = `translate(calc(-50% + ${ox.toFixed(2)}px), calc(-50% + ${oy.toFixed(2)}px))`;
+            });
+        };
+
+        const onMouseMove = (e: MouseEvent) => {
+            lastMouseRef.current = { x: e.clientX, y: e.clientY };
+            update(e.clientX, e.clientY);
+        };
+        const onTouchMove = (e: TouchEvent) => {
+            const t = e.touches[0];
+            if (!t) return;
+            lastMouseRef.current = { x: t.clientX, y: t.clientY };
+            update(t.clientX, t.clientY);
+        };
+        const onScroll = () => {
+            const m = lastMouseRef.current;
+            if (m) update(m.x, m.y);
+        };
+
+        window.addEventListener('mousemove', onMouseMove, { passive: true });
+        window.addEventListener('touchmove', onTouchMove, { passive: true });
+        window.addEventListener('scroll', onScroll, { passive: true });
+        return () => {
+            window.removeEventListener('mousemove', onMouseMove);
+            window.removeEventListener('touchmove', onTouchMove);
+            window.removeEventListener('scroll', onScroll);
+        };
+    }, []);
+
+    return (
+        <span className="hero-next__mascot-wrap" ref={wrapRef} aria-hidden="true">
+            <img
+                className="hero-next__mascot"
+                src="/images/next/home-page/doris-mascot.png"
+                width={1344}
+                height={768}
+                alt=""
+            />
+            {MASCOT_EYES.map((eye, i) => (
+                <span
+                    key={i}
+                    ref={(el) => { pupilRefs.current[i] = el; }}
+                    className="hero-next__mascot-pupil"
+                    style={{ left: `${eye.cx}%`, top: `${eye.cy}%` }}
+                />
+            ))}
+        </span>
+    );
+}
+
 // ─── HeroSection ─────────────────────────────────────────────────────────────
 
 export function HeroSection(): JSX.Element {
@@ -785,8 +874,9 @@ export function HeroSection(): JSX.Element {
                                 <span className="hero-next__title-accent">Fast</span>
                                 <LightningSvg size={56} />
                             </span>
-                            <span className="hero-next__title-line">
+                            <span className="hero-next__title-line hero-next__title-line--mascot-host">
                                 <span className="hero-next__title-accent">Analytics</span> and
+                                <MascotWithEyes />
                             </span>
                             <span className="hero-next__title-line">
                                 <span className="hero-next__title-accent">Search</span> Database
@@ -800,13 +890,23 @@ export function HeroSection(): JSX.Element {
                         </p>
 
                         <div className="hero-next__ctas">
-                            <a className="hero-next__btn hero-next__btn--yellow" href="/download-next">
-                                <DownloadIcon />
-                                Download
-                            </a>
-                            <a className="hero-next__btn hero-next__btn--primary" href={GET_STARTED_HREF}>
+                            <a className="hero-next__btn hero-next__btn--yellow" href={GET_STARTED_HREF}>
                                 Get Started
                             </a>
+                            <button
+                                type="button"
+                                className="hero-next__btn hero-next__btn--primary"
+                                onClick={() => {
+                                    // Reuse the Kapa modal trigger bound to the
+                                    // navbar Ask Me button via docusaurus.config.js
+                                    // (data-modal-override-open-selector).
+                                    document.getElementById('navbar-ask-ai-btn')?.click();
+                                }}
+                                aria-label="Ask Me"
+                            >
+                                <StarGreenIcon />
+                                Ask Me
+                            </button>
                             <a
                                 className="hero-next__btn hero-next__btn--ghost"
                                 href="https://doris.apache.org/slack"

@@ -30,6 +30,7 @@ PAUSE JOB WHERE jobname = <job_name> ;
 | ADMIN_PRIV    | 数据库（DB）  |  非 Streaming | 目前仅支持 **ADMIN** 权限执行此操作 |
 | LOAD_PRIV    | 数据库（DB）  |  Streaming  | 支持 **LOAD** 权限执行此操作 |
 
+
 ## 示例
 
 - 暂停名称为 example 的 JOB。

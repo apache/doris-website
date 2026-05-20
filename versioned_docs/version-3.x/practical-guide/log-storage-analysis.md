@@ -158,7 +158,7 @@ Refer to the following table to learn about the values of indicators in the exam
 
 ### Step 2: Deploy the cluster
 
-After estimating the resources, you need to deploy the cluster. It is recommended to deploy in both physical and virtual environments manually. For manual deployment, refer to [Manual Deployment](../../../docs/install/deploy-manually/integrated-storage-compute-deploy-manually).
+After estimating the resources, you need to deploy the cluster. It is recommended to deploy in both physical and virtual environments manually. For manual deployment, refer to [Manual Deployment](../install/deploy-manually/integrated-storage-compute-deploy-manually).
 
 ### Step 3: Optimize FE and BE configurations
 
@@ -216,7 +216,7 @@ Due to the distinct characteristics of both writing and querying log data, it is
 
 - For data partitioning:
 
-    - Enable [range partitioning](../table-design/data-partitioning/dynamic-partitioning#range-partition) (`PARTITION BY RANGE(`ts`)`) with [dynamic partitions](../table-design/data-partitioning/dynamic-partitioning)   (`"dynamic_partition.enable" = "true"`) managed automatically by day.
+    - Enable [range partitioning](../table-design/data-partitioning/manual-partitioning#range-partitioning) (`PARTITION BY RANGE(`ts`)`) with [dynamic partitions](../table-design/data-partitioning/dynamic-partitioning)   (`"dynamic_partition.enable" = "true"`) managed automatically by day.
 
     - Use a field in the DATETIME type as the key (`DUPLICATE KEY(ts)`) for accelerated retrieval of the latest N log entries.
 

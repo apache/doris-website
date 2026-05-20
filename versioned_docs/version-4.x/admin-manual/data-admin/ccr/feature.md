@@ -1,256 +1,298 @@
 ---
 {
     "title": "Feature Details",
-    "language": "en-US",
-    "description": "The Cross-Cluster Replication (CCR) feature in Doris is primarily used for efficiently synchronizing data between multiple clusters,"
+    "language": "en",
+    "description": "Apache Doris CCR (Cross Cluster Replication) feature details: supported operations, sync methods, and version requirements for databases, tables, partitions, data loading, views, materialized views, and more.",
+    "keywords": [
+        "Doris CCR",
+        "Cross Cluster Replication",
+        "CCR supported operations",
+        "CCR sync methods",
+        "Full Sync",
+        "Partial Sync",
+        "binlog sync",
+        "disaster recovery sync",
+        "multi-cluster data consistency"
+    ]
 }
 ---
 
-The Cross-Cluster Replication (CCR) feature in Doris is primarily used for efficiently synchronizing data between multiple clusters, thereby enhancing business continuity and disaster recovery capabilities. CCR supports various operations in Doris, ensuring data consistency across different clusters. Below are the details of the main Doris operations supported by CCR.
+The Cross Cluster Replication (CCR) feature in Apache Doris efficiently synchronizes data between multiple Doris clusters. It is commonly used for remote disaster recovery, read/write separation, and business continuity scenarios. This document lists the Doris operations supported by CCR, the corresponding sync methods, and the minimum version requirements, organized by **Database / Table / Data / Partition / View / Materialized View / Others**. Use it to quickly verify compatibility before setting up a CCR job.
+
+<!-- Knowledge type: Compatibility matrix / Capability list -->
+<!-- Applicable scenarios: CCR job design / Upstream-downstream version verification / Troubleshooting -->
+
+## Applicable Scenarios
+
+| Scenario                                  | Description                                                                                                  |
+| ----------------------------------------- | ------------------------------------------------------------------------------------------------------------ |
+| Before setting up a CCR job               | Verify whether the upstream and downstream Doris versions cover the sync capabilities of the target objects (databases, tables, partitions, views, etc.) |
+| Planning upstream and downstream clusters | Confirm which table properties, column operations, and partition operations can be synchronized automatically by CCR |
+| Troubleshooting CCR job exceptions        | Compare against the list of unsupported or restricted operations to determine whether the exception is caused by an incompatible operation |
+| Upgrading a Doris cluster                 | Evaluate the additional sync capabilities introduced after upgrading to versions such as 2.0.15, 2.1.6, 2.1.8, or 3.0.4 |
+
+## Reading Notes
 
 :::note
 
-1. The `-` in Doris Version indicates Doris version 2.0 and above, all versions of CCR. It is recommended to use Doris version 2.0.15 or 2.1.6 or later.
-2. Version requirements for CCR Syncer and Doris: Syncer Version >= Downstream Doris Version >= Upstream Doris Version. Therefore, upgrade Syncer first, then the downstream Doris, and finally the upstream Doris.
-3. CCR currently does not support the separation of storage and computation.
+1. In the Doris Version column, `-` means the feature is supported by Doris 2.0 and later, and by all CCR versions. Doris 2.0.15, 2.1.6, or later is recommended.
+2. The version requirements between CCR Syncer and Doris are: Syncer Version >= downstream Doris Version >= upstream Doris Version. Therefore, the upgrade order is: upgrade the Syncer first, then the downstream Doris, and finally the upstream Doris.
+3. CCR does not currently support the storage-compute separation mode.
 
 :::
+
+### Sync Method Terminology
+
+CCR uses the following methods to synchronize upstream changes to the downstream. The "Sync Method" column in the tables below uses these terms:
+
+| Sync Method  | Meaning                                                                                              |
+| ------------ | ---------------------------------------------------------------------------------------------------- |
+| Full Sync    | A full synchronization. The downstream re-fetches a complete copy of the data based on an upstream snapshot. |
+| Partial Sync | A partial synchronization. Only changed objects or partitions are synced, avoiding a full sync.       |
+| SQL          | The DDL/DML SQL statements executed upstream are replayed on the downstream.                          |
+| TXN          | Upstream transactions are synchronized through the transaction records in the binlog. The downstream starts syncing after the transaction becomes visible upstream. |
 
 ## Database
 
 ### Database Properties
 
-Database-level jobs will synchronize the properties of the database during Full Sync.
+For a database-level job, database properties are synchronized during Full Sync.
 
-| Property                | Supported | Doris Version | Sync Method | Description |
-| ----------------------- | --------- | ------------- | ----------- | ----------- |
-| replication_allocation  | Supported | -             | Full Sync   |             |
-| data quota              | Not Supported |           |             |             |
-| replica quota           | Not Supported |           |             |             |
+| Property               | Supported | Doris version | Sync Method | Description |
+| ---------------------- | --------- | ------------- | ----------- | ----------- |
+| replication_allocation | Yes       | -             | Full Sync   |             |
+| data quota             | No        |               |             |             |
+| replica quota          | No        |               |             |             |
 
-### Modify Database Properties
+### Modifying Database Properties
 
-CCR jobs do not synchronize operations that modify database properties.
+A CCR job does not synchronize operations that modify database properties.
 
-| Property                | Supported | Can Upstream Operate | Can Downstream Operate | Description                              |
-| ----------------------- | --------- | -------------------- | ---------------------- | ---------------------------------------- |
-| replication_allocation  | Not Supported | No                 | No                     | Operations on both sides will cause CCR jobs to be interrupted |
-| data quota              | Not Supported | Yes                | Yes                    |                                          |
-| replica quota           | Not Supported | Yes                | Yes                    |                                          |
+| Property               | Supported | Can operate upstream | Can operate downstream | Description                                                  |
+| ---------------------- | --------- | -------------------- | ---------------------- | ------------------------------------------------------------ |
+| replication_allocation | No        | No                   | No                     | Operating independently on either side interrupts the CCR job |
+| data quota             | No        | Yes                  | Yes                    |                                                              |
+| replica quota          | No        | Yes                  | Yes                    |                                                              |
 
-### Rename Database
+### Renaming Databases
 
-Renaming is not supported for upstream and downstream; if done, it may cause views to stop working.
+Renaming is not supported on either the upstream or the downstream. If you do rename, views may stop working.
 
 ## Table
+
+<!-- Knowledge type: Compatibility matrix -->
+<!-- Applicable scenarios: Table schema design / CCR job planning -->
+
 ### Table Properties
 
-| Property                                      | Supported | Doris Version | Sync Method | Description                                                     |
-| --------------------------------------------- | --------- | ------------- | ----------- | -------------------------------------------------------------- |
-| Table Model (duplicate, unique, aggregate)    | Supported | -             | SQL         |                                                                |
-| Partition and Bucketing                        | Supported | -             | SQL         |                                                                |
-| replication_num                               | Supported | -             | SQL         |                                                                |
-| replication_allocation (resource group)       | Supported | -             | SQL         | Upstream must be consistent with downstream, BE tags must match; otherwise, CCR jobs will fail |
-| colocate_with                                 | Not Supported |           |             |                                                                |
-| storage_policy                                 | Not Supported |           |             |                                                                |
-| dynamic_partition                              | Supported | -             | SQL         |                                                                |
-| storage_medium                                 | Supported | -             | SQL         |                                                                |
-| auto_bucket                                    | Supported | -             | SQL         |                                                                |
-| group_commit series                           | Supported | -             | SQL         |                                                                |
-| enable_unique_key_merge_on_write              | Supported | -             | SQL         |                                                                |
-| enable_single_replica_compaction              | Supported | -             | SQL         |                                                                |
-| disable_auto_compaction                       | Supported | -             | SQL         |                                                                |
-| compaction_policy                             | Supported | -             | SQL         |                                                                |
-| time_series_compaction series                 | Supported | -             | SQL         |                                                                |
-| binlog series                                 | Supported | -             | SQL         |                                                                |
-| variant_enable_flatten_nested                 | Supported | -             | SQL         |                                                                |
-| skip_write_index_on_load                      | Supported | -             | SQL         |                                                                |
-| row_store series                               | Supported | -             | SQL         |                                                                |
-| seq column                                    | Supported | -             | SQL         |                                                                |
-| enable_light_schema_change                    | Supported | -             | SQL         |                                                                |
-| compression_type                              | Supported | -             | SQL         |                                                                |
-| index                                         | Supported | -             | SQL         |                                                                |
-| bloom_filter_columns                          | Supported | -             | SQL         |                                                                |
-| bloom_filter_fpp                              | Supported |               |             |                                                                |
-| storage_cooldown_time                         | Not Supported |           |             |                                                                |
-| generated column                               | Supported | -             | SQL         |                                                                |
-| auto-increment id                             | Not Supported |           |             | Has issues                                                   |
+| Property                                   | Supported | Doris version | Sync Method | Description                                                                                  |
+| ------------------------------------------ | --------- | ------------- | ----------- | -------------------------------------------------------------------------------------------- |
+| Table model (duplicate, unique, aggregate) | Yes       | -             | SQL         |                                                                                              |
+| Partitioning and bucketing                 | Yes       | -             | SQL         |                                                                                              |
+| replication_num                            | Yes       | -             | SQL         |                                                                                              |
+| replication_allocation (resource group)    | Yes       | -             | SQL         | The upstream must be consistent with the downstream, and BE tags must match, otherwise the CCR job fails |
+| colocate_with                              | No        |               |             |                                                                                              |
+| storage_policy                             | No        |               |             |                                                                                              |
+| dynamic_partition                          | Yes       | -             | SQL         |                                                                                              |
+| storage_medium                             | Yes       | -             | SQL         |                                                                                              |
+| auto_bucket                                | Yes       | -             | SQL         |                                                                                              |
+| group_commit series                        | Yes       | -             | SQL         |                                                                                              |
+| enable_unique_key_merge_on_write           | Yes       | -             | SQL         |                                                                                              |
+| enable_single_replica_compaction           | Yes       | -             | SQL         |                                                                                              |
+| disable_auto_compaction                    | Yes       | -             | SQL         |                                                                                              |
+| compaction_policy                          | Yes       | -             | SQL         |                                                                                              |
+| time_series_compaction series              | Yes       | -             | SQL         |                                                                                              |
+| binlog series                              | Yes       | -             | SQL         |                                                                                              |
+| variant_enable_flatten_nested              | Yes       | -             | SQL         |                                                                                              |
+| skip_write_index_on_load                   | Yes       | -             | SQL         |                                                                                              |
+| row_store series                           | Yes       | -             | SQL         |                                                                                              |
+| seq column                                 | Yes       | -             | SQL         |                                                                                              |
+| enable_light_schema_change                 | Yes       | -             | SQL         |                                                                                              |
+| compression_type                           | Yes       | -             | SQL         |                                                                                              |
+| index                                      | Yes       | -             | SQL         |                                                                                              |
+| bloom_filter_columns                       | Yes       | -             | SQL         |                                                                                              |
+| bloom_filter_fpp                           | Yes       |               |             |                                                                                              |
+| storage_cooldown_time                      | No        |               |             |                                                                                              |
+| generated column                           | Yes       | -             | SQL         |                                                                                              |
+| auto-increment id                          | No        |               |             | Has issues                                                                                   |
 
 ### Basic Table Operations
 
-| Operation      | Supported | Doris Version | Sync Method | Can Downstream Operate Independently | Description |
-| -------------- | --------- | ------------- | ----------- | ------------------------------------ | ----------- |
-| create table   | Supported | -             | SQL/Partial Sync | Cannot operate on tables synchronized by CCR jobs. | Refer to the properties for creating tables; in most cases, use SQL for synchronization; for some operations, such as when users set certain session variables or when the create table statement includes inverted indexes, use partial sync |
-| drop table     | Supported | -             | SQL/Full Sync | Same as above | Before 2.0.15/2.1.6: Full Sync, after: SQL |
-| rename table   | Table-level jobs do not support database-level jobs | 2.1.8/3.0.4 | SQL | Same as above | Table-level job renames will cause CCR jobs to stop |
-| replace table  | Supported | 2.1.8/3.0.4 | SQL/Full Sync | Same as above | Use SQL for database-level synchronization; table-level triggers full synchronization |
-| truncate table | Supported | -             | SQL | Same as above | |
-| restore table  | Not Supported | | | Same as above | |
+| Operation      | Supported                                          | Doris version | Sync Method        | Can operate downstream independently        | Description                                                                                                                                                       |
+| -------------- | -------------------------------------------------- | ------------- | ------------------ | ------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| create table   | Yes                                                | -             | SQL / Partial Sync | Operating on tables synced by a CCR job is not supported. | See the table-creation section for properties. SQL sync is used in most cases. Partial Sync is used in specific cases, for example when certain session variables are enabled at table creation or the CREATE TABLE statement contains an inverted index. |
+| drop table     | Yes                                                | -             | SQL / Full Sync    | Same as above                               | Before 2.0.15 / 2.1.6: Full Sync. After: SQL.                                                                                                                     |
+| rename table   | Not supported for table-level jobs, supported for database-level jobs | 2.1.8 / 3.0.4 | SQL                | Same as above                               | Executing rename in a table-level job stops the CCR job.                                                                                                          |
+| replace table  | Yes                                                | 2.1.8 / 3.0.4 | SQL / Full Sync    | Same as above                               | At the database level, SQL sync is used. At the table level, a full sync is triggered.                                                                            |
+| truncate table | Yes                                                | -             | SQL                | Same as above                               |                                                                                                                                                                   |
+| restore table  | No                                                 |               |                    | Same as above                               |                                                                                                                                                                   |
 
-### Modify Table Properties
+### Modifying Table Properties
 
-The synchronization method is SQL.
+The sync method is SQL.
 
-| Property                       | Supported | Doris Version | Can Upstream Operate | Can Downstream Operate | Description                                    |
-| ------------------------------ | --------- | ------------- | -------------------- | ---------------------- | ---------------------------------------------- |
-| colocate                       | Not Supported |           | Yes                  | No                     | Triggering full sync on downstream operations will cause data loss |
-| distribution type              | Not Supported |           | No                   | Same                   |                                                |
-| dynamic partition              | Not Supported |           | Yes                  | Same                   |                                                |
-| replication_num                | Not Supported |           | No                   | No                     |                                                |
-| replication_allocation         | Not Supported |           | No                   |                        |                                                |
-| storage policy                 | Not Supported |           | No                   | No                     |                                                |
-| enable_light_schema_change     | Not Supported |           |                      |                        | CCR can only synchronize lightweight schema changes. |
-| row_store                      | Supported | 2.1.8/3.0.4 |                      |                        | Through Partial Sync |
-| bloom_filter_columns           | Supported | 2.1.8/3.0.4 |                      |                        | Through Partial Sync |
-| bloom_filter_fpp               | Supported | 2.1.8/3.0.4 |                      |                        | Through Partial Sync |
-| bucket num                     | Not Supported |           | Yes                  | No                     | Triggering full sync on downstream operations will cause data loss |
-| isBeingSynced                  | Not Supported |           | No                   | No                     |                                                |
-| compaction series properties    | Not Supported |           | Yes                  | No                     | Triggering full sync on downstream operations will cause data loss |
-| skip_write_index_on_load       | Not Supported |           | Yes                  | Same                   |                                                |
-| seq column                     | Supported | -             | Yes                  | No                     | Triggering full sync on downstream operations will cause data loss |
-| delete sign column             | Supported | -             | Yes                  | Same                   |                                                |
-| comment                        | Supported | 2.1.8/3.0.4 | Yes                  | No                     | Triggering full sync on downstream operations will cause data loss |
+| Property                   | Supported | Doris version | Can operate upstream | Can operate downstream                                  | Description                                       |
+| -------------------------- | --------- | ------------- | -------------------- | ------------------------------------------------------- | ------------------------------------------------- |
+| colocate                   | No        |               | Yes                  | No. Triggers Full Sync, and downstream changes are lost. |                                                   |
+| distribution type          | No        |               | No                   | Same as above                                           |                                                   |
+| dynamic partition          | No        |               | Yes                  | Same as above                                           |                                                   |
+| replication_num            | No        |               | No                   | No                                                      |                                                   |
+| replication_allocation     | No        |               | No                   |                                                         |                                                   |
+| storage policy             | No        |               | No                   | No                                                      |                                                   |
+| enable_light_schema_change | No        |               |                      |                                                         | CCR can only synchronize tables with light schema change |
+| row_store                  | Yes       | 2.1.8 / 3.0.4 |                      |                                                         | Via Partial Sync                                  |
+| bloom_filter_columns       | Yes       | 2.1.8 / 3.0.4 |                      |                                                         | Via Partial Sync                                  |
+| bloom_filter_fpp           | Yes       | 2.1.8 / 3.0.4 |                      |                                                         | Via Partial Sync                                  |
+| bucket num                 | No        |               | Yes                  | No. Triggers Full Sync, and downstream changes are lost. |                                                   |
+| isBeingSynced              | No        |               | No                   | No                                                      |                                                   |
+| compaction series properties | No      |               | Yes                  | No. Triggers Full Sync, and downstream changes are lost. |                                                   |
+| skip_write_index_on_load   | No        |               | Yes                  | Same as above                                           |                                                   |
+| seq column                 | Yes       | -             | Yes                  | No. Triggers Full Sync, and downstream changes are lost. |                                                   |
+| delete sign column         | Yes       | -             | Yes                  | Same as above                                           |                                                   |
+| comment                    | Yes       | 2.1.8 / 3.0.4 | Yes                  | No. Triggers Full Sync, and downstream changes are lost. |                                                   |
 
 ### Column Operations
 
-Column operations on Base Index in the table.
+Column operations on the Base Index of a table:
 
-| Operation          | Supported | Doris Version | Sync Method           | Can Downstream Operate | Remarks                            |
-| ------------------ | --------- | ------------- | --------------------- | ---------------------- | ---------------------------------- |
-| add key column     | Supported | -             | Partial Sync          | No                     |                                    |
-| add value column   | Supported | -             | SQL                   | No                     |                                    |
-| drop key column    | Supported | -             | Partial Sync          | Same                   |                                    |
-| drop value column  | Supported | -             | SQL                   | Same                   |                                    |
-| modify column      | Supported | -             | Partial Sync          | Same                   |                                    |
-| order by           | Supported | -             | Partial Sync          | Same                   |                                    |
-| rename             | Supported | 2.1.8/3.0.4  | SQL                   | Same                   |                                    |
-| comment            | Supported | 2.1.8/3.0.4  | SQL                   | Same                   |                                    |
+| Operation         | Supported | Doris version | Sync Method  | Can operate downstream            | Notes |
+| ----------------- | --------- | ------------- | ------------ | --------------------------------- | ----- |
+| add key column    | Yes       | -             | Partial Sync | No. Interrupts the CCR job.       |       |
+| add value column  | Yes       | -             | SQL          | No. Interrupts the CCR job.       |       |
+| drop key column   | Yes       | -             | Partial Sync | Same as above                     |       |
+| drop value column | Yes       | -             | SQL          | Same as above                     |       |
+| modify column     | Yes       | -             | Partial Sync | Same as above                     |       |
+| order by          | Yes       | -             | Partial Sync | Same as above                     |       |
+| rename            | Yes       | 2.1.8 / 3.0.4 | SQL          | Same as above                     |       |
+| comment           | Yes       | 2.1.8 / 3.0.4 | SQL          | Same as above                     |       |
 
 :::note
 
-Adding/dropping value columns requires setting the property `"light_schema_change" = "true"` when creating the table.
+add/drop value column requires the property `"light_schema_change" = "true"` to be set at table creation.
 
 :::
 
-Column operations on Rollup Index in the table.
+Column operations on a Rollup Index of a table:
 
-| Operation          | Supported | Doris Version | Sync Method           | Remarks              |
-| ------------------ | --------- | ------------- | --------------------- | -------------------- |
-| add key column     | Supported | 2.1.8/3.0.4  | Partial Sync          |                      |
-| add value column   | Supported | 2.1.8/3.0.4  | SQL                   | Requires enabling lightning schema change |
-| drop column        | Supported | 2.1.8/3.0.4  | Partial Sync          |                      |
-| modify column      | Unknown   | 2.1.8/3.0.4  | Partial Sync          | Doris does not support directly modifying rollup column types |
-| order by           | Supported | 2.1.8/3.0.4  | Partial sync          |                      |
+| Operation        | Supported | Doris Version | Sync Method  | Notes                                              |
+| ---------------- | --------- | ------------- | ------------ | -------------------------------------------------- |
+| add key column   | Yes       | 2.1.8 / 3.0.4 | Partial Sync |                                                    |
+| add value column | Yes       | 2.1.8 / 3.0.4 | SQL          | Requires light schema change to be enabled         |
+| drop column      | Yes       | 2.1.8 / 3.0.4 | Partial Sync |                                                    |
+| modify column    | Unknown   | 2.1.8 / 3.0.4 | Partial Sync | Doris does not support directly modifying the type of a rollup column |
+| order by         | Yes       | 2.1.8 / 3.0.4 | Partial Sync |                                                    |
 
 ### Rollup
 
-| Operation          | Supported | Doris Version | Sync Method           | Remarks         |
-| ------------------ | --------- | ------------- | --------------------- | ---------------- |
-| add rollup         | Supported | 2.1.8/3.0.4  | Partial Sync          |                  |
-| drop rollup        | Supported | 2.1.8/3.0.4  | SQL                   |                  |
-| rename rollup      | Supported | 2.1.8/3.0.4  | SQL                   |                  |
+| Operation     | Supported | Doris Version | Sync Method  | Notes |
+| ------------- | --------- | ------------- | ------------ | ----- |
+| add rollup    | Yes       | 2.1.8 / 3.0.4 | Partial Sync |       |
+| drop rollup   | Yes       | 2.1.8 / 3.0.4 | SQL          |       |
+| rename rollup | Yes       | 2.1.8 / 3.0.4 | SQL          |       |
 
 ### Index
 
-Inverted Index
+Inverted Index:
 
-| Operation         | Supported | Doris Version | Sync Method           | Remarks     |
-| ------------------ | --------- | ------------- | --------------------- | ----------- |
-| create index      | Supported | 2.1.8/3.0.4  | Partial Sync          |             |
-| drop index        | Supported | 2.1.8/3.0.4  | SQL                   |             |
-| build index       | Supported | 2.1.8/3.0.4  | SQL                   |             |
+| Operation    | Supported | Doris Version | Sync Method  | Notes |
+| ------------ | --------- | ------------- | ------------ | ----- |
+| create index | Yes       | 2.1.8 / 3.0.4 | Partial Sync |       |
+| drop index   | Yes       | 2.1.8 / 3.0.4 | SQL          |       |
+| build index  | Yes       | 2.1.8 / 3.0.4 | SQL          |       |
 
-Bloom Filter
+Bloom Filter:
 
-| Operation         | Supported | Doris Version | Sync Method           | Remarks     |
-| ------------------ | --------- | ------------- | --------------------- | ----------- |
-| add bloom filter   | Supported | 2.1.8/3.0.4  | Partial Sync          |             |
-| alter bloom filter | Supported | 2.1.8/3.0.4  | Partial Sync          | This refers to modifying bloom_filter_columns |
-| drop bloom filter  | Supported | 2.1.8/3.0.4  | Partial Sync          |             |
+| Operation          | Supported | Doris Version | Sync Method  | Notes                                       |
+| ------------------ | --------- | ------------- | ------------ | ------------------------------------------- |
+| add bloom filter   | Yes       | 2.1.8 / 3.0.4 | Partial Sync |                                             |
+| alter bloom filter | Yes       | 2.1.8 / 3.0.4 | Partial Sync | Refers to modifying bloom_filter_columns    |
+| drop bloom filter  | Yes       | 2.1.8 / 3.0.4 | Partial Sync |                                             |
 
 ## Data
 
-### Import
+<!-- Knowledge type: Compatibility matrix -->
+<!-- Applicable scenarios: Data loading selection / DML sync troubleshooting -->
 
-| Import Method     | Supported             | Doris Version | Sync Method | Can Downstream Operate                                             | Description                                                 |
-| ------------------ | -------------------- | ------------- | ----------- | ------------------------------------------------------------ | ---------------------------------------------------------- |
-| stream load        | Supported (except for temporary partitions) | -             | TXN         | No, if downstream imports, subsequent triggers of full or Partial Sync will cause data loss | Upstream transactions are visible, i.e., data is visible when generating binlog, downstream starts syncing. |
-| broker load        | Supported (except for temporary partitions) | -             | TXN         | Same                                                         | Same                                                      |
-| routine load       | Supported (except for temporary partitions) | -             | TXN         | Same                                                         | Same                                                      |
-| mysql load         | Supported (except for temporary partitions) | -             | TXN         | Same                                                         | Same                                                      |
-| group commit       | Supported (except for temporary partitions) | 2.1           | TXN         | Same                                                         | Same                                                      |
+### Loading
+
+| Load Method  | Supported                          | Doris version | Sync Method | Can operate downstream                                                                                | Description                                                                                          |
+| ------------ | ---------------------------------- | ------------- | ----------- | ----------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
+| stream load  | Yes (except for temporary partitions) | -          | TXN         | No. If you load on the downstream, the downstream-loaded data is lost when a Full Sync or Partial Sync is triggered later. | When the upstream transaction becomes visible (that is, when the data becomes visible), a binlog is generated and the downstream starts syncing. |
+| broker load  | Yes (except for temporary partitions) | -          | TXN         | Same as above                                                                                         | Same as above                                                                                        |
+| routine load | Yes (except for temporary partitions) | -          | TXN         | Same as above                                                                                         | Same as above                                                                                        |
+| mysql load   | Yes (except for temporary partitions) | -          | TXN         | Same as above                                                                                         | Same as above                                                                                        |
+| group commit | Yes (except for temporary partitions) | 2.1        | TXN         | Same as above                                                                                         | Same as above                                                                                        |
 
 ### Data Operations
 
-| Operation                      | Supported             | Doris Version | Sync Method     | Can Downstream Operate                                             | Description                                                 |
-| ------------------------------- | -------------------- | ------------- | ---------------- | ------------------------------------------------------------ | ---------------------------------------------------------- |
-| delete                          | Supported             | -             | TXN              | No, if downstream operates, subsequent triggers of full or Partial Sync will cause data loss | Upstream transactions are visible, i.e., data is visible when generating binlog, downstream starts syncing. |
-| update                          | Supported             | -             | TXN              | Same                                                         | Same                                                      |
-| insert                          | Supported             | -             | TXN              | Same                                                         | Same                                                      |
-| insert into overwrite           | Supported (except for temporary partitions) | 2.1.6         | Partial Sync | Same                                                         | Same                                                      |
-| insert into overwrite           | Supported (except for temporary partitions) | 2.0           | full sync    | Same                                                         | Same                                                      |
-| Explicit transaction (3.0) begin commit | Not Supported |               |                  |                                                              |                                                          |
+| Operation                            | Supported                          | Doris version | Sync Method  | Can operate downstream                                                                            | Description                                                                                          |
+| ------------------------------------ | ---------------------------------- | ------------- | ------------ | ------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
+| delete                               | Yes                                | -             | TXN          | No. If you operate on the downstream, the downstream changes are lost when a Full Sync or Partial Sync is triggered later. | When the upstream transaction becomes visible (that is, when the data becomes visible), a binlog is generated and the downstream starts syncing. |
+| update                               | Yes                                | -             | TXN          | Same as above                                                                                     | Same as above                                                                                        |
+| insert                               | Yes                                | -             | TXN          | Same as above                                                                                     | Same as above                                                                                        |
+| insert into overwrite                | Yes (except for temporary partitions) | 2.1.6      | Partial Sync | Same as above                                                                                     | Same as above                                                                                        |
+| insert into overwrite                | Yes (except for temporary partitions) | 2.0        | Full Sync    | Same as above                                                                                     | Same as above                                                                                        |
+| Explicit transactions (3.0) begin commit | No                             |               |              |                                                                                                   |                                                                                                      |
 
 ## Partition Operations
 
-| Operation               | Supported                        | Doris Version | Sync Method            | Can Downstream Operate Independently                                        | Description                                                         |
-| ----------------------- | ------------------------------- | ------------- | ---------------------- | ------------------------------------------------------------ | ---------------------------------------------------------- |
-| add partition           | Supported                       | -             | SQL                    | No, subsequent triggers of Full Sync or Partial Sync will cause downstream operations to be lost | Cooldown time property and its behavior are unknown |
-| add temp partition      | Not Supported                   |               |                        | Same                                                         | Backup does not support temp partition; starting from Doris 2.1.8/3.0.4, you can modify upstream FE configuration: `ignore_backup_tmp_partitions` to bypass this issue |
-| drop partition          | Supported                       | -             | SQL/Full Sync          | Same                                                         | Before 2.0.15/2.1.6: Full Sync, after: SQL |
-| replace partition       | Supported                       | 2.1.7/3.0.3  | Partial Sync           | Same                                                         | Partial Sync **only supports strict range and non-temp partition replace method**, otherwise it will trigger Full Sync. |
-| modify partition        | Not Supported                   |               |                        | Same                                                         | Refers to modifying the property of the partition |
-| rename partition        | Supported                       | 2.1.8/3.0.4  | SQL                    | Same                                                         | |
+| Operation          | Supported | Doris version | Sync Method     | Can operate downstream independently                              | Description                                                                                                                              |
+| ------------------ | --------- | ------------- | --------------- | ----------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| add partition      | Yes       | -             | SQL             | No. A subsequent Full Sync or Partial Sync causes downstream changes to be lost. | The behavior of the cooldown time property is unknown.                                                                                   |
+| add temp partition | No        |               |                 | Same as above                                                     | Backup does not support tmp partition. From Doris 2.1.8 / 3.0.4, you can work around this by modifying the upstream FE configuration: `ignore_backup_tmp_partitions`. |
+| drop partition     | Yes       | -             | SQL / Full Sync | Same as above                                                     | Before 2.0.15 / 2.1.6: Full Sync. After: SQL.                                                                                            |
+| replace partition  | Yes       | 2.1.7 / 3.0.3 | Partial Sync    | Same as above                                                     | Partial Sync **only supports the replace mode with strict range and non-tmp partition**. Otherwise, a Full Sync is triggered.            |
+| modify partition   | No        |               |                 | Same as above                                                     | Refers to modifying the property of a partition.                                                                                         |
+| rename partition   | Yes       | 2.1.8 / 3.0.4 | SQL             | Same as above                                                     |                                                                                                                                          |
 
-## Views
+## View
 
-| Operation        | Supported | Doris Version | Sync Method | Remarks                             |
-| ---------------- | --------- | ------------- | ----------- | ---------------------------------- |
-| create view      | Supported | -             | SQL         | Can work when upstream and downstream have the same name; if downstream already exists, it will be deleted before creation |
-| alter view       | Supported | 2.1.8/3.0.4  | SQL         |                                    |
-| drop view        | Supported | 2.1.8/3.0.4  | SQL         |                                    |
+| Operation   | Supported | Doris version | Sync Method | Notes                                                                              |
+| ----------- | --------- | ------------- | ----------- | ---------------------------------------------------------------------------------- |
+| create view | Yes       | -             | SQL         | Works when the upstream and downstream names are the same. If the view already exists on the downstream, it is dropped first and then recreated. |
+| alter view  | Yes       | 2.1.8 / 3.0.4 | SQL         |                                                                                    |
+| drop view   | Yes       | 2.1.8 / 3.0.4 | SQL         |                                                                                    |
 
-::: note
+:::note
 
-Due to limitations in Doris implementation, column names/view names in views cannot be the same as database names.
+Due to limitations in the Doris implementation, the column name and view name within a view cannot be the same as the database name.
 
 :::
 
-## Materialized Views
+## Materialized View
 
-Synchronizing materialized views
+Synchronous materialized view:
 
-| Operation                     | Supported | Doris Version | Sync Method | Remarks                                                         |
-| ----------------------------- | --------- | ------------- | ----------- | -------------------------------------------------------------- |
-| create materialized view      | Supported | 2.1.8/3.0.4  | Partial Sync | Can work when upstream and downstream have the same name; if different names, downstream needs to manually rebuild the view. |
-| drop materialized view        | Supported | 2.1.8/3.0.4  | SQL         |                                                              |
+| Operation                | Supported | Doris Version | Sync Method  | Notes                                                                                              |
+| ------------------------ | --------- | ------------- | ------------ | -------------------------------------------------------------------------------------------------- |
+| create materialized view | Yes       | 2.1.8 / 3.0.4 | Partial Sync | Works when the upstream and downstream names are the same. When the names differ, the view must be manually recreated on the downstream. |
+| drop materialized view   | Yes       | 2.1.8 / 3.0.4 | SQL          |                                                                                                    |
 
+Asynchronous materialized view:
 
-Asynchronous materialized views
-
-| Operation                           | Supported |
-| ----------------------------------- | --------- |
-| create async materialized view      | Not Supported |
-| alter async materialized view       | Not Supported |
-| drop async materialized view        | Not Supported |
-| refresh                             | Not Supported |
-| pause                               | Not Supported |
-| resume                              | Not Supported |
+| Operation                      | Supported |
+| ------------------------------ | --------- |
+| create async materialized view | No        |
+| alter async materialized view  | No        |
+| drop async materialized view   | No        |
+| refresh                        | No        |
+| pause                          | No        |
+| resume                         | No        |
 
 ## Statistics
 
-Not synchronized between upstream and downstream, operate independently.
+Statistics are not synchronized between the upstream and the downstream. They work independently.
 
 ## Others
 
-| Operation             | Supported |
-| --------------------- | --------- |
-| external table        | Not Supported |
-| recycle bin           | Not Supported |
-| catalog               | Not Supported |
-| workload group        | Not Supported |
-| job                   | Not Supported |
-| function              | Not Supported |
-| policy                | Not Supported |
-| user                  | Not Supported |
-| cancel alter job      | Supported |
+| Operation        | Supported |
+| ---------------- | --------- |
+| external table   | No        |
+| recycle bin      | No        |
+| catalog          | No        |
+| workload group   | No        |
+| job              | No        |
+| function         | No        |
+| policy           | No        |
+| user             | No        |
+| cancel alter job | Yes       |

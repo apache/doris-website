@@ -102,7 +102,7 @@ For more help, please refer to [ALTER USER](../../sql-manual/sql-statements/acco
 
 ### LDAP-based Authentication Scheme
 
-Please refer to [LDAP-based Authentication Scheme](./ldap.md).
+Please refer to [LDAP-based Authentication Scheme](./authentication/ldap.md).
 
 ## Authorization
 
@@ -230,7 +230,7 @@ Data masking is a method to protect sensitive data by modifying, replacing, or h
 
 For example, administrators may choose to replace part or all of the digits of sensitive fields like credit card numbers or ID numbers with asterisks `*` or other characters, or replace real names with pseudonyms.
 
-From version 2.1.2, support for setting data masking policies for certain columns through Apache Ranger's Data Masking is available, currently only configurable via [Apache Ranger](./ranger.md).
+From version 2.1.2, support for setting data masking policies for certain columns through Apache Ranger's Data Masking is available, currently only configurable via [Apache Ranger](./authorization/ranger.md).
 
 ### Doris Built-in Authorization Scheme
 
@@ -275,7 +275,7 @@ The default role cannot be deleted, nor can it be assigned to someone else. When
 
 ### Authorization Scheme Based on Apache Ranger
 
-Please refer to [Authorization Scheme Based on Apache Ranger](./ranger.md).
+Please refer to [Authorization Scheme Based on Apache Ranger](./authorization/ranger.md).
 
 ## Common Questions
 

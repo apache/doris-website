@@ -99,7 +99,7 @@ def _find_site_roots(start_dir: str):
 
 # Docusaurus route-prefix → source-dir mapping for plugins whose route name
 # differs from their on-disk directory. Same-name cases (community → community/,
-# docs-next → docs-next/) are handled by the generic site-root fallback below.
+# docs → docs/) are handled by the generic site-root fallback below.
 ROUTE_PREFIX_REMAP = {
     "releases": "releasenotes",
 }

@@ -13,15 +13,16 @@ HTACCESS_SRC="$(cd "$(dirname "$0")/.." && pwd)/static/.htaccess"
 
 stage() {
     rm -rf "$ROOT"
-    mkdir -p "$ROOT"/{docs/dev/install,docs-next/dev/getting-started/what-is-apache-doris,zh-CN}
+    mkdir -p "$ROOT"/{docs/dev/install,docs/dev/getting-started/what-is-apache-doris,zh-CN/docs/dev/getting-started/what-is-apache-doris}
     cp "$HTACCESS_SRC" "$ROOT/.htaccess"
 
     printf 'GENERIC_404\n' > "$ROOT/404.html"
     printf 'ZH_404\n' > "$ROOT/zh-CN/404.html"
-    # Simulate a file emitted by createRedirects — must short-circuit the rewrite.
+    # Simulate a file emitted by Docusaurus build — must short-circuit the rewrite.
     printf 'EXISTING_REDIRECT_FILE\n' > "$ROOT/docs/dev/install/index.html"
     # The eventual 301 target.
-    printf 'NEW_DEV_LANDING\n' > "$ROOT/docs-next/dev/getting-started/what-is-apache-doris/index.html"
+    printf 'NEW_DEV_LANDING\n' > "$ROOT/docs/dev/getting-started/what-is-apache-doris/index.html"
+    printf 'ZH_NEW_DEV_LANDING\n' > "$ROOT/zh-CN/docs/dev/getting-started/what-is-apache-doris/index.html"
 
     cat > "$ROOT/httpd.conf" <<EOF
 ServerName localhost
@@ -76,9 +77,9 @@ case "${1:-}" in
                 exit 1
             fi
         }
-        run 'legacy /docs/dev/<missing>      -> 301 new landing'           '/docs/dev/gettingStarted/intro'   301 '/docs-next/dev/getting-started/what-is-apache-doris'
-        run 'legacy /docs/dev/install/       -> 200 existing redirect file' '/docs/dev/install/'              200 'EXISTING_REDIRECT_FILE'
-        run 'zh-CN /docs/dev/<missing>       -> 301 zh-CN new landing'     '/zh-CN/docs/dev/whatever'         301 '/zh-CN/docs-next/dev/getting-started/what-is-apache-doris'
+        run '/docs/dev/<missing>             -> 301 Dev landing'           '/docs/dev/gettingStarted/intro'   301 '/docs/dev/getting-started/what-is-apache-doris'
+        run '/docs/dev/install/              -> 200 existing build file'   '/docs/dev/install/'              200 'EXISTING_REDIRECT_FILE'
+        run 'zh-CN /docs/dev/<missing>       -> 301 zh-CN Dev landing'     '/zh-CN/docs/dev/whatever'         301 '/zh-CN/docs/dev/getting-started/what-is-apache-doris'
         run 'random EN 404                   -> /404.html'                 '/totally/missing/path'            404 'GENERIC_404'
         run 'random zh-CN 404                -> /zh-CN/404.html'           '/zh-CN/totally/missing/path'      404 'ZH_404'
         run '/docs/devops bystander          -> not rewritten (404)'       '/docs/devops'                     404 'GENERIC_404'

@@ -51,10 +51,6 @@ DELETE FROM table_name [table_alias]
 + ORDER BY column: 指定删除行的排序方式。通常与 LIMIT 一起使用，以控制哪些行会被删除。
 + LIMIT [offset,] count: 限制删除的行数。与 ORDER BY 一起使用时，排序后删除前 `count` 行。如果指定了 `offset`，则跳过排序后的前 `offset` 行再进行删除。如果不配合 ORDER BY 使用，受影响的行是不确定的。
 
-:::tip
-DELETE 语句中的 ORDER BY 和 LIMIT 自 4.1.0 版本起支持。
-:::
-
 #### Note
 
 1. 使用聚合类的表模型（AGGREGATE、UNIQUE）只能指定 key 列上的条件。

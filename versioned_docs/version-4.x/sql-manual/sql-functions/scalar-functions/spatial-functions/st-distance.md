@@ -12,10 +12,6 @@ Calculates the shortest distance on the sphere between two geometry objects, in 
 
 Unlike `ST_DISTANCE_SPHERE`, which accepts longitude and latitude coordinates, `ST_DISTANCE` accepts geometry objects (points, lines, polygons, circles, etc.) as parameters and calculates the shortest distance between their boundaries. If the two shapes intersect (including touching or containing each other), it returns 0.
 
-:::info Note
-Supported since Apache Doris 4.0.4
-:::
-
 ## Syntax
 
 ```sql

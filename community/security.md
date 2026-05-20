@@ -1,8 +1,15 @@
 ---
-{
-    "title": "Security",
-    "language": "en"
-}
+title: Apache Doris Security Vulnerability Disclosure
+language: en
+description: "How to report security vulnerabilities to Apache Doris: contact the ASF Security Team via security@apache.org and follow the official responsible disclosure process."
+keywords:
+    - Apache Doris security
+    - Doris security vulnerability
+    - security@apache.org
+    - ASF Security Team
+    - responsible disclosure
+    - vulnerability report
+    - CVE
 ---
 
 <!--
@@ -24,15 +31,39 @@ specific language governing permissions and limitations
 under the License.
 -->
 
+# Security Vulnerability Disclosure
 
+<!-- Knowledge type: Procedure -->
+<!-- Applicable scenario: Vulnerability reporting / Security disclosure -->
 
-The Apache Software Foundation takes a rigorous stance on eliminating security issues in its software projects. Likewise, Apache Doris is also vigilant and takes security issues related to its features and functionality into the highest consideration.
+The Apache Software Foundation (ASF) takes a strict stance on security issues in its software projects. Apache Doris also pays close attention to security issues related to product features and functionality. This page describes how to report security vulnerabilities or potential threats to Doris through the official ASF process.
 
-If you have any concerns regarding Doris’s security, or you discover a vulnerability or potential threat, please don’t hesitate to get in touch with the [Apache Security Team](http://www.apache.org/security/) by dropping an email at [security@apache.org](mailto:security@apache.org).
+## Reporting Channel Quick Reference
 
-Please specify the project name as "Doris" in the email, and provide a description of the relevant problem or potential threat. You are also urged to recommend how to reproduce and replicate the issue.
+| Item | Description |
+|------|------|
+| Recipient | [Apache Security Team](http://www.apache.org/security/) |
+| Email address | [security@apache.org](mailto:security@apache.org) |
+| Project name | Always specify `Doris` in the email |
+| Disclosure principle | **Do not disclose** the vulnerability through any public channel before submitting the email |
 
-The Apache Security Team and the Doris community will get back to you after assessing and analyzing the findings.
+## Reporting Steps
 
-**Please note** that the security issue should be reported on the security email first, before disclosing it on any public domain.
+<!-- Knowledge type: Procedure -->
 
+1. **Compose the email**: Send it to [security@apache.org](mailto:security@apache.org), and make sure the subject and body clearly identify the project name as `Doris`.
+2. **Describe the issue**: Clearly state the impact scope, affected versions, and possible attack scenarios of the vulnerability or potential threat.
+3. **Attach reproduction steps**: Provide minimal reproduction steps, a PoC, or log snippets that reproduce the security issue.
+4. **Wait for a reply**: The Apache Security Team and the Doris community will contact you directly after evaluation and analysis.
+
+## Important Notes
+
+- **Do not disclose publicly**: Do not discuss the vulnerability on any public channel, including GitHub Issues, mailing lists, Slack, or social media, before receiving a reply from the security team and coordinating a disclosure window.
+- **Do not use the regular feedback channels**: Security issues must not be submitted through GitHub Issues or the dev mailing list described in [Feedback](feedback).
+- **Follow responsible disclosure**: For the full process, see the [ASF Security Disclosure Policy](http://www.apache.org/security/).
+
+## Related Links
+
+- [ASF Security Team Home](http://www.apache.org/security/)
+- [Feedback](feedback): Channel for non-security issues.
+- [Join the Community](join-community): Other community communication channels.

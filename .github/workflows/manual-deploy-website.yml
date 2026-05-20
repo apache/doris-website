@@ -37,11 +37,14 @@ jobs:
                   node-version: 20
 
             - name: Build
+              env:
+                  GITHUB_TOKEN: ${{ github.token }}
               run: |
                   npm install -g yarn
                   yarn cache clean
                   export NODE_OPTIONS=--max-old-space-size=8192
                   yarn
+                  node ./scripts/update_github_info.js
                   yarn key-features:generate
                   PWA_SERVICE_WORKER_URL=https://doris.apache.org/sw.js yarn docusaurus build --locale en --locale zh-CN
                   if [ ! -d "./ja-build" ]; then

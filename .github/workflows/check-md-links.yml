@@ -28,9 +28,9 @@ jobs:
             echo 'files<<EOF'
             git diff --name-only --diff-filter=AM \
               "${{ github.event.pull_request.base.sha }}...HEAD" \
-              -- 'docs-next/**/*.md' 'docs-next/**/*.mdx' \
-                 'i18n/zh-CN/docusaurus-plugin-content-docs-next/**/*.md' \
-                 'i18n/zh-CN/docusaurus-plugin-content-docs-next/**/*.mdx'
+              -- 'docs/**/*.md' 'docs/**/*.mdx' \
+                 'i18n/zh-CN/docusaurus-plugin-content-docs/current/**/*.md' \
+                 'i18n/zh-CN/docusaurus-plugin-content-docs/current/**/*.mdx'
             echo EOF
           } >> "$GITHUB_OUTPUT"
 

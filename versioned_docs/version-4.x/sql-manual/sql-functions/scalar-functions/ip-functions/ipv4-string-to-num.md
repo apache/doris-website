@@ -9,7 +9,7 @@
 ## ipv4_string_to_num
 
 ## Description
-Takes a string containing an IPv4 address in A.B.C.D format (dot-separated decimal numbers). Returns the the numeric value of the address in network byte order (big endian) integer corresponding IPv4 address.
+Takes a string containing an IPv4 address in A.B.C.D format (dot-separated decimal numbers). Returns the numeric value of the corresponding IPv4 address in network byte order (big endian).
 
 ## Syntax
 ```sql
@@ -23,7 +23,7 @@ IPV4_STRING_TO_NUM(<ipv4_string>)
 Return Type: BIGINT
 
 Return Value Meaning:
-- Returns the the numeric value of the address in network byte order (big endian) integer representation of the corresponding IPv4 address
+- Returns the numeric value of the corresponding IPv4 address, as a network byte order (big endian) integer
 - Throws an exception for invalid IPv4 strings or `NULL` input
 
 ### Usage Notes
@@ -33,7 +33,7 @@ Return Value Meaning:
 
 ## Examples
 
-Convert IPv4 text `192.168.0.1` to the corresponding the the numeric value of the address in network byte order (big endian) integer.
+Convert IPv4 text `192.168.0.1` to the corresponding numeric value as a network byte order (big endian) integer.
 ```sql
 select ipv4_string_to_num('192.168.0.1');
 +-----------------------------------+

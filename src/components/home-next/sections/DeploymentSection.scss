@@ -10,14 +10,12 @@
     --dn-cream-warm: #EFE6D2;
     --dn-yellow: #FFD23F;
     --dn-ink: #0F1A14;
-    --dn-mono: 'JetBrains Mono', 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
-    --dn-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 
     position: relative;
     padding: 84px 0 140px;
     background: var(--dn-cream);
     color: var(--dn-ink);
-    font-family: var(--dn-sans);
+    font-family: var(--font-family-base);
 
     &__header {
         width: 100%;

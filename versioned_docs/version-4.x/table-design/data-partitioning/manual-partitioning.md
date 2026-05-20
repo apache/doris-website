@@ -1,96 +1,112 @@
 ---
 {
-    "title": "Manual partitioning",
+    "title": "Manual Partitioning",
     "language": "en",
-    "description": "Partition columns are usually time columns for convenient management of old and new data. RANGE partitioning supports column types such as DATE,"
+    "description": "Guide to manual partitioning in Doris: detailed syntax and use cases for Range partitioning, List partitioning, and NULL partitioning, including examples of the four Range partition forms (FIXED RANGE, LESS THAN, BATCH RANGE, MULTI RANGE)."
 }
 ---
 
-## Partition columns
+<!-- Knowledge type: Operational steps / Configuration parameters -->
+<!-- Applicable scenario: Table design / Data partitioning planning -->
 
-- Partition columns can be specified as one or multiple columns, and the partition columns must be KEY columns. 
+Manual partitioning is a partitioning method in which the user explicitly specifies the partition rules at table creation time. This article describes how to use manual partitioning in Doris, including the syntax, use cases, and best practices for Range partitioning, List partitioning, and NULL partitioning.
 
-- When `allow_partition_column_nullable` is set to true, Range partition supports the use of NULL partition columns. List Partition does not support NULL partition columns at all times.
+## Partition column rules
 
-- Regardless of the type of partition column, double quotes are required when writing partition values.
+Before using manual partitioning, you need to understand the general rules for partition columns:
 
-- There is theoretically no upper limit on the number of partitions. However, each table is limited to 4096 partitions by default. If you want to exceed this limit, you can modify the FE configuration parameters `max_multi_partition_num` and `max_dynamic_partition_num`.
+-   Partition columns can be one or more columns, and they must be KEY columns.
+-   Regardless of the partition column type, partition values must be enclosed in double quotes when written.
+-   There is no theoretical upper limit on the number of partitions. However, the default limit is 4096 partitions per table. To exceed this limit, modify the FE configurations `max_multi_partition_num` and `max_dynamic_partition_num`.
+-   When a table is created without partitioning, the system automatically generates a single partition with the same name as the table that covers the full value range. This partition is invisible to users and cannot be modified or deleted.
+-   You cannot create partitions whose ranges overlap.
 
-- When creating a table without partitioning, the system will automatically generate a full-range partition with the same name as the table name. This partition is not visible to users and cannot be deleted or modified.
+## Range partitioning
 
-- Overlapping ranges are not allowed when creating partitions.
+Range partitioning divides data into different partitions based on the value range of the partition column. The partition column is typically a time column, which makes it easy to manage old and new data.
 
-## RANGE partitioning
+**Supported column types:** `DATE`, `DATETIME`, `TIMESTAMPTZ`, `TINYINT`, `SMALLINT`, `INT`, `BIGINT`, `LARGEINT`.
 
-Partition columns are usually time columns for convenient management of old and new data. RANGE partitioning supports column types such as `DATE`, `DATETIME`, `TINYINT`, `SMALLINT`, `INT`, `BIGINT`, and `LARGEINT`.
+Range partitioning supports the following four forms, suitable for different scenarios:
 
-Partition information supports the following four writing methods:
+| Form | Use case |
+|------|----------|
+| FIXED RANGE | When you need precise control over the upper and lower bounds of each partition |
+| LESS THAN | When you only care about the upper bound of a partition and append partitions in chronological order |
+| BATCH RANGE | Batch creation of numeric or time partitions with equal step size |
+| MULTI RANGE | Batch creation with different step sizes for different time ranges |
 
-- `FIXED RANGE`: This method defines the partition as a left-closed, right-open interval.
+### 1. FIXED RANGE
+
+Defines a left-closed, right-open interval for the partition.
+
+**Syntax:**
 
 ```sql
-PARTITION BY RANGE(col1[, col2, ...])                                                                                                                                                                                                  
-(                                                                                                                                                                                                                                      
-    PARTITION partition_name1 VALUES [("k1-lower1", "k2-lower1", "k3-lower1",...), ("k1-upper1", "k2-upper1", "k3-upper1", ...)),                                                                                                      
-    PARTITION partition_name2 VALUES [("k1-lower1-2", "k2-lower1-2", ...), ("k1-upper1-2", MAXVALUE, ))                                                                                                                                
-)                                                                                                                                                                                                                                      
+PARTITION BY RANGE(col1[, col2, ...])
+(
+    PARTITION partition_name1 VALUES [("k1-lower1", "k2-lower1", "k3-lower1",...), ("k1-upper1", "k2-upper1", "k3-upper1", ...)),
+    PARTITION partition_name2 VALUES [("k1-lower1-2", "k2-lower1-2", ...), ("k1-upper1-2", MAXVALUE, ))
+)
 ```
 
-For example: 
+**Example:**
 
 ```sql
 PARTITION BY RANGE(`date`)
 (
-    PARTITION `p201701` VALUES [("2017-01-01"),  ("2017-02-01")),
+    PARTITION `p201701` VALUES [("2017-01-01"), ("2017-02-01")),
     PARTITION `p201702` VALUES [("2017-02-01"), ("2017-03-01")),
     PARTITION `p201703` VALUES [("2017-03-01"), ("2017-04-01"))
 )
 ```
 
-- `LESS THAN`: This method only defines the upper bound of the partition. The lower bound is determined by the upper bound of the previous partition.
+### 2. LESS THAN
+
+Defines only the upper bound of the partition; the lower bound is determined by the upper bound of the previous partition.
+
+**Syntax:**
 
 ```sql
-PARTITION BY RANGE(col1[, col2, ...])                                                                                                                                                                                                  
-(                                                                                                                                                                                                                                      
-    PARTITION partition_name1 VALUES LESS THAN MAXVALUE | ("value1", "value2", ...),                                                                                                                                                     
-    PARTITION partition_name2 VALUES LESS THAN MAXVALUE | ("value1", "value2", ...)                                                                                                                                                      
-)                                                                                                                                                                                                                                      
+PARTITION BY RANGE(col1[, col2, ...])
+(
+    PARTITION partition_name1 VALUES LESS THAN MAXVALUE | ("value1", "value2", ...),
+    PARTITION partition_name2 VALUES LESS THAN MAXVALUE | ("value1", "value2", ...)
+)
 ```
 
-For example:
+**Example:**
 
 ```sql
 PARTITION BY RANGE(`date`)
 (
     PARTITION `p201701` VALUES LESS THAN ("2017-02-01"),
     PARTITION `p201702` VALUES LESS THAN ("2017-03-01"),
-    PARTITION `p201703` VALUES LESS THAN ("2017-04-01")
-)
-
-PARTITION BY RANGE(`date`)
-(
-    PARTITION `p201701` VALUES LESS THAN ("2017-02-01"),
-    PARTITION `p201702` VALUES LESS THAN ("2017-03-01"),
-    PARTITION `p201703` VALUES LESS THAN ("2017-04-01")
+    PARTITION `p201703` VALUES LESS THAN ("2017-04-01"),
+    PARTITION `p2018` VALUES [("2018-01-01"), ("2019-01-01")),
     PARTITION `other` VALUES LESS THAN (MAXVALUE)
 )
 ```
 
-- `BATCH RANGE`: This method batch creates partitions based on ranges of number or time, defining the partitions as left-closed, right-open intervals and setting the step size.
+### 3. BATCH RANGE
+
+Creates RANGE partitions for numeric and time types in batch, defining a left-closed, right-open interval for each partition with a specified step size.
+
+**Syntax:**
 
 ```sql
-PARTITION BY RANGE(int_col)                                                                                                                                                                                                            
-(                                                                                                                                                                                                                                      
-    FROM (start_num) TO (end_num) INTERVAL interval_value                                                                                                                                                                                                   
+PARTITION BY RANGE(int_col)
+(
+    FROM (start_num) TO (end_num) INTERVAL interval_value
 )
 
-PARTITION BY RANGE(date_col)                                                                                                                                                                                                            
-(                                                                                                                                                                                                                                      
-    FROM ("start_date") TO ("end_date") INTERVAL num YEAR | num MONTH | num WEEK | num DAY ｜ 1 HOUR                                                                                                                                                                                                   
-)                                                                                                                                                                                                                                    
+PARTITION BY RANGE(date_col)
+(
+    FROM ("start_date") TO ("end_date") INTERVAL num YEAR | num MONTH | num WEEK | num DAY | 1 HOUR
+)
 ```
 
-For example: 
+**Example:**
 
 ```sql
 PARTITION BY RANGE(age)
@@ -104,26 +120,32 @@ PARTITION BY RANGE(`date`)
 )
 ```
 
-- `MULTI RANGE`: This method batch creates partitions based on range partitioning, defining the partitions as left-closed, right-open intervals. For example:
+### 4. MULTI RANGE
+
+Creates RANGE partitions in batch with left-closed, right-open intervals, allowing different step sizes within the same statement.
+
+**Example:**
 
 ```sql
-PARTITION BY RANGE(col)                                                                                                                                                                                                                
-(                                                                                                                                                                                                                                      
-   FROM ("2000-11-14") TO ("2021-11-14") INTERVAL 1 YEAR,                                                                                                                                                                              
-   FROM ("2021-11-14") TO ("2022-11-14") INTERVAL 1 MONTH,                                                                                                                                                                             
-   FROM ("2022-11-14") TO ("2023-01-03") INTERVAL 1 WEEK,                                                                                                                                                                              
-   FROM ("2023-01-03") TO ("2023-01-14") INTERVAL 1 DAY,
-   PARTITION p_20230114 VALUES [('2023-01-14'), ('2023-01-15'))                                                                                                                                                                                
-)                                                                                                                                                                                                                                      
+PARTITION BY RANGE(col)
+(
+    FROM ("2000-11-14") TO ("2021-11-14") INTERVAL 1 YEAR,
+    FROM ("2021-11-14") TO ("2022-11-14") INTERVAL 1 MONTH,
+    FROM ("2022-11-14") TO ("2023-01-03") INTERVAL 1 WEEK,
+    FROM ("2023-01-03") TO ("2023-01-14") INTERVAL 1 DAY,
+    PARTITION p_20230114 VALUES [('2023-01-14'), ('2023-01-15'))
+)
 ```
 
-## LIST partitioning
+## List partitioning
 
-Partition columns based on LIST partitioning support data types such as `BOOLEAN`, `TINYINT`, `SMALLINT`, `INT`, `BIGINT`, `LARGEINT`, `DATE`, `DATETIME`, `CHAR`, and `VARCHAR`. Partition values are enumerated values. Only when the data is one of the enumerated values of the target partition, the partition can be hit.
+List partitioning divides data into different partitions based on the enumerated values of the partition column. A row is routed to a partition only if its value matches one of the enumerated values defined for that partition.
 
-Partitions support specifying the enumerated values contained in each partition through `VALUES IN (...)`.
+**Supported column types:** `BOOLEAN`, `TINYINT`, `SMALLINT`, `INT`, `BIGINT`, `LARGEINT`, `DATE`, `DATETIME`, `TIMESTAMPTZ`, `CHAR`, `VARCHAR`.
 
-For example:
+**Syntax keyword:** Use `VALUES IN (...)` to specify the enumerated values contained in each partition.
+
+### Single-column List partitioning
 
 ```sql
 PARTITION BY LIST(city)
@@ -134,7 +156,7 @@ PARTITION BY LIST(city)
 )
 ```
 
-LIST partitioning also supports multi-column partitioning, for example:
+### Multi-column List partitioning
 
 ```sql
 PARTITION BY LIST(id, city)
@@ -147,9 +169,21 @@ PARTITION BY LIST(id, city)
 
 ## NULL partitioning
 
-Partition columns based on NULL partitioning must be not null columns by default. If you need to use null columns, set the session variable `allow_partition_column_nullable` to `true`. For LIST partitioning, the NULL partitioning is supported, while for RANGE partitioning, null values will be assigned to the `less than` partition. The columns are as follows:
+Partition columns must be NOT NULL by default. To use a nullable column as a partition column, set the following session variable:
 
-**LIST partitioning**
+```sql
+SET allow_partition_column_nullable = true;
+```
+
+Different partition types handle NULL values as follows:
+
+| Partition type | NULL value handling |
+|----------|-------------|
+| LIST partition | Supports a true NULL partition |
+| RANGE partition (with LESS THAN) | NULL values are placed in the smallest LESS THAN partition |
+| RANGE partition (without LESS THAN) | NULL values cannot be inserted |
+
+### Scenario 1: LIST partition supports NULL
 
 ```sql
 mysql> create table null_list(
@@ -175,7 +209,7 @@ mysql> select * from null_list;
 1 row in set (0.18 sec)
 ```
 
-**RANGE partitioning with the `less than` partition**
+### Scenario 2: RANGE partition routes NULL to the smallest LESS THAN partition
 
 ```sql
 mysql> create table null_range(
@@ -203,7 +237,7 @@ mysql> select * from null_range partition(p10);
 1 row in set (0.18 sec)
 ```
 
-**RANGE partitioning without the `less than` partition**
+### Scenario 3: RANGE partition without LESS THAN cannot accept NULL
 
 ```sql
 mysql> create table null_range2(
@@ -220,4 +254,3 @@ Query OK, 0 rows affected (0.13 sec)
 mysql> insert into null_range2 values (null);
 ERROR 5025 (HY000): Insert has filtered data in strict mode, tracking_url=......
 ```
-

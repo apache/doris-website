@@ -32,13 +32,13 @@ YEAR_CEIL(<date_or_time_expr>, <period>, <origin>)
 
 | Parameter | Description |
 |-----------|-------------|
-| `<date_or_time_expr>` | The datetime value to round up, supports date/datetime/timestamptz types. Date type will be converted to the start time 00:00:00 of the corresponding date. For specific formats please see [timestamptz conversion](../../../../../../docs/sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion.md), [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
+| `<date_or_time_expr>` | The datetime value to round up, supports date/datetime/timestamptz types. Date type will be converted to the start time 00:00:00 of the corresponding date. For specific formats please see [timestamptz conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion), [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
 | `<period>` | Optional, represents how many seconds each period consists of, supports positive integer type (INT). Default is 1 second. |
 | `<origin_datetime>` | Starting point for the interval, supports date/datetime types; defaults to 0000-01-01 00:00:00. |
 
 ## Return Value
 
-Returns TIMESTAMPTZ, DATETIME or DATE, representing the year interval start time after rounding up:
+Returns a result consistent with the input type (DATETIME or DATE), representing the year interval start time after rounding up:
 
 - If input is DATE type, returns DATE type (containing only date part); if input is DATETIME or properly formatted string, returns DATETIME type (time part consistent with origin, defaults to 00:00:00 when no origin).
 - If `<period>` is a non-positive integer (≤0), the function returns an error.
@@ -47,7 +47,7 @@ Returns TIMESTAMPTZ, DATETIME or DATE, representing the year interval start time
 - If calculation result exceeds maximum datetime 9999-12-31 23:59:59, returns an error.
 - If the `<origin>` date and time is after the `<period>`, it will still be calculated according to the above formula, but the period k will be negative.
 - If date_or_time_expr has a scale, the returned result will also have a scale with the fractional part being zero.
-- If the input is TIMESTAMPTZ type, it will first be converted to local_time (for example: `2025-12-31 23:59:59+05:00` represents local_time `2026-01-01 02:59:59` when the session variable is `+08:00`), and then perform YEAR_CEIL.
+- If the input is TIMESTAMPTZ type, it will first be converted to local_time (for example: `2025-12-31 23:59:59+05:00` represents local_time `2026-01-01 02:59:59` when the session variable is `+08:00`), and then perform CEIL calculation.
 - If the input time values (`<date_or_time_expr>` and `<period>`) contain both TIMESTAMPTZ and DATETIME types, the output is DATETIME type.
 
 ## Examples

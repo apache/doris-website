@@ -29,13 +29,6 @@ set -eo pipefail
 rm -rf doris
 
 git clone --branch master https://github.com/apache/doris.git --depth 1
-mkdir -p docs
-cp -R doris/docs/en/docs/* docs/
-rm -rf sidebars.json
-cp -R doris/docs/sidebars.json sidebars.json
-mkdir -p i18n/zh-CN/docusaurus-plugin-content-docs/current
-cp -R doris/docs/zh-CN/docs/* i18n/zh-CN/docusaurus-plugin-content-docs/current/
-cp -R doris/docs/dev.json i18n/zh-CN/docusaurus-plugin-content-docs/current.json
 
 mkdir -p community
 cp -R doris/docs/en/community/* community/
@@ -51,7 +44,6 @@ rm -rf doris
 
 # clone docs version 1.2
 git clone --branch branch-1.2-lts https://github.com/apache/doris.git --depth 1
-mkdir -p docs
 rm -rf versioned_docs/version-1.2
 mkdir -p versioned_docs/version-1.2
 cp -R doris/docs/en/docs/* versioned_docs/version-1.2/
@@ -67,7 +59,6 @@ rm -rf doris
 
 # clone docs version 2.0
 git clone --branch branch-2.0 https://github.com/apache/doris.git --depth 1
-mkdir -p docs
 rm -rf versioned_docs/version-2.0
 mkdir -p versioned_docs/version-2.0
 cp -R doris/docs/en/docs/* versioned_docs/version-2.0/
@@ -83,7 +74,6 @@ rm -rf doris
 
 # clone docs version 2.1
 git clone --branch branch-2.1 https://github.com/apache/doris.git --depth 1
-mkdir -p docs
 rm -rf versioned_docs/version-2.1
 mkdir -p versioned_docs/version-2.1
 cp -R doris/docs/en/docs/* versioned_docs/version-2.1/

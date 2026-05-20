@@ -10,7 +10,7 @@
 
 This statement is used to update the data. The UPDATE statement currently only supports the UNIQUE KEY model.
 
-The UPDATE operation currently only supports updating the Value column. The update of the Key column can refer to [Using FlinkCDC to update Key column](../../../../ecosystem/flink-doris-connector.md#use-flink-cdc-to-update-key-column).
+The UPDATE operation currently only supports updating the Value column. The update of the Key column can refer to [Using FlinkCDC to update Key column](../../../../connection-integration/data-integration/flink-doris-connector.md#use-flink-cdc-to-update-key-column).
 #### Syntax
 
 ```sql
@@ -36,10 +36,6 @@ UPDATE target_table [table_alias]
 + WHERE condition: The condition that is expected to be updated, an expression that returns true or false.
 + ORDER BY column: Specifies the order in which rows are updated. Typically used together with LIMIT to control which rows are affected.
 + LIMIT [offset,] count: Limits the number of rows to be updated. When used with ORDER BY, updates the first `count` rows after sorting. If `offset` is specified, skips the first `offset` rows before updating. If used without ORDER BY, the set of affected rows is non-deterministic.
-
-:::tip
-ORDER BY and LIMIT in UPDATE statements are supported since version 4.1.0.
-:::
 
 #### Note
 

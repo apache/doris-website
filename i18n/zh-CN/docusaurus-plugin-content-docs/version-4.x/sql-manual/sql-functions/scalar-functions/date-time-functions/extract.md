@@ -12,10 +12,6 @@
 
 该函数与 mysql 中的 [extract 函数](https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_extract) 行为一致。
 
-:::note
-复合单位的提取，如`YEAR_MONTH`从4.0.4开始支持。
-:::
-
 ## 语法
 
 `EXTRACT(<unit> FROM <date_or_time_expr>)`

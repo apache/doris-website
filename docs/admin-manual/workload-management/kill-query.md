@@ -1,156 +1,163 @@
 ---
 {
-    "title": "Kill Query",
+    "title": "Terminating Queries and Disconnecting Sessions: KILL Command Guide",
+    "sidebar_label": "Terminate Queries and Disconnect Sessions",
     "language": "en",
-    "description": "You can cancel currently executing operations or disconnect current connection sessions using the KILL command."
+    "description": "Use the KILL command to cancel running queries or disconnect sessions. Locate target queries by Query ID, Connection ID, or Trace ID.",
+    "keywords": ["kill query", "terminate query", "cancel query", "disconnect session", "kill connection", "Query ID", "Trace ID", "processlist"]
 }
 ---
 
-You can cancel currently executing operations or disconnect current connection sessions using the `KILL` command. This document introduces related operations and considerations.
+<!-- Knowledge Type: Operation Guide -->
 
-## Getting Query Identifiers
+The `KILL` command cancels a running query or disconnects a specified session. Before using it, obtain the identifier of the target query (Query ID, Connection ID, or Trace ID), then execute the corresponding KILL statement.
 
-`KILL` requires a query identifier to cancel the corresponding query request. Query identifiers include: Query ID, Connection ID, and Trace ID.
+## Obtain Query Identifiers
 
-You can obtain query identifiers through the following methods.
+<!-- Knowledge Type: Concept Definition -->
 
-### PROCESSLIST
+The KILL command supports the following three query identifiers:
 
-Through the `processlist` system table, you can get all current session connections and query operations being executed in the connections. This includes the Query ID and Connection ID.
+| Identifier Type | Description | How to Obtain |
+|---|---|---|
+| Query ID | A unique identifier that the system automatically generates for each query | `SHOW PROCESSLIST` or `information_schema.processlist` |
+| Connection ID | A unique identifier of a session connection | `SHOW PROCESSLIST` or `information_schema.processlist` |
+| Trace ID | A user-defined query identifier (supported from 2.1.11 / 3.0.7) | Set through the `session_context` variable |
+
+### View Through PROCESSLIST
+
+<!-- Knowledge Type: Operation Steps -->
+
+`SHOW PROCESSLIST` displays all current session connections and the queries they are running, including Query ID and Connection ID.
 
 ```sql
-mysql> SHOW PROCESSLIST;
-+------------------+------+------+---------------------+---------------------+----------+------+---------+------+-------+-----------------------------------+------------------+---------------+--------------+
-| CurrentConnected | Id   | User | Host                | LoginTime           | Catalog  | Db   | Command | Time | State | QueryId                           | Info             | FE            | CloudCluster |
-+------------------+------+------+---------------------+---------------------+----------+------+---------+------+-------+-----------------------------------+------------------+---------------+--------------+
-| No               |    2 | root | 172.20.32.136:54850 | 2025-05-11 10:41:52 | internal |      | Query   |    6 | OK    | 12ccf7f95c1c4d2c-b03fa9c652757c15 | select sleep(20) | 172.20.32.152 | NULL         |
-| Yes              |    3 | root | 172.20.32.136:54862 | 2025-05-11 10:41:55 | internal |      | Query   |    0 | OK    | b710ed990d4144ee-8b15bb53002b7710 | show processlist | 172.20.32.152 | NULL         |
-| No               |    1 | root | 172.20.32.136:47964 | 2025-05-11 10:41:54 | internal |      | Sleep   |   11 | EOF   | b60daa992bac4fe4-b29466aacce67d27 |                  | 172.20.32.153 | NULL         |
-+------------------+------+------+---------------------+---------------------+----------+------+---------+------+-------+-----------------------------------+------------------+---------------+--------------+
+SHOW PROCESSLIST;
 ```
 
-- `CurrentConnected`: `Yes` indicates the connection corresponding to the current session.
-- `Id`: The unique identifier of the connection, i.e., Connection ID.
-- `QueryId`: The unique identifier of the Query. Displays the Query Id of the most recently executed or currently executing SQL command.
-
-Note that by default, `SHOW PROCESSLIST` only displays all session connections on the FE node that the current session is connected to, and does not display session connections from other FE nodes.
-
-If you want to display session connections from all FE nodes, you need to set the following session variable:
+Example output:
 
 ```
-SET show_all_fe_connection=true;
++------------------+------+------+---------------------+---------------------+----------+------+---------+------+-------+----------------------------------+------------------+---------------+--------------+
+| CurrentConnected | Id   | User | Host                | LoginTime           | Catalog  | Db   | Command | Time | State | QueryId                          | Info             | FE            | CloudCluster |
++------------------+------+------+---------------------+---------------------+----------+------+---------+------+-------+----------------------------------+------------------+---------------+--------------+
+| No               |    2 | root | 172.20.32.136:54850 | 2025-05-11 10:41:52 | internal |      | Query   |    6 | OK    | 12ccf7f95c1c4d2c-b03fa9c652757c15| select sleep(20) | 172.20.32.152 | NULL         |
+| Yes              |    3 | root | 172.20.32.136:54862 | 2025-05-11 10:41:55 | internal |      | Query   |    0 | OK    | b710ed990d4144ee-8b15bb53002b7710| show processlist | 172.20.32.152 | NULL         |
+| No               |    1 | root | 172.20.32.136:47964 | 2025-05-11 10:41:54 | internal |      | Sleep   |   11 | EOF   | b60daa992bac4fe4-b29466aacce67d27|                  | 172.20.32.153 | NULL         |
++------------------+------+------+---------------------+---------------------+----------+------+---------+------+-------+----------------------------------+------------------+---------------+--------------+
 ```
 
-Then execute the `SHOW PROCESSLIST` command again to display session connections from all FE nodes.
+Key field descriptions:
 
-You can also view through the system table in `information_schema`:
+- `CurrentConnected`: `Yes` indicates the connection that corresponds to the current session.
+- `Id`: Connection ID, the unique identifier of the connection.
+- `QueryId`: Query ID, the unique identifier of the most recently executed or currently running SQL.
 
+**Default behavior**: `SHOW PROCESSLIST` only displays sessions on the FE node that the current connection is attached to, and does not include other FE nodes. To view sessions on all FE nodes, set the following variable before running the query:
+
+```sql
+SET show_all_fe_connection = true;
+SHOW PROCESSLIST;
 ```
+
+You can also use the `information_schema` system table, which displays sessions on all FE nodes by default and requires no additional setup:
+
+```sql
 SELECT * FROM information_schema.processlist;
 ```
 
-By default, `processlist` displays session connections from all FE nodes without requiring additional settings.
+### Identify Queries by Trace ID
 
-### TRACE ID
+<!-- Knowledge Type: Operation Steps -->
 
-> This feature is supported since versions 2.1.11 and 3.0.7.
+> This feature is supported from versions 2.1.11 and 3.0.7.
 
-By default, the system automatically generates a Query ID for each query. Users need to first obtain the Query ID through the `processlist` system table before performing a KILL operation.
+A Trace ID is a custom identifier that you assign to a query in advance. It lets a management tool record the unique identifier of a query before submission, so the query can be canceled at any time by Trace ID afterward.
 
-In addition, users can also customize a Trace ID and perform KILL operations using the Trace ID.
+Set the Trace ID for the current session as follows:
 
-```
+```sql
 SET session_context = "trace_id:your_trace_id";
 ```
 
-Where `your_trace_id` is the user-defined Trace ID. It can be any string but cannot contain the `;` symbol.
+- `your_trace_id`: A custom string that must not contain the `;` character. A UUID is recommended to ensure uniqueness.
+- The Trace ID is a session-level parameter and only applies to the current session. Once set, all subsequent queries in this session map to this Trace ID.
 
-Trace ID is a session-level parameter and only applies to the current session. Doris will map subsequent query requests in the current session to this Trace ID.
+You can also set it through a Hint on a single query statement, without modifying the session variable:
 
-## Kill Requests
+```sql
+SELECT /*+SET_VAR(session_context=trace_id:your_trace_id)*/ * FROM table ...;
+```
 
-The `KILL` statement supports canceling specified query operations as well as disconnecting specified session connections.
+## Execute the KILL Operation
 
-Regular users can cancel queries sent by their own user through the `KILL` operation. ADMIN users can cancel queries sent by themselves and any other users.
+<!-- Knowledge Type: Operation Steps -->
 
-### Kill Query
+**Permission notes**: Regular users can only terminate queries that they submitted themselves. ADMIN users can terminate queries of any user.
 
-Syntax:
+### Kill a Query
+
+`KILL QUERY` cancels a specified running query without disconnecting the session.
 
 ```sql
 KILL QUERY "query_id" | "trace_id" | connection_id;
 ```
 
-`KILL QUERY` is used to cancel a specified running query operation.
+Comparison of the three forms:
 
-- `"query_id"`
+| Parameter Type | Example | Scope |
+|---|---|---|
+| `"query_id"` | `KILL QUERY "d36417cc05ff41ab-9d3afe49be251055";` | Searches all FE nodes and cancels the matching query |
+| `"trace_id"` | `KILL QUERY "your_trace_id";` | Searches all FE nodes and cancels the matching query |
+| `connection_id` | `KILL QUERY 55;` | Only cancels the query running on this connection, on the FE node that the current connection is attached to |
 
-	The Query ID obtained through the `processlist` system table. Must be wrapped in quotes. For example:
-	
-	`KILL QUERY "d36417cc05ff41ab-9d3afe49be251055";`
-	
-	This operation will attempt to find the Query ID on all FE nodes and cancel the corresponding query.
-	
-- `"trace_id"`
+Notes:
 
-	The Trace ID customized through `session_context`. Must be wrapped in quotes. For example:
+- Query ID and Trace ID must be enclosed in quotation marks. Connection ID must be an integer greater than 0 and must not be enclosed in quotation marks.
+- `KILL QUERY` by Connection ID only takes effect on the FE node that the current connection is attached to.
 
-	`KILL QUERY "your_trace_id";`
-	
-	This operation will attempt to find the Trace ID on all FE nodes and cancel the corresponding query.
+### Kill a Connection
 
-	> This feature is supported since versions 2.1.11 and 3.0.7.
-
-- `connection_id`
-
-	The Connection ID obtained through the `processlist` system table. Must be an integer greater than 0 and cannot be wrapped in quotes. For example:
-
-	`KILL QUERY 55;`
-	
-	This operation only applies to session connections on the currently connected FE, and will cancel the query currently being executed on the corresponding session connection.
-
-### Kill Connection
-
-Killing a connection will disconnect the specified session connection and also cancel any query operations being executed on the connection.
-
-Syntax:
+`KILL CONNECTION` disconnects a specified session and also cancels the query running on that connection.
 
 ```sql
 KILL [CONNECTION] connection_id;
 ```
 
-The `CONNECTION` keyword can be omitted.
+The `CONNECTION` keyword can be omitted. The following two forms are equivalent:
 
-- `connection_id`
+```sql
+KILL CONNECTION 55;
+KILL 55;
+```
 
-	The Connection ID obtained through the `processlist` system table. Must be an integer greater than 0 and cannot be wrapped in quotes. For example:
+Note: Connection IDs on different FE nodes may collide. This operation only takes effect on the FE node that the current connection is attached to.
 
-	```sql
-	KILL CONNECTION 55;
-	KILL 55;
-	```
-	
-	Connection IDs on different FEs may be the same, but this operation only affects the session connection on the currently connected FE.
+## Best Practice: Manage Queries by Trace ID
 
-## Best Practices
+<!-- Knowledge Type: Best Practice -->
 
-1. Implementing query management through custom Trace ID
+In a management system or business platform, using Trace IDs is recommended for marking queries in advance and canceling them precisely. The workflow is:
 
-	Custom Trace IDs allow you to specify unique identifiers for queries in advance, making it easier for management system to implement the [Cancel Query] function. You can customize Trace IDs in the following ways:
-	
-	- Set `session_context` before each query
+1. **Before submitting the query**, generate a unique Trace ID (UUID recommended) and bind it to the query.
+2. **While the query is running**, the system can issue a KILL request at any time through the Trace ID.
 
-		Users generate their own Trace ID. It is recommended to use UUID to ensure the uniqueness of the Trace ID.
+There are two ways to bind the Trace ID:
 
-		```sql
-		SET session_context="trace_id:your_trace_id";
-		SELECT * FROM table ...;
-		```
-		
-	- Add Trace ID in the query statement
+- Set the session variable before the query (suitable for single-connection scenarios):
 
-		```sql
-		SELECT /*+SET_VAR(session_context=trace_id:your_trace_id)*/ * FROM table ...;
-		```
-	
-	Afterward, management system can cancel running operations at any time using the Trace ID.
+    ```sql
+    SET session_context = "trace_id:your_trace_id";
+    SELECT * FROM table ...;
+    ```
+
+- Embed a Hint in the query statement (suitable for connection-pool reuse scenarios):
+
+    ```sql
+    SELECT /*+SET_VAR(session_context=trace_id:your_trace_id)*/ * FROM table ...;
+    ```
+
+Once bound, cancel the query at any time with the following command:
+
+```sql
+KILL QUERY "your_trace_id";
+```

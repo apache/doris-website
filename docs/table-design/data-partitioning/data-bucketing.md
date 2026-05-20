@@ -2,29 +2,64 @@
 {
     "title": "Data Bucketing",
     "language": "en",
-    "description": "A partition can further be divided into different data buckets based on business logic. Each bucket will be stored as a physical data tablet."
+    "description": "Doris data bucketing guide: how to choose between Hash and Random bucketing, select bucket keys, and determine the number of buckets to improve query performance and avoid data skew.",
+    "keywords": [
+        "Doris data bucketing",
+        "Hash bucketing",
+        "Random bucketing",
+        "bucket key selection",
+        "bucket number",
+        "tablet",
+        "data skew"
+    ]
 }
 ---
 
-A partition can further be divided into different data buckets based on business logic. Each bucket will be stored as a physical data tablet. A reasonable bucket strategy can effectively reduce the amount of data scanned during queries, thereby improving query performance and increasing query concurrency.
+<!-- Knowledge type: Architecture decision / Configuration parameter -->
+<!-- Applicable scenarios: Table design / Performance tuning / Data skew handling -->
 
-## Bucket Methods
+A partition can be further divided into multiple data buckets according to business requirements. Each bucket is stored as a physical data shard (Tablet). A reasonable bucketing strategy can effectively reduce the amount of data scanned at query time, improve query performance, and increase concurrent processing capability.
 
-Doris supports two bucket methods: Hash Bucketing and Random Bucketing.
+This document is organized along the decision path used during table creation: first choose the bucketing method, then select the bucket key, and finally determine the number of buckets and the subsequent maintenance approach.
 
-### Hash Bucketing
+## Quick Decision
 
-When creating a table or adding a partition, users need to select one or more columns as the bucket columns and specify the number of buckets. Within the same partition, the system performs a hash calculation based on the bucket key and the number of buckets. Data with the same hash value will be allocated to the same bucket. For example, in the figure below, partition p250102 is divided into three buckets based on the region column, and rows with the same hash value are placed into the same bucket.
+When creating a table, you can complete the bucketing design in the following order:
+
+| Step | Decision Item | Key Considerations |
+|------|------|----------|
+| 1 | Choose the bucketing method | Whether there are high-frequency filter columns, whether the data is evenly distributed, and the table model |
+| 2 | Select the bucket key (Hash bucketing only) | Query filter conditions, column cardinality, query concurrency and throughput characteristics |
+| 3 | Determine the number of buckets | Data size per Tablet, number of BEs, number of disks |
+| 4 | Plan the bucket maintenance strategy | Data growth trend, whether dynamic partitioning is used |
+
+## 1. Choose the Bucketing Method
+
+Doris supports two bucketing methods: **Hash bucketing** and **Random bucketing**. Their core differences are as follows:
+
+| Comparison Item | Hash Bucketing | Random Bucketing |
+|--------|----------|------------|
+| Data distribution method | Divided by the Hash value of the bucket key | Randomly and evenly distributed |
+| Whether a bucket key is required | Required | Not required |
+| Whether bucket pruning is supported | Supported | Not supported |
+| Applicable table models | DUPLICATE / UNIQUE / AGGREGATE | DUPLICATE only |
+| Risk of data skew | Depends on the choice of bucket key | Lower |
+| Applicable scenarios | Point queries that frequently filter by a specific column | Analysis on arbitrary dimensions, data prone to skew |
+
+### 1. Hash Bucketing
+
+When creating a table or adding a new partition, you need to choose one or more columns as the bucket key and explicitly specify the number of buckets. Within the same partition, the system performs a Hash calculation based on the bucket key and the number of buckets, and rows with the same Hash value are assigned to the same bucket.
+
+For example, in the figure below, the `p250102` partition is divided into 3 buckets by the `region` column, and rows with the same Hash value are placed in the same bucket.
 
 ![hash-bucket](/images/table-desigin/hash-bucket.png)
 
-It is recommended to use Hash Bucketing in the following scenarios:
+**Recommended scenarios:**
 
-* When the business needs to frequently filter based on a certain field, you can use this field as the bucket key for Hash Bucketing to improve query efficiency.
+- When the business frequently filters on a specific field, you can use that field as the bucket key and leverage bucket pruning to improve query efficiency.
+- The data in the table is relatively evenly distributed and unlikely to be skewed.
 
-* When the data distribution in the table is relatively uniform, Hash Bucketing is also a suitable choice.
-
-The following example shows how to create a table with Hash Bucketing. For detailed syntax, please refer to the CREATE TABLE statement.
+**Example:** Create a table with Hash bucketing. For detailed syntax, see [CREATE TABLE](../../sql-manual/sql-statements/table-and-view/table/CREATE-TABLE.md).
 
 ```sql
 CREATE TABLE demo.hash_bucket_tbl(
@@ -41,30 +76,33 @@ PARTITION BY RANGE(dt) (
 DISTRIBUTED BY HASH(region) BUCKETS 8;
 ```
 
-In the example, `DISTRIBUTED BY HASH(region)` specifies the creation of Hash Bucketing and selects the `region` column as the bucket key. Meanwhile, `BUCKETS 8` specifies the creation of 8 buckets.
+In the example, `DISTRIBUTED BY HASH(region)` specifies the use of Hash bucketing and selects the `region` column as the bucket key. `BUCKETS 8` specifies the creation of 8 buckets.
 
+### 2. Random Bucketing
 
-### Random Bucketing
+Random bucketing randomly distributes data across the buckets within each partition, without relying on the Hash value of any field. This approach ensures that data is evenly spread out and avoids data skew caused by an inappropriate choice of bucket key.
 
-In each partition, Random Bucketing randomly distributes data to various buckets without relying on the hash value of a certain field. Random Bucketing ensures uniform data distribution, thus avoiding data skew caused by improper bucket key selection.
-
-During data import, each batch of a single import job will be randomly written to a tablet, ensuring uniform data distribution. For example, in one operation, eight batches of data are randomly allocated to three buckets under partition `p250102`.
+When data is loaded, each batch in a single load job is randomly written to a Tablet, which guarantees an even data distribution. For example, in the figure below, 8 batches of data are randomly assigned to 3 buckets under the `p250102` partition.
 
 ![random-bucket](/images/table-desigin/random-bucket.png)
 
-When using Random Bucketing, you can enable the single-tablet import mode (set `load_to_single_tablet` to `true`). During large-scale data imports, one batch of data will only be written to one data tablet, helping to improve the concurrency and throughput of data imports, reducing write amplification caused by data imports and Compaction, thereby ensuring cluster stability.
+When using Random bucketing, you can enable single-tablet load mode (set `load_to_single_tablet` to `true`), so that the data of a single batch is written to only one data shard. This can:
 
-It is recommended to use Random Bucketing in the following scenarios:
+- Improve the concurrency and throughput of large-scale data loads.
+- Reduce write amplification caused by data loading and Compaction operations.
+- Improve cluster stability.
 
-* In scenarios of arbitrary dimension analysis, where the business does not frequently filter or join queries based on a specific column, you can choose Random Bucketing.
+**Recommended scenarios:**
 
-* When the data distribution of frequently queried columns or combinations of columns is extremely uneven, using Random Bucketing can avoid data skew.
+- Analysis on arbitrary dimensions, where the business has no fixed filter or join columns.
+- The data distribution of frequently queried columns or column combinations is highly uneven, and data skew must be avoided.
 
-* Random Bucketing cannot be pruned based on bucket keys and will scan all data in the hit partition, so it is not recommended for point query scenarios.
+**Unsuitable scenarios:**
 
-* Only DUPLICATE tables can use Random partitioning. UNIQUE and AGGREGATE tables cannot use Random Bucketing.
+- Point query scenarios: Random bucketing cannot perform pruning based on the bucket key, so it scans all data in the matched partitions.
+- UNIQUE and AGGREGATE tables: only DUPLICATE tables support Random bucketing.
 
-The following example shows how to create a table with Random Bucketing. For detailed syntax, please refer to the CREATE TABLE statement:
+**Example:** Create a table with Random bucketing. For detailed syntax, see [CREATE TABLE](../../sql-manual/sql-statements/table-and-view/table/CREATE-TABLE.md).
 
 ```sql
 CREATE TABLE demo.random_bucket_tbl(
@@ -81,37 +119,53 @@ PARTITION BY RANGE(dt) (
 DISTRIBUTED BY RANDOM BUCKETS 8;
 ```
 
-In the example, the statement `DISTRIBUTED BY RANDOM` specifies the use of Random Bucketing. Creating Random Bucketing does not require selecting a bucket key, and the statement `BUCKETS 8` specifies the creation of 8 buckets.
+In the example, `DISTRIBUTED BY RANDOM` specifies the use of Random bucketing and does not require selecting a bucket key. `BUCKETS 8` specifies the creation of 8 buckets.
 
-## Choosing Bucket Keys
+## 2. Select the Bucket Key
 
-:::tip Note
+:::tip Tip
 
-Only Hash Bucketing requires selecting bucket keys; Random Bucketing does not require selecting bucket keys.
+Only Hash bucketing requires selecting a bucket key. Random bucketing does not.
 
 :::
 
-Bucket keys can be one or more columns. If it is a DUPLICATE table, any Key column or Value column can be used as the bucket key. If it is an AGGREGATE or UNIQUE table, to ensure gradual aggregation, the bucket column must be a Key column.
+The bucket key can consist of one or more columns. Different table models impose the following restrictions on the bucket key:
 
-Generally, you can choose bucket keys based on the following rules:
+| Table Model | Eligible Bucket Keys |
+|--------|----------|
+| DUPLICATE | Any Key column or Value column |
+| AGGREGATE / UNIQUE | Must be Key columns (to ensure correct data aggregation) |
 
-* **Using Query Filter Conditions:** Using query filter conditions for Hash Bucketing helps data pruning and reduces data scan volume;
+### Selection Principles
 
-* **Using High Cardinality Columns:** Selecting high cardinality (many unique values) columns for Hash Bucketing helps to evenly distribute data across each bucket;
+Based on business query characteristics, you can refer to the following principles when selecting a bucket key:
 
-* **High-Concurrency Point Query Scenarios:** It is recommended to select a single column or fewer columns for bucketing. Point queries may only trigger a scan of one bucket, and the probability of different queries triggering scans of different buckets is high, thereby reducing the IO impact between queries.
+| Principle | Description | Benefit |
+|------|------|------|
+| Leverage query filter conditions | Choose columns that frequently appear as filters in queries as the bucket key | Supports bucket pruning and reduces the amount of data scanned |
+| Leverage high-cardinality columns | Choose columns with many distinct values as the bucket key | Data is evenly distributed and skew is avoided |
+| High-concurrency point query scenarios | Choose a single column or a small number of columns as the bucket key | A single query triggers a scan of only one bucket, reducing IO interference between queries |
+| High-throughput query scenarios | Choose multiple columns as the bucket key | Data is more evenly distributed; when the query conditions cannot fully match the equality conditions, overall throughput is improved |
 
-* **High-Throughput Query Scenarios:** It is recommended to select multiple columns for bucketing to make data more evenly distributed. If the query conditions cannot include the equality conditions of all bucket keys, it will increase query throughput and reduce the latency of single queries.
+## 3. Determine the Number of Buckets
 
-## Choosing the Number of Buckets
+In Doris, each Bucket is stored as a physical file (Tablet). The total number of Tablets in a table equals:
 
-In Doris, a bucket is stored as a physical file (tablet). The number of tablets in a table equals `partition_num` (number of partitions) multiplied by `bucket_num` (number of buckets). Once the number of Partitions is specified, it cannot be changed.
+```text
+Total Tablets = partition_num × bucket_num
+```
 
-When determining the number of buckets, you need to consider machine expansion in advance. Starting from version 2.0, Doris supports automatically setting the number of buckets in partitions based on machine resources and cluster information.
+:::caution Caution
 
-### Manually Setting the Number of Buckets
+Once the number of buckets for a Partition is specified, it cannot be changed. When determining the number of buckets, plan ahead for future machine scaling.
 
-You can specify the number of buckets using the `DISTRIBUTED` statement:
+:::
+
+Starting from version 2.0, Doris supports automatically setting the number of buckets in a partition based on machine resources and cluster information. You can choose between manual and automatic methods according to how precise the business requires the estimation to be.
+
+### 1. Manually Set the Number of Buckets
+
+Specify the number of buckets through the `DISTRIBUTED` clause:
 
 ```sql
 -- Set hash bucket num to 8
@@ -121,35 +175,42 @@ DISTRIBUTED BY HASH(region) BUCKETS 8
 DISTRIBUTED BY RANDOM BUCKETS 8
 ```
 
-When determining the number of buckets, two principles are usually followed: quantity and size. If there is a conflict between the two, the size principle is prioritized:
+#### Decision Principles
 
-* **Size Principle:** Keep each tablet between **1 GB and 20 GB** compressed data (excluding index), or under **10 GB** for Unique Key tables. Too small a tablet may result in poor aggregation effect and increase metadata management pressure; too large a tablet is not conducive to replica migration and supplementation and will increase the cost of retrying Schema Change operations. You can check actual tablet sizes with `SHOW TABLETS FROM your_table`.
+When determining the number of buckets, follow the two principles below. When they conflict, **prioritize the size principle**:
 
-* **Quantity Principle:** Without considering expansion, it is recommended that the number of tablets for a table be slightly more than the number of disks in the entire cluster.
+1. **Size principle**: The compressed data size of each Tablet (excluding indexes) is recommended to stay between **1 GB and 20 GB**, and no more than **10 GB** for Unique Key tables.
+    - Tablets that are too small: aggregation is less effective, and metadata management overhead increases.
+    - Tablets that are too large: replica migration and recovery become difficult, and the cost of retrying a failed Schema Change increases.
+    - You can use `SHOW TABLETS FROM your_table` to check the actual Tablet sizes.
 
-The bucket count should be a multiple of the number of BEs for even data distribution. Generally, the bucket count per partition should not exceed **128** — if you need more, consider partitioning the table first.
+2. **Quantity principle**: Without considering scaling, the number of Tablets in a table is recommended to be slightly larger than the total number of disks in the cluster.
 
-For example, assuming there are 10 BE machines with one disk per BE, you can follow the recommendations below for data bucketing:
+In addition, note the following:
 
-| Partition Size | Recommended Number of Buckets |
-| -------------- | ----------------------------- |
-| < 1 GB         | 1 bucket                      |
-| 1-10 GB        | 10 buckets                    |
-| 10-200 GB      | 10-20 buckets                 |
-| > 200 GB       | Consider partitioning first   |
+- The number of buckets should be an integer multiple of the number of BEs to ensure even data distribution.
+- The number of buckets in a single partition should generally not exceed **128**. If you need more, partition the table first.
 
-Data sizes refer to compressed data size in Doris. You can check actual sizes with `SHOW TABLETS FROM your_table`.
+#### Recommended Configuration Examples
 
-:::tip Note
+Suppose the cluster has 10 BE machines, each with one disk. You can refer to the table below to set the number of buckets:
 
-The data volume of the table can be viewed using the `SHOW DATA` command. The result needs to be divided by the number of replicas and the data volume of the table.
+| Compressed Partition Data Size | Recommended Number of Buckets |
+|-----------------|-----------------|
+| < 1 GB | 1 bucket |
+| 1 - 10 GB | 10 buckets |
+| 10 - 200 GB | 10 - 20 buckets |
+| > 200 GB | Partition the table first |
+
+:::tip Tip
+
+You can check the data size of a table with the `SHOW DATA` command. The result must be divided by the number of replicas to obtain the actual data size of the table.
 
 :::
 
-### Automatic Bucket Number Setting
+### 2. Automatically Set the Number of Buckets
 
-The automatic bucket number calculation function will automatically predict the future partition size based on the partition size over a period of time, and determine the number of buckets accordingly.
-
+The automatic bucket inference feature predicts future partition sizes based on the partition sizes over a recent period and determines the number of buckets accordingly.
 
 ```sql
 -- Set hash bucket auto
@@ -161,22 +222,26 @@ DISTRIBUTED BY RANDOM BUCKETS AUTO
 properties("estimate_partition_size" = "20G")
 ```
 
-When creating buckets, you can adjust the estimated partition size through the `estimate_partition_size` attribute. This parameter is optional, and if not provided, Doris will default to 10GB. Please note that this parameter is not related to the future partition size calculated by the system based on historical partition data.
+The `estimate_partition_size` property is used to adjust the initial estimate of the partition size:
 
-## Maintaining Data Buckets
+- This parameter is optional. If not specified, the default value is `10GB`.
+- This parameter only affects the initial estimate and is independent of the future partition size that the system later infers from historical partition data.
 
-:::tip Note
+## 4. Maintain Data Bucketing
 
-Currently, Doris only supports modifying the number of buckets in newly added partitions and does not support the following operations:
+:::tip Tip
 
-1. Modifying the bucketing type
-2. Modifying the bucket key
-3. Modifying the number of buckets for existing buckets
+Currently, Doris only supports modifying the number of buckets for newly added partitions. The following operations are not supported:
+
+1. Modifying the bucketing type is not supported.
+2. Modifying the bucket key is not supported.
+3. Modifying the number of buckets for already-created buckets is not supported.
 
 :::
 
-When creating a table, the number of buckets for each partition is uniformly specified through the `DISTRIBUTED` statement. To cope with data growth or reduction, you can specify the number of buckets for the new partition when dynamically adding partitions. The following example shows how to modify the number of buckets in newly added partitions using the `ALTER TABLE` command:
+When creating a table, the number of buckets for each partition is uniformly specified through the `DISTRIBUTED` clause. To handle data growth or shrinkage, you can specify the number of buckets for a new partition individually when dynamically adding partitions.
 
+The following examples show how to modify the number of buckets for newly added partitions through the `ALTER TABLE` command:
 
 ```sql
 -- Modify hash bucket table
@@ -194,4 +259,4 @@ ALTER TABLE demo.dynamic_partition_tbl
 SET ("dynamic_partition.buckets"="16");
 ```
 
-After modifying the number of buckets, you can use the SHOW PARTITION command to check the updated number of buckets.
+After modifying the number of buckets, you can check the result with the `SHOW PARTITION` command.

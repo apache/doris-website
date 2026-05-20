@@ -1,65 +1,72 @@
 ---
 {
-    "title": "Trace",
+    "title": "Trace Storage and Analysis",
+    "sidebar_label": "Trace",
     "language": "en",
-    "description": "This article introduces the storage and analysis practices of Trace, one of the core observability data."
+    "description": "How do you store and analyze Trace data in Apache Doris? This article covers the full practice of table creation, OpenTelemetry collection integration, and Grafana queries.",
+    "keywords": [
+        "Doris Trace",
+        "OpenTelemetry",
+        "distributed tracing",
+        "Trace storage",
+        "observability",
+        "Doris Exporter",
+        "OTLP",
+        "Grafana Trace"
+    ]
 }
 ---
 
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
+<!-- Knowledge type: Capability definition + Operation steps -->
+<!-- Applicable scenario: Observability buildout / Distributed trace storage and analysis -->
 
-  http://www.apache.org/licenses/LICENSE-2.0
+This article describes how to store and analyze **Trace data** in Apache Doris, covering the full path of table creation, collection, and query.
 
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
+- For the overall observability solution, see the [Overview](./overview.mdx).
+- For resource estimation, cluster deployment, and tuning, see [Log](./log.md).
 
-# Trace
+## Quick Navigation
 
-This article introduces the storage and analysis practices of Trace, one of the core observability data. For an overview of the complete observability solution, please refer to [Overview](./overview.mdx). For resource evaluation, cluster deployment, and optimization, please refer to [Log](./log.md).
+The full onboarding flow consists of three steps, which you can complete in order:
 
-## 1. Table Creation
+| Step | Content | Goal |
+| :--- | :--- | :--- |
+| 1. [Create the table](#1-create-the-table) | Create a Trace storage table in Doris | Optimize performance for Trace write and query patterns |
+| 2. [Collect](#2-trace-collection) | Write Trace data into Doris through OpenTelemetry | Connect the application to Collector to Doris pipeline |
+| 3. [Query](#3-trace-query) | Visually analyze Trace data in Grafana | Search, view latency distribution, and inspect trace details |
 
-Trace data has distinct characteristics in terms of writing and querying patterns. Targeted configurations during table creation can significantly improve performance. Create your table based on the key guidelines below:
+## 1. Create the Table
 
-**Partitioning and Sorting**
-- Use RANGE partitioning on the time field, enable dynamic partitioning to manage partitions automatically by day.
-- Use `service_name` and a time field of type DATETIME as keys; this provides multiple times acceleration when querying traces for a specific service over a certain period.
+<!-- Knowledge type: Configuration parameters + Operation steps -->
 
-**Bucketing**
-- The number of buckets should be approximately three times the total number of disks in the cluster.
-- Use the RANDOM bucketing strategy. Combined with single-tablet ingestion during writes, it improves batch write efficiency.
+Trace data has clear characteristics in its write and query patterns. Targeted configuration during table creation yields better performance.
 
-**Compaction**
-- Use the time_series compaction strategy to reduce write amplification, which is crucial for optimizing resources under high-throughput ingestion.
+### 1.1 Key Configuration Items
 
-**VARIANT Data Type**
-- Use the semi-structured VARIANT data type for extended Trace fields like `span_attributes` and `resource_attributes`. This automatically splits JSON data into sub-columns for storage, improving compression rates and reducing storage space while also enhancing filtering and sub-column analysis performance.
+The following table summarizes the key configuration dimensions and recommended practices for table creation:
 
-**Indexing**
-- Build indexes on frequently queried fields.
-- For fields requiring full-text search, specify the parser parameter. Unicode tokenization generally meets most needs. Enable the `support_phrase` option to support phrase queries. If not needed, set it to false to reduce storage usage.
+| Configuration dimension | Recommended practice | Description |
+| :--- | :--- | :--- |
+| Partitioning | RANGE partition on the time field, with dynamic partitioning enabled to manage daily partitions automatically | Automatically rolls partitions, making hot/cold separation and expiration cleanup easier |
+| Sort key | Use `service_name` and a `DATETIME`-typed time field as the key | Speeds up queries that scan a specific service over a time range by several times |
+| Bucket count | Roughly 3 times the total number of disks in the cluster | Balances parallelism with control over small files |
+| Bucketing strategy | Use `RANDOM` together with single tablet imports during writes | Improves write batching |
+| Compaction | Use the `time_series` compaction policy | Reduces write amplification, which is critical for resource optimization under high-throughput Trace writes |
+| Semi-structured fields | Use the VARIANT type for `span_attributes` and `resource_attributes` | Automatically splits JSON into sub-columns for storage, improving compression and sub-column filter and analysis performance |
+| Indexes | Create inverted indexes on commonly queried fields | Speeds up equality filters and range queries |
+| Full-text search | Specify the tokenizer through the `parser` parameter (typically `unicode` is sufficient), and enable `support_phrase` as needed | `support_phrase` enables phrase queries; turn it off when not needed to reduce storage space |
+| Replicas | Cloud disks can use 1 replica; physical disks should use at least 2 replicas | Balances reliability with cost |
+| Hot/cold separation | Configure the `log_s3` object storage and the `log_policy_3day` policy | Data older than 3 days is automatically moved to S3, reducing hot storage cost |
 
-**Storage**
-- For hot data, configure 1 replica if using cloud disks or at least 2 replicas if using physical disks.
-- Use hot-cold tiered storage configuration with `log_s3` object storage and `log_policy_3day` policy to move data older than 3 days to S3.
+### 1.2 Table Creation SQL Example
+
+The following example covers the full creation process for the resource, storage policy, and table:
 
 ```sql
 CREATE DATABASE log_db;
 USE log_db;
 
--- Not required for compute-storage separation mode
+-- Not required in the storage-compute decoupled mode
 CREATE RESOURCE "log_s3"
 PROPERTIES
 (
@@ -72,7 +79,7 @@ PROPERTIES
     "s3.secret_key" = "your_sk"
 );
 
--- Not required for compute-storage separation mode
+-- Not required in the storage-compute decoupled mode
 CREATE STORAGE POLICY log_policy_3day
 PROPERTIES(
     "storage_resource" = "log_s3",
@@ -80,46 +87,46 @@ PROPERTIES(
 );
 
 CREATE TABLE trace_table
-(        
-    service_name          VARCHAR(200),        
+(
+    service_name          VARCHAR(200),
     timestamp             DATETIME(6),
     service_instance_id   VARCHAR(200),
-    trace_id              VARCHAR(200),        
-    span_id               STRING,        
-    trace_state           STRING,        
-    parent_span_id        STRING,        
-    span_name             STRING,        
-    span_kind             STRING,        
-    end_time              DATETIME(6),        
-    duration              BIGINT,        
-    span_attributes       VARIANT,        
-    events                ARRAY<STRUCT<timestamp:DATETIME(6), name:STRING, attributes:MAP<STRING, STRING>>>,        
-    links                 ARRAY<STRUCT<trace_id:STRING, span_id:STRING, trace_state:STRING, attributes:MAP<STRING, STRING>>>,        
-    status_message        STRING,        
-    status_code           STRING,        
-    resource_attributes   VARIANT,        
-    scope_name            STRING,        
+    trace_id              VARCHAR(200),
+    span_id               STRING,
+    trace_state           STRING,
+    parent_span_id        STRING,
+    span_name             STRING,
+    span_kind             STRING,
+    end_time              DATETIME(6),
+    duration              BIGINT,
+    span_attributes       VARIANT,
+    events                ARRAY<STRUCT<timestamp:DATETIME(6), name:STRING, attributes:MAP<STRING, STRING>>>,
+    links                 ARRAY<STRUCT<trace_id:STRING, span_id:STRING, trace_state:STRING, attributes:MAP<STRING, STRING>>>,
+    status_message        STRING,
+    status_code           STRING,
+    resource_attributes   VARIANT,
+    scope_name            STRING,
     scope_version         STRING,
     INDEX idx_timestamp(timestamp) USING INVERTED,
     INDEX idx_service_instance_id(service_instance_id) USING INVERTED,
-    INDEX idx_trace_id(trace_id) USING INVERTED,        
-    INDEX idx_span_id(span_id) USING INVERTED,        
-    INDEX idx_trace_state(trace_state) USING INVERTED,        
-    INDEX idx_parent_span_id(parent_span_id) USING INVERTED,        
-    INDEX idx_span_name(span_name) USING INVERTED,        
-    INDEX idx_span_kind(span_kind) USING INVERTED,        
-    INDEX idx_end_time(end_time) USING INVERTED,        
-    INDEX idx_duration(duration) USING INVERTED,        
-    INDEX idx_span_attributes(span_attributes) USING INVERTED,        
-    INDEX idx_status_message(status_message) USING INVERTED,        
-    INDEX idx_status_code(status_code) USING INVERTED,        
-    INDEX idx_resource_attributes(resource_attributes) USING INVERTED,        
-    INDEX idx_scope_name(scope_name) USING INVERTED,        
-    INDEX idx_scope_version(scope_version) USING INVERTED        
-)        
-ENGINE = OLAP        
-DUPLICATE KEY(service_name, timestamp)        
-PARTITION BY RANGE(timestamp) ()        
+    INDEX idx_trace_id(trace_id) USING INVERTED,
+    INDEX idx_span_id(span_id) USING INVERTED,
+    INDEX idx_trace_state(trace_state) USING INVERTED,
+    INDEX idx_parent_span_id(parent_span_id) USING INVERTED,
+    INDEX idx_span_name(span_name) USING INVERTED,
+    INDEX idx_span_kind(span_kind) USING INVERTED,
+    INDEX idx_end_time(end_time) USING INVERTED,
+    INDEX idx_duration(duration) USING INVERTED,
+    INDEX idx_span_attributes(span_attributes) USING INVERTED,
+    INDEX idx_status_message(status_message) USING INVERTED,
+    INDEX idx_status_code(status_code) USING INVERTED,
+    INDEX idx_resource_attributes(resource_attributes) USING INVERTED,
+    INDEX idx_scope_name(scope_name) USING INVERTED,
+    INDEX idx_scope_version(scope_version) USING INVERTED
+)
+ENGINE = OLAP
+DUPLICATE KEY(service_name, timestamp)
+PARTITION BY RANGE(timestamp) ()
 DISTRIBUTED BY RANDOM BUCKETS 250
 PROPERTIES (
 "compression" = "zstd",
@@ -132,102 +139,120 @@ PROPERTIES (
 "dynamic_partition.end" = "1",
 "dynamic_partition.prefix" = "p",
 "dynamic_partition.buckets" = "250",
-"dynamic_partition.replication_num" = "2", -- Not required for compute-storage separation
-"replication_num" = "2", -- Not required for compute-storage separation
-"storage_policy" = "log_policy_3day" -- Not required for compute-storage separation
+"dynamic_partition.replication_num" = "2", -- Not required in storage-compute decoupled mode
+"replication_num" = "2", -- Not required in storage-compute decoupled mode
+"storage_policy" = "log_policy_3day" -- Not required in storage-compute decoupled mode
 );
 ```
 
 ## 2. Trace Collection
 
-Doris provides open and general-purpose Stream HTTP APIs that can integrate with Trace collection systems like OpenTelemetry.
+<!-- Knowledge type: Operation steps -->
+<!-- Applicable scenario: Application onboarding / OpenTelemetry integration -->
 
-### OpenTelemetry Integration
+Doris provides an open and general Stream HTTP API that integrates with Trace collection systems such as OpenTelemetry.
 
-1. **Application-side Integration with OpenTelemetry SDK**
+### 2.1 Overall Pipeline
 
-Here we use a Spring Boot example application integrated with the OpenTelemetry Java SDK. The example application comes from the official [demo](https://docs.spring.io/spring-boot/tutorial/first-application/index.html), which returns a simple "Hello World!" string for requests to the path "/".  
-Download the [OpenTelemetry Java Agent](https://github.com/open-telemetry/opentelemetry-java-instrumentation/releases). The advantage of using the Java Agent is that no modifications are needed to existing application. For other languages and integration methods, see the OpenTelemetry official website [Language APIs & SDKs](https://opentelemetry.io/docs/languages/) or [Zero-code Instrumentation](https://opentelemetry.io/docs/zero-code/).
+Application to OpenTelemetry SDK/Agent to OpenTelemetry Collector (with Doris Exporter) to Doris table.
 
-1. **Deploy and Configure OpenTelemetry Collector**
+### 2.2 OpenTelemetry Integration Steps
 
-Download and extract [OpenTelemetry Collector](https://github.com/open-telemetry/opentelemetry-collector-releases/releases). You need to download the package starting with "otelcol-contrib", which includes the Doris Exporter.
+#### Step 1: Integrate the OpenTelemetry SDK on the Application Side
 
-Create the `otel_demo.yaml` configuration file as follows. For more details, refer to the Doris Exporter [documentation](https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/exporter/dorisexporter).
+This example uses the official Spring Boot [demo](https://docs.spring.io/spring-boot/tutorial/first-application/index.html) integrated with the OpenTelemetry Java SDK, returning a simple `Hello World!` string for the path `/`.
+
+Download the [OpenTelemetry Java Agent](https://github.com/open-telemetry/opentelemetry-java-instrumentation/releases). The advantage of using the Java Agent is that no modifications to the existing application are required.
+
+For other languages and integration methods, see:
+
+- [OpenTelemetry Language APIs & SDKs](https://opentelemetry.io/docs/languages/)
+- [OpenTelemetry Zero-code Instrumentation](https://opentelemetry.io/docs/zero-code/)
+
+#### Step 2: Deploy and Configure the OpenTelemetry Collector
+
+Download the [OpenTelemetry Collector](https://github.com/open-telemetry/opentelemetry-collector-releases/releases) and extract it.
+
+> Download the release package whose name is prefixed with `otelcol-contrib`. It includes the Doris Exporter component, which can import Trace data into Doris.
+
+Create the `otel_demo.yaml` configuration file as follows. For more configuration options, see the Doris Exporter [documentation](https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/exporter/dorisexporter):
 
 ```yaml
 receivers:
-  otlp: # OTLP protocol, receiving data sent by the OpenTelemetry Java Agent
-    protocols:
-      grpc:
-        endpoint: 0.0.0.0:4317
-      http:
-        endpoint: 0.0.0.0:4318
+    otlp: # otlp protocol, receives data sent by the OpenTelemetry Java Agent
+        protocols:
+            grpc:
+                endpoint: 0.0.0.0:4317
+            http:
+                endpoint: 0.0.0.0:4318
 
 processors:
-  batch:
-    send_batch_size: 100000 # Number of records per batch; recommended batch size between 100MB-1GB
-    timeout: 10s
+    batch:
+        send_batch_size: 100000 # Number of records per batch; recommended batch size is between 100M and 1G
+        timeout: 10s
 
 exporters:
-  doris:
-    endpoint: http://localhost:8030 # FE HTTP address
-    database: doris_db_name
-    username: doris_username
-    password: doris_password
-    table:
-      traces: doris_table_name
-    create_schema: true # Whether to auto-create schema; manual table creation is needed if set to false
-    mysql_endpoint: localhost:9030  # FE MySQL address
-    history_days: 10
-    create_history_days: 10
-    timezone: Asia/Shanghai
-    timeout: 60s # Timeout for HTTP stream load client
-    log_response: true
-    sending_queue:
-      enabled: true
-      num_consumers: 20
-      queue_size: 1000
-    retry_on_failure:
-      enabled: true
-      initial_interval: 5s
-      max_interval: 30s
-    headers:
-      load_to_single_tablet: "true"
+    doris:
+        endpoint: http://localhost:8030 # FE HTTP address
+        database: doris_db_name
+        username: doris_username
+        password: doris_password
+        table:
+            traces: doris_table_name
+        create_schema: true # Whether to automatically create the schema; when set to false, you need to create the table manually
+        mysql_endpoint: localhost:9030  # FE MySQL address
+        history_days: 10
+        create_history_days: 10
+        timezone: Asia/Shanghai
+        timeout: 60s # http stream load client timeout
+        log_response: true
+        sending_queue:
+            enabled: true
+            num_consumers: 20
+            queue_size: 1000
+        retry_on_failure:
+            enabled: true
+            initial_interval: 5s
+            max_interval: 30s
+        headers:
+            load_to_single_tablet: "true"
 ```
 
-1. **Run OpenTelemetry Collector**
+#### Step 3: Run the OpenTelemetry Collector
 
 ```bash
 ./otelcol-contrib --config otel_demo.yaml
 ```
 
-4. **Start the Spring Boot Example Application**
+#### Step 4: Start the Spring Boot Sample Application
 
-Before starting the application, simply add a few environment variables without modifying any code.
+Before starting the application, only a few environment variables need to be set; no code changes are required:
 
 ```bash
-export JAVA_TOOL_OPTIONS="${JAVA_TOOL_OPTIONS} -javaagent:/your/path/to/opentelemetry-javaagent.jar" # Path to OpenTelemetry Java Agent
-export OTEL_JAVAAGENT_LOGGING="none" # Disable Otel logs to prevent interference with application logs
+export JAVA_TOOL_OPTIONS="${JAVA_TOOL_OPTIONS} -javaagent:/your/path/to/opentelemetry-javaagent.jar" # Path to the OpenTelemetry Java Agent
+export OTEL_JAVAAGENT_LOGGING="none" # Disable otel logging to avoid interfering with the service's own logs
 export OTEL_SERVICE_NAME="myproject"
-export OTEL_TRACES_EXPORTER="otlp" # Send trace data using OTLP protocol
+export OTEL_TRACES_EXPORTER="otlp" # Use the otlp protocol to send trace data
 export OTEL_EXPORTER_OTLP_ENDPOINT="http://localhost:4317" # Address of the OpenTelemetry Collector
 
 java -jar myproject-0.0.1-SNAPSHOT.jar
 ```
 
-5. **Access the Spring Boot Example Service to Generate Trace Data**
+#### Step 5: Access the Sample Application and Generate Trace Data
 
-Running `curl localhost:8080` will trigger a call to the `hello` service. The OpenTelemetry Java Agent will automatically generate Trace data and send it to the OpenTelemetry Collector, which then writes the Trace data to the Doris table (default is `otel.otel_traces`) via the configured Doris Exporter.
+Run `curl localhost:8080` to trigger the `hello` service call. The OpenTelemetry Java Agent automatically generates Trace data and sends it to the OpenTelemetry Collector. The Collector then writes the Trace data into a Doris table through the configured Doris Exporter (the default table name is `otel.otel_traces`).
 
-## 3. Trace Querying
+## 3. Trace Query
 
-Trace querying typically uses visual query interfaces such as Grafana.
+<!-- Knowledge type: Operation steps -->
+<!-- Applicable scenario: Trace search / Troubleshooting -->
 
-- Filter by time range and service name to display Trace summaries, including latency distribution charts and detailed individual Traces.
+Trace queries are typically performed through a visual interface such as Grafana. Common scenarios include:
 
-  ![Trace List](/images/observability/trace-list.png)
+- Filter by time range and service name to display a Trace overview, including the latency distribution chart and the most recent traces.
 
-- Click on the link to view the Trace detail.
+    ![Trace list](/images/observability/trace-list.png)
 
-  ![Trace Detail](/images/observability/trace-detail.png)
+- Click a link to view Trace details.
+
+    ![Trace query](/images/observability/trace-detail.png)

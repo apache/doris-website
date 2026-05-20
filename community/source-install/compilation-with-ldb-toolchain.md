@@ -1,11 +1,17 @@
 ---
-{
-    "title": "Compiling with LDB Toolchain (Recommended)",
-    "language": "en"
-}
+title: Compiling Apache Doris with LDB Toolchain
+language: en
+description: Compile Apache Doris on Linux with LDB Toolchain. Detailed toolchain installation and build steps.
+keywords:
+    - LDB Toolchain
+    - Apache Doris
+    - source compilation
+    - Linux compilation
+    - precompiled third-party libraries
+    - AVX2
 ---
 
-<!-- 
+<!--
 Licensed to the Apache Software Foundation (ASF) under one
 or more contributor license agreements.  See the NOTICE file
 distributed with this work for additional information
@@ -24,38 +30,63 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-This guide is about how to compile Doris using the LDB Toolchain. This method serves as a supplement to the Docker compilation approach to help developers and users without a Docker environment.
+<!-- Knowledge type: Procedure -->
+<!-- Use case: First-time compilation / No Docker environment -->
 
-| Doris Version | Recommended LDB Toolchain Version | Included Compiler Version |
-| -- | -- | -- |
+This document describes how to compile Apache Doris on Linux with LDB Toolchain. This approach complements [Docker image compilation](./compilation-with-docker) and suits developers who do not have a Docker environment.
+
+:::tip
+LDB Toolchain stands for **Linux Distribution Based Toolchain Generator**. It provides a standalone, portable, modern C++ compilation toolchain that can build modern C++ projects on almost any Linux distribution.
+:::
+
+Thanks to [Amos Bird](https://github.com/amosbird) for the contribution.
+
+## Version Mapping
+
+<!-- Knowledge type: Configuration parameters -->
+
+| Doris version | Recommended LDB Toolchain version | Included compilers |
+| ---------- | ----------------------- | ---------- |
 | master | 0.25 | clang-20, gcc-15 |
 | 3.1 / 3.0 / 2.1 | 0.19 | clang-17, gcc-13 |
 
+## Target Audience, Pros, and Cons
+
+| Aspect | Description |
+| ---- | ---- |
+| Target audience | Developers without a Docker environment who want to compile directly on a physical machine or a virtual machine |
+| Pros | No Docker dependency; the toolchain is standalone and avoids polluting the system compiler |
+| Cons | Java, Maven, Node, and system-level dependencies must be installed manually |
+
+## 1. Prepare the Compilation Environment
+
+<!-- Knowledge type: Procedure -->
+<!-- Use case: First-time compilation -->
+
+Applicable to most Linux distributions (CentOS, Ubuntu, and so on).
+
+### 1.1 Download `ldb_toolchain_gen.sh`
+
+Download the matching version from [ldb_toolchain_gen Releases](https://github.com/amosbird/ldb_toolchain_gen/releases):
+
+- x86_64 architecture: download `ldb_toolchain_gen.sh`
+- ARM architecture: download `ldb_toolchain_gen.aarch64.sh`
+
 :::tip
-LDB Toolchain stands for Linux Distribution Based Toolchain Generator. It helps compile modern C++ projects on almost all Linux distributions.
+Project home page: <https://github.com/amosbird/ldb_toolchain_gen>
 :::
 
-## Prepare the compilation environment
+### 1.2 Generate the LDB Toolchain
 
-This method applies to most Linux distributions (CentOS, Ubuntu, etc.).
-
-1. **Download** **`ldb_toolchain_gen.sh`**
-
-Download the latest `ldb_toolchain_gen.sh` from [here](https://github.com/amosbird/ldb_toolchain_gen/releases), For ARM architecture, you need to download the latest ldb_toolchain_gen.aarch64.sh. This script is used to generate ldb toolchain.
-
-:::tip
-For more information, please visit <https://github.com/amosbird/ldb_toolchain_gen>
-:::
-
-2. **Execute the following command to generate ldb toolchain.**
+Run the script to generate the toolchain:
 
 ```bash
 sh ldb_toolchain_gen.sh /path/to/ldb_toolchain/
 ```
 
-`/path/to/ldb_toolchain/` is the installation directory for the toolchain. After successful execution, the following directory structure will be generated under `/path/to/ldb_toolchain/`:
+Here, `/path/to/ldb_toolchain/` is the target installation directory. After the script runs successfully, the following structure is generated in that directory:
 
-```bash
+```text
 ├── bin
 ├── include
 ├── lib
@@ -64,24 +95,28 @@ sh ldb_toolchain_gen.sh /path/to/ldb_toolchain/
 └── usr
 ```
 
-3. **Download and install other compilation components**
+### 1.3 Install Other Compilation Components
 
-- Download [Java8](https://doris-thirdparty-1308700295.cos.ap-beijing.myqcloud.com/tools/jdk-8u391-linux-x64.tar.gz) for Doris 2.1 and earlier versions and install it to /path/to/java.
+| Component | Recommended version | Download URL |
+| ---- | -------- | -------- |
+| JDK 8 | 1.8.0_391 | [jdk-8u391-linux-x64.tar.gz](https://doris-thirdparty-1308700295.cos.ap-beijing.myqcloud.com/tools/jdk-8u391-linux-x64.tar.gz) |
+| JDK 17 | 17.0.10 | [jdk-17.0.10_linux-x64](https://download.oracle.com/java/17/archive/jdk-17.0.10_linux-x64_bin.tar.gz) |
+| Maven | 3.9.9 | [apache-maven-3.9.9-bin.tar.gz](https://dlcdn.apache.org/maven/maven-3/3.9.9/binaries/apache-maven-3.9.9-bin.tar.gz) |
+| Node | v12.13.0 | [node-v12.13.0-linux-x64.tar.gz](https://doris-thirdparty-repo.bj.bcebos.com/thirdparty/node-v12.13.0-linux-x64.tar.gz) |
 
-    > For versions later than 3.0 (inclusive), or the master branch, please use [Java 17](https://download.oracle.com/java/17/archive/jdk-17.0.10_linux-x64_bin.tar.gz).
+JDK version selection rules:
 
-    > It is recommended to install Java 8 or Java 17 using the package management tools provided by your Linux distribution, such as yum(java-1.8.0/17-openjdk-devel) or apt(openjdk-8/17-jdk). and verify with java -version
+- For Doris 2.1 and earlier: use JDK 8
+- For Doris 3.0 and later, or the master branch: use JDK 17
+- You can also install OpenJDK 8 or 17 directly through the package manager of your Linux distribution (`yum`, `apt`, and so on)
 
-
-- Download [Apache Maven 3.9.9](https://dlcdn.apache.org/maven/maven-3/3.9.9/binaries/apache-maven-3.9.9-bin.tar.gz) and install it to /path/to/maven.
-- Download [Node v12.13.0](https://doris-thirdparty-repo.bj.bcebos.com/thirdparty/node-v12.13.0-linux-x64.tar.gz) and install it to /path/to/node.
-- Different Linux distributions may include different default components. Therefore, you may need to install some additional components. The following takes CentOS 6 as an example. Similar steps may apply to other distributions:
+Different Linux distributions ship with different system components, so additional tools may need to be installed. Using CentOS 6 as an example:
 
 ```bash
-install required system packages
+# Install system dependencies
 sudo yum install -y byacc patch automake libtool make which file ncurses-devel gettext-devel unzip bzip2 zip util-linux wget git python2
 
-install autoconf-2.69
+# Install autoconf-2.69
 wget http://ftp.gnu.org/gnu/autoconf/autoconf-2.69.tar.gz && \
     tar zxf autoconf-2.69.tar.gz && \
     cd autoconf-2.69 && \
@@ -89,7 +124,7 @@ wget http://ftp.gnu.org/gnu/autoconf/autoconf-2.69.tar.gz && \
     make && \
     make install
 
-install bison-3.8.2
+# Install bison-3.8.2
 wget http://ftp.gnu.org/gnu/bison/bison-3.8.2.tar.gz && \
     tar xzf bison-3.8.2.tar.gz && \
     cd bison-3.8.2 && \
@@ -98,13 +133,13 @@ wget http://ftp.gnu.org/gnu/bison/bison-3.8.2.tar.gz && \
     make install
 ```
 
-4. **Download Doris source code**
+### 1.4 Download the Doris Source Code and Configure Environment Variables
 
 ```bash
 git clone https://github.com/apache/doris.git
 ```
 
-After downloading, navigate to the Doris source code directory, create a `custom_env.sh` file, and set the PATH environment variable as follows:
+Enter the source directory and create `custom_env.sh` with the following environment variables:
 
 ```bash
 export JAVA_HOME=/path/to/java/
@@ -114,41 +149,69 @@ export PATH=/path/to/node/bin:$PATH
 export PATH=/path/to/ldb_toolchain/bin:$PATH
 ```
 
-## Compile Doris
+## 2. Compile Doris
+
+<!-- Knowledge type: Procedure -->
 
 :::tip
-The first step of compiling Doris source code is to first download third-party libraries and compile them. You can refer to the following instructions to download precompiled versions of the third-party libraries.
+By default, `build.sh` compiles the third-party libraries first. To skip third-party library compilation, see [3. Speed Up with Precompiled Third-Party Libraries](#3-speed-up-with-precompiled-third-party-libraries).
 :::
 
-1. **Enter the Doris source code directory and execute the following command to check if the compilation machine supports the AVX2 instruction set.**
+### 2.1 Check Whether AVX2 Is Supported
 
 ```bash
 cat /proc/cpuinfo | grep avx2
 ```
 
-2. **Execute compilation.**
+A non-empty output indicates that the CPU supports AVX2.
+
+### 2.2 Run the Compilation
 
 ```bash
-# By default, it builds AVX2 version.
-$ sh build.sh
+# By default, build artifacts that support AVX2
+sh build.sh
 
-# If you need the no AVX2 version, add USE_AVX2=0.
-$ USE_AVX2=0 sh build.sh
+# When the CPU does not support AVX2, append USE_AVX2=0
+USE_AVX2=0 sh build.sh
 
-# To compile a debug version of BE, add BUILD_TYPE=Debug.
-$ BUILD_TYPE=Debug sh build.sh
+# Compile the Debug version of BE
+BUILD_TYPE=Debug sh build.sh
 ```
 
-This script first compiles the third-party libraries and then the Doris components (FE, BE, MS). The compilation output can be found in the `output/` directory. MS stands for Meta Service, which a module of Doris in the compute-storage decoupled mode. For more information about MS, refer to this [doc](../../docs/compute-storage-decoupled/compilation-and-deployment.md).
+The script compiles the third-party libraries, FE, BE, and MS in order, and writes the artifacts to the `output/` directory. The MS module is used for the storage-compute separation mode. For details, see the related documentation.
 
-## Pre-compile third-party libraries
+## 3. Speed Up with Precompiled Third-Party Libraries
 
-The `build.sh` script compiles third-party libraries first. You can download the pre-compiled third-party libraries directly from the following link:
+<!-- Use case: Speed up compilation / Restricted network -->
 
-```Plain
+By default, `build.sh` compiles the third-party libraries from source, which takes a long time. You can also download the community precompiled version directly:
+
+```text
 https://github.com/apache/doris-thirdparty/releases
 ```
 
-The pre-compiled libraries for Linux and MacOS are provided. If they match your compilation and runtime environment, you can download them and use them directly.
+The community provides precompiled artifacts for Linux, macOS, and ARM. After you download and extract the package, you get an `installed/` directory. Copy it to the `thirdparty/` directory of the Doris source, then run `build.sh` to skip third-party library compilation.
 
-After downloading, extract the files to obtain an `installed/` directory. Copy this directory to the `thirdparty/`directory, and then run `build.sh` to proceed with the compilation.
+## FAQ
+
+### Q1: How do I choose an LDB Toolchain version?
+
+Follow the table: use 0.25 for the master branch, and 0.19 for the 3.1, 3.0, and 2.1 branches. A mismatched version may cause ABI inconsistency and link failures.
+
+### Q2: What if `cat /proc/cpuinfo | grep avx2` produces no output?
+
+The CPU does not support AVX2. Add `USE_AVX2=0` when compiling, and use the `-no-avx2` precompiled third-party libraries or compilation images instead.
+
+### Q3: What if I hit `Too many open files` during compilation?
+
+Raise the file handle limit with `ulimit -n 65536`, or write it into `/etc/security/limits.conf` to make it permanent.
+
+### Q4: What should I watch out for when compiling on ARM?
+
+Download `ldb_toolchain_gen.aarch64.sh`, and see [ARM Platform Compilation](./compilation-arm) for how to disable AVX2, libunwind, Azure, and other incompatible third-party libraries.
+
+## Related Documents
+
+- [Compile with Docker Image](./compilation-with-docker)
+- [Direct Compilation on Linux](./compilation-linux)
+- [ARM Platform Compilation](./compilation-arm)

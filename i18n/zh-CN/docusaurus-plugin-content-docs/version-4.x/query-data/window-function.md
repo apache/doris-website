@@ -2,14 +2,46 @@
 {
     "title": "分析函数（窗口函数）",
     "language": "zh-CN",
-    "description": "分析函数，也称为窗口函数，是一种在 SQL 查询中对数据集中的行进行复杂计算的函数。窗口函数的特点在于，它们不会减少查询结果的行数，而是为每一行增加一个新的计算结果。窗口函数适用于多种分析场景，如计算滚动合计、排名以及移动平均等。 具体的语法介绍可以参阅"
+    "description": "Doris 分析函数（窗口函数）使用指南：通过 OVER 子句对结果集分区与开窗，实现排名、累计求和、移动平均、同比环比等场景。",
+    "keywords": [
+        "Doris 窗口函数",
+        "分析函数",
+        "OVER 子句",
+        "PARTITION BY",
+        "ROWS BETWEEN",
+        "移动平均",
+        "累计求和",
+        "排名函数",
+        "NTILE",
+        "LAG LEAD"
+    ]
 }
 ---
 
-分析函数，也称为窗口函数，是一种在 SQL 查询中对数据集中的行进行复杂计算的函数。窗口函数的特点在于，它们不会减少查询结果的行数，而是为每一行增加一个新的计算结果。窗口函数适用于多种分析场景，如计算滚动合计、排名以及移动平均等。
-具体的语法介绍可以[参阅](../../current/sql-manual/sql-functions/window-functions/overview.md)
+<!-- 知识类型: 能力定义 + 操作示例 -->
+<!-- 适用场景: SQL 数据分析 / 报表统计 / 排名与同环比计算 -->
 
-下面是一个使用窗口函数计算每个商店的前后三天的销售移动平均值的例子：
+分析函数，也称为窗口函数（Window Function），是一种在 SQL 查询中对数据集中的行进行复杂计算的函数。窗口函数的特点在于：它们不会减少查询结果的行数，而是为每一行附加一个新的计算结果。
+
+窗口函数适用于多种数据分析场景，例如计算滚动合计、排名、移动平均、同比环比等。具体的语法说明可参阅 [窗口函数概览](../sql-manual/sql-functions/window-functions/overview.md)。
+
+## 适用场景
+
+窗口函数主要用于以下数据分析场景：
+
+| 场景 | 典型问题 | 推荐函数 |
+| --- | --- | --- |
+| 排名与分组 | 「按销售额对每个区域的门店排名」 | `RANK` / `DENSE_RANK` / `ROW_NUMBER` / `NTILE` |
+| 累计统计 | 「计算每个商品类别按月的累计销售额」 | `SUM() OVER (... ROWS UNBOUNDED PRECEDING)` |
+| 移动平均 | 「计算门店前后三天的销售移动平均」 | `AVG() OVER (... ROWS BETWEEN n PRECEDING AND n FOLLOWING)` |
+| 报告分析 | 「找出每年销售额最高的商品类别」 | `MAX() / SUM() OVER (PARTITION BY ...)` |
+| 行间比较 | 「计算每个类别的同比销售额差异」 | `LAG` / `LEAD` |
+
+## 快速上手：移动平均示例
+
+下面通过一个完整示例展示如何使用窗口函数计算每个商店「前后三天」的销售移动平均值。
+
+### 1. 建表与导入数据
 
 ```sql
 CREATE TABLE daily_sales (
@@ -18,21 +50,33 @@ CREATE TABLE daily_sales (
     sales_amount DECIMAL(10, 2)
 ) PROPERTIES ("replication_num" = "1");
 
-INSERT INTO daily_sales (store_id, sales_date, sales_amount) VALUES (1, '2023-01-01', 100.00), (1, '2023-01-02', 150.00), (1, '2023-01-03', 200.00), (1, '2023-01-04', 250.00), (1, '2023-01-05', 300.00), (1, '2023-01-06', 350.00), (1, '2023-01-07', 400.00), (1, '2023-01-08', 450.00), (1, '2023-01-09', 500.00), (2, '2023-01-01', 110.00), (2, '2023-01-02', 160.00), (2, '2023-01-03', 210.00), (2, '2023-01-04', 260.00), (2, '2023-01-05', 310.00), (2, '2023-01-06', 360.00), (2, '2023-01-07', 410.00), (2, '2023-01-08', 460.00), (2, '2023-01-09', 510.00);
-
-SELECT
-        store_id,
-        sales_date,
-        sales_amount,
-        AVG(sales_amount) OVER ( PARTITION BY store_id ORDER BY sales_date 
-        ROWS BETWEEN 3 PRECEDING AND 3 FOLLOWING ) AS moving_avg_sales
-FROM
-        daily_sales;
+INSERT INTO daily_sales (store_id, sales_date, sales_amount) VALUES
+(1, '2023-01-01', 100.00), (1, '2023-01-02', 150.00), (1, '2023-01-03', 200.00),
+(1, '2023-01-04', 250.00), (1, '2023-01-05', 300.00), (1, '2023-01-06', 350.00),
+(1, '2023-01-07', 400.00), (1, '2023-01-08', 450.00), (1, '2023-01-09', 500.00),
+(2, '2023-01-01', 110.00), (2, '2023-01-02', 160.00), (2, '2023-01-03', 210.00),
+(2, '2023-01-04', 260.00), (2, '2023-01-05', 310.00), (2, '2023-01-06', 360.00),
+(2, '2023-01-07', 410.00), (2, '2023-01-08', 460.00), (2, '2023-01-09', 510.00);
 ```
 
-查询结果为如下：
+### 2. 编写查询
 
 ```sql
+SELECT
+    store_id,
+    sales_date,
+    sales_amount,
+    AVG(sales_amount) OVER (
+        PARTITION BY store_id
+        ORDER BY sales_date
+        ROWS BETWEEN 3 PRECEDING AND 3 FOLLOWING
+    ) AS moving_avg_sales
+FROM daily_sales;
+```
+
+### 3. 查询结果
+
+```text
 +----------+------------+--------------+------------------+
 | store_id | sales_date | sales_amount | moving_avg_sales |
 +----------+------------+--------------+------------------+
@@ -58,71 +102,80 @@ FROM
 18 rows in set (0.09 sec)
 ```
 
-## 基本概念介绍
+## 基本概念
+
+<!-- 知识类型: 概念解释 -->
+
+理解窗口函数前，需要先了解其执行顺序、分区、窗口范围以及当前行这几个核心概念。
 
 ### 处理顺序
 
-使用分析函数的查询处理可以分为三个阶段。
+使用分析函数的查询，处理过程可以分为三个阶段：
 
-1. 执行所有的JOIN、WHERE、GROUP BY 和 HAVING 子句。
+1. 先执行所有的 `JOIN`、`WHERE`、`GROUP BY` 和 `HAVING` 子句。
+2. 将得到的结果集提供给分析函数，并完成所有窗口计算。
+3. 如果查询末尾包含 `ORDER BY` 子句，则在最后处理该子句以得到最终输出顺序。
 
-2. 将结果集提供给分析函数，并进行所有必要的计算。
-
-3. 如果查询的末尾包含 ORDER BY 子句，则处理该子句以实现精确的输出排序。
-
-查询的处理顺序如图所示：
+查询的处理顺序如下图所示：
 
 ![基本概念介绍](/images/window-function-order.png)
 
 ### 结果集分区
 
-分区是在使用 PARTITION BY 子句定义的组之后创建的。
+分区（Partition）是通过 `PARTITION BY` 子句定义的逻辑分组。每个分区内的行会被独立计算。
 
 :::caution 注意
-分析函数中使用的术语“分区”与表分区功能无关。在本章中，术语“分区”仅指与分析函数相关的含义。
+分析函数中使用的「分区」与表分区（Table Partition）功能无关。本章中的「分区」仅指与分析函数相关的含义。
 :::
 
 ### 窗口
 
-对于分区中的每一行，你可以定义一个滑动数据窗口，此窗口确定了用于执行当前行计算所涉及的行范围。窗口具有一个起始行和一个结束行，根据其定义，窗口可以在一端或两端进行滑动。例如ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW，为累积和函数定义的窗口，其起始行固定在其分区的第一行，而其结束行则从起点一直滑动到分区的最后一行。相反ROWS BETWEEN 3 PRECEDING AND 3 FOLLOWING，为移动平均值定义的窗口，其起点和终点都会进行滑动。
+对于分区中的每一行，可以定义一个滑动数据窗口，窗口确定了用于当前行计算所涉及的行范围。窗口具有起始行和结束行，根据其定义，窗口可以在一端或两端进行滑动：
 
-窗口的大小可以设置为与分区中的所有行一样大，也可以设置为在分区内仅包含一行的滑动窗口。需要注意的是，当窗口靠近分区的边界时，由于边界的限制，计算的范围可能会缩减行数，此时函数仅返回可用行的计算结果。
+- `ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW`：用于累积和函数，窗口的起始行固定在分区的第一行，结束行从起点一直滑动到分区的最后一行。
+- `ROWS BETWEEN 3 PRECEDING AND 3 FOLLOWING`：用于移动平均值，起点和终点都会随当前行一起滑动。
 
-在使用窗口函数时，当前行会被包含在计算之中。因此，在处理 n 个项目时，应指定为 (n-1)。例如，如果您需要计算五天的平均值，窗口应指定为“ROWS BETWEEN 4 PRECEDING AND CURRENT ROW”，这也可以简写为“ROWS 4 PRECEDING”。
+窗口的大小可以等同于分区中的所有行，也可以仅包含一行。需要注意的是，当窗口靠近分区边界时，由于边界限制，参与计算的行数可能会缩减，此时函数仅返回可用行的计算结果。
+
+在使用窗口函数时，**当前行也会被包含在计算之中**。因此，在处理 n 个项目时，应指定为 (n-1)。例如，要计算 5 天的平均值，窗口应指定为 `ROWS BETWEEN 4 PRECEDING AND CURRENT ROW`，也可以简写为 `ROWS 4 PRECEDING`。
 
 ### 当前行
 
-使用分析函数执行的每个计算都是基于分区内的当前行。当前行作为确定窗口开始和结束的参考点，具体如图所示。
+使用分析函数执行的每个计算都基于分区内的当前行（Current Row）。当前行作为确定窗口起始与结束的参考点。
 
-例如: ROWS BETWEEN 6 PRECEDING AND 6 FOLLOWING，可以使用一个窗口来定义中心移动平均值计算，该窗口包含当前行、当前行之前的 6 行以及当前行之后的 6 行。这样就创建了一个包含 13 行的滑动窗口。
+例如 `ROWS BETWEEN 6 PRECEDING AND 6 FOLLOWING` 定义了一个用于中心移动平均值计算的窗口，该窗口包含当前行、当前行之前的 6 行以及当前行之后的 6 行，共 13 行。
 
 ![当前行](/images/window-function-rows.jpg)
 
 ## 排序函数
 
-排序函数中，只有当指定的排序列是唯一值列时，查询结果才是确定的；如果排序列包含重复值，则每次的查询结果可能不同。更多相关函数可以[参阅](../../current/sql-manual/sql-functions/window-functions/overview.md)
+<!-- 适用场景: 排名 / 分桶 / Top-N 分析 -->
+
+排序函数用于在分区内对行进行排序或分组。需要注意：**只有当指定的排序列是唯一值列时，查询结果才是确定的**；如果排序列包含重复值，则每次的查询结果可能不同。更多相关函数可参阅 [窗口函数概览](../sql-manual/sql-functions/window-functions/overview)。
 
 ### NTILE 函数
 
-NTILE 是 SQL 中的一种窗口函数，用于将查询结果集分成指定数量的桶（组），并为每一行分配一个桶号。这在数据分析和报告中非常有用，特别是在需要对数据进行分组和排序时。
+`NTILE` 用于将查询结果集分成指定数量的桶（组），并为每一行分配一个桶号。在数据分析和报告中常用于分组排序场景。
 
-**1. 函数语法**
+#### 函数语法
 
 ```sql
 NTILE(num_buckets) OVER ([PARTITION BY partition_expression] ORDER BY order_expression)
 ```
 
-- `num_buckets`：要将行划分成的桶的数量。
+参数说明：
 
-- `PARTITION BY partition_expression`（可选）：定义如何分区数据。
+| 参数 | 说明 |
+| --- | --- |
+| `num_buckets` | 要将行划分成的桶的数量。 |
+| `PARTITION BY partition_expression` | 可选。定义如何分区数据。 |
+| `ORDER BY order_expression` | 必选。定义如何排序数据。 |
 
-- `ORDER BY order_expression`：定义如何排序数据。
+#### 使用示例：将学生按成绩分桶
 
-**2. 使用 NTILE 函数**
+假设有一张学生考试成绩表 `class_student_scores`，希望将学生按成绩分成 4 个组，且每组中的学生数量尽可能均匀。
 
-假设有一个包含学生考试成绩的表`class_student_scores`，希望将学生按成绩分成 4 个组，每组中的学生数量尽可能均匀。
-
-首先，创建并插入数据到`class_student_scores`表中：
+首先创建表并插入数据：
 
 ```sql
 CREATE TABLE class_student_scores (
@@ -130,7 +183,7 @@ CREATE TABLE class_student_scores (
     student_id INT,
     student_name VARCHAR(50),
     score INT
-)distributed by hash(student_id) properties('replication_num'=1);
+) DISTRIBUTED BY HASH(student_id) PROPERTIES('replication_num'='1');
 
 INSERT INTO class_student_scores VALUES
 (1, 1, 'Alice', 85),
@@ -143,21 +196,20 @@ INSERT INTO class_student_scores VALUES
 (2, 8, 'Hannah', 84);
 ```
 
-然后，使用 NTILE 函数将学生按成绩分成 4 个组：
+然后使用 `NTILE` 函数按成绩分桶：
 
 ```sql
-SELECT  
-    student_id,  
-    student_name,  
-    score,  
-    NTILE(4) OVER (ORDER BY score DESC) AS bucket  
-FROM  
-    class_student_scores;
+SELECT
+    student_id,
+    student_name,
+    score,
+    NTILE(4) OVER (ORDER BY score DESC) AS bucket
+FROM class_student_scores;
 ```
 
-结果如下：
+查询结果：
 
-```sql
+```text
 +------------+--------------+-------+--------+
 | student_id | student_name | score | bucket |
 +------------+--------------+-------+--------+
@@ -173,32 +225,30 @@ FROM
 8 rows in set (0.12 sec)
 ```
 
-在这个例子中，`NTILE(4)`函数根据成绩将学生分成了 4 个组（桶），每个组的学生数量尽可能均匀。
+在这个例子中，`NTILE(4)` 根据成绩将学生分成了 4 个桶，每个桶的学生数量尽可能均匀。
 
 :::caution 注意事项
 - 如果不能均匀地将行分配到桶中，某些桶可能会多一行。
-
-- `NTILE`函数在每个分区内工作，如果使用`PARTITION BY`子句，则每个分区内的数据将分别进行桶分配。
+- `NTILE` 在每个分区内独立工作，使用 `PARTITION BY` 时，每个分区内的数据会分别进行桶分配。
 :::
 
-**3. 使用 NTILE 和 PARTITION BY**
+#### 结合 PARTITION BY 使用
 
-假设按班级对学生进行分组，然后在每个班级内将学生按成绩分成 3 个组，可以使用`PARTITION BY`和`NTILE`函数：
+如果希望「先按班级分组，再在每个班级内将学生按成绩分成 3 个组」，可以结合 `PARTITION BY` 使用：
 
 ```sql
-SELECT  
-    class_id,  
-    student_id,  
-    student_name,  
-    score,  
-    NTILE(3) OVER (PARTITION BY class_id ORDER BY score DESC) AS bucket  
-FROM  
-    class_student_scores;
+SELECT
+    class_id,
+    student_id,
+    student_name,
+    score,
+    NTILE(3) OVER (PARTITION BY class_id ORDER BY score DESC) AS bucket
+FROM class_student_scores;
 ```
 
-结果如下：
+查询结果：
 
-```sql
+```text
 +----------+------------+--------------+-------+--------+
 | class_id | student_id | student_name | score | bucket |
 +----------+------------+--------------+-------+--------+
@@ -214,39 +264,47 @@ FROM
 8 rows in set (0.05 sec)
 ```
 
-在这个例子中，学生按班级进行分区，然后在每个班级内按成绩分成 3 个组。每个组的学生数量尽可能均匀。
+可以看到学生按班级进行分区，然后在每个班级内按成绩分成 3 个桶，每个桶的学生数量尽可能均匀。
 
 ## 聚合函数
 
-### 使用聚合函数 SUM 计算累计值
+<!-- 适用场景: 累计统计 / 移动平均 / 区间汇总 -->
 
-示例如下：
+聚合函数（`SUM`、`AVG`、`MAX`、`MIN` 等）配合 `OVER` 子句即可作为窗口函数使用，无需通过 `GROUP BY` 即可对每行计算分区内的聚合值。
+
+### 使用 SUM 计算累计值
+
+下面的查询计算 Books 与 Electronics 两个商品类别在 2000 年各月的销售额，以及按月累计的总销售额：
 
 ```sql
 SELECT
-        i_category,
-        year(d_date),
-        month(d_date),
-        sum(ss_net_paid) as total_sales,
-        sum(sum(ss_net_paid)) over (partition by i_category order by year(d_date),month(d_date) ROWS UNBOUNDED PRECEDING) as cum_sales
-FROM 
-        store_sales,
-        date_dim d1,
-        item
-WHERE 
-        d1.d_date_sk = ss_sold_date_sk
-        and i_item_sk = ss_item_sk
-        and year(d_date) =2000
-        and i_category in ('Books','Electronics')
-GROUP BY         
-        i_category,
-        year(d_date),
-        month(d_date)
+    i_category,
+    year(d_date),
+    month(d_date),
+    sum(ss_net_paid) AS total_sales,
+    sum(sum(ss_net_paid)) OVER (
+        PARTITION BY i_category
+        ORDER BY year(d_date), month(d_date)
+        ROWS UNBOUNDED PRECEDING
+    ) AS cum_sales
+FROM
+    store_sales,
+    date_dim d1,
+    item
+WHERE
+    d1.d_date_sk = ss_sold_date_sk
+    AND i_item_sk = ss_item_sk
+    AND year(d_date) = 2000
+    AND i_category IN ('Books', 'Electronics')
+GROUP BY
+    i_category,
+    year(d_date),
+    month(d_date);
 ```
 
-查询结果如下：
+查询结果：
 
-```sql
+```text
 +-------------+--------------+---------------+-------------+-------------+
 | i_category  | year(d_date) | month(d_date) | total_sales | cum_sales   |
 +-------------+--------------+---------------+-------------+-------------+
@@ -278,37 +336,40 @@ GROUP BY
 24 rows in set (0.13 sec)
 ```
 
-在此示例中，聚合函数 SUM 为每一行定义一个窗口，该窗口从分区的开头（UNBOUNDED PRECEDING）开始，默认在当前行结束。在此示例中，需要嵌套使用 SUM，因为需要对本身就是 SUM 的结果执行 SUM。嵌套聚合在分析聚合函数中高频使用。
+在此示例中，聚合函数 `SUM` 为每一行定义了一个窗口：起点固定为分区的第一行（`UNBOUNDED PRECEDING`），终点默认到当前行。这里需要嵌套使用 `SUM`，因为外层 `SUM` 是对内层 `SUM` 的结果再次求和。**嵌套聚合在分析聚合函数中非常常见**。
 
-### 使用聚合函数 AVG 计算移动平均值
+### 使用 AVG 计算移动平均值
 
-示例如下：
+下面的查询计算 Books 类别 2000 年各月销售额的「3 个月移动平均」（当前月与前两个月）：
 
 ```sql
 SELECT
-        i_category,
-        year(d_date),
-        month(d_date),
-        sum(ss_net_paid) as total_sales,
-        avg(sum(ss_net_paid)) over (order by year(d_date),month(d_date) ROWS 2 PRECEDING) as avg
-FROM 
-        store_sales,
-        date_dim d1,
-        item
-WHERE 
-        d1.d_date_sk = ss_sold_date_sk
-        and i_item_sk = ss_item_sk
-        and year(d_date) =2000
-        and i_category='Books'
-GROUP BY         
-        i_category,
-        year(d_date),
-        month(d_date)
+    i_category,
+    year(d_date),
+    month(d_date),
+    sum(ss_net_paid) AS total_sales,
+    avg(sum(ss_net_paid)) OVER (
+        ORDER BY year(d_date), month(d_date)
+        ROWS 2 PRECEDING
+    ) AS avg
+FROM
+    store_sales,
+    date_dim d1,
+    item
+WHERE
+    d1.d_date_sk = ss_sold_date_sk
+    AND i_item_sk = ss_item_sk
+    AND year(d_date) = 2000
+    AND i_category = 'Books'
+GROUP BY
+    i_category,
+    year(d_date),
+    month(d_date);
 ```
 
-查询结果如下：
+查询结果：
 
-```sql
+```text
 +------------+--------------+---------------+-------------+---------------+
 | i_category | year(d_date) | month(d_date) | total_sales | avg           |
 +------------+--------------+---------------+-------------+---------------+
@@ -329,65 +390,72 @@ GROUP BY
 ```
 
 :::caution 注意
-输出数据中 AVG 列的前两行没有计算三天的移动平均值，因为边界数据前面没有足够的行数（在 SQL 中指定的行数为 3）。
+输出数据中 `avg` 列的前两行没有真正按 3 个月的均值计算，因为前面没有足够的行数（SQL 中指定的行数为 3）。
 :::
 
-同时，还可以计算以当前行为中心的窗口聚合函数。例如，此示例计算了 Books 类别的产品 在 2000 年各月销售额的中心移动平均值，具体计算的是当前行前一个月、当前行、以及当前行后一个月的销售总额平均值。
+也可以计算「以当前行为中心」的窗口聚合。下面的示例计算 Books 类别 2000 年各月销售额的中心移动平均值，即「前一个月、当前月、后一个月」三个月销售额的平均值：
 
 ```sql
 SELECT
-        i_category,
-        year(d_date),
-        month(d_date),
-        sum(ss_net_paid) as total_sales,
-        avg(sum(ss_net_paid)) over (order by year(d_date),month(d_date) ROWS between 1 PRECEDING and 1 following) as avg_sales
-FROM 
-        store_sales,
-        date_dim d1,
-        item
-WHERE 
-        d1.d_date_sk = ss_sold_date_sk
-        and i_item_sk = ss_item_sk
-        and year(d_date) =2000
-        and i_category='Books'
-GROUP BY         
-        i_category,
-        year(d_date),
-        month(d_date)
+    i_category,
+    year(d_date),
+    month(d_date),
+    sum(ss_net_paid) AS total_sales,
+    avg(sum(ss_net_paid)) OVER (
+        ORDER BY year(d_date), month(d_date)
+        ROWS BETWEEN 1 PRECEDING AND 1 FOLLOWING
+    ) AS avg_sales
+FROM
+    store_sales,
+    date_dim d1,
+    item
+WHERE
+    d1.d_date_sk = ss_sold_date_sk
+    AND i_item_sk = ss_item_sk
+    AND year(d_date) = 2000
+    AND i_category = 'Books'
+GROUP BY
+    i_category,
+    year(d_date),
+    month(d_date);
 ```
 
 :::caution 注意
-输出数据中起始行和结束行的中心移动平均值计算仅基于两天，因为边界数据前后没有足够的行数。
+输出数据中起始行和结束行的中心移动平均值仅基于两个月的数据计算，因为边界行前后没有足够的行数。
 :::
 
 ## 报告函数
 
-报告函数是指每一行的窗口范围都是整个 partition。报告函数的主要优点是能够在单个查询块中多次传递数据，从而提高查询性能。例如，“对于每一年，找出其销售额最高的商品类别”之类的查询，使用报告函数则不需要进行 JOIN 操作。示例如下：
+<!-- 适用场景: 报表分析 / 全分区聚合 / 单查询多次扫描 -->
+
+报告函数（Reporting Function）的特征是「每一行的窗口范围都是整个分区」。它的主要优势在于能够在一次查询中多次使用同一份数据，从而避免显式 `JOIN`、提升查询性能。
+
+例如，需求「找出每一年销售额最高的商品类别」即可通过报告函数实现，而无需进行 `JOIN`：
 
 ```sql
-select year,category,total_sum from (
-select
-        year(d_date) as year,
-        i_category as category,
-        sum(ss_net_paid) as total_sum,
-        max(sum(ss_net_paid)) over (partition by year(d_date)) as max_sales
-from
+SELECT year, category, total_sum FROM (
+    SELECT
+        year(d_date) AS year,
+        i_category AS category,
+        sum(ss_net_paid) AS total_sum,
+        max(sum(ss_net_paid)) OVER (PARTITION BY year(d_date)) AS max_sales
+    FROM
         store_sales,
         date_dim d1,
         item
-where
+    WHERE
         d1.d_date_sk = ss_sold_date_sk
-        and i_item_sk = ss_item_sk
-        and year(d_date) in(1998, 1999)
-group by
-        year(d_date), i_category 
+        AND i_item_sk = ss_item_sk
+        AND year(d_date) IN (1998, 1999)
+    GROUP BY
+        year(d_date), i_category
 ) t
-where total_sum=max_sales;
+WHERE total_sum = max_sales;
 ```
 
-报告`MAX(SUM(ss_net_paid))`的内层查询结果如下：
+内层查询通过 `MAX(SUM(ss_net_paid))` 报告出每一年的最高品类销售额，结果如下：
 
-```sql
+```text
 +------+-------------+-------------+-------------+
 | year | category    | total_sum   | max_sales   |
 +------+-------------+-------------+-------------+
@@ -399,9 +467,9 @@ where total_sum=max_sales;
 4 rows in set (0.11 sec)
 ```
 
-完整的查询结果如下：
+外层过滤 `total_sum = max_sales` 后，得到每年销售额最高的品类：
 
-```sql
+```text
 +------+-------------+-------------+
 | year | category    | total_sum   |
 +------+-------------+-------------+
@@ -411,56 +479,66 @@ where total_sum=max_sales;
 2 rows in set (0.12 sec)
 ```
 
-你可以将报告聚合与嵌套查询结合使用，以解决一些复杂的问题，比如查找重要商品子类别中销量最好的产品。以“查找产品销售额占其产品类别总销售额 20% 以上的子类别，并从中选出其中销量最高的五种商品”为例，查询语句如下：
+报告聚合还可以与嵌套查询结合，解决更复杂的问题。例如「查找产品销售额占其产品类别总销售额 20% 以上的子类别，并从中选出销量最高的 5 种商品」：
 
 ```sql
-select i_category as categ, i_class as sub_categ, i_item_id 
-from
-    (
-    select 
-        i_item_id,i_class, i_category, sum(ss_net_paid) as sales,
-        sum(sum(ss_net_paid)) over(partition by i_category) as cat_sales,
-        sum(sum(ss_net_paid)) over(partition by i_class) as sub_cat_sales,
-        rank() over (partition by i_class order by sum(ss_net_paid) desc) rank_in_line
-    from 
+SELECT i_category AS categ, i_class AS sub_categ, i_item_id
+FROM (
+    SELECT
+        i_item_id, i_class, i_category,
+        sum(ss_net_paid) AS sales,
+        sum(sum(ss_net_paid)) OVER (PARTITION BY i_category) AS cat_sales,
+        sum(sum(ss_net_paid)) OVER (PARTITION BY i_class) AS sub_cat_sales,
+        rank() OVER (PARTITION BY i_class ORDER BY sum(ss_net_paid) DESC) AS rank_in_line
+    FROM
         store_sales,
         item
-    where
+    WHERE
         i_item_sk = ss_item_sk
-    group by i_class, i_category, i_item_id) t
-where sub_cat_sales>0.2*cat_sales and rank_in_line<=5;
+    GROUP BY i_class, i_category, i_item_id
+) t
+WHERE sub_cat_sales > 0.2 * cat_sales AND rank_in_line <= 5;
 ```
 
 ## LAG / LEAD 函数
 
-LAG 和 LEAD 函数适用于值之间的比较。两个函数无需进行自连接，均可以同时访问表中的多个行，从而可以提高查询处理的速度。具体来说，LAG 函数能够提供对当**前行之前**给定偏移处的行的访问，而 LEAD 函数则提供对当**前行之后**给定偏移处的行的访问。
+<!-- 适用场景: 同比环比 / 行间比较 / 时序差异分析 -->
 
-以下是一个使用 LAG 函数的 SQL 查询示例，该查询希望选取特定年份（1999, 2000, 2001, 2002）中，每个商品类别的总销售额、前一年的总销售额以及两者之间的差异：
+`LAG` 和 `LEAD` 函数适用于「行与行之间的比较」场景。两个函数无需自连接即可同时访问表中的多个行，从而显著提升查询效率：
+
+- `LAG`：访问当**前行之前**给定偏移处的行。
+- `LEAD`：访问当**前行之后**给定偏移处的行。
+
+### 示例 1：使用 LAG 计算同比销售差异
+
+下面的查询希望选取 1999、2000、2001、2002 年中，每个商品类别的总销售额、前一年的总销售额，以及两者之间的差异：
 
 ```sql
-select year, category, total_sales, before_year_sales, total_sales - before_year_sales from
-(
-select
-        sum(ss_net_paid) as total_sales,
-        year(d_date) year,
-        i_category category,
-        lag(sum(ss_net_paid), 1,0) over(PARTITION BY i_category ORDER BY YEAR(d_date)) AS before_year_sales
-from
+SELECT year, category, total_sales, before_year_sales, total_sales - before_year_sales FROM (
+    SELECT
+        sum(ss_net_paid) AS total_sales,
+        year(d_date) AS year,
+        i_category AS category,
+        lag(sum(ss_net_paid), 1, 0) OVER (
+            PARTITION BY i_category
+            ORDER BY YEAR(d_date)
+        ) AS before_year_sales
+    FROM
         store_sales,
         date_dim d1,
         item
-where
+    WHERE
         d1.d_date_sk = ss_sold_date_sk
-        and i_item_sk = ss_item_sk
-GROUP BY 
+        AND i_item_sk = ss_item_sk
+    GROUP BY
         YEAR(d_date), i_category
 ) t
-where year in (1999, 2000, 2001, 2002)
+WHERE year IN (1999, 2000, 2001, 2002);
 ```
 
-查询结果如下：
+查询结果：
 
-```sql
+```text
 +------+-------------+-------------+-------------------+-----------------------------------+
 | year | category    | total_sales | before_year_sales | (total_sales - before_year_sales) |
 +------+-------------+-------------+-------------------+-----------------------------------+
@@ -476,22 +554,27 @@ where year in (1999, 2000, 2001, 2002)
 8 rows in set (0.16 sec)
 ```
 
-1. 假设我们有如下的股票数据，股票代码是 JDR，closing price 是每天的收盘价。
+### 示例 2：使用窗口函数计算 3 天股价均价
+
+假设有如下股票数据，股票代码为 `JDR`，`closing_price` 是每天的收盘价：
 
 ```sql
-create table stock_ticker (stock_symbol string, closing_price decimal(8,2), closing_date datetime);    
+CREATE TABLE stock_ticker (
+    stock_symbol STRING,
+    closing_price DECIMAL(8, 2),
+    closing_date DATETIME
+);
 
-INSERT INTO stock_ticker VALUES 
-    ("JDR", 12.86, "2014-10-02 00:00:00"), 
-    ("JDR", 12.89, "2014-10-03 00:00:00"), 
-    ("JDR", 12.94, "2014-10-04 00:00:00"), 
-    ("JDR", 12.55, "2014-10-05 00:00:00"), 
-    ("JDR", 14.03, "2014-10-06 00:00:00"), 
-    ("JDR", 14.75, "2014-10-07 00:00:00"), 
-    ("JDR", 13.98, "2014-10-08 00:00:00")
-;
+INSERT INTO stock_ticker VALUES
+    ("JDR", 12.86, "2014-10-02 00:00:00"),
+    ("JDR", 12.89, "2014-10-03 00:00:00"),
+    ("JDR", 12.94, "2014-10-04 00:00:00"),
+    ("JDR", 12.55, "2014-10-05 00:00:00"),
+    ("JDR", 14.03, "2014-10-06 00:00:00"),
+    ("JDR", 14.75, "2014-10-07 00:00:00"),
+    ("JDR", 13.98, "2014-10-08 00:00:00");
 
-select * from stock_ticker order by stock_symbol, closing_date
+SELECT * FROM stock_ticker ORDER BY stock_symbol, closing_date;
 ```
 
 ```text
@@ -506,13 +589,19 @@ select * from stock_ticker order by stock_symbol, closing_date
 | JDR          | 13.98         | 2014-10-08 00:00:00 |
 ```
 
-2. 这个查询使用分析函数产生 moving_average 这一列，它的值是 3 天的股票均价，即前一天、当前以及后一天三天的均价。第一天没有前一天的值，最后一天没有后一天的值，所以这两行只计算了两天的均值。这里 Partition By 没有起到作用，因为所有的数据都是 JDR 的数据，但如果还有其他股票信息，Partition By 会保证分析函数值作用在本 Partition 之内。
+下面的查询使用窗口函数生成 `moving_average` 列，其值为「前一天、当前以及后一天」三天的股价均价。第一天没有前一天的值、最后一天没有后一天的值，因此这两行实际只参与两天的均值计算。这里 `PARTITION BY` 没有起到实际分组作用（因为所有数据都属于 `JDR`），但当存在多只股票时，`PARTITION BY` 可以保证窗口计算只在同一只股票内部进行：
 
 ```sql
-select stock_symbol, closing_date, closing_price,    
-avg(closing_price) over (partition by stock_symbol order by closing_date    
-rows between 1 preceding and 1 following) as moving_average    
-from stock_ticker;
+SELECT
+    stock_symbol,
+    closing_date,
+    closing_price,
+    avg(closing_price) OVER (
+        PARTITION BY stock_symbol
+        ORDER BY closing_date
+        ROWS BETWEEN 1 PRECEDING AND 1 FOLLOWING
+    ) AS moving_average
+FROM stock_ticker;
 ```
 
 ```text
@@ -527,9 +616,14 @@ from stock_ticker;
 | JDR          | 2014-10-08 00:00:00 | 13.98         | 14.36          |
 ```
 
-## 附录
+## 附录：示例数据准备
 
-示例中使用到的表的建表语句如下：
+<!-- 知识类型: 操作步骤 -->
+<!-- 适用场景: 复现文档中的 store_sales/item/date_dim 示例 -->
+
+本文中聚合函数、报告函数、LAG/LEAD 等示例都基于 TPC-DS 风格的表（`item`、`store_sales`、`date_dim`、`customer_address`）。如需复现，可按以下步骤准备数据。
+
+### 1. 创建示例表
 
 ```sql
 CREATE DATABASE IF NOT EXISTS doc_tpcds;
@@ -562,7 +656,7 @@ CREATE TABLE IF NOT EXISTS item (
 DUPLICATE KEY(i_item_sk)
 DISTRIBUTED BY HASH(i_item_sk) BUCKETS 12
 PROPERTIES (
-  "replication_num" = "1"
+    "replication_num" = "1"
 );
 
 CREATE TABLE IF NOT EXISTS store_sales (
@@ -593,7 +687,7 @@ CREATE TABLE IF NOT EXISTS store_sales (
 DUPLICATE KEY(ss_item_sk, ss_ticket_number)
 DISTRIBUTED BY HASH(ss_item_sk, ss_ticket_number) BUCKETS 32
 PROPERTIES (
-  "replication_num" = "1"
+    "replication_num" = "1"
 );
 
 CREATE TABLE IF NOT EXISTS date_dim (
@@ -629,7 +723,7 @@ CREATE TABLE IF NOT EXISTS date_dim (
 DUPLICATE KEY(d_date_sk)
 DISTRIBUTED BY HASH(d_date_sk) BUCKETS 12
 PROPERTIES (
-  "replication_num" = "1"
+    "replication_num" = "1"
 );
 
 CREATE TABLE IF NOT EXISTS customer_address (
@@ -650,9 +744,11 @@ CREATE TABLE IF NOT EXISTS customer_address (
 DUPLICATE KEY(ca_address_sk)
 DISTRIBUTED BY HASH(ca_address_sk) BUCKETS 12
 PROPERTIES (
-  "replication_num" = "1"
+    "replication_num" = "1"
 );
 ```
+
+### 2. 下载并通过 Stream Load 导入数据
 
 在终端执行如下命令，下载数据到本地，并使用 Stream Load 的方式加载数据：
 
@@ -660,32 +756,32 @@ PROPERTIES (
 curl -L https://cdn.selectdb.com/static/doc_ddl_dir_d27a752a7b.tar -o - | tar -Jxf -
 
 curl --location-trusted \
--u "root:" \
--H "column_separator:|" \
--H "columns: i_item_sk, i_item_id, i_rec_start_date, i_rec_end_date, i_item_desc, i_current_price, i_wholesale_cost, i_brand_id, i_brand, i_class_id, i_class, i_category_id, i_category, i_manufact_id, i_manufact, i_size, i_formulation, i_color, i_units, i_container, i_manager_id, i_product_name" \
--T "doc_ddl_dir/item_1_10.dat" \
-http://127.0.0.1:8030/api/doc_tpcds/item/_stream_load
+    -u "root:" \
+    -H "column_separator:|" \
+    -H "columns: i_item_sk, i_item_id, i_rec_start_date, i_rec_end_date, i_item_desc, i_current_price, i_wholesale_cost, i_brand_id, i_brand, i_class_id, i_class, i_category_id, i_category, i_manufact_id, i_manufact, i_size, i_formulation, i_color, i_units, i_container, i_manager_id, i_product_name" \
+    -T "doc_ddl_dir/item_1_10.dat" \
+    http://127.0.0.1:8030/api/doc_tpcds/item/_stream_load
 
 curl --location-trusted \
--u "root:" \
--H "column_separator:|" \
--H "columns: d_date_sk, d_date_id, d_date, d_month_seq, d_week_seq, d_quarter_seq, d_year, d_dow, d_moy, d_dom, d_qoy, d_fy_year, d_fy_quarter_seq, d_fy_week_seq, d_day_name, d_quarter_name, d_holiday, d_weekend, d_following_holiday, d_first_dom, d_last_dom, d_same_day_ly, d_same_day_lq, d_current_day, d_current_week, d_current_month, d_current_quarter, d_current_year" \
--T "doc_ddl_dir/date_dim_1_10.dat" \
-http://127.0.0.1:8030/api/doc_tpcds/date_dim/_stream_load
+    -u "root:" \
+    -H "column_separator:|" \
+    -H "columns: d_date_sk, d_date_id, d_date, d_month_seq, d_week_seq, d_quarter_seq, d_year, d_dow, d_moy, d_dom, d_qoy, d_fy_year, d_fy_quarter_seq, d_fy_week_seq, d_day_name, d_quarter_name, d_holiday, d_weekend, d_following_holiday, d_first_dom, d_last_dom, d_same_day_ly, d_same_day_lq, d_current_day, d_current_week, d_current_month, d_current_quarter, d_current_year" \
+    -T "doc_ddl_dir/date_dim_1_10.dat" \
+    http://127.0.0.1:8030/api/doc_tpcds/date_dim/_stream_load
 
 curl --location-trusted \
--u "root:" \
--H "column_separator:|" \
--H "columns: ss_sold_date_sk, ss_sold_time_sk, ss_item_sk, ss_customer_sk, ss_cdemo_sk, ss_hdemo_sk, ss_addr_sk, ss_store_sk, ss_promo_sk, ss_ticket_number, ss_quantity, ss_wholesale_cost, ss_list_price, ss_sales_price, ss_ext_discount_amt, ss_ext_sales_price, ss_ext_wholesale_cost, ss_ext_list_price, ss_ext_tax, ss_coupon_amt, ss_net_paid, ss_net_paid_inc_tax, ss_net_profit" \
--T "doc_ddl_dir/store_sales.csv" \
-http://127.0.0.1:8030/api/doc_tpcds/store_sales/_stream_load
+    -u "root:" \
+    -H "column_separator:|" \
+    -H "columns: ss_sold_date_sk, ss_sold_time_sk, ss_item_sk, ss_customer_sk, ss_cdemo_sk, ss_hdemo_sk, ss_addr_sk, ss_store_sk, ss_promo_sk, ss_ticket_number, ss_quantity, ss_wholesale_cost, ss_list_price, ss_sales_price, ss_ext_discount_amt, ss_ext_sales_price, ss_ext_wholesale_cost, ss_ext_list_price, ss_ext_tax, ss_coupon_amt, ss_net_paid, ss_net_paid_inc_tax, ss_net_profit" \
+    -T "doc_ddl_dir/store_sales.csv" \
+    http://127.0.0.1:8030/api/doc_tpcds/store_sales/_stream_load
 
 curl --location-trusted \
--u "root:" \
--H "column_separator:|" \
--H "ca_address_sk, ca_address_id, ca_street_number, ca_street_name, ca_street_type, ca_suite_number, ca_city, ca_county, ca_state, ca_zip, ca_country, ca_gmt_offset, ca_location_type" \
--T "doc_ddl_dir/customer_address_1_10.dat" \
-http://127.0.0.1:8030/api/doc_tpcds/customer_address/_stream_load
+    -u "root:" \
+    -H "column_separator:|" \
+    -H "ca_address_sk, ca_address_id, ca_street_number, ca_street_name, ca_street_type, ca_suite_number, ca_city, ca_county, ca_state, ca_zip, ca_country, ca_gmt_offset, ca_location_type" \
+    -T "doc_ddl_dir/customer_address_1_10.dat" \
+    http://127.0.0.1:8030/api/doc_tpcds/customer_address/_stream_load
 ```
 
-数据文件``item_1_10.dat``，``date_dim_1_10.dat``，``store_sales.csv``，``customer_address_1_10.dat``可以[点击链接](https://cdn.selectdb.com/static/doc_ddl_dir_d27a752a7b.tar)下载。
+数据文件 `item_1_10.dat`、`date_dim_1_10.dat`、`store_sales.csv`、`customer_address_1_10.dat` 也可以从 [此压缩包](https://cdn.selectdb.com/static/doc_ddl_dir_d27a752a7b.tar) 下载。

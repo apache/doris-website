@@ -2,48 +2,76 @@
 {
     "title": "Insert Into Values",
     "language": "en",
-    "description": "The INSERT INTO VALUES statement supports importing values from SQL into a Doris table. INSERT INTO VALUES is a synchronous import method,"
+    "description": "Use the INSERT INTO VALUES statement to atomically load SQL inline data into Doris tables in a synchronous manner, suitable for feature validation, demos, and small-batch data ingestion.",
+    "keywords": [
+        "INSERT INTO VALUES",
+        "Doris synchronous load",
+        "SQL write to Doris",
+        "atomic load",
+        "group commit",
+        "insert_max_filter_ratio",
+        "enable_insert_strict",
+        "insert_load_default_timeout_second"
+    ]
 }
 ---
 
-The INSERT INTO VALUES statement supports importing values from SQL into a Doris table. INSERT INTO VALUES is a synchronous import method, where the import result is returned after the import is executed. Whether the import is successful can be determined based on the returned result. INSERT INTO VALUES ensures the atomicity of the import task, meaning that either all the data is imported successfully or none of it is imported.
+<!-- Knowledge type: Procedure / Configuration parameters -->
+<!-- Applicable scenarios: Feature validation / Demo / Small-batch data ingestion -->
 
-## Applicable scenarios
+The INSERT INTO VALUES statement loads inline values from SQL into a Doris table. It is a **synchronous load method** that returns the load result directly after execution, so you can determine whether the load succeeded based on the response. This method guarantees the **atomicity** of the load task: either all data is loaded successfully, or none of it is.
 
-1. If a user wants to import only a few test data records to verify the functionality of the Doris system, the INSERT INTO VALUES syntax is applicable. It is similar to the MySQL syntax. However, it is not recommended to use INSERT INTO VALUES in a production environment.
-2. The performance of concurrent INSERT INTO VALUES jobs will be bottlenecked by commit stage. When loading large quantity of data, you can enable [group commit](../../../data-operate/import/group-commit-manual) to achieve high performance. 
+## Use Cases
 
-## Implementation
+INSERT INTO VALUES targets the following two scenarios:
 
-When using INSERT INTO VALUES, the import job needs to be initiated and submitted to the FE node using the MySQL protocol. The FE generates an execution plan, which includes query-related operators, with the last operator being the OlapTableSink. The OlapTableSink operator is responsible for writing the query result to the target table. The execution plan is then sent to the BE nodes for execution. Doris designates one BE node as the Coordinator, which receives and distributes the data to other BE nodes.
+| Scenario | Description |
+| --- | --- |
+| Feature validation / Demo | Load a small amount of mock data to validate Doris features. The syntax is consistent with MySQL. |
+| Small-batch data ingestion | Use it in scenarios with low concurrency and small data volume. |
 
-## Get started
+:::tip Performance tip
+The performance of concurrent INSERT INTO VALUES is limited by the bottleneck of the commit phase. When the data volume is large, enable [Group Commit](../load-best-practices/group-commit-manual.md) to achieve higher throughput.
+:::
 
-An INSERT INTO VALUES job is submitted and transmitted using the MySQL protocol. The following example demonstrates submitting an import job using INSERT INTO VALUES through the MySQL command-line interface.
+## How It Works
 
-### Preparation
+INSERT INTO VALUES sends jobs to the FE node for execution through the MySQL protocol. The overall flow is as follows:
 
-INSERT INTO VALUES requires INSERT permissions on the target table. You can grant permissions to user accounts using the GRANT command.
+1. The client submits the INSERT INTO VALUES statement to the FE through the MySQL protocol.
+2. The FE generates an execution plan: the front part contains query-related operators, and the last operator is `OlapTableSink`, which writes the query result into the target table.
+3. The FE dispatches the execution plan to BE nodes for execution and selects one BE as the **Coordinator** node.
+4. The Coordinator node receives the data and distributes it to other BE nodes to complete the write.
 
-### Create an INSERT INTO VALUES job
+## Quick Start
 
-**INSERT INTO VALUES**
+INSERT INTO VALUES is submitted and transmitted through the MySQL protocol. The example below uses the MySQL command line to demonstrate the full submission flow. For detailed syntax, see [INSERT INTO](../../../sql-manual/sql-statements/data-modification/DML/INSERT).
 
-1. Create a source table
+### Prerequisites
 
-```SQL
+Executing INSERT INTO VALUES requires the **INSERT privilege** on the target table. If the current user does not have this privilege, use the [GRANT](../../../sql-manual/sql-statements/account-management/GRANT-TO) command to grant it.
+
+### Create a Load Job
+
+#### Step 1: Create the target table
+
+```sql
 CREATE TABLE testdb.test_table(
-    user_id            BIGINT       NOT NULL COMMENT "User ID",
-    name               VARCHAR(20)           COMMENT "User name",
-    age                INT                   COMMENT "User age"
+    user_id            BIGINT       NOT NULL COMMENT "user id",
+    name               VARCHAR(20)           COMMENT "name",
+    age                INT                   COMMENT "age"
 )
 DUPLICATE KEY(user_id)
 DISTRIBUTED BY HASH(user_id) BUCKETS 10;
 ```
 
-2. Import data into the source table using `INSERT INTO VALUES` (not recommended for production environments).
+#### Step 2: Run INSERT INTO VALUES to write data
 
-```SQL
+:::caution Not recommended for production
+INSERT INTO VALUES is generally only used for demos or testing, and is not recommended for data ingestion in production environments.
+:::
+
+```sql
 INSERT INTO testdb.test_table (user_id, name, age)
 VALUES (1, "Emily", 25),
        (2, "Benjamin", 35),
@@ -52,16 +80,16 @@ VALUES (1, "Emily", 25),
        (5, "Ava", 17);
 ```
 
-INSERT INTO VALUES is a synchronous import method, where the import result is directly returned to the user.
+As a synchronous load method, the result is returned directly to the client:
 
 ```JSON
 Query OK, 5 rows affected (0.308 sec)
 {'label':'label_26eebc33411f441c_b2b286730d495e2c', 'status':'VISIBLE', 'txnId':'61071'}
 ```
 
-3. View imported data.
+#### Step 3: Verify the loaded data
 
-```SQL
+```sql
 MySQL> SELECT COUNT(*) FROM testdb.test_table;
 +----------+
 | count(*) |
@@ -71,11 +99,11 @@ MySQL> SELECT COUNT(*) FROM testdb.test_table;
 1 row in set (0.179 sec)
 ```
 
-### View INSERT INTO VALUES jobs
+### View the Load Job
 
-You can use the `SHOW LOAD` command to view the completed INSERT INTO VALUES tasks.
+Use the `SHOW LOAD` command to view completed INSERT INTO VALUES jobs:
 
-```SQL
+```sql
 mysql> SHOW LOAD FROM testdb\G
 *************************** 1. row ***************************
          JobId: 77172
@@ -100,51 +128,57 @@ LoadFinishTime: 2024-11-20 16:44:08
 1 row in set (0.00 sec)
 ```
 
-### Cancel INSERT INTO VALUES jobs
+### Cancel the Load Job
 
-You can cancel the currently executing INSERT INTO VALUES job via Ctrl-C.
+In the MySQL client, use `Ctrl-C` to cancel a currently running INSERT INTO VALUES job.
 
-## Manual
+## Reference
 
-### Syntax
+### Load Command Syntax
 
-INSERT INTO VALUES is typically used for testing purposes. It is not recommended for production environments.
-
-```SQL
+```sql
 INSERT INTO target_table (col1, col2, ...)
 VALUES (val1, val2, ...), (val3, val4, ...), ...;
 ```
 
-### Parameter configuration
+:::note
+INSERT INTO VALUES is generally only used for demos and is not recommended for production environments.
+:::
 
-**FE Config**
+### Load Configuration Parameters
 
-| Name | Default Value | Description |
+#### FE Configuration
+
+| Parameter | Default value | Description |
 | --- | --- | --- |
-| insert_load_default_timeout_second | 14400s (4 hours) | Timeout for import tasks, in seconds. If the import task does not complete within this timeout period, it will be canceled by the system and marked as `CANCELLED`. |
+| `insert_load_default_timeout_second` | 14400 (4 hours) | Timeout of the load task, in seconds. If the load task does not complete within this timeout, the system cancels it and the status changes to `CANCELLED`. |
 
-**Session Variable**
+#### Session Variables
 
-| Name | Default Value | Description |
+| Parameter | Default value | Description |
 | --- | --- | --- |
-| insert_timeout | 14400s (4 hours) | Timeout for INSERT INTO as an SQL statement, in seconds. |
-| enable_insert_strict | true | If this is set to true, INSERT INTO will fail when the task involves invalid data. If set to false, INSERT INTO will ignore invalid rows, and the import will be considered successful as long as at least one row is imported successfully. Until version 2.1.4. INSERT INTO cannot control the error rate, so this parameter is used to either strictly check data quality or completely ignore invalid data. Common reasons for data invalidity include: source data column length exceeding destination column length, column type mismatch, partition mismatch, and column order mismatch. |
-| insert_max_filter_ratio | 1.0 | Since version 2.1.5. Only effective when `enable_insert_strict` is false. Used to control the error tolerance when using `INSERT INTO FROM S3/HDFS/LOCAL()`. The default value is 1.0, which means all errors are tolerated. It can be a decimal between 0 and 1. It means that when the number of error rows exceeds this ratio, the INSERT task will fail. |
+| `insert_timeout` | 14400 (4 hours) | Timeout when INSERT INTO is executed as a SQL statement, in seconds. |
+| `enable_insert_strict` | true | When set to `true`, the load fails if any unqualified data is encountered. When set to `false`, unqualified rows are ignored, and the load is considered successful as long as at least one row is loaded correctly. In versions 2.1.4 and earlier, INSERT INTO cannot control the error rate; this parameter only allows strict data quality checking or completely ignoring erroneous data. |
+| `insert_max_filter_ratio` | 1.0 | Supported since version 2.1.5. **Takes effect only when `enable_insert_strict=false`.** Used to control the error tolerance ratio for `INSERT INTO FROM S3/HDFS/LOCAL()`. The value range is 0 to 1. The default 1.0 means tolerating all errors. When the proportion of error rows exceeds this value, the INSERT task fails. |
 
-### Return values
+:::info Common causes of unqualified data
+The source column length exceeds the target column length, column types do not match, partitions do not match, column order does not match, and so on.
+:::
 
-INSERT INTO VALUES is a SQL statement, and it returns a JSON string in its results.
+### Load Return Values
 
-Parameters in the JSON string:
+INSERT INTO VALUES is a SQL statement. The return result contains a JSON string with the following fields:
 
-| Parameter | Description                                                  |
-| --------- | ------------------------------------------------------------ |
-| Label     | Label of the import job: can be specified using "INSERT INTO tbl WITH LABEL label..." |
-| Status    | Visibility of the imported data: If it is visible, it will be displayed as "visible." If not, it will be displayed as "committed." In the "committed" state, the import is completed, but the data may be delayed in becoming visible. There is no need to retry in this case.`visible`: The import is successful and the data is visible.`committed`: The import is completed, but the data may be delayed in becoming visible. There is no need to retry in this case.Label Already Exists: The specified label already exists and needs to be changed to a different one.Fail: The import fails. |
-| Err       | Error message                                                |
-| TxnId     | ID of the import transaction                                 |
+| Parameter | Description |
+| -------- | ------------------------------------------------------------ |
+| `Label`  | The label of the load job. It can be specified with `INSERT INTO tbl WITH LABEL label ...`. |
+| `Status` | The visibility status of the loaded data:<br />- `visible`: the load succeeded and the data is visible.<br />- `committed`: the load is complete; the data may be visible after a delay, and no retry is needed.<br />- `Label Already Exists`: the label is duplicated and needs to be replaced.<br />- `Fail`: the load failed. |
+| `Err`    | Error message of the load. |
+| `TxnId`  | The ID of the load transaction. |
 
-**Successful INSERT**
+The four typical return scenarios are illustrated below.
+
+#### Scenario 1: INSERT executed successfully
 
 ```sql
 mysql> INSERT INTO test_table (user_id, name, age) VALUES (1, "Emily", 25), (2, "Benjamin", 35), (3, "Olivia", 28), (NULL, "Alexander", 60), (5, "Ava", 17);
@@ -152,9 +186,10 @@ Query OK, 5 rows affected (0.05 sec)
 {'label':'label_26eebc33411f441c_b2b286730d495e2c', 'status':'VISIBLE', 'txnId':'61071'}
 ```
 
-`Query OK` indicates successful execution. `5 rows affected` indicates that a total of 5 rows of data have been imported. 
+- `Query OK`: indicates the statement was executed successfully.
+- `5 rows affected`: indicates a total of 5 rows were loaded.
 
-**Successful INSERT with warnings**
+#### Scenario 2: INSERT executed successfully with warnings
 
 ```sql
 mysql> INSERT INTO test_table (user_id, name, age) VALUES (1, "Emily", 25), (2, "Benjamin", 35), (3, "Olivia", 28), (NULL, "Alexander", 60), (5, "Ava", 17);
@@ -162,11 +197,11 @@ Query OK, 4 rows affected, 1 warning (0.04 sec)
 {'label':'label_a8d99ae931194d2b_93357aac59981a18', 'status':'VISIBLE', 'txnId':'61068'}
 ```
 
-`Query OK` indicates successful execution. `4 rows affected` indicates that a total of 4 rows of data have been imported. `1 warnings` indicates the number of rows that were filtered out. 
+- `Query OK`: indicates the statement was executed successfully.
+- `4 rows affected`: indicates a total of 4 rows were loaded.
+- `1 warnings`: indicates 1 row was filtered out.
 
-You can use the [SHOW LOAD](../../../sql-manual/sql-statements/data-modification/load-and-export/SHOW-LOAD) statement to view the filtered rows.
-
-The result of this statement will include a URL that can be used to query the error data. For more details, refer to the "View error rows" section below.
+Use the [SHOW LOAD](../../../sql-manual/sql-statements/data-modification/load-and-export/SHOW-LOAD.md) statement to view the filtered rows. The `URL` in the result can be used to query the error data. See [View Error Rows](#view-error-rows) below.
 
 ```sql
 mysql> SHOW LOAD WHERE label="label_a8d99ae931194d2b_93357aac59981a18"\G
@@ -193,7 +228,7 @@ LoadFinishTime: 2024-11-20 16:35:40
 1 row in set (0.00 sec)
 ```
 
-**Successful INSERT with committed status**
+#### Scenario 3: INSERT executed successfully but status is committed
 
 ```sql
 mysql> INSERT INTO test_table (user_id, name, age) VALUES (1, "Emily", 25), (2, "Benjamin", 35), (3, "Olivia", 28), (4, "Alexander", 60), (5, "Ava", 17);
@@ -201,11 +236,7 @@ Query OK, 5 rows affected (0.04 sec)
 {'label':'label_78bf5396d9594d4d_a8d9a914af40f73d', 'status':'COMMITTED', 'txnId':'61074'}
 ```
 
-The invisible state of data is temporary, and the data will eventually become visible. 
-
-You can check the visibility status of a batch of data using the [SHOW TRANSACTION](../../../sql-manual/sql-statements/transaction/SHOW-TRANSACTION.md) statement.
-
-If the `TransactionStatus` column in the result is `visible`, it indicates that the data is visible.
+The data being invisible is a temporary state; this batch of data will eventually become visible. Use the [SHOW TRANSACTION](../../../sql-manual/sql-statements/transaction/SHOW-TRANSACTION.md) statement to check the visibility status. When the `TransactionStatus` column becomes `VISIBLE`, the data is visible.
 
 ```sql
 mysql> SHOW TRANSACTION WHERE id=61074\G
@@ -228,28 +259,29 @@ ErrorReplicasCount: 0
 1 row in set (0.00 sec)
 ```
 
-**Non-empty result set but failed INSERT**
+#### Scenario 4: INSERT execution failed
 
-Failed execution means that no data was successfully imported. An error message will be returned:
+A failed execution means no data was loaded successfully:
 
 ```sql
 mysql> INSERT INTO test_table (user_id, name, age) VALUES (1, "Emily", 25), (2, "Benjamin", 35), (3, "Olivia", 28), (NULL, "Alexander", 60), (5, "Ava", 17);
 ERROR 1105 (HY000): errCode = 2, detailMessage = Insert has too many filtered data 1/5 insert_max_filter_ratio is 0.100000. url: http://10.16.10.7:8747/api/_load_error_log?file=__shard_22/error_log_insert_stmt_5fafe6663e1a45e0-a666c1722ffc8c55_5fafe6663e1a45e0_a666c1722ffc8c55
 ```
 
-`ERROR 1105 (HY000): errCode = 2, detailMessage = Insert has too many filtered data 1/5 insert_max_filter_ratio is 0.100000.` indicates the root cause for the failure. The URL provided in the error message can be used to locate the error data. For more details, refer to the "View error rows" section below.
+- `ERROR 1105 (HY000): errCode = 2, detailMessage = Insert has too many filtered data 1/5 insert_max_filter_ratio is 0.100000.` shows the failure reason.
+- The url at the end can be used to query the error data. See [View Error Rows](#view-error-rows) below.
 
-## Best practice
+## Best Practices
 
-### Data size
+### Data Volume
 
-INSERT INTO VALUES is usually used for test and demo, it is not recommended to load large quantity data with INSERT INTO VALUES.
+INSERT INTO VALUES is typically used for testing and demos. It is **not recommended** for loading large amounts of data. For large-batch write requirements, use [Group Commit](../load-best-practices/group-commit-manual.md) or other batch load methods.
 
-### View error rows
+### View Error Rows
 
-When the INSERT INTO result includes a URL field, you can use the following command to view the error rows:
+When the INSERT INTO return result provides a `url` field, use the following command to view the error rows:
 
-```SQL
+```sql
 SHOW LOAD WARNINGS ON "url";
 ```
 
@@ -264,10 +296,51 @@ ErrorMsgDetail: Reason: column_name[user_id], null value for not null column, ty
 1 row in set (0.00 sec)
 ```
 
-Common reasons for errors include: source data column length exceeding destination column length, column type mismatch, partition mismatch, and column order mismatch.
+Common causes of errors include:
 
-You can control whether INSERT INTO ignores error rows by configuring the environment variable `enable_insert_strict`.
+- The source column length exceeds the target column length.
+- Column types do not match.
+- Partitions do not match.
+- Column order does not match.
 
-## More help
+Use the session variable `enable_insert_strict` to control whether INSERT INTO ignores error rows.
 
-For more detailed syntax on INSERT INTO, refer to the [INSERT INTO](../../../sql-manual/sql-statements/data-modification/DML/INSERT) command manual. You can also type `HELP INSERT` at the MySQL client command line for further information.
+## FAQ
+
+<!-- Knowledge type: FAQ -->
+
+**Q1: Is INSERT INTO VALUES synchronous or asynchronous?**
+
+A: Synchronous. The load result is returned directly after the statement is executed, with no additional polling required.
+
+**Q2: Does INSERT INTO VALUES guarantee atomicity?**
+
+A: Yes. All data in a single INSERT INTO VALUES is either fully loaded successfully or fully fails; partial writes do not occur.
+
+**Q3: Does a returned status of `COMMITTED` mean the load failed?**
+
+A: No. `COMMITTED` indicates that the load is complete and the data will become visible shortly, with no retry required. Use `SHOW TRANSACTION` to check `TransactionStatus` until it becomes `VISIBLE`.
+
+**Q4: Why does the load report `Insert has too many filtered data`?**
+
+A: When `enable_insert_strict=false`, the proportion of filtered data exceeded the threshold set by `insert_max_filter_ratio`. Either relax `insert_max_filter_ratio`, or check whether the source data conforms to the table schema (column types, NULL allowance, and so on).
+
+**Q5: What method should be used for large-batch loading?**
+
+A: INSERT INTO VALUES is limited by the commit bottleneck under high concurrency or large data volumes. Enable [Group Commit](../load-best-practices/group-commit-manual.md), or choose dedicated load methods such as Stream Load or Broker Load.
+
+## Troubleshooting
+
+<!-- Knowledge type: Troubleshooting -->
+
+| Symptom | Possible cause | Solution |
+| --- | --- | --- |
+| Error `null value for not null column` | A NULL value was inserted into a NOT NULL column. | Fix the source data, or change the target column to allow NULL. |
+| Error `Insert has too many filtered data` | The proportion of filtered rows exceeds `insert_max_filter_ratio`. | Increase the `insert_max_filter_ratio` threshold, or fix the source data. |
+| Error `Label Already Exists` | The specified label is already in use. | Use a different label, or do not specify a label and let the system generate one automatically. |
+| The task is canceled after running for a long time without completing. | Exceeds `insert_load_default_timeout_second` or `insert_timeout`. | Increase the corresponding timeout parameters, or split the load into multiple batches. |
+| Throughput is low under high concurrency. | Limited by the bottleneck of the commit phase. | Enable [Group Commit](../load-best-practices/group-commit-manual.md). |
+
+## More Help
+
+For more detailed syntax of INSERT INTO, see the [INSERT INTO](../../../sql-manual/sql-statements/data-modification/DML/INSERT.md) command manual. You can also enter `HELP INSERT` in the MySQL client command line for more help.

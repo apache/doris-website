@@ -1,48 +1,67 @@
 ---
 {
-    "title": "Kafka",
+    "title": "Importing Data from Kafka",
     "language": "en",
-    "description": "Doris provides the following methods to load data from Kafka:"
+    "description": "Describes how to import data from Kafka into Apache Doris, covering selection, configuration, and examples for Routine Load and Doris Kafka Connector.",
+    "keywords": [
+        "Kafka import",
+        "Routine Load",
+        "Doris Kafka Connector",
+        "Kafka Connect",
+        "Debezium",
+        "Avro",
+        "Protobuf",
+        "CDC sync"
+    ]
 }
 ---
 
-Doris provides the following methods to load data from Kafka:
+<!-- Knowledge type: Operational steps / Architecture selection decision -->
+<!-- Applicable scenarios: Real-time data ingestion / Importing Kafka data into Doris -->
 
-- **Using Routine Load to consume Kafka data**
+Apache Doris supports consuming data from Kafka in real time, which is commonly used for real-time data ingestion scenarios such as logs, orders, IoT events, and CDC sync. This document describes selection recommendations, usage limitations, and complete operational examples for the two mainstream approaches.
 
-Doris continuously consumes data from Kafka Topics through Routine Load. After submitting a Routine Load job, Doris generates load tasks in real-time to consume messages from the specified Topic in the Kafka cluster. Routine Load supports CSV and JSON formats, with Exactly-Once semantics, ensuring that data is neither lost nor duplicated. For more documentation, please refer to [Routine Load](../import-way/routine-load-manual.md).
+## Approach Selection
 
-- **Doris Kafka Connector to consume Kafka data**
+Doris provides the following two ways to import data from Kafka:
 
-The Doris Kafka Connector is a tool for loading Kafka data streams into the Doris database. Users can easily load various serialization formats (such as JSON, Avro, Protobuf) through the Kafka Connect plugin, and it supports parsing data formats from the Debezium component. For more documentation, please refer to [Doris Kafka Connector](../../../ecosystem/doris-kafka-connector.md).
+| Approach | Applicable Scenario | Supported Formats | Features |
+| --- | --- | --- | --- |
+| [Routine Load](../import-way/routine-load-manual.md) | Most common scenarios, with no need to introduce external components | CSV, JSON | Continuously consumes a Kafka Topic, generates import tasks in real time, provides exactly-once semantics, and ensures no data loss or duplication |
+| [Doris Kafka Connector](../../../connection-integration/data-integration/doris-kafka-connector.md) | Importing data in serialization formats such as Avro or Protobuf, or consuming upstream database CDC data collected by Debezium | JSON, Avro, Protobuf, Debezium | Built on the Kafka Connect plugin mechanism, with horizontal scalability and fault tolerance |
 
-In most cases, you can directly choose Routine Load for loading data without the need to integrate external components to consume Kafka data. When you need to load data in Avro or Protobuf formats, or data collected from upstream databases via Debezium, you can use the Doris Kafka Connector.
+Selection recommendations:
 
-## Using Routine Load to consume Kafka data
+- By default, prefer **Routine Load**, where Doris consumes Kafka directly. This is the simplest deployment.
+- When you need to consume formats such as **Avro / Protobuf**, or integrate with Kafka Connect ecosystem components such as **Debezium**, choose the **Doris Kafka Connector**.
 
-### Usage Restrictions
+## Approach 1: Use Routine Load to Consume Kafka Data
 
-1. Supported message formats are CSV and JSON. Each CSV message is one line, and the line does not contain a newline character at the end;
-2. By default, it supports Kafka version 0.10.0.0 and above. If you need to use older versions (such as 0.9.0, 0.8.2, 0.8.1, 0.8.0), you need to modify the BE configuration to set `kafka_broker_version_fallback` to a compatible older version, or set `property.broker.version.fallback` when creating the Routine Load. Using older versions may result in some new features being unavailable, such as setting Kafka partition offsets based on time.
+Routine Load submits a long-running job in Doris that continuously consumes messages from a specified Kafka Topic and writes them into a Doris table in real time.
 
-### Operation Example
+### Usage Limitations
 
-In Doris, create a persistent Routine Load load task through the CREATE ROUTINE LOAD command, which can be divided into single-table load and multi-table load. For detailed syntax, please refer to [CREATE ROUTINE LOAD](../../../sql-manual/sql-statements/data-modification/load-and-export/CREATE-ROUTINE-LOAD).
+1. Only **CSV** and **JSON** message formats are supported. For CSV, each message is one row and the row does not include a trailing newline.
+2. **Kafka 0.10.0.0 and above** is supported by default. To use older versions (such as 0.9.0, 0.8.2, 0.8.1, 0.8.0), you need to modify the BE configuration `kafka_broker_version_fallback` to a compatible older version, or set `property.broker.version.fallback` when creating the Routine Load. Using older versions may make some new features unavailable, for example setting Kafka partition offsets by time.
 
-#### Single Table Load
+### Operational Example
 
-**Step 1: Prepare Data**
+Use the `CREATE ROUTINE LOAD` command to create a long-running Routine Load import task. There are two scenarios: single-table import and multi-table import. For detailed syntax, refer to [CREATE ROUTINE LOAD](../../../sql-manual/sql-statements/data-modification/load-and-export/CREATE-ROUTINE-LOAD).
 
-In Kafka, sample data is as follows:
+#### Scenario 1: Single-Table Import
+
+Import data from one Kafka Topic into one table in Doris.
+
+**Step 1: Prepare Kafka data**
+
+Sample data in Kafka is as follows:
 
 ```SQL
 kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic test-routine-load-csv --from-beginning
 1,Emily,25
 ```
 
-**Step 2: Create Table in Database**
-
-Create the table to be loaded in Doris, with the following syntax:
+**Step 2: Create the target table in Doris**
 
 ```SQL
 CREATE TABLE testdb.test_routineload_tbl(
@@ -54,9 +73,9 @@ DUPLICATE KEY(user_id)
 DISTRIBUTED BY HASH(user_id) BUCKETS 10;
 ```
 
-**Step 3: Create Routine Load job to load data into a single table**
+**Step 3: Create the Routine Load job**
 
-In Doris, use the CREATE ROUTINE LOAD command to create the load job:
+Use the `CREATE ROUTINE LOAD` command to create the import job:
 
 ```SQL
 CREATE ROUTINE LOAD testdb.example_routine_load_csv ON test_routineload_tbl
@@ -69,7 +88,7 @@ FROM KAFKA(
 );
 ```
 
-**Step 4: Check Loaded Data**
+**Step 4: Check the import result**
 
 ```SQL
 select * from test_routineload_tbl;
@@ -80,13 +99,19 @@ select * from test_routineload_tbl;
 +-----------+----------------+------+
 ```
 
-#### Multi-Table Load
+#### Scenario 2: Multi-Table Import
 
-In scenarios where multiple tables need to be loaded simultaneously, the data in Kafka must include table name information, formatted as: `table_name|data`. For example, when loading CSV data, the format should be: `table_name|val1,val2,val3`. Please note that the table name must exactly match the table name in Doris; otherwise, the loading will fail, and the column_mapping configuration introduced later is not supported.
+Use this scenario when you need to import data from the same Kafka Topic into multiple Doris tables at once.
 
-**Step 1: Prepare Data**
+Requirements and limitations:
 
-In Kafka, sample data is as follows:
+- The data in Kafka must include the table name, in the format `table_name|data`. For example, the CSV format is `table_name|val1,val2,val3`.
+- **The table name must exactly match the table name in Doris**, otherwise the import will fail.
+- Multi-table import **does not support** the `column_mapping` configuration described later.
+
+**Step 1: Prepare Kafka data**
+
+Sample data in Kafka is as follows (the prefix is the target table name):
 
 ```SQL
 kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic test-multi-table-load --from-beginning
@@ -94,17 +119,15 @@ test_multi_table_load1|1,Emily,25
 test_multi_table_load2|2,Benjamin,35
 ```
 
-**Step 2: Create Tables in Database**
-
-Create the tables to be loaded in Doris, with the following syntax:
+**Step 2: Create the target tables in Doris**
 
 Table 1:
 
 ```SQL
 CREATE TABLE test_multi_table_load1(
-    user_id            BIGINT       NOT NULL COMMENT "User ID",
-    name               VARCHAR(20)           COMMENT "User Name",
-    age                INT                   COMMENT "User Age"
+    user_id            BIGINT       NOT NULL COMMENT "user id",
+    name               VARCHAR(20)           COMMENT "user name",
+    age                INT                   COMMENT "user age"
 )
 DUPLICATE KEY(user_id)
 DISTRIBUTED BY HASH(user_id) BUCKETS 10;
@@ -114,17 +137,15 @@ Table 2:
 
 ```SQL
 CREATE TABLE test_multi_table_load2(
-    user_id            BIGINT       NOT NULL COMMENT "User ID",
-    name               VARCHAR(20)           COMMENT "User Name",
-    age                INT                   COMMENT "User Age"
+    user_id            BIGINT       NOT NULL COMMENT "user id",
+    name               VARCHAR(20)           COMMENT "user name",
+    age                INT                   COMMENT "user age"
 )
 DUPLICATE KEY(user_id)
 DISTRIBUTED BY HASH(user_id) BUCKETS 10;
 ```
 
-**Step 3: Create Routine Load job to load data into multiple tables**
-
-In Doris, use the CREATE ROUTINE LOAD command to create the load job:
+**Step 3: Create the multi-table Routine Load job**
 
 ```SQL
 CREATE ROUTINE LOAD example_multi_table_load
@@ -136,17 +157,17 @@ FROM KAFKA(
 );
 ```
 
-**Step 4: Check Loaded Data**
+**Step 4: Check the import result**
 
 ```SQL
-select * from test_multi_table_load1;
+mysql> select * from test_multi_table_load1;
 +------+----------------+------+
 | id   | name           | age  |
 +------+----------------+------+
 |  1   | Emily          | 25   |
 +------+----------------+------+
 
-select * from test_multi_table_load2;
+mysql> select * from test_multi_table_load2;
 +------+----------------+------+
 | id   | name           | age  |
 +------+----------------+------+
@@ -154,45 +175,48 @@ select * from test_multi_table_load2;
 +------+----------------+------+
 ```
 
-#### **Configure Security Authentication**
+### Configuring Security Authentication
 
-For methods of configuring Kafka with authentication, please refer to [Kafka Security Authentication](../import-way/routine-load-manual.md#kafka-security-authentication).
+If the Kafka cluster has SSL, SASL, or other security authentication enabled, refer to [Kafka Security Authentication](../import-way/routine-load-manual.md#kafka-安全认证) to configure the corresponding authentication parameters.
 
-## Using Doris Kafka Connector to consume Kafka data
+## Approach 2: Use Doris Kafka Connector to Consume Kafka Data
 
-The Doris Kafka Connector is a tool for loading Kafka data streams into the Doris database. Users can easily load various serialization formats (such as JSON, Avro, Protobuf) through the Kafka Connect plugin, and it supports parsing data formats from the Debezium component.
+Doris Kafka Connector is a tool built on the Kafka Connect framework that writes Kafka data streams into Doris. Through its plugin mechanism, it can easily import data in multiple serialization formats (such as JSON, Avro, and Protobuf), and supports parsing CDC data collected by Debezium.
 
-### Start in Distributed Mode
+### Starting in Distributed Mode
 
-[Distributed](https://docs.confluent.io/platform/current/connect/index.html#distributed-workers) mode provides scalability and automatic fault tolerance for Kafka Connect. In this mode, multiple worker processes can be started using the same `group.id`, which will coordinate the execution of connectors and tasks across all available worker processes.
+[Distributed](https://docs.confluent.io/platform/current/connect/index.html#distributed-workers) mode provides scalability and automatic fault tolerance for Kafka Connect. In this mode, you can start multiple worker processes with the same `group.id`, and they coordinate scheduling of connectors and tasks.
 
-1. Create a plugins directory under `$KAFKA_HOME` and place the downloaded doris-kafka-connector jar package inside.
-2. Configure `config/connect-distributed.properties`:
+**Step 1: Place the plugin JAR**
+
+Create a `plugins` directory under `$KAFKA_HOME` and put the downloaded `doris-kafka-connector` JAR into it.
+
+**Step 2: Configure `config/connect-distributed.properties`**
 
 ```Bash
-# Modify kafka server address
+# Modify the broker address
 bootstrap.servers=127.0.0.1:9092
 
-# Modify group.id, which needs to be consistent across the same cluster
+# Modify the group.id; it must be the same within the same cluster
 group.id=connect-cluster
 
-# Modify to the created plugins directory
-# Note: Please fill in the direct path of Kafka here. For example: plugin.path=/opt/kafka/plugins
+# Change to the plugins directory you created
+# Note: enter the direct path under Kafka here. For example: plugin.path=/opt/kafka/plugins
 plugin.path=$KAFKA_HOME/plugins
 
-# It is recommended to increase Kafka's max.poll.interval.ms time to over 30 minutes, default is 5 minutes
-# To avoid Stream Load data load consumption timeout, causing the consumer to be kicked out of the consumption group
+# It is recommended to increase Kafka's max.poll.interval.ms to more than 30 minutes (default is 5 minutes)
+# This avoids consumers being kicked out of the consumer group due to Stream Load import timeouts
 max.poll.interval.ms=1800000
 consumer.max.poll.interval.ms=1800000
 ```
 
-3. Start:
+**Step 3: Start Kafka Connect**
 
 ```Bash
 $KAFKA_HOME/bin/connect-distributed.sh -daemon $KAFKA_HOME/config/connect-distributed.properties
 ```
 
-4. Consume Kafka data:
+**Step 4: Submit the import task (consume Kafka data)**
 
 ```Bash
 curl -i http://127.0.0.1:8083/connectors -H "Content-Type: application/json" -X POST -d '{
@@ -216,28 +240,25 @@ curl -i http://127.0.0.1:8083/connectors -H "Content-Type: application/json" -X 
 }'
 ```
 
-**Operate Kafka Connect**
+**Common Kafka Connect operations commands**
 
-```Bash
-# View connector status
-curl -i http://127.0.0.1:8083/connectors/test-doris-sink-cluster/status -X GET
-# Delete current connector
-curl -i http://127.0.0.1:8083/connectors/test-doris-sink-cluster -X DELETE
-# Pause current connector
-curl -i http://127.0.0.1:8083/connectors/test-doris-sink-cluster/pause -X PUT
-# Resume current connector
-curl -i http://127.0.0.1:8083/connectors/test-doris-sink-cluster/resume -X PUT
-# Restart tasks within the connector
-curl -i http://127.0.0.1:8083/connectors/test-doris-sink-cluster/tasks/0/restart -X POST
-```
+| Operation | Command |
+| --- | --- |
+| Check connector status | `curl -i http://127.0.0.1:8083/connectors/test-doris-sink-cluster/status -X GET` |
+| Delete the current connector | `curl -i http://127.0.0.1:8083/connectors/test-doris-sink-cluster -X DELETE` |
+| Pause the current connector | `curl -i http://127.0.0.1:8083/connectors/test-doris-sink-cluster/pause -X PUT` |
+| Restart the current connector | `curl -i http://127.0.0.1:8083/connectors/test-doris-sink-cluster/resume -X PUT` |
+| Restart a task within the connector | `curl -i http://127.0.0.1:8083/connectors/test-doris-sink-cluster/tasks/0/restart -X POST` |
 
-For an introduction to Distributed mode, please refer to [Distributed Workers](https://docs.confluent.io/platform/current/connect/index.html#distributed-workers).
+For more information about Distributed mode, refer to [Distributed Workers](https://docs.confluent.io/platform/current/connect/index.html#distributed-workers).
 
-### Load Ordinary Data
+### Consuming Plain JSON Data
 
-1. Load sample data:
+Use this for the scenario where Kafka stores plain JSON messages.
 
-In Kafka, sample data is as follows:
+**Step 1: Prepare Kafka data**
+
+Sample data in Kafka is as follows:
 
 ```Bash
 kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic test-data-topic --from-beginning
@@ -253,9 +274,7 @@ kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic test-data-to
 {"user_id":10,"name":"Liam","age":64}
 ```
 
-2. Create the table to be loaded:
-
-Create the table to be loaded in Doris, with the following syntax:
+**Step 2: Create the target table in Doris**
 
 ```SQL
 CREATE TABLE test_db.test_kafka_connector_tbl(
@@ -267,9 +286,9 @@ DUPLICATE KEY(user_id)
 DISTRIBUTED BY HASH(user_id) BUCKETS 12;
 ```
 
-3. Create the load task:
+**Step 3: Submit the import task**
 
-On the machine where Kafka Connect is deployed, submit the following load task via curl command:
+On the machine where Kafka Connect is deployed, submit the following import task using `curl`:
 
 ```Bash
 curl -i http://127.0.0.1:8083/connectors -H "Content-Type: application/json" -X POST -d '{
@@ -294,9 +313,11 @@ curl -i http://127.0.0.1:8083/connectors -H "Content-Type: application/json" -X 
 }'
 ```
 
-### Load Data Collected by Debezium Component
+### Consuming Data Collected by Debezium
 
-1. The MySQL database has the following table:
+Use this for the scenario where Debezium collects change data (CDC) in real time from upstream databases such as MySQL or PostgreSQL and writes it into Doris.
+
+**Step 1: Prepare the source table and data in MySQL**
 
 ```SQL
 CREATE TABLE test.test_user (
@@ -311,7 +332,9 @@ insert into test.test_user values(2,'lisi',21);
 insert into test.test_user values(3,'wangwu',22);
 ```
 
-2. Create the table to be loaded in Doris:
+**Step 2: Create the target table in Doris**
+
+CDC scenarios require the `UNIQUE KEY` table model to support primary key deduplication and deletion:
 
 ```SQL
 CREATE TABLE test_db.test_user(
@@ -323,11 +346,13 @@ UNIQUE KEY(user_id)
 DISTRIBUTED BY HASH(user_id) BUCKETS 12;
 ```
 
-3. Deploy the Debezium connector for MySQL component, refer to: [Debezium connector for MySQL](https://debezium.io/documentation/reference/stable/connectors/mysql.html).
+**Step 3: Deploy Debezium MySQL Connector**
 
-4. Create the doris-kafka-connector load task:
+Deploy the Debezium connector for MySQL component. Refer to [Debezium connector for MySQL](https://debezium.io/documentation/reference/stable/connectors/mysql.html).
 
-Assuming the data from the MySQL table collected by Debezium is in the `mysql_debezium.test.test_user` Topic:
+**Step 4: Create the doris-kafka-connector import task**
+
+Suppose the MySQL table data collected by Debezium is stored in the `mysql_debezium.test.test_user` Topic:
 
 ```Bash
 curl -i http://127.0.0.1:8083/connectors -H "Content-Type: application/json" -X POST -d '{
@@ -354,7 +379,14 @@ curl -i http://127.0.0.1:8083/connectors -H "Content-Type: application/json" -X 
 }'
 ```
 
-### Load Data in AVRO Serialization Format
+Key parameters:
+
+- `converter.mode=debezium_ingestion`: enables parsing of the Debezium data format.
+- `enable.delete=true`: synchronously executes delete operations in Doris.
+
+### Consuming Data in Avro Serialization Format
+
+Use this for the scenario where Kafka stores data in Avro format together with a Schema Registry.
 
 ```Bash
 curl -i http://127.0.0.1:8083/connectors -H "Content-Type: application/json" -X POST -d '{ 
@@ -382,7 +414,9 @@ curl -i http://127.0.0.1:8083/connectors -H "Content-Type: application/json" -X 
 }'
 ```
 
-### Load Data in Protobuf Serialization Format
+### Consuming Data in Protobuf Serialization Format
+
+Use this for the scenario where Kafka stores data in Protobuf format together with a Schema Registry.
 
 ```Bash
 curl -i http://127.0.0.1:8083/connectors -H "Content-Type: application/json" -X POST -d '{ 
@@ -409,3 +443,35 @@ curl -i http://127.0.0.1:8083/connectors -H "Content-Type: application/json" -X 
   } 
 }'
 ```
+
+## FAQ
+
+**Q1: How should I choose between Routine Load and Doris Kafka Connector?**
+
+- In most scenarios, Routine Load is sufficient: it requires no extra components and supports CSV and JSON.
+- If you need to consume Avro / Protobuf formats, or integrate with Kafka Connect ecosystem components such as Debezium, use the Doris Kafka Connector.
+
+**Q2: Which Kafka versions does Routine Load support?**
+
+Kafka 0.10.0.0 and above is supported by default. To consume older versions (0.9.0, 0.8.x), you need to modify the BE configuration `kafka_broker_version_fallback`, or set `property.broker.version.fallback` when creating the job. Note that using older versions makes some new features unavailable, for example setting Kafka partition offsets by time.
+
+**Q3: What format should the Kafka data be in for multi-table import?**
+
+The data format must be `table_name|data`. For example, the CSV multi-table import format is `table_name|val1,val2,val3`, and `table_name` must exactly match the table name in Doris, otherwise the import fails. Multi-table import does not support the `column_mapping` configuration.
+
+**Q4: When using Kafka Connect to consume, why should `max.poll.interval.ms` be increased?**
+
+Stream Load writes to Doris can take a long time. If `max.poll.interval.ms` (5 minutes by default) is too small, the consumer will be kicked out of the consumer group. It is recommended to increase it to **more than 30 minutes**, and set `consumer.max.poll.interval.ms` accordingly.
+
+**Q5: How do I sync DELETE operations collected by Debezium to Doris?**
+
+In the Doris Kafka Connector configuration, set `converter.mode=debezium_ingestion` and `enable.delete=true`, and use the `UNIQUE KEY` table model in Doris to store CDC data.
+
+## Related Links
+
+- [CREATE ROUTINE LOAD syntax reference](../../../sql-manual/sql-statements/data-modification/load-and-export/CREATE-ROUTINE-LOAD)
+- [Routine Load operation manual](../import-way/routine-load-manual.md)
+- [Doris Kafka Connector documentation](../../../connection-integration/data-integration/doris-kafka-connector.md)
+- [Kafka security authentication configuration](../import-way/routine-load-manual.md#kafka-安全认证)
+- [Kafka Connect Distributed Workers](https://docs.confluent.io/platform/current/connect/index.html#distributed-workers)
+- [Debezium connector for MySQL](https://debezium.io/documentation/reference/stable/connectors/mysql.html)
