@@ -65,7 +65,7 @@ select
 | 0000-01-01 | 0000-02-28 | 0000-03-01 | 2024-12-31 |
 +------------+------------+------------+------------+
 
--- Parse "YYY-MMM-D" format (each week starts with Monday), since 0522-01-01 is Thursday, dates before the first week will return year 0521
+-- Parse "YYYY-Www-D" format (each week starts with Monday), since 0522-01-01 is Thursday, dates before the first week will return year 0521
 select from_iso8601_date('0522-W01-1') as week_1;
 +------------+
 | week_1     |
@@ -81,7 +81,7 @@ select from_iso8601_date('0522-W01-4') as week_4;
 | 0522-01-01 |
 +------------+
 
----YYY-MMM format, Monday of the first week is in year 521
+---YYYY-Www format, Monday of the first week is in year 521
 select from_iso8601_date('0522-W01') as week_1;
 +------------+
 | week_1     |
