@@ -82,7 +82,7 @@ curl --location-trusted -u root:"" \
 | インポート中に大量の小さなトランザクションが生成され、compactionが失敗して継続的な-235エラーが発生する。 | Dorisのデータ消費が速すぎる、またはKafkaデータフローが小さなバッチになっている。 | Shared-nothingとshared-storage | Routine Loadジョブを一時停止し、次のコマンドを実行する：`ALTER ROUTINE LOAD FOR jobname FROM kafka ("property.enable.partition.eof" = "false");` | <2.1.8 <3.0.4 | 2.1.8 3.0.4 | [#45528](https://github.com/apache/doris/pull/45528), [#44949](https://github.com/apache/doris/pull/44949), [#39975](https://github.com/apache/doris/pull/39975) |
 | Kafkaサードパーティライブラリのデストラクタがハングし、データ消費が失敗する。 | Kafkaトピックの削除（他の条件の可能性もある）。 | Shared-nothingとshared-storage | すべてのBEノードを再起動する。 | <2.1.8 <3.0.4 | 2.1.8 3.0.4 | [#44913](https://github.com/apache/doris/pull/44913) |
 | Routine Loadスケジューリングがハングする。 | FEがMeta Serviceでトランザクションを中止する際にタイムアウトが発生する。 | Shared-storage | FEノードを再起動する。 | <3.0.2 | 3.0.2 | [#41267](https://github.com/apache/doris/pull/41267) |
-| Routine Load再起動の問題。 | BEノードの再起動。 | Shared-nothingとshared-storage | ジョブを手動で再開する。 | <2.1.7 <3.0.2 | 2.1.7 3.0.2 | [#40728](https://github.com/apache/doris/pull/40728) |
+| Routine Load再起動の問題。 | BEノードの再起動。 | Shared-nothingとshared-storage | ジョブを手動で再開する。 | <2.1.7 <3.0.2 | 2.1.7 3.0.2 | [#3727](https://github.com/apache/doris/pull/40728) |
 
 ### デフォルト設定の最適化
 

@@ -273,7 +273,7 @@ ldd /path/to/libmyodbc8w.so |grep libssl.so
 ```
 出力に ``libssl.so.10`` が含まれている場合、それを使用する際に問題が発生する可能性があります。``libssl.so.1.1`` が含まれている場合は、doris 1.0と互換性があります。
 
-### Q14. バージョン1.2へのアップグレード後、BE NoClassDefFoundErrorの問題で起動に失敗する
+### Q15. バージョン1.2へのアップグレード後、BE NoClassDefFoundErrorの問題で起動に失敗する
 Java UDF依存関係エラー
 アップグレードサポートでbeを起動する場合、以下のJava `NoClassDefFoundError`エラーが発生します
 
@@ -283,7 +283,7 @@ Caused by: java.lang.ClassNotFoundException: org.apache.doris.udf.JniUtil
 ```
 `apache-doris-java-udf-jar-with-dependencies-1.2.0` のJava UDF関数依存パッケージを公式Webサイトからダウンロードし、BEインストールディレクトリ下のlibディレクトリに配置してから、BEを再起動する必要があります
 
-### Q15. バージョン1.2にアップグレード後、BE起動時に Failed to initialize JNI が表示される
+### Q16. バージョン1.2にアップグレード後、BE起動時に Failed to initialize JNI が表示される
 
 アップグレード後にBEを起動する際に以下の `Failed to initialize JNI` エラーが発生した場合
 
@@ -292,7 +292,7 @@ Failed to initialize JNI: Failed to find the library libjvm.so.
 ```
 `JAVA_HOME`環境変数を設定するか、be.confで`JAVA_HOME`変数を設定してBEノードを再起動する必要があります。
 
-### Q16. Docker: backendの起動に失敗する
+### Q17. Docker: backendの起動に失敗する
 これはCPUがAVX2をサポートしていないことが原因の可能性があります。`docker logs -f be`でbackendログを確認してください。
 CPUがAVX2をサポートしていない場合は、`apache/doris:1.2.2-be-x86_64`の代わりに、
 `apache/doris:1.2.2-be-x86_64-noavx2`イメージを使用する必要があります。

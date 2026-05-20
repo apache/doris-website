@@ -270,7 +270,7 @@ cd fe && mvn clean install -DskipTests
 ```bash
 cp fe-core/target/generated-sources/cup/org/apache/doris/analysis/action_table.dat fe-core/target/classes/org/apache/doris/analysis
 ```
-### Q14. バージョン1.2へのアップグレード後、BEがNoClassDefFoundError問題で起動に失敗する
+### Q15. バージョン1.2へのアップグレード後、BEがNoClassDefFoundError問題で起動に失敗する
 
 :::note
 Java UDF依存関係エラーはDorisバージョン1.2以降でサポートされています
@@ -284,7 +284,7 @@ Caused by: java.lang.ClassNotFoundException: org.apache.doris.udf.JniUtil
 ```
 Java UDF関数の依存パッケージ`apache-doris-java-udf-jar-with-dependencies-1.2.0`を公式ウェブサイトからダウンロードし、BEインストールディレクトリの`lib`ディレクトリに配置してから、BEを再起動する必要があります。
 
-### Q15. バージョン1.2へのアップグレード後、BE起動時にFailed to initialize JNI問題が表示される
+### Q16. バージョン1.2へのアップグレード後、BE起動時にFailed to initialize JNI問題が表示される
 
 :::note
 Java環境の問題は、Dorisバージョン1.2以降でサポートされています
@@ -297,7 +297,7 @@ Failed to initialize JNI: Failed to find the library libjvm.so.
 ```
 システムで`JAVA_HOME`環境変数を設定するか、`be.conf`で`JAVA_HOME`変数を設定してから、BEノードを再起動する必要があります。
 
-### Q16. Docker: backendの起動に失敗する
+### Q17. Docker: backendの起動に失敗する
 これはCPUがAVX2をサポートしていないことが原因の可能性があります。`docker logs -f be`でbackendログを確認してください。
 CPUがAVX2をサポートしていない場合は、`apache/doris:1.2.2-be-x86_64`の代わりに、
 `apache/doris:1.2.2-be-x86_64-noavx2`イメージを使用する必要があります。
