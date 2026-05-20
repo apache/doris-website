@@ -2,7 +2,7 @@
 {
     "title": "IPV6_STRING_TO_NUM_OR_NULL | Ip Functions",
     "language": "en",
-    "description": "The reverse function of IPv6NumToString, it takes an IP address String and returns an IPv6 address in binary format.",
+    "description": "The reverse function of IPV6_NUM_TO_STRING, it takes an IP address String and returns an IPv6 address in binary format.",
     "sidebar_label": "IPV6_STRING_TO_NUM_OR_NULL"
 }
 ---
@@ -10,7 +10,7 @@
 # IPV6_STRING_TO_NUM_OR_NULL
 
 ## Description
-The reverse function of IPv6NumToString, it takes an IP address String and returns an IPv6 address in binary format.
+The reverse function of IPV6_NUM_TO_STRING, it takes an IP address String and returns an IPv6 address in binary format.
 
 ## Alias
 - INET6_ATON

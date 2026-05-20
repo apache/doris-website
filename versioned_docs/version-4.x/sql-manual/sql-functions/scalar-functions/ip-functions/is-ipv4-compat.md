@@ -6,8 +6,6 @@
 }
 ---
 
-## is_ipv4_compat
-
 ## Description
 Checks if an IPv6 address is an IPv4-compatible address. IPv4-compatible addresses are a special IPv6 address format used to represent IPv4 addresses in IPv6 networks.
 
@@ -28,7 +26,7 @@ Return Value Meaning: 1 indicates it is an IPv4-compatible address, 0 indicates 
 - IPv4-compatible address format is `::IPv4`, where the first 12 bytes are 0 and the last 4 bytes contain the IPv4 address
 - Input must be 16-byte IPv6 binary data
 - This format is defined in RFC 4291 for IPv6 transition period
-- The last 4 bytes cannot be 0, so `::0.0.0.0` is not a valid IPv4-compatible address, as 0.0.0.0 is not an IPv4 unicast address and does not satisfy the RFC 4291 IPv4-Mapped IPv6 Address definition
+- The last 4 bytes cannot be 0, so `::0.0.0.0` is not a valid IPv4-compatible address, as 0.0.0.0 is not an IPv4 unicast address and does not satisfy the RFC 4291 IPv4-Compatible IPv6 Address definition
 - Returns NULL when input parameter is NULL
 
 ## Examples

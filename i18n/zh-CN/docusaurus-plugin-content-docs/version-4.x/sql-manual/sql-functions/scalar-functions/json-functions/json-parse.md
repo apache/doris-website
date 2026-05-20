@@ -36,7 +36,7 @@ JSON_PARSE_ERROR_TO_VALUE (<json_str>, <default_json_value>)
 
 ## 使用说明
 1. 如果 `<json_str>` 是 NULL，得到的结果也是 NULL。
-2. `JSONB_PARSE`/`JSONB_PARSE_ERROR_TO_NULL`/`JSONB_PARSE_ERROR_TO_VALUE` 行为基本一致，只是在解析失败时得到的结果不同。
+2. `JSON_PARSE`/`JSON_PARSE_ERROR_TO_NULL`/`JSON_PARSE_ERROR_TO_VALUE` 行为基本一致，只是在解析失败时得到的结果不同。
 
 ## 示例
 1. 正常 JSON 字符串解析

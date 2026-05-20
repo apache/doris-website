@@ -2,14 +2,12 @@
 {
     "title": "IPV6_STRING_TO_NUM",
     "language": "en",
-    "description": "The reverse function of IPv6NumToString, it accepts an IP address string and returns the IPv6 address in binary format."
+    "description": "The reverse function of IPV6_NUM_TO_STRING, it accepts an IP address string and returns the IPv6 address in binary format."
 }
 ---
 
-## ipv6_string_to_num
-
 ## Description
-The reverse function of IPv6NumToString, it accepts an IP address string and returns the IPv6 address in binary format.
+The reverse function of IPV6_NUM_TO_STRING, it accepts an IP address string and returns the IPv6 address in binary format.
 
 ## Syntax
 ```sql
@@ -24,8 +22,7 @@ Return Type: VARCHAR (16-byte binary)
 
 Return Value Meaning:
 - Returns the 16-byte binary encoding of IPv6
-- Throws an exception when input is NULL
-- Throws an exception for invalid IP addresses or `NULL` input
+- Throws an exception when the input is NULL or an invalid IP address
 - If input is valid IPv4 text, returns equivalent IPv6 address (`::ffff:<ipv4>`)
 
 ### Usage Notes

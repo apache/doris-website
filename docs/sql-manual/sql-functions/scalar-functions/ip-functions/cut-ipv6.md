@@ -6,8 +6,6 @@
 }
 ---
 
-## cut_ipv6
-
 ## Description
 Cuts a specified number of bytes from the end of an IPv6 address based on its type (IPv4-mapped or pure IPv6), and returns the truncated IPv6 address string.
 

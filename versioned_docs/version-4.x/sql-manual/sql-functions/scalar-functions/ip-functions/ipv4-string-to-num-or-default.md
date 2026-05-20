@@ -6,8 +6,6 @@
 }
 ---
 
-## ipv4_string_to_num_or_default
-
 ## Description
 Takes a string containing an IPv4 address in A.B.C.D format (dot-separated decimal numbers). Returns a BIGINT representing the numeric value of the corresponding IPv4 address in network byte order (big endian).
 
