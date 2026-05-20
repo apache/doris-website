@@ -125,7 +125,7 @@ AS (
 
 #### 2.2 Inspect the exported files on GCS
 
-The command above exports `sales_data` to GCS. Each partition produces one or more files with incrementing file names. For details, see [exporting-data](https://cloud.google.com/bigquerydocs/exporting-data#exporting_data_into_one_or_more_files).
+The command above exports `sales_data` to GCS. Each partition produces one or more files with incrementing file names. For details, see [exporting-data](https://cloud.google.com/bigquery/docs/exporting-data#exporting_data_into_one_or_more_files).
 
 ![gcs_export](/images/data-operate/gcs_export.png)
 

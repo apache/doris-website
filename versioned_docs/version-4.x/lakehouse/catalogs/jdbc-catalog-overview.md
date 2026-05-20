@@ -65,7 +65,7 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
       
       2. Local absolute path. For example, `file:///path/to/mysql-connector-j-8.3.0.jar`. The Jar file must be pre-placed in the specified path on all FE/BE nodes.
       
-      3. HTTP URL. For example: `http://repo1.maven.org/maven2/com/mysql/mysql-connector-j/8.3.0/mysql-connector-j-8.3.0.jar`. The system will download the driver file from this HTTP address. Only supports HTTP services without authentication.
+      3. HTTP URL. For example: `https://repo1.maven.org/maven2/com/mysql/mysql-connector-j/8.3.0/mysql-connector-j-8.3.0.jar`. The system will download the driver file from this HTTP address. Only supports HTTP services without authentication.
 
   * Optional Properties
 

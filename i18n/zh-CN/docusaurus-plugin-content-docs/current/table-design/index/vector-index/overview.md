@@ -478,7 +478,7 @@ PROPERTIES (
     ```java
     // use `?` for placement holders, readStatement should be reused
     PreparedStatement readStatement = conn.prepareStatement("SELECT id, l2_distance_approximate(embedding, cast (? as ARRAY<FLOAT>)) AS distance
-        FROM l2_distance_approximate
+        FROM sift_1M
         ORDER BY distance
         LIMIT 10");
       
