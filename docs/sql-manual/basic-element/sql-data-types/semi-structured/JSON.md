@@ -310,8 +310,7 @@ mysql> SELECT cast('[1,                 2]' as json);
 ```
 
 ### Key Differences and Notes:
-- CAST(string AS JSON): Used to parse strings that conform to JSON syntax.
-- CAST(string AS JSON): For Number types, it will only parse Int8, Int16, Int32, Int64, Int128, and Double types, not Decimal type.
+- CAST(string AS JSON): Used to parse strings that conform to JSON syntax. For Number types, it will only parse Int8, Int16, Int32, Int64, Int128, and Double types, not Decimal type.
 - Unlike most other JSON implementations, Doris's JSONB type supports up to Int128 precision. Numbers exceeding Int128 precision may overflow.
 - If the input number string is 12.34, it will be parsed as a Double; if there's no decimal point, it will be parsed as an integer (if the size exceeds Int128 range, it will be converted to Double but with precision loss)
 
