@@ -153,7 +153,7 @@ ERROR 1105 (HY000): errCode = 2, detailMessage = Can not find the compatibility 
 
 Array is NULL, will return type conversion error
 ```
-mysql> SELECT array_max(NULL);
+mysql> SELECT array_avg(NULL);
 ERROR 1105 (HY000): errCode = 2, detailMessage = class org.apache.doris.nereids.types.NullType cannot be cast to class org.apache.doris.nereids.types.ArrayType (org.apache.doris.nereids.types.NullType and org.apache.doris.nereids.types.ArrayType are in unnamed module of loader 'app')
 ```
 

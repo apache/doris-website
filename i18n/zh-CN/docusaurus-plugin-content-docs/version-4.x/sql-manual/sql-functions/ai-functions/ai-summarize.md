@@ -66,7 +66,7 @@ SELECT AI_SUMMARIZE('Apache Doris is an MPP-based real-time data warehouse known
 ```
 
 ```sql
-SELECT AI_SUMMARIZE('resourse_name','Doris supports high-concurrency, real-time analytics and is widely used in business intelligence scenarios.') AS Result;
+SELECT AI_SUMMARIZE('resource_name','Doris supports high-concurrency, real-time analytics and is widely used in business intelligence scenarios.') AS Result;
 ```
 
 ```text
