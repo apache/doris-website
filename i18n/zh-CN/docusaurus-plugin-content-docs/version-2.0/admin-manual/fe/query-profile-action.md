@@ -9,7 +9,7 @@
 
 `GET /rest/v2/manager/query/query_info`
 
-`GET /rest/v2/manager/query/trace_id/{trace_id}`
+`GET /rest/v2/manager/query/trace/{trace_id}`
 
 `GET /rest/v2/manager/query/sql/{query_id}`
 
