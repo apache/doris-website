@@ -8,7 +8,7 @@
 
 ## Overview
 
-Kafka Catalog uses the Trino Kafka Connector through the [Trino Connector](https://doris.apache.org/community/how-to-contribute/trino-connector-developer-guide/) compatibility framework to access Kafka Topic data.
+Kafka Catalog uses the Trino Kafka Connector through the [Trino Connector](https://doris.apache.org/community/developer-guide/data-source-extension/trino-connector-developer-guide/) compatibility framework to access Kafka Topic data.
 
 :::note
 - This is an experimental feature, supported since version 3.0.1.
@@ -354,5 +354,5 @@ You can refer to [here](https://github.com/morningman/demo-env/tree/main/kafka) 
 ## References
 
 - [Trino Kafka Connector Official Documentation](https://trino.io/docs/435/connector/kafka.html)
-- [Trino Connector Development Guide](https://doris.apache.org/community/how-to-contribute/trino-connector-developer-guide/)
+- [Trino Connector Development Guide](https://doris.apache.org/community/developer-guide/data-source-extension/trino-connector-developer-guide/)
 - [Confluent Schema Registry Documentation](https://docs.confluent.io/platform/current/schema-registry/index.html)
