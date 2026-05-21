@@ -802,7 +802,7 @@ Flink Doris Connector 集成了 [Flink CDC](https://nightlies.apache.org/flink/f
 | doris.request.tablet.size   | 1             | N        | 一个 Partition 对应的 Doris Tablet 个数。此数值设置越小，则会生成越多的 Partition，从而提升 Flink 侧的并行度，但同时会对 Doris 造成更大的压力。         |
 | doris.batch.size            | 4064          | N        | 一次从 BE 读取数据的最大行数。增大此数值可减少 Flink 与 Doris 之间建立连接的次数，从而减轻网络延迟所带来的额外时间开销。                               |
 | doris.exec.mem.limit        | 8192mb        | N        | 单个查询的内存限制。默认为 8GB，单位为字节                                                                                                             |
-| source.use-flight-sql       | FALSE         | N        | 是否使用 Arrow Flight SQL 读取                                                                                                                         |
+| source.use-flight-sql       | TRUE          | N        | 是否使用 Arrow Flight SQL 读取                                                                                                                         |
 | source.flight-sql-port      | -             | N        | 使用 Arrow Flight SQL 读取时，FE 的 `arrow_flight_sql_port`                                                                                            |
 
 **DataStream 专有配置项**

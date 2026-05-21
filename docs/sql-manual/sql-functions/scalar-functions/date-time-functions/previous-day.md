@@ -1,13 +1,14 @@
 ---
 {
     "title": "PREVIOUS_DAY",
-    "language": "en"
+    "language": "en",
+    "description": "Returns the first date matching the target day of the week before the specified date."
 }
 ---
 
 ## Description
 
-The PREVIOUS_DAY function returns the first date that matches the target day of the week before the specified date. For example, `PREVIOUS_DAY('2020-01-31', 'MONDAY')` represents the first Monday before 2020-01-31. This function supports DATE, DATETIME, and TIMESTAMPTZ types, and ignores the time part of the input (calculating based on the date part only).
+The PREVIOUS_DAY function returns the first date that matches the target day of the week before the specified date. For example, `PREVIOUS_DAY('2020-01-31', 'MONDAY')` represents the first Monday before 2020-01-31. This function accepts DATE and DATETIME inputs, ignoring any time portion (calculation is based on the date part only).
 
 ## Syntax
 

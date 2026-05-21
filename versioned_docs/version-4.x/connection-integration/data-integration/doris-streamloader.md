@@ -248,7 +248,7 @@ Load Result: {
 
     **To import multiple files, use the `source_file` approach.**
 
-2. **`workers`**: The default value is the number of CPU cores. On machines with many cores (such as 96), this produces too much concurrency. Lower the value. **A common recommendation is `8`**.
+2. **`workers`**: The default value is `0`, which enables automatic mode (the tool computes a value from the import size, `disk_throughput`, and `streamload_throughput`, typically yielding 1, 2, 4, or 8). You can also set it manually — for high-performance clusters you may increase it, but **no more than 10 is recommended**. **A common manual value is `8`**.
 
 3. **`max_byte_per_task`**: A larger value reduces the number of import versions. However, if you encounter a `body exceed max size` error and do not want to adjust `streaming_load_max_mb` (which requires restarting the BE), or if you encounter the `-238 TOO MANY SEGMENT` error, you can lower this value temporarily. **The default usually works.**
 
