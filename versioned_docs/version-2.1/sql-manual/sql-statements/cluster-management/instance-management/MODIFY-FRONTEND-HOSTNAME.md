@@ -29,7 +29,7 @@ ALTER SYSTEM MODIFY FRONTEND "<frontend_hostname_port>" HOSTNAME "<frontend_new_
 
 ## Access Control Requirements
 
-The user executing this SQL command must have at least NOD_PRIV permissions.
+The user executing this SQL command must have at least NODE_PRIV permissions.
 
 ## Examples
 

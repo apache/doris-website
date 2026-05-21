@@ -38,7 +38,7 @@ The user executing this SQL command must have at least the following permissions
 
 1. Before deleting a FOLLOWER node, make sure that the node that needs to be taken offline is not a Master node.
 2. Before deleting a FOLLOWER node, ensure that the number of FOLLOWER nodes in the cluster is an odd number after they go offline.
-3. After deleting the FOLLOWER node[`SHOW FRONTENDS`](./SHOW-FRONTENDS.md)command to verify that they were successfully deleted.
+3. After deleting the FOLLOWER node, use the [`SHOW FRONTENDS`](./SHOW-FRONTENDS.md) command to verify that they were successfully deleted.
 
 ## Examples
 

@@ -38,7 +38,7 @@ The user executing this SQL command must have at least the following permissions
 |:-----------|:------|:---------------|
 | SELECT_PRIV | Corresponding database | Requires read permission on the corresponding database |
 
-## 示例
+## Examples
 
 - Displays the names of all current databases.
 
