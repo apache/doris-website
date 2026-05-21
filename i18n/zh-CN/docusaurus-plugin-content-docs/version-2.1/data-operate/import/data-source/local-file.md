@@ -225,6 +225,6 @@ MySQL Load 是一种同步的导入方式，导入后结果会在命令行中返
 如下是导入成功的结果显示，会返回导入的行数：
 
 ```SQL
-Query OK, 6 row affected (0.17 sec)
+Query OK, 6 rows affected (0.17 sec)
 Records: 6  Deleted: 0  Skipped: 0  Warnings: 0
 ```

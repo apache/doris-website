@@ -8,7 +8,7 @@
 
 Valid range for DATETIME type:
 
-`[0000-01-01 00:00:00.0000000, 9999-12-31 23:59:59.999999]`
+`[0000-01-01 00:00:00.000000, 9999-12-31 23:59:59.999999]`
 
 The DATETIME type includes a type parameter `p`, which represents the number of decimal places. The complete representation is `DATETIME(p)` type. For example, DATETIME(6) indicates a DATETIME type that supports microsecond precision.
 

@@ -108,7 +108,7 @@ func main() {
 
 ### Step 2: Configure the encrypted password in fe.conf
 
-Configure the encrypted password from the previous step into `fe.conf` according to the configuration file's requirements. Following the instructions in the [FE startup parameter configuration chapter](config-fe#自定义启动配置), deliver the configuration file to the Kubernetes cluster as a `ConfigMap`.
+Configure the encrypted password from the previous step into `fe.conf` according to the configuration file's requirements. Following the instructions in the [FE startup parameter configuration chapter](config-fe#custom-startup-configuration), deliver the configuration file to the Kubernetes cluster as a `ConfigMap`.
 
 ### Step 3: Configure management credentials in DorisDisaggregatedCluster
 

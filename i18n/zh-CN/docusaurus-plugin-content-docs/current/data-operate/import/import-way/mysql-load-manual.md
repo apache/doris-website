@@ -123,7 +123,7 @@ MySQL Load 是一种同步导入方式，导入结果会在命令行中直接返
 **导入成功**时返回导入的行数：
 
 ```sql
-Query OK, 6 row affected (0.17 sec)
+Query OK, 6 rows affected (0.17 sec)
 Records: 6  Deleted: 0  Skipped: 0  Warnings: 0
 ```
 

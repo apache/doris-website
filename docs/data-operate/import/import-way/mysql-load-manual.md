@@ -123,7 +123,7 @@ MySQL Load is a synchronous import method, so the import result is returned dire
 When the import **succeeds**, the number of imported rows is returned:
 
 ```sql
-Query OK, 6 row affected (0.17 sec)
+Query OK, 6 rows affected (0.17 sec)
 Records: 6  Deleted: 0  Skipped: 0  Warnings: 0
 ```
 
