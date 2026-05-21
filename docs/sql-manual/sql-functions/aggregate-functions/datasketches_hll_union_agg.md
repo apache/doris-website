@@ -1,8 +1,7 @@
----
 {
-  "title": "DATASKETCHES_HLL_UNION_AGG",
-  "language": "en",
-  "description": "The datasketches_hll_union_agg function is an aggregate function used to union multiple Apache DataSketches HLL sketches and return the estimated cardinality of the union."
+"title": "DATASKETCHES_HLL_UNION_AGG",
+"language": "en",
+"description": "The datasketches_hll_union_agg function is an aggregate function used to union multiple Apache DataSketches HLL sketches and return the estimated cardinality of the union as a DOUBLE value."
 }
 ---
 
@@ -14,8 +13,8 @@ This function expects the input to be **serialized bytes of a DataSketches HLL s
 
 Aliases:
 
-- `ds_hll_union_count`
-- `ds_cardinality`
+- `ds_hll_estimate`
+- `datasketches_hll_estimate`
 
 ## Syntax
 
@@ -31,9 +30,9 @@ datasketches_hll_union_agg(<sketch>)
 
 ## Return Value
 
-Returns a BIGINT cardinality estimate value.  
-If there is no valid data in the group, returns 0.  
-If the input bytes cannot be deserialized as a valid DataSketches HLL sketch (including empty string), an error is thrown.
+Returns a DOUBLE (Float64) cardinality estimate value.  
+If there is no valid data in the group (or the input is empty), returns 0.  
+If the input bytes cannot be deserialized as a valid DataSketches HLL sketch (including empty string), an error is thrown (typically with error code `CORRUPTION`).
 
 ## Example
 
@@ -54,23 +53,25 @@ INSERT INTO test_datasketches_hll_union_agg_tbl VALUES
 ```
 
 ```sql
-SELECT datasketches_hll_union_agg(sk) FROM test_datasketches_hll_union_agg_tbl;
+-- The function returns DOUBLE, so use ROUND/CAST if you want an integer display.
+SELECT CAST(ROUND(datasketches_hll_union_agg(sk)) AS BIGINT)
+FROM test_datasketches_hll_union_agg_tbl;
 ```
 
 ```text
-+-------------------------------+
-| datasketches_hll_union_agg(sk) |
-+-------------------------------+
-|                            17 |
-+-------------------------------+
++------------------------------------------------------+
+| CAST(ROUND(datasketches_hll_union_agg(sk)) AS BIGINT) |
++------------------------------------------------------+
+|                                                   17 |
++------------------------------------------------------+
 ```
 
 ```sql
 -- aliases
 SELECT
-    datasketches_hll_union_agg(sk),
-    ds_hll_union_count(sk),
-    ds_cardinality(sk)
+    CAST(ROUND(datasketches_hll_union_agg(sk)) AS BIGINT),
+    CAST(ROUND(ds_hll_estimate(sk)) AS BIGINT),
+    CAST(ROUND(datasketches_hll_estimate(sk)) AS BIGINT)
 FROM test_datasketches_hll_union_agg_tbl;
 ```
 
@@ -87,6 +88,11 @@ WHERE sk IS NULL;
 +-------------------------------+
 |                             0 |
 +-------------------------------+
+```
+
+```sql
+-- invalid sketch bytes will throw
+SELECT datasketches_hll_union_agg(from_base64('AA=='));
 ```
 
 ```sql

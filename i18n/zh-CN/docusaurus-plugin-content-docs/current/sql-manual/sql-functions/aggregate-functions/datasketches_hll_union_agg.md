@@ -1,8 +1,7 @@
----
 {
-  "title": "DATASKETCHES_HLL_UNION_AGG",
-  "language": "zh-CN",
-  "description": "datasketches_hll_union_agg 函数是一种聚合函数，用于对多个 Apache DataSketches HLL sketch 的序列化结果进行 union 合并，并返回合并后基数的估算值（近似去重数）。"
+"title": "DATASKETCHES_HLL_UNION_AGG",
+"language": "zh-CN",
+"description": "datasketches_hll_union_agg 函数是一种聚合函数，用于对多个 Apache DataSketches HLL sketch 的序列化结果进行 union 合并，并返回合并后基数的估算值（DOUBLE）。"
 }
 ---
 
@@ -14,8 +13,8 @@
 
 别名：
 
-- `ds_hll_union_count`
-- `ds_cardinality`
+- `ds_hll_estimate`
+- `datasketches_hll_estimate`
 
 ## 语法
 
@@ -31,9 +30,9 @@ datasketches_hll_union_agg(<sketch>)
 
 ## 返回值
 
-返回 BIGINT 类型的基数估算值。  
-如果组内没有合法数据则返回 0 。  
-若输入字节串无法反序列化为合法的 DataSketches HLL sketch（包括空字符串），将报错。
+返回 DOUBLE（Float64）类型的基数估算值。  
+如果没有合法数据（例如全为 NULL，或表为空）则返回 0。  
+若输入字节串无法反序列化为合法的 DataSketches HLL sketch（包括空字符串），将报错（通常错误码为 `CORRUPTION`）。
 
 ## 举例
 
@@ -42,7 +41,8 @@ datasketches_hll_union_agg(<sketch>)
 CREATE TABLE test_datasketches_hll_union_agg_tbl (
     id INT,
     sk STRING
-) DISTRIBUTED BY HASH(id) BUCKETS 1
+)
+DISTRIBUTED BY HASH(id) BUCKETS 1
 PROPERTIES ("replication_num" = "1");
 
 -- 通过 from_base64() 将 Base64 文本解码为 sketch 字节串后写入
@@ -53,23 +53,25 @@ INSERT INTO test_datasketches_hll_union_agg_tbl VALUES
 ```
 
 ```sql
-SELECT datasketches_hll_union_agg(sk) FROM test_datasketches_hll_union_agg_tbl;
+-- 该函数返回 DOUBLE，如需以整数形式展示可配合 ROUND/CAST
+SELECT CAST(ROUND(datasketches_hll_union_agg(sk)) AS BIGINT)
+FROM test_datasketches_hll_union_agg_tbl;
 ```
 
 ```text
-+-------------------------------+
-| datasketches_hll_union_agg(sk) |
-+-------------------------------+
-|                            17 |
-+-------------------------------+
++------------------------------------------------------+
+| CAST(ROUND(datasketches_hll_union_agg(sk)) AS BIGINT) |
++------------------------------------------------------+
+|                                                   17 |
++------------------------------------------------------+
 ```
 
 ```sql
 -- 别名用法
 SELECT
-    datasketches_hll_union_agg(sk),
-    ds_hll_union_count(sk),
-    ds_cardinality(sk)
+    CAST(ROUND(datasketches_hll_union_agg(sk)) AS BIGINT),
+    CAST(ROUND(ds_hll_estimate(sk)) AS BIGINT),
+    CAST(ROUND(datasketches_hll_estimate(sk)) AS BIGINT)
 FROM test_datasketches_hll_union_agg_tbl;
 ```
 
@@ -86,6 +88,11 @@ WHERE sk IS NULL;
 +-------------------------------+
 |                             0 |
 +-------------------------------+
+```
+
+```sql
+-- 非法 sketch 字节串将报错
+SELECT datasketches_hll_union_agg(from_base64('AA=='));
 ```
 
 ```sql
