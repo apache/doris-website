@@ -122,4 +122,4 @@ PROPERTIES (
 );
 ```
 
-`compression` 支持的取值：`none`、`lz4`、`lz4f`、`lz4hc`、`zstd`、`snappy`、`zlib`。如未显式指定，Doris 将使用系统默认的压缩算法。
+`compression` 支持的取值：`none`、`lz4`、`lz4f`、`lz4hc`、`zstd`、`snappy`、`zlib`。如未显式指定，Doris 将使用默认压缩算法 `ZSTD`（由 FE 配置项 `default_compression_type` 控制）。
