@@ -14,6 +14,29 @@
 `AGGREGATE_FUNCTION_FOREACH(arg...)`
 
 ## 举例
+
+准备示例数据：
+
+```sql
+CREATE TABLE db (
+    id INT,
+    a  ARRAY<INT>,
+    s  ARRAY<STRING>
+)
+DUPLICATE KEY(id)
+DISTRIBUTED BY HASH(id) BUCKETS 1
+PROPERTIES ("replication_num" = "1");
+
+INSERT INTO db VALUES
+    (1, [1, 2, 3], ["ab", "123"]),
+    (2, [20],      ["cd"]),
+    (3, [100],     ["efg"]),
+    (4, NULL,      NULL),
+    (5, [null, 2], [null, "c"]);
+```
+
+然后执行 FOREACH 组合器：
+
 ```
 mysql [test]>select a , s from db;
 +-----------+---------------+
