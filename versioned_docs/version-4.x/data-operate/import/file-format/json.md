@@ -189,7 +189,7 @@ The following table lists the support for JSON-related parameters across the dif
 
 - **Purpose**: Specifies whether to read JSON data line by line.
 - **Type**: Boolean.
-- **Default**: false.
+- **Default**: true if `strip_outer_array` is not set; specifying `strip_outer_array=true` causes it to default to false. (Broker Load and Routine Load always force `read_json_by_line=true`.)
 - **Examples**:
 
     ```json

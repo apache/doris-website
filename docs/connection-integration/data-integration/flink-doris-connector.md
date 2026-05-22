@@ -802,7 +802,7 @@ After the Flink cluster is started, you can run the corresponding command accord
 | doris.request.tablet.size   | 1             | N        | The number of Doris Tablets corresponding to one Partition. The smaller this value is set, the more Partitions will be generated, increasing parallelism on the Flink side, but also placing more pressure on Doris. |
 | doris.batch.size            | 4064          | N        | The maximum number of rows read from BE at a time. Increasing this value can reduce the number of connections established between Flink and Doris, thereby reducing the additional time overhead caused by network latency. |
 | doris.exec.mem.limit        | 8192mb        | N        | Memory limit for a single query. The default is 8GB, in bytes.                                                                                         |
-| source.use-flight-sql       | FALSE         | N        | Whether to use Arrow Flight SQL for reading                                                                                                            |
+| source.use-flight-sql       | TRUE          | N        | Whether to use Arrow Flight SQL for reading                                                                                                            |
 | source.flight-sql-port      | -             | N        | When using Arrow Flight SQL for reading, the FE's `arrow_flight_sql_port`                                                                              |
 
 **DataStream-Specific Configuration**

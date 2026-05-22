@@ -152,7 +152,7 @@ mysql> SELECT DISTINCT j FROM test_jsonb_groupby;
    +------+----------+
    ```
 
-   This is because the first `123` is of type `BIGINT`, while the second `123` is of type `TINYINT`, resulting in different binary representations. You can verify their types with the following query:
+   This is because the first `123` is stored internally as a 64-bit integer (`json_type` reports `bigint`), while the second `123` is stored as a narrow integer (`json_type` reports `int` for all sub-`bigint` integer widths), resulting in different binary representations. You can verify their types with the following query:
    ```sql
    mysql> SELECT j, json_type(j, '$') FROM test_jsonb;
    +------+------------------+
