@@ -19,12 +19,12 @@ CREATE DATABASE [IF NOT EXISTS] <db_name>
 
 ## 必选参数
 
-** 1. `<db_name>`**
+**1. `<db_name>`**
 >  数据库名称
 
 ## 可选参数
 
-** 1. `<PROPERTIES>`**
+**1. `<PROPERTIES>`**
 >  该数据库的附加信息
 
 ## 权限控制
