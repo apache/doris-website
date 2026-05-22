@@ -122,4 +122,4 @@ PROPERTIES (
 );
 ```
 
-Supported values for `compression` are: `none`, `lz4`, `lz4f`, `lz4hc`, `zstd`, `snappy`, and `zlib`. If not specified explicitly, Doris uses the system default compression algorithm.
+Supported values for `compression` are: `none`, `lz4`, `lz4f`, `lz4hc`, `zstd`, `snappy`, and `zlib`. If not specified explicitly, Doris uses the default compression algorithm `ZSTD` (controlled by the FE configuration `default_compression_type`).
