@@ -416,7 +416,6 @@
                         "admin-manual/fe/meta-replay-state-action",
                         "admin-manual/fe/metrics-action",
                         "admin-manual/fe/profile-action",
-                        "admin-manual/fe/query-detail-action",
                         "admin-manual/fe/query-schema-action",
                         "admin-manual/fe/query-stats-action",
                         "admin-manual/fe/row-count-action",
