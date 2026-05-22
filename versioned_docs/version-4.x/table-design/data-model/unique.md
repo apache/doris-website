@@ -35,8 +35,8 @@ The Doris Unique Key Model provides two implementations, compared as follows:
 
 | Implementation | Default since version | Merge timing | Query performance | Predicate pushdown | Applicable scenarios |
 | --- | --- | --- | --- | --- | --- |
-| Merge-on-write | Default since 1.2 | Merged immediately at write time | High | Supported | Most scenarios, balancing query and write performance |
-| Merge-on-read | Default before 1.2 | Merged at query or compaction time | Lower | Not supported | Write-heavy, read-light scenarios |
+| Merge-on-write | Default since 2.1 (introduced in 1.2) | Merged immediately at write time | High | Supported | Most scenarios, balancing query and write performance |
+| Merge-on-read | Default before 2.1 | Merged at query or compaction time | Lower | Not supported | Write-heavy, read-light scenarios |
 
 - **Merge-on-write**: Records with the same Key are merged immediately at write time, ensuring that the storage always holds the latest data. This mode balances query and write performance, avoids merging data across multiple versions, and supports predicate pushdown to the storage layer. **This mode is recommended for most scenarios.**
 - **Merge-on-read**: Data is not merged at write time but is appended incrementally, with multiple versions retained inside Doris. At query or compaction time, versions with the same Key are merged. This mode suits write-heavy, read-light scenarios, but queries must merge multiple versions and predicates cannot be pushed down, which may affect query speed.
