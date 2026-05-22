@@ -14,6 +14,29 @@ Converts an aggregate function for tables into an aggregate function for arrays 
 `AGGREGATE_FUNCTION_FOREACH(arg...)`
 
 ## example
+
+Prepare the sample data:
+
+```sql
+CREATE TABLE db (
+    id INT,
+    a  ARRAY<INT>,
+    s  ARRAY<STRING>
+)
+DUPLICATE KEY(id)
+DISTRIBUTED BY HASH(id) BUCKETS 1
+PROPERTIES ("replication_num" = "1");
+
+INSERT INTO db VALUES
+    (1, [1, 2, 3], ["ab", "123"]),
+    (2, [20],      ["cd"]),
+    (3, [100],     ["efg"]),
+    (4, NULL,      NULL),
+    (5, [null, 2], [null, "c"]);
+```
+
+Then run the FOREACH combinators:
+
 ```
 mysql [test]>select a , s from db;
 +-----------+---------------+
