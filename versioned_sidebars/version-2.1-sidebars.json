@@ -776,7 +776,6 @@
                                 "admin-manual/open-api/fe-http/meta-replay-state-action",
                                 "admin-manual/open-api/fe-http/metrics-action",
                                 "admin-manual/open-api/fe-http/profile-action",
-                                "admin-manual/open-api/fe-http/query-detail-action",
                                 "admin-manual/open-api/fe-http/query-schema-action",
                                 "admin-manual/open-api/fe-http/query-stats-action",
                                 "admin-manual/open-api/fe-http/row-count-action",
