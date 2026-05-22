@@ -105,7 +105,7 @@ spec:
       memory: 4Gi
 ```
 
-Apply the above configuration to the [DorisDisaggregatedCluster resource you want to deploy](./install-doris-cluster.md#3-配置-dorisdisaggregatedcluster-资源).
+Apply the above configuration to the [DorisDisaggregatedCluster resource you want to deploy](./install-doris-cluster.md#2-modify-key-configurations).
 
 ## 4. Customize startup configuration
 
@@ -175,7 +175,7 @@ Parameter description:
 - `${msConfigMapName}`: the name of the ConfigMap that contains the MetaService startup configuration
 - `mountPath`: the mount point must be `/etc/doris`
 
-Apply the above configuration to the [DorisDisaggregatedCluster resource](./install-doris-cluster.md#3-配置-dorisdisaggregatedcluster-资源) you want to deploy.
+Apply the above configuration to the [DorisDisaggregatedCluster resource](./install-doris-cluster.md#2-modify-key-configurations) you want to deploy.
 
 ## 5. Configure service probe timeouts
 

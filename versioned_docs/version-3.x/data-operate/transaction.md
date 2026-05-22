@@ -367,7 +367,7 @@ mysql> SELECT * FROM dt3;
 |    1 | Emily    |    25 |
 |    2 | Benjamin |    35 |
 |    3 | Olivia   |    28 |
-|    4 | Alexande |    60 |
+|    4 | Alexander |    60 |
 |    5 | Ava      |    17 |
 |    7 | Sophia   |    32 |
 +------+----------+-------+

@@ -40,4 +40,4 @@ Supported load methods include:
 
 <!-- Knowledge type: Capability definition -->
 
-When only some fields need to be updated, you can use the partial column update capability of the Unique model to avoid assembling the full record. For detailed information (including usage examples, flexible partial column updates, and handling of new rows), see the [Column update](./partial-column-update.md#column-update-for-the-unique-model) document.
+When only some fields need to be updated, you can use the partial column update capability of the Unique model to avoid assembling the full record. For detailed information (including usage examples, flexible partial column updates, and handling of new rows), see the [Column update](./partial-column-update.md#column-update-on-the-unique-key-model) document.
