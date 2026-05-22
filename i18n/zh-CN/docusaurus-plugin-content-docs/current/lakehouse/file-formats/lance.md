@@ -13,7 +13,7 @@
 Lance 格式支持为 **实验性功能**，自 Apache Doris **5.0.0** 版本起提供。
 :::
 
-[Lance](https://lancedb.github.io/lance/) 是一种面向 AI/ML 场景设计的现代列式数据格式，原生支持向量检索、多模态数据（图像、Embedding）以及高效的随机访问。
+[Lance](https://docs.lancedb.com/lance) 是一种面向 AI/ML 场景设计的现代列式数据格式，原生支持向量检索、多模态数据（图像、Embedding）以及高效的随机访问。
 
 Doris 通过 Table Valued Function（TVF）支持读取 Lance 格式文件。
 
@@ -95,4 +95,4 @@ SELECT count(*), min(id), max(id) FROM s3(
 
 ## 参考资料
 
-- [Lance 格式官方文档](https://lancedb.github.io/lance/)
+- [Lance 格式官方文档](https://docs.lancedb.com/lance)

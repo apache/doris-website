@@ -153,7 +153,7 @@ Spark related parameters are as follows:
       "user"="root",
       "password"="123456",
       "jdbc_url" = "jdbc:mysql://127.0.0.1:3316/doris_test?useSSL=false",
-      "driver_url" = "https://doris-community-test-1308700295.cos.ap-hongkong.myqcloud.com/jdbc_driver/mysql-connector-java-8.0.25.jar",
+      "driver_url" = "https://repo1.maven.org/maven2/mysql/mysql-connector-java/8.0.25/mysql-connector-java-8.0.25.jar",
    "driver_class" = "com.mysql.cj.jdbc.Driver"
    );
    ```
@@ -189,7 +189,7 @@ Spark related parameters are as follows:
 
 **6. Create HMS resource**
 
-   HMS resource is used to create [hms catalog](../../../../lakehouse/datalake-analytics/hive)
+   HMS resource is used to create [hms catalog](../../../../lakehouse/catalogs/hive-catalog.mdx)
    ```sql
    CREATE RESOURCE hms_resource PROPERTIES (
       'type'='hms',
