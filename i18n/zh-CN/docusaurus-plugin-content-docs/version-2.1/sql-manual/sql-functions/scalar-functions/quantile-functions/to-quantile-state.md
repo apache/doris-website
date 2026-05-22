@@ -6,28 +6,28 @@
 }
 ---
 
-## Description
+## 描述
 
 此函数将数值类型转化成 `QUANTILE_STATE` 类型。 compression 参数是可选项，可设置范围是[2048, 10000]，值越大，后续分位数近似计算的精度越高，内存消耗越大，计算耗时越长。 compression 参数未指定或设置的值在[2048, 10000]范围外，以 2048 的默认值运行
 
-## Syntax
+## 语法
 
 ```sql
 TO_QUANTILE_STATE(<raw_data>, <compression>)
 ```
 
-## Parameters
+## 参数
 
 | 参数 | 描述 |
 | -- | -- |
 | `<raw_data>` | 目标列。|
 | `<compression>` | 压缩阈值。|
 
-## Return value
+## 返回值
 
 转换之后的 `QUANTILE_STATE` 类型的列。
 
-## Example
+## 举例
 
 ```sql
 CREATE TABLE IF NOT EXISTS ${tableName_21} (
