@@ -6,8 +6,6 @@
     "keywords": [
         "Prefix Index",
         "Sort Key",
-        "Sort Key",
-        "Prefix Index",
         "Apache Doris",
         "sparse index",
         "query acceleration",

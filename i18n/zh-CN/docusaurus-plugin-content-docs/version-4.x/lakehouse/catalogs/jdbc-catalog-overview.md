@@ -65,7 +65,7 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
       
       2. 本地绝对路径。如 `file:///path/to/mysql-connector-j-8.3.0.jar`。需将 Jar 包预先存放在所有 FE/BE 节点指定的路径下。
       
-      3. Http 地址。如：`http://repo1.maven.org/maven2/com/mysql/mysql-connector-j/8.3.0/mysql-connector-j-8.3.0.jar` 系统会从这个 Http 地址下载 Driver 文件。仅支持无认证的 Http 服务。  
+      3. Http 地址。如：`https://repo1.maven.org/maven2/com/mysql/mysql-connector-j/8.3.0/mysql-connector-j-8.3.0.jar` 系统会从这个 Http 地址下载 Driver 文件。仅支持无认证的 Http 服务。  
 
 
   * 可选属性

@@ -395,7 +395,7 @@ Reference values:
 
 | dim | rows | Estimated memory |
 | --- | --- | --- |
-| 128 | 1M | 496 MB |
+| 128 | 1M | 500 MB |
 | 768 | 1M | 2.9 GB |
 
 To guarantee query performance, the BE must have enough memory to hold the entire index. Otherwise, frequent IO on index files causes severe query performance degradation.

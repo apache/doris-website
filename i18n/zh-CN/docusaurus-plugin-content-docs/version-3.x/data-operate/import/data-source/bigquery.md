@@ -99,7 +99,7 @@ PROPERTIES (
 
 2.2. **查看 GCS 上的导出文件**
 
-   以上命令会将 sales_data 的数据导出到 GCS 上，并且每个分区会产生一个或多个文件，文件名递增，具体可参考[exporting-data](https://cloud.google.com/bigquerydocs/exporting-data#exporting_data_into_one_or_more_files)，如下
+   以上命令会将 sales_data 的数据导出到 GCS 上，并且每个分区会产生一个或多个文件，文件名递增，具体可参考[exporting-data](https://cloud.google.com/bigquery/docs/exporting-data#exporting_data_into_one_or_more_files)，如下
    ![gcs_export](/images/data-operate/gcs_export.png)
 
 ## 3. 导入数据到 Doris

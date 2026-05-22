@@ -5,7 +5,6 @@
     "description": "Doris custom analyzers combine character filters, tokenizers, and token filters to flexibly control text segmentation strategies, improving the search relevance and precision of inverted indexes.",
     "keywords": [
         "custom analyzer",
-        "custom analyzer",
         "inverted index tokenizer",
         "tokenizer",
         "token_filter",
@@ -91,8 +90,8 @@ Supported tokenizer types:
 | Type | Description | Main Parameters |
 | --- | --- | --- |
 | `standard` | Standard tokenization (follows Unicode text segmentation), suitable for most languages | None |
-| `ngram` | Splits by N-grams | `min_ngram`, `max_ngram`, `token_chars` |
-| `edge_ngram` | Generates N-grams starting from the beginning of the word | `min_ngram`, `max_ngram`, `token_chars` |
+| `ngram` | Splits by N-grams | `min_gram`, `max_gram`, `token_chars` |
+| `edge_ngram` | Generates N-grams starting from the beginning of the word | `min_gram`, `max_gram`, `token_chars` |
 | `keyword` | Outputs the entire text as a single term, often combined with token_filter | None |
 | `char_group` | Splits by the given characters | `tokenize_on_chars` |
 | `basic` | Simple English / digit / Chinese / Unicode tokenization | `extra_chars` |
@@ -100,8 +99,8 @@ Supported tokenizer types:
 
 Parameter descriptions:
 
-- `min_ngram`: minimum length (default 1)
-- `max_ngram`: maximum length (default 2)
+- `min_gram`: minimum length (default 1)
+- `max_gram`: maximum length (default 2)
 - `token_chars`: character categories to keep (default: keep all). Options: `letter`, `digit`, `whitespace`, `punctuation`, `symbol`
 - `tokenize_on_chars`: a character list or category. Categories support `whitespace`, `letter`, `digit`, `punctuation`, `symbol`, `cjk`
 - `extra_chars`: additional ASCII characters to split on (such as `[]().`)
@@ -503,5 +502,3 @@ Result:
 1. Nesting multiple components in a custom `analyzer` may degrade tokenization performance.
 2. The `select tokenize` tokenization function supports custom analyzers and can be used to debug tokenization results.
 3. Only one of the predefined `built_in_analyzer` and a custom `analyzer` can exist on the same index.
-</content>
-</invoke>

@@ -418,7 +418,7 @@ Before high-concurrency queries, run a cold query first to warm up the index fil
 
 #### Memory Footprint and Performance
 
-> **An HNSW index (without quantization compression) takes about 1.2x the memory of the vectors it indexes.**
+> **An HNSW index (without quantization compression) takes about 1.3x the memory of the vectors it indexes.**
 
 For example, for a 128-dimensional, 1M dataset, an HNSW FLAT index needs about `128 x 4 x 1,000,000 x 1.3 ~= 650 MB`.
 
