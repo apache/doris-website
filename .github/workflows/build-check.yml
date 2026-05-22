@@ -156,15 +156,47 @@ jobs:
                     esac
                 done <<< "$CHANGED_FILES"
 
+                # Build the set of versions Docusaurus actually builds:
+                # `current` (the dev/unreleased version) plus everything in versions.json.
+                # Older version dirs (e.g. version-1.2, version-2.0) may still exist on
+                # disk but be absent from versions.json — touching them must not poison
+                # onlyIncludeVersions, which would fail the build with "unknown versions".
+                ACTIVE_VERSIONS=$(jq -r '.[]' versions.json | tr '\n' ',' | sed 's/,$//')
+                ACTIVE_VERSIONS="current,${ACTIVE_VERSIONS}"
+                echo "Active versions (current + versions.json): $ACTIVE_VERSIONS"
+
                 # Deduplicate versions
                 if [ "$NEED_FULL_BUILD" = "true" ]; then
                     # Structural changes: build all active versions
                     DOCS_VERSIONS=""
                     echo "Structural changes detected, will build ALL versions."
                 elif [ -n "$VERSIONS" ]; then
-                    # Only doc content changes: build only affected versions
-                    DOCS_VERSIONS=$(echo "$VERSIONS" | tr ',' '\n' | sort -u | grep -v '^$' | tr '\n' ',' | sed 's/,$//')
-                    echo "Doc-only changes detected for versions: $DOCS_VERSIONS"
+                    # Only doc content changes: build only affected versions.
+                    # Intersect detected versions with the active set so that edits to
+                    # retired version dirs (e.g. version-1.2) don't break the build.
+                    RAW_VERSIONS=$(echo "$VERSIONS" | tr ',' '\n' | sort -u | grep -v '^$')
+                    DOCS_VERSIONS=""
+                    SKIPPED_VERSIONS=""
+                    for v in $RAW_VERSIONS; do
+                        if echo ",$ACTIVE_VERSIONS," | grep -q ",$v,"; then
+                            DOCS_VERSIONS="${v},$DOCS_VERSIONS"
+                        else
+                            SKIPPED_VERSIONS="${v},$SKIPPED_VERSIONS"
+                        fi
+                    done
+                    DOCS_VERSIONS=$(echo "$DOCS_VERSIONS" | sed 's/,$//')
+                    SKIPPED_VERSIONS=$(echo "$SKIPPED_VERSIONS" | sed 's/,$//')
+                    if [ -n "$SKIPPED_VERSIONS" ]; then
+                        echo "Ignoring changes to retired/unknown versions: $SKIPPED_VERSIONS"
+                    fi
+                    if [ -z "$DOCS_VERSIONS" ]; then
+                        # Everything we detected was retired/unknown; fall back to a
+                        # minimal build so the workflow still validates the site.
+                        DOCS_VERSIONS="4.x"
+                        echo "All detected versions were retired/unknown, doing minimal build with '4.x' only."
+                    else
+                        echo "Doc-only changes detected for versions: $DOCS_VERSIONS"
+                    fi
                 else
                     # No versioned doc changes (e.g., only blog, community, or scripts).
                     # Blog and community plugins are always compiled by Docusaurus
