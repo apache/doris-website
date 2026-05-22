@@ -89,7 +89,7 @@ Maven 中使用的时候，可以直接在 Pom 文件中加入如下依赖
      
 ### 向 Doris 中写入数据
 
-在使用 Flink Doris Connector 写入数据时，会在 Flink 内存中进行攒批操作，在通过 Stream Load 批量导入。Doris Flink Connector 提供了两种攒批模式，默认使用基于 Flink Checkpoint 的流式写入方式：
+在使用 Flink Doris Connector 写入数据时，会在 Flink 内存中进行攒批操作，再通过 Stream Load 批量导入。Doris Flink Connector 提供了两种攒批模式，默认使用基于 Flink Checkpoint 的流式写入方式：
 
 |          | 流式写入 | 批量写入 |
 |----------|----------|----------|
