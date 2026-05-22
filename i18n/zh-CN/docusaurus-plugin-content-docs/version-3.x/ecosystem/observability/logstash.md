@@ -192,7 +192,7 @@ filter {
 # doris output 将数据输出到 Doris，使用的是 Stream Load HTTP 接口。通过 headers 参数指定了 Stream Load 的数据格式为 JSON，通过 mapping 参数指定 Logstash 字段到 JSON 字段的映射。由于 headers 指定了 "format" => "json"，Stream Load 会自动解析 JSON 字段写入对应的 Doris 表的字段。
 output {
     doris {
-        http_hosts => ["http://localhost:8630"]
+        http_hosts => ["http://localhost:8030"]
         user => "root"
         password => ""
         db => "log_db"
@@ -372,7 +372,7 @@ input {
 
 output {
     doris {
-        http_hosts => ["http://fe1:8630", "http://fe2:8630", "http://fe3:8630"]
+        http_hosts => ["http://fe1:8030", "http://fe2:8030", "http://fe3:8030"]
         user => "root"
         password => ""
         db => "log_db"
