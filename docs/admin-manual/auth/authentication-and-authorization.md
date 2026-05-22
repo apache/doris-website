@@ -45,7 +45,7 @@ Doris supports built-in authentication schemes as well as LDAP authentication.
 
 Authentication is based on usernames, passwords, and other information stored within Doris itself.
 
-Administrators create users with the `CREATE USER` command and view all created users with the `SHOW ALL GRANTS` command.
+Administrators create users with the `CREATE USER` command and view all users' permissions and roles with the `SHOW ALL GRANTS` command.
 
 When a user logs in, the system verifies whether the username, password, and client IP address are correct.
 
@@ -338,7 +338,7 @@ Please refer to [Authorization Scheme Based on Apache Ranger](./authorization/ra
 
         Suppose later, we grant a separate permission to `user1@'ip1'`:
 
-        `GRANT ALTER_PRIV ON . TO user1@'ip1';`
+        `GRANT ALTER_PRIV ON *.* TO user1@'ip1';`
 
         Then `user1@'ip1'` will have permissions for both Select_priv and Alter_priv. And when we change the permissions for `user1@['domain']` again, `user1@'ip1'` will not follow the change.
 

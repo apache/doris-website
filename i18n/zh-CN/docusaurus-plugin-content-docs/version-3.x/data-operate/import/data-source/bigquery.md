@@ -135,7 +135,7 @@ PROPERTIES (
   由于 S3Load 导入是异步提交的，所以需要通过 show load 可以查看指定 label 的导入情况：
 
    ```yaml
-   mysql> show load where label = "label_sales_data_2025_04_08"\G
+   mysql> show load where label = "sales_data_2025_04_08"\G
    *************************** 1. row ***************************
            JobId: 17956078
            Label: label_sales_data_2025_04_08

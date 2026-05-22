@@ -387,7 +387,7 @@ Follow these steps:
 
         output {
           doris {
-            http_hosts => [ "<http://fehost1:http_port>", "<http://fehost2:http_port>", "<http://fehost3:http_port">]
+            http_hosts => [ "<http://fehost1:http_port>", "<http://fehost2:http_port>", "<http://fehost3:http_port>" ]
             user => "your_username"
             password => "your_password"
             db => "your_db"
@@ -507,7 +507,7 @@ Refer to the example below, where `property.*` are settings for the Librdkafka c
 -- Prepare the kafka cluster and topic log__topic_
 -- Create a routine load that imports data from kafka log__topic_ into the log_table table
 CREATE ROUTINE LOAD load_log_kafka ON log_db.log_table
-COLUMNS(ts, clientip, request, status, size)
+COLUMNS(ts, host, path, message)
 PROPERTIES (
 "max_batch_interval" = "60",
 "max_batch_rows" = "20000000",

@@ -220,7 +220,7 @@ JobName: inner_mtmv_1752809156450
 State: NORMAL
 SchemaChangeDetail:
 RefreshState: SUCCESS
-RefreshInfo: BUILD IMMEDIATE REFRESH AUTO ON SCHEDULE EVERY 1 DAY STARTS "2025-12-01 20:30:00"
+RefreshInfo: BUILD IMMEDIATE REFRESH AUTO ON SCHEDULE EVERY 1 DAY STARTS "2024-12-01 20:30:00"
 QuerySql: SELECT
 `internal`.`doc_db`.`orders`.`o_orderdate`,
 `internal`.`doc_db`.`lineitem`.`l_orderkey`,

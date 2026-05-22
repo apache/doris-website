@@ -112,6 +112,6 @@ Load configuration parameters are set through the job's `job_properties`. They c
 
 | Parameter | Default | Description                                                                                                                                                                       |
 | --------- | ------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| session.* | None    | All session variables can be configured in `job_properties`. For load-related variables, see [Insert Into Select](../../../../data-operate/import/import-way/insert-into-manual.md#load-configuration-parameters). |
+| session.* | None    | All session variables can be configured in `job_properties`. For load-related variables, see [Insert Into Select](../../../../data-operate/import/import-way/insert-into-manual.md#import-configuration-parameters). |
 
 For more common parameters (such as `max_interval`), see the [Common Parameters](./continuous-load-overview.md#common-parameters) section in the Continuous Load Overview.

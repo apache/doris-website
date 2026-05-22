@@ -164,10 +164,10 @@ WITH S3
 由于 S3 Load 是异步提交，可通过 `SHOW LOAD` 查询指定 label 的导入情况：
 
 ```yaml
-mysql> show load where label = "label_sales_data_2025_04_08"\G
+mysql> show load where label = "sales_data_2025_04_08"\G
 *************************** 1. row ***************************
         JobId: 17956078
-        Label: label_sales_data_2025_04_08
+        Label: sales_data_2025_04_08
         State: FINISHED
       Progress: 100.00% (1/1)
           Type: BROKER

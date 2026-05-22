@@ -99,7 +99,7 @@ If the audit log shows that resource usage for each SQL is normal, use monitorin
 ```sql
 SELECT be_id, workload_group_id, memory_usage_bytes, cpu_usage_percent, local_scan_bytes_per_second
 FROM workload_group_resource_usage
-ORDER BY memory_usage_bytes, cpu_usage_percent, local_scan_bytes_per_second DESC;
+ORDER BY memory_usage_bytes DESC, cpu_usage_percent DESC, local_scan_bytes_per_second DESC;
 ```
 
 **2. Top N SQL by CPU usage**

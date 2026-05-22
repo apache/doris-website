@@ -323,7 +323,7 @@ In the vast majority of cases, JRF is adaptive and does not require manual tunin
 
 JRF uses a Try-best mechanism: the Scan waits for the JRF before starting; Doris automatically estimates the wait time. In some cases, insufficient waiting causes the JRF to not take effect, and the number of rows output by the Scan is higher than expected.
 
-How to determine this: in the Profile, the Scan node shows `RuntimeFilterState = false`.
+How to determine this: in the Profile, the Scan node shows `RuntimeFilterState = NOT_READY`.
 
 Operation:
 

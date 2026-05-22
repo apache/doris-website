@@ -178,10 +178,10 @@ WITH S3
 Because S3 Load is submitted asynchronously, you can use `SHOW LOAD` with the job label to check load progress:
 
 ```yaml
-mysql> show load where label = "label_sales_data_2025_04_08"\G
+mysql> show load where label = "sales_data_2025_04_08"\G
 *************************** 1. row ***************************
          JobId: 17956078
-         Label: label_sales_data_2025_04_08
+         Label: sales_data_2025_04_08
          State: FINISHED
       Progress: 100.00% (1/1)
           Type: BROKER
