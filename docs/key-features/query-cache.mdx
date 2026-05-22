@@ -64,7 +64,7 @@ FROM orders
 WHERE dt >= '2024-01-01' AND dt < '2024-01-08'
 GROUP BY region;
 
--- Run 2: overlapping window, four shared days
+-- Run 2: overlapping window, three shared days
 SELECT region, SUM(revenue), COUNT(*)
 FROM orders
 WHERE dt >= '2024-01-05' AND dt < '2024-01-12'
@@ -80,7 +80,7 @@ CacheSourceOperator
   CacheTabletId: 12345
 ```
 
-The first run misses every tablet and writes per-tablet partial aggregates. The second run hits the cache for the four overlapping days (`2024-01-05` through `2024-01-07`) and only scans the new days (`2024-01-08` through `2024-01-11`). To confirm a hit, look at `CacheSourceOperator` in the profile: a per-tablet `HitCache: true` means that tablet was served from memory.
+The first run misses every tablet and writes per-tablet partial aggregates. The second run hits the cache for the three overlapping days (`2024-01-05` through `2024-01-07`) and only scans the new days (`2024-01-08` through `2024-01-11`). To confirm a hit, look at `CacheSourceOperator` in the profile: a per-tablet `HitCache: true` means that tablet was served from memory.
 
 ## When should you use the Apache Doris Query Cache? {#when}
 

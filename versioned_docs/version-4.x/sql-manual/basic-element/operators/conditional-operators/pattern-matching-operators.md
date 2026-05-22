@@ -14,8 +14,8 @@ Pattern matching operators are used to compare character-type data.
 
 | Operator | Function | Example |
 | ----------------------------------- | ------------------------------------------------------------ | --------------------------- |
-| `<char1> [NOT] LIKE <char2>` | If `<char1>` does not match the pattern `<char2>`, it is TRUE. In `<char2>`, the character `%` matches any zero or multiple characters (except for an empty string). The character `_` matches any single character. If there is an escape character before the wildcard character, it is treated as a literal character. | `SELECT 'ABCD' LIKE '%C_'` |
-| `<char1> [NOT] {REGEXP \| RLIKE} <char2>` | If `<char1>` does not match the pattern `<char2>`, it is TRUE. For the specific rules of regular expressions, please refer to the subsequent REGEXP section. | `SELECT 'ABCD' REGEXP 'A.*D'` |
+| `<char1> [NOT] LIKE <char2>` | If `<char1>` matches the pattern `<char2>`, it is TRUE (or does not match when `NOT` is specified). In `<char2>`, the character `%` matches any zero or multiple characters (except for an empty string). The character `_` matches any single character. If there is an escape character before the wildcard character, it is treated as a literal character. | `SELECT 'ABCD' LIKE '%C_'` |
+| `<char1> [NOT] {REGEXP \| RLIKE} <char2>` | If `<char1>` matches the pattern `<char2>`, it is TRUE (or does not match when `NOT` is specified). For the specific rules of regular expressions, please refer to the subsequent REGEXP section. | `SELECT 'ABCD' REGEXP 'A.*D'` |
 
 ### LIKE
 

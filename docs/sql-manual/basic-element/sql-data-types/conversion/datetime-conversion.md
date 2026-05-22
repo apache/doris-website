@@ -433,7 +433,7 @@ When the input cannot be parsed into a valid DATETIME value according to the rul
 
 #### Examples
 
-Results are shown using DATETIME(3), which is a DATETIME type that accommodates 3 decimal places.
+Results are shown using DATETIME(6), which is a DATETIME type that accommodates 6 decimal places.
 
 | Number                           | Cast as DATETIME(6) Result       | Comment           |
 | ---------------------------- | ---------------------------- | ----------------- |

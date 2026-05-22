@@ -323,7 +323,7 @@ OLAP_SCAN_OPERATOR  (id=2.  nereids_id=351.  table  name  =  orders(orders)):(Ex
 
 JRF 采用 Try-best 机制：Scan 启动前会等待 JRF；Doris 自动估算等待时间。某些情况下等待不足导致 JRF 未生效，Scan 输出行数会高于预期。
 
-判断方法：Profile 中 Scan 节点 `RuntimeFilterState = false`。
+判断方法：Profile 中 Scan 节点 `RuntimeFilterState = NOT_READY`。
 
 操作：
 

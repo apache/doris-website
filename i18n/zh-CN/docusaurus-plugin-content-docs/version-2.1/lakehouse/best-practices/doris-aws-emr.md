@@ -104,7 +104,7 @@ CREATE CATALOG iceberg_s3 PROPERTIES (
 ### 03 访问 S3Tables
 
 ```sql
-Doris > SWITCH iceberg_s3;
+Doris > SWITCH aws_s3_tables;
 
 Doris > SHOW DATABASES;
 +--------------------+

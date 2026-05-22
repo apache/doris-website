@@ -387,7 +387,7 @@ PROPERTIES (
 
         output {
           doris {
-            http_hosts => [ "<http://fehost1:http_port>", "<http://fehost2:http_port>", "<http://fehost3:http_port">]
+            http_hosts => [ "<http://fehost1:http_port>", "<http://fehost2:http_port>", "<http://fehost3:http_port>" ]
             user => "your_username"
             password => "your_password"
             db => "your_db"
@@ -507,7 +507,7 @@ PROPERTIES (
 -- 准备好 kafka 集群和 topic log__topic_
 -- 创建 routine load，从 kafka log__topic_ 将数据导入 log_table 表
 CREATE ROUTINE LOAD load_log_kafka ON log_db.log_table
-COLUMNS(ts, clientip, request, status, size)
+COLUMNS(ts, host, path, message)
 PROPERTIES (
 "max_batch_interval" = "60",
 "max_batch_rows" = "20000000",

@@ -219,7 +219,7 @@ created_at: 2020-11-14 02:00:00
 By default, `DESC` only shows the top-level VARIANT column and does not expand the inner subcolumns:
 
 ``` sql
-mysql> desc github_events;
+mysql> desc test_variant;
 +------------------------------------------------------------+------------+------+-------+---------+-------+
 | Field                                                      | Type       | Null | Key   | Default | Extra |
 +------------------------------------------------------------+------------+------+-------+---------+-------+
@@ -239,7 +239,7 @@ After enabling `describe_extend_variant_column`, you can view the subcolumn type
 mysql> set describe_extend_variant_column = true;
 Query OK, 0 rows affected (0.01 sec)
 
-mysql> desc github_events;
+mysql> desc test_variant;
 +------------------------------------------------------------+------------+------+-------+---------+-------+
 | Field                                                      | Type       | Null | Key   | Default | Extra |
 +------------------------------------------------------------+------------+------+-------+---------+-------+

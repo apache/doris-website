@@ -176,7 +176,7 @@ created_at: 2020-11-14 02:00:00
 Running desc command to view schema information, sub-columns will automatically expand at the storage layer and undergo type inference.
 
 ``` sql
-mysql> desc github_events;
+mysql> desc test_variant;
 +------------------------------------------------------------+------------+------+-------+---------+-------+
 | Field                                                      | Type       | Null | Key   | Default | Extra |
 +------------------------------------------------------------+------------+------+-------+---------+-------+
@@ -192,7 +192,7 @@ mysql> desc github_events;
 mysql> set describe_extend_variant_column = true;
 Query OK, 0 rows affected (0.01 sec)
 
-mysql> desc github_events;
+mysql> desc test_variant;
 +------------------------------------------------------------+------------+------+-------+---------+-------+
 | Field                                                      | Type       | Null | Key   | Default | Extra |
 +------------------------------------------------------------+------------+------+-------+---------+-------+

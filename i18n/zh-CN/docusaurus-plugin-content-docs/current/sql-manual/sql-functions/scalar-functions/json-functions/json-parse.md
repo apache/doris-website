@@ -51,7 +51,7 @@ JSON_PARSE_ERROR_TO_VALUE (<json_str>, <default_json_value>)
     +-------------------------------------+
     ```
     ```sql
-    SELECT json_parse_error_to_null('{"k1":"v31","k2":300}','{}');
+    SELECT json_parse_error_to_null('{"k1":"v31","k2":300}');
     ```
     ```text
     +---------------------------------------------------+
