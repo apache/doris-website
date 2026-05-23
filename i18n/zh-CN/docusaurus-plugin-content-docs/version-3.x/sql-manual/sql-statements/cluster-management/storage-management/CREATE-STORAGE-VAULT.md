@@ -31,6 +31,10 @@ CREATE STORAGE VAULT [IF NOT EXISTS] <`vault_name`> [ <`properties`> ]
 | `[IF NOT EXISTS]` | 如果指定的存储库已经存在，则不会执行创建操作，并且不会抛出错误。这可以防止重复创建相同的存储库。 |
 | `PROPERTIES`      | 一组键值对，用来设置或更新存储库的具体属性。每个属性由键（`<key>`）和值（`<value>`）组成，并用等号 (`=`) 分隔。多个键值对之间用逗号 (`,`) 分隔。 |
 
+:::note
+`type` 属性只接受两种取值：`"S3"` 或 `"hdfs"`（不区分大小写）。所有对象存储后端 —— Amazon S3、阿里云 OSS、腾讯云 COS、华为云 OBS、百度云 BOS、MinIO、Azure Blob Storage、Google Cloud Storage —— 都使用 `"type" = "S3"`，因为 Doris 通过 S3 兼容 API 访问它们。具体的云厂商由 `provider` 属性指定（`COS`、`OSS`、`S3`、`OBS`、`BOS`、`AZURE`、`GCP` 之一）。`s3.access_key` / `s3.secret_key` 属性命名同理，并非特指 AWS S3。
+:::
+
 ### S3 Vault
 
 | 参数              | 是否必需 | 描述                                                                                                      |
