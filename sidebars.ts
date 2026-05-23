@@ -716,7 +716,6 @@ const sidebars: SidebarsConfig = {
                     label: 'Lakehouse Best Practices',
                     items: [
                         'lakehouse/best-practices/optimization',
-                        'lakehouse/best-practices/doris-snowflake-catalog',
                         'lakehouse/best-practices/kerberos',
                         'lakehouse/best-practices/tpch',
                         'lakehouse/best-practices/tpcds',

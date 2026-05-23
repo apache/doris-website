@@ -83,6 +83,16 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 
         这种方式性能最好。如果设置为 `false`，则 Doris 会逐一检查每个 Table 的类型，并只返回 Iceberg 类型的 Table。该模式在表很多的情况下，性能会比较差。
 
+    - `iceberg.rest.view-enabled`
+
+        自 4.0.6 版本支持。
+
+        仅对 Iceberg REST Catalog 生效。是否启用 View 相关操作（包括 `listViews`、`loadView`、`viewExists`、`dropView` 等）。默认为 `true`。
+
+        部分 Iceberg REST Catalog 实现虽然暴露了 Table 相关 API，但 View 相关 API 不可用或会返回错误。由于 Doris 在执行 `SHOW TABLES` 时会调用 `ViewCatalog.listViews()` 以将 View 从 Table 列表中过滤掉，因此此类 REST 服务可能导致 `SHOW TABLES` 及表元数据加载失败。
+
+        遇到上述情况时，可将该参数设置为 `false`，Doris 将跳过所有 View 相关操作，使 `SHOW TABLES` 等元数据操作可以正常工作。
+
 * `{CommonProperties}`
 
     CommonProperties 部分用于填写通用属性。请参阅[数据目录概述](../catalog-overview.md)中【通用属性】部分。
