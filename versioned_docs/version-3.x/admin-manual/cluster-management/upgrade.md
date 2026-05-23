@@ -67,7 +67,7 @@ Before upgrading, conduct metadata compatibility testing to prevent failures cau
    edit_log_port = 19010
 
    ## modify clusterIP
-   clusterId=<a_new_clusterIP, such as 123456>
+   clusterId=<a_new_clusterID, such as 123456>
    ...
    ```
 
