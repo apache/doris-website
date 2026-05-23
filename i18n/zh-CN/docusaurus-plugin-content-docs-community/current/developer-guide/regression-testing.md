@@ -724,6 +724,8 @@ Doris 支持对接多种外部数据源的查询。回归框架提供了通过 D
 
 分别对应 IP 地址（`hostname -i` 输出，一般是 eth0 的 IP）、主机名（`hostname` 输出）、别名（同主机名）。
 
+> **注意**：`run-thirdparties-docker.sh` 通过匹配 `eth[0-9]` 模式来探测主网卡。现代 Linux 发行版（systemd/udev）通常使用 `enp3s0`、`ens33`、`eno1` 等可预测命名，脚本无法识别。如果你的主机网卡名不符合 `eth[0-9]` 模式，启动前请手动在 `run-thirdparties-docker.sh` 中将 `eth_name` 变量设为实际的网卡名。
+
 ### 1. 启动 Container
 
 Doris 目前支持 es、mysql、pg、hive、sqlserver、oracle、iceberg、hudi、trino 等数据源的 Docker compose。相关文件存放在 `docker/thirdparties/docker-compose` 目录下。
