@@ -174,15 +174,14 @@
 
     &__visual-image {
         position: relative;
-        width: auto;
-        height: min(100%, 312px);
-        max-width: 100%;
+        width: 100%;
+        max-width: 624px;
+        height: auto;
         max-height: 100%;
         display: block;
         border: 2px solid var(--dn-cream-light);
         border-radius: 8px;
         box-sizing: border-box;
-        object-fit: contain;
     }
 
     &__card--ink &__visual {
@@ -271,10 +270,6 @@
             min-height: 230px;
             padding: 20px;
         }
-
-        &__visual-image {
-            height: min(100%, 190px);
-        }
     }
 }
 
@@ -318,10 +313,6 @@
         &__visual {
             min-height: 180px;
             padding: 16px;
-        }
-
-        &__visual-image {
-            height: min(100%, 148px);
         }
     }
 }
