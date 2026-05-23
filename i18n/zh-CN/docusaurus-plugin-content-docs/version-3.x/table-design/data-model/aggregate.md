@@ -148,7 +148,7 @@ select group_concat_merge(v2) from aggstate;
 如果不想要最终的聚合结果，而希望保留中间结果，可以使用 `union` 操作：
 
 ```sql
-insert into aggstate select 3,sum_union(v1),group_concat_union(v2) from aggstate;
+insert into aggstate select 3, sum(v1), group_concat_union(v2) from aggstate;
 ```
 
 此时表中计算如下：
@@ -158,17 +158,17 @@ insert into aggstate select 3,sum_union(v1),group_concat_union(v2) from aggstate
 查询结果如下：
 
 ```sql
-mysql> select sum_merge(v1) , group_concat_merge(v2)from aggstate;
-+---------------+------------------------+
-| sum_merge(v1) | group_concat_merge(v2) |
-+---------------+------------------------+
-|            20 | c,b,a,d,c,b,a,d        |
-+---------------+------------------------+
+mysql> select sum(v1), group_concat_merge(v2) from aggstate;
++---------+------------------------+
+| sum(v1) | group_concat_merge(v2) |
++---------+------------------------+
+|      20 | c,b,a,d,c,b,a,d        |
++---------+------------------------+
 
-mysql> select sum_merge(v1) , group_concat_merge(v2)from aggstate where k1 != 2;
-+---------------+------------------------+
-| sum_merge(v1) | group_concat_merge(v2) |
-+---------------+------------------------+
-|            16 | c,b,a,d,c,b,a          |
-+---------------+------------------------+
+mysql> select sum(v1), group_concat_merge(v2) from aggstate where k1 != 2;
++---------+------------------------+
+| sum(v1) | group_concat_merge(v2) |
++---------+------------------------+
+|      16 | c,b,a,d,c,b,a          |
++---------+------------------------+
 ```

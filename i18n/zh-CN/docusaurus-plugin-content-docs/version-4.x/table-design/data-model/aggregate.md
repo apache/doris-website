@@ -161,7 +161,7 @@ SELECT group_concat_merge(v2) FROM aggstate;
 
 ```sql
 INSERT INTO aggstate
-SELECT 3, sum_union(v1), group_concat_union(v2) FROM aggstate;
+SELECT 3, sum(v1), group_concat_union(v2) FROM aggstate;
 ```
 
 此时表内计算方式如下图所示：
@@ -171,17 +171,17 @@ SELECT 3, sum_union(v1), group_concat_union(v2) FROM aggstate;
 查询结果如下：
 
 ```sql
-mysql> SELECT sum_merge(v1), group_concat_merge(v2) FROM aggstate;
-+---------------+------------------------+
-| sum_merge(v1) | group_concat_merge(v2) |
-+---------------+------------------------+
-|            20 | c,b,a,d,c,b,a,d        |
-+---------------+------------------------+
+mysql> SELECT sum(v1), group_concat_merge(v2) FROM aggstate;
++---------+------------------------+
+| sum(v1) | group_concat_merge(v2) |
++---------+------------------------+
+|      20 | c,b,a,d,c,b,a,d        |
++---------+------------------------+
 
-mysql> SELECT sum_merge(v1), group_concat_merge(v2) FROM aggstate WHERE k1 != 2;
-+---------------+------------------------+
-| sum_merge(v1) | group_concat_merge(v2) |
-+---------------+------------------------+
-|            16 | c,b,a,d,c,b,a          |
-+---------------+------------------------+
+mysql> SELECT sum(v1), group_concat_merge(v2) FROM aggstate WHERE k1 != 2;
++---------+------------------------+
+| sum(v1) | group_concat_merge(v2) |
++---------+------------------------+
+|      16 | c,b,a,d,c,b,a          |
++---------+------------------------+
 ```

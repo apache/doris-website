@@ -161,7 +161,7 @@ If you do not need the final aggregated result and instead want to retain the in
 
 ```sql
 INSERT INTO aggstate
-SELECT 3, sum_union(v1), group_concat_union(v2) FROM aggstate;
+SELECT 3, sum(v1), group_concat_union(v2) FROM aggstate;
 ```
 
 The computation in the table at this point is shown in the following figure:
@@ -171,17 +171,17 @@ The computation in the table at this point is shown in the following figure:
 The query results are as follows:
 
 ```sql
-mysql> SELECT sum_merge(v1), group_concat_merge(v2) FROM aggstate;
-+---------------+------------------------+
-| sum_merge(v1) | group_concat_merge(v2) |
-+---------------+------------------------+
-|            20 | c,b,a,d,c,b,a,d        |
-+---------------+------------------------+
+mysql> SELECT sum(v1), group_concat_merge(v2) FROM aggstate;
++---------+------------------------+
+| sum(v1) | group_concat_merge(v2) |
++---------+------------------------+
+|      20 | c,b,a,d,c,b,a,d        |
++---------+------------------------+
 
-mysql> SELECT sum_merge(v1), group_concat_merge(v2) FROM aggstate WHERE k1 != 2;
-+---------------+------------------------+
-| sum_merge(v1) | group_concat_merge(v2) |
-+---------------+------------------------+
-|            16 | c,b,a,d,c,b,a          |
-+---------------+------------------------+
+mysql> SELECT sum(v1), group_concat_merge(v2) FROM aggstate WHERE k1 != 2;
++---------+------------------------+
+| sum(v1) | group_concat_merge(v2) |
++---------+------------------------+
+|      16 | c,b,a,d,c,b,a          |
++---------+------------------------+
 ```

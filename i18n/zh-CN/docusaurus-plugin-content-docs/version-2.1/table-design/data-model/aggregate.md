@@ -161,18 +161,18 @@ select sum(v1), group_concat_merge(v2) from aggstate where k1 != 2;
 查询结果如下：
 
 ```sql
-mysql> select sum_merge(v1) , group_concat_merge(v2)from aggstate;
-+---------------+------------------------+
-| sum_merge(v1) | group_concat_merge(v2) |
-+---------------+------------------------+
-|            20 | c,b,a,d,c,b,a,d        |
-+---------------+------------------------+
+mysql> select sum(v1), group_concat_merge(v2) from aggstate;
++---------+------------------------+
+| sum(v1) | group_concat_merge(v2) |
++---------+------------------------+
+|      20 | c,b,a,d,c,b,a,d        |
++---------+------------------------+
 
-mysql> select sum_merge(v1) , group_concat_merge(v2)from aggstate where k1 != 2;
-+---------------+------------------------+
-| sum_merge(v1) | group_concat_merge(v2) |
-+---------------+------------------------+
-|            16 | c,b,a,d,c,b,a          |
-+---------------+------------------------+
+mysql> select sum(v1), group_concat_merge(v2) from aggstate where k1 != 2;
++---------+------------------------+
+| sum(v1) | group_concat_merge(v2) |
++---------+------------------------+
+|      16 | c,b,a,d,c,b,a          |
++---------+------------------------+
 ```
 
