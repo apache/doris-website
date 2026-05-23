@@ -83,6 +83,16 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 
         If set to `false`, Doris will check the type of each table one by one and only return Iceberg type tables. This mode will have poor performance when there are many tables.
 
+    - `iceberg.rest.view-enabled`
+
+        Supported since version 4.0.6.
+
+        Only effective for Iceberg REST Catalog. Whether to enable View-related operations (including `listViews`, `loadView`, `viewExists`, `dropView`, etc.). Default is `true`.
+
+        Some Iceberg REST Catalog implementations expose Table APIs but the View APIs are unavailable or return errors. When executing `SHOW TABLES`, Doris calls `ViewCatalog.listViews()` to filter Views out of the Table list, so such REST services may cause `SHOW TABLES` and table metadata loading to fail.
+
+        In this case, set this parameter to `false`, and Doris will skip all View-related operations, allowing metadata operations such as `SHOW TABLES` to work normally.
+
 * `{CommonProperties}`
 
   The CommonProperties section is for entering general properties. See the [Catalog Overview](../catalog-overview.md) for details on common properties.

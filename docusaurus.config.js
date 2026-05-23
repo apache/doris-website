@@ -383,6 +383,7 @@ const config = {
                 searchResultLimits: 100,
                 searchContextByPaths: ['docs'],
                 useAllContextsWithNoSearchContext: false,
+                ignoreFiles: [/^docs\/(?:[^/]+\/)?key-features\//],
             },
         ],
     ],
