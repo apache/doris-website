@@ -49,7 +49,7 @@ CREATE STORAGE VAULT [IF NOT EXISTS] <vault_name> [ <properties> ]
 
 1. `s3.endpoint` if neither `http://` nor `https://` prefix is not provided, ​​`http`​​ will be used by default. If a prefix is explicitly specified, it will take effect with the prefix;
 
-2. Doris also support `AWS Assume Role` for S3 Vault(only for AWS S3 now), please refer to [AWS intergration](../../../../lakehouse/storages/s3.md).
+2. Doris also support `AWS Assume Role` for S3 Vault(only for AWS S3 now), please refer to [AWS integration](../../../../lakehouse/storages/s3.md).
 
 ### HDFS vault
 
@@ -166,7 +166,7 @@ PROPERTIES (
 
 **Note:&#x20;**
 
-Doris also support `AWS Assume Role` for S3 Vault(only for AWS S3 now), please refer to [AWS intergration](../../../../lakehouse/storages/s3.md)
+Doris also support `AWS Assume Role` for S3 Vault(only for AWS S3 now), please refer to [AWS integration](../../../../lakehouse/storages/s3.md)
 
 
 ### 7. Create MinIO storage vault
