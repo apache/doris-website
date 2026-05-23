@@ -70,6 +70,34 @@ select GROUP_CONCAT(DISTINCT value) from test;
 +-----------------------+
 ```
 
+```sql
+select GROUP_CONCAT(value ORDER BY value DESC) from test;
+```
+
+```text
++-----------------------+
+| GROUP_CONCAT(`value`) |
++-----------------------+
+| c, c, b, a            |
++-----------------------+
+```
+
+:::note
+Combining `DISTINCT` with `ORDER BY` inside `GROUP_CONCAT` is supported since 3.0.2.
+:::
+
+```sql
+select GROUP_CONCAT(DISTINCT value ORDER BY value DESC) from test;
+```
+
+```text
++-----------------------+
+| GROUP_CONCAT(`value`) |
++-----------------------+
+| c, b, a               |
++-----------------------+
+```
+
 ```sql 
 select GROUP_CONCAT(value, " ") from test;
 ```

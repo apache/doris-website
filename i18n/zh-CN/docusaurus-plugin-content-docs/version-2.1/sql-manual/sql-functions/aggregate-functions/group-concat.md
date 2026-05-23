@@ -70,6 +70,34 @@ select GROUP_CONCAT(DISTINCT value) from test;
 +-----------------------+
 ```
 
+```sql
+select GROUP_CONCAT(value ORDER BY value DESC) from test;
+```
+
+```text
++-----------------------+
+| GROUP_CONCAT(`value`) |
++-----------------------+
+| c, c, b, a            |
++-----------------------+
+```
+
+:::note
+`GROUP_CONCAT` 中 `DISTINCT` 与 `ORDER BY` 组合自 2.1.6 起支持。
+:::
+
+```sql
+select GROUP_CONCAT(DISTINCT value ORDER BY value DESC) from test;
+```
+
+```text
++-----------------------+
+| GROUP_CONCAT(`value`) |
++-----------------------+
+| c, b, a               |
++-----------------------+
+```
+
 ```sql 
 select GROUP_CONCAT(value, " ") from test;
 ```
