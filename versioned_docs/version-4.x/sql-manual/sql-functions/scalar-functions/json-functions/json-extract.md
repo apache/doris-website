@@ -186,3 +186,27 @@ JSON_EXTRACT (<json_object>, <path>[, <path2>, ...])
     | null |    0 |
     +------+------+
     ```
+
+11. Extracting a field from each element of a JSON array (Doris 4.0+)
+    ```sql
+    select json_extract('[{"k":1},{"k":2},{"k":3}]', '$.k');
+    ```
+    ```
+    +--------------------------------------------------+
+    | json_extract('[{"k":1},{"k":2},{"k":3}]', '$.k') |
+    +--------------------------------------------------+
+    | NULL                                             |
+    +--------------------------------------------------+
+    ```
+    > `$.k` does not traverse arrays; it only descends into object members.
+    ```sql
+    select json_extract('[{"k":1},{"k":2},{"k":3}]', '$[*].k');
+    ```
+    ```
+    +-----------------------------------------------------+
+    | json_extract('[{"k":1},{"k":2},{"k":3}]', '$[*].k') |
+    +-----------------------------------------------------+
+    | [1,2,3]                                             |
+    +-----------------------------------------------------+
+    ```
+    > Use `$[*].k` to extract the field from every element of the array.
