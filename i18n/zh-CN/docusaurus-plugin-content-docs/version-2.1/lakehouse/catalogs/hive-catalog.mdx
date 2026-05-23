@@ -13,6 +13,10 @@ import TabItem from '@theme/TabItem';
 
 除了 Hive 外，很多其他系统也会使用 Hive Metastore 存储元数据。所以通过 Hive Catalog，我们不仅能访问 Hive 表，也能访问使用 Hive Metastore 作为元数据存储的其他表格式，如 Iceberg、Hudi 等。
 
+:::note
+通过 Doris 写入 Hive 的能力自 2.1.3 版本起支持，2.1.3 之前的版本仅支持查询。
+:::
+
 ## 适用场景
 
 | 场景 | 说明                 |
@@ -30,7 +34,7 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
     'type'='hms', -- required
     'hive.metastore.type' = '<hive_metastore_type>', -- optional
     'hive.version' = '<hive_version>', -- optional
-    'fs.defaultFS' = '<fs_defaultfs>', -- optional
+    'fs.defaultFS' = '<fs_defaultfs>', -- 写入必填，只读时可选
     {MetaStoreProperties},
     {StorageProperties},
     {HiveProperties},

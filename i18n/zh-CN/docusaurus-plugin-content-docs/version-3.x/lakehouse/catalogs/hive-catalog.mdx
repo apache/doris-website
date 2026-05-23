@@ -30,7 +30,7 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
     'type'='hms', -- required
     'hive.metastore.type' = '<hive_metastore_type>', -- optional
     'hive.version' = '<hive_version>', -- optional
-    'fs.defaultFS' = '<fs_defaultfs>', -- optional
+    'fs.defaultFS' = '<fs_defaultfs>', -- 写入必填，只读时可选
     {MetaStoreProperties},
     {StorageProperties},
     {HiveProperties},
