@@ -38,6 +38,7 @@ JSON_EXTRACT (<json_object>, <path>[, <path2>, ...])
     * `*` represents a wildcard, where `$.*` represents all members of the root object, and `$[*]` represents all elements of the array.
     * `**` is used in combination with '$', '$**' represents all paths (including multi-level subpaths).
 - If `<path>` contains wildcards (`*`), the matching results will be returned in array form.
+- `<path>` does not auto-broadcast over arrays. If `<json_object>` is a JSON array and `<path>` is `$.k`, the result is NULL — `$.k` only traverses object members. To target an element by index, use `$[i].k`; to extract a field from every element of an array, use the wildcard syntax `$[*].k`, which is supported from Doris 4.0 onward.
 
 ## Examples
 1. General parameters
