@@ -94,7 +94,6 @@
         height: var(--stats-next-tile-height);
         overflow: hidden;
         border-radius: var(--stats-next-tile-radius);
-        background: #ffffff;
         box-shadow: 0 12px 24px -20px rgba(0, 0, 0, 0.35);
         cursor: pointer;
         outline: none;
@@ -147,12 +146,13 @@
         transform: translateZ(0);
         img {
             display: block;
-            max-width: 100%;
-            max-height: 36px;
+            max-width: 80%;
+            max-height: 30px;
             object-fit: contain;
             user-select: none;
             border-radius: inherit;
-            transform: scale(1.35);
+            filter: brightness(0) invert(1);
+            transform: scale(var(--logo-scale, 1));
             transform-origin: center;
         }
     }
@@ -299,10 +299,12 @@
     }
 
     .stats-next__card-logo img {
-        max-height: 72px;
+        max-width: 82%;
+        max-height: 48px;
         object-fit: contain;
         border-radius: inherit;
-        transform: scale(1.45);
+        filter: brightness(0) invert(1);
+        transform: scale(var(--logo-scale, 1));
         transform-origin: center;
     }
 }
