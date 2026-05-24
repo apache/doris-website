@@ -1,7 +1,7 @@
 @use '../../shared/typography' as type;
 
 .stats-next {
-    --stats-next-bg: #057657;
+    --stats-next-bg: #F5EFE4;
     --stats-next-content-edge: max(56px, calc((100vw - 1280px) / 2 + 56px));
     --stats-next-tile-width: 176px;
     --stats-next-tile-height: 40px;
@@ -10,10 +10,10 @@
 
     position: relative;
     width: 100%;
-    height: 80px;
+    height: 168px;
     background: var(--stats-next-bg);
-    border-top: 1px solid rgba(245, 239, 228, 0.08);
-    border-bottom: 1px solid rgba(245, 239, 228, 0.08);
+    border-top: 1px solid rgba(15, 26, 20, 0.08);
+    border-bottom: 1px solid rgba(15, 26, 20, 0.08);
     overflow: visible;
     z-index: 20;
 
@@ -21,23 +21,51 @@
         content: '';
         position: absolute;
         inset: 0;
-        background-image: radial-gradient(rgba(245, 239, 228, 0.06) 1px, transparent 1px);
+        background-image: radial-gradient(rgba(15, 26, 20, 0.07) 1px, transparent 1px);
         background-size: 22px 22px;
         mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
         -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
         pointer-events: none;
     }
 
+    &__eyebrow {
+        position: absolute;
+        top: 16px;
+        left: var(--stats-next-content-edge);
+        z-index: 5;
+        margin: 0;
+        padding: 6px 14px;
+        border: 1px solid rgba(15, 26, 20, 0.18);
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.55);
+        backdrop-filter: blur(6px);
+        -webkit-backdrop-filter: blur(6px);
+        color: rgba(15, 26, 20, 0.72);
+        @include type.micro-label;
+        white-space: nowrap;
+        pointer-events: none;
+    }
+
     &__viewport {
         position: absolute;
         right: var(--stats-next-content-edge);
-        top: 50%;
         left: var(--stats-next-content-edge);
         z-index: 3;
         height: 44px;
-        transform: translateY(-50%);
         overflow: visible;
         clip-path: inset(-180px 0 -180px 0);
+
+        &--row1 {
+            top: 50px;
+        }
+
+        &--row2 {
+            bottom: 14px;
+        }
+
+        &--active {
+            z-index: 50;
+        }
 
         &::before,
         &::after {
@@ -48,6 +76,7 @@
             z-index: 4;
             width: 96px;
             pointer-events: none;
+            transition: opacity 0.25s ease;
         }
 
         &::before {
@@ -61,6 +90,11 @@
         }
     }
 
+    &:has(&__viewport--active) &__viewport::before,
+    &:has(&__viewport--active) &__viewport::after {
+        opacity: 0;
+    }
+
     &__track {
         display: flex;
         align-items: center;
@@ -72,6 +106,10 @@
         will-change: transform;
         position: relative;
         z-index: 1;
+    }
+
+    &__track--row2 {
+        animation-direction: reverse;
     }
 
     &:hover &__track,
@@ -119,6 +157,7 @@
             height: 320px;
             padding: 0;
             border-radius: 14px;
+            background: #FFFFFF;
             box-shadow:
                 0 1px 0 rgba(255, 255, 255, 0.5) inset,
                 0 24px 48px -12px rgba(0, 0, 0, 0.45),
@@ -151,7 +190,6 @@
             object-fit: contain;
             user-select: none;
             border-radius: inherit;
-            filter: brightness(0) invert(1);
             transform: scale(var(--logo-scale, 1));
             transform-origin: center;
         }
@@ -185,28 +223,6 @@
         min-width: 0;
     }
 
-    &__card-mark {
-        display: flex;
-        flex: 0 0 auto;
-        align-items: center;
-        justify-content: center;
-        width: 52px;
-        height: 36px;
-        padding: 5px 7px;
-        border-radius: 8px;
-        background: #F5EFE4;
-        box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8) inset;
-
-        img {
-            display: block;
-            max-width: 100%;
-            max-height: 100%;
-            object-fit: contain;
-            user-select: none;
-            border-radius: inherit;
-        }
-    }
-
     &__card-name {
         min-width: 0;
         overflow: hidden;
@@ -216,8 +232,29 @@
         white-space: nowrap;
     }
 
-    &__card-description {
+    &__card-about {
+        margin: 0;
+        overflow: hidden;
+        color: rgba(15, 26, 20, 0.85);
+        @include type.small-copy;
+    }
+
+    &__card-usecase {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
         flex: 1;
+        min-height: 0;
+        padding-top: 12px;
+        border-top: 1px dashed rgba(15, 26, 20, 0.18);
+    }
+
+    &__card-usecase-label {
+        color: rgba(15, 26, 20, 0.5);
+        @include type.micro-label;
+    }
+
+    &__card-usecase-text {
         margin: 0;
         overflow: hidden;
         color: rgba(15, 26, 20, 0.78);
@@ -226,39 +263,14 @@
 
     &__card-tag {
         margin-left: auto;
-        max-width: 112px;
+        flex: 0 0 auto;
         padding: 3px 7px;
-        overflow: hidden;
         border: 1px solid rgba(11, 122, 88, 0.25);
         border-radius: 3px;
         background: rgba(11, 122, 88, 0.05);
         color: #0B7A58;
         @include type.micro-label;
-        text-overflow: ellipsis;
         white-space: nowrap;
-    }
-
-    &__card-meta {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 10px;
-        padding-top: 10px;
-        border-top: 1px dashed rgba(15, 26, 20, 0.18);
-        font-family: type.$font-mono;
-    }
-
-    &__card-meta-label {
-        display: block;
-        margin-bottom: 3px;
-        color: rgba(15, 26, 20, 0.5);
-        @include type.micro-label;
-    }
-
-    &__card-meta-value {
-        display: block;
-        overflow: hidden;
-        color: #0B7A58;
-        @include type.mono-text(13px, 700, 1.25, 0);
     }
 }
 
@@ -303,7 +315,6 @@
         max-height: 48px;
         object-fit: contain;
         border-radius: inherit;
-        filter: brightness(0) invert(1);
         transform: scale(var(--logo-scale, 1));
         transform-origin: center;
     }
@@ -326,15 +337,22 @@
         --stats-next-tile-width: 148px;
         --stats-next-tile-height: 66px;
 
-        height: 112px;
+        height: 144px;
 
         &__viewport {
-            bottom: 16px;
-            top: auto;
             right: 20px;
             left: 20px;
             height: 72px;
             transform: none;
+        }
+
+        &__viewport--row1 {
+            top: 56px;
+            bottom: auto;
+        }
+
+        &__viewport--row2 {
+            display: none;
         }
 
         &__track {
@@ -368,18 +386,10 @@
             padding: 18px;
         }
 
-        &__card-mark {
-            width: 46px;
-            height: 32px;
-        }
-
-        &__card-description {
+        &__card-about,
+        &__card-usecase-text {
             font-size: 12.5px;
             line-height: 1.45;
-        }
-
-        &__card-tag {
-            max-width: 86px;
         }
     }
 }

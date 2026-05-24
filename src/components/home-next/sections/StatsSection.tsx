@@ -6,6 +6,7 @@ interface UserLogo {
     name: string;
     file: string;
     category: string;
+    about: string;
     description: string;
     metric: string;
     metricLabel: string;
@@ -15,6 +16,7 @@ interface UserLogo {
 const USER_LOGOS: UserLogo[] = [
     {
         id: 'xiaomi',
+        about: 'Xiaomi is a global top-three smartphone maker and a leading consumer-electronics and smart-home brand, with growing reach into electric vehicles.',
         name: 'Xiaomi',
         file: 'xiaomi.svg',
         category: 'Technology',
@@ -25,25 +27,29 @@ const USER_LOGOS: UserLogo[] = [
     },
     {
         id: 'baidu',
+        about: "Baidu is China's largest search engine and a leading AI company, powering products from ERNIE large language models to Apollo autonomous driving.",
         name: 'Baidu',
         file: 'baidu.svg',
         category: 'Technology',
         description: 'Powers large-scale log analytics and ad-hoc SQL exploration for engineering and platform observability workflows.',
         metric: 'Billions',
         metricLabel: 'Events analyzed',
-        scale: 1.2,
+        scale: 1.6,
     },
     {
         id: 'samsung',
+        about: "Samsung is the world's largest electronics manufacturer, leading in smartphones, memory chips, displays, and home appliances across more than 70 countries.",
         name: 'Samsung',
         file: 'samsung.svg',
         category: 'Technology',
         description: 'Uses Apache Doris for device telemetry and service analytics across consumer electronics product lines.',
         metric: 'Global',
         metricLabel: 'Device analytics',
+        scale: 0.9,
     },
     {
         id: 'jd',
+        about: "JD.com is China's largest retailer by revenue and a Fortune Global 500 top-50 company, operating one of the world's most extensive self-built logistics networks.",
         name: 'JD.com',
         file: 'jd.svg',
         category: 'E-commerce',
@@ -53,6 +59,7 @@ const USER_LOGOS: UserLogo[] = [
     },
     {
         id: 'meituan',
+        about: "Meituan is China's largest local-services platform, connecting hundreds of millions of users with food delivery, travel, and on-demand retail every day.",
         name: 'Meituan',
         file: 'meituan.svg',
         category: 'Internet Services',
@@ -62,25 +69,29 @@ const USER_LOGOS: UserLogo[] = [
     },
     {
         id: 'netease',
+        about: "NetEase is China's second-largest gaming company and a major internet group spanning hit titles, music streaming, education, and intelligent enterprise services.",
         name: 'NetEase',
         file: 'netease.svg',
         category: 'Internet Services',
         description: 'Uses Apache Doris for game and content analytics, helping teams inspect live metrics without long batch delays.',
         metric: 'Live',
         metricLabel: 'Content metrics',
+        scale: 1.4,
     },
     {
         id: 'tencent-music',
+        about: "Tencent Music Entertainment is China's leading online music and audio platform, reaching over 500 million monthly users across QQ Music, Kugou, and Kuwo.",
         name: 'Tencent Music',
         file: 'tencent-music.svg',
         category: 'Media',
         description: 'Uses Doris for fast aggregation over user listening, content, and engagement data to power live music analytics.',
         metric: 'High QPS',
         metricLabel: 'Music analytics',
-        scale: 1.5,
+        scale: 0.9,
     },
     {
         id: 'kwai',
+        about: "Kuaishou is one of the world's largest short-video and live-streaming platforms, with more than 700 million monthly active users across China and its international Kwai app.",
         name: 'Kwai',
         file: 'kwai.svg',
         category: 'Media',
@@ -90,6 +101,7 @@ const USER_LOGOS: UserLogo[] = [
     },
     {
         id: 'mihoyo',
+        about: 'miHoYo, known globally as HoYoverse, is a leading game studio behind blockbuster franchises Genshin Impact, Honkai Star Rail, and Zenless Zone Zero.',
         name: 'miHoYo',
         file: 'mihoyo.svg',
         category: 'Gaming',
@@ -99,15 +111,18 @@ const USER_LOGOS: UserLogo[] = [
     },
     {
         id: 'luckin-coffee',
+        about: "Luckin Coffee is the world's largest coffee chain by store count, with more than 31,000 outlets serving tens of millions of daily customers.",
         name: 'Luckin Coffee',
         file: 'luckin-coffee.svg',
         category: 'Retail',
         description: 'Uses Doris for store, order, and membership analytics to track campaign performance across thousands of outlets.',
         metric: 'Store-level',
         metricLabel: 'Retail insights',
+        scale: 1.5,
     },
     {
         id: 'miniso',
+        about: 'MINISO is a fast-growing global lifestyle and IP retailer, operating over 8,000 stores across more than 110 countries and regions worldwide.',
         name: 'MINISO',
         file: 'miniso.svg',
         category: 'Retail',
@@ -118,25 +133,29 @@ const USER_LOGOS: UserLogo[] = [
     },
     {
         id: 'sf-express',
+        about: 'SF Express is the largest integrated logistics provider in China and Asia, and ranks among the top four globally by revenue.',
         name: 'SF Express',
         file: 'sf-express.svg',
         category: 'Logistics',
         description: 'Tracks shipment, route, and operations data in near real-time to support nationwide express delivery.',
         metric: 'Nationwide',
         metricLabel: 'Shipment tracking',
+        scale: 1.2,
     },
     {
         id: 'zto',
+        about: "ZTO Express is China's largest express delivery company by parcel volume, handling more than 34 billion parcels annually and leading the market for nine consecutive years.",
         name: 'ZTO Express',
         file: 'zto.svg',
         category: 'Logistics',
         description: 'Uses Doris for parcel flow, sorting hub, and last-mile analytics across the express delivery network.',
         metric: 'Network-wide',
         metricLabel: 'Parcel analytics',
-        scale: 1.25,
+        scale: 0.8,
     },
     {
         id: 'cainiao',
+        about: "Cainiao is Alibaba's global smart-logistics arm and a top-tier cross-border parcel network, serving e-commerce and supply-chain customers in more than 200 countries.",
         name: 'Cainiao',
         file: 'cainiao.svg',
         category: 'Logistics',
@@ -146,6 +165,7 @@ const USER_LOGOS: UserLogo[] = [
     },
     {
         id: 'ford',
+        about: "Ford Motor Company is one of the world's largest automakers, building iconic vehicles like the F-Series pickup, Mustang, and a growing lineup of electric models.",
         name: 'Ford',
         file: 'ford.svg',
         category: 'Automotive',
@@ -156,16 +176,18 @@ const USER_LOGOS: UserLogo[] = [
     },
     {
         id: 'byd',
+        about: "BYD is the world's largest electric-vehicle maker and a top-tier lithium-battery manufacturer, outselling Tesla globally and shipping millions of EVs and hybrids each year.",
         name: 'BYD',
         file: 'byd.svg',
         category: 'Automotive',
         description: 'Powers EV telemetry, supply chain, and after-sales analytics with fast SQL access for product teams.',
         metric: 'EV-scale',
         metricLabel: 'Telemetry data',
-        scale: 1.1,
+        scale: 0.9,
     },
     {
         id: 'suzuki',
+        about: 'Suzuki Motor is a top-10 global automaker and the dominant car brand in India and Southeast Asia, also famous for its motorcycles, ATVs, and outboard engines.',
         name: 'Suzuki',
         file: 'suzuki.svg',
         category: 'Automotive',
@@ -175,6 +197,7 @@ const USER_LOGOS: UserLogo[] = [
     },
     {
         id: 'anta',
+        about: "ANTA Sports is China's largest sportswear group and a global top-three player by revenue, with a brand portfolio spanning ANTA, FILA, Descente, and Arc'teryx.",
         name: 'ANTA',
         file: 'anta.svg',
         category: 'Sportswear',
@@ -184,16 +207,18 @@ const USER_LOGOS: UserLogo[] = [
     },
     {
         id: 'li-ning',
+        about: 'Li-Ning is a leading Chinese sportswear powerhouse founded by the Olympic gymnast, fusing performance gear with streetwear culture across thousands of stores nationwide.',
         name: 'Li-Ning',
         file: 'li-ning.svg',
         category: 'Sportswear',
         description: 'Powers store, e-commerce, and supply chain analytics with Doris for daily and real-time decision making.',
         metric: 'Omni-channel',
         metricLabel: 'Sales analytics',
-        scale: 1.3,
+        scale: 1.9,
     },
     {
         id: 'xtep',
+        about: "Xtep is a top-five Chinese sportswear brand and the country's number-one running label, sponsoring marathons and dressing millions of runners worldwide.",
         name: 'Xtep',
         file: 'xtep.svg',
         category: 'Sportswear',
@@ -203,15 +228,18 @@ const USER_LOGOS: UserLogo[] = [
     },
     {
         id: 'zhipu-ai',
+        about: "Zhipu AI is one of China's leading large-model labs and a Tsinghua spinout, building the GLM and ChatGLM foundation models that power chatbots and AI agents at scale.",
         name: 'Zhipu AI',
         file: 'zhipu-ai.svg',
         category: 'AI',
         description: 'Uses Apache Doris to analyze model training metrics, usage events, and platform telemetry at scale.',
         metric: 'AI-scale',
         metricLabel: 'Model analytics',
+        scale: 1.0,
     },
     {
         id: 'minimax',
+        about: 'MiniMax is a top Chinese AI unicorn building multimodal foundation models behind hit consumer apps like Talkie and Hailuo, serving tens of millions of users worldwide.',
         name: 'MiniMax',
         file: 'minimax.svg',
         category: 'AI',
@@ -221,15 +249,18 @@ const USER_LOGOS: UserLogo[] = [
     },
     {
         id: 'ave-ai',
+        about: 'Ave AI is a fast-growing data startup turning messy enterprise signals into AI-driven analytics and intelligent decisioning for modern data teams.',
         name: 'Ave AI',
         file: 'ave-ai.svg',
         category: 'AI',
         description: 'Builds AI-driven data products on Doris with fast SQL access for ad-hoc exploration and reporting.',
         metric: 'Self-serve',
         metricLabel: 'AI analytics',
+        scale: 2.0,
     },
     {
         id: 'talkie',
+        about: 'Talkie is a leading AI companion and character-chat app with over 11 million monthly active users, ranking among the most-downloaded AI apps in the United States.',
         name: 'Talkie',
         file: 'talkie.svg',
         category: 'AI',
@@ -239,15 +270,18 @@ const USER_LOGOS: UserLogo[] = [
     },
     {
         id: 'horizon-robotics',
+        about: "Horizon Robotics is China's leading autonomous-driving chipmaker, commanding over 40% of the domestic ADAS market and powering more than 100 vehicle models on the road.",
         name: 'Horizon Robotics',
         file: 'horizon-robotics.svg',
         category: 'Autonomous Driving',
         description: 'Uses Doris to process driving data, sensor telemetry, and chip performance metrics for autonomous platforms.',
         metric: 'Sensor-scale',
         metricLabel: 'Driving data',
+        scale: 1.2,
     },
     {
         id: 'goldwind',
+        about: "Goldwind is the world's number-one wind turbine manufacturer, shipping nearly 30 GW of capacity in a single year and powering wind farms across six continents.",
         name: 'Goldwind',
         file: 'goldwind.svg',
         category: 'Energy',
@@ -257,6 +291,7 @@ const USER_LOGOS: UserLogo[] = [
     },
     {
         id: 'advance-intelligence',
+        about: "Advance Intelligence Group is Southeast Asia's leading AI-driven fintech, serving 40 million consumers and 235,000 merchants through brands like Atome and ADVANCE.AI.",
         name: 'Advance Intelligence',
         file: 'advance-intelligence.svg',
         category: 'Fintech',
@@ -266,14 +301,28 @@ const USER_LOGOS: UserLogo[] = [
     },
     {
         id: 'true-watch',
+        about: 'TrueWatch is a next-generation cloud observability platform unifying metrics, logs, and traces across multi-cloud stacks for DevOps and SRE teams worldwide.',
         name: 'TrueWatch',
         file: 'true-watch.svg',
         category: 'Observability',
         description: 'Powers a unified observability platform using Doris for metrics, logs, and traces at infrastructure scale.',
         metric: 'Unified',
         metricLabel: 'Observability data',
+        scale: 1.2,
     },
 ];
+
+const ROW1_IDS: readonly string[] = [
+    'ave-ai', 'baidu', 'minimax', 'zhipu-ai', 'mihoyo', 'xiaomi',
+    'byd', 'ford', 'jd', 'kwai', 'li-ning', 'luckin-coffee',
+    'meituan', 'miniso',
+];
+
+const LOGO_BY_ID = new Map(USER_LOGOS.map(logo => [logo.id, logo]));
+const ROW1_LOGOS: UserLogo[] = ROW1_IDS
+    .map(id => LOGO_BY_ID.get(id))
+    .filter((logo): logo is UserLogo => logo !== undefined);
+const ROW2_LOGOS: UserLogo[] = USER_LOGOS.filter(logo => !ROW1_IDS.includes(logo.id));
 
 interface LogoTileProps {
     logo: UserLogo;
@@ -313,22 +362,13 @@ function LogoTile({ logo, duplicate = false, expanded = false, onEnter, onLeave 
 
             <div className="stats-next__card-content">
                 <div className="stats-next__card-head">
-                    <span className="stats-next__card-mark">
-                        <img src={src} alt="" loading="lazy" draggable={false} />
-                    </span>
                     <span className="stats-next__card-name">{logo.name}</span>
                     <span className="stats-next__card-tag">{logo.category}</span>
                 </div>
-                <p className="stats-next__card-description">{logo.description}</p>
-                <div className="stats-next__card-meta">
-                    <div>
-                        <span className="stats-next__card-meta-label">Use case</span>
-                        <span className="stats-next__card-meta-value">{logo.metricLabel}</span>
-                    </div>
-                    <div>
-                        <span className="stats-next__card-meta-label">Result</span>
-                        <span className="stats-next__card-meta-value">{logo.metric}</span>
-                    </div>
+                <p className="stats-next__card-about">{logo.about}</p>
+                <div className="stats-next__card-usecase">
+                    <span className="stats-next__card-usecase-label">Use case</span>
+                    <p className="stats-next__card-usecase-text">{logo.description}</p>
                 </div>
             </div>
         </article>
@@ -367,7 +407,6 @@ function CompactStatsGrid(): JSX.Element {
 export function StatsSection(): JSX.Element {
     const [hoveredKey, setHoveredKey] = useState<string | null>(null);
     const compact = useCompactStats();
-    const logoLoop = [...USER_LOGOS, ...USER_LOGOS];
 
     useEffect(() => {
         if (compact) setHoveredKey(null);
@@ -377,29 +416,48 @@ export function StatsSection(): JSX.Element {
         return <CompactStatsGrid />;
     }
 
+    const rows: ReadonlyArray<readonly ['row1' | 'row2', UserLogo[]]> = [
+        ['row1', ROW1_LOGOS],
+        ['row2', ROW2_LOGOS],
+    ];
+
     return (
         <section className="stats-next" aria-label="Companies using Apache Doris">
-            <div className="stats-next__viewport">
-                <div className={`stats-next__track${hoveredKey ? ' stats-next__track--expanded' : ''}`}>
-                    {logoLoop.map((logo, index) => {
-                        const cardKey = `${logo.id}-${index}`;
-                        const duplicate = index >= USER_LOGOS.length;
-
-                        return (
-                            <LogoTile
-                                key={cardKey}
-                                logo={logo}
-                                duplicate={duplicate}
-                                expanded={hoveredKey === cardKey}
-                                onEnter={() => setHoveredKey(cardKey)}
-                                onLeave={() =>
-                                    setHoveredKey(current => (current === cardKey ? null : current))
-                                }
-                            />
-                        );
-                    })}
-                </div>
-            </div>
+            <p className="stats-next__eyebrow">Trusted by 10,000+ users</p>
+            {rows.map(([rowName, logos]) => {
+                const loop = [...logos, ...logos];
+                const rowExpanded = hoveredKey?.startsWith(`${rowName}:`) ?? false;
+                const trackClassName =
+                    `stats-next__track stats-next__track--${rowName}` +
+                    (rowExpanded ? ' stats-next__track--expanded' : '');
+                const viewportClassName =
+                    `stats-next__viewport stats-next__viewport--${rowName}` +
+                    (rowExpanded ? ' stats-next__viewport--active' : '');
+                return (
+                    <div key={rowName} className={viewportClassName}>
+                        <div className={trackClassName}>
+                            {loop.map((logo, index) => {
+                                const cardKey = `${rowName}:${logo.id}-${index}`;
+                                const duplicate = index >= logos.length;
+                                return (
+                                    <LogoTile
+                                        key={cardKey}
+                                        logo={logo}
+                                        duplicate={duplicate}
+                                        expanded={hoveredKey === cardKey}
+                                        onEnter={() => setHoveredKey(cardKey)}
+                                        onLeave={() =>
+                                            setHoveredKey(current =>
+                                                current === cardKey ? null : current,
+                                            )
+                                        }
+                                    />
+                                );
+                            })}
+                        </div>
+                    </div>
+                );
+            })}
         </section>
     );
 }
