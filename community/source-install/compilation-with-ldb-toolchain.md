@@ -81,7 +81,7 @@ Project home page: <https://github.com/amosbird/ldb_toolchain_gen>
 Run the script to generate the toolchain:
 
 ```bash
-sh ldb_toolchain_gen.sh /path/to/ldb_toolchain/
+bash ldb_toolchain_gen.sh /path/to/ldb_toolchain/
 ```
 
 Here, `/path/to/ldb_toolchain/` is the target installation directory. After the script runs successfully, the following structure is generated in that directory:
