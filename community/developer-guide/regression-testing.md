@@ -724,6 +724,8 @@ Before starting the containers, check the network configuration of the server or
 
 These correspond to the IP address (output of `hostname -i`, usually the IP of eth0), the host name (output of `hostname`), and the alias (the same as the host name), respectively.
 
+> **Note**: `run-thirdparties-docker.sh` detects the primary network interface by scanning for names matching `eth[0-9]`. Modern Linux distributions using systemd/udev assign predictable names such as `enp3s0`, `ens33`, or `eno1`, which the script does not recognize. If your host uses such a name, the script will fail to detect an interface — manually set the `eth_name` variable inside `run-thirdparties-docker.sh` to your actual interface name before running it.
+
 ### 1. Start the Container
 
 Doris currently supports Docker compose for data sources including es, mysql, pg, hive, sqlserver, oracle, iceberg, hudi, and trino. The related files are stored in the `docker/thirdparties/docker-compose` directory.
