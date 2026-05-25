@@ -20,13 +20,15 @@
 
 ### 查询执行
 
-- 新增数据函数：`cot`/`sec`/`cosec`
 - `Like` 语句支持 `escape` 语法
 
 ### 半结构化数据管理
 
 - 通过设置会话变量 `enable_add_index_for_new_data=true`，支持仅对新增数据构建不分词倒排索引和 NGram bloomfilter 索引
 
+### 新函数
+
+- 新增数学函数：`cot`/`sec`/`cosec`
 
 ## 改进
 
