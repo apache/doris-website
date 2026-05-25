@@ -45,9 +45,12 @@ This document describes how to build a complete monitoring system for an Apache 
 
 ## Dashboard Template Download
 
-Doris provides an official Grafana dashboard template that you can import directly. The template is updated periodically. For the update procedure, see [Dashboard Update](#dashboard-update).
+Doris provides two Grafana dashboard templates. Pick the one that matches your cluster's storage mode and import it directly. The templates are updated periodically. For the update procedure, see [Dashboard Update](#dashboard-update).
 
-Download link: [doris-grafana-dashboard.json](https://doris.apache.org/files/doris-grafana-dashboard.json)
+| Storage Mode | Dashboard Template | Notes |
+| --- | --- | --- |
+| Shared-nothing | [doris-grafana-dashboard.json](https://doris.apache.org/files/doris-grafana-dashboard.json) | Traditional FE / BE deployment with local storage; panels cover FE and BE components. |
+| Compute-storage decoupled | [doris-grafana-dashboard-cloud.json](https://doris.apache.org/files/doris-grafana-dashboard-cloud.json) | Panels cover FE, BE / Compute Group, and Meta Service; **applies to both Kubernetes and non-Kubernetes deployments of compute-storage decoupled clusters**. |
 
 Contributions of better dashboards from the community are welcome.
 

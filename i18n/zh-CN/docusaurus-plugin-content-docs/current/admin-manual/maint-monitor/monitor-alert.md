@@ -45,9 +45,12 @@
 
 ## Dashboard 模板下载
 
-Doris 提供官方 Grafana Dashboard 模板，可直接导入使用。模板会不定期更新，更新方式见 [Dashboard 更新](#dashboard-更新)。
+Doris 提供两套 Grafana Dashboard 模板，按集群的存储模式选择对应模板，可直接导入使用。模板会不定期更新，更新方式见 [Dashboard 更新](#dashboard-更新)。
 
-下载链接：[doris-grafana-dashboard.json](https://doris.apache.org/files/doris-grafana-dashboard.json)
+| 存储模式 | Dashboard 模板 | 说明 |
+| --- | --- | --- |
+| 存算一体（shared-nothing） | [doris-grafana-dashboard.json](https://doris.apache.org/files/doris-grafana-dashboard.json) | 传统 FE / BE 部署，本地存储；面板覆盖 FE、BE 两类组件 |
+| 存算分离（compute-storage decoupled） | [doris-grafana-dashboard-cloud.json](https://doris.apache.org/files/doris-grafana-dashboard-cloud.json) | 面板覆盖 FE、BE / Compute Group、Meta Service 三类组件；**适用于 Kubernetes 与非 Kubernetes 部署的存算分离集群** |
 
 欢迎社区贡献更优的 Dashboard。
 
