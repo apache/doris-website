@@ -162,7 +162,7 @@
 - 在 s3 client 单测中支持 IAM Role (#62303)
 - 将 project 下推到 Union 时为常量分配新的 ExprId (#62296)
 - 对客户端隐藏 KV_TXN_MAYBE_COMMITTED (#62244)
-- Branch-4.1: [feature](jsf) FE/BE 将 JuiceFS (jfs://) 视为 HDFS 兼容 #61031 (#61706)
+- FE/BE 将 JuiceFS (jfs://) 视为 HDFS 兼容 (#61706)
 - 合并 ms 与 recycler 的 http 骨架 (#61502)
 
 ## 湖仓

@@ -162,7 +162,7 @@
 - Support IAM Role for s3 client ut test (#62303)
 - Allocate fresh ExprId for constants when pushing project into Union (#62296)
 - Hide KV_TXN_MAYBE_COMMITTED from clients (#62244)
-- Branch-4.1: [feature](jsf) Treat JuiceFS (jfs://) as HDFS-compatible in FE/BE #61031 (#61706)
+- Treat JuiceFS (jfs://) as HDFS-compatible in FE/BE (#61706)
 - Merge ms and recycler http skeleton (#61502)
 
 ## Lakehouse
