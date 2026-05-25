@@ -22,6 +22,8 @@
 
 本文档介绍如何为 Apache Doris 集群搭建一套完整的监控体系：通过 Prometheus 采集 FE / BE 暴露的监控指标，使用 Grafana 加载官方 Dashboard 模板进行可视化展示，并预留 Alertmanager 配置入口用于后续告警接入。
 
+> 注：如果你在 Kubernetes 上部署 Doris 存算分离集群，监控搭建请参考 [在 Kubernetes 上部署 Prometheus 和 Grafana](../../install/deploy-on-kubernetes/separating-storage-compute/install-prometheus-and-grafana)；本文中的监控架构、指标格式与 Dashboard 面板说明同样适用。
+
 <!-- 知识类型: 操作步骤 / 部署指南 -->
 <!-- 适用场景: 集群部署后搭建监控体系 / 故障排查与性能观测 -->
 
@@ -45,9 +47,7 @@
 
 Doris 提供官方 Grafana Dashboard 模板，可直接导入使用。模板会不定期更新，更新方式见 [Dashboard 更新](#dashboard-更新)。
 
-| Doris 版本 | Dashboard 版本                                                              |
-| ---------- | --------------------------------------------------------------------------- |
-| 1.2.x      | [revision 5](https://grafana.com/api/dashboards/9734/revisions/5/download)  |
+下载链接：[doris-grafana-dashboard.json](https://doris.apache.org/files/doris-grafana-dashboard.json)
 
 欢迎社区贡献更优的 Dashboard。
 
