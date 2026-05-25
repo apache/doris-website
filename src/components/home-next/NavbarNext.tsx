@@ -67,6 +67,7 @@ function buildNavItems(
         {
             label: 'Community',
             items: [
+                { label: 'Roadmap', href: 'https://github.com/apache/doris/issues/60036', external: true },
                 { label: 'Build with Us', href: joinCommunityHref },
                 { label: 'Join GitHub Discussions', href: 'https://github.com/apache/doris/discussions', external: true },
             ],
