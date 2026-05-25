@@ -69,6 +69,11 @@ Doris has a default Compute Group mechanism: when a new BE node is added without
 | Storage-compute integrated | `default` |
 :::
 
+:::caution Behavior of the `FOR` clause differs between architectures
+- **Cloud (storage-compute decoupled) mode**: CREATE / ALTER / DROP WORKLOAD GROUP **must** explicitly include the `FOR <compute_group>` clause. Omitting it raises: `Must specify compute group via 'FOR <compute_group>' in cloud mode.`
+- **Non-cloud (storage-compute coupled) mode**: The `FOR <compute_group>` clause is optional. The value here actually refers to a resource group (Tag) rather than a real compute group — the grammar is shared with cloud mode purely for consistency. When omitted, it defaults to the default resource group (`default`).
+:::
+
 ### Create a Workload Group
 
 **Bind to a specific Compute Group:**
@@ -77,7 +82,7 @@ Doris has a default Compute Group mechanism: when a new BE node is added without
 CREATE WORKLOAD GROUP group_a FOR compute_group_a PROPERTIES ('cpu_share'='1024');
 ```
 
-**Without specifying a Compute Group (bind to the default Compute Group):**
+**Without specifying a Compute Group (non-cloud mode only, binds to the default resource group):**
 
 ```sql
 CREATE WORKLOAD GROUP group_a PROPERTIES ('cpu_share'='1024');
@@ -91,7 +96,7 @@ CREATE WORKLOAD GROUP group_a PROPERTIES ('cpu_share'='1024');
 DROP WORKLOAD GROUP group_a FOR compute_group_a;
 ```
 
-**Without specifying a Compute Group (drop from the default Compute Group):**
+**Without specifying a Compute Group (non-cloud mode only, drops from the default resource group):**
 
 ```sql
 DROP WORKLOAD GROUP group_a;
@@ -105,7 +110,7 @@ DROP WORKLOAD GROUP group_a;
 ALTER WORKLOAD GROUP group_a FOR compute_group_a PROPERTIES ('cpu_share'='2048');
 ```
 
-**Without specifying a Compute Group (alter the Workload Group in the default Compute Group):**
+**Without specifying a Compute Group (non-cloud mode only, alters the Workload Group in the default resource group):**
 
 ```sql
 ALTER WORKLOAD GROUP group_a PROPERTIES ('cpu_share'='2048');
@@ -114,6 +119,19 @@ ALTER WORKLOAD GROUP group_a PROPERTIES ('cpu_share'='2048');
 :::note
 The `ALTER` statement is used only to modify the properties of a Workload Group. **It cannot modify the binding relationship between a Workload Group and a Compute Group.**
 :::
+
+### Referencing a Workload Group from a Workload Policy
+
+In the `workload_group` property of [CREATE WORKLOAD POLICY](../../sql-manual/sql-statements/cluster-management/compute-management/CREATE-WORKLOAD-POLICY) / [ALTER WORKLOAD POLICY](../../sql-manual/sql-statements/cluster-management/compute-management/ALTER-WORKLOAD-POLICY), because a workload group belongs to a compute group, the value must follow these rules:
+
+- **Cloud (storage-compute decoupled) mode**: The fully qualified form `<compute_group>.<workload_group>` is required, for example:
+
+    ```sql
+    CREATE WORKLOAD POLICY p1 CONDITIONS(query_time > 3000) ACTIONS(cancel_query)
+    PROPERTIES('workload_group'='compute_group_a.wg1');
+    ```
+
+- **Non-cloud (storage-compute coupled) mode**: Both `<workload_group>` (default resource group) and `<resource_group>.<workload_group>` are accepted.
 
 ## Notes
 
