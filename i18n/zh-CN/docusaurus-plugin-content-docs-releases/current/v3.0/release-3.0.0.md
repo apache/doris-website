@@ -54,6 +54,7 @@
 
 - **共享存储层**：数据持久化到共享存储层，目前支持 HDFS 以及 S3、OSS、GCS、Azure Blob、COS、BOS、MinIO 等各类云上兼容 S3 协议的对象存储系统。
 
+![从存算一体到存算分离-2](/images/storage-compute-decoupled-2.JPEG)
 
 ### 1-2 设计亮点
 
