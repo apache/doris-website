@@ -18,6 +18,14 @@
 
   - https://github.com/apache/doris/pull/33282
 
+3. Auto Partition syntax changes, see the [documentation](../../table-design/data-partitioning/auto-partitioning.md) for details.
+
+  - https://github.com/apache/doris/pull/32737
+
+4. Auto Partition is no longer allowed to coexist with Dynamic Partition on the same table.
+
+  - https://github.com/apache/doris/pull/33736
+
 
 ## Upgrade Problem
 
