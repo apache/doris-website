@@ -12,6 +12,8 @@
 
 本文介绍如何在 Kubernetes 上使用 Helm 部署 Prometheus 和 Grafana，并将其接入 Apache Doris 存算分离集群，实现指标采集、可视化与告警。Prometheus 负责拉取 FE/BE/Meta Service 暴露的 HTTP 与 bRPC 指标，Grafana 负责通过 Dashboard 呈现集群状态。
 
+> 注：本文聚焦 Kubernetes 上 Helm + ServiceMonitor 的部署步骤；文中下载的 cloud 版 Dashboard 模板同样适用于**非 Kubernetes 方式部署的存算分离集群**。关于 Doris 监控架构、指标（metrics）格式、Dashboard 面板说明以及完整的模板下载入口，请参见 [监控和报警](../../../admin-manual/maint-monitor/monitor-alert)。
+
 ## 适用场景
 
 | 场景 | 说明 |
