@@ -2,8 +2,6 @@
     'title': 'How an Autonomous Driving Company Unified Multimodal Search on a Single Analytics Engine'
     'summary': 'An autonomous driving company consolidated fragmented data platforms by adopting Apache Doris as a unified analytics engine, enabling seamless search across text, vectors, labels, and metadata while reducing query times from minutes to seconds.'
     'description': 'An autonomous driving company consolidated fragmented data platforms by adopting Apache Doris as a unified analytics engine, enabling seamless search across text, vectors, labels, and metadata while reducing query times from minutes to seconds.'
-    'picked': "true"
-    'order': "1"    
     'date': '2026-4-18'
     'author': 'velodb.io · Wesley Zhu'
     'externalLink': 'https://www.velodb.io/blog/autonomous-driving-company-unified-multimodal-search-on-apache-doris'
