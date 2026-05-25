@@ -194,6 +194,12 @@ PROPERTIES (
 
 The CPU limit configured here is a soft limit. Starting from version 2.1, the system automatically creates a group named `normal`, which cannot be deleted.
 
+:::caution Cloud mode requires an explicit compute group
+All CREATE / ALTER / DROP WORKLOAD GROUP examples in this document omit the `FOR <compute_group>` clause, and they only work as-is in **non-cloud (storage-compute coupled) mode**, where they apply to the default resource group.
+
+**In cloud (storage-compute decoupled) mode, the `FOR <compute_group>` clause must be specified explicitly**; otherwise the statement fails with: `Must specify compute group via 'FOR <compute_group>' in cloud mode.` See [Bind Workload Group to Compute Group](./workload-group-bind-compute-group) for details.
+:::
+
 For the complete syntax, see: [CREATE-WORKLOAD-GROUP](../../sql-manual/sql-statements/cluster-management/compute-management/CREATE-WORKLOAD-GROUP)
 
 ### Step 3: Grant permissions to a user and bind the Workload Group

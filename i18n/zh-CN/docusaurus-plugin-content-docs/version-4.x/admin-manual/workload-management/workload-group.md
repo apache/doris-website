@@ -194,6 +194,12 @@ PROPERTIES (
 
 此时配置的 CPU 限制为软限。自 2.1 版本起，系统自动创建名为 `normal` 的分组，不可删除。
 
+:::caution 存算分离模式必须显式指定 Compute Group
+本文中所有 CREATE / ALTER / DROP WORKLOAD GROUP 示例均省略了 `FOR <compute_group>` 子句，仅在**存算一体模式**下可直接使用，此时将作用于默认 Resource Group。
+
+**存算分离模式（Cloud 模式）下必须显式带上 `FOR <compute_group>` 子句**，否则会报错：`Must specify compute group via 'FOR <compute_group>' in cloud mode.` 详见 [Workload Group 绑定 Compute Group](./workload-group-bind-compute-group)。
+:::
+
 完整语法参考：[CREATE-WORKLOAD-GROUP](../../sql-manual/sql-statements/cluster-management/compute-management/CREATE-WORKLOAD-GROUP)
 
 ### 第三步：为用户授权并绑定 Workload Group
