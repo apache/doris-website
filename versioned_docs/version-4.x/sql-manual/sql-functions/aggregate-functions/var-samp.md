@@ -10,6 +10,14 @@
 
 The VAR_SAMP function calculates the sample variance of a specified expression. Unlike VARIANCE (population variance), VAR_SAMP uses n-1 as the divisor, which is considered an unbiased estimate of the population variance in statistics.
 
+The calculation formula is:
+
+$
+\mathrm{VAR\_SAMP}(x)=\frac{\sum_{i=1}^{n}(x_i-\bar{x})^2}{n-1}
+$
+
+Where `n` is the number of valid values in the group.
+
 ## Alias
 
 - VARIANCE_SAMP
@@ -28,7 +36,7 @@ VAR_SAMP(<expr>)
 
 ## Return Value
 Returns a Double value representing the calculated sample variance.
-If there is no valid data in the group, returns NULL.
+If there is no valid data in the group, or the number of valid values in the group is less than or equal to 1, returns NULL.
 
 ## Examples
 ```sql
@@ -65,4 +73,25 @@ FROM student_scores;
 +------------------+---------------------+
 | 29.4107142857143 |   25.73437500000001 |
 +------------------+---------------------+
+```
+
+When the number of valid values is less than or equal to 1, `VAR_SAMP` returns `NULL`.
+
+```sql
+-- Create a single-column sample table
+CREATE TABLE sample_values (
+    value INT
+) DISTRIBUTED BY HASH(value)
+PROPERTIES (
+    "replication_num" = "1"
+);
+
+INSERT INTO sample_values VALUES (10);
+
+SELECT VAR_SAMP(value) AS sample_variance FROM sample_values;
++-----------------+
+| sample_variance |
++-----------------+
+|            NULL |
++-----------------+
 ```

@@ -10,6 +10,14 @@
 
 Returns the sample standard deviation of the expr expression
 
+The calculation formula is:
+
+$
+\mathrm{STDDEV\_SAMP}(x)=\sqrt{\mathrm{VAR\_SAMP}(x)}=\sqrt{\frac{\sum_{i=1}^{n}(x_i-\bar{x})^2}{n-1}}
+$
+
+Where `n` is the number of valid values in the group.
+
 ## Syntax
 
 ```sql
@@ -25,11 +33,11 @@ STDDEV_SAMP(<expr>)
 ## Return Value
 
 Return the sample standard deviation of the expr expression as Double type.
-If there is no valid data in the group, returns NULL.
+If there is no valid data in the group, or the number of valid values in the group is less than or equal to 1, returns NULL.
 
 ### Examples
 ```sql
--- Create sample tables
+-- Create sample table
 CREATE TABLE score_table (
     student_id INT,
     score DOUBLE
@@ -57,4 +65,25 @@ FROM score_table;
 +-------------------+
 | 4.949747468305831 |
 +-------------------+
+```
+
+When the number of valid values is less than or equal to 1, `STDDEV_SAMP` returns `NULL`.
+
+```sql
+-- Create a single-column sample table
+CREATE TABLE sample_values (
+    value INT
+) DISTRIBUTED BY HASH(value)
+PROPERTIES (
+    "replication_num" = "1"
+);
+
+INSERT INTO sample_values VALUES (10);
+
+SELECT STDDEV_SAMP(value) AS sample_stddev FROM sample_values;
++---------------+
+| sample_stddev |
++---------------+
+|          NULL |
++---------------+
 ```

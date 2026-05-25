@@ -10,6 +10,14 @@
 
 返回 expr 表达式的样本标准差
 
+计算公式如下：
+
+$
+\mathrm{STDDEV\_SAMP}(x)=\sqrt{\mathrm{VAR\_SAMP}(x)}=\sqrt{\frac{\sum_{i=1}^{n}(x_i-\bar{x})^2}{n-1}}
+$
+
+其中 `n` 为组内合法数据的个数。
+
 ## 语法
 
 ```sql
@@ -25,7 +33,7 @@ STDDEV_SAMP(<expr>)
 ## 返回值
 
 返回 Double 类型的参数 expr 的样本标准差。
-当组内没有合法数据时，返回 NULL。
+当组内没有合法数据，或组内合法数据个数小于等于 1 时，返回 NULL。
 
 ## 举例
 ```sql
@@ -57,4 +65,25 @@ FROM score_table;
 +-------------------+
 | 4.949747468305831 |
 +-------------------+
+```
+
+当合法数据个数小于等于 1 时，`STDDEV_SAMP` 返回 `NULL`。
+
+```sql
+-- 创建单列示例表
+CREATE TABLE sample_values (
+    value INT
+) DISTRIBUTED BY HASH(value)
+PROPERTIES (
+    "replication_num" = "1"
+);
+
+INSERT INTO sample_values VALUES (10);
+
+SELECT STDDEV_SAMP(value) AS sample_stddev FROM sample_values;
++---------------+
+| sample_stddev |
++---------------+
+|          NULL |
++---------------+
 ```
