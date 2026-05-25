@@ -1,0 +1,213 @@
+---
+{
+    "title": "Release 4.1.1",
+    "language": "zh-CN",
+    "description": "Apache Doris 4.1.1 版本发布说明"
+}
+---
+
+# 新功能
+
+## 存储与压缩
+- 扫描路径新增自适应 batch size (#62835)
+- 新增 CompactionTaskTracker，提供系统表和 HTTP API (#61696)
+- MOR 表新增 value predicate 下推开关 (#60513)
+
+## 其他
+- 新增 json_object_flatten 标量函数 (#62825)
+
+# 改进
+
+## 存储与压缩
+- FileSplitter 跳过零长度文件，避免向 BE 发送空 split (#62482)
+- 顺序读 key 时避免单点读写 (#62476)
+- 为 AnnIndexIVFListCache 增加 stampede 保护 (#62442)
+- 限制 packed file 仅写入 rowset 的首个 segment (#62342)
+- 统一当前查询的运行时统计信息并暴露任务进度 (#60567)
+
+## 导入
+- 支持配置第三方 jar 下载镜像 (#62376)
+
+## 云原生
+- 新增 HashCRC32Return32，使 join_hash_table 使用 32 位 hash 值 (#62512)
+
+## 其他
+- 新增 current_database 内建别名 (#62591)
+
+# 问题修复
+
+## 索引与搜索
+- 修复深层嵌套复杂类型子类型校验被绕过的问题 (#63208)
+- 修复 getDeleteBitmapUpdateLock 中潜在的 NPE (#62809)
+- 修复 ANN 查询向量提取，兼容所有常量表达式类型 (#62637)
+- 将庞大的 function_string.h 拆分为按领域划分的多个文件 (#62262)
+- 修复 Iceberg/Paimon 表分区列生成时的 OOB 崩溃 (#62177)
+- 修复升级后 sessionVariables 的空指针异常 (#61959)
+- 优化 aggregate_function_orthogonal_bitmap.cpp 的编译耗时 (#61606)
+- drop index 时应设置 db_id (#58401)
+
+## 查询与执行
+- 修复远端 Flight SQL 结果接收器的初始化问题 (#63136)
+- 在空表的短路点查询中保留 LogicalOlapScan (#62948)
+- 修复 timestamptz literal 中 DST 春令跳变时段的处理 (#62945)
+- 修复 assert_num_rows_operator 中的 UB 和参数顺序 (#62800)
+- 通过新增 TimeStampTzType 签名匹配，在 LEAD/LAG 中保留 TIMESTAMPTZ (#62779)
+- 修复 exchange receiver 的依赖竞态 (#62777)
+- 为规范格式的 datetime 解析新增快速路径 (#62757)
+- 修复 isCountStar 将 count(null) 错误识别为 count(*) (#62548)
+- 修复 view 列在 lazy materialization 中丢失 colUniqueId (#62533)
+- 对齐 extra-join 消除的安全性检查 (#62527)
+- 修复 BE 节点文件句柄耗尽后 Doris 查询服务失败 (#62393)
+- 分区裁剪后按比例缩放列统计中的 num_nulls (#62265)
+- 修复审计日志关闭时 prepared statement QPS 指标未统计的问题 (#61621)
+- 升级 license-maven-plugin 到 2.1.0 (#58951)
+
+## 存储与压缩
+- 在 cloud snapshot manager 中避免任务嵌套 attach (#63189)
+- 物化 NG compaction 常规路径 (#63104)
+- Gson replay 后重建 broker load 存储属性 (#63094)
+- 系统库的统计信息缓存跳过处理 (#63089)
+- 修复 variant flat-leaf 根读取计划 (#63086)
+- 为 score() 解析 variant 子列索引 (#62992)
+- 避免删除不存在的 delete bitmap 文件 (#62967)
+- 跳过倾斜的 warmup rowset 延迟采样 (#62941)
+- 系统表返回未知统计信息 (#62913)
+- 在审计日志中将内部查询失败标记为 ERR (#62908)
+- 修复因错误信息变化导致 warm up 不重试的问题 (#62886)
+- 拒绝 add_cell 中超大的 block size (#62878)
+- 将 #include 指令移出 namespace 块，避免 ODR 违规 (#62871)
+- 为 cdc_client RPC 按类别添加超时限制 (#62870)
+- 新增 NestedGroup path 元数据支持 (#62848)
+- 通过 cache miss 时重发 query context，降低点查的网络开销 (#62836)
+- 构造 VariantStatsCaculator 时跳过完整 footer 扫描 (#62819)
+- warmup 任务取消/过期时避免 NPE 并清理过期 cache (#62805)
+- 首次动态分区初始化时持有表写锁，避免 CREATE MV 竞态 (#62755)
+- 支持为 StreamingJob 指定 compute_group (#62747)
+- 将 MemTracker 绑定到 cache 后台线程，修复 orphan crash (#62739)
+- 取消 alter 任务列表为空时按全部 rollup 任务处理 (#62712)
+- 移除 enable_nereids_load 开关 (#62703)
+- 增加部分 Sanity-check 以避免 NPE (#62691)
+- 修复升级时 RestoreJob 无法反序列化 Tablet (#62673)
+- 修复 force refresh 下 profile hitcache 不正确以及 sink id 不正确 (#62645)
+- 聚合非 MOW segment key 边界，减小 rowset meta 体积 (#62604)
+- 支持 ADMIN COMPACT TABLE type='FULL' 并在云模式启用 (#62596)
+- 优化 spill 场景下的可回收内存计量 (#62581)
+- 修复 no-key 表中 variant 列 uid=0 时的 compaction 失败 (#62571)
+- 将 ALTER 的 source/target 属性透传到运行时与持久化 (#62553)
+- 避免 TypedZoneMapIndexWriter 在每行产生临时 Field (#62544)
+- 修正错误的 for 循环 (#62517)
+- 读取时归一化遗留的单段 dot-key 子列路径 (#62409)
+- 修复 finalize 时缺少 local cache writer 导致的 BE 崩溃 (#62389)
+- 修复 InsertLoadJob 因任务永久卡在 PENDING 状态导致的内存泄漏 (#62282)
+- 新增 SC_COMPACTION_CONFLICT 错误码以重试跨 V1 的 compaction 失败 (#62272)
+- 为 streaming insert 任务新增按任务级别的指标 (#62224)
+- 减少 aggregate_function_reader_replace.cpp 的编译耗时 (#62047)
+- 减少 HybridSet/InListPredicate 的模板膨胀并修复 create_string_value_set 的 bug (#61999)
+- 在 PrimitiveType 枚举中弃用 TYPE_LAMBDA_FUNCTION (#61941)
+- 新增 get_version 与 get_tablet_stats 用例 (#61915)
+- 将旧版 VExpr execute 接口迁移到新的 execute_column（Part 1）(#61912)
+- 拒绝在损坏的存储路径上上传 snapshot (#61251)
+- 手动 full compaction 任务提交到线程池，替代游离线程 (#61222)
+- 新增零依赖、仅 JDK 的 fe-foundation 模块 (#61175)
+- meta_tool 新增 show_segment_data 操作 (#60608)
+- 清理 cache 时避免后台 LRU 更新引发的 SIGSEGV (#60533)
+- 修复 IOContext 的 Use-After-Free (#59947)
+- 云模式下优先调度最近活跃的 tablet (#59539)
+- 支持 file cache microbench 在运行时热加载配置 (#58922)
+- v2 下跳过将 agg delete bitmap v1 推送到 ms (#57990)
+- 校验 delete bitmap 版本 (#57989)
+- 暴露云模式下的 balance 指标 (#57200)
+
+## 导入
+- 任务 max interval 从首条记录到达后开始计算 (#63141)
+- 加载 JNI log4j2 properties 配置 (#63063)
+- 修复 broker load 在解析多文件路径时只静默加载首个文件 (#62969)
+- packed file 异步关闭采用非阻塞轮询 (#62938)
+- 避免拷贝 ANN 检索结果 (#62924)
+- 修复单表 S3 streaming 场景下 filteredRows 始终为 0 (#62816)
+- LoadStatistic.FileNumber 上报物理文件数 (#62804)
+- 自适应 flush 控制器使用 CPU 指标增量检测 CPU 压力 (#62744)
+- 拒绝静默无效的 ALTER key 与不支持的 load.* 属性 (#62680)
+- checkDataQuality 累积前滚动采样窗口 (#62636)
+- PostgreSQL CDC 使用按表 publication 替代 ALL TABLES (#62526)
+- 支持 StreamingInsertJob 创建和 alter 时指定 offset (#62490)
+- 修复 FE checkpoint 重启后 S3 offset 与任务统计丢失 (#62449)
+- 修复 EditLog replay 时 StreamingInsertJob.replayOnCommitted 的 NPE (#62416)
+- 限制自动 resume 次数并暴露结构化 FailureReason (#62345)
+- 修复 FE 重启后 show load 中 INSERT 任务统计丢失 (#62331)
+- 修复 NereidsStreamLoadTask 中无效的 String.format 模式 (#62225)
+- 更新 streaming job 使用的 flink cdc 版本 (#62212)
+- 非 master 的 stream load precommit 提前返回 (#62109)
+- group commit 之前校验 stream load 的 content length (#62110)
+- 在 stream load 日志中脱敏敏感 header (#62108)
+- 在 commit 和 rollback 中拒绝无效的 stream load token (#62111)
+- 使用 memtable 内存而非 load 内存来计算自适应 write buffer 大小 (#62104)
+- 修复 GenericPool 在过期 TLS 连接上 reopen 阻塞 18 分钟的问题 (#61951)
+- 修复协调 BE 重启时 routine load afterAborted 抛出 IllegalMonitorStateException (#61881)
+- 减少 scan_operator 的模板实例化以缩短编译时间 (#61227)
+- 支持自适应 memtable write buffer 大小 (#56948)
+- group commit 的 memory tracker 移除 NDEBUG 限制 (#56577)
+
+## 云原生
+- 保持正确的 DST fold 分支以跨越切换点 (#63034)
+- 在可用 backend 上清理 warmup 任务 (#62931)
+- 抽取 snapshot 集成钩子 (#62859)
+- 刷新 event warmup backend (#62839)
+- 避免 master 切换期间查询丢失结果包 (#62721)
+- 修复 collect_set merge 时的冗余拷贝 (#62640)
+- S3 文件系统支持 IAM role 鉴权 (#62584)
+- 修复 #59489 引入的 different_serialize 测试数据目录拼写错误 (#62480)
+- 修复 Set 算子运行时 filter 处理的竞态 (#62434)
+- 在 CRTP 聚合函数派生类上强制 `final`，使编译器可去虚化 (#62433)
+- 在 s3 client 单测中支持 IAM Role (#62303)
+- 将 project 下推到 Union 时为常量分配新的 ExprId (#62296)
+- 对客户端隐藏 KV_TXN_MAYBE_COMMITTED (#62244)
+- Branch-4.1: [feature](jsf) FE/BE 将 JuiceFS (jfs://) 视为 HDFS 兼容 #61031 (#61706)
+- 合并 ms 与 recycler 的 http 骨架 (#61502)
+
+## 湖仓
+- JDBC catalog 解耦元数据名 (#62806)
+- 修复 iceberg 与 maxcompute 的 p2 用例 (#62483)
+- 减少 datetime floor/ceil 函数的模板实例化 (#61515)
+
+## 安全与认证
+- 在 late arrival 路径中恢复 _applied_rf_num 更新 (#62872)
+- 支持 SSL 并将 MySQL CDC source 与 PG 对齐 (#62700)
+- 修复 __internal_schema.audit_log 中 workload_group 为空的问题 (#62651)
+- 修复 CTE 组合时 Ranger 列级权限被绕过 (#61741)
+- 修复 admin 操作的 HTTP API 鉴权框架 (#60761)
+
+## 其他
+- 修复 TIMESTAMPTZ 经过时间语义按 UTC 处理 (#63161)
+- 修正 Arrow UTF8/String 大小上限 (#63137)
+- 移除 `is_acting_on_a_slot` 中无用的 if (#63095)
+- `from_olap_string` 解析 datetime 失败不再抛异常 (#63035)
+- release 模式下移除 datetime transformers 检查 (#63003)
+- 避免格式化生成的 insert 错误 (#62982)
+- doris compose 支持 docker compose v2 (#62851)
+- 为负的不足一小时 TIMESTAMPTZ 偏移保留符号 (#62823)
+- 修复 VariantStatsCaculator 的 -Wtype-limits 错误 (#62632)
+- 修复 FE 启动参数透传 (#62587)
+- 修复 insert overwrite 的错误信息 (#62555)
+- License 检查 (#62534)
+- 将 report 逻辑迁移到 pipeline fragment context，去除 ctor 中的 callback 参数 (#62500)
+- 抽取 isDynamicScheduleTable 方法以减少重复代码 (#62477)
+- test_hive_compress_type_large_data 显式设置 parallel_pipeline_task_num (#62423)
+- JAVA_OPTS_FOR_JDK_17 移除 classhisto*=trace，避免 full gc 时打印类直方图 (#62422)
+- 修复 VExprContext 重建时 RuntimeFilter selectivity sampling_frequency 丢失 (#62355)
+- re-prepare 时关闭 snapshot reader 并加固 REST 错误处理 (#62337)
+- 移除 StringValueSet 的 FixedContainer 优化 (#62243)
+- DateTimeV2Type.acceptsType 要求精确匹配 (#62201)
+- 移除 BE cast 路径中的 io_helper 间接层 (#62179)
+- 减少 hash join build 的模板实例化 (#61349)
+- 优化 cast 的编译耗时 (#61276)
+- 减少 window 函数的模板实例化 (#61232)
+- 减少聚合函数的编译耗时 (#61179)
+- 修复 FE 因 websocket 启动失败导致启动失败 (#60369)
+- type_array 支持 max/min 聚合函数 (#58490)
+- 修复 AdminCreateClusterSnapshotCommand (#58119)
+- array_sort 新增 lambda functor 版本 (#57828)
+- clone snapshot 支持绝对路径文件 (#57685)
+- 显示 snapshot 数量 (#56491)
+- 将 watcher.stop() 移入加锁代码块 (#56462)
+- 处理长度超过 50 的自动分区名 (#56304)
