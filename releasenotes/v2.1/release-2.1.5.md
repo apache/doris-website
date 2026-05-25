@@ -360,6 +360,18 @@
 
 - Fixed potential duplicate data issues when primary key replica cloning fails. [#37229](https://github.com/apache/doris/pull/37229)
 
+### Memory Management
+
+- Fixed inaccurate Jemalloc Cache statistics. [#37464](https://github.com/apache/doris/pull/37464)
+
+- Fixed the issue where memory size could not be correctly detected in K8s / CGroup environments. [#36966](https://github.com/apache/doris/pull/36966)
+
+### Memory Management
+
+- Fixed inaccurate Jemalloc Cache statistics. [#37464](https://github.com/apache/doris/pull/37464)
+
+- Fixed the issue where memory size could not be correctly detected in K8s / CGroup environments. [#36966](https://github.com/apache/doris/pull/36966)
+
 ### Permissions
 
 - Fixed the issue of missing authorization when a table-valued function references a resource. [#37132](https://github.com/apache/doris/pull/37132)
