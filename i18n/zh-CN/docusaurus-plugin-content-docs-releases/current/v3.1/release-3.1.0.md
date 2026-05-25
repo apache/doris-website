@@ -470,6 +470,8 @@ ORDER BY new_total_size_mb DESC;
 
 3.1 版本重构了各个数据源的连接属性，不仅能够以更加清晰的方式对接各类元数据服务和数据存储系统，同时还支持了更加丰富的连接能力。
 
+#### 1. 数据湖 Rest Catalog 支持更灵活
+
 **Iceberg Rest Catalog**
 
 3.1 版本进一步增强了对 Iceberg Rest Catalog 的支持。不仅支持了包括 Unity、Polaris、Gravitino、Glue 等多种 Iceberg Rest Catalog 后端实现，同时支持了 vended credentials 功能，能够更加安全、灵活的管理访问凭证。目前支持 AWS 平台，后续小版本迭代中将陆续支持 GCP、Azure 等云平台的凭证管理。
@@ -481,6 +483,8 @@ ORDER BY new_total_size_mb DESC;
 3.1.0 版本中支持基于阿里云 DLF 的 Paimon Rest Catalog，可以直接访问新版本 DLF 管理的 Paimon 表数据。 
 
 详情参考[文档](https://doris.apache.org/docs/lakehouse/best-practices/doris-dlf-paimon)
+
+#### 2. Hadoop 生态支持更强
 
 **多 Kerberos 环境支持**
 
