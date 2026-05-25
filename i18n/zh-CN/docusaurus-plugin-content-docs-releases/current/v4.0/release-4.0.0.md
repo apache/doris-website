@@ -631,6 +631,8 @@ JSON 是半结构化数据常见的一种存储方式，在4.0 版本我们对JS
 
 4.0 版本对 workload group 的使用机制进行了优化：统一了 CPU 与内存的软限、硬限定义方式，无需再通过各类配置项单独开启软限或硬限功能，并且同时支持在同一 workload group 中并存使用软限与硬限。优化后不仅简化了参数配置流程，还增强了 workload group 的使用灵活性，能更精准地满足多样化的资源管控需求。
 
+### CPU 资源配置
+
 **MIN_CPU_PERCENT 和 MAX_CPU_PERCENT** 定义了在出现 CPU 争用时，Workload Group 中所有请求的最低和最高保证 CPU 资源。
 
 - MAX_CPU_PERCENT（最大 CPU 百分比）是该池中 CPU 带宽的最大限制，不论当前CPU 使用率是多少， 当前Workload Group 的 CPU 使用率超过都不会超过 MAX_CPU_PERCENT。
@@ -638,12 +640,14 @@ JSON 是半结构化数据常见的一种存储方式，在4.0 版本我们对JS
 
 例如，假设某公司的销售部门和市场部门共享同一个 Doris 实例。销售部门的工作负载是 CPU 密集型的，且包含高优先级查询；市场部门的工作负载同样是 CPU 密集型，但查询优先级较低。通过为每个部门创建单独的Workload Group，可以为销售Workload Group分配 40% 的最小 CPU 百分比，为市场Workload Group分配 30% 的最大 CPU 百分比。这种配置能确保销售工作负载获得所需的 CPU 资源，同时市场工作负载不会影响销售工作负载对 CPU 的需求。
 
+### 内存资源配置
+
 **MIN_MEMORY_PERCENT 和 MAX_MEMORY_PERCENT** 是Workload Group 可以使用的最小和最大内存量。
 
 - MAX_MEMORY_PERCENT，意味着当请求在该池中运行时，它们占用的内存绝不会超过总内存的这一百分比，一旦超过那么Query 将会触发落盘或者被Kill。
 - MIN_MEMORY_PERCENT，为某个池设置最小内存值，当资源空闲时，可以使用超过MIN_MEMORY_PERCENT的内存，但是当内存不足时，系统将按照MIN_MEMORY_PERCENT（最小内存百分比）分配内存，可能会选取一些Query Kill，将Workload Group 的内存使用量降低到MIN_MEMORY_PERCENT，以确保其他Workload Group有足够的内存可用。
 
-**与落盘相结合**
+### 与落盘相结合
 
 在这个版本中，我们将workload group的内存管理能力与落盘功能进行融合，用户不仅可以通过为每一个Query 设置内存大小来控制落盘，还可以通过workload group 的slot 机制来实现动态落盘，在workload group 之上我们实现了以下策略：
 
