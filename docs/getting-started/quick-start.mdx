@@ -249,6 +249,12 @@ As a temporary workaround, remove the `credsStore` field from `~/.docker/config.
 
 Check whether the BE's `priority_networks` is in the same network segment as the FE, and confirm that the BE ports (9050/9060/8040/8060) are not blocked by a firewall.
 
+### Q: Running the local deployment under WSL2 — the BE never joins the cluster. What's wrong?
+
+WSL2's loopback is namespaced per-distribution, so the FE and BE cannot reach each other through `127.0.0.1`. The default `priority_networks=127.0.0.1/32` therefore causes BE registration or heartbeats to fail under WSL2.
+
+To fix it, run `ip addr show eth0` to find the actual WSL network segment (typically `172.16.0.0/12` or `172.x.x.x/20`), then set `priority_networks` to that segment in both `fe/conf/fe.conf` and `be/conf/be.conf`, restart the FE and BE, and re-run `ALTER SYSTEM ADD BACKEND`.
+
 ### Q: How do I confirm that the cluster is healthy overall?
 
 Run `SHOW FRONTENDS;` and `SHOW BACKENDS;`, and ensure that the `Alive` column is `true` for every node.
