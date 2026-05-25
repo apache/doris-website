@@ -249,6 +249,12 @@ sudo ln -s /Applications/Docker.app/Contents/Resources/bin/docker /usr/local/bin
 
 检查 BE 的 `priority_networks` 是否与 FE 所在网段一致，并确认 BE 端口（9050/9060/8040/8060）未被防火墙拦截。
 
+### Q: 在 WSL2 中本地部署，BE 始终无法加入集群？
+
+WSL2 的回环网络按发行版隔离，FE 与 BE 之间无法通过 `127.0.0.1` 互通，因此默认配置 `priority_networks=127.0.0.1/32` 在 WSL2 下会导致 BE 注册失败或心跳异常。
+
+解决方法：通过 `ip addr show eth0` 查看 WSL 实际网卡所在网段（通常为 `172.16.0.0/12` 或 `172.x.x.x/20`），然后将 `fe/conf/fe.conf` 与 `be/conf/be.conf` 中的 `priority_networks` 同步修改为该网段，重启 FE、BE 后重新执行 `ALTER SYSTEM ADD BACKEND`。
+
 ### Q: 如何确认集群整体健康？
 
 执行 `SHOW FRONTENDS;` 和 `SHOW BACKENDS;`，确保所有节点的 `Alive` 列为 `true`。
