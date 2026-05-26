@@ -36,6 +36,22 @@ Returns VARCHAR — the new string after replacing the substring. Special cases:
 
 ## Examples
 
+For reference, `REPLACE` rewrites every occurrence of `<old>` and leaves the rest of the string untouched:
+
+```sql
+SELECT replace('hello world', 'world', 'universe');
+```
+
+```text
++---------------------------------------------+
+| replace('hello world', 'world', 'universe') |
++---------------------------------------------+
+| hello universe                              |
++---------------------------------------------+
+```
+
+`REPLACE_EMPTY` behaves the same in the ordinary case (see example 2 below), but differs when `<old>` is an empty string — it then inserts `<new>` before every character of `<str>` and at the end (example 1). The remaining examples cover the corner cases.
+
 1. Basic usage: insert behavior when `<old>` is an empty string.
 
 ```sql
