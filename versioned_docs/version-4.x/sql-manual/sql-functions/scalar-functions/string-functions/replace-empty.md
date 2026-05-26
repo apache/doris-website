@@ -28,46 +28,80 @@ REPLACE_EMPTY ( <str>, <old>, <new> )
 
 ## Return Value
 
-Returns the new string after replacing the substring. Special cases:
+Returns VARCHAR — the new string after replacing the substring. Special cases:
 
-- If any Parameter is NULL, NULL will be returned.
-- If `<old>` is an empty string, the string with the `<new>` string inserted before each character of the `<str>` string will be returned.
+- If any parameter is NULL, returns NULL.
+- If `<old>` is an empty string, returns the string with `<new>` inserted before every character of `<str>` and at the end.
+- If `<old>` is not found in `<str>`, returns `<str>` unchanged.
 
 ## Examples
 
+1. Basic usage: insert behavior when `<old>` is an empty string.
 
 ```sql
-SELECT replace('hello world', 'world', 'universe');
+SELECT replace_empty('abc', '', 'x');
 ```
 
 ```text
-+---------------------------------------------+
-| replace('hello world', 'world', 'universe') |
-+---------------------------------------------+
-| hello universe                              |
-+---------------------------------------------+
++-------------------------------+
+| replace_empty('abc', '', 'x') |
++-------------------------------+
+| xaxbxcx                       |
++-------------------------------+
 ```
 
+2. Plain substring replacement (same behavior as `REPLACE`).
+
 ```sql
-SELECT replace_empty("abc", '', 'xyz');
+SELECT replace_empty('hello', 'l', 'L');
 ```
 
 ```text
-+---------------------------------+
-| replace_empty('abc', '', 'xyz') |
-+---------------------------------+
-| xyzaxyzbxyzcxyz                 |
-+---------------------------------+
++----------------------------------+
+| replace_empty('hello', 'l', 'L') |
++----------------------------------+
+| heLLo                            |
++----------------------------------+
 ```
 
+3. Empty `<str>` together with empty `<old>`.
+
 ```sql
-SELECT replace_empty("", "", "xyz");
+SELECT replace_empty('', '', 'x');
 ```
 
 ```text
-+------------------------------+
-| replace_empty('', '', 'xyz') |
-+------------------------------+
-| xyz                          |
-+------------------------------+
++----------------------------+
+| replace_empty('', '', 'x') |
++----------------------------+
+| x                          |
++----------------------------+
+```
+
+4. NULL propagation.
+
+```sql
+SELECT replace_empty(NULL, 'old', 'new');
+```
+
+```text
++-----------------------------------+
+| replace_empty(NULL, 'old', 'new') |
++-----------------------------------+
+| NULL                              |
++-----------------------------------+
+```
+
+5. Multi-byte (UTF-8) `<new>`.
+
+```sql
+SELECT replace_empty('hello', 'l', 'ṭṛìṭ');
+```
+
+```text
++--------------------------------------------+
+| replace_empty('hello', 'l', 'ṭṛìṭ')        |
++--------------------------------------------+
+| heṭṛìṭṭṛìṭo                                |
++--------------------------------------------+
 ```
