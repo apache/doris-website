@@ -18,7 +18,7 @@
 
   - https://github.com/apache/doris/pull/33282
 
-3. Auto Partition syntax changes, see the [documentation](../../table-design/data-partitioning/auto-partitioning.md) for details.
+3. Auto Partition syntax changes, see the [documentation](https://doris.apache.org/docs/2.1/table-design/data-partitioning/auto-partitioning) for details.
 
   - https://github.com/apache/doris/pull/32737
 
