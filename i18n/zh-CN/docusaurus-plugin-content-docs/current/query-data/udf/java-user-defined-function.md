@@ -141,6 +141,10 @@ insert into test_table values (6, 666.66, "d,e");
     );
     ```
 
+:::caution Note
+使用 `file://` 时，Doris 会在 `CREATE FUNCTION` 阶段从 FE 节点读取 JAR 文件并计算 checksum，在执行阶段从 BE 节点读取 JAR 文件。因此，同一个 JAR 文件必须以相同绝对路径存在于所有 FE 和 BE 节点，并且文件内容必须完全一致。如果文件只存在于 BE 节点，`CREATE FUNCTION` 会失败；如果 FE 和 BE 上的文件内容不一致，执行时会因 checksum 不匹配失败。
+:::
+
 3. 调用 UDF。使用 UDF 必须拥有对应数据库的 `SELECT` 权限。如需查看注册成功的 UDF，可使用 [SHOW FUNCTIONS](../../sql-manual/sql-statements/function/SHOW-FUNCTIONS) 命令。
 
     ```sql
