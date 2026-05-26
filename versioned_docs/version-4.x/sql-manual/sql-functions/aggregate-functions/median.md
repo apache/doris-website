@@ -30,6 +30,22 @@ Returns NULL if there is no valid data in the group.
 ## Example
 
 ```sql
+-- setup
+create table log_statis(
+    datetime datetime,
+    scan_rows int
+) distributed by hash(datetime) buckets 1
+properties ("replication_num"="1");
+insert into log_statis values
+    ('2025-08-25 10:00:00', 10),
+    ('2025-08-25 10:00:00', 50),
+    ('2025-08-25 10:00:00', 100),
+    ('2025-08-25 11:00:00', 20),
+    ('2025-08-25 11:00:00', 30),
+    ('2025-08-25 11:00:00', 40);
+```
+
+```sql
 select datetime, median(scan_rows) from log_statis group by datetime;
 ```
 
