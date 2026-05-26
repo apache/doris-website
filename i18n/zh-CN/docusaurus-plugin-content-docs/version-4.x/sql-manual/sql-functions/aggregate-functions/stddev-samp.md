@@ -33,7 +33,7 @@ STDDEV_SAMP(<expr>)
 ## 返回值
 
 返回 Double 类型的参数 expr 的样本标准差。
-当组内没有合法数据，或组内合法数据个数小于等于 1 时，返回 NULL。
+当组内没有合法数据时，返回 NULL。组内合法数据个数为 1 时，返回 NaN。
 
 ## 举例
 ```sql
@@ -67,7 +67,7 @@ FROM score_table;
 +-------------------+
 ```
 
-当合法数据个数小于等于 1 时，`STDDEV_SAMP` 返回 `NULL`。
+当合法数据个数为 1 时，`STDDEV_SAMP` 返回 `NaN`。
 
 ```sql
 -- 创建单列示例表
@@ -84,6 +84,6 @@ SELECT STDDEV_SAMP(value) AS sample_stddev FROM sample_values;
 +---------------+
 | sample_stddev |
 +---------------+
-|          NULL |
+|           NaN |
 +---------------+
 ```

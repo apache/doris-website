@@ -36,7 +36,7 @@ VAR_SAMP(<expr>)
 
 ## Return Value
 Returns a Double value representing the calculated sample variance.
-If there is no valid data in the group, or the number of valid values in the group is less than or equal to 1, returns NULL.
+If there is no valid data in the group, returns NULL. If the number of valid values in the group is 1, returns NaN.
 
 ## Examples
 ```sql
@@ -75,7 +75,7 @@ FROM student_scores;
 +------------------+---------------------+
 ```
 
-When the number of valid values is less than or equal to 1, `VAR_SAMP` returns `NULL`.
+When the number of valid values is 1, `VAR_SAMP` returns `NaN`.
 
 ```sql
 -- Create a single-column sample table
@@ -92,6 +92,6 @@ SELECT VAR_SAMP(value) AS sample_variance FROM sample_values;
 +-----------------+
 | sample_variance |
 +-----------------+
-|            NULL |
+|             NaN |
 +-----------------+
 ```

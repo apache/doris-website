@@ -36,7 +36,7 @@ VAR_SAMP(<expr>)
 
 ## 返回值
 返回一个 Double 类型的值，表示计算得到的样本方差。
-组内没有合法数据，或组内合法数据个数小于等于 1 时，返回 NULL。
+组内没有合法数据时，返回 NULL。组内合法数据个数为 1 时，返回 NaN。
 
 ## 举例
 ```sql
@@ -75,7 +75,7 @@ FROM student_scores;
 +------------------+---------------------+
 ```
 
-当合法数据个数小于等于 1 时，`VAR_SAMP` 返回 `NULL`。
+当合法数据个数为 1 时，`VAR_SAMP` 返回 `NaN`。
 
 ```sql
 -- 创建单列示例表
@@ -92,6 +92,6 @@ SELECT VAR_SAMP(value) AS sample_variance FROM sample_values;
 +-----------------+
 | sample_variance |
 +-----------------+
-|            NULL |
+|             NaN |
 +-----------------+
 ```
