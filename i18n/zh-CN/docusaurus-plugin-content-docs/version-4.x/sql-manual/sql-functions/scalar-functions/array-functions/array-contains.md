@@ -89,7 +89,7 @@ PROPERTIES (
 INSERT INTO array_contains_test VALUES
 (1, [1000, 2000, 3000], ['apple', 'banana', 'cherry']),
 (2, [], []),
-(3, NULL, NULL);
+(3, NULL, NULL),
 (4, [1000, null, 3000], ['apple', null, 'cherry']);
 ```
 
