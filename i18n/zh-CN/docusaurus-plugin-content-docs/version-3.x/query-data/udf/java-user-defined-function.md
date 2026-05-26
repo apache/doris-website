@@ -41,7 +41,7 @@ Doris 支持使用 JAVA 编写 UDF、UDAF 和 UDTF。下文如无特殊说明，
 `List<Type>` 和 `Map<Type1,Type2>` 类的支持从3.1.0 版本开始
 :::
 
-:::caution 注意
+:::caution Note
 在创建函数时，请务必使用 `string` 类型而不是 `varchar`，否则可能会导致函数执行失败。
 :::
 
@@ -103,6 +103,10 @@ insert into test_table values (6, 666.66, "d,e");
         "type"="JAVA_UDF"
     );
     ```
+
+:::caution Note
+使用 `file://` 时，Doris 会在 `CREATE FUNCTION` 阶段从 FE 节点读取 JAR 文件并计算 checksum，在执行阶段从 BE 节点读取 JAR 文件。因此，同一个 JAR 文件必须以相同绝对路径存在于所有 FE 和 BE 节点，并且文件内容必须完全一致。如果文件只存在于 BE 节点，`CREATE FUNCTION` 会失败；如果 FE 和 BE 上的文件内容不一致，执行时会因 checksum 不匹配失败。
+:::
 
 3. 用户使用 UDF 必须拥有对应数据库的 `SELECT` 权限。
     如果想查看注册成功的对应 UDF 函数，可以使用[SHOW FUNCTIONS](../../sql-manual/sql-statements/function/SHOW-FUNCTIONS) 命令。

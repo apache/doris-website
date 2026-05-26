@@ -197,6 +197,7 @@ zip python_udf_scalar_ops.zip python_udf_scalar_ops.py utils.py helper.py ...
 - 使用远程下载方式时，需确保所有 BE 节点都能访问该 URL。
 - 首次调用时会下载文件，可能有一定延迟。
 - 文件会被缓存，后续调用无需重复下载。
+- 使用 `file://` 时，Doris 会在 `CREATE FUNCTION` 阶段从 FE 节点读取该包并计算 checksum，在执行阶段从 BE 节点读取该包。因此，同一个 `.zip` 文件必须以相同绝对路径存在于所有 FE 和 BE 节点，并且文件内容必须完全一致。如果文件只存在于 BE 节点，`CREATE FUNCTION` 会失败；如果 FE 和 BE 上的文件内容不一致，执行时会因 checksum 不匹配失败。
 :::
 
 **步骤 4：设置 `symbol` 参数**
@@ -1389,6 +1390,7 @@ zip stats_udaf.zip stats_udaf.py
 > - 使用远程下载方式时，需确保所有 BE 节点都能访问该 URL。
 > - 首次调用时会下载文件，可能有一定延迟。
 > - 文件会被缓存，后续调用无需重复下载。
+> - 使用 `file://` 时，Doris 会在 `CREATE AGGREGATE FUNCTION` 阶段从 FE 节点读取该包并计算 checksum，在执行阶段从 BE 节点读取该包。同一个 `.zip` 文件必须以相同绝对路径存在于所有 FE 和 BE 节点，并且文件内容必须完全一致。如果文件只存在于 BE 节点，函数创建会失败；如果 FE 和 BE 上的文件内容不一致，执行时会因 checksum 不匹配失败。
 
 **步骤 4：设置 `symbol` 参数**
 
@@ -2340,6 +2342,7 @@ zip text_udtf.zip text_udtf.py
 - 使用远程下载方式时，需确保所有 BE 节点都能访问该 URL。
 - 首次调用时会下载文件，可能有一定延迟。
 - 文件会被缓存，后续调用无需重复下载。
+- 使用 `file://` 时，Doris 会在 `CREATE TABLES FUNCTION` 阶段从 FE 节点读取该包并计算 checksum，在执行阶段从 BE 节点读取该包。因此，同一个 `.zip` 文件必须以相同绝对路径存在于所有 FE 和 BE 节点，并且文件内容必须完全一致。如果文件只存在于 BE 节点，函数创建会失败；如果 FE 和 BE 上的文件内容不一致，执行时会因 checksum 不匹配失败。
 :::
 
 **步骤 4：设置 `symbol` 参数**
