@@ -70,13 +70,17 @@ SELECT array_enumerate_uniq([]);
 +----------------------+
 ```
 
-NULL 数组返回 NULL
+NULL 数组返回 NULL（单参数和多参数形式均如此）：
+```sql
 SELECT array_enumerate_uniq(NULL), array_enumerate_uniq(NULL, NULL);
+```
+```text
 +----------------------------+----------------------------------+
 | array_enumerate_uniq(NULL) | array_enumerate_uniq(NULL, NULL) |
 +----------------------------+----------------------------------+
 | NULL                       | NULL                             |
 +----------------------------+----------------------------------+
+```
 
 包含 null 的数组，null 元素也会生成编号：
 ```sql
