@@ -60,7 +60,7 @@ select datetime, median(scan_rows) from log_statis group by datetime;
 ```
 
 ```sql
-select median(scan_rows) from log_statis group by datetime;
+select median(scan_rows) from log_statis where scan_rows is null;
 ```
 
 ```text
