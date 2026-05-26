@@ -33,6 +33,27 @@ FIELD(<expr>, <param> [, ...])
 ## Examples
 
 ```sql
+-- setup
+CREATE TABLE baseall (k1 INT, k7 VARCHAR(64))
+DISTRIBUTED BY HASH(k1) BUCKETS 1
+PROPERTIES ("replication_num" = "1");
+
+INSERT INTO baseall VALUES
+    (1, 'wangjing04'),
+    (2, 'wangyu14'),
+    (3, 'yuanyuan06');
+
+CREATE TABLE class_test (class_name VARCHAR(64))
+DISTRIBUTED BY HASH(class_name) BUCKETS 1
+PROPERTIES ("replication_num" = "1");
+
+INSERT INTO class_test VALUES
+    ('Suzi'), ('Suzi'),
+    ('Ben'), ('Ben'),
+    ('Henry'), ('Henry');
+```
+
+```sql
 SELECT FIELD(2, 3, 1, 2, 5);
 ```
 
