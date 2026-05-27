@@ -73,6 +73,31 @@ DELETE FROM table_name [table_alias]
 
 ### 示例
 
+下列示例使用 `my_table`，一张 Unique Key、按 `k1` 列做 List 分区的表，包含两个分区 `p1` 和 `p2`：
+
+```sql
+CREATE TABLE my_table (
+  k1 INT,
+  status VARCHAR(32),
+  dt DATE
+)
+UNIQUE KEY (k1)
+PARTITION BY LIST (k1) (
+  PARTITION p1 VALUES IN (1, 2, 3, 4, 5),
+  PARTITION p2 VALUES IN (6, 7, 8, 9, 10)
+)
+DISTRIBUTED BY HASH (k1) BUCKETS 1
+PROPERTIES ("replication_num" = "1");
+
+INSERT INTO my_table VALUES
+  (1, 'active',   '2024-09-01'),
+  (3, 'outdated', '2024-10-15'),
+  (5, 'active',   '2024-10-20'),
+  (6, 'outdated', '2024-10-05'),
+  (8, 'outdated', '2024-10-25'),
+  (10, 'active',  '2024-11-10');
+```
+
 **示例 1：删除指定分区中某列等于固定值的数据**
 
 ```sql
@@ -186,7 +211,11 @@ DELETE FROM t1
 
 **预期结果**：`t1` 表中 `id = 1` 的行被删除。
 
-```Plain
+```sql
+SELECT * FROM t1 ORDER BY id;
+```
+
+```text
 +----+----+----+--------+------------+
 | id | c1 | c2 | c3     | c4         |
 +----+----+----+--------+------------+

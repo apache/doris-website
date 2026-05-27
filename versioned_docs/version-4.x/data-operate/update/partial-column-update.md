@@ -45,7 +45,25 @@ During a load on the Unique Key Model, Doris can directly insert or update parti
 
 ### Example
 
-Assume Doris contains an order table `order_tbl`, where the order ID is the Key column and the order status and order amount are Value columns. The current data is as follows:
+Assume Doris contains an order table `order_tbl`, where the order ID is the Key column and the order status and order amount are Value columns. Create it with the Merge-on-Write Unique-Key model and load the seed row:
+
+```sql
+CREATE TABLE order_tbl (
+  order_id     INT,
+  order_status VARCHAR(64),
+  order_amount INT
+)
+UNIQUE KEY (order_id)
+DISTRIBUTED BY HASH (order_id) BUCKETS 1
+PROPERTIES (
+  "replication_num" = "1",
+  "enable_unique_key_merge_on_write" = "true"
+);
+
+INSERT INTO order_tbl VALUES (1, 'Pending payment', 100);
+```
+
+The current data is then:
 
 | Order ID | Order amount | Order status |
 | --- | --- | --- |

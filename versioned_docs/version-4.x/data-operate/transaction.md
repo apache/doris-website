@@ -257,7 +257,7 @@ The isolation level provided by Doris transactional writes is `READ COMMITTED`. 
 
 * For multiple statements in a transaction, each statement cannot read modifications made by other statements within the same transaction. For example:
 
-    Suppose that before the transaction begins, table `dt1` has 5 rows, table `dt2` has 5 rows, and table `dt3` is empty. The following statements are executed:
+    Suppose that before the transaction begins, table `dt1` has 5 rows, table `dt2` has 5 rows, and table `dt3` is empty. The following sketch shows the transaction shape (the runnable script that creates the tables and loads the seed rows first appears in the concrete example below):
 
     ```sql
     BEGIN;
@@ -268,7 +268,7 @@ The isolation level provided by Doris transactional writes is `READ COMMITTED`. 
     COMMIT;
     ```
 
-    A concrete example:
+    A concrete, end-to-end runnable example:
 
     ```sql
     # Create tables and write data
