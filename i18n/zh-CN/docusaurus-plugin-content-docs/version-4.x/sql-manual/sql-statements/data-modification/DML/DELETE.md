@@ -62,6 +62,26 @@ DELETE FROM table_name [table_alias]
 
 ## 示例
 
+示例 1-3、6、7 使用下面 setup 创建的 `my_table`，它是一个 Unique Key、按 `k1` 列做 List 分区的表，包含两个分区 `p1` 和 `p2`：
+
+```sql
+CREATE TABLE my_table (
+  k1 INT,
+  k2 VARCHAR(16)
+)
+UNIQUE KEY (k1)
+PARTITION BY LIST (k1) (
+  PARTITION p1 VALUES IN (1, 2, 3, 4, 5),
+  PARTITION p2 VALUES IN (6, 7, 8, 9, 10)
+)
+DISTRIBUTED BY HASH (k1) BUCKETS 1
+PROPERTIES ("replication_num" = "1");
+
+INSERT INTO my_table VALUES
+  (1, 'a'), (3, 'abc'), (5, 'abc'),
+  (6, 'b'), (8, 'abc'), (10, 'd');
+```
+
 1. 删除 my_table partition p1 中 k1 列值为 3 的数据行
     
     ```sql
@@ -126,10 +146,14 @@ DELETE FROM table_name [table_alias]
      USING t2 INNER JOIN t3 ON t2.id = t3.id
      WHERE t1.id = t2.id;
    ```
-   
-   预期结果为，删除了`t1`表`id`为`1`的列
-   
+
+   `t1` 删除后的预期内容（只移除了 `id = 1` 的行）：
+
+   ```sql
+   SELECT * FROM t1 ORDER BY id;
    ```
+
+   ```text
    +----+----+----+--------+------------+
    | id | c1 | c2 | c3     | c4         |
    +----+----+----+--------+------------+
