@@ -69,21 +69,21 @@ Below are a few quick-look screenshots from Grafana with the Doris App plugin in
 
 - Log search
 
-![Log search](/images/observability/dogstack/overview_logs.png)
+![Log search](https://cdnd.selectdb.com/images/upload/dogstack/overview_logs.png)
 
 - Trace analysis
 
-![Trace analysis](/images/observability/dogstack/overview_traces.png)
+![Trace analysis](https://cdnd.selectdb.com/images/upload/dogstack/overview_traces.png)
 
 - Metrics dashboard
 
-![Metrics dashboard](/images/observability/dogstack/overview_dashboard.png)
+![Metrics dashboard](https://cdnd.selectdb.com/images/upload/dogstack/overview_dashboard.png)
 
 
 
 ## Architecture
 
-![DOG Stack Architecture](/images/observability/dogstack/dogstack_architecture.png)
+![DOG Stack Architecture](https://cdnd.selectdb.com/images/upload/dogstack/dogstack_architecture.png)
 
 DOG Stack consists of the following components.
 

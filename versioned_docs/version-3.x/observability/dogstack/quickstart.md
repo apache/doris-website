@@ -37,15 +37,15 @@ This launches a complete DOG Stack along with a demo e-commerce application made
 
 Open your web browser, navigate to http://localhost:33000/grafana/plugins, search for `doris`, and click the **Doris App** entry.
 
-![Doris App plugin](/images/observability/dogstack/quickstart_plugin.png)
+![Doris App plugin](https://cdnd.selectdb.com/images/upload/dogstack/quickstart_plugin.png)
 
 Then click the **Enable** button to enable the Doris App.
 
-![Enable Doris App](/images/observability/dogstack/quickstart_enable.png)
+![Enable Doris App](https://cdnd.selectdb.com/images/upload/dogstack/quickstart_enable.png)
 
 Once enabled, you can find the Doris App under "More apps" in the left-side menu. Click "Doris App" to start exploring.
 
-![Doris App entry](/images/observability/dogstack/quickstart_apps.png)
+![Doris App entry](https://cdnd.selectdb.com/images/upload/dogstack/quickstart_apps.png)
 
 
 
@@ -53,11 +53,11 @@ Once enabled, you can find the Doris App under "More apps" in the left-side menu
 
 In the Doris App, choose `Doris` as the data source, `otel` as the database, and `otel_logs` as the table — you will see some data. The UI should look familiar and easy to use for Kibana users.
 
-![Log data source](/images/observability/dogstack/quickstart_logs.png)
+![Log data source](https://cdnd.selectdb.com/images/upload/dogstack/quickstart_logs.png)
 
 Try entering `body:error` in the search box to find logs whose body field contains the word `error`.
 
-![Search body:error](/images/observability/dogstack/quickstart_search.png)
+![Search body:error](https://cdnd.selectdb.com/images/upload/dogstack/quickstart_search.png)
 
 
 
@@ -67,17 +67,17 @@ Click **Traces** under the **Doris App** menu to explore and analyze traces.
 
 Choose `Doris` as the data source, `otel` as the database, and `otel_traces` as the table. Click the **Find Traces** button to fetch the most recent 50 trace records — they will be displayed as a chart at the top and a list below. You can experiment with the Service, Operation, Tags, and Duration filters on the left, and try different sort options below the trace chart.
 
-![Trace list](/images/observability/dogstack/quickstart_traces.png)
+![Trace list](https://cdnd.selectdb.com/images/upload/dogstack/quickstart_traces.png)
 
 Click a specific trace to view its waterfall visualization. Inside the waterfall view, use the **Span Filter** to further filter spans within the trace.
 
-![Trace waterfall](/images/observability/dogstack/quickstart_waterfall.png)
+![Trace waterfall](https://cdnd.selectdb.com/images/upload/dogstack/quickstart_waterfall.png)
 
 ## Dashboards
 
 Click **Dashboards** in the left-side menu, then click **Doris Demo**, and finally click **Collector Self-Monitoring**. You will see the demo dashboard below, which shows host metrics of the OpenTelemetry Collector itself.
 
-![Demo dashboard](/images/observability/dogstack/quickstart_dashboard.png)
+![Demo dashboard](https://cdnd.selectdb.com/images/upload/dogstack/quickstart_dashboard.png)
 
 
 
@@ -85,4 +85,4 @@ Click **Dashboards** in the left-side menu, then click **Doris Demo**, and final
 
 You can create alert rules based on SQL queries against Doris. Specify the alert condition parameters such as the **Reduce** function and the **Threshold**.
 
-![Alert rule](/images/observability/dogstack/quickstart_alert.png)
+![Alert rule](https://cdnd.selectdb.com/images/upload/dogstack/quickstart_alert.png)

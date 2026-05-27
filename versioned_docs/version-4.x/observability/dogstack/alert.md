@@ -29,7 +29,7 @@ As shown in the figure, the core mechanism of Grafana Alert is:
 3. If the trigger condition is met, an alert instance is generated.
 4. The alert is then dispatched — directly to a contact point or routed flexibly through notification policies.
 
-![alert_overview](/images/observability/dogstack/alert_overview.png)
+![alert_overview](https://cdnd.selectdb.com/images/upload/dogstack/alert_overview.png)
 
 
 
@@ -37,7 +37,7 @@ A typical alert-rule creation and management flow looks like this:
 
 **1. Open Grafana Alerting → Alert rules, and click "Create alert"**
 
-![alert_create](/images/observability/dogstack/alert_create.png)
+![alert_create](https://cdnd.selectdb.com/images/upload/dogstack/alert_create.png)
 
 
 
@@ -51,7 +51,7 @@ Finally, click **Preview** to preview the query result and whether the alert wou
 
 For more details, see the [Grafana docs](https://grafana.com/docs/grafana/latest/alerting/alerting-rules/create-grafana-managed-rule/).
 
-![alert_condition](/images/observability/dogstack/alert_condition.png)
+![alert_condition](https://cdnd.selectdb.com/images/upload/dogstack/alert_condition.png)
 
 
 
@@ -61,7 +61,7 @@ First choose a folder to organize alerts, then set the alert's evaluation interv
 
 For more details, see the [Grafana docs](https://grafana.com/docs/grafana/latest/alerting/fundamentals/alert-rule-evaluation/).
 
-![alert_evaluation](/images/observability/dogstack/alert_evaluation.png)
+![alert_evaluation](https://cdnd.selectdb.com/images/upload/dogstack/alert_evaluation.png)
 
 
 
@@ -71,9 +71,9 @@ Grafana supports many notification channels — Email, Slack, Discord, PagerDuty
 
 For more details, see the [Grafana docs](https://grafana.com/docs/grafana/latest/alerting/fundamentals/notifications/).
 
-![alert_label](/images/observability/dogstack/alert_lable.png)
+![alert_label](https://cdnd.selectdb.com/images/upload/dogstack/alert_lable.png)
 
-![alert_contact](/images/observability/dogstack/alert_contact.png)
+![alert_contact](https://cdnd.selectdb.com/images/upload/dogstack/alert_contact.png)
 
 
 
@@ -81,7 +81,7 @@ For more details, see the [Grafana docs](https://grafana.com/docs/grafana/latest
 
 You can customize the notification content — including a summary, description, and a runbook URL that guides handling — so that recipients can grasp what happened more quickly.
 
-![alert_message](/images/observability/dogstack/alert_message.png)
+![alert_message](https://cdnd.selectdb.com/images/upload/dogstack/alert_message.png)
 
 
 
@@ -91,4 +91,4 @@ After alert rules are created, you can manage them — pause an alert, silence n
 
 For more details, see the [Grafana docs](https://grafana.com/docs/grafana/latest/alerting/monitor-status/).
 
-![alert_management](/images/observability/dogstack/alert_management.png)
+![alert_management](https://cdnd.selectdb.com/images/upload/dogstack/alert_management.png)

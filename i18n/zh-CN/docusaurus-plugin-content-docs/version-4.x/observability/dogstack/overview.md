@@ -69,15 +69,15 @@ DOG Stack 基于 OpenTelemetry 和 Grafana 提供丰富的功能。
 
 - 日志检索
 
-![日志检索](/images/observability/dogstack/overview_logs.png)
+![日志检索](https://cdnd.selectdb.com/images/upload/dogstack/overview_logs.png)
 
 - Trace 分析
 
-![Trace 分析](/images/observability/dogstack/overview_traces.png)
+![Trace 分析](https://cdnd.selectdb.com/images/upload/dogstack/overview_traces.png)
 
 - 指标仪表盘
 
-![指标仪表盘](/images/observability/dogstack/overview_dashboard.png)
+![指标仪表盘](https://cdnd.selectdb.com/images/upload/dogstack/overview_dashboard.png)
 
 
 
@@ -85,7 +85,7 @@ DOG Stack 基于 OpenTelemetry 和 Grafana 提供丰富的功能。
 
 
 
-![DOG Stack Architecture](/images/observability/dogstack/dogstack_architecture.png)
+![DOG Stack Architecture](https://cdnd.selectdb.com/images/upload/dogstack/dogstack_architecture.png)
 
 
 

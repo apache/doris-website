@@ -36,7 +36,7 @@ Key capabilities:
 
 ## Discover page overview
 
-![Discover page overview](/images/observability/dogstack/search_overview.png)
+![Discover page overview](https://cdnd.selectdb.com/images/upload/dogstack/search_overview.png)
 
 The Discover page consists of four core areas:
 
@@ -80,7 +80,7 @@ Capabilities include:
 
 In the query input area, use the dropdown menus to select data source, database, table, time field, and time range. The defaults for data source, database, and table can be changed on the configuration page; the default time field is the first `DATETIME` or `DATE` column in the table.
 
-![Query input demo](/images/observability/dogstack/search_input.gif)
+![Query input demo](https://cdnd.selectdb.com/images/upload/dogstack/search_input.gif)
 
 The search input box supports both SQL and Lucene syntax — Lucene is internally translated into SQL `WHERE` conditions. The mapping between supported Lucene syntax, Kibana, and SQL is shown below.
 
@@ -131,7 +131,7 @@ As shown below, the area inside the red box is the time-trend data area. It is m
 2. Drag-select on the trend chart to change the query's time range.
 3. The bucket length defaults to `Auto`, scaled to the overall time range. You can also pick a different granularity such as second, minute, or hour from the dropdown.
 
-![Time-trend demo](/images/observability/dogstack/search_trend.gif)
+![Time-trend demo](https://cdnd.selectdb.com/images/upload/dogstack/search_trend.gif)
 
 
 
@@ -141,19 +141,19 @@ As shown below, the area inside the red box is the detail data area, which displ
 
 1. Records are sorted by the time field in descending order so the newest data is shown first. Each page displays 50 records and you can paginate for more. Two fields are shown by default: the time field and `_source`, where `_source` is a virtual concatenation of all fields displayed as `key: value` pairs with keys highlighted for readability. You can customize which fields are displayed on the right by clicking "+" next to a field name in the left-side field browser. Multiple fields can be added, and you can remove them by clicking "x" on the right; when all fields are removed it falls back to the default `_source`.
 
-![Detail data demo](/images/observability/dogstack/search_detail.gif)
+![Detail data demo](https://cdnd.selectdb.com/images/upload/dogstack/search_detail.gif)
 
 2. Click the "->" arrow at the leftmost position to expand a record's details. There are two forms — **Table** and **JSON**. In the Table form, click "+" or "-" next to a field to interactively add filter conditions such as `severity_text=INFO`.
 
-![Expand record demo](/images/observability/dogstack/search_expand.gif)
+![Expand record demo](https://cdnd.selectdb.com/images/upload/dogstack/search_expand.gif)
 
 3. After expanding a record, click **Surrounding items** to view that record's "context" — the 5 records before and after it in time. Note that this feature is commonly used to inspect logs around a specific log during issue analysis, so it ignores other query filter conditions besides time — otherwise it would behave the same as the detail data table. Of course you can view more than 5 surrounding records and add your own filters, such as restricting to a specific host.
 
-![View context demo](/images/observability/dogstack/search_context.gif)
+![View context demo](https://cdnd.selectdb.com/images/upload/dogstack/search_context.gif)
 
 4. If a record has a `trace_id` field, it is recognized as a related trace. The value becomes a clickable link; clicking it opens a trace waterfall drawer for log-to-trace correlation.
 
-![Log-to-trace demo](/images/observability/dogstack/search_trace.gif)
+![Log-to-trace demo](https://cdnd.selectdb.com/images/upload/dogstack/search_trace.gif)
 
 
 
@@ -164,4 +164,4 @@ The field browser on the left lets you inspect the fields of the current table a
 1. Click "+" on the right of a field to add it to the detail data table.
 2. Click a field name to see its Top 5 most frequent values, and click "+" / "-" next to a value to dynamically add filter conditions.
 
-![Field browser demo](/images/observability/dogstack/search_fields.gif)
+![Field browser demo](https://cdnd.selectdb.com/images/upload/dogstack/search_fields.gif)

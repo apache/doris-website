@@ -36,7 +36,7 @@ Discover 页面提供类似 Kibana Discover 的检索分析体验，并针对高
 
 ## Discover 页面概览
 
-![Discover 页面概览](/images/observability/dogstack/search_overview.png)
+![Discover 页面概览](https://cdnd.selectdb.com/images/upload/dogstack/search_overview.png)
 
 Discover 页面由四个核心区域组成：
 
@@ -80,7 +80,7 @@ Discover 页面由四个核心区域组成：
 
 你可以在查询输入区通过下拉菜单选择数据源、库、表、时间字段和时间范围，数据源、库、表的默认值在配置页面中可以修改，时间字段默认是表中第一个 DATETIME 或 DATE 类型的字段。
 
-![查询输入演示](/images/observability/dogstack/search_input.gif)
+![查询输入演示](https://cdnd.selectdb.com/images/upload/dogstack/search_input.gif)
 
 搜索输入框支持 SQL 和 Lucene 两种语法，Lucene 语法在内部会被转换成 SQL WHERE 条件。支持的 Lucene 语法和 SQL 以及 Kibana 语法的对应关系如下表。
 
@@ -131,7 +131,7 @@ SQL 语法的关键点如下：
 2. 鼠标在趋势图上框选，改变整个查询的时间范围
 3. 每个柱子的时间段长度默认是 Auto，自动根据整个时间范围缩放，你可以在下拉框中选择不同的粒度，比如秒、分、小时等。
 
-![趋势数据演示](/images/observability/dogstack/search_trend.gif)
+![趋势数据演示](https://cdnd.selectdb.com/images/upload/dogstack/search_trend.gif)
 
 
 
@@ -141,19 +141,19 @@ SQL 语法的关键点如下：
 
 1. 按照时间字段倒序排序，以便将最新数据显示在最上面。每页展示 50 条数据，可以翻页显示更多。默认展示两个字段：时间字段 和 _source，_source 是所有字段拼接起来的虚拟数据，每个字段以 key: value 形式展示，key 突出显示以便阅读。你可以定制在明细数据区展示哪些字段，在左侧的字段选择区的字段名上点击 "+" 即可将该字段加入右侧表格显示的列中，可以添加多个字段，也可以在右侧表格中点击 "x" 删除字段，当所有字段都删除后恢复到默认的 _source。
 
-![明细数据演示](/images/observability/dogstack/search_detail.gif)
+![明细数据演示](https://cdnd.selectdb.com/images/upload/dogstack/search_detail.gif)
 
 2. 你可以点击最左边的 "->" 展开一条数据的明细，有 Table 和 JSON 两种形式方式，在 Table 形式下还可以点击字段旁边的 "+" 或则 "-" 交互式添加过滤条件，比如 "serverity_text=INFO"。
 
-![展开明细演示](/images/observability/dogstack/search_expand.gif)
+![展开明细演示](https://cdnd.selectdb.com/images/upload/dogstack/search_expand.gif)
 
 3. 展开一条明细数据后，还可以点击 "Surrounding items" 查看这条数据的“上下文”，这条数据时间点周围的前后各 5条数据。需要注意的是这个功能常用在分析一个问题时查看一条日志前后的日志，因此会忽略时间之外的其他查询过滤条件，否则跟明细数据表格中的就没有区别了。当然，你还可以查看比前后 5条更多的上下文，也可以添加自己的过滤条件，比如限定在某一个 host 上。
 
-![查看上下文演示](/images/observability/dogstack/search_context.gif)
+![查看上下文演示](https://cdnd.selectdb.com/images/upload/dogstack/search_context.gif)
 
 4. 某条数据中如果有个字段 trace_id，将被识别为有关联的 trace，字段值会成为一个可点击的链接，点击会弹出 trace 瀑布图抽屉，实现 log 与 trace 的关联联动。
 
-![Log 关联 Trace 演示](/images/observability/dogstack/search_trace.gif)
+![Log 关联 Trace 演示](https://cdnd.selectdb.com/images/upload/dogstack/search_trace.gif)
 
 
 
@@ -164,4 +164,4 @@ SQL 语法的关键点如下：
 1. 你可以点击字段右侧的 "+" 将字段加入右侧的明细数据表格中。
 2. 你可以点击字段名查看某个字段出现最多的 5个值，进一步点击值右边的 "+" "-" 动态添加过滤条件。
 
-![字段浏览演示](/images/observability/dogstack/search_fields.gif)
+![字段浏览演示](https://cdnd.selectdb.com/images/upload/dogstack/search_fields.gif)

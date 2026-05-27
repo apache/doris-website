@@ -64,7 +64,7 @@ If you have not configured a data source yet, follow these steps:
 
 1. Click **Save & test** to confirm the connection works.
 
-![Configure MySQL data source](/images/observability/dogstack/dashboard_datasource.png)
+![Configure MySQL data source](https://cdnd.selectdb.com/images/upload/dogstack/dashboard_datasource.png)
 
 
 
@@ -103,7 +103,7 @@ Once imported, the variable selectors at the top of the dashboard (such as Servi
 - Disk: disk space usage table, read/write throughput
 - Network: ingress/egress traffic, errors and packet drops
 
-![Host Metrics Dashboard](/images/observability/dogstack/dashboard_host.png)
+![Host Metrics Dashboard](https://cdnd.selectdb.com/images/upload/dogstack/dashboard_host.png)
 
 **JVM Monitoring Dashboard**
 
@@ -112,7 +112,7 @@ Once imported, the variable selectors at the top of the dashboard (such as Servi
 - GC: time (Young / Old) and counts
 - Thread & CPU: thread count trend, CPU utilization
 
-![JVM Monitoring Dashboard](/images/observability/dogstack/dashboard_jvm.png)
+![JVM Monitoring Dashboard](https://cdnd.selectdb.com/images/upload/dogstack/dashboard_jvm.png)
 
 **K8s Observability Dashboard**
 
@@ -120,7 +120,7 @@ Once imported, the variable selectors at the top of the dashboard (such as Servi
 - Nodes: CPU / memory trends, status table
 - Namespaces: CPU / memory aggregates, status table
 
-![K8s Observability Dashboard](/images/observability/dogstack/dashboard_k8s.png)
+![K8s Observability Dashboard](https://cdnd.selectdb.com/images/upload/dogstack/dashboard_k8s.png)
 
 **Nginx Logs Dashboard**
 
@@ -129,7 +129,7 @@ Once imported, the variable selectors at the top of the dashboard (such as Servi
 - Analysis: Top URL, Top IP, HTTP method distribution, top error messages
 - Recent Logs: access / error log details
 
-![Nginx Logs Dashboard](/images/observability/dogstack/dashboard_nginx.png)
+![Nginx Logs Dashboard](https://cdnd.selectdb.com/images/upload/dogstack/dashboard_nginx.png)
 
 **PostgreSQL Metrics Dashboard**
 
@@ -138,7 +138,7 @@ Once imported, the variable selectors at the top of the dashboard (such as Servi
 - Storage: database size (split by database), number of databases, number of tables
 - BGWriter: checkpoint count (scheduled / requested), buffer writes, BGWriter time
 
-![PostgreSQL Metrics Dashboard](/images/observability/dogstack/dashboard_postgresql.png)
+![PostgreSQL Metrics Dashboard](https://cdnd.selectdb.com/images/upload/dogstack/dashboard_postgresql.png)
 
 
 
