@@ -64,8 +64,8 @@ ARRAYS_OVERLAP(arr1, arr2)
 2. Invalid parameter type: when unsupported types are passed in, returns `INVALID_ARGUMENT`
 
     ```SQL
-    -- [INVALID_ARGUMENT] execute failed, unsupported types for function arrays_overlap
     SELECT ARRAYS_OVERLAP(ARRAY(ARRAY('hello', 'aloha'), ARRAY('hi', 'hey')), ARRAY(ARRAY('hello', 'hi', 'hey'), ARRAY('aloha', 'hi')));
+    ERROR 1105 (HY000): errCode = 2, detailMessage = arrays_overlap does not support types: ARRAY<ARRAY<TEXT>>
     ```
 
 3. If the input `ARRAY` is `NULL`, the return value is `NULL`

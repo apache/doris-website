@@ -85,6 +85,19 @@ Users executing this SQL command must have at least the following permissions:
 
 ## Examples
 
+Setup — create the `test_table` used by the examples below:
+
+```sql
+CREATE TABLE test_table (
+  user_id BIGINT NOT NULL COMMENT 'Key1',
+  name    VARCHAR(20)     COMMENT 'username',
+  age     INT             COMMENT 'user_age'
+) ENGINE=OLAP
+UNIQUE KEY (user_id)
+DISTRIBUTED BY HASH(user_id) BUCKETS 1
+PROPERTIES ("replication_num" = "1");
+```
+
 1. Display Base Table Schema
 
 ```sql
