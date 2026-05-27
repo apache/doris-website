@@ -23,7 +23,7 @@
 <!-- 知识类型: 能力定义 + 架构介绍 -->
 <!-- 适用场景: 可观测性建设 / DOG Stack 方案选型 -->
 
-**DOG Stack** 是基于 Doris、OpenTelemetry 和 Grafana（包含 Doris App插件）的开放可观测性解决方案。它的构建旨在：
+**DOG Stack** 是基于 **D**oris、**O**penTelemetry（包含 [Doris Exporter](https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/exporter/dorisexporter)） 和 **G**rafana（包含 [Doris App插件](https://github.com/velodb/grafana-doris-app)）的开放可观测性解决方案。它的构建旨在：
 
 - **开放**：所有组件均为开源，以避免供应商锁定。
 - **高性能**：写入吞吐量可达数百GB/s。对于数十亿条记录，搜索和查询响应时间可在亚秒级。

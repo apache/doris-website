@@ -23,7 +23,7 @@
 <!-- Knowledge type: capability definition + architecture overview -->
 <!-- Applicable scenario: observability platform / DOG Stack solution selection -->
 
-**DOG Stack** is an open observability solution built on Doris, OpenTelemetry, and Grafana (including the Doris App plugin). It is designed to be:
+**DOG Stack** is an open observability solution built on **D**oris, **O**penTelemetry (including the [Doris Exporter](https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/exporter/dorisexporter)), and **G**rafana (including the [Doris App plugin](https://github.com/velodb/grafana-doris-app)). It is designed to be:
 
 - **Open**: All components are open source, avoiding vendor lock-in.
 - **High-performance**: Write throughput up to hundreds of GB/s. Sub-second search and query response time over billions of records.
