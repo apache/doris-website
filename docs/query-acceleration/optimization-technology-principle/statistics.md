@@ -98,6 +98,23 @@ Collect on the `l_orderkey` and `l_linenumber` columns of the `lineitem` table b
 ANALYZE TABLE lineitem (l_orderkey, l_linenumber) WITH SAMPLE ROWS 100000;
 ```
 
+#### Hot Value Collection
+
+Hot values record frequently occurring column values in column statistics. They can help the optimizer estimate predicates on skewed data more accurately, but collecting them can consume more memory on high-cardinality columns.
+
+For manual full collection, use `WITH HOT VALUE` to collect hot values:
+
+```sql
+ANALYZE TABLE lineitem WITH SYNC WITH HOT VALUE;
+```
+
+Do not use `WITH HOT VALUE` with `WITH SAMPLE`; sample collection always collects hot values, so specifying this option with `WITH SAMPLE` is rejected. When `WITH HOT VALUE` is not specified, Doris keeps the existing behavior:
+
+| Collection method | Hot value collection |
+| ----------------- | -------------------- |
+| Full collection | Disabled |
+| Sample collection | Always enabled |
+
 ### Auto Collection
 
 **Purpose**: Use a background thread to scan periodically and automatically maintain the freshness of statistics.
