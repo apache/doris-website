@@ -436,6 +436,41 @@ SHOW WARM UP JOB WHERE id = <job_id>;
 - `fail_*` 大于 0 时，需要结合 BE 日志排查磁盘空间、远端存储访问或网络错误。
 - 5 分钟窗口适合看实时波动，30 分钟和 1 小时窗口适合看持续趋势。
 
+### BE Bvar 指标
+
+除 `SHOW WARM UP JOB` 和 FE `/metrics` 外，也可以通过 BE Bvar 页面查看单个 BE 上的预热执行指标：
+
+```bash
+curl http://<be_host>:<brpc_port>/vars
+```
+
+周期性任务的 BE 侧指标如下：
+
+| 指标名称 | 含义 |
+|----------|------|
+| `file_cache_once_or_periodic_warm_up_submitted_segment_size` | 已提交的 segment 数据大小 |
+| `file_cache_once_or_periodic_warm_up_finished_segment_size` | 已完成的 segment 数据大小 |
+| `file_cache_once_or_periodic_warm_up_submitted_index_num` | 已提交的 index 数量 |
+| `file_cache_once_or_periodic_warm_up_finished_index_num` | 已完成的 index 数量 |
+
+事件驱动任务的源 BE 指标如下：
+
+| 指标名称 | 含义 |
+|----------|------|
+| `file_cache_event_driven_warm_up_requested_segment_size` | 请求同步的 segment 数据大小 |
+| `file_cache_event_driven_warm_up_requested_index_num` | 请求同步的 index 数量 |
+| `file_cache_warm_up_rowset_last_call_unix_ts` | 最后一次发起同步请求的时间戳 |
+
+事件驱动任务的目标 BE 指标如下：
+
+| 指标名称 | 含义 |
+|----------|------|
+| `file_cache_event_driven_warm_up_submitted_segment_num` | 收到的 segment 数量 |
+| `file_cache_event_driven_warm_up_finished_segment_num` | 完成预热的 segment 数量 |
+| `file_cache_warm_up_rowset_last_handle_unix_ts` | 最后一次处理同步请求的时间戳 |
+
+这些指标反映单个 BE 本地的执行情况，适合排查某个 BE 是否收到预热请求、是否完成下载以及最近一次调用或处理时间。跨 BE 的 Job 级汇总仍建议优先查看 `SHOW WARM UP JOB WHERE id = <job_id>` 或 FE Prometheus 指标。
+
 ### FE Prometheus 指标
 
 在 cloud 模式下，FE 会周期性从 BE 拉取并聚合事件驱动预热进度，默认每 15 秒刷新一次。刷新间隔由 FE 配置项 `cloud_warm_up_sync_stats_refresh_interval_ms` 控制，默认值为 `15000` 毫秒。
@@ -526,6 +561,18 @@ doris_fe_file_cache_warm_up_sync_job_trigger_gap_ms
 
 ## 常见问题
 
+**Q：某次同步失败会导致整个任务被取消吗？**
+
+不会。当前轮次同步失败仅跳过本次执行，任务状态保持不变，后续周期会继续尝试执行。可以通过 `SHOW WARM UP JOB WHERE id = <job_id>` 查看 `ErrMsg` 和 `SyncStats` 中的失败计数，并结合 BE 日志定位失败原因。
+
+**Q：周期性任务执行超时会怎样？**
+
+超时后系统会跳过本轮执行，任务本身不会被删除，下一个周期将正常触发。可以通过 `SHOW WARM UP JOB` 中的 `StartTime`、`FinishTime`、`FinishBatch` 和 `AllBatch` 观察最近一次执行情况。
+
+**Q：是否支持多个源计算组同步到同一目标计算组？**
+
+支持。例如计算组 A 和计算组 C 可以分别配置向计算组 B 同步（A -> B 与 C -> B 并存）。如果多个 Job 覆盖同一批表，需要注意任务管理和指标解释会更复杂。
+
 **Q：什么时候应该使用表级事件驱动预热？**
 
 当目标计算组只查询部分库表，或者源计算组表数量很多但热点表较少时，使用表级事件驱动预热可以减少无效预热和缓存污染。
@@ -552,8 +599,15 @@ doris_fe_file_cache_warm_up_sync_job_trigger_gap_ms
 
 **Q：如何验证预热是否生效？**
 
-可以先通过 `SHOW WARM UP JOB WHERE id = <job_id>` 查看 `Status`、`MatchedTables` 和 `SyncStats`，确认 Job 正常运行且同步缺口趋近于 0。随后在目标计算组上查询相关表，结合 File Cache 命中率、FE 指标和 BE 日志确认是否仍存在大量远端读取。
+可以通过以下方式验证：
 
-**Q：修改同步任务的配置需要怎么操作？**
+1. 执行 `SHOW WARM UP JOB WHERE id = <job_id>`，查看 `Status` 是否为 `RUNNING` 或 `FINISHED`。
+2. 对于表级事件驱动预热，检查 `MatchedTables` 是否符合预期。
+3. 对比 `FinishBatch` 与 `AllBatch`，确认一次性或周期性任务的同步进度。
+4. 查看 `SyncStats`，确认 `gap_size` 或详细 `gap_*` 趋近于 0，`trigger_gap_ms` 没有持续增大。
+5. 观察目标计算组的 BE Bvar 指标，确认 `file_cache_event_driven_warm_up_finished_segment_num` 等完成计数持续增长。
+6. 在目标计算组上查询相关表，结合 File Cache 命中率、FE 指标和 BE 日志确认是否仍存在大量远端读取。
+
+**Q：修改同步任务的配置（如调整同步间隔或 `ON TABLES` 规则）需要怎么操作？**
 
 当前版本不支持直接修改已有任务配置。需要先执行 `CANCEL WARM UP JOB WHERE id = <job_id>` 取消旧任务，再创建新任务。
