@@ -130,14 +130,14 @@ DESC test_table;
 2. 显示表所有 index 的 schema
 
 ```sql
-DESC demo.test_table ALL;
+DESC test_table ALL;
 ```
 
 ```text
 +------------+---------------+---------+-------------+--------------+------+-------+---------+-------+---------+------------+-------------+
 | IndexName  | IndexKeysType | Field   | Type        | InternalType | Null | Key   | Default | Extra | Visible | DefineExpr | WhereClause |
 +------------+---------------+---------+-------------+--------------+------+-------+---------+-------+---------+------------+-------------+
-| test_table | DUP_KEYS      | user_id | bigint      | bigint       | No   | true  | NULL    |       | true    |            |             |
+| test_table | UNIQUE_KEYS   | user_id | bigint      | bigint       | No   | true  | NULL    |       | true    |            |             |
 |            |               | name    | varchar(20) | varchar(20)  | Yes  | false | NULL    | NONE  | true    |            |             |
 |            |               | age     | int         | int          | Yes  | false | NULL    | NONE  | true    |            |             |
 +------------+---------------+---------+-------------+--------------+------+-------+---------+-------+---------+------------+-------------+
