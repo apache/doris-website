@@ -164,6 +164,18 @@ SELECT SUBSTRING('ṭṛì ḍḍumai hello', 5, 6);
 +--------------------------------------+
 ```
 
+11. Empty source string
+```sql
+SELECT substring('', 1, 3);
+```
+```text
++---------------------+
+| substring('', 1, 3) |
++---------------------+
+|                     |
++---------------------+
+```
+
 ### Keywords
 
     SUBSTRING, SUBSTR, MID
