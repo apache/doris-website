@@ -51,6 +51,20 @@ INSERT INTO class_test VALUES
     (NULL);
 ```
 
+直接使用 `FIELD` 查找位置（基于 1 的索引）：
+
+```sql
+SELECT FIELD(2, 3, 1, 2, 5);
+```
+
+```text
++----------------------+
+| FIELD(2, 3, 1, 2, 5) |
++----------------------+
+|                    3 |
++----------------------+
+```
+
 ```sql
 SELECT k1, k7 FROM baseall WHERE k1 IN (1,2,3) ORDER BY FIELD(k1,2,1,3);
 ```

@@ -176,6 +176,18 @@ SELECT substring('', 1, 3);
 +---------------------+
 ```
 
+12. NULL passed directly to `substring` (the `MID` alias case is in example 8)
+```sql
+SELECT substring(NULL, 1, 3);
+```
+```text
++-----------------------+
+| substring(NULL, 1, 3) |
++-----------------------+
+| NULL                  |
++-----------------------+
+```
+
 ### Keywords
 
     SUBSTRING, SUBSTR, MID
