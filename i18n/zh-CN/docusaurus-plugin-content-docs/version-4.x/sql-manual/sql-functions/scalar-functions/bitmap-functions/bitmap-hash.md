@@ -53,19 +53,23 @@ select bitmap_to_array(bitmap_hash('hello'))[1];
 +-------------------------------------------------------------+
 ```
 
-如果你想统计某一列去重后的个数，可以使用位图的方式，某些场景下性能比 `count distinct` 好很多：
+如果你想统计某一列去重后的个数，可以使用位图的方式，某些场景下性能比 `count distinct` 好很多。下面的示例先建一张 `words` 表，插入 6 行（其中 4 个去重值）；在真实大数据集上同样形态的查询可以返回到百万级别：
 
 ```sql
+CREATE TABLE `words` (`word` VARCHAR(64))
+DISTRIBUTED BY HASH(`word`) BUCKETS 1
+PROPERTIES ("replication_num" = "1");
+
+INSERT INTO `words` VALUES ('apple'), ('banana'), ('cherry'), ('apple'), ('date'), ('banana');
+
 select bitmap_count(bitmap_union(bitmap_hash(`word`))) from `words`;
 ```
-
-结果如下：
 
 ```text
 +-------------------------------------------------+
 | bitmap_count(bitmap_union(bitmap_hash(`word`))) |
 +-------------------------------------------------+
-|                                        33263478 |
+|                                               4 |
 +-------------------------------------------------+
 ```
 
