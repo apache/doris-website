@@ -67,6 +67,26 @@ This feature is supported since the Apache Doris 1.2 version
 
 ## Example
 
+Examples 1-3, 6 and 7 use the `my_table` table created by the following setup. It is a unique-key list-partitioned table with two partitions `p1` and `p2`:
+
+```sql
+CREATE TABLE my_table (
+  k1 INT,
+  k2 VARCHAR(16)
+)
+UNIQUE KEY (k1)
+PARTITION BY LIST (k1) (
+  PARTITION p1 VALUES IN (1, 2, 3, 4, 5),
+  PARTITION p2 VALUES IN (6, 7, 8, 9, 10)
+)
+DISTRIBUTED BY HASH (k1) BUCKETS 1
+PROPERTIES ("replication_num" = "1");
+
+INSERT INTO my_table VALUES
+  (1, 'a'), (3, 'abc'), (5, 'abc'),
+  (6, 'b'), (8, 'abc'), (10, 'd');
+```
+
 1. Delete the data row whose k1 column value is 3 in my_table partition p1
 
    ```sql
@@ -131,10 +151,14 @@ This feature is supported since the Apache Doris 1.2 version
      USING t2 INNER JOIN t3 ON t2.id = t3.id
      WHERE t1.id = t2.id;
    ```
-   
-   the expect result is only remove the row where id = 1 in table t1
-   
+
+   The expected post-delete state of `t1` (only the row where `id = 1` is removed):
+
+   ```sql
+   SELECT * FROM t1 ORDER BY id;
    ```
+
+   ```text
    +----+----+----+--------+------------+
    | id | c1 | c2 | c3     | c4         |
    +----+----+----+--------+------------+
