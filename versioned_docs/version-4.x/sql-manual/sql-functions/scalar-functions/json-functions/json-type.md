@@ -46,11 +46,11 @@ JSON_TYPE( <json>, <json_path> )
     SELECT JSON_TYPE('{"name": "John", "age": 30}', '$.name');
     ```
     ```text
-    +-------------------------------------------------------------------+
-    | jsonb_type(cast('{"name": "John", "age": 30}' as JSON), '$.name') |
-    +-------------------------------------------------------------------+
-    | string                                                            |
-    +-------------------------------------------------------------------+
+    +----------------------------------------------------+
+    | JSON_TYPE('{"name": "John", "age": 30}', '$.name') |
+    +----------------------------------------------------+
+    | string                                             |
+    +----------------------------------------------------+
     ```
 
 2. JSON is of number type:
@@ -58,13 +58,38 @@ JSON_TYPE( <json>, <json_path> )
     SELECT JSON_TYPE('{"name": "John", "age": 30}', '$.age');
     ```
     ```text
-    +------------------------------------------------------------------+
-    | jsonb_type(cast('{"name": "John", "age": 30}' as JSON), '$.age') |
-    +------------------------------------------------------------------+
-    | int                                                              |
-    +------------------------------------------------------------------+
+    +---------------------------------------------------+
+    | JSON_TYPE('{"name": "John", "age": 30}', '$.age') |
+    +---------------------------------------------------+
+    | int                                               |
+    +---------------------------------------------------+
     ```
-3. NULL parameters
+
+3. JSON is of double type:
+    ```sql
+    select json_type('{"key1": 1234.44}', '$.key1');
+    ```
+    ```text
+    +------------------------------------------+
+    | json_type('{"key1": 1234.44}', '$.key1') |
+    +------------------------------------------+
+    | double                                   |
+    +------------------------------------------+
+    ```
+
+4. JSON is of bool type:
+    ```sql
+    select json_type('{"key1": true}', '$.key1');
+    ```
+    ```text
+    +---------------------------------------+
+    | json_type('{"key1": true}', '$.key1') |
+    +---------------------------------------+
+    | bool                                  |
+    +---------------------------------------+
+    ```
+
+5. NULL parameters
     ```sql
     select json_type(NULL, '$.key1');
     ```
@@ -75,7 +100,7 @@ JSON_TYPE( <json>, <json_path> )
     | NULL                      |
     +---------------------------+
     ```
-4. NULL parameters 2
+6. NULL parameters 2
     ```sql
     select json_type('{"key1": true}', NULL);
     ```
@@ -86,7 +111,7 @@ JSON_TYPE( <json>, <json_path> )
     | NULL                              |
     +-----------------------------------+
     ```
-5. Field specified by `json_path` parameter does not exist
+7. Field specified by `json_path` parameter does not exist
     ```sql
     select json_type('{"key1": true}', '$.key2');
     ```
@@ -97,7 +122,7 @@ JSON_TYPE( <json>, <json_path> )
     | NULL                                  |
     +---------------------------------------+
     ```
-6. Invalid `json_path` parameter
+8. Invalid `json_path` parameter
     ```sql
     select json_type('{"key1": true}', '$.');
     ```
