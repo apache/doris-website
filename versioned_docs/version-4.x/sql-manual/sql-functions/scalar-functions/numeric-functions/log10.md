@@ -30,8 +30,8 @@ LOG10(<x>)
 
 Returns a floating-point number. Special cases:
 
-- If x IS NULL, return `NULL`
-- If x IS NaN, return NaN
+- If x IS NULL, returns `NULL`
+- If x IS NaN, zero, or negative, returns `NULL`
 
 ## Example
 
@@ -91,7 +91,7 @@ select log10(cast('nan' as double));
 +------------------------------+
 | log10(cast('nan' as double)) |
 +------------------------------+
-|                          NaN |
+|                         NULL |
 +------------------------------+
 ```
 
