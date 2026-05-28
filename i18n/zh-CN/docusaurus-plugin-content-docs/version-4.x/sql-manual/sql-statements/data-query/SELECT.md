@@ -135,6 +135,28 @@ CTE 名称可以在其他 CTE 中引用，从而可以基于其他 CTE 定义 CT
 
 ## 示例
 
+下面示例 1-9 基于这两张表运行。其余示例（UNION、WITH、JOIN、TABLESAMPLE）引用的 `t1`、`t2`、`employee`、`left_tbl`、`tournament` 等表本页并未创建——这些片段仅用于展示语法形态，请在自己的表上执行。
+
+```sql
+CREATE TABLE student (Name VARCHAR(32), age INT)
+DISTRIBUTED BY HASH(Name) BUCKETS 1
+PROPERTIES ("replication_num" = "1");
+
+INSERT INTO student VALUES
+  ('Alice', 18), ('Bob', 20), ('Carol', 22), ('Dave', 25), ('Eve', 30);
+
+CREATE TABLE tb_book (id INT, name VARCHAR(64), price DECIMAL(10,2), type VARCHAR(32))
+DISTRIBUTED BY HASH(id) BUCKETS 1
+PROPERTIES ("replication_num" = "1");
+
+INSERT INTO tb_book VALUES
+  (1, 'SQL Cookbook',                          39.99, 'database'),
+  (2, 'Doris Internals',                       49.99, 'database'),
+  (3, 'The Rust Programming Language',         45.00, 'programming'),
+  (4, 'Designing Data-Intensive Applications', 55.00, 'database'),
+  (5, 'Clean Code',                            35.00, 'programming');
+```
+
 1. 查询年龄分别是 18,20,25 的学生姓名
 
    ```sql

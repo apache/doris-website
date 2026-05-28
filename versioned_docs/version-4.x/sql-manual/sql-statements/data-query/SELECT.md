@@ -138,6 +138,28 @@ Recursive CTE is currently not supported.
 
 ## Example
 
+Examples 1-9 below run against the following two tables. The remaining examples (UNION, WITH, JOIN, TABLESAMPLE) reference tables (`t1`, `t2`, `employee`, `left_tbl`, `tournament`, ...) that are not created on this page — those snippets are illustrative of the syntax shape; substitute your own tables to execute them.
+
+```sql
+CREATE TABLE student (Name VARCHAR(32), age INT)
+DISTRIBUTED BY HASH(Name) BUCKETS 1
+PROPERTIES ("replication_num" = "1");
+
+INSERT INTO student VALUES
+  ('Alice', 18), ('Bob', 20), ('Carol', 22), ('Dave', 25), ('Eve', 30);
+
+CREATE TABLE tb_book (id INT, name VARCHAR(64), price DECIMAL(10,2), type VARCHAR(32))
+DISTRIBUTED BY HASH(id) BUCKETS 1
+PROPERTIES ("replication_num" = "1");
+
+INSERT INTO tb_book VALUES
+  (1, 'SQL Cookbook',                          39.99, 'database'),
+  (2, 'Doris Internals',                       49.99, 'database'),
+  (3, 'The Rust Programming Language',         45.00, 'programming'),
+  (4, 'Designing Data-Intensive Applications', 55.00, 'database'),
+  (5, 'Clean Code',                            35.00, 'programming');
+```
+
 1. Query the names of students whose ages are 18, 20, 25
 
    ```sql
