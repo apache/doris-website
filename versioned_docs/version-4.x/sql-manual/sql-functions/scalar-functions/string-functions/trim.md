@@ -46,16 +46,16 @@ SELECT trim('   ab d   ') str;
 +------+
 ```
 
-2. Remove specified strings from both ends
+2. Remove specified strings from both ends — `trim(str, rhs)` repeatedly strips `<rhs>` from both the leading and trailing ends of `<str>` until neither end starts/ends with `<rhs>`.
 ```sql
 SELECT trim('ababccaab', 'ab') str;
 ```
 ```text
-+---------+
-| str     |
-+---------+
-| ababcca |
-+---------+
++------+
+| str  |
++------+
+| cca  |
++------+
 ```
 
 3. UTF-8 character support
