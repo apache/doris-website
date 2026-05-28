@@ -59,6 +59,32 @@ SELECT WEEKOFYEAR('2024-01-01') AS week_20240101;
 |             1 |
 +---------------+
 
+-- The week 2021-12-27 (Monday) through 2022-01-02 (Sunday) only has 2 days
+-- in 2022 (<4), so it belongs to the last week of 2021 (week 52)
+SELECT WEEKOFYEAR('2022-01-02') AS week_20220102;
++---------------+
+| week_20220102 |
++---------------+
+|            52 |
++---------------+
+
+-- 2023-12-25 (Monday) through 2023-12-31 (Sunday) has 7 days in 2023 (≥4),
+-- so it belongs to week 52 of 2023
+SELECT WEEKOFYEAR('2023-12-25') AS week_20231225;
++---------------+
+| week_20231225 |
++---------------+
+|            52 |
++---------------+
+
+-- Pre-modern dates work too — the function does not validate a minimum year
+SELECT weekofyear('1023-01-04');
++--------------------------+
+| weekofyear('1023-01-04') |
++--------------------------+
+|                        1 |
++--------------------------+
+
 -- NULL input (returns NULL)
 SELECT WEEKOFYEAR(NULL) AS week_null_input; 
 +-----------------+

@@ -97,4 +97,13 @@ SELECT WEEK('2023-12-31 23:59:59', NULL), WEEK(NULL, 3);
 +-----------------------------------+--------------+
 |                              NULL |         NULL |
 +-----------------------------------+--------------+
+
+-- Mode 7: weeks start on Monday and week 1 is the week containing the first Monday;
+-- the first Monday of 2023 is Jan 2, so 2023-01-01 falls in the last week of 2022 (week 52)
+SELECT WEEK('2023-01-01', 7) AS week_result;
++-------------+
+| week_result |
++-------------+
+|          52 |
++-------------+
 ```
