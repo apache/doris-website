@@ -39,7 +39,7 @@ MurMur3 算法是一种高性能的、低碰撞率的散列算法，其计算出
 
 如果你想计算某个值的 MurMur3，你可以：
 
-```
+```sql
 select bitmap_to_array(bitmap_hash('hello'))[1];
 ```
 
