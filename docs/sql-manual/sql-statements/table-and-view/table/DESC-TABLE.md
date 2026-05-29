@@ -85,6 +85,19 @@ Users executing this SQL command must have at least the following permissions:
 
 ## Examples
 
+Setup — create the `test_table` used by the examples below:
+
+```sql
+CREATE TABLE test_table (
+  user_id BIGINT NOT NULL COMMENT 'Key1',
+  name    VARCHAR(20)     COMMENT 'username',
+  age     INT             COMMENT 'user_age'
+) ENGINE=OLAP
+UNIQUE KEY (user_id)
+DISTRIBUTED BY HASH(user_id) BUCKETS 1
+PROPERTIES ("replication_num" = "1");
+```
+
 1. Display Base Table Schema
 
 ```sql
@@ -98,4 +111,36 @@ DESC test_table;
 | name    | varchar(20) | Yes  | false | NULL    | NONE  |
 | age     | int         | Yes  | false | NULL    | NONE  |
 +---------+-------------+------+-------+---------+-------+
+```
+
+Set `show_column_comment_in_describe = true` (introduced in 3.0.7) to add the `Comment` column to the output:
+
+```sql
+SET show_column_comment_in_describe=true;
+DESC test_table;
+```
+```text
++---------+-------------+------+-------+---------+-------+----------+
+| Field   | Type        | Null | Key   | Default | Extra | Comment  |
++---------+-------------+------+-------+---------+-------+----------+
+| user_id | bigint      | No   | true  | NULL    |       | Key1     |
+| name    | varchar(20) | Yes  | false | NULL    | NONE  | username |
+| age     | int         | Yes  | false | NULL    | NONE  | user_age |
++---------+-------------+------+-------+---------+-------+----------+
+```
+
+2. Display the Schema of All Indexes of a Table
+
+```sql
+DESC test_table ALL;
+```
+
+```text
++------------+---------------+---------+-------------+--------------+------+-------+---------+-------+---------+------------+-------------+
+| IndexName  | IndexKeysType | Field   | Type        | InternalType | Null | Key   | Default | Extra | Visible | DefineExpr | WhereClause |
++------------+---------------+---------+-------------+--------------+------+-------+---------+-------+---------+------------+-------------+
+| test_table | UNIQUE_KEYS   | user_id | bigint      | bigint       | No   | true  | NULL    |       | true    |            |             |
+|            |               | name    | varchar(20) | varchar(20)  | Yes  | false | NULL    | NONE  | true    |            |             |
+|            |               | age     | int         | int          | Yes  | false | NULL    | NONE  | true    |            |             |
++------------+---------------+---------+-------------+--------------+------+-------+---------+-------+---------+------------+-------------+
 ```
