@@ -88,6 +88,12 @@ The user executing this SQL command must have at least the following privileges:
 
 ## Example
 
+Setup — create user `jack` so the examples below have a target user:
+
+```sql
+CREATE USER jack@'%' IDENTIFIED BY "12345";
+```
+
 - Change the user's password
 
 ```sql

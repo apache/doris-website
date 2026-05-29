@@ -61,6 +61,12 @@ For example, in the figure below, the `p250102` partition is divided into 3 buck
 
 **Example:** Create a table with Hash bucketing. For detailed syntax, see [CREATE TABLE](../../sql-manual/sql-statements/table-and-view/table/CREATE-TABLE.md).
 
+The examples below qualify table names with the `demo` database; create it first if it doesn't exist on your cluster:
+
+```sql
+CREATE DATABASE IF NOT EXISTS demo;
+```
+
 ```sql
 CREATE TABLE demo.hash_bucket_tbl(
     oid         BIGINT,
