@@ -369,6 +369,24 @@ curl --location-trusted -u root: -T gh_2022-11-07-3.json \
 
 导入完成后可用 `SELECT count(*)` 或 `SELECT * ... LIMIT 1` 验证。为提升高并发导入性能，推荐建表选择 RANDOM 分桶并开启 Group Commit（参见官方“Group Commit”文档）。
 
+## 输出
+
+从 VARIANT 列读出的 JSON 文本与写入时的 JSON 文本并非按字节完全一致：JSON object 内的 key 会按字典序输出，与输入 JSON 中的顺序无关。
+
+```sql
+INSERT INTO variant_tbl VALUES
+  (2, '{ "b": 2, "a": 1, "c": { "y": 20, "x": 10 } }');
+
+SELECT v FROM variant_tbl WHERE k = 2;
++-----------------------------------+
+| v                                 |
++-----------------------------------+
+| {"a":1,"b":2,"c":{"x":10,"y":20}} |
++-----------------------------------+
+```
+
+排序在每一层都会生效——顶层 key 输出为 `a`、`b`、`c`，嵌套 object 内 key 输出为 `x`、`y`。
+
 ## 支持的运算与 CAST 规则
 
 - VARIANT 本身不支持与其他类型直接比较/运算，两个 VARIANT 之间也不支持直接比较。
