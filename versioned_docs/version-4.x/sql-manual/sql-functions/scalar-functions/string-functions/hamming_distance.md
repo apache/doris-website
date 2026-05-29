@@ -44,55 +44,55 @@ Special cases:
 1. Compare two ASCII strings of the same length.
 
 ```sql
-SELECT hamming_distance('karolin', 'kathrin');
+SELECT hamming_distance('karolin', 'kathrin') AS distance;
 ```
 
 ```text
-+-----------------------------------------+
-| hamming_distance('karolin', 'kathrin')  |
-+-----------------------------------------+
-|                                       3 |
-+-----------------------------------------+
++----------+
+| distance |
++----------+
+|        3 |
++----------+
 ```
 
 2. Compare two UTF-8 strings. The strings have the same character length, and only one character is different.
 
 ```sql
-SELECT hamming_distance('数据库', '数据仓');
+SELECT hamming_distance('数据库', '数据仓') AS distance;
 ```
 
 ```text
-+---------------------------------------+
-| hamming_distance('数据库', '数据仓')  |
-+---------------------------------------+
-|                                     1 |
-+---------------------------------------+
++----------+
+| distance |
++----------+
+|        1 |
++----------+
 ```
 
 3. Compare strings that differ only by letter case.
 
 ```sql
-SELECT hamming_distance('Doris', 'doris');
+SELECT hamming_distance('Doris', 'doris') AS distance;
 ```
 
 ```text
-+-------------------------------------+
-| hamming_distance('Doris', 'doris')  |
-+-------------------------------------+
-|                                   1 |
-+-------------------------------------+
++----------+
+| distance |
++----------+
+|        1 |
++----------+
 ```
 
 4. NULL input returns NULL.
 
 ```sql
-SELECT hamming_distance(NULL, 'abc');
+SELECT hamming_distance(NULL, 'abc') AS distance;
 ```
 
 ```text
-+-------------------------------+
-| hamming_distance(NULL, 'abc') |
-+-------------------------------+
-|                          NULL |
-+-------------------------------+
++----------+
+| distance |
++----------+
+|     NULL |
++----------+
 ```
