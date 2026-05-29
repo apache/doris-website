@@ -2,6 +2,10 @@
 title: HAMMING_DISTANCE
 ---
 
+::: note
+Since 4.1.2
+:::
+
 ## 描述
 `HAMMING_DISTANCE` 函数用于计算两个**等长字符串**在对应位置上不同字符的个数。
 
