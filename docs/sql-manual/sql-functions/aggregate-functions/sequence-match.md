@@ -27,7 +27,7 @@ SEQUENCE_MATCH(<pattern>, <timestamp>, <cond_1> [, <cond_2>, ..., <cond_n>])
 | -- | -- |
 | `<pattern>` | Pattern string. See **Pattern syntax** below. Supports type String. |
 | `<timestamp>` | Column considered to contain time data. Supports type Date, DateTime. |
-| `<cond_n>` | Conditions that describe the chain of events. Supports type Bool. Up to 32 condition arguments can be passed. The function takes only the events described in these conditions into account. If the sequence contains data that isnt described in a condition, the function skips them. |
+| `<cond_n>` | Conditions that describe the chain of events. Supports type Bool. Up to 32 condition arguments can be passed. The function takes only the events described in these conditions into account. If the sequence contains data that isn't described in a condition, the function skips them. |
 
 **Pattern syntax**
 
@@ -43,7 +43,7 @@ SEQUENCE_MATCH(<pattern>, <timestamp>, <cond_1> [, <cond_2>, ..., <cond_n>])
 
 1: if the pattern is matched.
 
-0: if the pattern isnt matched.
+0: if the pattern isn't matched.
 If there is no valid data in the group, returns NULL.
 
 ## Examples

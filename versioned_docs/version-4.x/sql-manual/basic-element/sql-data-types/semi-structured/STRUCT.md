@@ -144,7 +144,7 @@ The STRUCT type is used to combine multiple fields into a single structure, wher
       >
   ) ENGINE=OLAP
   DUPLICATE KEY(id)
-  DISTRIBUTED BY HASH(id) BUCKETS 1
+  DISTRIBUTED BY HASH(id) BUCKETS 1
   PROPERTIES (
       "replication_allocation" = "tag.location.default: 1"
   );
