@@ -40,55 +40,55 @@ HAMMING_DISTANCE(<str1>, <str2>)
 1. 比较两个长度相同的 ASCII 字符串。
 
 ```sql
-SELECT hamming_distance('karolin', 'kathrin');
+SELECT hamming_distance('karolin', 'kathrin') AS distance;
 ```
 
 ```text
-+-----------------------------------------+
-| hamming_distance('karolin', 'kathrin')  |
-+-----------------------------------------+
-|                                       3 |
-+-----------------------------------------+
++----------+
+| distance |
++----------+
+|        3 |
++----------+
 ```
 
 2. 比较两个 UTF-8 字符串。两个字符串的字符数相同，只有一个字符不同。
 
 ```sql
-SELECT hamming_distance('数据库', '数据仓');
+SELECT hamming_distance('数据库', '数据仓') AS distance;
 ```
 
 ```text
-+---------------------------------------+
-| hamming_distance('数据库', '数据仓')  |
-+---------------------------------------+
-|                                     1 |
-+---------------------------------------+
++----------+
+| distance |
++----------+
+|        1 |
++----------+
 ```
 
 3. 比较仅大小写不同的字符串。
 
 ```sql
-SELECT hamming_distance('Doris', 'doris');
+SELECT hamming_distance('Doris', 'doris') AS distance;
 ```
 
 ```text
-+-------------------------------------+
-| hamming_distance('Doris', 'doris')  |
-+-------------------------------------+
-|                                   1 |
-+-------------------------------------+
++----------+
+| distance |
++----------+
+|        1 |
++----------+
 ```
 
 4. 输入 NULL 时返回 NULL。
 
 ```sql
-SELECT hamming_distance(NULL, 'abc');
+SELECT hamming_distance(NULL, 'abc') AS distance;
 ```
 
 ```text
-+-------------------------------+
-| hamming_distance(NULL, 'abc') |
-+-------------------------------+
-|                          NULL |
-+-------------------------------+
++----------+
+| distance |
++----------+
+|     NULL |
++----------+
 ```
