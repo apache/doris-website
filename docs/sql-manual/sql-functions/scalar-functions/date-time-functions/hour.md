@@ -73,12 +73,12 @@ select hour("2022-12-12");
 |                  0 |
 +--------------------+
 
--- Will not automatically convert input time string to time, returns NULL
+-- Since 4.0, input time string can be converted to time
 select hour('14:30:00') as normal_hour;
 +-------------+
 | normal_hour |
 +-------------+
-|        NULL |
+|          14 |
 +-------------+
 
 -- Input parameter is NULL, returns NULL

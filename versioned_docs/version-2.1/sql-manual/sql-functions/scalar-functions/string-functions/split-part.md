@@ -30,6 +30,7 @@ Returns the specified part of the string split according to the delimiter. Speci
 
 - If any of the parameters is NULL, NULL is returned.
 - When `<part_index>` is 0, NULL is returned.
+- When `<part_index>` is out of range, NULL is returned.
 
 ## Examples
 
@@ -55,4 +56,16 @@ SELECT split_part('apple,banana,cherry', ',', 0);
 +-------------------------------------------+
 | NULL                                      |
 +-------------------------------------------+
+```
+
+5. Index out of range
+```sql
+SELECT split_part('apple,banana', ',', 5), split_part('apple,banana', ',', -5);
+```
+```text
++------------------------------------+-------------------------------------+
+| split_part('apple,banana', ',', 5) | split_part('apple,banana', ',', -5) |
++------------------------------------+-------------------------------------+
+| NULL                               | NULL                                |
++------------------------------------+-------------------------------------+
 ```

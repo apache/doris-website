@@ -8,8 +8,8 @@
 
 ## Description
 
-The `unhex` function is used to convert a hexadecimal string back into the original string. It converts every two hexadecimal characters into one byte. When an invalid value is passed as a parameter, it will return empty string.
-The `unhex_null` function has the same effect as the `unhex` function. However, when an invalid value is passed as a parameter, it will return NULL.
+The `unhex` function is used to convert a hexadecimal string back into the original string. It converts every two hexadecimal characters into one byte. When a NULL value is passed as a parameter, it will return NULL; otherwise invalid values return an empty string.
+The `unhex_null` function has the same effect as the `unhex` function. However, when a NULL value is passed as a parameter, it will return NULL.
 
 :::tip
 The `unhex_null` function is supported since version 3.0.6. 
@@ -45,6 +45,18 @@ select unhex('@');
 +------------+
 |            |
 +------------+
+```
+
+```sql
+select unhex(NULL);
+```
+
+```text
++-------------+
+| unhex(NULL) |
++-------------+
+| NULL        |
++-------------+
 ```
 
 ```sql
