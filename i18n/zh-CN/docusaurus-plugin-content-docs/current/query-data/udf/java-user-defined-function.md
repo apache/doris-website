@@ -537,19 +537,20 @@ public class FunctionUdf {
 
 ### 方案 2：BE 全局缓存 JAR 包
 
-BE 全局缓存 JAR 包，并支持自定义过期淘汰时间。在 `CREATE FUNCTION` 时增加以下两个属性字段：
+BE 全局缓存 JAR 包，并支持自定义过期淘汰时间。在 `CREATE FUNCTION` 时增加以下属性字段：
 
 | 属性 | 说明 | 默认值 |
 | --- | --- | --- |
 | `static_load` | 是否使用静态 cache 加载方式 | `false` |
 | `expiration_time` | JAR 包过期时间，单位为分钟 | `360` |
 
+- `expiration_time` 字段自 4.1.1 版本之后删除，但对之前的版本无任何兼容性问题。
+
 工作机制如下：
 
 - 启用静态 cache 加载方式后，第一次调用该 UDF 时，初始化完成后会将该 UDF 实例缓存起来。
 - 后续调用该 UDF 时，先在 cache 中查找；若未命中，再执行相关初始化操作。
-- 后台有线程定期检查，如果在配置的过期淘汰时间内一直未被调用，则会从 cache 中清理掉。
-- 如果在过期前被再次调用，则会自动更新缓存时间点。
+- 在 Drop Function 时，会自动清理相关的cache.
 
 示例代码如下：
 
@@ -570,8 +571,7 @@ PROPERTIES (
     "symbol" = "org.apache.doris.udf.Print", 
     "always_nullable"="true",
     "type" = "JAVA_UDF",
-    "static_load" = "true", // default value is false
-    "expiration_time" = "60" // default value is 360 minutes
+    "static_load" = "true" // default value is false
 );
 ```
 

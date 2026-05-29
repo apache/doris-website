@@ -544,12 +544,13 @@ The BE caches JARs globally and supports a customizable expiration time. Add the
 | `static_load` | Whether to use the static cache loading method | `false` |
 | `expiration_time` | JAR expiration time, in minutes | `360` |
 
+- `expiration_time` will be removed after 4.1.1 version。
+
 How it works:
 
 - After static cache loading is enabled, the UDF instance is cached after initialization completes on the first call.
 - On subsequent calls to the UDF, the cache is checked first; if there is a miss, the relevant initialization is executed.
-- A background thread checks periodically. If the UDF has not been called within the configured expiration time, it is cleared from the cache.
-- If the UDF is called again before expiration, the cache timestamp is automatically refreshed.
+- When Drop Function, it's will be cleared from the cache.
 
 Example code:
 
