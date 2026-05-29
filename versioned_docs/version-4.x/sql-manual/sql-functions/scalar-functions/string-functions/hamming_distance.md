@@ -6,6 +6,10 @@
 }
 ---
 
+::: note
+Since 4.1.2
+:::
+
 ## Description
 The `HAMMING_DISTANCE` function returns the number of positions at which two strings of equal length differ.
 
