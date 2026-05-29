@@ -138,12 +138,6 @@ Users executing this SQL command must have at least the following privileges:
    REVOKE USAGE_PRIV ON WORKLOAD GROUP '%' FROM 'jack'@'%';
    ```
 
-- Revoke roles from a user:
-
-   ```sql
-   REVOKE 'role1','role2' FROM ROLE 'test_role';
-   ```
-
 - Revoke the usage privilege on all compute groups from a user:
 
    ```sql
