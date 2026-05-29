@@ -50,7 +50,6 @@ SELECT MINUTE('2023-05-01 10:05:30.123456') AS result;
 |      5 |
 +--------+
 
--- 自4.0起，开始支持将输入时间字符串转换为 time
 SELECT MINUTE('14:25:45') AS result;
 +--------+
 | result |

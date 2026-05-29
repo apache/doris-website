@@ -73,7 +73,6 @@ select hour("2022-12-12");
 |                  0 |
 +--------------------+
 
--- Since 4.0, input time string can be converted to time
 select hour('14:30:00') as normal_hour;
 +-------------+
 | normal_hour |
