@@ -30,7 +30,7 @@ TO_QUANTILE_STATE(<raw_data>, <compression>)
 ## 举例
 
 ```sql
-CREATE TABLE IF NOT EXISTS ${tableName_21} (
+CREATE TABLE IF NOT EXISTS quantile_state_agg_test (
          `dt` int(11) NULL COMMENT "",
          `id` int(11) NULL COMMENT "",
          `price` quantile_state QUANTILE_UNION NOT NULL COMMENT ""
