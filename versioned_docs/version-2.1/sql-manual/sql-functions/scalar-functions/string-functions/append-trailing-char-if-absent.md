@@ -29,14 +29,62 @@ Parameters The string after concatenation of `<str>` and `<trailing_char>` (if `
 
 ## Example
 
-``` sql
-SELECT APPEND_TRAILING_CHAR_IF_ABSENT('a','c'),APPEND_TRAILING_CHAR_IF_ABSENT('ac', 'c'),APPEND_TRAILING_CHAR_IF_ABSENT('ac', 'cd')
+1. Basic usage: Add character when it doesn't exist
+```sql
+SELECT APPEND_TRAILING_CHAR_IF_ABSENT('a', 'c');
+```
+```text
++------------------------------------------+
+| APPEND_TRAILING_CHAR_IF_ABSENT('a', 'c') |
++------------------------------------------+
+| ac                                       |
++------------------------------------------+
 ```
 
-```text 
-+------------------------------------------+-------------------------------------------+--------------------------------------------+
-| append_trailing_char_if_absent('a', 'c') | append_trailing_char_if_absent('ac', 'c') | append_trailing_char_if_absent('ac', 'cd') |
-+------------------------------------------+-------------------------------------------+--------------------------------------------+
-| ac                                       | ac                                        | accd                                       |
-+------------------------------------------+-------------------------------------------+--------------------------------------------+
+2. Character already exists, don't add
+```sql
+SELECT APPEND_TRAILING_CHAR_IF_ABSENT('ac', 'c');
+```
+```text
++-------------------------------------------+
+| APPEND_TRAILING_CHAR_IF_ABSENT('ac', 'c') |
++-------------------------------------------+
+| ac                                        |
++-------------------------------------------+
+```
+
+3. Empty string handling
+```sql
+SELECT APPEND_TRAILING_CHAR_IF_ABSENT('', '/');
+```
+```text
++-----------------------------------------+
+| APPEND_TRAILING_CHAR_IF_ABSENT('', '/') |
++-----------------------------------------+
+| /                                       |
++-----------------------------------------+
+```
+
+4. NULL value handling
+```sql
+SELECT APPEND_TRAILING_CHAR_IF_ABSENT(NULL, 'c');
+```
+```text
++-------------------------------------------+
+| APPEND_TRAILING_CHAR_IF_ABSENT(NULL, 'c') |
++-------------------------------------------+
+| NULL                                      |
++-------------------------------------------+
+```
+
+5. UTF-8 character
+```sql
+SELECT APPEND_TRAILING_CHAR_IF_ABSENT('acf', 'ṛ');
+```
+```text
++----------------------------------------------+
+| APPEND_TRAILING_CHAR_IF_ABSENT('acf', 'ṛ')   |
++----------------------------------------------+
+| acfṛ                                         |
++----------------------------------------------+
 ```
