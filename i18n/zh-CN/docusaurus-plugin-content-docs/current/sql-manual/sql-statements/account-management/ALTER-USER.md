@@ -89,6 +89,12 @@ password_policy:
 
 ## 示例
 
+准备：先创建用户 `jack`，作为下面示例的目标用户：
+
+```sql
+CREATE USER jack@'%' IDENTIFIED BY "12345";
+```
+
 - 修改用户的密码
 
 ```sql
