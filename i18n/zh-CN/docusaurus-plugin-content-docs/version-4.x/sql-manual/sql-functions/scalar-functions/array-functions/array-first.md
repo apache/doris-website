@@ -86,7 +86,7 @@ SELECT array_first(x -> x > 0, []);
 ```
 
 输入参数为NULL 会报错：
-```
+```sql
 SELECT array_first(x -> x > 2, NULL);
 ERROR 1105 (HY000): errCode = 2, detailMessage = lambda argument must be array but is NULL
 

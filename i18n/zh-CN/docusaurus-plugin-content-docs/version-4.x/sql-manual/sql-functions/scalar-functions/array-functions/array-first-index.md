@@ -85,7 +85,7 @@ SELECT array_first_index(x -> x > 0, []);
 ```
 
 NULL 数组和lambda 表达式组合，参数中有lambda 表达式结合NULL 会报错，无lambda 表达式则返回 0：
-``` 
+```sql
 SELECT array_first_index(NULL);
 +-------------------------+
 | array_first_index(NULL) |
