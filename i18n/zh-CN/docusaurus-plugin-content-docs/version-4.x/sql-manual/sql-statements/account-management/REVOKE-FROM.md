@@ -108,6 +108,31 @@ REVOKE <role_list> FROM <user_identity>
 
 ## 示例
 
+准备：创建下面 `REVOKE` 例子要用到的用户 / 角色 / 数据库 / workload group，并先 `GRANT` 上对应权限（不能撤销一项从未授予过的权限）：
+
+```sql
+CREATE DATABASE db1;
+CREATE USER jack@'192.%' IDENTIFIED BY 'jack_pwd';
+CREATE USER jack@'%' IDENTIFIED BY 'jack_pwd';
+CREATE ROLE role1;
+CREATE ROLE role2;
+CREATE ROLE my_role;
+CREATE ROLE test_role;
+CREATE WORKLOAD GROUP g1 PROPERTIES("max_cpu_percent"="10");
+
+GRANT SELECT_PRIV ON db1.* TO 'jack'@'192.%';
+GRANT USAGE_PRIV ON RESOURCE 'spark_resource' TO 'jack'@'192.%';
+GRANT 'role1','role2' TO 'jack'@'192.%';
+GRANT USAGE_PRIV ON WORKLOAD GROUP 'g1' TO 'jack'@'%';
+GRANT USAGE_PRIV ON WORKLOAD GROUP '%' TO 'jack'@'%';
+GRANT USAGE_PRIV ON WORKLOAD GROUP 'g1' TO ROLE 'test_role';
+GRANT USAGE_PRIV ON COMPUTE GROUP 'group1' TO 'jack'@'%';
+GRANT USAGE_PRIV ON COMPUTE GROUP 'group1' TO ROLE 'my_role';
+GRANT USAGE_PRIV ON STORAGE VAULT 'vault1' TO 'jack'@'%';
+GRANT USAGE_PRIV ON STORAGE VAULT 'vault1' TO ROLE 'my_role';
+GRANT USAGE_PRIV ON STORAGE VAULT '%' TO 'jack'@'%';
+```
+
 - 撤销用户在特定数据库上的 SELECT 权限：
 
    ```sql
