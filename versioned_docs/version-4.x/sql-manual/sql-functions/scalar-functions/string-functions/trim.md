@@ -130,6 +130,18 @@ SELECT trim('abcHelloabc', 'abc');
 +--------------------------------+
 ```
 
+9. UTF-8 string with a UTF-8 trim pattern — only the leading `ṭṛì` is stripped because the trailing end does not match the pattern (`+++`), so trim stops there.
+```sql
+SELECT trim('ṭṛì ḍḍumai+++', 'ṭṛì');
+```
+```text
++--------------------------------------------+
+| trim('ṭṛì ḍḍumai+++', 'ṭṛì')               |
++--------------------------------------------+
+|  ḍḍumai+++                                 |
++--------------------------------------------+
+```
+
 ### Keywords
 
     TRIM
