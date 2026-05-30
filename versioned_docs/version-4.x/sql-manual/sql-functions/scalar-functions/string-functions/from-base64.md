@@ -100,3 +100,63 @@ SELECT FROM_BASE64('!!!'), FROM_BASE64('ABC@DEF');
 | NULL               | NULL                   |
 +--------------------+------------------------+
 ```
+
+6. Longer payloads
+```sql
+SELECT FROM_BASE64('SGVsbG8gV29ybGQ='), FROM_BASE64('VGhlIHF1aWNrIGJyb3duIGZveA==');
+```
+```text
++---------------------------------+---------------------------------------------+
+| FROM_BASE64('SGVsbG8gV29ybGQ=') | FROM_BASE64('VGhlIHF1aWNrIGJyb3duIGZveA==') |
++---------------------------------+---------------------------------------------+
+| Hello World                     | The quick brown fox                         |
++---------------------------------+---------------------------------------------+
+```
+
+7. UTF-8 multi-byte payloads
+```sql
+SELECT FROM_BASE64('4bmt4bmbw6w='), FROM_BASE64('4biN4biNdW1haSBoZWxsbw==');
+```
+```text
++-----------------------------+-----------------------------------------+
+| FROM_BASE64('4bmt4bmbw6w=') | FROM_BASE64('4biN4biNdW1haSBoZWxsbw==') |
++-----------------------------+-----------------------------------------+
+| ṭṛì                         | ḍḍumai hello                            |
++-----------------------------+-----------------------------------------+
+```
+
+8. Email addresses
+```sql
+SELECT FROM_BASE64('dXNlckBleGFtcGxlLmNvbQ=='), FROM_BASE64('YWRtaW4udGVzdEBjb21wYW55Lm9yZw==');
+```
+```text
++-----------------------------------------+-------------------------------------------------+
+| FROM_BASE64('dXNlckBleGFtcGxlLmNvbQ==') | FROM_BASE64('YWRtaW4udGVzdEBjb21wYW55Lm9yZw==') |
++-----------------------------------------+-------------------------------------------------+
+| user@example.com                        | admin.test@company.org                          |
++-----------------------------------------+-------------------------------------------------+
+```
+
+9. JSON payloads
+```sql
+SELECT FROM_BASE64('eyJuYW1lIjoiSm9obiIsImFnZSI6MzB9'), FROM_BASE64('WzEsMiwzLDQsNV0=');
+```
+```text
++-------------------------------------------------+---------------------------------+
+| FROM_BASE64('eyJuYW1lIjoiSm9obiIsImFnZSI6MzB9') | FROM_BASE64('WzEsMiwzLDQsNV0=') |
++-------------------------------------------------+---------------------------------+
+| {"name":"John","age":30}                        | [1,2,3,4,5]                     |
++-------------------------------------------------+---------------------------------+
+```
+
+10. Round-trip with `TO_BASE64`
+```sql
+SELECT FROM_BASE64(TO_BASE64('Hello')), FROM_BASE64(TO_BASE64('测试'));
+```
+```text
++---------------------------------+----------------------------------+
+| FROM_BASE64(TO_BASE64('Hello')) | FROM_BASE64(TO_BASE64('测试'))   |
++---------------------------------+----------------------------------+
+| Hello                           | 测试                             |
++---------------------------------+----------------------------------+
+```
