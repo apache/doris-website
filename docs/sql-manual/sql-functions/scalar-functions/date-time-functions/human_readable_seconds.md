@@ -28,7 +28,7 @@ HUMAN_READABLE_SECONDS(<x>)
 
 | Parameter | Description                                                                |
 | --------- | -------------------------------------------------------------------------- |
-| `<x>`     | The number of seconds to format (numeric input, internally cast to DOUBLE) |
+| `<x>`     | Any numeric SQL type representing a number of seconds                      |
 
 ## Return Value
 
@@ -39,7 +39,7 @@ Returns a `VARCHAR` string representing the formatted duration.
 * When `<x>` is `NULL`, returns `NULL`
 * Fractional values are rounded to the nearest whole second
 * Negative values are converted using absolute value
-* `NaN` and `Infinity` values return an error
+* `NaN` and `Infinity` values raise an error: `Invalid argument value ... for function human_readable_seconds`
 
 ## Examples
 
@@ -96,11 +96,11 @@ select human_readable_seconds(56363463);
 ```
 
 ```text
-+----------------------------------+
-| human_readable_seconds(56363463) |
-+----------------------------------+
-| 93 weeks, 1 day, 8 hours, 31 minutes, 3 seconds |
-+----------------------------------+
++----------------------------------------------------------+
+| human_readable_seconds(56363463)                         |
++----------------------------------------------------------+
+| 93 weeks, 1 day, 8 hours, 31 minutes, 3 seconds          |
++----------------------------------------------------------+
 ```
 
 ```sql
