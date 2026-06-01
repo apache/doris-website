@@ -98,7 +98,6 @@ Renaming is not supported on either the upstream or the downstream. If you do re
 | auto_bucket                                | Yes       | -             | SQL         |                                                                                              |
 | group_commit series                        | Yes       | -             | SQL         |                                                                                              |
 | enable_unique_key_merge_on_write           | Yes       | -             | SQL         |                                                                                              |
-| enable_single_replica_compaction           | Yes       | -             | SQL         |                                                                                              |
 | disable_auto_compaction                    | Yes       | -             | SQL         |                                                                                              |
 | compaction_policy                          | Yes       | -             | SQL         |                                                                                              |
 | time_series_compaction series              | Yes       | -             | SQL         |                                                                                              |

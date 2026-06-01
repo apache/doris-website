@@ -399,7 +399,6 @@ DISTRIBUTED BY RANDOM BUCKETS 10
 PROPERTIES (
     "replication_num" = "1",
     "compaction_policy" = "time_series",
-    "enable_single_replica_compaction" = "true",
     "dynamic_partition.enable" = "true",
     "dynamic_partition.create_history_partition" = "true",
     "dynamic_partition.time_unit" = "DAY",

@@ -99,7 +99,6 @@ CCR 任务不同步修改库属性的操作。
 | auto_bucket                                | 支持     | -             | SQL      |                                                          |
 | group_commit 系列                          | 支持     | -             | SQL      |                                                          |
 | enable_unique_key_merge_on_write           | 支持     | -             | SQL      |                                                          |
-| enable_single_replica_compaction           | 支持     | -             | SQL      |                                                          |
 | disable_auto_compaction                    | 支持     | -             | SQL      |                                                          |
 | compaction_policy                          | 支持     | -             | SQL      |                                                          |
 | time_series_compaction 系列                | 支持     | -             | SQL      |                                                          |

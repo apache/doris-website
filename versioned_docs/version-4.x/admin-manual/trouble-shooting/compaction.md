@@ -51,17 +51,6 @@ Situations where segment compaction is not recommended:
 
 Refer to this [link](https://github.com/apache/doris/pull/12866) for more information about implementation and test results.
 
-## Single replica compaction
-
-By default, compaction for multiple replicas is performed independently, with each replica consuming CPU and IO resources. When single replica compaction is enabled, only one replica performs the compaction. Afterward, the other replicas pull the compacted files from this replica, resulting in CPU resources being consumed only once, saving N - 1 times CPU usage (where N is the number of replicas).
-
-Single replica compaction is specified in the table's PROPERTIES via the parameter `enable_single_replica_compaction`, which is false by default (disabled). To enable it, set the parameter to true.
-
-This parameter can be specified when creating the table or modified later using:
-```sql
-ALTER TABLE table_name SET("enable_single_replica_compaction" = "true");
-```
-
 ## Compaction strategy
 
 The compaction strategy determines when and which small files are merged into larger files. Doris currently offers two compaction strategies, specified by the `compaction_policy` parameter in the table properties.
@@ -98,4 +87,3 @@ Compaction runs in the background and consumes CPU and IO resources. The resourc
 The number of concurrent compaction threads is configured in the BE configuration file, including the following parameters:
 - `max_base_compaction_threads`: Number of base compaction threads, default is 4.
 - `max_cumu_compaction_threads`: Number of cumulative compaction threads, default is -1, which mean that 1 thread per disk.
-- `max_single_replica_compaction_threads`: Number of threads for fetching data files during single replica compaction, default is 10.
