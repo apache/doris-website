@@ -1,7 +1,8 @@
+---
 {
-"title": "DATASKETCHES_HLL_UNION_AGG",
-"language": "zh-CN",
-"description": "datasketches_hll_union_agg 函数是一种聚合函数，用于对多个 Apache DataSketches HLL sketch 的序列化结果进行 union 合并，并返回合并后基数的估算值（DOUBLE）。"
+  "title": "DATASKETCHES_HLL_UNION_AGG",
+  "language": "zh-CN",
+  "description": "datasketches_hll_union_agg 函数是一种聚合函数，用于对多个 Apache DataSketches HLL sketch 的序列化结果进行 union 合并，并返回合并后基数的估算值（DOUBLE）。"
 }
 ---
 
@@ -59,20 +60,28 @@ FROM test_datasketches_hll_union_agg_tbl;
 ```
 
 ```text
-+------------------------------------------------------+
++-------------------------------------------------------+
 | CAST(ROUND(datasketches_hll_union_agg(sk)) AS BIGINT) |
-+------------------------------------------------------+
-|                                                   17 |
-+------------------------------------------------------+
++-------------------------------------------------------+
+|                                                    17 |
++-------------------------------------------------------+
 ```
 
 ```sql
 -- 别名用法
 SELECT
-    CAST(ROUND(datasketches_hll_union_agg(sk)) AS BIGINT),
-    CAST(ROUND(ds_hll_estimate(sk)) AS BIGINT),
-    CAST(ROUND(datasketches_hll_estimate(sk)) AS BIGINT)
+    CAST(ROUND(datasketches_hll_union_agg(sk)) AS BIGINT) AS v1,
+    CAST(ROUND(ds_hll_estimate(sk)) AS BIGINT)            AS v2,
+    CAST(ROUND(datasketches_hll_estimate(sk)) AS BIGINT)  AS v3
 FROM test_datasketches_hll_union_agg_tbl;
+```
+
+```text
++------+------+------+
+| v1   | v2   | v3   |
++------+------+------+
+|   17 |   17 |   17 |
++------+------+------+
 ```
 
 ```sql
@@ -83,11 +92,11 @@ WHERE sk IS NULL;
 ```
 
 ```text
-+-------------------------------+
++--------------------------------+
 | datasketches_hll_union_agg(sk) |
-+-------------------------------+
-|                             0 |
-+-------------------------------+
++--------------------------------+
+|                              0 |
++--------------------------------+
 ```
 
 ```sql
@@ -95,7 +104,15 @@ WHERE sk IS NULL;
 SELECT datasketches_hll_union_agg(from_base64('AA=='));
 ```
 
+```text
+ERROR 1105 (HY000): errCode = 2, detailMessage = (127.0.0.1)[CORRUPTION]HLL sketch data corrupted when add: Attempt to deserialize unknown object type
+```
+
 ```sql
 -- 空字符串属于非法输入，将报错
 SELECT datasketches_hll_union_agg('');
+```
+
+```text
+ERROR 1105 (HY000): errCode = 2, detailMessage = (127.0.0.1)[CORRUPTION]HLL sketch data corrupted when add: empty input.
 ```
