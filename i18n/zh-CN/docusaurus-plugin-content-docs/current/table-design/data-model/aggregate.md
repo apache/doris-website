@@ -168,7 +168,7 @@ SELECT 3, sum(v1), group_concat_union(v2) FROM aggstate;
 
 ![state-func-group-concat-state-result-2](/images/table-desigin/state-func-group-concat-state-result-2.png)
 
-查询结果如下：
+由于 group_concat 对顺序有要求，结果是不稳定的，结果可能为：
 
 ```sql
 mysql> SELECT sum(v1), group_concat_merge(v2) FROM aggstate;
