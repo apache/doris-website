@@ -116,7 +116,7 @@ Unable to find a suitable base table for partitioning
 
 通常是物化视图的 SQL 定义和分区字段的选择导致不能进行分区增量更新，从而创建分区物化视图时报错：
 
-- 物化视图想要分区增量更新，需要满足相应要求，详情见 [物化视图刷新模式](../../../sql-manual/sql-statements/table-and-view/async-materialized-view/CREATE-ASYNC-MATERIALIZED-VIEW.md#可选参数)。
+- 物化视图想要分区增量更新，需要满足相应要求，详情见 [物化视图刷新模式](../../../sql-manual/sql-statements/table-and-view/async-materialized-view/CREATE-ASYNC-MATERIALIZED-VIEW.md#optional-parameters)。
 - 最新版本可以提示分区构建失败的具体原因，原因摘要和说明见 [附录 2](#附录-2-异步物化视图分区构建失败原因)。
 
 **示例**：
@@ -276,7 +276,7 @@ and l_suppkey = ps_suppkey;
                  State: NORMAL
     SchemaChangeDetail: 
           RefreshState: SUCCESS
-           RefreshInfo: BUILD IMMEDIATE REFRESH AUTO ON SCHEDULE EVERY 1 DAY STARTS "2025-12-01 20:30:00"
+           RefreshInfo: BUILD IMMEDIATE REFRESH AUTO ON SCHEDULE EVERY 1 DAY STARTS "2024-12-01 20:30:00"
               QuerySql: SELECT
                         `internal`.`doc_db`.`orders`.`o_orderdate`,
                         `internal`.`doc_db`.`lineitem`.`l_orderkey`,
@@ -369,7 +369,7 @@ your_query_sql;
 
 1. 在 Doris 2.1.3 之前的版本中，物化视图透明改写功能默认关闭，需要打开对应开关才能实现透明改写。具体开关请参见异步物化视图相关开关。
 2. 物化视图可能处于不可用状态。要查看物化视图的构建状态，请参见查看物化视图状态。
-3. 经过前两步检查后仍未命中，可能是物化视图的定义 SQL 和查询 SQL 不在当前透明改写能力范围内。详情参考 [物化视图透明改写能力](../../../query-acceleration/materialized-view/async-materialized-view/functions-and-demands.md#透明改写能力)。
+3. 经过前两步检查后仍未命中，可能是物化视图的定义 SQL 和查询 SQL 不在当前透明改写能力范围内。详情参考 [物化视图透明改写能力](../../../query-acceleration/materialized-view/async-materialized-view/functions-and-demands.md#22-transparent-query-rewrite)。
 4. 失败命中的详细摘要信息和说明，请查阅 [附录 1](#附录-1-透明改写失败摘要信息)。
 
 下面通过两个示例说明常见的透明改写失败场景。

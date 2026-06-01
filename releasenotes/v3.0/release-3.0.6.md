@@ -48,13 +48,19 @@ Dear community members, the Apache Doris 3.0.6 version was officially released o
 
 ## Improvements
 
-### Storage 
+### Data Ingestion
+
+- **Implemented blacklist mechanism** to prevent Routine Load from distributing metadata to unavailable BEs [#50587](https://github.com/apache/doris/pull/50587)
+- **Increased default value** of `load_task_high_priority_threshold_second` [#50478](https://github.com/apache/doris/pull/50478)
+
+### Primary Key Model
+
+- **Reduced redundant log output** [#51093](https://github.com/apache/doris/pull/51093)
+
+### Storage
 
 - Streamlined Compaction Profile and logs [#50950](https://github.com/apache/doris/pull/50950)
 - Enhanced scheduling strategy to improve Compaction throughput [#49882](https://github.com/apache/doris/pull/49882) [#48759](https://github.com/apache/doris/pull/48759) [#51482](https://github.com/apache/doris/pull/51482) [#50672](https://github.com/apache/doris/pull/50672) [#49953](https://github.com/apache/doris/pull/49953) [#50819](https://github.com/apache/doris/pull/50819)
-- **Reduced redundant log output** [#51093](https://github.com/apache/doris/pull/51093)
-- **Implemented blacklist mechanism** to prevent Routine Load from distributing metadata to unavailable BEs [#50587](https://github.com/apache/doris/pull/50587)
-- **Increased default value** of `load_task_high_priority_threshold_second` [#50478](https://github.com/apache/doris/pull/50478)
 
 ### Storage-Compute Decoupled
 
@@ -138,19 +144,24 @@ Dear community members, the Apache Doris 3.0.6 version was officially released o
 
 ### Lakehouse
 
-- **Export fixes** 
-  - Fixed FE memory leaks [#51171](https://github.com/apache/doris/pull/51171)
-  - Prevented FE deadlocks [#50088](https://github.com/apache/doris/pull/50088)
-- **Catalog fixes** 
-  - Enabled composite predicate pushdown for JDBC Catalog [#50542](https://github.com/apache/doris/pull/50542)
-  - Fixed Deletion Vector reading for Alibaba Cloud OSS Paimon tables [#49645](https://github.com/apache/doris/pull/49645)
-  - Supported comma-containing Hive partition values [#49382](https://github.com/apache/doris/pull/49382)
-  - Corrected MaxCompute Timestamp column parsing [#49600](https://github.com/apache/doris/pull/49600)
-  - Enabled `information_schema` system tables for Trino Catalog [#49912](https://github.com/apache/doris/pull/49912)
-- **File formats** 
-  - Fixed LZO compression reading failures [#49538](https://github.com/apache/doris/pull/49538)
-  - Added legacy ORC file compatibility [#50358](https://github.com/apache/doris/pull/50358)
-  - Corrected complex type parsing in ORC files [#50136](https://github.com/apache/doris/pull/50136)
+#### Export fixes
+
+- Fixed FE memory leaks [#51171](https://github.com/apache/doris/pull/51171)
+- Prevented FE deadlocks [#50088](https://github.com/apache/doris/pull/50088)
+
+#### Catalog fixes
+
+- Enabled composite predicate pushdown for JDBC Catalog [#50542](https://github.com/apache/doris/pull/50542)
+- Fixed Deletion Vector reading for Alibaba Cloud OSS Paimon tables [#49645](https://github.com/apache/doris/pull/49645)
+- Supported comma-containing Hive partition values [#49382](https://github.com/apache/doris/pull/49382)
+- Corrected MaxCompute Timestamp column parsing [#49600](https://github.com/apache/doris/pull/49600)
+- Enabled `information_schema` system tables for Trino Catalog [#49912](https://github.com/apache/doris/pull/49912)
+
+#### File formats
+
+- Fixed LZO compression reading failures [#49538](https://github.com/apache/doris/pull/49538)
+- Added legacy ORC file compatibility [#50358](https://github.com/apache/doris/pull/50358)
+- Corrected complex type parsing in ORC files [#50136](https://github.com/apache/doris/pull/50136)
 
 ### Asynchronous Materialized Views
 

@@ -21,7 +21,7 @@ This document describes the two update methods that the Doris Aggregate model su
 | Update method | Applicable scenario | Supported load methods | Behavior |
 | --- | --- | --- | --- |
 | Whole-row update | Write a complete row, and merge the new and old values according to each column's aggregate function | Stream Load, Broker Load, Routine Load, Insert Into, and others | The new value and the old value are combined by the aggregate function to produce a new aggregate value |
-| Partial-column update | Update only some columns while the other columns retain their existing aggregate results | See [Partial Column Update](./partial-column-update.md#聚合模型的列更新) | Only the specified columns participate in aggregate merging |
+| Partial-column update | Update only some columns while the other columns retain their existing aggregate results | See [Partial Column Update](./partial-column-update.md#column-update-on-the-aggregate-key-model) | Only the specified columns participate in aggregate merging |
 
 ## Whole-Row Update
 
@@ -40,4 +40,4 @@ No matter at which stage the aggregate value is produced, the result returned to
 
 <!-- Knowledge type: Capability index -->
 
-The Aggregate Key Model supports updating only some columns in the table while the other columns retain their existing aggregate results. For details on table creation, data write examples, and usage notes, see the [Partial Column Update](./partial-column-update.md#聚合模型的列更新) document.
+The Aggregate Key Model supports updating only some columns in the table while the other columns retain their existing aggregate results. For details on table creation, data write examples, and usage notes, see the [Partial Column Update](./partial-column-update.md#column-update-on-the-aggregate-key-model) document.

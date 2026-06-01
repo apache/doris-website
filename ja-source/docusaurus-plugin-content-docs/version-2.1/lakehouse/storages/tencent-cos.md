@@ -24,7 +24,7 @@
 | cos.secret_key                 | s3.secret_key            | COSシークレットキー、アクセスキーと組み合わせて認証に使用 |               | Yes      |
 | cos.region                     | s3.region                | COSリージョン、Tencent Cloud COSのリージョンを指定       |               | No       |
 | cos.connection.maximum         | s3.connection.maximum    | S3最大接続数、COSサービスへの最大接続数を指定 | 50            | No       |
-| cos.connection.request.timeout | s3.connection.timeout    | S3リクエストタイムアウト（ミリ秒）、COSサービスへの接続時のリクエストタイムアウトを指定 | 3000          | No       |
+| cos.connection.request.timeout | s3.connection.request.timeout | S3リクエストタイムアウト（ミリ秒）、COSサービスへの接続時のリクエストタイムアウトを指定 | 3000          | No       |
 | cos.connection.timeout         | s3.connection.timeout    | S3接続タイムアウト（ミリ秒）、COSサービスへの接続確立時のタイムアウトを指定 | 1000          | No       |
 
 > バージョン3.1以前では、legacy nameを使用

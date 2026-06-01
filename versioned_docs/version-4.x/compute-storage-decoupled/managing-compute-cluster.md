@@ -221,7 +221,7 @@ The following example describes the three strategy types using a scale-out scena
 Set the global default value in the FE configuration file (`fe.conf`):
 
 ```
-cloud_default_rebalance_type = "async_warmup"
+cloud_warm_up_for_rebalance_type = "async_warmup"
 ```
 
 ##### Compute Group-Level Configuration
@@ -264,7 +264,7 @@ After renaming, user permissions and default compute group settings associated w
 
 - **View**:
     ```sql
-    ADMIN SHOW FRONTEND CONFIG LIKE "cloud_default_rebalance_type";
+    ADMIN SHOW FRONTEND CONFIG LIKE "cloud_warm_up_for_rebalance_type";
     ```
 - **Modify** (takes effect without restarting FE):
     ```sql

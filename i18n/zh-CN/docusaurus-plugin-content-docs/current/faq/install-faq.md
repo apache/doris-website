@@ -277,7 +277,7 @@ cd fe && mvn clean install -DskipTests
 cp fe-core/target/generated-sources/cup/org/apache/doris/analysis/action_table.dat fe-core/target/classes/org/apache/doris/analysis
 ```
 
-### Q15. 升级到 1.2 版本，BE NoClassDefFoundError 问题启动失败
+### Q14. 升级到 1.2 版本，BE NoClassDefFoundError 问题启动失败
 
 :::note
 Java UDF 依赖错误从 Doris 1.2 版本后开始支持
@@ -292,7 +292,7 @@ Caused by: java.lang.ClassNotFoundException: org.apache.doris.udf.JniUtil
 
 需要从官网下载 `apache-doris-java-udf-jar-with-dependencies-1.2.0` 的 Java UDF 函数依赖包，放到 BE 安装目录下的 `lib` 目录，然后重新启动 BE。
 
-### Q16. 升级到 1.2 版本，BE 启动显示 Failed to initialize JNI 问题
+### Q15. 升级到 1.2 版本，BE 启动显示 Failed to initialize JNI 问题
 
 :::note
 Java 环境问题从 Doris 1.2 版本后开始支持

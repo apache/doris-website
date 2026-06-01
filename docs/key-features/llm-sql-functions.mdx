@@ -33,7 +33,7 @@ The usual workaround is a Python service. It pulls rows from Doris, calls OpenAI
 
 ## What are the Apache Doris AI_* SQL functions? {#what}
 
-The Apache Doris `AI_*` family is a set of SQL-callable functions that wrap an HTTP call to an LLM provider. Each function passes the input columns through a fixed prompt template and returns a typed result, so the planner treats them like any other scalar function. Apache Doris reaches the provider through an AI resource you create once with `CREATE RESOURCE ... TYPE='ai'`. Eleven scalar functions cover the most common tasks, and one aggregate, `AI_AGG`, rolls multiple rows into a single LLM-generated answer.
+The Apache Doris `AI_*` family is a set of SQL-callable functions that wrap an HTTP call to an LLM provider. Each function passes the input columns through a fixed prompt template and returns a typed result, so the planner treats them like any other scalar function. Apache Doris reaches the provider through an AI resource you create once with `CREATE RESOURCE ... TYPE='ai'`. Ten scalar functions cover the most common tasks, and one aggregate, `AI_AGG`, rolls multiple rows into a single LLM-generated answer.
 
 **Key terms**
 

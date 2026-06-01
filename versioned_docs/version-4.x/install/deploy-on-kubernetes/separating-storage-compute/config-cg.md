@@ -83,7 +83,7 @@ spec:
       memory: 8Gi
 ```
 
-Update the configuration above into the [`DorisDisaggregatedCluster` resource](./install-doris-cluster.md#3-配置-dorisdisaggregatedcluster-资源) to be deployed for it to take effect.
+Update the configuration above into the [`DorisDisaggregatedCluster` resource](./install-doris-cluster.md#2-modify-key-configurations) to be deployed for it to take effect.
 
 ## Scenario 4: Configure the Access Method of a Compute Group
 
@@ -228,7 +228,7 @@ Parameter descriptions:
 
 ### Step 3: Update the DorisDisaggregatedCluster Resource
 
-Update the [`DorisDisaggregatedCluster` resource](./install-doris-cluster.md#3-配置-dorisdisaggregatedcluster-资源) to mount the ConfigMap. The configuration is as follows:
+Update the [`DorisDisaggregatedCluster` resource](./install-doris-cluster.md#2-modify-key-configurations) to mount the ConfigMap. The configuration is as follows:
 
 ```yaml
 spec:

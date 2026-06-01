@@ -6,23 +6,19 @@
 }
 ---
 
-## array_contains
-
-array_contains
-
 ## 描述
-
-## 语法
-
-`BOOLEAN array_contains(ARRAY<T> arr, T value)`
 
 判断数组中是否包含 value。返回结果如下：
 
 ```
-1    - value在数组arr中存在；
-0    - value不存在数组arr中；
-NULL - arr为NULL时。
+1    - value 在数组 arr 中存在；
+0    - value 不存在数组 arr 中；
+NULL - arr 为 NULL 时。
 ```
+
+## 语法
+
+`BOOLEAN array_contains(ARRAY<T> arr, T value)`
 
 ## 举例
 

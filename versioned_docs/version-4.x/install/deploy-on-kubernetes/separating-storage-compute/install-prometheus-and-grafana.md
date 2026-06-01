@@ -12,6 +12,8 @@
 
 This document describes how to deploy Prometheus and Grafana on Kubernetes with Helm and connect them to an Apache Doris compute-storage decoupled cluster for metric collection, visualization, and alerting. Prometheus scrapes the HTTP and bRPC metrics exposed by FE, BE, and Meta Service. Grafana presents the cluster status through dashboards.
 
+> Note: This document focuses on the Helm + ServiceMonitor steps on Kubernetes. The cloud dashboard template downloaded in this guide also applies to **non-Kubernetes deployments of compute-storage decoupled clusters**. For the Doris monitoring architecture, metric format, dashboard panel descriptions, and the full template catalog, see [Monitoring and Alerting](../../../admin-manual/maint-monitor/monitor-alert).
+
 ## Use Cases
 
 | Scenario | Description |

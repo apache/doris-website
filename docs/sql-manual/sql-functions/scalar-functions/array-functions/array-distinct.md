@@ -104,6 +104,7 @@ SELECT array_distinct(CAST(['2001:db8::1', '2001:db8::2', '2001:db8::1'] AS ARRA
 
 Empty array returns empty array: empty array has no elements to deduplicate, directly returns empty array.
 ```sql
+SELECT array_distinct([]);
 +--------------------+
 | array_distinct([]) |
 +--------------------+
@@ -113,6 +114,7 @@ Empty array returns empty array: empty array has no elements to deduplicate, dir
 
 NULL array returns NULL: returning NULL when the input array is NULL without throwing an error.
 ```sql
+SELECT array_distinct(NULL);
 +----------------------+
 | array_distinct(NULL) |
 +----------------------+

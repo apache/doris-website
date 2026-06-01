@@ -27,13 +27,30 @@ The decoded value
 
 ##  Example
 
+Decoding a percent-encoded URL — `%3A` → `:`, `%2F` → `/`.
+
 ```sql
 select url_decode('https%3A%2F%2Fdoris.apache.org%2Fzh-CN%2Fdocs%2Fsql-manual%2Fsql-functions%2Fstring-functions');
 ```
-```sql
-+------------------------------------------------+
+
+```text
++-------------------------------------------------------------------------------------------------------------+
 | url_decode('https%3A%2F%2Fdoris.apache.org%2Fzh-CN%2Fdocs%2Fsql-manual%2Fsql-functions%2Fstring-functions') |
-+------------------------------------------------+
++-------------------------------------------------------------------------------------------------------------+
 | https://doris.apache.org/zh-CN/docs/sql-manual/sql-functions/string-functions                               |
-+------------------------------------------------+
++-------------------------------------------------------------------------------------------------------------+
+```
+
+Decoding a `application/x-www-form-urlencoded`-style string — `+` → space, `%26` → `&`.
+
+```sql
+select url_decode('Doris+Q%26A');
+```
+
+```text
++---------------------------+
+| url_decode('Doris+Q%26A') |
++---------------------------+
+| Doris Q&A                 |
++---------------------------+
 ```

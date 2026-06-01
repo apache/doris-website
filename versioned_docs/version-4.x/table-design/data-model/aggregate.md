@@ -88,7 +88,7 @@ INSERT INTO example_tbl_agg VALUES
 -- check the rows of table
 SELECT * FROM example_tbl_agg;
 +---------+------------+------+---------------------+------+----------------+
-| user_id | load_date  | city | last_visit_date     | cost | max_dwell_time |
+| user_id | load_date  | city | last_visit_dt       | cost | max_dwell       |
 +---------+------------+------+---------------------+------+----------------+
 | 102     | 2024-10-30 | BJ   | 2024-10-29 00:00:00 |   20 |             20 |
 | 102     | 2024-11-01 | BJ   | 2024-10-30 00:00:00 |   10 |             30 |
@@ -161,7 +161,7 @@ If you do not need the final aggregated result and instead want to retain the in
 
 ```sql
 INSERT INTO aggstate
-SELECT 3, sum_union(k2), group_concat_union(k3) FROM aggstate;
+SELECT 3, sum(v1), group_concat_union(v2) FROM aggstate;
 ```
 
 The computation in the table at this point is shown in the following figure:
@@ -171,17 +171,17 @@ The computation in the table at this point is shown in the following figure:
 The query results are as follows:
 
 ```sql
-mysql> SELECT sum_merge(k2), group_concat_merge(k3) FROM aggstate;
-+---------------+------------------------+
-| sum_merge(k2) | group_concat_merge(k3) |
-+---------------+------------------------+
-|            20 | c,b,a,d,c,b,a,d        |
-+---------------+------------------------+
+mysql> SELECT sum(v1), group_concat_merge(v2) FROM aggstate;
++---------+------------------------+
+| sum(v1) | group_concat_merge(v2) |
++---------+------------------------+
+|      20 | c,b,a,d,c,b,a,d        |
++---------+------------------------+
 
-mysql> SELECT sum_merge(k2), group_concat_merge(k3) FROM aggstate WHERE k1 != 2;
-+---------------+------------------------+
-| sum_merge(k2) | group_concat_merge(k3) |
-+---------------+------------------------+
-|            16 | c,b,a,d,c,b,a          |
-+---------------+------------------------+
+mysql> SELECT sum(v1), group_concat_merge(v2) FROM aggstate WHERE k1 != 2;
++---------+------------------------+
+| sum(v1) | group_concat_merge(v2) |
++---------+------------------------+
+|      16 | c,b,a,d,c,b,a          |
++---------+------------------------+
 ```

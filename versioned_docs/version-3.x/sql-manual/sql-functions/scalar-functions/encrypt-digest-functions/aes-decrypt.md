@@ -2,7 +2,7 @@
 {
     "title": "AES_DECRYPT",
     "language": "en",
-    "description": "AES decryption function. This function behaves the same as the AESDECRYPT function in MySQL. The default algorithm is AES128ECB,"
+    "description": "AES decryption function. This function behaves the same as the AES_DECRYPT function in MySQL. The default algorithm is AES_128_ECB,"
 }
 ---
 

@@ -6,6 +6,7 @@ import { UseCasesSection } from './sections/UseCasesSection';
 import { EcosystemSection } from './sections/EcosystemSection';
 import { DeploymentSection } from './sections/DeploymentSection';
 import { CommunitySection } from './sections/CommunitySection';
+import { StatsSection } from './sections/StatsSection';
 import './HomeNext.scss';
 
 export default function HomeNext(): JSX.Element {
@@ -16,6 +17,7 @@ export default function HomeNext(): JSX.Element {
         >
             <HeroSection />
             <UseCasesSection />
+            <StatsSection />
             <FeaturesSection />
             <EcosystemSection />
             <DeploymentSection />

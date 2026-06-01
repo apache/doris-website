@@ -2,7 +2,7 @@
 {
     "title": "CHAR_LENGTH",
     "language": "en",
-    "description": "The CHARLENGTH function calculates the number of characters (not bytes) in a string. For multi-byte characters (such as Chinese characters),"
+    "description": "The CHAR_LENGTH function calculates the number of characters (not bytes) in a string. For multi-byte characters (such as Chinese characters), it returns the number of characters."
 }
 ---
 

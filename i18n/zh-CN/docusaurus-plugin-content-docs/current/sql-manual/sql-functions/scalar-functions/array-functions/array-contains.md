@@ -168,7 +168,7 @@ SELECT array_contains([1, 2, 3], 'string');
 ```
 
 当查找值类型无法和数组元素进行类型转换时, 会返回错误
-```
+```sql
 SELECT array_contains([1, 2, 3], [4, 5, 6]);
 ERROR 1105 (HY000): errCode = 2, detailMessage = can not cast from origin type ARRAY<TINYINT> to target type=TINYINT
 ```

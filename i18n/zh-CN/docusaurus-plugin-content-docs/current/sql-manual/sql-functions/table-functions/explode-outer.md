@@ -1,6 +1,6 @@
 ---
 {
-    "title": "EXPLODE-OUTER",
+    "title": "EXPLODE_OUTER",
     "language": "zh-CN",
     "description": "explode 函数接受一个数组，会将数组的每个元素映射为单独的行。需要与 LATERAL VIEW 配合使用，以将嵌套数据结构展开为标准的平面表格式。 explodeouter 和 explode 区别主要在于空值处理。"
 }
@@ -11,7 +11,7 @@
 
 ## 语法
 ```sql
-EXPLODE(<array>[, ...])
+EXPLODE_OUTER(<array>[, ...])
 ```
 
 ## 可变参数
@@ -38,7 +38,7 @@ EXPLODE(<array>[, ...])
     ```
 1. 常规参数
     ```sql
-    select  * from example lateral view explode([1, 2, null, 4, 5]) t2 as c;
+    select  * from example lateral view explode_outer([1, 2, null, 4, 5]) t2 as c;
     ```
     ```text
     +------+------+
@@ -53,7 +53,7 @@ EXPLODE(<array>[, ...])
     ```
 2. 多个参数
     ```sql
-    select  * from example lateral view explode([], [1, 2, null, 4, 5], ["ab", "cd", "ef"], [null, null, 1, 2, 3, 4, 5]) t2 as c0, c1, c2, c3;
+    select  * from example lateral view explode_outer([], [1, 2, null, 4, 5], ["ab", "cd", "ef"], [null, null, 1, 2, 3, 4, 5]) t2 as c0, c1, c2, c3;
     ```
     ```text
     +------+------+------+------+------+

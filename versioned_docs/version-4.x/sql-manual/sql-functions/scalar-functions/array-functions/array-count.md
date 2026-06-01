@@ -10,7 +10,7 @@
 
 <version since="2.0.0">
 
-
+</version>
 
 ## Description
 
@@ -157,22 +157,30 @@ SELECT array_count((x, y) -> x > y, [1, 2, 3], [0, 3, 2]);
 
 Complex type example - count arrays with more than 2 elements:
 ```sql
-SELECT array_count(x -> array_length(x) > 2, [[1,2],[1,2,3],[4,5,6,7]]);
-+--------------------------------------------------+
-| array_count(x -> array_length(x) > 2, [[1,2],[1,2,3],[4,5,6,7]]) |
-+--------------------------------------------------+
-|                                              2   |
-+--------------------------------------------------+
+SELECT array_count(x -> array_size(x) > 2, [[1,2],[1,2,3],[4,5,6,7]]);
++----------------------------------------------------------------+
+| array_count(x -> array_size(x) > 2, [[1,2],[1,2,3],[4,5,6,7]]) |
++----------------------------------------------------------------+
+|                                                              2 |
++----------------------------------------------------------------+
 ```
 
-Nested higher-order function example - count arrays that contain elements greater than 5:
+Nested higher-order functions — `array_count` expects the lambda body to return a scalar that can be cast to BOOLEAN. When the inner `array_exists` returns an ARRAY of booleans (one per inner element), `array_count` can not consume it and reports a signature error:
+
 ```sql
 SELECT array_count(x -> array_exists(y -> y > 5, x), [[1,2,3],[4,5,6],[7,8,9]]);
-+--------------------------------------------------+
-| array_count(x -> array_exists(y -> y > 5, x), [[1,2,3],[4,5,6],[7,8,9]]) |
-+--------------------------------------------------+
-|                                              2   |
-+--------------------------------------------------+
+ERROR 1105 (HY000): errCode = 2, detailMessage = Can not find the compatibility function signature: array_count(ARRAY<ARRAY<BOOLEAN>>)
+```
+
+To count outer arrays that contain *any* element greater than 5, wrap the inner check so the lambda returns a scalar BOOLEAN — e.g. `size(array_filter(y -> y > 5, x)) > 0`:
+
+```sql
+SELECT array_count(x -> size(array_filter(y -> y > 5, x)) > 0, [[1,2,3],[4,5,6],[7,8,9]]);
++----------------------------------------------------------------------------------+
+| array_count(x -> size(array_filter(y -> y > 5, x)) > 0, [[1,2,3],[4,5,6],[7,8,9]]) |
++----------------------------------------------------------------------------------+
+|                                                                                2 |
++----------------------------------------------------------------------------------+
 ```
 
 Literal array example:

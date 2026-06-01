@@ -63,7 +63,7 @@ Follow these rules when upgrading:
 | Second-digit version | Cross-version not recommended | Upgrade second-digit version by second-digit version, for example 3.0 to 3.1 to 3.2 to 3.3 |
 | First-digit version | Cross-version not recommended | First upgrade to the latest second-digit version under the same first-digit version, then upgrade across the major version |
 
-For detailed version information, see [Versioning rules](https://doris.apache.org/community/release-versioning).
+For detailed version information, see [Versioning rules](https://doris.apache.org/community/release-and-verify/release-versioning).
 
 ## Upgrade Considerations
 

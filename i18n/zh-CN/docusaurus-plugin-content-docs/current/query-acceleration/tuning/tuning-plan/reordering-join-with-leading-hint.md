@@ -50,7 +50,7 @@
 **原始计划**：
 
 ```sql
-mysql> explain shape plan select from t1 join t2 on t1.c1 = t2.c2;
+mysql> explain shape plan select * from t1 join t2 on t1.c1 = t2.c2;
 +------------------------------------------------------------------------------+
 | _Explain_ String(Nereids Planner)                                            |
 +------------------------------------------------------------------------------+

@@ -23,7 +23,7 @@ PROPERTIES (
 
 ## Parameters
 
-1.`<type>`
+1.`<property>`
 
 `<property>` format as `<key>` = `<value>`, and the specific available values for `<key>` are as follows:
 
@@ -145,7 +145,7 @@ Spark related parameters are as follows:
        - `s3.connection.request.timeout`: s3 request timeout, in milliseconds, the default is 3000
        - `s3.connection.timeout`: s3 connection timeout, in milliseconds, the default is 1000
 
-    Doris also supported `AWS Assume Role` for creating S3 Resource , please refer to [AWS intergration](../../../../admin-manual/auth/integrations/aws-authentication-and-authorization.md#assumed-role-authentication).
+    Doris also supported `AWS Assume Role` for creating S3 Resource , please refer to [AWS integration](../../../../admin-manual/auth/integrations/aws-authentication-and-authorization.md#assumed-role-authentication).
 
 **4. Create JDBC resource**
 
@@ -155,7 +155,7 @@ Spark related parameters are as follows:
       "user"="root",
       "password"="123456",
       "jdbc_url" = "jdbc:mysql://127.0.0.1:3316/doris_test?useSSL=false",
-      "driver_url" = "https://doris-community-test-1308700295.cos.ap-hongkong.myqcloud.com/jdbc_driver/mysql-connector-java-8.0.25.jar",
+      "driver_url" = "https://repo1.maven.org/maven2/mysql/mysql-connector-java/8.0.25/mysql-connector-java-8.0.25.jar",
    "driver_class" = "com.mysql.cj.jdbc.Driver"
    );
    ```

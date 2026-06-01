@@ -38,15 +38,15 @@
 
 - 实现 Iceberg 表的写回功能。
   
-  - 更多信息，请查看文档数据湖构建-[Iceberg](../../lakehouse/catalogs/iceberg-catalog)
+  - 更多信息，请查看文档数据湖构建-[Iceberg](https://doris.apache.org/zh-CN/docs/2.1/lakehouse/catalogs/iceberg-catalog)
 
 - 增强 SQL 拦截规则，支持对外表的拦截处理。
 
-  - 更多信息，请查看文档查询管理-[SQL 拦截](../../admin-manual/workload-management/sql-blocking)
+  - 更多信息，请查看文档查询管理-[SQL 拦截](https://doris.apache.org/zh-CN/docs/2.1/admin-manual/workload-management/sql-blocking)
 
 - 新增系统表`file_cache_statistics`，用于查看 BE 节点的数据缓存性能指标。
 
-  - 更多信息，请查看文档系统表-[file_cache_statistics](../../admin-manual/system-tables/information_schema/file_cache_statistics)
+  - 更多信息，请查看文档系统表-[file_cache_statistics](https://doris.apache.org/zh-CN/docs/2.1/admin-manual/system-tables/information_schema/file_cache_statistics)
 
 ### 异步物化视图
 
@@ -90,10 +90,10 @@
 
 - 新增系统表`table_properties`，便于用户查看和管理表的各项属性。
  
-  - 更多信息，请查看文档 [table_properties](../../admin-manual/system-tables/information_schema/table_properties/)
+  - 更多信息，请查看文档 [table_properties](https://doris.apache.org/zh-CN/docs/2.1/admin-manual/system-tables/information_schema/table_properties/)
 - 新增 FE 中死锁和慢锁检测功能。
  
-  - 更多信息，请查看文档 [FE 锁管理](../../admin-manual/trouble-shooting/frontend-lock-manager)
+  - 更多信息，请查看文档 [FE 锁管理](https://doris.apache.org/zh-CN/docs/2.1/admin-manual/trouble-shooting/frontend-lock-manager)
 
 ## 改进提升
 
@@ -101,7 +101,7 @@
 
 - 革新外表元数据缓存机制。
   
-  - 更多信息，请查看文档 [元数据缓存](../../lakehouse/meta-cache.md)
+  - 更多信息，请查看文档 [元数据缓存](https://doris.apache.org/zh-CN/docs/2.1/lakehouse/meta-cache)
 
 - 新增会话变量`keep_carriage_return`，默认关闭。读取 Hive Text 格式表时，默认将`\r\n`与`\n`均视为换行符。[#38099](https://github.com/apache/doris/pull/38099)
 
@@ -195,9 +195,7 @@
 
 - 提高 `ParseUrl` 函数处理常量数据的性能。[#36882](https://github.com/apache/doris/pull/36882)
 
-### 存储管理
-
-**备份恢复 / 跨集群同步**
+### 备份恢复 / CCR
 
 - Restore 功能现已支持删除多余的 Tablet 和分区选项。[#39363](https://github.com/apache/doris/pull/39363)
 
@@ -205,7 +203,7 @@
 
 - Binlog 支持 Drop 表操作，使 CCR 能够支持 Drop 表的增量同步。[#38541](https://github.com/apache/doris/pull/38541)
 
-**Compaction**
+### Compaction
 
 - 改进高优 Compaction 任务不受并发控制限制的问题。[#38189](https://github.com/apache/doris/pull/38189)
 
@@ -215,7 +213,7 @@
 
 - 优化补副本期间 Compaction 选择 rowset 的策略，以避免触发 -235 错误。[#39262](https://github.com/apache/doris/pull/39262)
 
-**Merge-on-Write**
+### Merge-on-Write
 
 - 解决了列更新和 Compaction 并发时列更新慢的问题。[#38682](https://github.com/apache/doris/pull/38682)
 
@@ -223,7 +221,7 @@
 
 - 解决 BE 重启后，可能导致列更新数据丢失的问题。[#39035](https://github.com/apache/doris/pull/39035)
 
-**其他**
+### 存储管理
 
 - 增加了 FE 配置，用于控制冷热分层下查询是否优先访问本地数据的副本。[#38322](https://github.com/apache/doris/pull/38322)
 
@@ -437,7 +435,7 @@
 
 - 修复了 `histogram` 函数结果不稳定的问题。[#38608](https://github.com/apache/doris/pull/38608)
 
-### 存储管理
+### 备份恢复 / CCR
 
 - 修复备份恢复后，写入数据时可能出现不可读的问题。[#38343](https://github.com/apache/doris/pull/38343)
 

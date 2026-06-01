@@ -2,7 +2,7 @@
 {
     "title": "ASCII",
     "language": "en",
-    "description": "Returns the ASCII code value of the first character in a string. This function only processes the first character of the string,"
+    "description": "Returns the ASCII code value of the first character in a string. This function only processes the first character of the string, returning only the ASCII value of the first character for multi-character strings."
 }
 ---
 

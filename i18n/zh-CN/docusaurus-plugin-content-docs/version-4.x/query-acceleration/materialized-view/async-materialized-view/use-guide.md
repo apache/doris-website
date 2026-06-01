@@ -148,7 +148,7 @@
 
 1. 物化视图的基表数据量很大，且基表为分区表。
 2. 物化视图引用的非分区表不经常变化。
-3. 物化视图的定义 SQL 和分区字段满足分区推导要求（即符合分区增量更新要求）。详细要求参考：[CREATE-ASYNC-MATERIALIZED-VIEW](../../../sql-manual/sql-statements/table-and-view/async-materialized-view/CREATE-ASYNC-MATERIALIZED-VIEW#可选参数)。
+3. 物化视图的定义 SQL 和分区字段满足分区推导要求（即符合分区增量更新要求）。详细要求参考：[CREATE-ASYNC-MATERIALIZED-VIEW](../../../sql-manual/sql-statements/table-and-view/async-materialized-view/CREATE-ASYNC-MATERIALIZED-VIEW#optional-parameters)。
 4. 物化视图分区数不多。分区过多会导致构建时间过长。
 
 > 当物化视图的部分分区失效时，透明改写仍可使用有效分区 UNION ALL 基表来返回数据。
@@ -249,7 +249,7 @@
 
 ### 4.1 分区映射关系
 
-物化视图的分区跟随基表分区映射创建，一般与基表分区为 1:1 或 1:n 关系。分区推导的详细要求请参考 [CREATE-ASYNC-MATERIALIZED-VIEW](../../../sql-manual/sql-statements/table-and-view/async-materialized-view/CREATE-ASYNC-MATERIALIZED-VIEW#可选参数) 和 [异步物化视图 FAQ Q12](../../../query-acceleration/materialized-view/async-materialized-view/faq#q12构建分区物化视图报错)。
+物化视图的分区跟随基表分区映射创建，一般与基表分区为 1:1 或 1:n 关系。分区推导的详细要求请参考 [CREATE-ASYNC-MATERIALIZED-VIEW](../../../sql-manual/sql-statements/table-and-view/async-materialized-view/CREATE-ASYNC-MATERIALIZED-VIEW#optional-parameters) 和 [异步物化视图 FAQ Q12](../../../query-acceleration/materialized-view/async-materialized-view/faq#q12-error-when-building-a-partition-materialized-view)。
 
 ### 4.2 分区失效与刷新行为
 
@@ -306,7 +306,7 @@ INSERT INTO lineitem VALUES
 (1, 2, 3, 4, '2024-05-01 01:45:05', 5.5, 6.5, 0.1, 8.5, 'o', 'k', '2024-05-01', '2024-05-01', '2024-05-01', 'a', 'b', 'yyyyyyyyy'),    
 (1, 2, 3, 4, '2024-05-15 02:35:05', 5.5, 6.5, 0.15, 8.5, 'o', 'k', '2024-05-15', '2024-05-15', '2024-05-15', 'a', 'b', 'yyyyyyyyy'),     
 (2, 2, 3, 5, '2024-05-25 08:30:06', 5.5, 6.5, 0.2, 8.5, 'o', 'k', '2024-05-25', '2024-05-25', '2024-05-25', 'a', 'b', 'yyyyyyyyy'),     
-(3, 4, 3, 6, '2024-06-02 09:25:07', 5.5, 6.5, 0.3, 8.5, 'o', 'k', '2024-06-02', '2024-06-02', '2024-06-02', 'a', 'b', 'yyyyyyyyy'),
+(3, 4, 3, 6, '2024-06-02 09:25:07', 5.5, 6.5, 0.3, 8.5, 'o', 'k', '2024-06-02', '2024-06-02', '2024-06-02', 'a', 'b', 'yyyyyyyyy');
 
 CREATE TABLE IF NOT EXISTS partsupp (
     ps_partkey INTEGER NOT NULL, 
@@ -554,7 +554,7 @@ GROUP BY
 ```sql
 SELECT 
   l_linestatus, 
-  l_extendedprice * (1 - l_discount)
+  l_extendedprice * (1 - l_discount),
   o_shippriority 
 FROM 
   orders 

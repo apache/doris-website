@@ -161,7 +161,7 @@ Doris provides a cache warmup feature that allows you to proactively pull data f
 | Table data warmup | Pulls the full data of a specified table into the target compute group |
 | Partition data warmup | Pulls data for a specific partition of a specified table into the target compute group |
 
-For detailed usage, see the [WARM-UP SQL documentation](#).
+For detailed usage, see the [WARM-UP SQL documentation](../../sql-manual/sql-statements/cluster-management/storage-management/WARM-UP.md).
 
 ## Cache Clearing
 
@@ -393,7 +393,7 @@ Check whether `clear_file_cache` is set to `true`. If you do not want the cache 
 
 **Q: The first query after a new compute group comes online is very slow.**
 
-Use the **cache warmup** feature to proactively pull hot table or partition data from remote storage into the local cache of the new compute group before queries arrive. For detailed usage, see the [WARM-UP SQL documentation](#).
+Use the **cache warmup** feature to proactively pull hot table or partition data from remote storage into the local cache of the new compute group before queries arrive. For detailed usage, see the [WARM-UP SQL documentation](../../sql-manual/sql-statements/cluster-management/storage-management/WARM-UP.md).
 
 **Q: How do I tell whether the current cache space is full?**
 

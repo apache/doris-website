@@ -46,6 +46,6 @@ Doris 的导入主要涉及数据源、数据格式、导入方式、错误数�
 | [Broker Load](./import-way/broker-load-manual.md)        | 从对象存储、HDFS 等导入                     | csv、json、parquet、orc | 异步     |
 | [INSERT INTO VALUES](./import-way/insert-into-manual.md) | 通过 JDBC 等接口导入 | SQL                     | 同步     |
 | [INSERT INTO SELECT](./import-way/insert-into-manual.md) | 可以导入外部表或者对象存储、HDFS 中的文件      | SQL                     | 同步     |
-| [Routine Load](./import-way/routine-load-manual.md)      | 从 kakfa 实时导入                            | csv、json               | 异步     |
+| [Routine Load](./import-way/routine-load-manual.md)      | 从 Kafka 实时导入                            | csv、json               | 异步     |
 | [MySQL Load](./import-way/mysql-load-manual.md)          | 从本地数据导入                             | csv                     | 同步     |
 | [Group Commit](./group-commit-manual.md)          | 高频小批量导入                             | 根据使用的导入方式而定  | -     |

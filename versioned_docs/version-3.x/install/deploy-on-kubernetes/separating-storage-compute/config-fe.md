@@ -123,7 +123,7 @@ kubectl run mysql-client --image=mysql:5.7 -it --rm --restart=Never --namespace=
 ```
 Within the Pod, connect to the Doris cluster by using the Service name that does not have the "internal" suffix:
 ```yaml
-mysql -uroot -P9030 -hdoriscluster-sample-fe-service
+mysql -uroot -P9030 -hdoriscluster-sample-fe
 ```
 ### NodePort Mode
 To access Doris from outside the Kubernetes cluster, you can use the [NodePort service type](https://kubernetes.io/docs/concepts/services-networking/service/#type-nodeport). NodePort mode supports two configuration methods: static host port assignment and dynamic host port assignment.

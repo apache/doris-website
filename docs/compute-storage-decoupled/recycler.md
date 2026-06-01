@@ -129,7 +129,7 @@ All monitoring metrics can be observed in real time on the **MS dashboard**.
 | `g_bvar_recycler_instance_recycle_total_num_since_started` | `recycler_instance_recycle_total_num_since_started` | instance_id, resource_type | Total number of objects recycled since Recycler started |
 | `g_bvar_recycler_instance_recycle_total_bytes_since_started` | `recycler_instance_recycle_total_bytes_since_started` | instance_id, resource_type | Total amount of data recycled since Recycler started (bytes) |
 | `g_bvar_recycler_instance_running_counter` | `recycler_instance_running_counter` | — | Current number of instances being recycled |
-| `g_bvar_recycler_instance_last_recycle_duration` | `recycler_instance_last_round_recycle_duration` | instance_id | Total time for the most recent recycling round |
+| `g_bvar_recycler_instance_last_round_recycle_duration` | `recycler_instance_last_round_recycle_duration` | instance_id | Total time for the most recent recycling round |
 | `g_bvar_recycler_instance_next_ts` | `recycler_instance_next_ts` | instance_id | Estimated next recycling time based on `recycle_interval_seconds` |
 | `g_bvar_recycler_instance_recycle_st_ts` | `recycler_instance_recycle_start_ts` | instance_id | Start time of the overall recycling process |
 | `g_bvar_recycler_instance_recycle_ed_ts` | `recycler_instance_recycle_end_ts` | instance_id | End time of the overall recycling process |
@@ -258,8 +258,8 @@ The following are commonly used configuration parameters for Recycler:
 
 **Approach**:
 
-1. Enable `enable_recycler_stats_metrics = true` and check the `recycler_instance_last_recycle_duration` and `recycler_instance_recycle_last_success_ts` metrics on the MS dashboard.
-2. If `recycler_instance_last_success_ts` has not been updated for a long time, recycling may be stuck. Investigate the logs.
+1. Enable `enable_recycler_stats_metrics = true` and check the `recycler_instance_last_round_recycle_duration` and `recycler_instance_recycle_last_success_ts` metrics on the MS dashboard.
+2. If `recycler_instance_recycle_last_success_ts` has not been updated for a long time, recycling may be stuck. Investigate the logs.
 
 ### How to Investigate Suspected Data Consistency Issues
 

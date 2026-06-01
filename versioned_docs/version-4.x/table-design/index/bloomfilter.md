@@ -58,6 +58,7 @@ The BloomFilter index can accelerate equality queries (including `=` and `IN`), 
 -   **Query type limitation**: Only effective for `=` and `IN` queries. Not effective for queries such as `!=`, `NOT IN`, `>`, or `<`.
 -   **Data type limitation**: Building a BloomFilter index on columns of types `Tinyint`, `Float`, or `Double` is not supported.
 -   **Cardinality limitation**: The acceleration effect on low-cardinality columns is limited. For example, a "gender" column has only two values, so almost every data block contains all values. The BloomFilter cannot filter data, and the index becomes meaningless.
+-   **Version limitation**: Starting from version 4.1.2, BloomFilter indexes on `CHAR` type columns no longer take effect.
 
 ## Managing Indexes
 

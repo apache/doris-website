@@ -1,8 +1,8 @@
 ---
 {
     "title": "Get WAL size",
-    "language": "zh-CN",
-    "description": "用户可以通过该 HTTP 接口获取指定 BE 的 WAL 文件的数目，若不指定 BE，则默认返回所有 BE 的 WAL 文件的数目。"
+    "language": "en",
+    "description": "Through this HTTP interface, users can get the number of WAL files of a specified BE. If no BE is specified, the number of WAL files of all BEs is returned by default."
 }
 ---
 
@@ -12,21 +12,21 @@
 
 ## Description
 
-用户可以通过该 HTTP 接口获取指定 BE 的 WAL 文件的数目，若不指定 BE，则默认返回所有 BE 的 WAL 文件的数目。
+Through this HTTP interface, users can get the number of WAL files of a specified BE. If no BE is specified, the number of WAL files of all BEs is returned by default.
 
 ## Path parameters
 
-无
+None
 
 ## Query parameters
 
 * `host_ports`
 
-    BE 的 ip 和 http 端口。
+    The IP and HTTP port of the BE.
 
 ## Request body
 
-无
+None
 
 ## Response
 
@@ -41,7 +41,7 @@
     
 ## Examples
 
-1. 获取所有 BE 的 WAL 文件的数目。
+1. Get the number of WAL files of all BEs.
 
     ```
     curl -u root: "127.0.0.1:8038/api/get_wal_size"
@@ -55,12 +55,12 @@
     }
     ```
     
-    在返回的结果中，BE 后跟的数字即为对应 BE 的 WAL 文件数目。
+    In the returned result, the number following each BE is the WAL file count of that BE.
 
-2. 获取指定 BE 的 WAL 文件的数目。
+2. Get the number of WAL files of a specified BE.
 
     ```
-    curl -u root: "127.0.0.1:8038/api/get_wal_size?192.168.10.11:9050"
+    curl -u root: "127.0.0.1:8038/api/get_wal_size?host_ports=192.168.10.11:9050"
     
     Response:
     {
@@ -71,4 +71,4 @@
     }
     ```
     
-    在返回的结果中，BE 后跟的数字即为对应 BE 的 WAL 文件数目。
+    In the returned result, the number following each BE is the WAL file count of that BE.

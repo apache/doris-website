@@ -6,8 +6,6 @@
 }
 ---
 
-## ipv4_cidr_to_range
-
 ## Description
 Calculates the minimum and maximum IPv4 addresses for a network segment based on an IPv4 address and CIDR prefix length, returning a struct containing two IPv4 addresses.
 
@@ -38,21 +36,21 @@ Return Value Meaning:
 Calculate address range for /24 network segment.
 ```sql
 SELECT ipv4_cidr_to_range(INET_ATON('192.168.1.1'), 24) as range;
-+----------------------------------------+
-| range                                  |
-+----------------------------------------+
++------------------------------------------------+
+| range                                          |
++------------------------------------------------+
 | {"min": "192.168.1.0", "max": "192.168.1.255"} |
-+----------------------------------------+
++------------------------------------------------+
 ```
 
 Calculate address range for /16 network segment.
 ```sql
 SELECT ipv4_cidr_to_range(INET_ATON('10.0.0.1'), 16) as range;
-+----------------------------------------+
-| range                                  |
-+----------------------------------------+
++----------------------------------------------+
+| range                                        |
++----------------------------------------------+
 | {"min": "10.0.0.0", "max": "10.255.255.255"} |
-+----------------------------------------+
++----------------------------------------------+
 ```
 
 Access specific fields in the struct.
@@ -60,11 +58,11 @@ Access specific fields in the struct.
 SELECT 
   ipv4_cidr_to_range(INET_ATON('172.16.1.1'), 24).min as min_ip,
   ipv4_cidr_to_range(INET_ATON('172.16.1.1'), 24).max as max_ip;
-+-------------+-------------+
-| min_ip      | max_ip      |
-+-------------+-------------+
-| 172.16.1.0  | 172.16.1.255 |
-+-------------+-------------+
++------------+--------------+
+| min_ip     | max_ip       |
++------------+--------------+
+| 172.16.1.0 | 172.16.1.255 |
++------------+--------------+
 ```
 
 CIDR prefix out of range throws an exception.

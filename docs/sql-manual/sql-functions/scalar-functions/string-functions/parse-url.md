@@ -2,7 +2,7 @@
 {
     "title": "PARSE_URL",
     "language": "en",
-    "description": "The PARSEURL function is mainly used to parse URL strings and extract various components from them, such as protocols, hosts, paths, query parameters,"
+    "description": "The PARSE_URL function is mainly used to parse URL strings and extract various components from them, such as protocols, hosts, paths, query parameters,"
 }
 ---
 
@@ -56,6 +56,6 @@ SELECT parse_url ('https://doris.apache.org/', null);
 +----------------------------------------------+
 ```
 
-## 相关命令
+## See Also
 
-如果想获取 QUERY 中的特定 Parameter，可使用[extract_url_parameter](./extract-url-parameter.md)。
+If you want to extract a specific parameter from the QUERY, use [extract_url_parameter](./extract-url-parameter.md).

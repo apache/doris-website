@@ -13,8 +13,6 @@
     --kf-coral: #FF5C39;
     --kf-ink: #0F1A14;
     --kf-ink-soft: #1B2A22;
-    --kf-mono: 'JetBrains Mono', 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
-    --kf-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     --kf-container: 1320px;
     --kf-gutter: 56px;
 
@@ -22,7 +20,7 @@
     min-height: 100vh;
     background: var(--kf-green-dark);
     color: var(--kf-cream-light);
-    font-family: var(--kf-sans);
+    font-family: var(--font-family-base);
     overflow-x: hidden;
 
     * {
@@ -41,7 +39,7 @@
     display: inline-flex;
     align-items: center;
     gap: 12px;
-    font-family: var(--kf-mono);
+    font-family: var(--font-mono);
     font-size: 12px;
     font-weight: 500;
     letter-spacing: 0.14em;
@@ -82,7 +80,7 @@
 }
 
 .kf-next__section-title {
-    font-family: var(--kf-mono);
+    font-family: var(--font-mono);
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: -0.035em;
@@ -234,7 +232,7 @@
 }
 
 .kf-next__hero-title {
-    font-family: var(--kf-mono);
+    font-family: var(--font-mono);
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: -0.035em;
@@ -268,7 +266,7 @@
     display: inline-flex;
     align-items: center;
     gap: 14px;
-    font-family: var(--kf-mono);
+    font-family: var(--font-mono);
     font-size: 11px;
     font-weight: 500;
     letter-spacing: 0.18em;
@@ -342,7 +340,7 @@
     border: 0;
     outline: none;
     color: var(--kf-cream-light);
-    font-family: var(--kf-mono);
+    font-family: var(--font-mono);
     font-size: 16px;
     letter-spacing: 0.01em;
 }
@@ -383,7 +381,7 @@
     display: inline-flex;
     align-items: baseline;
     gap: 10px;
-    font-family: var(--kf-mono);
+    font-family: var(--font-mono);
     font-size: 12px;
     font-weight: 500;
     letter-spacing: 0.18em;
@@ -499,7 +497,7 @@
     border: 1px solid rgba(245, 239, 228, 0.24);
     background: rgba(15, 26, 20, 0.24);
     color: var(--kf-cream-light);
-    font-family: var(--kf-mono);
+    font-family: var(--font-mono);
     font-size: 10px;
     font-weight: 700;
     letter-spacing: 0.12em;
@@ -511,7 +509,7 @@
 
 .kf-next__tile-name {
     display: block;
-    font-family: var(--kf-mono);
+    font-family: var(--font-mono);
     font-weight: 700;
     font-size: clamp(13px, 1.05vw, 16px);
     line-height: 1.15;
@@ -563,7 +561,7 @@
 
 .kf-next__tile-tags {
     flex: 1 1 auto;
-    font-family: var(--kf-mono);
+    font-family: var(--font-mono);
     font-size: clamp(10px, 0.8vw, 11px);
     letter-spacing: 0.06em;
     word-spacing: -0.08em;
@@ -580,7 +578,7 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    font-family: var(--kf-mono);
+    font-family: var(--font-mono);
     font-size: 13px;
     background: rgba(15, 26, 20, 0.08);
     transition:

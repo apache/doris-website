@@ -35,8 +35,8 @@ The Doris Unique Key Model provides two implementations, compared as follows:
 
 | Implementation | Default since version | Merge timing | Query performance | Predicate pushdown | Applicable scenarios |
 | --- | --- | --- | --- | --- | --- |
-| Merge-on-write | Default since 1.2 | Merged immediately at write time | High | Supported | Most scenarios, balancing query and write performance |
-| Merge-on-read | Default before 1.2 | Merged at query or compaction time | Lower | Not supported | Write-heavy, read-light scenarios |
+| Merge-on-write | Default since 2.1 (introduced in 1.2) | Merged immediately at write time | High | Supported | Most scenarios, balancing query and write performance |
+| Merge-on-read | Default before 2.1 | Merged at query or compaction time | Lower | Not supported | Write-heavy, read-light scenarios |
 
 - **Merge-on-write**: Records with the same Key are merged immediately at write time, ensuring that the storage always holds the latest data. This mode balances query and write performance, avoids merging data across multiple versions, and supports predicate pushdown to the storage layer. **This mode is recommended for most scenarios.**
 - **Merge-on-read**: Data is not merged at write time but is appended incrementally, with multiple versions retained inside Doris. At query or compaction time, versions with the same Key are merged. This mode suits write-heavy, read-light scenarios, but queries must merge multiple versions and predicates cannot be pushed down, which may affect query speed.
@@ -87,12 +87,12 @@ Before Doris 2.1, merge-on-read was enabled by default. Starting from 2.1, you m
 CREATE TABLE IF NOT EXISTS example_tbl_unique
 (
     user_id         LARGEINT        NOT NULL,
-    username        VARCHAR(50)     NOT NULL,
+    user_name       VARCHAR(50)     NOT NULL,
     city            VARCHAR(20),
     age             SMALLINT,
     sex             TINYINT
 )
-UNIQUE KEY(user_id, username)
+UNIQUE KEY(user_id, user_name)
 DISTRIBUTED BY HASH(user_id) BUCKETS 10
 PROPERTIES (
     "enable_unique_key_merge_on_write" = "false"
@@ -122,14 +122,14 @@ INSERT INTO example_tbl_unique VALUES
 
 -- Query the updated data
 SELECT * FROM example_tbl_unique;
-+---------+----------+------+------+------+
-| user_id | username | city | age  | sex  |
-+---------+----------+------+------+------+
-| 101     | Tom      | BJ   |   27 |    1 |
-| 102     | Jason    | SH   |   28 |    1 |
-| 104     | Olivia   | SZ   |   22 |    2 |
-| 103     | Juice    | SH   |   20 |    2 |
-+---------+----------+------+------+------+
++---------+-----------+------+------+------+
+| user_id | user_name | city | age  | sex  |
++---------+-----------+------+------+------+
+| 101     | Tom       | BJ   |   27 |    1 |
+| 102     | Jason     | SH   |   28 |    1 |
+| 104     | Olivia    | SZ   |   22 |    2 |
+| 103     | Juice     | SH   |   20 |    2 |
++---------+-----------+------+------+------+
 ```
 
 ## Notes

@@ -30,7 +30,7 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
     'type'='hms', -- required
     'hive.metastore.type' = '<hive_metastore_type>', -- optional
     'hive.version' = '<hive_version>', -- optional
-    'fs.defaultFS' = '<fs_defaultfs>', -- optional
+    'fs.defaultFS' = '<fs_defaultfs>', -- 写入必填，只读时可选
     {MetaStoreProperties},
     {StorageProperties},
     {HiveProperties},
@@ -272,7 +272,7 @@ ORDER BY entry_name;
                 'hive.metastore.client.principal' = 'hive/presto-master.docker.cluster@LABS.TERADATA.COM',
                 'hive.metastore.client.keytab' = '/keytabs/hive-presto-master.keytab',
                 'hive.metastore.service.principal' = 'hive/hadoop-master@LABS.TERADATA.COM',
-                'hive.metastore.sasl.enabled ' = 'true',
+                'hive.metastore.sasl.enabled' = 'true',
                 'hive.metastore.authentication.type' = 'kerberos',
                 'fs.defaultFS' = 'hdfs://127.0.0.1:8520',
                 'hadoop.security.auth_to_local' = 'RULE:[2:\$1@\$0](.*@LABS.TERADATA.COM)s/@.*//
@@ -343,7 +343,7 @@ ORDER BY entry_name;
                 'hive.metastore.client.principal' = 'hive/presto-master.docker.cluster@LABS.TERADATA.COM',
                 'hive.metastore.client.keytab' = '/keytabs/hive-presto-master.keytab',
                 'hive.metastore.service.principal' = 'hive/hadoop-master@LABS.TERADATA.COM',
-                'hive.metastore.sasl.enabled ' = 'true',
+                'hive.metastore.sasl.enabled' = 'true',
                 'hive.metastore.authentication.type' = 'kerberos',
                 'hadoop.security.auth_to_local' = 'RULE:[2:\$1@\$0](.*@LABS.TERADATA.COM)s/@.*//
                 RULE:[2:\$1@\$0](.*@OTHERLABS.TERADATA.COM)s/@.*//
@@ -376,7 +376,7 @@ ORDER BY entry_name;
                 'hive.metastore.client.principal' = 'hive/presto-master.docker.cluster@LABS.TERADATA.COM',
                 'hive.metastore.client.keytab' = '/keytabs/hive-presto-master.keytab',
                 'hive.metastore.service.principal' = 'hive/hadoop-master@LABS.TERADATA.COM',
-                'hive.metastore.sasl.enabled ' = 'true',
+                'hive.metastore.sasl.enabled' = 'true',
                 'hive.metastore.authentication.type' = 'kerberos',
                 'hadoop.security.auth_to_local' = 'RULE:[2:\$1@\$0](.*@LABS.TERADATA.COM)s/@.*//
                 RULE:[2:\$1@\$0](.*@OTHERLABS.TERADATA.COM)s/@.*//
@@ -498,7 +498,7 @@ ORDER BY entry_name;
             CREATE CATALOG test_two_hive_kerberos PROPERTIES (
                 'type' = 'hms',
                 'hive.metastore.uris' = 'thrift://127.0.0.1:9583',
-                'hive.metastore.sasl.enabled ' = 'true',
+                'hive.metastore.sasl.enabled' = 'true',
                 'hive.metastore.kerberos.principal' = 'hive/hadoop-master@LABS.TERADATA.COM',
                 'fs.defaultFS' = 'hdfs://127.0.0.1:8520',
                 'hadoop.kerberos.min.seconds.before.relogin' = '5',

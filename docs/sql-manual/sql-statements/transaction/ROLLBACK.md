@@ -10,7 +10,7 @@
 
 Rollback an explicit transaction. It is used in pairs with [BEGIN](./BEGIN).
 
-## Syntax（Syntax）
+## Syntax
 
 ```sql
 ROLLBACK

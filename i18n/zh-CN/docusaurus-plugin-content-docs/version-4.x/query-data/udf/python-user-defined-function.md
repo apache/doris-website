@@ -626,7 +626,7 @@ def py_mixed_vector_add_impl(x: pd.Series, y: int):
 $$;
 
 SELECT
-	id
+	id,
 	a,
 	b,
 	py_mixed_vector_add(a, b) AS vector_val

@@ -22,6 +22,8 @@
 
 This document describes how to build a complete monitoring system for an Apache Doris cluster: use Prometheus to collect the metrics exposed by FE and BE, use Grafana with the official dashboard template for visualization, and reserve an Alertmanager configuration entry for later alert integration.
 
+> Note: If you deploy a Doris compute-storage decoupled cluster on Kubernetes, see [Deploy Prometheus and Grafana](../../install/deploy-on-kubernetes/separating-storage-compute/install-prometheus-and-grafana) for the monitoring setup. The monitoring architecture, metric format, and dashboard descriptions in this document also apply.
+
 <!-- Knowledge type: Procedure / Deployment guide -->
 <!-- Applicable scenarios: Setting up monitoring after cluster deployment / Troubleshooting and performance observation -->
 
@@ -43,11 +45,12 @@ This document describes how to build a complete monitoring system for an Apache 
 
 ## Dashboard Template Download
 
-Doris provides an official Grafana dashboard template that you can import directly. The template is updated periodically. For the update procedure, see [Dashboard Update](#dashboard-update).
+Doris provides two Grafana dashboard templates. Pick the one that matches your cluster's storage mode and import it directly. The templates are updated periodically. For the update procedure, see [Dashboard Update](#dashboard-update).
 
-| Doris Version | Dashboard Version                                                           |
-| ------------- | --------------------------------------------------------------------------- |
-| 1.2.x         | [revision 5](https://grafana.com/api/dashboards/9734/revisions/5/download)  |
+| Storage Mode | Dashboard Template | Notes |
+| --- | --- | --- |
+| Shared-nothing | [doris-grafana-dashboard.json](https://doris.apache.org/files/doris-grafana-dashboard.json) | Traditional FE / BE deployment with local storage; panels cover FE and BE components. |
+| Compute-storage decoupled | [doris-grafana-dashboard-cloud.json](https://doris.apache.org/files/doris-grafana-dashboard-cloud.json) | Panels cover FE, BE / Compute Group, and Meta Service; **applies to both Kubernetes and non-Kubernetes deployments of compute-storage decoupled clusters**. |
 
 Contributions of better dashboards from the community are welcome.
 

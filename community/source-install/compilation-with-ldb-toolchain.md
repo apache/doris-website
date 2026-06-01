@@ -81,7 +81,7 @@ Project home page: <https://github.com/amosbird/ldb_toolchain_gen>
 Run the script to generate the toolchain:
 
 ```bash
-sh ldb_toolchain_gen.sh /path/to/ldb_toolchain/
+bash ldb_toolchain_gen.sh /path/to/ldb_toolchain/
 ```
 
 Here, `/path/to/ldb_toolchain/` is the target installation directory. After the script runs successfully, the following structure is generated in that directory:
@@ -101,7 +101,7 @@ Here, `/path/to/ldb_toolchain/` is the target installation directory. After the 
 | ---- | -------- | -------- |
 | JDK 8 | 1.8.0_391 | [jdk-8u391-linux-x64.tar.gz](https://doris-thirdparty-1308700295.cos.ap-beijing.myqcloud.com/tools/jdk-8u391-linux-x64.tar.gz) |
 | JDK 17 | 17.0.10 | [jdk-17.0.10_linux-x64](https://download.oracle.com/java/17/archive/jdk-17.0.10_linux-x64_bin.tar.gz) |
-| Maven | 3.9.9 | [apache-maven-3.9.9-bin.tar.gz](https://dlcdn.apache.org/maven/maven-3/3.9.9/binaries/apache-maven-3.9.9-bin.tar.gz) |
+| Maven | 3.9.9 | [apache-maven-3.9.9-bin.tar.gz](https://archive.apache.org/dist/maven/maven-3/3.9.9/binaries/apache-maven-3.9.9-bin.tar.gz) |
 | Node | v12.13.0 | [node-v12.13.0-linux-x64.tar.gz](https://doris-thirdparty-repo.bj.bcebos.com/thirdparty/node-v12.13.0-linux-x64.tar.gz) |
 
 JDK version selection rules:

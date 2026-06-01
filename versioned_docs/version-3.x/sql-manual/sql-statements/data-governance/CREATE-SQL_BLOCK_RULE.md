@@ -83,7 +83,7 @@ The user executing this SQL command must have at least the following permissions
 
    ```sql
    mysql> select * from order_analysis;
-   ERROR 1064 (HY000): errCode = 2, detailMessage = sql match regex sql block rule: order_analysis_rule
+   ERROR 1064 (HY000): errCode = 2, detailMessage = sql match regex sql block rule: test_rule
    ```
 
 2. Create a rule that prevents scanning more than 30 partitions of the same table and restricts the query data volume to no more than 10 billion rows

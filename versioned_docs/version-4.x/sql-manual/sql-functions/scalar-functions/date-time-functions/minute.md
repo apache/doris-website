@@ -50,12 +50,11 @@ SELECT MINUTE('2023-05-01 10:05:30.123456') AS result;
 |      5 |
 +--------+
 
--- Does not automatically convert string to time type, returns NULL
 SELECT MINUTE('14:25:45') AS result;
 +--------+
 | result |
 +--------+
-|   NULL |
+|     25 |
 +--------+
 
 -- Extract minute from DATE type (default time 00:00:00)

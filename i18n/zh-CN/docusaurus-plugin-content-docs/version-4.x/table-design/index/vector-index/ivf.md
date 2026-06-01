@@ -396,7 +396,7 @@ Doris 的 ANN 索引基于 Meta 开源的 [faiss](https://github.com/facebookres
 
 | dim | rows | 预估内存 |
 | --- | --- | --- |
-| 128 | 1M | 496 MB |
+| 128 | 1M | 500 MB |
 | 768 | 1M | 2.9 GB |
 
 为保证查询性能，BE 必须有足够的内存容纳全部索引；否则索引文件频繁 IO 会导致查询性能大幅衰减。

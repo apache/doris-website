@@ -1,13 +1,13 @@
 ---
 {
-    "title": "PostgreSQL 库级同步",
+    "title": "PostgreSQL CDC 自动建表同步",
     "language": "zh-CN",
-    "sidebar_label": "库级同步",
+    "sidebar_label": "自动建表同步",
     "description": "通过 Streaming Job 将 PostgreSQL 整库表的全量与增量数据持续同步到 Doris，首次同步自动建表。",
     "keywords": [
         "PostgreSQL 同步",
         "PostgreSQL CDC",
-        "库级同步",
+        "自动建表同步",
         "整库同步",
         "Streaming Job",
         "Flink CDC",
@@ -22,9 +22,9 @@
 <!-- 知识类型: 操作步骤 -->
 <!-- 适用场景: 将 PostgreSQL 整库数据持续同步到 Doris -->
 
-库级同步通过原生 `FROM POSTGRES (...) TO DATABASE (...)` DDL 实现，**以库为同步单位，目标是一个 Doris database 容器**。可以通过 `include_tables` 控制同步一张、多张或全部表，首次同步时 Doris 会自动创建下游主键表，并保持主键与上游一致。该方式适用于不需要对数据做 SQL 加工、希望下游表结构自动跟随上游的镜像复制场景。
+自动建表同步通过原生 `FROM POSTGRES (...) TO DATABASE (...)` DDL 实现，**目标是一个 Doris database 容器，由 Doris 自动创建下游表**。可以通过 `include_tables` 控制同步一张、多张或全部表，首次同步时 Doris 会自动创建下游主键表，并保持主键与上游一致。该方式适用于不需要对数据做 SQL 加工、希望下游表结构自动跟随上游的镜像复制场景。
 
-通过集成 [Flink CDC](https://github.com/apache/flink-cdc) 能力，Doris 从 PostgreSQL 读取变更日志，将一组表的全量 + 增量数据通过 Stream Load 持续写入 Doris。若需要在同步过程中做列映射、过滤或数据转换，请参考 [PostgreSQL 表级同步](./continuous-load-postgresql-table.md)。
+通过集成 [Flink CDC](https://github.com/apache/flink-cdc) 能力，Doris 从 PostgreSQL 读取变更日志，将一组表的全量 + 增量数据通过 Stream Load 持续写入 Doris。若需要在同步过程中做列映射、过滤或数据转换，请参考 [PostgreSQL CDC SQL 映射同步](./continuous-load-postgresql-table.md)。
 
 ### 适用场景
 
@@ -44,7 +44,7 @@
 
 <!-- 知识类型: 操作步骤 -->
 
-按以下步骤即可完成一次 PostgreSQL 库级同步作业的创建和状态检查。
+按以下步骤即可完成一次 PostgreSQL 自动建表同步作业的创建和状态检查。
 
 ### 步骤 1：创建导入作业
 
@@ -115,7 +115,7 @@ PostgreSQL 源端参数用于配置 JDBC 连接、同步范围以及全量切片
 
 ### 导入命令语法
 
-创建库级同步作业语法如下：
+创建自动建表同步作业语法如下：
 
 ```sql
 CREATE JOB <job_name>
@@ -144,10 +144,10 @@ TO DATABASE <target_db> (
 
 <!-- 知识类型: 常见问题 -->
 
-**Q1：库级同步与表级同步如何选择？**
+**Q1：自动建表同步与 SQL 映射同步如何选择？**
 
--   需要镜像复制、自动建表、且无需列裁剪或转换时，使用库级同步。
--   需要在同步链路中做列映射、过滤或数据转换时，使用 [PostgreSQL 表级同步](./continuous-load-postgresql-table.md)。
+-   需要镜像复制、自动建表、且无需列裁剪或转换时，使用自动建表同步。
+-   需要在同步链路中做列映射、过滤或数据转换时，使用 [PostgreSQL CDC SQL 映射同步](./continuous-load-postgresql-table.md)。
 
 **Q2：是否支持非主键表同步？**
 
@@ -167,7 +167,7 @@ TO DATABASE <target_db> (
 
 ## 相关文档
 
--   [PostgreSQL 表级同步](./continuous-load-postgresql-table.md)
+-   [PostgreSQL CDC SQL 映射同步](./continuous-load-postgresql-table.md)
 -   [持续导入概览](./continuous-load-overview.md)
 -   [CREATE STREAMING JOB](../../../../sql-manual/sql-statements/job/CREATE-STREAMING-JOB.md)
 -   [JDBC Catalog 概述](../../../../lakehouse/catalogs/jdbc-catalog-overview.md)

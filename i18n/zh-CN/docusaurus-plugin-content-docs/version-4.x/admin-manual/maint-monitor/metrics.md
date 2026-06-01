@@ -146,10 +146,10 @@ curl http://be_host:webserver_port/metrics?type=json
 |  | {name="schema-change-pool"} | Num | Master FE 用于调度 schema change 作业的线程池 |  |  |
 |  | {name="thrift-server-pool"} | Num | FE 端 ThriftServer 的工作线程池。对应 fe.conf 中 `rpc_port`，用于和 BE 进行交互 |  |  |
 | `doris_fe_txn_counter` |  | Num | 统计各个状态的导入事务的数量的累计值 | 可以观测导入事务的执行情况 | P0 |
-|  | {type="begin"} | Num | 提交的事务数量 |  |  |
+|  | {type="begin"} | Num | 开始的事务数量 |  |  |
 |  | {type="failed"} | Num | 失败的事务数量 |  |  |
 |  | {type="reject"} | Num | 被拒绝的事务数量（如当前运行事务数大于阈值，则新的事务会被拒绝） |  |  |
-|  | {type="succes"} | Num | 成功的事务数量 |  |  |
+|  | {type="success"} | Num | 成功的事务数量 |  |  |
 | `doris_fe_txn_status` |  | Num | 统计当前处于各个状态的导入事务的数量。如 {type="committed"} 表示处于 committed 状态的事务的数量 | 可以观测各个状态下导入事务的数量，来判断是否有堆积 | P0 |
 | `doris_fe_query_instance_num` |  | Num | 指定用户当前正在请求的 fragment instance 数目。如 {user="test_u"} 表示用户 test_u 当前正在请求的 instance 数目 | 该数值可以用于观测指定用户是否占用过多查询资源 | P0 |
 | `doris_fe_query_instance_begin` |  | Num | 指定用户请求开始的 fragment instance 数目。如 {user="test_u"} 表示用户 test_u 开始请求的 instance 数目 | 该数值可以用于观测指定用户是否提交了过多查询 | P0 |

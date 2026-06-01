@@ -2,13 +2,13 @@
 {
     "title": "LOG10",
     "language": "en",
-    "description": "Returns the natural logarithm of x to base 10."
+    "description": "Returns the logarithm of x to base 10."
 }
 ---
 
 ## Description
 
-Returns the natural logarithm of `x` to base `10`.
+Returns the logarithm of `x` to base `10`.
 
 ## Alias
 

@@ -93,7 +93,7 @@ SELECT TIMESTAMPADD(YEAR,NULL, '2023-12-31 23:59:59') AS result;
 | NULL   |
 +--------+
 
--- Unit not supported, invalid
+-- Calculation result exceeds datetime range
 SELECT TIMESTAMPADD(YEAR,10000, '2023-12-31 23:59:59') AS result;
 ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.3)[E-218]Operation years_add of 2023-12-31 23:59:59, 10000 out of range
 ```

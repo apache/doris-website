@@ -255,6 +255,10 @@ ACTIONS(cancel_query)
 PROPERTIES('workload_group'='normal');
 ```
 
+:::caution 存算分离模式必须使用完整限定形式
+上例中的 `'workload_group'='normal'` 仅适用于**存算一体模式**。**存算分离模式（Cloud 模式）下必须使用 `<compute_group>.<workload_group>` 完整限定形式**，例如 `'workload_group'='compute_group_a.normal'`，否则会报错：`workload_group must be '<compute_group>.<workload_group>' in cloud mode`。详见 [CREATE WORKLOAD POLICY](../../sql-manual/sql-statements/cluster-management/compute-management/CREATE-WORKLOAD-POLICY)。
+:::
+
 ### 使用示例
 
 <!-- 知识类型: 操作步骤 -->

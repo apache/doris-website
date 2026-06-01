@@ -10,7 +10,7 @@
 
 This statement is used to modify the comment of an existing table. The operation is synchronous, and the command returns to indicate completion.
 
-grammar：
+## Syntax
 
 ```sql
 ALTER TABLE [database.]table alter_clause;
@@ -18,7 +18,7 @@ ALTER TABLE [database.]table alter_clause;
 
 1. Modify table comment
 
-grammar：
+## Syntax
 
 ```sql
 MODIFY COMMENT "new table comment";
@@ -26,7 +26,7 @@ MODIFY COMMENT "new table comment";
 
 2. Modify column comment
 
-grammar：
+## Syntax
 
 ```sql
 MODIFY COLUMN col1 COMMENT "new column comment";

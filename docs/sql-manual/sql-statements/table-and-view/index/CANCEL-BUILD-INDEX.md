@@ -17,7 +17,7 @@ Cancel background tasks for index building.
 CANCEL BUILD INDEX ON <table_name> [ job_list ]
 ```
 
-其中：
+Where:
 
 ```sql
 job_list

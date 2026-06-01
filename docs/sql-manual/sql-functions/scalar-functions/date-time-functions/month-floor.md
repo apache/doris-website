@@ -136,8 +136,8 @@ SELECT MONTH_FLOOR('2025-12-31 23:59:59+05:00', '2025-12-15 00:00:00.123');
 +---------------------------------------------------------------------+
 
 -- Period is non-positive, returns error
-SELECT MINUTE_FLOOR('2023-07-13 22:28:18', -5) AS result;
-ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.3)[E-218]Operation minute_floor of 2023-07-13 22:28:18, -5 out of range
+SELECT MONTH_FLOOR('2023-07-13 22:28:18', -5) AS result;
+ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.3)[E-218]Operation month_floor of 2023-07-13 22:28:18, -5 out of range
 
 -- Any parameter is NULL, returns NULL
 SELECT MONTH_FLOOR(NULL, 5), MONTH_FLOOR('2023-07-13 22:28:18', NULL) AS result;

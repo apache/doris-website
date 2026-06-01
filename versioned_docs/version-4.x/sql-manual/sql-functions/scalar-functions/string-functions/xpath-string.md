@@ -83,7 +83,7 @@ SELECT xpath_string('<a><b>1</b><b>2</b></a>', '/a/b[2]');
 +----------------------------------------------------+
 ```
 
-5. Handling CDATA and comments
+5. NULL input
 ```sql
 SELECT xpath_string(NULL, '/a');
 ```
@@ -93,6 +93,48 @@ SELECT xpath_string(NULL, '/a');
 +--------------------------+
 | NULL                     |
 +--------------------------+
+```
+
+6. CDATA sections — the CDATA payload is returned as plain text
+```sql
+SELECT xpath_string('<a><![CDATA[123]]></a>', '/a');
+```
+```text
++----------------------------------------------+
+| xpath_string('<a><![CDATA[123]]></a>', '/a') |
++----------------------------------------------+
+| 123                                          |
++----------------------------------------------+
+```
+
+7. XML comments are skipped
+```sql
+SELECT xpath_string('<a><!-- comment -->123</a>', '/a');
+```
+```text
++--------------------------------------------------+
+| xpath_string('<a><!-- comment -->123</a>', '/a') |
++--------------------------------------------------+
+| 123                                              |
++--------------------------------------------------+
+```
+
+8. Path does not match any node — returns empty string
+```sql
+SELECT xpath_string('<a>123</a>', '/b');
+```
+```text
++----------------------------------+
+| xpath_string('<a>123</a>', '/b') |
++----------------------------------+
+|                                  |
++----------------------------------+
+```
+
+9. Malformed XML — function raises an error
+```sql
+SELECT xpath_string('<a><!-- comment -->123/a>', '/a');
+ERROR 1105 (HY000): errCode = 2, detailMessage = [INVALID_ARGUMENT]Function xpath_string failed to parse XML string: Start-end tags mismatch
 ```
 
 ### Keywords

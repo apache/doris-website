@@ -59,7 +59,7 @@
 在 `fe.conf` 中配置，例如：
 
 ```shell
-restore_reset_index_id = true
+restore_reset_index_id = false
 ```
 
 | 名称 | 说明 | 默认值 | 版本 |

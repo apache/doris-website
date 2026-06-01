@@ -7,7 +7,7 @@
 ---
 
 ## Description
-~
+
 Performs a regular expression match on the string str, returning true if the match succeeds, otherwise false. pattern is the regular expression pattern.
 It should be noted that when handling character set matching, Utf-8 standard character classes should be used. This ensures that functions can correctly identify and process various characters from different languages.
 

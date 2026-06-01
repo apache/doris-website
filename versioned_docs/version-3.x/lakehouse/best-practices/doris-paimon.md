@@ -140,7 +140,7 @@ Flink SQL> select * from customer order by c_custkey limit 4;
 As shown below, a Catalog named `paimon` has been created in the Doris cluster (can be viewed using SHOW CATALOGS). The following is the statement for creating this Catalog:
 
 ```
--- 已创建，无需执行
+-- Already created, no need to run
 CREATE CATALOG `paimon` PROPERTIES (
     "type" = "paimon",
     "warehouse" = "s3://warehouse/wh/",

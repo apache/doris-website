@@ -190,7 +190,7 @@ spec:
         namespace: ${namespace}               # Required: Namespace where the ConfigMap resides
 ```
 
-To obtain the ConfigMap, run `kubectl get configmap` (see [Deploy FoundationDB - Get the ConfigMap with access information](install-fdb.md#get-the-configmap-containing-foundationdb-access-information) for details).
+To obtain the ConfigMap, run `kubectl get configmap` (see [Deploy FoundationDB - Get the ConfigMap with access information](install-fdb.md#get-the-configmap-that-contains-foundationdb-access-information) for details).
 
 Parameter description:
 

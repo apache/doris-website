@@ -248,7 +248,7 @@ Load Result: {
 
     **如需导入多个文件，推荐使用 `source_file` 方式。**
 
-2. **`workers`**：默认值为 CPU 核数。在 CPU 核数较多的场景（如 96 核）会产生过多并发，需要降低该值，**一般推荐设置为 `8`**。
+2. **`workers`**：默认值为 `0`，即自动模式（工具会根据导入数据大小、`disk_throughput` 与 `streamload_throughput` 自动推算，常见结果为 1、2、4 或 8）。也可手动设置，性能好的集群可适当调大，**最好不超过 10**。**一般手动设置为 `8`**。
 
 3. **`max_byte_per_task`**：可设置较大值以减少导入版本数。但如遇到 `body exceed max size` 错误且不想调整 `streaming_load_max_mb`（需重启 BE），或遇到 `-238 TOO MANY SEGMENT` 错误，可临时调小该值。**一般使用默认即可。**
 

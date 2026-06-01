@@ -197,6 +197,7 @@ Specify the `.zip` package path through the `file` parameter. Two methods are su
 - When using remote download, ensure that all BE nodes can access the URL.
 - The first call downloads the file, which may introduce some latency.
 - The file is cached, so later calls do not download it again.
+- When using `file://`, Doris reads the package on the FE node during `CREATE FUNCTION` to compute the checksum, and reads the package on BE nodes during execution. Therefore, the same `.zip` file must exist at the same absolute path on all FE and BE nodes, and the file content must be identical. If the file exists only on BE nodes, `CREATE FUNCTION` fails. If the file content differs between FE and BE nodes, execution fails with a checksum mismatch.
 :::
 
 **Step 4: Set the `symbol` parameter**
@@ -626,7 +627,7 @@ def py_mixed_vector_add_impl(x: pd.Series, y: int):
 $$;
 
 SELECT
-	id
+	id,
 	a,
 	b,
 	py_mixed_vector_add(a, b) AS vector_val
@@ -1389,6 +1390,7 @@ Specify the `.zip` package path through the `file` parameter:
 > - When using remote download, ensure that all BE nodes can access the URL.
 > - The first call downloads the file, which may introduce some latency.
 > - The file is cached, so later calls do not download it again.
+> - When using `file://`, Doris reads the package on the FE node during `CREATE AGGREGATE FUNCTION` to compute the checksum, and reads the package on BE nodes during execution. The same `.zip` file must exist at the same absolute path on all FE and BE nodes, and the file content must be identical. If the file exists only on BE nodes, function creation fails. If the file content differs between FE and BE nodes, execution fails with a checksum mismatch.
 
 **Step 4: Set the `symbol` parameter**
 
@@ -2340,6 +2342,7 @@ Specify the `.zip` package path through the `file` parameter:
 - When using remote download, ensure that all BE nodes can access the URL.
 - The first call downloads the file, which may introduce some latency.
 - The file is cached, so later calls do not download it again.
+- When using `file://`, Doris reads the package on the FE node during `CREATE TABLES FUNCTION` to compute the checksum, and reads the package on BE nodes during execution. Therefore, the same `.zip` file must exist at the same absolute path on all FE and BE nodes, and the file content must be identical. If the file exists only on BE nodes, function creation fails. If the file content differs between FE and BE nodes, execution fails with a checksum mismatch.
 :::
 
 **Step 4: Set the `symbol` parameter**

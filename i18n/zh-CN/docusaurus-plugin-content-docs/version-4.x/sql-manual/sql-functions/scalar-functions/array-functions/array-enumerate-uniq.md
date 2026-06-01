@@ -70,13 +70,17 @@ SELECT array_enumerate_uniq([]);
 +----------------------+
 ```
 
-NULL 数组返回 NULL
+NULL 数组返回 NULL（单参数和多参数形式均如此）：
+```sql
 SELECT array_enumerate_uniq(NULL), array_enumerate_uniq(NULL, NULL);
+```
+```text
 +----------------------------+----------------------------------+
 | array_enumerate_uniq(NULL) | array_enumerate_uniq(NULL, NULL) |
 +----------------------------+----------------------------------+
 | NULL                       | NULL                             |
 +----------------------------+----------------------------------+
+```
 
 包含 null 的数组，null 元素也会生成编号：
 ```sql
@@ -105,7 +109,7 @@ ERROR 1105 (HY000): errCode = 2, detailMessage = lengths of all arrays of functi
 ```
 
 IP 类型支持的例子
-```
+```sql
 SELECT array_enumerate_uniq(CAST(['192.168.1.1', '192.168.1.2', '192.168.1.1'] AS ARRAY<IPV4>));
 +------------------------------------------------------------------------------------------+
 | array_enumerate_uniq(CAST(['192.168.1.1', '192.168.1.2', '192.168.1.1'] AS ARRAY<IPV4>)) |
@@ -124,13 +128,13 @@ mysql> SELECT array_enumerate_uniq(CAST(['2001:db8::1', '2001:db8::2', '2001:db8
 复杂类型示例：
 
 嵌套数组类型不支持，报错：
-```
+```sql
 SELECT array_enumerate_uniq([[1,2],[3,4],[5,6]]);
 ERROR 1105 (HY000): errCode = 2, detailMessage = array_enumerate_uniq does not support type ARRAY<ARRAY<TINYINT>>, expression is array_enumerate_uniq([[1, 2], [3, 4], [5, 6]])
 ```
 
 map 类型不支持，报错：
-```
+```sql
 SELECT array_enumerate_uniq([{'k':1},{'k':2},{'k':3}]);
 ERROR 1105 (HY000): errCode = 2, detailMessage = array_enumerate_uniq does not support type ARRAY<MAP<VARCHAR(1),TINYINT>>, expression is array_enumerate_uniq([map('k', 1), map('k', 2), map('k', 3)])
 ```

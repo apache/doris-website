@@ -60,8 +60,8 @@ The `mem_limit` parameter in `be.conf` controls the upper memory limit of the en
 |------|------|
 | `max_memory_percent` | The maximum percentage of process memory this Workload Group can use. Exceeding it triggers spilling or kills queries. |
 | `min_memory_percent` | The minimum percentage of memory guaranteed to this Workload Group. When memory is tight, the system allocates by this value to ensure other groups have enough memory. |
-| `memory_low_watermark` | Low watermark of memory usage. Default is 80%. |
-| `memory_high_watermark` | High watermark of memory usage. Default is 95%. When this value is exceeded, reserve memory requests fail and spilling is triggered. |
+| `memory_low_watermark` | Low watermark of memory usage. Default is 50%. |
+| `memory_high_watermark` | High watermark of memory usage. Default is 80%. When this value is exceeded, reserve memory requests fail and spilling is triggered. |
 
 Constraints: the sum of `min_memory_percent` across all Workload Groups must not exceed 100%, and a single group's `min_memory_percent` must not be greater than its `max_memory_percent`.
 

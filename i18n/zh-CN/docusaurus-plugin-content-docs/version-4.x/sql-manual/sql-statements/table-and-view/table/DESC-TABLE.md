@@ -85,6 +85,19 @@ DESC[RIBE] [<ctl_name>.][<db_name>.]<table_name> [ALL];
 
 ## 举例
 
+准备 `test_table`，供下面的示例使用：
+
+```sql
+CREATE TABLE test_table (
+  user_id BIGINT NOT NULL COMMENT 'Key1',
+  name    VARCHAR(20)     COMMENT 'username',
+  age     INT             COMMENT 'user_age'
+) ENGINE=OLAP
+UNIQUE KEY (user_id)
+DISTRIBUTED BY HASH(user_id) BUCKETS 1
+PROPERTIES ("replication_num" = "1");
+```
+
 1. 显示 Base 表 Schema
 
 ```sql
@@ -117,14 +130,14 @@ DESC test_table;
 2. 显示表所有 index 的 schema
 
 ```sql
-DESC demo.test_table ALL;
+DESC test_table ALL;
 ```
 
 ```text
 +------------+---------------+---------+-------------+--------------+------+-------+---------+-------+---------+------------+-------------+
 | IndexName  | IndexKeysType | Field   | Type        | InternalType | Null | Key   | Default | Extra | Visible | DefineExpr | WhereClause |
 +------------+---------------+---------+-------------+--------------+------+-------+---------+-------+---------+------------+-------------+
-| test_table | DUP_KEYS      | user_id | bigint      | bigint       | No   | true  | NULL    |       | true    |            |             |
+| test_table | UNIQUE_KEYS   | user_id | bigint      | bigint       | No   | true  | NULL    |       | true    |            |             |
 |            |               | name    | varchar(20) | varchar(20)  | Yes  | false | NULL    | NONE  | true    |            |             |
 |            |               | age     | int         | int          | Yes  | false | NULL    | NONE  | true    |            |             |
 +------------+---------------+---------+-------------+--------------+------+-------+---------+-------+---------+------------+-------------+

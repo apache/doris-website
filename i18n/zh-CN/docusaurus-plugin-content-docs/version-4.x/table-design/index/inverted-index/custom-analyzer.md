@@ -91,8 +91,8 @@ PROPERTIES (
 | 类型 | 说明 | 主要参数 |
 | --- | --- | --- |
 | `standard` | 标准分词（遵循 Unicode 文本分割），适用于多数语言 | 无 |
-| `ngram` | 按 N 元组切分 | `min_ngram`、`max_ngram`、`token_chars` |
-| `edge_ngram` | 从词首起始位置生成 N 元组 | `min_ngram`、`max_ngram`、`token_chars` |
+| `ngram` | 按 N 元组切分 | `min_gram`、`max_gram`、`token_chars` |
+| `edge_ngram` | 从词首起始位置生成 N 元组 | `min_gram`、`max_gram`、`token_chars` |
 | `keyword` | 整段文本作为一个词项输出，常与 token_filter 组合 | 无 |
 | `char_group` | 按给定字符切分 | `tokenize_on_chars` |
 | `basic` | 简单英文 / 数字 / 中文 / Unicode 分词 | `extra_chars` |
@@ -100,8 +100,8 @@ PROPERTIES (
 
 参数说明：
 
-- `min_ngram`：最小长度（默认 1）
-- `max_ngram`：最大长度（默认 2）
+- `min_gram`：最小长度（默认 1）
+- `max_gram`：最大长度（默认 2）
 - `token_chars`：保留字符类别（默认保留全部）。可选：`letter`、`digit`、`whitespace`、`punctuation`、`symbol`
 - `tokenize_on_chars`：字符列表或类别，类别支持 `whitespace`、`letter`、`digit`、`punctuation`、`symbol`、`cjk`
 - `extra_chars`：额外分割的 ASCII 字符（如 `[]().`）

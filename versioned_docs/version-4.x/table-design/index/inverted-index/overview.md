@@ -55,7 +55,7 @@ Main operators supported in the current version:
 | `MATCH_PHRASE_PREFIX` | Phrase prefix match | Auto-completion, incremental search |
 | `MATCH_REGEXP` | Matching based on regular expressions | Pattern-based text retrieval |
 
-These operators can be used independently or combined through the `SEARCH()` function to build complex logical queries. For example:
+These operators can be used independently or combined through the `SEARCH()` function to build complex logical queries. For example (the `docs` table referenced here is the one created in the [Quick start](#quick-start) section below):
 
 ```sql
 -- Exact phrase search
@@ -159,7 +159,8 @@ CREATE TABLE docs (
     INDEX idx_tags(tags) USING INVERTED
 )
 DUPLICATE KEY(id)
-DISTRIBUTED BY HASH(id) BUCKETS 10;
+DISTRIBUTED BY HASH(id) BUCKETS 10
+PROPERTIES ("replication_num" = "1");
 ```
 
 ### Step 2: Run text queries

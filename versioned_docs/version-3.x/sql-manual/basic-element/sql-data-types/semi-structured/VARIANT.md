@@ -422,6 +422,24 @@ See also: `https://doris.apache.org/docs/dev/data-operate/import/complex-types/v
 
 After loading, verify with `SELECT count(*)` or sample with `SELECT * ... LIMIT 1`. For high-throughput ingestion, prefer RANDOM bucketing and enable Group Commit.
 
+## Output
+
+The JSON text returned when reading a VARIANT column is not byte-for-byte identical to the JSON text that was written in: inside a JSON object, keys are emitted in sorted (lexicographic) order regardless of the order they appeared in the input JSON.
+
+```sql
+INSERT INTO variant_tbl VALUES
+  (2, '{ "b": 2, "a": 1, "c": { "y": 20, "x": 10 } }');
+
+SELECT v FROM variant_tbl WHERE k = 2;
++-----------------------------------+
+| v                                 |
++-----------------------------------+
+| {"a":1,"b":2,"c":{"x":10,"y":20}} |
++-----------------------------------+
+```
+
+Sorting applies at every level — top-level keys become `a`, `b`, `c`, and the nested object's keys become `x`, `y`.
+
 ## Supported operations and CAST rules
 
 - VARIANT cannot be compared/operated directly with other types; comparisons between two VARIANTs are not supported either.

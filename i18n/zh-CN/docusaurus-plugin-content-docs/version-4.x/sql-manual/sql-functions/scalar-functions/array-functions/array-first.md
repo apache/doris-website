@@ -86,7 +86,7 @@ SELECT array_first(x -> x > 0, []);
 ```
 
 输入参数为NULL 会报错：
-```
+```sql
 SELECT array_first(x -> x > 2, NULL);
 ERROR 1105 (HY000): errCode = 2, detailMessage = lambda argument must be array but is NULL
 
@@ -136,13 +136,13 @@ SELECT array_first(x -> x['a'] > 10, [{'a':5}, {'a':15}, {'a':20}]);
 +---------------------------------------------------------------+
 ```
 
-参数数量错误会报错：
+lambda 表达式中参数个数和数组参数个数不一致报错：
 ```sql
 SELECT array_first(x -> x > 0, [1,2,3], [4,5,6], [7,8,9]);
 ERROR 1105 (HY000): errCode = 2, detailMessage = lambda x -> (x > 0) arguments' size is not equal parameters' size
 ```
 
-lambda 表达式中参数个数和数组参数个数不一致报错：
+参数数量错误会报错：
 ```sql
 SELECT array_first((x, y) -> x > y, [1,2,3], [4,5]);
 ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.6)[INVALID_ARGUMENT]in array map function, the input column size are not equal completely, nested column data rows 1st size is 3, 2th size is 2.

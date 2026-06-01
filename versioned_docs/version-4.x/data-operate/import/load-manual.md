@@ -86,10 +86,10 @@ This applies to scenarios where data is continuously synchronized to Doris table
 
     Through the built-in [Streaming Job](./import-way/streaming-job/continuous-load-overview.md) in Doris, you can continuously read data from sources such as MySQL, PostgreSQL, and S3 and write it into Doris, **without depending on external components such as Flink or Kafka**. Two sync methods are supported:
 
-    | Sync method        | Underlying mechanism                       | Auto table creation | Semantic guarantee | Typical scenario                                                       |
-    | :----------------- | :----------------------------------------- | :------------------ | :----------------- | :--------------------------------------------------------------------- |
-    | Table-level sync   | Job + TVF (INSERT INTO SELECT)             | Pre-creation needed | exactly-once       | Cases requiring column pruning, field renaming, type conversion, or conditional filtering |
-    | Database-level sync | Job + native whole-database DDL           | Auto-created on first run | at-least-once | Mirror replication of an entire database or a group of tables, with downstream table schemas automatically following the upstream |
+    | Sync method              | Underlying mechanism                       | Auto table creation | Semantic guarantee | Typical scenario                                                       |
+    | :----------------------- | :----------------------------------------- | :------------------ | :----------------- | :--------------------------------------------------------------------- |
+    | SQL Mapping Sync         | Job + TVF (INSERT INTO SELECT)             | Pre-creation needed | exactly-once       | Cases requiring column pruning, field renaming, type conversion, or conditional filtering |
+    | Auto Table Creation Sync | Job + native whole-database DDL            | Auto-created on first run | at-least-once | Mirror replication of an entire database or a group of tables, with downstream table schemas automatically following the upstream |
 
 ### Batch Load: Loading Files from External Storage
 
@@ -164,7 +164,7 @@ Yes. Each load in Doris is by default an implicit transaction. For details, see 
 
 **Q6: How do you choose between Streaming Job and Flink CDC?**
 
-- **Streaming Job**: A built-in capability of Doris that **does not depend on external components such as Flink or Kafka**. It supports table-level and database-level sync for MySQL and PostgreSQL, as well as continuous loading from S3. Database-level sync can automatically create tables, while table-level sync provides exactly-once semantics and supports SQL processing.
+- **Streaming Job**: A built-in capability of Doris that **does not depend on external components such as Flink or Kafka**. It supports SQL Mapping Sync and Auto Table Creation Sync for MySQL and PostgreSQL, as well as continuous loading from S3. Auto Table Creation Sync automatically creates downstream tables, while SQL Mapping Sync provides exactly-once semantics and supports SQL processing.
 - **Flink CDC**: Requires deploying a Flink cluster. It is suitable for scenarios that already have a Flink stream-processing system, require complex ETL processing, or need multi-target sync.
 
 If you only need to continuously synchronize MySQL or PostgreSQL data into Doris and have no external stream-processing requirements, **prefer Streaming Job**. For details, see [Continuous Load Overview](./import-way/streaming-job/continuous-load-overview.md).

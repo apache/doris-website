@@ -1,19 +1,19 @@
 export const RECENT_BLOGS_POSTS = [
     {
-        label: 'How an Autonomous Driving Company Unified Multimodal Search on a Single Analytics Engine',
-        link: 'https://www.velodb.io/blog/autonomous-driving-company-unified-multimodal-search-on-apache-doris',
+        label: 'NetEase Games: From Elasticsearch, HBase, and ClickHouse to a Unified Apache Doris Lakehouse',
+        link: 'https://www.velodb.io/blog/netease-games-from-elasticsearch-and-clickhouse-to-a-unified-apache-doris-lakehouse',
     },
     {
-        label: 'Querying Apache Doris Data as a Graph with PuppyGraph',
-        link: 'https://www.velodb.io/blog/querying-apache-doris-data-as-a-graph-with-puppygraph',
+        label: 'From Data Silos to Context Silos: What Database History Teaches Us About the AI Infrastructure Problem',
+        link: 'https://www.velodb.io/blog/from-data-silos-to-context-silos',
     },
     {
-        label: 'Set Up a Lakehouse with PostgreSQL, Apache Iceberg, and Apache Doris in 15 Minutes',
-        link: 'https://www.velodb.io/blog/set-up-a-lakehouse-with-postgresql-apache-iceberg-and-apache-doris',
+        label: 'Apache Doris 4.1 on Iceberg V3: Running the Full Lakehouse Lifecycle from One SQL Engine',
+        link: 'https://www.velodb.io/blog/apache-doris-4-1-on-iceberg-v3-full-lakehouse-lifecycle',
     },
     {
-        label: 'From ClickHouse + Elasticsearch to Apache Doris: How Kwai Unified Trillion-Scale Ad Analytics',
-        link: 'https://www.velodb.io/blog/from-clickhouse-elasticsearch-to-apache-doris-how-kwai-unified-trillion-scale-ad-analytics',
+        label: 'The Chunking and Embedding Cookbook for Production Context Engineering',
+        link: 'https://www.velodb.io/blog/the-chunking-and-embedding-cookbook-for-production-context-engineering',
     },
-    
+
 ];

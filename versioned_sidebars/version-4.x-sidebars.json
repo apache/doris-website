@@ -363,6 +363,8 @@
                 "data-operate/import/data-source/snowflake",
                 "data-operate/import/data-source/bigquery",
                 "data-operate/import/data-source/redshift",
+                "data-operate/import/data-source/mysql",
+                "data-operate/import/data-source/postgresql",
                 "data-operate/import/data-source/migrate-data-from-other-olap",
                 "data-operate/import/data-source/migrate-data-from-other-oltp"
               ]
@@ -835,7 +837,6 @@
               "label": "Lakehouse Best Practices",
               "items": [
                 "lakehouse/best-practices/optimization",
-                "lakehouse/best-practices/doris-snowflake-catalog",
                 "lakehouse/best-practices/kerberos",
                 "lakehouse/best-practices/tpch",
                 "lakehouse/best-practices/tpcds"
@@ -868,12 +869,42 @@
           "label": "Observability with Doris",
           "link": {
             "type": "doc",
-            "id": "observability/overview"
+            "id": "observability/dogstack/overview"
           },
           "collapsed": true,
           "items": [
-            "observability/log",
-            "observability/trace"
+            {
+              "type": "category",
+              "label": "DOG Stack",
+              "collapsed": true,
+              "link": {
+                "type": "doc",
+                "id": "observability/dogstack/overview"
+              },
+              "items": [
+                "observability/dogstack/overview",
+                "observability/dogstack/quickstart",
+                "observability/dogstack/deployment",
+                "observability/dogstack/search",
+                "observability/dogstack/trace",
+                "observability/dogstack/dashboard",
+                "observability/dogstack/alert"
+              ]
+            },
+            {
+              "type": "category",
+              "label": "Legacy",
+              "collapsed": true,
+              "link": {
+                "type": "doc",
+                "id": "observability/overview"
+              },
+              "items": [
+                "observability/overview",
+                "observability/log",
+                "observability/trace"
+              ]
+            }
           ]
         }
       ]
@@ -1119,7 +1150,7 @@
                   "type": "category",
                   "label": "mysql",
                   "items": [
-                    "admin-manual/system-tables/mysql/props_priv",
+                    "admin-manual/system-tables/mysql/procs_priv",
                     "admin-manual/system-tables/mysql/user"
                   ]
                 },
@@ -1177,7 +1208,6 @@
                     "admin-manual/open-api/fe-http/meta-replay-state-action",
                     "admin-manual/open-api/fe-http/metrics-action",
                     "admin-manual/open-api/fe-http/profile-action",
-                    "admin-manual/open-api/fe-http/query-detail-action",
                     "admin-manual/open-api/fe-http/query-schema-action",
                     "admin-manual/open-api/fe-http/query-stats-action",
                     "admin-manual/open-api/fe-http/row-count-action",

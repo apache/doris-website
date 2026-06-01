@@ -28,7 +28,7 @@
 
 下表显示了条件中涉及 NULL 的各种评估的示例。如果在 SELECT 语句的 WHERE 子句中使用计算结果为 UNKNOWN 的条件，那么该查询将不返回任何行。
 
-| **Condition**   | **Value of A** | **Evaluation** |
+| **Condition**   | **Value of a** | **Evaluation** |
 | :-------------- | :------------- | :------------- |
 | `a IS NULL`     | `10`           | `FALSE`        |
 | `a IS NOT NULL` | `10`           | `TRUE`         |

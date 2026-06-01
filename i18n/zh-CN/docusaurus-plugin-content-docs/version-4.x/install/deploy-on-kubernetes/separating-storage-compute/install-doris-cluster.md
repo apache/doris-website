@@ -190,7 +190,7 @@ spec:
         namespace: ${namespace}               # 必改：ConfigMap 所在命名空间
 ```
 
-ConfigMap 的获取方法可执行 `kubectl get configmap` 查看（详见 [部署 FoundationDB - 获取访问信息 ConfigMap](install-fdb.md#获取包含-foundationdb-访问信息的-configmap)）。
+ConfigMap 的获取方法可执行 `kubectl get configmap` 查看（详见 [部署 FoundationDB - 获取访问信息 ConfigMap](install-fdb.md#get-the-configmap-that-contains-foundationdb-access-information)）。
 
 参数说明：
 

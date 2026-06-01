@@ -26,7 +26,7 @@
 | minio.access_key               | s3.access_key            | MinIOアクセスキー、認証に使用されるMinIOアクセスキー             |               | Yes      |
 | minio.secret_key               | s3.secret_key            | MinIOシークレットキー、アクセスキーと併用するシークレットキー      |               | Yes      |
 | minio.connection.maximum       | s3.connection.maximum    | S3最大接続数、MinIOサービスとの最大接続数を指定               | 50            | No       |
-| minio.connection.request.timeout | s3.connection.timeout    | S3リクエストタイムアウト、ミリ秒単位、MinIOサービスに接続する際のリクエストタイムアウトを指定 | 3000          | No       |
+| minio.connection.request.timeout | s3.connection.request.timeout | S3リクエストタイムアウト、ミリ秒単位、MinIOサービスに接続する際のリクエストタイムアウトを指定 | 3000          | No       |
 | minio.connection.timeout       | s3.connection.timeout    | S3接続タイムアウト、ミリ秒単位、MinIOサービスとの接続確立時のタイムアウトを指定 | 1000          | No       |
 | minio.use_path_style           | s3.use_path_style        | パススタイルアクセスを使用するかどうか。MinIOおよびその他の非AWS S3サービスとの互換性のためにtrueに設定することを推奨 | FALSE         | No       |
 

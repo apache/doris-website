@@ -143,7 +143,7 @@ S3 相关参数如下：
       - `s3.connection.request.timeout`：s3 请求超时时间，单位毫秒，默认为 3000
       - `s3.connection.timeout`：s3 连接超时时间，单位毫秒，默认为 1000
 
-    Doris 也支持通过 `AWS Assume Role` 的方式创建 S3 Resource, 请参考如下文档配置和使用[AWS intergration](../../../../admin-manual/auth/integrations/aws-authentication-and-authorization.md#assumed-role-authentication).
+    Doris 也支持通过 `AWS Assume Role` 的方式创建 S3 Resource, 请参考如下文档配置和使用[AWS integration](../../../../admin-manual/auth/integrations/aws-authentication-and-authorization.md#assumed-role-authentication).
 
 **4. 创建 JDBC resource**
 
@@ -153,7 +153,7 @@ S3 相关参数如下：
       "user"="root",
       "password"="123456",
       "jdbc_url" = "jdbc:mysql://127.0.0.1:3316/doris_test?useSSL=false",
-      "driver_url" = "https://doris-community-test-1308700295.cos.ap-hongkong.myqcloud.com/jdbc_driver/mysql-connector-java-8.0.25.jar",
+      "driver_url" = "https://repo1.maven.org/maven2/mysql/mysql-connector-java/8.0.25/mysql-connector-java-8.0.25.jar",
    "driver_class" = "com.mysql.cj.jdbc.Driver"
    );
    ```

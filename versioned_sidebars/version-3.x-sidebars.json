@@ -533,10 +533,29 @@
                 {
                     "type": "category",
                     "label": "Observability",
+                    "link": {
+                        "type": "doc",
+                        "id": "observability/dogstack/overview"
+                    },
                     "items": [
-                        "observability/overview",
-                        "observability/log",
-                        "observability/trace",
+                        {
+                          "type": "category",
+                          "label": "DOG Stack",
+                          "collapsed": true,
+                          "link": {
+                            "type": "doc",
+                            "id": "observability/dogstack/overview"
+                          },
+                          "items": [
+                            "observability/dogstack/overview",
+                            "observability/dogstack/quickstart",
+                            "observability/dogstack/deployment",
+                            "observability/dogstack/search",
+                            "observability/dogstack/trace",
+                            "observability/dogstack/dashboard",
+                            "observability/dogstack/alert"
+                          ]
+                        },
                         {
                             "type": "category",
                             "label": "Integrations",
@@ -549,6 +568,15 @@
                                 "ecosystem/observability/langfuse",
                                 "ecosystem/observability/vector"
                             ]
+                        },
+                        {
+                          "type": "category",
+                          "label": "Legacy",
+                          "items": [
+                            "observability/overview",
+                            "observability/log",
+                            "observability/trace"
+                          ]
                         }
                     ]
                 },
@@ -790,7 +818,7 @@
                             "type": "category",
                             "label": "mysql",
                             "items": [
-                                "admin-manual/system-tables/mysql/props_priv",
+                                "admin-manual/system-tables/mysql/procs_priv",
                                 "admin-manual/system-tables/mysql/user"
                             ]
                         },
@@ -893,7 +921,6 @@
                                 "admin-manual/open-api/fe-http/meta-replay-state-action",
                                 "admin-manual/open-api/fe-http/metrics-action",
                                 "admin-manual/open-api/fe-http/profile-action",
-                                "admin-manual/open-api/fe-http/query-detail-action",
                                 "admin-manual/open-api/fe-http/query-schema-action",
                                 "admin-manual/open-api/fe-http/query-stats-action",
                                 "admin-manual/open-api/fe-http/row-count-action",

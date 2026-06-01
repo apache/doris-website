@@ -72,4 +72,12 @@ SELECT MILLISECONDS_ADD('2023-10-01 12:00:00.500', NULL) AS after_add;
 | NULL      |
 +-----------+
 
+-- delta supports the full BIGINT range; values beyond INT max (2^31 - 1) still compute correctly
+SELECT MILLISECONDS_ADD('2023-09-08 16:02:08.435', 2147483648) AS after_add;
++----------------------------+
+| after_add                  |
++----------------------------+
+| 2023-10-03 12:33:32.083000 |
++----------------------------+
+
 ```

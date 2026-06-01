@@ -239,7 +239,7 @@ mysql> SELECT COUNT() FROM amazon_reviews;
 ```sql
 SELECT
     product_id,
-    any(product_title),
+    any_value(product_title),
     AVG(star_rating) AS rating,
     COUNT() AS count
 FROM

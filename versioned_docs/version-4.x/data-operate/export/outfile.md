@@ -186,7 +186,7 @@ PROPERTIES
     "dfs.namenode.rpc-address.hacluster.n1"="192.168.0.1:8020",
     "dfs.namenode.rpc-address.hacluster.n2"="192.168.0.2:8020",
     "dfs.client.failover.proxy.provider.hacluster"="org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider",
-    "dfs.namenode.kerberos.principal"="hadoop/_HOST@REALM.COM"
+    "dfs.namenode.kerberos.principal"="hadoop/_HOST@REALM.COM",
     "hadoop.security.authentication"="kerberos",
     "hadoop.kerberos.principal"="doris_test@REALM.COM",
     "hadoop.kerberos.keytab"="/path/to/doris_test.keytab"

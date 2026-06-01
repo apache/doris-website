@@ -52,11 +52,11 @@ mysql> select count(
     ->       cast(number as tinyint), 
     ->       cast(number as String))
     ->   ) from numbers("number" = "300");
-+-------------------------------------------------------------------------+
-| count(if(number < 128, cast(number as tinyint), cast(number as String)))|
-+-------------------------------------------------------------------------+
++--------------------------------------------------------------------------+
+| count(if(number < 128, cast(number as tinyint), cast(number as String))) |
++--------------------------------------------------------------------------+
 |                                                                      300 |
-+-------------------------------------------------------------------------+
++--------------------------------------------------------------------------+
 ```
 
 With short-circuit evaluation enabled, functions like `if`, `ifnull`, `case`, and `coalesce` can avoid unnecessary computations in many scenarios, thus preventing errors and improving performance.

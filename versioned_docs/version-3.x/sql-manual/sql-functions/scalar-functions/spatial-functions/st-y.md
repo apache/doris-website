@@ -10,7 +10,7 @@
 
 Returns the Y coordinate of a valid POINT geometry. In geospatial contexts, the Y coordinate typically corresponds to Latitude, ranging from [-90.0, 90.0] (in degrees).
 
-## Sytax
+## Syntax
 
 ```sql
 ST_Y( <point>)
@@ -22,7 +22,7 @@ ST_Y( <point>)
 |------|----------|
 | `<point>` | A valid 2D POINT geometry from which to extract the Y coordinate. The Y value (latitude) must be within [-90.0, 90.0], and the X value (longitude) must be within [-180.0, 180.0]. |
 
-## Retuen value
+## Return Value
 
 The Y coordinate of the input POINT, returned as a DOUBLE PRECISION FLOAT.
 

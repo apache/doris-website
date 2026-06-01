@@ -13,7 +13,7 @@
 ## 语法
 
 ```sql
-TRIM_IN( <str> [ , <rhs>])
+TRIM( <str> [ , <rhs>])
 ```
 ## 必选参数
 
@@ -35,7 +35,7 @@ TRIM_IN( <str> [ , <rhs>])
 ## 举例
 
 ```sql
-SELECT trim_in('   ab d   ') str;
+SELECT trim('   ab d   ') str;
 ```
 
 ```sql
@@ -47,7 +47,7 @@ SELECT trim_in('   ab d   ') str;
 ```
 
 ```sql
-SELECT trim_in('ababccaab','ab') str;
+SELECT trim('ababccaab','ab') str;
 ```
 
 ```sql

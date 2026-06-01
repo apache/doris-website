@@ -32,6 +32,10 @@ CREATE STORAGE VAULT [IF NOT EXISTS] <vault_name> [ <properties> ]
 | `[IF NOT EXISTS]` | If the specified storage vault already exists, the creation operation will not be executed, and no error will be thrown. This prevents duplicate creation of the same storage vault. |
 | `<properties>`    | A set of key-value pairs used to set or update specific properties of the storage vault. Each property consists of a key (<key>) and a value (<value>), separated by an equals sign (=). Multiple key-value pairs are separated by commas (,). |
 
+:::note
+The `type` property accepts only two values: `"S3"` or `"hdfs"` (case-insensitive). All object-storage backends — Amazon S3, Alibaba Cloud OSS, Tencent Cloud COS, Huawei Cloud OBS, Baidu Cloud BOS, MinIO, Azure Blob Storage, and Google Cloud Storage — use `"type" = "S3"` because Doris accesses them through the S3-compatible API. The actual cloud is selected by the separate `provider` property (`COS`, `OSS`, `S3`, `OBS`, `BOS`, `AZURE`, or `GCP`). The `s3.access_key` / `s3.secret_key` property names follow the same convention and are not specific to AWS S3.
+:::
+
 ### S3 Vault
 
 | Parameter              | Required | Description                                                                                                      |
@@ -49,7 +53,7 @@ CREATE STORAGE VAULT [IF NOT EXISTS] <vault_name> [ <properties> ]
 
 1. `s3.endpoint` if neither `http://` nor `https://` prefix is not provided, ​​`http`​​ will be used by default. If a prefix is explicitly specified, it will take effect with the prefix;
 
-2. Doris also support `AWS Assume Role` for S3 Vault(only for AWS S3 now), please refer to [AWS intergration](../../../../lakehouse/storages/s3.md).
+2. Doris also support `AWS Assume Role` for S3 Vault(only for AWS S3 now), please refer to [AWS integration](../../../../lakehouse/storages/s3.md).
 
 ### HDFS vault
 
@@ -166,7 +170,7 @@ PROPERTIES (
 
 **Note:&#x20;**
 
-Doris also support `AWS Assume Role` for S3 Vault(only for AWS S3 now), please refer to [AWS intergration](../../../../lakehouse/storages/s3.md)
+Doris also support `AWS Assume Role` for S3 Vault(only for AWS S3 now), please refer to [AWS integration](../../../../lakehouse/storages/s3.md)
 
 
 ### 7. Create MinIO storage vault

@@ -76,6 +76,8 @@ JSON_EXTRACT_STRING (<json_str>, <path>)
 * '[i]' 代表 json array 中下标为 i 的元素
   - 获取 json_array 的最后一个元素可以用'$[last]'，倒数第二个元素可以用'$[last-1]'，以此类推。
 
+`<path>` 不会在数组上自动广播：如果 JSON 值是数组、`<path>` 为 `$.k`，结果为 NULL，因为 `$.k` 只会遍历 object 的成员。要按下标访问元素，使用 `$[i].k`。通过 `$[*].k` 在数组上广播取值是 Doris 4.0 引入的能力；在 2.1 和 3.x 上请改用 `LATERAL VIEW EXPLODE` 等方式逐元素展开后再 `json_extract`。
+
 ## 返回值
 根据要提取的字段类型不同，返回目标 JSON 中 指定 JSON_PATH 的数据类型。特殊情况处理如下：
 * 如果 json_path 指定的字段在 JSON 中不存在，返回 NULL

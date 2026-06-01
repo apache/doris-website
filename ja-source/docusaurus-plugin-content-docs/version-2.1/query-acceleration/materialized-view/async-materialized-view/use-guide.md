@@ -421,7 +421,7 @@ Query 1：
 ```sql
 SELECT 
   l_linestatus, 
-  l_extendedprice * (1 - l_discount)
+  l_extendedprice * (1 - l_discount),
   o_shippriority 
 FROM 
   orders 

@@ -40,14 +40,14 @@ Store audit logs
 | stmt_id           | bigint       | Statement ID                                                 |
 | stmt_type                   | string    | Statement type. Supported since version 3.0. |
 | is_query          | tinyint      | Whether it is a query                                        |
-| is_nereids                  | booean    | Is using Nereids Optimizer. |
+| is_nereids                  | boolean    | Is using Nereids Optimizer. |
 | frontend_ip       | varchar(128) | IP address of the connected Frontend                         |
 | cpu_time_ms       | bigint       | Cumulative CPU time (in milliseconds) consumed by the Backend for statement execution |
 | sql_hash          | varchar(128) | Hash value of the statement                                  |
 | sql_digest        | varchar(128) | Digest (signature) of the statement                          |
 | peak_memory_bytes | bigint       | Peak memory usage of the Backend during statement execution  |
 | workload_group    | text         | Workload Group used for statement execution                  |
-| compute_group                 | string    | In storage and computation decouped mode, the compute group used by the execution statement. Supported since version 3.0.|
+| compute_group                 | string    | In storage and computation decoupled mode, the compute group used by the execution statement. Supported since version 3.0.|
 | trace_id                    | string    | Trace ID set when executing the statement. Removed since version 2.1.7  |
 | stmt              | text         | Statement text                                               |
 

@@ -6,7 +6,7 @@
 }
 ---
 
-## Description
+## 描述
 
 `DOUBLE ngram_search(VARCHAR text,VARCHAR pattern,INT gram_num)`
 
@@ -24,11 +24,11 @@ N-gram 相似度的计算为 2 * |Intersection| / (|text set| + |pattern set|)
 
 仅支持 ASCII 编码。
 
-## Syntax
+## 语法
 
 `DOUBLE ngram_search(VARCHAR text,VARCHAR pattern,INT gram_num)`
 
-## Example
+## 举例
 
 ```sql
 mysql> select ngram_search('123456789' , '12345' , 3);

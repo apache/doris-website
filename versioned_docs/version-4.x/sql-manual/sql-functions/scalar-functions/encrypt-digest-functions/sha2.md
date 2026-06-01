@@ -49,6 +49,16 @@ select sha2('abc', 225);
 ERROR 1105 (HY000): errCode = 2, detailMessage = sha2 functions only support digest length of [224, 256, 384, 512]
 ```
 
+The second argument (`<digest_length>`) must be a literal; passing a column reference fails even when the value would be valid:
+
+```sql
+-- setup
+CREATE TABLE str (k0 VARCHAR(64), k1 INT)
+DISTRIBUTED BY HASH(k0) BUCKETS 1
+PROPERTIES ("replication_num" = "1");
+INSERT INTO str VALUES ('hello', 224), ('world', 256);
+```
+
 ```SQL
 select sha2('str', k1) from str;
 ```
@@ -64,6 +74,8 @@ select sha2(k0, k1) from str;
 ```text
 ERROR 1105 (HY000): errCode = 2, detailMessage = the second parameter of sha2 must be a literal but got: k1
 ```
+
+The following two examples are illustrative — they require an external MySQL catalog named `mysql_catalog` containing `binary_test.binary_test`, which most clusters do not have configured. They demonstrate that `SHA2` hashes a `VARBINARY` column and a `VARCHAR` column to the same digest when the underlying bytes are equal.
 
 ```sql
 -- vb (VarBinary) and vc (VarChar) used the same string during insertion.

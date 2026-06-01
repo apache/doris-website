@@ -2,13 +2,13 @@
 {
     "title": "ALTER WORKLOAD POLICY",
     "language": "en",
-    "description": "Modify the properties of a Workload Group. Currently, only property modifications are supported;"
+    "description": "Modify the properties of a Workload Policy. Currently, only property modifications are supported;"
 }
 ---
 
 ## Description
 
-Modify the properties of a Workload Group. Currently, only property modifications are supported; modifications to actions and conditions are not supported.
+Modify the properties of a Workload Policy. Currently, only property modifications are supported; modifications to actions and conditions are not supported.
 
 
 ## Syntax
@@ -38,6 +38,6 @@ You must have at least ADMIN_PRIV permissions.
 
 1. Disable a Workload Policy
 
-  ```Java
+  ```sql
   alter workload policy cancel_big_query properties('enabled'='false')
   ```

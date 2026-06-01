@@ -1,12 +1,12 @@
 ---
 {
-    "title": "MySQL Table-Level Sync",
+    "title": "MySQL CDC with SQL Mapping",
     "language": "en",
-    "sidebar_label": "Table-Level Sync",
-    "description": "How to continuously sync a single MySQL table to Doris? Achieve table-level real-time sync with Job + CDC Stream TVF, supporting column mapping and data transformation.",
+    "sidebar_label": "SQL Mapping Sync",
+    "description": "How to continuously sync a single MySQL table to Doris with SQL Mapping (Job + CDC Stream TVF), supporting column mapping and data transformation.",
     "keywords": [
         "MySQL sync to Doris",
-        "table-level CDC",
+        "SQL Mapping Sync",
         "CDC Stream TVF",
         "Streaming Job",
         "Binlog incremental sync",
@@ -20,9 +20,9 @@
 <!-- Knowledge type: Operation steps / Configuration parameters -->
 <!-- Applicable scenario: Real-time sync of a single MySQL table to Doris with column mapping or data transformation -->
 
-Table-level sync is implemented through Job + [CDC Stream TVF](../../../../sql-manual/sql-functions/table-valued-functions/cdc-stream.md), targeting an **existing** Doris table (`INSERT INTO tbl SELECT * FROM cdc_stream(...)`). With the expressive power of Doris SQL, you can perform column mapping, filtering, and data transformation in the sync pipeline, and exactly-once semantics is guaranteed. This is suitable for real-time sync scenarios that require data processing.
+SQL Mapping Sync is implemented through Job + [CDC Stream TVF](../../../../sql-manual/sql-functions/table-valued-functions/cdc-stream.md), targeting an **existing** Doris table (`INSERT INTO tbl SELECT * FROM cdc_stream(...)`). With the expressive power of Doris SQL, you can perform column mapping, filtering, and data transformation in the sync pipeline, and exactly-once semantics is guaranteed. This is suitable for real-time sync scenarios that require data processing.
 
-By integrating the read capability of [Flink CDC](https://github.com/apache/flink-cdc), Doris reads the change log (Binlog) from MySQL and completes **full + incremental** sync from source table to target table. If you want Doris to automatically create downstream tables and sync a group of tables on a per-database basis, see [MySQL Database-Level Sync](./continuous-load-mysql-database.md).
+By integrating the read capability of [Flink CDC](https://github.com/apache/flink-cdc), Doris reads the change log (Binlog) from MySQL and completes **full + incremental** sync from source table to target table. If you want Doris to automatically create downstream tables and sync a group of tables on a per-database basis, see [MySQL CDC with Auto Table Creation](./continuous-load-mysql-database.md).
 
 ### Applicable Scenarios
 
@@ -106,10 +106,10 @@ For more general parameters (such as `max_interval`), see the [Continuous Import
 
 ## FAQ
 
-**Q1: What is the difference between table-level sync and database-level sync?**
+**Q1: What is the difference between SQL Mapping Sync and Auto Table Creation Sync?**
 
-- Table-level sync: The target Doris table must be **created in advance**. Supports column mapping and data transformation, suitable for fine-grained processing scenarios.
-- Database-level sync: Doris **automatically creates** downstream tables and syncs as a whole on a per-database basis. See [MySQL Database-Level Sync](./continuous-load-mysql-database.md) for details.
+- SQL Mapping Sync: The target Doris table must be **created in advance**. Supports column mapping and data transformation, suitable for fine-grained processing scenarios.
+- Auto Table Creation Sync: Doris **automatically creates** downstream tables and syncs as a whole on a per-database basis. See [MySQL CDC with Auto Table Creation](./continuous-load-mysql-database.md) for details.
 
 **Q2: Are non-primary-key tables supported as the target table?**
 
@@ -129,7 +129,7 @@ You can adjust the following two parameters to improve throughput during the ful
 ## Related Documents
 
 - [Continuous Import Overview](./continuous-load-overview.md)
-- [MySQL Database-Level Sync](./continuous-load-mysql-database.md)
+- [MySQL CDC with Auto Table Creation](./continuous-load-mysql-database.md)
 - [CDC Stream TVF](../../../../sql-manual/sql-functions/table-valued-functions/cdc-stream.md)
 - [CREATE STREAMING JOB](../../../../sql-manual/sql-statements/job/CREATE-STREAMING-JOB.md)
 - [Insert Into Select](../../../../data-operate/import/import-way/insert-into-manual.md)

@@ -98,6 +98,23 @@ ANALYZE TABLE lineitem WITH SAMPLE ROWS 100000;
 ANALYZE TABLE lineitem (l_orderkey, l_linenumber) WITH SAMPLE ROWS 100000;
 ```
 
+#### 高频值收集
+
+高频值记录列统计信息中频繁出现的列值。它可以帮助优化器更准确地估算倾斜数据上的谓词选择率，但在高基数列上收集高频值可能消耗更多内存。
+
+手动全量收集时，可通过 `WITH HOT VALUE` 收集高频值：
+
+```sql
+ANALYZE TABLE lineitem WITH SYNC WITH HOT VALUE;
+```
+
+不要将 `WITH HOT VALUE` 与 `WITH SAMPLE` 一起使用；抽样收集始终收集高频值，因此与 `WITH SAMPLE` 同时指定该选项时会被拒绝。不指定 `WITH HOT VALUE` 时，Doris 保持原有行为：
+
+| 收集方式 | 是否收集高频值 |
+| -------- | ---------------- |
+| 全量收集 | 不收集 |
+| 抽样收集 | 始终收集 |
+
 ### 自动收集
 
 **目的**：通过后台线程定期扫描，自动维护统计信息的新鲜度。

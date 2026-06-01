@@ -106,7 +106,7 @@ CREATE [ GLOBAL ]
 3. 创建一个自定义 UDTF 函数
 
     ```sql
-    CREATE TABLES FUNCTION java-utdf(string, string) RETURNS array<string> PROPERTIES (
+    CREATE TABLES FUNCTION java_utdf(string, string) RETURNS array<string> PROPERTIES (
         "file"="file:///pathTo/java-udaf.jar",
         "symbol"="org.apache.doris.udf.demo.UDTFStringTest",
         "always_nullable"="true",

@@ -176,7 +176,7 @@ The following parameters can be configured in `job_properties`:
 
 | Parameter          | Default | Description                                                                                                                                                                          |
 | ------------------ | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| session.\*         | None    | All session variables can be configured under `job_properties`. For load variables, see [Insert Into Select](../../../../data-operate/import/import-way/insert-into-manual.md#load-configuration-parameters) |
+| session.\*         | None    | All session variables can be configured under `job_properties`. For load variables, see [Insert Into Select](../../../../data-operate/import/import-way/insert-into-manual.md#import-configuration-parameters) |
 | s3.max_batch_files | 256     | Triggers a load write when the cumulative number of files reaches this value                                                                                                         |
 | s3.max_batch_bytes | 10G     | Triggers a load write when the cumulative data volume reaches this value                                                                                                             |
 | max_interval       | 10s     | The idle scheduling interval when there are no new files or data from upstream                                                                                                       |
@@ -228,4 +228,4 @@ Use `ALTER JOB` to modify both the `PROPERTIES` and the `INSERT` statement at th
 
 -   [Continuous Load Overview](./continuous-load-overview.md)
 -   [CREATE STREAMING JOB syntax](../../../../sql-manual/sql-statements/job/CREATE-STREAMING-JOB.md)
--   [Insert Into Select load configuration parameters](../../../../data-operate/import/import-way/insert-into-manual.md#load-configuration-parameters)
+-   [Insert Into Select load configuration parameters](../../../../data-operate/import/import-way/insert-into-manual.md#import-configuration-parameters)

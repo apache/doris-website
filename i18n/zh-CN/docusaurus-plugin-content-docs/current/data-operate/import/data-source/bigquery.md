@@ -30,7 +30,7 @@
 - **表结构设计**：需要根据 BigQuery 的表结构选择 Doris 的[数据模型](../../../table-design/data-model/intro.mdx)，以及[分区](../../../table-design/data-partitioning/dynamic-partitioning.md)和[分桶](../../../table-design/data-partitioning/data-bucketing.md)的策略，更多创建表策略可参考[导入最佳实践](../load-best-practices/load-best-practices.md)。
 - **JSON 类型导出**：BigQuery 导出 JSON 类型时不支持 Parquet 格式，需要使用 JSON 格式导出。
 - **Time 类型导出**：BigQuery 导出 Time 类型时，需要 Cast 为 String 类型导出。
-- **复杂类型导入**：含有复杂类型（Struct/Array/Map）的 Parquet/ORC 格式文件导入，目前必须使用 [TVF 导入](./amazon-s3.md#load-with-tvf)。
+- **复杂类型导入**：含有复杂类型（Struct/Array/Map）的 Parquet/ORC 格式文件导入，目前必须使用 [TVF 导入](./amazon-s3.md#method-2-load-with-tvf-synchronous)。
 
 ## 数据类型映射
 
@@ -69,7 +69,7 @@ CREATE OR REPLACE TABLE test.sales_data (
     amount        NUMERIC(10,2),
     country       STRING
 )
-PARTITION BY  order_date
+PARTITION BY  order_date;
 
 
 INSERT INTO test.sales_data (order_id, customer_name, order_date, amount, country) VALUES
@@ -125,7 +125,7 @@ AS (
 
 #### 2.2 查看 GCS 上的导出文件
 
-以上命令会将 `sales_data` 的数据导出到 GCS，每个分区会产生一个或多个文件，文件名递增。具体规则可参考 [exporting-data](https://cloud.google.com/bigquerydocs/exporting-data#exporting_data_into_one_or_more_files)。
+以上命令会将 `sales_data` 的数据导出到 GCS，每个分区会产生一个或多个文件，文件名递增。具体规则可参考 [exporting-data](https://cloud.google.com/bigquery/docs/exporting-data#exporting_data_into_one_or_more_files)。
 
 ![gcs_export](/images/data-operate/gcs_export.png)
 
@@ -133,7 +133,7 @@ AS (
 
 导入采用 S3 Load 方式。**S3 Load 是一种异步的数据导入方式，执行后 Doris 会主动从数据源拉取数据**，数据源支持兼容 S3 协议的对象存储，包括 [AWS S3](./amazon-s3.md)、[GCS](./google-cloud-storage.md)、[AZURE](./azure-storage.md) 等。
 
-该方式适用于数据量大、需要后台异步处理的场景。对于需要同步处理的数据导入，可参考 [TVF 导入](./amazon-s3.md#load-with-tvf)。
+该方式适用于数据量大、需要后台异步处理的场景。对于需要同步处理的数据导入，可参考 [TVF 导入](./amazon-s3.md#method-2-load-with-tvf-synchronous)。
 
 > **注意**：对于含有复杂类型（Struct/Array/Map）的 Parquet/ORC 格式文件导入，目前必须使用 TVF 导入。
 
@@ -164,10 +164,10 @@ WITH S3
 由于 S3 Load 是异步提交，可通过 `SHOW LOAD` 查询指定 label 的导入情况：
 
 ```yaml
-mysql> show load where label = "label_sales_data_2025_04_08"\G
+mysql> show load where label = "sales_data_2025_04_08"\G
 *************************** 1. row ***************************
         JobId: 17956078
-        Label: label_sales_data_2025_04_08
+        Label: sales_data_2025_04_08
         State: FINISHED
       Progress: 100.00% (1/1)
           Type: BROKER
@@ -260,7 +260,7 @@ BigQuery 的 Time 类型在导出时需 Cast 为 String 类型，Doris 中对应
 
 **Q4：含有 Struct/Array/Map 的 Parquet/ORC 文件能用 S3 Load 导入吗？**
 
-不能。这类复杂类型的文件目前必须使用 [TVF 导入](./amazon-s3.md#load-with-tvf)。
+不能。这类复杂类型的文件目前必须使用 [TVF 导入](./amazon-s3.md#method-2-load-with-tvf-synchronous)。
 
 **Q5：迁移大量历史数据时如何避免单任务失败造成的重试成本？**
 

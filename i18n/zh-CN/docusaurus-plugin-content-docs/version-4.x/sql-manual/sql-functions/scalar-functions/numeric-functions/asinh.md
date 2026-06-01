@@ -40,7 +40,7 @@ ASINH(<x>)
 select asinh(0.0);
 ```
 
-```sql
+```text
 +------------+
 | asinh(0.0) |
 +------------+
@@ -52,7 +52,7 @@ select asinh(0.0);
 select asinh(1.0);
 ```
 
-```sql
+```text
 +-------------------+
 | asinh(1.0)        |
 +-------------------+
@@ -64,7 +64,7 @@ select asinh(1.0);
 select asinh(-1.0);
 ```
 
-```sql
+```text
 +--------------------+
 | asinh(-1.0)        |
 +--------------------+
@@ -76,7 +76,7 @@ select asinh(-1.0);
 select asinh(cast('nan' as double));
 ```
 
-```sql
+```text
 +------------------------------+
 | asinh(cast('nan' AS DOUBLE)) |
 +------------------------------+
@@ -88,7 +88,7 @@ select asinh(cast('nan' as double));
 select asinh(cast('inf' as double));
 ```
 
-```sql
+```text
 +------------------------------+
 | asinh(cast('inf' AS DOUBLE)) |
 +------------------------------+
@@ -100,7 +100,7 @@ select asinh(cast('inf' as double));
 select asinh(cast('-inf' as double));
 ```
 
-```sql
+```text
 +-------------------------------+
 | asinh(cast('-inf' AS DOUBLE)) |
 +-------------------------------+

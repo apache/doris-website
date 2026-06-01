@@ -28,9 +28,9 @@
 
 在 Doris 中主键表有两种实现方式：
 
-* **写时合并**（merge-on-write）：自 1.2 版本起，Doris 默认使用写时合并模式，数据在写入时立即合并相同 Key 的记录，确保存储的始终是最新数据。写时合并兼顾查询和写入性能，避免多个版本的数据合并，并支持谓词下推到存储层。大多数场景推荐使用此模式；
+* **写时合并**（merge-on-write）：自 1.2 版本引入，并自 2.1 版本起默认启用写时合并模式，数据在写入时立即合并相同 Key 的记录，确保存储的始终是最新数据。写时合并兼顾查询和写入性能，避免多个版本的数据合并，并支持谓词下推到存储层。大多数场景推荐使用此模式；
 
-* **读时合并**（merge-on-read）：在 1.2 版本前，Doris 中的主键表默认使用读时合并模式，数据在写入时并不进行合并，以增量的方式被追加存储，在 Doris 内保留多个版本。查询或 Compaction 时，会对数据进行相同 Key 的版本合并。读时合并适合写多读少的场景，在查询时需要进行多个版本合并，谓词无法下推，可能会影响到查询速度。
+* **读时合并**（merge-on-read）：在 2.1 版本前，Doris 中的主键表默认使用读时合并模式，数据在写入时并不进行合并，以增量的方式被追加存储，在 Doris 内保留多个版本。查询或 Compaction 时，会对数据进行相同 Key 的版本合并。读时合并适合写多读少的场景，在查询时需要进行多个版本合并，谓词无法下推，可能会影响到查询速度。
 
 在 Doris 中基于主键表更新有两种语义：
 
@@ -66,12 +66,12 @@ PROPERTIES (
 CREATE TABLE IF NOT EXISTS example_tbl_unique
 (
     user_id         LARGEINT        NOT NULL,
-    username        VARCHAR(50)     NOT NULL,
+    user_name       VARCHAR(50)     NOT NULL,
     city            VARCHAR(20),
     age             SMALLINT,
     sex             TINYINT
 )
-UNIQUE KEY(user_id, username)
+UNIQUE KEY(user_id, user_name)
 DISTRIBUTED BY HASH(user_id) BUCKETS 10
 PROPERTIES (
     "enable_unique_key_merge_on_write" = "false"
@@ -101,14 +101,14 @@ INSERT INTO example_tbl_unique VALUES
 
 -- check updated data
 SELECT * FROM example_tbl_unique;
-+---------+----------+------+------+------+
-| user_id | username | city | age  | sex  |
-+---------+----------+------+------+------+
-| 101     | Tom      | BJ   |   27 |    1 |
-| 102     | Jason    | SH   |   28 |    1 |
-| 104     | Olivia   | SZ   |   22 |    2 |
-| 103     | Juice    | SH   |   20 |    2 |
-+---------+----------+------+------+------+
++---------+-----------+------+------+------+
+| user_id | user_name | city | age  | sex  |
++---------+-----------+------+------+------+
+| 101     | Tom       | BJ   |   27 |    1 |
+| 102     | Jason     | SH   |   28 |    1 |
+| 104     | Olivia    | SZ   |   22 |    2 |
+| 103     | Juice     | SH   |   20 |    2 |
++---------+-----------+------+------+------+
 ```
 
 ## 注意事项

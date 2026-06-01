@@ -10,7 +10,7 @@
 
 ## FE 配置
 
-在 fe.conf 中配置，例如 `restore_reset_index_id = true`。
+在 fe.conf 中配置，例如 `restore_reset_index_id = false`。
 
 | **名称**|**说明**|**默认值**| **版本** |
 |---|---|---|---|

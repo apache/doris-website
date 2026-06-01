@@ -2,7 +2,7 @@
 {
     "title": "MASK_LAST_N",
     "language": "en",
-    "description": "The MASKLASTN function is used to mask the last N bytes of a string. It replaces uppercase letters with X, lowercase letters with x,"
+    "description": "The MASK_LAST_N function is used to mask the last N bytes of a string. It replaces uppercase letters with X, lowercase letters with x,"
 }
 ---
 

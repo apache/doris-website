@@ -255,6 +255,10 @@ ACTIONS(cancel_query)
 PROPERTIES('workload_group'='normal');
 ```
 
+:::caution Cloud mode requires the fully qualified form
+The `'workload_group'='normal'` form above is only valid in **non-cloud (storage-compute coupled) mode**. **In cloud (storage-compute decoupled) mode, the fully qualified `<compute_group>.<workload_group>` form is required**, e.g. `'workload_group'='compute_group_a.normal'`; otherwise the statement fails with: `workload_group must be '<compute_group>.<workload_group>' in cloud mode`. See [CREATE WORKLOAD POLICY](../../sql-manual/sql-statements/cluster-management/compute-management/CREATE-WORKLOAD-POLICY) for details.
+:::
+
 ### Examples
 
 <!-- Knowledge type: procedure -->

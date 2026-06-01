@@ -123,7 +123,7 @@ MySQL Load is a synchronous import method, so the import result is returned dire
 When the import **succeeds**, the number of imported rows is returned:
 
 ```sql
-Query OK, 6 row affected (0.17 sec)
+Query OK, 6 rows affected (0.17 sec)
 Records: 6  Deleted: 0  Skipped: 0  Warnings: 0
 ```
 
@@ -170,7 +170,7 @@ The descriptions of each clause are as follows:
 | INTO TABLE            | Specifies the database name and table name. The database name can be omitted.                                                            |
 | PARTITION             | Specifies the partitions to import into. If you can determine the partition each row belongs to, specifying this is recommended. Rows that do not match these partitions are filtered out. |
 | COLUMNS TERMINATED BY | Specifies the column delimiter for the import.                                                                                           |
-| LINE TERMINATED BY    | Specifies the line delimiter for the import.                                                                                             |
+| LINES TERMINATED BY    | Specifies the line delimiter for the import.                                                                                             |
 | IGNORE num LINES      | Specifies the number of lines to skip in the imported CSV. This is typically set to 1 to skip the header.                                |
 | col_name_or_user_var  | Specifies the column mapping syntax. For data conversion, see the [Column mapping](../../../data-operate/import/load-data-convert#column-mapping) section. |
 | PROPERTIES            | Import parameters.                                                                                                                       |
